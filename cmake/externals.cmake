@@ -76,6 +76,21 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
   add_custom_target(scanners)
 endif()
 
+# Add GOAT
+set(name "goat")
+set(dir "${PROJECT_SOURCE_DIR}/Core/scripts/GOAT")
+add_library(${name} SHARED "${dir}/src/goat.cpp")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set_target_properties(${name} PROPERTIES SUFFIX .so)
+endif()
+set_target_properties(${name} PROPERTIES LINK_FLAGS "${Mathematica_WSTP_LINKER_FLAGS}")
+set_target_properties(${name}
+PROPERTIES
+  ARCHIVE_OUTPUT_DIRECTORY "${dir}/lib"
+  LIBRARY_OUTPUT_DIRECTORY "${dir}/lib"
+  RUNTIME_OUTPUT_DIRECTORY "${dir}/lib"
+)
+
 # Add get-pippi target
 set(name "pippi")
 set(dir "${CMAKE_SOURCE_DIR}/${name}")
