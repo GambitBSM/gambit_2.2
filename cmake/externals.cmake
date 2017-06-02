@@ -77,9 +77,9 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
 endif()
 
 # Add GOAT
-set(name "goat")
-set(dir "${PROJECT_SOURCE_DIR}/Core/scripts/GOAT")
-add_library(${name} SHARED "${dir}/src/goat.cpp")
+set(name "gum")
+set(dir "${PROJECT_SOURCE_DIR}/Core/scripts/GUM")
+add_library(${name} SHARED "${dir}/src/${name}.cpp")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set_target_properties(${name} PROPERTIES SUFFIX .so)
 endif()

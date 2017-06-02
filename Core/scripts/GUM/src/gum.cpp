@@ -19,7 +19,6 @@
 ///
 ///  ***********************************************
 
-//#include "gambit/Elements/ini_functions.hpp"
 #include <iostream>
 #include <sstream>
 #include "../../../../cmake/include/gambit/cmake/cmake_variables.hpp"
@@ -27,12 +26,14 @@
 #ifdef HAVE_MATHEMATICA
 #include MATHEMATICA_WSTP_H
 
+extern WSENV WSenv;
+
 using namespace std;
 
 // Setup the WS environment and start the Kernel
 int MStart(void *&pHandle)
 {
-  WSENV WSenv = WSInitialize(0);
+  WSenv = WSInitialize(0);
   if(WSenv == (WSENV)0)
     return 0;
 
@@ -58,24 +59,24 @@ int MPutFunction(void *pHandle, std::string name, int args)
 }
 
 // Overloaded functions to get data through WSTP
-int MGetVariable(void *pHandle, int* val) { return WSGetInteger(WSLINK(pHandle), val); }
-int MGetVariable(void *pHandle, float* val) { return WSGetReal32(WSLINK(pHandle), val); }
-int MGetVariable(void *pHandle, double* val) { return WSGetReal64(WSLINK(pHandle), val); } 
-int MGetVariable(void *pHandle, bool* val) 
+int MGetInteger(void *pHandle, int* val) { return WSGetInteger(WSLINK(pHandle), val); }
+int MGetFloat(void *pHandle, float* val) { return WSGetReal32(WSLINK(pHandle), val); }
+int MGetDouble(void *pHandle, double* val) { return WSGetReal64(WSLINK(pHandle), val); } 
+int MGetBool(void *pHandle, bool* val) 
 { 
   const char *val2;
   int ret = WSGetString(WSLINK(pHandle), &val2); 
   *val = (std::string(val2) == "True");
   return ret;
 }
-int MGetVariable(void *pHandle, char* val)
+int MGetChar(void *pHandle, char* val)
 { 
   const char *val2;
   int ret = WSGetString(WSLINK(pHandle), &val2);
   *val = val2[0];
   return ret;
 }
-int MGetVariable(void *pHandle, std::string* val) 
+int MGetString(void *pHandle, std::string* val) 
 { 
   const char *val2;
   int ret = WSGetString(WSLINK(pHandle), &val2);
@@ -99,21 +100,21 @@ int MGetVariable(void *pHandle, std::string* val)
 //}  
 
 // Overloaded functions to put data through WSTP
-int MPutVariable(void *pHandle, int val) { return WSPutInteger32(WSLINK(pHandle), val); }
-int MPutVariable(void *pHandle, float val) { return WSPutReal32(WSLINK(pHandle), val); }
-int MPutVariable(void *pHandle, double val) { return WSPutReal64(WSLINK(pHandle), val); }
-int MPutVariable(void *pHandle, bool val) 
+int MPutInteger(void *pHandle, int val) { return WSPutInteger32(WSLINK(pHandle), val); }
+int MPutFloat(void *pHandle, float val) { return WSPutReal32(WSLINK(pHandle), val); }
+int MPutDouble(void *pHandle, double val) { return WSPutReal64(WSLINK(pHandle), val); }
+int MPutBool(void *pHandle, bool val) 
 { 
   if(val)
     return WSPutSymbol(WSLINK(pHandle), "True");
   else
     return WSPutSymbol(WSLINK(pHandle), "False");
 }
-int MPutVariable(void *pHandle, char val)
+int MPutChar(void *pHandle, char val)
 {
   return WSPutString(WSLINK(pHandle), std::string(&val).c_str());
 }
-int MPutVariable(void *pHandle, std::string val) { return WSPutString(WSLINK(pHandle), val.c_str()); }
+int MPutString(void *pHandle, std::string val) { return WSPutString(WSLINK(pHandle), val.c_str()); }
 //FIXME: This won't work because in python because of the template
 //template <typename T> inline int WSPutVariable(WSLINK WSlink, std::vector<T> val)
 //{
@@ -124,6 +125,17 @@ int MPutVariable(void *pHandle, std::string val) { return WSPutString(WSLINK(pHa
 //      return 0;
 //  return 1;
 //}
+
+// Function to close the link
+int MEnd(void *pHandle)
+{
+
+  WSPutFunction((WSLINK)pHandle, "Exit", 0);
+  WSClose((WSLINK)pHandle);
+  WSDeinitialize(WSenv);
+
+  return 1;
+}
 
 // Rubbish main function
 int main()
