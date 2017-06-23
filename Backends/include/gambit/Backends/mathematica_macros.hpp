@@ -28,9 +28,21 @@
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/size.hpp>
 
-/// If not defined already, define Mathematica
+/// If not defined already, define the backend languages
+#ifndef UNKNOWN
+  #define UNKNOWN 0
+#endif
+#ifndef CC
+  #define CC 1
+#endif
+#ifndef CXX
+  #define CXX 2
+#endif
+#ifndef FORTRAN
+  #define FORTRAN 3
+#endif
 #ifndef MATHEMATICA
-#define MATHEMATICA 4
+  #define MATHEMATICA 4
 #endif
 
 /// Macro to help identifying the language of the backend
@@ -133,18 +145,6 @@
             int size = BOOST_PP_IF(ISEMPTY(ARGLIST),0,BOOST_PP_TUPLE_SIZE(ARGLIST));            \
             str symbol_name = SYMBOLNAME;                                                       \
             boost::replace_all(symbol_name, "\\[", "\\\\[");                                    \
-            if(symbol_name != SYMBOLNAME)                                                       \
-            {                                                                                   \
-              WSPutFunction((WSLINK)pHandle, "Set", 2);                                         \
-              WSPutSymbol((WSLINK)pHandle, STRINGIFY(NAME));                                    \
-              WSPutFunction((WSLINK)pHandle, "ToExpression",1);                                 \
-              WSPutString((WSLINK)pHandle, symbol_name.c_str());                                \
-              symbol_name = STRINGIFY(NAME);                                                    \
-              int pkt;                                                                          \
-              while( (pkt = WSNextPacket((WSLINK)pHandle), pkt) && pkt != RETURNPKT)            \
-               WSNewPacket((WSLINK)pHandle);                                                    \
-              WSNewPacket((WSLINK)pHandle);                                                     \
-            }                                                                                   \
                                                                                                 \
             /* If TYPE is a numeric type, send N first */                                       \
             if(IS_NUMERIC(TYPE))                                                                \
@@ -154,7 +154,10 @@
               }                                                                                 \
                                                                                                 \
             /* Send the symbol name now */                                                      \
-            if(!WSPutFunction((WSLINK)pHandle, symbol_name.c_str(), size))                      \
+            if(!WSPutFunction((WSLINK)pHandle, "Apply", 2) or                                   \
+               !WSPutFunction((WSLINK)pHandle, "ToExpression",1) or                             \
+               !WSPutString((WSLINK)pHandle, symbol_name.c_str()) or                            \
+               !WSPutFunction((WSLINK)pHandle, "List", size))                                   \
             {                                                                                   \
               MATH_ERROR(TYPE,"Error sending packet through WSTP")                              \
             }                                                                                   \

@@ -63,13 +63,6 @@
 #include <boost/preprocessor/list/size.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-/// Define backend languages
-#define UNKNOWN 0
-#define CC 1
-#define CXX 2
-#define FORTRAN 3
-#define MATHEMATICA 4
-
 /// Declare the backend initialisation module BackendIniBit.
 #define MODULE BackendIniBit
   START_MODULE
@@ -367,8 +360,11 @@ namespace Gambit                                                              \
       SET_ALLOWED_MODELS(NAME, MODELS)                                        \
                                                                               \
       /* Disable the functor if the library is missing or symbol not found. */\
-      int CAT(vstatus_,NAME) =                                                \
-       set_backend_functor_status(Functown::NAME, SYMBOLNAME);                \
+      BOOST_PP_IF(USING_MATHEMATICA,                                          \
+        int CAT(vstatus_,NAME) =                                              \
+          set_math_backend_functor_status(Functown::NAME, SYMBOLNAME, pHandle);,                \
+        int CAT(vstatus_,NAME) = set_backend_functor_status(Functown::NAME, SYMBOLNAME);        \
+      )                                                                       \
                                                                               \
     } /* end namespace BACKENDNAME_SAFE_VERSION */                            \
   } /* end namespace Backends */                                              \
@@ -456,12 +452,6 @@ namespace Gambit                                                                
     namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)                                                 \
     {                                                                                           \
                                                                                                 \
-      /* Define a type NAME_type to be a suitable function pointer. */                          \
-      /*typedef TYPE (*NAME##_type) CONVERT_VARIADIC_ARG(ARGLIST);                                \
-                                                                                                \
-      extern const NAME##_type NAME = load_backend_symbol<NAME##_type>(pHandle, pSym,           \
-        SYMBOLNAME, STRINGIFY(BACKENDNAME), STRINGIFY(VERSION));                                \
-      */                                                                                          \
       /* Create functor object */                                                               \
       namespace Functown                                                                        \
       {                                                                                         \
@@ -549,7 +539,11 @@ namespace Gambit                                                                
       } /* end namespace Functown */                                                            \
                                                                                                 \
       /* Disable the functor if the library is not present or the symbol not found. */          \
-      int CAT(fstatus_,NAME) = set_backend_functor_status(Functown::NAME, "no_symbol");         \
+      BOOST_PP_IF(USING_MATHEMATICA,                                                            \
+        int CAT(fstatus_,NAME) =                                                                \
+          set_math_backend_functor_status(Functown::NAME, "no_symbol", pHandle);,               \
+        int CAT(fstatus_,NAME) = set_backend_functor_status(Functown::NAME, "no_symbol");       \
+      )                                                                                         \
                                                                                                 \
       /* Set the allowed model properties of the functor. */                                    \
       SET_ALLOWED_MODELS(NAME, MODELS)                                                          \
