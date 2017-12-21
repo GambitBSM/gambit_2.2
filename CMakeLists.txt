@@ -49,6 +49,7 @@ foreach(p
   CMP0042 # CMake 3.0
   CMP0051 # CMake 3.1
   CMP0054 # CMake 3.1
+  CMP0068 # CMake 3.9.1
   )
   if(POLICY ${p})
     cmake_policy(SET ${p} NEW)
@@ -60,8 +61,14 @@ project(gambit C CXX Fortran)
 
 # Disable clang support
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  message(FATAL_ERROR "GAMBIT does not support the Clang compiler. Please choose another compiler.")
+  message(FATAL_ERROR "\nYou seem to have selected the Clang compiler.  Beware that if you are using a mac, Clang may be your default compiler even though you might think it is gcc.  You can thank Apple for that, not GAMBIT/cmake.  \nGAMBIT does not support the Clang compiler. Please choose another compiler.")
 endif()
+
+# Make sure the user hasn't accidentally passed gcc instead of g++.
+if (CMAKE_CXX_COMPILER MATCHES "gcc$")
+  message(FATAL_ERROR "\nYou have set CMAKE_CXX_COMPILER to gcc.  I don't think that means what you think it means.  Do you really want to compile C++ with gcc rather than g++?")
+endif()
+
 
 # Use ccache to speed up re-compiling if it is available
 #find_program(CCACHE_FOUND ccache)
@@ -205,28 +212,37 @@ else()
 endif()
 
 # Check for Mathematica
-find_package(Mathematica 10.0)
-if(Mathematica_FOUND)
+string(REGEX MATCH ";M;|;Ma;|;Mat;|;Math;|;Mathe;|;Mathem;|;Mathema;|;Mathemat;|;Mathemati;|;Mathematic;|;Mathematica" DITCH_MATHEMATICA ";${itch};")
+if(DITCH_MATHEMATICA)
+  set(HAVE_MATHEMATICA 0)
+  message("${BoldCyan} X Excluding Mathematica from GAMBIT configuration. All backends using Mathematica will be disabled${ColourReset}")
+else()
   find_library(LIBUUID NAMES uuid)
   if(LIBUUID)
     message("   Found library libuuid")
-    message("${BoldYellow}   Found Mathematica.${ColourReset}")
-    if(Mathematica_WSTP_FOUND)
-      message("${BoldYellow}   Found Wolfram Symbolic Transfer Protocol. Mathematica backends enabled.${ColourReset}")
-      set(HAVE_MATHEMATICA 1)
-      set(MATHEMATICA_WSTP_H "${Mathematica_WSTP_INCLUDE_DIR}/wstp.h")
-      set(MATHEMATICA_KERNEL "${Mathematica_KERNEL_EXECUTABLE}")
+    find_package(Mathematica 10.0)
+    if(Mathematica_FOUND AND NOT DEFINED Mathematica_Invalid_License)
+      message("${BoldYellow}   Found Mathematica.${ColourReset}")
+      if(Mathematica_WSTP_FOUND)
+        message("${BoldYellow}   Found Wolfram Symbolic Transfer Protocol. Mathematica backends enabled.${ColourReset}")
+        set(HAVE_MATHEMATICA 1)
+        set(MATHEMATICA_WSTP_H "${Mathematica_WSTP_INCLUDE_DIR}/wstp.h")
+        set(MATHEMATICA_KERNEL "${Mathematica_KERNEL_EXECUTABLE}")
+      else()
+        message("${BoldRed}  WSTP not found. Please make sure it is installed before attempting to use Mathematica backends.${ColourReset}")
+        set(HAVE_MATHEMATICA 0)
+      endif()
+    elseif(DEFINED Mathematica_Invalid_License)
+      message("${BoldRed}   Mathematica found but with an invalid license. Backends using Mathematica will be disabled.${ColourReset}")
+      set(HAVE_MATHEMATICA 0)
     else()
-      message("${BoldRed}  WSTP not found. Please make sure it is installed before attempting to use Mathematica backends.${ColourReset}")
+      message("${BoldRed}   Mathematica not found. Backends using Mathematica will be disabled.${ColourReset}")
       set(HAVE_MATHEMATICA 0)
     endif()
   else()
     message("${BoldRed}   Missing library libuuid required for WSTP. Mathematica will be disabled.${ColourReset}")
     set(HAVE_MATHEMATICA 0)
   endif()
-else()
-  message("${BoldRed}   Mathematica not found. Backends using Mathematica will be disabled.${ColourReset}")
-  set(HAVE_MATHEMATICA 0)
 endif()
 
 # Check for DL libraries

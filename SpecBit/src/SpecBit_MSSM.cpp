@@ -37,6 +37,7 @@
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum_factories.hpp"
+#include "gambit/Elements/smlike_higgs.hpp"
 #include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
 #include "gambit/Utils/stream_overloads.hpp" // Just for more convenient output to logger
 #include "gambit/Utils/util_macros.hpp"
@@ -440,36 +441,16 @@ namespace Gambit
 
     }
 
-    void most_SMlike_Higgs_MSSM(int &result)
-    {
-      using namespace Pipes::most_SMlike_Higgs_MSSM;
-      const SubSpectrum& mssm_spec = Dep::MSSM_spectrum->get_HE();
-      double sa =  - mssm_spec.get(Par::Pole_Mixing,"h0",1,1);
-      double ca = mssm_spec.get(Par::Pole_Mixing,"h0",1,2);
-      double tb = mssm_spec.get(Par::dimensionless, "tanbeta" );
-      double sb = sin(atan(tb));
-      double cb = cos(atan(tb));
-      //cos (beta - alpha) and sin(beta-alpha)
-      double cbma = cb * ca + sb * sa;
-      double sbma = sb * ca - cb * ca;
 
-      if(sbma > cbma)
-      {
-        result = 25;
-      }
-      else
-      {
-        result = 35;
-      }
-
-      return;
-    }
-
-    void get_CMSSM_spectrum (Spectrum& result)
+    // Runs FlexibleSUSY MSSM spectrum generator with CMSSM (GUT scale) boundary conditions
+    // In principle an identical spectrum can be obtained from the function 
+    // get_MSSMatGUT_spectrum_FS
+    // by setting the input parameters to match the CMSSM assumptions
+    void get_CMSSM_spectrum_FS (Spectrum& result)
     {
 
       // Access the pipes for this function to get model and parameter information
-      namespace myPipe = Pipes::get_CMSSM_spectrum;
+      namespace myPipe = Pipes::get_CMSSM_spectrum_FS;
 
       // Get SLHA2 SMINPUTS values
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
@@ -508,11 +489,11 @@ namespace Gambit
 
     }
 
-    // Runs MSSM spectrum generator with EWSB scale input
-    void get_MSSMatQ_spectrum (Spectrum& result)
+    // Runs FlexibleSUSY MSSM spectrum generator with EWSB scale input (boundary conditions)
+    void get_MSSMatQ_spectrum_FS (Spectrum& result)
     {
       using namespace softsusy;
-      namespace myPipe = Pipes::get_MSSMatQ_spectrum;
+      namespace myPipe = Pipes::get_MSSMatQ_spectrum_FS;
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
       MSSM_input_parameters input;
       input.Qin = *myPipe::Param.at("Qin"); // MSSMatQ also requires input scale to be supplied
@@ -522,11 +503,11 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
     }
 
-    // Runs MSSM spectrum generator with GUT scale input
-    void get_MSSMatMGUT_spectrum (Spectrum& result)
+    // Runs FlexibleSUSY MSSM spectrum generator with GUT scale input (boundary conditions)
+    void get_MSSMatMGUT_spectrum_FS (Spectrum& result)
     {
       using namespace softsusy;
-      namespace myPipe = Pipes::get_MSSMatMGUT_spectrum;
+      namespace myPipe = Pipes::get_MSSMatMGUT_spectrum_FS;
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
       MSSMatMGUT_input_parameters input;
       fill_MSSM63_input(input,myPipe::Param);
@@ -788,9 +769,9 @@ namespace Gambit
 
 
     /// Higgs masses and mixings with theoretical uncertainties
-    void FH_HiggsMasses(fh_HiggsMassObs &result)
+    void FH_AllHiggsMasses(fh_HiggsMassObs &result)
     {
-      using namespace Pipes::FH_HiggsMasses;
+      using namespace Pipes::FH_AllHiggsMasses;
 
       #ifdef SPECBIT_DEBUG
         cout << "****** calling FH_HiggsMasses ******" << endl;
@@ -978,7 +959,7 @@ namespace Gambit
       result.CP[2] = -1; //A0
 
       // Work out which SM values correspond to which SUSY Higgs
-      int higgs = (*Dep::SMlike_Higgs_PDG_code == 25 ? 0 : 1);
+      int higgs = (SMlike_higgs_PDG_code(spec) == 25 ? 0 : 1);
       int other_higgs = (higgs == 0 ? 1 : 0);
 
       // Set the decays
@@ -1049,7 +1030,7 @@ namespace Gambit
       static const std::vector<str> sHneut = initVector<str>("h0_1", "h0_2", "A0");
 
       // Work out which SM values correspond to which SUSY Higgs
-      int higgs = (*Dep::SMlike_Higgs_PDG_code == 25 ? 0 : 1);
+      int higgs = (SMlike_higgs_PDG_code(spec) == 25 ? 0 : 1);
       int other_higgs = (higgs == 0 ? 1 : 0);
 
       // Set the decays
@@ -1271,7 +1252,44 @@ namespace Gambit
       specmap["scale(Q)"] = subspec.GetScale();
     }
 
-    void SHD_HiggsMass(shd_HiggsMassObs& HiggsMass)
+    void FH_HiggsMass(triplet<double>& result)
+    {
+      using namespace Pipes::FH_HiggsMass;
+      //FH indices: 0=h0_1, 1=h0_2
+      int i;
+      const SubSpectrum& spec = Dep::unimproved_MSSM_spectrum->get_HE();
+      int higgs = SMlike_higgs_PDG_code(spec);
+      if (higgs == 25) i = 0;
+      else if (higgs == 35) i = 1;
+      else SpecBit_error().raise(LOCAL_INFO, "Urecognised SM-like Higgs PDG code!");
+      result.central = Dep::FH_HiggsMasses->MH[i];
+      result.upper = Dep::FH_HiggsMasses->deltaMH[i];
+      result.lower = Dep::FH_HiggsMasses->deltaMH[i];
+    }
+
+    void FH_HeavyHiggsMasses(map_int_triplet_dbl& result)
+    {
+      using namespace Pipes::FH_HeavyHiggsMasses;
+      const int neutrals[2] = {25, 35};
+      int i;
+      const SubSpectrum& spec = Dep::unimproved_MSSM_spectrum->get_HE();
+      int higgs = SMlike_higgs_PDG_code(spec);
+      if (higgs == neutrals[0]) i = 1;
+      else if (higgs == neutrals[1]) i = 0;
+      else SpecBit_error().raise(LOCAL_INFO, "Urecognised SM-like Higgs PDG code!");
+      result.clear();
+      result[neutrals[i]].central = Dep::FH_HiggsMasses->MH[i];
+      result[neutrals[i]].upper = Dep::FH_HiggsMasses->deltaMH[i];
+      result[neutrals[i]].lower = Dep::FH_HiggsMasses->deltaMH[i];
+      result[36].central = Dep::FH_HiggsMasses->MH[2];
+      result[36].upper = Dep::FH_HiggsMasses->deltaMH[2];
+      result[36].lower = Dep::FH_HiggsMasses->deltaMH[2];
+      result[37].central = Dep::FH_HiggsMasses->MH[3];
+      result[37].upper = Dep::FH_HiggsMasses->deltaMH[3];
+      result[37].lower = Dep::FH_HiggsMasses->deltaMH[3];
+    }
+
+    void SHD_HiggsMass(triplet<double>& result)
     {
       using namespace Pipes::SHD_HiggsMass;
 
@@ -1314,13 +1332,10 @@ namespace Gambit
       #endif
 
       MReal DeltaMHiggs = BEreq::SUSYHD_DeltaMHiggs(parameterList);
- 
-      cout << "MHiggs = " << MHiggs << " +- " << DeltaMHiggs << endl; 
 
-      HiggsMass.MH = MHiggs;
-      HiggsMass.deltaMH = DeltaMHiggs;
-
-      return ;
+      result.central = MHiggs;
+      result.upper = DeltaMHiggs;
+      result.lower = DeltaMHiggs;
 
     }
 
