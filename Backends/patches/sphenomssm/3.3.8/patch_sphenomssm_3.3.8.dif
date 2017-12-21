@@ -1,12 +1,111 @@
-diff -rupN ./SPhenoMSSM.f90 ../installed/sphenomssm/3.3.8/src/SPhenoMSSM.f90
---- ./src/SPhenoMSSM.f90	2017-12-01 13:44:56.473642168 +0100
-+++ ../installed/sphenomssm/3.3.8/src/SPhenoMSSM.f90	2017-12-01 14:09:44.565713158 +0100
+diff -rupN SPheno-3.3.8/Makefilt ../installed/sphenomssm/3.3.8/Makefile
+--- SPheno-3.3.8/Makefile	2017-11-15 21:54:55.961478896 +0100
++++ ../installed/sphenomssm/3.3.8/Makefile	2015-11-02 14:26:45.000000000 +0100
+@@ -6,13 +6,16 @@
+ # F90 = gfortran
+ # F90 = g95
+ # F90 = lf95
+-F90 = ifort
++#F90 = ifort
+ Model = src
+ version = 330.00
++all: bin/SPheno lib/libSPhenoMSSM.so
+ bin/SPheno:
+ 	cd ${Model} ; ${MAKE} F90=${F90} version=${version}
++lib/libSPhenoMSSM.so:
++	cd ${Model} ; ${MAKE} $@ F90=${F90} version=${version}
+ clean:
+ 	rm -f *.o *~ */*.o */*~
+ cleanall:
+-	rm -f bin/SPheno lib/*.a *.o *~ */*.o */*~ include/*
+-.PHONY: bin/SPheno clean cleanall
++	rm -f bin/SPheno lib/*.a lib/*.so *.o *~ */*.o */*~ include/*
++.PHONY: bin/SPheno lib/libSPhenoMSSM clean cleanall
+diff -rupN SPheno-3.3.8/MSSM/Makefile ../installed/sphenomssm/3.3.8/MSSM/Makefile
+--- SPheno-3.3.8/MSSM/Makefile	2017-12-20 13:18:04.447997812 +0100
++++ ../installed/sphenomssm/3.3.8/MSSM/Makefile	2017-12-20 13:21:12.180006768 +0100
+@@ -4,6 +4,7 @@ PreDef = -DGENERATIONMIXING -DONLYDOUBLE
+ InDir = ../include
+ Mdir = ${InDir}
+ name = ../lib/libSPhenoMSSM.a
++shared = lib/libSPhenoMSSM.so
+  
+ # check if SARAH module and SPheno are compatibel  
+ minV=330.00 
+@@ -12,19 +13,21 @@ cVersion =$(shell expr $(version) \>= $(
+ # options for various compilers  
+ #  
+ # Default Compiler  
+-F90=gfortran
+-comp= -c -O -module ${Mdir} -I${InDir}  
+-LFlagsB= -O  
++ifeq (${F90},/usr/bin/gfortran)
++override F90=gfortran
++endif
++#comp= -c -O -module ${Mdir} -I${InDir}  
++#LFlagsB= -O  
+ # Intels ifort,debug modus  
+ ifeq (${F90},ifortg)  
+ F90=ifort  
+-comp= -c -g -module ${Mdir} -I${InDir}  
+-LFlagsB= -g  
++comp= -c -g -fpic -module ${Mdir} -I${InDir}  
++LFlagsB= -g -fpic 
+ endif  
+ # gfortran  
+ ifeq (${F90},gfortran)  
+-comp= -c -g -ffree-line-length-none -J${Mdir} -I${InDir}  
+-LFlagsB= -g  
++comp= -c -g -fPIC --free-line-length-none -J${Mdir} -I${InDir}
++LFlagsB= -g -fPIC
+ endif  
+ # g95  
+ ifeq (${F90},g95)  
+@@ -42,15 +45,21 @@ comp= -c -O -mdir ${Mdir} -I${InDir}
+ LFlagsB= -O -DONLYDOUBLE -mdir ${MDir} -I${InDir}  
+ endif   
+ .SUFFIXES : .o .ps .f90 .F90 .a 
+-bin/SPhenoMSSM:
++${shared}:
+ ifeq (${cVersion},1)
+ 	 cd ../src ; ${MAKE} F90=${F90} 
+ 	 ${MAKE} F90=${F90} ${name} 
+ 	 ${MAKE} F90=${F90} SPhenoMSSM.o 
+-	 ${F90} -c effpotasat.f 
+-	 ${F90} -o SPhenoMSSM ${LFlagsB} SPhenoMSSM.o effpotasat.o ../lib/libSPhenoMSSM.a ../lib/libSPheno.a
+-	 mv SPhenoMSSM ../bin
+-	 rm SPhenoMSSM.o  
++	 ${F90} -c -fPIC effpotasat.f
++	 ${F90} -shared -o ../${shared} ${LFlagsB} SPhenoMSSM.o effpotasat.o ../lib/libSPhenoMSSM.a ../lib/libSPheno.a
++bin/SPhenoMSSM:
++	cd ../src ; ${MAKE} F90=${F90} 
++	${MAKE} F90=${F90} ${name} 
++	${MAKE} F90=${F90} SPhenoMSSM.o 
++	${F90} -c effpotasat.f 
++	${F90} -o SPhenoMSSM ${LFlagsB} SPhenoMSSM.o effpotasat.o ../lib/libSPhenoMSSM.a ../lib/libSPheno.a
++	mv SPhenoMSSM ../bin
++	rm SPhenoMSSM.o  
+ ${name}:  ${name}(Model_Data_MSSM.o)  \
+  ${name}(RGEs_MSSM.o)   \
+  ${name}(Couplings_MSSM.o) ${name}(SusyMasses_MSSM.o) ${name}(TadpoleEquations_MSSM.o) \
+@@ -77,7 +86,7 @@ endif
+ clean: 
+ 	 rm -f *.o *~ */*.o */*~
+ cleanall: 
+-	 rm -f bin/SPheno3 lib/*.a *~ */*.o */*~ include/*
++	 rm -f bin/SPheno3 lib/*.a lib/*so *~ */*.o */*~ include/*
+ #
+ # Suffix rules
+ #
+diff -rupN SPheno0-3.3.8/MSSM/SPhenoMSSM.f90 ../installed/sphenomssm/3.3.8/MSSM/SPhenoMSSM.f90
+--- SPheno-3.3.8/MSSM/SPhenoMSSM.f90	2017-12-15 16:23:26.618801172 +0100
++++ ../installed/sphenomssm/3.3.8/MSSM/SPhenoMSSM.f90	2017-12-15 19:46:26.299382209 +0100
 @@ -7,7 +7,8 @@
  ! ----------------------------------------------------------------------  
   
   
 -Program SPhenoMSSM 
-+! Program SPhenoMSSM 
++!Program SPhenoMSSM 
 +Module SPhenoMSSM ! Added by GAMBIT
   
  Use Control
@@ -403,16 +502,16 @@ diff -rupN ./SPhenoMSSM.f90 ../installed/sphenomssm/3.3.8/src/SPhenoMSSM.f90
 +! delta_Mass = 0.0001_dp 
 +! CalcTBD = .false. 
 +! Call ReadingData(kont) 
-+!   
++!  
 +! If ((HighScaleModel.Eq."LOW").and.(.not.SUSYrunningFromMZ)) Then ! No longer used by default 
-+!  ! Setting values 
++! ! Setting values 
 +!  vd = vdIN 
 +!  vu = vuIN 
 +!  Mu = MuIN 
 +!  Td = TdIN 
 +!  Te = TeIN 
 +!  Tu = TuIN 
-+!  Bmu = BmuIN 
++! Bmu = BmuIN 
 +!  mq2 = mq2IN 
 +!  ml2 = ml2IN 
 +!  mHd2 = mHd2IN 
@@ -447,7 +546,7 @@ diff -rupN ./SPhenoMSSM.f90 ../installed/sphenomssm/3.3.8/src/SPhenoMSSM.f90
 +!  ! RGE running for gauge and Yukawa couplings from M_Z to M_SUSY 
 +!  Qin=sqrt(getRenormalizationScale()) 
 +! If (SMrunningLowScaleInput) Then 
-+! Call RunSM(Qin,deltaM,tanbeta,g1,g2,g3,Yu,Yd,Ye,vd,vu) 
++!  all RunSM(Qin,deltaM,tanbeta,g1,g2,g3,Yu,Yd,Ye,vd,vu) 
 +! End if 
 +! 
 +!  ! Setting Boundary conditions 
@@ -586,3 +685,24 @@ diff -rupN ./SPhenoMSSM.f90 ../installed/sphenomssm/3.3.8/src/SPhenoMSSM.f90
  Contains 
   
  Subroutine CalculateSpectrum(n_run,delta,WriteOut,kont,MAh,MAh2,MCha,MCha2,           & 
+@@ -5124,4 +5125,5 @@ g1input = Sqrt(3._dp/5._dp)*g1input
+ End subroutine CalculateLowEnergyConstraints 
+  
+  
+-End Program SPhenoMSSM 
++!End Program SPhenoMSSM 
++End Module SPhenoMSSM ! Added by GAMBIT
+diff -rupN SPheno-3.3.8/src/Makefile ../installed/sphenomssm/3.3.8/src/Makefile
+--- SPheno-3.3.8/src/Makefile	2015-11-02 14:26:45.000000000 +0100
++++ ../installed/sphenomssm/3.3.8/src/Makefile	2017-12-21 21:04:08.147494939 +0100
+@@ -23,8 +23,8 @@ endif
+ 
+ # gfortran
+ ifeq (${F90},gfortran)
+- comp = -c -O -J${Mdir} -I${InDir}
+- LFlagsB = -O  
++ comp = -c -O -fPIC -J${Mdir} -I${InDir}
++ LFlagsB = -O -fPIC
+ endif
+ 
+ # g95 
