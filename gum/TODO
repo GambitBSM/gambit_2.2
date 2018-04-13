@@ -1,0 +1,18 @@
+- finish process catalog:
+    - importDecays - which things to include/exclude??
+    - particle_database entries - dictionaries -> process catalogue work better?
+- python <-> mathematica interface!!
+- re-do calchep.py - not good
+- check the consistency of the yukawas for SMinputs - 3x3 matrix but accessed like a vector... seems like it wouldn't work?
+- spectrum_as_map and fill_as_map as standalone function in SpecBit??
+- backend DirectDM (or similar) -> use for Direct Detection etc.
+- "includes" function?
+- PATH_TO_GAMBIT option
+- proper setup.py for installation (setuptools)
+- PEP8
+- how to incorporate several DM candidates? say, if a model has a scalar and a fermion. 
+
+model hierarchy:
+ 
+  - if no parent -> new spectrum
+  - if child to the top of family tree -> new spectrum, rewrite others? hmm.. e.g. inserting 2HDM+S as parent to S? and 2HDM?

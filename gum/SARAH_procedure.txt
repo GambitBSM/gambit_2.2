@@ -1,0 +1,21 @@
+## Setup - 
+
+SetDirectory["~/.Mathematica/Applications/SARAH-4.9.1"];
+<< SARAH`;
+Start["SingletDM"];
+
+## Basic diagnostics -
+
+CheckModel;
+
+Particles[EWSB] ---> all particle information, EXCEPT for PDG codes????
+
+
+## Write CalcHEP output - 
+
+MakeVertexList[EWSB];
+MakeCHep[SLHAinput -> False, UseRunningCoupling -> True, CalculateMasses -> True];
+
+
+
+Quit[];

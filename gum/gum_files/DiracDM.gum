@@ -1,0 +1,10 @@
+## Minimal .gum (YAML) file for GUM.
+
+# The furthest ancestor in the model family tree. (i.e. the Spectrum used)
+gambit_model_tree: DiracDM
+  
+# Placeholder for now - this is just the folder where the CalcHEP model files live, so we can clean them, and extract the correct vertices. 
+calchep_folder: DiracDM
+
+# DM candidate in the new model, as in the GAMBIT particle database
+dm_candidate: phi

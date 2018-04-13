@@ -1,0 +1,159 @@
+#!/usr/bin/env python
+
+"""
+GUM - GAMBIT Universal Models
+"""
+
+import argparse
+import numpy as np
+
+from setup import *
+from parse import *
+from files import *
+from models import *
+from feynrules import *
+from calchep import *
+from decays import *
+from spectrum import *
+from particledb import *
+from darkbit import *
+
+parser = argparse.ArgumentParser(description="From Lagrangian to scans: GAMBIT "
+                                             "writing your papers for you.")
+parser.add_argument("-f", type=str, help="Specify input .GUM file.")
+
+args = parser.parse_args()
+
+# Input .gum file.
+if args.f:
+  
+    inputs = check_gum_file(args.f)
+    fr_script = inputs['fr_script']
+    calchep_model = inputs['calchep_model']
+    gambit_model = inputs['new_model_name']
+    is_self_conjugate = ['is_self_conjugate']
+    parent = child = friend = None
+    if 'parent' in inputs:
+        parent = inputs['parent']
+    if 'children' in inputs:
+        children = inputs['child']
+    if 'friend' in inputs:
+        friend = inputs['friend']
+    if 'use_existing_spectrum' in inputs:
+        new_spectrum = False
+    else:
+        new_spectrum = True
+    
+    print("Adding new model {0} to GAMBIT...").format(gambit_model) 
+      
+    add_to_model_hierarchy(parent, child, friend)
+  
+    # Need to know how GAMBIT names each particle. (In each module, too.)
+    gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
+  
+    # Initialise DM as particle class.
+    dm = Particle(inputs['dm_candidate']['chargeX3'],
+                  inputs['dm_candidate']['spinX2'],
+                  gambit_pdg_codes[inputs['dm_candidate']['name']],
+                  inputs['dm_candidate']['is_self_conjugate'])
+  
+    # Run FeynRules -> generate the following:
+    #  - CalcHEP files                                 DecayBit, DarkBit
+    #  - Spectrum generator (empty for now)            SpecBit
+    #  - MadGraph (.ufo) files                         ColliderBit
+    #  - ???                                           PrecisionBit
+    #  - ???                                           FlavBit
+  
+    # FeynRules
+  
+    feynrules_path = '../../.Mathematica/Applications/feynrules-current/Models/SingletDM/SingletDM.fr'
+  
+    # check_fr_model(fr_model)
+    # fr_pdgs, fr_params = parse_feynrules_model(feynrules_path)
+    # run_FeynRules(fr_script)
+  
+    # Run CalcHEP_cleaner
+  
+    bsm_particle_list = extract_particles(calchep_model, gambit_model) # Maybe just do this from the FR/SARAH file.
+    clean_calchep_model_files(calchep_model, gambit_model)
+  
+    # Obtain all model interactions from CalcHEP model files.
+    interactions, calchep_pdg_codes = get_vertices(calchep_model)
+  
+    # Need to know how GAMBIT names each particle. (In each module, too.)
+  
+    gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
+      
+    """
+    MODELS
+    """
+  
+    ## Just a placeholder for now -- need to scrape these from SARAH/
+    ## FeynRules files.
+    x=[]
+    # Should be from particles
+    x.append(SpectrumParameter("S", "Pole_Mass", gb_input="mS"))
+    x.append(SpectrumParameter("h_01", "Pole_Mass",fullname="higgs", gb_input="mH"))
+    # From parameters
+    x.append(SpectrumParameter("vev", "mass1", sm=True))
+    x.append(SpectrumParameter("lambda_hS", "dimensionless",fullname="lambdahs"))
+    x.append(SpectrumParameter("g1", "dimensionless", "scalar", sm=True))
+    x.append(SpectrumParameter("g2", "dimensionless", "scalar", sm=True))
+    x.append(SpectrumParameter("g3", "dimensionless", "scalar", sm=True))
+    x.append(SpectrumParameter("sinW2", "dimensionless", "scalar", sm=True))
+    x.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
+    x.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
+    x.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
+    
+    write_spectrumcontents(gambit_model, x)
+    write_subspectrum_wrapper(gambit_model, x)
+    
+    add_to_registered_spectra(gambit_model)
+  
+    """
+    DECAYS
+    """
+  
+    # Obtain all 3-point vertices that are BSM.
+    three_pi_bsm = [interaction.particles for interaction in interactions 
+                    if interaction.num_particles() == 3
+                    and interaction.is_sm() == False]
+  
+    three_body_decays = decay_sorter(three_pi_bsm)
+      
+    # Pass all interactions by first PDG code needed.
+    for i in xrange(len(three_body_decays)):
+        write_decaytable_entry(three_body_decays[i], gambit_model,
+                               calchep_pdg_codes, gambit_pdg_codes,
+                               decaybit_dict)
+  
+    """
+    CROSS SECTIONS
+    """
+  
+    # Obtain all three-field vertices
+    three_fields = [interaction.particles for interaction in interactions 
+                    if interaction.num_particles() == 3]
+    # And all 4-point BSM vertices
+    four_fields = [interaction.particles for interaction in interactions 
+                   if interaction.num_particles() == 4
+                   and interaction.is_sm() == False]
+  
+    ann_products, propagators = sort_annihilations(dm, three_fields,
+                                                   four_fields)
+    write_process_catalogue(dm, ann_products, propagators,
+                            gambit_pdg_codes, gambit_model,
+                            calchep_pdg_codes, bsm_particle_list)
+  
+    """
+    SPECTRA
+    """
+      
+    write_basic_spectrum(gambit_model, x, simple_SMinputs = True)
+    
+    print("")
+    print("GUM has finished successfully!")
+    print("Please (re)compile GAMBIT.")
+
+else:
+    raise GumError("ERROR: Usage: ./gum -f inputfile.gum")

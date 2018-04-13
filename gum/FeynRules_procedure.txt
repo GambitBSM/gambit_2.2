@@ -1,0 +1,42 @@
+## Setup -
+
+$FeynRulesPath = SetDirectory["~/.Mathematica/Applications/feynrules-current"];
+<< FeynRules`;
+LoadModel["Models/SingletDM/SingletDM.fr"];
+LoadRestriction["Models/DiagonalCKM.rst"];
+
+## Basic diagnostics - 
+
+CheckHermiticity[LTotal];
+
+====================================================================
+HALLELUJAH! USEFUL COMMANDS! Will want to pass over PartList and the
+E(I)ParamsList at least.
+
+PartList; ----> all particle information, from: M$ClassesDescription
+   - name
+   - PDG code
+   - fullname
+   - spin
+   - colour
+   etc.
+   
+MassList; WidthList; (not sure if too useful)
+
+EParamList; ----> all (external) parameters
+   - name of block (SMInputs, Yukawa, etc.)!
+   - real/complex
+   - parameter "description"
+   
+IParamList; ----> all (internal) parameters
+
+======================================================================
+
+## Write CalcHEP output
+
+FeynmanGauge = False;
+WriteCHOutput[LTotal, CHAutoWidths -> False];
+
+
+
+Quit[];

@@ -1,0 +1,204 @@
+"""
+Master module for all DecayBit related routines.
+"""
+
+import numpy as np
+import re
+from collections import Counter
+from setup import *
+
+def find_decay_type(vertex):
+    """
+    Determines whether a 2-body decay is an A->A,A, A->B,B, A->B,Bbar,
+    or A->B,C process, and correctly orders the vertex to reflect this.
+    """
+
+    # Case 1. All three are identical -> self-interaction.
+    if len(Counter(vertex).values()) == 1:
+        return vertex, "AAA"
+
+    # Case 2. A-> B, B process. Return the array in the order for 1->2 process.
+    elif len(Counter(vertex).values()) == 2:
+        if Counter(vertex).values()[0] == 1:
+            return vertex, "ABB"
+        elif Counter(vertex).values()[0] == 2:
+            return [Counter(vertex).keys()[1],
+                    Counter(vertex).keys()[0],
+                    Counter(vertex).keys()[0]], "ABB"
+
+    # Case 3. A -> B, C process.
+    elif len(Counter(vertex).values()) == 3:
+        # Subcase (i). A -> B, BBar process
+        if vertex[0] == -vertex[1]:
+            return [vertex[2], vertex[0], vertex[1]], "ABBar"
+        elif vertex[0] == -vertex[2]:
+            return [vertex[1], vertex[0], vertex[2]], "ABBar"
+        elif vertex[1] == -vertex[2]:
+            return vertex, "ABBar"
+        # Subcase (ii). Just an A -> B, C.
+        else:
+            return vertex, "ABC"
+
+    # Case 4. Error. Shouldn't happen.
+    else:
+        raise GumError(("Only 3 body vertices currently supported by GUM."
+                 "Attempted to use vertex " + vertex))
+
+
+def decay_grouper(decays):
+    """
+    Groups a list of decays into groups for each particle.
+    """
+
+    annihilations = []
+    others = []
+
+    for i in range(0, len(decays)):
+        if decays[i][1] == "ABB" or decays[i][1] == "ABBar":
+            annihilations.append(decays[i][0])
+        elif decays[i][1] == "ABC":
+            others.append(decays[i][0])
+
+    # Produce a list of all particles which need a module function writing.
+    # Those with annihilations
+    decaying_a_to_bb = list(set([i[0] for i in annihilations]))
+    # Those less easy to categorise
+    decaying_a_to_bc = list((set(i for j in others for i in j))
+                            - set(decaying_a_to_bb))
+
+    channels = []
+
+    for j in decaying_a_to_bb:
+        products = []
+        for i in range(0, len(annihilations)):
+            if j in annihilations[i]:
+                products.append([annihilations[i][1], annihilations[i][2]])
+        for i in range(0, len(others)):
+            if j in others[i]:
+                index = others[i].index(j)
+                products.append([others[i][index - 1], others[i][index - 2]])
+        channels.append([j, products])
+
+    for j in decaying_a_to_bc:
+        products = []
+        for i in range(0, len(others)):
+            if j in others[i]:
+                index = others[i].index(j)
+                products.append([others[i][index - 1], others[i][index - 2]])
+        channels.append([j, products])
+
+    # Return list of all channels per particle.
+    return channels
+
+def decay_sorter(three_diagrams):
+    """
+    Returns ordered lists of decays for writing module functions.
+    """
+
+    decays = []
+
+    for i in np.arange(len(three_diagrams)):
+
+      vertex, decaytype = find_decay_type(three_diagrams[i])
+
+      # Ignore self-interactions
+      if decaytype == "AAA":
+        pass
+      else:
+        decays.append([vertex, decaytype])
+                
+    return decay_grouper(decays)
+
+def write_decaytable_entry(grouped_decays, gambit_model_name,
+                           calchep_pdg_codes, gambit_pdg_codes,
+                           decaybit_dict):
+    """
+    Writes a DecayBit DecayTable::Entry module function for a given set of
+    of particle decays.
+    Here, grouped_decays is a list, where:
+      1. The first element is the decaying particle.
+      2. The remaining entries are pairs of decay products.
+      e.g. grouped_decays = [h, [tau+, tau-], [b, bbar], [t, tbar]]
+    """
+
+    # Find the name of the particle as in DecayBit_rollcall.hpp
+    decayparticle = pdg_to_particle(grouped_decays[0], decaybit_dict)
+    chep_name = pdg_to_particle(grouped_decays[0], calchep_pdg_codes)
+    
+    function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
+    spectrum = gambit_model_name + "_spectrum"
+    
+    
+    # definitely a nicer way to do this, but, this will do for now. should make it
+    # a bit easier to add 3 body final states (should be overloaded as a backend func)
+    products = np.array(grouped_decays[1])
+    c_name = []
+    g_name = []
+    for i in np.arange(len(products)):
+      c_name.append(map(lambda x:pdg_to_particle(x, calchep_pdg_codes),products[i]))
+      g_name.append(map(lambda x:pdg_to_particle(x, gambit_pdg_codes), products[i]))
+
+    c_strings = []
+    g_strings = []
+    for i in np.arange(len(c_name)):
+      c_strings.append("{{{}}}".format(', '.join("'{0}'".format(x) for x in c_name[i])))
+      g_strings.append("{{{}}}".format(', '.join("'{0}'".format(y) for y in g_name[i])))
+    
+    towrite = (
+            "void {0}(DecayTable::Entry& result)\n"
+            "{{\n"
+            "using namespace Pipes::{0};\n"
+            "\n"
+            "const Spectrum& spec = *Dep::{1};\n" 
+            "double QCD_coupling = spec.get(Par::dimensionless, 'g3');\n"
+            "\n"
+    ).format(function_name, spectrum)
+
+    if decayparticle == "Higgs":
+      towrite += "result = *Dep::Reference_SM_Higgs_decay_rates;\n\n"
+
+    towrite += (
+            "str model = '{0}';\n" 
+            "str in = '{1}';"
+            " // In state: CalcHEP particle name\n"
+            "std::vector<std::vector<str>> out_calchep = {{{2}}}; "
+            "// Out states: CalcHEP particle names\n"
+            "std::vector<std::vector<str>> out_gambit = {{{3}}}; " 
+            "// Out states: GAMBIT particle names\n\n"
+            "for (unsigned int i=0; i<out_calchep.size(); i++)\n"
+            "{{\n"
+            "\n"
+            "double gamma = BEreq::CH_Decay_Width(model, in, "
+            "out_calchep[i], QCD_coupling); // Partial width\n"
+            "double newwidth = result.width_in_GeV + gamma;  "
+            "// Adjust total width\n"
+            "double wscaling = result.width_in_GeV/newwidth; "
+            "// Scaling for BFs\n"
+            "result.width_in_GeV = newwidth;\n"
+            "\n"
+            "for (auto it = result.channels.begin(); "
+            "it != result.channels.end(); ++it)\n"
+            "{{\n"
+            "it->second.first  *= wscaling; "
+            "// rescale BF \n"
+            "it->second.second *= wscaling; // rescale error on BF \n"
+            "}}\n"
+            "\n"
+            "result.set_BF(gamma/result.width_in_GeV, 0.0, "
+            "out_gambit[i][0], out_gambit[i][1]);\n"
+            "\n"
+            "}}\n"
+            "\n"
+            "check_width(LOCAL_INFO, result.width_in_GeV, "
+            "runOptions->getValueOrDef<bool>(false, "
+            "\"invalid_point_for_negative_width\"))"
+            ";\n"
+            "}}"
+    ).format(gambit_model_name, chep_name, 
+             ", ".join(c_strings), ", ".join(g_strings))
+             
+    filename = "DecayBit"
+    module = "DecayBit"
+             
+
+    return indent(towrite)
