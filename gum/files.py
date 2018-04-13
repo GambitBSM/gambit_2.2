@@ -61,7 +61,7 @@ def find_capability(capability, module, filename=None):
         filename.strip('/')
 
     location = full_filename(filename, module, header=True)
-    if find_file:
+    if find_file(filename, module, header=True):
         pass
     else:
         GumError(("Cannot find capability {0} in rollcall header file {1} "
@@ -107,6 +107,27 @@ def find_function(function, capability, module, filename=None):
                 return True, no
             if terminate in line:
                 return False, 0
+
+    return False, 0
+
+def find_string(filename, module, string, header=False):
+    """
+    Tries to find a generic string in a given file.
+    """
+
+    location = full_filename(filename, module, header)
+
+    if find_file(filename, module, header):
+        pass
+    else:
+        GumError(("Cannot find capability {0} in rollcall header file {1} "
+                  "as the file does not exist!!").format(capability,
+                                                         location))
+
+    with open(location) as f:
+        for num, line in enumerate(f, 1):
+            if string in line:
+                return True, num
 
     return False, 0
 

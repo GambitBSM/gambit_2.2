@@ -106,7 +106,7 @@ def decay_sorter(three_diagrams):
         pass
       else:
         decays.append([vertex, decaytype])
-                
+
     return decay_grouper(decays)
 
 def write_decaytable_entry(grouped_decays, gambit_model_name,
@@ -124,11 +124,11 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     # Find the name of the particle as in DecayBit_rollcall.hpp
     decayparticle = pdg_to_particle(grouped_decays[0], decaybit_dict)
     chep_name = pdg_to_particle(grouped_decays[0], calchep_pdg_codes)
-    
+
     function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
     spectrum = gambit_model_name + "_spectrum"
-    
-    
+
+
     # definitely a nicer way to do this, but, this will do for now. should make it
     # a bit easier to add 3 body final states (should be overloaded as a backend func)
     products = np.array(grouped_decays[1])
@@ -143,13 +143,13 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     for i in np.arange(len(c_name)):
       c_strings.append("{{{}}}".format(', '.join("'{0}'".format(x) for x in c_name[i])))
       g_strings.append("{{{}}}".format(', '.join("'{0}'".format(y) for y in g_name[i])))
-    
+
     towrite = (
             "void {0}(DecayTable::Entry& result)\n"
             "{{\n"
             "using namespace Pipes::{0};\n"
             "\n"
-            "const Spectrum& spec = *Dep::{1};\n" 
+            "const Spectrum& spec = *Dep::{1};\n"
             "double QCD_coupling = spec.get(Par::dimensionless, 'g3');\n"
             "\n"
     ).format(function_name, spectrum)
@@ -158,12 +158,12 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
       towrite += "result = *Dep::Reference_SM_Higgs_decay_rates;\n\n"
 
     towrite += (
-            "str model = '{0}';\n" 
+            "str model = '{0}';\n"
             "str in = '{1}';"
             " // In state: CalcHEP particle name\n"
             "std::vector<std::vector<str>> out_calchep = {{{2}}}; "
             "// Out states: CalcHEP particle names\n"
-            "std::vector<std::vector<str>> out_gambit = {{{3}}}; " 
+            "std::vector<std::vector<str>> out_gambit = {{{3}}}; "
             "// Out states: GAMBIT particle names\n\n"
             "for (unsigned int i=0; i<out_calchep.size(); i++)\n"
             "{{\n"
@@ -194,11 +194,15 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
             "\"invalid_point_for_negative_width\"))"
             ";\n"
             "}}"
-    ).format(gambit_model_name, chep_name, 
+    ).format(gambit_model_name, chep_name,
              ", ".join(c_strings), ", ".join(g_strings))
-             
+
     filename = "DecayBit"
     module = "DecayBit"
-             
+    # Amend DecayBit, find SM_decays and add new decays in there.
+    # Think it would be neater to write these as separate functions,
+    # else DecayBit will just get obscenely long. DecayBit_NewModel.cpp etc.
+    lookup = "void all_decays"
+    num = find_string(filename, module, lookup)[1]
+    amend_file(filename, module, towrite, num-4)
 
-    return indent(towrite)
