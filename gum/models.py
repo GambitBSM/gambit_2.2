@@ -7,54 +7,201 @@ import re
 
 from setup import *
 
-def add_to_model_hierarchy(parent=None, children=None, friend=None):
+def add_to_model_hierarchy(new_spectrum, spectrum_name, model_name, model_params,
+                           parent=None, children=None, friend=None, 
+                           translation_functions_p = None, 
+                           translation_functions_c = None, 
+                           translation_functions_f = None):
     """
     Adds a model to the model hierarchy. This means we create any 
-    new header files in the model directory, 
+    new header files in the model directory, i.e.
+    Models/include/gambit/Models/models/<new_model>.hpp, and edit any
+    parent/children headers. Writes translation functions etc. in
+    Models/src/models/<new_model>.cpp if needed.
     """
+    
+    if parent or children or friend:
+        new_src_file = True
+    else:
+        new_src_file = False
+                
+    if new_spectrum == True:
+        print("Writing new spectrum, {0}".format(spectrum_name))
+        return
       
-    towrite = ""
+    towrite_header = blame_gum("/// Header file for {0}".format(model_name))
+    towrite_header += (
+                   "#ifndef __{0}_hpp__\n"
+                   "#define __{0}_hpp__\n"
+                   "\n"                   
+    ).format(model_name)
+    towrite_source = blame_gum("/// Source file for {0}".format(model_name))
+    
     module = "Models"
     header = True
-    new_spectrum = True
+    
+    if parent:
+        towrite_header += (
+                       "#include \"gambit/Models/models/{0}.hpp\"\n"
+                       "\n"
+        ).format(parent)
+        
+    towrite_header += "#define MODEL {0}\n".format(model_name)
+    
       
     if parent:
         if not find_file("models/" + parent, module, header):
             raise GumError(("Parent model {0} not found. Please check " 
                             "your .gum file.").format(parent))
-      
-        root = find_tree_root(parent)
-        print("Highest ancestor is {0}.").format(root)
-        print("No need to write a new Spectrum.")
-        new_spectrum = False
+    
+        if not translation_functions_p:
+            raise GumError(("Parent function specified, but no translation "
+                            "function. Please check your .gum file."))
+                            
+        parent_params = find_parents_params(parent)
+        
+        towrite_header += (
+                       "#define PARENT {0}\n"
+                       "  START_MODEL\n"
+                       "  INTERPRET_AS_PARENT_FUNCTION({1}_to_{0})\n"
+        ).format(parent, model_name)
+                      
+        print(("No need to write a new Spectrum. The model will try to inherit "
+               "from the parent Spectrum, {0}...").format(spectrum_name))
     else:
         print("No parent model specified. GUM will write a new Spectrum.")
     
+    towrite_header += "  DEFINEPARS({0})\n".format(', '.join(model_params))
+            
+    if parent:
+        towrite_header += "#undef PARENT\n"
+    
+    towrite_header += (
+                   "#undef MODEL\n"
+                   "\n"
+                   "#endif\n"   
+    )
+
+    if new_src_file:
+        towrite_source += (
+                       "#include <string>\n"
+                       "#include <vector>\n"
+                       "\n"
+                       "#include \"gambit/Models/model_macros.hpp\"\n"
+                       "#include \"gambit/Models/model_helpers.hpp\"\n"
+                       "#include \"gambit/Logs/logger.hpp\"\n"
+                       "#include \"gambit/Utils/util_functions.hpp\"\n"
+                       "\n"
+                       "#include \"gambit/Models/models/{0}.hpp\"\n"
+                       "#include \"gambit/Models/models/{1}.hpp\"\n"
+                       "\n"
+                       "using namespace Gambit::Utils;\n"
+                       "\n"
+                       "#define MODEL {0}\n"
+                       "#define PARENT {1}\n"
+                       "void MODEL_NAMESPACE::{0}_to_{1} (const "
+                       "ModelParameters &myP, ModelParameters &targetP)\n"
+                       "{{\n"
+                       "USE_MODEL_PIPE(PARENT)\n"
+                       "logger() << \"Running interpret_as_parent calculations "
+                       "for {0} --> {1}...\" << LogTags::info<<EOM;\n"
+                       "\n"
+                       + translation_functions(model_params, parent_params,
+                                               translation_functions_p) +
+                       "\n"
+                       "}}\n"
+                       "#undef PARENT\n"
+                       "#undef MODEL\n"
+    ).format(model_name, parent)        
+        
+    print towrite_header
+    print
+    print indent(towrite_source)
+    
+    write_file("models/" + model_name, "Models", towrite_header, True)
+    write_file("models/" + model_name, "Models", indent(towrite_source), False)
+
+def find_parents_params(parent):
+    """
+    Returns all params in the parent model.
+    """
+
+    module = "Models"
+    header = True
+    location = full_filename("models/" + parent, module, header)
+    
+    lookup = "#define MODEL " + parent
+    term = "#undef MODEL"
+    
+    num = find_string("models/" + parent, module, lookup, header)[1]
+    
+    parent_params = []
+    
+    with open(location, 'r') as f:
+        for num, line in enumerate(f, 1+num):
+            if "DEFINEPARS" in line:
+                params = re.compile( "\((.*)\)" ).search(line).group(1)
+                parent_params += params.split(",")
+            if term in line:
+                break
+                
+    return parent_params
+            
+ 
+def translation_functions(model_params, parent_params, translations):
+    """
+    Writes translation functions.
+    """
+    
+    
+    towrite = ""
+    for i in xrange(len(model_params)):
+        mp = model_params[i]
+        t = ""
+        if mp in translations:
+            t = translations[mp]
+        else:
+            t = "0"
+        towrite += "targetP.setValue(\"{0}\", {1});\n".format(mp, t)
+    return towrite
+    
+    
+    
+
+def check_spectrum(spectrum_name, parent):
+    """
+    Traces up the model tree to check if there is an ancestor whose spectrum
+    exists.
+    """    
+    
+    # Hardcoded spectra. All other ones just have _spectrum attached to them.
+    spectra = {'MSSM63atQ':'MSSM_spectrum'}
+        
   
 def find_tree_root(parent):
-  """
-  Traces up a model tree to find the 'root' of the model tree, 
-  i.e. which existing Spectrum a new model is allowed to use.
-  """
+    """
+    Traces up a model tree to find the 'root' of the model tree, 
+    i.e. which existing Spectrum a new model is allowed to use.
+    """
 
-  module = "Models"
-  header = True
+    module = "Models"
+    header = True
+    
+    newmodel = parent
+    root = False
+    lookup = "#define PARENT "
+    
+    while root == False:
+        location = full_filename("models/" + newmodel, module, header)
+        if lookup in open(location, 'r').read():
+            lines = open(location, 'r').readlines()
+            for line in lines:
+              if lookup in line:
+                newmodel = line.split(' ')[-1].strip('\n')
+        else:
+            root = True
   
-  newmodel = parent
-  root = False
-  lookup = "#define PARENT "
-  
-  while root == False:
-    location = full_filename("models/" + newmodel, module, header)
-    if lookup in open(location, 'r').read():
-      lines = open(location, 'r').readlines()
-      for line in lines:
-        if lookup in line:
-          newmodel = line.split(' ')[-1].strip('\n')
-    else:
-      root = True
-
-  return newmodel
+    return newmodel
       
 def write_spectrumcontents(gambit_model_name, model_parameters):
   """

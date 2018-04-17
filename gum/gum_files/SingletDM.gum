@@ -10,11 +10,13 @@ calchep_model: ../../.Mathematica/Applications/feynrules-current/Scalar-Singlet-
 # The name for the new model in GAMBIT
 new_model_name: SingletDM_test
 
-# The name of any parent model
-parent: SingletDM
+# The details of any parent model
+parent: 
+  name: SingletDM
+  tf:
 
-# The furthest ancestor in the model family tree. (i.e. the Spectrum used)
-gambit_model_tree: SingletDM
+# The name of the spectrum to use
+use_existing_spectrum: SingletDM_spectrum
 
 # DM candidate in the new model, as in the GAMBIT particle database
 dm_candidate: 

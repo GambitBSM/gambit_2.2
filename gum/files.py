@@ -11,6 +11,11 @@ from setup import *
 mode = 'Test'
 #mode = 'Go'
 
+if mode == 'Test':
+  print("**********************************************************")
+  print("GUM launched in test mode -- will not be writing to files!")
+  print("**********************************************************")
+
 def full_filename(filename, module, header=False):
     """
     Formats a gambit file correctly based on the filename, the

@@ -32,23 +32,40 @@ if args.f:
     calchep_model = inputs['calchep_model']
     gambit_model = inputs['new_model_name']
     is_self_conjugate = ['is_self_conjugate']
-    parent = child = friend = None
+    # Model hierarchy stuff.
+    parent = child = friend = tf_p = tf_c = tf_f = None 
+    new_spectrum = spectrum_name = None
     if 'parent' in inputs:
-        parent = inputs['parent']
+        if not 'name' in inputs['parent']:
+            raise GumError(("No name given for parent function, please check "
+                            "your .gum file."))
+        parent = inputs['parent']['name']
+        if not 'tf' in inputs['parent']:
+            raise GumError(("No translation function given for parent function."
+                            " Please check your .gum file."))
+        tf_p = True
+        
+        # Assume we can use a parent's spectrum, unless explicitly specified
+        new_spectrum = False 
     if 'children' in inputs:
         children = inputs['child']
     if 'friend' in inputs:
         friend = inputs['friend']
     if 'use_existing_spectrum' in inputs:
         new_spectrum = False
-    else:
+        spectrum_name = inputs['use_existing_spectrum']
+        if not spectrum_name.endswith('_spectrum'):
+            raise GumError(("Existing spectrum entry must end with _spectrum. "
+                            "Please check your .gum file."))
+    elif 'use_existing_spectrum' not in inputs:
         new_spectrum = True
+        spectrum_name = "{0}_spectrum".format(gambit_model)
     
     print("Adding new model {0} to GAMBIT...").format(gambit_model) 
-      
-    add_to_model_hierarchy(parent, child, friend)
+    
   
-    # Need to know how GAMBIT names each particle. (In each module, too.)
+    # Need to know how GAMBIT refers to each particle. Scrape information
+    # from particle_database.yaml.
     gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
   
     # Initialise DM as particle class.
@@ -87,7 +104,14 @@ if args.f:
     """
     MODELS
     """
-  
+    
+    # Will have to be extracted, somehow - from FR/SARAH/etc.
+    model_params = ["mS", "lam_hS"]
+    translation_functions_p = {"lam_hS": "lambda_hS*2"}
+          
+    add_to_model_hierarchy(new_spectrum, spectrum_name, gambit_model, model_params,
+                           parent, child, friend, translation_functions_p, tf_c, tf_f)
+    
     ## Just a placeholder for now -- need to scrape these from SARAH/
     ## FeynRules files.
     x=[]
