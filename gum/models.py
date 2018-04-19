@@ -66,8 +66,8 @@ def add_to_model_hierarchy(new_spectrum, spectrum_name, model_name, model_params
                        "  INTERPRET_AS_PARENT_FUNCTION({1}_to_{0})\n"
         ).format(parent, model_name)
                       
-        print(("No need to write a new Spectrum. The model will try to inherit "
-               "from the parent Spectrum, {0}...").format(spectrum_name))
+        print(("No need to write a new Spectrum. The model will piggyback on "
+               " parent Spectrum, {0}...").format(spectrum_name))
     else:
         print("No parent model specified. GUM will write a new Spectrum.")
     
@@ -114,9 +114,9 @@ def add_to_model_hierarchy(new_spectrum, spectrum_name, model_name, model_params
                        "#undef MODEL\n"
     ).format(model_name, parent)        
         
-    print towrite_header
-    print
-    print indent(towrite_source)
+    #print towrite_header
+    #print
+    #print indent(towrite_source)
     
     write_file("models/" + model_name, "Models", towrite_header, True)
     write_file("models/" + model_name, "Models", indent(towrite_source), False)

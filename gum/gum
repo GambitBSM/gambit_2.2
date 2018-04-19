@@ -28,77 +28,62 @@ args = parser.parse_args()
 if args.f:
   
     inputs = check_gum_file(args.f)
+    gum = fill_gum_object(inputs) 
+    
+    ## TEMP
     fr_script = inputs['fr_script']
     calchep_model = inputs['calchep_model']
-    gambit_model = inputs['new_model_name']
-    is_self_conjugate = ['is_self_conjugate']
-    # Model hierarchy stuff.
-    parent = child = friend = tf_p = tf_c = tf_f = None 
-    new_spectrum = spectrum_name = None
-    if 'parent' in inputs:
-        if not 'name' in inputs['parent']:
-            raise GumError(("No name given for parent function, please check "
-                            "your .gum file."))
-        parent = inputs['parent']['name']
-        if not 'tf' in inputs['parent']:
-            raise GumError(("No translation function given for parent function."
-                            " Please check your .gum file."))
-        tf_p = True
-        
-        # Assume we can use a parent's spectrum, unless explicitly specified
-        new_spectrum = False 
-    if 'children' in inputs:
-        children = inputs['child']
-    if 'friend' in inputs:
-        friend = inputs['friend']
-    if 'use_existing_spectrum' in inputs:
-        new_spectrum = False
-        spectrum_name = inputs['use_existing_spectrum']
-        if not spectrum_name.endswith('_spectrum'):
-            raise GumError(("Existing spectrum entry must end with _spectrum. "
-                            "Please check your .gum file."))
-    elif 'use_existing_spectrum' not in inputs:
-        new_spectrum = True
-        spectrum_name = "{0}_spectrum".format(gambit_model)
-    
-    print("Adding new model {0} to GAMBIT...").format(gambit_model) 
+    ## TEMP
+            
+    print("Adding new model {0} to GAMBIT...\n").format(gum.name) 
     
   
     # Need to know how GAMBIT refers to each particle. Scrape information
     # from particle_database.yaml.
     gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
   
+    # Run FeynRules/SARAH -> generate the following:
+    #  - CalcHEP files                                 DecayBit, DarkBit
+    #  - (Basic) Spectrum object                       SpecBit
+    #  - MadGraph (.ufo) files                         ColliderBit
+    
+    # SARAH only:
+    #  - SPheno interface                              PrecisionBit, FlavBit, DecayBit
+    #  - FlexibleSUSY model                            SpecBit, PrecisionBit?
+    #  - VEVacious model files                         SpecBit
+
+    # Unknown:
+    #  - DirectDM interface                            DarkBit
+  
+    # FeynRules
+    feynrules_path = '../../.Mathematica/Applications/feynrules-current/Models/SingletDM/SingletDM.fr'
+  
+    # if gum.math == 'FR':
+    #   load_fr_model(fr_model)
+    #   check_fr_model(fr_model)
+    #   pdgs, params = parse_feynrules_model(fr_model)
+    #   generate_output(options)
+    
+    # elif gum.math == 'SARAH':
+    #   load_sarah_model(sarah_model)
+    #   check_sarah_model(sarah_model)
+    #   pdgs, params = parse_sarah_model(sarah_model)
+    #   generate_output(options)   
+  
     # Initialise DM as particle class.
+    # This will be scraped from the FeynRules/SARAH file.
     dm = Particle(inputs['dm_candidate']['chargeX3'],
                   inputs['dm_candidate']['spinX2'],
                   gambit_pdg_codes[inputs['dm_candidate']['name']],
                   inputs['dm_candidate']['is_self_conjugate'])
-  
-    # Run FeynRules -> generate the following:
-    #  - CalcHEP files                                 DecayBit, DarkBit
-    #  - Spectrum generator (empty for now)            SpecBit
-    #  - MadGraph (.ufo) files                         ColliderBit
-    #  - ???                                           PrecisionBit
-    #  - ???                                           FlavBit
-  
-    # FeynRules
-  
-    feynrules_path = '../../.Mathematica/Applications/feynrules-current/Models/SingletDM/SingletDM.fr'
-  
-    # check_fr_model(fr_model)
-    # fr_pdgs, fr_params = parse_feynrules_model(feynrules_path)
-    # run_FeynRules(fr_script)
-  
+    
+    # Currently done from CHep, to be done from FR/SARAH
+    bsm_particle_list = extract_particles(calchep_model, gum.name) 
+    
     # Run CalcHEP_cleaner
-  
-    bsm_particle_list = extract_particles(calchep_model, gambit_model) # Maybe just do this from the FR/SARAH file.
-    clean_calchep_model_files(calchep_model, gambit_model)
-  
-    # Obtain all model interactions from CalcHEP model files.
-    interactions, calchep_pdg_codes = get_vertices(calchep_model)
+    clean_calchep_model_files(calchep_model, gum.name)
   
     # Need to know how GAMBIT names each particle. (In each module, too.)
-  
     gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
       
     """
@@ -106,37 +91,45 @@ if args.f:
     """
     
     # Will have to be extracted, somehow - from FR/SARAH/etc.
-    model_params = ["mS", "lam_hS"]
+    gambit_model_params = ["mS", "lam_hS"]
+    
+    # Translation functions for model hierarchy. These will have to be
+    # user specified. 
     translation_functions_p = {"lam_hS": "lambda_hS*2"}
+    tf_c = {}
+    tf_f = {}
           
-    add_to_model_hierarchy(new_spectrum, spectrum_name, gambit_model, model_params,
-                           parent, child, friend, translation_functions_p, tf_c, tf_f)
+    add_to_model_hierarchy(gum.new_spectrum, gum.spec, gum.name, 
+                           gambit_model_params, gum.parent, gum.children, 
+                           gum.friends, translation_functions_p, tf_c, tf_f)
     
-    ## Just a placeholder for now -- need to scrape these from SARAH/
-    ## FeynRules files.
-    x=[]
+    ## Just a placeholder for now -- need to scrape these from SARAH/FeynRules files.
+    model_parameters = []
     # Should be from particles
-    x.append(SpectrumParameter("S", "Pole_Mass", gb_input="mS"))
-    x.append(SpectrumParameter("h_01", "Pole_Mass",fullname="higgs", gb_input="mH"))
+    model_parameters.append(SpectrumParameter("S", "Pole_Mass", gb_input="mS"))
+    model_parameters.append(SpectrumParameter("h_01", "Pole_Mass",fullname="higgs", gb_input="mH"))
     # From parameters
-    x.append(SpectrumParameter("vev", "mass1", sm=True))
-    x.append(SpectrumParameter("lambda_hS", "dimensionless",fullname="lambdahs"))
-    x.append(SpectrumParameter("g1", "dimensionless", "scalar", sm=True))
-    x.append(SpectrumParameter("g2", "dimensionless", "scalar", sm=True))
-    x.append(SpectrumParameter("g3", "dimensionless", "scalar", sm=True))
-    x.append(SpectrumParameter("sinW2", "dimensionless", "scalar", sm=True))
-    x.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
-    x.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
-    x.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
+    model_parameters.append(SpectrumParameter("vev", "mass1", sm=True))
+    model_parameters.append(SpectrumParameter("lambda_hS", "dimensionless",fullname="lambdahs"))
+    model_parameters.append(SpectrumParameter("g1", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("g2", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("g3", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("sinW2", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
+    model_parameters.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
+    model_parameters.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
     
-    write_spectrumcontents(gambit_model, x)
-    write_subspectrum_wrapper(gambit_model, x)
+    write_spectrumcontents(gum.name, model_parameters)
+    write_subspectrum_wrapper(gum.name, model_parameters)
     
-    add_to_registered_spectra(gambit_model)
+    add_to_registered_spectra(gum.name)
   
     """
     DECAYS
     """
+    
+    # Obtain all model interactions from CalcHEP model files.
+    interactions, calchep_pdg_codes = get_vertices(calchep_model)
   
     # Obtain all 3-point vertices that are BSM.
     three_pi_bsm = [interaction.particles for interaction in interactions 
@@ -147,7 +140,7 @@ if args.f:
       
     # Pass all interactions by first PDG code needed.
     for i in xrange(len(three_body_decays)):
-        write_decaytable_entry(three_body_decays[i], gambit_model,
+        write_decaytable_entry(three_body_decays[i], gum.name,
                                calchep_pdg_codes, gambit_pdg_codes,
                                decaybit_dict)
   
@@ -166,18 +159,47 @@ if args.f:
     ann_products, propagators = sort_annihilations(dm, three_fields,
                                                    four_fields)
     write_process_catalogue(dm, ann_products, propagators,
-                            gambit_pdg_codes, gambit_model,
+                            gambit_pdg_codes, gum.name,
                             calchep_pdg_codes, bsm_particle_list)
   
     """
     SPECTRA
     """
       
-    write_basic_spectrum(gambit_model, x, simple_SMinputs = True)
+    write_basic_spectrum(gum.name, model_parameters, simple_SMinputs = True)
     
+    print("")
+    print("Everything has gone smoothly so far.")
+    print("Now to write some GAMBIT code...")
+    print("")
+    
+    # write to file, all code HERE 
+    """
+    - MODELS
+      - model hierarchy:
+        - new header file
+        - new source if no parent
+      - subspectrum contents
+        - source file
+        - wrapper
+      - amend registered spectra
+    DECAYS
+      - amend decaybit.cpp
+      - amend decaybit_rollcall.hpp
+    DARKBIT
+      - write process catalogue entry
+      - amend rollcall
+    SPECTRUM
+      - write basic spectrum wrapper
+      - write spectrum header (to do!)
+      - amend rollcall
+    """
+        
     print("")
     print("GUM has finished successfully!")
     print("Please (re)compile GAMBIT.")
+    print("")
 
 else:
-    raise GumError("ERROR: Usage: ./gum -f inputfile.gum")
+    raise GumError(("Hi! You must be new here. Usage: ./gum -f inputfile.gum\n"
+                    "Or try ./gum -h for help."))

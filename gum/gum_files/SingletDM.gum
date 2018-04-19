@@ -7,6 +7,8 @@ fr_script: mathscripts/FeynRules/SingletDM.m
 # This should be the absolute path from $GAMBIT/gum.
 calchep_model: ../../.Mathematica/Applications/feynrules-current/Scalar-Singlet-Dark-Matter-CH
 
+mathpackage: feynrules
+
 # The name for the new model in GAMBIT
 new_model_name: SingletDM_test
 
