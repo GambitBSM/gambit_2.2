@@ -3,7 +3,9 @@ Master module for all DarkBit related routines.
 """
 
 import numpy as np
+
 from setup import *
+from files import *
 
 def sort_annihilations(dm, three_fields, four_fields):
     """
@@ -155,12 +157,13 @@ def sort_annihilations(dm, three_fields, four_fields):
     return np.array(ann_products), propagators
 
 
-def write_process_catalogue(dm, ann_products, propagators,
-                            gambit_pdg_dict, gambit_model_name,
-                            calchep_pdg_dict, model_specific_particles,
-                            exclude_decays = []):
+def write_darkbit_entry(dm, ann_products, propagators,
+                        gambit_pdg_dict, gambit_model_name,
+                        calchep_pdg_dict, model_specific_particles,
+                        exclude_decays = []):
     """
-    Writes process catalogue output for use in DarkBit.
+    Writes source file for DarkBit. This includes the process catalogue and
+    direct detection routines.
     """
 
 
@@ -246,12 +249,12 @@ def write_process_catalogue(dm, ann_products, propagators,
     ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
 
     for i in np.arange(len(model_specific_particles)):
-      if model_specific_particles[i].PDG_code != dm.PDG_code:
-        towrite += (
-                "addParticle('{0}', spec.get(Par::Pole_Mass, '{1}'), {2});\n"
-        ).format(pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
-                 pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
-                 str(model_specific_particles[i].spinX2))
+        if model_specific_particles[i].PDG_code != dm.PDG_code:
+          towrite += (
+                  "addParticle('{0}', spec.get(Par::Pole_Mass, '{1}'), {2});\n"
+          ).format(pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
+                   pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
+                   str(model_specific_particles[i].spinX2))
 
     channels = ', '.join("\'{}, {}'".format(*t) for t in zip(out1g, out2g))
     p1 = ', '.join("\'{}'".format(*t) for t in zip(out1g))
@@ -317,13 +320,13 @@ def write_process_catalogue(dm, ann_products, propagators,
     ).format(gambit_model_name, dm_mass, channels, p1, p2)
 
     for i in np.arange(len(propagators)):
-      if abs(propagators[i]) != abs(dm.PDG_code):
-        towrite += (
-                "if (spec.get(Par::Pole_Mass, '{0}') >= 2*{1}) "
-                "process_ann.resonances_thresholds.resonances.\n    "
-                "push_back(TH_Resonance((spec.get(Par::Pole_Mass, '{0}'), "
-                "tbl.at('{0}').width_in_GeV)));\n"
-        ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
+        if abs(propagators[i]) != abs(dm.PDG_code):
+            towrite += (
+                    "if (spec.get(Par::Pole_Mass, '{0}') >= 2*{1}) "
+                    "process_ann.resonances_thresholds.resonances.\n    "
+                    "push_back(TH_Resonance((spec.get(Par::Pole_Mass, '{0}'), "
+                    "tbl.at('{0}').width_in_GeV)));\n"
+            ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
                  dm_mass)
 
     towrite += (
@@ -333,15 +336,17 @@ def write_process_catalogue(dm, ann_products, propagators,
             "catalog.validate();\n\n"
             "result = catalog;\n"
             "} // function TH_ProcessCatalog\n"
+    )
+    
+    towrite += write_direct_detection(gambit_model_name)
+    
+    towrite += (
             "} //namespace DarkBit\n"
             "} //namespace Gambit\n"
             "\n"
     )
     
-    filename = gambit_model_name
-    module = "DarkBit"
-
-    write_file(filename, module, indent(towrite)) 
+    return indent(towrite)
 
 def add_SM_macros():
 
@@ -411,7 +416,40 @@ def add_SM_macros():
 
     return towrite
 
-def write_direct_detection():
-  """
-  Writes direct detection bits in DarkBit...
-  """
+def write_direct_detection(model_name):
+    """
+    Writes direct detection bits in DarkBit... TODO
+    """
+    
+    towrite = (
+            "/// Direct detection couplings.\n"
+            "void DD_couplings_{0}(DM_nucleon_couplings & result)\n"
+            "{{\n"
+            "using namespace Pipes::DD_couplings_{0};\n"
+            "const Spectrum& spec = *Dep::{0}_spectrum;\n"
+            "\n"
+            "  *** TODO *** \n"
+            "result.gps = ();\n"
+            "result.gns = ();\n"
+            "result.gpa = ();\n"
+            "result.gna = ();\n"
+            "\n"
+            "logger() << LogTags::debug << '{0} DD couplings:' << std::endl;\n"
+            "logger() << ' gps = ' << result.gps << std::endl;\n"
+            "logger() << ' gns = ' << result.gns << std::endl;\n"
+            "logger() << ' gpa = ' << result.gpa << std::endl;\n"
+            "logger() << ' gna = ' << result.gna << EOM;\n"
+            "\n"
+            "}}\n"
+            "\n"
+    ).format(model_name)
+    
+    return towrite
+
+def write_darkbit_rollcall(model_name):
+    """
+    Writes the rollcall header entry for new DarkBit entry.
+    """
+    
+    towrite = ""
+    return towrite

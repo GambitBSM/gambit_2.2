@@ -4,7 +4,6 @@ Master module containing class information, auto-writing codes, etc.
 
 import datetime
 import os
-from files import *
 
 class GumError(Exception):
   pass
@@ -101,13 +100,13 @@ class SpectrumParameter:
         self.shape = shape
         self.sm = sm
         if not fullname:
-          self.fullname = name
+            self.fullname = name
         else:
-          self.fullname = fullname
+            self.fullname = fullname
         if not gb_input:
-          self.gb_in = name
+            self.gb_in = name
         else:
-          self.gb_in = gb_input
+            self.gb_in = gb_input
           
 class BackendReq:
     """
@@ -117,17 +116,17 @@ class BackendReq:
     
     def __init__(self, capability, cpptype, tags=[], variable=True, 
                  args=[]):
-      self.capability = capability
-      self.cpptype = cpptype
-      self.args = args
-      self.tags = tags
-      
-      if variable:
-        self.var = True
-        self.args = None
-      elif not variable:
-        self.var = False
+        self.capability = capability
+        self.cpptype = cpptype
         self.args = args
+        self.tags = tags
+        
+        if variable:
+            self.var = True
+            self.args = None
+        elif not variable:
+            self.var = False
+            self.args = args
         
 
 class Dependency:
@@ -136,83 +135,6 @@ class Dependency:
     """
     
     def __init__(self, name, cpptype):
-      self.name = name
-      self.cpptype = cpptype
+        self.name = name
+        self.cpptype = cpptype
       
-
-def blame_gum(message):
-    """
-    Writes function to dump at the beginning of a new GAMBIT file.
-    Blames GUM. Takes a message to describe the new file.
-    """
-
-    towrite = (
-            "//   GAMBIT: Global and Modular BSM Inference Tool\n"
-            "//   *********************************************\n"
-            "///  \\file\n"
-            "///\n"
-            + message +
-            "\n"
-            "///\n"
-            "///  Authors (add name and date if you modify):    \n"
-            "///       *** Automatically created by GUM ***     \n"
-            "///                                                \n"
-            "///  \\author The GAMBIT Collaboration             \n"
-            "///  \date " +
-            datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") +
-            "\n"
-            "///                                                \n"
-            "///  ********************************************* \n"
-            "\n"
-    )
-
-    return towrite
-
-def dumb_indent(numspaces, text):
-   """
-   Indents input text by specified number of spaces.
-   """
-
-   lines = text.splitlines(True)
-   out = ""
-   for line in lines:
-     for i in range(0, numspaces):
-       out += " "
-     out += line
-
-   return out
-
-def indent(text, numspaces=0):
-   """
-   Increases indents of text every time it detects an open
-   curly brace {, and decreases every time it detects a closed
-   curly brace }. Does nothing if there is a {}.
-   """
-
-   lines = text.splitlines(True)
-   out = ""
-
-   for line in lines:
-
-
-     if numspaces < 0:
-       raise GumError(("Tried to indent a negative number of spaces."
-                       "Please check for rogue braces."))
-
-     num_open = line.count("{")
-     num_closed = line.count("}")
-     if num_open != num_closed:
-       numspaces -= (num_closed*2)
-     for i in range(0, numspaces):
-        out += " "
-     if num_open != num_closed:
-       numspaces += (num_open*2)
-     out += line
-
-   return out
-   
-def reformat(location):
-  """
-  Reformat all text in a file (indents, etc.)
-  """
-  

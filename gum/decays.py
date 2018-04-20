@@ -5,7 +5,9 @@ Master module for all DecayBit related routines.
 import numpy as np
 import re
 from collections import Counter
+
 from setup import *
+from files import *
 
 def find_decay_type(vertex):
     """
@@ -103,9 +105,9 @@ def decay_sorter(three_diagrams):
 
       # Ignore self-interactions
       if decaytype == "AAA":
-        pass
+          pass
       else:
-        decays.append([vertex, decaytype])
+          decays.append([vertex, decaytype])
 
     return decay_grouper(decays)
 
@@ -135,14 +137,14 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     c_name = []
     g_name = []
     for i in np.arange(len(products)):
-      c_name.append(map(lambda x:pdg_to_particle(x, calchep_pdg_codes),products[i]))
-      g_name.append(map(lambda x:pdg_to_particle(x, gambit_pdg_codes), products[i]))
+        c_name.append(map(lambda x:pdg_to_particle(x, calchep_pdg_codes),products[i]))
+        g_name.append(map(lambda x:pdg_to_particle(x, gambit_pdg_codes), products[i]))
 
     c_strings = []
     g_strings = []
     for i in np.arange(len(c_name)):
-      c_strings.append("{{{}}}".format(', '.join("'{0}'".format(x) for x in c_name[i])))
-      g_strings.append("{{{}}}".format(', '.join("'{0}'".format(y) for y in g_name[i])))
+        c_strings.append("{{{}}}".format(', '.join("'{0}'".format(x) for x in c_name[i])))
+        g_strings.append("{{{}}}".format(', '.join("'{0}'".format(y) for y in g_name[i])))
 
     towrite = (
             "void {0}(DecayTable::Entry& result)\n"
@@ -155,7 +157,7 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     ).format(function_name, spectrum)
 
     if decayparticle == "Higgs":
-      towrite += "result = *Dep::Reference_SM_Higgs_decay_rates;\n\n"
+        towrite += "result = *Dep::Reference_SM_Higgs_decay_rates;\n\n"
 
     towrite += (
             "str model = '{0}';\n"
@@ -194,15 +196,8 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
             "\"invalid_point_for_negative_width\"))"
             ";\n"
             "}}"
-    ).format(gambit_model_name, chep_name,
-             ", ".join(c_strings), ", ".join(g_strings))
-
-    filename = "DecayBit"
-    module = "DecayBit"
-    # Amend DecayBit, find SM_decays and add new decays in there.
-    # Think it would be neater to write these as separate functions,
-    # else DecayBit will just get obscenely long. DecayBit_NewModel.cpp etc.
-    lookup = "void all_decays"
-    num = find_string(filename, module, lookup)[1]
-    amend_file(filename, module, towrite, num-4)
+    ).format(gambit_model_name, chep_name, ", ".join(c_strings), 
+             ", ".join(g_strings))
+    
+    return indent(towrite)
 

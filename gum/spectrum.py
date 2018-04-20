@@ -3,8 +3,9 @@ Master module for all SpecBit related routines.
 """
 
 from setup import *
+from files import *
 
-def write_basic_spectrum(gambit_model_name, model_parameters,
+def write_basic_spectrum(gambit_model_name, model_parameters, spec,
                          simple_SMinputs=False, FS=False):
     """
     Writes basic spectrum object wrapper for new model:
@@ -14,7 +15,6 @@ def write_basic_spectrum(gambit_model_name, model_parameters,
     modelSS = gambit_model_name + "SimpleSpec"
     modelclass = gambit_model_name + "Model"
     modelcont = gambit_model_name + "model"
-    spec = gambit_model_name + "_spectrum"
     
     intro_message = (
             "///  Implementation of SpecBit routines for \n"
@@ -66,21 +66,21 @@ def write_basic_spectrum(gambit_model_name, model_parameters,
     # Now add each BSM model parameter to spectrum
     for i in range(0, len(model_parameters)):
     
-      par = model_parameters[i] 
-    
-      if not isinstance(par, SpectrumParameter):
-         raise GumError(("Model Parameters at position " + i + 
-                         "not passed as instance of class "
-                         "SpectrumParameter."))
-        
-      if not par.sm:
-        toadd = ""
-        if par.tag == "Pole_Mass":
-          toadd = "_Pole_Mass"
-        towrite += "{0}.{1}_{2}{3} = *myPipe::Param.at(\"{4}\");\n".format(modelcont, gambit_model_name, par.fullname, toadd, par.gb_in)
+        par = model_parameters[i] 
+      
+        if not isinstance(par, SpectrumParameter):
+            raise GumError(("Model Parameters at position " + i + 
+                            "not passed as instance of class "
+                            "SpectrumParameter."))
+          
+        if not par.sm:
+            toadd = ""
+            if par.tag == "Pole_Mass":
+                toadd = "_Pole_Mass"
+            towrite += "{0}.{1}_{2}{3} = *myPipe::Param.at(\"{4}\");\n".format(modelcont, gambit_model_name, par.fullname, toadd, par.gb_in)
                         
     if simple_SMinputs:
-      towrite += add_simple_sminputs(modelcont)
+        towrite += add_simple_sminputs(modelcont)
       
     towrite += (
             "\n"
@@ -174,47 +174,51 @@ def write_basic_spectrum(gambit_model_name, model_parameters,
     module = "SpecBit"
     contents = indent(towrite)
     
-    write_file(filename, module, contents)
+    return contents
+    
     
 def write_spectrum_header():
-  """
-  Writes the header for spectrum object,
-  SpecBit/include/gambit/SpecBit/SpecBit_<model>_rollcall.hpp
-  """
+    """
+    Writes the header for spectrum object,
+    SpecBit/include/gambit/SpecBit/SpecBit_<model>_rollcall.hpp
+    """
+    
+    towrite = ""
+    return towrite
     
 def add_simple_sminputs(model):
-  """
-  Adds simple SMInputs definitions to a spectrum object.
-  """
-    
-  towrite = (
-          "\n"
-          "// quantities needed to fill container spectrum\n"
-          "double alpha_em = 1.0 / sminputs.alphainv;\n"
-          "double C = alpha_em * Pi / (sminputs.GF * pow(2,0.5));\n"
-          "double sinW2 = 0.5 - pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
-          "double cosW2 = 0.5 + pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
-          "double e = pow( 4*Pi*( alpha_em ),0.5);\n"
-          "double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
-          "\n"
-          "// Gauge couplings\n"
-          "{0}.HiggsVEV = vev;\n"    
-          "{0}.g1 = e / sqrt(sinW2);\n"    
-          "{0}.g2 = e / sqrt(cosW2);\n"    
-          "{0}.g3 = pow( 4*Pi*( sminputs.alphaS ),0.5);\n"    
-          "\n"
-          "// Yukawas\n"
-          "double sqrt2v = pow(2.0,0.5)/vev;\n"
-          "{0}.Yu[0] = sqrt2v * sminputs.mU;\n"
-          "{0}.Yu[1] = sqrt2v * sminputs.mCmC;\n"
-          "{0}.Yu[2] = sqrt2v * sminputs.mT;\n"
-          "{0}.Ye[0] = sqrt2v * sminputs.mE;\n"
-          "{0}.Ye[1] = sqrt2v * sminputs.mMu;\n"
-          "{0}.Ye[2] = sqrt2v * sminputs.mTau;\n"
-          "{0}.Yd[0] = sqrt2v * sminputs.mD;\n"
-          "{0}.Yd[1] = sqrt2v * sminputs.mS;\n"
-          "{0}.Yd[2] = sqrt2v * sminputs.mBmB;\n"
-  ).format(model)
-    
-  return towrite
+    """
+    Adds simple SMInputs definitions to a spectrum object.
+    """
+      
+    towrite = (
+            "\n"
+            "// quantities needed to fill container spectrum\n"
+            "double alpha_em = 1.0 / sminputs.alphainv;\n"
+            "double C = alpha_em * Pi / (sminputs.GF * pow(2,0.5));\n"
+            "double sinW2 = 0.5 - pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
+            "double cosW2 = 0.5 + pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
+            "double e = pow( 4*Pi*( alpha_em ),0.5);\n"
+            "double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
+            "\n"
+            "// Gauge couplings\n"
+            "{0}.HiggsVEV = vev;\n"    
+            "{0}.g1 = e / sqrt(sinW2);\n"    
+            "{0}.g2 = e / sqrt(cosW2);\n"    
+            "{0}.g3 = pow( 4*Pi*( sminputs.alphaS ),0.5);\n"    
+            "\n"
+            "// Yukawas\n"
+            "double sqrt2v = pow(2.0,0.5)/vev;\n"
+            "{0}.Yu[0] = sqrt2v * sminputs.mU;\n"
+            "{0}.Yu[1] = sqrt2v * sminputs.mCmC;\n"
+            "{0}.Yu[2] = sqrt2v * sminputs.mT;\n"
+            "{0}.Ye[0] = sqrt2v * sminputs.mE;\n"
+            "{0}.Ye[1] = sqrt2v * sminputs.mMu;\n"
+            "{0}.Ye[2] = sqrt2v * sminputs.mTau;\n"
+            "{0}.Yd[0] = sqrt2v * sminputs.mD;\n"
+            "{0}.Yd[1] = sqrt2v * sminputs.mS;\n"
+            "{0}.Yd[2] = sqrt2v * sminputs.mBmB;\n"
+    ).format(model)
+      
+    return towrite
     

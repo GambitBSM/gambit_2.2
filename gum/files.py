@@ -6,6 +6,7 @@ amending, and reading files.
 import os
 import re
 import numpy as np
+
 from setup import *
 
 mode = 'Test'
@@ -53,7 +54,7 @@ def find_file(filename, module, header=False):
 
 def find_capability(capability, module, filename=None):
     """
-    Tries to find a capability in a specified rollcall file.
+    Tries to find a CAPABILITY in a specified rollcall file.
     """
 
     module.strip('/')
@@ -69,9 +70,9 @@ def find_capability(capability, module, filename=None):
     if find_file(filename, module, header=True):
         pass
     else:
-        GumError(("Cannot find capability {0} in rollcall header file {1} "
-                  "as the file does not exist!!").format(capability,
-                                                         location))
+        raise GumError(("Cannot find capability {0} in rollcall header file "
+                        "{1} as the file does not exist!!").format(capability,
+                                                                   location))
 
     lookup = "#define CAPABILITY " + capability
 
@@ -84,7 +85,7 @@ def find_capability(capability, module, filename=None):
 
 def find_function(function, capability, module, filename=None):
     """
-    Tries to find a function in a specified rollcall header file.
+    Tries to find a FUNCTION in a specified rollcall header file.
     """
 
     module.strip('/')
@@ -125,9 +126,9 @@ def find_string(filename, module, string, header=False):
     if find_file(filename, module, header):
         pass
     else:
-        GumError(("Cannot find capability {0} in rollcall header file {1} "
-                  "as the file does not exist!!").format(capability,
-                                                         location))
+        raise GumError(("Cannot find capability {0} in rollcall header file {1} "
+                        "as the file does not exist!!").format(capability,
+                                                               location))
 
     with open(location) as f:
         for num, line in enumerate(f, 1):
@@ -140,11 +141,11 @@ def write_file(filename, module, contents, header=False):
     """
     Writes a file in a specified location.
     """
-
+    
     location = full_filename(filename, module, header)
 
     if find_file(filename, module, header) == True:
-        raise GumError(("ERROR: Tried to write file " + location +
+        raise GumError(("Tried to write file " + location +
                         ", but it already exists."))
 
     if mode != 'Test':
@@ -252,3 +253,79 @@ def write_function(function, returntype, dependencies=None,
 
     return dumb_indent(4, towrite)
 
+def blame_gum(message):
+    """
+    Writes function to dump at the beginning of a new GAMBIT file.
+    Blames GUM. Takes a message to describe the new file.
+    """
+
+    towrite = (
+            "//   GAMBIT: Global and Modular BSM Inference Tool\n"
+            "//   *********************************************\n"
+            "///  \\file\n"
+            "///\n"
+            + message +
+            "\n"
+            "///\n"
+            "///  Authors (add name and date if you modify):    \n"
+            "///       *** Automatically created by GUM ***     \n"
+            "///                                                \n"
+            "///  \\author The GAMBIT Collaboration             \n"
+            "///  \date " +
+            datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") +
+            "\n"
+            "///                                                \n"
+            "///  ********************************************* \n"
+            "\n"
+    )
+
+    return towrite
+
+def dumb_indent(numspaces, text):
+    """
+    Indents input text by specified number of spaces.
+    """
+
+    lines = text.splitlines(True)
+    out = ""
+    for line in lines:
+       for i in range(0, numspaces):
+           out += " "
+       out += line
+
+    return out
+
+def indent(text, numspaces=0):
+    """
+    Increases indents of text every time it detects an open
+    curly brace {, and decreases every time it detects a closed
+    curly brace }. Does nothing if there is a {}.
+    """
+
+    lines = text.splitlines(True)
+    out = ""
+
+    for line in lines:
+
+
+        if numspaces < 0:
+            raise GumError(("Tried to indent a negative number of spaces."
+                            "Please check for rogue braces."))
+
+        num_open = line.count("{")
+        num_closed = line.count("}")
+        if num_open != num_closed:
+            numspaces -= (num_closed*2)
+        for i in range(0, numspaces):
+            out += " "
+        if num_open != num_closed:
+            numspaces += (num_open*2)
+        out += line
+
+    return out
+   
+def reformat(location):
+    """
+    Reformat all text in a file (indents, etc.)
+    """
+  

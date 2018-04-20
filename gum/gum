@@ -99,9 +99,15 @@ if args.f:
     tf_c = {}
     tf_f = {}
           
-    add_to_model_hierarchy(gum.new_spectrum, gum.spec, gum.name, 
-                           gambit_model_params, gum.parent, gum.children, 
-                           gum.friends, translation_functions_p, tf_c, tf_f)
+    ## TODO
+    model_header, model_source = add_to_model_hierarchy(gum.new_spectrum, 
+                                                        gum.spec, gum.name, 
+                                                        gambit_model_params, 
+                                                        gum.parent, 
+                                                        gum.children, 
+                                                        gum.friends, 
+                                                        translation_functions_p,
+                                                        tf_c, tf_f)
     
     ## Just a placeholder for now -- need to scrape these from SARAH/FeynRules files.
     model_parameters = []
@@ -119,10 +125,9 @@ if args.f:
     model_parameters.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
     model_parameters.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
     
-    write_spectrumcontents(gum.name, model_parameters)
-    write_subspectrum_wrapper(gum.name, model_parameters)
-    
-    add_to_registered_spectra(gum.name)
+    spec_contents = write_spectrumcontents(gum.name, model_parameters)
+    subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
+    reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
   
     """
     DECAYS
@@ -138,11 +143,15 @@ if args.f:
   
     three_body_decays = decay_sorter(three_pi_bsm)
       
+    decaybit_src = ""
+    
     # Pass all interactions by first PDG code needed.
     for i in xrange(len(three_body_decays)):
-        write_decaytable_entry(three_body_decays[i], gum.name,
-                               calchep_pdg_codes, gambit_pdg_codes,
-                               decaybit_dict)
+        decaybit_src += write_decaytable_entry(three_body_decays[i], gum.name,
+                                               calchep_pdg_codes, 
+                                               gambit_pdg_codes,
+                                               decaybit_dict)
+  
   
     """
     CROSS SECTIONS
@@ -158,15 +167,22 @@ if args.f:
   
     ann_products, propagators = sort_annihilations(dm, three_fields,
                                                    four_fields)
-    write_process_catalogue(dm, ann_products, propagators,
-                            gambit_pdg_codes, gum.name,
-                            calchep_pdg_codes, bsm_particle_list)
+                                                   
+    # TODO - pass over required information for direct detection
+    darkbit_src = write_darkbit_entry(dm, ann_products, propagators, 
+                                      gambit_pdg_codes, gum.name, 
+                                      calchep_pdg_codes, bsm_particle_list)
+                                      
+    darkbit_rollcall = write_darkbit_rollcall(gum.name)
   
     """
     SPECTRA
     """
       
-    write_basic_spectrum(gum.name, model_parameters, simple_SMinputs = True)
+    spectrum_src = write_basic_spectrum(gum.name, model_parameters, gum.spec, 
+                                        simple_SMinputs = True)
+    ## TODO
+    spectrum_header = write_spectrum_header()
     
     print("")
     print("Everything has gone smoothly so far.")
@@ -174,26 +190,31 @@ if args.f:
     print("")
     
     # write to file, all code HERE 
-    """
-    - MODELS
-      - model hierarchy:
-        - new header file
-        - new source if no parent
-      - subspectrum contents
-        - source file
-        - wrapper
-      - amend registered spectra
-    DECAYS
-      - amend decaybit.cpp
-      - amend decaybit_rollcall.hpp
-    DARKBIT
-      - write process catalogue entry
-      - amend rollcall
-    SPECTRUM
-      - write basic spectrum wrapper
-      - write spectrum header (to do!)
-      - amend rollcall
-    """
+   
+    # Models
+    m = "Models"
+    write_file("models/" + gum.name, m, model_header, True)  
+    write_file("models/" + gum.name, m, model_source, False) # If no parent!
+    write_file("SpectrumContents/" + gum.name, m, spec_contents, False)
+    write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m, subspec_wrapper, True)
+    
+    # SpecBit
+    m = "SpecBit"
+    write_file("SpecBit_" + gum.name, m, spectrum_src, False)
+    write_file("SpecBit_" + gum.name, m, spectrum_header, True)
+    
+    # DecayBit
+    m = "DecayBit"
+    num = find_string("DecayBit", m, "void all_decays")[1]
+    amend_file("DecayBit", m, decaybit_src, num-4, False)
+    
+    # DarkBit
+    m = "DarkBit"
+    write_file(gum.name, m, darkbit_src, False)
+    
+    # ColliderBit
+    m = "ColliderBit"
+    
         
     print("")
     print("GUM has finished successfully!")
