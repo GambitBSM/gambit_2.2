@@ -11,7 +11,7 @@
 - proper setup.py for installation (setuptools)
 - PEP8
 - how to incorporate several DM candidates? say, if a model has a scalar and a fermion. 
-- migrate write routines to the end of GUM, not for each callable. (i.e., return stuff.)
+- merge calchep backend stuff to GUM_development
 
 model hierarchy:
  

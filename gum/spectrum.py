@@ -177,14 +177,56 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
     return contents
     
     
-def write_spectrum_header():
+def write_spectrum_header(model_name):
     """
     Writes the header for spectrum object,
     SpecBit/include/gambit/SpecBit/SpecBit_<model>_rollcall.hpp
     """
     
-    towrite = ""
+    towrite = blame_gum(("///  Rollcall declarations for routines declared \n"
+                         "///  in SpecBit_{0}.cpp.".format(model_name)))
+    
+    towrite += (
+            "#idndef __SpecBit_{0}_hpp\n"
+            "#define __SpecBit_{0}_hpp\n"
+            "\n"
+            "  // Spectrum object\n"
+            "  #define CAPABILITY {0}_spectrum\n"
+            "  START_CAPABILITY\n"
+            "\n"
+            "    // Create simple object from SMInputs & new params.\n"
+            "    #define FUNCTION get_{0}_spectrum\n"
+            "    START_FUNCTION(Spectrum)\n"
+            "    DEPENDENCY(SMINPUTS, SMInputs)\n"
+            "    ALLOW_MODELS({0})\n"
+            "    #undef FUNCTION\n"
+            "\n"
+            "    // Map for Spectrum, for printing.\n"
+            "    #define FUNCTION get_{0}_spectrum_as_map\n"
+            "    START_FUNCTION(map_str_dbl)\n"
+            "    DEPENDENCY({0}_spectrum, Spectrum)\n"
+            "    #undef FUNCTION\n"
+            "\n"
+            "  #undef CAPABILITY\n"
+            "\n"
+            "#endif\n"
+    ).format(model_name)
+    
     return towrite
+    
+def write_specbit_rollcall(model_name):
+    """
+    Writes the entry for the SpecBit rollcall header.
+    """
+    
+    towrite = (
+            "\n"
+            "/// Module function declarations for SpecBit_{0}.cpp\n"
+            "#include \"gambit/SpecBit/SpecBit_{0}_rollcall.hpp\"\n"
+            "\n"
+    ).format(model_name)
+    
+    return dumb_indent(2, towrite)
     
 def add_simple_sminputs(model):
     """

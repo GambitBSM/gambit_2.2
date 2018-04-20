@@ -173,7 +173,7 @@ if args.f:
                                       gambit_pdg_codes, gum.name, 
                                       calchep_pdg_codes, bsm_particle_list)
                                       
-    darkbit_rollcall = write_darkbit_rollcall(gum.name)
+    pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name)
   
     """
     SPECTRA
@@ -182,8 +182,9 @@ if args.f:
     spectrum_src = write_basic_spectrum(gum.name, model_parameters, gum.spec, 
                                         simple_SMinputs = True)
     ## TODO
-    spectrum_header = write_spectrum_header()
-    
+    spectrum_header = write_spectrum_header(gum.name)
+    spec_rollcall = write_specbit_rollcall(gum.name)
+        
     print("")
     print("Everything has gone smoothly so far.")
     print("Now to write some GAMBIT code...")
@@ -202,15 +203,23 @@ if args.f:
     m = "SpecBit"
     write_file("SpecBit_" + gum.name, m, spectrum_src, False)
     write_file("SpecBit_" + gum.name, m, spectrum_header, True)
+    write_file("SpecBit_" + gum.name + "_rollcall", m, spectrum_header, True)
+    num = find_string("SpecBit_rollcall", m, "SpecBit_tests_rollcall.hpp", True)[1]
+    amend_file("SpecBit_rollcall", m, spec_rollcall, num, True)
+    
     
     # DecayBit
     m = "DecayBit"
     num = find_string("DecayBit", m, "void all_decays")[1]
     amend_file("DecayBit", m, decaybit_src, num-4, False)
+    # + rollcall
     
     # DarkBit
     m = "DarkBit"
     write_file(gum.name, m, darkbit_src, False)
+    amend_rollcall("TH_ProcessCatalog", m, pc_cap)
+    amend_rollcall("DD_couplings", m, dd_cap)
+    amend_rollcall("DarkMatter_ID", m, dmid_cap)
     
     # ColliderBit
     m = "ColliderBit"

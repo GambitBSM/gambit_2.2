@@ -448,8 +448,35 @@ def write_direct_detection(model_name):
 
 def write_darkbit_rollcall(model_name):
     """
-    Writes the rollcall header entry for new DarkBit entry.
+    Writes the rollcall header entries for new DarkBit entry.
     """
     
-    towrite = ""
-    return towrite
+    pro_cat = dumb_indent(4, (
+            "#define FUNCTION TH_ProcessCatalog_{0}\n"
+            "  START_FUNCTION(DarkBit::TH_ProcessCatalog)\n"
+            "  DEPENDENCY(decay_rates, DecayTable)\n"
+            "  DEPENDENCY({0}_spectrum, Spectrum)\n"
+            "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, "
+            "std::vector<str>&, double&, double&, const DecayTable&))\n"
+            "  ALLOW_MODELS({0})\n"
+            "#undef FUNCTION\n"
+    ).format(model_name))
+        
+    dir_det = dumb_indent(4, (
+            "#define FUNCTION DD_couplings_{0}\n"
+            "START_FUNCTION(DM_nucleon_couplings)\n"
+            "DEPENDENCY({0}_spectrum, Spectrum)\n"
+            "*** TODO *** \n"
+            "#undef FUNCTION\n"
+    ).format(model_name))
+    
+    dm_id = dumb_indent(4, (
+            "#define FUNCTION DarkMatter_ID_{0}\n"
+            "START_FUNCTION(std::string)\n"
+            "ALLOW_MODELS({0})\n"
+            "#undef FUNCTION\n"
+    ).format(model_name))
+    
+    return pro_cat, dir_det, dm_id
+    
+    

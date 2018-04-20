@@ -82,6 +82,53 @@ def find_capability(capability, module, filename=None):
                 return True, num
 
     return False, 0
+    
+def amend_rollcall(capability, module, contents, filename=None):
+    """
+    Adds a new FUNCTION to an existing CAPABILITY in a rollcall header.
+    """
+
+    module.strip('/')
+    if not module.endswith('Bit') and module != "Models":
+        module += 'Bit'
+
+    if not filename:
+        filename = "{0}_rollcall".format(module)
+    else:
+        filename.strip('/')
+
+    location = full_filename(filename, module, header=True)
+    if find_file(filename, module, header=True):
+        pass
+    else:
+        raise GumError(("Cannot find capability {0} in rollcall header file "
+                        "{1} as the file does not exist!!").format(capability,
+                                                                   location))
+
+    lookup = "#define CAPABILITY " + capability
+    
+    found = False
+
+    with open(location) as f:
+        for num, line in enumerate(f, 1):
+            if lookup in line:
+                found = True
+                break
+    
+    lookup = "#undef CAPABILITY"
+    
+    # Found the capability -> find the #undef
+    if found == True:
+        with open(location) as f:
+            for i in xrange(num):
+                f.next()
+            for no, line in enumerate(f, 1+num):
+                if lookup in line:
+                    break
+            amend_file(filename, module, contents, no, header=True)        
+    else:
+        raise GumError(("Capability {0} not found in {1}!").format(capability,
+                                                                   filename))
 
 def find_function(function, capability, module, filename=None):
     """
