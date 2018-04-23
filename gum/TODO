@@ -7,7 +7,7 @@
 - spectrum_as_map and fill_as_map as standalone function in SpecBit??
 - backend DirectDM (or similar) -> use for Direct Detection etc.
 - "includes" function?
-- PATH_TO_GAMBIT option
+- PATH_TO_GAMBIT option ---> able to scrape this from ../cmake/include/gambit/cmake/cmake_variables.hpp
 - proper setup.py for installation (setuptools)
 - PEP8
 - how to incorporate several DM candidates? say, if a model has a scalar and a fermion. 

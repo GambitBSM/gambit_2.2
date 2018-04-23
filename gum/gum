@@ -9,6 +9,7 @@ import numpy as np
 
 from setup import *
 from parse import *
+from mathematica_interface import *
 from files import *
 from models import *
 from feynrules import *
@@ -34,6 +35,16 @@ if args.f:
     fr_script = inputs['fr_script']
     calchep_model = inputs['calchep_model']
     ## TEMP
+    
+    # Try to find mathematica
+    if find_mathematica():
+        pass
+    else:
+        raise GumError(("\nGAMBIT has not been able to find Mathematica. Please"
+                        " ensure you have libuuid, and a license for "
+                        "Mathematica.\n"
+                        "GUM cannot do much if it cannot interface to "
+                        "Mathematica."))
             
     print("Adding new model {0} to GAMBIT...\n").format(gum.name) 
     
@@ -142,7 +153,7 @@ if args.f:
                     and interaction.is_sm() == False]
   
     three_body_decays = decay_sorter(three_pi_bsm)
-      
+        
     decaybit_src = ""
     
     # Pass all interactions by first PDG code needed.
@@ -151,8 +162,15 @@ if args.f:
                                                calchep_pdg_codes, 
                                                gambit_pdg_codes,
                                                decaybit_dict)
-  
-  
+                                               
+    decay_roll, new_decays = write_decaybit_rollcall_entry(gum.name, gum.spec, 
+                                                           three_body_decays, 
+                                                           decaybit_dict,
+                                                           gambit_pdg_codes)
+                                                                 
+    all_decays_src, all_decays_header = amend_all_decays(gum.name, gum.spec, 
+                                                         new_decays)  
+    
     """
     CROSS SECTIONS
     """
@@ -204,15 +222,27 @@ if args.f:
     write_file("SpecBit_" + gum.name, m, spectrum_src, False)
     write_file("SpecBit_" + gum.name, m, spectrum_header, True)
     write_file("SpecBit_" + gum.name + "_rollcall", m, spectrum_header, True)
-    num = find_string("SpecBit_rollcall", m, "SpecBit_tests_rollcall.hpp", True)[1]
+    num = find_string("SpecBit_rollcall", m, "SpecBit_tests_rollcall.hpp", 
+                      True)[1]
     amend_file("SpecBit_rollcall", m, spec_rollcall, num, True)
-    
-    
+        
     # DecayBit
     m = "DecayBit"
     num = find_string("DecayBit", m, "void all_decays")[1]
     amend_file("DecayBit", m, decaybit_src, num-4, False)
-    # + rollcall
+    for i in xrange(len(decay_roll)):
+        if find_capability(decay_roll[i][0], m)[0]:
+            amend_rollcall(decay_roll[i][0], m, decay_roll[i][1])
+        else:
+            num = find_string("DecayBit_rollcall", m, 
+                              "#define CAPABILITY decay_rates", True)[1]
+            amend_file("DecayBit_rollcall", m, decay_roll[i][1], num-4, True)
+    if len(new_decays) > 0:
+        num = find_string("DecayBit_rollcall", m, 
+                          "DEPENDENCY(omega_decay_rates", True)[1]
+        amend_file("DecayBit_rollcall", m, all_decays_header, num, True)
+        num = find_string("DecayBit", m, "decays(\"omega\")", False)[1]
+        amend_file("DecayBit", m, all_decays_src, num, False)
     
     # DarkBit
     m = "DarkBit"

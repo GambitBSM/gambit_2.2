@@ -174,7 +174,7 @@ def find_string(filename, module, string, header=False):
         pass
     else:
         raise GumError(("Cannot find capability {0} in rollcall header file {1} "
-                        "as the file does not exist!!").format(capability,
+                        "as the file does not exist!!").format(string,
                                                                location))
 
     with open(location) as f:

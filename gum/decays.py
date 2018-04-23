@@ -196,8 +196,114 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
             "\"invalid_point_for_negative_width\"))"
             ";\n"
             "}}"
+            "\n"
+            "\n"
     ).format(gambit_model_name, chep_name, ", ".join(c_strings), 
              ", ".join(g_strings))
     
     return indent(towrite)
 
+def write_decaybit_rollcall_entry(model_name, spectrum, newdecays, 
+                                  decaybit_dict, gambit_dict):
+    """
+    Returns amendments for the  new rollcall entries for DecayBit as a 
+    numpy array. The format of the array is:
+    
+    [ [ capability_name_1, towrite_1 ],
+      [ capability_name_2, towrite_2 ], ... ]
+
+    """
+    
+    rollcall_entries = []
+    new_decays = []
+     
+    for i in xrange(len(newdecays)):
+        decayparticle = newdecays[i][0]
+        cap = "{0}_decay_rates".format(pdg_to_particle(decayparticle, 
+                                                       decaybit_dict)
+                                      )
+        func = "CH_{0}_{1}_decays".format(model_name, 
+                                          pdg_to_particle(decayparticle, 
+                                                          decaybit_dict)
+                                          )
+        # If the capability already exists, see if the function already exists, 
+        # only need to write the function
+        if (find_capability(cap, "DecayBit")[0]  
+        and not find_function(func, cap, "DecayBit")[0]):
+            if decayparticle == 25:
+                extra = (
+                      "    DEPENDENCY(Reference_SM_Higgs_decay_rates, "
+                      "DecayTable::Entry)\n"
+                )
+            else:
+                extra = ""
+            towrite = (
+                    "\n"
+                    "    #define FUNCTION {0}\n"
+                    "    START_FUNCTION(DecayTable::Entry)\n"
+                    "    DEPENDENCY({1}, Spectrum)\n{2}"
+                    "    BACKEND_REQ(CH_Decay_Width, (), double, (str&, str&, "
+                    "std::vector<str>&, double&))\n"
+                    "    #undef FUNCTION\n"
+                    "    ALLOW_MODELS({3})\n"
+            ).format(func, spectrum, extra, model_name)
+            rollcall_entries.append([cap, towrite])
+        # If the capability doesn't exist => must write a new entry for it as 
+        # well as the function
+        elif not find_capability(cap, "DecayBit")[0]:
+            towrite = (
+                    "\n"
+                    "  #define CAPABILITY {0}\n"
+                    "  START_CAPABILITY\n"
+                    "\n"
+                    "    #define FUNCTION {1}\n"
+                    "    START_FUNCTION(DecayTable::Entry)\n"
+                    "    DEPENDENCY({2}, Spectrum)\n"
+                    "    BACKEND_REQ(CH_Decay_Width, (), double, (str&, str&, "
+                    "std::vector<str>&, double&))\n"
+                    "    #undef FUNCTION\n"
+                    "    ALLOW_MODELS({3})\n"
+                    "\n"
+                    "  #undef CAPABILITY\n"
+            ).format(cap, func, spectrum, model_name)
+            rollcall_entries.append([cap, towrite])
+            gb_name = pdg_to_particle(decayparticle, gambit_dict)
+            new_decays.append([cap, gb_name])
+        
+    return np.array(rollcall_entries), new_decays
+
+def amend_all_decays(model_name, spectrum, new_decays):
+    """
+    Amends all_decays in DecayBit, both in source and in the rollcall
+    header.
+    """
+    
+    src = ""
+    header = ""
+    src_extra = ""
+    
+    for i in xrange(len(new_decays)):
+        src_extra += (
+                  "decays(\"{0}\") = *Dep::{1};\n"
+        ).format(new_decays[i][1], new_decays[i][0])
+    
+    if len(new_decays) > 0:
+        header += (
+            "    MODEL_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})"
+        ).format(spectrum, model_name)
+        
+        src += indent((
+             "// {0}-specific\n"
+             "if (ModelInUse(\"{0}\"))\n"
+             "{{\n"
+             "{1}"
+             "}}\n"
+        ).format(model_name, src_extra), 6)
+    
+    for i in xrange(len(new_decays)):
+        header += (
+               "\n    MODEL_CONDITIONAL_DEPENDENCY({0}, DecayTable::Entry, {1})"
+        ).format(new_decays[i][0], model_name)
+                
+    return src, header
+    

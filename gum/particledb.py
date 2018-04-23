@@ -4,7 +4,10 @@ scraping the information about existing particles as well as adding
 new particles to the database.
 """
 
-import yaml, os, itertools, sys
+import yaml
+import os
+import itertools
+import sys
 
 
 def get_gambit_particle_pdg_dict():
