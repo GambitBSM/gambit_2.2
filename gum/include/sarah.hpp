@@ -1,5 +1,5 @@
-#ifndef FEYNRULES_H
-#define FEYNRULES_H
+#ifndef SARAH_H
+#define SARAH_H
 
 #include "wstp.h"
 #include <math.h>
@@ -10,7 +10,7 @@
 #include "cmake_variables.hpp"
 #include "options.hpp"
 
-class FeynRules 
+class SARAH
 {
   private:
     
@@ -36,7 +36,7 @@ class FeynRules
       }
       else
       {
-        std::cout << "The environment is initialized successfully... ";
+        std::cout << "The environment is initialized successfully..." << std::endl;
       }
       
       std::stringstream WSTPflags;
@@ -100,7 +100,7 @@ class FeynRules
     }
     
     // Load package
-    void load_feynrules();
+    void load_sarah();
     
     // Load model
     void load_model(std::string name);
@@ -114,9 +114,10 @@ class FeynRules
     // Outputs: CalcHEP, MadGraph, ...
     void write_ch_output();
     void write_madgraph_output();
-    
-};
 
+};
+    
 // Everything
-void all_feynrules(Options);
+void all_sarah(Options);
+
 #endif

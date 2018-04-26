@@ -33,11 +33,11 @@ configure_file("${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp.in" ${outhdr})
 include_directories(src include ${Mathematica_WSTP_INCLUDE_DIR})
 
 # set source and header files used in all executables
-set(HEADER_FILES  include/cmake_variables.hpp include/feynrules.hpp)
+set(HEADER_FILES  include/cmake_variables.hpp include/options.hpp include/feynrules.hpp include/sarah.hpp)
 
 set(SRC_FILES src/mathematica.cpp)
 
-set(SRC_GUM src/mathematica.cpp src/feynrules.cpp)
+set(SRC_GUM src/mathematica.cpp src/options.cpp src/feynrules.cpp src/sarah.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_CXX_FLAGS -L.)

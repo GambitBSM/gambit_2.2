@@ -2,30 +2,39 @@
 
 #include <iostream>
 
+#include "options.hpp"
 #include "feynrules.hpp"
+#include "sarah.hpp"
 
-int main()
+int main(int argc, char** argv)
 {
-    std::string frmodel = "SingletDM";
-    std::cout << "Initialising C++ to Mathematica link with model: " + frmodel << std::endl;
     
-    // Declare FeynRules model class
-    FeynRules model;
+    // Initialise options for input.
+    Options options;
+
+    // Attempt to parse the user's command line input...
+    try
+    {
+        options = parse(argc, argv, options);
+    }
+    catch(const char* e)
+    {
+        std::cerr << e << std::endl << std::endl;
+        usage(argv[0]);
+        return 0;
+    }
     
-    // Open link to Mathematica
-    model.create_wstp_link();
+    // Pick FeynRules or SARAH, then crack on.
+    if (options.package == "feynrules")
+    {
+        all_feynrules(options);
+    }
+    else if (options.package == "sarah")
+    {
+        all_sarah(options);
+    }
     
-    // Load FeynRules
-    model.load_feynrules();
-    
-    // Set the FeynRules model and load it up
-    model.set_name(frmodel);
-    model.load_model(frmodel);
-    
-    // Diagnositics -- check it is hermitian
-    model.check_herm();
-    
-    
-    // All done. Close the Mathematica link.
-    model.close_wstp_link();
+    std::cout << "C++ to Mathematica interface: done." << std::endl;
+        
+    return 0;
 }

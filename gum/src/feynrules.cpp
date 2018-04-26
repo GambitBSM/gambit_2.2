@@ -1,5 +1,6 @@
-#include "feynrules.hpp"
 #include <iostream>
+
+#include "feynrules.hpp"
 
 void FeynRules::load_feynrules()
 {
@@ -36,7 +37,22 @@ void FeynRules::load_model(std::string name)
     send_to_math(command);
     
     // Some sort of check here ?
-    std::cout << "Model " + name + " loaded successfully." << std::endl;    
+    std::cout << "Model " + name + " loaded successfully." << std::endl;   
+     
+}
+
+void FeynRules::load_restriction(std::string name)
+{
+
+    std::cout << "Loading restriction " + name + "... ";
+
+    // LoadModel command.
+    std::string command = "LoadRestriction[\"Models/" + name + ".rst\"]";
+    send_to_math(command);
+    
+    // Some sort of check here ?
+    std::cout << "Restriction " + name + " loaded successfully." << std::endl;    
+    
 }
 
 // Check a model is Hermitian (it should be...)
@@ -44,6 +60,8 @@ void FeynRules::check_herm()
 {
 
     std::cout << "Checking the model is Hermitian... ";
+    
+    // Name of Lagrangian "LTotal" assumed -- probably should be a user input...?
     std::string command = "ch = CheckHermiticity[LTotal]";
     send_to_math(command);
     
@@ -72,4 +90,37 @@ void FeynRules::check_herm()
         }
     }
 
+}
+
+// Performs all FeynRules output.
+void all_feynrules(Options opts)
+{
+    std::cout << "Calling FeynRules with model " << opts.model << std::endl;
+
+    // Declare FeynRules model class
+    FeynRules model;
+ 
+    // Open link to Mathematica
+    model.create_wstp_link();
+    
+    // Load FeynRules
+    model.load_feynrules();
+    
+    // Set the FeynRules model and load it up
+    model.set_name(opts.model);
+    model.load_model(opts.model);
+    
+    // Load restrictions - if there are any.
+    if (not opts.restriction.empty())
+    {
+        model.load_restriction(opts.restriction);
+    }
+    
+    // Diagnositics -- check it is hermitian
+    model.check_herm();
+    
+    // All done. Close the Mathematica link.
+    model.close_wstp_link();
+    
+    return;
 }
