@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 #include "cmake_variables.hpp"
 #include "options.hpp"
@@ -111,12 +112,21 @@ class FeynRules
     // Hermiticity check
     void check_herm();
     
-    // Outputs: CalcHEP, MadGraph, ...
-    void write_ch_output();
-    void write_madgraph_output();
+    // Particle list
+    void get_partlist(std::vector<Particle>&);
+  
+    // Parameters list
+    void get_paramlist(std::vector<Parameter>&);
+    
+    // Set gauge: unitary, or feynman
+    void set_gauge(std::string);
+    
+    // Outputs: CalcHEP, MadGraph, ... (unsure if I will use opts here, or not.)
+    void write_ch_output(Options opts);
+    void write_madgraph_output(Options opts);
     
 };
 
 // Everything
-void all_feynrules(Options);
+void all_feynrules(Options, std::vector<Particle>&, std::vector<Parameter>&);
 #endif

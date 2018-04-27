@@ -5,10 +5,10 @@
 void usage(std::string name)
 {
     std::cerr << "Usage: " << name << " <option(s)>:\n\n"
-              << "\t-h,--help\t\tShow this help message.\n"
-              << "\t-p,--package PACKAGE\tSpecify the Mathematica package to use, 'feynrules' or 'sarah'.\n"
-              << "\t-m,--model MODEL\tSpecify the name of the model in a given package.\n"
-              << "\t-r,--restriction RESTRICTION\tSpecify the name of a restriction file for a given package.\n"
+              << "\t-h,--help\t\t\tShow this helpful help message.\n"
+              << "\t-p,--package PACKAGE\t\tSpecify the Mathematica package to use, 'feynrules' or 'sarah'.\n"
+              << "\t-m,--model MODEL\t\tSpecify the name of the model in a given package. This should live in $PACKAGE/Models/<modelname>/<modelname>.[m/fr]\n"
+              << "\t-r,--restriction RESTRICTION\tSpecify the name of a restriction file for FeynRules.\n"
               << "\n"
               << "The user must specify at the very minimum -m and -p.\n"
               << "e.g. " << name << " -p feynrules -m SingletDM\n"
@@ -19,7 +19,7 @@ Options parse(int argc, char** argv, Options options)
 {
     if (argc < 2) 
     {
-        throw("");
+        throw("Here are some tips to get you going.");
     }
     for (int i=1; i<argc; ++i)
     {
@@ -70,6 +70,10 @@ Options parse(int argc, char** argv, Options options)
     if ((options.model.empty()))
     {
         throw("ERROR: no model file specified.");
+    }
+    if ((options.package == "sarah") && (not options.restriction.empty()))
+    {
+        throw("ERROR: restriction file added for SARAH, only works for feynrules.");
     }
     return options;
 }

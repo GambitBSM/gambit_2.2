@@ -11,6 +11,8 @@ int main(int argc, char** argv)
     
     // Initialise options for input.
     Options options;
+    std::vector<Particle> partlist;
+    std::vector<Parameter> paramlist;
 
     // Attempt to parse the user's command line input...
     try
@@ -27,14 +29,14 @@ int main(int argc, char** argv)
     // Pick FeynRules or SARAH, then crack on.
     if (options.package == "feynrules")
     {
-        all_feynrules(options);
+        all_feynrules(options, partlist, paramlist);
     }
     else if (options.package == "sarah")
     {
         all_sarah(options);
     }
     
-    std::cout << "C++ to Mathematica interface: done." << std::endl;
+    std::cout << "C++ to Mathematica interface finished." << std::endl;
         
     return 0;
 }
