@@ -1,24 +1,24 @@
 cmake_minimum_required(VERSION 2.8)
-project(mass_builder)
-message(status "${CMAKE_CURRENT_SOURCE_DIR}")
+project(GUM)
+message("Building GUM in ${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
 # Check for Mathematica
 include(cmake/FindMathematica.cmake)
 if(Mathematica_FOUND)
-  message("${BoldYellow}   Found Mathematica")
+  message("   Found Mathematica")
   if(Mathematica_WSTP_FOUND)
-    message("${BoldYellow}   Found Wolfram Symbolic Transfer Protocol. Mathematica backends enabled")
+    message("   Found Wolfram Symbolic Transfer Protocol. Mathematica interface enabled.")
     set(HAVE_MATHEMATICA 1)
     set(MATHEMATICA_WSTP_H "${Mathematica_WSTP_INCLUDE_DIR}/wstp.h")
     set(MATHEMATICA_KERNEL "${Mathematica_KERNEL_EXECUTABLE}")
   else()
-    message("${BoldRed}  WSTP not found. Please make sure it is installed before attempting to use Mathematica backends")
+    message("  WSTP not found. Please make sure it is installed before attempting to use Mathematica interface.")
     set(HAVE_MATHEMATICA 0)
   endif()
 else()
-  message("${BoldRed}   Mathematica not found. Backends using Mathematica will be disabled")
+  message("   Mathematica not found. GUM won't work.")
   set(HAVE_MATHEMATICA 0)
 endif()
 
@@ -26,6 +26,40 @@ if(Mathematica_FOUND AND Mathematica_WSTP_FOUND)
   set(LIBRARIES ${LIBRARIES} ${Mathematica_WSTP_LIBRARIES} ${Mathematica_MathLink_LIBRARY})
 endif()
 
+# Get FeynRules path
+set(FR "" CACHE STRING "The path to the FeynRules module.")
+get_filename_component(FEYNRULES_PATH "${FR}" PATH)
+
+if(FEYNRULES_PATH)
+  if(EXISTS "${FR}/FeynRules.m")
+    message("   Found FeynRules.")
+    set(FEYNRULES_PATH "${FR}")
+    set(HAVE_FEYNRULES 1)
+  else()
+    set(HAVE_FEYNRULES 0)
+    message(FATAL_ERROR "\n  FeynRules.m not found where you said it would be...")
+  endif()
+endif()  
+
+# Get SARAH path
+set(SARAH "" CACHE STRING "The path to the SARAH module.")
+get_filename_component(SARAH_PATH "${SARAH}" PATH)
+
+if(SARAH_PATH)
+  if(EXISTS "${SARAH}/SARAH.m")
+    message("   Found SARAH.")
+    set(SARAH_PATH "${SARAH}")
+    set(HAVE_SARAH 1)
+  else()
+    set(HAVE_SARAH 0)
+    message(FATAL_ERROR "\n SARAH.m not found where you said it would be...")
+  endif()
+endif()
+
+if(NOT HAVE_FEYNRULES AND NOT HAVE_SARAH)
+  message(FATAL_ERROR "\n  You need to link GUM to either FeynRules or SARAH to get it to do stuff! \n  Use -D FR=path_to_feynrules or -D SARAH=path_to_sarah. (Or both.)")
+endif()
+  
 # Configure cmake variables file
 set(outhdr "${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp")
 configure_file("${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp.in" ${outhdr})
@@ -48,12 +82,12 @@ add_executable(mathematica ${SRC_GUM} ${SRC_FILES_GEN} ${HEADER_FILES_GEN} ${HEA
 TARGET_LINK_LIBRARIES(mathematica ${LIBRARIES})
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-    message(status "Setting GCC flags")
+    message("Setting GCC flags")
 
     # Remove the -g flag when not debugging
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -Wall -Wextra -W -pedantic -std=c++0x -O3")
 else()
-    message(status "Setting MSVC flags")
+    message(status ": Setting MSVC flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHc-")
 endif()
 install(TARGETS mathematica DESTINATION ${CMAKE_BINARY_DIR}/lib)

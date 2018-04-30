@@ -56,8 +56,8 @@ if args.f:
     # Unknown:
     #  - DirectDM interface                            DarkBit
   
-    # FeynRules
-    feynrules_path = '../../.Mathematica/Applications/feynrules-current/Models/SingletDM/SingletDM.fr'
+
+    
   
     # if gum.math == 'FR':
     #   load_fr_model(fr_model)

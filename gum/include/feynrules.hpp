@@ -112,6 +112,9 @@ class FeynRules
     // Hermiticity check
     void check_herm();
     
+    // Get model name
+    void get_modelname(std::string&);
+    
     // Particle list
     void get_partlist(std::vector<Particle>&);
   
@@ -121,9 +124,9 @@ class FeynRules
     // Set gauge: unitary, or feynman
     void set_gauge(std::string);
     
-    // Outputs: CalcHEP, MadGraph, ... (unsure if I will use opts here, or not.)
-    void write_ch_output(Options opts);
-    void write_madgraph_output(Options opts);
+    // Outputs: CalcHEP, MadGraph, ... 
+    void write_ch_output();
+    void write_madgraph_output();
     
 };
 

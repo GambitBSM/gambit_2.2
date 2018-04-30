@@ -6,4 +6,12 @@
 #cmakedefine MATHEMATICA_WSTP_H "@Mathematica_WSTP_INCLUDE_DIR@/wstp.h"
 #cmakedefine MATHEMATICA_KERNEL "@Mathematica_KERNEL_EXECUTABLE@"
 
+/// Found FeynRules
+#cmakedefine HAVE_FEYNRULES 1
+#cmakedefine FEYNRULES_PATH "@FEYNRULES_PATH@"
+
+/// Found SARAH
+#cmakedefine HAVE_SARAH 1
+#cmakedefine SARAH_PATH "@SARAH_PATH@"
+
 #endif //// #defined__cmake_variables_hpp__

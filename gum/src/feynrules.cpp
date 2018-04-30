@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <algorithm>
 #include <cstring>
 
 #include "feynrules.hpp"
@@ -9,16 +10,18 @@ void FeynRules::load_feynrules()
 
     std::cout << "Loading FeynRules... ";
     
-    std::string input;
-    // TODO -- somehow the user will need to specify this.
-    input+= "$FeynRulesPath = SetDirectory[\"~/.Mathematica/Applications/feynrules-current\"]";
-    
+    std::string input;       
+    input+= "$FeynRulesPath = SetDirectory[\"" + std::string(FEYNRULES_PATH) + "\"]";
+        
     send_to_math(input);
     
     const char* out;
     if (!WSGetString((WSLINK)pHandle, &out))
     {
-        std::cout << "Error loading FeynRules. Please check your $FeynRulesPath." << std::endl;
+        std::cerr << "Error loading FeynRules. Please check that FeynRules actually lives" 
+                  << "\nwhere CMake thinks it is, in:\n" 
+                  << "  " + std::string(FEYNRULES_PATH)
+                  << "\nPlease try rebuilding." << std::endl;
         return;
     }
     else
@@ -43,6 +46,23 @@ void FeynRules::load_model(std::string name)
     // Some sort of check here ?
     std::cout << "Model " + name + " loaded successfully." << std::endl;   
      
+}
+
+// The model may have a different "internal" name than what's on the package.
+// Need this info for output files, etc.
+void FeynRules::get_modelname(std::string &modelname)
+{
+    std::string command = "M$ModelName";
+    send_to_math(command);
+    
+    const char* out;
+    if (!WSGetString((WSLINK)pHandle, &out))
+    {
+        std::cerr << "Error getting Model name." << std::endl;
+        return;
+    }
+    
+    modelname = std::string(out);
 }
 
 void FeynRules::load_restriction(std::string name)
@@ -145,6 +165,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             const char* spin;
             const char* fullname;
             const char* eaten;
+            const char* mass;
             int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
             int pdg;
             bool SM;
@@ -223,6 +244,16 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
                 return;
             }
             
+            // Name of the mass parameter.
+            command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",5]]";
+            send_to_math(command);
+            
+            if (!WSGetString((WSLINK)pHandle, &mass))
+            {
+                std::cout << "Error getting mass from WSTP." << std::endl;
+                return;
+            }           
+            
             // Check it doesn't get eaten - this isn't a physical particle.
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",13]]";
             send_to_math(command);
@@ -251,13 +282,13 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             }
             
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, std::string(fullname), SM);
+            Particle particle(pdg, std::string(name), spinX2, std::string(fullname), SM, mass);
             partlist.push_back(particle);
             
             // Also add the antiparticle if it is distinct.
             if (not self_conjugate)
             {
-                Particle antiparticle((-1)*pdg, std::string(antiname), spinX2, std::string(fullname), SM);
+                Particle antiparticle((-1)*pdg, std::string(antiname), spinX2, std::string(fullname), SM, mass);
                 partlist.push_back(antiparticle);
             }
             
@@ -328,7 +359,9 @@ void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
                 std::cout << "Error getting paramname from WSTP." << std::endl;
                 return;
             }
-            std::cout << "paramname = " << paramname << std::endl;
+            
+            Parameter parameter(paramname, block);
+            paramlist.push_back(parameter);
         }        
     }
 }
@@ -359,7 +392,7 @@ void FeynRules::set_gauge(std::string gauge)
 }
 
 // Write CalcHEP output. 
-void FeynRules::write_ch_output(Options opts)
+void FeynRules::write_ch_output()
 {
     std::cout << "Writing CalcHEP output." << std::endl;
     
@@ -413,8 +446,17 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     // And all parameters
     model.get_paramlist(paramlist);
     
+    // Get the "actual" model name
+    std::string fr_model_name;
+    model.get_modelname(fr_model_name);
+    
     // Write CalcHEP output
-    model.write_ch_output(opts);
+    model.write_ch_output();
+    
+    // This is where the output CalcHEP files will be written
+    std::string chdir = std::string(FEYNRULES_PATH) + "/" + fr_model_name;
+    std::replace(chdir.begin(), chdir.end(), ' ', '-');
+    chdir += "-CH";
     
     // All done. Close the Mathematica link.
     model.close_wstp_link();

@@ -25,21 +25,24 @@ class Particle
     int doublespin;
     std::string fullname;
     bool standardmodel;
+    std::string partmass;
     
     public:
-        Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM)
+        Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass)
         {
             pdgcode = pdg;
             partname = name;
             doublespin = spinX2;
             fullname = full_name;
             standardmodel = SM;
+            partmass = mass;
         }
         
         int pdg() { return pdgcode; }
         std::string name() { return partname; }
         bool SM() { return standardmodel; }
         int spinX2() { return doublespin; }
+        std::string mass() { return partmass; }
 
         
         // Unsure if needed yet. 
@@ -51,17 +54,17 @@ class Parameter
 {
 
     std::string paramname;
-    bool standardmodel;
+    std::string blockname;
         
     public:
-        Parameter(std::string name, bool SM)
+        Parameter(std::string name, std::string block)
         {
             paramname = name;
-            standardmodel = SM;
+            blockname = block;
         }
         
         std::string name() { return paramname; }
-        bool SM() { return standardmodel; }
+        std::string block() { return blockname; }
         
 };
 

@@ -29,13 +29,26 @@ int main(int argc, char** argv)
     // Pick FeynRules or SARAH, then crack on.
     if (options.package == "feynrules")
     {
+        #ifndef HAVE_FEYNRULES
+        std::cerr << "\n ERROR: You can't call FeynRules if you haven't linked to it!!" 
+                  << "\n  Try 'cmake -D FR=path_to_feynrules ..' in your build directory.\n\n";
+        return 0;
+        #endif
+        
         all_feynrules(options, partlist, paramlist);
     }
     else if (options.package == "sarah")
     {
+    
+        #ifndef HAVE_SARAH
+        std::cerr << "\n ERROR: You can't call SARAH if you haven't linked to it!!" 
+                  << "\n  Try 'cmake -D SARAH=path_to_sarah ..' in your build directory.\n\n";
+        return 0;
+        #endif
+    
         all_sarah(options);
     }
-    
+
     std::cout << "C++ to Mathematica interface finished." << std::endl;
         
     return 0;
