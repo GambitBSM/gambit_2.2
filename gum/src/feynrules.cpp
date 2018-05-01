@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <cstring>
 
+#include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
 #include "feynrules.hpp"
 
 void FeynRules::load_feynrules()
@@ -413,10 +416,15 @@ void FeynRules::write_ch_output()
     std::cout << "CalcHEP files written." << std::endl;
 }
 
+char const* pythontest()
+{
+    return "Umm...";
+}
+
 // Performs all FeynRules output.
 void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist)
 {
-    std::cout << "Calling FeynRules with model " << opts.model << std::endl;
+    std::cout << "Calling FeynRules with model " << opts.model() << std::endl;
 
     // Declare FeynRules model class
     FeynRules model;
@@ -428,13 +436,13 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     model.load_feynrules();
     
     // Set the FeynRules model and load it up
-    model.set_name(opts.model);
-    model.load_model(opts.model);
+    model.set_name(opts.model());
+    model.load_model(opts.model());
     
     // Load restrictions - if there are any.
-    if (not opts.restriction.empty())
+    if (not opts.restriction().empty())
     {
-        model.load_restriction(opts.restriction);
+        model.load_restriction(opts.restriction());
     }
     
     // Diagnositics -- check it is hermitian
@@ -462,4 +470,42 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     model.close_wstp_link();
     
     return;
+}
+
+// Now all the grisly stuff, so Python can call C++ (which can call Mathematica...) 
+BOOST_PYTHON_MODULE(libfr)
+{
+  using namespace boost::python;
+  
+  def("pythontest", pythontest);
+  
+  class_<Particle>("FRParticle", init<int, std::string, int, std::string, bool, std::string>())
+    .def("pdg",    &Particle::pdg)
+    .def("name",   &Particle::name)
+    .def("SM",     &Particle::SM)
+    .def("spinX2", &Particle::spinX2)
+    .def("mass",   &Particle::mass)
+    ;
+  
+  class_<Parameter>("FRParameter", init<std::string, std::string>())
+    .def("name",  &Parameter::name)
+    .def("block", &Parameter::block)
+    ;
+  
+  class_<Options>("FROptions", init<std::string, std::string, std::string>())
+    .def("package",     &Options::package)
+    .def("model",       &Options::model)
+    .def("restriction", &Options::restriction)
+    ;
+  
+  class_< std::vector<Particle> >("VectorOfParticles")
+    .def(vector_indexing_suite< std::vector<Particle> >() )
+    ;
+    
+  class_< std::vector<Parameter> >("VectorOfParameters")
+    .def(vector_indexing_suite< std::vector<Parameter> >() )
+    ;
+
+  def("all_feynrules", all_feynrules);
+  
 }

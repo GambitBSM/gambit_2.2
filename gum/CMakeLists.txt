@@ -3,6 +3,9 @@ project(GUM)
 message("Building GUM in ${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+
+message("${CMAKE_CXX_COMPILER}")
 
 # Check for Mathematica
 include(cmake/FindMathematica.cmake)
@@ -59,6 +62,51 @@ endif()
 if(NOT HAVE_FEYNRULES AND NOT HAVE_SARAH)
   message(FATAL_ERROR "\n  You need to link GUM to either FeynRules or SARAH to get it to do stuff! \n  Use -D FR=path_to_feynrules or -D SARAH=path_to_sarah. (Or both.)")
 endif()
+
+# Python
+FIND_PACKAGE(PythonInterp 2 REQUIRED)
+if (PYTHON_VERSION_MAJOR GREATER 2)
+  message(FATAL_ERROR "\n  GUM only supports Python 2.  \nIf you need to set the path to the Python interpreter manually, "
+                      "please use -DPYTHON_EXECUTABLE:FILEPATH=path/to/preferred/python.")
+endif()
+FIND_PACKAGE(PythonLibs REQUIRED)
+INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
+
+# Add -fPIC for 64 bit systems
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
+# Check for C++11 and C++14 support
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+if(COMPILER_SUPPORTS_CXX14)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+else()
+  CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+  if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  else()
+    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+    if(COMPILER_SUPPORTS_CXX0X)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    else()
+      message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+    endif()
+  endif()
+endif()
+
+# Check for Boost & dump FeynRules/SARAH shared object files. 
+set(Boost_NO_BOOST_CMAKE ON)
+FIND_PACKAGE(Boost 1.41)
+if(Boost_FOUND)
+  include_directories("${Boost_INCLUDE_DIR}")
+  FIND_PACKAGE(Boost 1.41.0 COMPONENTS python)
+  ADD_LIBRARY(fr SHARED src/feynrules.cpp)
+  TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
+else()
+  message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and rerun cmake.")
+endif()
   
 # Configure cmake variables file
 set(outhdr "${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp")
@@ -67,19 +115,18 @@ configure_file("${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp.in" ${outhdr})
 include_directories(src include ${Mathematica_WSTP_INCLUDE_DIR})
 
 # set source and header files used in all executables
-set(HEADER_FILES  include/cmake_variables.hpp include/options.hpp include/feynrules.hpp include/sarah.hpp)
-
+set(HEADER_FILES include/cmake_variables.hpp include/options.hpp include/feynrules.hpp include/sarah.hpp)
 set(SRC_FILES src/mathematica.cpp)
-
 set(SRC_GUM src/mathematica.cpp src/options.cpp src/feynrules.cpp src/sarah.cpp)
+
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_CXX_FLAGS -L.)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-add_executable(mathematica ${SRC_GUM} ${SRC_FILES_GEN} ${HEADER_FILES_GEN} ${HEADER_MB} ${TSIL_HEADER_FILE} ${SRC_FILES} ${HEADER_FILES} ${GENERATED_SRC_FILES})
+add_executable(mathematica ${SRC_GUM} ${SRC_FILES_GEN} ${HEADER_FILES_GEN} ${HEADER_MB} ${SRC_FILES} ${HEADER_FILES} ${GENERATED_SRC_FILES})
 
-TARGET_LINK_LIBRARIES(mathematica ${LIBRARIES})
+TARGET_LINK_LIBRARIES(mathematica ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     message("Setting GCC flags")

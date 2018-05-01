@@ -130,6 +130,8 @@ class FeynRules
     
 };
 
+char const* pythontest();
+
 // Everything
 void all_feynrules(Options, std::vector<Particle>&, std::vector<Parameter>&);
 #endif

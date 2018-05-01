@@ -15,8 +15,12 @@ void usage(std::string name)
               << std::endl;
 }
 
-Options parse(int argc, char** argv, Options options)
+Options parse(int argc, char** argv)
 {
+    std::string package;
+    std::string model;
+    std::string restriction;
+    
     if (argc < 2) 
     {
         throw("Here are some tips to get you going.");
@@ -33,7 +37,7 @@ Options parse(int argc, char** argv, Options options)
 
             if (i+1 < argc) 
             { 
-                options.package = argv[++i];
+                package = argv[++i];
             } 
             else 
             { 
@@ -44,7 +48,7 @@ Options parse(int argc, char** argv, Options options)
         {
             if (i+1 < argc) 
             { 
-                options.model = argv[++i];
+                model = argv[++i];
             } 
             else 
             { 
@@ -55,7 +59,7 @@ Options parse(int argc, char** argv, Options options)
         {
             if (i+1 < argc) 
             { 
-                options.restriction = argv[++i];
+                restriction = argv[++i];
             } 
             else 
             { 
@@ -63,17 +67,18 @@ Options parse(int argc, char** argv, Options options)
             }  
         }  
     }
-    if ((options.package != "sarah") && (options.package != "feynrules"))
+    if ((package != "sarah") && (package != "feynrules"))
     {
         throw("ERROR: no Mathematica package specified.");
     }
-    if ((options.model.empty()))
+    if ((model.empty()))
     {
         throw("ERROR: no model file specified.");
     }
-    if ((options.package == "sarah") && (not options.restriction.empty()))
+    if ((package == "sarah") && (not restriction.empty()))
     {
         throw("ERROR: restriction file added for SARAH, only works for feynrules.");
     }
+    Options options(package, model, restriction);
     return options;
 }

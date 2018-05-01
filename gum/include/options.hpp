@@ -5,16 +5,28 @@
 
 class Options
 {
+
+    std::string optpackage;
+    std::string optmodel;
+    std::string optrestriction;
+    
     public:
-        std::string package;
-        std::string model;
-        std::string restriction;
+        Options(std::string package, std::string model, std::string restriction)
+        {
+            optpackage = package;
+            optmodel = model;
+            optrestriction = restriction;
+        }
+        
+        std::string model() { return optmodel; }
+        std::string package() { return optpackage; }
+        std::string restriction() { return optrestriction; }
 
 };
 
 void usage(std::string);
 
-Options parse(int, char**, Options);
+Options parse(int, char**);
 
 
 class Particle
@@ -28,6 +40,10 @@ class Particle
     std::string partmass;
     
     public:
+        
+        bool operator==(const Particle& other) {return false;}
+        bool operator!=(const Particle& other) {return true;}
+    
         Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass)
         {
             pdgcode = pdg;
@@ -57,6 +73,10 @@ class Parameter
     std::string blockname;
         
     public:
+    
+        bool operator==(const Parameter& other) {return false;}
+        bool operator!=(const Parameter& other) {return true;}
+        
         Parameter(std::string name, std::string block)
         {
             paramname = name;
