@@ -285,13 +285,13 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             }
             
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, std::string(fullname), SM, mass);
+            Particle particle(pdg, std::string(name), spinX2, std::string(fullname), SM, mass, self_conjugate);
             partlist.push_back(particle);
             
             // Also add the antiparticle if it is distinct.
             if (not self_conjugate)
             {
-                Particle antiparticle((-1)*pdg, std::string(antiname), spinX2, std::string(fullname), SM, mass);
+                Particle antiparticle((-1)*pdg, std::string(antiname), spinX2, std::string(fullname), SM, mass, self_conjugate);
                 partlist.push_back(antiparticle);
             }
             
@@ -416,13 +416,8 @@ void FeynRules::write_ch_output()
     std::cout << "CalcHEP files written." << std::endl;
 }
 
-char const* pythontest()
-{
-    return "Umm...";
-}
-
 // Performs all FeynRules output.
-void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist)
+void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs)
 {
     std::cout << "Calling FeynRules with model " << opts.model() << std::endl;
 
@@ -466,6 +461,12 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     std::replace(chdir.begin(), chdir.end(), ' ', '-');
     chdir += "-CH";
     
+    outputs.set_ch(chdir);
+    
+    // Do the same for madgraph..?
+    std::string mgdir = "";
+    outputs.set_mg(mgdir);
+    
     // All done. Close the Mathematica link.
     model.close_wstp_link();
     
@@ -476,15 +477,14 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
 BOOST_PYTHON_MODULE(libfr)
 {
   using namespace boost::python;
-  
-  def("pythontest", pythontest);
-  
-  class_<Particle>("FRParticle", init<int, std::string, int, std::string, bool, std::string>())
+    
+  class_<Particle>("FRParticle", init<int, std::string, int, std::string, bool, std::string, bool>())
     .def("pdg",    &Particle::pdg)
     .def("name",   &Particle::name)
     .def("SM",     &Particle::SM)
     .def("spinX2", &Particle::spinX2)
     .def("mass",   &Particle::mass)
+    .def("SC",     &Particle::SC)
     ;
   
   class_<Parameter>("FRParameter", init<std::string, std::string>())
@@ -498,13 +498,18 @@ BOOST_PYTHON_MODULE(libfr)
     .def("restriction", &Options::restriction)
     ;
   
-  class_< std::vector<Particle> >("VectorOfParticles")
+  class_<Outputs>("FROutputs", init<>())
+    .def("get_ch",  &Outputs::get_ch)
+    ;
+  
+  class_< std::vector<Particle> >("FRVectorOfParticles")
     .def(vector_indexing_suite< std::vector<Particle> >() )
     ;
     
-  class_< std::vector<Parameter> >("VectorOfParameters")
+  class_< std::vector<Parameter> >("FRVectorOfParameters")
     .def(vector_indexing_suite< std::vector<Parameter> >() )
     ;
+    
 
   def("all_feynrules", all_feynrules);
   

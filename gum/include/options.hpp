@@ -24,6 +24,21 @@ class Options
 
 };
 
+
+class Outputs
+{
+    std::string ch;
+    std::string mg;
+    
+    public:
+        
+        std::string get_ch() { return ch; }
+        std::string get_mg() { return mg; }
+        
+        void set_ch(std::string chdir) { ch = chdir; }
+        void set_mg(std::string mgdir) { mg = mgdir; }
+};
+
 void usage(std::string);
 
 Options parse(int, char**);
@@ -38,13 +53,14 @@ class Particle
     std::string fullname;
     bool standardmodel;
     std::string partmass;
+    bool selfconj;
     
     public:
         
         bool operator==(const Particle& other) {return false;}
         bool operator!=(const Particle& other) {return true;}
     
-        Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass)
+        Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass, bool SC)
         {
             pdgcode = pdg;
             partname = name;
@@ -52,6 +68,7 @@ class Particle
             fullname = full_name;
             standardmodel = SM;
             partmass = mass;
+            selfconj = SC;
         }
         
         int pdg() { return pdgcode; }
@@ -59,6 +76,7 @@ class Particle
         bool SM() { return standardmodel; }
         int spinX2() { return doublespin; }
         std::string mass() { return partmass; }
+        bool SC() { return selfconj; }
 
         
         // Unsure if needed yet. 

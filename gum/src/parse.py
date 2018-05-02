@@ -3,17 +3,20 @@ Contains all routines for parsing input .gum file.
 """
 
 import yaml
+
 from setup import *
 
 class Inputs:
 
-    def __init__(self, model_name, dm_candidate, mathpackage, 
-                 use_existing_spectrum = [False, None], parent=None, 
-                 children=None, friends=None):
+    def __init__(self, model_name, dm_candidate, mathpackage,
+                 restriction = None, use_existing_spectrum = [False, None], 
+                 parent=None, children=None, friends=None):
                  
         self.name = model_name
-        self.dm_name = dm_candidate
+        self.dm_pdg = dm_candidate
+        self.math = mathpackage
         
+        self.restriction = None
         self.parent = None
         self.children = None
         self.friends = None
@@ -25,6 +28,8 @@ class Inputs:
             self.new_spectrum = False
             self.spec = use_existing_spectrum[1]
             
+        if restriction:
+            self.restriction = restriction
         if parent:
             self.parent = parent
         if children:
@@ -72,7 +77,6 @@ def check_gum_file(inputfile):
   
     if inputfile.endswith(".gum"):
         pass
-  
     else:
         raise GumError("Input filetype must be .gum.")
   
@@ -81,36 +85,27 @@ def check_gum_file(inputfile):
             data = yaml.load(f)
         except yaml.YAMLerror as exc:
             print(exc)
-              
-        if not 'new_model_name' in data:
-        # This will just be a FR/SARAH *file* -> fine
-            raise GumError(("No FeynRules script specified. "
-                             "Please check your .gum file."))
                              
-        if not 'mathpackage' in data:
+        if not 'math' in data:
+            raise GumError(("'math' node needed in .gum file."))
+            
+        if not 'package' in data['math']:
         # Don't know what to run...!
             raise GumError(("No mathpackage input - what do you expect "
                             "GUM to do? Please check your .gum file. "
                             "Supported entries: sarah, feynrules."))
                                     
-        if data['mathpackage'] not in ["sarah", "feynrules"]:
+        if data['math']['package'] not in ["sarah", "feynrules"]:
             raise GumError(("You must specify which mathpackage you want "
                             "GUM to use. Please check your .gum file. "
                             "Supported entries: sarah, feynrules."))
-  
-        if not 'fr_script' in data:
-        # This will just be a FR/SARAH *file* -> fine
-            raise GumError(("No FeynRules script specified. "
-                            "Please check your .gum file."))
-  
-        if not 'calchep_model' in data:
-        # This will be linked to FR/SARAH directory -> fine
-            raise GumError(("No CalcHEP model file directory specified. "
-                            "Please check your .gum file."))
-  
+    
         if not 'dm_candidate' in data:
-        # This will need to be specified in the .gum file.
             raise GumError(("No dark matter candidate specified. "
+                            "Please check your .gum file."))
+                      
+        if not 'model' in data['math']:
+            raise GumError(("No model file specified. "
                             "Please check your .gum file."))
   
                               
@@ -124,9 +119,13 @@ def fill_gum_object(data):
     parsed data from check_gum_file.
     """
     
-    gambit_model = data['new_model_name']
-    mathpackage = data['mathpackage']
+    math = data['math']
+    mathpackage = math['package']
+    gambit_model = math['model']
+    dm_candidate = data['dm_candidate']
+    
     # Model hierarchy stuff.
+    restriction = None
     parent = children = friends = tf_p = tf_c = tf_f = None 
     old_spectrum = spectrum_name = None
     if 'parent' in data:
@@ -141,6 +140,8 @@ def fill_gum_object(data):
         
         # Assume we can use a parent's spectrum, unless explicitly specified
         old_spectrum = True
+    if 'restriction' in math and mathpackage == 'feynrules':
+        restriction = math['restriction']
     if 'children' in data:
         children = data['children']
     if 'friends' in data:
@@ -157,7 +158,8 @@ def fill_gum_object(data):
       
     dm_candidate = data['dm_candidate']
     
-    gum_info = Inputs(gambit_model, dm_candidate, mathpackage, [old_spectrum, spectrum_name],
+    gum_info = Inputs(gambit_model, dm_candidate, mathpackage, restriction,
+                      [old_spectrum, spectrum_name],
                       parent, children, friends)
 
     

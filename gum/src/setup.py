@@ -13,9 +13,8 @@ class Particle:
     Particle class for internal use in GUM.
     """
 
-    def __init__(self, chargex3, spinx2, pdg_code, own_conjugate):
+    def __init__(self, spinx2, pdg_code, own_conjugate):
 
-        self.chargeX3 = chargex3
         self.spinX2 = spinx2
         self.PDG_code = pdg_code
         self.own_conjugate = own_conjugate
@@ -23,10 +22,8 @@ class Particle:
         # If a particle is self-conjugate -> the conjugate PDG code is same.
         if own_conjugate:
             self.Conjugate.PDG_code = self.PDG_code
-            self.Conjugate.chargeX3 = self.chargeX3
         else:
             self.Conjugate.PDG_code = -self.PDG_code
-            self.Conjugate.chargeX3 = -self.chargeX3
 
     def is_sc(self):
         """
@@ -42,11 +39,9 @@ class Particle:
         """
 
         PDG_code = None
-        chargex3 = None
 
         def __init__(self):
             self.PDG_code = self.PDG_code
-            self.chargeX3 = self.chargeX3
 
 def pdg_to_particle(pdg_code, pdg_dict):
     """

@@ -8,6 +8,7 @@ import argparse
 import numpy as np
 
 from src import *
+from lib.libfr import *
 
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GAMBIT "
                                              "writing your papers for you.")
@@ -21,27 +22,51 @@ if args.f:
     inputs = check_gum_file(args.f)
     gum = fill_gum_object(inputs) 
     
-    ## TEMP
-    fr_script = inputs['fr_script']
-    calchep_model = inputs['calchep_model']
-    ## TEMP
+    # FeynRules
+    if gum.math == 'feynrules':
+        options = FROptions("feynrules", gum.name, gum.restriction)
+        partlist = FRVectorOfParticles()
+        paramlist = FRVectorOfParameters()
+        outputs = FROutputs()
+        
+        # Hit it
+        all_feynrules(options, partlist, paramlist, outputs)
+        
+        # Get a list of all non-SM particles
+        fr_bsm = [x for x in partlist if x.SM() is False]
+        
+        # Make all BSM particles work with GUM's native Particle class.
+        bsm_particle_list = fr_part_to_gum_part(fr_bsm)
+        
+        for i in xrange(len(partlist)):
+            part = partlist[i]
+            # Initialise the DM candidate
+            if part.pdg() == gum.dm_pdg:                 
+                dm = Particle(part.spinX2(), part.pdg(), part.SC())
     
-    # Try to find mathematica
-    if find_mathematica():
-        pass
-    else:
-        raise GumError(("\nGAMBIT has not been able to find Mathematica. Please"
-                        " ensure you have libuuid, and a license for "
-                        "Mathematica.\n"
-                        "GUM cannot do much if it cannot interface to "
-                        "Mathematica."))
-            
-    print("Adding new model {0} to GAMBIT...\n").format(gum.name) 
+    # elif gum.math == 'SARAH':
+    #   options = SARAHOptions("sarah", gum.name)
+    #   partlist = SARAHVectorOfParticles()
+    #   paramlist = SARAHVectorOfParameters()
+    #   outputs = SARAHOutputs()
+    #   all_sarah(options, partlist, paramlist, outputs)
+    # etc.
+           
+    # If we haven't found the DM candidate in the particle list...
+    if not dm:        
+        raise GumError(("The DM candidate specified has not been found "
+                        "in the FeynRules file. Please check your .gum "
+                        "file as well as the FeynRules file."))
+
+    print("Adding new model {0} to GAMBIT...\n").format(gum.name)
     
-  
+    # TODO : check all new particles are in the GAMBIT particle db
+    
+    
     # Need to know how GAMBIT refers to each particle. Scrape information
     # from particle_database.yaml.
     gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
+
   
     # Run FeynRules/SARAH -> generate the following:
     #  - CalcHEP files                                 DecayBit, DarkBit
@@ -55,34 +80,9 @@ if args.f:
 
     # Unknown:
     #  - DirectDM interface                            DarkBit
-  
-
-    
-  
-    # if gum.math == 'FR':
-    #   load_fr_model(fr_model)
-    #   check_fr_model(fr_model)
-    #   pdgs, params = parse_feynrules_model(fr_model)
-    #   generate_output(options)
-    
-    # elif gum.math == 'SARAH':
-    #   load_sarah_model(sarah_model)
-    #   check_sarah_model(sarah_model)
-    #   pdgs, params = parse_sarah_model(sarah_model)
-    #   generate_output(options)   
-  
-    # Initialise DM as particle class.
-    # This will be scraped from the FeynRules/SARAH file.
-    dm = Particle(inputs['dm_candidate']['chargeX3'],
-                  inputs['dm_candidate']['spinX2'],
-                  gambit_pdg_codes[inputs['dm_candidate']['name']],
-                  inputs['dm_candidate']['is_self_conjugate'])
-    
-    # Currently done from CHep, to be done from FR/SARAH
-    bsm_particle_list = extract_particles(calchep_model, gum.name) 
-    
+   
     # Run CalcHEP_cleaner
-    clean_calchep_model_files(calchep_model, gum.name)
+    clean_calchep_model_files(outputs.get_ch(), gum.name)
   
     # Need to know how GAMBIT names each particle. (In each module, too.)
     gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
@@ -135,7 +135,7 @@ if args.f:
     """
     
     # Obtain all model interactions from CalcHEP model files.
-    interactions, calchep_pdg_codes = get_vertices(calchep_model)
+    interactions, calchep_pdg_codes = get_vertices(outputs.get_ch())
   
     # Obtain all 3-point vertices that are BSM.
     three_pi_bsm = [interaction.particles for interaction in interactions 
@@ -251,5 +251,5 @@ if args.f:
     print("")
 
 else:
-    raise GumError(("Hi! You must be new here. Usage: ./gum -f inputfile.gum\n"
-                    "Or try ./gum -h for help."))
+    raise GumError(("\n\tHi! You must be new here. Usage: ./gum -f inifile.gum"
+                    "\n\tOr try ./gum -h for help."))

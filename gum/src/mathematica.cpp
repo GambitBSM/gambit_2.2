@@ -12,11 +12,14 @@ int main(int argc, char** argv)
     // Initialise options for input.
     std::vector<Particle> partlist;
     std::vector<Parameter> paramlist;
+    std::string chdir;
+    std::string mgdir;
 
     // Attempt to parse the user's command line input...
     try
     {
         Options options = parse(argc, argv);
+        Outputs outputs;
             
         // Pick FeynRules or SARAH, then crack on.
         if (options.package() == "feynrules")
@@ -27,7 +30,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
             
-            all_feynrules(options, partlist, paramlist);
+            all_feynrules(options, partlist, paramlist, outputs);
         }
         else if (options.package() == "sarah")
         {

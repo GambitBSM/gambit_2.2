@@ -1,17 +1,20 @@
 ## Minimal .gum (YAML) file for GUM.
 
-# Mathematica script to run, to produce CalcHEP (etc.) output.
-fr_script: mathscripts/FeynRules/SingletDM.m
-
 # CalcHEP model file -- placeholder -- this will be relative to the FR file etc.
 # This should be the absolute path from $GAMBIT/gum.
 calchep_model: ../../.Mathematica/Applications/feynrules-current/Scalar-Singlet-Dark-Matter-CH
 
-mathpackage: feynrules
-
-# The name for the new model in GAMBIT
-new_model_name: SingletDM_test
-
+math:
+  # Name of Mathematica package, either 'feynrules' or 'sarah'
+  package: feynrules
+  # Name of Model within that package. This will also be the name of the GAMBIT model.
+  model: SingletDM_test
+  # (Optional) Any restriction files to load up (feynrules only) 
+  restriction: DiagonalCKM 
+  
+# PDG code of the DM candidate.
+dm_candidate: 9900001 
+        
 # The details of any parent model
 parent: 
   name: SingletDM
@@ -20,9 +23,3 @@ parent:
 # The name of the spectrum to use
 use_existing_spectrum: SingletDM_spectrum
 
-# DM candidate in the new model, as in the GAMBIT particle database
-dm_candidate: 
-  name: S
-  chargeX3: 0
-  spinX2: 0
-  is_self_conjugate: True

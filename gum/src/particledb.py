@@ -157,6 +157,11 @@ def get_gambit_particle_pdg_dict():
 
     return gambit_pdg_codes, decaybit_dict
 
+def check_all_particles_present(partlist, gambit_pdg_codes):
+    """
+    Checks all particles exist in the particle_database.yaml.
+    """
+    
 
 def add_new_particleDB_entry(particle):
     """

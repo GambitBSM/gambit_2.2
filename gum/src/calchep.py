@@ -8,6 +8,7 @@ import shutil
 import re
 import datetime
 import numpy as np
+
 from setup import *
 
 def clean(line):
@@ -189,49 +190,6 @@ def clean_calchep_model_files(model_folder, model_name):
     # If the model folder does not exist
     else:
       raise GumError("CalcHEP model folder " + model_folder + " not found.")
-
-
-def extract_particles(model_folder, model_name):
-    """
-    Extract list of all non-SM particles from CalcHEP files. NOTE: The
-    Higgs is considered 'BSM' in GAMBIT, in light of SUSY, 2HDMs, etc.
-    """
-
-    standard_model_pdgs = {1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6, 11, -11,
-                           12, -12, 13, -13, 14, -14, 15, -15, 16, -16, 21, 22,
-                           23, 24, -24}
-
-    bsm_particles = []
-
-    with open(model_folder + "/prtcls1.mdl", "r") as prtcls:
-
-        # Trim the unuseful information such as model name etc. from the top
-        for i in xrange(3):
-            next(prtcls)
-
-        for line in prtcls:
-
-            # Read in particle list & rid of whitespace
-            parts = [i.strip(' ') for i in line.split('|')]
-            # If the PDG code is in Standard Model, it's not BSM. Pass.
-            if int(parts[3]) in standard_model_pdgs:
-                pass
-            else:
-                # Check to see if new particle has a distinct
-                # antiparticle.
-                if parts[1] == parts[2]:
-                    self_conj = True
-                else:
-                    self_conj = False
-                # Charge not obtained from here. Set to 0.
-                newParticle = Particle(chargex3=0, spinx2=int(parts[4]),
-                                       pdg_code=int(parts[3]),
-                                       own_conjugate=self_conj)
-                bsm_particles.append(newParticle)
-
-    bsm_particles[:] = list(set(bsm_particles))
-
-    return np.array(bsm_particles)
 
 def has_ghosts(string):
   """

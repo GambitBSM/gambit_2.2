@@ -1,6 +1,5 @@
 from .setup import *
 from .parse import *
-from .mathematica_interface import *
 from .files import *
 from .models import *
 from .feynrules import *
