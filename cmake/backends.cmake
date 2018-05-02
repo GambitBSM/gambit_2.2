@@ -42,6 +42,10 @@
 #          (j.mckay14@imperial.ac.uk)
 #  \date 2016 Aug
 #
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017 May
+#
 #************************************************
 
 
@@ -808,6 +812,26 @@ ExternalProject_Add(${name}_${ver}
   PATCH_COMMAND ""
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
+  INSTALL_COMMAND ""
+)
+add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+set_as_default_version("backend" ${name} ${ver})
+
+# CalcHEP
+set(name "calchep")
+set(ver "3.6.27")
+set(dl "http://theory.sinp.msu.ru/~pukhov/CALCHEP/calchep_3.6.27.tgz")
+set(md5 "7914181e15791fe03373bd37819ef638")
+set(lib "libcalchep")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/")
+ExternalProject_Add(${name}_${ver}
+  DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver} 
+  SOURCE_DIR ${dir}
+  BUILD_IN_SOURCE 1
+  CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/main.c ${dir}/c_source/dynamicME/main.c
+  PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
+  BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
   INSTALL_COMMAND ""
 )
 add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)

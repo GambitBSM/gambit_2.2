@@ -63,7 +63,10 @@ SPheno:
 
 SPhenoMSSM:
   3.3.8:       ./Backends/installed/sphenomssm/3.3.8/lib/libSPhenoMSSM.so
-
+  
+CalcHEP:
+  3.6.27:      ./Backends/installed/calchep/3.6.27/lib/libcalchep.so
+  
 libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
 
