@@ -13,7 +13,7 @@ def sort_annihilations(dm, three_fields, four_fields):
     """
 
     if not isinstance(dm, Particle):
-        GumError("DM not passed over as an instance of class Particle.")
+        GumError("\n\nDM not passed over as an instance of class Particle.")
 
     dm_dm_to_x_y = []
 

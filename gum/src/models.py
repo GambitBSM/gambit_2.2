@@ -53,11 +53,11 @@ def add_to_model_hierarchy(new_spectrum, spectrum_name, model_name,
       
     if parent:
         if not find_file("models/" + parent, module, header):
-            raise GumError(("Parent model {0} not found. Please check " 
+            raise GumError(("\n\nParent model {0} not found. Please check " 
                             "your .gum file.").format(parent))
     
         if not translation_functions_p:
-            raise GumError(("Parent function specified, but no translation "
+            raise GumError(("\n\nParent function specified, but no translation "
                             "function. Please check your .gum file."))
                             
         parent_params = find_parents_params(parent)
@@ -246,7 +246,7 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
     # Now add each parameter to the model file.
     for i in np.arange(len(model_parameters)):
         if not isinstance(model_parameters[i], SpectrumParameter):
-            raise GumError(("Model Parameters at position " + i + 
+            raise GumError(("\n\nModel Parameters at position " + i + 
                             "not passed as instance of class "
                             "SpectrumParameter."))
                      
@@ -292,7 +292,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
 
     for i in np.arange(len(model_parameters)):
         if not isinstance(model_parameters[i], SpectrumParameter):
-            raise GumError(("Model Parameters at position " + i + 
+            raise GumError(("\n\nModel Parameters at position " + i + 
                             " not passed as instance of class "
                             "SpectrumParameter."))
 
@@ -584,7 +584,7 @@ def add_to_registered_spectra(gambit_model):
             if lookup in line:
                 linenum = num
             if newentry in line:
-                raise GumError(("Model {0} already exists in GAMBIT.").format(gambit_model))
+                raise GumError(("\n\nModel {0} already exists in GAMBIT.").format(gambit_model))
     
     return newentry, linenum          
     amend_file(filename, module, newentry, linenum, header=True)

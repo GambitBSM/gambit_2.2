@@ -55,7 +55,7 @@ def pdg_to_particle(pdg_code, pdg_dict):
             return name
             
     # If not found -> throw error; gum doesn't know what to do.
-    raise GumError(("No entry for PDG code " + str(pdg_code) + 
+    raise GumError(("\n\nNo entry for PDG code " + str(pdg_code) + 
                     " in dictionary. Please check "
                     "gambit/config/particle_database.yaml "
                     "or your Mathematica file."))

@@ -9,6 +9,7 @@ import os
 import itertools
 import sys
 
+from setup import *
 
 def get_gambit_particle_pdg_dict():
     """
@@ -161,6 +162,11 @@ def check_all_particles_present(partlist, gambit_pdg_codes):
     """
     Checks all particles exist in the particle_database.yaml.
     """
+    
+    for i in xrange(len(partlist)):
+        pdg_to_particle(partlist[i].pdg(), gambit_pdg_codes)
+    
+    print("All particles are in the GAMBIT database.")
     
 
 def add_new_particleDB_entry(particle):

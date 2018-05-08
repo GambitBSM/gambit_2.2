@@ -9,7 +9,8 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Sanjay Bloor
-///  \date 2017 May - Sep
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2017 May - Oct
 ///
 ///  *****************************************
 
@@ -20,7 +21,7 @@
 
 LOAD_LIBRARY
 
-BE_ALLOW_MODELS(SingletDM, MSSM63atQ)
+BE_ALLOW_MODELS(SingletDM)
 
 BE_FUNCTION(setModel, int, (char*, int), "setModel", "setModel")
 BE_FUNCTION(calcMainFunc, int, (), "calcMainFunc", "calcMainFunc")
@@ -46,7 +47,6 @@ BE_CONV_FUNCTION(Assign_Value, void, (char*, double), "Assign_Value")
 
 BE_INI_DEPENDENCY(SM_decay_rates, DecayTable)
 BE_INI_CONDITIONAL_DEPENDENCY(SingletDM_spectrum, Spectrum, SingletDM)
-BE_INI_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ)
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"

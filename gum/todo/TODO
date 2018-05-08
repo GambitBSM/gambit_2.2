@@ -1,7 +1,6 @@
 - finish process catalog:
     - importDecays - which things to include/exclude??
     - particle_database entries - dictionaries -> process catalogue work better?
-- python <-> mathematica interface!!
 - re-do calchep.py - not good
 - check the consistency of the yukawas for SMinputs - 3x3 matrix but accessed like a vector... seems like it wouldn't work?
 - spectrum_as_map and fill_as_map as standalone function in SpecBit??
@@ -11,7 +10,6 @@
 - proper setup.py for installation (setuptools)
 - PEP8
 - how to incorporate several DM candidates? say, if a model has a scalar and a fermion. 
-- merge calchep backend stuff to GUM_development
 
 model hierarchy:
  

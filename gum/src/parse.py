@@ -78,7 +78,7 @@ def check_gum_file(inputfile):
     if inputfile.endswith(".gum"):
         pass
     else:
-        raise GumError("Input filetype must be .gum.")
+        raise GumError("\n\nInput filetype must be .gum.")
   
     with open(inputfile, "r") as f:
         try:
@@ -87,25 +87,25 @@ def check_gum_file(inputfile):
             print(exc)
                              
         if not 'math' in data:
-            raise GumError(("'math' node needed in .gum file."))
+            raise GumError(("\n\n'math' node needed in .gum file."))
             
         if not 'package' in data['math']:
         # Don't know what to run...!
-            raise GumError(("No mathpackage input - what do you expect "
+            raise GumError(("\n\nNo mathpackage input - what do you expect "
                             "GUM to do? Please check your .gum file. "
                             "Supported entries: sarah, feynrules."))
                                     
         if data['math']['package'] not in ["sarah", "feynrules"]:
-            raise GumError(("You must specify which mathpackage you want "
+            raise GumError(("\n\nYou must specify which mathpackage you want "
                             "GUM to use. Please check your .gum file. "
                             "Supported entries: sarah, feynrules."))
     
         if not 'dm_candidate' in data:
-            raise GumError(("No dark matter candidate specified. "
+            raise GumError(("\n\nNo dark matter candidate specified. "
                             "Please check your .gum file."))
                       
         if not 'model' in data['math']:
-            raise GumError(("No model file specified. "
+            raise GumError(("\n\nNo model file specified. "
                             "Please check your .gum file."))
   
                               
@@ -130,12 +130,12 @@ def fill_gum_object(data):
     old_spectrum = spectrum_name = None
     if 'parent' in data:
         if not 'name' in data['parent']:
-            raise GumError(("No name given for parent function, please check "
-                            "your .gum file."))
+            raise GumError(("\n\nNo name given for parent function, please "
+                            "check your .gum file."))
         parent = data['parent']['name']
         if not 'tf' in data['parent']:
-            raise GumError(("No translation function given for parent function."
-                            " Please check your .gum file."))
+            raise GumError(("\n\nNo translation function given for parent "
+                            "function. Please check your .gum file."))
         tf_p = True
         
         # Assume we can use a parent's spectrum, unless explicitly specified
@@ -150,8 +150,8 @@ def fill_gum_object(data):
         old_spectrum = True
         spectrum_name = data['use_existing_spectrum']
         if not spectrum_name.endswith('_spectrum'):
-            raise GumError(("Existing spectrum entry must end with _spectrum. "
-                            "Please check your .gum file."))
+            raise GumError(("\n\nExisting spectrum entry must end with "
+                            "_spectrum. Please check your .gum file."))
     elif 'use_existing_spectrum' not in data:
         old_spectrum = False
         spectrum_name = "{0}_spectrum".format(gambit_model)

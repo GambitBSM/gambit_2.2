@@ -43,8 +43,8 @@ def find_decay_type(vertex):
 
     # Case 4. Error. Shouldn't happen.
     else:
-        raise GumError(("Only 3 body vertices currently supported by GUM."
-                 "Attempted to use vertex " + vertex))
+        raise GumError(("\n\nOnly 3 body vertices currently supported by GUM."
+                        "\n\nAttempted to use vertex " + vertex))
 
 
 def decay_grouper(decays):

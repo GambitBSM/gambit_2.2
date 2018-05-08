@@ -473,7 +473,7 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     return;
 }
 
-// Now all the grisly stuff, so Python can call C++ (which can call Mathematica...) 
+// Now all the grizzly stuff, so Python can call C++ (which can call Mathematica...) 
 BOOST_PYTHON_MODULE(libfr)
 {
   using namespace boost::python;

@@ -26,8 +26,6 @@ def full_filename(filename, module, header=False):
     # strip leading & trailing slashes
     filename.strip('/')
     module.strip('/')
-    if not module.endswith('Bit') and module != "Models":
-        module += 'Bit'
 
     path = ""
     if header == True:
@@ -58,8 +56,6 @@ def find_capability(capability, module, filename=None):
     """
 
     module.strip('/')
-    if not module.endswith('Bit') and module != "Models":
-        module += 'Bit'
 
     if not filename:
         filename = "{0}_rollcall".format(module)
@@ -70,9 +66,9 @@ def find_capability(capability, module, filename=None):
     if find_file(filename, module, header=True):
         pass
     else:
-        raise GumError(("Cannot find capability {0} in rollcall header file "
-                        "{1} as the file does not exist!!").format(capability,
-                                                                   location))
+        raise GumError(("\n\nCannot find capability {0} in rollcall header file"
+                        " {1} as the file does not exist!!").format(capability,
+                                                                    location))
 
     lookup = "#define CAPABILITY " + capability
 
@@ -89,8 +85,6 @@ def amend_rollcall(capability, module, contents, filename=None):
     """
 
     module.strip('/')
-    if not module.endswith('Bit') and module != "Models":
-        module += 'Bit'
 
     if not filename:
         filename = "{0}_rollcall".format(module)
@@ -101,9 +95,9 @@ def amend_rollcall(capability, module, contents, filename=None):
     if find_file(filename, module, header=True):
         pass
     else:
-        raise GumError(("Cannot find capability {0} in rollcall header file "
-                        "{1} as the file does not exist!!").format(capability,
-                                                                   location))
+        raise GumError(("\n\nCannot find capability {0} in rollcall header file"
+                        " {1} as the file does not exist!!").format(capability,
+                                                                    location))
 
     lookup = "#define CAPABILITY " + capability
     
@@ -127,8 +121,8 @@ def amend_rollcall(capability, module, contents, filename=None):
                     break
             amend_file(filename, module, contents, no, header=True)        
     else:
-        raise GumError(("Capability {0} not found in {1}!").format(capability,
-                                                                   filename))
+        raise GumError(("\n\nCapability {0} not found in "
+                        "{1}!").format(capability, filename))
 
 def find_function(function, capability, module, filename=None):
     """
@@ -136,8 +130,6 @@ def find_function(function, capability, module, filename=None):
     """
 
     module.strip('/')
-    if not module.endswith('Bit') and module != "Models":
-        module += 'Bit'
 
     if not filename:
         filename = "{0}_rollcall".format(module)
@@ -173,9 +165,9 @@ def find_string(filename, module, string, header=False):
     if find_file(filename, module, header):
         pass
     else:
-        raise GumError(("Cannot find capability {0} in rollcall header file {1} "
-                        "as the file does not exist!!").format(string,
-                                                               location))
+        raise GumError(("\n\nCannot find string {0} in the file"
+                        " {1} as the file does not exist!!").format(string,
+                                                                    location))
 
     with open(location) as f:
         for num, line in enumerate(f, 1):
@@ -192,7 +184,7 @@ def write_file(filename, module, contents, header=False):
     location = full_filename(filename, module, header)
 
     if find_file(filename, module, header) == True:
-        raise GumError(("Tried to write file " + location +
+        raise GumError(("\n\nTried to write file " + location +
                         ", but it already exists."))
 
     if mode != 'Test':
@@ -221,7 +213,7 @@ def amend_file(filename, module, contents, line_number, header=False):
     location = full_filename(filename, module, header)
 
     if find_file(filename, module, header) == False:
-        raise GumError(("ERROR: Tried to amend file " + location +
+        raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
 
     if mode != 'Test':
@@ -278,7 +270,7 @@ def write_function(function, returntype, dependencies=None,
         for i in np.arange(len(backend_reqs)):
             bereq = backend_reqs[i]
             if not isinstance(bereq, BackendReq):
-                raise GumError(("Backend requirement at position " + i +
+                raise GumError(("\n\nBackend requirement at position " + i +
                                 "not passed as instance of class BackendReq."))
 
             add = ", ".join([bereq.capability,
@@ -356,7 +348,7 @@ def indent(text, numspaces=0):
 
 
         if numspaces < 0:
-            raise GumError(("Tried to indent a negative number of spaces."
+            raise GumError(("\n\nTried to indent a negative number of spaces."
                             "Please check for rogue braces."))
 
         num_open = line.count("{")

@@ -69,7 +69,7 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
         par = model_parameters[i] 
       
         if not isinstance(par, SpectrumParameter):
-            raise GumError(("Model Parameters at position " + i + 
+            raise GumError(("\n\nModel Parameters at position " + i + 
                             "not passed as instance of class "
                             "SpectrumParameter."))
           

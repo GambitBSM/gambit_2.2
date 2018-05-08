@@ -34,33 +34,17 @@ def clean_calchep_model_files(model_folder, model_name):
 
         files = [f for f in os.listdir(model_folder) if f.endswith(".mdl")]
 
-        needed_files = ["func1.mdl", "lgrng1.mdl", "prtcls1.mdl", "vars1.mdl"]
-
+        needed_files = ["func1.mdl", "lgrng1.mdl", "prtcls1.mdl", 
+                        "vars1.mdl", "extlib1.mdl"]
+                        
         # Check that all needed files are present in the directory
         if set(needed_files) <= set(files):
-            print("All CalcHEP model files found - let's go.")
-
+            pass
         else:
-            raise GumError(("ERROR: directory present but does not "
-                            "contain all 4 of these files:\n" 
-                            + needed_files + 
-                            "Please check that all model files are "
-                            "present, and are numbered 1."))
-        ## extlib1.mdl
-
-        # Delete any extlib files; we won't be using anything
-        if "extlib1.mdl" in files:
-            os.remove(model_folder + "/extlib1.mdl")
-
-        extlib = open(model_folder + "extlib1.mdl", "w+")
-
-        extlib.writelines([model_name, "\nLibraries",
-                           "\nExternal libraries                               "
-                           "                             <|",
-                           "\n================================================"
-                           "================================"])
-
-        extlib.close()
+            raise GumError(("\n\nERROR: CalcHEP model directory exists, but "
+                            "the required model files are not here. Please "
+                            "check the following files exist: \n\t func1.mdl, "
+                            "lgrng1.mdl, prtcls1.mdl, vars1.mdl, extlib1.mdl"))
 
         ## vars1.mdl
 
@@ -189,7 +173,7 @@ def clean_calchep_model_files(model_folder, model_name):
 
     # If the model folder does not exist
     else:
-      raise GumError("CalcHEP model folder " + model_folder + " not found.")
+      raise GumError("\n\nCalcHEP model folder " + model_folder + " not found.")
 
 def has_ghosts(string):
   """
@@ -299,4 +283,26 @@ def get_vertices(foldername):
 
   # If the model folder does not exist
   else:
-    raise GumError("ERROR: CalcHEP Model folder " + foldername + " not found.")
+    raise GumError(("\n\nERROR: CalcHEP Model folder " 
+                    + foldername + " not found."))
+                    
+def copy_calchep_files(model_folder, model_name):
+    """
+    Copies all CalcHEP files into the GAMBIT Backends directory.
+    """
+    
+    model_name.strip('/')    
+    model_folder.strip('/')    
+    
+    gb_target = "./../Backends/installed/calchep/3.6.27/models/" + model_name
+    if not os.path.exists(gb_target):
+        os.makedirs(gb_target)
+        
+    shutil.copyfile(model_folder + "/func1.mdl", gb_target + "/func1.mdl")
+    shutil.copyfile(model_folder + "/vars1.mdl", gb_target + "/vars1.mdl")
+    shutil.copyfile(model_folder + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
+    shutil.copyfile(model_folder + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
+    shutil.copyfile(model_folder + "/extlib1.mdl", gb_target + "/extlib1.mdl")
+    
+    print("CalcHEP files moved to GAMBIT Backends directory.")
+    

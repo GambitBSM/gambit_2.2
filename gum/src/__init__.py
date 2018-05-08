@@ -8,3 +8,4 @@ from .decays import *
 from .spectrum import *
 from .particledb import *
 from .darkbit import *
+from .backends import *

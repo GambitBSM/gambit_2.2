@@ -10,7 +10,7 @@ import numpy as np
 from src import *
 from lib.libfr import *
 
-parser = argparse.ArgumentParser(description="From Lagrangian to scans: GAMBIT "
+parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
                                              "writing your papers for you.")
 parser.add_argument("-f", type=str, help="Specify input .GUM file.")
 
@@ -19,8 +19,12 @@ args = parser.parse_args()
 # Input .gum file.
 if args.f:
   
+    # Parse the .gum file
     inputs = check_gum_file(args.f)
-    gum = fill_gum_object(inputs) 
+    gum = fill_gum_object(inputs)
+    
+    # First, check the required backends are installed
+    check_backends(gum)
     
     # FeynRules
     if gum.math == 'feynrules':
@@ -54,39 +58,38 @@ if args.f:
            
     # If we haven't found the DM candidate in the particle list...
     if not dm:        
-        raise GumError(("The DM candidate specified has not been found "
+        raise GumError(("\n\nThe DM candidate specified has not been found "
                         "in the FeynRules file. Please check your .gum "
                         "file as well as the FeynRules file."))
 
     print("Adding new model {0} to GAMBIT...\n").format(gum.name)
-    
-    # TODO : check all new particles are in the GAMBIT particle db
-    
-    
+        
     # Need to know how GAMBIT refers to each particle. Scrape information
     # from particle_database.yaml.
     gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
 
-  
+    # Check every new particle is in the database
+    check_all_particles_present(partlist, gambit_pdg_codes)
+    
+    # Clean up calchep files, then copy them to the GAMBIT backendDir
+    clean_calchep_model_files(outputs.get_ch(), gum.name)
+    copy_calchep_files(outputs.get_ch(), gum.name)
+    
     # Run FeynRules/SARAH -> generate the following:
-    #  - CalcHEP files                                 DecayBit, DarkBit
-    #  - (Basic) Spectrum object                       SpecBit
-    #  - MadGraph (.ufo) files                         ColliderBit
+    #  - CalcHEP files                                 DecayBit, DarkBit               (done)
+    #  - (Basic) Spectrum object                       SpecBit                         (done)
+    #  - MadGraph (.ufo) files                         ColliderBit                     (todo)
     
     # SARAH only:
-    #  - SPheno interface                              PrecisionBit, FlavBit, DecayBit
-    #  - FlexibleSUSY model                            SpecBit, PrecisionBit?
-    #  - VEVacious model files                         SpecBit
+    #  - SPheno interface                              PrecisionBit, FlavBit, DecayBit (todo)
+    #  - FlexibleSUSY model                            SpecBit, PrecisionBit?          (todo)
+    #  - VEVacious model files                         SpecBit                         (todo)
+    #  - MicrOMEGAs                                    DarkBit                         (todo)
 
     # Unknown:
-    #  - DirectDM interface                            DarkBit
+    #  - DirectDM interface                            DarkBit                         (todo)
    
-    # Run CalcHEP_cleaner
-    clean_calchep_model_files(outputs.get_ch(), gum.name)
-  
-    # Need to know how GAMBIT names each particle. (In each module, too.)
-    gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
-      
+
     """
     MODELS
     """
@@ -192,13 +195,19 @@ if args.f:
     ## TODO
     spectrum_header = write_spectrum_header(gum.name)
     spec_rollcall = write_specbit_rollcall(gum.name)
+    
+    """
+    BACKENDS
+    """
+    
+    ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec) # If no parent
         
     print("")
     print("Everything has gone smoothly so far.")
     print("Now to write some GAMBIT code...")
     print("")
     
-    # write to file, all code HERE 
+    # All file writing routines HERE, once everything has gone okay.
    
     # Models
     m = "Models"
@@ -244,6 +253,17 @@ if args.f:
     # ColliderBit
     m = "ColliderBit"
     
+    # Backends
+    m = "Backends"
+    f = "frontends/CalcHEP_3_6_27"
+    num = find_string(f, m, "setModel(modeltoset, 1)", False)[1]
+    amend_file(f, m, ch_src_sl, num, False)
+    num = find_string(f, m, "END_BE_INI_FUNCTION", False)[1]
+    amend_file(f, m, ch_src_pl, num-2, False)
+    num = find_string(f, m, "backend_undefs.hpp", True)[1]
+    amend_file(f, m, ch_head, num-2, True)
+    num = find_string(f, m, "BE_FUNCTION", True)[1]
+    amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, True)
         
     print("")
     print("GUM has finished successfully!")
@@ -251,5 +271,5 @@ if args.f:
     print("")
 
 else:
-    raise GumError(("\n\tHi! You must be new here. Usage: ./gum -f inifile.gum"
+    raise GumError(("\n\n\tHi! You must be new here. Usage: ./gum -f inifile.gum"
                     "\n\tOr try ./gum -h for help."))
