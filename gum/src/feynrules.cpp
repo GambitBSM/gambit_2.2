@@ -37,17 +37,17 @@ void FeynRules::load_feynrules()
     
 }
 
-void FeynRules::load_model(std::string name)
+void FeynRules::load_model(std::string model)
 {
 
-    std::cout << "Loading model " + name + " in FeynRules... ";
+    std::cout << "Loading model " + model + " in FeynRules... ";
 
     // LoadModel command.
-    std::string command = "LoadModel[\"Models/" + name + "/" + name + ".fr\"]";
+    std::string command = "LoadModel[\"Models/" + model + "/" + model + ".fr\"]";
     send_to_math(command);
     
     // Some sort of check here ?
-    std::cout << "Model " + name + " loaded successfully." << std::endl;   
+    std::cout << "Model " + model + " loaded successfully." << std::endl;   
      
 }
 
@@ -68,13 +68,13 @@ void FeynRules::get_modelname(std::string &modelname)
     modelname = std::string(out);
 }
 
-void FeynRules::load_restriction(std::string name)
+void FeynRules::load_restriction(std::string model, std::string rst)
 {
 
-    std::cout << "Loading restriction " + name + "... ";
+    std::cout << "Loading restriction " + rst + "... ";
 
     // LoadModel command.
-    std::string command = "LoadRestriction[\"Models/" + name + ".rst\"]";
+    std::string command = "LoadRestriction[\"Models/" + model + "/" + rst + ".rst\"]";
     send_to_math(command);
     
     // Some sort of check here ?
@@ -419,7 +419,7 @@ void FeynRules::write_ch_output()
 // Performs all FeynRules output.
 void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs)
 {
-    std::cout << "Calling FeynRules with model " << opts.model() << std::endl;
+    std::cout << "Calling FeynRules with model " << opts.model() << "..." << std::endl;
 
     // Declare FeynRules model class
     FeynRules model;
@@ -437,7 +437,7 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     // Load restrictions - if there are any.
     if (not opts.restriction().empty())
     {
-        model.load_restriction(opts.restriction());
+        model.load_restriction(opts.model(), opts.restriction());
     }
     
     // Diagnositics -- check it is hermitian

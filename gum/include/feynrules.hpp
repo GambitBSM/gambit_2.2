@@ -104,10 +104,10 @@ class FeynRules
     void load_feynrules();
     
     // Load model
-    void load_model(std::string name);
+    void load_model(std::string model);
     
     // Load restriction e.g. diagonal CKM, etc.
-    void load_restriction(std::string name);
+    void load_restriction(std::string model, std::string rst);
     
     // Hermiticity check
     void check_herm();

@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(GUM)
 message("Building GUM in ${CMAKE_CURRENT_SOURCE_DIR}")
+include(ExternalProject)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-
-message("${CMAKE_CXX_COMPILER}")
 
 # Check for Mathematica
 include(cmake/FindMathematica.cmake)
@@ -29,39 +28,51 @@ if(Mathematica_FOUND AND Mathematica_WSTP_FOUND)
   set(LIBRARIES ${LIBRARIES} ${Mathematica_WSTP_LIBRARIES} ${Mathematica_MathLink_LIBRARY})
 endif()
 
-# Get FeynRules path
-set(FR "" CACHE STRING "The path to the FeynRules module.")
-get_filename_component(FEYNRULES_PATH "${FR}" PATH)
+# Download FeynRules
+EXTERNALPROJECT_ADD(
+    FeynRules
+    
+    URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
+    URL_MD5 95c70262ac434d48346ef2f97165e76b
+    
+    UPDATE_COMMAND ""
+    PATCH_COMMAND ""
+    
+    SOURCE_DIR "${CMAKE_SOURCE_DIR}/contrib/FeynRules"
+    CONFIGURE_COMMAND ""
+    
+    BUILD_COMMAND ""
+    
+    INSTALL_COMMAND ""
+    
+    TEST_COMMAND ""
+)
 
-if(FEYNRULES_PATH)
-  if(EXISTS "${FR}/FeynRules.m")
-    message("   Found FeynRules.")
-    set(FEYNRULES_PATH "${FR}")
-    set(HAVE_FEYNRULES 1)
-  else()
-    set(HAVE_FEYNRULES 0)
-    message(FATAL_ERROR "\n  FeynRules.m not found where you said it would be...")
-  endif()
-endif()  
+# Download SARAH
+EXTERNALPROJECT_ADD(
+    SARAH
+    
+    URL http://www.hepforge.org/archive/sarah/SARAH-4.12.3.tar.gz
+    URL_MD5 be173d937e88f18df81dd29a08efc513
+    
+    UPDATE_COMMAND ""
+    PATCH_COMMAND ""
+    
+    SOURCE_DIR "${CMAKE_SOURCE_DIR}/contrib/SARAH"
+    CONFIGURE_COMMAND ""
+    
+    BUILD_COMMAND ""
+    
+    INSTALL_COMMAND ""
+    
+    TEST_COMMAND ""
+)
 
-# Get SARAH path
-set(SARAH "" CACHE STRING "The path to the SARAH module.")
-get_filename_component(SARAH_PATH "${SARAH}" PATH)
-
-if(SARAH_PATH)
-  if(EXISTS "${SARAH}/SARAH.m")
-    message("   Found SARAH.")
-    set(SARAH_PATH "${SARAH}")
-    set(HAVE_SARAH 1)
-  else()
-    set(HAVE_SARAH 0)
-    message(FATAL_ERROR "\n SARAH.m not found where you said it would be...")
-  endif()
-endif()
-
-if(NOT HAVE_FEYNRULES AND NOT HAVE_SARAH)
-  message(FATAL_ERROR "\n  You need to link GUM to either FeynRules or SARAH to get it to do stuff! \n  Use -D FR=path_to_feynrules or -D SARAH=path_to_sarah. (Or both.)")
-endif()
+# Set paths
+set(FEYNRULES_PATH "${CMAKE_SOURCE_DIR}/contrib/FeynRules/")
+set(HAVE_FEYNRULES 1)
+set(SARAH_PATH "${CMAKE_SOURCE_DIR}/contrib/SARAH/")
+set(HAVE_SARAH 1)
 
 # Python
 FIND_PACKAGE(PythonInterp 2 REQUIRED)
@@ -103,6 +114,8 @@ if(Boost_FOUND)
   include_directories("${Boost_INCLUDE_DIR}")
   FIND_PACKAGE(Boost 1.41.0 COMPONENTS python)
   ADD_LIBRARY(fr SHARED src/feynrules.cpp)
+  TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
+  ADD_LIBRARY(sarah SHARED src/sarah.cpp)
   TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 else()
   message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and rerun cmake.")

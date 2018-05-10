@@ -66,10 +66,10 @@ if args.f:
         
     # Need to know how GAMBIT refers to each particle. Scrape information
     # from particle_database.yaml.
-    gambit_pdg_codes, decaybit_dict = get_gambit_particle_pdg_dict()
+    gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
     # Check every new particle is in the database
-    check_all_particles_present(partlist, gambit_pdg_codes)
+    check_all_particles_present(partlist, gambit_pdgs)
     
     # Clean up calchep files, then copy them to the GAMBIT backendDir
     clean_calchep_model_files(outputs.get_ch(), gum.name)
@@ -89,7 +89,32 @@ if args.f:
     # Unknown:
     #  - DirectDM interface                            DarkBit                         (todo)
    
-
+        
+    # Add the BSM masses to the model parameters
+    
+    # Initialise all of the model parameters, for writing spectra, model files..
+    model_parameters = []
+    
+    # Add all new particle masses as Pole Masses... I think this is ok?
+    for i in xrange(len(fr_bsm)):
+        x = fr_bsm[i]
+        model_parameters.append(SpectrumParameter(pdg_to_particle(x.pdg(), 
+                                                                  gambit_pdgs), 
+                                                  "Pole_Mass", 
+                                                  gb_input=x.mass()))
+    
+    # Todo - get this information -- properly -- from 'paramlist'
+    # Same name in GAMBIT as in Backends?
+    model_parameters.append(SpectrumParameter("vev", "mass1", sm=True))
+    model_parameters.append(SpectrumParameter("lambda_hS", "dimensionless",fullname="lambdahs"))
+    model_parameters.append(SpectrumParameter("g1", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("g2", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("g3", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("sinW2", "dimensionless", "scalar", sm=True))
+    model_parameters.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
+    model_parameters.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
+    model_parameters.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
+    
     """
     MODELS
     """
@@ -112,22 +137,6 @@ if args.f:
                                                         gum.friends, 
                                                         translation_functions_p,
                                                         tf_c, tf_f)
-    
-    ## Just a placeholder for now -- need to scrape these from SARAH/FeynRules files.
-    model_parameters = []
-    # Should be from particles
-    model_parameters.append(SpectrumParameter("S", "Pole_Mass", gb_input="mS"))
-    model_parameters.append(SpectrumParameter("h_01", "Pole_Mass",fullname="higgs", gb_input="mH"))
-    # From parameters
-    model_parameters.append(SpectrumParameter("vev", "mass1", sm=True))
-    model_parameters.append(SpectrumParameter("lambda_hS", "dimensionless",fullname="lambdahs"))
-    model_parameters.append(SpectrumParameter("g1", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("g2", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("g3", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("sinW2", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
-    model_parameters.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
-    model_parameters.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
     
     spec_contents = write_spectrumcontents(gum.name, model_parameters)
     subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
@@ -153,13 +162,13 @@ if args.f:
     for i in xrange(len(three_body_decays)):
         decaybit_src += write_decaytable_entry(three_body_decays[i], gum.name,
                                                calchep_pdg_codes, 
-                                               gambit_pdg_codes,
+                                               gambit_pdgs,
                                                decaybit_dict)
                                                
     decay_roll, new_decays = write_decaybit_rollcall_entry(gum.name, gum.spec, 
                                                            three_body_decays, 
                                                            decaybit_dict,
-                                                           gambit_pdg_codes)
+                                                           gambit_pdgs)
                                                                  
     all_decays_src, all_decays_header = amend_all_decays(gum.name, gum.spec, 
                                                          new_decays)  
@@ -181,7 +190,7 @@ if args.f:
                                                    
     # TODO - pass over required information for direct detection
     darkbit_src = write_darkbit_entry(dm, ann_products, propagators, 
-                                      gambit_pdg_codes, gum.name, 
+                                      gambit_pdgs, gum.name, 
                                       calchep_pdg_codes, bsm_particle_list)
                                       
     pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name)
@@ -189,10 +198,10 @@ if args.f:
     """
     SPECTRA
     """
-      
+    
+    # Determine when "simple_SMinputs" needed from FR/S model file
     spectrum_src = write_basic_spectrum(gum.name, model_parameters, gum.spec, 
                                         simple_SMinputs = True)
-    ## TODO
     spectrum_header = write_spectrum_header(gum.name)
     spec_rollcall = write_specbit_rollcall(gum.name)
     
