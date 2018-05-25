@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 #include "cmake_variables.hpp"
 #include "options.hpp"
@@ -103,13 +104,19 @@ class SARAH
     void load_sarah();
     
     // Load model
-    void load_model(std::string name);
+    bool load_model(std::string name);
     
-    // Load restriction e.g. diagonal CKM, etc.
-    void load_restriction(std::string name);
+    // Model checks
+    void check_model();
     
-    // Hermiticity check
-    void check_herm();
+    // Get model name
+    void get_modelname(std::string&);
+    
+    // Particle list
+    void get_partlist(std::vector<Particle>&);
+  
+    // Parameters list
+    void get_paramlist(std::vector<Parameter>&);
     
     // Outputs: CalcHEP, MadGraph, ...
     void write_ch_output();
@@ -118,6 +125,6 @@ class SARAH
 };
     
 // Everything
-void all_sarah(Options);
+void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&);
 
 #endif

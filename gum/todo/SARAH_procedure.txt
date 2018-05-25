@@ -1,6 +1,6 @@
 ## Setup - 
 
-SetDirectory["~/.Mathematica/Applications/SARAH-4.9.1"];
+SetDirectory["/home/sb3212/GUMbit/gum/contrib/SARAH"];
 << SARAH`;
 Start["SingletDM"];
 
@@ -15,7 +15,6 @@ Particles[EWSB] ---> all particle information, EXCEPT for PDG codes????
 
 MakeVertexList[EWSB];
 MakeCHep[SLHAinput -> False, UseRunningCoupling -> True, CalculateMasses -> True];
-
 
 
 Quit[];

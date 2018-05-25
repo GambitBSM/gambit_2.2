@@ -1,8 +1,8 @@
 ## Setup -
 
-$FeynRulesPath = SetDirectory["~/.Mathematica/Applications/feynrules-current"];
+$FeynRulesPath = SetDirectory["/home/sb3212/GUMbit/gum/contrib/FeynRules"];
 << FeynRules`;
-LoadModel["Models/SingletDM/SingletDM.fr"];
+LoadModel["Models/SingletDM_test/SingletDM_test.fr"];
 LoadRestriction["Models/DiagonalCKM.rst"];
 
 ## Basic diagnostics - 

@@ -22,14 +22,14 @@ void FeynRules::load_feynrules()
     if (!WSGetString((WSLINK)pHandle, &out))
     {
         std::cerr << "Error loading FeynRules. Please check that FeynRules actually lives" 
-                  << "\nwhere CMake thinks it is, in:\n" 
+                  << "\nwhere CMake put it, in:\n" 
                   << "  " + std::string(FEYNRULES_PATH)
                   << "\nPlease try rebuilding." << std::endl;
         return;
     }
     else
     {
-        std::cout << "FeynRules loaded from " << out << std::endl;
+        std::cout << "FeynRules loaded from " << out << "." << std::endl;
     }
     
     input+= "<<FeynRules`";
@@ -37,18 +37,29 @@ void FeynRules::load_feynrules()
     
 }
 
-void FeynRules::load_model(std::string model)
+bool FeynRules::load_model(std::string model)
 {
 
-    std::cout << "Loading model " + model + " in FeynRules... ";
+    std::cout << "Loading model " + model + " in FeynRules... " << std::endl;
 
     // LoadModel command.
     std::string command = "LoadModel[\"Models/" + model + "/" + model + ".fr\"]";
     send_to_math(command);
     
-    // Some sort of check here ?
-    std::cout << "Model " + model + " loaded successfully." << std::endl;   
-     
+    // Check the model has been loaded by querying the model name. If it has changed from the default then we're set.
+    std::string modelname;
+    get_modelname(modelname);
+    
+    std::string tomatch = "Models" + model + model;
+    if (modelname == tomatch)
+    {
+        std::cerr << std::endl << "ERROR! Could not load model " << model << ". Please check your FeynRules file." << std::endl << std::endl;
+        return false;
+    }
+    
+    // All good.
+    std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;  
+    return true;     
 }
 
 // The model may have a different "internal" name than what's on the package.
@@ -68,7 +79,7 @@ void FeynRules::get_modelname(std::string &modelname)
     modelname = std::string(out);
 }
 
-void FeynRules::load_restriction(std::string model, std::string rst)
+bool FeynRules::load_restriction(std::string model, std::string rst)
 {
 
     std::cout << "Loading restriction " + rst + "... ";
@@ -77,9 +88,25 @@ void FeynRules::load_restriction(std::string model, std::string rst)
     std::string command = "LoadRestriction[\"Models/" + model + "/" + rst + ".rst\"]";
     send_to_math(command);
     
-    // Some sort of check here ?
-    std::cout << "Restriction " + name + " loaded successfully." << std::endl;    
+    // Some sort of check here?
+    command = "Length[M$Restrictions]";
+    send_to_math(command);
     
+    int out;
+    if (!WSGetInteger((WSLINK)pHandle, &out))
+    {
+        std::cerr << "Error loading restriction." << std::endl;
+        return false;
+    }
+    
+    if (out == 0)
+    {
+        std::cerr << std::endl << std::endl << "No restrictions loaded. Please check your .gum file and \nthat your .rst files are in the correct place." << std::endl << std::endl;
+        return false;
+    }
+        
+    std::cout << "Restriction " + rst + " loaded successfully." << std::endl;    
+    return true;
 }
 
 // Check a model is Hermitian (it should be...)
@@ -406,13 +433,7 @@ void FeynRules::write_ch_output()
     // Write output.
     std::string command = "WriteCHOutput[LTotal, CHAutoWidths -> False];";
     send_to_math(command);
-    
-    /* Checks -- including:
-         * Folder where files are written to.
-         * Writing of all files.
-         * "Done" message.      
-    */
-    
+        
     std::cout << "CalcHEP files written." << std::endl;
 }
 
@@ -432,12 +453,21 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     
     // Set the FeynRules model and load it up
     model.set_name(opts.model());
-    model.load_model(opts.model());
+    bool out = model.load_model(opts.model());
+    
+    if (not out)
+    {
+        return;
+    }
     
     // Load restrictions - if there are any.
     if (not opts.restriction().empty())
     {
-        model.load_restriction(opts.model(), opts.restriction());
+        out = model.load_restriction(opts.model(), opts.restriction());
+        if (not out)
+        {
+            return;
+        }
     }
     
     // Diagnositics -- check it is hermitian

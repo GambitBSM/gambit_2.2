@@ -1,9 +1,5 @@
 ## Minimal .gum (YAML) file for GUM.
 
-# CalcHEP model file -- placeholder -- this will be relative to the FR file etc.
-# This should be the absolute path from $GAMBIT/gum.
-calchep_model: ../../.Mathematica/Applications/feynrules-current/Scalar-Singlet-Dark-Matter-CH
-
 math:
   # Name of Mathematica package, either 'feynrules' or 'sarah'
   package: feynrules
