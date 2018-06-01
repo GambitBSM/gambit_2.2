@@ -137,6 +137,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             int pdg;
             int num;
             bool SM;
+            bool capitalise = false;
             
             // Assume a particle is SC unless we spot it.
             bool self_conjugate = true; 
@@ -192,65 +193,54 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                     std::cerr << "Error getting particle name." << std::endl;
                     return;
                 }
-                
-                
-                std::cout << "Here..." << std::endl;
-                
-                command = "conj[pl[[" + std::to_string(i+1) + ", 1]]]";
-                
-                std::cout << "Command: " << command << std::endl;
+                                
+                // Probe to see if it is self-conjugate
+                command = "TrueQ[pl[[" + std::to_string(i+1) + ", 1]] == conj[pl[[" + std::to_string(i+1) + ", 1]]]]";
                 send_to_math(command);
                 
-                const char* temp;
-                if (!WSGetString((WSLINK)pHandle, &temp))
+                const char* is_sc;
+                if (!WSGetString((WSLINK)pHandle, &is_sc))
                 {
                     std::cerr << "Error getting name." << std::endl;
                     return;
                 }
-                
-                std::cout << "NAME: " << temp;
-                
-                command = "conj[pl[[" + std::to_string(i+1) + ", 1]]]";
-                send_to_math(command);
-                
-                const char* temp2;
-                if (!WSGetString((WSLINK)pHandle, &temp2))
-                {
-                    std::cerr << "Error getting temp." << std::endl;
-                    return;
+                if (strcmp(is_sc, "True")) 
+                { 
+                    self_conjugate = false;
+                    capitalise = true;
                 }
-                std::cout << " CONJ: " << temp2;
-                
-                std::cout << " " << strcmp(temp, temp2) << std::endl;
             }
             else
             {
                 std::cerr << "More than 2 particles here; what weird symmetries have you got???" << std::endl;
                 return;
             }
-            
+
             if (numelements > 1)
             {
                 outputname = std::string(name) + std::to_string(j+1);
-                if (not self_conjugate)
-                {
-                    antioutputname = std::string(antiname) + std::to_string(j+1);
+                if (not self_conjugate && capitalise)
+                {                
+                    antioutputname = outputname;
+                    if (isupper(antioutputname[0])) { antioutputname = tolower(antioutputname[0]); }
+                    else { antioutputname[0] = toupper(antioutputname[0]); }
                 }
             }
-            else 
+            else
             { 
+
                 outputname = std::string(name); 
                 if (not self_conjugate)
                 {
-                    antioutputname = std::string(antiname) + std::to_string(j+1);
+                    antioutputname = std::string(antiname);
                 }
             }
             
-            std::cout << "PDG code = " << pdg << ", outputname = " << outputname;
+            std::cout << "PDG code = " << pdg << ", self conj? -- " << self_conjugate << ", outputname = " << outputname;
             
             if (not self_conjugate) { std::cout << ", antioutputname = " << antioutputname << std::endl; }
             else { std::cout << std::endl; }
-            
+                        
         }
         
     } 
