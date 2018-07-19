@@ -269,6 +269,19 @@ vacuum_stability: |
     the expected lifetime of the electroweak vacuum, the instability scale, and
     the perturbativity of the couplings up to the necessary scale.
 
+make_vevaciousPlusPlus_inputs: |
+    Write VevaciousPlusPlus files with the options specified in the YAML file.
+    Creates all the input necessary to initialize VevaciousPlusPlus object within
+    GAMBIT
+
+check_stability_MSSM: |
+    Calculates the lifetime of the desired symmetry breaking (DSB) for the current parameter
+    point.
+
+VS_likelihood_MSSM: |
+    Compute likelihood of no decay to undesired symmetry breaking minima
+    (i.e. color- or charge- breaking) in the past light cone.
+
 check_perturb_min_lambda: |
     Check that dimensionless couplings are sufficiently small up to the smaller
     of the Planck scale and the scale at which the quartic Higgs coupling is
