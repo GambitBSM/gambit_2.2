@@ -27,8 +27,10 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 
-namespace Gambit {
-  namespace DarkBit {
+namespace Gambit
+{
+  namespace DarkBit
+  {
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -88,33 +90,25 @@ namespace Gambit {
       logger() << LogTags::debug << "\tdels = delta s = " << BEreq::ddcom->dels << EOM;
 
 
+      // Loop corrections and pole removal.
+
       // Option loop<bool>: If true, include 1-loop effects discussed in
       // Drees Nojiri Phys.Rev. D48 (1993) 3483-3501 (default: true)
+      BEreq::ddcom->dddn = runOptions->getValueOrDef<bool>(true,"loop");
 
-      // Turn on Drees Nojiri treatment by default:
-      BEreq::ddcom->dddn = 1;
+      // Option pole<bool>: If true, include pole in nuclear scattering cross-section.
+      // If false, approximate squark propagator as 1/m_sq^2 (default: false)
+      BEreq::ddcom->ddpole = runOptions->getValueOrDef<bool>(false,"pole");
 
-      if (runOptions->hasKey("loop"))
+      // Some version notes:
+      // The default in DS5 is to for both these options to be false (tree-level cross-section with pole removed).
+      // The default in DS6 is to use Drees-Nojiri (1 loop) with the pole removed, which isn't an
+      // option in the official DS5.1.3.  The version in GAMBIT is patched to implement this option though,
+      // so we use it as the default here.
+
+
+      if (*Dep::DarkSUSY_PointInit)
       {
-        if (runOptions->getValue<bool>("loop")==false) BEreq::ddcom->dddn = 0;
-      }
-
-      // Option pole<bool>: If false, approximate squark propagator as 1/m_sq^2 (set to
-      // true if loop = true) (default: false)
-      if (runOptions->hasKey("pole"))
-      {
-        if (runOptions->getValue<bool>("pole")==true) BEreq::ddcom->ddpole = 1;
-        else
-        {
-          BEreq::ddcom->ddpole = 0;
-          if ((runOptions->hasKey("loop") && runOptions->getValue<bool>("loop")==true) ||
-             !(runOptions->hasKey("loop")))
-                logger () << LogTags::debug << "pole = false ignored "
-                   "by DarkSUSY because loop = true." << EOM;
-        }
-      }
-
-      if (*Dep::DarkSUSY_PointInit) {
         // Calling DarkSUSY subroutine dsddgpgn(gps,gns,gpa,gna)
         // to set all four couplings.
         BEreq::dsddgpgn(result.gps, result.gns, result.gpa, result.gna);
@@ -130,7 +124,9 @@ namespace Gambit {
         logger() << LogTags::debug << " gns = " << result.gns << std::endl;
         logger() << LogTags::debug << " gpa = " << result.gpa << std::endl;
         logger() << LogTags::debug << " gna = " << result.gna << EOM;
-      } else {
+      }
+      else
+      {
         // Set couplings to zero if DarkSUSY point initialization
         // was not successful
         result.gps = 0.0; result.gns = 0.0;
@@ -256,7 +252,14 @@ namespace Gambit {
     void CAT_3(EXPERIMENT,_Get,NAME)(TYPE &result)                                 \
     {                                                                              \
       using namespace Pipes::CAT_3(EXPERIMENT,_Get,NAME);                          \
-      result = BEreq::CAT(DD_,NAME)(BEreq::DD_Experiment(STRINGIFY(EXPERIMENT)));  \
+      TYPE temp_result = BEreq::CAT(DD_,NAME)(BEreq::DD_Experiment(STRINGIFY(EXPERIMENT)));  \
+      if (Utils::isnan(temp_result))                                               \
+      {                                                                            \
+        /* DarkBit_error().raise(LOCAL_INFO, "Got NaN value from DDCalc."); */     \
+        /* TODO: Raise a proper error here -- NaNs should be fixed. */             \
+        invalid_point().raise("Got NaN value from DDCalc! This need fixing!");     \
+      }                                                                            \
+      result = temp_result;                                                        \
     }
 
     /// Defines functions to perform the DDCalc internal rate calculations,
@@ -286,6 +289,7 @@ namespace Gambit {
     DD_EX(DARWIN_Xe)
     DD_EX(LUX_2016)             // D.S. Akerib et al., PRL 118, 021303 (2017) [arxiv:1608.07648]
     DD_EX(PandaX_2016)          // A. Tan et al., PRL 117, 121303 (2016) [arxiv:1607.07400]
+    DD_EX(PandaX_2017)          // X. Cui et al., PRL 119, 181302 (2017) [arxiv:1708.06917]
     DD_EX(LUX_2015)             // D.S. Akerib et al., PRL 116, 161301 (2016) [arXiv:1512.03506]
     DD_EX(PICO_2L)              // C. Amole et al., PRD 93, 061101 (2016) [arXiv:1601.03729]
     DD_EX(PICO_60_F)            // C. Amole et al., PRD 93, 052014 (2016) [arXiv:1510.07754]
