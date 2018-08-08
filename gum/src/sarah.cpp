@@ -130,9 +130,8 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             std::string outputname;
             const char* antiname;
             std::string antioutputname;
-            const char* spin;
             const char* fullname;
-            const char* mass;
+            std::string mass;
             int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
             int pdg;
             int num;
@@ -236,15 +235,74 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 }
             }
             
-            std::cout << "PDG code = " << pdg << ", self conj? -- " << self_conjugate << ", outputname = " << outputname;
+            //std::cout << "PDG code = " << pdg << ", self conj? -- " << self_conjugate << ", outputname = " << outputname;
+            //if (not self_conjugate) { std::cout << ", antioutputname = " << antioutputname << std::endl; }
+            //else { std::cout << std::endl; }
             
-            if (not self_conjugate) { std::cout << ", antioutputname = " << antioutputname << std::endl; }
-            else { std::cout << std::endl; }
+            mass = "M" + outputname;
+            
+            std::set<int> SM_pdgs = {1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24};
+            if (SM_pdgs.count(abs(pdg)))
+            {  
+                SM = true;
+            }
+            else
+            {
+                SM = false;
+            }
+            
+            // Add the particle to the list.
+            Particle particle(pdg, std::string(name), spinX2, std::string(outputname), SM, mass, self_conjugate);
+            partlist.push_back(particle);
                         
+            // Also add the antiparticle if it is distinct.
+            if (not self_conjugate)
+            {
+                Particle antiparticle((-1)*pdg, std::string(antiname), spinX2, std::string(antioutputname), SM, mass, self_conjugate);
+                partlist.push_back(antiparticle);
+            }
+                                    
         }
         
-    } 
-     
+    }
+             
+}
+
+void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
+{
+
+    std::cout << "Extracting parameters from SARAH model." << std::endl;
+    
+    // Get list of parameters
+    std::string command = "pL = parameters;";
+    send_to_math(command);
+
+    // Find out how many parameters we have to get.
+    command = "Length[pL]";
+    send_to_math(command);
+    
+    int lenpl;
+    
+    if (!WSGetInteger((WSLINK)pHandle, &lenpl))
+    {
+        std::cout << "Error getting 'Length[ParamList]' from WSTP." << std::endl;
+        return;
+    }
+    
+    std::cout << "Found " << lenpl << " parameter sets." << std::endl;
+
+}
+
+// Write CalcHEP output. 
+void SARAH::write_ch_output()
+{
+    std::cout << "Writing CalcHEP output." << std::endl;
+        
+    // Write output.
+    std::string command = "MakeCHep[SLHAinput -> False, UseRunningCoupling -> True, CalculateMasses -> False];";
+    send_to_math(command);
+        
+    std::cout << "CalcHEP files written." << std::endl;
 }
 
 void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs)
@@ -275,6 +333,18 @@ void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parame
     // Get all of the particles
     model.get_partlist(partlist);
     
+    // And all parameters
+    model.get_paramlist(paramlist);
+    
+    // Write CalcHEP output
+    model.write_ch_output();
+    
+    // This is where the output CalcHEP files will be written
+    std::string chdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/CHep";
+    std::replace(chdir.begin(), chdir.end(), ' ', '-');
+    
+    outputs.set_ch(chdir);
+    
     // All done. Close the Mathematica link.
     model.close_wstp_link();
     
@@ -282,3 +352,43 @@ void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parame
     
 }
 
+// Now all the grizzly stuff, so Python can call C++ (which can call Mathematica...) 
+BOOST_PYTHON_MODULE(libsarah)
+{
+  using namespace boost::python;
+    
+  class_<Particle>("SARAHParticle", init<int, std::string, int, std::string, bool, std::string, bool>())
+    .def("pdg",    &Particle::pdg)
+    .def("name",   &Particle::name)
+    .def("SM",     &Particle::SM)
+    .def("spinX2", &Particle::spinX2)
+    .def("mass",   &Particle::mass)
+    .def("SC",     &Particle::SC)
+    ;
+  
+  class_<Parameter>("SARAHParameter", init<std::string, std::string>())
+    .def("name",  &Parameter::name)
+    .def("block", &Parameter::block)
+    ;
+  
+  class_<Options>("SARAHOptions", init<std::string, std::string, std::string>())
+    .def("package",     &Options::package)
+    .def("model",       &Options::model)
+    ;
+  
+  class_<Outputs>("SARAHOutputs", init<>())
+    .def("get_ch",  &Outputs::get_ch)
+    ;
+  
+  class_< std::vector<Particle> >("SARAHVectorOfParticles")
+    .def(vector_indexing_suite< std::vector<Particle> >() )
+    ;
+    
+  class_< std::vector<Parameter> >("SARAHVectorOfParameters")
+    .def(vector_indexing_suite< std::vector<Parameter> >() )
+    ;
+    
+
+  def("all_sarah", all_sarah);
+  
+}

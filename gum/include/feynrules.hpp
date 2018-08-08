@@ -37,7 +37,7 @@ class FeynRules
       }
       else
       {
-        std::cout << "The environment is initialized successfully... ";
+        std::cout << "The environment is initialized successfully... " << std::endl;
       }
       
       std::stringstream WSTPflags;

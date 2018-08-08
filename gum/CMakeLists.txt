@@ -33,7 +33,7 @@ EXTERNALPROJECT_ADD(
     FeynRules
     
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    URL_MD5 95c70262ac434d48346ef2f97165e76b
+    URL_MD5 6a5644c2032d5f7e52be1787a908993b
     
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
@@ -116,7 +116,7 @@ if(Boost_FOUND)
   ADD_LIBRARY(fr SHARED src/feynrules.cpp)
   TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
   ADD_LIBRARY(sarah SHARED src/sarah.cpp)
-  TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
+  TARGET_LINK_LIBRARIES(sarah ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 else()
   message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and rerun cmake.")
 endif()

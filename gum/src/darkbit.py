@@ -225,7 +225,7 @@ def write_darkbit_entry(dm, ann_products, propagators,
             "\n"
             "}};\n\n"
             "void DarkMatter_ID_{0}(std::string& result)"
-            "{{ result = {1}; }}\n\n"
+            "{{ result = \"{1}\"; }}\n\n"
             "void TH_ProcessCatalog_{0}(DarkBit::TH_ProcessCatalog &result)\n"
             "{{\n"
             "using namespace Pipes::TH_ProcessCatalog_{0};\n"
@@ -233,9 +233,26 @@ def write_darkbit_entry(dm, ann_products, propagators,
             "using std::string;\n\n"
             "// Initialize empty catalog, main annihilation process\n"
             "TH_ProcessCatalog catalog;\n"
-            "TH_Process process_ann({1}, {2});"
+            "TH_Process process_ann(\"{1}\", \"{2}\");"
             "\n"
     ).format(gambit_model_name, gb_id, gb_conj)
+    
+    # Add flag for (non-)self-conjugate DM to rescale spectra properly
+    if not dm.is_sc():
+        towrite += (
+                "\n"
+                "// Explicitly state that Dirac DM is not self-conjugate to add"
+                " extra \n// factors of 1/2 where necessary\n"
+                "process_ann.isSelfConj = false;"
+                "\n\n"
+        )
+    else:
+        towrite += (                      
+                "\n"
+                "// Explicitly state that DM is self-conjugate\n"
+                "process_ann.isSelfConj = true;\n"
+                "\n\n"
+        )
 
     towrite += add_SM_macros()
 
@@ -341,7 +358,7 @@ def write_darkbit_entry(dm, ann_products, propagators,
     towrite += write_direct_detection(gambit_model_name)
     
     towrite += (
-            "} //namespace DarkBit\n"
+            "} //namespace DarkBit\n\n"
             "} //namespace Gambit\n"
             "\n"
     )
@@ -351,6 +368,7 @@ def write_darkbit_entry(dm, ann_products, propagators,
 def add_SM_macros():
 
     towrite = (
+            "\n"
             "// Import particle masses \n"
             "\n"
             "// Convenience macros\n"
@@ -365,6 +383,7 @@ def add_SM_macros():
             "\n"
             "// Import Spectrum objects\n"
             "const Spectrum& spec = *Dep::SingletDM_spectrum;\n"
+            "const SubSpectrum& SM = spec.get_LE();\n"
             "\n"
             "// Get SM pole masses\n"
             "getSMmass(\"e-_1\",     1)\n"
@@ -422,6 +441,7 @@ def write_direct_detection(model_name):
     """
     
     towrite = (
+            "\n"
             "/// Direct detection couplings.\n"
             "void DD_couplings_{0}(DM_nucleon_couplings & result)\n"
             "{{\n"

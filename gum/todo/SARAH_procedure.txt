@@ -2,7 +2,8 @@
 
 SetDirectory["/home/sb3212/GUMbit/gum/contrib/SARAH"];
 << SARAH`;
-Start["SingletDM"];
+Start["SingletDM_test"];
+pl = ParticleDefinitions[EWSB];
 
 ## Basic diagnostics -
 
@@ -14,7 +15,7 @@ Particles[EWSB] ---> all particle information, EXCEPT for PDG codes????
 ## Write CalcHEP output - 
 
 MakeVertexList[EWSB];
-MakeCHep[SLHAinput -> False, UseRunningCoupling -> True, CalculateMasses -> True];
+MakeCHep[FeynmanGauge-> True, SLHAinput -> False, UseRunningCoupling -> True, CalculateMasses -> True];
 
 
 Quit[];

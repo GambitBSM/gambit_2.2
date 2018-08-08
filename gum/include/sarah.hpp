@@ -120,7 +120,11 @@ class SARAH
     
     // Outputs: CalcHEP, MadGraph, ...
     void write_ch_output();
+    void write_micromegas_output();
     void write_madgraph_output();
+    void write_spheno_output();
+    void write_flexiblesusy_output();
+    void write_vevacious_output();
 
 };
     

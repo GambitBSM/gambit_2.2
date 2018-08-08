@@ -478,7 +478,7 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     
     // And all parameters
     model.get_paramlist(paramlist);
-    
+
     // Get the "actual" model name
     std::string fr_model_name;
     model.get_modelname(fr_model_name);

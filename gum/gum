@@ -8,7 +8,6 @@ import argparse
 import numpy as np
 
 from src import *
-from lib.libfr import *
 
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
                                              "writing your papers for you.")
@@ -28,6 +27,7 @@ if args.f:
     
     # FeynRules
     if gum.math == 'feynrules':
+        from lib.libfr import *
         options = FROptions("feynrules", gum.name, gum.restriction)
         partlist = FRVectorOfParticles()
         paramlist = FRVectorOfParameters()
@@ -46,30 +46,46 @@ if args.f:
             part = partlist[i]
             # Initialise the DM candidate
             if part.pdg() == gum.dm_pdg:                 
-                dm = Particle(part.spinX2(), part.pdg(), part.SC())
+                dm = Particle(part.spinX2(), part.pdg(), part.SC(), part.mass())
     
-    # elif gum.math == 'SARAH':
-    #   options = SARAHOptions("sarah", gum.name)
-    #   partlist = SARAHVectorOfParticles()
-    #   paramlist = SARAHVectorOfParameters()
-    #   outputs = SARAHOutputs()
-    #   all_sarah(options, partlist, paramlist, outputs)
-    # etc.
+    elif gum.math == 'sarah':
+        from lib.libsarah import *
+        options = SARAHOptions("sarah", gum.name, '')
+        partlist = SARAHVectorOfParticles()
+        paramlist = SARAHVectorOfParameters()
+        outputs = SARAHOutputs()
+                
+        # Hit it
+        all_sarah(options, partlist, paramlist, outputs)
+        
+        # Get a list of all non-SM particles
+        sarah_bsm = [x for x in partlist if x.SM() is False]
+        
+        # Make all BSM particles work with GUM's native Particle class.
+        bsm_particle_list = sarah_part_to_gum_part(sarah_bsm)
+               
+        for i in xrange(len(partlist)):
+            part = partlist[i]
+            # Initialise the DM candidate
+            if part.pdg() == gum.dm_pdg:                 
+                dm = Particle(part.spinX2(), part.pdg(), part.SC(), part.mass())
            
     # If we haven't found the DM candidate in the particle list...
     if not dm:        
         raise GumError(("\n\nThe DM candidate specified has not been found "
-                        "in the FeynRules file. Please check your .gum "
-                        "file as well as the FeynRules file."))
+                        "in the {0} file. Please check your .gum "
+                        "file as well as the {0} file.").format(gum.math))
 
     print("Adding new model {0} to GAMBIT...\n").format(gum.name)
         
     # Need to know how GAMBIT refers to each particle. Scrape information
     # from particle_database.yaml.
     gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
-
+    
     # Check every new particle is in the database
-    check_all_particles_present(partlist, gambit_pdgs)
+    # TODO: Add particles to particleDB automatically
+    if not (check_all_particles_present(partlist, gambit_pdgs)):
+        raise GumError()
     
     # Clean up calchep files, then copy them to the GAMBIT backendDir
     clean_calchep_model_files(outputs.get_ch(), gum.name)
@@ -96,12 +112,12 @@ if args.f:
     model_parameters = []
     
     # Add all new particle masses as Pole Masses... I think this is ok?
-    for i in xrange(len(fr_bsm)):
-        x = fr_bsm[i]
-        model_parameters.append(SpectrumParameter(pdg_to_particle(x.pdg(), 
+    for i in xrange(len(bsm_particle_list)):
+        x = bsm_particle_list[i]
+        model_parameters.append(SpectrumParameter(pdg_to_particle(x.PDG_code, 
                                                                   gambit_pdgs), 
                                                   "Pole_Mass", 
-                                                  gb_input=x.mass()))
+                                                  gb_input=x.mass))
     
     # Todo - get this information -- properly -- from 'paramlist'
     # Same name in GAMBIT as in Backends?
@@ -174,7 +190,7 @@ if args.f:
                                                          new_decays)  
     
     """
-    CROSS SECTIONS
+    CROSS-SECTIONS
     """
   
     # Obtain all three-field vertices

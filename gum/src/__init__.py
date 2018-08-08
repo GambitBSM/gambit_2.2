@@ -3,6 +3,7 @@ from .parse import *
 from .files import *
 from .models import *
 from .feynrules import *
+from .sarah import *
 from .calchep import *
 from .decays import *
 from .spectrum import *
