@@ -126,10 +126,10 @@ class FeynRules
     
     // Outputs: CalcHEP, MadGraph, ... 
     void write_ch_output();
-    void write_madgraph_output();
+    void write_mg_output();
     
 };
 
 // Everything
-void all_feynrules(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&);
+void all_feynrules(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&);
 #endif

@@ -4,6 +4,10 @@
 GUM - GAMBIT Universal Models
 """
 
+import sys
+if not sys.version_info[0] == 2 or sys.version_info[1] < 6:
+    sys.exit('Please use python 2.6 or later -- but not python 3.')
+
 import argparse
 import numpy as np
 
@@ -20,11 +24,11 @@ if args.f:
   
     # Parse the .gum file
     inputs = check_gum_file(args.f)
-    gum = fill_gum_object(inputs)
+    gum, output_opts = fill_gum_object(inputs)
     
     # First, check the required backends are installed
-    check_backends(gum)
-    
+    check_backends(output_opts)
+        
     # FeynRules
     if gum.math == 'feynrules':
         from lib.libfr import *
@@ -32,9 +36,11 @@ if args.f:
         partlist = FRVectorOfParticles()
         paramlist = FRVectorOfParameters()
         outputs = FROutputs()
+        backends = FRBackends()
+        backends.extend(x for x in output_opts.bes())
         
         # Hit it
-        all_feynrules(options, partlist, paramlist, outputs)
+        all_feynrules(options, partlist, paramlist, outputs, backends)
         
         # Get a list of all non-SM particles
         fr_bsm = [x for x in partlist if x.SM() is False]
@@ -54,9 +60,11 @@ if args.f:
         partlist = SARAHVectorOfParticles()
         paramlist = SARAHVectorOfParameters()
         outputs = SARAHOutputs()
+        backends = SARAHBackends()
+        backends.extend(x for x in output_opts.bes())
                 
         # Hit it
-        all_sarah(options, partlist, paramlist, outputs)
+        all_sarah(options, partlist, paramlist, outputs, backends)
         
         # Get a list of all non-SM particles
         sarah_bsm = [x for x in partlist if x.SM() is False]
@@ -162,54 +170,58 @@ if args.f:
     DECAYS
     """
     
-    # Obtain all model interactions from CalcHEP model files.
-    interactions, calchep_pdg_codes = get_vertices(outputs.get_ch())
+    # Conditional on CalcHEP files being made.
+    if output_opts.ch:
+        # Obtain all model interactions from CalcHEP model files.
+        interactions, calchep_pdg_codes = get_vertices(outputs.get_ch())
   
-    # Obtain all 3-point vertices that are BSM.
-    three_pi_bsm = [interaction.particles for interaction in interactions 
-                    if interaction.num_particles() == 3
-                    and interaction.is_sm() == False]
+        # Obtain all 3-point vertices that are BSM.
+        three_pi_bsm = [interaction.particles for interaction in interactions 
+                        if interaction.num_particles() == 3
+                        and interaction.is_sm() == False]
   
-    three_body_decays = decay_sorter(three_pi_bsm)
+        three_body_decays = decay_sorter(three_pi_bsm)
         
-    decaybit_src = ""
+        decaybit_src = ""
     
-    # Pass all interactions by first PDG code needed.
-    for i in xrange(len(three_body_decays)):
-        decaybit_src += write_decaytable_entry(three_body_decays[i], gum.name,
-                                               calchep_pdg_codes, 
-                                               gambit_pdgs,
-                                               decaybit_dict)
+        # Pass all interactions by first PDG code needed.
+        for i in xrange(len(three_body_decays)):
+            decaybit_src += write_decaytable_entry(three_body_decays[i], 
+                                                   gum.name,
+                                                   calchep_pdg_codes, 
+                                                   gambit_pdgs,
+                                                   decaybit_dict)
                                                
-    decay_roll, new_decays = write_decaybit_rollcall_entry(gum.name, gum.spec, 
-                                                           three_body_decays, 
-                                                           decaybit_dict,
-                                                           gambit_pdgs)
+        decay_roll, new_decays = \
+            write_decaybit_rollcall_entry(gum.name, gum.spec, three_body_decays, 
+                                          decaybit_dict, gambit_pdgs)
                                                                  
-    all_decays_src, all_decays_header = amend_all_decays(gum.name, gum.spec, 
-                                                         new_decays)  
+        all_decays_src, all_decays_header = amend_all_decays(gum.name, gum.spec, 
+                                                             new_decays)  
     
     """
     CROSS-SECTIONS
     """
-  
-    # Obtain all three-field vertices
-    three_fields = [interaction.particles for interaction in interactions 
-                    if interaction.num_particles() == 3]
-    # And all 4-point BSM vertices
-    four_fields = [interaction.particles for interaction in interactions 
-                   if interaction.num_particles() == 4
-                   and interaction.is_sm() == False]
-  
-    ann_products, propagators = sort_annihilations(dm, three_fields,
-                                                   four_fields)
-                                                   
-    # TODO - pass over required information for direct detection
-    darkbit_src = write_darkbit_entry(dm, ann_products, propagators, 
-                                      gambit_pdgs, gum.name, 
-                                      calchep_pdg_codes, bsm_particle_list)
-                                      
-    pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name)
+    
+    # Conditional on CalcHEP files being made.
+    if output_opts.ch:      
+        # Obtain all three-field vertices
+        three_fields = [interaction.particles for interaction in interactions 
+                        if interaction.num_particles() == 3]
+        # And all 4-point BSM vertices
+        four_fields = [interaction.particles for interaction in interactions 
+                       if interaction.num_particles() == 4
+                       and interaction.is_sm() == False]
+      
+        ann_products, propagators = sort_annihilations(dm, three_fields,
+                                                       four_fields)
+                                                       
+        # TODO - pass over required information for direct detection
+        darkbit_src = write_darkbit_entry(dm, ann_products, propagators, 
+                                          gambit_pdgs, gum.name, 
+                                          calchep_pdg_codes, bsm_particle_list)
+                                          
+        pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name)
   
     """
     SPECTRA
@@ -224,8 +236,9 @@ if args.f:
     """
     BACKENDS
     """
-    
-    ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec) # If no parent
+    # Conditional on CalcHEP files being made.
+    if output_opts.ch: # If no parent
+        ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec) 
         
     print("")
     print("Everything has gone smoothly so far.")

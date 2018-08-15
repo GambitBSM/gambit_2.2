@@ -10,7 +10,8 @@
 ///
 ///  \author Sanjay Bloor
 ///          (sanjay.bloor12@imperial.ac.uk)
-///  \date 2017 May - Oct
+///  \date 2017 May, Oct
+///        2018 Sep
 ///
 ///  *****************************************
 
@@ -40,12 +41,10 @@ BE_VARIABLE(VWdecay, int, "VWdecay", "VWdecay")
 
 BE_CONV_FUNCTION(CH_Decay_Width, double, (str&, str&, std::vector<str>&, double&), "CH_Decay_Width")
 BE_CONV_FUNCTION(CH_Sigma_V, double, (str&, std::vector<str>&, std::vector<str>&, double&, double&, const DecayTable&), "CH_Sigma_V")
-BE_CONV_FUNCTION(Assign_Standard_Model_Variables, void, (const Spectrum&, const DecayTable&), "Assign_Standard_Model_Variables")
 BE_CONV_FUNCTION(Assign_All_Values, void, (const Spectrum&, std::vector<SpectrumParameter>), "Assign_All_Values")
 BE_CONV_FUNCTION(Assign_Widths, void, (const DecayTable&), "Assign_All_Values")
 BE_CONV_FUNCTION(Assign_Value, void, (char*, double), "Assign_Value")
 
-BE_INI_DEPENDENCY(SM_decay_rates, DecayTable)
 BE_INI_CONDITIONAL_DEPENDENCY(SingletDM_spectrum, Spectrum, SingletDM)
 
 // Undefine macros to avoid conflict with other backends

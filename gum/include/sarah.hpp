@@ -129,6 +129,6 @@ class SARAH
 };
     
 // Everything
-void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&);
+void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&);
 
 #endif

@@ -7,22 +7,29 @@ import os
 
 from setup import *
 from files import *
+from parse import *
 
-def check_backends(inputs):
+def check_backends(outputs):
     """
     Diagonostics to check all backends exist in the GAMBIT repository.
     """
-    ## TO DO - use inputs object to know which Backends to look for.
-    # Currently - just look for all of them.  
+    ## TO DO - SPheno, MadGraph, FlexibleSUSY, Vevacious...  
+    
+    if not isinstance(outputs, Outputs):
+        raise GumError("\nRequested output not passed as class Outputs.\n")
     
     print("Checking for backends before we get going...")
     
-    if os.path.exists("../Backends/installed/calchep/3.6.27/models/"):
-        print("Found CalcHEP.")
-    else:
-        raise GumError(("\n\nNo CalcHEP installation found. Please go to into "    
-                        "the GAMBIT build directory and do:\n   make calchep"))
-                        
+    # CalcHEP
+    if outputs.ch:
+  
+      if os.path.exists("./../Backends/installed/calchep/3.6.27/models/"):
+          print("Found CalcHEP.")
+      else:
+          raise GumError(("\n\nNo CalcHEP installation found. Please go to into"    
+                          " the GAMBIT build directory and do"
+                          ":\n   make calchep"))
+                          
     print("Everything found - let's go!\n")
 
 def add_calchep_switch(model_name, spectrum):
@@ -39,9 +46,8 @@ def add_calchep_switch(model_name, spectrum):
         "path = BEpath.c_str();\n"
         "modeltoset = (char*)malloc(strlen(path)+11);\n"
         "sprintf(modeltoset, \"%s\", path);\n"
-        "One_Time_Spec = *Dep::{1};\n"
         "}}\n\n"               
-    ).format(model_name, spectrum))
+    ).format(model_name))
     
     # Point-level
     src_pl = dumb_indent(2, (
@@ -58,6 +64,7 @@ def add_calchep_switch(model_name, spectrum):
            "}}\n\n"
     ).format(model_name, spectrum))
     
+    # to do -- also ADD_MODEL()
     header = (
            "BE_INI_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})\n"
     ).format(spectrum, model_name)

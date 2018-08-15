@@ -305,7 +305,19 @@ void SARAH::write_ch_output()
     std::cout << "CalcHEP files written." << std::endl;
 }
 
-void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs)
+// Write MadGraph output. 
+void SARAH::write_madgraph_output()
+{
+    std::cout << "Writing MadGraph (UFO) output." << std::endl;
+        
+    // Write output.
+    std::string command = "MakeUFO[];";
+    send_to_math(command);
+        
+    std::cout << "MadGraph files written." << std::endl;
+}
+
+void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
 {
 
     std::cout << "Calling SARAH with model " << opts.model() << "..." << std::endl;
@@ -336,14 +348,26 @@ void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parame
     // And all parameters
     model.get_paramlist(paramlist);
     
-    // Write CalcHEP output
-    model.write_ch_output();
+    // Where the outputs all live
+    std::string outputdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/";
     
-    // This is where the output CalcHEP files will be written
-    std::string chdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/CHep";
-    std::replace(chdir.begin(), chdir.end(), ' ', '-');
-    
-    outputs.set_ch(chdir);
+    /// Write CalcHEP output
+    if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+      model.write_ch_output();
+        
+      // Location of CalcHEP files
+      std::string chdir = outputdir + "CHep";
+      std::replace(chdir.begin(), chdir.end(), ' ', '-');
+      outputs.set_ch(chdir);
+      
+    /// Write MadGraph output
+    if (std::find(backends.begin(), backends.end(), "madgraph") != backends.end() )
+      model.write_madgraph_output();
+      
+      // Location of MadGraph (UFO) files
+      std::string mgdir = outputdir + "UFO";
+      std::replace(mgdir.begin(), mgdir.end(), ' ', '-');
+      outputs.set_mg(mgdir);
     
     // All done. Close the Mathematica link.
     model.close_wstp_link();
@@ -378,6 +402,7 @@ BOOST_PYTHON_MODULE(libsarah)
   
   class_<Outputs>("SARAHOutputs", init<>())
     .def("get_ch",  &Outputs::get_ch)
+    .def("get_mg",  &Outputs::get_mg)
     ;
   
   class_< std::vector<Particle> >("SARAHVectorOfParticles")
@@ -387,7 +412,10 @@ BOOST_PYTHON_MODULE(libsarah)
   class_< std::vector<Parameter> >("SARAHVectorOfParameters")
     .def(vector_indexing_suite< std::vector<Parameter> >() )
     ;
-    
+  
+  class_< std::vector<std::string> >("SARAHBackends")
+    .def(vector_indexing_suite< std::vector<std::string> >() )
+    ; 
 
   def("all_sarah", all_sarah);
   

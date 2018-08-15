@@ -7,6 +7,10 @@ import yaml
 from setup import *
 
 class Inputs:
+    """
+    All the inputs from the .GUM file. Returns the master 
+    "gum" object used internally.
+    """
 
     def __init__(self, model_name, dm_candidate, mathpackage,
                  restriction = None, use_existing_spectrum = [False, None], 
@@ -15,7 +19,6 @@ class Inputs:
         self.name = model_name
         self.dm_pdg = dm_candidate
         self.math = mathpackage
-        
         self.restriction = None
         self.parent = None
         self.children = None
@@ -67,6 +70,40 @@ class Inputs:
             return True
         else:
             return False
+            
+class Outputs:
+    """
+    Outputs for GUM to write. 
+    """
+    
+    def __init__(self, mathpackage, calchep = False, madgraph = False, 
+                 micromegas = False, spheno = False, flexiblesusy = False,
+                 vevacious = False):
+                 
+        self.ch = calchep
+        self.ufo = madgraph
+        self.mo = micromegas
+        self.sph = spheno
+        self.fs = flexiblesusy
+        self.vev = vevacious
+                 
+        # Overwrite these, as the output does not exist.
+        if mathpackage == 'feynrules':
+            self.mo = False
+            self.sph = False
+            self.fs = False
+            self.vev = False
+            
+    def bes(self):
+        backends = []
+        if self.ch: backends.append('calchep')
+        if self.ufo: backends.append('madgraph') 
+        if self.mo: backends.append('micromegas') 
+        if self.sph: backends.append('spheno')
+        if self.fs: backends.append('flexiblesusy') 
+        if self.vev: backends.append('vevacious')
+        return backends
+        
 
 def check_gum_file(inputfile):
     """
@@ -124,6 +161,25 @@ def fill_gum_object(data):
     gambit_model = math['model']
     dm_candidate = data['dm_candidate']
     
+    backends = ['calchep', 'madgraph', 'spheno', 'flexiblesusy', 
+                'micromegas', 'vevacious']
+                
+    opts = {}            
+    # The outputs GUM should hook up to GAMBIT, if specified
+    if 'output' in data:
+        for i in backends:
+            if i in data['output']:
+                opts[i] = data['output'][i]
+            else:
+                opts[i] = False
+                
+    # Default: if unspecified, write everything.
+    else:
+        for i in backends:
+            opts[i] = True
+                          
+    outputs = Outputs(mathpackage, **opts)
+
     # Model hierarchy stuff.
     restriction = None
     parent = children = friends = tf_p = tf_c = tf_f = None 
@@ -163,5 +219,5 @@ def fill_gum_object(data):
                       parent, children, friends)
 
     
-    return gum_info
+    return gum_info, outputs
     

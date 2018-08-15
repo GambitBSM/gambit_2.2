@@ -65,7 +65,7 @@ Options parse(int argc, char** argv)
             { 
                 throw("ERROR: -r option requires an argument.");
             }  
-        }  
+        }
     }
     if ((package != "sarah") && (package != "feynrules"))
     {

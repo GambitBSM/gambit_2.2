@@ -437,8 +437,20 @@ void FeynRules::write_ch_output()
     std::cout << "CalcHEP files written." << std::endl;
 }
 
+// Write MadGraph output. 
+void FeynRules::write_mg_output()
+{
+    std::cout << "Writing MadGraph (UFO) output." << std::endl;
+    
+    // Write output.
+    std::string command = "WriteUFO[LTotal];";
+    send_to_math(command);
+        
+    std::cout << "MadGraph files written." << std::endl;
+}
+
 // Performs all FeynRules output.
-void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs)
+void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
 {
     std::cout << "Calling FeynRules with model " << opts.model() << "..." << std::endl;
 
@@ -483,19 +495,26 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
     std::string fr_model_name;
     model.get_modelname(fr_model_name);
     
-    // Write CalcHEP output
-    model.write_ch_output();
+    // Output directory
+    std::string output = std::string(FEYNRULES_PATH) + "/" + fr_model_name;
     
-    // This is where the output CalcHEP files will be written
-    std::string chdir = std::string(FEYNRULES_PATH) + "/" + fr_model_name;
-    std::replace(chdir.begin(), chdir.end(), ' ', '-');
-    chdir += "-CH";
+    /// Write CalcHEP output
+    if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+      model.write_ch_output();
+          
+      // Location of CalcHEP files
+      std::string chdir = output + "-CH";
+      std::replace(chdir.begin(), chdir.end(), ' ', '-');    
+      outputs.set_ch(chdir);
     
-    outputs.set_ch(chdir);
+    /// Same for MadGraph
+    if (std::find(backends.begin(), backends.end(), "madgraph") != backends.end() )
+      model.write_mg_output();
     
-    // Do the same for madgraph..?
-    std::string mgdir = "";
-    outputs.set_mg(mgdir);
+      // Location of MadGraph (UFO) files
+      std::string mgdir = output + "_UFO";
+      std::replace(mgdir.begin(), mgdir.end(), ' ', '-'); 
+      outputs.set_mg(mgdir);
     
     // All done. Close the Mathematica link.
     model.close_wstp_link();
@@ -530,6 +549,7 @@ BOOST_PYTHON_MODULE(libfr)
   
   class_<Outputs>("FROutputs", init<>())
     .def("get_ch",  &Outputs::get_ch)
+    .def("get_mg",  &Outputs::get_mg)
     ;
   
   class_< std::vector<Particle> >("FRVectorOfParticles")
@@ -538,6 +558,10 @@ BOOST_PYTHON_MODULE(libfr)
     
   class_< std::vector<Parameter> >("FRVectorOfParameters")
     .def(vector_indexing_suite< std::vector<Parameter> >() )
+    ;
+    
+  class_< std::vector<std::string> >("FRBackends")
+    .def(vector_indexing_suite< std::vector<std::string> >() )
     ;
     
 

@@ -1,17 +1,62 @@
-- finish process catalog:
-    - importDecays - which things to include/exclude??
-    - particle_database entries - dictionaries -> process catalogue work better?
-- re-do calchep.py - not good
-- check the consistency of the yukawas for SMinputs - 3x3 matrix but accessed like a vector... seems like it wouldn't work?
-- spectrum_as_map and fill_as_map as standalone function in SpecBit??
-- backend DirectDM (or similar) -> use for Direct Detection etc.
-- "includes" function?
-- PATH_TO_GAMBIT option ---> able to scrape this from ../cmake/include/gambit/cmake/cmake_variables.hpp
-- proper setup.py for installation (setuptools)
-- PEP8
-- how to incorporate several DM candidates? say, if a model has a scalar and a fermion. 
+To-do list for GUMMY things, and GAMBIT 2.0.0.
 
-model hierarchy:
- 
-  - if no parent -> new spectrum
-  - if child to the top of family tree -> new spectrum, rewrite others? hmm.. e.g. inserting 2HDM+S as parent to S? and 2HDM?
+=============
+=    GUM    =
+=============
+
+* Model parameters to be obtained (consistently).
+  * FeynRules: use common blocks from paramlist?
+  * SARAH: ???
+
+* DarkBit:
+  * Process Catalogue:
+    * importDecays - which things to include/exclude??
+    * 2->2 processes for consistency with fermions
+  * Direct detection: how to automate this? FeynCalc/Arts?
+  
+* SARAH -> CalcHEP gives lots of zero vertices (e.g. including SUSY mixing matrices for non-SUSY models)
+  * Can this be controlled by a useful flag for the output? Or in the model files?
+  * If not -> CalcHEP cleaner
+  
+* Re-design:
+  * calchep.py
+  * 2-2 processes/vertex sorters etc. (darkbit)
+  * decays.py
+
+* Particle database: automatically add all new particles to particle database.
+  * Make this a .gum option? -> "add_new_particles: true"
+
+* Call MadGraph directly from GUM -> Pythia8?
+
+* Model hierarchy:
+  * How to consistently define parameter translations?
+  * If child goes to the top of family tree -> new spectrum, rewrite others? hmm.. e.g. inserting 2HDM+S as parent to S? and 2HDM?
+  
+* Option for choice of Lagrangian (potential) basis, or physical basis
+  * SARAH: CalculateMasses -> True/False -- should work...
+
+==============
+=   GAMBIT   =
+==============
+
+* Backends
+  * CalcHEP
+    * Re-design frontend: want an it->externalName() routine for SpectrumParameters.
+  * SPheno
+    * Check -- is it backended "generally"?
+  * DirectDM
+  * Vevacious
+  * FlexibleSUSY)
+    * Needs template BOSS to be truly backended..?
+
+* Dark Matter:
+  * How to incorporate several DM candidates? 
+    * Multi-component DM e.g. from separate gauge groups 
+    * if a model has a scalar and a fermion, and t
+    * MicroMEGAs 5 allows this... 
+      * (+ freeze-in)
+    
+* Collider:
+  * Is there a "better" way to add new physics to Pythia?
+
+

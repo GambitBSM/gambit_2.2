@@ -2,11 +2,11 @@
 
 math:
   # Name of Mathematica package, either 'feynrules' or 'sarah'
-  # package: feynrules
-  package: sarah
+  package: feynrules
+  # package: sarah
   # Name of Model within that package. This will also be the name of the GAMBIT model.
   model: SingletDM_test
-  #restriction: DiagonalCKM  
+  restriction: DiagonalCKM  
 
 # PDG code of the DM candidate.
 dm_candidate: 9900001 
@@ -19,3 +19,7 @@ parent:
 # The name of the spectrum to use
 use_existing_spectrum: SingletDM_spectrum
 
+# Outputs for GUM to hook up to GAMBIT
+output:
+  calchep: true
+  madgraph: true

@@ -12,8 +12,7 @@ int main(int argc, char** argv)
     // Initialise options for input.
     std::vector<Particle> partlist;
     std::vector<Parameter> paramlist;
-    std::string chdir;
-    std::string mgdir;
+    std::vector<std::string> backends;
 
     // Attempt to parse the user's command line input...
     try
@@ -29,7 +28,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
             
-            all_feynrules(options, partlist, paramlist, outputs);
+            all_feynrules(options, partlist, paramlist, outputs, backends);
         }
         else if (options.package() == "sarah")
         {
@@ -39,7 +38,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
         
-            all_sarah(options, partlist, paramlist, outputs);
+            all_sarah(options, partlist, paramlist, outputs, backends);
         }
     }
     catch(const char* e)
