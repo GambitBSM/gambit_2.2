@@ -31,40 +31,40 @@ endif()
 # Download FeynRules
 EXTERNALPROJECT_ADD(
     FeynRules
-    
+
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    URL_MD5 6a5644c2032d5f7e52be1787a908993b
-    
+    URL_MD5 0865c540a3735b4bf4ab0ce2ac0addbb
+
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
-    
+
     SOURCE_DIR "${CMAKE_SOURCE_DIR}/contrib/FeynRules"
     CONFIGURE_COMMAND ""
-    
+
     BUILD_COMMAND ""
-    
+
     INSTALL_COMMAND ""
-    
+
     TEST_COMMAND ""
 )
 
 # Download SARAH
 EXTERNALPROJECT_ADD(
     SARAH
-    
+
     URL http://www.hepforge.org/archive/sarah/SARAH-4.12.3.tar.gz
-    URL_MD5 be173d937e88f18df81dd29a08efc513
-    
+    URL_MD5 15eadec49d22edf49b8605934e18a000
+
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
-    
+
     SOURCE_DIR "${CMAKE_SOURCE_DIR}/contrib/SARAH"
     CONFIGURE_COMMAND ""
-    
+
     BUILD_COMMAND ""
-    
+
     INSTALL_COMMAND ""
-    
+
     TEST_COMMAND ""
 )
 
@@ -107,7 +107,7 @@ else()
   endif()
 endif()
 
-# Check for Boost & dump FeynRules/SARAH shared object files. 
+# Check for Boost & dump FeynRules/SARAH shared object files.
 set(Boost_NO_BOOST_CMAKE ON)
 FIND_PACKAGE(Boost 1.41)
 if(Boost_FOUND)
@@ -120,7 +120,7 @@ if(Boost_FOUND)
 else()
   message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and rerun cmake.")
 endif()
-  
+
 # Configure cmake variables file
 set(outhdr "${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp")
 configure_file("${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp.in" ${outhdr})
