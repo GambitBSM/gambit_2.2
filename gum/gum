@@ -21,39 +21,39 @@ args = parser.parse_args()
 
 # Input .gum file.
 if args.f:
-  
+
     # Parse the .gum file
     inputs = check_gum_file(args.f)
     gum, output_opts = fill_gum_object(inputs)
-    
+
     # First, check the required backends are installed
     check_backends(output_opts)
-        
+
     # FeynRules
     if gum.math == 'feynrules':
         from lib.libfr import *
-        options = FROptions("feynrules", gum.name, gum.restriction)
+        options = FROptions("feynrules", gum.name, gum.restriction, gum.LTot)
         partlist = FRVectorOfParticles()
         paramlist = FRVectorOfParameters()
         outputs = FROutputs()
         backends = FRBackends()
         backends.extend(x for x in output_opts.bes())
-        
+
         # Hit it
         all_feynrules(options, partlist, paramlist, outputs, backends)
-        
+
         # Get a list of all non-SM particles
         fr_bsm = [x for x in partlist if x.SM() is False]
-        
+
         # Make all BSM particles work with GUM's native Particle class.
         bsm_particle_list = fr_part_to_gum_part(fr_bsm)
-        
+
         for i in xrange(len(partlist)):
             part = partlist[i]
             # Initialise the DM candidate
-            if part.pdg() == gum.dm_pdg:                 
+            if part.pdg() == gum.dm_pdg:
                 dm = Particle(part.spinX2(), part.pdg(), part.SC(), part.mass())
-    
+
     elif gum.math == 'sarah':
         from lib.libsarah import *
         options = SARAHOptions("sarah", gum.name, '')
@@ -62,48 +62,48 @@ if args.f:
         outputs = SARAHOutputs()
         backends = SARAHBackends()
         backends.extend(x for x in output_opts.bes())
-                
+
         # Hit it
         all_sarah(options, partlist, paramlist, outputs, backends)
-        
+
         # Get a list of all non-SM particles
         sarah_bsm = [x for x in partlist if x.SM() is False]
-        
+
         # Make all BSM particles work with GUM's native Particle class.
         bsm_particle_list = sarah_part_to_gum_part(sarah_bsm)
-               
+
         for i in xrange(len(partlist)):
             part = partlist[i]
             # Initialise the DM candidate
-            if part.pdg() == gum.dm_pdg:                 
+            if part.pdg() == gum.dm_pdg:
                 dm = Particle(part.spinX2(), part.pdg(), part.SC(), part.mass())
-           
+
     # If we haven't found the DM candidate in the particle list...
-    if not dm:        
+    if not dm:
         raise GumError(("\n\nThe DM candidate specified has not been found "
                         "in the {0} file. Please check your .gum "
                         "file as well as the {0} file.").format(gum.math))
 
     print("Adding new model {0} to GAMBIT...\n").format(gum.name)
-        
+
     # Need to know how GAMBIT refers to each particle. Scrape information
     # from particle_database.yaml.
     gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
-    
+
     # Check every new particle is in the database
     # TODO: Add particles to particleDB automatically
     if not (check_all_particles_present(partlist, gambit_pdgs)):
         raise GumError()
-    
+
     # Clean up calchep files, then copy them to the GAMBIT backendDir
     clean_calchep_model_files(outputs.get_ch(), gum.name)
     copy_calchep_files(outputs.get_ch(), gum.name)
-    
+
     # Run FeynRules/SARAH -> generate the following:
     #  - CalcHEP files                                 DecayBit, DarkBit               (done)
     #  - (Basic) Spectrum object                       SpecBit                         (done)
     #  - MadGraph (.ufo) files                         ColliderBit                     (todo)
-    
+
     # SARAH only:
     #  - SPheno interface                              PrecisionBit, FlavBit, DecayBit (todo)
     #  - FlexibleSUSY model                            SpecBit, PrecisionBit?          (todo)
@@ -112,21 +112,21 @@ if args.f:
 
     # Unknown:
     #  - DirectDM interface                            DarkBit                         (todo)
-   
-        
+
+
     # Add the BSM masses to the model parameters
-    
+
     # Initialise all of the model parameters, for writing spectra, model files..
     model_parameters = []
-    
+
     # Add all new particle masses as Pole Masses... I think this is ok?
     for i in xrange(len(bsm_particle_list)):
         x = bsm_particle_list[i]
-        model_parameters.append(SpectrumParameter(pdg_to_particle(x.PDG_code, 
-                                                                  gambit_pdgs), 
-                                                  "Pole_Mass", 
+        model_parameters.append(SpectrumParameter(pdg_to_particle(x.PDG_code,
+                                                                  gambit_pdgs),
+                                                  "Pole_Mass",
                                                   gb_input=x.mass))
-    
+
     # Todo - get this information -- properly -- from 'paramlist'
     # Same name in GAMBIT as in Backends?
     model_parameters.append(SpectrumParameter("vev", "mass1", sm=True))
@@ -138,131 +138,131 @@ if args.f:
     model_parameters.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
     model_parameters.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
     model_parameters.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
-    
+
     """
     MODELS
     """
-    
+
     # Will have to be extracted, somehow - from FR/SARAH/etc.
     gambit_model_params = ["mS", "lam_hS"]
-    
+
     # Translation functions for model hierarchy. These will have to be
-    # user specified. 
+    # user specified.
     translation_functions_p = {"lam_hS": "lambda_hS*2"}
     tf_c = {}
     tf_f = {}
-          
+
     ## TODO
-    model_header, model_source = add_to_model_hierarchy(gum.new_spectrum, 
-                                                        gum.spec, gum.name, 
-                                                        gambit_model_params, 
-                                                        gum.parent, 
-                                                        gum.children, 
-                                                        gum.friends, 
+    model_header, model_source = add_to_model_hierarchy(gum.new_spectrum,
+                                                        gum.spec, gum.name,
+                                                        gambit_model_params,
+                                                        gum.parent,
+                                                        gum.children,
+                                                        gum.friends,
                                                         translation_functions_p,
                                                         tf_c, tf_f)
-    
+
     spec_contents = write_spectrumcontents(gum.name, model_parameters)
     subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
     reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
-  
+
     """
     DECAYS
     """
-    
+
     # Conditional on CalcHEP files being made.
     if output_opts.ch:
         # Obtain all model interactions from CalcHEP model files.
         interactions, calchep_pdg_codes = get_vertices(outputs.get_ch())
-  
+
         # Obtain all 3-point vertices that are BSM.
-        three_pi_bsm = [interaction.particles for interaction in interactions 
+        three_pi_bsm = [interaction.particles for interaction in interactions
                         if interaction.num_particles() == 3
                         and interaction.is_sm() == False]
-  
+
         three_body_decays = decay_sorter(three_pi_bsm)
-        
+
         decaybit_src = ""
-    
+
         # Pass all interactions by first PDG code needed.
         for i in xrange(len(three_body_decays)):
-            decaybit_src += write_decaytable_entry(three_body_decays[i], 
+            decaybit_src += write_decaytable_entry(three_body_decays[i],
                                                    gum.name,
-                                                   calchep_pdg_codes, 
+                                                   calchep_pdg_codes,
                                                    gambit_pdgs,
                                                    decaybit_dict)
-                                               
+
         decay_roll, new_decays = \
-            write_decaybit_rollcall_entry(gum.name, gum.spec, three_body_decays, 
+            write_decaybit_rollcall_entry(gum.name, gum.spec, three_body_decays,
                                           decaybit_dict, gambit_pdgs)
-                                                                 
-        all_decays_src, all_decays_header = amend_all_decays(gum.name, gum.spec, 
-                                                             new_decays)  
-    
+
+        all_decays_src, all_decays_header = amend_all_decays(gum.name, gum.spec,
+                                                             new_decays)
+
     """
     CROSS-SECTIONS
     """
-    
+
     # Conditional on CalcHEP files being made.
-    if output_opts.ch:      
+    if output_opts.ch:
         # Obtain all three-field vertices
-        three_fields = [interaction.particles for interaction in interactions 
+        three_fields = [interaction.particles for interaction in interactions
                         if interaction.num_particles() == 3]
         # And all 4-point BSM vertices
-        four_fields = [interaction.particles for interaction in interactions 
+        four_fields = [interaction.particles for interaction in interactions
                        if interaction.num_particles() == 4
                        and interaction.is_sm() == False]
-      
+
         ann_products, propagators = sort_annihilations(dm, three_fields,
                                                        four_fields)
-                                                       
+
         # TODO - pass over required information for direct detection
-        darkbit_src = write_darkbit_entry(dm, ann_products, propagators, 
-                                          gambit_pdgs, gum.name, 
+        darkbit_src = write_darkbit_entry(dm, ann_products, propagators,
+                                          gambit_pdgs, gum.name,
                                           calchep_pdg_codes, bsm_particle_list)
-                                          
+
         pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name)
-  
+
     """
     SPECTRA
     """
-    
+
     # Determine when "simple_SMinputs" needed from FR/S model file
-    spectrum_src = write_basic_spectrum(gum.name, model_parameters, gum.spec, 
+    spectrum_src = write_basic_spectrum(gum.name, model_parameters, gum.spec,
                                         simple_SMinputs = True)
     spectrum_header = write_spectrum_header(gum.name)
     spec_rollcall = write_specbit_rollcall(gum.name)
-    
+
     """
     BACKENDS
     """
     # Conditional on CalcHEP files being made.
     if output_opts.ch: # If no parent
-        ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec) 
-        
+        ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
+
     print("")
     print("Everything has gone smoothly so far.")
     print("Now to write some GAMBIT code...")
     print("")
-    
+
     # All file writing routines HERE, once everything has gone okay.
-   
+
     # Models
     m = "Models"
-    write_file("models/" + gum.name, m, model_header, True)  
+    write_file("models/" + gum.name, m, model_header, True)
     write_file("models/" + gum.name, m, model_source, False) # If no parent!
     write_file("SpectrumContents/" + gum.name, m, spec_contents, False)
     write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m, subspec_wrapper, True)
-    
+
     # SpecBit
     m = "SpecBit"
     write_file("SpecBit_" + gum.name, m, spectrum_src, False)
     write_file("SpecBit_" + gum.name, m, spectrum_header, True)
     write_file("SpecBit_" + gum.name + "_rollcall", m, spectrum_header, True)
-    num = find_string("SpecBit_rollcall", m, "SpecBit_tests_rollcall.hpp", 
+    num = find_string("SpecBit_rollcall", m, "SpecBit_tests_rollcall.hpp",
                       True)[1]
     amend_file("SpecBit_rollcall", m, spec_rollcall, num, True)
-        
+
     # DecayBit
     m = "DecayBit"
     num = find_string("DecayBit", m, "void all_decays")[1]
@@ -271,26 +271,26 @@ if args.f:
         if find_capability(decay_roll[i][0], m)[0]:
             amend_rollcall(decay_roll[i][0], m, decay_roll[i][1])
         else:
-            num = find_string("DecayBit_rollcall", m, 
+            num = find_string("DecayBit_rollcall", m,
                               "#define CAPABILITY decay_rates", True)[1]
             amend_file("DecayBit_rollcall", m, decay_roll[i][1], num-4, True)
     if len(new_decays) > 0:
-        num = find_string("DecayBit_rollcall", m, 
+        num = find_string("DecayBit_rollcall", m,
                           "DEPENDENCY(omega_decay_rates", True)[1]
         amend_file("DecayBit_rollcall", m, all_decays_header, num, True)
         num = find_string("DecayBit", m, "decays(\"omega\")", False)[1]
         amend_file("DecayBit", m, all_decays_src, num, False)
-    
+
     # DarkBit
     m = "DarkBit"
     write_file(gum.name, m, darkbit_src, False)
     amend_rollcall("TH_ProcessCatalog", m, pc_cap)
     amend_rollcall("DD_couplings", m, dd_cap)
     amend_rollcall("DarkMatter_ID", m, dmid_cap)
-    
+
     # ColliderBit
     m = "ColliderBit"
-    
+
     # Backends
     m = "Backends"
     f = "frontends/CalcHEP_3_6_27"
@@ -302,7 +302,7 @@ if args.f:
     amend_file(f, m, ch_head, num-2, True)
     num = find_string(f, m, "BE_FUNCTION", True)[1]
     amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, True)
-        
+
     print("")
     print("GUM has finished successfully!")
     print("Please (re)compile GAMBIT.")

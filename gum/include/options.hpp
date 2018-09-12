@@ -9,18 +9,21 @@ class Options
     std::string optpackage;
     std::string optmodel;
     std::string optrestriction;
-    
+    std::string optLTot;
+
     public:
-        Options(std::string package, std::string model, std::string restriction)
+        Options(std::string package, std::string model, std::string restriction, std::string lagrangian = "LTotal")
         {
             optpackage = package;
             optmodel = model;
             optrestriction = restriction;
+            optLTot = lagrangian;
         }
-        
+
         std::string model() { return optmodel; }
         std::string package() { return optpackage; }
         std::string restriction() { return optrestriction; }
+        std::string lagrangian() { return optLTot; }
 
 };
 
@@ -29,12 +32,12 @@ class Outputs
 {
     std::string ch;
     std::string mg;
-    
+
     public:
-        
+
         std::string get_ch() { return ch; }
         std::string get_mg() { return mg; }
-        
+
         void set_ch(std::string chdir) { ch = chdir; }
         void set_mg(std::string mgdir) { mg = mgdir; }
 };
@@ -54,12 +57,12 @@ class Particle
     bool standardmodel;
     std::string partmass;
     bool selfconj;
-    
+
     public:
-        
+
         bool operator==(const Particle& other) {return false;}
         bool operator!=(const Particle& other) {return true;}
-    
+
         Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass, bool SC)
         {
             pdgcode = pdg;
@@ -70,7 +73,7 @@ class Particle
             partmass = mass;
             selfconj = SC;
         }
-        
+
         int pdg() { return pdgcode; }
         std::string name() { return partname; }
         bool SM() { return standardmodel; }
@@ -78,10 +81,10 @@ class Particle
         std::string mass() { return partmass; }
         bool SC() { return selfconj; }
 
-        
-        // Unsure if needed yet. 
+
+        // Unsure if needed yet.
         int colourX3;
-        
+
 };
 
 class Parameter
@@ -89,21 +92,21 @@ class Parameter
 
     std::string paramname;
     std::string blockname;
-        
+
     public:
-    
+
         bool operator==(const Parameter& other) {return false;}
         bool operator!=(const Parameter& other) {return true;}
-        
+
         Parameter(std::string name, std::string block)
         {
             paramname = name;
             blockname = block;
         }
-        
+
         std::string name() { return paramname; }
         std::string block() { return blockname; }
-        
+
 };
 
 #endif

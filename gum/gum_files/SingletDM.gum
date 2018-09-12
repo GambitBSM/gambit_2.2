@@ -6,13 +6,14 @@ math:
   # package: sarah
   # Name of Model within that package. This will also be the name of the GAMBIT model.
   model: SingletDM_test
-  restriction: DiagonalCKM  
+  restriction: DiagonalCKM
+  #lagrangian: LSM + LScalar
 
 # PDG code of the DM candidate.
-dm_candidate: 9900001 
-        
+dm_candidate: 9900001
+
 # The details of any parent model
-parent: 
+parent:
   name: SingletDM
   tf:
 

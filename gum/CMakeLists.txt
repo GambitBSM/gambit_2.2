@@ -33,7 +33,7 @@ EXTERNALPROJECT_ADD(
     FeynRules
 
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    URL_MD5 0865c540a3735b4bf4ab0ce2ac0addbb
+    URL_MD5 56521ae1ed6fe701368dbb5de9b581ee
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
@@ -52,13 +52,33 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
     SARAH
 
-    URL http://www.hepforge.org/archive/sarah/SARAH-4.12.3.tar.gz
-    URL_MD5 15eadec49d22edf49b8605934e18a000
+    URL https://sarah.hepforge.org/downloads/?f=SARAH-4.12.3.tar.gz
+    URL_MD5 be173d937e88f18df81dd29a08efc513
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
 
     SOURCE_DIR "${CMAKE_SOURCE_DIR}/contrib/SARAH"
+    CONFIGURE_COMMAND ""
+
+    BUILD_COMMAND ""
+
+    INSTALL_COMMAND ""
+
+    TEST_COMMAND ""
+)
+
+# Download MadGraph
+EXTERNALPROJECT_ADD(
+    MadGraph
+
+    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.3.2.tar.gz
+    URL_MD5 65a66e60e2f3f800130e8bc9b477bc25
+
+    UPDATE_COMMAND ""
+    PATCH_COMMAND ""
+
+    SOURCE_DIR "${CMAKE_SOURCE_DIR}/contrib/MadGraph"
     CONFIGURE_COMMAND ""
 
     BUILD_COMMAND ""
@@ -118,7 +138,7 @@ if(Boost_FOUND)
   ADD_LIBRARY(sarah SHARED src/sarah.cpp)
   TARGET_LINK_LIBRARIES(sarah ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 else()
-  message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and rerun cmake.")
+  message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and re-run cmake.")
 endif()
 
 # Configure cmake variables file

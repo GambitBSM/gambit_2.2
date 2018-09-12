@@ -4,6 +4,10 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 =    GUM    =
 =============
 
+* Better termination of code
+  * C++ -- as soon as there is an error, call close_wstp_link();
+  * Python -- better error throwing
+
 * Model parameters to be obtained (consistently).
   * FeynRules: use common blocks from paramlist?
   * SARAH: ???
@@ -13,11 +17,11 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
     * importDecays - which things to include/exclude??
     * 2->2 processes for consistency with fermions
   * Direct detection: how to automate this? FeynCalc/Arts?
-  
+
 * SARAH -> CalcHEP gives lots of zero vertices (e.g. including SUSY mixing matrices for non-SUSY models)
   * Can this be controlled by a useful flag for the output? Or in the model files?
   * If not -> CalcHEP cleaner
-  
+
 * Re-design:
   * calchep.py
   * 2-2 processes/vertex sorters etc. (darkbit)
@@ -31,9 +35,12 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 * Model hierarchy:
   * How to consistently define parameter translations?
   * If child goes to the top of family tree -> new spectrum, rewrite others? hmm.. e.g. inserting 2HDM+S as parent to S? and 2HDM?
-  
+  * Get rid of "use_existing_spectrum" as its own node, and gain information solely from the translation functions. But still give the user the option to write a new spectrum.
+
 * Option for choice of Lagrangian (potential) basis, or physical basis
   * SARAH: CalculateMasses -> True/False -- should work...
+
+* Add a "dryrun" option
 
 ==============
 =   GAMBIT   =
@@ -46,16 +53,16 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
     * Check -- is it backended "generally"?
   * DirectDM
   * Vevacious
-  * FlexibleSUSY)
+  * FlexibleSUSY
     * Needs template BOSS to be truly backended..?
 
 * Dark Matter:
-  * How to incorporate several DM candidates? 
-    * Multi-component DM e.g. from separate gauge groups 
-    * if a model has a scalar and a fermion, and t
-    * MicroMEGAs 5 allows this... 
+  * How to incorporate several DM candidates?
+    * Multi-component DM e.g. from separate gauge groups
+    * When the spectrum determines the LSP?
+    * MicroMEGAs 5 allows this...
       * (+ freeze-in)
-    
+
 * Collider:
   * Is there a "better" way to add new physics to Pythia?
 

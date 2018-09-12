@@ -115,7 +115,7 @@ BE_NAMESPACE
       else if (it->tag() == Par::dimensionless)
       {
         // TODO - it->name() to be replaced by it->externalName()
-        Assign_Value(const_cast<char*>(it->name().c_str()), spec.get(Par::dimensionless, it->name())); 
+        Assign_Value(const_cast<char*>(it->name().c_str()), spec.get(Par::dimensionless, it->name()));
       }
 
       // N.B. neutrinos can be easily added to this when they are implemented in GAMBIT.
@@ -159,6 +159,7 @@ BE_NAMESPACE
   }
 
   /// Provides spin-averaged decay width for 2 body decay process in CM frame at tree-level.
+  // TODO: remove dependence on g3 (for alphaS(mZ)).
   double CH_Decay_Width(str& model, str& in, std::vector<str>& out, double& QCD_coupling)
   {
     // Check size of in and out states;
