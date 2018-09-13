@@ -23,4 +23,4 @@ use_existing_spectrum: SingletDM_spectrum
 # Outputs for GUM to hook up to GAMBIT
 output:
   calchep: true
-  madgraph: true
+  pythia: true

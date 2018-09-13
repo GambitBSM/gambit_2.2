@@ -12,11 +12,6 @@ from setup import *
 mode = 'Test'
 #mode = 'Go'
 
-if mode == 'Test':
-  print("**********************************************************")
-  print("GUM launched in test mode -- will not be writing to files!")
-  print("**********************************************************")
-
 def full_filename(filename, module, header=False):
     """
     Formats a gambit file correctly based on the filename, the
@@ -78,7 +73,7 @@ def find_capability(capability, module, filename=None):
                 return True, num
 
     return False, 0
-    
+
 def amend_rollcall(capability, module, contents, filename=None):
     """
     Adds a new FUNCTION to an existing CAPABILITY in a rollcall header.
@@ -100,7 +95,7 @@ def amend_rollcall(capability, module, contents, filename=None):
                                                                     location))
 
     lookup = "#define CAPABILITY " + capability
-    
+
     found = False
 
     with open(location) as f:
@@ -108,9 +103,9 @@ def amend_rollcall(capability, module, contents, filename=None):
             if lookup in line:
                 found = True
                 break
-    
+
     lookup = "#undef CAPABILITY"
-    
+
     # Found the capability -> find the #undef
     if found == True:
         with open(location) as f:
@@ -119,7 +114,7 @@ def amend_rollcall(capability, module, contents, filename=None):
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
-            amend_file(filename, module, contents, no, header=True)        
+            amend_file(filename, module, contents, no, header=True)
     else:
         raise GumError(("\n\nCapability {0} not found in "
                         "{1}!").format(capability, filename))
@@ -180,7 +175,7 @@ def write_file(filename, module, contents, header=False):
     """
     Writes a file in a specified location.
     """
-    
+
     location = full_filename(filename, module, header)
 
     if find_file(filename, module, header) == True:
@@ -362,9 +357,9 @@ def indent(text, numspaces=0):
         out += line
 
     return out
-   
+
 def reformat(location):
     """
     Reformat all text in a file (indents, etc.)
     """
-  
+

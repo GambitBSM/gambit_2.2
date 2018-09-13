@@ -156,42 +156,17 @@ def sort_annihilations(dm, three_fields, four_fields):
         ann_products.remove([dm.PDG_code, dm.Conjugate.PDG_code])
     return np.array(ann_products), propagators
 
-
-def write_darkbit_entry(dm, ann_products, propagators,
-                        gambit_pdg_dict, gambit_model_name,
-                        calchep_pdg_dict, model_specific_particles,
-                        exclude_decays = []):
+def proc_cat(dm, ann_products, propagators, gambit_pdg_dict, gambit_model_name,
+             calchep_pdg_dict, model_specific_particles, exclude_decays = []):
     """
-    Writes source file for DarkBit. This includes the process catalogue and
-    direct detection routines.
+    Writes all entries for <sigma v> and the Process Catalogue for DarkBit,
+    utilising CalcHEP.
     """
-
 
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
     gb_conj = pdg_to_particle(dm.Conjugate.PDG_code, gambit_pdg_dict)
 
-    if not isinstance(dm, Particle):
-        print("DM not passed over as an instance of class Particle.")
-        exit()
-
-    intro_message = (
-            "///  Implementation of {0}\n"
-            "///  DarkBit routines."
-    ).format(gambit_model_name)
-
-    towrite = blame_gum(intro_message)
-
-    towrite += (
-            "#include \"gambit/Elements/gambit_module_headers.hpp\"\n"
-            "#include \"gambit/DarkBit/DarkBit_rollcall.hpp\"\n"
-            "#include \"gambit/Utils/ascii_table_reader.hpp\"\n"
-            "#include \"boost/make_shared.hpp\"\n"
-            "#include \"gambit/DarkBit/DarkBit_utils.hpp\"\n"
-            "\n"
-            "namespace Gambit\n"
-            "{{\n"
-            "namespace DarkBit\n"
-            "{{\n"
+    towrite = (
             "class {0}\n"
             "{{\n"
             "public:\n"
@@ -236,7 +211,7 @@ def write_darkbit_entry(dm, ann_products, propagators,
             "TH_Process process_ann(\"{1}\", \"{2}\");"
             "\n"
     ).format(gambit_model_name, gb_id, gb_conj)
-    
+
     # Add flag for (non-)self-conjugate DM to rescale spectra properly
     if not dm.is_sc():
         towrite += (
@@ -247,7 +222,7 @@ def write_darkbit_entry(dm, ann_products, propagators,
                 "\n\n"
         )
     else:
-        towrite += (                      
+        towrite += (
                 "\n"
                 "// Explicitly state that DM is self-conjugate\n"
                 "process_ann.isSelfConj = true;\n"
@@ -354,15 +329,60 @@ def write_darkbit_entry(dm, ann_products, propagators,
             "result = catalog;\n"
             "} // function TH_ProcessCatalog\n"
     )
-    
-    towrite += write_direct_detection(gambit_model_name)
-    
+
+    return towrite
+
+
+def write_darkbit_src(dm, pc, dd, ann_products, propagators, gambit_pdg_dict,
+                      gambit_model_name, calchep_pdg_dict,
+                      model_specific_particles, exclude_decays = []):
+    """
+    Collects all source for DarkBit: process catalogue (via CalcHEP),
+    direct detection...
+    """
+
+    gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
+    gb_conj = pdg_to_particle(dm.Conjugate.PDG_code, gambit_pdg_dict)
+
+    if not isinstance(dm, Particle):
+        print("DM not passed over as an instance of class Particle.")
+        exit()
+
+    intro_message = (
+            "///  Implementation of {0}\n"
+            "///  DarkBit routines."
+    ).format(gambit_model_name)
+
+    towrite = blame_gum(intro_message)
+
+    towrite += (
+            "#include \"gambit/Elements/gambit_module_headers.hpp\"\n"
+            "#include \"gambit/DarkBit/DarkBit_rollcall.hpp\"\n"
+            "#include \"gambit/Utils/ascii_table_reader.hpp\"\n"
+            "#include \"boost/make_shared.hpp\"\n"
+            "#include \"gambit/DarkBit/DarkBit_utils.hpp\"\n"
+            "\n"
+            "namespace Gambit\n"
+            "{\n"
+            "namespace DarkBit\n"
+            "{\n"
+    )
+
+    if pc:
+        towrite += proc_cat(dm, ann_products, propagators,
+                            gambit_pdg_dict, gambit_model_name,
+                            calchep_pdg_dict, model_specific_particles,
+                            exclude_decays)
+
+    if dd:
+        towrite += write_direct_detection(gambit_model_name)
+
     towrite += (
             "} //namespace DarkBit\n\n"
             "} //namespace Gambit\n"
             "\n"
     )
-    
+
     return indent(towrite)
 
 def add_SM_macros():
@@ -439,7 +459,7 @@ def write_direct_detection(model_name):
     """
     Writes direct detection bits in DarkBit... TODO
     """
-    
+
     towrite = (
             "\n"
             "/// Direct detection couplings.\n"
@@ -463,40 +483,46 @@ def write_direct_detection(model_name):
             "}}\n"
             "\n"
     ).format(model_name)
-    
+
     return towrite
 
-def write_darkbit_rollcall(model_name):
+def write_darkbit_rollcall(model_name, pc, dd):
     """
     Writes the rollcall header entries for new DarkBit entry.
     """
-    
-    pro_cat = dumb_indent(4, (
-            "#define FUNCTION TH_ProcessCatalog_{0}\n"
-            "  START_FUNCTION(DarkBit::TH_ProcessCatalog)\n"
-            "  DEPENDENCY(decay_rates, DecayTable)\n"
-            "  DEPENDENCY({0}_spectrum, Spectrum)\n"
-            "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, "
-            "std::vector<str>&, double&, double&, const DecayTable&))\n"
-            "  ALLOW_MODELS({0})\n"
-            "#undef FUNCTION\n"
-    ).format(model_name))
-        
-    dir_det = dumb_indent(4, (
-            "#define FUNCTION DD_couplings_{0}\n"
-            "START_FUNCTION(DM_nucleon_couplings)\n"
-            "DEPENDENCY({0}_spectrum, Spectrum)\n"
-            "*** TODO *** \n"
-            "#undef FUNCTION\n"
-    ).format(model_name))
-    
+
+    if pc:
+        pro_cat = dumb_indent(4, (
+                "#define FUNCTION TH_ProcessCatalog_{0}\n"
+                "  START_FUNCTION(DarkBit::TH_ProcessCatalog)\n"
+                "  DEPENDENCY(decay_rates, DecayTable)\n"
+                "  DEPENDENCY({0}_spectrum, Spectrum)\n"
+                "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, "
+                "std::vector<str>&, double&, double&, const DecayTable&))\n"
+                "  ALLOW_MODELS({0})\n"
+                "#undef FUNCTION\n"
+        ).format(model_name))
+    else:
+        pro_cat = None
+
+    if dd:
+        dir_det = dumb_indent(4, (
+                "#define FUNCTION DD_couplings_{0}\n"
+                "START_FUNCTION(DM_nucleon_couplings)\n"
+                "DEPENDENCY({0}_spectrum, Spectrum)\n"
+                "*** TODO *** \n"
+                "#undef FUNCTION\n"
+        ).format(model_name))
+    else:
+        dir_det = None
+
     dm_id = dumb_indent(4, (
             "#define FUNCTION DarkMatter_ID_{0}\n"
             "START_FUNCTION(std::string)\n"
             "ALLOW_MODELS({0})\n"
             "#undef FUNCTION\n"
     ).format(model_name))
-    
+
     return pro_cat, dir_det, dm_id
-    
-    
+
+

@@ -14,20 +14,36 @@ import numpy as np
 from src import *
 
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
-                                             "writing your papers for you.")
-parser.add_argument("-f", type=str, help="Specify input .GUM file.")
-
+                                             "(GAMBIT Universal Models)")
+required = parser.add_argument_group('Required arguments'  )
+required.add_argument('-f', '--file', type=str,
+                      help="Specify input .GUM file.", required=True)
+parser.add_argument("-d", "--dryrun", action='store_true',
+                    help="GUM will perform a dry run, not saving any output.")
+parser._action_groups.append(required)
 args = parser.parse_args()
 
 # Input .gum file.
-if args.f:
+if args.file:
+
+    if args.dryrun:
+        print("**********************************************************")
+        print("GUM called with a dry run -- will not be writing to files!")
+        print("**********************************************************")
 
     # Parse the .gum file
-    inputs = check_gum_file(args.f)
+    inputs = check_gum_file(args.file)
     gum, output_opts = fill_gum_object(inputs)
 
     # First, check the required backends are installed
     check_backends(output_opts)
+
+    if gum.dm_pdg:
+        darkbit = True
+    else:
+        darkbit = False
+        print(("No DM candidate requested -- no DarkBit routines will "
+               "be written.\n"))
 
     # FeynRules
     if gum.math == 'feynrules':
@@ -48,12 +64,6 @@ if args.f:
         # Make all BSM particles work with GUM's native Particle class.
         bsm_particle_list = fr_part_to_gum_part(fr_bsm)
 
-        for i in xrange(len(partlist)):
-            part = partlist[i]
-            # Initialise the DM candidate
-            if part.pdg() == gum.dm_pdg:
-                dm = Particle(part.spinX2(), part.pdg(), part.SC(), part.mass())
-
     elif gum.math == 'sarah':
         from lib.libsarah import *
         options = SARAHOptions("sarah", gum.name, '')
@@ -72,14 +82,18 @@ if args.f:
         # Make all BSM particles work with GUM's native Particle class.
         bsm_particle_list = sarah_part_to_gum_part(sarah_bsm)
 
+    # Initialise DM particle from particle list
+    if darkbit:
         for i in xrange(len(partlist)):
             part = partlist[i]
-            # Initialise the DM candidate
-            if part.pdg() == gum.dm_pdg:
-                dm = Particle(part.spinX2(), part.pdg(), part.SC(), part.mass())
+            # If specified, initialise the DM candidate
+            if darkbit:
+                if part.pdg() == gum.dm_pdg:
+                    dm = Particle(part.spinX2(), part.pdg(),
+                                  part.SC(), part.mass())
 
     # If we haven't found the DM candidate in the particle list...
-    if not dm:
+    if darkbit and not dm:
         raise GumError(("\n\nThe DM candidate specified has not been found "
                         "in the {0} file. Please check your .gum "
                         "file as well as the {0} file.").format(gum.math))
@@ -96,23 +110,12 @@ if args.f:
         raise GumError()
 
     # Clean up calchep files, then copy them to the GAMBIT backendDir
-    clean_calchep_model_files(outputs.get_ch(), gum.name)
-    copy_calchep_files(outputs.get_ch(), gum.name)
+    if output_opts.ch:
+        clean_calchep_model_files(outputs.get_ch(), gum.name)
+        copy_calchep_files(outputs.get_ch(), gum.name)
 
-    # Run FeynRules/SARAH -> generate the following:
-    #  - CalcHEP files                                 DecayBit, DarkBit               (done)
-    #  - (Basic) Spectrum object                       SpecBit                         (done)
-    #  - MadGraph (.ufo) files                         ColliderBit                     (todo)
-
-    # SARAH only:
-    #  - SPheno interface                              PrecisionBit, FlavBit, DecayBit (todo)
-    #  - FlexibleSUSY model                            SpecBit, PrecisionBit?          (todo)
-    #  - VEVacious model files                         SpecBit                         (todo)
-    #  - MicrOMEGAs                                    DarkBit                         (todo)
-
-    # Unknown:
-    #  - DirectDM interface                            DarkBit                         (todo)
-
+    if output_opts.ufo:
+        copy_madgraph_files(outputs.get_mg(), gum.name)
 
     # Add the BSM masses to the model parameters
 
@@ -200,31 +203,65 @@ if args.f:
                                                              new_decays)
 
     """
-    CROSS-SECTIONS
+    DARKBIT
     """
+    if darkbit:
 
-    # Conditional on CalcHEP files being made.
-    if output_opts.ch:
-        # Obtain all three-field vertices
-        three_fields = [interaction.particles for interaction in interactions
-                        if interaction.num_particles() == 3]
-        # And all 4-point BSM vertices
-        four_fields = [interaction.particles for interaction in interactions
-                       if interaction.num_particles() == 4
-                       and interaction.is_sm() == False]
+        pc = None
+        dd = None
+        mo = None
+        mdm = None
 
-        ann_products, propagators = sort_annihilations(dm, three_fields,
-                                                       four_fields)
+        # Conditional on CalcHEP files being made.
+        if output_opts.ch:
+
+            print("Writing process catalogue output in DarkBit.")
+
+            # Write process catalogue output
+            pc = True
+
+            # Obtain all three-field vertices
+            three_f = [interaction.particles for interaction in interactions
+                       if interaction.num_particles() == 3]
+            # And all 4-point BSM vertices
+            four_f = [interaction.particles for interaction in interactions
+                      if interaction.num_particles() == 4
+                      and interaction.is_sm() == False]
+
+            # Get all annihilation products and propagators involved in
+            # DM + DM -> X + Y at tree-level
+            ann_products, propagators = sort_annihilations(dm, three_f, four_f)
+
+        # If micrOMEGAs requested
+        if output_opts.mo:
+
+            print("Writing micrOMEGAs interface for DarkBit.")
+            # TODO: write simple frontend for MO.
+
+        """
+        # If MadDM requested
+        if output_opts.mdm:
+
+            print("Writing MadDM interface for DarkBit.")
+            # TODO: backend MadDM...
 
         # TODO - pass over required information for direct detection
-        darkbit_src = write_darkbit_entry(dm, ann_products, propagators,
-                                          gambit_pdgs, gum.name,
-                                          calchep_pdg_codes, bsm_particle_list)
+        # DirectDM?
+        if output_opts.ddm:
 
-        pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name)
+            print("Writing direct detection interface for DarkBit.")
+
+            # Write direct detection interface
+            dd = True
+        """
+        darkbit_src = write_darkbit_src(dm, pc, dd, ann_products, propagators,
+                                        gambit_pdgs, gum.name,
+                                        calchep_pdg_codes, bsm_particle_list)
+        pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name, pc, dd)
+
 
     """
-    SPECTRA
+    SPECBIT
     """
 
     # Determine when "simple_SMinputs" needed from FR/S model file
@@ -239,6 +276,13 @@ if args.f:
     # Conditional on CalcHEP files being made.
     if output_opts.ch: # If no parent
         ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
+
+    # If it's a dry run
+    if args.dryrun:
+        print("")
+        print("Dry run finished.")
+        print("")
+        exit()
 
     print("")
     print("Everything has gone smoothly so far.")
@@ -282,11 +326,14 @@ if args.f:
         amend_file("DecayBit", m, all_decays_src, num, False)
 
     # DarkBit
-    m = "DarkBit"
-    write_file(gum.name, m, darkbit_src, False)
-    amend_rollcall("TH_ProcessCatalog", m, pc_cap)
-    amend_rollcall("DD_couplings", m, dd_cap)
-    amend_rollcall("DarkMatter_ID", m, dmid_cap)
+    if darkbit:
+        m = "DarkBit"
+        write_file(gum.name, m, darkbit_src, False)
+        if pc:
+            amend_rollcall("TH_ProcessCatalog", m, pc_cap)
+        if dd:
+            amend_rollcall("DD_couplings", m, dd_cap)
+        amend_rollcall("DarkMatter_ID", m, dmid_cap)
 
     # ColliderBit
     m = "ColliderBit"

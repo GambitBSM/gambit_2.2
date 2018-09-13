@@ -12,8 +12,10 @@ class Inputs:
     "gum" object used internally.
     """
 
-    def __init__(self, model_name, dm_candidate, mathpackage, lagrangian = None,
-                 restriction = None, use_existing_spectrum = [False, None],
+    def __init__(self, model_name, mathpackage,
+                 dm_candidate,
+                 lagrangian = None, restriction = None,
+                 use_existing_spectrum = [False, None],
                  parent=None, children=None, friends=None):
 
         self.name = model_name
@@ -138,10 +140,6 @@ def check_gum_file(inputfile):
                             "GUM to use. Please check your .gum file. "
                             "Supported entries: sarah, feynrules."))
 
-        if not 'dm_candidate' in data:
-            raise GumError(("\n\nNo dark matter candidate specified. "
-                            "Please check your .gum file."))
-
         if not 'model' in data['math']:
             raise GumError(("\n\nNo model file specified. "
                             "Please check your .gum file."))
@@ -164,7 +162,10 @@ def fill_gum_object(data):
         lagrangian = "LTotal"
     mathpackage = math['package']
     gambit_model = math['model']
-    dm_candidate = data['dm_candidate']
+    if 'dm_candidate' in data:
+        dm_candidate = data['dm_candidate']
+    else:
+        dm_candidate = None
 
     backends = ['calchep', 'pythia', 'spheno', 'flexiblesusy',
                 'micromegas', 'vevacious']
@@ -217,9 +218,9 @@ def fill_gum_object(data):
         old_spectrum = False
         spectrum_name = "{0}_spectrum".format(gambit_model)
 
-    dm_candidate = data['dm_candidate']
+    #dm_candidate = data['dm_candidate']
 
-    gum_info = Inputs(gambit_model, dm_candidate, mathpackage, lagrangian,
+    gum_info = Inputs(gambit_model, mathpackage,  dm_candidate, lagrangian,
                       restriction,
                       [old_spectrum, spectrum_name],
                       parent, children, friends)

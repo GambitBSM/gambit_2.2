@@ -22,6 +22,8 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * Can this be controlled by a useful flag for the output? Or in the model files?
   * If not -> CalcHEP cleaner
 
+* If no CalcHEP dependency -> where to obtain vertices?
+
 * Re-design:
   * calchep.py
   * 2-2 processes/vertex sorters etc. (darkbit)
@@ -36,6 +38,7 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * How to consistently define parameter translations?
   * If child goes to the top of family tree -> new spectrum, rewrite others? hmm.. e.g. inserting 2HDM+S as parent to S? and 2HDM?
   * Get rid of "use_existing_spectrum" as its own node, and gain information solely from the translation functions. But still give the user the option to write a new spectrum.
+  * Do we NEED to be able to add translation functions? Is this the function of GUM? This is far more trivial from a GAMBIT model hierarchy point of view...
 
 * Option for choice of Lagrangian (potential) basis, or physical basis
   * SARAH: CalculateMasses -> True/False -- should work...
@@ -55,6 +58,7 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * Vevacious
   * FlexibleSUSY
     * Needs template BOSS to be truly backended..?
+    * Needs additional input to SARAH files?
 
 * Dark Matter:
   * How to incorporate several DM candidates?

@@ -440,7 +440,7 @@ void FeynRules::write_ch_output(std::string LTot)
 // Write MadGraph output.
 void FeynRules::write_mg_output(std::string LTot)
 {
-    std::cout << "Writing MadGraph (UFO) output." << std::endl;
+    std::cout << "Writing MadGraph (UFO) output for Pythia/MadDM." << std::endl;
 
     // Write output.
     std::string command = "WriteUFO[" + LTot + "];";
@@ -507,13 +507,13 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
       std::replace(chdir.begin(), chdir.end(), ' ', '-');
       outputs.set_ch(chdir);
 
-    /// Same for MadGraph
-    if (std::find(backends.begin(), backends.end(), "madgraph") != backends.end() )
+    /// Same for MadGraph->Pythia
+    if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
       model.write_mg_output(opts.lagrangian());
 
       // Location of MadGraph (UFO) files
       std::string mgdir = output + "_UFO";
-      std::replace(mgdir.begin(), mgdir.end(), ' ', '-');
+      std::replace(mgdir.begin(), mgdir.end(), ' ', '_');
       outputs.set_mg(mgdir);
 
     // All done. Close the Mathematica link.
