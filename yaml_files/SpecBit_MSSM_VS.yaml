@@ -1,8 +1,8 @@
 ##########################################################################
-## GAMBIT configuration for testing mass spectrum generation for several
-## MSSM variants (CMSSM by default)
+## GAMBIT configuration for testing vacuum stability likelihood and
+## Vevacious interface for the MSSM  (CMSSM by default)
 ##
-## Only requires SpecBit.
+##
 ##########################################################################
 
 
@@ -253,7 +253,7 @@ Logger:
 KeyValues:
 
   # Choose the output path
-  default_output_path: "runs/SpecBit_tests"
+  default_output_path: "runs/MSSM_VS"
 
   # Choose to use model spectific funtions during dependency resolution
   dependency_resolution:

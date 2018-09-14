@@ -4,7 +4,7 @@
 ///
 ///  Functions of module SpecBit
 ///  for interfacing with VevaciousPlusPlus
-///  assumed to be configured for the MSSM
+///  and calculating likelihoods from VS in the MSSM
 ///
 ///
 ///  *********************************************
@@ -35,7 +35,6 @@
 #include "gambit/SpecBit/model_files_and_boxes.hpp" // #includes lots of flexiblesusy headers and defines interface classes
 
 
-
 // Switch for debug mode
 //#define SPECBIT_DEBUG
 
@@ -64,10 +63,10 @@ namespace Gambit
             const Options& runOptions=*myPipe::runOptions;
 
 
-            vevaciouspath = std::string(GAMBIT_DIR) +
-                                        "/Backends/installed/VevaciousPlusPlus/"+
-                                       Backends::backendInfo().working_versions("VevaciousPlusPlus").back()+
-                                        "/VevaciousPlusPlus/"; // Bad to ask for the backend path. Use backendinfo.path or use scratch
+            std::string vevaciouslibpath = Backends::backendInfo().path_dir("VevaciousPlusPlus","1.0");
+
+            vevaciouspath = vevaciouslibpath + "/../";
+
             static bool firstrun = true;
             // Here we make sure files are only written the first time this is run
             if(firstrun) {
@@ -614,7 +613,9 @@ namespace Gambit
         };
 													
 		vevaciousPlusPlus.ReadLhaBlock( "MSU2", scale , msu2, 2 );
-	
+
+        spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
+
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
         try {
             vevaciousPlusPlus.RunPoint("internal");
@@ -634,14 +635,14 @@ namespace Gambit
 
  	}
 
- 	// Simple likelihood, good if stable bad if not. TODO: Put a more sophisticated likelihood when tunneling time is given
+
 
  	void get_likelihood_VS_MSSM(double &result)
     {
         namespace myPipe = Pipes::get_likelihood_VS_MSSM;
         double lifetime =  *myPipe::Dep::check_stability_MSSM;
 
-        if (lifetime > 10)
+        if (lifetime == -1)
         {
             result = 0;
         }
@@ -651,7 +652,10 @@ namespace Gambit
         }
         else
         {
-            result= -1e100;
+            // This is based on the estimation of the past lightcone from 1806.11281, should check what we used
+            // in Vevacious to be more accurate.
+            double conversion = (6.5821195e-25)/(31536000);
+            result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
         }
     }
 
