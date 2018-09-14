@@ -199,8 +199,6 @@ def proc_cat(dm, ann_products, propagators, gambit_pdg_dict, gambit_model_name,
             "}}\n\n"
             "\n"
             "}};\n\n"
-            "void DarkMatter_ID_{0}(std::string& result)"
-            "{{ result = \"{1}\"; }}\n\n"
             "void TH_ProcessCatalog_{0}(DarkBit::TH_ProcessCatalog &result)\n"
             "{{\n"
             "using namespace Pipes::TH_ProcessCatalog_{0};\n"
@@ -377,6 +375,8 @@ def write_darkbit_src(dm, pc, dd, ann_products, propagators, gambit_pdg_dict,
     if dd:
         towrite += write_direct_detection(gambit_model_name)
 
+    towrite += write_dm_id(gambit_model_name, gb_id)
+
     towrite += (
             "} //namespace DarkBit\n\n"
             "} //namespace Gambit\n"
@@ -385,7 +385,24 @@ def write_darkbit_src(dm, pc, dd, ann_products, propagators, gambit_pdg_dict,
 
     return indent(towrite)
 
+def write_dm_id(model_name, dm_id):
+    """
+    Returns entry for DarkMatter_ID in DarkBit.
+    """
+
+    towrite = (
+            "\n"
+            "void DarkMatter_ID_{0}(std::string& result)"
+            "{{ result = \"{1}\"; }}"
+            "\n\n"
+    ).format(model_name, dm_id)
+
+    return towrite;
+
 def add_SM_macros():
+    """
+    Adds Standard Model macros to the Process Catalogue.
+    """
 
     towrite = (
             "\n"

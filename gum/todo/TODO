@@ -23,6 +23,7 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * If not -> CalcHEP cleaner
 
 * If no CalcHEP dependency -> where to obtain vertices?
+  * Currently *don't* obtain vertices since CalcHEP is the only backend we use for ME generation
 
 * Re-design:
   * calchep.py
@@ -33,6 +34,7 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * Make this a .gum option? -> "add_new_particles: true"
 
 * Call MadGraph directly from GUM -> Pythia8?
+  * Try to intercept logger() -> find correct output
 
 * Model hierarchy:
   * How to consistently define parameter translations?
@@ -43,7 +45,9 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 * Option for choice of Lagrangian (potential) basis, or physical basis
   * SARAH: CalculateMasses -> True/False -- should work...
 
-* Add a "dryrun" option
+* std::set<std::string> amends -- to remove duplicates in the stdout of new created files
+
+* If parameters have underscores etc in FeynRules -> yell
 
 ==============
 =   GAMBIT   =
@@ -66,8 +70,5 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
     * When the spectrum determines the LSP?
     * MicroMEGAs 5 allows this...
       * (+ freeze-in)
-
-* Collider:
-  * Is there a "better" way to add new physics to Pythia?
 
 

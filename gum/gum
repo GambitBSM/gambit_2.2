@@ -45,6 +45,11 @@ if args.file:
         print(("No DM candidate requested -- no DarkBit routines will "
                "be written.\n"))
 
+    if output_opts.ch or output_opts.sph:
+        decaybit = True
+    else:
+        decaybit = False
+
     # FeynRules
     if gum.math == 'feynrules':
         from lib.libfr import *
@@ -114,6 +119,7 @@ if args.file:
         clean_calchep_model_files(outputs.get_ch(), gum.name)
         copy_calchep_files(outputs.get_ch(), gum.name)
 
+    # Move MadGraph files to contrib/MadGraph/models
     if output_opts.ufo:
         copy_madgraph_files(outputs.get_mg(), gum.name)
 
@@ -170,9 +176,8 @@ if args.file:
     reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
     """
-    DECAYS
+    VERTICES
     """
-
     # Conditional on CalcHEP files being made.
     if output_opts.ch:
         # Obtain all model interactions from CalcHEP model files.
@@ -184,23 +189,36 @@ if args.file:
                         and interaction.is_sm() == False]
 
         three_body_decays = decay_sorter(three_pi_bsm)
+    else:
+        calchep_pdg_codes = None
 
-        decaybit_src = ""
+    """
+    DECAYS
+    """
 
-        # Pass all interactions by first PDG code needed.
-        for i in xrange(len(three_body_decays)):
-            decaybit_src += write_decaytable_entry(three_body_decays[i],
-                                                   gum.name,
-                                                   calchep_pdg_codes,
-                                                   gambit_pdgs,
-                                                   decaybit_dict)
+    if decaybit:
 
-        decay_roll, new_decays = \
-            write_decaybit_rollcall_entry(gum.name, gum.spec, three_body_decays,
-                                          decaybit_dict, gambit_pdgs)
+        # CalcHEP specific decays
+        if output_opts.ch:
+            decaybit_src_ch = ""
 
-        all_decays_src, all_decays_header = amend_all_decays(gum.name, gum.spec,
-                                                             new_decays)
+            # Pass all interactions by first PDG code needed.
+            for i in xrange(len(three_body_decays)):
+                decaybit_src_ch += write_decaytable_entry(three_body_decays[i],
+                                                          gum.name,
+                                                          calchep_pdg_codes,
+                                                          gambit_pdgs,
+                                                          decaybit_dict)
+
+            decay_roll, new_decays = \
+                write_decaybit_rollcall_entry(gum.name, gum.spec,
+                                              three_body_decays,
+                                              decaybit_dict, gambit_pdgs)
+
+            all_decays_src, all_decays_header = \
+                amend_all_decays(gum.name, gum.spec, new_decays)
+
+        # TODO - decays from SPheno
 
     """
     DARKBIT
@@ -211,6 +229,8 @@ if args.file:
         dd = None
         mo = None
         mdm = None
+        ann_products = None
+        propagators = None
 
         # Conditional on CalcHEP files being made.
         if output_opts.ch:
@@ -254,11 +274,11 @@ if args.file:
             # Write direct detection interface
             dd = True
         """
+
         darkbit_src = write_darkbit_src(dm, pc, dd, ann_products, propagators,
                                         gambit_pdgs, gum.name,
                                         calchep_pdg_codes, bsm_particle_list)
         pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name, pc, dd)
-
 
     """
     SPECBIT
@@ -296,7 +316,8 @@ if args.file:
     write_file("models/" + gum.name, m, model_header, True)
     write_file("models/" + gum.name, m, model_source, False) # If no parent!
     write_file("SpectrumContents/" + gum.name, m, spec_contents, False)
-    write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m, subspec_wrapper, True)
+    write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m,
+               subspec_wrapper, True)
 
     # SpecBit
     m = "SpecBit"
@@ -308,22 +329,26 @@ if args.file:
     amend_file("SpecBit_rollcall", m, spec_rollcall, num, True)
 
     # DecayBit
-    m = "DecayBit"
-    num = find_string("DecayBit", m, "void all_decays")[1]
-    amend_file("DecayBit", m, decaybit_src, num-4, False)
-    for i in xrange(len(decay_roll)):
-        if find_capability(decay_roll[i][0], m)[0]:
-            amend_rollcall(decay_roll[i][0], m, decay_roll[i][1])
-        else:
-            num = find_string("DecayBit_rollcall", m,
-                              "#define CAPABILITY decay_rates", True)[1]
-            amend_file("DecayBit_rollcall", m, decay_roll[i][1], num-4, True)
-    if len(new_decays) > 0:
-        num = find_string("DecayBit_rollcall", m,
-                          "DEPENDENCY(omega_decay_rates", True)[1]
-        amend_file("DecayBit_rollcall", m, all_decays_header, num, True)
-        num = find_string("DecayBit", m, "decays(\"omega\")", False)[1]
-        amend_file("DecayBit", m, all_decays_src, num, False)
+    if decaybit:
+        m = "DecayBit"
+        # Append to the end of DecayBit -- just before all_decays
+        num = find_string("DecayBit", m, "void all_decays")[1]
+        if output_opts.ch:
+            amend_file("DecayBit", m, decaybit_src_ch, num-4, False)
+            for i in xrange(len(decay_roll)):
+                if find_capability(decay_roll[i][0], m)[0]:
+                    amend_rollcall(decay_roll[i][0], m, decay_roll[i][1])
+                else:
+                    num = find_string("DecayBit_rollcall", m,
+                                      "#define CAPABILITY decay_rates", True)[1]
+                    amend_file("DecayBit_rollcall", m, decay_roll[i][1],
+                               num-4, True)
+            if len(new_decays) > 0:
+                num = find_string("DecayBit_rollcall", m,
+                                  "DEPENDENCY(omega_decay_rates", True)[1]
+                amend_file("DecayBit_rollcall", m, all_decays_header, num, True)
+                num = find_string("DecayBit", m, "decays(\"omega\")", False)[1]
+                amend_file("DecayBit", m, all_decays_src, num, False)
 
     # DarkBit
     if darkbit:
@@ -340,15 +365,16 @@ if args.file:
 
     # Backends
     m = "Backends"
-    f = "frontends/CalcHEP_3_6_27"
-    num = find_string(f, m, "setModel(modeltoset, 1)", False)[1]
-    amend_file(f, m, ch_src_sl, num, False)
-    num = find_string(f, m, "END_BE_INI_FUNCTION", False)[1]
-    amend_file(f, m, ch_src_pl, num-2, False)
-    num = find_string(f, m, "backend_undefs.hpp", True)[1]
-    amend_file(f, m, ch_head, num-2, True)
-    num = find_string(f, m, "BE_FUNCTION", True)[1]
-    amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, True)
+    if output_opts.ch:
+        f = "frontends/CalcHEP_3_6_27"
+        num = find_string(f, m, "setModel(modeltoset, 1)", False)[1]
+        amend_file(f, m, ch_src_sl, num, False)
+        num = find_string(f, m, "END_BE_INI_FUNCTION", False)[1]
+        amend_file(f, m, ch_src_pl, num-2, False)
+        num = find_string(f, m, "backend_undefs.hpp", True)[1]
+        amend_file(f, m, ch_head, num-2, True)
+        num = find_string(f, m, "BE_FUNCTION", True)[1]
+        amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, True)
 
     print("")
     print("GUM has finished successfully!")
@@ -356,5 +382,5 @@ if args.file:
     print("")
 
 else:
-    raise GumError(("\n\n\tHi! You must be new here. Usage: ./gum -f inifile.gum"
-                    "\n\tOr try ./gum -h for help."))
+    raise GumError(("\n\n\tHi! You must be new here. Usage: gum -f inifile.gum"
+                    "\n\tOr try gum -h for help."))
