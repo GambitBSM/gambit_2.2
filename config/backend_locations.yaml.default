@@ -78,6 +78,8 @@ SPheno:
 SUSYHD:
   1.0.2:       ./Backends/installed/susyhd/1.0.2/SUSYHD.m
 
+DirectDM:
+  2.0.1:       ./Backends/installed/directdm/2.0.1/directdm
 
 LibFirst:
   1.0:         ./Backends/examples/libfirst.so
