@@ -21,10 +21,11 @@
 
 LOAD_LIBRARY
 
+//#include "gambit/Backends/python_variable.hpp"
 
-
-BE_INI_FUNCTION {}
-END_BE_INI_FUNCTION
+BE_CONV_FUNCTION(initialise_WC_dict, pybind11::dict, (std::vector<std::pair<std::string, double> >), "initialise_WC_dict")
+BE_CONV_FUNCTION(get_NR_WCs_flav, pybind11::dict, (pybind11::dict, int, std::string), "get_NR_WCs_flav")
+BE_CONV_FUNCTION(get_NR_WCs_EW, pybind11::dict, (pybind11::dict, double, double, double, std::string), "get_NR_WCs_EW")
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"
