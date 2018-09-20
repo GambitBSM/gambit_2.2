@@ -36,7 +36,7 @@
 ///  *********************************************
 
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/DDCalc_2_0_0.hpp"
+#include "gambit/Backends/frontends/DDCalc_2_1_0.hpp"
 #include "gambit/Utils/standalone_error_handlers.hpp"
 
 #include <map>
@@ -107,7 +107,9 @@ BE_INI_FUNCTION
 
   // Change DM parameters
 
-  TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+  /// Calling DDCalc with non-relativistic effective coefficients
+
+  DarkBit::TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
   std::string DMid = *Dep::DarkMatter_ID;
 
   // Obtain spin of DM particle, plus identify whether DM is self-conjugate
@@ -116,7 +118,9 @@ BE_INI_FUNCTION
   int OpIndex, tau;
   std::string OpName;
 
-  DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) sDM/2.)
+  DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) sDM/2.);
+
+  vec_strdbl_pairs wilsonCoeffs = *Dep::DD_nonrel_WCs;
 
   for (auto it = wilsonCoeffs.begin(); it != wilsonCoeffs.end(); ++it)
   {
@@ -133,6 +137,8 @@ BE_INI_FUNCTION
     DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, it->second);
 
   }
+
+  /// + option for calling DDCalc with "traditional" DD_couplings struct.
 
   // Log stuff if in debug mode
   #ifdef DDCALC_DEBUG

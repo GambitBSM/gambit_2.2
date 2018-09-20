@@ -595,6 +595,51 @@ START_MODULE
 
   #undef CAPABILITY
 
+
+  // Relativistic Wilson coefficients
+  #define CAPABILITY DD_rel_WCs
+  START_CAPABILITY
+
+      #define FUNCTION DD_rel_WCs_MajoranaDM
+      START_FUNCTION(vec_strdbl_pairs)
+      DEPENDENCY(MajoranaDM_spectrum, Spectrum)
+      ALLOW_MODEL(MajoranaDM)
+      #undef FUNCTION
+
+      #define FUNCTION DD_rel_WCs_DiracDM
+      START_FUNCTION(vec_strdbl_pairs)
+      DEPENDENCY(DiracDM_spectrum, Spectrum)
+      ALLOW_MODEL(DiracDM)
+      #undef FUNCTION
+
+  #undef CAPABILITY
+
+  // Determine the non-relativistic Wilson coefficients
+  #define CAPABILITY DD_nonrel_WCs
+  START_CAPABILITY
+
+      // Flavour matching scheme
+      #define FUNCTION DD_nonrel_WCs_flavscheme
+      START_FUNCTION(vec_strdbl_pairs)
+      DEPENDENCY(DD_rel_WCs, vec_strdbl_pairs)
+      DEPENDENCY(TH_ProcessCatalog, DarkBit::TH_ProcessCatalog)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      BACKEND_REQ(initialise_WC_dict, (), pybind11::dict, (vec_strdbl_pairs&))
+      BACKEND_REQ(get_NR_WCs_flav, (), vec_strdbl_pairs, (pybind11::dict&, double&, int&, std::string&))
+      #undef FUNCTION
+
+      // Unbroken SM phase
+      #define FUNCTION DD_nonrel_WCs_EW
+      START_FUNCTION(vec_strdbl_pairs)
+      DEPENDENCY(DD_rel_WCs, vec_strdbl_pairs)
+      DEPENDENCY(TH_ProcessCatalog, DarkBit::TH_ProcessCatalog)
+      DEPENDENCY(DarkMatter_ID, std::string)
+      BACKEND_REQ(initialise_WC_dict, (), pybind11::dict, (vec_strdbl_pairs&))
+      BACKEND_REQ(get_NR_WCs_EW, (), vec_strdbl_pairs, (pybind11::dict&, double&, double&, double&, double&, std::string&))
+      #undef FUNCTION
+
+  #undef CAPABILITY
+
   // Simple calculators of the spin-(in)dependent WIMP-proton and WIMP-neutron cross-sections
   QUICK_FUNCTION(DarkBit, sigma_SI_p, NEW_CAPABILITY, sigma_SI_p_simple, double, (), (DD_couplings, DM_nucleon_couplings), (mwimp, double))
   QUICK_FUNCTION(DarkBit, sigma_SI_n, NEW_CAPABILITY, sigma_SI_n_simple, double, (), (DD_couplings, DM_nucleon_couplings), (mwimp, double))

@@ -286,6 +286,115 @@ namespace Gambit
     }
 
 
+    /**** Direct detection using Wilson Coefficients ****/
+
+    /* Relativistic Wilson Coefficients, model dependent*/
+
+    void DD_rel_WCs_MajoranaDM(vec_strdbl_pairs &result)
+    {
+      using namespace Pipes::DD_rel_WCs_MajoranaDM;
+
+      // Get values of non-relativistic operators from Spectrum
+      Spectrum spec = *Dep::MajoranaDM_spectrum;
+
+      double lambda = spec.get(Par::dimensionless, "lX");
+
+      result.push_back(std::make_pair("C53",lambda));
+
+    }
+
+    void DD_rel_WCs_DiracDM(vec_strdbl_pairs &result)
+    {
+      using namespace Pipes::DD_rel_WCs_DiracDM;
+
+      // Get values of non-relativistic operators from Spectrum
+      Spectrum spec = *Dep::DiracDM_spectrum;
+
+      double lambda = spec.get(Par::dimensionless, "lF");
+
+      result.push_back(std::make_pair("C53",lambda));
+
+    }
+
+    /* Non-relativistic Wilson Coefficients, model independent */
+
+    /// Obtain the non-relativistic Wilson Coefficients from a set of model
+    /// specific relativistic Wilson Coefficients from DirectDM in the flavour
+    /// matching scheme (default 5 flavours). NR WCs defined at 2 GeV.
+    void DD_nonrel_WCs_flavscheme(vec_strdbl_pairs &result)
+    {
+      using namespace Pipes::DD_nonrel_WCs_flavscheme;
+
+      // Number of quark flavours used for matching (default 5)
+      int scheme = runOptions->getValueOrDef<int>(5,"flavs");
+
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+      std::string DMid = *Dep::DarkMatter_ID;
+      double mDM = catalog.getParticleProperty(DMid).mass;
+      std::string DM_type;
+
+      // Obtain spin of DM particle, plus identify whether DM is self-conjugate
+      unsigned int sDM  = catalog.getParticleProperty(DMid).spin2;
+      bool is_SC = catalog.getProcess(DMid, DMid).isSelfConj;
+
+      // Set DM_type based on the spin and & conjugacy of DM
+      // Fermion case
+      if (sDM == 1) { is_SC ? DM_type == "M" : DM_type == "D"; }
+      // Scalar
+      else if (sDM == 0) { is_SC ? DM_type == "R" : DM_type == "C"; }
+
+      // Relativistic Wilson Coefficients
+      vec_strdbl_pairs relativistic_WCs = *Dep::DD_rel_WCs;
+      // Convert to a Python dictionary
+      pybind11::dict wc_dict = BEreq::initialise_WC_dict(relativistic_WCs);
+      // Get non-relativistic coefficients
+      result = BEreq::get_NR_WCs_flav(wc_dict, mDM, scheme, DM_type);
+    }
+
+    /// Obtain the non-relativistic Wilson Coefficients from a set of model
+    /// specific relativistic Wilson Coefficients from DirectDM in the
+    /// unbroken SM phase. NR WCs defined at 2 GeV.
+    void DD_nonrel_WCs_EW(vec_strdbl_pairs &result)
+    {
+      using namespace Pipes::DD_nonrel_WCs_EW;
+
+      // Specify the scale that the Lagrangian is defined at
+      double scale = runOptions->getValue<double>("scale");
+      // Hypercharge of DM
+      double Ychi = runOptions->getValue<double>("Ychi");
+      // SU(2) dimension of DM
+      double dchi = runOptions->getValue<int>("dchi");
+
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+      std::string DMid = *Dep::DarkMatter_ID;
+      double mDM = catalog.getParticleProperty(DMid).mass;
+      std::string DM_type;
+
+      // Obtain spin of DM particle, plus identify whether DM is self-conjugate
+      unsigned int sDM  = catalog.getParticleProperty(DMid).spin2;
+      bool is_SC = catalog.getProcess(DMid, DMid).isSelfConj;
+
+      // Set DM_type based on the spin and & conjugacy of DM
+      // Fermion case: set DM_type to Majorana or Dirac
+      if (sDM == 1) { is_SC ? DM_type = "M" : DM_type = "D"; }
+      // Scalar case: set DM type to real or complex
+      else if (sDM == 0) { is_SC ? DM_type = "R" : DM_type = "C"; }
+
+      std::cout << "DM spin: " << sDM << std::endl;
+      std::cout << "is SC? " << is_SC << std::endl;
+      std::cout << "DM mass: " << mDM << std::endl;
+      std::cout << "DM_type: " << DM_type << std::endl;
+
+      // Relativistic Wilson Coefficients
+      vec_strdbl_pairs relativistic_WCs = *Dep::DD_rel_WCs;
+      // Convert to a Python dictionary
+      pybind11::dict wc_dict = BEreq::initialise_WC_dict(relativistic_WCs);
+      // Get non-relativistic coefficients
+
+      /// How to get hypercharge and SU(2) dimension for these fields!?
+      result = BEreq::get_NR_WCs_EW(wc_dict, mDM, dchi, Ychi, scale, DM_type);
+    }
+
     //////////////////////////////////////////////////////////////////////////
     //
     //          Direct detection rate and likelihood routines

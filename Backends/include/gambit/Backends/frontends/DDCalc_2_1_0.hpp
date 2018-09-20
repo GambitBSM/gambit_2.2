@@ -37,8 +37,8 @@
 // Identify backend
 #define BACKENDNAME DDCalc
 #define BACKENDLANG Fortran
-#define VERSION 2.0.0
-#define SAFE_VERSION 2_0_0
+#define VERSION 2.1.0
+#define SAFE_VERSION 2_1_0
 
 // Load it
 LOAD_LIBRARY
@@ -152,7 +152,7 @@ BE_FUNCTION(DDCalc_GetWIMP_msigma, void, (const int&,double&,double&,double&,dou
 //  (4) The desired value of the operator coefficient in units GeV^(-2)
 
 BE_FUNCTION(DDCalc_SetWIMP_NREffectiveTheory, void, (const int&,const double&,const double&), "C_DDCalc_ddcalc_setwimp_nreffectivetheory", "SetWIMP_NREffectiveTheory")
-BE_FUNCTION(DDCalc_SetWIMP_NREFT_CPT, void, (const int&,const double&,const double&), "C_DDCalc_ddcalc_setwimp_nreffectivetheory", "SetWIMP_NREffectiveTheory")
+BE_FUNCTION(DDCalc_SetWIMP_NREFT_CPT, void, (const int&,const double&,const double&), "C_DDCalc_ddcalc_setwimp_nreft_cpt", "SetWIMP_NREFT_CPT")
 BE_FUNCTION(DDCalc_SetNRCoefficient, void, (const int&,const int&,const int&,const double&), "C_DDCalc_ddcalc_setnrcoefficient", "SetNRCoefficient")
 
 // Get the values of the isoscalar and isovector part of a given non-relativistic operator.
@@ -199,6 +199,11 @@ BE_INI_DEPENDENCY(mwimp, double)
 BE_INI_DEPENDENCY(DD_couplings, DM_nucleon_couplings)
 BE_INI_DEPENDENCY(RD_fraction, double)
 BE_INI_DEPENDENCY(LocalHalo, LocalMaxwellianHalo)
+
+// Wilson Coefficient stuff.
+BE_INI_DEPENDENCY(DarkMatter_ID, std::string)
+BE_INI_DEPENDENCY(TH_ProcessCatalog, DarkBit::TH_ProcessCatalog)
+BE_INI_DEPENDENCY(DD_nonrel_WCs, vec_strdbl_pairs)
 
 // Convenience function for returning detector index given an analysis name.
 BE_CONV_FUNCTION(DDCalc_Experiment, int, (const str&), "DD_Experiment")

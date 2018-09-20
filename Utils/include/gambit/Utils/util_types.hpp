@@ -71,6 +71,9 @@ namespace Gambit
   /// Shorthand for an int-int pair to double map
   typedef std::map< std::pair < int, int >, double> map_intpair_dbl;
 
+  /// Shorthand for a vector of std,double pairs
+  typedef std::vector<std::pair<std::string,double> > vec_strdbl_pairs;
+
   // Useful unqualified functions
   using std::cout;
   using std::cerr;
