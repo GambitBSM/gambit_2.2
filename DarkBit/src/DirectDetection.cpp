@@ -34,6 +34,10 @@
 ///          (ankit.beniwal@adelaide.edu.au)
 ///  \date 2018 August
 ///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2018 Sep
+///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -298,9 +302,12 @@ namespace Gambit
       Spectrum spec = *Dep::MajoranaDM_spectrum;
 
       double lambda = spec.get(Par::dimensionless, "lX");
+      double xi = spec.get(Par::dimensionless, "xi");
 
-      result.push_back(std::make_pair("C53",lambda));
-
+      // lambda*cos(xi) XXHH
+      result.push_back(std::make_pair("C53",lambda*std::cos(xi)));
+      // lambda*sin(xi) iXg5XHH
+      result.push_back(std::make_pair("C57",lambda*std::sin(xi)));
     }
 
     void DD_rel_WCs_DiracDM(vec_strdbl_pairs &result)
@@ -311,9 +318,12 @@ namespace Gambit
       Spectrum spec = *Dep::DiracDM_spectrum;
 
       double lambda = spec.get(Par::dimensionless, "lF");
+      double xi = spec.get(Par::dimensionless, "xi");
 
-      result.push_back(std::make_pair("C53",lambda));
-
+      // lambda*cos(xi) FFHH
+      result.push_back(std::make_pair("C53",lambda*std::cos(xi)));
+      // lambda*cos(xi) iFg5FHH
+      result.push_back(std::make_pair("C57",lambda*std::sin(xi)));
     }
 
     /* Non-relativistic Wilson Coefficients, model independent */
@@ -380,18 +390,14 @@ namespace Gambit
       // Scalar case: set DM type to real or complex
       else if (sDM == 0) { is_SC ? DM_type = "R" : DM_type = "C"; }
 
-      std::cout << "DM spin: " << sDM << std::endl;
-      std::cout << "is SC? " << is_SC << std::endl;
-      std::cout << "DM mass: " << mDM << std::endl;
-      std::cout << "DM_type: " << DM_type << std::endl;
-
       // Relativistic Wilson Coefficients
       vec_strdbl_pairs relativistic_WCs = *Dep::DD_rel_WCs;
       // Convert to a Python dictionary
       pybind11::dict wc_dict = BEreq::initialise_WC_dict(relativistic_WCs);
       // Get non-relativistic coefficients
 
-      /// How to get hypercharge and SU(2) dimension for these fields!?
+      /// TODO - How to get hypercharge and SU(2) dimension for these fields!?
+      /// Currently just comes from the YAML file. GUM? Process Catalogue?
       result = BEreq::get_NR_WCs_EW(wc_dict, mDM, dchi, Ychi, scale, DM_type);
     }
 

@@ -17,13 +17,15 @@
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/DirectDM_2_0_1.hpp"
 
-#include <pybind11/embed.h>
-
 BE_INI_FUNCTION
 {
   // Empty ini function.
 }
 END_BE_INI_FUNCTION
+
+/// TODO -
+/// Replace directdm object with one loaded up by BE system proper (i.e. loaded_python_backends)
+/// Set nuisance parameters for scans within directdm (BE_INI_FUNCTION)
 
 BE_NAMESPACE
 {
@@ -42,38 +44,7 @@ BE_NAMESPACE
     {
       relativistic_WCs[pybind11::cast(it->first)] = pybind11::cast(it->second);
     }
-    pybind11::print(relativistic_WCs);
     return relativistic_WCs;
-  }
-
-  /// Get Wilson Coefficients at 2 GeV in a quark flavour matching scheme.
-  /// Requires a dictionary of relatavistic WCs, the DM mass, an integer specifying the number
-  /// of quark flavours to match onto, i.e. the 3, 4 or 5 quark flavour scheme, and
-  /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
-  vec_strdbl_pairs get_NR_WCs_flav(pybind11::dict& relativistic_WCs, double& mDM, int& scheme, std::string& DM_type)
-  {
-    // Only load up 3, 4, 5 flavour scheme.
-    if (scheme != 3 || scheme != 4 || scheme != 5)
-    {
-      backend_error().raise(LOCAL_INFO, "DirectDM quark flavour matching scheme must be for "
-        "3, 4 or 5 quark flavors.");
-    }
-    vec_strdbl_pairs nonrel_WCs;
-
-    // Import the Python class "WC_3f" from "directdm"
-    /// Todo - replace by directdm object loaded up by BE system (loaded_python_backends)
-    pybind11::object wc_3f = pybind11::module::import("directdm").attr("WC_3f");
-    pybind11::object wc_4f = pybind11::module::import("directdm").attr("WC_4f");
-    pybind11::object wc_5f = pybind11::module::import("directdm").attr("WC_5f");
-
-    // Initialise DirectDM object according to number of flavours specified
-    if (scheme == 5)
-    {
-      pybind11::object WCs = wc_5f(relativistic_WCs, DM_type);
-    }
-
-
-    return nonrel_WCs;
   }
 
   /// Get Wilson Coefficients at 2 GeV from the SM unbroken phase.
@@ -92,33 +63,80 @@ BE_NAMESPACE
     // Import Python class WC_EW from module directdm
     pybind11::object ddm = pybind11::module::import("directdm");
     pybind11::object WC_EW = ddm.attr("WC_EW")(relativistic_WCs, Ychi, dchi, DM_type);
-    pybind11::object cNRs = WC_EW.attr("_my_cNR")(mDM, scale);
+    pybind11::dict cNRs = WC_EW.attr("_my_cNR")(mDM, scale);
 
-    pybind11::print(cNRs);
+    // Obtain non-relativistic WCs and their values
+    pybind11::list cnrlistk = cNRs.attr("keys")();
+    pybind11::list cnrlistv = cNRs.attr("values")();
 
+    pybind11::str key;
+    pybind11::float_ value;
+
+    // Go through each key/value pair and append to the vector of non-rel WCs.
+    for (unsigned int i=0; i<len(cnrlistk); i++)
+    {
+      key = cnrlistk[i];
+      value = cnrlistv[i];
+      nonrel_WCs.push_back(std::make_pair(std::string(key), (double)value));
+    }
 
     return nonrel_WCs;
   }
 
-  /// Need to expose the following classes -- where DM_type can be equal to:
-  /// "D": Dirac fermion, "M": Majorana fermion, "C": complex scalar, "R": real scalar DM. Default behaviour is DM_type="D".
-  // class WC_3f(coeff_dict, DM_type)
-  // class WC_4f(coeff_dict, DM_type)
-  // class WC_5f(coeff_dict, DM_type)
-  // class WC_EW(coeff_dict, Ychi, dchi, DM_type="D") -- only allows DM_type="D". Ychi, dchi are DM hypercharge and dimension of the SU(2) representation.
+  /// Get Wilson Coefficients at 2 GeV in a quark flavour matching scheme.
+  /// Requires a dictionary of relatavistic WCs, the DM mass, an integer specifying the number
+  /// of quark flavours to match onto, i.e. the 3, 4 or 5 quark flavour scheme, and
+  /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
+  vec_strdbl_pairs get_NR_WCs_flav(pybind11::dict& relativistic_WCs, double& mDM, int& scheme, std::string& DM_type)
+  {
+    // Only load up 3, 4, 5 flavour scheme.
+    if (scheme != 3 || scheme != 4 || scheme != 5)
+    {
+      backend_error().raise(LOCAL_INFO, "DirectDM quark flavour matching scheme must be for "
+        "3, 4 or 5 quark flavors.");
+    }
+    vec_strdbl_pairs nonrel_WCs;
 
-  /// These classes all have the following methods:
-  // run(mu_Lambda, muz=MZ): perform the one-loop RGE from scale mu_Lambda to muz (default MZ) and output a dictionary with the resulting Wilson coefficients. (Scales in GeV)
+    // Import the Python class "WC_3f" from "directdm"
 
-  /// match(DM_mass, mu_Lambda, RUN_EW=True): return a dictionary after performing the running and the matching to the theory with broken EW symmetry and five active quark flavors at scale MZ.
-  // Setting the optional argument RUN_EW=False will switch off the RG evolution above the weak scale (default is RUN_EW=True).
+    // Import Python class module directdm
+    pybind11::object ddm = pybind11::module::import("directdm");
+    pybind11::dict cNRs;
 
-  /// cNR(DM_mass, qvec, mu_Lambda, RGE=True, NLO=False, RUN_EW=True): return a dictionary containing the coefficients of the nuclear operators, c_i^N.
-  /// _my_cNR(DM_mass, mu_Lambda, RGE=True, NLO=False, RUN_EW=True): return a dictionary containing the coefficients of the nuclear operators, c_i^N.
-  // The two mandatory arguments are the DM mass (GeV) and the spatial momentum transfer qvec (GeV).
-  // RGE=False will switch off the QCD and QED running (the default is RGE=True).
-  // NLO=True will add the coherently enhanced NLO terms for the tensor operators (see Bishara et al. for the details); the default is NLO=False.
-  // RUN_EW=False will switch off the RG evolution above the weak scale (default is RUN_EW=True).
+    // Initialise Python class according to number of quark flavours specified
+    if (scheme == 5)
+    {
+      pybind11::object WC_5f = ddm.attr("WC_5f")(relativistic_WCs, DM_type);
+      cNRs = WC_5f.attr("_my_cNR")(mDM);
+    }
+    else if (scheme == 4)
+    {
+      pybind11::object WC_4f = ddm.attr("WC_4f")(relativistic_WCs, DM_type);
+      cNRs = WC_4f.attr("_my_cNR")(mDM);
+    }
+    else if (scheme == 3)
+    {
+      pybind11::object WC_3f = ddm.attr("WC_3f")(relativistic_WCs, DM_type);
+      cNRs = WC_3f.attr("_my_cNR")(mDM);
+    }
+
+    // Obtain non-relativistic WCs and their values
+    pybind11::list cnrlistk = cNRs.attr("keys")();
+    pybind11::list cnrlistv = cNRs.attr("values")();
+
+    pybind11::str key;
+    pybind11::float_ value;
+
+    // Go through each key/value pair and append to the vector of non-rel WCs.
+    for (unsigned int i=0; i<len(cnrlistk); i++)
+    {
+      key = cnrlistk[i];
+      value = cnrlistv[i];
+      nonrel_WCs.push_back(std::make_pair(std::string(key), (double)value));
+    }
+
+    return nonrel_WCs;
+  }
 
 }
 END_BE_NAMESPACE

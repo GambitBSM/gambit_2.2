@@ -89,7 +89,7 @@ Scanner:
 
     random:
       plugin: random
-      point_number: 5
+      point_number: 1
       like: dummy
 
 ##############################################################################################
