@@ -289,41 +289,22 @@ namespace Gambit
       result[std::make_pair(0,4)] =   0.0;
     }
 
+    /// DDCalc initialisation.
 
-    /**** Direct detection using Wilson Coefficients ****/
-
-    /* Relativistic Wilson Coefficients, model dependent*/
-
-    void DD_rel_WCs_MajoranaDM(vec_strdbl_pairs &result)
+    // Using DM-nucleon couplings.
+    void DDCalc_Couplings_WIMP_nucleon(DD_coupling_container &result)
     {
-      using namespace Pipes::DD_rel_WCs_MajoranaDM;
-
-      // Get values of non-relativistic operators from Spectrum
-      Spectrum spec = *Dep::MajoranaDM_spectrum;
-
-      double lambda = spec.get(Par::dimensionless, "lX");
-      double xi = spec.get(Par::dimensionless, "xi");
-
-      // lambda*cos(xi) XXHH
-      result.push_back(std::make_pair("C53",lambda*std::cos(xi)));
-      // lambda*sin(xi) iXg5XHH
-      result.push_back(std::make_pair("C57",lambda*std::sin(xi)));
+      using namespace Pipes::DDCalc_Couplings_WIMP_nucleon;
+      result.coeff_structure = 1;
+      result.DM_nucleon_coeffs = *Dep::DD_couplings;
     }
 
-    void DD_rel_WCs_DiracDM(vec_strdbl_pairs &result)
+    // Using non-relativistic Wilson Coefficients.
+    void DDCalc_Couplings_NR_WCs(DD_coupling_container &result)
     {
-      using namespace Pipes::DD_rel_WCs_DiracDM;
-
-      // Get values of non-relativistic operators from Spectrum
-      Spectrum spec = *Dep::DiracDM_spectrum;
-
-      double lambda = spec.get(Par::dimensionless, "lF");
-      double xi = spec.get(Par::dimensionless, "xi");
-
-      // lambda*cos(xi) FFHH
-      result.push_back(std::make_pair("C53",lambda*std::cos(xi)));
-      // lambda*cos(xi) iFg5FHH
-      result.push_back(std::make_pair("C57",lambda*std::sin(xi)));
+      using namespace Pipes::DDCalc_Couplings_NR_WCs;
+      result.coeff_structure = 2;
+      result.DD_nonrel_WCs = *Dep::DD_nonrel_WCs;
     }
 
     /* Non-relativistic Wilson Coefficients, model independent */
@@ -338,16 +319,14 @@ namespace Gambit
       // Number of quark flavours used for matching (default 5)
       int scheme = runOptions->getValueOrDef<int>(5,"flavs");
 
-      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
-      std::string DMid = *Dep::DarkMatter_ID;
-      double mDM = catalog.getParticleProperty(DMid).mass;
-      std::string DM_type;
-
       // Obtain spin of DM particle, plus identify whether DM is self-conjugate
-      unsigned int sDM  = catalog.getParticleProperty(DMid).spin2;
-      bool is_SC = catalog.getProcess(DMid, DMid).isSelfConj;
+      double mDM = *Dep::mwimp;
+      unsigned int sDM  = *Dep::spinwimpx2;
+      bool is_SC = *Dep::wimp_sc;
 
       // Set DM_type based on the spin and & conjugacy of DM
+      std::string DM_type;
+
       // Fermion case
       if (sDM == 1) { is_SC ? DM_type == "M" : DM_type == "D"; }
       // Scalar
@@ -355,8 +334,10 @@ namespace Gambit
 
       // Relativistic Wilson Coefficients
       vec_strdbl_pairs relativistic_WCs = *Dep::DD_rel_WCs;
+
       // Convert to a Python dictionary
       pybind11::dict wc_dict = BEreq::initialise_WC_dict(relativistic_WCs);
+
       // Get non-relativistic coefficients
       result = BEreq::get_NR_WCs_flav(wc_dict, mDM, scheme, DM_type);
     }
@@ -375,14 +356,13 @@ namespace Gambit
       // SU(2) dimension of DM
       double dchi = runOptions->getValue<int>("dchi");
 
-      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
-      std::string DMid = *Dep::DarkMatter_ID;
-      double mDM = catalog.getParticleProperty(DMid).mass;
-      std::string DM_type;
-
       // Obtain spin of DM particle, plus identify whether DM is self-conjugate
-      unsigned int sDM  = catalog.getParticleProperty(DMid).spin2;
-      bool is_SC = catalog.getProcess(DMid, DMid).isSelfConj;
+      double mDM = *Dep::mwimp;
+      unsigned int sDM  = *Dep::spinwimpx2;
+      bool is_SC = *Dep::wimp_sc;
+
+      // Set DM_type based on the spin and & conjugacy of DM
+      std::string DM_type;
 
       // Set DM_type based on the spin and & conjugacy of DM
       // Fermion case: set DM_type to Majorana or Dirac

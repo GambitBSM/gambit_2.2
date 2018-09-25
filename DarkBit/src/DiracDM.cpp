@@ -32,7 +32,7 @@ namespace Gambit
 
   namespace DarkBit
   {
-    
+
     class DiracDM
     {
       public:
@@ -70,11 +70,11 @@ namespace Gambit
         double sv(std::string channel, double lambda, double mass, double cosXi, double v)
         {
           // Note: Valid for mass > 45 GeV
-          
+
           // Hardcoded velocity avoids NaN results.
           v = std::max(v, 1e-6);
-          
-          
+
+
           double s = 4*mass*mass/(1-v*v/4);
           double sqrt_s = sqrt(s);
           if ( sqrt_s < 90 )
@@ -101,12 +101,12 @@ namespace Gambit
           if ( channel == "WW" and sqrt_s < mW*2) return 0;
 
           if ( sqrt_s < 300 )
-          {          
+          {
             double br = virtual_SMHiggs_widths(channel,sqrt_s);
             double Gamma_s = virtual_SMHiggs_widths("Gamma",sqrt_s);
             double GeV2tocm3s1 = gev2cm2*s2cm;
             double cos2Xi = cosXi*cosXi;
-            double sin2Xi = 1 - cos2Xi; 
+            double sin2Xi = 1 - cos2Xi;
             double numerator = (cos2Xi*v*v/4 + sin2Xi);
 
             // Explicitly close channel for off-shell top quarks
@@ -133,7 +133,7 @@ namespace Gambit
         {
           double s = 4*mass*mass/(1-v*v/4);
           double cos2Xi = cosXi*cosXi;
-          double sin2Xi = 1 - cos2Xi; 
+          double sin2Xi = 1 - cos2Xi;
           double numerator = (cos2Xi*v*v/4 + sin2Xi);
           double x = pow(mW,2)/s;
           double GeV2tocm3s1 = gev2cm2*s2cm;
@@ -146,7 +146,7 @@ namespace Gambit
         {
           double s = 4*mass*mass/(1-v*v/4);
           double cos2Xi = cosXi*cosXi;
-          double sin2Xi = 1 - cos2Xi; 
+          double sin2Xi = 1 - cos2Xi;
           double numerator = (cos2Xi*v*v/4 + sin2Xi);
           double x = pow(mZ0,2)/s;
           double GeV2tocm3s1 = gev2cm2*s2cm;
@@ -160,7 +160,7 @@ namespace Gambit
         {
           double s = 4*mass*mass/(1-v*v/4);
           double cos2Xi = cosXi*cosXi;
-          double sin2Xi = 1 - cos2Xi; 
+          double sin2Xi = 1 - cos2Xi;
           double numerator = (cos2Xi*v*v/4 + sin2Xi);
           double vf = sqrt(1-4*pow(mf,2)/s);
           double Xf = 1;
@@ -173,32 +173,32 @@ namespace Gambit
 
         /// Annihilation into hh
         double sv_hh(double lambda, double mass, double v, double cosXi)
-        {        
+        {
           double s = 4*mass*mass/(1-v*v/4);  // v is relative velocity
           double GeV2tocm3s1 = gev2cm2*s2cm;
           double xh = mh*mh/s;
           double xpsi = mass*mass/s;
           double xG = Gamma_mh*mh/s;
-          
+
           double beta =  (s - 2*pow(mh,2))/sqrt((s - 4*pow(mh,2))*(s - 4*pow(mass,2)));
-                    
+
           return (pow(lambda,2)*sqrt(1 - 4*xh)/(32.*M_PI*s)*(
-          s - 4*pow(cosXi,2)*s*xpsi - 8*cosXi*lambda*pow(v0,2)*mass + 
-          (3*xh*(8*cosXi*lambda*pow(v0,2)*(-1 + xh)*sqrt(s*xpsi) - s*(2 + xh)*(-1 + 4*pow(cosXi,2)*xpsi)))/(pow(xG,2) + pow(-1 + xh,2)) 
+          s - 4*pow(cosXi,2)*s*xpsi - 8*cosXi*lambda*pow(v0,2)*mass +
+          (3*xh*(8*cosXi*lambda*pow(v0,2)*(-1 + xh)*sqrt(s*xpsi) - s*(2 + xh)*(-1 + 4*pow(cosXi,2)*xpsi)))/(pow(xG,2) + pow(-1 + xh,2))
           - (2*pow(lambda,2)*pow(v0,4)*(3*pow(xh,2) - 8*(1 + pow(cosXi,2))*xh*xpsi + 2*xpsi*(1 + 8*pow(cosXi,4)*xpsi)))/(pow(xh,2) + xpsi - 4*xh*xpsi)
           + (4*beta*lambda*pow(v0,2)*(2*cosXi*(-1 + 2*xh)*(-1 - pow(xG,2) + xh*(-1 + 2*xh))*sqrt(s*xpsi)*(-1 - 2*xh + 8*pow(cosXi,2)*xpsi) + lambda*pow(v0,2)*(pow(xG,2) + pow(-1 + xh,2))*
           (1 - 4*xh + 6*pow(xh,2) - 16*pow(cosXi,2)*(-1 + xh)*xpsi - 32*pow(cosXi,4)*pow(xpsi,2)))*atanh(1/beta))/((pow(xG,2) + pow(-1 + xh,2))*pow(1 - 2*xh,2)))
           )*GeV2tocm3s1;
-                  
+
         }
 
       private:
         double Gamma_mh, mh, v0, alpha_s, mb, mc, mtau, mt, mZ0, mW;
-    };    
-    
+    };
+
     void DarkMatter_ID_DiracDM(std::string & result) { result = "F"; }
 
-    /// Direct detection couplings for the DiracDM model.
+    /// WIMP-nucleon direct detection couplings.
     void DD_couplings_DiracDM(DM_nucleon_couplings &result)
     {
       using namespace Pipes::DD_couplings_DiracDM;
@@ -228,6 +228,23 @@ namespace Gambit
 
     } // function DD_couplings_DiracDM
 
+    /// Relativistic Wilson Coefficients for direct detection
+    void DD_rel_WCs_DiracDM(vec_strdbl_pairs &result)
+    {
+      using namespace Pipes::DD_rel_WCs_DiracDM;
+
+      // Get values of non-relativistic operators from Spectrum
+      Spectrum spec = *Dep::DiracDM_spectrum;
+
+      double lambda = spec.get(Par::dimensionless, "lF");
+      double xi = spec.get(Par::dimensionless, "xi");
+
+      // lambda*cos(xi) FFHH
+      result.push_back(std::make_pair("C53",lambda*std::cos(xi)));
+      // lambda*cos(xi) iFg5FHH
+      result.push_back(std::make_pair("C57",lambda*std::sin(xi)));
+    }
+
     /// Set up process catalog for the DiracDM model.
     void TH_ProcessCatalog_DiracDM(DarkBit::TH_ProcessCatalog &result)
     {
@@ -238,7 +255,7 @@ namespace Gambit
       // Initialize empty catalog
       TH_ProcessCatalog catalog;
       TH_Process process_ann("F", "F");
-      
+
       // Explicitly state that Dirac DM is not self-conjugate to add extra
       // factors of 1/2 where necessary
       process_ann.isSelfConj = false;
@@ -260,7 +277,7 @@ namespace Gambit
       const SubSpectrum& he = spec.get_HE();
       const SubSpectrum& SM = spec.get_LE();
       const SMInputs& SMI   = spec.get_SMInputs();
-      
+
       // Import couplings
       double lambda = he.get(Par::dimensionless,"lF");
       double v = he.get(Par::mass1,"vev");

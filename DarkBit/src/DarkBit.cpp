@@ -64,6 +64,20 @@ namespace Gambit
       if (result < 0.0) DarkBit_error().raise(LOCAL_INFO, "Negative WIMP mass detected.");
     }
 
+    /// Retrieve the DM spin (times two) generic models
+    void spinwimpx2_generic(unsigned int &result)
+    {
+      using namespace Pipes::spinwimpx2_generic;
+      result = Dep::TH_ProcessCatalog->getParticleProperty(*Dep::DarkMatter_ID).spin2;
+    }
+
+    /// Retrieve whether or not the DM is self conjugate or not.
+    void wimp_sc_generic(bool &result)
+    {
+      using namespace Pipes::wimp_sc_generic;
+      result = Dep::TH_ProcessCatalog->getProcess(*Dep::DarkMatter_ID,*Dep::DarkMatter_ID).isSelfConj;
+    }
+
     /*! \brief Retrieve the total thermally-averaged annihilation cross-section
      * for indirect detection (cm^3 / s).
      */

@@ -68,9 +68,9 @@ BE_INI_FUNCTION
   static bool scan_level = true;
   if (scan_level)
   {
-    // Initialize halo and WIMP models
-    WIMP = DDCalc_InitWIMP();
+    // Initialize halo model
     Halo = DDCalc_InitHalo();
+    WIMP = DDCalc_InitWIMP();
 
     // Initialize experiments
     if (*InUse::DDCalc_Experiment)
@@ -101,44 +101,77 @@ BE_INI_FUNCTION
     // Save safe pointers to local halo parameters.
     LocalHaloParameters_ptr = Dep::LocalHalo.safe_pointer();
   }
+
+  // Point-level initialization -----------------------------
   scan_level = false;
 
-  // Point-level initialization ----------------------------
+  // Set WIMP parameters
+  DD_coupling_container couplings = *Dep::DDCalc_Couplings;
 
-  // Change DM parameters
-
-  /// Calling DDCalc with non-relativistic effective coefficients
-
-  DarkBit::TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
-  std::string DMid = *Dep::DarkMatter_ID;
-
-  // Obtain spin of DM particle, plus identify whether DM is self-conjugate
-  unsigned int sDM  = catalog.getParticleProperty(DMid).spin2;
-
-  int OpIndex, tau;
-  std::string OpName;
-
-  DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) sDM/2.);
-
-  vec_strdbl_pairs wilsonCoeffs = *Dep::DD_nonrel_WCs;
-
-  for (auto it = wilsonCoeffs.begin(); it != wilsonCoeffs.end(); ++it)
+  // Initialise WIMP object with type DM_nucleon_couplings;
+  if (couplings.coeff_structure == 1)
   {
+    DM_nucleon_couplings DD_couplings = couplings.DM_nucleon_coeffs;
 
-    OpName = it->first;
-
-    OpIndex = atoi(OpName.substr(3, OpName.length()-4).c_str());
-
-    if (OpName.find('p') != std::string::npos)
-      tau = 0;
-    else
-      tau = 1;
-
-    DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, it->second);
-
+    // Set DM parameters
+    DDCalc_SetWIMP_mG(WIMP, *Dep::mwimp, DD_couplings.gps,DD_couplings.gns,
+                                         DD_couplings.gpa,DD_couplings.gna);
   }
+  // Initialse WIMP object with type vec_strdbl_pairs;
+  else if (couplings.coeff_structure == 2)
+  {
+    vec_strdbl_pairs wilsonCoeffs = couplings.DD_nonrel_WCs;
 
-  /// + option for calling DDCalc with "traditional" DD_couplings struct.
+    // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
+    DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
+
+    int OpIndex, tau;
+    std::string OpName;
+
+    // Loop through non-relativistic WCs and assign the correct coefficients
+    // to DDCalc WIMP object.
+    for (auto it = wilsonCoeffs.begin(); it != wilsonCoeffs.end(); ++it)
+    {
+
+      OpName = it->first;
+
+      OpIndex = atoi(OpName.substr(3, OpName.length()-4).c_str());
+
+      if (OpName.find('p') != std::string::npos)
+        tau = 0;
+      else
+        tau = 1;
+
+      DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, it->second);
+    }
+  }
+  // If DDCalc doesn't know what to do...
+  else { backend_error().raise(LOCAL_INFO, "Unknown direct detection couplings structure given to DDCalc."
+                                      "DDCalc does not know how to initialise the WIMP object."); }
+
+
+  // Change halo parameters.
+  bool halo_changed = false;
+
+  if (LocalHaloParameters_ptr->rho0 * fraction != rho0_eff) {rho0_eff = LocalHaloParameters_ptr->rho0 * fraction; halo_changed = true;}
+  if (LocalHaloParameters_ptr->vrot != vrot)                {vrot     = LocalHaloParameters_ptr->vrot;            halo_changed = true;}
+  if (LocalHaloParameters_ptr->v0   != v0)                  {v0       = LocalHaloParameters_ptr->v0;              halo_changed = true;}
+  if (LocalHaloParameters_ptr->vesc != vesc)                {vesc     = LocalHaloParameters_ptr->vesc;            halo_changed = true;}
+
+  if (halo_changed)
+  {
+    DDCalc_SetSHM(Halo,rho0_eff,vrot,v0,vesc);
+
+    // Log stuff if in debug mode
+    #ifdef DDCALC_DEBUG
+      logger() << "Updated DDCalc halo parameters:" << EOM;
+      logger() << "    rho0 [GeV/cm^3]     = " << LocalHaloParameters_ptr->rho0 << EOM;
+      logger() << "    rho0_eff [GeV/cm^3] = " << rho0_eff << EOM;
+      logger() << "    vrot [km/s]         = " << vrot << EOM;
+      logger() << "    v0   [km/s]         = " << v0   << EOM;
+      logger() << "    vesc [km/s]         = " << vesc << EOM;
+    #endif
+  }
 
   // Log stuff if in debug mode
   #ifdef DDCALC_DEBUG
@@ -150,29 +183,6 @@ BE_INI_FUNCTION
     logger() << "  sigmapSD = " << sigmapSD << std::endl;
     logger() << "  sigmanSD = " << sigmanSD << EOM;
   #endif
-
-  // Change halo parameters.
-    bool halo_changed = false;
-
-    if (LocalHaloParameters_ptr->rho0 * fraction != rho0_eff) {rho0_eff = LocalHaloParameters_ptr->rho0 * fraction; halo_changed = true;}
-    if (LocalHaloParameters_ptr->vrot != vrot)                {vrot     = LocalHaloParameters_ptr->vrot;            halo_changed = true;}
-    if (LocalHaloParameters_ptr->v0   != v0)                  {v0       = LocalHaloParameters_ptr->v0;              halo_changed = true;}
-    if (LocalHaloParameters_ptr->vesc != vesc)                {vesc     = LocalHaloParameters_ptr->vesc;            halo_changed = true;}
-
-    if (halo_changed)
-    {
-      DDCalc_SetSHM(Halo,rho0_eff,vrot,v0,vesc);
-
-      // Log stuff if in debug mode
-      #ifdef DDCALC_DEBUG
-        logger() << "Updated DDCalc halo parameters:" << EOM;
-        logger() << "    rho0 [GeV/cm^3]     = " << LocalHaloParameters_ptr->rho0 << EOM;
-        logger() << "    rho0_eff [GeV/cm^3] = " << rho0_eff << EOM;
-        logger() << "    vrot [km/s]         = " << vrot << EOM;
-        logger() << "    v0   [km/s]         = " << v0   << EOM;
-        logger() << "    vesc [km/s]         = " << vesc << EOM;
-      #endif
-    }
 
 }
 END_BE_INI_FUNCTION

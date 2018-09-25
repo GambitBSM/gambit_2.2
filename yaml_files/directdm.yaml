@@ -16,6 +16,10 @@ Parameters:
     lF: 1e-3
     xi: 0
 
+  #VectorDM:
+    #mV: 50
+    #lV: 0.01
+
   #nuclear_params_sigmas_sigmal:
     #sigmas: 43
     #sigmal: 50
@@ -23,16 +27,16 @@ Parameters:
     #deltad: -0.427
     #deltas: -0.085
 
-  #Halo_gNFW_rho0:
-    #rho0: 0.4
-    #v0: 240
-    #vesc: 533
-    #vrot: 240
-    #rs: 20.0
-    #r_sun: 8.5
-    #alpha: 1
-    #beta: 3
-    #gamma: 1
+  Halo_gNFW_rho0:
+    rho0: 0.4
+    v0: 240
+    vesc: 533
+    vrot: 240
+    rs: 20.0
+    r_sun: 8.5
+    alpha: 1
+    beta: 3
+    gamma: 1
 
 ##############################################################################################
 Priors:
@@ -42,13 +46,13 @@ Priors:
 ##############################################################################################
 ObsLikes:
 
-    - capability: mwimp
-      purpose:    Observable
+    # Direct detection
+    - capability: LUX_2016_LogLikelihood
+      purpose:    LogLike
 
-      # Choose to get nonrelativistic Wilson Coefficients by matching above EW scale
-    - capability: DD_nonrel_WCs
-      printme: false
-      purpose:    Test
+    - capability: XENON1T_2018_LogLikelihood
+      purpose:    LogLike
+
 
 ##############################################################################################
 Rules:
@@ -57,18 +61,20 @@ Rules:
   - capability: decay_rates
     function: all_decays
 
-  # Choose to obtain spectrum from the SpecBit module
-  - capability: DiracDM_spectrum
-    function: get_DiracDM_spectrum
-    options:
-      impose_EFT_validity: true
+  - capability: RD_fraction
+    function: RD_fraction_one
+
+  - capability: DDCalc_Couplings
+    function: DDCalc_PointInit_NR_WCs
 
   - capability: DD_nonrel_WCs
     function: DD_nonrel_WCs_EW
     options:
-        scale: 100
-        Ychi: 0
-        dchi: 1
+      scale: 100
+      Ychi: 0
+      dchi: 1
+
+
 
 ##############################################################################################
 Printer:
