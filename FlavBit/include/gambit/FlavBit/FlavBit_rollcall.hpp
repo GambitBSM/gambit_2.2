@@ -21,6 +21,7 @@
 ///  \date 2014 Sep
 ///  \date 2015 Feb
 ///  \date 2016 Jul
+///  \date 2018 Jan
 ///
 ///  \author Pat Scott
 ///  \date 2015 May
@@ -31,6 +32,7 @@
 ///  \date 2015 May
 ///  \date 2016 Aug
 ///  \date 2016 Oct
+///  \date 2018 Jan
 ///
 ///  \author Tomas Gonzalo
 ///  \date 2017 July
@@ -41,7 +43,6 @@
 #define __FlavBit_rollcall_hpp__
 
 #include "gambit/FlavBit/FlavBit_types.hpp"
-
 
 #define MODULE FlavBit
 START_MODULE
@@ -416,6 +417,71 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Helper macro to make the following declarations quicker
+  #define RKSTAR_BINS                                                                                   \
+    START_FUNCTION(double)                                                                     \
+    DEPENDENCY(SuperIso_modelinfo, parameters)                                                             \
+    BACKEND_OPTION( (SuperIso, 3.6), (libsuperiso) )                                                       \
+    BACKEND_REQ(RKstar_CONV, (libsuperiso), double, (const parameters*, double, double))
+
+ // Observable: RK* in q^2 bin from 0.045 GeV^2 to 1.1 GeV^2
+  #define CAPABILITY RKstar_0045_11
+  START_CAPABILITY
+    #define FUNCTION SI_RKstar_0045_11
+    RKSTAR_BINS
+    #undef FUNCTION
+
+    // Function to calcualte RK* for RHN
+    #define FUNCTION RHN_RKstar_0045_11
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    ALLOW_MODEL(StandardModel_SLHA2,RightHandedNeutrinos)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+ // Observable: RK* in q^2 bin from 1.1 GeV^2 to 6 GeV^2
+  #define CAPABILITY RKstar_11_60
+  START_CAPABILITY
+    #define FUNCTION SI_RKstar_11_60
+    RKSTAR_BINS
+    #undef FUNCTION
+
+    // Function to calculate RK* for RHN
+    #define FUNCTION RHN_RKstar_11_60
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    ALLOW_MODEL(StandardModel_SLHA2,RightHandedNeutrinos)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  // Helper macro to make the following declarations quicker
+  #define RK_BINS                                                                                   \
+    START_FUNCTION(double)                                                                     \
+    DEPENDENCY(SuperIso_modelinfo, parameters)                                                             \
+    BACKEND_OPTION( (SuperIso, 3.6), (libsuperiso) )                                                       \
+    BACKEND_REQ(RK_CONV, (libsuperiso), double, (const parameters*, double, double))
+
+ // Observable: RK in q^2 bin from 1 GeV^2 to 6 GeV^2
+  #define CAPABILITY RK
+  START_CAPABILITY
+    #define FUNCTION SI_RK
+    RK_BINS
+    #undef FUNCTION
+
+    // Function to calculate RK for RHN
+    #define FUNCTION RHN_RK
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    ALLOW_MODEL(StandardModel_SLHA2,RightHandedNeutrinos)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
   // All FeynHiggs flavour observables
   #define CAPABILITY FH_FlavourObs
   START_CAPABILITY
@@ -443,136 +509,168 @@ START_MODULE
   // Observable: mu -> e gamma
   #define CAPABILITY muegamma
   START_CAPABILITY
-    #define FUNCTION SN_muegamma
+    #define FUNCTION RHN_muegamma
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
     DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
     DEPENDENCY(m_nu, Eigen::Matrix3cd)
-    DEPENDENCY(UPMNS, Eigen::Matrix3cd)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(mu_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos)
     #undef FUNCTION
   #undef CAPABILITY 
 
   // Observable: tau -> e gamma
   #define CAPABILITY tauegamma
   START_CAPABILITY
-    #define FUNCTION SN_tauegamma
+    #define FUNCTION RHN_tauegamma
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos)
     #undef FUNCTION
   #undef CAPABILITY 
 
   // Observable: tau -> mu gamma
   #define CAPABILITY taumugamma
   START_CAPABILITY
-    #define FUNCTION SN_taumugamma
+    #define FUNCTION RHN_taumugamma
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos)
     #undef FUNCTION
   #undef CAPABILITY 
 
-  // Observable: mu -> e e e
+  // Observable: mu- -> e- e- e+
   #define CAPABILITY mueee
   START_CAPABILITY
-    #define FUNCTION SN_mueee
+    #define FUNCTION RHN_mueee
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(mu_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
     #undef FUNCTION
   #undef CAPABILITY 
 
-  // Observable: tau -> e e e
+  // Observable: tau- -> e- e- e+
   #define CAPABILITY taueee
   START_CAPABILITY
-    #define FUNCTION SN_taueee
+    #define FUNCTION RHN_taueee
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
     #undef FUNCTION
   #undef CAPABILITY 
 
-  // Observable: tau- -> mu- e+ e-, with muon same sign as tau 
-  #define CAPABILITY taueemu_ss
-  START_CAPABILITY
-    #define FUNCTION SN_taueemu_ss
-    START_FUNCTION(double)
-    DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
-    #undef FUNCTION
-  #undef CAPABILITY 
-
-  // Observable: tau- -> mu+ e- e-, with muon opposite sign as tau
-  #define CAPABILITY taueemu_os
-  START_CAPABILITY
-    #define FUNCTION SN_taueemu_os
-    START_FUNCTION(double)
-    DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
-    #undef FUNCTION
-  #undef CAPABILITY 
-
-  // Observable: tau- -> e- mu+ mu-, with electron same sign as tau
-  #define CAPABILITY tauemumu_ss
-  START_CAPABILITY
-    #define FUNCTION SN_tauemumu_ss
-    START_FUNCTION(double)
-    DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
-    #undef FUNCTION
-  #undef CAPABILITY 
-
-  // Observable: tau- -> e+ mu- mu-, with electron opposite sign as tau
-  #define CAPABILITY tauemumu_os
-  START_CAPABILITY
-    #define FUNCTION SN_tauemumu_os
-    START_FUNCTION(double)
-    DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
-    #undef FUNCTION
-  #undef CAPABILITY 
-
-  // Observable: tau -> mu mu mu
+   // Observable: tau- -> mu- mu- mu+
   #define CAPABILITY taumumumu
   START_CAPABILITY
-    #define FUNCTION SN_taumumumu
+    #define FUNCTION RHN_taumumumu
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> mu- e- e+ 
+  #define CAPABILITY taumuee
+  START_CAPABILITY
+    #define FUNCTION RHN_taumuee
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> e- e- mu+
+  #define CAPABILITY taueemu
+  START_CAPABILITY
+    #define FUNCTION RHN_taueemu
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> e- mu- mu+
+  #define CAPABILITY tauemumu
+  START_CAPABILITY
+    #define FUNCTION RHN_tauemumu
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> mu- mu- e+
+  #define CAPABILITY taumumue
+  START_CAPABILITY
+    #define FUNCTION RHN_taumumue
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(tau_minus_decay_rates, DecayTable::Entry)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
     #undef FUNCTION
   #undef CAPABILITY 
 
   // Observable: mu - e (Ti)
   #define CAPABILITY mueTi
   START_CAPABILITY
-    #define FUNCTION SN_mueTi
+    #define FUNCTION RHN_mueTi
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // Observable: mu - e (S)
-  #define CAPABILITY mueS
-  START_CAPABILITY
-    #define FUNCTION SN_mueS
-    START_FUNCTION(double)
-    DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
     #undef FUNCTION
   #undef CAPABILITY
 
   // Observable: mu - e (Pb)
   #define CAPABILITY muePb
   START_CAPABILITY
-    #define FUNCTION SN_muePb
+    #define FUNCTION RHN_muePb
     START_FUNCTION(double)
     DEPENDENCY(SMINPUTS, SMInputs)
-    ALLOW_MODELS(SN_dev)
+    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    ALLOW_MODELS(RightHandedNeutrinos, StandardModel_Higgs)
     #undef FUNCTION
   #undef CAPABILITY
-
 
   //###############################################
   //  Likelihoods
@@ -662,6 +760,25 @@ START_MODULE
     DEPENDENCY(SL_M, FlavBit::predictions_measurements_covariances)
     #undef FUNCTION
   #undef CAPABILITY
+   
+  // Tree-level leptonic and semi-leptonic B & D decay measurements
+  #define CAPABILITY LUV_M
+  START_CAPABILITY
+    #define FUNCTION LUV_measurements
+    START_FUNCTION(FlavBit::predictions_measurements_covariances)
+    DEPENDENCY(RK, double)
+    DEPENDENCY(RKstar_0045_11, double)
+    DEPENDENCY(RKstar_11_60, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY LUV_LL
+  START_CAPABILITY
+    #define FUNCTION LUV_likelihood
+    START_FUNCTION(double)
+    DEPENDENCY(LUV_M, FlavBit::predictions_measurements_covariances)
+    #undef FUNCTION
+  #undef CAPABILITY
 
   // l -> l gamma  likelihood
   #define CAPABILITY l2lgamma_lnL
@@ -681,12 +798,12 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(mueee, double)
     DEPENDENCY(taueee, double)
-    DEPENDENCY(taueemu_ss, double)
-    DEPENDENCY(taueemu_os, double)
-    DEPENDENCY(tauemumu_ss, double)
-    DEPENDENCY(tauemumu_os, double)
     DEPENDENCY(taumumumu, double)
-    #undef FUNCTION
+    DEPENDENCY(taumuee, double)
+    DEPENDENCY(taueemu, double)
+    DEPENDENCY(tauemumu, double)
+    DEPENDENCY(taumumue, double)
+   #undef FUNCTION
   #undef CAPABILITY 
 
   // mu - e conversion likelihood
@@ -695,7 +812,6 @@ START_MODULE
     #define FUNCTION mu2e_likelihood
     START_FUNCTION(double)
     DEPENDENCY(mueTi, double)
-    DEPENDENCY(mueS, double)
     DEPENDENCY(muePb, double)
     #undef FUNCTION
   #undef CAPABILITY

@@ -11,10 +11,16 @@
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2014 Nov
-///
 ///  \author Chris Rogan
 ///          (crogan@cern.ch)
 ///  \date 2014 Aug
+///  \date 2018 June
+///  \author Marcin Chrzaszcz
+///          (mchrzasz@cern.ch)
+///  \date 2018
+///  \author Chrisotph Weniger
+///          (c.weniger@uva.nl)
+///  \date 2018 Jun
 ///
 ///  *********************************************
 
@@ -700,7 +706,7 @@ namespace Gambit
 
     /// b quark mass likelihood
     /// m_b (mb)^MSbar = 4.18 +/- 0.03 GeV (1 sigma), Gaussian.
-   /// Reference: http://pdg.lbl.gov/2016/reviews/rpp2016-rev-qcd.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
+    /// Reference: http://pdg.lbl.gov/2016/reviews/rpp2016-rev-qcd.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
     void lnL_mbmb_chi2(double &result)
     {
       using namespace Pipes::lnL_mbmb_chi2;
@@ -710,8 +716,8 @@ namespace Gambit
     }
 
     /// c quark mass likelihood
-    /// m_c (mc)^MSbar = 1.275 +/- 0.025 GeV (1 sigma), Gaussian.
-     ///  Reference: http://pdg.lbl.gov/2016/reviews/rpp2016-rev-qcd.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
+    /// m_c (mc)^MSbar = 1.28 +/- 0.03 GeV (1 sigma), Gaussian.
+    ///  Reference: http://pdg.lbl.gov/2016/reviews/rpp2016-rev-qcd.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
     void lnL_mcmc_chi2(double &result)
     {
       using namespace Pipes::lnL_mcmc_chi2;
@@ -748,7 +754,7 @@ namespace Gambit
     }
 
     /// alpha^{-1}(mZ)^MSbar likelihood
-    /// alpha^{-1}(mZ)^MSbar = 127.940 +/- 0.014 (1 sigma), Gaussian.  (PDG global SM fit)
+    /// alpha^{-1}(mZ)^MSbar = 127.950 +/- 0.017 (1 sigma), Gaussian.  (PDG global SM fit)
     /// Reference: http://pdg.lbl.gov/2016/reviews/rpp2016-rev-standard-model.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
     void lnL_alpha_em_chi2(double &result)
     {
@@ -792,7 +798,7 @@ namespace Gambit
 
     /// Simple, naive h boson mass likelihood
     /// Reference: D. Aad et al arxiv:1503.07589, Phys.Rev.Lett. 114 (2015) 191803 (ATLAS + CMS combination)
-   /// Also used dierctly in http://pdg.lbl.gov/2016/tables/rpp2016-sum-gauge-higgs-bosons.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
+    /// Also used dierctly in http://pdg.lbl.gov/2016/tables/rpp2016-sum-gauge-higgs-bosons.pdf = C. Patrignani et al. (Particle Data Group), Chin. Phys. C, 40, 100001 (2016).
     void lnL_h_mass_chi2(double &result)
     {
       using namespace Pipes::lnL_h_mass_chi2;
@@ -947,18 +953,20 @@ namespace Gambit
         model.get_physical().MFu =smin.mU; //MSbar
         model.get_physical().MFc =smin.mCmC; // MSbar
 
-        /// Use hardcoded values as reccommended by GM2Calc authours
-        /// unless the user really wants to change these
-        double alpha_MZ = runOptions->getValueOrDef
-        <double>(0.00729735, "GM2Calc_extra_alpha_e_MZ");
-        double alpha_thompson = runOptions->getValueOrDef
-        <double>(0.00775531, "GM2Calc_extra_alpha_e_thompson_limit");
+        /// alpha_MZ := alpha(0) (1 - \Delta^{OS}(M_Z) ) where
+        /// \Delta^{OS}(M_Z) = quark and lepton contributions to
+        // on-shell renormalized photon vacuum polarization
+        // default value recommended by GM2calc from arxiv:1105.3149  
+        const double alpha_MZ = runOptions->getValueOrDef
+        <double>(alpha_e_OS_MZ, "GM2Calc_extra_alpha_e_MZ");
+        const double alpha_thomson = runOptions->getValueOrDef
+        <double>(alpha_e_OS_thomson_limit, "GM2Calc_extra_alpha_e_thomson_limit");
 
         if (alpha_MZ > std::numeric_limits<double>::epsilon())
           model.set_alpha_MZ(alpha_MZ);
 
-        if (alpha_thompson > std::numeric_limits<double>::epsilon())
-          model.set_alpha_thompson(alpha_thompson);
+        if (alpha_thomson > std::numeric_limits<double>::epsilon())
+          model.set_alpha_thompson(alpha_thomson);
 
         model.set_scale(mssm.GetScale());                   // 2L
 
@@ -999,10 +1007,10 @@ namespace Gambit
         invalid_point().raise(err.str());
       }
 
-      double error = BEreq::calculate_uncertainty_amu_2loop(model);
+      const double error = BEreq::calculate_uncertainty_amu_2loop(model);
 
-      double amumssm = BEreq::calculate_amu_1loop(model)
-                       + BEreq::calculate_amu_2loop(model);
+      const double amumssm = BEreq::calculate_amu_1loop(model)
+         + BEreq::calculate_amu_2loop(model);
 
       // Convert from a_mu to g-2
       result.central = 2.0*amumssm;
@@ -1066,6 +1074,161 @@ namespace Gambit
       result = 0.1;
       return;
 
+    }
+
+    // EWPO corrections from heavy neutrinos, from 1407.6607 and 1502.00477
+
+    // Weak mixing angle sinW2, calculation from 1211.1864
+    void RHN_sinW2(triplet<double> &result)
+    {
+      using namespace Pipes::RHN_sinW2;
+      Eigen::Matrix3cd Theta = *Dep::SeesawI_Theta;
+      Eigen::Matrix3d ThetaNorm = (Theta * Theta.adjoint()).real();
+
+      double sinW2_SM = 0.23152; // taken from 1211.1864
+      double sinW2_SM_err = 0.00010;
+
+      result.central = 0.5 - 0.5*sqrt(1.0 - 4*sinW2_SM*(1.0 - sinW2_SM)*sqrt(1.0 - ThetaNorm(0,0) - ThetaNorm(1,1)) ); 
+      result.upper = (1.0 - 2*sinW2_SM) / (1.0 - 2*result.central) * sqrt(1.0 - ThetaNorm(0,0) - ThetaNorm(1,1)) * sinW2_SM_err;
+      result.lower = result.upper;
+    }
+
+    void lnL_sinW2_chi2(double &result)
+    {
+      using namespace Pipes::lnL_sinW2_chi2;
+      double theory_uncert = std::max(Dep::sinW2->upper, Dep::sinW2->lower);
+      /// Option profile_systematics<bool>: Use likelihood version that has been profiled over systematic errors (default false)
+      bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
+      result = Stats::gaussian_loglikelihood(Dep::sinW2->central, 0.23155, theory_uncert, 0.00005, profile);
+    }
+
+    // Mass of W boson, calculation from 1502.00477
+    void RHN_mw(triplet<double> &result)
+    {
+      using namespace Pipes::RHN_mw;
+      Eigen::Matrix3cd Theta = *Dep::SeesawI_Theta;
+      triplet<double> sinW2 = *Dep::sinW2;
+      Eigen::Matrix3d ThetaNorm = (Theta * Theta.adjoint()).real();
+
+      // SM precision calculation, from 1211.1864
+      double sinW2_SM = 0.23152;
+      double sinW2_SM_err = 0.00010;
+      double mW_SM = 80.361;
+      double mW_SM_err = 0.010;
+
+      // Radiative corrections, form Marco's paper
+      result.central = sqrt( pow(mW_SM,2) * sinW2_SM / sinW2.central * sqrt(1.0 - ThetaNorm(0,0) - ThetaNorm(1,1))  );
+      result.upper = 0.5*result.central*sqrt( pow(2*mW_SM_err/mW_SM,2) + pow(sinW2_SM_err/sinW2_SM,2) + pow(sinW2.upper/sinW2.central,2)  );
+      result.lower = result.upper;
+    }
+
+    // Z invisible width, calculation from 1612.04737 (see also 1407.6607)
+/*    void RHN_Z_inv_width(double &result)
+    {
+      using namespace Pipes::RHN_Z_inv_width;
+      using namespace std;
+      std::cout << "WARNING: Z inv width routines not complet." << std::endl;
+      Eigen::Matrix3cd V = *Dep::SeesawI_Vnu;
+      Eigen::Matrix3cd Theta = *Dep::SeesawI_Theta;
+      SMInputs sminputs = *Dep::SMINPUTS;
+      double Gmu = sminputs.GF;
+      double mZ = sminputs.mZ;
+
+      std::vector<double> mNu = {*Param["mNu1"], *Param["mNu2"], *Param["mNu3"], *Param["M_1"], *Param["M_2"], *Param["M_3"]};
+      Eigen::Matrix<complex<double>,3,6> U;     
+      for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+        {
+          U(i,j) = V(i,j);
+          U(i,j+3) = Theta(i,j);
+        }
+
+      Eigen::Matrix<complex<double>,6,6> C;
+      C = U.adjoint() * U;
+
+      result = 0.0;
+      double c = 0.0;
+      for (int i = 0; i < 6; i++)
+        for (int j = i; j < 6; j++)
+        {
+          if(mNu[i] + mNu[j] < mZ)
+          {
+            // Majorana factor
+            double Maj = (i == j ? 0.5 : 1);
+
+            result += Maj*sqrt( pow(mZ*mZ - mNu[i]*mNu[i] - mNu[j]*mNu[j],2) - pow(2.0*mNu[i]*mNu[j],2) ) 
+              * (norm(C(i,j)) * (-pow(mNu[i]*mNu[i] - mNu[j]*mNu[j],2)/pow(mZ,4) - (pow(mNu[i],2) + pow(mNu[j],2))/pow(mZ,2) + 2) 
+                  - (C(i,j)*C(i,j)).real()*6*mNu[i]*mNu[j]/mZ/mZ);
+            c += 2*Maj*norm(C(i,j));
+         }
+        }
+      result *= sqrt(2)*Gmu/24/pi*mZ;
+      cout << "Z inv width = " << result << endl;
+    }
+
+    void lnL_Z_inv_width_chi2(double &result)
+    {
+      using namespace Pipes::lnL_Z_inv_width_chi2;
+      double Zinvwidth = *Dep::Z_inv_width;
+      DecayTable::Entry decays = *Dep::Z_decay_rates;
+
+      double BF = 1.0;
+      double BF_error_sq = 0.0;
+
+      for(auto it = decays.channels.begin(); it != decays.channels.end(); it++)
+      {
+        BF -= it->second.first;
+        BF_error_sq += pow(it->second.second,2);
+      }
+
+      double Zinvwidth_exp = BF*decays.width_in_GeV;
+      double Zinvwidth_error = sqrt(pow(BF*std::max(decays.positive_error,decays.negative_error),2) + pow(decays.width_in_GeV,2)*BF_error_sq);
+
+      result = Stats::gaussian_loglikelihood(Zinvwidth, Zinvwidth_exp, 0.0, Zinvwidth_error, false);
+    }
+*/
+    // W decays, calculation from 1407.6607
+    void RHN_W_to_l_decays(std::vector<double> &result)
+    {
+      using namespace Pipes::RHN_W_to_l_decays;
+      SMInputs sminputs = *Dep::SMINPUTS;
+      Eigen::Matrix3cd Theta = *Dep::SeesawI_Theta;
+      double Gmu = sminputs.GF;
+      double mw = Dep::mw->central;
+
+      Eigen::Matrix3d ThetaNorm = (Theta * Theta.adjoint()).real();
+      std::vector<double> ml = {sminputs.mE, sminputs.mMu, sminputs.mTau};
+      std::vector<double> M = {*Param["M_1"], *Param["M_2"], *Param["M_3"]};
+
+      result.clear();
+      for(int i=0; i<3; i++)
+      {
+        if(M[i] < mw)
+          result.push_back(Gmu*pow(mw,3)/(6*sqrt(2)*M_PI)*pow(1.0 - pow(ml[i]/mw,2),2)*(1.0 + pow(ml[i]/mw,2))/sqrt(1.0 - ThetaNorm(0,0) -ThetaNorm(1,1)));
+        else
+          result.push_back(Gmu*pow(mw,3)/(6*sqrt(2)*M_PI)*(1.0-ThetaNorm(i,i))*pow(1.0 - pow(ml[i]/mw,2),2)*(1.0 + pow(ml[i]/mw,2))/sqrt(1.0 - ThetaNorm(0,0) -ThetaNorm(1,1)));
+      }
+    }
+
+    void lnL_W_decays_chi2(double &result)
+    {
+      using namespace Pipes::lnL_W_decays_chi2;
+      std::vector<double> Wtoldecays = *Dep::W_to_l_decays;
+      DecayTable::Entry decays = *Dep::W_plus_decay_rates;
+
+      std::vector<double> Wwidth;
+      std::vector<double> Wwidth_error;
+
+      Wwidth.push_back(decays.width_in_GeV * decays.BF("e+","nu_e"));
+      Wwidth_error.push_back(sqrt(pow(decays.width_in_GeV*decays.BF_error("e+","nu_e"),2) + pow(std::max(decays.positive_error, decays.negative_error)*decays.BF("e+","nu_e"),2)));
+      Wwidth.push_back(decays.width_in_GeV * decays.BF("mu+","nu_mu"));
+      Wwidth_error.push_back(sqrt(pow(decays.width_in_GeV*decays.BF_error("mu+","nu_mu"),2) + pow(std::max(decays.positive_error, decays.negative_error)*decays.BF("mu+","nu_mu"),2)));
+      Wwidth.push_back(decays.width_in_GeV * decays.BF("tau+","nu_tau"));
+      Wwidth_error.push_back(sqrt(pow(decays.width_in_GeV*decays.BF_error("tau+","nu_tau"),2) + pow(std::max(decays.positive_error, decays.negative_error)*decays.BF("tau+","nu_tau"),2)));
+
+      result = Stats::gaussian_loglikelihood(Wtoldecays[0], Wwidth[0], 0.0, Wwidth_error[0], false);
+      result += Stats::gaussian_loglikelihood(Wtoldecays[1], Wwidth[1], 0.0, Wwidth_error[1], false);
+      result += Stats::gaussian_loglikelihood(Wtoldecays[2], Wwidth[2], 0.0, Wwidth_error[2], false);
     }
 
   }

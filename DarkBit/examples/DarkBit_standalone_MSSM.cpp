@@ -18,6 +18,9 @@
 ///  \author Pat Scott
 ///  \date 2016 Nov
 ///
+///  \author Jonathan Cornell
+///  \date 2016-2017
+///
 ///  *********************************************
 
 #include "gambit/Elements/standalone_module.hpp"
@@ -33,6 +36,7 @@ using namespace BackendIniBit::Functown;    // Functors wrapping the backend ini
 
 QUICK_FUNCTION(DarkBit, decay_rates, NEW_CAPABILITY, createDecays, DecayTable, ())
 QUICK_FUNCTION(DarkBit, MSSM_spectrum, OLD_CAPABILITY, createSpectrum, Spectrum, ())
+QUICK_FUNCTION(DarkBit, SLHA_pseudonyms, NEW_CAPABILITY, createSLHA1Names, mass_es_pseudonyms, (), (MSSM_spectrum, Spectrum))
 QUICK_FUNCTION(DarkBit, cascadeMC_gammaSpectra, OLD_CAPABILITY, CMC_dummy, DarkBit::stringFunkMap, ())
 
 
@@ -66,6 +70,16 @@ namespace Gambit
       std::cout << "Loading decays from: " << inputFileName << std::endl;
       outDecays = DecayTable(inputFileName, 0, true);
     }
+
+    // Create SLHA1 pseudonyms from Spectrum object
+    void createSLHA1Names(mass_es_pseudonyms& names)
+    {
+      const double gauge_mixing_tol = 0.5;
+      const bool tol_invalidates_pt = true;
+      const bool debug = false;
+      names.refill(Pipes::createSLHA1Names::Dep::MSSM_spectrum->get_HE(), gauge_mixing_tol, tol_invalidates_pt, debug);
+    }
+
   }
 }
 
@@ -115,7 +129,7 @@ int main(int argc, char* argv[])
     if (not Backends::backendInfo().works["MicrOmegas_MSSM3.6.9.2"]) backend_error().raise(LOCAL_INFO, "MicrOmegas 3.6.9.2 for MSSM is missing!");
     if (not Backends::backendInfo().works["gamLike1.0.0"]) backend_error().raise(LOCAL_INFO, "gamLike 1.0.0 is missing!");
     if (not Backends::backendInfo().works["DDCalc1.1.0"]) backend_error().raise(LOCAL_INFO, "DDCalc 1.1.0 is missing!");
-    if (not Backends::backendInfo().works["nulike1.0.5"]) backend_error().raise(LOCAL_INFO, "nulike 1.0.5 is missing!");
+    if (not Backends::backendInfo().works["nulike1.0.6"]) backend_error().raise(LOCAL_INFO, "nulike 1.0.6 is missing!");
 
 
     // ---- Initialize models ----
@@ -153,9 +167,10 @@ int main(int argc, char* argv[])
     nuclear_params_fnq->setValue("deltas", -0.12);
 
     // ---- Initialize spectrum and decays from SLHA file ----
-
     createSpectrum.setOption<std::string>("filename", filename);
     createSpectrum.reset_and_calculate();
+    createSLHA1Names.resolveDependency(&createSpectrum);
+    createSLHA1Names.reset_and_calculate();
     createDecays.setOption<std::string>("filename", filename);
     createDecays.reset_and_calculate();
 
@@ -173,16 +188,17 @@ int main(int argc, char* argv[])
     // ---- Initialize backends ----
 
     // Initialize nulike backend
-    Backends::nulike_1_0_5::Functown::nulike_bounds.setStatus(2);
-    nulike_1_0_5_init.reset_and_calculate();
+    Backends::nulike_1_0_6::Functown::nulike_bounds.setStatus(2);
+    nulike_1_0_6_init.reset_and_calculate();
 
     // Initialize gamLike backend
     gamLike_1_0_0_init.reset_and_calculate();
 
     // Initialize MicrOmegas backend
+    MicrOmegas_MSSM_3_6_9_2_init.notifyOfModel("MSSM30atQ");
     MicrOmegas_MSSM_3_6_9_2_init.resolveDependency(&createSpectrum);
     MicrOmegas_MSSM_3_6_9_2_init.resolveDependency(&createDecays);
-    MicrOmegas_MSSM_3_6_9_2_init.notifyOfModel("MSSM30atQ");
+    MicrOmegas_MSSM_3_6_9_2_init.resolveDependency(&createSLHA1Names);
     // Use decay table if it is present:
     if (decays) MicrOmegas_MSSM_3_6_9_2_init.setOption<bool>("internal_decays", false);
     else MicrOmegas_MSSM_3_6_9_2_init.setOption<bool>("internal_decays", true);
@@ -514,17 +530,17 @@ int main(int argc, char* argv[])
     IC79WH_full.resolveDependency(&mwimp_generic);
     IC79WH_full.resolveDependency(&annihilation_rate_Sun);
     IC79WH_full.resolveDependency(&nuyield_from_DS);
-    IC79WH_full.resolveBackendReq(&Backends::nulike_1_0_5::Functown::nulike_bounds);
+    IC79WH_full.resolveBackendReq(&Backends::nulike_1_0_6::Functown::nulike_bounds);
     IC79WH_full.reset_and_calculate();
     IC79WL_full.resolveDependency(&mwimp_generic);
     IC79WL_full.resolveDependency(&annihilation_rate_Sun);
     IC79WL_full.resolveDependency(&nuyield_from_DS);
-    IC79WL_full.resolveBackendReq(&Backends::nulike_1_0_5::Functown::nulike_bounds);
+    IC79WL_full.resolveBackendReq(&Backends::nulike_1_0_6::Functown::nulike_bounds);
     IC79WL_full.reset_and_calculate();
     IC79SL_full.resolveDependency(&mwimp_generic);
     IC79SL_full.resolveDependency(&annihilation_rate_Sun);
     IC79SL_full.resolveDependency(&nuyield_from_DS);
-    IC79SL_full.resolveBackendReq(&Backends::nulike_1_0_5::Functown::nulike_bounds);
+    IC79SL_full.resolveBackendReq(&Backends::nulike_1_0_6::Functown::nulike_bounds);
     IC79SL_full.reset_and_calculate();
 
     // Calculate IceCube likelihood

@@ -30,6 +30,10 @@
 ///          (anders.kvellestad@nordita.org)
 ///  \date 2016 Feb
 ///
+///  \author Tomas Gonzalo
+///          (t.e.gonzalo@fys.uio.no)
+///  \date 2018 Jan
+///
 ///  *********************************************
 
 
@@ -208,7 +212,6 @@ START_MODULE
 
   #undef CAPABILITY
 
-
   // Observable: SM contribution to (g-2)_mu
   #define CAPABILITY muon_gm2_SM
 
@@ -222,6 +225,73 @@ START_MODULE
     START_FUNCTION(triplet<double>)
     #undef FUNCTION
 
+  #undef CAPABILITY
+
+  // EWPO corrections from heavy neutrinos
+  #define CAPABILITY sinW2
+  START_CAPABILITY
+    #define FUNCTION RHN_sinW2
+    START_FUNCTION(triplet<double>)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    ALLOW_MODEL(RightHandedNeutrinos)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_sinW2
+  START_CAPABILITY
+    #define FUNCTION lnL_sinW2_chi2
+    START_FUNCTION(double)
+    DEPENDENCY(sinW2, triplet<double>)
+    #undef FUNCTION
+  #undef CAPABILITY
+ 
+  #define CAPABILITY mw
+    #define FUNCTION RHN_mw
+    START_FUNCTION(triplet<double>)
+    DEPENDENCY(sinW2, triplet<double>)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    ALLOW_MODEL(RightHandedNeutrinos)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+//  #define CAPABILITY Z_inv_width
+//  START_CAPABILITY
+//    #define FUNCTION RHN_Z_inv_width
+//    START_FUNCTION(double)
+//    DEPENDENCY(SMINPUTS, SMInputs)
+//    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+//    DEPENDENCY(SeesawI_Vnu, Eigen::Matrix3cd)
+//    ALLOW_MODEL(RightHandedNeutrinos, StandardModel_SLHA2)
+//    #undef FUNCTION
+//  #undef CAPABILITY
+
+//  #define CAPABILITY lnL_Z_inv_width
+//  START_CAPABILITY
+//    #define FUNCTION lnL_Z_inv_width_chi2
+//    START_FUNCTION(double)
+//    DEPENDENCY(Z_inv_width, double)
+//    DEPENDENCY(Z_decay_rates, DecayTable::Entry)
+//    #undef FUNCTION
+//  #undef CAPABILITY
+
+  #define CAPABILITY W_to_l_decays
+  START_CAPABILITY
+    #define FUNCTION RHN_W_to_l_decays
+    START_FUNCTION(std::vector<double>)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(mw, triplet<double>)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    ALLOW_MODEL(RightHandedNeutrinos)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_W_decays
+  START_CAPABILITY
+    #define FUNCTION lnL_W_decays_chi2
+    START_FUNCTION(double)
+    DEPENDENCY(W_to_l_decays, std::vector<double>)
+    DEPENDENCY(W_plus_decay_rates, DecayTable::Entry)
+    #undef FUNCTION
   #undef CAPABILITY
 
 #undef MODULE

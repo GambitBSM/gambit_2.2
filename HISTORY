@@ -3,6 +3,25 @@ GAMBIT Revision History
 Full details can be found in the git log.  Only a summary of the
 changes in each new version is given here.
 
+v1.1.3
+Bugfix release
+- Made Mathematica backends automatically ditch when Mathematica is missing
+- Updated DarkSUSY 5.1.3 URL to match new SU hosting location
+- Updated HiggsSignals 1.4.0 patch to match (non-versioned!) official increment of HiggsSignals
+
+v1.1.2
+Bugfix release
+- Made DecayTable output SLHA1 and SLHA2 format decay tables
+- Added ability to ditch Mathematica support
+- Adjusted checksum and patch for dark update (no version number increment; very bad practice)
+  made by authors of HiggsSignals 1.4.0
+
+v1.1.1
+Bugfix release.
+- Fixed cmake bug preventing compilation on systems with Mathematica installed but without libuuid.
+- Fixed issue caused when Mathematica license server is missing/faulty.
+- Updated ColliderBit_standalone to use nulike 1.0.5.
+
 v1.1.0
 Feature release.
 - Added support for Mathematica backends

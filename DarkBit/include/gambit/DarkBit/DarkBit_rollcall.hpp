@@ -56,8 +56,6 @@
 #define __DarkBit_rollcall_hpp__
 
 #include "gambit/DarkBit/DarkBit_types.hpp"
-#include <Eigen/Sparse>
-#include <Eigen/Dense>
 
 #define MODULE DarkBit
 START_MODULE
@@ -166,7 +164,7 @@ START_MODULE
         DEPENDENCY(MSSM_spectrum, Spectrum)
       #endif
       BACKEND_REQ(dsrdthlim, (), void, ())
-      BACKEND_REQ(dsrdtab, (), void, (double(*)(double&), double&))
+      BACKEND_REQ(dsrdtab, (), void, (double(*)(double&), double&, int&))
       BACKEND_REQ(dsrdeqn, (), void, (double(*)(double&),double&,double&,double&,double&,int&))
       BACKEND_REQ(dsrdwintp, (), double, (double&))
       BACKEND_REQ(particle_code, (), int, (const str&))
@@ -179,17 +177,20 @@ START_MODULE
       BACKEND_REQ(rdpadd, (), DS_RDPADD)
       BACKEND_REQ(rddof, (), DS_RDDOF)
       BACKEND_REQ(rderrors, (), DS_RDERRORS)
+      BACKEND_REQ(rdtime, (), DS_RDTIME)
     #undef FUNCTION
 
-    // Routine for cross checking RD density results
+    // Routine for cross checking relic density results
     #define FUNCTION RD_oh2_DarkSUSY
       START_FUNCTION(double)
       ALLOW_MODELS(MSSM63atQ)
       DEPENDENCY(DarkSUSY_PointInit, bool)
       BACKEND_REQ(dsrdomega, (), double, (int&,int&,double&,int&,int&,int&))
+      BACKEND_REQ(rderrors, (), DS_RDERRORS)
+      BACKEND_REQ(rdtime, (), DS_RDTIME)
     #undef FUNCTION
 
-    // Routine for cross checking RD density results
+    // Routine for cross checking relic density results
     #define FUNCTION RD_oh2_MicrOmegas
       START_FUNCTION(double)
       BACKEND_REQ(oh2, (MicrOmegas_MSSM, MicrOmegas_SingletDM), double, (double*,int,double))
@@ -601,6 +602,7 @@ START_MODULE
   DD_DECLARE_EXPERIMENT(DARWIN_Xe)
   DD_DECLARE_EXPERIMENT(LUX_2016)
   DD_DECLARE_EXPERIMENT(PandaX_2016)
+  DD_DECLARE_EXPERIMENT(PandaX_2017)
   DD_DECLARE_EXPERIMENT(LUX_2015)
   DD_DECLARE_EXPERIMENT(PICO_2L)
   DD_DECLARE_EXPERIMENT(PICO_60_F)
@@ -1013,125 +1015,5 @@ START_MODULE
     ALLOW_MODELS(Halo_gNFW, Halo_Einasto)
     #undef FUNCTION
   #undef CAPABILITY
-
-  #define CAPABILITY testLike
-  START_CAPABILITY
-    #define FUNCTION lHood
-    START_FUNCTION(double)
-    ALLOW_MODEL(Simple_test)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY SN_stuff
-  START_CAPABILITY
-
-    #define FUNCTION CI_param
-    START_FUNCTION(Eigen::Matrix3d)
-    ALLOW_MODEL(SN_dev)
-    #undef FUNCTION
- 
-  #undef CAPABILITY
-
-  #define CAPABILITY lnLikelihood
-  START_CAPABILITY
-
-    #define FUNCTION lnL
-    START_FUNCTION(double)
-    ALLOW_MODEL(SN_dev)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Ue1
-  START_CAPABILITY
-
-    #define FUNCTION printable_Ue1
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Um1
-  START_CAPABILITY
-
-    #define FUNCTION printable_Um1
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Ut1
-  START_CAPABILITY
-
-    #define FUNCTION printable_Ut1
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Ue2
-  START_CAPABILITY
-
-    #define FUNCTION printable_Ue2
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Um2
-  START_CAPABILITY
-
-    #define FUNCTION printable_Um2
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Ut2
-  START_CAPABILITY
-
-    #define FUNCTION printable_Ut2
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Ue3
-  START_CAPABILITY
-
-    #define FUNCTION printable_Ue3
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Um3
-  START_CAPABILITY
-
-    #define FUNCTION printable_Um3
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
-  #define CAPABILITY Ut3
-  START_CAPABILITY
-
-    #define FUNCTION printable_Ut3
-    START_FUNCTION(double)
-    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-
 #undef MODULE
 #endif /* defined(__DarkBit_rollcall_hpp__) */
