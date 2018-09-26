@@ -56,6 +56,8 @@
 #define __DarkBit_rollcall_hpp__
 
 #include "gambit/DarkBit/DarkBit_types.hpp"
+#include <Eigen/Sparse>
+#include <Eigen/Dense>
 
 #define MODULE DarkBit
 START_MODULE
@@ -1011,5 +1013,125 @@ START_MODULE
     ALLOW_MODELS(Halo_gNFW, Halo_Einasto)
     #undef FUNCTION
   #undef CAPABILITY
+
+  #define CAPABILITY testLike
+  START_CAPABILITY
+    #define FUNCTION lHood
+    START_FUNCTION(double)
+    ALLOW_MODEL(Simple_test)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY SN_stuff
+  START_CAPABILITY
+
+    #define FUNCTION CI_param
+    START_FUNCTION(Eigen::Matrix3d)
+    ALLOW_MODEL(SN_dev)
+    #undef FUNCTION
+ 
+  #undef CAPABILITY
+
+  #define CAPABILITY lnLikelihood
+  START_CAPABILITY
+
+    #define FUNCTION lnL
+    START_FUNCTION(double)
+    ALLOW_MODEL(SN_dev)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Ue1
+  START_CAPABILITY
+
+    #define FUNCTION printable_Ue1
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Um1
+  START_CAPABILITY
+
+    #define FUNCTION printable_Um1
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Ut1
+  START_CAPABILITY
+
+    #define FUNCTION printable_Ut1
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Ue2
+  START_CAPABILITY
+
+    #define FUNCTION printable_Ue2
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Um2
+  START_CAPABILITY
+
+    #define FUNCTION printable_Um2
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Ut2
+  START_CAPABILITY
+
+    #define FUNCTION printable_Ut2
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Ue3
+  START_CAPABILITY
+
+    #define FUNCTION printable_Ue3
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Um3
+  START_CAPABILITY
+
+    #define FUNCTION printable_Um3
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY Ut3
+  START_CAPABILITY
+
+    #define FUNCTION printable_Ut3
+    START_FUNCTION(double)
+    DEPENDENCY(SN_stuff, Eigen::Matrix3d)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
 #undef MODULE
 #endif /* defined(__DarkBit_rollcall_hpp__) */

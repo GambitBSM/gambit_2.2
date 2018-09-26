@@ -32,6 +32,10 @@
 ///  \date 2016 Aug
 ///  \date 2017 March
 ///
+///  \author Tomas Gonzalo
+///          (t.e.gonzalo@fys.uio.no)
+///  \date 2017 July
+///
 ///  *********************************************
 
 #include <string>
@@ -1435,6 +1439,271 @@ namespace Gambit
 
     }
 
+    double G(const double x)
+    {
+      return (10.0 - 43.0*x + 78.0*pow(x,2) - 49.0*pow(x,3) + 4.0*pow(x,4) + 18.0*pow(x,3)*log(x)) / (3.0*pow(x - 1,4));
+    }
+
+    void SN_muegamma(double &result)
+    {
+      using namespace Pipes::SN_muegamma;
+      SMInputs sminputs = *Dep::SMINPUTS;
+
+      double M[] = {*Param["M_1"], *Param["M_2"], *Param["M_3"]}; 
+      Eigen::Matrix3cd m_nu = *Dep::m_nu;
+      Eigen::Matrix3cd Theta = *Dep::SeesawI_Theta;
+      // The term proportional to G(m_nu^2/mW^2) vanishes at second order in theta, so it is enough to use the PMNS matrix
+      Eigen::Matrix3cd Vnu = *Dep::UPMNS;
+
+      std::complex<double> Rllgamma = {0.0, 0.0};
+      for(int i=0; i<3; ++i)
+        Rllgamma += Vnu.adjoint()(2,i) * Vnu(1,i) * G(pow(std::abs(m_nu(i,i)),2)/pow(sminputs.mW,2)) + Theta.adjoint()(2,i) * Theta(1,i) * G(pow(M[i],2)/pow(sminputs.mW,2));
+
+      result = 3 / (32 * M_PI * sminputs.alphainv) * pow(std::abs(Rllgamma),2);
+    }
+
+    void SN_tauegamma(double &result)
+    {
+      using namespace Pipes::SN_tauegamma;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_taumugamma(double &result)
+    {
+      using namespace Pipes::SN_taumugamma;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_mueee(double &result)
+    {
+      using namespace Pipes::SN_mueee;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_taueee(double &result)
+    {
+      using namespace Pipes::SN_taueee;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_taueemu_ss(double &result)
+    {
+      using namespace Pipes::SN_taueemu_ss;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_taueemu_os(double &result)
+    {
+      using namespace Pipes::SN_taueemu_os;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+   
+      result = 0;
+    }
+
+    void SN_tauemumu_ss(double &result)
+    {
+      using namespace Pipes::SN_tauemumu_ss;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_tauemumu_os(double &result)
+    {
+      using namespace Pipes::SN_tauemumu_os;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_taumumumu(double &result)
+    {
+      using namespace Pipes::SN_taumumumu;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_mueTi(double &result)
+    {
+      using namespace Pipes::SN_mueTi;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_mueS(double &result)
+    {
+      using namespace Pipes::SN_mueS;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    void SN_muePb(double &result)
+    {
+      using namespace Pipes::SN_muePb;
+      //const SMInputs sminputs = *Dep::SMINPUTS;
+  
+      result = 0;
+    }
+
+    /// Likelihood for l -> l gamma processes
+    void l2lgamma_likelihood(double &result)
+    {
+      using namespace Pipes::l2lgamma_likelihood;
+      
+      static bool first = true;
+      static boost::numeric::ublas::matrix<double> cov_exp, value_exp;
+      static double theory[3], th_err[3];
+
+
+      // Read and calculate things based on the observed data only the first time through, as none of it depends on the model parameters.
+      if (first)
+      {
+        // Read in experimental measuremens
+        Flav_reader fread(GAMBIT_DIR  "/FlavBit/data");
+        fread.debug_mode(flav_debug);
+
+        // mu -> e gamma
+        fread.read_yaml_measurement("flav_data.yaml", "BR_muegamma");
+        // tau -> e gamma
+        fread.read_yaml_measurement("flav_data.yaml", "BR_tauegamma");
+        // tau -> mu gamma
+        fread.read_yaml_measurement("flav_data.yaml", "BR_taumugamma");
+
+        fread.initialise_matrices();
+        cov_exp=fread.get_exp_cov();
+        value_exp=fread.get_exp_value();
+
+        for (int i = 0; i < 3; ++i)
+          th_err[i] = fread.get_th_err()(i,0).first;
+
+        // Init over.
+        first = false;
+      }
+
+     theory[0] = *Dep::muegamma;
+     theory[1] = *Dep::tauegamma;
+     theory[2] = *Dep::taumugamma;
+
+     result = 0;
+     for (int i = 0; i < 3; ++i)
+       result += Stats::gaussian_upper_limit(theory[i], value_exp(i,0), th_err[i], cov_exp(i,i), false);
+
+    }
+
+    /// Likelihood for l -> l l l processes
+    void l2lll_likelihood(double &result)
+    {
+      using namespace Pipes::l2lll_likelihood;
+       
+      static bool first = true;
+      static boost::numeric::ublas::matrix<double> cov_exp, value_exp;
+      static double theory[7], th_err[7];
+
+
+      // Read and calculate things based on the observed data only the first time through, as none of it depends on the model parameters.
+      if (first)
+      {
+        // Read in experimental measuremens
+        Flav_reader fread(GAMBIT_DIR  "/FlavBit/data");
+        fread.debug_mode(flav_debug);
+
+        // mu -> e e e
+        fread.read_yaml_measurement("flav_data.yaml", "BR_mueee");
+        // tau -> e e e
+        fread.read_yaml_measurement("flav_data.yaml", "BR_taueee");
+        // tau- -> e+ e- mu-
+        fread.read_yaml_measurement("flav_data.yaml", "BR_taueemu_ss");
+        // tau- -> e- e- mu+
+        fread.read_yaml_measurement("flav_data.yaml", "BR_taueemu_os");
+        // tau- -> e- mu+ mu- 
+        fread.read_yaml_measurement("flav_data.yaml", "BR_tauemumu_ss");
+        // tau- -> e+ mu- mu-
+        fread.read_yaml_measurement("flav_data.yaml", "BR_tauemumu_os");
+        // tau -> mu mu mu
+        fread.read_yaml_measurement("flav_data.yaml", "BR_taumumumu");
+
+        fread.initialise_matrices();
+        cov_exp=fread.get_exp_cov();
+        value_exp=fread.get_exp_value();
+
+        for (int i = 0; i < 7; ++i)
+          th_err[i] = fread.get_th_err()(i,0).first;
+
+        // Init over.
+        first = false;
+      }
+
+     theory[0] = *Dep::mueee;
+     theory[1] = *Dep::taueee;
+     theory[2] = *Dep::taueemu_ss;
+     theory[3] = *Dep::taueemu_os;
+     theory[4] = *Dep::tauemumu_ss;
+     theory[5] = *Dep::tauemumu_os;
+     theory[6] = *Dep::taumumumu;
+
+     result = 0;
+     for (int i = 0; i < 7; ++i)
+       result += Stats::gaussian_upper_limit(theory[i], value_exp(i,0), th_err[i], cov_exp(i,i), false);
+
+    }
+
+    /// Likelihood for mu - e conversion in nucleii
+    void mu2e_likelihood(double &result)
+    {
+      using namespace Pipes::mu2e_likelihood;
+        
+      static bool first = true;
+      static boost::numeric::ublas::matrix<double> cov_exp, value_exp;
+      static double theory[3], th_err[3];
+
+
+      // Read and calculate things based on the observed data only the first time through, as none of it depends on the model parameters.
+      if (first)
+      {
+        // Read in experimental measuremens
+        Flav_reader fread(GAMBIT_DIR  "/FlavBit/data");
+        fread.debug_mode(flav_debug);
+
+        // mu - e (Ti)
+        fread.read_yaml_measurement("flav_data.yaml", "R_mueTi");
+        // mu - e (S)
+        fread.read_yaml_measurement("flav_data.yaml", "R_mueS");
+        // mu - e (Pb)
+        fread.read_yaml_measurement("flav_data.yaml", "R_muePb");
+
+        fread.initialise_matrices();
+        cov_exp=fread.get_exp_cov();
+        value_exp=fread.get_exp_value();
+
+        for (int i = 0; i < 3; ++i)
+          th_err[i] = fread.get_th_err()(i,0).first;
+
+        // Init over.
+        first = false;
+      }
+
+      theory[0] = *Dep::mueTi;
+      theory[1] = *Dep::mueS;
+      theory[2] = *Dep::muePb;
+
+      result = 0;
+      for (int i = 0; i < 3; ++i)
+        result += Stats::gaussian_upper_limit(theory[i], value_exp(i,0), th_err[i], cov_exp(i,i), false);
+
+    }
 
   }
 

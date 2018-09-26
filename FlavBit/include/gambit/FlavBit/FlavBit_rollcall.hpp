@@ -32,6 +32,9 @@
 ///  \date 2016 Aug
 ///  \date 2016 Oct
 ///
+///  \author Tomas Gonzalo
+///  \date 2017 July
+///
 ///  *********************************************
 
 #ifndef __FlavBit_rollcall_hpp__
@@ -433,6 +436,143 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  //###############################################
+  // Lepton Flavour Violation
+  //###############################################
+
+  // Observable: mu -> e gamma
+  #define CAPABILITY muegamma
+  START_CAPABILITY
+    #define FUNCTION SN_muegamma
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    DEPENDENCY(SeesawI_Theta, Eigen::Matrix3cd)
+    DEPENDENCY(m_nu, Eigen::Matrix3cd)
+    DEPENDENCY(UPMNS, Eigen::Matrix3cd)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau -> e gamma
+  #define CAPABILITY tauegamma
+  START_CAPABILITY
+    #define FUNCTION SN_tauegamma
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau -> mu gamma
+  #define CAPABILITY taumugamma
+  START_CAPABILITY
+    #define FUNCTION SN_taumugamma
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: mu -> e e e
+  #define CAPABILITY mueee
+  START_CAPABILITY
+    #define FUNCTION SN_mueee
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau -> e e e
+  #define CAPABILITY taueee
+  START_CAPABILITY
+    #define FUNCTION SN_taueee
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> mu- e+ e-, with muon same sign as tau 
+  #define CAPABILITY taueemu_ss
+  START_CAPABILITY
+    #define FUNCTION SN_taueemu_ss
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> mu+ e- e-, with muon opposite sign as tau
+  #define CAPABILITY taueemu_os
+  START_CAPABILITY
+    #define FUNCTION SN_taueemu_os
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> e- mu+ mu-, with electron same sign as tau
+  #define CAPABILITY tauemumu_ss
+  START_CAPABILITY
+    #define FUNCTION SN_tauemumu_ss
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau- -> e+ mu- mu-, with electron opposite sign as tau
+  #define CAPABILITY tauemumu_os
+  START_CAPABILITY
+    #define FUNCTION SN_tauemumu_os
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: tau -> mu mu mu
+  #define CAPABILITY taumumumu
+  START_CAPABILITY
+    #define FUNCTION SN_taumumumu
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // Observable: mu - e (Ti)
+  #define CAPABILITY mueTi
+  START_CAPABILITY
+    #define FUNCTION SN_mueTi
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Observable: mu - e (S)
+  #define CAPABILITY mueS
+  START_CAPABILITY
+    #define FUNCTION SN_mueS
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Observable: mu - e (Pb)
+  #define CAPABILITY muePb
+  START_CAPABILITY
+    #define FUNCTION SN_muePb
+    START_FUNCTION(double)
+    DEPENDENCY(SMINPUTS, SMInputs)
+    ALLOW_MODELS(SN_dev)
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
   //###############################################
   //  Likelihoods
@@ -523,6 +663,42 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // l -> l gamma  likelihood
+  #define CAPABILITY l2lgamma_lnL
+  START_CAPABILITY
+    #define FUNCTION l2lgamma_likelihood
+    START_FUNCTION(double)
+    DEPENDENCY(muegamma, double)
+    DEPENDENCY(tauegamma, double)
+    DEPENDENCY(taumugamma, double)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // l -> l l l likelihood
+  #define CAPABILITY l2lll_lnL
+  START_CAPABILITY
+    #define FUNCTION l2lll_likelihood
+    START_FUNCTION(double)
+    DEPENDENCY(mueee, double)
+    DEPENDENCY(taueee, double)
+    DEPENDENCY(taueemu_ss, double)
+    DEPENDENCY(taueemu_os, double)
+    DEPENDENCY(tauemumu_ss, double)
+    DEPENDENCY(tauemumu_os, double)
+    DEPENDENCY(taumumumu, double)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  // mu - e conversion likelihood
+  #define CAPABILITY mu2e_lnL
+  START_CAPABILITY
+    #define FUNCTION mu2e_likelihood
+    START_FUNCTION(double)
+    DEPENDENCY(mueTi, double)
+    DEPENDENCY(mueS, double)
+    DEPENDENCY(muePb, double)
+    #undef FUNCTION
+  #undef CAPABILITY
 
 #undef MODULE
 
