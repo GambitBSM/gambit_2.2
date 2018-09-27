@@ -816,6 +816,19 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Observable: Test Flavio
+  #define CAPABILITY Flavio_test
+  START_CAPABILITY
+    #define FUNCTION Flavio_test
+    START_FUNCTION(parameters)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, WC)
+    BACKEND_OPTION( (Flavio, 0.27.3), (libflavio) )
+    BACKEND_REQ( sm_prediction, (libflavio), (double), (string))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
+
 #undef MODULE
 
 
