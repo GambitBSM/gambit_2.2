@@ -823,8 +823,7 @@ START_MODULE
     START_FUNCTION(double)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, WC)
     BACKEND_OPTION( (Flavio, 0.27.3), (libflavio) )
-    BACKEND_REQ(sm_prediction_CONV, (libflavio), double, (string) )
-  
+    BACKEND_REQ(sm_prediction_CONV, (libflavio), double, (std::string) )
     #undef FUNCTION
   #undef CAPABILITY
 

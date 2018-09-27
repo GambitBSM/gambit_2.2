@@ -23,9 +23,9 @@
 // Convenience functions (definitions)
 BE_NAMESPACE
 {
-  double sm_prediction_CONV(string)
+  double sm_prediction_CONV(std::string a)
   {
-    double result=sm_prediction(string);
+    double result=sm_prediction(a);
     return result;
 
   }
