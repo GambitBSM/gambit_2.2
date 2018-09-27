@@ -2318,7 +2318,16 @@ namespace Gambit
       if (flav_debug_LL) cout<<"Likelihood result LUV_likelihood  : "<< result<<endl;
 
     }
+    /// Br Bs->mumu decays for the untagged case (CP-averaged)
+    void Flavio_test(double &result)
+    {
+      using namespace Pipes::Flavio_test;
+      if (flav_debug) cout<<"Starting Flavio_test"<<endl;
 
+      result=BEreq::sm_prediction_CONV("BR(Bs->mumu)");
+                    
+    }
+    
 
 
   }

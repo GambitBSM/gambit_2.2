@@ -820,14 +820,13 @@ START_MODULE
   #define CAPABILITY Flavio_test
   START_CAPABILITY
     #define FUNCTION Flavio_test
-    START_FUNCTION(parameters)
+    START_FUNCTION(double)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, WC)
     BACKEND_OPTION( (Flavio, 0.27.3), (libflavio) )
-    BACKEND_REQ( sm_prediction, (libflavio), (double), (string))
+    BACKEND_REQ(sm_prediction_CONV, (libflavio), double, (string) )
+  
     #undef FUNCTION
   #undef CAPABILITY
-
-
 
 #undef MODULE
 

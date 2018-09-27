@@ -23,9 +23,12 @@
 // Convenience functions (definitions)
 BE_NAMESPACE
 {
-  void dummy(void)
+  double sm_prediction_CONV(string)
   {
-    std::cout<<"aaa"<<std::endl;
+    double result=sm_prediction(string);
+    return result;
+
   }
+  
 }
 END_BE_NAMESPACE  

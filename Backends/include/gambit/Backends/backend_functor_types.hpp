@@ -18,7 +18,7 @@
 ///  Authors:                                     
 ///                                               
 ///  \author The GAMBIT Collaboration            
-///  \date 11:16AM on September 27, 2018
+///  \date 11:44AM on September 27, 2018
 ///                                               
 ///  *********************************************
                                                   
@@ -74,9 +74,6 @@ namespace Gambit
 
   template class backend_functor_common<sd_sdownwidth_type*(*)(),sd_sdownwidth_type*>;
   template class backend_functor<sd_sdownwidth_type*(*)(),sd_sdownwidth_type*>;
-
-  template class backend_functor_common<double(*)(string),double,string>;
-  template class backend_functor<double(*)(string),double,string>;
 
   template class backend_functor_common<sd_neut3body_type*(*)(),sd_neut3body_type*>;
   template class backend_functor<sd_neut3body_type*(*)(),sd_neut3body_type*>;
@@ -156,8 +153,8 @@ namespace Gambit
   template class backend_functor_common<libFarrayTest_CB3_type*(*)(),libFarrayTest_CB3_type*>;
   template class backend_functor<libFarrayTest_CB3_type*(*)(),libFarrayTest_CB3_type*>;
 
-  template class backend_functor_common<void(*)(int&,int&,int&),void,int&,int&,int&>;
-  template class backend_functor<void(*)(int&,int&,int&),void,int&,int&,int&>;
+  template class backend_functor_common<double(*)(string),double,string>;
+  template class backend_functor<double(*)(string),double,string>;
 
   template class backend_functor_common<Farray_Fcomplex16_1_2*(*)(),Farray_Fcomplex16_1_2*>;
   template class backend_functor<Farray_Fcomplex16_1_2*(*)(),Farray_Fcomplex16_1_2*>;
@@ -489,9 +486,6 @@ namespace Gambit
   template class backend_functor_common<void(*)(const double(&)[29],const double(&)[29][3],const double(&)[15],const double(&)[3],const double&,const double&),void,const double(&)[29],const double(&)[29][3],const double(&)[15],const double(&)[3],const double&,const double&>;
   template class backend_functor<void(*)(const double(&)[29],const double(&)[29][3],const double(&)[15],const double(&)[3],const double&,const double&),void,const double(&)[29],const double(&)[29][3],const double(&)[15],const double(&)[3],const double&,const double&>;
 
-  template class backend_functor_common<(double)(*)(string),(double),string>;
-  template class backend_functor<(double)(*)(string),(double),string>;
-
   template class backend_functor_common<DS_SMCUSEFUL*(*)(),DS_SMCUSEFUL*>;
   template class backend_functor<DS_SMCUSEFUL*(*)(),DS_SMCUSEFUL*>;
 
@@ -584,6 +578,9 @@ namespace Gambit
 
   template class backend_functor_common<DS_WIDTHS*(*)(),DS_WIDTHS*>;
   template class backend_functor<DS_WIDTHS*(*)(),DS_WIDTHS*>;
+
+  template class backend_functor_common<void(*)(int&,int&,int&),void,int&,int&,int&>;
+  template class backend_functor<void(*)(int&,int&,int&),void,int&,int&,int&>;
 
   template class backend_functor_common<sd_snel2body_type*(*)(),sd_snel2body_type*>;
   template class backend_functor<sd_snel2body_type*(*)(),sd_snel2body_type*>;
