@@ -18,7 +18,7 @@
 ///  Authors:                                     
 ///                                               
 ///  \author The GAMBIT Collaboration            
-///  \date 11:44AM on September 27, 2018
+///  \date 01:57PM on September 27, 2018
 ///                                               
 ///  *********************************************
                                                   
@@ -44,6 +44,9 @@ namespace Gambit
 
   template class backend_functor_common<void(*)(const char*),void,const char*>;
   template class backend_functor<void(*)(const char*),void,const char*>;
+
+  template class backend_functor_common<double(*)(double),double,double>;
+  template class backend_functor<double(*)(double),double,double>;
 
   template class backend_functor_common<void(*)(int,std::complex<double>*,std::complex<double>*,double,double,const parameters*),void,int,std::complex<double>*,std::complex<double>*,double,double,const parameters*>;
   template class backend_functor<void(*)(int,std::complex<double>*,std::complex<double>*,double,double,const parameters*),void,int,std::complex<double>*,std::complex<double>*,double,double,const parameters*>;
