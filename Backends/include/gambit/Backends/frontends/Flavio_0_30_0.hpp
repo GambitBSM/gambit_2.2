@@ -31,3 +31,6 @@
 LOAD_LIBRARY
 
 BE_FUNCTION(sm_prediction, double, (std::string), "sm_prediction", "sm_prediction")
+
+BE_CONV_FUNCTION(sm_prediction_CONV, double, (std::string), "sm_prediction_CONV", "sm_prediction_CONV") 
+  

@@ -2325,7 +2325,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting Flavio_test"<<endl;
 
       result=BEreq::sm_prediction_CONV("BR(Bs->mumu)");
-                    
+      std::cout<<"Flavio result: "<<result<<std::endl;
     }
     
 
