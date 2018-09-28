@@ -17,8 +17,13 @@
 
 #include <sstream>
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/Flavio.hpp"
-//#include "gambit/Backends/backend_types/SuperIso.hpp"
+#include "gambit/Backends/frontends/Flavio_0_27_3.hpp"
+
+
+// Initialisation
+BE_INI_FUNCTION{}
+END_BE_INI_FUNCTION
+
 
 // Convenience functions (definitions)
 BE_NAMESPACE

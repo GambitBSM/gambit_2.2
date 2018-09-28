@@ -20,12 +20,14 @@
 #define BACKENDNAME Flavio
 #define BACKENDLANG Python        
 #define VERSION 0.27.3
-
+#define SAFE_VERSION 0_27_3
 /* The following macro imports the modudle in the Python interpreter              
  * when this header file is included somewhere. */
 
 
 
+
+
 LOAD_LIBRARY
 
-BE_FUNCTION(sm_prediction, double, (string), "sm_prediction", "sm_prediction")
+BE_FUNCTION(sm_prediction, double, (std::string), "sm_prediction", "sm_prediction")
