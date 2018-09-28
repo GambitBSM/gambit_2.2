@@ -148,7 +148,7 @@ endif()
 
 # Flavio
 set(name "Flavio")
-set(ver "0.27.3")
+set(ver "0.30.0")
 set(dl "https://www.physik.uzh.ch/~mchrzasz/Flavio/${name}-${ver}.tar.gz")  
 set(md5 "d8f6a49be8ff509916ae1dc3f3b837f1")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")

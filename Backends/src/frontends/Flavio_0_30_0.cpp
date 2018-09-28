@@ -17,7 +17,7 @@
 
 #include <sstream>
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/Flavio_0_27_3.hpp"
+#include "gambit/Backends/frontends/Flavio_0_30_0.hpp"
 
 
 // Initialisation
