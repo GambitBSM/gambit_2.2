@@ -29,13 +29,18 @@
 ///          (ankit.beniwal@adelaide.edu.au)
 ///  \date 2016 Aug
 ///
-///   \author Tomas Gonzalo
+///  \author Tomas Gonzalo
 ///           (t.e.gonzalo@fys.uio.no)
 ///  \date 2018 Feb
+///
 ///  \author Andrew Fowlie
 ///  \date 2018 May
+///
 ///  \author Peter Athron
 ///  \date 2018 May
+///
+/// \author Jeriek Van den Abeele
+/// \date 2018 Sep
 ///
 ///  *********************************************
 
@@ -702,10 +707,34 @@ START_MODULE
 
   #undef CAPABILITY
 
-  #define CAPABILITY decay_rates
-  START_CAPABILITY
+#define CAPABILITY neutralino_1_decay_rates_gravitino
+    START_CAPABILITY
 
-    #define FUNCTION all_decays_from_SLHA
+#define FUNCTION neutralino_1_decays_gravitino
+    START_FUNCTION(DecayTable::Entry)
+    DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+#undef FUNCTION
+
+#undef CAPABILITY
+
+#define CAPABILITY chargino_plus_1_decay_rates_gravitino
+    START_CAPABILITY
+
+#define FUNCTION chargino_plus_1_decays_gravitino
+    START_FUNCTION(DecayTable::Entry)
+    DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+#undef FUNCTION
+
+#undef CAPABILITY
+
+#define CAPABILITY decay_rates
+    START_CAPABILITY
+
+#define FUNCTION all_decays_from_SLHA
     START_FUNCTION(DecayTable)
     #undef FUNCTION
 
