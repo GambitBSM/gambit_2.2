@@ -137,9 +137,18 @@ function(add_subdirectory_if_present dir)
   endif()
 endfunction()
 
+# Function to make symbols visible for a code component
+function(make_symbols_visible lib)
+  if(${CMAKE_MAJOR_VERSION} MATCHES "2")
+    set_target_properties(${lib} PROPERTIES COMPILE_OPTIONS "-fvisibility=default")
+  else()
+    set_target_properties(${lib} PROPERTIES CXX_VISIBILITY_PRESET default)
+  endif()
+endfunction()
+
 # Function to add static GAMBIT library
 function(add_gambit_library libraryname)
-  cmake_parse_arguments(ARG "" "OPTION" "SOURCES;HEADERS" ${ARGN})
+  cmake_parse_arguments(ARG "VISIBLE" "OPTION" "SOURCES;HEADERS" ${ARGN})
 
   add_library(${libraryname} ${ARG_OPTION} ${ARG_SOURCES} ${ARG_HEADERS})
   add_dependencies(${libraryname} model_harvest)
@@ -160,6 +169,11 @@ function(add_gambit_library libraryname)
 
   if(${ARG_OPTION} STREQUAL SHARED AND APPLE)
     set_property(TARGET ${libraryname} PROPERTY SUFFIX .so)
+  endif()
+
+  # Reveal symbols if requested
+  if(${ARG_VISIBLE})
+    make_symbols_visible(${libraryname})
   endif()
 
   # Cotire speeds up compilation by automatically generating and precompiling prefix headers for the targets
@@ -516,6 +530,7 @@ endmacro()
 set(BOSS_dir "${PROJECT_SOURCE_DIR}/Backends/scripts/BOSS")
 set(needs_BOSSing "")
 set(needs_BOSSing_failed "")
+
 macro(BOSS_backend name backend_version)
 
   # Replace "." by "_" in the backend version number
@@ -546,7 +561,14 @@ macro(BOSS_backend name backend_version)
     elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
       set(BOSS_castxml_cc "")
     endif()
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+      set(dl "https://midas3.kitware.com/midas/download/item/318762/castxml-macosx.tar.gz")
+    else()
+      set(dl "https://midas3.kitware.com/midas/download/item/318227/castxml-linux.tar.gz")
+    endif()
     ExternalProject_Add_Step(${name}_${ver} BOSS
+      # Check for castxml binaries and download if they do not exist
+      COMMAND ${PROJECT_SOURCE_DIR}/cmake/scripts/download_castxml_binaries.sh ${BOSS_dir} ${CMAKE_COMMAND} ${dl}
       # Run BOSS
       COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py ${BOSS_castxml_cc} ${BOSS_includes} ${name}_${backend_version_safe}
       # Copy BOSS-generated files to correct folders within Backends/include
@@ -557,4 +579,3 @@ macro(BOSS_backend name backend_version)
     )
   endif()
 endmacro()
-

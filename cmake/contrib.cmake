@@ -38,10 +38,10 @@ add_gambit_library(mkpath OPTION OBJECT
                           HEADERS ${PROJECT_SOURCE_DIR}/contrib/mkpath/include/mkpath/mkpath.h)
 set(GAMBIT_BASIC_COMMON_OBJECTS "${GAMBIT_BASIC_COMMON_OBJECTS}" $<TARGET_OBJECTS:mkpath>)
 
-#contrib/yaml-cpp-0.5.3
-set(yaml_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/contrib/yaml-cpp-0.5.3/include)
+#contrib/yaml-cpp-0.6.2
+set(yaml_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/contrib/yaml-cpp-0.6.2/include)
 include_directories("${yaml_INCLUDE_DIR}")
-add_subdirectory(${PROJECT_SOURCE_DIR}/contrib/yaml-cpp-0.5.3 EXCLUDE_FROM_ALL)
+add_subdirectory(${PROJECT_SOURCE_DIR}/contrib/yaml-cpp-0.6.2 EXCLUDE_FROM_ALL)
 
 #contrib/Delphes-3.1.2; include only if ColliderBit is in use and Delphes is not intentionally ditched.
 set (DELPHES_DIR "${PROJECT_SOURCE_DIR}/contrib/Delphes-3.1.2")
@@ -67,7 +67,7 @@ else()
     SOURCE_DIR ${DELPHES_DIR}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ./configure
-              COMMAND sed ${dashi} "/^CXXFLAGS += .* -Iexternal\\/tcl/ s/$/ ${CMAKE_CXX_FLAGS}/" <SOURCE_DIR>/Makefile
+              COMMAND sed ${dashi} "/^CXXFLAGS += .* -Iexternal\\/tcl/ s/$/ ${BACKEND_CXX_FLAGS}/" <SOURCE_DIR>/Makefile
               COMMAND sed ${dashi} "s,\ ..EXECUTABLE.,,g" <SOURCE_DIR>/Makefile
               COMMAND sed ${dashi} "s/${DELPHES_BAD_LINE}/\\1/g" <SOURCE_DIR>/Makefile
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} all
@@ -109,8 +109,8 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
   set (EXCLUDE_FLEXIBLESUSY FALSE)
 
   # Always use -O2 for flexiblesusy to ensure fast spectrum generation.
-  set(FS_CXX_FLAGS "${GAMBIT_CXX_FLAGS} -Wno-missing-field-initializers")
-  set(FS_Fortran_FLAGS "${GAMBIT_Fortran_FLAGS}")
+  set(FS_CXX_FLAGS "${BACKEND_CXX_FLAGS} -Wno-missing-field-initializers")
+  set(FS_Fortran_FLAGS "${BACKEND_Fortran_FLAGS}")
   if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(FS_CXX_FLAGS "${FS_CXX_FLAGS} -O2")
     set(FS_Fortran_FLAGS "${FS_Fortran_FLAGS} -O2")
@@ -151,8 +151,7 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
      )
 
   # Set the models (spectrum generators) existing in flexiblesusy (could autogen this, but that would build some things we don't need)
-  set(ALL_FS_MODELS CMSSM MSSM MSSMatMGUT MSSM_mAmu MSSMatMSUSY_mAmu MSSMatMGUT_mAmu MSSMEFTHiggs MSSMEFTHiggs_mAmu MSSMatMSUSYEFTHiggs_mAmu SingletDMZ3 SingletDM)
-
+  set(ALL_FS_MODELS MDM CMSSM MSSM MSSMatMGUT MSSM_mAmu MSSMatMSUSY_mAmu MSSMatMGUT_mAmu MSSMEFTHiggs MSSMEFTHiggs_mAmu MSSMatMSUSYEFTHiggs_mAmu ScalarSingletDM_Z3 ScalarSingletDM_Z2)
   # Check if there has been command line instructions to only build with certain models. Default is to build everything!
   if(BUILD_FS_MODELS AND NOT ";${BUILD_FS_MODELS};" MATCHES ";ALL_FS_MODELS;")
     # Use whatever the user has supplied!
@@ -160,7 +159,6 @@ if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
     set(BUILD_FS_MODELS ${ALL_FS_MODELS})
   endif()
 
-  #set(BUILD_FS_MODELS CMSSM MSSM MSSMatMGUT)
   set(EXCLUDED_FS_MODELS "")
 
   # Check that all the models the user asked for are in fact valid models
