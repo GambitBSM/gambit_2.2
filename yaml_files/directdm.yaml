@@ -11,7 +11,7 @@ Parameters:
   StandardModel_Higgs:
     mH: 125
 
-  DiracDM:
+  DiracSingletDM_Z2:
     mF: 50
     lF: 1e-3
     xi: 0
@@ -65,7 +65,7 @@ Rules:
     function: RD_fraction_one
 
   - capability: DDCalc_Couplings
-    function: DDCalc_PointInit_NR_WCs
+    function: DDCalc_Couplings_NR_WCs
 
   - capability: DD_nonrel_WCs
     function: DD_nonrel_WCs_EW

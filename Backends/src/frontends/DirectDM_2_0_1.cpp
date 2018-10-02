@@ -10,7 +10,7 @@
 ///
 ///  \author Sanjay Bloor
 ///          (sanjay.bloor12@imperial.ac.uk)
-///  \date 2018 Sep
+///  \date 2018 Sep, Oct
 ///
 ///  *********************************************
 
@@ -24,7 +24,6 @@ BE_INI_FUNCTION
 END_BE_INI_FUNCTION
 
 /// TODO -
-/// Replace directdm object with one loaded up by BE system proper (i.e. loaded_python_backends)
 /// Set nuisance parameters for scans within directdm (BE_INI_FUNCTION)
 
 BE_NAMESPACE
@@ -58,19 +57,21 @@ BE_NAMESPACE
     {
       backend_error().raise(LOCAL_INFO, "DirectDM at unbroken scale currenly only supports Dirac DM.");
     }
-    vec_strdbl_pairs nonrel_WCs;
 
-    // Import Python class WC_EW from module directdm
-    pybind11::object ddm = pybind11::module::import("directdm");
-    pybind11::object WC_EW = ddm.attr("WC_EW")(relativistic_WCs, Ychi, dchi, DM_type);
+    // Import Python class WC_EW from module DirectDM
+    pybind11::object WC_EW = DirectDM.attr("WC_EW")(relativistic_WCs, Ychi, dchi, DM_type);
+    
+    // Obtain a dictionary of non-relativistic WCs, given the DM mass and the scale the Lagrangian is specified at.
     pybind11::dict cNRs = WC_EW.attr("_my_cNR")(mDM, scale);
 
-    // Obtain non-relativistic WCs and their values
+    // Translate from Python dict to vec_strdbl_pairs structure
     pybind11::list cnrlistk = cNRs.attr("keys")();
     pybind11::list cnrlistv = cNRs.attr("values")();
 
     pybind11::str key;
     pybind11::float_ value;
+    
+    vec_strdbl_pairs nonrel_WCs;
 
     // Go through each key/value pair and append to the vector of non-rel WCs.
     for (unsigned int i=0; i<len(cnrlistk); i++)
@@ -97,30 +98,28 @@ BE_NAMESPACE
     }
     vec_strdbl_pairs nonrel_WCs;
 
-    // Import the Python class "WC_3f" from "directdm"
-
-    // Import Python class module directdm
-    pybind11::object ddm = pybind11::module::import("directdm");
+    // Python dictionary of non-relativistic Wilson Coefficients
     pybind11::dict cNRs;
 
-    // Initialise Python class according to number of quark flavours specified
+    // Initialise Python class according to number of quark flavours specified from module DirectDM,
+    // then obtain a dictionary of non-relativistic WCs, given the DM mass.
     if (scheme == 5)
     {
-      pybind11::object WC_5f = ddm.attr("WC_5f")(relativistic_WCs, DM_type);
+      pybind11::object WC_5f = DirectDM.attr("WC_5f")(relativistic_WCs, DM_type);
       cNRs = WC_5f.attr("_my_cNR")(mDM);
     }
     else if (scheme == 4)
     {
-      pybind11::object WC_4f = ddm.attr("WC_4f")(relativistic_WCs, DM_type);
+      pybind11::object WC_4f = DirectDM.attr("WC_4f")(relativistic_WCs, DM_type);
       cNRs = WC_4f.attr("_my_cNR")(mDM);
     }
     else if (scheme == 3)
     {
-      pybind11::object WC_3f = ddm.attr("WC_3f")(relativistic_WCs, DM_type);
+      pybind11::object WC_3f = DirectDM.attr("WC_3f")(relativistic_WCs, DM_type);
       cNRs = WC_3f.attr("_my_cNR")(mDM);
     }
 
-    // Obtain non-relativistic WCs and their values
+    // Translate from Python dict to vec_strdbl_pairs structure
     pybind11::list cnrlistk = cNRs.attr("keys")();
     pybind11::list cnrlistv = cNRs.attr("values")();
 

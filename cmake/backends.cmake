@@ -65,6 +65,10 @@
 #          (aaron.vincent@cparc.ca)
 #  \date 2017 Sep, Nov
 #
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018 Sep
+#
 #************************************************
 
 
@@ -918,13 +922,14 @@ endif()
 # DirectDM
 set(name "directdm")
 set(ver "2.0.1")
+set(dl "https://github.com/DirectDM/directdm-py/archive/v2.0.1.tar.gz")
+set(md5 "0cc0fc63a0e4c4e8a546360eeb690845")
 set(lib "libdirectdm")
-set(dl "null")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    GIT_REPOSITORY https://github.com/DirectDM/directdm-py.git
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""

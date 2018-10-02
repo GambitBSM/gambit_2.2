@@ -239,7 +239,7 @@ namespace Gambit
       // Get values of non-relativistic operators from Spectrum
       Spectrum spec = *Dep::DiracSingletDM_Z2_spectrum;
 
-      double lambda = spec.get(Par::dimensionless, "lX");
+      double lambda = spec.get(Par::dimensionless, "lF");
       double xi = spec.get(Par::dimensionless, "xi");
 
       // lambda*cos(xi) XXHH
