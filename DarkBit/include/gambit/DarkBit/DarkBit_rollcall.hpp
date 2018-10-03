@@ -62,7 +62,8 @@
 ///
 /// \author Sanjay Bloor
 ///         (sanjay.bloor12@imperial.ac.uk)
-/// \date 2017 Dec, 2018 Aug, Sep
+/// \date 2017 Dec 
+/// \date 2018 Aug, Sep, Oct
 ///
 ///  *********************************************
 

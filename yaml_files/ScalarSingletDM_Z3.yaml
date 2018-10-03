@@ -264,7 +264,11 @@ Rules:
   # Use DarkBit's own calculations of the direct detection couplings
   - capability: DD_couplings
     function: DD_couplings_ScalarSingletDM_Z3
-
+    
+  # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
+  - capability: DDCalc_Couplings
+    function: DDCalc_Couplings_WIMP_nucleon
+    
   # Choose to get decays from DecayBit proper, not from an SLHA file.
   - capability: decay_rates
     function: all_decays

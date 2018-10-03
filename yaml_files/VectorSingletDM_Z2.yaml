@@ -181,7 +181,11 @@ Rules:
     function: SimYieldTable_DarkSUSY
     options:
       allow_yield_extrapolation: true
-
+    
+  # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
+  - capability: DDCalc_Couplings
+    function: DDCalc_Couplings_WIMP_nucleon
+    
   # Choose to compute decay rates from the DecayBit module
   - capability: decay_rates
     function: all_decays

@@ -182,6 +182,14 @@ Rules:
   # Choose to compute decay rates from the DecayBit module
   - capability: decay_rates
     function: all_decays
+    
+  # Select non-relativistic couplings for DDCalc 2.1.0 WIMP object
+  - capability: DDCalc_Couplings
+    function: DDCalc_Couplings_NR_WCs
+
+  # Perform matching of relativistic WCs from above electroweak scale
+  - capability: DD_nonrel_WCs
+    function: DD_nonrel_WCs_EW
 
   # Choose to obtain spectrum from the SpecBit module
   - capability: DiracSingletDM_Z2_spectrum
