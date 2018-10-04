@@ -891,6 +891,48 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+# Minuit2
+set(name "Minuit2")
+set(ver "5.34.14")
+set(md5 "7fc00378a2ed1f731b719d4837d62d6a")
+set(dl "https://www.cern.ch/mathlibs/sw/5_34_14/Minuit2/Minuit2-5.34.14.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/")
+check_ditch_status(${name} ${ver})
+if(NOT ditched_${name}_${ver})
+    ExternalProject_Add(${name}_${ver}
+            DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+            SOURCE_DIR ${dir}
+            BUILD_IN_SOURCE 1
+            CONFIGURE_COMMAND ./configure --prefix=${dir}
+            BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} install
+            )
+    #  BOSS_backend(${name} ${ver})
+endif()
+
+
+# VevaciousPlusPlus
+set(name "VevaciousPlusPlus")
+set(ver "2.0")
+set(dl "")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus")
+set(Minuit_name "Minuit2")
+set(Minuit_ver "5.34.14")
+set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
+set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
+check_ditch_status(${name} ${ver})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DEPENDS ${Minuit_name}_${Minuit_ver}
+          GIT_REPOSITORY https://github.com/benoleary/VevaciousPlusPlus.git
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND git checkout Gambit_BOSSED
+          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} BOOSTDIR=${Boost_INCLUDE_DIR} EIGENDIR=${EIGEN3_INCLUDE_DIR} MINUITINCLUDEDIR=${Minuit_inlcude} MINUITLIBDIR=${Minuit_lib}
+          INSTALL_COMMAND ""
+          )
+#  BOSS_backend(${name} ${ver})
+endif()
+
 # SUSYHD
 set(name "susyhd")
 set(ver "1.0.2")
