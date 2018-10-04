@@ -37,20 +37,20 @@ Printer:
 
 Scanner:
 
-  use_scanner: multinest
+  use_scanner: twalk
 
   scanners:
 
     de:
       plugin: diver
       like: LogLike
-      NP: 1000
+      NP: 5000
 
     multinest:
       plugin: multinest
       like:  LogLike
-      nlive: 1000
-      tol: 0.01
+      nlive: 500
+      tol: 0.5
 
     mcmc:
       plugin: great
