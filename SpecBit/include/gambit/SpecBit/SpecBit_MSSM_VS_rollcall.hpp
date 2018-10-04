@@ -8,8 +8,8 @@
 ///  *********************************************
 ///  Authors (add name and date if you modify):
 ///
-///  \author José Eliel Camargo-molina
-///           (j.camargo-molina@imperial.ac.uk)
+///  \author José Eliel Camargo-Molina
+///           (elielcamargomolina@gmail.com)
 ///
 ///  \date Jun 2018
 ///

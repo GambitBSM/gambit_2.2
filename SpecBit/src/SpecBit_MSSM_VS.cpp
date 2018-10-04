@@ -11,8 +11,8 @@
 ///
 ///  Authors (add name and date if you modify):
 ///
-///  \author José Eliel Camargo-molina
-///           (j.camargo-molina@imperial.ac.uk)
+///  \author José Eliel Camargo-Molina
+///           (elielcamargomolina@gmail.com)
 ///
 ///  \date Jun 2018
 ///
@@ -614,7 +614,7 @@ namespace Gambit
 													
 		vevaciousPlusPlus.ReadLhaBlock( "MSU2", scale , msu2, 2 );
 
-        spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
+        //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
 
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
         try {
@@ -626,7 +626,7 @@ namespace Gambit
         }
         catch(const std::exception& e)
         {
-            spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
+            //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
             lifetime = -2; //Vevacious Crashed
             cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
             std::string result = "Crashed";
@@ -642,12 +642,13 @@ namespace Gambit
         namespace myPipe = Pipes::get_likelihood_VS_MSSM;
         double lifetime =  *myPipe::Dep::check_stability_MSSM;
 
-        if (lifetime == -1)
+        if (lifetime == -1) // Means it is stable
         {
-            result = 0;
+            result = 10;
         }
-        else if(lifetime == -2)
+        else if(lifetime == -2) // Means Vevacious crashed
         {
+            invalid_point().raise("Vevacious crashed");
             result = 0;
         }
         else
