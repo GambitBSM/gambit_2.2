@@ -122,7 +122,7 @@ namespace Gambit
                 // Options that can be read from YAML file
                 std::string potentialminimizerinitpath = vevaciouspath +
                 "/InitializationFiles/DefaultObjectInitializationFiles/PotentialMinimizerInitialization.xml";
-                std::string PathToHom4ps2 = vevaciouspath + "/../HOM4PS2";
+                std::string PathToHom4ps2 = Backends::backendInfo().path_dir("HOM4PS","2.0");
 
                 // File contents
                 std::string potentialminimizerinit =

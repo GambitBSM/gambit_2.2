@@ -903,33 +903,88 @@ if(NOT ditched_${name}_${ver})
             DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
             SOURCE_DIR ${dir}
             BUILD_IN_SOURCE 1
-            CONFIGURE_COMMAND ./configure --prefix=${dir}
-            BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} install
+            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./configure --prefix=${dir} --disable-dependency-tracking --with-pic --disable-openmp
+            BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+            INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
             )
-    #  BOSS_backend(${name} ${ver})
+    add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+# PHC
+set(name "PHC")
+set(ver "2.4.58")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dl "http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz")
+  set(md5 "c67475054fadac83bfa7c06be6579e12")
+else()
+  set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
+  set(md5 "7f4e2f06497308019c89bc475b237ca4")
+endif()
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/")
+check_ditch_status(${name} ${ver})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+endif()
+
+# HOM4PS2
+set(name "HOM4PS")
+set(ver "2.0")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dl "http://www.math.nsysu.edu.tw/~leetsung/works/HOM4PS_soft_files/HOM4PS2_MacOSX.tar.gz")
+  set(md5 "daa880bd51fc166a9a2f85332b025fae")
+else()
+  set(dl "http://www.math.nsysu.edu.tw/~leetsung/works/HOM4PS_soft_files/HOM4PS2_64-bit.tar.gz")
+  set(md5 "134a2539faf2c0596eaf039e7ccc1677")
+endif()
+
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/")
+check_ditch_status(${name} ${ver})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+endif()
 
 # VevaciousPlusPlus
 set(name "VevaciousPlusPlus")
 set(ver "2.0")
-set(dl "")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus")
 set(Minuit_name "Minuit2")
 set(Minuit_ver "5.34.14")
-set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
+set(PHC_ver "2.4.58")
+set(dl "null")
+set(VEVACIOUSPLUSPLUS_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/Minuit2")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
 check_ditch_status(${name} ${ver})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
           DEPENDS ${Minuit_name}_${Minuit_ver}
+          DEPENDS PHC_${PHC_ver}
+          DEPENDS HOM4PS_2.0
           GIT_REPOSITORY https://github.com/benoleary/VevaciousPlusPlus.git
           SOURCE_DIR ${dir}
           BUILD_IN_SOURCE 1
           CONFIGURE_COMMAND git checkout Gambit_BOSSED
-          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} BOOSTDIR=${Boost_INCLUDE_DIR} EIGENDIR=${EIGEN3_INCLUDE_DIR} MINUITINCLUDEDIR=${Minuit_inlcude} MINUITLIBDIR=${Minuit_lib}
+#          COMMAND echo ${CMAKE_MAKE_PROGRAM} BOOSTDIR=${Boost_INCLUDE_DIR} EIGENDIR=${EIGEN3_INCLUDE_DIR} MINUITINCLUDEDIR=${Minuit_include} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_name}
+          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} BOOSTDIR=${Boost_INCLUDE_DIR} EIGENDIR=${EIGEN3_INCLUDE_DIR} MINUITINCLUDEDIR=${Minuit_include} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_name}
           INSTALL_COMMAND ""
           )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 #  BOSS_backend(${name} ${ver})
 endif()
 
