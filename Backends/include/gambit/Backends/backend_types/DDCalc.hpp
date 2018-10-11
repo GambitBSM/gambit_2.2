@@ -32,8 +32,8 @@ namespace Gambit
   struct DD_coupling_container
   {
     int coeff_structure;  // Simple integer to tell DDCalc which effective operators to set the WIMP object up with.
-    DM_nucleon_couplings DM_nucleon_coeffs; // Corresponds to int = 1. Direct DM-nucleon interactions.
-    vec_strdbl_pairs     DD_nonrel_WCs;     // Corresponds to int = 2. Effective non-relativistic DM-quark Wilson coefficients.
+    DM_nucleon_couplings          DM_nucleon_coeffs; // Corresponds to int = 1. Direct DM-nucleon interactions.
+    std::map<std::string,double>  DD_nonrel_WCs;     // Corresponds to int = 2. Effective non-relativistic DM-quark Wilson coefficients.
   };
 
 }

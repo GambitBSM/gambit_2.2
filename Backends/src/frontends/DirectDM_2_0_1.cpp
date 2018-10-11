@@ -17,6 +17,8 @@
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/DirectDM_2_0_1.hpp"
 
+#include <pybind11/stl.h>
+
 BE_INI_FUNCTION
 {
   // Empty ini function.
@@ -30,27 +32,11 @@ BE_NAMESPACE
 {
   /* Convenience functions */
 
-  /// Initialise a dictionary of relativistic Wilson Coefficients from a vector of
-  /// string-double pairs, where the string is the name of the WC in DirectDM, and
-  /// the double is the value at the input scale.
-  pybind11::dict initialise_WC_dict(vec_strdbl_pairs& wilsonCoeffs)
-  {
-    pybind11::dict relativistic_WCs;
-    // e.g. in Python: dict1 = {'C61u' : 1./10000., 'C62u' : 1./10000., 'C61d' : 1./10000.}
-
-    // Loop through all Wilson Coefficients and assign them to the Python dict.
-    for (auto it = wilsonCoeffs.begin(); it != wilsonCoeffs.end(); ++it)
-    {
-      relativistic_WCs[pybind11::cast(it->first)] = pybind11::cast(it->second);
-    }
-    return relativistic_WCs;
-  }
-
   /// Get Wilson Coefficients at 2 GeV from the SM unbroken phase.
   /// Requires a dictionary of relatavistic WCs, , the DM mass, dchi is the dimension of the DM SU2 representation,
   /// Ychi is the DM hypercharge such that Q = I^3 + Y/2, scale is the scale the Lagrangian is defined at, and
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
-  vec_strdbl_pairs get_NR_WCs_EW(pybind11::dict& relativistic_WCs,  double& mDM, double& dchi, double& Ychi, double& scale, std::string& DM_type)
+  map_str_dbl get_NR_WCs_EW(map_str_dbl& relativistic_WCs,  double& mDM, double& dchi, double& Ychi, double& scale, std::string& DM_type)
   {
     // S.B. 19/09: currently only Dirac supported
     if (DM_type != "D")
@@ -63,23 +49,9 @@ BE_NAMESPACE
     
     // Obtain a dictionary of non-relativistic WCs, given the DM mass and the scale the Lagrangian is specified at.
     pybind11::dict cNRs = WC_EW.attr("_my_cNR")(mDM, scale);
-
-    // Translate from Python dict to vec_strdbl_pairs structure
-    pybind11::list cnrlistk = cNRs.attr("keys")();
-    pybind11::list cnrlistv = cNRs.attr("values")();
-
-    pybind11::str key;
-    pybind11::float_ value;
     
-    vec_strdbl_pairs nonrel_WCs;
-
-    // Go through each key/value pair and append to the vector of non-rel WCs.
-    for (unsigned int i=0; i<len(cnrlistk); i++)
-    {
-      key = cnrlistk[i];
-      value = cnrlistv[i];
-      nonrel_WCs.push_back(std::make_pair(std::string(key), (double)value));
-    }
+    // Cast python dictionary to C++ type known to GAMBIT    
+    map_str_dbl nonrel_WCs = cNRs.cast<map_str_dbl>(); 
 
     return nonrel_WCs;
   }
@@ -88,7 +60,7 @@ BE_NAMESPACE
   /// Requires a dictionary of relatavistic WCs, the DM mass, an integer specifying the number
   /// of quark flavours to match onto, i.e. the 3, 4 or 5 quark flavour scheme, and
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
-  vec_strdbl_pairs get_NR_WCs_flav(pybind11::dict& relativistic_WCs, double& mDM, int& scheme, std::string& DM_type)
+  map_str_dbl get_NR_WCs_flav(map_str_dbl& relativistic_WCs, double& mDM, int& scheme, std::string& DM_type)
   {
     // Only load up 3, 4, 5 flavour scheme.
     if (scheme != 3 || scheme != 4 || scheme != 5)
@@ -96,7 +68,6 @@ BE_NAMESPACE
       backend_error().raise(LOCAL_INFO, "DirectDM quark flavour matching scheme must be for "
         "3, 4 or 5 quark flavors.");
     }
-    vec_strdbl_pairs nonrel_WCs;
 
     // Python dictionary of non-relativistic Wilson Coefficients
     pybind11::dict cNRs;
@@ -119,20 +90,8 @@ BE_NAMESPACE
       cNRs = WC_3f.attr("_my_cNR")(mDM);
     }
 
-    // Translate from Python dict to vec_strdbl_pairs structure
-    pybind11::list cnrlistk = cNRs.attr("keys")();
-    pybind11::list cnrlistv = cNRs.attr("values")();
-
-    pybind11::str key;
-    pybind11::float_ value;
-
-    // Go through each key/value pair and append to the vector of non-rel WCs.
-    for (unsigned int i=0; i<len(cnrlistk); i++)
-    {
-      key = cnrlistk[i];
-      value = cnrlistv[i];
-      nonrel_WCs.push_back(std::make_pair(std::string(key), (double)value));
-    }
+    // Cast python dictionary to C++ type known to GAMBIT    
+    map_str_dbl nonrel_WCs = cNRs.cast<map_str_dbl>(); 
 
     return nonrel_WCs;
   }

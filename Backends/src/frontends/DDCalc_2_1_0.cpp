@@ -117,10 +117,10 @@ BE_INI_FUNCTION
     DDCalc_SetWIMP_mG(WIMP, *Dep::mwimp, DD_couplings.gps,DD_couplings.gns,
                                          DD_couplings.gpa,DD_couplings.gna);
   }
-  // Initialse WIMP object with type vec_strdbl_pairs;
+  // Initialse WIMP object with type std::map<std::string,double>;
   else if (couplings.coeff_structure == 2)
   {
-    vec_strdbl_pairs wilsonCoeffs = couplings.DD_nonrel_WCs;
+    map_str_dbl wilsonCoeffs = couplings.DD_nonrel_WCs;
 
     // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
     DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
@@ -141,7 +141,7 @@ BE_INI_FUNCTION
         tau = 0;
       else
         tau = 1;
-
+        
       DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, it->second);
     }
   }

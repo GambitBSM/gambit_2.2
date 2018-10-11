@@ -312,7 +312,7 @@ namespace Gambit
     /// Obtain the non-relativistic Wilson Coefficients from a set of model
     /// specific relativistic Wilson Coefficients from DirectDM in the flavour
     /// matching scheme (default 5 flavours). NR WCs defined at 2 GeV.
-    void DD_nonrel_WCs_flavscheme(vec_strdbl_pairs &result)
+    void DD_nonrel_WCs_flavscheme(map_str_dbl &result)
     {
       using namespace Pipes::DD_nonrel_WCs_flavscheme;
 
@@ -333,19 +333,16 @@ namespace Gambit
       else if (sDM == 0) { is_SC ? DM_type == "R" : DM_type == "C"; }
 
       // Relativistic Wilson Coefficients
-      vec_strdbl_pairs relativistic_WCs = *Dep::DD_rel_WCs;
-
-      // Convert to a Python dictionary
-      pybind11::dict wc_dict = BEreq::initialise_WC_dict(relativistic_WCs);
+      map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs;
 
       // Get non-relativistic coefficients
-      result = BEreq::get_NR_WCs_flav(wc_dict, mDM, scheme, DM_type);
+      result = BEreq::get_NR_WCs_flav(relativistic_WCs, mDM, scheme, DM_type);
     }
 
     /// Obtain the non-relativistic Wilson Coefficients from a set of model
     /// specific relativistic Wilson Coefficients from DirectDM in the
     /// unbroken SM phase. NR WCs defined at 2 GeV.
-    void DD_nonrel_WCs_EW(vec_strdbl_pairs &result)
+    void DD_nonrel_WCs_EW(map_str_dbl &result)
     {
       using namespace Pipes::DD_nonrel_WCs_EW;
 
@@ -371,14 +368,12 @@ namespace Gambit
       else if (sDM == 0) { is_SC ? DM_type = "R" : DM_type = "C"; }
 
       // Relativistic Wilson Coefficients
-      vec_strdbl_pairs relativistic_WCs = *Dep::DD_rel_WCs;
-      // Convert to a Python dictionary
-      pybind11::dict wc_dict = BEreq::initialise_WC_dict(relativistic_WCs);
-      // Get non-relativistic coefficients
+      map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs;
 
+      // Get non-relativistic coefficients
       /// TODO - How to get hypercharge and SU(2) dimension for these fields!?
       /// Currently just comes from the YAML file. GUM? Process Catalogue?
-      result = BEreq::get_NR_WCs_EW(wc_dict, mDM, dchi, Ychi, scale, DM_type);
+      result = BEreq::get_NR_WCs_EW(relativistic_WCs, mDM, dchi, Ychi, scale, DM_type);
     }
 
     //////////////////////////////////////////////////////////////////////////

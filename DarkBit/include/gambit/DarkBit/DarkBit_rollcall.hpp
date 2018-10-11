@@ -625,7 +625,7 @@ START_MODULE
     // Initialise DDCalc couplings dependent on non-relativistic Wilson Coefficients.
     #define FUNCTION DDCalc_Couplings_NR_WCs
       START_FUNCTION(DD_coupling_container)
-      DEPENDENCY(DD_nonrel_WCs, vec_strdbl_pairs)
+      DEPENDENCY(DD_nonrel_WCs, map_str_dbl)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -709,13 +709,13 @@ START_MODULE
   START_CAPABILITY
 
       #define FUNCTION DD_rel_WCs_MajoranaSingletDM_Z2
-      START_FUNCTION(vec_strdbl_pairs)
+      START_FUNCTION(map_str_dbl)
       DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODEL(MajoranaSingletDM_Z2)
       #undef FUNCTION
 
       #define FUNCTION DD_rel_WCs_DiracSingletDM_Z2
-      START_FUNCTION(vec_strdbl_pairs)
+      START_FUNCTION(map_str_dbl)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODEL(DiracSingletDM_Z2)
       #undef FUNCTION
@@ -728,24 +728,22 @@ START_MODULE
 
       // Flavour matching scheme
       #define FUNCTION DD_nonrel_WCs_flavscheme
-      START_FUNCTION(vec_strdbl_pairs)
-      DEPENDENCY(DD_rel_WCs, vec_strdbl_pairs)
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(DD_rel_WCs, map_str_dbl)
       DEPENDENCY(mwimp, double)
       DEPENDENCY(spinwimpx2, unsigned int)
       DEPENDENCY(wimp_sc, bool)
-      BACKEND_REQ(initialise_WC_dict, (), pybind11::dict, (vec_strdbl_pairs&))
-      BACKEND_REQ(get_NR_WCs_flav, (), vec_strdbl_pairs, (pybind11::dict&, double&, int&, std::string&))
+      BACKEND_REQ(get_NR_WCs_flav, (), map_str_dbl, (map_str_dbl&, double&, int&, std::string&))
       #undef FUNCTION
 
       // Unbroken SM phase
       #define FUNCTION DD_nonrel_WCs_EW
-      START_FUNCTION(vec_strdbl_pairs)
-      DEPENDENCY(DD_rel_WCs, vec_strdbl_pairs)
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(DD_rel_WCs, map_str_dbl)
       DEPENDENCY(mwimp, double)
       DEPENDENCY(spinwimpx2, unsigned int)
       DEPENDENCY(wimp_sc, bool)
-      BACKEND_REQ(initialise_WC_dict, (), pybind11::dict, (vec_strdbl_pairs&))
-      BACKEND_REQ(get_NR_WCs_EW, (), vec_strdbl_pairs, (pybind11::dict&, double&, double&, double&, double&, std::string&))
+      BACKEND_REQ(get_NR_WCs_EW, (), map_str_dbl, (map_str_dbl&, double&, double&, double&, double&, std::string&))
       #undef FUNCTION
 
   #undef CAPABILITY

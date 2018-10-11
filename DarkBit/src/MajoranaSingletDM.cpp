@@ -235,7 +235,7 @@ namespace Gambit
     } // function DD_couplings_MajoranaSingletDM_Z2
     
     /// Relativistic Wilson Coefficients for direct detection
-    void DD_rel_WCs_MajoranaSingletDM_Z2(vec_strdbl_pairs &result)
+    void DD_rel_WCs_MajoranaSingletDM_Z2(map_str_dbl &result)
     {
       using namespace Pipes::DD_rel_WCs_MajoranaSingletDM_Z2;
 
@@ -246,9 +246,9 @@ namespace Gambit
       double xi = spec.get(Par::dimensionless, "xi");
 
       // lambda*cos(xi) XXHH
-      result.push_back(std::make_pair("C53",lambda*std::cos(xi)));
+      result["C53"] = lambda*std::cos(xi);
       // lambda*sin(xi) iXg5XHH
-      result.push_back(std::make_pair("C57",lambda*std::sin(xi)));
+      result["C57"] = lambda*std::sin(xi);
     }
 
     /// Set up process catalog for the MajoranaSingletDM_Z2 model.

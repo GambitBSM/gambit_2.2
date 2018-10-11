@@ -21,11 +21,8 @@
 
 LOAD_LIBRARY
 
-//#include "gambit/Backends/python_variable.hpp"
-
-BE_CONV_FUNCTION(initialise_WC_dict, pybind11::dict, (vec_strdbl_pairs&), "initialise_WC_dict")
-BE_CONV_FUNCTION(get_NR_WCs_flav, vec_strdbl_pairs, (pybind11::dict&, double&, int&, std::string&), "get_NR_WCs_flav")
-BE_CONV_FUNCTION(get_NR_WCs_EW, vec_strdbl_pairs, (pybind11::dict&, double&, double&, double&, double&, std::string&), "get_NR_WCs_EW")
+BE_CONV_FUNCTION(get_NR_WCs_flav, map_str_dbl, (map_str_dbl&, double&, int&, std::string&), "get_NR_WCs_flav")
+BE_CONV_FUNCTION(get_NR_WCs_EW, map_str_dbl, (map_str_dbl&, double&, double&, double&, double&, std::string&), "get_NR_WCs_EW")
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"
