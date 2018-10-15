@@ -689,18 +689,6 @@ START_MODULE
       ALLOW_JOINT_MODEL(nuclear_params_fnq, VectorSingletDM_Z2)
      #undef FUNCTION
 
-     #define FUNCTION DD_couplings_MajoranaSingletDM_Z2
-      START_FUNCTION(DM_nucleon_couplings)
-      DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq, MajoranaSingletDM_Z2)
-     #undef FUNCTION
-
-     #define FUNCTION DD_couplings_DiracSingletDM_Z2
-      START_FUNCTION(DM_nucleon_couplings)
-      DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq, DiracSingletDM_Z2)
-     #undef FUNCTION
-
   #undef CAPABILITY
 
 
@@ -722,11 +710,12 @@ START_MODULE
 
   #undef CAPABILITY
 
-  // Determine the non-relativistic Wilson coefficients from the relativistic ones, using DirectDM.
+  // Non-relativistic Wilson coefficients
   #define CAPABILITY DD_nonrel_WCs
   START_CAPABILITY
 
-      // Flavour matching scheme
+      // Get non-relativistic WCs from the relativistic ones, using DirectDM.
+      // Using flavour matching scheme.
       #define FUNCTION DD_nonrel_WCs_flavscheme
       START_FUNCTION(map_str_dbl)
       DEPENDENCY(DD_rel_WCs, map_str_dbl)
@@ -736,7 +725,8 @@ START_MODULE
       BACKEND_REQ(get_NR_WCs_flav, (), map_str_dbl, (map_str_dbl&, double&, int&, std::string&))
       #undef FUNCTION
 
-      // Unbroken SM phase
+      // Get non-relativistic WCs from the relativistic ones, using DirectDM.
+      // Using unbroken SM phase.
       #define FUNCTION DD_nonrel_WCs_EW
       START_FUNCTION(map_str_dbl)
       DEPENDENCY(DD_rel_WCs, map_str_dbl)
@@ -744,6 +734,18 @@ START_MODULE
       DEPENDENCY(spinwimpx2, unsigned int)
       DEPENDENCY(wimp_sc, bool)
       BACKEND_REQ(get_NR_WCs_EW, (), map_str_dbl, (map_str_dbl&, double&, double&, double&, double&, std::string&))
+      #undef FUNCTION
+      
+      // Non-relativistic WCs computed directly for fermionic Higgs portal models.
+      #define FUNCTION DD_nonrel_WCs_DiracSingletDM_Z2
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
+      ALLOW_JOINT_MODEL(nuclear_params_fnq, DiracSingletDM_Z2)
+      #undef FUNCTION
+      #define FUNCTION DD_nonrel_WCs_MajoranaSingletDM_Z2
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
+      ALLOW_JOINT_MODEL(nuclear_params_fnq, MajoranaSingletDM_Z2)
       #undef FUNCTION
 
   #undef CAPABILITY

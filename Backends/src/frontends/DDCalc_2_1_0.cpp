@@ -124,7 +124,7 @@ BE_INI_FUNCTION
 
     // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
     DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
-
+    
     int OpIndex, tau;
     std::string OpName;
 
@@ -141,7 +141,7 @@ BE_INI_FUNCTION
         tau = 0;
       else
         tau = 1;
-        
+                
       DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, it->second);
     }
   }

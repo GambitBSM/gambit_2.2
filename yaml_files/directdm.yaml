@@ -20,12 +20,12 @@ Parameters:
     #mV: 50
     #lV: 0.01
 
-  #nuclear_params_sigmas_sigmal:
-    #sigmas: 43
-    #sigmal: 50
-    #deltau: 0.842
-    #deltad: -0.427
-    #deltas: -0.085
+  nuclear_params_sigmas_sigmal:
+    sigmas: 43
+    sigmal: 50
+    deltau: 0.842
+    deltad: -0.427
+    deltas: -0.085
 
   Halo_gNFW_rho0:
     rho0: 0.4
@@ -66,13 +66,14 @@ Rules:
 
   - capability: DDCalc_Couplings
     function: DDCalc_Couplings_NR_WCs
-
+    
   - capability: DD_nonrel_WCs
-    function: DD_nonrel_WCs_EW
-    options:
-      scale: 100
-      Ychi: 0
-      dchi: 1
+    function: DD_nonrel_WCs_DiracSingletDM_Z2
+    #function: DD_nonrel_WCs_EW
+    #options:
+      #scale: 100
+      #Ychi: 0
+      #dchi: 1
 
 
 
