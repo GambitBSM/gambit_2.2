@@ -241,11 +241,6 @@ Logger:
   redirection:
     [Debug] : "debug.log"
     [Default] : "default.log"
-    [DecayBit] : "DecayBit.log"
-    [DarkBit] : "DarkBit.log"
-    [PrecisionBit] : "PrecisionBit.log"
-    [FlavBit] : "FlavBit.log"
-    [ColliderBit] : "ColliderBit.log"
     [SpecBit] : "SpecBit.log"
     [Dependency Resolver] : "dep_resolver.log"
 

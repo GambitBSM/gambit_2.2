@@ -63,7 +63,7 @@ namespace Gambit
             const Options& runOptions=*myPipe::runOptions;
 
 
-            std::string vevaciouslibpath = Backends::backendInfo().path_dir("VevaciousPlusPlus","1.0");
+            std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious","1.0");
 
             vevaciouspath = vevaciouslibpath + "/../";
 
@@ -122,7 +122,7 @@ namespace Gambit
                 // Options that can be read from YAML file
                 std::string potentialminimizerinitpath = vevaciouspath +
                 "/InitializationFiles/DefaultObjectInitializationFiles/PotentialMinimizerInitialization.xml";
-                std::string PathToHom4ps2 = Backends::backendInfo().path_dir("HOM4PS","2.0");
+                std::string PathToHom4ps2 = Backends::backendInfo().path_dir("hom4ps","2.0");
 
                 // File contents
                 std::string potentialminimizerinit =
@@ -149,7 +149,7 @@ namespace Gambit
                     "            </ClassType>\n"
                     "            <ConstructorArguments>\n"
                     "              <PathToHom4ps2>\n"
-                    "        " + PathToHom4ps2 + "\n"
+                    "        " + PathToHom4ps2  +"\n"
                     "              </PathToHom4ps2>\n"
                     "              <Hom4ps2Argument>\n"
                     "                1\n"
@@ -347,7 +347,7 @@ namespace Gambit
         // Initilization of Vevacious Object
 
         std::string inputFilename = vevaciouspath + "InitializationFiles/VevaciousPlusPlusDefaultObjectInitialization.xml";
-        VevaciousPlusPlus_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
+        vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
 
         // Get the spectrum object for MSSM
 
