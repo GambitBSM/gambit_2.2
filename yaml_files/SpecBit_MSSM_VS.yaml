@@ -175,6 +175,7 @@ Rules:
   - capability: make_vevaciousPlusPlus_inputs
     options:
       tunneling_strategy: JustQuantum
+      homotopy_backend: phc
 
   # Globally permit maximal mixing between gauge and family eigenstates
   - options:

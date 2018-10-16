@@ -116,76 +116,161 @@ namespace Gambit
                 std::ofstream potentialfunctioninitwrite(potentialfunctioninitpath);
                 potentialfunctioninitwrite << potentialfunctioninit;
                 potentialfunctioninitwrite.close();
+                // Check whether user wants hom4ps2 or PHC as homotopy continuation backend
+
+
 
                 // Writing potential minimizer initialization file
 
-                // Options that can be read from YAML file
+                // Options that can be read from YAML file go here
+                std::string homotopybackend = runOptions.getValueOrDef<std::string>("hom4ps",
+                                                                                      "homotopy_backend");
                 std::string potentialminimizerinitpath = vevaciouspath +
-                "/InitializationFiles/DefaultObjectInitializationFiles/PotentialMinimizerInitialization.xml";
-                std::string PathToHom4ps2 = Backends::backendInfo().path_dir("hom4ps","2.0");
+                                                         "/InitializationFiles/DefaultObjectInitializationFiles/PotentialMinimizerInitialization.xml";
+                std::string potentialminimizerinit;
 
-                // File contents
-                std::string potentialminimizerinit =
-                    "<VevaciousPlusPlusPotentialMinimizerInitialization>\n"
-                    "  <PotentialMinimizerClass>\n"
-                    "    <ClassType>\n"
-                    "      GradientFromStartingPoints\n"
-                    "    </ClassType>\n"
-                    "    <ConstructorArguments>\n"
-                    "      <StartingPointFinderClass>\n"
-                    "        <ClassType>\n"
-                    "          PolynomialAtFixedScalesSolver\n"
-                    "        </ClassType>\n"
-                    "        <ConstructorArguments>\n"
-                    "          <NumberOfScales>\n"
-                    "            1\n"
-                    "          </NumberOfScales>\n"
-                    "          <ReturnOnlyPolynomialMinima>\n"
-                    "            No\n"
-                    "          </ReturnOnlyPolynomialMinima>\n"
-                    "          <PolynomialSystemSolver>\n"
-                    "            <ClassType>\n"
-                    "              Hom4ps2Runner\n"
-                    "            </ClassType>\n"
-                    "            <ConstructorArguments>\n"
-                    "              <PathToHom4ps2>\n"
-                    "        " + PathToHom4ps2  +"\n"
-                    "              </PathToHom4ps2>\n"
-                    "              <Hom4ps2Argument>\n"
-                    "                1\n"
-                    "              </Hom4ps2Argument>\n"
-                    "              <ResolutionSize>\n"
-                    "                1.0\n"
-                    "              </ResolutionSize>\n"
-                    "            </ConstructorArguments>\n"
-                    "          </PolynomialSystemSolver>\n"
-                    "        </ConstructorArguments>\n"
-                    "      </StartingPointFinderClass>\n"
-                    "      <GradientMinimizerClass>\n"
-                    "        <ClassType>\n"
-                    "          MinuitPotentialMinimizer\n"
-                    "        </ClassType>\n"
-                    "        <ConstructorArguments>\n"
-                    "          <InitialStepSizeFraction>\n"
-                    "            0.1\n"
-                    "          </InitialStepSizeFraction>\n"
-                    "          <MinimumInitialStepSize>\n"
-                    "            1.0\n"
-                    "          </MinimumInitialStepSize>\n"
-                    "          <MinuitStrategy>\n"
-                    "            0\n"
-                    "          </MinuitStrategy>\n"
-                    "        </ConstructorArguments>\n"
-                    "      </GradientMinimizerClass>\n"
-                    "      <ExtremumSeparationThresholdFraction>\n"
-                    "        0.05\n"
-                    "      </ExtremumSeparationThresholdFraction>\n"
-                    "      <NonDsbRollingToDsbScalingFactor>\n"
-                    "        4.0\n"
-                    "      </NonDsbRollingToDsbScalingFactor>\n"
-                    "    </ConstructorArguments>\n"
-                    "  </PotentialMinimizerClass>\n"
-                    "</VevaciousPlusPlusObjectInitialization>\n";
+                if(homotopybackend == "hom4ps") {
+
+                    // Getting Path to hom4ps2
+
+                    std::string PathToHom4ps2 = Backends::backendInfo().path_dir("hom4ps", "2.0");
+
+                    // File contents
+                    potentialminimizerinit =
+                            "<VevaciousPlusPlusPotentialMinimizerInitialization>\n"
+                            "  <PotentialMinimizerClass>\n"
+                            "    <ClassType>\n"
+                            "      GradientFromStartingPoints\n"
+                            "    </ClassType>\n"
+                            "    <ConstructorArguments>\n"
+                            "      <StartingPointFinderClass>\n"
+                            "        <ClassType>\n"
+                            "          PolynomialAtFixedScalesSolver\n"
+                            "        </ClassType>\n"
+                            "        <ConstructorArguments>\n"
+                            "          <NumberOfScales>\n"
+                            "            1\n"
+                            "          </NumberOfScales>\n"
+                            "          <ReturnOnlyPolynomialMinima>\n"
+                            "            No\n"
+                            "          </ReturnOnlyPolynomialMinima>\n"
+                            "          <PolynomialSystemSolver>\n"
+                            "            <ClassType>\n"
+                            "              Hom4ps2Runner\n"
+                            "            </ClassType>\n"
+                            "            <ConstructorArguments>\n"
+                            "              <PathToHom4ps2>\n"
+                            "        " + PathToHom4ps2 + "\n"
+                             "              </PathToHom4ps2>\n"
+                             "              <Hom4ps2Argument>\n"
+                             "                1\n"
+                             "              </Hom4ps2Argument>\n"
+                             "              <ResolutionSize>\n"
+                             "                1.0\n"
+                             "              </ResolutionSize>\n"
+                             "            </ConstructorArguments>\n"
+                             "          </PolynomialSystemSolver>\n"
+                             "        </ConstructorArguments>\n"
+                             "      </StartingPointFinderClass>\n"
+                             "      <GradientMinimizerClass>\n"
+                             "        <ClassType>\n"
+                             "          MinuitPotentialMinimizer\n"
+                             "        </ClassType>\n"
+                             "        <ConstructorArguments>\n"
+                             "          <InitialStepSizeFraction>\n"
+                             "            0.1\n"
+                             "          </InitialStepSizeFraction>\n"
+                             "          <MinimumInitialStepSize>\n"
+                             "            1.0\n"
+                             "          </MinimumInitialStepSize>\n"
+                             "          <MinuitStrategy>\n"
+                             "            0\n"
+                             "          </MinuitStrategy>\n"
+                             "        </ConstructorArguments>\n"
+                             "      </GradientMinimizerClass>\n"
+                             "      <ExtremumSeparationThresholdFraction>\n"
+                             "        0.05\n"
+                             "      </ExtremumSeparationThresholdFraction>\n"
+                             "      <NonDsbRollingToDsbScalingFactor>\n"
+                             "        4.0\n"
+                             "      </NonDsbRollingToDsbScalingFactor>\n"
+                             "    </ConstructorArguments>\n"
+                             "  </PotentialMinimizerClass>\n"
+                             "</VevaciousPlusPlusObjectInitialization>\n";
+                } else if(homotopybackend == "phc") {
+
+                    // Getting path to PHC
+                    std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
+                    cout << "PHC path:  "<< PathToPHC << endl;
+
+                    // File contents
+                    potentialminimizerinit =
+                            "<VevaciousPlusPlusPotentialMinimizerInitialization>\n"
+                            "  <PotentialMinimizerClass>\n"
+                            "    <ClassType>\n"
+                            "      GradientFromStartingPoints\n"
+                            "    </ClassType>\n"
+                            "    <ConstructorArguments>\n"
+                            "      <StartingPointFinderClass>\n"
+                            "        <ClassType>\n"
+                            "          PolynomialAtFixedScalesSolver\n"
+                            "        </ClassType>\n"
+                            "        <ConstructorArguments>\n"
+                            "          <NumberOfScales>\n"
+                            "            1\n"
+                            "          </NumberOfScales>\n"
+                            "          <ReturnOnlyPolynomialMinima>\n"
+                            "            No\n"
+                            "          </ReturnOnlyPolynomialMinima>\n"
+                            "          <PolynomialSystemSolver>\n"
+                            "            <ClassType>\n"
+                            "              PHCRunner\n"
+                            "            </ClassType>\n"
+                            "            <ConstructorArguments>\n"
+                            "              <PathToPHC>\n"
+                            "        " + PathToPHC + "/" + "\n"
+                             "              </PathToPHC>\n"
+                             "              <ResolutionSize>\n"
+                             "                1.0\n"
+                             "              </ResolutionSize>\n"
+                             "            <Tasks>\n "
+                             "             1                     "
+                             "            </Tasks>\n            "
+                             "            </ConstructorArguments>\n"
+                             "          </PolynomialSystemSolver>\n"
+                             "        </ConstructorArguments>\n"
+                             "      </StartingPointFinderClass>\n"
+                             "      <GradientMinimizerClass>\n"
+                             "        <ClassType>\n"
+                             "          MinuitPotentialMinimizer\n"
+                             "        </ClassType>\n"
+                             "        <ConstructorArguments>\n"
+                             "          <InitialStepSizeFraction>\n"
+                             "            0.1\n"
+                             "          </InitialStepSizeFraction>\n"
+                             "          <MinimumInitialStepSize>\n"
+                             "            1.0\n"
+                             "          </MinimumInitialStepSize>\n"
+                             "          <MinuitStrategy>\n"
+                             "            0\n"
+                             "          </MinuitStrategy>\n"
+                             "        </ConstructorArguments>\n"
+                             "      </GradientMinimizerClass>\n"
+                             "      <ExtremumSeparationThresholdFraction>\n"
+                             "        0.05\n"
+                             "      </ExtremumSeparationThresholdFraction>\n"
+                             "      <NonDsbRollingToDsbScalingFactor>\n"
+                             "        4.0\n"
+                             "      </NonDsbRollingToDsbScalingFactor>\n"
+                             "    </ConstructorArguments>\n"
+                             "  </PotentialMinimizerClass>\n"
+                             "</VevaciousPlusPlusObjectInitialization>\n";
+                } else
+                {
+                    std::ostringstream errmsg;
+                    errmsg << "The homotopy_backend option in the YAML file has not been set up properly. Check the input YAML file." << std::endl;
+                    SpecBit_error().raise(LOCAL_INFO,errmsg.str());
+                }
 
                 std::ofstream potentialminimizerinitwrite(potentialminimizerinitpath);
                 potentialminimizerinitwrite << potentialminimizerinit;
