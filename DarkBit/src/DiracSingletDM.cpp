@@ -223,11 +223,11 @@ namespace Gambit
       double app = lambda*fp*m_proton*sinXI/pow(mh,2);
       double apn = lambda*fn*m_neutron*sinXI/pow(mh,2);
       
-      result["cNR1p"] = (fsp+fsn);
-      result["cNR1n"] = (fsp-fsn);
-      result["cNR11p"] = (app+apn)*m_proton/mass;
-      result["cNR11n"] = (app-apn)*m_proton/mass;
-      
+      result["cNR1p"] = fsp;
+      result["cNR1n"] = fsn;
+      result["cNR11p"] = app*m_proton/mass;
+      result["cNR11n"] = apn*m_proton/mass;
+
     } // function DD_couplings_DiracSingletDM_Z2
     
     /// Relativistic Wilson Coefficients for direct detection
