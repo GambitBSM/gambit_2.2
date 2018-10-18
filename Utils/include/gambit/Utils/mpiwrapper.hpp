@@ -55,6 +55,7 @@
 
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/local_info.hpp"
+#include "gambit/Utils/util_macros.hpp"
 
 // I wanted to keep the GAMBIT logger separate from this code so that it
 // would be more streamlined for using elsewhere. But the logger is very
@@ -64,10 +65,10 @@
 #define USE_GAMBIT_LOGGER
 
 #ifdef USE_GAMBIT_LOGGER
-#include "gambit/Logs/logger.hpp"
-#define LOGGER logger() << LogTags::utils << LogTags::info
+  #include "gambit/Logs/logger.hpp"
+  #define LOGGER logger() << LogTags::utils << LogTags::info
 #else
-#define LOGGER std::cerr
+  #define LOGGER std::cerr
   #define EOM std::endl
 #endif
 
@@ -100,70 +101,70 @@
 namespace Gambit
 {
 
-    namespace GMPI
-    {
+   namespace GMPI
+   {
 
-        /// Mapping from (basic) C++ types to MPI datatypes
-        /// Based on of "get_hdf5_data_type" in hdf5tools.hpp
-        /// Base template is left undefined in order to raise
-        /// a compile error if specialisation doesn't exist.
-        template<typename T, typename Enable=void>
-        struct get_mpi_data_type;
+      /// Mapping from (basic) C++ types to MPI datatypes
+      /// Based on of "get_hdf5_data_type" in hdf5tools.hpp
+      /// Base template is left undefined in order to raise
+      /// a compile error if specialisation doesn't exist.
+      template<typename T, typename Enable=void>
+      struct get_mpi_data_type;
 
-        /// Overload to work with arrays
-        template<typename T, size_t SIZE>
-        struct get_mpi_data_type<T[SIZE]> { static MPI_Datatype type() { return get_mpi_data_type<T>::type(); } };
+      /// Overload to work with arrays
+      template<typename T, size_t SIZE>
+      struct get_mpi_data_type<T[SIZE]> { static MPI_Datatype type() { return get_mpi_data_type<T>::type(); } };
 
-        /// True types
-        /// @{
-        template<> struct get_mpi_data_type<char>              { static MPI_Datatype type() { return MPI_CHAR;               } };
-        template<> struct get_mpi_data_type<short>             { static MPI_Datatype type() { return MPI_SHORT;              } };
-        template<> struct get_mpi_data_type<int>               { static MPI_Datatype type() { return MPI_INT;                } };
-        template<> struct get_mpi_data_type<long>              { static MPI_Datatype type() { return MPI_LONG;               } };
-        template<> struct get_mpi_data_type<long long>         { static MPI_Datatype type() { return MPI_LONG_LONG;          } };
-        template<> struct get_mpi_data_type<unsigned char>     { static MPI_Datatype type() { return MPI_UNSIGNED_CHAR;      } };
-        template<> struct get_mpi_data_type<unsigned short>    { static MPI_Datatype type() { return MPI_UNSIGNED_SHORT;     } };
-        template<> struct get_mpi_data_type<unsigned int>      { static MPI_Datatype type() { return MPI_UNSIGNED;           } };
-        template<> struct get_mpi_data_type<unsigned long>     { static MPI_Datatype type() { return MPI_UNSIGNED_LONG;      } };
-        template<> struct get_mpi_data_type<unsigned long long>{ static MPI_Datatype type() { return MPI_UNSIGNED_LONG_LONG; } };
-        template<> struct get_mpi_data_type<float>             { static MPI_Datatype type() { return MPI_FLOAT;              } };
-        template<> struct get_mpi_data_type<double>            { static MPI_Datatype type() { return MPI_DOUBLE;             } };
-        template<> struct get_mpi_data_type<long double>       { static MPI_Datatype type() { return MPI_LONG_DOUBLE;        } };
-        /// @}
+      /// True types
+      /// @{
+      template<> struct get_mpi_data_type<char>              { static MPI_Datatype type() { return MPI_CHAR;               } };
+      template<> struct get_mpi_data_type<short>             { static MPI_Datatype type() { return MPI_SHORT;              } };
+      template<> struct get_mpi_data_type<int>               { static MPI_Datatype type() { return MPI_INT;                } };
+      template<> struct get_mpi_data_type<long>              { static MPI_Datatype type() { return MPI_LONG;               } };
+      template<> struct get_mpi_data_type<long long>         { static MPI_Datatype type() { return MPI_LONG_LONG;          } };
+      template<> struct get_mpi_data_type<unsigned char>     { static MPI_Datatype type() { return MPI_UNSIGNED_CHAR;      } };
+      template<> struct get_mpi_data_type<unsigned short>    { static MPI_Datatype type() { return MPI_UNSIGNED_SHORT;     } };
+      template<> struct get_mpi_data_type<unsigned int>      { static MPI_Datatype type() { return MPI_UNSIGNED;           } };
+      template<> struct get_mpi_data_type<unsigned long>     { static MPI_Datatype type() { return MPI_UNSIGNED_LONG;      } };
+      template<> struct get_mpi_data_type<unsigned long long>{ static MPI_Datatype type() { return MPI_UNSIGNED_LONG_LONG; } };
+      template<> struct get_mpi_data_type<float>             { static MPI_Datatype type() { return MPI_FLOAT;              } };
+      template<> struct get_mpi_data_type<double>            { static MPI_Datatype type() { return MPI_DOUBLE;             } };
+      template<> struct get_mpi_data_type<long double>       { static MPI_Datatype type() { return MPI_LONG_DOUBLE;        } };
+      /// @}
 
-        /// Typedef'd types; enabled only where they differ from the true types, and where the relevant constants have been
-        /// defined in the linked MPI implementation.
-        /// @{
-#ifdef MPI_INT8_T
+      /// Typedef'd types; enabled only where they differ from the true types, and where the relevant constants have been
+      /// defined in the linked MPI implementation.
+      /// @{
+      #ifdef MPI_INT8_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(int8_t,   MPI_INT8_T  )
-#endif
-#ifdef MPI_UINT8_T
+      #endif
+      #ifdef MPI_UINT8_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(uint8_t,  MPI_UINT8_T )
-#endif
-#ifdef MPI_INT16_T
+      #endif
+      #ifdef MPI_INT16_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(int16_t,  MPI_INT16_T )
-#endif
-#ifdef MPI_UINT16_T
+      #endif
+      #ifdef MPI_UINT16_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(uint16_t, MPI_UINT16_T)
-#endif
-#ifdef MPI_INT32_T
+      #endif
+      #ifdef MPI_INT32_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(int32_t,  MPI_INT32_T )
-#endif
-#ifdef MPI_UINT32_T
+      #endif
+      #ifdef MPI_UINT32_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(uint32_t, MPI_UINT32_T)
-#endif
-#ifdef MPI_INT64_T
+      #endif
+      #ifdef MPI_INT64_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(int64_t,  MPI_INT64_T )
-#endif
-#ifdef MPI_UINT64_T
+      #endif
+      #ifdef MPI_UINT64_T
         SPECIALISE_MPI_DATA_TYPE_IF_NEEDED(uint64_t, MPI_UINT64_T)
-#endif
-        /// @}
+      #endif
+      /// @}
 
-        /// Main "Communicator" class
-        class Comm
-        {
-        public:
+      /// Main "Communicator" class
+      class EXPORT_SYMBOLS Comm
+      {
+         public:
             /// Default Constructor; attaches to MPI_COMM_WORLD
             Comm();
 
@@ -192,22 +193,22 @@ namespace Gambit
             /// Prevent further executation until all members of the bound communicator group enter the call
             void Barrier()
             {
-#ifdef MPI_MSG_DEBUG
-                std::cout<<"rank "<<Get_rank()<<": Barrier() called"<<std::endl;
-#endif
+              #ifdef MPI_MSG_DEBUG
+              std::cout<<"rank "<<Get_rank()<<": Barrier() called"<<std::endl;
+              #endif
 
-                int errflag;
-                errflag = MPI_Barrier(boundcomm);
-                if(errflag!=0) {
-                    std::ostringstream errmsg;
-                    errmsg << "Error performing MPI_Barrier! Received error flag: "<<errflag;
-                    utils_error().raise(LOCAL_INFO, errmsg.str());
-                }
+              int errflag;
+              errflag = MPI_Barrier(boundcomm);
+              if(errflag!=0) {
+                 std::ostringstream errmsg;
+                 errmsg << "Error performing MPI_Barrier! Received error flag: "<<errflag;
+                 utils_error().raise(LOCAL_INFO, errmsg.str());
+              }
 
-#ifdef MPI_MSG_DEBUG
-                std::cout<<"rank "<<Get_rank()<<": Barrier() passed"<<std::endl;
-#endif
-            }
+              #ifdef MPI_MSG_DEBUG
+              std::cout<<"rank "<<Get_rank()<<": Barrier() passed"<<std::endl;
+              #endif
+           }
 
             /// Blocking receive
             ///  void*        buf      - memory address in which to store received message
@@ -219,23 +220,23 @@ namespace Gambit
             /// Returns:
             ///  MPI_status - struct containing data about the received message
             void Recv(void *buf /*out*/, int count, MPI_Datatype datatype,
-                      int source, int tag,
-                      MPI_Status *in_status=NULL /*out*/)
+                                  int source, int tag,
+                                  MPI_Status *in_status=NULL /*out*/)
             {
-#ifdef MPI_MSG_DEBUG
-                std::cout<<"rank "<<Get_rank()<<": Recv() called (count="<<count<<", source="<<source<<", tag="<<tag<<")"<<std::endl;
-#endif
-                int errflag;
-                errflag = MPI_Recv(buf, count, datatype, source, tag, boundcomm, in_status == NULL ? MPI_STATUS_IGNORE : in_status);
-                if(errflag!=0)
-                {
-                    std::ostringstream errmsg;
-                    errmsg << "Error performing MPI_Recv! Received error flag: "<<errflag;
-                    utils_error().raise(LOCAL_INFO, errmsg.str());
-                }
-#ifdef MPI_MSG_DEBUG
-                std::cout<<"rank "<<Get_rank()<<": Recv() finished "<<std::endl;
-#endif
+              #ifdef MPI_MSG_DEBUG
+              std::cout<<"rank "<<Get_rank()<<": Recv() called (count="<<count<<", source="<<source<<", tag="<<tag<<")"<<std::endl;
+              #endif
+              int errflag;
+              errflag = MPI_Recv(buf, count, datatype, source, tag, boundcomm, in_status == NULL ? MPI_STATUS_IGNORE : in_status);
+              if(errflag!=0)
+              {
+                std::ostringstream errmsg;
+                errmsg << "Error performing MPI_Recv! Received error flag: "<<errflag;
+                utils_error().raise(LOCAL_INFO, errmsg.str());
+              }
+              #ifdef MPI_MSG_DEBUG
+              std::cout<<"rank "<<Get_rank()<<": Recv() finished "<<std::endl;
+              #endif
             }
 
             /// Templated blocking receive to automatically determine types
@@ -244,27 +245,27 @@ namespace Gambit
                       int source, int tag,
                       MPI_Status *status=NULL /*out*/)
             {
-                static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
-                Recv(buf, count, datatype, source, tag, status);
+               static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
+               Recv(buf, count, datatype, source, tag, status);
             }
 
             /// Blocking send
             void Send(void *buf, int count, MPI_Datatype datatype,
-                      int destination, int tag)
+                                  int destination, int tag)
             {
-#ifdef MPI_MSG_DEBUG
-                std::cout<<"rank "<<Get_rank()<<": Send() called (count="<<count<<", destination="<<destination<<", tag="<<tag<<")"<<std::endl;
-#endif
-                int errflag;
-                errflag = MPI_Send(buf, count, datatype, destination, tag, boundcomm);
-                if(errflag!=0) {
-                    std::ostringstream errmsg;
-                    errmsg << "Error performing MPI_Send! Received error flag: "<<errflag;
-                    utils_error().raise(LOCAL_INFO, errmsg.str());
-                }
-#ifdef MPI_MSG_DEBUG
-                std::cout<<"rank "<<Get_rank()<<": Send() finished"<<std::endl;
-#endif
+               #ifdef MPI_MSG_DEBUG
+               std::cout<<"rank "<<Get_rank()<<": Send() called (count="<<count<<", destination="<<destination<<", tag="<<tag<<")"<<std::endl;
+               #endif
+               int errflag;
+               errflag = MPI_Send(buf, count, datatype, destination, tag, boundcomm);
+               if(errflag!=0) {
+                 std::ostringstream errmsg;
+                 errmsg << "Error performing MPI_Send! Received error flag: "<<errflag;
+                 utils_error().raise(LOCAL_INFO, errmsg.str());
+               }
+               #ifdef MPI_MSG_DEBUG
+               std::cout<<"rank "<<Get_rank()<<": Send() finished"<<std::endl;
+               #endif
             }
 
             /// Templated blocking send
@@ -272,36 +273,36 @@ namespace Gambit
             void Send(T *buf, int count,
                       int destination, int tag)
             {
-                static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
-                Send(buf, count, datatype, destination, tag);
+               static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
+               Send(buf, count, datatype, destination, tag);
             }
 
 
             /// Non-blocking send
             void Isend(void *buf, int count, MPI_Datatype datatype,
-                       int destination, int tag,
-                       MPI_Request *request /*out*/)
+                                  int destination, int tag,
+                                  MPI_Request *request /*out*/)
             {
-#ifdef MPI_MSG_DEBUG
-                std::cerr<<"rank "<<Get_rank()<<": Isend() called (count="<<count<<", destination="<<destination<<", tag="<<tag<<")"<<std::endl;
-#endif
-                int errflag;
-                errflag = MPI_Isend(buf, count, datatype, destination, tag, boundcomm, request);
-                if(errflag!=0) {
-                    std::ostringstream errmsg;
-                    errmsg << "Error performing MPI_Isend! Received error flag: "<<errflag;
-                    utils_error().raise(LOCAL_INFO, errmsg.str());
-                }
+              #ifdef MPI_MSG_DEBUG
+              std::cerr<<"rank "<<Get_rank()<<": Isend() called (count="<<count<<", destination="<<destination<<", tag="<<tag<<")"<<std::endl;
+              #endif
+              int errflag;
+               errflag = MPI_Isend(buf, count, datatype, destination, tag, boundcomm, request);
+               if(errflag!=0) {
+                 std::ostringstream errmsg;
+                 errmsg << "Error performing MPI_Isend! Received error flag: "<<errflag;
+                 utils_error().raise(LOCAL_INFO, errmsg.str());
+               }
             }
 
             /// Templated Non-blocking send
             template<class T>
             void Isend(T *buf, int count,
-                       int destination, int tag,
-                       MPI_Request *request /*out*/)
+                      int destination, int tag,
+                      MPI_Request *request /*out*/)
             {
-                static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
-                Isend(buf, count, datatype, destination, tag, request);
+               static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
+               Isend(buf, count, datatype, destination, tag, request);
             }
 
             /// Blocking wait for e.g. Isend to complete
@@ -313,59 +314,59 @@ namespace Gambit
             // Probe for messages waiting to be delivered
             bool Iprobe(int source, int tag, MPI_Status* in_status=NULL /*out*/)
             {
-                //#ifdef MPI_MSG_DEBUG
-                //std::cout<<"rank "<<Get_rank()<<": Iprobe() called (source="<<source<<", tag="<<tag<<")"<<std::endl;
-                //#endif
-                int errflag;
-                int you_have_mail; // C does not have a bool type...
-                MPI_Status def_status;
-                MPI_Status* status;
-                if(in_status!=NULL) {
-                    status = in_status;
-                } else {
-                    status = &def_status;
-                }
-                MPI_Iprobe(source, 1, boundcomm, &you_have_mail, status);
-                errflag = MPI_Iprobe(source, tag, boundcomm, &you_have_mail, status);
-                if(errflag!=0) {
-                    std::ostringstream errmsg;
-                    errmsg << "Error performing MPI_Iprobe! Received error flag: "<<errflag;
-                    utils_error().raise(LOCAL_INFO, errmsg.str());
-                }
-#ifdef MPI_MSG_DEBUG
-                if(you_have_mail!=0) {
+              //#ifdef MPI_MSG_DEBUG
+              //std::cout<<"rank "<<Get_rank()<<": Iprobe() called (source="<<source<<", tag="<<tag<<")"<<std::endl;
+              //#endif
+               int errflag;
+               int you_have_mail; // C does not have a bool type...
+               MPI_Status def_status;
+               MPI_Status* status;
+               if(in_status!=NULL) {
+                 status = in_status;
+               } else {
+                 status = &def_status;
+               }
+               MPI_Iprobe(source, 1, boundcomm, &you_have_mail, status);
+               errflag = MPI_Iprobe(source, tag, boundcomm, &you_have_mail, status);
+               if(errflag!=0) {
+                 std::ostringstream errmsg;
+                 errmsg << "Error performing MPI_Iprobe! Received error flag: "<<errflag;
+                 utils_error().raise(LOCAL_INFO, errmsg.str());
+               }
+               #ifdef MPI_MSG_DEBUG
+               if(you_have_mail!=0) {
                      std::cerr<<"rank "<<Get_rank()<<": Iprobe: Message waiting from process "<<status->MPI_SOURCE<<std::endl;
                }
-#endif
-                return (you_have_mail != 0);
+               #endif
+               return (you_have_mail != 0);
             }
 
             // Perform an Isend to all other processes
             // (using templated non-blocking send repeatedly)
             template<class T>
             void IsendToAll(T *buf, int count, int tag,
-                            MPI_Request *in_req=NULL /*out*/)
+                      MPI_Request *in_req=NULL /*out*/)
             {
-                MPI_Request def_req;
-                MPI_Request* req;
-                if(in_req!=NULL) {
-                    req = in_req;
-                } else {
-                    req = &def_req;
-                }
-                int rank = Get_rank();
-                int size = Get_size();
-                for(int i=0; i<size; i++)
-                {
-                    if(i!=rank) Isend(buf, count, i, tag, req);
-                }
+               MPI_Request def_req;
+               MPI_Request* req;
+               if(in_req!=NULL) {
+                 req = in_req;
+               } else {
+                 req = &def_req;
+               }
+               int rank = Get_rank();
+               int size = Get_size();
+               for(int i=0; i<size; i++)
+               {
+                  if(i!=rank) Isend(buf, count, i, tag, req);
+               }
             }
 
             template <typename T>
-            void Bcast (T &buffer, int count, int root)
+            void Bcast (T &buffer, int count, int root) 
             {
                 static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
-
+                
                 MPI_Bcast (&buffer, count, datatype, root, boundcomm);
             }
 
@@ -392,8 +393,8 @@ namespace Gambit
             // for messages that will never arrive).
             void Abort()
             {
-                std::cerr << "rank "<<Get_rank()<<": Issuing MPI_Abort command, attempting to terminate all processes..." << std::endl;
-                MPI_Abort(boundcomm, 1);
+              std::cerr << "rank "<<Get_rank()<<": Issuing MPI_Abort command, attempting to terminate all processes..." << std::endl;
+              MPI_Abort(boundcomm, 1);
             }
 
             /// Tells master to wait until all other processes pass this function, with the specified MPI tag
@@ -426,30 +427,30 @@ namespace Gambit
             template<class T>
             void Recv_all(T* buffer, int size, int source, int tag, int max_loops)
             {
-                int loop = 0;
+              int loop = 0;
 
-                MPI_Status status;
-                while(loop<max_loops and Iprobe(source, tag, &status))
-                {
-#ifdef SIGNAL_DEBUG
-                    LOGGER << "Detected message from process "<<status.MPI_SOURCE<<" with tag "<<status.MPI_TAG<<"; doing Recv" << EOM;
-#endif
-                    MPI_Status recv_status;
-                    Recv(buffer, size, status.MPI_SOURCE, status.MPI_TAG, &recv_status);
-#ifdef SIGNAL_DEBUG
-                    LOGGER << "Received message from process "<<status.MPI_SOURCE<<" with tag "<<status.MPI_TAG<<". Discarding any existing message in the output buffer as obsolete..." << EOM;
-#endif
-                    ++loop;
-                }
+              MPI_Status status;
+              while(loop<max_loops and Iprobe(source, tag, &status))
+              {
+                #ifdef SIGNAL_DEBUG
+                LOGGER << "Detected message from process "<<status.MPI_SOURCE<<" with tag "<<status.MPI_TAG<<"; doing Recv" << EOM;
+                #endif
+                MPI_Status recv_status;
+                Recv(buffer, size, status.MPI_SOURCE, status.MPI_TAG, &recv_status);
+                #ifdef SIGNAL_DEBUG
+                LOGGER << "Received message from process "<<status.MPI_SOURCE<<" with tag "<<status.MPI_TAG<<". Discarding any existing message in the output buffer as obsolete..." << EOM;
+                #endif
+                ++loop;
+              }
 
-                if(loop==max_loops)
-                {
-                    std::ostringstream errmsg;
-                    errmsg << "Error while attempting to clean out unreceived messages from other processes! Received maximum allowed number of messages ("<<loop<<", note that MPI size is "<<Get_size()<<")";
-                    utils_error().raise(LOCAL_INFO, errmsg.str());
-                }
+              if(loop==max_loops)
+              {
+                std::ostringstream errmsg;
+                errmsg << "Error while attempting to clean out unreceived messages from other processes! Received maximum allowed number of messages ("<<loop<<", note that MPI size is "<<Get_size()<<")";
+                utils_error().raise(LOCAL_INFO, errmsg.str());
+              }
 
-                if(loop>0) LOGGER << "Communicator '"<<myname<<"' received "<<loop<<" messages with tag "<<tag<<". Only the last of these will be readable from the output buffer, the rest were discarded."<<EOM;
+              if(loop>0) LOGGER << "Communicator '"<<myname<<"' received "<<loop<<" messages with tag "<<tag<<". Only the last of these will be readable from the output buffer, the rest were discarded."<<EOM;
             }
 
             /// A generic place to store a tag commonly used by this communicator
@@ -458,84 +459,86 @@ namespace Gambit
             /// Get pointer to raw bound communicator
             MPI_Comm* get_boundcomm() { return &boundcomm; }
 
-        private:
+         private:
 
             // The MPI communicator to which the current object "talks".
             MPI_Comm boundcomm;
 
             // A name to identify the communicator group to which this object is bound
             std::string myname;
-        };
+      };
 
-        /// Check if MPI_Init has been called (it is an error to call it twice)
-        bool Is_initialized();
+      /// Check if MPI_Init has been called (it is an error to call it twice)
+      EXPORT_SYMBOLS bool Is_initialized();
 
-        /// Initialise MPI
-        void Init();
+      /// Initialise MPI
+      EXPORT_SYMBOLS void Init();
 
-        /// Check if MPI_Finalize has been called (it is an error to do anything else after this)
-        bool Is_finalized();
+      /// Check if MPI_Finalize has been called (it is an error to do anything else after this)
+      EXPORT_SYMBOLS bool Is_finalized();
 
-        /// Finalize MPI
-        void Finalize();
+      /// Finalize MPI
+      EXPORT_SYMBOLS void Finalize();
 
-        /// Prepare for calling MPI_Finalize, but call MPI_abort and exit function if timeout is exceeded.
-        bool PrepareForFinalizeWithTimeout(bool use_mpi_abort);
+      /// Prepare for calling MPI_Finalize, but call MPI_abort and exit function if timeout is exceeded.
+      EXPORT_SYMBOLS bool PrepareForFinalizeWithTimeout(bool use_mpi_abort);
 
-        /// Nice wrapper for getting the message size from an MPI_status struct.
-        /// Provide the type whose MPI_Datatype you want to retrieve as the
-        /// template argument.
-        template<class T>
-        int Get_count(MPI_Status *status)
-        {
-            static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
-            int msgsize;
-            MPI_Get_count(status, datatype, &msgsize);
-            if(msgsize<0)
-            {
-                std::ostringstream errmsg;
-                errmsg << "Error performing MPI_Get_count! Message size returned negative (value was "<<msgsize<<")! This can happen if the number of bytes received is not a multiple of the size of the specified MPI_Datatype. In other words you may have specified a type that doesn't match the type of the sent message; please double-check this.";
-                utils_error().raise(LOCAL_INFO, errmsg.str());
-            }
-            return msgsize;
-        }
+      /// Nice wrapper for getting the message size from an MPI_status struct.
+      /// Provide the type whose MPI_Datatype you want to retrieve as the
+      /// template argument.
+      template<class T>
+      int Get_count(MPI_Status *status)
+      {
+         static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
+         int msgsize;
+         MPI_Get_count(status, datatype, &msgsize);
+         if(msgsize<0)
+         {
+            std::ostringstream errmsg;
+            errmsg << "Error performing MPI_Get_count! Message size returned negative (value was "<<msgsize<<")! This can happen if the number of bytes received is not a multiple of the size of the specified MPI_Datatype. In other words you may have specified a type that doesn't match the type of the sent message; please double-check this.";
+            utils_error().raise(LOCAL_INFO, errmsg.str());
+         }
+         return msgsize;
+      }
 
-        /// @{ Helpers for registration of compound datatypes
+      /// @{ Helpers for registration of compound datatypes
 
-        /// Structure to hold an MPI startup function plus metadata
-        class MpiIniFunc {
+      /// Structure to hold an MPI startup function plus metadata
+      class MpiIniFunc
+      {
         private:
-            std::string location;
-            std::string name;
-            void (*func)();
+          std::string location;
+          std::string name;
+          void (*func)();
         public:
-            MpiIniFunc(const std::string& l, const std::string& n, void(*f)())
-                    : location(l)
-                    , name(n)
-                    , func(f)
-            {}
-            void runme()
-            {
-                (*func)();
-            }
-            std::string mylocation(){return location;}
-            std::string myname    (){return name;}
-        };
+          MpiIniFunc(const std::string& l, const std::string& n, void(*f)())
+            : location(l)
+            , name(n)
+            , func(f)
+          {}
+          void runme()
+          {
+            (*func)();
+          }
+          std::string mylocation(){return location;}
+          std::string myname    (){return name;}
+      };
 
-        /// Struct for adding functions to the 'mpi_ini_functions' map
-        ///
-        /// This will add functions to the map when it is constructed. Works
-        /// on the same idea as the "ini_code" struct, except it doesn't
-        /// cause the functions to be run, just "queues them up" so to speak.
-        // struct AddMpiIniFunc {
-        //   AddMpiIniFunc(const std::string& local_info, const std::string& name, void(*func)());
-        // };
+      /// Struct for adding functions to the 'mpi_ini_functions' map
+      ///
+      /// This will add functions to the map when it is constructed. Works
+      /// on the same idea as the "ini_code" struct, except it doesn't
+      /// cause the functions to be run, just "queues them up" so to speak.
+      // struct AddMpiIniFunc {
+      //   AddMpiIniFunc(const std::string& local_info, const std::string& name, void(*func)());
+      // };
 
-        /// @}
+      /// @}
 
-    }
+   }
 }
 
 
 #endif // include guard
 #endif // MPI
+
