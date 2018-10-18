@@ -411,7 +411,7 @@ namespace Gambit
         }
 
         // This function gives back the result for absolute stability, either "Stable" or "Metastable".
- 	void check_stability_MSSM(double &lifetime)
+ 	void check_stability_MSSM(ddpair &lifetimeAndThermalProbability)
     {
         // Vevacious backend path
        // std::string vevaciouspath = std::string(GAMBIT_DIR) +
@@ -704,16 +704,18 @@ namespace Gambit
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
         try {
             vevaciousPlusPlus.RunPoint("internal");
-            lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
-            cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+            lifetimeAndThermalProbability.first = vevaciousPlusPlus.GetLifetimeInSeconds();
+            lifetimeAndThermalProbability.second= vevaciousPlusPlus.GetThermalProbability();
+            cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
             std::string result = vevaciousPlusPlus.GetResultsAsString();
             cout << "VEVACIOUS RESULT:  "<< result << endl;
         }
         catch(const std::exception& e)
         {
             //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
-            lifetime = -2; //Vevacious Crashed
-            cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+            lifetimeAndThermalProbability.first = -2; //Vevacious Crashed
+            lifetimeAndThermalProbability.second= -2;
+            cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
             std::string result = "Crashed";
             cout << "VEVACIOUS RESULT:  "<< result << endl;
         }
@@ -725,11 +727,11 @@ namespace Gambit
  	void get_likelihood_VS_MSSM(double &result)
     {
         namespace myPipe = Pipes::get_likelihood_VS_MSSM;
-        double lifetime =  *myPipe::Dep::check_stability_MSSM;
+        double lifetime =  myPipe::Dep::check_stability_MSSM->first;
 
         if (lifetime == -1) // Means it is stable
         {
-            result = 10;
+            result = 0;
         }
         else if(lifetime == -2) // Means Vevacious crashed
         {
@@ -738,13 +740,31 @@ namespace Gambit
         }
         else
         {
-            // This is based on the estimation of the past lightcone from 1806.11281, should check what we used
-            // in Vevacious to be more accurate.
+            // This is based on the estimation of the past lightcone from 1806.11281
             double conversion = (6.5821195e-25)/(31536000);
             result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
         }
     }
 
+    void get_likelihood_VS_MSSM_thermal(double &result)
+    {
+        namespace myPipe = Pipes::get_likelihood_VS_MSSM;
+        double ThermalProbability =  myPipe::Dep::check_stability_MSSM->second;
+
+        if (ThermalProbability == -1) // Means Temperature corrections were not calculated
+        {
+            result = 0;
+        }
+        else if(ThermalProbability == -2) // Means Vevacious crashed
+        {
+            invalid_point().raise("Vevacious crashed");
+            result = 0;
+        }
+        else
+        {
+            result= std::log(ThermalProbability);
+        }
+    }
 
 
   } // end namespace SpecBit

@@ -29,7 +29,7 @@
   #define CAPABILITY check_stability_MSSM
   START_CAPABILITY
     #define FUNCTION check_stability_MSSM
-    START_FUNCTION(double)
+    START_FUNCTION(ddpair)
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
     DEPENDENCY(make_vevaciousPlusPlus_inputs, std::string)
     ALLOW_MODEL_DEPENDENCE(MSSM)
@@ -40,10 +40,17 @@
   START_CAPABILITY
     #define FUNCTION get_likelihood_VS_MSSM
       START_FUNCTION(double)
-      DEPENDENCY(check_stability_MSSM, double)
+      DEPENDENCY(check_stability_MSSM, ddpair)
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY VS_likelihood_MSSM_thermal
+  START_CAPABILITY
+    #define FUNCTION get_likelihood_VS_MSSM_thermal
+      START_FUNCTION(double)
+      DEPENDENCY(check_stability_MSSM, ddpair)
+    #undef FUNCTION
+  #undef CAPABILITY
 
 
 
