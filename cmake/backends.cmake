@@ -912,7 +912,7 @@ if(NOT ditched_${name}_${ver})
     add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
-# phcfd9e4f74b3565afc16ebecf533b576ed
+# phc
 set(name "phc")
 set(ver "2.4.58")
 
@@ -934,6 +934,9 @@ if(NOT ditched_${name}_${ver})
           BUILD_COMMAND ""
           INSTALL_COMMAND ""
           )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+
 endif()
 
 # hom4ps
@@ -959,6 +962,9 @@ if(NOT ditched_${name}_${ver})
           BUILD_COMMAND ""
           INSTALL_COMMAND ""
           )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} ) # FIGURE THIS OUT
+  set_as_default_version("backend" ${name} ${ver})
+
 endif()
 
 # Vevacious
@@ -970,7 +976,7 @@ set(Minuit_lib_name "Minuit2")
 set(Minuit_ver "5.34.14")
 set(phc_ver "2.4.58")
 set(dl "null")
-set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/Minuit2")
+set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
 set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-unused-parameter -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
 check_ditch_status(${name} ${ver})
@@ -992,7 +998,7 @@ if(NOT ditched_${name}_${ver})
  # execute_process(COMMAND cp -r ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1.0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/)
  # execute_process(COMMAND cp   ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/)
 
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  add_extra_targets("backend" ${name} ${ver} ${dir}/VevaciousPlusPlus ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
   #  BOSS_backend(${name} ${ver})
 endif()
