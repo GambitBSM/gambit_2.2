@@ -226,31 +226,34 @@ if args.file:
     if darkbit:
 
         pc = None
+        sv = None
         dd = None
         mo = None
         mdm = None
         ann_products = None
         propagators = None
 
+        print("Writing process catalogue output in DarkBit.")
+
+        # Write process catalogue output
+        pc = True
+        
         # Conditional on CalcHEP files being made.
         if output_opts.ch:
+        
+          sv = True
 
-            print("Writing process catalogue output in DarkBit.")
-
-            # Write process catalogue output
-            pc = True
-
-            # Obtain all three-field vertices
-            three_f = [interaction.particles for interaction in interactions
-                       if interaction.num_particles() == 3]
-            # And all 4-point BSM vertices
-            four_f = [interaction.particles for interaction in interactions
-                      if interaction.num_particles() == 4
-                      and interaction.is_sm() == False]
-
-            # Get all annihilation products and propagators involved in
-            # DM + DM -> X + Y at tree-level
-            ann_products, propagators = sort_annihilations(dm, three_f, four_f)
+          # Obtain all three-field vertices
+          three_f = [interaction.particles for interaction in interactions
+                     if interaction.num_particles() == 3]
+          # And all 4-point BSM vertices
+          four_f = [interaction.particles for interaction in interactions
+                    if interaction.num_particles() == 4
+                    and interaction.is_sm() == False]
+  
+          # Get all annihilation products and propagators involved in
+          # DM + DM -> X + Y at tree-level
+          ann_products, propagators = sort_annihilations(dm, three_f, four_f)
 
         # If micrOMEGAs requested
         if output_opts.mo:
@@ -275,9 +278,10 @@ if args.file:
             dd = True
         """
 
-        darkbit_src = write_darkbit_src(dm, pc, dd, ann_products, propagators,
-                                        gambit_pdgs, gum.name,
+        darkbit_src = write_darkbit_src(dm, pc, sv, dd, ann_products, 
+                                        propagators, gambit_pdgs, gum.name,
                                         calchep_pdg_codes, bsm_particle_list)
+                                        
         pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name, pc, dd)
 
     """

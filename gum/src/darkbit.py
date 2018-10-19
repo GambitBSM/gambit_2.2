@@ -156,28 +156,24 @@ def sort_annihilations(dm, three_fields, four_fields):
         ann_products.remove([dm.PDG_code, dm.Conjugate.PDG_code])
     return np.array(ann_products), propagators
 
-def proc_cat(dm, ann_products, propagators, gambit_pdg_dict, gambit_model_name,
-             calchep_pdg_dict, model_specific_particles, exclude_decays = []):
+    
+def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
+          calchep_pdg_dict):
     """
-    Writes all entries for <sigma v> and the Process Catalogue for DarkBit,
+    Writes all entries for <sigma v> within the Process Catalogue, 
     utilising CalcHEP.
     """
-
+    
+    # DM mass parameter
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    gb_conj = pdg_to_particle(dm.Conjugate.PDG_code, gambit_pdg_dict)
-
-    towrite = (
-            "class {0}\n"
-            "{{\n"
-            "public:\n"
-            "/// Initialize {0} object (branching ratios etc)\n"
-            "{0}(TH_ProcessCatalog* const catalog, DecayTable* const tbl);\n"
-            "~{0}();\n\n"
+    dm_mass = "m" + gb_id.replace("\"", "")
+    
+    towrite_class = (
             "double sv(std::vector<str> channel, double v_rel)\n"
-            "{{\n"
+            "{\n"
             "/// Returns sigma*v for a given channel.\n"
             "double GeV2tocm3s1 = gev2cm2*s2cm;\n\n"
-    ).format(gambit_model_name)
+    )
 
     out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])
     out2g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,1]])
@@ -186,7 +182,7 @@ def proc_cat(dm, ann_products, propagators, gambit_pdg_dict, gambit_model_name,
 
     # Add each channel individually for annihilation cross sections
     for i in np.arange(len(ann_products)):
-        towrite += (
+        towrite_class += (
                 "if (channel == '{0}, {1}')"
                 " return BEreq::CH_Sigma_V({2},"
                 " std::vector<str> {{'{3}', '{4}'}},"
@@ -194,85 +190,16 @@ def proc_cat(dm, ann_products, propagators, gambit_pdg_dict, gambit_model_name,
                 " QCD_coupling, v_rel, tbl)*GeV2tocm3s1; \n"
         ).format(out1g[i], out2g[i], gambit_model_name, dm_chep, dm_chepc)
 
-    towrite += (
+    towrite_class += (
             "else return 0;\n"
-            "}}\n\n"
-            "\n"
-            "}};\n\n"
-            "void TH_ProcessCatalog_{0}(DarkBit::TH_ProcessCatalog &result)\n"
-            "{{\n"
-            "using namespace Pipes::TH_ProcessCatalog_{0};\n"
-            "using std::vector;\n"
-            "using std::string;\n\n"
-            "// Initialize empty catalog, main annihilation process\n"
-            "TH_ProcessCatalog catalog;\n"
-            "TH_Process process_ann(\"{1}\", \"{2}\");"
-            "\n"
-    ).format(gambit_model_name, gb_id, gb_conj)
-
-    # Add flag for (non-)self-conjugate DM to rescale spectra properly
-    if not dm.is_sc():
-        towrite += (
-                "\n"
-                "// Explicitly state that Dirac DM is not self-conjugate to add"
-                " extra \n// factors of 1/2 where necessary\n"
-                "process_ann.isSelfConj = false;"
-                "\n\n"
-        )
-    else:
-        towrite += (
-                "\n"
-                "// Explicitly state that DM is self-conjugate\n"
-                "process_ann.isSelfConj = true;\n"
-                "\n\n"
-        )
-
-    towrite += add_SM_macros()
-
-    # Add the new BSM particles to the Process Catalog
-    dm_mass = "m" + gb_id.replace("\"", "")
-
-    towrite += (
-            "// {0}-specific masses\n"
-            "double {1} = spec.get(Par::Pole_Mass, '{2}'));\n"
-            "addParticle('{2}', {1}, {3});\n"
-    ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
-
-    for i in np.arange(len(model_specific_particles)):
-        if model_specific_particles[i].PDG_code != dm.PDG_code:
-          towrite += (
-                  "addParticle('{0}', spec.get(Par::Pole_Mass, '{1}'), {2});\n"
-          ).format(pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
-                   pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
-                   str(model_specific_particles[i].spinX2))
-
+            "}\n\n"
+    )
+    
     channels = ', '.join("\'{}, {}'".format(*t) for t in zip(out1g, out2g))
     p1 = ', '.join("\'{}'".format(*t) for t in zip(out1g))
     p2 = ', '.join("\'{}'".format(*t) for t in zip(out2g))
 
-    towrite += (
-            "\n"
-            "// Get rid of convenience macros\n"
-            "#undef getSMmass\n"
-            "#undef addParticle\n"
-            "\n"
-            "// Import decay table from DecayBit\n"
-            "const DecayTable* tbl = &(*Dep::decay_rates);\n"
-            "\n"
-            "// Set of imported decays\n"
-            "std::set<string> importedDecays;\n"
-            "\n"
-            "// Minimum branching ratio to include\n"
-            "double minBranching = runOptions->getValueOrDef<double>(0.0,"
-            " \"ProcessCatalog_MinBranching\");\n"
-            "\n"
-            "// Import relevant decays\n"
-            "using DarkBit_utils::ImportDecays;\n"
-            "\n"
-            "      *** TODO: excludeDecays?? ***\n"
-            "      *** And ImportDecays!! For all propagators? ***\n"
-            "      *** and all final states?? Which to exclude...?\n"
-            "\n"
+    towrite_pc = (
             "// Instantiate new {0} object.\n"
             "auto pc = boost::make_shared<{0}>(&catalog, &tbl);\n"
             "\n"
@@ -307,7 +234,109 @@ def proc_cat(dm, ann_products, propagators, gambit_pdg_dict, gambit_model_name,
             "}}\n"
             "}}\n"
             "\n"
-    ).format(gambit_model_name, dm_mass, channels, p1, p2)
+    ).format(gambit_model_name, dm_mass, channels, p1, p2)       
+    
+    return towrite_class, towrite_pc      
+
+def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict, 
+             gambit_model_name, calchep_pdg_dict, model_specific_particles, 
+             exclude_decays):
+    """
+    Writes all entries for the Process Catalogue for DarkBit.
+    """
+
+    gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
+    gb_conj = pdg_to_particle(dm.Conjugate.PDG_code, gambit_pdg_dict)
+
+    towrite = (
+            "class {0}\n"
+            "{{\n"
+            "public:\n"
+            "/// Initialize {0} object (branching ratios etc)\n"
+            "{0}(TH_ProcessCatalog* const catalog, DecayTable* const tbl);\n"
+            "~{0}();\n\n"
+    ).format(gambit_model_name)
+    
+    if sv:
+        sv_class, sv_src = xsecs(dm, ann_products, gambit_pdg_dict, 
+                                 gambit_model_name, calchep_pdg_dict)
+        towrite += sv_class
+
+    towrite += (
+            "\n"
+            "}};\n\n"
+            "void TH_ProcessCatalog_{0}(DarkBit::TH_ProcessCatalog &result)\n"
+            "{{\n"
+            "using namespace Pipes::TH_ProcessCatalog_{0};\n"
+            "using std::vector;\n"
+            "using std::string;\n\n"
+            "// Initialize empty catalog, main annihilation process\n"
+            "TH_ProcessCatalog catalog;\n"
+            "TH_Process process_ann(\"{1}\", \"{2}\");"
+            "\n"
+    ).format(gambit_model_name, gb_id, gb_conj)
+
+    # Add flag for (non-)self-conjugate DM to rescale spectra properly
+    if not dm.is_sc():
+        towrite += (
+                "\n"
+                "// Explicitly state that Dirac DM is not self-conjugate to add"
+                " extra \n// factors of 1/2 where necessary\n"
+                "process_ann.isSelfConj = false;\n\n"
+        )
+    else:
+        towrite += (
+                "\n"
+                "// Explicitly state that DM is self-conjugate\n"
+                "process_ann.isSelfConj = true;\n\n"
+        )
+
+    towrite += add_SM_macros()
+
+    # Add the new BSM particles to the Process Catalog
+    dm_mass = "m" + gb_id.replace("\"", "")
+
+    towrite += (
+            "// {0}-specific masses\n"
+            "double {1} = spec.get(Par::Pole_Mass, '{2}'));\n"
+            "addParticle('{2}', {1}, {3});\n"
+    ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
+
+    for i in np.arange(len(model_specific_particles)):
+        if model_specific_particles[i].PDG_code != dm.PDG_code:
+          towrite += (
+                  "addParticle('{0}', spec.get(Par::Pole_Mass, '{1}'), {2});\n"
+          ).format(pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
+                   pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
+                   str(model_specific_particles[i].spinX2))
+                   
+    towrite += (
+            "\n"
+            "// Get rid of convenience macros\n"
+            "#undef getSMmass\n"
+            "#undef addParticle\n"
+            "\n"
+            "// Import decay table from DecayBit\n"
+            "const DecayTable* tbl = &(*Dep::decay_rates);\n"
+            "\n"
+            "// Set of imported decays\n"
+            "std::set<string> importedDecays;\n"
+            "\n"
+            "// Minimum branching ratio to include\n"
+            "double minBranching = runOptions->getValueOrDef<double>(0.0,"
+            " \"ProcessCatalog_MinBranching\");\n"
+            "\n"
+            "// Import relevant decays\n"
+            "using DarkBit_utils::ImportDecays;\n"
+            "\n"
+            "      *** TODO: excludeDecays?? ***\n"
+            "      *** And ImportDecays!! For all propagators? ***\n"
+            "      *** and all final states?? Which to exclude...?\n"
+            "\n"
+    )
+
+    if sv:
+        towrite += sv_src
 
     for i in np.arange(len(propagators)):
         if abs(propagators[i]) != abs(dm.PDG_code):
@@ -331,12 +360,11 @@ def proc_cat(dm, ann_products, propagators, gambit_pdg_dict, gambit_model_name,
     return towrite
 
 
-def write_darkbit_src(dm, pc, dd, ann_products, propagators, gambit_pdg_dict,
-                      gambit_model_name, calchep_pdg_dict,
+def write_darkbit_src(dm, pc, sv, dd, ann_products, propagators, 
+                      gambit_pdg_dict, gambit_model_name, calchep_pdg_dict,
                       model_specific_particles, exclude_decays = []):
     """
-    Collects all source for DarkBit: process catalogue (via CalcHEP),
-    direct detection...
+    Collects all source for DarkBit: process catalogue, direct detection...
     """
 
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
@@ -367,7 +395,7 @@ def write_darkbit_src(dm, pc, dd, ann_products, propagators, gambit_pdg_dict,
     )
 
     if pc:
-        towrite += proc_cat(dm, ann_products, propagators,
+        towrite += proc_cat(dm, sv, ann_products, propagators,
                             gambit_pdg_dict, gambit_model_name,
                             calchep_pdg_dict, model_specific_particles,
                             exclude_decays)

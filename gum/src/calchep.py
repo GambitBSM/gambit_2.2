@@ -206,7 +206,7 @@ def get_vertices(foldername):
   # Check the folder exists
   if os.path.exists(foldername):
 
-    # Array of particle + PDG code
+    # Dict of particle + PDG code
     particle_PDG_conversion = {}
 
     # Now take in information from particles file to convert interactions to PDG codes
