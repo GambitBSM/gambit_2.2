@@ -160,6 +160,9 @@ ObsLikes:
   - capability:   VS_likelihood_MSSM
     purpose:      LogLike
 
+  - capability:   VS_likelihood_MSSM_thermal
+    purpose:      LogLike
+
 #  - capability: lnL_W_mass
 #    purpose:    LogLike
 
@@ -174,7 +177,7 @@ Rules:
 
   - capability: make_vevaciousPlusPlus_inputs
     options:
-      tunneling_strategy: JustQuantum
+      tunneling_strategy: QuantumThenThermal
       homotopy_backend: phc
 
   # Globally permit maximal mixing between gauge and family eigenstates
