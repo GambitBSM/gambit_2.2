@@ -104,3 +104,6 @@ LibFarrayTest:
 
 libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
+
+vevacious:
+  1.0:        ./Backends/installed/vevacious/1.0/VevaciousPlusPlus/lib/libVevaciousPlusPlus.so
