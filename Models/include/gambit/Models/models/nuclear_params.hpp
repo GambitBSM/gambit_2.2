@@ -13,6 +13,9 @@
 //  Jonathan Cornell
 //  2015 March
 //
+//  Sebastian Wild
+//  October 2018
+//
 //  *********************************************
 
 #ifndef __nuclear_params_hpp__
@@ -22,6 +25,21 @@
 namespace Gambit {
   class SMInputs;
 }
+
+
+// Hadronic matrix elements in the full chiral perturbation theory.
+// This is primarily intended for the interface with DirectDM,
+// and follows the naming conventions given in 1708.02678.
+#define MODEL nuclear_params_ChPT
+  START_MODEL
+  DEFINEPARS(gA, mG)
+  DEFINEPARS(sigmaup,sigmadp,sigmaun,sigmadn,sigmas)
+  DEFINEPARS(Deltaup,Deltadp,Deltas)
+  DEFINEPARS(B0mu,B0md,B0ms)
+  DEFINEPARS(mup,mun,ap,an,F2sp)
+  DEFINEPARS(gTu,gTd,gTs)
+  DEFINEPARS(BT10up,BT10dp,BT10s)
+#undef MODEL
 
 // Explicitly defined hadronic matrix elements. deltaq are the
 // spin content of the proton.

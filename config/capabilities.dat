@@ -3774,6 +3774,9 @@ nuclear_params_sigma0_sigmal_parameters: |
 
 nuclear_params_sigmas_sigmal_parameters: |
    Parameters for the model nuclear_params_sigmas_sigmal (see ./gambit nuclear_params_sigmas_sigmal)
+
+nuclear_params_ChPT_parameters: |
+   Parameters for the model nuclear_params_ChPT (see ./gambit nuclear_params_ChPT)
 #-------------------------------------
 #  FeynHiggs capabilities
 #-------------------------------------

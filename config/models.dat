@@ -476,6 +476,10 @@ nuclear_params_sigmas_sigmal: |
 
    The same as nuclear_params_fnq, but with the replacement of the six quark content matrix elements by the matrix element sigma0 and the strange quark content of the nucleon sigmas. See the GAMBIT core paper for details and definitions.
 
+nuclear_params_ChPT: |
+
+   Model of nuclear matrix elements relevant for chiral perturbation theory in the context of direct detection. This is primarily designed for the interface with DirectDM, and the naming of the parameters corresponds to the one given in 1708.02678.
+
 ScalarSingletDM_Z2: |
 
    The scalar singlet DM model, with two parameters mS (the mass of the scalar DM), and lambda_hS, the strength of the new scalar interaction with the SM Higgs. Note that mS should either be interpreted as the tree level mass or directly as the pole mass for S. This is analogous to the treatment of the SM Higgs mass in the model StandardModel_Higgs.
