@@ -25,7 +25,7 @@
 #ifndef __MSSM63atMGUT_mA_lightgravitino_hpp__
 #define __MSSM63atMGUT_mA_lightgravitino_hpp__
 
-#include "gambit/Models/models/MSSM63atMGUT.hpp" // Must include models which are targets of translation functions
+#include "gambit/Models/models/MSSM63atMGUT_lightgravitino.hpp" // Must include models which are targets of translation functions
 
 // Forward declaration of needed types
 namespace Gambit
@@ -35,10 +35,10 @@ namespace Gambit
 
 /// FlexibleSUSY compatible general (63 parameters plus sign, plus input scale) MSSM parameterisation
 #define MODEL MSSM63atMGUT_mA_lightgravitino
-#define PARENT MSSM63atMGUT
+#define PARENT MSSM63atMGUT_lightgravitino
   START_MODEL
 
-  /// Can translate this model into MSSM63atMGUT
+  /// Can translate this model into MSSM63atMGUT_lightgravitino
   INTERPRET_AS_PARENT_FUNCTION(MSSM63atMGUT_mA_lightgravitino_to_MSSM63atMGUT_lightgravitino)
   /// Depends on an MSSM spectrum, since RGEs must run in order to determine MGUT
   INTERPRET_AS_PARENT_DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)

@@ -23,7 +23,7 @@
 #define __MSSM30atQ_mA_lightgravitino_hpp__
 
 #include "gambit/Models/models/MSSM63atQ_mA_lightgravitino.hpp" // Parent model must be declared first! Include it here to ensure that this happens.
-#include "gambit/Models/models/MSSM30atQ.hpp"    // Likewise for 'friend' models
+#include "gambit/Models/models/MSSM30atQ_lightgravitino.hpp"    // Likewise for 'friend' models
 
 /// FlexibleSUSY compatible general (63 parameters plus sign) MSSM parameterisation
 #define MODEL MSSM30atQ_mA_lightgravitino
@@ -50,8 +50,8 @@
   DEFINEPARS(Au_1, Au_2, Au_3)
 
   INTERPRET_AS_PARENT_FUNCTION(MSSM30atQ_mA_lightgravitino_to_MSSM63atQ_mA_lightgravitino)
-  INTERPRET_AS_X_FUNCTION(MSSM30atQ, MSSM30atQ_mA_lightgravitino_to_MSSM30atQ)
-  INTERPRET_AS_X_DEPENDENCY(MSSM30atQ, unimproved_MSSM_spectrum, Spectrum)
+  INTERPRET_AS_X_FUNCTION(MSSM30atQ_lightgravitino, MSSM30atQ_mA_lightgravitino_to_MSSM30atQ_lightgravitino)
+  INTERPRET_AS_X_DEPENDENCY(MSSM30atQ_lightgravitino, unimproved_MSSM_spectrum, Spectrum)
 
 #undef PARENT
 #undef MODEL

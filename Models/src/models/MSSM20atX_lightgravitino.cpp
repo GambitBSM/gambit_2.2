@@ -46,7 +46,7 @@
 #include "gambit/Logs/logger.hpp"
 #include "gambit/Utils/util_functions.hpp"
 
-#include "gambit/Models/models/MSSM63atQ_lightgravitino.hpp" // Contains declaration of MSSM_mA_lightgravitino_to_MSSM_mhud and MSSMatX_to_MSSMatQ_lightgravitino functions
+#include "gambit/Models/models/MSSM63atQ_lightgravitino.hpp" // Contains declaration of MSSM_mA_lightgravitino_to_MSSM_mhud and MSSMatX_lightgravitino_to_MSSMatQ_lightgravitino functions
 #include "gambit/Models/models/MSSM20atQ_lightgravitino.hpp"
 #include "gambit/Models/models/MSSM20atQ_mA_lightgravitino.hpp"
 #include "gambit/Models/models/MSSM20atMGUT_lightgravitino.hpp"
@@ -58,7 +58,8 @@
 
 
 // General helper translation function definition
-namespace Gambit {
+namespace Gambit
+{
   void MSSM20atX_to_MSSM25atX(const ModelParameters &myP, ModelParameters &targetP)
   {
      // Send all parameter values upstream to matching parameters in parent.
@@ -83,7 +84,6 @@ namespace Gambit {
      // Done
   }
 }
-#undef MODEL
 
 /// @{ Interpret-as-parent function definitions
 /// These are particularly repetitive so let's define them with the help of a macro

@@ -2,9 +2,9 @@
 //   *********************************************
 ///  \file
 ///
-///  MSSM20atQ translation function definitions. 
+///  MSSM20atQ translation function definitions.
 ///
-///  Contains the interpret-as-parent translation 
+///  Contains the interpret-as-parent translation
 ///  functions for:
 ///
 ///  MSSM20atQ        --> MSSM25atQ
@@ -29,8 +29,8 @@
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
-///   
-///  \author Pat Scott  
+///
+///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2015 Sep
 ///
@@ -57,7 +57,8 @@
 
 
 // General helper translation function definition
-namespace Gambit { 
+namespace Gambit
+{
   void MSSM20atX_to_MSSM25atX(const ModelParameters &myP, ModelParameters &targetP)
   {
      // Send all parameter values upstream to matching parameters in parent.
@@ -82,7 +83,6 @@ namespace Gambit {
      // Done
   }
 }
-#undef MODEL
 
 /// @{ Interpret-as-parent function definitions
 /// These are particularly repetitive so let's define them with the help of a macro
