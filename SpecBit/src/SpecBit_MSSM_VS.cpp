@@ -77,7 +77,7 @@ namespace Gambit
                 "/InitializationFiles/DefaultObjectInitializationFiles/PotentialFunctionInitialization.xml";
 
                 std::string ScaleAndBlockFile = vevaciouspath +
-                "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwoAndSarahOutputs.xml";
+                "ModelFiles/LagrangianParameters/MssmCompatibleWithSARAHManager.xml";
 
                 std::string PotentialFunctionClassType = runOptions.getValueOrDef<std::string>(
                 "FixedScaleOneLoopPotential", "potential_type");
@@ -90,7 +90,7 @@ namespace Gambit
                     "<VevaciousPlusPlusPotentialFunctionInitialization>\n"
                     " <LagrangianParameterManagerClass>\n"
                     "    <ClassType>\n"
-                    "      SlhaCompatibleWithSarahManager\n"
+                    "      SARAHManager\n"
                     "    </ClassType>\n"
                     "    <ConstructorArguments>\n"
                     "      <ScaleAndBlockFile>\n"
