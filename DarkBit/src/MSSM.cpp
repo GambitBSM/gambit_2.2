@@ -47,7 +47,7 @@ namespace Gambit
      * indicating if point initialization was successful, which is essentially
      * always true for models that satisfy the dependency resolver.
      *
-     * Supported models: MSSM63atQ
+     * Supported models: MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino
      */
     void DarkSUSY_PointInit_MSSM(bool &result)
     {
@@ -121,7 +121,9 @@ namespace Gambit
         }
       }
 
-      else if (ModelInUse("MSSM63atQ") || ModelInUse("CMSSM"))
+      else if (ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT")
+            || ModelInUse("MSSM63atQ_lightgravitino") || ModelInUse("MSSM63atMGUT_lightgravitino")
+            || ModelInUse("CMSSM"))
       {
         SLHAstruct mySLHA;
         /// Option use_dsSLHAread<bool>: Use DS internal SLHA reader to initialize backend (false)
@@ -394,10 +396,10 @@ namespace Gambit
 
       // Declare DM annihilation process
       TH_Process process(DMid, DMid);
-      
+
       // Explicitly state that Neutralino DM is self-conjugate
       process.isSelfConj = true;
-      
+
       double M_DM = catalog.getParticleProperty(DMid).mass;
       // Helper variables
       int index;

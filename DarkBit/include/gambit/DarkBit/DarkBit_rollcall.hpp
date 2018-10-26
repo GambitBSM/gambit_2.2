@@ -89,7 +89,7 @@ START_MODULE
       START_FUNCTION(bool)
       DEPENDENCY(MSSM_spectrum, Spectrum)
       DEPENDENCY(decay_rates, DecayTable)
-      ALLOW_MODELS(MSSM63atQ,CMSSM)
+      ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino, CMSSM)
       // For debugging using DarkSUSY native interface to ISASUGRA
       BACKEND_REQ(dsgive_model_isasugra, (), void, (double&,double&,double&,double&,double&))
       BACKEND_REQ(dssusy_isasugra, (), void, (int&,int&))
@@ -198,7 +198,7 @@ START_MODULE
     // Routine for cross checking relic density results
     #define FUNCTION RD_oh2_DarkSUSY
       START_FUNCTION(double)
-      ALLOW_MODELS(MSSM63atQ)
+      ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
       DEPENDENCY(DarkSUSY_PointInit, bool)
       BACKEND_REQ(dsrdomega, (), double, (int&,int&,double&,int&,int&,int&))
       BACKEND_REQ(rderrors, (), DS_RDERRORS)
@@ -209,7 +209,7 @@ START_MODULE
     #define FUNCTION RD_oh2_MicrOmegas
       START_FUNCTION(double)
       BACKEND_REQ(oh2, (MicrOmegas_MSSM, MicrOmegas_SingletDM, MicrOmegas_VectorDM, MicrOmegas_MajoranaDM, MicrOmegas_DiracDM), double, (double*,int,double))
-      ALLOW_MODELS(MSSM63atQ, SingletDM, VectorDM, MajoranaDM, DiracDM)
+      ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino, SingletDM, VectorDM, MajoranaDM, DiracDM)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -383,7 +383,6 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION TH_ProcessCatalog_MSSM
       START_FUNCTION(DarkBit::TH_ProcessCatalog)
-      //ALLOW_MODELS(MSSM63atQ)
       DEPENDENCY(DarkSUSY_PointInit, bool)
       DEPENDENCY(MSSM_spectrum, Spectrum)
       DEPENDENCY(DarkMatter_ID, std::string)
@@ -551,7 +550,10 @@ START_MODULE
       BACKEND_REQ(dsddgpgn, (), void, (double&, double&, double&, double&))
       BACKEND_REQ(mspctm, (), DS_MSPCTM)
       BACKEND_REQ(ddcom, (DarkSUSY), DS_DDCOM)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq,MSSM63atQ)
+      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atQ)
+      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atMGUT)
+      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atQ_lightgravitino)
+      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atMGUT_lightgravitino)
     #undef FUNCTION
 
     #define FUNCTION DD_couplings_MicrOmegas
@@ -559,9 +561,9 @@ START_MODULE
       BACKEND_REQ(nucleonAmplitudes, (gimmemicro), int, (double(*)(double,double,double,double), double*, double*, double*, double*))
       BACKEND_REQ(FeScLoop, (gimmemicro), double, (double, double, double, double))
       BACKEND_REQ(MOcommon, (gimmemicro), MicrOmegas::MOcommonSTR)
-      ALLOW_MODEL_DEPENDENCE(nuclear_params_fnq, MSSM63atQ, SingletDM, VectorDM)
+      ALLOW_MODEL_DEPENDENCE(nuclear_params_fnq, MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino, SingletDM, VectorDM)
       MODEL_GROUP(group1, (nuclear_params_fnq))
-      MODEL_GROUP(group2, (MSSM63atQ, SingletDM, VectorDM))
+      MODEL_GROUP(group2, (MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino, SingletDM, VectorDM))
       ALLOW_MODEL_COMBINATION(group1, group2)
       BACKEND_OPTION((MicrOmegas_MSSM),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_SingletDM),(gimmemicro))

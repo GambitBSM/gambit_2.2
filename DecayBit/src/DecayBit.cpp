@@ -2887,8 +2887,8 @@ namespace Gambit
       {
         // Gaugino contribution (Eq. (18) in hep-ph/0404231v2)
         double gaugino_to_gravitino_gamma = (
-          pow2(abs(N11 * cos_thetaW + N12 * sin_thetaW)) 
-          / (48. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2) 
+          pow2(abs(N11 * cos_thetaW + N12 * sin_thetaW))
+          / (48. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2)
           * pow3(1. - mG_mNeu1_2) * (1 + 3. * mG_mNeu1_2)
          );
 
@@ -2905,20 +2905,20 @@ namespace Gambit
         // hep-ph/0404231v2, but note that it lacks the higgsino
         // contribution added below!)
         double gaugino_to_gravitino_Z = (
-          pow2(abs(-N11 * sin_thetaW + N12 * cos_thetaW)) 
-          / (48. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2) 
-          * phasespace_beta(mG_mNeu1, mZ_mNeu1) 
-          * ( pow2(1. - mG_mNeu1_2) * (1. + 3. * mG_mNeu1_2) - mZ_mNeu1_2 
-          * (3. + mG_mNeu1_3 * (mG_mNeu1 - 12.) - mZ_mNeu1_2 
+          pow2(abs(-N11 * sin_thetaW + N12 * cos_thetaW))
+          / (48. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2)
+          * phasespace_beta(mG_mNeu1, mZ_mNeu1)
+          * ( pow2(1. - mG_mNeu1_2) * (1. + 3. * mG_mNeu1_2) - mZ_mNeu1_2
+          * (3. + mG_mNeu1_3 * (mG_mNeu1 - 12.) - mZ_mNeu1_2
           * (3. - mG_mNeu1_2 - mZ_mNeu1_2)) )
           );
         // Higgsino contribution (Eq. (11) in 0908.3399)
         double higgsino_to_gravitino_Z = (
-          pow2(abs(-N13 * cos_beta + N14 * sin_beta)) 
-          / (96. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2) 
-          * phasespace_beta(mG_mNeu1, mZ_mNeu1) 
-          * ( pow2(1. + mG_mNeu1) * pow4(1. - mG_mNeu1) - mZ_mNeu1_2 
-          * (pow2(1. - mG_mNeu1) * (3. + 2. * mG_mNeu1 - 9. * mG_mNeu1_2) 
+          pow2(abs(-N13 * cos_beta + N14 * sin_beta))
+          / (96. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2)
+          * phasespace_beta(mG_mNeu1, mZ_mNeu1)
+          * ( pow2(1. + mG_mNeu1) * pow4(1. - mG_mNeu1) - mZ_mNeu1_2
+          * (pow2(1. - mG_mNeu1) * (3. + 2. * mG_mNeu1 - 9. * mG_mNeu1_2)
           - mZ_mNeu1_2 * (3. - 2. * mG_mNeu1 - 9. * mG_mNeu1_2 - mZ_mNeu1_2)) )
           );
 
@@ -2934,11 +2934,11 @@ namespace Gambit
         // Higgsino contribution (Eq. (12) in 0908.3399,
         // agrees with Eq. (23) in hep-ph/0404231v2)
         double higgsino_to_gravitino_h = (
-          pow2(abs(-N13 * sin_alpha + N14 * cos_alpha)) 
-          / (96. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2) 
-          * phasespace_beta(mG_mNeu1, mh_mNeu1) 
-          * ( pow2(1. - mG_mNeu1) * pow4(1. + mG_mNeu1) - mh_mNeu1_2 
-          * (pow2(1. + mG_mNeu1) * (3. - 2. * mG_mNeu1 + 3. * mG_mNeu1_2) 
+          pow2(abs(-N13 * sin_alpha + N14 * cos_alpha))
+          / (96. * pi * m_planck_red_2) * (m_Neu1_5 / m_G_2)
+          * phasespace_beta(mG_mNeu1, mh_mNeu1)
+          * ( pow2(1. - mG_mNeu1) * pow4(1. + mG_mNeu1) - mh_mNeu1_2
+          * (pow2(1. + mG_mNeu1) * (3. - 2. * mG_mNeu1 + 3. * mG_mNeu1_2)
           - mh_mNeu1_2 * (3. + 2. * mG_mNeu1 + 3. * mG_mNeu1_2 - mh_mNeu1_2)) )
           );
 
@@ -2951,7 +2951,7 @@ namespace Gambit
       result.calculator = "GAMBIT::DecayBit";
       result.calculator_version = gambit_version();
 
-      // Sum partial widths of decays involving gravitinos 
+      // Sum partial widths of decays involving gravitinos
       double total_width_gravitinos = 0.0;
       for (auto it = partial_widths.begin(); it != partial_widths.end(); it++)
         total_width_gravitinos += it->second;
@@ -3027,12 +3027,12 @@ namespace Gambit
         double kappa_1_W_T = 0.5 * (pow2(abs(V11)) + pow2(abs(U11)));
 
         // Longitudinal wino contribution factor (Eq. (25) in hep-ph/9605398)
-        double kappa_1_W_L = (pow2(abs(V12)) * pow2(sin_beta) 
+        double kappa_1_W_L = (pow2(abs(V12)) * pow2(sin_beta)
                               + pow2(abs(U12)) * pow2(cos_beta));
 
         // Decay width (Eq. (22) in hep-ph/9605398, light-gravitino limit)
         double chargino_to_gravitino_W = (
-          (2. * kappa_1_W_T + kappa_1_W_L) / (96. * pi * m_planck_red_2) 
+          (2. * kappa_1_W_T + kappa_1_W_L) / (96. * pi * m_planck_red_2)
           * (m_Cha1_5 / m_G_2) * pow4(1. - pow2(m_W / m_Cha1))
           );
 
@@ -3294,7 +3294,7 @@ namespace Gambit
       decays("omega") = *Dep::omega_decay_rates;    // Add the omega meson decays.
 
       // MSSM-specific
-      if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT"))
+      if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT") or ModelInUse("MSSM63atQ_lightgravitino") or ModelInUse("MSSM63atMGUT_lightgravitino"))
       {
 
         static bool allow_stable_charged_particles = runOptions->getValueOrDef<bool>(false, "allow_stable_charged_particles");

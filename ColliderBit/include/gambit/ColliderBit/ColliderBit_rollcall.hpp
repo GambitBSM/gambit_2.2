@@ -72,7 +72,7 @@ START_MODULE
     NEEDS_MANAGER_WITH_CAPABILITY(ColliderOperator)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(decay_rates, DecayTable)
-    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
     #undef FUNCTION
 
     #define FUNCTION getPythiaFileReader
