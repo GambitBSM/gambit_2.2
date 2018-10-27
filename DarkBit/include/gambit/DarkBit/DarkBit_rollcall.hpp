@@ -613,10 +613,13 @@ START_MODULE
       BACKEND_REQ(dsddgpgn, (), void, (double&, double&, double&, double&))
       BACKEND_REQ(mspctm, (), DS_MSPCTM)
       BACKEND_REQ(ddcom, (DarkSUSY), DS_DDCOM)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atQ)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atMGUT)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atQ_lightgravitino)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq, MSSM63atMGUT_lightgravitino)
+      ALLOW_MODEL_DEPENDENCE(nuclear_params_fnq,
+                             MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino,
+                             MSSM63atMGUT_lightgravitino)
+      MODEL_GROUP(group1, (nuclear_params_fnq))
+      MODEL_GROUP(group2, (MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino,
+                           MSSM63atMGUT_lightgravitino))
+      ALLOW_MODEL_COMBINATION(group1, group2)
     #undef FUNCTION
 
     #define FUNCTION DD_couplings_MicrOmegas

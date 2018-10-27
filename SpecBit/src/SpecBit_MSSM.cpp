@@ -1909,6 +1909,8 @@ namespace Gambit
            SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
          }
       }
+      // add the gravitino mass
+      if (subspec.has(Par::Pole_Mass, "~G")) specmap["~G Pole_Mass"] = subspec.get(Par::Pole_Mass, "~G");
       // add the scale!
       specmap["scale(Q)"] = subspec.GetScale();
     }

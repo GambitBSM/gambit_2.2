@@ -26,6 +26,7 @@
 #define __MSSM30atMSUSY_lightgravitino_hpp__
 
 #include "gambit/Models/models/MSSM63atMSUSY_lightgravitino.hpp" // Parent model must be declared first! Include it here to ensure that this happens.
+#include "gambit/Models/models/MSSM30atQ_lightgravitino.hpp"     // Friend model must be declared first! Include it here to ensure that this happens.
 
 /// FlexibleSUSY compatible general (78 parameters plus sign) MSSM parameterisation
 #define MODEL MSSM30atMSUSY_lightgravitino
