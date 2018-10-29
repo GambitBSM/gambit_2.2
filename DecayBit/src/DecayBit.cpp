@@ -1760,10 +1760,79 @@ namespace Gambit
       check_width(LOCAL_INFO, result.width_in_GeV, runOptions->getValueOrDef<bool>(false, "invalid_point_for_negative_width"));
     }
 
-    /// SUSY-HIT MSSM decays: neutralino_1
+    /// MSSM decays: neutralino_1 (Uses SUSY-HIT results)
     void neutralino_1_decays (DecayTable::Entry& result)
     {
       using namespace Pipes::neutralino_1_decays;
+      // Collect results from SUSY-HIT
+      result = *Dep::neutralino_1_decay_rates_SH;
+
+      check_width(LOCAL_INFO, result.width_in_GeV, runOptions->getValueOrDef<bool>(false, "invalid_point_for_negative_width"));
+    }
+
+    /// MSSM decays: neutralino_1 incl. decays to gravitinos (Uses SUSY-HIT results and dedicated DecayBit calculation for decays to gravitinos)
+    void neutralino_1_decays_all (DecayTable::Entry& result)
+    {
+      using namespace Pipes::neutralino_1_decays_all;
+      // Collect results from SUSY-HIT
+      DecayTable::Entry SH_result = *Dep::neutralino_1_decay_rates_SH;
+      // Collect the DecayBit results for decays to gravitinos
+      DecayTable::Entry gravitinos_result = *Dep::neutralino_1_decay_rates_gravitino;
+
+      // Combine the results from SUSY-HIT and gravitino decays
+      // (The total widths from non-gravitino and gravitino channels have to be added)
+      result.width_in_GeV = SH_result.width_in_GeV + gravitinos_result.width_in_GeV;
+
+      // Loop over channels computed by SUSY-HIT and copy the result after normalising to the correct full width
+      for (auto const &channel_BF_map : SH_result.channels)
+      {
+        // Extract channel and branching fraction
+        std::multiset<std::pair<int, int>> channel_key = channel_BF_map.first;
+        std::vector<std::pair<int, int>> channel_key_vector(channel_key.size());
+        std::copy(channel_key.begin(), channel_key.end(), channel_key_vector.begin());
+
+        std::pair<double, double> BF_with_error = channel_BF_map.second;
+        
+        double BF = BF_with_error.first;
+        double BF_error = BF_with_error.second;
+
+        double corrected_BF = (result.width_in_GeV > 0 ? (BF * SH_result.width_in_GeV / result.width_in_GeV) : 0.0);
+        double corrected_BF_error = (result.width_in_GeV > 0 ? (BF_error * SH_result.width_in_GeV / result.width_in_GeV) : 0.0);
+
+        result.set_BF((result.width_in_GeV > 0 ? corrected_BF : 0.0), corrected_BF_error, channel_key_vector);
+      }
+
+      // Loop over channels computed by DecayBit and copy the result after normalising to the correct full width
+      // (After SUSY-HIT channels so if there would be overlapping channels, the DecayBit result is used)
+      for (auto const &channel_BF_map : gravitinos_result.channels)
+      {
+        // Extract channel and branching fraction
+        std::multiset<std::pair<int, int>> channel_key = channel_BF_map.first;
+        std::vector<std::pair<int, int>> channel_key_vector(channel_key.size());
+        std::copy(channel_key.begin(), channel_key.end(), channel_key_vector.begin());
+
+        std::pair<double, double> BF_with_error = channel_BF_map.second;
+        
+        double BF = BF_with_error.first;
+        double BF_error = BF_with_error.second;
+
+        double corrected_BF = (result.width_in_GeV > 0 ? (BF * gravitinos_result.width_in_GeV / result.width_in_GeV) : 0.0);
+        double corrected_BF_error = (result.width_in_GeV > 0 ? (BF_error * gravitinos_result.width_in_GeV / result.width_in_GeV) : 0.0);
+
+        result.set_BF((result.width_in_GeV > 0 ? corrected_BF : 0.0), corrected_BF_error, channel_key_vector);
+      }
+
+      // Store results
+      result.calculator = "GAMBIT::DecayBit";
+      result.calculator_version = gambit_version();
+
+      check_width(LOCAL_INFO, result.width_in_GeV, runOptions->getValueOrDef<bool>(false, "invalid_point_for_negative_width"));
+    }
+
+    /// SUSY-HIT MSSM decays: neutralino_1
+    void neutralino_1_decays_SH (DecayTable::Entry& result)
+    {
+      using namespace Pipes::neutralino_1_decays_SH;
       mass_es_pseudonyms psn = *(Dep::SLHA_pseudonyms);
 
       result.calculator = BEreq::cb_sd_neutwidth.origin();
@@ -1820,16 +1889,16 @@ namespace Gambit
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2body->brneutsnel(1) : 0.0), 0.0, psn.isnmulbar, "nu_mu");
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2body->brneutsn1(1) : 0.0), 0.0, psn.isntaul, "nubar_tau");
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2body->brneutsn1(1) : 0.0), 0.0, psn.isntaulbar, "nu_tau");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutgamgrav(1) : 0.0), 0.0, "~G", "gamma");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutzgrav(1) : 0.0), 0.0, "~G", "Z0");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthlgrav(1) : 0.0), 0.0, "~G", "h0_1");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthhgrav(1) : 0.0), 0.0, "~G", "h0_2");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthagrav(1) : 0.0), 0.0, "~G", "A0");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutgamgrav(1) : 0.0), 0.0, "~G", "gamma");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutzgrav(1) : 0.0), 0.0, "~G", "Z0");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthlgrav(1) : 0.0), 0.0, "~G", "h0_1");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthhgrav(1) : 0.0), 0.0, "~G", "h0_2");
-      result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthagrav(1) : 0.0), 0.0, "~G", "A0");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutgamgrav(1) : 0.0), 0.0, "~G", "gamma");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutzgrav(1) : 0.0), 0.0, "~G", "Z0");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthlgrav(1) : 0.0), 0.0, "~G", "h0_1");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthhgrav(1) : 0.0), 0.0, "~G", "h0_2");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthagrav(1) : 0.0), 0.0, "~G", "A0");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutgamgrav(1) : 0.0), 0.0, "~G", "gamma");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneutzgrav(1) : 0.0), 0.0, "~G", "Z0");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthlgrav(1) : 0.0), 0.0, "~G", "h0_1");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthhgrav(1) : 0.0), 0.0, "~G", "h0_2");
+      // result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut2bodygrav->brneuthagrav(1) : 0.0), 0.0, "~G", "A0");
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut3body->brchubd(1,1) : 0.0), 0.0, "~chi+_1", "ubar", "d");
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut3body->brchubd(1,1) : 0.0), 0.0, "~chi-_1", "dbar", "u");
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_neut3body->brchubd(1,2) : 0.0), 0.0, "~chi+_2", "ubar", "d");

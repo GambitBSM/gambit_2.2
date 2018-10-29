@@ -646,6 +646,24 @@ START_MODULE
 
     #define FUNCTION neutralino_1_decays
     START_FUNCTION(DecayTable::Entry)
+    DEPENDENCY(neutralino_1_decay_rates_SH, DecayTable::Entry)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    #undef FUNCTION
+
+    #define FUNCTION neutralino_1_decays_all
+    START_FUNCTION(DecayTable::Entry)
+    DEPENDENCY(neutralino_1_decay_rates_SH, DecayTable::Entry)
+    DEPENDENCY(neutralino_1_decay_rates_gravitino, DecayTable::Entry)
+    ALLOW_MODELS(MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY neutralino_1_decay_rates_SH
+  START_CAPABILITY
+
+    #define FUNCTION neutralino_1_decays_SH
+    START_FUNCTION(DecayTable::Entry)
     DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
     BACKEND_REQ(cb_sd_neutwidth, (sh_reqd), sd_neutwidth_type)
     BACKEND_REQ(cb_sd_neut2body, (sh_reqd), sd_neut2body_type)
@@ -653,6 +671,17 @@ START_MODULE
     BACKEND_REQ(cb_sd_neut3body, (sh_reqd), sd_neut3body_type)
     BACKEND_OPTION( (SUSY_HIT), (sh_reqd) )
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+  #define CAPABILITY neutralino_1_decay_rates_gravitino
+      START_CAPABILITY
+
+    #define FUNCTION neutralino_1_decays_gravitino
+      START_FUNCTION(DecayTable::Entry)
+      DEPENDENCY(MSSM_spectrum, Spectrum)
+      ALLOW_MODELS(MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -708,24 +737,12 @@ START_MODULE
 
   #undef CAPABILITY
 
-#define CAPABILITY neutralino_1_decay_rates_gravitino
-    START_CAPABILITY
-
-#define FUNCTION neutralino_1_decays_gravitino
-    START_FUNCTION(DecayTable::Entry)
-    DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
-    DEPENDENCY(MSSM_spectrum, Spectrum)
-    ALLOW_MODELS(MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
-#undef FUNCTION
-
-#undef CAPABILITY
-
+///TODO: FIX CHARGINO!
 #define CAPABILITY chargino_plus_1_decay_rates_gravitino
     START_CAPABILITY
 
 #define FUNCTION chargino_plus_1_decays_gravitino
     START_FUNCTION(DecayTable::Entry)
-    DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     ALLOW_MODELS(MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
 #undef FUNCTION
