@@ -17,32 +17,44 @@ Parameters:
 
   # SUSY parameters.
   MSSM7atQ_lightgravitino:
-    Qin:
-      fixed_value: 1000.0
-    SignMu:
-      fixed_value: 1
-    Ad_3:
-      prior_type: double_log_flat_join
-      ranges: [-1e4, -1e2, 1e2, 1e4]
-    Au_3:
-      prior_type: double_log_flat_join
-      ranges: [-1e4, -1e2, 1e2, 1e4]
-    M2:
-      prior_type: double_log_flat_join
-      ranges: [-1e4, -1e2, 1e2, 1e4]
-    TanBeta:
-      range: [3.0, 70.0]
-      prior_type: flat
-    mHd2:
-      prior_type: double_log_flat_join
-      ranges: [-1e8, -1e4, 1e4, 1e8]
-    mHu2:
-      prior_type: double_log_flat_join
-      ranges: [-1e8, -1e4, 1e4, 1e8]
-    mf2:
-      prior_type: double_log_flat_join
-      ranges: [0, 0, 1e4, 1e8]
+    Qin: 1.9422e+16
+    SignMu: 1
+    TanBeta: 10
+    mHu2: 15625
+    mHd2: 15625
+    M2: 800
+    mf2: 15625.0
+    Ad_3: 0
+    Au_3: 0
     mG: 1.5
+
+  # MSSM7atQ_lightgravitino:
+  #   Qin:
+  #     fixed_value: 1000.0
+  #   SignMu:
+  #     fixed_value: 1
+  #   Ad_3:
+  #     prior_type: double_log_flat_join
+  #     ranges: [-1e4, -1e2, 1e2, 1e4]
+  #   Au_3:
+  #     prior_type: double_log_flat_join
+  #     ranges: [-1e4, -1e2, 1e2, 1e4]
+  #   M2:
+  #     prior_type: double_log_flat_join
+  #     ranges: [-1e4, -1e2, 1e2, 1e4]
+  #   TanBeta:
+  #     range: [3.0, 70.0]
+  #     prior_type: flat
+  #   mHd2:
+  #     prior_type: double_log_flat_join
+  #     ranges: [-1e8, -1e4, 1e4, 1e8]
+  #   mHu2:
+  #     prior_type: double_log_flat_join
+  #     ranges: [-1e8, -1e4, 1e4, 1e8]
+  #   mf2:
+  #     prior_type: double_log_flat_join
+  #     ranges: [0, 0, 1e4, 1e8]
+  #   mG: 1.5
 
 
 Priors:
@@ -96,18 +108,12 @@ ObsLikes:
     # - capability: lnL_deltarho
     #   purpose:    LogLike
 
-    - capability:  lnL_gm2
-      purpose:     LogLike
+    # - capability:  lnL_gm2
+    #   purpose:     LogLike
 
     - purpose:    Observable
       capability: MSSM_spectrum
       type:       map_str_dbl
-    
-    - purpose: Observable
-      capability: neutralino_1_decay_rates
-      printme: False
-      options:
-        drop_SLHA_file: true
 
     # Test DecayBit
     - purpose:      Test
