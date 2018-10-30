@@ -89,7 +89,7 @@ namespace Gambit
       {
         spectrum = Dep::SM_spectrum->getSLHAea(2);
       }
-      if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT") or ModelInUse("MSSM63atQ_lightgravitino") or ModelInUse("MSSM63atMGUT_lightgravitino"))
+      else if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT") or ModelInUse("MSSM63atQ_lightgravitino") or ModelInUse("MSSM63atMGUT_lightgravitino"))
       {
         spectrum = Dep::MSSM_spectrum->getSLHAea(2);
         // Add the MODSEL block if it is not provided by the spectrum object.

@@ -123,7 +123,7 @@
     #if(FS_MODEL_MSSMatMGUTEFTHiggs_IS_BUILT)
     #define FUNCTION get_MSSMatMGUT_spectrum_FlexibleEFTHiggs
     START_FUNCTION(Spectrum)
-    ALLOW_MODELS(MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atMGUT, MSSM63atMGUT_lightgravitino)
     DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
     #undef FUNCTION
     #endif
@@ -134,11 +134,11 @@
     #if(FS_MODEL_MSSMatMGUTEFTHiggs_mAmu_IS_BUILT)
     #define FUNCTION get_MSSMatMGUT_mA_spectrum_FlexibleEFTHiggs
     START_FUNCTION(Spectrum)
-    ALLOW_MODELS(MSSM63atMGUT_mA)
+    ALLOW_MODELS(MSSM63atMGUT_mA, MSSM63atMGUT_mA_lightgravitino)
     DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
     #undef FUNCTION
     #endif
-     
+
 
     // ==============================
     // MSSM parameterised by mA and mu (instead of mHu2 and mHd2) at SUSY scale
