@@ -77,7 +77,7 @@ namespace Gambit
                 "/InitializationFiles/DefaultObjectInitializationFiles/PotentialFunctionInitialization.xml";
 
                 std::string ScaleAndBlockFile = vevaciouspath +
-                "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwoAndSarahOutputs.xml";
+                "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwo.xml";
 
                 std::string PotentialFunctionClassType = runOptions.getValueOrDef<std::string>(
                 "FixedScaleOneLoopPotential", "potential_type");
@@ -313,7 +313,7 @@ namespace Gambit
                     "        100\n"
                     "      </PathResolution>\n"
                     "      <MinimumVacuumSeparationFraction>\n"
-                    "        0.8\n"
+                    "        0.2\n"
                     "      </MinimumVacuumSeparationFraction>\n"
                     "      <BouncePotentialFit>\n"
                     "        <ClassType>\n"
@@ -338,7 +338,7 @@ namespace Gambit
                     "              50\n"
                     "            </NumberOfPathSegments>\n"
                     "            <MinuitStrategy>\n"
-                    "              2\n"
+                    "              1\n"
                     "            </MinuitStrategy>\n"
                     "            <MinuitTolerance>\n"
                     "              0.5\n"
@@ -449,6 +449,7 @@ namespace Gambit
         cout << "VEVACIOUS SCALE:  "<< scale << endl;
 
         // Here we start passing the parameters form the SLHAea::Coll  object
+
 		std::vector<std::pair<int,double>> gaugecouplings = 
 		{ { 1 , SLHAea::to<double>(slhaea.at("GAUGE").at(1).at(1))  }, { 2, SLHAea::to<double>(slhaea.at("GAUGE").at(2).at(1)) }, { 3, SLHAea::to<double>(slhaea.at("GAUGE").at(3).at(1)) } };
 		
@@ -460,7 +461,7 @@ namespace Gambit
 													{ 103, SLHAea::to<double>(slhaea.at("HMIX").at(103).at(1))},
 													{ 3, SLHAea::to<double>(slhaea.at("HMIX").at(3).at(1))}
 													};
-													
+
 		vevaciousPlusPlus.ReadLhaBlock( "HMIX", scale , Hmix, 1 );
 	
    
@@ -703,6 +704,7 @@ namespace Gambit
 
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
         try {
+            //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
             vevaciousPlusPlus.RunPoint("internal");
             lifetimeAndThermalProbability.first = vevaciousPlusPlus.GetLifetimeInSeconds();
             lifetimeAndThermalProbability.second= vevaciousPlusPlus.GetThermalProbability();
