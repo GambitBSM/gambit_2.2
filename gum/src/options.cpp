@@ -90,7 +90,7 @@ Options parse(int argc, char** argv)
     }
     if ((package == "sarah") && (not restriction.empty()))
     {
-        throw("ERROR: restricti./mon file added for SARAH, only works for feynrules.");
+        throw("ERROR: restriction file added for SARAH, only works for feynrules.");
     }
     Options options(package, model, restriction, lagrangian);
     return options;

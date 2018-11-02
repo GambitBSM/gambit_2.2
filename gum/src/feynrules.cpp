@@ -201,9 +201,6 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             int pdg;
             bool SM;
 
-            // Assume a particle isn't SC unless we spot it.
-            bool self_conjugate = false;
-
             // Firstly, find the name
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",1]]";
             send_to_math(command);
@@ -222,10 +219,6 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             {
                 std::cout << "Error getting antiparticle name from WSTP." << std::endl;
                 return;
-            }
-            else if (not (std::strcmp(name, antiname)))
-            {
-                self_conjugate = true;
             }
 
             // Next, find out the spin.
@@ -313,16 +306,8 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, std::string(fullname), SM, mass, self_conjugate);
+            Particle particle(pdg, std::string(name), spinX2, std::string(fullname), SM, mass, std::string(antiname));
             partlist.push_back(particle);
-
-            // Also add the antiparticle if it is distinct.
-            if (not self_conjugate)
-            {
-                Particle antiparticle((-1)*pdg, std::string(antiname), spinX2, std::string(fullname), SM, mass, self_conjugate);
-                partlist.push_back(antiparticle);
-            }
-
         }
 
     }
@@ -527,13 +512,14 @@ BOOST_PYTHON_MODULE(libfr)
 {
   using namespace boost::python;
 
-  class_<Particle>("FRParticle", init<int, std::string, int, std::string, bool, std::string, bool>())
-    .def("pdg",    &Particle::pdg)
-    .def("name",   &Particle::name)
-    .def("SM",     &Particle::SM)
-    .def("spinX2", &Particle::spinX2)
-    .def("mass",   &Particle::mass)
-    .def("SC",     &Particle::SC)
+  class_<Particle>("FRParticle", init<int, std::string, int, std::string, bool, std::string, std::string>())
+    .def("pdg",      &Particle::pdg)
+    .def("name",     &Particle::name)
+    .def("SM",       &Particle::SM)
+    .def("spinX2",   &Particle::spinX2)
+    .def("mass",     &Particle::mass)
+    .def("SC",       &Particle::SC)
+    .def("antiname", &Particle::antiname)
     ;
 
   class_<Parameter>("FRParameter", init<std::string, std::string>())

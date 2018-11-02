@@ -13,7 +13,8 @@ def fr_part_to_gum_part(fr_bsm):
     
     for i in xrange(len(fr_bsm)):
         part = fr_bsm[i]            
-        bsm_list.append(Particle(part.spinX2(), part.pdg(), 
-                                 part.SC(), part.mass()))
+        bsm_list.append(Particle(part.name(), part.antiname(),
+        						 part.spinX2(), part.pdg(), 
+                                 part.mass()))
     
     return bsm_list

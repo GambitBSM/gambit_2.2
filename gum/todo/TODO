@@ -26,17 +26,8 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * 2-2 processes/vertex sorters etc. (darkbit)
   * decays.py
 
-* Particle database: automatically add all new particles to particle database.
-  * Make this a .gum option? -> "add_new_particles: true"
-
 * Call MadGraph directly from GUM -> Pythia8?
   * Try to intercept logger() -> find correct output
-
-* Model hierarchy:
-  * How to consistently define parameter translations?
-  * If child goes to the top of family tree -> new spectrum, rewrite others? hmm.. e.g. inserting 2HDM+S as parent to S? and 2HDM?
-  * Get rid of "use_existing_spectrum" as its own node, and gain information solely from the translation functions. But still give the user the option to write a new spectrum.
-  * Do we NEED to be able to add translation functions? Is this the function of GUM? This is far more trivial from a GAMBIT model hierarchy point of view...
 
 * Option for choice of Lagrangian (potential) basis, or physical basis
   * SARAH: CalculateMasses -> True/False -- should work...
@@ -52,6 +43,8 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * Use FeynArts/Calc?
   
 * .ufo to .mdl for 4-fermion vertices
+
+* Re-write DecayBit dictionary scraper so that particles, even if they don't decay, have an entry in the dict (i.e. light quarks)
 
 ==============
 =   GAMBIT   =

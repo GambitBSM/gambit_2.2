@@ -130,7 +130,6 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             std::string outputname;
             const char* antiname;
             std::string antioutputname;
-            const char* fullname;
             std::string mass;
             int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
             int pdg;
@@ -235,10 +234,6 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 }
             }
 
-            //std::cout << "PDG code = " << pdg << ", self conj? -- " << self_conjugate << ", outputname = " << outputname;
-            //if (not self_conjugate) { std::cout << ", antioutputname = " << antioutputname << std::endl; }
-            //else { std::cout << std::endl; }
-
             mass = "M" + outputname;
 
             std::set<int> SM_pdgs = {1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24};
@@ -252,15 +247,8 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, std::string(outputname), SM, mass, self_conjugate);
+            Particle particle(pdg, std::string(name), spinX2, std::string(outputname), SM, mass, std::string(antiname));
             partlist.push_back(particle);
-
-            // Also add the antiparticle if it is distinct.
-            if (not self_conjugate)
-            {
-                Particle antiparticle((-1)*pdg, std::string(antiname), spinX2, std::string(antioutputname), SM, mass, self_conjugate);
-                partlist.push_back(antiparticle);
-            }
 
         }
 
@@ -381,13 +369,14 @@ BOOST_PYTHON_MODULE(libsarah)
 {
   using namespace boost::python;
 
-  class_<Particle>("SARAHParticle", init<int, std::string, int, std::string, bool, std::string, bool>())
-    .def("pdg",    &Particle::pdg)
-    .def("name",   &Particle::name)
-    .def("SM",     &Particle::SM)
-    .def("spinX2", &Particle::spinX2)
-    .def("mass",   &Particle::mass)
-    .def("SC",     &Particle::SC)
+  class_<Particle>("SARAHParticle", init<int, std::string, int, std::string, bool, std::string, std::string>())
+    .def("pdg",      &Particle::pdg)
+    .def("name",     &Particle::name)
+    .def("SM",       &Particle::SM)
+    .def("spinX2",   &Particle::spinX2)
+    .def("mass",     &Particle::mass)
+    .def("SC",       &Particle::SC)
+    .def("antiname", &Particle::antiname)
     ;
 
   class_<Parameter>("SARAHParameter", init<std::string, std::string>())

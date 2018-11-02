@@ -36,41 +36,31 @@ def create_entry(macro, particle_list):
   for i in range(0, len(particle_list)):
   
     entry = particle_list[i]
-    
-    # If there's a comment -> just post it without the rest of the stuff
-    if 'comment' in entry:
-      output += "\n      // " + entry['comment'] + "\n      "
-    
+  
+    PDG = entry['PDG_context']
+
+    print PDG
+
+    # Count how many particles appear in the PDG_context lists.
+    numlists = sum(1 for x in PDG if isinstance(x, list))
+
+    if numlists == 0:
+      PDGbar = [-PDG[0], PDG[1]]
     else:
-      PDG = entry['PDG_context']
+      PDGbar = [[-i[0], i[1]] for i in PDG]
+
+    print PDGbar
+
+    # Add description (C++ comment) if it exists
+    if 'description' in entry:
+      output += "\n      // " + str(entry['description']) + "\n      "
       
-      # Count how many particles appear in the PDG_context lists.
-      numlists = sum(1 for x in PDG if isinstance(x, list))
-      
-      # Add description (C++ comment) if it exists
-      if 'description' in entry:
-        output += "\n      // " + str(entry['description']) + "\n      "
-        
-      # Add the macro plus the particle name, plus the PDG-context pair. 
-      output += macro + '("' + str(entry['name']) + '", ' + str(entry['PDG_context']).replace("]",")").replace("[","(") + ")\n      " 
-    
-      # If the YAML file says there is a conjugate particle, add the name of it and the negative PDG-context pair
-      if 'conjugate' in entry: 
-        output += macro + '("' + str(entry['conjugate']) + '", ('
-        
-        # If it is not a particle set.
-        if numlists == 0:
-          output += str(-PDG[0]) + ", " + str(PDG[1])
-          
-        # If it is a particle set. 
-        else:  
-          for i in range(0, numlists):
-            output += '(' + str(-PDG[i][0]) + ", " + str(PDG[i][1]) + ')'
-            # Comma separate all but the last one
-            if i < numlists-1: 
-              output += ', '
-              
-        output += "))\n      "
+    # Add the macro plus the particle name, plus the PDG-context pair. 
+    output += macro + '("{0}", {1})\n      '.format(str(entry['name']), str(PDG).replace(']',')').replace('[','('))
+
+    # If the YAML file says there is a conjugate particle, add the name of it and the negative PDG-context pair
+    if 'conjugate' in entry: 
+      output += macro + '("{0}", {1})\n      '.format(str(entry['conjugate']), str(PDGbar).replace(']',')').replace('[','('))
         
   return output
 

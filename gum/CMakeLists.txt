@@ -33,7 +33,7 @@ EXTERNALPROJECT_ADD(
     FeynRules
 
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    URL_MD5 56521ae1ed6fe701368dbb5de9b581ee
+    URL_MD5 0389b4bdac1b85961e9d2b8a21b31c36                                                                                                                                                               
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
@@ -52,8 +52,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
     SARAH
 
-    URL https://sarah.hepforge.org/downloads/?f=SARAH-4.12.3.tar.gz
-    URL_MD5 be173d937e88f18df81dd29a08efc513
+    URL https://sarah.hepforge.org/downloads/?f=SARAH-4.14.0.tar.gz
+    URL_MD5 850b74625e531b93fd43a32c181c825b
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""

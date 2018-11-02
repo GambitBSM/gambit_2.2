@@ -57,13 +57,15 @@ class Particle
     bool standardmodel;
     std::string partmass;
     bool selfconj;
+    std::string antipartname;
 
     public:
 
+        // Needed for Boost.python interface
         bool operator==(const Particle& other) {return false;}
         bool operator!=(const Particle& other) {return true;}
 
-        Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass, bool SC)
+        Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass, std::string antiname)
         {
             pdgcode = pdg;
             partname = name;
@@ -71,7 +73,17 @@ class Particle
             fullname = full_name;
             standardmodel = SM;
             partmass = mass;
-            selfconj = SC;
+            antipartname = antiname;
+
+            if (name == antiname)
+            {
+                selfconj = true;
+            }
+            else
+            {
+                selfconj = false;
+            }
+
         }
 
         int pdg() { return pdgcode; }
@@ -80,6 +92,7 @@ class Particle
         int spinX2() { return doublespin; }
         std::string mass() { return partmass; }
         bool SC() { return selfconj; }
+        std::string antiname() { return antipartname; }
 
 
         // Unsure if needed yet.
@@ -95,6 +108,7 @@ class Parameter
 
     public:
 
+        // Needed for Boost.python interface
         bool operator==(const Parameter& other) {return false;}
         bool operator!=(const Parameter& other) {return true;}
 

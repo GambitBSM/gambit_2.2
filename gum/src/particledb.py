@@ -22,7 +22,7 @@ def get_gambit_particle_pdg_dict():
     with open("./../config/particle_database.yaml", "r") as f:
 
         try:
-            data = yaml.load(f)
+            data = yaml.safe_load(f)
         except yaml.YAMLerror as exc:
             print(exc)
 
@@ -174,19 +174,69 @@ def check_all_particles_present(partlist, gambit_pdg_codes):
     
     for i in xrange(len(partlist)):
         if not partlist[i].pdg() in gambit_pdg_codes.values():
-            absent.append(partlist[i].pdg())
+            absent.append(partlist[i])
+
+    absent_by_pdg = [x.pdg() for x in absent]
     
     if len(absent) == 0:
         print("All particles are in the GAMBIT database.")
-        return True
     else:
-        print(("\n\tThe following particles (by PDG code) are missing from the "
-               "particle database: {0}. Please add them to "
-               "../config/particle_database.yaml.\n").format(absent))
-        return False
-    
+        print(("\nThe following particles (by PDG code) are missing from the "
+               "particle database: {0}. GUM is now adding them to "
+               "../config/particle_database.yaml.\n").format(absent_by_pdg))
 
-def add_new_particleDB_entry(particle):
+    return absent
+        
+
+def add_new_particleDB_entry(particles):
     """
-    Adds a new particle to the particle_database.yaml file.
+    Adds a list of particles to the particle database.
     """
+    stream =    ("# YAML file containing all particles for the particle database.\n\n"
+                "# particle_database.cpp is constructed from this YAML file at compile time, via particle_harvester.py.\n\n"
+                "# New entries should look like:\n"
+                "#\n"
+                "#   - name: \"X+\"                           The name used within GAMBIT, in the particleDB.\n"
+                "#     PDG_context: [10, 4]                 The PDG-context pair used for a single particle.\n"
+                "#     conjugate: \"X-\"                      The name for the conjugate particle, also added to the particleDB.\n"
+                "#     description: \"New particle\"          Optional - adds a C++ comment to particle_database.cpp. For readability.\n"
+                "#     DecayBit:\n"
+                "#       Decays: True                       Flag to show whether or not to include a particle's Decays in DecayBit.\n"
+                "#       name: \"X_plus\"                     The name used as CAPABILITES in DecayBit_rollcall.hpp for the specific particle.\n"
+                "#       conjugate: \"X_minus\"                    And the name used for it's conjugate.\n"
+                "#\n"
+                "# The syntax for adding sets is identical - GAMBIT automatically numbers each particle in a set.\n"
+                "#\n"
+                "#   - name: \"h0\"\n"
+                "#     PDG_context:\n"
+                "#     - [25, 0]      (This line-by-line format is equivalent to a list of lists)\n"
+                "#     - [35, 0]      Creates entries for \"h0_1\" and \"h0_2\" in the particleDB.\n"
+                "#     DecayBit:\n"
+                "#       Decays: True\n"
+                "#       name: \"h0\"                         Creates rollcall entries for \"h0_1_decay_rates\" and \"h0_2_decay_rates\" CAPABILITIES.\n"
+                "#       name: [\"Higgs\", \"h0_2\"]            Alternative syntax - if particles within sets have different names - creating CAPABILITIES \"Higgs_decay_rates\" and \"h0_2_decay_rates\".\n"
+                "#\n"
+                "# Note: If there is no entry for the 'DecayBit' field, GAMBIT will use the 'name' and 'conjugate' fields by default.\n"
+                "# TODO: Decide if Decays belong here, or elsewhere (GUM)\n\n")
+
+    with open("./../config/particle_database.yaml", "r") as f:
+        data = yaml.safe_load(f)
+        
+        for i in xrange(len(particles)):
+            part = particles[i]
+
+            entry = {}
+            entry['name'] = part.name()
+            entry['PDG_context'] = [part.pdg(), 0] # Always assuming mass ES.
+
+            if not (part.name() == part.antiname()):
+                entry['conjugate'] = part.antiname()
+
+            # Add new entry to the data structure
+            data['OtherModels']['Particles'].append(entry)
+
+    # Overwrite the particle database file
+    stream += yaml.dump(data).replace('\n  - ', '\n\n  - ')
+
+    with open("./../config/particle_database.yaml", "w") as f:
+        f.write(stream)
