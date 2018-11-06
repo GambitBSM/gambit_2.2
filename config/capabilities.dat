@@ -175,7 +175,7 @@ SomeDouble: |
 SomeInt: |
    Example integer in libfirst and friends.
 
-SomeOtherInt: |
+someOtherInt: |
    Another example integer; in libthird.
 
 funcBE: |
