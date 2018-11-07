@@ -18,8 +18,14 @@
 ///
 ///  *********************************************
 
+#ifdef WITH_MPI
+#include "mpi.h"
+#endif
+
 #include <string>
 #include <sstream>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_min.h>
@@ -62,19 +68,39 @@ namespace Gambit
             namespace myPipe = Pipes::make_vevaciousPlusPlus_inputs;
             const Options& runOptions=*myPipe::runOptions;
 
-
-            std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious","1.0");
-
-            vevaciouspath = vevaciouslibpath + "/../";
-
             static bool firstrun = true;
+            int rank;
             // Here we make sure files are only written the first time this is run
             if(firstrun) {
+
+                std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious","1.0");
+
+                vevaciouspath = vevaciouslibpath + "/../";
+
+
+                // Get mpi rank
+
+                #ifdef WITH_MPI
+                MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+                #else
+                rank = 0;
+                #endif
+                //Creating string with rank number
+                std::string rankstring = std::to_string(rank);
+                //Creating folders for initialization files
+                std::string mpipath = vevaciouspath + "/InitializationFiles/mpirank_"+ rankstring;
+                const int dir_err = mkdir(mpipath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+                if (-1 == dir_err)
+                {
+                    std::ostringstream errmsg;
+                    errmsg << "Error creating vevacious initialization folder for MPI process " << rankstring;
+                    utils_error().forced_throw(LOCAL_INFO,errmsg.str());
+                }
+
                 // Writing potential function initialization file
 
                 // Options that can be read from YAML file
-                std::string potentialfunctioninitpath = vevaciouspath +
-                "/InitializationFiles/DefaultObjectInitializationFiles/PotentialFunctionInitialization.xml";
+                std::string potentialfunctioninitpath = mpipath +"/PotentialFunctionInitialization.xml";
 
                 std::string ScaleAndBlockFile = vevaciouspath +
                 "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwo.xml";
@@ -125,8 +151,7 @@ namespace Gambit
                 // Options that can be read from YAML file go here
                 std::string homotopybackend = runOptions.getValueOrDef<std::string>("hom4ps",
                                                                                       "homotopy_backend");
-                std::string potentialminimizerinitpath = vevaciouspath +
-                                                         "/InitializationFiles/DefaultObjectInitializationFiles/PotentialMinimizerInitialization.xml";
+                std::string potentialminimizerinitpath = mpipath +"/PotentialMinimizerInitialization.xml";
                 std::string potentialminimizerinit;
 
                 if(homotopybackend == "hom4ps") {
@@ -277,8 +302,7 @@ namespace Gambit
                 potentialminimizerinitwrite.close();
 
                 // Writing tunneling calculator initialization file
-                std::string tunnelingcalculatorinitpath = vevaciouspath +
-                "/InitializationFiles/DefaultObjectInitializationFiles/TunnelingCalculatorInitialization.xml";
+                std::string tunnelingcalculatorinitpath = mpipath +"/TunnelingCalculatorInitialization.xml";
 
                 // Options that can be read from YAML file
 
@@ -386,7 +410,7 @@ namespace Gambit
                 //Finally write the main input file for VevaciousPlusPlus
 
                 std::string inputFilename =
-                vevaciouspath + "InitializationFiles/VevaciousPlusPlusDefaultObjectInitialization.xml";
+                vevaciouspath + "InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
 
                 // File contents
                 std::string inputfile =
@@ -431,7 +455,18 @@ namespace Gambit
         //}
         // Initilization of Vevacious Object
 
-        std::string inputFilename = vevaciouspath + "InitializationFiles/VevaciousPlusPlusDefaultObjectInitialization.xml";
+        // Getting mpi rank
+
+        int rank;
+        #ifdef WITH_MPI
+                    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        #else
+                    rank = 0;
+        #endif
+
+        std::string rankstring = std::to_string(rank);
+
+        std::string inputFilename = vevaciouspath + "InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
         vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
 
         // Get the spectrum object for MSSM
