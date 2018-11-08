@@ -91,7 +91,7 @@ namespace Gambit
 
 
                 // Getting the run folder for saving initialization files
-                inputspath = std::string(GAMBIT_DIR) + "/" + runOptions.getValue<std::string>("where_to_save_input");
+                inputspath = runOptions.getValue<std::string>("where_to_save_input");
 
                 std::string initfilesPath = inputspath + "/InitializationFiles/mpirank_"+ rankstring + "/";
                 std::string modelfilesPath = inputspath + "/ModelFiles/mpirank_"+ rankstring + "/";
@@ -269,7 +269,6 @@ namespace Gambit
 
                     // Getting path to PHC
                     std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
-                    cout << "PHC path:  "<< PathToPHC << endl;
 
                     // File contents
                     potentialminimizerinit =
