@@ -63,7 +63,7 @@ namespace Gambit
 
     bool firstrun = true;
 
-    void make_vevaciousPlusPlus_inputs(std::string &vevaciouspath)
+    void make_vevaciousPlusPlus_inputs(std::string &inputspath)
         {
             namespace myPipe = Pipes::make_vevaciousPlusPlus_inputs;
             const Options& runOptions=*myPipe::runOptions;
@@ -75,7 +75,7 @@ namespace Gambit
 
                 std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious","1.0");
 
-                vevaciouspath = vevaciouslibpath + "/../";
+                std::string vevaciouspath = vevaciouslibpath + "/../";
 
 
                 // Get mpi rank
@@ -85,31 +85,74 @@ namespace Gambit
                 #else
                 rank = 0;
                 #endif
+
                 //Creating string with rank number
                 std::string rankstring = std::to_string(rank);
+
+
+                // Getting the run folder for saving initialization files
+                inputspath = std::string(GAMBIT_DIR) + "/" + runOptions.getValue<std::string>("where_to_save_input");
+
+                std::string initfilesPath = inputspath + "/InitializationFiles/mpirank_"+ rankstring + "/";
+                std::string modelfilesPath = inputspath + "/ModelFiles/mpirank_"+ rankstring + "/";
+
+
                 //Creating folders for initialization files
-                std::string mpipath = vevaciouspath + "/InitializationFiles/mpirank_"+ rankstring;
-                const int dir_err = mkdir(mpipath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-                if (-1 == dir_err)
+
+               try
+               {
+                  Utils::ensure_path_exists(initfilesPath);
+                  Utils::ensure_path_exists(modelfilesPath);
+               }
+               catch(const std::exception& e)
+               {
+                    std::ostringstream errmsg;
+                    errmsg << "Error creating vevacious initialization and model files folders for MPI process " << rankstring;
+                    SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+               }
+
+               // Copying Vevacious Model files so that there is one for each process.
+
+                std::string ScaleAndBlockFileSource = vevaciouspath +
+                                                "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwo.xml";
+
+                std::string ModelFileSource = vevaciouspath + "ModelFiles/PotentialFunctions/RealMssmWithStauAndStopVevs.vin";
+
+                std::string ScaleAndBlockFile= modelfilesPath + "ScaleAndBlockFile.xml";
+
+                std::string ModelFile = modelfilesPath + "ModelFile.vin";
+
+                try
+                {
+
+                    std::ifstream  ScaleAndBlocksrc(ScaleAndBlockFileSource , std::ios::binary);
+                    std::ofstream  ScaleAndBlockdst(ScaleAndBlockFile ,   std::ios::binary);
+
+                    ScaleAndBlockdst << ScaleAndBlocksrc.rdbuf();
+
+                    std::ifstream  ModelFilesrc(ModelFileSource , std::ios::binary);
+                    std::ofstream  ModelFiledst(ModelFile ,   std::ios::binary);
+
+                    ModelFiledst << ModelFilesrc.rdbuf();
+                }
+                catch(const std::exception& e)
                 {
                     std::ostringstream errmsg;
-                    errmsg << "Error creating vevacious initialization folder for MPI process " << rankstring;
-                    utils_error().forced_throw(LOCAL_INFO,errmsg.str());
+                    errmsg << "Error copying model and scale/block vevacious files. Check they exist." << rankstring;
+                    SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
                 }
 
                 // Writing potential function initialization file
 
-                // Options that can be read from YAML file
-                std::string potentialfunctioninitpath = mpipath +"/PotentialFunctionInitialization.xml";
 
-                std::string ScaleAndBlockFile = vevaciouspath +
-                "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwo.xml";
+                // Options that can be read from YAML file
+                std::string potentialfunctioninitpath = initfilesPath + "/PotentialFunctionInitialization.xml";
 
                 std::string PotentialFunctionClassType = runOptions.getValueOrDef<std::string>(
                 "FixedScaleOneLoopPotential", "potential_type");
                 // std::string PotentialFunctionClassType = "FixedScaleOneLoopPotential";
 
-                std::string ModelFile = vevaciouspath + "ModelFiles/PotentialFunctions/RealMssmWithStauAndStopVevs.vin";
+
 
                 // File contents
                 std::string potentialfunctioninit =
@@ -151,7 +194,7 @@ namespace Gambit
                 // Options that can be read from YAML file go here
                 std::string homotopybackend = runOptions.getValueOrDef<std::string>("hom4ps",
                                                                                       "homotopy_backend");
-                std::string potentialminimizerinitpath = mpipath +"/PotentialMinimizerInitialization.xml";
+                std::string potentialminimizerinitpath = initfilesPath +"/PotentialMinimizerInitialization.xml";
                 std::string potentialminimizerinit;
 
                 if(homotopybackend == "hom4ps") {
@@ -302,7 +345,7 @@ namespace Gambit
                 potentialminimizerinitwrite.close();
 
                 // Writing tunneling calculator initialization file
-                std::string tunnelingcalculatorinitpath = mpipath +"/TunnelingCalculatorInitialization.xml";
+                std::string tunnelingcalculatorinitpath = initfilesPath +"/TunnelingCalculatorInitialization.xml";
 
                 // Options that can be read from YAML file
 
@@ -362,7 +405,7 @@ namespace Gambit
                     "              50\n"
                     "            </NumberOfPathSegments>\n"
                     "            <MinuitStrategy>\n"
-                    "              1\n"
+                    "              0\n"
                     "            </MinuitStrategy>\n"
                     "            <MinuitTolerance>\n"
                     "              0.5\n"
@@ -391,7 +434,7 @@ namespace Gambit
                     "              0.25\n"
                     "            </NeighborDisplacementWeights>\n"
                     "            <MinuitStrategy>\n"
-                    "              1\n"
+                    "              0\n"
                     "            </MinuitStrategy>\n"
                     "            <MinuitTolerance>\n"
                     "              0.5\n"
@@ -410,7 +453,7 @@ namespace Gambit
                 //Finally write the main input file for VevaciousPlusPlus
 
                 std::string inputFilename =
-                vevaciouspath + "InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
+                        inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
 
                 // File contents
                 std::string inputfile =
@@ -444,7 +487,7 @@ namespace Gambit
        //                            "/VevaciousPlusPlus/";
         namespace myPipe = Pipes::check_stability_MSSM;
 
-        static std::string vevaciouspath =  *myPipe::Dep::make_vevaciousPlusPlus_inputs;
+        static std::string inputspath =  *myPipe::Dep::make_vevaciousPlusPlus_inputs;
 
         // Writing Vevacious input files
 
@@ -466,7 +509,7 @@ namespace Gambit
 
         std::string rankstring = std::to_string(rank);
 
-        std::string inputFilename = vevaciouspath + "InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
+        std::string inputFilename = inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
         vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
 
         // Get the spectrum object for MSSM
@@ -741,8 +784,28 @@ namespace Gambit
         try {
             //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
             vevaciousPlusPlus.RunPoint("internal");
-            lifetimeAndThermalProbability.first = vevaciousPlusPlus.GetLifetimeInSeconds();
-            lifetimeAndThermalProbability.second= vevaciousPlusPlus.GetThermalProbability();
+            double lifetime= vevaciousPlusPlus.GetLifetimeInSeconds();
+            double thermalProbability = vevaciousPlusPlus.GetThermalProbability();
+
+            if(lifetime == -1 && thermalProbability == -1 ){
+                lifetimeAndThermalProbability.first = 3.0E+100;
+                lifetimeAndThermalProbability.second= 1;
+            }
+            else if(lifetime == -1 && thermalProbability != -1)
+            {
+                lifetimeAndThermalProbability.first = 3.0E+100;
+                lifetimeAndThermalProbability.second= thermalProbability;
+            }
+            else if(lifetime != -1 && thermalProbability == -1)
+            {
+                lifetimeAndThermalProbability.first = lifetime;
+                lifetimeAndThermalProbability.second= 1;
+            }
+            else {
+
+                lifetimeAndThermalProbability.first = lifetime;
+                lifetimeAndThermalProbability.second= thermalProbability;
+            }
             cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
             std::string result = vevaciousPlusPlus.GetResultsAsString();
             cout << "VEVACIOUS RESULT:  "<< result << endl;
@@ -750,11 +813,14 @@ namespace Gambit
         catch(const std::exception& e)
         {
             //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
-            lifetimeAndThermalProbability.first = -2; //Vevacious Crashed
-            lifetimeAndThermalProbability.second= -2;
+            lifetimeAndThermalProbability.first = 2.0E+100; //Vevacious has crashed
+            lifetimeAndThermalProbability.second= 1;
             cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
-            std::string result = "Crashed";
+            std::string result = "Inconclusive";
             cout << "VEVACIOUS RESULT:  "<< result << endl;
+            std::ostringstream errmsg;
+            errmsg << "Vevacious could not calculate lifetime. Conservatively setting it to large value." << rankstring;
+            SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
         }
 
  	}
@@ -766,41 +832,17 @@ namespace Gambit
         namespace myPipe = Pipes::get_likelihood_VS_MSSM;
         double lifetime =  myPipe::Dep::check_stability_MSSM->first;
 
-        if (lifetime == -1) // Means it is stable
-        {
-            result = 0;
-        }
-        else if(lifetime == -2) // Means Vevacious crashed
-        {
-            invalid_point().raise("Vevacious crashed");
-            result = 0;
-        }
-        else
-        {
-            // This is based on the estimation of the past lightcone from 1806.11281
-            double conversion = (6.5821195e-25)/(31536000);
-            result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
-        }
+        // This is based on the estimation of the past lightcone from 1806.11281
+        double conversion = (6.5821195e-25)/(31536000);
+        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
     }
 
     void get_likelihood_VS_MSSM_thermal(double &result)
     {
-        namespace myPipe = Pipes::get_likelihood_VS_MSSM;
+        namespace myPipe = Pipes::get_likelihood_VS_MSSM_thermal;
         double ThermalProbability =  myPipe::Dep::check_stability_MSSM->second;
 
-        if (ThermalProbability == -1) // Means Temperature corrections were not calculated
-        {
-            result = 0;
-        }
-        else if(ThermalProbability == -2) // Means Vevacious crashed
-        {
-            invalid_point().raise("Vevacious crashed");
-            result = 0;
-        }
-        else
-        {
             result= std::log(ThermalProbability);
-        }
     }
 
 
