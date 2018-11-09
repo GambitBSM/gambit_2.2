@@ -269,6 +269,29 @@ namespace Gambit
 
                     // Getting path to PHC
                     std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
+                    // Creating symlink to PHC in run folder
+                    std::string PHCSymlink = inputspath + "/PHC/mpirank_"+ rankstring + "/";
+
+                    try
+                    {
+                        Utils::ensure_path_exists(PHCSymlink);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::ostringstream errmsg;
+                        errmsg << "Error creating PHC folder for MPI process " << rankstring;
+                        SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+                    }
+
+                    std::string systemCommand( "ln -s " + PathToPHC + " " + PHCSymlink );
+
+                    int systemReturn = system( systemCommand.c_str() ) ;
+                    if( systemReturn == -1 )
+                    {
+                        std::ostringstream errmsg;
+                        errmsg << "Error making symlink for PHC in process " << rankstring;
+                        SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+                    }
 
                     // File contents
                     potentialminimizerinit =
@@ -295,7 +318,7 @@ namespace Gambit
                             "            </ClassType>\n"
                             "            <ConstructorArguments>\n"
                             "              <PathToPHC>\n"
-                            "        " + PathToPHC + "/" + "\n"
+                            "        " + PHCSymlink + "/2.4.58/" + "\n"
                              "              </PathToPHC>\n"
                              "              <ResolutionSize>\n"
                              "                1.0\n"
@@ -817,9 +840,10 @@ namespace Gambit
             cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
             std::string result = "Inconclusive";
             cout << "VEVACIOUS RESULT:  "<< result << endl;
-            std::ostringstream errmsg;
-            errmsg << "Vevacious could not calculate lifetime. Conservatively setting it to large value." << rankstring;
-            SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+            cout << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+            //std::ostringstream errmsg;
+            //errmsg << "Vevacious could not calculate lifetime. Conservatively setting it to large value." << rankstring;
+            //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
         }
 
  	}
