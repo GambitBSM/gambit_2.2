@@ -26,7 +26,7 @@ Parameters:
     mf2: 15625.0
     Ad_3: 0
     Au_3: 0
-    mG: 1.5
+    mG: 1.0e-10
 
   # MSSM7atQ_lightgravitino:
   #   Qin:
@@ -101,6 +101,10 @@ ObsLikes:
     # Precision physics likelihoods
     - capability: lnL_W_mass
       purpose:    LogLike
+
+    # Combined LHC likelihood
+    - purpose:    LogLike
+      capability: LHC_Combined_LogLike
 
     # - capability: lnL_sinW2_eff
     #   purpose:    LogLike
@@ -380,13 +384,13 @@ Rules:
     function: operateLHCLoop
     options:
       pythiaNames: ["Pythia_SUSY_LHC_13TeV"]
-      silenceLoop: true
+      silenceLoop: false
 
   # Choose statistical settings for Monte Carlo event generator
   - capability: MC_ConvergenceSettings
     options:
-      min_nEvents: [5000]
-      max_nEvents: [50000]
+      min_nEvents: [100]
+      max_nEvents: [100]
       events_between_convergence_checks: [5000]
       target_fractional_uncert: [0.3]
       halt_when_systematic_dominated: true
@@ -399,7 +403,7 @@ Rules:
       # Pythia_doc_path defaults to the xmldoc directory of the default Pythia
       # backend. So, this must only be set if the user chooses a different Pythia.
       # Pythia_doc_path: "Backends/installed/Pythia/8.212/share/Pythia8/xmldoc/"
-      Pythia_SUSY_LHC_13TeV: ["Print:quiet = on",
+      Pythia_SUSY_LHC_13TeV: ["Print:quiet = off",
                              "PartonLevel:MPI = off",
                              "PartonLevel:ISR = on",
                              "PartonLevel:FSR = on",
