@@ -283,7 +283,7 @@ namespace Gambit
                         SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
                     }
 
-                    std::string systemCommand( "ln -s " + PathToPHC + " " + PHCSymlink );
+                    std::string systemCommand( "ln -s " + PathToPHC + "/phc" + " " + PHCSymlink );
 
                     int systemReturn = system( systemCommand.c_str() ) ;
                     if( systemReturn == -1 )
@@ -318,7 +318,7 @@ namespace Gambit
                             "            </ClassType>\n"
                             "            <ConstructorArguments>\n"
                             "              <PathToPHC>\n"
-                            "        " + PHCSymlink + "/2.4.58/" + "\n"
+                            "        " + PHCSymlink + "\n"
                              "              </PathToPHC>\n"
                              "              <ResolutionSize>\n"
                              "                1.0\n"
