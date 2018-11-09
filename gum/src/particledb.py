@@ -188,7 +188,7 @@ def check_all_particles_present(partlist, gambit_pdg_codes):
     return absent
         
 
-def add_new_particleDB_entry(particles):
+def add_new_particleDB_entry(particles, dm_pdg):
     """
     Adds a list of particles to the particle database.
     """
@@ -226,11 +226,59 @@ def add_new_particleDB_entry(particles):
             part = particles[i]
 
             entry = {}
+
             entry['name'] = part.name()
             entry['PDG_context'] = [part.pdg(), 0] # Always assuming mass ES.
 
+            # Add conjugate field if it is distinct
             if not (part.name() == part.antiname()):
                 entry['conjugate'] = part.antiname()
+
+            # Assume a new particle decays *unless* it is explicitly given as
+            # a dark matter candidate
+            if not (part.pdg() == dm_pdg):
+
+                db = {'Decays': True}
+
+                entry['DecayBit'] = db
+
+                name = part.name()
+                antiname = part.antiname()
+
+                # Trim off stuff that would be illegal in a C++ function
+
+                # Tildes: at the start, just strip the tilde -- this is a symmetry thing
+                if name.startswith('~'):
+                    name = name[1:]
+                if antiname.startswith('~'):
+                    antiname = antiname[1:]
+                
+                # FeynRules adds a tilde for a conjugate.
+                if (name != antiname):
+                    if (antiname.endswith('~') and '~' not in name):
+                        antiname = antiname.strip('~') + 'bar'
+                    elif (name.endswith('~') and '~' not in antiname):
+                        name = name.strip('~') + 'bar'
+
+                # Plus / minus (let's assume nothing more than triply charged...)
+                for i in [name, antiname]:
+                    if i.endswith('+++'):
+                        i = i.strip('+++') + '_plusplusplus'                    
+                    if i.endswith('++'):
+                        i = i.strip('++') + '_plusplus'                
+                    if i.endswith('+'):
+                        i = i.strip('+') + '_plus'
+                    if i.endswith('---'):
+                        i = i.strip('---') + '_minusminusminus'
+                    if i.endswith('--'):
+                        i = i.strip('--') + '_minusminus'
+                    if i.endswith('-'):
+                        i = i.strip('-') + '_minus'
+
+                # Add 'name' and 'conjugate' fields to DecayBit entry.
+                db['name'] = name
+                if (antiname != name):
+                    db['conjugate'] = antiname
 
             # Add new entry to the data structure
             data['OtherModels']['Particles'].append(entry)

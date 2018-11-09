@@ -52,7 +52,9 @@ if args.file:
 
     # FeynRules
     if gum.math == 'feynrules':
+
         from lib.libfr import *
+
         options = FROptions("feynrules", gum.name, gum.restriction, gum.LTot)
         partlist = FRVectorOfParticles()
         paramlist = FRVectorOfParameters()
@@ -70,7 +72,9 @@ if args.file:
         bsm_particle_list = fr_part_to_gum_part(fr_bsm)
 
     elif gum.math == 'sarah':
+
         from lib.libsarah import *
+
         options = SARAHOptions("sarah", gum.name, '')
         partlist = SARAHVectorOfParticles()
         paramlist = SARAHVectorOfParameters()
@@ -92,10 +96,10 @@ if args.file:
         for i in xrange(len(partlist)):
             part = partlist[i]
             # If specified, initialise the DM candidate
-            if darkbit:
-                if part.pdg() == gum.dm_pdg:
-                    dm = Particle(part.spinX2(), part.pdg(),
-                                  part.SC(), part.mass())
+            if part.pdg() == gum.dm_pdg:
+                dm = Particle(part.name(), part.antiname(), 
+                              part.spinX2(), part.pdg(),
+                              part.mass())
 
     # If we haven't found the DM candidate in the particle list...
     if darkbit and not dm:
@@ -110,9 +114,17 @@ if args.file:
     gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
     # Check every new particle is in the database
-    # TODO: Add particles to particleDB automatically
-    if not (check_all_particles_present(partlist, gambit_pdgs)):
-        raise GumError()
+    missing_parts = check_all_particles_present(partlist, gambit_pdgs)
+
+    if len(missing_parts) != 0:
+        if args.dryrun:
+            print("GUM won't add to the particle database for a dryrun.")
+            print("GUM will fail shortly. That's a promise.")
+        else:
+            # Add new particles to the database.
+            add_new_particleDB_entry(missing_parts, gum.dm_pdg)
+            # Mow reload the dictionaries
+            gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
     # Clean up calchep files, then copy them to the GAMBIT backendDir
     if output_opts.ch:
@@ -155,22 +167,8 @@ if args.file:
     # Will have to be extracted, somehow - from FR/SARAH/etc.
     gambit_model_params = ["mS", "lam_hS"]
 
-    # Translation functions for model hierarchy. These will have to be
-    # user specified.
-    translation_functions_p = {"lam_hS": "lambda_hS*2"}
-    tf_c = {}
-    tf_f = {}
-
     ## TODO
-    model_header, model_source = add_to_model_hierarchy(gum.new_spectrum,
-                                                        gum.spec, gum.name,
-                                                        gambit_model_params,
-                                                        gum.parent,
-                                                        gum.children,
-                                                        gum.friends,
-                                                        translation_functions_p,
-                                                        tf_c, tf_f)
-
+    model_header = add_to_model_hierarchy(gum.spec, gum.name, gambit_model_params)
     spec_contents = write_spectrumcontents(gum.name, model_parameters)
     subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
     reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
@@ -313,12 +311,21 @@ if args.file:
     print("Now to write some GAMBIT code...")
     print("")
 
+
+    print(model_header)
+    print(spec_contents)
+    print(subspec_wrapper)
+    print(spectrum_src)
+    print(spec_contents)
+    print(spectrum_header)
+    #print(decaybit_src_ch)
+    #print(decay_roll)
+
     # All file writing routines HERE, once everything has gone okay.
 
     # Models
     m = "Models"
     write_file("models/" + gum.name, m, model_header, True)
-    write_file("models/" + gum.name, m, model_source, False) # If no parent!
     write_file("SpectrumContents/" + gum.name, m, spec_contents, False)
     write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m,
                subspec_wrapper, True)

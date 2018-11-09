@@ -44,8 +44,6 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   
 * .ufo to .mdl for 4-fermion vertices
 
-* Re-write DecayBit dictionary scraper so that particles, even if they don't decay, have an entry in the dict (i.e. light quarks)
-
 ==============
 =   GAMBIT   =
 ==============

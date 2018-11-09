@@ -127,6 +127,13 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     decayparticle = pdg_to_particle(grouped_decays[0], decaybit_dict)
     chep_name = pdg_to_particle(grouped_decays[0], calchep_pdg_codes)
 
+    # If the particle does not decay, according to the particle database,
+    # then there is no need to write a capability.
+    if decayparticle != None:
+        pass
+    else:
+        return ""
+
     function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
     spectrum = gambit_model_name + "_spectrum"
 
@@ -219,9 +226,15 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
      
     for i in xrange(len(newdecays)):
         decayparticle = newdecays[i][0]
-        cap = "{0}_decay_rates".format(pdg_to_particle(decayparticle, 
-                                                       decaybit_dict)
-                                      )
+        gb_name = (pdg_to_particle(decayparticle, decaybit_dict))
+        # If the particle does not decay, according to the particle database,
+        # then there is no need to write a capability.
+        print gb_name
+        if gb_name != None:
+            pass
+        else:
+            return "", ""
+        cap = "{0}_decay_rates".format(gb_name)
         func = "CH_{0}_{1}_decays".format(model_name, 
                                           pdg_to_particle(decayparticle, 
                                                           decaybit_dict)

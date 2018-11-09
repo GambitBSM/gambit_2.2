@@ -57,16 +57,19 @@ def pdg_to_particle(pdg_code, pdg_dict):
     a GAMBIT or CalcHEP dict, wrapped in quoatation marks.
     """
     
-
     for name, pdg_val in pdg_dict.iteritems():
         if pdg_code == pdg_val:
             return name
-            
+        
+    """ 
     # If not found -> throw error; gum doesn't know what to do.
     raise GumError(("\n\nNo entry for PDG code " + str(pdg_code) + 
                     " in dictionary. Please check "
                     "gambit/config/particle_database.yaml "
                     "or your Mathematica file."))
+    """
+    # If not found -> return None & deal with this on case-by-case
+    return None
 
 class Vertex:
     """
