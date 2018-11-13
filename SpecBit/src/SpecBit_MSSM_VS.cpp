@@ -142,6 +142,11 @@ namespace Gambit
                     SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
                 }
 
+                // Getting Minuit strategy option
+
+
+                std::string MinuitStrategy = runOptions.getValueOrDef<std::string>(
+                        "0", "minuit_strategy");
                 // Writing potential function initialization file
 
 
@@ -252,7 +257,7 @@ namespace Gambit
                              "            1.0\n"
                              "          </MinimumInitialStepSize>\n"
                              "          <MinuitStrategy>\n"
-                             "            0\n"
+                             "             "+ MinuitStrategy +"\n"
                              "          </MinuitStrategy>\n"
                              "        </ConstructorArguments>\n"
                              "      </GradientMinimizerClass>\n"
@@ -270,7 +275,7 @@ namespace Gambit
                     // Getting path to PHC
                     std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
                     // Creating symlink to PHC in run folder
-                    std::string PHCSymlink = inputspath + "/PHC/mpirank_"+ rankstring + "/";
+                    std::string PHCSymlink = inputspath + "/Homotopy/mpirank_"+ rankstring + "/";
 
                     try
                     {
@@ -342,7 +347,7 @@ namespace Gambit
                              "            1.0\n"
                              "          </MinimumInitialStepSize>\n"
                              "          <MinuitStrategy>\n"
-                             "            0\n"
+                             "            "+ MinuitStrategy +"\n"
                              "          </MinuitStrategy>\n"
                              "        </ConstructorArguments>\n"
                              "      </GradientMinimizerClass>\n"
@@ -427,7 +432,7 @@ namespace Gambit
                     "              50\n"
                     "            </NumberOfPathSegments>\n"
                     "            <MinuitStrategy>\n"
-                    "              0\n"
+                    "             "+ MinuitStrategy +"\n"
                     "            </MinuitStrategy>\n"
                     "            <MinuitTolerance>\n"
                     "              0.5\n"
@@ -456,7 +461,7 @@ namespace Gambit
                     "              0.25\n"
                     "            </NeighborDisplacementWeights>\n"
                     "            <MinuitStrategy>\n"
-                    "              0\n"
+                    "               "+ MinuitStrategy +"\n"
                     "            </MinuitStrategy>\n"
                     "            <MinuitTolerance>\n"
                     "              0.5\n"
@@ -805,6 +810,16 @@ namespace Gambit
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
         try {
             //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
+            // Run vevacious
+            struct stat buffer; //Checking if file exists, fastest method.
+            std::string HomotopyLockfile = inputspath + "/Homotopy/busy.lock";
+            // Check if homotopy binary is being used
+            while(stat(HomotopyLockfile.c_str(), &buffer)==0)
+            {
+            // Here I stupidly wait for the homotopy binary to be free
+            // This deals with the problem of MARCONI not liking a binary accessed by several
+            // processes at the same time. 
+            }
             vevaciousPlusPlus.RunPoint("internal");
             double lifetime= vevaciousPlusPlus.GetLifetimeInSeconds();
             double thermalProbability = vevaciousPlusPlus.GetThermalProbability();
@@ -829,6 +844,7 @@ namespace Gambit
                 lifetimeAndThermalProbability.second= thermalProbability;
             }
             cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
+            cout << "VEVACIOUS Prob. non zero temp:  "<< lifetimeAndThermalProbability.second << endl;
             std::string result = vevaciousPlusPlus.GetResultsAsString();
             cout << "VEVACIOUS RESULT:  "<< result << endl;
         }
@@ -864,8 +880,14 @@ namespace Gambit
     {
         namespace myPipe = Pipes::get_likelihood_VS_MSSM_thermal;
         double ThermalProbability =  myPipe::Dep::check_stability_MSSM->second;
+         if(ThermalProbability == 0)
+         {
+             result = -1e100;
+         } else
+         {
+             result= std::log(ThermalProbability);
+         }
 
-            result= std::log(ThermalProbability);
     }
 
 
