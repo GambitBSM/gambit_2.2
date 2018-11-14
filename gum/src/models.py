@@ -31,8 +31,11 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     header = True
         
     towrite_header += "#define MODEL {0}\n".format(model_name)
+
+    # Don't want the SM-like Higgs mass a fundamental parameter
+    params = [x.gb_in for x in model_params if x.name != 'h0_1']
       
-    towrite_header += "  DEFINEPARS({0})\n".format(', '.join(model_params))
+    towrite_header += "  DEFINEPARS({0})\n".format(', '.join(params))
        
     towrite_header += (
                    "#undef MODEL\n"
@@ -141,11 +144,11 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
                             "not passed as instance of class "
                             "SpectrumParameter."))
                      
-    if model_parameters[i].shape:
-        shape = ", " + model_parameters[i].shape
-    else:
-        shape = ""
-    towrite += "addParameter(Par::{0}, \"{1}\"{2});\n".format(model_parameters[i].tag.replace("\"",""), model_parameters[i].name, shape)
+        if model_parameters[i].shape:
+            shape = ", " + model_parameters[i].shape
+        else:
+            shape = ""
+        towrite += "addParameter(Par::{0}, \"{1}\"{2});\n".format(model_parameters[i].tag.replace("\"",""), model_parameters[i].name, shape)
           
     towrite += (
             "\n"
@@ -431,7 +434,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         
         if sp.shape == "scalar":
             size = "0"
-            finf = " &Self::{}".format(sp.getter)
+            finf = " &Self::{}".format(sp.setter)
         elif sp.shape == "vector":
             size = "1"
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))

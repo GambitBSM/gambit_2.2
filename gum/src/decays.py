@@ -229,11 +229,10 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
         gb_name = (pdg_to_particle(decayparticle, decaybit_dict))
         # If the particle does not decay, according to the particle database,
         # then there is no need to write a capability.
-        print gb_name
         if gb_name != None:
             pass
         else:
-            return "", ""
+            continue
         cap = "{0}_decay_rates".format(gb_name)
         func = "CH_{0}_{1}_decays".format(model_name, 
                                           pdg_to_particle(decayparticle, 

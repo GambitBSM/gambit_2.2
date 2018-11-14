@@ -84,7 +84,8 @@ IndexStyle[Generation, f];
 
 M$InteractionOrderHierarchy = {
   {QCD, 1},
-  {QED, 2}
+  {QED, 2},
+  {NP, 1}
 };
 
 
@@ -544,119 +545,215 @@ M$Parameters = {
     Value         -> 1.777,
     Description   -> "Tau Yukawa mass"
   },
-  cabi == {
+  (* CKM elements *)
+  CKM11 == {
     ParameterType -> External,
     BlockName     -> CKMBLOCK,
     OrderBlock    -> 1,
-    Value         -> 0.227736,
-    TeX           -> Subscript[\[Theta], c],
-    Description   -> "Cabibbo angle"
-  },
-  (* Wolfenstein parametrisation of CKM *)
-  ckmlam == {
+    Value         -> 0.974410,
+    Description   -> "V_ud"
+  },  
+  CKM12 == {
     ParameterType -> External,
     BlockName     -> CKMBLOCK,
     OrderBlock    -> 2,
-    Value         -> 0.2257,
-    TeX           -> \[Lambda],
-    Description   -> "Lambda in the Wolfenstein parametrisation"
+    Value         -> 0.224745,
+    Description   -> "V_us"
   },  
-  ckmA == {
+  CKM13 == {
     ParameterType -> External,
     BlockName     -> CKMBLOCK,
     OrderBlock    -> 3,
-    Value         -> 0.814,
-    TeX           -> A,
-    Description   -> "A in the Wolfenstein parametrisation"
-  },  
-  ckmrho == {
+    Value         -> 0.003746,
+    Description   -> "V_ub"
+  },    
+  CKM21 == {
     ParameterType -> External,
     BlockName     -> CKMBLOCK,
     OrderBlock    -> 4,
-    Value         -> 0.135,
-    TeX           -> \[Rho],
-    Description   -> "Rho in the Wolfenstein parametrisation"
+    Value         -> 0.224608,
+    Description   -> "V_cd"
   },  
-  ckmeta == {
+  CKM22 == {
     ParameterType -> External,
     BlockName     -> CKMBLOCK,
     OrderBlock    -> 5,
-    Value         -> 0.349,
-    TeX           -> \[Eta],
-    Description   -> "Eta in the Wolfenstein parametrisation"
-  },
+    Value         -> 0.973526,
+    Description   -> "V_cs"
+  },  
+  CKM23 == {
+    ParameterType -> External,
+    BlockName     -> CKMBLOCK,
+    OrderBlock    -> 6,
+    Value         -> 0.04240,
+    Description   -> "V_cb"
+  },   
+  CKM31 == {
+    ParameterType -> External,
+    BlockName     -> CKMBLOCK,
+    OrderBlock    -> 7,
+    Value         -> 0.008710,
+    Description   -> "V_td"
+  },  
+  CKM32 == {
+    ParameterType -> External,
+    BlockName     -> CKMBLOCK,
+    OrderBlock    -> 8,
+    Value         -> 0.04169,
+    Description   -> "V_ts"
+  },  
+  CKM33 == {
+    ParameterType -> External,
+    BlockName     -> CKMBLOCK,
+    OrderBlock    -> 9,
+    Value         -> 0.999093,
+    Description   -> "V_tb"
+  },  
+
   (* Leptoquark parameters *)
-  xde == {
+  xdeL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 1,
     Value         -> 0.5,
-    TeX           -> Subscript[x,de],
-    Description   -> "Down-electron mixing"
+    TeX           -> Subsuperscript[x,de,L],
+    Description   -> "Left down-electron mixing"
   },   
-  xdmu == {
+  xdmuL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 2,
     Value         -> 0.5,
-    TeX           -> Subscript[x,d\[Mu]],
-    Description   -> "Down-muon mixing"
+    TeX           -> Subsuperscript[x,b\[Mu],L],
+    Description   -> "Left down-muon mixing"
   },   
-  xdtau == {
+  xdtauL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 3,
     Value         -> 0.5,
-    TeX           -> Subscript[x,d\[Tau]],
-    Description   -> "Down-tau mixing"
+    TeX           -> Subsuperscript[x,d\[Tau],L],
+    Description   -> "Left down-tau mixing"
   },   
-  xse == {
+  xseL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 4,
     Value         -> 0.5,
-    TeX           -> Subscript[x,s\[Mu]],
-    Description   -> "Strange-electron mixing"
+    TeX           -> Subsuperscript[x,se,L],
+    Description   -> "Left strange-electron mixing"
   },   
-  xsmu == {
+  xsmuL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 5,
     Value         -> 0.5,
-    TeX           -> Subscript[x,s\[Mu]],
-    Description   -> "Strange-muon mixing"
+    TeX           -> Subsuperscript[x,s\[Mu],L],
+    Description   -> "Left strange-muon mixing"
   },  
-  xstau == {
+  xstauL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 6,
     Value         -> 0.5,
-    TeX           -> Subscript[x,s\[Tau]],
-    Description   -> "Strange-tau mixing"
+    TeX           -> Subsuperscript[x,s\[Tau],L],
+    Description   -> "Left strange-tau mixing"
   },  
-  xbe == {
+  xbeL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 7,
     Value         -> 0.5,
-    TeX           -> Subscript[x,be],
-    Description   -> "Bottom-electron mixing"
+    TeX           -> Subsuperscript[x,be,L],
+    Description   -> "Left bottom-electron mixing"
   },  
-  xbmu == {
+  xbmuL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 8,
     Value         -> 0.5,
-    TeX           -> Subscript[x,b\[Mu]],
-    Description   -> "Bottom-muon mixing"
+    TeX           -> Subsuperscript[x,b\[Mu],L],
+    Description   -> "Left bottom-muon mixing"
   },  
-  xbta == {
+  xbtaL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 9,
     Value         -> 0.5,
-    TeX           -> Subscript[x,b\[Tau]],
-    Description   -> "Bottom-tau mixing"
+    TeX           -> Subsuperscript[x,b\[Tau],L],
+    Description   -> "Left bottom-tau mixing"
+  },
+  xdeR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 10,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,de,R],
+    Description   -> "Right down-electron mixing"
+  },   
+  xdmuR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 11,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,d\[Mu],R],
+    Description   -> "Right down-muon mixing"
+  },   
+  xdtauR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 12,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,d\[Tau],R],
+    Description   -> "Right down-tau mixing"
+  },   
+  xseR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 13,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,se,R],
+    Description   -> "Right strange-electron mixing"
+  },   
+  xsmuR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 14,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,s\[Mu],R],
+    Description   -> "Right strange-muon mixing"
+  },  
+  xstauR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 15,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,s\[Tau],R],
+    Description   -> "Right strange-tau mixing"
+  },  
+  xbeR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 16,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,be,R],
+    Description   -> "Right bottom-electron mixing"
+  },  
+  xbmuR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 17,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,b\[Mu],R],
+    Description   -> "Right bottom-muon mixing"
+  },  
+  xbtaR == {
+    ParameterType -> External,
+    BlockName     -> LQBLOCK,
+    OrderBlock    -> 18,
+    Value         -> 0.5,
+    TeX           -> Subsuperscript[x,b\[Tau],R],
+    Description   -> "Right bottom-tau mixing"
   },
 
   (* Internal Parameters *)
@@ -770,23 +867,37 @@ M$Parameters = {
   xL == { 
     ParameterType -> Internal,
     Indices       -> {Index[Generation], Index[Generation]},
-    Value         -> {xL[1,1] -> xde, xL[1,2] -> xdmu, xL[1,3] -> xdtau,
-                      xL[2,1] -> xse, xL[2,2] -> xsmu, xL[2,3] -> xstau,
-                      xL[3,1] -> xbe, xL[3,2] -> xbmu, xL[3,3] -> xbtau},
+    Value         -> {xL[1,1] -> xdeL, xL[1,2] -> xdmuL, xL[1,3] -> xdtauL,
+                      xL[2,1] -> xseL, xL[2,2] -> xsmuL, xL[2,3] -> xstauL,
+                      xL[3,1] -> xbeL, xL[3,2] -> xbmuL, xL[3,3] -> xbtauL},
     TeX           -> Subscript[x,L],
-    ParameterName -> {xL[1,1] -> xde, xL[1,2] -> xdmu, xL[1,3] -> xdtau,
-                      xL[2,1] -> xse, xL[2,2] -> xsmu, xL[2,3] -> xstau,
-                      xL[3,1] -> xbe, xL[3,2] -> xbmu, xL[3,3] -> xbtau},    
-    Description -> "Leptoquark flavour matrix"
+    ParameterName -> {xL[1,1] -> xdeL, xL[1,2] -> xdmuL, xL[1,3] -> xdtauL,
+                      xL[2,1] -> xseL, xL[2,2] -> xsmuL, xL[2,3] -> xstauL,
+                      xL[3,1] -> xbeL, xL[3,2] -> xbmuL, xL[3,3] -> xbtauL},  
+    InteractionOrder -> {NP, 1},  
+    Description -> "Left-handed Leptoquark flavour matrix"
   },
-(* Full CKM matrix now *)
+  xR == { 
+    ParameterType -> Internal,
+    Indices       -> {Index[Generation], Index[Generation]},
+    Value         -> {xR[1,1] -> xdeR, xR[1,2] -> xdmuR, xR[1,3] -> xdtauR,
+                      xR[2,1] -> xseR, xR[2,2] -> xsmuR, xR[2,3] -> xstauR,
+                      xR[3,1] -> xbeR, xR[3,2] -> xbmuR, xR[3,3] -> xbtauR},
+    TeX           -> Subscript[x,R],
+    ParameterName -> {xR[1,1] -> xdeR, xR[1,2] -> xdmuR, xR[1,3] -> xdtauR,
+                      xR[2,1] -> xseR, xR[2,2] -> xsmuR, xR[2,3] -> xstauR,
+                      xR[3,1] -> xbeR, xR[3,2] -> xbmuR, xR[3,3] -> xbtauR},
+    InteractionOrder -> {NP, 1},    
+    Description -> "Right-handed Leptoquark flavour matrix"
+  },
+(* CKM with all elements external *)
   CKM == { 
     ParameterType -> Internal,
     Indices       -> {Index[Generation], Index[Generation]},
     Unitary       -> True,
-    Value         -> {CKM[1,1] -> 1-ckmlam^2/2,                      CKM[1,2] -> ckmlam,         CKM[1,3] -> ckmA*ckmlam^3*(ckmrho-I*ckmeta),
-                      CKM[2,1] -> -ckmlam,                           CKM[2,2] -> 1-ckmlam^2/2,   CKM[2,3] -> ckmA*ckmlam^2,
-                      CKM[3,1] -> ckmA*ckmlam^3*(1-ckmrho-I*ckmeta), CKM[3,2] -> -ckmA*ckmlam^2, CKM[3,3] -> 1},
+    Value         -> {CKM[1,1] -> CKM11,  CKM[1,2] -> CKM12,   CKM[1,3] -> CKM13,
+                      CKM[2,1] -> CKM21,  CKM[2,2] -> CKM22,   CKM[2,3] -> CKM23,
+                      CKM[3,1] -> CKM31,  CKM[3,2] -> CKM32,   CKM[3,3] -> CKM33},
     TeX         -> Superscript[V,CKM],
     Description -> "CKM-Matrix"}
 };
@@ -843,7 +954,9 @@ ExpandIndices[ LGhs + If[FeynmanGauge, LGh1 + LGhw + LGhphi,0], FlavorExpand->SU
 LSM:= LGauge + LFermions + LHiggs + LYukawa + LGhost;
 
 LLQ1:= MU^2 U1bar[mu] U1[mu] - 1/2 FS[U1,mu,nu] FS[U1,mu,nu];
+LLQ2:= ExpandIndices[ U1[mu, c] xL[i, j] QLbar[p, f, i, c].Ga[mu, p, q].LL[q, f, j]];
+LLQ3:= ExpandIndices[ U1[mu, c] xR[i, j] dRbar[p, i, c].Ga[mu, p, q].lR[q, j] ];
 
-LLQ2:= ExpandIndices[xL[i, j] U1[mu] uqbar[p, i].vl[q, j] Ga[mu, p, q] + Conjugate[CKM[i, k]] xL[i, j] U1[mu] dqbar[p, k].l[q, j] Ga[mu, p, q]];
+(* Add CP violation in here explicitly, since FeynRules to CalcHEP doesn't like complex parameters. *)
 
-LTotal:= LSM + LLQ1 + LLQ2 + HC[LLQ2];
+LTotal:= (LSM + LLQ1 + LLQ2 + HC[LLQ2] + LLQ3 + HC[LLQ3]);

@@ -12,6 +12,10 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * FeynRules: use common blocks from paramlist?
   * SARAH: ???
 
+  * How to extract mass dimension of a parameter?
+    * Hopeless from FeynRules since it knows nothing about the dimensionality of the Lagrangian
+    * Does SARAH know...? Surely..
+
 * DarkBit:
   * Process Catalogue:
     * importDecays - which things to include/exclude??
@@ -43,6 +47,8 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
   * Use FeynArts/Calc?
   
 * .ufo to .mdl for 4-fermion vertices
+
+
 
 ==============
 =   GAMBIT   =

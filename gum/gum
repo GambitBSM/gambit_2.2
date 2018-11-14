@@ -69,7 +69,12 @@ if args.file:
         fr_bsm = [x for x in partlist if x.SM() is False]
 
         # Make all BSM particles work with GUM's native Particle class.
-        bsm_particle_list = fr_part_to_gum_part(fr_bsm)
+        # Find out if the spectrum needs a dependency on StandardModel_Higgs.
+        bsm_particle_list, add_higgs = fr_part_to_gum_part(fr_bsm)
+
+        # Initialise all of the model parameters, for writing spectra, 
+        # model files - remove all SM stuff from parameter list.
+        parameters = fr_params(paramlist)
 
     elif gum.math == 'sarah':
 
@@ -126,6 +131,21 @@ if args.file:
             # Mow reload the dictionaries
             gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
+    # Once we've got the GAMBIT dictionaries, we can add the new parameters
+    # as pole masses to the 
+
+    # Add all of the masses of BSM particles as pole masses.
+    # I think this is okay..? TODO: check this is okay.
+    for i in xrange(len(bsm_particle_list)):
+        p = bsm_particle_list[i]
+        x = SpectrumParameter(pdg_to_particle(p.PDG_code, gambit_pdgs),
+                              "Pole_Mass", gb_input=p.mass)
+        parameters.append(x)
+
+    """
+    OUTPUT FOR BACKENDS
+    """
+
     # Clean up calchep files, then copy them to the GAMBIT backendDir
     if output_opts.ch:
         clean_calchep_model_files(outputs.get_ch(), gum.name)
@@ -135,42 +155,13 @@ if args.file:
     if output_opts.ufo:
         copy_madgraph_files(outputs.get_mg(), gum.name)
 
-    # Add the BSM masses to the model parameters
-
-    # Initialise all of the model parameters, for writing spectra, model files..
-    model_parameters = []
-
-    # Add all new particle masses as Pole Masses... I think this is ok?
-    for i in xrange(len(bsm_particle_list)):
-        x = bsm_particle_list[i]
-        model_parameters.append(SpectrumParameter(pdg_to_particle(x.PDG_code,
-                                                                  gambit_pdgs),
-                                                  "Pole_Mass",
-                                                  gb_input=x.mass))
-
-    # Todo - get this information -- properly -- from 'paramlist'
-    # Same name in GAMBIT as in Backends?
-    model_parameters.append(SpectrumParameter("vev", "mass1", sm=True))
-    model_parameters.append(SpectrumParameter("lambda_hS", "dimensionless",fullname="lambdahs"))
-    model_parameters.append(SpectrumParameter("g1", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("g2", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("g3", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("sinW2", "dimensionless", "scalar", sm=True))
-    model_parameters.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
-    model_parameters.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
-    model_parameters.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
-
     """
     MODELS
     """
 
-    # Will have to be extracted, somehow - from FR/SARAH/etc.
-    gambit_model_params = ["mS", "lam_hS"]
-
-    ## TODO
-    model_header = add_to_model_hierarchy(gum.spec, gum.name, gambit_model_params)
-    spec_contents = write_spectrumcontents(gum.name, model_parameters)
-    subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
+    model_header = add_to_model_hierarchy(gum.spec, gum.name, parameters)
+    spec_contents = write_spectrumcontents(gum.name, parameters)
+    subspec_wrapper = write_subspectrum_wrapper(gum.name, parameters)
     reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
     """
@@ -287,9 +278,9 @@ if args.file:
     """
 
     # Determine when "simple_SMinputs" needed from FR/S model file
-    spectrum_src = write_basic_spectrum(gum.name, model_parameters, gum.spec,
+    spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec,
                                         simple_SMinputs = True)
-    spectrum_header = write_spectrum_header(gum.name)
+    spectrum_header = write_spectrum_header(gum.name, add_higgs)
     spec_rollcall = write_specbit_rollcall(gum.name)
 
     """
@@ -312,14 +303,24 @@ if args.file:
     print("")
 
 
-    print(model_header)
-    print(spec_contents)
-    print(subspec_wrapper)
-    print(spectrum_src)
-    print(spec_contents)
-    print(spectrum_header)
+    #print("model_header")
+    #print(model_header)
+    #print("spec_contents")
+    #print(spec_contents)
+    #print("subspec_wrapper")
+    #print(subspec_wrapper)
+    #print("spectrum_src")
+    #print(spectrum_src)
+    #print("spec_contents")
+    #print(spec_contents)
+    #print("spectrum_header")
+    #print(spectrum_header)
+    #print("decaybit_src_ch")
     #print(decaybit_src_ch)
-    #print(decay_roll)
+    #print("decay_roll")
+    #for i in xrange(len(decay_roll)):
+    #    print(decay_roll[i][0])
+    #    print(decay_roll[i][1])
 
     # All file writing routines HERE, once everything has gone okay.
 

@@ -177,7 +177,7 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
     return contents
     
     
-def write_spectrum_header(model_name):
+def write_spectrum_header(model_name, add_higgs):
     """
     Writes the header for spectrum object,
     SpecBit/include/gambit/SpecBit/SpecBit_<model>_rollcall.hpp
@@ -198,7 +198,20 @@ def write_spectrum_header(model_name):
             "    #define FUNCTION get_{0}_spectrum\n"
             "    START_FUNCTION(Spectrum)\n"
             "    DEPENDENCY(SMINPUTS, SMInputs)\n"
-            "    ALLOW_MODELS({0})\n"
+    ).format(model_name)
+
+    # Add a conditional Higgs dependency if necessary
+    if add_higgs:
+        towrite += (
+                "    ALLOW_MODEL_DEPENDENCE(StandardModel_Higgs, {0})\n"
+                "    MODEL_GROUP(higgs, (StandardModel_Higgs))\n"
+                "    MODEL_GROUP({1}, ({0}))\n"
+                "    ALLOW_MODEL_COMBINATION(higgs, {1})\n"
+            ).format(model_name, model_name + "_group")
+    else:
+        towrite += "    ALLOW_MODELS({0})\n"
+
+    towrite +=(
             "    #undef FUNCTION\n"
             "\n"
             "    // Map for Spectrum, for printing.\n"
