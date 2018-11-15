@@ -406,7 +406,7 @@ namespace Gambit
         slha.clear();
         spectrum.clear();
         slha = Dep::decay_rates->getSLHAea(2);
-        if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT"))
+        if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT") or ModelInUse("MSSM63atQ_lightgravitino") or ModelInUse("MSSM63atMGUT_lightgravitino"))
         {
           // MSSM-specific.  SLHAea in SLHA2 format, please.
           spectrum = Dep::MSSM_spectrum->getSLHAea(2);
@@ -1034,7 +1034,7 @@ namespace Gambit
                 str errmsg = "The analysis " + analysis_name + " is not a known ColliderBit analysis.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg);
               }
-            }            
+            }
           }
 
           first = false;
@@ -1068,11 +1068,11 @@ namespace Gambit
         result.set_current_collider(*iterPythiaNames);
 
         // Initialize analysis container or reset all the contained analyses
-        if (!result.has_analyses()) 
+        if (!result.has_analyses())
         {
           try
           {
-            result.init(analyses[indexPythiaNames]);             
+            result.init(analyses[indexPythiaNames]);
           }
           catch (std::runtime_error& e)
           {
@@ -1100,7 +1100,7 @@ namespace Gambit
       {
         result.collect_and_add_signal();
         result.collect_and_improve_xsec();
-        result.scale();        
+        result.scale();
         return;
       }
     }
@@ -1133,7 +1133,7 @@ namespace Gambit
                 str errmsg = "The analysis " + analysis_name + " is not a known ColliderBit analysis.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg);
               }
-            }            
+            }
           }
 
           first = false;
@@ -1170,11 +1170,11 @@ namespace Gambit
         result.set_current_collider(*iterPythiaNames);
 
         // Initialize analysis container or reset all the contained analyses
-        if (!result.has_analyses()) 
+        if (!result.has_analyses())
         {
           try
           {
-            result.init(analyses[indexPythiaNames]);             
+            result.init(analyses[indexPythiaNames]);
           }
           catch (std::runtime_error& e)
           {
@@ -1202,7 +1202,7 @@ namespace Gambit
       {
         result.collect_and_add_signal();
         result.collect_and_improve_xsec();
-        result.scale();        
+        result.scale();
         return;
       }
 
@@ -1235,7 +1235,7 @@ namespace Gambit
                 str errmsg = "The analysis " + analysis_name + " is not a known ColliderBit analysis.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg);
               }
-            }            
+            }
           }
 
           first = false;
@@ -1272,11 +1272,11 @@ namespace Gambit
         result.set_current_collider(*iterPythiaNames);
 
         // Initialize analysis container or reset all the contained analyses
-        if (!result.has_analyses()) 
+        if (!result.has_analyses())
         {
           try
           {
-            result.init(analyses[indexPythiaNames]);             
+            result.init(analyses[indexPythiaNames]);
           }
           catch (std::runtime_error& e)
           {
@@ -1304,7 +1304,7 @@ namespace Gambit
       {
         result.collect_and_add_signal();
         result.collect_and_improve_xsec();
-        result.scale();        
+        result.scale();
         return;
       }
 
@@ -1337,7 +1337,7 @@ namespace Gambit
                 str errmsg = "The analysis " + analysis_name + " is not a known ColliderBit analysis.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg);
               }
-            }            
+            }
           }
 
           first = false;
@@ -1374,11 +1374,11 @@ namespace Gambit
         result.set_current_collider(*iterPythiaNames);
 
         // Initialize analysis container or reset all the contained analyses
-        if (!result.has_analyses()) 
+        if (!result.has_analyses())
         {
           try
           {
-            result.init(analyses[indexPythiaNames]);             
+            result.init(analyses[indexPythiaNames]);
           }
           catch (std::runtime_error& e)
           {
@@ -1406,7 +1406,7 @@ namespace Gambit
       {
         result.collect_and_add_signal();
         result.collect_and_improve_xsec();
-        result.scale();        
+        result.scale();
         return;
       }
 
@@ -1438,7 +1438,7 @@ namespace Gambit
                 str errmsg = "The analysis " + analysis_name + " is not a known ColliderBit analysis.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg);
               }
-            }            
+            }
           }
 
           first = false;
@@ -1475,11 +1475,11 @@ namespace Gambit
         result.set_current_collider(*iterPythiaNames);
 
         // Initialize analysis container or reset all the contained analyses
-        if (!result.has_analyses()) 
+        if (!result.has_analyses())
         {
           try
           {
-            result.init(analyses[indexPythiaNames]);             
+            result.init(analyses[indexPythiaNames]);
           }
           catch (std::runtime_error& e)
           {
@@ -1507,7 +1507,7 @@ namespace Gambit
       {
         result.collect_and_add_signal();
         result.collect_and_improve_xsec();
-        result.scale();        
+        result.scale();
         return;
       }
 
@@ -1539,7 +1539,7 @@ namespace Gambit
                 str errmsg = "The analysis " + analysis_name + " is not a known ColliderBit analysis.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg);
               }
-            }            
+            }
           }
 
           first = false;
@@ -1577,11 +1577,11 @@ namespace Gambit
         result.set_current_collider(*iterPythiaNames);
 
         // Initialize analysis container or reset all the contained analyses
-        if (!result.has_analyses()) 
+        if (!result.has_analyses())
         {
           try
           {
-            result.init(analyses[indexPythiaNames]);             
+            result.init(analyses[indexPythiaNames]);
           }
           catch (std::runtime_error& e)
           {
@@ -1609,7 +1609,7 @@ namespace Gambit
       {
         result.collect_and_add_signal();
         result.collect_and_improve_xsec();
-        result.scale();        
+        result.scale();
         return;
       }
 
@@ -2380,7 +2380,7 @@ namespace Gambit
       #endif
       #endif
 
-      // Add results 
+      // Add results
       if (haveUsedBuckFastATLASDetector)
         result.insert(result.end(), Dep::ATLASAnalysisNumbers->begin(), Dep::ATLASAnalysisNumbers->end());
       if (haveUsedBuckFastATLASnoeffDetector)
@@ -2414,21 +2414,21 @@ namespace Gambit
 
 
       // #ifdef COLLIDERBIT_DEBUG
-      // cout << debug_prefix() << "CollectAnalyses: Current size of 'result': " << result.size() << endl;        
+      // cout << debug_prefix() << "CollectAnalyses: Current size of 'result': " << result.size() << endl;
       // if (result.size() > 0)
       // {
-      //   cout << debug_prefix() << "CollectAnalyses: Will loop through 'result'..." << endl;        
+      //   cout << debug_prefix() << "CollectAnalyses: Will loop through 'result'..." << endl;
       //   for (auto& adp : result)
       //   {
-      //     cout << debug_prefix() << "CollectAnalyses: 'result' contains AnalysisData pointer to " << adp << endl;        
-      //     cout << debug_prefix() << "CollectAnalyses: -- Will now loop over all signal regions in " << adp << endl;        
+      //     cout << debug_prefix() << "CollectAnalyses: 'result' contains AnalysisData pointer to " << adp << endl;
+      //     cout << debug_prefix() << "CollectAnalyses: -- Will now loop over all signal regions in " << adp << endl;
       //     for (auto& sr : adp->srdata)
       //     {
-      //       cout << debug_prefix() << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal = " << sr.n_signal << ", n_signal_at_lumi = " << n_signal_at_lumi << endl;        
+      //       cout << debug_prefix() << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal = " << sr.n_signal << ", n_signal_at_lumi = " << n_signal_at_lumi << endl;
       //     }
-      //     cout << debug_prefix() << "CollectAnalyses: -- Done looping over signal regions in " << adp << endl;        
+      //     cout << debug_prefix() << "CollectAnalyses: -- Done looping over signal regions in " << adp << endl;
       //   }
-      //   cout << debug_prefix() << "CollectAnalyses: ...Done looping through 'result'." << endl;        
+      //   cout << debug_prefix() << "CollectAnalyses: ...Done looping through 'result'." << endl;
       // }
       // #endif
     }
@@ -2477,8 +2477,8 @@ namespace Gambit
         // AnalysisData for this analysis
         const AnalysisData& adata = *(Dep::AllAnalysisNumbers->at(analysis));
 
-        /// If no events have been generated (xsec veto) or too many events have failed, 
-        /// short-circut the loop and return delta log-likelihood = 0 for every SR in 
+        /// If no events have been generated (xsec veto) or too many events have failed,
+        /// short-circut the loop and return delta log-likelihood = 0 for every SR in
         /// each analysis.
         /// @todo This must be made more sophisticated once we add analyses that
         ///       don't rely on event generation.
@@ -2493,7 +2493,7 @@ namespace Gambit
           }
           // If this is an anlysis without covariance info, add 0-entries for all SRs plus
           // one for the combined LogLike
-          else 
+          else
           {
             for (size_t SR = 0; SR < adata.size(); ++SR)
             {
@@ -2516,16 +2516,16 @@ namespace Gambit
         for (size_t SR = 0; SR < adata.size(); ++SR)
         {
           const SignalRegionData& srData = adata[SR];
-          cout << std::fixed << debug_prefix() 
-                                 << "calc_LHC_LogLikes: " << adata.analysis_name 
-                                 << ", " << srData.sr_label 
+          cout << std::fixed << debug_prefix()
+                                 << "calc_LHC_LogLikes: " << adata.analysis_name
+                                 << ", " << srData.sr_label
                                  << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
-                                 << ",  n_obs = " << srData.n_observed 
+                                 << ",  n_obs = " << srData.n_observed
                                  << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
                                  << ",  n_s = " << srData.n_signal_at_lumi
                                  << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_at_lumi << " +/- " << srData.background_sys
                                  << ",  n_s_MC = " << srData.n_signal
-                                 << endl; 
+                                 << endl;
         }
         cout.precision(stream_precision); // restore previous precision
         #endif
@@ -2566,7 +2566,7 @@ namespace Gambit
             {
               all_zero_signal = false;
               break;
-            } 
+            }
           }
           if (all_zero_signal)
           {
@@ -2640,7 +2640,7 @@ namespace Gambit
 
           // Check absolute difference between independent estimates
           /// @todo Should also implement a check of relative difference
-          while ((diff_abs > CONVERGENCE_TOLERANCE_ABS && diff_rel > CONVERGENCE_TOLERANCE_REL) || 1.0/sqrt(NSAMPLE) > CONVERGENCE_TOLERANCE_ABS) 
+          while ((diff_abs > CONVERGENCE_TOLERANCE_ABS && diff_rel > CONVERGENCE_TOLERANCE_REL) || 1.0/sqrt(NSAMPLE) > CONVERGENCE_TOLERANCE_ABS)
           {
             Eigen::ArrayXd llrsums = Eigen::ArrayXd::Zero(adata.size());
 
@@ -2652,7 +2652,7 @@ namespace Gambit
             /// @todo Add option for normal sampling in log(rate), i.e. "multidimensional log-normal"
 
             const bool COVLOGNORMAL = false;
-            if (!COVLOGNORMAL) 
+            if (!COVLOGNORMAL)
             {
 
               #pragma omp parallel
@@ -2693,7 +2693,7 @@ namespace Gambit
 
             /// @todo Check that this log-normal sampling works as expected.
             else // COVLOGNORMAL
-            { 
+            {
 
               const Eigen::ArrayXd ln_n_pred_b = n_pred_b.log();
               const Eigen::ArrayXd ln_n_pred_sb = n_pred_sb.log();
@@ -2744,15 +2744,15 @@ namespace Gambit
             {
               llrsum_prev = llrsum;
               first_iteration = false;
-            } 
-            else 
+            }
+            else
             {
               ana_dll_prev = llrsum_prev / (double)NSAMPLE;
               ana_dll = llrsum / (double)NSAMPLE;
               diff_rel = fabs((ana_dll_prev - ana_dll)/ana_dll);  // Relative convergence check
               diff_abs = fabs(ana_dll_prev - ana_dll);  // Absolute convergence check
 
-              // Update variables 
+              // Update variables
               llrsum_prev += llrsum;  // Aggregate result. This doubles the effective batch size for llrsum_prev.
               NSAMPLE *=2;  // This ensures that the  next batch for llrsum is as big as the current batch size for llrsum_prev.
             }
@@ -2764,7 +2764,7 @@ namespace Gambit
             #endif
           }  // End while loop
 
-          // Combine the independent estimates ana_dll and ana_dll_prev. 
+          // Combine the independent estimates ana_dll and ana_dll_prev.
           // Use equal weights since the estimates are based on equal batch sizes.
           ana_dll = 0.5*(ana_dll + ana_dll_prev);
           #ifdef COLLIDERBIT_DEBUG
@@ -2779,14 +2779,14 @@ namespace Gambit
             for (size_t SR = 0; SR < adata.size(); ++SR)
             {
               const SignalRegionData& srData = adata[SR];
-              msg << srData.sr_label 
-                  << ",  n_background = " << srData.n_background 
+              msg << srData.sr_label
+                  << ",  n_background = " << srData.n_background
                   << ",  background_sys = " << srData.background_sys
-                  << ",  n_observed = " << srData.n_observed 
+                  << ",  n_observed = " << srData.n_observed
                   << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
                   << ",  n_signal = " << srData.n_signal
                   << ",  signal_sys = " << srData.signal_sys
-                  << endl; 
+                  << endl;
             }
             invalid_point().raise(msg.str());
           }
@@ -2881,14 +2881,14 @@ namespace Gambit
             for (size_t SR = 0; SR < adata.size(); ++SR)
             {
               const SignalRegionData& srData = adata[SR];
-              msg << srData.sr_label 
-                  << ",  n_background = " << srData.n_background 
+              msg << srData.sr_label
+                  << ",  n_background = " << srData.n_background
                   << ",  background_sys = " << srData.background_sys
-                  << ",  n_observed = " << srData.n_observed 
+                  << ",  n_observed = " << srData.n_observed
                   << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
                   << ",  n_signal = " << srData.n_signal
                   << ",  signal_sys = " << srData.signal_sys
-                  << endl; 
+                  << endl;
             }
             invalid_point().raise(msg.str());
           }
@@ -2936,12 +2936,12 @@ namespace Gambit
           const string& sr_label = pair_j.first;
           const double& sr_loglike = pair_j.second;
           const int sr_index = analysis_loglikes.sr_indices.at(sr_label);
-          
+
           const string key = analysis_name + "__" + sr_label + "__i" + std::to_string(sr_index) + "__LogLike";
-          result[key] = sr_loglike;          
+          result[key] = sr_loglike;
         }
 
-        result[analysis_name + "__combined_LogLike"] = analysis_loglikes.combination_loglike;          
+        result[analysis_name + "__combined_LogLike"] = analysis_loglikes.combination_loglike;
       }
     }
 

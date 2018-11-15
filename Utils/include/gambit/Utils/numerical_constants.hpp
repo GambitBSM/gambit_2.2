@@ -17,7 +17,11 @@
 ///          (c.weniger@uva.nl)
 ///  \date   2015 Apr
 ///  \date   2016 Mar
-//
+///
+///  \author Jeriek Van den Abeele
+///          (jeriekvda@fys.uio.no)
+///  \date 2018 Sep
+///
 ///  *********************************************
 
 #ifndef __numerical_constants_hpp__
@@ -40,6 +44,8 @@ namespace Gambit
   const double m_neutron_amu = 1.0086649156;                    // neutron mass (amu)
   const double m_proton = m_proton_amu * atomic_mass_unit;      // proton mass (GeV/c^2)
   const double m_neutron = m_neutron_amu * atomic_mass_unit;    // neutron mass (GeV/c^2)
+  const double m_planck = 1.220910e19;                          // Planck mass (GeV/c^2) (http://pdg.lbl.gov/2018/reviews/rpp2018-rev-astrophysical-constants.pdf)
+  const double m_planck_red = m_planck/(sqrt(8.0*pi));          // reduced Planck mass (GeV/c^2)
 
   /**
      @brief Thomson limit of \f$\alpha_e\f$ in OS scheme from
