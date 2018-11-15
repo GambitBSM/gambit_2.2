@@ -22,7 +22,7 @@
 
 LOAD_LIBRARY
 
-BE_ALLOW_MODELS(SingletDM)
+BE_ALLOW_MODELS(ScalarSingletDM_Z2)
 
 BE_FUNCTION(setModel, int, (char*, int), "setModel", "setModel")
 BE_FUNCTION(calcMainFunc, int, (), "calcMainFunc", "calcMainFunc")
@@ -45,7 +45,7 @@ BE_CONV_FUNCTION(Assign_All_Values, void, (const Spectrum&, std::vector<Spectrum
 BE_CONV_FUNCTION(Assign_Widths, void, (const DecayTable&), "Assign_All_Values")
 BE_CONV_FUNCTION(Assign_Value, void, (char*, double), "Assign_Value")
 
-BE_INI_CONDITIONAL_DEPENDENCY(SingletDM_spectrum, Spectrum, SingletDM)
+BE_INI_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2)
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"

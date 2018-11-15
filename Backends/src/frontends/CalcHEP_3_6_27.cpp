@@ -37,10 +37,10 @@ BE_INI_FUNCTION
     const char *path;
     char *modeltoset;
 
-    if (ModelInUse("SingletDM"))
+    if (ModelInUse("ScalarSingletDM_Z2"))
     {
       // Set model within CalcHEP
-      BEpath = backendDir + "/../models/SingletDM"; // This may, in the future, change to the GAMBIT model directory.
+      BEpath = backendDir + "/../models/ScalarSingletDM_Z2"; // This may, in the future, change to the GAMBIT model directory.
       path = BEpath.c_str();
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
@@ -54,18 +54,18 @@ BE_INI_FUNCTION
   // Point-level.
   scan_level = false;
 
-  if (ModelInUse("SingletDM"))
+  if (ModelInUse("ScalarSingletDM_Z2"))
   {
     // Obtain model contents
-    static const SpectrumContents::SingletDM SingletDM_contents;
+    static const SpectrumContents::ScalarSingletDM_Z2 ScalarSingletDM_Z2_contents;
 
     // Obtain list of all parameters within model
-    static const std::vector<SpectrumParameter> SingletDM_params = SingletDM_contents.all_parameters();
+    static const std::vector<SpectrumParameter> ScalarSingletDM_Z2_params = ScalarSingletDM_Z2_contents.all_parameters();
 
     // Obtain spectrum information to pass to CalcHEP
-    const Spectrum& spec = *Dep::SingletDM_spectrum;
+    const Spectrum& spec = *Dep::ScalarSingletDM_Z2_spectrum;
 
-    Assign_All_Values(spec, SingletDM_params);
+    Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
 
 }

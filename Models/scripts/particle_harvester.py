@@ -19,11 +19,17 @@
 #          (sanjay.bloor12@imperial.ac.uk)
 #    \date 2017 Aug
 #
+#  \author Ben Farmer
+#          (b.farmer@imperial.ac.uk)
+#  \date 2018 Oct
+#
 #*********************************************
 import os
 import yaml
 import itertools
-execfile("./Utils/scripts/harvesting_tools.py")
+
+toolsfile="./Utils/scripts/harvesting_tools.py"
+exec(compile(open(toolsfile, "rb").read(), toolsfile, 'exec')) # Python 2/3 compatible version of 'execfile'
 
 def create_entry(macro, particle_list):
 
@@ -39,8 +45,6 @@ def create_entry(macro, particle_list):
   
     PDG = entry['PDG_context']
 
-    print PDG
-
     # Count how many particles appear in the PDG_context lists.
     numlists = sum(1 for x in PDG if isinstance(x, list))
 
@@ -48,8 +52,6 @@ def create_entry(macro, particle_list):
       PDGbar = [-PDG[0], PDG[1]]
     else:
       PDGbar = [[-i[0], i[1]] for i in PDG]
-
-    print PDGbar
 
     # Add description (C++ comment) if it exists
     if 'description' in entry:

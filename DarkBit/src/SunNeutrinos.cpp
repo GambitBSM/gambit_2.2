@@ -159,15 +159,6 @@ namespace Gambit
     void equilibration_time_Sun(double &result)
     {
       using namespace Pipes::equilibration_time_Sun;
-      double ca = *Dep::sigmav/6.6e28 * pow(*Dep::mwimp/20.0, 1.5);
-      result = pow(*Dep::capture_rate_Sun * ca, -0.5);
-    }
-
-    // Same as the above function except sigma-v is calculated at the most probable speed v = sqrt(2*T/mDM) where
-    // T = 1.35e-6 GeV is the Sun's core temperature
-    void equilibration_time_Sun_vprob(double &result)
-    {
-      using namespace Pipes::equilibration_time_Sun_vprob;
 
       double sigmav = 0;
       double T_Sun_core = 1.35e-6; // Sun's core temperature (GeV)
@@ -190,10 +181,12 @@ namespace Gambit
       sigmav += annProc.genRateMisc->bind("v")->eval(sqrt(2.0*T_Sun_core/(*Dep::mwimp)));
 
       double ca = sigmav/6.6e28 * pow(*Dep::mwimp/20.0, 1.5);
+      // Scale the annihilation rate down by a factor of two if the DM is not self-conjugate
+      if (not (*Dep::TH_ProcessCatalog).getProcess(*Dep::DarkMatter_ID, *Dep::DarkMatter_ID).isSelfConj) ca *= 0.5;
       result = pow(*Dep::capture_rate_Sun * ca, -0.5);
 
-      // std::cout << "v = " << sqrt(2.0*T_Sun_core/(*Dep::mwimp)) << " and sigmav inside equilibration_time_Sun_vprob = " << sigmav << std::endl;
-      // std::cout << "capture_rate_Sun inside equilibration_time_Sun_vprob = " << *Dep::capture_rate_Sun << std::endl;
+      // std::cout << "v = " << sqrt(2.0*T_Sun_core/(*Dep::mwimp)) << " and sigmav inside equilibration_time_Sun = " << sigmav << std::endl;
+      // std::cout << "capture_rate_Sun inside equilibration_time_Sun = " << *Dep::capture_rate_Sun << std::endl;
     }
 
     /// Annihilation rate of dark matter in the Sun (s^-1)
@@ -450,15 +443,13 @@ namespace Gambit
       // Treat the yield function as threadsafe only if the loaded version of DarkSUSY supports it.
       result.threadsafe = (BEreq::nuyield.version() == "5.1.3");
 
-      // Avoid OpenMP with gfortran 6.x, as its implementation seems to be buggy (causes stack overflows).
+      // Avoid OpenMP with gfortran 6.x and later, as the implementation seems to be buggy (causes stack overflows).
       #ifdef __GNUC__
         #define GCC_VERSION (__GNUC__ * 10000 \
                      + __GNUC_MINOR__ * 100 \
                      + __GNUC_PATCHLEVEL__)
         #if GCC_VERSION > 60000
-          #if GCC_VERSION < 70000
-            result.threadsafe = false;
-          #endif
+          result.threadsafe = false;
         #endif
         #undef GCC_VERSION
       #endif
@@ -722,14 +713,15 @@ namespace Gambit
 
           BEreq::dshmnoclue->vobs = vrot;
 
-          logger() << "Updating DarkSUSY halo parameters:" << EOM;
-          logger() << "    rho0 [GeV/cm^3] = " << rho0 << EOM;
-          logger() << "    rho0_eff [GeV/cm^3] = " << rho0_eff << EOM;
-          logger() << "    v_sun [km/s]  = " << vrot<< EOM;
-          logger() << "    v_earth [km/s]  = " << v_earth << EOM;
-          logger() << "    v_obs [km/s]  = " << vrot << EOM;
-          logger() << "    vd_3d [km/s]  = " << vd_3d << EOM;
-          logger() << "    v_esc [km/s]  = " << vesc << EOM;
+          logger() << LogTags::debug
+                   << "Updating DarkSUSY halo parameters:" << std::endl
+                   << "    rho0 [GeV/cm^3] = " << rho0 << std::endl
+                   << "    rho0_eff [GeV/cm^3] = " << rho0_eff << std::endl
+                   << "    v_sun [km/s]  = " << vrot<< std::endl
+                   << "    v_earth [km/s]  = " << v_earth << std::endl
+                   << "    v_obs [km/s]  = " << vrot << std::endl
+                   << "    vd_3d [km/s]  = " << vd_3d << std::endl
+                   << "    v_esc [km/s]  = " << vesc << EOM;
 
           result = true;
 
