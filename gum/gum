@@ -330,6 +330,8 @@ if args.file:
     write_file("SpectrumContents/" + gum.name, m, spec_contents, False)
     write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m,
                subspec_wrapper, True)
+    amend_file("SpectrumContents/RegisteredSpectra", m, reg_spec, 
+                                                    reg_spec_num, True)
 
     # SpecBit
     m = "SpecBit"
@@ -380,7 +382,7 @@ if args.file:
     if output_opts.ch:
         f = "frontends/CalcHEP_3_6_27"
         num = find_string(f, m, "setModel(modeltoset, 1)", False)[1]
-        amend_file(f, m, ch_src_sl, num, False)
+        amend_file(f, m, ch_src_sl, num-2, False)
         num = find_string(f, m, "END_BE_INI_FUNCTION", False)[1]
         amend_file(f, m, ch_src_pl, num-2, False)
         num = find_string(f, m, "backend_undefs.hpp", True)[1]

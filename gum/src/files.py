@@ -9,8 +9,8 @@ import numpy as np
 
 from setup import *
 
-mode = 'Test'
-#mode = 'Go'
+#mode = 'Test'
+mode = 'Go'
 
 def full_filename(filename, module, header=False):
     """

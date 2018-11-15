@@ -39,10 +39,10 @@ def add_calchep_switch(model_name, spectrum):
     """
 
     # Scan-level
-    src_sl = dumb_indent(2, (
+    src_sl = dumb_indent(4, (
         "if (ModelInUse(\"{0}\"))\n"
         "{{\n"
-        "BEpath = backendDir + \"/../models/{0};\n"
+        "BEpath = backendDir + \"/../models/{0}\";\n"
         "path = BEpath.c_str();\n"
         "modeltoset = (char*)malloc(strlen(path)+11);\n"
         "sprintf(modeltoset, \"%s\", path);\n"
@@ -64,7 +64,7 @@ def add_calchep_switch(model_name, spectrum):
            "}}\n\n"
     ).format(model_name, spectrum))
 
-    # to do -- also ADD_MODEL()
+    # to do -- also ALLOW_MODEL()
     header = (
            "BE_INI_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})\n"
     ).format(spectrum, model_name)

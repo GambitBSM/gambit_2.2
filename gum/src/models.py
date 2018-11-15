@@ -228,8 +228,8 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     towrite = blame_gum(intro_message)
 
     towrite += (
-            "#ifndef __{0}.hpp__\n"
-            "#define __{0}.hpp__\n"
+            "#ifndef __{0}_hpp__\n"
+            "#define __{0}_hpp__\n"
             "\n"
             "#include \"gambit/Elements/spec.hpp\"\n"
             "#include \"gambit/Models/SpectrumContents/"
@@ -468,7 +468,7 @@ def add_to_registered_spectra(gambit_model):
     """
       
     lookup = "SubSpectrumContents"
-    newentry = "    struct {0:16}: SubSpectrumContents {{ {0}(); }};\n".format(gambit_model)
+    newentry = "    struct {0:21}: SubSpectrumContents {{ {0}(); }};\n".format(gambit_model)
     filename = "SpectrumContents/RegisteredSpectra"
     module = "Models"
     location = full_filename(filename, module, header=True)
@@ -481,4 +481,3 @@ def add_to_registered_spectra(gambit_model):
                 raise GumError(("\n\nModel {0} already exists in GAMBIT.").format(gambit_model))
     
     return newentry, linenum          
-    amend_file(filename, module, newentry, linenum, header=True)

@@ -187,8 +187,8 @@ def write_spectrum_header(model_name, add_higgs):
                          "///  in SpecBit_{0}.cpp.".format(model_name)))
     
     towrite += (
-            "#idndef __SpecBit_{0}_hpp\n"
-            "#define __SpecBit_{0}_hpp\n"
+            "#ifndef __SpecBit_{0}_hpp__\n"
+            "#define __SpecBit_{0}_hpp__\n"
             "\n"
             "  // Spectrum object\n"
             "  #define CAPABILITY {0}_spectrum\n"
