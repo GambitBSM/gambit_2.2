@@ -20,7 +20,7 @@
 #ifndef __MSSM63atMGUT_lightgravitino_hpp__
 #define __MSSM63atMGUT_lightgravitino_hpp__
 
-#include "gambit/Models/models/MSSM63atQ.hpp" // Must include models which are targets of translation functions
+#include "gambit/Models/models/MSSM63atQ_lightgravitino.hpp" // Must include models which are targets of translation functions
 
 // Forward declaration of needed types
 namespace Gambit
