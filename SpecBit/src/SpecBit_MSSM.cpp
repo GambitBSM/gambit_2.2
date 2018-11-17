@@ -76,16 +76,8 @@ namespace Gambit
 
 
     /// Check that the spectrum has the canonical LSP for the model being scanned.
-    void check_LSP(const Spectrum& result, const safe_ptr<Options>& runOptions, const bool(*&ModelInUse)(str))
+    void check_LSP(const Spectrum& spec, const safe_ptr<Options>& runOptions, bool gravitino_is_canonical_LSP)
     {
-      bool gravitino_is_canonical_LSP =
-       ModelInUse("MSSM63atQ_lightgravitino") or
-       ModelInUse("MSSM63atQ_mA_lightgravitino") or
-       ModelInUse("MSSM63atMGUT_lightgravitino") or
-       ModelInUse("MSSM63atMGUT_mA_lightgravitino") or
-       ModelInUse("MSSM63atMSUSY_lightgravitino") or
-       ModelInUse("MSSM63atMSUSY_mA_lightgravitino");
-
       double msqd  = spec.get(Par::Pole_Mass, 1000001, 0);
       double msqu  = spec.get(Par::Pole_Mass, 1000002, 0);
       double msl   = spec.get(Par::Pole_Mass, 1000011, 0);
@@ -97,12 +89,12 @@ namespace Gambit
 
       if (gravitino_is_canonical_LSP)
       {
-        if (not runOptions.getValueOrDef<bool>(true, "only_gravitino_LSP")) return;
+        if (not runOptions->getValueOrDef<bool>(true, "only_gravitino_LSP")) return;
         m_canonical_LSP = spec.get(Par::Pole_Mass, 1000039, 0);
       }
       else
       {
-        if (not runOptions.getValueOrDef<bool>(true, "only_neutralino_LSP")) return;
+        if (not runOptions->getValueOrDef<bool>(true, "only_neutralino_LSP")) return;
         m_canonical_LSP = mchi0;
       }
 
@@ -120,9 +112,9 @@ namespace Gambit
        }
     }
     /// Helper to work with pointer
-    void check_LSP(const Spectrum* result)
+    void check_LSP(const Spectrum* spec, const safe_ptr<Options>& runOptions, bool gravitino_model)
     {
-      check_LSP(*result);
+      check_LSP(*spec, runOptions, gravitino_model);
     }
 
     /// Check that the gravitino is actually light, and retrieve its mass
@@ -133,7 +125,7 @@ namespace Gambit
       if (mG > gmax)
       {
         std::ostringstream msg;
-        msg << "Gravitino mass ("<<mG<<" GeV) is greater than permitted in *_lightgravitno models ("<<gmax<<").\n"
+        msg << "Gravitino mass ("<<mG<<" GeV) is greater than permitted in *_lightgravitno models ("<<gmax<<" GeV).\n"
             << "If you know what you are doing(!), this behaiour can be modified with option max_permitted_gravitino_mass_GeV.";
         SpecBit_error().raise(LOCAL_INFO,msg.str());
       }
@@ -178,9 +170,9 @@ namespace Gambit
     Spectrum run_FS_spectrum_generator
         ( const typename MI::InputParameters& input
         , const SMInputs& sminputs
-        , const Options& runOptions
+        , const safe_ptr<Options>& runOptions
         , const std::map<str, safe_ptr<double> >& input_Param
-        , const bool(*&ModelInUse)(str)
+        , bool gravitino_model
         )
     {
       // SoftSUSY object used to set quark and lepton masses and gauge
@@ -217,22 +209,22 @@ namespace Gambit
       // | higgs_2loop_correction_atau_atau | 0, 1                         | 1 (= enabled)   |
 
       Spectrum_generator_settings settings;
-      settings.set(Spectrum_generator_settings::precision, runOptions.getValueOrDef<double>(1.0e-4,"precision_goal"));
-      settings.set(Spectrum_generator_settings::max_iterations, runOptions.getValueOrDef<double>(0,"max_iterations"));
-      settings.set(Spectrum_generator_settings::calculate_sm_masses, runOptions.getValueOrDef<bool> (false, "calculate_sm_masses"));
-      settings.set(Spectrum_generator_settings::pole_mass_loop_order, runOptions.getValueOrDef<int>(2,"pole_mass_loop_order"));
-      settings.set(Spectrum_generator_settings::pole_mass_loop_order, runOptions.getValueOrDef<int>(2,"ewsb_loop_order"));
-      settings.set(Spectrum_generator_settings::beta_loop_order, runOptions.getValueOrDef<int>(2,"beta_loop_order"));
-      settings.set(Spectrum_generator_settings::threshold_corrections_loop_order, runOptions.getValueOrDef<int>(2,"threshold_corrections_loop_order"));
-      settings.set(Spectrum_generator_settings::higgs_2loop_correction_at_as, runOptions.getValueOrDef<int>(1,"higgs_2loop_correction_at_as"));
-      settings.set(Spectrum_generator_settings::higgs_2loop_correction_ab_as, runOptions.getValueOrDef<int>(1,"higgs_2loop_correction_ab_as"));
-      settings.set(Spectrum_generator_settings::higgs_2loop_correction_at_at, runOptions.getValueOrDef<int>(1,"higgs_2loop_correction_at_at"));
-      settings.set(Spectrum_generator_settings::higgs_2loop_correction_atau_atau, runOptions.getValueOrDef<int>(1,"higgs_2loop_correction_atau_atau"));
-      settings.set(Spectrum_generator_settings::top_pole_qcd_corrections, runOptions.getValueOrDef<int>(1,"top_pole_qcd_corrections"));
-      settings.set(Spectrum_generator_settings::beta_zero_threshold, runOptions.getValueOrDef<int>(1.000000000e-14,"beta_zero_threshold"));
-      settings.set(Spectrum_generator_settings::eft_matching_loop_order_up, runOptions.getValueOrDef<int>(1,"eft_matching_loop_order_up"));
-      settings.set(Spectrum_generator_settings::eft_matching_loop_order_down, runOptions.getValueOrDef<int>(1,"eft_matching_loop_order_down"));
-      settings.set(Spectrum_generator_settings::threshold_corrections, runOptions.getValueOrDef<int>(123111321,"threshold_corrections"));
+      settings.set(Spectrum_generator_settings::precision, runOptions->getValueOrDef<double>(1.0e-4,"precision_goal"));
+      settings.set(Spectrum_generator_settings::max_iterations, runOptions->getValueOrDef<double>(0,"max_iterations"));
+      settings.set(Spectrum_generator_settings::calculate_sm_masses, runOptions->getValueOrDef<bool> (false, "calculate_sm_masses"));
+      settings.set(Spectrum_generator_settings::pole_mass_loop_order, runOptions->getValueOrDef<int>(2,"pole_mass_loop_order"));
+      settings.set(Spectrum_generator_settings::pole_mass_loop_order, runOptions->getValueOrDef<int>(2,"ewsb_loop_order"));
+      settings.set(Spectrum_generator_settings::beta_loop_order, runOptions->getValueOrDef<int>(2,"beta_loop_order"));
+      settings.set(Spectrum_generator_settings::threshold_corrections_loop_order, runOptions->getValueOrDef<int>(2,"threshold_corrections_loop_order"));
+      settings.set(Spectrum_generator_settings::higgs_2loop_correction_at_as, runOptions->getValueOrDef<int>(1,"higgs_2loop_correction_at_as"));
+      settings.set(Spectrum_generator_settings::higgs_2loop_correction_ab_as, runOptions->getValueOrDef<int>(1,"higgs_2loop_correction_ab_as"));
+      settings.set(Spectrum_generator_settings::higgs_2loop_correction_at_at, runOptions->getValueOrDef<int>(1,"higgs_2loop_correction_at_at"));
+      settings.set(Spectrum_generator_settings::higgs_2loop_correction_atau_atau, runOptions->getValueOrDef<int>(1,"higgs_2loop_correction_atau_atau"));
+      settings.set(Spectrum_generator_settings::top_pole_qcd_corrections, runOptions->getValueOrDef<int>(1,"top_pole_qcd_corrections"));
+      settings.set(Spectrum_generator_settings::beta_zero_threshold, runOptions->getValueOrDef<int>(1.000000000e-14,"beta_zero_threshold"));
+      settings.set(Spectrum_generator_settings::eft_matching_loop_order_up, runOptions->getValueOrDef<int>(1,"eft_matching_loop_order_up"));
+      settings.set(Spectrum_generator_settings::eft_matching_loop_order_down, runOptions->getValueOrDef<int>(1,"eft_matching_loop_order_down"));
+      settings.set(Spectrum_generator_settings::threshold_corrections, runOptions->getValueOrDef<int>(123111321,"threshold_corrections"));
 
 
       spectrum_generator.set_settings(settings);
@@ -272,12 +264,12 @@ namespace Gambit
 
       // Has the user chosen to override any pole mass values?
       // This will typically break consistency, but may be useful in some special cases
-      if (runOptions.hasKey("override_FS_pole_masses"))
+      if (runOptions->hasKey("override_FS_pole_masses"))
       {
-        std::vector<str> particle_names = runOptions.getNames("override_FS_pole_masses");
+        std::vector<str> particle_names = runOptions->getNames("override_FS_pole_masses");
         for (auto& name : particle_names)
         {
-          double mass = runOptions.getValue<double>("override_FS_pole_masses", name);
+          double mass = runOptions->getValue<double>("override_FS_pole_masses", name);
           mssmspec.set_override(Par::Pole_Mass, mass, name);
         }
       }
@@ -331,7 +323,7 @@ namespace Gambit
       #endif
       if( problems.have_problem() )
       {
-         if( runOptions.getValueOrDef<bool>(false,"invalid_point_fatal") )
+         if( runOptions->getValueOrDef<bool>(false,"invalid_point_fatal") )
          {
             ///TODO: Need to tell gambit that the spectrum is not viable somehow. For now
             /// just die.
@@ -384,23 +376,17 @@ namespace Gambit
       #endif
 
       // Retrieve any mass cuts
-      static const Spectrum::mc_info mass_cut = runOptions.getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
-      static const Spectrum::mr_info mass_ratio_cut = runOptions.getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
+      static const Spectrum::mc_info mass_cut = runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
+      static const Spectrum::mr_info mass_ratio_cut = runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
 
       // Package QedQcd SubSpectrum object, MSSM SubSpectrum object, and SMInputs struct into a 'full' Spectrum object
       Spectrum spec(qedqcdspec,mssmspec,sminputs,&input_Param,mass_cut,mass_ratio_cut);
 
       // Add the gravitino mass if it is present
-      if (ModelInUse("MSSM63atQ_lightgravitino")
-       or ModelInUse("MSSM63atQ_mA_lightgravitino")
-       or ModelInUse("MSSM63atMGUT_lightgravitino")
-       or ModelInUse("MSSM63atMGUT_mA_lightgravitino")
-       or ModelInUse("MSSM63atMSUSY_lightgravitino")
-       or ModelInUse("MSSM63atMSUSY_mA_lightgravitino"))
-       add_gravitino_mass(spec, input_Param, runOptions);
+      if (gravitino_model) add_gravitino_mass(spec, input_Param, runOptions);
 
       // Make sure that LSP conditions are respected
-      check_LSP(spec, runOptions, ModelInUse);
+      check_LSP(spec, runOptions, gravitino_model);
 
       return spec;
     }
@@ -597,7 +583,7 @@ namespace Gambit
       // This FS spectrum generator has mA as the parameter
       input.mAInput = *myPipe::Param.at("mA");
       fill_MSSM63_input_altnames(input,myPipe::Param); // Fill the rest
-      result = run_FS_spectrum_generator<MSSMatMSUSYEFTHiggs_mAmu_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSMatMSUSYEFTHiggs_mAmu_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atMSUSY_mA_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -625,7 +611,7 @@ namespace Gambit
       input.mHd2IN = *myPipe::Param.at("mHd2");
       input.SignMu = *myPipe::Param.at("SignMu");
       fill_MSSM63_input_altnames(input,myPipe::Param); // Fill the rest
-      result = run_FS_spectrum_generator<MSSMEFTHiggs_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSMEFTHiggs_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atQ_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -658,7 +644,7 @@ namespace Gambit
       // Note: This particular spectrum generator has been created with
       // different names for parameter inputs.  We should standardise this
       fill_MSSM63_input_altnames(input,myPipe::Param);
-      result = run_FS_spectrum_generator<MSSMEFTHiggs_mAmu_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSMEFTHiggs_mAmu_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atQ_mA_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -705,7 +691,7 @@ namespace Gambit
       }
 
       // Run spectrum generator
-      result = run_FS_spectrum_generator<CMSSM_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<CMSSM_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,false);
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -734,7 +720,7 @@ namespace Gambit
       fill_MSSM63_input(input,myPipe::Param);
 
       // Run spectrum generator
-      result = run_FS_spectrum_generator<MSSM_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSM_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atQ_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -760,7 +746,7 @@ namespace Gambit
       fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Run spectrum generator
-      result = run_FS_spectrum_generator<MSSM_mAmu_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSM_mAmu_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atQ_mA_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -787,7 +773,7 @@ namespace Gambit
       fill_MSSM63_input(input,myPipe::Param);
 
       // Run the spectrum generator
-      result = run_FS_spectrum_generator<MSSMatMGUT_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSMatMGUT_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -821,7 +807,7 @@ namespace Gambit
      fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
      // Run the spectrum generator
-     result = run_FS_spectrum_generator<MSSMatMGUTEFTHiggs_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+     result = run_FS_spectrum_generator<MSSMatMGUTEFTHiggs_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -848,7 +834,7 @@ namespace Gambit
       fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Run the spectrum generator
-      result = run_FS_spectrum_generator<MSSMatMGUT_mAmu_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSMatMGUT_mAmu_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atMGUT_mA_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -879,7 +865,7 @@ namespace Gambit
      fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
      // Run the specctrum generator
-     result = run_FS_spectrum_generator<MSSMatMGUTEFTHiggs_mAmu_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+     result = run_FS_spectrum_generator<MSSMatMGUTEFTHiggs_mAmu_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atMGUT_mA_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -906,7 +892,7 @@ namespace Gambit
       fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Run the spectrum generator
-      result = run_FS_spectrum_generator<MSSMatMSUSY_mAmu_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param,myPipe::ModelInUse);
+      result = run_FS_spectrum_generator<MSSMatMSUSY_mAmu_interface<ALGORITHM1>>(input,sminputs,myPipe::runOptions,myPipe::Param,myPipe::ModelInUse("MSSM63atMSUSY_mA_lightgravitino"));
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -1004,7 +990,7 @@ namespace Gambit
       add_gravitino_mass_from_slhaea(result, input_slha);
 
       // No sneaking in charged LSPs via SLHA, jävlar.
-      check_LSP(result, myPipe::runOptions, myPipe::ModelInUse);
+      check_LSP(result, myPipe::runOptions, result.has(Par::Pole_Mass, "~G"));
     }
 
     /// Get an MSSMSpectrum object from an SLHAstruct
@@ -1013,14 +999,7 @@ namespace Gambit
     void get_MSSM_spectrum_from_SLHAstruct(Spectrum& result)
     {
       namespace myPipe = Pipes::get_MSSM_spectrum_from_SLHAstruct;
-      const SLHAstruct& input_slha_tmp = *myPipe::Dep::unimproved_MSSM_spectrum; // Retrieve dependency on SLHAstruct
-
-      /// @todo FIXME this needs to be fixed -- is it needed any more?  Where is this GAMBIT block supposed to be written?
-      SLHAstruct input_slha(input_slha_tmp); // Copy struct (for demo adding of GAMBIT block only)
-      // For example; add this to your input SLHAstruct:
-      input_slha["GAMBIT"][""] << "BLOCK" << "GAMBIT";
-      input_slha["GAMBIT"][""] <<      1  << 1e99 << "# Input scale";
-      std::cout << input_slha << std::endl; // test.
+      const SLHAstruct& input_slha = *myPipe::Dep::unimproved_MSSM_spectrum; // Retrieve dependency on SLHAstruct
 
       // Retrieve any mass cuts
       static const Spectrum::mc_info mass_cut = myPipe::runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
@@ -1029,21 +1008,21 @@ namespace Gambit
       // Create Spectrum object from the slhaea object
       result = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(input_slha, input_slha, mass_cut, mass_ratio_cut);
 
-      // No sneaking in charged LSPs via SLHA, jävlar.
-      check_LSP(result, myPipe::runOptions, myPipe::ModelInUse);
-
-      // Add the gravitino mass to a spectrum object if it has been provided in an SLHAea object
+      // Add the gravitino mass to the spectrum object if it has been provided in the SLHAea object
       add_gravitino_mass_from_slhaea(result, input_slha);
 
-      // OK the relevant info exists, add the mass to the MSSM SubSpectrum object.
-      result.get_HE().set_override(Par::mass1,SLHAea::to<double>(input_slha.at("GAMBIT").at(1).at(1)), "high_scale", false);
+      // No sneaking in charged LSPs via SLHA, jävlar.
+      check_LSP(result, myPipe::runOptions, result.has(Par::Pole_Mass, "~G"));
 
       // In order to translate from e.g. MSSM63atMGUT to MSSM63atQ, we need
-      // to know that input scale Q. This is generally not stored in SLHA format,
+      // to know the input scale Q. This is generally not stored in SLHA format,
       // but we need it, so if you want to produce a Spectrum object this way you
       // will need to add this information to your SLHAstruct:
       // BLOCK GAMBIT
       //   1     <high_scale>    # Input scale of (upper) boundary conditions, e.g. GUT scale
+      // For example, you could add this to your input SLHAstruct in C++ as follows:
+      //input_slha["GAMBIT"][""] << "BLOCK" << "GAMBIT";
+      //input_slha["GAMBIT"][""] <<      1  << 1e99 << "# Input scale";
 
       // Need to check if this information exists:
       SLHAstruct::const_iterator block = input_slha.find("GAMBIT");
