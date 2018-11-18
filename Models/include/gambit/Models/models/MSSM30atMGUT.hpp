@@ -22,6 +22,7 @@
 #define __MSSM30atMGUT_hpp__
 
 #include "gambit/Models/models/MSSM63atMGUT.hpp" // Parent model must be declared first! Include it here to ensure that this happens.
+#include "gambit/Models/models/MSSM30atQ.hpp"
 
 /// FlexibleSUSY compatible general (78 parameters plus sign) MSSM parameterisation
 #define MODEL MSSM30atMGUT

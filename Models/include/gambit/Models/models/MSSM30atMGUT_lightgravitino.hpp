@@ -26,6 +26,7 @@
 #define __MSSM30atMGUT_lightgravitino_hpp__
 
 #include "gambit/Models/models/MSSM63atMGUT_lightgravitino.hpp" // Parent model must be declared first! Include it here to ensure that this happens.
+#include "gambit/Models/models/MSSM30atQ_lightgravitino.hpp"
 
 #define MODEL MSSM30atMGUT_lightgravitino
 #define PARENT MSSM63atMGUT_lightgravitino
