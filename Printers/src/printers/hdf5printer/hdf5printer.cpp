@@ -475,7 +475,6 @@ namespace Gambit
             }
             else
             {
-              set_resume(false);  //Tell ScannerBit that it shouldn't resume and do not find highest point.
               logger() << LogTags::info << "No process-level temporary files found; skipping combination step." << EOM;
             }
           }
