@@ -150,8 +150,8 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     c_strings = []
     g_strings = []
     for i in np.arange(len(c_name)):
-        c_strings.append("{{{}}}".format(', '.join("'{0}'".format(x) for x in c_name[i])))
-        g_strings.append("{{{}}}".format(', '.join("'{0}'".format(y) for y in g_name[i])))
+        c_strings.append("{{{}}}".format(', '.join("\"{0}\"".format(x) for x in c_name[i])))
+        g_strings.append("{{{}}}".format(', '.join("\"{0}\"".format(y) for y in g_name[i])))
 
     towrite = (
             "void {0}(DecayTable::Entry& result)\n"
@@ -159,7 +159,7 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
             "using namespace Pipes::{0};\n"
             "\n"
             "const Spectrum& spec = *Dep::{1};\n"
-            "double QCD_coupling = spec.get(Par::dimensionless, 'g3');\n"
+            "double QCD_coupling = spec.get(Par::dimensionless, \"g3\");\n"
             "\n"
     ).format(function_name, spectrum)
 
@@ -167,8 +167,8 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
         towrite += "result = *Dep::Reference_SM_Higgs_decay_rates;\n\n"
 
     towrite += (
-            "str model = '{0}';\n"
-            "str in = '{1}';"
+            "str model = \"{0}\";\n"
+            "str in = \"{1}\";"
             " // In state: CalcHEP particle name\n"
             "std::vector<std::vector<str>> out_calchep = {{{2}}}; "
             "// Out states: CalcHEP particle names\n"
@@ -256,8 +256,8 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
                     "    DEPENDENCY({1}, Spectrum)\n{2}"
                     "    BACKEND_REQ(CH_Decay_Width, (), double, (str&, str&, "
                     "std::vector<str>&, double&))\n"
-                    "    #undef FUNCTION\n"
                     "    ALLOW_MODELS({3})\n"
+                    "    #undef FUNCTION\n"
             ).format(func, spectrum, extra, model_name)
             rollcall_entries.append([cap, towrite])
         # If the capability doesn't exist => must write a new entry for it as 
@@ -273,8 +273,8 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
                     "    DEPENDENCY({2}, Spectrum)\n"
                     "    BACKEND_REQ(CH_Decay_Width, (), double, (str&, str&, "
                     "std::vector<str>&, double&))\n"
-                    "    #undef FUNCTION\n"
                     "    ALLOW_MODELS({3})\n"
+                    "    #undef FUNCTION\n"
                     "\n"
                     "  #undef CAPABILITY\n"
             ).format(cap, func, spectrum, model_name)

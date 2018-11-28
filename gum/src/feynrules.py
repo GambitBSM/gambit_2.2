@@ -28,7 +28,7 @@ def fr_part_to_gum_part(fr_bsm):
     
     return bsm_list, add_higgs
 
-def fr_params(paramlist):
+def fr_params(paramlist, add_higgs):
     """
     Removes all Standard Model parameters from those we wish
     to add to the GAMBIT model. This utilises the 'BlockName'
@@ -61,17 +61,16 @@ def fr_params(paramlist):
             x = SpectrumParameter(p.name(), "dimensionless")
             params.append(x)
 
-    # Add gauge couplings and Yukawas here? Unsure. 
-    # They're vetoed by the SMINPUTS filter above.
-    """
-    params.append(SpectrumParameter("g1", "dimensionless", "scalar", sm=True))
-    params.append(SpectrumParameter("g2", "dimensionless", "scalar", sm=True))
-    params.append(SpectrumParameter("g3", "dimensionless", "scalar", sm=True))
-    params.append(SpectrumParameter("sinW2", "dimensionless", "scalar", sm=True))
-    params.append(SpectrumParameter("Yd", "dimensionless", "m3x3", sm=True))
-    params.append(SpectrumParameter("Yu", "dimensionless", "m3x3", sm=True))
-    params.append(SpectrumParameter("Ye", "dimensionless", "m3x3", sm=True))
-    """
+    if add_higgs:
+        params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True))
 
+    # Add gauge couplings and Yukawas here? TODO: check! 
+    params.append(SpectrumParameter("g1", "dimensionless", shape="scalar", sm=True))
+    params.append(SpectrumParameter("g2", "dimensionless", shape="scalar", sm=True))
+    params.append(SpectrumParameter("g3", "dimensionless", shape="scalar", sm=True))
+    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True))
+    params.append(SpectrumParameter("Yd", "dimensionless", shape="m3x3", sm=True))
+    params.append(SpectrumParameter("Yu", "dimensionless", shape="m3x3", sm=True))
+    params.append(SpectrumParameter("Ye", "dimensionless", shape="m3x3", sm=True))
 
     return params

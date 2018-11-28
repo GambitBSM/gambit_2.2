@@ -675,7 +675,7 @@ M$Parameters = {
     TeX           -> Subsuperscript[x,b\[Mu],L],
     Description   -> "Left bottom-muon mixing"
   },  
-  xbtaL == {
+  xbtauL == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 9,
@@ -747,7 +747,7 @@ M$Parameters = {
     TeX           -> Subsuperscript[x,b\[Mu],R],
     Description   -> "Right bottom-muon mixing"
   },  
-  xbtaR == {
+  xbtauR == {
     ParameterType -> External,
     BlockName     -> LQBLOCK,
     OrderBlock    -> 18,

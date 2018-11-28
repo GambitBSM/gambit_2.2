@@ -6,7 +6,7 @@ from setup import *
 from files import *
 
 def write_basic_spectrum(gambit_model_name, model_parameters, spec,
-                         simple_SMinputs=False, FS=False):
+                         add_higgs, FS=False):
     """
     Writes basic spectrum object wrapper for new model:
     SpecBit/src/SpecBit_<new_model_name>. 
@@ -32,8 +32,13 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
             "#include \"gambit/SpecBit/SpecBit_helpers.hpp\"\n"
             "#include \"gambit/SpecBit/QedQcdWrapper.hpp\"\n"
             "#include \"gambit/Models/SimpleSpectra/{0}.hpp\"\n"
-            "#include \"gambit/SpecBit/{1}Spec.hpp\"\n"
     ).format(modelSS, gambit_model_name)
+
+    # If there's a Higgs dependency 
+    if add_higgs:
+    	towrite += (
+    		"#include \"gambit/Models/SimpleSpectra/SMHiggsSimpleSpec.hpp\"\n"
+    		)
     
     # Add FlexibleSUSY headers if flagged
     # TODO - wait until template BOSS...
@@ -79,7 +84,7 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
                 toadd = "_Pole_Mass"
             towrite += "{0}.{1}_{2}{3} = *myPipe::Param.at(\"{4}\");\n".format(modelcont, gambit_model_name, par.fullname, toadd, par.gb_in)
                         
-    if simple_SMinputs:
+    if add_higgs:
         towrite += add_simple_sminputs(modelcont)
       
     towrite += (
@@ -99,11 +104,14 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
             "result = Spectrum(spec,sminputs,&myPipe::Param,"
             "mass_cut,mass_ratio_cut);\n"
             "}}\n\n"
+            "// Declaration: print spectrum out\n"
+            "void fill_map_from_{2}_spectrum(std::map<std::string,double>&, "
+            "const Spectrum&);\n\n"
             "void get_{2}_spectrum_as_map" 
             "(std::map<std::string,double>& specmap)\n"
             "{{\n"
             "namespace myPipe = Pipes::get_{3}_as_map;\n"
-            "const Spectrum& spec(*myPipe::Dep::{3};\n"
+            "const Spectrum& spec(*myPipe::Dep::{3});\n"
             "fill_map_from_{2}_spectrum(specmap, spec);\n"
             "}}\n\n"
             "void fill_map_from_{2}_spectrum"
@@ -126,7 +134,7 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
             "if(shape.size()==1 and shape[0]==1)\n"
             "{{\n"
             "std::ostringstream label;\n"
-            "label << name <<" "<< Par::toString.at(tag);\n"
+            "label << name <<\" \"<< Par::toString.at(tag);\n"
             "specmap[label.str()] = spec.get_HE().get(tag,name);\n"
             "}}\n"
             "// Vector case\n"
@@ -159,7 +167,7 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
             "// ERROR\n"
             "std::ostringstream errmsg;\n"
             "errmsg << \"Invalid parameter received while converting " 
-            "{3} to map of strings!\"\n"
+            "{3} to map of strings!\";\n"
             "errmsg << \"Problematic parameter was: \"<< tag "
             "<<\", \" << name << \", shape=\"<< shape;\n"
             "utils_error().forced_throw(LOCAL_INFO,errmsg.str());\n"
@@ -250,17 +258,17 @@ def add_simple_sminputs(model):
             "\n"
             "// quantities needed to fill container spectrum\n"
             "double alpha_em = 1.0 / sminputs.alphainv;\n"
-            "double C = alpha_em * Pi / (sminputs.GF * pow(2,0.5));\n"
+            "double C = alpha_em * pi / (sminputs.GF * pow(2,0.5));\n"
             "double sinW2 = 0.5 - pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
             "double cosW2 = 0.5 + pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
-            "double e = pow( 4*Pi*( alpha_em ),0.5);\n"
+            "double e = pow( 4*pi*( alpha_em ),0.5);\n"
             "double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
             "\n"
             "// Gauge couplings\n"
             "{0}.HiggsVEV = vev;\n"    
             "{0}.g1 = e / sqrt(sinW2);\n"    
             "{0}.g2 = e / sqrt(cosW2);\n"    
-            "{0}.g3 = pow( 4*Pi*( sminputs.alphaS ),0.5);\n"    
+            "{0}.g3 = pow( 4*pi*( sminputs.alphaS ),0.5);\n"    
             "\n"
             "// Yukawas\n"
             "double sqrt2v = pow(2.0,0.5)/vev;\n"

@@ -166,6 +166,9 @@ def clean_calchep_model_files(model_folder, model_name):
         # We do not touch Lagrangian / particle files.
         # They're perfect just the way they are.
 
+        # Copy CalcHEP files to the correct directories
+        copy_calchep_files(model_folder, model_name)
+
         print("CalcHEP model files cleaned!")
         
         # TODO - move CalcHEP files to backend folder.
@@ -292,11 +295,21 @@ def copy_calchep_files(model_folder, model_name):
     
     model_name.strip('/')    
     model_folder.strip('/')    
-    
+
     gb_target = "./../Backends/installed/calchep/3.6.27/models/" + model_name
     if not os.path.exists(gb_target):
         os.makedirs(gb_target)
         
+    shutil.copyfile(model_folder + "/func1.mdl", gb_target + "/func1.mdl")
+    shutil.copyfile(model_folder + "/vars1.mdl", gb_target + "/vars1.mdl")
+    shutil.copyfile(model_folder + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
+    shutil.copyfile(model_folder + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
+
+    # Also move them to patches, just in case the user does make nuke-calchep
+    gb_target = "./../Backends/patches/calchep/3.6.27/Models/" + model_name
+    if not os.path.exists(gb_target):
+        os.makedirs(gb_target)
+
     shutil.copyfile(model_folder + "/func1.mdl", gb_target + "/func1.mdl")
     shutil.copyfile(model_folder + "/vars1.mdl", gb_target + "/vars1.mdl")
     shutil.copyfile(model_folder + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")

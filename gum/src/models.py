@@ -30,17 +30,23 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     module = "Models"
     header = True
         
-    towrite_header += "#define MODEL {0}\n".format(model_name)
+    towrite_header += (
+    			   "#define MODEL {0}"
+    			   "\n"
+    			   "  START_MODEL\n"
+    			   "\n"
+
+    			   ).format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    params = [x.gb_in for x in model_params if x.name != 'h0_1']
+    params = [x.gb_in for x in model_params if x.name != 'h0_1' and x.sm == False]
       
-    towrite_header += "  DEFINEPARS({0})\n".format(', '.join(params))
+    towrite_header += "  DEFINEPARS({0})\n\n".format(', '.join(params))
        
     towrite_header += (
                    "#undef MODEL\n"
                    "\n"
-                   "#endif\n"   
+                   "#endif\n"
     )    
     
     return towrite_header
@@ -190,7 +196,12 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
                             " not passed as instance of class "
                             "SpectrumParameter."))
 
-        paramname = gambit_model_name + "_" + model_parameters[i].fullname.replace("\"","")
+        if model_parameters[i].sm:
+        	e = ""
+        else:
+        	e = gambit_model_name + "_"
+
+        paramname = e + model_parameters[i].fullname
 
         if model_parameters[i].tag == "Pole_Mass":
             paramname += "_Pole_Mass"
@@ -274,7 +285,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             "struct SpecTraits<Models::{0}> : DefaultTraits\n"
             "{{\n"
             "static std::string name() {{ return \"{0}\"; }}\n"
-            "typedef SpectrumContents::{1}Contents;\n"
+            "typedef SpectrumContents::{1} Contents;\n"
             "}};\n"
             "\n"
             "namespace Models\n"
@@ -330,7 +341,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             size = ", int i, int j"
             indices = "[i][j]"
 
-        towrite += "double {0}(double in{1}) {{ params.{2}{3}=in; }}\n".format(sp.setter, size, sp.param, indices)
+        towrite += "void {0}(double in{1}) {{ params.{2}{3}=in; }}\n".format(sp.setter, size, sp.param, indices)
 
     towrite += (
             "\n"
@@ -368,7 +379,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
         
         towrite += (
-                "static const {0}v[] = {{{1}}};\n"
+                "static const int {0}v[] = {{{1}}};\n"
                 "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
                 "\n"
         ).format(fnname, ",".join(str(j) for j in np.arange(int(sizes[i]))))
@@ -421,7 +432,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
         
         towrite += (
-                "static const {0}v[] = {{{1}}};\n"
+                "static const int {0}v[] = {{{1}}};\n"
                 "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
                 "\n"
         ).format(fnname, ",".join(str(j) for j in np.arange(int(sizes[i]))))
