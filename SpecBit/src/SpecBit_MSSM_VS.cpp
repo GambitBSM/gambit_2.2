@@ -824,7 +824,7 @@ namespace Gambit
             double lifetime= vevaciousPlusPlus.GetLifetimeInSeconds();
             double thermalProbability = vevaciousPlusPlus.GetThermalProbability();
 
-            if(lifetime == -1 && thermalProbability == -1 ){
+            if(lifetime == -1 && thermalProbability == -1 ){ // Here -1 from Vevacious Means that the point is stable. 
                 lifetimeAndThermalProbability.first = 3.0E+100;
                 lifetimeAndThermalProbability.second= 1;
             }

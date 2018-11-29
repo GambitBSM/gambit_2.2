@@ -905,7 +905,7 @@ if(NOT ditched_${name}_${ver})
             DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
             SOURCE_DIR ${dir}
             BUILD_IN_SOURCE 1
-            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./configure --prefix=${dir} --disable-dependency-tracking --with-pic --disable-openmp
+            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./configure --prefix=${dir}
             BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
             INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
             )
@@ -918,7 +918,7 @@ set(ver "2.4.58")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(dl "http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz")
-  set(md5 "fd9e4f74b3565afc16ebecf533b576ed")
+  set(md5 "58e98d45f7076bacb7cf818ceb16e695")
 else()
   set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
   set(md5 "f508fd268f20fc7b98cf9d2dbcbbd131")
@@ -978,7 +978,8 @@ set(phc_ver "2.4.58")
 set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
-set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-unused-parameter -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
+set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -O2 -Wno-unused-local-typedefs -Wno-unused-parameter -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
+# message(${VPP_FLAGS})
 check_ditch_status(${name} ${ver})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
