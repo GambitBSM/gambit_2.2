@@ -32,7 +32,7 @@
     START_FUNCTION(ddpair)
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
     DEPENDENCY(make_vevaciousPlusPlus_inputs, std::string)
-    ALLOW_MODEL_DEPENDENCE(MSSM)
+    ALLOW_MODEL_DEPENDENCE(MSSM, CMSSM)
 	#undef FUNCTION
   #undef CAPABILITY
 

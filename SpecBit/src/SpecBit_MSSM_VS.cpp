@@ -39,7 +39,7 @@
 #include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/QedQcdWrapper.hpp"
 #include "gambit/SpecBit/model_files_and_boxes.hpp" // #includes lots of flexiblesusy headers and defines interface classes
-
+#include "gambit/Utils/stream_overloads.hpp"
 
 // Switch for debug mode
 //#define SPECBIT_DEBUG
@@ -49,6 +49,8 @@ namespace Gambit
   
   namespace SpecBit
   {
+      using namespace LogTags;
+
 		// This function initializes a VevaciousPlusPlus object that then can be fed  
 		// a parameter point. 
 
@@ -805,7 +807,14 @@ namespace Gambit
 													
 		vevaciousPlusPlus.ReadLhaBlock( "MSU2", scale , msu2, 2 );
 
+		double M0input = *myPipe::Param["M0"];
+		double M12input = *myPipe::Param["M12"];
+		double A0input = *myPipe::Param["A0"];
+		double TanBetainput = *myPipe::Param["TanBeta"];
+		double SignMuinput = *myPipe::Param["SignMu"];
+
         //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
+        logger() << "Running Vevacious with parameters: " << "M0=" << M0input << " M12=" << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput << EOM;
 
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
         try {
