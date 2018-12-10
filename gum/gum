@@ -377,6 +377,7 @@ if args.file:
 
     # Backends
     m = "Backends"
+    # CalcHEP
     if output_opts.ch:
         f = "frontends/CalcHEP_3_6_27"
         num = find_string(f, m, "setModel(modeltoset, 1)", False)[1]
@@ -387,6 +388,13 @@ if args.file:
         amend_file(f, m, ch_head, num-2, True)
         num = find_string(f, m, "BE_FUNCTION", True)[1]
         amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, True)
+    # micrOMEGAs
+    if output_opts.mo:
+        f = "frontends/MicrOmegas_{0}_3_6_9_2".format(gum.name)
+        write_file(f, m, mo_src, True)
+        write_file(f, m, mo_head, False)
+    # Pythia
+    # MadDM
 
     print("")
     print("GUM has finished successfully!")

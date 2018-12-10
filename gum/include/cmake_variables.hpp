@@ -8,10 +8,10 @@
 
 /// Found FeynRules
 #define HAVE_FEYNRULES 1
-#define FEYNRULES_PATH "/home/sb3212/GUMbit/gum/contrib/FeynRules/"
+#define FEYNRULES_PATH "/home/sanjay/gumbit/gum/contrib/FeynRules/"
 
 /// Found SARAH
 #define HAVE_SARAH 1
-#define SARAH_PATH "/home/sb3212/GUMbit/gum/contrib/SARAH/"
+#define SARAH_PATH "/home/sanjay/gumbit/gum/contrib/SARAH/"
 
 #endif //// #defined__cmake_variables_hpp__

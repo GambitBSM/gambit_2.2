@@ -33,7 +33,7 @@ EXTERNALPROJECT_ADD(
     FeynRules
 
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    URL_MD5 0389b4bdac1b85961e9d2b8a21b31c36                                                                                                                                                               
+    URL_MD5 fad2dd3ab00425c5340f5527a0180e0d                                                                                                                                                               
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
