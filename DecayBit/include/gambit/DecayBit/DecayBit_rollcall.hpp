@@ -792,6 +792,13 @@ START_MODULE
 
   #undef CAPABILITY
 
+  #define CAPABILITY all_BFs
+  START_CAPABILITY
+    #define FUNCTION get_decaytable_as_map
+    START_FUNCTION(map_str_dbl)
+    DEPENDENCY(decay_rates, DecayTable)
+    #undef FUNCTION
+  #undef CAPABILITY
 
   #define CAPABILITY SLHA1_violation
   START_CAPABILITY
