@@ -813,9 +813,11 @@ namespace Gambit
 		double TanBetainput = *myPipe::Param["TanBeta"];
 		double SignMuinput = *myPipe::Param["SignMu"];
 
+		std::ostringstream InputsForLog;
         //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
-        logger() << "Running Vevacious with parameters: " << "M0=" << M0input << " M12=" << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput << EOM;
-
+        InputsForLog << std::fixed << std::setprecision(12) << "Running Vevacious with parameters: " << "M0="  << M0input << " M12="  << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput ;
+        std::string InputsForLogString = InputsForLog.str();
+        logger() << InputsForLogString << EOM;
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
         try {
             //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
