@@ -81,8 +81,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
     MadGraph
 
-    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.3.2.tar.gz
-    URL_MD5 d41d8cd98f00b204e9800998ecf8427e
+    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.4.tar.gz
+    URL_MD5 d80db2c50d407e6a94064ab3567595c0
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
