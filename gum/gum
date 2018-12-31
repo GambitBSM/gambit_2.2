@@ -15,12 +15,14 @@ from src import *
 
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
                                              "(GAMBIT Universal Models)")
+# Required command-line arguments
 required = parser.add_argument_group('Required arguments'  )
 required.add_argument('-f', '--file', type=str,
                       help="Specify input .GUM file.", required=True)
+# Optional command-line arguments
 parser.add_argument("-d", "--dryrun", action='store_true',
                     help="GUM will perform a dry run, not saving any output.")
-parser._action_groups.append(required)
+# Retrieve command-line arguments
 args = parser.parse_args()
 
 # Input .gum file.
@@ -72,7 +74,7 @@ if args.file:
         # Find out if the spectrum needs a dependency on StandardModel_Higgs.
         bsm_particle_list, add_higgs = fr_part_to_gum_part(fr_bsm)
 
-        # Initialise all of the model parameters, for writing spectra, 
+        # Initialise all of the model parameters, for writing spectra,
         # model files - remove all SM stuff from parameter list.
         parameters = fr_params(paramlist, add_higgs)
 
@@ -102,7 +104,7 @@ if args.file:
             part = partlist[i]
             # If specified, initialise the DM candidate
             if part.pdg() == gum.dm_pdg:
-                dm = Particle(part.name(), part.antiname(), 
+                dm = Particle(part.name(), part.antiname(),
                               part.spinX2(), part.pdg(),
                               part.mass())
 
@@ -132,7 +134,7 @@ if args.file:
             gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
     # Once we've got the GAMBIT dictionaries, we can add the new parameters
-    # as pole masses to the 
+    # as pole masses to the
 
     # Add all of the masses of BSM particles as pole masses.
     # I think this is okay..? TODO: check this is okay.
@@ -225,10 +227,10 @@ if args.file:
 
         # Write process catalogue output
         pc = True
-        
+
         # Conditional on CalcHEP files being made.
         if output_opts.ch:
-        
+
           sv = True
 
           # Obtain all three-field vertices
@@ -238,7 +240,7 @@ if args.file:
           four_f = [interaction.particles for interaction in interactions
                     if interaction.num_particles() == 4
                     and interaction.is_sm() == False]
-  
+
           # Get all annihilation products and propagators involved in
           # DM + DM -> X + Y at tree-level
           ann_products, propagators = sort_annihilations(dm, three_f, four_f)
@@ -266,10 +268,10 @@ if args.file:
             dd = True
         """
 
-        darkbit_src = write_darkbit_src(dm, pc, sv, dd, ann_products, 
+        darkbit_src = write_darkbit_src(dm, pc, sv, dd, ann_products,
                                         propagators, gambit_pdgs, gum.name,
                                         calchep_pdg_codes, bsm_particle_list)
-                                        
+
         pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name, pc, dd)
 
     """
@@ -328,7 +330,7 @@ if args.file:
     write_file("SpectrumContents/" + gum.name, m, spec_contents, False)
     write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m,
                subspec_wrapper, True)
-    amend_file("SpectrumContents/RegisteredSpectra", m, reg_spec, 
+    amend_file("SpectrumContents/RegisteredSpectra", m, reg_spec,
                                                     reg_spec_num, True)
 
     # SpecBit
