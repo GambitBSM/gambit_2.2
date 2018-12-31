@@ -986,7 +986,7 @@ ExternalProject_Add(${name}_${ver}
   BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
   INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
 )
-add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} "yes | clean")
 set_as_default_version("backend" ${name} ${ver})
 
 # Alternative download command for getting unreleased things from the gambit_internal repository.
