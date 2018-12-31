@@ -169,10 +169,12 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     dm_mass = "m" + gb_id.replace("\"", "")
 
     towrite_class = (
-            "double sv(std::vector<str> channel, double v_rel)\n"
+            "double sv(std::vector<str> channel, const DecayTable* tbl, double v_rel)\n"
             "{\n"
             "/// Returns sigma*v for a given channel.\n"
             "double GeV2tocm3s1 = gev2cm2*s2cm;\n\n"
+            "/// Hard-coded for now -- CalcHEP frontend needs this removing anyway, it doesn't use it.\n"
+            "double QCD_coupling = 1.0;"
     )
 
     out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])
@@ -184,7 +186,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     for i in np.arange(len(ann_products)):
         towrite_class += (
                 "if (channel == \"{0}, {1}\")"
-                " return BEreq::CH_Sigma_V({2},"
+                " return BEreq::CH_Sigma_V(\"{2}\","
                 " std::vector<str> {{\"{3}\", \"{4}\"}},"
                 " std::vector<str> {{\"{0}\", \"{1}\"}},"
                 " QCD_coupling, v_rel, tbl)*GeV2tocm3s1; \n"
@@ -217,12 +219,12 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
             "for (unsigned int i = 0; i < channels.size(); ++i)\n"
             "{{\n"
             "double mtot_final = \n"
-            "catalog.getParticleProperty(p1.[i]).mass + \n"
-            "catalog.getParticleProperty(p2.[i]).mass;  \n"
+            "catalog.getParticleProperty(p1[i]).mass + \n"
+            "catalog.getParticleProperty(p2[i]).mass;  \n"
             "if ({1}*2 > mtot_final*0.5)\n"
             "{{\n"
             "daFunk::Funk kinematicFunction = daFunk::funcM("
-            "pc, &{0}::sv, channel[i], daFunk::var(\"v\"));\n"
+            "pc, &{0}::sv, channels[i], tbl, daFunk::var(\"v\"));\n"
             "TH_Channel new_channel("
             "daFunk::vec<string>(p1[i], p2[i]), kinematicFunction);\n"
             "process_ann.channelList.push_back(new_channel);\n"
@@ -291,14 +293,14 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
                 "process_ann.isSelfConj = true;\n\n"
         )
 
-    towrite += add_SM_macros()
+    towrite += add_SM_macros(gambit_model_name)
 
     # Add the new BSM particles to the Process Catalog
     dm_mass = "m" + gb_id.replace("\"", "")
 
     towrite += (
             "// {0}-specific masses\n"
-            "double {1} = spec.get(Par::Pole_Mass, \"{2}\"));\n"
+            "double {1} = spec.get(Par::Pole_Mass, \"{2}\");\n"
             "addParticle(\"{2}\", {1}, {3});\n"
     ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
 
@@ -343,8 +345,8 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             towrite += (
                     "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
                     "process_ann.resonances_thresholds.resonances.\n    "
-                    "push_back(TH_Resonance((spec.get(Par::Pole_Mass, \"{0}\"), "
-                    "tbl.at(\"{0}\").width_in_GeV)));\n"
+                    "push_back(TH_Resonance(spec.get(Par::Pole_Mass, \"{0}\"), "
+                    "tbl->at(\"{0}\").width_in_GeV));\n"
             ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
                  dm_mass)
 
@@ -427,7 +429,7 @@ def write_dm_id(model_name, dm_id):
 
     return towrite;
 
-def add_SM_macros():
+def add_SM_macros(gambit_model_name):
     """
     Adds Standard Model macros to the Process Catalogue.
     """
@@ -438,7 +440,7 @@ def add_SM_macros():
             "\n"
             "// Convenience macros\n"
             "#define getSMmass(Name, spinX2) "
-            "cat`alog.particleProperties.insert(std::pair<string, "
+            "catalog.particleProperties.insert(std::pair<string, "
             "TH_ParticleProperty> (Name, TH_ParticleProperty"
             "(SM.get(Par::Pole_Mass,Name), spinX2)));\n"
             "#define addParticle(Name, Mass, spinX2) "
@@ -447,8 +449,9 @@ def add_SM_macros():
             "TH_ParticleProperty(Mass, spinX2)));\n"
             "\n"
             "// Import Spectrum objects\n"
-            "const Spectrum& spec = *Dep::SingletDM_spectrum;\n"
+            "const Spectrum& spec = *Dep::{0}_spectrum;\n"
             "const SubSpectrum& SM = spec.get_LE();\n"
+            "const SMInputs& SMI   = spec.get_SMInputs();\n"
             "\n"
             "// Get SM pole masses\n"
             "getSMmass(\"e-_1\",     1)\n"
@@ -496,7 +499,7 @@ def add_SM_macros():
             "addParticle(\"rho-\",  meson_masses.rho_minus, 1)\n"
             "addParticle(\"omega\", meson_masses.omega,     1)\n"
             "\n"
-    )
+    ).format(gambit_model_name)
 
     return towrite
 
