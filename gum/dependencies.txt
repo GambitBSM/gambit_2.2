@@ -1,0 +1,7 @@
+Dependencies that differ from GAMBIT itself
+
+Python (2.6 or 2.7 --> should also support 3 in future)
+
+FeynRules:
+  - Boost::Python
+

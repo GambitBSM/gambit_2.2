@@ -6,6 +6,15 @@ include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
+# Check for Boost.  Not that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
+set(Boost_NO_BOOST_CMAKE ON)
+find_package(Boost 1.41 COMPONENTS "python")
+if(Boost_FOUND)
+  include_directories("${Boost_INCLUDE_DIR}")
+else()
+  message(FATAL_ERROR "\nGUM requires Boost v1.41 or greater, including the compiled Boost::Python library (for FeynRules).\nPlease suitable Boost components and rerun cmake.")
+endif()
+
 # Check for Mathematica
 include(cmake/FindMathematica.cmake)
 if(Mathematica_FOUND)
@@ -33,7 +42,7 @@ EXTERNALPROJECT_ADD(
     FeynRules
 
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    URL_MD5 fad2dd3ab00425c5340f5527a0180e0d                                                                                                                                                               
+    URL_MD5 fa03e812c3e7c50557668a3285b95a11
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
@@ -73,7 +82,7 @@ EXTERNALPROJECT_ADD(
     MadGraph
 
     URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.3.2.tar.gz
-    URL_MD5 65a66e60e2f3f800130e8bc9b477bc25
+    URL_MD5 d41d8cd98f00b204e9800998ecf8427e
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
