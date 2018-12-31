@@ -438,7 +438,7 @@ def add_SM_macros():
             "\n"
             "// Convenience macros\n"
             "#define getSMmass(Name, spinX2) "
-            "cat`alog.particleProperties.insert(std::pair<string, "
+            "catalog.particleProperties.insert(std::pair<string, "
             "TH_ParticleProperty> (Name, TH_ParticleProperty"
             "(SM.get(Par::Pole_Mass,Name), spinX2)));\n"
             "#define addParticle(Name, Mass, spinX2) "
