@@ -62,8 +62,8 @@ class Particle
     public:
 
         // Needed for Boost.python interface
-        bool operator==(const Particle& other) {return false;}
-        bool operator!=(const Particle& other) {return true;}
+        bool operator==(const Particle&) {return false;}
+        bool operator!=(const Particle&) {return true;}
 
         Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass, std::string antiname)
         {
@@ -109,8 +109,8 @@ class Parameter
     public:
 
         // Needed for Boost.python interface
-        bool operator==(const Parameter& other) {return false;}
-        bool operator!=(const Parameter& other) {return true;}
+        bool operator==(const Parameter&) {return false;}
+        bool operator!=(const Parameter&) {return true;}
 
         Parameter(std::string name, std::string block)
         {
