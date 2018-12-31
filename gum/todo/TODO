@@ -36,16 +36,19 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 * Option for choice of Lagrangian (potential) basis, or physical basis
   * SARAH: CalculateMasses -> True/False -- should work...
 
-* Create dict of amended files -- to remove duplicates in the stdout of new created files
+* Create dict of amended files
+  * Remove duplicates in the stdout of new created files
+  * Save reset file for each gum run
+  * Enable reset mode, i.e. gum -r <reset_file>
 
 * If parameters have underscores etc in FeynRules -> yell
 
 * FeynRules -- host externally? Or just pester them. The checksum changes every day...
 
 * Direct detection
-  * Need to go from Lagrangian to relativistic coefficients -- some sort of external program..? 
+  * Need to go from Lagrangian to relativistic coefficients -- some sort of external program..?
   * Use FeynArts/Calc?
-  
+
 * .ufo to .mdl for 4-fermion vertices
 
 
