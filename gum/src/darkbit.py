@@ -183,10 +183,10 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     # Add each channel individually for annihilation cross sections
     for i in np.arange(len(ann_products)):
         towrite_class += (
-                "if (channel == '{0}, {1}')"
+                "if (channel == \"{0}, {1}\")"
                 " return BEreq::CH_Sigma_V({2},"
-                " std::vector<str> {{'{3}', '{4}'}},"
-                " std::vector<str> {{'{0}', '{1}'}},"
+                " std::vector<str> {{\"{3}\", \"{4}\"}},"
+                " std::vector<str> {{\"{0}\", \"{1}\"}},"
                 " QCD_coupling, v_rel, tbl)*GeV2tocm3s1; \n"
         ).format(out1g[i], out2g[i], gambit_model_name, dm_chep, dm_chepc)
 
@@ -195,9 +195,9 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
             "}\n\n"
     )
 
-    channels = ', '.join("\'{}, {}'".format(*t) for t in zip(out1g, out2g))
-    p1 = ', '.join("\'{}'".format(*t) for t in zip(out1g))
-    p2 = ', '.join("\'{}'".format(*t) for t in zip(out2g))
+    channels = ', '.join("\"{}, {}\"".format(*t) for t in zip(out1g, out2g))
+    p1 = ', '.join("\"{}\"".format(*t) for t in zip(out1g))
+    p2 = ', '.join("\"{}\"".format(*t) for t in zip(out2g))
 
     towrite_pc = (
             "// Instantiate new {0} object.\n"
@@ -222,7 +222,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
             "if ({1}*2 > mtot_final*0.5)\n"
             "{{\n"
             "daFunk::Funk kinematicFunction = daFunk::funcM("
-            "pc, &{0}::sv, channel[i], daFunk::var('v'));\n"
+            "pc, &{0}::sv, channel[i], daFunk::var(\"v\"));\n"
             "TH_Channel new_channel("
             "daFunk::vec<string>(p1[i], p2[i]), kinematicFunction);\n"
             "process_ann.channelList.push_back(new_channel);\n"
@@ -298,14 +298,14 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
 
     towrite += (
             "// {0}-specific masses\n"
-            "double {1} = spec.get(Par::Pole_Mass, '{2}'));\n"
-            "addParticle('{2}', {1}, {3});\n"
+            "double {1} = spec.get(Par::Pole_Mass, \"{2}\"));\n"
+            "addParticle(\"{2}\", {1}, {3});\n"
     ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
 
     for i in np.arange(len(model_specific_particles)):
         if model_specific_particles[i].PDG_code != dm.PDG_code:
           towrite += (
-                  "addParticle('{0}', spec.get(Par::Pole_Mass, '{1}'), {2});\n"
+                  "addParticle(\"{0}\", spec.get(Par::Pole_Mass, \"{1}\"), {2});\n"
           ).format(pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
                    pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
                    str(model_specific_particles[i].spinX2))
@@ -341,10 +341,10 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     for i in np.arange(len(propagators)):
         if abs(propagators[i]) != abs(dm.PDG_code):
             towrite += (
-                    "if (spec.get(Par::Pole_Mass, '{0}') >= 2*{1}) "
+                    "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
                     "process_ann.resonances_thresholds.resonances.\n    "
-                    "push_back(TH_Resonance((spec.get(Par::Pole_Mass, '{0}'), "
-                    "tbl.at('{0}').width_in_GeV)));\n"
+                    "push_back(TH_Resonance((spec.get(Par::Pole_Mass, \"{0}\"), "
+                    "tbl.at(\"{0}\").width_in_GeV)));\n"
             ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
                  dm_mass)
 
@@ -438,7 +438,7 @@ def add_SM_macros():
             "\n"
             "// Convenience macros\n"
             "#define getSMmass(Name, spinX2) "
-            "catalog.particleProperties.insert(std::pair<string, "
+            "cat`alog.particleProperties.insert(std::pair<string, "
             "TH_ParticleProperty> (Name, TH_ParticleProperty"
             "(SM.get(Par::Pole_Mass,Name), spinX2)));\n"
             "#define addParticle(Name, Mass, spinX2) "

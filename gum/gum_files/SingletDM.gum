@@ -12,14 +12,6 @@ math:
 # PDG code of the DM candidate.
 dm_candidate: 9900001
 
-# The details of any parent model
-parent:
-  name: SingletDM
-  tf:
-
-# The name of the spectrum to use
-use_existing_spectrum: SingletDM_spectrum
-
 # Outputs for GUM to hook up to GAMBIT
 output:
   calchep: true
