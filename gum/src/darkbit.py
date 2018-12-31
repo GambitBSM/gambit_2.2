@@ -169,12 +169,12 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     dm_mass = "m" + gb_id.replace("\"", "")
 
     towrite_class = (
-            "double sv(std::vector<str> channel, const DecayTable* tbl, double v_rel)\n"
+            "double sv(str channel, const DecayTable* tbl, double v_rel)\n"
             "{\n"
             "/// Returns sigma*v for a given channel.\n"
             "double GeV2tocm3s1 = gev2cm2*s2cm;\n\n"
             "/// Hard-coded for now -- CalcHEP frontend needs this removing anyway, it doesn't use it.\n"
-            "double QCD_coupling = 1.0;"
+            "double QCD_coupling = 1.0;\n\n"
     )
 
     out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])
@@ -203,7 +203,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
 
     towrite_pc = (
             "// Instantiate new {0} object.\n"
-            "auto pc = boost::make_shared<{0}>(&catalog, &tbl);\n"
+            "auto pc = boost::make_shared<{0}>(&catalog, tbl);\n"
             "\n"
             "// Populate annihilation channel list and add "
             "thresholds to threshold list.\n"
@@ -255,7 +255,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             "{{\n"
             "public:\n"
             "/// Initialize {0} object (branching ratios etc)\n"
-            "{0}(TH_ProcessCatalog* const catalog, DecayTable* const tbl);\n"
+            "{0}(TH_ProcessCatalog* const catalog, const DecayTable* tbl);\n"
             "~{0}();\n\n"
     ).format(gambit_model_name)
 
@@ -331,9 +331,9 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             "// Import relevant decays\n"
             "using DarkBit_utils::ImportDecays;\n"
             "\n"
-            "      *** TODO: excludeDecays?? ***\n"
-            "      *** And ImportDecays!! For all propagators? ***\n"
-            "      *** and all final states?? Which to exclude...?\n"
+            "//      *** TODO: excludeDecays?? ***\n"
+            "//      *** And ImportDecays!! For all propagators? ***\n"
+            "//      *** and all final states?? Which to exclude...?\n"
             "\n"
     )
 
