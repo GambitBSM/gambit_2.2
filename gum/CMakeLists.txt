@@ -49,7 +49,7 @@ EXTERNALPROJECT_ADD(
     FeynRules
 
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    URL_MD5 fa03e812c3e7c50557668a3285b95a11
+    URL_MD5 8f38b09da9ae73ed3bc41b5094fa8218
 
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
@@ -92,7 +92,7 @@ EXTERNALPROJECT_ADD(
     URL_MD5 d80db2c50d407e6a94064ab3567595c0
 
     UPDATE_COMMAND ""
-    PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" Makefile
+    PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" input/mg5_configuration.txt
 
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/MadGraph
     CONFIGURE_COMMAND ""
