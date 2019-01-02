@@ -6,11 +6,29 @@ amending, and reading files.
 import os
 import re
 import numpy as np
+from distutils.dir_util import remove_tree
 
 from setup import *
 
 #mode = 'Test'
 mode = 'Go'
+
+def remove_tree_quietly(path):
+    """
+    Deletes a directory if it exists
+    """
+    if os.path.exists(path):
+        remove_tree(path)
+
+def mkdir_if_absent(path):
+    """
+    Makes a new directory if the proposed path doesn't yet exist
+    """
+    try:
+        os.makedirs(path)
+    except OSError:
+        if not os.path.isdir(path):
+            raise
 
 def full_filename(filename, module, header=False):
     """

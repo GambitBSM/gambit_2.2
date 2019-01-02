@@ -6,6 +6,13 @@ include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
+# Define the sed command to use differently for OSX and linux.  Delete this when properly integrated into GAMBIT cmake system, as it exists there already.
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dashi "-i ''")
+else()
+  set(dashi "-i")
+endif()
+
 # Check for Boost.  Not that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
 set(Boost_NO_BOOST_CMAKE ON)
 find_package(Boost 1.41 COMPONENTS "python")
@@ -85,7 +92,7 @@ EXTERNALPROJECT_ADD(
     URL_MD5 d80db2c50d407e6a94064ab3567595c0
 
     UPDATE_COMMAND ""
-    PATCH_COMMAND ""
+    PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" Makefile
 
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/MadGraph
     CONFIGURE_COMMAND ""

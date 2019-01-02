@@ -36,14 +36,15 @@ class Outputs:
 
     def __init__(self, mathpackage, calchep = False, pythia = False,
                  micromegas = False, spheno = False, flexiblesusy = False,
-                 vevacious = False):
+                 vevacious = False, collider_processes = None):
 
         self.ch = calchep
-        self.ufo = pythia
+        self.pythia = pythia
         self.mo = micromegas
         self.sph = spheno
         self.fs = flexiblesusy
         self.vev = vevacious
+        self.collider_processes = collider_processes
 
         # Overwrite these, as the output does not exist.
         if mathpackage == 'feynrules':
@@ -55,7 +56,7 @@ class Outputs:
     def bes(self):
         backends = []
         if self.ch: backends.append('calchep')
-        if self.ufo: backends.append('pythia')
+        if self.pythia: backends.append('pythia')
         if self.mo: backends.append('micromegas')
         if self.sph: backends.append('spheno')
         if self.fs: backends.append('flexiblesusy')
@@ -133,6 +134,8 @@ def fill_gum_object(data):
                 opts[i] = data['output'][i]
             else:
                 opts[i] = False
+        if 'collider_processes' in data['output']:
+            opts['collider_processes'] = data['output']['collider_processes']
 
     # Default: if unspecified, write everything.
     else:

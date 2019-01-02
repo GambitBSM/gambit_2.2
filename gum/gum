@@ -40,6 +40,11 @@ if args.file:
     # First, check the required backends are installed
     check_backends(output_opts)
 
+    # Create the output directory for all generated files for this model
+    output_dir = "./Outputs/" + gum.name
+    mkdir_if_absent(output_dir)
+
+    # Check for a DM candidate
     if gum.dm_pdg:
         darkbit = True
     else:
@@ -47,15 +52,22 @@ if args.file:
         print(("No DM candidate requested -- no DarkBit routines will "
                "be written.\n"))
 
+    # Check whether we need to generate DecayBit output or not
     if output_opts.ch or output_opts.sph:
         decaybit = True
     else:
         decaybit = False
 
-    # FeynRules
+
+    """
+    FEYNRULES/SARAH
+    """
     if gum.math == 'feynrules':
 
         from lib.libfr import *
+
+        # Create the output directory for all generated FeynRules files
+        mkdir_if_absent(output_dir + "/FeynRules")
 
         options = FROptions("feynrules", gum.name, gum.restriction, gum.LTot)
         partlist = FRVectorOfParticles()
@@ -82,6 +94,9 @@ if args.file:
 
         from lib.libsarah import *
 
+        # Create the output directory for all generated SARAH files
+        mkdir_if_absent(output_dir + "/SARAH")
+
         options = SARAHOptions("sarah", gum.name, '')
         partlist = SARAHVectorOfParticles()
         paramlist = SARAHVectorOfParameters()
@@ -97,6 +112,21 @@ if args.file:
 
         # Make all BSM particles work with GUM's native Particle class.
         bsm_particle_list = sarah_part_to_gum_part(sarah_bsm)
+
+
+    # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
+    # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.
+    if output_opts.ch:
+        clean_calchep_model_files(outputs.get_ch(), gum.name)
+
+    # Move MadGraph files from SARAH/FeynRules to contrib/MadGraph/models
+    # TODO make this go to the Outputs dir instead, then ln -s from there to MadGraph later.
+    if output_opts.pythia:
+        copy_madgraph_files(outputs.get_mg(), gum.name)
+
+    """
+    REGISTRATION OF NEW PARTICLES
+    """
 
     # Initialise DM particle from particle list
     if darkbit:
@@ -144,22 +174,35 @@ if args.file:
                               "Pole_Mass", gb_input=p.mass)
         parameters.append(x)
 
-    """
-    OUTPUT FOR BACKENDS
-    """
 
-    # Clean up calchep files, then copy them to the GAMBIT backendDir
-    if output_opts.ch:
-        clean_calchep_model_files(outputs.get_ch(), gum.name)
+    """
+    MADGRAPH
+    """
+    if output_opts.pythia:  #TODO this should eventually be conditional on a dedicated MadGraph flag, as it will eventually be needed for MadDM and other things than just Pythia.
 
-    # Move MadGraph files to contrib/MadGraph/models
-    if output_opts.ufo:
-        copy_madgraph_files(outputs.get_mg(), gum.name)
+        # Link MadGraph files output by SARAH/FeynRules to MadGraph's contrib/MadGraph/models
+        # still TODO
+
+        # Create the output directory for all generated MadGraph files
+        mg5_output_dir = output_dir + "/MadGraph5_aMC"
+        mkdir_if_absent(mg5_output_dir)
+
+        # Create the MadGraph script
+        # TODO determine all possible BSM processes automatically when collider_processes is missing from the .gum file
+        make_madgraph_script(mg5_output_dir, gum.name, output_opts.collider_processes)
+
+        # Add MadGraph to path and import the python interface
+        mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
+        sys.path.append(mg5_dir)
+        import madgraph.interface.master_interface as mi
+
+        # Run MadGraph
+        call_madgraph(mg5_dir, mg5_output_dir,mi)
+
 
     """
     MODELS
     """
-
     model_header = add_to_model_hierarchy(gum.spec, gum.name, parameters)
     spec_contents = write_spectrumcontents(gum.name, parameters)
     subspec_wrapper = write_subspectrum_wrapper(gum.name, parameters)
