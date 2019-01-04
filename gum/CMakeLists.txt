@@ -88,7 +88,6 @@ EXTERNALPROJECT_ADD(
     MadGraph
 
     URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.4.tar.gz
-    URL_MD5 d80db2c50d407e6a94064ab3567595c0
 
     UPDATE_COMMAND ""
     PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" input/mg5_configuration.txt
