@@ -23,7 +23,7 @@ def get_gambit_particle_pdg_dict():
 
         try:
             data = yaml.safe_load(f)
-        except yaml.YAMLerror as exc:
+        except yaml.YAMLError as exc:
             print(exc)
 
     gambit_pdg_codes = {}

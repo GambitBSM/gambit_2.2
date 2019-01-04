@@ -1,0 +1,11 @@
+new_files:
+- test.txt
+
+amended_files:
+- test2.txt: 
+    strings:
+    - string: string
+    - string: rabbit
+    - string: |6
+                  // Import decay table from DecayBit
+                  const DecayTable* tbl = &(*Dep::decay_rates);
