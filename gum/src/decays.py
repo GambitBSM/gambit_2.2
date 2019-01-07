@@ -281,8 +281,9 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
             rollcall_entries.append([cap, towrite])
             gb_name = pdg_to_particle(decayparticle, gambit_dict)
             new_decays.append([cap, gb_name])
-        
-    return np.array(rollcall_entries), new_decays
+
+
+    return rollcall_entries, new_decays
 
 def amend_all_decays(model_name, spectrum, new_decays):
     """

@@ -8,11 +8,12 @@ import re
 import numpy as np
 import yaml
 from distutils.dir_util import remove_tree
+from collections import defaultdict
 
 from setup import *
 
-#mode = 'Test'
-mode = 'Go'
+mode = 'Test'
+#mode = 'Go'
 
 def remove_tree_quietly(path):
     """
@@ -42,7 +43,7 @@ def full_filename(filename, module, header=False):
     module.strip('/')
 
     path = ""
-    if header == True:
+    if header:
         filename += ".hpp"
         path = "include/gambit/{0}".format(module)
     else:
@@ -93,7 +94,7 @@ def find_capability(capability, module, filename=None):
 
     return False, 0
 
-def amend_rollcall(capability, module, contents, filename=None):
+def amend_rollcall(capability, module, contents, reset_dict, filename=None):
     """
     Adds a new FUNCTION to an existing CAPABILITY in a rollcall header.
     """
@@ -133,7 +134,7 @@ def amend_rollcall(capability, module, contents, filename=None):
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
-            amend_file(filename, module, contents, no, header=True)
+            amend_file(filename, module, contents, no, reset_dict, header=True)
     else:
         raise GumError(("\n\nCapability {0} not found in "
                         "{1}!").format(capability, filename))
@@ -190,16 +191,19 @@ def find_string(filename, module, string, header=False):
 
     return False, 0
 
-def write_file(filename, module, contents, header=False):
+def write_file(filename, module, contents, reset_dict, header=False):
     """
     Writes a file in a specified location.
     """
 
     location = full_filename(filename, module, header)
 
-    if find_file(filename, module, header) == True:
+    if find_file(filename, module, header):
         raise GumError(("\n\nTried to write file " + location +
                         ", but it already exists."))
+
+
+    reset_dict['new_files']['files'].append(location)
 
     if mode != 'Test':
         # Create new file
@@ -214,11 +218,12 @@ def delete_file(filename, module, header=False):
 
     location = full_filename(filename, module, header)
 
-    if find_file(filename, module, header) == True:
+    if find_file(filename, module, header):
         os.remove(location)
         print("File {} successfully removed.".format(location))
 
-def amend_file(filename, module, contents, line_number, header=False):
+def amend_file(filename, module, contents, line_number, reset_dict, 
+               header=False):
     """
     Amends a file in a specified location with 'contents', starting
     from a given line number.
@@ -226,9 +231,13 @@ def amend_file(filename, module, contents, line_number, header=False):
 
     location = full_filename(filename, module, header)
 
-    if find_file(filename, module, header) == False:
+    if not find_file(filename, module, header):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
+
+    # Get the indentation out the front of the contents
+
+    reset_dict['amended_files'][location].append(contents)
 
     if mode != 'Test':
         temp_location = location + "_temp"
@@ -459,3 +468,18 @@ def revert(reset_file):
                     os.rename(temp_file, k)
 
     return 
+
+def drop_mug_file(mug_file, contents):
+    """
+    Drops a .mug (reset) file from the reset contents saved by GUM.
+    """
+
+    d = dict(contents)
+
+    new_files = dict(d['new_files'])
+    amended_files = dict(d['amended_files'])
+
+    new_contents = {'new_files': new_files, 'amended_files': amended_files}
+
+    with open(mug_file, 'w') as f:
+        yaml.dump(new_contents, f, default_flow_style=False)

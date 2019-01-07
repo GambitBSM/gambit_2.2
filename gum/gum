@@ -14,6 +14,8 @@ import numpy as np
 
 from src import *
 
+from collections import defaultdict
+
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
                                              "(GAMBIT Universal Models)")
 
@@ -378,26 +380,26 @@ if args.file:
 
     # All file writing routines HERE, once everything has gone okay.
 
-    # Save output to a .mug file for resetting purposes
-    mug_file = "mug_files/{0}.mug".format(gum.name)
+    # Create defaultdict for reset file.
+    # There are 2 nodes: new_files and amended_files.
+    reset_contents = defaultdict(lambda: defaultdict(list))
 
     # Models
     m = "Models"
-    write_file("models/" + gum.name, m, model_header, True)
-    write_file("SpectrumContents/" + gum.name, m, spec_contents, False)
+    write_file("models/" + gum.name, m, model_header, reset_contents, True)
+    write_file("SpectrumContents/" + gum.name, m, spec_contents, reset_contents, False)
     write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m,
-               subspec_wrapper, True)
+               subspec_wrapper, reset_contents, True)
     amend_file("SpectrumContents/RegisteredSpectra", m, reg_spec,
-                                                    reg_spec_num, True)
+               reg_spec_num, reset_contents, True)
 
     # SpecBit
     m = "SpecBit"
-    write_file("SpecBit_" + gum.name, m, spectrum_src, False)
-    #write_file("SpecBit_" + gum.name, m, spectrum_header, True)
-    write_file("SpecBit_" + gum.name + "_rollcall", m, spectrum_header, True)
+    write_file("SpecBit_" + gum.name, m, spectrum_src, reset_contents, False)
+    write_file("SpecBit_" + gum.name + "_rollcall", m, spectrum_header, reset_contents, True)
     num = find_string("SpecBit_rollcall", m, "SpecBit_tests_rollcall.hpp",
                       True)[1]
-    amend_file("SpecBit_rollcall", m, spec_rollcall, num, True)
+    amend_file("SpecBit_rollcall", m, spec_rollcall, num, reset_contents, True)
 
     # DecayBit
     if decaybit:
@@ -405,31 +407,31 @@ if args.file:
         # Append to the end of DecayBit -- just before all_decays
         num = find_string("DecayBit", m, "void all_decays")[1]
         if output_opts.ch:
-            amend_file("DecayBit", m, decaybit_src_ch, num-4, False)
+            amend_file("DecayBit", m, decaybit_src_ch, num-4, reset_contents, False)
             for i in xrange(len(decay_roll)):
                 if find_capability(decay_roll[i][0], m)[0]:
-                    amend_rollcall(decay_roll[i][0], m, decay_roll[i][1])
+                    amend_rollcall(decay_roll[i][0], m, decay_roll[i][1], reset_contents)
                 else:
                     num = find_string("DecayBit_rollcall", m,
                                       "#define CAPABILITY decay_rates", True)[1]
                     amend_file("DecayBit_rollcall", m, decay_roll[i][1],
-                               num-2, True)
+                               num-2, reset_contents, True)
             if len(new_decays) > 0:
                 num = find_string("DecayBit_rollcall", m,
                                   "DEPENDENCY(omega_decay_rates", True)[1]
-                amend_file("DecayBit_rollcall", m, all_decays_header, num, True)
+                amend_file("DecayBit_rollcall", m, all_decays_header, num, reset_contents, True)
                 num = find_string("DecayBit", m, "decays(\"omega\")", False)[1]
-                amend_file("DecayBit", m, all_decays_src, num, False)
+                amend_file("DecayBit", m, all_decays_src, num, reset_contents, False)
 
     # DarkBit
     if darkbit:
         m = "DarkBit"
-        write_file(gum.name, m, darkbit_src, False)
+        write_file(gum.name, m, darkbit_src, reset_contents, False)
         if pc:
-            amend_rollcall("TH_ProcessCatalog", m, pc_cap)
+            amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)
         if dd:
-            amend_rollcall("DD_couplings", m, dd_cap)
-        amend_rollcall("DarkMatter_ID", m, dmid_cap)
+            amend_rollcall("DD_couplings", m, dd_cap, reset_contents)
+        amend_rollcall("DarkMatter_ID", m, dmid_cap, reset_contents)
 
     # ColliderBit
     m = "ColliderBit"
@@ -440,34 +442,38 @@ if args.file:
     if output_opts.ch:
         f = "frontends/CalcHEP_3_6_27"
         num = find_string(f, m, "setModel(modeltoset, 1)", False)[1]
-        amend_file(f, m, ch_src_sl, num-2, False)
+        amend_file(f, m, ch_src_sl, num-2, reset_contents, False)
         num = find_string(f, m, "END_BE_INI_FUNCTION", False)[1]
-        amend_file(f, m, ch_src_pl, num-2, False)
+        amend_file(f, m, ch_src_pl, num-2, reset_contents, False)
         num = find_string(f, m, "backend_undefs.hpp", True)[1]
-        amend_file(f, m, ch_head, num-2, True)
+        amend_file(f, m, ch_head, num-2, reset_contents, True)
         num = find_string(f, m, "BE_FUNCTION", True)[1]
-        amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, True)
+        amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, reset_contents, True)
     # micrOMEGAs
     if output_opts.mo:
         f = "frontends/MicrOmegas_{0}_3_6_9_2".format(gum.name)
-        write_file(f, m, mo_src, True)
-        write_file(f, m, mo_head, False)
+        write_file(f, m, mo_src, reset_contents, True)
+        write_file(f, m, mo_head, reset_contents, False)
     # Pythia
     # MadDM
 
-
+    # Save output to a .mug file for resetting purposes
+    mug_file = "mug_files/{0}.mug".format(gum.name)
+    drop_mug_file(mug_file, reset_contents)
 
     print("")
     print("Changes saved to {}".format(mug_file))
     print("If you need to reset GAMBIT, do:")
     print("\t./gum -r {}".format(mug_file))
+
+    # All done!
     print("")
     print("GUM has finished successfully!")
     print("Please (re)compile GAMBIT.")
     print("")
 
 # If reset is called
-if args.reset:
+elif args.reset:
 	revert(args.reset)
 	model = os.path.split(args.reset)[-1].strip('.mug')
 	print("GUM has removed the model '{0}' from GAMBIT.".format(model))
