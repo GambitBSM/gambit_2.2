@@ -12,8 +12,8 @@ from collections import defaultdict
 
 from setup import *
 
-mode = 'Test'
-#mode = 'Go'
+#mode = 'Test'
+mode = 'Go'
 
 def remove_tree_quietly(path):
     """
@@ -412,7 +412,8 @@ def revert(reset_file):
 
         # The files GUM wrote as new. 
         # GUM can just simply delete these.
-        new_files = data['new_files']
+        new_files = data['new_files']['files']
+
 
         for i in new_files:
             if os.path.isfile(i):
@@ -428,44 +429,32 @@ def revert(reset_file):
         # We want to match *strings* and not line numbers or anything like that.
         # This way, there is no order needed to perform resets in.
 
-        for dict1 in amended_files:
-            for k, v in dict1.iteritems():
-                if not 'strings' in v:
-                    print("No 'strings' field found for {0}".format(k))
-                    print("Skipping...")
-                    continue
+        for filename, v in amended_files.iteritems():
+
+            temp_file = filename + "_temp"
+            with open(filename, 'r') as original_file:
+                text = original_file.read()
+                lines = text.splitlines()
+
+            # This is the YAML node for the strings needing to be deleted
+            for string in v:
+
+                # If we find it, kill it
+                if string in text:
+                    text = text.replace(string, '')
+                # Otherwise assume someone has messed with it
                 else:
-                    temp_file = k + "_temp"
-                    with open(k, 'r') as original_file:
-                        text = original_file.read()
-                        lines = text.splitlines()
+                    print(("Tried deleting the following entry from "
+                           "{0}, but I could not find it:\n\n{1}\n\n"
+                           "Perhaps it has already been removed."
+                           ).format(filename, string))
 
-                    # This is the YAML node for the strings needing to be deleted
-                    for i in v['strings']:
-
-                        # These are the individual strings themselves
-                        for k2, v2 in i.iteritems():
-                            if not k2 == 'string':
-                                print("No 'string' entry found for {0}".format(k2))
-                                print("Skipping...")
-                                continue
-
-                            # If we find it, kill it
-                            if v2 in text:
-                                text = text.replace(v2, '')
-                            # Otherwise assume someone has messed with it
-                            else:
-                                print(("Tried deleting the following entry from "
-                                       "{0}, but I could not find it:\n\n{1}\n\n"
-                                       "Perhaps it has already been removed."
-                                       ).format(k, v2))
-
-                    # Write the new amended file
-                    new_file = open(temp_file, 'w')
-                    new_file.write(text)
-                        
-                    os.remove(k)
-                    os.rename(temp_file, k)
+            # Write the new amended file
+            new_file = open(temp_file, 'w')
+            new_file.write(text)
+                
+            os.remove(filename)
+            os.rename(temp_file, filename)
 
     return 
 
