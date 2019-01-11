@@ -201,6 +201,8 @@ namespace Gambit
                 // Options that can be read from YAML file go here
                 std::string homotopybackend = runOptions.getValueOrDef<std::string>("hom4ps",
                                                                                       "homotopy_backend");
+                std::string globalIsPanic = runOptions.getValueOrDef<std::string>("false",
+                                                                                    "global_minimum_is_panic");
                 std::string potentialminimizerinitpath = initfilesPath +"/PotentialMinimizerInitialization.xml";
                 std::string potentialminimizerinit;
 
@@ -269,6 +271,9 @@ namespace Gambit
                              "      <NonDsbRollingToDsbScalingFactor>\n"
                              "        4.0\n"
                              "      </NonDsbRollingToDsbScalingFactor>\n"
+                             "      <GlobalIsPanic>\n"
+                             "        " + globalIsPanic + "\n"
+                             "      </GlobalIsPanic>\n"
                              "    </ConstructorArguments>\n"
                              "  </PotentialMinimizerClass>\n"
                              "</VevaciousPlusPlusObjectInitialization>\n";
@@ -380,10 +385,12 @@ namespace Gambit
 
                 std::string TunnelingStrategy = runOptions.getValueOrDef<std::string>("JustQuantum",
                 "tunneling_strategy");
-                //std::string TunnelingStrategy = "JustQuantum";
 
+                std::string pathFinidingTimeout = runOptions.getValueOrDef<std::string>("3600",
+                                                                                        "path_finding_timeout");
 
                 std::string SurvivalProbabilityThreshold = "0.01";
+
 
                 // File contents
                 std::string tunnelingcalculatorinit =
@@ -408,6 +415,9 @@ namespace Gambit
                     "      <PathResolution>\n"
                     "        1000\n"
                     "      </PathResolution>\n"
+                    "      <Timeout>\n"
+                    "        "+ pathFinidingTimeout +"\n"
+                    "      </Timeout>\n"
                     "      <MinimumVacuumSeparationFraction>\n"
                     "        0.2\n"
                     "      </MinimumVacuumSeparationFraction>\n"
@@ -825,13 +835,29 @@ namespace Gambit
             struct stat buffer; //Checking if file exists, fastest method.
             std::string HomotopyLockfile = inputspath + "/Homotopy/busy.lock";
             // Check if homotopy binary is being used
+
+            //Here I check it the busy.lock file exists and if it does I go into a
+            // while loop that either breaks when the file is deleted or after
+            // 30 seconds have passed.
+            // This deals with the problem of MARCONI not liking a binary accessed by too many
+            // processes at the same time
+
+            std::chrono::system_clock::time_point tStart = Utils::get_clock_now();
+
             while(stat(HomotopyLockfile.c_str(), &buffer)==0)
             {
-            // Here I stupidly wait for the homotopy binary to be free
-            // This deals with the problem of MARCONI not liking a binary accessed by several
-            // processes at the same time.
+            std::chrono::system_clock::time_point tNow = Utils::get_clock_now();
+
+            std::chrono::seconds tSofar = std::chrono::duration_cast<std::chrono::seconds>(tNow - tStart);
+
+            if(tSofar >= std::chrono::seconds(30) ){
+                remove( HomotopyLockfile.c_str());
+                break; }
+
             }
+
             vevaciousPlusPlus.RunPoint("internal");
+
             double lifetime= vevaciousPlusPlus.GetLifetimeInSeconds();
             double thermalProbability = vevaciousPlusPlus.GetThermalProbability();
 
