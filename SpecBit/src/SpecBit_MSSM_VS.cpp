@@ -893,7 +893,8 @@ namespace Gambit
             cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
             std::string result = "Inconclusive";
             cout << "VEVACIOUS RESULT:  "<< result << endl;
-            cout << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+            logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+            logger() << "Error occurred: " << e.what() << EOM;
             //std::ostringstream errmsg;
             //errmsg << "Vevacious could not calculate lifetime. Conservatively setting it to large value." << rankstring;
             //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
