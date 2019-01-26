@@ -50,39 +50,10 @@ namespace Gambit
                               const str& detname,
                               const MCLoopInfo& RunMC,
                               const BaseCollider& HardScatteringSim,
-                              int iteration,
-                              const Options& runOptions)
+                              int iteration)
     {
-      static std::vector<std::vector<str> > analyses;
-      static bool first = true;
-
-      if (iteration == BASE_INIT)
-      {
-        // Only run this once
-        if (first)
-        {
-          // Read analysis names from the yaml file
-          std::vector<std::vector<str> > default_analyses;  // The default is empty lists of analyses
-          analyses = runOptions.getValueOrDef<std::vector<std::vector<str> > >(default_analyses, "analyses");
-
-          // Check that the analysis names listed in the yaml file all correspond to actual ColliderBit analyses
-          for (std::vector<str> collider_specific_analyses : analyses)
-          {
-            for (str& analysis_name : collider_specific_analyses)
-            {
-              if (!checkAnalysis(analysis_name))
-              {
-                str errmsg = "The analysis " + analysis_name + " is not a known ColliderBit analysis.";
-                ColliderBit_error().raise(LOCAL_INFO, errmsg);
-              }
-            }
-          }
-
-          first = false;
-        }
-      }
-
-      if (analyses.empty()) return;
+      if (RunMC.analyses.empty() or iteration == BASE_INIT) return;
+      if (not RunMC.current_analyses_exist_for(detname)) return;
 
       if (iteration == START_SUBPROCESS)
       {
@@ -90,14 +61,14 @@ namespace Gambit
         result.register_thread(detname+"AnalysisContainer");
 
         // Set current collider
-        result.set_current_collider(RunMC.current_collider);
+        result.set_current_collider(RunMC.current_collider());
 
         // Initialize analysis container or reset all the contained analyses
         if (!result.has_analyses())
         {
           try
           {
-            result.init(analyses[RunMC.current_collider_index]);
+            result.init(RunMC.current_analyses_for(detname));
           }
           catch (std::runtime_error& e)
           {
@@ -136,13 +107,11 @@ namespace Gambit
     {                                                              \
       using namespace Pipes::NAME;                                 \
       getAnalysisContainer(result, #EXPERIMENT, *Dep::RunMC,       \
-       *(*Dep::HardScatteringSim), *Loop::iteration, *runOptions); \
+       *(*Dep::HardScatteringSim), *Loop::iteration);              \
     }
 
     GET_ANALYSIS_CONTAINER(getATLASAnalysisContainer, ATLAS)
-    GET_ANALYSIS_CONTAINER(getATLASmultieffAnalysisContainer, ATLASmultieff)
     GET_ANALYSIS_CONTAINER(getCMSAnalysisContainer, CMS)
-    GET_ANALYSIS_CONTAINER(getCMSmultieffAnalysisContainer, CMSmultieff)
     GET_ANALYSIS_CONTAINER(getIdentityAnalysisContainer, Identity)
 
 

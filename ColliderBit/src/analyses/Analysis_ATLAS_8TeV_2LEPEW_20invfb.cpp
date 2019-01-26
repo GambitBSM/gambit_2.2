@@ -57,6 +57,10 @@ namespace Gambit {
 
     public:
 
+      // Required detector sim
+      static constexpr const char* detector = "ATLAS";
+      // FIXME Apply standard electron and muon efficiencies
+
       Analysis_ATLAS_8TeV_2LEPEW_20invfb() {
 
         set_analysis_name("ATLAS_8TeV_2LEPEW_20invfb");
@@ -988,7 +992,7 @@ namespace Gambit {
         _num_WWc_SF=0;
         _num_WWc_DF=0;
         _num_Zjets=0;
-        
+
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
 

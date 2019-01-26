@@ -22,6 +22,10 @@ namespace Gambit {
     class Analysis_ATLAS_13TeV_0LEP_13invfb : public HEPUtilsAnalysis {
     public:
 
+      // Required detector sim
+      static constexpr const char* detector = "ATLAS";
+      // FIXME Apply standard electron and muon efficiencies
+
       // Numbers passing cuts
       static const size_t NUMSR = 13;
       double _srnums[13] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};

@@ -33,20 +33,11 @@
 
 #define MODULE ColliderBit
 
-  /// Set the options for establishing convergence of Monte Carlo simulations.
-  #define CAPABILITY MC_ConvergenceSettings
-  START_CAPABILITY
-    #define FUNCTION MC_ConvergenceSettings_from_YAML
-    START_FUNCTION(convergence_settings)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   /// Execute the main Monte Carlo event loop.
   #define CAPABILITY RunMC
   START_CAPABILITY
     #define FUNCTION operateLHCLoop
     START_FUNCTION(MCLoopInfo, CAN_MANAGE_LOOPS)
-    DEPENDENCY(MC_ConvergenceSettings, convergence_settings)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -61,27 +52,9 @@
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY ATLASmultieffAnalysisContainer
-  START_CAPABILITY
-    #define FUNCTION getATLASmultieffAnalysisContainer
-    START_FUNCTION(HEPUtilsAnalysisContainer)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(HardScatteringSim, const BaseCollider*)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   #define CAPABILITY CMSAnalysisContainer
   START_CAPABILITY
     #define FUNCTION getCMSAnalysisContainer
-    START_FUNCTION(HEPUtilsAnalysisContainer)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(HardScatteringSim, const BaseCollider*)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY CMSmultieffAnalysisContainer
-  START_CAPABILITY
-    #define FUNCTION getCMSmultieffAnalysisContainer
     START_FUNCTION(HEPUtilsAnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(HardScatteringSim, const BaseCollider*)
@@ -105,20 +78,8 @@
     #define FUNCTION runATLASAnalyses
     START_FUNCTION(AnalysisDataPointers)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(MC_ConvergenceSettings, convergence_settings)
     DEPENDENCY(ATLASSmearedEvent, HEPUtils::Event)
     DEPENDENCY(ATLASAnalysisContainer, HEPUtilsAnalysisContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY ATLASmultieffAnalysisNumbers
-  START_CAPABILITY
-    #define FUNCTION runATLASmultieffAnalyses
-    START_FUNCTION(AnalysisDataPointers)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(MC_ConvergenceSettings, convergence_settings)
-    DEPENDENCY(ATLASmultieffSmearedEvent, HEPUtils::Event)
-    DEPENDENCY(ATLASmultieffAnalysisContainer, HEPUtilsAnalysisContainer)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -127,20 +88,8 @@
     #define FUNCTION runCMSAnalyses
     START_FUNCTION(AnalysisDataPointers)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(MC_ConvergenceSettings, convergence_settings)
     DEPENDENCY(CMSSmearedEvent, HEPUtils::Event)
     DEPENDENCY(CMSAnalysisContainer, HEPUtilsAnalysisContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY CMSmultieffAnalysisNumbers
-  START_CAPABILITY
-    #define FUNCTION runCMSmultieffAnalyses
-    START_FUNCTION(AnalysisDataPointers)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(MC_ConvergenceSettings, convergence_settings)
-    DEPENDENCY(CMSmultieffSmearedEvent, HEPUtils::Event)
-    DEPENDENCY(CMSmultieffAnalysisContainer, HEPUtilsAnalysisContainer)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -149,7 +98,6 @@
     #define FUNCTION runIdentityAnalyses
     START_FUNCTION(AnalysisDataPointers)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(MC_ConvergenceSettings, convergence_settings)
     DEPENDENCY(CopiedEvent, HEPUtils::Event)
     DEPENDENCY(IdentityAnalysisContainer, HEPUtilsAnalysisContainer)
     #undef FUNCTION
@@ -162,9 +110,7 @@
     #define FUNCTION CollectAnalyses
     START_FUNCTION(AnalysisDataPointers)
     DEPENDENCY(ATLASAnalysisNumbers, AnalysisDataPointers)
-    DEPENDENCY(ATLASmultieffAnalysisNumbers, AnalysisDataPointers)
     DEPENDENCY(CMSAnalysisNumbers, AnalysisDataPointers)
-    DEPENDENCY(CMSmultieffAnalysisNumbers, AnalysisDataPointers)
     DEPENDENCY(IdentityAnalysisNumbers, AnalysisDataPointers)
     #undef FUNCTION
   #undef CAPABILITY
@@ -276,13 +222,7 @@
   #define CAPABILITY ATLASDetectorSim
   START_CAPABILITY
   #undef CAPABILITY
-  #define CAPABILITY ATLASmultieffDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
   #define CAPABILITY CMSDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CMSmultieffDetectorSim
   START_CAPABILITY
   #undef CAPABILITY
   #define CAPABILITY IdentityDetectorSim
@@ -295,13 +235,7 @@
   #define CAPABILITY ATLASSmearedEvent
   START_CAPABILITY
   #undef CAPABILITY
-  #define CAPABILITY ATLASmultieffSmearedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
   #define CAPABILITY CMSSmearedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CMSmultieffSmearedEvent
   START_CAPABILITY
   #undef CAPABILITY
   #define CAPABILITY CopiedEvent

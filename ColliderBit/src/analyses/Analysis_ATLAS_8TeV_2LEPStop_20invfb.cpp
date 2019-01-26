@@ -49,6 +49,10 @@ namespace Gambit {
 
     public:
 
+      // Required detector sim
+      static constexpr const char* detector = "ATLAS";
+      // FIXME Apply standard electron and muon efficiencies
+
       Analysis_ATLAS_8TeV_2LEPStop_20invfb()
         : _numSRM90SF(0), _numSRM100SF(0), _numSRM110SF(0), _numSRM120SF(0),
           _numSRM90DF(0), _numSRM100DF(0), _numSRM110DF(0), _numSRM120DF(0),
@@ -420,7 +424,7 @@ namespace Gambit {
       void clear() {
         _numSRM90SF=0; _numSRM100SF=0; _numSRM110SF=0; _numSRM120SF=0;
         _numSRM90DF=0; _numSRM100DF=0; _numSRM110DF=0; _numSRM120DF=0;
-        
+
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
 

@@ -56,7 +56,6 @@ namespace Gambit
                      const MCLoopInfo& RunMC,
                      const HEPUtilsAnalysisContainer& AnalysisContainer,
                      const HEPUtils::Event& SmearedEvent,
-                     const convergence_settings& MC_ConvergenceSettings,
                      int iteration,
                      void(*wrapup)())
     {
@@ -66,14 +65,14 @@ namespace Gambit
         return;
       }
 
-      if (not AnalysisContainer.has_analyses()) return;
-
       static MC_convergence_checker convergence;
       if (iteration == COLLIDER_INIT)
       {
-        convergence.init(RunMC.current_collider_index, MC_ConvergenceSettings);
+        convergence.init(RunMC.current_convergence_options());
         return;
       }
+
+      if (not AnalysisContainer.has_analyses()) return;
 
       if (iteration == COLLECT_CONVERGENCE_DATA)
       {
@@ -144,13 +143,11 @@ namespace Gambit
       using namespace Pipes::NAME;                                            \
       runAnalyses(result, #NAME, *Dep::RunMC,                                 \
        *Dep::CAT(EXPERIMENT,AnalysisContainer), *Dep::SMEARED_EVENT_DEP,      \
-       *Dep::MC_ConvergenceSettings, *Loop::iteration, Loop::wrapup);         \
+       *Loop::iteration, Loop::wrapup);                                       \
     }
 
     RUN_ANALYSES(runATLASAnalyses, ATLAS, ATLASSmearedEvent)
-    RUN_ANALYSES(runATLASmultieffAnalyses, ATLASmultieff, ATLASmultieffSmearedEvent)
     RUN_ANALYSES(runCMSAnalyses, CMS, CMSSmearedEvent)
-    RUN_ANALYSES(runCMSmultieffAnalyses, CMSmultieff, CMSmultieffSmearedEvent)
     RUN_ANALYSES(runIdentityAnalyses, Identity, CopiedEvent)
 
   }

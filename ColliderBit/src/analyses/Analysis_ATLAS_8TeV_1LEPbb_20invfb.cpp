@@ -43,6 +43,10 @@ namespace Gambit {
 
     public:
 
+      // Required detector sim
+      static constexpr const char* detector = "ATLAS";
+      // FIXME Apply standard electron and muon efficiencies
+
       struct particleComparison {
         bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } compareParticlePt;

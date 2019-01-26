@@ -57,44 +57,46 @@ namespace Gambit
     template<typename EventT>
     BaseDetector<EventT>* getBuckFast(const str& detname,
                                       const MCLoopInfo& RunMC,
-                                      bool use_effs,
                                       int iteration,
                                       const Options& runOptions)
     {
-      static std::vector<bool> partonOnly;
-      static std::vector<double> antiktR;
+      static bool partonOnly;
+      static double antiktR;
 
       // Where the real action is
       static std::unique_ptr<BuckFast<EventT>[]> bucky(new BuckFast<EventT>[omp_get_max_threads()]);
       int mine = omp_get_thread_num();
 
-      if (iteration == BASE_INIT)
+      if (iteration == COLLIDER_INIT)
       {
-        std::vector<bool> default_partonOnly(RunMC.collider_names.size(), false);
-        partonOnly = runOptions.getValueOrDef<std::vector<bool> >(default_partonOnly, "partonOnly");
-        CHECK_EQUAL_VECTOR_LENGTH(partonOnly,RunMC.collider_names)
-
-        std::vector<double> default_antiktR(RunMC.collider_names.size(), 0.4);
-        antiktR = runOptions.getValueOrDef<std::vector<double> >(default_antiktR, "antiktR");
-        CHECK_EQUAL_VECTOR_LENGTH(antiktR,RunMC.collider_names)
+        // The default values for partonOnly and antiktR
+        bool default_partonOnly = false;
+        double default_antiktR = 0.4;
+        // Retrieve any yaml options specifying partonOnly and antikt R for this collider
+        if (runOptions.hasKey(RunMC.current_collider()))
+        {
+          Options colOptions(runOptions.getValue<YAML::Node>(RunMC.current_collider()));
+          partonOnly = colOptions.getValueOrDef<bool>(default_partonOnly, "partonOnly");
+          antiktR = colOptions.getValueOrDef<double>(default_antiktR, "antiktR");
+        }
+        else
+        {
+          partonOnly = default_partonOnly;
+          antiktR = default_antiktR;
+        }
       }
 
       if (iteration == START_SUBPROCESS)
       {
         // Each thread gets its own copy of the detector sim, so it is initialised *after* COLLIDER_INIT, within omp parallel.
-        bucky[mine].init(partonOnly[RunMC.current_collider_index], antiktR[RunMC.current_collider_index]);
+        bucky[mine].init(partonOnly, antiktR);
         // Assign detector functions
         if (detname == "ATLAS")
         {
           bucky[mine].smearElectronEnergy = &ATLAS::smearElectronEnergy;
-          bucky[mine].smearMuonMomentum   = &ATLAS::smearMuonMomentum;
+          bucky[mine].smearMuonMomentum   = &ATLAS::smearMuonMomentum ;
           bucky[mine].smearTaus           = &ATLAS::smearTaus;
           bucky[mine].smearJets           = &ATLAS::smearJets;
-          if (use_effs)
-          {
-            bucky[mine].applyElectronEff  = &ATLAS::applyElectronEff;
-            bucky[mine].applyMuonEff      = &ATLAS::applyMuonEff;
-          }
         }
         else if (detname == "CMS")
         {
@@ -102,11 +104,6 @@ namespace Gambit
           bucky[mine].smearMuonMomentum   = &CMS::smearMuonMomentum;
           bucky[mine].smearTaus           = &CMS::smearTaus;
           bucky[mine].smearJets           = &CMS::smearJets;
-          if (use_effs)
-          {
-            bucky[mine].applyElectronEff  = &CMS::applyElectronEff;
-            bucky[mine].applyMuonEff      = &CMS::applyMuonEff;
-          }
         }
         else if (detname == "Identity") { /* relax */ }
         else
@@ -120,13 +117,13 @@ namespace Gambit
 
     }
 
-    /// Retrieve a BuckFast sim of CAT(EXPERIMENT,SUFFIX), that accepts type EVENT
-    #define GET_BUCKFAST_AS_BASE_DETECTOR(NAME, EVENT, EXPERIMENT, SUFFIX)      \
+    /// Retrieve a BuckFast sim of EXPERIMENT that accepts type EVENT
+    #define GET_BUCKFAST_AS_BASE_DETECTOR(NAME, EVENT, EXPERIMENT)              \
     void NAME(BaseDetector<EVENT>* &result)                                     \
     {                                                                           \
       using namespace Pipes::NAME;                                              \
-      result = getBuckFast<EVENT>(#EXPERIMENT, *Dep::RunMC,                     \
-       IF_ELSE_EMPTY(SUFFIX,true,false), *Loop::iteration, *runOptions);        \
+      result = getBuckFast<EVENT>(#EXPERIMENT, *Dep::RunMC, *Loop::iteration,   \
+      *runOptions);                                                             \
     }
 
   }
