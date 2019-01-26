@@ -16,4 +16,9 @@ dm_candidate: 9900001
 output:
   calchep: true
   pythia: true
-  collider_processes: ["p p > ~S ~S", "p p > ~S ~S j", "p p > ~S ~S a", "p p > ~S ~S Z", "p p > ~S ~S h"]
+  collider_processes:
+    - p p > ~S ~S
+    - p p > ~S ~S j
+    - p p > ~S ~S a
+    - p p > ~S ~S Z
+    - p p > ~S ~S h

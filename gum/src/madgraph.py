@@ -30,7 +30,7 @@ def make_madgraph_script(mg5_output_dir, model_name, processes):
     towrite += "display diagrams diagrams\n"
 
     # Generate matrix element code in Pythia 8 format
-    towrite += "output pythia8 matrix_elements_for_pythia8\n"
+    towrite += "output pythia8 Pythia_patched\n"
 
     # Put it on wax.
     open(filename, 'w').write(towrite)
@@ -43,11 +43,8 @@ def call_madgraph(mg5_dir, mg5_output_dir, mi):
     Calls MadGraph.
     """
 
-    # Clear the matrix element and diagrams dirs
+    # Clear the diagram dir and remake it
     remove_tree_quietly(mg5_output_dir + "/diagrams")
-    remove_tree_quietly(mg5_output_dir + "/matrix_elements_for_pythia8")
-
-    # Make the diagrams dir
     os.makedirs(mg5_output_dir + "/diagrams")
 
     # Go to the MadGraph output directory

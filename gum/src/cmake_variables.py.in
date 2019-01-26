@@ -1,0 +1,7 @@
+"""
+Global variables for GUM, passed down from cmake.
+"""
+
+# Pythia version
+base_pythia_version = "@BASE_PYTHIA_VERSION@"
+

@@ -71,6 +71,12 @@ if args.file:
     else:
         decaybit = False
 
+    # Check whether we need to generate new ColliderBit code or not
+    if output_opts.pythia:
+        colliderbit = True
+    else:
+        colliderbit = False
+
 
     """
     FEYNRULES/SARAH
@@ -138,6 +144,41 @@ if args.file:
         copy_madgraph_files(outputs.get_mg(), gum.name)
 
     """
+    MADGRAPH
+    """
+    if output_opts.pythia:  #TODO this should eventually be conditional on a dedicated MadGraph flag, as it will eventually be needed for MadDM and other things than just Pythia.
+
+        # Link MadGraph files output by SARAH/FeynRules to MadGraph's contrib/MadGraph/models
+        # still TODO
+
+        # Create the output directory for all generated MadGraph files
+        mg5_output_dir = output_dir + "/MadGraph5_aMC"
+        mkdir_if_absent(mg5_output_dir)
+
+        # Clear and remake the copy of Pythia that will receive the matrix element code produced by MadGraph
+        pristine_pythia_dir = os.path.join(os.getcwd(),'contrib','Pythia')
+        new_pythia_dir = mg5_output_dir + "/Pythia_patched"
+        remove_tree_quietly(new_pythia_dir)
+        copy_tree(pristine_pythia_dir, new_pythia_dir)
+
+        # Create the MadGraph script
+        # TODO determine all possible BSM processes automatically when collider_processes is missing from the .gum file
+        make_madgraph_script(mg5_output_dir, gum.name, output_opts.collider_processes)
+
+        # Add MadGraph to path and import the python interface
+        mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
+        sys.path.append(mg5_dir)
+        import madgraph.interface.master_interface as mi
+
+        # Run MadGraph
+        call_madgraph(mg5_dir, mg5_output_dir,mi)
+
+
+    print("")
+    print("Finished running external codes.  Now writing proposed GAMBIT code.")
+
+
+    """
     REGISTRATION OF NEW PARTICLES
     """
 
@@ -157,7 +198,7 @@ if args.file:
                         "in the {0} file. Please check your .gum "
                         "file as well as the {0} file.").format(gum.math))
 
-    print("Adding new model {0} to GAMBIT...\n").format(gum.name)
+    print("Adding new model {0} to GAMBIT.").format(gum.name)
 
     # Need to know how GAMBIT refers to each particle. Scrape information
     # from particle_database.yaml.
@@ -187,35 +228,10 @@ if args.file:
                               "Pole_Mass", gb_input=p.mass)
         parameters.append(x)
 
-
-    """
-    MADGRAPH
-    """
-    if output_opts.pythia:  #TODO this should eventually be conditional on a dedicated MadGraph flag, as it will eventually be needed for MadDM and other things than just Pythia.
-
-        # Link MadGraph files output by SARAH/FeynRules to MadGraph's contrib/MadGraph/models
-        # still TODO
-
-        # Create the output directory for all generated MadGraph files
-        mg5_output_dir = output_dir + "/MadGraph5_aMC"
-        mkdir_if_absent(mg5_output_dir)
-
-        # Create the MadGraph script
-        # TODO determine all possible BSM processes automatically when collider_processes is missing from the .gum file
-        make_madgraph_script(mg5_output_dir, gum.name, output_opts.collider_processes)
-
-        # Add MadGraph to path and import the python interface
-        mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
-        sys.path.append(mg5_dir)
-        import madgraph.interface.master_interface as mi
-
-        # Run MadGraph
-        call_madgraph(mg5_dir, mg5_output_dir,mi)
-
-
     """
     MODELS
     """
+
     model_header = add_to_model_hierarchy(gum.spec, gum.name, parameters)
     spec_contents = write_spectrumcontents(gum.name, parameters)
     subspec_wrapper = write_subspectrum_wrapper(gum.name, parameters)
@@ -224,6 +240,7 @@ if args.file:
     """
     VERTICES
     """
+
     # Conditional on CalcHEP files being made.
     if output_opts.ch:
         # Obtain all model interactions from CalcHEP model files.
@@ -239,10 +256,12 @@ if args.file:
         calchep_pdg_codes = None
 
     """
-    DECAYS
+    DECAYBIT
     """
 
     if decaybit:
+
+        print("Writing new module functions for DecayBit")
 
         # CalcHEP specific decays
         if output_opts.ch:
@@ -267,6 +286,20 @@ if args.file:
         # TODO - decays from SPheno
 
     """
+    COLLIDERBIT
+    """
+    if colliderbit:
+
+        print("Writing new module functions for ColliderBit")
+
+        # Create the output directory for all generated ColliderBit sources
+        cb_output_dir = output_dir + "/ColliderBit"
+        mkdir_if_absent(cb_output_dir)
+
+        # Write ColliderBit headers and sources for the new model
+        new_colliderbit_model(cb_output_dir, gum.name)
+
+    """
     DARKBIT
     """
     if darkbit:
@@ -279,7 +312,7 @@ if args.file:
         ann_products = None
         propagators = None
 
-        print("Writing process catalogue output in DarkBit.")
+        print("Writing new module functions for DarkBit")
 
         # Write process catalogue output
         pc = True
@@ -346,7 +379,16 @@ if args.file:
     if output_opts.ch: # If no parent
         ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
 
-    # If it's a dry run
+    # Have we made a new Pythia backend?
+    if output_opts.pythia:
+        print("Creating a diff of the newly-modified vs original version of Pythia.")
+        write_backend_patch(gum.name, pristine_pythia_dir, new_pythia_dir, "Pythia_"+gum.name, base_pythia_version)
+        print("Creating a BOSS config file for Pythia_"+gum.name+".")
+
+        print("Creating a cmake entry for Pythia"+gum.name+".")
+
+
+    # Stop now if we're just doing a dry run
     if args.dryrun:
         print("")
         print("Dry run finished.")
@@ -354,10 +396,7 @@ if args.file:
         exit()
 
     print("")
-    print("Everything has gone smoothly so far.")
-    print("Now to write some GAMBIT code...")
-    print("")
-
+    print("Now putting the new code into GAMBIT.")
 
     #print("model_header")
     #print(model_header)

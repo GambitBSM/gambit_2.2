@@ -1,6 +1,5 @@
 """
 Master file containing all routines for modifying Backend interfaces.
-Think CalcHEP, MadGraph, SPheno.
 """
 
 import os
@@ -71,6 +70,11 @@ def add_calchep_switch(model_name, spectrum):
 
     return indent(src_sl), indent(src_pl), header
 
-
+def write_backend_patch(model, pristine_dir, patched_dir, backend, version):
+    import subprocess
+    outdir = "Outputs/"+model+"/Backends/patches/"+backend+"/"+version
+    mkdir_if_absent(outdir)
+    outfile = outdir+"/patch_"+backend+"_"+version+".dif"
+    subprocess.call("diff -rupN "+pristine_dir+" "+patched_dir+" > "+outfile, shell=True)
 
 

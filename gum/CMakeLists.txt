@@ -47,59 +47,51 @@ endif()
 # Download FeynRules
 EXTERNALPROJECT_ADD(
     FeynRules
-
     URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
-
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/FeynRules
     CONFIGURE_COMMAND ""
-
     BUILD_COMMAND ""
-
     INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Models ${CMAKE_SOURCE_DIR}/contrib/FeynRules/Models
-
-    TEST_COMMAND ""
 )
 
 # Download SARAH
 EXTERNALPROJECT_ADD(
     SARAH
-
     URL https://sarah.hepforge.org/downloads/?f=SARAH-4.14.0.tar.gz
     URL_MD5 850b74625e531b93fd43a32c181c825b
-
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
-
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/SARAH
     CONFIGURE_COMMAND ""
-
     BUILD_COMMAND ""
-
     INSTALL_COMMAND ""
-
-    TEST_COMMAND ""
 )
 
 # Download MadGraph
 EXTERNALPROJECT_ADD(
     MadGraph
-
     URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.4.tar.gz
-
     UPDATE_COMMAND ""
     PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" input/mg5_configuration.txt
-
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/MadGraph
     CONFIGURE_COMMAND ""
-
     BUILD_COMMAND ""
-
     INSTALL_COMMAND ""
+)
 
-    TEST_COMMAND ""
+# Download Pythia
+set(BASE_PYTHIA_VERSION 240)
+EXTERNALPROJECT_ADD(
+    Pythia
+    URL http://home.thep.lu.se/~torbjorn/pythia8/pythia8${BASE_PYTHIA_VERSION}.tgz
+    UPDATE_COMMAND ""
+    PATCH_COMMAND  ""
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/Pythia
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
 )
 
 # Set paths
@@ -155,9 +147,11 @@ else()
   message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and re-run cmake.")
 endif()
 
-# Configure cmake variables file
-set(outhdr "${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp")
-configure_file("${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp.in" ${outhdr})
+# Configure cmake variables files
+set(outfile "${PROJECT_SOURCE_DIR}/include/cmake_variables.hpp")
+configure_file("${outfile}.in" ${outfile})
+set(outfile "${PROJECT_SOURCE_DIR}/src/cmake_variables.py")
+configure_file("${outfile}.in" ${outfile})
 
 include_directories(src include ${Mathematica_WSTP_INCLUDE_DIR})
 
