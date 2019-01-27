@@ -77,4 +77,79 @@ def write_backend_patch(model, pristine_dir, patched_dir, backend, version):
     outfile = outdir+"/patch_"+backend+"_"+version+".dif"
     subprocess.call("diff -rupN "+pristine_dir+" "+patched_dir+" > "+outfile, shell=True)
 
+def fix_pythia_lib(model, patched_dir):
 
+    import re
+
+    # Move the matrix element sources and headers to where they will get compiled into the Pythia library
+    process_dir = patched_dir+"/Processes_"+model+"/"
+    source_dir = patched_dir+"/src/"
+    inc_dir = patched_dir+"/include/"
+    files = os.listdir(process_dir)
+    headers = [x for x in files if x.endswith(".h")]
+    sources = [x for x in files if x.endswith(".cc")]
+    for x in headers:
+        os.rename(process_dir+"/"+x, inc_dir+"/"+x)
+    for x in sources:
+        os.rename(process_dir+"/"+x, source_dir+"/"+x)
+
+    # Scrape the list of processes from the header names
+    processes = []
+    for x in headers:
+        if (x.startswith("Sigma_")):
+            states = re.split("_", re.sub("Sigma_"+model+"_", "", re.sub("\.h", "", x)))
+            with open(inc_dir+"/"+x) as f:
+                for line in f:
+                    if "// Process: " in line:
+                        process_string = re.sub(" WEIGHTED.*\n", "", re.sub("// Process: ", "", line))
+                        process_string = re.sub(">", "&rarr;", process_string)
+                        states.append("<ei>"+process_string+"<\ei>")
+            processes.append(states)
+
+    # Get rid of the leftover process directory made by MadGraph
+    remove_tree_quietly(process_dir)
+
+    # Write the xml doc file for the new processes
+    with open(patched_dir+"/share/Pythia8/xmldoc/"+model+"Processes.xml", 'w') as f:
+        f.write("<flag name=\""+model+":all\" default=\"off\">\n")
+        f.write("Common switch for production of "+model+" processes. Added by GAMBIT.\n")
+        f.write("</flag>\n")
+        for x in processes:
+            f.write("\n")
+            f.write("<flag name=\""+model+":"+x[0]+"2"+x[1]+"\" default=\"off\">\n")
+            f.write("Switch for "+model+" process "+x[2]+". Added by GAMBIT.\n")
+            f.write("</flag>\n")
+
+    # Add the new processes to the master Pythia index.xml file
+    old = patched_dir+"/share/Pythia8/xmldoc/Index.xml"
+    tmp = old+".temp"
+    with open(old) as f_old, open(tmp, 'w') as f_new:
+        for line in f_old:
+            f_new.write(line)
+            if "<aidx href=\"SUSYProcesses\">SUSY</aidx><br/>" in line:
+                f_new.write("&nbsp;&nbsp;--&nbsp;&nbsp;\n")
+                f_new.write("<aidx href=\""+model+"Processes\">"+model+"</aidx><br/>\n")
+    os.remove(old)
+    os.rename(tmp, old)
+
+    # Add the new processes to the Pythia Process Container
+    old = source_dir+"ProcessContainer.cc"
+    tmp = old+".temp"
+    with open(old) as f_old, open(tmp, 'w') as f_new:
+        for line in f_old:
+            f_new.write(line)
+            if "#include \"Pythia8/SigmaSUSY.h\"" in line:
+                for x in headers:
+                    if x.startswith("Sigma"):
+                        f_new.write("#include \""+x+"\"\n")
+            if "// End of SUSY processes." in line:
+                f_new.write("\n")
+                f_new.write("  // Set up requested objects for "+model+" processes. Added by GAMBIT.\n")
+                f_new.write("  bool "+model+" = settings.flag(\""+model+":all\");\n")
+                for x in processes:
+                    f_new.write("  if ("+model+" || settings.flag(\""+model+":"+x[0]+"2"+x[1]+"\")) {\n")
+                    f_new.write("    sigmaPtr = new Sigma_"+model+"_"+x[0]+"_"+x[1]+"();\n")
+                    f_new.write("    containerPtrs.push_back( new ProcessContainer(sigmaPtr) );\n")
+                    f_new.write("  }\n")
+    os.remove(old)
+    os.rename(tmp, old)

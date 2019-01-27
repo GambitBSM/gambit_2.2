@@ -337,7 +337,7 @@ if args.file:
         # If micrOMEGAs requested
         if output_opts.mo:
 
-            print("Writing micrOMEGAs interface for DarkBit.")
+            print("  Writing micrOMEGAs interface for DarkBit.")
             # TODO: write simple frontend for MO.
 
         """
@@ -375,17 +375,22 @@ if args.file:
     """
     BACKENDS
     """
+
+    print("Writing new frontends and patches for backend codes.")
+
     # Conditional on CalcHEP files being made.
     if output_opts.ch: # If no parent
         ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
 
     # Have we made a new Pythia backend?
     if output_opts.pythia:
-        print("Creating a diff of the newly-modified vs original version of Pythia.")
-        write_backend_patch(gum.name, pristine_pythia_dir, new_pythia_dir, "Pythia_"+gum.name, base_pythia_version)
-        print("Creating a BOSS config file for Pythia_"+gum.name+".")
+        print("  Patching Pythia to inject new matrix elements into its Process Container and shared library.")
+        fix_pythia_lib(gum.name, new_pythia_dir)
+        print("  Creating a diff vs original version of Pythia.")
+        write_backend_patch(gum.name, pristine_pythia_dir, new_pythia_dir, "Pythia_"+gum.name, "8."+base_pythia_version)
+        print("  Creating a BOSS config file for Pythia_"+gum.name+".")
 
-        print("Creating a cmake entry for Pythia"+gum.name+".")
+        print("  Creating a cmake entry for Pythia"+gum.name+".")
 
 
     # Stop now if we're just doing a dry run

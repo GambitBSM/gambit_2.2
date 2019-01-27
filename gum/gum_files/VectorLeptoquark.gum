@@ -10,4 +10,6 @@ math:
 # Outputs for GUM to hook up to GAMBIT
 output:
   calchep: true
-  pythia: false
+  pythia: true
+  collider_processes:
+    - p p > ~U1 U1

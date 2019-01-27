@@ -82,7 +82,7 @@ EXTERNALPROJECT_ADD(
 )
 
 # Download Pythia
-set(BASE_PYTHIA_VERSION 240)
+set(BASE_PYTHIA_VERSION 212)
 EXTERNALPROJECT_ADD(
     Pythia
     URL http://home.thep.lu.se/~torbjorn/pythia8/pythia8${BASE_PYTHIA_VERSION}.tgz
