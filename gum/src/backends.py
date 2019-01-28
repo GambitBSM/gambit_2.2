@@ -160,12 +160,16 @@ def fix_pythia_lib(model, patched_dir):
     os.rename(tmp, old)
 
 def write_boss_config_for_pythia(model, output_dir):
+
+    # Sort out the paths
     path = "/Backends/scripts/BOSS/configs"
     filename = "/pythia_"+model.lower()+"_8_"+base_pythia_version+".py"
     full_output_dir = output_dir+path
     mkdir_if_absent(full_output_dir)
     template = ".."+path+"/pythia_8_"+base_pythia_version+".py"
     outfile = full_output_dir+filename
+
+    # Write the actual BOSS config file
     with open(outfile, 'w') as f_new, open(template) as f_old:
         for line in f_old:
           if "gambit_backend_name    = 'Pythia'" in line:
@@ -176,21 +180,60 @@ def write_boss_config_for_pythia(model, output_dir):
               f_new.write("#  ----brought to you by GUM----  #\n")
 
 
+def write_new_default_bossed_version(backend, version, output_dir):
+
+    import re
+
+    # The path to the original file in GAMBIT
+    path = "/Backends/include/gambit/Backends/"
+    filename = "default_bossed_versions.hpp"
+    old = ".."+path+filename
+
+    # Sort out the path to the candidate replacement
+    newdir = output_dir+path
+    mkdir_if_absent(newdir)
+    new = newdir+filename
+
+    # The signature of the line we want to add/replace
+    signature = "#define  Default_"+backend+" "
+
+    # Work through the old version of the file and add/replace this entry
+    with open(old) as f_old, open(new, 'w') as f_new:
+        for line in f_old:
+            if not signature in line: f_new.write(line)
+            if "// Defaults added by GUM" in line:
+                if not line.endswith("\n"): f_new.write("\n")
+                f_new.write(signature+re.sub("\.", "_", version)+"\n")
+
+
 def add_new_pythia_to_backends_cmake(model, output_dir):
+
+    # The string that will commence the block to be added by GUM
+    signature = "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M)."
+
+    # The path to the original file in GAMBIT
     old = "../cmake/backends.cmake"
+    # Sort out the path to the candidate replacement
     newdir = output_dir+"/cmake"
     mkdir_if_absent(newdir)
     new = newdir+"/backends.cmake"
+
+    # Initialise flags to indicate place in the original file
+    in_duplicate = False
     passed_pythia = False
     wrote_entry = False
+
+    # Open old and new files and iterate through the old one, writing to the new as we go.
     with open(old) as f_old, open(new, 'w') as f_new:
         for line in f_old:
-            f_new.write(line)
+            # Have we spotted a previous modification by GUM?  If so, overwrite it.
+            if signature in line: in_duplicate = True
+            # Have we spotted the vanilla pythia entry yet?
             if "set(name \"pythia\")" in line: passed_pythia = True
+            if not in_duplicate: f_new.write(line)
             if not wrote_entry and passed_pythia and "set_as_default_version(\"backend\" ${name} ${ver})" in line:
                 to_write = "endif()\n"\
-                           "\n"\
-                           "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M).\n"\
+                           "\n"+signature+"\n"\
                            "set(model \""+model.lower()+"\")\n"\
                            "set(name \"pythia_${model}\")\n"\
                            "set(ver \"8."+base_pythia_version+"\")\n"\
@@ -217,4 +260,6 @@ def add_new_pythia_to_backends_cmake(model, output_dir):
                            "  set_as_default_version(\"backend\" ${name} ${ver})\n"
                 f_new.write(to_write)
                 wrote_entry = True
+            # We've reached the end of the previous modification by GUM, so remove the hold on repeating lines from the old file.
+            if in_duplicate and "endif()" in line: in_duplicate = False
 

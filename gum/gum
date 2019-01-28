@@ -392,6 +392,8 @@ if args.file:
         write_boss_config_for_pythia(gum.name, output_dir)
         print("  Creating a cmake entry for Pythia"+gum.name+".")
         add_new_pythia_to_backends_cmake(gum.name, output_dir)
+        print("  Setting the default version of Pythia_"+gum.name+" for BOSSed classes to 8."+base_pythia_version)
+        write_new_default_bossed_version("Pythia_"+gum.name, "8."+base_pythia_version, output_dir)
 
     # Stop now if we're just doing a dry run
     if args.dryrun:
