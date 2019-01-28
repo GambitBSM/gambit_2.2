@@ -7,6 +7,7 @@ import os
 from setup import *
 from files import *
 from parse import *
+from cmake_variables import *
 
 def check_backends(outputs):
     """
@@ -70,12 +71,16 @@ def add_calchep_switch(model_name, spectrum):
 
     return indent(src_sl), indent(src_pl), header
 
-def write_backend_patch(model, pristine_dir, patched_dir, backend, version):
+def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version):
     import subprocess
-    outdir = "Outputs/"+model+"/Backends/patches/"+backend+"/"+version
-    mkdir_if_absent(outdir)
-    outfile = outdir+"/patch_"+backend+"_"+version+".dif"
-    subprocess.call("diff -rupN "+pristine_dir+" "+patched_dir+" > "+outfile, shell=True)
+    full_output_dir = output_dir+"/Backends/patches/"+backend+"/"+version
+    mkdir_if_absent(full_output_dir)
+    outfile = full_output_dir+"/patch_"+backend+"_"+version+".dif"
+    pristine_parts = os.path.split(pristine_dir)
+    cwd = os.getcwd()
+    os.chdir(pristine_parts[0])
+    subprocess.call("diff -rupN "+pristine_parts[1]+" "+patched_dir+" > "+outfile, shell=True)
+    os.chdir(cwd)
 
 def fix_pythia_lib(model, patched_dir):
 
@@ -153,3 +158,63 @@ def fix_pythia_lib(model, patched_dir):
                     f_new.write("  }\n")
     os.remove(old)
     os.rename(tmp, old)
+
+def write_boss_config_for_pythia(model, output_dir):
+    path = "/Backends/scripts/BOSS/configs"
+    filename = "/pythia_"+model.lower()+"_8_"+base_pythia_version+".py"
+    full_output_dir = output_dir+path
+    mkdir_if_absent(full_output_dir)
+    template = ".."+path+"/pythia_8_"+base_pythia_version+".py"
+    outfile = full_output_dir+filename
+    with open(outfile, 'w') as f_new, open(template) as f_old:
+        for line in f_old:
+          if "gambit_backend_name    = 'Pythia'" in line:
+              f_new.write("gambit_backend_name    = 'Pythia_"+model+"'\n")
+          else:
+              f_new.write(line)
+          if "#  Configuration module for BOSS  #" in line:
+              f_new.write("#  ----brought to you by GUM----  #\n")
+
+
+def add_new_pythia_to_backends_cmake(model, output_dir):
+    old = "../cmake/backends.cmake"
+    newdir = output_dir+"/cmake"
+    mkdir_if_absent(newdir)
+    new = newdir+"/backends.cmake"
+    passed_pythia = False
+    wrote_entry = False
+    with open(old) as f_old, open(new, 'w') as f_new:
+        for line in f_old:
+            f_new.write(line)
+            if "set(name \"pythia\")" in line: passed_pythia = True
+            if not wrote_entry and passed_pythia and "set_as_default_version(\"backend\" ${name} ${ver})" in line:
+                to_write = "endif()\n"\
+                           "\n"\
+                           "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M).\n"\
+                           "set(model \""+model.lower()+"\")\n"\
+                           "set(name \"pythia_${model}\")\n"\
+                           "set(ver \"8."+base_pythia_version+"\")\n"\
+                           "set(lib \"libpythia8\")\n"\
+                           "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
+                           "set(md5 \""+pythia_md5+"\")\n"\
+                           "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
+                           "set(patch1 \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
+                           "set(patch2 \"${PROJECT_SOURCE_DIR}/Backends/patches/pythia/${ver}/patch_pythia_${ver}.dif\")\n"\
+                           "check_ditch_status(${name} ${ver})\n"\
+                           "if(NOT ditched_${name}_${ver})\n"\
+                           "  ExternalProject_Add(${name}_${ver}\n"\
+                           "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
+                           "    SOURCE_DIR ${dir}\n"\
+                           "    BUILD_IN_SOURCE 1\n"\
+                           "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
+                           "          COMMAND patch -p1 < ${patch2}\n"\
+                           "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
+                           "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
+                           "    INSTALL_COMMAND \"\"\n"\
+                           "  )\n"\
+                           "  BOSS_backend(${name} ${ver})\n"\
+                           "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
+                           "  set_as_default_version(\"backend\" ${name} ${ver})\n"
+                f_new.write(to_write)
+                wrote_entry = True
+

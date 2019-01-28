@@ -54,7 +54,7 @@ if args.file:
     check_backends(output_opts)
 
     # Create the output directory for all generated files for this model
-    output_dir = "./Outputs/" + gum.name
+    output_dir = os.path.join(os.getcwd(),"Outputs", gum.name)
     mkdir_if_absent(output_dir)
 
     # Check for a DM candidate
@@ -156,7 +156,7 @@ if args.file:
         mkdir_if_absent(mg5_output_dir)
 
         # Clear and remake the copy of Pythia that will receive the matrix element code produced by MadGraph
-        pristine_pythia_dir = os.path.join(os.getcwd(),'contrib','Pythia')
+        pristine_pythia_dir = os.path.join(os.getcwd(),'contrib','pythia')
         new_pythia_dir = mg5_output_dir + "/Pythia_patched"
         remove_tree_quietly(new_pythia_dir)
         copy_tree(pristine_pythia_dir, new_pythia_dir)
@@ -382,16 +382,16 @@ if args.file:
     if output_opts.ch: # If no parent
         ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
 
-    # Have we made a new Pythia backend?
+    # Have we created a new Pythia backend?
     if output_opts.pythia:
         print("  Patching Pythia to inject new matrix elements into its Process Container and shared library.")
         fix_pythia_lib(gum.name, new_pythia_dir)
         print("  Creating a diff vs original version of Pythia.")
-        write_backend_patch(gum.name, pristine_pythia_dir, new_pythia_dir, "Pythia_"+gum.name, "8."+base_pythia_version)
+        write_backend_patch(output_dir, pristine_pythia_dir, new_pythia_dir, "pythia_"+gum.name.lower(), "8."+base_pythia_version)
         print("  Creating a BOSS config file for Pythia_"+gum.name+".")
-
+        write_boss_config_for_pythia(gum.name, output_dir)
         print("  Creating a cmake entry for Pythia"+gum.name+".")
-
+        add_new_pythia_to_backends_cmake(gum.name, output_dir)
 
     # Stop now if we're just doing a dry run
     if args.dryrun:

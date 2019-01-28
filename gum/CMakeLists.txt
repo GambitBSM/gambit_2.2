@@ -83,12 +83,14 @@ EXTERNALPROJECT_ADD(
 
 # Download Pythia
 set(BASE_PYTHIA_VERSION 212)
+set(PYTHIA_MD5 0886d1b2827d8f0cd2ae69b925045f40)
 EXTERNALPROJECT_ADD(
     Pythia
     URL http://home.thep.lu.se/~torbjorn/pythia8/pythia8${BASE_PYTHIA_VERSION}.tgz
+    URL_MD5 ${PYTHIA_MD5}
     UPDATE_COMMAND ""
     PATCH_COMMAND  ""
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/Pythia
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/pythia
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
