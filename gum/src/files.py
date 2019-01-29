@@ -32,7 +32,7 @@ def mkdir_if_absent(path):
         if not os.path.isdir(path):
             raise
 
-def full_filename(filename, module, header=False):
+def full_filename(filename, module):
     """
     Formats a gambit file correctly based on the filename, the
     module, and whether it is a header file.
@@ -43,22 +43,26 @@ def full_filename(filename, module, header=False):
     module.strip('/')
 
     path = ""
-    if header:
-        filename += ".hpp"
+    if filename.endswith(".hpp"):
         path = "include/gambit/{0}".format(module)
-    else:
-        filename += ".cpp"
+    elif filename.endswith(".cpp"):
         path = "src"
+    elif filename.endswith(".py"):
+        path = "scripts"
+    elif filename.endswith(".dif"):
+        path = "patches"
+    else:
+        path = ""
 
     location = "../{0}/{1}/{2}".format(module, path, filename)
     return location
 
-def find_file(filename, module, header=False):
+def find_file(filename, module):
     """
     Tries to find a file in a specified module.
     """
 
-    location = full_filename(filename, module, header)
+    location = full_filename(filename, module)
 
     if os.path.exists(location):
         return True
@@ -73,12 +77,12 @@ def find_capability(capability, module, filename=None):
     module.strip('/')
 
     if not filename:
-        filename = "{0}_rollcall".format(module)
+        filename = "{0}_rollcall.hpp".format(module)
     else:
         filename.strip('/')
 
-    location = full_filename(filename, module, header=True)
-    if find_file(filename, module, header=True):
+    location = full_filename(filename, module)
+    if find_file(filename, module):
         pass
     else:
         raise GumError(("\n\nCannot find capability {0} in rollcall header file"
@@ -102,12 +106,12 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
     module.strip('/')
 
     if not filename:
-        filename = "{0}_rollcall".format(module)
+        filename = "{0}_rollcall.hpp".format(module)
     else:
         filename.strip('/')
 
-    location = full_filename(filename, module, header=True)
-    if find_file(filename, module, header=True):
+    location = full_filename(filename, module)
+    if find_file(filename, module):
         pass
     else:
         raise GumError(("\n\nCannot find capability {0} in rollcall header file"
@@ -134,7 +138,7 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
-            amend_file(filename, module, contents, no, reset_dict, header=True)
+            amend_file(filename, module, contents, no, reset_dict)
     else:
         raise GumError(("\n\nCapability {0} not found in "
                         "{1}!").format(capability, filename))
@@ -147,11 +151,11 @@ def find_function(function, capability, module, filename=None):
     module.strip('/')
 
     if not filename:
-        filename = "{0}_rollcall".format(module)
+        filename = "{0}_rollcall.hpp".format(module)
     else:
         filename.strip('/')
 
-    location = full_filename(filename, module, header=True)
+    location = full_filename(filename, module)
 
     # First check the capability exists...
     exists, num = find_capability(capability, module, filename)
@@ -170,14 +174,14 @@ def find_function(function, capability, module, filename=None):
 
     return False, 0
 
-def find_string(filename, module, string, header=False):
+def find_string(filename, module, string):
     """
     Tries to find a generic string in a given file.
     """
 
-    location = full_filename(filename, module, header)
+    location = full_filename(filename, module)
 
-    if find_file(filename, module, header):
+    if find_file(filename, module):
         pass
     else:
         raise GumError(("\n\nCannot find string {0} in the file"
@@ -191,47 +195,71 @@ def find_string(filename, module, string, header=False):
 
     return False, 0
 
-def write_file(filename, module, contents, reset_dict, header=False):
+def write_file(filename, module, contents, reset_dict):
     """
     Writes a file in a specified location.
     """
 
-    location = full_filename(filename, module, header)
+    location = full_filename(filename, module)
+    location_parts = os.path.split(location)
 
-    if find_file(filename, module, header):
+    if find_file(filename, module):
         raise GumError(("\n\nTried to write file " + location +
                         ", but it already exists."))
-
 
     reset_dict['new_files']['files'].append(location)
 
     if mode != 'Test':
+        # Make the directory if it doesn't exist
+        mkdir_if_absent(location_parts[0])
         # Create new file
         open(location, 'w').write(contents)
 
     print("File {} successfully created.".format(location))
 
-def delete_file(filename, module, header=False):
+def copy_file(filename, module, output_dir, reset_dict, existing=True):
+    """
+    Copies an output file in a specified location.
+    """
+    import shutil
+
+    location = full_filename(filename, module)
+    location_parts = os.path.split(location)
+    GUM_version = output_dir + '/' + location[3:]
+
+    if existing:
+        reset_dict['copied_amended_files']['files'].append(location)
+    else:
+        reset_dict['new_files']['files'].append(location)
+
+    if mode != 'Test':
+        # Make the directory if it doesn't exist
+        mkdir_if_absent(location_parts[0])
+        # Copy the file
+        shutil.copy(GUM_version, location)
+
+    print("Copied "+GUM_version+" to "+location+".")
+
+def delete_file(filename, module):
     """
     Deletes a file in a specified location.
     """
 
-    location = full_filename(filename, module, header)
+    location = full_filename(filename, module)
 
-    if find_file(filename, module, header):
+    if find_file(filename, module):
         os.remove(location)
         print("File {} successfully removed.".format(location))
 
-def amend_file(filename, module, contents, line_number, reset_dict, 
-               header=False):
+def amend_file(filename, module, contents, line_number, reset_dict):
     """
     Amends a file in a specified location with 'contents', starting
     from a given line number.
     """
 
-    location = full_filename(filename, module, header)
+    location = full_filename(filename, module)
 
-    if not find_file(filename, module, header):
+    if not find_file(filename, module):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
 
@@ -410,7 +438,7 @@ def revert(reset_file):
             print(exc)
             return
 
-        # The files GUM wrote as new. 
+        # The files GUM wrote as new.
         # GUM can just simply delete these.
         new_files = data['new_files']['files']
 
@@ -425,7 +453,7 @@ def revert(reset_file):
         # The files that existed previously, that GUM added stuff to.
         # These are a little more annoying to deal with.
         amended_files = data['amended_files']
-        
+
         # We want to match *strings* and not line numbers or anything like that.
         # This way, there is no order needed to perform resets in.
 
@@ -452,11 +480,11 @@ def revert(reset_file):
             # Write the new amended file
             new_file = open(temp_file, 'w')
             new_file.write(text)
-                
+
             os.remove(filename)
             os.rename(temp_file, filename)
 
-    return 
+    return
 
 def drop_mug_file(mug_file, contents):
     """

@@ -10,26 +10,25 @@ from files import *
 
 def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     """
-    Adds a model to the model hierarchy. This means we create any 
+    Adds a model to the model hierarchy. This means we create any
     new header files in the model directory, i.e.
     Models/include/gambit/Models/models/<new_model>.hpp, and edit any
     parent/children headers. Writes translation functions etc. in
     Models/src/models/<new_model>.cpp if needed.
     """
-                
+
     print("Writing new spectrum, {0}".format(spectrum_name))
-      
+
     towrite_header = blame_gum("/// Header file for {0}".format(model_name))
     towrite_header += (
                    "#ifndef __{0}_hpp__\n"
                    "#define __{0}_hpp__\n"
-                   "\n"                   
+                   "\n"
     ).format(model_name)
     towrite_source = blame_gum("/// Source file for {0}".format(model_name))
-    
+
     module = "Models"
-    header = True
-        
+
     towrite_header += (
     			   "#define MODEL {0}"
     			   "\n"
@@ -40,15 +39,15 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
 
     # Don't want the SM-like Higgs mass a fundamental parameter
     params = [x.gb_in for x in model_params if x.name != 'h0_1' and x.sm == False]
-      
+
     towrite_header += "  DEFINEPARS({0})\n\n".format(', '.join(params))
-       
+
     towrite_header += (
                    "#undef MODEL\n"
                    "\n"
                    "#endif\n"
-    )    
-    
+    )
+
     return towrite_header
 
 def find_parents_params(parent):
@@ -57,16 +56,16 @@ def find_parents_params(parent):
     """
 
     module = "Models"
-    header = True
-    location = full_filename("models/" + parent, module, header)
-    
+    fname = "models/" + parent + ".hpp"
+    location = full_filename(fname, module)
+
     lookup = "#define MODEL " + parent
     term = "#undef MODEL"
-    
-    num = find_string("models/" + parent, module, lookup, header)[1]
-    
+
+    num = find_string(fname, module, lookup)[1]
+
     parent_params = []
-    
+
     with open(location, 'r') as f:
         for num, line in enumerate(f, 1+num):
             if "DEFINEPARS" in line:
@@ -74,24 +73,24 @@ def find_parents_params(parent):
                 parent_params += params.split(",")
             if term in line:
                 break
-                
-    return parent_params       
-  
+
+    return parent_params
+
 def find_tree_root(parent):
     """
-    Traces up a model tree to find the 'root' of the model tree, 
+    Traces up a model tree to find the 'root' of the model tree,
     i.e. which existing Spectrum a new model is allowed to use.
     """
 
     module = "Models"
-    header = True
-    
+    fname = "models/" + newmodel + ".hpp"
+
     newmodel = parent
     root = False
     lookup = "#define PARENT "
-    
+
     while root == False:
-        location = full_filename("models/" + newmodel, module, header)
+        location = full_filename(fname, module)
         if lookup in open(location, 'r').read():
             lines = open(location, 'r').readlines()
             for line in lines:
@@ -99,9 +98,9 @@ def find_tree_root(parent):
                 newmodel = line.split(' ')[-1].strip('\n')
         else:
             root = True
-  
+
     return newmodel
-      
+
 def write_spectrumcontents(gambit_model_name, model_parameters):
     """
     Writes SpectrumContents for a new model:
@@ -146,33 +145,33 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
     # Now add each parameter to the model file.
     for i in np.arange(len(model_parameters)):
         if not isinstance(model_parameters[i], SpectrumParameter):
-            raise GumError(("\n\nModel Parameters at position " + i + 
+            raise GumError(("\n\nModel Parameters at position " + i +
                             "not passed as instance of class "
                             "SpectrumParameter."))
-                     
+
         if model_parameters[i].shape:
             shape = ", " + model_parameters[i].shape
         else:
             shape = ""
         towrite += "addParameter(Par::{0}, \"{1}\"{2});\n".format(model_parameters[i].tag.replace("\"",""), model_parameters[i].name, shape)
-          
+
     towrite += (
             "\n"
             "} // namespace Models\n"
             "} // namespace Gambit\n"
             "#endif\n"
     )
-      
+
     contents = indent(towrite)
     return contents
-      
+
 def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     """
     Writes spectrum object wrapper for new model:
     Models/include/gambit/Models/SimpleSpectra/<new_model_name>SimpleSpec.hpp.
     """
-      
-    # Classes make life easier 
+
+    # Classes make life easier
     class SpecGetAndSet:
 
         def __init__(self, shape, size, param, getter, setter):
@@ -192,7 +191,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
 
     for i in np.arange(len(model_parameters)):
         if not isinstance(model_parameters[i], SpectrumParameter):
-            raise GumError(("\n\nModel Parameters at position " + i + 
+            raise GumError(("\n\nModel Parameters at position " + i +
                             " not passed as instance of class "
                             "SpectrumParameter."))
 
@@ -260,7 +259,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     for i in range(0, len(spectrumparameters)):
 
         sp = spectrumparameters[i]
-        
+
         if sp.shape == "scalar":
             size = ""
         elif sp.shape == "vector":
@@ -311,7 +310,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     for i in np.arange(len(spectrumparameters)):
 
         sp = spectrumparameters[i]
-          
+
         if sp.shape == "scalar":
             size = ""
             indices = ""
@@ -330,7 +329,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     for i in np.arange(len(spectrumparameters)):
 
         sp = spectrumparameters[i]
-          
+
         if sp.shape == "scalar":
             size = ""
             indices = ""
@@ -374,10 +373,10 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     # Remove all duplicates. These values tell us which indices we need to
     # include for the FInfo routines.
     sizes = list(set(sizes))
-        
+
     for i in np.arange(len(sizes)):
         fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
-        
+
         towrite += (
                 "static const int {0}v[] = {{{1}}};\n"
                 "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
@@ -385,12 +384,12 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         ).format(fnname, ",".join(str(j) for j in np.arange(int(sizes[i]))))
 
     towrite += "\nusing namespace Par;\n\n"
-    
+
     # Now add getter maps
     for i in np.arange(len(model_parameters)):
         sp = spectrumparameters[i]
         mp = model_parameters[i]
-        
+
         if sp.shape == "scalar":
             size = "0"
             finf = " &Self::{}".format(sp.getter)
@@ -401,7 +400,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         elif sp.shape == "matrix":
             size = "2"
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-            finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.getter, index) 
+            finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.getter, index)
 
         towrite += (
                 "getters[{0}].map{1}"
@@ -427,10 +426,10 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     # Remove all duplicates. These values tell us which indices we need to
     # include for the FInfo routines.
     sizes = list(set(sizes))
-    
+
     for i in np.arange(len(sizes)):
         fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
-        
+
         towrite += (
                 "static const int {0}v[] = {{{1}}};\n"
                 "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
@@ -442,7 +441,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     for i in range(0, len(model_parameters)):
         sp = spectrumparameters[i]
         mp = model_parameters[i]
-        
+
         if sp.shape == "scalar":
             size = "0"
             finf = " &Self::{}".format(sp.setter)
@@ -453,8 +452,8 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         elif sp.shape == "matrix":
             size = "2"
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-            finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index) 
-        
+            finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index)
+
         towrite += (
                 "setters[{0}].map{1}"
                 "W[\"{2}\"] = {3};\n"
@@ -469,20 +468,20 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             "} // namespace Gambit\n"
             "#endif\n"
     )
-    
+
     contents = indent(towrite)
     return contents
-    
+
 def add_to_registered_spectra(gambit_model):
     """
     Adds new model entry to RegisteredSpectra.hpp
     """
-      
+
     lookup = "SubSpectrumContents"
     newentry = "    struct {0:21}: SubSpectrumContents {{ {0}(); }};\n".format(gambit_model)
-    filename = "SpectrumContents/RegisteredSpectra"
+    filename = "SpectrumContents/RegisteredSpectra.hpp"
     module = "Models"
-    location = full_filename(filename, module, header=True)
+    location = full_filename(filename, module)
     linenum = 0 # Position of last entry in RegisteredSpectra
     with open(location) as f:
         for num, line in enumerate(f, 1):
@@ -490,5 +489,5 @@ def add_to_registered_spectra(gambit_model):
                 linenum = num
             if newentry in line:
                 raise GumError(("\n\nModel {0} already exists in GAMBIT.").format(gambit_model))
-    
-    return newentry, linenum          
+
+    return newentry, linenum

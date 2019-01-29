@@ -432,47 +432,41 @@ if args.file:
 
     # Models
     m = "Models"
-    write_file("models/" + gum.name, m, model_header, reset_contents, True)
-    write_file("SpectrumContents/" + gum.name, m, spec_contents, reset_contents, False)
-    write_file("SimpleSpectra/" + gum.name + "SimpleSpec", m,
-               subspec_wrapper, reset_contents, True)
-    amend_file("SpectrumContents/RegisteredSpectra", m, reg_spec,
-               reg_spec_num, reset_contents, True)
+    write_file("models/" + gum.name + ".hpp", m, model_header, reset_contents)
+    write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, reset_contents)
+    write_file("SimpleSpectra/" + gum.name + "SimpleSpec" + ".hpp", m, subspec_wrapper, reset_contents)
+    amend_file("SpectrumContents/RegisteredSpectra.hpp", m, reg_spec, reg_spec_num, reset_contents)
 
     # SpecBit
     m = "SpecBit"
-    write_file("SpecBit_" + gum.name, m, spectrum_src, reset_contents, False)
-    write_file("SpecBit_" + gum.name + "_rollcall", m, spectrum_header, reset_contents, True)
-    num = find_string("SpecBit_rollcall", m, "SpecBit_tests_rollcall.hpp",
-                      True)[1]
-    amend_file("SpecBit_rollcall", m, spec_rollcall, num, reset_contents, True)
+    write_file("SpecBit_" + gum.name + ".cpp", m, spectrum_src, reset_contents)
+    write_file("SpecBit_" + gum.name + "_rollcall.hpp", m, spectrum_header, reset_contents)
+    num = find_string("SpecBit_rollcall.hpp", m, "SpecBit_tests_rollcall.hpp")[1]
+    amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num, reset_contents)
 
     # DecayBit
     if decaybit:
         m = "DecayBit"
         # Append to the end of DecayBit -- just before all_decays
-        num = find_string("DecayBit", m, "void all_decays")[1]
+        num = find_string("DecayBit.cpp", m, "void all_decays")[1]
         if output_opts.ch:
-            amend_file("DecayBit", m, decaybit_src_ch, num-4, reset_contents, False)
+            amend_file("DecayBit.cpp", m, decaybit_src_ch, num-4, reset_contents)
             for i in xrange(len(decay_roll)):
                 if find_capability(decay_roll[i][0], m)[0]:
                     amend_rollcall(decay_roll[i][0], m, decay_roll[i][1], reset_contents)
                 else:
-                    num = find_string("DecayBit_rollcall", m,
-                                      "#define CAPABILITY decay_rates", True)[1]
-                    amend_file("DecayBit_rollcall", m, decay_roll[i][1],
-                               num-2, reset_contents, True)
+                    num = find_string("DecayBit_rollcall.hpp", m, "#define CAPABILITY decay_rates")[1]
+                    amend_file("DecayBit_rollcall.hpp", m, decay_roll[i][1], num-2, reset_contents)
             if len(new_decays) > 0:
-                num = find_string("DecayBit_rollcall", m,
-                                  "DEPENDENCY(omega_decay_rates", True)[1]
-                amend_file("DecayBit_rollcall", m, all_decays_header, num, reset_contents, True)
-                num = find_string("DecayBit", m, "decays(\"omega\")", False)[1]
-                amend_file("DecayBit", m, all_decays_src, num, reset_contents, False)
+                num = find_string("DecayBit_rollcall.hpp", m, "DEPENDENCY(omega_decay_rates")[1]
+                amend_file("DecayBit_rollcall.hpp", m, all_decays_header, num, reset_contents)
+                num = find_string("DecayBit.cpp", m, "decays(\"omega\")")[1]
+                amend_file("DecayBit.cpp", m, all_decays_src, num, reset_contents)
 
     # DarkBit
     if darkbit:
         m = "DarkBit"
-        write_file(gum.name, m, darkbit_src, reset_contents, False)
+        write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
         if pc:
             amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)
         if dd:
@@ -481,26 +475,40 @@ if args.file:
 
     # ColliderBit
     m = "ColliderBit"
+    if output_opts.pythia:
+        copy_file("models/"+gum.name+".hpp", m, output_dir, reset_contents, existing = False)
+        copy_file("models/"+gum.name+".cpp", m, output_dir, reset_contents, existing = False)
 
     # Backends
     m = "Backends"
+    # cmake
+    if output_opts.pythia:
+        copy_file("backends.cmake", "cmake", output_dir, reset_contents, existing = True)
     # CalcHEP
     if output_opts.ch:
-        f = "frontends/CalcHEP_3_6_27"
-        num = find_string(f, m, "setModel(modeltoset, 1)", False)[1]
-        amend_file(f, m, ch_src_sl, num-2, reset_contents, False)
-        num = find_string(f, m, "END_BE_INI_FUNCTION", False)[1]
-        amend_file(f, m, ch_src_pl, num-2, reset_contents, False)
-        num = find_string(f, m, "backend_undefs.hpp", True)[1]
-        amend_file(f, m, ch_head, num-2, reset_contents, True)
-        num = find_string(f, m, "BE_FUNCTION", True)[1]
-        amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, reset_contents, True)
+        f = "frontends/CalcHEP_3_6_27.cpp"
+        num = find_string(f, m, "setModel(modeltoset, 1)")[1]
+        amend_file(f, m, ch_src_sl, num-2, reset_contents)
+        num = find_string(f, m, "END_BE_INI_FUNCTION")[1]
+        amend_file(f, m, ch_src_pl, num-2, reset_contents)
+        f = "frontends/CalcHEP_3_6_27.hpp"
+        num = find_string(f, m, "backend_undefs.hpp")[1]
+        amend_file(f, m, ch_head, num-2, reset_contents)
+        num = find_string(f, m, "BE_FUNCTION")[1]
+        amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, reset_contents)
     # micrOMEGAs
     if output_opts.mo:
         f = "frontends/MicrOmegas_{0}_3_6_9_2".format(gum.name)
-        write_file(f, m, mo_src, reset_contents, True)
-        write_file(f, m, mo_head, reset_contents, False)
+        write_file(f+".cpp", m, mo_src, reset_contents)
+        write_file(f+".hpp", m, mo_head, reset_contents)
     # Pythia
+    if output_opts.pythia:
+        be = "pythia_"+gum.name.lower()
+        safe_ver = "8_"+base_pythia_version
+        ver = "8."+base_pythia_version
+        copy_file("default_bossed_versions.hpp", m, output_dir, reset_contents, existing = True)
+        copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir, reset_contents, existing = False)
+        copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir, reset_contents, existing = False)
     # MadDM
 
     # Save output to a .mug file for resetting purposes
