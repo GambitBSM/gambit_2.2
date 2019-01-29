@@ -24,7 +24,7 @@
     START_FUNCTION(ColliderPythia_@MODEL@_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     DEPENDENCY(decay_rates, DecayTable)
     MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
     #undef FUNCTION
@@ -33,7 +33,7 @@
     START_FUNCTION(ColliderPythia_@MODEL@_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
 
     #define FUNCTION getPythia_@MODEL@AsBase
@@ -41,7 +41,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
     DEPENDENCY(HardScatteringSim, ColliderPythia_@MODEL@_defaultversion)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -54,7 +54,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
     DEPENDENCY(HardScatteringSim, ColliderPythia_@MODEL@_defaultversion)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -66,7 +66,7 @@
     START_FUNCTION(BaseDetector<Pythia_@MODEL@_default::Pythia8::Event>*)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -75,7 +75,7 @@
     START_FUNCTION(BaseDetector<Pythia_@MODEL@_default::Pythia8::Event>*)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -84,7 +84,7 @@
     START_FUNCTION(BaseDetector<Pythia_@MODEL@_default::Pythia8::Event>*)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -98,7 +98,7 @@
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
     DEPENDENCY(HardScatteringEvent, Pythia_@MODEL@_default::Pythia8::Event)
     DEPENDENCY(ATLASDetectorSim, BaseDetector<Pythia_@MODEL@_default::Pythia8::Event>*)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -109,7 +109,7 @@
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
     DEPENDENCY(HardScatteringEvent, Pythia_@MODEL@_default::Pythia8::Event)
     DEPENDENCY(CMSDetectorSim, BaseDetector<Pythia_@MODEL@_default::Pythia8::Event>*)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -120,7 +120,7 @@
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
     DEPENDENCY(HardScatteringEvent, Pythia_@MODEL@_default::Pythia8::Event)
     DEPENDENCY(IdentityDetectorSim, BaseDetector<Pythia_@MODEL@_default::Pythia8::Event>*)
-    ALLOWED_MODEL(@MODEL@)
+    ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY
 
