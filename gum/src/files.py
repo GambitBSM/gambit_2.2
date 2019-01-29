@@ -138,7 +138,7 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
-            amend_file(filename, module, contents, no, reset_dict)
+            amend_file(filename, module, contents, no-1, reset_dict)
     else:
         raise GumError(("\n\nCapability {0} not found in "
                         "{1}!").format(capability, filename))
