@@ -905,7 +905,7 @@ if(NOT ditched_${name}_${ver})
             DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
             SOURCE_DIR ${dir}
             BUILD_IN_SOURCE 1
-            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./configure --prefix=${dir} --disable-openmp --with-pic
+            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=-fPIC ./configure --prefix=${dir} --disable-openmp --with-pic
             BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
             INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
             )
