@@ -168,31 +168,42 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
     dm_mass = "m" + gb_id.replace("\"", "")
 
+    # Arrays of final states (GAMBIT names)
+    out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])
+    out2g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,1]])
+    # DM (and conjugate) as known to CalcHEP
+    dm_chep = pdg_to_particle(dm.PDG_code, calchep_pdg_dict)
+    dm_chepc = pdg_to_particle(dm.Conjugate.PDG_code, calchep_pdg_dict)
+
     towrite_class = (
-            "double sv(str channel, const DecayTable* tbl, double v_rel)\n"
-            "{\n"
+            "// Annihilation cross-section. sigmav is a pointer to a"
+            " CalcHEP backend function.\n"
+            "double sv(str channel, DecayTable& tbl, "
+            "double (*sigmav)(str&, std::vector<str>&, std::vector<str>&, "
+            "double&, double&, const DecayTable&), double v_rel)\n"
+            "{{\n"
             "/// Returns sigma*v for a given channel.\n"
             "double GeV2tocm3s1 = gev2cm2*s2cm;\n\n"
             "/// Hard-coded for now -- CalcHEP frontend needs this removing anyway, it doesn't use it.\n"
             "double QCD_coupling = 1.0;\n\n"
-    )
-
-    out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])
-    out2g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,1]])
-    dm_chep = pdg_to_particle(dm.PDG_code, calchep_pdg_dict)
-    dm_chepc = pdg_to_particle(dm.Conjugate.PDG_code, calchep_pdg_dict)
+            "// CalcHEP args\n"
+            "str model = \"{0}\"; // CalcHEP model name\n"
+            "std::vector<str> in = {{\"{1}\", \"{2}\"}}; // In states: DM+DMbar\n"
+            "std::vector<str> out; // Out states\n"
+    ).format(gambit_model_name, dm_chep, dm_chepc)
 
     # Add each channel individually for annihilation cross sections
     for i in np.arange(len(ann_products)):
         towrite_class += (
-                "if (channel == \"{0}, {1}\")"
-                " return BEreq::CH_Sigma_V(\"{2}\","
-                " std::vector<str> {{\"{3}\", \"{4}\"}},"
-                " std::vector<str> {{\"{0}\", \"{1}\"}},"
-                " QCD_coupling, v_rel, tbl)*GeV2tocm3s1; \n"
-        ).format(out1g[i], out2g[i], gambit_model_name, dm_chep, dm_chepc)
+                "if (channel == \"{0}, {1}\") "
+                "out = {{\"{0}\", \"{1}\"}};\n"
+        ).format(out1g[i], out2g[i])
 
     towrite_class += (
+            "\n"
+            "// Check the channel has been filled\n"
+            "if (out.size() > 1) return "
+            "sigmav(model, in, out, QCD_coupling, v_rel, tbl)*GeV2tocm3s1;\n"
             "else return 0;\n"
             "}\n\n"
     )
@@ -203,7 +214,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
 
     towrite_pc = (
             "// Instantiate new {0} object.\n"
-            "auto pc = boost::make_shared<{0}>(&catalog, tbl);\n"
+            "auto pc = boost::make_shared<{0}>();\n"
             "\n"
             "// Populate annihilation channel list and add "
             "thresholds to threshold list.\n"
@@ -224,7 +235,8 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
             "if ({1}*2 > mtot_final*0.5)\n"
             "{{\n"
             "daFunk::Funk kinematicFunction = daFunk::funcM("
-            "pc, &{0}::sv, channels[i], tbl, daFunk::var(\"v\"));\n"
+            "pc, &{0}::sv, channels[i], tbl, "
+            "BEreq::CH_Sigma_V.pointer(), daFunk::var(\"v\"));\n"
             "TH_Channel new_channel("
             "daFunk::vec<string>(p1[i], p2[i]), kinematicFunction);\n"
             "process_ann.channelList.push_back(new_channel);\n"
@@ -255,8 +267,8 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             "{{\n"
             "public:\n"
             "/// Initialize {0} object (branching ratios etc)\n"
-            "{0}(TH_ProcessCatalog* const catalog, const DecayTable* tbl);\n"
-            "~{0}();\n\n"
+            "{0}() {{}};\n"
+            "~{0}() {{}};\n\n"
     ).format(gambit_model_name)
 
     if sv:
@@ -319,7 +331,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             "#undef addParticle\n"
             "\n"
             "// Import decay table from DecayBit\n"
-            "const DecayTable* tbl = &(*Dep::decay_rates);\n"
+            "DecayTable tbl = *Dep::decay_rates;\n"
             "\n"
             "// Set of imported decays\n"
             "std::set<string> importedDecays;\n"
@@ -346,7 +358,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
                     "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
                     "process_ann.resonances_thresholds.resonances.\n    "
                     "push_back(TH_Resonance(spec.get(Par::Pole_Mass, \"{0}\"), "
-                    "tbl->at(\"{0}\").width_in_GeV));\n"
+                    "tbl.at(\"{0}\").width_in_GeV));\n"
             ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
                  dm_mass)
 
