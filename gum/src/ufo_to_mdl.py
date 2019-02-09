@@ -20,6 +20,10 @@ import sys
 import os
 import re
 
+"""
+MadGraph objects and routines
+"""
+
 class MGParticle():
     """
     Internal object representing a particle
@@ -27,7 +31,7 @@ class MGParticle():
     """
     
     def __init__(self, mgname, mgantiname, pdg_code, name, antiname, spin, 
-                 colour, mass, width):
+                 color, mass, width):
                 
         self.mgname = mgname
         self.mgantiname = mgantiname
@@ -35,7 +39,7 @@ class MGParticle():
         self.name = name
         self.antiname = antiname
         self.spin = spin
-        self.colour = colour
+        self.color = color
         self.mass = mass
         self.width = width
         
@@ -140,7 +144,6 @@ def import_mg_parts(location):
     """
     
     parts = []
-    conjugates = []
     
     start_num = 0
     
@@ -234,7 +237,7 @@ def import_mg_verts(location):
     Import MadGraph5 vertices from a given file location.
     """
 
-    vertices = []
+    verts = []
     
     start_num = 0
     
@@ -281,9 +284,76 @@ def import_mg_verts(location):
         couplings = re.findall(r'couplings = {(.*?)}', str(vertices[i]))
         
         vertex = MGVertex(mgname, particles, color, lorentz, couplings)
-        vertices.append(vertex)
+        verts.append(vertex)
 
-    return vertices
+
+    return verts
+
+"""
+CalcHEP objecs and routines
+"""
+
+class CHParticle():
+    """
+    Internal object representing a particle
+    within CalcHEP.
+    """
+    
+    def __init__(self, chname, pdg_code, name, antiname, spinx2, 
+                 color, mass, width, aux):
+                
+        self.chname = chname
+        self.pdg_code = pdg_code
+        self.name = name
+        self.antiname = antiname
+        self.spinx2 = spinx2
+        self.color = color
+        self.mass = mass
+        self.width = width
+        self.aux = aux
+        
+        if (name == antiname):
+            self.selfconj = True
+        else:
+            self.selfconj = False
+  
+class CHParameter():
+    """
+    Internal object representing a parameter
+    within CalcHEP.
+    """
+    
+    def __init__(self, name, nature, value):
+    
+        self.name = name
+        self.nature = nature
+        self.value = value
+
+class CHCoupling():
+    """
+    Internal object representing a coupling structure
+    within CalcHEP.
+    """
+
+    def __init__(self, chname, value, order):
+
+        self.chname = chname
+        self.value = value
+        self.order = order
+
+class CHVertex():
+    """
+    Internal object representing a vertex
+    within CalcHEP.
+    """
+
+    def __init__(self, particles, lorentz, couplings):
+
+        self.particles = particles
+        self.lorentz = lorentz
+        self.couplings = couplings
+        self.numparticles = len(particles)
+
 
 def check_ch_files(location):
     """
@@ -309,19 +379,142 @@ def import_ch_params(location):
     Import CalcHEP parameters from a given file location.
     """
     
+    params = []
+    start_num = 0
+
+    # Firstly, deal with internal parameters
+
+    # Trim the stuff of the top
+    with open(location + '/func1.mdl') as f:
+        for num, line in enumerate(f, 1):
+            if re.search(r'Expression', line):
+                start_num = num
+    
+    # Now read in line by line (since all parameter info is stored on 1 line)
+    with open(location + '/func1.mdl', 'r') as f:
+        lines = f.readlines()[start_num:]
+
+    for line in lines:
+
+        # Get all information in a nice list, remove the whitespace
+        p = [i.strip() for i in line.split('|')]
+
+        name = p[0]
+
+        # FeynRules output comments out its SPheno interface (!) if you don't request it
+        # - don't want to parse this.
+        if name.startswith('%'):
+            continue
+
+        # All of these are internal.
+        nature = "Internal"
+
+        # Remove any comments from the value
+        value = p[1].split('%')[0].strip()
+
+        parameter = CHParameter(name, nature, value)
+        params.append(parameter)
+
+    # Now external parameters
+
+    with open(location + '/vars1.mdl') as f:
+        for num, line in enumerate(f, 1):
+            if re.search(r'Value', line):
+                start_num = num
+
+    with open(location + '/func1.mdl', 'r') as f:
+        lines = f.readlines()[start_num:]
+
+    for line in lines:
+
+        p = [i.strip() for i in line.split('|')]
+
+        name = p[0]
+        value = p[1]
+        nature = "External"
+
+        parameter = CHParameter(name, nature, value)
+        params.append(parameter)
+
+    return params
     
 def import_ch_parts(location):
     """
     Import CalcHEP particles from a given file location.
     """
+
+    parts = []
     
+    start_num = 0
+    
+    # Trim the stuff of the top
+    with open(location + '/prtcls1.mdl') as f:
+        for num, line in enumerate(f, 1):
+            if re.search(r'Full  name', line):
+                start_num = num
+    
+    # Now read in line by line (since all particle info is stored on 1 line)
+    with open(location + '/prtcls1.mdl', 'r') as f:
+        lines = f.readlines()[start_num:]
+
+    for line in lines:
+
+        # Get all information in a nice list, remove the whitespace
+        p = [i.strip() for i in line.split('|')]
+        
+        chname = p[0]
+        name = p[1]
+        antiname = p[2]
+        pdg_code = p[3]
+        spinx2 = p[4]
+        mass = p[5]
+        width = p[6]
+        color = p[7]
+        aux = p[8]
+
+        particle = CHParticle(chname, pdg_code, name, antiname, spinx2, color, mass, width, aux)
+        parts.append(particle)
+
+    return parts
+
     
 def import_ch_verts(location):
     """
     Import CalcHEP vertices from a given file location.
     """
-    
-    
+
+    verts = []
+    start_num = 0
+
+    # Trim the stuff of the top
+    with open(location + '/lgrng1.mdl') as f:
+        for num, line in enumerate(f, 1):
+            if re.search(r'Factor', line):     
+                start_num = num
+
+    # Now read in line by line (since all vertex info is stored on 1 line)
+    with open(location + '/lgrng1.mdl', 'r') as f:
+        lines = f.readlines()[start_num:]
+
+    for line in lines:
+
+        # Get all information in a nice list, remove the whitespace
+        v = [i.strip() for i in line.split('|')]
+
+        # Always 3 particles in a vertex...
+        particles = [v[0], v[1], v[2]]
+        # Sometimes a fourth - if not empty, add it
+        if v[3] != '':
+            particles.append(v[3])
+        
+        coupling = v[4]
+        lorentz = v[5]
+
+        vertex = CHVertex(particles, lorentz, coupling)
+        verts.append(vertex)
+
+    return verts
+
 def convert(mg_location):
     """
     Create CalcHEP files from a given set of MadGraph files.
