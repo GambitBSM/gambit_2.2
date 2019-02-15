@@ -26,7 +26,7 @@
 #include "gambit/Logs/logger.hpp"
 #include "yaml-cpp/yaml.h"
 
-#define SIGNAL_DEBUG // comment out when not debugging.
+//#define SIGNAL_DEBUG // comment out when not debugging.
 
 namespace Gambit
 {
