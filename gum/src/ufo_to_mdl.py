@@ -31,7 +31,7 @@ class MGParticle():
     """
     
     def __init__(self, mgname, mgantiname, pdg_code, name, antiname, spin, 
-                 color, mass, width):
+                 color, mass, width, goldstone, ghostnum):
                 
         self.mgname = mgname
         self.mgantiname = mgantiname
@@ -42,6 +42,8 @@ class MGParticle():
         self.color = color
         self.mass = mass
         self.width = width
+        self.goldstone = goldstone
+        self.ghostnum = ghostnum
         
         if (name == antiname):
             self.selfconj = True
@@ -72,6 +74,18 @@ class MGCoupling():
         self.mgname = mgname
         self.value = value
         self.order = order
+
+class MGLorentz():
+    """
+    Internal object representing a lorentz structure
+    within MadGraph.
+    """
+
+    def __init__(self, mgname, spins, structure):
+
+        self.mgname = mgname
+        self.spins = spins   #2s+1
+        self.structure = structure
 
 class MGVertex():
     """
@@ -171,15 +185,23 @@ def import_mg_parts(location):
 
         mgname = particles[i][0]
 
-        p = particles[i][1].split(', ')
+        p = particles[i][1]
 
-        pdg_code = p[0].strip().split("=")[1].strip().strip("'")
-        name = p[1].strip().split("=")[1].strip().strip("'")
-        antiname = p[2].strip().split("=")[1].strip().strip("'")
-        spin = p[3].strip().split("=")[1].strip().strip("'")     # 2S+1
-        color = p[4].strip().split("=")[1].strip().strip("'")    # 1/3/8.
-        mass = p[5].strip().split("=")[1].strip().strip("'") 
-        width = p[6].strip().split("=")[1].strip().strip("'") 
+        pdg_code = re.findall(r'pdg_code = (.*?),', p)[0].strip("'")
+        name = re.findall(r'name = (.*?),', p)[0].strip("'")
+        antiname = re.findall(r'antiname = (.*?),', p)[0].strip("'")
+        spin = re.findall(r'spin = (.*?),', p)[0].strip("'")     # 2S+1
+        color = re.findall(r'color = (.*?),', p)[0].strip("'")    # 1/3/8.
+        mass = re.findall(r'mass = (.*?),', p)[0].strip("'") 
+        width = re.findall(r'width = (.*?),', p)[0].strip("'")
+
+        # Also save the ghost number, they're represented differently.
+        ghostnum = re.findall(r'GhostNumber = (.*?),', p)[0]
+
+        # Same with Goldstones
+        goldstone = re.findall(r'goldstone = (.*?),', p)
+        if len(goldstone) > 0: goldstone = goldstone[0]
+        else: goldstone = False
 
         # Go through conjugates and add them as mgantiname -- if distinct.
         mgantiname = mgname
@@ -188,7 +210,7 @@ def import_mg_parts(location):
                 mgantiname = antis[j][0]
         
         par = MGParticle(mgname, mgantiname, pdg_code, name, antiname, 
-                       spin, color, mass, width)
+                       spin, color, mass, width, goldstone, ghostnum)
         parts.append(par)
 
     return parts
@@ -232,6 +254,54 @@ def import_mg_couplings(location):
 
     return couplings
 
+def import_mg_lorentz(location):
+    """
+    Import Lorentz structures from MadGraph5 from a given file location.
+    """
+
+    lor = []
+
+    start_num = 0
+
+    # Find last instance of "pass"
+    with open(location + '/lorentz.py', 'r') as f:
+        for num, line in enumerate(f, 1):
+            if re.match(r'from (.*?)', line): 
+                start_num = num
+
+    # Now read in properly
+    with open(location + '/lorentz.py', 'r') as f:
+        lines = ''.join(f.readlines()[start_num:]).replace('\n','')
+
+    # Explicitly add a newline after each closing parenthesis.
+    # This makes the regular expressions work consistently.
+    lines = lines.replace('\')', '\')\n')
+
+    # Find all matches to "X = Particle(...)"
+    lorentz = re.findall(r'(.*?) = Lorentz\((.*?)\)\n', lines)
+
+    for i in range(len(lorentz)):
+
+        l = lorentz[i][1]
+
+        # Match 'name = '...' '
+        mgname = re.findall(r'name = \'(.*?)\'', str(l))[0]
+
+        # Match 'spins = [ X, Y, Z ]'
+        spins = re.findall(r'spins = \[(.*?)\]', str(l))
+        # This returns a list with 1 entry; we want to split this up.
+        spins = spins[0].split(',')
+        # Remove those pesky whitespaces
+        spins = [x.strip() for x in spins]
+
+        # Match 'structure = '...' '
+        structure = re.findall(r'structure = \'(.*?)\'', str(l))[0]
+        
+        lorentztry = MGLorentz(mgname, spins, structure)
+        lor.append(lorentztry)
+
+    return lor
+
 def import_mg_verts(location):
     """
     Import MadGraph5 vertices from a given file location.
@@ -271,8 +341,12 @@ def import_mg_verts(location):
         particles = [x.strip() for x in parts]
 
         # 'Color' entry
-        color = re.findall(r'color = \[(.*?)\]', str(vertices[i]))
-        color = color[0].strip().strip("'")
+        color = re.findall(r'color = \[(.*?)\]', str(vertices[i]))[0]
+        # We have a list of color indices now, all between 
+        # inverted commas so match these
+        color = re.findall(r'\'(.*?)\'', color)
+        # Create a list object
+        color = [x.strip() for x in color]
 
         # 'Lorentz' entry
         lorentz = re.findall(r'lorentz = \[(.*?)\]', str(vertices[i]))
@@ -282,6 +356,21 @@ def import_mg_verts(location):
         lorentz = [x.strip() for x in lorentz]
 
         couplings = re.findall(r'couplings = {(.*?)}', str(vertices[i]))
+
+        # Commas appear in the coupling structure -- use the parenthesis too
+        couplings = couplings[0].split(",(")
+
+        # If there were more than 1, add the parentheses back
+        if len(couplings) > 1:
+            for i in range(len(couplings)-1):
+                couplings[i+1] = '(' + couplings[i+1]
+
+        # Each coupling should have a Lorentz structure with it...
+        if len(lorentz) != len(couplings):
+            print("Length of Lorentz entry not the same as couplings entry!")
+            print("The vertex that caused the problem is:")
+            print(vertices[i][1])
+            sys.exit()
         
         vertex = MGVertex(mgname, particles, color, lorentz, couplings)
         verts.append(vertex)
@@ -422,7 +511,7 @@ def import_ch_params(location):
             if re.search(r'Value', line):
                 start_num = num
 
-    with open(location + '/func1.mdl', 'r') as f:
+    with open(location + '/vars1.mdl', 'r') as f:
         lines = f.readlines()[start_num:]
 
     for line in lines:
@@ -431,11 +520,17 @@ def import_ch_params(location):
 
         name = p[0]
         value = p[1]
+
+        # FeynRules output comments out its SPheno interface (!) if you don't request it
+        # - don't want to parse this.
+        if name.startswith('%'):
+            continue
+
         nature = "External"
 
         parameter = CHParameter(name, nature, value)
         params.append(parameter)
-
+        
     return params
     
 def import_ch_parts(location):
@@ -515,6 +610,106 @@ def import_ch_verts(location):
 
     return verts
 
+"""
+Routines for interfacing MG & CH
+"""
+
+def get_mg_ch_param_dict():
+    """
+    Dictionary of common (Standard Model) parameter names
+    that systematically differ between MadGraph and CalcHEP.
+
+    The format is (key, value) = (MG, CH)
+    """
+
+    param_dict = {}
+
+    
+    param_dict["G"]         = "GG"     # Strong coupling 
+    param_dict["ee"]        = "EE"     # EM constant
+
+    return param_dict
+
+def get_mg_ch_parts_dict(mg_parts, ch_parts):
+    """
+    Dictionary of names of particles in MadGraph and CalcHEP, 
+    for writing routines.
+
+    The format is (key, value) = (MG, CH)
+    """
+
+    # Get a list of all PDG codes according to MG (ignoring ghosts & Goldstones)
+    mg_pdgs = [x.pdg_code for x in mg_parts if int(x.ghostnum) == 0 and x.goldstone == False]
+
+    ch_pdgs = [x.pdg_code for x in ch_parts]
+
+    # Check there's no particles missing from either
+    if (set(mg_pdgs) ^ set(ch_pdgs)):
+        print("Not all particles in MadGraph are present in CalcHEP!")
+        print("The following particles by PDG code are in one but not the other:")
+        print(set(mg_pdgs) ^ set(ch_pdgs))
+        print("Please check your files.")
+        sys.exit()
+
+    # We're all good now. Now go through the list of MadGraph particles, and get their names
+    mg_pairs = {}
+    for i in range(len(mg_parts)):
+        mg_pairs[mg_parts[i].pdg_code] = mg_parts[i].name
+
+    keys = []
+    values = []
+
+    for i in range(len(ch_parts)):
+        keys.append( mg_pairs.get(ch_parts[i].pdg_code) )
+        values.append( ch_parts[i].name)
+
+    part_dict = dict(zip(keys, values))
+
+    return part_dict
+
+def run_through_parameter_dict(parameters, param_dict):
+    """
+    Goes through all unshared parameters to check which ones 
+    are not duped, just have a different name.
+    """
+
+"""
+Writing routines
+"""
+
+def write_ch_vertex(vertex):
+    """
+    Writes a CalcHEP vertex, given a MadGraph one.
+    """
+
+    # Get the list of particles involved in the vertex
+    particles = vertex.particles
+    lorentz = vertex.lorentz
+    couplings = vertex.couplings
+
+    return "\n"
+
+
+
+def write_calchep_files(ch_location, particles, parameters, vertices):
+    """
+    Writes CalcHEP files, given all of the information.
+    """
+
+    lgrngfile = ""
+    varsfile = ""
+    prtclsfile = ""
+    funcfile = ""
+    extlibfile = ""
+
+    for i in range(len(vertices)):
+        vertex = vertices[i]
+        lgrngfile += write_ch_vertex(vertex)
+
+"""
+Main functions
+"""
+
 def convert(mg_location):
     """
     Create CalcHEP files from a given set of MadGraph files.
@@ -523,11 +718,20 @@ def convert(mg_location):
     # Check the MadGraph files are where the user says
     check_mg_files(mg_location)
 
+    print("Reading MadGraph files...")
+
     # Read in the MadGraph files
     params = import_mg_params(mg_location)
     parts = import_mg_parts(mg_location)
     couplings = import_mg_couplings(mg_location)
+    lorentz = import_mg_lorentz(mg_location)
     verts = import_mg_verts(mg_location)
+
+    print("Done.")
+
+    print("Writing CalcHEP output...")
+
+    print("Done.")
     
     
 def compare(mg_location, ch_location):
@@ -540,17 +744,43 @@ def compare(mg_location, ch_location):
     # Check both sets of files are where they should be
     check_mg_files(mg_location)
     check_ch_files(ch_location)
+
+    print("Reading MadGraph files...")
     
     # Read in the MadGraph files
     mg_params = import_mg_params(mg_location)
     mg_parts = import_mg_parts(mg_location)
     mg_couplings = import_mg_couplings(mg_location)
+    mg_lorentz = import_mg_lorentz(mg_location)
     mg_verts = import_mg_verts(mg_location)
+
+    print("Reading CalcHEP files...")
 
     # Read in the CalcHEP files
     ch_params = import_ch_params(ch_location)
     ch_parts = import_ch_parts(ch_location)
     ch_verts = import_ch_verts(ch_location)
+
+    print("Done.")
+    print("Comparing MadGraph and CalcHEP files...")
+
+    # CalcHEP can compute widths 'on the fly' - these will be parameters in MadGraph, so add
+    # these as another group...
+    ch_widths = [x.width.strip('!') for x in ch_parts if x.width.startswith('!')]
+
+    shared_params = set([x.name for x in ch_params] + ch_widths) & set([x.name for x in mg_params])
+    unshared_params = set([x.name for x in ch_params] + ch_widths) ^ set([x.name for x in mg_params])
+
+    print unshared_params
+
+    # For those unshared parameters, run them through the dictionary of common misnomers to check 
+    # they're actually not repeated
+
+    # Obtain a dictionary to translate between MG and CH particle names, just in case they are
+    # different. They probably won't be.
+    parts_dict = get_mg_ch_parts_dict(mg_parts, ch_parts)
+
+    print("Done.")
     
 def usage():
     """
@@ -569,10 +799,12 @@ def usage():
 
 if __name__ == '__main__':
 
+    print("****************************************************************")
     print("Welcome to the .ufo to .mdl file converter!")
-    print("If you use this, please cite the GUM manual: arXiv:19XX.YYYYY.\n\n")
+    print("If you use this, please cite the GUM manual: arXiv:19XX.YYYYY.")
+    print("****************************************************************\n")
     
-    if len(sys.argv) == 1:
+    if len(sys.argv) == 1 or len(sys.argv) > 3:
         usage()
         
     elif len(sys.argv) == 2:
