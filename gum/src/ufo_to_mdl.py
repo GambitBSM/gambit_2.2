@@ -148,9 +148,12 @@ def import_mg_params(location):
             continue
 
         par = MGParameter(name, nature, type, value)
-        params.append(par)
-     
+
+        # Only care about external parameters (for now).
+        if nature == 'external': params.append(par)
+    
     return params
+
           
 def import_mg_parts(location):
     """
@@ -471,38 +474,39 @@ def import_ch_params(location):
     params = []
     start_num = 0
 
-    # Firstly, deal with internal parameters
 
-    # Trim the stuff of the top
-    with open(location + '/func1.mdl') as f:
-        for num, line in enumerate(f, 1):
-            if re.search(r'Expression', line):
-                start_num = num
+    # Currently only deal with external parameters
+
+    # # Trim the stuff off the top
+    # with open(location + '/func1.mdl') as f:
+    #     for num, line in enumerate(f, 1):
+    #         if re.search(r'Expression', line):
+    #             start_num = num
     
-    # Now read in line by line (since all parameter info is stored on 1 line)
-    with open(location + '/func1.mdl', 'r') as f:
-        lines = f.readlines()[start_num:]
+    # # Now read in line by line (since all parameter info is stored on 1 line)
+    # with open(location + '/func1.mdl', 'r') as f:
+    #     lines = f.readlines()[start_num:]
 
-    for line in lines:
+    # for line in lines:
 
-        # Get all information in a nice list, remove the whitespace
-        p = [i.strip() for i in line.split('|')]
+    #     # Get all information in a nice list, remove the whitespace
+    #     p = [i.strip() for i in line.split('|')]
 
-        name = p[0]
+    #     name = p[0]
 
-        # FeynRules output comments out its SPheno interface (!) if you don't request it
-        # - don't want to parse this.
-        if name.startswith('%'):
-            continue
+    #     # FeynRules output comments out its SPheno interface (!) if you don't request it
+    #     # - don't want to parse this.
+    #     if name.startswith('%'):
+    #         continue
 
-        # All of these are internal.
-        nature = "Internal"
+    #     # All of these are internal.
+    #     nature = "internal"
 
-        # Remove any comments from the value
-        value = p[1].split('%')[0].strip()
+    #     # Remove any comments from the value
+    #     value = p[1].split('%')[0].strip()
 
-        parameter = CHParameter(name, nature, value)
-        params.append(parameter)
+    #     parameter = CHParameter(name, nature, value)
+    #     params.append(parameter)
 
     # Now external parameters
 
@@ -526,7 +530,11 @@ def import_ch_params(location):
         if name.startswith('%'):
             continue
 
-        nature = "External"
+        # Also ignore if it's exp or pi
+        if name == 'Pi' or name == 'E':
+            continue
+
+        nature = "external"
 
         parameter = CHParameter(name, nature, value)
         params.append(parameter)
@@ -663,6 +671,7 @@ def get_mg_ch_parts_dict(mg_parts, ch_parts):
         keys.append( mg_pairs.get(ch_parts[i].pdg_code) )
         values.append( ch_parts[i].name)
 
+    # Now construct a dictionary of {'MadGraph name': 'CalcHEP name'}
     part_dict = dict(zip(keys, values))
 
     return part_dict
@@ -672,6 +681,40 @@ def run_through_parameter_dict(parameters, param_dict):
     Goes through all unshared parameters to check which ones 
     are not duped, just have a different name.
     """
+
+    chparams = []
+    mgparams = []
+
+    for i in range(len(parameters)):
+
+        p = parameters[i]
+
+        # If it's a MadGraph vertex, look to see if the key is in the dictionary
+        if isinstance(p, MGParameter):
+            if p.name in param_dict.keys():
+                continue
+            else:
+                mgparams.append(p)
+
+        # If it's a CalcHEP one, look to see if the value is in the dictionary
+        elif isinstance(p, CHParameter):
+            if p.name in param_dict.values():
+                continue
+            else:
+                chparams.append(p)
+
+        else:
+            print("Parameter passed over not an instance of either the CalcHEP or MadGraph")
+            print("parameter class!")
+            sys.exit()
+
+    return mgparams, chparams
+
+def check_for_optimisation(mgparams, chparams):
+    """
+    Checks the definitions of the parameters...
+    """
+
 
 """
 Writing routines
@@ -689,7 +732,13 @@ def write_ch_vertex(vertex):
 
     return "\n"
 
+def write_four_fermion_vertex(vertex):
+    """
+    Writes a four-fermion vertex for CalcHEP. This splits the contact interaction into
+    two three-body interactions, with a constant propagator.
+    """
 
+    return "\n"
 
 def write_calchep_files(ch_location, particles, parameters, vertices):
     """
@@ -763,22 +812,50 @@ def compare(mg_location, ch_location):
 
     print("Done.")
     print("Comparing MadGraph and CalcHEP files...")
+    print("Checking external variables...")
 
     # CalcHEP can compute widths 'on the fly' - these will be parameters in MadGraph, so add
     # these as another group...
     ch_widths = [x.width.strip('!') for x in ch_parts if x.width.startswith('!')]
 
-    shared_params = set([x.name for x in ch_params] + ch_widths) & set([x.name for x in mg_params])
-    unshared_params = set([x.name for x in ch_params] + ch_widths) ^ set([x.name for x in mg_params])
+    shared_by_name = set([x.name for x in ch_params] + ch_widths) & set([x.name for x in mg_params])
+    unshared_by_name = set([x.name for x in ch_params] + ch_widths) ^ set([x.name for x in mg_params])
 
-    print unshared_params
+    # Go through those with unmatching names and add the *full* parameter member instance to it
+    unshared_full = []
+    for i in range(len(mg_params)):
+        if mg_params[i].name in unshared_by_name:
+            unshared_full.append(mg_params[i])
+    for i in range(len(ch_params)):
+        if ch_params[i].name in unshared_by_name:
+            unshared_full.append(ch_params[i])
 
     # For those unshared parameters, run them through the dictionary of common misnomers to check 
     # they're actually not repeated
+    param_dict = get_mg_ch_param_dict()
+    mg_full, ch_full = run_through_parameter_dict(unshared_full, param_dict)
+
+    # If anything is found in MadGraph, tell the user
+    if len(mg_full) > 0:
+        print("The following external parameters are defined in MadGraph but not CalcHEP:")
+        print([x.name() for x in mg_full])
+        if len(ch_full) == 0: sys.exit()
+    # If anything is found in CalcHEP, tell the user, and kill.
+    if len(ch_full) > 0:
+        print("The following external parameters are defined in CalcHEP but not MadGraph:")
+        print([x.name() for x in mg_full])
+        sys.exit()
+
+    print("All external variables are consistent!")
+    print("Checking particle content...")
 
     # Obtain a dictionary to translate between MG and CH particle names, just in case they are
     # different. They probably won't be.
     parts_dict = get_mg_ch_parts_dict(mg_parts, ch_parts)
+
+    print("All particles are consistent...")
+    print("Checking vertices...")
+
 
     print("Done.")
     
@@ -812,3 +889,6 @@ if __name__ == '__main__':
         
     elif len(sys.argv) == 3:
         compare(sys.argv[1], sys.argv[2])
+
+# TODO - add a --force flag so if the files don't agree, automatically produce CH files from MG
+# TODO - write 4-fermion vertex
