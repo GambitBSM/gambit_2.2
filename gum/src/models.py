@@ -300,7 +300,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             " : params(p)\n"
             "{{}}\n"
             "\n"
-            "static int index_offset() {return -1;}\n"
+            "static int index_offset() {{return -1;}}\n"
             "\n" 
             "/// Wrapper functions to parameter object.\n"
     ).format(modelSS, gambit_model_name, modelclass)

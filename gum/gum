@@ -513,7 +513,7 @@ if args.file:
         copy_file("default_bossed_versions.hpp", m, output_dir, reset_contents, existing = True)
         copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir, reset_contents, existing = False)
         copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir, reset_contents, existing = False)
-        add_to_backend_locations("Pythia_"+gum.name(), be+ver+"/lib/libpythia8.so", ver, reset_contents)
+        add_to_backend_locations("Pythia_"+gum.name, be+ver+"/lib/libpythia8.so", ver, reset_contents)
     # MadDM
 
     # Save output to a .mug file for resetting purposes
