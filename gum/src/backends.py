@@ -263,3 +263,37 @@ def add_new_pythia_to_backends_cmake(model, output_dir):
             # We've reached the end of the previous modification by GUM, so remove the hold on repeating lines from the old file.
             if in_duplicate and "endif()" in line: in_duplicate = False
 
+
+def add_to_backend_locations(backend_name, backend_location, version_number, reset_dict):
+    """
+    Adds an entry to backend_locations.yaml for a new backend.
+    """
+
+    # Check to see if backend_locations.yaml exists; if not then we'll use 
+    # backend_locations.yaml.default (as long as it hasn't been removed)
+
+    if not os.path.isfile("./../config/backend_locations.yaml.default"):
+        raise GumError("backend_locations.yaml.default is missing. What have you done to GAMBIT!?")
+
+    target = "./../config/backend_locations.yaml"
+
+    if not os.path.isfile(target): 
+        target = "./../config/backend_locations.yaml.default"
+
+    # Add the new backend before the examples stuff.
+    linenum = 0
+    with open(target) as f:
+      for num, line in enumerate(f, 1):
+          if "Examples" in line: 
+              linenum = num
+              break      
+
+    contents = (
+                "{0}\n"
+                "  {1}:         ./Backends/installed/{2}"
+                ).format(backend_name, version_number, backend_location)
+
+    # Write the changes
+    amend_file(target, "config/", contents, linenum, reset_dict)
+
+
