@@ -288,12 +288,13 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
               linenum = num
               break      
 
-    contents = (
-                "{0}\n"
+    contents = ("\n"
+                "{0}:\n"
                 "  {1}:         ./Backends/installed/{2}"
+                "\n"
                 ).format(backend_name, version_number, backend_location)
 
     # Write the changes
-    amend_file(target, "config", contents, linenum, reset_dict)
+    amend_file(target, "config", contents, linenum-1, reset_dict)
 
 
