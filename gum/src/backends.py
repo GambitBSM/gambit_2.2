@@ -275,16 +275,16 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
     if not os.path.isfile("./../config/backend_locations.yaml.default"):
         raise GumError("backend_locations.yaml.default is missing. What have you done to GAMBIT!?")
 
-    target = "./../config/backend_locations.yaml"
+    target = "backend_locations.yaml"
 
-    if not os.path.isfile(target): 
-        target = "./../config/backend_locations.yaml.default"
+    if not os.path.isfile("./../config/"+target): 
+        target = "backend_locations.yaml.default"
 
     # Add the new backend before the examples stuff.
     linenum = 0
-    with open(target) as f:
+    with open("./../config/"+target) as f:
       for num, line in enumerate(f, 1):
-          if "Examples" in line: 
+          if "Example" in line: 
               linenum = num
               break      
 
@@ -294,6 +294,6 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
                 ).format(backend_name, version_number, backend_location)
 
     # Write the changes
-    amend_file(target, "config/", contents, linenum, reset_dict)
+    amend_file(target, "config", contents, linenum, reset_dict)
 
 

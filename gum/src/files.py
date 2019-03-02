@@ -44,17 +44,17 @@ def full_filename(filename, module):
 
     path = ""
     if filename.endswith(".hpp"):
-        path = "include/gambit/{0}".format(module)
+        path = "/include/gambit/{0}/".format(module)
     elif filename.endswith(".cpp"):
-        path = "src"
+        path = "/src/"
     elif filename.endswith(".py"):
-        path = "scripts"
+        path = "/scripts/"
     elif filename.endswith(".dif"):
-        path = "patches"
+        path = "/patches/"
     else:
         path = ""
 
-    location = "../{0}/{1}/{2}".format(module, path, filename)
+    location = "../{0}{1}{2}".format(module, path, filename)
     return location
 
 def find_file(filename, module):
