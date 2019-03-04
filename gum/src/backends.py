@@ -204,6 +204,11 @@ def write_new_default_bossed_version(backend, version, output_dir):
             if "// Defaults added by GUM" in line:
                 if not line.endswith("\n"): f_new.write("\n")
                 f_new.write(signature+re.sub("\.", "_", version)+"\n")
+                return
+
+        # If defaults by GUM not found, write it...
+        f_new.write("\n// Defaults added by GUM (do not remove this comment).\n")
+        f_new.write(signature+re.sub("\.", "_", version)+"\n")
 
 
 def add_new_pythia_to_backends_cmake(model, output_dir):
@@ -288,9 +293,10 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
               linenum = num
               break      
 
-    contents = ("\n"
+    contents = ("#Added by GUM\n"
                 "{0}:\n"
                 "  {1}:         ./Backends/installed/{2}"
+                "\n"
                 "\n"
                 ).format(backend_name, version_number, backend_location)
 
