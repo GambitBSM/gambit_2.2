@@ -5,10 +5,9 @@
 #include <cmath>
 #include <memory>
 #include <iomanip>
-#include <random>
 
 #include "gambit/Utils/threadsafe_rng.hpp"
-#include "gambit/ColliderBit/analyses/BaseAnalysis.hpp"
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 #include "TLorentzVector.h"
@@ -55,7 +54,7 @@ namespace Gambit {
     }
 
 
-    class Analysis_ATLAS_13TeV_1LEPStop_36invfb : public HEPUtilsAnalysis
+    class Analysis_ATLAS_13TeV_1LEPStop_36invfb : public Analysis
     {
     private:
 
@@ -175,7 +174,6 @@ namespace Gambit {
 
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
-      // FIXME Apply standard electron and muon efficiencies
 
       Analysis_ATLAS_13TeV_1LEPStop_36invfb()
       {
@@ -242,7 +240,7 @@ namespace Gambit {
       ClusteringHistory& GetHistory(const FJNS::PseudoJet& jet)
       {
         auto shared_ptr = jet.user_info_shared_ptr();
-        return *dynamic_cast<ClusteringHistory*>(shared_ptr.get());
+        return *dynamic_cast<const ClusteringHistory*>(shared_ptr.get());
       }
 
       static std::vector<FJNS::PseudoJet> SortedByNConstit(std::vector<FJNS::PseudoJet> jets)
@@ -392,38 +390,50 @@ namespace Gambit {
       }
 
 
-      void analyze(const HEPUtils::Event* event)
+      void run(const HEPUtils::Event* event)
       {
-        HEPUtilsAnalysis::analyze(event);
 
         // Missing energy
         HEPUtils::P4 metVec = event->missingmom();
         double Met = event->met();
 
-
-        // Baseline lepton objects
-        vector<HEPUtils::Particle*> baselineElectrons, baselineMuons, baselineTaus, baselineLeptons;
-
+        // Construct baseline electron objects
+        vector<HEPUtils::Particle*> baselineElectrons;
         for (HEPUtils::Particle* electron : event->electrons())
         {
           if (electron->pT() > 5. && electron->abseta() < 2.47)
           {
             baselineElectrons.push_back(electron);
-            baselineLeptons.push_back(electron);
           }
         }
+
+        // Apply electron efficiency
+        ATLAS::applyElectronEff(baselineElectrons);
+
+        // Construct baseline muon objects
+        vector<HEPUtils::Particle*> baselineMuons;
         for (HEPUtils::Particle* muon : event->muons())
         {
           if (muon->pT() > 4. && muon->abseta() < 2.7)
           {
             baselineMuons.push_back(muon);
-            baselineLeptons.push_back(muon);
           }
         }
+
+        // Apply muon efficiency
+        ATLAS::applyMuonEff(baselineMuons);
+
+        // Construct set of all light baseline leptons
+        vector<HEPUtils::Particle*> baselineLeptons = baselineElectrons;
+        baselineLeptons.insert(baselineLeptons.end(), baselineMuons.begin(), baselineMuons.end() );
+
+        // Construct baseline tau objects
+        vector<HEPUtils::Particle*> baselineTaus;
         for (HEPUtils::Particle* tau : event->taus())
         {
           if (tau->pT() > 20. && fabs(tau->eta()) < 2.5) baselineTaus.push_back(tau);
         }
+        // Apply tau efficiency
         ATLAS::applyTauEfficiencyR1(baselineTaus);
 
         // Photons
@@ -1349,18 +1359,14 @@ namespace Gambit {
 
         return;
 
-      } // END analyze
+      }
 
-
-      void add(BaseAnalysis* other)
+      /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
+      void combine(const Analysis* other)
       {
-        // The base class add function handles the signal region vector and total # events.
-        HEPUtilsAnalysis::add(other);
+        const Analysis_ATLAS_13TeV_1LEPStop_36invfb* specificOther
+                = dynamic_cast<const Analysis_ATLAS_13TeV_1LEPStop_36invfb*>(other);
 
-        Analysis_ATLAS_13TeV_1LEPStop_36invfb* specificOther
-                = dynamic_cast<Analysis_ATLAS_13TeV_1LEPStop_36invfb*>(other);
-
-        // Here we will add the subclass member variables:
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (int j=0; j<NCUTS; j++)
         {
@@ -1377,7 +1383,6 @@ namespace Gambit {
         num_DM_low_loose += specificOther->num_DM_low_loose;
         num_DM_low += specificOther->num_DM_low;
         num_DM_high += specificOther->num_DM_high;
-
       }
 
 
@@ -1524,7 +1529,7 @@ namespace Gambit {
 
 
     protected:
-      void clear()
+      void analysis_specific_reset()
       {
         num_tN_med=0;
         num_tN_high=0;

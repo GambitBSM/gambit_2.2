@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include "gambit/ColliderBit/analyses/BaseAnalysis.hpp"
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
@@ -28,7 +28,7 @@ namespace Gambit
   namespace ColliderBit
   {
 
-    class Analysis_ATLAS_13TeV_4LEP_36invfb : public HEPUtilsAnalysis
+    class Analysis_ATLAS_13TeV_4LEP_36invfb : public Analysis
     {
 
     protected:
@@ -149,7 +149,6 @@ namespace Gambit
 
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
-      // FIXME Apply standard electron and muon efficiencies
 
       Analysis_ATLAS_13TeV_4LEP_36invfb()
       {
@@ -169,9 +168,8 @@ namespace Gambit
 
       }
 
-      void analyze(const HEPUtils::Event* event)
+      void run(const HEPUtils::Event* event)
       {
-        HEPUtilsAnalysis::analyze(event);
 
         // Baseline objects
         vector<HEPUtils::Particle*> baselineElectrons;
@@ -202,13 +200,22 @@ namespace Gambit
         {
           if (electron->pT()>7. && electron->abseta()<2.47) baselineElectrons.push_back(electron);
         }
+
+        // Apply electron efficiency
+        ATLAS::applyElectronEff(baselineElectrons);
+
+        // Apply loose electron selection
         ATLAS::applyLooseIDElectronSelectionR2(baselineElectrons);
 
         for (HEPUtils::Particle* muon : event->muons())
         {
           if (muon->pT()>5. && muon->abseta()<2.7) baselineMuons.push_back(muon);
         }
-        // Missing: Apply "medium" ID criteria
+
+        // Apply muon efficiency
+        ATLAS::applyMuonEff(baselineMuons);
+
+        // Missing: Apply "medium" muon ID criteria
 
         for (HEPUtils::Particle* tau : event->taus())
         {
@@ -455,16 +462,11 @@ namespace Gambit
         #endif
       }
 
-
-      void add(BaseAnalysis* other) {
-        // The base class add function handles the signal region vector and total # events.
-
-        HEPUtilsAnalysis::add(other);
-
-        Analysis_ATLAS_13TeV_4LEP_36invfb* specificOther
-                = dynamic_cast<Analysis_ATLAS_13TeV_4LEP_36invfb*>(other);
-
-        // Here we will add the subclass member variables:
+      /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
+      void combine(const Analysis* other)
+      {
+        const Analysis_ATLAS_13TeV_4LEP_36invfb* specificOther
+                = dynamic_cast<const Analysis_ATLAS_13TeV_4LEP_36invfb*>(other);
 
         #ifdef CHECK_CUTFLOW
           // if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
@@ -474,8 +476,9 @@ namespace Gambit
           }
         #endif
 
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR[el.first];
+        for (auto& el : _numSR)
+        {
+          el.second += specificOther->_numSR.at(el.first);
         }
 
       }
@@ -512,7 +515,7 @@ namespace Gambit
 
 
     protected:
-      void clear() {
+      void analysis_specific_reset() {
         for (auto& el : _numSR) { el.second = 0.;}
         #ifdef CHECK_CUTFLOW
           std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);

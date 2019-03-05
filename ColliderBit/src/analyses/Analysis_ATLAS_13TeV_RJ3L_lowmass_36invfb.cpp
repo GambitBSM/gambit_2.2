@@ -9,12 +9,9 @@
 #include <algorithm>
 #include <iomanip>
 
-#include "gambit/ColliderBit/analyses/BaseAnalysis.hpp"
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
-
-
-
 
 #include "RestFrames/RestFrames.hh"
 #include "TLorentzVector.h"
@@ -55,22 +52,8 @@ namespace Gambit {
       return jv1.Pt() > jv2.Pt();
     }
 
-    // Class to randomly select m elements from an n-d vector
-    template<class BidiIter >
-    BidiIter random_unique(BidiIter begin, BidiIter end, size_t num_random) {
-      size_t left = std::distance(begin, end);
-      while (num_random--) {
-        BidiIter r = begin;
-        std::advance(r, rand()%left);
-        std::swap(*begin, *r);
-        ++begin;
-        --left;
-      }
-      return begin;
-    }
 
-
-    class Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb : public HEPUtilsAnalysis {
+    class Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb : public Analysis {
 
     protected:
       // Numbers passing cuts
@@ -261,7 +244,6 @@ namespace Gambit {
 
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
-      // FIXME Apply standard electron and muon efficiencies
 
       Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb() {
 
@@ -615,7 +597,7 @@ namespace Gambit {
       }
 
 
-      void analyze(const HEPUtils::Event* event) {
+      void run(const HEPUtils::Event* event) {
 
         // Clear
         LAB_2L2J->ClearEvent();
@@ -623,9 +605,6 @@ namespace Gambit {
         LAB_2LNJ->ClearEvent();
         LAB_2L1L->ClearEvent();
         LAB_3L->ClearEvent();
-
-
-        HEPUtilsAnalysis::analyze(event);
 
         // Missing energy
         HEPUtils::P4 ptot = event->missingmom();
@@ -638,9 +617,16 @@ namespace Gambit {
         for (HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && electron->abseta() < 2.47) baselineElectrons.push_back(electron);
         }
+
+        // Apply electron efficiency
+        ATLAS::applyElectronEff(baselineElectrons);
+
         for (HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && muon->abseta() < 2.4) baselineMuons.push_back(muon);
         }
+
+        // Apply muon efficiency
+        ATLAS::applyMuonEff(baselineMuons);
 
         // Photons
         vector<HEPUtils::Particle*> signalPhotons;
@@ -2118,23 +2104,21 @@ namespace Gambit {
 
       } // end analyze method
 
+      /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
+      void combine(const Analysis* other)
+      {
+        const Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb* specificOther
+          = dynamic_cast<const Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb*>(other);
 
-      void add(BaseAnalysis* other) {
-        // The base class add function handles the signal region vector and total # events.
-        HEPUtilsAnalysis::add(other);
-
-        Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb* specificOther
-          = dynamic_cast<Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb*>(other);
-
-        // Here we will add the subclass member variables:
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
-        for (int j=0; j<NCUTS; j++) {
+
+        for (int j=0; j<NCUTS; j++)
+        {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
         }
 
         _num3LLOW+= specificOther->_num3LLOW;
-
       }
 
 
@@ -2169,7 +2153,7 @@ namespace Gambit {
 
 
     protected:
-      void clear() {
+      void analysis_specific_reset() {
         _num2L2JHIGH=0;
         _num2L2JINT=0;
         _num2L2JLOW=0;

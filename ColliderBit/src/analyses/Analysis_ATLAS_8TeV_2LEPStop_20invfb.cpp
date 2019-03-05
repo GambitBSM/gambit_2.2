@@ -3,7 +3,7 @@
 #include <memory>
 #include <iomanip>
 
-#include "gambit/ColliderBit/analyses/BaseAnalysis.hpp"
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
@@ -34,7 +34,7 @@ namespace Gambit {
     }
 
 
-    class Analysis_ATLAS_8TeV_2LEPStop_20invfb : public HEPUtilsAnalysis {
+    class Analysis_ATLAS_8TeV_2LEPStop_20invfb : public Analysis {
     private:
 
       // Numbers passing cuts
@@ -51,7 +51,6 @@ namespace Gambit {
 
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
-      // FIXME Apply standard electron and muon efficiencies
 
       Analysis_ATLAS_8TeV_2LEPStop_20invfb()
         : _numSRM90SF(0), _numSRM100SF(0), _numSRM110SF(0), _numSRM120SF(0),
@@ -68,22 +67,30 @@ namespace Gambit {
         }
       }
 
-      void analyze(const HEPUtils::Event* event) {
-        HEPUtilsAnalysis::analyze(event);
+      void run(const HEPUtils::Event* event) {
 
         // Missing energy
         HEPUtils::P4 ptot = event->missingmom();
         //double met = event->met();
 
-        // Now define vectors of baseline objects
+        // Now define vector of baseline electrons
         vector<HEPUtils::Particle*> baselineElectrons;
         for (HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && electron->abseta() < 2.47) baselineElectrons.push_back(electron);
         }
+
+        // Apply electron efficiency
+        ATLAS::applyElectronEff(baselineElectrons);
+
+        // Now define vector of baseline muons
         vector<HEPUtils::Particle*> baselineMuons;
         for (HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && muon->abseta() < 2.4) baselineMuons.push_back(muon);
         }
+
+        // Apply muon efficiency
+        ATLAS::applyMuonEff(baselineMuons);
+
         vector<HEPUtils::Particle*> baselineTaus;
         for (HEPUtils::Particle* tau : event->taus()) {
           if (tau->pT() > 10. && tau->abseta() < 2.47) baselineTaus.push_back(tau);
@@ -353,15 +360,12 @@ namespace Gambit {
         return;
       }
 
+      /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
+      void combine(const Analysis* other)
+      {
+        const Analysis_ATLAS_8TeV_2LEPStop_20invfb* specificOther
+                = dynamic_cast<const Analysis_ATLAS_8TeV_2LEPStop_20invfb*>(other);
 
-      void add(BaseAnalysis* other) {
-        // The base class add function handles the signal region vector and total # events.
-        HEPUtilsAnalysis::add(other);
-
-        Analysis_ATLAS_8TeV_2LEPStop_20invfb* specificOther
-                = dynamic_cast<Analysis_ATLAS_8TeV_2LEPStop_20invfb*>(other);
-
-        // Here we will add the subclass member variables:
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (int j=0; j<NCUTS; j++) {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
@@ -421,7 +425,7 @@ namespace Gambit {
 
 
     protected:
-      void clear() {
+      void analysis_specific_reset() {
         _numSRM90SF=0; _numSRM100SF=0; _numSRM110SF=0; _numSRM120SF=0;
         _numSRM90DF=0; _numSRM100DF=0; _numSRM110DF=0; _numSRM120DF=0;
 

@@ -13,7 +13,7 @@
 #include <memory>
 #include <iomanip>
 
-#include "gambit/ColliderBit/analyses/BaseAnalysis.hpp"
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 
 // #define CHECK_CUTFLOW
@@ -26,7 +26,7 @@ namespace Gambit {
   namespace ColliderBit {
 
 
-    class Analysis_ATLAS_13TeV_3b_24invfb : public HEPUtilsAnalysis {
+    class Analysis_ATLAS_13TeV_3b_24invfb : public Analysis {
 
     protected:
       // Signal region map
@@ -95,7 +95,6 @@ namespace Gambit {
 
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
-      // FIXME Apply standard electron and muon efficiencies
 
       Analysis_ATLAS_13TeV_3b_24invfb() {
 
@@ -164,8 +163,7 @@ namespace Gambit {
       }
 
 
-      void analyze(const HEPUtils::Event* event) {
-        HEPUtilsAnalysis::analyze(event);
+      void run(const HEPUtils::Event* event) {
 
         // Get the missing energy in the event
         double met = event->met();
@@ -173,18 +171,28 @@ namespace Gambit {
         // Now define vectors of baseline objects, including:
         // - retrieval of electron, muon and jets from the event
         // - application of basic pT and eta cuts
+
+        // Electrons
         vector<HEPUtils::Particle*> electrons;
         for (HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 5.
               && fabs(electron->eta()) < 2.47)
             electrons.push_back(electron);
         }
+
+        // Apply electron efficiency
+        ATLAS::applyElectronEff(electrons);
+
+        // Muons
         vector<HEPUtils::Particle*> muons;
         for (HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 5.
               && fabs(muon->eta()) < 2.5)
             muons.push_back(muon);
         }
+
+        // Apply muon efficiency
+        ATLAS::applyMuonEff(muons);
 
         vector<HEPUtils::Jet*> candJets;
         for (HEPUtils::Jet* jet : event->jets()) {
@@ -513,15 +521,12 @@ namespace Gambit {
 
       } // End of analyze
 
+      /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
+      void combine(const Analysis* other)
+      {
+        const Analysis_ATLAS_13TeV_3b_24invfb* specificOther
+          = dynamic_cast<const Analysis_ATLAS_13TeV_3b_24invfb*>(other);
 
-      void add(BaseAnalysis* other) {
-        // The base class add function handles the signal region number and total # events combination across threads
-        HEPUtilsAnalysis::add(other);
-
-        Analysis_ATLAS_13TeV_3b_24invfb* specificOther
-          = dynamic_cast<Analysis_ATLAS_13TeV_3b_24invfb*>(other);
-
-        // Here we will add the subclass member variables:
         #ifdef CHECK_CUTFLOW
           if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
           for (size_t j=0; j<NCUTS; j++) {
@@ -530,8 +535,9 @@ namespace Gambit {
           }
         #endif
 
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR[el.first];
+        for (auto& el : _numSR)
+        {
+          el.second += specificOther->_numSR.at(el.first);
         }
 
       }
@@ -627,7 +633,7 @@ namespace Gambit {
         return;
       }
 
-      void clear() {
+      void analysis_specific_reset() {
         // Clear signal regions
         for (auto& el : _numSR) { el.second = 0.;}
 

@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include "gambit/ColliderBit/analyses/BaseAnalysis.hpp"
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
@@ -35,7 +35,7 @@ namespace Gambit
     // defined further down:
     // - ATLAS_13TeV_2OSLEP_chargino_binned_80invfb
     // - ATLAS_13TeV_2OSLEP_chargino_inclusive_80invfb
-    class Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb : public HEPUtilsAnalysis
+    class Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb : public Analysis
     {
 
     protected:
@@ -101,7 +101,6 @@ namespace Gambit
 
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
-      // FIXME Apply standard electron and muon efficiencies
 
       Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb():
       _cutflow("ATLAS 2-lep chargino-W 13 TeV", {"Two_OS_leptons", "mll_25", "b_jet_veto", "MET_100", "MET_significance_10", "n_j<=1", "m_ll_m_Z"})
@@ -169,14 +168,14 @@ namespace Gambit
       } comparePt;
 
 
-      void analyze(const HEPUtils::Event* event)
+      void run(const HEPUtils::Event* event)
       {
         _cutflow.fillinit();
+
         // Baseline objects
-        HEPUtilsAnalysis::analyze(event);
         double met = event->met();
 
-        // electrons
+        // Electrons
         vector<HEPUtils::Particle*> electrons;
         for (HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10.
@@ -184,13 +183,19 @@ namespace Gambit
             electrons.push_back(electron);
         }
 
-        // muons
+        // Apply electron efficiency
+        ATLAS::applyElectronEff(electrons);
+
+        // Muons
         vector<HEPUtils::Particle*> muons;
         for (HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10.
               && fabs(muon->eta()) < 2.5)
             muons.push_back(muon);
         }
+
+        // Apply muon efficiency
+        ATLAS::applyMuonEff(muons);
 
         // Jets
         vector<HEPUtils::Jet*> candJets;
@@ -358,21 +363,20 @@ namespace Gambit
 
       }
 
+      /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
+      void combine(const Analysis* other)
+      {
+        const Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb* specificOther
+                = dynamic_cast<const Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb*>(other);
 
-      void add(BaseAnalysis* other) {
-        // The base class add function handles the signal region vector and total # events.
-
-        HEPUtilsAnalysis::add(other);
-
-        Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb* specificOther
-                = dynamic_cast<Analysis_ATLAS_13TeV_2OSLEP_chargino_80invfb*>(other);
-
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR[el.first];
+        for (auto& el : _numSR)
+        {
+          el.second += specificOther->_numSR.at(el.first);
         }
 
-        for (auto& el : _numSR_bin) {
-          el.second += specificOther->_numSR_bin[el.first];
+        for (auto& el : _numSR_bin)
+        {
+          el.second += specificOther->_numSR_bin.at(el.first);
         }
 
       }
@@ -414,7 +418,7 @@ namespace Gambit
 
 
     protected:
-      void clear() {
+      void analysis_specific_reset() {
         for (auto& el : _numSR) { el.second = 0.;}
         for (auto& el : _numSR_bin) { el.second = 0.;}
       }

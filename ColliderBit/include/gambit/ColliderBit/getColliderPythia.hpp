@@ -25,7 +25,7 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2015 Jul
 ///  \date 2018 Jan
-///  \date 2019 Jan
+///  \date 2019 Jan, Feb
 ///
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
@@ -50,19 +50,19 @@ namespace Gambit
     template<typename PythiaT, typename EventT>
     void getColliderPythia(ColliderPythia<PythiaT, EventT>& result,
                            const MCLoopInfo& RunMC,
-                           const Spectrum& MSSM_spectrum,
+                           const Spectrum& spectrum,
                            const DecayTable& decay_rates,
                            const str model_suffix,
                            const int iteration,
                            void(*wrapup)(),
                            const Options& runOptions,
-                           bool(*ModelInUse)(str))
+                           bool is_SUSY)
     {
       static bool first = true;
       static str pythia_doc_path;
       static std::vector<str> pythiaCommonOptions;
       static SLHAstruct slha;
-      static SLHAstruct spectrum;
+      static SLHAstruct slha_spectrum;
       static double xsec_veto_fb;
 
       if (iteration == BASE_INIT)
@@ -79,23 +79,19 @@ namespace Gambit
 
         // SLHAea object constructed from dependencies on the spectrum and decays.
         slha.clear();
-        spectrum.clear();
+        slha_spectrum.clear();
         slha = decay_rates.getSLHAea(2);
-        if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT"))
+        // SLHAea in SLHA2 format, please.
+        slha_spectrum = spectrum.getSLHAea(2);
+        slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());
+        if (is_SUSY)
         {
-          // MSSM-specific.  SLHAea in SLHA2 format, please.
-          spectrum = MSSM_spectrum.getSLHAea(2);
           SLHAea::Block block("MODSEL");
           block.push_back("BLOCK MODSEL              # Model selection");
           SLHAea::Line line;
-          line << 1 << 0 << "# General MSSM";
+          line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";
           block.push_back(line);
-          slha.insert(slha.begin(), spectrum.begin(), spectrum.end());
           slha.push_front(block);
-        }
-        else
-        {
-          ColliderBit_error().raise(LOCAL_INFO, "No spectrum object available for this model.");
         }
       }
 
@@ -149,10 +145,11 @@ namespace Gambit
         // Get the Pythia options that are common across all OMP threads ('pythiaCommonOptions')
         // and then add the thread-specific seed
         std::vector<str> pythiaOptions = pythiaCommonOptions;
-        pythiaOptions.push_back("Random:seed = " + std::to_string(RunMC.current_seed_base() + omp_get_thread_num()));
+        str seed = std::to_string(int(Random::draw() * 899990000.));
+        pythiaOptions.push_back("Random:seed = " + seed);
 
         #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "getPythia"+model_suffix+": My Pythia seed is: " << std::to_string(RunMC.current_seed_base() + omp_get_thread_num()) << endl;
+          cout << debug_prefix() << "getPythia"+model_suffix+": My Pythia seed is: " << seed << endl;
         #endif
 
         try
@@ -315,10 +312,11 @@ namespace Gambit
         // Get the Pythia options that are common across all OMP threads ('pythiaCommonOptions')
         // and then add the thread-specific seed
         std::vector<str> pythiaOptions = pythiaCommonOptions;
-        pythiaOptions.push_back("Random:seed = " + std::to_string(RunMC.current_seed_base() + omp_get_thread_num()));
+        str seed = std::to_string(int(Random::draw() * 899990000.));
+        pythiaOptions.push_back("Random:seed = " + seed);
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "getPythia"+model_suffix+"FileReader: My Pythia seed is: " << std::to_string(RunMC.current_seed_base() + omp_get_thread_num()) << endl;
+          cout << debug_prefix() << "getPythia"+model_suffix+"FileReader: My Pythia seed is: " << seed << endl;
         #endif
 
         try
@@ -381,14 +379,16 @@ namespace Gambit
     }
 
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
-    #define GET_SPECIFIC_PYTHIA(NAME, PYTHIA_NS, MODEL_EXTENSION)        \
-    void NAME(ColliderPythia<PYTHIA_NS::Pythia8::Pythia,                 \
-                             PYTHIA_NS::Pythia8::Event> &result)         \
-    {                                                                    \
-      using namespace Pipes::NAME;                                       \
-      getColliderPythia(result, *Dep::RunMC, *Dep::MSSM_spectrum,        \
-       *Dep::decay_rates, #MODEL_EXTENSION, *Loop::iteration,            \
-       Loop::wrapup, *runOptions, ModelInUse);                           \
+    #define IS_SUSY true
+    #define NOT_SUSY false
+    #define GET_SPECIFIC_PYTHIA(NAME, PYTHIA_NS, SPECTRUM, MODEL_EXTENSION, SUSY_FLAG)\
+    void NAME(ColliderPythia<PYTHIA_NS::Pythia8::Pythia,                              \
+                             PYTHIA_NS::Pythia8::Event> &result)                      \
+    {                                                                                 \
+      using namespace Pipes::NAME;                                                    \
+      getColliderPythia(result, *Dep::RunMC, *Dep::SPECTRUM,                          \
+       *Dep::decay_rates, #MODEL_EXTENSION, *Loop::iteration,                         \
+       Loop::wrapup, *runOptions, SUSY_FLAG);                             \
     }
 
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation, initialised from an SLHA file
