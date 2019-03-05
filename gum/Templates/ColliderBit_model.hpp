@@ -26,7 +26,7 @@
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
     ALLOW_MODEL(@MODEL@)
     DEPENDENCY(decay_rates, DecayTable)
-    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    DEPENDENCY(@MODEL@_spectrum, Spectrum)
     #undef FUNCTION
 
     #define FUNCTION getPythia_@MODEL@FileReader

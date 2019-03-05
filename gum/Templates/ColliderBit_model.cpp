@@ -24,7 +24,7 @@ namespace Gambit
   {
 
     // Get Monte Carlo event generator
-    GET_SPECIFIC_PYTHIA(getPythia_@MODEL@, Pythia_@MODEL@_default, _@MODEL@)
+    GET_SPECIFIC_PYTHIA(getPythia_@MODEL@, Pythia_@MODEL@_default, @MODEL@_spectrum, _@MODEL@, NOT_SUSY)
     GET_SPECIFIC_PYTHIA_FROM_SLHA(getPythia_@MODEL@FileReader, Pythia_@MODEL@_default, _@MODEL@)
     GET_PYTHIA_AS_BASE_COLLIDER(getPythia_@MODEL@AsBase)
 
