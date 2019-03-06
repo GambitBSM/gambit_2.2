@@ -341,7 +341,7 @@ def import_mg_verts(location):
         # This returns a list with 1 entry; we want to split this up.
         parts = parts[0].split(',')
         # Remove those pesky whitespaces
-        particles = [x.strip() for x in parts]
+        particles = [x.strip()[2:] for x in parts]
 
         # 'Color' entry
         color = re.findall(r'color = \[(.*?)\]', str(vertices[i]))[0]
@@ -619,7 +619,7 @@ def import_ch_verts(location):
     return verts
 
 """
-Routines for interfacing MG & CH
+INTERFACING ROUTINES
 """
 
 def get_mg_ch_param_dict():
@@ -637,6 +637,15 @@ def get_mg_ch_param_dict():
     param_dict["ee"]        = "EE"     # EM constant
 
     return param_dict
+
+def get_mg_ch_lorentz_dict():
+	"""
+	Returns a dictionary to translate between Lorentz structures in MadGraph
+	and CalcHEP.
+	"""
+
+	ld = {}
+	return ld
 
 def get_mg_ch_parts_dict(mg_parts, ch_parts):
     """
@@ -715,9 +724,58 @@ def check_for_optimisation(mgparams, chparams):
     Checks the definitions of the parameters...
     """
 
+def compare_vertices(mg_verts, mg_parts, mg_params,
+					 ch_verts, ch_parts, ch_params
+					 ):
+	"""
+	Compares the vertices from a MadGraph model with those
+	in a CalcHEP model.
+	"""
+
+	# Display all vertices by PDG code for ease
+	mg_pdg_dict = {}
+	ch_pdg_dict = {}
+
+	for i in range(len(mg_parts)):
+		p = mg_parts[i]
+
+		mg_pdg_dict[p.mgname] = int(p.pdg_code)
+		if not p.selfconj: mg_pdg_dict[p.mgantiname] = -1*int(p.pdg_code)
+
+	for i in range(len(ch_parts)):
+		p = ch_parts[i]
+
+		ch_pdg_dict[p.name] = int(p.pdg_code)
+		if not p.selfconj: ch_pdg_dict[p.antiname] = -1*int(p.pdg_code)
+
+	# Save each individual vertex as a set of PDG codes from MadGraph
+	mg_vertices_by_pdg = []
+
+	for i in range(len(mg_verts)):
+		v = mg_verts[i]
+
+		print v.particles
+
+		vpdg = [ mg_pdg_dict[i] for i in v.particles ]
+
+		mg_vertices_by_pdg.append(vpdg)
+
+	# Same for CalcHEP
+	ch_vertices_by_pdg = []
+
+	for i in range(len(ch_verts)):
+		v = ch_verts[i]
+
+		#print v.particles
+
+		#vpdg = [ ch_pdg_dict[i] for i in v.particles ]
+
+		#ch_vertices_by_pdg.append(vpdg)
+
+	#print set(mg_vertices_by_pdg) ^ set(ch_vertices_by_pdg)
 
 """
-Writing routines
+WRITING ROUTINES
 """
 
 def write_ch_vertex(vertex):
@@ -830,8 +888,8 @@ def compare(mg_location, ch_location):
         if ch_params[i].name in unshared_by_name:
             unshared_full.append(ch_params[i])
 
-    # For those unshared parameters, run them through the dictionary of common misnomers to check 
-    # they're actually not repeated
+    # For those unshared parameters, run them through the dictionary of common misnomers to 
+    # check they're actually not repeated
     param_dict = get_mg_ch_param_dict()
     mg_full, ch_full = run_through_parameter_dict(unshared_full, param_dict)
 
@@ -856,8 +914,11 @@ def compare(mg_location, ch_location):
     print("All particles are consistent...")
     print("Checking vertices...")
 
+    compare_vertices(mg_verts, mg_parts, mg_params,
+					 ch_verts, ch_parts, ch_params)
 
-    print("Done.")
+    print("All vertices are consistent...")
+    print("Done!")
     
 def usage():
     """
@@ -890,5 +951,26 @@ if __name__ == '__main__':
     elif len(sys.argv) == 3:
         compare(sys.argv[1], sys.argv[2])
 
-# TODO - add a --force flag so if the files don't agree, automatically produce CH files from MG
-# TODO - write 4-fermion vertex
+"""
+ TODO
+ 
+  - add a --force flag so if the files don't agree, automatically produce CH files from MG
+  - write 4-fermion vertex for calchep using auxiliary field:
+ 
+     ( chibar (gamma) chi ) ( etabar (gamma') eta ) -> entries:
+     
+     prctls1.mdl
+ 
+     Full name | A     | A+    | PDG   | spinx2 | mass | width | color | aux | tex(A) | tex(A+)
+     ...
+     <aux>     |~00    |~01    |       |2       |Maux  |0      |1      |!*   | <aux>  | <aux+>
+ 
+     lgrng1.mdl
+ 
+     part 1 | part 2| part 3| part 4| Factor | Lorentz
+     ...
+     chibar |chi    |~01    |       |i*Maux  |Gamma(m3)
+     etabar |eta    |~00    |       |i*Maux  |Gamma'(m3)
+ 
+ 
+ """

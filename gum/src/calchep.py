@@ -34,7 +34,7 @@ def clean_calchep_model_files(model_folder, model_name):
 
         files = [f for f in os.listdir(model_folder) if f.endswith(".mdl")]
 
-        needed_files = ["func1.mdl", "lgrng1.mdl", "prtcls1.mdl", "vars1.mdl"]
+        needed_files = ["func1.mdl", "lgrng1.mdl", "prtcls1.mdl", "vars1.mdl", "extlib1.mdl"]
                         
         # Check that all needed files are present in the directory
         if set(needed_files) <= set(files):
@@ -43,7 +43,7 @@ def clean_calchep_model_files(model_folder, model_name):
             raise GumError(("\n\nERROR: CalcHEP model directory exists, but "
                             "the required model files are not here. Please "
                             "check the following files exist: \n\t func1.mdl, "
-                            "lgrng1.mdl, prtcls1.mdl, and vars1.mdl."))
+                            "lgrng1.mdl, prtcls1.mdl, and vars1.mdl, extlib1.mdl."))
 
         ## vars1.mdl
 
@@ -304,6 +304,7 @@ def copy_calchep_files(model_folder, model_name):
     shutil.copyfile(model_folder + "/vars1.mdl", gb_target + "/vars1.mdl")
     shutil.copyfile(model_folder + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
     shutil.copyfile(model_folder + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
+    shutil.copyfile(model_folder + "/extlib1.mdl", gb_target + "/extlib1.mdl")
 
     # Also move them to patches, just in case the user does make nuke-calchep
     gb_target = "./../Backends/patches/calchep/3.6.27/Models/" + model_name
@@ -314,6 +315,7 @@ def copy_calchep_files(model_folder, model_name):
     shutil.copyfile(model_folder + "/vars1.mdl", gb_target + "/vars1.mdl")
     shutil.copyfile(model_folder + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
     shutil.copyfile(model_folder + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
+    shutil.copyfile(model_folder + "/extlib1.mdl", gb_target + "/extlib1.mdl")
     
     print("CalcHEP files moved to GAMBIT Backends directory.")
     
