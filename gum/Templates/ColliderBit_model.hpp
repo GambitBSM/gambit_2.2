@@ -29,13 +29,6 @@
     DEPENDENCY(@MODEL@_spectrum, Spectrum)
     #undef FUNCTION
 
-    #define FUNCTION getPythia_@MODEL@FileReader
-    START_FUNCTION(ColliderPythia_@MODEL@_defaultversion)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    ALLOW_MODEL(@MODEL@)
-    #undef FUNCTION
-
     #define FUNCTION getPythia_@MODEL@AsBase
     START_FUNCTION(const BaseCollider*)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
