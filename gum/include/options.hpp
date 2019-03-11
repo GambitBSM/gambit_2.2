@@ -8,19 +8,22 @@ class Options
 
     std::string optpackage;
     std::string optmodel;
+    std::string optbasemodel;
     std::string optrestriction;
     std::string optLTot;
 
     public:
-        Options(std::string package, std::string model, std::string restriction, std::string lagrangian = "LTotal")
+        Options(std::string package, std::string model, std::string basemodel, std::string restriction, std::string lagrangian = "LTotal")
         {
             optpackage = package;
             optmodel = model;
+            optbasemodel = basemodel;
             optrestriction = restriction;
             optLTot = lagrangian;
         }
 
         std::string model() { return optmodel; }
+        std::string base_model() { return optbasemodel; }
         std::string package() { return optpackage; }
         std::string restriction() { return optrestriction; }
         std::string lagrangian() { return optLTot; }

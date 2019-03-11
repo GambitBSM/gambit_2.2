@@ -88,7 +88,7 @@ if args.file:
         # Create the output directory for all generated FeynRules files
         mkdir_if_absent(output_dir + "/FeynRules")
 
-        options = FROptions("feynrules", gum.name, gum.restriction, gum.LTot)
+        options = FROptions("feynrules", gum.name, gum.base_model, gum.restriction, gum.LTot)
         partlist = FRVectorOfParticles()
         paramlist = FRVectorOfParameters()
         outputs = FROutputs()
@@ -116,7 +116,7 @@ if args.file:
         # Create the output directory for all generated SARAH files
         mkdir_if_absent(output_dir + "/SARAH")
 
-        options = SARAHOptions("sarah", gum.name, '')
+        options = SARAHOptions("sarah", gum.name, '', '', '')
         partlist = SARAHVectorOfParticles()
         paramlist = SARAHVectorOfParameters()
         outputs = SARAHOutputs()

@@ -384,7 +384,7 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("block", &Parameter::block)
     ;
 
-  class_<Options>("SARAHOptions", init<std::string, std::string, std::string>())
+  class_<Options>("SARAHOptions", init<std::string, std::string, std::string, std::string, std::string>())
     .def("package",     &Options::package)
     .def("model",       &Options::model)
     ;

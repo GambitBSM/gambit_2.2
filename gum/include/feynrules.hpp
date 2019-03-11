@@ -104,7 +104,7 @@ class FeynRules
     void load_feynrules();
 
     // Load model
-    bool load_model(std::string model);
+    bool load_model(std::string model, std::string base_model);
 
     // Load restriction e.g. diagonal CKM, etc.
     bool load_restriction(std::string model, std::string rst);

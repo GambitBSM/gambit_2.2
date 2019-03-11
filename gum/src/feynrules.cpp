@@ -37,16 +37,28 @@ void FeynRules::load_feynrules()
 
 }
 
-bool FeynRules::load_model(std::string model)
+bool FeynRules::load_model(std::string model, std::string base_model)
 {
 
-    std::cout << "Loading model " + model + " in FeynRules... " << std::endl;
+    std::cout << "Loading model " + model + " in FeynRules";
+    if (not base_model.empty()) { std::cout << ", piggybacking off of " << base_model; }
+    std::cout << "... " << std::endl;
 
     // LoadModel command.
-    std::string command = "LoadModel[\"Models/" + model + "/" + model + ".fr\"]";
-    send_to_math(command);
+
+    if (base_model.empty()) 
+    {
+        std::string command = "LoadModel[\"Models/" + model + "/" + model + ".fr\"]";
+        send_to_math(command);
+    }
+    else
+    {
+        std::string command = "LoadModel[\"Models/" + base_model + "/" + base_model + ".fr\",\"Models/" + model + "/" + model + ".fr\"]";
+        send_to_math(command);
+    }
 
     // Check the model has been loaded by querying the model name. If it has changed from the default then we're set.
+    // TODO: need to check for duplicate definitions of gauge groups, field contents etc - this makes gum freeze 
     std::string modelname;
     get_modelname(modelname);
 
@@ -86,6 +98,7 @@ bool FeynRules::load_restriction(std::string model, std::string rst)
 
     // LoadModel command.
     std::string command = "LoadRestriction[\"Models/" + model + "/" + rst + ".rst\"]";
+    std::cout << command << std::endl;
     send_to_math(command);
 
     // Some sort of check here?
@@ -450,7 +463,7 @@ void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Pa
 
     // Set the FeynRules model and load it up
     model.set_name(opts.model());
-    bool out = model.load_model(opts.model());
+    bool out = model.load_model(opts.model(), opts.base_model());
 
     if (not out)
     {
@@ -527,9 +540,10 @@ BOOST_PYTHON_MODULE(libfr)
     .def("block", &Parameter::block)
     ;
 
-  class_<Options>("FROptions", init<std::string, std::string, std::string, std::string>())
+  class_<Options>("FROptions", init<std::string, std::string, std::string, std::string, std::string>())
     .def("package",     &Options::package)
     .def("model",       &Options::model)
+    .def("base_model",  &Options::base_model)
     .def("restriction", &Options::restriction)
     .def("lagrangian",  &Options::lagrangian)
     ;

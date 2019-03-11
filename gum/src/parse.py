@@ -12,11 +12,12 @@ class Inputs:
     "gum" object used internally.
     """
 
-    def __init__(self, model_name, mathpackage,
+    def __init__(self, model_name, base_model, mathpackage,
                  dm_candidate,
                  lagrangian = None, restriction = None):
 
         self.name = model_name
+        self.base_model = base_model
         self.dm_pdg = dm_candidate
         self.math = mathpackage
         self.restriction = None
@@ -118,6 +119,14 @@ def fill_gum_object(data):
         lagrangian = "LTotal"
     mathpackage = math['package']
     gambit_model = math['model']
+
+    # FeynRules specific -- a "base" model to build a pheno model on top of.
+    # Tyically this is the SM, plus the BSM contribution defined in a separate file.
+    if 'base_model' in data['math']:
+        base_model = data['math']['base_model']
+    else:
+        base_model = ""
+
     if 'dm_candidate' in data:
         dm_candidate = data['dm_candidate']
     else:
@@ -149,8 +158,8 @@ def fill_gum_object(data):
     if 'restriction' in math and mathpackage == 'feynrules':
         restriction = math['restriction']
 
-    gum_info = Inputs(gambit_model, mathpackage,  dm_candidate, lagrangian,
-                      restriction)
+    gum_info = Inputs(gambit_model, base_model, mathpackage,  
+                      dm_candidate, lagrangian, restriction)
 
 
     return gum_info, outputs
