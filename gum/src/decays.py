@@ -317,6 +317,8 @@ def amend_all_decays(model_name, spectrum, new_decays):
         header += (
                "\n    MODEL_CONDITIONAL_DEPENDENCY({0}, DecayTable::Entry, {1})"
         ).format(new_decays[i][0], model_name)
+
+        header += "\n"
                 
     return src, header
     

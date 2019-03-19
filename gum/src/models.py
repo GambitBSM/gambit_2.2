@@ -493,3 +493,32 @@ def add_to_registered_spectra(gambit_model):
                 raise GumError(("\n\nModel {0} already exists in GAMBIT.").format(gambit_model))
 
     return newentry, linenum
+
+def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs):
+    """
+    Adds the pole masses to the list of parameters. 
+    If the parameter name exists already, it is removed.
+    Double counting is known to occur in the following circumstances:
+
+      1) FeynRules: a shared tree-level mass term for a multiplet.
+
+    """
+
+    parameters_by_name = [x.name for x in parameters]
+
+    for i in xrange(len(bsm_particle_list)):
+        p = bsm_particle_list[i]
+
+        # Check to see if the parameter name is in the list of model parameters currently.
+        if p.mass in parameters_by_name:
+            for i, o in enumerate(parameters):
+                if o.name == p.mass: 
+                    del parameters[i]
+                    break
+
+        # Add the new parameter to the list of model parameters.
+        x = SpectrumParameter(pdg_to_particle(p.PDG_code, gambit_pdgs),
+                              "Pole_Mass", gb_input=p.mass)
+        parameters.append(x)
+
+    return parameters

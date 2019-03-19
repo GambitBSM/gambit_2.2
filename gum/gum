@@ -220,13 +220,8 @@ if args.file:
     # Once we've got the GAMBIT dictionaries, we can add the new parameters
     # as pole masses to the
 
-    # Add all of the masses of BSM particles as pole masses.
-    # I think this is okay..? TODO: check this is okay.
-    for i in xrange(len(bsm_particle_list)):
-        p = bsm_particle_list[i]
-        x = SpectrumParameter(pdg_to_particle(p.PDG_code, gambit_pdgs),
-                              "Pole_Mass", gb_input=p.mass)
-        parameters.append(x)
+    # Add all of the masses of BSM particles as pole masses. Remove all duplicates.
+    parameters = add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs)
 
     """
     MODELS
