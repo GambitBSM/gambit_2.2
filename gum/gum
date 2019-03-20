@@ -239,14 +239,14 @@ if args.file:
     # Conditional on CalcHEP files being made.
     if output_opts.ch:
         # Obtain all model interactions from CalcHEP model files.
-        interactions, calchep_pdg_codes = get_vertices(outputs.get_ch())
+        interactions, calchep_pdg_codes, aux_particles = get_vertices(outputs.get_ch())
 
         # Obtain all 3-point vertices that are BSM.
         three_pi_bsm = [interaction.particles for interaction in interactions
                         if interaction.num_particles() == 3
                         and interaction.is_sm() == False]
 
-        three_body_decays = decay_sorter(three_pi_bsm)
+        three_body_decays = decay_sorter(three_pi_bsm, aux_particles)
     else:
         calchep_pdg_codes = None
 
@@ -453,8 +453,8 @@ if args.file:
                     num = find_string("DecayBit_rollcall.hpp", m, "#define CAPABILITY decay_rates")[1]
                     amend_file("DecayBit_rollcall.hpp", m, decay_roll[i][1], num-2, reset_contents)
             if len(new_decays) > 0:
-                num = find_string("DecayBit_rollcall.hpp", m, "DEPENDENCY(omega_decay_rates")[1]
-                amend_file("DecayBit_rollcall.hpp", m, all_decays_header, num, reset_contents)
+                num = find_string("DecayBit_rollcall.hpp", m, "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
+                amend_file("DecayBit_rollcall.hpp", m, all_decays_header, num-1, reset_contents)
                 num = find_string("DecayBit.cpp", m, "decays(\"omega\")")[1]
                 amend_file("DecayBit.cpp", m, all_decays_src, num, reset_contents)
 

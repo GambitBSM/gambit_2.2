@@ -92,14 +92,20 @@ def decay_grouper(decays):
     # Return list of all channels per particle.
     return channels
 
-def decay_sorter(three_diagrams):
+def decay_sorter(three_diagrams, aux_particles):
     """
     Returns ordered lists of decays for writing module functions.
+    Removes those with auxiliary particles.
     """
 
     decays = []
 
     for i in np.arange(len(three_diagrams)):
+
+      # If there is any cross-over between the vertex, and the list of auxiliary particles,
+      # then we do not want them to be used in decays.
+      if set(three_diagrams[i]) & set(aux_particles):
+        continue
 
       vertex, decaytype = find_decay_type(three_diagrams[i])
 
@@ -208,7 +214,7 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     ).format(gambit_model_name, chep_name, ", ".join(c_strings), 
              ", ".join(g_strings))
     
-    return indent(towrite)
+    return indent(towrite, 4)
 
 def write_decaybit_rollcall_entry(model_name, spectrum, newdecays, 
                                   decaybit_dict, gambit_dict):
@@ -306,6 +312,7 @@ def amend_all_decays(model_name, spectrum, new_decays):
         ).format(spectrum, model_name)
         
         src += indent((
+             "\n"
              "// {0}-specific\n"
              "if (ModelInUse(\"{0}\"))\n"
              "{{\n"
@@ -318,7 +325,8 @@ def amend_all_decays(model_name, spectrum, new_decays):
                "\n    MODEL_CONDITIONAL_DEPENDENCY({0}, DecayTable::Entry, {1})"
         ).format(new_decays[i][0], model_name)
 
-        header += "\n"
+        
+    header += "\n"
                 
     return src, header
     

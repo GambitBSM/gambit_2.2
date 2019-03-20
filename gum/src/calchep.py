@@ -211,6 +211,7 @@ def get_vertices(foldername):
 
     # Dict of particle + PDG code
     particle_PDG_conversion = {}
+    aux_particles = []
 
     # Now take in information from particles file to convert interactions to PDG codes
     with open(foldername + "/prtcls1.mdl") as prtcls:
@@ -232,6 +233,12 @@ def get_vertices(foldername):
 
           # If so, add the antiparticle separately
           particle_PDG_conversion[parts[2]] = int('-' +  parts[3])
+
+        # Is a particle an auxiliary particle?
+        if parts[8] == '*':
+            aux_particles.append(int(parts[3]))
+            aux_particles.append(int('-' + parts[3]))
+
 
     lines = []
     interactions = []
@@ -281,7 +288,7 @@ def get_vertices(foldername):
       else:
         interactions[i].SM = False
 
-    return interactions, particle_PDG_conversion
+    return interactions, particle_PDG_conversion, aux_particles
 
   # If the model folder does not exist
   else:

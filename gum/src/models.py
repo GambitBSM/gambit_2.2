@@ -40,6 +40,9 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     # Don't want the SM-like Higgs mass a fundamental parameter
     params = [x.gb_in for x in model_params if x.name != 'h0_1' and x.sm == False]
 
+    # No double counting!
+    params = list(set(params))
+
     towrite_header += "  DEFINEPARS({0})\n\n".format(', '.join(params))
 
     towrite_header += (
@@ -510,6 +513,7 @@ def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs):
         p = bsm_particle_list[i]
 
         # Check to see if the parameter name is in the list of model parameters currently.
+        # If it is, remove it
         if p.mass in parameters_by_name:
             for i, o in enumerate(parameters):
                 if o.name == p.mass: 

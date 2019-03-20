@@ -34,6 +34,7 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 * Things that break FeynRules:
   - If parameters have underscores etc in FeynRules -> yell
   - InteractionOrder not being specified in FeynRules files.
+  - particles not having pdg codes
 
 * FeynRules -- host externally? Or just pester them. The checksum changes every day...
 
@@ -45,7 +46,12 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 
 * Generating collider diagrams
   - "Generate all" option?
+  - Option to define multiparticles - e.g. for Leptoquark study, "define LQ = u1 u1~ S1 S1~ ..."
   - MadGraph will throw an error if a requested diagram is not available 
+
+* BSM contributions to Standard Model decays (W, Z, etc.) -- do not get added to DecayBit correctly
+
+* Auxiliary particles in CalcHEP to be ignored by decay/DM routines
 
 ==============
 =   GAMBIT   =
@@ -53,7 +59,7 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 
 * Backends
   * CalcHEP
-    * Re-design frontend: want an it->externalName() routine for SpectrumParameters.
+    * Re-design frontend: generate a list of model parameters to set in the INI file.
   * SPheno
     * Check -- is it backended "generally"?
   * Vevacious
