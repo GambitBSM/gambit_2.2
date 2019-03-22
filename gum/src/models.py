@@ -40,12 +40,18 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     # Don't want the SM-like Higgs mass a fundamental parameter
     params = [x.gb_in for x in model_params if x.name != 'h0_1' and x.sm == False]
 
-    # No double counting!
-    params = list(set(params))
+    # No double counting (also want to preserve the order)
+    norepets = []
+    [norepeats.append(i) for i in params if not i in norepeats]
 
-    towrite_header += "  DEFINEPARS({0})\n\n".format(', '.join(params))
+    # Chunk this up into groups of no more than 9, so the DEFINEPARS macro works.
+    definepars = [norepeats[i:i+9] for i in range(0,len(norepeats),9)]
+
+    for i in range(len(definepars)):
+        towrite_header += "  DEFINEPARS({0})\n".format(', '.join(definepars[i]))
 
     towrite_header += (
+                   "\n"
                    "#undef MODEL\n"
                    "\n"
                    "#endif\n"

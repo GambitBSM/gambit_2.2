@@ -140,6 +140,13 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     else:
         return ""
 
+    # if decayparticle == "Z":
+    #     return write_Z_decays()
+    # else if decayparticle == "W_plus":
+    #     return write_W_plus_decays()
+    # else if decayparticle == "W_minus":
+    #     return write_W_minus_decays()
+
     function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
     spectrum = gambit_model_name + "_spectrum"
 
