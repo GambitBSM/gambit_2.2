@@ -140,12 +140,13 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     else:
         return ""
 
-    # if decayparticle == "Z":
-    #     return write_Z_decays()
-    # else if decayparticle == "W_plus":
-    #     return write_W_plus_decays()
-    # else if decayparticle == "W_minus":
-    #     return write_W_minus_decays()
+    # TODO: proper support for BSM contributions to Z and W decays
+    if decayparticle == "Z":
+        return ""
+    else if decayparticle == "W_plus":
+        return ""
+    else if decayparticle == "W_minus":
+        return ""
 
     function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
     spectrum = gambit_model_name + "_spectrum"
@@ -239,6 +240,9 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
      
     for i in xrange(len(newdecays)):
         decayparticle = newdecays[i][0]
+        # TODO: support for BSM contribution to Z/W decays
+        if decayparticle in [24, -24, 23]:
+            pass
         gb_name = (pdg_to_particle(decayparticle, decaybit_dict))
         # If the particle does not decay, according to the particle database,
         # then there is no need to write a capability.

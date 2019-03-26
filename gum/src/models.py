@@ -41,7 +41,7 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     params = [x.gb_in for x in model_params if x.name != 'h0_1' and x.sm == False]
 
     # No double counting (also want to preserve the order)
-    norepets = []
+    norepeats = []
     [norepeats.append(i) for i in params if not i in norepeats]
 
     # Chunk this up into groups of no more than 9, so the DEFINEPARS macro works.
