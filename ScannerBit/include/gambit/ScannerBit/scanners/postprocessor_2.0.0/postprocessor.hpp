@@ -91,6 +91,7 @@ namespace Gambit
          GMPI::Comm* comm;
          PPOptions() : comm(NULL) {}
          #endif
+         bool verbose;
       };
  
       /// Driver class to handle the actual postprocessing tasks
@@ -198,6 +199,9 @@ namespace Gambit
             #ifdef WITH_MPI
             GMPI::Comm* comm;
             #endif
+
+            /// If true, create lots of log messages explaining exactly what the postprocessor is doing
+            bool verbose;
       };
 
   }
