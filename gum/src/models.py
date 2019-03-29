@@ -503,7 +503,7 @@ def add_to_registered_spectra(gambit_model):
 
     return newentry, linenum
 
-def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs):
+def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
     """
     Adds the pole masses to the list of parameters. 
     If the parameter name exists already, it is removed.
@@ -525,6 +525,12 @@ def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs):
                 if o.name == p.mass: 
                     del parameters[i]
                     break
+
+        # Overwrite the parameter name for the Higgs mass, to match the name within GAMBIT, 
+        # if this is a 1HDM.
+        if p.PDG_code == 25: 
+            if add_higgs:
+                p.mass = "mH"
 
         # Add the new parameter to the list of model parameters.
         x = SpectrumParameter(pdg_to_particle(p.PDG_code, gambit_pdgs),

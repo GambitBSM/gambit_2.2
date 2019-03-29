@@ -221,7 +221,8 @@ if args.file:
     # as pole masses to the
 
     # Add all of the masses of BSM particles as pole masses. Remove all duplicates.
-    parameters = add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs)
+    antiparticle_dict = get_antiparticles(partlist)
+    parameters = add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs)
 
     """
     MODELS
@@ -246,7 +247,7 @@ if args.file:
                         if interaction.num_particles() == 3
                         and interaction.is_sm() == False]
 
-        three_body_decays = decay_sorter(three_pi_bsm, aux_particles)
+        three_body_decays = decay_sorter(three_pi_bsm, aux_particles, antiparticle_dict)
     else:
         calchep_pdg_codes = None
 

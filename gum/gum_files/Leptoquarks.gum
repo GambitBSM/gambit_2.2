@@ -1,0 +1,120 @@
+## Minimal .gum (YAML) file for Vector leptoquark model in GUM
+
+math:
+  # Name of Mathematica package, either 'feynrules' or 'sarah'
+  package: feynrules
+  # Name of Model within that package. This will also be the name of the GAMBIT model.
+  model: Leptoquarks
+  base_model: SM
+  lagrangian: LSM + LLQ
+
+# Outputs for GUM to hook up to GAMBIT
+output:
+  calchep: true
+#   pythia: true
+#   collider_processes:
+#     - p p > U1~ U1
+#     - p p > U1~ U1 j
+#     - p p > U1~ U1 a
+#     - p p > U1~ U1 Z
+#     - p p > U1~ U1 h
+#     - p p > l- U1
+#     - p p > l- U1 j
+#     - p p > l- U1 a
+#     - p p > l- U1 Z
+#     - p p > l- U1 h
+#     - p p > l+ U1~
+#     - p p > l+ U1~ j
+#     - p p > l+ U1~ a
+#     - p p > l+ U1~ Z
+#     - p p > l+ U1~ h
+#     - p p > S1~ S1
+#     - p p > S1~ S1 j
+#     - p p > S1~ S1 a
+#     - p p > S1~ S1 Z
+#     - p p > S1~ S1 h
+#     - p p > l+ S1
+#     - p p > l+ S1 j
+#     - p p > l+ S1 a
+#     - p p > l+ S1 Z
+#     - p p > l+ S1 h
+#     - p p > l- S1~
+#     - p p > l- S1~ j
+#     - p p > l- S1~ a
+#     - p p > l- S1~ Z
+#     - p p > l- S1~ h
+#     - p p > S3m13~ S3m13
+#     - p p > S3m13~ S3m13 j
+#     - p p > S3m13~ S3m13 a
+#     - p p > S3m13~ S3m13 Z
+#     - p p > S3m13~ S3m13 h
+#     - p p > l+ S3m13
+#     - p p > l+ S3m13 j
+#     - p p > l+ S3m13 a
+#     - p p > l+ S3m13 Z
+#     - p p > l+ S3m13 h
+#     - p p > l- S3m13~
+#     - p p > l- S3m13~ j
+#     - p p > l- S3m13~ a
+#     - p p > l- S3m13~ Z
+#     - p p > l- S3m13~ h
+#     - p p > S3m43~ S3m43
+#     - p p > S3m43~ S3m43 j
+#     - p p > S3m43~ S3m43 a
+#     - p p > S3m43~ S3m43 Z
+#     - p p > S3m43~ S3m43 h
+#     - p p > l+ S3m43
+#     - p p > l+ S3m43 j
+#     - p p > l+ S3m43 a
+#     - p p > l+ S3m43 Z
+#     - p p > l+ S3m43 h
+#     - p p > l- S3m43~
+#     - p p > l- S3m43~ j
+#     - p p > l- S3m43~ a
+#     - p p > l- S3m43~ Z
+#     - p p > l- S3m43~ h
+#     - p p > S3p23~ S3p23
+#     - p p > S3p23~ S3p23 j
+#     - p p > S3p23~ S3p23 a
+#     - p p > S3p23~ S3p23 Z
+#     - p p > S3p23~ S3p23 h
+# #    - p p > l- S3p23
+# #    - p p > l- S3p23 j
+# #    - p p > l- S3p23 a
+# #    - p p > l- S3p23 Z
+# #    - p p > l- S3p23 h
+# #    - p p > l+ S3p23~
+# #    - p p > l+ S3p23~ j
+# #    - p p > l+ S3p23~ a
+# #    - p p > l+ S3p23~ Z
+# #    - p p > l+ S3p23~ h
+#     - p p > R2p23~ R2p23
+#     - p p > R2p23~ R2p23 j
+#     - p p > R2p23~ R2p23 a
+#     - p p > R2p23~ R2p23 Z
+#     - p p > R2p23~ R2p23 h
+#     - p p > l- R2p23
+#     - p p > l- R2p23 j
+#     - p p > l- R2p23 a
+#     - p p > l- R2p23 Z
+#     - p p > l- R2p23 h
+#     - p p > l+ R2p23~
+#     - p p > l+ R2p23~ j
+#     - p p > l+ R2p23~ a
+#     - p p > l+ R2p23~ Z
+#     - p p > l+ R2p23~ h
+#     - p p > R2p53~ R2p53
+#     - p p > R2p53~ R2p53 j
+#     - p p > R2p53~ R2p53 a
+#     - p p > R2p53~ R2p53 Z
+#     - p p > R2p53~ R2p53 h
+#     - p p > l- R2p53
+#     - p p > l- R2p53 j
+#     - p p > l- R2p53 a
+#     - p p > l- R2p53 Z
+#     - p p > l- R2p53 h
+#     - p p > l+ R2p53~
+#     - p p > l+ R2p53~ j
+#     - p p > l+ R2p53~ a
+#     - p p > l+ R2p53~ Z
+#     - p p > l+ R2p53~ h

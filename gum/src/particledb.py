@@ -288,3 +288,28 @@ def add_new_particleDB_entry(particles, dm_pdg):
 
     with open("./../config/particle_database.yaml", "w") as f:
         f.write(stream)
+
+def get_antiparticles(partlist):
+    """
+    Retuns a dictionary of (k, v) = (particle, antiparticle)
+    by PDG code. k==v for self-conjugate particles.
+    """
+
+    conjdict = {}
+
+    for i in range(len(partlist)):
+        p = partlist[i]
+
+        print p.name(), p.antiname()
+
+        # If it's self-conjugate, just add it once
+        if ( p.name() == p.antiname() ):
+            conjdict[p.pdg()] = p.pdg()
+
+        # Otherwise add both ways
+        else:
+            conjdict[p.pdg()] = -p.pdg()
+            conjdict[-p.pdg()] = p.pdg()
+
+    print conjdict
+    return conjdict

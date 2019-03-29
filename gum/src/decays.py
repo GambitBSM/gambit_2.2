@@ -47,13 +47,32 @@ def find_decay_type(vertex):
                         "\n\nAttempted to use vertex " + vertex))
 
 
-def decay_grouper(decays):
+def decay_grouper(decays, antiparticle_dict):
     """
     Groups a list of decays into groups for each particle.
     """
 
     annihilations = []
     others = []
+
+    # CalcHEP convention is that everything in the vertex list is an incoming particle,
+    # so for A -> B Bbar decays this is fine, but for A -> B B or A -> B C, we need
+    # to conjugate the outgoing particles to A -> Bbar Bbar or A -> Bbar Cbar.
+
+    for i in range(0, len(decays)):
+        if decays[i][1] == "ABB" or decays[i][1] == "ABC":
+
+            print("Before:")
+            print(decays[i][0])
+
+            # Outgoing particles
+            p1 = antiparticle_dict.get(decays[i][0][1])
+            p2 = antiparticle_dict.get(decays[i][0][2])
+
+            decays[i][0] = [ decays[i][0][0], p1, p2 ]
+
+            print("After:")
+            print(decays[i][0])
 
     for i in range(0, len(decays)):
         if decays[i][1] == "ABB" or decays[i][1] == "ABBar":
@@ -92,7 +111,7 @@ def decay_grouper(decays):
     # Return list of all channels per particle.
     return channels
 
-def decay_sorter(three_diagrams, aux_particles):
+def decay_sorter(three_diagrams, aux_particles, antiparticle_dict):
     """
     Returns ordered lists of decays for writing module functions.
     Removes those with auxiliary particles.
@@ -102,20 +121,21 @@ def decay_sorter(three_diagrams, aux_particles):
 
     for i in np.arange(len(three_diagrams)):
 
-      # If there is any cross-over between the vertex, and the list of auxiliary particles,
-      # then we do not want them to be used in decays.
-      if set(three_diagrams[i]) & set(aux_particles):
-        continue
+        # If there is any cross-over between the vertex, and the list of auxiliary particles,
+        # then we do not want them to be used in decays.
+        if set(three_diagrams[i]) & set(aux_particles):
+            continue
 
-      vertex, decaytype = find_decay_type(three_diagrams[i])
+        vertex, decaytype = find_decay_type(three_diagrams[i])
 
-      # Ignore self-interactions
-      if decaytype == "AAA":
-          pass
-      else:
-          decays.append([vertex, decaytype])
+        # Ignore self-interactions
+        if decaytype == "AAA":
+            pass
+        else:
 
-    return decay_grouper(decays)
+            decays.append([vertex, decaytype])
+
+    return decay_grouper(decays, antiparticle_dict)
 
 def write_decaytable_entry(grouped_decays, gambit_model_name,
                            calchep_pdg_codes, gambit_pdg_codes,
@@ -143,9 +163,9 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     # TODO: proper support for BSM contributions to Z and W decays
     if decayparticle == "Z":
         return ""
-    else if decayparticle == "W_plus":
+    elif decayparticle == "W_plus":
         return ""
-    else if decayparticle == "W_minus":
+    elif decayparticle == "W_minus":
         return ""
 
     function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
@@ -242,7 +262,7 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
         decayparticle = newdecays[i][0]
         # TODO: support for BSM contribution to Z/W decays
         if decayparticle in [24, -24, 23]:
-            pass
+            continue
         gb_name = (pdg_to_particle(decayparticle, decaybit_dict))
         # If the particle does not decay, according to the particle database,
         # then there is no need to write a capability.

@@ -90,7 +90,21 @@ BE_NAMESPACE
     // to CalcHEP from the spectrum, by PDG code.
     for (auto it = params.begin(); it != params.end(); ++it)
     {
+      // Don't add the SM vev, Gauge couplings, Yukawas,
+      // as CalcHEP computes these internally.
+      std::list<str> doNotAssign = {"g1", "g2", "g3", "v", "Yu", "Ye", "Yd", "sinW2", "vev"};
 
+      // Fetch the iterator of element with the parameter name
+      std::list<std::string>::iterator it2 = std::find(doNotAssign.begin(), doNotAssign.end(), it->name());
+
+      // If we find the parameter in the "do not assign" list, then don't try and assign it, 
+      // or this will throw an error.
+      if (it2 != doNotAssign.end())
+      { 
+        continue;
+      }
+
+      // Pole masses
       if (it->tag() == Par::Pole_Mass)
       {
         // Scalar case
@@ -111,9 +125,36 @@ BE_NAMESPACE
         }
         // Ignore any matrix cases, as Par::Pole_Mass should only be scalars or vectors
       }
-      // Don't add any dimensionful parameters (SM vev), or dimensionless parameters (like Gauge couplings, Yukawas):
-      // as CalcHEP computes these internally.
-      else { continue; }
+      // Otherwise, should all have the right names
+      else 
+      { 
+        // Scalar case
+        if (it->shape().size()==1 and it->shape()[0] == 1)
+        {
+          char *chepname = const_cast<char*> ( it->name().c_str() );
+          Assign_Value(chepname, spec.get(it->tag(), it->name()));
+        }
+        // Vector case
+        // TODO check this works
+        else if (it->shape().size()==1 and it->shape()[0] > 1)
+        {
+          for (int i=0; i<it->shape()[0]; ++i)
+          {
+            str long_name = it->name() + std::to_string(i+1);
+            char *chepname = const_cast<char*> ( long_name.c_str() );
+            Assign_Value(chepname, spec.get(it->tag(), it->name(), i));
+          }
+        }
+        // Matrix
+        // TODO this is throwing an error? 
+        // else if(it->shape().size()==2)
+        // for (int i=0; i<it->shape()[0]; ++i)
+        //   for (int j=0; j<it->shape()[0]; ++j)
+        //   {
+        //     str long_name = it->name() + std::to_string(i+1) + "x" + std::to_string(j+1);
+        //     Assign_Value(long_name.c_str(), spec.get(it->tag(), it->name(), i, j));
+        //   }
+      }
     }
 
     // Now go through the input parameters of the model. **NOTE**: this structure will only work for the case
