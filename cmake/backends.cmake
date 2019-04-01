@@ -1010,7 +1010,7 @@ if(NOT ditched_${name}_${ver})
           DEPENDS phc_${phc_ver}
           DEPENDS hom4ps_2.0
           SOURCE_DIR ${dir}
-          GIT_REPOSITORY https://github.com/benoleary/VevaciousPlusPlus.git
+          GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
           GIT_TAG origin/Gambit_BOSSED
           CONFIGURE_COMMAND ""
           BINARY_DIR ${dir}/VevaciousPlusPlus
