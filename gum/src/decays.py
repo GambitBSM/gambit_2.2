@@ -62,17 +62,11 @@ def decay_grouper(decays, antiparticle_dict):
     for i in range(0, len(decays)):
         if decays[i][1] == "ABB" or decays[i][1] == "ABC":
 
-            print("Before:")
-            print(decays[i][0])
-
             # Outgoing particles
             p1 = antiparticle_dict.get(decays[i][0][1])
             p2 = antiparticle_dict.get(decays[i][0][2])
 
             decays[i][0] = [ decays[i][0][0], p1, p2 ]
-
-            print("After:")
-            print(decays[i][0])
 
     for i in range(0, len(decays)):
         if decays[i][1] == "ABB" or decays[i][1] == "ABBar":

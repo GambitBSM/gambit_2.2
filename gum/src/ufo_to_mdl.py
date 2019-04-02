@@ -15,10 +15,13 @@ If you use this script as a standalone please cite the GUM manual:
       arXiv:19XX.YYYYY
 
 """
-    
+
 import sys
 import os
 import re
+import shutil
+
+counter = 0
 
 """
 MadGraph objects and routines
@@ -639,13 +642,13 @@ def get_mg_ch_param_dict():
     return param_dict
 
 def get_mg_ch_lorentz_dict():
-	"""
-	Returns a dictionary to translate between Lorentz structures in MadGraph
-	and CalcHEP.
-	"""
+    """
+    Returns a dictionary to translate between Lorentz structures in MadGraph
+    and CalcHEP.
+    """
 
-	ld = {}
-	return ld
+    ld = {}
+    return ld
 
 def get_mg_ch_parts_dict(mg_parts, ch_parts):
     """
@@ -725,60 +728,138 @@ def check_for_optimisation(mgparams, chparams):
     """
 
 def compare_vertices(mg_verts, mg_parts, mg_params,
-					 ch_verts, ch_parts, ch_params
-					 ):
-	"""
-	Compares the vertices from a MadGraph model with those
-	in a CalcHEP model.
-	"""
+                     ch_verts, ch_parts, ch_params,
+                     ch_location, 
+                     param_dict, lorentz_dict, part_dict,
+                     ):
+    """
+    Compares the vertices from a MadGraph model with those
+    in a CalcHEP model.
 
-	# Display all vertices by PDG code for ease
-	mg_pdg_dict = {}
-	ch_pdg_dict = {}
+    todo: compare the vertex factors + lorentz structures
+    """
 
-	for i in range(len(mg_parts)):
-		p = mg_parts[i]
+    # Display all vertices by PDG code for ease
+    mg_pdg_dict = {}
+    ch_pdg_dict = {}
 
-		mg_pdg_dict[p.mgname] = int(p.pdg_code)
-		if not p.selfconj: mg_pdg_dict[p.mgantiname] = -1*int(p.pdg_code)
+    # Have a separate version for ghosts + goldstones as they're represented somewhat
+    # differently between CH and MG
+    mg_ghosts = {}
+    ch_ghosts = {}
 
-	for i in range(len(ch_parts)):
-		p = ch_parts[i]
+    for i in range(len(mg_parts)):
+        p = mg_parts[i]
 
-		ch_pdg_dict[p.name] = int(p.pdg_code)
-		if not p.selfconj: ch_pdg_dict[p.antiname] = -1*int(p.pdg_code)
+        if (int(p.ghostnum) == 1) or (not p.goldstone == False):
+            mg_ghosts[p.mgname] = int(p.pdg_code)
+            if not p.selfconj: mg_ghosts[p.mgantiname] = -1*int(p.pdg_code)
+            
+        else:
+            mg_pdg_dict[p.mgname] = int(p.pdg_code)
+            if not p.selfconj: mg_pdg_dict[p.mgantiname] = -1*int(p.pdg_code)
 
-	# Save each individual vertex as a set of PDG codes from MadGraph
-	mg_vertices_by_pdg = []
+    for i in range(len(ch_parts)):
+        p = ch_parts[i]
 
-	for i in range(len(mg_verts)):
-		v = mg_verts[i]
+        ch_pdg_dict[p.name] = int(p.pdg_code)
+        if not p.selfconj: ch_pdg_dict[p.antiname] = -1*int(p.pdg_code)
 
-		print v.particles
+    # Save each individual vertex as a set of PDG codes from MadGraph
+    mg_vertices_by_pdg = []
+    mg_vertices_with_ghosts = []
 
-		vpdg = [ mg_pdg_dict[i] for i in v.particles ]
+    for i in range(len(mg_verts)):
+        v = mg_verts[i]
 
-		mg_vertices_by_pdg.append(vpdg)
+        parts = v.particles
 
-	# Same for CalcHEP
-	ch_vertices_by_pdg = []
+        # If there's ghosts/goldstones, put them in a different list
+        # and deal with them separately.
+        if any( part in mg_ghosts for part in parts):
+            mg_vertices_with_ghosts.append(parts)
+            continue
 
-	for i in range(len(ch_verts)):
-		v = ch_verts[i]
+        vpdg = [ mg_pdg_dict[i] for i in parts ]
 
-		#print v.particles
+        mg_vertices_by_pdg.append(vpdg)
 
-		#vpdg = [ ch_pdg_dict[i] for i in v.particles ]
+    # Same for CalcHEP
+    ch_vertices_by_pdg = []
+    ch_vertices_with_ghosts = []
 
-		#ch_vertices_by_pdg.append(vpdg)
+    for i in range(len(ch_verts)):
+        v = ch_verts[i]
 
-	#print set(mg_vertices_by_pdg) ^ set(ch_vertices_by_pdg)
+        parts = v.particles
+
+        # Find ghosts and goldstones
+        # TODO: tensor structures...
+        r = re.compile(r'(.*?)\.(.*?)')
+
+        hasghosts = False
+
+        for part in parts:
+            if r.match(part):
+                hasghosts = True
+        if hasghosts: continue
+
+        vpdg = [ ch_pdg_dict[i] for i in v.particles ]
+
+        ch_vertices_by_pdg.append(vpdg)
+
+    
+    # Reorder the PDG codes in ascending order so we can compare
+    ch_vertices_by_pdg = [sorted(i) for i in ch_vertices_by_pdg]
+    mg_vertices_by_pdg = [sorted(i) for i in mg_vertices_by_pdg]
+
+    # Ditch any MG vertices with more than 4 particles, as there's no way CalcHEP 
+    # can possibly have these.
+    mg_set = set(tuple(i) for i in mg_vertices_by_pdg if len(i) < 5)
+    # Now compare them
+    ch_set = set(tuple(i) for i in ch_vertices_by_pdg)
+
+    unshared_vertices = mg_set ^ ch_set
+
+    # If there's only vertices found that exist in just MadGraph, then
+    # create a list of the actual vertices, as instances of MGVertex
+    new_vertices = []
+
+    if (unshared_vertices) and not (unshared_vertices & ch_set):
+        for i in range(len(mg_verts)):
+            v = mg_verts[i]
+            parts = v.particles
+            if any( part in mg_ghosts for part in parts):
+                continue
+            vpdg = sorted([ mg_pdg_dict[i] for i in parts ])
+            if tuple(vpdg) in unshared_vertices:
+                new_vertices.append(v)
+
+    if unshared_vertices:
+        if (unshared_vertices & mg_set):
+            print("\nThe following vertices, by PDG code, are found in MadGraph but not CalcHEP:")
+            print(list(unshared_vertices & mg_set))
+        if (unshared_vertices & ch_set):
+            print("\nThe following vertices, by PDG code, are found in CalcHEP but not MadGraph:")
+            print(list(unshared_vertices & ch_set))
+            print("This is not the case ufo2mdl was designed to deal with!")
+            print("Please check your input files. However, if you trust the MadGraph files, do:\n")
+            print("\tpython ufo_to_mdl <madgraph_folder>\n")
+            print("to generate new CalcHEP files from scratch.")
+            sys.exit()
+        else: 
+            print("Writing new CalcHEP files.")
+            add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, 
+                                          lorentz_dict, part_dict, mg_parts)
+    else:
+        print("All vertices are consistent...")
+
 
 """
 WRITING ROUTINES
 """
 
-def write_ch_vertex(vertex):
+def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location):
     """
     Writes a CalcHEP vertex, given a MadGraph one.
     """
@@ -788,19 +869,101 @@ def write_ch_vertex(vertex):
     lorentz = vertex.lorentz
     couplings = vertex.couplings
 
+    spin2splus1 = []
+    # Get the spins of each particle involved in the vertex
+    for part in particles:
+        for i in range(len(mg_parts)):
+            if mg_parts[i].mgname == part or mg_parts[i].mgantiname == part:
+                spin2splus1.append(int(mg_parts[i].spin))
+    
+    # If there's 4 fermions involved - use the specialist 4-fermion function.
+    if spin2splus1.count(2) == 4: 
+        return write_four_fermion_vertex(vertex, param_dict, lorentz_dict, 
+                                         part_dict, mg_parts, ch_location)
+    else:
+        return "\n"
+
     return "\n"
 
-def write_four_fermion_vertex(vertex):
+def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location):
     """
     Writes a four-fermion vertex for CalcHEP. This splits the contact interaction into
-    two three-body interactions, with a constant propagator.
+    two three-body interactions, with a constant propagator. This is achieved by 
+    introducing a new auxiliary field.
     """
+
+    """
+      - write 4-fermion vertex for calchep using auxiliary field:
+ 
+     ( chibar (gamma) chi ) ( etabar (gamma') eta ) -> entries:
+     
+     prctls1.mdl
+ 
+     Full name | A     | A+    | PDG   | spinx2 | mass | width | color | aux | tex(A) | tex(A+)
+     ...
+     <aux>     |~00    |~01    |       |2       |Maux  |0      |1      |!*   | <aux>  | <aux+>
+ 
+     lgrng1.mdl
+ 
+     part 1 | part 2| part 3| part 4| Factor | Lorentz
+     ...
+     chibar |chi    |~01    |       |i*Maux  |Gamma(m3)
+     etabar |eta    |~00    |       |i*Maux  |Gamma'(m3)
+
+    """
+
+
+    # Need to add new auxiliary particles to the CalcHEP files
+    global counter
+
+    newentry =  "{0: <13}".format("aux" + str(counter)) + "|"
+    newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter))) + "|"
+    newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter+1))) + "|"
+    newentry +=  "{0: <8}".format("") + "|"
+    newentry +=  "{0: <6}".format("2") + "|"
+    newentry +=  "{0: <15}".format("Maux") + "|"
+    newentry +=  "{0: <15}".format("0") + "|"
+    newentry +=  "{0: <5}".format("1") + "|"
+    newentry +=  "{0: <3}".format("!*") + "|"
+    newentry +=  "{0: <10}".format("aux" + str(counter)) + "|"
+    newentry +=  "{0: <14}".format("Aux" + str(counter)) + "|\n"
+
+    print newentry
+
+    new_ch_loc = os.path.abspath(ch_location) + "_ufo2mdl"
+
+    with open(new_ch_loc + "/prtcls1.mdl", 'r') as f, open(new_ch_loc + "/parts_temp", 'w') as g:
+
+        # Copy the original particles
+        for line in f:
+            g.write(line)
+
+        # Add the new auxiliary particle to the end
+        g.write(newentry)
+
+    # Save the new file as the master one
+    os.remove(new_ch_loc + "/prtcls1.mdl")
+    os.rename(new_ch_loc + "/parts_temp", new_ch_loc + "/prtcls1.mdl")
+
+    # Now write vertices with these auxiliary particles.
+    # Create a fake MadGraph particle
+
+    # todo: am here
+
+    parts = mg_parts.copy()
+    parts.append(aux_part)
+
+    write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, parts, ch_location)
+
+    # Increment counter for new particles
+    counter+=1
 
     return "\n"
 
-def write_calchep_files(ch_location, particles, parameters, vertices):
+
+def write_calchep_files(particles, parameters, vertices, param_dict, lorentz_dict, part_dict, mg_parts):
     """
-    Writes CalcHEP files, given all of the information.
+    Writes CalcHEP files, given all of the information from MadGraph.
     """
 
     lgrngfile = ""
@@ -811,7 +974,35 @@ def write_calchep_files(ch_location, particles, parameters, vertices):
 
     for i in range(len(vertices)):
         vertex = vertices[i]
-        lgrngfile += write_ch_vertex(vertex)
+        lgrngfile += write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location)
+
+def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz_dict, 
+                                  part_dict, mg_parts):
+    """
+    Creates copies of the original CalcHEP files, and adds any new vertices found in the
+    MadGraph files to them.
+    """
+
+    new_ch_loc = os.path.abspath(ch_location) + "_ufo2mdl"
+    if os.path.isdir(new_ch_loc):
+        print("\n{} already exists - deleting...").format(new_ch_loc)
+        shutil.rmtree(new_ch_loc)        
+
+    shutil.copytree(ch_location, new_ch_loc)
+
+    with open(new_ch_loc+"/lgrng1.mdl", 'r') as f, open(new_ch_loc+"/lgnrg_temp", 'w') as g:
+
+        # Copy over the vertices we want to keep
+        for line in f:
+            g.write(line)
+
+        # Now write all the new vertices in.
+        for i in range(len(new_vertices)):
+            vertex = new_vertices[i]
+            g.write(write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location))
+
+
+    print("New CalcHEP vertices added to {}.").format(new_ch_loc)
 
 """
 Main functions
@@ -837,6 +1028,8 @@ def convert(mg_location):
     print("Done.")
 
     print("Writing CalcHEP output...")
+
+    write_calchep_files(ch_location, particles, parameters, vertices)
 
     print("Done.")
     
@@ -909,15 +1102,17 @@ def compare(mg_location, ch_location):
 
     # Obtain a dictionary to translate between MG and CH particle names, just in case they are
     # different. They probably won't be.
-    parts_dict = get_mg_ch_parts_dict(mg_parts, ch_parts)
+    part_dict = get_mg_ch_parts_dict(mg_parts, ch_parts)
 
     print("All particles are consistent...")
     print("Checking vertices...")
 
-    compare_vertices(mg_verts, mg_parts, mg_params,
-					 ch_verts, ch_parts, ch_params)
+    lorentz_dict = get_mg_ch_lorentz_dict()
 
-    print("All vertices are consistent...")
+    compare_vertices(mg_verts, mg_parts, mg_params,
+                     ch_verts, ch_parts, ch_params,
+                     ch_location, param_dict, lorentz_dict, part_dict)
+
     print("Done!")
     
 def usage():
