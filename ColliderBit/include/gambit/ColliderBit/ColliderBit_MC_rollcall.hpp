@@ -57,6 +57,12 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
+    #define FUNCTION getProspinoxsec
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    BACKEND_REQ(prospino_gb, (libprospino), void, ())
+    #undef FUNCTION
+
   #undef CAPABILITY
   /// @}
 
