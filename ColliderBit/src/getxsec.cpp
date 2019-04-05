@@ -102,6 +102,11 @@ namespace Gambit
     {
       using namespace Pipes::getProspinoxsec;
 
+      // Testing...
+      cout << "DEBUG: getProspinoxsec: Calling BEreq::prospino_gb()..." << endl;
+      BEreq::prospino_gb();
+      cout << "DEBUG: getProspinoxsec: Returned" << endl;
+
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
