@@ -62,7 +62,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     DEPENDENCY(MSSM_spectrum, Spectrum)
-    BACKEND_REQ(prospino_LHC_xsec, (libprospino), double, (const Spectrum&))
+    BACKEND_REQ(prospino_LHC_xsec, (libprospino), std::vector<double>, (const Spectrum&))
     #undef FUNCTION
 
   #undef CAPABILITY

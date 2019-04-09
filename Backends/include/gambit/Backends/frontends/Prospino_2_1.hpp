@@ -31,10 +31,10 @@ LOAD_LIBRARY
 
 // PROSPINO_GB(inlo,isq_ng_in,icoll_in,energy_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in)
 // __xx_prospino_subroutine_MOD_prospino_gb
-BE_FUNCTION(prospino_gb, void, (), "__xx_prospino_subroutine_MOD_prospino_gb", "prospino_gb")
+BE_FUNCTION(prospino_gb, void, (Finteger&,Finteger&,Finteger&), "__xx_prospino_subroutine_MOD_prospino_gb", "prospino_gb")
 
 // Convenience functions (registration)
-BE_CONV_FUNCTION(run_prospino, double, (const Spectrum&), "prospino_LHC_xsec")
+BE_CONV_FUNCTION(run_prospino, std::vector<double>, (const Spectrum&), "prospino_LHC_xsec")
 
 
 // Undefine macros to avoid conflict with other backends

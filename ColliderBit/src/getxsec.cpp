@@ -118,17 +118,10 @@ namespace Gambit
         // Rather call a BE convenience function, which itself calls Prospino...
         // @todo pass in a list of processes to SPheno?
 
-        // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
         const Spectrum& spectrum = *Dep::MSSM_spectrum;
-        double xsec_vals = BEreq::prospino_LHC_xsec(spectrum);
+        std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
 
-        // cout << "DEBUG: getProspinoxsec: xsec_vals.at(0) = " << xsec_vals.at(0) << ",  xsec_vals.at(1) = " << xsec_vals.at(1) << endl;
-
-        // double xs_fb = 0.123456;               // replace with xsec from NLL-Fast
-        // double xserr_fb = 0.0123456 * xs_fb;   // or whatever
-
-        // result.set_xsec(xsec_vals.at(0), xsec_vals.at(1));
-        result.set_xsec(xsec_vals, xsec_vals*0.1);
+        result.set_xsec(xsec_vals.at(0), xsec_vals.at(1));
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread

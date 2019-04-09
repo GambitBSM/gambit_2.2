@@ -29,21 +29,24 @@
 BE_NAMESPACE
 {
   // Convenience function to run SPheno and obtain the spectrum
-  double run_prospino(const Spectrum& spectrum)
+  std::vector<double> run_prospino(const Spectrum& spectrum)
   {
 
     std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
 
-    // std::vector<double> xsec_vals;
-    // xsec_vals.push_back(1.2345);
-    // xsec_vals.push_back(1.2345 * 0.1);
-
-    double xsec_vals = 1.2345;
+    Finteger inlo = 0;
+    Finteger isq_ng_in = 1;
+    Finteger icoll_in = 2;
 
     // Call prospino
-    prospino_gb();
+    prospino_gb(inlo, isq_ng_in, icoll_in);
 
     std::cout << "DEBUG: run_prospino: ...End" << std::endl;
+
+    // Dummy result
+    std::vector<double> xsec_vals;
+    xsec_vals.push_back(1.2345);
+    xsec_vals.push_back(1.2345 * 0.1);
 
     return xsec_vals;
   }
