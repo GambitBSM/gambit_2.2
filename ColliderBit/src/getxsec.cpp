@@ -102,32 +102,38 @@ namespace Gambit
     {
       using namespace Pipes::getProspinoxsec;
 
-      // Testing...
-      cout << "DEBUG: getProspinoxsec: Calling BEreq::prospino_gb()..." << endl;
-      BEreq::prospino_gb();
-      cout << "DEBUG: getProspinoxsec: Returned" << endl;
-
-      // Don't bother if there are no analyses that will use this.
-      if (Dep::RunMC->analyses.empty()) return;
+      // // Don't bother if there are no analyses that will use this.
+      // if (Dep::RunMC->analyses.empty()) return;
 
       // Reset the xsec object on the main thread (other threads do not matter)
-      if (*Loop::iteration == COLLIDER_INIT)
+      if (*Loop::iteration == BASE_INIT)
       {
         result.reset();
+
+        // Testing...
+        cout << "DEBUG: getProspinoxsec: Loop iteration:" << *Loop::iteration << endl;
+        cout << "DEBUG: getProspinoxsec: Requesting dependency BE::prospino_LHC_xsec..." << endl;
+
+        // Rather call a BE convenience function, which itself calls Prospino...
+        // @todo pass in a list of processes to SPheno?
+
+        // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
+        const Spectrum& spectrum = *Dep::MSSM_spectrum;
+        double xsec_vals = BEreq::prospino_LHC_xsec(spectrum);
+
+        // cout << "DEBUG: getProspinoxsec: xsec_vals.at(0) = " << xsec_vals.at(0) << ",  xsec_vals.at(1) = " << xsec_vals.at(1) << endl;
+
+        // double xs_fb = 0.123456;               // replace with xsec from NLL-Fast
+        // double xserr_fb = 0.0123456 * xs_fb;   // or whatever
+
+        // result.set_xsec(xsec_vals.at(0), xsec_vals.at(1));
+        result.set_xsec(xsec_vals, xsec_vals*0.1);
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread
       if (*Loop::iteration > 0)
       {
         result.log_event();
-      }
-
-      // Set the xsec and its error
-      if (*Loop::iteration == COLLIDER_FINALIZE)
-      {
-        double xs_fb = 0.123456;               // replace with xsec from NLL-Fast
-        double xserr_fb = 0.0123456 * xs_fb;   // or whatever
-        result.set_xsec(xs_fb, xserr_fb);
       }
 
     }
