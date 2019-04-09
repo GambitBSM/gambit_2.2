@@ -105,13 +105,14 @@ namespace Gambit
       // // Don't bother if there are no analyses that will use this.
       // if (Dep::RunMC->analyses.empty()) return;
 
+      cout << "DEBUG: getProspinoxsec: Loop iteration:" << *Loop::iteration << endl;
+
       // Reset the xsec object on the main thread (other threads do not matter)
       if (*Loop::iteration == BASE_INIT)
       {
         result.reset();
 
         // Testing...
-        cout << "DEBUG: getProspinoxsec: Loop iteration:" << *Loop::iteration << endl;
         cout << "DEBUG: getProspinoxsec: Requesting dependency BE::prospino_LHC_xsec..." << endl;
 
         // Rather call a BE convenience function, which itself calls Prospino...
