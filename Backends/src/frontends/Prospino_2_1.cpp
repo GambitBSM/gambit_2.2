@@ -46,6 +46,52 @@ BE_NAMESPACE
     Finteger isquark1_in = 0;          //
     Finteger isquark2_in = 0;          //
 
+    Farray<Fdouble,1,20> unimass;
+    Farray<Fdouble,0,99> lowmass;
+
+    Farray<Fdouble,1,2,1,2> uu_in, vv_in;
+    Farray<Fdouble,1,4,1,4> bw_in;
+    Farray<Fdouble,1,2,1,2> mst_in, msb_in, msl_in;
+
+/*
+  integer                            :: ipart1, ipart2   ! set in INIT_SUSY   : internal variable for final state particles 
+  real(kind=double)                  :: mg,ms            ! set in INIT_SUSY
+  real(kind=double)                  :: mh1,mh2,mch      ! set in INIT_SUSY
+  real(kind=double)                  :: sin_a,cos_a      ! set in INIT_SUSY
+  real(kind=double)                  :: mu_susy,tan_b    ! set in INIT_SUSY
+  real(kind=double)                  :: a_b,a_t          ! set in INIT_SUSY
+  real(kind=double), dimension(-6:6) :: msq              ! set in INIT_SUSY
+  real(kind=double), dimension(1:8)  :: smass_n,mass_n   ! set in INIT_SUSY
+  real(kind=double), dimension(2,2)  :: uu,vv            ! set in INIT_SUSY
+  real(kind=double), dimension(2,2)  :: mst,msb,msl      ! set in INIT_SUSY
+  real(kind=double), dimension(4,4)  :: bw               ! set in INIT_SUSY
+  real(kind=double), dimension(1:4)  :: mass_s           ! set in INIT_SUSY
+  real(kind=double), dimension(1:4)  :: mass_x           ! set in INIT_SUSY
+  real(kind=double)                  :: mg_orig,ms_orig  ! set in INIT_SUSY
+  complex(kind=double), dimension(4,4) :: zz             ! set in INIT_SUSY
+*/
+
+    // Call prospino
+    prospino_gb(inlo, isq_ng_in, icoll_in, energy_in, i_error_in, final_state_in, ipart1_in, ipart2_in, isquark1_in, isquark2_in,
+                unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
+
+    std::cout << "DEBUG: run_prospino: ...End" << std::endl;
+
+
+    /*
+      call PROSPINO_OPEN_CLOSE(0)                                                            ! open all input/output files
+      
+      call PROSPINO_CHECK_HIGGS(final_state_in)                                              ! lock Higgs final states
+      call PROSPINO_CHECK_FS(final_state_in,ipart1_in,ipart2_in,lfinal)                      ! check final state 
+      if (.not. lfinal ) then
+         print*, " final state not correct ",final_state_in,ipart1_in,ipart2_in
+         call HARD_STOP                                                                      ! finish if final state bad
+      end if
+
+      call PROSPINO(inlo,isq_ng_in,icoll_in,energy_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in) ! actual prospino call
+    */
+
+
     /* 
       (From the Prospino code documentation)
 
@@ -116,11 +162,6 @@ BE_NAMESPACE
       flavors in final state: light-flavor quarks summed over five flavors
     */
 
-
-    // Call prospino
-    prospino_gb(inlo, isq_ng_in, icoll_in, energy_in, i_error_in, final_state_in, ipart1_in, ipart2_in, isquark1_in, isquark2_in);
-
-    std::cout << "DEBUG: run_prospino: ...End" << std::endl;
 
     // Dummy result
     std::vector<double> xsec_vals;
