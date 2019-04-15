@@ -30,7 +30,7 @@ BE_FUNCTION(getMEcode, numout*, (int ,int, char*, char*, char*, char*), "getMEco
 BE_FUNCTION(passParameters, int, (numout*), "passParameters", "passParameters")
 BE_FUNCTION(findValW, double, (char*), "findValW", "findValW")
 BE_FUNCTION(assignVal, int, (char*, double), "assignVal", "assignVal")
-BE_FUNCTION(pMass, double*, (char*), "pMass", "pMass")
+BE_FUNCTION(pMass, double, (char*), "pMass", "pMass")
 BE_FUNCTION(procInfo2, int, (numout*, int, char**, double*), "procInfo2", "procInfo2")
 BE_FUNCTION(pdg2mass, char*, (int), "pdg2mass", "pdg2mass")
 BE_FUNCTION(pdg2width, char*, (int), "pdg2width", "pdg2width")

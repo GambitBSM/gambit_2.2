@@ -41,7 +41,7 @@ class MGParticle():
         self.pdg_code = pdg_code
         self.name = name
         self.antiname = antiname
-        self.spin = spin
+        self.spin = spin # 2s+1
         self.color = color
         self.mass = mass
         self.width = width
@@ -80,7 +80,7 @@ class MGCoupling():
 
 class MGLorentz():
     """
-    Internal object representing a lorentz structure
+    Internal object representing a Lorentz structure
     within MadGraph.
     """
 
@@ -302,6 +302,8 @@ def import_mg_lorentz(location):
 
         # Match 'structure = '...' '
         structure = re.findall(r'structure = \'(.*?)\'', str(l))[0]
+
+        #print (mgname, spins, structure )
         
         lorentztry = MGLorentz(mgname, spins, structure)
         lor.append(lorentztry)
@@ -358,8 +360,8 @@ def import_mg_verts(location):
         lorentz = re.findall(r'lorentz = \[(.*?)\]', str(vertices[i]))
         # This returns a list with 1 entry; we want to split this up.
         lorentz = lorentz[0].split(',')
-        # Remove whitespace and quote marks
-        lorentz = [x.strip() for x in lorentz]
+        # Remove whitespace, quote marks and the preceding "L."
+        lorentz = [x.strip().strip('L.') for x in lorentz]
 
         couplings = re.findall(r'couplings = {(.*?)}', str(vertices[i]))
 
@@ -641,14 +643,128 @@ def get_mg_ch_param_dict():
 
     return param_dict
 
-def get_mg_ch_lorentz_dict():
+
+def translate_lorentz_structure(lorentz):
+    """
+    Translates the Lorentz structure of a MadGraph vertex into the language 
+    of CalcHEP.
+    """
+
+    # todo: factor of i for goldstones? can't have complex numbers in CH.
+
+    # If it's a 4-fermion vertex, we're going to have to split it up.
+    if lorentz.mgname[:4] == "FFFF":
+        return translate_four_fermion_lorentz(lorentz)
+
+    ch_struct = lorentz.structure
+
+    # Projection operators in MadGraph are ProjP(a,b) = (I + gamma^5)_{a,b}/2, (M<->P, +<->-)
+    ch_struct = re.sub(r'ProjP\((.*?),(.*?)\)', '(1 + G5)/2', ch_struct)
+    ch_struct = re.sub(r'ProjM\((.*?),(.*?)\)', '(1 - G5)/2', ch_struct)
+
+    # Momenta in MadGraph are P(A,N) = P_N^A
+    # Momenta in CalcHEP are pN.mA
+    ch_struct = re.sub(r'P\((.*?),(.*?)\)', r'p\2.m\1', ch_struct)
+
+    # Metric in MadGraph is Metric(mu,nu) = g_{mu,nu}
+    # Metric in CalcHEP is m1.m2 = g_{m1,m2}
+    ch_struct = re.sub(r'Metric\((.*?),(.*?)\)',r'm\1.m\2', ch_struct)
+
+    # Dirac matrix in MadGraph is Gamma(mu,a,b) = gamma^mu_{a,b}
+    # Dirac matrix in CalcHEP is G(m1) -> gamma^m1
+    ch_struct = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)',r'G(m\1)', ch_struct)
+
+    # Gamma5 in MadGraph is Gamma5(a,b) = gamma^5_{a,b}
+    # Gamma5 in CalcHEP is G5
+    ch_struct = re.sub(r'Gamma5\((.*?),(.*?)\)','G5', ch_struct)
+
+    # Do some algabra on gamma matrices? Clean it up? Leave it as one big string? 
+
+    return ch_struct
+
+def translate_four_fermion_lorentz(lorentz):
+    """
+    Translates the Lorentz structure of a MadGraph vertex into the language 
+    of CalcHEP, for a 4-fermion vertex.
+    """
+
+    ch_struct = lorentz.structure
+
+    # These vertices are like:
+    # ~ (chibar gamma chi) (etabar gamma' eta)
+    # To be split into:
+    # chibar (gamma) chi AUX   +   etabar gamma' eta (AUXbar)
+    # to be denoted left + right
+
+    # Use the multiplication to split the string up
+    strings = ch_struct.split('*')
+
+    # These are now strings like Gamma5(2,1) or Gamma(-1,4,3)
+    # Find all of those with both a +1 and +2 in, and same for +3 and +4
+    left = []
+    right = []
+
+    for i in strings:
+        nums = re.search(r'\((.*?)\)',i).group(1).split(',')
+        # Make these integers
+        nums = [int(x) for x in nums]
+        if 1 in nums or 2 in nums:
+            left.append(i)
+        elif 3 in nums or 4 in nums:
+            right.append(i)
+        else:
+            print("Unexpected Lorentz structure found.")
+            print("Quitting...")
+            sys.exit()
+
+    # Now want to perform operations on left and right
+    left = '*'.join(left)
+    right = '*'.join(right)
+
+    # Dirac matrix in MadGraph is Gamma(mu,a,b) = gamma^mu_{a,b}
+    # Dirac matrix in CalcHEP is G(m1) -> gamma^m1
+    # This always gets put on the auxiliary particle
+    left = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)', left)
+    right = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)', right)
+
+    # Gamma5 in MadGraph is Gamma5(a,b) = gamma^5_{a,b}
+    # Gamma5 in CalcHEP is G5
+    left = re.sub(r'Gamma5\((.*?),(.*?)\)','G5', left)
+    right = re.sub(r'Gamma5\((.*?),(.*?)\)','G5', right)
+
+    # Identity is 1!
+    left = re.sub(r'Identity\((.*?),(.*?)\)','1', left)
+    right = re.sub(r'Identity\((.*?),(.*?)\)','1', right)
+
+    # Sigma matrices don't seem to be defined in CalcHEP, so write them out by hand
+    # todo: factor of i?
+    left = re.sub(r'Sigma\((.*?),(.*?)\)','(G(m3)*G(M3)/2-G(M3)*G(m3)/2)', left)
+    right = re.sub(r'Sigma\((.*?),(.*?)\)','(G(m3)*G(M3)/2-G(M3)*G(m3)/2)', right)
+
+    return left, right
+
+
+
+
+def get_mg_ch_lorentz_dict(mg_lorentz):
     """
     Returns a dictionary to translate between Lorentz structures in MadGraph
     and CalcHEP.
     """
 
     ld = {}
+
+    for i in range(len(mg_lorentz)):
+        ld[mg_lorentz[i].mgname] = translate_lorentz_structure(mg_lorentz[i])
+
+    #print("")
+    #print("")
+    #for k, v in ld.iteritems():
+    #    print k, v
+    #print("")
+    #print("")
     return ld
+
 
 def get_mg_ch_parts_dict(mg_parts, ch_parts):
     """
@@ -675,13 +791,17 @@ def get_mg_ch_parts_dict(mg_parts, ch_parts):
     mg_pairs = {}
     for i in range(len(mg_parts)):
         mg_pairs[mg_parts[i].pdg_code] = mg_parts[i].name
+        if not mg_parts[i].selfconj: mg_pairs[-1*int(mg_parts[i].pdg_code)] = mg_parts[i].antiname
 
     keys = []
     values = []
 
     for i in range(len(ch_parts)):
         keys.append( mg_pairs.get(ch_parts[i].pdg_code) )
-        values.append( ch_parts[i].name)
+        values.append( ch_parts[i].name )
+        if not ch_parts[i].selfconj: 
+            keys.append( mg_pairs.get(-1*int(ch_parts[i].pdg_code) ))
+            values.append( ch_parts[i].antiname)
 
     # Now construct a dictionary of {'MadGraph name': 'CalcHEP name'}
     part_dict = dict(zip(keys, values))
@@ -728,6 +848,7 @@ def check_for_optimisation(mgparams, chparams):
     """
 
 def compare_vertices(mg_verts, mg_parts, mg_params,
+                     mg_lorentz, mg_couplings,
                      ch_verts, ch_parts, ch_params,
                      ch_location, 
                      param_dict, lorentz_dict, part_dict,
@@ -793,8 +914,7 @@ def compare_vertices(mg_verts, mg_parts, mg_params,
 
         parts = v.particles
 
-        # Find ghosts and goldstones
-        # TODO: tensor structures...
+        # Find ghosts and goldstones and tensor colour structures
         r = re.compile(r'(.*?)\.(.*?)')
 
         hasghosts = False
@@ -821,8 +941,33 @@ def compare_vertices(mg_verts, mg_parts, mg_params,
 
     unshared_vertices = mg_set ^ ch_set
 
+    # 4-gluon vertex -- hard-coded as it is in SARAH/FeynRules.
+    # This interaction is split into 2 3-body interactions with a coloured 
+    # tensor auxiliary propagator. Let's see if that is in the CH files.
+    if (21, 21, 21, 21) in unshared_vertices:
+
+        # Let's get the gluon name
+        gluon = ""
+        for i in range(len(ch_parts)):
+            p = ch_parts[i]
+            if int(p.pdg_code) == 21:
+                gluon = p.name
+        
+        # We want [g, g, g.t] vertex...
+        lookup = tuple([gluon, gluon, gluon+'.t'])
+        for i in range(len(ch_verts)):
+            v = ch_verts[i]
+            parts = v.particles
+            # If we find what we want, remove the 4G vertex
+            if lookup == tuple(sorted(parts)):
+                unshared_vertices.remove( (21, 21, 21, 21) )
+                break
+
+        # If it's not found, then we can add it later.
+
+
     # If there's only vertices found that exist in just MadGraph, then
-    # create a list of the actual vertices, as instances of MGVertex
+    # create a list of the actual vertex objects (i.e. instances of MGVertex)
     new_vertices = []
 
     if (unshared_vertices) and not (unshared_vertices & ch_set):
@@ -835,6 +980,7 @@ def compare_vertices(mg_verts, mg_parts, mg_params,
             if tuple(vpdg) in unshared_vertices:
                 new_vertices.append(v)
 
+    # 
     if unshared_vertices:
         if (unshared_vertices & mg_set):
             print("\nThe following vertices, by PDG code, are found in MadGraph but not CalcHEP:")
@@ -850,7 +996,8 @@ def compare_vertices(mg_verts, mg_parts, mg_params,
         else: 
             print("Writing new CalcHEP files.")
             add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, 
-                                          lorentz_dict, part_dict, mg_parts)
+                                          lorentz_dict, part_dict, mg_parts, 
+                                          mg_lorentz, mg_couplings)
     else:
         print("All vertices are consistent...")
 
@@ -859,7 +1006,8 @@ def compare_vertices(mg_verts, mg_parts, mg_params,
 WRITING ROUTINES
 """
 
-def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location):
+def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, 
+                    ch_location, mg_lorentz, mg_couplings):
     """
     Writes a CalcHEP vertex, given a MadGraph one.
     """
@@ -870,22 +1018,74 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_lo
     couplings = vertex.couplings
 
     spin2splus1 = []
+    pdgs = []
+    parts = []
+
     # Get the spins of each particle involved in the vertex
     for part in particles:
         for i in range(len(mg_parts)):
-            if mg_parts[i].mgname == part or mg_parts[i].mgantiname == part:
+            if mg_parts[i].mgname == part:
                 spin2splus1.append(int(mg_parts[i].spin))
+                pdgs.append(int(mg_parts[i].pdg_code))
+                parts.append(mg_parts[i].name)
+            elif mg_parts[i].mgantiname == part:
+                pdgs.append(-1*int(mg_parts[i].pdg_code))
+                spin2splus1.append(int(mg_parts[i].spin))
+                parts.append(mg_parts[i].antiname)
+
     
     # If there's 4 fermions involved - use the specialist 4-fermion function.
     if spin2splus1.count(2) == 4: 
         return write_four_fermion_vertex(vertex, param_dict, lorentz_dict, 
-                                         part_dict, mg_parts, ch_location)
+                                         part_dict, mg_parts, mg_lorentz, ch_location)
+
+            
+    # If it's a 4-gluon vertex, this is a hard-coded result: use the specialist function
+    if pdgs == [21, 21, 21, 21]:
+        return write_four_gluon_vertex(part_dict, mg_parts, ch_location)
+    
+    #todo: For nice formatting, get the numbers of spaces for each header.
+
+    #print particles
+    #print lorentz
+    #print couplings
+
+
+    # Rewrite the Lorentz strcture
+    lor = []
+    for i in range(len(mg_lorentz)):
+        l = mg_lorentz[i]
+        for j in range(len(lorentz)):
+            if lorentz[j] == l.mgname:
+                s = mg_lorentz[i].mgname
+                print s
+                # Rewrite the Lorentz structure into CalcHEP language
+                lor.append(lorentz_dict.get(s))
+    lor = ''.join('+'.join(lor).split())
+
+    # Rewrite the couplings
+    coup = ""
+
+    # Now we can do some writing.
+    vertex = ""
+    vertex += "{0: <13}".format(part_dict.get(parts[0])) + "|"
+    vertex += "{0: <13}".format(part_dict.get(parts[1])) + "|"
+    vertex += "{0: <13}".format(part_dict.get(parts[2])) + "|"
+    if len(parts) == 4:
+        vertex += "{0: <13}".format(part_dict.get(parts[3])) + "|"
     else:
-        return "\n"
+        vertex += "{0: <13}".format("") + "|"
 
-    return "\n"
+    vertex += "{0: <31}".format(coup) + "|"
+    vertex += "{}\n".format(lor)
 
-def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location):
+    #print vertex
+
+    return vertex
+
+
+def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, 
+                              mg_lorentz,ch_location):
     """
     Writes a four-fermion vertex for CalcHEP. This splits the contact interaction into
     two three-body interactions, with a constant propagator. This is achieved by 
@@ -928,7 +1128,7 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     newentry +=  "{0: <10}".format("aux" + str(counter)) + "|"
     newentry +=  "{0: <14}".format("Aux" + str(counter)) + "|\n"
 
-    print newentry
+    #print newentry
 
     new_ch_loc = os.path.abspath(ch_location) + "_ufo2mdl"
 
@@ -946,20 +1146,57 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     os.rename(new_ch_loc + "/parts_temp", new_ch_loc + "/prtcls1.mdl")
 
     # Now write vertices with these auxiliary particles.
-    # Create a fake MadGraph particle
+    out = ""
 
-    # todo: am here
+    # CalcHEP-ify the particle names
+    v = []
+    for i in vertex.particles[:]:
+        for j in range(len(mg_parts)):
+            if mg_parts[j].mgname == i:
+                v.append( part_dict.get(mg_parts[j].name) )
+            elif mg_parts[j].mgantiname == i:
+                v.append( part_dict.get(mg_parts[j].antiname) )
 
-    parts = mg_parts.copy()
-    parts.append(aux_part)
+    # Rewrite the Lorentz strcture
+    lor = []
+    for i in range(len(mg_lorentz)):
+        l = mg_lorentz[i]
+        for j in range(len(vertex.lorentz)):
+            if vertex.lorentz[j] == l.mgname:
+                s = mg_lorentz[i].mgname
+                # Rewrite the Lorentz structure into CalcHEP language
+                lor.append(lorentz_dict.get(s))
 
-    write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, parts, ch_location)
+    # Each object in lor is a tuple with the left- and right-side operators 
+    # chibar (gamma(left)) chi    etabar (gamma(right)) eta 
 
-    # Increment counter for new particles
+    # write new functions/variables to optimise vertex computation? 
+    # (as CH computes internal objects just once)
+
+    print lor
+
+    # Increment counter for auxiliary particles
     counter+=1
 
     return "\n"
 
+def write_four_gluon_vertex(part_dict, mg_parts, ch_location):
+    """
+    Writes the Standard Model 4-gluon interaction in CalcHEP via an auxiliary
+    tensor propagator carrying colour charge.  
+
+    # todo
+    """
+
+    # Get the name of the gluon in CalcHEP
+
+    # v =[]
+    # for i in mg_parts: if mgp[i].pdg == 21: glu=mgp[i].mgname
+    # chname = part_dict.get(glu)
+    # vertex = [chname, chname, chname+'.t']
+    # etc.
+
+    return "\n"
 
 def write_calchep_files(particles, parameters, vertices, param_dict, lorentz_dict, part_dict, mg_parts):
     """
@@ -974,10 +1211,11 @@ def write_calchep_files(particles, parameters, vertices, param_dict, lorentz_dic
 
     for i in range(len(vertices)):
         vertex = vertices[i]
-        lgrngfile += write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location)
+        lgrngfile += write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, 
+                                     ch_location, mg_lorentz, mg_couplings)
 
 def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz_dict, 
-                                  part_dict, mg_parts):
+                                  part_dict, mg_parts, mg_lorentz, mg_couplings):
     """
     Creates copies of the original CalcHEP files, and adds any new vertices found in the
     MadGraph files to them.
@@ -999,7 +1237,8 @@ def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz
         # Now write all the new vertices in.
         for i in range(len(new_vertices)):
             vertex = new_vertices[i]
-            g.write(write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, ch_location))
+            g.write(write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, 
+                                    mg_parts, ch_location, mg_lorentz, mg_couplings))
 
 
     print("New CalcHEP vertices added to {}.").format(new_ch_loc)
@@ -1107,9 +1346,9 @@ def compare(mg_location, ch_location):
     print("All particles are consistent...")
     print("Checking vertices...")
 
-    lorentz_dict = get_mg_ch_lorentz_dict()
+    lorentz_dict = get_mg_ch_lorentz_dict(mg_lorentz)
 
-    compare_vertices(mg_verts, mg_parts, mg_params,
+    compare_vertices(mg_verts, mg_parts, mg_params, mg_lorentz, mg_couplings,
                      ch_verts, ch_parts, ch_params,
                      ch_location, param_dict, lorentz_dict, part_dict)
 

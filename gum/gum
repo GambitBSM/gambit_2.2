@@ -144,6 +144,16 @@ if args.file:
         copy_madgraph_files(outputs.get_mg(), gum.name)
 
     """
+    # If we have both UFO and MDL files, run the files through ufo2mdl to compare outputs.
+    # This will, e.g., add 4-fermion interactions to CalcHEP where FeynRules fails to do so.
+    if output_opts.ch and output_opts.pythia:
+    # TODO make this depend on opts.ufo also.
+    compare(outputs.get_ch(), outputs.get_mg()):
+
+    todo: figure out what to return 
+    """
+
+    """
     MADGRAPH
     """
     if output_opts.pythia:  #TODO this should eventually be conditional on a dedicated MadGraph flag, as it will eventually be needed for MadDM and other things than just Pythia.
@@ -173,10 +183,8 @@ if args.file:
         # Run MadGraph
         call_madgraph(mg5_dir, mg5_output_dir,mi)
 
-
     print("")
     print("Finished running external codes.  Now writing proposed GAMBIT code.")
-
 
     """
     REGISTRATION OF NEW PARTICLES

@@ -16,6 +16,7 @@
 ///  *****************************************
 
 #include <fstream>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Models/partmap.hpp"
@@ -221,10 +222,12 @@ BE_NAMESPACE
     char *outbound_2 = new char[(out[1]).length() + 1];
     strcpy(outbound_2, (out[1]).c_str());
 
+    std::cout << "Requesting process " << in << " -> " << out[0] << " + " << out[1] << std::endl;
+
     // Obtain mass of decaying particle
-    double M =  *pMass(inbound);
-    double m1 = *pMass(outbound_1);
-    double m2 = *pMass(outbound_2);
+    double M =  pMass(inbound);
+    double m1 = pMass(outbound_1);
+    double m2 = pMass(outbound_2);
 
     // If channel is kinematically closed, return 0.
     if (m1 + m2 > M) { return 0; }
@@ -233,14 +236,23 @@ BE_NAMESPACE
     char *process = new char[(in + " -> " + out[0] + "," + out[1]).length() + 1];
     strcpy(process, (in + " -> " + out[0] + "," + out[1]).c_str());
 
+    std::string incpy = in;
+    std::string out0cpy = out[0];
+    std::string out1cpy = out[1];
+
+    // Replace any instance of a tilde with "bar"
+    boost::replace_all(incpy, "~", "bar");
+    boost::replace_all(out0cpy, "~", "bar");
+    boost::replace_all(out1cpy, "~", "bar");
+
     // Remove all non-alpha numeric characters from the library names
-    in.resize(std::remove_if(in.begin(), in.end(), [](char x) {return !isalnum(x) && !isspace(x);})-in.begin());
-    out[0].resize(std::remove_if(out[0].begin(), out[0].end(), [](char x) {return !isalnum(x) && !isspace(x);})-out[0].begin());
-    out[1].resize(std::remove_if(out[1].begin(), out[1].end(), [](char x) {return !isalnum(x) && !isspace(x);})-out[1].begin());
+    incpy.resize(std::remove_if(incpy.begin(), incpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-incpy.begin());
+    out0cpy.resize(std::remove_if(out0cpy.begin(), out0cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out0cpy.begin());
+    out1cpy.resize(std::remove_if(out1cpy.begin(), out1cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out1cpy.begin());
 
     // Generate libname from model and process name
-    char *libname = new char[(model + "_" + in + "_to_" + out[0] + out[1]).length() + 1];
-    strcpy(libname, (model + "_" + in + "_to_" + out[0] + out[1]).c_str());
+    char *libname = new char[(model + "_" + incpy + "_to_" + out0cpy + out1cpy).length() + 1];
+    strcpy(libname, (model + "_" + incpy + "_to_" + out0cpy + out1cpy).c_str());
 
     char *excludeVirtual = NULL; // Exclude any internal particles
     char *excludeOut = NULL;     // Exclude any products
@@ -269,8 +281,18 @@ BE_NAMESPACE
     // Compute squared matrix element
     double matElement = cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err);
 
+    if(err != 0) std::cout << "Error in CalcHEP!" << std::endl;
+
+    std::cout << matElement << std::endl;
+
     // Compute kinematic prefactor for X -> Y, Z decay
     double prefactor = p/(8*pi*Msquared);
+
+    // Release all memory allocated by "new" before returning
+    delete libname; 
+    delete inbound; 
+    delete outbound_1; 
+    delete outbound_2; 
 
     // Return partial width
     return prefactor*matElement;
@@ -304,11 +326,11 @@ BE_NAMESPACE
     strcpy(outbound_2, (out[1]).c_str());
 
     // Obtain mass of in & out states
-    double m_DM = *pMass(inbound_1);
-    if (*pMass(inbound_2) != m_DM) backend_error().raise(LOCAL_INFO, "Mass for both in states must be identical for CH_Sigma_V. "
+    double m_DM = pMass(inbound_1);
+    if (pMass(inbound_2) != m_DM) backend_error().raise(LOCAL_INFO, "Mass for both in states must be identical for CH_Sigma_V. "
                                   "Coannihilations not currently supported.");
-    double m3 = *pMass(outbound_1);
-    double m4 = *pMass(outbound_2);
+    double m3 = pMass(outbound_1);
+    double m4 = pMass(outbound_2);
 
     // Kinematics (in states)
     double s = 16*m_DM*m_DM/(4-v_rel*v_rel);
@@ -384,6 +406,13 @@ BE_NAMESPACE
       pvect[15] = -pvect[11];
       M_squared += dcos*(cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err)); // dcos * dM_squared/dcos
     }
+
+    // Release all memory allocated by "new" before returning
+    delete libname;
+    delete inbound_1;
+    delete inbound_2;
+    delete outbound_1;
+    delete outbound_2;
 
     // Total sigma_v
     return prefactor*M_squared;
