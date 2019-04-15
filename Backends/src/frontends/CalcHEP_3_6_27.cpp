@@ -281,9 +281,8 @@ BE_NAMESPACE
     // Compute squared matrix element
     double matElement = cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err);
 
-    if(err != 0) std::cout << "Error in CalcHEP!" << std::endl;
-
-    std::cout << matElement << std::endl;
+    if(err != 0) backend_error().raise(LOCAL_INFO, "Unable to calculate matrix element associated with " + std::string(process) +
+          " in CalcHEP. Please check your model files.\n");
 
     // Compute kinematic prefactor for X -> Y, Z decay
     double prefactor = p/(8*pi*Msquared);
