@@ -118,8 +118,13 @@ namespace Gambit
         // Rather call a BE convenience function, which itself calls Prospino...
         // @todo pass in a list of processes to SPheno?
 
-        const Spectrum& spectrum = *Dep::MSSM_spectrum;
-        std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
+        // const Spectrum& spectrum = *Dep::MSSM_spectrum;
+
+        // Get an SLHA1 object for Prospino.
+        const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
+
+        // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
+        std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(slha);
 
         result.set_xsec(xsec_vals.at(0), xsec_vals.at(1));
       }

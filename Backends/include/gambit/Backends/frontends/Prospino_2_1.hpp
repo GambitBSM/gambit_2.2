@@ -25,6 +25,7 @@
 // Load it
 LOAD_LIBRARY
 
+BE_ALLOW_MODELS(MSSM63atQ_mA,MSSM63atMGUT_mA)
 
 
 // Import functions
@@ -34,7 +35,7 @@ LOAD_LIBRARY
 BE_FUNCTION(prospino_gb, void, (Finteger&, Finteger&, Finteger&, Fdouble&, Finteger&, Fstring<2>&, Finteger&, Finteger&, Finteger&, Finteger&, Farray<Fdouble,1,20>&, Farray<Fdouble,0,99>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,4,1,4>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&), "__xx_prospino_subroutine_MOD_prospino_gb", "prospino_gb")
 
 // Convenience functions (registration)
-BE_CONV_FUNCTION(run_prospino, std::vector<double>, (const Spectrum&), "prospino_LHC_xsec")
+BE_CONV_FUNCTION(run_prospino, std::vector<double>, (const SLHAstruct&), "prospino_LHC_xsec")
 
 
 // Undefine macros to avoid conflict with other backends

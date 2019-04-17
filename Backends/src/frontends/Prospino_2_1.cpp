@@ -15,8 +15,11 @@
 
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/Prospino_2_1.hpp"
+#include "gambit/Elements/mssm_slhahelp.hpp"
+#include "gambit/Elements/slhaea_helpers.hpp"
 
-#include "gambit/Elements/spectrum.hpp"
+
+// #include "gambit/Elements/spectrum.hpp"
 // #include "gambit/Elements/spectrum_factories.hpp"
 // #include "gambit/Models/SimpleSpectra/NMSSMSimpleSpec.hpp"
 
@@ -29,10 +32,17 @@
 BE_NAMESPACE
 {
   // Convenience function to run SPheno and obtain the spectrum
-  std::vector<double> run_prospino(const Spectrum& spectrum)
+  // std::vector<double> run_prospino(const Spectrum& spectrum)
+  std::vector<double> run_prospino(const SLHAstruct& slha)
   {
 
+    // Get type converter 
+    using SLHAea::to;
+
     std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
+    
+    std::cout << "DEBUG:  slha.at('EXTPAR').at(1) = " << to<double>(slha.at("EXTPAR").at(1)) << std::endl;
+
 
     Finteger inlo = 1;                 // specify LO only[0] or complete NLO (slower)[1]
     Finteger isq_ng_in = 1;            // specify degenerate [0] or free [1] squark masses
@@ -70,6 +80,97 @@ BE_NAMESPACE
   real(kind=double)                  :: mg_orig,ms_orig  ! set in INIT_SUSY
   complex(kind=double), dimension(4,4) :: zz             ! set in INIT_SUSY
 */
+
+    lowmass(0) = to<double>(slha.at("EXTPAR").at(1));
+
+
+    // lowmass(0) = *Param["mu"];
+    // lowmass(1) = *Param["M1"];
+    // lowmass(2) = *Param["M2"];
+    // lowmass(3) = *Param["M3"];
+
+    // lowmass(4) = spectrum.get(Par::Pole_Mass, "~g");
+
+    // lowmass(5) = spectrum.get(Par::Pole_Mass, "~chi0",1);
+    // lowmass(6) = spectrum.get(Par::Pole_Mass, "~chi0",2);
+    // lowmass(7) = spectrum.get(Par::Pole_Mass, "~chi0",3);
+    // lowmass(8) = spectrum.get(Par::Pole_Mass, "~chi0",4);
+
+    // lowmass(9) = spectrum.get(Par::Pole_Mass, "~chi+",1);
+    // lowmass(10) = spectrum.get(Par::Pole_Mass, "~chi+",2);
+
+    // double degen_squark_mass_8 = ;
+    // double degen_squark_mass_10 = degen_squark_mass_10;
+
+    // lowmass(15) degenerate squark mass (8)
+    // lowmass(16) degenerate squark mass (10)
+
+
+
+/*
+  output parameters: 
+  lowmass(0)  mu                                 c
+  lowmass(1)  m_1
+  lowmass(2)  m_2
+  lowmass(3)  m_3
+                                                 
+  lowmass(4)  gluino mass
+  lowmass(5)  \
+  lowmass(6)   \
+  lowmass(7)   /  neutralino masses [with sign]
+  lowmass(8)  /
+  lowmass(9)  \
+  lowmass(10) /   chargino masses
+                                                 
+  lowmass(15) degenerate squark mass (8)
+  lowmass(16) degenerate squark mass (10)
+                                                 
+  lowmass(21) a_b
+  lowmass(24) a_t
+                                                 
+  lowmass(30) selectron_l mass
+  lowmass(31) selectron_r mass
+  lowmass(32) selectron-neutrino mass
+  lowmass(33) stau_1 mass
+  lowmass(34) stau_2 mass
+  lowmass(35) stau-neutrino mass
+  lowmass(36) a_tau
+                                                 
+  lowmass(40) cp odd higgs mass
+  lowmass(41) light cp even higgs mass
+  lowmass(42) heavy cp even higgs mass
+  lowmass(43) charged higgs mass
+  lowmass(44) sin(alpha
+  lowmass(45) cos(alpha
+                                                 
+  like cteq: u,d,s,c,b,t first L then R
+  lowmass(51) sup_L
+  lowmass(52) sdown_L
+  lowmass(53) sstrange_L
+  lowmass(54) scharm_L
+  lowmass(55) sbottom_1
+  lowmass(56) stop_1
+  lowmass(57) sup_R
+  lowmass(58) sdown_R
+  lowmass(59) sstrange_R
+  lowmass(60) scharm_R
+  lowmass(61) sbottom_2
+  lowmass(62) stop_2
+                                                 
+  lowmass(80) unification scale
+  lowmass(81) unified coupling alpha(m_x)
+                                                 
+  lowmass(91) trilinear higgs coupling lambda(1)
+  .......
+  lowmass(97) lambda(7)
+                                                 
+  lowmass(99
+*/
+
+
+    // (*MCha)(i) = spectrum.get(Par::Pole_Mass, "~chi+",i);
+    // (*ZD)(i,j) = spectrum.get(Par::Pole_Mixing, "~d", i, j);
+
 
     // Call prospino
     prospino_gb(inlo, isq_ng_in, icoll_in, energy_in, i_error_in, final_state_in, ipart1_in, ipart2_in, isquark1_in, isquark2_in,
