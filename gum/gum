@@ -173,7 +173,8 @@ if args.file:
 
         # Create the MadGraph script
         # TODO determine all possible BSM processes automatically when collider_processes is missing from the .gum file
-        make_madgraph_script(mg5_output_dir, gum.name, output_opts.collider_processes)
+        make_madgraph_script(mg5_output_dir, gum.name, output_opts.collider_processes, 
+                             output_opts.multiparticles)
 
         # Add MadGraph to path and import the python interface
         mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
@@ -382,6 +383,11 @@ if args.file:
 
     print("Writing new frontends and patches for backend codes.")
 
+    # Create defaultdict for reset file.
+    # There are 2 nodes: new_files and amended_files.
+    # todo: add backend patches (e.g. pythia stuff) to reset_contents
+    reset_contents = defaultdict(lambda: defaultdict(list))
+
     # Conditional on CalcHEP files being made.
     if output_opts.ch: # If no parent
         ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
@@ -389,7 +395,7 @@ if args.file:
     # Have we created a new Pythia backend?
     if output_opts.pythia:
         print("  Patching Pythia to inject new matrix elements into its Process Container and shared library.")
-        fix_pythia_lib(gum.name, new_pythia_dir)
+        fix_pythia_lib(gum.name, new_pythia_dir, output_opts.pythia_groups)
         print("  Creating a diff vs original version of Pythia.")
         write_backend_patch(output_dir, pristine_pythia_dir, new_pythia_dir, "pythia_"+gum.name.lower(), "8."+base_pythia_version)
         print("  Creating a BOSS config file for Pythia_"+gum.name+".")
@@ -409,30 +415,8 @@ if args.file:
     print("")
     print("Now putting the new code into GAMBIT.")
 
-    #print("model_header")
-    #print(model_header)
-    #print("spec_contents")
-    #print(spec_contents)
-    #print("subspec_wrapper")
-    #print(subspec_wrapper)
-    #print("spectrum_src")
-    #print(spectrum_src)
-    #print("spec_contents")
-    #print(spec_contents)
-    #print("spectrum_header")
-    #print(spectrum_header)
-    #print("decaybit_src_ch")
-    #print(decaybit_src_ch)
-    #print("decay_roll")
-    #for i in xrange(len(decay_roll)):
-    #    print(decay_roll[i][0])
-    #    print(decay_roll[i][1])
-
     # All file writing routines HERE, once everything has gone okay.
 
-    # Create defaultdict for reset file.
-    # There are 2 nodes: new_files and amended_files.
-    reset_contents = defaultdict(lambda: defaultdict(list))
 
     # Models
     m = "Models"

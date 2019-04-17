@@ -37,7 +37,8 @@ class Outputs:
 
     def __init__(self, mathpackage, calchep = False, pythia = False,
                  micromegas = False, spheno = False, flexiblesusy = False,
-                 vevacious = False, collider_processes = None):
+                 vevacious = False, collider_processes = None, 
+                 multiparticles = None, pythia_groups = None):
 
         self.ch = calchep
         self.pythia = pythia
@@ -46,6 +47,8 @@ class Outputs:
         self.fs = flexiblesusy
         self.vev = vevacious
         self.collider_processes = collider_processes
+        self.multiparticles = multiparticles
+        self.pythia_groups = pythia_groups
 
         # Overwrite these, as the output does not exist.
         if mathpackage == 'feynrules':
@@ -145,6 +148,10 @@ def fill_gum_object(data):
                 opts[i] = False
         if 'collider_processes' in data['output']:
             opts['collider_processes'] = data['output']['collider_processes']
+        if 'multiparticles' in data['output']:
+            opts['multiparticles'] = data['output']['multiparticles']
+        if 'pythia_groups' in data['output']:
+            opts['pythia_groups'] = data['output']['pythia_groups']
 
     # Default: if unspecified, write everything.
     else:

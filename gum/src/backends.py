@@ -82,7 +82,11 @@ def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version)
     subprocess.call("diff -rupN "+pristine_parts[1]+" "+patched_dir+" > "+outfile, shell=True)
     os.chdir(cwd)
 
-def fix_pythia_lib(model, patched_dir):
+def fix_pythia_lib(model, patched_dir, pythia_groups):
+    """
+    Routine to patch the new Pythia - adding new matrix elements to the 
+    Process Container -- and the shared library too.
+    """
 
     import re
 
@@ -119,6 +123,16 @@ def fix_pythia_lib(model, patched_dir):
         f.write("<flag name=\""+model+":all\" default=\"off\">\n")
         f.write("Common switch for production of "+model+" processes. Added by GAMBIT.\n")
         f.write("</flag>\n")
+
+        # Go through pythia_groups to add each individual flag, to
+        # select groups of subprocesses
+        for group in pythia_groups:
+            for k, v in group.items():
+                f.write("<flag name=\""+model+k+":all\" default=\"off\">\n")
+                f.write("Common switch for production of "+model+" processes, involving the group of particles ["+', '.join(v)+"] as external legs ONLY. Added by GAMBIT.\n")
+                f.write("</flag>\n")
+
+        # Invidiual processes
         for x in processes:
             f.write("\n")
             f.write("<flag name=\""+model+":"+x[0]+"2"+x[1]+"\" default=\"off\">\n")
@@ -147,12 +161,40 @@ def fix_pythia_lib(model, patched_dir):
                 for x in headers:
                     if x.startswith("Sigma"):
                         f_new.write("#include \""+x+"\"\n")
+
             if "// End of SUSY processes." in line:
+
                 f_new.write("\n")
                 f_new.write("  // Set up requested objects for "+model+" processes. Added by GAMBIT.\n")
                 f_new.write("  bool "+model+" = settings.flag(\""+model+":all\");\n")
+
+                # Go through pythia_groups to add each individual flag, to
+                # select groups of subprocesses
+                for group in pythia_groups:
+                    for k, v in group.items():
+                        f_new.write("  bool "+model+k+" = settings.flag(\""+model+k+":all\");\n")
+
+                # Add each process
                 for x in processes:
-                    f_new.write("  if ("+model+" || settings.flag(\""+model+":"+x[0]+"2"+x[1]+"\")) {\n")
+
+                    process_syntax = x[2]
+                    # Get the in and out states
+                    in_states =  re.search('<ei>(.*)&rarr', process_syntax).group(1).split()
+                    out_states = re.search(';(.*)<\\\\ei>', process_syntax).group(1).split()
+                    external_states = in_states+out_states
+
+                    # If any of the particles belong to any Pythia group,
+                    # add them as a conditional to be selectable from
+                    # the yaml file in a GAMBIT scan.
+
+                    switches = ""
+                    for group in pythia_groups:
+                        for k, v in group.items():
+                            vtemp = [i.lower() for i in v] # Pythia makes everything lowercase
+                            if any([i.lower() in vtemp for i in external_states]):
+                                switches += " {0} ||".format(model+k)
+
+                    f_new.write("  if ("+model+" ||{0} settings.flag(\"".format(switches)+model+":"+x[0]+"2"+x[1]+"\")) {\n")
                     f_new.write("    sigmaPtr = new Sigma_"+model+"_"+x[0]+"_"+x[1]+"();\n")
                     f_new.write("    containerPtrs.push_back( new ProcessContainer(sigmaPtr) );\n")
                     f_new.write("  }\n")

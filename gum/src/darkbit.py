@@ -714,7 +714,7 @@ def write_micromegas(gambit_model_name, mathpackage, params):
             "\n"
             "LOAD_LIBRARY\n"
             "\n"
-            "BE_ALLOW_MODELS(VectorSingletDM_Z2)\n"
+            "BE_ALLOW_MODELS({0})\n"
             "\n"
             "BE_FUNCTION(assignVal, int, (char*,double),\"assignVal\",\"assignVal\")\n"
             "BE_FUNCTION(vSigma, double, (double, double, int), \"vSigma\",\"vSigma\")\n"

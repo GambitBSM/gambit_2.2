@@ -9,7 +9,7 @@ from files import mkdir_if_absent, remove_tree_quietly
 
 script_name = "generate_matrix_elements.mg5"
 
-def make_madgraph_script(mg5_output_dir, model_name, processes):
+def make_madgraph_script(mg5_output_dir, model_name, processes, multiparticles):
     """
     Writes a script to be used when calling MadGraph.
     """
@@ -18,9 +18,16 @@ def make_madgraph_script(mg5_output_dir, model_name, processes):
 
     print("Generating {}.".format(filename))
 
-    # Import the model and tell MadGraph to generate the first process
-    towrite = ("import model " + model_name + "\n"
-               "generate " + processes[0] + "\n")
+    # Import the model 
+    towrite = "import model " + model_name + "\n"
+
+    # Import any multiparticles
+    for multi in multiparticles:
+        for k, v in multi.items():
+           towrite += ("define {0} = {1}\n".format(k, ' '.join(v)))
+
+    # Tell MadGraph to generate the first process
+    towrite += "generate " + processes[0] + "\n"
     # If there are more processes, tell MadGraph to add them too
     if len(processes) > 1:
         for x in processes[1:]:

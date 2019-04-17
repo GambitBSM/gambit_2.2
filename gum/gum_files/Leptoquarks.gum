@@ -10,111 +10,43 @@ math:
 
 # Outputs for GUM to hook up to GAMBIT
 output:
-  calchep: true
-#   pythia: true
-#   collider_processes:
-#     - p p > U1~ U1
-#     - p p > U1~ U1 j
-#     - p p > U1~ U1 a
-#     - p p > U1~ U1 Z
-#     - p p > U1~ U1 h
-#     - p p > l- U1
-#     - p p > l- U1 j
-#     - p p > l- U1 a
-#     - p p > l- U1 Z
-#     - p p > l- U1 h
-#     - p p > l+ U1~
-#     - p p > l+ U1~ j
-#     - p p > l+ U1~ a
-#     - p p > l+ U1~ Z
-#     - p p > l+ U1~ h
-#     - p p > S1~ S1
-#     - p p > S1~ S1 j
-#     - p p > S1~ S1 a
-#     - p p > S1~ S1 Z
-#     - p p > S1~ S1 h
-#     - p p > l+ S1
-#     - p p > l+ S1 j
-#     - p p > l+ S1 a
-#     - p p > l+ S1 Z
-#     - p p > l+ S1 h
-#     - p p > l- S1~
-#     - p p > l- S1~ j
-#     - p p > l- S1~ a
-#     - p p > l- S1~ Z
-#     - p p > l- S1~ h
-#     - p p > S3m13~ S3m13
-#     - p p > S3m13~ S3m13 j
-#     - p p > S3m13~ S3m13 a
-#     - p p > S3m13~ S3m13 Z
-#     - p p > S3m13~ S3m13 h
-#     - p p > l+ S3m13
-#     - p p > l+ S3m13 j
-#     - p p > l+ S3m13 a
-#     - p p > l+ S3m13 Z
-#     - p p > l+ S3m13 h
-#     - p p > l- S3m13~
-#     - p p > l- S3m13~ j
-#     - p p > l- S3m13~ a
-#     - p p > l- S3m13~ Z
-#     - p p > l- S3m13~ h
-#     - p p > S3m43~ S3m43
-#     - p p > S3m43~ S3m43 j
-#     - p p > S3m43~ S3m43 a
-#     - p p > S3m43~ S3m43 Z
-#     - p p > S3m43~ S3m43 h
-#     - p p > l+ S3m43
-#     - p p > l+ S3m43 j
-#     - p p > l+ S3m43 a
-#     - p p > l+ S3m43 Z
-#     - p p > l+ S3m43 h
-#     - p p > l- S3m43~
-#     - p p > l- S3m43~ j
-#     - p p > l- S3m43~ a
-#     - p p > l- S3m43~ Z
-#     - p p > l- S3m43~ h
-#     - p p > S3p23~ S3p23
-#     - p p > S3p23~ S3p23 j
-#     - p p > S3p23~ S3p23 a
-#     - p p > S3p23~ S3p23 Z
-#     - p p > S3p23~ S3p23 h
-# #    - p p > l- S3p23
-# #    - p p > l- S3p23 j
-# #    - p p > l- S3p23 a
-# #    - p p > l- S3p23 Z
-# #    - p p > l- S3p23 h
-# #    - p p > l+ S3p23~
-# #    - p p > l+ S3p23~ j
-# #    - p p > l+ S3p23~ a
-# #    - p p > l+ S3p23~ Z
-# #    - p p > l+ S3p23~ h
-#     - p p > R2p23~ R2p23
-#     - p p > R2p23~ R2p23 j
-#     - p p > R2p23~ R2p23 a
-#     - p p > R2p23~ R2p23 Z
-#     - p p > R2p23~ R2p23 h
-#     - p p > l- R2p23
-#     - p p > l- R2p23 j
-#     - p p > l- R2p23 a
-#     - p p > l- R2p23 Z
-#     - p p > l- R2p23 h
-#     - p p > l+ R2p23~
-#     - p p > l+ R2p23~ j
-#     - p p > l+ R2p23~ a
-#     - p p > l+ R2p23~ Z
-#     - p p > l+ R2p23~ h
-#     - p p > R2p53~ R2p53
-#     - p p > R2p53~ R2p53 j
-#     - p p > R2p53~ R2p53 a
-#     - p p > R2p53~ R2p53 Z
-#     - p p > R2p53~ R2p53 h
-#     - p p > l- R2p53
-#     - p p > l- R2p53 j
-#     - p p > l- R2p53 a
-#     - p p > l- R2p53 Z
-#     - p p > l- R2p53 h
-#     - p p > l+ R2p53~
-#     - p p > l+ R2p53~ j
-#     - p p > l+ R2p53~ a
-#     - p p > l+ R2p53~ Z
-#     - p p > l+ R2p53~ h
+  # calchep: true
+  pythia: true
+  multiparticles:
+    - LQ: [U1, U1~, S1, S1~, S3m13, S3m13~, S3m43, S3m43~, S3p23, S3p23~, R2p23, R2p23~, R2p53, R2p53~]
+  pythia_groups: 
+    - S1: [S1, S1~]
+    - S3: [S3m13, S3m13~, S3m43, S3m43~, S3p23, S3p23~]
+    - R2: [R2p23, R2p23~, R2p53, R2p53~]
+    - U1: [U1, U1~]
+  collider_processes:
+    - p p > LQ LQ
+    - p p > LQ LQ j
+    - p p > LQ LQ a
+    - p p > LQ LQ Z
+    - p p > LQ LQ h
+    - p p > l- LQ
+    - p p > l- LQ j
+    - p p > l- LQ a
+    - p p > l- LQ Z
+    - p p > l- LQ h
+    - p p > l+ LQ
+    - p p > l+ LQ j
+    - p p > l+ LQ a
+    - p p > l+ LQ Z
+    - p p > l+ LQ h
+    - p p > l+ l-
+    - p p > l+ l- j
+    - p p > l+ l- a
+    - p p > l+ l- Z
+    - p p > l+ l- h
+    - p p > l- vl~
+    - p p > l- vl~ j
+    - p p > l- vl~ a
+    - p p > l- vl~ Z
+    - p p > l- vl~ h    
+    - p p > l+ vl
+    - p p > l+ vl j
+    - p p > l+ vl a
+    - p p > l+ vl Z
+    - p p > l+ vl h

@@ -300,8 +300,6 @@ def get_antiparticles(partlist):
     for i in range(len(partlist)):
         p = partlist[i]
 
-        print p.name(), p.antiname()
-
         # If it's self-conjugate, just add it once
         if ( p.name() == p.antiname() ):
             conjdict[p.pdg()] = p.pdg()
@@ -311,5 +309,4 @@ def get_antiparticles(partlist):
             conjdict[p.pdg()] = -p.pdg()
             conjdict[-p.pdg()] = p.pdg()
 
-    print conjdict
     return conjdict
