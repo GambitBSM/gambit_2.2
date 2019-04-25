@@ -6,19 +6,14 @@ math:
   # Name of Model within that package. This will also be the name of the GAMBIT model.
   model: Leptoquarks
   base_model: SM
-  lagrangian: LSM + LU1 + LR2 + LS3
+  lagrangian: LSM + LS1 + LR2
 
 # Outputs for GUM to hook up to GAMBIT
 output:
   calchep: true
   pythia: true
   multiparticles:
-    - LQ: [U1, U1~, S1, S1~, S3m13, S3m13~, S3m43, S3m43~, S3p23, S3p23~, R2p23, R2p23~, R2p53, R2p53~]
-  # pythia_groups: 
-  #   - S1: [S1, S1~]
-  #   - S3: [S3m13, S3m13~, S3m43, S3m43~, S3p23, S3p23~]
-  #   - R2: [R2p23, R2p23~, R2p53, R2p53~]
-  #   - U1: [U1, U1~]
+    - LQ: [S1, S1~, R2p23, R2p23~, R2p53, R2p53~]
   collider_processes:
     - p p > LQ LQ
     - p p > l- LQ

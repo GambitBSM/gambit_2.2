@@ -282,6 +282,24 @@ M$Parameters = {
 
   (* U1 parameters *)
 
+  kappaY == {
+    ParameterType    -> External,
+    ComplexParameter -> False,
+    BlockName        -> U1GAUGE,
+    OrderBlock       -> 2,
+    Value            -> 1.0,
+    Description      -> "Non-minimal SU(2) coupling"
+  },  
+
+  kappaW == {
+    ParameterType    -> External,
+    ComplexParameter -> False,
+    BlockName        -> U1GAUGE,
+    OrderBlock       -> 3,
+    Value            -> 1.0,
+    Description      -> "Non-minimal Hypercharge coupling"
+  },
+
   xLU1 == { 
     ParameterType    -> External,
     ComplexParameter -> False,
@@ -306,9 +324,7 @@ M$Parameters = {
     TeX              -> Subsuperscript[x,U1,R],
     InteractionOrder -> {NP, 1},
     Description      -> "Right-handed U1 flavour matrix"
-  }
-
-};
+  };
 
 (********************* The Lagrangian *********************)
 
@@ -330,7 +346,6 @@ LS1Yuk1 :=  Module[ {a,b,sp,i,j,cc},
 LS1Yuk2 :=  Module[ {sp,i,j,cc},
  ExpandIndices[yRRS1[i,j] anti[CC[uR]][sp,i,cc].lR[sp,j] S1bar[cc], FlavorExpand-> Generation]
 ];
-
 
 (***** Complete S1 Lagrangian *****)
 
@@ -377,11 +392,16 @@ LS3 := LS3Kin + LS3Yuk + HC[LS3Yuk];
 
 (** U1 **)
 
-LLQ1:= Mu1^2 U1bar[mu] U1[mu] - 1/2 FS[U1,mu,nu] FS[U1,mu,nu];
-LLQ2:= ExpandIndices[ U1[mu, c] xLU1[i, j] QLbar[p, f, i, c].Ga[mu, p, q].LL[q, f, j]];
-LLQ3:= ExpandIndices[ U1[mu, c] xRU1[i, j] dRbar[p, i, c].Ga[mu, p, q].lR[q, j] ];
+(*LLQ1:= Mu1^2 U1bar[mu] U1[mu] - 1/2 FS[U1,mu,nu] FS[U1,mu,nu];*)
 
-LU1:= (LLQ1 + LLQ2 + HC[LLQ2] + LLQ3 + HC[LLQ3]);
+LU1kin := - 1/2 (DC[U1bar[nu,i], mu] - DC[U1bar[mu,i], nu]) (DC[U1[nu,i], mu] - DC[U1[mu,i], nu]) + Mu1^2 U1bar[mu] U1[mu];
+
+LU1gauge := - I gs kappaG U1bar[mu,i] FS[G,mu,nu,a] T[a,i,j] U1[nu,j] - I g1 kappaY U1bar[mu] FS[B,mu,nu] U1[nu];
+
+LU1left:= ExpandIndices[ U1[mu, c] xLU1[i, j] QLbar[p, f, i, c].Ga[mu, p, q].LL[q, f, j]];
+LU1right:= ExpandIndices[ U1[mu, c] xRU1[i, j] dRbar[p, i, c].Ga[mu, p, q].lR[q, j] ];
+
+LU1:= (LU1kin + LU1gauge + LU1left + HC[LU1left] + LU1right + HC[LU1right]);
 
 (** Total Lagrangian **) 
 

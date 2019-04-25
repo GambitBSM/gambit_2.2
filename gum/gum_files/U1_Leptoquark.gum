@@ -4,19 +4,20 @@ math:
   # Name of Mathematica package, either 'feynrules' or 'sarah'
   package: feynrules
   # Name of Model within that package. This will also be the name of the GAMBIT model.
-  model: VectorLeptoquark
+  model: Leptoquarks
   base_model: SM
-  #restriction: DiagonalCKM
   lagrangian: LSM + LU1
 
 # Outputs for GUM to hook up to GAMBIT
 output:
   calchep: true
   pythia: true
+  multiparticles:
+    - LQ: [U1, U1]
   collider_processes:
-    - p p > U1 U1~
-    - p p > U1 U1~ j
-    - p p > U1 U1~ a
-    - p p > U1 U1~ Z
-    - p p > U1 U1~ h
-    # ...
+    - p p > LQ LQ
+    - p p > l- LQ
+    - p p > l+ LQ
+    - p p > l+ l-
+    - p p > l- vl~   
+    - p p > l+ vl
