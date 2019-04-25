@@ -12,11 +12,12 @@
     arxiv:1903.07070
 
   Notes:
+    
+    There are a lot of details missing in the paper, e.g. the exact numbers used for baseline 
+    object selection, isolation criteria, etc. So we have for now made some hopefully reasonable 
+    assumptions, to be validated when we get more info from CMS.
 
-
-  Event selection:
-
-    Apply photon detector efficiency?
+  Event selection summary:
 
     Trigger:
     - Two photons
@@ -30,10 +31,10 @@
     - |eta| < 1.44
     - Isolated from other reconstructed particles by 
       considering pT sum of other particles within 
-      DeltaR = 0.3. (No details given in the paper...) 
+      DeltaR = 0.3. (Not implemented. No details given in the paper...) 
 
     Further requirements:
-    - Identift the two highest pT EM objects (gg, ee, ge)
+    - Identify the two highest pT EM objects (gg, ee, ge)
     - Require objects to have DeltaR > 0.6
     - Require objects to have m > 105
 
@@ -92,7 +93,7 @@ namespace Gambit {
       void run(const HEPUtils::Event* event)
       {
         // Baseline objects
-        HEPUtils::P4 ptot = event->missingmom();
+        // HEPUtils::P4 pTmissVector = event->missingmom();
         double met = event->met();
 
         // _cutflow.fillinit();
@@ -118,12 +119,25 @@ namespace Gambit {
                                      0.0,    0.0,      0.0,      0.0,      0.0,     // eta > 2.5
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dPhoton(aPhoton,bPhoton,cPhoton);
-        vector<HEPUtils::Particle*> Photons;
+        vector<HEPUtils::Particle*> photons;
         for (HEPUtils::Particle* photon : event->photons())
         {
           bool isPhoton=has_tag(_eff2dPhoton, photon->abseta(), photon->pT());
-          if (isPhoton && photon->pT()>15.) Photons.push_back(photon);
+          if (isPhoton && photon->pT()>15.) photons.push_back(photon);
         }
+        // Sort 
+        sortByPt(photons);
+
+        // Photon trigger cut
+        bool trigger = false;
+        if (photons.size() >= 2) {
+          double mggTrigger = (photons.at(0)->mom() + photons.at(1)->mom()).m();
+          if (mggTrigger > 95.) {
+            trigger = true;
+          }
+        }
+        // // Return immediately if event didn't pass trigger
+        // if (!trigger) return;
 
 
         // Electrons
@@ -148,13 +162,16 @@ namespace Gambit {
                                    0.0,    0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.5
                                   };
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        vector<HEPUtils::Particle*> baselineElectrons;
+        vector<HEPUtils::Particle*> electrons;
         for (HEPUtils::Particle* electron : event->electrons()) {
           bool isEl=has_tag(_eff2dEl, electron->abseta(), electron->pT());
           // No info in the paper on pT or |eta| cuts for baseline electrons, 
           // but the above efficieny map effectively requires pT > 10 and |eta| < 2.5
-          if (isEl) baselineElectrons.push_back(electron);
+          if (isEl) electrons.push_back(electron);
         }
+        // Sort 
+        sortByPt(electrons);
+
 
         // Muons
         // NOTE:
@@ -177,72 +194,95 @@ namespace Gambit {
                                      0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.4
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        vector<HEPUtils::Particle*> baselineMuons;
+        vector<HEPUtils::Particle*> muons;
         for (HEPUtils::Particle* muon : event->muons()) {
           bool isMu=has_tag(_eff2dMu, muon->abseta(), muon->pT());
           // No info in the paper on pT or |eta| cuts for baseline muons, 
           // but the above efficieny map effectively requires pT > 10 and |eta| < 2.4
-          if (isMu) baselineMuons.push_back(muon);
+          if (isMu) muons.push_back(muon);
+        }
+        // Sort 
+        sortByPt(muons);
+
+
+        // Jets
+        vector<HEPUtils::Jet*> jets;
+        for (HEPUtils::Jet* jet : event->jets()) {
+          // No info on baseline jet cuts in the paper, so for now we'll
+          // apply an|eta| cut for HCAL coverage and a loose jet pT cut
+          if (jet->pT()>10. && jet->abseta()<3.0) jets.push_back(jet);
+        }
+        // Sort 
+        sortByPt(jets);
+
+
+        // Select signal photon candidates
+        vector<HEPUtils::Particle*> signalPhotons;
+        for (HEPUtils::Particle* photon : photons)
+        {
+          if (photon->pT() > 15. && photon->abseta() < 1.44) signalPhotons.push_back(photon);
+          // NOTE: there should also be an isolation cut based on pT sums of other objects
+          // within DeltaR = 0.3 of the photon, but no details are given in the paper...
         }
 
+        // Requirements on the two highest-pT EM objects
+        vector<HEPUtils::Particle*> EMobjects;
+        EMobjects.insert(EMobjects.end(), signalPhotons.begin(), signalPhotons.end());
+        EMobjects.insert(EMobjects.end(), electrons.begin(), electrons.end());
+        sortByPt(EMobjects);
 
-        // _Anders: Got this far...
+        vector<HEPUtils::Particle*> signalEMobjects;
+        if (EMobjects.size() < 2) {
+          signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.end());
+        } 
+        else {
+          signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.begin() + 1);
+        }
 
+        bool isDiphoton = false;
+        bool DeltaR_gt_06 = false;
+        bool mgg_gt_105 = false;
+        if (signalEMobjects.size() >= 2) {
 
-     //    // jets
-     //    vector<HEPUtils::Jet*> Jets;
-     //    for (HEPUtils::Jet* jet : event->jets())
-     //    {
-     //      if (jet->pT()>30. &&fabs(jet->eta())<3.0) Jets.push_back(jet);
-     //    }
-     //    // TODO: Apply jets isolation instead of removeOverlap.
-     //    removeOverlap(Jets, Photons, 0.2);
+          HEPUtils::Particle* obj1 = signalEMobjects.at(0);
+          HEPUtils::Particle* obj2 = signalEMobjects.at(1);
 
-     //    // Preselection
-     //    bool high_pT_photon = false;  // At least one high-pT photon;
-     //    bool delta_R_g_j = false;     // Photons are required to have delta_R>0.5 to the nearest jet;
-     //    bool delta_phi_j_MET = false; // Jets with pT>100 GeV must fulfill delta_phi(MET,jet)>0.3;
-      // for (HEPUtils::Particle* photon  : Photons){
-      //     if (photon->pT()>180. && fabs(photon->eta()) < 1.44) {
-      //         high_pT_photon = true;
-      //         for (HEPUtils::Jet* jet : Jets){
-      //             if ( jet->mom().deltaR_eta(photon->mom()) < 0.5 ) delta_R_g_j=true;
-      //         }
-      //     }
-      // }
-     //    if (not high_pT_photon) return;
-     //    if (delta_R_g_j) return;
-     //    for (HEPUtils::Jet* jet : Jets){
-     //        if (jet->pT()>100. && jet->mom().deltaPhi(ptot) < 0.3 ) delta_phi_j_MET=true;
-     //    }
-     //    if (delta_phi_j_MET) return;
+          if (obj1->pid() == 22 && obj2->pid() == 22) isDiphoton = true;
 
-     //    // _cutflow.fill(1);
+          if (obj1->mom().deltaR_eta(obj2->mom()) > 0.6) DeltaR_gt_06 = true;
 
+          if ((obj1->mom() + obj2->mom()).m() > 105.) mgg_gt_105 = true;
+        }
 
-     //    // MET > 300 GeV
-     //    if (met<300)return;
-     //    // _cutflow.fill(2);
+        // Vetos on muons
+        bool muVeto = false;
+        for (HEPUtils::Particle* muon : muons) {
+          if (muon->pT() > 25. && muon->abseta() < 2.4) {
+            muVeto = true;
+            break;
+          }
+        }
 
-     //    // MT(photon,MET) > 300 GeV
-     //    double MT = sqrt(2.*Photons[0]->pT()*met*(1. - std::cos(Photons[0]->mom().deltaPhi(ptot)) ));
-     //    if (MT<300)return;
-     //    // _cutflow.fill(3);
+        // Veto on electrons not part of the two signalEMobjects
+        bool elVeto = false;
+        for (HEPUtils::Particle* electron : electrons) {
+          if (electron->pT() > 25. && electron->abseta() < 2.5) {
+            if (electron != signalEMobjects.at(0) && electron != signalEMobjects.at(1)) {
+              elVeto = true;
+              break;
+            }
+          }
+        }
 
-     //    // S_T^gamma > 600 GeV
-     //    double STgamma = met;
-     //    for (HEPUtils::Particle* photon  : Photons){
-      //     STgamma += photon->pT();
-      //   }
-        
-     //    if (STgamma<600) return;
-     //    // _cutflow.fill(4);
-
-     //    // Signal regions
-     //    if      (STgamma<800)  _numSR["SR-600-800"]++;
-     //    else if (STgamma<1000) _numSR["SR-800-1000"]++;
-     //    else if (STgamma<1300) _numSR["SR-1000-1300"]++;
-     //    else                   _numSR["SR-1300"]++;
+        // Fill signal region
+        if (trigger && isDiphoton && DeltaR_gt_06 && mgg_gt_105 && !muVeto && !elVeto) {
+          if      (met > 100. && met < 115) _numSR["SR_MET_100-115"]++;
+          else if (met > 115. && met < 130) _numSR["SR_MET_115-130"]++;
+          else if (met > 130. && met < 150) _numSR["SR_MET_130-150"]++;
+          else if (met > 150. && met < 185) _numSR["SR_MET_150-185"]++;
+          else if (met > 185. && met < 250) _numSR["SR_MET_185-250"]++;
+          else if (met > 250.) _numSR["SR_MET_>250"]++;
+        }
 
       }
 
