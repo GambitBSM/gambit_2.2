@@ -236,7 +236,7 @@ namespace Gambit {
           signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.end());
         } 
         else {
-          signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.begin() + 1);
+          signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.begin() + 2);
         }
 
         bool isDiphoton = false;
