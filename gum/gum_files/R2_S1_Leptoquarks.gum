@@ -4,7 +4,7 @@ math:
   # Name of Mathematica package, either 'feynrules' or 'sarah'
   package: feynrules
   # Name of Model within that package. This will also be the name of the GAMBIT model.
-  model: Leptoquarks
+  model: R2_S1_Leptoquarks
   base_model: SM
   lagrangian: LSM + LS1 + LR2
 

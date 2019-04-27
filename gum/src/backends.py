@@ -126,11 +126,12 @@ def fix_pythia_lib(model, patched_dir, pythia_groups):
 
         # Go through pythia_groups to add each individual flag, to
         # select groups of subprocesses
-        for group in pythia_groups:
-            for k, v in group.items():
-                f.write("<flag name=\""+model+k+":all\" default=\"off\">\n")
-                f.write("Common switch for production of "+model+" processes, involving the group of particles ["+', '.join(v)+"] as external legs ONLY. Added by GAMBIT.\n")
-                f.write("</flag>\n")
+        if pythia_groups:
+            for group in pythia_groups:
+                for k, v in group.items():
+                    f.write("<flag name=\""+model+k+":all\" default=\"off\">\n")
+                    f.write("Common switch for production of "+model+" processes, involving the group of particles ["+', '.join(v)+"] as external legs ONLY. Added by GAMBIT.\n")
+                    f.write("</flag>\n")
 
         # Invidiual processes
         for x in processes:
@@ -170,9 +171,10 @@ def fix_pythia_lib(model, patched_dir, pythia_groups):
 
                 # Go through pythia_groups to add each individual flag, to
                 # select groups of subprocesses
-                for group in pythia_groups:
-                    for k, v in group.items():
-                        f_new.write("  bool "+model+k+" = settings.flag(\""+model+k+":all\");\n")
+                if pythia_groups:
+                    for group in pythia_groups:
+                        for k, v in group.items():
+                            f_new.write("  bool "+model+k+" = settings.flag(\""+model+k+":all\");\n")
 
                 # Add each process
                 for x in processes:
@@ -188,11 +190,12 @@ def fix_pythia_lib(model, patched_dir, pythia_groups):
                     # the yaml file in a GAMBIT scan.
 
                     switches = ""
-                    for group in pythia_groups:
-                        for k, v in group.items():
-                            vtemp = [i.lower() for i in v] # Pythia makes everything lowercase
-                            if any([i.lower() in vtemp for i in external_states]):
-                                switches += " {0} ||".format(model+k)
+                    if pythia_groups:
+                        for group in pythia_groups:
+                            for k, v in group.items():
+                                vtemp = [i.lower() for i in v] # Pythia makes everything lowercase
+                                if any([i.lower() in vtemp for i in external_states]):
+                                    switches += " {0} ||".format(model+k)
 
                     f_new.write("  if ("+model+" ||{0} settings.flag(\"".format(switches)+model+":"+x[0]+"2"+x[1]+"\")) {\n")
                     f_new.write("    sigmaPtr = new Sigma_"+model+"_"+x[0]+"_"+x[1]+"();\n")

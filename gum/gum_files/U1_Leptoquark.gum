@@ -3,8 +3,8 @@
 math:
   # Name of Mathematica package, either 'feynrules' or 'sarah'
   package: feynrules
-  # Name of Model within that package. This will also be the name of the GAMBIT model.
-  model: Leptoquarks
+  # Name of Model within that package. This will also be the name of the GAMBIT model unless specified in gambit_opts: model_name: {model_name}
+  model: U1_Leptoquark
   base_model: SM
   lagrangian: LSM + LU1
 
@@ -13,7 +13,7 @@ output:
   calchep: true
   pythia: true
   multiparticles:
-    - LQ: [U1, U1]
+    - LQ: [U1, U1~]
   collider_processes:
     - p p > LQ LQ
     - p p > l- LQ

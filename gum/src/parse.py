@@ -13,7 +13,7 @@ class Inputs:
     """
 
     def __init__(self, model_name, base_model, mathpackage,
-                 dm_candidate,
+                 dm_candidate, mathname = None,
                  lagrangian = None, restriction = None):
 
         self.name = model_name
@@ -23,6 +23,13 @@ class Inputs:
         self.restriction = None
         self.LTot = lagrangian
         self.spec = "{0}_spectrum".format(model_name)
+
+        # If we want the new GAMBIT model to have a different 
+        # name than the model file from Mathematica
+        if mathname:
+            self.mathname = mathname
+        else:
+            self.mathname = model_name
 
         if restriction:
             self.restriction = restriction
@@ -121,7 +128,20 @@ def fill_gum_object(data):
     else:
         lagrangian = "LTotal"
     mathpackage = math['package']
+
     gambit_model = math['model']
+
+    # Overwrite the GAMBIT model if specified
+    mathname = ""
+    if 'gambit_opts' in data:
+        if 'model_name' in data['gambit_opts']:
+            mathname = gambit_model
+            gambit_model = data['gambit_opts']['model_name']
+
+    print "mathname", mathname
+    print "gambit_model", gambit_model
+    import sys
+    #sys.exit()
 
     # FeynRules specific -- a "base" model to build a pheno model on top of.
     # Tyically this is the SM, plus the BSM contribution defined in a separate file.
@@ -166,7 +186,7 @@ def fill_gum_object(data):
         restriction = math['restriction']
 
     gum_info = Inputs(gambit_model, base_model, mathpackage,  
-                      dm_candidate, lagrangian, restriction)
+                      dm_candidate, mathname, lagrangian, restriction)
 
 
     return gum_info, outputs
