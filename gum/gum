@@ -77,6 +77,9 @@ if args.file:
     else:
         colliderbit = False
 
+    # Check to see if any of the proposed new files will
+    # clash with any existing files.
+    check_for_existing_entries(gum.name, darkbit, colliderbit, output_opts)
 
     """
     FEYNRULES/SARAH
@@ -131,7 +134,6 @@ if args.file:
 
         # Make all BSM particles work with GUM's native Particle class.
         bsm_particle_list = sarah_part_to_gum_part(sarah_bsm)
-
 
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
     # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.
@@ -503,6 +505,9 @@ if args.file:
         copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir, reset_contents, existing = False)
         add_to_backend_locations("Pythia_"+gum.name, be+"/"+ver+"/lib/libpythia8.so", ver, reset_contents)
     # MadDM
+
+    # Write a simple YAML file.
+    if decaybit: drop_yaml_file(gum.name, model_parameters, add_higgs, reset_contents)
 
     # Save output to a .mug file for resetting purposes
     mug_file = "mug_files/{0}.mug".format(gum.name)

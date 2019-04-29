@@ -12,9 +12,6 @@ from collections import defaultdict
 
 from setup import *
 
-#mode = 'Test'
-mode = 'Go'
-
 def remove_tree_quietly(path):
     """
     Deletes a directory if it exists
@@ -209,11 +206,10 @@ def write_file(filename, module, contents, reset_dict):
 
     reset_dict['new_files']['files'].append(location)
 
-    if mode != 'Test':
-        # Make the directory if it doesn't exist
-        mkdir_if_absent(location_parts[0])
-        # Create new file
-        open(location, 'w').write(contents)
+    # Make the directory if it doesn't exist
+    mkdir_if_absent(location_parts[0])
+    # Create new file
+    open(location, 'w').write(contents)
 
     print("File {} successfully created.".format(location))
 
@@ -232,11 +228,9 @@ def copy_file(filename, module, output_dir, reset_dict, existing=True):
     else:
         reset_dict['new_files']['files'].append(location)
 
-    if mode != 'Test':
-        # Make the directory if it doesn't exist
-        mkdir_if_absent(location_parts[0])
-        # Copy the file
-        shutil.copy(GUM_version, location)
+    mkdir_if_absent(location_parts[0])
+    # Copy the file
+    shutil.copy(GUM_version, location)
 
     print("Copied "+GUM_version+" to "+location+".")
 
@@ -267,19 +261,18 @@ def amend_file(filename, module, contents, line_number, reset_dict):
 
     reset_dict['amended_files'][location].append(contents)
 
-    if mode != 'Test':
-        temp_location = location + "_temp"
-        lines = open(location, 'r').readlines()
+    temp_location = location + "_temp"
+    lines = open(location, 'r').readlines()
 
-        with open(temp_location, 'w') as f:
-            for i in xrange(line_number):
-                f.write(lines[i])
-            f.write(contents)
-            for i in xrange(len(lines)-line_number):
-                f.write(lines[i+line_number])
+    with open(temp_location, 'w') as f:
+        for i in xrange(line_number):
+            f.write(lines[i])
+        f.write(contents)
+        for i in xrange(len(lines)-line_number):
+            f.write(lines[i+line_number])
 
-        os.remove(location)
-        os.rename(temp_location, location)
+    os.remove(location)
+    os.rename(temp_location, location)
 
     print("File {} successfully amended.".format(location))
 
@@ -486,6 +479,31 @@ def revert(reset_file):
 
     return
 
+def check_for_existing_entries(model_name, darkbit, colliderbit, output_opts):
+    """
+    Checks for existing entries within GAMBIT, for a new model.
+    """
+
+    # Models entries
+    if ( find_file("models/" + model_name + ".hpp", "Models") or
+         find_file("SpectrumContents/" + model_name + ".cpp", "Models") or 
+         find_file("SimpleSpectra/" + model_name + "SimpleSpec" + ".hpp", "Models") or 
+         find_file("SpecBit_" + model_name + ".cpp", "SpecBit") or 
+         find_file("SpecBit_" + model_name + "_rollcall.hpp", "SpecBit")
+       ):
+        raise GumError("Model {0} already exists in the Model Hierarchy.").format(model_name)
+
+    if darkbit:
+        if find_file(model_name + ".cpp", "DarkBit"):
+            raise GumError("Model {0} already exists in DarkBit.").format(model_name)
+        if output_opts.mo:
+            ver = "3.6.9.2"
+            f = "frontends/MicrOmegas_{0}_{1}".format(model_name, ver.replace('.','_'))
+            if ( find_file(f+".cpp", "Backends") or 
+                 find_file(f+".hpp", "Backends")
+               ):
+                raise GumError("MicrOmegas entry already exists for model {0}").format(model_name)
+
 def drop_mug_file(mug_file, contents):
     """
     Drops a .mug (reset) file from the reset contents saved by GUM.
@@ -500,3 +518,115 @@ def drop_mug_file(mug_file, contents):
 
     with open(mug_file, 'w') as f:
         yaml.dump(new_contents, f, default_flow_style=False)
+
+
+def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
+    """
+    Drops an example YAML file with all decays of a new model
+    added.
+    """
+
+    towrite = (
+        "##########################################################################\n"
+        "## GAMBIT configuration for a random scan of the {0} model\n"
+        "##\n"
+        "## Includes simply the decays of the new model.\n"
+        "##########################################################################\n"
+        "\n"
+        "\n"
+        "Parameters:\n"
+        "\n"
+        "  # SM parameters.\n"
+        "  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml\n"
+        "\n"
+    ).format(model_name)
+
+    if add_higgs:
+        towrite+= (
+            "  StandardModel_Higgs:\n"
+            "    mH: 125.09\n"
+            "\n"
+        )
+
+    towrite += ("  {0}:\n").format(model_name)
+
+    # Don't want the SM-like Higgs mass a fundamental parameter
+    params = [x.gb_in for x in model_parameters if x.name != 'h0_1' and x.sm == False]
+
+    # No double counting (also want to preserve the order)
+    norepeats = []
+    [norepeats.append(i) for i in params if not i in norepeats]
+
+    for i in norepeats:
+        towrite += ("    {0}: 0.1\n").format(norepeats[i])
+
+    towrite += (
+        "Priors:\n"
+        "\n"
+        "  # All the priors are simple for this scan, so they "
+        "are specified directly in the Parameters section.\n"
+        "\n"
+        "\n"
+        "Printer:\n"
+        "\n"
+        "  printer: hdf5\n"
+        "\n"
+        "  options:\n"
+        "    output_file: \"{0}.hdf5\"\n"
+        "    group: \"/{0}\"\n"
+        "\n"
+        "\n"
+        "Scanner:\n"
+        "\n"
+        "  use_scanner: random\n"
+        "\n"
+        "  scanners:\n"
+        "\n"
+        "    random:\n"
+        "      plugin: random\n"
+        "      point_number: 10\n"
+        "      like:  LogLike\n"
+        "\n"
+        "ObsLikes:\n"
+        "\n"
+        "  - purpose:      Observable\n"
+        "    capability:   decay_rates\n"
+        "    type:         DecayTable\n"
+        "    printme:      false\n"
+        "\n"
+        "  - purpose:      LogLike\n"
+        "    capability:   LHC_Combined_LogLike\n"
+        "\n"
+        "Rules:\n"
+        "\n"
+        "  # Choose to get decays from DecayBit proper, not from an SLHA file.\n"
+        "  - capability: decay_rates\n"
+        "    function: all_decays\n"
+        "Logger:\n"
+        "\n"
+        "  redirection:\n"
+        "    [Debug] : \"debug.log\"\n"
+        "    [Default] : \"default.log\"\n"
+        "    [DecayBit] : \"DecayBit.log\"\n"
+        "    [PrecisionBit] : \"PrecisionBit.log\"\n"
+        "    [ColliderBit] : \"ColliderBit.log\"\n"
+        "    [SpecBit] : \"SpecBit.log\"\n"
+        "    [Dependency Resolver] : \"dep_resolver.log\"\n"
+        "\n"
+        "KeyValues:\n"
+        "\n"
+        "  dependency_resolution:\n"
+        "    prefer_model_specific_functions: true\n"
+        "\n"
+        "  likelihood:\n"
+        "    model_invalid_for_lnlike_below: -5e5\n"
+        "    model_invalid_for_lnlike_below_alt: -1e5\n"
+        "\n"
+        "  default_output_path: \"runs/{0}/\"\n"
+        "\n"
+        "  debug: false\n"
+        "\n"
+    ).format(model_name)
+
+    write_file(model_name + '.yaml', 'yaml_files', towrite, reset_dict)
+

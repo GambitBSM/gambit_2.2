@@ -138,11 +138,6 @@ def fill_gum_object(data):
             mathname = gambit_model
             gambit_model = data['gambit_opts']['model_name']
 
-    print "mathname", mathname
-    print "gambit_model", gambit_model
-    import sys
-    #sys.exit()
-
     # FeynRules specific -- a "base" model to build a pheno model on top of.
     # Tyically this is the SM, plus the BSM contribution defined in a separate file.
     if 'base_model' in data['math']:
