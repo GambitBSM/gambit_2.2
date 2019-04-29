@@ -507,7 +507,7 @@ if args.file:
     # MadDM
 
     # Write a simple YAML file.
-    if decaybit: drop_yaml_file(gum.name, model_parameters, add_higgs, reset_contents)
+    if decaybit: drop_yaml_file(gum.name, parameters, add_higgs, reset_contents)
 
     # Save output to a .mug file for resetting purposes
     mug_file = "mug_files/{0}.mug".format(gum.name)

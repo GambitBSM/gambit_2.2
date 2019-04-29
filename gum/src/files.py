@@ -491,18 +491,18 @@ def check_for_existing_entries(model_name, darkbit, colliderbit, output_opts):
          find_file("SpecBit_" + model_name + ".cpp", "SpecBit") or 
          find_file("SpecBit_" + model_name + "_rollcall.hpp", "SpecBit")
        ):
-        raise GumError("Model {0} already exists in the Model Hierarchy.").format(model_name)
+        raise GumError(("Model {0} already exists in the Model Hierarchy.").format(model_name))
 
     if darkbit:
         if find_file(model_name + ".cpp", "DarkBit"):
-            raise GumError("Model {0} already exists in DarkBit.").format(model_name)
+            raise GumError(("Model {0} already exists in DarkBit.").format(model_name))
         if output_opts.mo:
             ver = "3.6.9.2"
             f = "frontends/MicrOmegas_{0}_{1}".format(model_name, ver.replace('.','_'))
             if ( find_file(f+".cpp", "Backends") or 
                  find_file(f+".hpp", "Backends")
                ):
-                raise GumError("MicrOmegas entry already exists for model {0}").format(model_name)
+                raise GumError(("MicrOmegas entry already exists for model {0}").format(model_name))
 
 def drop_mug_file(mug_file, contents):
     """
@@ -558,7 +558,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
     [norepeats.append(i) for i in params if not i in norepeats]
 
     for i in norepeats:
-        towrite += ("    {0}: 0.1\n").format(norepeats[i])
+        towrite += ("    {0}: 0.1\n").format(i)
 
     towrite += (
         "Priors:\n"
