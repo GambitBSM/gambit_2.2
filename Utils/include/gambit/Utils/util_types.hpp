@@ -290,7 +290,7 @@ namespace Gambit
   };
 
   /// Shorthand for the type of the 'Param' map (string-to-double-safe_ptr map)
-  typedef std::map<std::string, safe_ptr<double> > params_map_type;
+  typedef std::map<std::string, safe_ptr<double> > param_map_type;
 
 
 

@@ -33,7 +33,7 @@ BE_NAMESPACE
 {
   // Convenience function to run SPheno and obtain the spectrum
   // std::vector<double> run_prospino(const Spectrum& spectrum)
-  std::vector<double> run_prospino(const SLHAstruct& slha_in, const params_map_type& params)
+  std::vector<double> run_prospino(const SLHAstruct& slha_in, const param_map_type& params)
   {
 
     // Get type converter 
