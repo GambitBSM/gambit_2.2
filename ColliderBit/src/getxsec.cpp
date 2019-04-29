@@ -123,8 +123,12 @@ namespace Gambit
         // Get an SLHA1 object for Prospino.
         const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
 
+        // Get the GAMBIT model parameters for Prospino
+        const params_map_type& model_params = Param;
+
         // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
-        std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(slha);
+        // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(std::move(slha));
+        std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(slha, model_params);
 
         result.set_xsec(xsec_vals.at(0), xsec_vals.at(1));
       }

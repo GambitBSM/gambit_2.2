@@ -289,6 +289,10 @@ namespace Gambit
 
   };
 
+  /// Shorthand for the type of the 'Param' map (string-to-double-safe_ptr map)
+  typedef std::map<std::string, safe_ptr<double> > params_map_type;
+
+
 
   /// Array class that matches the memory structure and functionality of arrays in Fortran codes
   /// Syntax: Farray<[type], [lower index, dim 1], [upper index, dim 1], [alternating lower/upper indices for subsequent dimensions]>

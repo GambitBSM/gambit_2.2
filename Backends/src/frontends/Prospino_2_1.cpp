@@ -33,15 +33,56 @@ BE_NAMESPACE
 {
   // Convenience function to run SPheno and obtain the spectrum
   // std::vector<double> run_prospino(const Spectrum& spectrum)
-  std::vector<double> run_prospino(const SLHAstruct& slha)
+  std::vector<double> run_prospino(const SLHAstruct& slha_in, const params_map_type& params)
   {
 
     // Get type converter 
     using SLHAea::to;
 
     std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
+
+
+    // Copy the slha object so that we can modify it
+    SLHAstruct slha(slha_in);
+
+    // Contstruct EXTPAR block from input parameters
+    SLHAea_add_block(slha, "EXTPAR");
+
+    slha["EXTPAR"][""] << 0 << *params.at("Qin") << "# scale Q where the parameters below are defined";
+    slha["EXTPAR"][""] << 1 << *params.at("M1") << "# M_1";
+    slha["EXTPAR"][""] << 2 << *params.at("M2") << "# M_2";
+    slha["EXTPAR"][""] << 3 << *params.at("M3") << "# M_3";
+    slha["EXTPAR"][""] << 11 << *params.at("Au_33") << "# A_t";
+    slha["EXTPAR"][""] << 12 << *params.at("Ad_33") << "# A_b";
+    slha["EXTPAR"][""] << 13 << *params.at("Ae_33") << "# A_l";
+    slha["EXTPAR"][""] << 21 << *params.at("mHd2") << "# m_Hd^2";
+    slha["EXTPAR"][""] << 22 << *params.at("mHd2") << "# m_Hu^2";
+    slha["EXTPAR"][""] << 31 << sqrt(*params.at("ml2_11")) << "# M_(L,11)";
+    slha["EXTPAR"][""] << 32 << sqrt(*params.at("ml2_22")) << "# M_(L,22)";
+    slha["EXTPAR"][""] << 33 << sqrt(*params.at("ml2_33")) << "# M_(L,33)";
+    slha["EXTPAR"][""] << 34 << sqrt(*params.at("me2_11")) << "# M_(E,11)";
+    slha["EXTPAR"][""] << 35 << sqrt(*params.at("me2_22")) << "# M_(E,22)";
+    slha["EXTPAR"][""] << 36 << sqrt(*params.at("me2_33")) << "# M_(E,33)";
+    slha["EXTPAR"][""] << 41 << sqrt(*params.at("mq2_11")) << "# M_(Q,11)";
+    slha["EXTPAR"][""] << 42 << sqrt(*params.at("mq2_22")) << "# M_(Q,22)";
+    slha["EXTPAR"][""] << 43 << sqrt(*params.at("mq2_33")) << "# M_(Q,33)";
+    slha["EXTPAR"][""] << 44 << sqrt(*params.at("mu2_11")) << "# M_(U,11)";
+    slha["EXTPAR"][""] << 45 << sqrt(*params.at("mu2_22")) << "# M_(U,22)";
+    slha["EXTPAR"][""] << 46 << sqrt(*params.at("mu2_33")) << "# M_(U,33)";
+    slha["EXTPAR"][""] << 47 << sqrt(*params.at("md2_11")) << "# M_(D,11)";
+    slha["EXTPAR"][""] << 48 << sqrt(*params.at("md2_22")) << "# M_(D,22)";
+    slha["EXTPAR"][""] << 49 << sqrt(*params.at("md2_33")) << "# M_(D,33)";
+
+    // std::cout << "DEBUG:  slha.at('MASS').at(25).at(1) = " << to<double>(slha.at("MASS").at(25).at(1)) << std::endl;
+    // std::cout << "DEBUG:  slha.at('EXTPAR').at(1).at(1) = " << to<double>(slha.at("EXTPAR").at(1).at(1)) << std::endl;
     
-    std::cout << "DEBUG:  slha.at('EXTPAR').at(1) = " << to<double>(slha.at("EXTPAR").at(1)) << std::endl;
+    std::cout << "DEBUG: SLHAstruct content:" << std::endl;
+    std::cout << slha.str() << std::endl;
+    
+
+
+    // std::cout << "DEBUG:  slha.at('EXTPAR').at(1).at(1) = " << to<double>(slha.at("EXTPAR").at(1).at(1)) << std::endl;
+    // std::cout << "DEBUG:  slha.at('MASS').at(25).at(1) = " << to<double>(slha.at("MASS").at(25).at(1)) << std::endl;
 
 
     Finteger inlo = 1;                 // specify LO only[0] or complete NLO (slower)[1]
@@ -80,8 +121,6 @@ BE_NAMESPACE
   real(kind=double)                  :: mg_orig,ms_orig  ! set in INIT_SUSY
   complex(kind=double), dimension(4,4) :: zz             ! set in INIT_SUSY
 */
-
-    lowmass(0) = to<double>(slha.at("EXTPAR").at(1));
 
 
     // lowmass(0) = *Param["mu"];
