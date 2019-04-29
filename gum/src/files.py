@@ -594,9 +594,6 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "    type:         DecayTable\n"
         "    printme:      false\n"
         "\n"
-        "  - purpose:      LogLike\n"
-        "    capability:   LHC_Combined_LogLike\n"
-        "\n"
         "Rules:\n"
         "\n"
         "  # Choose to get decays from DecayBit proper, not from an SLHA file.\n"
@@ -628,5 +625,5 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "\n"
     ).format(model_name)
 
-    write_file(model_name + '.yaml', 'yaml_files', towrite, reset_dict)
+    write_file(model_name + '.yaml', 'yaml_files', towrite, reset_contents)
 
