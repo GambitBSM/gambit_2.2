@@ -84,7 +84,7 @@ def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version)
 
 def fix_pythia_lib(model, patched_dir, pythia_groups):
     """
-    Routine to patch the new Pythia - adding new matrix elements to the 
+    Routine to patch the new Pythia - adding new matrix elements to the
     Process Container -- and the shared library too.
     """
 
@@ -242,17 +242,18 @@ def write_new_default_bossed_version(backend, version, output_dir):
     # The signature of the line we want to add/replace
     signature = "#define  Default_"+backend+" "
 
+    # Flag indicating that GUM section exists already
+    comment_exists = False
+
     # Work through the old version of the file and add/replace this entry
     with open(old) as f_old, open(new, 'w') as f_new:
         for line in f_old:
             if not signature in line: f_new.write(line)
             if "// Defaults added by GUM" in line:
                 if not line.endswith("\n"): f_new.write("\n")
-                f_new.write(signature+re.sub("\.", "_", version)+"\n")
-                return
-
-        # If defaults by GUM not found, write it...
-        f_new.write("\n// Defaults added by GUM (do not remove this comment).\n")
+                comment_exists = True
+        if not comment_exists:
+            f_new.write("\n// Defaults added by GUM (do not remove this comment).\n")
         f_new.write(signature+re.sub("\.", "_", version)+"\n")
 
 
@@ -319,7 +320,7 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
     Adds an entry to backend_locations.yaml for a new backend.
     """
 
-    # Check to see if backend_locations.yaml exists; if not then we'll use 
+    # Check to see if backend_locations.yaml exists; if not then we'll use
     # backend_locations.yaml.default (as long as it hasn't been removed)
 
     if not os.path.isfile("./../config/backend_locations.yaml.default"):
@@ -327,16 +328,16 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
 
     target = "backend_locations.yaml"
 
-    if not os.path.isfile("./../config/"+target): 
+    if not os.path.isfile("./../config/"+target):
         target = "backend_locations.yaml.default"
 
     # Add the new backend before the examples stuff.
     linenum = 0
     with open("./../config/"+target) as f:
       for num, line in enumerate(f, 1):
-          if "Example" in line: 
+          if "Example" in line:
               linenum = num
-              break      
+              break
 
     contents = ("#Added by GUM\n"
                 "{0}:\n"
