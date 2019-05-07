@@ -326,5 +326,20 @@ namespace Gambit
     return;
   }
 
+  /// Write a SimpleSpectrum to an SLHAea object.
+  void add_SimpleSpec_to_SLHAea(const SubSpectrum& subspec, SLHAstruct& slha, SubSpectrumContents& contents)
+  {
+
+    // Pick out the parameters whose SLHA block name is not: SMINPUTS, CKMBLOCK, YUKAWA, or empty.
+    std::vector<SpectrumParameter> bsm = contents.all_BSM_parameters();
+
+    // Then assign them to the correct part of the SLHAea object
+    for (std::vector<SpectrumParameter>::const_iterator it = bsm.begin(); it != bsm.end(); ++it)
+    {
+      // Check for par.shape() at this point, probably?
+      SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, it->tag(), it->name(), it->blockname(), it->blockindex(), "");
+    }
+
+  }
 
 }
