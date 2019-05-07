@@ -250,6 +250,17 @@ namespace Gambit
 
   };
 
+  /// Gambit invalid loop iteration exception class.
+  class invalid_loop_iteration_exception : public special_exception
+  {
+
+    public:
+
+      /// Constructor
+      invalid_loop_iteration_exception();
+
+  };
+
   /// Gambit piped invalid point exception class.
   class Piped_invalid_point
   {

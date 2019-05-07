@@ -186,6 +186,9 @@
             /* Create a loop-breaking function that can be called to tell the  \
             functor's loop manager that it is time to break. */                \
             extern void wrapup();                                              \
+            /* Create an iteration-skipping function that can be called to skip\
+            on to the next iteration. */                                       \
+            extern void cycle();                                               \
           }                                                                    \
         }                                                                      \
       }                                                                        \

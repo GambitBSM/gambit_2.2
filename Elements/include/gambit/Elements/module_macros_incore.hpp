@@ -674,6 +674,9 @@
             /* Create a loop-breaking function that can be called to tell the  \
             functor's loop manager that it is time to break. */                \
             void wrapup() { Functown::FUNCTION.breakLoopFromManagedFunctor(); }\
+            /* Create an iteration-skipping function that can be called to skip\
+            on to the next iteration. */                                       \
+            void cycle() { throw invalid_loop_iteration_exception(); }         \
           }                                                                    \
         }                                                                      \
       }                                                                        \
