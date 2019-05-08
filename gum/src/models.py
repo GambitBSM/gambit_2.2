@@ -332,7 +332,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             "\n"
             "/// Add SLHAea object using the SimpleSpec_to_SLHAea routine\n"
             "void add_to_SLHAea(int /*slha_version*/, SLHAea::Coll& slha) const\n"
-            "{{}\n"
+            "{{\n"
             "// Add SPINFO data if not already present\n"
             "SLHAea_add_GAMBIT_SPINFO(slha);\n"
             "\n"
