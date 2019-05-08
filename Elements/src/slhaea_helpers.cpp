@@ -327,7 +327,7 @@ namespace Gambit
   }
 
   /// Write a SimpleSpectrum to an SLHAea object.
-  void add_SimpleSpec_to_SLHAea(const SubSpectrum& subspec, SLHAstruct& slha, SubSpectrumContents& contents)
+  void add_SimpleSpec_to_SLHAea(const SubSpectrum& subspec, SLHAstruct& slha, const SubSpectrumContents& contents)
   {
 
     // Pick out the parameters whose SLHA block name is not: SMINPUTS, CKMBLOCK, YUKAWA, or empty.
@@ -336,10 +336,52 @@ namespace Gambit
     // Then assign them to the correct part of the SLHAea object
     for (std::vector<SpectrumParameter>::const_iterator it = bsm.begin(); it != bsm.end(); ++it)
     {
-      // Check for par.shape() at this point, probably?
-      SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, it->tag(), it->name(), it->blockname(), it->blockindex(), "");
+      // The SLHAea comment changes based on the ParType
+      std::ostringstream comment;
+
+      // If it's a mass, we always want to write it to the MASS block. Otherwise use what's been specified explicitly.
+      str blockname = (it->tag() == Par::Pole_Mass ? "MASS" : it->blockname());
+
+      // Masses
+      if (it->tag() == Par::Pole_Mass)
+      { 
+        comment << it->name() << " mass.";
+        std::pair<int, int> pdg_pair = Models::ParticleDB().pdg_pair(it->name());
+        SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, it->tag(), pdg_pair, blockname, comment.str());
+      }
+      // The rest
+      else 
+      {
+        // Scalar case
+        if (it->shape().size()==1 and it->shape()[0]==1) 
+        {
+          SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, it->tag(), it->name(), blockname, it->blockindex(), comment.str());
+        }
+        // Vector (1 index) 
+        else if (it->shape().size() == 1 and it->shape()[0] > 1) 
+        {
+          for (int i=1; i<it->shape()[0]; ++i)
+          { 
+            // Increment +1 to each entry for the BLOCKNAME
+            SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, it->tag(), it->name(), blockname, it->blockindex()+i, comment.str());
+          }
+        }
+        // Matrix (2 indices) -- blockindex() should just start from 1.
+        else if (it->shape().size() == 2)
+        {
+          for (int i=1; i<it->shape()[0]; ++i)
+          { 
+            for (int j=1; j<it->shape()[0]; ++j)
+            { 
+              SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, it->tag(), it->name(), i, j, blockname, i, j, comment.str());
+            }
+          }
+        }
+      }
     }
 
-  }
+    // Finally, add the Higgs mass by hand, if present in the spectrum.
+    if (subspec.has(Par::Pole_Mass, "h0_1")) SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, Par::Pole_Mass, Models::ParticleDB().pdg_pair("h0_1"), "MASS", "Higgs mass.");
+  } 
 
-}
+} 
