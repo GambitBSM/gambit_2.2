@@ -56,6 +56,8 @@ class Particle
     int pdgcode;
     std::string partname;
     int doublespin;
+    int chargex3;
+    int partcolor;
     std::string fullname;
     bool standardmodel;
     std::string partmass;
@@ -68,11 +70,14 @@ class Particle
         bool operator==(const Particle&) {return false;}
         bool operator!=(const Particle&) {return true;}
 
-        Particle(int pdg, std::string name, int spinX2, std::string full_name, bool SM, std::string mass, std::string antiname)
+        Particle(int pdg, std::string name, int spinX2, int chargeX3, int color, 
+                 std::string full_name, bool SM, std::string mass, std::string antiname)
         {
             pdgcode = pdg;
             partname = name;
             doublespin = spinX2;
+            chargex3 = chargeX3;
+            partcolor = color;
             fullname = full_name;
             standardmodel = SM;
             partmass = mass;
@@ -93,13 +98,11 @@ class Particle
         std::string name() { return partname; }
         bool SM() { return standardmodel; }
         int spinX2() { return doublespin; }
+        int chargeX3() { return chargex3; }
+        int color() { return partcolor; }
         std::string mass() { return partmass; }
         bool SC() { return selfconj; }
         std::string antiname() { return antipartname; }
-
-
-        // Unsure if needed yet.
-        int colourX3;
 
 };
 

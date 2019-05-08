@@ -132,6 +132,8 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             std::string antioutputname;
             std::string mass;
             int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
+            int chargeX3 = 0;
+            int color = 0;
             int pdg;
             int num;
             bool SM;
@@ -247,7 +249,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, std::string(outputname), SM, mass, std::string(antiname));
+            Particle particle(pdg, std::string(name), spinX2, chargeX3, color, std::string(outputname), SM, mass, std::string(antiname));
             partlist.push_back(particle);
 
         }
@@ -369,11 +371,13 @@ BOOST_PYTHON_MODULE(libsarah)
 {
   using namespace boost::python;
 
-  class_<Particle>("SARAHParticle", init<int, std::string, int, std::string, bool, std::string, std::string>())
+  class_<Particle>("SARAHParticle", init<int, std::string, int, int, int, std::string, bool, std::string, std::string>())
     .def("pdg",      &Particle::pdg)
     .def("name",     &Particle::name)
     .def("SM",       &Particle::SM)
     .def("spinX2",   &Particle::spinX2)
+    .def("chargeX3", &Particle::chargeX3)
+    .def("color",    &Particle::color)
     .def("mass",     &Particle::mass)
     .def("SC",       &Particle::SC)
     .def("antiname", &Particle::antiname)

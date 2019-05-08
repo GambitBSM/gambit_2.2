@@ -210,7 +210,10 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             const char* fullname;
             const char* eaten;
             const char* mass;
-            int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
+            // Needs to initialise these to suppress compiler warnings.
+            int color = 1;
+            int chargeX3 = 0;
+            int spinX2 = 0;   
             int pdg;
             bool SM;
 
@@ -305,9 +308,61 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
                 continue;
             }
 
+            // Color representation
+            command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",7]]";
+            send_to_math(command);
+
+            const char* colorstr;
+
+            if (!WSGetString((WSLINK)pHandle, &colorstr))
+            {
+                std::cout << "Error getting Color info from WSTP." << std::endl;
+                return;
+            }
+            if (!std::strcmp(colorstr, "S"))
+            {
+                color = 1;
+            }
+            else if (!std::strcmp(colorstr, "T"))
+            {
+                color = 3;
+            }
+            else if (!std::strcmp(colorstr, "O"))
+            {
+                color = 8;
+            }
+
+            // Charge
+
+            // Firsly, need to get the name of the Class in FeynRules (in case there's
+            // multiple entries -- they will all have the same QNUMBERS.)
+            const char* classname;
+            command = "pl[[" + std::to_string(i+1) + ",1,2]]";
+            send_to_math(command);
+
+            if (!WSGetString((WSLINK)pHandle, &classname))
+            {
+                std::cout << "Error getting classname from WSTP." << std::endl;
+                return;
+            }
+            std::string str(classname);
+            
+            // Now see if there is a charge entry
+            float charge = 0.;
+
+            command = "N[Q[" + str + "]]";
+            send_to_math(command);
+
+            if (!WSGetFloat((WSLINK)pHandle, &charge))
+            {
+                std::cout << "Error getting charge info from WSTP." << std::endl;
+                return;
+            }
+
+            chargeX3 = int(round(charge * 3));
+
             // If we've got this far, our particle is physical.
             // One last thing... check if it's a SM particle or not.
-
             std::set<int> SM_pdgs = {1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24};
             if (SM_pdgs.count(abs(pdg)))
             {
@@ -319,7 +374,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, std::string(fullname), SM, mass, std::string(antiname));
+            Particle particle(pdg, std::string(name), spinX2, chargeX3, color, std::string(fullname), SM, mass, std::string(antiname));
             partlist.push_back(particle);
         }
 
@@ -525,11 +580,13 @@ BOOST_PYTHON_MODULE(libfr)
 {
   using namespace boost::python;
 
-  class_<Particle>("FRParticle", init<int, std::string, int, std::string, bool, std::string, std::string>())
+  class_<Particle>("FRParticle", init<int, std::string, int, int, int, std::string, bool, std::string, std::string>())
     .def("pdg",      &Particle::pdg)
     .def("name",     &Particle::name)
     .def("SM",       &Particle::SM)
     .def("spinX2",   &Particle::spinX2)
+    .def("chargeX3", &Particle::chargeX3)
+    .def("color",    &Particle::color)
     .def("mass",     &Particle::mass)
     .def("SC",       &Particle::SC)
     .def("antiname", &Particle::antiname)

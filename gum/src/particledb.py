@@ -200,6 +200,9 @@ def add_new_particleDB_entry(particles, dm_pdg):
                 "#     PDG_context: [10, 4]                 The PDG-context pair used for a single particle.\n"
                 "#     conjugate: \"X-\"                      The name for the conjugate particle, also added to the particleDB.\n"
                 "#     description: \"New particle\"          Optional - adds a C++ comment to particle_database.cpp. For readability.\n"
+                "#     chargex3: 0                          Three times the electric charge.\n"
+                "#     spinx2: 1                            Twice the spin.\n"
+                "#     color:  3                            The color representation (1 = singlet; 3 = triplet; 6 = sextet; 8 = octet).\n"
                 "#     DecayBit:\n"
                 "#       Decays: True                       Flag to show whether or not to include a particle's Decays in DecayBit.\n"
                 "#       name: \"X_plus\"                     The name used as CAPABILITES in DecayBit_rollcall.hpp for the specific particle.\n"
@@ -229,6 +232,11 @@ def add_new_particleDB_entry(particles, dm_pdg):
 
             entry['name'] = part.name()
             entry['PDG_context'] = [part.pdg(), 0] # Always assuming mass ES.
+
+            # Add charge, color, spin
+            entry['spinx2'] = part.spinX2()
+            entry['chargex3'] = part.chargeX3()
+            entry['color'] = part.color()
 
             # Add conjugate field if it is distinct
             if not (part.name() == part.antiname()):
