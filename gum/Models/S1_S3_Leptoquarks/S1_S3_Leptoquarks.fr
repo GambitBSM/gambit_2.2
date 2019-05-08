@@ -44,7 +44,7 @@ M$ClassesDescription = {
   	Indices          -> {Index[Colour]},
   	ParticleName     -> "S1",
   	AntiParticleName -> "S1~",
-  	PDG               -> 43,
+  	PDG               -> 9000043,
   	FullName         -> "S1"
   },
 
@@ -78,7 +78,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Colour]},
     ParticleName     -> "S3p23",
     AntiParticleName -> "S3p23~",
-    PDG               -> 44,
+    PDG               -> 9000044,
     FullName         -> "S323"
   },
 
@@ -94,7 +94,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Colour]},
     ParticleName     -> "S3m13",
     AntiParticleName -> "S3m13~",
-    PDG               -> 45,
+    PDG               -> 9000045
     FullName         -> "S313"
   },
 
@@ -110,7 +110,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Colour]},
     ParticleName     -> "S3m43",
     AntiParticleName -> "S3m43~",
-    PDG               -> 46,
+    PDG               -> 9000046,
     FullName         -> "S343"
   }
 

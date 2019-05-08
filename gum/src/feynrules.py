@@ -58,7 +58,7 @@ def fr_params(paramlist, add_higgs):
             and (p.block() != 'CKMBLOCK')):
             
             # Create a new instance of SpectrumParameter
-            x = SpectrumParameter(p.name(), "dimensionless")
+            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), index=p.index())
             params.append(x)
 
     if add_higgs:

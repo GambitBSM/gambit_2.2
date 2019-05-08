@@ -379,9 +379,10 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("antiname", &Particle::antiname)
     ;
 
-  class_<Parameter>("SARAHParameter", init<std::string, std::string>())
+  class_<Parameter>("SARAHParameter", init<std::string, std::string, int>())
     .def("name",  &Parameter::name)
     .def("block", &Parameter::block)
+    .def("index", &Parameter::index)
     ;
 
   class_<Options>("SARAHOptions", init<std::string, std::string, std::string, std::string, std::string>())

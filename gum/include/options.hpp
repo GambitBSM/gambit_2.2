@@ -108,6 +108,7 @@ class Parameter
 
     std::string paramname;
     std::string blockname;
+    int blockindex;
 
     public:
 
@@ -115,14 +116,16 @@ class Parameter
         bool operator==(const Parameter&) {return false;}
         bool operator!=(const Parameter&) {return true;}
 
-        Parameter(std::string name, std::string block)
+        Parameter(std::string name, std::string block, int index)
         {
             paramname = name;
             blockname = block;
+            blockindex = index;
         }
 
         std::string name() { return paramname; }
         std::string block() { return blockname; }
+        int index() { return blockindex; }
 
 };
 

@@ -158,11 +158,27 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
                             "not passed as instance of class "
                             "SpectrumParameter."))
 
-        if model_parameters[i].shape:
-            shape = ", " + model_parameters[i].shape
+        mp = model_parameters[i]
+
+        # Default shape to 'scalar'
+        if mp.shape:
+            shape = mp.shape
         else:
-            shape = ""
-        towrite += "addParameter(Par::{0}, \"{1}\"{2});\n".format(model_parameters[i].tag.replace("\"",""), model_parameters[i].name, shape)
+            shape = "scalar"
+
+        # If we've extracted some information about the block, then
+        # add the information to the addParameter macro
+        if mp.block:
+            extra = ", " + mp.block + ", " + str(mp.index)
+        else: extra = ""
+
+        # Write the addParameter macro to initialise each SpectrumParameter
+        # object within the SubSpectrum.
+        towrite += (
+                "addParameter(Par::{0}, \"{1}\", {2}{3});\n"
+                ).format(mp.tag.replace("\"",""), 
+                         mp.name, shape, extra)
+
 
     towrite += (
             "\n"

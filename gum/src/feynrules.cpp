@@ -389,7 +389,7 @@ void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
                 return;
             }
 
-            Parameter parameter(paramname, block);
+            Parameter parameter(paramname, block, int(j+1));
             paramlist.push_back(parameter);
         }
     }
@@ -535,9 +535,10 @@ BOOST_PYTHON_MODULE(libfr)
     .def("antiname", &Particle::antiname)
     ;
 
-  class_<Parameter>("FRParameter", init<std::string, std::string>())
+  class_<Parameter>("FRParameter", init<std::string, std::string, int>())
     .def("name",  &Parameter::name)
     .def("block", &Parameter::block)
+    .def("index", &Parameter::index)
     ;
 
   class_<Options>("FROptions", init<std::string, std::string, std::string, std::string, std::string>())

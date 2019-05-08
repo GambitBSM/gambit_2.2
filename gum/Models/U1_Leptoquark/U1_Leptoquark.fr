@@ -41,7 +41,7 @@ M$ClassesDescription = {
     Width             -> {Wu1, 1.},
     ParticleName      -> "U1",
     AntiParticleName  -> "U1~",
-    PDG               -> 42,
+    PDG               -> 9000042,
     PropagatorLabel   -> "U1",
     PropagatorType    -> Sine,
     PropagatorArrow   -> Forward,

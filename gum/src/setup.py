@@ -99,11 +99,14 @@ class SpectrumParameter:
     in SpecBit and in Models.
     """
 
-    def __init__(self, name, tag, shape=None, fullname=None,
+    def __init__(self, name, tag, block=None, index=1, 
+                 shape=None, fullname=None,
                  sm=False, gb_input=None):
         self.name = name
         self.tag = tag
         self.shape = shape
+        self.block = block
+        self.index = index
         self.sm = sm
         if not fullname:
             self.fullname = name
