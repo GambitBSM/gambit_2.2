@@ -169,7 +169,7 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
         # If we've extracted some information about the block, then
         # add the information to the addParameter macro
         if mp.block:
-            extra = ", " + mp.block + ", " + str(mp.index)
+            extra = ", \"" + mp.block + "\", " + str(mp.index)
         else: extra = ""
 
         # Write the addParameter macro to initialise each SpectrumParameter
@@ -327,7 +327,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             "\n"
             "static int index_offset() {{return -1;}}\n"
             "\n"
-            "\\ Construct the SubSpectrumContents\n"
+            "/// Construct the SubSpectrumContents\n"
             "const SpectrumContents::{1} contents;\n"
             "\n"
             "/// Add SLHAea object using the SimpleSpec_to_SLHAea routine\n"
