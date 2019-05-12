@@ -25,7 +25,7 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2015 Jul
 ///  \date 2018 Jan
-///  \date 2019 Jan, Feb
+///  \date 2019 Jan, Feb, May
 ///
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
@@ -48,15 +48,15 @@ namespace Gambit
 
     /// Retrieve a Pythia hard-scattering Monte Carlo simulation
     template<typename PythiaT, typename EventT>
-    void getColliderPythia(ColliderPythia<PythiaT, EventT>& result,
-                           const MCLoopInfo& RunMC,
-                           const Spectrum& spectrum,
-                           const DecayTable& decay_rates,
-                           const str model_suffix,
-                           const int iteration,
-                           void(*wrapup)(),
-                           const Options& runOptions,
-                           bool is_SUSY)
+    void getPy8Collider(Py8Collider<PythiaT, EventT>& result,
+                        const MCLoopInfo& RunMC,
+                        const Spectrum& spectrum,
+                        const DecayTable& decay_rates,
+                        const str model_suffix,
+                        const int iteration,
+                        void(*wrapup)(),
+                        const Options& runOptions,
+                        bool is_SUSY)
     {
       static bool first = true;
       static std::vector<str> filenames;
@@ -119,20 +119,28 @@ namespace Gambit
         pythiaCommonOptions.push_back("SLHA:verbose = 0");
 
         // Get options from yaml file.
-        double xsec_veto_default = 0.0;
+        const double xsec_veto_default = 0.0;
+        const bool partonOnly_default = false;
+        const double antiktR_default = 0.4;
         if (runOptions.hasKey(RunMC.current_collider()))
         {
           YAML::Node colNode = runOptions.getValue<YAML::Node>(RunMC.current_collider());
           Options colOptions(colNode);
           xsec_veto_fb = colOptions.getValueOrDef<double>(xsec_veto_default, "xsec_veto");
-
+          result.partonOnly = colOptions.getValueOrDef<bool>(partonOnly_default, "partonOnly");
+          result.antiktR = colOptions.getValueOrDef<double>(antiktR_default, "antiktR");
           if (colOptions.hasKey("pythia_settings"))
           {
             std::vector<str> addPythiaOptions = colNode["pythia_settings"].as<std::vector<str> >();
             pythiaCommonOptions.insert(pythiaCommonOptions.end(), addPythiaOptions.begin(), addPythiaOptions.end());
           }
         }
-        else xsec_veto_fb = xsec_veto_default;
+        else
+        {
+          xsec_veto_fb = xsec_veto_default;
+          result.partonOnly = partonOnly_default;
+          result.antiktR = antiktR_default;
+        }
 
         // We need showProcesses for the xsec veto.
         pythiaCommonOptions.push_back("Init:showProcesses = on");
@@ -181,7 +189,7 @@ namespace Gambit
             result.init(pythia_doc_path, pythiaOptions, processLevelOutput);
           }
         }
-        catch (typename ColliderPythia<PythiaT,EventT>::InitializationError& e)
+        catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
         {
           // Append new seed to override the previous one
           int newSeedBase = int(Random::draw() * 899990000.);
@@ -197,10 +205,10 @@ namespace Gambit
               result.init(pythia_doc_path, pythiaOptions, processLevelOutput);
             }
           }
-          catch (typename ColliderPythia<PythiaT,EventT>::InitializationError& e)
+          catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
           {
             #ifdef COLLIDERBIT_DEBUG
-              cout << debug_prefix() << "ColliderPythia::InitializationError caught in getColliderPythia. Will discard this point." << endl;
+              cout << debug_prefix() << "Py8Collider::InitializationError caught in getPy8Collider. Will discard this point." << endl;
             #endif
             piped_invalid_point.request("Bad point: Pythia can't initialize");
             wrapup();
@@ -263,13 +271,13 @@ namespace Gambit
     #define IS_SUSY true
     #define NOT_SUSY false
     #define GET_SPECIFIC_PYTHIA(NAME, PYTHIA_NS, SPECTRUM, MODEL_EXTENSION, SUSY_FLAG)\
-    void NAME(ColliderPythia<PYTHIA_NS::Pythia8::Pythia,                              \
-                             PYTHIA_NS::Pythia8::Event> &result)                      \
+    void NAME(Py8Collider<PYTHIA_NS::Pythia8::Pythia,                                 \
+                          PYTHIA_NS::Pythia8::Event> &result)                         \
     {                                                                                 \
       using namespace Pipes::NAME;                                                    \
-      getColliderPythia(result, *Dep::RunMC, *Dep::SPECTRUM,                          \
+      getPy8Collider(result, *Dep::RunMC, *Dep::SPECTRUM,                             \
        *Dep::decay_rates, #MODEL_EXTENSION, *Loop::iteration,                         \
-       Loop::wrapup, *runOptions, SUSY_FLAG);                             \
+       Loop::wrapup, *runOptions, SUSY_FLAG);                                         \
     }
 
     /// Get a specific Pythia hard-scattering sim as a generator-independent pointer-to-BaseCollider

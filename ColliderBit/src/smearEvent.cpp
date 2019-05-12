@@ -5,7 +5,6 @@
 ///  ColliderBit event loop functions returning
 ///  events after detector simulation.
 ///
-///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
@@ -38,8 +37,6 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
-
 namespace Gambit
 {
 
@@ -47,48 +44,17 @@ namespace Gambit
   {
 
     /// Smear an event
-    template<typename EventT>
     void smearEvent(HEPUtils::Event& result,
-                    const EventT& HardScatteringEvent,
-                    const BaseDetector<EventT>& Smearer,
+                    const HEPUtils::Event& HardScatteringEvent,
+                    const BaseDetector& detector,
                     const MCLoopInfo& RunMC,
                     const int iteration,
-                    const str& ID,
-                    const str& detname,
-                    void(*wrapup)())
+                    const str& detname)
     {
-
       if (iteration <= BASE_INIT or not RunMC.current_analyses_exist_for(detname)) return;
       result.clear();
-
-      // Attempt to get the next event from Pythia8, convert to HEPUtils::Event, and smear it
-      try
-      {
-        Smearer.processEvent(HardScatteringEvent, result);
-      }
-
-      // No good.
-      catch (Gambit::exception& e)
-      {
-
-        #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Gambit::exception caught during event conversion in "+ID+". Check the ColliderBit log for details." << endl;
-        #endif
-
-        #pragma omp critical (event_conversion_error)
-        {
-          // Store Pythia event record in the logs
-          std::stringstream ss;
-          HardScatteringEvent.list(ss, 1);
-          logger() << LogTags::debug << "Gambit::exception caught in "+ID+". Pythia record for event that failed:\n" << ss.str() << EOM;
-        }
-
-        str errmsg = "Bad point: "+ID+" caught the following runtime error: ";
-        errmsg    += e.what();
-        piped_invalid_point.request(errmsg);
-        wrapup();
-        return;
-      }
+      HardScatteringEvent.cloneTo(result);
+      detector.processEvent(result);
     }
 
     /// Smear an event using a simulation of EXPERIMENT
@@ -97,8 +63,12 @@ namespace Gambit
     {                                                                                    \
       using namespace Pipes::NAME;                                                       \
       smearEvent(result, *Dep::HardScatteringEvent, *(*Dep::CAT(EXPERIMENT,DetectorSim)),\
-       *Dep::RunMC, *Loop::iteration, #NAME, #EXPERIMENT, Loop::wrapup);                 \
+       *Dep::RunMC, *Loop::iteration, #EXPERIMENT);                                      \
     }
+
+    SMEAR_EVENT(smearEventATLAS, ATLAS)
+    SMEAR_EVENT(smearEventCMS, CMS)
+    SMEAR_EVENT(copyEvent, Identity)
 
   }
 

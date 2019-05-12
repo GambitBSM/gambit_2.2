@@ -5,7 +5,6 @@
 ///  ColliderBit event loop functions returning
 ///  detector simulations.
 ///
-///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
@@ -41,7 +40,7 @@
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/CMSEfficiencies.hpp"
-#include "gambit/ColliderBit/detectors/BuckFast_definitions.hpp"
+#include "gambit/ColliderBit/detectors/BuckFast.hpp"
 
 #include "HEPUtils/FastJet.h"
 
@@ -54,42 +53,17 @@ namespace Gambit
   {
 
     /// Get a BuckFast detector simulation
-    template<typename EventT>
-    BaseDetector<EventT>* getBuckFast(const str& detname,
-                                      const MCLoopInfo& RunMC,
-                                      int iteration,
-                                      const Options& runOptions)
+    BaseDetector* getBuckFast(const str& detname
+                              ,int iteration
+                              //,const Options& runOptions
+                              )
     {
-      static bool partonOnly;
-      static double antiktR;
-
-      // Where the real action is
-      static std::unique_ptr<BuckFast<EventT>[]> bucky(new BuckFast<EventT>[omp_get_max_threads()]);
+      // Where's my Bucky?
+      static std::unique_ptr<BuckFast[]> bucky(new BuckFast[omp_get_max_threads()]);
       int mine = omp_get_thread_num();
-
-      if (iteration == COLLIDER_INIT)
-      {
-        // The default values for partonOnly and antiktR
-        bool default_partonOnly = false;
-        double default_antiktR = 0.4;
-        // Retrieve any yaml options specifying partonOnly and antikt R for this collider
-        if (runOptions.hasKey(RunMC.current_collider()))
-        {
-          Options colOptions(runOptions.getValue<YAML::Node>(RunMC.current_collider()));
-          partonOnly = colOptions.getValueOrDef<bool>(default_partonOnly, "partonOnly");
-          antiktR = colOptions.getValueOrDef<double>(default_antiktR, "antiktR");
-        }
-        else
-        {
-          partonOnly = default_partonOnly;
-          antiktR = default_antiktR;
-        }
-      }
 
       if (iteration == START_SUBPROCESS)
       {
-        // Each thread gets its own copy of the detector sim, so it is initialised *after* COLLIDER_INIT, within omp parallel.
-        bucky[mine].init(partonOnly, antiktR);
         // Assign detector functions
         if (detname == "ATLAS")
         {
@@ -117,14 +91,17 @@ namespace Gambit
 
     }
 
-    /// Retrieve a BuckFast sim of EXPERIMENT that accepts type EVENT
-    #define GET_BUCKFAST_AS_BASE_DETECTOR(NAME, EVENT, EXPERIMENT)              \
-    void NAME(BaseDetector<EVENT>* &result)                                     \
-    {                                                                           \
-      using namespace Pipes::NAME;                                              \
-      result = getBuckFast<EVENT>(#EXPERIMENT, *Dep::RunMC, *Loop::iteration,   \
-      *runOptions);                                                             \
+    /// Retrieve a BuckFast sim of EXPERIMENT
+    #define GET_BUCKFAST_AS_BASE_DETECTOR(NAME, EXPERIMENT)             \
+    void NAME(BaseDetector* &result)                                    \
+    {                                                                   \
+      using namespace Pipes::NAME;                                      \
+      result = getBuckFast(#EXPERIMENT, *Loop::iteration/*, *runOptions*/); \
     }
+
+    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastATLAS, ATLAS)
+    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastCMS, CMS)
+    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastIdentity, Identity)
 
   }
 

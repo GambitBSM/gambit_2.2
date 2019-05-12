@@ -223,6 +223,66 @@
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Detector sim capabilities.
+  /// @{
+  #define CAPABILITY ATLASDetectorSim
+  START_CAPABILITY
+    #define FUNCTION getBuckFastATLAS
+    START_FUNCTION(BaseDetector*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY CMSDetectorSim
+  START_CAPABILITY
+    #define FUNCTION getBuckFastCMS
+    START_FUNCTION(BaseDetector*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY IdentityDetectorSim
+  START_CAPABILITY
+    #define FUNCTION getBuckFastIdentity
+    START_FUNCTION(BaseDetector*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
+
+  /// Run detector simulators and produce the standard event format.
+  /// @{
+  #define CAPABILITY ATLASSmearedEvent
+  START_CAPABILITY
+    #define FUNCTION smearEventATLAS
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringEvent, HEPUtils::Event)
+    DEPENDENCY(ATLASDetectorSim, BaseDetector*)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY CMSSmearedEvent
+  START_CAPABILITY
+    #define FUNCTION smearEventCMS
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringEvent, HEPUtils::Event)
+    DEPENDENCY(CMSDetectorSim, BaseDetector*)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY CopiedEvent
+  START_CAPABILITY
+    #define FUNCTION copyEvent
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringEvent, HEPUtils::Event)
+    DEPENDENCY(IdentityDetectorSim, BaseDetector*)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
+
   // All other functions are declared in additional headers in the ColliderBit/models directory.
   // The following capabilities need to be provided for each new model:
 
@@ -235,31 +295,5 @@
   #define CAPABILITY HardScatteringEvent
   START_CAPABILITY
   #undef CAPABILITY
-
-  /// Detector sim capabilities.
-  /// @{
-  #define CAPABILITY ATLASDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CMSDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY IdentityDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
-  /// @}
-
-  /// Run detector simulators and produce the standard event format.
-  /// @{
-  #define CAPABILITY ATLASSmearedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CMSSmearedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CopiedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
-  /// @}
 
 #undef MODULE

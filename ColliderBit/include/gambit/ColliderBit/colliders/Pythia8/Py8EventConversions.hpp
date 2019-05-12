@@ -2,24 +2,29 @@
 //  *********************************************
 ///  \file
 ///
-///  BuckFast smearing functions.
+///  Helper functions for converting between
+///  different event types.
 ///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Andy Buckley
-///  \author Abram Krislock
 ///  \author Anders Kvellestad
 ///  \author Pat Scott
 ///  \author Martin White
 ///
 ///  *********************************************
 
-#include "gambit/ColliderBit/detectors/BuckFast.hpp"
-#include "gambit/ColliderBit/detectors/Py8Utils.hpp"
+#pragma once
 
+#include "gambit/ColliderBit/colliders/Pythia8/Py8Utils.hpp"
+
+#include "HEPUtils/Event.h"
+#include "HEPUtils/Particle.h"
+#include "HEPUtils/FastJet.h"
 #include "MCUtils/PIDCodes.h"
+
 
 namespace Gambit
 {
@@ -27,40 +32,10 @@ namespace Gambit
   namespace ColliderBit
   {
 
-    /// Process an event with BuckFast
-    template<typename EventT>
-    void BuckFast<EventT>::processEvent(const EventT& eventIn, HEPUtils::Event& eventOut) const
-    {
-      if (partonOnly)
-        convertPartonEvent(eventIn, eventOut);
-      else
-        convertParticleEvent(eventIn, eventOut);
-
-      // Electron smearing and efficiency
-      /// @todo Run-dependence?
-      if (smearElectronEnergy != NULL) smearElectronEnergy(eventOut.electrons());
-
-      // Muon smearing and efficiency
-      /// @todo Run-dependence?
-      if (smearMuonMomentum != NULL) smearMuonMomentum(eventOut.muons());
-
-      //Smear taus
-      if (smearTaus != NULL) smearTaus(eventOut.taus());
-
-      // Smear jet momenta
-      if (smearJets != NULL) smearJets(eventOut.jets());
-
-      // Unset b-tags outside |eta|=2.5
-      for (HEPUtils::Jet* j : eventOut.jets())
-      {
-        if (j->abseta() > 2.5) j->set_btag(false);
-      }
-    }
-
     /// Convert a hadron-level EventT into an unsmeared HEPUtils::Event
     /// @todo Overlap between jets and prompt containers: need some isolation in MET calculation
     template<typename EventT>
-    void BuckFast<EventT>::convertParticleEvent(const EventT& pevt, HEPUtils::Event& result) const
+    void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR)
     {
       result.clear();
 
@@ -144,7 +119,7 @@ namespace Gambit
           if (gotmother) sid << " -> ";
           sid << p.id();
           ColliderBit_error().forced_throw(LOCAL_INFO, "Found final-state parton " + sid.str() + " in particle-level event converter: "
-                                   "reconfigure your generator to include hadronization, or Gambit to use the partonic event converter.");
+           "reconfigure your generator to include hadronization, or Gambit to use the partonic event converter.");
         }
 
         // Add particle outside ATLAS/CMS acceptance to MET
@@ -243,7 +218,7 @@ namespace Gambit
 
     /// Convert a partonic (no hadrons) EventT into an unsmeared HEPUtils::Event
     template<typename EventT>
-    void BuckFast<EventT>::convertPartonEvent(const EventT& pevt, HEPUtils::Event& result) const
+    void convertPartonEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR)
     {
       result.clear();
 
@@ -365,7 +340,6 @@ namespace Gambit
         pout += p->mom();
       result.set_missingmom(pout);
     }
-
 
   }
 
