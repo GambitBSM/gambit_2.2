@@ -112,7 +112,7 @@ namespace Gambit
       {
         if (thread_xsec_pair.first == this_thread) continue;
         const xsec& other_xsec = (*thread_xsec_pair.second);
-        _ntot + = other_xsec.num_events();
+        _ntot += other_xsec.num_events();
       }
     }
 

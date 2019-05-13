@@ -34,6 +34,7 @@
 ///
 ///  *********************************************
 
+#include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
 #define COLLIDERBIT_DEBUG

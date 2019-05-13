@@ -6,6 +6,9 @@
 ///  -> HEPUtils::Event MC generator event file
 ///  converter, based on lhef2hepmc.
 ///
+///  Hat tip: Leif Lönnblad for writing the LHEF
+///  parser that actually makes this possible!
+///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
@@ -18,28 +21,30 @@
 ///  (p.scott@imperial.ac.uk)
 ///  \date May 2019
 ///
-///  Hat tip: Leif Lonnblad for writing the LHEF
-///  parser that actually makes this possible!
-///
 ///  *********************************************
 
-#include "lhef2heputils.hpp"
-#include "HEPUtils/FastJet.h"
-#include <iostream>
-
 using namespace std;
+
+#include <iostream>
+#include "LHEF.h"
+#include "HEPUtils/FastJet.h"
+#include "gambit/ColliderBit/lhef2heputils.hpp"
+
+//#define COLLIDERBIT_DEBUG
+
 using namespace HEPUtils;
 using namespace FJNS;
 
 /// Extract an LHE event as a HEPUtils::Event
-Event get_HEPUtils_event(const LHEF::Reader& lhe)
+void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt)
 {
-  Event evt;
-  evt.set_weight(lhe.hepeup.weight());
 
   P4 vmet;
   vector<PseudoJet> jetparticles;
 
+  evt.set_weight(lhe.hepeup.weight());
+
+  // Loop over all particles in the event
   for (int i = 0; i < lhe.hepeup.NUP; ++i)
   {
     // Get status and PID code
@@ -80,6 +85,7 @@ Event get_HEPUtils_event(const LHEF::Reader& lhe)
   vmet.setM(0);
   evt.set_missingmom(vmet);
 
+  // Jets
   vector<PseudoJet> jets = get_jets(jetparticles, 0.4, 20.0);
   for (const PseudoJet& pj : jets)
   {
@@ -92,13 +98,16 @@ Event get_HEPUtils_event(const LHEF::Reader& lhe)
     evt.add_jet(new Jet(mk_p4(pj), hasB, hasC));
   }
 
-  // Print event summary
-  cout << "EVENT #" << event_number << endl;
-  cout << "  MET  = " << evt.met() << " GeV" << endl;
-  cout << "  #e   = " << evt.electrons().size() << endl;
-  cout << "  #mu  = " << evt.muons().size() << endl;
-  cout << "  #tau = " << evt.taus().size() << endl;
-  cout << "  #jet = " << evt.jets().size() << endl;
-  cout << "  #pho  = " << evt.photons().size() << endl;
-  cout << endl;
+  #ifdef COLLIDERBIT_DEBUG
+    // Print event summary
+    cout << "EVENT #" << event_number << endl;
+    cout << "  MET  = " << evt.met() << " GeV" << endl;
+    cout << "  #e   = " << evt.electrons().size() << endl;
+    cout << "  #mu  = " << evt.muons().size() << endl;
+    cout << "  #tau = " << evt.taus().size() << endl;
+    cout << "  #jet = " << evt.jets().size() << endl;
+    cout << "  #pho  = " << evt.photons().size() << endl;
+    cout << endl;
+  #endif
+
 }

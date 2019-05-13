@@ -23,6 +23,7 @@ using namespace std;
 
 #include "gambit/Elements/standalone_module.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/ColliderBit/ColliderBit_eventloop_utils.hpp"
 #include "gambit/ColliderBit/lhef2heputils.hpp"
 #include "gambit/Utils/cats.hpp"
 #include "gambit/Utils/util_functions.hpp"
@@ -46,6 +47,7 @@ using namespace CAT(Backends::nulike_,NULIKE_SAFE_VERSION)::Functown;
   #define CAPABILITY CrossSection
     #define FUNCTION getYAMLxsec
     START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
   #undef CAPABILITY
 #undef MODULE
@@ -62,8 +64,9 @@ namespace Gambit
 
       result.clear();
 
-      // Get the pointer to the LHEF reader object
-      LHEF::Reader& lhe = runOptions->getValue<LHEF::Reader&>("lhef_reader");
+      // Get the filename and initialise the LHEF reader
+      const static str lhef_filename = runOptions->getValue<str>("lhef_filename");
+      static LHEF::Reader lhe(lhef_filename);
 
       // Don't do anything during special iterations
       cout << *Loop::iteration << endl;
@@ -73,7 +76,7 @@ namespace Gambit
       #pragma omp critical
       {
         if (not lhe.readEvent()) Loop::wrapup();
-        result = get_HEPUtils_event(lhe);
+        get_HEPUtils_event(lhe, result);
       }
     }
 
@@ -178,15 +181,12 @@ int main(int argc, char* argv[])
     // Pass options to the main event loop
     YAML::Node CBS(infile["settings"]);
     CBS["analyses"] = analyses;
-    CBS["min_nEvents"] = (long long)(1 000);
-    CBS["max_nEvents"] = (long long)(1 000 000 000);
+    CBS["min_nEvents"] = (long long)(1000);
+    CBS["max_nEvents"] = (long long)(1000000000);
     operateLHCLoop.setOption<YAML::Node>("CBS", CBS);
 
-    // Open the LHE file
-    LHEF::Reader lhe(lhef_filename);
-
-    // Pass (a pointer to) the LHEF reader object to the module function that uses it to return HEPUtils events
-    getLHEvent.setOption<LHEF::Reader&>("lhef_reader", lhe);
+    // Pass the filename to the LHEF reader function
+    getLHEvent.setOption<str>("lhef_filename", lhef_filename);
 
     // Pass options to the cross-section function
     getYAMLxsec.setOption<double>("xsec_pb", settings.getValue<double>("xsec_pb"));

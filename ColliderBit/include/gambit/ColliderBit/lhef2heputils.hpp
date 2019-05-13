@@ -23,8 +23,10 @@
 ///
 ///  *********************************************
 
-#include "LHEF.h"
 #include "HEPUtils/Event.h"
 
+/// Forward declaration to cut down on includes
+namespace LHEF { class Reader; }
+
 /// Extract an LHE event as a HEPUtils::Event
-HEPUtils::Event get_HEPUtils_event(const LHEF::Reader&);
+void get_HEPUtils_event(const LHEF::Reader&, HEPUtils::Event&);
