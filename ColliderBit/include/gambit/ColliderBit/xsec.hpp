@@ -66,6 +66,9 @@ namespace Gambit
         /// Collect xsec predictions from other threads and do a weighted combination.
         void gather_xsecs();
 
+        /// Collect total events seen on all threads.
+        void gather_num_events();
+
       private:
 
         long long _ntot;

@@ -104,6 +104,18 @@ namespace Gambit
       }
     }
 
+    /// Collect total events seen on all threads.
+    void xsec::gather_num_events()
+    {
+      int this_thread = omp_get_thread_num();
+      for (auto& thread_xsec_pair : instances_map)
+      {
+        if (thread_xsec_pair.first == this_thread) continue;
+        const xsec& other_xsec = (*thread_xsec_pair.second);
+        _ntot + = other_xsec.num_events();
+      }
+    }
+
     /// A map with pointers to all instances of this class. The key is the thread number.
     std::map<int, const xsec*> xsec::instances_map;
 

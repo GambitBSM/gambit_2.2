@@ -23,6 +23,7 @@ using namespace std;
 
 #include "gambit/Elements/standalone_module.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/ColliderBit/lhef2heputils.hpp"
 #include "gambit/Utils/cats.hpp"
 #include "gambit/Utils/util_functions.hpp"
 
@@ -41,59 +42,74 @@ using namespace CAT(Backends::nulike_,NULIKE_SAFE_VERSION)::Functown;
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
   #undef CAPABILITY
-  // Declare a non-nested function that reads the total cross-section from the input file
+  // Declare a function that reads the total cross-section from the input file, but builds up the number of events from the event loop
   #define CAPABILITY CrossSection
-    #define FUNCTION getXsecFromYaml
+    #define FUNCTION getYAMLxsec
     START_FUNCTION(xsec)
     #undef FUNCTION
   #undef CAPABILITY
 #undef MODULE
 
-/// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
 namespace Gambit
 {
   namespace ColliderBit
   {
+
+    /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
     void getLHEvent(HEPUtils::Event& result)
     {
       using namespace Pipes::getLHEvent;
+
       result.clear();
-      // Retrieve the total number of LHEF files to be read
-      static const long long n_lhefs = runOptions->getValue<long long>("n_lhefs");
+
+      // Get the pointer to the LHEF reader object
+      LHEF::Reader& lhe = runOptions->getValue<LHEF::Reader&>("lhef_reader");
+
       // Don't do anything during special iterations
       cout << *Loop::iteration << endl;
       if (*Loop::iteration <= 0) return;
-      // Skip this loop iteration if we are out of LHEF files
-      if (*Loop::iteration > n_lhefs) Loop::cycle();
-      // Access the file corresponding to this iteration
-      static const std::vector<str> filenames = runOptions->getValue<std::vector<str>>("lhef_filenames");
-      str filename = filenames[*Loop::iteration-1];
-      cout << "files: " << endl;
-      for (auto x : filenames) {cout << "  " << x << endl;}
-      cout << "Would have read file " << *Loop::iteration << " of " << n_lhefs << " on thread " << omp_get_thread_num() << ": " << filename << endl;
-      // Convert the file into a HEPUtils::Event
-      //result = read_LHEF(filename);
-    }
-  }
-}
 
-/// A non-nested function that reads the total cross-section from the input file
-namespace Gambit
-{
-  namespace ColliderBit
-  {
-    void getXsecFromYaml(xsec& result)
-    {
-      using namespace Pipes::getXsecFromYaml;
-      // Retrieve the total number of LHEF files to be read, total cross-section and cross-section error
-      const long long n_lhefs = runOptions->getValue<long long>("n_lhefs");
-      const double xsec_pb = runOptions->getValue<double>("xsec_pb");
-      const double xsec_fractional_uncert = runOptions->getValue<double>("xsec_fractional_uncert");
-      // Add them to the xsec object
-      result.set_num_events(n_lhefs);
-      result.set_xsec(xsec_pb, xsec_fractional_uncert*xsec_pb);
-      cout << "xsec details: " << n_lhefs << " " << xsec_pb << " " << xsec_fractional_uncert << endl;
+      // Attempt to read the next LHE event as a HEPUtils event. If there are no more events, wrap up the loop.
+      #pragma omp critical
+      {
+        if (not lhe.readEvent()) Loop::wrapup();
+        result = get_HEPUtils_event(lhe);
+      }
     }
+
+    /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
+    void getYAMLxsec(xsec& result)
+    {
+      using namespace Pipes::getYAMLxsec;
+
+      // Don't bother if there are no analyses that will use this.
+      if (Dep::RunMC->analyses.empty()) return;
+
+      // Retrieve the total cross-section and cross-section error
+      const static double xsec_fb = 1000 * runOptions->getValue<double>("xsec_pb");
+      const static double xsec_fractional_uncert = runOptions->getValue<double>("xsec_fractional_uncert");
+
+      // Reset the xsec objects on all threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        result.reset();
+      }
+
+      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
+      if (*Loop::iteration > 0)
+      {
+        result.log_event();
+      }
+
+      // Set the xsec and its error
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+        result.set_xsec(xsec_fb, xsec_fractional_uncert*xsec_fb);
+        result.gather_num_events();
+        cout << "xsec details: " << result.num_events() << " " << xsec_fb << " " << xsec_fractional_uncert << endl;
+      }
+    }
+
   }
 }
 
@@ -152,11 +168,7 @@ int main(int argc, char* argv[])
     // Translate relevant settings into appropriate variables
     bool debug = settings.getValueOrDef<bool>(false, "debug");
     bool use_lnpiln = settings.getValueOrDef<bool>(false, "use_lognormal_distribution_for_1d_systematic");
-    str lhef_dir = settings.getValue<str>("event_file_dir");
-    DIR* dp = opendir(lhef_dir.c_str());
-    if (dp == NULL) throw std::runtime_error("LHE file directory "+lhef_dir+" not found.  Quitting...");
-    std::vector<str> lhef_filenames = Gambit::Utils::ls_dir(lhef_dir);
-    long long n_lhefs = lhef_filenames.size();
+    str lhef_filename = settings.getValue<str>("event_file");
 
     // Initialise logs
     logger().set_log_debug_messages(debug);
@@ -166,18 +178,19 @@ int main(int argc, char* argv[])
     // Pass options to the main event loop
     YAML::Node CBS(infile["settings"]);
     CBS["analyses"] = analyses;
-    CBS["min_nEvents"] = std::min((long long)(1000), n_lhefs);
-    CBS["max_nEvents"] = n_lhefs;
+    CBS["min_nEvents"] = (long long)(1 000);
+    CBS["max_nEvents"] = (long long)(1 000 000 000);
     operateLHCLoop.setOption<YAML::Node>("CBS", CBS);
 
-    // Pass options to the LHEF reader
-    getLHEvent.setOption<long long>("n_lhefs", n_lhefs);
-    getLHEvent.setOption<std::vector<str>>("lhef_filenames", lhef_filenames);
+    // Open the LHE file
+    LHEF::Reader lhe(lhef_filename);
+
+    // Pass (a pointer to) the LHEF reader object to the module function that uses it to return HEPUtils events
+    getLHEvent.setOption<LHEF::Reader&>("lhef_reader", lhe);
 
     // Pass options to the cross-section function
-    getXsecFromYaml.setOption<long long>("n_lhefs", n_lhefs);
-    getXsecFromYaml.setOption<double>("xsec_pb", settings.getValue<double>("xsec_pb"));
-    getXsecFromYaml.setOption<double>("xsec_fractional_uncert", settings.getValue<double>("xsec_fractional_uncert"));
+    getYAMLxsec.setOption<double>("xsec_pb", settings.getValue<double>("xsec_pb"));
+    getYAMLxsec.setOption<double>("xsec_fractional_uncert", settings.getValue<double>("xsec_fractional_uncert"));
 
     // Pass options to the likelihood function
     calc_LHC_LogLikes.setOption<int>("covariance_nsamples_start", settings.getValue<int>("covariance_nsamples_start"));
@@ -200,9 +213,9 @@ int main(int argc, char* argv[])
     runCMSAnalyses.resolveDependency(&smearEventCMS);
     runIdentityAnalyses.resolveDependency(&getIdentityAnalysisContainer);
     runIdentityAnalyses.resolveDependency(&copyEvent);
-    getATLASAnalysisContainer.resolveDependency(&getXsecFromYaml);
-    getCMSAnalysisContainer.resolveDependency(&getXsecFromYaml);
-    getIdentityAnalysisContainer.resolveDependency(&getXsecFromYaml);
+    getATLASAnalysisContainer.resolveDependency(&getYAMLxsec);
+    getCMSAnalysisContainer.resolveDependency(&getYAMLxsec);
+    getIdentityAnalysisContainer.resolveDependency(&getYAMLxsec);
     smearEventATLAS.resolveDependency(&getBuckFastATLAS);
     smearEventATLAS.resolveDependency(&getLHEvent);
     smearEventCMS.resolveDependency(&getBuckFastCMS);
@@ -221,6 +234,7 @@ int main(int argc, char* argv[])
     smearEventATLAS.resolveLoopManager(&operateLHCLoop);
     smearEventCMS.resolveLoopManager(&operateLHCLoop);
     copyEvent.resolveLoopManager(&operateLHCLoop);
+    getYAMLxsec.resolveLoopManager(&operateLHCLoop);
     runATLASAnalyses.resolveLoopManager(&operateLHCLoop);
     runCMSAnalyses.resolveLoopManager(&operateLHCLoop);
     runIdentityAnalyses.resolveLoopManager(&operateLHCLoop);
@@ -228,6 +242,7 @@ int main(int argc, char* argv[])
                                                              &getBuckFastATLAS,
                                                              &getBuckFastCMS,
                                                              &getBuckFastIdentity,
+                                                             &getYAMLxsec,
                                                              &getATLASAnalysisContainer,
                                                              &getCMSAnalysisContainer,
                                                              &getIdentityAnalysisContainer,
@@ -243,7 +258,6 @@ int main(int argc, char* argv[])
     nulike_1_0_7_init.reset_and_calculate();
 
     // Run the detector sim and selected analyses on all the events read in.
-    getXsecFromYaml.reset_and_calculate();
     operateLHCLoop.reset_and_calculate();
     CollectAnalyses.reset_and_calculate();
     calc_LHC_LogLikes.reset_and_calculate();
@@ -251,16 +265,18 @@ int main(int argc, char* argv[])
     calc_combined_LHC_LogLike.reset_and_calculate();
 
     // Retrieve and print the predicted + observed counts and likelihoods for the individual SRs and analyses, as well as the total likelihood.
-    // get predicted counts (BG, signal, total), observed counts, likelihood for each SR
-    // get selected SR information
-    // get total likelihood for each analysis
+    /// @todo
+    /// Get predicted counts (BG, signal, total), observed counts, likelihood for each SR
+    /// Get selected SR information
+    /// Get total likelihood for each analysis
     double loglike = calc_combined_LHC_LogLike(0);
 
     cout.precision(5);
     cout << endl;
-    // print predicted counts (BG, signal, total), observed counts, likelihood for each SR
-    // print selected SR information
-    // print total likelihood for each analysis
+    /// @todo
+    /// print predicted counts (BG, signal, total), observed counts, likelihood for each SR
+    /// print selected SR information
+    /// print total likelihood for each analysis
     cout << scientific << "Total combined ATLAS+CMS log-likelihood: " << loglike << endl;
     cout << endl;
 

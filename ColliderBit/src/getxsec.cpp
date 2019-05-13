@@ -74,8 +74,8 @@ namespace Gambit
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
-      // Reset the xsec object on the main thread (other threads do not matter)
-      if (*Loop::iteration == COLLIDER_INIT)
+      // Reset the xsec objects on all threads
+      if (*Loop::iteration == START_SUBPROCESS)
       {
         result.reset();
       }
@@ -86,14 +86,14 @@ namespace Gambit
         result.log_event();
       }
 
-      // Set the xsec and its error
+      // Set the xsec and its error, and gather event counts from all threads.
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
         double xs_fb = 0.1;             // replace with xsec from NLL-Fast
         double xserr_fb = 0.1 * xs_fb;  // or whatever
         result.set_xsec(xs_fb, xserr_fb);
+        result.gather_num_events();
       }
-
     }
 
 
