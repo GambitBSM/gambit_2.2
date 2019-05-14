@@ -18,7 +18,7 @@ analyses:
 
 settings:
   debug: true
-  event_file: solo_example.lhef
+  event_file: solo_example.lhe
   xsec_pb: 1.0
   xsec_fractional_uncert: 0.2
   use_lognormal_distribution_for_1d_systematic: true
