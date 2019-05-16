@@ -24,7 +24,7 @@
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2018 Jan
-///  \date 2019 Jan
+///  \date 2019 Jan, May
 ///
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
@@ -56,6 +56,7 @@
 /// TODO: see if we can use this one:
 //#include "gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp"
 
+#include "LHEF.h"
 #include "HEPUtils/Event.h"
 
 namespace Gambit

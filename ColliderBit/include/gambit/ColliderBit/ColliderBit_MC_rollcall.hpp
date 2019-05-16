@@ -46,16 +46,26 @@
   #define CAPABILITY CrossSection
   START_CAPABILITY
 
+    /// Cross-section from Monte Carlo
     #define FUNCTION getMCxsec
     START_FUNCTION(xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(HardScatteringSim, const BaseCollider*)
     #undef FUNCTION
 
+    /// Example function for interfacing alternative cross-section calculators
     #define FUNCTION getNLLFastxsec
     START_FUNCTION(xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
+
+    /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
+    #define CAPABILITY CrossSection
+      #define FUNCTION getYAMLxsec
+      START_FUNCTION(xsec)
+      NEEDS_MANAGER(RunMC, MCLoopInfo)
+      #undef FUNCTION
+    #undef CAPABILITY
 
   #undef CAPABILITY
   /// @}
@@ -294,6 +304,11 @@
   /// Collider sim event capability.
   #define CAPABILITY HardScatteringEvent
   START_CAPABILITY
+    /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
+    #define FUNCTION getLHEvent
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
   #undef CAPABILITY
 
 #undef MODULE

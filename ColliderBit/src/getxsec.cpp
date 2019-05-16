@@ -10,7 +10,7 @@
 ///
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
-///  \date 2019 Feb
+///  \date 2019 Feb, May
 ///
 ///  *********************************************
 
@@ -39,7 +39,7 @@ namespace Gambit
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration > 0)
+      if (*Loop::iteration >= 0)
       {
         result.log_event();
       }
@@ -81,7 +81,7 @@ namespace Gambit
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration > 0)
+      if (*Loop::iteration >= 0)
       {
         result.log_event();
       }
@@ -96,6 +96,38 @@ namespace Gambit
       }
     }
 
+    /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
+    void getYAMLxsec(xsec& result)
+    {
+      using namespace Pipes::getYAMLxsec;
+
+      // Don't bother if there are no analyses that will use this.
+      if (Dep::RunMC->analyses.empty()) return;
+
+      // Retrieve the total cross-section and cross-section error
+      const static double xsec_fb = 1000 * runOptions->getValue<double>("xsec_pb");
+      const static double xsec_fractional_uncert = runOptions->getValue<double>("xsec_fractional_uncert");
+
+      // Reset the xsec objects on all threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        result.reset();
+      }
+
+      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
+      if (*Loop::iteration >= 0)
+      {
+        result.log_event();
+      }
+
+      // Set the xsec and its error
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+        result.set_xsec(xsec_fb, xsec_fractional_uncert*xsec_fb);
+        result.gather_num_events();
+      }
+
+    }
 
   }
 }

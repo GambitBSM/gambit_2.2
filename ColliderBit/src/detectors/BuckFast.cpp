@@ -18,6 +18,9 @@
 
 #include "gambit/ColliderBit/detectors/BuckFast.hpp"
 
+//FIXME delete
+#include "gambit/ColliderBit/ATLASEfficiencies.hpp"
+
 namespace Gambit
 {
 
@@ -35,7 +38,7 @@ namespace Gambit
       /// @todo Run-dependence?
       if (smearMuonMomentum != NULL) smearMuonMomentum(event.muons());
 
-      //Smear taus
+      // Smear taus
       if (smearTaus != NULL) smearTaus(event.taus());
 
       // Smear jet momenta

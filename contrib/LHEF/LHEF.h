@@ -1316,7 +1316,7 @@ struct Scale : public TagBase {
   /**
    * Empty constructor
    */
-  Scale(string st = "veto", int emtr = 0, double sc = 0.0)
+  Scale(std::string st = "veto", int emtr = 0, double sc = 0.0)
     : stype(st), emitter(emtr), scale(sc) {}
 
   /**
@@ -1369,9 +1369,9 @@ struct Scale : public TagBase {
       eos << *it;
       while ( ++it != emitted.end() ) eos << " " << *it;
       if ( eos.str() == "-5 -4  -3 -2 -1 1 2 3 4 5 21" )
-        file << oattr("etype", string("QCD"));
+        file << oattr("etype", std::string("QCD"));
       else if ( eos.str() == "-13 -12 -11 11 12 13 22 23 24" )
-        file << oattr("etype", string("EW"));
+        file << oattr("etype", std::string("EW"));
       else
         file << oattr("etype", eos.str());
     }
@@ -2956,7 +2956,7 @@ public:
   void openeventfile(int ifile) {
     std::cerr << "opening file " << ifile << std::endl;
     efile.close();
-    string fname = heprup.eventfiles[ifile].filename;
+    std::string fname = heprup.eventfiles[ifile].filename;
     if ( fname[0] != '/' ) fname = dirpath + fname;
     efile.open(fname.c_str());
     if ( !efile ) throw std::runtime_error("Could not open event file " +
@@ -3194,7 +3194,7 @@ public:
       ef.neve = currfileevent;
     }
     efile.close();
-    string fname = heprup.eventfiles[ifile].filename;
+    std::string fname = heprup.eventfiles[ifile].filename;
     if ( fname[0] != '/' ) fname = dirpath + fname;
     efile.open(fname.c_str());
     if ( !efile ) throw std::runtime_error("Could not open event file " +

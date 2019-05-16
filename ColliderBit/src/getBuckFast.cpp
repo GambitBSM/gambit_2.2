@@ -44,7 +44,6 @@
 
 #include "HEPUtils/FastJet.h"
 
-// #define COLLIDERBIT_DEBUG
 
 namespace Gambit
 {
@@ -52,56 +51,45 @@ namespace Gambit
   namespace ColliderBit
   {
 
-    /// Get a BuckFast detector simulation
-    BaseDetector* getBuckFast(const str& detname
-                              ,int iteration
-                              //,const Options& runOptions
-                              )
+    /// Retrieve a BuckFast sim of ATLAS
+    void getBuckFastATLAS(BaseDetector* &result)
     {
-      // Where's my Bucky?
-      static std::unique_ptr<BuckFast[]> bucky(new BuckFast[omp_get_max_threads()]);
-      int mine = omp_get_thread_num();
-
-      if (iteration == START_SUBPROCESS)
+      using namespace Pipes::getBuckFastATLAS;
+      static std::unique_ptr<BuckFast[]> buckies(new BuckFast[omp_get_max_threads()]);
+      if (*Loop::iteration == START_SUBPROCESS)
       {
-        // Assign detector functions
-        if (detname == "ATLAS")
-        {
-          bucky[mine].smearElectronEnergy = &ATLAS::smearElectronEnergy;
-          bucky[mine].smearMuonMomentum   = &ATLAS::smearMuonMomentum ;
-          bucky[mine].smearTaus           = &ATLAS::smearTaus;
-          bucky[mine].smearJets           = &ATLAS::smearJets;
-        }
-        else if (detname == "CMS")
-        {
-          bucky[mine].smearElectronEnergy = &CMS::smearElectronEnergy;
-          bucky[mine].smearMuonMomentum   = &CMS::smearMuonMomentum;
-          bucky[mine].smearTaus           = &CMS::smearTaus;
-          bucky[mine].smearJets           = &CMS::smearJets;
-        }
-        else if (detname == "Identity") { /* relax */ }
-        else
-        {
-          ColliderBit_error().raise(LOCAL_INFO, "Unrecognised detector name.");
-        }
+        BuckFast* bucky = &buckies[omp_get_thread_num()];
+        bucky->smearElectronEnergy = &ATLAS::smearElectronEnergy;
+        bucky->smearMuonMomentum   = &ATLAS::smearMuonMomentum;
+        bucky->smearTaus           = &ATLAS::smearTaus;
+        bucky->smearJets           = &ATLAS::smearJets;
+        result = bucky;
       }
-
-      // Paper-bag it
-      return &bucky[mine];
-
     }
 
-    /// Retrieve a BuckFast sim of EXPERIMENT
-    #define GET_BUCKFAST_AS_BASE_DETECTOR(NAME, EXPERIMENT)             \
-    void NAME(BaseDetector* &result)                                    \
-    {                                                                   \
-      using namespace Pipes::NAME;                                      \
-      result = getBuckFast(#EXPERIMENT, *Loop::iteration/*, *runOptions*/); \
+    /// Retrieve a BuckFast sim of CMS
+    void getBuckFastCMS(BaseDetector* &result)
+    {
+      using namespace Pipes::getBuckFastCMS;
+      static std::unique_ptr<BuckFast[]> buckies(new BuckFast[omp_get_max_threads()]);
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        BuckFast* bucky = &buckies[omp_get_thread_num()];
+        bucky->smearElectronEnergy = &CMS::smearElectronEnergy;
+        bucky->smearMuonMomentum   = &CMS::smearMuonMomentum;
+        bucky->smearTaus           = &CMS::smearTaus;
+        bucky->smearJets           = &CMS::smearJets;
+        result = bucky;
+      }
     }
 
-    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastATLAS, ATLAS)
-    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastCMS, CMS)
-    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastIdentity, Identity)
+    /// Retrieve an Identity BuckFast sim (no sim)
+    void getBuckFastIdentity(BaseDetector* &result)
+    {
+      using namespace Pipes::getBuckFastIdentity;
+      static std::unique_ptr<BuckFast[]> buckies(new BuckFast[omp_get_max_threads()]);
+      if (*Loop::iteration == START_SUBPROCESS) result = &buckies[omp_get_thread_num()];
+    }
 
   }
 

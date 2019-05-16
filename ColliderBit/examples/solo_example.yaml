@@ -18,6 +18,7 @@ analyses:
 
 settings:
   debug: true
+  seed: -1
   event_file: solo_example.lhe
   xsec_pb: 1.0
   xsec_fractional_uncert: 0.2

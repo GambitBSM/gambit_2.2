@@ -100,7 +100,6 @@ void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt)
 
   #ifdef COLLIDERBIT_DEBUG
     // Print event summary
-    cout << "EVENT #" << event_number << endl;
     cout << "  MET  = " << evt.met() << " GeV" << endl;
     cout << "  #e   = " << evt.electrons().size() << endl;
     cout << "  #mu  = " << evt.muons().size() << endl;
