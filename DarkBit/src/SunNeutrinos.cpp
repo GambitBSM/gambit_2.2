@@ -152,6 +152,95 @@ namespace Gambit
       //cout << "capture rate via capture_rate_Sun_vnqn = " << result << "\n";
 
     }
+/*
+    // couplingNumber and isoSpin are the indicies of a FORTRAN array to fill
+    // note: in FORTRAN indices start at 1, not 0 like C++
+    void populate_captureArray(double val, int couplingNumber, int isospin)
+    {
+      using namespace Pipes::populate_captureArray;
+      BEreq::populate_array(val, couplingNumber, isospin);
+    }
+*/
+    ///Capture rate for Non-Relataivistic Effective Operator (NREO)
+    /// how is jx spin of dm handled by GAMBIT? (already implemented?)
+    /// still needs to know how to choose coupling constants
+    void capture_rate_Sun_NREO(double &result)
+    {
+      cout << "Starting capture_rate_Sun_NREO ...";
+      using namespace Pipes::capture_rate_Sun_NREO;
+
+      double capped;
+      double maxcap;
+      const int niso = 16;
+
+      BEreq::cap_sun_saturation(*Dep::mwimp,maxcap);
+
+      /*
+      use pipe to access parameters of model (0c1...1c15) here (3.2.3 of gambit paper)
+
+      for loop through C++ array of [0c1,0c2,...] (initialized by INI in captn_gen.cpp)
+      call populate Array with the value found in the C++ array and the position in the C++ array
+      */
+      cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap;
+
+      double coupling_array [2][15] = {
+        {
+          *Dep::c0_1_cap, *Dep::c0_2_cap, *Dep::c0_3_cap, *Dep::c0_4_cap, *Dep::c0_5_cap, 
+          *Dep::c0_6_cap, *Dep::c0_7_cap, *Dep::c0_8_cap, *Dep::c0_9_cap, *Dep::c0_10_cap, 
+          *Dep::c0_11_cap, *Dep::c0_12_cap, *Dep::c0_13_cap, *Dep::c0_14_cap, *Dep::c0_15_cap
+        }, 
+        {
+          *Dep::c1_1_cap, *Dep::c1_2_cap, *Dep::c1_3_cap, *Dep::c1_4_cap, *Dep::c1_5_cap, 
+          *Dep::c1_6_cap, *Dep::c1_7_cap, *Dep::c1_8_cap, *Dep::c1_9_cap, *Dep::c1_10_cap, 
+          *Dep::c1_11_cap, *Dep::c1_12_cap, *Dep::c1_13_cap, *Dep::c1_14_cap, *Dep::c1_15_cap
+        }
+      };
+      cout << "The first array entry in coupling_array, [0][0]: " << coupling_array[0][0];
+      int coupleNum;
+      int isoNum;
+      for(int i=0; i<2; i++)
+      {
+        for(int j=0; j<15; j++)
+        {
+          isoNum = i; // this is tau, takes the value 0 or 1
+          coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
+          if (coupleNum != 2) // 2 is not an allowed coupling constant
+          {
+            BEreq::populate_array(coupling_array[i][j], coupleNum, isoNum);
+            cout << "I tried to called pop_array with coupleNum: " << coupleNum << ", and isoNum: " << isoNum;
+          }
+        }
+      }
+
+      /*
+      Code to sum over all elements in solar model simultaneously.
+      The fourth parameter tells captn_NREO which of the 16 elements to sum over,
+       any other integer (than 1 to 16) tells it to sum over all elements together.
+      */
+      cout << "Before captn_NREO, capped: " << capped;
+      BEreq::captn_NREO(*Dep::mwimp,*Dep::jwimp,niso,0,capped);
+      cout << "I called captn_NREO, capped: " << capped;
+
+      /// Loop to sum over each element in solar model individually.
+      /*
+      double isoCapped = 0e0;
+      for(int iso=1; iso<(niso+1); iso++)
+      {
+        BEreq::captn_NREO(*Dep::mwimp,jx,nsio,iso,isoCapped);
+        capped += isoCapped;
+      }
+      */
+
+      result = capped;
+
+      logger() << "Capgen captured: total: " << result << "max = " << maxcap << "\n" << EOM;
+
+      // If capture is above saturation, return saturation value.
+      if (maxcap < result)
+      {
+        result = maxcap;
+      }
+    }
 
     /*! \brief Equilibration time for capture and annihilation of dark matter
      * in the Sun (s)

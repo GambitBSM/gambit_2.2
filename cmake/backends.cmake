@@ -78,7 +78,7 @@ set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    GIT_REPOSITORY https://github.com/aaronvincent/captngen.git
+    GIT_REPOSITORY https://github.com/Laen111/testcaptnoper.git # https://github.com/aaronvincent/captngen/tree/oper.git
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""

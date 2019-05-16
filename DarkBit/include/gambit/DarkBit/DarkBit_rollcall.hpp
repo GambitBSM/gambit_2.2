@@ -886,6 +886,51 @@ START_MODULE
     DEPENDENCY(sigma_SD_p, map_intpair_dbl)
     DEPENDENCY(sigma_SI_p,map_intpair_dbl)
     #undef FUNCTION
+/*
+    #define FUNCTION populate_captureArray
+    START_FUNCTION(double, int, int)
+    BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
+    #undef FUNCTION
+*/
+    ///Capture rate of dark matter with NREO method (s^-1), using backend Captn' General
+    #define FUNCTION capture_rate_Sun_NREO
+    START_FUNCTION(double)
+    BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,const int&,double&))
+    BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),void,(const double&,double&))
+    BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
+    DEPENDENCY(mwimp,double)
+    DEPENDENCY(jwimp,double)
+    DEPENDENCY(c0_1_cap,double)
+    DEPENDENCY(c0_2_cap,double)
+    DEPENDENCY(c0_3_cap,double)
+    DEPENDENCY(c0_4_cap,double)
+    DEPENDENCY(c0_5_cap,double)
+    DEPENDENCY(c0_6_cap,double)
+    DEPENDENCY(c0_7_cap,double)
+    DEPENDENCY(c0_8_cap,double)
+    DEPENDENCY(c0_9_cap,double)
+    DEPENDENCY(c0_10_cap,double)
+    DEPENDENCY(c0_11_cap,double)
+    DEPENDENCY(c0_12_cap,double)
+    DEPENDENCY(c0_13_cap,double)
+    DEPENDENCY(c0_14_cap,double)
+    DEPENDENCY(c0_15_cap,double)
+    DEPENDENCY(c1_1_cap,double)
+    DEPENDENCY(c1_2_cap,double)
+    DEPENDENCY(c1_3_cap,double)
+    DEPENDENCY(c1_4_cap,double)
+    DEPENDENCY(c1_5_cap,double)
+    DEPENDENCY(c1_6_cap,double)
+    DEPENDENCY(c1_7_cap,double)
+    DEPENDENCY(c1_8_cap,double)
+    DEPENDENCY(c1_9_cap,double)
+    DEPENDENCY(c1_10_cap,double)
+    DEPENDENCY(c1_11_cap,double)
+    DEPENDENCY(c1_12_cap,double)
+    DEPENDENCY(c1_13_cap,double)
+    DEPENDENCY(c1_14_cap,double)
+    DEPENDENCY(c1_15_cap,double)
+    #undef FUNCTION
   #undef CAPABILITY
 
   /// Equilibration time for capture and annihilation of dark matter in the Sun (s)

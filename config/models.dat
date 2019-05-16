@@ -543,3 +543,7 @@ DFSZAxion_II: |
 ConstantMassALP: |
 
    A convenient version of the GeneralALP model for studies of ALPs with not explicitly temperature-dependent axion mass, i.e. beta = 0 and Tcrit is irrelevant.
+
+NREO: |
+
+   Non-relativistic effective operator model, coupling constants as defined in: https://arxiv.org/abs/1501.03729
