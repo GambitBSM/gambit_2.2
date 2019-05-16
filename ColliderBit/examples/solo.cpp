@@ -180,19 +180,41 @@ int main(int argc, char* argv[])
 
     // Retrieve and print the predicted + observed counts and likelihoods for the individual SRs and analyses, as well as the total likelihood.
     long long n_events = getYAMLxsec(0).num_events();
-    /// @todo
-    /// Get predicted counts (BG, signal, total), observed counts, likelihood for each SR
-    /// Get selected SR information
-    /// Get total likelihood for each analysis
+    std::stringstream summary_line;
+    for (size_t analysis = 0; analysis < CollectAnalyses(0).size(); ++analysis)
+    {
+      const Gambit::ColliderBit::AnalysisData& adata = *(CollectAnalyses(0).at(analysis));
+      const str& analysis_name = adata.analysis_name;
+      const Gambit::ColliderBit::AnalysisLogLikes& analysis_loglikes = calc_LHC_LogLikes(0).at(analysis_name);
+      summary_line << "  " << analysis_name << ": " << endl;
+      for (size_t sr_index = 0; sr_index < adata.size(); ++sr_index)
+      {
+        const Gambit::ColliderBit::SignalRegionData srData = adata[sr_index];
+        const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
+        const double abs_uncertainty_s_sys = srData.signal_sys;
+        const double combined_s_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
+        const double abs_uncertainty_bg_stat = (srData.n_background == 0 ? 0 : sqrt(srData.n_background));
+        const double abs_uncertainty_bg_sys = srData.background_sys;
+        const double combined_bg_uncertainty = HEPUtils::add_quad(abs_uncertainty_bg_stat, abs_uncertainty_bg_sys);
+        summary_line << "    Signal region " << srData.sr_label << " (SR index " << sr_index << "):" << endl;
+        summary_line << "      Observed events: " << srData.n_observed << endl;
+        summary_line << "      SM prediction: " << srData.n_background << " +/- " << combined_bg_uncertainty << endl;
+        summary_line << "      Signal prediction: " << srData.n_signal_at_lumi << " +/- " << combined_s_uncertainty << endl;
+        auto loglike_it = analysis_loglikes.sr_loglikes.find(srData.sr_label);
+        if (loglike_it != analysis_loglikes.sr_loglikes.end())
+        {
+          summary_line << "      Log-likelihood: " << loglike_it->second << endl;
+        }
+      }
+      summary_line << "    Selected signal region: " << analysis_loglikes.combination_sr_label << endl;
+      summary_line << "    Total log-likelihood for analysis:" << analysis_loglikes.combination_loglike << endl << endl;
+    }
     double loglike = calc_combined_LHC_LogLike(0);
 
     cout.precision(5);
     cout << endl;
-    cout << "Read and analysed " << n_events << " events from LHE file." << endl;
-    /// @todo
-    /// print predicted counts (BG, signal, total), observed counts, likelihood for each SR
-    /// print selected SR information
-    /// print total likelihood for each analysis
+    cout << "Read and analysed " << n_events << " events from LHE file." << endl << endl;
+    cout << "Analysis details:" << endl << endl << summary_line.str() << endl;
     cout << std::scientific << "Total combined ATLAS+CMS log-likelihood: " << loglike << endl;
     cout << endl;
 
