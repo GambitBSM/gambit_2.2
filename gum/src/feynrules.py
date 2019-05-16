@@ -3,6 +3,7 @@ Master module for all FeynRules related routines.
 """
 
 from setup import *
+import re 
 
 def fr_part_to_gum_part(fr_bsm):
     """
@@ -48,6 +49,7 @@ def fr_params(paramlist, add_higgs):
     Maybe worth adding a new parameter tag, like Par::unspecified.
     """
 
+    unsorted_params = []
     params = []
 
     # Add all parameters from the parameter list from FeynRules
@@ -59,8 +61,63 @@ def fr_params(paramlist, add_higgs):
             
             # Create a new instance of SpectrumParameter
             x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), index=p.index())
-            params.append(x)
+            unsorted_params.append(x)
 
+    # Now all of the parameters have been extracted, look to see if any of them
+    # are elements of a matrix.
+
+    # Firstly, get the name of each block
+    blocks = list(set([i.block for i in unsorted_params]))
+
+    # For each block, add the parameters to a dictionary...
+    from collections import defaultdict
+    blockdict = defaultdict(list)
+
+    for i in blocks:
+        for j in unsorted_params:
+            if j.block == i:
+                blockdict[i].append(j.name)
+
+    # Parameters that GUM decides are (square) matrices
+    matrices = {}
+
+    # Go through each entry in the dictionary, and try and group them
+    for k, v in blockdict.iteritems():
+
+        # FeynRules splits a matrix M into M1x1, M1x2, ..., Mdxd.
+        # Find any matches to M1x1 to start with.
+        r = re.compile(r'(.*)1x1')
+        first_entries = list(filter(r.match, v))
+
+        # Now go through the list, to see how big the (square) matrix is.
+        # Could generalise this to non-square matrices, if they're ever needed
+        for i in first_entries:
+            size = 1
+            while (i[:-1] + str(size+1)) in v:
+                size += 1
+            matrices[i[:-3]] = "m{0}x{0}".format(str(size))
+
+    # Delete duplicates from the original set of parameters
+    keys = matrices.keys()
+    added = [] # Dirty check to see a parameter's been added 
+    for i in unsorted_params:
+        present = False
+        for k in keys:
+            if k in i.name:
+                present = True
+                if k not in added:
+                    added.append(k)
+                    params.append(SpectrumParameter(k, "dimensionless", 
+                                                    i.block, i.index, 
+                                                    shape=matrices[k]))
+            
+        # If the parameter name doesn't match any of the matrix keys,
+        # then just copy the parameter over from the unsorted list
+        if not present:
+            params.append(i)
+        else: continue
+
+    # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
         params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True))
 

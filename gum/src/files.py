@@ -551,7 +551,20 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
     towrite += ("  {0}:\n").format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    params = [x.gb_in for x in model_parameters if x.name != 'h0_1' and x.sm == False]
+    bsm_params = [x for x in model_parameters if x.name != 'h0_1' and x.sm == False]
+    params = []
+
+    for i in bsm_params:
+        if i.shape == 'scalar' or i.shape == None: params.append(i.gb_in)
+        elif re.match("m[2-9]x[2-9]", i.shape): 
+            size = int(i.shape[-1])
+            for i in xrange(size):
+                for j in xrange(size):
+                    params.append(i.gb_in + str(j+1) + 'x' + str(k+1))
+        elif re.match("v[2-9]", i.shape): 
+            size = int(i.shape[-1])
+            for j in xrange(size):
+                params.append(i.gb_in + str(j+1))
 
     # No double counting (also want to preserve the order)
     norepeats = []

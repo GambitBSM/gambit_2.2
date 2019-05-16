@@ -375,7 +375,7 @@ if args.file:
     """
 
     # Determine when "simple_SMinputs" needed from FR/S model file
-    spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs)
+    spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs, gum.math)
     spectrum_header = write_spectrum_header(gum.name, add_higgs)
     spec_rollcall = write_specbit_rollcall(gum.name)
 
