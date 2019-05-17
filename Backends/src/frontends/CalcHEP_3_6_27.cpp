@@ -46,13 +46,6 @@ BE_INI_FUNCTION
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
     }
-    if (ModelInUse("U1_Leptoquark"))
-    {
-      BEpath = backendDir + "/../models/U1_Leptoquark";
-      path = BEpath.c_str();
-      modeltoset = (char*)malloc(strlen(path)+11);
-      sprintf(modeltoset, "%s", path);
-    }
     
 
     int error = setModel(modeltoset, 1);
@@ -75,20 +68,6 @@ BE_INI_FUNCTION
     const Spectrum& spec = *Dep::ScalarSingletDM_Z2_spectrum;
 
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
-  }
-  
-  if (ModelInUse("U1_Leptoquark"))
-  {
-    // Obtain model contents
-    static const SpectrumContents::U1_Leptoquark U1_Leptoquark_contents;
-    
-    // Obtain list of all parameters within model
-    static const std::vector<SpectrumParameter> U1_Leptoquark_params = U1_Leptoquark_contents.all_parameters();
-    
-    // Obtain spectrum information to pass to CalcHEP
-    const Spectrum& spec = *Dep::U1_Leptoquark_spectrum;
-    
-    Assign_All_Values(spec, U1_Leptoquark_params);
   }
   
 }
