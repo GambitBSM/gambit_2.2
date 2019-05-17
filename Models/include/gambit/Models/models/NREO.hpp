@@ -26,8 +26,8 @@
 	/// To declare this kind of relationship between a parameter 'my_par' and a 
 	/// capability 'capability', one adds the following to the declaration of the 
 	/// model containing 'my_par': MAP_TO_CAPABILITY(my_par, capability)
-	MAP_TO_CAPABILITY(mwimp, mwimp)
-	MAP_TO_CAPABILITY(j, jwimp)
+	// MAP_TO_CAPABILITY(mwimp, mwimp)
+	// MAP_TO_CAPABILITY(j, jwimp)
 
 	MAP_TO_CAPABILITY(c0_1, c0_1_cap)
 	MAP_TO_CAPABILITY(c0_2, c0_2_cap)

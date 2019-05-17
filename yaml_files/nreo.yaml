@@ -151,11 +151,11 @@ Scanner:
 
 ObsLikes:
 
-  - purpose:      LogLike
-    capability:   capture_rate_Sun
-    module:       DarkBit
-    function: capture_rate_Sun_NREO
-    type:         double
+  # - purpose:      LogLike
+  #   capability:   capture_rate_Sun
+  #   module:       DarkBit
+  #   function: capture_rate_Sun_NREO
+  #   type:         double
 
   # Indirect detection
   # Ice Cube
@@ -191,11 +191,11 @@ ObsLikes:
 Rules:
     # why do I need a function for mwimp, shouldn't I just be providing it by the model nreo?
     - capability: mwimp
-      function: mwimp_generic
+      function: Observable #mwimp_generic
 
     # RD_fraction needed by the captn init function, _one sets to one
-    - capability: RD_fraction
-      function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
+    # - capability: RD_fraction
+    #   function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
 
     # # DarMatter_ID_MSSM function needs this
     # - capability: MSSM_spectrum
