@@ -7,7 +7,7 @@ Parameters:
   # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
   NREO:
     j: 0.5
-    mwimp:
+    m:
       range: [1, 100]
     c0_1: 0.0000000165  # 1.65*10**(-8)
     c0_2: 0
@@ -151,11 +151,11 @@ Scanner:
 
 ObsLikes:
 
-  # - purpose:      LogLike
-  #   capability:   capture_rate_Sun
-  #   module:       DarkBit
-  #   function: capture_rate_Sun_NREO
-  #   type:         double
+  - purpose:      LogLike
+    capability:   capture_rate_Sun
+    module:       DarkBit
+    function: capture_rate_Sun_NREO
+    type:         double
 
   # Indirect detection
   # Ice Cube
@@ -190,12 +190,12 @@ ObsLikes:
 
 Rules:
     # why do I need a function for mwimp, shouldn't I just be providing it by the model nreo?
-    - capability: mwimp
+    - capability: mwimpNREO
       function: Observable #mwimp_generic
 
     # RD_fraction needed by the captn init function, _one sets to one
-    # - capability: RD_fraction
-    #   function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
+    - capability: RD_fraction
+      function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
 
     # # DarMatter_ID_MSSM function needs this
     # - capability: MSSM_spectrum

@@ -4028,3 +4028,6 @@ c1_14_cap: |
   
 c1_15_cap: |
   The c^{1}_{15} coupling constant from arxiv 1501.03729
+
+mwimpNREO: |
+   TESTING REMOVE THIS LATER: dark matter mass GeV created with map_to_cap().
