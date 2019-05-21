@@ -173,7 +173,7 @@ namespace Gambit
       double maxcap;
       const int niso = 16;
 
-      BEreq::cap_sun_saturation(*Dep::mwimp,maxcap);
+      BEreq::cap_sun_saturation(*Dep::mwimpNREO,maxcap);
 
       /*
       use pipe to access parameters of model (0c1...1c15) here (3.2.3 of gambit paper)
@@ -218,7 +218,7 @@ namespace Gambit
        any other integer (than 1 to 16) tells it to sum over all elements together.
       */
       cout << "Before captn_NREO, capped: " << capped;
-      BEreq::captn_NREO(*Dep::mwimp,*Dep::jwimp,niso,0,capped);
+      BEreq::captn_NREO(*Dep::mwimpNREO,*Dep::jwimpNREO,niso,0,capped);
       cout << "I called captn_NREO, capped: " << capped;
 
       /// Loop to sum over each element in solar model individually.

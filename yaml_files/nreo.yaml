@@ -4,7 +4,6 @@
 
 
 Parameters:
-  # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
   NREO:
     j: 0.5
     m:
@@ -62,8 +61,8 @@ Parameters:
   #  r_sun: 8.5
   #  alpha: .17
 
-  # SUSY parameters. from CMSSM.yaml
-  # needed by DarkSUSY_PointINit_MSSM in DarkBit/src/MSSM.cpp
+  # # SUSY parameters. from CMSSM.yaml
+  # # needed by DarkSUSY_PointINit_MSSM in DarkBit/src/MSSM.cpp
   # CMSSM:
   #   M0:
   #     range: [50, 1e4]
@@ -80,10 +79,22 @@ Parameters:
   #     range: [3.0, 70]
   #   SignMu: 1
 
-  # SM parameters.
-  # needed by get_SMINPUTS
+  # # SM parameters.
+  # # needed by get_SMINPUTS
   # StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
+  # # Nuclear matrix parameters. from NUHM1.yaml (for capture_rate_sun_const_xsec)
+  # nuclear_params_sigmas_sigmal:
+  #   sigmas:
+  #     range:  [19, 67]
+  #   sigmal:
+  #     range:  [31, 85]
+  #   deltau:
+  #     fixed_value:  0.842
+  #   deltad:
+  #     fixed_value: -0.427
+  #   deltas:
+  #     fixed_value: -0.085
 
 Priors:
 
@@ -187,29 +198,40 @@ ObsLikes:
   # - capability: DarkSide_50_LogLikelihood
   #   purpose:    LogLike
 
+  # - purpose: Observable
+  #   capability: mwimpNREO
+
 
 Rules:
-    # why do I need a function for mwimp, shouldn't I just be providing it by the model nreo?
-    # - capability: mwimpNREO
-    #   function: Observable #mwimp_generic
+  #testing the already implemented darksusy constant cross section for capture rate
+    # - capability: capture_rate_Sun
+    #   function: capture_rate_Sun_const_xsec
+    # - capability: DD_couplings
+    #   function: DD_couplings_DarkSUSY
 
-    # RD_fraction needed by the captn init function, _one sets to one
-    # - capability: RD_fraction
-    #   function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
+  #testing my cpature code
+    - capability: capture_rate_Sun
+      function: capture_rate_Sun_NREO
 
-    # # DarMatter_ID_MSSM function needs this
-    # - capability: MSSM_spectrum
-    #   function: make_MSSM_precision_spectrum_4H_W # make_MSSM_precision_spectrum_H_W, make_MSSM_precision_spectrum_H, make_MSSM_precision_spectrum_W, make_MSSM_precision_spectrum_none
 
-    # # TH_ProcessCAtalog_MSSM needs this
-    # - capability: decay_rates
-    #   function: all_decays_from_SLHA
 
-    # # make_MSSM_precision_spectrum_4H_W needs these two
-    # - capability: prec_mh
-    #   function: FH_HiggsMass # SHD_HiggsMass
-    # - capability: unimproved_MSSM_spectrum
-    #   function: get_MSSM_spectrum_SPheno # get_CMSSM_spectrum_FS, get_MSSMatMGUT_spectrum_FS, get_MSSMatQ_spectrum_FS, get_MSSMatMGUT_spectrum_FlexibleEFTHiggs, get_MSSMatQ_spectrum_FlexibleEFTHiggs, get_MSSM_spectrum_from_SLHAfile, get_MSSM_spectrum_from_SLHAstruct
+  # #RD_fraction needed by the captn init function, _one sets to one
+  #   - capability: RD_fraction
+  #     function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
+
+  # #DarMatter_ID_MSSM function needs this
+  #   - capability: MSSM_spectrum
+  #     function: make_MSSM_precision_spectrum_4H_W # make_MSSM_precision_spectrum_H_W, make_MSSM_precision_spectrum_H, make_MSSM_precision_spectrum_W, make_MSSM_precision_spectrum_none
+
+  # #TH_ProcessCAtalog_MSSM needs this
+  #   - capability: decay_rates
+  #     function: all_decays_from_SLHA
+
+  # #make_MSSM_precision_spectrum_4H_W needs these two
+  #   - capability: prec_mh
+  #     function: FH_HiggsMass # SHD_HiggsMass
+  #   - capability: unimproved_MSSM_spectrum
+  #     function: get_MSSM_spectrum_SPheno # get_CMSSM_spectrum_FS, get_MSSMatMGUT_spectrum_FS, get_MSSMatQ_spectrum_FS, get_MSSMatMGUT_spectrum_FlexibleEFTHiggs, get_MSSMatQ_spectrum_FlexibleEFTHiggs, get_MSSM_spectrum_from_SLHAfile, get_MSSM_spectrum_from_SLHAstruct
 
     # # errors: Option "SLHA_decay_filenames" is required to use this function
     # # found in DecayBit/scr/DecayBit.cpp:
@@ -247,4 +269,4 @@ KeyValues:
 
   print_timing_data: true
 
-  debug: false
+  debug: true
