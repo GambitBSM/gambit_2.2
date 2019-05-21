@@ -8,6 +8,7 @@ Parameters:
     j: 0.5
     m:
       range: [1, 100]
+    sig_v: 1 # just testing!
     c0_1: 0.0000000165  # 1.65*10**(-8)
     c0_2: 0
     c0_3: 0
