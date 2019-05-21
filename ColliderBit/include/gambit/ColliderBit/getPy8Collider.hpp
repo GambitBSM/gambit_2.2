@@ -94,12 +94,15 @@ namespace Gambit
           slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());
           if (is_SUSY)
           {
-            SLHAea::Block block("MODSEL");
-            block.push_back("BLOCK MODSEL              # Model selection");
-            SLHAea::Line line;
-            line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";
-            block.push_back(line);
-            slha.push_front(block);
+            if(slha.find("MODSEL") == slha.end())
+            {
+              SLHAea::Block block("MODSEL");
+              block.push_back("BLOCK MODSEL              # Model selection");
+              SLHAea::Line line;
+              line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";
+              block.push_back(line);
+              slha.push_front(block);
+            }
           }
         }
         else
