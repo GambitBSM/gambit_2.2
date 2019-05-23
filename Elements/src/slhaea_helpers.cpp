@@ -78,7 +78,7 @@ namespace Gambit
     return output;
   }
 
-  /// Add a new block to an SLHAea object, with our without a scale
+  /// Add a new block to an SLHAea object, with or without a scale
   void SLHAea_add_block(SLHAstruct& slha, const str& name, const double scale)
   {
     if(scale==-1)
@@ -337,12 +337,21 @@ namespace Gambit
       int chargex3 = Models::ParticleDB().get_chargex3(long_name);
       int color = Models::ParticleDB().get_color(long_name);
       bool is_anti = Models::ParticleDB().has_antiparticle(long_name);
-      std::string blockname = "QNUMBERS " + std::to_string(pdg_pair.first);
 
-      SLHAea_overwrite_block(slha, blockname, 1, chargex3, "# 3 times electric charge");
-      SLHAea_overwrite_block(slha, blockname, 2, spinx2+1, "# number of spin states (2S+1)");
-      SLHAea_overwrite_block(slha, blockname, 3, color, "# colour rep (1: singlet, 3: triplet, 8: octet)");
-      SLHAea_overwrite_block(slha, blockname, 4, is_anti, "# Particle/Antiparticle distinction (0=own anti)");
+      SLHAea::Block QNblock("QNUMBERS");
+      SLHAea::Line line1, line2, line3, line4, line5;
+      line1 << "BLOCK" << "QNUMBERS" << pdg_pair.first << "# " + long_name;
+      line2 << 1 << chargex3 << "# 3 times electric charge";
+      line3 << 2 << spinx2+1 << "# number of spin states (2S+1)";
+      line4 << 3 << color    << "# colour rep (1: singlet, 3: triplet, 8: octet)";
+      line5 << 4 << is_anti  << "# Particle/Antiparticle distinction (0=own anti)";
+      QNblock.push_back(line1);
+      QNblock.push_back(line2);
+      QNblock.push_back(line3);
+      QNblock.push_back(line4);
+      QNblock.push_back(line5);
+      slha.push_front(QNblock);
+
     }
   }
 
@@ -401,14 +410,6 @@ namespace Gambit
       }
     }
 
-    // We also need to add the Higgs mass by hand, if present in the spectrum.
-    if (subspec.has(Par::Pole_Mass, "h0_1")) 
-    {
-      SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, Par::Pole_Mass, Models::ParticleDB().pdg_pair("h0_1"), "MASS", "Higgs mass.");
-      SLHAea_add_QNumbers_from_subspec(slha, subspec, Models::ParticleDB().pdg_pair("h0_1"));
-    }
-
-    // Now need to export the QNUMBERS of each particle
   } 
 
 } 
