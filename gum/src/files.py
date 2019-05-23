@@ -223,6 +223,7 @@ def copy_file(filename, module, output_dir, reset_dict, existing=True):
     location_parts = os.path.split(location)
     GUM_version = output_dir + '/' + location[3:]
 
+    # Todo - do something with this. It's not doing anything right now.
     if existing:
         reset_dict['copied_amended_files']['files'].append(location)
     else:
@@ -558,8 +559,8 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         if i.shape == 'scalar' or i.shape == None: params.append(i.gb_in)
         elif re.match("m[2-9]x[2-9]", i.shape): 
             size = int(i.shape[-1])
-            for i in xrange(size):
-                for j in xrange(size):
+            for j in xrange(size):
+                for k in xrange(size):
                     params.append(i.gb_in + str(j+1) + 'x' + str(k+1))
         elif re.match("v[2-9]", i.shape): 
             size = int(i.shape[-1])
@@ -640,3 +641,33 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
 
     write_file(model_name + '.yaml', 'yaml_files', towrite, reset_contents)
 
+write_config_file(outputs, model_name, reset_contents):
+    """
+    Drops a configuration file, which will build the correct backends, 
+    and then GAMBIT, in the correct order.
+    """
+
+    towrite = (
+        "cd ../build\n"
+    )
+
+    if outputs.pythia:
+        towrite += (
+            "cmake ..\n"
+            "make -j4 pythia_{0}\n"
+        ).format(model_name.lower())
+
+    if outputs.mo:
+        towrite += (
+            "cmake ..\n"
+            "make -j4 micromegas\n"
+        )
+
+    # spheno, flexiblesusy, etc.
+
+    towrite += (
+        "cmake ..\n"
+        "make -j4 gambit\n"
+    )
+
+    write_file(model_name + '_config.sh', 'gum', towrite, reset_contents)

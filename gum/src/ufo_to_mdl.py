@@ -245,15 +245,15 @@ def import_mg_couplings(location):
     lines = lines.replace('})', '})\n')
 
     # Find all matches to "X = Vertex(...)"
-    couplings = re.findall(r'(.*?) = Coupling\((.*?)\)\n', lines)
+    coups = re.findall(r'(.*?) = Coupling\((.*?)\)\n', lines)
 
-    for i in range(len(couplings)):
+    for i in range(len(coups)):
 
-        mgname = couplings[i][0]
+        mgname = coups[i][0]
         
         # Match 'value = VALUE'
-        value = re.findall(r'value = \'(.*?)\'', str(couplings[i]))[0]
-        order = re.findall(r'order = {(.*?)}', str(couplings[i]))[0]
+        value = re.findall(r'value = \'(.*?)\'', str(coups[i]))[0]
+        order = re.findall(r'order = {(.*?)}', str(coups[i]))[0]
 
         coupling = MGCoupling(mgname, value, order)
         couplings.append(coupling)
@@ -1037,7 +1037,8 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
     # If there's 4 fermions involved - use the specialist 4-fermion function.
     if spin2splus1.count(2) == 4: 
         return write_four_fermion_vertex(vertex, param_dict, lorentz_dict, 
-                                         part_dict, mg_parts, mg_lorentz, ch_location)
+                                         part_dict, mg_parts, mg_lorentz, mg_couplings,
+                                         ch_location)
 
             
     # If it's a 4-gluon vertex, this is a hard-coded result: use the specialist function
@@ -1058,7 +1059,6 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
         for j in range(len(lorentz)):
             if lorentz[j] == l.mgname:
                 s = mg_lorentz[i].mgname
-                print s
                 # Rewrite the Lorentz structure into CalcHEP language
                 lor.append(lorentz_dict.get(s))
     lor = ''.join('+'.join(lor).split())
@@ -1083,9 +1083,30 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
 
     return vertex
 
+def c_ify_couplings(mg_couplings):
+    """
+    Returns a dictionary mapping Python syntax to C syntax for the couplings.
+    """
+
+    #ch_struct = re.sub(r'P\((.*?),(.*?)\)', r'p\2.m\1', ch_struct)
+
+    coupling_dict = {}
+    # Go through the couplings and make the MG Python syntax into CH C syntax
+    for i in mg_couplings:
+        t = i.value
+        t = re.sub(r'cmath.sqrt\(2\)', 'Sqrt2', t)
+        t = re.sub(r'complex\(0,1\)', 'i', t)
+
+        print t
+        t = re.sub(r'\((.*?)\*\*(.*?)', r'pow(\1,\2)', t)
+
+        print t
+
+
+    return coupling_dict
 
 def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, 
-                              mg_lorentz,ch_location):
+                              mg_lorentz, mg_couplings, ch_location):
     """
     Writes a four-fermion vertex for CalcHEP. This splits the contact interaction into
     two three-body interactions, with a constant propagator. This is achieved by 
@@ -1128,8 +1149,6 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     newentry +=  "{0: <10}".format("aux" + str(counter)) + "|"
     newentry +=  "{0: <14}".format("Aux" + str(counter)) + "|\n"
 
-    #print newentry
-
     new_ch_loc = os.path.abspath(ch_location) + "_ufo2mdl"
 
     with open(new_ch_loc + "/prtcls1.mdl", 'r') as f, open(new_ch_loc + "/parts_temp", 'w') as g:
@@ -1148,6 +1167,13 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     # Now write vertices with these auxiliary particles.
     out = ""
 
+    # todo: if the colour structure is non-trivial, 
+    # throw an error, for now.
+    for i in vertex.color[:]:
+        if i not in ["1", "Identity(3,4)"]:
+            print("ufo2mdl does not yet support funky color structures. Sorry.")
+            sys.exit()
+
     # CalcHEP-ify the particle names
     v = []
     for i in vertex.particles[:]:
@@ -1157,8 +1183,9 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
             elif mg_parts[j].mgantiname == i:
                 v.append( part_dict.get(mg_parts[j].antiname) )
 
-    # Rewrite the Lorentz strcture
+    # Rewrite the Lorentz structure, and save each coupling
     lor = []
+    coups = []
     for i in range(len(mg_lorentz)):
         l = mg_lorentz[i]
         for j in range(len(vertex.lorentz)):
@@ -1166,14 +1193,42 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
                 s = mg_lorentz[i].mgname
                 # Rewrite the Lorentz structure into CalcHEP language
                 lor.append(lorentz_dict.get(s))
+                coups.append(vertex.couplings[j])
 
     # Each object in lor is a tuple with the left- and right-side operators 
     # chibar (gamma(left)) chi    etabar (gamma(right)) eta 
 
-    # write new functions/variables to optimise vertex computation? 
-    # (as CH computes internal objects just once)
+    # For each vertex, want to split it up into two components.
+    # Assing the first half all of the couplings
 
-    print lor
+    # Go through the list of couplings, and swap in their actual values
+    coups_dict = {}
+    for i in coups:
+
+        # The key will look like (i,j) -> i-th entry of the colour tensor space, 
+        # j-th entry of the lorentz tensor space. Since we're only dealing with 
+        # cases where we have the identity in colour space (for now), we can ditch
+        # the first entry of the key, and just keep the jth value.
+        key, value = i.split(':')[0].split(',')[1][:-1] , i.split(':')[1][2:]
+        coups_dict[ key ] = value     
+
+        # Now each key points to an element of the lorentz array which maps to a 
+        # coupling. Phew!
+
+    # Now we need to pair up each element of the lorentz array
+    # with the correct coupling.
+
+    lc_dict = {}
+    for k, v in coups_dict.iteritems():
+        for j in mg_couplings:
+            if v == j.mgname:
+                lc_dict[ lor[int(k)] ] = j.value
+
+    # Now we have a dictionary of each pair of (left, right) fermion operators, and 
+    # the associated coupling. 
+
+    c_dict = c_ify_couplings(mg_couplings)
+
 
     # Increment counter for auxiliary particles
     counter+=1

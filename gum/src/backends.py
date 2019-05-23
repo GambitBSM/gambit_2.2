@@ -3,6 +3,7 @@ Master file containing all routines for modifying Backend interfaces.
 """
 
 import os
+import re
 
 from setup import *
 from files import *
@@ -87,8 +88,6 @@ def fix_pythia_lib(model, patched_dir, pythia_groups):
     Routine to patch the new Pythia - adding new matrix elements to the
     Process Container -- and the shared library too.
     """
-
-    import re
 
     # Move the matrix element sources and headers to where they will get compiled into the Pythia library
     process_dir = patched_dir+"/Processes_"+model+"/"
@@ -350,3 +349,46 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
     amend_file(target, "config", contents, linenum-1, reset_dict)
 
 
+def patch_pythia_patch(model_parameters):
+    """
+    Writes a generic patch to the existing GAMBIT Pythia patch.
+    This adds new LesHouches block entries for a new model.
+    """
+
+    pp_source = "\n// LH blocks added by GUM\n"
+    pp_header = "\n// LH blocks added by GUM\n"
+
+    blocks = []
+
+    for i in model_parameters:
+
+        if (i.sm) or i.tag == "Pole_Mass" or i.block in blocks:
+            continue
+
+        if i.shape == "scalar" or i.shape == None:
+
+            pp_source += (
+                    "else if (blockName == \"{0}\") {{\n"
+                    "  FILL_LHBLOCK({0}, double)\n"
+                    "}}\n"
+            ).format(i.block.lower())
+          
+            pp_header += "LHblock<double> {0};\n".format(i.block.lower())
+
+        # Matrix cases
+        elif re.match("m[2-9]x[2-9]", i.shape):
+
+            pp_source += (
+                    "else if (blockName == \"{0}\") {{\n"
+                    "  FILL_LHMATRIXBLOCK({0})\n"
+                    "}}\n"
+            ).format(i.block.lower())
+          
+            pp_header += "LHmatrixBlock<{0}> {1};\n".format(i.shape[-1], i.block.lower())
+
+
+        blocks.append(i.block)
+
+    print pp_source, pp_header
+
+    #return pp_source, pp_header
