@@ -49,7 +49,7 @@ namespace Gambit
   /// Get an entry from an SLHAea object as a double; raise a warning and use a default value if the entry is missing
   double SLHAea_get(const SLHAstruct& slha, const str& block, const int index, const double defvalue);
 
-  /// Add a new block to an SLHAea object, with our without a scale
+  /// Add a new block to an SLHAea object, with or without a scale
   void SLHAea_add_block(SLHAstruct&, const str& name, const double scale = -1);
 
   /// Delete an entire block from an SLHAea object, if it exists (actually just the first block matching the given name)
