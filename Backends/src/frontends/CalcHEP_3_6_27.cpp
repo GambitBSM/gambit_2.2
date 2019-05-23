@@ -47,7 +47,6 @@ BE_INI_FUNCTION
       sprintf(modeltoset, "%s", path);
     }
     
-
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
@@ -69,7 +68,7 @@ BE_INI_FUNCTION
 
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
-  
+
 }
 END_BE_INI_FUNCTION
 
@@ -130,39 +129,42 @@ BE_NAMESPACE
       // Otherwise, should all have the right names
       else 
       { 
+        const SubSpectrum& HE = spec.get_HE();
+
         // Scalar case
         if (it->shape().size()==1 and it->shape()[0] == 1)
         {
           char *chepname = const_cast<char*> ( it->name().c_str() );
-          Assign_Value(chepname, spec.get(it->tag(), it->name()));
+          Assign_Value(chepname, HE.get(it->tag(), it->name()));
         }
         // Vector case
-        // TODO check this works
         else if (it->shape().size()==1 and it->shape()[0] > 1)
         {
           for (int i=0; i<it->shape()[0]; ++i)
           {
             str long_name = it->name() + std::to_string(i+1);
             char *chepname = const_cast<char*> ( long_name.c_str() );
-            Assign_Value(chepname, spec.get(it->tag(), it->name(), i));
+            Assign_Value(chepname, HE.get(it->tag(), it->name(), i+1));
           }
         }
         // Matrix
-        // TODO this is throwing an error? 
-        // else if(it->shape().size()==2)
-        // for (int i=0; i<it->shape()[0]; ++i)
-        //   for (int j=0; j<it->shape()[0]; ++j)
-        //   {
-        //     str long_name = it->name() + std::to_string(i+1) + "x" + std::to_string(j+1);
-        //     Assign_Value(long_name.c_str(), spec.get(it->tag(), it->name(), i, j));
-        //   }
+        else if(it->shape().size()==2)
+        {
+          for (int i=0; i<it->shape()[0]; ++i)
+          {
+            for (int j=0; j<it->shape()[0]; ++j)
+            {
+              str long_name = it->name() + std::to_string(i+1) + "x" + std::to_string(j+1);
+              char *chepname = const_cast<char*> ( long_name.c_str() );
+              Assign_Value(chepname, HE.get(it->tag(), it->name(), i+1, j+1));
+            }
+          }
+        }
       }
     }
 
     // Now go through the input parameters of the model. **NOTE**: this structure will only work for the case
     // where we want to scan over fundamental Lagrangian parameters. This will change post-SpecBit redesign.
-
-    // where does *Param[...] come from!?
 
     // Create SMInputs struct from spectrum
     const SMInputs& sminputs = spec.get_SMInputs();
