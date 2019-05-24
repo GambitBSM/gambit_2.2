@@ -89,6 +89,37 @@ namespace Gambit
     }
 
 
+    // Pass in a set of nuisance parameters and return a combined log-likelihood
+    // Context required: n_pred_sb_nom, Vsb, n_obs
+    /// @todo Reduce this further, to just an sb likelihood and compute the b likelihood *once*, via s=0
+    double calc_Analysis_LogLikes(const Eigen::VectorXd& unit_nuisances)
+    {
+      double lsum_sb_private = 0;
+
+      // // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
+      // #pragma omp for nowait
+      // for (size_t i = 0; i < NSAMPLE; ++i) {
+
+      //   Eigen::VectorXd norm_sample_b(adata.size()), norm_sample_sb(adata.size());
+      //   for (size_t j = 0; j < adata.size(); ++j)
+      //     norm_sample_sb(j) = sqrtEsb(j) * unitnormdbn(Random::rng());
+
+      // Rotate rate deltas into the SR basis and shift by SR mean rates
+      const Eigen::VectorXd n_pred_sb = n_pred_sb_nom + (Vsb*unit_nuisances).array();
+
+      // Calculate Poisson likelihood and add to composite likelihood calculation
+      double combined_loglike_sb = 0;
+      for (size_t j = 0; j < adata.size(); ++j) {
+        const double lambda_sb_j = std::max(n_pred_sb(j), 1e-3); //< manually avoid <= 0 rates
+        const double loglike_sb_j = n_obs(j)*log(lambda_sb_j) - lambda_sb_j - logfact_n_obs(j);
+        combined_loglike_sb += loglike_sb_j;
+      }
+      return combined_loglike_sb;
+
+      // }
+    }
+
+
     /// Loop over all analyses and fill a map of AnalysisLogLikes objects
     void calc_LHC_LogLikes(map_str_AnalysisLogLikes& result)
     {
@@ -256,8 +287,19 @@ namespace Gambit
           const Eigen::MatrixXd Vsb = eig_sb.eigenvectors();
           //const Eigen::MatrixXd Vsbinv = Vsb.inverse();
 
-          ///////////////////
-          /// @todo Split this whole chunk off into a lnlike-style utility function?
+
+          const bool MARGINALISE = false;
+          if (!MARGINALISE) {
+
+
+
+          } else {
+
+            ////////////////////
+            /// start likelihood marginalisation
+            /// @todo Split this whole chunk off into a lnlike-style utility function?
+            ////////////////////
+
 
           // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
           static const double CONVERGENCE_TOLERANCE_ABS = runOptions->getValueOrDef<double>(0.05, "covariance_marg_convthres_abs");
@@ -294,6 +336,7 @@ namespace Gambit
             /// (distorts the pdf quite badly), or something else (skew term)?
             /// We're using the "set to epsilon" version for now.
             /// Ben: I would vote for 'discard'. It can't be that inefficient, surely?
+            /// Andy: For a lot of signal regions, the probability of none having a negative sample is Prod_SR p_SR(non-negative)... which *can* get bad.
             ///
             /// @todo Add option for normal sampling in log(rate), i.e. "multidimensional log-normal"
 
@@ -303,6 +346,11 @@ namespace Gambit
 
               #pragma omp parallel
               {
+
+                ////////////////////
+                /// start one-point likelihood calculation
+                ////////////////////
+
                 double lsum_b_private  = 0;
                 double lsum_sb_private = 0;
 
@@ -314,7 +362,7 @@ namespace Gambit
                   for (size_t j = 0; j < adata.size(); ++j) {
                     norm_sample_b(j) = sqrtEb(j) * unitnormdbn(Random::rng());
                     norm_sample_sb(j) = sqrtEsb(j) * unitnormdbn(Random::rng());
-                   }
+                  }
 
                   // Rotate rate deltas into the SR basis and shift by SR mean rates
                   const Eigen::VectorXd n_pred_b_sample  = n_pred_b + (Vb*norm_sample_b).array();
@@ -335,6 +383,11 @@ namespace Gambit
                   lsum_b_private  += exp(combined_loglike_b);
                   lsum_sb_private += exp(combined_loglike_sb);
                 }
+
+                ////////////////////
+                /// ^^^ end one-point likelihood calculation
+                ////////////////////
+
                 #pragma omp critical
                 {
                   lsum_b  += lsum_b_private;
@@ -342,6 +395,8 @@ namespace Gambit
                 }
               } // End omp parallel
             }  // End if !COVLOGNORMAL
+
+
 
             // /// @todo Check that this log-normal sampling works as expected.
             // else // COVLOGNORMAL
@@ -438,8 +493,14 @@ namespace Gambit
           // Compute LLR from mean s+b and b likelihoods
           const double ana_dll = log(ana_like_sb) - log(ana_like_b);
           #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << "Combined estimate: ana_dll: " << ana_dll << "   (based on 2*NSAMPLE=" << 2*NSAMPLE << " samples)" << endl;
+          cout << debug_prefix() << "Combined estimate: ana_dll: " << ana_dll << "   (based on 2*NSAMPLE=" << 2*NSAMPLE << " samples)" << endl;
           #endif
+
+
+          ///////////////////////
+          /// ^^^ end likelihood marginalisation
+          ///////////////////////
+
 
           // Check for problem
           if (Utils::isnan(ana_dll))
