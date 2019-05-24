@@ -2160,6 +2160,11 @@ namespace Gambit
     }
 
 
+    /// @todo ADD PROFILING:
+    /// - separate logL as a standalone function
+    /// - add GSL minimiser wrapper... without gradient info
+
+
     // Loop over all analyses and fill a map of AnalysisLogLikes objects
     void calc_LHC_LogLikes(map_str_AnalysisLogLikes& result)
     {
@@ -2347,7 +2352,7 @@ namespace Gambit
           long double lsum_sb_prev = 0;
 
           std::normal_distribution<double> unitnormdbn(0,1);
- 
+
           // Check absolute difference between independent estimates
           /// @todo Should also implement a check of relative difference
           while ((diff_abs > CONVERGENCE_TOLERANCE_ABS && diff_rel > CONVERGENCE_TOLERANCE_REL) || 1.0/sqrt(NSAMPLE) > CONVERGENCE_TOLERANCE_ABS)
