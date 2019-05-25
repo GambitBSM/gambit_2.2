@@ -217,8 +217,8 @@ Rules:
       function: m
     - capability: sigmav
       function: sig_v
-    # - capability: DarkMatter_ID
-    #   function: DarkMatter_ID_NREO
+    - capability: DarkMatter_ID
+      function: DarkMatter_ID_NREO
 
 
   # #RD_fraction needed by the captn init function, _one sets to one
