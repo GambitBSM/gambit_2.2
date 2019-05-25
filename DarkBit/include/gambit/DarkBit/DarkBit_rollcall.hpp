@@ -900,7 +900,6 @@ START_MODULE
     BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
     DEPENDENCY(mwimp,double)
     DEPENDENCY(jwimp,double)
-    DEPENDENCY(sigmav,double)
     DEPENDENCY(c0_1_cap,double)
     DEPENDENCY(c0_2_cap,double)
     DEPENDENCY(c0_3_cap,double)
@@ -1306,6 +1305,10 @@ START_MODULE
     #define FUNCTION DarkMatter_ID_MSSM
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
+    #undef FUNCTION
+    #define FUNCTION DarkMatter_ID_NREO
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(NREO)
     #undef FUNCTION
   #undef CAPABILITY
 

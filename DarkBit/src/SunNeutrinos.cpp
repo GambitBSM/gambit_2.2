@@ -29,6 +29,9 @@
 
 //#define DARKBIT_DEBUG
 
+// Function for DarkMatter_ID capability (used for NREO), copied from DarkBit_Standalone_WIMP.cpp
+// QUICK_FUNCTION(DarkBit, DarkMatter_ID, OLD_CAPABILITY, DarkMatter_ID_WIMP, std::string, ())
+
 namespace Gambit
 {
 
@@ -161,9 +164,18 @@ namespace Gambit
       BEreq::populate_array(val, couplingNumber, isospin);
     }
 */
-    ///Capture rate for Non-Relataivistic Effective Operator (NREO)
-    /// how is jx spin of dm handled by GAMBIT? (already implemented?)
-    /// still needs to know how to choose coupling constants
+
+    // Identifier for DM particle, copied from DarkBit_Standalone_WIMP.cpp
+    // void DarkMatter_ID_WIMP(std::string& result)
+    // {
+    //   result = "WIMP";
+    // }
+    // header defined in DarkBit_rollcall.hpp
+    void DarkMatter_ID_NREO(std::string& result)
+    {
+      result = "WIMP";
+    }
+    //Capture rate for Non-Relataivistic Effective Operator (NREO)
     void capture_rate_Sun_NREO(double &result)
     {
       cout << "Starting capture_rate_Sun_NREO ...";
