@@ -29,9 +29,6 @@
 
 //#define DARKBIT_DEBUG
 
-// Function for DarkMatter_ID capability (used for NREO), copied from DarkBit_Standalone_WIMP.cpp
-// QUICK_FUNCTION(DarkBit, DarkMatter_ID, OLD_CAPABILITY, DarkMatter_ID_WIMP, std::string, ())
-
 namespace Gambit
 {
 
@@ -165,11 +162,6 @@ namespace Gambit
     }
 */
 
-    // Identifier for DM particle, copied from DarkBit_Standalone_WIMP.cpp
-    // void DarkMatter_ID_WIMP(std::string& result)
-    // {
-    //   result = "WIMP";
-    // }
     // header defined in DarkBit_rollcall.hpp
     void DarkMatter_ID_NREO(std::string& result)
     {
