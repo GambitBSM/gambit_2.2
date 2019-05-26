@@ -212,65 +212,34 @@ ObsLikes:
 
 
 Rules:
-  #testing the already implemented darksusy constant cross section for capture rate
-    # - capability: capture_rate_Sun
-    #   function: capture_rate_Sun_const_xsec
-    # - capability: DD_couplings
-    #   function: DD_couplings_DarkSUSY
-
-  #testing my cpature code
+  #testing my capture code
     - capability: capture_rate_Sun
       function: capture_rate_Sun_NREO
+
+    #RD_fraction needed by the captn init function, _one sets to one
+    - capability: RD_fraction
+      function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
+    
     - capability: mwimp
       function: m
+    
     - capability: sigmav
       function: sig_v
     
     - capability: DarkMatter_ID
       function: DarkMatter_ID_MSSM #DarkMatter_ID_NREO
     
+    # Use DarkSUSY or MicrOmegas for calculating direct detection couplings. from the HP_Develop branch in file capgentest.yaml
+    - capability: DD_couplings
+      function: DD_couplings_DarkSUSY
+      #function: DD_couplings_MicrOmegas
+
     - capability: TH_ProcessCatalog
       function: TH_ProcessCatalog_MSSM
 
     # Choose to get decays from DecayBit proper, not from an SLHA file. from the HP_Develop branch in file capgentest.yaml
     - capability: decay_rates
       function: all_decays
-
-    # Choose where to get the precision spectrum from. from the HP_Develop branch in file capgentest.yaml
-    - capability: MSSM_spectrum
-      type: Spectrum
-      function: make_MSSM_precision_spectrum_none
-      #function: make_MSSM_precision_spectrum_W
-      #function: make_MSSM_precision_spectrum_H_W
-      # The following options only have an impact when using make_MSSM_precision_spectrum_H_W.
-      # Choose to take FeynHiggs' prediction for the Higgs mass (rather then FlexibleSUSY's).
-      # Choose to use the difference between the FeynHiggs and spectrum generator predictions, along
-      # with the FH error estimate, to estimate the theoretical error on the prediction.
-      #options:
-      #  Higgs_predictions_source: 1
-      #  Higgs_predictions_error_method: 4
-
-    #RD_fraction needed by the captn init function, _one sets to one
-    - capability: RD_fraction
-      function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
-
-    # Choose to get the spectrum from SpecBit proper, not an SLHA file. from the HP_Develop branch in file capgentest.yaml
-    # Options set to match benchmark point specified in SpecBit/MSSM_benchmark_points/LesHouches.in.MSSM_1
-    - capability: unimproved_MSSM_spectrum
-      function: get_CMSSM_spectrum_FS
-      options:
-        precision_goal:        1.0e-4
-        max_iterations:        0
-        calculate_sm_masses:   false
-        pole_mass_loop_order:  2
-        ewsb_loop_order:       2
-        beta_loop_order:       2
-        threshold_corrections_loop_order: 2
-        use_higgs_2loop_at_as: true
-        use_higgs_2loop_ab_as: true
-        use_higgs_2loop_at_at: true
-        use_higgs_2loop_atau_atau: true
-        invalid_point_fatal: false
 
     # Choose to use functions that get Higgs decays from SUSY-HIT, and t decays from DecayBit native implementation (instead of FeynHiggs). from the HP_Develop branch in file capgentest.yaml
     - capability: Reference_SM_Higgs_decay_rates
@@ -290,28 +259,37 @@ Rules:
     - capability: t_decay_rates
       function: t_decays
 
-  # #DarMatter_ID_MSSM function needs this
-  #   - capability: MSSM_spectrum
-  #     function: make_MSSM_precision_spectrum_4H_W # make_MSSM_precision_spectrum_H_W, make_MSSM_precision_spectrum_H, make_MSSM_precision_spectrum_W, make_MSSM_precision_spectrum_none
+    # Choose where to get the precision spectrum from. from the HP_Develop branch in file capgentest.yaml
+    - capability: MSSM_spectrum
+      type: Spectrum
+      function: make_MSSM_precision_spectrum_none
+      #function: make_MSSM_precision_spectrum_W
+      #function: make_MSSM_precision_spectrum_H_W
+      # The following options only have an impact when using make_MSSM_precision_spectrum_H_W.
+      # Choose to take FeynHiggs' prediction for the Higgs mass (rather then FlexibleSUSY's).
+      # Choose to use the difference between the FeynHiggs and spectrum generator predictions, along
+      # with the FH error estimate, to estimate the theoretical error on the prediction.
+      #options:
+      #  Higgs_predictions_source: 1
+      #  Higgs_predictions_error_method: 4
 
-  # #TH_ProcessCatalog_MSSM needs this
-  #   - capability: decay_rates
-  #     function: all_decays_from_SLHA
-
-  # #make_MSSM_precision_spectrum_4H_W needs these two
-  #   - capability: prec_mh
-  #     function: FH_HiggsMass # SHD_HiggsMass
-  #   - capability: unimproved_MSSM_spectrum
-  #     function: get_MSSM_spectrum_SPheno # get_CMSSM_spectrum_FS, get_MSSMatMGUT_spectrum_FS, get_MSSMatQ_spectrum_FS, get_MSSMatMGUT_spectrum_FlexibleEFTHiggs, get_MSSMatQ_spectrum_FlexibleEFTHiggs, get_MSSM_spectrum_from_SLHAfile, get_MSSM_spectrum_from_SLHAstruct
-
-    # # errors: Option "SLHA_decay_filenames" is required to use this function
-    # # found in DecayBit/scr/DecayBit.cpp:
-    # # /// Read an SLHA2 file in and use it to create a GAMBIT DecayTable.
-    # # ///  Note that creating a DecayTable from an SLHA1 file is not possible at present.
-    # # void all_decays_from_SLHA(DecayTable& decays)
-    # - options:
-    #   SLHA_decay_filenames: testFile.txt # seems to not recognize this option, otherwise would output 'file empty' error
-    # # what is a decay table?
+    # Choose to get the spectrum from SpecBit proper, not an SLHA file. from the HP_Develop branch in file capgentest.yaml
+    # Options set to match benchmark point specified in SpecBit/MSSM_benchmark_points/LesHouches.in.MSSM_1
+    - capability: unimproved_MSSM_spectrum
+      function: get_CMSSM_spectrum_FS
+      options:
+        precision_goal:        1.0e-4
+        max_iterations:        0
+        calculate_sm_masses:   false
+        pole_mass_loop_order:  2
+        ewsb_loop_order:       2
+        beta_loop_order:       2
+        threshold_corrections_loop_order: 2
+        use_higgs_2loop_at_as: true
+        use_higgs_2loop_ab_as: true
+        use_higgs_2loop_at_at: true
+        use_higgs_2loop_atau_atau: true
+        invalid_point_fatal: false
 
 Logger:
 
