@@ -7,7 +7,7 @@ Parameters:
   NREO:
     j: 0.5
     m:
-      range: [1, 100]
+      range: [10, 20]
     sig_v: 3.0e+26 #cm^3/s, standard WIMP
     c0_1: 1.65e-8  # 1.65*10**(-8)
     c0_2: 0
@@ -41,8 +41,8 @@ Parameters:
     c1_15: 0
 
   Halo_gNFW_rho0:
-    rho0:
-      range: [.2, .8]
+    rho0: .5
+      #range: [.2, .8]
     v0: 235.0
     vesc: 550.0
     vrot: 235.0

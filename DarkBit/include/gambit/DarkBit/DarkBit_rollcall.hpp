@@ -1306,10 +1306,10 @@ START_MODULE
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
-    #define FUNCTION DarkMatter_ID_NREO
-    START_FUNCTION(std::string)
-    ALLOW_MODELS(NREO)
-    #undef FUNCTION
+    // #define FUNCTION DarkMatter_ID_NREO
+    // START_FUNCTION(std::string)
+    // ALLOW_MODELS(NREO)
+    // #undef FUNCTION
   #undef CAPABILITY
 
   // --- Functions related to the local and global properties of the DM halo ---

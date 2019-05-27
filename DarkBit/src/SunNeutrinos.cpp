@@ -162,15 +162,15 @@ namespace Gambit
     }
 */
 
-    // header defined in DarkBit_rollcall.hpp
-    void DarkMatter_ID_NREO(std::string& result)
-    {
-      result = "WIMP";
-    }
+    // // header defined in DarkBit_rollcall.hpp
+    // void DarkMatter_ID_NREO(std::string& result)
+    // {
+    //   result = "WIMP";
+    // }
     //Capture rate for Non-Relataivistic Effective Operator (NREO)
     void capture_rate_Sun_NREO(double &result)
     {
-      cout << "Starting capture_rate_Sun_NREO ...";
+      cout << "Starting capture_rate_Sun_NREO ..." << endl;
       using namespace Pipes::capture_rate_Sun_NREO;
 
       double capped;
@@ -185,7 +185,7 @@ namespace Gambit
       for loop through C++ array of [0c1,0c2,...] (initialized by INI in captn_gen.cpp)
       call populate Array with the value found in the C++ array and the position in the C++ array
       */
-      cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap;
+      cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
 
       double coupling_array [2][15] = {
         {
@@ -199,7 +199,7 @@ namespace Gambit
           *Dep::c1_11_cap, *Dep::c1_12_cap, *Dep::c1_13_cap, *Dep::c1_14_cap, *Dep::c1_15_cap
         }
       };
-      cout << "The first array entry in coupling_array, [0][0]: " << coupling_array[0][0];
+      cout << "The first array entry in coupling_array, [0][0]: " << coupling_array[0][0] << endl;
       int coupleNum;
       int isoNum;
       for(int i=0; i<2; i++)
@@ -211,7 +211,7 @@ namespace Gambit
           if (coupleNum != 2) // 2 is not an allowed coupling constant
           {
             BEreq::populate_array(coupling_array[i][j], coupleNum, isoNum);
-            cout << "I tried to called pop_array with coupleNum: " << coupleNum << ", and isoNum: " << isoNum;
+            // cout << "I tried to called pop_array with coupleNum: " << coupleNum << ", and isoNum: " << isoNum << endl;
           }
         }
       }
@@ -221,9 +221,9 @@ namespace Gambit
       The fourth parameter tells captn_NREO which of the 16 elements to sum over,
        any other integer (than 1 to 16) tells it to sum over all elements together.
       */
-      cout << "Before captn_NREO, capped: " << capped;
+      // cout << "Before calling captn_NREO, capped: " << capped << endl;
       BEreq::captn_NREO(*Dep::mwimp,*Dep::jwimp,niso,0,capped);
-      cout << "I called captn_NREO, capped: " << capped;
+      cout << "From captn_NREO;" << endl << "mwimp: " << *Dep::mwimp << "GeV" << endl << "capped: " << capped << " captures/second" << endl;
 
       /// Loop to sum over each element in solar model individually.
       /*
