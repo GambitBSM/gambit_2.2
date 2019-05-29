@@ -135,11 +135,11 @@ namespace Gambit {
             HEPUtils::BinnedFn2D<double> _eff2dMu(a,b,cMu);
             vector<HEPUtils::Particle*> baselineElectrons, baselineMuons;
             for (HEPUtils::Particle* electron : event->electrons()) {
-                bool hasTrig=has_tag(_eff2dEl, electron->eta(), electron->pT());
+                bool hasTrig=has_tag(_eff2dEl, electron->abseta(), electron->pT());
                 if (electron->pT() > 15. && electron->abseta() < 2.4 && hasTrig) baselineElectrons.push_back(electron);
             }
             for (HEPUtils::Particle* muon : event->muons()) {
-                bool hasTrig=has_tag(_eff2dMu, muon->eta(), muon->pT());
+                bool hasTrig=has_tag(_eff2dMu, muon->abseta(), muon->pT());
                 if (muon->pT() > 15. && muon->abseta() < 2.4 && hasTrig) baselineMuons.push_back(muon);
             }
             ATLAS::applyLooseIDElectronSelectionR2(baselineElectrons);
@@ -179,7 +179,7 @@ namespace Gambit {
             const std::vector<double> c = {0.60};
             HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
             for (HEPUtils::Jet* jet :baselineJets) {
-                bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+                bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
                 if(jet->btag() && hasTag && jet->pT() > 25.) {
                         bJets.push_back(jet);
                     }else{

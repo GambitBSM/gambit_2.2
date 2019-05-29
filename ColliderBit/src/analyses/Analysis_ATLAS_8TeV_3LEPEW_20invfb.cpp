@@ -299,7 +299,7 @@ namespace Gambit {
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
 
         for (HEPUtils::Jet* jet : signalJets) {
-          bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+          bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(jet->btag() && hasTag)bJets.push_back(jet);
         }
 

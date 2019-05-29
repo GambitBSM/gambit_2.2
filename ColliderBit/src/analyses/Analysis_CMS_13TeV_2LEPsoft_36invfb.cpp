@@ -117,7 +117,7 @@ namespace Gambit {
         // const vector<double> cEl={0.336,0.412,0.465,0.496,0.503,0.344,0.402,0.448,0.476,0.482,0.233,0.299,0.25,0.261,0.255,0.309,0.359,0.394,0.408,0.418,0.243,0.287,0.327,0.341,0.352};
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
         for (HEPUtils::Particle* electron : event->electrons()) {
-          bool isEl=has_tag(_eff2dEl,electron->eta(),electron->pT());
+          bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (electron->pT()>5. && electron->pT()<30. && fabs(electron->eta())<2.5 && isEl)signalElectrons.push_back(electron);
         }
 
@@ -138,7 +138,7 @@ namespace Gambit {
         // const vector<double> cMu={0.647,0.718,0.739,0.76,0.763,0.627,0.662,0.694,0.725,0.733,0.61,0.66,0.678,0.685,0.723,0.566,0.629,0.655,0.67,0.696};
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
         for (HEPUtils::Particle* muon : event->muons()) {
-          bool isMu=has_tag(_eff2dMu,muon->eta(),muon->pT());
+          bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (muon->pT()>5. && muon->pT()<30. && fabs(muon->eta())<2.4 && isMu) signalMuons.push_back(muon);
         }
 

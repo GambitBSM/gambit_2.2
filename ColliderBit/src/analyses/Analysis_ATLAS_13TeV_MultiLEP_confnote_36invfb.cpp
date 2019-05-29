@@ -195,7 +195,7 @@ namespace Gambit {
         vector<HEPUtils::Jet*> overlapJet;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
           vector<HEPUtils::Particle*> overlapEl;
-          bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->eta(), baselineJets.at(iJet)->pT());
+          bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->abseta(), baselineJets.at(iJet)->pT());
           for (size_t iEl=0;iEl<baselineElectrons.size();iEl++) {
             if (baselineElectrons.at(iEl)->mom().deltaR_eta(baselineJets.at(iJet)->mom())<0.2)overlapEl.push_back(baselineElectrons.at(iEl));
           }
@@ -225,7 +225,7 @@ namespace Gambit {
             if (baselineMuons.at(iMu)->mom().deltaR_eta(baselineJets.at(iJet)->mom())<0.2 && baselineMuons.at(iMu)->pT()>0.7*baselineJets.at(iJet)->pT())overlap=true;
           }
           if (!overlap) {
-            bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->eta(), baselineJets.at(iJet)->pT());
+            bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->abseta(), baselineJets.at(iJet)->pT());
             signalJets.push_back(baselineJets.at(iJet));
             if (baselineJets.at(iJet)->btag() && hasTag && baselineJets.at(iJet)->abseta()<2.4)signalBJets.push_back(baselineJets.at(iJet));
           }
