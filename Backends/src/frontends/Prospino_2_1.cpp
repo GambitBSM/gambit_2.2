@@ -31,10 +31,17 @@
 // Convenience functions (definition)
 BE_NAMESPACE
 {
-  // Convenience function to run SPheno and obtain the spectrum
+  // Convenience function to run Prospino and get a vector of cross-sections
   // std::vector<double> run_prospino(const Spectrum& spectrum)
   std::vector<double> run_prospino(const SLHAstruct& slha_in, const param_map_type& params)
   {
+
+    // // Get path
+    // // TODO: move this to init function
+    // const str be = "Pythia" + model_suffix;
+    // const str ver = Backends::backendInfo().default_version(be);
+    // pythia_doc_path = Backends::backendInfo().path_dir(be, ver) + "/../share/Pythia8/xmldoc/";
+
 
     // Get type converter 
     using SLHAea::to;
@@ -313,5 +320,13 @@ BE_NAMESPACE
 }
 END_BE_NAMESPACE
 
-// Initialisation function (definition)
-BE_INI_FUNCTION{} END_BE_INI_FUNCTION
+// // Initialisation function (definition)
+// BE_INI_FUNCTION{} END_BE_INI_FUNCTION
+
+// Backend init function
+BE_INI_FUNCTION
+{
+    Fstring<500> prospino_dir_in = "/home/anders/physics/GAMBIT/gambit/Backends/installed/prospino/2.1";
+    prospino_gb_init(prospino_dir_in);
+}
+END_BE_INI_FUNCTION
