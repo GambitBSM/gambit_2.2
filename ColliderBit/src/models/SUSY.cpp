@@ -14,11 +14,8 @@
 ///
 ///  *********************************************
 
-#include "gambit/ColliderBit/getColliderPythia.hpp"
-#include "gambit/ColliderBit/generateEventColliderPythia.hpp"
-#include "gambit/ColliderBit/getBuckFast.hpp"
-#include "gambit/ColliderBit/smearEvent.hpp"
-
+#include "gambit/ColliderBit/getPy8Collider.hpp"
+#include "gambit/ColliderBit/generateEventPy8Collider.hpp"
 
 namespace Gambit
 {
@@ -30,17 +27,7 @@ namespace Gambit
     GET_PYTHIA_AS_BASE_COLLIDER(getPythiaAsBase)
 
     // Run event generator
-    GET_PYTHIA_EVENT(generateEventPythia, Pythia_default::Pythia8::Event)
-
-    // Get detector simulations
-    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastATLASPythia, Pythia_default::Pythia8::Event, ATLAS)
-    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastCMSPythia, Pythia_default::Pythia8::Event, CMS)
-    GET_BUCKFAST_AS_BASE_DETECTOR(getBuckFastIdentityPythia, Pythia_default::Pythia8::Event, Identity)
-
-    // Run detector simulations
-    SMEAR_EVENT(smearEventATLAS, ATLAS)
-    SMEAR_EVENT(smearEventCMS, CMS)
-    SMEAR_EVENT(copyEvent, Identity)
+    GET_PYTHIA_EVENT(generateEventPythia)
 
   }
 }

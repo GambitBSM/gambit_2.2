@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  The ColliderPythia class.
+///  The Py8Collider class.
 ///
 ///  *********************************************
 ///
@@ -32,7 +32,7 @@ namespace Gambit
 
     /// A specializable, recyclable class interfacing ColliderBit and Pythia.
     template <typename PythiaT, typename EventT>
-    class ColliderPythia : public BaseCollider
+    class Py8Collider : public BaseCollider
     {
 
       protected:
@@ -74,9 +74,9 @@ namespace Gambit
         /// @name Construction, Destruction, and Recycling:
         ///@{
 
-        ColliderPythia() : _pythiaInstance(nullptr), _pythiaBase(nullptr) {}
+        Py8Collider() : _pythiaInstance(nullptr), _pythiaBase(nullptr) {}
 
-        ~ColliderPythia()
+        ~Py8Collider()
         {
           _pythiaSettings.clear();
           if (_pythiaInstance) delete _pythiaInstance;

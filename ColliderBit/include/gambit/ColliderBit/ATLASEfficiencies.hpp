@@ -198,11 +198,9 @@ namespace Gambit
             // Smear by a Gaussian centered on the current energy, with width given by the resolution
             std::normal_distribution<> d(e->E(), resolution);
             double smeared_E = d(Random::rng());
-            if (smeared_E < 0) smeared_E = 0;
+            if (smeared_E < e->mass()) smeared_E = 1.01*e->mass();
             // double smeared_pt = smeared_E/cosh(e->eta()); ///< @todo Should be cosh(|eta|)?
-            // std::cout << "BEFORE eta " << electron->eta() << std::endl;
             e->set_mom(HEPUtils::P4::mkEtaPhiME(e->eta(), e->phi(), e->mass(), smeared_E));
-            // std::cout << "AFTER eta " << electron->eta() << std::endl;
           }
         }
 

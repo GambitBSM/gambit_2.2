@@ -86,7 +86,7 @@ namespace Gambit {
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
         vector<HEPUtils::Particle*> baselineElectrons;
         for (HEPUtils::Particle* electron : event->electrons()) {
-          bool isEl=has_tag(_eff2dEl, electron->eta(), electron->pT());
+          bool isEl=has_tag(_eff2dEl, electron->abseta(), electron->pT());
           if (electron->pT()>5. && electron->abseta()<2.5 && isEl)baselineElectrons.push_back(electron);
         }
 
@@ -97,7 +97,7 @@ namespace Gambit {
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
         vector<HEPUtils::Particle*> baselineMuons;
         for (HEPUtils::Particle* muon : event->muons()) {
-          bool isMu=has_tag(_eff2dMu, muon->eta(), muon->pT());
+          bool isMu=has_tag(_eff2dMu, muon->abseta(), muon->pT());
           if (muon->pT()>5. && muon->abseta()<2.4 && isMu)baselineMuons.push_back(muon);
         }
 
@@ -169,11 +169,11 @@ namespace Gambit {
         if (baselineTaus.size()>0)tau_veto=false;
         if (nSignalLeptons>0 && met>50. && lepton2_veto && tau_veto && nSignalJets==2 && nSignalBJets==2) {
           if (nSignalMuons==1) {
-            bool hasTrig=has_tag(_eff2dMu_Trig, signalMuons.at(0)->eta(), signalMuons.at(0)->pT());
+            bool hasTrig=has_tag(_eff2dMu_Trig, signalMuons.at(0)->abseta(), signalMuons.at(0)->pT());
             if (hasTrig)preselection=true;
           }
           if (nSignalElectrons==1) {
-            bool hasTrig=has_tag(_eff2dEl_Trig, signalElectrons.at(0)->eta(), signalElectrons.at(0)->pT());
+            bool hasTrig=has_tag(_eff2dEl_Trig, signalElectrons.at(0)->abseta(), signalElectrons.at(0)->pT());
             if (hasTrig)preselection=true;
           }
         }

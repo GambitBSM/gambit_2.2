@@ -116,7 +116,7 @@ namespace Gambit {
             baselineJets.push_back(jet);
             //LorentzVector j1 (jet->mom().px(),jet->mom().py(),jet->mom().pz(),jet->mom().E()) ;
             jets.push_back(jet->mom());
-            bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+            bool hasTag=has_tag(_eff2d, fabs(jet->eta()), jet->pT());
             bool isB=false;
 
             if(jet->btag() && hasTag && fabs(jet->eta()) < 2.4 && jet->pT() > 30.) {

@@ -40,7 +40,7 @@ namespace Gambit
         void log_event();
 
         /// Return the total number of events seen so far.
-        double num_events() const;
+        long long num_events() const;
 
         /// Return the full cross-section (in pb).
         double operator()() const;
@@ -54,18 +54,24 @@ namespace Gambit
         /// Return the cross-section per event seen (in pb).
         double xsec_per_event() const;
 
+        /// Set the total number of events seen so far.
+        void set_num_events(long long);
+
         /// Set the cross-section and its error (in pb).
         void set_xsec(double, double);
 
         /// Average cross-sections and combine errors.
-        void average_xsec(double, double, int);
+        void average_xsec(double, double, long long);
 
         /// Collect xsec predictions from other threads and do a weighted combination.
         void gather_xsecs();
 
+        /// Collect total events seen on all threads.
+        void gather_num_events();
+
       private:
 
-        double _ntot;
+        long long _ntot;
         double _xsec;
         double _xsecerr;
 

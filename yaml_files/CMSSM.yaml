@@ -501,6 +501,11 @@ Rules:
       ms_central: 95.E-03
       ms_error: 5.E-03
 
+  # Choose to estimate cross-sections from Monte Carlo
+  - capability: CrossSection
+    function: getMCxsec
+    module: ColliderBit
+
   # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
   - capability: RunMC
     function: operateLHCLoop
@@ -541,6 +546,8 @@ Rules:
       LHC_13TeV:
         # 0.028 fb corresponds to ~1 expected event at L = 36 fb^-1.
         xsec_veto: 0.028
+        partonOnly: false
+        antiktR: 0.4
         pythia_settings:
           - Print:quiet = on
           - PartonLevel:MPI = off
@@ -550,20 +557,6 @@ Rules:
           - SUSY:all = on
           - TauDecays:mode = 0
           - TimeShower:pTmin = 2
-
-  # Choose ATLAS detector simulation and options.
-  - capability: ATLASDetectorSim
-    options:
-      LHC_13TeV:
-        partonOnly: false
-        antiktR: 0.4
-
-  # Choose CMS detector simulation and options.
-  - capability: CMSDetectorSim
-    options:
-      LHC_13TeV:
-        partonOnly: false
-        antiktR: 0.4
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes
