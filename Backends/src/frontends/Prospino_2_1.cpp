@@ -18,6 +18,7 @@
 #include "gambit/Elements/mssm_slhahelp.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
 
+#include <typeinfo>
 
 // #include "gambit/Elements/spectrum.hpp"
 // #include "gambit/Elements/spectrum_factories.hpp"
@@ -56,14 +57,20 @@ BE_NAMESPACE
     SLHAea_add_block(slha, "EXTPAR");
 
     slha["EXTPAR"][""] << 0 << *params.at("Qin") << "# scale Q where the parameters below are defined";
+
     slha["EXTPAR"][""] << 1 << *params.at("M1") << "# M_1";
     slha["EXTPAR"][""] << 2 << *params.at("M2") << "# M_2";
     slha["EXTPAR"][""] << 3 << *params.at("M3") << "# M_3";
+
     slha["EXTPAR"][""] << 11 << *params.at("Au_33") << "# A_t";
     slha["EXTPAR"][""] << 12 << *params.at("Ad_33") << "# A_b";
     slha["EXTPAR"][""] << 13 << *params.at("Ae_33") << "# A_l";
-    slha["EXTPAR"][""] << 21 << *params.at("mHd2") << "# m_Hd^2";
-    slha["EXTPAR"][""] << 22 << *params.at("mHd2") << "# m_Hu^2";
+
+    // slha["EXTPAR"][""] << 21 << *params.at("mHd2") << "# m_Hd^2";
+    // slha["EXTPAR"][""] << 22 << *params.at("mHd2") << "# m_Hu^2";
+    slha["EXTPAR"][""] << 23 << *params.at("mu") << "# mu";
+    slha["EXTPAR"][""] << 24 << pow(*params.at("mA"),2) << "# m_A^2";
+
     slha["EXTPAR"][""] << 31 << sqrt(*params.at("ml2_11")) << "# M_(L,11)";
     slha["EXTPAR"][""] << 32 << sqrt(*params.at("ml2_22")) << "# M_(L,22)";
     slha["EXTPAR"][""] << 33 << sqrt(*params.at("ml2_33")) << "# M_(L,33)";
@@ -130,28 +137,95 @@ BE_NAMESPACE
 */
 
 
-    // lowmass(0) = *Param["mu"];
-    // lowmass(1) = *Param["M1"];
-    // lowmass(2) = *Param["M2"];
-    // lowmass(3) = *Param["M3"];
+    lowmass(0) = to<double>(slha.at("HMIX").at(1).at(1));
+    lowmass(1) = to<double>(slha.at("MSOFT").at(1).at(1));
+    lowmass(2) = to<double>(slha.at("MSOFT").at(2).at(1));
+    lowmass(3) = to<double>(slha.at("MSOFT").at(3).at(1));
 
-    // lowmass(4) = spectrum.get(Par::Pole_Mass, "~g");
+    lowmass(4) = to<double>(slha.at("MASS").at(1000021).at(1));
 
-    // lowmass(5) = spectrum.get(Par::Pole_Mass, "~chi0",1);
-    // lowmass(6) = spectrum.get(Par::Pole_Mass, "~chi0",2);
-    // lowmass(7) = spectrum.get(Par::Pole_Mass, "~chi0",3);
-    // lowmass(8) = spectrum.get(Par::Pole_Mass, "~chi0",4);
+    lowmass(5) = to<double>(slha.at("MASS").at(1000022).at(1));
+    lowmass(6) = to<double>(slha.at("MASS").at(1000023).at(1));
+    lowmass(7) = to<double>(slha.at("MASS").at(1000025).at(1));
+    lowmass(8) = to<double>(slha.at("MASS").at(1000035).at(1));
 
-    // lowmass(9) = spectrum.get(Par::Pole_Mass, "~chi+",1);
-    // lowmass(10) = spectrum.get(Par::Pole_Mass, "~chi+",2);
+    lowmass(9) = to<double>(slha.at("MASS").at(1000024).at(1));
+    lowmass(10) = to<double>(slha.at("MASS").at(1000037).at(1));
 
-    // double degen_squark_mass_8 = ;
-    // double degen_squark_mass_10 = degen_squark_mass_10;
+    lowmass(11) = to<double>(slha.at("MASS").at(1000001).at(1));
+    lowmass(52) = lowmass(11);
 
-    // lowmass(15) degenerate squark mass (8)
-    // lowmass(16) degenerate squark mass (10)
+    lowmass(12) = to<double>(slha.at("MASS").at(2000001).at(1));
+    lowmass(58) = lowmass(12);
 
+    lowmass(13) = to<double>(slha.at("MASS").at(1000002).at(1));
+    lowmass(51) = lowmass(13);
 
+    lowmass(14) = to<double>(slha.at("MASS").at(2000002).at(1));
+    lowmass(57) = lowmass(14);
+
+    lowmass(17) = to<double>(slha.at("MASS").at(1000005).at(1));
+    lowmass(55) = lowmass(17);
+
+    lowmass(18) = to<double>(slha.at("MASS").at(2000005).at(1));
+    lowmass(61) = lowmass(18);
+
+    lowmass(19) = to<double>(slha.at("MASS").at(1000006).at(1));
+    lowmass(56) = lowmass(19);
+
+    lowmass(20) = to<double>(slha.at("MASS").at(2000006).at(1));
+    lowmass(62) = lowmass(20);
+
+    lowmass(30) = to<double>(slha.at("MASS").at(1000011).at(1));
+
+    lowmass(31) = to<double>(slha.at("MASS").at(2000011).at(1));
+
+    lowmass(32) = to<double>(slha.at("MASS").at(1000012).at(1));
+
+    lowmass(33) = to<double>(slha.at("MASS").at(1000015).at(1));
+
+    lowmass(34) = to<double>(slha.at("MASS").at(2000015).at(1));
+
+    lowmass(35) = to<double>(slha.at("MASS").at(1000016).at(1));
+
+    lowmass(40) = to<double>(slha.at("MASS").at(36).at(1));
+
+    lowmass(41) = to<double>(slha.at("MASS").at(25).at(1));
+
+    lowmass(42) = to<double>(slha.at("MASS").at(35).at(1));
+
+    lowmass(43) = to<double>(slha.at("MASS").at(37).at(1));
+
+    lowmass(53) = to<double>(slha.at("MASS").at(1000003).at(1));
+
+    lowmass(59) = to<double>(slha.at("MASS").at(2000003).at(1));
+
+    lowmass(54) = to<double>(slha.at("MASS").at(1000004).at(1));
+
+    lowmass(60) = to<double>(slha.at("MASS").at(2000004).at(1));
+
+    // Degenerate squark masses
+    double degen_squark_mass_8 = 0.;
+    degen_squark_mass_8 += lowmass(51) + lowmass(52) + lowmass(53) + lowmass(54);
+    degen_squark_mass_8 += lowmass(57) + lowmass(58) + lowmass(59) + lowmass(60);
+    degen_squark_mass_8 = degen_squark_mass_8/8.;
+    lowmass(15) = degen_squark_mass_8;
+
+    double degen_squark_mass_10 = 0.;
+    degen_squark_mass_10 += lowmass(51) + lowmass(52) + lowmass(53) + lowmass(54) + lowmass(55);
+    degen_squark_mass_10 += lowmass(57) + lowmass(58) + lowmass(59) + lowmass(60) + lowmass(61);
+    degen_squark_mass_10 = degen_squark_mass_10/10.;
+    lowmass(16) = degen_squark_mass_10;
+
+    // BLOCK ALPHA
+    double alpha = to<double>( slha.at("ALPHA").back().front() );
+    lowmass(44) = sin(alpha);
+    lowmass(45) = cos(alpha);
+
+    // AD, AU, AE
+    lowmass(21) = -to<double>(slha.at("AD").at(3,3).at(2));   // Note sign!
+    lowmass(24) = -to<double>(slha.at("AU").at(3,3).at(2));   // Note sign!
+    lowmass(36) = -to<double>(slha.at("AE").at(3,3).at(2));   // Note sign!
 
 /*
   output parameters: 

@@ -62,7 +62,7 @@
     #define FUNCTION getProspinoxsec
     START_FUNCTION(xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     BACKEND_REQ(prospino_LHC_xsec, (libprospino), std::vector<double>, (const SLHAstruct&, const param_map_type&))
     #undef FUNCTION
