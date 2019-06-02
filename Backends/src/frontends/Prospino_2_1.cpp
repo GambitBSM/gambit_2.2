@@ -227,69 +227,52 @@ BE_NAMESPACE
     lowmass(24) = -to<double>(slha.at("AU").at(3,3).at(2));   // Note sign!
     lowmass(36) = -to<double>(slha.at("AE").at(3,3).at(2));   // Note sign!
 
-/*
-  output parameters: 
-  lowmass(0)  mu                                 c
-  lowmass(1)  m_1
-  lowmass(2)  m_2
-  lowmass(3)  m_3
-                                                 
-  lowmass(4)  gluino mass
-  lowmass(5)  \
-  lowmass(6)   \
-  lowmass(7)   /  neutralino masses [with sign]
-  lowmass(8)  /
-  lowmass(9)  \
-  lowmass(10) /   chargino masses
-                                                 
-  lowmass(15) degenerate squark mass (8)
-  lowmass(16) degenerate squark mass (10)
-                                                 
-  lowmass(21) a_b
-  lowmass(24) a_t
-                                                 
-  lowmass(30) selectron_l mass
-  lowmass(31) selectron_r mass
-  lowmass(32) selectron-neutrino mass
-  lowmass(33) stau_1 mass
-  lowmass(34) stau_2 mass
-  lowmass(35) stau-neutrino mass
-  lowmass(36) a_tau
-                                                 
-  lowmass(40) cp odd higgs mass
-  lowmass(41) light cp even higgs mass
-  lowmass(42) heavy cp even higgs mass
-  lowmass(43) charged higgs mass
-  lowmass(44) sin(alpha
-  lowmass(45) cos(alpha
-                                                 
-  like cteq: u,d,s,c,b,t first L then R
-  lowmass(51) sup_L
-  lowmass(52) sdown_L
-  lowmass(53) sstrange_L
-  lowmass(54) scharm_L
-  lowmass(55) sbottom_1
-  lowmass(56) stop_1
-  lowmass(57) sup_R
-  lowmass(58) sdown_R
-  lowmass(59) sstrange_R
-  lowmass(60) scharm_R
-  lowmass(61) sbottom_2
-  lowmass(62) stop_2
-                                                 
-  lowmass(80) unification scale
-  lowmass(81) unified coupling alpha(m_x)
-                                                 
-  lowmass(91) trilinear higgs coupling lambda(1)
-  .......
-  lowmass(97) lambda(7)
-                                                 
-  lowmass(99
-*/
+    // Neutralino mixing matrix
+    bw_in(1,1) = to<double>(slha.at("NMIX").at(1,1).at(2));
+    bw_in(1,2) = to<double>(slha.at("NMIX").at(1,2).at(2));
+    bw_in(1,3) = to<double>(slha.at("NMIX").at(1,3).at(2));
+    bw_in(1,4) = to<double>(slha.at("NMIX").at(1,4).at(2));
+    bw_in(2,1) = to<double>(slha.at("NMIX").at(2,1).at(2));
+    bw_in(2,2) = to<double>(slha.at("NMIX").at(2,2).at(2));
+    bw_in(2,3) = to<double>(slha.at("NMIX").at(2,3).at(2));
+    bw_in(2,4) = to<double>(slha.at("NMIX").at(2,4).at(2));
+    bw_in(3,1) = to<double>(slha.at("NMIX").at(3,1).at(2));
+    bw_in(3,2) = to<double>(slha.at("NMIX").at(3,2).at(2));
+    bw_in(3,3) = to<double>(slha.at("NMIX").at(3,3).at(2));
+    bw_in(3,4) = to<double>(slha.at("NMIX").at(3,4).at(2));
+    bw_in(4,1) = to<double>(slha.at("NMIX").at(4,1).at(2));
+    bw_in(4,2) = to<double>(slha.at("NMIX").at(4,2).at(2));
+    bw_in(4,3) = to<double>(slha.at("NMIX").at(4,3).at(2));
+    bw_in(4,4) = to<double>(slha.at("NMIX").at(4,4).at(2));
+
+    // Chargino mixing matrix
+    uu_in(1,1) = to<double>(slha.at("UMIX").at(1,1).at(2));
+    uu_in(1,2) = to<double>(slha.at("UMIX").at(1,2).at(2));
+    uu_in(2,1) = to<double>(slha.at("UMIX").at(2,1).at(2));
+    uu_in(2,2) = to<double>(slha.at("UMIX").at(2,2).at(2));
+
+    vv_in(1,1) = to<double>(slha.at("VMIX").at(1,1).at(2));
+    vv_in(1,2) = to<double>(slha.at("VMIX").at(1,2).at(2));
+    vv_in(2,1) = to<double>(slha.at("VMIX").at(2,1).at(2));
+    vv_in(2,2) = to<double>(slha.at("VMIX").at(2,2).at(2));
+
+    // Sfermion mixing matrices
+    mst_in(1,1) = to<double>(slha.at("STOPMIX").at(1,1).at(2));
+    mst_in(1,2) = to<double>(slha.at("STOPMIX").at(1,2).at(2));
+    mst_in(2,1) = to<double>(slha.at("STOPMIX").at(2,1).at(2));
+    mst_in(2,2) = to<double>(slha.at("STOPMIX").at(2,2).at(2));
+
+    msb_in(1,1) = to<double>(slha.at("SBOTMIX").at(1,1).at(2));
+    msb_in(1,2) = to<double>(slha.at("SBOTMIX").at(1,2).at(2));
+    msb_in(2,1) = to<double>(slha.at("SBOTMIX").at(2,1).at(2));
+    msb_in(2,2) = to<double>(slha.at("SBOTMIX").at(2,2).at(2));
+
+    msl_in(1,1) = to<double>(slha.at("STAUMIX").at(1,1).at(2));
+    msl_in(1,2) = to<double>(slha.at("STAUMIX").at(1,2).at(2));
+    msl_in(2,1) = to<double>(slha.at("STAUMIX").at(2,1).at(2));
+    msl_in(2,2) = to<double>(slha.at("STAUMIX").at(2,2).at(2));
 
 
-    // (*MCha)(i) = spectrum.get(Par::Pole_Mass, "~chi+",i);
-    // (*ZD)(i,j) = spectrum.get(Par::Pole_Mixing, "~d", i, j);
 
 
     // Call prospino
