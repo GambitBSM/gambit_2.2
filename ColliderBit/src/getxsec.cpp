@@ -10,7 +10,7 @@
 ///
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
-///  \date 2019 Feb
+///  \date 2019 Feb, May
 ///
 ///  *********************************************
 
@@ -39,7 +39,7 @@ namespace Gambit
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration > 0)
+      if (*Loop::iteration >= 0)
       {
         result.log_event();
       }
@@ -74,14 +74,48 @@ namespace Gambit
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
-      // Reset the xsec object on the main thread (other threads do not matter)
-      if (*Loop::iteration == COLLIDER_INIT)
+      // Reset the xsec objects on all threads
+      if (*Loop::iteration == START_SUBPROCESS)
       {
         result.reset();
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration > 0)
+      if (*Loop::iteration >= 0)
+      {
+        result.log_event();
+      }
+
+      // Set the xsec and its error, and gather event counts from all threads.
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+        double xs_fb = 0.1;             // replace with xsec from NLL-Fast
+        double xserr_fb = 0.1 * xs_fb;  // or whatever
+        result.set_xsec(xs_fb, xserr_fb);
+        result.gather_num_events();
+      }
+    }
+
+    /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
+    void getYAMLxsec(xsec& result)
+    {
+      using namespace Pipes::getYAMLxsec;
+
+      // Don't bother if there are no analyses that will use this.
+      if (Dep::RunMC->analyses.empty()) return;
+
+      // Retrieve the total cross-section and cross-section error
+      const static double xsec_fb = 1000 * runOptions->getValue<double>("xsec_pb");
+      const static double xsec_fractional_uncert = runOptions->getValue<double>("xsec_fractional_uncert");
+
+      // Reset the xsec objects on all threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        result.reset();
+      }
+
+      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
+      if (*Loop::iteration >= 0)
       {
         result.log_event();
       }
@@ -89,13 +123,11 @@ namespace Gambit
       // Set the xsec and its error
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
-        double xs_fb = 0.1;             // replace with xsec from NLL-Fast
-        double xserr_fb = 0.1 * xs_fb;  // or whatever
-        result.set_xsec(xs_fb, xserr_fb);
+        result.set_xsec(xsec_fb, xsec_fractional_uncert*xsec_fb);
+        result.gather_num_events();
       }
 
     }
-
 
   }
 }

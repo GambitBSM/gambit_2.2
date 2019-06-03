@@ -105,7 +105,7 @@ namespace Gambit {
         vector<HEPUtils::Particle*> baselineElectrons;
         for (HEPUtils::Particle* electron : event->electrons())
         {
-          bool isEl=has_tag(_eff2dEl, electron->eta(), electron->pT());
+          bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (isEl && electron->pT()>12. && fabs(electron->eta())<2.5) baselineElectrons.push_back(electron);
         }
 
@@ -127,7 +127,7 @@ namespace Gambit {
         vector<HEPUtils::Particle*> baselineMuons;
         for (HEPUtils::Particle* muon : event->muons())
         {
-          bool isMu=has_tag(_eff2dMu, muon->eta(), muon->pT());
+          bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (isMu && muon->pT()>8. && fabs(muon->eta())<2.4) baselineMuons.push_back(muon);
         }
 

@@ -82,7 +82,7 @@ namespace Gambit {
         vector<HEPUtils::Particle*> baselineElectrons;
         for (HEPUtils::Particle* electron : event->electrons())
         {
-          bool isEl=has_tag(_eff2dEl, electron->eta(), electron->pT());
+          bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (isEl && electron->pT()>15. && fabs(electron->eta())<2.4) baselineElectrons.push_back(electron);
         }
 
@@ -104,7 +104,7 @@ namespace Gambit {
         vector<HEPUtils::Particle*> baselineMuons;
         for (HEPUtils::Particle* muon : event->muons())
         {
-          bool isMu=has_tag(_eff2dMu, muon->eta(), muon->pT());
+          bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (isMu && muon->pT()>15. && fabs(muon->eta())<2.4) baselineMuons.push_back(muon);
         }
 
@@ -130,7 +130,7 @@ namespace Gambit {
         vector<HEPUtils::Jet*> signalJets,signalBJets;
         bool ISR_btag=false;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
-          bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->eta(), baselineJets.at(iJet)->pT());
+          bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->abseta(), baselineJets.at(iJet)->pT());
           bool ovelap=false;
           for (size_t iEl=0;iEl<signalLeptons.size();iEl++) {
             if (signalLeptons.at(iEl)->mom().deltaR_eta(baselineJets.at(iJet)->mom())<0.4) ovelap=true;

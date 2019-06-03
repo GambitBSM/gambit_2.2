@@ -143,7 +143,7 @@ namespace Gambit {
         }
 
         for (HEPUtils::Jet* jet : signalJets) {
-          bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+          bool hasTag=has_tag(_eff2d, fabs(jet->eta()), jet->pT());
           if(jet->btag() && hasTag && fabs(jet->eta()) < 2.5 && jet->pT() > 20.) bJets.push_back(jet);
         }
 

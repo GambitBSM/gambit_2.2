@@ -33,7 +33,7 @@ namespace Gambit
       public:
 
         /// Constructor
-        BaseCollider() {}
+        BaseCollider() : partonOnly(false), antiktR(0.4) {}
         /// Destructor
         virtual ~BaseCollider() {}
         /// Reset this instance for reuse, avoiding the need for "new" or "delete".
@@ -54,6 +54,11 @@ namespace Gambit
         /// General init for any collider of this type - no settings version.
         virtual void init() {}
         ///@}
+
+        /// Flag indicating if events from this collider should be processed as parton-only or full events
+        bool partonOnly;
+        ///The jet radius used for the anti-kt jet clustering.
+        double antiktR;
 
     };
 
