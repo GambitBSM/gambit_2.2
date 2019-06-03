@@ -235,14 +235,6 @@ if args.file:
     antiparticle_dict = get_antiparticles(partlist)
     parameters = add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs)
 
-    for i in parameters:
-        print i.name, i.shape, i.tag, i.block, i.index
-
-    patch_pythia_patch(parameters)
-    print("Going to die now.")
-    import sys
-    sys.exit()
-
     """
     MODELS
     """
