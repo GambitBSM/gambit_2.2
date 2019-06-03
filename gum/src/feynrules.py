@@ -55,6 +55,7 @@ def fr_params(paramlist, add_higgs):
     # Add all parameters from the parameter list from FeynRules
     for i in xrange(len(paramlist)):
         p = paramlist[i]
+        print p.name(), p.block(), p.index()
         if (    (p.block() != 'YUKAWA')
             and (p.block() != 'SMINPUTS')
             and (p.block() != 'CKMBLOCK')):
@@ -129,5 +130,5 @@ def fr_params(paramlist, add_higgs):
     params.append(SpectrumParameter("Yd", "dimensionless", shape="m3x3", sm=True))
     params.append(SpectrumParameter("Yu", "dimensionless", shape="m3x3", sm=True))
     params.append(SpectrumParameter("Ye", "dimensionless", shape="m3x3", sm=True))
-
+    
     return params

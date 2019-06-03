@@ -641,7 +641,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
 
     write_file(model_name + '.yaml', 'yaml_files', towrite, reset_contents)
 
-write_config_file(outputs, model_name, reset_contents):
+def write_config_file(outputs, model_name, reset_contents):
     """
     Drops a configuration file, which will build the correct backends, 
     and then GAMBIT, in the correct order.

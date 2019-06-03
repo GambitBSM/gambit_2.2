@@ -362,7 +362,7 @@ def patch_pythia_patch(model_parameters):
 
     for i in model_parameters:
 
-        if (i.sm) or i.tag == "Pole_Mass" or i.block in blocks:
+        if (i.sm) or (i.tag == "Pole_Mass" and i.block == "") or i.block in blocks:
             continue
 
         if i.shape == "scalar" or i.shape == None:
