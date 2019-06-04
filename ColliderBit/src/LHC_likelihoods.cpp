@@ -90,42 +90,14 @@ namespace Gambit
     }
 
 
-    /// @todo Use this to compute both the b and s+b likelihood, and compute the b likelihood only once, via s=0
-
-
-    // /// Pass in a set of nuisance parameters and return a combined log-likelihood
-    // ///
-    // /// @todo How to deal with no-covariance cases where each SR needs to be evaluated independently?
-    // /// Vector return, or abuse the covariance input to specify which single SR?
-    // double calc_Analysis_LogLikes(const Eigen::VectorXd& unit_nuisances,
-    //                               const Eigen::ArrayXd& n_pred_nominal,
-    //                               const Eigen::ArrayXd& n_obs,
-    //                               const Eigen::MatrixXd& cov)
-    // {
-    //   // Rotate rate deltas into the SR basis and shift by SR mean rates
-    //   const Eigen::VectorXd n_pred = n_pred_nominal + (cov*unit_nuisances).array();
-
-    //   // Calculate each SR's Gaussian-Poisson likelihood and add to composite likelihood calculation
-    //   double loglike_tot = 0;
-    //   for (int j = 0; j < unit_nuisances.size(); ++j) {
-    //     // First the multivariate Gaussian bit (j = nuisance)
-    //     const double pnorm_j = -pow(unit_nuisances(j), 2)/2.; // -log(1/sqrt(2pi))
-    //     loglike_tot += pnorm_j;
-    //     // Then the Poisson bit (j = SR)
-    //     const double lambda_j = std::max(n_pred(j), 1e-3); //< manually avoid <= 0 rates
-    //     const double loglike_j = n_obs(j)*log(lambda_j) - lambda_j; // - logfact_n_obs(j);
-    //     loglike_tot += loglike_j;
-    //   }
-
-    //   return loglike_tot;
-    // }
 
 
     /// Loglike objective-function wrapper to provide the signature for GSL multimin
     ///
-    /// @todo Can't tell from this if the cov is valid... need two wrapper functions?
+    /// @todo Use this to compute both the b and s+b likelihood, and compute
+    /// the b likelihood only once, via s = 0
     void _gsl_calc_Analysis_MinusLogLike(const size_t n, const double* unit_nuisances_dbl,
-                                     void* npred_nobs_cov, double* fval) {
+                                         void* npred_nobs_cov, double* fval) {
 
       // Convert the array of doubles into an "Eigen view" of the nuisance params
       Eigen::Map<const Eigen::VectorXd> unit_nuisances(&unit_nuisances_dbl[0], n);
@@ -134,7 +106,7 @@ namespace Gambit
       double *npred_nobs_cov_dbl = (double*) npred_nobs_cov;
       Eigen::Map<const Eigen::ArrayXd> n_pred_nominal(&npred_nobs_cov_dbl[0], n);
       Eigen::Map<const Eigen::ArrayXd> n_obs(&npred_nobs_cov_dbl[n], n);
-      Eigen::Map<const Eigen::MatrixXd> cov(&npred_nobs_cov_dbl[2*n], n*n);
+      Eigen::Map<const Eigen::MatrixXd> cov(&npred_nobs_cov_dbl[2*n], n, n);
 
       // Call the real loglike function
       // return calc_Analysis_LogLikes(unit_nuisances, n_pred_nominal, n_obs, cov);
@@ -172,27 +144,6 @@ namespace Gambit
       }
       return fixeds;
     }
-
-
-
-    // /// Loglike objective-function wrapper to provide the signature for GSL multimin
-    // ///
-    // /// @todo With no covariance, we need a way to tell this which single SR to use
-    // void _gsl_calc_Analysis_LogLikes_nocov(const size_t n, const double* unit_nuisances_dbl,
-    //                                        void* npred_nobs, double *fval) {
-
-    //   // Convert the array of doubles into an "Eigen views" of the nuisance params
-    //   Eigen::Map<const Eigen::VectorXd> unit_nuisances(&unit_nuisances_dbl[0], n);
-
-    //   // Convert the linearised array of doubles into "Eigen views" of the fixed params
-    //   double *npred_nobs_cov_dbl = (double*) npred_nobs_cov;
-    //   Eigen::Map<const Eigen::VectorXd> n_pred_nominal(&npred_nobs_cov_dbl[0], n);
-    //   Eigen::Map<const Eigen::ArrayXd> n_obs(&npred_nobs_cov_dbl[n], n);
-    //   const Eigen::MatrixXd trivial_cov; //< empty covariance
-
-    //   // Call the real loglike function
-    //   return calc_Analysis_LogLikes(unit_nuisances, n_pred_nominal, n_obs, trivial_cov);
-    // }
 
 
 
@@ -365,6 +316,8 @@ namespace Gambit
           const Eigen::MatrixXd Vsb = eig_sb.eigenvectors();
           //const Eigen::MatrixXd Vsbinv = Vsb.inverse();
 
+          // Analysis-level DLL result
+          double ana_dll = NAN;
 
           const bool MARGINALISE = false;
           if (!MARGINALISE) {
@@ -374,14 +327,6 @@ namespace Gambit
             std::vector<double> nuisances(nSR, 0.0);
 
             // Convert the linearised array of doubles into "Eigen views" of the fixed params
-            /// @todo Avoid recomputing some bits of this?
-            // std::vector<double> fixeds((2 + nSR)*nSR, 0.0);
-            // for (size_t i = 0; i < nSR; ++i) {
-            //   fixeds[0+i] = n_pred_sb(i);
-            //   fixeds[nSR+i] = n_obs(i);
-            //   for (size_t j = 0; j < nSR; ++j)
-            //     fixeds[2*nSR+i*nSR+j] = Vsb(i,j);
-            // }
             std::vector<double> fixeds = _gsl_mkfixedarray(n_pred_sb, n_obs, Vsb);
 
             // Pass to the minimiser
@@ -394,8 +339,7 @@ namespace Gambit
             // Set final value
             /// @todo Implement the background-only LL subtraction
             const double bkgll = 0;
-            const double ana_dll = -minusbestll - bkgll; //log(ana_like_sb) - log(ana_like_b);
-
+            ana_dll = -minusbestll - bkgll; //log(ana_like_sb) - log(ana_like_b);
 
           } else {
 
@@ -405,49 +349,40 @@ namespace Gambit
             ////////////////////
 
 
-          // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
-          static const double CONVERGENCE_TOLERANCE_ABS = runOptions->getValueOrDef<double>(0.05, "covariance_marg_convthres_abs");
-          static const double CONVERGENCE_TOLERANCE_REL = runOptions->getValueOrDef<double>(0.05, "covariance_marg_convthres_rel");
-          static const size_t nsample_input = runOptions->getValueOrDef<size_t>(100000, "covariance_nsamples_start");
-          size_t NSAMPLE = nsample_input;
+            // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
+            static const double CONVERGENCE_TOLERANCE_ABS = runOptions->getValueOrDef<double>(0.05, "covariance_marg_convthres_abs");
+            static const double CONVERGENCE_TOLERANCE_REL = runOptions->getValueOrDef<double>(0.05, "covariance_marg_convthres_rel");
+            static const size_t nsample_input = runOptions->getValueOrDef<size_t>(100000, "covariance_nsamples_start");
+            size_t NSAMPLE = nsample_input;
 
-          // Dynamic convergence control & test variables
-          bool first_iteration = true;
-          double diff_abs = 9999;
-          double diff_rel = 1;
+            // Dynamic convergence control & test variables
+            bool first_iteration = true;
+            double diff_abs = 9999;
+            double diff_rel = 1;
 
-          // Likelihood variables (note use of long double to guard against blow-up of L as opposed to log(L1/L0))
-          long double ana_like_b_prev = 1;
-          long double ana_like_sb_prev = 1;
-          long double ana_like_b = 1;
-          long double ana_like_sb = 1;
-          long double lsum_b_prev = 0;
-          long double lsum_sb_prev = 0;
+            // Likelihood variables (note use of long double to guard against blow-up of L as opposed to log(L1/L0))
+            long double ana_like_b_prev = 1;
+            long double ana_like_sb_prev = 1;
+            long double ana_like_b = 1;
+            long double ana_like_sb = 1;
+            long double lsum_b_prev = 0;
+            long double lsum_sb_prev = 0;
 
-          std::normal_distribution<double> unitnormdbn(0,1);
+            std::normal_distribution<double> unitnormdbn(0,1);
 
-          // Check absolute difference between independent estimates
-          /// @todo Should also implement a check of relative difference
-          while ((diff_abs > CONVERGENCE_TOLERANCE_ABS && diff_rel > CONVERGENCE_TOLERANCE_REL) || 1.0/sqrt(NSAMPLE) > CONVERGENCE_TOLERANCE_ABS)
-          {
-            long double lsum_b = 0;
-            long double lsum_sb = 0;
+            // Check absolute difference between independent estimates
+            /// @todo Should also implement a check of relative difference
+            while ((diff_abs > CONVERGENCE_TOLERANCE_ABS && diff_rel > CONVERGENCE_TOLERANCE_REL) || 1.0/sqrt(NSAMPLE) > CONVERGENCE_TOLERANCE_ABS)
+            {
+              long double lsum_b = 0;
+              long double lsum_sb = 0;
 
-            // typedef Eigen::Array<long double, Eigen::Dynamic, 1> ArrayXld;
-
-            /// @note How to correct negative rates? Discard (scales badly), set to
-            /// epsilon (= discontinuous & unphysical pdf), transform to log-space
-            /// (distorts the pdf quite badly), or something else (skew term)?
-            /// We're using the "set to epsilon" version for now.
-            /// Ben: I would vote for 'discard'. It can't be that inefficient, surely?
-            /// Andy: For a lot of signal regions, the probability of none having a negative sample is Prod_SR p_SR(non-negative)... which *can* get bad.
-            ///
-            /// @todo Add option for normal sampling in log(rate), i.e. "multidimensional log-normal"
-
-            // const bool COVLOGNORMAL = false;
-            // if (!COVLOGNORMAL)
-            // {
-
+              /// @note How to correct negative rates? Discard (scales badly), set to
+              /// epsilon (= discontinuous & unphysical pdf), transform to log-space
+              /// (distorts the pdf quite badly), or something else (skew term)?
+              /// We're using the "set to epsilon" version for now.
+              /// Ben: I would vote for 'discard'. It can't be that inefficient, surely?
+              /// Andy: For a lot of signal regions, the probability of none having a negative sample is Prod_SR p_SR(non-negative)... which *can* get bad.
 
               #pragma omp parallel
               {
@@ -501,83 +436,35 @@ namespace Gambit
               } // End omp parallel
 
 
+              // Compare convergence to previous independent batch
+              if (first_iteration)  // The first round must be generated twice
+                {
+                  lsum_b_prev = lsum_b;
+                  lsum_sb_prev = lsum_sb;
+                  first_iteration = false;
+                }
+              else
+                {
+                  ana_like_b_prev = lsum_b_prev / (double)NSAMPLE;
+                  ana_like_sb_prev = lsum_sb_prev / (double)NSAMPLE;
+                  ana_like_b = lsum_b / (double)NSAMPLE;
+                  ana_like_sb = lsum_sb / (double)NSAMPLE;
+                  //
+                  const double diff_abs_b = fabs(ana_like_b_prev - ana_like_b);
+                  const double diff_abs_sb = fabs(ana_like_sb_prev - ana_like_sb);
+                  const double diff_rel_b = diff_abs_b/ana_like_b;
+                  const double diff_rel_sb = diff_abs_sb/ana_like_sb;
+                  //
+                  diff_rel = std::max(diff_rel_b, diff_rel_sb);  // Relative convergence check
+                  diff_abs = std::max(diff_abs_b, diff_abs_sb);  // Absolute convergence check
 
-              //  }  // End if !COVLOGNORMAL
-            // /// @todo Check that this log-normal sampling works as expected.
-            // else // COVLOGNORMAL
-            // {
+                  // Update variables
+                  lsum_b_prev += lsum_b;  // Aggregate result. This doubles the effective batch size for lsum_prev.
+                  lsum_sb_prev += lsum_sb;  // Aggregate result. This doubles the effective batch size for lsum_prev.
+                  NSAMPLE *=2;  // This ensures that the next batch for lsum is as big as the current batch size for lsum_prev, so they can be compared directly.
+                }
 
-            //   const Eigen::ArrayXd ln_n_pred_b = n_pred_b.log();
-            //   const Eigen::ArrayXd ln_n_pred_sb = n_pred_sb.log();
-            //   const Eigen::ArrayXd ln_sqrtEb = (n_pred_b + sqrtEb).log() - ln_n_pred_b;
-            //   const Eigen::ArrayXd ln_sqrtEsb = (n_pred_sb + sqrtEsb).log() - ln_n_pred_sb;
-
-            //   #pragma omp parallel
-            //   {
-            //     std::normal_distribution<> unitnormdbn{0,1};
-            //     Eigen::ArrayXd llrsums_private = Eigen::ArrayXd::Zero(adata.size());
-
-            //     #pragma omp for nowait
-
-            //     // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
-            //     for (size_t i = 0; i < NSAMPLE; ++i) {
-            //       Eigen::VectorXd ln_norm_sample_b(adata.size()), ln_norm_sample_sb(adata.size());
-            //       for (size_t j = 0; j < adata.size(); ++j) {
-            //         ln_norm_sample_b(j) = ln_sqrtEb(j) * unitnormdbn(Random::rng());
-            //         ln_norm_sample_sb(j) = ln_sqrtEsb(j) * unitnormdbn(Random::rng());
-            //       }
-
-            //       // Rotate rate deltas into the SR basis and shift by SR mean rates
-            //       const Eigen::ArrayXd delta_ln_n_pred_b_sample = Vb*ln_norm_sample_b;
-            //       const Eigen::ArrayXd delta_ln_n_pred_sb_sample = Vsb*ln_norm_sample_sb;
-            //       const Eigen::ArrayXd n_pred_b_sample = (ln_n_pred_b + delta_ln_n_pred_b_sample).exp();
-            //       const Eigen::ArrayXd n_pred_sb_sample = (ln_n_pred_sb + delta_ln_n_pred_sb_sample).exp();
-
-            //       // Calculate Poisson LLR and add to aggregated LL calculation
-            //       for (size_t j = 0; j < adata.size(); ++j) {
-            //         const double lambda_b_j = std::max(n_pred_b_sample(j), 1e-3); //< shouldn't be needed in log-space sampling
-            //         const double lambda_sb_j = std::max(n_pred_sb_sample(j), 1e-3); //< shouldn't be needed in log-space sampling
-            //         const double llr_j = n_obs(j)*log(lambda_sb_j/lambda_b_j) - (lambda_sb_j - lambda_b_j);
-            //         llrsums_private(j) += llr_j;
-            //       }
-            //     }
-
-            //     #pragma omp critical
-            //     {
-            //       for (size_t j = 0; j < adata.size(); ++j) { llrsums(j) += llrsums_private(j); }
-            //     }
-            //   } // End omp parallel
-            // }
-
-            // Compare convergence to previous independent batch
-            if (first_iteration)  // The first round must be generated twice
-            {
-              lsum_b_prev = lsum_b;
-              lsum_sb_prev = lsum_sb;
-              first_iteration = false;
-            }
-            else
-            {
-              ana_like_b_prev = lsum_b_prev / (double)NSAMPLE;
-              ana_like_sb_prev = lsum_sb_prev / (double)NSAMPLE;
-              ana_like_b = lsum_b / (double)NSAMPLE;
-              ana_like_sb = lsum_sb / (double)NSAMPLE;
-              //
-              const double diff_abs_b = fabs(ana_like_b_prev - ana_like_b);
-              const double diff_abs_sb = fabs(ana_like_sb_prev - ana_like_sb);
-              const double diff_rel_b = diff_abs_b/ana_like_b;
-              const double diff_rel_sb = diff_abs_sb/ana_like_sb;
-              //
-              diff_rel = std::max(diff_rel_b, diff_rel_sb);  // Relative convergence check
-              diff_abs = std::max(diff_abs_b, diff_abs_sb);  // Absolute convergence check
-
-              // Update variables
-              lsum_b_prev += lsum_b;  // Aggregate result. This doubles the effective batch size for lsum_prev.
-              lsum_sb_prev += lsum_sb;  // Aggregate result. This doubles the effective batch size for lsum_prev.
-              NSAMPLE *=2;  // This ensures that the next batch for lsum is as big as the current batch size for lsum_prev, so they can be compared directly.
-            }
-
-            #ifdef COLLIDERBIT_DEBUG
+              #ifdef COLLIDERBIT_DEBUG
               cout << debug_prefix()
                    << "diff_rel: " << diff_rel << endl
                    <<  "   diff_abs: " << diff_abs << endl
@@ -585,29 +472,31 @@ namespace Gambit
                    << "   ana_dll: " << log(ana_like_sb/ana_like_b) << endl
                    << "   logl_sb: " << log(ana_like_sb) << endl
                    << "   logl_b: " << log(ana_like_b) << endl;
-               cout << debug_prefix() << "NSAMPLE for the next iteration is: " << NSAMPLE << endl;
+              cout << debug_prefix() << "NSAMPLE for the next iteration is: " << NSAMPLE << endl;
               cout << debug_prefix() << endl;
+              #endif
+            }  // End while loop
+
+            // Combine the independent estimates ana_like and ana_like_prev.
+            // Use equal weights since the estimates are based on equal batch sizes.
+            ana_like_b = 0.5*(ana_like_b + ana_like_b_prev);
+            ana_like_sb = 0.5*(ana_like_sb + ana_like_sb_prev);
+
+            // Compute LLR from mean s+b and b likelihoods
+            ana_dll = log(ana_like_sb) - log(ana_like_b);
+            #ifdef COLLIDERBIT_DEBUG
+            cout << debug_prefix() << "Combined estimate: ana_dll: " << ana_dll << "   (based on 2*NSAMPLE=" << 2*NSAMPLE << " samples)" << endl;
             #endif
-          }  // End while loop
-
-          // Combine the independent estimates ana_like and ana_like_prev.
-          // Use equal weights since the estimates are based on equal batch sizes.
-          ana_like_b = 0.5*(ana_like_b + ana_like_b_prev);
-          ana_like_sb = 0.5*(ana_like_sb + ana_like_sb_prev);
-
-          // Compute LLR from mean s+b and b likelihoods
-          const double ana_dll = log(ana_like_sb) - log(ana_like_b);
-          #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Combined estimate: ana_dll: " << ana_dll << "   (based on 2*NSAMPLE=" << 2*NSAMPLE << " samples)" << endl;
-          #endif
 
 
-          ///////////////////////
-          /// ^^^ end likelihood marginalisation
-          ///////////////////////
+            ///////////////////////
+            /// ^^^ end likelihood marginalisation
+            ///////////////////////
+
+          } // end ana_dll calculation, by either marginalisation or profiling
 
 
-          // Check for problem
+          // Check for problems with the result
           if (Utils::isnan(ana_dll))
           {
             std::stringstream msg;
