@@ -159,16 +159,16 @@ namespace Gambit
     }
 
 
-    std::vector<double> _gsl_mkfixedarray(const Eigen::ArrayXd& n_pred_nominal,
+    std::vector<double> _gsl_mkfixedarray(const Eigen::ArrayXd& n_pred,
                                           const Eigen::ArrayXd& n_obs,
                                           const Eigen::MatrixXd& cov) {
-      std::vector<double> fixeds((2 + nSR)*nSR, 0.0);
       const size_t nSR = n_obs.size();
+      std::vector<double> fixeds((2 + nSR)*nSR, 0.0);
       for (size_t i = 0; i < nSR; ++i) {
-        fixeds[0+i] = n_pred_sb(i);
+        fixeds[0+i] = n_pred(i);
         fixeds[nSR+i] = n_obs(i);
         for (size_t j = 0; j < nSR; ++j)
-          fixeds[2*nSR+i*nSR+j] = Vsb(i,j);
+          fixeds[2*nSR+i*nSR+j] = cov(i,j); ///< @todo Double-check ordering
       }
       return fixeds;
     }
@@ -382,7 +382,7 @@ namespace Gambit
             //   for (size_t j = 0; j < nSR; ++j)
             //     fixeds[2*nSR+i*nSR+j] = Vsb(i,j);
             // }
-            std::vector<double> fixeds = _gsl_mkfixedarray(n_pred_nominal, n_obs, cov);
+            std::vector<double> fixeds = _gsl_mkfixedarray(n_pred_sb, n_obs, Vsb);
 
             // Pass to the minimiser
             double minusbestll = 999;
