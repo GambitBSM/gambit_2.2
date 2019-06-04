@@ -333,8 +333,9 @@ namespace Gambit
             double minusbestll = 999;
             struct multimin_params oparams = {.1,1e-2,100,1e-3,1e-5,4,0};
             multimin(nSR, &nuisances[0], &minusbestll,
+                     nullptr, nullptr, nullptr,
                      _gsl_calc_Analysis_MinusLogLike, nullptr, nullptr,
-                     fixeds, oparams);
+                     &fixeds, oparams);
 
             // Set final value
             /// @todo Implement the background-only LL subtraction
