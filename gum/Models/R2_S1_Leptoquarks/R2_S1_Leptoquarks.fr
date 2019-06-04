@@ -66,7 +66,7 @@ M$ClassesDescription = {
 
   S[8] == {
     ClassName        -> R2p53,
-    Mass             -> {MR2, Internal},
+    Mass             -> {MR2, 1000.},
     Width            -> {WR253, 1.},
     SelfConjugate    -> False,
     PropagatorLabel  -> "R253",
@@ -82,7 +82,7 @@ M$ClassesDescription = {
 
   S[9] == {
     ClassName        -> R2p23,
-    Mass             -> {MR2, Internal},
+    Mass             -> {MR2, 1000.},
     Width            -> {WR223, 1.},
     SelfConjugate    -> False,
     PropagatorLabel  -> "R2p23",
@@ -106,13 +106,6 @@ M$ClassesDescription = {
 M$Parameters = {
 
   (* Masses and widths *)
-
-  MR2 == { 
-    ParameterType -> External,
-    BlockName     -> LQMASS,
-    Value         -> 650.0,
-    Description   -> "R2 mass"
-  },
 
   (* S1 parameters *)
 

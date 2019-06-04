@@ -68,7 +68,7 @@ M$ClassesDescription = {
 
   S[5] == {
     ClassName        -> S3p23,
-    Mass             -> {MS3, Internal},
+    Mass             -> {MS3, 1000.},
     Width            -> {WS323, 1.},
     SelfConjugate    -> False,
     PropagatorLabel  -> "S23",
@@ -84,7 +84,7 @@ M$ClassesDescription = {
 
   S[6] == {
     ClassName        -> S3m13,
-    Mass             -> {MS3, Internal},
+    Mass             -> {MS3, 1000.},
     Width            -> {WS313, 1.},
     SelfConjugate    -> False,
     PropagatorLabel  -> "S13",
@@ -100,7 +100,7 @@ M$ClassesDescription = {
 
   S[7] == {
     ClassName        -> S3m43,
-    Mass             -> {MS3, Internal},
+    Mass             -> {MS3, 1000.},
     Width            -> {WS343, 1.},
     SelfConjugate    -> False,
     PropagatorLabel  -> "S43",
@@ -122,15 +122,6 @@ M$ClassesDescription = {
 (* ************************** *)
 
 M$Parameters = {
-
-  (* Masses and widths *)
-
-  MS3 == { 
-    ParameterType -> External,
-    BlockName     -> LQMASS,
-    Value         -> 650.0,
-    Description   -> "S3 mass"
-  },  
 
   (* S1 parameters *)
 
