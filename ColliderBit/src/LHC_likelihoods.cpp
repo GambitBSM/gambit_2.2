@@ -126,7 +126,7 @@ namespace Gambit
         loglike_tot += loglike_j;
       }
 
-      // Output via argument
+      // Output via argument (invert to return -LL for minimisation)
       *fval = -loglike_tot;
     }
 
@@ -135,7 +135,7 @@ namespace Gambit
                                           const Eigen::ArrayXd& n_obs,
                                           const Eigen::MatrixXd& cov) {
       const size_t nSR = n_obs.size();
-      std::vector<double> fixeds((2 + nSR)*nSR, 0.0);
+      std::vector<double> fixeds(nSR + nSR + nSR*nSR, 0.0);
       for (size_t i = 0; i < nSR; ++i) {
         fixeds[0+i] = n_pred(i);
         fixeds[nSR+i] = n_obs(i);
