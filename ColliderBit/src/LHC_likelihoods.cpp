@@ -42,6 +42,7 @@
 
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
+#include "gambit/ColliderBit/multimin.h"
 
 // #define COLLIDERBIT_DEBUG
 
@@ -89,35 +90,111 @@ namespace Gambit
     }
 
 
-    // Pass in a set of nuisance parameters and return a combined log-likelihood
-    // Context required: n_pred_sb_nom, Vsb, n_obs
-    /// @todo Reduce this further, to just an sb likelihood and compute the b likelihood *once*, via s=0
-    double calc_Analysis_LogLikes(const Eigen::VectorXd& unit_nuisances)
-    {
-      double lsum_sb_private = 0;
+    /// @todo Use this to compute both the b and s+b likelihood, and compute the b likelihood only once, via s=0
 
-      // // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
-      // #pragma omp for nowait
-      // for (size_t i = 0; i < NSAMPLE; ++i) {
 
-      //   Eigen::VectorXd norm_sample_b(adata.size()), norm_sample_sb(adata.size());
-      //   for (size_t j = 0; j < adata.size(); ++j)
-      //     norm_sample_sb(j) = sqrtEsb(j) * unitnormdbn(Random::rng());
+    // /// Pass in a set of nuisance parameters and return a combined log-likelihood
+    // ///
+    // /// @todo How to deal with no-covariance cases where each SR needs to be evaluated independently?
+    // /// Vector return, or abuse the covariance input to specify which single SR?
+    // double calc_Analysis_LogLikes(const Eigen::VectorXd& unit_nuisances,
+    //                               const Eigen::ArrayXd& n_pred_nominal,
+    //                               const Eigen::ArrayXd& n_obs,
+    //                               const Eigen::MatrixXd& cov)
+    // {
+    //   // Rotate rate deltas into the SR basis and shift by SR mean rates
+    //   const Eigen::VectorXd n_pred = n_pred_nominal + (cov*unit_nuisances).array();
+
+    //   // Calculate each SR's Gaussian-Poisson likelihood and add to composite likelihood calculation
+    //   double loglike_tot = 0;
+    //   for (int j = 0; j < unit_nuisances.size(); ++j) {
+    //     // First the multivariate Gaussian bit (j = nuisance)
+    //     const double pnorm_j = -pow(unit_nuisances(j), 2)/2.; // -log(1/sqrt(2pi))
+    //     loglike_tot += pnorm_j;
+    //     // Then the Poisson bit (j = SR)
+    //     const double lambda_j = std::max(n_pred(j), 1e-3); //< manually avoid <= 0 rates
+    //     const double loglike_j = n_obs(j)*log(lambda_j) - lambda_j; // - logfact_n_obs(j);
+    //     loglike_tot += loglike_j;
+    //   }
+
+    //   return loglike_tot;
+    // }
+
+
+    /// Loglike objective-function wrapper to provide the signature for GSL multimin
+    ///
+    /// @todo Can't tell from this if the cov is valid... need two wrapper functions?
+    void _gsl_calc_Analysis_MinusLogLike(const size_t n, const double* unit_nuisances_dbl,
+                                     void* npred_nobs_cov, double* fval) {
+
+      // Convert the array of doubles into an "Eigen view" of the nuisance params
+      Eigen::Map<const Eigen::VectorXd> unit_nuisances(&unit_nuisances_dbl[0], n);
+
+      // Convert the linearised array of doubles into "Eigen views" of the fixed params
+      double *npred_nobs_cov_dbl = (double*) npred_nobs_cov;
+      Eigen::Map<const Eigen::ArrayXd> n_pred_nominal(&npred_nobs_cov_dbl[0], n);
+      Eigen::Map<const Eigen::ArrayXd> n_obs(&npred_nobs_cov_dbl[n], n);
+      Eigen::Map<const Eigen::MatrixXd> cov(&npred_nobs_cov_dbl[2*n], n*n);
+
+      // Call the real loglike function
+      // return calc_Analysis_LogLikes(unit_nuisances, n_pred_nominal, n_obs, cov);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
-      const Eigen::VectorXd n_pred_sb = n_pred_sb_nom + (Vsb*unit_nuisances).array();
+      const Eigen::VectorXd n_pred = n_pred_nominal + (cov*unit_nuisances).array();
 
-      // Calculate Poisson likelihood and add to composite likelihood calculation
-      double combined_loglike_sb = 0;
-      for (size_t j = 0; j < adata.size(); ++j) {
-        const double lambda_sb_j = std::max(n_pred_sb(j), 1e-3); //< manually avoid <= 0 rates
-        const double loglike_sb_j = n_obs(j)*log(lambda_sb_j) - lambda_sb_j - logfact_n_obs(j);
-        combined_loglike_sb += loglike_sb_j;
+      // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
+      double loglike_tot = 0;
+      for (int j = 0; j < unit_nuisances.size(); ++j) {
+        // First the multivariate Gaussian bit (j = nuisance)
+        const double pnorm_j = -pow(unit_nuisances(j), 2)/2.; // -log(1/sqrt(2pi))
+        loglike_tot += pnorm_j;
+        // Then the Poisson bit (j = SR)
+        const double lambda_j = std::max(n_pred(j), 1e-3); //< manually avoid <= 0 rates
+        const double loglike_j = n_obs(j)*log(lambda_j) - lambda_j; // - logfact_n_obs(j);
+        loglike_tot += loglike_j;
       }
-      return combined_loglike_sb;
 
-      // }
+      // Output via argument
+      *fval = -loglike_tot;
     }
+
+
+    std::vector<double> _gsl_mkfixedarray(const Eigen::ArrayXd& n_pred_nominal,
+                                          const Eigen::ArrayXd& n_obs,
+                                          const Eigen::MatrixXd& cov) {
+      std::vector<double> fixeds((2 + nSR)*nSR, 0.0);
+      const size_t nSR = n_obs.size();
+      for (size_t i = 0; i < nSR; ++i) {
+        fixeds[0+i] = n_pred_sb(i);
+        fixeds[nSR+i] = n_obs(i);
+        for (size_t j = 0; j < nSR; ++j)
+          fixeds[2*nSR+i*nSR+j] = Vsb(i,j);
+      }
+      return fixeds;
+    }
+
+
+
+    // /// Loglike objective-function wrapper to provide the signature for GSL multimin
+    // ///
+    // /// @todo With no covariance, we need a way to tell this which single SR to use
+    // void _gsl_calc_Analysis_LogLikes_nocov(const size_t n, const double* unit_nuisances_dbl,
+    //                                        void* npred_nobs, double *fval) {
+
+    //   // Convert the array of doubles into an "Eigen views" of the nuisance params
+    //   Eigen::Map<const Eigen::VectorXd> unit_nuisances(&unit_nuisances_dbl[0], n);
+
+    //   // Convert the linearised array of doubles into "Eigen views" of the fixed params
+    //   double *npred_nobs_cov_dbl = (double*) npred_nobs_cov;
+    //   Eigen::Map<const Eigen::VectorXd> n_pred_nominal(&npred_nobs_cov_dbl[0], n);
+    //   Eigen::Map<const Eigen::ArrayXd> n_obs(&npred_nobs_cov_dbl[n], n);
+    //   const Eigen::MatrixXd trivial_cov; //< empty covariance
+
+    //   // Call the real loglike function
+    //   return calc_Analysis_LogLikes(unit_nuisances, n_pred_nominal, n_obs, trivial_cov);
+    // }
+
+
 
 
     /// Loop over all analyses and fill a map of AnalysisLogLikes objects
@@ -144,14 +221,14 @@ namespace Gambit
         ///       don't rely on event generation.
         if (not Dep::RunMC->event_generation_began || Dep::RunMC->exceeded_maxFailedEvents)
         {
-          // If this is an anlysis with covariance info, only add a single 0-entry in the map
+          // If this is an analysis with covariance info, only add a single 0-entry in the map
           if (use_covar && adata.srcov.rows() > 0)
           {
             result[adata.analysis_name].combination_sr_label = "none";
             result[adata.analysis_name].combination_loglike = 0.0;
             continue;
           }
-          // If this is an anlysis without covariance info, add 0-entries for all SRs plus
+          // If this is an analysis without covariance info, add 0-entries for all SRs plus
           // one for the combined LogLike
           else
           {
@@ -220,7 +297,8 @@ namespace Gambit
 
           // Shortcut: if all SRs have 0 signal prediction, we know the Delta LogLike is 0.
           bool all_zero_signal = true;
-          for (size_t SR = 0; SR < adata.size(); ++SR)
+          size_t nSR = adata.size();
+          for (size_t SR = 0; SR < nSR; ++SR)
           {
             if (adata[SR].n_signal != 0)
             {
@@ -291,6 +369,32 @@ namespace Gambit
           const bool MARGINALISE = false;
           if (!MARGINALISE) {
 
+            // Start with nuisances at nominal values
+            /// @todo Pick a more informed starting position
+            std::vector<double> nuisances(nSR, 0.0);
+
+            // Convert the linearised array of doubles into "Eigen views" of the fixed params
+            /// @todo Avoid recomputing some bits of this?
+            // std::vector<double> fixeds((2 + nSR)*nSR, 0.0);
+            // for (size_t i = 0; i < nSR; ++i) {
+            //   fixeds[0+i] = n_pred_sb(i);
+            //   fixeds[nSR+i] = n_obs(i);
+            //   for (size_t j = 0; j < nSR; ++j)
+            //     fixeds[2*nSR+i*nSR+j] = Vsb(i,j);
+            // }
+            std::vector<double> fixeds = _gsl_mkfixedarray(n_pred_nominal, n_obs, cov);
+
+            // Pass to the minimiser
+            double minusbestll = 999;
+            struct multimin_params oparams = {.1,1e-2,100,1e-3,1e-5,4,0};
+            multimin(nSR, &nuisances[0], &minusbestll,
+                     _gsl_calc_Analysis_MinusLogLike, nullptr, nullptr,
+                     fixeds, oparams);
+
+            // Set final value
+            /// @todo Implement the background-only LL subtraction
+            const double bkgll = 0;
+            const double ana_dll = -minusbestll - bkgll; //log(ana_like_sb) - log(ana_like_b);
 
 
           } else {
@@ -340,9 +444,10 @@ namespace Gambit
             ///
             /// @todo Add option for normal sampling in log(rate), i.e. "multidimensional log-normal"
 
-            const bool COVLOGNORMAL = false;
-            if (!COVLOGNORMAL)
-            {
+            // const bool COVLOGNORMAL = false;
+            // if (!COVLOGNORMAL)
+            // {
+
 
               #pragma omp parallel
               {
@@ -394,10 +499,10 @@ namespace Gambit
                   lsum_sb += lsum_sb_private;
                 }
               } // End omp parallel
-            }  // End if !COVLOGNORMAL
 
 
 
+              //  }  // End if !COVLOGNORMAL
             // /// @todo Check that this log-normal sampling works as expected.
             // else // COVLOGNORMAL
             // {
