@@ -721,6 +721,13 @@ namespace Gambit
           continue;
         }
 
+        // If using capped likelihood for each individual analysis, set analysis_loglike = min(analysis_loglike,0)
+        static const bool use_cap_loglike_individual = runOptions->getValueOrDef<bool>(false, "cap_loglike_individual_analyses");
+        if (use_cap_loglike_individual)
+        {
+          analysis_loglike = std::min(analysis_loglike, 0.0);
+        }
+
         // Add analysis loglike
         result += analysis_loglike;
 
@@ -734,15 +741,11 @@ namespace Gambit
         cout << debug_prefix() << "calc_combined_LHC_LogLike: LHC_Combined_LogLike = " << result << endl;
       #endif
 
-      // If using capped likelihood, set result = min(result,0)
+      // If using a "global" capped likelihood, set result = min(result,0)
       static const bool use_cap_loglike = runOptions->getValueOrDef<bool>(false, "cap_loglike");
       if (use_cap_loglike)
       {
         result = std::min(result, 0.0);
-
-        #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_combined_LHC_LogLike: LHC_Combined_LogLike (capped) = " << result << endl;
-        #endif
       }
 
       std::stringstream summary_line;
