@@ -131,9 +131,9 @@ namespace Gambit
     }
 
 
-    std::vector<double> _gsl_mkfixedarray(const Eigen::ArrayXd& n_pred,
-                                          const Eigen::ArrayXd& n_obs,
-                                          const Eigen::MatrixXd& cov) {
+    std::vector<double> _gsl_mkpackedarray(const Eigen::ArrayXd& n_pred,
+                                           const Eigen::ArrayXd& n_obs,
+                                           const Eigen::MatrixXd& cov) {
       const size_t nSR = n_obs.size();
       std::vector<double> fixeds(nSR + nSR + nSR*nSR, 0.0);
       for (size_t i = 0; i < nSR; ++i) {
@@ -145,6 +145,43 @@ namespace Gambit
       return fixeds;
     }
 
+
+    double profile_loglike_cov(size_t nSR,
+                               const Eigen::ArrayXd& n_pred,
+                               const Eigen::ArrayXd& n_obs,
+                               const Eigen::MatrixXd& cov) {
+
+      // Start with nuisances at nominal values
+      /// @todo Pick a more informed starting position
+      std::vector<double> nuisances(nSR, 0.0);
+
+      // Optimiser parameters
+      // Params: step1 size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
+      // Methods:
+      //  0: Fletcher-Reeves conjugate gradient
+      //  1: Polak-Ribiere conjugate gradient
+      //  2: Vector Broyden-Fletcher-Goldfarb-Shanno method
+      //  3: Steepest descent algorithm
+      //  4: Nelder-Mead simplex
+      //  5: Vector Broyden-Fletcher-Goldfarb-Shanno method ver. 2
+      //  6: Simplex algorithm of Nelder and Mead ver. 2
+      //  7: Simplex algorithm of Nelder and Mead: random initialization
+      //
+      /// @todo Tune / take from YAML: currently using 0.1 initial step, 0.01 convergence, and Simplex2
+      struct multimin_params oparams = {.1,1e-2,100,1e-3,1e-5,6,0};
+
+      // Convert the linearised array of doubles into "Eigen views" of the fixed params
+      std::vector<double> fixeds = _gsl_mkpackedarray(n_pred_sb, n_obs, Vsb);
+
+      // Pass to the minimiser
+      double minusbestll = 999;
+      multimin(nSR, &nuisances[0], &minusbestll,
+               nullptr, nullptr, nullptr,
+               _gsl_calc_Analysis_MinusLogLike, nullptr, nullptr,
+               &fixeds, oparams);
+
+      return -minusbestll;
+    }
 
 
 
@@ -160,6 +197,7 @@ namespace Gambit
       result.clear();
 
       // Loop over analyses and calculate the observed dLL for each
+      /// @todo Do this only once per run?
       for (size_t analysis = 0; analysis < Dep::AllAnalysisNumbers->size(); ++analysis)
       {
         // AnalysisData for this analysis
@@ -283,7 +321,7 @@ namespace Gambit
 
             // Log factorial of observed number of events.
             // Currently use the ln(Gamma(x)) function gsl_sf_lngamma from GSL. (Need continuous function.)
-            // We may want to switch to using Sterlings approximation: ln(n!) ~ n*ln(n) - n
+            // We may want to switch to using Stirling's approximation: ln(n!) ~ n*ln(n) - n
             logfact_n_obs(SR) = gsl_sf_lngamma(n_obs(SR) + 1.);
 
             // A contribution to the predicted number of events that is not known exactly
@@ -322,25 +360,16 @@ namespace Gambit
           const bool MARGINALISE = false;
           if (!MARGINALISE) {
 
-            // Start with nuisances at nominal values
-            /// @todo Pick a more informed starting position
-            std::vector<double> nuisances(nSR, 0.0);
+            // Pass background to the profiler
+            /// @todo Only compute this once per run
+            double ll_b = profile_loglike_cov(nSR, n_pred_b, n_obs, Vb);
 
-            // Convert the linearised array of doubles into "Eigen views" of the fixed params
-            std::vector<double> fixeds = _gsl_mkfixedarray(n_pred_sb, n_obs, Vsb);
+            // Pass signal+background to the profiler
+            double ll_sb = profile_loglike_cov(nSR, n_pred_sb, n_obs, Vsb);
 
-            // Pass to the minimiser
-            double minusbestll = 999;
-            struct multimin_params oparams = {.1,1e-2,100,1e-3,1e-5,4,0};
-            multimin(nSR, &nuisances[0], &minusbestll,
-                     nullptr, nullptr, nullptr,
-                     _gsl_calc_Analysis_MinusLogLike, nullptr, nullptr,
-                     &fixeds, oparams);
-
-            // Set final value
-            /// @todo Implement the background-only LL subtraction
-            const double bkgll = 0;
-            ana_dll = -minusbestll - bkgll; //log(ana_like_sb) - log(ana_like_b);
+            // Compute the DLL wrt background-only
+            const double ll_b = 0;
+            ana_dll = ll_sb - ll_b;
 
           } else {
 
