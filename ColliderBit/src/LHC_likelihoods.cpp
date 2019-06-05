@@ -190,8 +190,11 @@ namespace Gambit
     {
       using namespace Pipes::calc_LHC_LogLikes;
 
-      // Use covariance matrix when available?
-      static const bool use_covar = runOptions->getValueOrDef<bool>(true, "use_covariances");
+      // Use marginalisation rather than profiling (probably less stable)?
+      static const bool USE_MARG = runOptions->getValueOrDef<bool>(false, "use_marginalising");
+
+      // Use covariance matrices if available?
+      static const bool USE_COVAR = runOptions->getValueOrDef<bool>(true, "use_covariances");
 
       // Clear the result map
       result.clear();
@@ -211,7 +214,7 @@ namespace Gambit
         if (not Dep::RunMC->event_generation_began || Dep::RunMC->exceeded_maxFailedEvents)
         {
           // If this is an analysis with covariance info, only add a single 0-entry in the map
-          if (use_covar && adata.srcov.rows() > 0)
+          if (USE_COVAR && adata.srcov.rows() > 0)
           {
             result[adata.analysis_name].combination_sr_label = "none";
             result[adata.analysis_name].combination_loglike = 0.0;
@@ -260,7 +263,7 @@ namespace Gambit
         // Loop over the signal regions inside the analysis, and work out the total (delta) log likelihood for this analysis
         /// @todo Unify the treatment of best-only and correlated SR treatments as far as possible
         /// @todo Come up with a good treatment of zero and negative predictions
-        if (use_covar && adata.srcov.rows() > 0)
+        if (USE_COVAR && adata.srcov.rows() > 0)
         {
           /// If (simplified) SR-correlation info is available, so use the
           /// covariance matrix to construct composite marginalised likelihood
@@ -357,8 +360,7 @@ namespace Gambit
           // Analysis-level DLL result
           double ana_dll = NAN;
 
-          const bool MARGINALISE = false;
-          if (!MARGINALISE) {
+          if (!USE_MARG) {
 
             // Pass background to the profiler
             /// @todo Only compute this once per run
