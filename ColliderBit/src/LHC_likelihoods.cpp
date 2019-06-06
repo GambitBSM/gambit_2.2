@@ -121,14 +121,10 @@ namespace Gambit
         const double pnorm_j = -pow(unit_nuisances(j), 2)/2. - log(1/sqrt(2*M_PI));
         loglike_tot += pnorm_j;
         // Then the Poisson bit (j = SR)
-        /// @note Currently uses the ln(Gamma(x)) function gsl_sf_lngamma from GSL.
-        ///       We may want to switch to using Stirling's approximation: ln(n!) ~ n*ln(n) - n
-        /// @todo n_obs(j) and hence log(n_obs(j)) are fixed. Can we avoid recalculating this? Via 'static'?
-        /// @todo Or in fact can we / should we drop this term since we're computing LLRs without marginalisation?
+        /// @note We've dropped the log(n_obs!) terms, since they're expensive and cancel in computing DLL
         const double lambda_j = std::max(n_pred(j), 1e-3); //< manually avoid <= 0 rates
-        const double logfact_n_obs = gsl_sf_lngamma(n_obs(j) + 1);
+        const double logfact_n_obs = 0; // gsl_sf_lngamma(n_obs(j) + 1); //< skipping log(n_obs!) computation
         const double loglike_j = n_obs(j)*log(lambda_j) - lambda_j - logfact_n_obs;
-
         loglike_tot += loglike_j;
       }
 
@@ -153,6 +149,7 @@ namespace Gambit
 
 
     /// Return the best log likelihood
+    /// @note Return value is missing the log(n_obs!) terms (n_SR of them) which cancel in LLR calculation
     double profile_loglike_cov(size_t nSR,
                                const Eigen::ArrayXd& n_pred,
                                const Eigen::ArrayXd& n_obs,
