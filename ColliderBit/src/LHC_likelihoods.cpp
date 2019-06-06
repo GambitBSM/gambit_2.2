@@ -709,6 +709,10 @@ namespace Gambit
 
         else
         {
+
+          /// @todo Huge duplication here... reuse existing functions for trivial vectors & cov={sigma2}
+          /// @todo Nulike is marginalising rather than profiling over the single best-exp SR: make consistent
+
           // No SR-correlation info, or user chose not to use it.
           // Then we either take the result from the SR *expected* to be most constraining
           // under the s=0 assumption (default), or naively combine the loglikes for
