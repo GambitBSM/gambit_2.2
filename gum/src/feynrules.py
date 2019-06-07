@@ -55,7 +55,6 @@ def fr_params(paramlist, add_higgs):
     # Add all parameters from the parameter list from FeynRules
     for i in xrange(len(paramlist)):
         p = paramlist[i]
-        print p.name(), p.block(), p.index()
         if (    (p.block() != 'YUKAWA')
             and (p.block() != 'SMINPUTS')
             and (p.block() != 'CKMBLOCK')):

@@ -68,10 +68,22 @@ bool FeynRules::load_model(std::string model, std::string base_model)
         std::cerr << std::endl << "ERROR! Could not load model " << model << ". Please check your FeynRules file." << std::endl << std::endl;
         return false;
     }
+    else if ((modelname == "Standard Model") and (base_model.empty()))
+    {
+        std::cerr << std::endl << "ERROR! GUM is for BSM physics, yo!" << std::endl << std::endl;
+        return false;
+    }
+    else if ((modelname == "Standard Model") and (not base_model.empty()))
+    {
+        std::cerr << std::endl << "ERROR! GUM tried to import something on top of the Standard Model, but your"
+          " model file did not import properly. Please check it." << std::endl << std::endl;
+        return false;
+    }
 
-    // All good.
+    // All good. else {
     std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
     return true;
+    //}
 }
 
 // The model may have a different "internal" name than what's on the package.

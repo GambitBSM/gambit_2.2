@@ -301,6 +301,7 @@ def add_new_pythia_to_backends_cmake(model, output_dir):
                            "    BUILD_IN_SOURCE 1\n"\
                            "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
                            "          COMMAND patch -p1 < ${patch2}\n"\
+                           "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
                            "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
                            "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
                            "    INSTALL_COMMAND \"\"\n"\
@@ -338,7 +339,7 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
               linenum = num
               break
 
-    contents = ("#Added by GUM\n"
+    contents = ("# Added by GUM\n"
                 "{0}:\n"
                 "  {1}:         ./Backends/installed/{2}"
                 "\n"
@@ -349,14 +350,14 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
     amend_file(target, "config", contents, linenum-1, reset_dict)
 
 
-def patch_pythia_patch(model_parameters):
+def patch_pythia_patch(model_parameters, model_name, reset_dict):
     """
     Writes a generic patch to the existing GAMBIT Pythia patch.
     This adds new LesHouches block entries for a new model.
     """
 
-    pp_source = "\n// LH blocks added by GUM\n"
-    pp_header = "\n// LH blocks added by GUM\n"
+    pp_source = "\n        \"      // LH blocks added by GUM\\n\"\n"
+    pp_header = "\n        \"  // LH blocks added by GUM\\n\"\n"
 
     blocks = []
 
@@ -368,27 +369,95 @@ def patch_pythia_patch(model_parameters):
         if i.shape == "scalar" or i.shape == None:
 
             pp_source += (
-                    "else if (blockName == \"{0}\") {{\n"
-                    "  FILL_LHBLOCK({0}, double)\n"
-                    "}}\n"
+                    "        \"      else if (blockName == \\\"{0}\\\") {{\\n\"\n"
+                    "        \"        FILL_LHBLOCK({0}, double)\\n\"\n"
+                    "        \"      }}\\n\"\n"
             ).format(i.block.lower())
           
-            pp_header += "LHblock<double> {0};\n".format(i.block.lower())
+            pp_header += "        \"  LHblock<double> {0};\\n\"\n".format(i.block.lower())
 
         # Matrix cases
         elif re.match("m[2-9]x[2-9]", i.shape):
 
             pp_source += (
-                    "else if (blockName == \"{0}\") {{\n"
-                    "  FILL_LHMATRIXBLOCK({0})\n"
-                    "}}\n"
+                    "        \"      else if (blockName == \\\"{0}\\\") {{\\n\"\n"
+                    "        \"        FILL_LHMATRIXBLOCK({0})\\n\"\n"
+                    "        \"      }}\\n\"\n"
             ).format(i.block.lower())
           
-            pp_header += "LHmatrixBlock<{0}> {1};\n".format(i.shape[-1], i.block.lower())
+            pp_header += "        \"  LHmatrixBlock<{0}> {1};\\n\"\n".format(i.shape[-1], i.block.lower())
 
 
         blocks.append(i.block)
 
-    print pp_source, pp_header
+    # This is the output to add to the post-GAMBIT patched Pythia.
 
-    #return pp_source, pp_header
+    patch_contents = (
+        "import os\n"
+        "\n"
+        "location = \"src/SusyLesHouches.cc\"\n"
+        "temp_location = location + \"_temp\"\n"
+        "\n"
+        "lines = open(location, 'r').readlines()\n"
+        "\n"
+        "# Find where the GAMBIT patch ends.\n"
+        "linenum = 0\n"
+        "with open(location) as f:\n"
+        "    for num, line in enumerate(f, 1):\n"
+        "        if \"FILL_LHBLOCK(nmssmrun, double)\" in line:\n"
+        "            linenum = num+1\n"
+        "            break\n"
+        "\n"
+        "with open(temp_location, 'w') as f:\n"
+        "    # Write the stuff at the beginning...\n"
+        "    for i in range(linenum):\n"
+        "        f.write(lines[i])\n"
+        "    # Write the source specific to the model...\n"
+        "    f.write(("
+        "{2}"
+        "        \"\\n\"\n"
+        "    ))\n"
+        "    # Then write the rest. Voila: the cheap man's patch.\n"
+        "    for i in range(len(lines)-linenum):\n"
+        "        f.write(lines[i+linenum])\n"
+        "\n"
+        "os.remove(location)\n"
+        "os.rename(temp_location, location)\n"
+        "\n"
+        "location = \"include/Pythia8/SusyLesHouches.h\"\n"
+        "temp_location = location + \"_temp\"\n"
+        "\n"
+        "lines = open(location, 'r').readlines()\n"
+        "\n"
+        "# Find where the GAMBIT patch ends.\n"
+        "linenum = 0\n"
+        "with open(location) as f:\n"
+        "    for num, line in enumerate(f, 1):\n"
+        "        if \"LHmatrixBlock<5> imnmnmix;\" in line:\n"
+        "            linenum = num\n"
+        "            break\n"
+        "\n"
+        "with open(temp_location, 'w') as f:\n"
+        "    # Write the stuff at the beginning...\n"
+        "    for i in range(linenum):\n"
+        "        f.write(lines[i])\n"
+        "    # Write the stuff specific to the model.\n"
+        "    f.write(("
+        "{3}"
+        "        \"\\n\"\n"
+        "    ))\n"
+        "    # Then write the rest. Voila: the cheap man's patch.\n"
+        "    for i in range(len(lines)-linenum):\n"
+        "        f.write(lines[i+linenum])\n"
+        "\n"
+        "os.remove(location)\n"
+        "os.rename(temp_location, location)\n"
+    ).format(model_name.lower(), base_pythia_version, pp_source, pp_header)
+
+    filename = "pythia_{0}/8.{1}/patch_pythia_{0}.dif".format(model_name.lower(), base_pythia_version)
+    write_file(filename, "Backends", patch_contents, reset_dict)
+    loc = full_filename(filename, "Backends")
+    new_loc = "../Backends/patches/pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
+    print loc
+    print new_loc
+    os.rename(loc, new_loc)

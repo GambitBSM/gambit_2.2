@@ -402,7 +402,7 @@ if args.file:
         print("  Creating a diff vs original version of Pythia.")
         write_backend_patch(output_dir, pristine_pythia_dir, new_pythia_dir, "pythia_"+gum.name.lower(), "8."+base_pythia_version)
         print("  Writing an additional patch for the new version of Pythia.")
-        patch_pythia_patch(parameters)
+        patch_pythia_patch(parameters, gum.name, reset_contents)
         print("  Creating a BOSS config file for Pythia_"+gum.name+".")
         write_boss_config_for_pythia(gum.name, output_dir)
         print("  Creating a cmake entry for Pythia"+gum.name+".")
