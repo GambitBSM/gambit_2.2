@@ -721,15 +721,17 @@ namespace Gambit
           continue;
         }
 
+        // Add analysis loglike.
         // If using capped likelihood for each individual analysis, set analysis_loglike = min(analysis_loglike,0)
         static const bool use_cap_loglike_individual = runOptions->getValueOrDef<bool>(false, "cap_loglike_individual_analyses");
         if (use_cap_loglike_individual)
         {
-          analysis_loglike = std::min(analysis_loglike, 0.0);
+          result += std::min(analysis_loglike, 0.0);
         }
-
-        // Add analysis loglike
-        result += analysis_loglike;
+        else
+        {
+          result += analysis_loglike;
+        }
 
         #ifdef COLLIDERBIT_DEBUG
           cout.precision(5);
