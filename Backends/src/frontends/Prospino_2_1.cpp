@@ -33,21 +33,16 @@
 BE_NAMESPACE
 {
   // Convenience function to run Prospino and get a vector of cross-sections
-  // std::vector<double> run_prospino(const Spectrum& spectrum)
-  std::vector<double> run_prospino(const SLHAstruct& slha_in, const param_map_type& params)
+  map_str_dbl run_prospino(const SLHAstruct& slha_in, const param_map_type& params)
   {
-
-    // // Get path
-    // // TODO: move this to init function
-    // const str be = "Pythia" + model_suffix;
-    // const str ver = Backends::backendInfo().default_version(be);
-    // pythia_doc_path = Backends::backendInfo().path_dir(be, ver) + "/../share/Pythia8/xmldoc/";
-
 
     // Get type converter 
     using SLHAea::to;
 
     std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
+
+    // Read run options from yaml file
+    // static const variable_name = runOptions->getValueOrDef<int>(0.1, "hstep_pn");    
 
 
     // Copy the slha object so that we can modify it
@@ -87,19 +82,11 @@ BE_NAMESPACE
     slha["EXTPAR"][""] << 48 << sqrt(*params.at("md2_22")) << "# M_(D,22)";
     slha["EXTPAR"][""] << 49 << sqrt(*params.at("md2_33")) << "# M_(D,33)";
 
-    // std::cout << "DEBUG:  slha.at('MASS').at(25).at(1) = " << to<double>(slha.at("MASS").at(25).at(1)) << std::endl;
-    // std::cout << "DEBUG:  slha.at('EXTPAR').at(1).at(1) = " << to<double>(slha.at("EXTPAR").at(1).at(1)) << std::endl;
-    
     std::cout << "DEBUG: SLHAstruct content:" << std::endl;
     std::cout << slha.str() << std::endl;
     
 
-
-    // std::cout << "DEBUG:  slha.at('EXTPAR').at(1).at(1) = " << to<double>(slha.at("EXTPAR").at(1).at(1)) << std::endl;
-    // std::cout << "DEBUG:  slha.at('MASS').at(25).at(1) = " << to<double>(slha.at("MASS").at(25).at(1)) << std::endl;
-
-
-    Finteger inlo = 1;                 // specify LO only[0] or complete NLO (slower)[1]
+    Finteger inlo = 0;                 // specify LO only[0] or complete NLO (slower)[1]
     Finteger isq_ng_in = 1;            // specify degenerate [0] or free [1] squark masses
     Finteger icoll_in = 1;             // collider : tevatron[0], lhc[1]
     Fdouble energy_in = 13000.0;       // collider energy in GeV
@@ -117,24 +104,6 @@ BE_NAMESPACE
     Farray<Fdouble,1,2,1,2> uu_in, vv_in;
     Farray<Fdouble,1,4,1,4> bw_in;
     Farray<Fdouble,1,2,1,2> mst_in, msb_in, msl_in;
-
-/*
-  integer                            :: ipart1, ipart2   ! set in INIT_SUSY   : internal variable for final state particles 
-  real(kind=double)                  :: mg,ms            ! set in INIT_SUSY
-  real(kind=double)                  :: mh1,mh2,mch      ! set in INIT_SUSY
-  real(kind=double)                  :: sin_a,cos_a      ! set in INIT_SUSY
-  real(kind=double)                  :: mu_susy,tan_b    ! set in INIT_SUSY
-  real(kind=double)                  :: a_b,a_t          ! set in INIT_SUSY
-  real(kind=double), dimension(-6:6) :: msq              ! set in INIT_SUSY
-  real(kind=double), dimension(1:8)  :: smass_n,mass_n   ! set in INIT_SUSY
-  real(kind=double), dimension(2,2)  :: uu,vv            ! set in INIT_SUSY
-  real(kind=double), dimension(2,2)  :: mst,msb,msl      ! set in INIT_SUSY
-  real(kind=double), dimension(4,4)  :: bw               ! set in INIT_SUSY
-  real(kind=double), dimension(1:4)  :: mass_s           ! set in INIT_SUSY
-  real(kind=double), dimension(1:4)  :: mass_x           ! set in INIT_SUSY
-  real(kind=double)                  :: mg_orig,ms_orig  ! set in INIT_SUSY
-  complex(kind=double), dimension(4,4) :: zz             ! set in INIT_SUSY
-*/
 
 
     lowmass(0) = to<double>(slha.at("HMIX").at(1).at(1));
@@ -274,12 +243,36 @@ BE_NAMESPACE
 
 
 
-
     // Call prospino
-    prospino_gb(inlo, isq_ng_in, icoll_in, energy_in, i_error_in, final_state_in, ipart1_in, ipart2_in, isquark1_in, isquark2_in,
+    Farray<Fdouble,0,6> prospino_result;
+
+    prospino_gb(prospino_result, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, final_state_in, ipart1_in, ipart2_in, isquark1_in, isquark2_in,
                 unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
 
+    
+    std::cout << "DEBUG: run_prospino: " << std::endl;
+    std::cout << "DEBUG: run_prospino: prospino_result(0) = " << prospino_result(0) << std::endl;
+    std::cout << "DEBUG: run_prospino: prospino_result(1) = " << prospino_result(1) << std::endl;
+    std::cout << "DEBUG: run_prospino: prospino_result(2) = " << prospino_result(2) << std::endl;
+    std::cout << "DEBUG: run_prospino: prospino_result(3) = " << prospino_result(3) << std::endl;
+    std::cout << "DEBUG: run_prospino: prospino_result(4) = " << prospino_result(4) << std::endl;
+    std::cout << "DEBUG: run_prospino: prospino_result(5) = " << prospino_result(5) << std::endl;
+    std::cout << "DEBUG: run_prospino: prospino_result(6) = " << prospino_result(6) << std::endl;
+    std::cout << "DEBUG: run_prospino: " << std::endl;
     std::cout << "DEBUG: run_prospino: ...End" << std::endl;
+
+
+    // Fill the result map with the content of prospino_result
+    map_str_dbl result;
+    result["LO[pb]"] = prospino_result(0);
+    result["LO_rel_error"] = prospino_result(1);
+    result["NLO[pb]"] = prospino_result(2);
+    result["NLO_rel_error"] = prospino_result(3);
+    result["K"] = prospino_result(4);
+    result["LO_ms[pb]"] = prospino_result(5);
+    result["NLO_ms[pb]"] = prospino_result(6);
+
+    return result;
 
 
     /*
@@ -366,13 +359,6 @@ BE_NAMESPACE
       flavors in final state: light-flavor quarks summed over five flavors
     */
 
-
-    // Dummy result
-    std::vector<double> xsec_vals;
-    xsec_vals.push_back(1.2345);
-    xsec_vals.push_back(1.2345 * 0.1);
-
-    return xsec_vals;
   }
 }
 END_BE_NAMESPACE

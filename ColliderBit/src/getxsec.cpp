@@ -160,16 +160,31 @@ namespace Gambit
 
         // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
         // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(std::move(slha));
-        std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(slha, model_params);
+        map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params);
 
-        result.set_xsec(xsec_vals.at(0), xsec_vals.at(1));
+        cout << "DEBUG: getProspinoxsec: got this result from Prospino:" << endl;
+
+        for (auto& element : prospino_output)
+        {
+          cout << "DEBUG: getProspinoxsec: " << element.first << " = " << element.second << endl;
+        }
+
+        // set result
+        result.set_xsec(prospino_output.at("NLO_ms[pb]"), prospino_output.at("NLO_rel_error"));
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration > 0)
+      if (*Loop::iteration >= 0)
       {
         result.log_event();
       }
+
+      // Set the xsec and its error
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+        result.gather_num_events();
+      }
+
 
     }
 

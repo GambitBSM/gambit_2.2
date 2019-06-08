@@ -64,7 +64,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)
-    BACKEND_REQ(prospino_LHC_xsec, (libprospino), std::vector<double>, (const SLHAstruct&, const param_map_type&))
+    BACKEND_REQ(prospino_LHC_xsec, (libprospino), map_str_dbl, (const SLHAstruct&, const param_map_type&))
     #undef FUNCTION
 
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
