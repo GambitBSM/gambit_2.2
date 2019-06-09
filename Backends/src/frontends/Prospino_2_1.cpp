@@ -29,6 +29,46 @@
 #define BACKEND_DEBUG 0
 
 
+// Prospino settings, filled by the backend init function 
+BE_NAMESPACE
+{
+  Finteger inlo;
+  Finteger isq_ng_in;
+  Finteger icoll_in;
+  Fdouble energy_in;
+  Finteger i_error_in;
+
+  Fstring<2> final_state_in;
+  Finteger ipart1_in;
+  Finteger ipart2_in;
+  Finteger isquark1_in;
+  Finteger isquark2_in;
+}
+END_BE_NAMESPACE
+
+
+// Backend init function
+BE_INI_FUNCTION
+{
+    // Read run options from yaml file
+    inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
+    isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
+    icoll_in = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
+    energy_in = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
+    i_error_in = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
+    
+    final_state_in = runOptions->getValueOrDef<std::string>("nn", "final_state_in"); // select process
+    ipart1_in = runOptions->getValueOrDef<Finteger>(1, "ipart1_in");      //
+    ipart2_in = runOptions->getValueOrDef<Finteger>(2, "ipart2_in");      //
+    isquark1_in = runOptions->getValueOrDef<Finteger>(0, "isquark1_in");  //
+    isquark2_in = runOptions->getValueOrDef<Finteger>(0, "isquark2_in");  //
+
+    Fstring<500> prospino_dir_in = "/home/anders/physics/GAMBIT/gambit/Backends/installed/prospino/2.1";
+    prospino_gb_init(prospino_dir_in);
+}
+END_BE_INI_FUNCTION
+
+
 // Convenience functions (definition)
 BE_NAMESPACE
 {
@@ -40,10 +80,6 @@ BE_NAMESPACE
     using SLHAea::to;
 
     std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
-
-    // Read run options from yaml file
-    // static const variable_name = runOptions->getValueOrDef<int>(0.1, "hstep_pn");    
-
 
     // Copy the slha object so that we can modify it
     SLHAstruct slha(slha_in);
@@ -85,18 +121,6 @@ BE_NAMESPACE
     std::cout << "DEBUG: SLHAstruct content:" << std::endl;
     std::cout << slha.str() << std::endl;
     
-
-    Finteger inlo = 0;                 // specify LO only[0] or complete NLO (slower)[1]
-    Finteger isq_ng_in = 1;            // specify degenerate [0] or free [1] squark masses
-    Finteger icoll_in = 1;             // collider : tevatron[0], lhc[1]
-    Fdouble energy_in = 13000.0;       // collider energy in GeV
-    Finteger i_error_in = 0;           // with central scale [0] or scale variation [1]
-
-    Fstring<2> final_state_in = "nn";  // select process
-    Finteger ipart1_in = 1;            //
-    Finteger ipart2_in = 2;            //
-    Finteger isquark1_in = 0;          //
-    Finteger isquark2_in = 0;          //
 
     Farray<Fdouble,1,20> unimass;
     Farray<Fdouble,0,99> lowmass;
@@ -365,11 +389,3 @@ END_BE_NAMESPACE
 
 // // Initialisation function (definition)
 // BE_INI_FUNCTION{} END_BE_INI_FUNCTION
-
-// Backend init function
-BE_INI_FUNCTION
-{
-    Fstring<500> prospino_dir_in = "/home/anders/physics/GAMBIT/gambit/Backends/installed/prospino/2.1";
-    prospino_gb_init(prospino_dir_in);
-}
-END_BE_INI_FUNCTION
