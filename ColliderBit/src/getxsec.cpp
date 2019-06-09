@@ -129,6 +129,7 @@ namespace Gambit
 
     }
 
+
     /// Get a cross-section from Prospino
     void getProspinoxsec(xsec& result)
     {
@@ -147,10 +148,6 @@ namespace Gambit
         // Testing...
         cout << "DEBUG: getProspinoxsec: Requesting dependency BE::prospino_LHC_xsec..." << endl;
 
-        // Rather call a BE convenience function, which itself calls Prospino...
-        // @todo pass in a list of processes to SPheno?
-
-        // const Spectrum& spectrum = *Dep::MSSM_spectrum;
 
         // Get an SLHA1 object for Prospino.
         const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
@@ -158,9 +155,35 @@ namespace Gambit
         // Get the GAMBIT model parameters for Prospino
         const param_map_type& model_params = Param;
 
-        // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(*Dep::MSSM_spectrum);
-        // std::vector<double> xsec_vals = BEreq::prospino_LHC_xsec(std::move(slha));
-        map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params);
+        // Create struct with settings Prospino
+        prospino_settings ps;
+
+        ps.inlo = 0;
+        ps.isq_ng_in = 1;
+        ps.icoll_in = 1;
+        ps.energy_in = 13000.;
+        ps.i_error_in = 0;
+        ps.final_state_in = "nn";
+        ps.ipart1_in = 1;
+        ps.ipart2_in = 2;
+        ps.isquark1_in = 0;
+        ps.isquark2_in = 0;
+
+        // inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
+        // isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
+        // icoll_in = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
+        // energy_in = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
+        // i_error_in = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
+        
+        // final_state_in = runOptions->getValueOrDef<std::string>("nn", "final_state_in"); // select process
+        // ipart1_in = runOptions->getValueOrDef<Finteger>(1, "ipart1_in");      //
+        // ipart2_in = runOptions->getValueOrDef<Finteger>(2, "ipart2_in");      //
+        // isquark1_in = runOptions->getValueOrDef<Finteger>(0, "isquark1_in");  //
+        // isquark2_in = runOptions->getValueOrDef<Finteger>(0, "isquark2_in");  //
+
+
+        // Call Prospino and get the result in a map<string,double>
+        map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
 
         cout << "DEBUG: getProspinoxsec: got this result from Prospino:" << endl;
 

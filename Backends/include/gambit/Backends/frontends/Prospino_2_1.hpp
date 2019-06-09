@@ -36,7 +36,7 @@ BE_FUNCTION(prospino_gb_init, void, (Fstring<500>&), "__xx_prospino_subroutine_M
 BE_FUNCTION(prospino_gb, void, (Farray<Fdouble,0,6>&, Finteger&, Finteger&, Finteger&, Fdouble&, Finteger&, Fstring<2>&, Finteger&, Finteger&, Finteger&, Finteger&, Farray<Fdouble,1,20>&, Farray<Fdouble,0,99>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,4,1,4>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&), "__xx_prospino_subroutine_MOD_prospino_gb", "prospino_gb")
 
 // Convenience functions (registration)
-BE_CONV_FUNCTION(run_prospino, map_str_dbl, (const SLHAstruct&, const param_map_type&), "prospino_LHC_xsec")
+BE_CONV_FUNCTION(run_prospino, map_str_dbl, (const SLHAstruct&, const param_map_type&, prospino_settings&), "prospino_LHC_xsec")
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"

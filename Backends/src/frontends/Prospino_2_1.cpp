@@ -13,57 +13,23 @@
 ///
 ///  *********************************************
 
+#include "gambit/Backends/backend_singleton.hpp"
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/Prospino_2_1.hpp"
 #include "gambit/Elements/mssm_slhahelp.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
-
-#include <typeinfo>
-
-// #include "gambit/Elements/spectrum.hpp"
-// #include "gambit/Elements/spectrum_factories.hpp"
-// #include "gambit/Models/SimpleSpectra/NMSSMSimpleSpec.hpp"
 
 #include "gambit/Utils/version.hpp"
 
 #define BACKEND_DEBUG 0
 
 
-// Prospino settings, filled by the backend init function 
-BE_NAMESPACE
-{
-  Finteger inlo;
-  Finteger isq_ng_in;
-  Finteger icoll_in;
-  Fdouble energy_in;
-  Finteger i_error_in;
-
-  Fstring<2> final_state_in;
-  Finteger ipart1_in;
-  Finteger ipart2_in;
-  Finteger isquark1_in;
-  Finteger isquark2_in;
-}
-END_BE_NAMESPACE
-
-
 // Backend init function
 BE_INI_FUNCTION
 {
-    // Read run options from yaml file
-    inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
-    isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
-    icoll_in = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
-    energy_in = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
-    i_error_in = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
-    
-    final_state_in = runOptions->getValueOrDef<std::string>("nn", "final_state_in"); // select process
-    ipart1_in = runOptions->getValueOrDef<Finteger>(1, "ipart1_in");      //
-    ipart2_in = runOptions->getValueOrDef<Finteger>(2, "ipart2_in");      //
-    isquark1_in = runOptions->getValueOrDef<Finteger>(0, "isquark1_in");  //
-    isquark2_in = runOptions->getValueOrDef<Finteger>(0, "isquark2_in");  //
-
-    Fstring<500> prospino_dir_in = "/home/anders/physics/GAMBIT/gambit/Backends/installed/prospino/2.1";
+    // Help Prospino find itself
+    std::string prospino_dir = Backends::backendInfo().path_dir(STRINGIFY(BACKENDNAME), STRINGIFY(VERSION));
+    Fstring<500> prospino_dir_in = prospino_dir.c_str();
     prospino_gb_init(prospino_dir_in);
 }
 END_BE_INI_FUNCTION
@@ -73,7 +39,7 @@ END_BE_INI_FUNCTION
 BE_NAMESPACE
 {
   // Convenience function to run Prospino and get a vector of cross-sections
-  map_str_dbl run_prospino(const SLHAstruct& slha_in, const param_map_type& params)
+  map_str_dbl run_prospino(const SLHAstruct& slha_in, const param_map_type& params, prospino_settings& ps)
   {
 
     // Get type converter 
@@ -266,11 +232,11 @@ BE_NAMESPACE
     msl_in(2,2) = to<double>(slha.at("STAUMIX").at(2,2).at(2));
 
 
-
     // Call prospino
     Farray<Fdouble,0,6> prospino_result;
 
-    prospino_gb(prospino_result, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, final_state_in, ipart1_in, ipart2_in, isquark1_in, isquark2_in,
+    prospino_gb(prospino_result, ps.inlo, ps.isq_ng_in, ps.icoll_in, ps.energy_in, ps.i_error_in, 
+                ps.final_state_in, ps.ipart1_in, ps.ipart2_in, ps.isquark1_in, ps.isquark2_in,
                 unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
 
     
@@ -298,94 +264,6 @@ BE_NAMESPACE
 
     return result;
 
-
-    /*
-      call PROSPINO_OPEN_CLOSE(0)                                                            ! open all input/output files
-      
-      call PROSPINO_CHECK_HIGGS(final_state_in)                                              ! lock Higgs final states
-      call PROSPINO_CHECK_FS(final_state_in,ipart1_in,ipart2_in,lfinal)                      ! check final state 
-      if (.not. lfinal ) then
-         print*, " final state not correct ",final_state_in,ipart1_in,ipart2_in
-         call HARD_STOP                                                                      ! finish if final state bad
-      end if
-
-      call PROSPINO(inlo,isq_ng_in,icoll_in,energy_in,i_error_in,final_state_in,ipart1_in,ipart2_in,isquark1_in,isquark2_in) ! actual prospino call
-    */
-
-
-    /* 
-      (From the Prospino code documentation)
-
-      Options for final_state_in:
-
-      ng     neutralino/chargino + gluino  
-      ns     neutralino/chargino + squark  
-      nn     neutralino/chargino pair combinations  
-      ll     slepton pair combinations  
-      sb     squark-antisquark  
-      ss     squark-squark  
-      tb     stop-antistop  
-      bb     sbottom-antisbottom  
-      gg     gluino pair  
-      sg     squark + gluino  
-      lq     leptoquark pairs (using stop1 mass) 
-      le     leptoquark plus lepton (using stop1 mass) 
-      hh     charged Higgs pairs (private code only!)
-      ht     charged Higgs with top (private code only!)
-
-      Squark and antisquark added, but taking into account different sb or ss.
-
-
-      Options for ipart1_in, ipart2_in:
-
-      final_state_in = ng,ns,nn
-      ipart1_in   = 1,2,3,4  neutralinos
-                    5,6      positive charge charginos
-                    7,8      negative charge charginos
-      ipart2_in the same
-          chargino+ and chargino- different processes
-                                                                               
-      final_state_in = ll
-      ipart1_in   = 0        sel,sel + ser,ser  (first generation)
-                    1        sel,sel
-                    2        ser,ser
-                    3        snel,snel
-                    4        sel+,snl
-                    5        sel-,snl
-                    6        stau1,stau1
-                    7        stau2,stau2
-                    8        stau1,stau2
-                    9        sntau,sntau
-                   10        stau1+,sntau
-                   11        stau1-,sntau
-                   12        stau2+,sntau
-                   13        stau2-,sntau
-                   14        H+,H- in Drell-Yan channel
-                                                                               
-      final_state_in = tb and bb
-      ipart1_in   = 1        stop1/sbottom1 pairs
-                    2        stop2/sbottom2 pairs
-                                                                               
-      Note: Otherwise ipart1_in,ipart2_in have to set to one if not used.
-
-
-      Options for isquark1_in, isquark1_in:
-
-      for LO with light-squark flavor in the final state
-      isquark1_in     =  -5,-4,-3,-2,-1,+1,+2,+3,+4,+5
-                        (bL cL sL dL uL uR dR sR cR bR) in CteQ ordering
-      isquark1_in     = 0 sum over light-flavor squarks throughout
-                          (the squark mass in the data files is then averaged)
-
-      flavors in initial state: only light-flavor partons, no bottoms
-                                bottom partons only for Higgs channels
-
-      flavors in final state: light-flavor quarks summed over five flavors
-    */
-
   }
 }
 END_BE_NAMESPACE
-
-// // Initialisation function (definition)
-// BE_INI_FUNCTION{} END_BE_INI_FUNCTION
