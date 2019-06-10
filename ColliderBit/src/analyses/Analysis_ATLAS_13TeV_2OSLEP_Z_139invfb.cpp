@@ -6,7 +6,6 @@
 // Based on https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/CONFNOTES/ATLAS-CONF-2019-016/
 
 // - 139 fb^-1 data
-// - Just started
 
 #include <vector>
 #include <cmath>
@@ -28,17 +27,17 @@ namespace Gambit
   namespace ColliderBit
   {
 
-    class Analysis_ATLAS_13TeV_2OSLEP_Z_139_invfb : public Analysis
+    class Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb : public Analysis
     {
 
     protected:
 
       // Counters for the number of accepted events for each signal region
       std::map<string,double> _numSR = {
-//        {"SR0A", 0},
-//        {"SR0B", 0},
-//        {"SR0C", 0},
-//        {"SR0D", 0},
+        {"SR1A", 0},
+        {"SR1B", 0},
+        {"SR2A", 0},
+        {"SR2B", 0},
       };
 
     private:
@@ -144,17 +143,16 @@ namespace Gambit
         return;
       }
 
-
     public:
 
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
 
-      Analysis_ATLAS_13TeV_4LEP_36invfb()
+      Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb()
       {
 
-        set_analysis_name("ATLAS_13TeV_4LEP_36invfb");
-        set_luminosity(36.1);
+        set_analysis_name("ATLAS_13TeV_2OSLEP_Z_139invfb");
+        set_luminosity(139);
 
         #ifdef CHECK_CUTFLOW
           NCUTS = 11;
@@ -178,120 +176,104 @@ namespace Gambit
         vector<HEPUtils::Jet*> baselineJets;
         double met = event->met();
 
-        #ifdef  CHECK_CUTFLOW
-          bool generator_filter = false;
-          bool trigger = true;
-          bool event_cleaning = true;
-
-          vector<HEPUtils::Particle*> baselineLeptons_cutflow;
-          for (HEPUtils::Particle* electron : event->electrons())
-          {
-            if (electron->pT()>4. && electron->abseta()<2.8) baselineLeptons_cutflow.push_back(electron);
-          }
-          for (HEPUtils::Particle* muons : event->muons())
-          {
-            if (muons->pT()>4. && muons->abseta()<2.8) baselineLeptons_cutflow.push_back(muons);
-          }
-          if (baselineLeptons_cutflow.size() >= 4) generator_filter = true;
-        #endif
-
-
-        for (HEPUtils::Particle* electron : event->electrons())
+        // Electron candidates are reconstructed from isolated electromagnetic calorimeter energy deposits matched to ID tracks and are required to have |η| < 2.47, a transverse momentum pT > 4.5 GeV, and to pass the “LooseAndBLayer” requirement in arXiv: 1902.04655 [hep-ex].
+       for (HEPUtils::Particle* electron : event->electrons())
         {
-          if (electron->pT()>7. && electron->abseta()<2.47) baselineElectrons.push_back(electron);
+          if (electron->pT()>4.5 && electron->abseta()<2.47) baselineElectrons.push_back(electron);
         }
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
 
         // Apply loose electron selection
+        // TODO: Check that the LooseAndBLayer cut is the same as this
         ATLAS::applyLooseIDElectronSelectionR2(baselineElectrons);
 
+        // Muon candidates are reconstructed in the region |η| < 2.4 from muon spectrometer tracks matching ID tracks. Candidate muons must have pT > 4 GeV and pass the medium identification requirements defined in arXiv: 1603.05598 [hep-ex]. 
         for (HEPUtils::Particle* muon : event->muons())
         {
-          if (muon->pT()>5. && muon->abseta()<2.7) baselineMuons.push_back(muon);
+          if (muon->pT()>4. && muon->abseta()<2.4) baselineMuons.push_back(muon);
         }
 
         // Apply muon efficiency
         ATLAS::applyMuonEff(baselineMuons);
 
-        // Missing: Apply "medium" muon ID criteria
+        // TODO Apply "medium" muon ID criteria
 
-        for (HEPUtils::Particle* tau : event->taus())
-        {
-          if (tau->pT()>20. && tau->abseta()<2.47) baselineTaus.push_back(tau);
-        }
-        // Since tau efficiencies are not applied as part of the BuckFast ATLAS sim we apply it here
-        ATLAS::applyTauEfficiencyR2(baselineTaus);
+        // TODO: transverse and longitudinal impact parameter cuts
 
+        // Only jet candidates with pT > 20 GeV and |η| < 2.8 are considered in the analysis
         for (HEPUtils::Jet* jet : event->jets())
         {
           if (jet->pT()>20. && jet->abseta()<2.8) baselineJets.push_back(jet);
         }
-        // Missing: Some additional requirements for jets with pT < 60 and abseta < 2.4 (see paper)
+        // TODO: Additional requirements for jets
 
-
+        // TODO: Something about b-jets
 
         // Overlap removal
-        // 1) Remove taus within DeltaR = 0.2 of an electron or muon
-        ParticleOverlapRemoval(baselineTaus, baselineElectrons, 0.2);
-        ParticleOverlapRemoval(baselineTaus, baselineMuons, 0.2);
 
-        // 2) Missing: Remove electron sharing an ID track with a muon
-
-        // 3) Remove jets within DeltaR = 0.2 of electron
+        // 1) Remove jets within DeltaR = 0.2 of electron
+        // TODO: only jets with pT > 200 GeV
+        // TODO: remove electron if b-taggin effeciciency > 85%
         JetLeptonOverlapRemoval(baselineJets, baselineElectrons, 0.2);
 
-        // 4) Remove electrons within DeltaR = 0.4 of a jet
+        // 2) Remove electrons within DeltaR = 0.4 of a jet
         LeptonJetOverlapRemoval(baselineElectrons, baselineJets, 0.4);
 
-        // 5) Missing: Remove jets with < 3 assocated tracks if a muon is
-        //    within DeltaR = 0.2 *or* if the muon is a track in the jet.
+        // 3) Remove jets within DeltaR = 0.2 of a muon
+        JetLeptonOverlapRemoval(baselineJets, baselineMuons, 0.2);
 
-        // 6) Remove muons within DeltaR = 0.4 of jet
+        // 4) Remove muons within DeltaR = 0.4 of jet
+        // TODO: Not quite 0.4 but min(0.4, 0.04 + pT(µ)/10 GeV)
+        // TODO: Remove the jet instead if the jet has fewer than 3 associated tracks
         LeptonJetOverlapRemoval(baselineMuons, baselineJets, 0.4);
 
-        // 7) Remove jets within DeltaR = 0.4 of a "medium" tau
-        JetLeptonOverlapRemoval(baselineJets, baselineTaus, 0.4);
-
-
-        // Suppress low-mass particle decays
-        vector<HEPUtils::Particle*> baselineLeptons;
-        baselineLeptons = baselineElectrons;
-        baselineLeptons.insert(baselineLeptons.end(), baselineMuons.begin(), baselineMuons.end());
-        // - Remove low-mass OS pairs
-        removeOSPairsInMassRange(baselineElectrons, baselineLeptons, 0.0, 4.0);
-        removeOSPairsInMassRange(baselineMuons, baselineLeptons, 0.0, 4.0);
-        // - Remove SFOS pairs in the mass range (8.4, 10.4) GeV
-        removeOSPairsInMassRange(baselineElectrons, baselineElectrons, 8.4, 10.4);
-        removeOSPairsInMassRange(baselineMuons, baselineMuons, 8.4, 10.4);
+        // 5) Remove electron candidates sharing and ID track with a muon candidate
+        // TODO: Missing
 
 
         // Signal objects
         vector<HEPUtils::Jet*> signalJets = baselineJets;
         vector<HEPUtils::Particle*> signalElectrons = baselineElectrons;
-        vector<HEPUtils::Particle*> signalMuons = baselineMuons;
-        vector<HEPUtils::Particle*> signalTaus = baselineTaus;
+        vector<HEPUtils::Particle*> signalMuons;
         vector<HEPUtils::Particle*> signalLeptons;
+
+         // TODO: Signal electrons must satisfy the “medium” identification requirement as defined in arXiv: 1902.04655 [hep-ex]
+
+        // Signal muons must have pT > 5 GeV.
+        for (HEPUtils::Particle* signalMuon : baselineMuons)
+        {
+          if (signalMuon.pT() > 5.) signalMuons.push_back(signalMuon);
+        }
+         
+        // TODO: isolation criteria for signal leptons (see paper)
+
+        // TODO: Check that nothing to be done for corrections between MC and signal
+
+        // TODO: MET already defined
+ 
+        // Fill signal leptons
         signalLeptons = signalElectrons;
         signalLeptons.insert(signalLeptons.end(), signalMuons.begin(), signalMuons.end());
-
-        // Missing: pT-dependent isolation criteria for signal leptons (see paper)
 
         // Sort by pT
         sort(signalJets.begin(), signalJets.end(), compareJetPt);
         sort(signalLeptons.begin(), signalLeptons.end(), comparePt);
 
-        // Count signal leptons and jets
-        // size_t nSignalElectrons = signalElectrons.size();
-        // size_t nSignalMuons = signalMuons.size();
-        size_t nSignalTaus = signalTaus.size();
-        size_t nSignalLeptons = signalLeptons.size();
-        // size_t nSignalJets = signalJets.size();
+        // Trigger requirements are
+        // - >=3 signal leptons
+        // - >=1 SF-OS pair
+        // - leading lepton pT > 40 GeV
+        // - subleading lepton pT > 20 GeV
+        // - Zlike, |mll - mZ| < 15 GeV
+        bool trigger = false;
 
-        // Get OS and SFOS pairs
+        // Count signal leptons and jets
+        size_t nSignalLeptons = signalLeptons.size();
+
+        // Get SFOS pairs
         vector<vector<HEPUtils::Particle*>> SFOSpairs = getSFOSpairs(signalLeptons);
-        vector<vector<HEPUtils::Particle*>> OSpairs = getOSpairs(signalLeptons);
 
         // Z requirements
         vector<double> SFOSpair_masses;
@@ -301,165 +283,55 @@ namespace Gambit
         }
         std::sort(SFOSpair_masses.begin(), SFOSpair_masses.end(), std::greater<double>());
 
-        bool Z1 = false;
-        bool Z2 = false;
         bool Zlike = false;
+        double mZ = 91.2;
         for(double m : SFOSpair_masses)
         {
-          if (!Z1 && (m > 81.2) && (m < 101.2))
-          {
-            Z1 = true;
-          }
-          else if (Z1 && (m > 61.2) && (m < 101.2))
-          {
-            Z2 = true;
-          }
+          if (abs(m - mZ) < 15)
+            Zlike = true;
         }
-        if (Z1) Zlike = true;
-        // Missing: Also check Z-like combinations of SFOS+L and SFOS+SFOS (see paper)
+
+        // Combine all trigger cuts
+        trigger = nSignalLeptons >= 3 && SFOSpairs.size() >= 1 && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20. && Zlike;     
 
 
         // Effective mass (met + pT of all signal leptons + pT of all jets with pT>40 GeV)
-        double meff = met;
-        for (HEPUtils::Particle* l : signalLeptons)
-        {
-          meff += l->pT();
-        }
-        for (HEPUtils::Jet* jet : signalJets)
-        {
-          if(jet->pT()>40.) meff += jet->pT();
-        }
+//        double meff = met;
+//        for (HEPUtils::Particle* l : signalLeptons)
+//        {
+//          meff += l->pT();
+//        }
+//        for (HEPUtils::Jet* jet : signalJets)
+//        {
+//          if(jet->pT()>40.) meff += jet->pT();
+//        }
 
 
         // Signal Regions
 
-        // --- 4L0T ---
+        // Requirement                      SR1A     SR1B    SR2A    SR2B
+        // ---------------------------------------------------------------
+        // Third leading lepton pT           >20      >20     <20     <60   // done
+        // njets (pT > 30 GeV)               >=4      >=5     >=3     >=3   // done
+        // nb-tagged jets (pT > 30 GeV)      >=1      >=1      -      >=1   // TODO
+        // Leading jet pT                     -        -     >150      -    // TODO
+        // Leading b-tagged jet pT            -      >100      -       -    // TODO
+        // MET                              >250     >150    >200    >350   // TODO
+        // pTll                               -      >150     <50    >150   // TODO
+        // mT23l                            >100       -       -       -    // TODO
 
-        // SR0A
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.) _numSR["SR0A"]++;
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0A ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  meff = " << meff << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
+        // SR1A
+        if (trigger && signalLeptons.at(2)->pT() > 20. && signalJets.at(3) > 30.) _numSR["SR1A"]++;
 
-        //   _numSR["SR0A"]++;
-        // }
+        // SR1B
+        if (trigger && signalLeptons.at(2)->pT() > 20. && signalJets.at(4) > 30.) _numSR["SR1B"]++;
 
-        // SR0B
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.) _numSR["SR0B"]++;
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0B ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  meff = " << meff << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
+        // SR2A
+        if (trigger && signalLeptons.at(2)->pT() < 20. && signalJets.at(2) > 30.) _numSR["SR2A"]++;
 
-        //   _numSR["SR0B"]++;
-        // }
+        // SR2B
+        if (trigger && signalLeptons.at(2)->pT() < 60. && signalJets.at(2) > 30.) _numSR["SR2B"]++;
 
-        // SR0C
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _numSR["SR0C"]++;
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0C ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  met = " << met << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
-
-        //   _numSR["SR0C"]++;
-        // }
-
-        // SR0D
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _numSR["SR0D"]++;
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0D ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  met = " << met << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
-
-        //   _numSR["SR0D"]++;
-        // }
-
-        // Missing: signal regions SR1 (3L1T) and SR2 (2L2T)
-
-        #ifdef CHECK_CUTFLOW
-          cutFlowVector_str[0] = "Initial";
-          cutFlowVector_str[1] = "Generator filter";
-          cutFlowVector_str[2] = "Trigger";
-          cutFlowVector_str[3] = "Event cleaning";
-          cutFlowVector_str[4] = "N_e_mu >= 1";
-          cutFlowVector_str[5] = "N_e_mu >= 2";
-          cutFlowVector_str[6] = "N_e_mu >= 3";
-          cutFlowVector_str[7] = "N_e_mu >= 4";
-          cutFlowVector_str[8] = "ZZ selection";
-          cutFlowVector_str[9] = "ETmiss > 50 (SRC)";
-          cutFlowVector_str[10] = "ETmiss > 100 (SRD)";
-
-          cutFlowVectorATLAS_400_0[0] = 3203.45;
-          cutFlowVectorATLAS_400_0[1] = 36.34;
-          cutFlowVectorATLAS_400_0[2] = 28.77;
-          cutFlowVectorATLAS_400_0[3] = 27.64;
-          cutFlowVectorATLAS_400_0[4] = 26.14;
-          cutFlowVectorATLAS_400_0[5] = 23.34;
-          cutFlowVectorATLAS_400_0[6] = 14.19;
-          cutFlowVectorATLAS_400_0[7] = 7.59;
-          cutFlowVectorATLAS_400_0[8] = 5.71;
-          cutFlowVectorATLAS_400_0[9] = 5.44;
-          cutFlowVectorATLAS_400_0[10] = 4.84;
-
-          for (size_t j=0;j<NCUTS;j++)
-          {
-            if(
-              (j==0) ||
-
-              (j==1 && generator_filter) ||
-
-              (j==2 && generator_filter && trigger) ||
-
-              (j==3 && generator_filter && trigger && event_cleaning) ||
-
-              (j==4 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 1) ||
-
-              (j==5 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 2) ||
-
-              (j==6 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 3) ||
-
-              (j==7 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4) ||
-
-              (j==8 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4 && Z1 && Z2) ||
-
-              (j==9 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) ||
-
-              (j==10 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
-
-              )
-
-            cutFlowVector[j]++;
-          }
-        #endif
       }
 
       /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
@@ -467,14 +339,6 @@ namespace Gambit
       {
         const Analysis_ATLAS_13TeV_4LEP_36invfb* specificOther
                 = dynamic_cast<const Analysis_ATLAS_13TeV_4LEP_36invfb*>(other);
-
-        #ifdef CHECK_CUTFLOW
-          // if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
-          for (size_t j = 0; j < NCUTS; j++) {
-            cutFlowVector[j] += specificOther->cutFlowVector[j];
-            cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
-          }
-        #endif
 
         for (auto& el : _numSR)
         {
@@ -484,38 +348,23 @@ namespace Gambit
       }
 
       // This function can be overridden by the derived SR-specific classes
-      virtual void collect_results() {
+      virtual void collect_results()
+      {
 
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR0A", 13., {_numSR["SR0A"], 0.}, {10.2, 2.1}));
-        add_result(SignalRegionData("SR0B",  2., {_numSR["SR0B"], 0.}, {1.31, 0.24}));
-        add_result(SignalRegionData("SR0C", 47., {_numSR["SR0C"], 0.}, {37., 9.}));
-        add_result(SignalRegionData("SR0D", 10., {_numSR["SR0D"], 0.}, {4.1, 0.7}));
+        // TODO: Make sure background events and uncertainties are correct
+        add_result(SignalRegionData("SR1A", 3., {_numSR["SR1A"], 0.}, {5.4, 0.7}));
+        add_result(SignalRegionData("SR1B", 14., {_numSR["SR1B"], 0.}, {12.8, 1.6}));
+        add_result(SignalRegionData("SR2A", 3., {_numSR["SR2A"], 0.}, {5.7, 1.7}));
+        add_result(SignalRegionData("SR2B", 6., {_numSR["SR2B"], 0.}, {5.4, 0.8}));
 
 
-        #ifdef CHECK_CUTFLOW
-          vector<double> cutFlowVector_scaled;
-          for (size_t i=0 ; i < cutFlowVector.size() ; i++)
-          {
-            double scale_factor = cutFlowVectorATLAS_400_0[0]/cutFlowVector[0];
-            cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
-          }
-          cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled) " << endl;
-          cout << "DEBUG CUTFLOW:   -------------------------------------" << endl;
-
-          for (size_t j = 0; j < NCUTS; j++) {
-            cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_400_0[j] << "\t\t"
-                                        << cutFlowVector[j] << "\t\t"
-                                        << cutFlowVector_scaled[j] << "\t\t"
-                                        << cutFlowVector_str[j]
-                                        << endl;
-          }
-        #endif
       }
 
 
     protected:
-      void analysis_specific_reset() {
+      void analysis_specific_reset()
+      {
         for (auto& el : _numSR) { el.second = 0.;}
         #ifdef CHECK_CUTFLOW
           std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
@@ -525,7 +374,7 @@ namespace Gambit
     };
 
     // Factory fn
-    DEFINE_ANALYSIS_FACTORY(ATLAS_13TeV_4LEP_36invfb)
+    DEFINE_ANALYSIS_FACTORY(ATLAS_13TeV_2OSLEP_Z_139invfb)
 
 
   }
