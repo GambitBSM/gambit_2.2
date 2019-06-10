@@ -23,6 +23,7 @@
 #include <cstring>
 #include <chrono>  // chrono::system_clock
 #include <ctime>   // localtime
+#include <cctype>  // toupper
 #include <sstream> // stringstream
 #include <string>  // string
 
@@ -183,6 +184,14 @@ namespace Gambit
         //return not file.fail();
         struct stat buffer;
         return (stat(filename.c_str(), &buffer) == 0);
+    }
+
+    /// Convert a string to upper case
+    std::string toUpper(std::string& str)
+    {
+        // Will use the C STL library function for this, for now at least. ASCII only, won't work for unicode or anything fancy. 
+        for (auto & c: str) c = std::toupper(c);
+        return str;
     }
 
     /// Return a vector of strings listing the contents of a directory (POSIX)

@@ -60,26 +60,6 @@ namespace Gambit
     return output;
   }
 
-  /// Get an entry with two indices from an SLHAea object as a double
-  double SLHAea_get(const SLHAstruct& slha, const str& block, const int index1, const int index2)
-  {
-    double output = 0.0;
-    try
-    {
-      output = SLHAea::to<double>(slha.at(block).at(index1,index2).at(2));
-    }
-    catch (const std::out_of_range& e)
-    {
-      std::ostringstream errmsg;
-      errmsg << "Error accessing data with indices [" << index1 << ", "<<index2<<"] of block " << block
-             << ". Please check that the SLHAea object was properly filled." << std::endl
-             << "(Received out_of_range error from SLHAea class with message: " << e.what() << ")";
-      utils_error().raise(LOCAL_INFO,errmsg.str());
-    }
-    return output;
-  }
-
-
   /// Get an entry from an SLHAea object as a double; raise a warning and use a default value if the entry is missing
   double SLHAea_get(const SLHAstruct& slha, const str& block, const int index, const double defvalue)
   {

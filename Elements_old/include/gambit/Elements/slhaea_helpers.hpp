@@ -45,8 +45,6 @@ namespace Gambit
 
   /// Get an entry from an SLHAea object as a double, with some error checking
   double SLHAea_get(const SLHAstruct& slha, const str& block, const int index);
-  /// Get an entry with two indices from an SLHAea object as a double
-  double SLHAea_get(const SLHAstruct& slha, const str& block, const int index1, const int index2);
 
   /// Get an entry from an SLHAea object as a double; raise a warning and use a default value if the entry is missing
   double SLHAea_get(const SLHAstruct& slha, const str& block, const int index, const double defvalue);

@@ -28,6 +28,8 @@ namespace Gambit {
   {
      setName("MSSM");
 
+     addAllFrom(SM()); 
+
      // shape prototypes
      std::vector<int> scalar = initVector(1);   // i.e. get(Par::Tag, "name")
      std::vector<int> v2     = initVector(2);   // i.e. get(Par::Tag, "name", i)
@@ -57,8 +59,8 @@ namespace Gambit {
      addParameter(Par::mass1, "vu", scalar);
      addParameter(Par::mass1, "vd", scalar);
 
-     addParameter(Par::mass1, "TYd", m3x3);
-     addParameter(Par::mass1, "TYe", m3x3);
+     addParameter(Par::mass1, "TYd", m3x3, "TD"); // for example
+     addParameter(Par::mass1, "TYe", m3x3, "TE");
      addParameter(Par::mass1, "TYu", m3x3);
      addParameter(Par::mass1, "ad" , m3x3);
      addParameter(Par::mass1, "ae" , m3x3);
@@ -82,7 +84,7 @@ namespace Gambit {
 
      addParameter(Par::Pole_Mass, "~g", scalar);
 
-     addParameter(Par::Pole_Mass, "~d",    v6);
+     addParameter(Par::Pole_Mass, "~d",    v6, "MASS", 5);
      addParameter(Par::Pole_Mass, "~u",    v6);
      addParameter(Par::Pole_Mass, "~e-",   v6);
      addParameter(Par::Pole_Mass, "~nu",   v3);
@@ -92,6 +94,8 @@ namespace Gambit {
      addParameter(Par::Pole_Mass, "A0", scalar);
      addParameter(Par::Pole_Mass, "H+", scalar);
      addParameter(Par::Pole_Mass, "W+", scalar);
+
+     addTheoryErrors(Par::Pole_Mass, "DMASS");
 
      addParameter(Par::Pole_Mixing, "~d",    m6x6);
      addParameter(Par::Pole_Mixing, "~u",    m6x6);

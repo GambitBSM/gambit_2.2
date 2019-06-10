@@ -89,6 +89,9 @@ namespace Gambit
     /// Copy a str to a character array, stripping the null termination character.
     EXPORT_SYMBOLS void strcpy2f(char*, int, str);
 
+    /// Convert a string to upper case
+    EXPORT_SYMBOLS std::string toUpper(std::string&);
+
     /// Checks whether `str' ends with `suffix'
     EXPORT_SYMBOLS bool endsWith(const std::string& str, const std::string& suffix);
 

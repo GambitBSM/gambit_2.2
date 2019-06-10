@@ -52,13 +52,13 @@ namespace Gambit {
        std::string      blockname()  const { return my_blockname; }
        int              blockindex() const { return my_blockname_index; }
    };
-   
+
    /// Base class for defining the required contents of a SubSpectrum object
    class SpectrumContents
    {
       private:
         /// Type to use for parameter map lookup keys
-        typedef std::tuple<Par::Tags, std::string, std::vector<int>> parameter_key;
+        typedef std::pair<Par::Tags, std::string> parameter_key;
 
         /// Vector defining what parameters a wrapper must contain
         std::map<parameter_key,SpectrumParameter> parameters;
@@ -72,6 +72,18 @@ namespace Gambit {
 
       public:
         std::string getName() const {return my_name;}
+
+        /// Function to check if a parameter definition exists in this object, identified by tag and string name
+        bool has_parameter(const Par::Tags tag, const std::string& name) const;
+
+        /// Function to check if a parameter definition exists in this object, this time also checking the index shape
+        bool has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int> indices);
+
+        /// Function to get definition information for one parameter, identified by tag and string name
+        SpectrumParameter get_parameter(const Par::Tags tag, const std::string& name) const;
+
+        /// Function to get indices in SLHAea block in which requested index item can be found
+        std::vector<int> get_SLHA_indices(const Par::Tags tag, const std::string& name, std::vector<int> indices) const;
 
         /// Function to retreive all parameters
         std::vector<SpectrumParameter> all_parameters() const;
@@ -88,8 +100,6 @@ namespace Gambit {
         /// Function to verify that a SubSpectrum wrapper contains everything that this class says it should
         void verify_contents(const Spectrum& spec) const;
 
-        /// Function to retrieve SLHA block and indices at which the specified parameter should be found in a Spectrum object
-        std::pair<std::string,std::vector<int>> get_slha_location const;
    };
 
 }

@@ -44,8 +44,8 @@ namespace Gambit {
      addParameter(Par::Pole_Mass, "Z0"   , scalar);
      addParameter(Par::Pole_Mass, "W+"   , scalar);
 
-     addParameter(Par::Pole_Mass, "u_3" , scalar);
-     addParameter(Par::Pole_Mass, "d_3" , scalar);
+     addParameter(Par::Pole_Mass, "u_3" , scalar, "SMINPUTS", 6);
+     addParameter(Par::Pole_Mass, "d_3" , scalar, "SMINPUTS", 5);
 
      addParameter(Par::Pole_Mass, "e-", v3);
      addParameter(Par::Pole_Mass, "nu", v3);
@@ -62,4 +62,4 @@ namespace Gambit {
 
   }
 
-}
+}gt

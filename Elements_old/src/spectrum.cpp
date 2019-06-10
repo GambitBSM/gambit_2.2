@@ -1,10 +1,19 @@
-///  GAMBIT: Global and Modular BSM Inference Tool
-///  *********************************************
+//   GAMBIT: Global and Modular BSM Inference Tool
+//   *********************************************
+///  \file
 ///
-///  Object for carrying around particle spectrum
-///  data.
-///  Primarily an interface to SLHAea objects,
-///  carrying SLHA style information.
+///  This class is used to deliver both information defined in the Standard
+///  Model (or potentially just QED X QCD) as a low-energy effective theory (as
+///  opposed to correspending information defined in a high-energy model) as well as a
+///  corresponding high energy theory. Parameters defined in the low-energy model are
+///  often used as input to a physics calculators. In addition, parameters used
+///  to define the Standard Model, in SLHA2 format, are provided in the
+///  SMINPUTS data member.
+///
+///  Access to the pole masses of either SubSpectrum is provided by the
+///  "get_Pole_Mass" function, which will search both subspectra for a match.
+///  For running parameters, one should access them via the getters of "LE" or
+///  "HE" subspectra.
 ///
 ///  *********************************************
 ///
@@ -12,14 +21,21 @@
 ///  <!-- add name and date if you modify -->
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@imperial.ac.uk)
-///  \date 2019 June
+///          (benjamin.farmer@fysik.su.se)
+///  \date 2015 Mar
+///
+///  \author Pat Scott
+///          (p.scott@imperial.ac.uk)
+///  \date 2015 May, 2016 Nov
+///
+///  \author Abram Krislock
+///          (a.m.b.krislock@fys.uio.no)
+///  \date 2016 Feb
 ///
 ///  *********************************************
-///
-///  \file
-///
+
 #include "gambit/Elements/spectrum.hpp"
+#include "gambit/Models/SimpleSpectra/SMSimpleSpec.hpp" // For auto-creation of simple SM low-energy SubSpectrum
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/file_lock.hpp"
 
@@ -30,18 +46,115 @@ namespace Gambit
 
    /// @{ Spectrum class member function definitions
 
+   /// Check if object has been fully initialised
+   void Spectrum::check_init() const
+   {
+     if(not initialised) utils_error().raise(LOCAL_INFO,"Access or deepcopy of empty Spectrum object attempted!");
+   }
+
+   /// Swap resources of two Spectrum objects
+   /// Note: Not a member function! This is an external function which is a friend of the Spectrum class.
+   void swap(Spectrum& first, Spectrum& second)
+   {
+       using std::swap; // enable ADL
+       swap(first.LE, second.LE);
+       swap(first.HE, second.HE);
+       swap(first.LE_new, second.LE_new);
+       swap(first.HE_new, second.HE_new);
+       swap(first.SMINPUTS, second.SMINPUTS);
+       swap(first.input_Param, second.input_Param);
+       swap(first.mass_cuts, second.mass_cuts);
+       swap(first.mass_ratio_cuts, second.mass_ratio_cuts);
+       swap(first.initialised, second.initialised);
+   }
+
    /// @{ Constructors/destructors
 
    /// Default constructor
-   Spectrum::Spectrum() : mySLHAea(), myContents() {}
+   Spectrum::Spectrum() : input_Param(NULL), mass_cuts(NULL), mass_ratio_cuts(NULL), initialised(false) {}
 
-   /// Construct from SLHAea object (also specifying what SpectrumContents should apply, which defines how to interpret the SLHAea blocks)
-   Spectrum(const SLHAstruct& slha, const SpectrumContents& contents)
-    : mySLHAea(slha)
-    , myContents(contents)
+   /// Construct new object, cloning the SubSpectrum objects supplied and taking possession of them.
+   Spectrum::Spectrum(const SubSpectrum& le, const SubSpectrum& he, const SMInputs& smi, const std::map<str, safe_ptr<double> >* params,
+    const mc_info& mci, const mr_info& mri)
+     : LE_new(le.clone())
+     , HE_new(he.clone())
+     , LE(LE_new.get())
+     , HE(HE_new.get())
+     , SMINPUTS(smi)
+     , input_Param(params)
+     , mass_cuts(&mci)
+     , mass_ratio_cuts(&mri)
+     , initialised(true)
+   { check_mass_cuts(); }
+
+   /// Construct new object, automatically creating an SMSimpleSpec as the LE subspectrum, and cloning the HE SubSpectrum object supplied and taking possession of it.
+   Spectrum::Spectrum(const SubSpectrum& he, const SMInputs& smi, const std::map<str, safe_ptr<double> >* params, const mc_info& mci, const mr_info& mri)
+     : LE_new(SMSimpleSpec(smi).clone())
+     , HE_new(he.clone())
+     , LE(LE_new.get())
+     , HE(HE_new.get())
+     , SMINPUTS(smi)
+     , input_Param(params)
+     , mass_cuts(&mci)
+     , mass_ratio_cuts(&mri)
+     , initialised(true)
+   { check_mass_cuts(); }
+
+   /// Construct new object, wrapping existing SubSpectrum objects
+   ///  Make sure the original objects don't get deleted before this wrapper does!
+   Spectrum::Spectrum(SubSpectrum* const le, SubSpectrum* const he, const SMInputs& smi, const std::map<str, safe_ptr<double> >* params,
+    const mc_info& mci, const mr_info& mri)
+     : LE(le)
+     , HE(he)
+     , SMINPUTS(smi)
+     , input_Param(params)
+     , mass_cuts(&mci)
+     , mass_ratio_cuts(&mri)
+     , initialised(true)
+   { check_mass_cuts(); }
+
+   /// Copy constructor, clones SubSpectrum objects.
+   /// Make a non-const copy in order to use e.g. RunBothToScale function.
+   Spectrum::Spectrum(const Spectrum& other)
+     : LE_new(other.clone_LE())
+     , HE_new(other.clone_HE())
+     , LE(LE_new.get())
+     , HE(HE_new.get())
+     , SMINPUTS(other.SMINPUTS)
+     , input_Param(other.input_Param)
+     , mass_cuts(other.mass_cuts)
+     , mass_ratio_cuts(other.mass_ratio_cuts)
+     , initialised(other.initialised)
+   {}
+
+   /// Copy-assignment
+   /// Using "copy-and-swap" idiom
+   Spectrum& Spectrum::operator=(const Spectrum& other)
    {
+      Spectrum temp(other);
+      swap(*this, temp);
+      return *this;
    }
+
+   /// Move constructor
+   Spectrum::Spectrum(Spectrum&& other)
+   {
+      swap(*this, other);
+   }
+
    /// @}
+
+   /// Overloads for PDG types
+   /// These just convert the types and then call the properly defined functions
+   //DEFINE_PDG_GETTERS(Spectrum,Pole_Mass) //TODO: redo
+
+   /// Linked running
+   /// Only possible with non-const object
+   void Spectrum::RunBothToScale(double scale)
+   {
+     LE->RunToScale(scale);
+     HE->RunToScale(scale);
+   }
 
    /// Helper function for checking if a particle or ratio has been requested as an absolute value
    bool is_abs(str& s)
@@ -103,236 +216,78 @@ namespace Gambit
          if (mratio < low or mratio > high) invalid_point().raise(p1 + "/" + p2 +" failed requested mass ratio cut.");
        }
      }
-   }
+     }
 
- 
-   /// Master checker function to see if a parameter request matches the spectrum contents
-   bool Spectrum::has(const Par::Tags partype, std::string& name, std::vector<int> indices, bool auto_check_antiparticle_name) const
+   /// Standard getters
+   /// Return references to internal data members. Make sure original Spectrum object doesn't
+   /// get destroyed before you finish using these or you will cause a segfault.
+   SubSpectrum& Spectrum::get_LE() {check_init(); return *LE;}
+   SubSpectrum& Spectrum::get_HE() {check_init(); return *HE;}
+   SMInputs&    Spectrum::get_SMInputs() {check_init(); return SMINPUTS;}
+   // const versions
+   const SubSpectrum& Spectrum::get_LE()       const {check_init(); return *LE;}
+   const SubSpectrum& Spectrum::get_HE()       const {check_init(); return *HE;}
+   const SMInputs&    Spectrum::get_SMInputs() const {check_init(); return SMINPUTS;}
+
+   /// Clone getters
+   /// Note: If you want to clone the whole Spectrum object, just use copy constructor, not these.
+   std::unique_ptr<SubSpectrum> Spectrum::clone_LE() const {check_init(); return LE->clone();}
+   std::unique_ptr<SubSpectrum> Spectrum::clone_HE() const {check_init(); return HE->clone();}
+
+   /// Pole mass getters/checkers
+   /// "Shortcut" getters/checkers to access pole masses in hosted SubSpectrum objects.
+   /// HE object given higher priority; if no match found, LE object will be
+   /// checked. If still no match, error is thrown.
+   /// TODO: These currently work for anything! Need to restrict them to only allow
+   /// access to pole masses and their estimated uncertainties
+   /// Also need to change error messages etc, plus the PDG overloads
+   bool Spectrum::has(const Par::Tags partype, const std::string& mass) const
    {
-      bool found(true);
-      // If no indices provided, first try to decompose 'name' into str+index form using the particle database
-      if(indices.size()==0 and PDB.has_particle(name) and PDB.has_short_name(name))
-      {
-         std::pair<str, int> shortpair = PDB.short_name_pair(name);
-         name = shortpair.first;
-         indices = std::vector<int>(1).push_back(shortpair.second);
-      }
-
-      if(myContents.has_parameter(partype,name,indices))
-      {
-         // Spectrum should have this type and name, and indices are within bounds (if any indices)
-         // Now check if the entry actually exists in the wrapped
-         // SLHAea object.
-         // This will be an error if it fails, because it is *supposed* to exist.
-
-         std::pair<std::string,std::vector<int>> slha_loc = myContents.get_SLHA_indices(partype,name,indices);
-         std::string      block        = slha_loc.first;
-         std::vector<int> SLHA_indices = slha_loc.second;
-         // First check if the required block even exists
-         if(SLHAea_block_exists(mySLHAea, block)
-         {
-            bool in_slhaea(false);
-            switch(SLHA_indices.size())
-            {
-               case 0:
-               {
-                  // I think there are some weird SLHA cases of things with no indices
-                  // Will ignore them for now. Raise error to get user to ask for this feature
-                  std::ostringstream errmsg;
-                  errmsg<<"Error while checking for existence of Spectrum entry "<<Par::toString(partype)<<" '"<<name<<"'! It seems like this parameter has been defined as being associated with an SLHA block but no index. This is allowed by SLHA, but Spectrum objects are not currently compatible with them. Please file a bug report to request this feature if you need it.";
-                  utils_error().raise(LOCAL_INFO,errmsg.str());
-                  break;
-               }
-               case 1:
-               { 
-                  if(SLHAea_check_block(mySLHAea, block, SLHA_indices.at(0))) in_slhaea = true;
-                  break;
-               }
-               case 2:
-               {
-                  if(SLHAea_check_block(mySLHAea, block, SLHA_indices.at(0), SLHA_indices.at(1))) in_slhaea = true;
-                  break;
-               }
-            }
-
-            if(in_slhaea)
-            {
-               found = true;
-            }
-            else
-            {
-               // Required entry doesn't exist!
-               std::ostringstream errmsg;
-               errmsg<<"Error while checking for existence of Spectrum entry "<<Par::toString(partype)<<" '"<<name<<"'! A parameter with this tag, name, and indices should exist in this spectrum, however no entry was found in the wrapped SLHAea object at the expected location (BLOCK "<<block<<", indices: "<<SLHA_indices<<")";
-               utils_error().raise(LOCAL_INFO,errmsg.str());
-            }
-         }
-         else
-         {
-            // Required block doesn't even exist! So parameter definitely doesn't.
-            // But this block *should* exist according to the contents, so this is
-            // an error.
-            std::ostringstream errmsg;
-            errmsg<<"Error while checking for existence of Spectrum entry "<<Par::toString(partype)<<" '"<<name<<"'! A parameter with this tag and name should exist in this spectrum, however the wrapped SLHAea object is missing the required block (BLOCK "<<par.block()<<")";
-            utils_error().raise(LOCAL_INFO,errmsg.str());
-         }
-      }
-      else if(auto_check_antiparticle_name)
-      {
-         // This parameter is not supposed to be in this spectrum object under this name.
-         // But info might be stored under antiparticle name instead, so check this if permitted by options
-         // (and disable further checking of antiparticles)
-         std::string antiparticle_name;
-         switch(indices.size())
-         {
-            case 0:
-            {
-               if(PDB.has_particle(name) and PDB.has_antiparticle(name))
-               {
-                  antiparticle_longname = PDB.get_antiparticle(name);
-                  found = has(partype, antiparticle_longname, indices, false);
-               }
-               break;
-            }
-            case 1:
-            {
-               int index = indices.at(0);
-               if(PDB.has_particle(name,index) and PDB.has_antiparticle(name,index))
-               {
-                  std::pair<str,int> antiparticle = PDB.get_antiparticle(name,index);
-                  found = has(partype, antiparticle.first, indices, false);
-               }
-               break;
-            }
-            default:
-            {
-               // Don't attempt this name conversion for higher index numbers. Doesn't really make sense
-               // for mixing matrices and so on.
-            }
-         }
-      }
-      else
-      {
-         found = false;
-      }
-      return found;
-   }
-
-   /// Master getter function to retrieve parameters from Spectrum object (digging them out of the wrapped SLHAea object)
-   double Spectrum::get(const Par::Tags partype, std::string& name, std::vector<int> indices) const
-   {
-      double entry;
-      // First check for existence, without allowing antiparticle name conversion
-      if(not has(partype,name,indices,false))
-      {
-         // Not found under normal name; now allow for antiparticle possibility
-         if(has(partype,name,indices,true))
-         {
-            std::string antiparticle_name;
-            switch(indices.size())
-            {
-               case 0:
-               {
-                  antiparticle_name = PDB.get_antiparticle(name);
-                  break;
-               }
-               case 1:
-               {
-                  int index = indices.at(0);
-                  std::pair<str,int> antiparticle = PDB.get_antiparticle(name,index);
-                  antiparticle_name = antiparticle.first;
-                  break;
-               }
-               default:
-               {
-                  std::ostringstream errmsg;
-                  errmsg<<"Error while checking for existence of Spectrum entry "<<Par::toString(partype)<<" '"<<name<<"'! This entry was identified as existing in the Spectrum under the antiparticle name, however retrieval of this entry failed due to an index shape mismatch. This is a bug in the Spectrum object interface, please report it."; 
-                  utils_error().raise(LOCAL_INFO,errmsg.str());
-               }
-            }
-            name = antiparticle_name;
-            // Double check that this conversion was done correctly
-            if(not has(partype,name,indices,false))
-            {
-               std::ostringstream errmsg;
-               errmsg<<"Error while checking for existence of Spectrum entry "<<Par::toString(partype)<<" '"<<name<<"'! This entry was identified as existing in the Spectrum under the antiparticle name, however the existence check failed when explicitly using the antiparticle name. This is a bug in the Spectrum object interface, please report it."; 
-               utils_error().raise(LOCAL_INFO,errmsg.str()); 
-            }
-         }
-      }
-
-      // Now entry has been confirmed to exist, can retrieve it.
-      // Should be safe to rely on the error checking that occurs in the 'has' function
-      std::pair<std::string,std::vector<int>> slha_loc = myContents.get_SLHA_indices(partype,name,indices);
-      std::string      block        = slha_loc.first;
-      std::vector<int> SLHA_indices = slha_loc.second;
-      switch(SLHA_indices.size())
-      {
-         case 0:
-         {
-            // I think there are some weird SLHA cases of things with no indices
-            // Will ignore them for now. Raise error to get user to ask for this feature
-            std::ostringstream errmsg;
-            errmsg<<"Error retrieving Spectrum entry "<<Par::toString(partype)<<" '"<<name<<"'! It seems like this parameter has been defined as being associated with an SLHA block but no index. This is allowed by SLHA, but Spectrum objects are not currently compatible with them. Please file a bug report to request this feature if you need it.";
-            utils_error().raise(LOCAL_INFO,errmsg.str());
-            break;
-         }
-         case 1:
-         {
-            entry = SLHAea_get(mySLHAea, block, SLHA_indices.at(0));
-            break;
-         }
-         case 2:
-         {
-            entry = SLHAea_get(mySLHAea, block, SLHA_indices.at(0), SLHA_indices.at(1));
-            break;
-         }
-      }
-      return entry;
-   }
-
-   /// @{ getters/checkers for spectrum parameters, with various numbers of indices
-   ///    All call the 'master' getter/checker functions in the end
-   bool Spectrum::has(const Par::Tags partype, const std::string& name) const
-   {
-      std::vector<int> no_indices();  
-      return has(partype,name,no_indices);
+     return (HE->has(partype,mass) or LE->has(partype,mass));
    }
 
    double Spectrum::get(const Par::Tags partype, const std::string& mass) const
    {
-      std::vector<int> no_indices;  
-      return get(partype,name,no_indices);
+     double result(-1);
+     if( HE->has(partype,mass) )
+     { result = HE->get(partype,mass); }
+     else if( LE->has(partype,mass) )
+     { result = LE->get(partype,mass); }
+     else
+     {
+        std::ostringstream errmsg;
+        errmsg << "Error retrieving particle spectrum data!" << std::endl;
+        errmsg << "No pole mass with string reference '"<<mass<<"' could be found in either LE or HE SubSpectrum!" <<std::endl;
+        utils_error().raise(LOCAL_INFO,errmsg.str());
+     }
+     // In c++11 we could add the [[noreturn]] attribute utils_error.raise()
+     // to suppress the compiler warning about not returning anything (and enable
+     // extra optimisations), however it isn't implemented in gcc until version
+     // 4.8 (and we decided to support earlier versions).
+     return result;
    }
 
    bool Spectrum::has(const Par::Tags partype, const std::string& mass, const int index) const
    {
-      std::vector<int> one_index;
-      one_index.push_back(index);  
-      return has(partype,name,one_index);
+     return (HE->has(partype,mass,index) or LE->has(partype,mass,index));
    }
 
    double Spectrum::get(const Par::Tags partype, const std::string& mass, const int index) const
    {
-      std::vector<int> one_index;
-      one_index.push_back(index);  
-      return get(partype,name,one_index);
-   }
-
-   bool Spectrum::has(const Par::Tags partype, const std::string& mass, const int index1, const int index2) const
-   {
-      std::vector<int> two_indices;
-      two_indices.push_back(index1);
-      two_indices.push_back(index2);  
-      return has(partype,name,two_indices);
-   }
-
-   double Spectrum::get(const Par::Tags partype, const std::string& mass, const int index1, const int index2) const
-   {
-      std::vector<int> two_indices;
-      two_indices.push_back(index1);
-      two_indices.push_back(index2);  
-      return get(partype,name,two_indices);
+     double result(-1);
+     if( HE->has(partype,mass,index) )
+     { result = HE->get(partype,mass,index); }
+     else if( LE->has(partype,mass,index) )
+     { result = LE->get(partype,mass,index); }
+     else
+     {
+        std::ostringstream errmsg;
+        errmsg << "Error retrieving particle spectrum data!" << std::endl;
+        errmsg << "No pole mass with string reference '"<<mass<<"' and index '"<<index<<"' could be found in either LE or HE SubSpectrum!" <<std::endl;
+        utils_error().raise(LOCAL_INFO,errmsg.str());
+     }
+     // [[noreturn]]
+     return result;
    }
 
    /// @{ PDB getter/checker overloads
@@ -404,7 +359,7 @@ namespace Gambit
    {
       double result = get(partype, mass);
       if (Utils::isnan(result))
-         utils_error().raise(LOCAL_INFO,"Spectrum parameter is nan!!");
+         utils_error().raise(LOCAL_INFO,"SubSpectrum parameter is nan!!");
       return result;
    }
 
@@ -413,7 +368,7 @@ namespace Gambit
    {
       double result = get(partype, mass, index);
       if (Utils::isnan(result))
-         utils_error().raise(LOCAL_INFO,"Spectrum parameter is nan!!");
+         utils_error().raise(LOCAL_INFO,"SubSpectrum parameter is nan!!");
       return result;
    }
 
@@ -422,7 +377,7 @@ namespace Gambit
    {
       double result = get(partype, pdg_code, context);
       if (Utils::isnan(result))
-         utils_error().raise(LOCAL_INFO,"Spectrum parameter is nan!!");
+         utils_error().raise(LOCAL_INFO,"SubSpectrum parameter is nan!!");
       return result;
    }
 
@@ -431,7 +386,7 @@ namespace Gambit
    {
       double result = get(partype, pdgpr);
       if (Utils::isnan(result))
-         utils_error().raise(LOCAL_INFO,"Spectrum parameter is nan!!");
+         utils_error().raise(LOCAL_INFO,"SubSpectrum parameter is nan!!");
       return result;
    }
 
@@ -440,21 +395,23 @@ namespace Gambit
    {
       double result = get(partype, shortpr);
       if (Utils::isnan(result))
-         utils_error().raise(LOCAL_INFO,"Spectrum parameter is nan!!");
+         utils_error().raise(LOCAL_INFO,"SubSpectrum parameter is nan!!");
       return result;
    }
 
    /// @}
 
    /// SLHAea object getter
-   /// Retrieves wrapped SLHAea object. Converts from SLHA2 -> SLHA1 before returning if requested
+   /// First constructs an SLHAea object from the SMINPUTS object, then adds the info from
+   /// the LE subspectrum (if possible), followed by the HE subspectrum (if possible). Any duplicate
+   /// entries are overwritten at each step, so HE takes precendence over LE, and LE takes precedence
+   /// over SMINPUTS.
    SLHAstruct Spectrum::getSLHAea(int slha_version) const
    {
-      if(slha_version==1)
-      {
-         //Do conversion. Routine should be defined elsewhere, not as part of Spectrum object
-      }
-      return ;
+      SLHAstruct slha(SMINPUTS.getSLHAea());
+      LE->add_to_SLHAea(slha_version, slha);
+      HE->add_to_SLHAea(slha_version, slha);
+      return slha;
    }
 
    /// Output spectrum contents as an SLHA file, using getSLHAea.
