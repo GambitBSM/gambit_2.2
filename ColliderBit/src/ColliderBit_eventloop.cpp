@@ -34,9 +34,10 @@
 ///
 ///  *********************************************
 
+#include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+//#define COLLIDERBIT_DEBUG
 
 namespace Gambit
 {
@@ -141,7 +142,7 @@ namespace Gambit
         // OMP parallelized sections begin here
         //
         #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "operateLHCLoop: Will execute START_SUBPROCESS";
+        cout << debug_prefix() << "operateLHCLoop: Will execute START_SUBPROCESS" << endl;
         #endif
         int currentEvent = 0;
         #pragma omp parallel
@@ -176,8 +177,11 @@ namespace Gambit
               try
               {
                 Loop::executeIteration(currentEvent);
-                currentEvent++;
-                eventCountBetweenConvergenceChecks++;
+                #pragma omp critical
+                {
+                  currentEvent++;
+                  eventCountBetweenConvergenceChecks++;
+                }
               }
               catch (std::domain_error& e)
               {

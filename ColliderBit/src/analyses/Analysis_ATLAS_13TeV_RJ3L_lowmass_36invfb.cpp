@@ -654,7 +654,7 @@ namespace Gambit {
         const std::vector<double> c = {0.77}; // set b-tag efficiency to 77%
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
         for (HEPUtils::Jet* jet : event->jets()) {
-          bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+          bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if (jet->pT() > 20. && fabs(jet->eta()) < 2.4) {
             if(jet->btag() && hasTag && fabs(jet->eta()) < 2.4 && jet->pT() > 20.){
               bJets.push_back(jet);

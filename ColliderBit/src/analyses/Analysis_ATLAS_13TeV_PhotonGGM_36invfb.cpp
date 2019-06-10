@@ -212,12 +212,12 @@ namespace Gambit {
         const std::vector<double> c = {0.77};
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
         for (HEPUtils::Jet* jet : jets25) {
-          bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+          bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(jet->btag() && hasTag) bJets25.push_back(jet);
         }
 
         for (HEPUtils::Jet* jet : jets28) {
-          bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+          bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(jet->btag() && hasTag) bJets28.push_back(jet);
         }
 

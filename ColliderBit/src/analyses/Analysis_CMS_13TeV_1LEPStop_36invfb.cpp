@@ -198,12 +198,12 @@ namespace Gambit {
                     bJets.push_back(baselineJets.at(ii));
                 else
                     nobJets.push_back(baselineJets.at(ii));
-                bool hasTag=has_tag(_eff2d_1, baselineJets.at(ii)->eta(), baselineJets.at(ii)->pT());
+                bool hasTag=has_tag(_eff2d_1, baselineJets.at(ii)->abseta(), baselineJets.at(ii)->pT());
                 if(baselineJets.at(ii)->btag() && hasTag ) {
                     mediumbJets.push_back(baselineJets.at(ii));
                     if (ii==0) leadjet_nob =false;
                 }
-                hasTag=has_tag(_eff2d_2, baselineJets.at(ii)->eta(), baselineJets.at(ii)->pT());
+                hasTag=has_tag(_eff2d_2, baselineJets.at(ii)->abseta(), baselineJets.at(ii)->pT());
                 if(baselineJets.at(ii)->btag() && hasTag )
                     N_tight_bJets++;
             }

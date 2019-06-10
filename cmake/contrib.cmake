@@ -113,6 +113,9 @@ if(NOT EXCLUDE_RESTFRAMES)
   add_dependencies(nuke-all nuke-restframes)
 endif()
 
+#contrib/LHEF
+set(LHEF_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/contrib/LHEF")
+include_directories("${LHEF_INCLUDE_DIR}")
 
 #contrib/fjcore-3.2.0
 set(fjcore_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/contrib/fjcore-3.2.0")

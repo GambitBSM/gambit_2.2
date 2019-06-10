@@ -456,7 +456,7 @@ namespace Gambit {
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
         for (HEPUtils::Jet* jet : event->jets())
         {
-          bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+          bool hasTag=has_tag(_eff2d, fabs(jet->eta()), jet->pT());
           if (jet->pT() > 20. && fabs(jet->eta()) < 4.9)
           {
             if(jet->btag() && hasTag && fabs(jet->eta()) < 2.5 && jet->pT() > 20.)

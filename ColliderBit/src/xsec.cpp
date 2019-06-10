@@ -52,7 +52,7 @@ namespace Gambit
     void xsec::log_event() { _ntot += 1; }
 
     /// Return the total number of events seen so far.
-    double xsec::num_events() const { return _ntot; }
+    long long xsec::num_events() const { return _ntot; }
 
     /// Return the cross-section (in pb).
     double xsec::operator()() const { return _xsec; }
@@ -66,11 +66,14 @@ namespace Gambit
     /// Return the cross-section per event seen (in pb).
     double xsec::xsec_per_event() const { return (_xsec >= 0 && _ntot > 0) ? _xsec/_ntot : 0; }
 
+    /// Set the total number of events seen so far.
+    void xsec::set_num_events(long long n) { _ntot = n; }
+
     /// Set the cross-section and its error (in pb).
     void xsec::set_xsec(double xs, double xserr) { _xsec = xs; _xsecerr = xserr; }
 
     /// Average cross-sections and combine errors.
-    void xsec::average_xsec(double other_xsec, double other_xsecerr, int other_ntot)
+    void xsec::average_xsec(double other_xsec, double other_xsecerr, long long other_ntot)
     {
       if (other_xsec > 0)
       {
@@ -98,6 +101,18 @@ namespace Gambit
         if (thread_xsec_pair.first == this_thread) continue;
         const xsec& other_xsec = (*thread_xsec_pair.second);
         average_xsec(other_xsec(), other_xsec.xsec_err(), other_xsec.num_events());
+      }
+    }
+
+    /// Collect total events seen on all threads.
+    void xsec::gather_num_events()
+    {
+      int this_thread = omp_get_thread_num();
+      for (auto& thread_xsec_pair : instances_map)
+      {
+        if (thread_xsec_pair.first == this_thread) continue;
+        const xsec& other_xsec = (*thread_xsec_pair.second);
+        _ntot += other_xsec.num_events();
       }
     }
 

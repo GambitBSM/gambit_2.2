@@ -24,7 +24,7 @@
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2018 Jan
-///  \date 2019 Jan
+///  \date 2019 Jan, May
 ///
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
@@ -42,8 +42,8 @@
 #include "gambit/ColliderBit/MCLoopInfo.hpp"
 #include "gambit/ColliderBit/MC_convergence.hpp"
 #include "gambit/ColliderBit/xsec.hpp"
-#include "gambit/ColliderBit/colliders/ColliderPythia.hpp"
-#include "gambit/ColliderBit/colliders/ColliderPythia_typedefs.hpp"
+#include "gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp"
+#include "gambit/ColliderBit/colliders/Pythia8/Py8Collider_typedefs.hpp"
 #include "gambit/ColliderBit/detectors/BuckFast.hpp"
 #include "gambit/ColliderBit/analyses/AnalysisContainer.hpp"
 #include "gambit/ColliderBit/analyses/AnalysisData.hpp"
@@ -56,6 +56,7 @@
 /// TODO: see if we can use this one:
 //#include "gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp"
 
+#include "LHEF.h"
 #include "HEPUtils/Event.h"
 
 namespace Gambit
