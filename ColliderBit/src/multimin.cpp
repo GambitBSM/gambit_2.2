@@ -201,7 +201,7 @@ parameters. The members are
 
 */
 
-#include "multimin.h"
+#include "gambit/ColliderBit/multimin.h"
 
 struct g_params {
   size_t n;
