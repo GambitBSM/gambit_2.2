@@ -347,48 +347,19 @@ namespace Gambit
 
         // AnalysisData for this analysis
         const AnalysisData& adata = *(Dep::AllAnalysisNumbers->at(analysis));
-
-        /// If no events have been generated (xsec veto) or too many events have failed,
-        /// short-circut the loop and return delta log-likelihood = 0 for every SR in
-        /// each analysis.
-        /// @todo This must be made more sophisticated once we add analyses that
-        ///       don't rely on event generation.
-        if (not Dep::RunMC->event_generation_began || Dep::RunMC->exceeded_maxFailedEvents)
-        {
-          // If this is an analysis with covariance info, only add a single 0-entry in the map
-          if (USE_COVAR && adata.srcov.rows() > 0)
-          {
-            result[adata.analysis_name].combination_sr_label = "none";
-            result[adata.analysis_name].combination_loglike = 0.0;
-            continue;
-          }
-          // If this is an analysis without covariance info, add 0-entries for all SRs plus
-          // one for the combined LogLike
-          else
-          {
-            for (size_t SR = 0; SR < adata.size(); ++SR)
-            {
-              result[adata.analysis_name].sr_indices[adata[SR].sr_label] = SR;
-              result[adata.analysis_name].sr_loglikes[adata[SR].sr_label] = 0.0;
-              continue;
-            }
-            result[adata.analysis_name].combination_sr_label = "none";
-            result[adata.analysis_name].combination_loglike = 0.0;
-            continue;
-          }
-
-        }
-
+        const std::string ananame = adata.analysis_name;
+        const size_t nSR = adata.size();
+        const bool has_covar = adata.srcov.rows() > 0;
 
         #ifdef COLLIDERBIT_DEBUG
         std::streamsize stream_precision = cout.precision();  // get current precision
         cout.precision(2);  // set precision
-        cout << debug_prefix() << "calc_LHC_LogLikes: " << "Will print content of " << adata.analysis_name << " signal regions:" << endl;
+        cout << debug_prefix() << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
         for (size_t SR = 0; SR < adata.size(); ++SR)
         {
           const SignalRegionData& srData = adata[SR];
           cout << std::fixed << debug_prefix()
-                                 << "calc_LHC_LogLikes: " << adata.analysis_name
+                                 << "calc_LHC_LogLikes: " << ananame
                                  << ", " << srData.sr_label
                                  << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
                                  << ",  n_obs = " << srData.n_observed
@@ -402,11 +373,77 @@ namespace Gambit
         #endif
 
 
+        // Shortcut #1
+        //
+        // If no events have been generated (xsec veto) or too many events have
+        // failed, short-circut the loop and return delta log-likelihood = 0 for
+        // every SR in each analysis.
+        //
+        /// @todo Needs more sophistication once we add analyses that don't use event generation.
+        if (not Dep::RunMC->event_generation_began || Dep::RunMC->exceeded_maxFailedEvents)
+        {
+          // If this is an analysis with covariance info, only add a single 0-entry in the map
+          if (USE_COVAR && has_covar)
+          {
+            result[ananame].combination_sr_label = "none";
+            result[ananame].combination_loglike = 0.0;
+          }
+          // If this is an analysis without covariance info, add 0-entries for all SRs plus
+          // one for the combined LogLike
+          else
+          {
+            for (size_t SR = 0; SR < adata.size(); ++SR)
+            {
+              result[ananame].sr_indices[adata[SR].sr_label] = SR;
+              result[ananame].sr_loglikes[adata[SR].sr_label] = 0.0;
+            }
+            result[ananame].combination_sr_label = "none";
+            result[ananame].combination_loglike = 0.0;
+          }
+
+          #ifdef COLLIDERBIT_DEBUG
+          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
+          #endif
+
+          // Continue to next analysis
+          continue;
+        }
+
+
+        // Shortcut #2
+        //
+        // If all SRs have 0 signal prediction, we know the delta log-likelihood is 0.
+        bool all_zero_signal = true;
+        for (size_t SR = 0; SR < nSR; ++SR)
+        {
+          if (adata[SR].n_signal != 0)
+          {
+            all_zero_signal = false;
+            break;
+          }
+        }
+        if (all_zero_signal)
+        {
+          // Store result
+          result[ananame].combination_sr_label = "all";
+          result[ananame].combination_sr_index = -1;
+          result[ananame].combination_loglike = 0.0;
+
+          #ifdef COLLIDERBIT_DEBUG
+          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No signal predicted. Skipped full calculation.)" << endl;
+          #endif
+
+          // Continue to next analysis
+          continue;
+        }
+
+
         // Work out the total (delta) log likelihood for this analysis, with correlations as available/instructed
         double ana_dll = NAN;
-        const bool has_covar = adata.srcov.rows() > 0;
         if (USE_COVAR && has_covar)
         {
+
+
           /// If (simplified) SR-correlation info is available, so use the
           /// covariance matrix to construct composite marginalised likelihood
           /// Despite initial thoughts, we can't just do independent LL
@@ -419,48 +456,18 @@ namespace Gambit
           /// rates.
           ///
           /// @todo Support NSL, i.e. skewness correction
-
           #ifdef COLLIDERBIT_DEBUG
           cout << debug_prefix() << "calc_LHC_LogLikes: Analysis " << analysis << " has a covariance matrix: computing composite loglike." << endl;
           #endif
 
 
-
-          // Shortcut: if all SRs have 0 signal prediction, we know the Delta LogLike is 0.
-          /// @todo Can't we use this shortcut in both the cov and no-cov scenarios, i.e. outside this loop?
-          bool all_zero_signal = true;
-          size_t nSR = adata.size();
-          for (size_t SR = 0; SR < nSR; ++SR)
-          {
-            if (adata[SR].n_signal != 0)
-            {
-              all_zero_signal = false;
-              break;
-            }
-          }
-          if (all_zero_signal)
-          {
-            // Store result
-            result[adata.analysis_name].combination_sr_label = "all";
-            result[adata.analysis_name].combination_sr_index = -1;
-            result[adata.analysis_name].combination_loglike = 0.0;
-
-            #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << "calc_LHC_LogLikes: " << adata.analysis_name << "_LogLike : " << 0.0 << " (No signal predicted. Skipped covariance calculation.)" <<endl;
-            #endif
-
-            // Continue to next analysis
-            continue;
-          }
-
-
-
           // Construct vectors of SR numbers
-          /// @todo Unify this for both cov and no-cov, and just feed the arrays in element-wise for the latter?
-          Eigen::ArrayXd n_obs(adata.size()), logfact_n_obs(adata.size()), n_pred_b(adata.size()), n_pred_sb(adata.size()), abs_unc_s(adata.size());
+          /// @todo Unify this for both cov and no-cov, feeding in one-element Eigen blocks as Ref<>s for the latter
+          Eigen::ArrayXd n_obs(adata.size()); // logfact_n_obs(adata.size());
+          Eigen::ArrayXd n_pred_b(adata.size()), n_pred_sb(adata.size()), abs_unc_s(adata.size());
           for (size_t SR = 0; SR < adata.size(); ++SR)
           {
-            const SignalRegionData srData = adata[SR];
+            const SignalRegionData& srData = adata[SR];
 
             // Actual observed number of events
             n_obs(SR) = srData.n_observed;
@@ -468,7 +475,7 @@ namespace Gambit
             // Log factorial of observed number of events.
             // Currently use the ln(Gamma(x)) function gsl_sf_lngamma from GSL. (Need continuous function.)
             // We may want to switch to using Stirling's approximation: ln(n!) ~ n*ln(n) - n
-            logfact_n_obs(SR) = gsl_sf_lngamma(n_obs(SR) + 1.);
+            //logfact_n_obs(SR) = gsl_sf_lngamma(n_obs(SR) + 1.);
 
             // A contribution to the predicted number of events that is not known exactly
             n_pred_b(SR) = srData.n_background;
@@ -496,32 +503,25 @@ namespace Gambit
           const Eigen::MatrixXd Vsb = eig_sb.eigenvectors();
 
 
-          // Compute the single, correlated analysis-level DLL
-
-          // First compute the background LL
+          // Compute the single, correlated analysis-level DLL as the difference of s+b and b (partial) LLs
           /// @todo Only compute this once per run
           const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb);
-
-          // Then the signal+background LL
           const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb);
-
-          // Finally compute the (total analysis) DLL
           ana_dll = ll_sb - ll_b;
 
 
           // Store result
-          result[adata.analysis_name].combination_sr_label = "all";
-          result[adata.analysis_name].combination_sr_index = -1;
-          result[adata.analysis_name].combination_loglike = ana_dll;
+          result[ananame].combination_sr_label = "all";
+          result[ananame].combination_sr_index = -1;
+          result[ananame].combination_loglike = ana_dll;
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << adata.analysis_name << "_LogLike : " << ana_dll << endl;
+          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << ana_dll << endl;
           #endif
 
-        }
 
-        else // NO SR-CORRELATION INFO, OR USER CHOSE NOT TO USE IT:
-        {
+        } else { // NO SR-CORRELATION INFO, OR USER CHOSE NOT TO USE IT:
+
 
           // We either take the result from the SR *expected* to be most
           // constraining under the s=0 assumption (default), or naively combine
@@ -564,28 +564,23 @@ namespace Gambit
             Eigen::MatrixXd evecs_dummy(1,1); evecs_dummy(0,0) = 1.0;
 
 
-            // Compute this SR's DLLs
-
-            // First compute this SR's background LLs
-            /// @todo Only compute these once per run
+            // Compute this SR's DLLs as the differences of s+b and b (partial) LLs
+            /// @todo Or compute all the exp DLLs first, then only the best-expected SR's obs DLL?
+            /// @todo Only compute this once per run
             const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, evecs_dummy);
+            /// @todo Only compute this once per run
             const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, evecs_dummy);
-
-            // Then its signal+background LLs
             const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, evecs_dummy);
             const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, evecs_dummy);
 
-            // Finally compute this SR's exp and obs DLLs
-            /// @todo Compute all the exp DLLs first, then only one obs DLL (for the best-expected SR)? But we do currently store them all
             /// @todo Why the flipped sign convention? Remove?
             const double dll_exp = -( ll_sb_exp - ll_b_exp );
             const double dll_obs = -( ll_sb_obs - ll_b_obs );
 
 
             // // Calculate the expected dll and set the bestexp values for exp and obs dll if this one is the best so far
-            // const double dll_exp = llb_exp - llsb_exp; //< note positive dll convention -> more exclusion here      <- ????????
             #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << adata.analysis_name << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << -dll_exp << ",  llsb_obs-llb_obs= " << -dll_obs << endl;
+            cout << debug_prefix() << ananame << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << -dll_exp << ",  llsb_obs-llb_obs= " << -dll_obs << endl;
             #endif
 
             if (dll_exp > bestexp_dll_exp || SR == 0)
@@ -600,8 +595,8 @@ namespace Gambit
             }
 
             // Store "observed LogLike" result for this SR
-            result[adata.analysis_name].sr_indices[srData.sr_label] = SR;
-            result[adata.analysis_name].sr_loglikes[srData.sr_label] = -dll_obs; ///< @todo Argh, sign convention mess!
+            result[ananame].sr_indices[srData.sr_label] = SR;
+            result[ananame].sr_loglikes[srData.sr_label] = -dll_obs; ///< @todo Argh, sign convention mess!
 
             // Add loglike to the no-correlations loglike sum over SRs
             nocovar_srsum_dll_obs += -dll_obs; ///< @todo Argh, sign convention mess!
@@ -612,20 +607,20 @@ namespace Gambit
 
 
           // Set this analysis' total obs dLL to that from the best-expected SR (with conversion to more negative dll = more exclusion convention)
-          // result[adata.analysis_name] = -bestexp_dll_obs;
-          result[adata.analysis_name].combination_sr_label = bestexp_sr_label;
-          result[adata.analysis_name].combination_sr_index = bestexp_sr_index;
-          result[adata.analysis_name].combination_loglike = -ana_dll; ///< @todo Argh, sign convention mess!
+          // result[ananame] = -bestexp_dll_obs;
+          result[ananame].combination_sr_label = bestexp_sr_label;
+          result[ananame].combination_sr_index = bestexp_sr_index;
+          result[ananame].combination_loglike = -ana_dll; ///< @todo Argh, sign convention mess!
 
           // Should we use the naive sum of SR loglikes (without correlations), instead of the best-expected SR?
           static const bool combine_nocovar_SRs = runOptions->getValueOrDef<bool>(false, "combine_SRs_without_covariances");
           if (combine_nocovar_SRs)
           {
-            result[adata.analysis_name].combination_loglike = nocovar_srsum_dll_obs;
+            result[ananame].combination_loglike = nocovar_srsum_dll_obs;
           }
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << adata.analysis_name << "_" << bestexp_sr_label << "_LogLike : " << -ana_dll << endl; ///< @todo Argh, sign convention mess!
+          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_" << bestexp_sr_label << "_LogLike : " << -ana_dll << endl; ///< @todo Argh, sign convention mess!
           #endif
 
         } // end cov/no-cov
@@ -635,7 +630,7 @@ namespace Gambit
         if (Utils::isnan(ana_dll))
         {
           std::stringstream msg;
-          msg << "Computation of composite loglike for analysis " << adata.analysis_name << " returned NaN" << endl;
+          msg << "Computation of composite loglike for analysis " << ananame << " returned NaN" << endl;
           msg << "Will now print the signal region data for this analysis:" << endl;
           for (size_t SR = 0; SR < adata.size(); ++SR)
           {
