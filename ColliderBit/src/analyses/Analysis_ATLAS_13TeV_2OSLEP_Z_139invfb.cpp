@@ -42,13 +42,6 @@ namespace Gambit
 
     private:
 
-      #ifdef CHECK_CUTFLOW
-        vector<int> cutFlowVector;
-        vector<string> cutFlowVector_str;
-        size_t NCUTS;
-        vector<double> cutFlowVectorATLAS_400_0;
-      #endif
-
       struct ptComparison
       {
         bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
@@ -61,20 +54,22 @@ namespace Gambit
 
       // Jet lepton overlap removal
       // Discards jets if they are within DeltaRMax of a lepton
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*>& jets, vector<HEPUtils::Particle*>& leptons, double DeltaRMax)
+      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*>& jets, vector<HEPUtils::Particle*>& leptons, double DeltaRMax, double pTMax = 1000., double btaggeff = 1)
       {
-        vector<HEPUtils::Jet*> survivors;
+        vector<HEPUtils::Jet*> jetSurvivors;
+        vector<HEPUtils::Particle*> leptonSurvivors;
         for(HEPUtils::Jet* jet : jets)
         {
           bool overlap = false;
           for(HEPUtils::Particle* lepton : leptons)
           {
             double dR = jet->mom().deltaR_eta(lepton->mom());
-            if(fabs(dR) <= DeltaRMax) overlap = true;
+            if(jet->pT() < pTMax && fabs(dR) <= DeltaRMax) overlap = true;
+            // TODO: Add conditional for b-tagging efficiency
           }
-          if(!overlap) survivors.push_back(jet);
+          if(!overlap) jetSsurvivors.push_back(jet);
         }
-        jets = survivors;
+        jets = jetSurvivors;
         return;
       }
 
@@ -214,9 +209,8 @@ namespace Gambit
         // Overlap removal
 
         // 1) Remove jets within DeltaR = 0.2 of electron
-        // TODO: only jets with pT > 200 GeV
         // TODO: remove electron if b-taggin effeciciency > 85%
-        JetLeptonOverlapRemoval(baselineJets, baselineElectrons, 0.2);
+        JetLeptonOverlapRemoval(baselineJets, baselineElectrons, 0.2, 200., 0.85);
 
         // 2) Remove electrons within DeltaR = 0.4 of a jet
         LeptonJetOverlapRemoval(baselineElectrons, baselineJets, 0.4);
@@ -244,15 +238,13 @@ namespace Gambit
         // Signal muons must have pT > 5 GeV.
         for (HEPUtils::Particle* signalMuon : baselineMuons)
         {
-          if (signalMuon.pT() > 5.) signalMuons.push_back(signalMuon);
+          if (signalMuon->pT() > 5.) signalMuons.push_back(signalMuon);
         }
          
         // TODO: isolation criteria for signal leptons (see paper)
 
         // TODO: Check that nothing to be done for corrections between MC and signal
 
-        // TODO: MET already defined
- 
         // Fill signal leptons
         signalLeptons = signalElectrons;
         signalLeptons.insert(signalLeptons.end(), signalMuons.begin(), signalMuons.end());
@@ -271,18 +263,23 @@ namespace Gambit
 
         // Count signal leptons and jets
         size_t nSignalLeptons = signalLeptons.size();
+        size_t nSignalJets = signalJets.size();
 
         // Get SFOS pairs
         vector<vector<HEPUtils::Particle*>> SFOSpairs = getSFOSpairs(signalLeptons);
 
-        // Z requirements
+        // Get SFOS pairs masses and pTs
         vector<double> SFOSpair_masses;
+        vector<double> SFOSpair_pTs;
         for (vector<HEPUtils::Particle*> pair : SFOSpairs)
         {
           SFOSpair_masses.push_back( (pair.at(0)->mom() + pair.at(1)->mom()).m() );
+          SFOSpair_pTs.push_back( (pair.at(0)->mom() + pair.at(1)->mom()).pT() );
         }
         std::sort(SFOSpair_masses.begin(), SFOSpair_masses.end(), std::greater<double>());
+        std::sort(SFOSpair_pTs.begin(), SFOSpair_pTs.end(), std::greater<double>());
 
+        // Z resonance
         bool Zlike = false;
         double mZ = 91.2;
         for(double m : SFOSpair_masses)
@@ -314,31 +311,71 @@ namespace Gambit
         // Third leading lepton pT           >20      >20     <20     <60   // done
         // njets (pT > 30 GeV)               >=4      >=5     >=3     >=3   // done
         // nb-tagged jets (pT > 30 GeV)      >=1      >=1      -      >=1   // TODO
-        // Leading jet pT                     -        -     >150      -    // TODO
+        // Leading jet pT                     -        -     >150      -    // done
         // Leading b-tagged jet pT            -      >100      -       -    // TODO
-        // MET                              >250     >150    >200    >350   // TODO
-        // pTll                               -      >150     <50    >150   // TODO
+        // MET                              >250     >150    >200    >350   // done
+        // pTll                               -      >150     <50    >150   // done
         // mT23l                            >100       -       -       -    // TODO
 
         // SR1A
-        if (trigger && signalLeptons.at(2)->pT() > 20. && signalJets.at(3) > 30.) _numSR["SR1A"]++;
+        if (trigger && 
+            signalLeptons.at(2)->pT() > 20. && 
+            nSignalJets >= 4 && signalJets.at(3)->pT() > 30. &&
+            // TODO
+            // -
+            // TODO
+            met > 250. &&
+            // -
+            // TODO
+           ) 
+          _numSR["SR1A"]++;
 
         // SR1B
-        if (trigger && signalLeptons.at(2)->pT() > 20. && signalJets.at(4) > 30.) _numSR["SR1B"]++;
+        if (trigger && 
+            signalLeptons.at(2)->pT() > 20. && 
+            nSignalJets >= 5 && signalJets.at(4)->pT() > 30. &&
+            // TODO
+            // -
+            // TODO
+            met > 150. &&
+            SFOSpair_pTs.at(0) > 150.
+            // -
+           ) 
+          _numSR["SR1B"]++;
 
         // SR2A
-        if (trigger && signalLeptons.at(2)->pT() < 20. && signalJets.at(2) > 30.) _numSR["SR2A"]++;
+        if (trigger && 
+            signalLeptons.at(2)->pT() < 20. && 
+            nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && 
+            // TODO
+            signalJets.at(0)->pT() > 150. &&
+            // TODO
+            met > 200. &&
+            SFOSpair_pTs.at(-1) < 50. 
+            // -
+           ) 
+          _numSR["SR2A"]++;
 
         // SR2B
-        if (trigger && signalLeptons.at(2)->pT() < 60. && signalJets.at(2) > 30.) _numSR["SR2B"]++;
+        if (trigger && 
+            signalLeptons.at(2)->pT() < 60. && 
+            nSignalJets >= 3 && signalJets.at(2)->pT() > 30. &&
+           // TODO
+           // -
+           // TODO
+           met > 350. && 
+           SFOSpair_pTs.at(0) > 150.
+           // -
+           ) 
+          _numSR["SR2B"]++;
 
       }
 
       /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
       void combine(const Analysis* other)
       {
-        const Analysis_ATLAS_13TeV_4LEP_36invfb* specificOther
-                = dynamic_cast<const Analysis_ATLAS_13TeV_4LEP_36invfb*>(other);
+        const Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb* specificOther
+                = dynamic_cast<const Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb*>(other);
 
         for (auto& el : _numSR)
         {
