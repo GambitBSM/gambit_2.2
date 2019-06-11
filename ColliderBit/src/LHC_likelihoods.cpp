@@ -756,62 +756,32 @@ namespace Gambit
             Eigen::ArrayXd sqrtevals_sb(1);  sqrtevals_sb(0) = abs_uncertainty_sb;
             Eigen::MatrixXd evecs_dummy(1,1); evecs_dummy(0,0) = 1.0;
 
+            // Choose to profile or marginalise, via this function
+            auto marg_prof_fn = USE_MARG ? marg_loglike_cov : profile_loglike_cov;
+
             // Compute this SR's DLLs
-            double dll_exp = NAN, dll_obs = NAN;
-            if (!USE_MARG) {
-              /// @todo Use auto to treat profiler and marginaliser functions as interchangeable (now possible since they have the same signature)
 
-              // Pass background to the profiler
-              /// @todo Only compute this once per run
-              const double llpart_b_exp = profile_loglike_cov(n_preds_b, n_preds_b_int, sqrtevals_b, evecs_dummy);
-              const double llpart_b_obs = profile_loglike_cov(n_preds_b, n_obss, sqrtevals_b, evecs_dummy);
+            // First compute this SR's background LLs
+            /// @todo Only compute these once per run
+            const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, evecs_dummy);
+            const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, evecs_dummy);
 
-              // Pass signal+background to the profiler
-              const double llpart_sb_exp = profile_loglike_cov(n_preds_sb, n_preds_b_int, sqrtevals_sb, evecs_dummy);
-              const double llpart_sb_obs = profile_loglike_cov(n_preds_sb, n_obss, sqrtevals_sb, evecs_dummy);
+            // Then its signal+background LLs
+            const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, evecs_dummy);
+            const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, evecs_dummy);
 
-              // Compute the DLL wrt background-only
-              /// @todo Compute all the exp DLLs first, then only one obs DLL (for the best-expected SR)
-              dll_exp = llpart_sb_exp - llpart_b_exp;
-              dll_obs = llpart_sb_obs - llpart_b_obs;
+            // Finally compute this SR's exp and obs DLLs
+            /// @todo Compute all the exp DLLs first, then only one obs DLL (for the best-expected SR)? But we do currently store them all
+            /// @todo Why the flipped sign convention? Remove?
+            const double dll_exp = -( ll_sb_exp - ll_b_exp );
+            const double dll_obs = -( ll_sb_obs - ll_b_obs );
 
-            } else {
-
-              // Pass background to the marginaliser
-              /// @todo Only compute this once per run
-              const double ll_b_exp = marg_loglike_cov(n_preds_b, n_preds_b_int, sqrtevals_b, evecs_dummy);
-              const double ll_b_obs = marg_loglike_cov(n_preds_b, n_obss, sqrtevals_b, evecs_dummy);
-
-              // Pass signal+background to the marginaliser
-              const double ll_sb_exp = marg_loglike_cov(n_preds_sb, n_preds_b_int, sqrtevals_sb, evecs_dummy);
-              const double ll_sb_obs = marg_loglike_cov(n_preds_sb, n_obss, sqrtevals_sb, evecs_dummy);
-
-              // Compute the DLL wrt background-only
-              /// @todo Compute all the exp DLLs first, then only one obs DLL (for the best-expected SR)
-              dll_exp = ll_sb_exp - ll_b_exp;
-              dll_obs = ll_sb_obs - ll_b_obs;
-
-              /// @todo Why the flipped sign convention? Remove?
-              dll_exp *= -1;
-              dll_obs *= -1;
-            }
-
-
-
-            // // Marginalise over systematic uncertainties on mean rates
-            // // Use a log-normal/Gaussia distribution for the nuisance parameter, as requested
-            // auto marginaliser = (*BEgroup::lnlike_marg_poisson == "lnlike_marg_poisson_lognormal_error")
-            //   ? BEreq::lnlike_marg_poisson_lognormal_error : BEreq::lnlike_marg_poisson_gaussian_error;
-            // const double llb_exp =  marginaliser(n_predicted_total_b_int, n_predicted_exact, n_predicted_uncertain_b, frac_uncertainty_b);
-            // const double llsb_exp = marginaliser(n_predicted_total_b_int, n_predicted_exact, n_predicted_uncertain_sb, frac_uncertainty_sb);
-            // const double llb_obs =  marginaliser(n_obs, n_predicted_exact, n_predicted_uncertain_b, frac_uncertainty_b);
-            // const double llsb_obs = marginaliser(n_obs, n_predicted_exact, n_predicted_uncertain_sb, frac_uncertainty_sb);
 
             // // Calculate the expected dll and set the bestexp values for exp and obs dll if this one is the best so far
-            // const double dll_exp = llb_exp - llsb_exp; //< note positive dll convention -> more exclusion here
-            // #ifdef COLLIDERBIT_DEBUG
-            // cout << debug_prefix() << adata.analysis_name << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << llsb_exp-llb_exp << ",  llsb_obs-llb_obs= " << llsb_obs - llb_obs << endl;
-            // #endif
+            // const double dll_exp = llb_exp - llsb_exp; //< note positive dll convention -> more exclusion here      <- ????????
+            #ifdef COLLIDERBIT_DEBUG
+            cout << debug_prefix() << adata.analysis_name << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << -dll_exp << ",  llsb_obs-llb_obs= " << -dll_obs << endl; ///< @todo Argh, sign convention mess!
+            #endif
 
             if (dll_exp > bestexp_dll_exp || SR == 0)
             {
