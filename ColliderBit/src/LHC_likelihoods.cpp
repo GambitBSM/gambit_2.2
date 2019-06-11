@@ -713,7 +713,7 @@ namespace Gambit
           int bestexp_sr_index;
           double nocovar_srsum_dll_obs = 0;
 
-          double ana_dll = NAN;
+          //double ana_dll = NAN;
 
           for (size_t SR = 0; SR < adata.size(); ++SR)
           {
@@ -858,44 +858,45 @@ namespace Gambit
           //   nocovar_srsum_dll_obs += llsb_obs - llb_obs;
           // }
 
-          // // Check for problem
-          // if (Utils::isnan(bestexp_dll_obs))
-          // {
-          //   std::stringstream msg;
-          //   msg << "Computation of single-SR loglike for analysis " << adata.analysis_name << " returned NaN, from signal region: " << bestexp_sr_label << endl;
-          //   msg << "Will now print the signal region data for this analysis:" << endl;
-          //   for (size_t SR = 0; SR < adata.size(); ++SR)
-          //   {
-          //     const SignalRegionData& srData = adata[SR];
-          //     msg << srData.sr_label
-          //         << ",  n_background = " << srData.n_background
-          //         << ",  background_sys = " << srData.background_sys
-          //         << ",  n_observed = " << srData.n_observed
-          //         << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
-          //         << ",  n_signal = " << srData.n_signal
-          //         << ",  signal_sys = " << srData.signal_sys
-          //         << endl;
-          //   }
-          //   invalid_point().raise(msg.str());
-          // }
 
-          // // Set this analysis' total obs dLL to that from the best-expected SR (with conversion to more negative dll = more exclusion convention)
-          // // result[adata.analysis_name] = -bestexp_dll_obs;
-          // result[adata.analysis_name].combination_sr_label = bestexp_sr_label;
-          // result[adata.analysis_name].combination_sr_index = bestexp_sr_index;
-          // result[adata.analysis_name].combination_loglike = -bestexp_dll_obs;
 
-          // // Should we use the naive sum of SR loglikes (without correlations), instead of the best-expected SR?
-          // static const bool combine_nocovar_SRs = runOptions->getValueOrDef<bool>(false, "combine_SRs_without_covariances");
-          // if (combine_nocovar_SRs)
-          // {
-          //   result[adata.analysis_name].combination_loglike = nocovar_srsum_dll_obs;
-          // }
+          // Check for problem
+          if (Utils::isnan(bestexp_dll_obs))
+          {
+            std::stringstream msg;
+            msg << "Computation of single-SR loglike for analysis " << adata.analysis_name << " returned NaN, from signal region: " << bestexp_sr_label << endl;
+            msg << "Will now print the signal region data for this analysis:" << endl;
+            for (size_t SR = 0; SR < adata.size(); ++SR)
+            {
+              const SignalRegionData& srData = adata[SR];
+              msg << srData.sr_label
+                  << ",  n_background = " << srData.n_background
+                  << ",  background_sys = " << srData.background_sys
+                  << ",  n_observed = " << srData.n_observed
+                  << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
+                  << ",  n_signal = " << srData.n_signal
+                  << ",  signal_sys = " << srData.signal_sys
+                  << endl;
+            }
+            invalid_point().raise(msg.str());
+          }
 
-          // #ifdef COLLIDERBIT_DEBUG
-          // cout << debug_prefix() << "calc_LHC_LogLikes: " << adata.analysis_name << "_" << bestexp_sr_label << "_LogLike : " << -bestexp_dll_obs << endl;
-          // #endif
+          // Set this analysis' total obs dLL to that from the best-expected SR (with conversion to more negative dll = more exclusion convention)
+          // result[adata.analysis_name] = -bestexp_dll_obs;
+          result[adata.analysis_name].combination_sr_label = bestexp_sr_label;
+          result[adata.analysis_name].combination_sr_index = bestexp_sr_index;
+          result[adata.analysis_name].combination_loglike = -bestexp_dll_obs;
 
+          // Should we use the naive sum of SR loglikes (without correlations), instead of the best-expected SR?
+          static const bool combine_nocovar_SRs = runOptions->getValueOrDef<bool>(false, "combine_SRs_without_covariances");
+          if (combine_nocovar_SRs)
+          {
+            result[adata.analysis_name].combination_loglike = nocovar_srsum_dll_obs;
+          }
+
+          #ifdef COLLIDERBIT_DEBUG
+          cout << debug_prefix() << "calc_LHC_LogLikes: " << adata.analysis_name << "_" << bestexp_sr_label << "_LogLike : " << -bestexp_dll_obs << endl;
+          #endif
 
         }
 
