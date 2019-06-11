@@ -745,6 +745,7 @@ namespace Gambit
 
 
             // Choose to profile or marginalise, via this function
+            /// @todo Can take this out of the cov/no-cov conditional, and all loops!
             auto marg_prof_fn = USE_MARG ? marg_loglike_cov : profile_loglike_cov;
 
             // Compute this SR's DLLs
