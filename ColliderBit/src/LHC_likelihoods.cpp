@@ -507,8 +507,8 @@ namespace Gambit
           /// @todo Only compute this once per run
           const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb);
           const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb);
-          ana_dll = ll_sb - ll_b;
-
+          const double dll = ll_sb - ll_b;
+          ana_dll = dll;
 
           // Store result
           result[ananame].combination_sr_label = "all";
@@ -530,7 +530,7 @@ namespace Gambit
           cout << debug_prefix() << "calc_LHC_LogLikes: Analysis " << analysis << " has no covariance matrix: computing single best-expected loglike." << endl;
           #endif
 
-          double bestexp_dll_exp = 0, bestexp_dll_obs = 0;
+          double bestexp_dll_exp = 0, bestexp_dll_obs = NAN;
           str bestexp_sr_label;
           int bestexp_sr_index;
           double nocovar_srsum_dll_obs = 0;
@@ -572,47 +572,40 @@ namespace Gambit
             const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, evecs_dummy);
             const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, evecs_dummy);
             const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, evecs_dummy);
+            const double dll_exp = ll_sb_exp - ll_b_exp;
+            const double dll_obs = ll_sb_obs - ll_b_obs;
 
-            /// @todo Why the flipped sign convention? Remove?
-            const double dll_exp = -( ll_sb_exp - ll_b_exp );
-            const double dll_obs = -( ll_sb_obs - ll_b_obs );
-
-
-            // // Calculate the expected dll and set the bestexp values for exp and obs dll if this one is the best so far
-            #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << ananame << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << -dll_exp << ",  llsb_obs-llb_obs= " << -dll_obs << endl;
-            #endif
-
-            if (dll_exp > bestexp_dll_exp || SR == 0)
+            // Update the running best-expected-exclusion detail
+            if (dll_exp < bestexp_dll_exp || SR == 0)
             {
               bestexp_dll_exp = dll_exp;
               bestexp_dll_obs = dll_obs;
               bestexp_sr_label = srData.sr_label;
               bestexp_sr_index = SR;
               // #ifdef COLLIDERBIT_DEBUG
-              // cout << debug_prefix() << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << -bestexp_dll_exp << ", LogL_obs = " << -bestexp_dll_obs << endl;
+              // cout << debug_prefix() << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << bestexp_dll_exp << ", LogL_obs = " << bestexp_dll_obs << endl;
               // #endif
             }
 
-            // Store "observed LogLike" result for this SR
+            // Store (obs) result for this SR
             result[ananame].sr_indices[srData.sr_label] = SR;
-            result[ananame].sr_loglikes[srData.sr_label] = -dll_obs; ///< @todo Argh, sign convention mess!
+            result[ananame].sr_loglikes[srData.sr_label] = dll_obs;
+            // Also add the obs loglike to the no-correlations sum over SRs
+            nocovar_srsum_dll_obs += dll_obs;
 
-            // Add loglike to the no-correlations loglike sum over SRs
-            nocovar_srsum_dll_obs += -dll_obs; ///< @todo Argh, sign convention mess!
+            #ifdef COLLIDERBIT_DEBUG
+            cout << debug_prefix() << ananame << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << dll_exp << ",  llsb_obs-llb_obs= " << dll_obs << endl;
+            #endif
+
           }
 
-          // Set total analysis DLL
+          // Set this analysis' total obs DLL to that from the best-expected SR
           ana_dll = bestexp_dll_obs;
-
-
-          // Set this analysis' total obs dLL to that from the best-expected SR (with conversion to more negative dll = more exclusion convention)
-          // result[ananame] = -bestexp_dll_obs;
           result[ananame].combination_sr_label = bestexp_sr_label;
           result[ananame].combination_sr_index = bestexp_sr_index;
-          result[ananame].combination_loglike = -ana_dll; ///< @todo Argh, sign convention mess!
+          result[ananame].combination_loglike = ana_dll;
 
-          // Should we use the naive sum of SR loglikes (without correlations), instead of the best-expected SR?
+          // Or should we use the naive sum of SR loglikes (without correlations) instead?
           static const bool combine_nocovar_SRs = runOptions->getValueOrDef<bool>(false, "combine_SRs_without_covariances");
           if (combine_nocovar_SRs)
           {
@@ -620,7 +613,7 @@ namespace Gambit
           }
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_" << bestexp_sr_label << "_LogLike : " << -ana_dll << endl; ///< @todo Argh, sign convention mess!
+          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_" << bestexp_sr_label << "_LogLike : " << ana_dll << endl;
           #endif
 
         } // end cov/no-cov
@@ -648,8 +641,7 @@ namespace Gambit
         }
 
 
-      }
-
+      } // end analysis loop
     }
 
 
