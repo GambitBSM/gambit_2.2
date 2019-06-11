@@ -462,7 +462,7 @@ namespace Gambit
 
 
           // Construct vectors of SR numbers
-          /// @todo Unify this for both cov and no-cov, feeding in one-element Eigen blocks as Ref<>s for the latter
+          /// @todo Unify this for both cov and no-cov, feeding in one-element Eigen blocks as Ref<>s for the latter?
           Eigen::ArrayXd n_obs(adata.size()); // logfact_n_obs(adata.size());
           Eigen::ArrayXd n_pred_b(adata.size()), n_pred_sb(adata.size()), abs_unc_s(adata.size());
           for (size_t SR = 0; SR < adata.size(); ++SR)
@@ -508,9 +508,9 @@ namespace Gambit
           const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb);
           const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb);
           const double dll = ll_sb - ll_b;
-          ana_dll = dll;
 
           // Store result
+          ana_dll = dll;
           result[ananame].combination_sr_label = "all";
           result[ananame].combination_sr_index = -1;
           result[ananame].combination_loglike = ana_dll;
