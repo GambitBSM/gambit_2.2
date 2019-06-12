@@ -26,82 +26,90 @@ namespace Gambit {
 
    class Spectrum;
 
-   /// Simple class to contain information defining how some parameter in a Spectrum object can be accessed
-   class SpectrumParameter
-   {
-     private:
-       const Par::Tags my_tag;
-       const std::string my_name;
-       const std::vector<int> my_shape;
+   namespace SpectrumContents {
 
-       const std::string my_blockname;
-       const int my_blockname_index;
-   
-     public:
-       SpectrumParameter(const Par::Tags tag, const std::string label, const std::vector<int> shape, const std::string blockname, const int blockindex)
-         : my_tag(tag)
-         , my_name(label)
-         , my_shape(shape)
-         , my_blockname(blockname)
-         , my_blockname_index(blockindex)
-       {}
-   
-       Par::Tags        tag()        const { return my_tag; }
-       std::string      name()       const { return my_name; }
-       std::vector<int> shape()      const { return my_shape; }
-       std::string      blockname()  const { return my_blockname; }
-       int              blockindex() const { return my_blockname_index; }
-   };
+       /// Simple class to contain information defining how some parameter in a Spectrum object can be accessed
+       class Parameter
+       {
+         private:
+           const Par::Tags my_tag;
+           const std::string my_name;
+           const std::vector<int> my_shape;
 
-   /// Base class for defining the required contents of a SubSpectrum object
-   class SpectrumContents
-   {
-      private:
-        /// Type to use for parameter map lookup keys
-        typedef std::pair<Par::Tags, std::string> parameter_key;
+           const std::string my_blockname;
+           const int my_blockname_index;
+       
+         public:
+           Parameter(const Par::Tags tag, const std::string label, const std::vector<int> shape, const std::string blockname, const int blockindex)
+             : my_tag(tag)
+             , my_name(label)
+             , my_shape(shape)
+             , my_blockname(blockname)
+             , my_blockname_index(blockindex)
+           {}
+       
+           Par::Tags        tag()        const { return my_tag; }
+           std::string      name()       const { return my_name; }
+           std::vector<int> shape()      const { return my_shape; }
+           std::string      blockname()  const { return my_blockname; }
+           int              blockindex() const { return my_blockname_index; }
 
-        /// Vector defining what parameters a wrapper must contain
-        std::map<parameter_key,SpectrumParameter> parameters;
-    
-        /// Name of SubSpectrumContents class (for more helpful error messages)
-        std::string my_name;
-   
-      protected:
-        void addParameter(const Par::Tags tag, const std::string& name, const std::vector<int>& shape = initVector(1), const std::string& blockname="", const int index=0);
-        void setName(const std::string& name);
+           /// Function to retrieve all valid indices for this parameter
+           /// Returns them in the most general form, vector of vectors, regardless of actual shape
+           std::vector<std::vector<int>> allowed_indices();
+       };
 
-      public:
-        std::string getName() const {return my_name;}
+       /// Base class for defining the required contents of a SubSpectrum object
+       class Contents
+       {
+          private:
+            /// Type to use for parameter map lookup keys
+            typedef std::pair<Par::Tags, std::string> parameter_key;
 
-        /// Function to check if a parameter definition exists in this object, identified by tag and string name
-        bool has_parameter(const Par::Tags tag, const std::string& name) const;
+            /// Vector defining what parameters a wrapper must contain
+            std::map<parameter_key,Parameter> parameters;
+        
+            /// Name of SubSpectrumContents class (for more helpful error messages)
+            std::string my_name;
+       
+          protected:
+            void addParameter(const Par::Tags tag, const std::string& name, const std::vector<int>& shape = initVector(1), const std::string& blockname="", const int index=0);
+            void setName(const std::string& name);
 
-        /// Function to check if a parameter definition exists in this object, this time also checking the index shape
-        bool has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int> indices);
+          public:
+            std::string getName() const {return my_name;}
 
-        /// Function to get definition information for one parameter, identified by tag and string name
-        SpectrumParameter get_parameter(const Par::Tags tag, const std::string& name) const;
+            /// Function to check if a parameter definition exists in this object, identified by tag and string name
+            bool has_parameter(const Par::Tags tag, const std::string& name) const;
 
-        /// Function to get indices in SLHAea block in which requested index item can be found
-        std::vector<int> get_SLHA_indices(const Par::Tags tag, const std::string& name, std::vector<int> indices) const;
+            /// Function to check if a parameter definition exists in this object, this time also checking the index shape
+            bool has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int> indices);
 
-        /// Function to retreive all parameters
-        std::vector<SpectrumParameter> all_parameters() const;
-    
-        /// Function to retreive all parameters matching a certain tag
-        std::vector<SpectrumParameter> all_parameters_with_tag(Par::Tags tag) const; 
+            /// Function to get definition information for one parameter, identified by tag and string name
+            Parameter get_parameter(const Par::Tags tag, const std::string& name) const;
 
-        /// Function to retrieve all parameters matching a certain tag and shape
-        std::vector<SpectrumParameter> all_parameters_with_tag_and_shape(Par::Tags tag, std::vector<int>& shape) const; 
+            /// Function to get indices in SLHAea block in which requested index item can be found
+            std::vector<int> get_SLHA_indices(const Par::Tags tag, const std::string& name, std::vector<int> indices) const;
 
-        /// Function to retrieve all parameters whose blockName is not SMINPUTS, YUKAWA, CKMBLOCK, or empty.
-        std::vector<SpectrumParameter> all_BSM_parameters() const;
+            /// Function to retreive all parameters
+            std::vector<Parameter> all_parameters() const;
+        
+            /// Function to retreive all parameters matching a certain tag
+            std::vector<Parameter> all_parameters_with_tag(Par::Tags tag) const; 
 
-        /// Function to verify that a SubSpectrum wrapper contains everything that this class says it should
-        void verify_contents(const Spectrum& spec) const;
+            /// Function to retrieve all parameters matching a certain tag and shape
+            std::vector<Parameter> all_parameters_with_tag_and_shape(Par::Tags tag, std::vector<int>& shape) const; 
 
-   };
+            /// Function to retrieve all parameters whose blockName is not SMINPUTS, YUKAWA, CKMBLOCK, or empty.
+            std::vector<Parameter> all_BSM_parameters() const;
 
+            /// Function to verify that a SubSpectrum wrapper contains everything that this class says it should
+            void verify_contents(const Spectrum& spec) const;
+
+            /// Create template SLHA file to match this SpectrumContents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given SpectrumContents
+            void create_template_SLHA_file(const std::string& filename) const;
+       };
+    }
 }
 
 #endif

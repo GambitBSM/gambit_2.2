@@ -23,7 +23,7 @@
 #ifndef __registeredspectra_hpp__
 #define __registeredspectra_hpp__
 
-#include "gambit/Models/SpectrumContents/subspectrum_contents.hpp"
+#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
 
 /// Just declare the classes here; should be defined in source files
 
@@ -32,16 +32,16 @@ namespace Gambit
   namespace SpectrumContents
   {
 
-    struct SM                   : SubSpectrumContents { SM(); };
-    struct SM_slha              : SubSpectrumContents { SM_slha(); }; // Missing some running masses that aren't part of SMINPUTS in slha
-    struct SMHiggs              : SubSpectrumContents { SMHiggs(); };
-    struct MSSM                 : SubSpectrumContents { MSSM(); };
-    struct MDM                  : SubSpectrumContents { MDM(); };
-    struct ScalarSingletDM_Z2   : SubSpectrumContents { ScalarSingletDM_Z2(); };
-    struct ScalarSingletDM_Z3   : SubSpectrumContents { ScalarSingletDM_Z3(); };
-    struct VectorSingletDM_Z2   : SubSpectrumContents { VectorSingletDM_Z2(); };
-    struct MajoranaSingletDM_Z2 : SubSpectrumContents { MajoranaSingletDM_Z2(); };
-    struct DiracSingletDM_Z2    : SubSpectrumContents { DiracSingletDM_Z2(); };
+    struct SM                   : Contents { SM(); };
+    struct SM_slha              : Contents { SM_slha(); }; // Missing some running masses that aren't part of SMINPUTS in slha
+    struct SMHiggs              : Contents { SMHiggs(); };
+    struct MSSM                 : Contents { MSSM(); };
+    struct MDM                  : Contents { MDM(); };
+    struct ScalarSingletDM_Z2   : Contents { ScalarSingletDM_Z2(); };
+    struct ScalarSingletDM_Z3   : Contents { ScalarSingletDM_Z3(); };
+    struct VectorSingletDM_Z2   : Contents { VectorSingletDM_Z2(); };
+    struct MajoranaSingletDM_Z2 : Contents { MajoranaSingletDM_Z2(); };
+    struct DiracSingletDM_Z2    : Contents { DiracSingletDM_Z2(); };
 
   }
 }

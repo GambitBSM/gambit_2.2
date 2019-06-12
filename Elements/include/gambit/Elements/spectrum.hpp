@@ -113,7 +113,7 @@ namespace Gambit
          SLHAstruct mySLHAea;
 
          /// Contents requirements for this spectrum
-         SpectrumContents myContents;
+         SpectrumContents::Contents myContents;
 
       public:
 
@@ -125,7 +125,7 @@ namespace Gambit
          Spectrum();
 
          /// Construct from SLHAea object (also specifying what SpectrumContents should apply, which defines how to interpret the SLHAea blocks)
-         Spectrum(const SLHAstruct& slha, const SpectrumContents& contents);
+         Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents);
 
          /// Set constraints on masses and mass ratios that cause the spectrum to be declared "invalid" if they are violated
          void set_mass_cuts(const mc_info&);
@@ -141,7 +141,7 @@ namespace Gambit
          // bool auto_check_antiparticle_name
          
          /// Master checker function to see if a parameter request matches the spectrum contents
-         bool has(const Par::Tags partype, std::string& name, std::vector<int> indices, bool auto_check_antiparticle_name=true) const 
+         bool has(const Par::Tags partype, std::string& name, std::vector<int> indices, bool auto_check_antiparticle_name=true) const;
          
          /// Getters to access pole masses in spectrum 
          bool   has(const Par::Tags partype, const std::string& mass) const;
@@ -165,6 +165,18 @@ namespace Gambit
          double safeget(const Par::Tags partype, const std::pair<int,int> pdgpr) const;
          double safeget(const Par::Tags partype, const std::pair<str,int> shortpr) const;
          /// @}
+
+         /* Setter declarations, for manually overwriting parameter values (directly changes wrapped SLHAea object contents)
+            Note; these are NON-CONST */
+         void set(const Par::Tags, const double, const str&);
+         void set(const Par::Tags, const double, const str&, const int);
+         void set(const Par::Tags, const double, const str&, const int, const int);
+
+         /* Setters for setting values of many parameters at once, by iterating over the supplied string names or indices, or both */
+         void set_many(const Par::Tags, const double, const std::vector<str>&);
+         void set_many(const Par::Tags, const double, const std::vector<str>&, const std::vector<int>);
+         void set_many(const Par::Tags, const double, const std::vector<str>&, const int);
+         void set_many(const Par::Tags, const double, const str&, const std::vector<int>);
 
          /// @}
 

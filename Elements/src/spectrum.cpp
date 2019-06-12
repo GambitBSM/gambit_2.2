@@ -40,6 +40,8 @@ namespace Gambit
     : mySLHAea(slha)
     , myContents(contents)
    {
+      /// Make sure the supplied slhaea object contains everything that the contents definition requires
+      contents.verify_contents(*this);
    }
    /// @}
 
@@ -218,8 +220,9 @@ namespace Gambit
       return found;
    }
 
-   /// Master getter function to retrieve parameters from Spectrum object (digging them out of the wrapped SLHAea object)
-   double Spectrum::get(const Par::Tags partype, std::string& name, std::vector<int> indices) const
+   /// Master function for obtaining the 'basic' name under which a parameter set is recorded in the
+   /// SpectrumContents. Does all the checking for long/short name and antiparticle conversions.
+   std::pair<std::string,std::vector<int>> Spectrum::get_basic_name(const Par::Tags partype, std::string& name, std::vector<int> indices)
    {
       double entry;
       // First check for existence, without allowing antiparticle name conversion
@@ -261,6 +264,30 @@ namespace Gambit
          }
       }
 
+      // name is now converted to antiparticle name if needed
+      // But we still don't know whether this is a long or short name
+      // Want to convert to short name
+      // (but require that no indices supplied, since long name + indices is
+      //  not a valid input combination)
+      if(indices.size()==0 and PDB.has_particle(name) and PDB.has_short_name(name))
+      {
+         std::pair<str, int> shortpair = PDB.short_name_pair(name);
+         name = shortpair.first;
+         indices = std::vector<int>(1).push_back(shortpair.second);
+      }
+      return std::make_pair(name,indices);
+   }
+
+   /// Master getter function to retrieve parameters from Spectrum object (digging them out of the wrapped SLHAea object)
+   double Spectrum::get(const Par::Tags partype, std::string& name, std::vector<int> indices) const
+   {
+      double entry;
+      // First convert to 'basic' name and indices used by SpectrumContents
+      // Also checks that entry is compatible with declared contents
+      std::pair<std::string,std::vector<int>> basic_name = get_basic_name(partype,name,indices);
+      name    = basic_name.first;
+      indices = basic_name.second;
+       
       // Now entry has been confirmed to exist, can retrieve it.
       // Should be safe to rely on the error checking that occurs in the 'has' function
       std::pair<std::string,std::vector<int>> slha_loc = myContents.get_SLHA_indices(partype,name,indices);
@@ -443,6 +470,71 @@ namespace Gambit
          utils_error().raise(LOCAL_INFO,"Spectrum parameter is nan!!");
       return result;
    }
+
+   /// @}
+
+   /// @{ Setter functions
+
+   /// Master setter function (general case)
+   void Spectrum::set(const Par::Tags partype, const double value, const str& name, std::vector<int> indices)
+   {
+      // First convert to 'basic' name and indices used by SpectrumContents
+      // Also checks that entry is compatible with declared contents
+      std::pair<std::string,std::vector<int>> basic_name = get_basic_name(partype,name,indices);
+      name    = basic_name.first;
+      indices = basic_name.second;
+
+      // Now entry has been confirmed to exist, can set its value.
+      // Should be safe to rely on the error checking that occurs in the 'has' function
+      std::pair<std::string,std::vector<int>> slha_loc = myContents.get_SLHA_indices(partype,name,indices);
+      std::string      block        = slha_loc.first;
+      std::vector<int> SLHA_indices = slha_loc.second;
+
+      std::sstream comment;
+      comment << name;
+      if(indices.size()>0) comment << index_list;
+      comment << " ("<<Par::toString(tag)<<") ***modified manually***";
+
+      switch(SLHA_indices.size())
+      {
+         case 0:
+         {
+            // I think there are some weird SLHA cases of things with no indices
+            // Will ignore them for now. Raise error to get user to ask for this feature
+            std::ostringstream errmsg;
+            errmsg<<"Error retrieving Spectrum entry "<<Par::toString(partype)<<" '"<<name<<"'! It seems like this parameter has been defined as being associated with an SLHA block but no index. This is allowed by SLHA, but Spectrum objects are not currently compatible with them. Please file a bug report to request this feature if you need it.";
+            utils_error().raise(LOCAL_INFO,errmsg.str());
+            break;
+         }
+         case 1:
+         {
+            int index = SLHA_indices.at(0);
+            SLHAea_add(out, block, index, value, comment);
+            break;
+         }
+         case 2:
+         {
+            int index1 = SLHA_indices.at(0);
+            int index2 = SLHA_indices.at(1);
+            SLHAea_add(out, block, index1, index2, value, comment);
+            break;
+         }
+      }
+   }
+
+   void Spectrum::set(const Par::Tags, const double, const str&);
+   void Spectrum::set(const Par::Tags, const double, const str&, const int);
+   void Spectrum::set(const Par::Tags, const double, const str&, const int, const int);
+
+   
+   /* Setters for setting values of many parameters at once, by iterating over the supplied string names or indices, or both */
+   /// Master set_many function (general case)
+   void Spectrum::set_many(const Par::Tags, const double, const std::vector<str>&, const std::vector<int>);
+   void Spectrum::set_many(const Par::Tags, const double, const std::vector<str>&);
+   void Spectrum::set_many(const Par::Tags, const double, const std::vector<str>&, const int);
+   void Spectrum::set_many(const Par::Tags, const double, const str&, const std::vector<int>);
+
+
 
    /// @}
 
