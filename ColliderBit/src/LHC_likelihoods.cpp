@@ -95,23 +95,22 @@ namespace Gambit
 
     /// Loglike objective-function wrapper to provide the signature for GSL multimin
     ///
-    /// @todo Use this to compute both the b and s+b likelihood, and compute
-    /// the b likelihood only once, via s = 0
+    /// @note Doesn't return a full log-like: the factorial term is missing since it's expensive, fixed and cancels in DLLs
     void _gsl_calc_Analysis_MinusLogLike(const size_t n, const double* unit_nuisances_dbl,
                                          void* npreds_nobss_sqrtevals_evecs, double* fval) {
 
       // Convert the array of doubles into an "Eigen view" of the nuisance params
-      Eigen::Map<const Eigen::VectorXd> unit_nuisances(&unit_nuisances_dbl[0], n);
+      Eigen::Map<const Eigen::ArrayXd> unit_nuisances(&unit_nuisances_dbl[0], n);
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
       double *npreds_nobss_sqrtevals_evecs_dbl = (double*) npreds_nobss_sqrtevals_evecs;
-      Eigen::Map<const Eigen::ArrayXd> n_preds_nominal(&npreds_nobss_sqrtevals_evecs_dbl[0], n);
+      Eigen::Map<const Eigen::VectorXd> n_preds_nominal(&npreds_nobss_sqrtevals_evecs_dbl[0], n);
       Eigen::Map<const Eigen::ArrayXd> n_obss(&npreds_nobss_sqrtevals_evecs_dbl[n], n);
       Eigen::Map<const Eigen::ArrayXd> sqrtevals(&npreds_nobss_sqrtevals_evecs_dbl[2*n], n);
       Eigen::Map<const Eigen::MatrixXd> evecs(&npreds_nobss_sqrtevals_evecs_dbl[3*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
-      const Eigen::VectorXd n_preds = n_preds_nominal + (evecs*unit_nuisances).array();
+      const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
       double loglike_tot = 0;
@@ -130,6 +129,40 @@ namespace Gambit
       // Output via argument (invert to return -LL for minimisation)
       *fval = -loglike_tot;
     }
+
+
+    /// Loglike gradient-function wrapper to provide the signature for GSL multimin
+    void _gsl_calc_Analysis_MinusLogLikeGrad(const size_t n, const double* unit_nuisances_dbl,
+                                             void* npreds_nobss_sqrtevals_evecs, double* fgrad) {
+
+      // Convert the array of doubles into an "Eigen view" of the nuisance params
+      Eigen::Map<const Eigen::ArrayXd> unit_nuisances(&unit_nuisances_dbl[0], n);
+
+      // Convert the linearised array of doubles into "Eigen views" of the fixed params
+      double *npreds_nobss_sqrtevals_evecs_dbl = (double*) npreds_nobss_sqrtevals_evecs;
+      Eigen::Map<const Eigen::VectorXd> n_preds_nominal(&npreds_nobss_sqrtevals_evecs_dbl[0], n);
+      Eigen::Map<const Eigen::ArrayXd> n_obss(&npreds_nobss_sqrtevals_evecs_dbl[n], n);
+      Eigen::Map<const Eigen::ArrayXd> sqrtevals(&npreds_nobss_sqrtevals_evecs_dbl[2*n], n);
+      Eigen::Map<const Eigen::MatrixXd> evecs(&npreds_nobss_sqrtevals_evecs_dbl[3*n], n, n);
+      /// @todo Need to add this to the packing
+      Eigen::Map<const Eigen::MatrixXd> invcorr(&npreds_nobss_sqrtevals_evecs_dbl[3*n + n*n], n, n);
+
+      // Rotate rate deltas into the SR basis and shift by SR mean rates
+      const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
+
+      // Compute gradient elements
+      for (int j = 0; j < unit_nuisances.size(); ++j) {
+        double llgrad = 0;
+        llgrad += (n_obss(j)/n_preds(j) - 1) * sqrtevals(j);
+        // An Eigeny, no-loop way to do this multiplication? Dot product of a row/col with the unit nuisances?
+        for (int k = 0; j < unit_nuisances.size(); ++j)
+          llgrad -= invcorr(j,k) * unit_nuisances(k);
+
+        // Output via argument (invert to return -dLL for minimisation)
+        fgrad[j] = -llgrad;
+      }
+    }
+
 
 
     std::vector<double> _gsl_mkpackedarray(const Eigen::ArrayXd& n_preds,
@@ -151,6 +184,7 @@ namespace Gambit
 
     /// Return the best log likelihood
     /// @note Return value is missing the log(n_obs!) terms (n_SR of them) which cancel in LLR calculation
+    /// @todo Pass in the cov, and compute the fixed evals, evecs, and corr matrix as fixed params in here? Via a helper function to reduce duplication
     double profile_loglike_cov(const Eigen::ArrayXd& n_preds,
                                const Eigen::ArrayXd& n_obss,
                                const Eigen::ArrayXd& sqrtevals,
@@ -192,8 +226,7 @@ namespace Gambit
       // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
       multimin(nSR, &nuisances[0], &minusbestll,
                nullptr, nullptr, nullptr,
-               _gsl_calc_Analysis_MinusLogLike,
-               nullptr, nullptr,
+               _gsl_calc_Analysis_MinusLogLike, _gsl_calc_Analysis_MinusLogLikeGrad, nullptr,
                &fixeds[0], oparams);
 
       return -minusbestll;
