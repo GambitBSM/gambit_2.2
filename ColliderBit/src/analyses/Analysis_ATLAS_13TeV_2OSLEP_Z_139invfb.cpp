@@ -16,6 +16,7 @@
 
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
+#include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
 // #define CHECK_CUTFLOW
@@ -40,6 +41,8 @@ namespace Gambit
         {"SR2B", 0},
       };
 
+       vector<Cutflow> _cutflow;
+
     private:
 
       struct ptComparison
@@ -63,16 +66,17 @@ namespace Gambit
 
         set_analysis_name("ATLAS_13TeV_2OSLEP_Z_139invfb");
         set_luminosity(139);
-
-        #ifdef CHECK_CUTFLOW
-          NCUTS = 11;
-          for (size_t i=0;i<NCUTS;i++)
-          {
-            cutFlowVector.push_back(0);
-            cutFlowVectorATLAS_400_0.push_back(0);
-            cutFlowVector_str.push_back("");
-          }
-        #endif
+        
+        
+        str cutflow_name = "ATLAS 2 opposite sign leptons at the Z peak 13 TeV";
+        vector<str> SR1A = {"Trigger", "Third leading lepton pT > 20 GeV", "|mll - mZ| < 15 GeV", "nb-tagged (pT > 30 GeV) >= 1", "njets (pT > 30 GeV) >= 4", "MET > 250 GeV", "mT23l > 100 GeV"};
+        vector<str> SR1B = {"Trigger", "Third leading lepton pT > 20 GeV", "|mll - mZ| < 15 GeV", "nb-tagged (pT > 30 GeV) >= 1", "njets (pT > 30 GeV) >= 5", "MET > 150 GeV", "pTll > 150 GeV", "Leading b-tagged jet pT > 100 GeV"};
+        vector<str> SR2A = {"Trigger", "Third leading lepton pT < 20 GeV", "|mll - mZ| < 15 GeV", "Leading jet pT > 150 GeV", "MET > 200 GeV", "pTll < 50 GeV"};
+        vector<str> SR2B = {"Trigger", "Third leading lepton pT < 60 GeV", "|mll - mZ| < 15 GeV", "nb-tagged (pT > 30 GeV) >= 1", "MET > 350 GeV", "pTll > 150 GeV"};
+        _cutflow = { Cutflow(cutflow_name, SR1A),
+                     Cutflow(cutflow_name, SR1B),
+                     Cutflow(cutflow_name, SR2A), 
+                     Cutflow(cutflow_name, SR2B) };
 
       }
 
@@ -90,6 +94,10 @@ namespace Gambit
         // Missing momentum and energy
         HEPUtils::P4 ptot = event->missingmom();
         double met = event->met();
+
+        // Initialize cutflow
+        for(int i=0; i<4; i++)
+          _cutflow[i].fillinit();
 
         // Electron candidates are reconstructed from isolated electromagnetic calorimeter energy deposits matched to ID tracks and are required to have |η| < 2.47, a transverse momentum pT > 4.5 GeV, and to pass the “LooseAndBLayer” requirement in arXiv: 1902.04655 [hep-ex].
        for (HEPUtils::Particle* electron : event->electrons())
@@ -244,7 +252,9 @@ namespace Gambit
             SFOSpairClosestToMZ = pair;
           }
         }
-        // Find the highest pT letpon not in the pair, but make sure there are at least 3 leptons
+        // Construct the pTll variable
+        double pTll = ( SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom() ).pT();
+        // Find the highest pT lepton not in the pair, but make sure there are at least 3 leptons
         double mT23l = 0;
         if(preselection)
         {
@@ -301,7 +311,7 @@ namespace Gambit
             // -
             signalBJets.at(0)->pT() > 100. && 
             met > 150. &&
-            SFOSpair_pTs.at(0) > 150.
+            pTll > 150.
             // -
            ) 
           _numSR["SR1B"]++;
@@ -314,7 +324,7 @@ namespace Gambit
             signalJets.at(0)->pT() > 150. &&
             // -
             met > 200. &&
-            SFOSpair_pTs.at(-1) < 50. 
+            pTll < 50. 
             // -
            ) 
           _numSR["SR2A"]++;
@@ -327,11 +337,83 @@ namespace Gambit
            // -
            // -
            met > 350. && 
-           SFOSpair_pTs.at(0) > 150.
+           pTll > 150.
            // -
            ) 
           _numSR["SR2B"]++;
 
+
+        // Cutflows
+        
+        // Fill cutflow with preselection trigger as defined by ATLAS
+        if(nSignalLeptons >= 3 && nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && met > 50. && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20.)
+        {
+          // 1
+          for(int i=0; i<4; i++)
+            _cutflow[i].fill(1);
+
+          // 2
+          // Third leading lepton pT
+          if(signalLeptons.at(2)->pT() > 20)
+            for(int i=0; i<2; i++)
+              _cutflow[i].fill(2);
+          if(signalLeptons.at(2)->pT() < 20)
+            _cutflow[2].fill(2);
+          if(signalLeptons.at(2)->pT() < 60)
+            _cutflow[2].fill(2);
+
+          // 3
+          // Z peak
+          if(Zlike)
+            for(int i=0; i<4; i++)
+              _cutflow[i].fill(3);  
+
+          // 4
+          // nbtagged jets (pT > 30 GeV)
+          for(int i=0; i<4; i++)
+            if(nSignalBJets >= 1 && signalBJets.at(0)->pT() > 30. && i != 2)
+              _cutflow[i].fill(4);
+          // Leading jet pT > 150 GeV
+          if(signalJets.at(0)->pT() > 150.)
+            _cutflow[2].fill(4);
+
+          // 5
+          // n jets (pT > 30 GeV)
+          if(nSignalJets >= 4 && signalJets.at(3)->pT() > 30.)
+            _cutflow[0].fill(5);
+          if(nSignalJets >= 5 && signalJets.at(4)->pT() > 30.)
+            _cutflow[1].fill(5);
+          // MET
+          if(met > 200.)
+            _cutflow[2].fill(5);
+          if(met > 350.)
+            _cutflow[3].fill(5);
+
+          // 6
+          // MET
+          if(met > 250.)
+            _cutflow[0].fill(6);
+          if(met > 150.)
+            _cutflow[1].fill(6);
+          // pTll
+          if(pTll < 50.)
+            _cutflow[2].fill(6);
+          if(pTll > 150.)
+            _cutflow[3].fill(6);
+
+          // 7
+          // mT23l
+          if(mT23l > 100.)
+            _cutflow[0].fill(7);
+          // pTll
+          if(pTll > 150.)
+            _cutflow[1].fill(7);
+
+          // 8
+          // Leading b-tagget jet pT > 100 GeV
+          if(nSignalBJets >= 1 && signalBJets.at(0)->pT() > 100.)
+            _cutflow[1].fill(8);
+        }
       }
 
       /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
@@ -357,6 +439,14 @@ namespace Gambit
         add_result(SignalRegionData("SR2A", 3., {_numSR["SR2A"], 0.}, {5.7, 1.7}));
         add_result(SignalRegionData("SR2B", 6., {_numSR["SR2B"], 0.}, {5.4, 0.8}));
 
+        #ifdef CHECK_CUTFLOW
+          cout << _cutflow << endl;
+          for (auto& el : _numSR)
+          {
+             cout << el.first << "\t" << _numSR[el.first] << endl;
+          }
+        #endif
+
 
       }
 
@@ -365,9 +455,6 @@ namespace Gambit
       void analysis_specific_reset()
       {
         for (auto& el : _numSR) { el.second = 0.;}
-        #ifdef CHECK_CUTFLOW
-          std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
-        #endif
       }
 
     };
