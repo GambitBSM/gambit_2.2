@@ -52,112 +52,6 @@ namespace Gambit
         bool operator() (HEPUtils::Jet* i,HEPUtils::Jet* j) {return (i->pT()>j->pT());}
       } compareJetPt;
 
-      // Jet lepton overlap removal
-      // Discards jets if they are within DeltaRMax of a lepton and less than pTMax, unless they are b-tagged with efficiency btaggeff
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*>& jets, vector<HEPUtils::Particle*>& leptons, double DeltaRMax, double btaggeff = 0, double pTMax = 1000.)
-      {
-        vector<HEPUtils::Jet*> jetSurvivors;
-        vector<HEPUtils::Particle*> leptonSurvivors;
-        for(HEPUtils::Jet* jet : jets)
-        {
-          bool overlap = false;
-          for(HEPUtils::Particle* lepton : leptons)
-          {
-            double dR = jet->mom().deltaR_eta(lepton->mom());
-            if(jet->pT() < pTMax && fabs(dR) <= DeltaRMax) overlap = true;
-            // Do not remove jet if it has been tagged with efficiency btageff
-            if(jet->btag() && random_bool(btaggeff) ) overlap = false;
-            // No need to remove lepton as it will be removed by other overlap function
-          }
-          if(!overlap) jetSurvivors.push_back(jet);
-        }
-        jets = jetSurvivors;
-        return;
-      }
-
-      // Lepton jet overlap removal
-      // Discards leptons if they are within DeltaRMax of a jet
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*>& leptons, vector<HEPUtils::Jet*>& jets, double DeltaRMax)
-      {
-        vector<HEPUtils::Particle*> survivors;
-        for(HEPUtils::Particle* lepton : leptons)
-        {
-          bool overlap = false;
-          for(HEPUtils::Jet* jet : jets)
-          {
-            double dR = jet->mom().deltaR_eta(lepton->mom());
-            if(fabs(dR) <= DeltaRMax) overlap = true;
-          }
-          if(!overlap) survivors.push_back(lepton);
-        }
-        leptons = survivors;
-        return;
-      }
-
-      // As above but with DeltaRMax function
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*>& leptons, vector<HEPUtils::Jet*>& jets, double (*DeltaRMax)(const double))
-      {
-        vector<HEPUtils::Particle*> survivors;
-        for(HEPUtils::Particle* lepton : leptons)
-        {
-          bool overlap = false;
-          for(HEPUtils::Jet* jet : jets)
-          {
-            double dR = jet->mom().deltaR_eta(lepton->mom());
-            if(fabs(dR) <= DeltaRMax(lepton->pT())) overlap = true;
-          }
-          if(!overlap) survivors.push_back(lepton);
-        }
-        leptons = survivors;
-        return;
-      }
-
-
-      // Particle overlap removal
-      // Discards particle (from "particles1") if it is within DeltaRMax of another particle
-      void ParticleOverlapRemoval(vector<HEPUtils::Particle*>& particles1, vector<HEPUtils::Particle*>& particles2, double DeltaRMax)
-      {
-        vector<HEPUtils::Particle*> survivors;
-        for(HEPUtils::Particle* p1 : particles1)
-        {
-          bool overlap = false;
-          for(HEPUtils::Particle* p2 : particles2)
-          {
-            double dR = p1->mom().deltaR_eta(p2->mom());
-            if(fabs(dR) <= DeltaRMax) overlap = true;
-          }
-          if(!overlap) survivors.push_back(p1);
-        }
-        particles1 = survivors;
-        return;
-      }
-
-      // Removes a lepton from the leptons1 vector if it forms an OS pair with a
-      // lepton in leptons2 and the pair has a mass in the range (m_low, m_high).
-      void removeOSPairsInMassRange(vector<HEPUtils::Particle*>& leptons1, vector<HEPUtils::Particle*>& leptons2, double m_low, double m_high)
-      {
-        vector<HEPUtils::Particle*> l1_survivors;
-        for(HEPUtils::Particle* l1 : leptons1)
-        {
-          bool survived = true;
-          for(HEPUtils::Particle* l2 : leptons2)
-          {
-            if(l2 == l1) continue;
-            if (l1->pid()*l2->pid() < 0.)
-            {
-              double m = (l1->mom() + l2->mom()).m();
-              if ((m >= m_low) && (m <= m_high))
-              {
-                survived = false;
-                break;
-              }
-            }
-          }
-          if(survived) l1_survivors.push_back(l1);
-        }
-        leptons1 = l1_survivors;
-        return;
-      }
 
     public:
 
@@ -223,16 +117,38 @@ namespace Gambit
 
         // TODO Apply "medium" muon ID criteria
 
-        // TODO: transverse and longitudinal impact parameter cuts
+        // Missing: transverse and longitudinal impact parameter cuts
 
         // Only jet candidates with pT > 20 GeV and |η| < 2.8 are considered in the analysis
-        // TODO: Make sure that the paper means that jets have an efficiency of 90%
-        // TODO: Missing stuff about discarding jets regarding noise
+        // Jets with pT < 120 GeV and |η| < 2.8 have an efficiency of 90% 
+        // Mising:  cut based on detector noise and non-collision backgrounds
         double jet_eff = 0.9;
         for (HEPUtils::Jet* jet : event->jets())
         {
-          if (jet->pT()>20. && jet->abseta()<2.8 && random_bool(jet_eff)) baselineJets.push_back(jet);
+          if (jet->pT()>20. && jet->abseta()<2.8)
+            if( (jet->pT() >= 120. || jet->abseta() >= 2.5) || random_bool(jet_eff) ) baselineJets.push_back(jet);
         }
+
+        // Overlap removal
+
+        // 1) Remove jets within DeltaR = 0.2 of electron
+        // If b-tagging efficiency > 85%, do not remove jet. The lepton will be removed anyway.
+        removeOverlap(baselineJets, baselineElectrons, 0.2, false, 200, 0.85);
+
+        // 2) Remove electrons within DeltaR = 0.4 of a jet
+        removeOverlap(baselineElectrons, baselineJets, 0.4);
+
+        // 3) Remove jets within DeltaR = 0.2 of a muon
+        removeOverlap(baselineJets, baselineMuons, 0.2, false, DBL_MAX, 0.85);
+
+        // 4) Remove muons within DeltaR = 0.4 of jet
+        // Use lambda function to remove overlap with DeltaRMax as min(0.4, 0.04 + pT(µ)/10 GeV)
+        // Missing: Remove the jet instead if the jet has fewer than 3 associated tracks
+        auto lambda = [](double muonpT) { return std::min(0.4, 0.04 + muonpT/10.); };
+        removeOverlap(baselineMuons, baselineJets, lambda);
+
+        // 5) Remove electron candidates sharing and ID track with a muon candidate
+        // Missing: No track information
 
         // Find b-jets
         // Copied from ATLAS_13TeV_3b_24invfb
@@ -247,27 +163,6 @@ namespace Gambit
           // Non b-jet
           else baselineNonBJets.push_back(jet);
         }
-
-        // Overlap removal
-
-        // 1) Remove jets within DeltaR = 0.2 of electron
-        // If b-tagging efficiency > 85%, do not remove jet. The lepton will be removed anyway.
-        JetLeptonOverlapRemoval(baselineJets, baselineElectrons, 0.2, 0.85, 200.);
-
-        // 2) Remove electrons within DeltaR = 0.4 of a jet
-        LeptonJetOverlapRemoval(baselineElectrons, baselineJets, 0.4);
-
-        // 3) Remove jets within DeltaR = 0.2 of a muon
-        JetLeptonOverlapRemoval(baselineJets, baselineMuons, 0.2, 0.85);
-
-        // 4) Remove muons within DeltaR = 0.4 of jet
-        // Use lambda function to remove overlap with DeltaRMax as min(0.4, 0.04 + pT(µ)/10 GeV)
-        // TODO: Remove the jet instead if the jet has fewer than 3 associated tracks
-        auto lambda = [](double muonpT) { return std::min(0.4, 0.04 + muonpT/10.); };
-        LeptonJetOverlapRemoval(baselineMuons, baselineJets, lambda);
-
-        // 5) Remove electron candidates sharing and ID track with a muon candidate
-        // TODO: No track information
 
 
         // Signal objects
@@ -287,9 +182,7 @@ namespace Gambit
           if (signalMuon->pT() > 5.) signalMuons.push_back(signalMuon);
         }
          
-        // TODO: isolation criteria for signal leptons (see paper)
-
-        // TODO: Check that nothing to be done for corrections between MC and signal
+        // Missing: we need track information for isolation criteria for signal leptons
 
         // Fill signal leptons
         signalLeptons = signalElectrons;
@@ -306,7 +199,7 @@ namespace Gambit
         // - leading lepton pT > 40 GeV
         // - subleading lepton pT > 20 GeV
         // - Zlike, |mll - mZ| < 15 GeV
-        bool trigger = false;
+        bool preselection = false;
 
         // Count signal leptons and jets
         size_t nSignalLeptons = signalLeptons.size();
@@ -336,29 +229,43 @@ namespace Gambit
             Zlike = true;
         }
 
-        // Combine all trigger cuts
-        trigger = nSignalLeptons >= 3 && SFOSpairs.size() >= 1 && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20. && Zlike;     
+        // Combine all preselection cuts
+        preselection = nSignalLeptons >= 3 && SFOSpairs.size() >= 1 && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20. && Zlike;     
 
-        // Construct the mT23l variable for all pairs of SFOS and third lepton
-        double mT23lmax = 0;
+        // Construct the mT23l variable for the pair of SFOS with invariant mass closest to mZ and highest pT lepton not in the pair
+        vector<HEPUtils::Particle*> SFOSpairClosestToMZ;
+        double mll =  0;
+        // Find the SFOS pair high inv mass closest to mZ
         for (vector<HEPUtils::Particle*> pair: SFOSpairs)
         {
-          for (HEPUtils::Particle* signalLepton : signalLeptons)
+          if( fabs( (pair.at(0)->mom() + pair.at(1)->mom()).m() - mZ ) < fabs(mll - mZ) )
           {
-            double pa[3] = { 0, (pair.at(0)->mom() + pair.at(1)->mom()).px(), (pair.at(0)->mom() + pair.at(1)->mom()).py() };
-            double pb[3] = { 0, signalLepton->mom().px(), signalLepton->mom().py() };
-            double pmiss[3] = { 0, ptot.px(), ptot.py() };
-            double mn = 0.;
-
-            mt2_bisect::mt2 mt2_calc;
-            mt2_calc.set_momenta(pa,pb,pmiss);
-            mt2_calc.set_mn(mn);
-            double mt2 = mt2_calc.get_mt2();
-            if(mt2 > mT23lmax) mT23lmax = mt2;
+            mll = (pair.at(0)->mom() + pair.at(1)->mom()).m();
+            SFOSpairClosestToMZ = pair;
           }
-
         }
-        
+        // Find the highest pT letpon not in the pair, but make sure there are at least 3 leptons
+        double mT23l = 0;
+        if(preselection)
+        {
+          HEPUtils::Particle* thirdLepton;
+          if(signalLeptons.at(0) != SFOSpairClosestToMZ.at(0) && signalLeptons.at(0) != SFOSpairClosestToMZ.at(1))
+            thirdLepton = signalLeptons.at(0);
+          else if(signalLeptons.at(1) != SFOSpairClosestToMZ.at(0) && signalLeptons.at(1) != SFOSpairClosestToMZ.at(1))
+            thirdLepton = signalLeptons.at(1);
+          else
+            thirdLepton = signalLeptons.at(2);
+ 
+          double pa[3] = { 0, (SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom()).px(), (SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom()).py() };
+          double pb[3] = { 0, thirdLepton->mom().px(), thirdLepton->mom().py() };
+          double pmiss[3] = { 0, ptot.px(), ptot.py() };
+          double mn = 0.;
+
+          mt2_bisect::mt2 mt2_calc;
+          mt2_calc.set_momenta(pa,pb,pmiss);
+          mt2_calc.set_mn(mn);
+          mT23l = mt2_calc.get_mt2();
+        }
 
         // Signal Regions
 
@@ -374,23 +281,23 @@ namespace Gambit
         // mT23l                            >100       -       -       -    // done
 
         // SR1A
-        if (trigger && 
+        if (preselection && 
             signalLeptons.at(2)->pT() > 20. && 
             nSignalJets >= 4 && signalJets.at(3)->pT() > 30. &&
-            nSignalBJets >=1 && signalBJets.at(0)->pT() > 30. &&
+            nSignalBJets >= 1 && signalBJets.at(0)->pT() > 30. &&
             // -
             // -
             met > 250. &&
             // -
-            mT23lmax > 100.
+            mT23l > 100.
            ) 
           _numSR["SR1A"]++;
 
         // SR1B
-        if (trigger && 
+        if (preselection && 
             signalLeptons.at(2)->pT() > 20. && 
             nSignalJets >= 5 && signalJets.at(4)->pT() > 30. &&
-            nSignalBJets >=1 && signalBJets.at(0)->pT() > 30. &&
+            nSignalBJets >= 1 && signalBJets.at(0)->pT() > 30. &&
             // -
             signalBJets.at(0)->pT() > 100. && 
             met > 150. &&
@@ -400,7 +307,7 @@ namespace Gambit
           _numSR["SR1B"]++;
 
         // SR2A
-        if (trigger && 
+        if (preselection && 
             signalLeptons.at(2)->pT() < 20. && 
             nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && 
             // -
@@ -413,10 +320,10 @@ namespace Gambit
           _numSR["SR2A"]++;
 
         // SR2B
-        if (trigger && 
+        if (preselection && 
             signalLeptons.at(2)->pT() < 60. && 
             nSignalJets >= 3 && signalJets.at(2)->pT() > 30. &&
-            nSignalBJets >=1 && signalBJets.at(0)->pT() > 30. &&
+            nSignalBJets >= 1 && signalBJets.at(0)->pT() > 30. &&
            // -
            // -
            met > 350. && 
@@ -445,7 +352,6 @@ namespace Gambit
       {
 
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        // TODO: Make sure background events and uncertainties are correct
         add_result(SignalRegionData("SR1A", 3., {_numSR["SR1A"], 0.}, {5.4, 0.7}));
         add_result(SignalRegionData("SR1B", 14., {_numSR["SR1B"], 0.}, {12.8, 1.6}));
         add_result(SignalRegionData("SR2A", 3., {_numSR["SR2A"], 0.}, {5.7, 1.7}));
