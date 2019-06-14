@@ -209,13 +209,13 @@ namespace Gambit
       //  6: Simplex algorithm of Nelder and Mead ver. 2
       //  7: Simplex algorithm of Nelder and Mead: random initialization
       using namespace Pipes::calc_LHC_LogLikes;
-      static const double INITIAL_STEP = runOptions->getValueOrDef<double>(0.1, "covariance_prof_initstep");
-      static const double CONV_TOL = runOptions->getValueOrDef<double>(0.01, "covariance_prof_convtol");
-      static const unsigned MAXSTEPS = runOptions->getValueOrDef<unsigned>(10000, "covariance_prof_maxsteps");
-      static const double CONV_ACC = runOptions->getValueOrDef<double>(0.01, "covariance_prof_convacc");
-      static const double SIMPLEX_SIZE = runOptions->getValueOrDef<double>(1e-5, "covariance_prof_simplexsize");
-      static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(6, "covariance_prof_method");
-      static const unsigned VERBOSITY = runOptions->getValueOrDef<unsigned>(0, "covariance_prof_verbosity");
+      static const double INITIAL_STEP = runOptions->getValueOrDef<double>(0.1, "nuisance_prof_initstep");
+      static const double CONV_TOL = runOptions->getValueOrDef<double>(0.01, "nuisance_prof_convtol");
+      static const unsigned MAXSTEPS = runOptions->getValueOrDef<unsigned>(10000, "nuisance_prof_maxsteps");
+      static const double CONV_ACC = runOptions->getValueOrDef<double>(0.01, "nuisance_prof_convacc");
+      static const double SIMPLEX_SIZE = runOptions->getValueOrDef<double>(1e-5, "nuisance_prof_simplexsize");
+      static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(6, "nuisance_prof_method");
+      static const unsigned VERBOSITY = runOptions->getValueOrDef<unsigned>(0, "nuisance_prof_verbosity");
       static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
@@ -245,9 +245,9 @@ namespace Gambit
 
       // Sample correlated SR rates from a rotated Gaussian defined by the covariance matrix and offset by the mean rates
       using namespace Pipes::calc_LHC_LogLikes;
-      static const double CONVERGENCE_TOLERANCE_ABS = runOptions->getValueOrDef<double>(0.05, "covariance_marg_convthres_abs");
-      static const double CONVERGENCE_TOLERANCE_REL = runOptions->getValueOrDef<double>(0.05, "covariance_marg_convthres_rel");
-      static const size_t NSAMPLE_INPUT = runOptions->getValueOrDef<size_t>(100000, "covariance_nsamples_start");
+      static const double CONVERGENCE_TOLERANCE_ABS = runOptions->getValueOrDef<double>(0.05, "nuisance_marg_convthres_abs");
+      static const double CONVERGENCE_TOLERANCE_REL = runOptions->getValueOrDef<double>(0.05, "nuisance_marg_convthres_rel");
+      static const size_t NSAMPLE_INPUT = runOptions->getValueOrDef<size_t>(100000, "nuisance_nsamples_start");
 
       // Dynamic convergence control & test variables
       size_t nsample = NSAMPLE_INPUT;
