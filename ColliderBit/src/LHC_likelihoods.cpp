@@ -153,10 +153,7 @@ namespace Gambit
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         double llgrad = 0;
         llgrad += (n_obss(j)/n_preds(j) - 1) * sqrtevals(j);
-        // An Eigeny, no-loop way to do this multiplication? Dot product of a row/col with the unit nuisances?
-        for (int k = 0; j < unit_nuisances.size(); ++j)
-          llgrad -= invcorr(j,k) * unit_nuisances(k);
-
+        llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
         // Output via argument (invert to return -dLL for minimisation)
         fgrad[j] = -llgrad;
       }
