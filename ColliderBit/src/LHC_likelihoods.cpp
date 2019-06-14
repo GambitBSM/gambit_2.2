@@ -97,17 +97,17 @@ namespace Gambit
     ///
     /// @note Doesn't return a full log-like: the factorial term is missing since it's expensive, fixed and cancels in DLLs
     void _gsl_calc_Analysis_MinusLogLike(const size_t n, const double* unit_nuisances_dbl,
-                                         void* npreds_nobss_sqrtevals_evecs, double* fval) {
+                                         void* fixedparamspack, double* fval) {
 
       // Convert the array of doubles into an "Eigen view" of the nuisance params
       Eigen::Map<const Eigen::ArrayXd> unit_nuisances(&unit_nuisances_dbl[0], n);
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
-      double *npreds_nobss_sqrtevals_evecs_dbl = (double*) npreds_nobss_sqrtevals_evecs;
-      Eigen::Map<const Eigen::VectorXd> n_preds_nominal(&npreds_nobss_sqrtevals_evecs_dbl[0], n);
-      Eigen::Map<const Eigen::ArrayXd> n_obss(&npreds_nobss_sqrtevals_evecs_dbl[n], n);
-      Eigen::Map<const Eigen::ArrayXd> sqrtevals(&npreds_nobss_sqrtevals_evecs_dbl[2*n], n);
-      Eigen::Map<const Eigen::MatrixXd> evecs(&npreds_nobss_sqrtevals_evecs_dbl[3*n], n, n);
+      double *fixedparamspack_dbl = (double*) fixedparamspack;
+      Eigen::Map<const Eigen::VectorXd> n_preds_nominal(&fixedparamspack_dbl[0], n);
+      Eigen::Map<const Eigen::ArrayXd> n_obss(&fixedparamspack_dbl[n], n);
+      Eigen::Map<const Eigen::ArrayXd> sqrtevals(&fixedparamspack_dbl[2*n], n);
+      Eigen::Map<const Eigen::MatrixXd> evecs(&fixedparamspack_dbl[3*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
@@ -133,18 +133,18 @@ namespace Gambit
 
     /// Loglike gradient-function wrapper to provide the signature for GSL multimin
     void _gsl_calc_Analysis_MinusLogLikeGrad(const size_t n, const double* unit_nuisances_dbl,
-                                             void* npreds_nobss_sqrtevals_evecs, double* fgrad) {
+                                             void* fixedparamspack, double* fgrad) {
 
       // Convert the array of doubles into an "Eigen view" of the nuisance params
       Eigen::Map<const Eigen::ArrayXd> unit_nuisances(&unit_nuisances_dbl[0], n);
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
-      double *npreds_nobss_sqrtevals_evecs_dbl = (double*) npreds_nobss_sqrtevals_evecs;
-      Eigen::Map<const Eigen::VectorXd> n_preds_nominal(&npreds_nobss_sqrtevals_evecs_dbl[0], n);
-      Eigen::Map<const Eigen::ArrayXd> n_obss(&npreds_nobss_sqrtevals_evecs_dbl[n], n);
-      Eigen::Map<const Eigen::ArrayXd> sqrtevals(&npreds_nobss_sqrtevals_evecs_dbl[2*n], n);
-      Eigen::Map<const Eigen::MatrixXd> evecs(&npreds_nobss_sqrtevals_evecs_dbl[3*n], n, n);
-      Eigen::Map<const Eigen::MatrixXd> invcorr(&npreds_nobss_sqrtevals_evecs_dbl[3*n + n*n], n, n);
+      double *fixedparamspack_dbl = (double*) fixedparamspack;
+      Eigen::Map<const Eigen::VectorXd> n_preds_nominal(&fixedparamspack_dbl[0], n);
+      Eigen::Map<const Eigen::ArrayXd> n_obss(&fixedparamspack_dbl[n], n);
+      Eigen::Map<const Eigen::ArrayXd> sqrtevals(&fixedparamspack_dbl[2*n], n);
+      Eigen::Map<const Eigen::MatrixXd> evecs(&fixedparamspack_dbl[3*n], n, n);
+      Eigen::Map<const Eigen::MatrixXd> invcorr(&fixedparamspack_dbl[3*n + n*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
@@ -159,6 +159,13 @@ namespace Gambit
       }
     }
 
+
+    void _gsl_calc_Analysis_MinusLogLikeAndGrad(const size_t n, const double* unit_nuisances_dbl,
+                                                void* fixedparamspack,
+                                                double* fval, double* fgrad) {
+      _gsl_calc_Analysis_MinusLogLike(n, unit_nuisances_dbl, fixedparamspack, fval);
+      _gsl_calc_Analysis_MinusLogLikeGrad(n, unit_nuisances_dbl, fixedparamspack, fgrad);
+    }
 
 
     std::vector<double> _gsl_mkpackedarray(const Eigen::ArrayXd& n_preds,
@@ -226,7 +233,9 @@ namespace Gambit
       // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
       multimin(nSR, &nuisances[0], &minusbestll,
                nullptr, nullptr, nullptr,
-               _gsl_calc_Analysis_MinusLogLike, _gsl_calc_Analysis_MinusLogLikeGrad, nullptr,
+               _gsl_calc_Analysis_MinusLogLike,
+               _gsl_calc_Analysis_MinusLogLikeGrad,
+               _gsl_calc_Analysis_MinusLogLikeAndGrad,
                &fixeds[0], oparams);
 
       return -minusbestll;
