@@ -144,7 +144,6 @@ namespace Gambit
       Eigen::Map<const Eigen::ArrayXd> n_obss(&npreds_nobss_sqrtevals_evecs_dbl[n], n);
       Eigen::Map<const Eigen::ArrayXd> sqrtevals(&npreds_nobss_sqrtevals_evecs_dbl[2*n], n);
       Eigen::Map<const Eigen::MatrixXd> evecs(&npreds_nobss_sqrtevals_evecs_dbl[3*n], n, n);
-      /// @todo Need to add this to the packing
       Eigen::Map<const Eigen::MatrixXd> invcorr(&npreds_nobss_sqrtevals_evecs_dbl[3*n + n*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
@@ -168,15 +167,18 @@ namespace Gambit
     std::vector<double> _gsl_mkpackedarray(const Eigen::ArrayXd& n_preds,
                                            const Eigen::ArrayXd& n_obss,
                                            const Eigen::ArrayXd& sqrtevals,
-                                           const Eigen::MatrixXd& evecs) {
+                                           const Eigen::MatrixXd& evecs,
+                                           const Eigen::MatrixXd& invcorr) {
       const size_t nSR = n_obss.size();
-      std::vector<double> fixeds(nSR + nSR + nSR + nSR*nSR, 0.0);
+      std::vector<double> fixeds(3*nSR + 2*nSR*nSR, 0.0);
       for (size_t i = 0; i < nSR; ++i) {
         fixeds[0+i] = n_preds(i);
         fixeds[nSR+i] = n_obss(i);
         fixeds[2*nSR+i] = sqrtevals(i);
-        for (size_t j = 0; j < nSR; ++j)
+        for (size_t j = 0; j < nSR; ++j) {
           fixeds[3*nSR+i*nSR+j] = evecs(i,j); ///< @todo Double-check ordering... not that it matters
+          fixeds[3*nSR+nSR*nSR+i*nSR+j] = invcorr(i,j); ///< @todo Double-check ordering... not that it matters
+        }
       }
       return fixeds;
     }
@@ -188,7 +190,8 @@ namespace Gambit
     double profile_loglike_cov(const Eigen::ArrayXd& n_preds,
                                const Eigen::ArrayXd& n_obss,
                                const Eigen::ArrayXd& sqrtevals,
-                               const Eigen::MatrixXd& evecs) {
+                               const Eigen::MatrixXd& evecs,
+                               const Eigen::MatrixXd& invcorr) {
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
@@ -219,7 +222,7 @@ namespace Gambit
       static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
-      std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs);
+      std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs, invcorr);
 
       // Pass to the minimiser
       double minusbestll = 999;
@@ -237,7 +240,8 @@ namespace Gambit
     double marg_loglike_cov(const Eigen::ArrayXd& n_preds,
                             const Eigen::ArrayXd& n_obss,
                             const Eigen::ArrayXd& sqrtevals,
-                            const Eigen::MatrixXd& evecs) {
+                            const Eigen::MatrixXd& evecs,
+                            const Eigen::MatrixXd& /* invcorr */) {
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
@@ -496,9 +500,9 @@ namespace Gambit
 
           // Construct vectors of SR numbers
           /// @todo Unify this for both cov and no-cov, feeding in one-element Eigen blocks as Ref<>s for the latter?
-          Eigen::ArrayXd n_obs(adata.size()); // logfact_n_obs(adata.size());
-          Eigen::ArrayXd n_pred_b(adata.size()), n_pred_sb(adata.size()), abs_unc_s(adata.size());
-          for (size_t SR = 0; SR < adata.size(); ++SR)
+          Eigen::ArrayXd n_obs(nSR); // logfact_n_obs(nSR);
+          Eigen::ArrayXd n_pred_b(nSR), n_pred_sb(nSR), abs_unc_s(nSR);
+          for (size_t SR = 0; SR < nSR; ++SR)
           {
             const SignalRegionData& srData = adata[SR];
 
@@ -520,8 +524,17 @@ namespace Gambit
             abs_unc_s(SR) = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
           }
 
-          // Diagonalise the background-only covariance matrix, extracting the rotation matrix
+          // Diagonalise the background-only covariance matrix, extracting the correlation and rotation matrices
           /// @todo Compute the background-only covariance decomposition and likelihood only once
+          const Eigen::MatrixXd& srcov_b = adata.srcov;
+          Eigen::MatrixXd srcorr_b = srcov_b; // start with cov, then make corr
+          for (size_t SR = 0; SR < nSR; ++SR)
+          {
+            const double diagsd = sqrt(srcov_b(SR,SR));
+            srcorr_b.row(SR) /= diagsd;
+            srcorr_b.col(SR) /= diagsd;
+          }
+          const Eigen::MatrixXd srinvcorr_b = srcorr_b.inverse();
           const Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eig_b(adata.srcov);
           const Eigen::ArrayXd Eb = eig_b.eigenvalues();
           const Eigen::ArrayXd sqrtEb = Eb.sqrt();
@@ -529,17 +542,27 @@ namespace Gambit
 
           // Construct and diagonalise the s+b covariance matrix, adding the diagonal signal uncertainties in quadrature
           const Eigen::MatrixXd srcov_s = abs_unc_s.array().square().matrix().asDiagonal();
-          const Eigen::MatrixXd srcov_sb = adata.srcov + srcov_s;
+          const Eigen::MatrixXd srcov_sb = srcov_b + srcov_s;
+          Eigen::MatrixXd srcorr_sb = srcov_sb;
+          for (size_t SR = 0; SR < nSR; ++SR)
+          {
+            const double diagsd = sqrt(srcov_sb(SR,SR));
+            srcorr_sb.row(SR) /= diagsd;
+            srcorr_sb.col(SR) /= diagsd;
+          }
+          const Eigen::MatrixXd srinvcorr_sb = srcorr_sb.inverse();
           const Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eig_sb(srcov_sb);
           const Eigen::ArrayXd Esb = eig_sb.eigenvalues();
           const Eigen::ArrayXd sqrtEsb = Esb.sqrt();
           const Eigen::MatrixXd Vsb = eig_sb.eigenvectors();
 
+          // cout << "B: " << srcorr_b << " " << srcov_b << endl;
+          // cout << "SB: " << srcorr_sb << " " << srcov_sb << endl;
 
           // Compute the single, correlated analysis-level DLL as the difference of s+b and b (partial) LLs
           /// @todo Only compute this once per run
-          const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb);
-          const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb);
+          const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb, srinvcorr_b);
+          const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb, srinvcorr_b);
           const double dll = ll_sb - ll_b;
 
           // Store result
@@ -568,7 +591,7 @@ namespace Gambit
           int bestexp_sr_index;
           double nocovar_srsum_dll_obs = 0;
 
-          for (size_t SR = 0; SR < adata.size(); ++SR)
+          for (size_t SR = 0; SR < nSR; ++SR)
           {
             const SignalRegionData& srData = adata[SR];
 
@@ -594,17 +617,17 @@ namespace Gambit
             Eigen::ArrayXd n_preds_sb(1);    n_preds_sb(0) = n_pred_sb;
             Eigen::ArrayXd sqrtevals_b(1);   sqrtevals_b(0) = abs_uncertainty_b;
             Eigen::ArrayXd sqrtevals_sb(1);  sqrtevals_sb(0) = abs_uncertainty_sb;
-            Eigen::MatrixXd evecs_dummy(1,1); evecs_dummy(0,0) = 1.0;
+            Eigen::MatrixXd dummy(1,1); dummy(0,0) = 1.0;
 
 
             // Compute this SR's DLLs as the differences of s+b and b (partial) LLs
             /// @todo Or compute all the exp DLLs first, then only the best-expected SR's obs DLL?
             /// @todo Only compute this once per run
-            const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, evecs_dummy);
+            const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, dummy, dummy);
             /// @todo Only compute this once per run
-            const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, evecs_dummy);
-            const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, evecs_dummy);
-            const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, evecs_dummy);
+            const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, dummy, dummy);
+            const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, dummy, dummy);
+            const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, dummy, dummy);
             const double dll_exp = ll_sb_exp - ll_b_exp;
             const double dll_obs = ll_sb_obs - ll_b_obs;
 
@@ -658,7 +681,7 @@ namespace Gambit
           std::stringstream msg;
           msg << "Computation of composite loglike for analysis " << ananame << " returned NaN" << endl;
           msg << "Will now print the signal region data for this analysis:" << endl;
-          for (size_t SR = 0; SR < adata.size(); ++SR)
+          for (size_t SR = 0; SR < nSR; ++SR)
           {
             const SignalRegionData& srData = adata[SR];
             msg << srData.sr_label
