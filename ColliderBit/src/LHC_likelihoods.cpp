@@ -116,7 +116,7 @@ namespace Gambit
       double loglike_tot = 0;
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         // First the multivariate Gaussian bit (j = nuisance)
-        const double pnorm_j = -pow(unit_nuisances(j), 2)/2. - log(1/sqrt(2*M_PI));
+        const double pnorm_j = -pow(unit_nuisances(j), 2)/2. + log(1/sqrt(2*M_PI));
         loglike_tot += pnorm_j;
         // Then the Poisson bit (j = SR)
         /// @note We've dropped the log(n_obs!) terms, since they're expensive and cancel in computing DLL
