@@ -21,7 +21,7 @@
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/version.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
-#include "gambit/Elements/subspectrum.hpp"
+#include "gambit/Elements/spectrum.hpp"
 
 namespace Gambit
 {
@@ -111,13 +111,59 @@ namespace Gambit
     }
   }
 
-  bool SLHAea_block_exists(SLHAstruct& slha, const str& block)
+  bool SLHAea_block_exists(const SLHAstruct& slha, const str& block)
   {
     // Check if block exists
     bool found = false;
     if(slha.find(block) != slha.end()) found = true;
     return found;
   }
+
+  /// Check if an entry exists in an SLHA file (one index)
+  /// Error if the block doesn't exist! User should check that first with SLHAea_block_exists
+  bool SLHAea_entry_exists(const SLHAstruct& slha, const str& block, const int index)
+  {
+    bool found = false;
+    if(SLHAea_block_exists(slha,block))
+    {
+      std::stringstream i;
+      i<<index;
+      SLHAea::Block::key_type key(1);
+      key[0] = i.str();
+      if( slha.at(block).find(key) != slha.at(block).end() ) found = true; 
+    }
+    else
+    {
+      std::ostringstream errmsg;
+      errmsg<<"Error checking for existence of SLHA entry with index "<<index<<" in block "<<block<<"! The block itself doesn't exist! If this is a legitimate possibility for your use case then please expicitly check for the existence of the block using the 'SLHAea_block_exists' function before checking for the existence of specific entries";
+      utils_error().raise(LOCAL_INFO,errmsg.str());
+    }
+    return found;
+  }
+
+  /// Check if an entry exists in an SLHA file (one index)
+  /// Error if the block doesn't exist! User should check that first with SLHAea_block_exists
+  bool SLHAea_entry_exists(const SLHAstruct& slha, const str& block, const int index1, const int index2)
+  {
+    bool found = false;
+    if(SLHAea_block_exists(slha,block))
+    {
+      std::stringstream i,j;
+      i<<index1; j<<index2;
+      SLHAea::Block::key_type key(2);
+      key[0] = i.str();
+      key[1] = j.str();
+      if( slha.at(block).find(key) != slha.at(block).end() ) found = true;
+    }
+    else
+    {
+      std::ostringstream errmsg;
+      errmsg<<"Error checking for existence of SLHA entry with indices ["<<index1<<", "<<index2<<"] in block "<<block<<"! The block itself doesn't exist! If this is a legitimate possibility for your use case then please expicitly check for the existence of the block using the 'SLHAea_block_exists' function before checking for the existence of specific entries";
+      utils_error().raise(LOCAL_INFO,errmsg.str());
+    }
+    return found;
+  }
+
 
   bool SLHAea_check_block(SLHAstruct& slha, const str& block)
   {
@@ -288,19 +334,19 @@ namespace Gambit
 
   /// @}
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; SLHA index given by pdg code
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
+  /// Add an entry from a spectrum getter to an SLHAea object; SLHA index given by pdg code
+  void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const std::pair<int, int>& pdg_pair, const str& block, const str& comment,
    const bool error_if_missing, const double rescale)
   {
-     if(subspec.has(partype,pdg_pair))
+     if(spec.has(partype,pdg_pair))
      {
-       SLHAea_overwrite_block(slha, block, pdg_pair.first, subspec.get(partype,pdg_pair)*rescale, (comment == "" ? "" : "# " + comment));
+       SLHAea_overwrite_block(slha, block, pdg_pair.first, spec.get(partype,pdg_pair)*rescale, (comment == "" ? "" : "# " + comment));
      }
      else if(error_if_missing)
      {
         std::ostringstream errmsg;
-        errmsg << "Error creating SLHAea output from SubSpectrum object! Required entry not found (paramtype="<<Par::toString.at(partype)
+        errmsg << "Error creating SLHAea output from Spectrum object! Required entry not found (paramtype="<<Par::toString.at(partype)
                <<", pdg:context="<<pdg_pair.first<<":"<<pdg_pair.second<<")";
         utils_error().raise(local_info,errmsg.str());
      }
@@ -308,38 +354,38 @@ namespace Gambit
      return;
   }
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; 1 SLHA index
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
+  /// Add an entry from a spectrum getter to an SLHAea object; 1 SLHA index
+  void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const str& name, const str& block, const int slha_index,
    const str& comment, const bool error_if_missing, const double rescale)
   {
-     if(subspec.has(partype,name))
+     if(spec.has(partype,name))
      {
-       SLHAea_overwrite_block(slha, block, slha_index, subspec.get(partype,name)*rescale, (comment == "" ? "" : "# " + comment));
+       SLHAea_overwrite_block(slha, block, slha_index, spec.get(partype,name)*rescale, (comment == "" ? "" : "# " + comment));
      }
      else if(error_if_missing)
      {
         std::ostringstream errmsg;
-        errmsg << "Error creating SLHAea output from SubSpectrum object! Required entry not found (paramtype="<<Par::toString.at(partype)<<", name="<<name<<")";
+        errmsg << "Error creating SLHAea output from Spectrum object! Required entry not found (paramtype="<<Par::toString.at(partype)<<", name="<<name<<")";
         utils_error().raise(local_info,errmsg.str());
      }
      // else skip this entry
      return;
   }
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; two SubSpectrum getter indices, two SLHA indices
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
+  /// Add an entry from a spectrum getter to an SLHAea object; two Spectrum getter indices, two SLHA indices
+  void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const str& name, const int index1, const int index2, const str& block,
    const int slha_index1, const int slha_index2, const str& comment, const bool error_if_missing, const double rescale)
   {
-    if(subspec.has(partype,name,index1,index2))
+    if(spec.has(partype,name,index1,index2))
     {
-      SLHAea_overwrite_block(slha, block, slha_index1, slha_index2, subspec.get(partype,name,index1,index2)*rescale, (comment == "" ? "" : "# " + comment));
+      SLHAea_overwrite_block(slha, block, slha_index1, slha_index2, spec.get(partype,name,index1,index2)*rescale, (comment == "" ? "" : "# " + comment));
     }
     else if(error_if_missing)
     {
       std::ostringstream errmsg;
-      errmsg << "Error creating SLHAea output from SubSpectrum object! Required entry not found (paramtype="<<Par::toString.at(partype)<<", name="<<name<<", index1="<<index1<<", index2="<<index2;
+      errmsg << "Error creating SLHAea output from Spectrum object! Required entry not found (paramtype="<<Par::toString.at(partype)<<", name="<<name<<", index1="<<index1<<", index2="<<index2;
       utils_error().raise(local_info,errmsg.str());
     }
     // else skip this entry
@@ -347,17 +393,17 @@ namespace Gambit
   }
 
   /// Write a SimpleSpectrum to an SLHAea object.
-  void add_SimpleSpec_to_SLHAea(const SubSpectrum& subspec, SLHAstruct& slha, SubSpectrumContents& contents)
+  void add_SimpleSpec_to_SLHAea(const Spectrum& spec, SLHAstruct& slha, SpectrumContents::Contents& contents)
   {
 
     // Pick out the parameters whose SLHA block name is not: SMINPUTS, CKMBLOCK, YUKAWA, or empty.
-    std::vector<SpectrumParameter> bsm = contents.all_BSM_parameters();
+    std::vector<SpectrumContents::Parameter> bsm = contents.all_BSM_parameters();
 
     // Then assign them to the correct part of the SLHAea object
-    for (std::vector<SpectrumParameter>::const_iterator it = bsm.begin(); it != bsm.end(); ++it)
+    for (std::vector<SpectrumContents::Parameter>::const_iterator it = bsm.begin(); it != bsm.end(); ++it)
     {
       // Check for par.shape() at this point, probably?
-      SLHAea_add_from_subspec(slha, LOCAL_INFO, subspec, it->tag(), it->name(), it->blockname(), it->blockindex(), "");
+      SLHAea_add_from_spec(slha, LOCAL_INFO, spec, it->tag(), it->name(), it->blockname(), it->blockindex(), "");
     }
 
   }

@@ -33,10 +33,6 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-extern "C"
-{
-  #include "mkpath/mkpath.h"
-}
 
 # if GAMBIT_CONFIG_FLAG_use_std_regex
   #include <regex>
@@ -90,7 +86,7 @@ namespace Gambit
     EXPORT_SYMBOLS void strcpy2f(char*, int, str);
 
     /// Convert a string to upper case
-    EXPORT_SYMBOLS std::string toUpper(std::string&);
+    EXPORT_SYMBOLS std::string toUpper(const std::string&);
 
     /// Checks whether `str' ends with `suffix'
     EXPORT_SYMBOLS bool endsWith(const std::string& str, const std::string& suffix);
@@ -138,6 +134,10 @@ namespace Gambit
     /// Ensure that a path exists (and then return the path, for chaining purposes)
     EXPORT_SYMBOLS const str& ensure_path_exists(const str&);
 
+    /// From: http://nion.modprobe.de/blog/archives/357-Recursive-directory-creation.html
+    /// Author: Nico Golde (2005)
+    void recursive_mkdir(const char *path);
+ 
     /// Check if a file exists
     EXPORT_SYMBOLS bool file_exists(const std::string& filename);
 

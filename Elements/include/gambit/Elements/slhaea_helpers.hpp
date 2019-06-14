@@ -27,15 +27,15 @@
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/util_types.hpp"
 #include "gambit/Elements/spectrum_helpers.hpp"
-#include "gambit/Models/SpectrumContents/subspectrum_contents.hpp"
+#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
 
 #include "SLHAea/slhaea.h"
 
 
 namespace Gambit
 {
-  /// Forward declare SubSpectrum class
-  class SubSpectrum;
+  /// Forward declare Spectrum class
+  class Spectrum;
 
   /// Less confusing name for SLHAea container class
   typedef SLHAea::Coll SLHAstruct;
@@ -58,12 +58,17 @@ namespace Gambit
   void SLHAea_delete_block(SLHAstruct& slha, const std::string& block);
 
   /// Check if a block exists in an SLHAea object
-  bool SLHAea_block_exists(SLHAstruct& slha, const str& block);
+  bool SLHAea_block_exists(const SLHAstruct& slha, const str& block);
   /// Check if a block exists in an SLHAea object, add it if not
   bool SLHAea_check_block(SLHAstruct& slha, const str& block);
   /// Check if a block exists in an SLHAea object, add it if not, and check if it has an entry at a given index
   bool SLHAea_check_block(SLHAstruct& slha, const str& block, const int index); /*, const bool overwrite)*/
   bool SLHAea_check_block(SLHAstruct& slha, const str& block, const int index1, const int index2);
+
+  /// Check if specific entries within a block exist (error if block doesn't exist; check that first when using this function!)
+  bool SLHAea_entry_exists(const SLHAstruct& slha, const str& block, const int index);
+  bool SLHAea_entry_exists(const SLHAstruct& slha, const str& block, const int index1, const int index2); 
+
 
   /// Write the SPINFO block with GAMBIT name and version number
   void SLHAea_add_GAMBIT_SPINFO(SLHAstruct& slha /*modify*/);
@@ -97,22 +102,22 @@ namespace Gambit
   }
 
   /// Add an entry from a subspectrum getter to an SLHAea object; SLHA index given by pdg code
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
+  void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const std::pair<int, int>& pdg_pair, const str& block, const str& comment,
    const bool error_if_missing = true, const double rescale = 1.0);
 
   /// Add an entry from a subspectrum getter to an SLHAea object; 1 SLHA index
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
+  void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const str& name, const str& block, const int slha_index,
    const str& comment, const bool error_if_missing = true, const double rescale = 1.0);
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; two SubSpectrum getter indices, two SLHA indices
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
+  /// Add an entry from a subspectrum getter to an SLHAea object; two Spectrum getter indices, two SLHA indices
+  void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const str& name, const int index1, const int index2, const str& block,
    const int slha_index1, const int slha_index2, const str& comment, const bool error_if_missing = true, const double rescale = 1.0);
 
   /// Write a SimpleSpectrum to an SLHAea object.
-  void add_SimpleSpec_to_SLHAea(const SubSpectrum&, SLHAstruct&, SubSpectrumContents&);
+  //void add_SimpleSpec_to_SLHAea(const Spectrum&, SLHAstruct&, SpectrumContents&);
 
 }
 

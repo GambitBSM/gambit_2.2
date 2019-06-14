@@ -73,9 +73,13 @@ namespace Gambit {
             std::string my_name;
        
           protected:
-            void addParameter(const Par::Tags tag, const std::string& name, const std::vector<int>& shape = initVector(1), const std::string& blockname="", const int index=0);
+            /// Define a new parameter requirement
+            void addParameter(const Par::Tags tag, const std::string& name, const std::vector<int>& shape, const std::string& blockname, const int index=1);
             void setName(const std::string& name);
 
+            /// Import all parameter definitions from another Contents object
+            void addAllFrom(const Contents& other);
+                    
           public:
             std::string getName() const {return my_name;}
 
@@ -83,13 +87,13 @@ namespace Gambit {
             bool has_parameter(const Par::Tags tag, const std::string& name) const;
 
             /// Function to check if a parameter definition exists in this object, this time also checking the index shape
-            bool has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int> indices);
+            bool has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int>& indices) const;
 
             /// Function to get definition information for one parameter, identified by tag and string name
             Parameter get_parameter(const Par::Tags tag, const std::string& name) const;
 
             /// Function to get indices in SLHAea block in which requested index item can be found
-            std::vector<int> get_SLHA_indices(const Par::Tags tag, const std::string& name, std::vector<int> indices) const;
+            std::pair<std::string,std::vector<int>> get_SLHA_indices(const Par::Tags tag, const std::string& name, std::vector<int> indices) const;
 
             /// Function to retreive all parameters
             std::vector<Parameter> all_parameters() const;

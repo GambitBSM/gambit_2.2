@@ -21,6 +21,7 @@
 #ifndef __Spectrum_hpp__
 #define __Spectrum_hpp__
 
+#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/yaml_options.hpp"
 #include "SLHAea/slhaea.h"
@@ -115,6 +116,10 @@ namespace Gambit
          /// Contents requirements for this spectrum
          SpectrumContents::Contents myContents;
 
+         /// Master function for obtaining the 'basic' name under which a parameter set is recorded in the
+         /// SpectrumContents. Does all the checking for long/short name and antiparticle conversions.
+         std::pair<std::string,std::vector<int>> get_basic_name(const Par::Tags partype, const std::string& name, const std::vector<int>& indices) const;
+
       public:
 
          /// @{ Constructors/Destructors
@@ -141,13 +146,18 @@ namespace Gambit
          // bool auto_check_antiparticle_name
          
          /// Master checker function to see if a parameter request matches the spectrum contents
-         bool has(const Par::Tags partype, std::string& name, std::vector<int> indices, bool auto_check_antiparticle_name=true) const;
+         bool   has(const Par::Tags partype, const std::string& name, const std::vector<int>& indices, bool auto_check_antiparticle_name=true) const;
          
-         /// Getters to access pole masses in spectrum 
+         /// Master getter function to retrieve parameters from Spectrum object (digging them out of the wrapped SLHAea object)
+         double get(const Par::Tags partype, const std::string& name, const std::vector<int>& indices) const;
+ 
+         /// Checkers/getters for fixed number of indices   
          bool   has(const Par::Tags partype, const std::string& mass) const;
          double get(const Par::Tags partype, const std::string& mass) const;
          bool   has(const Par::Tags partype, const std::string& mass, const int index) const;
          double get(const Par::Tags partype, const std::string& mass, const int index) const;
+         bool   has(const Par::Tags partype, const std::string& mass, const int index1, const int index2) const;
+         double get(const Par::Tags partype, const std::string& mass, const int index1, const int index2) const;
 
          /// @{ PDB getter/checker overloads
          bool   has(const Par::Tags partype, const int pdg_code, const int context) const;
@@ -166,6 +176,9 @@ namespace Gambit
          double safeget(const Par::Tags partype, const std::pair<str,int> shortpr) const;
          /// @}
 
+         /// Master setter function (general case)
+         void set(const Par::Tags partype, const double value, const str& name, const std::vector<int>& indices);
+ 
          /* Setter declarations, for manually overwriting parameter values (directly changes wrapped SLHAea object contents)
             Note; these are NON-CONST */
          void set(const Par::Tags, const double, const str&);
@@ -181,17 +194,14 @@ namespace Gambit
          /// @}
 
          /// SLHAea object getter
-         /// Return underlying SLHAea object (with conversions between SLHA1/2 definitions if applicable)
-         SLHAstruct getSLHAea(int) const;
+         /// Return underlying SLHAea object
+         SLHAstruct getSLHAea() const;
 
          /// Output spectrum contents as an SLHA file, using getSLHAea.
-         void writeSLHAfile(int, const str&) const;
+         void writeSLHAfile(const str&) const;
 
          /// Helper function to drop SLHA files
          void drop_SLHAs_if_requested(const safe_ptr<Options>&, const str&);
-
-         /// PDG code translation map, for special cases where an SLHA file has been read in and the PDG codes changed.
-         const std::map<int, int>& PDG_translator() const;
 
          /// CKM Wolfenstein (lambda, A, rhobar, etabar) --> V_qq standard parameterisation convertors
          /// @{

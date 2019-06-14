@@ -26,7 +26,7 @@ namespace Gambit {
   {
      setName("SM");
 
-     std::vector<int> scalar = initVector(1);   // i.e. get(Par::Tag, "name")
+     std::vector<int> scalar; // Empty vector means no indices   // i.e. get(Par::Tag, "name")
      std::vector<int> v3     = initVector(3);   // i.e. get(Par::Tag, "name", i)
 
      addParameter(Par::mass1, "u"   , v3);

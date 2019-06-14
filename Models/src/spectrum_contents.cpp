@@ -18,14 +18,21 @@
 
 #include <fstream>
 
-#include "gambit/Models/Contents/spectrum_contents.hpp"
+#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
+#include "gambit/Models/partmap.hpp"
 #include "gambit/Elements/spectrum.hpp"
+#include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Utils/stream_overloads.hpp"
 #include "gambit/Utils/util_functions.hpp"
-#include "gambit/Elements/slhaea_helpers.hpp"
+
+// Easy name for particle database access
+#define PDB Models::ParticleDB()
 
 namespace Gambit 
 {
+  /// Less confusing name for SLHAea container class
+  typedef SLHAea::Coll SLHAstruct;
+
   namespace SpectrumContents
   {
     /// Function to retrieve all valid indices for this parameter
@@ -33,7 +40,7 @@ namespace Gambit
     std::vector<std::vector<int>> Parameter::allowed_indices()
     {
         std::vector<std::vector<int>> out;
-        switch shape().size()
+        switch(shape().size())
         {
             case 0:
             {
@@ -75,7 +82,7 @@ namespace Gambit
                                            const std::string& blockname, const int blockindex)
     {
        parameter_key thiskey(tag,name);
-       parameters.emplace_back(thiskey,Parameter(tag,name,shape,blockname,blockindex));
+       parameters.emplace(thiskey,Parameter(tag,name,shape,blockname,blockindex));
        /// Special additions for Par::Pole_Mass parameters; uncertainties!
        if(tag==Par::Pole_Mass)
        {
@@ -84,11 +91,21 @@ namespace Gambit
           Par::Tags tag_lower(Par::Pole_Mass_1srd_low);
           parameter_key key_upper(tag_upper,name);
           parameter_key key_lower(tag_lower,name);
-          parameters.emplace_back(key_upper,Parameter(tag_upper,name,shape,"DMASS",blockindex);
-          parameters.emplace_back(key_lower,Parameter(tag_lower,name,shape,"DMASS",blockindex);
+          parameters.emplace(key_upper,Parameter(tag_upper,name,shape,"DMASS",blockindex));
+          parameters.emplace(key_lower,Parameter(tag_lower,name,shape,"DMASS",blockindex));
        }
     }
 
+    /// Import all parameter definitions from another Contents object
+    void Contents::addAllFrom(const Contents& other)
+    {
+       for(auto p : other.all_parameters())
+       {
+          parameter_key thiskey(p.tag(),p.name());
+          parameters.emplace(thiskey,p);
+       }
+    }
+ 
     /// Set the name of this Contents object (i.e. the name of the model to which this spectrum data applies) 
     void Contents::setName(const std::string& name)
     {
@@ -103,17 +120,17 @@ namespace Gambit
        {
           found=false;
        }
-       return found
+       return found;
     }
 
     /// Function to check if a parameter definition exists in this object, this time also checking the index shape
-    bool Contents::has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int> indices)
+    bool Contents::has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int>& indices) const
     {
        bool found=true;
        if(has_parameter(tag,name))
        {
           // Now retrieve parameter definition and check indices
-          Parameter par = parameters.at(std::make_pair(tag,name));
+          Parameter par(parameters.at(std::make_pair(tag,name)));
           if(par.shape().size()!=indices.size())
           {
              // Nope, shape is wrong
@@ -138,23 +155,17 @@ namespace Gambit
        return found;
     }
 
-
     /// Function to get definition information for one parameter, identified by tag and string name
     Parameter Contents::get_parameter(const Par::Tags tag, const std::string& name) const
     {
-       Parameter out;
-       if(has_parameter(tag,name))
-       {
-          out = parameters.at(std::make_pair(tag,name));
-       }
-       else
+       if(not has_parameter(tag,name))
        {
           std::ostringstream errmsg;
-          errmsg<<"Could not get_parameter "<<name<<" with tag "<<Par::toString(tag)<<" from Contents with name "<<getName()<<std::endl;
+          errmsg<<"Could not get_parameter "<<name<<" with tag "<<Par::toString.at(tag)<<" from Contents with name "<<getName()<<std::endl;
           errmsg<<"That parameter has not been defined for this Contents!"<<std::endl;
           utils_error().forced_throw(LOCAL_INFO,errmsg.str());           
        }
-       return out;
+       return parameters.at(std::make_pair(tag,name));
     }
  
     /// Function to get block and indices in SLHAea file in which requested index item can be found
@@ -162,12 +173,11 @@ namespace Gambit
     {
        std::vector<int> SLHA_indices;
        std::string block;
-       Parameter p;
-       if(has_parameter(tag, name)
+       if(has_parameter(tag, name))
        {
-          p = parameters.at(std::make_pair(tag,name));
-          block = Utils::toUpper(p.block());
-          if(has_parameter(tag, name, indices)
+          Parameter p(parameters.at(std::make_pair(tag,name)));
+          block = Utils::toUpper(p.blockname());
+          if(has_parameter(tag, name, indices))
           {
              // Parameter exists and indices are correct; now convert them to SLHA indices
              switch(p.shape().size())
@@ -180,7 +190,7 @@ namespace Gambit
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name);
                       // I don't think we need to worry about the context integer here. Long name should be unique
                       // across all contexts, it is the PDG code that can refer to different things in different model contexts.
-                      pdgcode = pdgpair.first;
+                      int pdgcode = pdgpair.first;
                       SLHA_indices.push_back(pdgcode);
                    }
                    if(tag==Par::Pole_Mass_1srd_high or tag==Par::Pole_Mass_1srd_low)
@@ -188,7 +198,7 @@ namespace Gambit
                       // Pole mass uncertainties also have special retrieval rules, since they are added automatically
                       // Stored with two SLHA indices: one PDG code, and one index indicating 'upper' or 'lower' uncertainty. 
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name);
-                      pdgcode = pdgpair.first;
+                      int pdgcode = pdgpair.first;
                       SLHA_indices.push_back(pdgcode);
                       if(tag==Par::Pole_Mass_1srd_high) SLHA_indices.push_back(1);
                       if(tag==Par::Pole_Mass_1srd_low) SLHA_indices.push_back(0);
@@ -207,7 +217,7 @@ namespace Gambit
                    if(tag==Par::Pole_Mass & block=="MASS")
                    {
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name,index);
-                      pdgcode = pdgpair.first;
+                      int pdgcode = pdgpair.first;
                       SLHA_indices.push_back(pdgcode);
                    }
                    if(tag==Par::Pole_Mass_1srd_high or tag==Par::Pole_Mass_1srd_low)
@@ -215,7 +225,7 @@ namespace Gambit
                       // Pole mass uncertainties also have special retrieval rules, since they are added automatically
                       // Stored with two SLHA indices: one PDG code, and one index indicating 'upper' or 'lower' uncertainty. 
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name,index);
-                      pdgcode = pdgpair.first;
+                      int pdgcode = pdgpair.first;
                       SLHA_indices.push_back(pdgcode);
                       if(tag==Par::Pole_Mass_1srd_high) SLHA_indices.push_back(1);
                       if(tag==Par::Pole_Mass_1srd_low) SLHA_indices.push_back(0);
@@ -243,16 +253,19 @@ namespace Gambit
           else
           {
              std::ostringstream errmsg;
-             errmsg<<"Could not get SLHA indices for parameter "<<name<<" (indices="<<indices<<") with tag "<<Par::toString(tag)<<" from Contents with name "<<getName()<<std::endl;
+             errmsg<<"Could not get SLHA indices for parameter "<<name<<" (indices="<<indices<<") with tag "<<Par::toString.at(tag)<<" from Contents with name "<<getName()<<std::endl;
              errmsg<<"A parameter with that name and tag *has* been defined for this Contents, but the requested indices are out of the allowed range (allowed shape has been defined as "<<p.shape()<<")."<<std::endl;
              utils_error().forced_throw(LOCAL_INFO,errmsg.str());           
           }
+       }
+       else
+       {
           std::ostringstream errmsg;
-          errmsg<<"Could not get SLHA indices for parameter "<<name<<" (indices="<<indices<<") with tag "<<Par::toString(tag)<<" from Contents with name "<<getName()<<std::endl;
+          errmsg<<"Could not get SLHA indices for parameter "<<name<<" (indices="<<indices<<") with tag "<<Par::toString.at(tag)<<" from Contents with name "<<getName()<<std::endl;
           errmsg<<"No parameter with that name and tag has been defined for this Contents!"<<std::endl;
           utils_error().forced_throw(LOCAL_INFO,errmsg.str());           
-        }
-        return std::make_pair(block,SLHA_indices);
+       }
+       return std::make_pair(block,SLHA_indices);
     }
 
 
@@ -262,9 +275,9 @@ namespace Gambit
       std::vector<Parameter> all_pars;
       for(auto it=parameters.begin(); it!=parameters.end(); ++it)
       {
-         pars.push_back(it->second);
+         all_pars.push_back(it->second);
       }
-      return pars; 
+      return all_pars; 
     }
     
     /// Function to retreive all parameters matching a certain tag
@@ -309,11 +322,11 @@ namespace Gambit
     {
        const std::vector<Parameter> required_parameters = all_parameters();
        
-       for(auto& kv : required_parameters)
+       for(auto& par : required_parameters)
        {
-          const Par::Tags        tag   = kv.second.tag();
-          const std::string      name  = kv.second.name();
-          const std::vector<int> shape = kv.second.shape();
+          const Par::Tags        tag   = par.tag();
+          const std::string      name  = par.name();
+          const std::vector<int> shape = par.shape();
 
           // Deal with empty shape case
           if(shape.size()==0)
@@ -412,56 +425,60 @@ namespace Gambit
            Parameter par(kv.second);
 
            // Make sure block exists in output
-           SLHAea_check_block(out, par.block());
+           SLHAea_check_block(out, par.blockname());
 
            // Get all allowed indices for this parameter
+           std::cout<<"Processing parameter: "<<par.name()<<", "<<Par::toString.at(par.tag())<<", "<<par.shape()<<", "<<par.blockname()<<", "<<par.blockindex()<<std::endl;
            std::vector<std::vector<int>> indices(par.allowed_indices());
            // Get SLHA indices for all entries, and add them to SLHA output
            if(indices.size()==0)
            {
-              SLHAea_add(out, par.block(), -9999, name + "("+Par::toString(tag)")");
+              SLHAea_add(out, par.blockname(), -9999, name + " ("+Par::toString.at(tag)+")");
            }
            else
            {
               for(auto index_list : indices)
               {
-                  std::sstream comment;
+                  std::stringstream comment;
                   comment << name;
                   if(index_list.size()>0) comment << index_list;
-                  comment << " ("<<Par::toString(tag)<<")";
+                  comment << " ("<<Par::toString.at(tag)<<")";
 
-                  std::vector<int> SLHA_indices = get_SLHA_indices(tag,name,index_list);
-                  switch SLHA_indices.size():
+                  std::pair<std::string,std::vector<int>> SLHA_loc = get_SLHA_indices(tag,name,index_list);
+                  std::string      block        = SLHA_loc.first;
+                  std::vector<int> SLHA_indices = SLHA_loc.second;
+                  switch(SLHA_indices.size())
                   {
                       case 0:
                       {
                           // Currently not handled; error
                           std::ostringstream errmsg;
-                          errmsg<<"Error generating template SLHA file for Contents "<<getName()<<"! Received null index list from get_SLHA_indices function when looking up indices for parameter "<<name<<" of type "<<Par::toString(tag)<<" with spectrum indices "<<index_list<<"! Currently we do not handle the case of SLHA items that have no indices. Please file a bug report if you require this feature, or check the Contents definition if you think this is a mistake.";          
+                          errmsg<<"Error generating template SLHA file for Contents "<<getName()<<"! Received null index list from get_SLHA_indices function when looking up indices for parameter "<<name<<" of type "<<Par::toString.at(tag)<<" with spectrum indices "<<index_list<<"! Currently we do not handle the case of SLHA items that have no indices. Please file a bug report if you require this feature, or check the Contents definition if you think this is a mistake.";          
                           utils_error().forced_throw(LOCAL_INFO,errmsg.str());
                           break;
                       }
                       case 1:
                       {
                           int index = SLHA_indices.at(0);
-                          SLHAea_add(out, par.block(), index, -9999, comment); 
+                          SLHAea_add(out, block, index, -9999, comment.str()); 
                           break;
                       }
                       case 2:
                       {
                           int index1 = SLHA_indices.at(0);
                           int index2 = SLHA_indices.at(1);
-                          SLHAea_add(out, par.block(), index1, index2, -9999, comment);
+                          SLHAea_add(out, block, index1, index2, -9999, comment.str());
                       }
                   }
               }
            } 
        }
        // Write to file
-       ofstream ofs(filename);
+       std::ofstream ofs(filename);
        ofs << out;
        ofs.close();
     }
   }
 }
 
+#undef PDB
