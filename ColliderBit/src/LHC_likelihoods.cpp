@@ -242,6 +242,23 @@ namespace Gambit
     }
 
 
+    double marg_loglike_nulike1sr(const Eigen::ArrayXd& n_preds,
+                                  const Eigen::ArrayXd& n_obss,
+                                  const Eigen::ArrayXd& sqrtevals) {
+      //const Eigen::MatrixXd& /* evecs */,
+      //                          const Eigen::MatrixXd& /* invcorr */) {
+      assert(n_preds.size() == 1);
+      assert(n_obss.size() == 1);
+      assert(sqrtevals.size() == 1);
+
+      using namespace Pipes::calc_LHC_LogLikes;
+      auto marginaliser = (*BEgroup::lnlike_marg_poisson == "lnlike_marg_poisson_lognormal_error")
+        ? BEreq::lnlike_marg_poisson_lognormal_error : BEreq::lnlike_marg_poisson_gaussian_error;
+
+      const double sr_margll = marginaliser((int) n_preds(0), 0.0, n_obss(0), sqrtevals(0)/n_preds(0));
+      return sr_margll;
+    }
+
 
     double marg_loglike_cov(const Eigen::ArrayXd& n_preds,
                             const Eigen::ArrayXd& n_obss,
@@ -256,7 +273,11 @@ namespace Gambit
       using namespace Pipes::calc_LHC_LogLikes;
       static const double CONVERGENCE_TOLERANCE_ABS = runOptions->getValueOrDef<double>(0.05, "nuisance_marg_convthres_abs");
       static const double CONVERGENCE_TOLERANCE_REL = runOptions->getValueOrDef<double>(0.05, "nuisance_marg_convthres_rel");
-      static const size_t NSAMPLE_INPUT = runOptions->getValueOrDef<size_t>(100000, "nuisance_nsamples_start");
+      static const size_t NSAMPLE_INPUT = runOptions->getValueOrDef<size_t>(100000, "nuisance_marg_nsamples_start");
+      static const bool   NULIKE1SR = runOptions->getValueOrDef<bool>(false, "nuisance_marg_nulike1sr");
+
+      // Optionally use nulike's more careful 1D marginalisation for one-SR cases
+      if (NULIKE1SR && nSR == 1) return marg_loglike_nulike1sr(n_preds, n_obss, sqrtevals);
 
       // Dynamic convergence control & test variables
       size_t nsample = NSAMPLE_INPUT;
@@ -362,8 +383,6 @@ namespace Gambit
 
       return ana_margll;
     }
-
-
 
 
     /// Loop over all analyses and fill a map of AnalysisLogLikes objects
