@@ -35,25 +35,26 @@ namespace Gambit
      setName("DiracSingletDM_Z2");
 
      // shape prototypes
+     std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name")
      std::vector<int> m3x3 = initVector(3,3);
 
-     addParameter(Par::mass1, "vev");
-     addParameter(Par::dimensionless, "lF");
-     addParameter(Par::dimensionless, "lambda_h");
-     addParameter(Par::dimensionless, "xi");
+     addParameter(Par::mass1, "vev", scalar, "VEVS", 1);
+     addParameter(Par::dimensionless, "lF",       scalar, "COUPLINGS", 1);
+     addParameter(Par::dimensionless, "lambda_h", scalar, "COUPLINGS", 2);
+     addParameter(Par::dimensionless, "xi",       scalar, "COUPLINGS", 3);
 
-     addParameter(Par::Pole_Mass, "h0_1");
-     addParameter(Par::Pole_Mass, "F" );
+     addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS"); // Index is PDG code, determined using particle database
+     addParameter(Par::Pole_Mass, "F" ,   scalar, "MASS");
 
-     addParameter(Par::dimensionless, "g1");
-     addParameter(Par::dimensionless, "g2");
-     addParameter(Par::dimensionless, "g3");
+     addParameter(Par::dimensionless, "g1", scalar, "GAUGE", 1);
+     addParameter(Par::dimensionless, "g2", scalar, "GAUGE", 2);
+     addParameter(Par::dimensionless, "g3", scalar, "GAUGE", 3);
 
-     addParameter(Par::dimensionless, "sinW2");
+     addParameter(Par::dimensionless, "sinW2", scalar, "SINTHETAW", 1);
 
-     addParameter(Par::dimensionless, "Yd", m3x3);
-     addParameter(Par::dimensionless, "Yu", m3x3);
-     addParameter(Par::dimensionless, "Ye", m3x3);
+     addParameter(Par::dimensionless, "Yd", m3x3, "YD");
+     addParameter(Par::dimensionless, "Yu", m3x3, "YU");
+     addParameter(Par::dimensionless, "Ye", m3x3, "YE");
   }
 
 }

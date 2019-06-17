@@ -56,8 +56,9 @@ namespace Gambit {
      addParameter(Par::mass1, "M2", scalar, "MSOFT", 2);
      addParameter(Par::mass1, "M3", scalar, "MSOFT", 3);
      addParameter(Par::mass1, "Mu", scalar, "HMIX", 1); // Is this \mu?
-     addParameter(Par::mass1, "vu", scalar, "VEV", 1); // TODO: More made up stuff
-     addParameter(Par::mass1, "vd", scalar, "VEV", 2);
+     addParameter(Par::mass1, "vev",scalar, "VEVS", 1); // TODO: More made up stuff
+     addParameter(Par::mass1, "vu", scalar, "VEVS", 2); 
+     addParameter(Par::mass1, "vd", scalar, "VEVS", 3);
 
      addParameter(Par::mass1, "TYd", m3x3, "TD"); // TODO: Peter check this. I think TD,TE etc are something to do with the trilinears in SLHA2, more like AD,AE etc, not this presumably Yukawa-related thing. I guess the SpecBit paper explains it. 
      addParameter(Par::mass1, "TYe", m3x3, "TE");

@@ -39,25 +39,25 @@ namespace Gambit {
   
 
 
-     addParameter(Par::mass1, "vev"      );
+     addParameter(Par::mass1, "vev", scalar, "VEVS", 1);
 
-     addParameter(Par::Pole_Mass, "h0_1");
+     addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS");
      
-     addParameter(Par::Pole_Mass, "Chi0" );
-     addParameter(Par::Pole_Mass, "Chi1" );
-     addParameter(Par::Pole_Mass, "Chi2" );
+     addParameter(Par::Pole_Mass, "Chi0", scalar, "MASS"); // TODO: These need to be added to the particle database!
+     addParameter(Par::Pole_Mass, "Chi1", scalar, "MASS");
+     addParameter(Par::Pole_Mass, "Chi2", scalar, "MASS");
      
-     addParameter(Par::dimensionless, "lambda_h");
+     addParameter(Par::dimensionless, "lambda_h", scalar , "COUPLINGS", 1);
     
-     addParameter(Par::dimensionless, "g1", scalar);
-     addParameter(Par::dimensionless, "g2", scalar);
-     addParameter(Par::dimensionless, "g3", scalar);
+     addParameter(Par::dimensionless, "g1", scalar, "GAUGE", 1);
+     addParameter(Par::dimensionless, "g2", scalar, "GAUGE", 2);
+     addParameter(Par::dimensionless, "g3", scalar, "GAUGE", 3);
     
-     addParameter(Par::dimensionless, "sinW2", scalar);
+     addParameter(Par::dimensionless, "sinW2", scalar, "SINTHETAW", 1);
   
-     addParameter(Par::dimensionless, "Yd", m3x3);
-     addParameter(Par::dimensionless, "Yu", m3x3);
-     addParameter(Par::dimensionless, "Ye", m3x3);
+     addParameter(Par::dimensionless, "Yd", m3x3, "YD");
+     addParameter(Par::dimensionless, "Yu", m3x3, "YU");
+     addParameter(Par::dimensionless, "Ye", m3x3, "YE");
   }
 
 }
