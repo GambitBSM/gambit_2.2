@@ -28,6 +28,9 @@
 // Easy name for particle database access
 #define PDB Models::ParticleDB()
 
+// Activate extra cout statements to watch SLHA index deduction
+//#define DEBUG_SLHA_INDEX
+
 namespace Gambit 
 {
   /// Less confusing name for SLHAea container class
@@ -40,12 +43,16 @@ namespace Gambit
     std::vector<std::vector<int>> Parameter::allowed_indices()
     {
         std::vector<std::vector<int>> out;
+        std::cout<<"shape():"<<shape()<<std::endl;
+        std::cout<<"shape().size(): "<<shape().size()<<std::endl;
         switch(shape().size())
         {
             case 0:
             {
                 // No indices, return empty allowed index list
-                break; 
+                std::vector<int> indices;
+                out.push_back(indices);
+                break;
             }
             case 1:
             {
@@ -155,6 +162,85 @@ namespace Gambit
        return found;
     }
 
+    /// Function to retrieve a version of the parameter name and indices that exists in this Contents object
+    /// i.e. attempts conversions based on particle database
+    std::pair<std::string,std::vector<int>> Contents::find_matching_parameter(const Par::Tags tag, const std::string& name, const std::vector<int>& indices, bool& success) const
+    {
+       std::string name_out;
+       std::vector<int> indices_out;
+       success = false;
+       if(has_parameter(tag,name,indices))
+       {
+          // No conversion necessary
+          name_out = name;
+          indices_out = indices;
+          success = true;
+       }
+       // Check for short name
+       else if(indices.size()==0 and PDB.has_particle(name) and PDB.has_short_name(name))
+       {
+          // Try converting long->short name
+          std::pair<std::string, int> shortpair = PDB.short_name_pair(name);
+          std::vector<int> test_indices;
+          test_indices.push_back(shortpair.second);
+          if(has_parameter(tag,shortpair.first,test_indices))
+          {
+             name_out = shortpair.first;
+             indices_out = test_indices;
+             success = true;
+          }
+          else if(PDB.has_antiparticle(shortpair))
+          {
+             // Try antiparticle name
+             std::pair<std::string, int> antipair = PDB.get_antiparticle(shortpair);
+             test_indices.clear();
+             test_indices.push_back(antipair.second);
+             if(has_parameter(tag,antipair.first,test_indices))
+             {
+                name_out = antipair.first;
+                indices_out = test_indices;
+                success = true;
+             }
+          }
+       }
+       // Check for long name
+       else if(indices.size()==1 and PDB.has_particle(std::make_pair(name,indices.at(1))))
+       {
+          std::string longname = PDB.long_name(name,indices.at(1));
+          std::vector<int> no_indices; // Left empty intentionally
+          if(has_parameter(tag,longname,no_indices))
+          {
+             name_out = longname;
+             indices_out = no_indices;
+             success = true; 
+          }
+          else if(PDB.has_antiparticle(longname))
+          {
+             // Try antiparticle name
+             std::string antiparticle = PDB.get_antiparticle(longname);
+             if(has_parameter(tag,antiparticle,no_indices))
+             {
+                name_out = antiparticle;
+                indices_out = no_indices;
+                success = true; 
+             }
+          }
+       }
+       // Check for antiparticle (keeping indices as-is)
+       else if(PDB.has_antiparticle(name))
+       {
+          std::string antiparticle = PDB.get_antiparticle(name);
+          if(has_parameter(tag,antiparticle,indices))
+          {
+             name_out = antiparticle;
+             indices_out = indices;
+             success = true; 
+          }
+       }
+       return std::make_pair(name_out,indices_out);   
+    }
+
+
     /// Function to get definition information for one parameter, identified by tag and string name
     Parameter Contents::get_parameter(const Par::Tags tag, const std::string& name) const
     {
@@ -175,26 +261,42 @@ namespace Gambit
        std::string block;
        if(has_parameter(tag, name))
        {
+          #ifdef DEBUG_SLHA_INDEX
+          std::cout<<"has_parameter("<<Par::toString.at(tag)<<", "<<name<<") = true"<<std::endl;
+          #endif
           Parameter p(parameters.at(std::make_pair(tag,name)));
           block = Utils::toUpper(p.blockname());
           if(has_parameter(tag, name, indices))
           {
+             #ifdef DEBUG_SLHA_INDEX
+             std::cout<<"has_parameter("<<Par::toString.at(tag)<<", "<<name<<", "<<indices<<") = true"<<std::endl;
+             #endif
+ 
              // Parameter exists and indices are correct; now convert them to SLHA indices
              switch(p.shape().size())
              {
                 case 0:
                 {
+                   #ifdef DEBUG_SLHA_INDEX
+                   std::cout<<"  p.shape().size()==0"<<std::endl;
+                   #endif
                    // We have to deal with the MASS block as a special case, because the SLHA indices are PDG codes.
                    if(tag==Par::Pole_Mass & block=="MASS")
                    {
+                      #ifdef DEBUG_SLHA_INDEX
+                      std::cout<<"  Pole_Mass in MASS block detected; will retrieve PDG code from particle database to use as SLHA index"<<std::endl;
+                      #endif
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name);
                       // I don't think we need to worry about the context integer here. Long name should be unique
                       // across all contexts, it is the PDG code that can refer to different things in different model contexts.
                       int pdgcode = pdgpair.first;
                       SLHA_indices.push_back(pdgcode);
                    }
-                   if(tag==Par::Pole_Mass_1srd_high or tag==Par::Pole_Mass_1srd_low)
+                   else if(tag==Par::Pole_Mass_1srd_high or tag==Par::Pole_Mass_1srd_low)
                    {
+                      #ifdef DEBUG_SLHA_INDEX
+                      std::cout<<"  Pole_Mass uncertainty detected; will retrieve PDG code from particle database to use as SLHA index"<<std::endl;
+                      #endif  
                       // Pole mass uncertainties also have special retrieval rules, since they are added automatically
                       // Stored with two SLHA indices: one PDG code, and one index indicating 'upper' or 'lower' uncertainty. 
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name);
@@ -212,16 +314,25 @@ namespace Gambit
                 }
                 case 1:
                 {
+                   #ifdef DEBUG_SLHA_INDEX
+                   std::cout<<"  p.shape().size()==1"<<std::endl;
+                   #endif 
                    int index = indices.at(0);
                    // We have to deal with the MASS block as a special case, because the SLHA indices are PDG codes.
                    if(tag==Par::Pole_Mass & block=="MASS")
                    {
+                      #ifdef DEBUG_SLHA_INDEX
+                      std::cout<<"  Pole_Mass in MASS block detected; will retrieve PDG code from particle database to use as SLHA index"<<std::endl;
+                      #endif
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name,index);
                       int pdgcode = pdgpair.first;
                       SLHA_indices.push_back(pdgcode);
                    }
-                   if(tag==Par::Pole_Mass_1srd_high or tag==Par::Pole_Mass_1srd_low)
+                   else if(tag==Par::Pole_Mass_1srd_high or tag==Par::Pole_Mass_1srd_low)
                    {
+                      #ifdef DEBUG_SLHA_INDEX
+                      std::cout<<"  Pole_Mass uncertainty detected; will retrieve PDG code from particle database to use as SLHA index"<<std::endl;
+                      #endif 
                       // Pole mass uncertainties also have special retrieval rules, since they are added automatically
                       // Stored with two SLHA indices: one PDG code, and one index indicating 'upper' or 'lower' uncertainty. 
                       std::pair<int, int> pdgpair = PDB.pdg_pair(name,index);
@@ -241,6 +352,9 @@ namespace Gambit
                 }
                 case 2:
                 {
+                   #ifdef DEBUG_SLHA_INDEX
+                   std::cout<<"  p.shape().size()==2"<<std::endl;
+                   #endif 
                    int index1 = indices.at(0);
                    int index2 = indices.at(1);
                    // No weird PDG code stuff for matrix-valued parameters.
@@ -265,6 +379,9 @@ namespace Gambit
           errmsg<<"No parameter with that name and tag has been defined for this Contents!"<<std::endl;
           utils_error().forced_throw(LOCAL_INFO,errmsg.str());           
        }
+       #ifdef DEBUG_SLHA_INDEX
+       std::cout<<"  Deduced SLHA location: "<<block<<", "<<SLHA_indices<<std::endl;
+       #endif
        return std::make_pair(block,SLHA_indices);
     }
 
@@ -328,29 +445,29 @@ namespace Gambit
           const std::string      name  = par.name();
           const std::vector<int> shape = par.shape();
 
-          // Deal with empty shape case
+          // Deal with scalar case (empty shape)
           if(shape.size()==0)
-          {
-            // ERROR, please use length 1 vector for scalar case
-            std::ostringstream errmsg;           
-            errmsg << "Error while verifying contents of Spectrum object against Contents object with name \""<<my_name<<"\" !" << std::endl;
-            errmsg << "Encountered a required parameter ("<<Par::toString.at(tag)<<", "<<name<<") with shape.size()==0. This is not allowed; if you want this parameter to be considered a scalar, please set the shape to '1', i.e. std::vector<int> shape = initVector(1). Please fix this parameter in the Contents class." << std::endl;
-            utils_error().forced_throw(LOCAL_INFO,errmsg.str());
-          }
-          // Check scalar case
-          else if(shape.size()==1 and shape[0]==1)
           {
             if(not spec.has(tag,name))
             {
               // ERROR, Required parameter not found
               std::ostringstream errmsg;           
               errmsg << "Error while verifying contents of Spectrum object against Contents object with name \""<<my_name<<"\" !" << std::endl;
-              errmsg << "Required scalar-valued parameter ("<<Par::toString.at(tag)<<", "<<name<<") is not accessible via subspectrum->get(Par::"<<Par::toString.at(tag)<<", \""<<name<<"\"). Please fix the relevant Spectrum wrapper class so that this parameter can be accessed." << std::endl;
+              errmsg << "Required scalar-valued parameter ("<<Par::toString.at(tag)<<", "<<name<<") is not accessible via spectrum->get(Par::"<<Par::toString.at(tag)<<", \""<<name<<"\"). Please check that the input SLHAea object has been correctly filled to match the required Contents." << std::endl;
               utils_error().forced_throw(LOCAL_INFO,errmsg.str());
             }
           }
+          // Check for attempts to specify scalar using vector of length 1 (not allowed)
+          else if(shape.size()==1 and shape.at(0)==1)
+          {
+            // ERROR, please use empty vector for scalar case
+            std::ostringstream errmsg;           
+            errmsg << "Error while verifying contents of Spectrum object against Contents object with name \""<<my_name<<"\" !" << std::endl;
+            errmsg << "Encountered a required parameter ("<<Par::toString.at(tag)<<", "<<name<<") with shape.size()==1 and shape.at(0)==1 (i.e. vector parameter of length 1). This is not allowed; if you want this parameter to be considered a scalar, please set the shape to be an empty vector, i.e. std::vector<int> shape = std::vector<int>(). Please fix this parameter in the Contents class." << std::endl;
+            utils_error().forced_throw(LOCAL_INFO,errmsg.str());
+          }
           // Check vector case
-          else if(shape.size()==1 and shape[0]>1)
+          else if(shape.size()==1 and shape.at(0)>1)
           {
             if(shape[0]<0)
             {
@@ -362,13 +479,13 @@ namespace Gambit
             }
             else
             { 
-              for(int i = 1; i<=shape[0]; ++i) {
+              for(int i = 1; i<=shape.at(0); ++i) {
                 if(not spec.has(tag,name,i))
                 {
                   // ERROR, Required parameter not found
                   std::ostringstream errmsg;           
                   errmsg << "Error while verifying contents of Spectrum object against Contents object with name \""<<my_name<<"\" !" << std::endl;
-                  errmsg << "An entry of the required vector-valued parameter ("<<Par::toString.at(tag)<<", "<<name<<") with required length "<<shape[0]<<" is not accessible via subspectrum->get(Par::"<<Par::toString.at(tag)<<", \""<<name<<"\", "<<i<<"). Please fix the relevant Spectrum wrapper class so that this parameter can be accessed. Keep in mind that you may need to override index_offset() to align the expected indices." << std::endl;
+                  errmsg << "An entry of the required vector-valued parameter ("<<Par::toString.at(tag)<<", "<<name<<") with required length "<<shape.at(0)<<" is not accessible via spectrum->get(Par::"<<Par::toString.at(tag)<<", \""<<name<<"\", "<<i<<"). Please fix the supplied SLHAea object so that it matches the required Contents. If the indices don't make sense to you then please check that the 'starting' index (offset) has been set correctly in the Contents object" << std::endl;
                   utils_error().forced_throw(LOCAL_INFO,errmsg.str());
                 }            
               }
@@ -394,7 +511,7 @@ namespace Gambit
                      // ERROR, Required parameter not found
                      std::ostringstream errmsg;           
                      errmsg << "Error while verifying contents of Spectrum object against Contents object with name \""<<my_name<<"\" !" << std::endl;
-                     errmsg << "An entry of the required matrix-valued parameter ("<<Par::toString.at(tag)<<", "<<name<<") with required dimensions ("<<shape[0]<<", "<<shape[1]<<") is not accessible via subspectrum->get(Par::"<<Par::toString.at(tag)<<", \""<<name<<"\", "<<i<<", "<<j<<"). Please fix the relevant Spectrum wrapper class so that this parameter can be accessed. Keep in mind that you may need to override index_offset() to align the expected indices." << std::endl;
+                     errmsg << "An entry of the required matrix-valued parameter ("<<Par::toString.at(tag)<<", "<<name<<") with required dimensions ("<<shape[0]<<", "<<shape[1]<<") is not accessible via spectrum->get(Par::"<<Par::toString.at(tag)<<", \""<<name<<"\", "<<i<<", "<<j<<"). Please check that the supplied SLHAea object has been filled to match the required Contents. If the indices don't make sense to you then please check that the 'starting' index (offset) has been set correctly in the Contents object" << std::endl;
                      utils_error().forced_throw(LOCAL_INFO,errmsg.str());
                    }            
                 }
@@ -414,8 +531,8 @@ namespace Gambit
        // End constructor
     }
 
-    /// Create template SLHA file to match this Contents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given Contents
-    void Contents::create_template_SLHA_file(const std::string& filename) const
+    /// Create template SLHAea object to match this SpectrumContents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given SpectrumContents, and to run tests.
+    SLHAstruct Contents::create_template_SLHAea() const
     {
        SLHAstruct out;
        for(auto& kv : parameters)
@@ -431,53 +548,52 @@ namespace Gambit
            std::cout<<"Processing parameter: "<<par.name()<<", "<<Par::toString.at(par.tag())<<", "<<par.shape()<<", "<<par.blockname()<<", "<<par.blockindex()<<std::endl;
            std::vector<std::vector<int>> indices(par.allowed_indices());
            // Get SLHA indices for all entries, and add them to SLHA output
-           if(indices.size()==0)
+           for(auto index_list : indices)
            {
-              SLHAea_add(out, par.blockname(), -9999, name + " ("+Par::toString.at(tag)+")");
-           }
-           else
-           {
-              for(auto index_list : indices)
-              {
-                  std::stringstream comment;
-                  comment << name;
-                  if(index_list.size()>0) comment << index_list;
-                  comment << " ("<<Par::toString.at(tag)<<")";
+               std::stringstream comment;
+               comment << name;
+               if(index_list.size()>0) comment << index_list;
+               comment << " ("<<Par::toString.at(tag)<<")";
 
-                  std::pair<std::string,std::vector<int>> SLHA_loc = get_SLHA_indices(tag,name,index_list);
-                  std::string      block        = SLHA_loc.first;
-                  std::vector<int> SLHA_indices = SLHA_loc.second;
-                  switch(SLHA_indices.size())
-                  {
-                      case 0:
-                      {
-                          // Currently not handled; error
-                          std::ostringstream errmsg;
-                          errmsg<<"Error generating template SLHA file for Contents "<<getName()<<"! Received null index list from get_SLHA_indices function when looking up indices for parameter "<<name<<" of type "<<Par::toString.at(tag)<<" with spectrum indices "<<index_list<<"! Currently we do not handle the case of SLHA items that have no indices. Please file a bug report if you require this feature, or check the Contents definition if you think this is a mistake.";          
-                          utils_error().forced_throw(LOCAL_INFO,errmsg.str());
-                          break;
-                      }
-                      case 1:
-                      {
-                          int index = SLHA_indices.at(0);
-                          SLHAea_add(out, block, index, -9999, comment.str()); 
-                          break;
-                      }
-                      case 2:
-                      {
-                          int index1 = SLHA_indices.at(0);
-                          int index2 = SLHA_indices.at(1);
-                          SLHAea_add(out, block, index1, index2, -9999, comment.str());
-                      }
-                  }
-              }
-           } 
+               std::pair<std::string,std::vector<int>> SLHA_loc = get_SLHA_indices(tag,name,index_list);
+               std::string      block        = SLHA_loc.first;
+               std::vector<int> SLHA_indices = SLHA_loc.second;
+               switch(SLHA_indices.size())
+               {
+                   case 0:
+                   {
+                       // Currently not handled; error
+                       std::ostringstream errmsg;
+                       errmsg<<"Error generating template SLHA file for Contents "<<getName()<<"! Received null index list from get_SLHA_indices function when looking up indices for parameter "<<name<<" of type "<<Par::toString.at(tag)<<" with spectrum indices "<<index_list<<"! Currently we do not handle the case of SLHA items that have no indices. Please file a bug report if you require this feature, or check the Contents definition if you think this is a mistake.";          
+                       utils_error().forced_throw(LOCAL_INFO,errmsg.str());
+                       break;
+                   }
+                   case 1:
+                   {
+                       int index = SLHA_indices.at(0);
+                       SLHAea_add(out, block, index, -9999, comment.str()); 
+                       break;
+                   }
+                   case 2:
+                   {
+                       int index1 = SLHA_indices.at(0);
+                       int index2 = SLHA_indices.at(1);
+                       SLHAea_add(out, block, index1, index2, -9999, comment.str());
+                   }
+               }
+           }
        }
-       // Write to file
+       return out;
+    }
+
+    /// Create template SLHA file to match this Contents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given Contents
+    void Contents::create_template_SLHA_file(const std::string& filename) const
+    {
        std::ofstream ofs(filename);
-       ofs << out;
+       ofs << create_template_SLHAea();
        ofs.close();
     }
+
   }
 }
 

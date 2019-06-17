@@ -123,29 +123,35 @@ namespace Gambit
       bool found(true);
       std::string name;
       std::vector<int> indices;
-      // If no indices provided, first try to decompose 'name' into str+index form using the particle database
-      if(indices_in.size()==0 and PDB.has_particle(name_in) and PDB.has_short_name(name_in))
-      {
-         std::pair<str, int> shortpair = PDB.short_name_pair(name_in);
-         name = shortpair.first;
-         indices.push_back(shortpair.second);
-      }
-      else
-      {
-         name = name_in;
-         indices = indices_in;
-      }
+      #ifdef SPECTRUM_DEBUG
+      std::cout<<"Checking if "<<Par::toString.at(partype)<<" "<<name_in<<" "<<indices_in<<" is in this Spectrum object..."<<std::endl; 
+      #endif
 
-      if(myContents.has_parameter(partype,name,indices))
+      // First figure out which version of this parameter is supposed to 
+      // be in this Spectrum according to the Contents object.
+      bool success;
+      std::pair<std::string,std::vector<int>> tmp;
+      tmp = myContents.find_matching_parameter(partype, name_in, indices_in, success);
+      if(success)
       {
+         name = tmp.first;
+         indices = tmp.second;
+         #ifdef SPECTRUM_DEBUG
+         std::cout<<"Contents DOES contain "<<Par::toString.at(partype)<<" "<<name<<" "<<indices<<"; should therefore be in this Spectrum object..."<<std::endl; 
+         #endif
+ 
          // Spectrum should have this type and name, and indices are within bounds (if any indices)
          // Now check if the entry actually exists in the wrapped
          // SLHAea object.
          // This will be an error if it fails, because it is *supposed* to exist.
-
          std::pair<std::string,std::vector<int>> slha_loc = myContents.get_SLHA_indices(partype,name,indices);
          std::string      block        = slha_loc.first;
          std::vector<int> SLHA_indices = slha_loc.second;
+
+         #ifdef SPECTRUM_DEBUG
+         std::cout<<"Parameter is expected at SLHA location: "<<block<<", "<<SLHA_indices<<std::endl;
+         #endif
+ 
          // First check if the required block even exists
          if(SLHAea_block_exists(mySLHAea, block))
          {
@@ -194,51 +200,20 @@ namespace Gambit
             errmsg<<"Error while checking for existence of Spectrum entry "<<Par::toString.at(partype)<<" '"<<name<<"'! A parameter with this tag and name should exist in this spectrum, however the wrapped SLHAea object is missing the required block (BLOCK "<<block<<")";
             utils_error().raise(LOCAL_INFO,errmsg.str());
          }
-      }
-      else if(auto_check_antiparticle_name)
-      {
-         // This parameter is not supposed to be in this spectrum object under this name.
-         // But info might be stored under antiparticle name instead, so check this if permitted by options
-         // (and disable further checking of antiparticles)
-         std::string antiparticle_name;
-         switch(indices.size())
-         {
-            case 0:
-            {
-               if(PDB.has_particle(name) and PDB.has_antiparticle(name))
-               {
-                  antiparticle_name = PDB.get_antiparticle(name);
-                  found = has(partype, antiparticle_name, indices, false);
-               }
-               break;
-            }
-            case 1:
-            {
-               int index = indices.at(0);
-               if(PDB.has_particle(name,index) and PDB.has_antiparticle(name,index))
-               {
-                  std::pair<str,int> antiparticle = PDB.get_antiparticle(name,index);
-                  found = has(partype, antiparticle.first, indices, false);
-               }
-               break;
-            }
-            default:
-            {
-               // Don't attempt this name conversion for higher index numbers. Doesn't really make sense
-               // for mixing matrices and so on.
-            }
 
-         }
       }
       else
       {
+         // No parameter by this name found, or any particle database transformation of it.
          found = false;
       }
+
       return found;
    }
 
    /// Master function for obtaining the 'basic' name under which a parameter set is recorded in the
    /// SpectrumContents. Does all the checking for long/short name and antiparticle conversions.
+   /// TODO: what if no match? the find_matching_parameter function deals with this. Do we need both functions?
    std::pair<std::string,std::vector<int>> Spectrum::get_basic_name(const Par::Tags partype, const std::string& name, const std::vector<int>& indices) const
    {
       double entry;

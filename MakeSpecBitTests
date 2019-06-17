@@ -1,7 +1,7 @@
 # Basic makefile for compiling Spectrum object standalone tests
 
 CXX=g++
-CXXFLAGS=-g -Wfatal-errors --std=c++14\
+CXXFLAGS=-g --std=c++14\
 -fopenmp \
 -IModels/include \
 -IElements/include \

@@ -6,49 +6,9 @@
 ///  and SpectrumContents classes 
 ///
 ///  Not built with GAMBIT cmake system. 
-///  Compile like this:
-///
-///  > g++ -Wfatal-errors --std=c++14 -o test_spectrum_objects \
--fopenmp \
--Lcontrib/yaml-cpp-0.6.2 \
--lyaml-cpp \
--IModels/include \
--IElements/include \
--IUtils/include \
--ILogs/include \
--Icontrib/mkpath/include \
--Icontrib/yaml-cpp-0.6.2/include \
--Icontrib/slhaea/include \
--Icmake/include \
-contrib/mkpath/src/mkpath.c \
-Elements/src/spectrum.cpp \
-Elements/src/slhaea_helpers.cpp \
-Utils/src/exceptions.cpp \
-Utils/src/standalone_error_handlers.cpp \
-Utils/src/util_functions.cpp \
-Logs/src/logger.cpp \
-Logs/src/logmaster.cpp \
-Logs/src/logging.cpp \
-Models/src/spectrum_contents.cpp \
-Models/src/particle_database.cpp \
-Models/src/partmap.cpp \
-Models/src/spectrum_contents.cpp \
-Models/src/SpectrumContents/DiracSingletDM.cpp \
-Models/src/SpectrumContents/MajoranaSingletDM.cpp \
-Models/src/SpectrumContents/MDM.cpp \
-Models/src/SpectrumContents/MSSM.cpp \
-Models/src/SpectrumContents/ScalarSingletDM.cpp \
-Models/src/SpectrumContents/SM.cpp \
-Models/src/SpectrumContents/SMHiggs.cpp \
-Models/src/SpectrumContents/SM_slha.cpp \
-Models/src/SpectrumContents/VectorSingletDM.cpp \
-SpecBit/tests/spectrum_object_tests.cpp 
-
-
-//
-//    -IModels/include
-//    -IElements/include
-//    -IUtils/include
+///  Compile with 'make -f MakeSpecBitTests' from
+///  GAMBIT root directory. May require customisation
+///  for your system.
 ///
 ///  *********************************************
 ///
@@ -73,11 +33,19 @@ using namespace Gambit;
 int main(int argc, char* argv[])
 {
     std::cout<<"Creating MSSM Spectrum Contents object"<<std::endl; 
-    // Create MSSM spectrum contents object
-    SpectrumContents::MSSM mssm; 
+    SpectrumContents::MSSM mssm_contents; 
 
-    std::cout<<"Writing template SLHA file corresponding to required spectrum contents: mssm_template.slha"<<std::endl;
-    // Create template SLHA file complying with MSSM contents definition
+    std::cout<<"Creating template SLHAea object corresponding to required spectrum contents: mssm_template.slha"<<std::endl;
+    // Create template SLHAea object complying with MSSM contents definition
     // (Won't include stuff the Spectrum objects don't care about, like MODSEL blocks and whatnot)
-    mssm.create_template_SLHA_file("mssm_template.slha");
+    SLHAstruct mssm_slha = mssm_contents.create_template_SLHAea();
+
+    std::cout<<"Writing SLHAea object to file for inspection: mssm_template.slha"<<std::endl;
+    std::ofstream ofs("mssm_template.slha");
+    ofs << mssm_slha;
+    ofs.close();
+
+    std::cout<<"Creating Spectrum object from template MSSM SLHAea object and corresponding Contents object"<<std::endl;
+    Spectrum mssm_spec(mssm_slha,mssm_contents);
+    std::cout<<"End of tests!"<<std::endl;
 }

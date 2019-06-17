@@ -22,9 +22,12 @@
 #include "gambit/Elements/spectrum_helpers.hpp"
 #include "gambit/Utils/variadic_functions.hpp"
 
+namespace SLHAea { class Coll; } // Forward declaration
+
 namespace Gambit { 
 
    class Spectrum;
+   typedef class SLHAea::Coll SLHAstruct;
 
    namespace SpectrumContents {
 
@@ -89,6 +92,10 @@ namespace Gambit {
             /// Function to check if a parameter definition exists in this object, this time also checking the index shape
             bool has_parameter(const Par::Tags tag, const std::string& name, const std::vector<int>& indices) const;
 
+            /// Function to retrieve a version of the parameter name and indices that exists in this Contents object
+            /// i.e. attempts conversions based on particle database
+            std::pair<std::string,std::vector<int>> find_matching_parameter(const Par::Tags tag, const std::string& name, const std::vector<int>& indices, bool& success) const;
+
             /// Function to get definition information for one parameter, identified by tag and string name
             Parameter get_parameter(const Par::Tags tag, const std::string& name) const;
 
@@ -110,7 +117,10 @@ namespace Gambit {
             /// Function to verify that a SubSpectrum wrapper contains everything that this class says it should
             void verify_contents(const Spectrum& spec) const;
 
-            /// Create template SLHA file to match this SpectrumContents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given SpectrumContents
+            /// Create template SLHAea object to match this SpectrumContents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given SpectrumContents, and to run tests.
+            SLHAstruct create_template_SLHAea() const;
+            
+            /// Create template SLHA file to match this SpectrumContents
             void create_template_SLHA_file(const std::string& filename) const;
        };
     }
