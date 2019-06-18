@@ -57,7 +57,7 @@
                                                           MODULE_DECLARE_FUNCTION(MODULE, FUNCTION, TYPE, CAN_MANAGE)
 #define DEPENDENCY(DEP, TYPE)                             MODULE_DEPENDENCY(DEP, TYPE, MODULE, FUNCTION, NOT_MODEL)
 #define LONG_DEPENDENCY(MODULE, FUNCTION, DEP, TYPE)      MODULE_DEPENDENCY(DEP, TYPE, MODULE, FUNCTION, NOT_MODEL)
-#define NEEDS_MANAGER_WITH_CAPABILITY(LOOPMAN)            MODULE_NEEDS_MANAGER_WITH_CAPABILITY(LOOPMAN)
+#define NEEDS_MANAGER(...)                                MODULE_NEEDS_MANAGER_REDIRECT(__VA_ARGS__)
 #define ALLOWED_MODEL(MODULE,FUNCTION,MODEL)              MODULE_ALLOWED_MODEL(MODULE,FUNCTION,MODEL)
 #define ALLOWED_MODEL_DEPENDENCE(MODULE,FUNCTION,MODEL)   MODULE_ALLOWED_MODEL(MODULE,FUNCTION,MODEL)
 #define ALLOW_MODEL_COMBINATION(...)                      DUMMYARG(__VA_ARGS__)
@@ -155,9 +155,20 @@
   }                                                                            \
 
 
-/// Redirection of NEEDS_MANAGER_WITH_CAPABILITY(LOOPMAN) when invoked from
-/// within a module.
-#define MODULE_NEEDS_MANAGER_WITH_CAPABILITY(LOOPMAN)                          \
+/// Variadic redirection for NEEDS_MANAGER when invoked from within a module.
+/// @{
+#define MODULE_NEEDS_MANAGER_REDIRECT_2(_1, _2) MODULE_NEEDS_MANAGER_2(_1,  _2)
+#define MODULE_NEEDS_MANAGER_REDIRECT_1(_1)     MODULE_NEEDS_MANAGER_1(_1)
+#define MODULE_NEEDS_MANAGER_REDIRECT(...)      VARARG(MODULE_NEEDS_MANAGER_REDIRECT, __VA_ARGS__)
+/// @}
+
+/// Redirection of NEEDS_MANAGER(LOOPMAN, TYPE) when invoked from within a module.
+#define MODULE_NEEDS_MANAGER_2(LOOPMAN, TYPE)                                  \
+  MODULE_NEEDS_MANAGER_1(LOOPMAN)                                              \
+  MODULE_DEPENDENCY(LOOPMAN, TYPE, MODULE, FUNCTION, NOT_MODEL)
+
+/// Redirection of NEEDS_MANAGER(LOOPMAN) when invoked from within a module.
+#define MODULE_NEEDS_MANAGER_1(LOOPMAN)                                        \
                                                                                \
   namespace Gambit                                                             \
   {                                                                            \
@@ -175,6 +186,12 @@
             /* Create a loop-breaking function that can be called to tell the  \
             functor's loop manager that it is time to break. */                \
             extern void wrapup();                                              \
+            /* Create a function that can be called to break a loop            \
+            immediately,, without finishing the current iteration. */          \
+            extern void halt();                                                \
+            /* Create an iteration-skipping function that can be called to skip\
+            on to the next iteration. */                                       \
+            extern void cycle();                                               \
           }                                                                    \
         }                                                                      \
       }                                                                        \

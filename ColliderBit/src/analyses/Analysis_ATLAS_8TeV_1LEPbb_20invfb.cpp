@@ -11,7 +11,7 @@
 #include <fstream>
 #include <ctime>
 
-#include "gambit/ColliderBit/analyses/BaseAnalysis.hpp"
+#include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 //#include "gambit/ColliderBit/analyses/Perf_Plot.hpp"
 
@@ -20,7 +20,7 @@ using namespace std;
 namespace Gambit {
   namespace ColliderBit {
 
-    class Analysis_ATLAS_8TeV_1LEPbb_20invfb : public HEPUtilsAnalysis {
+    class Analysis_ATLAS_8TeV_1LEPbb_20invfb : public Analysis {
     private:
 
       // Numbers passing cuts
@@ -42,6 +42,9 @@ namespace Gambit {
       // ofstream cutflowFile;
 
     public:
+
+      // Required detector sim
+      static constexpr const char* detector = "ATLAS";
 
       struct particleComparison {
         bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
@@ -81,8 +84,8 @@ namespace Gambit {
       }
 
 
-      void analyze(const HEPUtils::Event* event) {
-        HEPUtilsAnalysis::analyze(event);
+      void run(const HEPUtils::Event* event) {
+
         double met = event->met();
 
         // Baseline objects
@@ -90,12 +93,20 @@ namespace Gambit {
         for (HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT()>10. && electron->abseta()<2.47)baselineElectrons.push_back(electron);
         }
+
+        // Apply electron efficiency
+        ATLAS::applyElectronEff(baselineElectrons);
+
+        // Apply medium electron selection
         ATLAS::applyMediumIDElectronSelection(baselineElectrons);
 
         vector<HEPUtils::Particle*> baselineMuons;
         for (HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT()>10. && muon->abseta()<2.4)baselineMuons.push_back(muon);
         }
+
+        // Apply muon efficiency
+        ATLAS::applyMuonEff(baselineMuons);
 
         vector<HEPUtils::Jet*> baselineJets;
         for (HEPUtils::Jet* jet : event->jets()) {
@@ -166,7 +177,7 @@ namespace Gambit {
         for (size_t iJet=0;iJet<overlapJets.size();iJet++) {
           if (overlapJets.at(iJet)->pT()>25. && overlapJets.at(iJet)->abseta()<2.40) {
             signalJets.push_back(overlapJets.at(iJet));
-            bool hasTag=has_tag(_eff2dBJet, overlapJets.at(iJet)->eta(), overlapJets.at(iJet)->pT());
+            bool hasTag=has_tag(_eff2dBJet, overlapJets.at(iJet)->abseta(), overlapJets.at(iJet)->pT());
             if (overlapJets.at(iJet)->btag() && hasTag)signalBJets.push_back(overlapJets.at(iJet));
           }
         }
@@ -211,13 +222,13 @@ namespace Gambit {
         }
         if (lepton_overlap && nSignalLeptons==1 && nBaselineLeptons==1 && (nSignalJets==2 || nSignalJets==3) && leadingBJets) {
           if (nSignalMuons==1) {
-            bool hasTrig1=has_tag(_eff2dMu1,signalMuons.at(0)->eta(),signalMuons.at(0)->pT());
-            bool hasTrig2=has_tag(_eff2dMu2,signalMuons.at(0)->eta(),signalMuons.at(0)->pT());
+            bool hasTrig1=has_tag(_eff2dMu1,signalMuons.at(0)->abseta(),signalMuons.at(0)->pT());
+            bool hasTrig2=has_tag(_eff2dMu2,signalMuons.at(0)->abseta(),signalMuons.at(0)->pT());
             if (signalMuons.at(0)->abseta()<1.05 && hasTrig1)preselection=true;
             if (signalMuons.at(0)->abseta()>1.05 && hasTrig2)preselection=true;
           }
           if (nSignalElectrons==1) {
-            bool hasTrig=has_tag(_eff2dEl,signalElectrons.at(0)->eta(),signalElectrons.at(0)->pT());
+            bool hasTrig=has_tag(_eff2dEl,signalElectrons.at(0)->abseta(),signalElectrons.at(0)->pT());
             if (hasTrig)preselection=true;
           }
         }
@@ -301,15 +312,11 @@ namespace Gambit {
         }
       }
 
-
-      void add(BaseAnalysis* other) {
-        // The base class add function handles the signal region vector and total # events.
-        HEPUtilsAnalysis::add(other);
-
-        Analysis_ATLAS_8TeV_1LEPbb_20invfb* specificOther
-                = dynamic_cast<Analysis_ATLAS_8TeV_1LEPbb_20invfb*>(other);
-
-        // Here we will add the subclass member variables:
+      /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
+      void combine(const Analysis* other)
+      {
+        const Analysis_ATLAS_8TeV_1LEPbb_20invfb* specificOther
+                = dynamic_cast<const Analysis_ATLAS_8TeV_1LEPbb_20invfb*>(other);
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (size_t j = 0; j < NCUTS; j++) {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
@@ -396,7 +403,7 @@ namespace Gambit {
 
 
     protected:
-      void clear() {
+      void analysis_specific_reset() {
         _numSRA=0;
         _numSRB=0;
 
