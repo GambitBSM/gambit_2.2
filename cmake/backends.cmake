@@ -945,7 +945,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(md5 "999c0a4471b0efa4e0bf1d847569b4c4")
 else()
   set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
-  set(md5 "ac30e3676b028dbb53e4b56854c35697")
+  set(md5 "2eb1fcf33188627849801e58fb1aae63")
 endif()
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver})
@@ -1011,7 +1011,7 @@ if(NOT ditched_${name}_${ver})
           DEPENDS hom4ps_2.0
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
-          GIT_TAG origin/Gambit_BOSSED
+          GIT_TAG origin/Gambit_BOSSED_debug
           CONFIGURE_COMMAND ""
           BINARY_DIR ${dir}/VevaciousPlusPlus
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} shared
