@@ -40,7 +40,7 @@ namespace Gambit {
 
      addParameter(Par::Pole_Mass, "gamma", scalar, "MASS");
      addParameter(Par::Pole_Mass, "g"    , scalar, "MASS");
-     addParameter(Par::Pole_Mass, "Z0"   , scalar, "MASS");
+     addParameter(Par::Pole_Mass, "Z0"   , scalar, "SMINPUTS", 4);
      addParameter(Par::Pole_Mass, "W+"   , scalar, "MASS");
 
      addParameter(Par::Pole_Mass, "u_3" , scalar, "SMINPUTS", 6);

@@ -69,6 +69,8 @@ namespace Gambit
   bool SLHAea_entry_exists(const SLHAstruct& slha, const str& block, const int index);
   bool SLHAea_entry_exists(const SLHAstruct& slha, const str& block, const int index1, const int index2); 
 
+  /// Get the scale at which a block is defined (the Q= value)
+  double SLHAea_get_scale(const SLHAstruct& slha, const str& block);
 
   /// Write the SPINFO block with GAMBIT name and version number
   void SLHAea_add_GAMBIT_SPINFO(SLHAstruct& slha /*modify*/);

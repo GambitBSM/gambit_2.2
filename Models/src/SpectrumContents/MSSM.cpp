@@ -32,6 +32,7 @@ namespace Gambit {
 
   /// @{ Helper functions to do error checking for SLHAea object contents
   /// Used to be in SLHASimpleSpec wrapper. Needed for SLHA1->2 translation routines
+  /// TODO: Do we really need these? Aren't they the same as SLHAes_get etc?
   
   /// One index
   double getdata(const SLHAstruct& data, const std::string& block, int index)
@@ -75,7 +76,7 @@ namespace Gambit {
   SpectrumContents::MSSM::MSSM()
    : Contents("MSSM")
   {
-     addAllFrom(SM()); 
+     addAllFrom(SM_slha()); 
 
      // shape prototypes
      std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name")

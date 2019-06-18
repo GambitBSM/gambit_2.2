@@ -29,7 +29,7 @@
 #define PDB Models::ParticleDB()
 
 // Activate extra cout statements to watch SLHA index deduction
-//#define DEBUG_SLHA_INDEX
+#define DEBUG_SLHA_INDEX
 
 namespace Gambit 
 {
@@ -218,9 +218,9 @@ namespace Gambit
           }
        }
        // Check for long name
-       else if(indices.size()==1 and PDB.has_particle(std::make_pair(name,indices.at(1))))
+       else if(indices.size()==1 and PDB.has_particle(std::make_pair(name,indices.at(0))))
        {
-          std::string longname = PDB.long_name(name,indices.at(1));
+          std::string longname = PDB.long_name(name,indices.at(0));
           std::vector<int> no_indices; // Left empty intentionally
           if(has_parameter(tag,longname,no_indices))
           {
@@ -483,12 +483,12 @@ namespace Gambit
           // Check vector case
           else if(shape.size()==1 and shape.at(0)>1)
           {
-            if(shape[0]<0)
+            if(shape.at(0)<0)
             {
               // ERROR, asked for negative length vector
               std::ostringstream errmsg;           
               errmsg << "Error while verifying contents of Spectrum object against Contents object with name \""<<my_name<<"\" !" << std::endl;
-              errmsg << "Encountered a vector-valued required parameter ("<<Par::toString.at(tag)<<", "<<name<<") with negative required length ("<<shape[0]<<")! This is invalid; Please fix this parameter in the Contents class so that the required length is a positive number." << std::endl;
+              errmsg << "Encountered a vector-valued required parameter ("<<Par::toString.at(tag)<<", "<<name<<") with negative required length ("<<shape.at(0)<<")! This is invalid; Please fix this parameter in the Contents class so that the required length is a positive number." << std::endl;
               utils_error().forced_throw(LOCAL_INFO,errmsg.str());
             }
             else

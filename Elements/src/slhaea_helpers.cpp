@@ -392,6 +392,38 @@ namespace Gambit
     return;
   }
 
+  /// Get the scale at which a block is defined (the Q= value)
+  double SLHAea_get_scale(const SLHAstruct& slha, const str& block)
+  {
+     double Q;
+     if(SLHAea_block_exists(slha,block))
+     {
+        SLHAea::Block b = slha.at(block);
+        SLHAea::Line l = *b.find_block_def();
+        std::cout<<l<<std::endl;
+        if(l.size()<4)
+        {
+           std::ostringstream errmsg;
+           errmsg<<"Error getting scale for block "<<block<<": block definition line is not long enough to have a scale defined!"<<std::endl;
+           utils_error().raise(LOCAL_INFO,errmsg.str());
+        }
+        else if(Utils::toUpper(l.at(2))!="Q=")
+        {
+           std::ostringstream errmsg;
+           errmsg<<"Error getting scale for block "<<block<<": no scale definition found!"<<std::endl;
+           utils_error().raise(LOCAL_INFO,errmsg.str());
+        }
+        Q = std::stod(l.at(3));
+     }
+     else
+     {
+        std::ostringstream errmsg;
+        errmsg<<"Error getting scale for block "<<block<<": block doesn't exist!"<<std::endl;
+        utils_error().raise(LOCAL_INFO,errmsg.str());
+     }
+     return Q;
+  }
+
   /// Write a SimpleSpectrum to an SLHAea object.
   void add_SimpleSpec_to_SLHAea(const Spectrum& spec, SLHAstruct& slha, SpectrumContents::Contents& contents)
   {

@@ -135,12 +135,12 @@ namespace Gambit
       // First figure out which version of this parameter is supposed to 
       // be in this Spectrum according to the Contents object.
       bool success;
-      std::pair<std::string,std::vector<int>> tmp;
-      tmp = myContents.find_matching_parameter(partype, name_in, indices_in, success);
+      std::pair<std::string,std::vector<int>> new_name_and_indices;
+      new_name_and_indices = myContents.find_matching_parameter(partype, name_in, indices_in, success);
       if(success)
       {
-         name = tmp.first;
-         indices = tmp.second;
+         name = new_name_and_indices.first;
+         indices = new_name_and_indices.second;
          #ifdef SPECTRUM_DEBUG
          std::cout<<"Contents DOES contain "<<Par::toString.at(partype)<<" "<<name<<" "<<indices<<"; should therefore be in this Spectrum object..."<<std::endl; 
          #endif

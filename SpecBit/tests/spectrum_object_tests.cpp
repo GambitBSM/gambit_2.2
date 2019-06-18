@@ -27,6 +27,7 @@
 #include "gambit/Models/spectrum_contents.hpp"
 #include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Elements/spectrum.hpp"
+#include "gambit/Elements/slhaea_helpers.hpp"
 
 using namespace Gambit;
 
@@ -49,8 +50,45 @@ int main(int argc, char* argv[])
     Spectrum mssm_spec(mssm_slha,mssm_contents,100); // Last parameter is scale at which running parameters are defined. Could try to infer from certain blocks, but I think better to explictly specify it.
 
     std::cout<<"Writing SLHA-compliant outputs from MSSM Spectrum object"<<std::endl;
-    mssm_spec.writeSLHAfile("mssm_compliant.slha1", 1);
-    mssm_spec.writeSLHAfile("mssm_compliant.slha2", 2);
+    mssm_spec.writeSLHAfile("mssm_compliant_template.slha1", 1);
+    mssm_spec.writeSLHAfile("mssm_compliant_template.slha2", 2);
+
+    // Do the same thing with a couple of test SLHA files from SoftSUSY
+    std::cout<<"Reading SoftSUSY-generated SLHA1 spectrum and wrapping it"<<std::endl;
+    SLHAstruct ss1;
+    std::ifstream ifs1("SpecBit/tests/softsusy_output.slha1");
+    ifs1 >> ss1;
+    ifs1.close();
+    double Q = SLHAea_get_scale(ss1,"GAUGE"); // Determine scale of spectrum
+    mssm_spec = Spectrum(ss1,mssm_contents,Q);
+    std::cout<<"Writing SLHA-compliant outputs from MSSM Spectrum object"<<std::endl;
+    mssm_spec.writeSLHAfile("mssm_compliant_softsusy1.slha1", 1);
+    mssm_spec.writeSLHAfile("mssm_compliant_softsusy1.slha2", 2);
+
+    std::cout<<"Reading SoftSUSY-generated SLHA2 spectrum and wrapping it"<<std::endl;
+    SLHAstruct ss2;
+    std::ifstream ifs2("SpecBit/tests/softsusy_output.slha2");
+    ifs2 >> ss2;
+    ifs2.close();
+    Q = SLHAea_get_scale(ss2,"GAUGE"); // Determine scale of spectrum
+    mssm_spec = Spectrum(ss2,mssm_contents,Q);
+    std::cout<<"Writing SLHA-compliant outputs from MSSM Spectrum object"<<std::endl;
+    mssm_spec.writeSLHAfile("mssm_compliant_softsusy2.slha1", 1);
+    mssm_spec.writeSLHAfile("mssm_compliant_softsusy2.slha2", 2);
+
+    std::cout<<"Explicity call a few of the getters for good measure..."<<std::endl;
+    for(int i=1;i<=3;i++)
+    {
+       std::cout<<"mssm_spec.get(Par::Pole_Mass,\"e-\","<<i<<"): "<<mssm_spec.get(Par::Pole_Mass,"e-",i)<<std::endl;
+       std::cout<<"mssm_spec.get(Par::Pole_Mass,\"e+\","<<i<<"): "<<mssm_spec.get(Par::Pole_Mass,"e+",i)<<std::endl;
+    }
+    std::cout<<"mssm_spec.get(Par::Pole_Mass,\"e-\"): "<<mssm_spec.get(Par::Pole_Mass,"e-")<<std::endl;
+    std::cout<<"mssm_spec.get(Par::Pole_Mass,\"mu-\"): "<<mssm_spec.get(Par::Pole_Mass,"mu-")<<std::endl;
+    std::cout<<"mssm_spec.get(Par::Pole_Mass,\"tau-\"): "<<mssm_spec.get(Par::Pole_Mass,"tau-")<<std::endl;
+    std::cout<<"mssm_spec.get(Par::Pole_Mass,\"e+\"): "<<mssm_spec.get(Par::Pole_Mass,"e+")<<std::endl;
+    std::cout<<"mssm_spec.get(Par::Pole_Mass,\"mu+\"): "<<mssm_spec.get(Par::Pole_Mass,"mu+")<<std::endl;
+    std::cout<<"mssm_spec.get(Par::Pole_Mass,\"tau+\"): "<<mssm_spec.get(Par::Pole_Mass,"tau+")<<std::endl;
+    std::cout<<"mssm_spec.get(Par::dimensionless,\"sinW2\"): "<<mssm_spec.get(Par::dimensionless,"sinW2")<<std::endl;
 
     std::cout<<"End of tests!"<<std::endl;
 }
