@@ -495,7 +495,14 @@ scanner_plugin(postprocessor, version(2, 0, 0))
        }
        #endif
 
+
        if(this_rank_verbose) logger() << LogTags::debug << LogTags::scanner << "Rank "<<rank<<": Chunk to process is ["<<mychunk.start<<", "<<mychunk.end<<"; eff_len="<<mychunk.eff_length<<"]"<<EOM;
+
+       if((rank==0 and numtasks==1) or (rank!=0 and numtasks>1))
+       {
+          //std::cout << "Rank "<<rank<<": Chunk to process is ["<<mychunk.start<<", "<<mychunk.end<<"; eff_len="<<mychunk.eff_length<<"]"<<std::endl;
+       }
+
 
        // Progress report
        unsigned long long npi = driver.next_point_index();
