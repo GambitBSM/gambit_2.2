@@ -27,9 +27,8 @@ namespace Gambit
 {
 
   SpectrumContents::VectorSingletDM_Z2::VectorSingletDM_Z2()
+   : Contents("VectorSingletDM_Z2")
   {
-     setName("VectorSingletDM_Z2");
-
      // shape prototypes
      std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name") 
      std::vector<int> m3x3 = initVector(3,3);

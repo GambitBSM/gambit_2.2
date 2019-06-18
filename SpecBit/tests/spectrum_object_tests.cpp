@@ -24,7 +24,7 @@
 #include "gambit/Utils/standalone_utils.hpp"
 #include "gambit/Utils/static_members.hpp"
 #include "gambit/Logs/logger.hpp"
-#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
+#include "gambit/Models/spectrum_contents.hpp"
 #include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Elements/spectrum.hpp"
 
@@ -46,6 +46,11 @@ int main(int argc, char* argv[])
     ofs.close();
 
     std::cout<<"Creating Spectrum object from template MSSM SLHAea object and corresponding Contents object"<<std::endl;
-    Spectrum mssm_spec(mssm_slha,mssm_contents);
+    Spectrum mssm_spec(mssm_slha,mssm_contents,100); // Last parameter is scale at which running parameters are defined. Could try to infer from certain blocks, but I think better to explictly specify it.
+
+    std::cout<<"Writing SLHA-compliant outputs from MSSM Spectrum object"<<std::endl;
+    mssm_spec.writeSLHAfile("mssm_compliant.slha1", 1);
+    mssm_spec.writeSLHAfile("mssm_compliant.slha2", 2);
+
     std::cout<<"End of tests!"<<std::endl;
 }

@@ -15,6 +15,7 @@ LIBS=-lyaml-cpp
 
 DEPS=tmp/spectrum.o \
 tmp/slhaea_helpers.o \
+tmp/mssm_slhahelp.o \
 tmp/exceptions.o \
 tmp/standalone_error_handlers.o \
 tmp/util_functions.o \

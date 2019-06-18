@@ -24,9 +24,8 @@ namespace Gambit
 
   /// Only have to define the constructor
   SpectrumContents::SM_slha::SM_slha()
+    : Contents("SM_slha")
   {
-     setName("SM_slha");
-
      std::vector<int> scalar = initVector(1);   // i.e. get(Par::Tag, "name")
      std::vector<int> v3     = initVector(3);   // i.e. get(Par::Tag, "name", i)
 

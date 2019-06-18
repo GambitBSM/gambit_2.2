@@ -27,7 +27,7 @@
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/util_types.hpp"
 #include "gambit/Elements/spectrum_helpers.hpp"
-#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
+#include "gambit/Models/spectrum_contents.hpp"
 
 #include "SLHAea/slhaea.h"
 

@@ -23,10 +23,10 @@ namespace Gambit {
 
   /// Only have to define the constructor
   SpectrumContents::SMHiggs::SMHiggs()
+    : Contents("SMHiggs")
   {
      std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name")
  
-     setName("SMHiggs");
      addParameter(Par::mass1,     "vev",  scalar, "VEVS", 1);
      addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS");
   }

@@ -11,8 +11,8 @@
 ///  <!-- add name and date if you modify -->
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@fysik.su.se)
-///  \date 2016 Feb
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2016 Feb, 2019 June
 ///
 ///  \author Ankit Beniwal
 ///          (ankit.beniwal@adelaide.edu.au)
@@ -23,9 +23,9 @@
 #ifndef __registeredspectra_hpp__
 #define __registeredspectra_hpp__
 
-#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
+#include "gambit/Models/spectrum_contents.hpp"
 
-/// Just declare the classes here; should be defined in source files
+/// Just declare the Contents derived classes here; should be defined in source files
 
 namespace Gambit
 {
@@ -35,7 +35,12 @@ namespace Gambit
     struct SM                   : Contents { SM(); };
     struct SM_slha              : Contents { SM_slha(); }; // Missing some running masses that aren't part of SMINPUTS in slha
     struct SMHiggs              : Contents { SMHiggs(); };
-    struct MSSM                 : Contents { MSSM(); };
+    struct MSSM                 : Contents 
+    { 
+        MSSM();
+        static SLHAstruct transformInputSLHAea(const SLHAstruct& input);
+        static SLHAstruct generateOutputSLHAea(const Spectrum&, const int version);
+    };
     struct MDM                  : Contents { MDM(); };
     struct ScalarSingletDM_Z2   : Contents { ScalarSingletDM_Z2(); };
     struct ScalarSingletDM_Z3   : Contents { ScalarSingletDM_Z3(); };

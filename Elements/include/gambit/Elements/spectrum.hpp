@@ -21,10 +21,12 @@
 #ifndef __Spectrum_hpp__
 #define __Spectrum_hpp__
 
-#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
+#include "gambit/Models/spectrum_contents.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/yaml_options.hpp"
+
 #include "SLHAea/slhaea.h"
+
 
 /// YAML overloads for mass cut and mass cut ratio constituents
 namespace YAML
@@ -81,7 +83,6 @@ namespace YAML
 
 }
 
-
 namespace Gambit
 {
 
@@ -113,6 +114,10 @@ namespace Gambit
          /// Wrapped SLHAea object
          SLHAstruct mySLHAea;
 
+         /// Scale at which all running parameters are defined
+         /// (except for certain parameters which are defined at fixed scales; these are not considered as "running")
+         double scale;
+
          /// Contents requirements for this spectrum
          SpectrumContents::Contents myContents;
 
@@ -129,13 +134,18 @@ namespace Gambit
          /// Default constructor
          Spectrum();
 
-         /// Construct from SLHAea object (also specifying what SpectrumContents should apply, which defines how to interpret the SLHAea blocks)
-         Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents);
+         /// Construct from SLHAea object (also specifying what SpectrumContents should apply, which defines how to interpret the SLHAea blocks, as
+         /// well as the scale at which all running parameters are defined)
+         Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale);
 
          /// Set constraints on masses and mass ratios that cause the spectrum to be declared "invalid" if they are violated
          void set_mass_cuts(const mc_info&);
          void set_mass_ratio_cuts(const mr_info&);
          /// @}
+
+         /// Return scale at which all running parameters are defined (in GeV)
+         /// (except for certain parameters which are defined at fixed scales; these are not considered as "running")
+         double GetScale() const;
 
          /// Check the that the spectrum satisifies any mass cuts requested from the yaml file.
          void check_mass_cuts();
@@ -194,11 +204,14 @@ namespace Gambit
          /// @}
 
          /// SLHAea object getter
-         /// Return underlying SLHAea object
-         SLHAstruct getSLHAea() const;
+         /// Return underlying SLHAea object, exactly as it is stored internally
+         SLHAstruct getRawSLHAea() const;
+
+         /// Return an SLHA-compliant (or similar) SLHAea object
+         SLHAstruct getSLHAea(const int version) const;
 
          /// Output spectrum contents as an SLHA file, using getSLHAea.
-         void writeSLHAfile(const str&) const;
+         void writeSLHAfile(const str&, const int version) const;
 
          /// Helper function to drop SLHA files
          void drop_SLHAs_if_requested(const safe_ptr<Options>&, const str&);

@@ -11,23 +11,70 @@
 ///  <!-- add name and date if you modify -->
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@fysik.su.se)
-///  \date 2016 Feb
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2016 Feb, 2019 June
 ///
 ///  *********************************************
 
 #ifndef __mssmcontents_hpp__
 #define __mssmcontents_hpp__
 
+#include "gambit/Elements/slhaea_helpers.hpp"
+#include "gambit/Elements/mssm_slhahelp.hpp"
 #include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/Logs/logger.hpp"
+#include "SLHAea/slhaea.h"
 
 namespace Gambit {
 
-  /// Only have to define the constructor
-  SpectrumContents::MSSM::MSSM()
-  {
-     setName("MSSM");
+  /// Helper function for sorting int, double pairs according to the double
+  bool orderer (std::pair<int, double> a, std::pair<int, double> b) { return a.second < b.second; }
 
+  /// @{ Helper functions to do error checking for SLHAea object contents
+  /// Used to be in SLHASimpleSpec wrapper. Needed for SLHA1->2 translation routines
+  
+  /// One index
+  double getdata(const SLHAstruct& data, const std::string& block, int index)
+  {
+     double output = 0.0;
+     try
+     {
+       output = SLHAea::to<double>(data.at(block).at(index).at(1));
+     }
+     catch (const std::out_of_range& e)
+     {
+       std::ostringstream errmsg;
+       errmsg << "Error accessing data at index "<<index<<" of block "<<block<<". Please check that the SLHAea object was properly filled." << std::endl;
+       errmsg  << "(Received out_of_range error from SLHAea class with message: " << e.what() << ")";
+       utils_error().raise(LOCAL_INFO,errmsg.str());
+     }
+     return output;
+  }
+
+  /// Two indices
+  double getdata(const SLHAstruct& data, const std::string& block, int i, int j)
+  {
+     double output = 0.0;
+     try
+     {
+       output = SLHAea::to<double>(data.at(block).at(i,j).at(2));
+     }
+     catch (const std::out_of_range& e)
+     {
+       std::ostringstream errmsg;
+       errmsg << "Error accessing data at index "<<i<<","<<j<<" of block "<<block<<". Please check that the SLHAea object was properly filled." << std::endl;
+       errmsg  << "(Received out_of_range error from SLHAea class with message: " << e.what() << ")";
+       utils_error().raise(LOCAL_INFO,errmsg.str());
+     }
+     return output;
+  }
+
+  /// @}
+ 
+  /// Contents defined via constructor
+  SpectrumContents::MSSM::MSSM()
+   : Contents("MSSM")
+  {
      addAllFrom(SM()); 
 
      // shape prototypes
@@ -40,6 +87,10 @@ namespace Gambit {
      std::vector<int> m3x3   = initVector(3,3); // "
      std::vector<int> m4x4   = initVector(4,4); // "
      std::vector<int> m6x6   = initVector(6,6); // "
+
+     /// Set transformation functions for SLHA input/output
+     setInputTransform(&MSSM::transformInputSLHAea);
+     setOutputTransform(&MSSM::generateOutputSLHAea);
 
      //           tag,        name,   shape
      addParameter(Par::mass2, "BMu" , scalar, "BMu", 1); // TODO: Made this up
@@ -55,10 +106,10 @@ namespace Gambit {
      addParameter(Par::mass1, "M1", scalar, "MSOFT", 1);
      addParameter(Par::mass1, "M2", scalar, "MSOFT", 2);
      addParameter(Par::mass1, "M3", scalar, "MSOFT", 3);
-     addParameter(Par::mass1, "Mu", scalar, "HMIX", 1); // Is this \mu?
-     addParameter(Par::mass1, "vev",scalar, "VEVS", 1); // TODO: More made up stuff
-     addParameter(Par::mass1, "vu", scalar, "VEVS", 2); 
-     addParameter(Par::mass1, "vd", scalar, "VEVS", 3);
+     addParameter(Par::mass1, "Mu", scalar, "HMIX", 1); // mu(Q) DRbar, I think
+     addParameter(Par::mass1, "vev",scalar, "HMIX", 3);
+     addParameter(Par::mass1, "vu", scalar, "VEVS", 1); 
+     addParameter(Par::mass1, "vd", scalar, "VEVS", 2);
 
      addParameter(Par::mass1, "TYd", m3x3, "TD"); // TODO: Peter check this. I think TD,TE etc are something to do with the trilinears in SLHA2, more like AD,AE etc, not this presumably Yukawa-related thing. I guess the SpecBit paper explains it. 
      addParameter(Par::mass1, "TYe", m3x3, "TE");
@@ -73,7 +124,8 @@ namespace Gambit {
      addParameter(Par::mass2, "mA2" , scalar, "HMIX", 4);
      //
 
-     addParameter(Par::dimensionless, "g1", scalar, "GAUGE", 1); // TODO: I forget if our g1,g2,g3 definitions are g',g,g3 like in SLHA. Check this. 
+     addParameter(Par::dimensionless, "g1", scalar, "GAUGE", 4); // TODO: I forget if our g1,g2,g3 definitions are g',g,g3 like in SLHA. Check this.
+                                                                 // I'm pretty sure no. See below for conversion. Will put converted value in entry 4 rather than 1. 
      addParameter(Par::dimensionless, "g2", scalar, "GAUGE", 2);
      addParameter(Par::dimensionless, "g3", scalar, "GAUGE", 3);
 
@@ -107,5 +159,246 @@ namespace Gambit {
      addParameter(Par::Pole_Mixing, "H+",    m2x2, "CHARGEMIX");
   }
 
+  /// For the MSSM we need to transform our internal structure back into SLHA-compliant format for output
+  SLHAstruct SpectrumContents::MSSM::generateOutputSLHAea(const Spectrum& spec, const int slha_version)
+  {
+      std::cout<<"Called MSSM version of generateOutputSLHAea..."<<std::endl;
+ 
+      SLHAstruct output;
+      std::ostringstream comment;
+
+      // TODO: Would be good to have this, but currently the information about where the spectrum came from is lost.
+      // Would need to add some member variable to the Spectrum object to store this information.
+      // SPINFO block
+      //if(not SLHAea_block_exists(output, "SPINFO"))
+      //{
+      //   SLHAea_add_block(output, "SPINFO");
+      //   SLHAea_add(output, "SPINFO", 1, "GAMBIT, using "+backend_name);
+      //   SLHAea_add(output, "SPINFO", 2, gambit_version()+" (GAMBIT); "+backend_version+" ("+backend_name+")");
+      //}
+
+      // All other MSSM blocks
+      slhahelp::add_MSSM_spectrum_to_SLHAea(spec, output, slha_version);
+      return output;
+   }
+
+   /// For the MSSM we also need to transform SLHA-compliant input files into our internal format
+   /// EXCEPTION: We do not add the DMASS (mass uncertainty) block automatically! This is to force people
+   /// to set uncertainties for the pole masses when they create Spectrum objects.
+   SLHAstruct SpectrumContents::MSSM::transformInputSLHAea(const SLHAstruct& input)
+   {
+      // This is copy/pasted from the old MSSMSimpleSpec constructor
+      SLHAstruct data = input;
+      std::map<int, int> slha1to2; // PDG_translation_map;
+      str blocks[4] = {"DSQMIX", "USQMIX", "SELMIX", "SNUMIX"};
+      str gen3mix[3] = {"SBOTMIX", "STOPMIX", "STAUMIX"};
+      logger() << LogTags::utils;
+
+      // Work out if this SLHAea object is SLHA1 or SLHA2
+      if (data.find(blocks[0]) == data.end() or
+          data.find(blocks[1]) == data.end() or
+          data.find(blocks[2]) == data.end() or
+          data.find(blocks[3]) == data.end() )
+      {
+        if (data.find(gen3mix[0]) == data.end() or
+            data.find(gen3mix[1]) == data.end() or
+            data.find(gen3mix[2]) == data.end() )
+        {
+          utils_error().raise(LOCAL_INFO, "Input SLHA data appears to be neither SLHA1 nor SLHA2.");
+        }
+        logger() << "Input SLHA for setting up simple spectrum is SLHA1.  You old dog." << EOM;
+
+        // Get scale, needed for specifying SLHA2 blocks
+        /// TODO: Currently assumes all blocks at same scale. Should check if this
+        /// is true.
+        double scale = 0.0;
+        try
+        {
+          scale = SLHAea::to<double>(data.at("GAUGE").find_block_def()->at(3));
+        }
+        catch (const std::out_of_range& e)
+        {
+          std::ostringstream errmsg;
+          errmsg << "Could not find block \"GAUGE\" in SLHAea object (required to retrieve scale Q). Received out_of_range error with message: " << e.what();
+          utils_error().raise(LOCAL_INFO,errmsg.str());
+        }
+
+        //Looks like it is SLHA1, so convert it to SLHA2.
+        int lengths[4] = {6, 6, 6, 3};
+        str names[4] = {"~d_", "~u_", "~l_", "~nu_"};
+        std::vector<int> pdg[4];
+        std::vector< std::pair<int, double> > masses[4];
+        pdg[0] = initVector<int>(1000001, 1000003, 1000005, 2000001, 2000003, 2000005); // d-type squarks
+        pdg[1] = initVector<int>(1000002, 1000004, 1000006, 2000002, 2000004, 2000006); // u-type squarks
+        pdg[2] = initVector<int>(1000011, 1000013, 1000015, 2000011, 2000013, 2000015); // sleptons
+        pdg[3] = initVector<int>(1000012, 1000014, 1000016);                            // sneutrinos
+        for (int j = 0; j < 4; j++)
+        {
+          // Get the masses
+          for (int i = 0; i < lengths[j]; i++) masses[j].push_back(std::pair<int, double>(pdg[j][i], getdata(data,"MASS",pdg[j][i])));
+
+          // Sort them
+          std::sort(masses[j].begin(), masses[j].end(), orderer);
+
+          // Rewrite them in correct order, and populate the pdg-pdg maps
+          for (int i = 0; i < lengths[j]; i++)
+          {
+            //data["MASS"][pdg[j][i]][1] = boost::lexical_cast<str>(masses[j][i].second);
+            //data["MASS"][pdg[j][i]][2] = "# "+names[j]+boost::lexical_cast<str>(i+1);
+            str masspdg = boost::lexical_cast<str>(masses[j][i].second);
+            str comment = "# "+names[j]+boost::lexical_cast<str>(i+1);
+            SLHAea_add(data, "MASS", pdg[j][i], masspdg, comment, true);
+            slha1to2[masses[j][i].first] = pdg[j][i];
+          }
+
+          // Write the mixing block.  i is the SLHA2 index, k is the SLHA1 index.
+          //data[blocks[j]][""] << "BLOCK" << blocks[j];
+          SLHAea_check_block(data, blocks[j]);
+          for (int i = 0; i < lengths[j]; i++) for (int k = 0; k < lengths[j]; k++)
+          {
+            double datum;
+            if (lengths[j] == 3 or (k != 2 and k != 5)) // first or second generation (or neutrinos)
+            {
+              datum = (slha1to2.at(pdg[j][k]) == pdg[j][i]) ? 1.0 : 0.0;
+            }
+            else // third generation => need to use the 2x2 SLHA1 mixing matrices.
+            {
+              double family_index = 0;
+              if (k == 2)
+              {
+                if (slha1to2.at(pdg[j][k]) == pdg[j][i]) family_index = 1;
+                else if (slha1to2.at(pdg[j][5]) == pdg[j][i]) family_index = 2;
+              }
+              else if (k == 5)
+              {
+                if (slha1to2.at(pdg[j][k]) == pdg[j][i]) family_index = 2;
+                else if (slha1to2.at(pdg[j][2]) == pdg[j][i]) family_index = 1;
+              }
+              if (family_index > 0)
+              {
+                datum = getdata(data, gen3mix[j], family_index, (k+1)/3);
+              }
+              else datum = 0.0;
+            }
+            //data[blocks[j]][""] << i+1 << k+1 << datum << "# "+blocks[j]+boost::lexical_cast<str>(i*10+k+11);
+            SLHAea_add(data, blocks[j], i+1, k+1, datum, "# "+blocks[j]+boost::lexical_cast<str>(i*10+k+11), true);
+          }
+
+        }
+        // Now deal with MSOFT --> SLHA2 soft mass matrix blocks
+        // (inverse of retrieval code in add_MSSM_spectrum_to_SLHAea) 
+        sspair M[5] = {sspair("MSL2","ml2"), sspair("MSE2","me2"), sspair("MSQ2","mq2"), sspair("MSU2","mu2"), sspair("MSD2","md2")};
+        for (int k=0;k<5;k++)
+        {
+          std::string block(M[k].first);
+          if(not SLHAea_block_exists(data, block)) SLHAea_add_block(data, block, scale); //TODO: maybe just always delete and replace
+          for(int i=1;i<4;i++) for(int j=1;j<4;j++)
+          {
+            std::ostringstream comment;
+            comment << block << "(" << i << "," << j << ")";
+            double entry;
+            if(i==j)
+            {
+              entry = getdata(data, "MSOFT",30+3*k+i+(k>1?4:0)); // black magic to get correct index in MSOFT matching diagonal elements
+            }
+            else
+            {
+              // Everything off-diagonal is zero in SLHA1
+              entry = 0;
+            }
+            //data[block][""] << i << j << entry*entry << "# "+comment.str();
+            SLHAea_add(data, block, i, j, entry*entry, "# "+comment.str(), true);
+          }
+        }
+
+        // Yukawa and trilinear blocks.  YU, YD and YE, plus [YU, YD and YE; SLHA1 only], or [TU, TD and TE; SLHA2 only].
+        sspair A[3] = {sspair("AU","Au"), sspair("AD","Ad"), sspair("AE","Ae")};
+        sspair Y[3] = {sspair("YU","Yu"), sspair("YD","Yd"), sspair("YE","Ye")};
+        sspair T[3] = {sspair("TU","TYu"), sspair("TD","TYd"), sspair("TE","TYe")};
+        for (int k=0;k<3;k++)
+        {
+          SLHAea_check_block(data, A[k].first);
+          SLHAea_check_block(data, Y[k].first);
+          SLHAea_check_block(data, T[k].first); // TODO: should delete superceded slha1 "A" blocks?
+          for(int i=1;i<4;i++)
+          {
+            for(int j=1;j<4;j++)
+            {
+              std::ostringstream comment;
+              comment << "(" << i << "," << j << ")";
+              // SLHA1 has only diagonal elements in Y and A. We should fill them out fully.
+              // Assume missing diagonal elements are also zero.
+              double Yentry;
+              double Aentry;
+              if(i==j)
+              {
+                if(SLHAea_check_block(data,Y[k].first,i,j))
+                {
+                  Yentry = getdata(data, Y[k].first,i,j);
+                }
+                else
+                {
+                  Yentry = 0;
+                }
+
+                if(SLHAea_check_block(data,A[k].first,i,j))
+                {
+                  Aentry = getdata(data, A[k].first,i,j);
+                }
+                else
+                {
+                  Aentry = 0;
+                }
+              }
+              else
+              {
+                Yentry = 0;
+                Aentry = 0;
+              }
+            
+              double Tentry = Aentry * Yentry;
+              SLHAea_add(data, Y[k].first, i, j, Yentry, "# "+Y[k].first+"_"+comment.str(), true);
+              SLHAea_add(data, A[k].first, i, j, Aentry, "# "+A[k].first+"_"+comment.str(), true);
+              SLHAea_add(data, T[k].first, i, j, Tentry, "# "+T[k].first+"_"+comment.str(), true);
+            }
+          }
+        }
+      }
+      else logger() << "Input SLHA data for setting up MSSM spectrum is SLHA2.  *living in the future*" << EOM;
+      // TODO: The above just takes care of SLHA1->2 conversions.
+      // We still need to add a bunch of data that was previously computed "on the fly" by the SimpleSpectrum getter functions
+  
+      // gY -> g1
+      // GAUGE block entry 1 is gY, not g1 as the Spectrum getters have been defined to return.
+      double g1 = SLHAea_get(data,"GAUGE",1) / sqrt(3./5.);
+      SLHAea_add(data,"GAUGE",4,g1,"g1 = gY/sqrt(3/5)",true);
+
+      // BMu
+      double tb = SLHAea_get(data,"HMIX",2); // tan beta(Q) DRbar ( = vu/vd)
+      double cb = cos(atan(tb));
+      double sb = sin(atan(tb));
+      double mA2 = SLHAea_get(data,"HMIX",4); // m^2_A=[m3^2/cosBsinB](Q) DRbar, tree 
+      double BMu = mA2 * (sb * cb);
+      SLHAea_add(data,"BMu",1,BMu,"BMu",true); // TODO: Just sticking it in a made-up block for now
+
+      // vd, vu
+      double v = SLHAea_get(data,"HMIX",3); // v = sqrt(vd^2 + vu^2) DRbar
+      double vd = sqrt(abs( v*v / ( tb*tb + 1 ) ));
+      double itb = 1./tb; 
+      double vu = sqrt(abs( v*v / ( itb*itb + 1 ) )); 
+      SLHAea_add(data,"VEVS",1,vu,"vu",true); // TODO: Just sticking it in a made-up block for now
+      SLHAea_add(data,"VEVS",2,vd,"vd",true);
+  
+      // sin(\theta_W) (DRbar)
+      double sg1 = 0.6 * Utils::sqr(g1);
+      double g2 = SLHAea_get(data,"GAUGE",2);
+      double sintw = sg1 / (sg1 + Utils::sqr(g2));
+      SLHAea_add(data,"SINTHETAW",1,sintw,"sin(theta_W) (DRbar)",true);
+
+      // TODO: Need to deal with SCALARMIX, PSEUDOSCALARMIX, etc also. FlexibleSUSY gives us these, and we need them internally, but they are not SLHA standard. So we cannot assume they exist.
+
+      return data;
+   }
+ 
 }
 #endif

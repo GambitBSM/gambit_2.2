@@ -25,8 +25,8 @@
 namespace Gambit {
 
   SpectrumContents::MDM::MDM()
+   : Contents("MDM")
   {
-     setName("MDM");
      std::vector<int> scalar = initVector(1);   // i.e. get(Par::Tag, "name")
      std::vector<int> v2     = initVector(2);   // i.e. get(Par::Tag, "name", i)
      std::vector<int> v3     = initVector(3);   // "

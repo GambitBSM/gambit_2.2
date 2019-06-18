@@ -23,9 +23,8 @@ namespace Gambit {
 
   /// Only have to define the constructor
   SpectrumContents::SM::SM()
+    : Contents("SM")
   {
-     setName("SM");
-
      std::vector<int> scalar; // Empty vector means no indices   // i.e. get(Par::Tag, "name")
      std::vector<int> v3     = initVector(3);   // i.e. get(Par::Tag, "name", i)
 

@@ -45,14 +45,19 @@ namespace Gambit
    Spectrum::Spectrum() : mySLHAea(), myContents() {}
 
    /// Construct from SLHAea object (also specifying what SpectrumContents should apply, which defines how to interpret the SLHAea blocks)
-   Spectrum::Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents)
+   Spectrum::Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale_in)
     : mySLHAea(slha)
     , myContents(contents)
+    , scale(scale_in)
    {
       /// Make sure the supplied slhaea object contains everything that the contents definition requires
       contents.verify_contents(*this);
    }
    /// @}
+
+   /// Return scale at which all running parameters are defined (in GeV)
+   /// (except for certain parameters which are defined at fixed scales; these are not considered as "running")
+   double Spectrum::GetScale() const { return scale; }
 
    /// Helper function for checking if a particle or ratio has been requested as an absolute value
    bool is_abs(str& s)
@@ -534,22 +539,27 @@ namespace Gambit
 
    /// SLHAea object getter
    /// Retrieves wrapped SLHAea object. 
-   /// NO LONGER converts from SLHA2 -> SLHA1. Routines for this are
-   /// now separate!
-   SLHAstruct Spectrum::getSLHAea() const
+   SLHAstruct Spectrum::getRawSLHAea() const
    {
       return mySLHAea;
    }
 
+   /// Return an SLHA-compliant (or similar) SLHAea object
+   /// Takes an integer specifying version of standard to use
+   SLHAstruct Spectrum::getSLHAea(const int version) const
+   {
+      return myContents.generateOutputSLHAea(*this,version);
+   }
+
    /// Output spectrum contents as an SLHA file, using getSLHAea.
-   void Spectrum::writeSLHAfile(const str& filename) const
+   void Spectrum::writeSLHAfile(const str& filename, const int version) const
    {
       // Ensure path exists first
       Utils::ensure_path_exists(filename); // Not sure if file locking can help with race conditions on this... hopefully filesystem can handle it.
       Utils::FileLock mylock(filename);
       mylock.get_lock();
       std::ofstream ofs(filename);
-      ofs << getSLHAea(); 
+      ofs << getSLHAea(version); 
       ofs.close();
       mylock.release_lock();
    }
@@ -562,7 +572,10 @@ namespace Gambit
          // Spit out the full spectrum as SLHA file.
          str prefix   = runOptions->getValueOrDef<str>("", "SLHA_output_prefix");
          str filename = runOptions->getValueOrDef<str>(default_name, "SLHA_output_filename");
-         writeSLHAfile(prefix+filename+".slha2"); // TODO: conversion to SLHA1? Need model-specific conversion routine. User could provide this as a function pointer?
+         int version  = runOptions->getValueOrDef<int>(2, "SLHA_version");
+         std::stringstream ss;
+         ss<<prefix<<filename<<".slha"<<version;
+         writeSLHAfile(ss.str(),version);
       }
    }
 

@@ -18,7 +18,7 @@
 
 #include <fstream>
 
-#include "gambit/Models/SpectrumContents/spectrum_contents.hpp"
+#include "gambit/Models/spectrum_contents.hpp"
 #include "gambit/Models/partmap.hpp"
 #include "gambit/Elements/spectrum.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
@@ -113,12 +113,26 @@ namespace Gambit
        }
     }
  
-    /// Set the name of this Contents object (i.e. the name of the model to which this spectrum data applies) 
-    void Contents::setName(const std::string& name)
-    {
-       my_name = name;
-    }
+    /// Constructor. Sets the name of this Contents object (i.e. the name of the model to which this spectrum data applies) 
+    Contents::Contents(const std::string& name)
+      : parameters()
+      , my_name(name)
+      , inputTransform(NULL)
+      , outputTransform(NULL)
+    {}
 
+    // Default constructor
+    Contents::Contents()
+      : parameters()
+      , my_name()
+      , inputTransform(NULL)
+      , outputTransform(NULL)
+    {}
+
+    /// Setters for transform functions
+    void Contents::setInputTransform(const inputTfunc f) {inputTransform = f;}
+    void Contents::setOutputTransform(const outputTfunc f) {outputTransform = f;}
+ 
     /// Function to check if a parameter definition exists in this object, identified by tag and string name
     bool Contents::has_parameter(const Par::Tags tag, const std::string& name) const
     {
@@ -189,7 +203,7 @@ namespace Gambit
              indices_out = test_indices;
              success = true;
           }
-          else if(PDB.has_antiparticle(shortpair))
+          else if(PDB.has_particle(name) and PDB.has_antiparticle(shortpair))
           {
              // Try antiparticle name
              std::pair<std::string, int> antipair = PDB.get_antiparticle(shortpair);
@@ -227,7 +241,7 @@ namespace Gambit
           }
        }
        // Check for antiparticle (keeping indices as-is)
-       else if(PDB.has_antiparticle(name))
+       else if(PDB.has_particle(name) and PDB.has_antiparticle(name))
        {
           std::string antiparticle = PDB.get_antiparticle(name);
           if(has_parameter(tag,antiparticle,indices))
@@ -592,6 +606,44 @@ namespace Gambit
        std::ofstream ofs(filename);
        ofs << create_template_SLHAea();
        ofs.close();
+    }
+
+    /// Perform transformations on input 'Standard' SLHAea object to make it conform to this Contents definition
+    /// E.g. for transforming SLHA-standard information into our internally required format
+    /// Derived Contents classes should set the function to use via setInputTransform, if required
+    SLHAstruct Contents::transformInputSLHAea(const SLHAstruct& input) const
+    {
+       SLHAstruct out;
+       if(inputTransform==NULL)
+       {
+          // Do nothing if no transform function provided
+          out = input;
+       }
+       else
+       {
+          out = inputTransform(input);
+       }
+       return out;
+    }
+
+    /// Obtain SLHA-compliant (or similar) SLHAea object from spectrum object.
+    /// E.g. for transformation internal SLHA-like format of Spectrum objects back into SLHA-compliant format
+    /// Derived Contents classes should set the function to use via setOutputTransform, if required
+    /// Can take an integer specifying version of standard to use.
+    SLHAstruct Contents::generateOutputSLHAea(const Spectrum& spec, const int version) const
+    {
+       SLHAstruct out;
+       if(outputTransform==NULL)
+       {
+          // Default is to just return the interal SLHAea object unchanged.
+          std::cout<<"Output transform is NULL; returning RAW SLHAea object..."<<std::endl;
+          out = spec.getRawSLHAea();
+       }
+       else
+       {
+          out = outputTransform(spec,version);
+       }
+       return out;
     }
 
   }

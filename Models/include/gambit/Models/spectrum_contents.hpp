@@ -12,7 +12,7 @@
 ///   
 ///  \author Ben Farmer
 ///          (benjamin.farmer@fysik.su.se)
-///  \date 2016 Feb 
+///  \date 2016 Feb, 2019 June
 ///
 ///  *********************************************
 
@@ -75,15 +75,28 @@ namespace Gambit {
             /// Name of SubSpectrumContents class (for more helpful error messages)
             std::string my_name;
        
+            /// Typedefs for transform function signatures
+            typedef SLHAstruct (*inputTfunc)(const SLHAstruct&);
+            typedef SLHAstruct (*outputTfunc)(const Spectrum&, const int);
+
+            /// Pointers to transform functions
+            inputTfunc  inputTransform;
+            outputTfunc outputTransform;
+
           protected:
             /// Define a new parameter requirement
             void addParameter(const Par::Tags tag, const std::string& name, const std::vector<int>& shape, const std::string& blockname, const int index=1);
-            void setName(const std::string& name);
 
             /// Import all parameter definitions from another Contents object
             void addAllFrom(const Contents& other);
-                    
+
+            /// Constructor; sets name of contents object
+            Contents(const std::string& name);
+            
           public:
+            // Default constructor. Should not be used by Derived classes, they should set a name!
+            Contents();
+
             std::string getName() const {return my_name;}
 
             /// Function to check if a parameter definition exists in this object, identified by tag and string name
@@ -122,6 +135,24 @@ namespace Gambit {
             
             /// Create template SLHA file to match this SpectrumContents
             void create_template_SLHA_file(const std::string& filename) const;
+
+            /// Perform transformations on input 'Standard' SLHAea object to make it conform to this Contents definition
+            /// E.g. for transforming SLHA-standard information into our internally required format
+            /// A function pointer to a function doing this transformation should be set in the derived Contents 
+            /// constructor using setInputTransform;
+            SLHAstruct transformInputSLHAea(const SLHAstruct& input) const;
+
+            /// Obtain SLHA-compliant (or similar) SLHAea object from spectrum object.
+            /// E.g. for transformation internal SLHA-like format of Spectrum objects back into SLHA-compliant format
+            /// To be overridden in model-specific derived classes, if needed
+            /// Can take an integer specifying version of standard to use.
+            /// A function pointer to a function doing this transformation should be set in the derived Contents 
+            /// constructor using setOutputTransform;
+            SLHAstruct generateOutputSLHAea(const Spectrum& spec, const int version) const;
+
+            /// Setters for transform functions
+            void setInputTransform(const inputTfunc);
+            void setOutputTransform(const outputTfunc);
        };
     }
 }

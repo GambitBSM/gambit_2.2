@@ -31,8 +31,8 @@ namespace Gambit
 {
 
   SpectrumContents::DiracSingletDM_Z2::DiracSingletDM_Z2()
+   : Contents("DiracSingletDM_Z2")
   {
-     setName("DiracSingletDM_Z2");
 
      // shape prototypes
      std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name")

@@ -32,9 +32,8 @@ namespace Gambit
 
   /////// Z2 model ///////
   SpectrumContents::ScalarSingletDM_Z2::ScalarSingletDM_Z2()
+    : Contents("ScalarSingletDM_Z2")
   {
-     setName("ScalarSingletDM_Z2");
-
      // shape prototypes
      std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name")
      std::vector<int> m3x3 = initVector(3,3);
@@ -60,9 +59,8 @@ namespace Gambit
 
   /////// Z3 model ///////
   SpectrumContents::ScalarSingletDM_Z3::ScalarSingletDM_Z3()
+    : Contents("ScalarSingletDM_Z3")
   {
-     setName("ScalarSingletDM_Z3");
-
      // shape prototypes
      std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name")
      std::vector<int> m3x3 = initVector(3,3);
