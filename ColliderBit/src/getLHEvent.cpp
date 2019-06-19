@@ -14,9 +14,17 @@
 ///
 ///  *********************************************
 
+#include "gambit/cmake/cmake_variables.hpp"
+
+#ifndef EXCLUDE_HEPMC
+
+using namespace std;
+
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/lhef2heputils.hpp"
 #include "gambit/Utils/util_functions.hpp"
+
+#include "HepMC3/LHEF.h"
 
 namespace Gambit
 {
@@ -57,3 +65,5 @@ namespace Gambit
   }
 
 }
+
+#endif

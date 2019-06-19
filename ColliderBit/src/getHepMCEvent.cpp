@@ -25,7 +25,7 @@
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/hepmc2heputils.hpp"
 #include "gambit/Utils/util_functions.hpp"
-#include "HepMC/IO_GenEvent.h"
+#include "HepMC3/IO_GenEvent.h"
 
 namespace Gambit
 {

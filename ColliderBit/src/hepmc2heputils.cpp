@@ -21,9 +21,11 @@
 using namespace std;
 
 #include <iostream>
-#include "HepMC/IO_GenEvent.h"
-#include "HEPUtils/FastJet.h"
+
 #include "gambit/ColliderBit/hepmc2heputils.hpp"
+
+#include "HepMC3/IO_GenEvent.h"
+#include "HEPUtils/FastJet.h"
 
 //#define COLLIDERBIT_DEBUG
 

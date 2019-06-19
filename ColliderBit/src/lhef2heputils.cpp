@@ -23,12 +23,18 @@
 ///
 ///  *********************************************
 
+#include "gambit/cmake/cmake_variables.hpp"
+
+#ifndef EXCLUDE_HEPMC
+
 using namespace std;
 
 #include <iostream>
-#include "LHEF.h"
-#include "HEPUtils/FastJet.h"
+
 #include "gambit/ColliderBit/lhef2heputils.hpp"
+
+#include "HepMC3/LHEF.h"
+#include "HEPUtils/FastJet.h"
 
 //#define COLLIDERBIT_DEBUG
 
@@ -110,3 +116,5 @@ void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt)
   #endif
 
 }
+
+#endif

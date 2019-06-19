@@ -305,18 +305,21 @@
   #define CAPABILITY HardScatteringEvent
   START_CAPABILITY
 
-    /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
-    #define FUNCTION getLHEvent
-    START_FUNCTION(HEPUtils::Event)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    #undef FUNCTION
-
+    /// Only activate these functions if HepMC is activated
     #ifndef EXCLUDE_HEPMC
+
+      /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
+      #define FUNCTION getLHEvent
+      START_FUNCTION(HEPUtils::Event)
+      NEEDS_MANAGER(RunMC, MCLoopInfo)
+      #undef FUNCTION
+
       /// A nested function that reads in HepMC event files and converts them to HEPUtils::Event format
       #define FUNCTION getHepMCEvent
       START_FUNCTION(HEPUtils::Event)
       NEEDS_MANAGER(RunMC, MCLoopInfo)
       #undef FUNCTION
+
     #endif
 
   #undef CAPABILITY
