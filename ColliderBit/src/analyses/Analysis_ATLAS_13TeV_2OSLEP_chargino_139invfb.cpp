@@ -278,7 +278,7 @@ namespace Gambit
         // The missing transverse momentum significance >10
         // TODO Use event-based MET significance instead of object-based significance
         // https://cds.cern.ch/record/2630948/files/ATLAS-CONF-2018-038.pdf
-        double met_sig=met/sqrt(HT);
+        double met_sig=met/sqrt(met);
         if (met_sig<10) return;
         _cutflow.fill(5);
 
@@ -403,25 +403,25 @@ namespace Gambit
         #endif
 
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR-SF-0J-100"    , 131., {_numSR["SR-SF-0J-100"],     0.}, {119.67, 9.0}));
-        add_result(SignalRegionData("SR-SF-0J-160"    ,  31., {_numSR["SR-SF-0J-160"],     0.}, {27.1  , 2.7}));
-        add_result(SignalRegionData("SR-SF-0J-100-120",  65., {_numSR["SR-SF-0J-100-120"], 0.}, {50.9  , 5.7}));
-        add_result(SignalRegionData("SR-SF-0J-120-160",  35., {_numSR["SR-SF-0J-120-160"], 0.}, {42.3  , 3.4}));
+        add_result(SignalRegionData("SR-SF-0J-100"    , 147., {_numSR["SR-SF-0J-100"],     0.}, {145. , 12.}));
+        add_result(SignalRegionData("SR-SF-0J-160"    ,  37., {_numSR["SR-SF-0J-160"],     0.}, {37.3 , 3.}));
+        add_result(SignalRegionData("SR-SF-0J-100-120",  53., {_numSR["SR-SF-0J-100-120"], 0.}, {56.  , 6.}));
+        add_result(SignalRegionData("SR-SF-0J-120-160",  57., {_numSR["SR-SF-0J-120-160"], 0.}, {51.  , 5.}));
 
-        add_result(SignalRegionData("SR-SF-1J-100"    , 114., {_numSR["SR-SF-1J-100"],     0.}, {114.  , 13.}));
-        add_result(SignalRegionData("SR-SF-1J-160"    ,  23., {_numSR["SR-SF-1J-160"],     0.}, {29.   , 5. }));
-        add_result(SignalRegionData("SR-SF-1J-100-120",  56., {_numSR["SR-SF-1J-100-120"], 0.}, {51.7  , 10.}));
-        add_result(SignalRegionData("SR-SF-1J-120-160",  35., {_numSR["SR-SF-1J-120-160"], 0.}, {33.   , 4. }));
+        add_result(SignalRegionData("SR-SF-1J-100"    , 120., {_numSR["SR-SF-1J-100"],     0.}, {124. , 12.}));
+        add_result(SignalRegionData("SR-SF-1J-160"    ,  29., {_numSR["SR-SF-1J-160"],     0.}, {36.  , 5. }));
+        add_result(SignalRegionData("SR-SF-1J-100-120",  55., {_numSR["SR-SF-1J-100-120"], 0.}, {48.  , 8.}));
+        add_result(SignalRegionData("SR-SF-1J-120-160",  36., {_numSR["SR-SF-1J-120-160"], 0.}, {40.  , 4. }));
 
-        add_result(SignalRegionData("SR-DF-0J-100"    ,  84., {_numSR["SR-DF-0J-100"],     0.}, {100.8, 11.9}));
-        add_result(SignalRegionData("SR-DF-0J-160"    ,  15., {_numSR["SR-DF-0J-160"],     0.}, {16.1 , 2.0 }));
-        add_result(SignalRegionData("SR-DF-0J-100-120",  49., {_numSR["SR-DF-0J-100-120"], 0.}, {53.4 , 9.}));
-        add_result(SignalRegionData("SR-DF-0J-120-160",  20., {_numSR["SR-DF-0J-120-160"], 0.}, {31.5 , 3.5}));
+        add_result(SignalRegionData("SR-DF-0J-100"    ,  95., {_numSR["SR-DF-0J-100"],     0.}, {97.  , 15.}));
+        add_result(SignalRegionData("SR-DF-0J-160"    ,  21., {_numSR["SR-DF-0J-160"],     0.}, {18.8 , 2.4 }));
+        add_result(SignalRegionData("SR-DF-0J-100-120",  47., {_numSR["SR-DF-0J-100-120"], 0.}, {45.  , 9.}));
+        add_result(SignalRegionData("SR-DF-0J-120-160",  27., {_numSR["SR-DF-0J-120-160"], 0.}, {33.  , 5.}));
 
-        add_result(SignalRegionData("SR-DF-1J-100"    ,  73., {_numSR["SR-DF-1J-100"],     0.}, {83.5 , 14.6}));
-        add_result(SignalRegionData("SR-DF-1J-160"    ,   9., {_numSR["SR-DF-1J-160"],     0.}, {12.2 , 2.5 }));
-        add_result(SignalRegionData("SR-DF-1J-100-120",  39., {_numSR["SR-DF-1J-100-120"], 0.}, {50.6 , 10.7}));
-        add_result(SignalRegionData("SR-DF-1J-120-160",  25., {_numSR["SR-DF-1J-120-160"], 0.}, {21.2 , 4.0 }));
+        add_result(SignalRegionData("SR-DF-1J-100"    ,  75., {_numSR["SR-DF-1J-100"],     0.}, {75.  , 9.}));
+        add_result(SignalRegionData("SR-DF-1J-160"    ,  15., {_numSR["SR-DF-1J-160"],     0.}, {15.1 , 2.7 }));
+        add_result(SignalRegionData("SR-DF-1J-100-120",  38., {_numSR["SR-DF-1J-100-120"], 0.}, {39.  , 6.}));
+        add_result(SignalRegionData("SR-DF-1J-120-160",  22., {_numSR["SR-DF-1J-120-160"], 0.}, {21.3 , 2.8 }));
       }
 
 
