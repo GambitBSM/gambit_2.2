@@ -285,7 +285,6 @@ namespace Gambit {
             }
             
             bool SSHL_combine = MTmiss_l_120&&( (met_50_200&&Nj_5) or met_200_300 )&&HT_300 ;
-            bool HT_1300 = HT>1300;
             
             // SSHL: exactly 2 leptons, one with PT>25 GeV, one with PT<25 GeV,  and MET>50 GeV
             if (leptons.size()==2 and leptons[0]->pT() > 25. and leptons[1]->pT() < 25.) {
@@ -375,13 +374,13 @@ namespace Gambit {
                 } else if (HT_1125_1300){
                     if (Nj_2_4) {
                         _SRLM[7]++;
-                    } else if{
+                    } else if (Nj_5) {
                         _SRLM[8]++;
                     }
                 } else if (HT_1300){
                     if (Nj_2_4) {
                         _SRLM[9]++;
-                    } else if{
+                    } else if (Nj_5) {
                         _SRLM[10]++;
                     }
                 }
@@ -538,18 +537,47 @@ namespace Gambit {
 
         void collect_results() {
 
+//            // Observed event counts
+//            static const double OBSNUM_SF[_SR_size] = {
+//                112., 7., 69., 1., 0., 2., 2., 2., 1., 1., 0., 2., 1.
+//            };
+//            // Background estimates
+//            static const double BKGNUM_SF[_SR_size] = {
+//                131., 4.1, 60., 4.8, 0.5, 1.9, 1.1, 0.6, 2.1, 1.6, 0.3, 1.7, 0.7
+//            };
+//            // Background uncertainties
+//            static const double BKGERR_SF[_SR_size] = {
+//                30., 1.1, 13., 1.2, 0.2, 0.5, 0.6, 0.3, 0.7, 0.4, 0.1, 0.4, 0.3
+//            };
 
+
+//            for (size_t ibin = 0; ibin < _SR_size; ++ibin)
+//            {
+//                // (Must match the ordering in the covariance matrix.)
+//                stringstream ss_SF; ss_SF << "SF-SR-" << ibin;
+//                stringstream ss_DF; ss_DF << "DF-SR-" << ibin;
+//                add_result(SignalRegionData(ss_SF.str(), OBSNUM_SF[ibin], {_SRSF[ibin],  0.}, {BKGNUM_SF[ibin], BKGERR_SF[ibin]}));
+//                add_result(SignalRegionData(ss_DF.str(), OBSNUM_DF[ibin], {_SRDF[ibin],  0.}, {BKGNUM_DF[ibin], BKGERR_DF[ibin]}));
+//            }
+
+//            static const vector< vector<double> > BKGCOV = {
+//                {},
+//                {}
+//            };
+
+//            set_covariance(BKGCOV);
 
             return;
         }
 
     protected:
       void analysis_specific_reset() {
-          for(size_t i=0;i<NUMSRHH;i++) { _SRHH[i]=0; }
-          for(size_t i=0;i<NUMSRHL;i++) { _SRHL[i]=0; }
-          for(size_t i=0;i<NUMSRLL;i++) { _SRLL[i]=0; }
-          for(size_t i=0;i<NUMSRLM;i++) { _SRLM[i]=0; }
-          for(size_t i=0;i<NUMSRML;i++) { _SRML[i]=0; }
+        for(size_t i=0;i<NUMSRHH;i++) { _SRHH[i]=0; }
+        for(size_t i=0;i<NUMSRHL;i++) { _SRHL[i]=0; }
+        for(size_t i=0;i<NUMSRLL;i++) { _SRLL[i]=0; }
+        for(size_t i=0;i<NUMSRLM;i++) { _SRLM[i]=0; }
+        for(size_t i=0;i<NUMSRML;i++) { _SRML[i]=0; }
+
       }
 
     };
