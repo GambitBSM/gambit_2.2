@@ -7,7 +7,8 @@
 // Search for electroweak production of charginos and sleptons decaying in final states with two leptons and missing transverse momentum in √s = 13 TeV p p collisions using the ATLAS detector
 
 // Note:
-// 1. Not fully validated.
+// 1. Not validated!!!!
+//    The excluding abilities in low mass region are much weaker than experimental report.
 // 2. Use event-based MET significance instead of object-based significance
 
 #include <vector>
