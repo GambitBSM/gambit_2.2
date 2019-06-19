@@ -14,6 +14,10 @@
 ///
 ///  *********************************************
 
+#include "gambit/cmake/cmake_variables.hpp"
+
+#ifndef EXCLUDE_HEPMC
+
 using namespace std;
 
 #include <iostream>
@@ -102,3 +106,5 @@ void get_HEPUtils_event(std::unique_ptr<const HepMC::GenEvent>, HEPUtils::Event&
   #endif
 
 }
+
+#endif

@@ -2,17 +2,25 @@
 //   *********************************************
 ///  \file
 ///
-///  Les Houches event file reader module function
+///  HepMC event file reader module function
 ///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
 ///
+///  \author Andy Buckley
+///          (andy.buckley@cern.ch)
+///  \date 2019 June
+///
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
-///  \date 2019 May
+///  \date 2019 June
 ///
 ///  *********************************************
+
+#include "gambit/cmake/cmake_variables.hpp"
+
+#ifndef EXCLUDE_HEPMC
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/hepmc2heputils.hpp"
@@ -26,18 +34,18 @@ namespace Gambit
   {
 
     /// A nested function that reads in HepMC event files and converts them to HEPUtils::Event format
-    void getLHEvent(HEPUtils::Event& result)
+    void getHepMCEvent(HEPUtils::Event& result)
     {
-      using namespace Pipes::getLHEvent;
+      using namespace Pipes::getHepMCEvent;
 
       result.clear();
 
-      // Get the filename and initialise the LHEF reader
+      // Get the filename and initialise the HepMC reader
       const static str hepmc_filename = runOptions->getValue<str>("hepmc_filename");
       static bool first = true;
       if (first)
       {
-        if (not Utils::file_exists(hepmc_filename)) throw std::runtime_error("LHE file "+hepmc_filename+" not found.  Quitting...");
+        if (not Utils::file_exists(hepmc_filename)) throw std::runtime_error("HepMC event file "+hepmc_filename+" not found.  Quitting...");
         first = false;
       }
       static HepMC::IO_GenEvent hepmcio(hepmc_filename, std::ios::in);
@@ -59,3 +67,5 @@ namespace Gambit
   }
 
 }
+
+#endif

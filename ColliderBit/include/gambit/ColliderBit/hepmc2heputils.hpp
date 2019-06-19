@@ -14,13 +14,20 @@
 ///
 ///  *********************************************
 
+#include "gambit/cmake/cmake_variables.hpp"
+
+#ifndef EXCLUDE_HEPMC
+
 #include "HEPUtils/Event.h"
 
 /// Forward declaration to cut down on includes
-namespace HepMC {
+namespace HepMC
+{
   class GenEvent;
   class IO_GenEvent;
 }
 
 /// Extract a HepMC event as a HEPUtils::Event
 void get_HEPUtils_event(std::unique_ptr<const HepMC::GenEvent>, HEPUtils::Event&);
+
+#endif

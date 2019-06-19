@@ -304,11 +304,21 @@
   /// Collider sim event capability.
   #define CAPABILITY HardScatteringEvent
   START_CAPABILITY
+
     /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
     #define FUNCTION getLHEvent
     START_FUNCTION(HEPUtils::Event)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
+
+    #ifndef EXCLUDE_HEPMC
+      /// A nested function that reads in HepMC event files and converts them to HEPUtils::Event format
+      #define FUNCTION getHepMCEvent
+      START_FUNCTION(HEPUtils::Event)
+      NEEDS_MANAGER(RunMC, MCLoopInfo)
+      #undef FUNCTION
+    #endif
+
   #undef CAPABILITY
 
 #undef MODULE

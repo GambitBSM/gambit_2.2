@@ -340,10 +340,17 @@ set(STANDALONE_FACILITATOR ${PROJECT_SOURCE_DIR}/Elements/scripts/standalone_fac
 
 # Function to add a standalone executable
 function(add_standalone executablename)
-  cmake_parse_arguments(ARG "" "" "SOURCES;HEADERS;LIBRARIES;MODULES" ${ARGN})
+  cmake_parse_arguments(ARG "" "" "SOURCES;HEADERS;LIBRARIES;MODULES;DEPENDENCIES" ${ARGN})
+
+  # Assume that the standlone is to be include unless we discover otherwise.
+  set(standalone_permitted 1)
+
+  # Exclude standalones that need HepMC if it has been excluded.
+  if (EXCLUDE_HEPMC AND (";${ARG_DEPENDENCIES};" MATCHES ";hepmc;"))
+    set(standalone_permitted 0)
+  endif()
 
   # Iterate over modules, checking if the neccessary ones are present, and adding them to the target objects if so.
-  set(standalone_permitted 1)
   foreach(module ${ARG_MODULES})
     if(standalone_permitted AND EXISTS "${PROJECT_SOURCE_DIR}/${module}/" AND (";${GAMBIT_BITS};" MATCHES ";${module};"))
       if(COMMA_SEPARATED_MODULES)
@@ -413,6 +420,11 @@ function(add_standalone executablename)
     if (USES_COLLIDERBIT AND NOT EXCLUDE_RESTFRAMES)
       add_dependencies(${executablename} restframes)
     endif()
+
+    # Add each of the declared dependencies
+    foreach(dep ${ARG_DEPENDENCIES})
+      add_dependencies(${executablename} ${dep})
+    endforeach()
 
     # Add the new executable to the standalones target
     add_dependencies(standalones ${executablename})
