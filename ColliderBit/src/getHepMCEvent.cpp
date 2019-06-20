@@ -25,7 +25,7 @@
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/hepmc2heputils.hpp"
 #include "gambit/Utils/util_functions.hpp"
-#include "HepMC3/IO_GenEvent.h"
+#include "HepMC3/ReaderAsciiHepMC2.h"
 
 namespace Gambit
 {
@@ -48,7 +48,7 @@ namespace Gambit
         if (not Utils::file_exists(hepmc_filename)) throw std::runtime_error("HepMC event file "+hepmc_filename+" not found.  Quitting...");
         first = false;
       }
-      static HepMC::IO_GenEvent hepmcio(hepmc_filename, std::ios::in);
+      static HepMC3::ReaderAsciiHepMC2 hepmcio(hepmc_filename);
 
       // Don't do anything during special iterations
       if (*Loop::iteration < 0) return;
@@ -57,9 +57,12 @@ namespace Gambit
       bool event_retrieved = true;
       #pragma omp critical (reading_HepMCEvent)
       {
-        std::unique_ptr<const HepMC::GenEvent> ge = in.read_next_event();
-        if (ge) get_HEPUtils_event(ge, result);
-        else event_retrieved = false;
+        HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
+        if (hepmcio.read_event(ge)) {
+          get_HEPUtils_event(ge, result);
+        } else {
+          event_retrieved = false;
+        }
       }
       if (not event_retrieved) Loop::halt();
     }

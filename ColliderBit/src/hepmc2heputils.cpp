@@ -24,7 +24,8 @@ using namespace std;
 
 #include "gambit/ColliderBit/hepmc2heputils.hpp"
 
-#include "HepMC3/IO_GenEvent.h"
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenParticle.h"
 #include "HEPUtils/FastJet.h"
 
 //#define COLLIDERBIT_DEBUG
@@ -33,27 +34,27 @@ using namespace HEPUtils;
 using namespace FJNS;
 
 /// Extract a HepMC event as a HEPUtils::Event
-void get_HEPUtils_event(std::unique_ptr<const HepMC::GenEvent>, HEPUtils::Event&)
+void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
 {
 
   P4 vmet;
   vector<PseudoJet> jetparticles;
 
-  evt.set_weight(lhe.hepeup.weight());
+  evt.set_weight(ge.weight());
 
   // Loop over all particles in the event
-  for (HepMC::GenEvent::particle_const_iterator pi = ge.particles_begin(); pi != ge.particles_end(); ++pi) {
+  for (HepMC3::ConstGenParticlePtr gp : ge.particles())
   {
     // Get status and PID code
-    const int st = pi->status();
-    const int apid = fabs(pi->pdg_id());
+    const int st = gp->status();
+    const int apid = fabs(gp->pid());
 
     // Use physical particles only
     if (st != 1 && st != 2) continue;
 
     // Get 4-momentum
-    const HepMC::FourVector& hp4 = pi->momentum();
-    const P4 p4 = P4::mkXYZM(hp4->px(), hp4->py(), hp4->pz(), hp4->e());
+    const HepMC3::FourVector& hp4 = gp->momentum();
+    const P4 p4 = P4::mkXYZM(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
 
     // Store interacting prompt particles
     /// @todo Dress leptons?

@@ -21,13 +21,12 @@
 #include "HEPUtils/Event.h"
 
 /// Forward declaration to cut down on includes
-namespace HepMC
+namespace HepMC3
 {
   class GenEvent;
-  class IO_GenEvent;
 }
 
 /// Extract a HepMC event as a HEPUtils::Event
-void get_HEPUtils_event(std::unique_ptr<const HepMC::GenEvent>, HEPUtils::Event&);
+void get_HEPUtils_event(const HepMC3::GenEvent&, HEPUtils::Event&);
 
 #endif
