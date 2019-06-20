@@ -391,6 +391,8 @@ namespace Gambit
 
                 std::string SurvivalProbabilityThreshold = "0.01";
 
+                std::string radialResolution = runOptions.getValueOrDef<std::string>("0.1",
+                "radial_resolution_undershoot_overshoot");
 
                 // File contents
                 std::string tunnelingcalculatorinit =
@@ -413,7 +415,7 @@ namespace Gambit
                     "        4\n"
                     "      </CriticalTemperatureAccuracy>\n"
                     "      <PathResolution>\n"
-                    "        1000\n"
+                    "        500\n"
                     "      </PathResolution>\n"
                     "      <Timeout>\n"
                     "        "+ pathFinidingTimeout +"\n"
@@ -430,7 +432,7 @@ namespace Gambit
                     "            32\n"
                     "          </NumberShootAttemptsAllowed>\n"
                     "          <RadialResolution>\n"
-                    "            0.05\n"
+                    "            "+ radialResolution +"\n"
                     "          </RadialResolution>\n"
                     "        </ConstructorArguments>\n"
                     "      </BouncePotentialFit>\n"
@@ -457,7 +459,7 @@ namespace Gambit
                     "          </ClassType>\n"
                     "          <ConstructorArguments>\n"
                     "            <NumberOfPathSegments>\n"
-                    "              100\n"
+                    "              50\n"
                     "            </NumberOfPathSegments>\n"
                     "            <NumberOfAllowedWorsenings>\n"
                     "              3\n"
