@@ -145,6 +145,7 @@ namespace Gambit
     void Analysis::add(Analysis* other)
     {
       if (_results.empty()) collect_results();
+      if (this == other) return;
       const AnalysisData otherResults = other->get_results();
       /// @todo Access by name, including merging disjoint region sets?
       assert(otherResults.size() == _results.size());
