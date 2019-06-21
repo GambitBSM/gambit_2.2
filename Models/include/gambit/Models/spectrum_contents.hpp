@@ -131,16 +131,16 @@ namespace Gambit {
             void verify_contents(const Spectrum& spec) const;
 
             /// Create template SLHAea object to match this SpectrumContents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given SpectrumContents, and to run tests.
-            SLHAstruct create_template_SLHAea() const;
+            SLHAstruct create_template_SLHAea(const int version) const;
             
             /// Create template SLHA file to match this SpectrumContents
-            void create_template_SLHA_file(const std::string& filename) const;
+            void create_template_SLHA_file(const std::string& filename, const int version) const;
 
             /// Perform transformations on input 'Standard' SLHAea object to make it conform to this Contents definition
             /// E.g. for transforming SLHA-standard information into our internally required format
             /// A function pointer to a function doing this transformation should be set in the derived Contents 
             /// constructor using setInputTransform;
-            SLHAstruct transformInputSLHAea(const SLHAstruct& input) const;
+            SLHAstruct transformInputSLHAea(const SLHAstruct& input, bool ignore_input_transform=false) const;
 
             /// Obtain SLHA-compliant (or similar) SLHAea object from spectrum object.
             /// E.g. for transformation internal SLHA-like format of Spectrum objects back into SLHA-compliant format

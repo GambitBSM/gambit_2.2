@@ -29,7 +29,7 @@
 #define PDB Models::ParticleDB()
 
 // Activate extra cout statements to watch SLHA index deduction
-#define DEBUG_SLHA_INDEX
+//#define DEBUG_SLHA_INDEX
 
 namespace Gambit 
 {
@@ -43,8 +43,8 @@ namespace Gambit
     std::vector<std::vector<int>> Parameter::allowed_indices()
     {
         std::vector<std::vector<int>> out;
-        std::cout<<"shape():"<<shape()<<std::endl;
-        std::cout<<"shape().size(): "<<shape().size()<<std::endl;
+        //std::cout<<"shape():"<<shape()<<std::endl;
+        //std::cout<<"shape().size(): "<<shape().size()<<std::endl;
         switch(shape().size())
         {
             case 0:
@@ -546,7 +546,7 @@ namespace Gambit
     }
 
     /// Create template SLHAea object to match this SpectrumContents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given SpectrumContents, and to run tests.
-    SLHAstruct Contents::create_template_SLHAea() const
+    SLHAstruct Contents::create_template_SLHAea(const int version) const
     {
        SLHAstruct out;
        for(auto& kv : parameters)
@@ -559,7 +559,7 @@ namespace Gambit
            SLHAea_check_block(out, par.blockname());
 
            // Get all allowed indices for this parameter
-           std::cout<<"Processing parameter: "<<par.name()<<", "<<Par::toString.at(par.tag())<<", "<<par.shape()<<", "<<par.blockname()<<", "<<par.blockindex()<<std::endl;
+           //std::cout<<"Processing parameter: "<<par.name()<<", "<<Par::toString.at(par.tag())<<", "<<par.shape()<<", "<<par.blockname()<<", "<<par.blockindex()<<std::endl;
            std::vector<std::vector<int>> indices(par.allowed_indices());
            // Get SLHA indices for all entries, and add them to SLHA output
            for(auto index_list : indices)
@@ -597,26 +597,32 @@ namespace Gambit
                }
            }
        }
-       return out;
+       // At this point we have a full representation of what is stored *internally* in a Spectrum object
+       // However, input/output transformations may also be applied so that input/output SLHAea objects
+       // conform to an external standard (like SLHA). This is how information should be supplied to 
+       // the Spectrum objects, so we need to apply the output transformation in this template.
+       Spectrum spec(out,*this,0,true); // Extra flag specifies to ignore input transform (since we created 
+                                        //  the internally required SLHAea format directly) 
+       return spec.getSLHAea(version);
     }
 
     /// Create template SLHA file to match this Contents: mainly used to help Spectrum object creators to know what exactly is required in the SLHAea objects for a given Contents
-    void Contents::create_template_SLHA_file(const std::string& filename) const
+    void Contents::create_template_SLHA_file(const std::string& filename, const int version) const
     {
        std::ofstream ofs(filename);
-       ofs << create_template_SLHAea();
+       ofs << create_template_SLHAea(version);
        ofs.close();
     }
 
     /// Perform transformations on input 'Standard' SLHAea object to make it conform to this Contents definition
     /// E.g. for transforming SLHA-standard information into our internally required format
     /// Derived Contents classes should set the function to use via setInputTransform, if required
-    SLHAstruct Contents::transformInputSLHAea(const SLHAstruct& input) const
+    SLHAstruct Contents::transformInputSLHAea(const SLHAstruct& input, bool ignore_input_transform) const
     {
        SLHAstruct out;
-       if(inputTransform==NULL)
+       if(inputTransform==NULL or ignore_input_transform)
        {
-          // Do nothing if no transform function provided
+          // Do nothing if no transform function provided, or if flag says to ignore it
           out = input;
        }
        else

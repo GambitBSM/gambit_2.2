@@ -121,10 +121,6 @@ namespace Gambit
          /// Contents requirements for this spectrum
          SpectrumContents::Contents myContents;
 
-         /// Master function for obtaining the 'basic' name under which a parameter set is recorded in the
-         /// SpectrumContents. Does all the checking for long/short name and antiparticle conversions.
-         std::pair<std::string,std::vector<int>> get_basic_name(const Par::Tags partype, const std::string& name, const std::vector<int>& indices) const;
-
       public:
 
          /// @{ Constructors/Destructors
@@ -136,7 +132,7 @@ namespace Gambit
 
          /// Construct from SLHAea object (also specifying what SpectrumContents should apply, which defines how to interpret the SLHAea blocks, as
          /// well as the scale at which all running parameters are defined)
-         Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale);
+         Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale, const bool ignore_input_transform=false);
 
          /// Set constraints on masses and mass ratios that cause the spectrum to be declared "invalid" if they are violated
          void set_mass_cuts(const mc_info&);
@@ -160,22 +156,31 @@ namespace Gambit
          
          /// Master getter function to retrieve parameters from Spectrum object (digging them out of the wrapped SLHAea object)
          double get(const Par::Tags partype, const std::string& name, const std::vector<int>& indices) const;
- 
+
+         /// Master setter function (general case)
+         void   set(const double value, const Par::Tags partype, const str& name, const std::vector<int>& indices);
+         
          /// Checkers/getters for fixed number of indices   
          bool   has(const Par::Tags partype, const std::string& mass) const;
          double get(const Par::Tags partype, const std::string& mass) const;
+         void   set(const double value, const Par::Tags partype, const std::string& mass);
          bool   has(const Par::Tags partype, const std::string& mass, const int index) const;
          double get(const Par::Tags partype, const std::string& mass, const int index) const;
+         void   set(const double value, const Par::Tags partype, const std::string& mass, const int index);
          bool   has(const Par::Tags partype, const std::string& mass, const int index1, const int index2) const;
          double get(const Par::Tags partype, const std::string& mass, const int index1, const int index2) const;
+         void   set(const double value, const Par::Tags partype, const std::string& mass, const int index1, const int index2);
 
          /// @{ PDB getter/checker overloads
          bool   has(const Par::Tags partype, const int pdg_code, const int context) const;
          double get(const Par::Tags partype, const int pdg_code, const int context) const;
+         void   set(const double value, const Par::Tags partype, const int pdg_code, const int context);
          bool   has(const Par::Tags partype, const std::pair<int,int> pdgpr) const;
          double get(const Par::Tags partype, const std::pair<int,int> pdgpr) const;
+         void   set(const double value, const Par::Tags partype, const std::pair<int,int> pdgpr);
          bool   has(const Par::Tags partype, const std::pair<str,int> shortpr) const;
          double get(const Par::Tags partype, const std::pair<str,int> shortpr) const;
+         void   set(const double value, const Par::Tags partype, const std::pair<str,int> shortpr);
          /// @}
 
          /// @{ Getters which first check the sanity of the thing they are returning
@@ -186,16 +191,7 @@ namespace Gambit
          double safeget(const Par::Tags partype, const std::pair<str,int> shortpr) const;
          /// @}
 
-         /// Master setter function (general case)
-         void set(const Par::Tags partype, const double value, const str& name, const std::vector<int>& indices);
- 
-         /* Setter declarations, for manually overwriting parameter values (directly changes wrapped SLHAea object contents)
-            Note; these are NON-CONST */
-         void set(const Par::Tags, const double, const str&);
-         void set(const Par::Tags, const double, const str&, const int);
-         void set(const Par::Tags, const double, const str&, const int, const int);
-
-         /* Setters for setting values of many parameters at once, by iterating over the supplied string names or indices, or both */
+        /* Setters for setting values of many parameters at once, by iterating over the supplied string names or indices, or both */
          void set_many(const Par::Tags, const double, const std::vector<str>&);
          void set_many(const Par::Tags, const double, const std::vector<str>&, const std::vector<int>);
          void set_many(const Par::Tags, const double, const std::vector<str>&, const int);

@@ -33,7 +33,11 @@ namespace Gambit
   {
 
     struct SM                   : Contents { SM(); };
-    struct SM_slha              : Contents { SM_slha(); }; // Missing some running masses that aren't part of SMINPUTS in slha
+    struct SM_slha              : Contents 
+    {  // SLHA version doesn't have running masses that aren't part of SMINPUTS in slha 
+        SM_slha();
+        static SLHAstruct generateOutputSLHAea(const Spectrum&, const int version);
+    };
     struct SMHiggs              : Contents { SMHiggs(); };
     struct MSSM                 : Contents 
     { 
