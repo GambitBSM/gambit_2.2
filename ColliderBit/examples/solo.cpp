@@ -16,6 +16,7 @@
 
 #include "gambit/Elements/standalone_module.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/cats.hpp"
 
 #define NULIKE_VERSION "1.0.7"
@@ -79,8 +80,15 @@ int main(int argc, char* argv[])
     // Translate relevant settings into appropriate variables
     bool debug = settings.getValueOrDef<bool>(false, "debug");
     bool use_lnpiln = settings.getValueOrDef<bool>(false, "use_lognormal_distribution_for_1d_systematic");
-    str lhef_filename = settings.getValue<str>("event_file");
-    if (debug) cout << "Reading LHEF file: " << lhef_filename << endl;
+    str event_filename = settings.getValue<str>("event_file");
+    bool event_file_is_LHEF = Gambit::Utils::endsWith(event_filename, ".lhe");
+    bool event_file_is_HepMC = Gambit::Utils::endsWith(event_filename, ".hepmc");
+    if (not event_file_is_LHEF and not event_file_is_HepMC)
+     throw std::runtime_error("Unrecognised event file format in "+event_filename+"; must be .lhe or .hepmc.");
+
+    // Choose the event file reader according to file format
+    if (debug) cout << "Reading " << (event_file_is_LHEF ? "LHEF" : "HepMC") << " file: " << event_filename << endl;
+    auto& getEvent = (event_file_is_LHEF ? getLHEvent : getHepMCEvent);
 
     // Initialise logs
     logger().set_log_debug_messages(debug);
@@ -99,8 +107,8 @@ int main(int argc, char* argv[])
     operateLHCLoop.setOption<YAML::Node>("CBS", CBS);
     operateLHCLoop.setOption<bool>("silenceLoop", not debug);
 
-    // Pass the filename to the LHEF reader function
-    getLHEvent.setOption<str>("lhef_filename", lhef_filename);
+    // Pass the filename to the LHEF/HepMC reader function
+    getEvent.setOption<str>((event_file_is_LHEF ? "lhef_filename" : "hepmc_filename"), event_filename);
 
     // Pass options to the cross-section function
     getYAMLxsec.setOption<double>("xsec_pb", settings.getValue<double>("xsec_pb"));
@@ -131,14 +139,14 @@ int main(int argc, char* argv[])
     getCMSAnalysisContainer.resolveDependency(&getYAMLxsec);
     getIdentityAnalysisContainer.resolveDependency(&getYAMLxsec);
     smearEventATLAS.resolveDependency(&getBuckFastATLAS);
-    smearEventATLAS.resolveDependency(&getLHEvent);
+    smearEventATLAS.resolveDependency(&getEvent);
     smearEventCMS.resolveDependency(&getBuckFastCMS);
-    smearEventCMS.resolveDependency(&getLHEvent);
+    smearEventCMS.resolveDependency(&getEvent);
     copyEvent.resolveDependency(&getBuckFastIdentity);
-    copyEvent.resolveDependency(&getLHEvent);
+    copyEvent.resolveDependency(&getEvent);
 
     // Resolve loop manager for ColliderBit event loop
-    getLHEvent.resolveLoopManager(&operateLHCLoop);
+    getEvent.resolveLoopManager(&operateLHCLoop);
     getBuckFastATLAS.resolveLoopManager(&operateLHCLoop);
     getBuckFastCMS.resolveLoopManager(&operateLHCLoop);
     getBuckFastIdentity.resolveLoopManager(&operateLHCLoop);
@@ -152,7 +160,7 @@ int main(int argc, char* argv[])
     runATLASAnalyses.resolveLoopManager(&operateLHCLoop);
     runCMSAnalyses.resolveLoopManager(&operateLHCLoop);
     runIdentityAnalyses.resolveLoopManager(&operateLHCLoop);
-    std::vector<functor*> nested_functions = initVector<functor*>(&getLHEvent,
+    std::vector<functor*> nested_functions = initVector<functor*>(&getEvent,
                                                                   &getBuckFastATLAS,
                                                                   &getBuckFastCMS,
                                                                   &getBuckFastIdentity,
@@ -213,7 +221,7 @@ int main(int argc, char* argv[])
 
     cout.precision(5);
     cout << endl;
-    cout << "Read and analysed " << n_events << " events from LHE file." << endl << endl;
+    cout << "Read and analysed " << n_events << " events from " << (event_file_is_LHEF ? "LHE" : "HepMC") << " file." << endl << endl;
     cout << "Analysis details:" << endl << endl << summary_line.str() << endl;
     cout << std::scientific << "Total combined ATLAS+CMS log-likelihood: " << loglike << endl;
     cout << endl;

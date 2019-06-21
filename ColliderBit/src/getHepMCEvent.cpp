@@ -27,6 +27,8 @@
 #include "gambit/Utils/util_functions.hpp"
 #include "HepMC3/ReaderAsciiHepMC2.h"
 
+//#define COLLIDERBIT_DEBUG
+
 namespace Gambit
 {
 
@@ -53,18 +55,28 @@ namespace Gambit
       // Don't do anything during special iterations
       if (*Loop::iteration < 0) return;
 
+      #ifdef COLLIDERBIT_DEBUG
+        cout << "Event number: " << *Loop::iteration << endl;
+      #endif
+
       // Attempt to read the next HepMC event as a HEPUtils event. If there are no more events, wrap up the loop and skip the rest of this iteration.
       bool event_retrieved = true;
       #pragma omp critical (reading_HepMCEvent)
       {
         HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
-        if (hepmcio.read_event(ge)) {
+        if (hepmcio.read_event(ge))
+        {
           get_HEPUtils_event(ge, result);
-        } else {
+        }
+        else
+        {
           event_retrieved = false;
         }
       }
       if (not event_retrieved) Loop::halt();
+
+      // FIXME this line is temp testing code only
+      if (*Loop::iteration > 9) Loop::halt();
     }
 
   }
