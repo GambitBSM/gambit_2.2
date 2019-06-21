@@ -393,7 +393,9 @@ namespace Gambit
 
                 std::string radialResolution = runOptions.getValueOrDef<std::string>("0.1",
                 "radial_resolution_undershoot_overshoot");
+                std::string PathResolution = runOptions.getValueOrDef<std::string>("1000","PathResolution");
 
+                std::cout << "Scan settings: radialResolution = " << radialResolution << ", PathResolution = " << PathResolution << std::endl;
                 // File contents
                 std::string tunnelingcalculatorinit =
                     "<VevaciousPlusPlusObjectInitialization>\n"
@@ -415,7 +417,7 @@ namespace Gambit
                     "        4\n"
                     "      </CriticalTemperatureAccuracy>\n"
                     "      <PathResolution>\n"
-                    "        500\n"
+                    "        " + PathResolution + "\n"
                     "      </PathResolution>\n"
                     "      <Timeout>\n"
                     "        "+ pathFinidingTimeout +"\n"
