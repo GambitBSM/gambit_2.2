@@ -59,7 +59,7 @@ Printer:
   # Can switch to the ascii printer by commenting out and
   # using the ascii lines below
 
-  # printer: cout
+   printer: cout
 
 #  printer: hdf5
 #  options:
@@ -67,9 +67,9 @@ Printer:
 #    group: "/MSSMEW"
 #    delete_file_on_restart: false
 
-   printer: ascii
-   options:
-    output_file: "gambit_output.txt"
+#   printer: ascii
+#   options:
+#    output_file: "gambit_output.txt"
 
 
 Scanner:
@@ -88,7 +88,7 @@ Scanner:
       plugin: random
       point_number: 1
       output_file:  output
-      like:  Likelihood
+      like:  LogLike
       files:
         output_file: "weights ..."
 
@@ -213,7 +213,7 @@ Rules:
       invalid_point_fatal: false
       # Only consider chargino masses > 45 GeV as masses lighter than this are excluded by 
       # LEP measurements of the Z width.
-      mass_cut: [ ["|~chi+_1|", 45., 1e6] ]
+      #mass_cut: [ ["|~chi+_1|", 45., 1e6] ]
       drop_SLHA_file: true
 
 
@@ -272,7 +272,6 @@ Rules:
         all_SR_must_converge: false
         maxFailedEvents: 10
         analyses:
-        analyses:
           - ATLAS_13TeV_2OSLEP_Z_139invfb
 
   # Choose Monte Carlo event simulator and options.
@@ -291,7 +290,7 @@ Rules:
           - PartonLevel:ISR = on
           - PartonLevel:FSR = on
           - HadronLevel:all = on
-          - SUSY:all = on
+          - SUSY:all = off
           - SUSY:idA = 1000006
           - SUSY:idB = 1000006
 
@@ -350,7 +349,7 @@ Logger:
 
 KeyValues:
 
-  debug: false
+  debug: true
 
   dependency_resolution:
     prefer_model_specific_functions: true
