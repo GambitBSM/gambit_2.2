@@ -106,12 +106,8 @@ namespace Gambit
         }
 
         // Apply electron efficiency
-        // TODO: Is this needed if below is done
-        ATLAS::applyElectronEff(baselineElectrons);
-
-        // Apply loose electron selection
-        // TODO: This is not the same as in the reference
-        ATLAS::applyLooseIDElectronSelectionR2(baselineElectrons);
+        // Loose electron ID selection
+        ATLAS::applyElectronIDEfficiency2019(baselineElectrons, "Loose");
 
         // Muon candidates are reconstructed in the region |η| < 2.4 from muon spectrometer tracks matching ID tracks. Candidate muons must have pT > 4 GeV and pass the medium identification requirements defined in arXiv: 1603.05598 [hep-ex]. 
         for (HEPUtils::Particle* muon : event->muons())
@@ -120,10 +116,9 @@ namespace Gambit
         }
 
         // Apply muon efficiency
-        // TODO: Is this needed if below is done
-        ATLAS::applyMuonEff(baselineMuons);
+        // Missing: "Medium" muon ID criteria
 
-        // TODO Apply "medium" muon ID criteria
+        ATLAS::applyMuonEff(baselineMuons);
 
         // Missing: transverse and longitudinal impact parameter cuts
 
@@ -172,7 +167,6 @@ namespace Gambit
           else baselineNonBJets.push_back(jet);
         }
 
-
         // Signal objects
         vector<HEPUtils::Jet*> signalJets = baselineJets;
         vector<HEPUtils::Jet*> signalBJets = baselineBJets;
@@ -181,8 +175,7 @@ namespace Gambit
         vector<HEPUtils::Particle*> signalLeptons;
 
         // Signal electrons must satisfy the “medium” identification requirement as defined in arXiv: 1902.04655 [hep-ex]
-        // TODO: Not the same as in paper
-        ATLAS::applyMediumIDElectronSelectionR2(signalElectrons);
+        ATLAS::applyElectronIDEfficiency2019(signalElectrons, "Medium");
 
         // Signal muons must have pT > 5 GeV.
         for (HEPUtils::Particle* signalMuon : baselineMuons)
