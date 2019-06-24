@@ -110,6 +110,7 @@ namespace Gambit
       Eigen::Map<const Eigen::MatrixXd> evecs(&fixedparamspack_dbl[3*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
+      /// @todo Is sqrtevals right? In eigenbasis vs actual SRs?
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
@@ -152,7 +153,7 @@ namespace Gambit
       // Compute gradient elements
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         double llgrad = 0;
-        llgrad += (n_obss(j)/n_preds(j) - 1) * sqrtevals(j);
+        llgrad += (n_obss(j)/n_preds(j) - 1) * sqrtevals(j); ///< @todo Is sqrtevals right? In eigenbasis vs actual SRs?
         llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
         // Output via argument (invert to return -dLL for minimisation)
         fgrad[j] = -llgrad;
