@@ -16,6 +16,10 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2019 June
 ///
+///  \author Anders Kvellestad
+///          (a.kvellestad@imperial.ac.uk)
+///  \date 2019 June
+///
 ///  *********************************************
 
 #include "gambit/cmake/cmake_variables.hpp"
@@ -60,23 +64,20 @@ namespace Gambit
       #endif
 
       // Attempt to read the next HepMC event as a HEPUtils event. If there are no more events, wrap up the loop and skip the rest of this iteration.
+      HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
       bool event_retrieved = true;
       #pragma omp critical (reading_HepMCEvent)
       {
-        HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
-        if (hepmcio.read_event(ge))
-        {
-          get_HEPUtils_event(ge, result);
-        }
-        else
-        {
-          event_retrieved = false;
-        }
+        event_retrieved = hepmcio.read_event(ge);
       }
       if (not event_retrieved) Loop::halt();
 
+      // Translate to HEPUtils event
+      get_HEPUtils_event(ge, result);
+
       // FIXME this line is temp testing code only
-      if (*Loop::iteration > 9) Loop::halt();
+      // if (*Loop::iteration > 9) Loop::halt();
+      if (*Loop::iteration > 10000-1) Loop::halt();
     }
 
   }
