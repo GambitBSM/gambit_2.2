@@ -8,9 +8,13 @@
 ///  \author Anders Kvellestad
 ///  \date 2018 June
 ///
+///  \author Tomas Gonzalo
+///  \date 2019 June
+///
 ///  *********************************************
 
 // Based on http://cms-results.web.cern.ch/cms-results/public-results/preliminary-results/SUS-16-048/index.html
+// Corrected signal regions for the published version https://arxiv.org/pdf/1801.01846.pdf
 
 #include <vector>
 #include <cmath>
@@ -217,20 +221,20 @@ namespace Gambit {
         // Signal Regions
         // In the low ETmiss region, for each passing event we add 0.65 due to trigger efficiency
         if (preselection && met>125. && met<200. && nSignalMuons == 2) {
-          if (m_ll>4. && m_ll<10.) _numSR["SR1"] += 0.65;
-          if (m_ll>10. && m_ll<20.) _numSR["SR2"] += 0.65;
+          if (m_ll>4. && m_ll<9.) _numSR["SR1"] += 0.65;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SR2"] += 0.65;
           if (m_ll>20. && m_ll<30.) _numSR["SR3"] += 0.65;
           if (m_ll>30. && m_ll<50.) _numSR["SR4"] += 0.65;
         }
         if (preselection && met>200. && met<250.) {
-          if (m_ll>4. && m_ll<10.) _numSR["SR5"]++;
-          if (m_ll>10. && m_ll<20.) _numSR["SR6"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SR5"]++;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SR6"]++;
           if (m_ll>20. && m_ll<30.) _numSR["SR7"]++;
           if (m_ll>30. && m_ll<50.) _numSR["SR8"]++;
         }
         if (preselection && met>250.) {
-          if (m_ll>4. && m_ll<10.) _numSR["SR9"]++;
-          if (m_ll>10. && m_ll<20.) _numSR["SR10"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SR9"]++;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SR10"]++;
           if (m_ll>20. && m_ll<30.) _numSR["SR11"]++;
           if (m_ll>30. && m_ll<50.) _numSR["SR12"]++;
         }
