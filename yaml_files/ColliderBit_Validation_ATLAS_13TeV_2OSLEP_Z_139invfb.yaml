@@ -293,6 +293,8 @@ Rules:
           - SUSY:all = off
           - SUSY:idA = 1000006
           - SUSY:idB = 1000006
+        SLHA_filenames: ["../ColliderBit/data/ATLAS_13TeV_2OSLEP_Z_139invfb.slha"]
+          
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes
