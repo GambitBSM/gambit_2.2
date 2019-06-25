@@ -558,6 +558,25 @@ Rules:
           - TauDecays:mode = 0
           - TimeShower:pTmin = 2
 
+  # Choose to get cross-sections from the Monte Carlo
+  - capability: CrossSection
+    function: getMCxsec
+    module: ColliderBit
+
+  # Choose ATLAS detector simulation and options.
+  - capability: ATLASDetectorSim
+    options:
+      LHC_13TeV:
+        partonOnly: false
+        antiktR: 0.4
+
+  # Choose CMS detector simulation and options.
+  - capability: CMSDetectorSim
+    options:
+      LHC_13TeV:
+        partonOnly: false
+        antiktR: 0.4
+
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes
     backends:

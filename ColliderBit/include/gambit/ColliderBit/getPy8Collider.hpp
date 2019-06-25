@@ -61,7 +61,6 @@ namespace Gambit
       static bool first = true;
       static std::vector<str> filenames;
       static str pythia_doc_path;
-      static std::vector<str> pythiaCommonOptions;
       static SLHAstruct slha;
       static SLHAstruct slha_spectrum;
       static double xsec_veto_fb;
@@ -112,14 +111,28 @@ namespace Gambit
 
       }
 
-      else if (iteration == COLLIDER_INIT)
+
+      // To make sure that the Pythia instance on each OMP thread gets all the 
+      // options it should, all the options parsing and initialisation happens in
+      // START_SUBPROCESS (OMP parallel) rather than COLLIDER_INIT (only thread 0).
+      // We may want to split this up, so that all the yaml options are parsed in 
+      // COLLIDER_INIT (by thread 0), and used to initialize the 'result' instance
+      // of each thread within START_SUBPROCESS.
+      // 
+      // else if (iteration == COLLIDER_INIT)
+      // {
+      //   // Do the option parsing here?
+      // }
+
+
+      else if (iteration == START_SUBPROCESS)
       {
-        // Collect Pythia options that are common across all OMP threads
-        pythiaCommonOptions.clear();
+
+        std::vector<str> pythiaOptions;
 
         // By default we tell Pythia to be quiet. (Can be overridden from yaml settings)
-        pythiaCommonOptions.push_back("Print:quiet = on");
-        pythiaCommonOptions.push_back("SLHA:verbose = 0");
+        pythiaOptions.push_back("Print:quiet = on");
+        pythiaOptions.push_back("SLHA:verbose = 0");
 
         // Get options from yaml file.
         const double xsec_veto_default = 0.0;
@@ -135,7 +148,7 @@ namespace Gambit
           if (colOptions.hasKey("pythia_settings"))
           {
             std::vector<str> addPythiaOptions = colNode["pythia_settings"].as<std::vector<str> >();
-            pythiaCommonOptions.insert(pythiaCommonOptions.end(), addPythiaOptions.begin(), addPythiaOptions.end());
+            pythiaOptions.insert(pythiaOptions.end(), addPythiaOptions.begin(), addPythiaOptions.end());
           }
         }
         else
@@ -146,15 +159,12 @@ namespace Gambit
         }
 
         // We need showProcesses for the xsec veto.
-        pythiaCommonOptions.push_back("Init:showProcesses = on");
+        pythiaOptions.push_back("Init:showProcesses = on");
 
         // We need "SLHA:file = slhaea" for the SLHAea interface, and the filename for the SLHA interface.
         str slha_string = (filenames.empty() ? "slhaea" : filenames.at(fileCounter));
-        pythiaCommonOptions.push_back("SLHA:file = " + slha_string);
-      }
+        pythiaOptions.push_back("SLHA:file = " + slha_string);
 
-      else if (iteration == START_SUBPROCESS)
-      {
         // Variables needed for the xsec veto
         std::stringstream processLevelOutput;
         str _junk, readline;
@@ -171,9 +181,7 @@ namespace Gambit
         if (not filenames.empty() and omp_get_thread_num() == 0)
           logger() << "Reading SLHA file: " << filenames.at(fileCounter) << EOM;
 
-        // Get the Pythia options that are common across all OMP threads ('pythiaCommonOptions')
-        // and then add the thread-specific seed
-        std::vector<str> pythiaOptions = pythiaCommonOptions;
+        // Add the thread-specific seed to the Pythia options
         str seed = std::to_string(int(Random::draw() * 899990000.));
         pythiaOptions.push_back("Random:seed = " + seed);
 

@@ -565,6 +565,7 @@ set( PLUGIN_INCLUDE_DIRECTORIES
                 ${Boost_INCLUDE_DIR}
                 ${GSL_INCLUDE_DIRS}
                 ${ROOT_INCLUDE_DIR}
+                ${ROOT_INCLUDE_DIRS}
                 ${PROJECT_SOURCE_DIR}/ScannerBit/include/gambit/ScannerBit
 )\n
 if( ${PLUG_VERBOSE} )
@@ -714,6 +715,7 @@ endif()
                             towrite += "endif()\n\n"
                         else:
                             lib_name = plug_type[i] + "_" + directory + "_" + lib + "_LIBRARY"
+                            towrite += "unset(" + lib_name + " CACHE)\n"
                             towrite += "find_library( " + lib_name + " " + lib + " HINTS ${" + plug_type[i] + "_plugin_lib_paths_" + directory + "} )\n"
                             towrite += "if( " + lib_name + " STREQUAL \"" + lib_name + "-NOTFOUND\" )\n"
                             towrite += "    message(\"-- Did not find "+ plug_type[i] + " library " + lib + " for " + directory + ". Disabling scanners that depend on this.\")\n"
@@ -747,14 +749,15 @@ endif()
                             towrite += "if (" + inc + "_FOUND)\n"
                             towrite += " "*4 + "set (" + plug_type[i] + "_plugin_includes_" + directory + "\n"
                             towrite += " "*8 + "${" + plug_type[i] + "_plugin_includes_" + directory + "}\n"
-                            towrite += " "*8 + "${ROOT_INCLUDE_DIR}\n"
+                            towrite += " "*8 + "${ROOT_INCLUDE_DIRS}\n"
                             towrite += " "*4 + ")\n"
                             towrite += " "*4 + "set (" + plug_type[i] + "_plugin_found_incs_" + directory
                             towrite += " \"${" +  plug_type[i] + "_plugin_found_incs_" + directory + "}"
-                            towrite += "    \\\"" + inc + "\\\": ${ROOT_INCLUDE_DIR}\\n\")\n"
+                            towrite += "    \\\"" + inc + "\\\": ${ROOT_INCLUDE_DIRS}\\n\")\n"
                             towrite += "endif()\n\n"
                         else:
                             inc_name = plug_type[i] + "_" + directory + "_" + re.sub(r";|/|\.", "_", inc) + "_INCLUDE_PATH"
+                            towrite += "unset(" + inc_name + " CACHE)\n"
                             towrite += "find_path( " + inc_name + " \"" + inc + "\" HINTS ${" + plug_type[i] + "_plugin_includes_" + directory + "})\n"
                             towrite += "if( NOT " + inc_name + " STREQUAL \"" + inc_name + "-NOTFOUND\" )\n"
                             towrite += " "*4 + "set (" + plug_type[i] + "_plugin_includes_" + directory + "\n"
@@ -764,9 +767,8 @@ endif()
                             towrite += " "*4 + "set (" + plug_type[i] + "_plugin_found_incs_" + directory
                             towrite += " \"${" +  plug_type[i] + "_plugin_found_incs_" + directory + "}"
                             towrite += "    \\\"" + inc + "\\\": ${" + inc_name + "}\\n\")\n"
-                            towrite += "    message(\"-- Found " + plug_type[i] + " header: ${inc_name}/" + inc + "\")\n"
+                            towrite += "    message(\"-- Found " + plug_type[i] + " header: ${" + inc_name + "}/" + inc + "\")\n"
                             towrite += "else()\n"
-                            towrite += " "*4 + "set (" + plug_type[i] + "_ok_flag_" + directory + " \"    file_missing: \\\"" + inc + "\\\"\")\n"
                             towrite += "    message(\"-- Did not find "+ plug_type[i] + " header " + inc + ". Disabling scanners that depend on this.\")\n"
                             towrite += "endif()\n\n"
             towrite += "if( NOT ${" + plug_type[i] + "_plugin_linked_libs_" + directory + "} STREQUAL \"\" OR NOT ${" + plug_type[i] + "_plugin_found_incs_" + directory + "} STREQUAL \"\")\n"
