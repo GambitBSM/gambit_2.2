@@ -346,7 +346,8 @@ def main(argv):
             for current_location_file in location_files:
 
                 # Load the locations yaml file, and work out which libs are present
-                yaml_file = yaml.load(open(current_location_file))
+                yaml_loader = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
+                yaml_file = yaml_loader(open(current_location_file))
 
                 if yaml_file:
                     if plugin_name in yaml_file and plugin[1] == plugin_type:
@@ -623,7 +624,7 @@ endif()
                 nothing_excluded = True
                 if plug[3] == "excluded":
                     nothing_excluded = False
-                    towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"    user: " + plug[4] + "\\n\")\n\n"
+                    towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"    Missing scanner plugin " + plug[4] + "\")\n\n"
             if (nothing_excluded):
                 towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"\")\n\n"
 
@@ -719,6 +720,11 @@ endif()
                             towrite += "find_library( " + lib_name + " " + lib + " HINTS ${" + plug_type[i] + "_plugin_lib_paths_" + directory + "} )\n"
                             towrite += "if( " + lib_name + " STREQUAL \"" + lib_name + "-NOTFOUND\" )\n"
                             towrite += "    message(\"-- Did not find "+ plug_type[i] + " library " + lib + " for " + directory + ". Disabling scanners that depend on this.\")\n"
+                            towrite += "    if ( " + plug_type[i] + "_ok_flag_" + directory + " STREQUAL \"\" )\n"
+                            towrite += "      set(" + plug_type[i] + "_ok_flag_" + directory + " \"lib" + lib + ".so\")\n"
+                            towrite += "    else()\n"
+                            towrite += "      set(" + plug_type[i] + "_ok_flag_" + directory + " \"${" + plug_type[i] + "_ok_flag_" + directory + "}, lib" + lib + ".so\")\n"
+                            towrite += "    endif()\n"
                             towrite += "else()\n"
                             towrite += " "*4 + "get_filename_component(lib_path ${" + lib_name + "} PATH)\n"
                             towrite += " "*4 + "get_filename_component(lib_name ${" + lib_name + "} NAME_WE)\n"
@@ -770,6 +776,7 @@ endif()
                             towrite += "    message(\"-- Found " + plug_type[i] + " header: ${" + inc_name + "}/" + inc + "\")\n"
                             towrite += "else()\n"
                             towrite += "    message(\"-- Did not find "+ plug_type[i] + " header " + inc + ". Disabling scanners that depend on this.\")\n"
+                            towrite += "    set(" + plug_type[i] + "_ok_flag_" + directory + " \"${" + plug_type[i] + "_ok_flag_" + directory + "}, " + inc + "\")\n"
                             towrite += "endif()\n\n"
             towrite += "if( NOT ${" + plug_type[i] + "_plugin_linked_libs_" + directory + "} STREQUAL \"\" OR NOT ${" + plug_type[i] + "_plugin_found_incs_" + directory + "} STREQUAL \"\")\n"
             towrite += " "*4 + "set ( reqd_lib_output \"${reqd_lib_output}lib" + plug_type[i] + "_" + directory + ".so:\\n\" )\n"
@@ -800,7 +807,7 @@ endif()
             towrite += "  plugins:\\n"
             for plug in scanbit_plugins[plug_type[i]][directory]:
                 towrite += "    - " + plug[4] + "\\n"
-            towrite += "  reason: \\n${" + plug_type[i] + "_ok_flag_" + directory + "}\\n\" )\n"
+            towrite += "  reason: ${" + plug_type[i] + "_ok_flag_" + directory + "}\\n\" )\n"
             towrite += "endif()\n\n"
 
     towrite += "set(SCANNERBIT_PLUGINS ${SCANNERBIT_PLUGINS} PARENT_SCOPE)\n"
