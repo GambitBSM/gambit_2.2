@@ -34,10 +34,6 @@
 ///  \date   2018 Jan
 ///  \date   2018 May
 ///
-///  \author Tomas Gonzalo
-///          (tomas.gonzalo@monash.edu)
-///  \date   2019 June
-///
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
@@ -57,8 +53,7 @@ namespace Gambit
                                   const MCLoopInfo& RunMC,
                                   const Py8Collider<PythiaT,EventT>& HardScatteringSim,
                                   const int iteration,
-                                  void(*wrapup)(),
-                                  const Options& runOptions)
+                                  void(*wrapup)())
     {
       static int nFailedEvents;
       thread_local EventT pythia_event;
@@ -114,36 +109,6 @@ namespace Gambit
         return;
       }
 
-      #ifndef EXCLUDE_HEPMC
-        // Print the event to HepMC
-        long long maxIterationsForHepMC = runOptions.getValueOrDef<long long>(50000, "max_HepMC_events");;
-        if (iteration <= maxIterationsForHepMC)
-        {
-          if (runOptions.getValueOrDef<bool>(false, "drop_HepMC_file") )
-          {
-            cout << "printing HepMC" << endl;
-
-            // Interface for conversion from Pythia8::Event to HepMC event.
-//            HepMC3::Pythia8ToHepMC ToHepMC;
-
-            // Specify file where HepMC events will be stored.
-//            HepMC3::IO_GenEvent ascii_io("GAMBIT_HepMC.dat", std::ios::out);
-
-            // Construct new empty HepMC event and fill it.
-            // Units will be as chosen for HepMC build; but can be changed
-            // by arguments, e.g. GenEvt( HepMC::Units::GEV, HepMC::Units::MM)
- //           HepMC3::GenEvent* hepmcevt = new HepMC3::GenEvent();
- //           ToHepMC.fill_next_event( pythia, hepmcevt );
-
-            // Write the HepMC event to file. Done with it.
-  //          #pragma once
- //           ascii_io << hepmcevt;
-//            delete hepmcevt;
-          }
-
-        }
-      #endif
-
       // Attempt to convert the Pythia event to a HEPUtils event
       try
       {
@@ -182,8 +147,7 @@ namespace Gambit
     {                                                            \
       using namespace Pipes::NAME;                               \
       generateEventPy8Collider(result, *Dep::RunMC,              \
-       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup,  \
-       *runOptions); \
+       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup); \
     }
 
   }
