@@ -263,9 +263,9 @@ Rules:
     options:
       silenceLoop: false
       LHC_13TeV:
-        min_nEvents: 5000
-        max_nEvents: 50000
-        events_between_convergence_checks: 5000
+        min_nEvents: 95000
+        max_nEvents: 95000
+        events_between_convergence_checks: 50000
         target_fractional_uncert: 0.3
         halt_when_systematic_dominated: true
         all_analyses_must_converge: false
@@ -276,7 +276,7 @@ Rules:
 
   # Choose Monte Carlo event simulator and options.
   - capability:  HardScatteringSim
-    type: ColliderPythia_defaultversion
+    type: Py8Collider_defaultversion 
     function: getPythia
     options:
       LHC_13TeV:
@@ -290,11 +290,18 @@ Rules:
           - PartonLevel:ISR = on
           - PartonLevel:FSR = on
           - HadronLevel:all = on
+          - Beams:eCM = 13000
           - SUSY:all = off
+          - SUSY:qqbar2squarkantisquark = on
+          - SUSY:gg2squarkantisquark = on
           - SUSY:idA = 1000006
           - SUSY:idB = 1000006
-        SLHA_filenames: ["../ColliderBit/data/ATLAS_13TeV_2OSLEP_Z_139invfb.slha"]
-          
+          - TauDecays:mode = 0
+          - TimeShower:pTmin = 2
+          - Next:numberCount = 1000
+      SLHA_filenames: ["./ColliderBit/data/Cutflows/ATLAS_13TeV_2OSLEP_Z_139invfb/SR1A.slha"]
+
+ 
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes
@@ -351,7 +358,7 @@ Logger:
 
 KeyValues:
 
-  debug: true
+  debug: false
 
   dependency_resolution:
     prefer_model_specific_functions: true

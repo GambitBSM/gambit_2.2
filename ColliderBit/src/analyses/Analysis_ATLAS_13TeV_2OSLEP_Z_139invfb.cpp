@@ -19,7 +19,7 @@
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
- #define CHECK_CUTFLOW
+#define CHECK_CUTFLOW
 
 using namespace std;
 
@@ -117,10 +117,10 @@ namespace Gambit
 
         // Apply muon efficiency
         // Missing: "Medium" muon ID criteria
-
         ATLAS::applyMuonEff(baselineMuons);
 
         // Missing: transverse and longitudinal impact parameter cuts
+
 
         // Only jet candidates with pT > 20 GeV and |η| < 2.8 are considered in the analysis
         // Jets with pT < 120 GeV and |η| < 2.8 have an efficiency of 90% 
@@ -153,6 +153,7 @@ namespace Gambit
         // 5) Remove electron candidates sharing and ID track with a muon candidate
         // Missing: No track information
 
+
         // Find b-jets
         // Copied from ATLAS_13TeV_3b_24invfb
         double btag = 0.77; double cmisstag = 1/16.; double misstag = 1./113.;
@@ -176,6 +177,7 @@ namespace Gambit
 
         // Signal electrons must satisfy the “medium” identification requirement as defined in arXiv: 1902.04655 [hep-ex]
         ATLAS::applyElectronIDEfficiency2019(signalElectrons, "Medium");
+
 
         // Signal muons must have pT > 5 GeV.
         for (HEPUtils::Particle* signalMuon : baselineMuons)
@@ -245,11 +247,15 @@ namespace Gambit
             SFOSpairClosestToMZ = pair;
           }
         }
+
         // Construct the pTll variable
-        double pTll = ( SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom() ).pT();
+        double pTll = 0.0;
+        if(SFOSpairClosestToMZ.size() == 2)
+          pTll = ( SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom() ).pT();
+
         // Find the highest pT lepton not in the pair, but make sure there are at least 3 leptons
-        double mT23l = 0;
-        if(preselection)
+        double mT23l = 0.0;
+        if(nSignalLeptons >= 3 and SFOSpairClosestToMZ.size() == 2)
         {
           HEPUtils::Particle* thirdLepton;
           if(signalLeptons.at(0) != SFOSpairClosestToMZ.at(0) && signalLeptons.at(0) != SFOSpairClosestToMZ.at(1))
@@ -259,9 +265,9 @@ namespace Gambit
           else
             thirdLepton = signalLeptons.at(2);
  
-          double pa[3] = { 0, (SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom()).px(), (SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom()).py() };
+          double pa[3] = { mll, (SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom()).px(), (SFOSpairClosestToMZ.at(0)->mom() + SFOSpairClosestToMZ.at(1)->mom()).py() };
           double pb[3] = { 0, thirdLepton->mom().px(), thirdLepton->mom().py() };
-          double pmiss[3] = { 0, ptot.px(), ptot.py() };
+          double pmiss[3] = { met, ptot.px(), ptot.py() };
           double mn = 0.;
 
           mt2_bisect::mt2 mt2_calc;
@@ -335,7 +341,6 @@ namespace Gambit
            ) 
           _numSR["SR2B"]++;
 
-
         // Cutflows
         
         // Fill cutflow with preselection trigger as defined by ATLAS
@@ -345,67 +350,88 @@ namespace Gambit
           for(int i=0; i<4; i++)
             _cutflow[i].fill(1);
 
+          bool SR[] ={true, true, true, true};
+
           // 2
           // Third leading lepton pT
-          if(signalLeptons.at(2)->pT() > 20)
-            for(int i=0; i<2; i++)
+          for(int i=0; i<2; i++)
+            if(signalLeptons.at(2)->pT() > 20)
               _cutflow[i].fill(2);
+            else
+              SR[i] = false;
           if(signalLeptons.at(2)->pT() < 20)
             _cutflow[2].fill(2);
+          else SR[2] = false; 
           if(signalLeptons.at(2)->pT() < 60)
-            _cutflow[2].fill(2);
+            _cutflow[3].fill(2);
+          else SR[3] = false;
 
           // 3
           // Z peak
-          if(Zlike)
-            for(int i=0; i<4; i++)
-              _cutflow[i].fill(3);  
+          for(int i=0; i<4; i++)
+            if(Zlike)
+             _cutflow[i].fill(3, SR[i]);  
+            else SR[i] = false; 
 
           // 4
           // nbtagged jets (pT > 30 GeV)
           for(int i=0; i<4; i++)
             if(nSignalBJets >= 1 && signalBJets.at(0)->pT() > 30. && i != 2)
-              _cutflow[i].fill(4);
+              _cutflow[i].fill(4, SR[i]);
+            else if (i != 2)
+              SR[i] = false;
           // Leading jet pT > 150 GeV
           if(signalJets.at(0)->pT() > 150.)
-            _cutflow[2].fill(4);
+            _cutflow[2].fill(4, SR[2]);
+          else SR[2] = false;
 
           // 5
           // n jets (pT > 30 GeV)
           if(nSignalJets >= 4 && signalJets.at(3)->pT() > 30.)
-            _cutflow[0].fill(5);
+            _cutflow[0].fill(5, SR[0]);
+          else SR[0] = false;
           if(nSignalJets >= 5 && signalJets.at(4)->pT() > 30.)
-            _cutflow[1].fill(5);
+            _cutflow[1].fill(5, SR[1]);
+          else SR[1] = false;
           // MET
           if(met > 200.)
-            _cutflow[2].fill(5);
+            _cutflow[2].fill(5, SR[2]);
+          else SR[2] = false;
           if(met > 350.)
-            _cutflow[3].fill(5);
+            _cutflow[3].fill(5, SR[3]);
+          else SR[3] = false;
 
           // 6
           // MET
           if(met > 250.)
-            _cutflow[0].fill(6);
+            _cutflow[0].fill(6, SR[0]);
+          else SR[0] = false;
           if(met > 150.)
-            _cutflow[1].fill(6);
+            _cutflow[1].fill(6, SR[1]);
+          else SR[1] = false;
           // pTll
           if(pTll < 50.)
-            _cutflow[2].fill(6);
+            _cutflow[2].fill(6, SR[2]);
+          else SR[2] = false;
           if(pTll > 150.)
-            _cutflow[3].fill(6);
+            _cutflow[3].fill(6, SR[3]);
+          else SR[3] = false;
 
           // 7
           // mT23l
           if(mT23l > 100.)
-            _cutflow[0].fill(7);
+            _cutflow[0].fill(7, SR[0]);
+          else SR[0] = false;
           // pTll
           if(pTll > 150.)
-            _cutflow[1].fill(7);
+            _cutflow[1].fill(7, SR[1]);
+          else SR[1] = false;
 
           // 8
           // Leading b-tagget jet pT > 100 GeV
           if(nSignalBJets >= 1 && signalBJets.at(0)->pT() > 100.)
-            _cutflow[1].fill(8);
+            _cutflow[1].fill(8, SR[1]);
+          else SR[1] = false;
         }
       }
 
@@ -434,10 +460,6 @@ namespace Gambit
 
         #ifdef CHECK_CUTFLOW
           cout << _cutflow << endl;
-          for (auto& el : _numSR)
-          {
-             cout << el.first << "\t" << _numSR[el.first] << endl;
-          }
         #endif
 
 
