@@ -61,7 +61,7 @@
 #cmakedefine PYTHON_VERSION_MINOR @PYTHON_VERSION_MINOR@
 
 /// Found/installed pybind11
-#cmakedefine HAVE_PYBIND11 1
+//#cmakedefine HAVE_PYBIND11 1
 
 /// Leave out HepMC
 #cmakedefine EXCLUDE_HEPMC 1

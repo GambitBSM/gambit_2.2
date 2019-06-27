@@ -173,6 +173,12 @@ if(WITH_HEPMC)
   message("-- HepMC-dependent functions in ColliderBit will be activated.")
   message("   HepMC v${ver} will be downloaded and installed when building GAMBIT.")
   message("   ColliderBit Solo (CBS) will be activated.")
+  if(NOT ROOT_FOUND)
+    message("   No ROOT found, ROOT-IO in HepMC will be deactivated.")
+    set(HEPMC3_ROOTIO OFF)
+  else()
+    set(HEPMC3_ROOTIO ON)
+  endif()
   set(EXCLUDE_HEPMC FALSE)
 else()
   message("   HepMC-dependent functions in ColliderBit will be deactivated.")
@@ -192,7 +198,7 @@ if(NOT EXCLUDE_HEPMC)
   ExternalProject_Add(${name}
     DOWNLOAD_COMMAND ${DL_CONTRIB} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
-    CMAKE_COMMAND ${CMAKE_COMMAND} ..
+    CMAKE_COMMAND ${CMAKE_COMMAND} -DHEPMC3_ENABLE_ROOTIO=${HEPMC3_ROOTIO} ..
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS}
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
     INSTALL_COMMAND ""
