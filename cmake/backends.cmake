@@ -65,6 +65,14 @@
 #          (aaron.vincent@cparc.ca)
 #  \date 2017 Sep, Nov
 #
+#  \author Marcin Chrzaszcz
+#          (mchrzasz@cern.ch)
+#  \date 2019 July
+#
+#  \author Jihyun Bhom
+#          (jihyun.bhom@ifj.edu.pl)
+#  \date 2019 July
+#
 #************************************************
 
 
@@ -117,6 +125,32 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+# HepLike
+set(name "heplike")
+set(ver "1.0")
+set(lib "libHEPLikeSO")
+set(dl "null")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    GIT_REPOSITORY https://github.com/mchrzasz/HEPLike.git
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${CMAKE_COMMAND} -E make_directory build
+    #COMMAND ${CMAKE_COMMAND} -E make_directory lib
+    COMMAND ${CMAKE_COMMAND} -E echo "cd build" > make_so.sh
+    COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_COMMAND} .." >> make_so.sh 
+    COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_MAKE_PROGRAM}" >> make_so.sh
+    COMMAND chmod u+x make_so.sh
+    COMMAND ./make_so.sh
+    INSTALL_COMMAND ""
+    )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+endif()
+
 
 # SuperIso
 set(name "superiso")
@@ -149,7 +183,7 @@ endif()
 # Flavio
 set(name "Flavio")
 set(ver "0.30.0")
-set(dl "https://www.physik.uzh.ch/~mchrzasz/Flavio/${name}-${ver}.tar.gz")  
+set(dl "https://www.physik.uzh.ch/~mchrzasz/Flavio/${name}-${ver}.tar.gz")
 set(md5 "d8f6a49be8ff509916ae1dc3f3b837f1")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver})
@@ -161,12 +195,12 @@ if(NOT ditched_${name}_${ver})
     CONFIGURE_COMMAND ""
     BUILD_COMMAND cd flavio
           COMMAND pip3 install -e .[plotting,sampling,testing] --user
-    INSTALL_COMMAND ""   
+    INSTALL_COMMAND ""
     )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
-  
-endif()      
+
+endif()
 
 # DDCalc
 set(name "ddcalc")
