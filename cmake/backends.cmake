@@ -131,7 +131,7 @@ set(ver "1.0")
 set(lib "libHEPLikeSO")
 set(dl "null")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     GIT_REPOSITORY https://github.com/mchrzasz/HEPLike.git
@@ -141,7 +141,7 @@ if(NOT ditched_${name}_${ver})
     BUILD_COMMAND ${CMAKE_COMMAND} -E make_directory build
     #COMMAND ${CMAKE_COMMAND} -E make_directory lib
     COMMAND ${CMAKE_COMMAND} -E echo "cd build" > make_so.sh
-    COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_COMMAND} .." >> make_so.sh 
+    COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_COMMAND} .." >> make_so.sh
     COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_MAKE_PROGRAM}" >> make_so.sh
     COMMAND chmod u+x make_so.sh
     COMMAND ./make_so.sh
@@ -186,7 +186,7 @@ set(ver "0.30.0")
 set(dl "https://www.physik.uzh.ch/~mchrzasz/Flavio/${name}-${ver}.tar.gz")
 set(md5 "d8f6a49be8ff509916ae1dc3f3b837f1")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver} "retain container folder"

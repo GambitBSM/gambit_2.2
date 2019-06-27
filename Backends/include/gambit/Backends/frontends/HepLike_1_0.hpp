@@ -21,7 +21,7 @@
 #define SAFE_VERSION 1_0
 
 LOAD_LIBRARY
-//BE_FUNCTION(Init_param, void, (parameters*), "Init_param", "Init_param")
+BE_FUNCTION(Init_param, void, (parameters*), "Init_param", "Init_param")
 
 
 // Undefine macros to avoid conflict with other backends
