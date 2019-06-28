@@ -148,11 +148,12 @@ namespace Gambit
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
+      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
       // Compute gradient elements
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         double llgrad = 0;
-        llgrad += (n_obss(j)/n_preds(j) - 1) * sqrtevals(j); ///< @todo Is sqrtevals right? In eigenbasis vs actual SRs?
+        llgrad += (n_obss(j)/n_preds(j) - 1) * err_n_preds(j); ///< @todo CHECK: SR basis vs eigenbasis
         llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
         // Output via argument (invert to return -dLL for minimisation)
         fgrad[j] = -llgrad;
