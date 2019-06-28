@@ -110,7 +110,6 @@ namespace Gambit
       Eigen::Map<const Eigen::MatrixXd> evecs(&fixedparamspack_dbl[3*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
-      /// @todo Is sqrtevals right? In eigenbasis vs actual SRs?
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
@@ -200,10 +199,28 @@ namespace Gambit
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
+      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
-      // Start with nuisances at nominal values
-      /// @todo Pick a more informed starting position
+      // Set nuisances to an informed starting position
       std::vector<double> nuisances(nSR, 0.0);
+      for (size_t j = 0; j < nSR; ++j) {
+        // Calculate the max-L starting position, ignoring correlations
+        const double obs = n_obss(j);
+        const double rate = n_preds(j);
+        const double delta = err_n_preds(j);
+        const double a = delta;
+        const double b = rate + delta*delta;
+        const double c = delta * (rate - obs);
+        const double d = b*b - 4*a*c;
+        const double sqrtd = (d < 0) ? 0 : sqrt(d);
+        if (sqrtd == 0) {
+          return -b / (2*a);
+        } else {
+          const double th0_a = (-b + sqrtd) / (2*a);
+          const double th0_b = (-b - sqrtd) / (2*a);
+          return (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
+        }
+      }
 
       // Optimiser parameters
       // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
