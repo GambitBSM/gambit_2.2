@@ -73,10 +73,7 @@ namespace Gambit
         // FIXME This is a temp solution to ensure that the event reading
         //       stops when there are no more events in the HepMC file.
         //       Remove this once bugfix is implemented in HepMC.
-        if (ge.particles().size() == 0) 
-        {
-          event_retrieved = false;
-        }
+        if ((ge.particles().size() == 0) && (ge.vertices().size() == 0)) event_retrieved = false;
       }
       if (not event_retrieved) Loop::halt();
 
