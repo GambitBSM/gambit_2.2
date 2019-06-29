@@ -72,7 +72,9 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
     // Aggregate missing ET
     else if (apid == 12 || apid == 14 || apid == 16 || apid == 1000022 || apid == 1000039)
     {
-      evt.add_particle(new Particle(p4, apid));
+      Particle* p = new Particle(p4, pid); // the event will take ownership of this pointer
+      p->set_prompt(true);
+      evt.add_particle(p);
       vmet += p4;
     }
 
