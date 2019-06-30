@@ -117,7 +117,6 @@ namespace Gambit
         else
           convertParticleEvent(pythia_event, event, HardScatteringSim.antiktR);
       }
-
       // No good.
       catch (Gambit::exception& e)
       {
