@@ -510,7 +510,8 @@ Rules:
     function: getMCxsec
 
   # Choose Monte Carlo event simulator and options.
-  - capability:  HardScatteringSim
+  - capability: HardScatteringSim
+    type: Py8Collider_defaultversion
     function: getPythia
     options:
       LHC_13TeV:
