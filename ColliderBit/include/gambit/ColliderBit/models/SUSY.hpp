@@ -40,8 +40,9 @@
     START_FUNCTION(Py8Collider_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     DEPENDENCY(decay_rates, DecayTable)
-    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
 
     #define FUNCTION getPythiaAsBase
@@ -51,17 +52,54 @@
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     #undef FUNCTION
 
+
+
+    #define FUNCTION getPythia_SLHA
+    START_FUNCTION(Py8Collider_defaultversion)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    NEEDS_CLASSES_FROM(Pythia, default)
+    ALLOW_MODELS(CB_SLHA_file_model)
+    DEPENDENCY(SLHAFileName, str)
+    #undef FUNCTION
+
+    // #define FUNCTION getPythia_SLHAAsBase
+    // START_FUNCTION(const BaseCollider*)
+    // NEEDS_MANAGER(RunMC, MCLoopInfo)
+    // NEEDS_CLASSES_FROM(Pythia_, default)
+    // DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
+    // #undef FUNCTION
+
   #undef CAPABILITY
 
 
   // Run event generator
   #define CAPABILITY HardScatteringEvent
+
     #define FUNCTION generateEventPythia
     START_FUNCTION(HEPUtils::Event)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     #undef FUNCTION
+
+
+    #define FUNCTION generateEventPythia_SLHA
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    NEEDS_CLASSES_FROM(Pythia, default)
+    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
+    #undef FUNCTION
+
   #undef CAPABILITY
+
+
+  // Distribute SLHA file names (for model CB_SLHA_file_model)
+  #define CAPABILITY SLHAFileName
+    #define FUNCTION getNextSLHAFileName
+    START_FUNCTION(str)
+    ALLOW_MODELS(CB_SLHA_file_model)
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
 #undef MODULE

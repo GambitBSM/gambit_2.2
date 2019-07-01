@@ -60,12 +60,17 @@
     #undef FUNCTION
 
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
-    #define CAPABILITY CrossSection
-      #define FUNCTION getYAMLxsec
-      START_FUNCTION(xsec)
-      NEEDS_MANAGER(RunMC, MCLoopInfo)
-      #undef FUNCTION
-    #undef CAPABILITY
+    #define FUNCTION getYAMLxsec
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+
+    #define FUNCTION getYAMLxsec_SLHA
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(CB_SLHA_file_model)
+    DEPENDENCY(SLHAFileName, str)
+    #undef FUNCTION
 
   #undef CAPABILITY
   /// @}

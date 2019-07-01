@@ -129,5 +129,75 @@ namespace Gambit
 
     }
 
+
+    /// A function that reads a list of (SLHA file, total cross-section) pairs from the input YAML file
+    void getYAMLxsec_SLHA(xsec& result)
+    {
+      using namespace Pipes::getYAMLxsec_SLHA;
+
+      // Don't bother if there are no analyses that will use this.
+      if (Dep::RunMC->analyses.empty()) return;
+
+      static bool first = true;
+      if (first)
+      {
+        if (!runOptions->hasKey("xsec_pb"))
+        {
+          ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_pb' not found. It should be a list of SLHA filenames and cross-sections.");
+        }
+
+        if (!runOptions->hasKey("xsec_fractional_uncert"))
+        {
+          ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_fractional_uncert' not found. It should be a list of SLHA filenames and fractional cross-section uncertainties.");
+        }
+        first = false;
+      }
+
+      // Check xsec list
+      const static YAML::Node colNode_xsec = runOptions->getValue<YAML::Node>("xsec_pb");
+      const static Options colOptions_xsec(colNode_xsec);
+      if (*Loop::iteration == COLLIDER_INIT)
+      {
+        if (!colOptions_xsec.hasKey(*Dep::SLHAFileName))
+        {
+          piped_invalid_point.request(str("No cross-section found for SLHA file ").append(*Dep::SLHAFileName));
+        }
+      }
+
+      // Get fractional xsec uncertainty list
+      const static YAML::Node colNode_uncert = runOptions->getValue<YAML::Node>("xsec_fractional_uncert");
+      const static Options colOptions_uncert(colNode_uncert);
+      if (*Loop::iteration == COLLIDER_INIT)
+      {
+        if (!colOptions_uncert.hasKey(*Dep::SLHAFileName))
+        {
+          piped_invalid_point.request(str("No fractional cross-section uncertainty found for SLHA file ").append(*Dep::SLHAFileName));
+        }
+      }
+
+      // Reset the xsec objects on all threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        result.reset();
+      }
+
+      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
+      if (*Loop::iteration >= 0)
+      {
+        result.log_event();
+      }
+
+      // Set the xsec and its error
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+        double xsec_fb = 1000 * colOptions_xsec.getValue<double>(*Dep::SLHAFileName);
+        double xsec_fractional_uncert = colOptions_uncert.getValue<double>(*Dep::SLHAFileName);
+
+        result.set_xsec(xsec_fb, xsec_fractional_uncert*xsec_fb);
+        result.gather_num_events();
+      }
+
+    }
+
   }
 }

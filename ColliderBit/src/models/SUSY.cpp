@@ -29,5 +29,42 @@ namespace Gambit
     // Run event generator
     GET_PYTHIA_EVENT(generateEventPythia)
 
+
+    // Get Monte Carlo event generator from SLHA file input
+    GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
+    // GET_PYTHIA_AS_BASE_COLLIDER(getPythia_SLHAAsBase)
+
+    // Run event generator
+    GET_PYTHIA_EVENT(generateEventPythia_SLHA)
+
+
+    // Get next SLHA file path (for use with model CB_SLHA_file_model)
+    void getNextSLHAFileName(str& result)
+    {
+      using namespace Pipes::getNextSLHAFileName;
+
+      static int counter = 0;
+      static bool first = true;
+
+      if (first)
+      {
+        if (!runOptions->hasKey("SLHA_filenames"))
+        {
+          ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_filenames' (a list of SLHA filenames) not found.");
+        }
+        first = false;
+      }
+
+      const static std::vector<str> filenames = runOptions->getValue<std::vector<str> >("SLHA_filenames");
+
+      if (counter >= filenames.size())
+      {
+        invalid_point().raise("No more SLHA files. My work is done.");
+      }
+
+      result = filenames.at(counter);
+      counter++;
+    }
+
   }
 }
