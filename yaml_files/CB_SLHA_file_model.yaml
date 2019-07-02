@@ -33,7 +33,7 @@ Scanner:
 
     random:
       plugin: random
-      point_number: 2
+      point_number: 3
       output_file:  output
       like:  Likelihood
       files:
@@ -72,17 +72,22 @@ Rules:
     options:
       SLHA_filenames:
         - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
-        - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
-        - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
+        - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha
+        - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha
 
 
   - capability: CrossSection
     function: getYAMLxsec_SLHA
     options:
       xsec_pb:
-        ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.0
+        ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.1
+        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 2.2
+        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 3.3
+
       xsec_fractional_uncert:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 0.1
+        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 0.1
+        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 0.1
 
 
   # Generate evens (don't read LH event files)

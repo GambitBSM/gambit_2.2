@@ -43,27 +43,35 @@ namespace Gambit
     {
       using namespace Pipes::getNextSLHAFileName;
 
-      static int counter = 0;
+      static unsigned int counter = 0;
       static bool first = true;
 
-      if (first)
-      {
-        if (!runOptions->hasKey("SLHA_filenames"))
+      // Why does this have to be part of the loop?
+      if (*Loop::iteration == BASE_INIT)
+      {      
+        if (first)
         {
-          ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_filenames' (a list of SLHA filenames) not found.");
+          if (!runOptions->hasKey("SLHA_filenames"))
+          {
+            ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_filenames' (a list of SLHA filenames) not found.");
+          }
+          first = false;
         }
-        first = false;
+
+        const static std::vector<str> filenames = runOptions->getValue<std::vector<str> >("SLHA_filenames");
+
+        if (counter >= filenames.size())
+        {
+          piped_invalid_point.request("No more SLHA files. My work is done.");
+          result = "";
+        }
+        else
+        {
+          result = filenames.at(counter);
+        }
+        counter++;          
       }
 
-      const static std::vector<str> filenames = runOptions->getValue<std::vector<str> >("SLHA_filenames");
-
-      if (counter >= filenames.size())
-      {
-        invalid_point().raise("No more SLHA files. My work is done.");
-      }
-
-      result = filenames.at(counter);
-      counter++;
     }
 
   }

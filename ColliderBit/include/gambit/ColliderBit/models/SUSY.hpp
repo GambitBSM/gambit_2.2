@@ -97,6 +97,7 @@
   #define CAPABILITY SLHAFileName
     #define FUNCTION getNextSLHAFileName
     START_FUNCTION(str)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_file_model)
     #undef FUNCTION
   #undef CAPABILITY
