@@ -62,20 +62,40 @@ ObsLikes:
     # - purpose:    Observable
     #   capability: SLHAFileName
 
-
+    # - purpose:    Observable
+    #   capability: SLHAFileElements
+    #   type: map_str_dbl
     
+
 Rules:
 
+  # List the SLHA file entries that should be stored in the GAMBIT output
+  - capability: SLHAFileElements
+    function: getSLHAFileElements
+    type: map_str_dbl
+    options:
+      SLHA_elements:
+        - MASS_1000022
+        - MASS_1000023
+        - MASS_1000024
+        - NMIX_1_1
+        - NMIX_1_2
+        - NMIX_1_3
+        - NMIX_1_4
+        - DECAY_1000024_1000022_24       # BR chi1+ --> chi10 W+
+        - DECAY_1000024_1000022_-11_12   # BR chi1+ --> chi10 e+ nu_e
+
+
   # Give the set of SLHA files that ColliderBit should use
-  - capability: SLHAFileName
-    function: getNextSLHAFileName
+  - capability: SLHAFileNameAndContent
+    function: getNextSLHAFileNameAndContent
     options:
       SLHA_filenames:
         - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
         - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha
         - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha
 
-
+  # Assign cross-sections and uncertainties for each SLHA file
   - capability: CrossSection
     function: getYAMLxsec_SLHA
     options:

@@ -153,14 +153,17 @@ namespace Gambit
         first = false;
       }
 
+      // Grab the SLHA filename
+      const str& filename = Dep::SLHAFileNameAndContent->first;
+
       // Check xsec list
       const static YAML::Node colNode_xsec = runOptions->getValue<YAML::Node>("xsec_pb");
       const static Options colOptions_xsec(colNode_xsec);
       if (*Loop::iteration == COLLIDER_INIT)
       {
-        if (!colOptions_xsec.hasKey(*Dep::SLHAFileName))
+        if (!colOptions_xsec.hasKey(filename))
         {
-          piped_invalid_point.request(str("No cross-section found for SLHA file ").append(*Dep::SLHAFileName));
+          piped_invalid_point.request(str("No cross-section found for SLHA file ").append(filename));
         }
       }
 
@@ -169,9 +172,9 @@ namespace Gambit
       const static Options colOptions_uncert(colNode_uncert);
       if (*Loop::iteration == COLLIDER_INIT)
       {
-        if (!colOptions_uncert.hasKey(*Dep::SLHAFileName))
+        if (!colOptions_uncert.hasKey(filename))
         {
-          piped_invalid_point.request(str("No fractional cross-section uncertainty found for SLHA file ").append(*Dep::SLHAFileName));
+          piped_invalid_point.request(str("No fractional cross-section uncertainty found for SLHA file ").append(filename));
         }
       }
 
@@ -190,8 +193,8 @@ namespace Gambit
       // Set the xsec and its error
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
-        double xsec_fb = 1000 * colOptions_xsec.getValue<double>(*Dep::SLHAFileName);
-        double xsec_fractional_uncert = colOptions_uncert.getValue<double>(*Dep::SLHAFileName);
+        double xsec_fb = 1000 * colOptions_xsec.getValue<double>(filename);
+        double xsec_fractional_uncert = colOptions_uncert.getValue<double>(filename);
 
         result.set_xsec(xsec_fb, xsec_fractional_uncert*xsec_fb);
         result.gather_num_events();

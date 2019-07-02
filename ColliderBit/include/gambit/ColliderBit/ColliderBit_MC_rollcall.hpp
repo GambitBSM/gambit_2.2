@@ -69,7 +69,7 @@
     START_FUNCTION(xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_file_model)
-    DEPENDENCY(SLHAFileName, str)
+    DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
     #undef FUNCTION
 
   #undef CAPABILITY

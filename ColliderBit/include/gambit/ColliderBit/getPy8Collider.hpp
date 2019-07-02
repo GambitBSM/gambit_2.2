@@ -242,190 +242,6 @@ namespace Gambit
 
 
 
-    /* 
-
-    /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
-    /// from reading a SLHA file rather than getting a Spectrum + DecayTable
-    template<typename PythiaT, typename EventT>
-    void getPy8Collider_SLHA(Py8Collider<PythiaT, EventT>& result,
-                        const MCLoopInfo& RunMC,
-                        const str& SLHA_filename,
-                        const str model_suffix,
-                        const int iteration,
-                        void(*wrapup)(),
-                        const Options& runOptions)
-    {
-      static bool first = true;
-      static str pythia_doc_path;
-      static double xsec_veto_fb;
-      static unsigned int fileCounter = 0;
-
-      if (iteration == BASE_INIT)
-      {
-        // Setup the Pythia documentation path and print the banner once
-        if (first)
-        {
-          const str be = "Pythia" + model_suffix;
-          const str ver = Backends::backendInfo().default_version(be);
-          pythia_doc_path = Backends::backendInfo().path_dir(be, ver) + "/../share/Pythia8/xmldoc/";
-          result.banner(pythia_doc_path);
-          first = false;
-        }
-      }
-
-
-      // To make sure that the Pythia instance on each OMP thread gets all the 
-      // options it should, all the options parsing and initialisation happens in
-      // START_SUBPROCESS (OMP parallel) rather than COLLIDER_INIT (only thread 0).
-      // We may want to split this up, so that all the yaml options are parsed in 
-      // COLLIDER_INIT (by thread 0), and used to initialize the 'result' instance
-      // of each thread within START_SUBPROCESS.
-      // 
-      // else if (iteration == COLLIDER_INIT)
-      // {
-      //   // Do the option parsing here?
-      // }
-
-
-      else if (iteration == START_SUBPROCESS)
-      {
-
-        std::vector<str> pythiaOptions;
-
-        // By default we tell Pythia to be quiet. (Can be overridden from yaml settings)
-        pythiaOptions.push_back("Print:quiet = on");
-        pythiaOptions.push_back("SLHA:verbose = 0");
-
-        // Get options from yaml file.
-        const double xsec_veto_default = 0.0;
-        const bool partonOnly_default = false;
-        const double antiktR_default = 0.4;
-        if (runOptions.hasKey(RunMC.current_collider()))
-        {
-          YAML::Node colNode = runOptions.getValue<YAML::Node>(RunMC.current_collider());
-          Options colOptions(colNode);
-          xsec_veto_fb = colOptions.getValueOrDef<double>(xsec_veto_default, "xsec_veto");
-          result.partonOnly = colOptions.getValueOrDef<bool>(partonOnly_default, "partonOnly");
-          result.antiktR = colOptions.getValueOrDef<double>(antiktR_default, "antiktR");
-          if (colOptions.hasKey("pythia_settings"))
-          {
-            std::vector<str> addPythiaOptions = colNode["pythia_settings"].as<std::vector<str> >();
-            pythiaOptions.insert(pythiaOptions.end(), addPythiaOptions.begin(), addPythiaOptions.end());
-          }
-        }
-        else
-        {
-          xsec_veto_fb = xsec_veto_default;
-          result.partonOnly = partonOnly_default;
-          result.antiktR = antiktR_default;
-        }
-
-        // We need showProcesses for the xsec veto.
-        pythiaOptions.push_back("Init:showProcesses = on");
-
-        // Tell Pythia where the SLHA file is.
-        pythiaOptions.push_back("SLHA:file = " + SLHA_filename);
-
-        // Variables needed for the xsec veto
-        std::stringstream processLevelOutput;
-        str _junk, readline;
-        int code, nxsec;
-        double xsec, totalxsec;
-
-        // Each thread needs an independent Pythia instance at the start
-        // of each event generation loop.
-        // Thus, the actual Pythia initialization is
-        // *after* COLLIDER_INIT, within omp parallel.
-
-        result.clear();
-
-        if (omp_get_thread_num() == 0)
-          logger() << "Reading SLHA file: " << SLHA_filename << EOM;
-
-        // Add the thread-specific seed to the Pythia options
-        str seed = std::to_string(int(Random::draw() * 899990000.));
-        pythiaOptions.push_back("Random:seed = " + seed);
-
-        #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "getPythia"+model_suffix+": My Pythia seed is: " << seed << endl;
-        #endif
-
-        try
-        {
-          result.init(pythia_doc_path, pythiaOptions, processLevelOutput);
-        }
-        catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
-        {
-          // Append new seed to override the previous one
-          int newSeedBase = int(Random::draw() * 899990000.);
-          pythiaOptions.push_back("Random:seed = " + std::to_string(newSeedBase));
-          try
-          {
-            result.init(pythia_doc_path, pythiaOptions, processLevelOutput);
-          }
-          catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
-          {
-            #ifdef COLLIDERBIT_DEBUG
-              cout << debug_prefix() << "Py8Collider::InitializationError caught in getPy8Collider. Will discard this point." << endl;
-            #endif
-            piped_invalid_point.request("Bad point: Pythia can't initialize");
-            wrapup();
-            return;
-          }
-        }
-
-        // Should we apply the xsec veto and skip event generation?
-
-        // - Get the upper limt xsec as estimated by Pythia
-        code = -1;
-        nxsec = 0;
-        totalxsec = 0.;
-        while(true)
-        {
-          std::getline(processLevelOutput, readline);
-          std::istringstream issPtr(readline);
-          issPtr.seekg(47, issPtr.beg);
-          issPtr >> code;
-          if (!issPtr.good() && nxsec > 0) break;
-          issPtr >> _junk >> xsec;
-          if (issPtr.good())
-          {
-            totalxsec += xsec;
-            nxsec++;
-          }
-        }
-
-        #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "totalxsec [fb] = " << totalxsec * 1e12 << ", veto limit [fb] = " << xsec_veto_fb << endl;
-        #endif
-
-        // - Check for NaN xsec
-        if (Utils::isnan(totalxsec))
-        {
-          #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Got NaN cross-section estimate from Pythia." << endl;
-          #endif
-          piped_invalid_point.request("Got NaN cross-section estimate from Pythia.");
-          wrapup();
-          return;
-        }
-
-        // - Wrap up loop if veto applies
-        if (totalxsec * 1e12 < xsec_veto_fb)
-        {
-          #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Cross-section veto applies. Will now call Loop::wrapup() to skip event generation for this collider." << endl;
-          #endif
-          wrapup();
-        }
-
-      }
-
-    }
-
-    */
-
-
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
     #define IS_SUSY true
     #define NOT_SUSY false
@@ -477,19 +293,19 @@ namespace Gambit
                                                                                       \
       if (*Loop::iteration == COLLIDER_INIT)                                          \
       {                                                                               \
-        if (Dep::SLHAFileName->empty())                                               \
+        const pair_str_SLHAstruct& filename_content_pair = *Dep::SLHAFileNameAndContent;           \
+        if (filename_content_pair.first.empty())                                      \
         {                                                                             \
           piped_invalid_point.request("Got empty SLHA filename. Will invalidate point."); \
         }                                                                             \
-                                                                                      \
-        logger() << "Reading SLHA file: " << *Dep::SLHAFileName << EOM;               \
-        std::ifstream ifs(Dep::SLHAFileName->c_str());                                \
-        if(!ifs.good()){ ColliderBit_error().raise(LOCAL_INFO,"ERROR: SLHA file not found."); } \
-        ifs >> slha;                                                                  \
-        ifs.close();                                                                  \
+        /* logger() << "Reading SLHA file: " << *Dep::SLHAFileName << EOM;               */ \
+        /* std::ifstream ifs(Dep::SLHAFileName->c_str());                                */ \
+        /* if(!ifs.good()){ ColliderBit_error().raise(LOCAL_INFO,"ERROR: SLHA file not found."); } */ \
+        /* ifs >> slha;                                                                  */ \
+        /* ifs.close();                                                                  */ \
       }                                                                               \
                                                                                       \
-      getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \
+      getPy8Collider(result, *Dep::RunMC, Dep::SLHAFileNameAndContent->second, #MODEL_EXTENSION,    \
         *Loop::iteration, Loop::wrapup, *runOptions);                                 \
     }
 
