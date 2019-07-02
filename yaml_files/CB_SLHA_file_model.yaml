@@ -6,15 +6,10 @@ Parameters:
     dummy: 1.0
 
 Priors:
-
   # All priors simple, so specified in Parameters section
 
 
 Printer:
-
-  # These lines tell GAMBIT to use the hdf5 printer
-  # Can switch to the ascii printer by commenting out and
-  # using the ascii lines below
 
   printer: cout
 
@@ -59,32 +54,11 @@ ObsLikes:
     - purpose:    Observable
       capability: LHCEventLoopInfo
 
-    # - purpose:    Observable
-    #   capability: SLHAFileName
-
-    # - purpose:    Observable
-    #   capability: SLHAFileElements
-    #   type: map_str_dbl
+    - purpose:    Observable
+      capability: SLHAFileElements
     
 
 Rules:
-
-  # List the SLHA file entries that should be stored in the GAMBIT output
-  - capability: SLHAFileElements
-    function: getSLHAFileElements
-    type: map_str_dbl
-    options:
-      SLHA_elements:
-        - MASS_1000022
-        - MASS_1000023
-        - MASS_1000024
-        - NMIX_1_1
-        - NMIX_1_2
-        - NMIX_1_3
-        - NMIX_1_4
-        - DECAY_1000024_1000022_24       # BR chi1+ --> chi10 W+
-        - DECAY_1000024_1000022_-11_12   # BR chi1+ --> chi10 e+ nu_e
-
 
   # Give the set of SLHA files that ColliderBit should use
   - capability: SLHAFileNameAndContent
@@ -94,6 +68,23 @@ Rules:
         - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
         - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha
         - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha
+
+  # List the SLHA file entries that should be stored in the GAMBIT output.
+  # Use SLHAea syntax for the SLHA_keys: <block/pdg> ; <line identifier> ; <line index of requested element>
+  - capability: SLHAFileElements
+    function: getSLHAFileElements
+    type: map_str_dbl
+    options:
+      value_for_missing_elements: -9999
+      SLHA_keys:
+        - MASS;1000022;1
+        - MASS;1000024;1
+        - NMIX;1,1;1
+        - NMIX;1,2;1
+        - NMIX;1,3;1
+        - NMIX;1,4;1
+        - 1000024;DECAY;2               # <-- Total decay width for 1000024 (chargino1)
+        - 1000024;(any),2,1000022,24;0  # <-- BR for two-body decay 1000024 -> 1000022 24 
 
   # Assign cross-sections and uncertainties for each SLHA file
   - capability: CrossSection
@@ -121,8 +112,8 @@ Rules:
     options:
       silenceLoop: false
       LHC_13TeV_SUSY_EWonly:
-        min_nEvents: 1000
-        max_nEvents: 1000
+        min_nEvents: 500
+        max_nEvents: 500
         events_between_convergence_checks: 5000
         target_fractional_uncert: 0.3
         halt_when_systematic_dominated: true

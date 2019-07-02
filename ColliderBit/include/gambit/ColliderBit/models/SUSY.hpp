@@ -62,13 +62,6 @@
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
     #undef FUNCTION
 
-    // #define FUNCTION getPythia_SLHAAsBase
-    // START_FUNCTION(const BaseCollider*)
-    // NEEDS_MANAGER(RunMC, MCLoopInfo)
-    // NEEDS_CLASSES_FROM(Pythia_, default)
-    // DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    // #undef FUNCTION
-
   #undef CAPABILITY
 
 
@@ -95,21 +88,21 @@
 
   // Distribute SLHA file names (for model CB_SLHA_file_model)
   #define CAPABILITY SLHAFileNameAndContent
+  START_CAPABILITY
     #define FUNCTION getNextSLHAFileNameAndContent
     START_FUNCTION(pair_str_SLHAstruct)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_file_model)
     #undef FUNCTION
   #undef CAPABILITY
 
-  // // Extract SLHA file elements (for model CB_SLHA_file_model)
-  // #define CAPABILITY SLHAFileElements
-  //   #define FUNCTION getSLHAFileElements
-  //   START_FUNCTION(map_str_dbl)
-  //   ALLOW_MODELS(CB_SLHA_file_model)
-  //   DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
-  //   #undef FUNCTION
-  // #undef CAPABILITY
-
+  // Extract SLHA file elements (for model CB_SLHA_file_model)
+  #define CAPABILITY SLHAFileElements
+  START_CAPABILITY
+    #define FUNCTION getSLHAFileElements
+    START_FUNCTION(map_str_dbl)
+    ALLOW_MODELS(CB_SLHA_file_model)
+    DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
+    #undef FUNCTION
+  #undef CAPABILITY
 
 #undef MODULE
