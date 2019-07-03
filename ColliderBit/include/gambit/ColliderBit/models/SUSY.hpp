@@ -45,21 +45,21 @@
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
 
-    #define FUNCTION getPythiaAsBase
-    START_FUNCTION(const BaseCollider*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    #undef FUNCTION
-
-
-
     #define FUNCTION getPythia_SLHA
     START_FUNCTION(Py8Collider_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     ALLOW_MODELS(CB_SLHA_file_model)
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
+    #undef FUNCTION
+
+
+
+    #define FUNCTION getPythiaAsBase
+    START_FUNCTION(const BaseCollider*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    NEEDS_CLASSES_FROM(Pythia, default)
+    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -75,14 +75,6 @@
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     #undef FUNCTION
 
-
-    #define FUNCTION generateEventPythia_SLHA
-    START_FUNCTION(HEPUtils::Event)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    #undef FUNCTION
-
   #undef CAPABILITY
 
 
@@ -92,7 +84,7 @@
     #define FUNCTION getNextSLHAFileNameAndContent
     START_FUNCTION(pair_str_SLHAstruct)
     ALLOW_MODELS(CB_SLHA_file_model)
-    #undef FUNCTION
+    #undef FUNCTION  
   #undef CAPABILITY
 
   // Extract SLHA file elements (for model CB_SLHA_file_model)

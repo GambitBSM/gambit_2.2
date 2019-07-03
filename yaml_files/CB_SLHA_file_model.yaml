@@ -5,6 +5,8 @@ Parameters:
   CB_SLHA_file_model:
     dummy: 1.0
 
+
+
 Priors:
   # All priors simple, so specified in Parameters section
 
@@ -30,7 +32,7 @@ Scanner:
       plugin: random
       point_number: 3
       output_file:  output
-      like:  Likelihood
+      like:  LogLike
       files:
         output_file: "weights ..."
 
@@ -94,7 +96,6 @@ Rules:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.1
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 2.2
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 3.3
-
       xsec_fractional_uncert:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 0.1
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 0.1
@@ -103,8 +104,13 @@ Rules:
 
   # Generate evens (don't read LH event files)
   - capability: HardScatteringEvent
-    function: generateEventPythia_SLHA
+    function: generateEventPythia
     module: ColliderBit
+
+  # # Generate evens (don't read LH event files)
+  # - capability: HardScatteringEvent
+  #   function: generateEventPythia_SLHA
+  #   module: ColliderBit
 
   # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
   - capability: RunMC
@@ -186,12 +192,12 @@ Logger:
   redirection:
     [Debug] : "debug.log"
     [Default] : "default.log"
-    [DecayBit] : "DecayBit.log"
+    # [DecayBit] : "DecayBit.log"
     # [DarkBit] : "DarkBit.log"
     # [PrecisionBit] : "PrecisionBit.log"
     # [FlavBit] : "FlavBit.log"
     [ColliderBit] : "ColliderBit.log"
-    [SpecBit] : "SpecBit.log"
+    # [SpecBit] : "SpecBit.log"
     [Dependency Resolver] : "dep_resolver.log"
 
 KeyValues:

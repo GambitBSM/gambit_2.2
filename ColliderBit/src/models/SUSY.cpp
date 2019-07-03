@@ -24,6 +24,9 @@ namespace Gambit
 
     // Get Monte Carlo event generator
     GET_SPECIFIC_PYTHIA(getPythia, Pythia_default, MSSM_spectrum, , IS_SUSY)
+    // Get Monte Carlo event generator from SLHA file input
+    GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
+
     GET_PYTHIA_AS_BASE_COLLIDER(getPythiaAsBase)
 
     // Run event generator
@@ -31,11 +34,11 @@ namespace Gambit
 
 
     // Get Monte Carlo event generator from SLHA file input
-    GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
+    // GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
     // GET_PYTHIA_AS_BASE_COLLIDER(getPythia_SLHAAsBase)
 
-    // Run event generator
-    GET_PYTHIA_EVENT(generateEventPythia_SLHA)
+    // // Run event generator
+    // GET_PYTHIA_EVENT(generateEventPythia_SLHA)
 
 
 
@@ -49,10 +52,7 @@ namespace Gambit
 
       if (first)
       {
-        if (!runOptions->hasKey("SLHA_filenames"))
-        {
-          ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_filenames' (a list of SLHA filenames) not found.");
-        }
+        if (!runOptions->hasKey("SLHA_filenames")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_filenames' (a list of SLHA filenames) not found.");
         first = false;
       }
 
@@ -60,7 +60,7 @@ namespace Gambit
 
       if (counter >= filenames.size())
       {
-        piped_invalid_point.request("No more SLHA files. My work is done.");
+        invalid_point().raise("No more SLHA files. My work is done.");
         result = std::make_pair("", SLHAstruct());
       }
       else
@@ -68,8 +68,8 @@ namespace Gambit
         const str& filename = filenames.at(counter);
         result = std::make_pair(filename, read_SLHA(filename));
       }
-      counter++;          
 
+      counter++;          
     }
 
 

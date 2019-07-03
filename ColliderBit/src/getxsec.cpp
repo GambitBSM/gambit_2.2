@@ -138,44 +138,30 @@ namespace Gambit
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
+      // Check that the required YAML options are there
       static bool first = true;
       if (first)
       {
-        if (!runOptions->hasKey("xsec_pb"))
-        {
-          ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_pb' not found. It should be a list of SLHA filenames and cross-sections.");
-        }
-
-        if (!runOptions->hasKey("xsec_fractional_uncert"))
-        {
-          ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_fractional_uncert' not found. It should be a list of SLHA filenames and fractional cross-section uncertainties.");
-        }
+        if (!runOptions->hasKey("xsec_pb")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_pb' not found. It should be a list of SLHA filenames and cross-sections.");
+        if (!runOptions->hasKey("xsec_fractional_uncert")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_fractional_uncert' not found. It should be a list of SLHA filenames and fractional cross-section uncertainties.");
         first = false;
       }
 
-      // Grab the SLHA filename
-      const str& filename = Dep::SLHAFileNameAndContent->first;
-
-      // Check xsec list
+      // Get the filename, check the xsec and uncertainty lists
       const static YAML::Node colNode_xsec = runOptions->getValue<YAML::Node>("xsec_pb");
       const static Options colOptions_xsec(colNode_xsec);
-      if (*Loop::iteration == COLLIDER_INIT)
-      {
-        if (!colOptions_xsec.hasKey(filename))
-        {
-          piped_invalid_point.request(str("No cross-section found for SLHA file ").append(filename));
-        }
-      }
-
-      // Get fractional xsec uncertainty list
       const static YAML::Node colNode_uncert = runOptions->getValue<YAML::Node>("xsec_fractional_uncert");
       const static Options colOptions_uncert(colNode_uncert);
-      if (*Loop::iteration == COLLIDER_INIT)
+      static str filename;
+
+      if (*Loop::iteration == BASE_INIT)
       {
-        if (!colOptions_uncert.hasKey(filename))
-        {
-          piped_invalid_point.request(str("No fractional cross-section uncertainty found for SLHA file ").append(filename));
-        }
+        // Update the SLHA filename
+        filename = Dep::SLHAFileNameAndContent->first;
+
+        // Look for the filename in the xsec lists
+        if (!colOptions_xsec.hasKey(filename)) piped_invalid_point.request(str("No cross-section found for SLHA file ").append(filename));
+        if (!colOptions_uncert.hasKey(filename)) piped_invalid_point.request(str("No fractional cross-section uncertainty found for SLHA file ").append(filename));
       }
 
       // Reset the xsec objects on all threads

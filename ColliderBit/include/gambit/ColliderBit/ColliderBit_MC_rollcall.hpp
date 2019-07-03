@@ -34,10 +34,15 @@
 #define MODULE ColliderBit
 
   /// Execute the main Monte Carlo event loop.
+  /// Note: 
+  ///   "Non-loop" capabilities that some in-loop capabilities depend on
+  ///   can be added as dependencies here to ensure that they are calculated
+  ///   before the loop starts.
   #define CAPABILITY RunMC
   START_CAPABILITY
     #define FUNCTION operateLHCLoop
     START_FUNCTION(MCLoopInfo, CAN_MANAGE_LOOPS)
+    MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model)
     #undef FUNCTION
   #undef CAPABILITY
 

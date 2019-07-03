@@ -58,8 +58,6 @@ namespace Gambit
     {
       static bool first = true;
       static str pythia_doc_path;
-      // static SLHAstruct slha;
-      // static SLHAstruct slha_spectrum;
       static double xsec_veto_fb;
 
       if (iteration == BASE_INIT)
@@ -73,26 +71,6 @@ namespace Gambit
           result.banner(pythia_doc_path);
           first = false;
         }
-
-        // // SLHAea object constructed from dependencies on the spectrum and decays.
-        // slha.clear();
-        // slha_spectrum.clear();
-        // slha = decay_rates.getSLHAea(2);
-        // // SLHAea in SLHA2 format, please.
-        // slha_spectrum = spectrum.getSLHAea(2);
-        // slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());
-        // if (is_SUSY)
-        // {
-        //   if(slha.find("MODSEL") == slha.end())
-        //   {
-        //     SLHAea::Block block("MODSEL");
-        //     block.push_back("BLOCK MODSEL              # Model selection");
-        //     SLHAea::Line line;
-        //     line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";
-        //     block.push_back(line);
-        //     slha.push_front(block);
-        //   }
-        // }
       }
 
       // To make sure that the Pythia instance on each OMP thread gets all the 
@@ -293,20 +271,15 @@ namespace Gambit
                                                                                       \
       if (*Loop::iteration == COLLIDER_INIT)                                          \
       {                                                                               \
-        const pair_str_SLHAstruct& filename_content_pair = *Dep::SLHAFileNameAndContent;           \
+        const pair_str_SLHAstruct& filename_content_pair = *Dep::SLHAFileNameAndContent; \
         if (filename_content_pair.first.empty())                                      \
         {                                                                             \
           piped_invalid_point.request("Got empty SLHA filename. Will invalidate point."); \
         }                                                                             \
-        /* logger() << "Reading SLHA file: " << *Dep::SLHAFileName << EOM;               */ \
-        /* std::ifstream ifs(Dep::SLHAFileName->c_str());                                */ \
-        /* if(!ifs.good()){ ColliderBit_error().raise(LOCAL_INFO,"ERROR: SLHA file not found."); } */ \
-        /* ifs >> slha;                                                                  */ \
-        /* ifs.close();                                                                  */ \
       }                                                                               \
                                                                                       \
-      getPy8Collider(result, *Dep::RunMC, Dep::SLHAFileNameAndContent->second, #MODEL_EXTENSION,    \
-        *Loop::iteration, Loop::wrapup, *runOptions);                                 \
+      getPy8Collider(result, *Dep::RunMC, Dep::SLHAFileNameAndContent->second,        \
+        #MODEL_EXTENSION, *Loop::iteration, Loop::wrapup, *runOptions);               \
     }
 
 

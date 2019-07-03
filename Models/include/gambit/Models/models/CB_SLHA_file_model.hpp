@@ -17,7 +17,6 @@
 #ifndef __cb_slha_file_model_hpp__
 #define __cb_slha_file_model_hpp__
 
-// This is the normal distribution toy model used in ExampleBit_A.
 #define MODEL CB_SLHA_file_model
   START_MODEL
   DEFINEPARS(dummy)
