@@ -49,7 +49,7 @@
     START_FUNCTION(Py8Collider_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
-    ALLOW_MODELS(CB_SLHA_file_model)
+    ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
     #undef FUNCTION
 
@@ -78,21 +78,32 @@
   #undef CAPABILITY
 
 
-  // Distribute SLHA file names (for model CB_SLHA_file_model)
+  // Get SLHA content from one or more SLHA files
   #define CAPABILITY SLHAFileNameAndContent
   START_CAPABILITY
+
+    // Get the next SLHA filename and content (for model CB_SLHA_file_model)
     #define FUNCTION getNextSLHAFileNameAndContent
     START_FUNCTION(pair_str_SLHAstruct)
     ALLOW_MODELS(CB_SLHA_file_model)
     #undef FUNCTION  
+  
+    // Read single SLHA file and replace some entries 
+    // (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    #define FUNCTION getAndReplaceSLHAContent
+    START_FUNCTION(pair_str_SLHAstruct)
+    ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    #undef FUNCTION  
+
   #undef CAPABILITY
+
 
   // Extract SLHA file elements (for model CB_SLHA_file_model)
   #define CAPABILITY SLHAFileElements
   START_CAPABILITY
     #define FUNCTION getSLHAFileElements
     START_FUNCTION(map_str_dbl)
-    ALLOW_MODELS(CB_SLHA_file_model)
+    ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
     #undef FUNCTION
   #undef CAPABILITY

@@ -188,5 +188,122 @@ namespace Gambit
 
     }
 
+
+    /// A function that assigns a total cross-sections directly from the scan parameters
+    /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    void getYAMLxsec_param(xsec& result)
+    {
+      using namespace Pipes::getYAMLxsec_param;
+
+      // Don't bother if there are no analyses that will use this.
+      if (Dep::RunMC->analyses.empty()) return;
+
+      static std::vector<str> pnames;
+      static std::pair<str,str> xsec_pnames;
+      static int xsec_par_combo = 0;
+
+      static bool first = true;
+
+      if (*Loop::iteration == BASE_INIT)
+      {
+
+        if (first)
+        {
+
+          // Get all parameter names
+          for (const auto& parname_parptr_pair : Param)
+          {
+            pnames.push_back(parname_parptr_pair.first);
+          }
+
+          // Determine the correct combination of parameters
+          if ((std::find(pnames.begin(), pnames.end(), "xsec_fb") != pnames.end()) 
+               && (std::find(pnames.begin(), pnames.end(), "xsec_uncert_fb") != pnames.end()))
+          {
+            xsec_par_combo = 1;
+            xsec_pnames.first = "xsec_fb";
+            xsec_pnames.second = "xsec_uncert_fb";
+          }
+          else if ((std::find(pnames.begin(), pnames.end(), "xsec_fb") != pnames.end()) 
+                    && (std::find(pnames.begin(), pnames.end(), "xsec_fractional_uncert") != pnames.end()))
+          {
+            xsec_par_combo = 2;
+            xsec_pnames.first = "xsec_fb";
+            xsec_pnames.second = "xsec_fractional_uncert";
+          }
+          else if ((std::find(pnames.begin(), pnames.end(), "xsec_pb") != pnames.end()) 
+                    && (std::find(pnames.begin(), pnames.end(), "xsec_uncert_pb") != pnames.end()))
+          {
+            xsec_par_combo = 3;
+            xsec_pnames.first = "xsec_pb";
+            xsec_pnames.second = "xsec_uncert_pb";
+          }
+          else if ((std::find(pnames.begin(), pnames.end(), "xsec_pb") != pnames.end()) 
+                    && (std::find(pnames.begin(), pnames.end(), "xsec_fractional_uncert") != pnames.end()))
+          {
+            xsec_par_combo = 4;
+            xsec_pnames.first = "xsec_pb";
+            xsec_pnames.second = "xsec_fractional_uncert";
+          }
+          else
+          {
+            ColliderBit_error().raise(LOCAL_INFO, "Unknown parameter combination for function getYAMLxsec_param.");
+          }
+
+          first = false;
+        }
+      }
+
+      // Reset the xsec objects on all threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        result.reset();
+      }
+
+      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
+      if (*Loop::iteration >= 0)
+      {
+        result.log_event();
+      }
+
+      // Set the xsec and its error
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+
+        double xsec_fb;
+        double xsec_uncert_fb;
+
+        if (xsec_par_combo == 1)
+        {
+          xsec_fb = *Param.at(xsec_pnames.first);
+          xsec_uncert_fb = *Param.at(xsec_pnames.second);
+        }
+        else if (xsec_par_combo == 2)
+        {
+          xsec_fb = *Param.at(xsec_pnames.first);
+          xsec_uncert_fb = *Param.at(xsec_pnames.second) * xsec_fb;
+        }
+        else if (xsec_par_combo == 3)
+        {
+          xsec_fb = *Param.at(xsec_pnames.first) * 1000.;
+          xsec_uncert_fb = *Param.at(xsec_pnames.second) * 1000.;
+        }
+        else if (xsec_par_combo == 4)
+        {
+          xsec_fb = *Param.at(xsec_pnames.first) * 1000.;
+          xsec_uncert_fb = *Param.at(xsec_pnames.second) * xsec_fb;
+        }
+        else
+        {
+          ColliderBit_error().raise(LOCAL_INFO, "Unknown parameter combination for function getYAMLxsec_param.");
+        }
+
+        result.set_xsec(xsec_fb, xsec_uncert_fb);
+        result.gather_num_events();
+      }
+
+    }
+
+
   }
 }

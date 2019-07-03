@@ -69,8 +69,79 @@ namespace Gambit
         result = std::make_pair(filename, read_SLHA(filename));
       }
 
-      counter++;          
+      counter++;
     }
+
+
+    // Read a single SLHA file and update some entries for each scan point 
+    // (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    void getAndReplaceSLHAContent(pair_str_SLHAstruct& result)
+    {
+      using namespace Pipes::getAndReplaceSLHAContent;
+
+      static unsigned int counter = 0;
+
+      static str filename;
+      static SLHAstruct file_content;
+
+      static YAML::Node keysNode;
+      static Options keysOptions; 
+      static std::map<str,str> SLHAkey_to_parname;
+      
+      // Do the variable initialization only once
+      static bool first = true;
+      if (first)
+      {
+        if (!runOptions->hasKey("SLHA_filename")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_filename' (a single SLHA filename) not found.");
+        if (!runOptions->hasKey("replace_SLHA_keys")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'replace_SLHA_keys' (a list of strings in the SLHAea key format, e.g. 'MASS;1000022;1') not found.");
+
+        // Get filename of base SLHA file
+        filename = runOptions->getValue<str>("SLHA_filename");
+
+        // Read the original SLHA file once
+        file_content = read_SLHA(filename);
+
+        // Get the YAML options under 'replace_SLHA_keys'
+        keysNode = runOptions->getValue<YAML::Node>("replace_SLHA_keys");
+        keysOptions = Options(keysNode);
+
+        // Construct a map from SLHA keys to scan model parameters
+        for (const str& parname : keysOptions.getNames())
+        {
+          std::vector<str> slhakeys = keysOptions.getValue<std::vector<str> >(parname);
+          for (const str& slhakey : slhakeys) 
+          {
+            SLHAkey_to_parname[slhakey] = parname;
+          }
+        }
+
+        first = false;
+      }
+
+      // Generate new SLHA content by replacing SLHA elements with scan parameters
+      SLHAstruct new_content(file_content);
+      static int precision = 8;
+      for (const auto& key_param_pair : SLHAkey_to_parname)
+      {
+        new_content.field(key_param_pair.first) = SLHAea::to_string(*Param.at(key_param_pair.second), precision);
+      }
+
+      // Construct a dummy name for the SLHA "file" we pass around as a SLHAea object
+      std::stringstream filename_mod_ss;
+      filename_mod_ss << filename << ".point" << counter;
+
+      // Save result as a pair_str_SLHAstruct
+      result = std::make_pair(filename_mod_ss.str(), new_content);
+
+      // DEBUG 
+      // cout << "DEBUG: new_content:" << endl;
+      // cout << new_content.str() << endl;
+
+      /// @todo Add option to save the new SLHA content to file 
+
+      counter++;
+    }
+
 
 
     // Extract SLHA file elements (for use with model CB_SLHA_file_model)
@@ -90,7 +161,7 @@ namespace Gambit
       if (first)
       {
         // Check that the required YAML option "SLHA_keys" is present
-        if (!runOptions->hasKey("SLHA_keys")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_keys' (a list of strings, e.g. '- MASS_1000022') not found.");
+        if (!runOptions->hasKey("SLHA_keys")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'SLHA_keys' (a list of strings in the SLHAea key format, e.g. 'MASS;1000022;1') not found.");
 
         // Read default value for missing elements;
         if (use_missing_element_value) missing_element_value = runOptions->getValue<double>("value_for_missing_elements");

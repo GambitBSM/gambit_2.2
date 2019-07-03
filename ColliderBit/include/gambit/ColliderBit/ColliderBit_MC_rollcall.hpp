@@ -42,7 +42,7 @@
   START_CAPABILITY
     #define FUNCTION operateLHCLoop
     START_FUNCTION(MCLoopInfo, CAN_MANAGE_LOOPS)
-    MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model)
+    MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -70,11 +70,21 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
+    /// A function that assigns a total cross-sections to a given SLHA input file
+    /// (for model CB_SLHA_file_model)
     #define FUNCTION getYAMLxsec_SLHA
     START_FUNCTION(xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_file_model)
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
+    #undef FUNCTION
+
+    /// A function that assigns a total cross-sections directly from the scan parameters
+    /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    #define FUNCTION getYAMLxsec_param
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
 
   #undef CAPABILITY
