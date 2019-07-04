@@ -96,6 +96,8 @@ namespace Gambit
     typedef std::chrono::steady_clock::time_point tp;
     typedef std::map<std::string,double> timer_map_type;
 
+    /// @brief Typedef for a str-SLHAstruct pair, to pass around SLHA filenames + content
+    typedef std::pair<std::string,SLHAstruct> pair_str_SLHAstruct;
   }
 }
 
