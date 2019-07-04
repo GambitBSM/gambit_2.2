@@ -366,7 +366,7 @@ namespace Gambit
                 out << std::endl;
 
                 out << "\n\x1b[01m\x1b[04mHEADER & LINK INFO\x1b[0m" << std::endl;
-                out << "\nrequired inifile entries:";
+                out << "\n\x1b[04mrequired inifile entries\x1b[0m:";
                 for (auto &&plug : plugins)
                 {
                     out << "\n    " << plug->version << ":  ";
@@ -403,7 +403,7 @@ namespace Gambit
                     out << std::endl;
                 }
 
-                out << "\n\x1b[04minclude header status\x1b[0m:" << std::endl;
+                out << "\x1b[04minclude header status\x1b[0m:" << std::endl;
                 for (auto &&plug : plugins)
                 {
                     out << "    " << plug->version << ":\n";
@@ -426,7 +426,7 @@ namespace Gambit
                 }
                 out << std::endl;
 
-                out << "\n\x1b[01m\x1b[04mDESCRIPTION\x1b[0m\n" << std::endl;
+                out << "\x1b[01m\x1b[04mDESCRIPTION\x1b[0m\n" << std::endl;
 
                 std::string p_str, description;
                 std::string path = GAMBIT_DIR "/config/";
