@@ -24,6 +24,50 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    // ======= Utility functions =======
+
+
+    /// Helper function that takes a cross-section value in fb or pb, 
+    /// along with an absolute or relative uncertainty, and returns the 
+    /// xsec and absolute uncertainty in fb.
+    std::pair<double,double> convert_xsecs_to_fb(double input_xsec, double input_xsec_uncert, str input_unit, bool input_fractional_uncert)
+    {
+      double xsec_fb;
+      double xsec_uncert_fb;
+
+      if (input_unit == "fb" && !input_fractional_uncert)
+      {
+        xsec_fb = input_xsec;
+        xsec_uncert_fb = input_xsec_uncert;
+      }
+      else if (input_unit == "fb" && input_fractional_uncert)
+      {
+        xsec_fb = input_xsec;
+        xsec_uncert_fb = input_xsec_uncert * xsec_fb;
+      }
+      else if (input_unit == "pb" && !input_fractional_uncert)
+      {
+        xsec_fb = input_xsec * 1000.;
+        xsec_uncert_fb = input_xsec_uncert * 1000.;
+      }
+      else if (input_unit == "pb" && input_fractional_uncert)
+      {
+        xsec_fb = input_xsec * 1000.;
+        xsec_uncert_fb = input_xsec_uncert * xsec_fb;
+      }
+      else
+      {
+        ColliderBit_error().raise(LOCAL_INFO, "Unknown combination of options for function convert_xsecs_to_fb.");
+      }      
+
+      cout << "DEBUG: returning xsec [fb] = " << xsec_fb << " +/- " << xsec_uncert_fb << endl;
+      return std::make_pair(xsec_fb, xsec_uncert_fb);
+    }
+
+
+    // ======= Module functions =======
+
+
     /// Compute a cross-section from Monte Carlo
     void getMCxsec(xsec& result)
     {
@@ -96,6 +140,7 @@ namespace Gambit
       }
     }
 
+
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
     void getYAMLxsec(xsec& result)
     {
@@ -104,9 +149,66 @@ namespace Gambit
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
+      static std::pair<str,str> xsec_pnames;
+      static str input_unit; 
+      static bool input_fractional_uncert = false;
+
+
+      static bool first = true;
+      if (*Loop::iteration == BASE_INIT)
+      {
+
+        if (first)
+        {
+          // Determine the correct combination of parameters
+          if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_uncert_fb")))
+          {
+            xsec_pnames.first = "xsec_fb";
+            xsec_pnames.second = "xsec_uncert_fb";
+            input_unit = "fb";
+            input_fractional_uncert = false;
+          }
+          else if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          {
+            xsec_pnames.first = "xsec_fb";
+            xsec_pnames.second = "xsec_fractional_uncert";
+            input_unit = "fb";
+            input_fractional_uncert = true;
+          }
+          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_uncert_pb")))
+          {
+            xsec_pnames.first = "xsec_pb";
+            xsec_pnames.second = "xsec_uncert_pb";
+            input_unit = "pb";
+            input_fractional_uncert = false;
+          }
+          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          {
+            xsec_pnames.first = "xsec_pb";
+            xsec_pnames.second = "xsec_fractional_uncert";
+            input_unit = "pb";
+            input_fractional_uncert = true;
+          }
+          else
+          {
+            std::stringstream errmsg_ss;
+            errmsg_ss << "Unknown combination of options for function getYAMLxsec." << endl;
+            errmsg_ss << "Needs one of the following sets of option names:" << endl;
+            errmsg_ss << "  xsec_fb, xsec_uncert_fb" << endl;
+            errmsg_ss << "  xsec_fb, xsec_fractional_uncert" << endl;
+            errmsg_ss << "  xsec_pb, xsec_uncert_pb" << endl;
+            errmsg_ss << "  xsec_pb, xsec_fractional_uncert" << endl;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+          }
+
+          first = false;
+        }
+      }
+
+
       // Retrieve the total cross-section and cross-section error
-      const static double xsec_fb = 1000 * runOptions->getValue<double>("xsec_pb");
-      const static double xsec_fractional_uncert = runOptions->getValue<double>("xsec_fractional_uncert");
+      const static double input_xsec = runOptions->getValue<double>(xsec_pnames.first);
+      const static double input_xsec_uncert = runOptions->getValue<double>(xsec_pnames.second);
 
       // Reset the xsec objects on all threads
       if (*Loop::iteration == START_SUBPROCESS)
@@ -123,11 +225,16 @@ namespace Gambit
       // Set the xsec and its error
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
-        result.set_xsec(xsec_fb, xsec_fractional_uncert*xsec_fb);
+        std::pair<double,double> temp = convert_xsecs_to_fb(input_xsec, input_xsec_uncert, input_unit, input_fractional_uncert);
+        double xsec_fb = temp.first;
+        double xsec_uncert_fb = temp.second;
+
+        result.set_xsec(xsec_fb, xsec_uncert_fb);
         result.gather_num_events();
       }
 
     }
+
 
 
     /// A function that reads a list of (SLHA file, total cross-section) pairs from the input YAML file
@@ -138,19 +245,65 @@ namespace Gambit
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
-      // Check that the required YAML options are there
+      static std::pair<str,str> xsec_pnames;
+      static str input_unit; 
+      static bool input_fractional_uncert = false;
+
       static bool first = true;
-      if (first)
+      if (*Loop::iteration == BASE_INIT)
       {
-        if (!runOptions->hasKey("xsec_pb")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_pb' not found. It should be a list of SLHA filenames and cross-sections.");
-        if (!runOptions->hasKey("xsec_fractional_uncert")) ColliderBit_error().raise(LOCAL_INFO,"Expected YAML file option 'xsec_fractional_uncert' not found. It should be a list of SLHA filenames and fractional cross-section uncertainties.");
-        first = false;
+
+        if (first)
+        {
+          // Determine the correct combination of parameters
+          if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_uncert_fb")))
+          {
+            xsec_pnames.first = "xsec_fb";
+            xsec_pnames.second = "xsec_uncert_fb";
+            input_unit = "fb";
+            input_fractional_uncert = false;
+          }
+          else if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          {
+            xsec_pnames.first = "xsec_fb";
+            xsec_pnames.second = "xsec_fractional_uncert";
+            input_unit = "fb";
+            input_fractional_uncert = true;
+          }
+          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_uncert_pb")))
+          {
+            xsec_pnames.first = "xsec_pb";
+            xsec_pnames.second = "xsec_uncert_pb";
+            input_unit = "pb";
+            input_fractional_uncert = false;
+          }
+          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          {
+            xsec_pnames.first = "xsec_pb";
+            xsec_pnames.second = "xsec_fractional_uncert";
+            input_unit = "pb";
+            input_fractional_uncert = true;
+          }
+          else
+          {
+            std::stringstream errmsg_ss;
+            errmsg_ss << "Unknown combination of options for function getYAMLxsec_SLHA." << endl;
+            errmsg_ss << "Needs one of the following sets of option names:" << endl;
+            errmsg_ss << "  xsec_fb, xsec_uncert_fb" << endl;
+            errmsg_ss << "  xsec_fb, xsec_fractional_uncert" << endl;
+            errmsg_ss << "  xsec_pb, xsec_uncert_pb" << endl;
+            errmsg_ss << "  xsec_pb, xsec_fractional_uncert" << endl;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+          }
+
+          first = false;
+        }
       }
 
-      // Get the filename, check the xsec and uncertainty lists
-      const static YAML::Node colNode_xsec = runOptions->getValue<YAML::Node>("xsec_pb");
+      // Get the filename, look for it in the xsec and uncertainty lists
+      const static YAML::Node colNode_xsec = runOptions->getValue<YAML::Node>(xsec_pnames.first);
       const static Options colOptions_xsec(colNode_xsec);
-      const static YAML::Node colNode_uncert = runOptions->getValue<YAML::Node>("xsec_fractional_uncert");
+      const static YAML::Node colNode_uncert = runOptions->getValue<YAML::Node>(xsec_pnames.second);
       const static Options colOptions_uncert(colNode_uncert);
       static str filename;
 
@@ -179,10 +332,14 @@ namespace Gambit
       // Set the xsec and its error
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
-        double xsec_fb = 1000 * colOptions_xsec.getValue<double>(filename);
-        double xsec_fractional_uncert = colOptions_uncert.getValue<double>(filename);
+        double input_xsec = colOptions_xsec.getValue<double>(filename);
+        double input_xsec_uncert = colOptions_uncert.getValue<double>(filename);
 
-        result.set_xsec(xsec_fb, xsec_fractional_uncert*xsec_fb);
+        std::pair<double,double> temp = convert_xsecs_to_fb(input_xsec, input_xsec_uncert, input_unit, input_fractional_uncert);
+        double xsec_fb = temp.first;
+        double xsec_uncert_fb = temp.second;
+
+        result.set_xsec(xsec_fb, xsec_uncert_fb);
         result.gather_num_events();
       }
 
@@ -200,10 +357,11 @@ namespace Gambit
 
       static std::vector<str> pnames;
       static std::pair<str,str> xsec_pnames;
-      static int xsec_par_combo = 0;
+
+      static str input_unit; 
+      static bool input_fractional_uncert = false;
 
       static bool first = true;
-
       if (*Loop::iteration == BASE_INIT)
       {
 
@@ -220,34 +378,45 @@ namespace Gambit
           if ((std::find(pnames.begin(), pnames.end(), "xsec_fb") != pnames.end()) 
                && (std::find(pnames.begin(), pnames.end(), "xsec_uncert_fb") != pnames.end()))
           {
-            xsec_par_combo = 1;
             xsec_pnames.first = "xsec_fb";
             xsec_pnames.second = "xsec_uncert_fb";
+            input_unit = "fb";
+            input_fractional_uncert = false;
           }
           else if ((std::find(pnames.begin(), pnames.end(), "xsec_fb") != pnames.end()) 
                     && (std::find(pnames.begin(), pnames.end(), "xsec_fractional_uncert") != pnames.end()))
           {
-            xsec_par_combo = 2;
             xsec_pnames.first = "xsec_fb";
             xsec_pnames.second = "xsec_fractional_uncert";
+            input_unit = "fb";
+            input_fractional_uncert = true;
           }
           else if ((std::find(pnames.begin(), pnames.end(), "xsec_pb") != pnames.end()) 
                     && (std::find(pnames.begin(), pnames.end(), "xsec_uncert_pb") != pnames.end()))
           {
-            xsec_par_combo = 3;
             xsec_pnames.first = "xsec_pb";
             xsec_pnames.second = "xsec_uncert_pb";
+            input_unit = "pb";
+            input_fractional_uncert = false;
           }
           else if ((std::find(pnames.begin(), pnames.end(), "xsec_pb") != pnames.end()) 
                     && (std::find(pnames.begin(), pnames.end(), "xsec_fractional_uncert") != pnames.end()))
           {
-            xsec_par_combo = 4;
             xsec_pnames.first = "xsec_pb";
             xsec_pnames.second = "xsec_fractional_uncert";
+            input_unit = "pb";
+            input_fractional_uncert = true;
           }
           else
           {
-            ColliderBit_error().raise(LOCAL_INFO, "Unknown parameter combination for function getYAMLxsec_param.");
+            std::stringstream errmsg_ss;
+            errmsg_ss << "Unknown combination of parameters for function getYAMLxsec_param." << endl;
+            errmsg_ss << "Needs one of the following sets of parameter names:" << endl;
+            errmsg_ss << "  xsec_fb, xsec_uncert_fb" << endl;
+            errmsg_ss << "  xsec_fb, xsec_fractional_uncert" << endl;
+            errmsg_ss << "  xsec_pb, xsec_uncert_pb" << endl;
+            errmsg_ss << "  xsec_pb, xsec_fractional_uncert" << endl;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
           }
 
           first = false;
@@ -269,34 +438,12 @@ namespace Gambit
       // Set the xsec and its error
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
+        double input_xsec = *Param.at(xsec_pnames.first);
+        double input_xsec_uncert = *Param.at(xsec_pnames.second); 
 
-        double xsec_fb;
-        double xsec_uncert_fb;
-
-        if (xsec_par_combo == 1)
-        {
-          xsec_fb = *Param.at(xsec_pnames.first);
-          xsec_uncert_fb = *Param.at(xsec_pnames.second);
-        }
-        else if (xsec_par_combo == 2)
-        {
-          xsec_fb = *Param.at(xsec_pnames.first);
-          xsec_uncert_fb = *Param.at(xsec_pnames.second) * xsec_fb;
-        }
-        else if (xsec_par_combo == 3)
-        {
-          xsec_fb = *Param.at(xsec_pnames.first) * 1000.;
-          xsec_uncert_fb = *Param.at(xsec_pnames.second) * 1000.;
-        }
-        else if (xsec_par_combo == 4)
-        {
-          xsec_fb = *Param.at(xsec_pnames.first) * 1000.;
-          xsec_uncert_fb = *Param.at(xsec_pnames.second) * xsec_fb;
-        }
-        else
-        {
-          ColliderBit_error().raise(LOCAL_INFO, "Unknown parameter combination for function getYAMLxsec_param.");
-        }
+        std::pair<double,double> temp = convert_xsecs_to_fb(input_xsec, input_xsec_uncert, input_unit, input_fractional_uncert);
+        double xsec_fb = temp.first;
+        double xsec_uncert_fb = temp.second;
 
         result.set_xsec(xsec_fb, xsec_uncert_fb);
         result.gather_num_events();
