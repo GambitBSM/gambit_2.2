@@ -1090,9 +1090,9 @@ if(NOT ditched_${name}_${ver})
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND ""
-    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --with-yoda=${yoda_dir} --with-hepmc3=${hepmc_dir} --with-fastjet=${fastjet_dir}
+    CONFIGURE_COMMAND ./configure FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} --with-yoda=${yoda_dir} --with-hepmc3=${hepmc_dir} --with-fastjet=${fastjet_dir} --prefix=${dir}/local
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX="${CMAKE_CXX_COMPILER}"
-    INSTALL_COMMAND ""
+    INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
