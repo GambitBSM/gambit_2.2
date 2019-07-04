@@ -43,6 +43,8 @@ namespace Gambit
 
        vector<Cutflow> _cutflow;
 
+       vector<int> _test;
+
     private:
 
       struct ptComparison
@@ -77,6 +79,7 @@ namespace Gambit
                      Cutflow(cutflow_name, SR1B),
                      Cutflow(cutflow_name, SR2A), 
                      Cutflow(cutflow_name, SR2B) };
+	_test = {0,0,0,0,0};
 
       }
 
@@ -152,7 +155,6 @@ namespace Gambit
 
         // 5) Remove electron candidates sharing and ID track with a muon candidate
         // Missing: No track information
-
 
         // Find b-jets
         // Copied from ATLAS_13TeV_3b_24invfb
@@ -344,6 +346,11 @@ namespace Gambit
         // Cutflows
         
         // Fill cutflow with preselection trigger as defined by ATLAS
+        if(nSignalLeptons >= 3) _test[0]++;
+        if(nSignalJets >= 3 && signalJets.at(2)->pT() > 30.) _test[1]++;
+        if(met > 50.) _test[2]++;
+        if(nSignalLeptons > 0 && signalLeptons.at(0)->pT() > 40.) _test[3]++;
+        if(nSignalLeptons > 1 && signalLeptons.at(1)->pT() > 20.) _test[4]++;
         if(nSignalLeptons >= 3 && nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && met > 50. && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20.)
         {
           // 1
@@ -460,6 +467,11 @@ namespace Gambit
 
         #ifdef CHECK_CUTFLOW
           cout << _cutflow << endl;
+          cout << "n signal leptons = " << _test[0] << endl;
+          cout << "n signal jets (pT > 30) = " << _test[1] << endl;
+          cout << "met = " << _test[2] << endl;
+          cout << "leading jet pT > 40 = " << _test[3] << endl;
+          cout << "subleading jet pT > 20 = " << _test[4] << endl;
         #endif
 
 
