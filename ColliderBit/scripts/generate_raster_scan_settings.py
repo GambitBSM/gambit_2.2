@@ -5,7 +5,7 @@
 # \file
 #
 # Simple script for generating parameter value 
-# lists for the rastor scanner, when used
+# lists for the 'raster' scanner, when used
 # to perform "SLHA scans" of simplified models
 # with ColliderBit.
 #
