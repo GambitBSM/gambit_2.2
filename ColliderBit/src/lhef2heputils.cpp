@@ -55,7 +55,8 @@ void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt)
   {
     // Get status and PID code
     const int st = lhe.hepeup.ISTUP[i];
-    const int apid = fabs(lhe.hepeup.IDUP[i]);
+    const int pid = lhe.hepeup.IDUP[i];
+    const int apid = fabs(pid);
 
     // Use LHE-stable particles only
     if (st != 1) continue;
@@ -67,13 +68,17 @@ void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt)
     /// @todo Dress leptons?
     if (apid == 22 || apid == 11 || apid == 13 || apid == 15)
     {
-      evt.add_particle(new Particle(p4, apid));
+      Particle* p = new Particle(p4, pid); // the event will take ownership of this pointer
+      p->set_prompt(true);
+      evt.add_particle(p);
     }
 
     // Aggregate missing ET
     else if (apid == 12 || apid == 14 || apid == 16 || apid == 1000022 || apid == 1000039)
     {
-      evt.add_particle(new Particle(p4, apid));
+      Particle* p = new Particle(p4, pid); // the event will take ownership of this pointer
+      p->set_prompt(true);
+      evt.add_particle(p);
       vmet += p4;
     }
 

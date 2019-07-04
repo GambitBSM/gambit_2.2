@@ -69,15 +69,16 @@ namespace Gambit
       #pragma omp critical (reading_HepMCEvent)
       {
         event_retrieved = hepmcio.read_event(ge);
+
+        // FIXME This is a temp solution to ensure that the event reading
+        //       stops when there are no more events in the HepMC file.
+        //       Remove this once bugfix is implemented in HepMC.
+        if ((ge.particles().size() == 0) && (ge.vertices().size() == 0)) event_retrieved = false;
       }
       if (not event_retrieved) Loop::halt();
 
       // Translate to HEPUtils event
       get_HEPUtils_event(ge, result);
-
-      // FIXME this line is temp testing code only
-      // if (*Loop::iteration > 9) Loop::halt();
-      if (*Loop::iteration > 10000-1) Loop::halt();
     }
 
   }
