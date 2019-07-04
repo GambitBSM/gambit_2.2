@@ -132,6 +132,8 @@ function(check_ditch_status name version dir)
   # Check first for optional argument for Mathematica backends
   if ((ARGN STREQUAL "Mathematica" OR ARGN STREQUAL "mathematica") AND NOT HAVE_MATHEMATICA)
     set (itch "${itch}" "${name}_${version}")
+  elseif ((ARGN STREQUAL "HEPMC" OR ARGN STREQUAL "HepMC" OR ARG STREQUAL "hepmc") AND EXCLUDE_HEPMC)
+    set (itch "${itch}" "${name}_${version}")
   endif()
   foreach(ditch_command ${itch})
     execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "print(\"${name}_${version}\".startswith(\"${ditch_command}\"))"
