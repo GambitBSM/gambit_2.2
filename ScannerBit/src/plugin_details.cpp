@@ -356,7 +356,7 @@ namespace Gambit
                         out << "\nreason for exclusion:";
                         for (auto &&plug : plugins)
                         {
-                            out << "\n    version:\n";
+                            out << "\n    " << plug->version << ":\n";
                             for (auto it = plug->reason.begin(), end = plug->reason.end(); it != end; ++it)
                                 out << "        " << *it << std::endl;
                         }

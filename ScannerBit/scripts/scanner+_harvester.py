@@ -66,7 +66,7 @@ def main(argv):
             print('scanner+_harvester.py: verbose=True')
         elif opt in ('-x','--exclude-plugins','--exclude-plugin'):
             exclude_plugins.update(neatsplit(",",arg))
-
+    #print(exclude_plugins)
     # info for the different plugin types
     src_paths = sorted(["./ScannerBit/src/scanners", "./ScannerBit/src/objectives"])
     inc_paths = sorted(["./ScannerBit/include/gambit/ScannerBit/scanners", "./ScannerBit/include/gambit/ScannerBit/objectives"])
@@ -620,11 +620,12 @@ endif()
                     towrite += " ".join(scanbit_cxx_flags[plug_type[i]][directory])
             towrite += "\")\n\n"
 
+            nothing_excluded = True
             for plug in scanbit_plugins[plug_type[i]][directory]:
-                nothing_excluded = True
                 if plug[3] == "excluded":
                     nothing_excluded = False
-                    towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"    Missing scanner plugin " + plug[4] + "\")\n\n"
+                    towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"\\n    - user excluded plugin: " + plug[4].split("__t__")[0] + "\")\n"
+                    print("excluding ", plug[4])
             if (nothing_excluded):
                 towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"\")\n\n"
 
@@ -720,11 +721,9 @@ endif()
                             towrite += "find_library( " + lib_name + " " + lib + " HINTS ${" + plug_type[i] + "_plugin_lib_paths_" + directory + "} )\n"
                             towrite += "if( " + lib_name + " STREQUAL \"" + lib_name + "-NOTFOUND\" )\n"
                             towrite += "    message(\"-- Did not find "+ plug_type[i] + " library " + lib + " for " + directory + ". Disabling scanners that depend on this.\")\n"
-                            towrite += "    if ( " + plug_type[i] + "_ok_flag_" + directory + " STREQUAL \"\" )\n"
-                            towrite += "      set(" + plug_type[i] + "_ok_flag_" + directory + " \"lib" + lib + ".so\")\n"
-                            towrite += "    else()\n"
-                            towrite += "      set(" + plug_type[i] + "_ok_flag_" + directory + " \"${" + plug_type[i] + "_ok_flag_" + directory + "}, lib" + lib + ".so\")\n"
-                            towrite += "    endif()\n"
+                            # next line will exclude plugins if no lib found.  Note that is you un-comment this line
+                            # all plugins plugins defined in this library will be excluded.
+                            # towrite += "    set (" + plug_type[i] + "_ok_flag_" + directory + " \"${" + plug_type[i] + "_ok_flag_" + directory + "} \\n    - library missing: \\\"lib" + lib + ".so\\\"\")\n"
                             towrite += "else()\n"
                             towrite += " "*4 + "get_filename_component(lib_path ${" + lib_name + "} PATH)\n"
                             towrite += " "*4 + "get_filename_component(lib_name ${" + lib_name + "} NAME_WE)\n"
@@ -776,7 +775,7 @@ endif()
                             towrite += "    message(\"-- Found " + plug_type[i] + " header: ${" + inc_name + "}/" + inc + "\")\n"
                             towrite += "else()\n"
                             towrite += "    message(\"-- Did not find "+ plug_type[i] + " header " + inc + ". Disabling scanners that depend on this.\")\n"
-                            towrite += "    set(" + plug_type[i] + "_ok_flag_" + directory + " \"${" + plug_type[i] + "_ok_flag_" + directory + "}, " + inc + "\")\n"
+                            towrite += "    set (" + plug_type[i] + "_ok_flag_" + directory + " \"${" + plug_type[i] + "_ok_flag_" + directory + "} \\n    - file missing: \\\"" + inc + "\\\"\")\n"
                             towrite += "endif()\n\n"
             towrite += "if( NOT ${" + plug_type[i] + "_plugin_linked_libs_" + directory + "} STREQUAL \"\" OR NOT ${" + plug_type[i] + "_plugin_found_incs_" + directory + "} STREQUAL \"\")\n"
             towrite += " "*4 + "set ( reqd_lib_output \"${reqd_lib_output}lib" + plug_type[i] + "_" + directory + ".so:\\n\" )\n"
@@ -807,7 +806,7 @@ endif()
             towrite += "  plugins:\\n"
             for plug in scanbit_plugins[plug_type[i]][directory]:
                 towrite += "    - " + plug[4] + "\\n"
-            towrite += "  reason: ${" + plug_type[i] + "_ok_flag_" + directory + "}\\n\" )\n"
+            towrite += "  reason: ${" + plug_type[i] + "_ok_flag_" + directory + "}\\n\\n\" )\n"
             towrite += "endif()\n\n"
 
     towrite += "set(SCANNERBIT_PLUGINS ${SCANNERBIT_PLUGINS} PARENT_SCOPE)\n"
