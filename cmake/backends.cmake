@@ -147,8 +147,10 @@ if(NOT ditched_${name}_${ver})
     COMMAND ./make_so.sh
     INSTALL_COMMAND ""
     )
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  BOSS_backend_withROOT(${name} ${ver})
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
+  
 endif()
 
 
