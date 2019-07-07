@@ -721,7 +721,7 @@ endif()
                             towrite += "find_library( " + lib_name + " " + lib + " HINTS ${" + plug_type[i] + "_plugin_lib_paths_" + directory + "} )\n"
                             towrite += "if( " + lib_name + " STREQUAL \"" + lib_name + "-NOTFOUND\" )\n"
                             towrite += "    message(\"-- Did not find "+ plug_type[i] + " library " + lib + " for " + directory + ". Disabling scanners that depend on this.\")\n"
-                            # next line will exclude plugins if no lib found.  Note that is you un-comment this line
+                            # next line will exclude plugins if no lib found.  Note that if you un-comment this line
                             # all plugins plugins defined in this library will be excluded.
                             # towrite += "    set (" + plug_type[i] + "_ok_flag_" + directory + " \"${" + plug_type[i] + "_ok_flag_" + directory + "} \\n    - library missing: \\\"lib" + lib + ".so\\\"\")\n"
                             towrite += "else()\n"
