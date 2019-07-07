@@ -613,6 +613,7 @@ endif()
 
             towrite += "#################### lib" + plug_type[i] + "_" + directory + ".so ####################\n\n"
 
+            towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"\")\n\n"
             towrite += "set (" + plug_type[i] + "_compile_flags_" + directory + " \"${PLUGIN_COMPILE_FLAGS}"
             if plug_type[i] in scanbit_cxx_flags:
                 if directory in scanbit_cxx_flags[plug_type[i]]:
@@ -620,15 +621,11 @@ endif()
                     towrite += " ".join(scanbit_cxx_flags[plug_type[i]][directory])
             towrite += "\")\n\n"
 
-            nothing_excluded = True
             for plug in scanbit_plugins[plug_type[i]][directory]:
                 if plug[3] == "excluded":
-                    nothing_excluded = False
-                    towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"\\n    - user excluded plugin: " + plug[4].split("__t__")[0] + "\")\n"
+                    towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"\\n    - user excluded plugin: \\\"" + plug[4].split("__t__")[0] + "\\\"\")\n"
                     print("excluding ", plug[4])
-            if (nothing_excluded):
-                towrite += "set (" + plug_type[i] + "_ok_flag_" + directory + " \"\")\n\n"
-
+                
             towrite += "set (" + plug_type[i] + "_plugin_libraries_" + directory + "\n"
             if plug_type[i] in scanbit_libs:
                 if directory in scanbit_libs[plug_type[i]]:
