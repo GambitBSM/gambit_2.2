@@ -185,21 +185,11 @@ namespace Gambit
       for loop through C++ array of [0c1,0c2,...] (initialized by INI in captn_gen.cpp)
       call populate Array with the value found in the C++ array and the position in the C++ array
       */
-      cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
+      // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
+      // bjf> Modified to use parameters directly, no need to map everything to individual
+      // capabilities.
+      cout << "Parameters grabbed via Pipes, e.g. *Param[\"c0_1\"]: " << *Param["c0_1"] << endl;
 
-      double coupling_array [2][15] = {
-        {
-          *Dep::c0_1_cap, *Dep::c0_2_cap, *Dep::c0_3_cap, *Dep::c0_4_cap, *Dep::c0_5_cap, 
-          *Dep::c0_6_cap, *Dep::c0_7_cap, *Dep::c0_8_cap, *Dep::c0_9_cap, *Dep::c0_10_cap, 
-          *Dep::c0_11_cap, *Dep::c0_12_cap, *Dep::c0_13_cap, *Dep::c0_14_cap, *Dep::c0_15_cap
-        }, 
-        {
-          *Dep::c1_1_cap, *Dep::c1_2_cap, *Dep::c1_3_cap, *Dep::c1_4_cap, *Dep::c1_5_cap, 
-          *Dep::c1_6_cap, *Dep::c1_7_cap, *Dep::c1_8_cap, *Dep::c1_9_cap, *Dep::c1_10_cap, 
-          *Dep::c1_11_cap, *Dep::c1_12_cap, *Dep::c1_13_cap, *Dep::c1_14_cap, *Dep::c1_15_cap
-        }
-      };
-      cout << "The first array entry in coupling_array, [0][0]: " << coupling_array[0][0] << endl;
       int coupleNum;
       int isoNum;
       for(int i=0; i<2; i++)
@@ -210,8 +200,11 @@ namespace Gambit
           coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
           if (coupleNum != 2) // 2 is not an allowed coupling constant
           {
-            BEreq::populate_array(coupling_array[i][j], coupleNum, isoNum);
-            // cout << "I tried to called pop_array with coupleNum: " << coupleNum << ", and isoNum: " << isoNum << endl;
+            std::stringstream p;
+            p<<"c"<<isoNum<<"_"<<coupleNum; 
+            BEreq::populate_array(*Param[p.str()], coupleNum, isoNum);
+            cout << "I tried to called pop_array with coupleNum: " << coupleNum << ", and isoNum: " << isoNum << endl;
+            cout << "  *Param["<<p.str()<<"]: "<< *Param[p.str()]<<endl;
           }
         }
       }
@@ -221,7 +214,7 @@ namespace Gambit
       The fourth parameter tells captn_NREO which of the 16 elements to sum over,
        any other integer (than 1 to 16) tells it to sum over all elements together.
       */
-      // cout << "Before calling captn_NREO, capped: " << capped << endl;
+      //cout << "Before calling captn_NREO, capped: " << capped << endl;
       BEreq::captn_NREO(*Dep::mwimp,*Dep::jwimp,niso,0,capped);
       cout << "From captn_NREO;" << endl << "mwimp: " << *Dep::mwimp << "GeV" << endl << "capped: " << capped << " captures/second" << endl;
 
