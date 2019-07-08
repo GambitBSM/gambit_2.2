@@ -13,11 +13,11 @@
 #
 
 #
-# *** Special note for OS X *** 
-# 
+# *** Special note for OS X ***
+#
 # BOSS will most likely fail if 'g++' points to the Clang compiler.
-# Install GNU g++ and point the castxml_cc variable below the GNU 
-# g++ executable.   
+# Install GNU g++ and point the castxml_cc variable below the GNU
+# g++ executable.
 #
 
 castxml_cc_id  = 'gnu'         # Reference compiler: 'gnu', 'gnu-c', 'msvc', 'msvc-c'
@@ -36,26 +36,26 @@ gambit_base_namespace  = ''
 
 # Use either absolute paths or paths relative to the main BOSS directory.
 
-input_files = [
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_BifurGaussian.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_Constants.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_Data.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_ExpPoints.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_Gaussian.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_Limit.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_nDimBifurGaussian.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_nDimGaussian.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_nDimLikelihood.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_ProfLikelihood.h',
-    '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/HL_Stats.h',
-]
-include_paths = [
-      '../../../Backends/installed/heplike/'+gambit_backend_version+'/include/',
-]
-base_paths = ['../../../Backends/installed/heplike/'+gambit_backend_version]
+install_path = '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version
 
-header_files_to = '../../../Backends/installed/heplike/'+gambit_backend_version+'/include'
-src_files_to    = '../../../Backends/installed/heplike/'+gambit_backend_version+'/src'
+input_files = [
+    install_path+'/include/HL_BifurGaussian.h',
+    install_path+'/include/HL_Constants.h',
+    install_path+'/include/HL_Data.h',
+    install_path+'/include/HL_ExpPoints.h',
+    install_path+'/include/HL_Gaussian.h',
+    install_path+'/include/HL_Limit.h',
+    install_path+'/include/HL_nDimBifurGaussian.h',
+    install_path+'/include/HL_nDimGaussian.h',
+    install_path+'/include/HL_nDimLikelihood.h',
+    install_path+'/include/HL_ProfLikelihood.h',
+    install_path+'/include/HL_Stats.h'
+]
+include_paths = [install_path+'/include/', '../../../contrib/yaml-cpp-0.6.2/include']
+base_paths = [install_path]
+
+header_files_to = install_path+'/include'
+src_files_to    = install_path+'/src'
 
 load_classes = [
     'HL_BifurGaussian',
@@ -101,6 +101,7 @@ indent = 3
 known_classes = {
     "Eigen::Matrix" : "<Eigen/Core>",
     "Eigen::Array" : "<Eigen/Core>",
+    "YAML::Node" : "yaml-cpp/yaml.h"
 }
 
 
