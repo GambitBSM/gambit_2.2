@@ -37,6 +37,7 @@
 #include "gambit/Utils/util_macros.hpp"
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
 #include "gambit/SpecBit/SpecBit_helpers.hpp"
+#include "gambit/SpecBit/SpecBit_types.hpp"
 #include "gambit/SpecBit/QedQcdWrapper.hpp"
 #include "gambit/SpecBit/model_files_and_boxes.hpp" // #includes lots of flexiblesusy headers and defines interface classes
 #include "gambit/Utils/stream_overloads.hpp"
@@ -520,8 +521,9 @@ namespace Gambit
 
         }
 
-        // This function gives back the result for absolute stability, either "Stable" or "Metastable".
- 	void check_stability_MSSM(ddpair &lifetimeAndThermalProbability)
+     // This function gives back the result for absolute stability, either "Stable" or "Metastable".
+ 	void check_stability_MSSM(VevaciousResultContainer & result)
+    //void check_stability_MSSM(ddpair &lifetimeAndThermalProbability)
     {
         // Vevacious backend path
        // std::string vevaciouspath = std::string(GAMBIT_DIR) +
@@ -832,8 +834,19 @@ namespace Gambit
         InputsForLog << std::fixed << std::setprecision(12) << "Running Vevacious with parameters: " << "M0="  << M0input << " M12="  << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput ;
         std::string InputsForLogString = InputsForLog.str();
         logger() << InputsForLogString << EOM;
+        
+
+        // initialise vevacious outputs to -1. In case vevacious crashed or 
+        // exitis with an exception we will use these to fill the 
+        // VevaciousResultContainer result
+        double BounceActionThermal = -1, BounceAction = -1;
+        double StraightPathThermal = -1, StraightPath = -1;
+
+        double lifetime, thermalProbability;
+
 	    // Tell Vevacious we are using the point we just read by giving it "internal".
-        try {
+        try 
+        {
             //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
             // Run vevacious
             struct stat buffer; //Checking if file exists, fastest method.
@@ -854,49 +867,83 @@ namespace Gambit
 
             std::chrono::seconds tSofar = std::chrono::duration_cast<std::chrono::seconds>(tNow - tStart);
 
-            if(tSofar >= std::chrono::seconds(30) ){
+            if(tSofar >= std::chrono::seconds(30) )
+            {
                 remove( HomotopyLockfile.c_str());
-                break; }
-
+                break; 
+            }
             }
 
             vevaciousPlusPlus.RunPoint("internal");
 
-            double lifetime= vevaciousPlusPlus.GetLifetimeInSeconds();
-            double thermalProbability = vevaciousPlusPlus.GetThermalProbability();
+            lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
+            thermalProbability = vevaciousPlusPlus.GetThermalProbability();
 
             if(lifetime == -1 && thermalProbability == -1 ){ // Here -1 from Vevacious Means that the point is stable. 
-                lifetimeAndThermalProbability.first = 3.0E+100;
-                lifetimeAndThermalProbability.second= 1;
+                lifetime = 3.0E+100;
+                thermalProbability = 1;
             }
             else if(lifetime == -1 && thermalProbability != -1)
             {
-                lifetimeAndThermalProbability.first = 3.0E+100;
-                lifetimeAndThermalProbability.second= thermalProbability;
+                lifetime = 3.0E+100;
             }
             else if(lifetime != -1 && thermalProbability == -1)
             {
-                lifetimeAndThermalProbability.first = lifetime;
-                lifetimeAndThermalProbability.second= 1;
+                thermalProbability = 1;
             }
-            else {
 
-                lifetimeAndThermalProbability.first = lifetime;
-                lifetimeAndThermalProbability.second= thermalProbability;
+            cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+            cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
+            std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
+            
+            // return a vector caintaining the results from vevacious, the Thermal ones are filled
+            // in any succesffull run case with the entries
+            //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
+            //              "best result from path_finder 1", "best result from path_finder 2",...]
+            //          Note that the entries "best result from path_finder x" are only filled if the
+            //               "straight path bounce action" (entry 1) is higher than the "boucne Action Threshold"
+            //                (entry 0). The vector length depends on how many different path finders are implemented in
+            //                vevacious
+            std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
+            std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
+            
+
+            if(BounceActions_vec.size()>0)
+            {
+                BounceAction = BounceActions_vec.at(0);
+                StraightPath = BounceActions_vec.at(1);
+
+                for(int ii = 0; ii < BounceActions_vec.size(); ii ++)
+                {   
+                    // save all entries of BounceActions_vec
+                    result.addPathFinderEntry(BounceActions_vec.at(ii));
+                }
             }
-            cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
-            cout << "VEVACIOUS Prob. non zero temp:  "<< lifetimeAndThermalProbability.second << endl;
-            std::string result = vevaciousPlusPlus.GetResultsAsString();
-            cout << "VEVACIOUS RESULT:  "<< result << endl;
+
+            if(BounceActionsThermal_vec.size()>0)
+            {
+                BounceActionThermal = BounceActionsThermal_vec.at(0);
+                StraightPathThermal = BounceActionsThermal_vec.at(1);
+
+                for(int ii = 0; ii < BounceActionsThermal_vec.size(); ii ++)
+                {   
+                    // save all entries of BounceActionsThermal_vec
+                    result.addPathFinderThermalEntry(BounceActionsThermal_vec.at(ii));
+                }
+            }
+
+            cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
         }
+
         catch(const std::exception& e)
         {
             //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
-            lifetimeAndThermalProbability.first = 2.0E+100; //Vevacious has crashed
-            lifetimeAndThermalProbability.second= 1;
-            cout << "VEVACIOUS LIFETIME:  "<< lifetimeAndThermalProbability.first << endl;
-            std::string result = "Inconclusive";
-            cout << "VEVACIOUS RESULT:  "<< result << endl;
+            lifetime = 2.0E+100; //Vevacious has crashed
+            thermalProbability= 1;
+
+            cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+            std::string vevacious_result = "Inconclusive";
+            cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
             logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
             logger() << "Error occurred: " << e.what() << EOM;
             //std::ostringstream errmsg;
@@ -904,14 +951,24 @@ namespace Gambit
             //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
         }
 
+        result.addEntry("lifetime", lifetime);
+        result.addEntry("thermalProbability",thermalProbability);
+
+        // values were initialised before the catch loop 
+        result.addEntry("BounceActionThresholdThermal", BounceActionThermal);
+        result.addEntry("BounceActionStraightThermal", StraightPathThermal);
+        
+        result.addEntry("BounceActionThreshold", BounceAction);
+        result.addEntry("BounceActionStraight", StraightPath);
+
  	}
-
-
 
  	void get_likelihood_VS_MSSM(double &result)
     {
-        namespace myPipe = Pipes::get_likelihood_VS_MSSM;
-        double lifetime =  myPipe::Dep::check_stability_MSSM->first;
+        using namespace Pipes::get_likelihood_VS_MSSM;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
+        double lifetime =  vevacious_results.return_result_map()["lifetime"];
 
         // This is based on the estimation of the past lightcone from 1806.11281
         double conversion = (6.5821195e-25)/(31536000);
@@ -920,8 +977,11 @@ namespace Gambit
 
     void get_likelihood_VS_MSSM_thermal(double &result)
     {
-        namespace myPipe = Pipes::get_likelihood_VS_MSSM_thermal;
-        double ThermalProbability =  myPipe::Dep::check_stability_MSSM->second;
+        using namespace Pipes::get_likelihood_VS_MSSM_thermal;
+
+        VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
+        double ThermalProbability =  vevacious_results.return_result_map()["ThermalProbability"];
+
          if(ThermalProbability == 0)
          {
              result = -1e100;
@@ -929,9 +989,54 @@ namespace Gambit
          {
              result= std::log(ThermalProbability);
          }
-
     }
 
+    void print_VS_StraighPathGoodEnough(int &result)
+    {
+        using namespace Pipes::print_VS_StraighPathGoodEnough;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
+        
+        if(vevacious_results.return_result_map()["BounceActionThreshold"] > vevacious_results.return_result_map()["BounceActionStraight"])
+        {
+            // straight path was good enough
+            result = 1;
+        }
+        else{result = 0;}
+    }
+    
+    void print_VS_StraighPathGoodEnough_Thermal(int &result)
+    {
+        using namespace Pipes::print_VS_StraighPathGoodEnough_Thermal;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
+        map_str_dbl result_map = vevacious_results.return_result_map();
+        
+        if(result_map["BounceActionThresholdThermal"] > result_map["BounceActionStraightThermal"])
+        {
+            // straight path was good enough
+            result = 1;
+        }
+        else{result = 0;}
+    }
+    
+    void print_VS_ThresholdAndBounceActions(std::vector<double> &result)
+    {
+        using namespace Pipes::print_VS_ThresholdAndBounceActions;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
+        
+        result = vevacious_results.return_PathFinderResults();
+    }
+    
+    void print_VS_ThresholdAndBounceActions_Thermal(std::vector<double> &result)
+    {
+        using namespace Pipes::print_VS_ThresholdAndBounceActions_Thermal;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
+        
+        result = vevacious_results.return_PathFinderThermalResults();
+    }
 
   } // end namespace SpecBit
 } // end namespace Gambit
