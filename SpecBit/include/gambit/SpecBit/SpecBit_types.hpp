@@ -46,6 +46,8 @@ namespace Gambit
 
       public:
         VevaciousResultContainer(){PathFinderResults.clear();PathFinderThermalResults.clear();};
+        ~VevaciousResultContainer(){std::cout << "AAHHHGHG I DIED" << std::endl; };
+
         // Methods to add entry to vevacious_result_map
         void addEntry(str key, double value) {vevacious_result_map[key]=value;};
         // return 1 if key found, zero otherwise
