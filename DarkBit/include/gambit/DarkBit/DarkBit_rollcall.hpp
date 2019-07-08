@@ -852,6 +852,15 @@ START_MODULE
 
   // Solar capture ------------------------
 
+  /// Translation of DDcalc couplings into NREO couplings
+  #define CAPABILITY NREO_parameters
+  // No need to START_CAPABILITY; this capability is created by the NREO model definition
+     #define FUNCTION NREO_from_DD_couplings
+     START_FUNCTION(ModelParameters)
+     DEPENDENCY(DD_couplings, DM_nucleon_couplings)
+     #undef FUNCTION
+  #undef CAPABILITY
+
   /// Capture rate of regular dark matter in the Sun (no v-dependent or q-dependent cross-sections) (s^-1).
   #define CAPABILITY capture_rate_Sun
   START_CAPABILITY
@@ -900,7 +909,7 @@ START_MODULE
     BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
     DEPENDENCY(mwimp,double)
     DEPENDENCY(jwimp,double)
-    ALLOW_MODELS(NREO)
+    DEPENDENCY(NREO_parameters,ModelParameters)
     #undef FUNCTION
   #undef CAPABILITY
 

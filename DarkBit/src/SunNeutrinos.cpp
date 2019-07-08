@@ -34,6 +34,44 @@ namespace Gambit
 
   namespace DarkBit
   {
+    //////////////////////////////////////////////////////////////////////////
+    //
+    //   Translation of DD_couplings into NREO parameters
+    //
+    //////////////////////////////////////////////////////////////////////////
+
+    void NREO_from_DD_couplings(ModelParameters& NREO_parameters)
+    {
+       using namespace Pipes::NREO_from_DD_couplings;
+       DM_nucleon_couplings ddc = *Dep::DD_couplings;
+
+       // TODO! I have not been able to find the exact conventions
+       // used in DDcalc vs the NREO model. I think it is just this:
+       // c0 = 0.5*(cp+cn)
+       // c1 = 0.5*(cp-cn)
+       // so that 
+       // cp = c0 + c1
+       // cn = c0 - c1
+       // Change if needed!
+       
+       // Set all of the NREO couplings to zero to start
+       for(int i=0; i<2; i++)
+       {
+           for(int j=1; j<=15; j++)
+           {
+               std::stringstream p;
+               p<<"c"<<i<<"_"<<j;
+               NREO_parameters.setValue(p.str(),0);
+           }
+       }
+
+       // Compute non-zero isospin basis couplings from DM_nucleon_couplings entries
+       // TODO: I also did this from memory, should check I got the operator numbers right
+       NREO_parameters.setValue("c0_1", 0.5*(ddc.gps + ddc.gns));
+       NREO_parameters.setValue("c1_1", 0.5*(ddc.gps - ddc.gns));
+       NREO_parameters.setValue("c0_4", 0.5*(ddc.gpa + ddc.gna));
+       NREO_parameters.setValue("c1_4", 0.5*(ddc.gpa - ddc.gna));
+    }
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -188,8 +226,8 @@ namespace Gambit
       // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
       // bjf> Modified to use parameters directly, no need to map everything to individual
       // capabilities.
-      cout << "Parameters grabbed via Pipes, e.g. *Param[\"c0_1\"]: " << *Param["c0_1"] << endl;
-
+      cout << "Parameters grabbed via Pipes, e.g. Dep::NREO_parameters->at(\"c0_1\"): " << Dep::NREO_parameters->at("c0_1") << endl;
+      
       int coupleNum;
       int isoNum;
       for(int i=0; i<2; i++)
@@ -202,9 +240,9 @@ namespace Gambit
           {
             std::stringstream p;
             p<<"c"<<isoNum<<"_"<<coupleNum; 
-            BEreq::populate_array(*Param[p.str()], coupleNum, isoNum);
+            BEreq::populate_array(Dep::NREO_parameters->at(p.str()), coupleNum, isoNum);
             cout << "I tried to called pop_array with coupleNum: " << coupleNum << ", and isoNum: " << isoNum << endl;
-            cout << "  *Param["<<p.str()<<"]: "<< *Param[p.str()]<<endl;
+            cout << "  Dep::NREO_parameters->at("<<p.str()<<"): "<< Dep::NREO_parameters->at(p.str())<<endl;
           }
         }
       }
