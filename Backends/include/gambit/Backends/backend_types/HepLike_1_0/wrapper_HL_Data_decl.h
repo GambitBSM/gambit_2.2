@@ -6,6 +6,7 @@
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_HL_Data.h"
 #include <string>
+#include "yaml-cpp/yaml.h"
 
 #include "identification.hpp"
 

@@ -128,29 +128,23 @@ endif()
 # HepLike
 set(name "heplike")
 set(ver "1.0")
-set(lib "libHEPLikeSO")
 set(dl "null")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     GIT_REPOSITORY https://github.com/mchrzasz/HEPLike.git
     SOURCE_DIR ${dir}
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E make_directory build
-    #COMMAND ${CMAKE_COMMAND} -E make_directory lib
-    COMMAND ${CMAKE_COMMAND} -E echo "cd build" > make_so.sh
-    COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_COMMAND} .." >> make_so.sh
-    COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_MAKE_PROGRAM}" >> make_so.sh
-    COMMAND chmod u+x make_so.sh
-    COMMAND ./make_so.sh
+    CMAKE_COMMAND ${CMAKE_COMMAND} ..
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${HL_CXXFLAGS} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
     INSTALL_COMMAND ""
     )
   BOSS_backend_withROOT(${name} ${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
-  
+
 endif()
 
 

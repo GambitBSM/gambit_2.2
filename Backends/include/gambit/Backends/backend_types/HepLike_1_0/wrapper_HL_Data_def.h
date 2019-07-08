@@ -2,6 +2,7 @@
 #define __wrapper_HL_Data_def_HepLike_1_0_h__
 
 #include <string>
+#include "yaml-cpp/yaml.h"
 
 #include "identification.hpp"
 
