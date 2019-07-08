@@ -30,7 +30,7 @@ Scanner:
 
     random:
       plugin: random
-      point_number: 3
+      point_number: 1
       output_file:  output
       like:  LogLike
       files:
@@ -68,8 +68,6 @@ Rules:
     options:
       SLHA_filenames:
         - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
-        - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha
-        - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha
 
   # List the SLHA file entries that should be stored in the GAMBIT output.
   # Use SLHAea syntax for the SLHA_keys: <block/pdg> ; <line identifier> ; <line index of requested element>
@@ -94,18 +92,17 @@ Rules:
     options:
       xsec_fb:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.1
-        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 2.2
-        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 3.3
       xsec_fractional_uncert:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 0.1
-        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 0.1
-        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 0.1
 
 
   # Generate evens (don't read LH event files)
   - capability: HardScatteringEvent
     function: generateEventPythia
     module: ColliderBit
+    options:
+      drop_HepMC_file: false   
+      # Warning: the HepMC files can quickly become very large... (20 events take ~1MB)
 
   # # Generate evens (don't read LH event files)
   # - capability: HardScatteringEvent

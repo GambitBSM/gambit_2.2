@@ -77,6 +77,8 @@
 
   #undef CAPABILITY
 
+    // _Anders
+    // BACKEND_REQ(output_hepmc2_event, (Pythia), void, (Pythia_default::Pythia8::Pythia*, const char*))
 
   // Get SLHA content from one or more SLHA files
   #define CAPABILITY SLHAFileNameAndContent

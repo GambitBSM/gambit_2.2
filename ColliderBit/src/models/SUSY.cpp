@@ -33,14 +33,6 @@ namespace Gambit
     GET_PYTHIA_EVENT(generateEventPythia)
 
 
-    // Get Monte Carlo event generator from SLHA file input
-    // GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
-    // GET_PYTHIA_AS_BASE_COLLIDER(getPythia_SLHAAsBase)
-
-    // // Run event generator
-    // GET_PYTHIA_EVENT(generateEventPythia_SLHA)
-
-
 
     // Get next SLHA file path and content (for use with model CB_SLHA_file_model)
     void getNextSLHAFileNameAndContent(pair_str_SLHAstruct& result)
