@@ -45,15 +45,16 @@ namespace Gambit
     {
 
       public:
-        VevaciousResultContainer(){PathFinderResults.clear();PathFinderThermalResults.clear();};
-        ~VevaciousResultContainer(){std::cout << "AAHHHGHG I DIED" << std::endl; };
+        //VevaciousResultContainer(){};
+        //~VevaciousResultContainer(){PathFinderResults.clear();PathFinderThermalResults.clear();std::cout << "AAHHHGHG I DIED" << std::endl; };
 
         // Methods to add entry to vevacious_result_map
         void addEntry(str key, double value) {vevacious_result_map[key]=value;};
         // return 1 if key found, zero otherwise
         int hasKey(str key){return vevacious_result_map.count(key);};
         // clears all entries from vevacious_result_map
-        void clear(){vevacious_result_map.clear();};
+        void clear(){vevacious_result_map.clear();PathFinderResults.clear();PathFinderThermalResults.clear();};
+        
         
 
         // add Entries to the PathFinderResults 
