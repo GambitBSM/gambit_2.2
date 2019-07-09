@@ -19,6 +19,10 @@
 ///          (benjamin.farmer@fysik.su.se)
 ///  \date 2015 Feb
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 May
+///
 ///  *********************************************
 
 #ifndef __base_base_printer_hpp__
@@ -69,15 +73,21 @@ namespace Gambit
       private:
         int rank;
         std::set<std::string> print_list; // List of names of data that may be printed (i.e. with printme=true)
+        bool resume; // Flag to query to determine if printer is appending points to existing output 
 
       public:
-        BaseBasePrinter(): rank(0), printer_enabled(true) {}
+        BaseBasePrinter(): rank(0), printer_enabled(true), printer_cooldown(-1) {}
         virtual ~BaseBasePrinter() {}
         /// Function to signal to the printer to write buffer contents to disk
         //virtual void flush() {}; // TODO: needed?
 
         /// Signal printer to reset contents, i.e. delete old data in preperation for replacement
         virtual void reset(bool force=false) = 0;
+
+        /// Signal printer to flush data in buffers to disk
+        /// Printers should do this automatically as needed, but this is useful if a scanner is printing
+        /// a bunch of data as a batch, to make sure it is all on disk after the batch is done.
+        virtual void flush() = 0;
 
         /// Retrieve/Set MPI rank (setting is useful for e.g. the postprocessor to re-print points from other ranks)
         int  getRank() {return rank;}
@@ -86,17 +96,31 @@ namespace Gambit
         /// Retrieve/Set print list for this printer
         /// Required by e.g. postprocessor.
         std::set<std::string> getPrintList() {return print_list;}
-        void                  setPrintList(std::set<std::string>& in) {print_list = in;}
-        void                  addToPrintList(std::string& in) {print_list.insert(in);}
+        void                  setPrintList(const std::set<std::string>& in) {print_list = in;}
+        void                  addToPrintList(const std::string& in) {print_list.insert(in);}
+
+        // Get options required to construct a reader object that can read
+        // the previous output of this printer.
+        virtual Options resume_reader_options() = 0;
+
+        bool get_resume() { return resume; }
+        void set_resume(bool rflag) { resume = rflag; }
 
         /// Signal printer that scan is finished, and final output needs to be performed
         virtual void finalise(bool abnormal=false) = 0;
 
         /// "Turn off" printer; i.e. calls to print functions will do nothing while this is active
-        void disable() { printer_enabled = false; }
+        /// Optionally, disable printer just for the next n print calls unless it was already disabled
+        void disable(int n=-1)
+        {
+          if(printer_enabled)
+            printer_cooldown = n;   
+          printer_enabled = false;
+        }
 
         /// "Turn on" printer; print calls will work as normal.
-        void enable() { printer_enabled = true; }
+        /// Reset cooldown
+        void enable() { printer_enabled = true;  printer_cooldown = 0;}
 
         // Printer dispatch function. If a virtual function override exists for
         // the print type, info is passed on, otherwise the function call is resolved
@@ -108,6 +132,8 @@ namespace Gambit
                    const ulong pointID)
         {
           if(printer_enabled) _print(in, label, vertexID, rank, pointID);
+          if(printer_cooldown > 0) printer_cooldown--; // if there's a cooldown, reduce it afer printing
+          if(!printer_cooldown) printer_enabled = true; // if cooldown has ended, re-enable printer
         }
 
         // Overload which automatically determines a unique ID code
@@ -118,11 +144,16 @@ namespace Gambit
                    const ulong pointID)
         {
           if(printer_enabled) _print(in, label, rank, pointID);
+          if(printer_cooldown > 0) printer_cooldown--; // if there's a cooldown, reduce it afer printing
+          if(!printer_cooldown) printer_enabled = true; // if cooldown has ended, re-enable printer
         }
 
       protected:
         /// Flag to check if print functions are enabled or disabled
         bool printer_enabled;
+
+        /// Counter for printer cooldown. If non-zero printer can be disabled for a fixed number of print calls
+        int printer_cooldown;
 
         /// Default _print function. Throws an error if no matching
         /// virtual function for the type of the attempted print is

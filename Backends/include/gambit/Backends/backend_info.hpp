@@ -19,6 +19,10 @@
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 Jun
 ///
+///  \author Patrick Stoecker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2019 Jun
+///
 ///  *********************************************
 
 #ifndef __backend_info_hpp__
@@ -32,7 +36,17 @@
 
 // Forward declarations
 #ifdef HAVE_MATHEMATICA
-  typedef struct WSLink* WSLINK;
+  #if MATHEMATICA_WSTP_VERSION_MAJOR > 4 || (MATHEMATICA_WSTP_VERSION_MAJOR == 4 && MATHEMATICA_WSTP_VERSION_MINOR > 25)
+    #ifndef __MLINK__
+      typedef struct MLink* WSLINK;
+      #define __MLINK__
+    #endif
+  #else
+    #ifndef __WSLINK__
+      typedef struct WSLink* WSLINK;
+      #define __WSLINK__
+    #endif
+  #endif
 #endif
 #ifdef HAVE_PYBIND11
   namespace pybind11
@@ -96,6 +110,9 @@ namespace Gambit
 
         /// Key: backend name + version
         std::map<str,bool> needsPython;
+
+        /// Key: backend name + version
+        std::map<str,int> missingPythonVersion;
 
         /// Key: backend name + version
         std::map<str,bool> classloader;
@@ -188,10 +205,13 @@ namespace Gambit
 
         #ifdef HAVE_PYBIND11
           /// Load a Python backend module
-          void loadLibrary_Python(const str&, const str&, const str&);
+          void loadLibrary_Python(const str&, const str&, const str&, const str&);
 
           /// Python sys modudle
           pybind11::module* sys;
+
+          /// Python os modudle
+          pybind11::module* os;
 
           /// Pointer to the Python interpreter
           pybind11::scoped_interpreter* python_interpreter;

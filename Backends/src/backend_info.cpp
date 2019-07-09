@@ -14,6 +14,10 @@
 ///  \date 2014 Dec
 ///  \date 2017 Dec
 ///
+///  \author Patrick Stoecker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2019 Jun
+///
 ///  *********************************************
 
 #include <dlfcn.h>
@@ -41,10 +45,12 @@ namespace Gambit
   // Public method definitions for backend_info class
 
   /// Constructor
-  Backends::backend_info::backend_info() :
-   filename(GAMBIT_DIR "/config/backend_locations.yaml"),
-   default_filename(GAMBIT_DIR "/config/backend_locations.yaml.default"),
-   python_started(false)
+  Backends::backend_info::backend_info()
+   : filename(GAMBIT_DIR "/config/backend_locations.yaml")
+   , default_filename(GAMBIT_DIR "/config/backend_locations.yaml.default")
+   #ifdef HAVE_PYBIND11
+     , python_started(false)
+   #endif
   {
     // Attempt to read user yaml configuration file
     try
@@ -196,7 +202,7 @@ namespace Gambit
     int i, end = p.length();
     for (i = end-1; i >= 0; --i)
     {
-      if (p[i] == '.') end = i;
+      if (p[i] == '.') end = i-1;
       if (p[i] == '/') break;
     }
     return p.substr(i+1,end-i);
@@ -305,6 +311,7 @@ namespace Gambit
       needsMathematica[be+ver] = false;
       needsPython[be+ver] = false;
       classloader[be+ver] = false;
+      missingPythonVersion[be+ver] = -1;
 
      // Now switch according to the language of the backend
       if (lang == "MATHEMATICA"
@@ -323,14 +330,16 @@ namespace Gambit
         #endif
       }
       // and so on.
-      else if (lang == "PYTHON"
-            or lang == "Python")
+      else if (lang == "PYTHON" or lang == "Python" or
+               lang == "PYTHON2" or lang == "Python2" or
+               lang == "PYTHON3" or lang == "Python3")
       {
         needsPython[be+ver] = true;
         #ifdef HAVE_PYBIND11
-         loadLibrary_Python(be, ver, sv);
+          loadLibrary_Python(be, ver, sv, lang);
         #else
           works[be+ver] = false;
+          std::ostringstream err;
           err << "GAMBIT requires pybind11 to interface with Python, but it was not found in "
               << "the system. Please install it before using this backend." << endl
               << "You can do this with 'make pybind11' from the GAMBIT build directory." << endl;
@@ -512,16 +521,13 @@ namespace Gambit
   #ifdef HAVE_PYBIND11
 
     /// Load a Python backend module
-    void Backends::backend_info::loadLibrary_Python(const str& be, const str& ver, const str& sv)
+    void Backends::backend_info::loadLibrary_Python(const str& be, const str& ver, const str& sv, const str& lang)
     {
       // Set the internal info for this backend
       const str path = corrected_path(be,ver);
       link_versions(be, ver, sv);
-      classloader[be+ver] = false;
-      needsMathematica[be+ver] = false;
-      needsPython[be+ver] = true;
 
-      // If the backend is not present, bail now.
+      // Bail now if the backend is not present.
       std::ifstream f(path.c_str());
       std::ostringstream err;
       if(!f.good())
@@ -532,13 +538,40 @@ namespace Gambit
         return;
       }
 
+      // Bail now if the backend requires a version of Python that GAMBIT is not configured with.
+      if (PYTHON_VERSION_MAJOR < 2 or PYTHON_VERSION_MAJOR > 3)
+      {
+        err << "Unrecognised version of Python: " << PYTHON_VERSION_MAJOR << endl;
+        backend_error().raise(LOCAL_INFO, err.str());
+        works[be+ver] = false;
+        return;
+      }
+      if (PYTHON_VERSION_MAJOR != 2 and (lang == "Python2" or lang == "PYTHON2"))
+      {
+        err << "Failed loading Python backend " << be << " " << ver << "." << endl
+            << "GAMBIT was configured with Python " << PYTHON_VERSION_MAJOR << " but this backend needs Python 2." << endl;
+        backend_warning().raise(LOCAL_INFO, err.str());
+        works[be+ver] = false;
+        missingPythonVersion[be+ver] = 2;
+        return;
+      }
+      if (PYTHON_VERSION_MAJOR != 3 and (lang == "Python3" or lang == "PYTHON3"))
+      {
+        err << "Failed loading Python backend " << be << "." << endl
+            << "GAMBIT was configured with Python " << PYTHON_VERSION_MAJOR << " but this backend needs Python 3." << endl;
+        backend_warning().raise(LOCAL_INFO, err.str());
+        works[be+ver] = false;
+        missingPythonVersion[be+ver] = 3;
+        return;
+      }
+
       // Fire up the Python interpreter if it hasn't been started yet.
       if (not python_started) start_python();
 
       // Add the path to the backend to the Python system path
       pybind11::object sys_path = sys->attr("path");
-      pybind11::object sys_path_append = sys_path.attr("append");
-      sys_path_append(path_dir(be, ver));
+      pybind11::object sys_path_insert = sys_path.attr("insert");
+      sys_path_insert(0,path_dir(be, ver));
 
       // Attempt to import the module
       const str name = lib_name(be, ver);
@@ -551,6 +584,29 @@ namespace Gambit
       {
         err << "Failed to import Python module from " << path << "." << endl
             << "Python error was: " << e.what() << endl;
+        backend_warning().raise(LOCAL_INFO, err.str());
+        works[be+ver] = false;
+        return;
+      }
+
+      // Check if the loaded moule has actually come from the expected path.
+      // First get the relevant os functions.
+      pybind11::object os_path = os->attr("path");
+      pybind11::object os_path_split = os_path.attr("split");
+      // Get the path to the loaded module (Split the path at the last '/')
+      pybind11::tuple full_loaded_path = os_path_split( new_module->attr("__file__") );
+      // For Python modules with an underlying '__init__.py' script we need to repeat this split step
+      if ((full_loaded_path[1]).cast<str>().find("__init__") != str::npos)
+        full_loaded_path = os_path_split(full_loaded_path[0]);
+
+      // Compare the expected and the actual location. If they differ, declare the module as broken.
+      const str loaded_loc = (full_loaded_path[0]).cast<str>();
+      const str expected_loc = path_dir(be,ver);
+      if (loaded_loc.compare(expected_loc) != 0)
+      {
+        err << "Failed to import Python module from " << path << "." << endl
+            << "A module with the same name was loaded but its location is not what is expected" << endl
+            << "Got: " << loaded_loc << " (expected: " << expected_loc << ")" << endl;
         backend_warning().raise(LOCAL_INFO, err.str());
         works[be+ver] = false;
         return;
@@ -573,6 +629,10 @@ namespace Gambit
       // Import the sys module, and save a wrapper to it for later.
       static pybind11::module local_sys = pybind11::module::import("sys");
       sys = &local_sys;
+      // Import the os module, and save a wrapper to it for later.
+      static pybind11::module local_os = pybind11::module::import("os");
+      os = &local_os;
+
       logger() << LogTags::backends << LogTags::debug << "Python interpreter successfully started." << EOM;
       python_started = true;
     }
