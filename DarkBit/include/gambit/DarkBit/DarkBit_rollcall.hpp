@@ -850,6 +850,16 @@ START_MODULE
 
   // INDIRECT DETECTION: NEUTRINOS =====================================
 
+  // Placeholder setting of WIMP spin for MSSM models
+  // (assumes neutralino dark matter; need chance for gravitino etc?)
+  #define CAPABILITY jwimp
+  START_CAPABILITY
+     #define FUNCTION jwimp_for_MSSM
+     START_FUNCTION(double)
+     ALLOW_MODELS(MSSM63atQ)
+     #undef FUNCTION
+  #undef CAPABILITY
+
   // Solar capture ------------------------
 
   /// Translation of DDcalc couplings into NREO couplings
@@ -858,6 +868,9 @@ START_MODULE
      #define FUNCTION NREO_from_DD_couplings
      START_FUNCTION(ModelParameters)
      DEPENDENCY(DD_couplings, DM_nucleon_couplings)
+     DEPENDENCY(mwimp, double)
+     DEPENDENCY(jwimp, double)
+     //DEPENDENCY(sigmav, double) // Need to think about structure for this
      #undef FUNCTION
   #undef CAPABILITY
 
