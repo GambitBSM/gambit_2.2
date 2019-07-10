@@ -45,33 +45,46 @@ namespace Gambit
     {
 
       public:
-        //VevaciousResultContainer(){};
-        //~VevaciousResultContainer(){PathFinderResults.clear();PathFinderThermalResults.clear();std::cout << "AAHHHGHG I DIED" << std::endl; };
+        // constructor initialises every member to -1 to avoid 
+        // problems when printing results when vevacious did not run
+        VevaciousResultContainer();
+        ~VevaciousResultContainer();
 
-        // Methods to add entry to vevacious_result_map
-        void addEntry(str key, double value) {vevacious_result_map[key]=value;};
-        // return 1 if key found, zero otherwise
-        int hasKey(str key){return vevacious_result_map.count(key);};
-        // clears all entries from vevacious_result_map
-        void clear(){vevacious_result_map.clear();PathFinderResults.clear();PathFinderThermalResults.clear();};
+        // setter functions for members, set bool thermal to true
+        // to set thermal values
+        void set_lifetime(double val) {lifetime = val;};
+        void set_thermalProbability(double val) {thermalProbability = val;};
         
+        void set_bounceActionThreshold  (double val, bool thermal);
+        void set_bounceActionStraight   (double val, bool thermal);
+        void set_firstPathFinder        (double val, bool thermal);
+        void set_secondPathFinder       (double val, bool thermal);
+
+        // getter functions for members, set thermal to ture to 
+        // get thermal values
+        double get_lifetime()           {return lifetime;};
+        double get_thermalProbability() {return thermalProbability;};
+
+        double get_bounceActionThreshold(bool thermal);
+        double get_bounceActionStraight (bool thermal);
+        double get_firstPathFinder      (bool thermal);
+        double get_secondPathFinder     (bool thermal);
         
-
-        // add Entries to the PathFinderResults 
-        void addPathFinderEntry         (double value) {PathFinderResults.push_back(value);};
-        void addPathFinderThermalEntry  (double value) {PathFinderThermalResults.push_back(value);};
-
-        // return PathFinderResult vectors
-        std::vector<double> return_PathFinderResults(){return PathFinderResults;};
-        std::vector<double> return_PathFinderThermalResults(){return PathFinderThermalResults;};
-        map_str_dbl return_result_map(){return vevacious_result_map;};
-
-
       private:
-        map_str_dbl vevacious_result_map;
-        std::vector<double> PathFinderResults;
-        std::vector<double> PathFinderThermalResults;
-        
+        double lifetime;
+        double thermalProbability;
+
+        double bounceActionThreshold;
+        double bounceActionThresholdThermal;
+
+        double bounceActionStraight;
+        double bounceActionStraightThermal;
+
+        double firstPathFinder;
+        double firstPathFinderThermal;
+
+        double secondPathFinder;
+        double secondPathFinderThermal;        
     };
   }
 }

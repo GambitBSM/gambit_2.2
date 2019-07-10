@@ -54,17 +54,17 @@
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY VS_StraighPathGoodEnough
+  #define CAPABILITY VS_StraightPathGoodEnough
   START_CAPABILITY
-    #define FUNCTION print_VS_StraighPathGoodEnough
+    #define FUNCTION print_VS_StraightPathGoodEnough
       START_FUNCTION(int)
       DEPENDENCY(check_stability_MSSM, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
   
-  #define CAPABILITY VS_StraighPathGoodEnough_Thermal
+  #define CAPABILITY VS_StraightPathGoodEnough_Thermal
   START_CAPABILITY
-    #define FUNCTION print_VS_StraighPathGoodEnough_Thermal
+    #define FUNCTION print_VS_StraightPathGoodEnough_Thermal
       START_FUNCTION(int)
       DEPENDENCY(check_stability_MSSM, SpecBit::VevaciousResultContainer)
     #undef FUNCTION

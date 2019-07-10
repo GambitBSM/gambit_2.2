@@ -836,11 +836,14 @@ namespace Gambit
         logger() << InputsForLogString << EOM;
         
 
-        // initialise vevacious outputs to -1. In case vevacious crashed or 
+        /*// initialise vevacious outputs to -1. In case vevacious crashed or 
         // exitis with an exception we will use these to fill the 
         // VevaciousResultContainer result
         double BounceActionThermal = -1, BounceAction = -1;
         double StraightPathThermal = -1, StraightPath = -1;
+
+        double FirstPathFinderThermal = -1, FirstPathFinder = -1;
+        double SecondPathFinderThermal = -1, SecondPathFinder = -1;*/
 
         double lifetime, thermalProbability;
 
@@ -907,30 +910,19 @@ namespace Gambit
             std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
             std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
             
+            cout << "VEVACIOUS RESULT size "<< BounceActions_vec.size() << endl;
 
-            if(BounceActions_vec.size()>0)
-            {
-                BounceAction = BounceActions_vec.at(0);
-                StraightPath = BounceActions_vec.at(1);
+            // set claculated bounce actions values & the threshold if they were calculated
+            // bool false means that we are not setting the thermal values here
+            if(BounceActions_vec.size()>0) {result.set_bounceActionThreshold(BounceActions_vec.at(0), false);}
+            if(BounceActions_vec.size()>1) {result.set_bounceActionStraight(BounceActions_vec.at(1), false);}
+            if(BounceActions_vec.size()>2) {result.set_firstPathFinder(BounceActions_vec.at(2), false);}
+            if(BounceActions_vec.size()>3) {result.set_secondPathFinder(BounceActions_vec.at(3), false);}
 
-                for(int ii = 0; ii < BounceActions_vec.size(); ii ++)
-                {   
-                    // save all entries of BounceActions_vec
-                    result.addPathFinderEntry(BounceActions_vec.at(ii));
-                }
-            }
-
-            if(BounceActionsThermal_vec.size()>0)
-            {
-                BounceActionThermal = BounceActionsThermal_vec.at(0);
-                StraightPathThermal = BounceActionsThermal_vec.at(1);
-
-                for(int ii = 0; ii < BounceActionsThermal_vec.size(); ii ++)
-                {   
-                    // save all entries of BounceActionsThermal_vec
-                    result.addPathFinderThermalEntry(BounceActionsThermal_vec.at(ii));
-                }
-            }
+            if(BounceActionsThermal_vec.size()>0) {result.set_bounceActionThreshold(BounceActions_vec.at(0), true);}
+            if(BounceActionsThermal_vec.size()>1) {result.set_bounceActionStraight(BounceActions_vec.at(1), true);}
+            if(BounceActionsThermal_vec.size()>2) {result.set_firstPathFinder(BounceActions_vec.at(2), true);}
+            if(BounceActionsThermal_vec.size()>3) {result.set_secondPathFinder(BounceActions_vec.at(3), true);}
 
             cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
         }
@@ -951,15 +943,8 @@ namespace Gambit
             //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
         }
 
-        result.addEntry("lifetime", lifetime);
-        result.addEntry("thermalProbability",thermalProbability);
-
-        // values were initialised before the catch loop 
-        result.addEntry("BounceActionThresholdThermal", BounceActionThermal);
-        result.addEntry("BounceActionStraightThermal", StraightPathThermal);
-        
-        result.addEntry("BounceActionThreshold", BounceAction);
-        result.addEntry("BounceActionStraight", StraightPath);
+        result.set_lifetime( lifetime);
+        result.set_thermalProbability(thermalProbability);
 
  	}
 
@@ -968,7 +953,7 @@ namespace Gambit
         using namespace Pipes::get_likelihood_VS_MSSM;
         
         VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
-        double lifetime =  vevacious_results.return_result_map()["lifetime"];
+        double lifetime =  vevacious_results.get_lifetime();
 
         // This is based on the estimation of the past lightcone from 1806.11281
         double conversion = (6.5821195e-25)/(31536000);
@@ -980,62 +965,89 @@ namespace Gambit
         using namespace Pipes::get_likelihood_VS_MSSM_thermal;
 
         VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
-        double ThermalProbability =  vevacious_results.return_result_map()["ThermalProbability"];
+        double thermalProbability =  vevacious_results.get_thermalProbability();
 
-         if(ThermalProbability == 0)
+         if(thermalProbability == 0)
          {
              result = -1e100;
          } else
          {
-             result= std::log(ThermalProbability);
+             result= std::log(thermalProbability);
          }
     }
 
-    void print_VS_StraighPathGoodEnough(int &result)
+    void print_VS_StraightPathGoodEnough(int &result)
     {
-        using namespace Pipes::print_VS_StraighPathGoodEnough;
+        using namespace Pipes::print_VS_StraightPathGoodEnough;
         
         VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
+        // boolean false means that we are getting non-thermal values
+        double threshold = vevacious_results.get_bounceActionThreshold(false);
+        double straightPath = vevacious_results.get_bounceActionStraight(false);
         
-        if(vevacious_results.return_result_map()["BounceActionThreshold"] > vevacious_results.return_result_map()["BounceActionStraight"])
+        if(threshold == -1)
+        {
+            // vevacious did not run
+            result = -1;
+        }
+        else if(threshold > straightPath)
         {
             // straight path was good enough
             result = 1;
         }
+        // straigh path was not good enough
         else{result = 0;}
     }
     
-    void print_VS_StraighPathGoodEnough_Thermal(int &result)
+    void print_VS_StraightPathGoodEnough_Thermal(int &result)
     {
-        using namespace Pipes::print_VS_StraighPathGoodEnough_Thermal;
+        using namespace Pipes::print_VS_StraightPathGoodEnough_Thermal;
         
         VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
-        map_str_dbl result_map = vevacious_results.return_result_map();
+        // boolean true means that we are getting thermal values
+        double threshold = vevacious_results.get_bounceActionThreshold(true);
+        double straightPath = vevacious_results.get_bounceActionStraight(true);
         
-        if(result_map["BounceActionThresholdThermal"] > result_map["BounceActionStraightThermal"])
+        if(threshold == -1)
+        {
+            // vevacious did not run
+            result = -1;
+        }
+        else if(threshold > straightPath)
         {
             // straight path was good enough
             result = 1;
         }
+        // straigh path was not good enough
         else{result = 0;}
     }
     
     void print_VS_ThresholdAndBounceActions(std::vector<double> &result)
     {
         using namespace Pipes::print_VS_ThresholdAndBounceActions;
-        
+
+        result.clear();
         VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
         
-        result = vevacious_results.return_PathFinderResults();
+        // bool false since we are getting non-thermal values
+        result.push_back(vevacious_results.get_bounceActionThreshold(false));
+        result.push_back(vevacious_results.get_bounceActionStraight(false));
+        result.push_back(vevacious_results.get_firstPathFinder(false));
+        result.push_back(vevacious_results.get_secondPathFinder(false));
     }
     
     void print_VS_ThresholdAndBounceActions_Thermal(std::vector<double> &result)
     {
         using namespace Pipes::print_VS_ThresholdAndBounceActions_Thermal;
         
+        result.clear();
         VevaciousResultContainer vevacious_results = *Dep::check_stability_MSSM;
         
-        result = vevacious_results.return_PathFinderThermalResults();
+        // bool true since we are getting thermal values
+        result.push_back(vevacious_results.get_bounceActionThreshold(true));
+        result.push_back(vevacious_results.get_bounceActionStraight(true));
+        result.push_back(vevacious_results.get_firstPathFinder(true));
+        result.push_back(vevacious_results.get_secondPathFinder(true));
     }
 
   } // end namespace SpecBit
