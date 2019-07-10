@@ -41,6 +41,21 @@ namespace Gambit
       std::cout << "Init Container, values are " << lifetime << " thermalProb "<< thermalProbability << std::endl;
     }
 
+    void VevaciousResultContainer::reset_results()
+    { 
+      lifetime = -1;                
+      thermalProbability = -1;
+      bounceActionThreshold = -1;  
+      bounceActionThresholdThermal = -1;
+      bounceActionStraight = -1;   
+      bounceActionStraightThermal = -1;
+      firstPathFinder = -1;        
+      firstPathFinderThermal = -1;
+      secondPathFinder = -1;       
+      secondPathFinderThermal = -1;
+      vevaciousRunFlag = false;
+    }
+
     VevaciousResultContainer::~VevaciousResultContainer()
     {
       std::cout << "AAHHHGHG I DIED" << std::endl;

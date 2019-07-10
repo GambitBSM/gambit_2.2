@@ -534,6 +534,10 @@ namespace Gambit
 
         static std::string inputspath =  *myPipe::Dep::make_vevaciousPlusPlus_inputs;
 
+        // reset all member variables of VevaciousResultContainer to -1
+        // to avoid that any value could be carried over from a previous calculated point
+        result.reset_results();
+
         // Writing Vevacious input files
 
 
@@ -919,10 +923,10 @@ namespace Gambit
             if(BounceActions_vec.size()>2) {result.set_firstPathFinder(BounceActions_vec.at(2), false);}
             if(BounceActions_vec.size()>3) {result.set_secondPathFinder(BounceActions_vec.at(3), false);}
 
-            if(BounceActionsThermal_vec.size()>0) {result.set_bounceActionThreshold(BounceActions_vec.at(0), true);}
-            if(BounceActionsThermal_vec.size()>1) {result.set_bounceActionStraight(BounceActions_vec.at(1), true);}
-            if(BounceActionsThermal_vec.size()>2) {result.set_firstPathFinder(BounceActions_vec.at(2), true);}
-            if(BounceActionsThermal_vec.size()>3) {result.set_secondPathFinder(BounceActions_vec.at(3), true);}
+            if(BounceActionsThermal_vec.size()>0) {result.set_bounceActionThreshold(BounceActionsThermal_vec.at(0), true);}
+            if(BounceActionsThermal_vec.size()>1) {result.set_bounceActionStraight(BounceActionsThermal_vec.at(1), true);}
+            if(BounceActionsThermal_vec.size()>2) {result.set_firstPathFinder(BounceActionsThermal_vec.at(2), true);}
+            if(BounceActionsThermal_vec.size()>3) {result.set_secondPathFinder(BounceActionsThermal_vec.at(3), true);}
 
             cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
         }
@@ -943,7 +947,7 @@ namespace Gambit
             //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
         }
 
-        result.set_lifetime( lifetime);
+        result.set_lifetime(lifetime);
         result.set_thermalProbability(thermalProbability);
 
  	}
@@ -997,6 +1001,7 @@ namespace Gambit
         }
         // straigh path was not good enough
         else{result = 0;}
+
     }
     
     void print_VS_StraightPathGoodEnough_Thermal(int &result)
@@ -1020,6 +1025,7 @@ namespace Gambit
         }
         // straigh path was not good enough
         else{result = 0;}
+
     }
     
     void print_VS_ThresholdAndBounceActions(std::vector<double> &result)
@@ -1034,6 +1040,7 @@ namespace Gambit
         result.push_back(vevacious_results.get_bounceActionStraight(false));
         result.push_back(vevacious_results.get_firstPathFinder(false));
         result.push_back(vevacious_results.get_secondPathFinder(false));
+
     }
     
     void print_VS_ThresholdAndBounceActions_Thermal(std::vector<double> &result)
@@ -1048,6 +1055,7 @@ namespace Gambit
         result.push_back(vevacious_results.get_bounceActionStraight(true));
         result.push_back(vevacious_results.get_firstPathFinder(true));
         result.push_back(vevacious_results.get_secondPathFinder(true));
+
     }
 
   } // end namespace SpecBit

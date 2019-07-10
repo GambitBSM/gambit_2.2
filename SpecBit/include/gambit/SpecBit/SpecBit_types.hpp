@@ -50,6 +50,11 @@ namespace Gambit
         VevaciousResultContainer();
         ~VevaciousResultContainer();
 
+        // reset all memember variables to value -1
+        void reset_results();
+        void vevacious_ran(){vevaciousRunFlag = true;};
+        void vevacious_ran_reset(){vevaciousRunFlag = false;};
+
         // setter functions for members, set bool thermal to true
         // to set thermal values
         void set_lifetime(double val) {lifetime = val;};
@@ -71,6 +76,7 @@ namespace Gambit
         double get_secondPathFinder     (bool thermal);
         
       private:
+        bool vevaciousRunFlag; 
         double lifetime;
         double thermalProbability;
 
