@@ -35,8 +35,16 @@ gambit_base_namespace  = ''
 # ~~~~~ Information about the external code ~~~~~
 
 # Use either absolute paths or paths relative to the main BOSS directory.
-input_files   = ['../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h']
-include_paths = ['../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include', '../../../contrib/slhaea/include']
+input_files   = [
+                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h',
+                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/GAMBIT_hepmc2_writer.h',
+                  # '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/src/GAMBIT_output_hepmc2_event.cc',
+                ]
+include_paths = [
+                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include',
+                  '../../../contrib/slhaea/include',
+                  '../../../contrib/HepMC2-2.06.08/local/include',
+                ]
 base_paths    = ['../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/']
 
 header_files_to = '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include'
@@ -75,6 +83,8 @@ load_classes = [
     'Pythia8::SusyLesHouches',
     'Pythia8::UserHooks',
     'Pythia8::Vec4',
+    # 
+    'Pythia8::GAMBIT_hepmc2_writer'
 ]
 
 load_functions = [

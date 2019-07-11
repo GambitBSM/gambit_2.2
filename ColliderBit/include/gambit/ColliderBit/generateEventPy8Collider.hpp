@@ -53,7 +53,9 @@ namespace Gambit
                                   const MCLoopInfo& RunMC,
                                   const Py8Collider<PythiaT,EventT>& HardScatteringSim,
                                   const int iteration,
-                                  void(*wrapup)())
+                                  void(*wrapup)(),
+                                  const safe_ptr<Options>& runOptions,
+                                  void(*output_hepmc2_event)(PythiaT*, const char*) = NULL)
     {
       static int nFailedEvents;
       thread_local EventT pythia_event;
@@ -109,6 +111,27 @@ namespace Gambit
         return;
       }
 
+
+      // // Write event to HepMC file?
+      // // TODO: This is closer to how it should work...
+      // static const bool drop_hepmc_file = runOptions->getValueOrDef<bool>(false, "drop_HepMC_file");
+      // thread_local Pythia_default::Pythia8::GAMBIT_hepmc2_writer hepmc2_writer;
+      // thread_local bool first = true;
+      // if (drop_hepmc_file)
+      // {
+      //   if (first)
+      //   {
+      //     str filename = "GAMBIT_collider_events.omp_thread_";
+      //     filename.append(std::to_string(omp_get_thread_num())).append(".hepmc");
+      //     hepmc2_writer.init(filename.c_str());
+      //     first = false;
+      //   }
+
+      //   hepmc2_writer.write_event(const_cast<PythiaT*>(HardScatteringSim.pythia()));
+      // }
+  
+
+
       // Attempt to convert the Pythia event to a HEPUtils event
       try
       {
@@ -117,7 +140,6 @@ namespace Gambit
         else
           convertParticleEvent(pythia_event, event, HardScatteringSim.antiktR);
       }
-
       // No good.
       catch (Gambit::exception& e)
       {
@@ -142,14 +164,50 @@ namespace Gambit
 
     }
 
-    /// Generate a hard scattering event with a specific Pythia
+    /// TODO This split between GET_PYTHIA_EVENT and GET_PYTHIA_EVENT_NOHEPMC
+    ///      is a temporary solution. Work in progress...
+
+    /// Generate a hard scattering event with a specific Pythia,
+    /// and include the possibility to write the event to a HepMC2 file
     #define GET_PYTHIA_EVENT(NAME)                               \
     void NAME(HEPUtils::Event& result)                           \
     {                                                            \
       using namespace Pipes::NAME;                               \
       generateEventPy8Collider(result, *Dep::RunMC,              \
-       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup); \
+       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup,  \
+       runOptions);                                              \
+                                                                 \
+      /* TODO: move everything below into generateEventPy8Collider */  \
+      if (*Loop::iteration <= BASE_INIT) return;                 \
+                                                                 \
+      static const bool drop_hepmc_file = runOptions->getValueOrDef<bool>(false, "drop_HepMC_file"); \
+      thread_local Pythia_default::Pythia8::GAMBIT_hepmc2_writer hepmc2_writer; \
+      thread_local bool first = true;                            \
+      if (drop_hepmc_file)                                       \
+      {                                                          \
+        if (first)                                               \
+        {                                                        \
+          str filename = "GAMBIT_collider_events.omp_thread_";   \
+          filename.append(std::to_string(omp_get_thread_num())).append(".hepmc"); \
+          hepmc2_writer.init(filename.c_str());                  \
+          first = false;                                         \
+        }                                                        \
+                                                                 \
+        hepmc2_writer.write_event(const_cast<Pythia_default::Pythia8::Pythia*>(Dep::HardScatteringSim->pythia())); \
+      }                                                          \
     }
+
+
+    /// Generate a hard scattering event with a specific Pythia
+    #define GET_PYTHIA_EVENT_NOHEPMC(NAME)                       \
+    void NAME(HEPUtils::Event& result)                           \
+    {                                                            \
+      using namespace Pipes::NAME;                               \
+      generateEventPy8Collider(result, *Dep::RunMC,              \
+       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup,  \
+       runOptions);                                              \
+    }
+
 
   }
 

@@ -480,6 +480,9 @@ else()
   set(pythia_CXX_SHARED_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS}")
 endif()
 
+# - Add HepMC2 library path
+set(pythia_CXX_SHARED_FLAGS "${pythia_CXX_SHARED_FLAGS}  -L${HEPMC2_PATH}/local/lib -Wl,-rpath ${HEPMC2_PATH}/local/lib -lHepMC")
+
 # - Add option to turn off intel IPO if insufficient memory exists to use it.
 option(PYTHIA_OPT "For Pythia: Switch Intel's multi-file interprocedural optimization on/off" ON)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT "${PYTHIA_OPT}")
@@ -492,17 +495,18 @@ if(COMPILER_SUPPORTS_CXX17)
 endif()
 
 # - Set include directories
-set(pythia_CXXFLAGS "${pythia_CXXFLAGS} -I${Boost_INCLUDE_DIR} -I${PROJECT_SOURCE_DIR}/contrib/slhaea/include")
+set(pythia_CXXFLAGS "${pythia_CXXFLAGS} -I${Boost_INCLUDE_DIR} -I${PROJECT_SOURCE_DIR}/contrib/slhaea/include -I${HEPMC2_PATH}/local/include")
 
 # - Actual configure and compile commands
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
+    DEPENDS hepmc2
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
-    CONFIGURE_COMMAND ./configure --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --lib-suffix=".so"
+    CONFIGURE_COMMAND ./configure --with-hepmc2=${HEPMC2_PATH}/local --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --lib-suffix=".so"
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX="${CMAKE_CXX_COMPILER}" lib/${lib}.so
     INSTALL_COMMAND ""
   )

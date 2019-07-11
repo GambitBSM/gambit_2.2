@@ -1,6 +1,85 @@
+diff -rupN pythia_8.212_original/include/Pythia8/GAMBIT_hepmc2_writer.h pythia_8.212_patched/include/Pythia8/GAMBIT_hepmc2_writer.h
+--- pythia_8.212_original/include/Pythia8/GAMBIT_hepmc2_writer.h	1970-01-01 01:00:00.000000000 +0100
++++ pythia_8.212_patched/include/Pythia8/GAMBIT_hepmc2_writer.h	2019-07-08 03:07:03.888593784 +0100
+@@ -0,0 +1,75 @@
++#ifndef Pythia8_GAMBIT_hepmc2_writer_H
++#define Pythia8_GAMBIT_hepmc2_writer_H
++
++#include "Pythia8/Pythia.h"
++#include "Pythia8Plugins/HepMC2.h"
++
++namespace Pythia8
++{
++
++  class GAMBIT_hepmc2_writer
++  {
++
++  private:
++
++    const char* filename;
++    HepMC::Pythia8ToHepMC* ToHepMC;
++    HepMC::IO_GenEvent* ascii_io;
++
++  public:
++
++    // // Constructors
++    // GAMBIT_hepmc2_writer() :
++    //   filename("GAMBIT_collider_events.hepmc"),
++    //   ToHepMC(),
++    //   ascii_io(filename, std::ios::out)
++    // {}
++
++    // GAMBIT_hepmc2_writer(const char* filename_in) :
++    //   filename(filename_in),
++    //   ToHepMC(),
++    //   ascii_io(filename, std::ios::out)
++    // {}
++
++
++    // // Copy constructor
++    // GAMBIT_hepmc2_writer(const GAMBIT_hepmc2_writer& in) :
++    //   filename(in.filename),
++    //   ToHepMC(in.ToHepMC),
++    //   ascii_io(filename, std::ios::out)
++    // {}
++
++    // // Assignment operator
++    // GAMBIT_hepmc2_writer& operator=(const GAMBIT_hepmc2_writer& in)
++    // {
++    //   ToHepMC = in.ToHepMC;
++    //   return *this;
++    // }
++
++    void init(const char* filename_in)
++    {
++      filename = filename_in;
++      ascii_io = new HepMC::IO_GenEvent(filename, std::ios::out);
++      ToHepMC = new HepMC::Pythia8ToHepMC();
++    }
++
++
++    // Write current event to file
++    void write_event(Pythia* pythia)
++    {
++      // Construct new empty HepMC event and fill it.
++      // Units will be as chosen for HepMC build; but can be changed
++      // by arguments, e.g. GenEvt( HepMC::Units::GEV, HepMC::Units::MM)
++      HepMC::GenEvent* hepmcevt = new HepMC::GenEvent();
++      ToHepMC->fill_next_event(*pythia, hepmcevt);
++
++      // Write the HepMC event to file. Done with it.
++      *ascii_io << hepmcevt;
++      delete hepmcevt;
++    }
++  };
++
++}
++
++#endif // Pythia8_GAMBIT_hepmc2_writer_H
++
 diff -rupN pythia_8.212_original/include/Pythia8/ParticleData.h pythia_8.212_patched/include/Pythia8/ParticleData.h
---- pythia_8.212_original/include/Pythia8/ParticleData.h	2015-09-23 17:34:38.000000000 +0200
-+++ pythia_8.212_patched/include/Pythia8/ParticleData.h	2019-05-26 14:34:09.976465003 +0200
+--- pythia_8.212_original/include/Pythia8/ParticleData.h	2015-09-23 16:34:38.000000000 +0100
++++ pythia_8.212_patched/include/Pythia8/ParticleData.h	2019-07-05 23:20:29.938681391 +0100
 @@ -347,6 +347,10 @@ public:
    bool init(string startFile = "../xmldoc/ParticleData.xml") {
      initCommon(); return readXML(startFile);}
@@ -52,8 +131,8 @@ diff -rupN pythia_8.212_original/include/Pythia8/ParticleData.h pythia_8.212_pat
  
  //==========================================================================
 diff -rupN pythia_8.212_original/include/Pythia8/PartonDistributions.h pythia_8.212_patched/include/Pythia8/PartonDistributions.h
---- pythia_8.212_original/include/Pythia8/PartonDistributions.h	2015-09-23 17:34:38.000000000 +0200
-+++ pythia_8.212_patched/include/Pythia8/PartonDistributions.h	2019-05-26 14:34:09.972464983 +0200
+--- pythia_8.212_original/include/Pythia8/PartonDistributions.h	2015-09-23 16:34:38.000000000 +0100
++++ pythia_8.212_patched/include/Pythia8/PartonDistributions.h	2019-07-05 23:20:29.938681391 +0100
 @@ -156,9 +156,8 @@ class MSTWpdf : public PDF {
  public:
  
@@ -138,8 +217,8 @@ diff -rupN pythia_8.212_original/include/Pythia8/PartonDistributions.h pythia_8.
    double *fLogXGrid;
    double *fQ2Grid;
 diff -rupN pythia_8.212_original/include/Pythia8/Pythia.h pythia_8.212_patched/include/Pythia8/Pythia.h
---- pythia_8.212_original/include/Pythia8/Pythia.h	2015-09-23 17:34:39.000000000 +0200
-+++ pythia_8.212_patched/include/Pythia8/Pythia.h	2019-05-26 14:34:09.972464983 +0200
+--- pythia_8.212_original/include/Pythia8/Pythia.h	2015-09-23 16:34:39.000000000 +0100
++++ pythia_8.212_patched/include/Pythia8/Pythia.h	2019-07-08 02:29:07.798972052 +0100
 @@ -56,6 +56,11 @@ public:
    // Constructor. (See Pythia.cc file.)
    Pythia(string xmlDir = "../share/Pythia8/xmldoc", bool printBanner = true);
@@ -162,8 +241,8 @@ diff -rupN pythia_8.212_original/include/Pythia8/Pythia.h pythia_8.212_patched/i
    // Generate the next event.
    bool next();
 diff -rupN pythia_8.212_original/include/Pythia8/Settings.h pythia_8.212_patched/include/Pythia8/Settings.h
---- pythia_8.212_original/include/Pythia8/Settings.h	2015-09-23 17:34:39.000000000 +0200
-+++ pythia_8.212_patched/include/Pythia8/Settings.h	2019-05-26 14:34:09.972464983 +0200
+--- pythia_8.212_original/include/Pythia8/Settings.h	2015-09-23 16:34:39.000000000 +0100
++++ pythia_8.212_patched/include/Pythia8/Settings.h	2019-07-05 23:20:29.938681391 +0100
 @@ -302,6 +302,9 @@ public:
    void resetMVec(string keyIn);
    void resetPVec(string keyIn);
@@ -175,8 +254,8 @@ diff -rupN pythia_8.212_original/include/Pythia8/Settings.h pythia_8.212_patched
  
    // Pointer to various information on the generation.
 diff -rupN pythia_8.212_original/include/Pythia8/SusyLesHouches.h pythia_8.212_patched/include/Pythia8/SusyLesHouches.h
---- pythia_8.212_original/include/Pythia8/SusyLesHouches.h	2015-09-23 17:34:40.000000000 +0200
-+++ pythia_8.212_patched/include/Pythia8/SusyLesHouches.h	2019-05-26 14:34:09.972464983 +0200
+--- pythia_8.212_original/include/Pythia8/SusyLesHouches.h	2015-09-23 16:34:40.000000000 +0100
++++ pythia_8.212_patched/include/Pythia8/SusyLesHouches.h	2019-07-05 23:20:29.938681391 +0100
 @@ -14,6 +14,9 @@
  #define Pythia8_SLHA_H
  
@@ -226,8 +305,8 @@ diff -rupN pythia_8.212_original/include/Pythia8/SusyLesHouches.h pythia_8.212_p
  };
  
 diff -rupN pythia_8.212_original/src/ParticleData.cc pythia_8.212_patched/src/ParticleData.cc
---- pythia_8.212_original/src/ParticleData.cc	2015-09-23 17:35:08.000000000 +0200
-+++ pythia_8.212_patched/src/ParticleData.cc	2019-05-26 14:34:09.996465108 +0200
+--- pythia_8.212_original/src/ParticleData.cc	2015-09-23 16:35:08.000000000 +0100
++++ pythia_8.212_patched/src/ParticleData.cc	2019-07-05 23:20:29.958681489 +0100
 @@ -572,6 +572,8 @@ void ParticleData::initCommon() {
  
  void ParticleData::initWidths( vector<ResonanceWidths*> resonancePtrs) {
@@ -467,8 +546,8 @@ diff -rupN pythia_8.212_original/src/ParticleData.cc pythia_8.212_patched/src/Pa
    };
  
 diff -rupN pythia_8.212_original/src/PartonDistributions.cc pythia_8.212_patched/src/PartonDistributions.cc
---- pythia_8.212_original/src/PartonDistributions.cc	2015-09-23 17:35:08.000000000 +0200
-+++ pythia_8.212_patched/src/PartonDistributions.cc	2019-05-26 14:34:10.000465128 +0200
+--- pythia_8.212_original/src/PartonDistributions.cc	2015-09-23 16:35:08.000000000 +0100
++++ pythia_8.212_patched/src/PartonDistributions.cc	2019-07-05 23:20:29.958681489 +0100
 @@ -2133,17 +2133,10 @@ void NNPDF::init(int iFitIn, string xmlP
    for (int iq = 0; iq < fNQ2; iq++) fLogQ2Grid[iq] = log(fQ2Grid[iq]);
  
@@ -735,8 +814,8 @@ diff -rupN pythia_8.212_original/src/PartonDistributions.cc pythia_8.212_patched
  //--------------------------------------------------------------------------
  
 diff -rupN pythia_8.212_original/src/ProcessLevel.cc pythia_8.212_patched/src/ProcessLevel.cc
---- pythia_8.212_original/src/ProcessLevel.cc	2015-09-23 17:35:08.000000000 +0200
-+++ pythia_8.212_patched/src/ProcessLevel.cc	2019-05-26 14:34:10.000465128 +0200
+--- pythia_8.212_original/src/ProcessLevel.cc	2015-09-23 16:35:08.000000000 +0100
++++ pythia_8.212_patched/src/ProcessLevel.cc	2019-07-05 23:20:29.958681489 +0100
 @@ -6,6 +6,20 @@
  // Function definitions (not found in the header) for the ProcessLevel class.
  
@@ -835,8 +914,8 @@ diff -rupN pythia_8.212_original/src/ProcessLevel.cc pythia_8.212_patched/src/Pr
      // Update sum of maxima if current maximum violated.
      if (containerPtrs[iContainer]->newSigmaMax()) {
 diff -rupN pythia_8.212_original/src/Pythia.cc pythia_8.212_patched/src/Pythia.cc
---- pythia_8.212_original/src/Pythia.cc	2015-09-23 17:35:08.000000000 +0200
-+++ pythia_8.212_patched/src/Pythia.cc	2019-05-26 14:34:10.000465128 +0200
+--- pythia_8.212_original/src/Pythia.cc	2015-09-23 16:35:08.000000000 +0100
++++ pythia_8.212_patched/src/Pythia.cc	2019-07-08 02:29:02.250952813 +0100
 @@ -113,7 +113,9 @@ Pythia::Pythia(string xmlDir, bool print
      info.errorMsg("Abort from Pythia::Pythia: settings unavailable");
      return;
@@ -996,8 +1075,8 @@ diff -rupN pythia_8.212_original/src/Pythia.cc pythia_8.212_patched/src/Pythia.c
       << "                                      |  | \n"
       << " |  |   Stephen Mrenna;  Computing Division, "
 diff -rupN pythia_8.212_original/src/ResonanceDecays.cc pythia_8.212_patched/src/ResonanceDecays.cc
---- pythia_8.212_original/src/ResonanceDecays.cc	2015-09-23 17:35:09.000000000 +0200
-+++ pythia_8.212_patched/src/ResonanceDecays.cc	2019-05-26 14:34:10.000465128 +0200
+--- pythia_8.212_original/src/ResonanceDecays.cc	2015-09-23 16:35:09.000000000 +0100
++++ pythia_8.212_patched/src/ResonanceDecays.cc	2019-07-05 23:20:29.958681489 +0100
 @@ -92,6 +92,10 @@ bool ResonanceDecays::next( Event& proce
            idProd.push_back( idNow);
          }
@@ -1029,8 +1108,8 @@ diff -rupN pythia_8.212_original/src/ResonanceDecays.cc pythia_8.212_patched/src
    // Else if below then retry Breit-Wigners, with simple treshold.
    if (mSum + MSAFETY < mMother) {
 diff -rupN pythia_8.212_original/src/SusyLesHouches.cc pythia_8.212_patched/src/SusyLesHouches.cc
---- pythia_8.212_original/src/SusyLesHouches.cc	2015-09-23 17:35:10.000000000 +0200
-+++ pythia_8.212_patched/src/SusyLesHouches.cc	2019-05-26 14:53:27.033478343 +0200
+--- pythia_8.212_original/src/SusyLesHouches.cc	2015-09-23 16:35:10.000000000 +0100
++++ pythia_8.212_patched/src/SusyLesHouches.cc	2019-07-05 23:20:29.958681489 +0100
 @@ -7,6 +7,58 @@
  #include "Pythia8/SusyLesHouches.h"
  #include "Pythia8/Streams.h"
