@@ -18,6 +18,8 @@
 #define VERSION 3.0.0
 #define SAFE_VERSION 3_0_0
 
+LOAD_LIBRARY
+
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"
 

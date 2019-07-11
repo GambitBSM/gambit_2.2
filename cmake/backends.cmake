@@ -1067,7 +1067,7 @@ endif()
 set(name "rivet")
 set(ver "3.0.0")
 set(dl "https://rivet.hepforge.org/downloads/?f=Rivet-3.0.0.tar.gz")
-set(md5 4b74187ce65ada1a387082457efd6092)
+set(md5 "4b74187ce65ada1a387082457efd6092")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(yoda_name "yoda")
 set(yoda_ver "1.7.7")
@@ -1096,8 +1096,6 @@ if(NOT ditched_${name}_${ver})
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
-  # make sure yoda is installed first
-  add_dependencies(${name} yoda)
 endif()
 
 # Contur
