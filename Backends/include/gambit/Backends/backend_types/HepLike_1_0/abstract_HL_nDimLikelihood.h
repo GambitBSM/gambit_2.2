@@ -28,8 +28,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
          virtual double GetLogLikelihood(::std::vector<double, std::allocator<double> >) =0;
    
-         virtual bool Restrict(::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > >) =0;
-   
          virtual void Profile() =0;
    
          virtual double GetChi2_profile(double, ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >) =0;

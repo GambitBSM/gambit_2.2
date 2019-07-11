@@ -31,11 +31,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
       return get_BEptr()->GetLogLikelihood(theory);
    }
    
-   inline bool HL_nDimLikelihood::Restrict(::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > arg_1)
-   {
-      return get_BEptr()->Restrict(arg_1);
-   }
-   
    inline void HL_nDimLikelihood::Profile()
    {
       get_BEptr()->Profile();
