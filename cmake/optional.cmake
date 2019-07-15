@@ -27,9 +27,9 @@
 #
 #************************************************
 
-# Check for MPI libraries; disable manually with "cmake -DMPI=OFF .."
-option(MPI "Compile with MPI enabled" ON)
-if(MPI)
+# Check for MPI libraries; enable manually with "cmake -DWITH_MPI=ON .."
+option(WITH_MPI "Compile with MPI enabled" OFF)
+if(WITH_MPI)
   find_package(MPI)
   # Do things for GAMBIT itself
   if(MPI_C_FOUND OR MPI_CXX_FOUND)
@@ -102,7 +102,7 @@ if(MPI)
     message("${BoldRed}   Missing C++ MPI installation.  C++ scanners will not be MPI-enabled.${ColourReset}")
   endif()
 else()
-  message("${BoldCyan} X MPI manually disabled. Executables will not be parallelised via MPI.${ColourReset}")
+  message("${BoldCyan} X MPI is disabled. Executables will not be parallelised with MPI. Please use -DWITH_MPI=ON to enable MPI.${ColourReset}")
 endif()
 
 # Check for LAPACK.  Cmake native findLAPACK isn't very thorough, so we need to do a bit more work here.
@@ -136,7 +136,7 @@ if(NOT LAPACK_LINKLIBS)
         # Make sure FindLAPACK.cmake doesn't clobber gcc's openmp
         string(FIND "${lib}" "iomp5" IS_IOMP5)
         string(FIND "${lib}" "mkl_intel_thread" IS_MKLINTELTHREAD)
-        if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
           if(NOT ${IS_IOMP5} EQUAL -1)
             set(lib "")
           endif()
@@ -144,7 +144,7 @@ if(NOT LAPACK_LINKLIBS)
             string(REGEX REPLACE "intel_thread" "def" DEF ${lib})
             string(REGEX REPLACE "intel_thread" "gnu_thread" lib ${lib})
             if(NOT EXISTS ${lib} OR NOT EXISTS ${DEF})
-              message(FATAL_ERROR "${BoldRed}You are using the GNU C++ compiler, but cmake's automatic FindLAPACK.cmake"
+              message(FATAL_ERROR "${BoldRed}You are using the GNU or LLVM C++ compiler, but cmake's automatic FindLAPACK.cmake"
                                   "script is trying to link to the intel MKL library, using the intel OpenMP implementation."
                                   "I tried to force MKL to use the GNU OpenMP implementation, but I cannot find one or both of "
                                   "libmkl_def.so and libmkl_gnu_thread.so.  Please rerun cmake, manually specifying what LAPACK"
@@ -175,23 +175,92 @@ if(LAPACK_STATIC OR (NOT LAPACK_LINKLIBS AND NOT LAPACK_FOUND))
   message("${BoldRed}   LAPACK shared library not found. Excluding FlexibleSUSY and MultiNest from GAMBIT configuration. ${ColourReset}")
 endif()
 
-# Check for ROOT.  Always look, in case the wise user has uninstalled it since last cmaking.
-unset(ROOT_CONFIG_EXECUTABLE CACHE)
-find_package(ROOT)
-if (NOT ROOT_FOUND OR ROOT_VERSION VERSION_GREATER 6)
-  # Excluding GreAT and RestFrames from GAMBIT
-  if (NOT ROOT_FOUND)
-    message("${BoldRed}   No ROOT installation found. Excluding GreAT and RestFrames from GAMBIT configuration. ${ColourReset}")
-    set (EXCLUDE_ROOT TRUE)
-    set (itch "${itch}" "great" "RestFrames")
+# Check for ROOT.
+option(WITH_ROOT "Compile with ROOT enabled" OFF)
+if(WITH_ROOT)
+  if (DEFINED ENV{ROOTSYS})
+    list(APPEND CMAKE_MODULE_PATH $ENV{ROOTSYS}/etc/cmake/)
+    find_package(ROOT 6)
+    if (ROOT_VERSION VERSION_LESS 6)
+      set (ROOT_FOUND FALSE)
+    endif()
   else()
-    set (ROOT_6_OR_LATER_FOUND 1)
-    include_directories(${ROOT_INCLUDE_DIR})
-    set (EXCLUDE_ROOT FALSE)
+    set (ROOT_FOUND FALSE)
+  endif()
+  if(NOT ROOT_FOUND)
+    message("${BoldRed}   ROOT 6 not found.  ROOT support will be disabled.${ColourReset}")
   endif()
 else()
-  include_directories(${ROOT_INCLUDE_DIR})
+  message("${BoldCyan} X ROOT support is deactivated. Set -DWITH_ROOT=ON to activate ROOT support in GAMBIT.${ColourReset}")
+endif()
+if (WITH_ROOT AND ROOT_FOUND)
+  message("${BoldYellow}   Found ROOT version ${ROOT_VERSION}.${ColourReset}")
+  if ("${ROOT_INCLUDE_DIRS}" STREQUAL "")
+    if ("${ROOT_INCLUDE_DIR}" STREQUAL "")
+      message(FATAL_ERROR "${BoldRed}FindROOT.cmake has not provided any include dir."
+                          "This is a ROOT bug; please report it to the ROOT developers."
+                          "You can set -DWITH_ROOT=OFF to compile GAMBIT without ROOT.${ColourReset}")
+    endif()
+    set(ROOT_INCLUDE_DIRS "${ROOT_INCLUDE_DIR}")
+  endif()
+  include_directories(${ROOT_INCLUDE_DIRS})
+  add_definitions(${ROOT_DEFINITIONS})
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};$ENV{ROOTSYS}/lib")
+  # Check if ROOT has been compiled with the same standard as we are using here.  If not, downgrade to the standard that ROOT was compiled with.
+  set(CXX17 "-std=c\\+\\+17")
+  set(CXX14 "-std=c\\+\\+14")
+  set(CXX11 "-std=c\\+\\+11")
+  string(REGEX MATCH ${CXX17} ROOT_USES_CXX17 ${ROOT_CXX_FLAGS})
+  string(REGEX MATCH ${CXX14} ROOT_USES_CXX14 ${ROOT_CXX_FLAGS})
+  string(REGEX MATCH ${CXX11} ROOT_USES_CXX11 ${ROOT_CXX_FLAGS})
+  if (ROOT_USES_CXX17)
+    message("${BoldYellow}   This ROOT was compiled with -std=c++17.${ColourReset}")
+    if (NOT COMPILER_SUPPORTS_CXX17)
+      message(FATAL_ERROR "${BoldRed}This installation of ROOT has been compiled with C++17 support, "
+                          "but your chosen compiler does not support C++17.  Please change compiler "
+                          "or set -DWITH_ROOT=OFF.${ColourReset}")
+    endif()
+  elseif (ROOT_USES_CXX14)
+    message("${BoldYellow}   This ROOT was compiled with -std=c++14.${ColourReset}")
+    if (COMPILER_SUPPORTS_CXX17)
+      unset(COMPILER_SUPPORTS_CXX17)
+      CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+      if(COMPILER_SUPPORTS_CXX14)
+        string(REGEX REPLACE ${CXX17} "-std=c++14" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REGEX REPLACE ${CXX17} "-std=c++14" BACKEND_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
+      endif()
+    endif()
+    if (NOT COMPILER_SUPPORTS_CXX14)
+      message(FATAL_ERROR "${BoldRed}This installation of ROOT has been compiled with C++14 support, "
+                          "but your chosen compiler does not support C++14.  Please change compiler "
+                          "or set -DWITH_ROOT=OFF.${ColourReset}")
+    endif()
+  elseif (ROOT_USES_CXX11)
+    message("${BoldYellow}   This ROOT was compiled with -std=c++11.${ColourReset}")
+    if (COMPILER_SUPPORTS_CXX17 OR COMPILER_SUPPORTS_CXX14)
+      unset(COMPILER_SUPPORTS_CXX14)
+      unset(COMPILER_SUPPORTS_CXX17)
+      CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+      if(COMPILER_SUPPORTS_CXX11)
+        string(REGEX REPLACE "${CXX17}|${CXX14}" "-std=c++11" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REGEX REPLACE "${CXX17}|${CXX14}" "-std=c++11" BACKEND_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
+      endif()
+    endif()
+    if (NOT COMPILER_SUPPORTS_CXX11)
+      message(FATAL_ERROR "${BoldRed}This installation of ROOT has been compiled with C++11 support, "
+                          "but your chosen compiler does not support C++11.  Please change compiler "
+                          "or set -DWITH_ROOT=OFF.${ColourReset}")
+    endif()
+  else()
+    message(FATAL_ERROR "${BoldRed}Unable to detect what flavour of C++ your installation of ROOT has "
+                        "been compiled with; please set -DWITH_ROOT=OFF.${ColourReset}")
+  endif()
   set (EXCLUDE_ROOT FALSE)
+else()
+  message("   Disabling GreAT and RestFrames support in GAMBIT configuration.")
+  option (WITH_RESTFRAMES OFF)
+  set (itch "${itch}" "great")
+  set (EXCLUDE_ROOT TRUE)
 endif()
 
 # Check for HDF5 libraries

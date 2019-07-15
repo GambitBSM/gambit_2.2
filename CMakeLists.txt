@@ -64,14 +64,13 @@ endforeach()
 # Set the project name, enabling C, C++ and Fortran support
 project(gambit C CXX Fortran)
 
-# Disable clang support
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  message(FATAL_ERROR "\nYou seem to have selected the Clang compiler.  Beware that if you are using a mac, Clang may be your default compiler even though you might think it is gcc.  You can thank Apple for that, not GAMBIT/cmake.  \nGAMBIT does not support the Clang compiler. Please choose another compiler.")
-endif()
-
-# Make sure the user hasn't accidentally passed gcc instead of g++.
-if (CMAKE_CXX_COMPILER MATCHES "gcc$")
-  message(FATAL_ERROR "\nYou have set CMAKE_CXX_COMPILER to gcc.  I don't think that means what you think it means.  Do you really want to compile C++ with gcc rather than g++?")
+# Make sure the user hasn't accidentally set the C++ compiler to the C compiler.
+if (CMAKE_CXX_COMPILER MATCHES "gcc.*$")
+  message(FATAL_ERROR "\nYou have set CMAKE_CXX_COMPILER to gcc.  Did you mean g++?")
+elseif (CMAKE_CXX_COMPILER MATCHES "clang($|-.*)")
+  message(FATAL_ERROR "\nYou have set CMAKE_CXX_COMPILER to clang.  Did you mean clang++?")
+elseif (CMAKE_CXX_COMPILER MATCHES "icc.*$")
+  message(FATAL_ERROR "\nYou have set CMAKE_CXX_COMPILER to icc.  Did you mean icpc?")
 endif()
 
 # Use ccache to speed up re-compiling if it is available
@@ -238,21 +237,26 @@ foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${mylibdir} )
 endforeach()
 
-# Check for C++11 and C++14 support
+# Check for C++11, C++14 and C++17 support
 include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
-if(COMPILER_SUPPORTS_CXX14)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
+if(COMPILER_SUPPORTS_CXX17)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 else()
-  CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-  if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+  if(COMPILER_SUPPORTS_CXX14)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
   else()
-    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-    if(COMPILER_SUPPORTS_CXX0X)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+    if(COMPILER_SUPPORTS_CXX11)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     else()
-      message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+      CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+      if(COMPILER_SUPPORTS_CXX0X)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+      else()
+        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+      endif()
     endif()
   endif()
 endif()
@@ -264,6 +268,15 @@ if(Boost_FOUND)
   include_directories("${Boost_INCLUDE_DIR}")
 else()
   message(FATAL_ERROR "GAMBIT requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and rerun cmake.")
+endif()
+
+# Fix Boost < 1.55 for Clang
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  if(${CMAKE_VERSION} VERSION_LESS 3.12.0)
+    add_definitions(-DBOOST_PP_VARIADICS=1)
+  else()
+    add_compile_definitions(BOOST_PP_VARIADICS=1)
+  endif()
 endif()
 
 # Check for Eigen
@@ -278,15 +291,39 @@ else()
 endif()
 
 # Check for OpenMP
-find_package(OpenMP REQUIRED)
+find_package(OpenMP QUIET)
 if (OPENMP_FOUND)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    if (NOT DEFINED OpenMP_Fortran_FLAGS)
-      set(OpenMP_Fortran_FLAGS "-fopenmp")
+  message("-- OpenMP found successfully")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+  if (NOT DEFINED OpenMP_Fortran_FLAGS)
+    set(OpenMP_Fortran_FLAGS "-fopenmp")
+  endif()
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS}")
+else()
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    find_program(BREW NAMES brew)
+    # This block modified from https://github.com/CLIUtils/cmake/blob/master/PatchOpenMPApple.cmake
+    if(BREW)
+      execute_process(COMMAND ${BREW} ls libomp RESULT_VARIABLE BREW_RESULT_CODE OUTPUT_QUIET ERROR_QUIET)
+      if(BREW_RESULT_CODE)
+        message(FATAL_ERROR "You are using the Apple Clang compiler, and have HomeBrew installed, but have not installed OpenMP. Please run \"brew install libomp\"")
+      else()
+        execute_process(COMMAND ${BREW} --prefix libomp OUTPUT_VARIABLE BREW_LIBOMP_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
+        set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp")
+        set(OpenMP_CXX_LIB_NAMES "omp")
+        set(OpenMP_omp_LIBRARY "${BREW_LIBOMP_PREFIX}/lib/libomp.dylib")
+        include_directories("${BREW_LIBOMP_PREFIX}/include")
+        message(STATUS "Using Homebrew libomp from ${BREW_LIBOMP_PREFIX}")
+      endif()
+    else()
+      message(FATAL_ERROR "\nOpenMP libraries not found. You are using the Apple Clang compiler. The easiest way to get OpenMP support for Apple Clang is to install it via HomeBrew. If you want to install it some other way, e.g. via MacPorts, you need to manually set -DOpenMP_CXX_FLAGS -DOpenMP_CXX_LIB_NAMES -DOpenMP_C_FLAGS -DOpenMP_C_LIB_NAMES -DOpenMP_omp_LIBRARY when invoking cmake.")
     endif()
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS}")
+  else()
+    message(FATAL_ERROR "\nOpenMP libraries not found.  Your compiler installation seems to be broken.")
+  endif()
 endif()
+
 
 # Check for Gnu Scientific Library (GSL)
 include(cmake/FindGSL.cmake)
@@ -532,10 +569,19 @@ endforeach()
 # If ColliderBit is in use, make the collider_harvest step a dependency of ColliderBit
 if(";${GAMBIT_BITS};" MATCHES ";ColliderBit;")
   add_dependencies(ColliderBit collider_harvest)
-  # If RestFrames is in use, make RestFrames a dependency of ColliderBit
+  # If RestFrames is in use, make it a dependency of ColliderBit
   if(NOT EXCLUDE_RESTFRAMES)
     add_dependencies(ColliderBit restframes)
   endif()
+  # If HepMC is in use, make it a dependency of ColliderBit
+  if(NOT EXCLUDE_HEPMC)
+    add_dependencies(ColliderBit hepmc)
+  endif()
+endif()
+
+# If SpecBit is in use, make flexiblesusy a dependency of SpecBit
+if(";${GAMBIT_BITS};" MATCHES ";SpecBit;")
+  add_dependencies(SpecBit flexiblesusy)
 endif()
 
 # Add the executables

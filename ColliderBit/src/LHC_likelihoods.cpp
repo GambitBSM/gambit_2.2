@@ -403,8 +403,8 @@ namespace Gambit
               ana_like_b = lsum_b / (double)NSAMPLE;
               ana_like_sb = lsum_sb / (double)NSAMPLE;
               //
-              const double diff_abs_b = fabs(ana_like_b_prev - ana_like_b);
-              const double diff_abs_sb = fabs(ana_like_sb_prev - ana_like_sb);
+              const double diff_abs_b = std::abs(ana_like_b_prev - ana_like_b);
+              const double diff_abs_sb = std::abs(ana_like_sb_prev - ana_like_sb);
               const double diff_rel_b = diff_abs_b/ana_like_b;
               const double diff_rel_sb = diff_abs_sb/ana_like_sb;
               //
@@ -721,8 +721,17 @@ namespace Gambit
           continue;
         }
 
-        // Add analysis loglike
-        result += analysis_loglike;
+        // Add analysis loglike.
+        // If using capped likelihood for each individual analysis, set analysis_loglike = min(analysis_loglike,0)
+        static const bool use_cap_loglike_individual = runOptions->getValueOrDef<bool>(false, "cap_loglike_individual_analyses");
+        if (use_cap_loglike_individual)
+        {
+          result += std::min(analysis_loglike, 0.0);
+        }
+        else
+        {
+          result += analysis_loglike;
+        }
 
         #ifdef COLLIDERBIT_DEBUG
           cout.precision(5);
@@ -734,15 +743,11 @@ namespace Gambit
         cout << debug_prefix() << "calc_combined_LHC_LogLike: LHC_Combined_LogLike = " << result << endl;
       #endif
 
-      // If using capped likelihood, set result = min(result,0)
+      // If using a "global" capped likelihood, set result = min(result,0)
       static const bool use_cap_loglike = runOptions->getValueOrDef<bool>(false, "cap_loglike");
       if (use_cap_loglike)
       {
         result = std::min(result, 0.0);
-
-        #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_combined_LHC_LogLike: LHC_Combined_LogLike (capped) = " << result << endl;
-        #endif
       }
 
       std::stringstream summary_line;

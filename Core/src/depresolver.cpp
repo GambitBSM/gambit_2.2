@@ -28,6 +28,7 @@
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 June
+///        2019 May
 ///
 ///  *********************************************
 
@@ -195,10 +196,8 @@ namespace Gambit
     // Graphviz output for edges/dependencies
     class edgeWriter
     {
-      private:
-        const DRes::MasterGraphType * myGraph;
       public:
-        edgeWriter(const DRes::MasterGraphType * masterGraph) : myGraph(masterGraph) {};
+        edgeWriter(const DRes::MasterGraphType*) {};
         void operator()(std::ostream&, const EdgeID&) const
         {
           //out << "[style=\"dotted\"]";
@@ -248,25 +247,29 @@ namespace Gambit
     }
 
     // Check whether s1 (wildcard + regex allowed) matches s2
-    bool stringComp(const str & s1, const str & s2, bool with_regex)
+    bool stringComp(const str & s1, const str & s2, bool
+                   #ifdef HAVE_REGEX_H
+                     with_regex
+                   #endif
+                   )
     {
       if ( s1 == s2 ) return true;
       if ( s1 == "" ) return true;
       if ( s1 == "*" ) return true;
-#ifdef HAVE_REGEX_H
-      try
-      {
-        if (with_regex) if (std::regex_match(s2, std::regex(s1))) return true;
-      }
-      catch (std::regex_error & err)
-      {
-        std::ostringstream errmsg;
-        errmsg << "ERROR during regex string comparison." << std::endl;
-        errmsg << "  Comparing regular expression: " << s1 << std::endl;
-        errmsg << "  with test string: " << s2 << std::endl;
-        dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
-      }
-#endif
+      #ifdef HAVE_REGEX_H
+        try
+        {
+          if (with_regex) if (std::regex_match(s2, std::regex(s1))) return true;
+        }
+        catch (std::regex_error & err)
+        {
+          std::ostringstream errmsg;
+          errmsg << "ERROR during regex string comparison." << std::endl;
+          errmsg << "  Comparing regular expression: " << s1 << std::endl;
+          errmsg << "  with test string: " << s2 << std::endl;
+          dependency_resolver_error().raise(LOCAL_INFO,errmsg.str());
+        }
+      #endif
       return false;
     }
 
@@ -623,11 +626,8 @@ namespace Gambit
     }
 
     // Evaluates ObsLike vertex, and everything it depends on, and prints results
-    void DependencyResolver::calcObsLike(VertexID vertex, const int pointID)
+    void DependencyResolver::calcObsLike(VertexID vertex)
     {
-      // pointID is supplied by the scanner, and is used to tell the printer which model
-      // point the results should be associated with.
-
       if (SortedParentVertices.find(vertex) == SortedParentVertices.end())
         core_error().raise(LOCAL_INFO, "Tried to calculate a function not in or not at top of dependency graph.");
       std::vector<VertexID> order = SortedParentVertices.at(vertex);
@@ -647,6 +647,27 @@ namespace Gambit
         }
         invalid_point_exception* e = masterGraph[*it]->retrieve_invalid_point_exception();
         if (e != NULL) throw(*e);
+      }
+      // Reset the cout output precision, in case any backends have messed with it during the ObsLike evaluation.
+      cout << std::setprecision(boundCore->get_outprec());
+    }
+
+    // Prints the results of an ObsLike vertex
+    void DependencyResolver::printObsLike(VertexID vertex, const int pointID)
+    {
+      // pointID is supplied by the scanner, and is used to tell the printer which model
+      // point the results should be associated with.
+
+      if (SortedParentVertices.find(vertex) == SortedParentVertices.end())
+        core_error().raise(LOCAL_INFO, "Tried to calculate a function not in or not at top of dependency graph.");
+      std::vector<VertexID> order = SortedParentVertices.at(vertex);
+
+      for (std::vector<VertexID>::iterator it = order.begin(); it != order.end(); ++it)
+      {
+        std::ostringstream ss;
+        ss << "Printing " << masterGraph[*it]->name() << " from " << masterGraph[*it]->origin() << "...";
+        logger() << LogTags::dependency_resolver << LogTags::info << LogTags::debug << ss.str() << EOM;
+
         if (not typeComp(masterGraph[*it]->type(),  "void", *boundTEs, false))
         {
           // Note that this prints from thread index 0 only, i.e. results created by
@@ -659,8 +680,6 @@ namespace Gambit
           masterGraph[*it]->print(boundPrinter,pointID);
         }
       }
-      // Reset the cout output precision, in case any backends have messed with it during the ObsLike evaluation.
-      cout << std::setprecision(boundCore->get_outprec());
     }
 
     /// Getter for print_timing flag (used by LikelihoodContainer)
