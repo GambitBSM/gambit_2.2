@@ -63,11 +63,18 @@ Parameters:
   #  alpha: .17
 
   # SUSY parameters. from the HP_Develop branch in file capgentest.yaml
+  #CMSSM:
+  #  M0: 200
+  #  M12: 80
+  #  A0: 0
+  #  TanBeta: 10
+  #  SignMu: 1
+
   CMSSM:
     M0: 200
-    M12: 80
+    M12: 200
     A0: 0
-    TanBeta: 10
+    TanBeta: 3
     SignMu: 1
 
   # # SUSY parameters. from CMSSM.yaml
@@ -92,18 +99,18 @@ Parameters:
   # needed by get_SMINPUTS
   StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
-  # # Nuclear matrix parameters. from NUHM1.yaml (for capture_rate_sun_const_xsec)
-  # nuclear_params_sigmas_sigmal:
-  #   sigmas:
-  #     range:  [19, 67]
-  #   sigmal:
-  #     range:  [31, 85]
-  #   deltau:
-  #     fixed_value:  0.842
-  #   deltad:
-  #     fixed_value: -0.427
-  #   deltas:
-  #     fixed_value: -0.085
+  # Nuclear matrix parameters. from NUHM1.yaml (for capture_rate_sun_const_xsec)
+  nuclear_params_sigmas_sigmal:
+    sigmas:
+      range:  [19, 67]
+    sigmal:
+      range:  [31, 85]
+    deltau:
+      fixed_value:  0.842
+    deltad:
+      fixed_value: -0.427
+    deltas:
+      fixed_value: -0.085
 
 Priors:
 

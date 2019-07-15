@@ -34,6 +34,14 @@ namespace Gambit
 
   namespace DarkBit
   {
+ 
+    // Placeholder setting of WIMP spin for MSSM models
+    // (assumes neutralino dark matter; need chance for gravitino etc?)
+    void jwimp_for_MSSM(double& jwimp)
+    {
+      jwimp = 0.5;
+    }
+ 
     //////////////////////////////////////////////////////////////////////////
     //
     //   Translation of DD_couplings into NREO parameters
@@ -44,6 +52,19 @@ namespace Gambit
     {
        using namespace Pipes::NREO_from_DD_couplings;
        DM_nucleon_couplings ddc = *Dep::DD_couplings;
+
+       // Additional information needed for NREO model, aside from WIMP-nucleon couplings
+       double mwimp = *Dep::mwimp;
+       double jwimp = *Dep::jwimp;
+       //double sigmav = *Dep::sigmav
+
+       // NREO_parameters is just an empty ModelParameters object to start with.
+       // Need to copy parameter definitions from primary model object, and set
+       // a new "output name" to identify the origin of this object in error messages.
+       NREO_parameters.initialize_as("NREO","NREO_from_DD_couplings::NREO_parameters");
+
+       NREO_parameters.setValue("mwimp",mwimp);
+       NREO_parameters.setValue("jwimp",jwimp);
 
        // TODO! I have not been able to find the exact conventions
        // used in DDcalc vs the NREO model. I think it is just this:

@@ -188,7 +188,7 @@ Rules:
       function: RD_fraction_one # RD_fraction_leq_one, RD_fraction_rescaled
     
     - capability: mwimp
-      function: m
+      function: mwimp_generic
     
     - capability: sigmav
       function: sig_v
