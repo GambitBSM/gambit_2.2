@@ -201,7 +201,10 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 const char* is_sc;
                 if (!WSGetString((WSLINK)pHandle, &is_sc))
                 {
-                    std::cerr << "Error getting name." << std::endl;
+                    std::cerr << "Error getting self-conjugate status " 
+                              << "for particle " 
+                              << std::string(name) << "."
+                              << std::endl;
                     return;
                 }
                 if (strcmp(is_sc, "True"))
@@ -212,7 +215,9 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             }
             else
             {
-                std::cerr << "More than 2 particles here; what weird symmetries have you got???" << std::endl;
+                std::cerr << "More than 2 particles here; "
+                          << "what weird symmetries have you got???" 
+                          << std::endl;
                 return;
             }
 
@@ -249,12 +254,14 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, chargeX3, color, std::string(outputname), SM, mass, std::string(antiname));
+            Particle particle(pdg, std::string(name), spinX2, chargeX3, color, std::string(outputname), SM, mass, std::string(antioutputname));
             partlist.push_back(particle);
 
         }
 
     }
+
+    std::cout << "Done." << std::endl;
 
 }
 
@@ -264,11 +271,11 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
     std::cout << "Extracting parameters from SARAH model." << std::endl;
 
     // Get list of parameters
-    std::string command = "pL = parameters;";
+    std::string command = "pd = ParameterDefinitions;";
     send_to_math(command);
 
     // Find out how many parameters we have to get.
-    command = "Length[pL]";
+    command = "Length[pd]";
     send_to_math(command);
 
     int lenpl;
@@ -280,6 +287,139 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
     }
 
     std::cout << "Found " << lenpl << " parameter sets." << std::endl;
+
+    for (int i=0; i<lenpl; i++)
+    {
+        const char* block;
+        const char* paramname;
+        int index;
+
+        // Whether or not the parameter is defined by other parameters
+        // of the model. If so, don't want it in GAMBIT
+        bool externalparam = true;
+
+        // Whether we've found an LH block
+        bool LHblock = false;
+
+        command = "pd[[" + std::to_string(i+1) + ",1]]";
+        send_to_math(command);
+
+        // Get the parameter name as it is known in SARAH. This
+        // might change later.
+        if (!WSGetString((WSLINK)pHandle, &paramname))
+        {
+            std::cout << "Error getting the parameter name "
+                      << "at position " << i+1 
+                      << "; please check your .m file."
+                      << std::endl;
+            return;
+        }
+
+        command = "Length[pd[[" + std::to_string(i+1) + ",2]]]";
+        send_to_math(command);
+
+        int numelements;
+
+        // Find out how many entries are in the description 
+        // of the parameter
+        if (!WSGetInteger((WSLINK)pHandle, &numelements))
+        {
+            std::cout << "Error getting the number of elements "
+                      << "defining the parameter " << paramname
+                      << ". Please check your .m file."
+                      << std::endl;
+            return;
+        }
+
+        // Go through each parameter and extract any useful info
+        for (int j=0; j<numelements; j++)
+        {
+
+            // Each entry will be some sort of descriptor for
+            // a particle. Discard things like LaTeX entries, 
+            // descriptions in prose, etc.
+            const char* entry;
+
+            // Here are the useful things we want to query:
+            // - blockname & index
+            // - parameter name
+            // - dependences
+
+            // Does the parameter depend on some other combination
+            // of parameters?
+            command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]] // ToString";
+            send_to_math(command);
+
+            if (!WSGetString((WSLINK)pHandle, &entry))
+            {
+                std::cout << "Error querying DependenceNum for "
+                          << i+1 << ", " << j+1 << " from WSTP "
+                          << "for the SARAH parameter " << paramname
+                          << std::endl;
+                return;
+            }
+            // If it has a dependence -- not interested. Bin it.
+            if (strcmp(entry, "DependenceNum")) 
+            { 
+                externalparam = false; 
+            }
+
+            // Does the parameter depend on some other combination
+            // of parameters?
+            command = "Head[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]]]";
+            send_to_math(command);
+
+            if (!WSGetString((WSLINK)pHandle, &entry))
+            {
+                std::cout << "Error querying LesHouches entry "
+                          << i+1 << ", " << j+1 << " from WSTP "
+                          << "for the SARAH parameter " << paramname
+                          << std::endl;
+                return;
+            }
+
+            // If we have a list, then there's a blockname and an index.
+            if (not strcmp(entry, "List")) 
+            { 
+                // blockname
+                command = "Part[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]],1]";
+                send_to_math(command);
+
+                if (!WSGetString((WSLINK)pHandle, &block))
+                {
+                    std::cout << "Error querying blockname from WSTP "
+                              << "for the SARAH parameter " 
+                              << paramname << " with indices "
+                              << i+1 << "," << j+1
+                              << std::endl;
+                    return;
+                }
+
+                // index
+                command = "Part[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]],2]";
+                send_to_math(command);
+                if (!WSGetInteger((WSLINK)pHandle, &index))
+                {
+                    std::cout << "Error querying index from WSTP "
+                              << "for the SARAH parameter " 
+                              << paramname << " with indices "
+                              << i+1 << "," << j+1
+                              << std::endl;
+                    return;
+                }
+                LHblock = true;
+            }
+
+        }
+
+        // If it's a fundamental parameter of our theory, 
+        // add it to the list (if it has an LH block!)
+        if (externalparam && LHblock)
+        {
+            Parameter parameter(paramname, block, index);
+            paramlist.push_back(parameter);
+        }
+    }
 
 }
 

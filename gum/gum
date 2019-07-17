@@ -135,6 +135,17 @@ if args.file:
         # Make all BSM particles work with GUM's native Particle class.
         bsm_particle_list = sarah_part_to_gum_part(sarah_bsm)
 
+        print("particles:")
+        for part in bsm_particle_list:
+            print part.name
+
+        print()
+        print("parameters:")
+        for param in paramlist:
+            print param.name(), param.block(), param.index()
+
+        sys.exit()
+
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
     # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.
     if output_opts.ch:
