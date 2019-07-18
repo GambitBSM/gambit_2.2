@@ -923,7 +923,35 @@ START_MODULE
 
   // INDIRECT DETECTION: NEUTRINOS =====================================
 
+  // Placeholder setting of WIMP spin for MSSM models
+  // (assumes neutralino dark matter; need chance for gravitino etc?)
+  #define CAPABILITY jwimp
+  START_CAPABILITY
+     #define FUNCTION jwimp_for_MSSM
+     START_FUNCTION(double)
+     ALLOW_MODELS(MSSM63atQ)
+     #undef FUNCTION
+  #undef CAPABILITY
+
   // Solar capture ------------------------
+
+  /// Functions to compute NREO WIMP-nucleon couplings
+  #define CAPABILITY NREO_couplings
+  START_CAPABILITY
+
+     /// Copying of NREO model parameters into NREO_DD_nucleon_couplings object
+     #define FUNCTION NREO_couplings_from_parameters
+     START_FUNCTION(NREO_DM_nucleon_couplings)
+     ALLOW_MODELS(NREO)
+     #undef FUNCTION
+
+     /// Translation of DDcalc couplings into NREO couplings
+     #define FUNCTION NREO_from_DD_couplings
+     START_FUNCTION(NREO_DM_nucleon_couplings)
+     DEPENDENCY(DD_couplings, DM_nucleon_couplings)
+     #undef FUNCTION
+
+  #undef CAPABILITY
 
   /// Capture rate of regular dark matter in the Sun (no v-dependent or q-dependent cross-sections) (s^-1).
   #define CAPABILITY capture_rate_Sun
@@ -958,6 +986,22 @@ START_MODULE
     DEPENDENCY(mwimp,double)
     DEPENDENCY(sigma_SD_p, map_intpair_dbl)
     DEPENDENCY(sigma_SI_p,map_intpair_dbl)
+    #undef FUNCTION
+/*
+    #define FUNCTION populate_captureArray
+    START_FUNCTION(double, int, int)
+    BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
+    #undef FUNCTION
+*/
+    ///Capture rate of dark matter with NREO method (s^-1), using backend Captn' General
+    #define FUNCTION capture_rate_Sun_NREO
+    START_FUNCTION(double)
+    BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,const int&,double&))
+    BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),void,(const double&,double&))
+    BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
+    DEPENDENCY(mwimp,double)
+    DEPENDENCY(jwimp,double)
+    DEPENDENCY(NREO_couplings,NREO_DM_nucleon_couplings)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1334,6 +1378,10 @@ START_MODULE
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
+    // #define FUNCTION DarkMatter_ID_NREO
+    // START_FUNCTION(std::string)
+    // ALLOW_MODELS(NREO)
+    // #undef FUNCTION
   #undef CAPABILITY
 
   // --- Functions related to the local and global properties of the DM halo ---

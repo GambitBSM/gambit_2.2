@@ -34,6 +34,53 @@ namespace Gambit
 
   namespace DarkBit
   {
+ 
+    // Placeholder setting of WIMP spin for MSSM models
+    // (assumes neutralino dark matter; need chance for gravitino etc?)
+    void jwimp_for_MSSM(double& jwimp)
+    {
+      jwimp = 0.5;
+    }
+ 
+    //////////////////////////////////////////////////////////////////////////
+    //
+    //   Translation of NREO ModelParameters into NREO_DM_nucleon_couplings
+    //
+    //////////////////////////////////////////////////////////////////////////
+
+    void NREO_couplings_from_parameters(NREO_DM_nucleon_couplings& NREO_couplings)
+    {
+       using namespace Pipes::NREO_couplings_from_parameters;
+       NREO_couplings = NREO_DM_nucleon_couplings(Param); // Constructor takes care of the parameter copying for us
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    //
+    //   Translation of DD_couplings into NREO_DM_nucleon_couplings
+    //
+    //////////////////////////////////////////////////////////////////////////
+
+    void NREO_from_DD_couplings(NREO_DM_nucleon_couplings& NREO_couplings)
+    {
+       using namespace Pipes::NREO_from_DD_couplings;
+       DM_nucleon_couplings ddc = *Dep::DD_couplings;
+
+       // TODO! I have not been able to find the exact conventions
+       // used in DDcalc vs the NREO model. I think it is just this:
+       // c0 = 0.5*(cp+cn)
+       // c1 = 0.5*(cp-cn)
+       // so that 
+       // cp = c0 + c1
+       // cn = c0 - c1
+       // Change if needed!
+    
+       // Compute non-zero isospin basis couplings from DM_nucleon_couplings entries
+       // TODO: I also did this from memory, should check I got the operator numbers right
+       NREO_couplings.c0[1] = 0.5*(ddc.gps + ddc.gns);
+       NREO_couplings.c1[1] = 0.5*(ddc.gps - ddc.gns);
+       NREO_couplings.c0[4] = 0.5*(ddc.gpa + ddc.gna);
+       NREO_couplings.c1[4] = 0.5*(ddc.gpa - ddc.gna);
+    }
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -151,6 +198,85 @@ namespace Gambit
 
       //cout << "capture rate via capture_rate_Sun_vnqn = " << result << "\n";
 
+    }
+/*
+    // couplingNumber and isoSpin are the indicies of a FORTRAN array to fill
+    // note: in FORTRAN indices start at 1, not 0 like C++
+    void populate_captureArray(double val, int couplingNumber, int isospin)
+    {
+      using namespace Pipes::populate_captureArray;
+      BEreq::populate_array(val, couplingNumber, isospin);
+    }
+*/
+
+    // // header defined in DarkBit_rollcall.hpp
+    // void DarkMatter_ID_NREO(std::string& result)
+    // {
+    //   result = "WIMP";
+    // }
+    //Capture rate for Non-Relataivistic Effective Operator (NREO)
+    void capture_rate_Sun_NREO(double &result)
+    {
+      cout << "Starting capture_rate_Sun_NREO ..." << endl;
+      using namespace Pipes::capture_rate_Sun_NREO;
+
+      double capped;
+      double maxcap;
+      const int niso = 16;
+
+      BEreq::cap_sun_saturation(*Dep::mwimp,maxcap);
+
+      /*
+      use pipe to access parameters of model (0c1...1c15) here (3.2.3 of gambit paper)
+
+      for loop through C++ array of [0c1,0c2,...] (initialized by INI in captn_gen.cpp)
+      call populate Array with the value found in the C++ array and the position in the C++ array
+      */
+      // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
+      // bjf> Modified to use a custom object to carry these couplings (makes for a better 
+      // dependency structure)
+      cout << "NREO_couplings capabilitiy grabbed via Pipes, e.g. Dep::NREO_couplings->c(0,1) " << Dep::NREO_couplings->c(0,1) << endl;
+      
+      int coupleNum;
+      for(int j=0; j<15; j++)
+      {
+        coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
+        if (coupleNum != 2) // 2 is not an allowed coupling constant
+        {
+          BEreq::populate_array(Dep::NREO_couplings->c(0,coupleNum), coupleNum, 0);
+          BEreq::populate_array(Dep::NREO_couplings->c(1,coupleNum), coupleNum, 1);
+        }
+      }
+      
+
+      /*
+      Code to sum over all elements in solar model simultaneously.
+      The fourth parameter tells captn_NREO which of the 16 elements to sum over,
+       any other integer (than 1 to 16) tells it to sum over all elements together.
+      */
+      //cout << "Before calling captn_NREO, capped: " << capped << endl;
+      BEreq::captn_NREO(*Dep::mwimp,*Dep::jwimp,niso,0,capped);
+      cout << "From captn_NREO;" << endl << "mwimp: " << *Dep::mwimp << "GeV" << endl << "capped: " << capped << " captures/second" << endl;
+
+      /// Loop to sum over each element in solar model individually.
+      /*
+      double isoCapped = 0e0;
+      for(int iso=1; iso<(niso+1); iso++)
+      {
+        BEreq::captn_NREO(*Dep::mwimp,jx,nsio,iso,isoCapped);
+        capped += isoCapped;
+      }
+      */
+
+      result = capped;
+
+      logger() << "Capgen captured: total: " << result << "max = " << maxcap << "\n" << EOM;
+
+      // If capture is above saturation, return saturation value.
+      if (maxcap < result)
+      {
+        result = maxcap;
+      }
     }
 
     /*! \brief Equilibration time for capture and annihilation of dark matter

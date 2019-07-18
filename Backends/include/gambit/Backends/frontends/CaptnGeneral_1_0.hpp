@@ -12,6 +12,8 @@
 ///  Authors (add name and date if you modify):
 ///  Aaron Vincent
 ///  \date 2017 Sep-Nov
+///  Neal Avis Kozar
+///  \date 2019 Jan
 ///  *********************************************
 
 #define BACKENDNAME CaptnGeneral
@@ -22,12 +24,15 @@
 // Load the library
 LOAD_LIBRARY
 
-BE_ALLOW_MODELS(Halo_Einasto_rho0,Halo_gNFW_rho0)
+BE_ALLOW_MODELS(Halo_Einasto_rho0,Halo_gNFW_rho0,NREO)
 // Functions
 BE_FUNCTION(captn_init,void,(const char&,const double&,const double&,const double&,const double&),"captn_init_","captn_init")
 BE_FUNCTION(captn_general, void, (const double&,const double&,const int&,const int&,const int&,double&), "captn_general_", "cap_Sun_vnqn_isoscalar")
 BE_FUNCTION(captn_specific, void, (const double&,const double&,const double&,double&,double&), "captn_specific_", "cap_Sun_v0q0_isoscalar")
 BE_FUNCTION(captn_maxcap, void, (const double&,double&), "captn_maxcap_", "cap_sun_saturation")
+BE_FUNCTION(captn_init_oper,void,(),"captn_init_oper_","captn_init_oper")
+BE_FUNCTION(captn_oper,void,(const double&,const double&,const int&,const int&,double&),"captn_oper_","captn_NREO")
+BE_FUNCTION(populate_array, void, (const double&,const int&,const int&), "populate_array_", "populate_array")
 
 // Undefine macros to avoid conflict with other backends
 
