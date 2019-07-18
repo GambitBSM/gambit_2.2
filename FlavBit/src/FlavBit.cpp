@@ -2340,9 +2340,12 @@ namespace Gambit
     void hepLike_test(double &result)
     {
       using namespace Pipes::hepLike_test;
-      HepLike_default::HL_Gaussian gauss;
+      // The following is just for testing -- we cannot assume that this is where the data files are in general
+      str file = GAMBIT_DIR "/Backends/installed/heplike/1.0/data_toy/examples/test.yaml";
+      cout << "HepLike data file to read: " << file << endl;
+      HepLike_default::HL_Gaussian gauss(file);
       gauss.Read();
-      result = gauss.GetLogLikelihood(0.5);
+      result = gauss.GetLogLikelihood(0.16);
       cout << "hepLike_test result: " << result << endl;
     }
 
