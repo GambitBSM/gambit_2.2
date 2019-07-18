@@ -37,6 +37,12 @@
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 July
+/// 
+/// 
+///  \date 2017 July
+///  \author Jihyun Bhom
+///          (jihyun.bhom@ifj.edu.pl)
+///  \date 2019 July
 ///
 ///  *********************************************
 
@@ -55,6 +61,7 @@
 #include "gambit/Elements/spectrum.hpp"
 #include "gambit/Utils/statistics.hpp"
 #include "gambit/cmake/cmake_variables.hpp"
+
 
 //#define FLAVBIT_DEBUG
 //#define FLAVBIT_DEBUG_LL
@@ -2328,7 +2335,15 @@ namespace Gambit
       result=BEreq::sm_prediction_CONV("BR(Bs->mumu)");
       std::cout<<"Flavio result: "<<result<<std::endl;
     }
-    
+    void hepLike_test(double &result)
+    {
+      using namespace Pipes::hepLike_test;
+      
+      std::cout<<"Entering"<<std::endl;
+      HepLike_1_0::HL_Gaussian gauss;
+
+
+    }
 
 
   }

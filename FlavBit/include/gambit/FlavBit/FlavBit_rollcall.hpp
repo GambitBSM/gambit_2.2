@@ -1,4 +1,3 @@
-
 //   GAMBIT: Global and Modular BSM Inference Tool
 //   *********************************************
 ///  \file
@@ -38,6 +37,11 @@
 ///  \author Tomas Gonzalo
 ///  \date 2017 July
 ///
+///  \author Jihyun Bhom
+///  \date 2019 July
+///
+
+
 ///  *********************************************
 
 #ifndef __FlavBit_rollcall_hpp__
@@ -828,6 +832,15 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY hepLike_test
+  START_CAPABILITY
+      #define FUNCTION hepLike_test
+      START_FUNCTION(double)
+      NEEDS_CLASSES_FROM(HepLike, default)
+      BACKEND_OPTION( ((libHEPLike) )
+      #undef FUNCTION
+  #undef CAPABILITY
+                
 #undef MODULE
 
 
