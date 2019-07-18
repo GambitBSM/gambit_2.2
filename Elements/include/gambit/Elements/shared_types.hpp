@@ -28,8 +28,8 @@
 ///  \date 2014 Oct
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@fysik.su.su)
-///  \date 2015 Apr
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2015 Apr, 2019 Jul
 ///
 ///  \author Sebastian Wild
 ///          (sebastian.wild@ph.tum.de)
