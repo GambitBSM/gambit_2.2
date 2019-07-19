@@ -21,8 +21,11 @@
 
 LOAD_LIBRARY
 
-BE_CONV_FUNCTION(get_NR_WCs_flav, map_str_dbl, (map_str_dbl&, double&, int&, std::string&), "get_NR_WCs_flav")
-BE_CONV_FUNCTION(get_NR_WCs_EW, map_str_dbl, (map_str_dbl&, double&, double&, double&, double&, std::string&), "get_NR_WCs_EW")
+// Forward declaration of custom return type (defined in gambit/Backends/backend_types/DDCalc.hpp)
+namespace Gambit { class NREO_DM_nucleon_couplings; }
+
+BE_CONV_FUNCTION(get_NR_WCs_flav, NREO_DM_nucleon_couplings, (map_str_dbl&, double&, int&, std::string&), "get_NR_WCs_flav")
+BE_CONV_FUNCTION(get_NR_WCs_EW, NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&), "get_NR_WCs_EW")
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"

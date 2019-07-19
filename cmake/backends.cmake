@@ -984,7 +984,10 @@ set(dl "http://users.ictp.it/~${name}/v${ver}/SUSYHD.tgz")
 set(md5 "e831c3fa977552ff944e0db44db38e87")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(ditch_if_absent "Mathematica")
-check_ditch_status(${name} ${ver} ${ditch_if_absent})
+# bjf> Err these arguments don't seem to match the check_ditch_status requirements? 
+#check_ditch_status(${name} ${ver} ${ditch_if_absent})
+# bjf> I think it should be this?
+check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
@@ -1006,7 +1009,11 @@ set(dl "https://github.com/DirectDM/directdm-py/archive/v2.0.1.tar.gz")
 set(md5 "0cc0fc63a0e4c4e8a546360eeb690845")
 set(lib "libdirectdm")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-check_ditch_status(${name} ${ver})
+message("check_ditch_status(${name} ${ver})")
+# bjf> Cmake error from the below: not enough arguments?
+#check_ditch_status(${name} ${ver} )
+# bjf> probably should be this?
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}

@@ -508,7 +508,7 @@ namespace Gambit
 
     /// Helper function for setting 3x3 matrix-valued parameters
     //  Names must conform to convention "<parname>_ij"
-    Eigen::Matrix<double,3,3> fill_3x3_parameter_matrix(const std::string& rootname, const std::map<str, safe_ptr<double> >& Param)
+    Eigen::Matrix<double,3,3> fill_3x3_parameter_matrix(const std::string& rootname, const std::map<str, const safe_ptr<const double> >& Param)
     {
        Eigen::Matrix<double,3,3> output;
        for(int i=0; i<3; ++i) for(int j=0; j<3; ++j)
@@ -519,7 +519,7 @@ namespace Gambit
     }
 
     /// As above, but for symmetric input (i.e. 6 entries, assumed to be the upper triangle)
-    Eigen::Matrix<double,3,3> fill_3x3_symmetric_parameter_matrix(const std::string& rootname, const std::map<str, safe_ptr<double> >& Param)
+    Eigen::Matrix<double,3,3> fill_3x3_symmetric_parameter_matrix(const std::string& rootname, const std::map<str, const safe_ptr<const double> >& Param)
     {
        Eigen::Matrix<double,3,3> output;
        for(int i=0; i<3; ++i) for(int j=0; j<3; ++j)
@@ -533,7 +533,7 @@ namespace Gambit
     /// Helper function for filling MSSM63-compatible input parameter objects
     /// Leaves out mHu2, mHd2, SignMu, (mA, mu) because we use two different parameterisations of these
     template <class T>
-    void fill_MSSM63_input(T& input, const std::map<str, safe_ptr<double> >& Param )
+    void fill_MSSM63_input(T& input, const std::map<str, const safe_ptr<const double> >& Param )
     {
       //double valued parameters
       input.TanBeta     = *Param.at("TanBeta");
@@ -587,7 +587,7 @@ namespace Gambit
   // parameters are used. This should be standardised.
 
     template <class T>
-    void fill_MSSM63_input_altnames(T& input, const std::map<str, safe_ptr<double> >& Param )
+    void fill_MSSM63_input_altnames(T& input, const std::map<str, const safe_ptr<const double> >& Param )
     {
       //double valued parameters
       input.TanBeta     = *Param.at("TanBeta");

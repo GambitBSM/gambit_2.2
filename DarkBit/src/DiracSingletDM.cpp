@@ -202,7 +202,7 @@ namespace Gambit
     void DarkMatter_ID_DiracSingletDM(std::string & result) { result = "F"; }
 
     /// Direct detection couplings for the DiracSingletDM_Z2 model.
-    void DD_nonrel_WCs_DiracSingletDM_Z2(map_str_dbl &result)
+    void DD_nonrel_WCs_DiracSingletDM_Z2(NREO_DM_nucleon_couplings &result)
     {
       using namespace Pipes::DD_nonrel_WCs_DiracSingletDM_Z2;
       const Spectrum& spec = *Dep::DiracSingletDM_Z2_spectrum;
@@ -223,11 +223,24 @@ namespace Gambit
       double app = lambda*fp*m_proton*sinXI/pow(mh,2);
       double apn = lambda*fn*m_neutron*sinXI/pow(mh,2);
       
-      result["cNR1p"] = fsp;
-      result["cNR1n"] = fsn;
-      result["cNR11p"] = app*m_proton/mass;
-      result["cNR11n"] = apn*m_proton/mass;
+      //result["cNR1p"] = fsp;
+      //result["cNR1n"] = fsn;
+      //result["cNR11p"] = app*m_proton/mass;
+      //result["cNR11n"] = apn*m_proton/mass;
 
+      // We now use the isoscalar/isovector basis of couplings (because DDCalc and CaptnGeneral use it)
+      // TODO: Check conventions are consistent everywhere!
+      // I am assuming those of 1203.3542 are used, i.e.
+      // c0 = cp + cn
+      // c1 = cp - cn
+      // --->
+      // cp = 0.5*(c0 + c1)
+      // cn = 0.5*(c0 - c2)
+      result.c0[1] = fsp + fsn;
+      result.c1[1] = fsp - fsn;
+      result.c0[11] = (app + apn)*m_proton/mass;
+      result.c1[11] = (app - apn)*m_proton/mass;
+      
     } // function DD_couplings_DiracSingletDM_Z2
     
     /// Relativistic Wilson Coefficients for direct detection

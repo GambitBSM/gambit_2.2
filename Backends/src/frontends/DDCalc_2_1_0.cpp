@@ -120,29 +120,17 @@ BE_INI_FUNCTION
   // Initialse WIMP object with type std::map<std::string,double>;
   else if (couplings.coeff_structure == 2)
   {
-    map_str_dbl wilsonCoeffs = couplings.DD_nonrel_WCs;
+    NREO_DM_nucleon_couplings wilsonCoeffs = couplings.DD_nonrel_WCs;
 
     // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
     DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
     
-    int OpIndex, tau;
-    std::string OpName;
-
     // Loop through non-relativistic WCs and assign the correct coefficients
     // to DDCalc WIMP object.
-    for (auto it = wilsonCoeffs.begin(); it != wilsonCoeffs.end(); ++it)
-    {
-
-      OpName = it->first;
-
-      OpIndex = atoi(OpName.substr(3, OpName.length()-4).c_str());
-
-      if (OpName.find('p') != std::string::npos)
-        tau = 0;
-      else
-        tau = 1;
-                
-      DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, it->second);
+    for(int tau=0; tau<=1; tau++) {
+      for(int OpIndex=1; OpIndex<=15; OpIndex++) {
+        DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, wilsonCoeffs.c(tau,OpIndex));
+      }
     }
   }
   // If DDCalc doesn't know what to do...

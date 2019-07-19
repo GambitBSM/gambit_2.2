@@ -105,7 +105,7 @@
           namespace CAT(MODEL_X,_parameters)                                   \
           {                                                                    \
             /* Declare the parameters safe-pointer map as external. */         \
-            extern std::map<str, safe_ptr<double> > Param;                     \
+            extern std::map<str, const safe_ptr<const double> > Param;                     \
             /* Declare the safe-pointer to the models vector as external. */   \
             extern safe_ptr< std::vector<str> > Models;                        \
             /* Declare the safe pointer to the run options as external. */     \
