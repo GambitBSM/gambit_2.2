@@ -26,6 +26,9 @@ Flavio:
 HepLike:
   1.0:         ./build/heplike_1.0-prefix/src/heplike_1.0-build/libHEPLike.so
 
+HepLikeData:
+  1.0:         ./Backends/installed/heplikedata/1.0
+
 DDCalc:
   1.0.0:       ./Backends/installed/ddcalc/1.0.0/lib/libDDCalc.so
   1.1.0:       ./Backends/installed/ddcalc/1.1.0/lib/libDDCalc.so

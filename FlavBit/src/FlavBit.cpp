@@ -89,6 +89,15 @@ namespace Gambit
       false;
     #endif
 
+    /// Find the path to the latest installed version of the HepLike data
+    str path_to_latest_heplike_data()
+    {
+      std::vector<str> working_data = Backends::backendInfo().working_versions("HepLikeData");
+      if (working_data.empty()) FlavBit_error().raise(LOCAL_INFO, "No working HepLikeData installations detected.");
+      std::sort(working_data.begin(), working_data.end());
+      return Backends::backendInfo().corrected_path("HepLikeData", working_data.back());
+    }
+
     /// Fill SuperIso model info structure
     void SI_fill(parameters &result)
     {
@@ -2340,13 +2349,16 @@ namespace Gambit
     void hepLike_test(double &result)
     {
       using namespace Pipes::hepLike_test;
-      // The following is just for testing -- we cannot assume that this is where the data files are in general
-      str file = GAMBIT_DIR "/Backends/installed/heplike/1.0/data_toy/examples/test.yaml";
-      cout << "HepLike data file to read: " << file << endl;
-      HepLike_default::HL_Gaussian gauss(file);
-      gauss.Read();
-      result = gauss.GetLogLikelihood(0.16);
-      cout << "hepLike_test result: " << result << endl;
+      static HepLike_default::HL_Gaussian gauss(path_to_latest_heplike_data() + "/data/HFLAV_18/RD/b2sgamma.yaml");
+      static bool first = true;
+      if (first)
+      {
+        cout << "Debug: Reading HepLike data file: " << path_to_latest_heplike_data() + "/data/HFLAV_18/RD/b2sgamma.yaml" << endl;
+        gauss.Read();
+        first = false;
+      }
+      result = gauss.GetLogLikelihood(3.5e-4);
+      cout << "HepLike_test result: " << result << endl;
     }
 
 
