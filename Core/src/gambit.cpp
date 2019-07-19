@@ -129,8 +129,11 @@ int main(int argc, char* argv[])
         use_mpi_abort = iniFile.getValueOrDef<bool>(true, "use_mpi_abort");
       #endif
 
-      // Initialise the random number generator, letting the RNG class choose its own default.
-      Random::create_rng_engine(iniFile.getValueOrDef<str>("default", "rng"));
+      // Initialise the random number generator, letting the RNG class choose its own defaults.
+      Options rng(iniFile.getValueOrDef<YAML::Node>(YAML::Node(), "rng"));
+      str generator = rng.getValueOrDef<str>("default", "generator");
+      int seed = rng.getValueOrDef<int>(-1, "seed");
+      Random::create_rng_engine(generator, seed);
 
       // Determine selected model(s)
       std::set<str> selectedmodels = iniFile.getModelNames();
@@ -165,11 +168,7 @@ int main(int argc, char* argv[])
       if (not Core().show_runorder)
       {
         //Define the likelihood container object for the scanner
-        Likelihood_Container_Factory factory(Core(), dependencyResolver, iniFile, *(printerManager.printerptr)
-          #ifdef WITH_MPI
-            , errorComm
-          #endif
-        );
+        Likelihood_Container_Factory factory(Core(), dependencyResolver, iniFile, *(printerManager.printerptr));
 
         //Make scanner yaml node
         YAML::Node scanner_node;
@@ -261,7 +260,6 @@ int main(int argc, char* argv[])
         if(rank == 0) cout << ss.str();
         logger() << ss.str() << EOM;
         #ifdef WITH_MPI
-          signaldata().discard_excess_shutdown_messages();
           allow_finalize = GMPI::PrepareForFinalizeWithTimeout(use_mpi_abort);
         #endif
       }
@@ -277,7 +275,6 @@ int main(int argc, char* argv[])
       }
       #ifdef WITH_MPI
         signaldata().broadcast_shutdown_signal();
-        signaldata().discard_excess_shutdown_messages();
         allow_finalize = GMPI::PrepareForFinalizeWithTimeout(use_mpi_abort);
       #endif
       return_value = EXIT_FAILURE;
@@ -294,25 +291,49 @@ int main(int argc, char* argv[])
       cout << e << endl;
       #ifdef WITH_MPI
         signaldata().broadcast_shutdown_signal();
-        signaldata().discard_excess_shutdown_messages();
         allow_finalize = GMPI::PrepareForFinalizeWithTimeout(use_mpi_abort);
       #endif
       return_value = EXIT_FAILURE;
     }
 
     #ifdef WITH_MPI
-      if (signaldata().shutdown_begun()) signaldata().discard_excess_shutdown_messages();
-      // If all processes receive a POSIX signal to shutdown there might be many of these
-      // (e.g. says 1000 processes all independently get a POSIX signal to shut down;
-      // they will each broadcast this command via MPI to all other processes, i.e.
-      // 1000*1000 messages will be sent. Could be slow.
+    // Synchronise all processes before discarding shutdown messages, to make sure that
+    // they have all been sent.
+    if(allow_finalize and signaldata().shutdown_begun()) //signaldata().discard_excess_shutdown_messages();
+    {
+      // Need to clean up excess shutdown messages
+      // Only do this if MPI_Finalize will be called
+      // (it is needed to prevent MPI_Finalize from locking up,
+      // but there is no point doing it if we aren't going to
+      // call MPI_Finalize)
+      signaldata().broadcast_shutdown_signal(SignalData::NO_MORE_MESSAGES); // Tell all other processes that we are done sending messages
+      signaldata().ensure_no_more_shutdown_messages();
+      logger()<<"All shutdown messages successfully Recv'd on this process!"<<EOM;
+
+      // DEBUG: Check for unreceived messages of any tag
+      // int timeout_sec(10);
+      // errorComm.check_for_unreceived_messages(timeout_sec);
+      // scanComm.check_for_unreceived_messages(0); // No need to wait again
+    }
+
     #endif
 
-    if(rank == 0) cout << "Calling MPI_Finalize..." << endl; // Debug
+    #ifdef WITH_MPI
+      if(rank == 0) cout << "Calling MPI_Finalize..." << endl;
+    #endif
   } // End main scope; want to destruct all communicators before MPI_Finalize() is called
 
   #ifdef WITH_MPI
-    if (allow_finalize) GMPI::Finalize();
+  if (allow_finalize) 
+  {
+      logger()<<"Calling MPI_Finalize..."<<EOM;
+      GMPI::Finalize();
+      logger()<<"MPI successfully finalized!"<<EOM;
+  }
+  else
+  {
+      logger()<<"MPI_Finalize has been disabled (e.g. due to an error) and will not be called."<<EOM; 
+  }
   #endif
 
   return return_value;
