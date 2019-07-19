@@ -808,6 +808,20 @@ def get_mg_ch_parts_dict(mg_parts, ch_parts):
 
     return part_dict
 
+def get_from_part_dict(particle_name, part_dict):
+    """
+    Returns the CalcHEP particle from the MadGraph particle.
+
+    If we are adding a new 4-fermion interaction there will be an auxiliary
+    particle which does not exist in the MadGraph files, so won't be present
+    in the dictionary. So let's deal with this.
+    """
+
+    if re.match(r'~\d+', particle_name):
+        return particle_name
+    else:
+        return part_dict.get(particle_name)
+
 def run_through_parameter_dict(parameters, param_dict):
     """
     Goes through all unshared parameters to check which ones 
@@ -1012,6 +1026,8 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
     Writes a CalcHEP vertex, given a MadGraph one.
     """
 
+    new_ch_loc = os.path.abspath(ch_location) + "_ufo2mdl"
+
     # Get the list of particles involved in the vertex
     particles = vertex.particles
     lorentz = vertex.lorentz
@@ -1023,85 +1039,173 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
 
     # Get the spins of each particle involved in the vertex
     for part in particles:
+        SET = False # Has the particle been added?
         for i in range(len(mg_parts)):
             if mg_parts[i].mgname == part:
                 spin2splus1.append(int(mg_parts[i].spin))
                 pdgs.append(int(mg_parts[i].pdg_code))
                 parts.append(mg_parts[i].name)
+                SET = True
             elif mg_parts[i].mgantiname == part:
                 pdgs.append(-1*int(mg_parts[i].pdg_code))
                 spin2splus1.append(int(mg_parts[i].spin))
                 parts.append(mg_parts[i].antiname)
+                SET = True
+        ## 4-fermion routines will give an auxiliary particle called
+        ## something like ~0, ~1, etc. Add these even though they're not
+        ## in the MadGraph files, otherwise this will break
+        if SET == False and re.match(r'~\d+', part):
+            parts.append(part)
 
-    
     # If there's 4 fermions involved - use the specialist 4-fermion function.
     if spin2splus1.count(2) == 4: 
         return write_four_fermion_vertex(vertex, param_dict, lorentz_dict, 
-                                         part_dict, mg_parts, mg_lorentz, mg_couplings,
-                                         ch_location)
+                                         part_dict, mg_parts, mg_lorentz, 
+                                         mg_couplings, ch_location)
 
             
-    # If it's a 4-gluon vertex, this is a hard-coded result: use the specialist function
+    # If it's a 4-gluon vertex, this is a hard-coded result: 
+    # just use the specialist function
     if pdgs == [21, 21, 21, 21]:
         return write_four_gluon_vertex(part_dict, mg_parts, ch_location)
     
     #todo: For nice formatting, get the numbers of spaces for each header.
 
-    #print particles
-    #print lorentz
-    #print couplings
+    print "particles", particles
+    print "lorentz", lorentz
+    print "couplings", couplings
 
-
-    # Rewrite the Lorentz strcture
-    lor = []
-    for i in range(len(mg_lorentz)):
-        l = mg_lorentz[i]
-        for j in range(len(lorentz)):
-            if lorentz[j] == l.mgname:
-                s = mg_lorentz[i].mgname
-                # Rewrite the Lorentz structure into CalcHEP language
-                lor.append(lorentz_dict.get(s))
-    lor = ''.join('+'.join(lor).split())
-
-    # Rewrite the couplings
     coup = ""
+    lor = ""
+    # If we are adding a 4-fermion vertex, the conversion to CalcHEP-friendly language will
+    # have already been done, so no need to do it again.
+    conversion_done = False
+    for part in particles:
+        if re.match(r'~\d+', part):
+            conversion_done = True
 
+    if conversion_done:
+        lor = lorentz
+        coup = couplings
+    else:
+        # Rewrite the Lorentz structure, and save each coupling
+        lor = []
+        coups = []
+        for i in range(len(mg_lorentz)):
+            l = mg_lorentz[i]
+            for j in range(len(vertex.lorentz)):
+                if vertex.lorentz[j] == l.mgname:
+                    s = mg_lorentz[i].mgname
+                    # Rewrite the Lorentz structure into CalcHEP language
+                    lor.append(lorentz_dict.get(s))
+                    coups.append(vertex.couplings[j])
+
+        # Rewrite the couplings in CH-friendly format
+
+        # Go through the list of couplings, and swap in their actual values
+        coups_dict = {}
+        for i in coups:
+
+            # The key will look like (i,j) -> i-th entry of the colour tensor space, 
+            # j-th entry of the lorentz tensor space. Since we're only dealing with 
+            # cases where we have the identity in colour space (for now), we can ditch
+            # the first entry of the key, and just keep the jth value.
+            key, value = i.split(':')[0].split(',')[1][:-1] , i.split(':')[1][2:]
+            coups_dict[ key ] = value
+
+        # Now we need to pair up each element of the lorentz array
+        # with the correct coupling.
+
+        lc_dict = {}
+        for k, v in coups_dict.iteritems():
+            for j in mg_couplings:
+                if v == j.mgname:
+                    lc_dict[ lor[int(k)] ] = j.value
+
+        # Dictionary of lorentz structures & couplings -- updated to be in C 
+        # syntax, and only the ones relevant for the interactions at hand.
+        c_dict = c_ify_couplings(mg_couplings, param_dict)
+
+        lc_dict_updated = {}
+        
+        for k, v in lc_dict.iteritems():
+            lc_dict_updated.update({k: c_dict[v]})
+
+        # Put all the couplings in the Lorentz bit as one big horrible string
+        horrible_string = []
+        for k,v in lc_dict_updated.iteritems():
+            horrible_string.append( v+"*"+k[0] ) # Coupling * Lorentz factor
+
+        lor = "+".join(horrible_string)
+        coup = "i" # TODO should this be i or 1?
+    
     # Now we can do some writing.
     vertex = ""
-    vertex += "{0: <13}".format(part_dict.get(parts[0])) + "|"
-    vertex += "{0: <13}".format(part_dict.get(parts[1])) + "|"
-    vertex += "{0: <13}".format(part_dict.get(parts[2])) + "|"
+    vertex += "{0: <13}".format(get_from_part_dict(parts[0], part_dict)) + "|"
+    vertex += "{0: <13}".format(get_from_part_dict(parts[1], part_dict)) + "|"
+    vertex += "{0: <13}".format(get_from_part_dict(parts[2], part_dict)) + "|"
     if len(parts) == 4:
-        vertex += "{0: <13}".format(part_dict.get(parts[3])) + "|"
+        vertex += "{0: <13}".format(get_from_part_dict(parts[3], part_dict)) + "|"
     else:
         vertex += "{0: <13}".format("") + "|"
 
     vertex += "{0: <31}".format(coup) + "|"
     vertex += "{}\n".format(lor)
 
-    #print vertex
+    with open(new_ch_loc + "/lgrng1.mdl", 'r') as f, open(new_ch_loc + "/lgrng_temp", 'w') as g:
 
+        # Copy the original vertices
+        for line in f:
+            g.write(line)
+
+        # Add the new vertex to the end
+        g.write(vertex)
+
+    # Save the new file as the master one
+    os.remove(new_ch_loc + "/lgrng1.mdl")
+    os.rename(new_ch_loc + "/lgrng_temp", new_ch_loc + "/lgrng1.mdl")
+
+    print("VERTEX:")
+    print vertex
     return vertex
 
-def c_ify_couplings(mg_couplings):
+def c_ify_couplings(mg_couplings, param_dict):
     """
     Returns a dictionary mapping Python syntax to C syntax for the couplings.
     """
 
-    #ch_struct = re.sub(r'P\((.*?),(.*?)\)', r'p\2.m\1', ch_struct)
-
     coupling_dict = {}
     # Go through the couplings and make the MG Python syntax into CH C syntax
     for i in mg_couplings:
+        
+
+        # create a local copy to play about with
         t = i.value
+
+        # cmath.sqrt(2) --> Sqrt2 
         t = re.sub(r'cmath.sqrt\(2\)', 'Sqrt2', t)
+        # complex(0,1) --> i
         t = re.sub(r'complex\(0,1\)', 'i', t)
+        # cmath.pi --> Pi
+        t = re.sub(r'cmath.pi', 'Pi', t)
+        # a**b --> pow(a,b)
+        t = re.sub(r'(\w+)\*\*(\w+)', r'pow(\1,\2)', t)
 
-        print t
-        t = re.sub(r'\((.*?)\*\*(.*?)', r'pow(\1,\2)', t)
+        # ComplexConjugate
+        # TODO - since CalcHEP can't hack complex parameters, will want to 
+        # either:
+        # a) split the complex parameter into real and imaginary parts;
+        # b) throw an error;
+        # c) assume everything is okay (bad idea -- but doing this for now);
+        t = re.sub(r'complexconjugate\((\w+)\)', r'\1', t)
 
-        print t
-
+        # Finally go through the param_dict and change any parameters
+        # that are named differently between MadGraph and CalcHEP
+        for k, v in param_dict.iteritems():
+            t = re.sub(k, v, t)
+        
+        # Look, another dictionary!
+        coupling_dict[i.value] = t
 
     return coupling_dict
 
@@ -1199,21 +1303,43 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     # chibar (gamma(left)) chi    etabar (gamma(right)) eta 
 
     # For each vertex, want to split it up into two components.
-    # Assing the first half all of the couplings
+    # Assigning the first half all of the couplings
 
     # Go through the list of couplings, and swap in their actual values
     coups_dict = {}
     for i in coups:
+
 
         # The key will look like (i,j) -> i-th entry of the colour tensor space, 
         # j-th entry of the lorentz tensor space. Since we're only dealing with 
         # cases where we have the identity in colour space (for now), we can ditch
         # the first entry of the key, and just keep the jth value.
         key, value = i.split(':')[0].split(',')[1][:-1] , i.split(':')[1][2:]
-        coups_dict[ key ] = value     
+        coups_dict[ key ] = value
 
         # Now each key points to an element of the lorentz array which maps to a 
         # coupling. Phew!
+
+    # print("")
+    # print("test!")
+    # print vertex.lorentz, vertex.couplings
+    # print("")
+
+    # print("")
+    # print("lorentz_dict")
+    # for k, v in lorentz_dict.iteritems():
+    #     print k, v
+
+    # print("")
+    # print("coups_dict")
+    # for k, v in coups_dict.iteritems():
+    #     print k, v
+
+    # # these are tuples of (left) (right) lorentz structures
+    # print("")
+    # print("lor")
+    # for i in lor:
+    #     print i[0], i[1]
 
     # Now we need to pair up each element of the lorentz array
     # with the correct coupling.
@@ -1226,9 +1352,45 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
 
     # Now we have a dictionary of each pair of (left, right) fermion operators, and 
     # the associated coupling. 
+    c_dict = c_ify_couplings(mg_couplings, param_dict)
 
-    c_dict = c_ify_couplings(mg_couplings)
+    # Dictionary of lorentz structures & couplings -- updated to be in C 
+    # syntax, and only the ones relevant for the interactions at hand.
+    lc_dict_updated = {}
+    
+    for k, v in lc_dict.iteritems():
+        lc_dict_updated.update({k: c_dict[v]})
 
+    # By convention, assign the coupling to the first vertex, then just give
+    # the other vertex the identity (i*Maux)
+
+    # Let's create a new MG vertex object and use the existing function
+    # to create a CH vertex
+    v1parts = [vertex.particles[0], vertex.particles[1], "~" + str("{:02d}".format(2*counter))]
+    v2parts = [vertex.particles[2], vertex.particles[3], "~" + str("{:02d}".format(2*counter+1))]
+
+    # print v1parts, v2parts
+
+    v1coups = "i*Maux"
+    v2coups = "i*Maux"
+
+    # Put all the couplings in the Lorentz bit as one big horrible string
+    horrible_string = []
+    for k,v in lc_dict_updated.iteritems():
+        horrible_string.append( v+"*"+k[0] ) # Coupling * Lorentz factor 
+
+
+    v1loren = "+".join(horrible_string)
+    v2loren = "+".join([i[1] for i in lor])
+
+    vertex1 = MGVertex("vertex1", v1parts, "", v1loren, v1coups)
+    vertex2 = MGVertex("vertex2", v2parts, "", v2loren, v2coups)
+
+    # Try again with the two 3-body vertices
+    write_ch_vertex(vertex1, param_dict, lorentz_dict, part_dict, mg_parts, 
+                    ch_location, mg_lorentz, mg_couplings)
+    write_ch_vertex(vertex2, param_dict, lorentz_dict, part_dict, mg_parts, 
+                    ch_location, mg_lorentz, mg_couplings)
 
     # Increment counter for auxiliary particles
     counter+=1
@@ -1253,7 +1415,8 @@ def write_four_gluon_vertex(part_dict, mg_parts, ch_location):
 
     return "\n"
 
-def write_calchep_files(particles, parameters, vertices, param_dict, lorentz_dict, part_dict, mg_parts):
+def write_calchep_files(particles, parameters, vertices, param_dict, 
+                        lorentz_dict, part_dict, mg_parts):
     """
     Writes CalcHEP files, given all of the information from MadGraph.
     """
@@ -1319,11 +1482,16 @@ def convert(mg_location):
     lorentz = import_mg_lorentz(mg_location)
     verts = import_mg_verts(mg_location)
 
+    param_dict = {}
+    lorentz_dict = {} 
+    part_dict = {}
+
     print("Done.")
 
     print("Writing CalcHEP output...")
 
-    write_calchep_files(ch_location, particles, parameters, vertices)
+    write_calchep_files(parames, verts, param_dict, 
+                        lorentz_dict, part_dict, parts)
 
     print("Done.")
     
@@ -1360,7 +1528,7 @@ def compare(mg_location, ch_location):
     print("Checking external variables...")
 
     # CalcHEP can compute widths 'on the fly' - these will be parameters in MadGraph, so add
-    # these as another group...
+    # these as another group...str("{:02d}".format(2*counter)))
     ch_widths = [x.width.strip('!') for x in ch_parts if x.width.startswith('!')]
 
     shared_by_name = set([x.name for x in ch_params] + ch_widths) & set([x.name for x in mg_params])

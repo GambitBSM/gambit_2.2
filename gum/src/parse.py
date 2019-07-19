@@ -59,7 +59,6 @@ class Outputs:
 
         # Overwrite these, as the output does not exist.
         if mathpackage == 'feynrules':
-            self.mo = False
             self.sph = False
             self.fs = False
             self.vev = False

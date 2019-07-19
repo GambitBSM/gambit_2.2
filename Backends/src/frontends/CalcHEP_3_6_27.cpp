@@ -83,6 +83,22 @@ BE_NAMESPACE
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
   }
 
+  /// Assigns gambit value to parameter, with error-checking, for parameters that may have two different names in GAMBIT.
+  /// Useful for parameters that have different names, such as aEWM1 (FeynRules) and aEWinv (SARAH)
+  void Assign_Value(char *parameter1, char *parameter2, double value)
+  {
+    int error;
+    error = assignVal(parameter1, value);
+    // If name 1 is successful, awesome.
+    if (error == 0) return;
+    // If not, then try the second one
+    error = assignVal(parameter2, value);
+    // If that doesn't work, we can throw an error, eh.
+    if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set " + std::string(parameter1) + 
+          " or " + std::string(parameter2) + " in CalcHEP. " +
+          " CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
+  }
+
   /// Takes all parameters in a model, and assigns them by value to the appropriate CalcHEP parameter names.
   void Assign_All_Values(const Spectrum& spec, std::vector<SpectrumParameter> params)
   {
@@ -170,10 +186,10 @@ BE_NAMESPACE
     const SMInputs& sminputs = spec.get_SMInputs();
 
     // Assign SMInputs
-    Assign_Value((char*)"Gf", sminputs.GF);                      // Fermi
-    Assign_Value((char*)"aS", sminputs.alphaS);                  // Strong coupling (mZ)
-    //Assign_Value((char*)"aEWinv", sminputs.alphainv);            // Inverse EM coupling
-    Assign_Value((char*)"aEWM1", sminputs.alphainv);             // Inverse EM coupling
+    Assign_Value((char*)"Gf", (char*)"GF", sminputs.GF);                    // Fermi
+    Assign_Value((char*)"aS", sminputs.alphaS);                             // Strong coupling (unspecified scale if SARAH)
+    Assign_Value((char*)"alfSMZ", (char*)"aS", sminputs.alphaS);            // Strong coupling (mZ) for both.
+    Assign_Value((char*)"aEWM1", (char*)"aEWinv", sminputs.alphainv);       // Inverse EM coupling
 
     // Then, SM particle masses (by PDG code)
     Assign_Value(pdg2mass(1), sminputs.mD);                        // Down

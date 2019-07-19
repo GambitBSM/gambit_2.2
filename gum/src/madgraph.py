@@ -20,11 +20,12 @@ def make_madgraph_script(mg5_output_dir, model_name, processes, multiparticles):
 
     # Import the model 
     towrite = "import model " + model_name + "\n"
-
+    
     # Import any multiparticles
-    for multi in multiparticles:
-        for k, v in multi.items():
-           towrite += ("define {0} = {1}\n".format(k, ' '.join(v)))
+    if multiparticles:
+        for multi in multiparticles:
+            for k, v in multi.items():
+               towrite += ("define {0} = {1}\n".format(k, ' '.join(v)))
 
     # Tell MadGraph to generate the first process
     towrite += "generate " + processes[0] + "\n"

@@ -169,6 +169,7 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     # definitely a nicer way to do this, but, this will do for now. should make it
     # a bit easier to add 3 body final states (should be overloaded as a backend func)
     products = np.array(grouped_decays[1])
+
     c_name = []
     g_name = []
     for i in np.arange(len(products)):

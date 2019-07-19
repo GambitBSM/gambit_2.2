@@ -239,6 +239,10 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 {
                     antioutputname = std::string(antiname);
                 }
+                else
+                {
+                    antioutputname = std::string(name);
+                }
             }
 
             mass = "M" + outputname;
@@ -254,7 +258,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, chargeX3, color, std::string(outputname), SM, mass, std::string(antioutputname));
+            Particle particle(pdg, std::string(outputname), spinX2, chargeX3, color, std::string(outputname), SM, mass, std::string(antioutputname));
             partlist.push_back(particle);
 
         }
@@ -410,6 +414,26 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
                 LHblock = true;
             }
 
+            // Does the parameter have a different external
+            // name than the internal SARAH name? If so, use it.
+            command = "OutputName /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]] // ToString";
+            send_to_math(command);
+
+            if (!WSGetString((WSLINK)pHandle, &entry))
+            {
+                std::cout << "Error querying OutputName for "
+                          << i+1 << ", " << j+1 << " from WSTP "
+                          << "for the SARAH parameter " << paramname
+                          << std::endl;
+                return;
+            }
+            // If it has a different output name to 
+            // internal, we'd better use it, seeing as GAMBIT
+            // is... output, I guess.
+            if (strcmp(entry, "OutputName")) 
+            { 
+                paramname = entry;
+            }
         }
 
         // If it's a fundamental parameter of our theory, 
