@@ -173,11 +173,14 @@ namespace Gambit {
                     muons.push_back(muon);
             }
             
+            double HT;
             // Jets
             vector<HEPUtils::Jet*> candJets;
             for (HEPUtils::Jet* jet : event->jets()) {
-                if (jet->pT() > 25. && fabs(jet->eta()) < 2.4)
+                if (jet->pT() > 25. && fabs(jet->eta()) < 2.4){
+                    HT += jet->pT();
                     candJets.push_back(jet);
+                }
             }
 
             // Overlap removal
@@ -189,8 +192,7 @@ namespace Gambit {
             // Jets
             vector<HEPUtils::Jet*> bJets;
             vector<HEPUtils::Jet*> nonbJets;
-            
-            double HT;
+
             
             // Find b-jets
             // Copied from ATLAS_13TeV_3b_24invfb
@@ -204,7 +206,6 @@ namespace Gambit {
                 else if( random_bool(misstag) ) bJets.push_back(jet);
                 // Non b-jet
                 else if( jet->pT() > 40. ) {
-                    HT += jet->pT();
                     nonbJets.push_back(jet);
                 }
             }
