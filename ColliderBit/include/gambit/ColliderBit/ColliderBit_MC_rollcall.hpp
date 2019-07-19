@@ -34,10 +34,15 @@
 #define MODULE ColliderBit
 
   /// Execute the main Monte Carlo event loop.
+  /// Note: 
+  ///   "Non-loop" capabilities that some in-loop capabilities depend on
+  ///   can be added as dependencies here to ensure that they are calculated
+  ///   before the loop starts.
   #define CAPABILITY RunMC
   START_CAPABILITY
     #define FUNCTION operateLHCLoop
     START_FUNCTION(MCLoopInfo, CAN_MANAGE_LOOPS)
+    MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -60,12 +65,27 @@
     #undef FUNCTION
 
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
-    #define CAPABILITY CrossSection
-      #define FUNCTION getYAMLxsec
-      START_FUNCTION(xsec)
-      NEEDS_MANAGER(RunMC, MCLoopInfo)
-      #undef FUNCTION
-    #undef CAPABILITY
+    #define FUNCTION getYAMLxsec
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+
+    /// A function that assigns a total cross-sections to a given SLHA input file
+    /// (for model CB_SLHA_file_model)
+    #define FUNCTION getYAMLxsec_SLHA
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(CB_SLHA_file_model)
+    DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
+    #undef FUNCTION
+
+    /// A function that assigns a total cross-sections directly from the scan parameters
+    /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    #define FUNCTION getYAMLxsec_param
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    #undef FUNCTION
 
   #undef CAPABILITY
   /// @}

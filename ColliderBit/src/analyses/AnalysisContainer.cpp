@@ -97,6 +97,9 @@ namespace Gambit
       F(CMS_13TeV_2OSLEP_36invfb_nocovar)            \
       F(CMS_13TeV_2OSLEP_confnote_36invfb)           \
       F(CMS_13TeV_2OSLEP_chargino_stop_36invfb)      \
+      F(CMS_13TeV_2SSLEP_Stop_36invfb)               \
+      F(CMS_13TeV_2SSLEP_Stop_inclusive_36invfb)     \
+      F(CMS_13TeV_2SSLEP_Stop_exclusive_36invfb)     \
       F(CMS_13TeV_2SSLEP_Stop_137invfb)              \
       F(CMS_13TeV_Photon_GMSB_36invfb)               \
       F(CMS_13TeV_2Photon_GMSB_36invfb)              \
@@ -383,12 +386,11 @@ namespace Gambit
     }
 
     /// Collect signal predictions from other threads and add to this one,
-    /// for specific analysis
+    /// for specific analysis. Note: Analysis::add will not add analyses to themselves.
     void AnalysisContainer::collect_and_add_signal(str collider_name, str analysis_name)
     {
       for (auto& thread_container_pair : instances_map.at(base_key))
       {
-        if (thread_container_pair.first == omp_get_thread_num()) continue;
         AnalysisContainer* other_container = thread_container_pair.second;
         Analysis* other_analysis = other_container->analyses_map.at(collider_name).at(analysis_name);
         analyses_map.at(collider_name).at(analysis_name)->add(other_analysis);

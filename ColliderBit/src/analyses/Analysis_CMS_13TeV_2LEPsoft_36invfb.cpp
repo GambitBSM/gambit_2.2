@@ -8,9 +8,13 @@
 ///  \author Anders Kvellestad
 ///  \date 2018 June
 ///
+///  \author Tomas Gonzalo
+///  \date 2019 June
+///
 ///  *********************************************
 
 // Based on http://cms-results.web.cern.ch/cms-results/public-results/preliminary-results/SUS-16-048/index.html
+// Corrected signal regions for the published version https://arxiv.org/pdf/1801.01846.pdf
 
 #include <vector>
 #include <cmath>
@@ -53,10 +57,11 @@ namespace Gambit {
 
     private:
 
-      vector<int> cutFlowVector;
+      vector<double> cutFlowVector;
       vector<string> cutFlowVector_str;
       size_t NCUTS;
       vector<double> cutFlowVectorCMS_150_130;
+      vector<double> cutFlowVectorCMS_150_143;
       // double xsecCMS_150_143;
       // double xsecCMS_150_130;
 
@@ -83,6 +88,7 @@ namespace Gambit {
         for (size_t i=0;i<NCUTS;i++){
           cutFlowVector.push_back(0);
           cutFlowVectorCMS_150_130.push_back(0);
+          cutFlowVectorCMS_150_143.push_back(0);
           cutFlowVector_str.push_back("");
         }
       }
@@ -217,26 +223,31 @@ namespace Gambit {
         // Signal Regions
         // In the low ETmiss region, for each passing event we add 0.65 due to trigger efficiency
         if (preselection && met>125. && met<200. && nSignalMuons == 2) {
-          if (m_ll>4. && m_ll<10.) _numSR["SR1"] += 0.65;
-          if (m_ll>10. && m_ll<20.) _numSR["SR2"] += 0.65;
+          if (m_ll>4. && m_ll<9.) _numSR["SR1"] += 0.65;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SR2"] += 0.65;
           if (m_ll>20. && m_ll<30.) _numSR["SR3"] += 0.65;
           if (m_ll>30. && m_ll<50.) _numSR["SR4"] += 0.65;
+          // if (m_ll>4. && m_ll<9.) _numSR["SR1"]++;
+          // if (m_ll>10.5 && m_ll<20.) _numSR["SR2"]++;
+          // if (m_ll>20. && m_ll<30.) _numSR["SR3"]++;
+          // if (m_ll>30. && m_ll<50.) _numSR["SR4"]++;
         }
         if (preselection && met>200. && met<250.) {
-          if (m_ll>4. && m_ll<10.) _numSR["SR5"]++;
-          if (m_ll>10. && m_ll<20.) _numSR["SR6"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SR5"]++;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SR6"]++;
           if (m_ll>20. && m_ll<30.) _numSR["SR7"]++;
           if (m_ll>30. && m_ll<50.) _numSR["SR8"]++;
         }
         if (preselection && met>250.) {
-          if (m_ll>4. && m_ll<10.) _numSR["SR9"]++;
-          if (m_ll>10. && m_ll<20.) _numSR["SR10"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SR9"]++;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SR10"]++;
           if (m_ll>20. && m_ll<30.) _numSR["SR11"]++;
           if (m_ll>30. && m_ll<50.) _numSR["SR12"]++;
         }
 
         cutFlowVector_str[0] = "All events";
-        cutFlowVector_str[1] = "2 reconstructed $\\mu$'s with $5 < p_{T} < 30$ GeV";
+        // cutFlowVector_str[1] = "2 reconstructed $\\mu$'s with $5 < p_{T} < 30$ GeV";
+        cutFlowVector_str[1] = "2 $\\mu$'s with $5 < p_{T} < 30$ GeV";
         cutFlowVector_str[2] = "$\\mu$'s oppositely charged";
         cutFlowVector_str[3] = "$p_{T}(\\mu\\mu) > 3$ GeV";
         cutFlowVector_str[4] = "$M(\\mu\\mu) \\in [4,50]$ GeV";
@@ -267,6 +278,22 @@ namespace Gambit {
         cutFlowVectorCMS_150_130[12] = 12.3;
         cutFlowVectorCMS_150_130[13] = 9.3;
 
+        cutFlowVectorCMS_150_143[0] = 172004.;
+        cutFlowVectorCMS_150_143[1] = 242.7;
+        cutFlowVectorCMS_150_143[2] = 218.5;
+        cutFlowVectorCMS_150_143[3] = 213.8;
+        cutFlowVectorCMS_150_143[4] = 103.3;
+        cutFlowVectorCMS_150_143[5] = 102.2;
+        cutFlowVectorCMS_150_143[6] =   9.8;
+        cutFlowVectorCMS_150_143[7] =   5.5;
+        cutFlowVectorCMS_150_143[8] =   5.3;
+        cutFlowVectorCMS_150_143[9] =   4.1;
+        cutFlowVectorCMS_150_143[10] =  3.7;
+        cutFlowVectorCMS_150_143[11] =  3.0;
+        cutFlowVectorCMS_150_143[12] =  2.7;
+        cutFlowVectorCMS_150_143[13] =  2.2;
+
+
         for (size_t j=0;j<NCUTS;j++){
           if(
              (j==0) ||
@@ -283,6 +310,7 @@ namespace Gambit {
 
              (j==6 && nSignalMuons==2 && OS && pT_ll>3. && (m_ll>4. && m_ll<50.) && (m_ll<9. || m_ll>10.5) && (met>125. && metcorr > 125. && met<200.)) ||
 
+             // replace this step with efficiency of 0.65 (below)
              (j==7 && nSignalMuons==2 && OS && pT_ll>3. && (m_ll>4. && m_ll<50.) && (m_ll<9. || m_ll>10.5) && (met>125. && metcorr > 125. && met<200.)) ||
 
              (j==8 && nSignalMuons==2 && OS && pT_ll>3. && (m_ll>4. && m_ll<50.) && (m_ll<9. || m_ll>10.5) && (met>125. && metcorr > 125. && met<200.) && nSignalJets>0) ||
@@ -296,7 +324,10 @@ namespace Gambit {
              (j==12 && nSignalMuons==2 && OS && pT_ll>3. && (m_ll>4. && m_ll<50.) && (m_ll<9. || m_ll>10.5) && (met>125. && metcorr > 125. && met<200.) && nSignalJets>0 && hT>100. && (met/hT<1.4 && met/hT>0.6) && nSignalBJets==0  && (mTauTau<0. || mTauTau>160.)) ||
 
              (j==13 && nSignalMuons==2 && OS && pT_ll>3. && (m_ll>4. && m_ll<50.) && (m_ll<9. || m_ll>10.5) && (met>125. && metcorr > 125. && met<200.) && nSignalJets>0 && hT>100. && (met/hT<1.4 && met/hT>0.6) && nSignalBJets==0  && (mTauTau<0. || mTauTau>160.) && (mT.at(0)<70. && mT.at(1)<70.)))
-          cutFlowVector[j]++;
+          {
+            if (j<7) cutFlowVector[j] += 1.0;
+            else cutFlowVector[j] += 0.65;  // trigger efficiency
+          }
         }
       }
 
@@ -320,6 +351,22 @@ namespace Gambit {
 
 
       virtual void collect_results() {
+
+        // double scale_by= 172004. / 250000.;
+        double scale_by= 172004. / 1000000.;
+        cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+        cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb "<<endl;
+        cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
+        cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
+             << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
+        for (int j=0; j<NCUTS; j++) {
+          cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
+               << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
+               << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_143[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_143[j]) << endl;
+        }
+        cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+
+
 
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
         add_result(SignalRegionData("SR1",  2.,  {_numSR["SR1"],  0.}, {3.5, 1.}));

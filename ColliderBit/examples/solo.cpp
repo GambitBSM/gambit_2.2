@@ -103,8 +103,18 @@ int main(int argc, char* argv[])
     getLHEvent.setOption<str>("lhef_filename", lhef_filename);
 
     // Pass options to the cross-section function
-    getYAMLxsec.setOption<double>("xsec_pb", settings.getValue<double>("xsec_pb"));
-    getYAMLxsec.setOption<double>("xsec_fractional_uncert", settings.getValue<double>("xsec_fractional_uncert"));
+    if (settings.hasKey("xsec_pb"))
+    {
+      getYAMLxsec.setOption<double>("xsec_pb", settings.getValue<double>("xsec_pb"));
+      if (settings.hasKey("xsec_fractional_uncert")) { getYAMLxsec.setOption<double>("xsec_fractional_uncert", settings.getValue<double>("xsec_fractional_uncert")); }
+      else {getYAMLxsec.setOption<double>("xsec_uncert_pb", settings.getValue<double>("xsec_uncert_pb")); }
+    }
+    else // <-- must have option "xsec_fb"
+    {
+      getYAMLxsec.setOption<double>("xsec_fb", settings.getValue<double>("xsec_fb"));
+      if (settings.hasKey("xsec_fractional_uncert")) { getYAMLxsec.setOption<double>("xsec_fractional_uncert", settings.getValue<double>("xsec_fractional_uncert")); }
+      else { getYAMLxsec.setOption<double>("xsec_uncert_fb", settings.getValue<double>("xsec_uncert_fb")); }
+    }
 
     // Pass options to the likelihood function
     calc_LHC_LogLikes.setOption<int>("covariance_nsamples_start", settings.getValue<int>("covariance_nsamples_start"));
