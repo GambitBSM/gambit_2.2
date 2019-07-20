@@ -89,7 +89,7 @@ namespace Gambit
         ( const typename MI::InputParameters& input
         , const SMInputs& sminputs
         , const Options& runOptions
-        , const std::map<str, safe_ptr<double> >& input_Param
+        , const Models::safe_param_map<const safe_ptr<const double>>& input_Param
         )
     {
       // SoftSUSY object used to set quark and lepton masses and gauge

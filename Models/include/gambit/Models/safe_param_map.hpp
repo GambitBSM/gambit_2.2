@@ -14,6 +14,10 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2014 Dec
 ///
+///  \author Ben Farmer
+///          (b.farmer@imperial.ac.uk)
+///  \date 2019 Jul
+///
 ///  *********************************************
 
 
@@ -35,7 +39,7 @@ namespace Gambit
     class safe_param_map : public std::map<str,T>
     {
       public:
-        T& operator[](str key)
+        T& operator[](str key) const
         {
           try
           {

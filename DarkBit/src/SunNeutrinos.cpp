@@ -44,27 +44,26 @@ namespace Gambit
  
     //////////////////////////////////////////////////////////////////////////
     //
-    //   Translation of DD_couplings into NREO parameters
+    //   Translation of NREO ModelParameters into NREO_DM_nucleon_couplings
     //
     //////////////////////////////////////////////////////////////////////////
 
-    void NREO_from_DD_couplings(ModelParameters& NREO_parameters)
+    void NREO_couplings_from_parameters(NREO_DM_nucleon_couplings& NREO_couplings)
+    {
+       using namespace Pipes::NREO_couplings_from_parameters;
+       NREO_couplings = NREO_DM_nucleon_couplings(Param); // Constructor takes care of the parameter copying for us
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    //
+    //   Translation of DD_couplings into NREO_DM_nucleon_couplings
+    //
+    //////////////////////////////////////////////////////////////////////////
+
+    void NREO_from_DD_couplings(NREO_DM_nucleon_couplings& NREO_couplings)
     {
        using namespace Pipes::NREO_from_DD_couplings;
        DM_nucleon_couplings ddc = *Dep::DD_couplings;
-
-       // Additional information needed for NREO model, aside from WIMP-nucleon couplings
-       double mwimp = *Dep::mwimp;
-       double jwimp = *Dep::jwimp;
-       //double sigmav = *Dep::sigmav
-
-       // NREO_parameters is just an empty ModelParameters object to start with.
-       // Need to copy parameter definitions from primary model object, and set
-       // a new "output name" to identify the origin of this object in error messages.
-       NREO_parameters.initialize_as("NREO","NREO_from_DD_couplings::NREO_parameters");
-
-       NREO_parameters.setValue("mwimp",mwimp);
-       NREO_parameters.setValue("jwimp",jwimp);
 
        // TODO! I have not been able to find the exact conventions
        // used in DDcalc vs the NREO model. I think it is just this:
@@ -74,24 +73,13 @@ namespace Gambit
        // cp = c0 + c1
        // cn = c0 - c1
        // Change if needed!
-       
-       // Set all of the NREO couplings to zero to start
-       for(int i=0; i<2; i++)
-       {
-           for(int j=1; j<=15; j++)
-           {
-               std::stringstream p;
-               p<<"c"<<i<<"_"<<j;
-               NREO_parameters.setValue(p.str(),0);
-           }
-       }
-
+    
        // Compute non-zero isospin basis couplings from DM_nucleon_couplings entries
        // TODO: I also did this from memory, should check I got the operator numbers right
-       NREO_parameters.setValue("c0_1", 0.5*(ddc.gps + ddc.gns));
-       NREO_parameters.setValue("c1_1", 0.5*(ddc.gps - ddc.gns));
-       NREO_parameters.setValue("c0_4", 0.5*(ddc.gpa + ddc.gna));
-       NREO_parameters.setValue("c1_4", 0.5*(ddc.gpa - ddc.gna));
+       NREO_couplings.c0[1] = 0.5*(ddc.gps + ddc.gns);
+       NREO_couplings.c1[1] = 0.5*(ddc.gps - ddc.gns);
+       NREO_couplings.c0[4] = 0.5*(ddc.gpa + ddc.gna);
+       NREO_couplings.c1[4] = 0.5*(ddc.gpa - ddc.gna);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -245,28 +233,21 @@ namespace Gambit
       call populate Array with the value found in the C++ array and the position in the C++ array
       */
       // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
-      // bjf> Modified to use parameters directly, no need to map everything to individual
-      // capabilities.
-      cout << "Parameters grabbed via Pipes, e.g. Dep::NREO_parameters->at(\"c0_1\"): " << Dep::NREO_parameters->at("c0_1") << endl;
+      // bjf> Modified to use a custom object to carry these couplings (makes for a better 
+      // dependency structure)
+      cout << "NREO_couplings capabilitiy grabbed via Pipes, e.g. Dep::NREO_couplings->c(0,1) " << Dep::NREO_couplings->c(0,1) << endl;
       
       int coupleNum;
-      int isoNum;
-      for(int i=0; i<2; i++)
+      for(int j=0; j<15; j++)
       {
-        for(int j=0; j<15; j++)
+        coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
+        if (coupleNum != 2) // 2 is not an allowed coupling constant
         {
-          isoNum = i; // this is tau, takes the value 0 or 1
-          coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
-          if (coupleNum != 2) // 2 is not an allowed coupling constant
-          {
-            std::stringstream p;
-            p<<"c"<<isoNum<<"_"<<coupleNum; 
-            BEreq::populate_array(Dep::NREO_parameters->at(p.str()), coupleNum, isoNum);
-            cout << "I tried to called pop_array with coupleNum: " << coupleNum << ", and isoNum: " << isoNum << endl;
-            cout << "  Dep::NREO_parameters->at("<<p.str()<<"): "<< Dep::NREO_parameters->at(p.str())<<endl;
-          }
+          BEreq::populate_array(Dep::NREO_couplings->c(0,coupleNum), coupleNum, 0);
+          BEreq::populate_array(Dep::NREO_couplings->c(1,coupleNum), coupleNum, 1);
         }
       }
+      
 
       /*
       Code to sum over all elements in solar model simultaneously.
