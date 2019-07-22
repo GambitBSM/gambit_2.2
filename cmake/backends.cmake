@@ -153,7 +153,7 @@ set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DEPENDS heplikedata_${hl_data_ver}
+    DEPENDS heplikedata_${hl_data_ver} yaml-cpp
     GIT_REPOSITORY https://github.com/mchrzasz/HEPLike.git
     SOURCE_DIR ${dir}
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
