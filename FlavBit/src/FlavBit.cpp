@@ -2342,7 +2342,7 @@ namespace Gambit
       std::cout<<"Entering"<<std::endl;
       HepLike_1_0::HL_Gaussian gauss;
 
-
+      
     }
 
 

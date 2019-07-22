@@ -837,7 +837,6 @@ START_MODULE
       #define FUNCTION hepLike_test
       START_FUNCTION(double)
       NEEDS_CLASSES_FROM(HepLike, default)
-      BACKEND_OPTION( ((libHEPLike) )
       #undef FUNCTION
   #undef CAPABILITY
                 

@@ -139,6 +139,10 @@ if(NOT ditched_${name}_${ver})
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${HL_CXXFLAGS} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+    # getting heplikedata
+          COMMAND cd "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}"
+          COMMAND pwd
+          COMMAND wget 
     INSTALL_COMMAND ""
     )
   BOSS_backend_withROOT(${name} ${ver})
@@ -146,6 +150,36 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 
 endif()
+
+# HepLikedata
+set(name "heplikedata")
+set(ver "1.0")
+set(dl "https://github.com/mchrzasz/HEPLikeData/archive/master.zip")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(md5 "0cf8a9ca59d6f36cb45bf557d6bcfaa0")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    BUILD_COMMAND cp ' ${dir}/data/' ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}
+
+
+
+    
+#    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+#    SOURCE_DIR ${dir}  
+#    CONFIGURE_COMMAND ""
+#    BUILD_COMMAND  pwd
+#          COMMAND echo 'aaa'
+#    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}    
+#    CMAKE_COMMAND ""
+#    BUILD_COMMAND ""
+#    INSTALL_COMMAND ""
+    )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean) 
+  set_as_default_version("backend" ${name} ${ver})
+
+endif()    
 
 
 # SuperIso
