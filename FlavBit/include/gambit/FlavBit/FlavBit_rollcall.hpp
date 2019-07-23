@@ -897,6 +897,17 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// HEPLike LogLikelihood RD RDstar
+  #define CAPABILITY hepLikeRDRDstarLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeRDRDstarLogLikelihood
+    START_FUNCTION(double);
+    DEPENDENCY(RD, double);
+    DEPENDENCY(RDstar, double);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
 #undef MODULE
 
 

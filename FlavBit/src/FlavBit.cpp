@@ -2453,8 +2453,26 @@ namespace Gambit
         first = false;
       }
       const double theory = *Dep::Btaunu;
-      result = gauss.GetLikelihood(theory);
-      std::cout << "hepLikeB2TauNuLikelihood result: " << result << std::endl;
+      result = gaussian.GetLogLikelihood(theory /* , theory_error */);
+      std::cout << "hepLikeB2TauNuLogLikelihood result: " << result << std::endl;
+    }
+
+    /// HEPLike LogLikelihood RD RDstar
+    void hepLikeRDRDstarLogLikelihood(double& result)
+    {
+      using namespace Pipes::hepLikeRDRDstarLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/HFLAV_18/Semileptonic/RD_RDstar.yaml";
+      static HepLike_default::HL_nDimGaussian nDimGaussian(inputfile);
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        nDimGaussian.Read();
+        first = false;
+      }
+      const std::vector<double> theory{*Dep::RD, *Dep::RDstar};
+      result = nDimGaussian.GetLogLikelihood(theory /* , theory_covariance */);
+      std::cout << "hepLikeRDRDstarLogLikelihood result: " << result << std::endl;
     }
 
   }

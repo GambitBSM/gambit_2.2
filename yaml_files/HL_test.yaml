@@ -96,7 +96,10 @@ ObsLikes:
     capability: hepLike_test
 
   - purpose:    B2TauNuTest
-    capability: hepLikeB2TauNuLikelihood
+    capability: hepLikeB2TauNuLogLikelihood
+
+  - purpose:    RDRDstarTest
+    capability: hepLikeRDRDstarLogLikelihood
 
 Rules:
 
