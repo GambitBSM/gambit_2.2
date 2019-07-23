@@ -2475,5 +2475,23 @@ namespace Gambit
       std::cout << "hepLikeRDRDstarLogLikelihood result: " << result << std::endl;
     }
 
+    /// HEPLike LogLikelihood b -> s gamma
+    void hepLikeB2SGammaLogLikelihood(double &result)
+    {
+      using namespace Pipes::hepLikeB2SGammaLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/HFLAV_18/RD/b2sgamma.yaml";
+      static HepLike_default::HL_Gaussian gaussian(inputfile);
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        gaussian.Read();
+        first = false;
+      }
+      const double theory = *Dep::bsgamma;
+      result = gaussian.GetLogLikelihood(theory /* , theory_error */);
+      std::cout << "hepLikeB2SGammaLogLikelihood result: " << result << std::endl;
+    }
+
   }
 }

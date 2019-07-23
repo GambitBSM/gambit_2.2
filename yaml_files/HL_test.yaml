@@ -101,6 +101,9 @@ ObsLikes:
   - purpose:    RDRDstarTest
     capability: hepLikeRDRDstarLogLikelihood
 
+  - purpose:    B2SGammaTest
+    capability: hepLikeB2SGammaLogLikelihood
+
 Rules:
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
