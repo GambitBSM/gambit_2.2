@@ -887,6 +887,16 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// HEPLike LogLikelihood B -> tau nu
+  #define CAPABILITY hepLikeB2TauNuLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeB2TauNuLogLikelihood
+    START_FUNCTION(double);
+    DEPENDENCY(Btaunu, double);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
 #undef MODULE
 
 

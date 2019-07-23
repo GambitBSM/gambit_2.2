@@ -2439,5 +2439,23 @@ namespace Gambit
     }
 
 
+    /// HEPLike LogLikelihood B -> tau nu
+    void hepLikeB2TauNuLogLikelihood(double &result)
+    {
+      using namespace Pipes::hepLikeB2TauNuLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/PDG/Semileptonic/B2TauNu.yaml";
+      static HepLike_default::HL_Gaussian gaussian(inputfile);
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        gaussian.Read();
+        first = false;
+      }
+      const double theory = *Dep::Btaunu;
+      result = gauss.GetLikelihood(theory);
+      std::cout << "hepLikeB2TauNuLikelihood result: " << result << std::endl;
+    }
+
   }
 }
