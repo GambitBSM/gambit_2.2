@@ -216,14 +216,19 @@
                                                                                \
       }                                                                        \
                                                                                \
+      /* Make the functor exclusive to this model and its descendants */       \
+      CORE_ALLOW_MODEL(MODEL,PARAMETER,MODEL)                                  \
+                                                                               \
     }                                                                          \
                                                                                \
   }                                                                            \
                                                                                \
   /* Create dependency of PARAMETER functor on host model parameters object */ \
-  CORE_DEPENDENCY(CAT(MODEL,_parameters),ModelParameters,MODEL,PARAMETER,      \
+  /*CORE_DEPENDENCY(CAT(MODEL,_parameters),ModelParameters,MODEL,PARAMETER,      \
    IS_MODEL)                                                                   \
-                                                                               \
+    **No longer needed, I think. ALLOW_MODEL should add the required dependency**
+  */   \
+  \
   /* Define the actual parameter setting function, now that we have the
      functor and its dependency */                                             \
   namespace Gambit                                                             \
@@ -241,9 +246,7 @@
            core */                                                             \
         void PARAMETER (double &result)                                        \
         {                                                                      \
-          safe_ptr<ModelParameters> model_safe_ptr =                           \
-           Pipes::PARAMETER::Dep::CAT(MODEL,_parameters).safe_pointer();       \
-          result = model_safe_ptr->getValue(STRINGIFY(PARAMETER));             \
+          result = *Pipes::PARAMETER::Param.at(STRINGIFY(PARAMETER));          \
         }                                                                      \
                                                                                \
       }                                                                        \
@@ -251,7 +254,6 @@
     }                                                                          \
                                                                                \
   }                                                                            \
-
 
 /// Macro to define parameter.  Does not create a corresponding CAPABILITY;
 /// use MAP_TO_CAPABILITY to do this after calling DEFINEPAR(S).

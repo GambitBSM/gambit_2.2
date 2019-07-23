@@ -610,11 +610,11 @@ START_MODULE
 
   // Retrieve the DM spin (times two) for generic models
   QUICK_FUNCTION(DarkBit, spinwimpx2, NEW_CAPABILITY, spinwimpx2_generic, unsigned int, (),
-      (TH_ProcessCatalog, DarkBit::TH_ProcessCatalog), (DarkMatter_ID, std::string))
+      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
 
   // Retrieve a bool determining if a WIMP is self-conjugate.
   QUICK_FUNCTION(DarkBit, wimp_sc, NEW_CAPABILITY, wimp_sc_generic, bool, (),
-      (TH_ProcessCatalog, DarkBit::TH_ProcessCatalog), (DarkMatter_ID, std::string))
+      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
 
   // Retrieve the total thermally-averaged annihilation cross-section for indirect detection (cm^3 / s)
   QUICK_FUNCTION(DarkBit, sigmav, NEW_CAPABILITY, sigmav_late_universe, double, (),

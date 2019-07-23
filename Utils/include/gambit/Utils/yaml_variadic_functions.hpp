@@ -22,8 +22,8 @@
 ///  \date Dec 2014
 ///
 ///  \author Ben Farmer
-///          <b.farmer@imperial.ac.uk>
-///  \date Jan 2016, Jul 2019
+///          <benjamin.farmer@fysik.su.se>
+///  \date Jan 2016
 ///
 ///  *********************************************
 
@@ -33,7 +33,6 @@
 #include <string>
 
 #include "yaml-cpp/yaml.h"
-#include "gambit/Utils/standalone_error_handlers.hpp"
 
 namespace Gambit
 {       
@@ -48,24 +47,12 @@ namespace Gambit
         
         inline const YAML::Node getVariadicNode(const YAML::Node &node, std::string key) 
         {
-                if(node.Type()!=YAML::NodeType::Map)
-                {
-                     std::ostringstream os;
-                     os<<"Error accessing YAML key '"<<key<<"' in node! The supplied node is not a map (i.e. it is a scalar value, sequence, null, or undefined)";
-                     utils_error().raise(LOCAL_INFO,os.str());
-                }
                 return node[key];
         }
 
         template <typename... args>
         inline const YAML::Node getVariadicNode(const YAML::Node &node, const std::string &key, const args&... keys)
         {
-                if(node.Type()!=YAML::NodeType::Map)
-                {
-                     std::ostringstream os;
-                     os<<"Error accessing YAML key '"<<key<<"' in node! The supplied node is not a map (i.e. it is a scalar value, sequence, null, or undefined)";
-                     utils_error().raise(LOCAL_INFO,os.str());
-                }
                 if(not node[key]) return node[key];
                 else return getVariadicNode(node[key], keys...);
         }
