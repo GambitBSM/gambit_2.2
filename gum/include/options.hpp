@@ -35,14 +35,20 @@ class Outputs
 {
     std::string ch;
     std::string mg;
+    std::string vev;
+    std::string sph;
 
     public:
 
         std::string get_ch() { return ch; }
         std::string get_mg() { return mg; }
+        std::string get_sph() { return sph; }
+        std::string get_vev() { return vev; }
 
         void set_ch(std::string chdir) { ch = chdir; }
         void set_mg(std::string mgdir) { mg = mgdir; }
+        void set_sph(std::string sphdir) { sph = sphdir; }
+        void set_vev(std::string vevdir) { vev = vevdir; }
 };
 
 void usage(std::string);

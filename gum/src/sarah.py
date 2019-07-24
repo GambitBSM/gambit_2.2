@@ -51,7 +51,8 @@ def sarah_params(paramlist, add_higgs):
 
     Default assumption is that everything is a dimensionless
     parameter. 
-    TODO. This is a problem for SARAH.
+    TODO. This is a problem for SARAH, and actual spectrum objects.
+    Hmmm......
     Maybe worth adding a new parameter tag, like Par::unspecified.
     """
 
@@ -83,6 +84,9 @@ def sarah_params(paramlist, add_higgs):
         for j in unsorted_params:
             if j.block == i:
                 blockdict[i].append(j.name)
+
+    """
+    TODO: matrix handling for SARAH interface!
 
     # Parameters that GUM decides are (square) matrices
     matrices = {}
@@ -122,7 +126,8 @@ def sarah_params(paramlist, add_higgs):
         if not present:
             params.append(i)
         else: continue
-
+    """
+    
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
         params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True))

@@ -13,3 +13,5 @@ from .darkbit import *
 from .backends import *
 from .madgraph import *
 from .colliderbit import *
+from .spheno import *
+from .vevacious import *

@@ -452,8 +452,15 @@ void SARAH::write_ch_output()
 {
     std::cout << "Writing CalcHEP output." << std::endl;
 
+    // Options for the CH output.
+    std::string options;
+    // This is currently hard-coded, because GAMBIT needs to interface with CalcHEP 
+    // in a specific way.
+    /* do not read from SLHA file |  let alphaS run  |  all masses computed externally */
+    options = "SLHAinput -> False, UseRunningCoupling -> True, CalculateMasses -> False";
+
     // Write output.
-    std::string command = "MakeCHep[SLHAinput -> False, UseRunningCoupling -> True, CalculateMasses -> False];";
+    std::string command = "MakeCHep[" + options + "];";
     send_to_math(command);
 
     std::cout << "CalcHEP files written." << std::endl;
@@ -469,6 +476,42 @@ void SARAH::write_madgraph_output()
     send_to_math(command);
 
     std::cout << "MadGraph files written." << std::endl;
+}
+
+// Write SPheno output.
+void SARAH::write_spheno_output()
+{
+    std::cout << "Writing SPheno output." << std::endl;
+    
+    // Options for SPheno output.
+    std::string options;
+    // TODO: options:
+    // - InputFile (default $MODEL/SPheno.m)
+    // - StandardCompiler -> <COMPILER> (default gfortran)
+
+    // Write output.
+    std::string command = "MakeSPheno[" + options + "];";
+    send_to_math(command);
+
+    std::cout << "SPheno files written." << std::endl;
+}
+
+// Write Vevacious output.
+void SARAH::write_vevacious_output()
+{
+    std::cout << "Writing Vevacious output." << std::endl;
+
+    // Options for Vevacious output.
+    std::string options;
+    // TODO: options:
+    // - ComplexParameters (automatic?)
+    // - Scheme (DRbar for SUSY, MSbar for non-SUSY)
+
+    // Write output.
+    std::string command = "MakeVevacious[" + options + "];";
+    send_to_math(command);
+
+    std::cout << "Vevacious files written." << std::endl;
 }
 
 void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
@@ -522,6 +565,24 @@ void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parame
       std::string mgdir = outputdir + "UFO";
       std::replace(mgdir.begin(), mgdir.end(), ' ', '-');
       outputs.set_mg(mgdir);
+
+    /// Write SPheno output
+    if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
+      model.write_spheno_output();
+
+      // Location of SPheno files
+      std::string sphdir = outputdir + "SPheno";
+      std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
+      outputs.set_sph(sphdir);
+
+    /// Write Vevacious output
+    if (std::find(backends.begin(), backends.end(), "vevacious") != backends.end() )
+      model.write_vevacious_output();
+
+      // Location of Vevacious (vin) files
+      std::string vevdir = outputdir + "Vevacious";
+      std::replace(vevdir.begin(), vevdir.end(), ' ', '-');
+      outputs.set_mg(vevdir);
 
     // All done. Close the Mathematica link.
     model.close_wstp_link();
