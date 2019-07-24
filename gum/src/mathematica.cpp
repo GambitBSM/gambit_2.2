@@ -1,4 +1,22 @@
-/// Contains all routines for interface between C++ and Mathematica packages.
+//   GUM: GAMBIT Universal Models
+//   **********************************
+///  \file
+///
+///  Contains all routines for interface
+///  between C++ and Mathematica packages
+///
+///  **********************************
+///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2017, 2018, 2019
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+//   \date 2019 July
+///
+///  ***********************************
+
 
 #include <iostream>
 
@@ -28,7 +46,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
             
-            all_feynrules(options, partlist, paramlist, outputs, backends);
+            GUM::all_feynrules(options, partlist, paramlist, outputs, backends);
         }
         else if (options.package() == "sarah")
         {
@@ -38,7 +56,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
         
-            all_sarah(options, partlist, paramlist, outputs, backends);
+            GUM::all_sarah(options, partlist, paramlist, outputs, backends);
         }
     }
     catch(const char* e)

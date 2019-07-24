@@ -1,6 +1,9 @@
 #ifndef __cmake_variables_hpp__
 #define __cmake_variables_hpp__
 
+// GUM main directory
+#cmakedefine GUM_DIR "@GUM_DIR@"
+
 /// Found Mathematica
 #cmakedefine HAVE_MATHEMATICA 1
 #cmakedefine MATHEMATICA_WSTP_H "@Mathematica_WSTP_INCLUDE_DIR@/wstp.h"

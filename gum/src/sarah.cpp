@@ -1,4 +1,21 @@
-#include <iostream>
+//   GUM: GAMBIT Universal Models
+//   **********************************
+///  \file
+///
+///  Definitions of SARAH class
+///
+///  **********************************
+///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2017, 2018, 2019
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 July
+///
+///  ***********************************
+
 #include <set>
 #include <algorithm>
 #include <cstring>
@@ -8,8 +25,29 @@
 
 #include "sarah.hpp"
 
-void SARAH::load_sarah()
+namespace GUM
 {
+
+  // SARAH constructor, loads SARAH and the model
+  SARAH::SARAH(std::string model) : Math_Package(model)
+  {
+    // Math_Package constructor already creates the WSTP link
+
+    try
+    {
+      // Load SARAH
+      load_sarah();
+
+      // Load model
+      load_model(model);
+    }
+    catch(...) { throw; }
+    
+  }
+   
+  // Load SARAH
+  void SARAH::load_sarah()
+  {
 
     std::cout << "Loading SARAH... ";
 
@@ -18,14 +56,8 @@ void SARAH::load_sarah()
     send_to_math(input);
 
     const char* out;
-    if (!WSGetString((WSLINK)pHandle, &out))
-    {
-        std::cerr << "Error loading SARAH. Please check that SARAH actually lives"
-                  << "\nwhere CMake put it, in:\n"
-                  << "  " + std::string(SARAH_PATH)
-                  << "\nPlease try rebuilding." << std::endl;
-        return;
-    }
+    if (!WSGetString(link, &out))
+        throw std::runtime_error("SARAH Error: Error loading SARAH. Please check that SARAH actually lives \nwhere CMake put it, in:\n " + std::string(SARAH_PATH) + "\nPlease try rebuilding.");
     else
     {
         std::cout << "SARAH loaded from " << out << "." << std::endl;
@@ -34,53 +66,81 @@ void SARAH::load_sarah()
     input+= "<<SARAH`";
     send_to_math(input);
 
-}
+  }
 
-bool SARAH::load_model(std::string model)
-{
-
-    std::cout << "Loading model " + model + " in SARAH... " << std::endl;
-
-    // Load it up.
-    std::string command = "Start[\"" + model + "\"];";
-    send_to_math(command);
-
-    // Check the model has been loaded by querying the model name. If it has changed from the default then we're set.
-    std::string modelname;
-    get_modelname(modelname);
-
-    // ...Assuming someone hasn't set the model name to 'ModelName' which would be unbelievably annoying and vastly silly.
-    if (modelname == "ModelName")
+  void SARAH::load_model(std::string model)
+  {
+    try
     {
-        std::cerr << std::endl << "ERROR! Could not load model " << model << ". Please check your SARAH file." << std::endl << std::endl;
-        return false;
-    }
+      std::cout << "Loading model " + model + " in SARAH... " << std::endl;
 
-    // All good.
-    std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
-    return true;
-}
+      // Check if model is in SARAH's or GUM's list of models
+      if(!check_model(model))
+      {
+        throw std::runtime_error("SARAH Error: Could not load model " + model + ". Model is not recognised by SARAH or GUM.");
+      }
 
-// The model may have a different "internal" name than what's on the package.
-// Need this info for output files, etc.
-void SARAH::get_modelname(std::string &modelname)
-{
+      // Load it up.
+      std::string command = "Start[\"" + model + "\"];";
+      send_to_math(command);
+
+      // Check the model has been loaded by querying the model name. If it has changed from the default then we're set.
+      std::string modelname = get_modelname();
+
+      // ...Assuming someone hasn't set the model name to 'ModelName' which would be unbelievably annoying and vastly silly.
+      if (modelname == "ModelName")
+        throw std::runtime_error("SARAH Error: Could not load model " + model + ". Please check your SARAH file.");
+
+
+      // All good.
+      std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
+  
+    } catch(...) { throw; }
+  }
+
+  // The model may have a different "internal" name than what's on the package.
+  // Need this info for output files, etc.
+  std::string SARAH::get_modelname()
+  {
 
     std::string command = "ModelName";
     send_to_math(command);
 
     const char* out;
-    if (!WSGetString((WSLINK)pHandle, &out))
+    if (!WSGetString(link, &out))
+        throw std::runtime_error("SARAH Error: Error getting Model name.");
+
+    return std::string(out);
+  }
+
+  // Check if model is SARAH's database or in GUM's
+  bool SARAH::check_model(std::string modelname)
+  {
+    try
     {
-        std::cerr << "Error getting Model name." << std::endl;
-        return;
+      // Check if the model is in the SARAH database
+      std::string command = "MemberQ[ShowModels[[1]],\"" + modelname + "\"]";
+      send_to_math(command);
+      
+      // Get the boolean result
+      bool is_SARAH_model;
+      get_from_math(is_SARAH_model);
+      if(is_SARAH_model)
+        return true;
+
+      // If not check if it's on the GUM model database
+      std::string model_paths = std::string(GUM_DIR) + "/Models";
+      // TODO: check if it's in the models dir and if it is move it to the SARAH dir
+
+      return false;
+    
     }
+    catch(...) { throw; }
+  }
 
-    modelname = std::string(out);
-}
-
-void SARAH::get_partlist(std::vector<Particle> &partlist)
-{
+  // Get particles list
+  void SARAH::get_partlist(std::vector<Particle> &partlist)
+  {
 
     std::cout << "Extracting particles from SARAH model." << std::endl;
 
@@ -94,11 +154,8 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
 
     int lenpl;
 
-    if (!WSGetInteger((WSLINK)pHandle, &lenpl))
-    {
-        std::cout << "Error getting 'Length[PartList]' from WSTP." << std::endl;
-        return;
-    }
+    if (!WSGetInteger(link, &lenpl))
+        throw std::runtime_error("SARAH Error: Error getting 'Length[PartList]' from WSTP.");
 
     std::cout << "Found " << lenpl << " particle sets." << std::endl;
 
@@ -111,7 +168,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
         int numelements;
         command = "Length[getPDG[pl[[" + std::to_string(i+1) + ", 1]]]]";
         send_to_math(command);
-        if (!WSGetInteger((WSLINK)pHandle, &numelements))
+        if (!WSGetInteger(link, &numelements))
         {
             std::cout << "Error getting number of elements from WSTP." << std::endl;
             return;
@@ -145,7 +202,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             command = "Part[getPDG[pl[[" + std::to_string(i+1) + ", 1]]], " + std::to_string(j+1) + "]";
             send_to_math(command);
 
-            if (!WSGetInteger((WSLINK)pHandle, &pdg))
+            if (!WSGetInteger(link, &pdg))
             {
                 std::cout << "Error getting PDG code from WSTP." << std::endl;
                 return;
@@ -157,7 +214,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
             command = "Length[getOutputName[pl[[" + std::to_string(i+1) + ", 1]]]]";
             send_to_math(command);
 
-            if (!WSGetInteger((WSLINK)pHandle, &num))
+            if (!WSGetInteger(link, &num))
             {
                 std::cout << "Error getting length of OutputNames." << std::endl;
                 return;
@@ -169,7 +226,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 command = "Part[getOutputName[pl[[" + std::to_string(i+1) + ", 1]]], 1]";
                 send_to_math(command);
 
-                if (!WSGetString((WSLINK)pHandle, &name))
+                if (!WSGetString(link, &name))
                 {
                     std::cerr << "Error getting particle name." << std::endl;
                     return;
@@ -177,7 +234,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 command = "Part[getOutputName[pl[[" + std::to_string(i+1) + ", 1]]], 2]";
                 send_to_math(command);
 
-                if (!WSGetString((WSLINK)pHandle, &antiname))
+                if (!WSGetString(link, &antiname))
                 {
                     std::cerr << "Error getting particle antiname." << std::endl;
                     return;
@@ -188,7 +245,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 command = "getOutputName[pl[[" + std::to_string(i+1) + ", 1]]]";
                 send_to_math(command);
 
-                if (!WSGetString((WSLINK)pHandle, &name))
+                if (!WSGetString(link, &name))
                 {
                     std::cerr << "Error getting particle name." << std::endl;
                     return;
@@ -199,7 +256,7 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
                 send_to_math(command);
 
                 const char* is_sc;
-                if (!WSGetString((WSLINK)pHandle, &is_sc))
+                if (!WSGetString(link, &is_sc))
                 {
                     std::cerr << "Error getting self-conjugate status " 
                               << "for particle " 
@@ -267,10 +324,11 @@ void SARAH::get_partlist(std::vector<Particle> &partlist)
 
     std::cout << "Done." << std::endl;
 
-}
+  }
 
-void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
-{
+  // Get parameters list
+  void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
+  {
 
     std::cout << "Extracting parameters from SARAH model." << std::endl;
 
@@ -284,7 +342,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
 
     int lenpl;
 
-    if (!WSGetInteger((WSLINK)pHandle, &lenpl))
+    if (!WSGetInteger(link, &lenpl))
     {
         std::cout << "Error getting 'Length[ParamList]' from WSTP." << std::endl;
         return;
@@ -310,7 +368,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
 
         // Get the parameter name as it is known in SARAH. This
         // might change later.
-        if (!WSGetString((WSLINK)pHandle, &paramname))
+        if (!WSGetString(link, &paramname))
         {
             std::cout << "Error getting the parameter name "
                       << "at position " << i+1 
@@ -326,7 +384,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
 
         // Find out how many entries are in the description 
         // of the parameter
-        if (!WSGetInteger((WSLINK)pHandle, &numelements))
+        if (!WSGetInteger(link, &numelements))
         {
             std::cout << "Error getting the number of elements "
                       << "defining the parameter " << paramname
@@ -354,7 +412,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
             command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]] // ToString";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &entry))
+            if (!WSGetString(link, &entry))
             {
                 std::cout << "Error querying DependenceNum for "
                           << i+1 << ", " << j+1 << " from WSTP "
@@ -373,7 +431,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
             command = "Head[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &entry))
+            if (!WSGetString(link, &entry))
             {
                 std::cout << "Error querying LesHouches entry "
                           << i+1 << ", " << j+1 << " from WSTP "
@@ -389,7 +447,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
                 command = "Part[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]],1]";
                 send_to_math(command);
 
-                if (!WSGetString((WSLINK)pHandle, &block))
+                if (!WSGetString(link, &block))
                 {
                     std::cout << "Error querying blockname from WSTP "
                               << "for the SARAH parameter " 
@@ -402,7 +460,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
                 // index
                 command = "Part[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]],2]";
                 send_to_math(command);
-                if (!WSGetInteger((WSLINK)pHandle, &index))
+                if (!WSGetInteger(link, &index))
                 {
                     std::cout << "Error querying index from WSTP "
                               << "for the SARAH parameter " 
@@ -419,7 +477,7 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
             command = "OutputName /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]] // ToString";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &entry))
+            if (!WSGetString(link, &entry))
             {
                 std::cout << "Error querying OutputName for "
                           << i+1 << ", " << j+1 << " from WSTP "
@@ -445,11 +503,11 @@ void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
         }
     }
 
-}
+  }
 
-// Write CalcHEP output.
-void SARAH::write_ch_output()
-{
+  // Write CalcHEP output.
+  void SARAH::write_ch_output()
+  {
     std::cout << "Writing CalcHEP output." << std::endl;
 
     // Options for the CH output.
@@ -464,11 +522,11 @@ void SARAH::write_ch_output()
     send_to_math(command);
 
     std::cout << "CalcHEP files written." << std::endl;
-}
+  }
 
-// Write MadGraph output.
-void SARAH::write_madgraph_output()
-{
+  // Write MadGraph output.
+  void SARAH::write_madgraph_output()
+  {
     std::cout << "Writing MadGraph (UFO) output for Pythia/MadDM." << std::endl;
 
     // Write output.
@@ -476,120 +534,120 @@ void SARAH::write_madgraph_output()
     send_to_math(command);
 
     std::cout << "MadGraph files written." << std::endl;
-}
+  }
 
-// Write SPheno output.
-void SARAH::write_spheno_output()
-{
-    std::cout << "Writing SPheno output." << std::endl;
-    
-    // Options for SPheno output.
-    std::string options;
-    // TODO: options:
-    // - InputFile (default $MODEL/SPheno.m)
-    // - StandardCompiler -> <COMPILER> (default gfortran)
+  // Write SPheno output.
+  void SARAH::write_spheno_output()
+  {
+      std::cout << "Writing SPheno output." << std::endl;
+      
+      // Options for SPheno output.
+      std::string options;
+      // TODO: options:
+      // - InputFile (default $MODEL/SPheno.m)
+      // - StandardCompiler -> <COMPILER> (default gfortran)
 
-    // Write output.
-    std::string command = "MakeSPheno[" + options + "];";
-    send_to_math(command);
+      // Write output.
+      std::string command = "MakeSPheno[" + options + "];";
+      send_to_math(command);
 
-    std::cout << "SPheno files written." << std::endl;
-}
+      std::cout << "SPheno files written." << std::endl;
+  }
 
-// Write Vevacious output.
-void SARAH::write_vevacious_output()
-{
-    std::cout << "Writing Vevacious output." << std::endl;
+  // Write Vevacious output.
+  void SARAH::write_vevacious_output()
+  {
+      std::cout << "Writing Vevacious output." << std::endl;  
 
-    // Options for Vevacious output.
-    std::string options;
-    // TODO: options:
-    // - ComplexParameters (automatic?)
-    // - Scheme (DRbar for SUSY, MSbar for non-SUSY)
+      // Options for Vevacious output.
+      std::string options;
+      // TODO: options:
+      // - ComplexParameters (automatic?)
+      // - Scheme (DRbar for SUSY, MSbar for non-SUSY)  
 
-    // Write output.
-    std::string command = "MakeVevacious[" + options + "];";
-    send_to_math(command);
+      // Write output.
+      std::string command = "MakeVevacious[" + options + "];";
+      send_to_math(command);  
 
-    std::cout << "Vevacious files written." << std::endl;
-}
+      std::cout << "Vevacious files written." << std::endl;
+  }
 
-void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
-{
+  // Do all operations with SARAH
+  void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
+  {
 
-    std::cout << "Calling SARAH with model " << opts.model() << "..." << std::endl;
-
-    // Initialise SARAH object
-    SARAH model;
-
-    // Open the WSTP link to Mathematica
-    model.create_wstp_link();
-
-    // Load SARAH.
-    model.load_sarah();
-
-    // Set the name for the model class.
-    model.set_name(opts.model());
-
-    // Attempt to load the SARAH model
-    bool out = model.load_model(opts.model());
-
-    if (not out)
+    try
     {
-        return;
+      std::cout << "Calling SARAH with model " << opts.model() << "..." << std::endl;
+
+      // Create SARAH object, open link to Mathematica, load SARAH and the model
+      SARAH model(opts.model());
+
+      // Get all of the particles
+      model.get_partlist(partlist);
+
+      // And all parameters
+      model.get_paramlist(paramlist);
+
+      // Where the outputs all live
+      std::string outputdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/";
+
+      /// Write CalcHEP output
+      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+      {
+        model.write_ch_output();
+
+        // Location of CalcHEP files
+        std::string chdir = outputdir + "CHep";
+        std::replace(chdir.begin(), chdir.end(), ' ', '-');
+        outputs.set_ch(chdir);
+      }
+ 
+      /// Write MadGraph output
+      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
+      {
+        model.write_madgraph_output();
+
+        // Location of MadGraph (UFO) files
+        std::string mgdir = outputdir + "UFO";
+        std::replace(mgdir.begin(), mgdir.end(), ' ', '-');
+        outputs.set_mg(mgdir);
+      }
+
+      /// Write SPheno output
+      if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
+      {
+        model.write_spheno_output();
+
+        // Location of SPheno files
+        std::string sphdir = outputdir + "SPheno";
+        std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
+        outputs.set_sph(sphdir);
+      }
+
+      /// Write Vevacious output
+      if (std::find(backends.begin(), backends.end(), "vevacious") != backends.end() )
+      {
+        model.write_vevacious_output();        // Location of Vevacious (vin) files
+        std::string vevdir = outputdir + "Vevacious";
+        std::replace(vevdir.begin(), vevdir.end(), ' ', '-');
+        outputs.set_vev(vevdir);
+      }
+
+
+      // All done. Close the Mathematica link.
+      model.close_wstp_link();
+
     }
-
-    // Get all of the particles
-    model.get_partlist(partlist);
-
-    // And all parameters
-    model.get_paramlist(paramlist);
-
-    // Where the outputs all live
-    std::string outputdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/";
-
-    /// Write CalcHEP output
-    if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
-      model.write_ch_output();
-
-      // Location of CalcHEP files
-      std::string chdir = outputdir + "CHep";
-      std::replace(chdir.begin(), chdir.end(), ' ', '-');
-      outputs.set_ch(chdir);
-
-    /// Write MadGraph output
-    if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
-      model.write_madgraph_output();
-
-      // Location of MadGraph (UFO) files
-      std::string mgdir = outputdir + "UFO";
-      std::replace(mgdir.begin(), mgdir.end(), ' ', '-');
-      outputs.set_mg(mgdir);
-
-    /// Write SPheno output
-    if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
-      model.write_spheno_output();
-
-      // Location of SPheno files
-      std::string sphdir = outputdir + "SPheno";
-      std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
-      outputs.set_sph(sphdir);
-
-    /// Write Vevacious output
-    if (std::find(backends.begin(), backends.end(), "vevacious") != backends.end() )
-      model.write_vevacious_output();
-
-      // Location of Vevacious (vin) files
-      std::string vevdir = outputdir + "Vevacious";
-      std::replace(vevdir.begin(), vevdir.end(), ' ', '-');
-      outputs.set_mg(vevdir);
-
-    // All done. Close the Mathematica link.
-    model.close_wstp_link();
-
+    catch(std::exception &e)
+    {
+      std::cerr << e.what() << std::endl;
+    }
     return;
+  }
 
-}
+   
+} // namespace GUM
 
 // Now all the grizzly stuff, so Python can call C++ (which can call Mathematica...)
 BOOST_PYTHON_MODULE(libsarah)
@@ -620,8 +678,10 @@ BOOST_PYTHON_MODULE(libsarah)
     ;
 
   class_<Outputs>("SARAHOutputs", init<>())
-    .def("get_ch",  &Outputs::get_ch)
-    .def("get_mg",  &Outputs::get_mg)
+    .def("get_ch",   &Outputs::get_ch)
+    .def("get_mg",   &Outputs::get_mg)
+    .def("get_sph",  &Outputs::get_sph)
+    .def("get_vev",  &Outputs::get_vev)
     ;
 
   class_< std::vector<Particle> >("SARAHVectorOfParticles")
@@ -636,6 +696,6 @@ BOOST_PYTHON_MODULE(libsarah)
     .def(vector_indexing_suite< std::vector<std::string> >() )
     ;
 
-  def("all_sarah", all_sarah);
+  def("all_sarah", GUM::all_sarah);
 
 }

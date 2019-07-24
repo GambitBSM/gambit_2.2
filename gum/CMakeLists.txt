@@ -6,6 +6,9 @@ include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
+# Define the main GUM directory
+set(GUM_DIR ${PROJECT_SOURCE_DIR})
+
 # Define the sed command to use differently for OSX and linux.  Delete this when properly integrated into GAMBIT cmake system, as it exists there already.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(dashi "-i ''")
@@ -96,6 +99,22 @@ EXTERNALPROJECT_ADD(
     INSTALL_COMMAND ""
 )
 
+# Download SPheno
+set(ver "4.0.3")
+set(dl http://www.hepforge.org/archive/spheno/SPheno-${ver}.tar.gz)
+set(md5 "64787d6c8ce03cac38aec53d34ac46ad")
+set(dir "${CMAKE_SOURCE_DIR}/contrib/spheno")
+ExternalProject_Add(
+  SPheno
+  URL ${dl}
+  URL_MD5 ${md5}
+  SOURCE_DIR ${dir}
+  PATCH_COMMAND ""
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND ""
+  INSTALL_COMMAND ""
+)
+
 # Set paths
 set(FEYNRULES_PATH "${CMAKE_SOURCE_DIR}/contrib/FeynRules/")
 set(HAVE_FEYNRULES 1)
@@ -139,11 +158,12 @@ endif()
 set(Boost_NO_BOOST_CMAKE ON)
 FIND_PACKAGE(Boost 1.41)
 if(Boost_FOUND)
+  set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined" )
   include_directories("${Boost_INCLUDE_DIR}")
   FIND_PACKAGE(Boost 1.41.0 COMPONENTS python)
-  ADD_LIBRARY(fr SHARED src/feynrules.cpp)
+  ADD_LIBRARY(fr SHARED src/feynrules.cpp src/math_package.cpp)
   TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
-  ADD_LIBRARY(sarah SHARED src/sarah.cpp)
+  ADD_LIBRARY(sarah SHARED src/sarah.cpp src/math_package.cpp)
   TARGET_LINK_LIBRARIES(sarah ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 else()
   message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and re-run cmake.")
@@ -158,18 +178,21 @@ configure_file("${outfile}.in" ${outfile})
 include_directories(src include ${Mathematica_WSTP_INCLUDE_DIR})
 
 # set source and header files used in all executables
-set(HEADER_FILES include/cmake_variables.hpp include/options.hpp include/feynrules.hpp include/sarah.hpp)
+set(HEADER_FILES include/cmake_variables.hpp include/options.hpp include/math_package.hpp include/feynrules.hpp include/sarah.hpp)
 set(SRC_FILES src/mathematica.cpp)
-set(SRC_GUM src/mathematica.cpp src/options.cpp src/feynrules.cpp src/sarah.cpp)
+#set(SRC_GUM src/mathematica.cpp src/options.cpp src/math_package.cpp src/feynrules.cpp src/sarah.cpp)
+set(SRC_GUM src/mathematica.cpp src/options.cpp)
+set(GUM_LIBS sarah fr)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_CXX_FLAGS -L.)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-add_executable(mathematica ${SRC_GUM} ${SRC_FILES_GEN} ${HEADER_FILES_GEN} ${HEADER_MB} ${SRC_FILES} ${HEADER_FILES} ${GENERATED_SRC_FILES})
+#add_executable(mathematica ${SRC_GUM} ${SRC_FILES_GEN} ${HEADER_FILES_GEN} ${HEADER_MB} ${SRC_FILES} ${HEADER_FILES} ${GENERATED_SRC_FILES})
+add_executable(mathematica ${SRC_GUM} ${HEADER_FILES})
 
-TARGET_LINK_LIBRARIES(mathematica ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(mathematica ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${GUM_LIBS})
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     message("Setting GCC flags")
