@@ -7,3 +7,6 @@ base_pythia_version = "@BASE_PYTHIA_VERSION@"
 
 # Pythia md5 sum
 pythia_md5 = "@PYTHIA_MD5@"
+
+# SPheno version
+spheno_version = "@SPHENO_VERSION@"

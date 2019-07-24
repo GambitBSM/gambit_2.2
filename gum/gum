@@ -66,7 +66,7 @@ if args.file:
                "be written.\n"))
 
     # Check whether we need to generate DecayBit output or not
-    if output_opts.ch or output_opts.sph:
+    if output_opts.ch or output_opts.spheno:
         decaybit = True
     else:
         decaybit = False
@@ -148,7 +148,7 @@ if args.file:
     # TODO make this go to the Outputs dir instead, then ln -s from there to MadGraph later.
     if output_opts.pythia:
         copy_madgraph_files(outputs.get_mg(), gum.name)
-
+    
     """
     # If we have both UFO and MDL files, run the files through ufo2mdl to compare outputs.
     # This will, e.g., add 4-fermion interactions to CalcHEP where FeynRules fails to do so.
@@ -188,7 +188,32 @@ if args.file:
         import madgraph.interface.master_interface as mi
 
         # Run MadGraph
-        call_madgraph(mg5_dir, mg5_output_dir,mi)
+        call_madgraph(mg5_dir, mg5_output_dir, mi)
+
+    """
+    SPHENO
+    """
+
+    if output_opts.spheno:
+        # Move SPheno files from SARAH to Outputs.
+        copy_spheno_files(gum.name, output_dir, outputs.get_sph())
+
+        # Patch the files
+        patch_spheno(gum.name, output_dir+"/SPheno_patched")
+
+
+        ## NOT WORKING!
+        pristine_spheno_dir = os.path.join(os.getcwd(), 'Outputs', gum.name, 'SPheno')
+
+        # Create a diff vs. the out of the [SARAH]box
+        write_backend_patch(output_dir, pristine_spheno_dir, output_dir+"/SPheno_patched", 
+                            "spheno_"+gum.name.lower(), spheno_version)
+
+
+    # Enough for now.
+    sys.exit()
+
+
 
     print("")
     print("Finished running external codes.  Now writing proposed GAMBIT code.")

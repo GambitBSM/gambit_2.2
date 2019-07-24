@@ -100,6 +100,7 @@ EXTERNALPROJECT_ADD(
 )
 
 # Download SPheno
+set(SPHENO_VERSION 4.0.3)
 set(ver "4.0.3")
 set(dl http://www.hepforge.org/archive/spheno/SPheno-${ver}.tar.gz)
 set(md5 "64787d6c8ce03cac38aec53d34ac46ad")

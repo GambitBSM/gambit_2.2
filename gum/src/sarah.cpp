@@ -634,16 +634,15 @@ namespace GUM
         outputs.set_vev(vevdir);
       }
 
-
       // All done. Close the Mathematica link.
-      model.close_wstp_link();
+      // Sanjay: this function seems to kill GUM. Not sure why.
+      //model.close_wstp_link();
 
     }
     catch(std::exception &e)
     {
       std::cerr << e.what() << std::endl;
     }
-    return;
   }
 
    

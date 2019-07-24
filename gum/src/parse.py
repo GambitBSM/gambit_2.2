@@ -50,7 +50,7 @@ class Outputs:
         self.ch = calchep
         self.pythia = pythia
         self.mo = micromegas
-        self.sph = spheno
+        self.spheno = spheno
         self.fs = flexiblesusy
         self.vev = vevacious
         self.collider_processes = collider_processes
@@ -59,7 +59,7 @@ class Outputs:
 
         # Overwrite these, as the output does not exist.
         if mathpackage == 'feynrules':
-            self.sph = False
+            self.spheno = False
             self.fs = False
             self.vev = False
 
@@ -68,7 +68,7 @@ class Outputs:
         if self.ch: backends.append('calchep')
         if self.pythia: backends.append('pythia')
         if self.mo: backends.append('micromegas')
-        if self.sph: backends.append('spheno')
+        if self.spheno: backends.append('spheno')
         if self.fs: backends.append('flexiblesusy')
         if self.vev: backends.append('vevacious')
         return backends
