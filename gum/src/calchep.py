@@ -189,124 +189,123 @@ def clean_calchep_model_files(model_folder, model_name):
 
     # If the model folder does not exist
     else:
-      raise GumError("\n\nCalcHEP model folder " + model_folder + " not found.")
+        raise GumError("\n\nCalcHEP model folder " + model_folder + " not found.")
 
 def has_ghosts(string):
-  """
-  Returns True if there is a ghost/auxiliary field in the interaction.
-  """
+    """
+    Returns True if there is a ghost/auxiliary field in the interaction.
+    """
+    for i in range(0, len(string)):
+        if (string[i].endswith(".f")
+        or  string[i].endswith(".c")
+        or  string[i].endswith(".C")
+        or  string[i].endswith(".t")):
+            return True
 
-  for i in range(0, len(string)):
-    if (string[i].endswith(".f")
-    or  string[i].endswith(".c")
-    or  string[i].endswith(".C")
-    or  string[i].endswith(".t")):
-      return True
-
-  return False
+    return False
 
 def convert(vertex, PDG_conversion):
-  """
-  Swaps field names for PDG codes for a vertex (list object).
-  """
+    """
+    Swaps field names for PDG codes for a vertex (list object).
+    """
 
-  for particleName, PDGcode in PDG_conversion.iteritems():
-    for i in range(0, len(vertex)):
-      if vertex[i] == particleName:
-        vertex[i] = PDGcode
+    for particleName, PDGcode in PDG_conversion.iteritems():
+        for i in range(0, len(vertex)):
+            if vertex[i] == particleName:
+                vertex[i] = PDGcode
 
 def get_vertices(foldername):
-  """
-  Pulls all vertices from a CalcHEP model file by PDG code.
-  """
+    """
+    Pulls all vertices from a CalcHEP model file by PDG code.
+    """
 
-  # Check the folder exists
-  if os.path.exists(foldername):
+    # Check the folder exists
+    if os.path.exists(foldername):
 
-    # Dict of particle + PDG code
-    particle_PDG_conversion = {}
-    aux_particles = []
+        # Dict of particle + PDG code
+        particle_PDG_conversion = {}
+        aux_particles = []
 
-    # Now take in information from particles file to convert interactions to PDG codes
-    with open(foldername + "/prtcls1.mdl") as prtcls:
+        # Now take in information from particles file to convert interactions to PDG codes
+        with open(foldername + "/prtcls1.mdl") as prtcls:
 
-      # Trim the unuseful information such as model name etc. from the beginning
-      for i in xrange(3):
-        next(prtcls)
+            # Trim the unuseful information such as model name etc. from the beginning
+            for i in xrange(3):
+                next(prtcls)
 
-      for line in prtcls:
+            for line in prtcls:
 
-        # Read in particle list & rid of whitespace
-        parts = [i.strip(' ') for i in line.split('|')]
+                # Read in particle list & rid of whitespace
+                parts = [i.strip(' ') for i in line.split('|')]
 
-        # Add particle + code
-        particle_PDG_conversion[parts[1]] = int(parts[3])
+                # Add particle + code
+                particle_PDG_conversion[parts[1]] = int(parts[3])
 
-        # Is a particle it's own antiparticle?
-        if parts[1] != parts[2]:
+                # Is a particle it's own antiparticle?
+                if parts[1] != parts[2]:
 
-          # If so, add the antiparticle separately
-          particle_PDG_conversion[parts[2]] = int('-' +  parts[3])
+                    # If so, add the antiparticle separately
+                    particle_PDG_conversion[parts[2]] = int('-' +  parts[3])
 
-        # Is a particle an auxiliary particle?
-        if parts[8] == '*':
-            aux_particles.append(int(parts[3]))
-            aux_particles.append(int('-' + parts[3]))
+                # Is a particle an auxiliary particle?
+                if parts[8] == '*':
+                        aux_particles.append(int(parts[3]))
+                        aux_particles.append(int('-' + parts[3]))
 
-    lines = []
-    interactions = []
+        lines = []
+        interactions = []
 
-    # Set of SM PDG codes.
-    standard_model_PDGs = set([1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6,
-                               11, -11, 12, -12, 13, -13, 14, -14, 15,
-                               -15, 16, -16, 21, 22, 23, 24, -24, 25])
+        # Set of SM PDG codes.
+        standard_model_PDGs = set([1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6,
+                                   11, -11, 12, -12, 13, -13, 14, -14, 15,
+                                   -15, 16, -16, 21, 22, 23, 24, -24, 25])
 
-    # Open file containing vertices, and read the vertices in.
-    with open(foldername + "/lgrng1.mdl") as lgrng:
+        # Open file containing vertices, and read the vertices in.
+        with open(foldername + "/lgrng1.mdl") as lgrng:
 
-      # Trim the model etc. from the beginning
-      for i in xrange(3):
-        next(lgrng)
+            # Trim the model etc. from the beginning
+            for i in xrange(3):
+                next(lgrng)
 
-      # Read in line-by-line.
-      for line in lgrng:
-        x = [i.strip(' ') for i in line.split('|')]
+            # Read in line-by-line.
+            for line in lgrng:
+                x = [i.strip(' ') for i in line.split('|')]
 
-        # All interactions should have 4 particles or fewer.
-        if len(x) > 4:
+                # All interactions should have 4 particles or fewer.
+                if len(x) > 4:
 
-          # Check for ghosts - not useful for pheno
-          if has_ghosts(x) == False:
+                    # Check for ghosts - not useful for pheno
+                    if has_ghosts(x) == False:
 
-            # Create instance of vertex class
-            interaction = Vertex()
+                        # Create instance of vertex class
+                        interaction = Vertex()
 
-            # If 4th column is empty -> 3 point int
-            if x[3] == '':
-              interaction.particles += x[0:3]
+                        # If 4th column is empty -> 3 point int
+                        if x[3] == '':
+                            interaction.particles += x[0:3]
+                        else:
+                            interaction.particles += x[0:4]
+
+                        # Add to list of interactions
+                        interactions.append(interaction)
+
+        for i in range(0, len(interactions)):
+
+            # Convert all interactions to PDG codes for universality
+            convert(interactions[i].particles, particle_PDG_conversion)
+
+            # Tag if SM or not
+            if set(interactions[i].particles) <= standard_model_PDGs:
+                interactions[i].SM = True
             else:
-              interaction.particles += x[0:4]
+                interactions[i].SM = False
 
-            # Add to list of interactions
-            interactions.append(interaction)
+        return interactions, particle_PDG_conversion, aux_particles
 
-    for i in range(0, len(interactions)):
-
-      # Convert all interactions to PDG codes for universality
-      convert(interactions[i].particles, particle_PDG_conversion)
-
-      # Tag if SM or not
-      if set(interactions[i].particles) <= standard_model_PDGs:
-        interactions[i].SM = True
-      else:
-        interactions[i].SM = False
-
-    return interactions, particle_PDG_conversion, aux_particles
-
-  # If the model folder does not exist
-  else:
-    raise GumError(("\n\nERROR: CalcHEP Model folder " 
-                    + foldername + " not found."))
+    # If the model folder does not exist
+    else:
+        raise GumError(("\n\nERROR: CalcHEP Model folder " 
+                                        + foldername + " not found."))
                     
 def copy_calchep_files(model_folder, model_name):
     """
@@ -339,3 +338,41 @@ def copy_calchep_files(model_folder, model_name):
     
     print("CalcHEP files moved to GAMBIT Backends directory.")
     
+def add_calchep_switch(model_name, spectrum):
+    """
+    Adds an 'if ModelInUse()' switch to the CalcHEP frontend to make GAMBIT
+    point to the correct CalcHEP files.
+    """
+
+    # Scan-level
+    src_sl = dumb_indent(4, (
+        "if (ModelInUse(\"{0}\"))\n"
+        "{{\n"
+        "BEpath = backendDir + \"/../models/{0}\";\n"
+        "path = BEpath.c_str();\n"
+        "modeltoset = (char*)malloc(strlen(path)+11);\n"
+        "sprintf(modeltoset, \"%s\", path);\n"
+        "}}\n\n"
+    ).format(model_name))
+
+    # Point-level
+    src_pl = dumb_indent(2, (
+           "if (ModelInUse(\"{0}\"))\n"
+           "{{\n"
+           "// Obtain model contents\n"
+           "static const SpectrumContents::{0} {0}_contents;\n\n"
+           "// Obtain list of all parameters within model\n"
+           "static const std::vector<SpectrumParameter> {0}_params = "
+           "{0}_contents.all_parameters();\n\n"
+           "// Obtain spectrum information to pass to CalcHEP\n"
+           "const Spectrum& spec = *Dep::{1};\n\n"
+           "Assign_All_Values(spec, {0}_params);\n"
+           "}}\n\n"
+    ).format(model_name, spectrum))
+
+    # to do -- also ALLOW_MODEL()
+    header = (
+           "BE_INI_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})\n"
+    ).format(spectrum, model_name)
+
+    return indent(src_sl), indent(src_pl), header

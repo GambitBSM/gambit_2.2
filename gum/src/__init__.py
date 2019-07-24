@@ -15,3 +15,4 @@ from .madgraph import *
 from .colliderbit import *
 from .spheno import *
 from .vevacious import *
+from .pythia import *

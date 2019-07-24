@@ -33,46 +33,12 @@ def check_backends(outputs):
 
     print("\nAll backends found -- connecting to Mathematica!\n")
 
-def add_calchep_switch(model_name, spectrum):
-    """
-    Adds an 'if ModelInUse()' switch to the CalcHEP frontend to make GAMBIT
-    point to the correct CalcHEP files.
-    """
-
-    # Scan-level
-    src_sl = dumb_indent(4, (
-        "if (ModelInUse(\"{0}\"))\n"
-        "{{\n"
-        "BEpath = backendDir + \"/../models/{0}\";\n"
-        "path = BEpath.c_str();\n"
-        "modeltoset = (char*)malloc(strlen(path)+11);\n"
-        "sprintf(modeltoset, \"%s\", path);\n"
-        "}}\n\n"
-    ).format(model_name))
-
-    # Point-level
-    src_pl = dumb_indent(2, (
-           "if (ModelInUse(\"{0}\"))\n"
-           "{{\n"
-           "// Obtain model contents\n"
-           "static const SpectrumContents::{0} {0}_contents;\n\n"
-           "// Obtain list of all parameters within model\n"
-           "static const std::vector<SpectrumParameter> {0}_params = "
-           "{0}_contents.all_parameters();\n\n"
-           "// Obtain spectrum information to pass to CalcHEP\n"
-           "const Spectrum& spec = *Dep::{1};\n\n"
-           "Assign_All_Values(spec, {0}_params);\n"
-           "}}\n\n"
-    ).format(model_name, spectrum))
-
-    # to do -- also ALLOW_MODEL()
-    header = (
-           "BE_INI_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})\n"
-    ).format(spectrum, model_name)
-
-    return indent(src_sl), indent(src_pl), header
 
 def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version):
+    """
+    Writes a backend patch (i.e. just a diff) from a pristine 
+    and a modified version of a backend.
+    """
     import subprocess
     full_output_dir = output_dir+"/Backends/patches/"+backend+"/"+version
     mkdir_if_absent(full_output_dir)
@@ -82,146 +48,6 @@ def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version)
     os.chdir(pristine_parts[0])
     subprocess.call("diff -rupN "+pristine_parts[1]+" "+patched_dir+" > "+outfile, shell=True)
     os.chdir(cwd)
-
-def fix_pythia_lib(model, patched_dir, pythia_groups):
-    """
-    Routine to patch the new Pythia - adding new matrix elements to the
-    Process Container -- and the shared library too.
-    """
-
-    # Move the matrix element sources and headers to where they will get compiled into the Pythia library
-    process_dir = patched_dir+"/Processes_"+model+"/"
-    source_dir = patched_dir+"/src/"
-    inc_dir = patched_dir+"/include/"
-    files = os.listdir(process_dir)
-    headers = [x for x in files if x.endswith(".h")]
-    sources = [x for x in files if x.endswith(".cc")]
-    for x in headers:
-        os.rename(process_dir+"/"+x, inc_dir+"/"+x)
-    for x in sources:
-        os.rename(process_dir+"/"+x, source_dir+"/"+x)
-
-    # Scrape the list of processes from the header names
-    processes = []
-    for x in headers:
-        if (x.startswith("Sigma_")):
-            states = re.split("_", re.sub("Sigma_"+model+"_", "", re.sub("\.h", "", x)))
-            with open(inc_dir+"/"+x) as f:
-                for line in f:
-                    if "// Process: " in line:
-                        process_string = re.sub(" WEIGHTED.*\n", "", re.sub("// Process: ", "", line))
-                        process_string = re.sub(">", "&rarr;", process_string)
-                        states.append("<ei>"+process_string+"<\ei>")
-            processes.append(states)
-
-    # Get rid of the leftover process directory made by MadGraph
-    remove_tree_quietly(process_dir)
-
-    # Write the xml doc file for the new processes
-    with open(patched_dir+"/share/Pythia8/xmldoc/"+model+"Processes.xml", 'w') as f:
-        f.write("<flag name=\""+model+":all\" default=\"off\">\n")
-        f.write("Common switch for production of "+model+" processes. Added by GAMBIT.\n")
-        f.write("</flag>\n")
-
-        # Go through pythia_groups to add each individual flag, to
-        # select groups of subprocesses
-        if pythia_groups:
-            for group in pythia_groups:
-                for k, v in group.items():
-                    f.write("<flag name=\""+model+k+":all\" default=\"off\">\n")
-                    f.write("Common switch for production of "+model+" processes, involving the group of particles ["+', '.join(v)+"] as external legs ONLY. Added by GAMBIT.\n")
-                    f.write("</flag>\n")
-
-        # Invidiual processes
-        for x in processes:
-            f.write("\n")
-            f.write("<flag name=\""+model+":"+x[0]+"2"+x[1]+"\" default=\"off\">\n")
-            f.write("Switch for "+model+" process "+x[2]+". Added by GAMBIT.\n")
-            f.write("</flag>\n")
-
-    # Add the new processes to the master Pythia index.xml file
-    old = patched_dir+"/share/Pythia8/xmldoc/Index.xml"
-    tmp = old+".temp"
-    with open(old) as f_old, open(tmp, 'w') as f_new:
-        for line in f_old:
-            f_new.write(line)
-            if "<aidx href=\"SUSYProcesses\">SUSY</aidx><br/>" in line:
-                f_new.write("&nbsp;&nbsp;--&nbsp;&nbsp;\n")
-                f_new.write("<aidx href=\""+model+"Processes\">"+model+"</aidx><br/>\n")
-    os.remove(old)
-    os.rename(tmp, old)
-
-    # Add the new processes to the Pythia Process Container
-    old = source_dir+"ProcessContainer.cc"
-    tmp = old+".temp"
-    with open(old) as f_old, open(tmp, 'w') as f_new:
-        for line in f_old:
-            f_new.write(line)
-            if "#include \"Pythia8/SigmaSUSY.h\"" in line:
-                for x in headers:
-                    if x.startswith("Sigma"):
-                        f_new.write("#include \""+x+"\"\n")
-
-            if "// End of SUSY processes." in line:
-
-                f_new.write("\n")
-                f_new.write("  // Set up requested objects for "+model+" processes. Added by GAMBIT.\n")
-                f_new.write("  bool "+model+" = settings.flag(\""+model+":all\");\n")
-
-                # Go through pythia_groups to add each individual flag, to
-                # select groups of subprocesses
-                if pythia_groups:
-                    for group in pythia_groups:
-                        for k, v in group.items():
-                            f_new.write("  bool "+model+k+" = settings.flag(\""+model+k+":all\");\n")
-
-                # Add each process
-                for x in processes:
-
-                    process_syntax = x[2]
-                    # Get the in and out states
-                    in_states =  re.search('<ei>(.*)&rarr', process_syntax).group(1).split()
-                    out_states = re.search(';(.*)<\\\\ei>', process_syntax).group(1).split()
-                    external_states = in_states+out_states
-
-                    # If any of the particles belong to any Pythia group,
-                    # add them as a conditional to be selectable from
-                    # the yaml file in a GAMBIT scan.
-
-                    switches = ""
-                    if pythia_groups:
-                        for group in pythia_groups:
-                            for k, v in group.items():
-                                vtemp = [i.lower() for i in v] # Pythia makes everything lowercase
-                                if any([i.lower() in vtemp for i in external_states]):
-                                    switches += " {0} ||".format(model+k)
-
-                    f_new.write("  if ("+model+" ||{0} settings.flag(\"".format(switches)+model+":"+x[0]+"2"+x[1]+"\")) {\n")
-                    f_new.write("    sigmaPtr = new Sigma_"+model+"_"+x[0]+"_"+x[1]+"();\n")
-                    f_new.write("    containerPtrs.push_back( new ProcessContainer(sigmaPtr) );\n")
-                    f_new.write("  }\n")
-    os.remove(old)
-    os.rename(tmp, old)
-
-def write_boss_config_for_pythia(model, output_dir):
-
-    # Sort out the paths
-    path = "/Backends/scripts/BOSS/configs"
-    filename = "/pythia_"+model.lower()+"_8_"+base_pythia_version+".py"
-    full_output_dir = output_dir+path
-    mkdir_if_absent(full_output_dir)
-    template = ".."+path+"/pythia_8_"+base_pythia_version+".py"
-    outfile = full_output_dir+filename
-
-    # Write the actual BOSS config file
-    with open(outfile, 'w') as f_new, open(template) as f_old:
-        for line in f_old:
-          if "gambit_backend_name    = 'Pythia'" in line:
-              f_new.write("gambit_backend_name    = 'Pythia_"+model+"'\n")
-          else:
-              f_new.write(line)
-          if "#  Configuration module for BOSS  #" in line:
-              f_new.write("#  ----brought to you by GUM----  #\n")
 
 
 def write_new_default_bossed_version(backend, version, output_dir):
@@ -254,65 +80,6 @@ def write_new_default_bossed_version(backend, version, output_dir):
         if not comment_exists:
             f_new.write("\n// Defaults added by GUM (do not remove this comment).\n")
         f_new.write(signature+re.sub("\.", "_", version)+"\n")
-
-
-def add_new_pythia_to_backends_cmake(model, output_dir):
-
-    # The string that will commence the block to be added by GUM
-    signature = "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M)."
-
-    # The path to the original file in GAMBIT
-    old = "../cmake/backends.cmake"
-    # Sort out the path to the candidate replacement
-    newdir = output_dir+"/cmake"
-    mkdir_if_absent(newdir)
-    new = newdir+"/backends.cmake"
-
-    # Initialise flags to indicate place in the original file
-    in_duplicate = False
-    passed_pythia = False
-    wrote_entry = False
-
-    # Open old and new files and iterate through the old one, writing to the new as we go.
-    with open(old) as f_old, open(new, 'w') as f_new:
-        for line in f_old:
-            # Have we spotted a previous modification by GUM?  If so, overwrite it.
-            if signature in line: in_duplicate = True
-            # Have we spotted the vanilla pythia entry yet?
-            if "set(name \"pythia\")" in line: passed_pythia = True
-            if not in_duplicate: f_new.write(line)
-            if not wrote_entry and passed_pythia and "set_as_default_version(\"backend\" ${name} ${ver})" in line:
-                to_write = "endif()\n"\
-                           "\n"+signature+"\n"\
-                           "set(model \""+model.lower()+"\")\n"\
-                           "set(name \"pythia_${model}\")\n"\
-                           "set(ver \"8."+base_pythia_version+"\")\n"\
-                           "set(lib \"libpythia8\")\n"\
-                           "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
-                           "set(md5 \""+pythia_md5+"\")\n"\
-                           "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
-                           "set(patch1 \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
-                           "set(patch2 \"${PROJECT_SOURCE_DIR}/Backends/patches/pythia/${ver}/patch_pythia_${ver}.dif\")\n"\
-                           "check_ditch_status(${name} ${ver})\n"\
-                           "if(NOT ditched_${name}_${ver})\n"\
-                           "  ExternalProject_Add(${name}_${ver}\n"\
-                           "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
-                           "    SOURCE_DIR ${dir}\n"\
-                           "    BUILD_IN_SOURCE 1\n"\
-                           "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
-                           "          COMMAND patch -p1 < ${patch2}\n"\
-                           "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
-                           "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
-                           "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
-                           "    INSTALL_COMMAND \"\"\n"\
-                           "  )\n"\
-                           "  BOSS_backend(${name} ${ver})\n"\
-                           "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
-                           "  set_as_default_version(\"backend\" ${name} ${ver})\n"
-                f_new.write(to_write)
-                wrote_entry = True
-            # We've reached the end of the previous modification by GUM, so remove the hold on repeating lines from the old file.
-            if in_duplicate and "endif()" in line: in_duplicate = False
 
 
 def add_to_backend_locations(backend_name, backend_location, version_number, reset_dict):
@@ -350,114 +117,22 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
     amend_file(target, "config", contents, linenum-1, reset_dict)
 
 
-def patch_pythia_patch(model_parameters, model_name, reset_dict):
+def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
     """
-    Writes a generic patch to the existing GAMBIT Pythia patch.
-    This adds new LesHouches block entries for a new model.
+    Adds an entry to backends.cmake, either with a line number
+    or with a string to find, then write afterwards.
     """
 
-    pp_source = "\n        \"      // LH blocks added by GUM\\n\"\n"
-    pp_header = "\n        \"  // LH blocks added by GUM\\n\"\n"
+    if ((linenum == 0) and (string_to_find == "")):
+        raise GumError(("\n\tYou need to pass either a line number, or a string for "
+                        "me to find, if you want to amend backends.cmake."))
 
-    blocks = []
+    # If the user specifies a 
+    if (linenum != 0):
+        amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)
 
-    for i in model_parameters:
-
-        if (i.sm) or (i.tag == "Pole_Mass" and i.block == "") or i.block in blocks:
-            continue
-
-        if i.shape == "scalar" or i.shape == None:
-
-            pp_source += (
-                    "        \"      else if (blockName == \\\"{0}\\\") {{\\n\"\n"
-                    "        \"        FILL_LHBLOCK({0}, double)\\n\"\n"
-                    "        \"      }}\\n\"\n"
-            ).format(i.block.lower())
-          
-            pp_header += "        \"  LHblock<double> {0};\\n\"\n".format(i.block.lower())
-
-        # Matrix cases
-        elif re.match("m[2-9]x[2-9]", i.shape):
-
-            pp_source += (
-                    "        \"      else if (blockName == \\\"{0}\\\") {{\\n\"\n"
-                    "        \"        FILL_LHMATRIXBLOCK({0})\\n\"\n"
-                    "        \"      }}\\n\"\n"
-            ).format(i.block.lower())
-          
-            pp_header += "        \"  LHmatrixBlock<{0}> {1};\\n\"\n".format(i.shape[-1], i.block.lower())
+    else:
+        present, linenum = find_string("backends.cmake", "cmake", string)
+        if present: amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)
 
 
-        blocks.append(i.block)
-
-    # This is the output to add to the post-GAMBIT patched Pythia.
-
-    patch_contents = (
-        "import os\n"
-        "\n"
-        "location = \"src/SusyLesHouches.cc\"\n"
-        "temp_location = location + \"_temp\"\n"
-        "\n"
-        "lines = open(location, 'r').readlines()\n"
-        "\n"
-        "# Find where the GAMBIT patch ends.\n"
-        "linenum = 0\n"
-        "with open(location) as f:\n"
-        "    for num, line in enumerate(f, 1):\n"
-        "        if \"FILL_LHBLOCK(nmssmrun, double)\" in line:\n"
-        "            linenum = num+1\n"
-        "            break\n"
-        "\n"
-        "with open(temp_location, 'w') as f:\n"
-        "    # Write the stuff at the beginning...\n"
-        "    for i in range(linenum):\n"
-        "        f.write(lines[i])\n"
-        "    # Write the source specific to the model...\n"
-        "    f.write(("
-        "{2}"
-        "        \"\\n\"\n"
-        "    ))\n"
-        "    # Then write the rest. Voila: the cheap man's patch.\n"
-        "    for i in range(len(lines)-linenum):\n"
-        "        f.write(lines[i+linenum])\n"
-        "\n"
-        "os.remove(location)\n"
-        "os.rename(temp_location, location)\n"
-        "\n"
-        "location = \"include/Pythia8/SusyLesHouches.h\"\n"
-        "temp_location = location + \"_temp\"\n"
-        "\n"
-        "lines = open(location, 'r').readlines()\n"
-        "\n"
-        "# Find where the GAMBIT patch ends.\n"
-        "linenum = 0\n"
-        "with open(location) as f:\n"
-        "    for num, line in enumerate(f, 1):\n"
-        "        if \"LHmatrixBlock<5> imnmnmix;\" in line:\n"
-        "            linenum = num\n"
-        "            break\n"
-        "\n"
-        "with open(temp_location, 'w') as f:\n"
-        "    # Write the stuff at the beginning...\n"
-        "    for i in range(linenum):\n"
-        "        f.write(lines[i])\n"
-        "    # Write the stuff specific to the model.\n"
-        "    f.write(("
-        "{3}"
-        "        \"\\n\"\n"
-        "    ))\n"
-        "    # Then write the rest. Voila: the cheap man's patch.\n"
-        "    for i in range(len(lines)-linenum):\n"
-        "        f.write(lines[i+linenum])\n"
-        "\n"
-        "os.remove(location)\n"
-        "os.rename(temp_location, location)\n"
-    ).format(model_name.lower(), base_pythia_version, pp_source, pp_header)
-
-    filename = "pythia_{0}/8.{1}/patch_pythia_{0}.dif".format(model_name.lower(), base_pythia_version)
-    write_file(filename, "Backends", patch_contents, reset_dict)
-    loc = full_filename(filename, "Backends")
-    new_loc = "../Backends/patches/pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
-    print loc
-    print new_loc
-    os.rename(loc, new_loc)
