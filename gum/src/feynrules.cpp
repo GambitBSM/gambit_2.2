@@ -1,4 +1,21 @@
-#include <iostream>
+//   GUM: GAMBIT Universal Models
+//   **********************************
+///  \file
+///
+///  Definitions of Feynrules class
+///
+///  **********************************
+///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2017, 2018, 2019
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 July
+///
+///  ***********************************
+
 #include <set>
 #include <algorithm>
 #include <cstring>
@@ -8,8 +25,28 @@
 
 #include "feynrules.hpp"
 
-void FeynRules::load_feynrules()
+namespace GUM
 {
+
+  // Feynrules constructor, loads Feynrules and model
+  FeynRules::FeynRules(std::string model, std::string base_model) : Math_Package(model)
+  {
+    // Math_Package constructor already creates the WSTP link
+    
+    try
+    {
+      // Load Feynrules
+      load_feynrules();
+
+      // Load model
+      load_model(model, base_model);
+    }
+    catch(...) { throw; }
+  }
+
+  // Load Feynrules
+  void FeynRules::load_feynrules()
+  {
 
     std::cout << "Loading FeynRules... ";
 
@@ -19,7 +56,7 @@ void FeynRules::load_feynrules()
     send_to_math(input);
 
     const char* out;
-    if (!WSGetString((WSLINK)pHandle, &out))
+    if (!WSGetString(link, &out))
     {
         std::cerr << "Error loading FeynRules. Please check that FeynRules actually lives"
                   << "\nwhere CMake put it, in:\n"
@@ -35,10 +72,10 @@ void FeynRules::load_feynrules()
     input+= "<<FeynRules`";
     send_to_math(input);
 
-}
+  }
 
-bool FeynRules::load_model(std::string model, std::string base_model)
-{
+  void FeynRules::load_model(std::string model, std::string base_model)
+  {
 
     std::cout << "Loading model " + model + " in FeynRules";
     if (not base_model.empty()) { std::cout << ", piggybacking off of " << base_model; }
@@ -59,53 +96,40 @@ bool FeynRules::load_model(std::string model, std::string base_model)
 
     // Check the model has been loaded by querying the model name. If it has changed from the default then we're set.
     // TODO: need to check for duplicate definitions of gauge groups, field contents etc - this makes gum freeze 
-    std::string modelname;
-    get_modelname(modelname);
+    std::string modelname = get_modelname();
 
     std::string tomatch = "Models" + model + model;
     if (modelname == tomatch)
-    {
-        std::cerr << std::endl << "ERROR! Could not load model " << model << ". Please check your FeynRules file." << std::endl << std::endl;
-        return false;
-    }
+        throw std::runtime_error("FeynRules Error: Could not load model " + model + ". Please check your FeynRules file.");
     else if ((modelname == "Standard Model") and (base_model.empty()))
-    {
-        std::cerr << std::endl << "ERROR! GUM is for BSM physics, yo!" << std::endl << std::endl;
-        return false;
-    }
+        throw std::runtime_error("FeynRules Error: GUM is for BSM physics, yo!");
     else if ((modelname == "Standard Model") and (not base_model.empty()))
-    {
-        std::cerr << std::endl << "ERROR! GUM tried to import something on top of the Standard Model, but your"
-          " model file did not import properly. Please check it." << std::endl << std::endl;
-        return false;
-    }
+        throw std::runtime_error("FeynRules Error: GUM tried to import something on top of the Standard Model, but your model file did not import properly. Please check it.");
 
     // All good. else {
     std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
-    return true;
     //}
-}
+  }
 
-// The model may have a different "internal" name than what's on the package.
-// Need this info for output files, etc.
-void FeynRules::get_modelname(std::string &modelname)
-{
+  // The model may have a different "internal" name than what's on the package.
+  // Need this info for output files, etc.
+  std::string FeynRules::get_modelname()
+  {
     std::string command = "M$ModelName";
     send_to_math(command);
 
     const char* out;
-    if (!WSGetString((WSLINK)pHandle, &out))
+    if (!WSGetString(link, &out))
     {
-        std::cerr << "Error getting Model name." << std::endl;
-        return;
+        throw std::runtime_error("FeyRules Error: Error getting Model name.");
     }
 
-    modelname = std::string(out);
-}
+    return std::string(out);
+  }
 
-bool FeynRules::load_restriction(std::string model, std::string rst)
-{
-
+  void FeynRules::load_restriction(std::string model, std::string rst)
+  {
+   
     std::cout << "Loading restriction " + rst + "... ";
 
     // LoadModel command.
@@ -114,29 +138,23 @@ bool FeynRules::load_restriction(std::string model, std::string rst)
     send_to_math(command);
 
     // Some sort of check here?
+    // TODO: TG: This checks are really clanky
     command = "Length[M$Restrictions]";
     send_to_math(command);
 
     int out;
-    if (!WSGetInteger((WSLINK)pHandle, &out))
-    {
-        std::cerr << "Error loading restriction." << std::endl;
-        return false;
-    }
+    if (!WSGetInteger(link, &out))
+        throw std::runtime_error("FeynRules Error: Error loading restriction.");
 
     if (out == 0)
-    {
-        std::cerr << std::endl << std::endl << "No restrictions loaded. Please check your .gum file and \nthat your .rst files are in the correct place." << std::endl << std::endl;
-        return false;
-    }
+        throw std::runtime_error("FeynRules Error: No restrictions loaded. Please check your .gum file and \nthat your .rst files are in the correct place.");
 
     std::cout << "Restriction " + rst + " loaded successfully." << std::endl;
-    return true;
-}
+  }
 
-// Check a model is Hermitian (it should be...)
-void FeynRules::check_herm(std::string LTot)
-{
+  // Check a model is Hermitian (it should be...)
+  void FeynRules::check_herm(std::string LTot)
+  {
 
     std::cout << "Checking the model is Hermitian... ";
 
@@ -150,11 +168,8 @@ void FeynRules::check_herm(std::string LTot)
 
     int lench;
 
-    if (!WSGetInteger((WSLINK)pHandle, &lench))
-    {
-        std::cout << "Error getting 'Length[ch]' from WSTP." << std::endl;
-        return;
-    }
+    if (!WSGetInteger(link, &lench))
+        throw std::runtime_error("Error getting 'Length[ch]' from WSTP.");
     else
     {
         if (lench == 0)
@@ -171,11 +186,11 @@ void FeynRules::check_herm(std::string LTot)
 
     }
 
-}
+  }
 
-// Gets the 'PartList' -- this contains all particles in the model.
-void FeynRules::get_partlist(std::vector<Particle> &partlist)
-{
+  // Gets the 'PartList' -- this contains all particles in the model.
+  void FeynRules::get_partlist(std::vector<Particle> &partlist)
+  {
 
     std::cout << "Extracting particles from FeynRules model." << std::endl;
 
@@ -189,7 +204,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
 
     int lenpl;
 
-    if (!WSGetInteger((WSLINK)pHandle, &lenpl))
+    if (!WSGetInteger(link, &lenpl))
     {
         std::cout << "Error getting 'Length[PartList]' from WSTP." << std::endl;
         return;
@@ -206,7 +221,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
         int numelements;
         command = "Length[pl[[" + std::to_string(i+1) + ",2]]]";
         send_to_math(command);
-        if (!WSGetInteger((WSLINK)pHandle, &numelements))
+        if (!WSGetInteger(link, &numelements))
         {
             std::cout << "Error getting number of elements from WSTP." << std::endl;
             return;
@@ -233,7 +248,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",1]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &name))
+            if (!WSGetString(link, &name))
             {
                 std::cout << "Error getting particle name from WSTP." << std::endl;
                 return;
@@ -243,7 +258,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",2]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &antiname))
+            if (!WSGetString(link, &antiname))
             {
                 std::cout << "Error getting antiparticle name from WSTP." << std::endl;
                 return;
@@ -253,7 +268,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",3]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &spin))
+            if (!WSGetString(link, &spin))
             {
                 std::cout << "Error getting spin from WSTP." << std::endl;
                 return;
@@ -280,7 +295,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             // PDG code.
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",9]]";
             send_to_math(command);
-            if (!WSGetInteger((WSLINK)pHandle, &pdg))
+            if (!WSGetInteger(link, &pdg))
             {
                 std::cout << "Error getting pdg code from WSTP." << std::endl;
                 return;
@@ -290,7 +305,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",10]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &fullname))
+            if (!WSGetString(link, &fullname))
             {
                 std::cout << "Error getting fullname from WSTP." << std::endl;
                 return;
@@ -300,7 +315,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",5]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &mass))
+            if (!WSGetString(link, &mass))
             {
                 std::cout << "Error getting mass from WSTP." << std::endl;
                 return;
@@ -310,7 +325,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",13]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &eaten))
+            if (!WSGetString(link, &eaten))
             {
                 std::cout << "Error getting Goldstone info from WSTP." << std::endl;
                 return;
@@ -326,7 +341,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
 
             const char* colorstr;
 
-            if (!WSGetString((WSLINK)pHandle, &colorstr))
+            if (!WSGetString(link, &colorstr))
             {
                 std::cout << "Error getting Color info from WSTP." << std::endl;
                 return;
@@ -352,7 +367,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "pl[[" + std::to_string(i+1) + ",1,2]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &classname))
+            if (!WSGetString(link, &classname))
             {
                 std::cout << "Error getting classname from WSTP." << std::endl;
                 return;
@@ -365,7 +380,7 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             command = "N[Q[" + str + "]]";
             send_to_math(command);
 
-            if (!WSGetFloat((WSLINK)pHandle, &charge))
+            if (!WSGetFloat(link, &charge))
             {
                 std::cout << "Error getting charge info from WSTP." << std::endl;
                 return;
@@ -390,13 +405,13 @@ void FeynRules::get_partlist(std::vector<Particle> &partlist)
             partlist.push_back(particle);
         }
 
-    }
+     }
 
-}
+  }
 
-// Gets the 'ParamList' -- this contains all particles in the model.
-void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
-{
+  // Gets the 'ParamList' -- this contains all particles in the model.
+  void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
+  {
     std::cout << "Extracting external parameters from FeynRules model." << std::endl;
 
     std::string command = "epl = EParamList;";
@@ -408,7 +423,7 @@ void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
 
     int lenepl;
 
-    if (!WSGetInteger((WSLINK)pHandle, &lenepl))
+    if (!WSGetInteger(link, &lenepl))
     {
         std::cout << "Error getting 'Length[EParamList]' from WSTP." << std::endl;
         return;
@@ -423,7 +438,7 @@ void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
         command = "epl[[" + std::to_string(i+1) + ",1]]";
         send_to_math(command);
 
-        if (!WSGetString((WSLINK)pHandle, &block))
+        if (!WSGetString(link, &block))
         {
             std::cout << "Error getting block info from WSTP. "
                       << "Please check every parameter has a BlockName in your .fr file."
@@ -436,7 +451,7 @@ void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
         int numelements;
         command = "Length[epl[[" + std::to_string(i+1) + ",2]]]";
         send_to_math(command);
-        if (!WSGetInteger((WSLINK)pHandle, &numelements))
+        if (!WSGetInteger(link, &numelements))
         {
             std::cout << "Error getting number of elements from WSTP." << std::endl;
             return;
@@ -450,7 +465,7 @@ void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
             command = "epl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",2,1]]";
             send_to_math(command);
 
-            if (!WSGetString((WSLINK)pHandle, &paramname))
+            if (!WSGetString(link, &paramname))
             {
                 std::cout << "Error getting paramname from WSTP." << std::endl;
                 return;
@@ -460,11 +475,11 @@ void FeynRules::get_paramlist(std::vector<Parameter> &paramlist)
             paramlist.push_back(parameter);
         }
     }
-}
+  }
 
-// Set the gauge -- accepts either 'feynman' or 'unitary'
-void FeynRules::set_gauge(std::string gauge)
-{
+  // Set the gauge -- accepts either 'feynman' or 'unitary'
+  void FeynRules::set_gauge(std::string gauge)
+  {
     if ((gauge != "feynman") && (gauge != "unitary"))
     {
         std::cerr << "set_gauge() called with an incorrect option, "
@@ -484,11 +499,11 @@ void FeynRules::set_gauge(std::string gauge)
         std::cout << "Setting Unitary Gauge." << std::endl;
     }
     send_to_math(command);
-}
+  }
 
-// Write CalcHEP output.
-void FeynRules::write_ch_output(std::string LTot)
-{
+  // Write CalcHEP output.
+  void FeynRules::write_ch_output(std::string LTot)
+  {
     std::cout << "Writing CalcHEP output." << std::endl;
 
     // CalcHEP is faster in Feynman Gauge.
@@ -500,11 +515,11 @@ void FeynRules::write_ch_output(std::string LTot)
     send_to_math(command);
 
     std::cout << "CalcHEP files written." << std::endl;
-}
+  }
 
-// Write MadGraph output.
-void FeynRules::write_mg_output(std::string LTot)
-{
+  // Write MadGraph output.
+  void FeynRules::write_mg_output(std::string LTot)
+  {
     std::cout << "Writing MadGraph (UFO) output for Pythia/MadDM." << std::endl;
 
     // Write output.
@@ -512,80 +527,65 @@ void FeynRules::write_mg_output(std::string LTot)
     send_to_math(command);
 
     std::cout << "MadGraph files written." << std::endl;
-}
+  }
 
-// Performs all FeynRules output.
-void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
-{
-    std::cout << "Calling FeynRules with model " << opts.model() << "..." << std::endl;
-
-    // Declare FeynRules model class
-    FeynRules model;
-
-    // Open link to Mathematica
-    model.create_wstp_link();
-
-    // Load FeynRules
-    model.load_feynrules();
-
-    // Set the FeynRules model and load it up
-    model.set_name(opts.model());
-    bool out = model.load_model(opts.model(), opts.base_model());
-
-    if (not out)
+  // Performs all FeynRules output.
+  void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
+  {
+    try
     {
-        return;
-    }
+      std::cout << "Calling FeynRules with model " << opts.model() << "..." << std::endl;
 
-    // Load restrictions - if there are any.
-    if (not opts.restriction().empty())
-    {
-        out = model.load_restriction(opts.model(), opts.restriction());
-        if (not out)
-        {
-            return;
-        }
-    }
+      // Create FeynRules object, open link to Mathematica, load Feynrules and the model
+      FeynRules model(opts.model(), opts.base_model());
 
-    // Diagnositics -- check it is hermitian
-    model.check_herm(opts.lagrangian());
+      // Load restrictions - if there are any.
+      if (not opts.restriction().empty())
+      {
+        model.load_restriction(opts.model(), opts.restriction());
+      }
 
-    // Get all of the particles
-    model.get_partlist(partlist);
+      // Diagnositics -- check it is hermitian
+      model.check_herm(opts.lagrangian());
 
-    // And all parameters
-    model.get_paramlist(paramlist);
+      // Get all of the particles
+      model.get_partlist(partlist);
 
-    // Get the "actual" model name
-    std::string fr_model_name;
-    model.get_modelname(fr_model_name);
+      // And all parameters
+      model.get_paramlist(paramlist);
 
-    // Output directory
-    std::string output = std::string(FEYNRULES_PATH) + "/" + fr_model_name;
+      // Get the "actual" model name
+      std::string fr_model_name = model.get_modelname();
 
-    /// Write CalcHEP output
-    if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
-      model.write_ch_output(opts.lagrangian());
+      // Output directory
+      std::string output = std::string(FEYNRULES_PATH) + "/" + fr_model_name;
+
+      /// Write CalcHEP output
+      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+        model.write_ch_output(opts.lagrangian());
 
       // Location of CalcHEP files
       std::string chdir = output + "-CH";
       std::replace(chdir.begin(), chdir.end(), ' ', '-');
       outputs.set_ch(chdir);
 
-    /// Same for MadGraph->Pythia
-    if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
-      model.write_mg_output(opts.lagrangian());
+      /// Same for MadGraph->Pythia
+      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
+        model.write_mg_output(opts.lagrangian());
 
       // Location of MadGraph (UFO) files
       std::string mgdir = output + "_UFO";
       std::replace(mgdir.begin(), mgdir.end(), ' ', '_');
       outputs.set_mg(mgdir);
 
-    // All done. Close the Mathematica link.
-    model.close_wstp_link();
+    }
+    catch(std::exception &e)
+    {
+     std::cerr << e.what() << std::endl;
+    }
+  }
 
-    return;
-}
+} // namespace GUM
 
 // Now all the grizzly stuff, so Python can call C++ (which can call Mathematica...)
 BOOST_PYTHON_MODULE(libfr)
@@ -636,6 +636,6 @@ BOOST_PYTHON_MODULE(libfr)
     ;
 
 
-  def("all_feynrules", all_feynrules);
+  def("all_feynrules", GUM::all_feynrules);
 
 }

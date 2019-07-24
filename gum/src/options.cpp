@@ -28,14 +28,14 @@ Options parse(int argc, char** argv)
 
     if (argc < 2)
     {
-        throw("Here are some tips to get you going.");
+        throw std::runtime_error("Options Error: Here are some tips to get you going.");
     }
     for (int i=1; i<argc; ++i)
     {
         std::string arg = argv[i];
         if ((arg == "-h") || (arg == "--help"))
         {
-            throw("");
+            throw std::runtime_error("Options Error:");
         }
         else if ((arg == "-p") || (arg == "--package"))
         {
@@ -46,7 +46,7 @@ Options parse(int argc, char** argv)
             }
             else
             {
-                throw("ERROR: -p option requires an argument.");
+                throw std::runtime_error("Options Error: -p option requires an argument.");
             }
         }
         else if ((arg == "-m") || (arg == "--model"))
@@ -57,7 +57,7 @@ Options parse(int argc, char** argv)
             }
             else
             {
-                throw("ERROR: -m option requires an argument.");
+                throw std::runtime_error("Options Error: -m option requires an argument.");
             }
         }        
         else if ((arg == "-b") || (arg == "--basemodel"))
@@ -68,7 +68,7 @@ Options parse(int argc, char** argv)
             }
             else
             {
-                throw("ERROR: -b option requires an argument.");
+                throw std::runtime_error("Options Error: -b option requires an argument.");
             }
         }
         else if ((arg == "-r") || (arg == "--restriction"))
@@ -79,7 +79,7 @@ Options parse(int argc, char** argv)
             }
             else
             {
-                throw("ERROR: -r option requires an argument.");
+                throw std::runtime_error("Options Error: -r option requires an argument.");
             }
         }
         else if ((arg == "-L") || (arg == "--Lagrangian"))
@@ -90,25 +90,25 @@ Options parse(int argc, char** argv)
             }
             else
             {
-                throw("ERROR: -L option requires an argument.");
+                throw std::runtime_error("Options Error: -L option requires an argument.");
             }
         }
     }
     if ((package != "sarah") && (package != "feynrules"))
     {
-        throw("ERROR: no Mathematica package specified.");
+        throw std::runtime_error("Options Error: no Mathematica package specified.");
     }
     if ((model.empty()))
     {
-        throw("ERROR: no model file specified.");
+        throw std::runtime_error("Options Error: no model file specified.");
     }
     if ((package == "sarah") && (not restriction.empty()))
     {
-        throw("ERROR: restriction file added for SARAH, only works for FeynRules.");
+        throw std::runtime_error("Options Error: restriction file added for SARAH, only works for FeynRules.");
     }
     if ((package == "sarah") && (not basemodel.empty()))
     {
-        throw("ERROR: base model specified for SARAH, only works for FeynRules.");
+        throw std::runtime_error("Options Error: base model specified for SARAH, only works for FeynRules.");
     }
     Options options(package, model, basemodel, restriction, lagrangian);
     return options;

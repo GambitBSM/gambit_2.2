@@ -35,14 +35,17 @@ class Outputs
 {
     std::string ch;
     std::string mg;
+    std::string sp;
 
     public:
 
         std::string get_ch() { return ch; }
         std::string get_mg() { return mg; }
+        std::string get_sp() { return sp; }
 
         void set_ch(std::string chdir) { ch = chdir; }
         void set_mg(std::string mgdir) { mg = mgdir; }
+        void set_sp(std::string spdir) { sp = spdir; }
 };
 
 void usage(std::string);
