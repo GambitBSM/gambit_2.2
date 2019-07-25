@@ -66,7 +66,7 @@ def patch_spheno(model_name, patch_dir):
     patch_spheno_makefile(model_name, patch_dir)
     patch_spheno_model_makefile(model_name, patch_dir)
     patch_spheno_src_makefile(model_name, patch_dir)
-    #patch_control(model_name, patch_dir)
+    patch_control(model_name, patch_dir)
     #patch_brs(model_name, patch_dir)
     #patch_loopfunctions(model_name, patch_dir)
     #patch_spheno_model(model_name, patch_dir)
@@ -255,10 +255,89 @@ def patch_spheno_src_makefile(model_name, patch_dir):
   os.remove(filename)
   os.rename(temp_filename, filename)
 
+
 def patch_control(model_name, patch_dir):
-	"""
-	Patches $SPheno/src/Control.f90
-	"""
+  """
+  Patches $SPheno/src/Control.F90
+  """
+  
+  filename = patch_dir + "/src/Control.F90"
+  temp_filename = filename + "_temp"
+
+  # TODO: throw some errors if the file does not exist
+
+  with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+    skip_next_lines = False
+    for line in f :
+      if line.startswith(" Interface Is_NaN") :
+        content = "! Added by GAMBIT\n"\
+                  "Use, Intrinsic :: iso_c_binding\n"\
+                  "Implicit none\n"\
+                  "\n"\
+                  "Type(c_funptr) :: ErrorHandler_cptr\n"\
+                  "\n"\
+                  "! Define interface of call-back routine.\n"\
+                  "\n"\
+                  "Abstract Interface\n"\
+                  "  Subroutine callback ()\n"\
+                  "    Use, Intrinsic :: iso_c_binding\n"\
+                  "  End Subroutine callback\n"\
+                  "End Interface\n"\
+                  "! GAMBIT addition end\n\n"
+        g.write(content)
+        g.write(line) 
+      elif line.startswith(" Subroutine TerminateProgram") :
+        content = " ! Subroutine modified by GAMBIT\n"\
+                  " Subroutine TerminateProgram\n"\
+                  " !-----------------------------------------------------------------------\n"\
+                  " ! This subroutine terminates a program if a fatal error occurs.\n"\
+                  " ! Before doing this, it writes the tree of calling subroutines to\n"\
+                  " ! the file which is connected to the channel ErrCan\n"\
+                  " ! written by Werner Porod, 20.9.2000\n"\
+                  " !-----------------------------------------------------------------------\n"\
+                  " Use, Intrinsic :: iso_c_binding\n"\
+                  " Implicit None\n"\
+                  " \n"\
+                  "  Procedure(callback), Pointer :: ErrorHandler_fptr\n"\
+                  "  Integer :: i1\n"\
+                  " \n"\
+                  "  Write (ErrCan,*) \"  \"\n"\
+                  "  Write (ErrCan,*) \"ErrorLevel, Iname:\",ErrorLevel, Iname\n"\
+                  "  Write (ErrCan,*) &\n"\
+                  "    & \"The error has occured in the following chain of subroutines:\"\n"\
+                  "  Do i1=1,Size(NameOfUnit)\n"\
+                  "   Write (ErrCan,*) NameOfUnit(i1)\n"\
+                  "  End Do\n"\
+                  "  Write (ErrCan,*) \"  \"\n"\
+                  "  Write (ErrCan,*) \"Hopefully you find the error soon\"\n"\
+                  "  Do i1=ErrCan,ErrCan+NumberOfOpenFiles-1\n"\
+                  "   Close(i1)\n"\
+                  "  End Do\n"\
+                  " \n"\
+                  "  ! Convert C to Fortran procedure pointer.\n"\
+                  "  Call c_f_procpointer(ErrorHandler_cptr, ErrorHandler_fptr)\n"\
+                  " \n"\
+                  "  ! Call the ErrorHandler\n"\
+                  "  Call ErrorHandler_fptr()\n"\
+                  " \n"\
+                  "  ! This should never happen\n"\
+                  "  Write(*,*) \"DEBUG: SPheno has continued past the ErrorHandler call. This should never happen...\"\n"\
+                  "  Stop \"Subroutine TerminateProgram\"\n"\
+                  " \n"\
+                  " End Subroutine TerminateProgram\n\n"
+        g.write(content)
+        skip_next_lines = True
+      elif line.startswith(" Subroutine") :
+        g.write(line)
+        skip_next_lines = False
+      else :
+        if not skip_next_lines :
+          g.write(line)
+
+
+  os.remove(filename)
+  os.rename(temp_filename, filename)
+
 
 def patch_brs(model_name, patch_dir):
 	"""
