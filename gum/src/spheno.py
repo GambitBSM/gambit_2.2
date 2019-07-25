@@ -68,7 +68,7 @@ def patch_spheno(model_name, patch_dir):
     patch_spheno_src_makefile(model_name, patch_dir)
     patch_control(model_name, patch_dir)
     patch_brs(model_name, patch_dir)
-    #patch_loopfunctions(model_name, patch_dir)
+    patch_loopfunctions(model_name, patch_dir)
     #patch_spheno_model(model_name, patch_dir)
     #patch_model_data(model_name, patch_dir)
 
@@ -380,12 +380,31 @@ def patch_brs(model_name, patch_dir):
   os.remove(filename)
   os.rename(temp_filename, filename)
 
-
-
 def patch_loopfunctions(model_name, patch_dir):
-	"""
-	Patches $SPheno/AddLoopFunctions.f90
-	"""
+  """
+  Patches $SPheno/<MODEL>/AddLoopFunctions.f90
+  """
+
+  filename = patch_dir + "/" + model_name + "/AddLoopFunctions.f90"
+  temp_filename = filename + "_temp"
+
+  # TODO: throw some errors if the file does not exist
+
+  with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+    for line in f :
+      if line.startswith("  SA_DerB00 = 3._dp * (xm1 * xm1 - 2._dp * xm1 * xm2") :
+        content = "  If ((xm1.Eq.0._dp).And.(xm2.Eq.0._dp)) Then\n"\
+                  "    SA_DerB00 = -2._dp * xp * xp - 3._dp * xp * xp * VB0 - 3._dp * xp * xp * xp * VDerB0\n"\
+                  "  Else\n"
+        g.write(content)
+      elif line.startswith("  SA_DerB00 = SA_DerB00 / (36._dp * xp * xp)") :
+        g.write("  Endif\n")
+      g.write(line)
+
+
+  os.remove(filename)
+  os.rename(temp_filename, filename)
+
 
 # Model-dependent patches
 
