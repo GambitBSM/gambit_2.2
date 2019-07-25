@@ -545,7 +545,7 @@ namespace GUM
       std::string options;
       // TODO: options:
       // - InputFile (default $MODEL/SPheno.m)
-      // - StandardCompiler -> <COMPILER> (default gfortran)
+      // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
 
       // Write output.
       std::string command = "MakeSPheno[" + options + "];";
@@ -617,7 +617,8 @@ namespace GUM
       /// Write SPheno output
       if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
       {
-        model.write_spheno_output();
+        // TODO: commented for speed, uncomment at the end
+        //model.write_spheno_output();
 
         // Location of SPheno files
         std::string sphdir = outputdir + "SPheno";
@@ -633,10 +634,6 @@ namespace GUM
         std::replace(vevdir.begin(), vevdir.end(), ' ', '-');
         outputs.set_vev(vevdir);
       }
-
-      // All done. Close the Mathematica link.
-      // Sanjay: this function seems to kill GUM. Not sure why.
-      //model.close_wstp_link();
 
     }
     catch(std::exception &e)

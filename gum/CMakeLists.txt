@@ -101,15 +101,14 @@ EXTERNALPROJECT_ADD(
 
 # Download SPheno
 set(SPHENO_VERSION 4.0.3)
-set(ver "4.0.3")
-set(dl http://www.hepforge.org/archive/spheno/SPheno-${ver}.tar.gz)
+set(dl http://www.hepforge.org/archive/spheno/SPheno-${SPHENO_VERSION}.tar.gz)
 set(md5 "64787d6c8ce03cac38aec53d34ac46ad")
-set(dir "${CMAKE_SOURCE_DIR}/contrib/spheno")
+set(SPHENO_DIR "${CMAKE_SOURCE_DIR}/contrib/SPheno")
 ExternalProject_Add(
   SPheno
   URL ${dl}
   URL_MD5 ${md5}
-  SOURCE_DIR ${dir}
+  SOURCE_DIR ${SPHENO_DIR}
   PATCH_COMMAND ""
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""

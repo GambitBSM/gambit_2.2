@@ -1,8 +1,23 @@
 #!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Main GUM script
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017, 2018, 2019 
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2019 July
+#
+#  **************************************
 
-"""
-GUM - GAMBIT Universal Models
-"""
 
 import sys
 import os
@@ -195,19 +210,22 @@ if args.file:
     """
 
     if output_opts.spheno:
+
+        # SARAH removes hyphens for .f90 files...
+        clean_model_name = gum.name.replace('-','')
+
         # Move SPheno files from SARAH to Outputs.
-        copy_spheno_files(gum.name, output_dir, outputs.get_sph())
+        copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR, outputs.get_sph())
 
         # Patch the files
-        patch_spheno(gum.name, output_dir+"/SPheno_patched")
-
+        patch_spheno(clean_model_name, output_dir+"/SPheno_patched")
 
         ## NOT WORKING!
-        pristine_spheno_dir = os.path.join(os.getcwd(), 'Outputs', gum.name, 'SPheno')
+        #pristine_spheno_dir = os.path.join(os.getcwd(), 'Outputs', gum.name, 'SPheno')
 
         # Create a diff vs. the out of the [SARAH]box
-        write_backend_patch(output_dir, pristine_spheno_dir, output_dir+"/SPheno_patched", 
-                            "spheno_"+gum.name.lower(), spheno_version)
+        #write_backend_patch(output_dir, pristine_spheno_dir, output_dir+"/SPheno_patched", 
+        #                    "spheno_"+gum.name.lower(), SPHENO_VERSION)
 
 
     # Enough for now.
