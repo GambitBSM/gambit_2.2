@@ -217,15 +217,15 @@ if args.file:
         # Move SPheno files from SARAH to Outputs.
         copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR, outputs.get_sph())
 
-        # Patch the files
-        patch_spheno(clean_model_name, output_dir+"/SPheno_patched")
+        # Pristine and patched SPhenos
+        pristine_spheno_dir = output_dir + "/SPheno"
+        patched_spheno_dir = output_dir + "/SPheno_patched"
 
-        ## NOT WORKING!
-        #pristine_spheno_dir = os.path.join(os.getcwd(), 'Outputs', gum.name, 'SPheno')
+        # Patch the files
+        patch_spheno(clean_model_name, patched_spheno_dir)
 
         # Create a diff vs. the out of the [SARAH]box
-        #write_backend_patch(output_dir, pristine_spheno_dir, output_dir+"/SPheno_patched", 
-        #                    "spheno_"+gum.name.lower(), SPHENO_VERSION)
+        write_backend_patch(output_dir, pristine_spheno_dir, patched_spheno_dir, "spheno_"+gum.name.lower(), SPHENO_VERSION)
 
 
     # Enough for now.
