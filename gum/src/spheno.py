@@ -63,13 +63,9 @@ def patch_spheno(model_name, patch_dir):
     Outputs/... directory.
     """
 
-    patch_main_dir = patch_dir + "/"
-    patch_src_dir = patch_dir + "/src/"
-    patch_model_dir = patch_dir + "/" + model_name + "/"
-
-    patch_spheno_makefile(model_name, patch_main_dir)
-    patch_spheno_model_makefile(model_name, patch_model_dir)
-    patch_spheno_src_makefile(model_name, patch_src_dir)
+    patch_spheno_makefile(model_name, patch_dir)
+    patch_spheno_model_makefile(model_name, patch_dir)
+    patch_spheno_src_makefile(model_name, patch_dir)
     #patch_control(model_name, patch_dir)
     #patch_brs(model_name, patch_dir)
     #patch_loopfunctions(model_name, patch_dir)
@@ -88,9 +84,9 @@ def patch_spheno_makefile(model_name, patch_dir):
   Patches $SPheno/Makefile
   """
 
-  filename = patch_dir + "Makefile"
+  filename = patch_dir + "/Makefile"
 
-  makefile_content = "# please put here your preferred F95/F2003 compiler\n"\
+  content = "# please put here your preferred F95/F2003 compiler\n"\
     "# the options in src/Makefile have been put for the\n"\
     "# cases NAG's nagfor, gfortran, g95, Lahey's lf95 and Intels ifort\n"\
     "# Please uncomment the corresponding line\n"\
@@ -113,17 +109,151 @@ def patch_spheno_makefile(model_name, patch_dir):
     ".PHONY: bin/SPheno lib/libSPheno"+model_name+" clean cleanall"
 
   f = open(filename, 'w')
-  f.write(makefile_content)
+  f.write(content)
+  f.close()
 
 def patch_spheno_model_makefile(model_name, patch_dir):
-	"""
-	Patches $SPheno/<MODEL>/Makefile
-	"""
+  """
+  Patches $SPheno/<MODEL>/Makefile
+  """
+  
+  filename = patch_dir + "/" + model_name + "/Makefile" 
+  temp_filename = filename + "_temp"  
+
+  with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+    skip_next_lines = False
+    for line in f :
+      if line.startswith("name = ") :
+        g.write(line)
+        g.write("shared = lib/libSPheno" + model_name + ".so")
+      elif line.startswith("F90=gfortran") :
+        content = "ifeq (${F90},/usr/bin/gfortran)\n"\
+                  "override F90=gfortran\n"\
+                  "endif\n"\
+                  "# Intels ifort,debug modus\n"\
+                  "ifeq (${F90},ifort)\n"\
+                  "F90=ifort\n"\
+                  "comp= -c -g -fPIC -module ${Mdir} -I${InDir}\n"\
+                  "LFlagsB= -g -fPIC\n"\
+                  "endif\n"\
+                  "# gfortran\n"\
+                  "ifeq (${F90},gfortran)\n"\
+                  "comp= -c -g -fPIC --free-line-length-none -J${Mdir} -I${InDir}\n"\
+                  "LFlagsB= -g -fPIC\n"\
+                  "endif\n"\
+                  "# g95\n"\
+                  "ifeq (${F90},g95)\n"\
+                  "comp= -c -O -fPIC -fmod=${Mdir} -I${InDir}\n"\
+                  "LFlagsB= -O -fPIC\n"\
+                  "endif\n"\
+                  "# Lahey F95 compiler\n"  \
+                  "ifeq (${F90},lf95)\n"\
+                  "comp=-c -O -fPIC -M ${Mdir} -I${InDir}\n"\
+                  "LFlagsB=-O -fPIC\n"\
+                  "endif\n"\
+                  "# NAG f95/2003\n"\
+                  "ifeq (${F90},nagfor)\n"\
+                  "comp= -c -O -fPIC -mdir ${Mdir} -I${InDir}\n"\
+                  "LFlagsB= -O -fPIC -DONLYDOUBLE -mdir ${MDir} -I${InDir}\n"\
+                  "endif\n"\
+                  ".SUFFIXES : .o .ps .f90 .F90 .a\n"
+        g.write(content)
+        skip_next_lines = True
+      elif line.startswith("bin/SPheno" + model_name) :
+        content = "${shared}:\n"\
+                  "\tcd ../src ; ${MAKE} F90=${F90}\n"\
+                  "\t${MAKE} F90=${F90} ${name}\n"\
+                  "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
+                  "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
+                  "\t${F90} -shared -fPIC -o ../${shared} ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
+                  "bin/SPheno" + model_name + ":\n"\
+                  "ifeq (${cVersion},1)\n"\
+                  "\tcd ../src ; ${MAKE} F90=${F90}\n"\
+                  "\t${MAKE} F90=${F90} ${name}\n"\
+                  "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
+                  "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
+                  "\t${F90} -o -fPIC SPheno" + model_name + " ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
+                  "\tmv SPhenoNMSSM ../bin\n"\
+                  "\trm SPhenoNMSSM.o\n"
+        g.write(content)
+        for i in range(7): next(f)
+        skip_next_lines = False
+      elif line.startswith("cleanall:") :
+         g.write(line)
+         g.write("\trm -f bin/SPheno3 lib/*.a lib/*.so *~ */*.o */*~ include/*")
+         next(f)
+      else :
+        if not skip_next_lines :
+          g.write(line)
+
+  os.remove(filename)
+  os.rename(temp_filename, filename)
 
 def patch_spheno_src_makefile(model_name, patch_dir):
-	"""
-	Patches $SPheno/src/Makefile
-	"""
+  """
+  Patches $SPheno/src/Makefile
+  """
+
+  filename = patch_dir + "/src/Makefile"
+  temp_filename = filename + "_temp"
+
+  with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+    skip_next_lines = False
+    for line in f :
+      if line.startswith("F90 = ifort") :
+        content = "F90 = ifort\n"\
+                  "comp = -c -fPIC -O -module ${Mdir} -I${InDir}\n"\
+                  "LFlagsB = -O -fPIC\n"\
+                  "\n"\
+                  "# Intels ifort, debug modus\n"\
+                  "ifeq (${F90},ifortg)\n"\
+                  " F90 = ifort\n"\
+                  " comp = -c -g -fPIC -module ${Mdir} -I${InDir}\n"\
+                  " LFlagsB = -g -fPIC\n"\
+                  "endif\n"\
+                  "\n"\
+                  "# gfortran\n"\
+                  "ifeq (${F90},gfortran)\n"\
+                  " comp = -c -O -fPIC -J${Mdir} -I${InDir}\n"\
+                  " LFlagsB = -O -fPIC\n"\
+                  "endif\n"\
+                  "\n"\
+                  "# gfortran, any version (Added by GAMBIT)\n"\
+                  "ifneq (,$(findstring gfortran,${F90}))\n"\
+                  " comp = -c -O -fPIC -J${Mdir} -I${InDir}\n"\
+                  " LFlagsB = -O -fPIC\n"\
+                  "endif\n"\
+                  "\n"\
+                  "# g95 \n"\
+                  "ifeq (${F90},g95)\n"\
+                  " comp = -c -O -fPIC -fmod=${Mdir} -I${InDir}\n"\
+                  " LFlagsB = -O -fPIC\n"\
+                  "endif\n"\
+                  "\n"\
+                  "# Lahey F95 compiler\n"\
+                  "ifeq (${F90},lf95)\n"\
+                  " comp = -c -O -fPIC -M ${Mdir} -I${InDir}\n"\
+                  " LFlagsB = -O -fPIC\n"\
+                  "endif\n"\
+                  "\n"\
+                  "# NAG f95/2003\n"\
+                  "ifeq (${F90},nagfor)\n"\
+                  " comp = -c -O -fPIC -DONLYDOUBLE -mdir ${Mdir} -I${InDir}\n"\
+                  " LFlagsB = -O -fPIC\n"\
+                  "endif\n\n"
+        g.write(content)
+        skip_next_lines = True
+      elif line.startswith(".SUFFIXES") :
+        g.write(line)
+        skip_next_lines = False
+      else :
+        if not skip_next_lines :
+          g.write(line)
+
+      # We do not patch the -U flag in the ar command as it couses issues in OSX
+
+  os.remove(filename)
+  os.rename(temp_filename, filename)
 
 def patch_control(model_name, patch_dir):
 	"""
