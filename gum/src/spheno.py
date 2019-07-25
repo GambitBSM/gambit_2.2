@@ -67,7 +67,7 @@ def patch_spheno(model_name, patch_dir):
     patch_spheno_model_makefile(model_name, patch_dir)
     patch_spheno_src_makefile(model_name, patch_dir)
     patch_control(model_name, patch_dir)
-    #patch_brs(model_name, patch_dir)
+    patch_brs(model_name, patch_dir)
     #patch_loopfunctions(model_name, patch_dir)
     #patch_spheno_model(model_name, patch_dir)
     #patch_model_data(model_name, patch_dir)
@@ -85,6 +85,8 @@ def patch_spheno_makefile(model_name, patch_dir):
   """
 
   filename = patch_dir + "/Makefile"
+
+  # TODO: throw some errors if the file does not exist
 
   content = "# please put here your preferred F95/F2003 compiler\n"\
     "# the options in src/Makefile have been put for the\n"\
@@ -120,12 +122,14 @@ def patch_spheno_model_makefile(model_name, patch_dir):
   filename = patch_dir + "/" + model_name + "/Makefile" 
   temp_filename = filename + "_temp"  
 
+  # TODO: throw some errors if the file does not exist
+
   with open(filename, 'r') as f, open(temp_filename, 'w') as g :
     skip_next_lines = False
     for line in f :
       if line.startswith("name = ") :
         g.write(line)
-        g.write("shared = lib/libSPheno" + model_name + ".so")
+        g.write("shared = lib/libSPheno" + model_name + ".so\n")
       elif line.startswith("F90=gfortran") :
         content = "ifeq (${F90},/usr/bin/gfortran)\n"\
                   "override F90=gfortran\n"\
@@ -180,7 +184,7 @@ def patch_spheno_model_makefile(model_name, patch_dir):
         skip_next_lines = False
       elif line.startswith("cleanall:") :
          g.write(line)
-         g.write("\trm -f bin/SPheno3 lib/*.a lib/*.so *~ */*.o */*~ include/*")
+         g.write("\trm -f bin/SPheno3 lib/*.a lib/*.so *~ */*.o */*~ include/*\n")
          next(f)
       else :
         if not skip_next_lines :
@@ -196,6 +200,8 @@ def patch_spheno_src_makefile(model_name, patch_dir):
 
   filename = patch_dir + "/src/Makefile"
   temp_filename = filename + "_temp"
+
+  # TODO: throw some errors if the file does not exist
 
   with open(filename, 'r') as f, open(temp_filename, 'w') as g :
     skip_next_lines = False
@@ -283,6 +289,10 @@ def patch_control(model_name, patch_dir):
                   "    Use, Intrinsic :: iso_c_binding\n"\
                   "  End Subroutine callback\n"\
                   "End Interface\n"\
+                  "\n"\
+                  "! Variable to swith off screen output\n"\
+                  "Logical :: SilenceOutput = .False.\n"\
+                  "\n"\
                   "! GAMBIT addition end\n\n"
         g.write(content)
         g.write(line) 
@@ -340,9 +350,37 @@ def patch_control(model_name, patch_dir):
 
 
 def patch_brs(model_name, patch_dir):
-	"""
-	Patches $SPheno/BranchingRatios_<MODEL>.f90
-	"""
+  """
+  Patches $SPheno/<MODEL>/BranchingRatios_<MODEL>.f90
+  """
+
+  filename = patch_dir + "/" + model_name + "/BranchingRatios_" + model_name + ".f90"
+  temp_filename = filename + "_temp"
+
+  # TODO: throw some errors if the file does not exist
+
+  with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+    for line in f :
+      if line.startswith("Subroutine CalculateBR") :
+        g.write("Subroutine CalculateBR_2(CTBD,fac3,epsI,deltaM,kont,MAh,MAh2,MCha,MCha2,MChi,           &\n")
+      elif line.startswith("NameOfUnit(Iname) = \'CalculateBR\'") :
+        content = "NameOfUnit(Iname) = \'CalculateBR_2\'\n"\
+                  "\n"\
+                  "! Added by GAMBIT\n"\
+                  "If (SilenceOutput) Then\n"\
+                  "  open(unit=6, file=\"/dev/null\", status=\"old\")\n"\
+                  "Endif\n"
+        g.write(content)
+      elif line.startswith("End Subroutine CalculateBR") :
+        g.write("End Subroutine CalculateBR_2\n")
+      else :
+        g.write(line)
+
+
+  os.remove(filename)
+  os.rename(temp_filename, filename)
+
+
 
 def patch_loopfunctions(model_name, patch_dir):
 	"""
