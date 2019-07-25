@@ -70,10 +70,11 @@ def patch_spheno(model_name, patch_dir):
     patch_brs(model_name, patch_dir)
     patch_loopfunctions(model_name, patch_dir)
     #patch_spheno_model(model_name, patch_dir)
-    #patch_model_data(model_name, patch_dir)
 
-    # TODO: if gum.is_susy: ...
-    #patch_3_body_decays_susy(model_name, patch_dir)
+    if model_name == "MSSM" or model_name == "NMSSM" :
+      # TODO: if gum.is_susy: ...
+      patch_model_data(model_name, patch_dir)
+      patch_3_body_decays_susy(model_name, patch_dir)
 
     print("SPheno files patched.")
 
@@ -401,9 +402,9 @@ def patch_loopfunctions(model_name, patch_dir):
         g.write("  Endif\n")
       g.write(line)
 
-
   os.remove(filename)
   os.rename(temp_filename, filename)
+
 
 
 # Model-dependent patches
@@ -427,20 +428,70 @@ def patch_spheno_model(model_name, patch_dir):
 			else:
 				g.write(line)
 
-
-def patch_model_data(model_name, patch_dir):
-	"""
-	Patches $SPheno/Model_Data_<MODEL>.f90
-	"""
-
 # SUSY-only patches
 
+def patch_model_data(model_name, patch_dir):
+  """
+  Patches $SPheno/<MODEL>Model_Data_<MODEL>.f90
+  """
+  
+  filename = patch_dir + "/" + model_name + "/Model_Data_" + model_name + ".f90"
+  temp_filename = filename + "_temp"
+
+  # TODO: throw some errors if the file does not exist
+
+  with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+    for line in f :
+      if line.startswith("Logical, Save :: CalcLoopDecay_LoopInducedOnly=.False.") :
+        g.write(line)
+        g.write("Logical, Save :: CalcSUSY3BodyDecays=.False. ! Added by GAMBIT\n")
+      else :
+        g.write(line)
+
+  os.remove(filename)
+  os.rename(temp_filename, filename)
+
+
 def patch_3_body_decays_susy(model_name, patch_dir):
-	"""
-	Patches the 3-body decays in: 
-	$SPheno/3-Body-Decays/X_<MODEL>.f90
-	where X is a superfield.
-	"""
+  """
+  Patches the 3-body decays in: 
+  $SPheno/<MODEL>/3-Body-Decays/X_<MODEL>.f90
+  where X is a superfield.
+  """
+
+  particles = {"Cha", "Chi", "Glu", "Sd", "Su", "Se", "Sv"}
+  channels = {"Cha": {"ChaToChacChaCha", "ChaToChaChiChi"},
+              "Chi": {"ChiToChicChaCha", "ChiToChiChiChi"},
+              "Glu": {},
+              "Sd": {"SdToChaGluSu", "SdToSdChacCha", "SdToSdChiChi", "SdToChiGluSd", "SdToGluGluSd"},
+              "Su": {"SuToSuChiChi", "SuToChiGluSu", "SuToSdChicCha", "SuToGluGluSu", "SuToGluSdcCha", "SuToSuChacCha"},
+              "Se": {"SeToSvChaChi", "SeToSeChacCha", "SeToSeChiChi"},
+              "Sv": {"SvToSvChiChi", "SvToSeChicCha", "SvToSvChacCha"}}
+
+  for particle in particles :
+ 
+    filename = patch_dir + "/" + model_name + "/3-Body-Decays/" + particle + "_" + model_name + ".f90"
+    temp_filename = filename + "_temp"
+
+    # TODO: throw some errors if the file does not exist
+
+    with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+      for line in f :
+        if line.startswith("Use ThreeBodyPhaseSpace") :
+          g.write(line)
+          g.write("Use Model_Data_" + model_name + " ! Added by GAMBIT\n")
+        elif any([line.startwith("Call " + channel) for channel in channels[particle]]) :
+          g.write("If (CalcSUSY3BodyDecays) Then ! Added by GAMBIT\n")
+          g.write(line)
+        elif any([line.startwith("g" + channel + "(i_run,:,:,:) = g" + channel + "i") for channel in channels[particle]]) :
+          g.write("End If ! Added by GAMBIT\n\n")
+          g.write(line)
+        else :
+          g.write(line)
+
+    os.remove(filename)
+    os.rename(temp_filename, filename)
+
 
 """
 FRONTEND ROUTINES
