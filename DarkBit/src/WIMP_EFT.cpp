@@ -35,7 +35,13 @@ namespace Gambit
 
   namespace DarkBit
   {
- 
+
+    /// DarkMatter_ID string for NREO model 
+    void DarkMatter_ID_NREO(std::string& result)
+    {
+      result = "WIMP";
+    }
+
     //////////////////////////////////////////////////////////////////////////
     //
     //   Translation of NREO ModelParameters into NREO_DM_nucleon_couplings

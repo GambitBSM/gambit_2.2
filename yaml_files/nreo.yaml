@@ -112,23 +112,23 @@ Priors:
 
 Printer:
 
-  # printer: hdf5
-  # options:
-  #   output_file: "nreo.hdf5"
-  #   group: "/nreo"
-  #   delete_file_on_restart: true
-
-  printer: ascii
+  printer: hdf5
   options:
-   output_file: "nreo.dat"
-   buffer_length: 10
-   delete_file_on_restart: true
+    output_file: "nreo.hdf5"
+    group: "/nreo"
+    delete_file_on_restart: true
+
+  # printer: ascii
+  # options:
+  #  output_file: "nreo.dat"
+  #  buffer_length: 10
+  #  delete_file_on_restart: true
 
   # printer: cout
 
 Scanner:
 
-  use_scanner: sqrgrd
+  use_scanner: random
 
   scanners:
 
@@ -183,11 +183,11 @@ ObsLikes:
   #  capability: IC79_loglike
 
   # Direct detection
-  # - capability: LUX_2016_LogLikelihood
-  #   purpose:    LogLike
+  - capability: LUX_2016_LogLikelihood
+    purpose:    LogLike
 
-  # - capability: XENON1T_2018_LogLikelihood
-  #   purpose:    LogLike
+  - capability: XENON1T_2018_LogLikelihood
+    purpose:    LogLike
 
   # - capability: PandaX_2016_LogLikelihood
   #   purpose:    LogLike
@@ -230,14 +230,19 @@ Rules:
     #  function: DarkMatter_ID_MSSM #DarkMatter_ID_NREO
     - capability: DarkMatter_ID
       function: DarkMatter_ID_NREO
-     
+  
+    # Get WIMP-nucleon couplings from NREO wilson coefficients 
+    - capability: DDCalc_Couplings
+      function: DDCalc_Couplings_NR_WCs
+    
     # Use DarkSUSY or MicrOmegas for calculating direct detection couplings. from the HP_Develop branch in file capgentest.yaml
     - capability: DD_couplings
       function: DD_couplings_DarkSUSY
       #function: DD_couplings_MicrOmegas
 
-    - capability: TH_ProcessCatalog
-      function: TH_ProcessCatalog_MSSM
+    # Neal working on ProcessCatalog stuff for NREO model (for annihilations to neutrinos (from solar capture wimps) for icecube likelihoods)
+    #- capability: TH_ProcessCatalog
+    #  function: TH_ProcessCatalog_MSSM
 
     # Choose to get decays from DecayBit proper, not from an SLHA file. from the HP_Develop branch in file capgentest.yaml
     - capability: decay_rates

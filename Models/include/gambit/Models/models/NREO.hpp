@@ -19,7 +19,7 @@
 
 #define MODEL NREO
 	START_MODEL
-	DEFINEPARS(j, m, sig_v)
+	DEFINEPARS(j, m, sig_v, wimp_sc)
 	DEFINEPARS(c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7, c0_8, c0_9, c0_10, c0_11, c0_12, c0_13, c0_14, c0_15) 
 	DEFINEPARS(c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7, c1_8, c1_9, c1_10, c1_11, c1_12, c1_13, c1_14, c1_15)
 
@@ -27,8 +27,16 @@
 	/// capability 'capability', one adds the following to the declaration of the 
 	/// model containing 'my_par': MAP_TO_CAPABILITY(my_par, capability)
 	MAP_TO_CAPABILITY(m, mwimp) /// this capability already exists in DarkBit
-	MAP_TO_CAPABILITY(j, jwimp) /// this is a new capability
+    // Need "real" module functions for this
+	//MAP_TO_CAPABILITY(j, spinwimpx2) /// As does this (2 times WIMP spin, e.g. 1 means spin 1/2)
+    //MAP_TO_CAPABILITY(wimp_sc, wimp_sc) /// " " (boolean flag, 1 if WIMP is self-conjugate, 0 otherwise)
 	MAP_TO_CAPABILITY(sig_v, sigmav) /// this capability already exists in DarkBit - not sure if I should actually be setting it, testing
+
+    // Define a couple of module functions, for the module NREO (automatically created by START_MODEL)
+    // This works pretty much the same as in a normal module
+    QUICK_FUNCTION(NREO, spinwimpx2, OLD_CAPABILITY, NREO_wimp_spin, unsigned int, (NREO))
+    QUICK_FUNCTION(NREO, wimp_sc,    OLD_CAPABILITY, NREO_wimp_sc,   unsigned int, (NREO))
+
 #undef MODEL
 
 #endif

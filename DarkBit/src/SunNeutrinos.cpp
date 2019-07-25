@@ -169,11 +169,6 @@ namespace Gambit
     }
 */
 
-    // // header defined in DarkBit_rollcall.hpp
-    // void DarkMatter_ID_NREO(std::string& result)
-    // {
-    //   result = "WIMP";
-    // }
     //Capture rate for Non-Relataivistic Effective Operator (NREO)
     void capture_rate_Sun_NREO(double &result)
     {
@@ -195,7 +190,7 @@ namespace Gambit
       // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
       // bjf> Modified to use a custom object to carry these couplings (makes for a better 
       // dependency structure)
-      cout << "NREO_couplings capabilitiy grabbed via Pipes, e.g. Dep::NREO_couplings->c(0,1) " << Dep::NREO_couplings->c(0,1) << endl;
+      cout << "DD_nonrel_WCs capabilitiy grabbed via Pipes, e.g. Dep::DD_nonrel_WCs->c(0,1) " << Dep::DD_nonrel_WCs->c(0,1) << endl;
       
       int coupleNum;
       for(int j=0; j<15; j++)
@@ -203,8 +198,8 @@ namespace Gambit
         coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
         if (coupleNum != 2) // 2 is not an allowed coupling constant
         {
-          BEreq::populate_array(Dep::NREO_couplings->c(0,coupleNum), coupleNum, 0);
-          BEreq::populate_array(Dep::NREO_couplings->c(1,coupleNum), coupleNum, 1);
+          BEreq::populate_array(Dep::DD_nonrel_WCs->c(0,coupleNum), coupleNum, 0);
+          BEreq::populate_array(Dep::DD_nonrel_WCs->c(1,coupleNum), coupleNum, 1);
         }
       }
       
