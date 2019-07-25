@@ -29,29 +29,29 @@ import re
 d = defaultdict(list)
 
 def copy_spheno_files(model_name, output_dir, spheno_oob_path, sarah_spheno_path):
-	"""
-	Creates a copy of SPheno output in the 
-	Outputs/... folder.
-	Then create another one, for the patched version.
-	"""
+  """
+  Creates a copy of SPheno output in the 
+  Outputs/... folder.
+  Then create another one, for the patched version.
+  """
 
-	dirs = [output_dir + "/SPheno", output_dir+"/SPheno_patched"]
+  dirs = [output_dir + "/SPheno", output_dir+"/SPheno_patched"]
 
-	for newdir in dirs:
+  for newdir in dirs:
 
-		# Remove the directory if it already exists, then make it
-		remove_tree_quietly(newdir)
-		mkdir_if_absent(newdir)
+    # Remove the directory if it already exists, then make it
+    remove_tree_quietly(newdir)
+    mkdir_if_absent(newdir)
 
-                # Copy SPheno to the Output directory
-                copy_tree(spheno_oob_path, newdir)
+    # Copy SPheno to the Output directory
+    copy_tree(spheno_oob_path, newdir)
 
-		# Now copy from SARAH to the Output directory
-                modeldir = newdir + "/" + model_name
-                mkdir_if_absent(modeldir)
-		copy_tree(sarah_spheno_path, modeldir)
+    # Now copy from SARAH to the Output directory
+    modeldir = newdir + "/" + model_name
+    mkdir_if_absent(modeldir)
+    copy_tree(sarah_spheno_path, modeldir)
 
-	print("SPheno files moved to output directory, and a copy made.")
+  print("SPheno files moved to output directory, and a copy made.")
 
 """
 PATCHING
@@ -69,7 +69,7 @@ def patch_spheno(model_name, patch_dir):
     patch_control(model_name, patch_dir)
     patch_brs(model_name, patch_dir)
     patch_loopfunctions(model_name, patch_dir)
-    #patch_spheno_model(model_name, patch_dir)
+    patch_spheno_model(model_name, patch_dir)
 
     if model_name == "MSSM" or model_name == "NMSSM" :
       # TODO: if gum.is_susy: ...
@@ -78,7 +78,6 @@ def patch_spheno(model_name, patch_dir):
 
     print("SPheno files patched.")
 
-# Model-independent patches
 
 def patch_spheno_makefile(model_name, patch_dir):
   """
@@ -89,31 +88,31 @@ def patch_spheno_makefile(model_name, patch_dir):
 
   # TODO: throw some errors if the file does not exist
 
-  content = "# please put here your preferred F95/F2003 compiler\n"\
-    "# the options in src/Makefile have been put for the\n"\
-    "# cases NAG's nagfor, gfortran, g95, Lahey's lf95 and Intels ifort\n"\
-    "# Please uncomment the corresponding line\n"\
-    "# F90 = nagfor\n"\
-    "F90 = gfortran\n"\
-    "# F90 = g95\n"\
-    "# F90 = lf95\n"\
-    "# F90 = ifort\n"\
-    "Model = src\n"\
-    "version = 400.00\n"\
-    "all: bin/SPheno lib/libSPheno"+model_name+".so\n"\
-    "bin/SPheno:\n"\
-    "\tcd ${Model} ; ${MAKE} F90=${F90} version=${version}\n"\
-    "lib/libSPheno"+model_name+".so:\n"\
-    "\tcd ${Model} ; ${MAKE} $@ F90=${F90} version=${version}\n"\
-    "clean:\n"\
-    "\trm -f *.o *~ */*.o */*~\n"\
-    "cleanall:\n"\
-    "\trm -f bin/SPheno lib/*.a lib/*.so *.o *~ */*.o */*~ include/*\n"\
-    ".PHONY: bin/SPheno lib/libSPheno"+model_name+" clean cleanall"
+  with open(filename, 'w') as f :
+    content = "# please put here your preferred F95/F2003 compiler\n"\
+      "# the options in src/Makefile have been put for the\n"\
+      "# cases NAG's nagfor, gfortran, g95, Lahey's lf95 and Intels ifort\n"\
+      "# Please uncomment the corresponding line\n"\
+      "# F90 = nagfor\n"\
+      "F90 = gfortran\n"\
+      "# F90 = g95\n"\
+      "# F90 = lf95\n"\
+      "# F90 = ifort\n"\
+      "Model = src\n"\
+      "version = 400.00\n"\
+      "all: bin/SPheno lib/libSPheno"+model_name+".so\n"\
+      "bin/SPheno:\n"\
+      "\tcd ${Model} ; ${MAKE} F90=${F90} version=${version}\n"\
+      "lib/libSPheno"+model_name+".so:\n"\
+      "\tcd ${Model} ; ${MAKE} $@ F90=${F90} version=${version}\n"\
+      "clean:\n"\
+      "\trm -f *.o *~ */*.o */*~\n"\
+      "cleanall:\n"\
+      "\trm -f bin/SPheno lib/*.a lib/*.so *.o *~ */*.o */*~ include/*\n"\
+      ".PHONY: bin/SPheno lib/libSPheno"+model_name+" clean cleanall"
 
-  f = open(filename, 'w')
-  f.write(content)
-  f.close()
+    f.write(content)
+
 
 def patch_spheno_model_makefile(model_name, patch_dir):
   """
@@ -193,6 +192,7 @@ def patch_spheno_model_makefile(model_name, patch_dir):
 
   os.remove(filename)
   os.rename(temp_filename, filename)
+
 
 def patch_spheno_src_makefile(model_name, patch_dir):
   """
@@ -363,7 +363,7 @@ def patch_brs(model_name, patch_dir):
   with open(filename, 'r') as f, open(temp_filename, 'w') as g :
     for line in f :
       if line.startswith("Subroutine CalculateBR") :
-        g.write("Subroutine CalculateBR_2(CTBD,fac3,epsI,deltaM,kont,MAh,MAh2,MCha,MCha2,MChi,           &\n")
+        g.write(line[:22] + "_2" + line[22:])
       elif line.startswith("NameOfUnit(Iname) = \'CalculateBR\'") :
         content = "NameOfUnit(Iname) = \'CalculateBR_2\'\n"\
                   "\n"\
@@ -380,6 +380,7 @@ def patch_brs(model_name, patch_dir):
 
   os.remove(filename)
   os.rename(temp_filename, filename)
+
 
 def patch_loopfunctions(model_name, patch_dir):
   """
@@ -406,27 +407,56 @@ def patch_loopfunctions(model_name, patch_dir):
   os.rename(temp_filename, filename)
 
 
-
-# Model-dependent patches
-
 def patch_spheno_model(model_name, patch_dir):
-	"""
-	Patches $SPheno/SPheno<MODEL>.f90
-	"""
+  """
+  Patches $SPheno/<MODEL>/SPheno<MODEL>.f90
+  """
+ 
+  filename = patch_dir + "/" + model_name + "/SPheno" + model_name + ".f90"
+  temp_filename = filename + "_temp"
 
-	filename = "{0}/SPheno{1}.f90".format(patch_dir, model_name)
-	tempfile = filename+"_temp"
+  # TODO: throw some errors if the file does not exist
 
-	with open(filename, 'r') as f, open(tempfile, 'w') as g:
-		for line in f:
-			if line.startswith("Program SPheno"+model_name):
-				g.write("!Program SPheno"+model_name+" ! Commented by GAMBIT")
-				g.write("Module SPheno"+model_name+" ! Added by GAMBIT")
-			elif line.startswith("End Program SPheno"+model_name):
-				g.write("!End Program SPheno"+model_name+" ! Commented by GAMBIT")
-				g.write("End Module SPheno"+model_name+" ! Added by GAMBIT")
-			else:
-				g.write(line)
+  with open(filename, 'r') as f, open(temp_filename, 'w') as g:
+    for line in f:
+      if line.startswith("Program SPheno" + model_name) :
+        g.write("!Program SPheno" + model_name + " ! Commented by GAMBIT\n")
+        g.write("Module SPheno" + model_name + " ! Added by GAMBIT\n")
+      elif line.startswith("Tpar = 0._dp") :
+        content = "Contains ! Added by GAMBIT\n"\
+                  "\n"\
+                  "Subroutine Dummy() ! Added by GAMBIT\n"
+        g.write(content)
+        g.write(line)
+      elif line.startswith(" Call CalculateBR") :
+        g.write(line[:17] + "_2" + line[17:])
+      elif line.startswith("Contains") :
+        content = "\n"\
+                  "End Subroutine Dummy ! Added by GAMBIT\n"\
+                  "!Contains ! Commented by GAMBIT\n"
+        g.write(content)
+      elif line.startswith("kont = 0") :
+        line2 = next(f)
+        if line2.startswith("Call FirstGuess") :
+          content = "! Added by GAMBIT\n"\
+                    "If (SilenceOutput) Then\n"\
+                    " open(unit=6, file=\"/dev/null\", status=\"old\")\n"\
+                    "Endif\n"\
+                    "\n"\
+                    "kont = 0\n"
+          g.write(content)
+          g.write(line2)
+      elif line.startswith("!If (kont.ne.0) Call TerminateProgram") :
+        g.write("If (kont.ne.0) Call TerminateProgram\n")
+      elif line.startswith("End Program SPheno" + model_name):
+        g.write("!End Program SPheno" + model_name + " ! Commented by GAMBIT\n")
+        g.write("End Module SPheno" + model_name + " ! Added by GAMBIT\n")
+      else:
+        g.write(line)
+
+  os.remove(filename)
+  os.rename(temp_filename, filename)
+
 
 # SUSY-only patches
 
@@ -480,10 +510,10 @@ def patch_3_body_decays_susy(model_name, patch_dir):
         if line.startswith("Use ThreeBodyPhaseSpace") :
           g.write(line)
           g.write("Use Model_Data_" + model_name + " ! Added by GAMBIT\n")
-        elif any([line.startwith("Call " + channel) for channel in channels[particle]]) :
+        elif any([line.startswith("Call " + channel) for channel in channels[particle]]) :
           g.write("If (CalcSUSY3BodyDecays) Then ! Added by GAMBIT\n")
           g.write(line)
-        elif any([line.startwith("g" + channel + "(i_run,:,:,:) = g" + channel + "i") for channel in channels[particle]]) :
+        elif any([line.startswith("g" + channel + "(i_run,:,:,:) = g" + channel + "i") for channel in channels[particle]]) :
           g.write("End If ! Added by GAMBIT\n\n")
           g.write(line)
         else :
