@@ -490,13 +490,14 @@ def patch_3_body_decays_susy(model_name, patch_dir):
   """
 
   particles = {"Cha", "Chi", "Glu", "Sd", "Su", "Se", "Sv"}
-  channels = {"Cha": {"ChaToChacChaCha", "ChaToChaChiChi"},
-              "Chi": {"ChiToChicChaCha", "ChiToChiChiChi"},
+  channels = {"Cha": {"ChacChaCha", "ChaChiChi"},
+              "Chi": {"ChicChaCha", "ChiChiChi"},
               "Glu": {},
-              "Sd": {"SdToChaGluSu", "SdToSdChacCha", "SdToSdChiChi", "SdToChiGluSd", "SdToGluGluSd"},
-              "Su": {"SuToSuChiChi", "SuToChiGluSu", "SuToSdChicCha", "SuToGluGluSu", "SuToGluSdcCha", "SuToSuChacCha"},
-              "Se": {"SeToSvChaChi", "SeToSeChacCha", "SeToSeChiChi"},
-              "Sv": {"SvToSvChiChi", "SvToSeChicCha", "SvToSvChacCha"}}
+              "Sd": {"ChaGluSu", "SdChacCha", "SdChiChi", "ChiGluSd", "GluGluSd"},
+              "Su": {"SuChiChi", "ChiGluSu", "SdChicCha", "GluGluSu", "GluSdcCha", "SuChacCha"},
+              "Se": {"SvChaChi", "SeChacCha", "SeChiChi"},
+              "Sv": {"SvChiChi", "SeChicCha", "SvChacCha"}}
+  # TODO: these channels work for the NMSSM, other susy models may have others
 
   for particle in particles :
  
@@ -510,10 +511,10 @@ def patch_3_body_decays_susy(model_name, patch_dir):
         if line.startswith("Use ThreeBodyPhaseSpace") :
           g.write(line)
           g.write("Use Model_Data_" + model_name + " ! Added by GAMBIT\n")
-        elif any([line.startswith("Call " + channel) for channel in channels[particle]]) :
+        elif any([line.startswith("Call " + particle + "To" + channel) for channel in channels[particle]]) :
           g.write("If (CalcSUSY3BodyDecays) Then ! Added by GAMBIT\n")
           g.write(line)
-        elif any([line.startswith("g" + channel + "(i_run,:,:,:) = g" + channel + "i") for channel in channels[particle]]) :
+        elif any([line.startswith("g" + particle + channel + "(i_run,:,:,:) = g" + particle + channel + "i") for channel in channels[particle]]) :
           g.write("End If ! Added by GAMBIT\n\n")
           g.write(line)
         else :

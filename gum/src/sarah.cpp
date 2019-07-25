@@ -617,8 +617,7 @@ namespace GUM
       /// Write SPheno output
       if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
       {
-        // TODO: commented for speed, uncomment at the end
-        //model.write_spheno_output();
+        model.write_spheno_output();
 
         // Location of SPheno files
         std::string sphdir = outputdir + "SPheno";
