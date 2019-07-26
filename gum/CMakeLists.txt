@@ -60,9 +60,10 @@ EXTERNALPROJECT_ADD(
 )
 
 # Download SARAH
+set(SARAH_VERSION 4.14.0)
 EXTERNALPROJECT_ADD(
     SARAH
-    URL https://sarah.hepforge.org/downloads/?f=SARAH-4.14.0.tar.gz
+    URL https://sarah.hepforge.org/downloads/?f=SARAH-${SARAH_VERSION}.tar.gz
     URL_MD5 850b74625e531b93fd43a32c181c825b
     UPDATE_COMMAND ""
     PATCH_COMMAND ""

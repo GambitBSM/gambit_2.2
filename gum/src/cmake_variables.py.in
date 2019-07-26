@@ -11,3 +11,6 @@ pythia_md5 = "@PYTHIA_MD5@"
 # SPheno path and version
 SPHENO_DIR = "@SPHENO_DIR@"
 SPHENO_VERSION = "@SPHENO_VERSION@"
+
+# SARAH version
+SARAH_VERSION = "@SARAH_VERSION@"
