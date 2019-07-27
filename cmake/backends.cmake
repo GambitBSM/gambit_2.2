@@ -169,10 +169,10 @@ endif()
 
 # SuperIso
 set(name "superiso")
-set(ver "3.6")
+set(ver "4.1")
 set(lib "libsuperiso")
-set(dl "http://superiso.in2p3.fr/download/${name}_v${ver}.tgz")
-set(md5 "df864ceeccb72467bfbe572a8da9711d")
+set(dl "http://superiso.in2p3.fr/download/${name}_v${ver}_flavbit.tgz")
+set(md5 "16729dd71648e7f383899487dff2970a")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
@@ -185,7 +185,7 @@ if(NOT ditched_${name}_${ver})
           COMMAND sed ${dashi} -e "s#rcsU#rcs#g" src/Makefile
           COMMAND sed ${dashi} -e "s/CFLAGS= -O3 -pipe -fomit-frame-pointer/CFLAGS= -fPIC ${BACKEND_C_FLAGS}/g" Makefile
           COMMAND ${CMAKE_MAKE_PROGRAM}
-          COMMAND ar x src/libisospin.a
+          COMMAND ar x src/libsuperiso.a
           COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_C_COMPILER} -shared -o ${lib}.so *.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh

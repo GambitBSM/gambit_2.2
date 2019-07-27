@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  Frontend for SuperIso backend v3.6
+///  Frontend for SuperIso backend v4.1
 ///
 ///  *********************************************
 ///
@@ -11,6 +11,7 @@
 ///  \author Nazila Mahmoudi
 ///  \date   2016 Jul
 ///  \date   2018 Jan
+///  \date   2019 Jul
 ///
 ///  \author Pat Scott
 ///  \date   2015 May
@@ -21,8 +22,8 @@
 
 #define BACKENDNAME SuperIso
 #define BACKENDLANG CC
-#define VERSION 3.6
-#define SAFE_VERSION 3_6
+#define VERSION 4.1
+#define SAFE_VERSION 4_1
 
 LOAD_LIBRARY
 
@@ -33,6 +34,7 @@ BE_ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, WC)
 
 BE_FUNCTION(Init_param, void, (parameters*), "Init_param", "Init_param")
 BE_FUNCTION(slha_adjust, void, (parameters*), "slha_adjust", "slha_adjust")
+BE_FUNCTION(mcmc_from_pole, double, (double, int, parameters*), "mcmc_from_pole", "mcmc_from_pole")
 
 BE_FUNCTION(CW_calculator, void, (int, double*, double*, double*, double, const parameters*), "CW_calculator", "CW_calculator")
 BE_FUNCTION(C_calculator_base1, void, (double*, double*, double*, double, double*, double*, double*, double, const parameters*), "C_calculator_base1", "C_calculator_base1")

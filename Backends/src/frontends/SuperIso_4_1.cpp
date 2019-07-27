@@ -12,6 +12,7 @@
 ///         (nazila@cern.ch)
 /// \date 2016 Jul
 /// \date 2018 Jan
+/// \date 2019 Jul
 ///
 /// \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
@@ -26,12 +27,13 @@
 
 #include <sstream>
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/SuperIso_3_6.hpp"
+#include "gambit/Backends/frontends/SuperIso_4_1.hpp"
 #include "gambit/Backends/backend_types/SuperIso.hpp"
 
-/// Number of observables the SuperIso returns for B0 -> K(*) mu mu
-#define Nobs_BKsll 30
+/// Number of observables the SuperIso returns for B0 -> K(*) mu mu and Bs -> phi mu mu
 #define Nobs_BKll 2
+#define Nobs_BKsll 30
+#define Nobs_Bsphill 6
 
 
 // Initialisation
