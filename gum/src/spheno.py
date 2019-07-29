@@ -567,17 +567,134 @@ def write_spheno_frontends(model_name, parameters, spheno_path):
     """
 
     # Firstly, scrape the function signatures from the spheno source
-    functions, arguments = scrape_functions_from_spheno(spheno_path, model_name)
+    functions, arguments, locations = scrape_functions_from_spheno(spheno_path,
+                                                                   model_name)
 
     # Convert the arguments to GAMBIT types
     type_dictionary = get_fortran_shapes(arguments)
-    
+
+    # Get all of the variables used in SPheno so we can store them as 
+    # BE_VARIABLES. 
+    variables = harvest_spheno_model_variables(spheno_path, model_name)
+
     # Get the source and header files
     spheno_src = write_spheno_frontend_src(model_name, functions)
-    spheno_header = write_spheno_frontend_header(model_name, functions, arguments)
+    spheno_header = write_spheno_frontend_header(model_name, functions, 
+                                                 type_dictionary, 
+                                                 locations)
 
+
+    #print spheno_header
     return spheno_src, spheno_header
 
+def harvest_spheno_model_variables(spheno_path, model_name):
+    """
+    Harvests the model variables from $SPHENO/<MODEL>/Model_Data_<MODEL>.f90.
+    Returns a dictionary of key: parameter name, value: GAMBIT fortran type, 
+    and the same for the HiggsBounds output.
+    """
+
+    clean_model_name = model_name.replace('-','')
+    location = "{0}/{1}/Model_Data_{1}.f90".format(spheno_path, 
+                                                   clean_model_name)
+
+        
+    parameters = {}
+    hb_parameters = {}
+
+    src = ""
+    hb_src = ""
+    # First entry we care about is the line with "mass_uncertainty_Q" on it.
+    # Last one will have the line "Contains". Read everything else in, then.
+    # Save the HiggsBounds stuff too. This comes after a "For HiggsBounds" flag
+    # and ends when the "HPPloop" variables are written, followed by 
+    # " Real(dp) :: m32, tanbetaMZ "
+    with open(location, 'r') as f:
+        started = False
+        hb_started = False
+        for line in f:
+            if "mass_uncertainty" in line:
+                src += line
+                started = True
+            elif "HiggsBounds" in line:
+                hb_started = True
+            elif hb_started and "m32, tanbetaMZ" in line:
+                hb_started = False
+                started = False
+            # Done.
+            elif "Contains" in line:
+                started = False
+                hb_started = False
+            elif started and not hb_started:
+                src += line
+            elif hb_started:
+                hb_src += line
+
+    # Source output -- clean it up a bit to make it easier to parse
+    src = src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
+    hb_src = hb_src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
+
+    # The list of possible types a parameter could be
+    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical"]
+
+    # Each line looks like - TYPE :: definition(s)
+    for line in src:
+        # Each "split" is either an empty list, or a list with type first,
+        # and parameter definition second.
+        split = filter(None, line.split('::'))
+        if not split: continue # Empty list -- skip it
+        # Get the type.
+        _type = ""
+        for pt in possible_types:
+            if pt in split[0]:
+                _type = pt
+        if _type == "":
+            raise GumError("No type scraped from Model_Data.")
+
+        # Split the RHS up but *not* if there is a comma between parentheses.
+        names = re.split(r',\s*(?![^()]*\))', split[1])
+        for name in names:
+            # If it's defaulted, don't wanna save that.
+            if "=" in name:
+                name = name.split('=')[0]
+            # Any size information? Like (3,3) or (2)...
+            pat = '\((.*?)\)'
+            r = re.search(pat, name)
+            if r:
+                size = r.group(1)
+                name = name.split('(')[0] # Save the name without the (..)
+            else: 
+                size = ""
+
+            par = SPhenoParameter(name, _type, size)
+            parameters[name] = par
+
+    # Exactly the same for HiggsBounds output
+    for line in hb_src:
+        split = filter(None, line.split('::'))
+        if not split: continue 
+        _type = ""
+        for pt in possible_types:
+            if pt in split[0]:
+                _type = pt
+        if _type == "":
+            raise GumError("No type scraped from Model_Data.")
+        names = re.split(r',\s*(?![^()]*\))', split[1])
+        for name in names:
+            if "=" in name:
+                name = name.split('=')[0]
+            pat = '\((.*?)\)'
+            r = re.search(pat, name)
+            if r:
+                size = r.group(1)
+                name = name.split('(')[0] # Save the name without the (..)
+            else: 
+                size = ""
+
+            par = SPhenoParameter(name, _type, size)
+            hb_parameters[name] = par
+    
+    return parameters, hb_parameters
 
 def get_fortran_shapes(parameters):
     """
@@ -591,7 +708,6 @@ def get_fortran_shapes(parameters):
         if not isinstance(parameter, SPhenoParameter):
             raise GumError(("Parameter not passed as instance of "
                             "SPhenoParameter to function get_fortran_shape."))
-        print parameter.name, parameter.type, parameter.size
 
         fortran_type = ""
         
@@ -667,9 +783,6 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
         # This is the entire function definition we're grabbing
         pattern = 'Subroutine {0}(.*?)End Subroutine {0}'.format(function)
         s = re.search(pattern, file)
-        # print
-        # print file_path, function
-        # print 
         if s:
             func = s.group(1)
             # Split the definition up by the :: sign for definitions.
@@ -688,6 +801,7 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
                         # in the string, scrape the parameter name and add to the 
                         # dictionary.
                         for i in range(len(defs)):
+                            # ... unless we've already got it.
                             if arg in argument_dictionary: 
                                 continue
                             else:
@@ -702,6 +816,10 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
                                                 size = r.group(1)
                                             else: 
                                                 size = ""
+                                            # Size can also be given by "Dimension"
+                                            # in FORTRAN
+                                            if "Dimension" in defs[i]:
+                                                size = re.search(r'Dimension\((.*?)\)', defs[i]).group(1)
                                             par = SPhenoParameter(arg, j, size)
                                             argument_dictionary[arg] = par
                                             break
@@ -719,61 +837,41 @@ def scrape_functions_from_spheno(spheno_path, model_name):
     Reads the SPheno source to identify the function signatures
     we want to include in the frontend.
     """
+   
+    clean_model_name = model_name.replace('-','')
 
     # Create a dictionary of function names, and the string of 
     # parameters that go into them.
     function_dictionary = {}
     args_dictionary = {}
 
-    clean_model_name = model_name.replace('-','')
+    # Dictionary of which files each function lives in.
+    locations_dictionary = {
+        clean_model_name+"/BranchingRatios_"+clean_model_name  : "CalculateBR_2",
+        clean_model_name+"/Unitarity_"+clean_model_name        : ["ScatteringEigenvalues",
+                                                                  "ScatteringEigenvaluesWithTrilinears"],
+        clean_model_name+"/SPheno"+clean_model_name            : ["CalculateSpectrum",
+                                                                  "GetScaleUncertainty"],
+        clean_model_name+"/Model_Data_"+clean_model_name       : "SetMatchingConditions",
+        clean_model_name+"/LoopMasses_"+clean_model_name       : "OneLoopMasses",
+        clean_model_name+"/InputOutput_"+clean_model_name      : ["Switch_to_superCKM",
+                                                                  "Switch_to_superPMNS"],
+        "src/Model_Data"                                       : ["Switch_from_superCKM",
+                                                                  "Switch_from_superPMNS"],
+        clean_model_name+"/TadpoleEquations_"+clean_model_name : "SolveTadpoleEquations"
+    }
 
-    # CalculateBR_2
-    filename = spheno_path+"/"+clean_model_name+"/BranchingRatios_"+clean_model_name+".f90"
-    functions = "CalculateBR_2"
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
+    for location, functions in locations_dictionary.iteritems():
+        filename = spheno_path+"/"+location+".f90"
+        get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
 
-    # ScatteringEigenvalues and ScatteringEigenvaluesWithTrilinears
-    filename = spheno_path+"/"+clean_model_name+"/Unitarity_"+clean_model_name+".f90"
-    functions = ["ScatteringEigenvalues", "ScatteringEigenvaluesWithTrilinears"]
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    # CalculateSpectrum, GetScaleUncertainty
-    filename = spheno_path+"/"+clean_model_name+"/SPheno"+clean_model_name+".f90"
-    functions = ["CalculateSpectrum", "GetScaleUncertainty"]
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    # SetMatchingConditions
-    filename = spheno_path+"/"+clean_model_name+"/Model_Data_"+clean_model_name+".f90"
-    functions = ["SetMatchingConditions"]
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    # OneLoopMasses
-    filename = spheno_path+"/"+clean_model_name+"/LoopMasses_"+clean_model_name+".f90"
-    functions = ["OneLoopMasses"]
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    # Switch_to_superCKM + superPMNS
-    filename = spheno_path+"/"+clean_model_name+"/InputOutput_"+clean_model_name+".f90"
-    functions = ["Switch_to_superCKM","Switch_to_superPMNS"]
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    # Switch_from_superCKM + superPMNS
-    filename = spheno_path+"/src/Model_Data.f90"
-    functions = ["Switch_from_superCKM","Switch_from_superPMNS"]
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    # SolveTadpoleEquations
-    filename = spheno_path+"/"+clean_model_name+"/TadpoleEquations_"+clean_model_name+".f90"
-    functions = ["SolveTadpoleEquations"]
-    get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    return function_dictionary, args_dictionary
+    return function_dictionary, args_dictionary, locations_dictionary
 
 def write_spheno_frontend_src(model_name, function_signatures):
     """
     Writes source for 
     Backends/src/frontends/SARAHSPheno_<MODEL>_<VERSION>.cpp
-    """
+    """ 
     intro_message = "Frontend for SARAH-SPheno {0} backend, for the "\
                     " {1} model.".format(SPHENO_VERSION, model_name)
 
@@ -831,7 +929,7 @@ def write_spheno_frontend_src(model_name, function_signatures):
     #print indent(towrite)
     return indent(towrite)
 
-def write_spheno_frontend_header(model_name, function_signatures, argument_types):
+def write_spheno_frontend_header(model_name, function_signatures, type_dictionary, locations):
     """
     Writes code for 
     Backends/include/gambit/Backends/SARAHSPheno_<MODEL>_<VERSION>.hpp
@@ -843,6 +941,9 @@ def write_spheno_frontend_header(model_name, function_signatures, argument_types
         -> number of Higgses
         -> if it's a SUSY model
     """
+
+    clean_model_name = model_name.replace('-','')
+
     intro_message = "Frontend header for SARAH-SPheno {0} backend, for the "\
                     " {1} model.".format(SPHENO_VERSION, model_name)
                     
@@ -868,25 +969,24 @@ def write_spheno_frontend_header(model_name, function_signatures, argument_types
             "BE_FUNCTION(SetRenormalizationScale, Freal8, (Freal8&), \"__loopfunctions_MOD_setrenormalizationscale\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(InitializeLoopFunctions, void, (), \"__loopfunctions_MOD_initializeloopfunctions\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(CalculateRunningMasses, void, (Farray_Freal8_1_3&, //mf_l_in\n"
-            "                    Farray_Freal8_1_3&, // mf_d_in\n"
-            "                    Farray_Freal8_1_3&, // mf_u_in\n"
-            "                    Freal8&, // Qlow\n"
-            "                                        Freal8&, // Alpha\n"
-            "                                        Freal8&, // AlphaS\n"
-            "                                        Freal8&, // Qhigh\n"
-            "                                        Farray_Freal8_1_3&, // mf_l_out\n"
-            "                                        Farray_Freal8_1_3&, // mf_d_out\n"
-            "                                        Farray_Freal8_1_3&, // mf_u_out\n"
-            "                                        Finteger&), //kont))\n"
+            "                                           Farray_Freal8_1_3&, // mf_d_in\n"
+            "                                           Farray_Freal8_1_3&, // mf_u_in\n"
+            "                                           Freal8&, // Qlow\n"
+            "                                           Freal8&, // Alpha\n"
+            "                                           Freal8&, // AlphaS\n"
+            "                                           Freal8&, // Qhigh\n"
+            "                                           Farray_Freal8_1_3&, // mf_l_out\n"
+            "                                           Farray_Freal8_1_3&, // mf_d_out\n"
+            "                                           Farray_Freal8_1_3&, // mf_u_out\n"
+            "                                           Finteger&), //kont))\n"
             "     \"__standardmodel_MOD_calculaterunningmasses\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(GetRenormalizationScale, Freal8, (), \"__loopfunctions_MOD_getrenormalizationscale\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetRGEScale, void, (Freal8&), \"__model_data_{4}_MOD_setrgescale\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetGUTScale, void, (Freal8&), \"__model_data_{4}_MOD_setgutscale\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetStrictUnification, Flogical, (Flogical&), \"__model_data_{4}_MOD_setstrictunification\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetYukawaScheme, Finteger, (Finteger&), \"__model_data_{4}_MOD_setyukawascheme\", \"SARAHSPheno_{0}_internal\")\n"
-
-    ).format(model_name, SPHENO_VERSION, SARAH_VERSION, SPHENO_VERSION.replace('.','_'),
-             model_name.lower())
+    ).format(clean_model_name, SPHENO_VERSION, SARAH_VERSION, SPHENO_VERSION.replace('.','_'),
+             clean_model_name.lower())
 
     # Some model-dependent functions:
     """
@@ -895,6 +995,35 @@ def write_spheno_frontend_header(model_name, function_signatures, argument_types
     SetMatchingConditions; ScatteringEigenvaluesWithTrilinears; CalculateBR
     """
 
+    towrite += "\n// Model-dependent arguments auto-scraped by GUM\n"
+    
+    # The functions that we have scraped from SPheno directly.
+    for function, sig in function_signatures.iteritems():
+        # And the locations where each function lives
+        for k, v in locations.iteritems():
+            # If they match, store the module name (usually the filename)
+            # as this is going to be the name of the symbol in SPheno
+            if function in v:
+                loc = k.lower().split('/')[-1]
+                # Overwrite the tadpoles module, the filename is different
+                if "tadpole" in loc: loc = "tadpoles"
+                symbol = "__{0}_MOD_{2}".format(loc, 
+                         clean_model_name.lower(), function.lower())
+        # Now list all arguments, with a nice comment next to it, to make it 
+        # lovely and readable.
+        arguments = []
+        arguments.append(type_dictionary[sig[0]] + '&, // ' + sig[0])
+        for argument in sig[1:-1]:
+            arguments.append("   "+type_dictionary[argument]+"&, // "+argument)
+        arguments.append("   "+type_dictionary[sig[-1]]+"& // "+sig[-1]+"\n")
+        args = "\n".join(arguments)
+        # Wrap it all up.
+        towrite += (
+            "BE_FUNCTION({0}, void,\n"
+            "  ({1}),"
+            " \"{2}\", \"SARAHSPheno_{3}_internal\")\n"
+        ).format(function, args, symbol, clean_model_name)
+    
     # MODEL VARIABLES
     # TODO
 
@@ -955,7 +1084,7 @@ def write_spheno_frontend_header(model_name, function_signatures, argument_types
             "BE_VARIABLE(rho_wolf, Freal8, \"__standardmodel_MOD_rho_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(eta_wolf, Freal8, \"__standardmodel_MOD_eta_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "\n"
-    ).format(model_name)
+    ).format(clean_model_name)
 
     # MASS + OUTPUT VARIABLES
     # TODO
@@ -979,13 +1108,67 @@ def write_spheno_frontend_header(model_name, function_signatures, argument_types
             "BE_VARIABLE(Qin, Freal8, \"__spheno{1}_MOD_qin\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(ratioWoM, Freal8, \"__spheno{1}_MOD_ratiowom\",\"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(CalcTBD, Flogical, \"__spheno{1}_MOD_calctbd\",\"SARAHSPheno_{0}_internal\")\n"
-    ).format(model_name, model_name.lower())
+    ).format(clean_model_name, clean_model_name.lower())
 
     # BRANCHING RATIOS
-    # TODO
+    towrite += (
+            "// Branching Ratio variables\n"
+            "BE_VARIABLE(L_BR, Flogical, \"__control_MOD_l_br\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Enable3BDecaysF, Flogical, \"__settings_MOD_enable3bdecaysf\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Enable3BDecaysS, Flogical, \"__settings_MOD_enable3bdecayss\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningCouplingsDecays, Flogical, \"__settings_MOD_runningcouplingsdecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MinWidth, Freal8, \"__settings_MOD_minwidth\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OneLoopDecays, Flogical, \"__settings_MOD_oneloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+    ).format(clean_model_name)
 
     # DECAY OPTIONS
-    # TODO
+    towrite += (
+            "\n"
+            "// Decay options"
+            "BE_VARIABLE(divonly_save, Finteger, \"__settings_MOD_divonly_save\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(divergence_save, Freal8, \"__settings_MOD_divergence_save\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SimplisticLoopDecays, Flogical, \"__settings_MOD_simplisticloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ShiftIRdiv, Flogical, \"__settings_MOD_shiftirdiv\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(DebugLoopDecays, Flogical, \"__settings_MOD_debugloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OnlyTreeLevelContributions, Flogical, \"__settings_MOD_onlytreelevelcontributions\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ExternalZfactors, Flogical, \"__settings_MOD_externalzfactors\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(UseZeroRotationMatrices, Flogical, \"__settings_MOD_usezerorotationmatrices\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(UseP2Matrices, Flogical, \"__settings_MOD_usep2matrices\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OSkinematics, Flogical, \"__settings_MOD_oskinematics\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ewOSinDecays, Flogical, \"__settings_MOD_ewosindecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(yukOSinDecays, Flogical, \"__settings_MOD_yukosindecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CTinLoopDecays, Flogical, \"__settings_MOD_ctinloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(LoopInducedDecaysOS, Flogical, \"__settings_MOD_loopinduceddecaysos\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Mass_Regulator_PhotonGluon, Freal8, \"__settings_MOD_mass_regulator_photongluon\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Extra_Scale_LoopDecays, Flogical, \"__settings_MOD_extra_scale_loopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Scale_LoopDecays, Freal8, \"__settings_MOD_scale_loopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+    ).format(clean_model_name)
+
+    # TODO: if is_susy:
+    if "MSSM" in model_name: 
+        towrite += (
+                "BE_VARIABLE(Calc3BodyDecay_Glu, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_glu\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(Calc3BodyDecay_Chi, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_chi\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(Calc3BodyDecay_Cha, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_cha\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(Calc3BodyDecay_Sd, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_sd\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(Calc3BodyDecay_Su, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_su\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(Calc3BodyDecay_Se, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_se\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(Calc3BodyDecay_Sv, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_sv\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcSUSY3BodyDecays, Flogical, \"__model_data_{0}_MOD_calcsusy3bodydecays\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_LoopInducedOnly, Flogical, \"__model_data_{0}_MOD_calcloopdecay_loopinducedonly\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Sd, Flogical, \"__model_data_{0}_MOD_calcloopdecay_sd\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Su, Flogical, \"__model_data_{0}_MOD_calcloopdecay_su\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Se, Flogical, \"__model_data_{0}_MOD_calcloopdecay_se\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Sv, Flogical, \"__model_data_{0}_MOD_calcloopdecay_sv\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_hh, Flogical, \"__model_data_{0}_MOD_calcloopdecay_hh\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Ah, Flogical, \"__model_data_{0}_MOD_calcloopdecay_ah\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Hpm, Flogical, \"__model_data_{0}_MOD_calcloopdecay_hpm\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Glu, Flogical, \"__model_data_{0}_MOD_calcloopdecay_glu\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Chi, Flogical, \"__model_data_{0}_MOD_calcloopdecay_chi\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Cha, Flogical, \"__model_data_{0}_MOD_calcloopdecay_cha\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcLoopDecay_Fu, Flogical, \"__model_data_{0}_MOD_calcloopdecay_fu\", \"SARAHSPheno_{1}_internal\")\n"
+        ).format(clean_model_name.lower(), clean_model_name)
+
 
     # HIGGSBOUNDS OUTPUT
     # TODO
@@ -1009,7 +1192,7 @@ def write_spheno_frontend_header(model_name, function_signatures, argument_types
             "\n"
             "// End\n"
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
-    ).format(model_name)
+    ).format(clean_model_name)
 
     #print indent(towrite)
     return indent(towrite)
