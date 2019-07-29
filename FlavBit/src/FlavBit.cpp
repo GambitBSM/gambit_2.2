@@ -63,7 +63,7 @@
 #include "gambit/cmake/cmake_variables.hpp"
 
 
-//#define FLAVBIT_DEBUG
+#define FLAVBIT_DEBUG
 //#define FLAVBIT_DEBUG_LL
 
 namespace Gambit
@@ -509,8 +509,6 @@ namespace Gambit
         result.SM = 1;
 
         // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
-        // SuperIso can actually only handle real O_7, O_9 and O_10 too, so the imaginary
-        // parts of those operators get ignored in subsequent calculations.
         result.Re_DeltaC7  = *Param["Re_DeltaC7"];
         result.Im_DeltaC7  = *Param["Im_DeltaC7"];
         result.Re_DeltaC9  = *Param["Re_DeltaC9"];
