@@ -43,7 +43,8 @@ namespace Gambit
 
        vector<Cutflow> _cutflow;
 
-       vector<int> _test;
+       //vector<int> _test;
+       //int _test2;
 
     private:
 
@@ -79,7 +80,8 @@ namespace Gambit
                      Cutflow(cutflow_name, SR1B),
                      Cutflow(cutflow_name, SR2A), 
                      Cutflow(cutflow_name, SR2B) };
-	_test = {0,0,0,0,0};
+	//_test = {0,0,0,0,0};
+        //_test2 = 0;
 
       }
 
@@ -98,12 +100,15 @@ namespace Gambit
         HEPUtils::P4 ptot = event->missingmom();
         double met = event->met();
 
+        //if(event->electrons().size() + event->muons().size() >= 3)
+        //  _test2++;
+
         // Initialize cutflow
         for(int i=0; i<4; i++)
           _cutflow[i].fillinit();
 
         // Electron candidates are reconstructed from isolated electromagnetic calorimeter energy deposits matched to ID tracks and are required to have |η| < 2.47, a transverse momentum pT > 4.5 GeV, and to pass the “LooseAndBLayer” requirement in arXiv: 1902.04655 [hep-ex].
-       for (HEPUtils::Particle* electron : event->electrons())
+        for (HEPUtils::Particle* electron : event->electrons())
         {
           if (electron->pT()>4.5 && electron->abseta()<2.47) baselineElectrons.push_back(electron);
         }
@@ -141,11 +146,11 @@ namespace Gambit
         // If b-tagging efficiency > 85%, do not remove jet. The lepton will be removed anyway.
         removeOverlap(baselineJets, baselineElectrons, 0.2, false, 200, 0.85);
 
-        // 2) Remove electrons within DeltaR = 0.4 of a jet
-        removeOverlap(baselineElectrons, baselineJets, 0.4);
-
         // 3) Remove jets within DeltaR = 0.2 of a muon
         removeOverlap(baselineJets, baselineMuons, 0.2, false, DBL_MAX, 0.85);
+
+        // 2) Remove electrons within DeltaR = 0.4 of a jet
+        removeOverlap(baselineElectrons, baselineJets, 0.4);
 
         // 4) Remove muons within DeltaR = 0.4 of jet
         // Use lambda function to remove overlap with DeltaRMax as min(0.4, 0.04 + pT(µ)/10 GeV)
@@ -346,11 +351,11 @@ namespace Gambit
         // Cutflows
         
         // Fill cutflow with preselection trigger as defined by ATLAS
-        if(nSignalLeptons >= 3) _test[0]++;
-        if(nSignalJets >= 3 && signalJets.at(2)->pT() > 30.) _test[1]++;
-        if(met > 50.) _test[2]++;
-        if(nSignalLeptons > 0 && signalLeptons.at(0)->pT() > 40.) _test[3]++;
-        if(nSignalLeptons > 1 && signalLeptons.at(1)->pT() > 20.) _test[4]++;
+        //if(nSignalLeptons >= 3) _test[0]++;
+        //if(nSignalLeptons >= 3 && nSignalJets >= 3 && signalJets.at(2)->pT() > 30.) _test[1]++;
+        //if(nSignalLeptons >= 3 && nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && met > 50.) _test[2]++;
+        //if(nSignalLeptons >= 3 && nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && met > 50. && signalLeptons.at(0)->pT() > 40.) _test[3]++;
+        //if(nSignalLeptons >= 3 && nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && met > 50. && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20.) _test[4]++;
         if(nSignalLeptons >= 3 && nSignalJets >= 3 && signalJets.at(2)->pT() > 30. && met > 50. && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20.)
         {
           // 1
@@ -467,11 +472,12 @@ namespace Gambit
 
         #ifdef CHECK_CUTFLOW
           cout << _cutflow << endl;
-          cout << "n signal leptons = " << _test[0] << endl;
-          cout << "n signal jets (pT > 30) = " << _test[1] << endl;
-          cout << "met = " << _test[2] << endl;
-          cout << "leading jet pT > 40 = " << _test[3] << endl;
-          cout << "subleading jet pT > 20 = " << _test[4] << endl;
+          //cout << "n signal leptons before = " << _test2 << endl;
+          //cout << "n signal leptons = " << _test[0] << endl;
+          //cout << "n signal jets (pT > 30) = " << _test[1] << endl;
+          //cout << "met = " << _test[2] << endl;
+          //cout << "leading lepton pT > 40 = " << _test[3] << endl;
+          //cout << "subleading lepton pT > 20 = " << _test[4] << endl;
         #endif
 
 
