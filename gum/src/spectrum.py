@@ -4,6 +4,11 @@ Master module for all SpecBit related routines.
 
 from setup import *
 from files import *
+from cmake_variables import *
+
+"""
+BASIC SPECTRA - NO SPECTRUM GENERATION
+"""
 
 def write_basic_spectrum(gambit_model_name, model_parameters, spec,
                          add_higgs, mathematica, FS=False):
@@ -211,7 +216,7 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
     return indent(towrite)
     
     
-def write_spectrum_header(model_name, add_higgs):
+def write_spectrum_header(model_name, add_higgs, is_spheno):
     """
     Writes the header for spectrum object,
     SpecBit/include/gambit/SpecBit/SpecBit_<model>_rollcall.hpp
@@ -228,37 +233,85 @@ def write_spectrum_header(model_name, add_higgs):
             "  #define CAPABILITY {0}_spectrum\n"
             "  START_CAPABILITY\n"
             "\n"
+    )
+
+    if is_spheno:
+        towrite += (
+                "// =========================\n"
+                "// {0} spectrum (from SARAH-generated SPheno)\n"
+                "//\n"
+                "#define FUNCTION get_{0}_spectrum_SPheno\n"
+                "START_FUNCTION(Spectrum)\n"
+                "ALLOW_MODELS({0})\n"
+                "DEPENDENCY(SMINPUTS, SMInputs)\n"
+                "BACKEND_REQ({0}_spectrum, (libSPheno{0}), int, (Spectrum&, const Finputs&) )\n"
+                "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{0}))\n"
+                "#undef FUNCTION\n"
+                "\"n"
+        ).format(model_name, SPHENO_VERSION)
+    # If we want to make a simple container spectrum only.
+    else:
+        towrite += (
             "    // Create simple object from SMInputs & new params.\n"
             "    #define FUNCTION get_{0}_spectrum\n"
             "    START_FUNCTION(Spectrum)\n"
             "    DEPENDENCY(SMINPUTS, SMInputs)\n"
-    ).format(model_name)
+        ).format(model_name)
 
-    # Add a conditional Higgs dependency if necessary
-    if add_higgs:
-        towrite += (
-                "    ALLOW_MODEL_DEPENDENCE(StandardModel_Higgs, {0})\n"
-                "    MODEL_GROUP(higgs, (StandardModel_Higgs))\n"
-                "    MODEL_GROUP({1}, ({0}))\n"
-                "    ALLOW_MODEL_COMBINATION(higgs, {1})\n"
+        # Add a conditional Higgs dependency if necessary
+        if add_higgs:
+            towrite += (
+                    "    ALLOW_MODEL_DEPENDENCE(StandardModel_Higgs, {0})\n"
+                    "    MODEL_GROUP(higgs, (StandardModel_Higgs))\n"
+                    "    MODEL_GROUP({1}, ({0}))\n"
+                    "    ALLOW_MODEL_COMBINATION(higgs, {1})\n"
             ).format(model_name, model_name + "_group")
-    else:
-        towrite += "    ALLOW_MODELS({0})\n"
+        else:
+            towrite += "    ALLOW_MODELS({0})\n"
 
-    towrite +=(
-            "    #undef FUNCTION\n"
-            "\n"
-            "    // Map for Spectrum, for printing.\n"
-            "    #define FUNCTION get_{0}_spectrum_as_map\n"
-            "    START_FUNCTION(map_str_dbl)\n"
-            "    DEPENDENCY({0}_spectrum, Spectrum)\n"
-            "    #undef FUNCTION\n"
-            "\n"
-            "  #undef CAPABILITY\n"
-            "\n"
-            "#endif\n"
+        towrite +=(
+                "    #undef FUNCTION\n"
+                "\n"
+        )
+
+    towrite += (
+        "    // Map for Spectrum, for printing.\n"
+        "    #define FUNCTION get_{0}_spectrum_as_map\n"
+        "    START_FUNCTION(map_str_dbl)\n"
+        "    DEPENDENCY({0}_spectrum, Spectrum)\n"
+        "    #undef FUNCTION\n"
+        "\n"
+        "  #undef CAPABILITY\n"
+        "\n"
     ).format(model_name)
-    
+
+    # HiggsBounds output:
+    if is_spheno:
+        towrite += (
+                "// Generalised Higgs couplings\n"
+                "#define CAPABILITY Higgs_Couplings\n"
+                "\n"
+                "  // From partial widths\n"
+                "  #define FUNCTION {0}_higgs_couplings_SPheno\n"
+                "  START_FUNCTION(HiggsCouplingsTable)\n"
+                "  DEPENDENCY({0}_spectrum, Spectrum)\n"
+                "  // SM rates.\n"
+                # TODO : numHiggses needed
+                "  DEPENDENCY(Reference_SM_Higgs_decay_rates, DecayTable::Entry)\n"
+                # "  DEPENDENCY(Reference_SM_other_Higgs_decay_rates, DecayTable::Entry)\n"
+                # "  DEPENDENCY(Reference_SM_h0_3_decay_rates, DecayTable::Entry)\n"
+                # "  DEPENDENCY(Reference_SM_A0_decay_rates, DecayTable::Entry)\n"
+                # "  DEPENDENCY(Reference_SM_A0_2_decay_rates, DecayTable::Entry)\n"
+                "  // DecayTable to provide us with the rest of the decays\n"
+                "  DEPENDENCY(decay_rates, DecayTable)\n"
+                "  BACKEND_REQ({0}_HiggsCouplingsTable, (libSPheno{0}), int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&) )\n"
+                "  ALLOW_MODELS({0})\n"
+                "  #undef FUNCTION\n"
+                "\n"
+                "#undef CAPABILITY\n"
+                "\n"
+        ).format(model_name)
+    towrite += "#endif\n"
     return towrite
     
 def write_specbit_rollcall(model_name):
@@ -311,3 +364,15 @@ def add_simple_sminputs(model):
       
     return towrite
     
+"""
+SPHENO-SPECTRA
+"""
+
+def write_spheno_spectrum_src(model_name):
+    """
+    Writes SpecBit/src/SpecBit_<MODEL>.cpp
+    for a Spectrum object interface to SPheno.
+    """
+
+    towrite = ""
+    return indent(towrite)

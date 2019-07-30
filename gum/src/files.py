@@ -343,6 +343,9 @@ def blame_gum(message):
     Blames GUM. Takes a message to describe the new file.
     """
 
+    if not message.startswith("///"):
+        message = "/// " + message
+
     towrite = (
             "//   GAMBIT: Global and Modular BSM Inference Tool\n"
             "//   *********************************************\n"

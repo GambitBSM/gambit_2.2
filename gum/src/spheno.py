@@ -548,7 +548,6 @@ def patch_3_body_decays_susy(model_name, patch_dir):
 FRONTEND ROUTINES
 """
 
-
 class SPhenoParameter:
     """
     Container type for a SPheno parameter.
@@ -574,131 +573,32 @@ def write_spheno_frontends(model_name, parameters, spheno_path):
     type_dictionary = get_fortran_shapes(arguments)
 
     # Get all of the variables used in SPheno so we can store them as 
-    # BE_VARIABLES. 
-    variables = harvest_spheno_model_variables(spheno_path, model_name)
+    # BE_VARIABLES. Keep track of those used for HiggsBounds too.
+    variables, hb_variables = harvest_spheno_model_variables(spheno_path, 
+                                                             model_name)
+
+    # Convert these to GAMBIT types too
+    variable_dictionary = get_fortran_shapes(variables)
+    hb_variable_dictionary = get_fortran_shapes(hb_variables)
 
     # Get the source and header files
     spheno_src = write_spheno_frontend_src(model_name, functions)
-    spheno_header = write_spheno_frontend_header(model_name, functions, 
+    spheno_header = write_spheno_frontend_header(model_name, 
+                                                 functions, 
                                                  type_dictionary, 
-                                                 locations)
+                                                 locations, 
+                                                 variables,
+                                                 variable_dictionary,
+                                                 hb_variables,
+                                                 hb_variable_dictionary)
 
 
-    #print spheno_header
     return spheno_src, spheno_header
 
-def harvest_spheno_model_variables(spheno_path, model_name):
-    """
-    Harvests the model variables from $SPHENO/<MODEL>/Model_Data_<MODEL>.f90.
-    Returns a dictionary of key: parameter name, value: GAMBIT fortran type, 
-    and the same for the HiggsBounds output.
-    """
-
-    clean_model_name = model_name.replace('-','')
-    location = "{0}/{1}/Model_Data_{1}.f90".format(spheno_path, 
-                                                   clean_model_name)
-
-        
-    parameters = {}
-    hb_parameters = {}
-
-    src = ""
-    hb_src = ""
-    # First entry we care about is the line with "mass_uncertainty_Q" on it.
-    # Last one will have the line "Contains". Read everything else in, then.
-    # Save the HiggsBounds stuff too. This comes after a "For HiggsBounds" flag
-    # and ends when the "HPPloop" variables are written, followed by 
-    # " Real(dp) :: m32, tanbetaMZ "
-    with open(location, 'r') as f:
-        started = False
-        hb_started = False
-        for line in f:
-            if "mass_uncertainty" in line:
-                src += line
-                started = True
-            elif "HiggsBounds" in line:
-                hb_started = True
-            elif hb_started and "m32, tanbetaMZ" in line:
-                hb_started = False
-                started = False
-            # Done.
-            elif "Contains" in line:
-                started = False
-                hb_started = False
-            elif started and not hb_started:
-                src += line
-            elif hb_started:
-                hb_src += line
-
-    # Source output -- clean it up a bit to make it easier to parse
-    src = src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
-    hb_src = hb_src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
-
-    # The list of possible types a parameter could be
-    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical"]
-
-    # Each line looks like - TYPE :: definition(s)
-    for line in src:
-        # Each "split" is either an empty list, or a list with type first,
-        # and parameter definition second.
-        split = filter(None, line.split('::'))
-        if not split: continue # Empty list -- skip it
-        # Get the type.
-        _type = ""
-        for pt in possible_types:
-            if pt in split[0]:
-                _type = pt
-        if _type == "":
-            raise GumError("No type scraped from Model_Data.")
-
-        # Split the RHS up but *not* if there is a comma between parentheses.
-        names = re.split(r',\s*(?![^()]*\))', split[1])
-        for name in names:
-            # If it's defaulted, don't wanna save that.
-            if "=" in name:
-                name = name.split('=')[0]
-            # Any size information? Like (3,3) or (2)...
-            pat = '\((.*?)\)'
-            r = re.search(pat, name)
-            if r:
-                size = r.group(1)
-                name = name.split('(')[0] # Save the name without the (..)
-            else: 
-                size = ""
-
-            par = SPhenoParameter(name, _type, size)
-            parameters[name] = par
-
-    # Exactly the same for HiggsBounds output
-    for line in hb_src:
-        split = filter(None, line.split('::'))
-        if not split: continue 
-        _type = ""
-        for pt in possible_types:
-            if pt in split[0]:
-                _type = pt
-        if _type == "":
-            raise GumError("No type scraped from Model_Data.")
-        names = re.split(r',\s*(?![^()]*\))', split[1])
-        for name in names:
-            if "=" in name:
-                name = name.split('=')[0]
-            pat = '\((.*?)\)'
-            r = re.search(pat, name)
-            if r:
-                size = r.group(1)
-                name = name.split('(')[0] # Save the name without the (..)
-            else: 
-                size = ""
-
-            par = SPhenoParameter(name, _type, size)
-            hb_parameters[name] = par
-    
-    return parameters, hb_parameters
 
 def get_fortran_shapes(parameters):
     """
-    Returns the GAMBIT fortran-shape for a SPheno parameter
+    Returns a dictionary of GAMBIT fortran-shape for a SPheno parameter
     """
 
     type_dictionary = {}
@@ -743,6 +643,133 @@ def get_fortran_shapes(parameters):
         type_dictionary[name] = fortran_type  
 
     return type_dictionary
+
+# harvesting
+
+def scrape_functions_from_spheno(spheno_path, model_name):
+    """
+    Reads the SPheno source to identify the function signatures
+    we want to include in the frontend.
+    """
+   
+    clean_model_name = model_name.replace('-','')
+
+    # Create a dictionary of function names, and the string of 
+    # parameters that go into them.
+    function_dictionary = {}
+    args_dictionary = {}
+
+    # Dictionary of which files each function lives in.
+    locations_dictionary = {
+        clean_model_name+"/BranchingRatios_"+clean_model_name  : "CalculateBR_2",
+        clean_model_name+"/Unitarity_"+clean_model_name        : ["ScatteringEigenvalues",
+                                                                  "ScatteringEigenvaluesWithTrilinears"],
+        clean_model_name+"/SPheno"+clean_model_name            : ["CalculateSpectrum",
+                                                                  "GetScaleUncertainty"],
+        clean_model_name+"/Model_Data_"+clean_model_name       : "SetMatchingConditions",
+        clean_model_name+"/LoopMasses_"+clean_model_name       : "OneLoopMasses",
+        clean_model_name+"/InputOutput_"+clean_model_name      : ["Switch_to_superCKM",
+                                                                  "Switch_to_superPMNS"],
+        "src/Model_Data"                                       : ["Switch_from_superCKM",
+                                                                  "Switch_from_superPMNS"],
+        clean_model_name+"/TadpoleEquations_"+clean_model_name : "SolveTadpoleEquations"
+    }
+
+    for location, functions in locations_dictionary.iteritems():
+        filename = spheno_path+"/"+location+".f90"
+        get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
+
+    return function_dictionary, args_dictionary, locations_dictionary
+
+
+
+def harvest_spheno_model_variables(spheno_path, model_name):
+    """
+    Harvests the model variables from $SPHENO/<MODEL>/Model_Data_<MODEL>.f90.
+    Returns a dictionary of key: parameter name, value: GAMBIT fortran type, 
+    and the same for the HiggsBounds output.
+    """
+
+    clean_model_name = model_name.replace('-','')
+    location = "{0}/{1}/Model_Data_{1}.f90".format(spheno_path, 
+                                                   clean_model_name)
+
+        
+    parameters = {}
+    hb_parameters = {}
+
+
+
+    src = ""
+    # First entry we care about is the line with "mass_uncertainty_Q" on it.
+    # Last one will have the line "Contains". Read everything else in, then.
+    with open(location, 'r') as f:
+        started = False
+        for line in f:
+            if "mass_uncertainty" in line:
+                src += line
+                started = True
+            # If we are done.
+            elif "Contains" in line:
+                started = False
+            elif started:
+                src += line
+
+    # Source output -- clean it up a bit to make it easier to parse
+    src = src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
+    #hb_src = hb_src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
+
+    # The list of possible types a parameter could be
+    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical"]
+
+    # A list of strings to match if we want to section it off to HB.
+    # Just the starts of strings, there will be various suffixes.
+    hb_strings = ["ratioPP", "ratioGG", "CPL_H_H", "CPL_A_A", "CPL_A_H", "rHB", 
+                  "BR_H", "BR_t"]
+
+    # Each line looks like - TYPE :: definition(s)
+    for line in src:
+        # Each "split" is either an empty list, or a list with type first,
+        # and parameter definition second.
+        split = filter(None, line.split('::'))
+        if not split: continue # Empty list -- skip it
+        if "HiggsBounds" in line: continue # Just a comment
+        # Get the type.
+        _type = ""
+        for pt in possible_types:
+            if pt in split[0]:
+                _type = pt
+        if _type == "":
+            raise GumError("No type scraped from Model_Data.")
+
+        # Split the RHS up but *not* if there is a comma between parentheses.
+        names = re.split(r',\s*(?![^()]*\))', split[1])
+        for name in names:
+            # If it's defaulted, don't wanna save that.
+            if "=" in name:
+                name = name.split('=')[0]
+            # Any size information? Like (3,3) or (2)...
+            pat = '\((.*?)\)'
+            r = re.search(pat, name)
+            if r:
+                size = r.group(1)
+                name = name.split('(')[0] # Save the name without the (..)
+            else: 
+                size = ""
+
+            par = SPhenoParameter(name, _type, size)
+
+            # Finally check to see if the name matches anything we want to
+            # section off into the HiggsBounds parameters
+            hb = False
+            for i in hb_strings:
+                if name.startswith(i):
+                    hb_parameters[name] = par
+                    hb = True
+            # If it's not a HB parameter, leave with the rest
+            if not hb: parameters[name] = par
+    
+    return parameters, hb_parameters
 
 
 
@@ -830,42 +857,8 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
                             ", please inspect the SARAH-SPheno source code, "
                             "as I don't think it will work anyway."))
 
-
-
-def scrape_functions_from_spheno(spheno_path, model_name):
-    """
-    Reads the SPheno source to identify the function signatures
-    we want to include in the frontend.
-    """
-   
-    clean_model_name = model_name.replace('-','')
-
-    # Create a dictionary of function names, and the string of 
-    # parameters that go into them.
-    function_dictionary = {}
-    args_dictionary = {}
-
-    # Dictionary of which files each function lives in.
-    locations_dictionary = {
-        clean_model_name+"/BranchingRatios_"+clean_model_name  : "CalculateBR_2",
-        clean_model_name+"/Unitarity_"+clean_model_name        : ["ScatteringEigenvalues",
-                                                                  "ScatteringEigenvaluesWithTrilinears"],
-        clean_model_name+"/SPheno"+clean_model_name            : ["CalculateSpectrum",
-                                                                  "GetScaleUncertainty"],
-        clean_model_name+"/Model_Data_"+clean_model_name       : "SetMatchingConditions",
-        clean_model_name+"/LoopMasses_"+clean_model_name       : "OneLoopMasses",
-        clean_model_name+"/InputOutput_"+clean_model_name      : ["Switch_to_superCKM",
-                                                                  "Switch_to_superPMNS"],
-        "src/Model_Data"                                       : ["Switch_from_superCKM",
-                                                                  "Switch_from_superPMNS"],
-        clean_model_name+"/TadpoleEquations_"+clean_model_name : "SolveTadpoleEquations"
-    }
-
-    for location, functions in locations_dictionary.iteritems():
-        filename = spheno_path+"/"+location+".f90"
-        get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
-
-    return function_dictionary, args_dictionary, locations_dictionary
+# /harvesting
+# writing
 
 def write_spheno_frontend_src(model_name, function_signatures):
     """
@@ -925,27 +918,20 @@ def write_spheno_frontend_src(model_name, function_signatures):
         "\n"
     ).format(model_name, SPHENO_VERSION.replace('.','_'))
 
-
-    #print indent(towrite)
     return indent(towrite)
 
-def write_spheno_frontend_header(model_name, function_signatures, type_dictionary, locations):
+def write_spheno_frontend_header(model_name, function_signatures, 
+                                 type_dictionary, locations, 
+                                 variables, var_dict, hb_variables, hb_dict):
     """
     Writes code for 
     Backends/include/gambit/Backends/SARAHSPheno_<MODEL>_<VERSION>.hpp
-
-    Information needed:
-        -> parameters (as they are known in SPheno) and their type and size,
-        and the order they appear in the functions.
-        -> function signatures from spheno
-        -> number of Higgses
-        -> if it's a SUSY model
     """
 
     clean_model_name = model_name.replace('-','')
 
-    intro_message = "Frontend header for SARAH-SPheno {0} backend, for the "\
-                    " {1} model.".format(SPHENO_VERSION, model_name)
+    intro_message = "Frontend header for SARAH-SPheno {0} backend,\n" \
+                    "/// for the {1} model.".format(SPHENO_VERSION, model_name)
                     
     towrite = blame_gum(intro_message)
 
@@ -1024,20 +1010,38 @@ def write_spheno_frontend_header(model_name, function_signatures, type_dictionar
             " \"{2}\", \"SARAHSPheno_{3}_internal\")\n"
         ).format(function, args, symbol, clean_model_name)
     
+    # All scraped from Model_Data_<MODEL>.f90
+    # todo: check these are all present. I think they are.
     # MODEL VARIABLES
-    # TODO
+    # MASS + OUTPUT VARIABLES
+    # MODEL VARIABLES
+    # EXTPAR VARIABLES
+    # MINPAR VARIABLES
+    towrite += "\n// Model-dependent variables\n" 
+    br_entry = "" # Branching ratio parameters can go later, with the rest.
+
+    # Let's do this alphabetically so it looks nicer.
+    for name, param in sorted(variables.iteritems()):
+
+        # We'll put this in with SMINPUTS, otherwise it'll be a duplicate.
+        if name == "MZ_input": continue
+
+        string = (
+               "BE_VARIABLE({0}, {1}, \"__model_data_{2}_MOD_{3}\",\"SARAHSPheno_{4}_internal\")\n"
+        ).format(name, var_dict[name], clean_model_name.lower(), name.lower(), clean_model_name)
+
+        # Organise branching ratio stuff separately
+        if name.startswith("gT") or name.startswith("BR"):
+            br_entry += string
+        else: 
+            towrite += string
 
     # SPHENOINPUT VARIABLES
     # TODO
 
-    # MINPAR VARIABLES
-    # TODO
-    
-    # EXTPAR VARIABLES
-    # TODO
-
     # SMINPUTS
     towrite += (
+            "\n"
             "// SMINPUT Variables\n"
             "BE_VARIABLE(mZ, Freal8, \"__standardmodel_MOD_mz\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(mZ2, Freal8,  \"__standardmodel_MOD_mz2\", \"SARAHSPheno_{0}_internal\")\n"
@@ -1083,17 +1087,11 @@ def write_spheno_frontend_header(model_name, function_signatures, type_dictionar
             "BE_VARIABLE(A_wolf, Freal8, \"__standardmodel_MOD_a_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(rho_wolf, Freal8, \"__standardmodel_MOD_rho_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(eta_wolf, Freal8, \"__standardmodel_MOD_eta_wolf\", \"SARAHSPheno_{0}_internal\")\n"
-            "\n"
     ).format(clean_model_name)
 
-    # MASS + OUTPUT VARIABLES
-    # TODO
-
-    # MODEL VARIABLES
-    # TODO
-
-    # CONTROL  + "OTHER" VARIABLES
+    # CONTROL + "OTHER" VARIABLES
     towrite += (
+            "\n"
             "// Control Variables\n"
             "BE_VARIABLE(Iname, Finteger, \"__control_MOD_iname\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(kont, Finteger, \"__spheno{1}_MOD_kont\", \"SARAHSPheno_{0}_internal\")\n"
@@ -1112,6 +1110,7 @@ def write_spheno_frontend_header(model_name, function_signatures, type_dictionar
 
     # BRANCHING RATIOS
     towrite += (
+            "\n"
             "// Branching Ratio variables\n"
             "BE_VARIABLE(L_BR, Flogical, \"__control_MOD_l_br\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(Enable3BDecaysF, Flogical, \"__settings_MOD_enable3bdecaysf\", \"SARAHSPheno_{0}_internal\")\n"
@@ -1121,10 +1120,12 @@ def write_spheno_frontend_header(model_name, function_signatures, type_dictionar
             "BE_VARIABLE(OneLoopDecays, Flogical, \"__settings_MOD_oneloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name)
 
+    towrite += br_entry
+
     # DECAY OPTIONS
     towrite += (
             "\n"
-            "// Decay options"
+            "// Decay options\n"
             "BE_VARIABLE(divonly_save, Finteger, \"__settings_MOD_divonly_save\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(divergence_save, Freal8, \"__settings_MOD_divergence_save\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(SimplisticLoopDecays, Flogical, \"__settings_MOD_simplisticloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
@@ -1171,10 +1172,18 @@ def write_spheno_frontend_header(model_name, function_signatures, type_dictionar
 
 
     # HIGGSBOUNDS OUTPUT
-    # TODO
+    towrite += "\n// HiggsBounds variables\n" 
+
+    # Let's do this alphabetically so it looks nicer.
+    for name, param in sorted(hb_variables.iteritems()):
+
+        towrite += (
+               "BE_VARIABLE({0}, {1}, \"__model_data_{2}_MOD_{3}\",\"SARAHSPheno_{4}_internal\")\n"
+        ).format(name, hb_dict[name], clean_model_name.lower(), name.lower(), clean_model_name)
 
     # Wrap it up.
     towrite += (
+            "\n"
             "// Convenience functions (registration)\n"
             "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), \"{0}_spectrum\")\n"
             "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const Finputs&), \"{0}_decays\")\n"
@@ -1194,7 +1203,22 @@ def write_spheno_frontend_header(model_name, function_signatures, type_dictionar
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
     ).format(clean_model_name)
 
-    #print indent(towrite)
+    # DONE!
+
+    # Debugging: just checking for duplications
+    matches = re.findall(r'BE_VARIABLE\((.*?)\)', towrite)
+
+    counts = []
+    for match in matches:
+        counts.append(match.split(',')[0])
+
+    from collections import Counter
+    c = Counter(counts)
+
+    for k, v in c.iteritems():
+        if v == 2:
+            print "Duplication of ", k, "- it appeared", v, "times."
+
     return indent(towrite)
 
 

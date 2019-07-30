@@ -205,36 +205,8 @@ if args.file:
         # Run MadGraph
         call_madgraph(mg5_dir, mg5_output_dir, mi)
 
-    """
-    SPHENO
-    """
-
-    if output_opts.spheno:
-
-        # SARAH removes hyphens for .f90 files...
-        clean_model_name = gum.name.replace('-','')
-
-        # Move SPheno files from SARAH to Outputs.
-        copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR, outputs.get_sph())
-
-        # Pristine and patched SPhenos
-        pristine_spheno_dir = output_dir + "/SPheno"
-        patched_spheno_dir = output_dir + "/SPheno_patched"
-
-        # Patch the files
-        patch_spheno(clean_model_name, patched_spheno_dir)
-
-        # Create a diff vs. the out of the [SARAH]box
-        write_backend_patch(output_dir, pristine_spheno_dir, patched_spheno_dir, "spheno_"+gum.name.lower(), SPHENO_VERSION)
-
-
-    # Enough for now.
-    sys.exit()
-
-
-
     print("")
-    print("Finished running external codes.  Now writing proposed GAMBIT code.")
+    print("Finished running external codes. Now writing proposed GAMBIT code.")
 
     """
     REGISTRATION OF NEW PARTICLES
@@ -276,7 +248,7 @@ if args.file:
             gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
     # Once we've got the GAMBIT dictionaries, we can add the new parameters
-    # as pole masses to the
+    # as pole masses to the existing list.
 
     # Add all of the masses of BSM particles as pole masses. Remove all duplicates.
     antiparticle_dict = get_antiparticles(partlist)
@@ -292,11 +264,47 @@ if args.file:
     reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
     """
-    VERTICES
+    SPHENO
+    """
+
+    if output_opts.spheno:
+
+        # SARAH removes hyphens for .f90 files...
+        clean_model_name = gum.name.replace('-','')
+
+        # Move SPheno files from SARAH to Outputs.
+        copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR, outputs.get_sph())
+
+        # Pristine and patched SPhenos
+        pristine_spheno_dir = output_dir + "/SPheno"
+        patched_spheno_dir = output_dir + "/SPheno_patched"
+
+        # Patch the files
+        print("Patching SPheno...")
+        patch_spheno(clean_model_name, patched_spheno_dir)
+
+        # Create a diff vs. the out of the [SARAH]box
+        write_backend_patch(output_dir, pristine_spheno_dir, patched_spheno_dir, "spheno_"+gum.name.lower(), SPHENO_VERSION)
+
+        # Write frontends for SPheno. That's a lotta scrapin'.
+        print("Writing SPheno frontends.")
+        write_spheno_frontends(gum.name, parameters, patched_spheno_dir)
+
+        # DecayBit entry
+        print("Writing SPheno module functions for DecayBit.")
+        spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(gum.name)
+
+    # Enough for now.
+    sys.exit()
+    
+
+    """
+    CALCHEP
     """
 
     # Conditional on CalcHEP files being made.
     if output_opts.ch:
+        
         # Obtain all model interactions from CalcHEP model files.
         interactions, calchep_pdg_codes, aux_particles = get_vertices(outputs.get_ch())
 
@@ -307,38 +315,32 @@ if args.file:
 
         three_body_decays = decay_sorter(three_pi_bsm, aux_particles, antiparticle_dict)
 
-    else:
-        calchep_pdg_codes = None
-
-    """
-    DECAYBIT
-    """
-
-    if decaybit:
-
-        print("Writing new module functions for DecayBit")
-
+        print("Writing CalcHEP module functions for DecayBit")
         # CalcHEP specific decays
-        if output_opts.ch:
-            decaybit_src_ch = ""
+        decaybit_src_ch = ""
 
-            # Pass all interactions by first PDG code needed.
-            for i in xrange(len(three_body_decays)):
-                decaybit_src_ch += write_decaytable_entry(three_body_decays[i],
-                                                          gum.name,
-                                                          calchep_pdg_codes,
-                                                          gambit_pdgs,
-                                                          decaybit_dict)
+        """
+        PART I: DECAYBIT
+        """
+        # TODO: if we have SPheno output, do we /really/ want 
+        # to provide CalcHEP DecayBit entries too? 
 
-            decay_roll, new_decays = \
-                write_decaybit_rollcall_entry(gum.name, gum.spec,
-                                              three_body_decays,
-                                              decaybit_dict, gambit_pdgs)
+        # Pass all interactions by first PDG code needed.
+        for i in xrange(len(three_body_decays)):
+            decaybit_src_ch += write_decaytable_entry_calchep(
+                                                      three_body_decays[i],
+                                                      gum.name,
+                                                      calchep_pdg_codes,
+                                                      gambit_pdgs,
+                                                      decaybit_dict)
 
-            all_decays_src, all_decays_header = \
-                amend_all_decays(gum.name, gum.spec, new_decays)
+        decay_roll, new_decays = \
+            write_decaybit_rollcall_entry_calchep(gum.name, gum.spec,
+                                                  three_body_decays,
+                                                  decaybit_dict, gambit_pdgs)
 
-        # TODO - decays from SPheno
+        all_decays_src, all_decays_header = \
+            amend_all_decays_calchep(gum.name, gum.spec, new_decays)
 
     """
     COLLIDERBIT
@@ -422,9 +424,18 @@ if args.file:
     SPECBIT
     """
 
-    # Determine when "simple_SMinputs" needed from FR/S model file
-    spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs, gum.math)
-    spectrum_header = write_spectrum_header(gum.name, add_higgs)
+    spectrum_src = ""
+
+    if output_opts.spheno():
+        print("Writing SPheno SpecBit interface...")
+        spectrum_src = write_spheno_spectrum_src(gum.name)
+    # TODO: elif output_opts.flexiblesusy(): ...
+    else:
+        print("Writing basic container SpecBit interface...")
+        # TODO: determine when "simple_SMinputs" needed from FR/S model file
+        spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs, gum.math)
+
+    spectrum_header = write_spectrum_header(gum.name, add_higgs, output_opts.spheno())
     spec_rollcall = write_specbit_rollcall(gum.name)
 
     """

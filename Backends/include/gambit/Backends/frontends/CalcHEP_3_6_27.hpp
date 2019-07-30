@@ -42,7 +42,7 @@ BE_VARIABLE(VWdecay, int, "VWdecay", "VWdecay")
 BE_CONV_FUNCTION(CH_Decay_Width, double, (str&, str&, std::vector<str>&, double&), "CH_Decay_Width")
 BE_CONV_FUNCTION(CH_Sigma_V, double, (str&, std::vector<str>&, std::vector<str>&, double&, double&, const DecayTable&), "CH_Sigma_V")
 BE_CONV_FUNCTION(Assign_All_Values, void, (const Spectrum&, std::vector<SpectrumParameter>), "Assign_All_Values")
-BE_CONV_FUNCTION(Assign_Widths, void, (const DecayTable&), "Assign_All_Values")
+BE_CONV_FUNCTION(Assign_Widths, void, (const DecayTable&), "Assign_Widths")
 BE_CONV_FUNCTION(Assign_Value, void, (char*, double), "Assign_Value")
 
 BE_INI_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2)

@@ -8,6 +8,12 @@ from collections import Counter
 
 from setup import *
 from files import *
+from cmake_variables import *
+
+
+"""
+CALCHEP-ONLY ROUTINES
+"""
 
 def find_decay_type(vertex):
     """
@@ -131,9 +137,9 @@ def decay_sorter(three_diagrams, aux_particles, antiparticle_dict):
 
     return decay_grouper(decays, antiparticle_dict)
 
-def write_decaytable_entry(grouped_decays, gambit_model_name,
-                           calchep_pdg_codes, gambit_pdg_codes,
-                           decaybit_dict):
+def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
+                                   calchep_pdg_codes, gambit_pdg_codes,
+                                   decaybit_dict):
     """
     Writes a DecayBit DecayTable::Entry module function for a given set of
     of particle decays.
@@ -242,8 +248,8 @@ def write_decaytable_entry(grouped_decays, gambit_model_name,
     
     return indent(towrite, 4)
 
-def write_decaybit_rollcall_entry(model_name, spectrum, newdecays, 
-                                  decaybit_dict, gambit_dict):
+def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays, 
+                                          decaybit_dict, gambit_dict):
     """
     Returns amendments for the  new rollcall entries for DecayBit as a 
     numpy array. The format of the array is:
@@ -320,7 +326,7 @@ def write_decaybit_rollcall_entry(model_name, spectrum, newdecays,
 
     return rollcall_entries, new_decays
 
-def amend_all_decays(model_name, spectrum, new_decays):
+def amend_all_decays_calchep(model_name, spectrum, new_decays):
     """
     Amends all_decays in DecayBit, both in source and in the rollcall
     header.
@@ -359,3 +365,67 @@ def amend_all_decays(model_name, spectrum, new_decays):
                 
     return src, header
     
+
+"""
+SPHENO
+"""
+
+def write_spheno_decay_entry(model_name):
+    """
+    Writes a DecayBit entry for SPheno decays.
+    """
+
+    towrite_src = (
+        "/// Get all the decays from SPheno\n"
+        "void all_{0}_decays_from_SPheno(DecayTable& decays)\n"
+        "{{\n"
+        "namespace myPipe = Pipes::all_{0}_decays_from_SPheno;\n"
+        "\n"
+        "// Get the spectrum object\n"
+        "Spectrum spectrum = *myPipe::Dep::{0}_spectrum;\n"
+        "\n"
+        "// Set up the input structure\n"
+        "Finputs inputs;\n"
+        "inputs.param = myPipe::Param;\n"
+        "inputs.options = myPipe::runOptions;\n"
+        "\n"
+        "// Use SPheno to fill the decay table\n"
+        "myPipe::BEreq::{0}_decays(spectrum, decays, inputs);\n"
+        "\n"
+        "// Add some SM decays\n"
+        "decays(\"Z0\") = *myPipe::Dep::Z_decay_rates;           // Add the Z decays\n"
+        "decays(\"W+\") = *myPipe::Dep::W_plus_decay_rates;      // Add the W decays for W+.\n"
+        "decays(\"W-\") = *myPipe::Dep::W_minus_decay_rates;     // Add the W decays for W-\n"
+        "\n"
+        "/// Spit out the full decay table as SLHA1 and SLHA2 files.\n"
+        "/// @todo Get the mass eigenstate pseudonyms working for {0} as well. Need it for SLHA1 decays\n"
+        "if (myPipe::runOptions->getValueOrDef<bool>(false, \"drop_SLHA_file\"))\n"
+        "{{\n"
+        "str prefix   = myPipe::runOptions->getValueOrDef<str>(\"\", \"SLHA_output_prefix\");\n"
+        "str filename = myPipe::runOptions->getValueOrDef<str>(\"GAMBIT_decays\", \"SLHA_output_filename\");\n"
+        "// decays.writeSLHAfile(1,prefix+filename+\".slha1\",false,psn);\n"
+        "// decays.writeSLHAfile(2,prefix+filename+\".slha2\",false,psn);\n"
+        "// decays.writeSLHAfile(1,prefix+filename+\".slha1\",false);\n"
+        "decays.writeSLHAfile(2,prefix+filename+\".slha2\",false);\n"
+        "}}\n"
+        "\n"
+        "}}\n"
+    ).format(model_name)
+
+    towrite_header = (
+                   "\n"
+                   "#define FUNCTION all_{0}_decays_from_SPheno\n"
+                   "START_FUNCTION(DecayTable)\n"
+                   "DEPENDENCY(W_minus_decay_rates, DecayTable::Entry)\n"
+                   "DEPENDENCY(W_plus_decay_rates, DecayTable::Entry)\n"
+                   "DEPENDENCY(Z_decay_rates, DecayTable::Entry)\n"
+                   "DEPENDENCY({0}_spectrum, Spectrum)\n"
+                   "BACKEND_REQ({0}_decays, (libSPheno{0}), int, "
+                   "(const Spectrum&, DecayTable&, const Finputs&) )\n"
+                   "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{0}))\n"
+                   "ALLOW_MODELS({0})\n"
+                   "#undef FUNCTION\n"
+                   "\n"
+    ).format(model_name, SPHENO_VERSION)
+
+    return indent(towrite_src), dumb_indent(4, towrite_header)
