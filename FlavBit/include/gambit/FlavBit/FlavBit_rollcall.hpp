@@ -71,6 +71,39 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Initialisation capability (fill the SuperIso nuisance structure)
+  #define CAPABILITY SuperIso_nuisance
+  START_CAPABILITY
+    #define FUNCTION SI_nuisance_fill
+    START_FUNCTION(nuisance)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    BACKEND_REQ(set_nuisance, (libsuperiso), void, (nuisance*))
+    BACKEND_REQ(set_nuisance_value_from_param, (libsuperiso), void, (nuisance*, const parameters*))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Initialisation capability (Define list of observables for SuperIso)
+  #define CAPABILITY SuperIso_obs_list
+  START_CAPABILITY
+    #define FUNCTION SI_obs_list
+    START_FUNCTION(obsname)
+    BACKEND_REQ(make_obslist, (libsuperiso), void, (char**, obsname*, int*))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Theory covariance matrix
+  /*#define CAPABILITY theory_covariance
+  START_CAPABILITY
+    #define FUNCTION SI_theory_covariance
+    START_FUNCTION(double**)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    BACKEND_REQ(bsgamma_CONV, (libsuperiso), double,(const parameters*, double))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+    #undef FUNCTION
+  #undef CAPABILITY*/
+
   // Observable: BR(B -> Xs gamma)
   #define CAPABILITY bsgamma
   START_CAPABILITY

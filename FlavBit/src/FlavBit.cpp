@@ -14,6 +14,7 @@
 ///  \date 2015 Feb
 ///  \date 2016 Jul
 ///  \date 2018 Jan
+///  \date 2019 Jul
 ///
 ///  \author Marcin Chrzaszcz
 ///  \date 2015 May
@@ -519,11 +520,76 @@ namespace Gambit
         result.Im_DeltaCQ1 = *Param["Im_DeltaCQ1"];
         result.Re_DeltaCQ2 = *Param["Re_DeltaCQ2"];
         result.Im_DeltaCQ2 = *Param["Im_DeltaCQ2"];
-
+        
+        /* Lines below are valid only in the flavour universal case
+           deltaC[1..10] = Cmu[1..10], deltaC[11..20] = Ce[1..10], deltaC[21..30] = Ctau[1..10]
+           deltaCQ[1,2] = CQmu[1,2], deltaCQ[1,2] = CQe[1,2], deltaCQ[1,2] = CQtau[1,2] */
+           
+        result.deltaC[7]=result.deltaC[17]=result.deltaC[27]=std::complex<double>(result.Re_DeltaC7, result.Im_DeltaC7);
+        result.deltaC[9]=result.deltaC[19]=result.deltaC[29]=std::complex<double>(result.Re_DeltaC9, result.Im_DeltaC9);
+        result.deltaC[10]=result.deltaC[20]=result.deltaC[30]=std::complex<double>(result.Re_DeltaC10, result.Im_DeltaC10);
+        
+        result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
+        result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
       }
 
       if (flav_debug) cout<<"Finished SI_fill"<<endl;
     }
+
+    /// Fill SuperIso nuisance structure
+    void SI_nuisance_fill(nuisance &nuislist)
+    {
+      using namespace Pipes::SI_nuisance_fill;
+	  if (flav_debug) cout<<"Starting SI_nuisance_fill"<<endl;
+
+      parameters const& param = *Dep::SuperIso_modelinfo;
+
+	  BEreq::set_nuisance(&nuislist);
+	  BEreq::set_nuisance_value_from_param(&nuislist,&param);
+	  
+	  /* Here the nuisance parameters which should not be used for the correlation calculation have to be given a zero standard deviation.
+	     E.g. nuislist.mass_b.dev=0.; */
+
+      if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
+	}
+
+    /// Define SuperIso list of observables for covariance calculation
+    void SI_obs_list(obsname &obslist)
+    {
+      using namespace Pipes::SI_obs_list;
+	  if (flav_debug) cout<<"Starting SI_obs_list"<<endl;
+
+	  int nbobs=2;
+
+	  char **obsnames = (char **) malloc(nbobs*sizeof(char*));
+	  for(int ie=0;ie<nbobs;ie++) obsnames[ie] = (char *) malloc(51*sizeof(char));
+	  
+	  strcpy(obsnames[0],"BR_Bsmumu");
+	  strcpy(obsnames[1],"BR_BXsgamma");
+	 
+	  BEreq::make_obslist(byVal(obsnames),&obslist,&nbobs);
+	  
+      if (flav_debug) cout<<"Finished SI_obs_listl"<<endl;
+	}
+
+    /// Define SuperIso list of observables for covariance calculation
+    void SI_obs_list(obsname &obslist)
+    {
+      using namespace Pipes::SI_obs_list;
+	  if (flav_debug) cout<<"Starting SI_obs_list"<<endl;
+
+	  int nbobs=2;
+
+	  char **obsnames = (char **) malloc(nbobs*sizeof(char*));
+	  for(int ie=0;ie<nbobs;ie++) obsnames[ie] = (char *) malloc(51*sizeof(char));
+	  
+	  strcpy(obsnames[0],"BR_Bsmumu");
+	  strcpy(obsnames[1],"BR_BXsgamma");
+	 
+	  BEreq::make_obslist(byVal(obsnames),&obslist,&nbobs);
+	  
+      if (flav_debug) cout<<"Finished SI_obs_listl"<<endl;
+	}
 
 
     /// Br b-> s gamma decays
@@ -1193,6 +1259,8 @@ namespace Gambit
         // Init out.
         first = false;
       }
+
+	  printf("BKstarmumu_11_25->FL=%.3e\n",Dep::BKstarmumu_11_25->FL);
 
       pmc.value_th(0,0)=Dep::BKstarmumu_11_25->FL;
       pmc.value_th(1,0)=Dep::BKstarmumu_11_25->AFB;

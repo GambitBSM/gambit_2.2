@@ -27,7 +27,7 @@
 
 LOAD_LIBRARY
 
-// Can't do anything non-MSSM with SuperIso yet, besides Willson coefficients.
+// Can't do anything non-MSSM/2HDM with SuperIso yet, besides Wilson coefficients.
 // If you want to expand this to work in the 2HDM, it should all just work out of the box if you set the
 // parameters object up correctly in FlavBit and specify the model(s) as allowed here.
 BE_ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, WC)
@@ -78,6 +78,15 @@ BE_FUNCTION(Bll, double, (int, std::complex<double>*, std::complex<double>*, std
 BE_FUNCTION(BRBDlnu, double, (int, int, double,  double, double*, const parameters*), "BRBDlnu", "BRBDlnu")
 BE_FUNCTION(BRBDstarlnu, double, (int, int, double,  double, double*, const parameters*), "BRBDstarlnu", "BRBDstarlnu")
 BE_FUNCTION(mb_1S, double , (const parameters*), "mb_1S", "mb_1S")
+
+// SuperIso functions related to theory correlations:
+BE_FUNCTION(set_nuisance, void, (nuisance*), "set_nuisance", "set_nuisance")
+BE_FUNCTION(set_nuisance_value_from_param, void, (nuisance*, const parameters*), "set_nuisance_value_from_param", "set_nuisance_value_from_param")
+BE_FUNCTION(make_obslist, void, (char**, obsname*, int*), "make_obslist", "make_obslist")
+BE_FUNCTION(compute_nameobs_ref, double, (obsname*, const parameters*), "compute_nameobs_ref", "compute_obs")
+BE_FUNCTION(get_predictions_nuisance, void, (char**, int*, double**, const parameters*, nuisance*), "get_predictions_nuisance", "compute_obs_from_list")
+BE_FUNCTION(convert_correlation, void, (nuiscorr*, int, double**, char**, int), "convert_correlation", "convert_correlation")
+BE_FUNCTION(get_th_covariance_nuisance, void, (double***, char**, int*, const parameters*, nuisance*, double**), "get_th_covariance_nuisance", "get_th_covariance_nuisance")
 
 // Convenience functions:
 BE_CONV_FUNCTION(BKstarmumu_CONV, Flav_KstarMuMu_obs, (const parameters*, double, double), "BKstarmumu_CONV", (MSSM63atQ, MSSM63atMGUT, WC))
