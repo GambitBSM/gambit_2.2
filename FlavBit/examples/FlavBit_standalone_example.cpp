@@ -370,6 +370,19 @@ int main(int argc, char** argv)
 
     std::cout << endl;
 
+	std::cout << "testing new routines..." << std::endl;
+
+	SI_nuisance_fill.resolveDependency(&SI_fill);
+    SI_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance);
+    SI_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance_value_from_param);
+
+	SI_compute_obs_list.resolveDependency(&SI_fill);
+	SI_compute_obs_list.resolveDependency(&SI_nuisance_fill);
+    SI_compute_obs_list.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
+
+	SI_compute_obs_list.reset_and_calculate();
+
+
   }
 
   catch (std::exception& e)

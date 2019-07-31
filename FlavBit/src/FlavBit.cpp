@@ -561,34 +561,42 @@ namespace Gambit
 
 	  int nbobs=2;
 
-	  char **obsnames = (char **) malloc(nbobs*sizeof(char*));
-	  for(int ie=0;ie<nbobs;ie++) obsnames[ie] = (char *) malloc(51*sizeof(char));
+	  char obsnames[nbobs][50];
 	  
 	  strcpy(obsnames[0],"BR_Bsmumu");
 	  strcpy(obsnames[1],"BR_BXsgamma");
 	 
 	  BEreq::make_obslist(byVal(obsnames),&obslist,&nbobs);
 	  
-      if (flav_debug) cout<<"Finished SI_obs_listl"<<endl;
+      if (flav_debug) cout<<"Finished SI_obs_list"<<endl;
 	}
 
-    /// Define SuperIso list of observables for covariance calculation
-    void SI_obs_list(obsname &obslist)
+    /// Compute values of list of observables
+    void SI_compute_obs_list(double &result)
     {
-      using namespace Pipes::SI_obs_list;
-	  if (flav_debug) cout<<"Starting SI_obs_list"<<endl;
+      using namespace Pipes::SI_compute_obs_list;
+	  if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
+
+      parameters const& param = *Dep::SuperIso_modelinfo;
+      nuisance const& nuislist = *Dep::SuperIso_nuisance;
 
 	  int nbobs=2;
 
-	  char **obsnames = (char **) malloc(nbobs*sizeof(char*));
-	  for(int ie=0;ie<nbobs;ie++) obsnames[ie] = (char *) malloc(51*sizeof(char));
+	  char obsnames[nbobs][50];
 	  
 	  strcpy(obsnames[0],"BR_Bsmumu");
 	  strcpy(obsnames[1],"BR_BXsgamma");
 	 
-	  BEreq::make_obslist(byVal(obsnames),&obslist,&nbobs);
+	  double *res;
+	  res=(double *) malloc(nbobs*sizeof(double));	
+
+	  BEreq::get_predictions_nuisance(byVal(obsnames),&nbobs,&res,&param,&nuislist);
+	 
+	  for(int ie=0;ie<nbobs;ie++) printf("%s=%.4e\n",obsnames[ie],res[ie]);
 	  
-      if (flav_debug) cout<<"Finished SI_obs_listl"<<endl;
+	  result=res[0];
+	  
+      if (flav_debug) cout<<"Finished SI_compute_obs_list"<<endl;
 	}
 
 

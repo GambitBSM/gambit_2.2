@@ -83,12 +83,24 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Compute values of observable list
+  #define CAPABILITY SuperIso_obs_values
+  START_CAPABILITY
+    #define FUNCTION SI_compute_obs_list
+    START_FUNCTION(double)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char[][50], int*, double**, const parameters*, const nuisance*))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+    #undef FUNCTION
+  #undef CAPABILITY
+  
   // Initialisation capability (Define list of observables for SuperIso)
   #define CAPABILITY SuperIso_obs_list
   START_CAPABILITY
     #define FUNCTION SI_obs_list
     START_FUNCTION(obsname)
-    BACKEND_REQ(make_obslist, (libsuperiso), void, (char**, obsname*, int*))
+    BACKEND_REQ(make_obslist, (libsuperiso), void, (char[][50], obsname*, int*))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
   #undef CAPABILITY
