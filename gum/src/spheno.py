@@ -14,7 +14,7 @@
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
-#  \date 2019 July
+#  \date 2019 July, August
 #
 #  **************************************
 
@@ -560,7 +560,7 @@ class SPhenoParameter:
         self.size = _size
 
 
-def write_spheno_frontends(model_name, parameters, spheno_path):
+def write_spheno_frontends(model_name, is_susy, parameters, particles, spheno_path, output_dir):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -582,7 +582,7 @@ def write_spheno_frontends(model_name, parameters, spheno_path):
     hb_variable_dictionary = get_fortran_shapes(hb_variables)
 
     # Get the source and header files
-    spheno_src = write_spheno_frontend_src(model_name, functions)
+    spheno_src = write_spheno_frontend_src(model_name, is_susy, functions, parameters)
     spheno_header = write_spheno_frontend_header(model_name, 
                                                  functions, 
                                                  type_dictionary, 
@@ -595,6 +595,15 @@ def write_spheno_frontends(model_name, parameters, spheno_path):
 
     return spheno_src, spheno_header
 
+def write_spheno_function(name, function_signatures, no_star = []) :
+    """
+    Write the function for spheno
+    """
+    args = function_signatures[name]
+    function = name + "(" +  ''.join([("*" if arg not in no_star else "") + arg + "," for arg in args[:-1]])
+    function += ("*" if args[-1] not in no_star else "") + args[-1] + ");"
+
+    return function
 
 def get_fortran_shapes(parameters):
     """
@@ -860,7 +869,7 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 # /harvesting
 # writing
 
-def write_spheno_frontend_src(model_name, function_signatures):
+def write_spheno_frontend_src(model_name, is_susy, function_signatures, parameters):
     """
     Writes source for 
     Backends/src/frontends/SARAHSPheno_<MODEL>_<VERSION>.cpp
@@ -870,6 +879,7 @@ def write_spheno_frontend_src(model_name, function_signatures):
 
     towrite = blame_gum(intro_message)
 
+    # Headers, macros and callback function
     towrite += (
         "#include \"gambit/Backends/frontend_macros.hpp\"\n"
         "#include \"gambit/Backends/frontends/SARAHSPheno_{0}_{1}.hpp\"\n"
@@ -892,6 +902,10 @@ def write_spheno_frontend_src(model_name, function_signatures):
         "}}\n"
         "END_BE_NAMESPACE\n"
         "\n"
+    ).format(model_name, SPHENO_VERSION.replace('.','_'))
+
+    # Convenience functions
+    towrite += (
         "// Convenience functions (definition)\n"
         "BE_NAMESPACE\n"
         "{{\n"
@@ -918,6 +932,188 @@ def write_spheno_frontend_src(model_name, function_signatures):
         "\n"
     ).format(model_name, SPHENO_VERSION.replace('.','_'))
 
+    # run_SPheno function
+    # TODO: Missing initalization of variables native to the frontend, but depends on model
+    towrite += "// Convenience function to run SPheno and obtain the spectrum\n"\
+        "int run_SPheno(Spectrum &spectrum, const Finputs &inputs)\n"\
+        "{\n"\
+        "\n"\
+        "Set_All_Parameters_0();\n"\
+        "\n"\
+        "*Iname = 1;\n"\
+        "*kont = 0;\n"\
+        "*delta_mass = 1.0E-4;\n"\
+        "*CalcTBD = false;\n"\
+        "\n"\
+        "ReadingData(inputs);\n"\
+        "\n"\
+        "if((*MatchingOrder < -1) or (*MatchingOrder > 2))\n"\
+        "{\n"\
+        "if(*HighScaleModel == \"LOW\") // Default for the NMSSM66atQ\n"\
+        "{\n"\
+        "if(!*CalculateOneLoopMasses)\n"\
+        "*MatchingOrder = -1;\n"\
+        "else\n"\
+        "*MatchingOrder =  2;\n"\
+        "}\n"\
+        "else\n"\
+        "*MatchingOrder =  2;\n"\
+        "}\n"\
+        "switch(*MatchingOrder)\n"\
+        "{\n"\
+        "case 0:\n"\
+        "*OneLoopMatching = false;\n"\
+        "*TwoLoopMatching = false;\n"\
+        "2*GuessTwoLoopMatchingBSM = false;\n"\
+        "break;\n"\
+        "case 1:\n"\
+        "*OneLoopMatching = true;\n"\
+        "*TwoLoopMatching = false;\n"\
+        "*GuessTwoLoopMatchingBSM = false;\n"\
+        "break;\n"\
+        "case 2:\n"\
+        "*OneLoopMatching = true;\n"\
+        "*TwoLoopMatching = true;\n"\
+        "*GuessTwoLoopMatchingBSM = true;\n"\
+        "break;\n"\
+        "}\n"\
+        "if(*MatchingOrder == -1)\n"\
+        "{\n"
+
+    # TODO: Misssing some MD stuff
+    towrite += "Missing some DM stuff\n\n"
+  
+    towrite += "// Setting Boundary conditions\n"\
+        "Flogical MZsuffix = false;\n"\
+        "try { " + write_spheno_function("SetMatchingConditions", function_signatures, ["g1SM", "g2SM", "g3SM", "YuSM", "YdSM", "YeSM", "vSM", "MZsuffix"]) + " }\n"\
+        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"
+
+    # TODO: Missing more MD stuff
+    towrite += "Missing more MD stuff\n\n"
+
+    towrite += "Farray_Fcomplex16_1_3 Tad1Loop;\n"\
+        "try{ " + write_spheno_function("SolveTadpoleEquations", function_signatures,"Tad1Loop") + " }\n"\
+        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+        "\n"\
+        "try{ " + write_spheno_function("OneLoopMasses", function_signatures) + "}\n"\
+        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+        "\n"\
+        "if(*kont != 0)\n"\
+        "ErrorHandling(*kont);\n"\
+        "\n"\
+        "// Invalidate if tachyonic masses\n"\
+        "if(*SignOfMassChanged and !*IgnoreNegativeMasses)\n"\
+        "{\n"\
+        "std::stringstream message;\n"\
+        "message << \"Point invdalid because of negative mass squared.\";\n"\
+        "invalid_point().raise(message.str());\n"\
+        "}\n"\
+        "if(*SignOfMuChanged and !*IgnoreMuSignFlip)\n"\
+        "{\n"\
+        "std::stringstream message;\n"\
+        "message << \"Point invalid because of negative mass squared in tadpoles.\";\n"\
+        "invalid_point().raise(message.str());\n"\
+        "}\n"\
+        "\n"\
+        "}\n"\
+        "else\n"\
+        "{\n"\
+        "if(*GetMassUncertainty)\n"\
+        "{\n"\
+        "if(*CalculateOneLoopMasses and *CalculateTwoLoopHiggsMasses)\n"\
+        "{\n"\
+        "*OneLoopMatching = true;\n"\
+        "*TwoLoopMatching = false;\n"\
+        "*GuessTwoLoopMatchingBSM = true;\n"\
+        "}\n"\
+        "else if(*CalculateOneLoopMasses and  !*CalculateTwoLoopHiggsMasses)\n"\
+        "{\n"\
+        "*OneLoopMatching = true;\n"\
+        "*TwoLoopMatching = false;\n"\
+        "*GuessTwoLoopMatchingBSM = false;\n"\
+        "}\n"\
+        "else\n"\
+        "{\n"\
+        "*OneLoopMatching = true;\n"\
+        "*TwoLoopMatching = false;\n"\
+        "*GuessTwoLoopMatchingBSM = false;\n"\
+        "}\n"\
+        "\n"\
+        "try{ " + write_spheno_function("CalculateSpectrum", function_signatures) + "}\n"\
+        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+        "\n"\
+        "if(*kont != 0)\n"\
+        "ErrorHandling(*kont);\n"\
+
+    # TODO: Missing everything else here
+
+    towrite +="}\n\n"
+
+    towrite += "}\n"\
+        "END_BE_NAMESPACE\n"\
+        "\n"
+
+    # Ini function
+    towrite += "BE_INI_FUNCTION\n"\
+        "{\n"\
+        "\n"\
+        "// Scan-level initialisation\n"\
+        "static bool scan_level = true;\n"\
+        "if (scan_level)\n"\
+        "{\n"\
+        "// Dump all internal output to stdout\n"\
+        "*ErrCan = 6;\n"\
+        "\n"\
+        "// Set the function pointer in SPheno to our ErrorHandler callback function\n"\
+        "*ErrorHandler_cptr = & CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler);\n"\
+        "\n"\
+        "try{ Set_All_Parameters_0(); }\n"\
+        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+        "\n"\
+        "/****************/\n"\
+        "/* Block MODSEL */\n"\
+        "/****************/\n"\
+        "if((*ModelInUse)(\"" + model_name + "\"))\n"\
+        "{\n"\
+        "  *HighScaleModel = \"LOW\";\n"\
+        "  // BC where all parameters are taken at the low scale\n"\
+        "  *BoundaryCondition = 3;\n"\
+        "}\n"\
+        "else\n"\
+        "{\n"\
+        "  str message = \"Model not recognised\";\n"\
+        "  logger() << message << EOM;\n"\
+        "  invalid_point().raise(message);\n"\
+        "}\n"\
+        " \n"\
+        "// GAMBIT default behaviour\n"\
+        "*GenerationMixing = true;\n"\
+        "\n"\
+        "}\n"\
+        "scan_level = false;\n"\
+        "\n"
+    if is_susy :
+        towrite += "*Qin = 1.0E3;  // Default value if there's no input\n"
+    else :
+        towrite += "*Qin = 1.0E6;  // Default value if there's no input\n"
+    towrite += "Freal8 scale_sq = pow(*Qin, 2);\n"\
+        "try{ SetRenormalizationScale(scale_sq); }\n"\
+        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+        "if(Param.find(\"Qin\") != Param.end())\n"\
+        "{ \n"\
+        "*Qin = *Param.at(\"Qin\");\n"\
+        "scale_sq = pow(*Qin,2);\n"\
+        "try{ SetRGEScale(scale_sq); } \n"\
+        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+        "}\n"\
+        "\n"\
+        "// Reset the global flag that indicates whether or not BRs have been computed yet or not for this parameter point.\n"\
+        "Fdecays::BRs_already_calculated = false;\n"\
+        "\n"\
+        "}\n"\
+        "END_BE_INI_FUNCTION\n"\
+
+      
     return indent(towrite)
 
 def write_spheno_frontend_header(model_name, function_signatures, 

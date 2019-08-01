@@ -1,6 +1,23 @@
-"""
-Master file containing all routines for modifying Backend interfaces.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master file containing all routines for modifying Backend interfaces.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017, 2018, 2019
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2019 July, August
+#
+#  **************************************
+
 
 import os
 import re
@@ -136,3 +153,26 @@ def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
         if present: amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)
 
 
+def write_backend_frontends(output_dir, model_name, backend_name, backend_version, header_content, src_content) :
+    """
+    Adds frontend headers and source files for backend to output directory
+    """
+
+    # Header and source directories
+    header_dir = output_dir + "/Backends/include/gambit/Backends/frontends/"
+    src_dir = output_dir + "/Backends/src/frontends/"
+
+    mkdir_if_absent(header_dir)
+    mkdir_if_absent(src_dir)
+
+    # Name of files (except extension)
+    clean_model_name = model_name.replace("-","")
+    safe_version = backend_version.replace(".","_")
+    filename = backend_name + "_" + clean_model_name + "_" + safe_version
+
+    # Write to files now
+    with open(header_dir + "/" + filename + ".hpp", 'w') as f_header :
+      f_header.write(header_content)
+
+    with open(src_dir + "/" + filename + ".cpp", 'w') as f_src :
+      f_src.write(src_content)

@@ -288,11 +288,14 @@ if args.file:
 
         # Write frontends for SPheno. That's a lotta scrapin'.
         print("Writing SPheno frontends.")
-        write_spheno_frontends(gum.name, parameters, patched_spheno_dir)
+        spheno_src, spheno_header = write_spheno_frontends(clean_model_name, gum.is_susy, parameters, bsm_particle_list, patched_spheno_dir, output_dir)
 
+        # Write out the frontend header and source files
+        write_backend_frontends(output_dir, gum.name, "SARAHSPheno", SPHENO_VERSION, spheno_header, spheno_src)
+ 
         # DecayBit entry
         print("Writing SPheno module functions for DecayBit.")
-        spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(gum.name)
+        spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(clean_model_name)
 
     # Enough for now.
     sys.exit()
