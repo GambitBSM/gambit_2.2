@@ -14,7 +14,7 @@
 ///  \date 2015 Feb
 ///  \date 2016 Jul
 ///  \date 2018 Jan
-///  \date 2019 Jul
+///  \date 2019 Aug
 ///
 ///  \author Marcin Chrzaszcz
 ///  \date 2015 May
@@ -536,7 +536,7 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_fill"<<endl;
     }
 
-    /// Fill SuperIso nuisance structure
+    /// NEW! Fill SuperIso nuisance structure
     void SI_nuisance_fill(nuisance &nuislist)
     {
       using namespace Pipes::SI_nuisance_fill;
@@ -553,26 +553,22 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
 	}
 
-    /// Define SuperIso list of observables for covariance calculation
+    /// NEW! Define SuperIso list of observables for covariance calculation
     void SI_obs_list(obsname &obslist)
     {
       using namespace Pipes::SI_obs_list;
 	  if (flav_debug) cout<<"Starting SI_obs_list"<<endl;
 
 	  int nbobs=2;
-
-	  char obsnames[nbobs][50];
-	  
-	  strcpy(obsnames[0],"BR_Bsmumu");
-	  strcpy(obsnames[1],"BR_BXsgamma");
+	  char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
 	 
-	  BEreq::make_obslist(byVal(obsnames),&obslist,&nbobs);
+	  BEreq::make_obslist((char**)obsnames,&obslist,&nbobs);
 	  
       if (flav_debug) cout<<"Finished SI_obs_list"<<endl;
 	}
 
-    /// Compute values of list of observables
-    void SI_compute_obs_list(double &result)
+    /// NEW! Compute values of list of observables
+    void SI_compute_obs_list(double &result)  // TO BE MODIFIED
     {
       using namespace Pipes::SI_compute_obs_list;
 	  if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
@@ -581,20 +577,16 @@ namespace Gambit
       nuisance const& nuislist = *Dep::SuperIso_nuisance;
 
 	  int nbobs=2;
-
-	  char obsnames[nbobs][50];
-	  
-	  strcpy(obsnames[0],"BR_Bsmumu");
-	  strcpy(obsnames[1],"BR_BXsgamma");
-	 
+	  char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
+	  	  
 	  double *res;
 	  res=(double *) malloc(nbobs*sizeof(double));	
-
-	  BEreq::get_predictions_nuisance(byVal(obsnames),&nbobs,&res,&param,&nuislist);
-	 
-	  for(int ie=0;ie<nbobs;ie++) printf("%s=%.4e\n",obsnames[ie],res[ie]);
 	  
-	  result=res[0];
+	  BEreq::get_predictions_nuisance((char**)obsnames,&nbobs,&res,&param,&nuislist);
+	 
+	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) printf("%s=%.4e\n",obsnames[ie],res[ie]);
+	  
+	  result=res[0]; // TO BE MODIFIED
 	  
       if (flav_debug) cout<<"Finished SI_compute_obs_list"<<endl;
 	}

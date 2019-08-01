@@ -16,6 +16,10 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date Sep 2016
 ///
+///  \author Nazila Mahmoudi
+///          (nazila@cern.ch)
+///  \date Aug 2019
+///
 ///  *********************************************
 
 // Always required in any standalone module main file
@@ -370,7 +374,10 @@ int main(int argc, char** argv)
 
     std::cout << endl;
 
-	std::cout << "testing new routines..." << std::endl;
+	std::cout << "-------------------------------------" << std::endl;
+	std::cout << "testing new SuperIso v4.1 routines..." << std::endl;
+	std::cout << "-------------------------------------" << std::endl;
+    std::cout << endl;
 
 	SI_nuisance_fill.resolveDependency(&SI_fill);
     SI_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance);
@@ -380,9 +387,8 @@ int main(int argc, char** argv)
 	SI_compute_obs_list.resolveDependency(&SI_nuisance_fill);
     SI_compute_obs_list.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
 
+    SI_nuisance_fill.reset_and_calculate();
 	SI_compute_obs_list.reset_and_calculate();
-
-
   }
 
   catch (std::exception& e)

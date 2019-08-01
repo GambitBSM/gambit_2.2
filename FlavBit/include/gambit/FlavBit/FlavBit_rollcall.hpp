@@ -22,7 +22,7 @@
 ///  \date 2015 Feb
 ///  \date 2016 Jul
 ///  \date 2018 Jan
-///  \date 2019 Jul
+///  \date 2019 Aug
 ///
 ///  \author Pat Scott
 ///  \date 2015 May
@@ -90,7 +90,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
-	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char[][50], int*, double**, const parameters*, const nuisance*))
+	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
   #undef CAPABILITY
@@ -100,7 +100,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION SI_obs_list
     START_FUNCTION(obsname)
-    BACKEND_REQ(make_obslist, (libsuperiso), void, (char[][50], obsname*, int*))
+    BACKEND_REQ(make_obslist, (libsuperiso), void, (char**, obsname*, int*))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
   #undef CAPABILITY
@@ -109,9 +109,9 @@ START_MODULE
   /*#define CAPABILITY theory_covariance
   START_CAPABILITY
     #define FUNCTION SI_theory_covariance
-    START_FUNCTION(double**)
+    START_FUNCTION(double)
     DEPENDENCY(SuperIso_modelinfo, parameters)
-    BACKEND_REQ(bsgamma_CONV, (libsuperiso), double,(const parameters*, double))
+    DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
   #undef CAPABILITY*/
