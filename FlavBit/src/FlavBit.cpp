@@ -2493,5 +2493,51 @@ namespace Gambit
       std::cout << "hepLikeB2SGammaLogLikelihood result: " << result << std::endl;
     }
 
-  }
+    /// HEPLike LogLikelihood l -> l l l
+    void hepLikeL2LLLGamma(double &result)
+    {
+      using namespace Pipes::hepLikeL2LLLGamma;
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/HFLAV_18/Tau/HFLAV_2016_182.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/HFLAV_18/Tau/HFLAV_2016_181.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/HFLAV_18/Tau/HFLAV_2016_180.yaml";
+      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/data/HFLAV_18/Tau/HFLAV_2016_179.yaml";
+      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/data/HFLAV_18/Tau/HFLAV_2016_178.yaml";
+      static HepLike_default::HL_Limit limit_0(inputfile_0);
+      static HepLike_default::HL_Limit limit_1(inputfile_1);
+      static HepLike_default::HL_Limit limit_2(inputfile_2);
+      static HepLike_default::HL_Limit limit_3(inputfile_3);
+      static HepLike_default::HL_Limit limit_4(inputfile_4);
+
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        limit_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
+        limit_1.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
+        limit_2.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
+        limit_3.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_4 << endl;
+        limit_4.Read();
+
+        first = false;
+      }
+      // TODO: Remove the two lines below
+      assert(false && "Theory prediction not available");
+      result = -999;
+      // TODO: and add theory prediction here
+      result = 0;
+      //result += limit_0.GetLogLikelihood(theory /* , theory_error */);
+      //result += limit_1.GetLogLikelihood(theory /* , theory_error */);
+      //result += limit_2.GetLogLikelihood(theory /* , theory_error */);
+      //result += limit_3.GetLogLikelihood(theory /* , theory_error */);
+      //result += limit_4.GetLogLikelihood(theory /* , theory_error */);
+
+      std::cout << "%s result: " << result << std::endl;
+    }
+
+
+}
 }
