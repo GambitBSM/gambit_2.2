@@ -3158,8 +3158,8 @@ SL_LL : |
 SL_M : |
   Measurements related to the tree-level leptonic and semileptonic B and D decays.
 
-SuperIso_3_6_init : |
-   Initalise SuperIso v3.6.
+SuperIso_4_1_init : |
+   Initalise SuperIso v4.1.
 
 SuperIso_modelinfo : |
    SuperIso internal model information.

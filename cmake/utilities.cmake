@@ -328,7 +328,7 @@ function(add_gambit_executable executablename LIBRARIES)
     target_link_libraries(${executablename} PRIVATE ${LIBRARIES} yaml-cpp ${gambit_preload_LDFLAGS})
   endif()
 
-  add_dependencies(${executablename} mkpath)
+  add_dependencies(${executablename} mkpath gambit_preload)
 
   #For checking if all the needed libs are present.  Never add them manually with -lsomelib!!
   if(VERBOSE)
@@ -577,7 +577,7 @@ set(BOSS_dir "${PROJECT_SOURCE_DIR}/Backends/scripts/BOSS")
 set(needs_BOSSing "")
 set(needs_BOSSing_failed "")
 
-macro(BOSS_backend_withROOT name backend_version)
+macro(BOSS_backend_full name backend_version include_ROOT)
 
   # Replace "." by "_" in the backend version number
   string(REPLACE "." "_" backend_version_safe ${backend_version})
@@ -618,7 +618,7 @@ macro(BOSS_backend_withROOT name backend_version)
       # Check for castxml binaries and download if they do not exist
       COMMAND ${PROJECT_SOURCE_DIR}/cmake/scripts/download_castxml_binaries.sh ${BOSS_dir} ${CMAKE_COMMAND} ${dl} ${dl_filename}
       # Run BOSS
-      COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py  ${BOSS_castxml_cc} ${BOSS_includes} ${name}_${backend_version_safe}  --include=${ROOT_INCLUDE_DIRS}
+      COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py  ${BOSS_castxml_cc} ${BOSS_includes} ${name}_${backend_version_safe} ${include_ROOT}
       # Copy BOSS-generated files to correct folders within Backends/include
       COMMAND cp -r BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/backend_types/${name_in_frontend}_${backend_version_safe} ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/
       COMMAND cp BOSS_output/${name_in_frontend}_${backend_version_safe}/frontends/${name_in_frontend}_${backend_version_safe}.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/${name_in_frontend}_${backend_version_safe}.hpp
@@ -628,55 +628,10 @@ macro(BOSS_backend_withROOT name backend_version)
   endif()
 endmacro()
 
-
-
 macro(BOSS_backend name backend_version)
+  BOSS_backend_full(${name} ${backend_version} "")
+endmacro()
 
-  # Replace "." by "_" in the backend version number
-  string(REPLACE "." "_" backend_version_safe ${backend_version})
-
-  # Construct path to the config file expected by BOSS
-  set(config_file_path "${BOSS_dir}/configs/${name}_${backend_version_safe}.py")
-
-  # Only add BOSS step to the build process if the config file exists
-  if(NOT EXISTS ${config_file_path})
-    message("${BoldRed}-- The config file ${config_file_path} required ")
-    message("   to BOSS the backend ${name} ${backend_version} was not found. This backend will not be BOSSed. ${ColourReset}")
-    list(APPEND needs_BOSSing_failed ${name}_${ver})
-  else()
-    list(APPEND needs_BOSSing ${name}_${ver})
-    file(READ "${config_file_path}" conf_file)
-    string(REGEX MATCH "gambit_backend_name[ \t\n]*=[ \t\n]*'\([^\n]+\)'" dummy "${conf_file}")
-    set(name_in_frontend "${CMAKE_MATCH_1}")
-    set(BOSS_includes "-I ${Boost_INCLUDE_DIR}")
-    if (NOT ${GSL_INCLUDE_DIR} STREQUAL "")
-      set(BOSS_includes "${BOSS_includes} -I ${GSL_INCLUDE_DIR}")
-    endif()
-    if (NOT ${EIGEN3_INCLUDE_DIR} STREQUAL "")
-      set(BOSS_includes "${BOSS_includes} -I ${EIGEN3_INCLUDE_DIR}")
-    endif()
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      set(BOSS_castxml_cc "--castxml-cc=${CMAKE_CXX_COMPILER}")
-    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-      set(BOSS_castxml_cc "")
-    endif()
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      set(dl "https://data.kitware.com/api/v1/file/57b5de9f8d777f10f2696378/download")
-      set(dl_filename "castxml-macosx.tar.gz")
-    else()
-      set(dl "https://data.kitware.com/api/v1/file/57b5dea08d777f10f2696379/download")
-      set(dl_filename "castxml-linux.tar.gz")
-    endif()
-    ExternalProject_Add_Step(${name}_${ver} BOSS
-      # Check for castxml binaries and download if they do not exist
-      COMMAND ${PROJECT_SOURCE_DIR}/cmake/scripts/download_castxml_binaries.sh ${BOSS_dir} ${CMAKE_COMMAND} ${dl} ${dl_filename}
-      # Run BOSS
-      COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py ${BOSS_castxml_cc} ${BOSS_includes} ${name}_${backend_version_safe}
-      # Copy BOSS-generated files to correct folders within Backends/include
-      COMMAND cp -r BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/backend_types/${name_in_frontend}_${backend_version_safe} ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/
-      COMMAND cp BOSS_output/${name_in_frontend}_${backend_version_safe}/frontends/${name_in_frontend}_${backend_version_safe}.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/${name_in_frontend}_${backend_version_safe}.hpp
-      DEPENDEES patch
-      DEPENDERS configure
-    )
-  endif()
+macro(BOSS_backend_with_ROOT name backend_version)
+  BOSS_backend_full(${name} ${backend_version} "--include=${ROOT_INCLUDE_DIRS}")
 endmacro()
