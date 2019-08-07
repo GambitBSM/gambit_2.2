@@ -595,6 +595,41 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_compute_obs_list"<<endl;
 	}
 
+    /// NEW! Compute covariance matrix for a list of observables
+    void SI_theory_covariance(double &result)  // TO BE MODIFIED
+    {
+      using namespace Pipes::SI_theory_covariance;
+	  if (flav_debug) cout<<"Starting SI_theory_covariance"<<endl;
+
+      parameters const& param = *Dep::SuperIso_modelinfo;
+      nuisance const& nuislist = *Dep::SuperIso_nuisance;
+	  
+	  int nnuis=161;
+	  char namenuisance[nnuis+1][50];
+	  BEreq::observables(0,NULL,0,NULL,NULL,&nuislist,(char **)namenuisance,&param); // Initialization of namenuisance
+  	  
+	  double **corr=(double  **) malloc(nnuis*sizeof(double *));  // Nuisance parameter correlations
+	  for(int ie=0;ie<=nnuis;ie++) corr[ie]=(double *) malloc(nnuis*sizeof(double));	
+	  
+	  int ncorrnuis=100;
+	  nuiscorr corrnuis;
+	  
+	  BEreq::convert_correlation(&corrnuis,byVal(ncorrnuis),(double **)corr,(char **)namenuisance,byVal(nnuis));
+	
+	  int nbobs=2;
+	  char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
+
+	  double **res=(double **) malloc(nbobs*sizeof(double *));
+	  for(int ie=0;ie<=nbobs;ie++) res[ie]=(double *) malloc(nbobs*sizeof(double));	
+	
+	  BEreq::get_th_covariance_nuisance(&res,(char**)obsnames,&nbobs,&param,&nuislist,byVal(corr));
+	 
+	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("%s %s: %.4e\n",obsnames[ie],obsnames[je],res[ie][je]);
+	  
+	  result=res[0][0]; // TO BE MODIFIED
+	  
+      if (flav_debug) cout<<"Finished SI_theory_covariance"<<endl;
+	}
 
     /// Br b-> s gamma decays
     void SI_bsgamma(double &result)

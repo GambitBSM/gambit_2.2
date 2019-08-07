@@ -107,15 +107,18 @@ START_MODULE
   #undef CAPABILITY
 
   // Theory covariance matrix
-  /*#define CAPABILITY theory_covariance
+  #define CAPABILITY SuperIso_theory_covariance
   START_CAPABILITY
     #define FUNCTION SI_theory_covariance
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+ 	BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+	BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-    #undef FUNCTION
-  #undef CAPABILITY*/
+   #undef FUNCTION
+  #undef CAPABILITY
 
   // Observable: BR(B -> Xs gamma)
   #define CAPABILITY bsgamma
