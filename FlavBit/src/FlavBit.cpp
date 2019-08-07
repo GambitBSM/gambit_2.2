@@ -2497,6 +2497,29 @@ namespace Gambit
       std::cout << "hepLikeB2SGammaLogLikelihood result: " << result << std::endl;
     }
 
+    /// HEPLike LogLikelihood B -> ll
+    void hepLikeB2llLogLikelihood(double &result)
+    {
+      using namespace Pipes::hepLikeB2llLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
+      static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
+
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        nDimLikelihood.Read();
+  
+        first = false;
+      }
+
+      const std::vector<double> theory_central{*Dep::Bsmumu_untag, *Dep::Bmumu};
+      // nDimLikelihood does not support theory errors
+      result = nDimLikelihood.GetLogLikelihood(theory_central);
+
+      std::cout << "%s result: " << result << std::endl;
+    }
+
     /// HEPLike LogLikelihood l -> l l l
     void hepLikeL2LLLGamma(double &result)
     {

@@ -919,6 +919,17 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// HEPLike LogLikelihood B -> ll
+  #define CAPABILITY hepLikeB2llLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeB2llLogLikelihood
+    START_FUNCTION(double);    
+    DEPENDENCY(Bsmumu_untag, double);
+    DEPENDENCY(Bmumu, double);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
   /// HEPLike LogLikelihood l -> l l l
   #define CAPABILITY hepLikeL2LLLGamma
