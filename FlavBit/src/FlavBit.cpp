@@ -45,6 +45,10 @@
 ///          (jihyun.bhom@ifj.edu.pl)
 ///  \date 2019 July
 ///
+///  \author Markus Prim
+///          (markus.prim@kit.edu)
+///  \date 2019 August
+///
 ///  *********************************************
 
 #include <string>

@@ -41,8 +41,9 @@
 ///  \author Jihyun Bhom
 ///  \date 2019 July
 ///
-
-
+///  \author Markus Prim
+///  \date 2019 August
+///
 ///  *********************************************
 
 #ifndef __FlavBit_rollcall_hpp__
