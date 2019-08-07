@@ -183,7 +183,7 @@ if(NOT ditched_${name}_${ver})
     CONFIGURE_COMMAND ""
     BUILD_COMMAND sed ${dashi} -e "s#CC = gcc#CC = ${CMAKE_C_COMPILER}#g" Makefile
           COMMAND sed ${dashi} -e "s#rcsU#rcs#g" src/Makefile
-          COMMAND sed ${dashi} -e "s/CFLAGS= -O3 -pipe -fomit-frame-pointer/CFLAGS= -fPIC ${BACKEND_C_FLAGS}/g" Makefile
+          COMMAND sed ${dashi} -e "s#CFLAGS = -O3 -pipe -fomit-frame-pointer#CFLAGS = -fPIC ${BACKEND_C_FLAGS}#g" Makefile
           COMMAND ${CMAKE_MAKE_PROGRAM}
           COMMAND ar x src/libsuperiso.a
           COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_C_COMPILER} -shared -o ${lib}.so *.o" > make_so.sh
