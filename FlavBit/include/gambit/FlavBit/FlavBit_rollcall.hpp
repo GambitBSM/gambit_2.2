@@ -41,8 +41,9 @@
 ///  \author Jihyun Bhom
 ///  \date 2019 July
 ///
-
-
+///  \author Markus Prim
+///  \date 2019 August
+///
 ///  *********************************************
 
 #ifndef __FlavBit_rollcall_hpp__
@@ -106,15 +107,18 @@ START_MODULE
   #undef CAPABILITY
 
   // Theory covariance matrix
-  /*#define CAPABILITY theory_covariance
+  #define CAPABILITY SuperIso_theory_covariance
   START_CAPABILITY
     #define FUNCTION SI_theory_covariance
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+ 	BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+	BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-    #undef FUNCTION
-  #undef CAPABILITY*/
+   #undef FUNCTION
+  #undef CAPABILITY
 
   // Observable: BR(B -> Xs gamma)
   #define CAPABILITY bsgamma
@@ -445,6 +449,14 @@ START_MODULE
   #define CAPABILITY BKstarmumu_17_19
   START_CAPABILITY
     #define FUNCTION SI_BKstarmumu_17_19
+    KSTARMUMU_BINS
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Observable: BR(B -> K* mu mu) in q^2 bin from 15 GeV^2 to 19 GeV^2
+  #define CAPABILITY BKstarmumu_15_19
+  START_CAPABILITY
+    #define FUNCTION SI_BKstarmumu_15_19
     KSTARMUMU_BINS
     #undef FUNCTION
   #undef CAPABILITY
@@ -886,6 +898,62 @@ START_MODULE
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
+
+  /// HEPLike LogLikelihood B -> tau nu
+  #define CAPABILITY hepLikeB2TauNuLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeB2TauNuLogLikelihood
+    START_FUNCTION(double);
+    DEPENDENCY(Btaunu, double);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// HEPLike LogLikelihood RD RDstar
+  #define CAPABILITY hepLikeRDRDstarLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeRDRDstarLogLikelihood
+    START_FUNCTION(double);
+    DEPENDENCY(RD, double);
+    DEPENDENCY(RDstar, double);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// HEPLike LogLikelihood b -> s gamma
+  #define CAPABILITY hepLikeB2SGammaLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeB2SGammaLogLikelihood
+    START_FUNCTION(double);
+    DEPENDENCY(bsgamma, double);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// HEPLike LogLikelihood B -> ll
+  #define CAPABILITY hepLikeB2llLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeB2llLogLikelihood
+    START_FUNCTION(double);    
+    DEPENDENCY(Bsmumu_untag, double);
+    DEPENDENCY(Bmumu, double);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// HEPLike LogLikelihood B -> K* mu mu
+  #define CAPABILITY hepLikeB2KstarllLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeB2KstarllLogLikelihood
+    START_FUNCTION(double);    
+    DEPENDENCY(BKstarmumu_11_25, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_25_40, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_40_60, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_60_80, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_15_19, Flav_KstarMuMu_obs);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+ #undef CAPABILITY
 
 #undef MODULE
 

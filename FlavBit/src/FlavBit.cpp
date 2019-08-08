@@ -45,6 +45,10 @@
 ///          (jihyun.bhom@ifj.edu.pl)
 ///  \date 2019 July
 ///
+///  \author Markus Prim
+///          (markus.prim@kit.edu)
+///  \date 2019 August
+///
 ///  *********************************************
 
 #include <string>
@@ -591,6 +595,41 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_compute_obs_list"<<endl;
 	}
 
+    /// NEW! Compute covariance matrix for a list of observables
+    void SI_theory_covariance(double &result)  // TO BE MODIFIED
+    {
+      using namespace Pipes::SI_theory_covariance;
+	  if (flav_debug) cout<<"Starting SI_theory_covariance"<<endl;
+
+      parameters const& param = *Dep::SuperIso_modelinfo;
+      nuisance const& nuislist = *Dep::SuperIso_nuisance;
+	  
+	  int nnuis=161;
+	  char namenuisance[nnuis+1][50];
+	  BEreq::observables(0,NULL,0,NULL,NULL,&nuislist,(char **)namenuisance,&param); // Initialization of namenuisance
+  	  
+	  double **corr=(double  **) malloc(nnuis*sizeof(double *));  // Nuisance parameter correlations
+	  for(int ie=0;ie<=nnuis;ie++) corr[ie]=(double *) malloc(nnuis*sizeof(double));	
+	  
+	  int ncorrnuis=100;
+	  nuiscorr corrnuis;
+	  
+	  BEreq::convert_correlation(&corrnuis,byVal(ncorrnuis),(double **)corr,(char **)namenuisance,byVal(nnuis));
+	
+	  int nbobs=2;
+	  char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
+
+	  double **res=(double **) malloc(nbobs*sizeof(double *));
+	  for(int ie=0;ie<=nbobs;ie++) res[ie]=(double *) malloc(nbobs*sizeof(double));	
+	
+	  BEreq::get_th_covariance_nuisance(&res,(char**)obsnames,&nbobs,&param,&nuislist,byVal(corr));
+	 
+	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("%s %s: %.4e\n",obsnames[ie],obsnames[je],res[ie][je]);
+	  
+	  result=res[0][0]; // TO BE MODIFIED
+	  
+      if (flav_debug) cout<<"Finished SI_theory_covariance"<<endl;
+	}
 
     /// Br b-> s gamma decays
     void SI_bsgamma(double &result)
@@ -981,6 +1020,7 @@ namespace Gambit
     DEFINE_BKSTARMUMU(6.0, 8.0, 60, 80)
     DEFINE_BKSTARMUMU(15., 17., 15, 17)
     DEFINE_BKSTARMUMU(17., 19., 17, 19)
+    DEFINE_BKSTARMUMU(15., 19., 15, 19)
     /// @}
     #undef DEFINE_BKSTARMUMU
 
@@ -2438,6 +2478,138 @@ namespace Gambit
       cout << "HepLike_test result: " << result << endl;
     }
 
+
+    /// HEPLike LogLikelihood B -> tau nu
+    void hepLikeB2TauNuLogLikelihood(double &result)
+    {
+      using namespace Pipes::hepLikeB2TauNuLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/PDG/Semileptonic/B2TauNu.yaml";
+      static HepLike_default::HL_Gaussian gaussian(inputfile);
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        gaussian.Read();
+        first = false;
+      }
+      const double theory = *Dep::Btaunu;
+      result = gaussian.GetLogLikelihood(theory /* , theory_error */);
+      std::cout << "hepLikeB2TauNuLogLikelihood result: " << result << std::endl;
+    }
+
+    /// HEPLike LogLikelihood RD RDstar
+    void hepLikeRDRDstarLogLikelihood(double& result)
+    {
+      using namespace Pipes::hepLikeRDRDstarLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/HFLAV_18/Semileptonic/RD_RDstar.yaml";
+      static HepLike_default::HL_nDimGaussian nDimGaussian(inputfile);
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        nDimGaussian.Read();
+        first = false;
+      }
+      const std::vector<double> theory{*Dep::RD, *Dep::RDstar};
+      result = nDimGaussian.GetLogLikelihood(theory /* , theory_covariance */);
+      std::cout << "hepLikeRDRDstarLogLikelihood result: " << result << std::endl;
+    }
+
+    /// HEPLike LogLikelihood b -> s gamma
+    void hepLikeB2SGammaLogLikelihood(double &result)
+    {
+      using namespace Pipes::hepLikeB2SGammaLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/HFLAV_18/RD/b2sgamma.yaml";
+      static HepLike_default::HL_Gaussian gaussian(inputfile);
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        gaussian.Read();
+        first = false;
+      }
+      const double theory = *Dep::bsgamma;
+      result = gaussian.GetLogLikelihood(theory /* , theory_error */);
+      std::cout << "hepLikeB2SGammaLogLikelihood result: " << result << std::endl;
+    }
+
+    /// HEPLike LogLikelihood B -> ll
+    void hepLikeB2llLogLikelihood(double &result)
+    {
+      using namespace Pipes::hepLikeB2llLogLikelihood;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
+      static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
+
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        nDimLikelihood.Read();
+  
+        first = false;
+      }
+
+      const std::vector<double> theory_central{*Dep::Bsmumu_untag, *Dep::Bmumu};
+      // nDimLikelihood does not support theory errors
+      result = nDimLikelihood.GetLogLikelihood(theory_central);
+
+      std::cout << "%s result: " << result << std::endl;
+    }
+
+    /// HEPLike LogLikelihood B -> K* mu mu
+    void hepLikeB2KstarllLogLikelihood(double &result)
+    {
+      using namespace Pipes::hepLikeB2KstarllLogLikelihood;
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_2.5_4.0.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_4.0_6.0.yaml";
+      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_6.0_8.0.yaml";
+      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_15.0_19.yaml";
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_0);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_3);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_4);
+
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        nDimBifurGaussian_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
+        nDimBifurGaussian_1.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
+        nDimBifurGaussian_2.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
+        nDimBifurGaussian_3.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_4 << endl;
+        nDimBifurGaussian_4.Read();
+
+        first = false;
+      }
+
+      // Ordering of observables defined by HEPLike
+      // Code assumes each bin is calculated by the same dependency (decltype)
+      auto get_theory = [](decltype(Dep::BKstarmumu_11_25) theory_dependency) { return std::vector<double>{
+          theory_dependency->FL,
+          theory_dependency->S3, 
+          theory_dependency->S4, 
+          theory_dependency->S5,
+          theory_dependency->AFB, 
+          theory_dependency->S7, 
+          theory_dependency->S8, 
+          theory_dependency->S9
+      }; };
+
+      result = 0;
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_11_25) /* , theory_error */);
+      result += nDimBifurGaussian_1.GetLogLikelihood(get_theory(Dep::BKstarmumu_25_40) /* , theory_error */);
+      result += nDimBifurGaussian_2.GetLogLikelihood(get_theory(Dep::BKstarmumu_40_60) /* , theory_error */);
+      result += nDimBifurGaussian_3.GetLogLikelihood(get_theory(Dep::BKstarmumu_60_80) /* , theory_error */);
+      result += nDimBifurGaussian_4.GetLogLikelihood(get_theory(Dep::BKstarmumu_15_19) /* , theory_error */);
+  
+      std::cout << "%s result: " << result << std::endl;
+    }
 
   }
 }
