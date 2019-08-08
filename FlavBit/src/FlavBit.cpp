@@ -2598,7 +2598,7 @@ namespace Gambit
           theory_dependency->AFB, 
           theory_dependency->S7, 
           theory_dependency->S8, 
-          theory_dependency->S8
+          theory_dependency->S9
       }; };
 
       result = 0;
