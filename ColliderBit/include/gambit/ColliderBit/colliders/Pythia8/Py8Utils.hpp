@@ -22,11 +22,15 @@
 #include "HEPUtils/FastJet.h"
 #include "MCUtils/PIDUtils.h"
 
+//#define ELECTRON_PARENTAGE_DEBUG_TWO
+
 namespace Gambit
 {
 
   namespace ColliderBit
   {
+
+
 
     /// @name Converters to/from Pythia8's native 4-vector
     ///@{
@@ -84,7 +88,35 @@ namespace Gambit
       return false;
     }
 
+#ifdef ELECTRON_PARENTAGE_DEBUG_TWO
+    /// @todo Rewrite using the Pythia > 8.176 particle-based methods
+    template<typename EventT>
+    inline bool fromHadron(int n, const EventT& evt, bool print_parentage = false, int counter = 0)
+    {
+      // Root particle is invalid
+      if (n == 0) return false;
+      const auto& p = evt[n];
+      if (p.isHadron()) return true;
+      if (p.isParton()) return false; // stop the walking at the end of the hadron level
 
+      if (print_parentage)
+      {
+        std::cout << "\nCounter - " << counter << ": ";
+        for (int m : p.motherList())
+        {
+          std::cout << "(" << evt[m].id() << ", " << evt[m].p().e() << "), ";
+        }
+      }
+      for (int m : p.motherList())
+      {
+        if (fromHadron(m, evt, print_parentage, ++counter)) return true;
+      }
+      return false;
+    }
+#endif
+
+
+#ifndef ELECTRON_PARENTAGE_DEBUG_TWO
     /// @todo Rewrite using the Pythia > 8.176 particle-based methods
     template<typename EventT>
     inline bool fromHadron(int n, const EventT& evt)
@@ -94,11 +126,13 @@ namespace Gambit
       const auto& p = evt[n];
       if (p.isHadron()) return true;
       if (p.isParton()) return false; // stop the walking at the end of the hadron level
-      for (int m : p.motherList()) {
+      for (int m : p.motherList())
+      {
         if (fromHadron(m, evt)) return true;
       }
       return false;
     }
+#endif
 
 
     template<typename EventT>
@@ -114,6 +148,9 @@ namespace Gambit
       }
       return true;
     }
+
+
+
 
 
     template<typename EventT>

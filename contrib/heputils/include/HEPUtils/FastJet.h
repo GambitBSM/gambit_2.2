@@ -32,6 +32,8 @@
 #endif
 #endif
 
+#define JETCLUSTER_DEBUG
+
 namespace HEPUtils {
 
 
@@ -72,10 +74,21 @@ namespace HEPUtils {
 
   /// Construct pT-sorted jets using the @a alg measure with jet @a R parameter, and min pT @a ptmin (in MeV)
   inline std::vector<FJNS::PseudoJet> get_jets(const std::vector<FJNS::PseudoJet>& particles, double R, double ptmin,
-                                               FJNS::JetAlgorithm alg=FJNS::antikt_algorithm) {
+                                               FJNS::JetAlgorithm alg=FJNS::antikt_algorithm)
+  {
     const FJNS::JetDefinition jet_def(alg, R);
     /// @todo Add area definition? And filtering?
     FJNS::ClusterSequence cseq(particles, jet_def); //< @todo Need new + auto/unique_ptr?
+
+#ifdef JETCLUSTER_DEBUG
+    std::cout << "\n\nJETCLUSTER_DEBUG_INFO: " << std::endl;
+    std::cout << "AntiktR: " << R << std::endl;
+    std::cout << "pTmin: " << ptmin << std::endl;
+    std::cout << "Number of particles passed to algorithm is: " << particles.size() << std::endl;
+    std::cout << "Number of outputjets, unsorted: " << cseq.inclusive_jets(10).size() << std::endl;
+    std::cout << "Number of outputjets, sorted: " << sorted_by_pt(cseq.inclusive_jets(10)).size() << std::endl;
+    
+#endif
     return sorted_by_pt(cseq.inclusive_jets(ptmin));
   }
 

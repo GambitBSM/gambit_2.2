@@ -2,7 +2,9 @@
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
+#include "gambit/ColliderBit/analyses/Perf_Plot.hpp"
 #include "Eigen/Eigen"
+
 
 namespace Gambit {
   namespace ColliderBit {
@@ -21,6 +23,10 @@ namespace Gambit {
     ///
     /// Note: cutflows have not been updated yet (sincec 13 invfb analysis).
     ///
+    ///Tomek Procter July 2019: This version will be used to output some plots while
+    /// we debug
+
+
     class Analysis_ATLAS_13TeV_0LEP_36invfb : public Analysis {
     public:
 
@@ -56,9 +62,23 @@ namespace Gambit {
 
       Cutflows _flows;
 
+
+      Perf_Plot* plots_beginning;
+      Perf_Plot* plots_firstcut;
+      string analysisRunName;
+
       Analysis_ATLAS_13TeV_0LEP_36invfb() {
 
         set_analysis_name("ATLAS_13TeV_0LEP_36invfb");
+        analysisRunName = Analysis::analysis_name();
+
+
+        vector<const char*> variablesNames = {"met", "nJets", "HT", "pTjetOne", "pTjetTwo", "pTjetThree", "sumpTj", "etamax_2", "etamax_4", "dphimin_123", "dphimin_more", "aplanarity"};
+	plots_beginning = new Perf_Plot(analysisRunName+"_beginning", &variablesNames);
+        plots_firstcut = new Perf_Plot(analysisRunName+"_firstcut", &variablesNames);
+
+
+
         set_luminosity(36.0);
 
         // Book cut-flows
@@ -177,10 +197,16 @@ namespace Gambit {
           if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*m, *j) > 0.4; }))
             signalMuons.push_back(m);
 
-        // The subset of jets with pT > 50 GeV is used for several calculations
+       // The subset of jets with pT > 50 GeV is used for several calculations
+        
         vector<const Jet*> signalJets50;
         for (const Jet* j : signalJets)
-          if (j->pT() > 50) signalJets50.push_back(j);
+        {
+          if (j->pT() > 50)
+          {
+            signalJets50.push_back(j);
+          }
+        }
 
 
         ////////////////////////////////
@@ -252,13 +278,47 @@ namespace Gambit {
         const double mineigenvalue = momtensor.eigenvalues().real().minCoeff();
         const double aplanarity = 1.5 * mineigenvalue;
 
+	
+
+	//TP July 2019:
+	//Some values I want to obtain just for plotting:
+
+	double pTjetOne;
+        double pTjetTwo;
+        double pTjetThree;
+
+	if (nJets >= 1)
+	{
+          pTjetOne = signalJets[0]->pT();
+          if (nJets >= 2)
+	  {
+            pTjetTwo = signalJets[1]->pT();
+            if (nJets >= 3)
+	      {
+                pTjetThree = signalJets[2]->pT();
+              } else pTjetThree = -3.0;
+          } else pTjetTwo = -2.0;
+        } else pTjetOne = -1.0;
+        
+
         ////////////////////////////////
         // Fill signal regions
 
+
+
         const bool leptonCut = (nElectrons == 0 && nMuons == 0);
         const bool metCut = (met > 250.);
+
+        //Now to plot: I'm not even doing this after preselection, I just want the initial values.
+	vector<double> variables={met, nJets, HT, pTjetOne, pTjetTwo, pTjetThree, sumptj, etamax_2, etamax_4, dphimin_123, dphimin_more, aplanarity};
+	if (1 == 1)//If I check post-cuts then I may have some conditions, may as well keep the structure in place.
+        {
+          plots_beginning->fill(&variables);
+        }
+
         if (nJets50 >= 2 && leptonCut && metCut) {
-          _flows.fill(0);
+          _flows.fill(1);//Corrected TP July 2019
+          plots_firstcut->fill(&variables);
 
           // 2 jet regions
           if (dphimin_123 > 0.8 && dphimin_more > 0.4) {
@@ -407,7 +467,11 @@ namespace Gambit {
 
         // const double sf = 13.3*crossSection()/femtobarn/sumOfWeights();
         // _flows.scale(sf);
-        // cout << "CUTFLOWS:\n\n" << _flows << endl;
+        cout << "CUTFLOWS:\n\n" << _flows << endl;
+
+        plots_beginning->createFile(luminosity(),(36.1/100000));
+        plots_firstcut->createFile(luminosity(),(36.1/100000));
+
       }
 
 

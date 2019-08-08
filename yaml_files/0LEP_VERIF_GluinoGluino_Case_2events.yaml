@@ -1,6 +1,6 @@
+#Adapted from CB_SLHA_file_model.yaml for CBS verification Tomek Procter Jul 2019
 
 Parameters:
-
   # Dummy model to allow ColliderBit to loop through a set of SLHA files
   CB_SLHA_file_model:
     dummy: 1.0
@@ -67,7 +67,7 @@ Rules:
     function: getNextSLHAFileNameAndContent
     options:
       SLHA_filenames:
-        - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
+        - /home/tomasz/summer/Cutflows-2017/ATLAS_13TeV_0LEP/GluinoGluinoCase.slha
 
   # List the SLHA file entries that should be stored in the GAMBIT output.
   # Use SLHAea syntax for the SLHA_keys: <block/pdg> ; <line identifier> ; <line index of requested element>
@@ -77,23 +77,23 @@ Rules:
     options:
       value_for_missing_elements: -9999
       SLHA_keys:
-        - MASS;1000022;1
-        - MASS;1000024;1
-        - NMIX;1,1;2
-        - NMIX;1,2;2
-        - NMIX;1,3;2
-        - NMIX;1,4;2
-        - 1000024;DECAY;2               # <-- Total decay width for 1000024 (chargino1)
-        - 1000024;(any),2,1000022,24;0  # <-- BR for two-body decay 1000024 -> 1000022 24 
+        - MASS;1000021;1
+        #- MASS;1000024;1
+        #- NMIX;1,1;2
+        #- NMIX;1,2;2
+        #- NMIX;1,3;2
+        #- NMIX;1,4;2
+        #- 1000024;DECAY;2               # <-- Total decay width for 1000024 (chargino1)
+        #- 1000024;(any),2,1000022,24;0  # <-- BR for two-body decay 1000024 -> 1000022 24 
 
   # Assign cross-sections and uncertainties for each SLHA file
   - capability: CrossSection
     function: getYAMLxsec_SLHA
     options:
-      xsec_fb:
-        ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.1
+      xsec_pb:
+        /home/tomasz/summer/Cutflows-2017/ATLAS_13TeV_0LEP/GluinoGluinoCase.slha: 0.0101
       xsec_fractional_uncert:
-        ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 0.1
+        /home/tomasz/summer/Cutflows-2017/ATLAS_13TeV_0LEP/GluinoGluinoCase.slha: 0.1942
 
 
   # Generate evens (don't read LH event files)
@@ -101,7 +101,7 @@ Rules:
     function: generateEventPythia
     module: ColliderBit
     options:
-      drop_HepMC_file: false 
+      drop_HepMC_file: true 
       # Warning: the HepMC files can quickly become very large... (20 events take ~1MB)
 
   # # Generate evens (don't read LH event files)
@@ -114,9 +114,9 @@ Rules:
     function: operateLHCLoop
     options:
       silenceLoop: false
-      LHC_13TeV_SUSY_EWonly:
-        min_nEvents: 500
-        max_nEvents: 500
+      LHC_13TeV_SUSY: #edited
+        min_nEvents: 2
+        max_nEvents: 2
         events_between_convergence_checks: 5000
         target_fractional_uncert: 0.3
         halt_when_systematic_dominated: true
@@ -124,45 +124,45 @@ Rules:
         all_SR_must_converge: false
         maxFailedEvents: 10
         analyses:
-          - ATLAS_13TeV_PhotonGGM_36invfb
-          - ATLAS_13TeV_ZGammaGrav_CONFNOTE_80invfb
+          - ATLAS_13TeV_0LEP_36invfb
 
   # Choose Monte Carlo event simulator and options.
   - capability:  HardScatteringSim
     type: Py8Collider_defaultversion
     function: getPythia_SLHA   # <-- The function to use for the model CB_SLHA_file_model
     options:
-      LHC_13TeV_SUSY_EWonly:
+      LHC_13TeV_SUSY: #edited
         xsec_veto: 0.028  # 0.028 fb corresponds to ~1 expected event at L = 36 fb^-1.
         pythia_settings:
           - SLHA:verbose = 1
           - Next:numberShowProcess = 1
           - Print:quiet = off
           - Next:numberCount = 500
-          - Random:setSeed = on
+          - Random:setSeed = off #I want reproducability.
           - Beams:eCM = 13000          
           - PartonLevel:MPI = off
           - PartonLevel:ISR = on
           - PartonLevel:FSR = on
           - HadronLevel:all = on
           - SUSY:all = off
-          - SUSY:qqbar2chi0chi0 = on
-          - SUSY:qqbar2chi+-chi0 = on
-          - SUSY:qqbar2chi+chi- = on
+          - SUSY:gg2gluinogluino = on
+          - SUSY:qqbar2gluinogluino = on
+          - SUSY:idA = 1000021
+          - SUSY:idB = 1000021
           - TauDecays:mode = 0
           - TimeShower:pTmin = 2
 
   # Choose ATLAS detector simulation and options.
   - capability: ATLASDetectorSim
     options:
-      LHC_13TeV_SUSY_EWonly:
+      LHC_13TeV_SUSY: #edited
         partonOnly: false
         antiktR: 0.4
 
   # Choose CMS detector simulation and options.
   - capability: CMSDetectorSim
     options:
-      LHC_13TeV_SUSY_EWonly:
+      LHC_13TeV_SUSY: #edited
         partonOnly: false
         antiktR: 0.4
 
@@ -210,7 +210,7 @@ KeyValues:
     model_invalid_for_lnlike_below_alt: -1e5
 
   # Set the default output path
-  default_output_path: "runs/CB_SLHA_file_model/"
+  default_output_path: "runs/0LEP_VERIF/GluinoGluinoCase"
 
   # We set the errors from the physics modules to be non-fatal
   # to avoid crashing the entire scan due to a rare problem point.
