@@ -104,9 +104,6 @@ ObsLikes:
   - purpose:    B2SGammaTest
     capability: hepLikeB2SGammaLogLikelihood
 
-  - purpose:    L2LLLTest
-    capability: hepLikeL2LLLGamma
-
 Rules:
 
   # Use SuperIso instead of FeynHiggs for b->sgamma

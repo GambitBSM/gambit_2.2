@@ -933,19 +933,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-
-  /// HEPLike LogLikelihood l -> l l l
-  #define CAPABILITY hepLikeL2LLLGamma
-  START_CAPABILITY
-  #define FUNCTION hepLikeL2LLLGamma
-  START_FUNCTION(double);
-  // TODO: add dependencies
-  NEEDS_CLASSES_FROM(HepLike);
-  #undef FUNCTION
-  #undef CAPABILITY
-
-
-
 #undef MODULE
 
 
