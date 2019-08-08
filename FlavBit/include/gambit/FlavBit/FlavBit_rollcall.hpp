@@ -453,6 +453,14 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Observable: BR(B -> K* mu mu) in q^2 bin from 15 GeV^2 to 19 GeV^2
+  #define CAPABILITY BKstarmumu_15_19
+  START_CAPABILITY
+    #define FUNCTION SI_BKstarmumu_15_19
+    KSTARMUMU_BINS
+    #undef FUNCTION
+  #undef CAPABILITY
+
   // Observable: A_I(B -> K* mu mu)
   #define CAPABILITY AI_BKstarmumu
   START_CAPABILITY
@@ -932,6 +940,20 @@ START_MODULE
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
+
+  /// HEPLike LogLikelihood B -> K* mu mu
+  #define CAPABILITY hepLikeB2KstarllLogLikelihood
+  START_CAPABILITY
+    #define FUNCTION hepLikeB2KstarllLogLikelihood
+    START_FUNCTION(double);    
+    DEPENDENCY(BKstarmumu_11_25, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_25_40, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_40_60, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_60_80, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_15_19, Flav_KstarMuMu_obs);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+ #undef CAPABILITY
 
 #undef MODULE
 
