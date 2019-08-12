@@ -1517,7 +1517,7 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_RKstar_11_60"<<endl;
     }
 
-    // RK* for RHN, using same approximations as RK
+    // RK* for RHN, using same approximations as RK, low q^2
     void RHN_RKstar_0045_11(double &result)
     {
       using namespace Pipes::RHN_RKstar_0045_11;
@@ -1528,7 +1528,6 @@ namespace Gambit
 
       if (flav_debug) cout << "Starting RHN_RKstar_0045_11" << endl;
 
-      // TODO: change for EWPO
       const double mW = sminputs.mW;
       const double sinW2 = sqrt(1.0 - pow(sminputs.mW/sminputs.mZ,2));
 
@@ -1553,7 +1552,8 @@ namespace Gambit
       if (flav_debug) cout << "Finished RHN_RKstar_0045_11" << endl;
 
     }
-
+ 
+    // RK* for RHN, using same approximations as RK, intermediate q^2
     void RHN_RKstar_11_60(double &result)
     {
       using namespace Pipes::RHN_RKstar_11_60;
@@ -1564,7 +1564,6 @@ namespace Gambit
 
       if (flav_debug) cout << "Starting RHN_RKstar_11_60" << endl;
 
-      // TODO: change for EWPO
       const double mW = sminputs.mW;
       const double sinW2 = sqrt(1.0 - pow(sminputs.mW/sminputs.mZ,2));
 
@@ -1614,7 +1613,6 @@ namespace Gambit
 
       if (flav_debug) cout << "Starting RHN_RK" << endl;
 
-      // TODO: change for EWPO
       const double mW = sminputs.mW;
       const double sinW2 = sqrt(1.0 - pow(sminputs.mW/sminputs.mZ,2));
 
@@ -2190,7 +2188,7 @@ namespace Gambit
 
     }
 
-
+    // Helper function 
     double G(const double x)
     {
       if(x)
@@ -2199,6 +2197,7 @@ namespace Gambit
         return 10.0/3;
     }
 
+    // Contribution to mu -> e gamma from RHNs
     void RHN_muegamma(double &result)
     {
       using namespace Pipes::RHN_muegamma;
@@ -2232,6 +2231,7 @@ namespace Gambit
 
     }
 
+    // Contribution to tau -> e gamma from RHNs
     void RHN_tauegamma(double &result)
     {
       using namespace Pipes::RHN_tauegamma;
@@ -2263,8 +2263,9 @@ namespace Gambit
 
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
 
-   }
+    }
 
+    // Contribution to tau -> mu gamma from RHNs
     void RHN_taumugamma(double &result)
     {
       using namespace Pipes::RHN_taumugamma;
@@ -2297,6 +2298,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // General contribution to l_\alpha^- -> l_\beta^- l_\gamma^- l_\delta^+ from RHNs
     double RHN_l2lll(int alpha, int beta, int gamma, int delta, SMInputs sminputs, Eigen::Matrix3cd Vnu, Eigen::Matrix3cd Theta, Eigen::Matrix3cd m_nu, double M1, double M2, double M3, double mH)
     {
       vector<double> ml = {sminputs.mE, sminputs.mMu, sminputs.mTau};
@@ -2346,6 +2348,7 @@ namespace Gambit
 
     }
 
+    // Contribution to mu -> e e e from RHNs
     void RHN_mueee(double &result)
     {
       using namespace Pipes::RHN_mueee;
@@ -2364,6 +2367,7 @@ namespace Gambit
 
     }
 
+    // Contribution to tau -> e e e from RHNs
     void RHN_taueee(double &result)
     {
       using namespace Pipes::RHN_taueee;
@@ -2382,6 +2386,7 @@ namespace Gambit
 
     }
 
+    // Contribution to tau -> mu mu mu from RHNs
     void RHN_taumumumu(double &result)
     {
       using namespace Pipes::RHN_taumumumu;
@@ -2400,7 +2405,7 @@ namespace Gambit
 
     }
 
-
+    // Contribution to tau^- -> mu^- e^- e^+ from RHNs
     void RHN_taumuee(double &result)
     {
       using namespace Pipes::RHN_taumuee;
@@ -2418,6 +2423,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to tau^- -> e^- e^- mu^+ from RHNs
     void RHN_taueemu(double &result)
     {
       using namespace Pipes::RHN_taueemu;
@@ -2435,6 +2441,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to tau^- -> e^- mu^- mu^+ from RHNs
     void RHN_tauemumu(double &result)
     {
       using namespace Pipes::RHN_tauemumu;
@@ -2452,6 +2459,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to tau^- -> mu^- mu^- e^+ from RHNs
     void RHN_taumumue(double &result)
     {
       using namespace Pipes::RHN_taumumue;
@@ -2469,6 +2477,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to mu - e conversion in Ti nucleii from RHNs
     void RHN_mueTi(double &result)
     {
       using namespace Pipes::RHN_mueTi;
@@ -2561,6 +2570,7 @@ namespace Gambit
 
     }
 
+    // Contribution to mu - e conversion in Pb nucleii from RHNs
     void RHN_muePb(double &result)
     {
       using namespace Pipes::RHN_muePb;
