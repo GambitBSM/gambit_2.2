@@ -5,6 +5,7 @@
 #include "HEPUtils/FastJet.h"
 #include <functional>
 #include <memory>
+#include <cfloat>
 
 namespace Gambit
 {
@@ -38,6 +39,22 @@ namespace Gambit
     /// Typedef for a vector of const Jet pointers
     typedef std::vector<const HEPUtils::Jet*> ConstJetPtrs;
 
+    /// @name Particle IDs
+    //@{
+
+    /// Identifier for jets true
+    inline bool amIaJet(const HEPUtils::Jet *jet) { (void)jet; return true; }
+
+    /// Indentifier for b-jets true 
+    inline bool amIaBJet(const HEPUtils::Jet *jet) { return jet->btag(); } 
+
+    /// Identifier for jets false
+    inline bool amIaJet(const HEPUtils::Particle *part) { (void)part; return false; }
+
+    /// Indentifier for b-jets true
+    inline bool amIaBJet(const HEPUtils::Particle *part) { (void)part; return true; } 
+
+    //@}
 
     /// @name Particle-list filtering by cuts
     //@{
@@ -227,17 +244,41 @@ namespace Gambit
 
 
     /// Overlap removal -- discard from first list if within deltaRMax of any from the second list
+    /// Optional arguments:
+    ///  - use_rapidity = use rapidity instead of psedurapidity to compute deltaR. Defaults to False
+    ///  - pTmax = only discard from first list with pT < pTmax. Defaults to DBL_MAX
+    ///  - btageff = do not discard jets that have a b-tagging efficiency lower than btageff. Defaults to 0
     template<typename MOMPTRS1, typename MOMPTRS2>
-    void removeOverlap(MOMPTRS1& momstofilter, const MOMPTRS2& momstocmp, double deltaRMax, bool use_rapidity=false) {
-      ifilter_reject(momstofilter, [&](const typename MOMPTRS1::value_type& mom1) {
-          for (const typename MOMPTRS2::value_type& mom2 : momstocmp) {
-            const double dR = (use_rapidity) ? deltaR_rap(mom1->mom(), mom2->mom()) : deltaR_eta(mom1->mom(), mom2->mom());
-            if (dR < deltaRMax) return true;
-          }
-          return false;
-        }, false);
+    void removeOverlap(MOMPTRS1& momstofilter, const MOMPTRS2& momstocmp, double deltaRMax, bool use_rapidity=false, double pTmax = DBL_MAX, double btageff = 0)
+    {
+      ifilter_reject(momstofilter, [&](const typename MOMPTRS1::value_type& mom1)
+      {
+        for (const typename MOMPTRS2::value_type& mom2 : momstocmp) {
+          const double dR = (use_rapidity) ? deltaR_rap(mom1->mom(), mom2->mom()) : deltaR_eta(mom1->mom(), mom2->mom());
+          if (dR < deltaRMax && mom1->pT() < pTmax && ( !amIaBJet(mom1) || !random_bool(btageff) ) ) return true;
+        }
+        return false;
+      }, false);
     }
 
+    /// Overlap removal -- discard from first list if within deltaRmax of any from the second list.
+    /// Overload of previous function where deltaRmax is a function of the pT of the first list
+    /// Optional arguments:
+    ///  - use_rapidity = use rapidity instead of psedurapidity to compute deltaR. Defaults to False
+    ///  - pTmax = only discard from first list with pT < pTmax. Defaults to DBL_MAX
+    ///  - btageff = do not discard jets that have a b-tagging efficiency lower than btageff. Defaults to 0
+    template<typename MOMPTRS1, typename MOMPTRS2>
+    void removeOverlap(MOMPTRS1& momstofilter, const MOMPTRS2& momstocmp, double (*deltaRMax)(const double), bool use_rapidity=false, double pTmax = DBL_MAX, double btageff = 0)
+    {
+      ifilter_reject(momstofilter, [&](const typename MOMPTRS1::value_type& mom1)
+      {
+        for (const typename MOMPTRS2::value_type& mom2 : momstocmp) {
+          const double dR = (use_rapidity) ? deltaR_rap(mom1->mom(), mom2->mom()) : deltaR_eta(mom1->mom(), mom2->mom());
+          if (dR < deltaRMax(mom1->pT()) && mom1->pT() < pTmax && ( !amIaBJet(mom1) || !random_bool(btageff) ) ) return true;
+        }
+        return false;
+      }, false);
+    }
 
     /// Non-iterator version of std::all_of
     template <typename CONTAINER, typename FN>
@@ -295,7 +336,6 @@ namespace Gambit
     inline void sortByPt(JetPtrs& jets) { sortBy(jets, cmpJetsByPt); }
 
     //@}
-
 
   }
 }
