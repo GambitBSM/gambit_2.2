@@ -33,13 +33,14 @@ using namespace std;
 
 #include "MCUtils/PIDUtils.h"//Added Tomek Procter July 2019
 #include <fstream>
+#include <algorithm>//Used for sorting the particles so I know CBS and gambit get them in the same order.
 
 //#define COLLIDERBIT_DEBUG
 
 using namespace HEPUtils;
 using namespace FJNS;
 
-#define SINGLE_EVENT_DEBUG
+//#define SINGLE_EVENT_DEBUG
 //#define ELECTRON_PARENTAGE_DEBUG
 //#define JET_CHECKING
 
@@ -109,6 +110,11 @@ inline bool fromHadron_test(HepMC3::ConstGenParticlePtr gp)
     else return true;
 }
 
+inline bool compare_particles_by_pz(PseudoJet jet1, PseudoJet jet2)
+{
+  return (jet1.pz() > jet2.pz());
+}
+
 
 //Tomek Procter Aug 19 - Basically this function's in MCUtils/HepMCVectors.h,
 //Except that header file seems a bit broken - including it breaks everything!
@@ -176,8 +182,11 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
 
     // Get 4-momentum
     const HepMC3::FourVector& hp4 = gp->momentum();
-    const P4 p4 = P4::mkXYZM(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
 
+    //We need to define p4 some other way - as mkXYZE doesn't work, for now I'll do
+    //const P4 p4 = P4::mkXYZM(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
+
+    const P4 p4 = mk_p4(PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e()));
     
 
     //Lets test out adding an eta cut, like they have in gambit:
@@ -251,11 +260,11 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
     // Store non-prompt momenta for Jet building
     else if (apid != MCUtils::PID::MUON) //Tomek Procter August 2019 - Muons don't go into jets, right? So what happens to non-prompt muons?
     {
-      PseudoJet pj = mk_pj(p4);
+      PseudoJet pj = PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
       //pj.set_user_index(apid);
       jetparticles.push_back(pj);
 #ifdef JET_CHECKING
-      jetfile << p4.px() << ", " << p4.py() << ", " << p4.pz() << ", " << p4.m() << ", " << apid <<",\n";
+      jetfile << pj.px() << ", " << pj.py() << ", " << pj.pz() << ", " << pj.e() << ", " << hp4.e() << ", " << pj.rap() << ",\n";
 #endif      
     }
     else
@@ -277,7 +286,18 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
   
 
   // Jets
+  //Sorting the vector of pseudojets by z momentum so gambit and CBS have the same event order - makes debugging easier.
+  //std::sort(jetparticles.begin(), jetparticles.end(), compare_particles_by_pz);
+  /*int TP_TEMP_COUNTER = 0;
+  for (auto particle : jetparticles)
+    {
+      std::cout << "Particle Number: " << TP_TEMP_COUNTER++ << "; Pz: " << particle.pz() << "; Px: " << particle.px() <<std::endl;
+    }*/
+  
+
   vector<PseudoJet> jets = get_jets(jetparticles, 0.4, 10.0); //Cut off momentum edited to match gambit at 10.0.
+  
+
   for (const PseudoJet& pj : jets)
   {
     bool hasC = false, hasB = false;

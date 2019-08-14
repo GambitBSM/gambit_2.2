@@ -27,6 +27,7 @@
 #include "MCUtils/PIDCodes.h"
 
 #include <fstream>
+#include <algorithm>//Used for sorting the particles so I know CBS and gambit get them in the same order.
 
 //#define JET_CHECKING
 //#define SINGLE_EVENT_DEBUG
@@ -60,6 +61,11 @@ template<typename EventT>
       return 0;
     }
 #endif
+
+inline bool compare_particles_by_pz(FJNS::PseudoJet jet1, FJNS::PseudoJet jet2)
+{
+  return (jet1.pz() > jet2.pz());
+}
 
 
 namespace Gambit
@@ -194,8 +200,8 @@ namespace Gambit
         {
            Full_Mother_List.push_back(mother_part);
            mother_part = pevt[mother_part].mother1();
-           if (pevt[mother_part].mother1() != 0)
-               std::cout << "MULTIPLE PARENTS!";
+           //if (pevt[mother_part].mother1() != 0)
+               //std::cout << "MULTIPLE PARENTS!";
         }
         
 
@@ -227,8 +233,9 @@ namespace Gambit
         if (visible && p.idAbs() != MCUtils::PID::MUON)
         {
            jetparticles.push_back(mk_pseudojet(p.p()));
+           FJNS::PseudoJet temp = mk_pseudojet(p.p());
 #ifdef JET_CHECKING
-        jetfile << p.p().px() << ", " << p.p().py() << ", " << p.p().pz() << ", " << p.p().e() << ", " <<",\n";
+        jetfile << temp.px() << ", " << temp.py() << ", " << temp.pz() << ", " << temp.e() << ", " << temp.rap() << ",\n";
 #endif
         }
         // next case are visible non-prompt muons
@@ -253,16 +260,23 @@ namespace Gambit
       /// Jet finding
       /// @todo Choose jet algorithm via detector _settings? Run several algs?
       const FJNS::JetDefinition jet_def(FJNS::antikt_algorithm, antiktR);
+      //sort jet particles by p so gambit and CBS have same order.
+      std::sort(jetparticles.begin(), jetparticles.end(), compare_particles_by_pz);
+      //int TP_TEMP_COUNTER = 0;
+      //for (auto particle : jetparticles)
+      //{
+        //std::cout << "Particle Number: " << TP_TEMP_COUNTER++ << "; Pz: " << particle.pz() << "; Px: " << particle.px() <<std::endl;
+      //}
+
       FJNS::ClusterSequence cseq(jetparticles, jet_def);
       std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(10));
 
-      std::cout << "\n\nJETCLUSTER_DEBUG_INFO: " << std::endl;
-      std::cout << "AntiktR: " << antiktR << std::endl;
-      std::cout << "pTmin: " << 10 << std::endl;
-      std::cout << "Number of particles passed to algorithm is: " << jetparticles.size() << std::endl;
-      std::cout << "Algorithm is: " << FJNS::antikt_algorithm << std::endl;
-      std::cout << "Number of outputjets, unsorted: " << cseq.inclusive_jets(10).size() << std::endl;
-      std::cout << "Number of outputjets, sorted: " << sorted_by_pt(cseq.inclusive_jets(10)).size() << std::endl;
+      //std::cout << "\n\nJETCLUSTER_DEBUG_INFO: " << std::endl;
+      //std::cout << "AntiktR: " << antiktR << std::endl;
+      //std::cout << "pTmin: " << 10 << std::endl;
+      //std::cout << "Number of particles passed to algorithm is: " << jetparticles.size() << std::endl;
+      //std::cout << "Number of outputjets, unsorted: " << cseq.inclusive_jets(10).size() << std::endl;
+      //std::cout << "Number of outputjets, sorted: " << sorted_by_pt(cseq.inclusive_jets(10)).size() << std::endl;
 
 
       /// Do jet b-tagging, etc. and add to the Event
