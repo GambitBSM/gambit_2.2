@@ -104,6 +104,8 @@ def patch_spheno_makefile(model_name, patch_dir):
                   "# F90 = g95\n"\
                   "# F90 = lf95\n"\
                   "# F90 = ifort\n"\
+                  "F90_temp := ${F90} # Added by GAMBIT\n"\
+                  "override F90 = ${notdir ${F90_temp}} # Added by GAMBIT\n"\
                   "Model = src\n"\
                   "version = 400.00\n"\
                   "all: bin/SPheno lib/libSPheno"+model_name+".so\n"\
@@ -139,9 +141,9 @@ def patch_spheno_model_makefile(model_name, patch_dir):
                 g.write(line)
                 g.write("shared = lib/libSPheno" + model_name + ".so\n")
             elif line.startswith("F90=gfortran") :
-                content = "ifeq (${F90},/usr/bin/gfortran)\n"\
-                          "override F90=gfortran\n"\
-                          "endif\n"\
+                content = "F90=gfortran\n"\
+                          "comp= -c -O -fPIC -module ${Mdir} -I${InDir}\n"\
+                          "LFlagsB= -O\n"\
                           "# Intels ifort,debug modus\n"\
                           "ifeq (${F90},ifort)\n"\
                           "F90=ifort\n"\
