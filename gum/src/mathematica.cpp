@@ -30,6 +30,7 @@ int main(int argc, char** argv)
     // Initialise options for input.
     std::vector<Particle> partlist;
     std::vector<Parameter> paramlist;
+    std::map<std::string, bool> flags;
     std::vector<std::string> backends;
 
     // Attempt to parse the user's command line input...
@@ -56,7 +57,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
         
-            GUM::all_sarah(options, partlist, paramlist, outputs, backends);
+            GUM::all_sarah(options, partlist, paramlist, outputs, backends, flags);
         }
     }
     catch(const char* e)

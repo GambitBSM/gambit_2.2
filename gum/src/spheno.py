@@ -61,7 +61,7 @@ def copy_spheno_files(model_name, output_dir, spheno_oob_path, sarah_spheno_path
 PATCHING
 """
 
-def patch_spheno(model_name, patch_dir):
+def patch_spheno(model_name, patch_dir, flags):
     """
     Applies all patches to SPheno in the GUM 
     Outputs/... directory.
@@ -75,8 +75,7 @@ def patch_spheno(model_name, patch_dir):
     patch_loopfunctions(model_name, patch_dir)
     patch_spheno_model(model_name, patch_dir)
 
-    if model_name == "MSSM" or model_name == "NMSSM" :
-        # TODO: if gum.is_susy: ...
+    if flags["SupersymmetricModel"] :
         patch_model_data(model_name, patch_dir)
         patch_3_body_decays_susy(model_name, patch_dir)
 
@@ -562,7 +561,7 @@ class SPhenoParameter:
         self.size = _size
 
 
-def write_spheno_frontends(model_name, is_susy, parameters, particles, spheno_path, output_dir):
+def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path, output_dir):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -584,7 +583,7 @@ def write_spheno_frontends(model_name, is_susy, parameters, particles, spheno_pa
     hb_variable_dictionary = get_fortran_shapes(hb_variables)
 
     # Get the source and header files
-    spheno_src = write_spheno_frontend_src(model_name, is_susy, functions, parameters)
+    spheno_src = write_spheno_frontend_src(model_name, functions, parameters, flags)
     spheno_header = write_spheno_frontend_header(model_name, 
                                                  functions, 
                                                  type_dictionary, 
@@ -871,249 +870,1313 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 # /harvesting
 # writing
 
-def write_spheno_frontend_src(model_name, is_susy, function_signatures, parameters):
+def write_spheno_frontend_src(model_name, function_signatures, parameters, flags) :
     """
     Writes source for 
     Backends/src/frontends/SARAHSPheno_<MODEL>_<VERSION>.cpp
     """ 
-    intro_message = "Frontend for SARAH-SPheno {0} backend, for the "\
-                    " {1} model.".format(SPHENO_VERSION, model_name)
+    intro_message = "Frontend for SARAH-SPheno "+SPHENO_VERSION+" backend, for the "\
+                    " "+model_name+" model."
+
+    safe_version = SPHENO_VERSION.replace('.','_')
 
     towrite = blame_gum(intro_message)
 
     # Headers, macros and callback function
-    towrite += (
-        "#include \"gambit/Backends/frontend_macros.hpp\"\n"
-        "#include \"gambit/Backends/frontends/SARAHSPheno_{0}_{1}.hpp\"\n"
-        "#include \"gambit/Elements/spectrum_factories.hpp\"\n"
-        "#include \"gambit/Models/SimpleSpectra/{0}SimpleSpec.hpp\"\n"
-        "#include \"gambit/Utils/version.hpp\"\n"
-        "\n"
-        "#define BACKEND_DEBUG 0\n"
-        "\n"
-        "// Callback function for error handling\n"
-        "BE_NAMESPACE\n"
-        "{{\n"
-        "// This function will be called from SPheno. Needs C linkage, and thus also\n"
-        "// a backend-specific name to guard against name clashes.\n"
-        "extern \"C\"\n"
-        "void CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler)()\n"
-        "{{\n"
-        "throw std::runtime_error(\"SARAHSPheno_{0} backend called TerminateProgram.\");\n"
-        "}}\n"
-        "}}\n"
-        "END_BE_NAMESPACE\n"
-        "\n"
-    ).format(model_name, SPHENO_VERSION.replace('.','_'))
+    towrite += "#include \"gambit/Backends/frontend_macros.hpp\"\n"\
+      "#include \"gambit/Backends/frontends/SARAHSPheno_"+model_name+"_"+safe_version+".hpp\"\n"\
+      "#include \"gambit/Elements/spectrum_factories.hpp\"\n"\
+      "#include \"gambit/Models/SimpleSpectra/"+model_name+"SimpleSpec.hpp\"\n"\
+      "#include \"gambit/Utils/version.hpp\"\n"\
+      "\n"\
+      "#define BACKEND_DEBUG 0\n"\
+      "\n"\
+      "// Callback function for error handling\n"\
+      "BE_NAMESPACE\n"\
+      "{\n"\
+       "// This function will be called from SPheno. Needs C linkage, and thus also\n"\
+      "// a backend-specific name to guard against name clashes.\n"\
+      "extern \"C\"\n"\
+      "void CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler)()\n"\
+      "{\n"\
+      "throw std::runtime_error(\"SARAHSPheno_"+model_name+" backend called TerminateProgram.\");\n"\
+      "}\n"\
+      "}\n"\
+      "END_BE_NAMESPACE\n"\
+      "\n"
 
     # Convenience functions
-    towrite += (
-        "// Convenience functions (definition)\n"
-        "BE_NAMESPACE\n"
-        "{{\n"
-        "\n"
-        "// Variables and functions to keep and access decay info\n"
-        "typedef std::tuple<std::vector<int>,int,double> channel_info_triplet; // {{pdgs of daughter particles}}, spheno index, correction factor\n"
-        "namespace Fdecays\n"
-        "{{\n"
-        "// A (pdg,vector) map, where the vector contains a channel_info_triplet for each\n"
-        "// decay mode of the mother particle. (See typedef of channel_info_triplet above.)\n"
-        "static std::map<int,std::vector<channel_info_triplet> > all_channel_info;\n"
-        "\n"
-        "// Flag indicating whether the decays need to be computed or not.\n"
-        "static bool BRs_already_calculated = false;\n"
-        "\n"
-        "// Function that reads a table of all the possible decays in SARAHSPheno_{0}\n"
-        "// and fills the all_channel_info map above\n"
-        "void fill_all_channel_info(str);\n"
-        "\n"
-        "// Helper function to turn a vector<int> into a vector<pairs<int,int> > needed for\n"
-        "// when calling the GAMBIT DecayTable::set_BF function\n"
-        "std::vector<std::pair<int,int> > get_pdg_context_pairs(std::vector<int>);\n"
-        "}}\n"
-        "\n"
-    ).format(model_name, SPHENO_VERSION.replace('.','_'))
+    towrite += "// Convenience functions (definition)\n"\
+      "BE_NAMESPACE\n"\
+      "{\n"\
+      "\n"\
+      "// Variables and functions to keep and access decay info\n"\
+      "typedef std::tuple<std::vector<int>,int,double> channel_info_triplet; // {{pdgs of daughter particles}}, spheno index, correction factor\n"\
+      "namespace Fdecays\n"\
+      "{\n"\
+      "// A (pdg,vector) map, where the vector contains a channel_info_triplet for each\n"\
+      "// decay mode of the mother particle. (See typedef of channel_info_triplet above.)\n"\
+      "static std::map<int,std::vector<channel_info_triplet> > all_channel_info;\n"\
+      "\n"\
+      "// Flag indicating whether the decays need to be computed or not.\n"\
+      "static bool BRs_already_calculated = false;\n"\
+      "\n"\
+      "// Function that reads a table of all the possible decays in SARAHSPheno_"+model_name+"\n"\
+      "// and fills the all_channel_info map above\n"\
+      "void fill_all_channel_info(str);\n"\
+      "\n"\
+      "// Helper function to turn a vector<int> into a vector<pairs<int,int> > needed for\n"\
+      "// when calling the GAMBIT DecayTable::set_BF function\n"\
+      "std::vector<std::pair<int,int> > get_pdg_context_pairs(std::vector<int>);\n"\
+      "}\n"\
+      "\n"
 
     # run_SPheno function
     # TODO: Missing initalization of variables native to the frontend, but depends on model
     towrite += "// Convenience function to run SPheno and obtain the spectrum\n"\
-        "int run_SPheno(Spectrum &spectrum, const Finputs &inputs)\n"\
-        "{\n"\
-        "\n"\
-        "Set_All_Parameters_0();\n"\
-        "\n"\
-        "*Iname = 1;\n"\
-        "*kont = 0;\n"\
-        "*delta_mass = 1.0E-4;\n"\
-        "*CalcTBD = false;\n"\
-        "\n"\
-        "ReadingData(inputs);\n"\
-        "\n"\
-        "if((*MatchingOrder < -1) or (*MatchingOrder > 2))\n"\
-        "{\n"\
-        "if(*HighScaleModel == \"LOW\") // Default for the NMSSM66atQ\n"\
-        "{\n"\
-        "if(!*CalculateOneLoopMasses)\n"\
-        "*MatchingOrder = -1;\n"\
-        "else\n"\
-        "*MatchingOrder =  2;\n"\
-        "}\n"\
-        "else\n"\
-        "*MatchingOrder =  2;\n"\
-        "}\n"\
-        "switch(*MatchingOrder)\n"\
-        "{\n"\
-        "case 0:\n"\
-        "*OneLoopMatching = false;\n"\
-        "*TwoLoopMatching = false;\n"\
-        "2*GuessTwoLoopMatchingBSM = false;\n"\
-        "break;\n"\
-        "case 1:\n"\
-        "*OneLoopMatching = true;\n"\
-        "*TwoLoopMatching = false;\n"\
-        "*GuessTwoLoopMatchingBSM = false;\n"\
-        "break;\n"\
-        "case 2:\n"\
-        "*OneLoopMatching = true;\n"\
-        "*TwoLoopMatching = true;\n"\
-        "*GuessTwoLoopMatchingBSM = true;\n"\
-        "break;\n"\
-        "}\n"\
-        "if(*MatchingOrder == -1)\n"\
-        "{\n"
+      "int run_SPheno(Spectrum &spectrum, const Finputs &inputs)\n"\
+      "{\n"\
+      "\n"\
+      "Set_All_Parameters_0();\n"\
+      "\n"\
+      "*Iname = 1;\n"\
+      "*kont = 0;\n"\
+      "*delta_mass = 1.0E-4;\n"\
+      "*CalcTBD = false;\n"\
+      "\n"\
+      "ReadingData(inputs);\n"\
+      "\n"\
+      "if((*MatchingOrder < -1) or (*MatchingOrder > 2))\n"\
+      "{\n"\
+      "if(*HighScaleModel == \"LOW\") // Default for the NMSSM66atQ\n"\
+      "{\n"\
+      "if(!*CalculateOneLoopMasses)\n"\
+      "*MatchingOrder = -1;\n"\
+      "else\n"\
+      "*MatchingOrder =  2;\n"\
+      "}\n"\
+      "else\n"\
+      "*MatchingOrder =  2;\n"\
+      "}\n"\
+      "switch(*MatchingOrder)\n"\
+      "{\n"\
+      "case 0:\n"\
+      "*OneLoopMatching = false;\n"\
+      "*TwoLoopMatching = false;\n"\
+      "*GuessTwoLoopMatchingBSM = false;\n"\
+      "break;\n"\
+      "case 1:\n"\
+      "*OneLoopMatching = true;\n"\
+      "*TwoLoopMatching = false;\n"\
+      "*GuessTwoLoopMatchingBSM = false;\n"\
+      "break;\n"\
+      "case 2:\n"\
+      "*OneLoopMatching = true;\n"\
+      "*TwoLoopMatching = true;\n"\
+      "*GuessTwoLoopMatchingBSM = true;\n"\
+      "break;\n"\
+      "}\n"\
+      "if(*MatchingOrder == -1)\n"\
+      "{\n"
 
     # TODO: Misssing some MD stuff
     towrite += "Missing some DM stuff\n\n"
   
     towrite += "// Setting Boundary conditions\n"\
-        "Flogical MZsuffix = false;\n"\
-        "try { " + write_spheno_function("SetMatchingConditions", function_signatures, ["g1SM", "g2SM", "g3SM", "YuSM", "YdSM", "YeSM", "vSM", "MZsuffix"]) + " }\n"\
-        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"
+      "Flogical MZsuffix = false;\n"\
+      "try { " + write_spheno_function("SetMatchingConditions", function_signatures, ["g1SM", "g2SM", "g3SM", "YuSM", "YdSM", "YeSM", "vSM", "MZsuffix"]) + " }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"
 
     # TODO: Missing more MD stuff
     towrite += "Missing more MD stuff\n\n"
 
     towrite += "Farray_Fcomplex16_1_3 Tad1Loop;\n"\
-        "try{ " + write_spheno_function("SolveTadpoleEquations", function_signatures,"Tad1Loop") + " }\n"\
-        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-        "\n"\
-        "try{ " + write_spheno_function("OneLoopMasses", function_signatures) + "}\n"\
-        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "try{ " + write_spheno_function("SolveTadpoleEquations", function_signatures,"Tad1Loop") + " }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "try{ " + write_spheno_function("OneLoopMasses", function_signatures) + " }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "\n"\
+      "// Invalidate if tachyonic masses\n"\
+      "if(*SignOfMassChanged and !*IgnoreNegativeMasses)\n"\
+      "{\n"\
+      "std::stringstream message;\n"\
+      "message << \"Point invdalid because of negative mass squared.\";\n"\
+      "invalid_point().raise(message.str());\n"\
+      "}\n"\
+      "if(*SignOfMuChanged and !*IgnoreMuSignFlip)\n"\
+      "{\n"\
+      "std::stringstream message;\n"\
+      "message << \"Point invalid because of negative mass squared in tadpoles.\";\n"\
+      "invalid_point().raise(message.str());\n"\
+      "}\n"\
+      "\n"\
+      "}\n"\
+      "else\n"\
+      "{\n"\
+      "if(*GetMassUncertainty)\n"\
+      "{\n"\
+      "if(*CalculateOneLoopMasses and *CalculateTwoLoopHiggsMasses)\n"\
+      "{\n"\
+      "*OneLoopMatching = true;\n"\
+      "*TwoLoopMatching = false;\n"\
+      "*GuessTwoLoopMatchingBSM = true;\n"\
+      "}\n"\
+      "else if(*CalculateOneLoopMasses and  !*CalculateTwoLoopHiggsMasses)\n"\
+      "{\n"\
+      "*OneLoopMatching = true;\n"\
+      "*TwoLoopMatching = false;\n"\
+      "*GuessTwoLoopMatchingBSM = false;\n"\
+      "}\n"\
+      "else\n"\
+      "{\n"\
+      "*OneLoopMatching = true;\n"\
+      "*TwoLoopMatching = false;\n"\
+      "*GuessTwoLoopMatchingBSM = false;\n"\
+      "}\n"\
+      "\n"\
+      "try{ " + write_spheno_function("CalculateSpectrum", function_signatures) + " }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+
+    # TODO: Missing mass uncertainty stuff here
+
+    towrite += "if(*CalculateOneLoopMasses and *CalculateTwoLoopHiggsMasses)\n"\
+      "{\n"\
+      "*OneLoopMatching = true;\n"\
+      "*TwoLoopMatching = true;\n"\
+      "*GuessTwoLoopMatchingBSM = false;\n"\
+      "}\n"\
+      "else if(*CalculateOneLoopMasses and !*CalculateTwoLoopHiggsMasses)\n"\
+      "{\n"\
+      "*OneLoopMatching = false;\n"\
+      "*TwoLoopMatching = false;\n"\
+      "*GuessTwoLoopMatchingBSM = false;\n"\
+      "}\n"\
+      "else\n"\
+      "{\n"\
+      "*OneLoopMatching = false;\n"\
+      "*TwoLoopMatching = false;\n"\
+      "*GuessTwoLoopMatchingBSM = false;\n"\
+      "}\n"\
+      "}\n"\
+      "try{ " + write_spheno_function("CalculateSpectrum", function_signatures) + " }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "\n"\
+      "if(*GetMassUncertainty)\n"\
+      "{\n"\
+      "try{ " + write_spheno_function("GetScaleUncertainty", function_signatures) + " }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "}\n"\
+      "\n"\
+      "}\n"\
+      "\n"\
+      "if(*FoundIterativeSolution or *WriteOutputForNonConvergence)\n"\
+      "{\n"\
+      "\n"
+
+    if flags["AddTreeLevelUnitarityLimits"] :
+      towrite += "// Calculating unitarity constraints\n"\
+        "if(*TreeLevelUnitarityLimits)\n"\
+        "{\n"\
+        "" + write_spheno_function("ScatteringEigenvalues", function_signatures) + "\n"\
+        "}\n"\
+        "if(*TrilinearUnitarity)\n"\
+        "{\n"\
+        "" + write_spheno_function("ScatteringEigenvaluesWithTrilinears", function_signatures)+"\n"\
+        "\}\n"\
+        "\n\n"\
+        "spectrum = Spectrum_Out(inputs);\n"\
+        "}\n"\
         "\n"\
         "if(*kont != 0)\n"\
         "ErrorHandling(*kont);\n"\
         "\n"\
-        "// Invalidate if tachyonic masses\n"\
-        "if(*SignOfMassChanged and !*IgnoreNegativeMasses)\n"\
-        "{\n"\
-        "std::stringstream message;\n"\
-        "message << \"Point invdalid because of negative mass squared.\";\n"\
-        "invalid_point().raise(message.str());\n"\
-        "}\n"\
-        "if(*SignOfMuChanged and !*IgnoreMuSignFlip)\n"\
-        "{\n"\
-        "std::stringstream message;\n"\
-        "message << \"Point invalid because of negative mass squared in tadpoles.\";\n"\
-        "invalid_point().raise(message.str());\n"\
-        "}\n"\
-        "\n"\
-        "}\n"\
-        "else\n"\
-        "{\n"\
-        "if(*GetMassUncertainty)\n"\
-        "{\n"\
-        "if(*CalculateOneLoopMasses and *CalculateTwoLoopHiggsMasses)\n"\
-        "{\n"\
-        "*OneLoopMatching = true;\n"\
-        "*TwoLoopMatching = false;\n"\
-        "*GuessTwoLoopMatchingBSM = true;\n"\
-        "}\n"\
-        "else if(*CalculateOneLoopMasses and  !*CalculateTwoLoopHiggsMasses)\n"\
-        "{\n"\
-        "*OneLoopMatching = true;\n"\
-        "*TwoLoopMatching = false;\n"\
-        "*GuessTwoLoopMatchingBSM = false;\n"\
-        "}\n"\
-        "else\n"\
-        "{\n"\
-        "*OneLoopMatching = true;\n"\
-        "*TwoLoopMatching = false;\n"\
-        "*GuessTwoLoopMatchingBSM = false;\n"\
-        "}\n"\
-        "\n"\
-        "try{ " + write_spheno_function("CalculateSpectrum", function_signatures) + "}\n"\
-        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-        "\n"\
-        "if(*kont != 0)\n"\
-        "ErrorHandling(*kont);\n"\
+        "return *kont\n"\
+        "}\n"
+    # End of run_SPheno function
 
-    # TODO: Missing everything else here
+    # fill_spectrum_calculate_BRs function
+    towrite += "\n"\
+      "// Helper function to pass the spectrum object to the SPheno frontend and compute the BRs.\n"\
+      "void fill_spectrum_calculate_BRs(const Spectrum &spectrum, const Finputs& inputs)\n"\
+      "{\n"\
+      "if (Fdecays::BRs_already_calculated) return;\n"\
+      "\n"\
+      "// Initialize some variables\n"\
+      "*Iname = 1;\n"\
+      "*CalcTBD = false;\n"\
+      "*ratioWoM = 0.0;\n"\
+      "*epsI = 1.0E-5;\n"\
+      "*deltaM = 1.0e-6;\n"\
+      "*kont =  0;\n"\
+      "\n"\
+      "// Read options and decay info\n"\
+      "ReadingData_decays(inputs);\n"\
+      "\n"\
+      "// Fill input parameters with spectrum imformation\n"\
+      "// Masses\n"\
+      "SMInputs sminputs = spectrum.get_SMInputs();\n"
 
-    towrite +="}\n\n"
+    # TODO: Fill model dependent particle masses
 
-    towrite += "}\n"\
-        "END_BE_NAMESPACE\n"\
-        "\n"
+    towrite += "*MVWm = spectrum.get(Par::Pole_Mass, \"W-\");\n"\
+      "*MVWm2 = pow(*MVWm,2);\n"\
+      "*MVZ = spectrum.get(Par::Pole_Mass, \"Z0\");\n"\
+      "*MVZ2 = pow(*MVZ,2);\n"\
+      "\n\n"\
+      "// Mixings\n"
+
+    # TODO: Fill model dependent mixings     
+
+    towrite += "// Other parameters\n"
+
+    # TODO: Fill model dependent other parameters
+    towrite += "// Call SPheno's function to calculate decays\n"\
+      "try{ " + write_spheno_function("CalculateBR_2", function_signatures) + " }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "// Check for errors\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "\n"\
+      "Fdecays::BRs_already_calculated = true;\n"\
+      "\n"\
+      "}\n\n"
+    # End of fill_spectrum_calculate_BRs function
+
+    # run_SPheno_decays function
+    towrite += "// Convenience function to run Spheno and obtain the decays\n"\
+      "int run_SPheno_decays(const Spectrum &spectrum, DecayTable& decays, const Finputs& inputs)\n"\
+      "{\n"\
+      "\n"\
+      "double BRMin = inputs.options->getValueOrDef<double>(1e-5, \"BRMin\");\n"\
+      "\n"\
+      "// Pass the GAMBIT spectrum to SPheno and fill the internal decay objects\n"\
+      "fill_spectrum_calculate_BRs(spectrum, inputs);\n"\
+      "\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "\n"\
+      "// Fill in info about the entry for all decays\n"\
+      "DecayTable::Entry entry;\n"\
+      "entry.calculator = STRINGIFY(BACKENDNAME);\n"\
+      "entry.calculator_version = STRINGIFY(VERSION);\n"\
+      "entry.positive_error = 0.0;\n"\
+      "entry.negative_error = 0.0;\n"\
+      "\n"\
+      "// Helper variables\n"\
+      "std::vector<int> daughter_pdgs;\n"\
+      "int spheno_index;\n"\
+      "double corrf;\n"\
+      "\n"\
+      
+    # TODO: Fill model dependent pdg vector
+
+    towrite += "int n_particles = pdg.size();\n"
+
+    # TODO: Fill model dependent gT and BR lambdas
+
+    towrite += "for(int i=0; i<n_particles; i++)\n"\
+      "{\n"\
+      "std::vector<channel_info_triplet> civ = Fdecays::all_channel_info.at(pdg[i]);\n"\
+      "entry.width_in_GeV = gT(i+1);\n"\
+      "entry.channels.clear();\n"\
+      "for(channel_info_triplet ci : civ)\n"\
+      "{\n"\
+      "std::tie(daughter_pdgs, spheno_index, corrf) = ci;\n"\
+      "if(BR(i+1,spheno_index) * corrf > BRMin)\n"\
+      "entry.set_BF(BR(i+1,spheno_index) * corrf, 0.0, Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
+      "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"\
+      "else\n"\
+      "entry.set_BF(0., 0., Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
+      "}\n"\
+      "// SM fermions in flavour basis, everything else in mass basis\n"\
+      "if(abs(pdg[i]) < 17)\n"\
+      "decays(Models::ParticleDB().long_name(pdg[i],1)) = entry;\n"\
+      "else\n"\
+      "decays(Models::ParticleDB().long_name(pdg[i],0)) = entry;\n"\
+      "}\n"\
+      "\n"\
+      "return *kont;\n"\
+      "}\n\n"
+    # End of run_SPheno_decays
+
+    # Spectrum_Out function
+    towrite += "// Convenience function to convert internal SPheno variables into a Spectrum object\n"\
+      "Spectrum Spectrum_Out(const Finputs &inputs)\n"\
+      "{\n"\
+      "\n"\
+      "SLHAstruct slha;\n"\
+      "\n"\
+      "Freal8 Q;\n"\
+      "try{ Q = sqrt(GetRenormalizationScale()); }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"
+
+    # TODO: Add rotation of fermion masses in for SUSY models
+
+    towrite += "// Spectrum generator information\n"\
+      'SLHAea_add_block(slha, "SPINFO");\n'\
+      'SLHAea_add(slha, "SPINFO", 1, "GAMBIT, using "+str(STRINGIFY(BACKENDNAME))+" from SARAH");\n'\
+      'SLHAea_add(slha, "SPINFO", 2, gambit_version()+" (GAMBIT); "+str(STRINGIFY(VERSION))+" ("+str(STRINGIFY(BACKENDNAME))+"); "+str(STRINGIFY(SARAH_VERSION))+" (SARAH)");\n'\
+      "\n"\
+      "// Block MODSEL\n"\
+      'SLHAea_add_block(slha, "MODSEL");\n'
+    if not flags["OnlyLowEnergySPheno"] :
+      towrite += 'if(*HighScaleModel == "LOW")\n'\
+        'slha["MODSEL"][""] << 1 << 0 << "# ' + 'SUSY' if flags["SupersymmetricModel"] else 'Renormalization' + ' scale input";\n'\
+        "else\n"
+    towrite += 'slha["MODSEL"][""] << 1 << 1 << "# GUT scale input";\n'\
+      'slha["MODSEL"][""] << 2 << *BoundaryCondition << "# Boundary conditions";\n'\
+      'slha["MODSEL"][""] << 5 << 1 << "# Switching on CP violations";\n'\
+      'if(*GenerationMixing)\n'\
+      'slha["MODSEL"][""] << 6 << 1 << "# switching on flavour violation";\n'\
+      'if(inputs.param.find("Qin") != inputs.param.end())\n'\
+      'slha["MODSEL"][""] << 12 << *inputs.param.at("Qin") << "# Qin";\n'\
+      '\n'\
+      '// Block MINPAR\n'\
+      'SLHAea_add_block(slha, "MINPAR");\n'
+
+    # TODO: MINPAR
+
+    towrite += '\n'\
+      '// Block EXTPAR\n'\
+      'SLHAea_add_block(slha, "EXTPAR")\n'
+
+    # TODO: EXTPAR
+
+    towrite += '\n'\
+      '// Block SMINPUTS\n'\
+      'SLHAea_add_block(slha, "SMINPUTS");\n'\
+      'slha["SMINPUTS"][""] << 1 << 1.0 / *Alpha_mZ_MS << "# alpha_em^-1(MZ)^MSbar";\n'\
+      'slha["SMINPUTS"][""] << 2 << *G_F << "# G_mu [GeV^-2]";\n'\
+      'slha["SMINPUTS"][""] << 3 << *AlphaS_mZ << "# alpha_s(MZ)^MSbar";\n'\
+      'slha["SMINPUTS"][""] << 4 << *mZ << "# m_Z(pole)";\n'\
+      'slha["SMINPUTS"][""] << 5 << (*mf_d)(3) << "# m_b(m_b), MSbar";\n'\
+      'slha["SMINPUTS"][""] << 6 << (*mf_u)(3) << "# m_t(pole)";\n'\
+      'slha["SMINPUTS"][""] << 7 << (*mf_l)(3) << "# m_tau(pole)";\n'\
+      'slha["SMINPUTS"][""] << 8 << (*mf_nu)(3) << "# m_nu_3";\n'\
+      'slha["SMINPUTS"][""] << 11 << (*mf_l)(1) << "# m_e(pole)";\n'\
+      'slha["SMINPUTS"][""] << 12 << (*mf_nu)(1) << "# m_nu_1";\n'\
+      'slha["SMINPUTS"][""] << 13 << (*mf_l)(2) << "# m_muon(pole)";\n'\
+      'slha["SMINPUTS"][""] << 14 << (*mf_nu)(2) << "# m_nu_2";\n'\
+      'slha["SMINPUTS"][""] << 21 << (*mf_d)(1) << "# m_d(2 GeV), MSbar";\n'\
+      'slha["SMINPUTS"][""] << 22 << (*mf_u)(1) << "# m_u(2 GeV), MSbar";\n'\
+      'slha["SMINPUTS"][""] << 23 << (*mf_d)(2) << "# m_s(2 GeV), MSbar";\n'\
+      'slha["SMINPUTS"][""] << 24 << (*mf_u)(2) << "# m_c(m_c), MSbar";\n'\
+
+    if not flags["OnlyLowEnergySPheno"] :
+      towrite += "// Write output in the super-CKM basis\n"\
+        "if(*SwitchToSCKM)\n"\
+        "{\n"\
+        'SLHAea_add_block(slha, "VCKMIN");\n'\
+        'slha["VCKMIN"][""] << 1 << *lam_wolf << "# lambda";\n'\
+        'slha["VCKMIN"][""] << 2 << *A_wolf << "# A";\n'\
+        'slha["VCKMIN"][""] << 3 << *rho_wolf << "# rho bar";\n'\
+        'slha["VCKMIN"][""] << 4 << *eta_wolf << "# eta bar";\n'
+
+      # TODO: SCKM sutff
+      towrite += "}\n"
+
+    # TODO: Many MD parameters
+
+    towrite += "\n"\
+      "// Block MASS\n"\
+      'SLHAea_add_block(slha, "MASS")\n'
+
+    # TODO: Particle masses
+    towrite += "\n"\
+      '// Check whether any of the masses is NaN\n'\
+      'auto block = slha["MASS"];\n'\
+      'for(auto it = block.begin(); it != block.end(); it++)\n'\
+      '{\n'\
+      'if((*it)[0] != "BLOCK" and Utils::isnan(stod((*it)[1])) )\n'\
+      '{\n'\
+      'std::stringstream message;\n'\
+      'message << "Error in spectrum generator: mass of " << Models::ParticleDB().long_name(std::pair<int,int>(stoi((*it)[0]),0)) << " is NaN";\n'\
+      'logger() << message.str() << EOM;\n'\
+      'invalid_point().raise(message.str());\n'\
+      '}\n'\
+      '}\n'\
+      '\n'\
+      '// Block DMASS\n'\
+      'if(*GetMassUncertainty)\n'\
+      '{\n'\
+      'SLHAea_add_block(slha, "DMASS");\n'
+
+    # TODO: MD Mass uncertainty
+
+    towrite += "\n"\
+      "// Do the W mass separately.  Here we use 10 MeV based on the size of corrections from two-loop papers and advice from Dominik Stockinger.\n"\
+      'slha["DMASS"][""] << 24 << 0.01 / *mW << " # mW";\n'\
+      '}\n'
+
+    # TODO: MD Rotation matrices
+
+    towrite += "\n"\
+      "// Block SPhenoINFO\n"\
+      'SLHAea_add_block(slha, "SPhenoInput");\n'\
+      'slha["SPheno"][""] << 1 << *ErrorLevel << "# ErrorLevel";\n'\
+      'slha["SPheno"][""] << 2 << *SPA_convention << "# SPA_conventions";\n'\
+      'slha["SPheno"][""] << 8 << *TwoLoopMethod << "# Two Loop Method";\n'\
+      'slha["SPheno"][""] << 9 << *GaugelessLimit << "# Gauge-less limit";\n'\
+      'slha["SPheno"][""] << 31 << *mGUT << "# GUT scale";\n'\
+      'slha["SPheno"][""] << 33 << Q << "# Renormalization scale";\n'\
+      'slha["SPheno"][""] << 34 << *delta_mass << "# Precision";\n'\
+      'slha["SPheno"][""] << 35 << *n_run << "# Iterations";\n'\
+      'if(*TwoLoopRGE)\n'\
+      'slha["SPheno"][""] << 38 << 2 << "# RGE level";\n'\
+      'else\n'\
+      'slha["SPheno"][""] << 38 << 1 << "# RGE level";\n'\
+      'slha["SPheno"][""] << 40 << 1.0 / *Alpha << "# Alpha^-1";\n'\
+      'slha["SPheno"][""] << 41 << *gamZ << "# Gamma_Z";\n'\
+      'slha["SPheno"][""] << 42 << *gamW << "# Gamma_W";\n'\
+      'slha["SPheno"][""] << 50 << *RotateNegativeFermionMasses << "# Rotate negative fermion masses";\n'\
+      'slha["SPheno"][""] << 51 << *SwitchToSCKM << "# Switch to SCKM matrix";\n'\
+      'slha["SPheno"][""] << 52 << *IgnoreNegativeMasses << "# Ignore negative masses";\n'\
+      'slha["SPheno"][""] << 53 << *IgnoreNegativeMassesMZ << "# Ignore negative masses at MZ";\n'\
+      'slha["SPheno"][""] << 55 << *CalculateOneLoopMasses << "# Calculate one loop masses";\n'\
+      'slha["SPheno"][""] << 56 << *CalculateTwoLoopHiggsMasses << "# Calculate two-loop Higgs masses";\n'\
+      'slha["SPheno"][""] << 57 << *CalculateLowEnergy << "# Calculate low energy";\n'\
+      'slha["SPheno"][""] << 60 << *KineticMixing << "# Include kinetic mixing";\n'\
+      'slha["SPheno"][""] << 65 << *SolutionTadpoleNr << "# Solution of tadpole equation";\n'\
+      '\n'\
+      '// Retrieve mass cuts\n'\
+      'static const Spectrum::cuts_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n'\
+      '\n'\
+      '// Has the user chosen to override any pole mass values?\n'\
+      '// This will typically break consistency, but may be useful in some special cases\n'\
+      'if (inputs.options->hasKey("override_pole_masses"))\n'\
+      '{\n'\
+      'std::vector<str> particle_names = inputs.options->getNames("override_pole_masses");\n'\
+      'for (auto& name : particle_names)\n'\
+      '{\n'\
+      'double mass = inputs.options->getValue<double>("override_pole_masses", name);\n'\
+      'SLHAea_add(slha, "MASS", Models::ParticleDB().pdg_pair(name).first, mass, name, true);\n'\
+      '}\n'\
+      '}\n'\
+      '\n'\
+      '//Create Spectrum object\n'\
+      'Spectrum spectrum = spectrum_from_SLHAea<'+model_name+'SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n'\
+      '\n'\
+      'return spectrum;\n'\
+      '\n'\
+      '}\n'\
+      '\n'
+    # End of Spectrum_Out
+
+    # get_HiggsCouplingsTable function
+    towrite += "// Convenience function to obtain a HiggsCouplingsTable object for HiggsBounds"\
+      "int get_HiggsCouplingsTable(const Spectrum& spectrum, HiggsCouplingsTable& hctbl, const Finputs& inputs)"\
+      "{\n"\
+      "\n"\
+      "// Pass the GAMBIT spectrum to SPheno and fill the internal decay objects (if necessary)\n"\
+      "fill_spectrum_calculate_BRs(spectrum, inputs);\n"\
+      "\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "\n"\
+      "/* Fill in effective coupling ratios.\n"\
+      "   These are the ratios of BR_BSM(channel)/BR_SM(channel) */\n"
+
+    # TODO: MD Higgs couplings
+
+    towrite += "\n"\
+      "// Check there's no errors\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "\n"\
+      "return *kont;\n"\
+      "}\n"
+    # End of get_HiggsCouplingsTable
+
+    # ReadingData function
+    towrite += "\n"\
+      "// Function to read data from the Gambit inputs and fill SPheno internal variables\n"\
+      "void ReadingData(const Finputs &inputs)\n"\
+      "{\n"\
+      "\n"\
+      "InitializeStandardModel(inputs.sminputs);\n"\
+      "try{ InitializeLoopFunctions(); }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "*ErrorLevel = -1;\n"\
+      "//*GenerationMixing = true;\n"\
+      "\n"\
+      "try{ Set_All_Parameters_0(); }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "*TwoLoopRGE = true;\n"\
+      "\n"\
+      "*kont = 0;\n"\
+      '\n'\
+      '/****************/\n'\
+      '/* Block MODSEL */\n'\
+      '/****************/\n'\
+      '// Already in Backend initialization function\n'\
+      '\n'\
+      '/******************/\n'\
+      '/* Block SMINPUTS */\n'\
+      '/******************/\n'\
+      '// Already in InitializeStandardModel\n'\
+      '\n'\
+      '/****************/\n'\
+      '/* Block VCKMIN */\n'\
+      '/****************/\n'\
+      '// Already in SMInputs\n'\
+      '\n'\
+      '/****************/\n'\
+      '/* Block FCONST */\n'\
+      '/****************/\n'\
+      '// Some hadron constants, not really needed\n'\
+      '\n'\
+      '/***************/\n'\
+      '/* Block FMASS */\n'\
+      '/***************/\n'\
+      '// Masses of hadrons, not really needed\n'\
+      '\n'\
+      '/***************/\n'\
+      '/* Block FLIFE */\n'\
+      '/***************/\n'\
+      '// Lifetimes of hadrons, not really needed\n'\
+      '\n'\
+      '/*******************************/\n'\
+      '/* Block SPHENOINPUT (options) */\n'\
+      '/*******************************/\n'\
+      '// 1, Error_Level\n'\
+      '*ErrorLevel = inputs.options->getValueOrDef<Finteger>(-1, "ErrorLevel");\n'\
+      '\n'\
+      '// 2, SPA_convention\n'\
+      '*SPA_convention = inputs.options->getValueOrDef<bool>(false, "SPA_convention");\n'\
+      'if(*SPA_convention)\n'\
+      '{\n'\
+      'Freal8 scale = 1.0E6;  // SPA convention is 1 TeV\n'\
+      'try {SetRGEScale(scale); }\n'\
+      'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+      '}\n'\
+      '\n'\
+      '// 3, External_Spectrum\n'\
+      '// GAMBIT: no need for external spectrum options\n'\
+      '*External_Spectrum = false;\n'\
+      '*External_Higgs = false;\n'\
+      '\n'\
+      '// 4, Use_Flavour_States\n'\
+      '// GAMBIT: private variable, cannot import\n'\
+      '\n'\
+      '// 5, FermionMassResummation\n'\
+      '// GAMBIT: not covered\n'\
+      '*FermionMassResummation = true;\n'\
+      '\n'\
+      '// 6, RXiNew\n'\
+      '*RXiNew = inputs.options->getValueOrDef<Freal8>(1.0, "RXiNew");\n'\
+      '\n'\
+      '// 7, Caclulate Two Loop Higgs Masses\n'\
+      '*CalculateTwoLoopHiggsMasses = inputs.options->getValueOrDef<bool>(true, "CalculateTwoLoopHiggsMasses");\n'\
+      '\n'\
+      '// 8, Two Loop method\n'\
+      '*TwoLoopMethod = inputs.options->getValueOrDef<Finteger>(3, "TwoLoopMethod");\n'\
+      'switch(*TwoLoopMethod)\n'\
+      '{\n'\
+      'case 1:\n'\
+      '  *PurelyNumericalEffPot = true;\n'\
+      '  *CalculateMSSM2Loop = false;\n'\
+      '  break;\n'\
+      'case 2:\n'\
+      '  *PurelyNumericalEffPot = false;\n'\
+      '  *CalculateMSSM2Loop = false;\n'\
+      '  break;\n'\
+      'case 3:\n'\
+      '  *CalculateMSSM2Loop = false;\n'\
+      '  break;\n'\
+      'case 8:\n'\
+      '  *CalculateMSSM2Loop = true;\n'\
+      '  break;\n'\
+      'case 9:\n'\
+      '  *CalculateMSSM2Loop = true;\n'\
+      '  break;\n'\
+      'default:\n'\
+      '  *CalculateTwoLoopHiggsMasses = false;\n'\
+      '}\n'\
+      '\n'\
+      '// 9, GaugelessLimit\n'\
+      '*GaugelessLimit = inputs.options->getValueOrDef<bool>(true, "GaugelessLimit");\n'\
+      '\n'\
+      '// 400, hstep_pn\n'\
+      '*hstep_pn = inputs.options->getValueOrDef<Freal8>(0.1, "hstep_pn");\n'\
+      '\n'\
+      '// 401, hstep_pn\n'\
+      '*hstep_sa = inputs.options->getValueOrDef<Freal8>(0.001, "hstep_sa");\n'\
+      '\n'\
+      '// 410, TwoLoopRegulatorMass\n'\
+      '*TwoLoopRegulatorMass = inputs.options->getValueOrDef<Freal8>(0.0, "TwoLoopRegulatorMass");\n'\
+      '\n'\
+      '// 10, TwoLoopSafeMode\n'\
+      '*TwoLoopSafeMode = inputs.options->getValueOrDef<bool>(false, "TwoLoopSafeMode");\n'\
+      '\n'\
+      '// 11, whether to calculate branching ratios or not, L_BR\n'\
+      '// All BR details are taken by other convenience function\n'\
+      '*L_BR = false;\n'\
+      '\n'\
+      '// 12, minimal value such that a branching ratio is written out, BRMin\n'\
+      '// All BR details are taken by other convenience function\n'\
+      '\n'\
+      '// 13, 3 boday decays\n'\
+      '// All BR details are taken by other convenience function\n'\
+      '\n'\
+      '// 14, run SUSY couplings to scale of decaying particle\n'\
+      '// All BR details are taken by other convenience function\n'\
+      '\n'\
+      '// 15, MinWidth\n'\
+      '// All BR details are taken by other convenience function\n'\
+      '\n'\
+      '// 16. OneLoopDecays\n'\
+      '// All BR details are taken by other convenience function\n'\
+      '\n'\
+      '// 19, MatchingOrder: maximal number of iterations\n'\
+      '*MatchingOrder = inputs.options->getValueOrDef<Finteger>(-2, "MatchingOrder");\n'\
+      '\n'\
+      '// 20, GetMassUncertainty\n'\
+      '*GetMassUncertainty = inputs.options->getValueOrDef<bool>(false, "GetMassUncertainty");\n'\
+      '\n'\
+      '// 21-26, whether to calculate cross sections or not, L_CS\n'\
+      '*L_CS = false;\n'\
+      '\n'\
+      '// 31, setting a fixed GUT scale, GUTScale\n'\
+      'Freal8 GUTScale = inputs.options->getValueOrDef<Freal8>(0.0, "GUTScale");\n'\
+      'if(GUTScale > 0.0)\n'\
+      '{\n'\
+      'try{ SetGUTScale(GUTScale); }\n'\
+      'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+      '}\n'\
+      '\n'\
+      '// 32, requires strict unification, StrictUnification\n'\
+      'Flogical StrictUnification = inputs.options->getValueOrDef<bool>(false, "StrictUnification");\n'\
+      'if(StrictUnification)\n'\
+      '{\n'\
+      'try{ SetStrictUnification(StrictUnification); }\n'\
+      'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+      '}\n'\
+      '\n'\
+      '// 33, setting a fixed renormalization scale\n'\
+      'Freal8 RGEScale = inputs.options->getValueOrDef<Freal8>(0.0, "RGEScale");\n'\
+      'if(RGEScale > 0.0)\n'\
+      '{\n'\
+      'RGEScale *= RGEScale;\n'\
+      'try{ SetRGEScale(RGEScale); }\n'\
+      'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+      '}\n'\
+      '\n'\
+      '// 34, precision of mass calculation, delta_mass\n'\
+      '*delta_mass = inputs.options->getValueOrDef<Freal8>(0.00001, "delta_mass");\n'\
+      '\n'\
+      '// 35, maximal number of iterations, n_run\n'\
+      '*n_run = inputs.options->getValueOrDef<Finteger>(40, "n_run");\n'\
+      '\n'\
+      '// 36, minimal number of iterations\n'\
+      '*MinimalNumberIterations = inputs.options->getValueOrDef<Finteger>(5, "MinimalNumberIterations");\n'\
+      '\n'\
+      '// 37, if = 1 -> CKM through V_u, if = 2 CKM through V_d, YukawaScheme\n'\
+      'Finteger YukawaScheme = inputs.options->getValueOrDef<Finteger>(1, "YukawaScheme");\n'\
+      'if(YukawaScheme == 1 or YukawaScheme == 2)\n'\
+      '{\n'\
+      'try{ SetYukawaScheme(YukawaScheme); }\n'\
+      'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+      '}\n'\
+      '\n'\
+      '// 38, set looplevel of RGEs, TwoLoopRGE\n'\
+      '*TwoLoopRGE = inputs.options->getValueOrDef<bool>(true, "TwoLoopRGE");\n'\
+      '\n'\
+      '// 39, write additional SLHA1 file, Write_SLHA1\n'\
+      '// GABMIT: Always false, no file output\n'\
+      '*WriteSLHA1 = false;\n'\
+      '\n'\
+      '// 40, alpha(0), Alpha\n'\
+      'Freal8 alpha = 1.0/137.035999074;\n'\
+      '*Alpha = inputs.options->getValueOrDef<Freal8>(alpha,"Alpha");\n'\
+      '\n'\
+      '// 41, Z-boson width, gamZ\n'\
+      '*gamZ = inputs.options->getValueOrDef<Freal8>(2.49,"gamZ");\n'\
+      '\n'\
+      '// 42, W-boson width, gamW\n'\
+      '*gamW = inputs.options->getValueOrDef<Freal8>(2.06,"gamW");\n'\
+      '\n'\
+      '// 50, RotateNegativeFermionMasses\n'\
+      '// Never rotate the masses, it\'s agains SLHA convention and Gambit cannot handle complex couplings\n'\
+      '*RotateNegativeFermionMasses = false;\n'\
+      '\n'\
+      '// 51, Switch to SCKM\n'\
+      '// This the default behaviour with GAMBIT\n'\
+      '*SwitchToSCKM = true;\n'\
+      '\n'\
+      '// 52, Ignore negative masses\n'\
+      '*IgnoreNegativeMasses = inputs.options->getValueOrDef<bool>(false, "IgnoreNegativeMasses");\n'\
+      '\n'\
+      '// 53, Ignore negative masses at MZ\n'\
+      '*IgnoreNegativeMassesMZ = inputs.options->getValueOrDef<bool>(false, "IgnoreNegativeMassesMZ");\n'\
+      '\n'\
+      '// 54, Write Out for non convergence\n'\
+      '*WriteOutputForNonConvergence = inputs.options->getValueOrDef<bool>(false, "WriteOutputForNonConvergence");\n'\
+      '\n'\
+      '// 55, calculate one loop masses\n'\
+      '*CalculateOneLoopMasses = inputs.options->getValueOrDef<bool>(true, "CalculateOneLoopMasses");\n'\
+      '\n'\
+      '// 57, calculate low energy observables\n'\
+      '// TODO: No low energy observables yet\n'\
+      '  *CalculateLowEnergy = false;\n'\
+      '\n'\
+      '// 58, include delta and/or BSM delta VB\n'\
+      '*IncludeDeltaVB = inputs.options->getValueOrDef<bool>(true, "IncludeDeltaVB");\n'\
+      'if(*IncludeDeltaVB)\n'\
+      '*IncludeBSMdeltaVB = inputs.options->getValueOrDef<bool>(true, "IncludeBSMdeltaVB");\n'\
+      '\n'\
+      '// 60, kinetic mixing\n'\
+      '*KineticMixing = inputs.options->getValueOrDef<bool>(true, "KineticMixing");\n'\
+      '\n'\
+      '// 62,\n'\
+      '*RunningSUSYparametersLowEnergy = inputs.options->getValueOrDef<bool>(true, "RunningSUSYparametersLowEnergy");\n'\
+      '  \n'\
+      '// 63,\n'\
+      '*RunningSMparametersLowEnergy = inputs.options->getValueOrDef<bool>(true, "RunningSMparametersLowEnergy");\n'\
+      '\n'\
+      '// 64\n'\
+      '*WriteParametersAtQ = inputs.options->getValueOrDef<bool>(false, "WriteParametersAtQ");\n'\
+      '\n'\
+      '// 65\n'\
+      '*SolutionTadpoleNr = inputs.options->getValueOrDef<Finteger>(1, "SolutionTadpoleNr");\n'\
+      '\n'\
+      '// 66\n'\
+      '*DecoupleAtRenScale = inputs.options->getValueOrDef<bool>(false, "DecoupleAtRenScale");\n'\
+      '\n'\
+      '// 67\n'\
+      '*Calculate_mh_within_SM = inputs.options->getValueOrDef<bool>(true, "Calculate_mh_within_SM");\n'\
+      'if(*Calculate_mh_within_SM)\n'\
+      '*Force_mh_within_SM = inputs.options->getValueOrDef<bool>(false, "Force_mh_within_SM");\n'\
+      '\n'\
+      '// 68\n'\
+      '*MatchZWpoleMasses = inputs.options->getValueOrDef<bool>(false, "MatchZWpolemasses");\n'\
+      '\n'\
+      '// 75,  Writes the parameter file for WHIZARD\n'\
+      '// GAMBIT: no output\n'\
+      '*Write_WHIZARD = false;\n'\
+      '\n'\
+      '// 76, Writes input files for HiggsBounds\n'\
+      '// GAMBIT: no output\n'\
+      '*Write_HiggsBounds = false;\n'\
+      '\n'\
+      '// 77, Use conventions for MO\n'\
+      '// GAMBIT: no output\n'\
+      '*OutputForMO = false;\n'\
+      '\n'\
+      '// 78,  Use conventions for MG\n'\
+      '// GAMBIT: no output\n'\
+      '*OutputForMG = false;\n'\
+      '\n'\
+      '// 79, Writes Wilson coefficients in WCXF format\n'\
+      '*Write_WCXF = inputs.options->getValueOrDef<bool>(false, "Write_WCXF");\n'\
+      '\n'\
+      '// 80, exit for sure with non-zero value if problem occurs, Non_Zero_Exit\n'\
+      '// GAMBIT: never brute exit, let GAMBIT do a controlled exit\n'\
+      '*Non_Zero_Exit = false;\n'\
+      '\n'\
+      '// 86, width to be counted as invisible in HiggsBounds input\n'\
+      '*WidthToBeInvisible = inputs.options->getValueOrDef<Freal8>(0.0, "WidthToBeInvisible");\n'\
+      '  \n'\
+      '// 88, maximal mass allowedin loops\n'\
+      '*MaxMassLoop = pow(inputs.options->getValueOrDef<Freal8>(1.0E16, "MaxMassLoop"), 2);\n'\
+      '\n'\
+      '// 80, maximal mass counted as numerical zero\n'\
+      '*MaxMassNumericalZero = inputs.options->getValueOrDef<Freal8>(1.0E-8, "MaxMassNumericalZero");\n'\
+      '\n'\
+      '// 95, force mass mastrices at 1-loop to be real\n'\
+      '*ForceRealMatrices = inputs.options->getValueOrDef<bool>(false, "ForceRealMatrices");\n'\
+      '\n'\
+      '// 150, use 1l2lshifts\n'\
+      '*include1l2lshift=inputs.options->getValueOrDef<bool>(false,"include1l2lshift");\n'\
+      '\n'\
+      '// 151\n'\
+      '*NewGBC=inputs.options->getValueOrDef<bool>(true,"NewGBC");\n'\
+      '\n'\
+      '// 440\n'\
+      '*TreeLevelUnitarityLimits=inputs.options->getValueOrDef<bool>(true,"TreeLevelUnitarityLimits");\n'\
+      '\n'\
+      '// 441\n'\
+      '*TrilinearUnitarity=inputs.options->getValueOrDef<bool>(true,"TrilinearUnitarity");\n'\
+      '\n'\
+      '// 442\n'\
+      '*unitarity_s_min = inputs.options->getValueOrDef<Freal8>(2000,"unitarity_s_min");\n'\
+      '\n'\
+      '// 443\n'\
+      '*unitarity_s_max = inputs.options->getValueOrDef<Freal8>(3000,"unitarity_s_max");\n'\
+      '\n'\
+      '// 444\n'\
+      '*unitarity_steps = inputs.options->getValueOrDef<Finteger>(5,"unitarity_steps");\n'\
+      '\n'\
+      '// 445\n'\
+      '*RunRGEs_unitarity=inputs.options->getValueOrDef<bool>(false,"RunRGEs_unitarity");\n'\
+      '\n'\
+      '// 446\n'\
+      '*TUcutLevel = inputs.options->getValueOrDef<Finteger>(2,"TUcutLevel");\n'\
+      '\n'\
+      '// 510, Write tree level tadpole solutions\n'\
+      '// Doesn\'t seem to have any effect, but add option anyway\n'\
+      '*WriteTreeLevelTadpoleSolutions = inputs.options->getValueOrDef<bool>(false, "WriteTreeLevelTadpoleSolutions");\n'\
+      '\n'\
+      '// 515, Write GUT values\n'\
+      '// In SPheno the default is true, but in GAMBIT we don\'t often need these, so false\n'\
+      '*WriteGUTvalues = inputs.options->getValueOrDef<bool>(false, "WriteGUTvalues");\n'\
+      '\n'\
+      '// 520, write effective higgs coupling ratios\n'\
+      '// Already done by the getCouplingsTable convenience function, but check\n'\
+      '*WriteEffHiggsCouplingRatios = false;\n'\
+      '\n'\
+      '// 521, Higher order diboson\n'\
+      '*HigherOrderDiboson = inputs.options->getValueOrDef<bool>(true, "HigherOrderDiboson");\n'\
+      '\n'\
+      '// 522\n'\
+      '*PoleMassesInLoops = inputs.options->getValueOrDef<bool>(true, "PoleMassesInLoops");\n'\
+      '\n'\
+      '// 525, write higgs diphoton loop contributions\n'\
+      '// As with 520, these should be in getCouplingsTable\n'\
+      '*WriteHiggsDiphotonLoopContributions = false;\n'\
+      '\n'\
+      '// 530, write tree level tadpole parameters\n'\
+      '*WriteTreeLevelTadpoleParameters = inputs.options->getValueOrDef<bool>(false, "WriteTreeLevelTadpoleParameters");\n'\
+      '\n'\
+      '// 550, CalcFT\n'\
+      '// Does nothing so we don\'t include it\n'\
+      '\n'\
+      '// 551, one loop FT\n'\
+      '// Does nothing so we don\'t include it\n'\
+      '\n'\
+      '// 990, make Q test\n'\
+      '// Does nothing so we don\'t include it\n'\
+      '\n'\
+      '// 000, print debug information\n'\
+      '// GAMBIT: no output\n'\
+      '*PrintDebugInformation = false;\n'\
+      '\n'\
+      '// Silence screen output, added by GAMBIT to SPheno\n'\
+      '*SilenceOutput = inputs.options->getValueOrDef<bool>(false, "SilenceOutput");\n'\
+      '\n'\
+      '/**********************/\n'\
+      '/* Block DECAYOPTIONS */\n'\
+      '/**********************/\n'\
+      '\n'\
+      '// All in ReadingData_decays\n'\
+      '\n'\
+      '\n'\
+      '/****************/\n'\
+      '// Block MINPAR //\n'\
+      '/****************/\n'
+
+    # TODO: MINPAR
+
+    towrite += "\n"\
+      "/****************/\n"\
+      "/* Block EXTPAR */\n"\
+      "/****************/\n"
+
+    # TODO: EXTPAR
+
+    # TODO: ParamIN blocks
+
+    towrite += "\n"\
+      '/*****************/\n'\
+      '/* Block GAUGEIN */\n'\
+      '/*****************/\n'\
+      '// Irrelevant\n'
+
+    # TODO: Model dependent blocks
+
+    towrite += "\n"\
+      "// No other blocks are relevant at this stage\n"\
+      "\n"\
+      "}\n"
+    # end of ReadingData
+
+    # ReadingData_decays function
+    towrite += "// Function to read decay tables and options\n"\
+      '{\n'\
+      '// Read the file with info about decay channels\n'\
+      'static bool scan_level_decays = true;\n'\
+      'if (scan_level_decays)\n'\
+      '{\n'\
+      '// str decays_file = inputs.options->getValueOrDef<str>("", "decays_file");\n'\
+      'str decays_file = str(GAMBIT_DIR) + "/Backends/data/" + STRINGIFY(BACKENDNAME) + "_" + STRINGIFY(SAFE_VERSION) + "_decays_info.dat";\n'\
+      '\n'\
+      'Fdecays::fill_all_channel_info(decays_file);\n'\
+      '\n'\
+      'scan_level_decays = false;\n'\
+      '}\n'\
+      ' \n'\
+      '// Options for decays only\n'\
+      ' \n'\
+      '/********************/\n'\
+      '/* Block SPhenoInput */\n'\
+      '/********************/\n'\
+      ' \n'\
+      '// 11, whether to calculate branching ratios or not, L_BR\n'\
+      '*L_BR = true;\n'\
+      ' \n'\
+      '// 12, minimal value such that a branching ratio is written out, BRMin\n'\
+      '// This really only affects output so we don\'t care\n'\
+      ' \n'\
+      '// 13, 3 boday decays\n'\
+      '*Enable3BDecaysF = inputs.options->getValueOrDef<bool>(true, "Enable3BDecaysF");\n'\
+      '*Enable3BDecaysS = inputs.options->getValueOrDef<bool>(true, "Enable3BDecaysS");\n'\
+      ' \n'\
+      '// 14, run SUSY couplings to scale of decaying particle\n'\
+      '*RunningCouplingsDecays = inputs.options->getValueOrDef<bool>(true, "RunningCouplingsDecays");\n'\
+      '\n'\
+      '// 15, MinWidth\n'\
+      '*MinWidth = inputs.options->getValueOrDef<Freal8>(1.0E-30, "MinWidth");\n'\
+      ' \n'\
+      '// 16. OneLoopDecays\n'\
+      '*OneLoopDecays = inputs.options->getValueOrDef<bool>(true, "OneLoopDecays");\n'\
+      '\n'\
+      '/**********************/\n'\
+      '/* Block DECAYOPTIONS */\n'\
+      '/**********************/\n'\
+      '\n'
+
+    # TODO: i, Calc3BodyDecay_<particle_i>
+      
+    if flags["SupersymmetricModel"] :
+      towrite += '// Calculate 3 body decays with only SUSY particles\n'\
+        '*CalcSUSY3BodyDecays = inputs.options->getValueOrDef<bool>(false, "CalcSUSY3BodyDecays");\n'\
+        '\n'
+    towrite += '// 1000, Loop induced only\n'\
+      '*CalcLoopDecay_LoopInducedOnly = inputs.options->getValueOrDef<bool>(false, "CalcLoopDecay_LoopInducedOnly");\n'\
+      '\n'
+
+    # TODO: 100i, CalcLoopDecay_<particle_i>
+      
+    towrite += '// 1101, divonly_save\n'\
+      '*divonly_save = inputs.options->getValueOrDef<Finteger>(1,"divonly_save");\n'\
+      '\n'\
+      '// 1102, divergence_save\n'\
+      '*divergence_save = inputs.options->getValueOrDef<Freal8>(0.0,"divergence_save");\n'\
+      '\n'\
+      '// 1110, Simplistic Loop Decays\n'\
+      '*SimplisticLoopDecays = inputs.options->getValueOrDef<bool>(false, "SimplisticLoopDecays");\n'\
+      '\n'\
+      '// 1111, Shift IR divergence\n'\
+      '*ShiftIRdiv = inputs.options->getValueOrDef<bool>(true, "ShiftIRdiv");\n'\
+      '\n'\
+      '// 1103, Debug loop decays\n'\
+      '*DebugLoopDecays = inputs.options->getValueOrDef<bool>(false, "DebugLoopDecays");\n'\
+      '\n'\
+      '// 1104, Only Tree Level Contributions\n'\
+      '*OnlyTreeLevelContributions = inputs.options->getValueOrDef<bool>(false, "OnlyTreeLevelContributions");\n'\
+      '\n'\
+      '// 1114, External Z factors\n'\
+      '*ExternalZfactors = inputs.options->getValueOrDef<bool>(true, "ExternalZfactors");\n'\
+      '  if(*ExternalZfactors)\n'\
+      '{\n'\
+      '*UseZeroRotationMatrices = inputs.options->getValueOrDef<bool>(false, "UseZeroRotationMatrices");\n'\
+      '*UseP2Matrices = inputs.options->getValueOrDef<bool>(true, "UseP2Matrices");\n'\
+      '}\n'\
+      '\n'\
+      '// 1115, OS kinematics\n'\
+      '*OSkinematics = inputs.options->getValueOrDef<bool>(true, "OSkinematics");\n'\
+      '\n'\
+      '// 1116, ew/yuk OS in decays\n'\
+      '*ewOSinDecays = inputs.options->getValueOrDef<bool>(true, "ewOSinDecays");\n'\
+      '*yukOSinDecays = inputs.options->getValueOrDef<bool>(false, "yukOSinDecays");\n'\
+      '\n'\
+      '// 1117, CT in loop decays\n'\
+      '*CTinLoopDecays = inputs.options->getValueOrDef<bool>(false, "CTinLoopDecays");\n'\
+      '\n'\
+      '// 1118, Loop induced decays OS\n'\
+      '*LoopInducedDecaysOS = inputs.options->getValueOrDef<bool>(true, "LoopInducedDecaysOS");\n'\
+      '\n'\
+      '// 1201, Mass regulator for photon and gluon\n'\
+      '*Mass_Regulator_PhotonGluon = inputs.options->getValueOrDef<Freal8>(1e-10, "Mass_Regulator_PhotonGluon");\n'\
+      '\n'\
+      '// 1205, Extra scale for loop decays\n'\
+      '*Extra_Scale_LoopDecays = inputs.options->getValueOrDef<bool>(false, "Extra_Scale_LoopDecays");\n'\
+      'if(*Extra_Scale_LoopDecays)\n'\
+      '*Scale_LoopDecays = inputs.options->getValue<Freal8>("Scale_LoopDecays");\n'\
+      '\n'\
+      '}\n'\
+      '\n'
+    # end of ReadingData_decays
+
+    # InitializeStandardModel function
+    towrite += 'void InitializeStandardModel(const SMInputs &sminputs)\n'\
+      '{\n'\
+      '\n'\
+      '*kont = 0;\n'\
+      '\n'\
+      '// Contributions to alpha(m_Z), based on F. Jegerlehner, hep-ph/0310234 and Fanchiotti, Kniehl, Sirlin PRD 48 (1993) 307\n'\
+      '*Delta_Alpha_Lepton = 0.04020;\n'\
+      '*Delta_Alpha_Hadron = 0.027651;\n'\
+      '\n'\
+      '// Z-boson\n'\
+      '*mZ = sminputs.mZ;          // mass\n'\
+      '*gamZ = 2.4952;             // width, values henceforth from StandardModel.f90\n'\
+      '(*BrZqq)(1) = 0.156;        // branching ratio in d \bar{d}\n'\
+      '(*BrZqq)(2) = 0.156;        // branching ratio in s \bar{s}\n'\
+      '(*BrZqq)(3) = 0.151;        // branching ratio in b \bar{b}\n'\
+      '(*BrZqq)(4) = 0.116;        // branching ratio in u \bar{u}\n'\
+      '(*BrZqq)(5) = 0.12;         // branching ratio in c \bar{c}\n'\
+      '(*BrZll)(1) = 0.0336;       // branching ratio in e+ e-\n'\
+      '(*BrZll)(2) = 0.0336;       // branching ratio in mu+ mu-\n'\
+      '(*BrZll)(3) = 0.0338;       // branching ratio in tau+ tau-\n'\
+      '*BrZinv = 0.2;              // invisible branching ratio\n'\
+      '\n'\
+      '*mZ2 = *mZ * *mZ;\n'\
+      '*gamZ2 = *gamZ * *gamZ;\n'\
+      '*gmZ = *gamZ * *mZ;\n'\
+      '*gmZ2 = *gmZ * *gmZ;\n'\
+      '\n'\
+      '// W-boson\n'\
+      '*mW = 80.385;\n'\
+      '*gamW = 2.085;\n'\
+      '(*BrWqq)(1) = 0.35;\n'\
+      '(*BrWqq)(2) = 0.35;\n'\
+      'for(int i=1; i<=3; i++)\n'\
+      '(*BrWln)(i) = 0.1;\n'\
+      '\n'\
+      '*mW2 = pow(*mW, 2);\n'\
+      '*gamW2 = pow(*gamW, 2);\n'\
+      '*gmW = *gamW * *mW;\n'\
+      '*gmW2 = pow(*gmW, 2);\n'\
+      '\n'\
+      '// lepton masses: e, muon, tau\n'\
+      '(*mf_l)(1) = sminputs.mE;\n'\
+      '(*mf_l)(2) = sminputs.mMu;\n'\
+      '(*mf_l)(3) = sminputs.mTau;\n'\
+      '\n'\
+      '// default for neutrino masses\n'\
+      '(*mf_nu)(1) = 0.0;\n'\
+      '(*mf_nu)(2) = 0.0;\n'\
+      '(*mf_nu)(3) = 0.0;\n'\
+      '\n'\
+      '// scale where masses of light quarks are defined [in GeV]\n'\
+      '(*Q_light_quarks) = 2;\n'\
+      '\n'\
+      '// up-quark masses: u, c, t\n'\
+      '(*mf_u)(1) = sminputs.mU;\n'\
+      '(*mf_u)(2) = sminputs.mCmC;\n'\
+      '(*mf_u)(3) = sminputs.mT;\n'\
+      '\n'\
+      '// down-quark masses: d, s, b\n'\
+      '(*mf_d)(1) = sminputs.mD;\n'\
+      '(*mf_d)(2) = sminputs.mS;\n'\
+      '(*mf_d)(3) = sminputs.mBmB;\n'\
+      '\n'\
+      'for(int i=1; i<=3; i++)\n'\
+      '{\n'\
+      '(*mf_l2)(i) = pow((*mf_l)(i),2);\n'\
+      '(*mf_u2)(i) = pow((*mf_u)(i),2);\n'\
+      '(*mf_d2)(i) = pow((*mf_d)(i),2);\n'\
+      '}\n'\
+      '\n'\
+      '// couplings: Alpha(Q=0), Alpha(mZ), Alpha_S(mZ), Fermi constant G_F\n'\
+      '*Alpha =  1.0/137.035999074;\n'\
+      '*Alpha_mZ = 1.0/sminputs.alphainv;\n'\
+      '*Alpha_mZ_MS = *Alpha_mZ; // from SMINPUTS\n'\
+      '*MZ_input = true;\n'\
+      '*AlphaS_mZ = sminputs.alphaS;\n'\
+      '*G_F = sminputs.GF;\n'\
+      '\n'\
+      '// for ISR correction in e+e- annihilation\n'\
+      '*KFactorLee = 1.0 + (M_PI/3.0 - 1.0/(2*M_PI))*(*Alpha);\n'\
+      '\n'\
+      '// CKM matrix\n'\
+      '*lam_wolf = sminputs.CKM.lambda;\n'\
+      '*A_wolf = sminputs.CKM.A;\n'\
+      '*rho_wolf = sminputs.CKM.rhobar;\n'\
+      '*eta_wolf = sminputs.CKM.etabar;\n'\
+      '\n'\
+      '\n'\
+      'float s12 = sminputs.CKM.lambda;\n'\
+      'float s23 = pow(s12,2) * sminputs.CKM.A;\n'\
+      'float s13 = s23 * sminputs.CKM.lambda * sqrt(pow(sminputs.CKM.etabar,2) + pow(sminputs.CKM.rhobar,2));\n'\
+      'float phase = atan(sminputs.CKM.etabar/sminputs.CKM.rhobar);\n'\
+      '\n'\
+      'float c12 = sqrt(1.0 - s12*s12);\n'\
+      'float c23 = sqrt(1.0 - s23*s23);\n'\
+      'float c13 = sqrt(1.0 - s13*s13);\n'\
+      '\n'\
+      'std::complex<float> i = -1;\n'\
+      'i = sqrt(i);\n'\
+      '\n'\
+      '(*CKM)(1,1) = c12 * c13;\n'\
+      '(*CKM)(1,2) = s12 * c13;\n'\
+      '(*CKM)(1,3) = s13 * exp(-i * phase);\n'\
+      '(*CKM)(2,1) = -s12*c23 -c12*s23*s13 * exp(i * phase);\n'\
+      '(*CKM)(2,2) = c12*c23 -s12*s23*s13 * exp(i * phase );\n'\
+      '(*CKM)(2,3) = s23 * c13;\n'\
+      '(*CKM)(3,1) = s12*s23 -c12*c23*s13 * exp(i * phase );\n'\
+      '(*CKM)(3,2) = -c12*s23 - s12*c23*s13 * exp( i * phase );\n'\
+      '(*CKM)(3,3) = c23 * c13;\n'\
+      '\n'\
+      'for(int i=1; i<=3; i++)\n'\
+      '{\n'\
+      '(*mf_l_mZ)(i) = 0.0;\n'\
+      '(*mf_d_mZ)(i) = 0.0;\n'\
+      '(*mf_u_mZ)(i) = 0.0;\n'\
+      '}\n'\
+      'try{ CalculateRunningMasses(*mf_l, *mf_d, *mf_u, *Q_light_quarks, *Alpha_mZ, *AlphaS_mZ, *mZ, *mf_l_mZ, *mf_d_mZ, *mf_u_mZ, *kont); }\n'\
+      'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+      'if(*kont != 0)\n'\
+      'ErrorHandling(*kont);\n'\
+      '\n'\
+      '}\n'\
+      '\n'
+    # end of InitializeStandardModel
+
+    # ErrorHandling function
+    # TODO : Update on NMSSM first to test it 
+    # end of ErrorHandling
+
+    # Helper functions
+    towrite += '//Helper functions\n'\
+      'void Fdecays::fill_all_channel_info(str decays_file)\n'\
+      '{\n'\
+      'std::ifstream file(decays_file);\n'\
+      'if(file.is_open())\n'\
+      '{\n'\
+      'str line;\n'\
+      'int parent_pdg;\n'\
+      'while(getline(file, line))\n'\
+      '{\n'\
+      'std::istringstream sline(line);\n'\
+      'str first;\n'\
+      'sline >> first;\n'\
+      '// Ignore the line if it is a comment\n'\
+      'if(first[0] != \'#\' and first != "")\n'\
+      '{\n'\
+      '// If the line starts with DECAY read up the pdg of the decaying particle\n'\
+      'if(first == "DECAY")\n'\
+      '{\n'\
+      'sline >> parent_pdg;\n'\
+      '}\n'\
+      'else\n'\
+      '{\n'\
+      '// Read up the decay index, number of daughters, pdgs for the daughters and the correction factor\n'\
+      'int index, nda, pdg;\n'\
+      'double corrf;\n'\
+      'std::vector<int> daughter_pdgs;\n'\
+      'index = stoi(first);\n'\
+      'sline >> nda;\n'\
+      'for(int i=0; i<nda; i++)\n'\
+      '{\n'\
+      'sline >> pdg;\n'\
+      'daughter_pdgs.push_back(pdg);  //< filling a vector of (PDG code, context int) pairs\n'\
+      '}\n'\
+      'sline >> corrf;\n'\
+      '\n'\
+      '// Now fill the map all_channel_info in the Fdecays namespace\n'\
+      'if(BACKEND_DEBUG)\n'\
+      'std::cout << "DEBUG: Filled channel: parent_pdg=" << parent_pdg << ", index=" << index << ", corrf=" << corrf << std::endl;\n'\
+      'all_channel_info[parent_pdg].push_back(channel_info_triplet (daughter_pdgs, index, corrf));\n'\
+      '}\n'\
+      '}\n'\
+      '}\n'\
+      '\n'\
+      'file.close();\n'\
+      '}\n'\
+      'else\n'\
+      '{\n'\
+      'str message = "Unable to open decays info file " + decays_file;\n'\
+      'logger() << message << EOM;\n'\
+      'backend_error().raise(LOCAL_INFO, message);\n'\
+      '// invalid_point().raise(message);\n'\
+      '}\n'\
+      '}\n'\
+      '\n'\
+      'std::vector<std::pair<int,int> > Fdecays::get_pdg_context_pairs(std::vector<int> pdgs)\n'\
+      '{\n'\
+      'std::vector<std::pair<int,int> > result;\n'\
+      'for(int pdg : pdgs)\n'\
+      '{\n'\
+      '// SM fermions in flavour basis, everything else in mass basis\n'\
+      'if(abs(pdg) < 17)\n'\
+      'result.push_back(std::pair<int,int> (pdg,1));\n'\
+      'else\n'\
+      'result.push_back(std::pair<int,int> (pdg,0));\n'\
+      '}\n'\
+      'return result;\n'\
+      '}\n'\
+      '\n'\
+      "}\n"\
+      "END_BE_NAMESPACE\n"\
+      "\n"
 
     # Ini function
     towrite += "BE_INI_FUNCTION\n"\
-        "{\n"\
-        "\n"\
-        "// Scan-level initialisation\n"\
-        "static bool scan_level = true;\n"\
-        "if (scan_level)\n"\
-        "{\n"\
-        "// Dump all internal output to stdout\n"\
-        "*ErrCan = 6;\n"\
-        "\n"\
-        "// Set the function pointer in SPheno to our ErrorHandler callback function\n"\
-        "*ErrorHandler_cptr = & CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler);\n"\
-        "\n"\
-        "try{ Set_All_Parameters_0(); }\n"\
-        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-        "\n"\
-        "/****************/\n"\
-        "/* Block MODSEL */\n"\
-        "/****************/\n"\
-        "if((*ModelInUse)(\"" + model_name + "\"))\n"\
-        "{\n"\
-        "  *HighScaleModel = \"LOW\";\n"\
-        "  // BC where all parameters are taken at the low scale\n"\
-        "  *BoundaryCondition = 3;\n"\
-        "}\n"\
-        "else\n"\
-        "{\n"\
-        "  str message = \"Model not recognised\";\n"\
-        "  logger() << message << EOM;\n"\
-        "  invalid_point().raise(message);\n"\
-        "}\n"\
-        " \n"\
-        "// GAMBIT default behaviour\n"\
-        "*GenerationMixing = true;\n"\
-        "\n"\
-        "}\n"\
-        "scan_level = false;\n"\
-        "\n"
-    if is_susy :
-        towrite += "*Qin = 1.0E3;  // Default value if there's no input\n"
+      "{\n"\
+      "\n"\
+      "// Scan-level initialisation\n"\
+      "static bool scan_level = true;\n"\
+      "if (scan_level)\n"\
+      "{\n"\
+      "// Dump all internal output to stdout\n"\
+      "*ErrCan = 6;\n"\
+      "\n"\
+      "// Set the function pointer in SPheno to our ErrorHandler callback function\n"\
+      "*ErrorHandler_cptr = & CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler);\n"\
+      "\n"\
+      "try{ Set_All_Parameters_0(); }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "\n"\
+      "/****************/\n"\
+      "/* Block MODSEL */\n"\
+      "/****************/\n"\
+      "if((*ModelInUse)(\"" + model_name + "\"))\n"\
+      "{\n"\
+      "  *HighScaleModel = \"LOW\";\n"\
+      "  // BC where all parameters are taken at the low scale\n"\
+      "  *BoundaryCondition = 3;\n"\
+      "}\n"\
+      "else\n"\
+      "{\n"\
+      "  str message = \"Model not recognised\";\n"\
+      "  logger() << message << EOM;\n"\
+      "  invalid_point().raise(message);\n"\
+      "}\n"\
+      " \n"\
+      "// GAMBIT default behaviour\n"\
+      "*GenerationMixing = true;\n"\
+      "\n"\
+      "}\n"\
+      "scan_level = false;\n"\
+      "\n"
+    if flags["SupersymmetricModel"] :
+      towrite += "*Qin = 1.0E3;  // Default value if there's no input\n"
     else :
-        towrite += "*Qin = 1.0E6;  // Default value if there's no input\n"
+      towrite += "*Qin = 1.0E6;  // Default value if there's no input\n"
     towrite += "Freal8 scale_sq = pow(*Qin, 2);\n"\
-        "try{ SetRenormalizationScale(scale_sq); }\n"\
-        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-        "if(Param.find(\"Qin\") != Param.end())\n"\
-        "{ \n"\
-        "*Qin = *Param.at(\"Qin\");\n"\
-        "scale_sq = pow(*Qin,2);\n"\
-        "try{ SetRGEScale(scale_sq); } \n"\
-        "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-        "}\n"\
-        "\n"\
-        "// Reset the global flag that indicates whether or not BRs have been computed yet or not for this parameter point.\n"\
-        "Fdecays::BRs_already_calculated = false;\n"\
-        "\n"\
-        "}\n"\
-        "END_BE_INI_FUNCTION\n"\
+      "try{ SetRenormalizationScale(scale_sq); }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "if(Param.find(\"Qin\") != Param.end())\n"\
+      "{ \n"\
+      "*Qin = *Param.at(\"Qin\");\n"\
+      "scale_sq = pow(*Qin,2);\n"\
+      "try{ SetRGEScale(scale_sq); } \n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
+      "}\n"\
+      "\n"\
+      "// Reset the global flag that indicates whether or not BRs have been computed yet or not for this parameter point.\n"\
+      "Fdecays::BRs_already_calculated = false;\n"\
+      "\n"\
+      "}\n"\
+      "END_BE_INI_FUNCTION\n"\
 
       
     return indent(towrite)
@@ -1176,7 +2239,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     """
     ScatteringEigenvalues; GetScaleUncertainty; CalculateSpectrum; OneLoopMasses;
     SolveTadpoleEquations; Switch_to_superPMNS; Switch_to_superCKM; Switch_from_superCKM;
-    SetMatchingConditions; ScatteringEigenvaluesWithTrilinears; CalculateBR
+    SetMatchingConditions; ScatteringEigenvaluesWithTrilinears; CalculateBR_2
     """
 
     towrite += "\n// Model-dependent arguments auto-scraped by GUM\n"

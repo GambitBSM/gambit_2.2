@@ -1,3 +1,18 @@
+//   GUM: GAMBIT Universal Models
+//   **********************************
+///  \file
+///
+///  Declarations of SARAH class
+///
+///  **********************************
+///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2017, 2018, 2019
+///
+///  ***********************************
+
+
 #ifndef OPTIONS
 #define OPTIONS
 
