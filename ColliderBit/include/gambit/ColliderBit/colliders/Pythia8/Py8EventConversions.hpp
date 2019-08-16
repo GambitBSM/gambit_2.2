@@ -207,8 +207,6 @@ namespace Gambit
 #endif
 
 
-#endif
-
         // Add prompt and invisible particles as individual particles
         if (prompt || !visible)
         {
