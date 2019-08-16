@@ -27,40 +27,18 @@
 #include "MCUtils/PIDCodes.h"
 
 #include <fstream>
-#include <algorithm>//Used for sorting the particles so I know CBS and gambit get them in the same order.
+#include <algorithm>//Used for sorting the particles so I know CBS and gambit get them in the same order - makes debugging easier.
 
+//#define MET_DEBUG
 //#define JET_CHECKING
 //#define SINGLE_EVENT_DEBUG
 
 //#define ELECTRON_PARENTAGE_DEBUG
 //#define ELECTRON_PARENTAGE_DEBUG_TWO
 
-#ifdef ELECTRON_PARENTAGE_DEBUG
-template<typename EventT>
-    int print_histories(int n, const EventT& evt)
-    {
+#define NJET_DATA_OUTPUT
 
-      if (n == 0) return 0;
-      std::cout << "Generation 1: ";
-      const auto& p = evt[n];
-      for (int m : p.motherList())
-      {
-          std::cout << "(" << evt[m].idAbs() << ", " << evt[m].p().e() << "), ";
-      }
-      std::cout << "\nGeneration 2: ";
-      for (int m : p.motherList())
-      {
-          if (m == 0) continue;
-          const auto& parent = evt[m];
-          for (int k : parent.motherList())
-          {
-              std::cout << "(" << evt[k].idAbs() << ", " << evt[k].p().e() << "), ";
-          }
-      }
-      std::cout << "\n";
-      return 0;
-    }
-#endif
+
 
 inline bool compare_particles_by_pz(FJNS::PseudoJet jet1, FJNS::PseudoJet jet2)
 {
@@ -74,12 +52,20 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    #ifndef DODGY_GLOBAL_COUNTING_SHORTCUT
+    static int TomeksCounter1{0};
+    #define DODGY_GLOBAL_COUNTING_SHORTCUT
+    #endif
+
     /// Convert a hadron-level EventT into an unsmeared HEPUtils::Event
     /// @todo Overlap between jets and prompt containers: need some isolation in MET calculation
     template<typename EventT>
     void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR)
     {
       result.clear();
+
+      //Want to see debug info in more detail.
+      //std::cout.precision(6);
 
       std::vector<FJNS::PseudoJet> bhadrons; //< for input to FastJet b-tagging
       std::vector<HEPUtils::Particle> bpartons, cpartons, tauCandidates;
@@ -150,8 +136,11 @@ namespace Gambit
 #endif
 
 #ifdef JET_CHECKING
-      std::fstream jetfile;
+    std::fstream jetfile;
+    if (TomeksCounter1 == 22)
+    {  
       jetfile.open("GAMBIT Jetfile.csv", std::fstream::app);
+    }
 #endif
 
 
@@ -185,6 +174,9 @@ namespace Gambit
         if (std::abs(p.eta()) > 5.0)
         {
           pout += mk_p4(p.p());
+          #ifdef MET_DEBUG
+          std::cout << "Adding particle to met - PID: " << (p.id()) << "; Pz: " << mk_p4(p.p()).pz() << ", m: " << mk_p4(p.p()).m() << std::endl;
+          #endif
           continue;
         }
 
@@ -194,7 +186,7 @@ namespace Gambit
 
 #ifdef SINGLE_EVENT_DEBUG
 
-        std::vector<int>Full_Mother_List;
+        /*std::vector<int>Full_Mother_List;
         int mother_part = i;
         while (pevt[mother_part].mother1() != 0)
         {
@@ -211,21 +203,24 @@ namespace Gambit
         {
             myfile << pevt[parent_part].id() << ", " << pevt[parent_part].e() << ", ";
         }
-        myfile << "\n";
+        myfile << "\n";*/
 #endif
 
-#ifdef ELECTRON_PARENTAGE_DEBUG
-        if (abs(p.id()) == 11){
-           print_histories(i, pevt);
-        }
 
 #endif
 
         // Add prompt and invisible particles as individual particles
-        if (prompt || !visible) {
+        if (prompt || !visible)
+        {
           HEPUtils::Particle* gp = new HEPUtils::Particle(mk_p4(p.p()), p.id());
           gp->set_prompt();
           result.add_particle(gp);
+          #ifdef JET_CHECKING
+          if (p.id() == 22)
+          {
+            std::cout << "Prompt Photon: pz = " << p.p().pz() << std::endl;
+          }
+          #endif
         }
 
         // All particles other than invisibles and muons are jet constituents
@@ -235,7 +230,10 @@ namespace Gambit
            jetparticles.push_back(mk_pseudojet(p.p()));
            FJNS::PseudoJet temp = mk_pseudojet(p.p());
 #ifdef JET_CHECKING
-        jetfile << temp.px() << ", " << temp.py() << ", " << temp.pz() << ", " << temp.e() << ", " << temp.rap() << ",\n";
+        if (TomeksCounter1 == 22)
+          {
+            jetfile << p.id() << ", " << temp.px() << ", " << temp.py() << ", " << temp.pz() << ", " << temp.e() << ", " << temp.rap() << ",\n";
+          }
 #endif
         }
         // next case are visible non-prompt muons
@@ -249,14 +247,12 @@ namespace Gambit
       myfile.close();
 #endif
 #ifdef JET_CHECKING
+if (TomeksCounter1 == 22)
+{
       jetfile << "\n\n========\n\n";
       jetfile.close();
+}
 #endif
-
-
-
-
-
       /// Jet finding
       /// @todo Choose jet algorithm via detector _settings? Run several algs?
       const FJNS::JetDefinition jet_def(FJNS::antikt_algorithm, antiktR);
@@ -341,30 +337,53 @@ namespace Gambit
       // From sum of invisibles, including those out of range
       for (size_t i = 0; i < result.invisible_particles().size(); ++i) {
         pout += result.invisible_particles()[i]->mom();
+        #ifdef MET_DEBUG
+        auto thingy = result.invisible_particles()[i];
+        std::cout << "Adding particle to met - PID: " << thingy->pid() << "; Pz: " << thingy->mom().pz() << ", m: " << thingy->mom().m() << std::endl;
+        #endif
       }
+      #ifdef MET_DEBUG
+      std::cout << "FINAL MISSING MOMENTUM IS: (" << pout.px() <<", "<<pout.py()<<", "<<pout.pz()<<", "<<pout.m()<<")"<<std::endl;
+      #endif
       result.set_missingmom(pout);
 
-#ifdef SINGLE_EVENT_DEBUG
-    cout << " Gambit Event Information\n";
-    cout << "  MET  = " << result.met() << " GeV" << endl;
-    cout << "  #e   = " << result.electrons().size() << endl;
-    cout << "  #mu  = " << result.muons().size() << endl;
-    cout << "  #tau = " << result.taus().size() << endl;
-    cout << "  #jet = " << result.jets().size() << endl;
+#ifdef NJET_DATA_OUTPUT
+    double sumpT = 0;
     for (int i{0}; i < result.jets().size(); i++)
     {
-       cout << "   pT Jet " << i << ": " << result.jets()[i]->pT() << endl;
+      sumpT += result.jets()[i]->pT();
     }
-    cout << "  #pho  = " << result.photons().size() << endl;
-    cout << endl;
+    std::fstream njetdatafile;
+    njetdatafile.open("GambitNjetFile.csv", std::fstream::app);
+    njetdatafile << result.jets().size() << ", " << result.met() << ", " << result.jets()[0]->pT() << ", " << sumpT << "\n";
+    njetdatafile.close();
+#endif
+
+#ifdef SINGLE_EVENT_DEBUG
+++TomeksCounter1;
+if (TomeksCounter1 == 3047 || TomeksCounter1 == 3048 || TomeksCounter1 == 3541 || TomeksCounter1 == 3542 || TomeksCounter1 == 3618 || TomeksCounter1 == 3619)
+    {
+      cout << TomeksCounter1 << ". Gambit Event Information\n";
+      cout << "  MET  = " << result.met() << " GeV" << endl;
+      cout << "  #e   = " << result.electrons().size() << endl;
+      cout << "  #mu  = " << result.muons().size() << endl;
+      cout << "  #tau = " << result.taus().size() << endl;
+      cout << "  #jet = " << result.jets().size() << endl;
+      for (int i{0}; i < result.jets().size(); i++)
+      {
+        cout << "   pT Jet " << i << ": " << result.jets()[i]->pT() << endl;
+      }
+      cout << "  #pho  = " << result.photons().size() << endl;
+      cout << endl;
+    }
 #endif
 
 #ifdef JET_CHECKING
       jetfile << "\n\n========\n\n";
       jetfile.close();    
 #endif  
-
     }
+  
 
     /// Convert a partonic (no hadrons) EventT into an unsmeared HEPUtils::Event
     template<typename EventT>

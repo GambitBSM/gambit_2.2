@@ -138,7 +138,7 @@ Rules:
           - Next:numberShowProcess = 1
           - Print:quiet = off
           - Next:numberCount = 500
-          - Random:setSeed = on
+          - Random:setSeed = off
           - Beams:eCM = 13000          
           - PartonLevel:MPI = off
           - PartonLevel:ISR = on

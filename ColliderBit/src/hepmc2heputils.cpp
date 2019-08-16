@@ -40,11 +40,14 @@ using namespace std;
 using namespace HEPUtils;
 using namespace FJNS;
 
+int TomeksCounter2{0};
+
+#define NJET_DATA_OUTPUT
+
 //#define SINGLE_EVENT_DEBUG
 //#define ELECTRON_PARENTAGE_DEBUG
 //#define JET_CHECKING
-
-//#define ELECTRON_PARENTAGE_DEBUG_TWO
+//#define MET_DEBUG
 
 //Tomek Procter Aug 19. Note the MCUtils isParton function only checks
 // for quarks/gluons (while in pythia, the function used in Gambit inlcudes
@@ -55,6 +58,24 @@ inline bool isParton(int pid)
    return (MCUtils::PID::isParton(pid) || MCUtils::PID::isDiquark(pid));
 }
 
+//#define NJET_DATA_INPUT
+#ifdef NJET_DATA_INPUT
+std::vector<int> get_GAMBIT_njets_from_CSV()
+{
+  std::vector<int> to_return;
+  to_return.reserve(10000);
+  std::fstream myfile;
+  myfile.open("GambitNjetFile.csv");
+  std::string line;
+  while(std::getline(myfile, line))
+  {
+    to_return.push_back(stoi(line));
+    line.clear();
+  }
+  return to_return;
+}
+std::vector<int> gambit_njets = get_GAMBIT_njets_from_CSV();
+#endif
 
 //TP Aug 19 - Adapted from Pythia function of same name.
 inline bool fromHadron(HepMC3::ConstGenParticlePtr gp, bool print_progress = false, int counter = 0)
@@ -63,51 +84,12 @@ inline bool fromHadron(HepMC3::ConstGenParticlePtr gp, bool print_progress = fal
       if (isParton(abs(gp->pid()))) return false; // stop the walking at the end of the hadron level
       auto parent_vector = (gp->parents());
       if (parent_vector.size() == 0) return false;
-#ifdef ELECTRON_PARENTAGE_DEBUG_TWO
-      if (print_progress && counter < 10)
-      {
-        std::cout << "\nCounter - " << counter << ": ";
-        for (auto parent:parent_vector)
-        {
-          std::cout << "(" << parent->pid() << ", " << parent->momentum().e() << "), ";
-        } 
-      }
-#endif
-//      if (parent_vector.size() > 1) std::cout << "\n\n\aTwo Events in Parent vector\n\n";
       for (const HepMC3::ConstGenParticlePtr parent : parent_vector)
       {
         if (counter >= 100) return false;
         if (fromHadron(parent, print_progress, ++counter)) return true;
       }
       return false;
-}
-
-//Tomek Procter August 2019. Iterative is much cleaner than recursive (if it works).
-inline bool fromHadron_iterative(HepMC3::ConstGenParticlePtr gp)
-{
-    if (MCUtils::PID::isHadron(abs(gp->pid()))) return true;
-    if (isParton(abs(gp->pid()))) return false;
-    if (gp->parent_event() == NULL) return false;
-    auto parent = gp->parents()[0];
-
-    int loop_counter{0};
-    while (!(parent->parent_event() == NULL) && (loop_counter++ < 250))
-    {
-        parent = parent->parents()[0];
-        if (MCUtils::PID::isHadron(abs(parent->pid()))) return true;
-        if (isParton(abs(parent->pid()))) return false;
-        if (loop_counter == 248) std::cout << "\a\nLoop Counter Exceeded!!!";
-    }
-    return false;
-}
-
-//Tomek Procter Aug 2019
-//This is a "fake" function - doesn't actually calc anything, just
-//mimics the results for fromHadron seen in gambit.
-inline bool fromHadron_test(HepMC3::ConstGenParticlePtr gp)
-{
-    if (abs(gp->pid()) == 1000022) return false;
-    else return true;
 }
 
 inline bool compare_particles_by_pz(PseudoJet jet1, PseudoJet jet2)
@@ -165,8 +147,11 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
 #endif
 
 #ifdef JET_CHECKING
-    std::fstream jetfile;
-    jetfile.open("CBS_JetFile.csv", std::fstream::app);
+std::fstream jetfile;
+if (TomeksCounter2 == 22)
+{
+  jetfile.open("CBS_JetFile.csv", std::fstream::app);
+}
 #endif
 
   // Loop over all particles in the event
@@ -183,16 +168,17 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
     // Get 4-momentum
     const HepMC3::FourVector& hp4 = gp->momentum();
 
-    //We need to define p4 some other way - as mkXYZE doesn't work, for now I'll do
-    //const P4 p4 = P4::mkXYZM(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
-
-    const P4 p4 = mk_p4(PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e()));
+    //MODIFIED SO IT NOW USES mkXZE not mkXYZM !!! Tomek Procter Aug 2019
+    const P4 p4 = P4::mkXYZE(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
     
 
     //Lets test out adding an eta cut, like they have in gambit:
     if (abs(get_eta(gp)) > 5.0)
     {
     vmet += p4;
+    #ifdef MET_DEBUG
+    std::cout << "Adding particle to met - PID: " << pid << "; Pz: " << p4.pz() << ", m: " <<p4.m() <<std::endl;
+    #endif
     continue; 
     }
        
@@ -204,14 +190,12 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
 
 // Promptness: for leptons and photons we're only interested if they don't come from hadron/tau decays: Added Tomek Procter Aug 19
         const bool prompt = !fromHadron(gp, (apid == 11)); //&& !fromTau(i, pevt);
-        //cout << "\nLINE: " << __LINE__;
         //const bool visible = MCUtils::PID::isStrongInteracting(apid) || MCUtils::PID::isEMInteracting(apid); //Not needed by CBS (yet)
-        //cout << "\nLINE: " << __LINE__;
 
  
 #ifdef SINGLE_EVENT_DEBUG
 //Find the full parent vector:
-
+/*
     vector<HepMC3::ConstGenParticlePtr> Full_Parent_List;
     if (gp->parent_event() != NULL)
     {
@@ -229,7 +213,7 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
         {
            myfile << event->pid() << ", " << event->momentum().e() << ", ";
         }
-        myfile << "\n";
+        myfile << "\n";*/
 #endif
 
 
@@ -247,6 +231,12 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
       Particle* p = new Particle(p4, pid); // the event will take ownership of this pointer
       p->set_prompt(true);
       evt.add_particle(p);
+      #ifdef JET_CHECKING
+      if (apid == 22)
+      {
+        std::cout << "Prompt Photon: pz = " << p4.pz() << std::endl;
+      }
+      #endif
     }
     // Aggregate missing ET
     else if (apid == 12 || apid == 14 || apid == 16 || apid == 1000022 || apid == 1000039)
@@ -254,17 +244,22 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
       Particle* p = new Particle(p4, pid); // the event will take ownership of this pointer
       p->set_prompt(true);
       evt.add_particle(p);
+      #ifdef MET_DEBUG
+      std::cout << "Adding particle to met - PID: " << pid << "; Pz: " << p4.pz() << ", m: " << p4.m() <<std::endl;
+      #endif
       vmet += p4;
-
     }
     // Store non-prompt momenta for Jet building
-    else if (apid != MCUtils::PID::MUON) //Tomek Procter August 2019 - Muons don't go into jets, right? So what happens to non-prompt muons?
-    {
+    if ((apid != MCUtils::PID::MUON) && !(apid == 12 || apid == 14 || apid == 16 || apid == 1000022 || apid == 1000039)) //Tomek Procter August 2019 - Muons don't go into jets, right? So what happens to non-prompt muons?
+    {//Now added exclusion of invisibles as n longer else if as we want prompt gammas/leptons.
       PseudoJet pj = PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
       //pj.set_user_index(apid);
       jetparticles.push_back(pj);
 #ifdef JET_CHECKING
-      jetfile << pj.px() << ", " << pj.py() << ", " << pj.pz() << ", " << pj.e() << ", " << hp4.e() << ", " << pj.rap() << ",\n";
+    if (TomeksCounter2 == 22)
+    {
+      jetfile << pid << ", " << pj.px() << ", " << pj.py() << ", " << pj.pz() << ", " << pj.e() << ", " << hp4.e() << ", " << pj.rap() << ",\n";
+    }
 #endif      
     }
     else
@@ -276,23 +271,30 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
   myfile.close();
 #endif
 #ifdef JET_CHECKING
-  jetfile.close();
+if (TomeksCounter2 == 22)
+  {jetfile.close();}
 #endif
 
   // MET
+  #ifdef MET_DEBUG
+  std::cout << "FINAL MISSING MOMENTUM IS: (" << vmet.px() <<", "<<vmet.py()<<", "<<vmet.pz()<<", "<<vmet.m()<<")"<<std::endl;
+  #endif
   vmet.setPz(0);
   vmet.setM(0);
+  #ifdef MET_DEBUG
+  std::cout << "FINAL MISSING MOMENTUM IS: (" << vmet.px() <<", "<<vmet.py()<<", "<<vmet.pz()<<", "<<vmet.m()<<")"<<std::endl;
+  #endif
   evt.set_missingmom(vmet);
   
 
   // Jets
   //Sorting the vector of pseudojets by z momentum so gambit and CBS have the same event order - makes debugging easier.
   //std::sort(jetparticles.begin(), jetparticles.end(), compare_particles_by_pz);
-  /*int TP_TEMP_COUNTER = 0;
-  for (auto particle : jetparticles)
-    {
-      std::cout << "Particle Number: " << TP_TEMP_COUNTER++ << "; Pz: " << particle.pz() << "; Px: " << particle.px() <<std::endl;
-    }*/
+  //int TP_TEMP_COUNTER = 0;
+  //for (auto particle : jetparticles)
+  //{
+    //std::cout << "Particle Number: " << TP_TEMP_COUNTER++ << "; Px: " << particle.px() << "; Pz: " << particle.pz() << "; e: " << particle.e() << std::endl;
+  //}
   
 
   vector<PseudoJet> jets = get_jets(jetparticles, 0.4, 10.0); //Cut off momentum edited to match gambit at 10.0.
@@ -309,11 +311,31 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
     evt.add_jet(new Jet(mk_p4(pj), hasB, hasC));
   }
 
+#ifdef NJET_DATA_INPUT
+if (evt.jets().size() != gambit_njets[TomeksCounter2])
+{
+  std::cout << "Event " << TomeksCounter2 << " has jet discrepancy!" <<std::endl;
+  std::cout << "Gambit Events: " << gambit_njets[TomeksCounter2]  << ", CBS njets: " << evt.jets().size() <<std::endl;
+}
+TomeksCounter2++;
+#endif
+
+#ifdef NJET_DATA_OUTPUT
+    double sumpT = 0;
+    for (int i{0}; i < evt.jets().size(); i++)
+    {
+      sumpT += evt.jets()[i]->pT();
+    }
+    std::fstream njetdatafile;
+    njetdatafile.open("CBSNjetFile.csv", std::fstream::app);
+    njetdatafile << evt.jets().size() << ", " << evt.met() << ", " << evt.jets()[0]->pT() << ", " << sumpT << "\n";
+    njetdatafile.close();
+#endif
 
 #ifdef SINGLE_EVENT_DEBUG
   //#ifdef COLLIDERBIT_DEBUG TP AUG 2019 - Lets get as much info out as possible!!!
     // Print event summary
-    cout << " CBS Event Information\n";
+    cout << ". CBS Event Information\n";
     cout << "  MET  = " << evt.met() << " GeV" << endl;
     cout << "  #e   = " << evt.electrons().size() << endl;
     cout << "  #mu  = " << evt.muons().size() << endl;
@@ -325,7 +347,7 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
     }
     cout << "  #pho  = " << evt.photons().size() << endl;
     cout << endl;
-  //#endif
+    }
 #endif
 
 }
