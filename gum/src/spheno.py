@@ -2041,7 +2041,38 @@ def write_spheno_frontend_src(model_name, function_signatures, parameters, flags
     # end of InitializeStandardModel
 
     # ErrorHandling function
-    # TODO : Update on NMSSM first to test it 
+    towrite += "/ Function that handles errors\n"\
+      'void ErrorHandling(const int &kont)\n'\
+      '{\n'\
+      '\n'\
+      'str message;\n'\
+      '\n'\
+      'if (kont > 0 and kont <= 31)\n'\
+      'message = (*Math_Error)(kont).str();\n'\
+      'else if (kont > 100 and kont <= 102)\n'\
+      'message = (*SM_Error)(kont-100).str();\n'\
+      'else if (kont > 200 and kont <= 233)\n'\
+      'message = (*SusyM_Error)(kont-200).str();\n'\
+      'else if (kont > 300 and kont <= 315)\n'\
+      'message = (*InOut_Error)(kont-300).str();\n'\
+      'else if (kont > 400 and kont <= 422)\n'\
+      'message = (*Sugra_Error)(kont-400).str();\n'\
+      'else if (kont > 500 and kont <= 525)\n'\
+      'message = (*LoopMass_Error)(kont-500).str();\n'\
+      'else if (kont > 600 and kont <= 609)\n'\
+      'message = (*TwoLoopHiggs_Error)(kont-600).str();\n'\
+      'else if (kont > 1000 and kont <= 1010)\n'\
+      'message = (*MathQP_Error)(kont-1000).str();\n'\
+      'else\n'\
+      'message = "GAMBIT caught an error in SPheno. Check the SPheno output for more info.";\n'\
+      '\n'\
+      'logger() << message << EOM;\n'\
+      'invalid_point().raise(message);\n'\
+      '\n'\
+      'return ;\n'\
+      '\n'\
+      '}\n'\
+      '\n'
     # end of ErrorHandling
 
     # Helper functions
@@ -2362,6 +2393,14 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(mGUT, Freal8, \"__spheno{1}_MOD_mgut\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(ErrCan, Finteger, \"__control_MOD_errcan\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(FoundIterativeSolution, Flogical, \"__settings_MOD_founditerativesolution\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Math_Error, Farray_Fstring60_1_31, \"__control_MOD_math_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SM_Error, Farray_Fstring60_1_2, \"__control_MOD_sm_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SusyM_Error, Farray_Fstring60_1_33, \"__control_MOD_susym_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(InOut_Error, Farray_Fstring60_1_15, \"__control_MOD_inout_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Sugra_Error, Farray_Fstring60_1_22, \"__control_MOD_sugra_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(LoopMass_Error, Farray_Fstring60_1_25, \"__control_MOD_loopmass_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, \"__control_MOD_twoloophiggs_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MathQP_Error, Farray_Fstring60_1_10, \"__control_MOD_mathqp_error\", \"SARAHSPheno_{0}_internal\")\n"
             "\n"   
             "// Other variables\n"
             "BE_VARIABLE(Qin, Freal8, \"__spheno{1}_MOD_qin\", \"SARAHSPheno_{0}_internal\")\n"
