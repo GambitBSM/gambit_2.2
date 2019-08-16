@@ -60,9 +60,9 @@ namespace Gambit {
         CMS::applyMuonEff(baselineMuons);
 
         // Veto on isolated leptons and photons
-        for (const Particle* e : baselineElectrons) if (e->pT() > 10) return; //< VETO
-        for (const Particle* m : baselineMuons) if (m->pT() > 10) return; //< VETO
-        for (const Particle* t : event->taus()) if (t->pT() > 18) return; //< VETO
+        for (const Particle* e : baselineElectrons) if (e->pT() > 10 && e->abseta() < 2.5) return; //< VETO
+        for (const Particle* m : baselineMuons) if (m->pT() > 10 && m->abseta() < 2.4) return; //< VETO
+        for (const Particle* t : event->taus()) if (t->pT() > 18 && t->abseta() < 2.3) return; //< VETO
         for (const Particle* y : event->photons()) if (y->pT() > 15 && y->abseta() < 2.5) return; //< VETO
 
         // Get jets
