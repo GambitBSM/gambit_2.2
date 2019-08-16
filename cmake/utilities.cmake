@@ -80,7 +80,7 @@ macro(retrieve_bits bits root excludes quiet)
 
   foreach(child ${children})
     string(FIND ${child} ".dSYM" FOUND_DSYM)
-    if(IS_DIRECTORY ${root}/${child} AND ${FOUND_DSYM} EQUAL -1)
+    if(IS_DIRECTORY ${root}/${child} AND EXISTS ${root}/${child}/CMakeLists.txt AND ${FOUND_DSYM} EQUAL -1)
 
       # Work out if this Bit should be excluded or not.  Never exclude ScannerBit.
       set(excluded "NO")
@@ -328,7 +328,7 @@ function(add_gambit_executable executablename LIBRARIES)
     target_link_libraries(${executablename} PRIVATE ${LIBRARIES} yaml-cpp ${gambit_preload_LDFLAGS})
   endif()
 
-  add_dependencies(${executablename} mkpath)
+  add_dependencies(${executablename} mkpath gambit_preload)
 
   #For checking if all the needed libs are present.  Never add them manually with -lsomelib!!
   if(VERBOSE)
