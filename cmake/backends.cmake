@@ -153,7 +153,7 @@ set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DEPENDS heplikedata_${hl_data_ver}
+    DEPENDS heplikedata_${hl_data_ver} yaml-cpp
     GIT_REPOSITORY https://github.com/mchrzasz/HEPLike.git
     SOURCE_DIR ${dir}
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
@@ -203,10 +203,10 @@ endif()
 
 # SuperIso
 set(name "superiso")
-set(ver "3.6")
+set(ver "4.1")
 set(lib "libsuperiso")
-set(dl "http://superiso.in2p3.fr/download/${name}_v${ver}.tgz")
-set(md5 "df864ceeccb72467bfbe572a8da9711d")
+set(dl "http://superiso.in2p3.fr/download/${name}_v${ver}_flavbit.tgz")
+set(md5 "8e634fe5ec463ab444f5b6eba6c96629")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
@@ -217,9 +217,9 @@ if(NOT ditched_${name}_${ver})
     CONFIGURE_COMMAND ""
     BUILD_COMMAND sed ${dashi} -e "s#CC = gcc#CC = ${CMAKE_C_COMPILER}#g" Makefile
           COMMAND sed ${dashi} -e "s#rcsU#rcs#g" src/Makefile
-          COMMAND sed ${dashi} -e "s/CFLAGS= -O3 -pipe -fomit-frame-pointer/CFLAGS= -fPIC ${BACKEND_C_FLAGS}/g" Makefile
+          COMMAND sed ${dashi} -e "s#CFLAGS = -O3 -pipe -fomit-frame-pointer#CFLAGS = -fPIC ${BACKEND_C_FLAGS}#g" Makefile
           COMMAND ${CMAKE_MAKE_PROGRAM}
-          COMMAND ar x src/libisospin.a
+          COMMAND ar x src/libsuperiso.a
           COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_C_COMPILER} -shared -o ${lib}.so *.o" > make_so.sh
           COMMAND chmod u+x make_so.sh
           COMMAND ./make_so.sh
