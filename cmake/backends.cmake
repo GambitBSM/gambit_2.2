@@ -125,6 +125,25 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+# HepLike data files
+set(name "heplikedata")
+set(ver "1.0")
+set(dl "null")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(hl_data_ver "${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    GIT_REPOSITORY https://github.com/mchrzasz/HEPLikeData.git
+    SOURCE_DIR ${dir}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+    )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} "null")
+  set_as_default_version("backend" ${name} ${ver})
+endif()
+
 # HepLike
 set(name "heplike")
 set(ver "1.0")
@@ -134,6 +153,7 @@ set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
+    DEPENDS heplikedata_${hl_data_ver}
     GIT_REPOSITORY https://github.com/mchrzasz/HEPLike.git
     SOURCE_DIR ${dir}
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
@@ -145,10 +165,9 @@ if(NOT ditched_${name}_${ver})
           COMMAND wget 
     INSTALL_COMMAND ""
     )
-  BOSS_backend_withROOT(${name} ${ver})
+  BOSS_backend_with_ROOT(${name} ${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
-
 endif()
 
 # HepLikedata
