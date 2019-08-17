@@ -387,8 +387,15 @@ int main(int argc, char** argv)
 	SI_compute_obs_list.resolveDependency(&SI_nuisance_fill);
     SI_compute_obs_list.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
 
+	SI_theory_covariance.resolveDependency(&SI_fill);
+	SI_theory_covariance.resolveDependency(&SI_nuisance_fill);
+    SI_theory_covariance.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
+    SI_theory_covariance.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
+    SI_theory_covariance.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
+
     SI_nuisance_fill.reset_and_calculate();
 	SI_compute_obs_list.reset_and_calculate();
+	SI_theory_covariance.reset_and_calculate();
   }
 
   catch (std::exception& e)

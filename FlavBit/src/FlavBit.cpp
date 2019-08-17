@@ -580,8 +580,10 @@ namespace Gambit
       parameters const& param = *Dep::SuperIso_modelinfo;
       nuisance const& nuislist = *Dep::SuperIso_nuisance;
 
-	  int nbobs=2;
-	  char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
+	  //int nbobs=2;
+	  //char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
+	  int nbobs=113;
+	  char obsnames[nbobs][50]={"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98","FL_B0Kstar0mumu_0.1_0.98","AFB_B0Kstar0mumu_0.1_0.98","S3_B0Kstar0mumu_0.1_0.98","S4_B0Kstar0mumu_0.1_0.98","S5_B0Kstar0mumu_0.1_0.98","S7_B0Kstar0mumu_0.1_0.98","S8_B0Kstar0mumu_0.1_0.98","S9_B0Kstar0mumu_0.1_0.98","dGamma/dq2_B0Kstar0mumu_1.1_2.5","FL_B0Kstar0mumu_1.1_2.5","AFB_B0Kstar0mumu_1.1_2.5","S3_B0Kstar0mumu_1.1_2.5","S4_B0Kstar0mumu_1.1_2.5","S5_B0Kstar0mumu_1.1_2.5","S7_B0Kstar0mumu_1.1_2.5","S8_B0Kstar0mumu_1.1_2.5","S9_B0Kstar0mumu_1.1_2.5","dGamma/dq2_B0Kstar0mumu_2.5_4","FL_B0Kstar0mumu_2.5_4","AFB_B0Kstar0mumu_2.5_4","S3_B0Kstar0mumu_2.5_4","S4_B0Kstar0mumu_2.5_4","S5_B0Kstar0mumu_2.5_4","S7_B0Kstar0mumu_2.5_4","S8_B0Kstar0mumu_2.5_4","S9_B0Kstar0mumu_2.5_4","dGamma/dq2_B0Kstar0mumu_4_6","FL_B0Kstar0mumu_4_6","AFB_B0Kstar0mumu_4_6","S3_B0Kstar0mumu_4_6","S4_B0Kstar0mumu_4_6","S5_B0Kstar0mumu_4_6","S7_B0Kstar0mumu_4_6","S8_B0Kstar0mumu_4_6","S9_B0Kstar0mumu_4_6","dGamma/dq2_B0Kstar0mumu_6_8","FL_B0Kstar0mumu_6_8","AFB_B0Kstar0mumu_6_8","S3_B0Kstar0mumu_6_8","S4_B0Kstar0mumu_6_8","S5_B0Kstar0mumu_6_8","S7_B0Kstar0mumu_6_8","S8_B0Kstar0mumu_6_8","S9_B0Kstar0mumu_6_8","dGamma/dq2_B0Kstar0mumu_15_17","FL_B0Kstar0mumu_15_17","AFB_B0Kstar0mumu_15_17","S3_B0Kstar0mumu_15_17","S4_B0Kstar0mumu_15_17","S5_B0Kstar0mumu_15_17","S7_B0Kstar0mumu_15_17","S8_B0Kstar0mumu_15_17","S9_B0Kstar0mumu_15_17","dGamma/dq2_B0Kstar0mumu_17_19","FL_B0Kstar0mumu_17_19","AFB_B0Kstar0mumu_17_19","S3_B0Kstar0mumu_17_19","S4_B0Kstar0mumu_17_19","S5_B0Kstar0mumu_17_19","S7_B0Kstar0mumu_17_19","S8_B0Kstar0mumu_17_19","S9_B0Kstar0mumu_17_19","dGamma/dq2_BKstarmumu_1.1_6","dGamma/dq2_BKstarmumu_15_19","BR_B0Kstar0ee_0.1_19.2","R-1_B0Kstar0ll_0.045_1.1","R-1_B0Kstar0ll_1.1_6","R-1_B0Kstar0ll_0.045_1.1_Belle","R-1_B0Kstar0ll_1.1_6_Belle","R-1_B0Kstar0ll_0.1_8_Belle","R-1_B0Kstar0ll_15_19_Belle","dGamma/dq2_B0K0mumu_1.1_6","dGamma/dq2_B0K0mumu_15_22","dGamma/dq2_BKmumu_1.1_6","FH_BKmumu_1.1_6","dGamma/dq2_BKmumu_15_22","FH_BKmumu_15_22","R-1_BKll_1.1_6","dGamma/dq2_Bsphimumu_0.1_2","FL_Bsphimumu_0.1_2","S3_Bsphimumu_0.1_2","S4_Bsphimumu_0.1_2","S7_Bsphimumu_0.1_2","dGamma/dq2_Bsphimumu_2_5","FL_Bsphimumu_2_5","S3_Bsphimumu_2_5","S4_Bsphimumu_2_5","S7_Bsphimumu_2_5","dGamma/dq2_Bsphimumu_5_8","FL_Bsphimumu_5_8","S3_Bsphimumu_5_8","S4_Bsphimumu_5_8","S7_Bsphimumu_5_8","dGamma/dq2_Bsphimumu_15_17","FL_Bsphimumu_15_17","S3_Bsphimumu_15_17","S4_Bsphimumu_15_17","S7_Bsphimumu_15_17","dGamma/dq2_Bsphimumu_17_19","FL_Bsphimumu_17_19","S3_Bsphimumu_17_19","S4_Bsphimumu_17_19","S7_Bsphimumu_17_19"};  // LIST TO BE DEFINED LATER
 	  	  
 	  double *res;
 	  res=(double *) malloc(nbobs*sizeof(double));	
@@ -607,24 +609,489 @@ namespace Gambit
 	  int nnuis=161;
 	  char namenuisance[nnuis+1][50];
 	  BEreq::observables(0,NULL,0,NULL,NULL,&nuislist,(char **)namenuisance,&param); // Initialization of namenuisance
-  	  
-	  double **corr=(double  **) malloc(nnuis*sizeof(double *));  // Nuisance parameter correlations
-	  for(int ie=0;ie<=nnuis;ie++) corr[ie]=(double *) malloc(nnuis*sizeof(double));	
-	  
-	  int ncorrnuis=100;
-	  nuiscorr corrnuis;
-	  
-	  BEreq::convert_correlation(&corrnuis,byVal(ncorrnuis),(double **)corr,(char **)namenuisance,byVal(nnuis));
-	
-	  int nbobs=2;
-	  char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
+  	  	    	  	  
+	  int ncorrnuis=463;
+	  nuiscorr corrnuis[ncorrnuis]={ // List of nuisance correlations, below between the form factors
+	  {"a00_BK","a10_BK",-0.39},
+	  {"a00_BK","a20_BK",-0.71},
+	  {"a00_BK","a30_BK",-0.63},
+	  {"a00_BK","a0p_BK",0.49},
+	  {"a00_BK","a1p_BK",-0.03},
+	  {"a00_BK","a2p_BK",-0.22},
+	  {"a00_BK","a0T_BK",0.16},
+	  {"a00_BK","a1T_BK",-0.08},
+	  {"a00_BK","a2T_BK",-0.09},
+	  {"a10_BK","a20_BK",0.66},
+	  {"a10_BK","a30_BK",0.26},
+	  {"a10_BK","a0p_BK",0.05},
+	  {"a10_BK","a1p_BK",0.72},
+	  {"a10_BK","a2p_BK",0.48},
+	  {"a10_BK","a0T_BK",-0.08},
+	  {"a10_BK","a1T_BK",0.03},
+	  {"a10_BK","a2T_BK",0.01},
+	  {"a20_BK","a30_BK",0.54},
+	  {"a20_BK","a0p_BK",-0.17},
+	  {"a20_BK","a1p_BK",0.51},
+	  {"a20_BK","a2p_BK",0.59},
+	  {"a20_BK","a0T_BK",-0.16},
+	  {"a20_BK","a1T_BK",0.05},
+	  {"a20_BK","a2T_BK",0.09},
+	  {"a30_BK","a0p_BK",0.05},
+	  {"a30_BK","a1p_BK",0.14},
+	  {"a30_BK","a2p_BK",0.05},
+	  {"a30_BK","a1T_BK",0.03},
+	  {"a30_BK","a2T_BK",-0.01},
+	  {"a0p_BK","a1p_BK",0.09},
+	  {"a0p_BK","a2p_BK",-0.47},
+	  {"a0p_BK","a0T_BK",0.34},
+	  {"a0p_BK","a1T_BK",-0.06},
+	  {"a0p_BK","a2T_BK",-0.28},
+	  {"a1p_BK","a2p_BK",0.43},
+	  {"a1p_BK","a0T_BK",-0.06},
+	  {"a1p_BK","a1T_BK",0.11},
+	  {"a1p_BK","a2T_BK",-0.04},
+	  {"a2p_BK","a0T_BK",-0.32},
+	  {"a2p_BK","a1T_BK",-0.05},
+	  {"a2p_BK","a2T_BK",0.29},
+	  {"a0T_BK","a2T_BK",-0.35},
+	  {"a1T_BK","a2T_BK",0.21},
+	  {"a0A0_BKstar","a1A0_BKstar",0.633689},
+	  {"a0A0_BKstar","a2A0_BKstar",0.0575305},
+	  {"a0A0_BKstar","a0A1_BKstar",0.0615373},
+	  {"a0A0_BKstar","a1A1_BKstar",0.169044},
+	  {"a0A0_BKstar","a2A1_BKstar",0.240647},
+	  {"a0A0_BKstar","a0A12_BKstar",0.999},
+	  {"a0A0_BKstar","a1A12_BKstar",0.609495},
+	  {"a0A0_BKstar","a2A12_BKstar",0.0355029},
+	  {"a0A0_BKstar","a0V_BKstar",0.0393316},
+	  {"a0A0_BKstar","a1V_BKstar",0.178168},
+	  {"a0A0_BKstar","a2V_BKstar",0.195421},
+	  {"a0A0_BKstar","a0T1_BKstar",0.0164883},
+	  {"a0A0_BKstar","a1T1_BKstar",0.0452644},
+	  {"a0A0_BKstar","a2T1_BKstar",-0.158457},
+	  {"a0A0_BKstar","a0T2_BKstar",0.0217598},
+	  {"a0A0_BKstar","a1T2_BKstar",0.150264},
+	  {"a0A0_BKstar","a2T2_BKstar",0.0311554},
+	  {"a0A0_BKstar","a0T23_BKstar",0.451075},
+	  {"a0A0_BKstar","a1T23_BKstar",0.104911},
+	  {"a0A0_BKstar","a2T23_BKstar",-0.347452},
+	  {"a1A0_BKstar","a2A0_BKstar",0.486314},
+	  {"a1A0_BKstar","a0A1_BKstar",0.300568},
+	  {"a1A0_BKstar","a1A1_BKstar",0.472167},
+	  {"a1A0_BKstar","a2A1_BKstar",0.321569},
+	  {"a1A0_BKstar","a0A12_BKstar",0.621073},
+	  {"a1A0_BKstar","a1A12_BKstar",0.756564},
+	  {"a1A0_BKstar","a2A12_BKstar",0.46913},
+	  {"a1A0_BKstar","a0V_BKstar",0.280475},
+	  {"a1A0_BKstar","a1V_BKstar",0.553833},
+	  {"a1A0_BKstar","a2V_BKstar",0.0752289},
+	  {"a1A0_BKstar","a0T1_BKstar",0.241261},
+	  {"a1A0_BKstar","a1T1_BKstar",0.448732},
+	  {"a1A0_BKstar","a2T1_BKstar",-0.182566},
+	  {"a1A0_BKstar","a0T2_BKstar",0.24405},
+	  {"a1A0_BKstar","a1T2_BKstar",0.495428},
+	  {"a1A0_BKstar","a2T2_BKstar",0.181197},
+	  {"a1A0_BKstar","a0T23_BKstar",0.573536},
+	  {"a1A0_BKstar","a1T23_BKstar",0.53356},
+	  {"a1A0_BKstar","a2T23_BKstar",-0.19402},
+	  {"a2A0_BKstar","a0A1_BKstar",0.515475},
+	  {"a2A0_BKstar","a1A1_BKstar",0.743538},
+	  {"a2A0_BKstar","a2A1_BKstar",0.661689},
+	  {"a2A0_BKstar","a0A12_BKstar",0.05503},
+	  {"a2A0_BKstar","a1A12_BKstar",0.326536},
+	  {"a2A0_BKstar","a2A12_BKstar",0.665149},
+	  {"a2A0_BKstar","a0V_BKstar",0.545574},
+	  {"a2A0_BKstar","a1V_BKstar",0.731129},
+	  {"a2A0_BKstar","a2V_BKstar",0.00860747},
+	  {"a2A0_BKstar","a0T1_BKstar",0.475401},
+	  {"a2A0_BKstar","a1T1_BKstar",0.674459},
+	  {"a2A0_BKstar","a2T1_BKstar",-0.125613},
+	  {"a2A0_BKstar","a0T2_BKstar",0.474921},
+	  {"a2A0_BKstar","a1T2_BKstar",0.701034},
+	  {"a2A0_BKstar","a2T2_BKstar",0.273928},
+	  {"a2A0_BKstar","a0T23_BKstar",0.663092},
+	  {"a2A0_BKstar","a1T23_BKstar",0.426721},
+	  {"a2A0_BKstar","a2T23_BKstar",-0.318126},
+	  {"a0A1_BKstar","a1A1_BKstar",0.702494},
+	  {"a0A1_BKstar","a2A1_BKstar",0.153604},
+	  {"a0A1_BKstar","a0A12_BKstar",0.0555181},
+	  {"a0A1_BKstar","a1A12_BKstar",0.0105278},
+	  {"a0A1_BKstar","a2A12_BKstar",0.205325},
+	  {"a0A1_BKstar","a0V_BKstar",0.922982},
+	  {"a0A1_BKstar","a1V_BKstar",0.731071},
+	  {"a0A1_BKstar","a2V_BKstar",-0.35833},
+	  {"a0A1_BKstar","a0T1_BKstar",0.899902},
+	  {"a0A1_BKstar","a1T1_BKstar",0.68101},
+	  {"a0A1_BKstar","a2T1_BKstar",-0.468536},
+	  {"a0A1_BKstar","a0T2_BKstar",0.899616},
+	  {"a0A1_BKstar","a1T2_BKstar",0.692637},
+	  {"a0A1_BKstar","a2T2_BKstar",-0.202092},
+	  {"a0A1_BKstar","a0T23_BKstar",0.564524},
+	  {"a0A1_BKstar","a1T23_BKstar",0.30614},
+	  {"a0A1_BKstar","a2T23_BKstar",-0.362387},
+	  {"a1A1_BKstar","a2A1_BKstar",0.747682},
+	  {"a1A1_BKstar","a0A12_BKstar",0.166407},
+	  {"a1A1_BKstar","a1A12_BKstar",0.284455},
+	  {"a1A1_BKstar","a2A12_BKstar",0.480939},
+	  {"a1A1_BKstar","a0V_BKstar",0.678427},
+	  {"a1A1_BKstar","a1V_BKstar",0.862475},
+	  {"a1A1_BKstar","a2V_BKstar",-0.0633373},
+	  {"a1A1_BKstar","a0T1_BKstar",0.630965},
+	  {"a1A1_BKstar","a1T1_BKstar",0.760031},
+	  {"a1A1_BKstar","a2T1_BKstar",-0.373063},
+	  {"a1A1_BKstar","a0T2_BKstar",0.634299},
+	  {"a1A1_BKstar","a1T2_BKstar",0.915195},
+	  {"a1A1_BKstar","a2T2_BKstar",0.226359},
+	  {"a1A1_BKstar","a0T23_BKstar",0.695868},
+	  {"a1A1_BKstar","a1T23_BKstar",0.457217},
+	  {"a1A1_BKstar","a2T23_BKstar",-0.440385},
+	  {"a2A1_BKstar","a0A12_BKstar",0.245093},
+	  {"a2A1_BKstar","a1A12_BKstar",0.316222},
+	  {"a2A1_BKstar","a2A12_BKstar",0.535592},
+	  {"a2A1_BKstar","a0V_BKstar",0.194572},
+	  {"a2A1_BKstar","a1V_BKstar",0.517205},
+	  {"a2A1_BKstar","a2V_BKstar",0.253395},
+	  {"a2A1_BKstar","a0T1_BKstar",0.135433},
+	  {"a2A1_BKstar","a1T1_BKstar",0.400555},
+	  {"a2A1_BKstar","a2T1_BKstar",-0.127614},
+	  {"a2A1_BKstar","a0T2_BKstar",0.140073},
+	  {"a2A1_BKstar","a1T2_BKstar",0.59715},
+	  {"a2A1_BKstar","a2T2_BKstar",0.402339},
+	  {"a2A1_BKstar","a0T23_BKstar",0.553618},
+	  {"a2A1_BKstar","a1T23_BKstar",0.252273},
+	  {"a2A1_BKstar","a2T23_BKstar",-0.40495},
+	  {"a0A12_BKstar","a1A12_BKstar",0.617726},
+	  {"a0A12_BKstar","a2A12_BKstar",0.0443495},
+	  {"a0A12_BKstar","a0V_BKstar",0.0335119},
+	  {"a0A12_BKstar","a1V_BKstar",0.172545},
+	  {"a0A12_BKstar","a2V_BKstar",0.202654},
+	  {"a0A12_BKstar","a0T1_BKstar",0.010524},
+	  {"a0A12_BKstar","a1T1_BKstar",0.0391092},
+	  {"a0A12_BKstar","a2T1_BKstar",-0.154503},
+	  {"a0A12_BKstar","a0T2_BKstar",0.0157345},
+	  {"a0A12_BKstar","a1T2_BKstar",0.145566},
+	  {"a0A12_BKstar","a2T2_BKstar",0.0343108},
+	  {"a0A12_BKstar","a0T23_BKstar",0.448529},
+	  {"a0A12_BKstar","a1T23_BKstar",0.100428},
+	  {"a0A12_BKstar","a2T23_BKstar",-0.348189},
+	  {"a1A12_BKstar","a2A12_BKstar",0.700096},
+	  {"a1A12_BKstar","a0V_BKstar",-0.0140921},
+	  {"a1A12_BKstar","a1V_BKstar",0.350603},
+	  {"a1A12_BKstar","a2V_BKstar",0.234661},
+	  {"a1A12_BKstar","a0T1_BKstar",-0.0243359},
+	  {"a1A12_BKstar","a1T1_BKstar",0.234436},
+	  {"a1A12_BKstar","a2T1_BKstar",-0.0609604},
+	  {"a1A12_BKstar","a0T2_BKstar",-0.0214341},
+	  {"a1A12_BKstar","a1T2_BKstar",0.28577},
+	  {"a1A12_BKstar","a2T2_BKstar",0.248484},
+	  {"a1A12_BKstar","a0T23_BKstar",0.386552},
+	  {"a1A12_BKstar","a1T23_BKstar",0.537224},
+	  {"a1A12_BKstar","a2T23_BKstar",-0.0377692},
+	  {"a2A12_BKstar","a0V_BKstar",0.196602},
+	  {"a2A12_BKstar","a1V_BKstar",0.485841},
+	  {"a2A12_BKstar","a2V_BKstar",0.139392},
+	  {"a2A12_BKstar","a0T1_BKstar",0.173373},
+	  {"a2A12_BKstar","a1T1_BKstar",0.402833},
+	  {"a2A12_BKstar","a2T1_BKstar",-0.0779755},
+	  {"a2A12_BKstar","a0T2_BKstar",0.173504},
+	  {"a2A12_BKstar","a1T2_BKstar",0.422339},
+	  {"a2A12_BKstar","a2T2_BKstar",0.253397},
+	  {"a2A12_BKstar","a0T23_BKstar",0.403006},
+	  {"a2A12_BKstar","a1T23_BKstar",0.571118},
+	  {"a2A12_BKstar","a2T23_BKstar",-0.0276853},
+	  {"a0V_BKstar","a1V_BKstar",0.757379},
+	  {"a0V_BKstar","a2V_BKstar",-0.397005},
+	  {"a0V_BKstar","a0T1_BKstar",0.901557},
+	  {"a0V_BKstar","a1T1_BKstar",0.716437},
+	  {"a0V_BKstar","a2T1_BKstar",-0.400738},
+	  {"a0V_BKstar","a0T2_BKstar",0.899723},
+	  {"a0V_BKstar","a1T2_BKstar",0.702845},
+	  {"a0V_BKstar","a2T2_BKstar",-0.147198},
+	  {"a0V_BKstar","a0T23_BKstar",0.573778},
+	  {"a0V_BKstar","a1T23_BKstar",0.277866},
+	  {"a0V_BKstar","a2T23_BKstar",-0.360324},
+	  {"a1V_BKstar","a2V_BKstar",0.0346143},
+	  {"a1V_BKstar","a0T1_BKstar",0.709376},
+	  {"a1V_BKstar","a1T1_BKstar",0.906137},
+	  {"a1V_BKstar","a2T1_BKstar",-0.236675},
+	  {"a1V_BKstar","a0T2_BKstar",0.709471},
+	  {"a1V_BKstar","a1T2_BKstar",0.916209},
+	  {"a1V_BKstar","a2T2_BKstar",0.261192},
+	  {"a1V_BKstar","a0T23_BKstar",0.70266},
+	  {"a1V_BKstar","a1T23_BKstar",0.480664},
+	  {"a1V_BKstar","a2T23_BKstar",-0.355976},
+	  {"a2V_BKstar","a0T1_BKstar",-0.354268},
+	  {"a2V_BKstar","a1T1_BKstar",-0.0783557},
+	  {"a2V_BKstar","a2T1_BKstar",0.338328},
+	  {"a2V_BKstar","a0T2_BKstar",-0.352355},
+	  {"a2V_BKstar","a1T2_BKstar",-0.0541063},
+	  {"a2V_BKstar","a2T2_BKstar",0.38493},
+	  {"a2V_BKstar","a0T23_BKstar",0.016202},
+	  {"a2V_BKstar","a1T23_BKstar",6.71602e-05},
+	  {"a2V_BKstar","a2T23_BKstar",0.0569126},
+	  {"a0T1_BKstar","a1T1_BKstar",0.713877},
+	  {"a0T1_BKstar","a2T1_BKstar",-0.473872},
+	  {"a0T1_BKstar","a0T2_BKstar",0.999},
+	  {"a0T1_BKstar","a1T2_BKstar",0.686349},
+	  {"a0T1_BKstar","a2T2_BKstar",-0.229853},
+	  {"a0T1_BKstar","a0T23_BKstar",0.515437},
+	  {"a0T1_BKstar","a1T23_BKstar",0.236189},
+	  {"a0T1_BKstar","a2T23_BKstar",-0.310316},
+	  {"a1T1_BKstar","a2T1_BKstar",0.00093065},
+	  {"a1T1_BKstar","a0T2_BKstar",0.706907},
+	  {"a1T1_BKstar","a1T2_BKstar",0.881232},
+	  {"a1T1_BKstar","a2T2_BKstar",0.365115},
+	  {"a1T1_BKstar","a0T23_BKstar",0.601021},
+	  {"a1T1_BKstar","a1T23_BKstar",0.427022},
+	  {"a1T1_BKstar","a2T23_BKstar",-0.210129},
+	  {"a2T1_BKstar","a0T2_BKstar",-0.48143},
+	  {"a2T1_BKstar","a1T2_BKstar",-0.239308},
+	  {"a2T1_BKstar","a2T2_BKstar",0.626511},
+	  {"a2T1_BKstar","a0T23_BKstar",-0.27088},
+	  {"a2T1_BKstar","a1T23_BKstar",-0.105814},
+	  {"a2T1_BKstar","a2T23_BKstar",0.447129},
+	  {"a0T2_BKstar","a1T2_BKstar",0.692809},
+	  {"a0T2_BKstar","a2T2_BKstar",-0.227854},
+	  {"a0T2_BKstar","a0T23_BKstar",0.517204},
+	  {"a0T2_BKstar","a1T23_BKstar",0.237634},
+	  {"a0T2_BKstar","a2T23_BKstar",-0.313381},
+	  {"a1T2_BKstar","a2T2_BKstar",0.382807},
+	  {"a1T2_BKstar","a0T23_BKstar",0.658722},
+	  {"a1T2_BKstar","a1T23_BKstar",0.46875},
+	  {"a1T2_BKstar","a2T23_BKstar",-0.326765},
+	  {"a2T2_BKstar","a0T23_BKstar",0.0969361},
+	  {"a2T2_BKstar","a1T23_BKstar",0.216438},
+	  {"a2T2_BKstar","a2T23_BKstar",0.27039},
+	  {"a0T23_BKstar","a1T23_BKstar",0.327243},
+	  {"a0T23_BKstar","a2T23_BKstar",-0.711856},
+	  {"a1T23_BKstar","a2T23_BKstar",0.287454},
+	  {"a0A0_Bsphi","a1A0_Bsphi",0.687348},
+	  {"a0A0_Bsphi","a2A0_Bsphi",-0.349657},
+	  {"a0A0_Bsphi","a0A1_Bsphi",0.206736},
+	  {"a0A0_Bsphi","a1A1_Bsphi",-0.554941},
+	  {"a0A0_Bsphi","a2A1_Bsphi",-0.597622},
+	  {"a0A0_Bsphi","a0A12_Bsphi",0.996},
+	  {"a0A0_Bsphi","a1A12_Bsphi",0.772589},
+	  {"a0A0_Bsphi","a2A12_Bsphi",0.42463},
+	  {"a0A0_Bsphi","a0V_Bsphi",0.187815},
+	  {"a0A0_Bsphi","a1V_Bsphi",-0.422447},
+	  {"a0A0_Bsphi","a2V_Bsphi",-0.456553},
+	  {"a0A0_Bsphi","a0T1_Bsphi",0.0865627},
+	  {"a0A0_Bsphi","a1T1_Bsphi",-0.297008},
+	  {"a0A0_Bsphi","a2T1_Bsphi",0.0671143},
+	  {"a0A0_Bsphi","a0T2_Bsphi",0.0885951},
+	  {"a0A0_Bsphi","a1T2_Bsphi",-0.457242},
+	  {"a0A0_Bsphi","a2T2_Bsphi",-0.196984},
+	  {"a0A0_Bsphi","a0T23_Bsphi",0.703702},
+	  {"a0A0_Bsphi","a1T23_Bsphi",0.728003},
+	  {"a0A0_Bsphi","a2T23_Bsphi",0.602114},
+	  {"a1A0_Bsphi","a2A0_Bsphi",0.121069},
+	  {"a1A0_Bsphi","a0A1_Bsphi",0.0064726},
+	  {"a1A0_Bsphi","a1A1_Bsphi",-0.609677},
+	  {"a1A0_Bsphi","a2A1_Bsphi",-0.668983},
+	  {"a1A0_Bsphi","a0A12_Bsphi",0.668299},
+	  {"a1A0_Bsphi","a1A12_Bsphi",0.791667},
+	  {"a1A0_Bsphi","a2A12_Bsphi",0.646183},
+	  {"a1A0_Bsphi","a0V_Bsphi",0.0174825},
+	  {"a1A0_Bsphi","a1V_Bsphi",-0.52219},
+	  {"a1A0_Bsphi","a2V_Bsphi",-0.662488},
+	  {"a1A0_Bsphi","a0T1_Bsphi",0.0545029},
+	  {"a1A0_Bsphi","a1T1_Bsphi",-0.247063},
+	  {"a1A0_Bsphi","a2T1_Bsphi",-0.0128991},
+	  {"a1A0_Bsphi","a0T2_Bsphi",0.0486156},
+	  {"a1A0_Bsphi","a1T2_Bsphi",-0.525849},
+	  {"a1A0_Bsphi","a2T2_Bsphi",-0.32988},
+	  {"a1A0_Bsphi","a0T23_Bsphi",0.640094},
+	  {"a1A0_Bsphi","a1T23_Bsphi",0.775898},
+	  {"a1A0_Bsphi","a2T23_Bsphi",0.645661},
+	  {"a2A0_Bsphi","a0A1_Bsphi",0.091877},
+	  {"a2A0_Bsphi","a1A1_Bsphi",0.0390177},
+	  {"a2A0_Bsphi","a2A1_Bsphi",0.272613},
+	  {"a2A0_Bsphi","a0A12_Bsphi",-0.367399},
+	  {"a2A0_Bsphi","a1A12_Bsphi",-0.290877},
+	  {"a2A0_Bsphi","a2A12_Bsphi",0.166971},
+	  {"a2A0_Bsphi","a0V_Bsphi",0.207248},
+	  {"a2A0_Bsphi","a1V_Bsphi",-0.0243012},
+	  {"a2A0_Bsphi","a2V_Bsphi",-0.0754036},
+	  {"a2A0_Bsphi","a0T1_Bsphi",0.182472},
+	  {"a2A0_Bsphi","a1T1_Bsphi",-0.00649649},
+	  {"a2A0_Bsphi","a2T1_Bsphi",-0.220386},
+	  {"a2A0_Bsphi","a0T2_Bsphi",0.174415},
+	  {"a2A0_Bsphi","a1T2_Bsphi",-0.0908376},
+	  {"a2A0_Bsphi","a2T2_Bsphi",-0.260704},
+	  {"a2A0_Bsphi","a0T23_Bsphi",-0.255547},
+	  {"a2A0_Bsphi","a1T23_Bsphi",-0.197701},
+	  {"a2A0_Bsphi","a2T23_Bsphi",-0.0842799},
+	  {"a0A1_Bsphi","a1A1_Bsphi",0.250919},
+	  {"a0A1_Bsphi","a2A1_Bsphi",-0.105449},
+	  {"a0A1_Bsphi","a0A12_Bsphi",0.200928},
+	  {"a0A1_Bsphi","a1A12_Bsphi",-0.13586},
+	  {"a0A1_Bsphi","a2A12_Bsphi",-0.146239},
+	  {"a0A1_Bsphi","a0V_Bsphi",0.406354},
+	  {"a0A1_Bsphi","a1V_Bsphi",0.180876},
+	  {"a0A1_Bsphi","a2V_Bsphi",0.109717},
+	  {"a0A1_Bsphi","a0T1_Bsphi",0.267591},
+	  {"a0A1_Bsphi","a1T1_Bsphi",0.101937},
+	  {"a0A1_Bsphi","a2T1_Bsphi",-0.164558},
+	  {"a0A1_Bsphi","a0T2_Bsphi",0.275557},
+	  {"a0A1_Bsphi","a1T2_Bsphi",0.190196},
+	  {"a0A1_Bsphi","a2T2_Bsphi",-0.0562319},
+	  {"a0A1_Bsphi","a0T23_Bsphi",0.0931432},
+	  {"a0A1_Bsphi","a1T23_Bsphi",-0.0724199},
+	  {"a0A1_Bsphi","a2T23_Bsphi",-0.155631},
+	  {"a1A1_Bsphi","a2A1_Bsphi",0.78406},
+	  {"a1A1_Bsphi","a0A12_Bsphi",-0.549042},
+	  {"a1A1_Bsphi","a1A12_Bsphi",-0.662113},
+	  {"a1A1_Bsphi","a2A12_Bsphi",-0.589264},
+	  {"a1A1_Bsphi","a0V_Bsphi",-0.00746984},
+	  {"a1A1_Bsphi","a1V_Bsphi",0.642019},
+	  {"a1A1_Bsphi","a2V_Bsphi",0.552109},
+	  {"a1A1_Bsphi","a0T1_Bsphi",0.142301},
+	  {"a1A1_Bsphi","a1T1_Bsphi",0.571088},
+	  {"a1A1_Bsphi","a2T1_Bsphi",-0.22105},
+	  {"a1A1_Bsphi","a0T2_Bsphi",0.139241},
+	  {"a1A1_Bsphi","a1T2_Bsphi",0.794425},
+	  {"a1A1_Bsphi","a2T2_Bsphi",0.195856},
+	  {"a1A1_Bsphi","a0T23_Bsphi",-0.601549},
+	  {"a1A1_Bsphi","a1T23_Bsphi",-0.673956},
+	  {"a1A1_Bsphi","a2T23_Bsphi",-0.681441},
+	  {"a2A1_Bsphi","a0A12_Bsphi",-0.58909},
+	  {"a2A1_Bsphi","a1A12_Bsphi",-0.716176},
+	  {"a2A1_Bsphi","a2A12_Bsphi",-0.453332},
+	  {"a2A1_Bsphi","a0V_Bsphi",0.0402144},
+	  {"a2A1_Bsphi","a1V_Bsphi",0.47354},
+	  {"a2A1_Bsphi","a2V_Bsphi",0.497547},
+	  {"a2A1_Bsphi","a0T1_Bsphi",0.156373},
+	  {"a2A1_Bsphi","a1T1_Bsphi",0.388671},
+	  {"a2A1_Bsphi","a2T1_Bsphi",-0.169048},
+	  {"a2A1_Bsphi","a0T2_Bsphi",0.148962},
+	  {"a2A1_Bsphi","a1T2_Bsphi",0.548463},
+	  {"a2A1_Bsphi","a2T2_Bsphi",0.124908},
+	  {"a2A1_Bsphi","a0T23_Bsphi",-0.652782},
+	  {"a2A1_Bsphi","a1T23_Bsphi",-0.693798},
+	  {"a2A1_Bsphi","a2T23_Bsphi",-0.569813},
+	  {"a0A12_Bsphi","a1A12_Bsphi",0.775667},
+	  {"a0A12_Bsphi","a2A12_Bsphi",0.424398},
+	  {"a0A12_Bsphi","a0V_Bsphi",0.184513},
+	  {"a0A12_Bsphi","a1V_Bsphi",-0.420811},
+	  {"a0A12_Bsphi","a2V_Bsphi",-0.447059},
+	  {"a0A12_Bsphi","a0T1_Bsphi",0.0773811},
+	  {"a0A12_Bsphi","a1T1_Bsphi",-0.304431},
+	  {"a0A12_Bsphi","a2T1_Bsphi",0.0722582},
+	  {"a0A12_Bsphi","a0T2_Bsphi",0.0795224},
+	  {"a0A12_Bsphi","a1T2_Bsphi",-0.455068},
+	  {"a0A12_Bsphi","a2T2_Bsphi",-0.187699},
+	  {"a0A12_Bsphi","a0T23_Bsphi",0.698961},
+	  {"a0A12_Bsphi","a1T23_Bsphi",0.723823},
+	  {"a0A12_Bsphi","a2T23_Bsphi",0.599831},
+	  {"a1A12_Bsphi","a2A12_Bsphi",0.803423},
+	  {"a1A12_Bsphi","a0V_Bsphi",-0.0661659},
+	  {"a1A12_Bsphi","a1V_Bsphi",-0.502237},
+	  {"a1A12_Bsphi","a2V_Bsphi",-0.553914},
+	  {"a1A12_Bsphi","a0T1_Bsphi",-0.148005},
+	  {"a1A12_Bsphi","a1T1_Bsphi",-0.406181},
+	  {"a1A12_Bsphi","a2T1_Bsphi",0.0686011},
+	  {"a1A12_Bsphi","a0T2_Bsphi",-0.149814},
+	  {"a1A12_Bsphi","a1T2_Bsphi",-0.597757},
+	  {"a1A12_Bsphi","a2T2_Bsphi",-0.236414},
+	  {"a1A12_Bsphi","a0T23_Bsphi",0.629096},
+	  {"a1A12_Bsphi","a1T23_Bsphi",0.8456},
+	  {"a1A12_Bsphi","a2T23_Bsphi",0.733289},
+	  {"a2A12_Bsphi","a0V_Bsphi",0.0196031},
+	  {"a2A12_Bsphi","a1V_Bsphi",-0.450477},
+	  {"a2A12_Bsphi","a2V_Bsphi",-0.475719},
+	  {"a2A12_Bsphi","a0T1_Bsphi",-0.124325},
+	  {"a2A12_Bsphi","a1T1_Bsphi",-0.459704},
+	  {"a2A12_Bsphi","a2T1_Bsphi",-0.0415268},
+	  {"a2A12_Bsphi","a0T2_Bsphi",-0.129832},
+	  {"a2A12_Bsphi","a1T2_Bsphi",-0.651114},
+	  {"a2A12_Bsphi","a2T2_Bsphi",-0.338525},
+	  {"a2A12_Bsphi","a0T23_Bsphi",0.369588},
+	  {"a2A12_Bsphi","a1T23_Bsphi",0.656874},
+	  {"a2A12_Bsphi","a2T23_Bsphi",0.656771},
+	  {"a0V_Bsphi","a1V_Bsphi",0.247761},
+	  {"a0V_Bsphi","a2V_Bsphi",-0.123124},
+	  {"a0V_Bsphi","a0T1_Bsphi",0.526268},
+	  {"a0V_Bsphi","a1T1_Bsphi",-0.0393931},
+	  {"a0V_Bsphi","a2T1_Bsphi",-0.415068},
+	  {"a0V_Bsphi","a0T2_Bsphi",0.535066},
+	  {"a0V_Bsphi","a1T2_Bsphi",-0.0392003},
+	  {"a0V_Bsphi","a2T2_Bsphi",-0.368212},
+	  {"a0V_Bsphi","a0T23_Bsphi",0.160071},
+	  {"a0V_Bsphi","a1T23_Bsphi",0.0458389},
+	  {"a0V_Bsphi","a2T23_Bsphi",0.0186265},
+	  {"a1V_Bsphi","a2V_Bsphi",0.739804},
+	  {"a1V_Bsphi","a0T1_Bsphi",0.218671},
+	  {"a1V_Bsphi","a1T1_Bsphi",0.571275},
+	  {"a1V_Bsphi","a2T1_Bsphi",-0.444945},
+	  {"a1V_Bsphi","a0T2_Bsphi",0.223869},
+	  {"a1V_Bsphi","a1T2_Bsphi",0.633854},
+	  {"a1V_Bsphi","a2T2_Bsphi",-0.0725463},
+	  {"a1V_Bsphi","a0T23_Bsphi",-0.617296},
+	  {"a1V_Bsphi","a1T23_Bsphi",-0.617176},
+	  {"a1V_Bsphi","a2T23_Bsphi",-0.629361},
+	  {"a2V_Bsphi","a0T1_Bsphi",-0.099119},
+	  {"a2V_Bsphi","a1T1_Bsphi",0.323867},
+	  {"a2V_Bsphi","a2T1_Bsphi",-0.0726924},
+	  {"a2V_Bsphi","a0T2_Bsphi",-0.0931479},
+	  {"a2V_Bsphi","a1T2_Bsphi",0.50992},
+	  {"a2V_Bsphi","a2T2_Bsphi",0.213584},
+	  {"a2V_Bsphi","a0T23_Bsphi",-0.677613},
+	  {"a2V_Bsphi","a1T23_Bsphi",-0.651525},
+	  {"a2V_Bsphi","a2T23_Bsphi",-0.547041},
+	  {"a0T1_Bsphi","a1T1_Bsphi",0.448903},
+	  {"a0T1_Bsphi","a2T1_Bsphi",-0.56142},
+	  {"a0T1_Bsphi","a0T2_Bsphi",0.996},
+	  {"a0T1_Bsphi","a1T2_Bsphi",0.189067},
+	  {"a0T1_Bsphi","a2T2_Bsphi",-0.51613},
+	  {"a0T1_Bsphi","a0T23_Bsphi",0.106616},
+	  {"a0T1_Bsphi","a1T23_Bsphi",-0.176712},
+	  {"a0T1_Bsphi","a2T23_Bsphi",-0.210211},
+	  {"a1T1_Bsphi","a2T1_Bsphi",-0.169757},
+	  {"a1T1_Bsphi","a0T2_Bsphi",0.423782},
+	  {"a1T1_Bsphi","a1T2_Bsphi",0.660917},
+	  {"a1T1_Bsphi","a2T2_Bsphi",-0.00861968},
+	  {"a1T1_Bsphi","a0T23_Bsphi",-0.321698},
+	  {"a1T1_Bsphi","a1T23_Bsphi",-0.487256},
+	  {"a1T1_Bsphi","a2T23_Bsphi",-0.54514},
+	  {"a2T1_Bsphi","a0T2_Bsphi",-0.561865},
+	  {"a2T1_Bsphi","a1T2_Bsphi",-0.137407},
+	  {"a2T1_Bsphi","a2T2_Bsphi",0.711765},
+	  {"a2T1_Bsphi","a0T23_Bsphi",0.220799},
+	  {"a2T1_Bsphi","a1T23_Bsphi",0.232593},
+	  {"a2T1_Bsphi","a2T23_Bsphi",0.364997},
+	  {"a0T2_Bsphi","a1T2_Bsphi",0.212618},
+	  {"a0T2_Bsphi","a2T2_Bsphi",-0.495299},
+	  {"a0T2_Bsphi","a0T23_Bsphi",0.109431},
+	  {"a0T2_Bsphi","a1T23_Bsphi",-0.176517},
+	  {"a0T2_Bsphi","a2T23_Bsphi",-0.208143},
+	  {"a1T2_Bsphi","a2T2_Bsphi",0.410351},
+	  {"a1T2_Bsphi","a0T23_Bsphi",-0.455203},
+	  {"a1T2_Bsphi","a1T23_Bsphi",-0.62091},
+	  {"a1T2_Bsphi","a2T23_Bsphi",-0.661853},
+	  {"a2T2_Bsphi","a0T23_Bsphi",-0.0306923},
+	  {"a2T2_Bsphi","a1T23_Bsphi",-0.114741},
+	  {"a2T2_Bsphi","a2T23_Bsphi",0.00905559},
+	  {"a0T23_Bsphi","a1T23_Bsphi",0.777787},
+	  {"a0T23_Bsphi","a2T23_Bsphi",0.573289},
+	  {"a1T23_Bsphi","a2T23_Bsphi",0.899178},
+	  };
+	  	  
+	  double **corr=(double  **) malloc((nnuis+1)*sizeof(double *));  // Nuisance parameter correlations
+	  for(int ie=0;ie<=nnuis;ie++) corr[ie]=(double *) malloc((nnuis+1)*sizeof(double));	
 
-	  double **res=(double **) malloc(nbobs*sizeof(double *));
-	  for(int ie=0;ie<=nbobs;ie++) res[ie]=(double *) malloc(nbobs*sizeof(double));	
+	  BEreq::convert_correlation((nuiscorr *)corrnuis,byVal(ncorrnuis),(double **)corr,(char **)namenuisance,byVal(nnuis));
 	
-	  BEreq::get_th_covariance_nuisance(&res,(char**)obsnames,&nbobs,&param,&nuislist,byVal(corr));
+	  //int nbobs=2;
+	  //char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
+	  int nbobs=113;
+	  char obsnames[nbobs][50]={"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98","FL_B0Kstar0mumu_0.1_0.98","AFB_B0Kstar0mumu_0.1_0.98","S3_B0Kstar0mumu_0.1_0.98","S4_B0Kstar0mumu_0.1_0.98","S5_B0Kstar0mumu_0.1_0.98","S7_B0Kstar0mumu_0.1_0.98","S8_B0Kstar0mumu_0.1_0.98","S9_B0Kstar0mumu_0.1_0.98","dGamma/dq2_B0Kstar0mumu_1.1_2.5","FL_B0Kstar0mumu_1.1_2.5","AFB_B0Kstar0mumu_1.1_2.5","S3_B0Kstar0mumu_1.1_2.5","S4_B0Kstar0mumu_1.1_2.5","S5_B0Kstar0mumu_1.1_2.5","S7_B0Kstar0mumu_1.1_2.5","S8_B0Kstar0mumu_1.1_2.5","S9_B0Kstar0mumu_1.1_2.5","dGamma/dq2_B0Kstar0mumu_2.5_4","FL_B0Kstar0mumu_2.5_4","AFB_B0Kstar0mumu_2.5_4","S3_B0Kstar0mumu_2.5_4","S4_B0Kstar0mumu_2.5_4","S5_B0Kstar0mumu_2.5_4","S7_B0Kstar0mumu_2.5_4","S8_B0Kstar0mumu_2.5_4","S9_B0Kstar0mumu_2.5_4","dGamma/dq2_B0Kstar0mumu_4_6","FL_B0Kstar0mumu_4_6","AFB_B0Kstar0mumu_4_6","S3_B0Kstar0mumu_4_6","S4_B0Kstar0mumu_4_6","S5_B0Kstar0mumu_4_6","S7_B0Kstar0mumu_4_6","S8_B0Kstar0mumu_4_6","S9_B0Kstar0mumu_4_6","dGamma/dq2_B0Kstar0mumu_6_8","FL_B0Kstar0mumu_6_8","AFB_B0Kstar0mumu_6_8","S3_B0Kstar0mumu_6_8","S4_B0Kstar0mumu_6_8","S5_B0Kstar0mumu_6_8","S7_B0Kstar0mumu_6_8","S8_B0Kstar0mumu_6_8","S9_B0Kstar0mumu_6_8","dGamma/dq2_B0Kstar0mumu_15_17","FL_B0Kstar0mumu_15_17","AFB_B0Kstar0mumu_15_17","S3_B0Kstar0mumu_15_17","S4_B0Kstar0mumu_15_17","S5_B0Kstar0mumu_15_17","S7_B0Kstar0mumu_15_17","S8_B0Kstar0mumu_15_17","S9_B0Kstar0mumu_15_17","dGamma/dq2_B0Kstar0mumu_17_19","FL_B0Kstar0mumu_17_19","AFB_B0Kstar0mumu_17_19","S3_B0Kstar0mumu_17_19","S4_B0Kstar0mumu_17_19","S5_B0Kstar0mumu_17_19","S7_B0Kstar0mumu_17_19","S8_B0Kstar0mumu_17_19","S9_B0Kstar0mumu_17_19","dGamma/dq2_BKstarmumu_1.1_6","dGamma/dq2_BKstarmumu_15_19","BR_B0Kstar0ee_0.1_19.2","R-1_B0Kstar0ll_0.045_1.1","R-1_B0Kstar0ll_1.1_6","R-1_B0Kstar0ll_0.045_1.1_Belle","R-1_B0Kstar0ll_1.1_6_Belle","R-1_B0Kstar0ll_0.1_8_Belle","R-1_B0Kstar0ll_15_19_Belle","dGamma/dq2_B0K0mumu_1.1_6","dGamma/dq2_B0K0mumu_15_22","dGamma/dq2_BKmumu_1.1_6","FH_BKmumu_1.1_6","dGamma/dq2_BKmumu_15_22","FH_BKmumu_15_22","R-1_BKll_1.1_6","dGamma/dq2_Bsphimumu_0.1_2","FL_Bsphimumu_0.1_2","S3_Bsphimumu_0.1_2","S4_Bsphimumu_0.1_2","S7_Bsphimumu_0.1_2","dGamma/dq2_Bsphimumu_2_5","FL_Bsphimumu_2_5","S3_Bsphimumu_2_5","S4_Bsphimumu_2_5","S7_Bsphimumu_2_5","dGamma/dq2_Bsphimumu_5_8","FL_Bsphimumu_5_8","S3_Bsphimumu_5_8","S4_Bsphimumu_5_8","S7_Bsphimumu_5_8","dGamma/dq2_Bsphimumu_15_17","FL_Bsphimumu_15_17","S3_Bsphimumu_15_17","S4_Bsphimumu_15_17","S7_Bsphimumu_15_17","dGamma/dq2_Bsphimumu_17_19","FL_Bsphimumu_17_19","S3_Bsphimumu_17_19","S4_Bsphimumu_17_19","S7_Bsphimumu_17_19"};  // LIST TO BE DEFINED LATER
+
+	  double **res;	
+	
+	  BEreq::get_th_covariance_nuisance(&res,(char**)obsnames,&nbobs,&param,&nuislist,(double **)corr);
 	 
-	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("%s %s: %.4e\n",obsnames[ie],obsnames[je],res[ie][je]);
+	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("Covariance %s - %s: %.4e\n",obsnames[ie],obsnames[je],res[ie][je]);
 	  
 	  result=res[0][0]; // TO BE MODIFIED
 	  
@@ -1050,7 +1517,7 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_RKstar_11_60"<<endl;
     }
 
-    // RK* for RHN, using same approximations as RK
+    // RK* for RHN, using same approximations as RK, low q^2
     void RHN_RKstar_0045_11(double &result)
     {
       using namespace Pipes::RHN_RKstar_0045_11;
@@ -1061,7 +1528,6 @@ namespace Gambit
 
       if (flav_debug) cout << "Starting RHN_RKstar_0045_11" << endl;
 
-      // TODO: change for EWPO
       const double mW = sminputs.mW;
       const double sinW2 = sqrt(1.0 - pow(sminputs.mW/sminputs.mZ,2));
 
@@ -1086,7 +1552,8 @@ namespace Gambit
       if (flav_debug) cout << "Finished RHN_RKstar_0045_11" << endl;
 
     }
-
+ 
+    // RK* for RHN, using same approximations as RK, intermediate q^2
     void RHN_RKstar_11_60(double &result)
     {
       using namespace Pipes::RHN_RKstar_11_60;
@@ -1097,7 +1564,6 @@ namespace Gambit
 
       if (flav_debug) cout << "Starting RHN_RKstar_11_60" << endl;
 
-      // TODO: change for EWPO
       const double mW = sminputs.mW;
       const double sinW2 = sqrt(1.0 - pow(sminputs.mW/sminputs.mZ,2));
 
@@ -1147,7 +1613,6 @@ namespace Gambit
 
       if (flav_debug) cout << "Starting RHN_RK" << endl;
 
-      // TODO: change for EWPO
       const double mW = sminputs.mW;
       const double sinW2 = sqrt(1.0 - pow(sminputs.mW/sminputs.mZ,2));
 
@@ -1723,7 +2188,7 @@ namespace Gambit
 
     }
 
-
+    // Helper function 
     double G(const double x)
     {
       if(x)
@@ -1732,6 +2197,7 @@ namespace Gambit
         return 10.0/3;
     }
 
+    // Contribution to mu -> e gamma from RHNs
     void RHN_muegamma(double &result)
     {
       using namespace Pipes::RHN_muegamma;
@@ -1765,6 +2231,7 @@ namespace Gambit
 
     }
 
+    // Contribution to tau -> e gamma from RHNs
     void RHN_tauegamma(double &result)
     {
       using namespace Pipes::RHN_tauegamma;
@@ -1796,8 +2263,9 @@ namespace Gambit
 
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
 
-   }
+    }
 
+    // Contribution to tau -> mu gamma from RHNs
     void RHN_taumugamma(double &result)
     {
       using namespace Pipes::RHN_taumugamma;
@@ -1830,6 +2298,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // General contribution to l_\alpha^- -> l_\beta^- l_\gamma^- l_\delta^+ from RHNs
     double RHN_l2lll(int alpha, int beta, int gamma, int delta, SMInputs sminputs, Eigen::Matrix3cd Vnu, Eigen::Matrix3cd Theta, Eigen::Matrix3cd m_nu, double M1, double M2, double M3, double mH)
     {
       vector<double> ml = {sminputs.mE, sminputs.mMu, sminputs.mTau};
@@ -1879,6 +2348,7 @@ namespace Gambit
 
     }
 
+    // Contribution to mu -> e e e from RHNs
     void RHN_mueee(double &result)
     {
       using namespace Pipes::RHN_mueee;
@@ -1897,6 +2367,7 @@ namespace Gambit
 
     }
 
+    // Contribution to tau -> e e e from RHNs
     void RHN_taueee(double &result)
     {
       using namespace Pipes::RHN_taueee;
@@ -1915,6 +2386,7 @@ namespace Gambit
 
     }
 
+    // Contribution to tau -> mu mu mu from RHNs
     void RHN_taumumumu(double &result)
     {
       using namespace Pipes::RHN_taumumumu;
@@ -1933,7 +2405,7 @@ namespace Gambit
 
     }
 
-
+    // Contribution to tau^- -> mu^- e^- e^+ from RHNs
     void RHN_taumuee(double &result)
     {
       using namespace Pipes::RHN_taumuee;
@@ -1951,6 +2423,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to tau^- -> e^- e^- mu^+ from RHNs
     void RHN_taueemu(double &result)
     {
       using namespace Pipes::RHN_taueemu;
@@ -1968,6 +2441,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to tau^- -> e^- mu^- mu^+ from RHNs
     void RHN_tauemumu(double &result)
     {
       using namespace Pipes::RHN_tauemumu;
@@ -1985,6 +2459,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to tau^- -> mu^- mu^- e^+ from RHNs
     void RHN_taumumue(double &result)
     {
       using namespace Pipes::RHN_taumumue;
@@ -2002,6 +2477,7 @@ namespace Gambit
       result /= Dep::tau_minus_decay_rates->width_in_GeV;
     }
 
+    // Contribution to mu - e conversion in Ti nucleii from RHNs
     void RHN_mueTi(double &result)
     {
       using namespace Pipes::RHN_mueTi;
@@ -2094,6 +2570,7 @@ namespace Gambit
 
     }
 
+    // Contribution to mu - e conversion in Pb nucleii from RHNs
     void RHN_muePb(double &result)
     {
       using namespace Pipes::RHN_muePb;

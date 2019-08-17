@@ -2831,6 +2831,12 @@ Z_gamma_nu: |
 Z_gamma_chi_0: |
    Decay width of the Z boson to neutralinos in MeV.
 
+W_to_l_decays: |
+   Precision calculation of W decays to leptons
+
+lnL_W_decays: |
+   Log-likelihood of the W decays to leptons
+
 lnL_Z_inv: |
    Log Likelihood for the inivislbe decay width of the Z boson.
 
@@ -2929,24 +2935,6 @@ lnL_deltarho : |
 
 sinW2: |
    Precision value of the weak mixing angle sin^2 θ_W (not the effective one)
-
-W_to_l_decays: |
-   Precision calculation of W decays to leptons
-
-Z_inv_width: |
-   Precision calculation of the invisible width of Z
-
-Gmu: |
-   Precision calculation of Gmu
-
-lnL_Gmu: |
-  Log-likelihood of Gmu
-
-lnL_W_decays: |
-   Log-likelihood of the W decays to leptons
-
-lnL_Z_inv_width: |
-   Log-likelihood of the invisible width of Z
 
 lnL_sinW2: |
    Log-likelihood of the weak mixing angle sin^2 θ_W (not the effective one)
@@ -3887,6 +3875,7 @@ calculate_amu_2loop_non_tan_beta_resummed: |
 calculate_uncertainty_amu_2loop: |
    Calculates the uncertainty on the anomalous magnetic moment of the muon at 2 loops.
 
+
 #----------------------------
 #  Axion-related capabilities
 #----------------------------
@@ -4004,7 +3993,7 @@ SUSYHD_DeltaMHiggs : |
    Calculates the uncertainty on the Higgs mass using SUSYHD
 
 #-------------------
-# Right Handed Neutrino capabilities
+# NeutrinoBit capabilities
 #-------------------
 
 UPMNS: |
@@ -4199,20 +4188,32 @@ R_tau: |
 R_W: |
   Lepton universality ratio of W decays to leptons
 
-lnLlepuniv: |
-  Log-likelihood for lepton universality
+lnL_R_K: |
+  Log-likelihood for lepton universality ratio of Kaon decays to leptons
+
+lnL_R_pi: |
+  Log-likelihood for lepton universality ratio of pion decays to leptons
+
+lnL_R_tau: |
+  Log-likelihood for lepton universality ratio of tau decays to leptons
+
+lnL_R_W: |
+  Log-likelihood for lepton universality ratio of W decays to leptons
 
 calc_Vus: |
   Calculate optimized value of Vus for Theta
 
+lnLckm_Vus:
+  Log-likelihood for CKM unitarity using Vus as input parameter
+
 lnLckm_Vusmin: |
   Log-likelihood for CKM unitarity profiling over Vus
+ 
+Thalf_0nubb_Ge: |
+  Neutrinoless double beta half-life for 76Ge detector
 
-Gamma_0nubb_Ge: |
-  Neutrinoless double beta decay rate for 76Ge detector
-
-Gamma_0nubb_Xe: |
-  Neutrinoless double beta decay rate for 136Xe detector
+Thalf_0nubb_Xe: |
+  Neutrinoless double beta half-life for 136Xe detector
 
 lnL_0nubb_GERDA: |
   Log-likelihood for the neutrinoless double beta decay rate for the 76Ge detector
@@ -4279,6 +4280,9 @@ lnLps191e: |
 
 lnLps191mu: |
   Log-likelihood for direct searches of right-handed neutrinos in the PS191 experiment in the muon sector
+
+RHN_coupling_slide: |
+  Artificial coupling slide
 
 #-------------------------------------
 #  Capgen capabilities
