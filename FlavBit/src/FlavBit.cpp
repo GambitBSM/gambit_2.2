@@ -2951,6 +2951,7 @@ namespace Gambit
     {
       using namespace Pipes::hepLikeB2TauNuLogLikelihood;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/PDG/Semileptonic/B2TauNu.yaml";
+      std::cout<<"testing path: "<<inputfile<<std::endl;
       static HepLike_default::HL_Gaussian gaussian(inputfile);
       static bool first = true;
       if (first)
