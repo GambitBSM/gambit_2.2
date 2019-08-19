@@ -118,7 +118,7 @@ namespace Gambit
       static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
 
       // We don't supply a LE subspectrum here; an SMSimpleSpec will therefore be automatically created from 'sminputs'
-      result = Spectrum(vectorspec,sminputs,&myPipe::Param,mass_cut,mass_ratio_cut);
+      result = Spectrum(vectorspec,sminputs,myPipe::Param,mass_cut,mass_ratio_cut);
 
     }
 
