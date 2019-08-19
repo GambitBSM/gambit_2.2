@@ -40,11 +40,12 @@ namespace Gambit
     class safe_param_map : public std::map<std::string,T>
     {
       public:
-        T& operator[](std::string key) const
+        T operator[](std::string key) const
         {
           try
           {
-            return this->at(key);
+            T temp(this->at(key));
+            return temp;
           }
           catch(std::out_of_range)
           {
@@ -54,7 +55,8 @@ namespace Gambit
                                 "because you have failed to declare the dependency on the model's parameters  \n"
                                 "in your rollcall header using ALLOW_MODEL(S) or ALLOW_MODEL_DEPENDENCE.");           
           }
-          return this->at(key);  // Will only get here if someone has turned model errors into warnings.  If so, they get what they deserve.
+          T temp2(this->at(key)); // Will only get here if someone has turned model errors into warnings.  If so, they get what they deserve.
+          return temp2;
         }
     };
 
