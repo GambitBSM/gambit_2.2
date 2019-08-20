@@ -140,6 +140,130 @@ namespace Gambit
 
       cout << "DEBUG: getProspinoxsec: Loop iteration:" << *Loop::iteration << endl;
 
+      // Read options from yaml file
+      static bool first = true;
+
+      const static Finteger inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
+      const static Finteger isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
+      const static Finteger icoll_in = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
+      const static Fdouble energy_in = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
+      const static Finteger i_error_in = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
+
+      // ng
+      const static bool ng_all = runOptions->getValueOrDef<bool>(false, "ng_all");
+      static std::vector<int> ng_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "ng_ipart1");
+
+      // nn
+      const static bool nn_all = runOptions->getValueOrDef<bool>(false, "nn_all");
+      static std::vector<std::pair<int,int> > nn_ipart1_ipart2 = runOptions->getValueOrDef<std::vector<std::pair<int,int>>>(std::vector<std::pair<int,int>>(), "nn_ipart1_ipart2");
+
+      // ns
+      const static bool ns_all = runOptions->getValueOrDef<bool>(false, "ns_all");
+      static std::vector<std::pair<int,int> > ns_ipart1_isquark1 = runOptions->getValueOrDef<std::vector<std::pair<int,int>>>(std::vector<std::pair<int,int>>(), "ns_ipart1_isquark1");
+
+      // ll
+      const static bool ll_all = runOptions->getValueOrDef<bool>(false, "ll_all");
+      static std::vector<int> ll_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "ll_ipart1");
+
+      // tb
+      const static bool tb_all = runOptions->getValueOrDef<bool>(false, "tb_all");
+      static std::vector<int> tb_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "tb_ipart1");
+
+      // bb
+      const static bool bb_all = runOptions->getValueOrDef<bool>(false, "bb_all");
+      static std::vector<int> bb_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "bb_ipart1");
+
+
+      // Use complete process sets?
+      if (first) {
+
+        first = false;
+
+        // ng
+        if (ng_all) {
+          std::vector<int> ng_all_processes = {1, 2, 3, 4, 5, 6, 7, 8};
+          ng_ipart1.clear();
+          ng_ipart1 = ng_all_processes;
+        }
+
+        // nn
+        if (nn_all) {
+          std::vector<std::pair<int, int> > nn_all_processes = {
+            {1,1}, {1,2}, {1,3}, {1,4}, {1,5}, {1,6}, {1,7}, {1,8},
+            {2,2}, {2,3}, {2,4}, {2,5}, {2,6}, {2,7}, {2,8},
+            {3,3}, {3,4}, {3,5}, {3,6}, {3,7}, {3,8},
+            {4,4}, {4,5}, {4,6}, {4,7}, {4,8},
+            {5,5}, {5,6}, {5,7}, {5,8},
+            {6,6}, {6,7}, {6,8},
+            {7,7}, {7,8},
+            {8,8}
+          };
+          nn_ipart1_ipart2.clear();
+          nn_ipart1_ipart2 = nn_all_processes;
+        }
+
+        // ns
+        if (ns_all) {
+          std::vector<std::pair<int, int> > ns_all_processes = {
+            {1,-5}, {1,-4}, {1,-3}, {1,-2}, {1,-1}, {1,1}, {1,2}, {1,3}, {1,4}, {1,5},
+            {2,-5}, {2,-4}, {2,-3}, {2,-2}, {2,-1}, {2,1}, {2,2}, {2,3}, {2,4}, {2,5},
+            {3,-5}, {3,-4}, {3,-3}, {3,-2}, {3,-1}, {3,1}, {3,2}, {3,3}, {3,4}, {3,5},
+            {4,-5}, {4,-4}, {4,-3}, {4,-2}, {4,-1}, {4,1}, {4,2}, {4,3}, {4,4}, {4,5},
+            {5,-5}, {5,-4}, {5,-3}, {5,-2}, {5,-1}, {5,1}, {5,2}, {5,3}, {5,4}, {5,5},
+            {6,-5}, {6,-4}, {6,-3}, {6,-2}, {6,-1}, {6,1}, {6,2}, {6,3}, {6,4}, {6,5},
+            {7,-5}, {7,-4}, {7,-3}, {7,-2}, {7,-1}, {7,1}, {7,2}, {7,3}, {7,4}, {7,5},
+            {8,-5}, {8,-4}, {8,-3}, {8,-2}, {8,-1}, {8,1}, {8,2}, {8,3}, {8,4}, {8,5}
+          };
+          ns_ipart1_isquark1.clear();
+          ns_ipart1_isquark1 = ns_all_processes;
+        }
+
+        // ll
+        if (ll_all) {
+          std::vector<int> ll_all_processes = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+          ll_ipart1.clear();
+          ll_ipart1 = ll_all_processes;
+        }
+
+        // tb
+        if (tb_all) {
+          std::vector<int> tb_all_processes = {1, 2};
+          tb_ipart1.clear();
+          tb_ipart1 = tb_all_processes;
+        }
+
+        // bb
+        if (bb_all) {
+          std::vector<int> bb_all_processes = {1, 2};
+          bb_ipart1.clear();
+          bb_ipart1 = bb_all_processes;
+        }
+
+
+      }
+
+      // Default values
+      Finteger ipart1_in = 1;
+      Finteger ipart2_in = 2;
+      Finteger isquark1_in = 0;
+      Finteger isquark2_in = 0;
+
+      // 
+      // FIXME: make process loop 
+      // 
+
+      // std::string final_state_in = "nn";
+      // ipart1_in = nn_ipart1_ipart2.at(0).first;
+      // ipart2_in = nn_ipart1_ipart2.at(0).second;
+
+      // std::string final_state_in = "ng";
+      // ipart1_in = ng_ipart1.at(0);
+
+      std::string final_state_in = "tb";
+      ipart1_in = ng_ipart1.at(0);
+
+
+
       // Reset the xsec object on the main thread (other threads do not matter)
       if (*Loop::iteration == BASE_INIT)
       {
@@ -158,16 +282,17 @@ namespace Gambit
         // Create struct with settings Prospino
         prospino_settings ps;
 
-        ps.inlo = 0;
-        ps.isq_ng_in = 1;
-        ps.icoll_in = 1;
-        ps.energy_in = 13000.;
-        ps.i_error_in = 0;
-        ps.final_state_in = "nn";
-        ps.ipart1_in = 1;
-        ps.ipart2_in = 2;
-        ps.isquark1_in = 0;
-        ps.isquark2_in = 0;
+        ps.inlo = inlo;
+        ps.isq_ng_in = isq_ng_in;
+        ps.icoll_in = icoll_in;
+        ps.energy_in = energy_in;
+        ps.i_error_in = i_error_in;
+        // ps.final_state_in = final_state_in.c_str();
+        ps.final_state_in = final_state_in;
+        ps.ipart1_in = ipart1_in;
+        ps.ipart2_in = ipart2_in;
+        ps.isquark1_in = isquark1_in;
+        ps.isquark2_in = isquark2_in;
 
         // inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
         // isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
