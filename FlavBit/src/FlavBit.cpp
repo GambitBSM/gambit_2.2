@@ -2943,16 +2943,6 @@ namespace Gambit
     void hepLike_test(double &result)
     {
       using namespace Pipes::hepLike_test;
-      static HepLike_default::HL_Gaussian gauss(path_to_latest_heplike_data() + "/data/HFLAV_18/RD/b2sgamma.yaml");
-      static bool first = true;
-      if (first)
-      {
-        cout << "Debug: Reading HepLike data file: " << path_to_latest_heplike_data() + "/data/HFLAV_18/RD/b2sgamma.yaml" << endl;
-        gauss.Read();
-        first = false;
-      }
-      result = gauss.GetLogLikelihood(3.5e-4);
-      cout << "HepLike_test result: " << result << endl;
     }
 
 

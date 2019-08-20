@@ -83,6 +83,8 @@ load_functions = [
     
 ]
 
+print('Funcitions: ', load_functions)
+
 ditch = []
 
 
