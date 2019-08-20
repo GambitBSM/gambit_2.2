@@ -32,10 +32,46 @@
     //MAP_TO_CAPABILITY(wimp_sc, wimp_sc) /// " " (boolean flag, 1 if WIMP is self-conjugate, 0 otherwise)
 	MAP_TO_CAPABILITY(sig_v, sigmav) /// this capability already exists in DarkBit - not sure if I should actually be setting it, testing
 
-    // Define a couple of module functions, for the module NREO (automatically created by START_MODEL)
+    // Declare a couple of module functions, for the module NREO (automatically created by START_MODEL)
     // This works pretty much the same as in a normal module
-    QUICK_FUNCTION(NREO, spinwimpx2, OLD_CAPABILITY, NREO_wimp_spin, unsigned int, (NREO))
-    QUICK_FUNCTION(NREO, wimp_sc,    OLD_CAPABILITY, NREO_wimp_sc,   unsigned int, (NREO))
+    QUICK_FUNCTION(NREO, spinwimpx2, NEW_CAPABILITY, NREO_wimp_spin, unsigned int, (NREO))
+    QUICK_FUNCTION(NREO, wimp_sc,    NEW_CAPABILITY, NREO_wimp_sc,   unsigned int, (NREO))
+
+    // Define the module functions
+    namespace Gambit {
+      namespace Models {
+        namespace MODEL {
+
+          // 2x WIMP spin
+          void NREO_wimp_spin(unsigned int& result)
+          {
+              using namespace Pipes::NREO_wimp_spin;
+              int twoj = std::round(2*(*Param["j"]));
+              if(twoj<0)
+              {
+                  model_error().raise(LOCAL_INFO,"WIMP spin parameter in NREO model is negative! This parameter must be a postive integer or half-integer!");
+              }
+              // Could also check that the rounding is less than floating point precision, but currently have neglected to do that
+              result = (unsigned int)twoj;
+          }
+
+          // WIMP self-conjugateness
+          void NREO_wimp_sc(unsigned int& result)
+          {
+              using namespace Pipes::NREO_wimp_sc;
+              int sc = std::round(*Param["wimp_sc"]);
+              if(sc!=0 and sc!=1)
+              {
+                  model_error().raise(LOCAL_INFO,"WIMP sc (self-conjugate) parameter in NREO model is invalid! This parameter must be a postive integer or half-integer!integer");
+              }
+              // Could also check that the rounding is less than floating point precision, but currently have neglected to do that
+              result = (unsigned int)sc;
+          }
+
+        }
+      }
+  }
+
 
 #undef MODEL
 
