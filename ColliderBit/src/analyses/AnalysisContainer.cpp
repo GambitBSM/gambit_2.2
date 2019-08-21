@@ -87,6 +87,8 @@ namespace Gambit
       F(ATLAS_8TeV_2LEPStop_20invfb)                 \
       F(ATLAS_8TeV_3LEPEW_20invfb)                   \
       F(ATLAS_8TeV_1LEPbb_20invfb)                   \
+      F(ATLAS_7TeV_1OR2LEPStop_4_7invfb)             \
+      F(ATLAS_7TeV_2LEPStop_4_7invfb)                \
       F(CMS_13TeV_0LEP_13invfb)                      \
       F(CMS_13TeV_0LEP_36invfb)                      \
       F(CMS_13TeV_1LEPbb_36invfb)                    \
