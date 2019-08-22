@@ -623,7 +623,6 @@ namespace GUM
         // Get useful SPheno flags, default to False
         flags = {
           {"SupersymmetricModel",false}, 
-          {"AddTreeLevelUnitarityLimits",false},
           {"OnlyLowEnergySPheno", false}
         };
         model.get_flags(flags);

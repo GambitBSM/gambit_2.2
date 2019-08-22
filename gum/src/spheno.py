@@ -71,13 +71,18 @@ def patch_spheno(model_name, patch_dir, flags):
     patch_spheno_model_makefile(model_name, patch_dir)
     patch_spheno_src_makefile(model_name, patch_dir)
     patch_control(model_name, patch_dir)
-    patch_brs(model_name, patch_dir)
     patch_loopfunctions(model_name, patch_dir)
+    patch_standardmodel(model_name, patch_dir)
     patch_spheno_model(model_name, patch_dir)
+    patch_brs(model_name, patch_dir)
+    patch_addloopfunctions(model_name, patch_dir)
+    patch_settings(model_name, flags, patch_dir)
+    patch_model_data(model_name, flags, patch_dir)
+    patch_inputoutput(model_name, patch_dir)
+ 
 
     if flags["SupersymmetricModel"] :
-        patch_model_data(model_name, patch_dir)
-        patch_3_body_decays_susy(model_name, patch_dir)
+       patch_3_body_decays_susy(model_name, patch_dir)
 
     print("SPheno files patched.")
 
@@ -308,6 +313,32 @@ def patch_control(model_name, patch_dir):
                           "! GAMBIT addition end\n\n"
                 g.write(content)
                 g.write(line) 
+            elif line.startswith("Contains") :
+                content = '! C++ bind statements added by GAMBIT\n'\
+                          'BIND(C, NAME="C_control_errorlevel") :: ErrorLevel\n'\
+                          'BIND(C, NAME="C_control_errcan") :: ErrCan\n'\
+                          'BIND(C, NAME="C_control_generationmixing") :: GenerationMixing\n'\
+                          'BIND(C, NAME="C_control_fermionmassresummation") :: FermionMassResummation\n'\
+                          'BIND(C, NAME="C_control_l_cs") :: L_CS\n'\
+                          'BIND(C, NAME="C_control_external_spectrum") :: External_Spectrum\n'\
+                          'BIND(C, NAME="C_control_external_higgs") :: External_Higgs\n'\
+                          'BIND(C, NAME="C_control_delta_mass") :: delta_mass\n'\
+                          'BIND(C, NAME="C_control_n_run") :: n_run\n'\
+                          'BIND(C, NAME="C_control_non_zero_exit") :: Non_Zero_Exit\n'\
+                          'BIND(C, NAME="C_control_silenceoutput") :: SilenceOutput\n'\
+                          'BIND(C, NAME="C_control_math_error") :: Math_Error\n'\
+                          'BIND(C, NAME="C_control_sm_error") :: SM_Error\n'\
+                          'BIND(C, NAME="C_control_susym_error") :: SusyM_Error\n'\
+                          'BIND(C, NAME="C_control_inout_error") :: InOut_Error\n'\
+                          'BIND(C, NAME="C_control_sugra_error") :: Sugra_Error\n'\
+                          'BIND(C, NAME="C_control_loopmass_error") :: LoopMass_Error\n'\
+                          'BIND(C, NAME="C_control_twoloophiggs_error") :: TwoLoopHiggs_Error\n'\
+                          'BIND(C, NAME="C_control_mathqp_error") :: MathQP_Error\n'\
+                          'BIND(C, NAME="C_control_l_br") :: L_BR\n'\
+                          'BIND(C, NAME="C_control_errorhandler_cptr") :: ErrorHandler_cptr\n'\
+                          '\n'
+                g.write(content)
+                g.write(line)
             elif line.startswith(" Subroutine TerminateProgram") :
                 content = " ! Subroutine modified by GAMBIT\n"\
                           " Subroutine TerminateProgram\n"\
@@ -356,10 +387,230 @@ def patch_control(model_name, patch_dir):
                 if not skip_next_lines :
                     g.write(line)
 
+    os.remove(filename)
+    os.rename(temp_filename, filename)
+
+def patch_loopfunctions(model_name, patch_dir):
+    """
+    Patches $SPheno/src/LoopFunctions.f90
+    """
+
+    filename = patch_dir + "/src/LoopFunctions.f90"
+    temp_filename = filename + "_temp"
+
+    if not os.path.exists(filename):
+        raise GumError(("Tried to find the file located at " + filename +
+                        " but it does not seem to exist!"))
+ 
+    with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+        for line in f :
+            if line.startswith(" End Function GetRenormalizationScale") :
+                content = "\n"\
+                          ' ! C++ wrapper added by GAMBIT\n'\
+                          '  Real(C_DOUBLE) Function C_GetRenormalizationScale() BIND(C, NAME="C_loopfunctions_getrenormalizationscale")\n'\
+                          '  Use ISO_C_BINDING, only: C_DOUBLE\n'\
+                          '  Implicit None\n'\
+                          '  C_GetRenormalizationScale = GetRenormalizationScale()\n'\
+                          ' End Function C_GetRenormalizationScale\n'\
+                          '\n'
+                g.write(line)
+                g.write(content)
+            elif line.startswith(" End Subroutine InitializeLoopFunctions") :
+                content = "\n"\
+                          ' ! C++ wrapper added by GAMBIT\n'\
+                          '  Subroutine C_InitializeLoopFunctions() BIND(C, NAME="C_loopfunctions_initializeloopfunctions")\n'\
+                          '  Use ISO_C_BINDING\n'\
+                          '  Implicit None\n'\
+                          '  Call InitializeLoopFunctions()\n'\
+                          ' End Subroutine C_InitializeLoopFunctions\n'\
+                          '\n'
+                g.write(line)
+                g.write(content)
+            elif line.startswith(" End Function SetRenormalizationScale") :
+                content = "\n"\
+                          ' Real(C_DOUBLE) Function C_SetRenormalizationScale(mu2_in) BIND(C, NAME="C_loopfunctions_setrenormalizationscale")\n'\
+                          '  Use ISO_C_BINDING, only: C_DOUBLE\n'\
+                          '  Implicit None\n'\
+                          '  Real(KIND=C_DOUBLE) :: mu2_in\n'\
+                          '  C_SetRenormalizationScale = SetRenormalizationScale(mu2_in)\n'\
+                          ' End Function C_SetRenormalizationScale\n'\
+                          '\n' 
+                g.write(line)
+                g.write(content)
+            else :
+                g.write(line)
 
     os.remove(filename)
     os.rename(temp_filename, filename)
 
+
+def patch_standardmodel(model_name, patch_dir):
+    """
+    Patches $SPheno/src/StandardModel.f90
+    """
+
+    filename = patch_dir + "/src/StandardModel.f90"
+    temp_filename = filename + "_temp"
+
+    if not os.path.exists(filename):
+        raise GumError(("Tried to find the file located at " + filename +
+                        " but it does not seem to exist!"))
+
+    with open(filename, 'r') as f, open(temp_filename, 'w') as g:
+        for line in f:
+            if line.startswith("Contains") :
+                content = "! C++ bind statements added by GAMBIT\n"\
+                    'BIND(C,NAME="C_standardmodel_mz") :: mZ\n'\
+                    'BIND(C,NAME="C_standardmodel_mz2") :: mZ2\n'\
+                    'BIND(C,NAME="C_standardmodel_gamz") :: gamZ\n'\
+                    'BIND(C,NAME="C_standardmodel_gamz2") :: gamZ2\n'\
+                    'BIND(C,NAME="C_standardmodel_gmz") :: gmZ\n'\
+                    'BIND(C,NAME="C_standardmodel_gmz2") :: gmZ2\n'\
+                    'BIND(C,NAME="C_standardmodel_brzqq") :: BrZqq\n'\
+                    'BIND(C,NAME="C_standardmodel_brzll") :: BrZll\n'\
+                    'BIND(C,NAME="C_standardmodel_brzinv") :: BrZinv\n'\
+                    'BIND(C,NAME="C_standardmodel_mw") :: mW\n'\
+                    'BIND(C,NAME="C_standardmodel_mw2") :: mW2\n'\
+                    'BIND(C,NAME="C_standardmodel_gamw") :: gamW\n'\
+                    'BIND(C,NAME="C_standardmodel_gamw2") :: gamW2\n'\
+                    'BIND(C,NAME="C_standardmodel_gmw") :: gmW\n'\
+                    'BIND(C,NAME="C_standardmodel_gmw2") :: gmW2\n'\
+                    'BIND(C,NAME="C_standardmodel_brwqq") :: BrWqq\n'\
+                    'BIND(C,NAME="C_standardmodel_brwln") :: BrWln\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_l") :: mf_l\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_l_mz") :: mf_l_mZ\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_nu") :: mf_nu\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_u") :: mf_u\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_u_mz") :: mf_u_mZ\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_d") :: mf_d\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_d_mz") :: mf_d_mZ\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_l2") :: mf_l2\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_u2") :: mf_u2\n'\
+                    'BIND(C,NAME="C_standardmodel_mf_d2") :: mf_d2\n'\
+                    'BIND(C,NAME="C_standardmodel_q_light_quarks") :: Q_light_quarks\n'\
+                    'BIND(C,NAME="C_standardmodel_delta_alpha_lepton") :: Delta_Alpha_Lepton\n'\
+                    'BIND(C,NAME="C_standardmodel_delta_alpha_hadron") :: Delta_Alpha_Hadron\n'\
+                    'BIND(C,NAME="C_standardmodel_alpha") :: Alpha\n'\
+                    'BIND(C,NAME="C_standardmodel_alpha_mz") :: Alpha_mZ\n'\
+                    'BIND(C,NAME="C_standardmodel_alpha_mz_ms") :: Alpha_mZ_MS\n'\
+                    'BIND(C,NAME="C_standardmodel_alphas_mz") :: AlphaS_mZ\n'\
+                    'BIND(C,NAME="C_standardmodel_g_f") :: G_F\n'\
+                    'BIND(C,NAME="C_standardmodel_kfactorlee") :: KFactorLee\n'\
+                    'BIND(C,NAME="C_standardmodel_ckm") :: CKM\n'\
+                    'BIND(C,NAME="C_standardmodel_lam_wolf") :: lam_wolf\n'\
+                    'BIND(C,NAME="C_standardmodel_a_wolf") :: A_wolf\n'\
+                    'BIND(C,NAME="C_standardmodel_rho_wolf") :: rho_wolf\n'\
+                    'BIND(C,NAME="C_standardmodel_eta_wolf") :: eta_wolf\n'\
+                    '\n'
+                g.write(content)
+                g.write(line)
+            elif line.startswith(" End Subroutine CalculateRunningMasses") :
+                content = "\n"\
+                    '! C++ wrapper added by GAMBIT\n'\
+                    'Subroutine C_CalculateRunningMasses(mf_l_in, mf_d_in, mf_u_in, Qlow, alpha &\n'\
+                    '    &  , alphas, Qhigh, mf_l_out, mf_d_out, mf_u_out, kont) BIND(C, NAME="C_standardmodel_calculaterunningmasses")\n'\
+                    ' Use ISO_C_BINDING, only: C_DOUBLE, C_INT\n'\
+                    ' Implicit None\n'\
+                    ' Real(Kind=C_DOUBLE) ::  mf_l_in(3), mf_d_in(3), mf_u_in(3), Qlow, alpha &\n'\
+                    '    &  , alphas, Qhigh\n'\
+                    ' Real(Kind=C_DOUBLE) :: mf_l_out(3), mf_d_out(3), mf_u_out(3)\n'\
+                    ' Integer(Kind=C_INT) :: kont\n'\
+                    ' Call CalculateRunningMasses(mf_l_in, mf_d_in, mf_u_in, Qlow, alpha &\n'\
+                    '    &  , alphas, Qhigh, mf_l_out, mf_d_out, mf_u_out, kont)\n'\
+                    'End Subroutine C_CalculateRunningMasses\n'\
+                    '\n'
+                g.write(line)
+                g.write(content)
+            else :
+                g.write(line)
+
+    os.remove(filename)
+    os.rename(temp_filename, filename)    
+
+def patch_spheno_model(model_name, patch_dir):
+    """
+    Patches $SPheno/<MODEL>/SPheno<MODEL>.f90
+    """
+ 
+    filename = patch_dir + "/" + model_name + "/SPheno" + model_name + ".f90"
+    temp_filename = filename + "_temp"
+
+    if not os.path.exists(filename):
+        raise GumError(("Tried to find the file located at " + filename +
+                        " but it does not seem to exist!"))
+            
+    with open(filename, 'r') as f, open(temp_filename, 'w') as g:
+        for line in f:
+            if line.startswith("Program SPheno" + model_name) :
+                g.write("!Program SPheno" + model_name + " ! Commented by GAMBIT\n")
+                g.write("Module SPheno" + model_name + " ! Added by GAMBIT\n")
+            elif line.startswith("Tpar = 0._dp") :
+                content = '! C++ bind statements added by GAMBIT\n'\
+                    'BIND(C,NAME="C_spheno'+model_name.lower()+'_qin") :: Qin\n'\
+                    'BIND(C,NAME="C_spheno'+model_name.lower()+'_ratiowom") :: ratioWoM\n'\
+                    'BIND(C,NAME="C_spheno'+model_name.lower()+'_calctbd") :: CalcTBD\n'\
+                    'BIND(C,NAME="C_spheno'+model_name.lower()+'_kont") :: kont\n'\
+                    'BIND(C,NAME="C_spheno'+model_name.lower()+'_epsi") :: epsI\n'\
+                    'BIND(C,NAME="C_spheno'+model_name.lower()+'_deltam") :: deltaM\n'\
+                    'BIND(C,NAME="C_spheno'+model_name.lower()+'_mgut") :: mGUT\n'\
+                    '\n'\
+                    "Contains ! Added by GAMBIT\n"\
+                    "\n"\
+                    "Subroutine SPheno_Main() ! Added by GAMBIT\n"
+                g.write(content)
+                g.write(line)
+            elif line.startswith("Call Set_All_Parameters_0()") :
+                content = "!Call Set_All_Parameters_0() ! Commented by GAMBIT\n"\
+                    "\n"\
+                    "!Qin = SetRenormalizationScale(1.0E3_dp**2)  ! Commented by GAMBIT\n"\
+                    "!kont = 0 ! Commented by GAMBIT\n"\
+                    "!delta_Mass = 0.0001_dp ! Commented by GAMBIT\n"\
+                    "!CalcTBD = .false. ! Commented by GAMBIT\n"\
+                    "!Call ReadingData(kont) ! Commented by GAMBIT\n"
+                g.write(content)
+                for i in range(6) : next(f)
+            elif line.startswith(" Call CalculateBR") :
+                g.write(line[:17] + "_2" + line[17:])
+            elif line.startswith("Call LesHouches_Out") :
+                g.write("!"+line)
+                line2 = next(f)
+                while line2.startswith("&") :
+                  g.write("!"+line2)
+                  line2 = next(f)
+                g.write(line2)
+            elif line.startswith("Contains") :
+                content = "\n"\
+                    "End Subroutine SPheno_Main ! Added by GAMBIT\n"\
+                    "\n"\
+                    "! C++ wrapper added by GAMBIT\n"\
+                    'Subroutine C_SPheno_Main() BIND(C, NAME="C_spheno'+model_name.lower()+'_spheno_main")\n'\
+                    ' Use ISO_C_BINDING\n'\
+                    ' Call SPheno_Main()\n'\
+                    'End Subroutine C_SPheno_Main\n'\
+                    '\n'\
+                    "!Contains ! Commented by GAMBIT\n"
+                g.write(content)
+            elif line.startswith("kont = 0") :
+                line2 = next(f)
+                if line2.startswith("Call FirstGuess") :
+                    content = "! Added by GAMBIT\n"\
+                                        "If (SilenceOutput) Then\n"\
+                                        " open(unit=6, file=\"/dev/null\", status=\"old\")\n"\
+                                        "Endif\n"\
+                                        "\n"\
+                                        "kont = 0\n"
+                    g.write(content)
+                    g.write(line2)
+            elif line.startswith("!If (kont.ne.0) Call TerminateProgram") :
+                g.write("If (kont.ne.0) Call TerminateProgram\n")
+            elif line.startswith("End Program SPheno" + model_name):
+                g.write("!End Program SPheno" + model_name + " ! Commented by GAMBIT\n")
+                g.write("End Module SPheno" + model_name + " ! Added by GAMBIT\n")
+            else:
+                g.write(line)
+
+    os.remove(filename)
+    os.rename(temp_filename, filename)
 
 def patch_brs(model_name, patch_dir):
     """
@@ -386,7 +637,21 @@ def patch_brs(model_name, patch_dir):
                                     "Endif\n"
                 g.write(content)
             elif line.startswith("End Subroutine CalculateBR") :
-                g.write("End Subroutine CalculateBR_2\n")
+                content = "End Subroutine CalculateBR_2\n"\
+                    "\n"\
+                    "! C++ wrapper added by GAMBIT\n"\
+                    "Subroutine C_CalculateBR_2("
+                    # TODO: Get arguments, remove args with size 0
+                content += ') BIND(C, NAME="C_branchingratios_'+model_name.lower()+'_calculatebr_2")\n'\
+                    ' Use ISO_C_BINDING, only: C_DOUBLE, C_INT, C_BOOL\n'\
+                    ' Implicit none\n'
+                    # TODO: Get vars
+                content += '\n'\
+                    ' Call CalculateBR_2('
+                    # TODO: Get args
+                content += '\n'\
+                    'End Subroutine C_CalculateBR_2\n'
+                g.write(content)
             else :
                 g.write(line)
 
@@ -394,8 +659,7 @@ def patch_brs(model_name, patch_dir):
     os.remove(filename)
     os.rename(temp_filename, filename)
 
-
-def patch_loopfunctions(model_name, patch_dir):
+def patch_addloopfunctions(model_name, patch_dir):
     """
     Patches $SPheno/<MODEL>/AddLoopFunctions.f90
     """
@@ -421,65 +685,34 @@ def patch_loopfunctions(model_name, patch_dir):
     os.remove(filename)
     os.rename(temp_filename, filename)
 
+def patch_settings(model_name, flags, patch_dir):
+    """
+    Patches $SPheno/<MODEL>/Settings.f90
+    """
 
-def patch_spheno_model(model_name, patch_dir):
-    """
-    Patches $SPheno/<MODEL>/SPheno<MODEL>.f90
-    """
- 
-    filename = patch_dir + "/" + model_name + "/SPheno" + model_name + ".f90"
+    filename = patch_dir + "/" + model_name + "/Settings.f90"
     temp_filename = filename + "_temp"
 
     if not os.path.exists(filename):
         raise GumError(("Tried to find the file located at " + filename +
                         " but it does not seem to exist!"))
-            
-    with open(filename, 'r') as f, open(temp_filename, 'w') as g:
-        for line in f:
-            if line.startswith("Program SPheno" + model_name) :
-                g.write("!Program SPheno" + model_name + " ! Commented by GAMBIT\n")
-                g.write("Module SPheno" + model_name + " ! Added by GAMBIT\n")
-            elif line.startswith("Tpar = 0._dp") :
-                content = "Contains ! Added by GAMBIT\n"\
-                                    "\n"\
-                                    "Subroutine Dummy() ! Added by GAMBIT\n"
+
+    with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+        for line in f :
+            if line.startswith(" Contains") :
+                content = '! C++ bind statements added by GAMBIT\n'
+                # TODO: get variables and write bind statements
                 g.write(content)
-                g.write(line)
-            elif line.startswith(" Call CalculateBR") :
-                g.write(line[:17] + "_2" + line[17:])
-            elif line.startswith("Contains") :
-                content = "\n"\
-                                    "End Subroutine Dummy ! Added by GAMBIT\n"\
-                                    "!Contains ! Commented by GAMBIT\n"
-                g.write(content)
-            elif line.startswith("kont = 0") :
-                line2 = next(f)
-                if line2.startswith("Call FirstGuess") :
-                    content = "! Added by GAMBIT\n"\
-                                        "If (SilenceOutput) Then\n"\
-                                        " open(unit=6, file=\"/dev/null\", status=\"old\")\n"\
-                                        "Endif\n"\
-                                        "\n"\
-                                        "kont = 0\n"
-                    g.write(content)
-                    g.write(line2)
-            elif line.startswith("!If (kont.ne.0) Call TerminateProgram") :
-                g.write("If (kont.ne.0) Call TerminateProgram\n")
-            elif line.startswith("End Program SPheno" + model_name):
-                g.write("!End Program SPheno" + model_name + " ! Commented by GAMBIT\n")
-                g.write("End Module SPheno" + model_name + " ! Added by GAMBIT\n")
-            else:
-                g.write(line)
+            g.write(line)
+
 
     os.remove(filename)
     os.rename(temp_filename, filename)
 
 
-# SUSY-only patches
-
-def patch_model_data(model_name, patch_dir):
+def patch_model_data(model_name, flags, patch_dir):
     """
-    Patches $SPheno/<MODEL>Model_Data_<MODEL>.f90
+    Patches $SPheno/<MODEL>/Model_Data_<MODEL>.f90
     """
     
     filename = patch_dir + "/" + model_name + "/Model_Data_" + model_name + ".f90"
@@ -491,15 +724,138 @@ def patch_model_data(model_name, patch_dir):
             
     with open(filename, 'r') as f, open(temp_filename, 'w') as g :
         for line in f :
-            if line.startswith("Logical, Save :: CalcLoopDecay_LoopInducedOnly=.False.") :
+            if line.startswith("Logical, Save :: CalcLoopDecay_LoopInducedOnly=.False.") and flags["SupersymmetricModel"]:
                 g.write(line)
                 g.write("Logical, Save :: CalcSUSY3BodyDecays=.False. ! Added by GAMBIT\n")
+            elif line.startswith("Contains") :
+                content = '! C++ bind statements added by GAMBIT\n'
+                # TODO: get variables and write bind statements
+                g.write(content)
+                g.write(line)
+            elif line.startswith("End Subroutine SetGUTScale") :
+                content = '\n'\
+                    '! C++ wrapper added by GAMBIT\n'\
+                    'Subroutine C_SetGUTScale(scale) BIND(C, NAME="C_model_data_'+model_name.lower()+'_setgutscale")\n'\
+                    ' Use ISO_C_BINDING, only: C_DOUBLE\n'\
+                    ' Implicit None\n'\
+                    ' Real(Kind=C_DOUBLE) :: scale\n'\
+                    ' Call SetGUTScale(scale)\n'\
+                    'End Subroutine C_SetGUTScale\n'\
+                    '\n'
+                g.write(line)
+                g.write(content)
+            elif line.startswith("End Subroutine SetRGEScale") :
+                content = '\n'\
+                    '! C++ wrapper added by GAMBIT\n'\
+                    'Subroutine C_SetRGEScale(scale) BIND(C, NAME="C_model_data_'+model_name.lower()+'_setrgescale")\n'\
+                    ' Use ISO_C_BINDING, only: C_DOUBLE\n'\
+                    ' Implicit None\n'\
+                    ' Real(Kind=C_DOUBLE) :: scale\n'\
+                    ' Call SetRGEScale(scale)\n'\
+                    'End Subroutine C_SetRGEScale\n'\
+                    '\n'
+                g.write(line)
+                g.write(content)
+            elif line.startswith("End Function SetStrictUnification") :
+                content = '\n'\
+                    '! C++ wrapper added by GAMBIT\n'\
+                    'Logical(C_BOOL) Function C_SetStrictUnification(V1) BIND(C, NAME="C_model_data_'+model_name.lower()+'_setstrictunification")\n'\
+                    ' Use ISO_C_BINDING, only: C_BOOL\n'\
+                    ' Implicit None\n'\
+                    ' Logical(Kind=C_BOOL) :: V1\n'\
+                    ' C_SetStrictUnification =  SetStrictUnification(Logical(V1,Kind=4))\n'\
+                    'End Function C_SetStrictUnification\n'\
+                    '\n'
+                g.write(line)
+                g.write(content)
+            elif line.startswith("End Function SetYukawaScheme") :
+                content = '\n'\
+                    '! C++ wrapper added by GAMBIT\n'\
+                    'Integer(C_INT) Function C_SetYukawaScheme(V1) BIND(C, NAME="C_model_data_'+model_name.lower()+'_setyukawascheme")\n'\
+                    ' Use ISO_C_BINDING, only: C_INT\n'\
+                    ' Implicit None\n'\
+                    ' Integer(Kind=C_INT) :: V1\n'\
+                    ' C_SetYukawaScheme = SetYukawaScheme(V1)\n'\
+                    'End Function C_SetYukawaScheme\n'\
+                    '\n'
+                g.write(line)
+                g.write(content)
+            elif line.startswith("End Subroutine Set_All_Parameters_0") :
+                content = '\n'\
+                    '! C++ wrapper added by GAMBIT\n'\
+                    'Subroutine C_Set_All_Parameters_0() BIND(C, NAME="C_model_data_'+model_name.lower()+'_set_all_parameters_0")\n'\
+                    ' Use ISO_C_BINDING\n'\
+                    ' Call Set_All_Parameters_0()\n'\
+                    'End Subroutine C_Set_All_Parameters_0\n'\
+                    '\n'
+                g.write(line)
+                g.write(content)
             else :
                 g.write(line)
+           
 
     os.remove(filename)
     os.rename(temp_filename, filename)
 
+def patch_inputoutput(model_name, patch_dir) :
+    """
+    Patches $SPheno/<MODEL>/InputOutput_<MODEL>.f90
+    """
+
+    filename = patch_dir + "/" + model_name + "/InputOutput_" + model_name + ".f90"
+    temp_filename = filename + "_temp"
+ 
+    if not os.path.exists(filename):
+        raise GumError(("Tried to find the file located at " + filename +
+                        " but it does not seem to exist!"))
+            
+    with open(filename, 'r') as f, open(temp_filename, 'w') as g :
+        already = False
+        for line in f :
+             if line.startswith("Contain") and not already:
+                 content = "! C++ bind statements added by GAMBIT\n"\
+                     'BIND(C,NAME="C_inputoutput_'+model_name.lower()+'_write_higgsbounds") :: Write_HiggsBounds\n'\
+                     '\n'
+                 g.write(content)
+                 g.write(line)
+                 already = True
+             elif line.startswith(" End Subroutine Switch_to_superCKM") :
+                 content = "\n"\
+                     ' ! C++ wrapper added by GAMBIT\n'\
+                     ' Subroutine C_Switch_to_superCKM('
+                 # TODO: get args
+                 content += ') BIND(C, NAME="C_inputoutput_'+model_name.lower()+'_switch_to_superckm")\n'\
+                     '  Use ISO_C_BINDING, only: C_DOUBLE, C_BOOL\n'\
+                     '  Implicit None\n'
+                 # TODO: get vars
+                 content += 'Call Switch_to_superCKM('
+                 # TODO: args
+                 content += ')\n'\
+                     ' End Subroutine C_Switch_to_superCKM\n'
+                 g.write(line)
+                 g.write(content)
+             elif line.startswith(" End Subroutine Switch_to_superPMNS") :
+                 content = "\n"\
+                     ' ! C++ wrapper added by GAMBIT\n'\
+                     ' Subroutine C_Switch_to_superPMNS('
+                 # TODO: get args
+                 content += ') BIND(C, NAME="C_inputoutput_'+model_name.lower()+'_switch_to_superpmns")\n'\
+                     '  Use ISO_C_BINDING, only: C_DOUBLE, C_BOOL\n'\
+                     '  Implicit None\n'
+                 # TODO: get vars
+                 content += 'Call Switch_to_superPMNS('
+                 # TODO: args
+                 content += ')\n'\
+                     ' End Subroutine C_Switch_to_superPMNS\n'
+                 g.write(line)
+                 g.write(content)
+             else :
+                 g.write(line)
+
+    os.remove(filename)
+    os.rename(temp_filename, filename)
+
+# SUSY-only patches
 
 def patch_3_body_decays_susy(model_name, patch_dir):
     """
@@ -672,17 +1028,8 @@ def scrape_functions_from_spheno(spheno_path, model_name):
     # Dictionary of which files each function lives in.
     locations_dictionary = {
         clean_model_name+"/BranchingRatios_"+clean_model_name  : "CalculateBR_2",
-        clean_model_name+"/Unitarity_"+clean_model_name        : ["ScatteringEigenvalues",
-                                                                  "ScatteringEigenvaluesWithTrilinears"],
-        clean_model_name+"/SPheno"+clean_model_name            : ["CalculateSpectrum",
-                                                                  "GetScaleUncertainty"],
-        clean_model_name+"/Model_Data_"+clean_model_name       : "SetMatchingConditions",
-        clean_model_name+"/LoopMasses_"+clean_model_name       : "OneLoopMasses",
         clean_model_name+"/InputOutput_"+clean_model_name      : ["Switch_to_superCKM",
                                                                   "Switch_to_superPMNS"],
-        "src/Model_Data"                                       : ["Switch_from_superCKM",
-                                                                  "Switch_from_superPMNS"],
-        clean_model_name+"/TadpoleEquations_"+clean_model_name : "SolveTadpoleEquations"
     }
 
     for location, functions in locations_dictionary.iteritems():
@@ -932,179 +1279,40 @@ def write_spheno_frontend_src(model_name, function_signatures, parameters, flags
       "\n"
 
     # run_SPheno function
-    # TODO: Missing initalization of variables native to the frontend, but depends on model
     towrite += "// Convenience function to run SPheno and obtain the spectrum\n"\
       "int run_SPheno(Spectrum &spectrum, const Finputs &inputs)\n"\
       "{\n"\
       "\n"\
+      "*epsI = 1.0E-5;\n"\
+      "*deltaM = 1.0E-6;\n"\
+      "*mGUT = -1.0;\n"\
+      "*ratioWoM = 0.0;\n"\
+      "\n"\
       "Set_All_Parameters_0();\n"\
       "\n"\
-      "*Iname = 1;\n"\
       "*kont = 0;\n"\
       "*delta_mass = 1.0E-4;\n"\
       "*CalcTBD = false;\n"\
       "\n"\
       "ReadingData(inputs);\n"\
       "\n"\
-      "if((*MatchingOrder < -1) or (*MatchingOrder > 2))\n"\
-      "{\n"\
-      "if(*HighScaleModel == \"LOW\") // Default for the NMSSM66atQ\n"\
-      "{\n"\
-      "if(!*CalculateOneLoopMasses)\n"\
-      "*MatchingOrder = -1;\n"\
-      "else\n"\
-      "*MatchingOrder =  2;\n"\
-      "}\n"\
-      "else\n"\
-      "*MatchingOrder =  2;\n"\
-      "}\n"\
-      "switch(*MatchingOrder)\n"\
-      "{\n"\
-      "case 0:\n"\
-      "*OneLoopMatching = false;\n"\
-      "*TwoLoopMatching = false;\n"\
-      "*GuessTwoLoopMatchingBSM = false;\n"\
-      "break;\n"\
-      "case 1:\n"\
-      "*OneLoopMatching = true;\n"\
-      "*TwoLoopMatching = false;\n"\
-      "*GuessTwoLoopMatchingBSM = false;\n"\
-      "break;\n"\
-      "case 2:\n"\
-      "*OneLoopMatching = true;\n"\
-      "*TwoLoopMatching = true;\n"\
-      "*GuessTwoLoopMatchingBSM = true;\n"\
-      "break;\n"\
-      "}\n"\
-      "if(*MatchingOrder == -1)\n"\
-      "{\n"
-
-    # TODO: Misssing some MD stuff
-    towrite += "Missing some DM stuff\n\n"
-  
-    towrite += "// Setting Boundary conditions\n"\
-      "Flogical MZsuffix = false;\n"\
-      "try { " + write_spheno_function("SetMatchingConditions", function_signatures, ["g1SM", "g2SM", "g3SM", "YuSM", "YdSM", "YeSM", "vSM", "MZsuffix"]) + " }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"
-
-    # TODO: Missing more MD stuff
-    towrite += "Missing more MD stuff\n\n"
-
-    towrite += "Farray_Fcomplex16_1_3 Tad1Loop;\n"\
-      "try{ " + write_spheno_function("SolveTadpoleEquations", function_signatures,"Tad1Loop") + " }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-      "\n"\
-      "try{ " + write_spheno_function("OneLoopMasses", function_signatures) + " }\n"\
+      "try{ SPheno_Main(); }\n"\
       "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
       "\n"\
       "if(*kont != 0)\n"\
       "ErrorHandling(*kont);\n"\
-      "\n"\
-      "// Invalidate if tachyonic masses\n"\
-      "if(*SignOfMassChanged and !*IgnoreNegativeMasses)\n"\
-      "{\n"\
-      "std::stringstream message;\n"\
-      "message << \"Point invdalid because of negative mass squared.\";\n"\
-      "invalid_point().raise(message.str());\n"\
-      "}\n"\
-      "if(*SignOfMuChanged and !*IgnoreMuSignFlip)\n"\
-      "{\n"\
-      "std::stringstream message;\n"\
-      "message << \"Point invalid because of negative mass squared in tadpoles.\";\n"\
-      "invalid_point().raise(message.str());\n"\
-      "}\n"\
-      "\n"\
-      "}\n"\
-      "else\n"\
-      "{\n"\
-      "if(*GetMassUncertainty)\n"\
-      "{\n"\
-      "if(*CalculateOneLoopMasses and *CalculateTwoLoopHiggsMasses)\n"\
-      "{\n"\
-      "*OneLoopMatching = true;\n"\
-      "*TwoLoopMatching = false;\n"\
-      "*GuessTwoLoopMatchingBSM = true;\n"\
-      "}\n"\
-      "else if(*CalculateOneLoopMasses and  !*CalculateTwoLoopHiggsMasses)\n"\
-      "{\n"\
-      "*OneLoopMatching = true;\n"\
-      "*TwoLoopMatching = false;\n"\
-      "*GuessTwoLoopMatchingBSM = false;\n"\
-      "}\n"\
-      "else\n"\
-      "{\n"\
-      "*OneLoopMatching = true;\n"\
-      "*TwoLoopMatching = false;\n"\
-      "*GuessTwoLoopMatchingBSM = false;\n"\
-      "}\n"\
-      "\n"\
-      "try{ " + write_spheno_function("CalculateSpectrum", function_signatures) + " }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-      "\n"\
-      "if(*kont != 0)\n"\
-      "ErrorHandling(*kont);\n"\
-
-    # TODO: Missing mass uncertainty stuff here
-
-    towrite += "if(*CalculateOneLoopMasses and *CalculateTwoLoopHiggsMasses)\n"\
-      "{\n"\
-      "*OneLoopMatching = true;\n"\
-      "*TwoLoopMatching = true;\n"\
-      "*GuessTwoLoopMatchingBSM = false;\n"\
-      "}\n"\
-      "else if(*CalculateOneLoopMasses and !*CalculateTwoLoopHiggsMasses)\n"\
-      "{\n"\
-      "*OneLoopMatching = false;\n"\
-      "*TwoLoopMatching = false;\n"\
-      "*GuessTwoLoopMatchingBSM = false;\n"\
-      "}\n"\
-      "else\n"\
-      "{\n"\
-      "*OneLoopMatching = false;\n"\
-      "*TwoLoopMatching = false;\n"\
-      "*GuessTwoLoopMatchingBSM = false;\n"\
-      "}\n"\
-      "}\n"\
-      "try{ " + write_spheno_function("CalculateSpectrum", function_signatures) + " }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-      "\n"\
-      "if(*kont != 0)\n"\
-      "ErrorHandling(*kont);\n"\
-      "\n"\
-      "if(*GetMassUncertainty)\n"\
-      "{\n"\
-      "try{ " + write_spheno_function("GetScaleUncertainty", function_signatures) + " }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-      "\n"\
-      "if(*kont != 0)\n"\
-      "ErrorHandling(*kont);\n"\
-      "}\n"\
-      "\n"\
-      "}\n"\
-      "\n"\
       "if(*FoundIterativeSolution or *WriteOutputForNonConvergence)\n"\
       "{\n"\
-      "\n"
-
-    if flags["AddTreeLevelUnitarityLimits"] :
-      towrite += "// Calculating unitarity constraints\n"\
-        "if(*TreeLevelUnitarityLimits)\n"\
-        "{\n"\
-        "" + write_spheno_function("ScatteringEigenvalues", function_signatures) + "\n"\
-        "}\n"\
-        "if(*TrilinearUnitarity)\n"\
-        "{\n"\
-        "" + write_spheno_function("ScatteringEigenvaluesWithTrilinears", function_signatures)+"\n"\
-        "\}\n"\
-        "\n\n"\
-        "spectrum = Spectrum_Out(inputs);\n"\
-        "}\n"\
-        "\n"\
-        "if(*kont != 0)\n"\
-        "ErrorHandling(*kont);\n"\
-        "\n"\
-        "return *kont\n"\
-        "}\n"
+      "\n"\
+      "spectrum = Spectrum_Out(inputs);\n"\
+      "\n"\
+      "}\n"\
+      "\n"\
+      "if(*kont != 0)\n"\
+      "ErrorHandling(*kont);\n"\
+      "\n"\
+      "return *kont\n"\
+      "}\n"
     # End of run_SPheno function
 
     # fill_spectrum_calculate_BRs function
