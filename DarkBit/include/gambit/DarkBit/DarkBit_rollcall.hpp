@@ -494,12 +494,12 @@ START_MODULE
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
-    #define FUNCTION TH_ProcessCatalog_NREO
-      START_FUNCTION(DarkBit::TH_ProcessCatalog)
-      DEPENDENCY(decay_rates, DecayTable)
-      DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum)
-      ALLOW_MODELS(ScalarSingletDM_Z2,ScalarSingletDM_Z2_running)
-    #undef FUNCTION
+    // #define FUNCTION TH_ProcessCatalog_NREO
+    //   START_FUNCTION(DarkBit::TH_ProcessCatalog)
+    //   DEPENDENCY(decay_rates, DecayTable)
+    //   DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum)
+    //   ALLOW_MODELS(ScalarSingletDM_Z2,ScalarSingletDM_Z2_running)
+    // #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY set_gamLike_GC_halo
