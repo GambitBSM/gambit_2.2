@@ -90,6 +90,16 @@
   #undef CAPABILITY
   /// @}
 
+  /// Get cross-section info as map_str_dbl (for simple printing)
+  #define CAPABILITY XsecInfo
+  START_CAPABILITY
+    #define FUNCTION getXsecInfoMap
+    START_FUNCTION(map_str_dbl)
+    DEPENDENCY(CrossSection, xsec)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
   /// Lists of analyses to run
   /// @{
   #define CAPABILITY ATLASAnalysisContainer

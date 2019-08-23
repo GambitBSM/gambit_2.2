@@ -452,5 +452,14 @@ namespace Gambit
     }
 
 
+    /// Get cross-section info as map_str_dbl (for simple printing)
+    void getXsecInfoMap(map_str_dbl& result)
+    {
+      using namespace Pipes::getXsecInfoMap;
+      result.clear();
+      const xsec& xs = (*Dep::CrossSection);
+      result = xs.get_content_as_map();
+    }
+
   }
 }

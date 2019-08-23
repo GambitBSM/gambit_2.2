@@ -15,6 +15,7 @@
 ///  *********************************************
 
 #include <map>
+#include <string>
 
 #pragma once
 
@@ -68,6 +69,9 @@ namespace Gambit
 
         /// Collect total events seen on all threads.
         void gather_num_events();
+
+        /// Get content as map <string,double> map (for easy printing).
+        std::map<std::string, double> get_content_as_map() const;
 
       private:
 

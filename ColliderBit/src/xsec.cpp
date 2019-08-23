@@ -116,6 +116,18 @@ namespace Gambit
       }
     }
 
+    /// Get content as a <string,double> map (for easy printing).
+    std::map<std::string, double> xsec::get_content_as_map() const
+    {
+      std::map<std::string, double> content_map;
+      content_map["xsec_pb"] = (*this)();
+      content_map["xsec_err_pb"] = this->xsec_err();
+      content_map["xsec_relerr"] = this->xsec_relerr();
+      content_map["xsec_per_event_pb"] = this->xsec_per_event();
+      content_map["logged_events"] = _ntot;
+      return content_map;
+    }
+
     /// A map with pointers to all instances of this class. The key is the thread number.
     std::map<int, const xsec*> xsec::instances_map;
 
