@@ -3782,6 +3782,9 @@ RightHandedNeutrinos_parameters: |
 RightHandedNeutrinos_diff_parameters: |
    Parameters for the model RightHandedNeutrinos_diff (see ./gambit RightHandedNeutrinos_diff)
 
+nuclear_params_ChPT_parameters: |
+   Parameters for the model nuclear_params_ChPT (see ./gambit nuclear_params_ChPT)
+
 NREO_parameters: |
    Parameters for the model Non-Relativistic Effective Operator model of dark matter
 

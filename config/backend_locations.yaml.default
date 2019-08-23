@@ -25,6 +25,7 @@ DDCalc:
   1.1.0:       ./Backends/installed/ddcalc/1.1.0/lib/libDDCalc.so
   1.2.0:       ./Backends/installed/ddcalc/1.2.0/lib/libDDCalc.so
   2.0.0:       ./Backends/installed/ddcalc/2.0.0/lib/libDDCalc.so
+  2.1.0:       ./../DDCalc_v2/lib/libDDCalc.so
 
 HiggsBounds:
   4.2.1:       ./Backends/installed/higgsbounds/4.2.1/lib/libhiggsbounds.so
@@ -83,6 +84,8 @@ SPheno:
 SUSYHD:
   1.0.2:       ./Backends/installed/susyhd/1.0.2/SUSYHD.m
 
+DirectDM:
+  2.0.1:       ./Backends/installed/directdm/2.0.1/directdm
 
 # Example/debug backends
 

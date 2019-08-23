@@ -205,12 +205,13 @@ namespace Gambit
     void DarkMatter_ID_MajoranaSingletDM(std::string & result) { result = "X"; }
 
     /// Direct detection couplings for the MajoranaSingletDM_Z2 model.
-    void DD_couplings_MajoranaSingletDM_Z2(DM_nucleon_couplings &result)
+    /// Non-relativistic Wilson Coefficients for direct detection
+    void DD_nonrel_WCs_MajoranaSingletDM_Z2(NREO_DM_nucleon_couplings &result)
     {
-      using namespace Pipes::DD_couplings_MajoranaSingletDM_Z2;
+      using namespace Pipes::DD_nonrel_WCs_MajoranaSingletDM_Z2;
       const Spectrum& spec = *Dep::MajoranaSingletDM_Z2_spectrum;
       const SubSpectrum& he = spec.get_HE();
-      //double mass = spec.get(Par::Pole_Mass,"X");
+      double mass = spec.get(Par::Pole_Mass,"X");
       double lambda = he.get(Par::dimensionless,"lX");
       double cosXI = std::cos(he.get(Par::dimensionless,"xi"));
       double sinXI = std::sin(he.get(Par::dimensionless,"xi"));
@@ -219,20 +220,54 @@ namespace Gambit
       // Expressions taken from Cline et al. (2013, PRD 88:055025, arXiv:1306.4710)
       double fp = 2./9. + 7./9.*(*Param["fpu"] + *Param["fpd"] + *Param["fps"]);
       double fn = 2./9. + 7./9.*(*Param["fnu"] + *Param["fnd"] + *Param["fns"]);
+      
+      // Coefficients
+      double fsp = lambda*fp*m_proton*cosXI/pow(mh,2);
+      double fsn = lambda*fn*m_neutron*cosXI/pow(mh,2);
+      double app = lambda*fp*m_proton*sinXI/pow(mh,2);
+      double apn = lambda*fn*m_neutron*sinXI/pow(mh,2);
+     
+      // TODO: bjf> Err, this looks weird to me? Isoscalar/isovector couplings
+      // assigned to proton/neutron couplings?
+      // Also cNR11p looks like sign wrong? (isoscalar should be plus?)
+      //result["cNR1p"] = (fsp+fsn);
+      //result["cNR1n"] = (fsp-fsn);
+      //result["cNR11p"] = (app-apn)*m_proton/mass;
+      //result["cNR11n"] = (app-apn)*m_proton/mass;
 
-      // SI scalar and pseudoscalar couplings
-      result.gps = lambda*fp*m_proton*cosXI/pow(mh,2);
-      result.gns = lambda*fn*m_neutron*cosXI/pow(mh,2);
-      result.gpa = lambda*fp*m_proton*sinXI/pow(mh,2);
-      result.gna = lambda*fn*m_neutron*sinXI/pow(mh,2);
-
-      logger() << LogTags::debug << "Majorana DM DD couplings:" << std::endl;
-      logger() << " gps = " << result.gps << std::endl;
-      logger() << " gns = " << result.gns << std::endl;
-      logger() << " gpa = " << result.gpa << std::endl;
-      logger() << " gna = " << result.gna << EOM;
+      // Well anyway, I think the new version below is correct. But if the above is the way
+      // it is for a good reason then please correct the code below!
+      // We now use the isoscalar/isovector basis of couplings (because DDCalc and CaptnGeneral use it)
+      // TODO: Check conventions are consistent everywhere!
+      // I am assuming those of 1203.3542 are used, i.e.
+      // c0 = cp + cn
+      // c1 = cp - cn
+      // --->
+      // cp = 0.5*(c0 + c1)
+      // cn = 0.5*(c0 - c2)
+      result.c0[1] = fsp + fsn;
+      result.c1[1] = fsp - fsn;
+      result.c0[11] = (app + apn)*m_proton/mass;
+      result.c1[11] = (app - apn)*m_proton/mass;
 
     } // function DD_couplings_MajoranaSingletDM_Z2
+    
+    /// Relativistic Wilson Coefficients for direct detection
+    void DD_rel_WCs_MajoranaSingletDM_Z2(map_str_dbl &result)
+    {
+      using namespace Pipes::DD_rel_WCs_MajoranaSingletDM_Z2;
+
+      // Get values of non-relativistic operators from Spectrum
+      Spectrum spec = *Dep::MajoranaSingletDM_Z2_spectrum;
+
+      double lambda = spec.get(Par::dimensionless, "lX");
+      double xi = spec.get(Par::dimensionless, "xi");
+
+      // lambda*cos(xi) XXHH
+      result["C53"] = lambda*std::cos(xi);
+      // lambda*sin(xi) iXg5XHH
+      result["C57"] = lambda*std::sin(xi);
+    }
 
     /// Set up process catalog for the MajoranaSingletDM_Z2 model.
     void TH_ProcessCatalog_MajoranaSingletDM_Z2(DarkBit::TH_ProcessCatalog &result)

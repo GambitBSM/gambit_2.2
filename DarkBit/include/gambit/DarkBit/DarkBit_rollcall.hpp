@@ -63,7 +63,7 @@
 /// \author Sanjay Bloor
 ///         (sanjay.bloor12@imperial.ac.uk)
 /// \date 2017 Dec
-/// \date 2018 Aug
+/// \date 2018 Aug, Sep, Oct
 ///  \author Sebastian Hoof
 ///          (s.hoof15@imperial.ac.uk)
 ///  \date 2016 Oct
@@ -614,12 +614,38 @@ START_MODULE
   QUICK_FUNCTION(DarkBit, mwimp, NEW_CAPABILITY, mwimp_generic, double, (),
       (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
 
+  // Retrieve the DM spin (times two) for generic models
+  QUICK_FUNCTION(DarkBit, spinwimpx2, NEW_CAPABILITY, spinwimpx2_generic, unsigned int, (),
+      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
+
+  // Retrieve a bool determining if a WIMP is self-conjugate.
+  QUICK_FUNCTION(DarkBit, wimp_sc, NEW_CAPABILITY, wimp_sc_generic, bool, (),
+      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
+
   // Retrieve the total thermally-averaged annihilation cross-section for indirect detection (cm^3 / s)
   QUICK_FUNCTION(DarkBit, sigmav, NEW_CAPABILITY, sigmav_late_universe, double, (),
       (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
 
 
   // DIRECT DETECTION ==================================================
+
+  // Function to initialise DDCalc couplings from a given DM interaction basis.
+  #define CAPABILITY DDCalc_Couplings
+  START_CAPABILITY
+
+    // Initialise DDCalc couplings dependent on WIMP-nucleon couplings.
+    #define FUNCTION DDCalc_Couplings_WIMP_nucleon
+      START_FUNCTION(DD_coupling_container)
+      DEPENDENCY(DD_couplings, DM_nucleon_couplings)
+    #undef FUNCTION
+
+    // Initialise DDCalc couplings dependent on non-relativistic Wilson Coefficients.
+    #define FUNCTION DDCalc_Couplings_NR_WCs
+      START_FUNCTION(DD_coupling_container)
+      DEPENDENCY(DD_nonrel_WCs, NREO_DM_nucleon_couplings)
+    #undef FUNCTION
+
+  #undef CAPABILITY
 
   // Determine the DM-nucleon couplings
   #define CAPABILITY DD_couplings
@@ -680,17 +706,76 @@ START_MODULE
       ALLOW_JOINT_MODEL(nuclear_params_fnq, VectorSingletDM_Z2)
      #undef FUNCTION
 
-     #define FUNCTION DD_couplings_MajoranaSingletDM_Z2
-      START_FUNCTION(DM_nucleon_couplings)
-      DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
-      ALLOW_JOINT_MODEL(nuclear_params_fnq, MajoranaSingletDM_Z2)
-     #undef FUNCTION
+  #undef CAPABILITY
 
-     #define FUNCTION DD_couplings_DiracSingletDM_Z2
-      START_FUNCTION(DM_nucleon_couplings)
+
+  // Relativistic Wilson coefficients
+  #define CAPABILITY DD_rel_WCs
+  START_CAPABILITY
+
+      #define FUNCTION DD_rel_WCs_MajoranaSingletDM_Z2
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
+      ALLOW_MODEL(MajoranaSingletDM_Z2)
+      #undef FUNCTION
+
+      #define FUNCTION DD_rel_WCs_DiracSingletDM_Z2
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
+      ALLOW_MODEL(DiracSingletDM_Z2)
+      #undef FUNCTION
+
+  #undef CAPABILITY
+
+  // Non-relativistic Wilson coefficients
+  #define CAPABILITY DD_nonrel_WCs
+  START_CAPABILITY
+
+      /// Copying of NREO model parameters into NREO_DD_nucleon_couplings object
+      #define FUNCTION NREO_couplings_from_parameters
+      START_FUNCTION(NREO_DM_nucleon_couplings)
+      ALLOW_MODELS(NREO)
+      #undef FUNCTION
+
+      /// Translation of DDcalc couplings into NREO couplings
+      #define FUNCTION NREO_from_DD_couplings
+      START_FUNCTION(NREO_DM_nucleon_couplings)
+      DEPENDENCY(DD_couplings, DM_nucleon_couplings)
+      #undef FUNCTION
+
+      // Get non-relativistic WCs from the relativistic ones, using DirectDM.
+      // Using flavour matching scheme.
+      #define FUNCTION DD_nonrel_WCs_flavscheme
+      START_FUNCTION(NREO_DM_nucleon_couplings)
+      DEPENDENCY(DD_rel_WCs, map_str_dbl)
+      DEPENDENCY(mwimp, double)
+      DEPENDENCY(spinwimpx2, unsigned int)
+      DEPENDENCY(wimp_sc, bool)
+      BACKEND_REQ(get_NR_WCs_flav, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, int&, std::string&))
+      #undef FUNCTION
+
+      // Get non-relativistic WCs from the relativistic ones, using DirectDM.
+      // Using unbroken SM phase.
+      #define FUNCTION DD_nonrel_WCs_EW
+      START_FUNCTION(NREO_DM_nucleon_couplings)
+      DEPENDENCY(DD_rel_WCs, map_str_dbl)
+      DEPENDENCY(mwimp, double)
+      DEPENDENCY(spinwimpx2, unsigned int)
+      DEPENDENCY(wimp_sc, bool)
+      BACKEND_REQ(get_NR_WCs_EW, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&))
+      #undef FUNCTION
+      
+      // Non-relativistic WCs computed directly for fermionic Higgs portal models.
+      #define FUNCTION DD_nonrel_WCs_DiracSingletDM_Z2
+      START_FUNCTION(NREO_DM_nucleon_couplings)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_JOINT_MODEL(nuclear_params_fnq, DiracSingletDM_Z2)
-     #undef FUNCTION
+      #undef FUNCTION
+      #define FUNCTION DD_nonrel_WCs_MajoranaSingletDM_Z2
+      START_FUNCTION(NREO_DM_nucleon_couplings)
+      DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
+      ALLOW_JOINT_MODEL(nuclear_params_fnq, MajoranaSingletDM_Z2)
+      #undef FUNCTION
 
   #undef CAPABILITY
 
@@ -835,22 +920,22 @@ START_MODULE
   // If an experiment does not have any entry here, any version (of any backend) is allowed.
 
   // Introduced in DDCalc 1.0.0 but later deleted
-  SET_BACKEND_OPTION(PICO_60_F, (DDCalc, 1.0.0, 1.1.0, 1.2.0))
-  SET_BACKEND_OPTION(PICO_60_I, (DDCalc, 1.0.0, 1.1.0, 1.2.0))
+  SET_BACKEND_OPTION(PICO_60_F, (DDCalc, 1.0.0, 1.1.0, 1.2.0, 2.1.0))
+  SET_BACKEND_OPTION(PICO_60_I, (DDCalc, 1.0.0, 1.1.0, 1.2.0, 2.1.0))
   // Introduced in DDCalc 1.1.0
-  SET_BACKEND_OPTION(PICO_60_2017, (DDCalc, 1.1.0, 1.2.0, 2.0.0))
-  SET_BACKEND_OPTION(XENON1T_2017, (DDCalc, 1.1.0, 1.2.0, 2.0.0))
+  SET_BACKEND_OPTION(PICO_60_2017, (DDCalc, 1.1.0, 1.2.0, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(XENON1T_2017, (DDCalc, 1.1.0, 1.2.0, 2.0.0, 2.1.0))
   // Introduced in DDCalc 1.2.0
-  SET_BACKEND_OPTION(PandaX_2017, (DDCalc, 1.2.0, 2.0.0))
+  SET_BACKEND_OPTION(PandaX_2017, (DDCalc, 1.2.0, 2.0.0, 2.1.0))
   // Introduced in DDCalc 2.0.0
-  SET_BACKEND_OPTION(XENON1T_2018, (DDCalc, 2.0.0))
-  SET_BACKEND_OPTION(DARWIN, (DDCalc, 2.0.0))
-  SET_BACKEND_OPTION(LZ, (DDCalc, 2.0.0))
-  SET_BACKEND_OPTION(DarkSide_50, (DDCalc, 2.0.0))
-  SET_BACKEND_OPTION(CRESST_II, (DDCalc, 2.0.0))
-  SET_BACKEND_OPTION(CDMSlite, (DDCalc, 2.0.0))
-  SET_BACKEND_OPTION(PICO_60, (DDCalc, 2.0.0))
-  SET_BACKEND_OPTION(PICO_500, (DDCalc, 2.0.0))
+  SET_BACKEND_OPTION(XENON1T_2018, (DDCalc, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(DARWIN, (DDCalc, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(LZ, (DDCalc, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(DarkSide_50, (DDCalc, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(CRESST_II, (DDCalc, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(CDMSlite, (DDCalc, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(PICO_60, (DDCalc, 2.0.0, 2.1.0))
+  SET_BACKEND_OPTION(PICO_500, (DDCalc, 2.0.0, 2.1.0))
 
 
 
@@ -868,23 +953,6 @@ START_MODULE
 
   // Solar capture ------------------------
 
-  /// Functions to compute NREO WIMP-nucleon couplings
-  #define CAPABILITY NREO_couplings
-  START_CAPABILITY
-
-     /// Copying of NREO model parameters into NREO_DD_nucleon_couplings object
-     #define FUNCTION NREO_couplings_from_parameters
-     START_FUNCTION(NREO_DM_nucleon_couplings)
-     ALLOW_MODELS(NREO)
-     #undef FUNCTION
-
-     /// Translation of DDcalc couplings into NREO couplings
-     #define FUNCTION NREO_from_DD_couplings
-     START_FUNCTION(NREO_DM_nucleon_couplings)
-     DEPENDENCY(DD_couplings, DM_nucleon_couplings)
-     #undef FUNCTION
-
-  #undef CAPABILITY
 
   /// Capture rate of regular dark matter in the Sun (no v-dependent or q-dependent cross-sections) (s^-1).
   #define CAPABILITY capture_rate_Sun
@@ -934,7 +1002,7 @@ START_MODULE
     BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
     DEPENDENCY(mwimp,double)
     DEPENDENCY(jwimp,double)
-    DEPENDENCY(NREO_couplings,NREO_DM_nucleon_couplings)
+    DEPENDENCY(DD_nonrel_WCs,NREO_DM_nucleon_couplings)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1311,10 +1379,10 @@ START_MODULE
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
-    // #define FUNCTION DarkMatter_ID_NREO
-    // START_FUNCTION(std::string)
-    // ALLOW_MODELS(NREO)
-    // #undef FUNCTION
+    #define FUNCTION DarkMatter_ID_NREO
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(NREO)
+    #undef FUNCTION
   #undef CAPABILITY
 
   // --- Functions related to the local and global properties of the DM halo ---

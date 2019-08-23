@@ -34,6 +34,10 @@
 ///          (ankit.beniwal@adelaide.edu.au)
 ///  \date 2018 August
 ///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2018 Sep
+///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -285,6 +289,23 @@ namespace Gambit
       result[std::make_pair(0,4)] =   0.0;
     }
 
+    /// DDCalc initialisation.
+
+    // Using DM-nucleon couplings.
+    void DDCalc_Couplings_WIMP_nucleon(DD_coupling_container &result)
+    {
+      using namespace Pipes::DDCalc_Couplings_WIMP_nucleon;
+      result.coeff_structure = 1;
+      result.DM_nucleon_coeffs = *Dep::DD_couplings;
+    }
+
+    // Using non-relativistic Wilson Coefficients.
+    void DDCalc_Couplings_NR_WCs(DD_coupling_container &result)
+    {
+      using namespace Pipes::DDCalc_Couplings_NR_WCs;
+      result.coeff_structure = 2;
+      result.DD_nonrel_WCs = *Dep::DD_nonrel_WCs;
+    }
 
     //////////////////////////////////////////////////////////////////////////
     //

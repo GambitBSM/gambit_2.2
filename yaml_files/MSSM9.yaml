@@ -354,6 +354,10 @@ Rules:
   # Use DarkSUSY for calculating direct detection couplings
   - capability: DD_couplings
     function: DD_couplings_DarkSUSY
+    
+  # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
+  - capability: DDCalc_Couplings
+    function: DDCalc_Couplings_WIMP_nucleon
 
   # Choose to get decays from DecayBit proper, not from an SLHA file.
   # Also, discard points with stable charged SUSY particles

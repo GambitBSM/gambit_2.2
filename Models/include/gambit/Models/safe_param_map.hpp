@@ -27,6 +27,7 @@
 #include "gambit/Utils/standalone_error_handlers.hpp"
 
 #include <map>
+#include <string>
 #include <stdexcept>
 
 namespace Gambit
@@ -36,10 +37,10 @@ namespace Gambit
   {
 
     template<typename T>
-    class safe_param_map : public std::map<str,T>
+    class safe_param_map : public std::map<std::string,T>
     {
       public:
-        T operator[](str key) const
+        T operator[](std::string key) const
         {
           try
           {

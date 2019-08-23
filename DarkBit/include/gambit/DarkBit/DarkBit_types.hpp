@@ -187,24 +187,7 @@ namespace Gambit
             int findChannel(std::string p1, std::string p2, std::string finalState) const;
     };
 
-    /// \brief NREO couplings container
-    /// Object containing coupling constants for generalised non-relativistic WIMP-nucleon effective operators
-    struct NREO_DM_nucleon_couplings
-    {
-        public:
-            NREO_DM_nucleon_couplings();
-            NREO_DM_nucleon_couplings(const ModelParameters&);
-            NREO_DM_nucleon_couplings(const Models::safe_param_map<safe_ptr<const double>>&);
-            /// Store couplings in map for easier iteration
-            /// Could use vector, but to match NREO model parameters we don't want to start indices at zero. I think this is less confusing?
-            std::map<int,double> c0;
-            std::map<int,double> c1;
-            /// Function to prettify retrieval of couplings (also helpful for looping over 1,0 isospin integers)
-            double c(int,int) const;
-    };
-
-
-  }
+ }
 }
 
 #endif // defined __DarkBit_types_hpp__

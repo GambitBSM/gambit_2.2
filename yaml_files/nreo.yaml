@@ -63,12 +63,12 @@ Parameters:
   #  alpha: .17
 
   # SUSY parameters. from the HP_Develop branch in file capgentest.yaml
-  CMSSM:
-    M0: 200
-    M12: 80
-    A0: 0
-    TanBeta: 10
-    SignMu: 1
+  #CMSSM:
+  #  M0: 200
+  #  M12: 80
+  #  A0: 0
+  #  TanBeta: 10
+  #  SignMu: 1
 
   # # SUSY parameters. from CMSSM.yaml
   # # needed by DarkSUSY_PointInit_MSSM in DarkBit/src/MSSM.cpp
@@ -90,7 +90,7 @@ Parameters:
 
   # SM parameters.
   # needed by get_SMINPUTS
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+  #StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
   # Nuclear matrix parameters. from NUHM1.yaml (for capture_rate_sun_const_xsec)
   #nuclear_params_sigmas_sigmal:
@@ -112,23 +112,23 @@ Priors:
 
 Printer:
 
-  # printer: hdf5
-  # options:
-  #   output_file: "nreo.hdf5"
-  #   group: "/nreo"
-  #   delete_file_on_restart: true
-
-  printer: ascii
+  printer: hdf5
   options:
-   output_file: "nreo.dat"
-   buffer_length: 10
-   delete_file_on_restart: true
+    output_file: "nreo.hdf5"
+    group: "/nreo"
+    delete_file_on_restart: true
+
+  # printer: ascii
+  # options:
+  #  output_file: "nreo.dat"
+  #  buffer_length: 10
+  #  delete_file_on_restart: true
 
   # printer: cout
 
 Scanner:
 
-  use_scanner: sqrgrd
+  use_scanner: random
 
   scanners:
 
@@ -171,23 +171,23 @@ Scanner:
 
 ObsLikes:
 
-  # - purpose:      LogLike
-  #   capability:   capture_rate_Sun
-  #   module:       DarkBit
-  #   function: capture_rate_Sun_NREO
-  #   type:         double
+  - purpose:      Observable
+    capability:   capture_rate_Sun
+    module:       DarkBit
+    function: capture_rate_Sun_NREO
+    type:         double
 
   # Indirect detection
   # Ice Cube
-  - purpose: LogLike
-    capability: IC79_loglike
+  #- purpose: LogLike
+  #  capability: IC79_loglike
 
   # Direct detection
-  # - capability: LUX_2016_LogLikelihood
-  #   purpose:    LogLike
+  - capability: LUX_2016_LogLikelihood
+    purpose:    LogLike
 
-  # - capability: XENON1T_2018_LogLikelihood
-  #   purpose:    LogLike
+  - capability: XENON1T_2018_LogLikelihood
+    purpose:    LogLike
 
   # - capability: PandaX_2016_LogLikelihood
   #   purpose:    LogLike
@@ -226,16 +226,23 @@ Rules:
     - capability: sigmav
       function: sig_v
     
+    #- capability: DarkMatter_ID
+    #  function: DarkMatter_ID_MSSM #DarkMatter_ID_NREO
     - capability: DarkMatter_ID
-      function: DarkMatter_ID_MSSM #DarkMatter_ID_NREO
+      function: DarkMatter_ID_NREO
+  
+    # Get WIMP-nucleon couplings from NREO wilson coefficients 
+    - capability: DDCalc_Couplings
+      function: DDCalc_Couplings_NR_WCs
     
     # Use DarkSUSY or MicrOmegas for calculating direct detection couplings. from the HP_Develop branch in file capgentest.yaml
     - capability: DD_couplings
       function: DD_couplings_DarkSUSY
       #function: DD_couplings_MicrOmegas
 
-    - capability: TH_ProcessCatalog
-      function: TH_ProcessCatalog_MSSM
+    # Neal working on ProcessCatalog stuff for NREO model (for annihilations to neutrinos (from solar capture wimps) for icecube likelihoods)
+    #- capability: TH_ProcessCatalog
+    #  function: TH_ProcessCatalog_MSSM
 
     # Choose to get decays from DecayBit proper, not from an SLHA file. from the HP_Develop branch in file capgentest.yaml
     - capability: decay_rates
@@ -260,18 +267,18 @@ Rules:
       function: t_decays
 
     # Choose where to get the precision spectrum from. from the HP_Develop branch in file capgentest.yaml
-    - capability: MSSM_spectrum
-      type: Spectrum
-      function: make_MSSM_precision_spectrum_none
-      #function: make_MSSM_precision_spectrum_W
-      #function: make_MSSM_precision_spectrum_H_W
-      # The following options only have an impact when using make_MSSM_precision_spectrum_H_W.
-      # Choose to take FeynHiggs' prediction for the Higgs mass (rather then FlexibleSUSY's).
-      # Choose to use the difference between the FeynHiggs and spectrum generator predictions, along
-      # with the FH error estimate, to estimate the theoretical error on the prediction.
-      #options:
-      #  Higgs_predictions_source: 1
-      #  Higgs_predictions_error_method: 4
+    #- capability: MSSM_spectrum
+    #  type: Spectrum
+    #  function: make_MSSM_precision_spectrum_none
+    #  #function: make_MSSM_precision_spectrum_W
+    #  #function: make_MSSM_precision_spectrum_H_W
+    #  # The following options only have an impact when using make_MSSM_precision_spectrum_H_W.
+    #  # Choose to take FeynHiggs' prediction for the Higgs mass (rather then FlexibleSUSY's).
+    #  # Choose to use the difference between the FeynHiggs and spectrum generator predictions, along
+    #  # with the FH error estimate, to estimate the theoretical error on the prediction.
+    #  #options:
+    #  #  Higgs_predictions_source: 1
+    #  #  Higgs_predictions_error_method: 4
 
     # Choose to get the spectrum from SpecBit proper, not an SLHA file. from the HP_Develop branch in file capgentest.yaml
     # Options set to match benchmark point specified in SpecBit/MSSM_benchmark_points/LesHouches.in.MSSM_1
@@ -314,7 +321,10 @@ KeyValues:
 
   default_output_path: "runs/nreo"
 
-  rng: ranlux48
+  rng:
+    generator: ranlux48
+    seed: -1
+
 
   print_timing_data: true
 

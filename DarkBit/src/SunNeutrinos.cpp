@@ -41,46 +41,6 @@ namespace Gambit
     {
       jwimp = 0.5;
     }
- 
-    //////////////////////////////////////////////////////////////////////////
-    //
-    //   Translation of NREO ModelParameters into NREO_DM_nucleon_couplings
-    //
-    //////////////////////////////////////////////////////////////////////////
-
-    void NREO_couplings_from_parameters(NREO_DM_nucleon_couplings& NREO_couplings)
-    {
-       using namespace Pipes::NREO_couplings_from_parameters;
-       NREO_couplings = NREO_DM_nucleon_couplings(Param); // Constructor takes care of the parameter copying for us
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-    //
-    //   Translation of DD_couplings into NREO_DM_nucleon_couplings
-    //
-    //////////////////////////////////////////////////////////////////////////
-
-    void NREO_from_DD_couplings(NREO_DM_nucleon_couplings& NREO_couplings)
-    {
-       using namespace Pipes::NREO_from_DD_couplings;
-       DM_nucleon_couplings ddc = *Dep::DD_couplings;
-
-       // TODO! I have not been able to find the exact conventions
-       // used in DDcalc vs the NREO model. I think it is just this:
-       // c0 = 0.5*(cp+cn)
-       // c1 = 0.5*(cp-cn)
-       // so that 
-       // cp = c0 + c1
-       // cn = c0 - c1
-       // Change if needed!
-    
-       // Compute non-zero isospin basis couplings from DM_nucleon_couplings entries
-       // TODO: I also did this from memory, should check I got the operator numbers right
-       NREO_couplings.c0[1] = 0.5*(ddc.gps + ddc.gns);
-       NREO_couplings.c1[1] = 0.5*(ddc.gps - ddc.gns);
-       NREO_couplings.c0[4] = 0.5*(ddc.gpa + ddc.gna);
-       NREO_couplings.c1[4] = 0.5*(ddc.gpa - ddc.gna);
-    }
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -209,11 +169,6 @@ namespace Gambit
     }
 */
 
-    // // header defined in DarkBit_rollcall.hpp
-    // void DarkMatter_ID_NREO(std::string& result)
-    // {
-    //   result = "WIMP";
-    // }
     //Capture rate for Non-Relataivistic Effective Operator (NREO)
     void capture_rate_Sun_NREO(double &result)
     {
@@ -235,7 +190,7 @@ namespace Gambit
       // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
       // bjf> Modified to use a custom object to carry these couplings (makes for a better 
       // dependency structure)
-      cout << "NREO_couplings capabilitiy grabbed via Pipes, e.g. Dep::NREO_couplings->c(0,1) " << Dep::NREO_couplings->c(0,1) << endl;
+      cout << "DD_nonrel_WCs capabilitiy grabbed via Pipes, e.g. Dep::DD_nonrel_WCs->c(0,1) " << Dep::DD_nonrel_WCs->c(0,1) << endl;
       
       int coupleNum;
       for(int j=0; j<15; j++)
@@ -243,8 +198,8 @@ namespace Gambit
         coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
         if (coupleNum != 2) // 2 is not an allowed coupling constant
         {
-          BEreq::populate_array(Dep::NREO_couplings->c(0,coupleNum), coupleNum, 0);
-          BEreq::populate_array(Dep::NREO_couplings->c(1,coupleNum), coupleNum, 1);
+          BEreq::populate_array(Dep::DD_nonrel_WCs->c(0,coupleNum), coupleNum, 0);
+          BEreq::populate_array(Dep::DD_nonrel_WCs->c(1,coupleNum), coupleNum, 1);
         }
       }
       
