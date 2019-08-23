@@ -22,6 +22,9 @@ import re
 import shutil
 
 counter = 0
+opt = 0
+optimisations = {}
+numdivisions = 0
 
 """
 MadGraph objects and routines
@@ -302,8 +305,6 @@ def import_mg_lorentz(location):
 
         # Match 'structure = '...' '
         structure = re.findall(r'structure = \'(.*?)\'', str(l))[0]
-
-        #print (mgname, spins, structure )
         
         lorentztry = MGLorentz(mgname, spins, structure)
         lor.append(lorentztry)
@@ -482,39 +483,6 @@ def import_ch_params(location):
 
     # Currently only deal with external parameters
 
-    # # Trim the stuff off the top
-    # with open(location + '/func1.mdl') as f:
-    #     for num, line in enumerate(f, 1):
-    #         if re.search(r'Expression', line):
-    #             start_num = num
-    
-    # # Now read in line by line (since all parameter info is stored on 1 line)
-    # with open(location + '/func1.mdl', 'r') as f:
-    #     lines = f.readlines()[start_num:]
-
-    # for line in lines:
-
-    #     # Get all information in a nice list, remove the whitespace
-    #     p = [i.strip() for i in line.split('|')]
-
-    #     name = p[0]
-
-    #     # FeynRules output comments out its SPheno interface (!) if you don't request it
-    #     # - don't want to parse this.
-    #     if name.startswith('%'):
-    #         continue
-
-    #     # All of these are internal.
-    #     nature = "internal"
-
-    #     # Remove any comments from the value
-    #     value = p[1].split('%')[0].strip()
-
-    #     parameter = CHParameter(name, nature, value)
-    #     params.append(parameter)
-
-    # Now external parameters
-
     with open(location + '/vars1.mdl') as f:
         for num, line in enumerate(f, 1):
             if re.search(r'Value', line):
@@ -651,6 +619,9 @@ def translate_lorentz_structure(lorentz):
     """
 
     # todo: factor of i for goldstones? can't have complex numbers in CH.
+    # todo: epsilon(a,b,c,d)
+    # todo: minus signs in gammas..?
+
 
     # If it's a 4-fermion vertex, we're going to have to split it up.
     if lorentz.mgname[:4] == "FFFF":
@@ -659,8 +630,8 @@ def translate_lorentz_structure(lorentz):
     ch_struct = lorentz.structure
 
     # Projection operators in MadGraph are ProjP(a,b) = (I + gamma^5)_{a,b}/2, (M<->P, +<->-)
-    ch_struct = re.sub(r'ProjP\((.*?),(.*?)\)', '(1 + G5)/2', ch_struct)
-    ch_struct = re.sub(r'ProjM\((.*?),(.*?)\)', '(1 - G5)/2', ch_struct)
+    ch_struct = re.sub(r'ProjP\((.*?),(.*?)\)', 'half*(1+G5)', ch_struct)
+    ch_struct = re.sub(r'ProjM\((.*?),(.*?)\)', 'half*(1-G5)', ch_struct)
 
     # Momenta in MadGraph are P(A,N) = P_N^A
     # Momenta in CalcHEP are pN.mA
@@ -678,8 +649,9 @@ def translate_lorentz_structure(lorentz):
     # Gamma5 in CalcHEP is G5
     ch_struct = re.sub(r'Gamma5\((.*?),(.*?)\)','G5', ch_struct)
 
-    # Do some algabra on gamma matrices? Clean it up? Leave it as one big string? 
+    # Now we have to split this all up into Dirac algebra and the other stuff.
 
+    # TODO: Do some algabra on gamma matrices? Clean it up? Leave it as one big string?
     return ch_struct
 
 def translate_four_fermion_lorentz(lorentz):
@@ -695,6 +667,8 @@ def translate_four_fermion_lorentz(lorentz):
     # To be split into:
     # chibar (gamma) chi AUX   +   etabar gamma' eta (AUXbar)
     # to be denoted left + right
+    # The vertices will have already been organised s.t. only those 
+    # with consistent Lorentz indices are combined
 
     # Use the multiplication to split the string up
     strings = ch_struct.split('*')
@@ -737,9 +711,9 @@ def translate_four_fermion_lorentz(lorentz):
     right = re.sub(r'Identity\((.*?),(.*?)\)','1', right)
 
     # Sigma matrices don't seem to be defined in CalcHEP, so write them out by hand
-    # todo: factor of i?
-    left = re.sub(r'Sigma\((.*?),(.*?)\)','(G(m3)*G(M3)/2-G(M3)*G(m3)/2)', left)
-    right = re.sub(r'Sigma\((.*?),(.*?)\)','(G(m3)*G(M3)/2-G(M3)*G(m3)/2)', right)
+    # todo: these have to be split up into real and imaginary parts...
+    left = re.sub(r'Sigma\((.*?),(.*?)\)','(half*(G(m3)*G(M3)-G(M3)*G(m3)))', left)
+    right = re.sub(r'Sigma\((.*?),(.*?)\)','(half*(G(m3)*G(M3)-G(M3)*G(m3)))', right)
 
     return left, right
 
@@ -757,12 +731,6 @@ def get_mg_ch_lorentz_dict(mg_lorentz):
     for i in range(len(mg_lorentz)):
         ld[mg_lorentz[i].mgname] = translate_lorentz_structure(mg_lorentz[i])
 
-    #print("")
-    #print("")
-    #for k, v in ld.iteritems():
-    #    print k, v
-    #print("")
-    #print("")
     return ld
 
 
@@ -855,11 +823,6 @@ def run_through_parameter_dict(parameters, param_dict):
             sys.exit()
 
     return mgparams, chparams
-
-def check_for_optimisation(mgparams, chparams):
-    """
-    Checks the definitions of the parameters...
-    """
 
 def compare_vertices(mg_verts, mg_parts, mg_params,
                      mg_lorentz, mg_couplings,
@@ -1020,6 +983,86 @@ def compare_vertices(mg_verts, mg_parts, mg_params,
 WRITING ROUTINES
 """
 
+def sort_vertex_by_lorentz_indices(vertex, mg_lorentz):
+    """
+    Takes a set of vertices and organises them by their Lorentz indices
+    """
+
+    # Keep track of how many Lorentz indices each vertex function has,
+    # to make separate auxiliary particles for each
+    no_lor = []
+    no_lor_coups = []
+    one_lor = []
+    one_lor_coups = []
+    two_lor = []
+    two_lor_coups = []
+
+    for i in range(len(mg_lorentz)):
+        l = mg_lorentz[i]
+        for j in range(len(vertex.lorentz)):
+
+            # We've found the right structure according to the internal name.
+            if l.mgname == vertex.lorentz[j]:
+
+                # Find the corresponding entry in the vertex coupling dict.
+                tomatch = '(0,{})'.format(j)
+
+                coup = ""
+                for k in vertex.couplings:
+                    if tomatch in k:
+                        coup = k
+                if not coup:
+                    print("Coupling not found. Aborting.")
+                    sys.exit()
+
+                # Count the number of Lorentz indices. 
+                numgammas = l.structure.split(' ')[0].count("Gamma(")
+                numsigmas = l.structure.split(' ')[0].count("Sigma(")
+
+                # No Lorentz indices
+                if numgammas + numsigmas == 0:
+                    no_lor.append( l.mgname )
+                    no_lor_coups.append( coup )
+
+                elif numgammas == 2 and numsigmas == 0:
+                    one_lor.append( l.mgname )
+                    one_lor_coups.append( coup )
+
+                elif numgammas == 4 and numsigmas == 0:
+                    two_lor.append( l.mgname )
+                    two_lor_coups.append( coup )
+
+                elif numgammas == 0 and numsigmas == 2:
+                    two_lor.append( l.mgname )
+                    two_lor_coups.append( coup )
+
+                else: 
+                    print("Weird number of Lorentz indices... I'm out!")
+                    sys.exit()
+
+    # print no_lor
+    # print no_lor_coups
+    # print one_lor
+    # print one_lor_coups
+    # print two_lor
+    # print two_lor_coups
+
+    # Now create separate instances of the vertex for each set of interactions
+    v = []
+
+    if no_lor:
+        v.append(MGVertex(mgname=vertex.mgname, particles=vertex.particles, color=vertex.color,
+                          lorentz=no_lor, couplings=no_lor_coups))
+    if one_lor:
+        v.append(MGVertex(mgname=vertex.mgname, particles=vertex.particles, color=vertex.color,
+                          lorentz=one_lor, couplings=one_lor_coups))
+    if two_lor:
+        v.append(MGVertex(mgname=vertex.mgname, particles=vertex.particles, color=vertex.color,
+                          lorentz=two_lor, couplings=two_lor_coups))
+
+    return v
+
+
 def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, 
                     ch_location, mg_lorentz, mg_couplings):
     """
@@ -1058,116 +1101,123 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
             parts.append(part)
 
     # If there's 4 fermions involved - use the specialist 4-fermion function.
-    if spin2splus1.count(2) == 4: 
-        return write_four_fermion_vertex(vertex, param_dict, lorentz_dict, 
-                                         part_dict, mg_parts, mg_lorentz, 
-                                         mg_couplings, ch_location)
+    if spin2splus1.count(2) == 4:
+        v = sort_vertex_by_lorentz_indices(vertex, mg_lorentz)
+        for i in range(len(v)):
+            write_four_fermion_vertex(v[i], param_dict, lorentz_dict, 
+                                      part_dict, mg_parts, mg_lorentz, 
+                                      mg_couplings, ch_location, i)
 
             
     # If it's a 4-gluon vertex, this is a hard-coded result: 
     # just use the specialist function
-    if pdgs == [21, 21, 21, 21]:
+    elif pdgs == [21, 21, 21, 21]:
         return write_four_gluon_vertex(part_dict, mg_parts, ch_location)
     
     #todo: For nice formatting, get the numbers of spaces for each header.
-
-    print "particles", particles
-    print "lorentz", lorentz
-    print "couplings", couplings
-
-    coup = ""
-    lor = ""
-    # If we are adding a 4-fermion vertex, the conversion to CalcHEP-friendly language will
-    # have already been done, so no need to do it again.
-    conversion_done = False
-    for part in particles:
-        if re.match(r'~\d+', part):
-            conversion_done = True
-
-    if conversion_done:
-        lor = lorentz
-        coup = couplings
+    # Otherwise - let's go!
     else:
-        # Rewrite the Lorentz structure, and save each coupling
-        lor = []
-        coups = []
-        for i in range(len(mg_lorentz)):
-            l = mg_lorentz[i]
-            for j in range(len(vertex.lorentz)):
-                if vertex.lorentz[j] == l.mgname:
-                    s = mg_lorentz[i].mgname
-                    # Rewrite the Lorentz structure into CalcHEP language
-                    lor.append(lorentz_dict.get(s))
-                    coups.append(vertex.couplings[j])
+        coup = ""
+        lor = ""
+        # If we are adding a 4-fermion vertex, the conversion to CalcHEP-friendly language will
+        # have already been done, so no need to do it again.
+        conversion_done = False
+        for part in particles:
+            if re.match(r'~\d+', part):
+                conversion_done = True
 
-        # Rewrite the couplings in CH-friendly format
+        if conversion_done:
+            lor = lorentz
+            coup = couplings
+        else:
+            # Rewrite the Lorentz structure, and save each coupling
+            lor = []
+            coups = []
+            for i in range(len(mg_lorentz)):
+                l = mg_lorentz[i]
+                for j in range(len(vertex.lorentz)):
+                    if vertex.lorentz[j] == l.mgname:
+                        s = mg_lorentz[i].mgname
+                        # Rewrite the Lorentz structure into CalcHEP language
+                        lor.append(lorentz_dict.get(s))
+                        coups.append(vertex.couplings[j])
 
-        # Go through the list of couplings, and swap in their actual values
-        coups_dict = {}
-        for i in coups:
+            # Rewrite the couplings in CH-friendly format
 
-            # The key will look like (i,j) -> i-th entry of the colour tensor space, 
-            # j-th entry of the lorentz tensor space. Since we're only dealing with 
-            # cases where we have the identity in colour space (for now), we can ditch
-            # the first entry of the key, and just keep the jth value.
-            key, value = i.split(':')[0].split(',')[1][:-1] , i.split(':')[1][2:]
-            coups_dict[ key ] = value
+            # Go through the list of couplings, and swap in their actual values
+            coups_dict = {}
+            for i in coups:
 
-        # Now we need to pair up each element of the lorentz array
-        # with the correct coupling.
+                # The key will look like (i,j) -> i-th entry of the colour tensor space, 
+                # j-th entry of the lorentz tensor space. Since we're only dealing with 
+                # cases where we have the identity in colour space (for now), we can ditch
+                # the first entry of the key, and just keep the jth value.
+                key, value = i.split(':')[0].split(',')[1][:-1] , i.split(':')[1][2:]
+                coups_dict[ key ] = value
 
-        lc_dict = {}
-        for k, v in coups_dict.iteritems():
-            for j in mg_couplings:
-                if v == j.mgname:
-                    lc_dict[ lor[int(k)] ] = j.value
+            # Now we need to pair up each element of the lorentz array
+            # with the correct coupling.
 
-        # Dictionary of lorentz structures & couplings -- updated to be in C 
-        # syntax, and only the ones relevant for the interactions at hand.
-        c_dict = c_ify_couplings(mg_couplings, param_dict)
+            lc_dict = {}
+            for k, v in coups_dict.iteritems():
+                for j in mg_couplings:
+                    if v == j.mgname:
+                        lc_dict[ lor[int(k)] ] = j.value
 
-        lc_dict_updated = {}
+            # Dictionary of lorentz structures & couplings -- updated to be in C 
+            # syntax, and only the ones relevant for the interactions at hand.
+            c_dict = c_ify_couplings(mg_couplings, param_dict)
+
+            lc_dict_updated = {}
+            
+            for k, v in lc_dict.iteritems():
+                lc_dict_updated.update({k: c_dict[v]})
+
+            # Put all the couplings in the Lorentz bit as one big horrible string
+            horrible_string = []
+            for k,v in lc_dict_updated.iteritems():
+                horrible_string.append( v+"*"+k[0] ) # Coupling * Lorentz factor
+
+            # CalcHEP doesn't understand +-, so we
+            # can't simply use the string.join(list) method,
+            # as the first character might be a "-"
+            lor = horrible_string[0]
+            for i in horrible_string[1:]:
+                if i.startswith("-"): 
+                    lor += i
+                else:
+                    lor += "+"+i
+            coup = "i" # TODO should this be i or 1?
         
-        for k, v in lc_dict.iteritems():
-            lc_dict_updated.update({k: c_dict[v]})
+        # Now we can do some writing.
+        vertex = ""
+        vertex += "{0: <13}".format(get_from_part_dict(parts[0], part_dict)) + "|"
+        vertex += "{0: <13}".format(get_from_part_dict(parts[1], part_dict)) + "|"
+        vertex += "{0: <13}".format(get_from_part_dict(parts[2], part_dict)) + "|"
+        if len(parts) == 4:
+            vertex += "{0: <13}".format(get_from_part_dict(parts[3], part_dict)) + "|"
+        else:
+            vertex += "{0: <13}".format("") + "|"
 
-        # Put all the couplings in the Lorentz bit as one big horrible string
-        horrible_string = []
-        for k,v in lc_dict_updated.iteritems():
-            horrible_string.append( v+"*"+k[0] ) # Coupling * Lorentz factor
+        vertex += "{0: <31}".format(coup) + "|"
+        vertex += "{}\n".format(lor)
 
-        lor = "+".join(horrible_string)
-        coup = "i" # TODO should this be i or 1?
-    
-    # Now we can do some writing.
-    vertex = ""
-    vertex += "{0: <13}".format(get_from_part_dict(parts[0], part_dict)) + "|"
-    vertex += "{0: <13}".format(get_from_part_dict(parts[1], part_dict)) + "|"
-    vertex += "{0: <13}".format(get_from_part_dict(parts[2], part_dict)) + "|"
-    if len(parts) == 4:
-        vertex += "{0: <13}".format(get_from_part_dict(parts[3], part_dict)) + "|"
-    else:
-        vertex += "{0: <13}".format("") + "|"
+        with open(new_ch_loc + "/lgrng1.mdl", 'r') as f, open(new_ch_loc + "/lgrng_temp", 'w') as g:
 
-    vertex += "{0: <31}".format(coup) + "|"
-    vertex += "{}\n".format(lor)
+            # Copy the original vertices
+            for line in f:
+                g.write(line)
 
-    with open(new_ch_loc + "/lgrng1.mdl", 'r') as f, open(new_ch_loc + "/lgrng_temp", 'w') as g:
+            # Add the new vertex to the end
+            g.write(vertex)
 
-        # Copy the original vertices
-        for line in f:
-            g.write(line)
+        # Save the new file as the master one
+        os.remove(new_ch_loc + "/lgrng1.mdl")
+        os.rename(new_ch_loc + "/lgrng_temp", new_ch_loc + "/lgrng1.mdl")
 
-        # Add the new vertex to the end
-        g.write(vertex)
-
-    # Save the new file as the master one
-    os.remove(new_ch_loc + "/lgrng1.mdl")
-    os.rename(new_ch_loc + "/lgrng_temp", new_ch_loc + "/lgrng1.mdl")
-
-    print("VERTEX:")
-    print vertex
-    return vertex
+        print("VERTEX:")
+        print vertex
+        return vertex
 
 def c_ify_couplings(mg_couplings, param_dict):
     """
@@ -1188,6 +1238,8 @@ def c_ify_couplings(mg_couplings, param_dict):
         t = re.sub(r'complex\(0,1\)', 'i', t)
         # cmath.pi --> Pi
         t = re.sub(r'cmath.pi', 'Pi', t)
+        # 1/a**b --> pow(a,-b)
+        t = re.sub(r'/(\w+)\*\*(\w+)', r'*pow(\1,-\2)', t)
         # a**b --> pow(a,b)
         t = re.sub(r'(\w+)\*\*(\w+)', r'pow(\1,\2)', t)
 
@@ -1210,7 +1262,7 @@ def c_ify_couplings(mg_couplings, param_dict):
     return coupling_dict
 
 def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, 
-                              mg_lorentz, mg_couplings, ch_location):
+                              mg_lorentz, mg_couplings, ch_location, lorentz_indices):
     """
     Writes a four-fermion vertex for CalcHEP. This splits the contact interaction into
     two three-body interactions, with a constant propagator. This is achieved by 
@@ -1218,40 +1270,118 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     """
 
     """
-      - write 4-fermion vertex for calchep using auxiliary field:
- 
-     ( chibar (gamma) chi ) ( etabar (gamma') eta ) -> entries:
-     
-     prctls1.mdl
- 
-     Full name | A     | A+    | PDG   | spinx2 | mass | width | color | aux | tex(A) | tex(A+)
-     ...
-     <aux>     |~00    |~01    |       |2       |Maux  |0      |1      |!*   | <aux>  | <aux+>
- 
-     lgrng1.mdl
- 
-     part 1 | part 2| part 3| part 4| Factor | Lorentz
-     ...
-     chibar |chi    |~01    |       |i*Maux  |Gamma(m3)
-     etabar |eta    |~00    |       |i*Maux  |Gamma'(m3)
+    There are 3 categories to split these interactions up into: 
+    
 
+    %%% CASE 1 %%%
+    
+    no lorentz indices --> scalar mediator
+
+    e.g. 
+       ( chibar chi ) ( etabar eta )
+
+    would have the following entries:
+
+    prctls1.mdl
+    Full name | A     | A+    | PDG   | spinx2 | mass | width | color | aux | tex(A) | tex(A+)
+    ..
+    <aux>     |~00    |~01    |       |0       |Maux  |0      |1      |!*   | <aux>  | <aux+>
+    
+    lgrng1.mdl
+    part 1 | part 2| part 3| part 4| Factor | Lorentz
+    ...
+    chibar |chi    |~01    |       |Maux    |1
+    etabar |eta    |~00    |       |Maux    |1
+
+    %%% CASE 2 %%% 
+    
+    1 lorentz index --> vector mediator
+
+    e.g. 
+        chibar (gamma^mu) chi ) ( etabar (gamma'_mu) eta )
+
+    would have the following entries:
+
+    prctls1.mdl
+    Full name | A     | A+    | PDG   | spinx2 | mass | width | color | aux | tex(A) | tex(A+)
+    ..
+    <aux>     |~00    |~01    |       |2       |Maux  |0      |1      |!*   | <aux>  | <aux+>
+    
+    lgrng1.mdl
+    part 1 | part 2| part 3| part 4| Factor | Lorentz
+    ...
+    chibar |chi    |~01    |       |i*Maux  |Gamma(m3)
+    etabar |eta    |~00    |       |i*Maux  |Gamma'(m3)
+
+    %%% CASE 3. %%%
+
+    2 lorentz indices --> tensor mediator
+    
+    e.g. 
+        (chibar gamma^mu gamma^nu chi) (etabar gamma_mu gamma_nu eta)
+
+    would have the following entries:
+
+    prctls1.mdl
+    Full name | A     | A+    | PDG   | spinx2 | mass | width | color | aux | tex(A) | tex(A+)
+    ..
+    <aux>     |~00    |~01    |       |2       |Maux  |0      |1      |!*   | <aux>  | <aux+>
+    
+    lgrng1.mdl
+    part 1 | part 2| part 3| part 4| Factor | Lorentz
+    ...
+    chibar |chi    |~01.t  |       |1         |G(m3)*G(M3)
+    etabar |eta    |~00.t  |       |1         |G(m3)*G(M3)
     """
-
 
     # Need to add new auxiliary particles to the CalcHEP files
     global counter
 
-    newentry =  "{0: <13}".format("aux" + str(counter)) + "|"
-    newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter))) + "|"
-    newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter+1))) + "|"
-    newentry +=  "{0: <8}".format("") + "|"
-    newentry +=  "{0: <6}".format("2") + "|"
-    newentry +=  "{0: <15}".format("Maux") + "|"
-    newentry +=  "{0: <15}".format("0") + "|"
-    newentry +=  "{0: <5}".format("1") + "|"
-    newentry +=  "{0: <3}".format("!*") + "|"
-    newentry +=  "{0: <10}".format("aux" + str(counter)) + "|"
-    newentry +=  "{0: <14}".format("Aux" + str(counter)) + "|\n"
+    newentry = ""
+
+    # Add a different particle based on the number of Lorentz indices
+    if lorentz_indices == 0:
+        
+        newentry += "{0: <13}".format("aux" + str(counter)) + "|"
+        newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter))) + "|"
+        newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter+1))) + "|"
+        newentry += "{0: <8}".format("") + "|"
+        newentry += "{0: <6}".format("0") + "|"
+        newentry += "{0: <15}".format("Maux") + "|"
+        newentry += "{0: <15}".format("0") + "|"
+        newentry += "{0: <5}".format("1") + "|"
+        newentry += "{0: <3}".format("!*") + "|"
+        newentry += "{0: <10}".format("aux" + str(counter)) + "|"
+        newentry += "{0: <14}".format("Aux" + str(counter)) + "|\n"
+
+    elif lorentz_indices == 1:
+
+        newentry += "{0: <13}".format("aux" + str(counter)) + "|"
+        newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter))) + "|"
+        newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter+1))) + "|"
+        newentry += "{0: <8}".format("") + "|"
+        newentry += "{0: <6}".format("2") + "|"
+        newentry += "{0: <15}".format("Maux") + "|"
+        newentry += "{0: <15}".format("0") + "|"
+        newentry += "{0: <5}".format("1") + "|"
+        newentry += "{0: <3}".format("!*") + "|"
+        newentry += "{0: <10}".format("aux" + str(counter)) + "|"
+        newentry += "{0: <14}".format("Aux" + str(counter)) + "|\n"
+
+    elif lorentz_indices == 2:
+
+        # First particle (real?)
+        newentry += "{0: <13}".format("aux" + str(counter)) + "|"
+        newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter))) + "|"
+        newentry += "{0: <11}".format("~" + str("{:02d}".format(2*counter+1))) + "|"
+        newentry += "{0: <8}".format("") + "|"
+        newentry += "{0: <6}".format("2") + "|"
+        newentry += "{0: <15}".format("Maux") + "|"
+        newentry += "{0: <15}".format("0") + "|"
+        newentry += "{0: <5}".format("1") + "|"
+        newentry += "{0: <3}".format("!*") + "|"
+        newentry += "{0: <10}".format("aux" + str(counter)) + "|"
+        newentry += "{0: <14}".format("Aux" + str(counter)) + "|\n"
 
     new_ch_loc = os.path.abspath(ch_location) + "_ufo2mdl"
 
@@ -1305,50 +1435,15 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     # For each vertex, want to split it up into two components.
     # Assigning the first half all of the couplings
 
-    # Go through the list of couplings, and swap in their actual values
-    coups_dict = {}
-    for i in coups:
-
-
-        # The key will look like (i,j) -> i-th entry of the colour tensor space, 
-        # j-th entry of the lorentz tensor space. Since we're only dealing with 
-        # cases where we have the identity in colour space (for now), we can ditch
-        # the first entry of the key, and just keep the jth value.
-        key, value = i.split(':')[0].split(',')[1][:-1] , i.split(':')[1][2:]
-        coups_dict[ key ] = value
-
-        # Now each key points to an element of the lorentz array which maps to a 
-        # coupling. Phew!
-
-    # print("")
-    # print("test!")
-    # print vertex.lorentz, vertex.couplings
-    # print("")
-
-    # print("")
-    # print("lorentz_dict")
-    # for k, v in lorentz_dict.iteritems():
-    #     print k, v
-
-    # print("")
-    # print("coups_dict")
-    # for k, v in coups_dict.iteritems():
-    #     print k, v
-
-    # # these are tuples of (left) (right) lorentz structures
-    # print("")
-    # print("lor")
-    # for i in lor:
-    #     print i[0], i[1]
-
-    # Now we need to pair up each element of the lorentz array
+    # Each element of the lorentz array is already paired up
     # with the correct coupling.
 
     lc_dict = {}
-    for k, v in coups_dict.iteritems():
+    for i in range(len(lor)):
+        tomatch = coups[i].split(':')[1][2:]
         for j in mg_couplings:
-            if v == j.mgname:
-                lc_dict[ lor[int(k)] ] = j.value
+            if j.mgname == tomatch:
+                lc_dict[ lor[i] ] = j.value
 
     # Now we have a dictionary of each pair of (left, right) fermion operators, and 
     # the associated coupling. 
@@ -1362,25 +1457,50 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
         lc_dict_updated.update({k: c_dict[v]})
 
     # By convention, assign the coupling to the first vertex, then just give
-    # the other vertex the identity (i*Maux)
+    # the other vertex the correct factor given the Lorentz structure.
 
     # Let's create a new MG vertex object and use the existing function
     # to create a CH vertex
-    v1parts = [vertex.particles[0], vertex.particles[1], "~" + str("{:02d}".format(2*counter))]
-    v2parts = [vertex.particles[2], vertex.particles[3], "~" + str("{:02d}".format(2*counter+1))]
+    if lorentz_indices in [0, 1]:
+        v1parts = [vertex.particles[0], vertex.particles[1], "~" + str("{:02d}".format(2*counter))]
+        v2parts = [vertex.particles[2], vertex.particles[3], "~" + str("{:02d}".format(2*counter+1))]
+    # Need to indicate that the auxiliary particle has tensor indices
+    elif lorentz_indices == 2:
+        v1parts = [vertex.particles[0], vertex.particles[1], "~" + str("{:02d}.t".format(2*counter))]
+        v2parts = [vertex.particles[2], vertex.particles[3], "~" + str("{:02d}.t".format(2*counter+1))]
 
-    # print v1parts, v2parts
+    if lorentz_indices == 0:
+        v1coups = "Maux"
+        v2coups = "Maux"
+    elif lorentz_indices == 1:
+        v1coups = "i*Maux"
+        v2coups = "i*Maux"
+    elif lorentz_indices == 2:
+        v1coups = "1"
+        v2coups = "1"
 
-    v1coups = "i*Maux"
-    v2coups = "i*Maux"
+    # For some optimisations to save
+    global opt
+    global optimisations
 
     # Put all the couplings in the Lorentz bit as one big horrible string
     horrible_string = []
-    for k,v in lc_dict_updated.iteritems():
-        horrible_string.append( v+"*"+k[0] ) # Coupling * Lorentz factor 
+    for k, v in lc_dict_updated.iteritems():
+        newstring = "GUM{:0>3}".format(str(opt))
+        opt = opt+1
+        optimisations[ newstring ] = v
+        horrible_string.append( newstring+"*"+k[0] ) # Coupling * Lorentz factor
 
-
-    v1loren = "+".join(horrible_string)
+    # CalcHEP doesn't understand +-, so we
+    # can't simply use the string.join(list) method,
+    # as the first character might be a "-"
+    v1loren = horrible_string[0]
+    for i in horrible_string[1:]:
+        if i.startswith("-"): 
+            v1loren += i
+        else:
+            v1loren += "+"+i
+    
     v2loren = "+".join([i[1] for i in lor])
 
     vertex1 = MGVertex("vertex1", v1parts, "", v1loren, v1coups)
@@ -1392,9 +1512,9 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_pa
     write_ch_vertex(vertex2, param_dict, lorentz_dict, part_dict, mg_parts, 
                     ch_location, mg_lorentz, mg_couplings)
 
+
     # Increment counter for auxiliary particles
     counter+=1
-
     return "\n"
 
 def write_four_gluon_vertex(part_dict, mg_parts, ch_location):
@@ -1416,7 +1536,7 @@ def write_four_gluon_vertex(part_dict, mg_parts, ch_location):
     return "\n"
 
 def write_calchep_files(particles, parameters, vertices, param_dict, 
-                        lorentz_dict, part_dict, mg_parts):
+                        lorentz_dict, part_dict):
     """
     Writes CalcHEP files, given all of the information from MadGraph.
     """
@@ -1429,7 +1549,7 @@ def write_calchep_files(particles, parameters, vertices, param_dict,
 
     for i in range(len(vertices)):
         vertex = vertices[i]
-        lgrngfile += write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts, 
+        lgrngfile += write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, particles, 
                                      ch_location, mg_lorentz, mg_couplings)
 
 def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz_dict, 
@@ -1446,18 +1566,24 @@ def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz
 
     shutil.copytree(ch_location, new_ch_loc)
 
-    with open(new_ch_loc+"/lgrng1.mdl", 'r') as f, open(new_ch_loc+"/lgnrg_temp", 'w') as g:
+    # Firstly do the vertices
+    for i in range(len(new_vertices)):
+        vertex = new_vertices[i]
+        write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, 
+                        mg_parts, ch_location, mg_lorentz, mg_couplings)
 
-        # Copy over the vertices we want to keep
-        for line in f:
-            g.write(line)
+    # Add Maux to the vars file, if we need auxiliary particles...
+    with open(new_ch_loc+"/vars1.mdl", 'a') as f:
+        f.write("Maux           |1            |Auxiliary mass parameter                                                 | \n")
+        f.write("half           |0.5          |One divided by two                                                       | ")
 
-        # Now write all the new vertices in.
-        for i in range(len(new_vertices)):
-            vertex = new_vertices[i]
-            g.write(write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, 
-                                    mg_parts, ch_location, mg_lorentz, mg_couplings))
 
+    # Go through the optimisations and add the new definitions
+    global optimisations
+    with open(new_ch_loc+"/func1.mdl", 'a') as f:
+        for k, v in sorted(optimisations.iteritems()):
+            towrite = "{0: <15}".format(k) + "|" + v + "  % Optimisation by GUM\n"
+            f.write(towrite)
 
     print("New CalcHEP vertices added to {}.").format(new_ch_loc)
 
@@ -1490,7 +1616,7 @@ def convert(mg_location):
 
     print("Writing CalcHEP output...")
 
-    write_calchep_files(parames, verts, param_dict, 
+    write_calchep_files(params, verts, param_dict, 
                         lorentz_dict, part_dict, parts)
 
     print("Done.")
@@ -1528,7 +1654,7 @@ def compare(mg_location, ch_location):
     print("Checking external variables...")
 
     # CalcHEP can compute widths 'on the fly' - these will be parameters in MadGraph, so add
-    # these as another group...str("{:02d}".format(2*counter)))
+    # these as another group...
     ch_widths = [x.width.strip('!') for x in ch_parts if x.width.startswith('!')]
 
     shared_by_name = set([x.name for x in ch_params] + ch_widths) & set([x.name for x in mg_params])
@@ -1563,7 +1689,7 @@ def compare(mg_location, ch_location):
     print("Checking particle content...")
 
     # Obtain a dictionary to translate between MG and CH particle names, just in case they are
-    # different. They probably won't be.
+    # different. They probably won't be if they've been generated by the same tool.
     part_dict = get_mg_ch_parts_dict(mg_parts, ch_parts)
 
     print("All particles are consistent...")
@@ -1607,27 +1733,3 @@ if __name__ == '__main__':
         
     elif len(sys.argv) == 3:
         compare(sys.argv[1], sys.argv[2])
-
-"""
- TODO
- 
-  - add a --force flag so if the files don't agree, automatically produce CH files from MG
-  - write 4-fermion vertex for calchep using auxiliary field:
- 
-     ( chibar (gamma) chi ) ( etabar (gamma') eta ) -> entries:
-     
-     prctls1.mdl
- 
-     Full name | A     | A+    | PDG   | spinx2 | mass | width | color | aux | tex(A) | tex(A+)
-     ...
-     <aux>     |~00    |~01    |       |2       |Maux  |0      |1      |!*   | <aux>  | <aux+>
- 
-     lgrng1.mdl
- 
-     part 1 | part 2| part 3| part 4| Factor | Lorentz
-     ...
-     chibar |chi    |~01    |       |i*Maux  |Gamma(m3)
-     etabar |eta    |~00    |       |i*Maux  |Gamma'(m3)
- 
- 
- """
