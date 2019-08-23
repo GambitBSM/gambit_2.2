@@ -42,7 +42,7 @@ using namespace FJNS;
 
 int TomeksCounter2{0};
 
-#define NJET_DATA_OUTPUT
+//#define NJET_DATA_OUTPUT
 
 //#define SINGLE_EVENT_DEBUG
 //#define ELECTRON_PARENTAGE_DEBUG
@@ -136,9 +136,15 @@ int print_history(HepMC3::ConstGenParticlePtr gp)
 /// Extract a HepMC event as a HEPUtils::Event
 void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
 {
+  //std::cout << "\n -- -- Begin Event -- -- \n";
+
   P4 vmet;
   vector<PseudoJet> jetparticles;
   evt.set_weight(ge.weight());
+
+  //Tomek Procter Aug 2019: trying to add B, C, tau checking as in Py8EventConversions.hpp
+  std::vector<HEPUtils::Particle> bpartons, cpartons, tauCandidates;
+
 
 #ifdef SINGLE_EVENT_DEBUG
    std::fstream myfile;
@@ -162,14 +168,102 @@ if (TomeksCounter2 == 22)
     const int pid = gp->pid();
     const int apid = fabs(pid);
 
-    // Use physical particles only
-    if (st != 1) continue;
-
     // Get 4-momentum
     const HepMC3::FourVector& hp4 = gp->momentum();
 
     //MODIFIED SO IT NOW USES mkXZE not mkXYZM !!! Tomek Procter Aug 2019
     const P4 p4 = P4::mkXYZE(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
+
+    //---------------------------------------------------------------------------------------------
+    //Now we look for b's, c's and tau's a la gambit - TP Aug 2019 (Code copied from
+    //Py8EventConversions and edited where needs be)
+
+    // Find last b-hadrons in b decay chains as the best proxy for b-tagging
+        /// @todo Temporarily using quark-based tagging instead -- fix
+        if (apid == 5)
+        {
+          bool isGoodB = true;
+          //const std::vector<int> bDaughterList = p.daughterList();
+          auto bchildren_vector = gp->children();
+          //for (size_t daughter = 0; daughter < bDaughterList.size(); daughter++)
+          for (const HepMC3::ConstGenParticlePtr bchild : bchildren_vector)
+          {
+            int childID = abs(bchild->pid());
+            if (childID == 5) isGoodB = false;
+          }
+          if (isGoodB)
+          {
+            Particle* p = new Particle(p4, pid);
+            bpartons.push_back(p);
+          }
+        }
+
+        // Find last c-hadrons in decay chains as the best proxy for c-tagging
+        /// @todo Temporarily using quark-based tagging instead -- fix
+        if (apid == 4)
+        {
+          bool isGoodC = true;
+          //const std::vector<int> cDaughterList = p.daughterList();
+          auto cchildren_vector = gp->children();
+          //for (size_t daughter = 0; daughter < cDaughterList.size(); daughter++)
+          for (const HepMC3::ConstGenParticlePtr cchild : cchildren_vector)
+          {
+            int daughterID = abs(cchild->pid());
+            if (daughterID == 4) isGoodC = false;
+          }
+          if (isGoodC)
+          {
+            Particle* p = new Particle(p4, pid);
+            cpartons.push_back(p);
+          }
+        }
+
+        // Find tau candidates
+        if (apid == MCUtils::PID::TAU)
+        {
+          P4 tmpMomentum;
+          bool isGoodTau=true;
+          //const std::vector<int> tauDaughterList = p.daughterList();
+          auto tauChildList = gp->children();
+          //std::cout << "The Tau Child List is: " <<std::endl;
+          for (const HepMC3::ConstGenParticlePtr tauChild : tauChildList)
+          {
+            int daughterID = abs(tauChild->pid());
+            #ifdef SINGLE_EVENT_DEBUG
+            if (TomeksCounter2 >= 499)
+            {
+              std::cout << "PID: " << daughterID << ", " << "ZMomentum: " << tauChild->momentum().pz() <<std::endl;
+            }
+            #endif
+            // Veto leptonic taus
+            /// @todo What's wrong with having a W daughter? Doesn't that just mark a final tau?
+            if (daughterID == MCUtils::PID::ELECTRON || daughterID == MCUtils::PID::MUON ||
+                daughterID == MCUtils::PID::WPLUSBOSON || daughterID == MCUtils::PID::TAU)
+              {
+                isGoodTau = false;
+              }
+            //if (daughterID != MCUtils::PID::TAU) tmpMomentum += mk_p4(tauChild->momentum());
+            //Tomek Procter Aug 2019 - what does tmpMomentum actually do?? Its not used is it? I've commented
+            //it out as it seems a waste of time to try and convert it into the right form of 4 momentum.
+          }
+
+          if (isGoodTau) {
+            Particle* p = new Particle(p4, pid);
+            tauCandidates.push_back(p);
+            //std::cout << "Is good Tau!" <<std::endl;
+          }
+        }
+      
+
+
+
+
+    //---------------------------------------------------------------------------------------------
+
+    // Use physical particles only
+    if (st != 1) continue;
+
+    
     
 
     //Lets test out adding an eta cut, like they have in gambit:
@@ -302,12 +396,43 @@ if (TomeksCounter2 == 22)
 
   for (const PseudoJet& pj : jets)
   {
-    bool hasC = false, hasB = false;
+    bool hasC = false, hasB = false, hastau = false;
+    HEPUtils::P4 jetMom = HEPUtils::mk_p4(pj);
+    //Tomek Procter Aug 2019 - replacing the block below with the logic from Gambit.
     /// @todo Bug in HEPUtils::get_jets means that constituent info is lost for now...
     // for (const PseudoJet& c : pj.constituents()) {
     //   if (c.user_index() == 4) hasC = true;
     //   if (c.user_index() == 5) hasB = true;
     // }
+    for (HEPUtils::Particle& pb : bpartons)
+    {
+    if (jetMom.deltaR_eta(pb.mom()) < 0.4)///< @todo Hard-coded radius!!!
+      {
+        hasB = true;
+        break;
+      }
+    }
+    for (HEPUtils::Particle& pc : cpartons)
+    {
+      if (jetMom.deltaR_eta(pc.mom()) < 0.4) { ///< @todo Hard-coded radius!!!
+        hasC = true;
+        break;
+      }
+    }
+    for (HEPUtils::Particle& ptau : tauCandidates)
+    {
+      if (jetMom.deltaR_eta(ptau.mom()) < 0.5)
+      {
+        hastau = true;
+        break;
+      }
+    }
+    if (hastau)
+    {
+      HEPUtils::Particle* tauparticle = new HEPUtils::Particle(HEPUtils::mk_p4(pj), MCUtils::PID::TAU);
+      tauparticle->set_prompt();
+      evt.add_particle(tauparticle);
+    }
     evt.add_jet(new Jet(mk_p4(pj), hasB, hasC));
   }
 
@@ -333,20 +458,23 @@ TomeksCounter2++;
 #endif
 
 #ifdef SINGLE_EVENT_DEBUG
+  ++TomeksCounter2;
   //#ifdef COLLIDERBIT_DEBUG TP AUG 2019 - Lets get as much info out as possible!!!
     // Print event summary
-    cout << ". CBS Event Information\n";
-    cout << "  MET  = " << evt.met() << " GeV" << endl;
-    cout << "  #e   = " << evt.electrons().size() << endl;
-    cout << "  #mu  = " << evt.muons().size() << endl;
-    cout << "  #tau = " << evt.taus().size() << endl;
-    cout << "  #jet = " << evt.jets().size() << endl;
-    for (int i{0}; i < evt.jets().size(); i++)
+    if (TomeksCounter2 >= 500)
     {
-       cout << "   pT Jet " << i << ": " << evt.jets()[i]->pT() << endl;
-    }
-    cout << "  #pho  = " << evt.photons().size() << endl;
-    cout << endl;
+      cout << TomeksCounter2 << ". CBS Event Information\n";
+      cout << "  MET  = " << evt.met() << " GeV" << endl;
+      cout << "  #e   = " << evt.electrons().size() << endl;
+      cout << "  #mu  = " << evt.muons().size() << endl;
+      cout << "  #tau = " << evt.taus().size() << endl;
+      cout << "  #jet = " << evt.jets().size() << endl;
+      for (int i{0}; i < evt.jets().size(); i++)
+      {
+          cout << "   pT Jet " << i << ": " << evt.jets()[i]->pT() << endl;
+      }
+      cout << "  #pho  = " << evt.photons().size() << endl;
+      cout << endl;
     }
 #endif
 
