@@ -97,6 +97,15 @@ namespace Gambit
       double valB;
     };
 
+    // Basic properties of generic WIMP
+    struct WIMPprops
+    {
+      double mass;
+      unsigned int spinx2;
+      bool sc; // Self-conjugate?
+      std::string name; // Name in the particle database
+    };
+
     //generalized capture cross section
     // struct genCapXsec
     // {
@@ -185,6 +194,22 @@ namespace Gambit
             SimYieldChannel dummy_channel;
             std::vector<SimYieldChannel> channel_list;
             int findChannel(std::string p1, std::string p2, std::string finalState) const;
+    };
+
+    /// Contain for generic parameterisation of WIMP annihilation to various two-body final states,
+    /// with <sigma v> expanded as a simple power series in v^2
+    class WIMP_annihilation
+    {
+        public:
+            WIMP_annihilation();
+            double A(const std::string& channel) const;
+            double B(const std::string& channel) const;
+
+            void setA(const std::string& channel, double val);
+            void setB(const std::string& channel, double val);
+        private:
+            std::map<std::string,double> a;
+            std::map<std::string,double> b;
     };
 
  }

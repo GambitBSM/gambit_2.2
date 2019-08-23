@@ -4,11 +4,9 @@
 
 
 Parameters:
-  NREO:
-    j: 0.5
+  NREO_DiracDM:
     m:
       range: [10, 20]
-    sig_v: 3.0e+26 #cm^3/s, standard WIMP
     c0_1: 1.65e-8  # 1.65*10**(-8)
     c0_2: 0
     c0_3: 0
@@ -51,6 +49,22 @@ Parameters:
     alpha: 1
     beta: 3
     gamma: 1
+
+  WIMP_sigmav:
+    A_bb: 1. 
+    A_WW: 1.
+    A_cc: 1.
+    A_ta: 1.
+    A_ZZ: 1.
+    A_tt: 1.
+    A_hh: 1.
+    B_bb: 1.
+    B_WW: 1.
+    B_cc: 1.
+    B_ta: 1.
+    B_ZZ: 1.
+    B_tt: 1.
+    B_hh: 1. 
 
   # Halo_Einasto_rho0:
   #  rho0:
@@ -179,8 +193,8 @@ ObsLikes:
 
   # Indirect detection
   # Ice Cube
-  #- purpose: LogLike
-  #  capability: IC79_loglike
+  - purpose: LogLike
+    capability: IC79_loglike
 
   # Direct detection
   - capability: LUX_2016_LogLikelihood
@@ -212,9 +226,13 @@ ObsLikes:
 
 
 Rules:
-  #testing my capture code
+    #testing my capture code
     - capability: capture_rate_Sun
       function: capture_rate_Sun_NREO
+
+    - capability: DD_nonrel_WCs
+      function: NREO_from_DD_couplings
+      module: DarkBit
 
     #RD_fraction needed by the captn init function, _one sets to one
     - capability: RD_fraction

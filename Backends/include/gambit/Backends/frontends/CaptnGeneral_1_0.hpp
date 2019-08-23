@@ -24,7 +24,7 @@
 // Load the library
 LOAD_LIBRARY
 
-BE_ALLOW_MODELS(Halo_Einasto_rho0,Halo_gNFW_rho0,NREO)
+BE_ALLOW_MODELS(Halo_Einasto_rho0,Halo_gNFW_rho0,NREO_DiracDM,NREO_MajoranaDM,NREO_scalarDM)
 // Functions
 BE_FUNCTION(captn_init,void,(const char&,const double&,const double&,const double&,const double&),"captn_init_","captn_init")
 BE_FUNCTION(captn_general, void, (const double&,const double&,const int&,const int&,const int&,double&), "captn_general_", "cap_Sun_vnqn_isoscalar")

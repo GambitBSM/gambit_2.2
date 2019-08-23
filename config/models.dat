@@ -557,8 +557,9 @@ RightHandedNeutrinos_diff: |
 
 StandardModel_mNudiff: |
    Daughter model of the StandardModel_SLHA2 where the masses of neutrinos have been substituted by mass differences and the absolute lightest neutrino mass.
-=
 
-NREO: |
-
+NREO_DiracDM: |
    Non-relativistic effective operator model, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+WIMP_sigmav: |
+   General A + Bv^2 parameterisation of WIMP self-annihilation to all SM two-body final states

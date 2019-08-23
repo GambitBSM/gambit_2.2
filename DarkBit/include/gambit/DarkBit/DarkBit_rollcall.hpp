@@ -494,12 +494,13 @@ START_MODULE
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
-    // #define FUNCTION TH_ProcessCatalog_NREO
-    //   START_FUNCTION(DarkBit::TH_ProcessCatalog)
-    //   DEPENDENCY(decay_rates, DecayTable)
-    //   DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum)
-    //   ALLOW_MODELS(ScalarSingletDM_Z2,ScalarSingletDM_Z2_running)
-    // #undef FUNCTION
+    #define FUNCTION TH_ProcessCatalog_WIMP_EFT
+      START_FUNCTION(TH_ProcessCatalog)
+      DEPENDENCY(decay_rates, DecayTable)
+      DEPENDENCY(SM_spectrum, Spectrum)
+      DEPENDENCY(WIMP_properties, WIMPprops)
+      DEPENDENCY(generic_WIMP_sigmav, WIMP_annihilation)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY set_gamLike_GC_halo
@@ -949,6 +950,12 @@ START_MODULE
      START_FUNCTION(double)
      ALLOW_MODELS(MSSM63atQ)
      #undef FUNCTION
+
+     #define FUNCTION jwimp_from_WIMPprop
+     START_FUNCTION(double)
+     DEPENDENCY(WIMP_properties,WIMPprops)
+     #undef FUNCTION
+
   #undef CAPABILITY
 
   // Solar capture ------------------------
@@ -1379,9 +1386,9 @@ START_MODULE
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
-    #define FUNCTION DarkMatter_ID_NREO
+    #define FUNCTION DarkMatter_ID_EFT
     START_FUNCTION(std::string)
-    ALLOW_MODELS(NREO)
+    DEPENDENCY(WIMP_properties, WIMPprops)
     #undef FUNCTION
   #undef CAPABILITY
 
