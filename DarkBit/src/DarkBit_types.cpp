@@ -222,7 +222,7 @@ namespace Gambit
     }
 
     /// NREO_DM_nucleon_couplings constuctor from functor 'Params', i.e. 'safe_param_map' used to hold collected model parameters 
-    NREO_DM_nucleon_couplings::NREO_DM_nucleon_couplings(const Models::safe_param_map<const safe_ptr<const double>>& pars)
+    NREO_DM_nucleon_couplings::NREO_DM_nucleon_couplings(const Models::safe_param_map<safe_ptr<const double>>& pars)
     {
        for(int i=1; i<=15; i++)
        {
