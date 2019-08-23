@@ -12,7 +12,7 @@
 ///
 ///  \author Tomas Gonzalo
 ///          (tomas.gonzalo@monash.edu)
-///  \date 2019 July
+///  \date 2019 July, Aug
 ///
 ///  ***********************************
 
@@ -22,6 +22,7 @@
 
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+#include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
 #include "sarah.hpp"
 
@@ -573,7 +574,7 @@ namespace GUM
   }
 
   // Do all operations with SARAH
-  void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
+  void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends, std::map<std::string,bool> &flags)
   {
 
     try
@@ -618,6 +619,13 @@ namespace GUM
       if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
       {
         model.write_spheno_output();
+
+        // Get useful SPheno flags, default to False
+        flags = {
+          {"SupersymmetricModel",false}, 
+          {"OnlyLowEnergySPheno", false}
+        };
+        model.get_flags(flags);
 
         // Location of SPheno files
         std::string sphdir = outputdir + "SPheno";
@@ -685,6 +693,10 @@ BOOST_PYTHON_MODULE(libsarah)
 
   class_< std::vector<Parameter> >("SARAHVectorOfParameters")
     .def(vector_indexing_suite< std::vector<Parameter> >() )
+    ;
+
+  class_< std::map<std::string,bool> >("SARAHMapOfFlags")
+    .def(map_indexing_suite< std::map<std::string,bool> >() )
     ;
 
   class_< std::vector<std::string> >("SARAHBackends")

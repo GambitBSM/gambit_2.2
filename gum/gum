@@ -137,12 +137,13 @@ if args.file:
         options = SARAHOptions("sarah", gum.mathname, '', '', '')
         partlist = SARAHVectorOfParticles()
         paramlist = SARAHVectorOfParameters()
+        flags = SARAHMapOfFlags()
         outputs = SARAHOutputs()
         backends = SARAHBackends()
         backends.extend(x for x in output_opts.bes())
 
         # Hit it
-        all_sarah(options, partlist, paramlist, outputs, backends)
+        all_sarah(options, partlist, paramlist, outputs, backends, flags)
 
         # Get a list of all non-SM particles
         sarah_bsm = [x for x in partlist if x.SM() is False]
@@ -281,14 +282,14 @@ if args.file:
 
         # Patch the files
         print("Patching SPheno...")
-        patch_spheno(clean_model_name, patched_spheno_dir)
+        patch_spheno(clean_model_name, patched_spheno_dir, flags)
 
         # Create a diff vs. the out of the [SARAH]box
         write_backend_patch(output_dir, pristine_spheno_dir, patched_spheno_dir, "spheno_"+gum.name.lower(), SPHENO_VERSION)
 
         # Write frontends for SPheno. That's a lotta scrapin'.
         print("Writing SPheno frontends.")
-        spheno_src, spheno_header = write_spheno_frontends(clean_model_name, gum.is_susy, parameters, bsm_particle_list, patched_spheno_dir, output_dir)
+        spheno_src, spheno_header = write_spheno_frontends(clean_model_name, parameters, bsm_particle_list, flags, patched_spheno_dir, output_dir)
 
         # Write out the frontend header and source files
         write_backend_frontends(output_dir, gum.name, "SARAHSPheno", SPHENO_VERSION, spheno_header, spheno_src)

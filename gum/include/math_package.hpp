@@ -9,7 +9,7 @@
 ///
 ///  \author Tomas Gonzalo
 ///          (tomas.gonzalo@monash.edu)
-///  \date 2019 July
+///  \date 2019 July, Aug
 ///
 ///  ***********************************
 
@@ -22,6 +22,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <exception>
 
 #include "cmake_variables.hpp"
@@ -114,6 +115,9 @@ namespace GUM
 
       // Parameters list
       void get_paramlist(std::vector<Parameter>&);
+
+      // Flags (boolean only)
+      void get_flags(std::map<std::string,bool>&);
 
   };
 

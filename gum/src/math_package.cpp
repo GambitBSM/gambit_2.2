@@ -9,7 +9,7 @@
 ///
 ///  \author Tomas Gonzalo
 ///          (tomas.gonzalo@monash.edu)
-//   \date 2019 July
+//   \date 2019 July, Aug
 ///
 ///  ***********************************
 
@@ -196,6 +196,22 @@ namespace GUM
   void Math_Package::get_paramlist(std::vector<Parameter>&)
   {
     // Dummy, overload
+  }
+
+  // Flags (boolean only)
+  void Math_Package::get_flags(std::map<std::string, bool>& flags)
+  {   
+    try
+    {
+      for (auto it = flags.begin(); it != flags.end(); it++)
+      {
+        std::string flag_label = it->first;
+        send_to_math(flag_label);
+        get_from_math(it->second);
+      }
+    }
+    catch (...) { throw; }
+      
   }
 
 } // namespace GUM

@@ -12,7 +12,7 @@
 ///
 ///  \author Tomas Gonzalo
 ///          (tomas.gonzalo@monash.edu)
-///  \date 2019 July
+///  \date 2019 July, Aug
 ///
 ///  ***********************************
 
@@ -61,7 +61,7 @@ namespace GUM
 
    
   // Everything
-  void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&);
+  void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&, std::map<std::string,bool>&);
 
 } // namespace GUM
  

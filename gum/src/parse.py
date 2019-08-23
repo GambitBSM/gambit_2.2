@@ -13,12 +13,11 @@ class Inputs:
     """
 
     def __init__(self, model_name, base_model, mathpackage,
-                 is_susy, dm_candidate, mathname = None,
+                 dm_candidate, mathname = None,
                  lagrangian = None, restriction = None):
 
         self.name = model_name
         self.base_model = base_model
-        self.is_susy = is_susy
         self.dm_pdg = dm_candidate
         self.math = mathpackage
         self.restriction = None
@@ -145,11 +144,6 @@ def fill_gum_object(data):
     else:
         base_model = ""
 
-    if 'is_susy' in data:
-        is_susy = data['is_susy']
-    else:
-        is_susy = False
-
     if 'dm_candidate' in data:
         dm_candidate = data['dm_candidate']
     else:
@@ -185,7 +179,7 @@ def fill_gum_object(data):
     if 'restriction' in math and mathpackage == 'feynrules':
         restriction = math['restriction']
 
-    gum_info = Inputs(gambit_model, base_model, mathpackage, is_susy, 
+    gum_info = Inputs(gambit_model, base_model, mathpackage, 
                       dm_candidate, mathname, lagrangian, restriction)
 
 
