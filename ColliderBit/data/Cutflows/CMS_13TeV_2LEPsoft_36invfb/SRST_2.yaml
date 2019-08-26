@@ -286,17 +286,19 @@ Rules:
         antiktR: 0.4
         pythia_settings:
           - Print:quiet = on
+          - Next:numberShowProcess = 10
+          - Next:numberCount = 100
+          - Random:setSeed = on
+          - Beams:eCM = 13000
           - PartonLevel:MPI = off
           - PartonLevel:ISR = on
           - PartonLevel:FSR = on
           - HadronLevel:all = on
-          - Beams:eCM = 13000
+          - TauDecays:mode = 0
+          - TimeShower:pTmin = 20
           - SUSY:all = on
           - SUSY:idA = 1000006
           - SUSY:idB = 1000006
-          - TauDecays:mode = 0
-          - TimeShower:pTmin = 20
-          - Next:numberCount = 1000
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes

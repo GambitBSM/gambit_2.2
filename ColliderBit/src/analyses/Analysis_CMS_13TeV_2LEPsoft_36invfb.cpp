@@ -394,7 +394,8 @@ namespace Gambit {
       virtual void collect_results() {
 
         // double scale_by= 172004. / 250000.;
-        double scale_by= 172004. / 1000000.;
+        //double scale_by= 172004. / 1000000.;
+        double scale_by = 1;
         cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
         cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb "<<endl;
         cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
@@ -403,7 +404,7 @@ namespace Gambit {
         for (int j=0; j<NCUTS; j++) {
           cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
                << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
-               << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_143[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_143[j]) << endl;
+               << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_130[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_130[j]) << endl;
         }
         cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
 
