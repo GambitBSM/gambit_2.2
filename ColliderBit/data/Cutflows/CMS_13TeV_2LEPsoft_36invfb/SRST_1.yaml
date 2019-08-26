@@ -275,10 +275,10 @@ Rules:
 
   # Choose Monte Carlo event simulator and options.
   - capability:  HardScatteringSim
-    type: ColliderPythia_defaultversion
+    type: Py8Collider_defaultversion
     function: getPythia
     options:
-      SLHA_filenames: ["./ColliderBit/data/Cutflows/SRST_1.slha"]
+      SLHA_filenames: ["./ColliderBit/data/Cutflows/CMS_13TeV_2LEPsoft_36invfb/SRST_1.slha"]
       LHC_13TeV:
         # 0.028 fb corresponds to ~1 expected event at L = 36 fb^-1.
         xsec_veto: 0.028
