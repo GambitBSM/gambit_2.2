@@ -20,11 +20,11 @@ import sys
 import os
 import re
 import shutil
+from collections import Counter
 
 counter = 0
 opt = 0
 optimisations = {}
-numdivisions = 0
 
 """
 MadGraph objects and routines
@@ -675,29 +675,138 @@ def translate_four_fermion_lorentz(lorentz):
 
     # These are now strings like Gamma5(2,1) or Gamma(-1,4,3)
     # Find all of those with both a +1 and +2 in, and same for +3 and +4
+    # Those with a +1 and a +2 are on the left hand side, for sure.
+    # Those with a +3 and a +4 are on the right hand side.
     left = []
     right = []
 
-    for i in strings:
-        nums = re.search(r'\((.*?)\)',i).group(1).split(',')
-        # Make these integers
-        nums = [int(x) for x in nums]
-        if 1 in nums or 2 in nums:
-            left.append(i)
-        elif 3 in nums or 4 in nums:
-            right.append(i)
+    # This procedure works for 4-fermion Lorentz structures with 
+    # 4 or fewer Lorentz indices (i.e. if there are no tensor currents)
+    if len(strings) <= 4:
+        for i in strings:
+            # Grab the indices labelling the gamma matrices
+            nums = re.search(r'\((.*?)\)',i).group(1).split(',')
+            # Make these integers
+            nums = [int(x) for x in nums]
+            if 1 in nums or 2 in nums:
+                left.append(i)
+            elif 3 in nums or 4 in nums:
+                right.append(i)
+    # If there's 5 different structures....
+    elif len(strings) == 5:
+        # We probably have contractions with a gamma5 in this case.
+        # Just check explicitly:
+        search = ["Gamma\(", "Gamma5\("]
+        to_search = re.compile('|'.join(sorted(search, key=len, reverse=True)))
+        matches = (to_search.search(el) for el in strings)
+        counts = Counter(match.group() for match in matches if match)
+                
+        # Bingo! 
+        if counts["Gamma("] == 4 and counts["Gamma5("] == 1:
+            # Now need to figure out which order the Lorentz indices go.
+            # Doesn't matter which side has the g5 - it commutes with Sigma
+
+            # Find the gamma matrix attached to the fermions labelled 1 and 4
+            first_index = 0
+            last_index = 0
+            for i in strings:
+                # Grab the indices labelling the gamma matrices
+                nums = re.search(r'\((.*?)\)',i).group(1).split(',')
+                # Make these integers
+                nums = [int(x) for x in nums]
+        
+                if 1 in nums:
+                    first_index = nums[0]
+                if 4 in nums:
+                    last_index = nums[0]
+
+            # Just put the CalcHEP syntax in here.
+            if first_index == 0 or last_index == 0:
+                print("Could not find the correct indices.")
+                print("Please check your UFO files.")
+                sys.exit()
+            # (mu,nu)(nu,mu)
+            if first_index == last_index:
+                left.append("G(m3)*G(M3)")
+                right.append("G5*G(M3)*G(m3)")
+            # (mu,nu)(mu,nu)
+            else:
+                left.append("G(m3)*G(M3)")
+                right.append("G5*G(m3)*G(M3)")
+
+        # *Pretty* sure this is the only dim 5 operator we'll get...
         else:
             print("Unexpected Lorentz structure found.")
             print("Quitting...")
             sys.exit()
 
+    # Or it's just something super weird I've not come across either.
+    # Don't think we'll ever get dimension 6, can't think of how.
+    # Note that if you have (chi g5 sigma chi)(eta g5 sigma eta) this
+    # simply equals (chi sigma chi) (eta sigma eta): go rewrite your vertices!
+    else:
+        print("Unexpected Lorentz structure found.")
+        print("Quitting...")
+        sys.exit()
+
+
     # Now want to perform operations on left and right
     left = '*'.join(left)
     right = '*'.join(right)
+    
+    # Now we do magic on the Lorentz structures.
 
     # Dirac matrix in MadGraph is Gamma(mu,a,b) = gamma^mu_{a,b}
     # Dirac matrix in CalcHEP is G(m1) -> gamma^m1
-    # This always gets put on the auxiliary particle
+
+    # This always gets put on the auxiliary particle so it carries the
+    # correct Lorentz structure in the propagator...
+    
+    # Let's do the case where we have two Gammas first, otherwise
+    # the single routines will give incorrect indices
+
+    # Order of Lorentz indices is important, so make sure we follow them through
+    if ( re.search(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)', left) and
+         re.search(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)', right) ):
+            
+        first_index = 0
+        last_index = 0
+
+        nums_l = re.findall(r'\((.*?)\)',left)
+        nums_r = re.findall(r'\((.*?)\)',right)
+
+        n_l = []
+        n_r = []
+        for i in nums_l:
+            n_l.append([int(x) for x in i.split(',')])
+        for i in nums_r:
+            n_r.append([int(x) for x in i.split(',')])
+
+        for i in n_l:
+            if 1 in i:
+                first_index = i[0]
+        for j in n_r:
+            if 4 in j:
+                last_index = j[0]
+
+        if first_index == 0 or last_index == 0:
+            print("Could not find the correct indices.")
+            print("Please check your UFO files.")
+            sys.exit()
+        # (mu,nu)(nu,mu)
+        if first_index == last_index:
+            left = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)*G(M3)', left)
+            right = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)',r'G(M3)*G(m3)', right)
+        # (mu,nu)(mu,nu)
+        else:
+            left = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)*G(M3)', left)
+            right = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)*G(M3)', right)
+
+    
+    # left = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)*G(M3)', left)
+    # right = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)*Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)*G(M3)', right)
+
+    # Now the case where there's one. 
     left = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)', left)
     right = re.sub(r'Gamma\((.*?),(.*?),(.*?)\)',r'G(m3)', right)
 
@@ -711,13 +820,11 @@ def translate_four_fermion_lorentz(lorentz):
     right = re.sub(r'Identity\((.*?),(.*?)\)','1', right)
 
     # Sigma matrices don't seem to be defined in CalcHEP, so write them out by hand
-    # todo: these have to be split up into real and imaginary parts...
+    # todo: factor of i needs to be added to the vertex factor!
     left = re.sub(r'Sigma\((.*?),(.*?)\)','(half*(G(m3)*G(M3)-G(M3)*G(m3)))', left)
     right = re.sub(r'Sigma\((.*?),(.*?)\)','(half*(G(m3)*G(M3)-G(M3)*G(m3)))', right)
 
     return left, right
-
-
 
 
 def get_mg_ch_lorentz_dict(mg_lorentz):
@@ -1215,8 +1322,6 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
         os.remove(new_ch_loc + "/lgrng1.mdl")
         os.rename(new_ch_loc + "/lgrng_temp", new_ch_loc + "/lgrng1.mdl")
 
-        print("VERTEX:")
-        print vertex
         return vertex
 
 def c_ify_couplings(mg_couplings, param_dict):
@@ -1677,6 +1782,8 @@ def compare(mg_location, ch_location):
     # If anything is found in MadGraph, tell the user
     if len(mg_full) > 0:
         print("The following external parameters are defined in MadGraph but not CalcHEP:")
+        for x in mg_full:
+            print x.name
         print([x.name() for x in mg_full])
         if len(ch_full) == 0: sys.exit()
     # If anything is found in CalcHEP, tell the user, and kill.
