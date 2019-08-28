@@ -215,11 +215,11 @@ namespace Gambit
         const double d = b*b - 4*a*c;
         const double sqrtd = (d < 0) ? 0 : sqrt(d);
         if (sqrtd == 0) {
-          return -b / (2*a);
+          nuisances[j] = -b / (2*a);
         } else {
           const double th0_a = (-b + sqrtd) / (2*a);
           const double th0_b = (-b - sqrtd) / (2*a);
-          return (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
+          nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
         }
       }
 
@@ -274,7 +274,7 @@ namespace Gambit
       auto marginaliser = (*BEgroup::lnlike_marg_poisson == "lnlike_marg_poisson_lognormal_error")
         ? BEreq::lnlike_marg_poisson_lognormal_error : BEreq::lnlike_marg_poisson_gaussian_error;
 
-      const double sr_margll = marginaliser((int) n_preds(0), 0.0, n_obss(0), sqrtevals(0)/n_preds(0));
+      const double sr_margll = marginaliser((int) n_obss(0), 0.0, n_preds(0), sqrtevals(0)/n_preds(0));
       return sr_margll;
     }
 
