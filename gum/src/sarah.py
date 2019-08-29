@@ -1,6 +1,22 @@
-"""
-Master module for all SARAH related routines.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module for all SARAH related routines.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017, 2018, 2019 
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2019 Aug
+#
+#  **************************************
 
 from setup import *
 import re
@@ -127,6 +143,9 @@ def sarah_params(paramlist, add_higgs):
             params.append(i)
         else: continue
     """
+    # TODO: TG: Added this cause otherwise I don't know the parameters in SPheno
+    for par in unsorted_params:
+      params.append(par)
     
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:

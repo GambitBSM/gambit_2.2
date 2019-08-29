@@ -154,6 +154,7 @@ if args.file:
         # Initialise all of the model parameters, for writing spectra,
         # model files - remove all SM stuff from parameter list.
         parameters = sarah_params(paramlist, add_higgs)
+  
 
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
     # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.

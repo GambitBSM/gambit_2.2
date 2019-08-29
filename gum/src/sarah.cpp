@@ -503,6 +503,45 @@ namespace GUM
             paramlist.push_back(parameter);
         }
     }
+  }
+
+  // Get minpar and extpar parameters and add them to the parameter list
+  void SARAH::get_minpar_extpar(std::vector<Parameter> &parameters)
+  {
+    std::cout << "Extracting MINPAR and EXTPAR parameters from SPheno" << std::endl;
+
+    // Check if MINPAR is a list first
+    bool is_list;
+    send_to_math("Head[MINPAR]===List");
+    get_from_math(is_list);
+
+    if(is_list)
+    {
+      // Get the MINPAR list
+      std::vector<std::vector<std::string> > minpar;
+      send_to_math("ToExpression[MINPAR]");
+      get_from_math(minpar);
+
+      // Add MINPAR parameters to the parameter list
+      for(std::vector<std::string> par : minpar)
+        parameters.push_back(Parameter(par[1], "MINPAR", std::stoi(par[0])));
+    }
+
+    // Check if EXTPAR is a list
+    send_to_math("Head[EXTPAR]===List");
+    get_from_math(is_list);
+
+    if(is_list)
+    {
+      // Get the EXTPAR list
+      std::vector<std::vector<std::string> > extpar;
+      send_to_math("ToExpresssion[EXTPAR]");
+      get_from_math(extpar);
+
+      // Add EXTPAR parameters to the parameter list
+      for(std::vector<std::string> par : extpar)
+        parameters.push_back(Parameter(par[1], "EXTPAR", std::stoi(par[0])));
+    }
 
   }
 
@@ -547,6 +586,8 @@ namespace GUM
       // TODO: options:
       // - InputFile (default $MODEL/SPheno.m)
       // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
+      // TODO: temp hack to make it faster
+      options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
 
       // Write output.
       std::string command = "MakeSPheno[" + options + "];";
@@ -619,6 +660,9 @@ namespace GUM
       if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
       {
         model.write_spheno_output();
+
+        // Get minpar and extpar parameters
+        model.get_minpar_extpar(paramlist);
 
         // Get useful SPheno flags, default to False
         flags = {

@@ -63,7 +63,7 @@ namespace GUM
       void wait_for_packet();
 
       // Send a string to be evaluated in Mathematica via WSTP
-      void send_to_math(std::string &input);
+      void send_to_math(std::string input);
 
       // Get a character variable from Mathematica via WSTP
       void get_from_math(char &);
@@ -92,7 +92,7 @@ namespace GUM
         for(int i=0; i<dim; i++)
         {
           T value;
-          try { get_from_math(&value); }
+          try { get_from_math(value); }
           catch(std::exception& e) { throw e; }
           list.push_back(value);
         }

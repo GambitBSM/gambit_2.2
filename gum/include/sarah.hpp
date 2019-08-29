@@ -48,6 +48,9 @@ namespace GUM
   
       // Parameters list
       void get_paramlist(std::vector<Parameter>&);
+
+      // MINPAR, EXTPAR
+      void get_minpar_extpar(std::vector<Parameter>&);
     
       // Outputs: CalcHEP, MadGraph, ...
       void write_ch_output();

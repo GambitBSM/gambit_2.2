@@ -105,7 +105,7 @@ namespace GUM
   }
     
   // Send a string to be evaluated in Mathematica via WSTP
-  void Math_Package::send_to_math(std::string &input)
+  void Math_Package::send_to_math(std::string input)
   {
     WSNewPacket(link);
     WSPutFunction(link, "ToExpression", 1);
