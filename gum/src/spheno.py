@@ -575,12 +575,13 @@ class SPhenoParameter:
     Container type for a SPheno parameter.
     """
     
-    def __init__(self, _name, _type, _size, _block):
+    def __init__(self, _name, _type, _size, _block="", _index=0):
 
         self.name = _name
         self.type = _type
         self.size = _size
         self.block = _block
+        self.index = _index
 
 
 def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path, output_dir):
@@ -781,11 +782,13 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
 
             # If the variable is part of the model parameters, add the block
             block = "None"
+            index = 0
             for model_par in model_parameters:
               if name == model_par.name:
                 block = model_par.block
+                index = model_par.index
 
-            par = SPhenoParameter(name, _type, size, block)
+            par = SPhenoParameter(name, _type, size, block, index)
 
             # Finally check to see if the name matches anything we want to
             # section off into the HiggsBounds parameters
@@ -1128,14 +1131,27 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
       '\n'\
       '// Block MINPAR\n'\
       'SLHAea_add_block(slha, "MINPAR");\n'
-
-    # TODO: MINPAR
+    
+    for name, var in variables.iteritems() :
+      if var.block == "MINPAR" :
+        towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
+        if var.type.startswith("Complex") :
+          towrite += name+'->re << "# '+name+'";\n'
+        else :
+          towrite += '*'+name+';\n'
 
     towrite += '\n'\
       '// Block EXTPAR\n'\
       'SLHAea_add_block(slha, "EXTPAR")\n'
 
-    # TODO: EXTPAR
+    for name, var in variables.iteritems() :
+      if var.block == "EXTPAR" :
+        towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
+        if var.type.startswith("Complex") :
+          towrite += name+'->re << "# '+name+'";\n'
+        else :
+          towrite += '*'+name+';\n'
+
 
     towrite += '\n'\
       '// Block SMINPUTS\n'\
