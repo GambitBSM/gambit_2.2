@@ -1676,10 +1676,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
       '// Block MINPAR //\n'\
       '/****************/\n'
 
+    # TODO: The name of model parameters might be wrong
     for name, var in variables.iteritems():
       if var.block == "MINPAR" :
         towrite += 'if(inputs.param.find("'+name+'") != inputs.param.end())\n'
-        # TODO: we only differentiate between complex and the rest, check if there's any other type that needs special treatment
         if var.type.startswith("Complex") :
           towrite += '  '+name+'->re'
         else :
@@ -1691,10 +1691,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
       "/* Block EXTPAR */\n"\
       "/****************/\n"
 
+    # TODO: The name of model parameters might be wrong
     for name, var in variables.iteritems():
       if var.block == "EXTPAR" :
         towrite += 'if(inputs.param.find("'+name+'") != inputs.param.end())\n'
-        # TODO: we only differentiate between complex and the rest, check if there's any other type that needs special treatment
         if var.type.startswith("Complex") :
           towrite += '  '+name+'->re'
         else :
