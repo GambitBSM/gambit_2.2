@@ -60,6 +60,7 @@ namespace Gambit
       // Retrieve run options from the YAML file (or standalone code)
       static bool first = true;
       static bool silenceLoop;
+      static bool invalidate_failed_points;
       static std::map<str,int> min_nEvents;
       static std::map<str,int> max_nEvents;
       static std::map<str,int> stoppingres;
@@ -67,6 +68,9 @@ namespace Gambit
       {
         // Should we silence stdout during the loop?
         silenceLoop = runOptions->getValueOrDef<bool>(true, "silenceLoop");
+
+        // Should we ivalidate points where the number of failed events exceed maxFailedEvents?
+        invalidate_failed_points = runOptions->getValueOrDef<bool>(false, "invalidate_failed_points");
 
         // Retrieve all the names of all entries in the yaml options node.
         std::vector<str> vec = runOptions->getNames();
@@ -228,6 +232,10 @@ namespace Gambit
         if(result.exceeded_maxFailedEvents)
         {
           logger() << LogTags::debug << "Too many failed events during event generation." << EOM;
+          if (invalidate_failed_points)
+          {
+            piped_invalid_point.request("Too many failed events during event generation.");
+          }
           break;
         }
 
