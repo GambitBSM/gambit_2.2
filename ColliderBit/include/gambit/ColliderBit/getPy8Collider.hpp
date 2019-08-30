@@ -38,7 +38,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
- #define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
 
 namespace Gambit
 {
@@ -191,7 +191,7 @@ namespace Gambit
         }
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "totalxsec [fb] = " << totalxsec * 1e12 << ", veto limit [fb] = " << xsec_veto_fb << endl;
+          cout << debug_prefix() << "totalxsec [fb] = " << totalxsec * 1e12 << ", veto limit [fb] = " << xsec_veto_fb << endl;
         #endif
 
         // - Check for NaN xsec
