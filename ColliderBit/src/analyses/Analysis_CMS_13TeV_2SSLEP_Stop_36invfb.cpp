@@ -23,7 +23,7 @@
 #include "gambit/ColliderBit/CMSEfficiencies.hpp"
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 
-#define CHECK_CUTFLOW
+// #define CHECK_CUTFLOW
 
 using namespace std;
 

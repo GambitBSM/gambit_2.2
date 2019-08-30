@@ -104,7 +104,14 @@ namespace Gambit
       // Wrap up event loop if too many events fail.
       if(nFailedEvents > RunMC.current_maxFailedEvents())
       {
-        piped_warnings.request(LOCAL_INFO,"exceeded maxFailedEvents");
+        if(RunMC.current_invalidate_failed_points())
+        {
+          piped_invalid_point.request("exceeded maxFailedEvents");
+        }
+        else
+        {
+          piped_warnings.request(LOCAL_INFO,"exceeded maxFailedEvents");
+        }
         wrapup();
         return;
       }

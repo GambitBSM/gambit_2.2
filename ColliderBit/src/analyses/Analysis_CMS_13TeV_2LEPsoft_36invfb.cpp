@@ -393,21 +393,20 @@ namespace Gambit {
 
       virtual void collect_results() {
 
-        // double scale_by= 172004. / 250000.;
-        //double scale_by= 172004. / 1000000.;
-        double scale_by = 1;
-        cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
-        cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb "<<endl;
-        cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
-        cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
-             << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
-        for (int j=0; j<NCUTS; j++) {
-          cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
-               << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
-               << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_130[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_130[j]) << endl;
-        }
-        cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
-
+        // // double scale_by= 172004. / 250000.;
+        // //double scale_by= 172004. / 1000000.;
+        // double scale_by = 1;
+        // cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+        // cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb "<<endl;
+        // cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
+        // cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
+        //      << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
+        // for (int j=0; j<NCUTS; j++) {
+        //   cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
+        //        << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
+        //        << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_130[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_130[j]) << endl;
+        // }
+        // cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
 
 
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));

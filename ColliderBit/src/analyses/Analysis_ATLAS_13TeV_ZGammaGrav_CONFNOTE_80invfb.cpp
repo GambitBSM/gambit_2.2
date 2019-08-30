@@ -162,10 +162,10 @@ namespace Gambit {
         results.n_signal = nsig;
         add_result(results);
 
-        cout << "\nCUTFLOW" << endl;
-        const string cutnames[NCUTS] = {"mll near mZ", "y1 > 25 GeV", "MET > 95 GeV", "ZH pT balance", "ZH dphi", "ll dphi"};
-        const double sf_cutflow = 85.92 / cutflow[0];
-        for (size_t i = 0; i < NCUTS; ++i) cout << i+1 << ". " << cutflow[i] * sf_cutflow << " (" << cutnames[i] << ")" << endl;
+        // cout << "\nCUTFLOW" << endl;
+        // const string cutnames[NCUTS] = {"mll near mZ", "y1 > 25 GeV", "MET > 95 GeV", "ZH pT balance", "ZH dphi", "ll dphi"};
+        // const double sf_cutflow = 85.92 / cutflow[0];
+        // for (size_t i = 0; i < NCUTS; ++i) cout << i+1 << ". " << cutflow[i] * sf_cutflow << " (" << cutnames[i] << ")" << endl;
 
       }
 

@@ -60,7 +60,6 @@ namespace Gambit
       // Retrieve run options from the YAML file (or standalone code)
       static bool first = true;
       static bool silenceLoop;
-      static bool invalidate_failed_points;
       static std::map<str,int> min_nEvents;
       static std::map<str,int> max_nEvents;
       static std::map<str,int> stoppingres;
@@ -68,9 +67,6 @@ namespace Gambit
       {
         // Should we silence stdout during the loop?
         silenceLoop = runOptions->getValueOrDef<bool>(true, "silenceLoop");
-
-        // Should we ivalidate points where the number of failed events exceed maxFailedEvents?
-        invalidate_failed_points = runOptions->getValueOrDef<bool>(false, "invalidate_failed_points");
 
         // Retrieve all the names of all entries in the yaml options node.
         std::vector<str> vec = runOptions->getNames();
@@ -92,6 +88,7 @@ namespace Gambit
           result.convergence_options[collider].all_analyses_must_converge = colOptions.getValueOrDef<bool>(false, "all_analyses_must_converge");
           result.convergence_options[collider].all_SR_must_converge       = colOptions.getValueOrDef<bool>(false, "all_SR_must_converge");
           result.maxFailedEvents[collider]                                = colOptions.getValueOrDef<int>(1, "maxFailedEvents");
+          result.invalidate_failed_points[collider]                       = colOptions.getValueOrDef<bool>(false, "invalidate_failed_points");
           stoppingres[collider]                                           = colOptions.getValueOrDef<int>(200, "events_between_convergence_checks");
           result.analyses[collider]                                       = colOptions.getValueOrDef<std::vector<str>>(std::vector<str>(), "analyses");
           result.event_count[collider]                                    = 0;
@@ -223,21 +220,14 @@ namespace Gambit
             piped_warnings.check(ColliderBit_warning());
             piped_errors.check(ColliderBit_error());
           }
+
         }
 
         // Store the number of generated events
         result.current_event_count() = currentEvent;
 
-        // Break collider loop if too many events have failed
-        if(result.exceeded_maxFailedEvents)
-        {
-          logger() << LogTags::debug << "Too many failed events during event generation." << EOM;
-          if (invalidate_failed_points)
-          {
-            piped_invalid_point.request("Too many failed events during event generation.");
-          }
-          break;
-        }
+        // Skip to next collider if too many events fail
+        if(result.exceeded_maxFailedEvents) continue;
 
         #pragma omp parallel
         {
