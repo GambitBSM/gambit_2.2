@@ -456,9 +456,18 @@ namespace Gambit
     void getXsecInfoMap(map_str_dbl& result)
     {
       using namespace Pipes::getXsecInfoMap;
-      result.clear();
-      const xsec& xs = (*Dep::CrossSection);
-      result = xs.get_content_as_map();
+
+      // Append the xsec info for the current collider to the result map
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+        const xsec& xs = (*Dep::CrossSection);
+        for(auto s_d_pair : xs.get_content_as_map())
+        {
+          std::string new_key(Dep::RunMC->current_collider());
+          new_key.append("__").append(s_d_pair.first);
+          result[new_key] = s_d_pair.second;
+        }
+      }
     }
 
   }
