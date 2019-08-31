@@ -42,6 +42,9 @@ namespace Gambit
       /// Maximum allowable number of failed events before MC loop is terminated for each collider
       std::map<str,int> maxFailedEvents;
 
+      /// Invalidate points where number of failed events > maxFailedEvents? One bool for each collider
+      std::map<str,bool> invalidate_failed_points;
+
       /// Number of events generated for each collider
       std::map<str,int> event_count;
 
@@ -64,6 +67,11 @@ namespace Gambit
       const int& current_maxFailedEvents() const;
       /// Get/set maximum allowable number of failed events before MC loop is terminated for the current collider
       int& current_maxFailedEvents();
+
+      /// Get invalidate_failed_points bool for the current collider
+      const bool& current_invalidate_failed_points() const;
+      /// Get/set invalidate_failed_points for the current collider
+      bool& current_invalidate_failed_points();
 
       /// Get the number of events generated for the current collider
       const int& current_event_count() const;
@@ -98,6 +106,9 @@ namespace Gambit
 
         /// Iterator to the current maxFailedEvents
         std::map<str,int>::iterator _current_maxFailedEvents_it;
+
+        /// Iterator to the current invalidate_failed_points
+        std::map<str,bool>::iterator _current_invalidate_failed_points_it;
 
         /// Iterator to the current event count
         std::map<str,int>::iterator _current_event_count_it;
