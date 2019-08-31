@@ -244,7 +244,7 @@ namespace Gambit
 
       // Default values
       Finteger ipart1_in = 1;
-      Finteger ipart2_in = 2;
+      Finteger ipart2_in = 1;
       Finteger isquark1_in = 0;
       Finteger isquark2_in = 0;
 
@@ -259,10 +259,8 @@ namespace Gambit
       // std::string final_state_in = "ng";
       // ipart1_in = ng_ipart1.at(0);
 
-      std::string final_state_in = "tb";
-      ipart1_in = ng_ipart1.at(0);
-
-
+      // std::string final_state_in = "tb";
+      // ipart1_in = ng_ipart1.at(0);
 
       // Reset the xsec object on the main thread (other threads do not matter)
       if (*Loop::iteration == BASE_INIT)
@@ -272,6 +270,10 @@ namespace Gambit
         // Testing...
         cout << "DEBUG: getProspinoxsec: Requesting dependency BE::prospino_LHC_xsec..." << endl;
 
+        // Accumulators
+        double combined_xsec_pb = 0.0;
+        double combined_xsec_err = 0.0;
+        double combined_xsec_rel_err = 0.0;
 
         // Get an SLHA1 object for Prospino.
         const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
@@ -287,38 +289,86 @@ namespace Gambit
         ps.icoll_in = icoll_in;
         ps.energy_in = energy_in;
         ps.i_error_in = i_error_in;
-        // ps.final_state_in = final_state_in.c_str();
-        ps.final_state_in = final_state_in;
-        ps.ipart1_in = ipart1_in;
-        ps.ipart2_in = ipart2_in;
-        ps.isquark1_in = isquark1_in;
-        ps.isquark2_in = isquark2_in;
 
-        // inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
-        // isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
-        // icoll_in = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
-        // energy_in = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
-        // i_error_in = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
-        
-        // final_state_in = runOptions->getValueOrDef<std::string>("nn", "final_state_in"); // select process
-        // ipart1_in = runOptions->getValueOrDef<Finteger>(1, "ipart1_in");      //
-        // ipart2_in = runOptions->getValueOrDef<Finteger>(2, "ipart2_in");      //
-        // isquark1_in = runOptions->getValueOrDef<Finteger>(0, "isquark1_in");  //
-        // isquark2_in = runOptions->getValueOrDef<Finteger>(0, "isquark2_in");  //
+        // ng
+        cout << "DEBUG: getProspinoxsec: " << endl;
+        cout << "DEBUG: getProspinoxsec: --------------------------------" << endl;
+        cout << "DEBUG: getProspinoxsec: Process: ng" << endl;
+        cout << "DEBUG: getProspinoxsec: --------------------------------" << endl;
+        cout << "DEBUG: getProspinoxsec: " << endl;
+        for (int& ip1 : ng_ipart1) {
 
+          ps.final_state_in = "ng";
+          ps.ipart1_in = ip1;
+          ps.ipart2_in = 1;
+          ps.isquark1_in = 0;
+          ps.isquark2_in = 0;
 
-        // Call Prospino and get the result in a map<string,double>
-        map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
+          // Call Prospino and get the result in a map<string,double>
+          map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
 
-        cout << "DEBUG: getProspinoxsec: got this result from Prospino:" << endl;
+          cout << "DEBUG: getProspinoxsec: process: ng" << endl;
+          cout << "DEBUG: getProspinoxsec: ipart1, ipart2: " << ps.ipart1_in << ", " << ps.ipart2_in << endl;
+          cout << "DEBUG: getProspinoxsec: isquark1, isquark2: " << ps.isquark1_in << ", " << ps.isquark2_in << endl;
+          cout << "DEBUG: getProspinoxsec: got this result from Prospino:" << endl;
+          for (auto& element : prospino_output)
+          {
+            cout << "DEBUG: getProspinoxsec: " << element.first << " = " << element.second << endl;
+          }
 
-        for (auto& element : prospino_output)
-        {
-          cout << "DEBUG: getProspinoxsec: " << element.first << " = " << element.second << endl;
+          double xs_pb = prospino_output.at("NLO_ms[pb]");
+          double xs_rel_err = prospino_output.at("NLO_rel_error");
+          double xs_err = xs_pb * xs_rel_err;
+
+          combined_xsec_pb += xs_pb;
+          combined_xsec_err = sqrt(pow(combined_xsec_err,2) + pow(xs_err,2));
+          combined_xsec_rel_err = combined_xsec_err / combined_xsec_pb;
+
+          result.set_xsec(combined_xsec_pb, combined_xsec_rel_err);
         }
 
-        // set result
-        result.set_xsec(prospino_output.at("NLO_ms[pb]"), prospino_output.at("NLO_rel_error"));
+
+        // nn
+        cout << "DEBUG: getProspinoxsec: " << endl;
+        cout << "DEBUG: getProspinoxsec: --------------------------------" << endl;
+        cout << "DEBUG: getProspinoxsec: Process: nn" << endl;
+        cout << "DEBUG: getProspinoxsec: --------------------------------" << endl;
+        cout << "DEBUG: getProspinoxsec: " << endl;
+        for (std::pair<int,int>& ip1_ip2_pair : nn_ipart1_ipart2) {
+
+          ps.final_state_in = "nn";
+          ps.ipart1_in = ip1_ip2_pair.first;
+          ps.ipart2_in = ip1_ip2_pair.second;
+          ps.isquark1_in = 0;
+          ps.isquark2_in = 0;
+
+          // Call Prospino and get the result in a map<string,double>
+          map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
+
+          cout << "DEBUG: getProspinoxsec: process: nn" << endl;
+          cout << "DEBUG: getProspinoxsec: ipart1, ipart2: " << ps.ipart1_in << ", " << ps.ipart2_in << endl;
+          cout << "DEBUG: getProspinoxsec: isquark1, isquark2: " << ps.isquark1_in << ", " << ps.isquark2_in << endl;
+          cout << "DEBUG: getProspinoxsec: got this result from Prospino:" << endl;
+          for (auto& element : prospino_output)
+          {
+            cout << "DEBUG: getProspinoxsec: " << element.first << " = " << element.second << endl;
+          }
+
+          double xs_pb = prospino_output.at("NLO_ms[pb]");
+          double xs_rel_err = prospino_output.at("NLO_rel_error");
+          double xs_err = xs_pb * xs_rel_err;
+
+          combined_xsec_pb += xs_pb;
+          combined_xsec_err = sqrt(pow(combined_xsec_err,2) + pow(xs_err,2));
+          combined_xsec_rel_err = combined_xsec_err / combined_xsec_pb;
+
+          result.set_xsec(combined_xsec_pb, combined_xsec_rel_err);
+        }
+
+        // 
+        // Add more process blocks here...
+        //
+
       }
 
       // If we are in the main event loop, count the event towards cross-section normalisation on this thread
