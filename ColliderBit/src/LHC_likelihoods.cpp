@@ -45,6 +45,7 @@
 #include "gambit/ColliderBit/multimin.h"
 
 // #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -382,12 +383,12 @@ namespace Gambit
         }
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix()
+        cout << DEBUG_PREFIX
              << "diff_rel: " << diff_rel << endl
              << "   diff_abs: " << diff_abs << endl
              << "   logl: " << log(ana_like) << endl;
-        cout << debug_prefix() << "nsample for the next iteration is: " << nsample << endl;
-        cout << debug_prefix() << endl;
+        cout << DEBUG_PREFIX << "nsample for the next iteration is: " << nsample << endl;
+        cout << DEBUG_PREFIX << endl;
         #endif
       }
       // End convergence while-loop
@@ -397,7 +398,7 @@ namespace Gambit
       ana_like = 0.5*(ana_like + ana_like_prev);
       const double ana_margll = log(ana_like);
       #ifdef COLLIDERBIT_DEBUG
-      cout << debug_prefix() << "Combined estimate: ana_loglike: " << ana_margll << "   (based on 2*nsample=" << 2*nsample << " samples)" << endl;
+      cout << DEBUG_PREFIX << "Combined estimate: ana_loglike: " << ana_margll << "   (based on 2*nsample=" << 2*nsample << " samples)" << endl;
       #endif
 
       return ana_margll;
@@ -435,11 +436,11 @@ namespace Gambit
         #ifdef COLLIDERBIT_DEBUG
         std::streamsize stream_precision = cout.precision();  // get current precision
         cout.precision(2);  // set precision
-        cout << debug_prefix() << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
+        cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
         for (size_t SR = 0; SR < adata.size(); ++SR)
         {
           const SignalRegionData& srData = adata[SR];
-          cout << std::fixed << debug_prefix()
+          cout << std::fixed << DEBUG_PREFIX
                                  << "calc_LHC_LogLikes: " << ananame
                                  << ", " << srData.sr_label
                                  << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
@@ -483,7 +484,7 @@ namespace Gambit
           }
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
           #endif
 
           // Continue to next analysis
@@ -511,7 +512,7 @@ namespace Gambit
           result[ananame].combination_loglike = 0.0;
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No signal predicted. Skipped full calculation.)" << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No signal predicted. Skipped full calculation.)" << endl;
           #endif
 
           // Continue to next analysis
@@ -538,7 +539,7 @@ namespace Gambit
           ///
           /// @todo Support NSL, i.e. skewness correction
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: Analysis " << analysis << " has a covariance matrix: computing composite loglike." << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: Analysis " << analysis << " has a covariance matrix: computing composite loglike." << endl;
           #endif
 
 
@@ -616,7 +617,7 @@ namespace Gambit
           result[ananame].combination_loglike = ana_dll;
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << ana_dll << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << ana_dll << endl;
           #endif
 
 
@@ -627,7 +628,7 @@ namespace Gambit
           // constraining under the s=0 assumption (default), or naively combine
           // the loglikes for all SRs (if combine_SRs_without_covariances=true).
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: Analysis " << analysis << " has no covariance matrix: computing single best-expected loglike." << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: Analysis " << analysis << " has no covariance matrix: computing single best-expected loglike." << endl;
           #endif
 
           double bestexp_dll_exp = 0, bestexp_dll_obs = NAN;
@@ -683,7 +684,7 @@ namespace Gambit
               bestexp_sr_label = srData.sr_label;
               bestexp_sr_index = SR;
               // #ifdef COLLIDERBIT_DEBUG
-              // cout << debug_prefix() << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << bestexp_dll_exp << ", LogL_obs = " << bestexp_dll_obs << endl;
+              // cout << DEBUG_PREFIX << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << bestexp_dll_exp << ", LogL_obs = " << bestexp_dll_obs << endl;
               // #endif
             }
 
@@ -694,7 +695,7 @@ namespace Gambit
             nocovar_srsum_dll_obs += dll_obs;
 
             #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << ananame << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << dll_exp << ",  llsb_obs-llb_obs= " << dll_obs << endl;
+            cout << DEBUG_PREFIX << ananame << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << dll_exp << ",  llsb_obs-llb_obs= " << dll_obs << endl;
             #endif
 
           }
@@ -713,7 +714,7 @@ namespace Gambit
           }
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_" << bestexp_sr_label << "_LogLike : " << ana_dll << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_" << bestexp_sr_label << "_LogLike : " << ana_dll << endl;
           #endif
 
         } // end cov/no-cov
@@ -852,7 +853,7 @@ namespace Gambit
       if (Dep::RunMC->exceeded_maxFailedEvents)
       {
         #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_combined_LHC_LogLike: Too many failed events. Will be conservative and return a delta log-likelihood of 0." << endl;
+          cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Too many failed events. Will be conservative and return a delta log-likelihood of 0." << endl;
         #endif
         return;
       }
@@ -868,7 +869,7 @@ namespace Gambit
         {
           #ifdef COLLIDERBIT_DEBUG
             cout.precision(5);
-            cout << debug_prefix() << "calc_combined_LHC_LogLike: Leaving out analysis " << analysis_name << " with LogL = " << analysis_loglike << endl;
+            cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Leaving out analysis " << analysis_name << " with LogL = " << analysis_loglike << endl;
           #endif
           continue;
         }
@@ -887,12 +888,12 @@ namespace Gambit
 
         #ifdef COLLIDERBIT_DEBUG
           cout.precision(5);
-          cout << debug_prefix() << "calc_combined_LHC_LogLike: Analysis " << analysis_name << " contributes with a LogL = " << analysis_loglike << endl;
+          cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Analysis " << analysis_name << " contributes with a LogL = " << analysis_loglike << endl;
         #endif
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "calc_combined_LHC_LogLike: LHC_Combined_LogLike = " << result << endl;
+        cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: LHC_Combined_LogLike = " << result << endl;
       #endif
 
       // If using a "global" capped likelihood, set result = min(result,0)

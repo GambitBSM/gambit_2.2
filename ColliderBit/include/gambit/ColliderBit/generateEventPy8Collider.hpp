@@ -39,7 +39,8 @@
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp"
 
-#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -87,7 +88,7 @@ namespace Gambit
         catch (typename Py8Collider<PythiaT,EventT>::EventGenerationError& e)
         {
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Py8Collider::EventGenerationError caught in generateEventPy8Collider. Check the ColliderBit log for event details." << endl;
+          cout << DEBUG_PREFIX << "Py8Collider::EventGenerationError caught in generateEventPy8Collider. Check the ColliderBit log for event details." << endl;
           #endif
           #pragma omp critical (pythia_event_failure)
           {
@@ -128,7 +129,7 @@ namespace Gambit
       catch (Gambit::exception& e)
       {
         #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Gambit::exception caught during event conversion in generateEventPy8Collider. Check the ColliderBit log for details." << endl;
+          cout << DEBUG_PREFIX << "Gambit::exception caught during event conversion in generateEventPy8Collider. Check the ColliderBit log for details." << endl;
         #endif
 
         #pragma omp critical (event_conversion_error)

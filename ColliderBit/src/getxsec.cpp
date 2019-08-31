@@ -16,7 +16,8 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-//#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -97,7 +98,7 @@ namespace Gambit
           const double xserr_fb = (*Dep::HardScatteringSim)->xsecErr_pb() * 1000.;
           result.set_xsec(xs_fb, xserr_fb);
           #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << "xs_fb = " << xs_fb << " +/- " << xserr_fb << endl;
+            cout << DEBUG_PREFIX << "xs_fb = " << xs_fb << " +/- " << xserr_fb << endl;
           #endif
         }
       }
