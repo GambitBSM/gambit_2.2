@@ -458,6 +458,19 @@ namespace Gambit
     {
       using namespace Pipes::getXsecInfoMap;
 
+      // @todo Do we need this to ensure that the result map is always of the same length (for the printer)?
+      // // Append the xsec info for the current collider to the result map
+      // if (*Loop::iteration == COLLIDER_INIT)
+      // {
+      //   xsec empty_xs;
+      //   for(auto s_d_pair : empty_xs.get_content_as_map())
+      //   {
+      //     std::string new_key(Dep::RunMC->current_collider());
+      //     new_key.append("__").append(s_d_pair.first);
+      //     result[new_key] = s_d_pair.second;
+      //   }
+      // }
+
       // Append the xsec info for the current collider to the result map
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {

@@ -560,7 +560,7 @@ namespace Gambit
             //logfact_n_obs(SR) = gsl_sf_lngamma(n_obs(SR) + 1.);
 
             // A contribution to the predicted number of events that is not known exactly
-            n_pred_b(SR) = srData.n_background;
+            n_pred_b(SR) = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
             n_pred_sb(SR) = srData.n_signal_at_lumi + srData.n_background;
 
             // Absolute errors for n_predicted_uncertain_*
@@ -640,8 +640,28 @@ namespace Gambit
           {
             const SignalRegionData& srData = adata[SR];
 
+            // Shortcut: If n_signal == 0, we know the delta log-likelihood is 0.
+            if(srData.n_signal == 0)
+            {
+              // Store (obs) result for this SR
+              result[ananame].sr_indices[srData.sr_label] = SR;
+              result[ananame].sr_loglikes[srData.sr_label] = 0.0;
+
+              // Update the running best-expected-exclusion detail
+              if (0.0 < bestexp_dll_exp || SR == 0)
+              {
+                bestexp_dll_exp = 0.0;
+                bestexp_dll_obs = 0.0;
+                bestexp_sr_label = srData.sr_label;
+                bestexp_sr_index = SR;
+              }
+
+              // Skip to next SR
+              continue;
+            }
+
             // A contribution to the predicted number of events that is not known exactly
-            const double n_pred_b = srData.n_background;
+            const double n_pred_b = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
             const double n_pred_sb = n_pred_b + srData.n_signal_at_lumi;
 
             // Actual observed number of events and predicted background, as integers cf. Poisson stats
@@ -651,7 +671,7 @@ namespace Gambit
             // Absolute errors for n_predicted_uncertain_*
             const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
             const double abs_uncertainty_s_sys = srData.signal_sys;
-            const double abs_uncertainty_b = srData.background_sys;
+            const double abs_uncertainty_b = std::max(srData.background_sys, 0.001); // <-- Avoid trouble with b_err==0
             const double abs_uncertainty_sb = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys, abs_uncertainty_b);
 
             // Construct dummy 1-element Eigen objects for passing to the general likelihood calculator
@@ -721,26 +741,28 @@ namespace Gambit
 
 
         // Check for problems with the result
-        if (Utils::isnan(ana_dll))
+        for(auto& s_d_pair : result[ananame].sr_loglikes)
         {
-          std::stringstream msg;
-          msg << "Computation of composite loglike for analysis " << ananame << " returned NaN" << endl;
-          msg << "Will now print the signal region data for this analysis:" << endl;
-          for (size_t SR = 0; SR < nSR; ++SR)
+          if (Utils::isnan(s_d_pair.second))
           {
-            const SignalRegionData& srData = adata[SR];
-            msg << srData.sr_label
-                << ",  n_background = " << srData.n_background
-                << ",  background_sys = " << srData.background_sys
-                << ",  n_observed = " << srData.n_observed
-                << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
-                << ",  n_signal = " << srData.n_signal
-                << ",  signal_sys = " << srData.signal_sys
-                << endl;
-          }
-          invalid_point().raise(msg.str());
+            std::stringstream msg;
+            msg << "Computation of loglike for signal region " << s_d_pair.first << " in analysis " << ananame << " returned NaN" << endl;
+            msg << "Will now print the signal region data for this analysis:" << endl;
+            for (size_t SR = 0; SR < nSR; ++SR)
+            {
+              const SignalRegionData& srData = adata[SR];
+              msg << srData.sr_label
+                  << ",  n_background = " << srData.n_background
+                  << ",  background_sys = " << srData.background_sys
+                  << ",  n_observed = " << srData.n_observed
+                  << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
+                  << ",  n_signal = " << srData.n_signal
+                  << ",  signal_sys = " << srData.signal_sys
+                  << endl;
+            }
+            invalid_point().raise(msg.str());
+          }          
         }
-
 
       } // end analysis loop
     }
