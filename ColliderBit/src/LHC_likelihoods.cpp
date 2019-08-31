@@ -696,6 +696,32 @@ namespace Gambit
             const double dll_exp = ll_sb_exp - ll_b_exp;
             const double dll_obs = ll_sb_obs - ll_b_obs;
 
+            // Check for problems
+            if (Utils::isnan(ll_b_exp))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_b_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+            if (Utils::isnan(ll_b_obs))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_b_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+            if (Utils::isnan(ll_sb_exp))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_sb_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+            if (Utils::isnan(ll_sb_obs))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_sb_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+
             // Update the running best-expected-exclusion detail
             if (dll_exp < bestexp_dll_exp || SR == 0)
             {
