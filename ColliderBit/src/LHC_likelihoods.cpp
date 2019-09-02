@@ -201,6 +201,12 @@ namespace Gambit
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
+
+      // @todo Remove this when reinstating the block below
+      std::vector<double> nuisances(nSR, 0.0);
+
+      // @todo Comment out this until we've figured out a memory issue...
+      /*
       const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
       // Set nuisances to an informed starting position
@@ -223,6 +229,8 @@ namespace Gambit
           nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
         }
       }
+      */
+
 
       // Optimiser parameters
       // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
