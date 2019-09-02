@@ -16,7 +16,8 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-//#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -97,7 +98,7 @@ namespace Gambit
           const double xserr_fb = (*Dep::HardScatteringSim)->xsecErr_pb() * 1000.;
           result.set_xsec(xs_fb, xserr_fb);
           #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << "xs_fb = " << xs_fb << " +/- " << xserr_fb << endl;
+            cout << DEBUG_PREFIX << "xs_fb = " << xs_fb << " +/- " << xserr_fb << endl;
           #endif
         }
       }
@@ -456,9 +457,31 @@ namespace Gambit
     void getXsecInfoMap(map_str_dbl& result)
     {
       using namespace Pipes::getXsecInfoMap;
-      result.clear();
-      const xsec& xs = (*Dep::CrossSection);
-      result = xs.get_content_as_map();
+
+      // @todo Do we need this to ensure that the result map is always of the same length (for the printer)?
+      // // Append the xsec info for the current collider to the result map
+      // if (*Loop::iteration == COLLIDER_INIT)
+      // {
+      //   xsec empty_xs;
+      //   for(auto s_d_pair : empty_xs.get_content_as_map())
+      //   {
+      //     std::string new_key(Dep::RunMC->current_collider());
+      //     new_key.append("__").append(s_d_pair.first);
+      //     result[new_key] = s_d_pair.second;
+      //   }
+      // }
+
+      // Append the xsec info for the current collider to the result map
+      if (*Loop::iteration == COLLIDER_FINALIZE)
+      {
+        const xsec& xs = (*Dep::CrossSection);
+        for(auto s_d_pair : xs.get_content_as_map())
+        {
+          std::string new_key(Dep::RunMC->current_collider());
+          new_key.append("__").append(s_d_pair.first);
+          result[new_key] = s_d_pair.second;
+        }
+      }
     }
 
   }

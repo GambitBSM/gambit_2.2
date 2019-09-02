@@ -73,11 +73,18 @@ namespace Gambit
         /// Get content as map <string,double> map (for easy printing).
         std::map<std::string, double> get_content_as_map() const;
 
+        /// Set the info string
+        void set_info_string(std::string);
+
+        /// Get the info string
+        std::string info_string() const;
+
       private:
 
         long long _ntot;
         double _xsec;
         double _xsecerr;
+        std::string _info_string;
 
         /// A map with pointers to all instances of this class. The key is the OMP thread number.
         static std::map<int, const xsec*> instances_map;

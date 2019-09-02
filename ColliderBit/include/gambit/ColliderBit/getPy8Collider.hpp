@@ -38,7 +38,8 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
- #define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -142,7 +143,7 @@ namespace Gambit
         pythiaOptions.push_back("Random:seed = " + seed);
 
         #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "getPythia"+model_suffix+": My Pythia seed is: " << seed << endl;
+          cout << DEBUG_PREFIX << "getPythia"+model_suffix+": My Pythia seed is: " << seed << endl;
         #endif
 
         try
@@ -161,7 +162,7 @@ namespace Gambit
           catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
           {
             #ifdef COLLIDERBIT_DEBUG
-              cout << debug_prefix() << "Py8Collider::InitializationError caught in getPy8Collider. Will discard this point." << endl;
+              cout << DEBUG_PREFIX << "Py8Collider::InitializationError caught in getPy8Collider. Will discard this point." << endl;
             #endif
             piped_invalid_point.request("Bad point: Pythia can't initialize");
             wrapup();
@@ -191,14 +192,14 @@ namespace Gambit
         }
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "totalxsec [fb] = " << totalxsec * 1e12 << ", veto limit [fb] = " << xsec_veto_fb << endl;
+          cout << DEBUG_PREFIX << "totalxsec [fb] = " << totalxsec * 1e12 << ", veto limit [fb] = " << xsec_veto_fb << endl;
         #endif
 
         // - Check for NaN xsec
         if (Utils::isnan(totalxsec))
         {
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Got NaN cross-section estimate from Pythia." << endl;
+          cout << DEBUG_PREFIX << "Got NaN cross-section estimate from Pythia." << endl;
           #endif
           piped_invalid_point.request("Got NaN cross-section estimate from Pythia.");
           wrapup();
@@ -209,7 +210,7 @@ namespace Gambit
         if (totalxsec * 1e12 < xsec_veto_fb)
         {
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Cross-section veto applies. Will now call Loop::wrapup() to skip event generation for this collider." << endl;
+          cout << DEBUG_PREFIX << "Cross-section veto applies. Will now call Loop::wrapup() to skip event generation for this collider." << endl;
           #endif
           wrapup();
         }
