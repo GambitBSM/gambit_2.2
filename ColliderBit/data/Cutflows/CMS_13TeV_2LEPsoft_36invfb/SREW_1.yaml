@@ -287,7 +287,7 @@ Rules:
         pythia_settings:
           - Print:quiet = on
           - Next:numberShowProcess = 10
-          - Next:numberCount = 100
+          - Next:numberCount = 1000
           - Random:setSeed = on
           - Beams:eCM = 13000
           - PartonLevel:MPI = off
