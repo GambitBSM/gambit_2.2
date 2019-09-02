@@ -95,6 +95,7 @@
   START_CAPABILITY
     #define FUNCTION getXsecInfoMap
     START_FUNCTION(map_str_dbl)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(CrossSection, xsec)
     #undef FUNCTION
   #undef CAPABILITY

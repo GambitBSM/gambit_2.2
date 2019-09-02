@@ -56,15 +56,6 @@ namespace Gambit
                              COLLIDER_FINALIZE = -7,
                              BASE_FINALIZE = -8};
 
-
-    /// Debug prefix string giving thread number
-    inline str debug_prefix()
-    {
-      std::stringstream ss;
-      ss << "DEBUG: OMP thread " << omp_get_thread_num() << ":  ";
-      return ss.str();
-    }
-
   }
 
 }

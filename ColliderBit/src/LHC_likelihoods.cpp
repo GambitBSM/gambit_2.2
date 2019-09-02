@@ -45,6 +45,7 @@
 #include "gambit/ColliderBit/multimin.h"
 
 // #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -200,6 +201,12 @@ namespace Gambit
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
+
+      // @todo Remove this when reinstating the block below
+      std::vector<double> nuisances(nSR, 0.0);
+
+      // @todo Comment out this until we've figured out a memory issue...
+      /*
       const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
       // Set nuisances to an informed starting position
@@ -215,13 +222,15 @@ namespace Gambit
         const double d = b*b - 4*a*c;
         const double sqrtd = (d < 0) ? 0 : sqrt(d);
         if (sqrtd == 0) {
-          return -b / (2*a);
+          nuisances[j] = -b / (2*a);
         } else {
           const double th0_a = (-b + sqrtd) / (2*a);
           const double th0_b = (-b - sqrtd) / (2*a);
-          return (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
+          nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
         }
       }
+      */
+
 
       // Optimiser parameters
       // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
@@ -240,7 +249,7 @@ namespace Gambit
       static const unsigned MAXSTEPS = runOptions->getValueOrDef<unsigned>(10000, "nuisance_prof_maxsteps");
       static const double CONV_ACC = runOptions->getValueOrDef<double>(0.01, "nuisance_prof_convacc");
       static const double SIMPLEX_SIZE = runOptions->getValueOrDef<double>(1e-5, "nuisance_prof_simplexsize");
-      static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(1, "nuisance_prof_method");
+      static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(6, "nuisance_prof_method");
       static const unsigned VERBOSITY = runOptions->getValueOrDef<unsigned>(0, "nuisance_prof_verbosity");
       static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
@@ -274,7 +283,7 @@ namespace Gambit
       auto marginaliser = (*BEgroup::lnlike_marg_poisson == "lnlike_marg_poisson_lognormal_error")
         ? BEreq::lnlike_marg_poisson_lognormal_error : BEreq::lnlike_marg_poisson_gaussian_error;
 
-      const double sr_margll = marginaliser((int) n_preds(0), 0.0, n_obss(0), sqrtevals(0)/n_preds(0));
+      const double sr_margll = marginaliser((int) n_obss(0), 0.0, n_preds(0), sqrtevals(0)/n_preds(0));
       return sr_margll;
     }
 
@@ -382,12 +391,12 @@ namespace Gambit
         }
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix()
+        cout << DEBUG_PREFIX
              << "diff_rel: " << diff_rel << endl
              << "   diff_abs: " << diff_abs << endl
              << "   logl: " << log(ana_like) << endl;
-        cout << debug_prefix() << "nsample for the next iteration is: " << nsample << endl;
-        cout << debug_prefix() << endl;
+        cout << DEBUG_PREFIX << "nsample for the next iteration is: " << nsample << endl;
+        cout << DEBUG_PREFIX << endl;
         #endif
       }
       // End convergence while-loop
@@ -397,7 +406,7 @@ namespace Gambit
       ana_like = 0.5*(ana_like + ana_like_prev);
       const double ana_margll = log(ana_like);
       #ifdef COLLIDERBIT_DEBUG
-      cout << debug_prefix() << "Combined estimate: ana_loglike: " << ana_margll << "   (based on 2*nsample=" << 2*nsample << " samples)" << endl;
+      cout << DEBUG_PREFIX << "Combined estimate: ana_loglike: " << ana_margll << "   (based on 2*nsample=" << 2*nsample << " samples)" << endl;
       #endif
 
       return ana_margll;
@@ -435,11 +444,11 @@ namespace Gambit
         #ifdef COLLIDERBIT_DEBUG
         std::streamsize stream_precision = cout.precision();  // get current precision
         cout.precision(2);  // set precision
-        cout << debug_prefix() << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
+        cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
         for (size_t SR = 0; SR < adata.size(); ++SR)
         {
           const SignalRegionData& srData = adata[SR];
-          cout << std::fixed << debug_prefix()
+          cout << std::fixed << DEBUG_PREFIX
                                  << "calc_LHC_LogLikes: " << ananame
                                  << ", " << srData.sr_label
                                  << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
@@ -483,7 +492,7 @@ namespace Gambit
           }
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
           #endif
 
           // Continue to next analysis
@@ -511,7 +520,7 @@ namespace Gambit
           result[ananame].combination_loglike = 0.0;
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No signal predicted. Skipped full calculation.)" << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No signal predicted. Skipped full calculation.)" << endl;
           #endif
 
           // Continue to next analysis
@@ -538,7 +547,7 @@ namespace Gambit
           ///
           /// @todo Support NSL, i.e. skewness correction
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: Analysis " << analysis << " has a covariance matrix: computing composite loglike." << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: Analysis " << analysis << " has a covariance matrix: computing composite loglike." << endl;
           #endif
 
 
@@ -559,7 +568,7 @@ namespace Gambit
             //logfact_n_obs(SR) = gsl_sf_lngamma(n_obs(SR) + 1.);
 
             // A contribution to the predicted number of events that is not known exactly
-            n_pred_b(SR) = srData.n_background;
+            n_pred_b(SR) = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
             n_pred_sb(SR) = srData.n_signal_at_lumi + srData.n_background;
 
             // Absolute errors for n_predicted_uncertain_*
@@ -616,7 +625,7 @@ namespace Gambit
           result[ananame].combination_loglike = ana_dll;
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << ana_dll << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << ana_dll << endl;
           #endif
 
 
@@ -627,7 +636,7 @@ namespace Gambit
           // constraining under the s=0 assumption (default), or naively combine
           // the loglikes for all SRs (if combine_SRs_without_covariances=true).
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: Analysis " << analysis << " has no covariance matrix: computing single best-expected loglike." << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: Analysis " << analysis << " has no covariance matrix: computing single best-expected loglike." << endl;
           #endif
 
           double bestexp_dll_exp = 0, bestexp_dll_obs = NAN;
@@ -639,8 +648,28 @@ namespace Gambit
           {
             const SignalRegionData& srData = adata[SR];
 
+            // Shortcut: If n_signal == 0, we know the delta log-likelihood is 0.
+            if(srData.n_signal == 0)
+            {
+              // Store (obs) result for this SR
+              result[ananame].sr_indices[srData.sr_label] = SR;
+              result[ananame].sr_loglikes[srData.sr_label] = 0.0;
+
+              // Update the running best-expected-exclusion detail
+              if (0.0 < bestexp_dll_exp || SR == 0)
+              {
+                bestexp_dll_exp = 0.0;
+                bestexp_dll_obs = 0.0;
+                bestexp_sr_label = srData.sr_label;
+                bestexp_sr_index = SR;
+              }
+
+              // Skip to next SR
+              continue;
+            }
+
             // A contribution to the predicted number of events that is not known exactly
-            const double n_pred_b = srData.n_background;
+            const double n_pred_b = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
             const double n_pred_sb = n_pred_b + srData.n_signal_at_lumi;
 
             // Actual observed number of events and predicted background, as integers cf. Poisson stats
@@ -650,7 +679,7 @@ namespace Gambit
             // Absolute errors for n_predicted_uncertain_*
             const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
             const double abs_uncertainty_s_sys = srData.signal_sys;
-            const double abs_uncertainty_b = srData.background_sys;
+            const double abs_uncertainty_b = std::max(srData.background_sys, 0.001); // <-- Avoid trouble with b_err==0
             const double abs_uncertainty_sb = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys, abs_uncertainty_b);
 
             // Construct dummy 1-element Eigen objects for passing to the general likelihood calculator
@@ -675,6 +704,32 @@ namespace Gambit
             const double dll_exp = ll_sb_exp - ll_b_exp;
             const double dll_obs = ll_sb_obs - ll_b_obs;
 
+            // Check for problems
+            if (Utils::isnan(ll_b_exp))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_b_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+            if (Utils::isnan(ll_b_obs))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_b_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+            if (Utils::isnan(ll_sb_exp))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_sb_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+            if (Utils::isnan(ll_sb_obs))
+            {
+              std::stringstream msg;
+              msg << "Computation of ll_sb_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
+              invalid_point().raise(msg.str());
+            }          
+
             // Update the running best-expected-exclusion detail
             if (dll_exp < bestexp_dll_exp || SR == 0)
             {
@@ -683,7 +738,7 @@ namespace Gambit
               bestexp_sr_label = srData.sr_label;
               bestexp_sr_index = SR;
               // #ifdef COLLIDERBIT_DEBUG
-              // cout << debug_prefix() << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << bestexp_dll_exp << ", LogL_obs = " << bestexp_dll_obs << endl;
+              // cout << DEBUG_PREFIX << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << bestexp_dll_exp << ", LogL_obs = " << bestexp_dll_obs << endl;
               // #endif
             }
 
@@ -694,7 +749,7 @@ namespace Gambit
             nocovar_srsum_dll_obs += dll_obs;
 
             #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << ananame << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << dll_exp << ",  llsb_obs-llb_obs= " << dll_obs << endl;
+            cout << DEBUG_PREFIX << ananame << ", " << srData.sr_label << ",  llsb_exp-llb_exp = " << dll_exp << ",  llsb_obs-llb_obs= " << dll_obs << endl;
             #endif
 
           }
@@ -713,33 +768,35 @@ namespace Gambit
           }
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_LHC_LogLikes: " << ananame << "_" << bestexp_sr_label << "_LogLike : " << ana_dll << endl;
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_" << bestexp_sr_label << "_LogLike : " << ana_dll << endl;
           #endif
 
         } // end cov/no-cov
 
 
         // Check for problems with the result
-        if (Utils::isnan(ana_dll))
+        for(auto& s_d_pair : result[ananame].sr_loglikes)
         {
-          std::stringstream msg;
-          msg << "Computation of composite loglike for analysis " << ananame << " returned NaN" << endl;
-          msg << "Will now print the signal region data for this analysis:" << endl;
-          for (size_t SR = 0; SR < nSR; ++SR)
+          if (Utils::isnan(s_d_pair.second))
           {
-            const SignalRegionData& srData = adata[SR];
-            msg << srData.sr_label
-                << ",  n_background = " << srData.n_background
-                << ",  background_sys = " << srData.background_sys
-                << ",  n_observed = " << srData.n_observed
-                << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
-                << ",  n_signal = " << srData.n_signal
-                << ",  signal_sys = " << srData.signal_sys
-                << endl;
-          }
-          invalid_point().raise(msg.str());
+            std::stringstream msg;
+            msg << "Computation of loglike for signal region " << s_d_pair.first << " in analysis " << ananame << " returned NaN" << endl;
+            msg << "Will now print the signal region data for this analysis:" << endl;
+            for (size_t SR = 0; SR < nSR; ++SR)
+            {
+              const SignalRegionData& srData = adata[SR];
+              msg << srData.sr_label
+                  << ",  n_background = " << srData.n_background
+                  << ",  background_sys = " << srData.background_sys
+                  << ",  n_observed = " << srData.n_observed
+                  << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
+                  << ",  n_signal = " << srData.n_signal
+                  << ",  signal_sys = " << srData.signal_sys
+                  << endl;
+            }
+            invalid_point().raise(msg.str());
+          }          
         }
-
 
       } // end analysis loop
     }
@@ -852,7 +909,7 @@ namespace Gambit
       if (Dep::RunMC->exceeded_maxFailedEvents)
       {
         #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "calc_combined_LHC_LogLike: Too many failed events. Will be conservative and return a delta log-likelihood of 0." << endl;
+          cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Too many failed events. Will be conservative and return a delta log-likelihood of 0." << endl;
         #endif
         return;
       }
@@ -868,7 +925,7 @@ namespace Gambit
         {
           #ifdef COLLIDERBIT_DEBUG
             cout.precision(5);
-            cout << debug_prefix() << "calc_combined_LHC_LogLike: Leaving out analysis " << analysis_name << " with LogL = " << analysis_loglike << endl;
+            cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Leaving out analysis " << analysis_name << " with LogL = " << analysis_loglike << endl;
           #endif
           continue;
         }
@@ -887,12 +944,12 @@ namespace Gambit
 
         #ifdef COLLIDERBIT_DEBUG
           cout.precision(5);
-          cout << debug_prefix() << "calc_combined_LHC_LogLike: Analysis " << analysis_name << " contributes with a LogL = " << analysis_loglike << endl;
+          cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Analysis " << analysis_name << " contributes with a LogL = " << analysis_loglike << endl;
         #endif
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "calc_combined_LHC_LogLike: LHC_Combined_LogLike = " << result << endl;
+        cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: LHC_Combined_LogLike = " << result << endl;
       #endif
 
       // If using a "global" capped likelihood, set result = min(result,0)

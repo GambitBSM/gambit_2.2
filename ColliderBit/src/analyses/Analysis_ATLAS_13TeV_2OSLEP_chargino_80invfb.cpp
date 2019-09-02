@@ -22,7 +22,7 @@
 #include "gambit/ColliderBit/mt2_bisect.h"
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 
-#define CHECK_CUTFLOW
+// #define CHECK_CUTFLOW
 
 using namespace std;
 

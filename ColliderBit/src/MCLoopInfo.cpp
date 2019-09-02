@@ -83,6 +83,15 @@ namespace Gambit
       }
       _current_detector_analyses_it = lt;
 
+      // Save an iterator to the current invalidate_failed_points
+      auto mt = invalidate_failed_points.find(_current_collider);
+      if (mt == invalidate_failed_points.end())
+      {
+        str msg = "Current collider \"" + _current_collider + "\" not found in MCLoopInfo::invalidate_failed_points map.";
+        utils_error().raise(LOCAL_INFO, msg);
+      }
+      _current_invalidate_failed_points_it = mt;
+
     }
 
     bool MCLoopInfo::current_analyses_exist_for(const str& detname) const
@@ -96,6 +105,9 @@ namespace Gambit
 
     const int& MCLoopInfo::current_maxFailedEvents() const { return _current_maxFailedEvents_it->second; }
     int& MCLoopInfo::current_maxFailedEvents() { return _current_maxFailedEvents_it->second; }
+
+    const bool& MCLoopInfo::current_invalidate_failed_points() const { return _current_invalidate_failed_points_it->second; }
+    bool& MCLoopInfo::current_invalidate_failed_points() { return _current_invalidate_failed_points_it->second; }
 
     const int& MCLoopInfo::current_event_count() const { return _current_event_count_it->second; }
     int& MCLoopInfo::current_event_count() { return _current_event_count_it->second; }
