@@ -31,10 +31,15 @@ using namespace std;
 namespace Gambit {
   namespace ColliderBit {
 
-    // This analysis class is also a base class for the class
-    // Analysis_CMS_13TeV_2LEPsoft_36invfb_nocovar defined further down.
-    // This is the same analysis, but it does not make use of the
-    // SR covariance information.
+    // This analysis class only returns the results from the EWino signal regions.
+    // The stop signal regions are returned from the derived class 
+    // Analysis_CMS_13TeV_2LEPsoft_stop_36invfb below.
+    //
+    // There also the derived classes 
+    // - Analysis_CMS_13TeV_2LEPsoft_36invfb_nocovar
+    // - Analysis_CMS_13TeV_2LEPsoft_stop_36invfb_nocovar
+    // that don't make use of the the covariance matrices
+
     class Analysis_CMS_13TeV_2LEPsoft_36invfb : public Analysis {
 
     protected:
@@ -409,6 +414,9 @@ namespace Gambit {
         // cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
 
 
+        // The stop signal regions are collected in the derived analysis class 
+        // Analysis_CMS_13TeV_2LEPsoft_stop_36invfb below.
+
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
         add_result(SignalRegionData("SREW1",  2.,  {_numSR["SREW1"],  0.}, {3.5, 1.}));
         add_result(SignalRegionData("SREW2",  15., {_numSR["SREW2"],  0.}, {12, 2.3}));
@@ -422,16 +430,6 @@ namespace Gambit {
         add_result(SignalRegionData("SREW10", 1.,  {_numSR["SREW10"], 0.}, {1.5, 0.6}));
         add_result(SignalRegionData("SREW11", 2.,  {_numSR["SREW11"], 0.}, {1.5, 0.8}));
         add_result(SignalRegionData("SREW12", 0.,  {_numSR["SREW12"], 0.}, {1.2, 0.6}));
-        add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
-        add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
-        add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
-        add_result(SignalRegionData("SRST4",  23., {_numSR["SRST4"],  0.}, {23.0,3.5}));
-        add_result(SignalRegionData("SRST5",  40., {_numSR["SRST5"],  0.}, {41.0,5.6}));
-        add_result(SignalRegionData("SRST6",  44., {_numSR["SRST6"],  0.}, {45.0,7.0}));
-        add_result(SignalRegionData("SRST7",  4.,  {_numSR["SRST7"],  0.}, {4.7,1.3}));
-        add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
-        add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
-
 
         // Covariance matrix
         static const vector< vector<double> > BKGCOV = {
@@ -468,7 +466,54 @@ namespace Gambit {
 
 
     //
-    // Derived analysis class that does not make use of the SR covariance matrix
+    // Derived analysis class that for the stop search signal regions
+    //
+    class Analysis_CMS_13TeV_2LEPsoft_stop_36invfb : public Analysis_CMS_13TeV_2LEPsoft_36invfb {
+
+    public:
+      Analysis_CMS_13TeV_2LEPsoft_stop_36invfb() {
+        set_analysis_name("CMS_13TeV_2LEPsoft_stop_36invfb");
+      }
+
+      virtual void collect_results() {
+
+        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
+        add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
+        add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
+        add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
+        add_result(SignalRegionData("SRST4",  23., {_numSR["SRST4"],  0.}, {23.0,3.5}));
+        add_result(SignalRegionData("SRST5",  40., {_numSR["SRST5"],  0.}, {41.0,5.6}));
+        add_result(SignalRegionData("SRST6",  44., {_numSR["SRST6"],  0.}, {45.0,7.0}));
+        add_result(SignalRegionData("SRST7",  4.,  {_numSR["SRST7"],  0.}, {4.7,1.3}));
+        add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
+        add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
+
+        // Covariance matrix
+        static const vector< vector<double> > BKGCOV = {
+          { 6.09,  4.71,  3.20,  2.50,  1.91,  2.77,  0.54,  0.89,  0.73 },
+          { 4.71, 42.34, 27.35,  7.02,  8.98, 26.59,  2.10,  5.75,  8.78 },
+          { 3.20, 27.35, 43.20,  6.86, 13.80, 32.28,  2.33,  6.71,  9.86 },
+          { 2.50,  7.02,  6.86, 12.11,  6.86,  8.32,  1.13,  2.35,  2.85 },
+          { 1.91,  8.98, 13.80,  6.86, 22.57, 16.73,  1.46,  3.93,  5.61 },
+          { 2.77, 26.59, 32.28,  8.32, 16.73, 44.78,  2.58,  7.69, 12.14 },
+          { 0.54,  2.10,  2.33,  1.13,  1.46,  2.58,  1.56,  0.66,  0.79 },
+          { 0.89,  5.75,  6.71,  2.35,  3.93,  7.69,  0.66,  3.88,  2.55 },
+          { 0.73,  8.78,  9.86,  2.85,  5.61, 12.14,  0.79,  2.55,  6.54 },
+        };
+
+        set_covariance(BKGCOV);
+
+      }
+
+    };
+
+    // Factory fn
+    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_stop_36invfb)
+
+
+
+    //
+    // Derived EWino analysis class that does not make use of the SR covariance matrix
     //
     class Analysis_CMS_13TeV_2LEPsoft_36invfb_nocovar : public Analysis_CMS_13TeV_2LEPsoft_36invfb {
 
@@ -492,6 +537,28 @@ namespace Gambit {
         add_result(SignalRegionData("SREW10", 1.,  {_numSR["SREW10"], 0.}, {1.5, 0.6}));
         add_result(SignalRegionData("SREW11", 2.,  {_numSR["SREW11"], 0.}, {1.5, 0.8}));
         add_result(SignalRegionData("SREW12", 0.,  {_numSR["SREW12"], 0.}, {1.2, 0.6}));
+
+      }
+
+    };
+
+    // Factory fn
+    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_36invfb_nocovar)
+
+
+    //
+    // Derived stop-search analysis class that does not make use of the SR covariance matrix
+    //
+    class Analysis_CMS_13TeV_2LEPsoft_stop_36invfb_nocovar : public Analysis_CMS_13TeV_2LEPsoft_36invfb {
+
+    public:
+      Analysis_CMS_13TeV_2LEPsoft_stop_36invfb_nocovar() {
+        set_analysis_name("CMS_13TeV_2LEPsoft_stop_36invfb_nocovar");
+      }
+
+      virtual void collect_results() {
+
+        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
         add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
         add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
         add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
@@ -502,13 +569,12 @@ namespace Gambit {
         add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
         add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
 
-
       }
 
     };
 
     // Factory fn
-    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_36invfb_nocovar)
+    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_stop_36invfb_nocovar)
 
 
   }
