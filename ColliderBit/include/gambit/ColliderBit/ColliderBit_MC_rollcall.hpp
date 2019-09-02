@@ -34,10 +34,15 @@
 #define MODULE ColliderBit
 
   /// Execute the main Monte Carlo event loop.
+  /// Note: 
+  ///   "Non-loop" capabilities that some in-loop capabilities depend on
+  ///   can be added as dependencies here to ensure that they are calculated
+  ///   before the loop starts.
   #define CAPABILITY RunMC
   START_CAPABILITY
     #define FUNCTION operateLHCLoop
     START_FUNCTION(MCLoopInfo, CAN_MANAGE_LOOPS)
+    MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -46,19 +51,55 @@
   #define CAPABILITY CrossSection
   START_CAPABILITY
 
+    /// Cross-section from Monte Carlo
     #define FUNCTION getMCxsec
     START_FUNCTION(xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(HardScatteringSim, const BaseCollider*)
     #undef FUNCTION
 
+    /// Example function for interfacing alternative cross-section calculators
     #define FUNCTION getNLLFastxsec
     START_FUNCTION(xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
+    /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
+    #define FUNCTION getYAMLxsec
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+
+    /// A function that assigns a total cross-sections to a given SLHA input file
+    /// (for model CB_SLHA_file_model)
+    #define FUNCTION getYAMLxsec_SLHA
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(CB_SLHA_file_model)
+    DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
+    #undef FUNCTION
+
+    /// A function that assigns a total cross-sections directly from the scan parameters
+    /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    #define FUNCTION getYAMLxsec_param
+    START_FUNCTION(xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    #undef FUNCTION
+
   #undef CAPABILITY
   /// @}
+
+  /// Get cross-section info as map_str_dbl (for simple printing)
+  #define CAPABILITY XsecInfo
+  START_CAPABILITY
+    #define FUNCTION getXsecInfoMap
+    START_FUNCTION(map_str_dbl)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(CrossSection, xsec)
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
   /// Lists of analyses to run
   /// @{
@@ -223,6 +264,66 @@
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Detector sim capabilities.
+  /// @{
+  #define CAPABILITY ATLASDetectorSim
+  START_CAPABILITY
+    #define FUNCTION getBuckFastATLAS
+    START_FUNCTION(BaseDetector*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY CMSDetectorSim
+  START_CAPABILITY
+    #define FUNCTION getBuckFastCMS
+    START_FUNCTION(BaseDetector*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY IdentityDetectorSim
+  START_CAPABILITY
+    #define FUNCTION getBuckFastIdentity
+    START_FUNCTION(BaseDetector*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
+
+  /// Run detector simulators and produce the standard event format.
+  /// @{
+  #define CAPABILITY ATLASSmearedEvent
+  START_CAPABILITY
+    #define FUNCTION smearEventATLAS
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringEvent, HEPUtils::Event)
+    DEPENDENCY(ATLASDetectorSim, BaseDetector*)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY CMSSmearedEvent
+  START_CAPABILITY
+    #define FUNCTION smearEventCMS
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringEvent, HEPUtils::Event)
+    DEPENDENCY(CMSDetectorSim, BaseDetector*)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY CopiedEvent
+  START_CAPABILITY
+    #define FUNCTION copyEvent
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringEvent, HEPUtils::Event)
+    DEPENDENCY(IdentityDetectorSim, BaseDetector*)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
+
   // All other functions are declared in additional headers in the ColliderBit/models directory.
   // The following capabilities need to be provided for each new model:
 
@@ -234,32 +335,11 @@
   /// Collider sim event capability.
   #define CAPABILITY HardScatteringEvent
   START_CAPABILITY
+    /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
+    #define FUNCTION getLHEvent
+    START_FUNCTION(HEPUtils::Event)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
   #undef CAPABILITY
-
-  /// Detector sim capabilities.
-  /// @{
-  #define CAPABILITY ATLASDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CMSDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY IdentityDetectorSim
-  START_CAPABILITY
-  #undef CAPABILITY
-  /// @}
-
-  /// Run detector simulators and produce the standard event format.
-  /// @{
-  #define CAPABILITY ATLASSmearedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CMSSmearedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
-  #define CAPABILITY CopiedEvent
-  START_CAPABILITY
-  #undef CAPABILITY
-  /// @}
 
 #undef MODULE

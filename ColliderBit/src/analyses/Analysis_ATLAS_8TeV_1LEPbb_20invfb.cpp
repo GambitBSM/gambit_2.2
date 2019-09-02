@@ -177,7 +177,7 @@ namespace Gambit {
         for (size_t iJet=0;iJet<overlapJets.size();iJet++) {
           if (overlapJets.at(iJet)->pT()>25. && overlapJets.at(iJet)->abseta()<2.40) {
             signalJets.push_back(overlapJets.at(iJet));
-            bool hasTag=has_tag(_eff2dBJet, overlapJets.at(iJet)->eta(), overlapJets.at(iJet)->pT());
+            bool hasTag=has_tag(_eff2dBJet, overlapJets.at(iJet)->abseta(), overlapJets.at(iJet)->pT());
             if (overlapJets.at(iJet)->btag() && hasTag)signalBJets.push_back(overlapJets.at(iJet));
           }
         }
@@ -222,13 +222,13 @@ namespace Gambit {
         }
         if (lepton_overlap && nSignalLeptons==1 && nBaselineLeptons==1 && (nSignalJets==2 || nSignalJets==3) && leadingBJets) {
           if (nSignalMuons==1) {
-            bool hasTrig1=has_tag(_eff2dMu1,signalMuons.at(0)->eta(),signalMuons.at(0)->pT());
-            bool hasTrig2=has_tag(_eff2dMu2,signalMuons.at(0)->eta(),signalMuons.at(0)->pT());
+            bool hasTrig1=has_tag(_eff2dMu1,signalMuons.at(0)->abseta(),signalMuons.at(0)->pT());
+            bool hasTrig2=has_tag(_eff2dMu2,signalMuons.at(0)->abseta(),signalMuons.at(0)->pT());
             if (signalMuons.at(0)->abseta()<1.05 && hasTrig1)preselection=true;
             if (signalMuons.at(0)->abseta()>1.05 && hasTrig2)preselection=true;
           }
           if (nSignalElectrons==1) {
-            bool hasTrig=has_tag(_eff2dEl,signalElectrons.at(0)->eta(),signalElectrons.at(0)->pT());
+            bool hasTrig=has_tag(_eff2dEl,signalElectrons.at(0)->abseta(),signalElectrons.at(0)->pT());
             if (hasTrig)preselection=true;
           }
         }

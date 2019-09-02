@@ -23,7 +23,7 @@
 #include "gambit/ColliderBit/mt2_bisect.h"
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 
-#define CHECK_CUTFLOW
+// #define CHECK_CUTFLOW
 
 using namespace std;
 
@@ -80,7 +80,7 @@ namespace Gambit {
         vector<HEPUtils::Particle*> Photons;
         for (HEPUtils::Particle* photon : event->photons())
         {
-          bool isPhoton=has_tag(_eff2dPhoton, photon->eta(), photon->pT());
+          bool isPhoton=has_tag(_eff2dPhoton, photon->abseta(), photon->pT());
           if (isPhoton && photon->pT()>15.) Photons.push_back(photon);
         }
 

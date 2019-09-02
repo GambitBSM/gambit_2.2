@@ -37,18 +37,29 @@
   #define CAPABILITY HardScatteringSim
 
     #define FUNCTION getPythia
-    START_FUNCTION(ColliderPythia_defaultversion)
+    START_FUNCTION(Py8Collider_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     DEPENDENCY(decay_rates, DecayTable)
-    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
+
+    #define FUNCTION getPythia_SLHA
+    START_FUNCTION(Py8Collider_defaultversion)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    NEEDS_CLASSES_FROM(Pythia, default)
+    ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
+    #undef FUNCTION
+
+
 
     #define FUNCTION getPythiaAsBase
     START_FUNCTION(const BaseCollider*)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
-    DEPENDENCY(HardScatteringSim, ColliderPythia_defaultversion)
+    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -56,71 +67,44 @@
 
   // Run event generator
   #define CAPABILITY HardScatteringEvent
+
     #define FUNCTION generateEventPythia
-    START_FUNCTION(Pythia_default::Pythia8::Event)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    DEPENDENCY(HardScatteringSim, ColliderPythia_defaultversion)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-
-  // Get detector simulations
-
-  #define CAPABILITY ATLASDetectorSim
-    #define FUNCTION getBuckFastATLASPythia
-    START_FUNCTION(BaseDetector<Pythia_default::Pythia8::Event>*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY CMSDetectorSim
-    #define FUNCTION getBuckFastCMSPythia
-    START_FUNCTION(BaseDetector<Pythia_default::Pythia8::Event>*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY IdentityDetectorSim
-    #define FUNCTION getBuckFastIdentityPythia
-    START_FUNCTION(BaseDetector<Pythia_default::Pythia8::Event>*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-
-  // Run detector simulations
-
-  #define CAPABILITY ATLASSmearedEvent
-    #define FUNCTION smearEventATLAS
     START_FUNCTION(HEPUtils::Event)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
-    DEPENDENCY(HardScatteringEvent, Pythia_default::Pythia8::Event)
-    DEPENDENCY(ATLASDetectorSim, BaseDetector<Pythia_default::Pythia8::Event>*)
+    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     #undef FUNCTION
+
   #undef CAPABILITY
 
-  #define CAPABILITY CMSSmearedEvent
-    #define FUNCTION smearEventCMS
-    START_FUNCTION(HEPUtils::Event)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    DEPENDENCY(HardScatteringEvent, Pythia_default::Pythia8::Event)
-    DEPENDENCY(CMSDetectorSim, BaseDetector<Pythia_default::Pythia8::Event>*)
-    #undef FUNCTION
+
+  // Get SLHA content from one or more SLHA files
+  #define CAPABILITY SLHAFileNameAndContent
+  START_CAPABILITY
+
+    // Get the next SLHA filename and content (for model CB_SLHA_file_model)
+    #define FUNCTION getNextSLHAFileNameAndContent
+    START_FUNCTION(pair_str_SLHAstruct)
+    ALLOW_MODELS(CB_SLHA_file_model)
+    #undef FUNCTION  
+  
+    // Read single SLHA file and replace some entries 
+    // (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    #define FUNCTION getAndReplaceSLHAContent
+    START_FUNCTION(pair_str_SLHAstruct)
+    ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    #undef FUNCTION  
+
   #undef CAPABILITY
 
-  #define CAPABILITY CopiedEvent
-    #define FUNCTION copyEvent
-    START_FUNCTION(HEPUtils::Event)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    NEEDS_CLASSES_FROM(Pythia, default)
-    DEPENDENCY(HardScatteringEvent, Pythia_default::Pythia8::Event)
-    DEPENDENCY(IdentityDetectorSim, BaseDetector<Pythia_default::Pythia8::Event>*)
+
+  // Extract SLHA file elements (for model CB_SLHA_file_model)
+  #define CAPABILITY SLHAFileElements
+  START_CAPABILITY
+    #define FUNCTION getSLHAFileElements
+    START_FUNCTION(map_str_dbl)
+    ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
     #undef FUNCTION
   #undef CAPABILITY
 

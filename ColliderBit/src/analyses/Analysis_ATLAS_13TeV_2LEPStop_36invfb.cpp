@@ -157,7 +157,7 @@ namespace Gambit {
             const vector<double> cMu={0.89};
             HEPUtils::BinnedFn2D<double> _eff2dMu(a,b,cMu);
             for (HEPUtils::Particle* muon : event->muons()) {
-                bool hasTrig=has_tag(_eff2dMu, muon->eta(), muon->pT());
+                bool hasTrig=has_tag(_eff2dMu, muon->abseta(), muon->pT());
             // Same with the code snippet, not the experimental report
                 if (muon->pT() > 10. && muon->abseta() < 2.5 && hasTrig) blMuons.push_back(muon);
                 if (muon->pT() > 7. && muon->abseta() < 2.5 && hasTrig) baselineMuons.push_back(muon);
@@ -240,7 +240,7 @@ namespace Gambit {
             for (HEPUtils::Jet* jet :sgJets) {
                 if (jet->pT() > 25.) {
                     sgJetsGt25.push_back(jet);
-                    bool hasTag=has_tag(_eff2d, jet->eta(), jet->pT());
+                    bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
                     if(jet->btag() && hasTag && jet->pT() > 25.) sgbJets.push_back(jet);
                 }
             }
@@ -401,8 +401,8 @@ namespace Gambit {
                     const std::vector<double>  b = {0,10000.};
                     const std::vector<double> c = {0.7};
                     HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);*/
-                    bool j1Tag=has_tag(_eff2d, signalJets.at(0)->eta(), signalJets.at(0)->pT());
-                    bool j2Tag=has_tag(_eff2d, signalJets.at(1)->eta(), signalJets.at(1)->pT());
+                    bool j1Tag=has_tag(_eff2d, signalJets.at(0)->abseta(), signalJets.at(0)->pT());
+                    bool j2Tag=has_tag(_eff2d, signalJets.at(1)->abseta(), signalJets.at(1)->pT());
                     if (!(signalJets.at(0)->btag()&&j1Tag&&signalJets.at(1)->btag()&&j2Tag)) c4_2bjetveto=true;
                 }
             }

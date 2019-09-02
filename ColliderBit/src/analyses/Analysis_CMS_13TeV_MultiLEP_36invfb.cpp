@@ -138,7 +138,7 @@ namespace Gambit {
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
         vector<HEPUtils::Particle*> baselineElectrons;
         for (HEPUtils::Particle* electron : event->electrons()) {
-          bool isEl=has_tag(_eff2dEl, electron->eta(), electron->pT());
+          bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (electron->pT()>15. && fabs(electron->eta())<2.5 && isEl)baselineElectrons.push_back(electron);
         }
 
@@ -160,7 +160,7 @@ namespace Gambit {
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
         vector<HEPUtils::Particle*> baselineMuons;
         for (HEPUtils::Particle* muon : event->muons()) {
-          bool isMu=has_tag(_eff2dMu, muon->eta(), muon->pT());
+          bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (muon->pT()>10. &&fabs(muon->eta())<2.4 && isMu)baselineMuons.push_back(muon);
         }
 
@@ -172,7 +172,7 @@ namespace Gambit {
         HEPUtils::BinnedFn2D<double> _eff2dTau(aTau,bTau,cTau);
         vector<HEPUtils::Particle*> baselineTaus;
         for (HEPUtils::Particle* tau : event->taus()) {
-          bool isTau=has_tag(_eff2dTau, tau->eta(), tau->pT());
+          bool isTau=has_tag(_eff2dTau, fabs(tau->eta()), tau->pT());
           if (tau->pT()>20. &&fabs(tau->eta())<2.3 && isTau)baselineTaus.push_back(tau);
         }
 
