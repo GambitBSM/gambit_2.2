@@ -66,8 +66,8 @@ Rules:
     options:
       silenceLoop: false
       LHC_13TeV:
-        min_nEvents: 1724
-        max_nEvents: 1724
+        min_nEvents: 172004
+        max_nEvents: 172004
         events_between_convergence_checks: 172004
         target_fractional_uncert: 0.3
         halt_when_systematic_dominated: true

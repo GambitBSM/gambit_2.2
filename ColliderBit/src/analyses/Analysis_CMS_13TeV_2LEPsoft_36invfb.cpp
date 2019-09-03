@@ -412,7 +412,7 @@ namespace Gambit {
           for (int j=0; j<NCUTS; j++) {
             cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
                  << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
-                 << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_130[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_130[j]) << endl;
+                 << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_143[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_143[j]) << endl;
           }
           cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
         #endif
