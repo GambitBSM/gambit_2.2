@@ -75,7 +75,7 @@ def sarah_params(paramlist, add_higgs):
     unsorted_params = []
     params = []
 
-    # Add all parameters from the parameter list from FeynRules
+    # Add all parameters from the parameter list from SARAH
     for i in xrange(len(paramlist)):
         p = paramlist[i]
         if (    (p.block() != 'SM')
@@ -83,7 +83,7 @@ def sarah_params(paramlist, add_higgs):
             and (p.block() != 'VCKM')):
             
             # Create a new instance of SpectrumParameter
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), index=p.index())
+            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), index=p.index(), alt_name = p.alt_name(), bcs = p.bcs())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them

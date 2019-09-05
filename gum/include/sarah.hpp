@@ -51,6 +51,12 @@ namespace GUM
 
       // MINPAR, EXTPAR
       void get_minpar_extpar(std::vector<Parameter>&);
+
+      // Get boundary conditions
+      void get_boundary_conditions(std::vector<Parameter>&);
+
+      // Get tadpoles
+      void get_tadpoles(std::vector<Parameter>&);
     
       // Outputs: CalcHEP, MadGraph, ...
       void write_ch_output();

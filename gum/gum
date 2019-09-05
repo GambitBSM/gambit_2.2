@@ -145,6 +145,7 @@ if args.file:
         # Hit it
         all_sarah(options, partlist, paramlist, outputs, backends, flags)
 
+
         # Get a list of all non-SM particles
         sarah_bsm = [x for x in partlist if x.SM() is False]
 
@@ -154,7 +155,8 @@ if args.file:
         # Initialise all of the model parameters, for writing spectra,
         # model files - remove all SM stuff from parameter list.
         parameters = sarah_params(paramlist, add_higgs)
-  
+
+
 
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
     # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.
@@ -260,9 +262,13 @@ if args.file:
     MODELS
     """
 
-    model_header = add_to_model_hierarchy(gum.spec, gum.name, parameters)
-    spec_contents = write_spectrumcontents(gum.name, parameters)
-    subspec_wrapper = write_subspectrum_wrapper(gum.name, parameters)
+    # Get the model parameters out of the parameter list
+    # TODO: should the BSM particle masses be model parameters?
+    model_parameters = get_model_parameters(parameters, partlist);
+
+    model_header = add_to_model_hierarchy(gum.spec, gum.name, model_parameters)
+    spec_contents = write_spectrumcontents(gum.name, model_parameters)
+    subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
     reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
     """

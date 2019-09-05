@@ -19,6 +19,7 @@
 #  **************************************
 
 from files import *
+from models import *
 from cmake_variables import *
 from distutils.dir_util import copy_tree
 from collections import defaultdict
@@ -575,13 +576,15 @@ class SPhenoParameter:
     Container type for a SPheno parameter.
     """
     
-    def __init__(self, _name, _type, _size, _block="", _index=0):
+    def __init__(self, _name, _type, _size, _block="", _index=0, _alt_name="", _bcs=""):
 
         self.name = _name
         self.type = _type
         self.size = _size
         self.block = _block
         self.index = _index
+        self.alt_name = _alt_name
+        self.bcs = _bcs
 
 
 def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path, output_dir):
@@ -604,8 +607,12 @@ def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path
     variable_dictionary = get_fortran_shapes(variables)
     hb_variable_dictionary = get_fortran_shapes(hb_variables)
 
+
     # Get the source and header files
-    spheno_src = write_spheno_frontend_src(model_name, functions, variables, flags)
+    spheno_src = write_spheno_frontend_src(model_name, 
+                                           functions, 
+                                           variables, 
+                                           flags)
     spheno_header = write_spheno_frontend_header(model_name, 
                                                  functions, 
                                                  type_dictionary, 
@@ -781,14 +788,17 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
                 size = ""
 
             # If the variable is part of the model parameters, add the block
-            block = "None"
+            block = "" 
             index = 0
+            alt_name = ""
+            bcs = ""
             for model_par in model_parameters:
-              if name == model_par.name:
+              if name == model_par.name or name == model_par.alt_name :
                 block = model_par.block
                 index = model_par.index
-
-            par = SPhenoParameter(name, _type, size, block, index)
+                alt_name = model_par.alt_name
+                bcs = model_par.bcs
+            par = SPhenoParameter(name, _type, size, block, index, alt_name, bcs)
 
             # Finally check to see if the name matches anything we want to
             # section off into the HiggsBounds parameters
@@ -1009,7 +1019,16 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
       "\n"\
       "// Fill input parameters with spectrum imformation\n"\
       "// Masses\n"\
-      "SMInputs sminputs = spectrum.get_SMInputs();\n"
+      "SMInputs sminputs = spectrum.get_SMInputs();\n"\
+      "(*MFd)(1) = sminputs.mD;\n"\
+      "(*MFd)(2) = sminputs.mS;\n"\
+      "(*MFd)(3) = sminputs.mBmB;\n"\
+      "(*MFe)(1) = sminputs.mE;\n"\
+      "(*MFe)(2) = sminputs.mMu;\n"\
+      "(*MFe)(3) = sminputs.mTau;\n"\
+      "(*MFu)(1) = sminputs.mU;\n"\
+      "(*MFu)(2) = sminputs.mCmC;\n"\
+      "(*MFu)(3) = sminputs.mT;\n"
 
     # TODO: Fill model dependent particle masses
 
@@ -1679,12 +1698,13 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
     # TODO: The name of model parameters might be wrong
     for name, var in variables.iteritems():
       if var.block == "MINPAR" :
-        towrite += 'if(inputs.param.find("'+name+'") != inputs.param.end())\n'
+        model_par = get_model_par_name(name, variables)
+        towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'
         if var.type.startswith("Complex") :
           towrite += '  '+name+'->re'
         else :
           towrite += '  *'+name
-        towrite += ' = *inputs.param.at("'+name+'");\n'
+        towrite += ' = *inputs.param.at("'+model_par+'");\n'
 
     towrite += "\n"\
       "/****************/\n"\
@@ -1694,12 +1714,13 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
     # TODO: The name of model parameters might be wrong
     for name, var in variables.iteritems():
       if var.block == "EXTPAR" :
-        towrite += 'if(inputs.param.find("'+name+'") != inputs.param.end())\n'
+        model_par = get_model_par_name(name, variables)
+        towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'
         if var.type.startswith("Complex") :
           towrite += '  '+name+'->re'
         else :
           towrite += '  *'+name
-        towrite += ' = *inputs.param.at("'+name+'");\n'
+        towrite += ' = *inputs.param.at("'+model_par+'");\n'
 
     # TODO: ParamIN blocks
 

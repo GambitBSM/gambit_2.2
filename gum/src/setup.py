@@ -101,7 +101,8 @@ class SpectrumParameter:
 
     def __init__(self, name, tag, block=None, index=1, 
                  shape=None, fullname=None,
-                 sm=False, gb_input=None):
+                 sm=False, gb_input=None,
+                 alt_name=None, bcs=None):
         self.name = name
         self.tag = tag
         self.shape = shape
@@ -116,6 +117,8 @@ class SpectrumParameter:
             self.gb_in = name
         else:
             self.gb_in = gb_input
+        self.alt_name = alt_name
+        self.bcs = bcs
           
 class BackendReq:
     """

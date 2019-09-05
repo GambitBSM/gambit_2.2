@@ -342,24 +342,26 @@ namespace GUM
     send_to_math(command);
 
     int lenpl;
-
-    if (!WSGetInteger(link, &lenpl))
+    try { get_from_math(lenpl); }
+    catch(std::runtime_error &e)
     {
-        std::cout << "Error getting 'Length[ParamList]' from WSTP." << std::endl;
-        return;
+      std::stringstream ss; 
+      ss << e.what() << ": Error getting 'Length[ParamList]' from WSTP";
+      throw std::runtime_error(ss.str());
     }
 
     std::cout << "Found " << lenpl << " parameter sets." << std::endl;
 
     for (int i=0; i<lenpl; i++)
     {
-        const char* block;
-        const char* paramname;
-        int index;
+        std::string block;
+        std::string paramname;
+        std::string alt_paramname;
+        int index = 0;
 
         // Whether or not the parameter is defined by other parameters
         // of the model. If so, don't want it in GAMBIT
-        bool externalparam = true;
+        //bool externalparam = true;
 
         // Whether we've found an LH block
         bool LHblock = false;
@@ -369,137 +371,129 @@ namespace GUM
 
         // Get the parameter name as it is known in SARAH. This
         // might change later.
-        if (!WSGetString(link, &paramname))
+        try { get_from_math(paramname); }
+        catch(std::runtime_error &e)
         {
-            std::cout << "Error getting the parameter name "
-                      << "at position " << i+1 
-                      << "; please check your .m file."
-                      << std::endl;
-            return;
+            std::stringstream ss;
+            ss << e.what()
+               << ": Error getting the parameter name "
+               << "at position " + i+1 
+               << "; please check your .m file.";
+            throw std::runtime_error(ss.str());
         }
 
         command = "Length[pd[[" + std::to_string(i+1) + ",2]]]";
         send_to_math(command);
 
-        int numelements;
+        // Each entry will be some sort of descriptor for
+        // a particle. Discard things like LaTeX entries, 
+        // descriptions in prose, etc.
+        std::string entry;
 
-        // Find out how many entries are in the description 
-        // of the parameter
-        if (!WSGetInteger(link, &numelements))
+        // Here are the useful things we want to query:
+        // - blockname & index
+        // - parameter name
+        // - dependences
+
+        // Does the parameter depend on some other combination
+        // of parameters?
+        try
         {
-            std::cout << "Error getting the number of elements "
-                      << "defining the parameter " << paramname
-                      << ". Please check your .m file."
-                      << std::endl;
-            return;
+          command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+          send_to_math(command);
+          get_from_math(entry);
+        
+          // If it has a dependence -- not interested. Bin it.
+          if (entry != "DependenceNum" and entry != "None") continue;
+
+          // Same with DependenceSPheno
+          command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+          send_to_math(command);
+          get_from_math(entry);
+          if (entry != "DependenceSPheno" and entry != "None") continue;
+
+          // Same with just Dependence
+          command = "Dependence /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+          send_to_math(command); 
+          get_from_math(entry);
+          if (entry != "Dependence" and entry != "None") continue;
+        }
+        catch(std::runtime_error &e)
+        {
+            std::stringstream ss;
+            ss << e.what()
+               << ": Error querying Dependence for "
+               << i+1 << " from WSTP "
+               << "for the SARAH parameter " << paramname;
+            throw std::runtime_error(ss.str());
         }
 
-        // Go through each parameter and extract any useful info
-        for (int j=0; j<numelements; j++)
+        // Get block name
+        command = "Head[LesHouches /. pd[[" + std::to_string(i+1) + ",2]]]";
+        send_to_math(command);
+        try { get_from_math(entry); }
+        catch(std::runtime_error &e)
         {
+            std::stringstream ss;
+            ss << e.what()
+               << ": Error querying LesHouches entry "
+               << i+1 << " from WSTP "
+               << "for the SARAH parameter " << paramname;
+            throw std::runtime_error(ss.str());
+        }
 
-            // Each entry will be some sort of descriptor for
-            // a particle. Discard things like LaTeX entries, 
-            // descriptions in prose, etc.
-            const char* entry;
-
-            // Here are the useful things we want to query:
-            // - blockname & index
-            // - parameter name
-            // - dependences
-
-            // Does the parameter depend on some other combination
-            // of parameters?
-            command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]] // ToString";
+        // If we have a list, then there's a blockname and an index.
+        if (entry == "List") 
+        { 
+            command = "LesHouches /. pd[[" + std::to_string(i+1) + ",2]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &entry))
+            std::vector<std::string> leshouches;
+            try { get_from_math(leshouches); }             
+            catch(std::runtime_error &e)
             {
-                std::cout << "Error querying DependenceNum for "
-                          << i+1 << ", " << j+1 << " from WSTP "
-                          << "for the SARAH parameter " << paramname
-                          << std::endl;
-                return;
-            }
-            // If it has a dependence -- not interested. Bin it.
-            if (strcmp(entry, "DependenceNum")) 
-            { 
-                externalparam = false; 
+                std::stringstream ss;
+                ss << e.what() 
+                   << ": Error querying LesHouches info from WSTP "
+                   << "for the SARAH parameter " 
+                   << paramname << " with index" << i+1;
+                throw std::runtime_error(ss.str());
             }
 
-            // Does the parameter depend on some other combination
-            // of parameters?
-            command = "Head[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]]]";
-            send_to_math(command);
+            // blockname
+            block = leshouches[0];
+            // index
+            index = std::stoi(leshouches[1]);
+            LHblock = true;
+        }
 
-            if (!WSGetString(link, &entry))
-            {
-                std::cout << "Error querying LesHouches entry "
-                          << i+1 << ", " << j+1 << " from WSTP "
-                          << "for the SARAH parameter " << paramname
-                          << std::endl;
-                return;
-            }
-
-            // If we have a list, then there's a blockname and an index.
-            if (not strcmp(entry, "List")) 
-            { 
-                // blockname
-                command = "Part[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]],1]";
-                send_to_math(command);
-
-                if (!WSGetString(link, &block))
-                {
-                    std::cout << "Error querying blockname from WSTP "
-                              << "for the SARAH parameter " 
-                              << paramname << " with indices "
-                              << i+1 << "," << j+1
-                              << std::endl;
-                    return;
-                }
-
-                // index
-                command = "Part[LesHouches /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]],2]";
-                send_to_math(command);
-                if (!WSGetInteger(link, &index))
-                {
-                    std::cout << "Error querying index from WSTP "
-                              << "for the SARAH parameter " 
-                              << paramname << " with indices "
-                              << i+1 << "," << j+1
-                              << std::endl;
-                    return;
-                }
-                LHblock = true;
-            }
-
-            // Does the parameter have a different external
-            // name than the internal SARAH name? If so, use it.
-            command = "OutputName /. pd[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + "]] // ToString";
-            send_to_math(command);
-
-            if (!WSGetString(link, &entry))
-            {
-                std::cout << "Error querying OutputName for "
-                          << i+1 << ", " << j+1 << " from WSTP "
-                          << "for the SARAH parameter " << paramname
-                          << std::endl;
-                return;
-            }
-            // If it has a different output name to 
-            // internal, we'd better use it, seeing as GAMBIT
-            // is... output, I guess.
-            if (strcmp(entry, "OutputName")) 
-            { 
-                paramname = entry;
-            }
+        // Does the parameter have a different external
+        // name than the internal SARAH name? If so, use it.
+        command = "OutputName /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+        send_to_math(command);
+        try { get_from_math(entry); }
+        catch(std::runtime_error &e)
+        {
+            std::stringstream ss;
+            ss << e.what()
+               << ": Error querying OutputName for "
+               << i+1 << " from WSTP "
+               << "for the SARAH parameter " << paramname;
+            throw std::runtime_error(ss.str());
+        }
+        // If it has a different output name to 
+        // internal, we'd better use it, seeing as GAMBIT
+        // is... output, I guess.
+        if (entry != "OutputName") 
+        { 
+            alt_paramname = paramname;
+            paramname = entry;
         }
 
         // If it's a fundamental parameter of our theory, 
         // add it to the list (if it has an LH block!)
-        if (externalparam && LHblock)
+        if (LHblock)
         {
-            Parameter parameter(paramname, block, index);
+            Parameter parameter(paramname, block, index, alt_paramname);
             paramlist.push_back(parameter);
         }
     }
@@ -510,6 +504,9 @@ namespace GUM
   {
     std::cout << "Extracting MINPAR and EXTPAR parameters from SPheno" << std::endl;
 
+    std::vector<std::vector<std::string> > minpar;
+    std::vector<std::vector<std::string> > extpar;
+
     // Check if MINPAR is a list first
     bool is_list;
     send_to_math("Head[MINPAR]===List");
@@ -518,8 +515,7 @@ namespace GUM
     if(is_list)
     {
       // Get the MINPAR list
-      std::vector<std::vector<std::string> > minpar;
-      send_to_math("ToExpression[MINPAR]");
+      send_to_math("MINPAR");
       get_from_math(minpar);
 
       // Add MINPAR parameters to the parameter list
@@ -534,8 +530,7 @@ namespace GUM
     if(is_list)
     {
       // Get the EXTPAR list
-      std::vector<std::vector<std::string> > extpar;
-      send_to_math("ToExpresssion[EXTPAR]");
+      send_to_math("EXTPAR");
       get_from_math(extpar);
 
       // Add EXTPAR parameters to the parameter list
@@ -543,6 +538,58 @@ namespace GUM
         parameters.push_back(Parameter(par[1], "EXTPAR", std::stoi(par[0])));
     }
 
+  }
+
+  // Get the boundary conditions for all parameters in the parameter list
+  void SARAH::get_boundary_conditions(std::vector<Parameter> &parameters)
+  {
+    std::cout << "Getting boundary conditions" << std::endl;
+
+    // TODO: for now just get the low scale conditions
+    bool is_list;
+    send_to_math("Head[BoundaryLowScaleInput]===List");
+    get_from_math(is_list);
+    if(is_list)
+    {
+      std::vector<std::vector<std::string> > boundary_conditions;
+      send_to_math("BoundaryLowScaleInput");
+      get_from_math(boundary_conditions);
+
+      for(auto param = parameters.begin(); param != parameters.end(); param++)
+      {
+        for (auto bc: boundary_conditions)
+        {
+          if (param->name() == bc[0] or param->alt_name() == bc[0])
+            param->set_bcs(bc[1]);
+        }
+      }
+    }
+
+  }
+
+  // Extract parameters used to solve tadpoles and remove them from the list
+  void SARAH::get_tadpoles(std::vector<Parameter> &parameters)
+  {
+    std::cout << "Extracting parameters to solve tadpoles" << std::endl;
+
+    bool is_list; 
+    send_to_math("Head[ParametersToSolveTadpoles]===List");
+    get_from_math(is_list);
+    if(is_list)
+    {
+      std::vector<std::string> tadpoles;
+      send_to_math("ParametersToSolveTadpoles");
+      get_from_math(tadpoles);
+
+      for(auto param = parameters.begin(); param != parameters.end(); param++)
+        for(auto tp : tadpoles)
+          if (param->name() == tp or param->alt_name() == tp)
+          {
+            param--;
+            parameters.erase(param+1);
+          }
+    }
+        
   }
 
   // Write CalcHEP output.
@@ -671,6 +718,12 @@ namespace GUM
         };
         model.get_flags(flags);
 
+        // Get the boundary conditions for the parameters
+        model.get_boundary_conditions(paramlist);
+
+        // Get the parameters used to solve tadpoles and removed them from the list
+        model.get_tadpoles(paramlist);
+
         // Location of SPheno files
         std::string sphdir = outputdir + "SPheno";
         std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
@@ -713,10 +766,12 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("antiname", &Particle::antiname)
     ;
 
-  class_<Parameter>("SARAHParameter", init<std::string, std::string, int>())
-    .def("name",  &Parameter::name)
-    .def("block", &Parameter::block)
-    .def("index", &Parameter::index)
+  class_<Parameter>("SARAHParameter", init<std::string, std::string, int, std::string, std::string >())
+    .def("name",      &Parameter::name)
+    .def("block",     &Parameter::block)
+    .def("index",     &Parameter::index)
+    .def("alt_name",  &Parameter::alt_name)
+    .def("bcs",       &Parameter::bcs)
     ;
 
   class_<Options>("SARAHOptions", init<std::string, std::string, std::string, std::string, std::string>())

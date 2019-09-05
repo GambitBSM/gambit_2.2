@@ -1,12 +1,55 @@
-"""
-Master module for all Models related routines.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module for all Models related routines.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2019 July
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2019 Sep
+#
 
 import numpy as np
 import re
 
 from setup import *
 from files import *
+
+def get_model_parameters(parameters, partlist) :
+    """
+    Extracts the model (scan) parameters out of the full parameter list
+    """
+
+    model_parameters = []
+
+    for param in parameters:
+ 
+        # if the parameter is in MINPAR or EXTPAR it's not a model parameter
+        if param.block != "MINPAR" and param.block != "EXTPAR" : 
+            model_parameters.append(param)
+
+    return model_parameters;
+
+def get_model_par_name(paramname, parameters) :
+    """
+    Get the output name of the model parameter with name or altname equal to paramname
+    """
+    
+    for name, param in parameters.iteritems():
+      if paramname == param.bcs :
+        return name
+    for name, param in parameters.iteritems():
+      if paramname == param.name or paramname == param.alt_name :
+        return param.name
+
 
 def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     """

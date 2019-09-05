@@ -10,6 +10,10 @@
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date 2017, 2018, 2019
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Sep
+///
 ///  ***********************************
 
 
@@ -17,6 +21,7 @@
 #define OPTIONS
 
 #include <iostream>
+#include <vector>
 
 class Options
 {
@@ -133,6 +138,9 @@ class Parameter
     std::string paramname;
     std::string blockname;
     int blockindex;
+    std::string alt_paramname;
+    std::string boundary_conditions;
+ 
 
     public:
 
@@ -140,16 +148,23 @@ class Parameter
         bool operator==(const Parameter&) {return false;}
         bool operator!=(const Parameter&) {return true;}
 
-        Parameter(std::string name, std::string block, int index)
+        Parameter(std::string name, std::string block, int index, std::string alt_name = "", 
+                  std::string bcs= "")
         {
             paramname = name;
             blockname = block;
             blockindex = index;
+            alt_paramname = alt_name;
+            boundary_conditions = bcs;
         }
 
         std::string name() { return paramname; }
         std::string block() { return blockname; }
         int index() { return blockindex; }
+        std::string alt_name() { return alt_paramname; }
+        std::string bcs() { return boundary_conditions; }
+
+        void set_bcs(std::string bc) { boundary_conditions = bc; }
 
 };
 
