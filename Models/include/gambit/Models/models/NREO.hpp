@@ -26,7 +26,7 @@
     #define CAPABILITY WIMP_properties
     START_CAPABILITY
        #define FUNCTION NREO_scalarDM_WIMP_properties
-       START_FUNCTION(DarkBit::WIMPprops)
+       START_FUNCTION(WIMPprops)
        ALLOW_MODELS(NREO_scalarDM)
        #undef FUNCTION
     #undef CAPABILITY
@@ -35,7 +35,7 @@
     namespace Gambit {
       namespace Models {
         namespace MODEL {
-          void NREO_scalarDM_WIMP_properties(DarkBit::WIMPprops& result)
+          void NREO_scalarDM_WIMP_properties(WIMPprops& result)
           {
               using namespace Pipes::NREO_scalarDM_WIMP_properties;
               result.mass   = *Param["m"];
@@ -57,7 +57,7 @@
     #define CAPABILITY WIMP_properties
     START_CAPABILITY
        #define FUNCTION NREO_MajoranaDM_WIMP_properties
-       START_FUNCTION(DarkBit::WIMPprops)
+       START_FUNCTION(WIMPprops)
        ALLOW_MODELS(NREO_MajoranaDM)
        #undef FUNCTION
     #undef CAPABILITY
@@ -66,7 +66,7 @@
     namespace Gambit {
       namespace Models {
         namespace MODEL {
-          void NREO_MajoranaDM_WIMP_properties(DarkBit::WIMPprops& result)
+          void NREO_MajoranaDM_WIMP_properties(WIMPprops& result)
           {
               using namespace Pipes::NREO_MajoranaDM_WIMP_properties;
               result.mass   = *Param["m"];
@@ -88,7 +88,7 @@
     #define CAPABILITY WIMP_properties
     START_CAPABILITY
        #define FUNCTION NREO_DiracDM_WIMP_properties
-       START_FUNCTION(DarkBit::WIMPprops)
+       START_FUNCTION(WIMPprops)
        ALLOW_MODELS(NREO_DiracDM)
        #undef FUNCTION
     #undef CAPABILITY
@@ -97,7 +97,7 @@
     namespace Gambit {
       namespace Models {
         namespace MODEL {
-          void NREO_DiracDM_WIMP_properties(DarkBit::WIMPprops& result)
+          void NREO_DiracDM_WIMP_properties(WIMPprops& result)
           {
               using namespace Pipes::NREO_DiracDM_WIMP_properties;
               result.mass   = *Param["m"];

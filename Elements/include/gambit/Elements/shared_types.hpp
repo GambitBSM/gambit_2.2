@@ -50,6 +50,8 @@
 #include "gambit/Elements/higgs_couplings_table.hpp"   // Higgs couplings table class (carries couplings info for entire Higgs sector)
 #include "gambit/Elements/slhaea_helpers.hpp"          // Contains SLHAea reader/writer class alias
 #include "gambit/Elements/halo_types.hpp"              // data types for DM halo properties
+#include "gambit/Elements/wimp_props.hpp"              // Containers for generic WIMP dark matter properties
+#include "gambit/Elements/wimp_annihilation.hpp"       // Containers for generic parameterisation of WIMP annihilations to SM particles 
 
 #include "gambit/Backends/default_bossed_versions.hpp" // Default versions of backends to use when employing BOSSed types
 #include "gambit/Backends/mathematica_variable.hpp"    // Wrapper type for Mathematica global variables

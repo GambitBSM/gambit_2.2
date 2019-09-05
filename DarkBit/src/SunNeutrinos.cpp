@@ -35,13 +35,6 @@ namespace Gambit
   namespace DarkBit
   {
  
-    // Placeholder setting of WIMP spin for MSSM models
-    // (assumes neutralino dark matter; need chance for gravitino etc?)
-    void jwimp_for_MSSM(double& jwimp)
-    {
-      jwimp = 0.5;
-    }
-
     //////////////////////////////////////////////////////////////////////////
     //
     //            Neutrino telescope likelihoods and observables
@@ -179,7 +172,7 @@ namespace Gambit
       double maxcap;
       const int niso = 16;
 
-      BEreq::cap_sun_saturation(*Dep::mwimp,maxcap);
+      BEreq::cap_sun_saturation(Dep::WIMP_properties->mass,maxcap);
 
       /*
       use pipe to access parameters of model (0c1...1c15) here (3.2.3 of gambit paper)
@@ -210,8 +203,8 @@ namespace Gambit
        any other integer (than 1 to 16) tells it to sum over all elements together.
       */
       //cout << "Before calling captn_NREO, capped: " << capped << endl;
-      BEreq::captn_NREO(*Dep::mwimp,*Dep::jwimp,niso,0,capped);
-      cout << "From captn_NREO;" << endl << "mwimp: " << *Dep::mwimp << "GeV" << endl << "capped: " << capped << " captures/second" << endl;
+      BEreq::captn_NREO(Dep::WIMP_properties->mass,Dep::WIMP_properties->spinx2/2.,niso,0,capped);
+      cout << "From captn_NREO;" << endl << "mwimp: " << Dep::WIMP_properties->mass << "GeV" << endl << "capped: " << capped << " captures/second" << endl;
 
       /// Loop to sum over each element in solar model individually.
       /*

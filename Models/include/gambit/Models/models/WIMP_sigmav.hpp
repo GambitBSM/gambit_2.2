@@ -37,7 +37,7 @@
     #define CAPABILITY generic_WIMP_sigmav
     START_CAPABILITY
       #define FUNCTION generic_WIMP_sigmav_from_parameters
-      START_FUNCTION(DarkBit::WIMP_annihilation)
+      START_FUNCTION(WIMP_annihilation)
       ALLOW_MODEL(WIMP_sigmav)
       #undef FUNCTION
     #undef CAPABILITY
@@ -46,7 +46,7 @@
     namespace Gambit {
       namespace Models {
         namespace MODEL {
-          void generic_WIMP_sigmav_from_parameters(DarkBit::WIMP_annihilation& result)
+          void generic_WIMP_sigmav_from_parameters(WIMP_annihilation& result)
           {
               using namespace Pipes::generic_WIMP_sigmav_from_parameters;
               std::vector<std::string> finalstates {"bb", "WW", "cc", "tautau", "ZZ", "tt", "hh"};

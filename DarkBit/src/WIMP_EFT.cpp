@@ -30,6 +30,7 @@
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 #include "gambit/DarkBit/DarkBit_utils.hpp"
 #include "gambit/DarkBit/ProcessCatalog.hpp"
+#include "gambit/Utils/numerical_constants.hpp"
 
 //#define DARKBIT_DEBUG
 
@@ -121,6 +122,22 @@ namespace Gambit
        result = Dep::WIMP_properties->name;
     }
 
+    /// WIMP spin property extractor
+    void jwimpx2_from_WIMPprops(unsigned int& result)
+    {
+       using namespace Pipes::jwimpx2_from_WIMPprops;
+       result = Dep::WIMP_properties->spinx2;
+    }
+
+    /// WIMP mass property extractor
+    void mwimp_from_WIMPprops(double& result)
+    {
+       using namespace Pipes::mwimp_from_WIMPprops;
+       result = Dep::WIMP_properties->mass;
+    }
+
+
+
     //////////////////////////////////////////////////////////////////////////
     //
     //   Translation of NREO ModelParameters into NREO_DM_nucleon_couplings
@@ -174,9 +191,9 @@ namespace Gambit
       int scheme = runOptions->getValueOrDef<int>(5,"flavs");
 
       // Obtain spin of DM particle, plus identify whether DM is self-conjugate
-      double mDM = *Dep::mwimp;
-      unsigned int sDM  = *Dep::spinwimpx2;
-      bool is_SC = *Dep::wimp_sc;
+      double mDM = Dep::WIMP_properties->mass;
+      unsigned int sDM  = Dep::WIMP_properties->spinx2;
+      bool is_SC = Dep::WIMP_properties->sc;
 
       // Set DM_type based on the spin and & conjugacy of DM
       std::string DM_type;
@@ -208,9 +225,9 @@ namespace Gambit
       double dchi = runOptions->getValue<int>("dchi");
 
       // Obtain spin of DM particle, plus identify whether DM is self-conjugate
-      double mDM = *Dep::mwimp;
-      unsigned int sDM  = *Dep::spinwimpx2;
-      bool is_SC = *Dep::wimp_sc;
+      double mDM = Dep::WIMP_properties->mass;
+      unsigned int sDM  = Dep::WIMP_properties->spinx2;
+      bool is_SC = Dep::WIMP_properties->sc;
 
       // Set DM_type based on the spin and & conjugacy of DM
       std::string DM_type;
