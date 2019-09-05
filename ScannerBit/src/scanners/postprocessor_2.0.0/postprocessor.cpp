@@ -39,6 +39,7 @@
 #include <sstream>
 
 // GAMBIT
+#include "gambit/Logs/logger.hpp"
 #include "gambit/Utils/mpiwrapper.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/new_mpi_datatypes.hpp"
@@ -48,6 +49,7 @@
 
 using namespace Gambit;
 using namespace Gambit::PostProcessor;
+
 
 // Forward declare this template specialisation as extern so that we use the definition compiled into baseprinter.cpp
 extern template std::size_t Gambit::Printers::getTypeID<double>();
