@@ -182,6 +182,7 @@ namespace Gambit
       }
 
       else {
+	//Andre to replace this calculation
 	yield_C61_C64_ATLAS = 1000. * cross_C61_C64.interpolate(C61,C64) * eff_C61_C64_ATLAS.interpolate(C61,C64);
 	//yield_C61_C64_CMS = 1000. * cross_C61_C64.interpolate(C61,C64) * eff_C61_C64_CMS.interpolate(C61,C64);
       }
@@ -195,7 +196,13 @@ namespace Gambit
       // Will need to set the vector _srnums to hold the interpolated yields in each bin
 
       // Give dummy entries for now
+      // Andre needs to put signal numbers for CMS bins here (output from interpolator)
+      // Bins are defined as:
+      // const static vector<double> metedges = {250, 280, 310, 340, 370, 400, 430, 470, 510, 550, 590,
+      //                                         640, 690, 740, 790, 840, 900, 960, 1020, 1090, 1160, 1250};
 
+
+      
       double _srnums[NUMSR] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
       
       static const double OBSNUM[NUMSR] = {
