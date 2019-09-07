@@ -104,6 +104,10 @@ namespace Gambit
     typedef std::pair<int,int> PID_pair;
     typedef std::vector<std::pair<int,int>> vec_PID_pairs;
 
+    /// @brief Typedef for an int to xsec map, used to match Pythia process codes to cross-sections
+    typedef std::map<int,xsec> map_int_xsec;
+
+
   }
 }
 

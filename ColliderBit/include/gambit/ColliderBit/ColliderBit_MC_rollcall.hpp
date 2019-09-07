@@ -31,6 +31,8 @@
 
 #pragma once
 
+#include "gambit/Utils/util_types.hpp"
+
 #define MODULE ColliderBit
 
   /// Execute the main Monte Carlo event loop.
@@ -45,6 +47,34 @@
     MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
   #undef CAPABILITY
+
+
+  /// Cross-sections for weighting events by production process
+  /// @{
+  #define CAPABILITY ProcessCrossSections
+  START_CAPABILITY
+
+    /// Cross-section from Monte Carlo
+    #define FUNCTION getProcessCrossSections
+    START_FUNCTION(map_int_xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
+    DEPENDENCY(ProcessCodes, std::vector<int>)
+    DEPENDENCY(ProcessPIDPairs, vec_PID_pairs)
+    #undef FUNCTION
+
+    // #define FUNCTION getProspinoxsec
+    // START_FUNCTION(xsec)
+    // NEEDS_MANAGER(RunMC, MCLoopInfo)
+    // ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    // DEPENDENCY(MSSM_spectrum, Spectrum)
+    // BACKEND_REQ(prospino_LHC_xsec, (libprospino), map_str_dbl, (const SLHAstruct&, const param_map_type&, prospino_settings&))
+    // #undef FUNCTION
+
+  #undef CAPABILITY
+  /// @}
+
 
   /// Cross-section calculators
   /// @{

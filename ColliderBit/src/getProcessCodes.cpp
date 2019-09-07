@@ -50,7 +50,6 @@ namespace Gambit
       if (*Loop::iteration == XSEC_CALCULATION)
       {
         result = Dep::HardScatteringSim->codesHard();
-        // result = std::vector<int>({1,2,3,4,5});
       }
 
       // if (*Loop::iteration == BASE_INIT) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in BASE_INIT: result.size() = " << result.size() << endl; }

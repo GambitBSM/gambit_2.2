@@ -69,6 +69,20 @@ namespace Gambit
     // ======= Module functions =======
 
 
+    /// Get a map between Pythia process codes and cross-sections
+    void getProcessCrossSections(map_int_xsec& result)
+    {
+      using namespace Pipes::getProcessCrossSections;
+
+      if(*Loop::iteration == XSEC_CALCULATION)
+      {
+        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
+        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessPIDPairs.size() = " << Dep::ProcessPIDPairs->size() << endl;          
+      }
+
+    }
+
+
     /// Compute a cross-section from Monte Carlo
     void getMCxsec(xsec& result)
     {
