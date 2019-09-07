@@ -111,6 +111,20 @@
     #undef FUNCTION
   #undef CAPABILITY 
 
+  /// Translate a list of Pythia process codes to list of (PID,PID) pairs
+  /// for the two final state particles of the hard process
+  #define CAPABILITY ProcessPIDPairs
+  START_CAPABILITY
+    #define FUNCTION getProcessPIDPairs
+    // START_FUNCTION(std::vector<std::pair<int,int>>)
+    // START_FUNCTION(std::vector<PID_pair>)
+    START_FUNCTION(vec_PID_pairs)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ProcessCodes, std::vector<int>)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+
 
   /// Lists of analyses to run
   /// @{

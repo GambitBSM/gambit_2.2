@@ -99,6 +99,11 @@ namespace Gambit
 
     /// @brief Typedef for a str-SLHAstruct pair, to pass around SLHA filenames + content
     typedef std::pair<std::string,SLHAstruct> pair_str_SLHAstruct;
+
+    /// @brief Typedefs used for pairs of PID integers
+    typedef std::pair<int,int> PID_pair;
+    typedef std::vector<std::pair<int,int>> vec_PID_pairs;
+
   }
 }
 
