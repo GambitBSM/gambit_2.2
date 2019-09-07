@@ -37,7 +37,7 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -131,17 +131,40 @@ namespace Gambit
 
         piped_invalid_point.check();
         Loop::reset();
+
+        // Do the single-thread part of the collider initialization
         #ifdef COLLIDERBIT_DEBUG
         cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT" << endl;
         #endif
         Loop::executeIteration(COLLIDER_INIT);
-
         // Any problem during COLLIDER_INIT step?
         piped_warnings.check(ColliderBit_warning());
         piped_errors.check(ColliderBit_error());
 
+        // Do the OMP parallelized part of the collider initialization
+        #ifdef COLLIDERBIT_DEBUG
+        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT_OMP" << endl;
+        #endif
+        #pragma omp parallel
+        {
+          Loop::executeIteration(COLLIDER_INIT_OMP);
+        }
+        // Any problems during the COLLIDER_INIT_OMP step?
+        piped_warnings.check(ColliderBit_warning());
+        piped_errors.check(ColliderBit_error());
+
+        // Execute the sigle-thread iteration XSEC_CALCULATION 
+        #ifdef COLLIDERBIT_DEBUG
+        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute XSEC_CALCULATION" << endl;
+        #endif
+        Loop::executeIteration(XSEC_CALCULATION);
+        // Any problems during the XSEC_CALCULATION step?
+        piped_warnings.check(ColliderBit_warning());
+        piped_errors.check(ColliderBit_error());
+
+
         //
-        // OMP parallelized sections begin here
+        // The main OMP parallelized sections begin here
         //
         #ifdef COLLIDERBIT_DEBUG
         cout << DEBUG_PREFIX << "operateLHCLoop: Will execute START_SUBPROCESS" << endl;
@@ -155,12 +178,6 @@ namespace Gambit
         piped_warnings.check(ColliderBit_warning());
         piped_errors.check(ColliderBit_error());
 
-        // _Anders
-        // Execute non-parallelized iteration XSEC_CALCULATION now
-        Loop::executeIteration(XSEC_CALCULATION);
-        // Any problems during the XSEC_CALCULATION step?
-        piped_warnings.check(ColliderBit_warning());
-        piped_errors.check(ColliderBit_error());
 
         // Convergence loop
         while(currentEvent < max_nEvents.at(collider) and not *Loop::done)

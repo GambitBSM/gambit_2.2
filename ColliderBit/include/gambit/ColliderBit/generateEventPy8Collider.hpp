@@ -73,6 +73,12 @@ namespace Gambit
       // If in any other special iteration, do nothing
       if (iteration < BASE_INIT) return;
 
+
+      // _Anders: Insert test here
+
+
+
+
       // Reset the Pythia and HEPUtils events
       pythia_event.clear();
       event.clear();
