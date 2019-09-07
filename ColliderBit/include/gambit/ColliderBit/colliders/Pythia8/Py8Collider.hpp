@@ -216,6 +216,10 @@ namespace Gambit
         /// Report the cross section uncertainty (in pb) at the end of the subprocess.
         double xsecErr_pb() const { return _pythiaInstance->info.sigmaErr() * 1e9; }
 
+
+        /// Return the list of Pythia process codes for the active processes
+        std::vector<int> codesHard() const { return _pythiaInstance->info.codesHard(); }
+
         ///@}
 
      };

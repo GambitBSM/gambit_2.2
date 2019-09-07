@@ -101,6 +101,17 @@
   #undef CAPABILITY
 
 
+  /// Get list of Pythia process codes for all active processes
+  #define CAPABILITY ProcessCodes
+  START_CAPABILITY
+    #define FUNCTION getPythiaProcessCodes
+    START_FUNCTION(std::vector<int>)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+
   /// Lists of analyses to run
   /// @{
   #define CAPABILITY ATLASAnalysisContainer

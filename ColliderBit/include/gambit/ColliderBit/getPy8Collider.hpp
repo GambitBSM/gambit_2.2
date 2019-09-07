@@ -215,6 +215,10 @@ namespace Gambit
           wrapup();
         }
 
+      // _Anders
+      // Create a dummy event to make Pythia fill it's internal list of process codes
+      EventT dummy_pythia_event;
+      result.nextEvent(dummy_pythia_event);
       }
 
     }

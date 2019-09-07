@@ -155,6 +155,13 @@ namespace Gambit
         piped_warnings.check(ColliderBit_warning());
         piped_errors.check(ColliderBit_error());
 
+        // _Anders
+        // Execute non-parallelized iteration XSEC_CALCULATION now
+        Loop::executeIteration(XSEC_CALCULATION);
+        // Any problems during the XSEC_CALCULATION step?
+        piped_warnings.check(ColliderBit_warning());
+        piped_errors.check(ColliderBit_error());
+
         // Convergence loop
         while(currentEvent < max_nEvents.at(collider) and not *Loop::done)
         {

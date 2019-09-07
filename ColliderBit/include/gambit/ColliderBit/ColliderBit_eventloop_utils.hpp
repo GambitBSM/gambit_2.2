@@ -50,12 +50,12 @@ namespace Gambit
     enum specialIterations { BASE_INIT = -1,
                              COLLIDER_INIT = -2,
                              START_SUBPROCESS = -3,
-                             COLLECT_CONVERGENCE_DATA = -4,
-                             CHECK_CONVERGENCE = -5,
-                             END_SUBPROCESS = -6,
-                             COLLIDER_FINALIZE = -7,
-                             BASE_FINALIZE = -8};
-
+                             XSEC_CALCULATION = -4,
+                             COLLECT_CONVERGENCE_DATA = -5,
+                             CHECK_CONVERGENCE = -6,
+                             END_SUBPROCESS = -7,
+                             COLLIDER_FINALIZE = -8,
+                             BASE_FINALIZE = -9};
   }
 
 }
