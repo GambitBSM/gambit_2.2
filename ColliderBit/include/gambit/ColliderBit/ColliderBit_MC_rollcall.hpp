@@ -116,8 +116,6 @@
   #define CAPABILITY ProcessPIDPairs
   START_CAPABILITY
     #define FUNCTION getProcessPIDPairs
-    // START_FUNCTION(std::vector<std::pair<int,int>>)
-    // START_FUNCTION(std::vector<PID_pair>)
     START_FUNCTION(vec_PID_pairs)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ProcessCodes, std::vector<int>)
