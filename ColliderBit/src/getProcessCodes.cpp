@@ -602,6 +602,10 @@ namespace Gambit
         std::vector<int> process_codes = *Dep::ProcessCodes;
         for (int& c : process_codes)
         {
+          // TODO: Should we use multimap::find here, which only finds the first
+          // matching process code, or should we use multimap::equal_range, 
+          // to get all the matching elements? 
+          // Depends on what the rest of the code assumes...
           PID_pair& p = process_to_PIDs.find(c)->second;
           result.push_back(p);
         }
