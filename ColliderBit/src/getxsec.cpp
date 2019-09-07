@@ -78,7 +78,7 @@ namespace Gambit
       if (Dep::RunMC->analyses.empty()) return;
 
       // Reset the xsec objects on all threads
-      if (*Loop::iteration == START_SUBPROCESS)
+      if (*Loop::iteration == COLLIDER_INIT_OMP)
       {
         result.reset();
       }
@@ -120,7 +120,7 @@ namespace Gambit
       if (Dep::RunMC->analyses.empty()) return;
 
       // Reset the xsec objects on all threads
-      if (*Loop::iteration == START_SUBPROCESS)
+      if (*Loop::iteration == COLLIDER_INIT_OMP)
       {
         result.reset();
       }
@@ -212,7 +212,7 @@ namespace Gambit
       const static double input_xsec_uncert = runOptions->getValue<double>(xsec_pnames.second);
 
       // Reset the xsec objects on all threads
-      if (*Loop::iteration == START_SUBPROCESS)
+      if (*Loop::iteration == COLLIDER_INIT_OMP)
       {
         result.reset();
       }
@@ -319,7 +319,7 @@ namespace Gambit
       }
 
       // Reset the xsec objects on all threads
-      if (*Loop::iteration == START_SUBPROCESS)
+      if (*Loop::iteration == COLLIDER_INIT_OMP)
       {
         result.reset();
       }
@@ -425,7 +425,7 @@ namespace Gambit
       }
 
       // Reset the xsec objects on all threads
-      if (*Loop::iteration == START_SUBPROCESS)
+      if (*Loop::iteration == COLLIDER_INIT_OMP)
       {
         result.reset();
       }

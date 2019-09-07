@@ -76,17 +76,17 @@ namespace Gambit
 
       // To make sure that the Pythia instance on each OMP thread gets all the 
       // options it should, all the options parsing and initialisation happens in
-      // START_SUBPROCESS (OMP parallel) rather than COLLIDER_INIT (only thread 0).
+      // COLLIDER_INIT_OMP (OMP parallel) rather than COLLIDER_INIT (only thread 0).
       // We may want to split this up, so that all the yaml options are parsed in 
       // COLLIDER_INIT (by thread 0), and used to initialize the 'result' instance
-      // of each thread within START_SUBPROCESS.
+      // of each thread within COLLIDER_INIT_OMP.
       // 
       // else if (iteration == COLLIDER_INIT)
       // {
       //   // Do the option parsing here?
       // }
 
-      else if (iteration == START_SUBPROCESS)
+      else if (iteration == COLLIDER_INIT_OMP)
       {
 
         std::vector<str> pythiaOptions;
