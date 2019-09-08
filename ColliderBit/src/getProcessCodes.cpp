@@ -68,12 +68,12 @@ namespace Gambit
 
     /// Translate list of Pythia process codes to list of (PID,PID) pairs
     /// for the two final state particles of the hard process
-    void getProcessPIDPairs(vec_PID_pairs& result)
+    void getProcessCodeToPIDPairsMap(multimap_int_PID_pair& result)
     {
-      using namespace Pipes::getProcessPIDPairs;
+      using namespace Pipes::getProcessCodeToPIDPairsMap;
 
       static bool first = true;
-      static std::multimap<int,PID_pair> process_to_PIDs;
+      static multimap_int_PID_pair process_to_PIDs;
 
       // Initialize the map from Pythia process codes to PID pairs the first time
       // this module function is run
@@ -591,45 +591,46 @@ namespace Gambit
         first = false;
       }
 
+      result = process_to_PIDs;
 
-      if (*Loop::iteration == COLLIDER_INIT)
-      {
-        result.clear();
-      }
+      // if (*Loop::iteration == COLLIDER_INIT)
+      // {
+      //   result.clear();
+      // }
 
-      if (*Loop::iteration == XSEC_CALCULATION)
-      {
-        std::vector<int> process_codes = *Dep::ProcessCodes;
-        for (int& c : process_codes)
-        {
-          // TODO: Should we use multimap::find here, which only finds the first
-          // matching process code, or should we use multimap::equal_range, 
-          // to get all the matching elements? 
-          // Depends on what the rest of the code assumes...
-          auto it = process_to_PIDs.find(c);
-          if (it == process_to_PIDs.end())
-          {
-            std::stringstream errmsg_ss;
-            errmsg_ss << "Can't find the Pythia process code " << c << " in the process_to_PIDs map." << endl;
-            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-          } 
-          else
-          {
-            PID_pair& p = process_to_PIDs.find(c)->second;
-            result.push_back(p);
-          }
-        }
-      }
+      // if (*Loop::iteration == XSEC_CALCULATION)
+      // {
+      //   std::vector<int> process_codes = *Dep::ProcessCodes;
+      //   for (int& c : process_codes)
+      //   {
+      //     // TODO: Should we use multimap::find here, which only finds the first
+      //     // matching process code, or should we use multimap::equal_range, 
+      //     // to get all the matching elements? 
+      //     // Depends on what the rest of the code assumes...
+      //     auto it = process_to_PIDs.find(c);
+      //     if (it == process_to_PIDs.end())
+      //     {
+      //       std::stringstream errmsg_ss;
+      //       errmsg_ss << "Can't find the Pythia process code " << c << " in the process_to_PIDs map." << endl;
+      //       ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+      //     } 
+      //     else
+      //     {
+      //       PID_pair& p = process_to_PIDs.find(c)->second;
+      //       result.push_back(p);
+      //     }
+      //   }
+      // }
 
-      // _Anders
-      if (*Loop::iteration == START_SUBPROCESS)
-      {
-        cout << DEBUG_PREFIX << "getProcessPIDPairs: it = START_SUBPROCESS, result.size() = " << result.size() << endl;
-        for (PID_pair& p : result)
-        {
-          cout << DEBUG_PREFIX << "getProcessPIDPairs: it = START_SUBPROCESS, result element: (" << p.first << "," << p.second << ")" << endl;          
-        }
-      }
+      // // _Anders
+      // if (*Loop::iteration == START_SUBPROCESS)
+      // {
+      //   cout << DEBUG_PREFIX << "getProcessPIDPairs: it = START_SUBPROCESS, result.size() = " << result.size() << endl;
+      //   for (PID_pair& p : result)
+      //   {
+      //     cout << DEBUG_PREFIX << "getProcessPIDPairs: it = START_SUBPROCESS, result element: (" << p.first << "," << p.second << ")" << endl;          
+      //   }
+      // }
 
     }
 

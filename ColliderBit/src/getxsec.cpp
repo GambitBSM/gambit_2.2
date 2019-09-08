@@ -96,26 +96,26 @@ namespace Gambit
     {
       using namespace Pipes::getProcessCrossSections;
 
+      if(*Loop::iteration == COLLIDER_INIT_OMP)
+      {
+        result.clear();
+      }
+
       if(*Loop::iteration == XSEC_CALCULATION)
       {
         cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
-        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessPIDPairs.size() = " << Dep::ProcessPIDPairs->size() << endl;          
-
-        // Check that the number of process codes and PID pairs match.
-        assert(Dep::ProcessCodes->size() == Dep::ProcessPIDPairs->size());
+        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessCodeToPIDPairsMap.size() = " << Dep::ProcessCodeToPIDPairsMap->size() << endl;          
 
         // Get an SLHA1 object
         const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
 
         // Loop over all active processes and calculate cross-sections
-        for (size_t i = 0; i != Dep::ProcessPIDPairs->size(); ++i)
+        for (size_t i = 0; i != Dep::ProcessCodes->size(); ++i)
         {
           int pcode = Dep::ProcessCodes->at(i);
-          PID_pair pids = Dep::ProcessPIDPairs->at(i);
+          // PID_pair pids = Dep::ProcessPIDPairs->at(i);
+          PID_pair pids = Dep::ProcessCodeToPIDPairsMap->find(pcode)->second;
 
-          // int pcode = 9999;
-          // PID_pair pids(1234, 5678);
-          // PID_pair pids = Dep::ProcessPIDPairs->at(pcode);
           xsec xs = dummyXsecFunction(slha, pids);
 
           // Save cross-section instance in result map
@@ -123,7 +123,6 @@ namespace Gambit
         }
 
         cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, result.size() = " << result.size() << endl;          
-
       }
 
     }

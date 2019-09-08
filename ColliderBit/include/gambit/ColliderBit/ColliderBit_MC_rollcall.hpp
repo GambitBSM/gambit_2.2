@@ -61,7 +61,7 @@
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     DEPENDENCY(ProcessCodes, std::vector<int>)
-    DEPENDENCY(ProcessPIDPairs, vec_PID_pairs)
+    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)
     #undef FUNCTION
 
     // #define FUNCTION getProspinoxsec
@@ -143,10 +143,10 @@
 
   /// Translate a list of Pythia process codes to list of (PID,PID) pairs
   /// for the two final state particles of the hard process
-  #define CAPABILITY ProcessPIDPairs
+  #define CAPABILITY ProcessCodeToPIDPairsMap
   START_CAPABILITY
-    #define FUNCTION getProcessPIDPairs
-    START_FUNCTION(vec_PID_pairs)
+    #define FUNCTION getProcessCodeToPIDPairsMap
+    START_FUNCTION(multimap_int_PID_pair)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ProcessCodes, std::vector<int>)
     #undef FUNCTION
