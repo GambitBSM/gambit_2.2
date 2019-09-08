@@ -606,8 +606,18 @@ namespace Gambit
           // matching process code, or should we use multimap::equal_range, 
           // to get all the matching elements? 
           // Depends on what the rest of the code assumes...
-          PID_pair& p = process_to_PIDs.find(c)->second;
-          result.push_back(p);
+          auto it = process_to_PIDs.find(c);
+          if (it == process_to_PIDs.end())
+          {
+            std::stringstream errmsg_ss;
+            errmsg_ss << "Can't find the Pythia process code " << c << " in the process_to_PIDs map." << endl;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+          } 
+          else
+          {
+            PID_pair& p = process_to_PIDs.find(c)->second;
+            result.push_back(p);
+          }
         }
       }
 
