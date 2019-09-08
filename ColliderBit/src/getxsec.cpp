@@ -66,6 +66,28 @@ namespace Gambit
     }
 
 
+    /// Dummy function for testing getProcessCrossSections
+    xsec dummyXsecFunction(const SLHAstruct& slha, const PID_pair& pids)
+    {
+      xsec xs_result;
+
+      // Calculate cross section
+      double xs_pb = 3.1415;
+      double xs_rel_err = 0.01;
+      // double xs_err = xs_pb * xs_rel_err;
+
+      // Save result in xs_result
+      xs_result.set_xsec(xs_pb, xs_rel_err);
+
+      // Construct info string of the form "PID1,PID2"
+      std::stringstream info_ss;
+      info_ss << pids.first << "," << pids.second;
+      xs_result.set_info_string(info_ss.str());
+
+      return xs_result;
+    }
+
+
     // ======= Module functions =======
 
 
@@ -78,6 +100,30 @@ namespace Gambit
       {
         cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
         cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessPIDPairs.size() = " << Dep::ProcessPIDPairs->size() << endl;          
+
+        // Check that the number of process codes and PID pairs match.
+        assert(Dep::ProcessCodes->size() == Dep::ProcessPIDPairs->size());
+
+        // Get an SLHA1 object
+        const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
+
+        // Loop over all active processes and calculate cross-sections
+        for (size_t i = 0; i != Dep::ProcessPIDPairs->size(); ++i)
+        {
+          int pcode = Dep::ProcessCodes->at(i);
+          PID_pair pids = Dep::ProcessPIDPairs->at(i);
+
+          // int pcode = 9999;
+          // PID_pair pids(1234, 5678);
+          // PID_pair pids = Dep::ProcessPIDPairs->at(pcode);
+          xsec xs = dummyXsecFunction(slha, pids);
+
+          // Save cross-section instance in result map
+          result[pcode] = xs;
+        }
+
+        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, result.size() = " << result.size() << endl;          
+
       }
 
     }
