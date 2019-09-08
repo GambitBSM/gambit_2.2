@@ -82,6 +82,7 @@ namespace Gambit
         if (_xsec <= 0)
         {
           set_xsec(other_xsec, other_xsecerr);
+          set_num_events(other_ntot);
         }
         else
         {
@@ -93,6 +94,31 @@ namespace Gambit
         }
       }
     }
+
+    /// Sum cross-sections and add errors in quadrature.
+    void xsec::sum_xsecs(double other_xsec, double other_xsecerr, long long other_ntot)
+    {
+      if (other_xsec > 0)
+      {
+        if (_xsec <= 0)
+        {
+          set_xsec(other_xsec, other_xsecerr);
+          set_num_events(other_ntot);          
+        }
+        else
+        {
+          _ntot += other_ntot;
+          _xsec += other_xsec;
+          _xsecerr = sqrt(_xsecerr * _xsecerr + other_xsecerr * other_xsecerr);
+        }
+      }
+    }
+
+    void xsec::sum_xsecs(const xsec& other_xsec)
+    {
+      sum_xsecs(other_xsec(), other_xsec.xsec_err(), other_xsec.num_events());
+    }
+
 
     /// Collect xsec predictions from other threads and do a weighted combination.
     void xsec::gather_xsecs()

@@ -64,6 +64,10 @@ namespace Gambit
         /// Average cross-sections and combine errors.
         void average_xsec(double, double, long long);
 
+        /// Sum cross-sections and add errors in quadrature.
+        void sum_xsecs(double, double, long long=0);
+        void sum_xsecs(const xsec&);
+
         /// Collect xsec predictions from other threads and do a weighted combination.
         void gather_xsecs();
 

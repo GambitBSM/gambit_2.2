@@ -79,9 +79,9 @@ namespace Gambit
       // Save result in xs_result
       xs_result.set_xsec(xs_pb, xs_rel_err);
 
-      // Construct info string of the form "PID1,PID2"
+      // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
       std::stringstream info_ss;
-      info_ss << pids.first << "," << pids.second;
+      info_ss << "PID1:" << pids.first << ", " << "PID2:" << pids.second;
       xs_result.set_info_string(info_ss.str());
 
       return xs_result;
@@ -109,18 +109,57 @@ namespace Gambit
         // Get an SLHA1 object
         const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
 
-        // Loop over all active processes and calculate cross-sections
+        // Loop over all active processes and construct the cross-section map (result)
         for (size_t i = 0; i != Dep::ProcessCodes->size(); ++i)
         {
           int pcode = Dep::ProcessCodes->at(i);
-          // PID_pair pids = Dep::ProcessPIDPairs->at(i);
-          PID_pair pids = Dep::ProcessCodeToPIDPairsMap->find(pcode)->second;
 
-          xsec xs = dummyXsecFunction(slha, pids);
+          // Accumulate all the cross-sections corresponding to the process code pcode
+          xsec xs_combined;
 
-          // Save cross-section instance in result map
-          result[pcode] = xs;
+          // Get iterator bounds (as a pair) over the multimap entries that match the key pcode
+          auto mm_range = Dep::ProcessCodeToPIDPairsMap->equal_range(pcode);
+
+          // Loop over these elements in the multimap
+          for (auto mm_it = mm_range.first; mm_it != mm_range.second; ++mm_it)
+          {
+            PID_pair pids = mm_it->second;
+
+            // Call cross-section calculator
+            xsec xs = dummyXsecFunction(slha, pids);
+            // @todo Do we need to add a call with reversed PIDs, e.g. (PID2,PID1)? Depends on the calculator!
+
+            // Accumulate result
+            xs_combined.sum_xsecs(xs);
+          }
+
+          // Construct info string of the form "ProcessCode:<pcode>"
+          std::stringstream info_ss;
+          info_ss << "ProcessCode:" << pcode;
+          xs_combined.set_info_string(info_ss.str());
+
+          // Save combined cross-section for this process code in the result map
+          result[pcode] = xs_combined;
         }
+
+
+      // // Fill NLO cross sections for turned-on processes
+      // for(vector<int>::iterator it = procs.begin(); it != procs.end(); ++it){
+      //   // Process code
+      //   int process = *it;
+      //   // Loop over and sum NLO cross sections from all PID combinations belonging to this process number
+      //   double NLOxsec = 0;
+      //   pair<multimap<int,PIDs>::iterator, multimap<int,PIDs>::iterator> range;
+      //   range = proc2PID.equal_range(process);
+      //   for (multimap<int,PIDs>::iterator mmit=range.first; mmit!=range.second; ++mmit){
+      //     int PID1 = mmit->second.PID1;
+      //     int PID2 = mmit->second.PID2;
+      //     double cross_section = external_xsec(PID1, PID2);       // This is the call to the external cross section tool
+      //     if(cross_section == 0) cross_section = external_xsec(PID2, PID1); // Should not be necessary if external tool is sensible, my example is not
+      //     NLOxsec += cross_section;
+      //   }
+      //   xsec.insert ( pair<int,double>(process,NLOxsec) );
+      // }
 
         cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, result.size() = " << result.size() << endl;          
       }
