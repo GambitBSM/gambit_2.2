@@ -56,7 +56,7 @@
 
     /// Cross-section from Monte Carlo
     #define FUNCTION getProcessCrossSections
-    START_FUNCTION(map_int_xsec)
+    START_FUNCTION(map_int_ProcessXsecInfo)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)

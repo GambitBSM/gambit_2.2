@@ -92,7 +92,7 @@ namespace Gambit
 
 
     /// Get a map between Pythia process codes and cross-sections
-    void getProcessCrossSections(map_int_xsec& result)
+    void getProcessCrossSections(map_int_ProcessXsecInfo& result)
     {
       using namespace Pipes::getProcessCrossSections;
 
@@ -112,35 +112,80 @@ namespace Gambit
         // Loop over all active processes and construct the cross-section map (result)
         for (size_t i = 0; i != Dep::ProcessCodes->size(); ++i)
         {
-          int pcode = Dep::ProcessCodes->at(i);
+          // Get process code
+          int current_pcode = Dep::ProcessCodes->at(i);
 
-          // Accumulate all the cross-sections corresponding to the process code pcode
-          xsec xs_combined;
+          // Construct a ProcessXsecInfo instance to be stored in the result map
+          ProcessXsecInfo xs_info;
+          xs_info.process_code = current_pcode;
 
-          // Get iterator bounds (as a pair) over the multimap entries that match the key pcode
-          auto mm_range = Dep::ProcessCodeToPIDPairsMap->equal_range(pcode);
+          // Get iterator bounds (as a pair) over the multimap entries that match the key current_pcode
+          auto mm_range = Dep::ProcessCodeToPIDPairsMap->equal_range(current_pcode);
 
           // Loop over these elements in the multimap
           for (auto mm_it = mm_range.first; mm_it != mm_range.second; ++mm_it)
           {
-            PID_pair pids = mm_it->second;
+            const PID_pair& pids = mm_it->second;
 
             // Call cross-section calculator
             xsec xs = dummyXsecFunction(slha, pids);
+            // 
             // @todo Do we need to add a call with reversed PIDs, e.g. (PID2,PID1)? Depends on the calculator!
+            // 
 
-            // Accumulate result
-            xs_combined.sum_xsecs(xs);
+            // Accumulate result in the ProcessXsecInfo::process_xsec variable
+            xs_info.process_xsec.sum_xsecs(xs);
+            xs_info.pid_pairs.push_back(pids);
           }
 
-          // Construct info string of the form "ProcessCode:<pcode>"
+          // Construct info string of the form "ProcessCode:<current_pcode>"
           std::stringstream info_ss;
-          info_ss << "ProcessCode:" << pcode;
-          xs_combined.set_info_string(info_ss.str());
+          info_ss << "ProcessCode:" << current_pcode;
+          xs_info.process_xsec.set_info_string(info_ss.str());
 
-          // Save combined cross-section for this process code in the result map
-          result[pcode] = xs_combined;
+
+          // Loop over all elements in Dep::ProcessCodeToPIDPairsMap
+          // - if element_process_code != current_pcode
+          // - if element_PID_pair (incl. cc?) is in xs_info.pid_pairs
+          //   then add element process_code to xs_info.processes_sharing_xsec
+          // - if element_process_code is *not* in Dep::ProcessCodes, 
+          //   then throw error (correct weighting depends on inactive Pythia process...)
+
+          // Loop over *all* elements in the multimap
+          for (auto mm_it = Dep::ProcessCodeToPIDPairsMap->begin(); mm_it != Dep::ProcessCodeToPIDPairsMap->end(); ++mm_it)
+          {
+            // Extract the process code (pc) and PID pair (pp)
+            int pc = mm_it->first;
+            const PID_pair& pp = mm_it->second;
+
+            if (pc == current_pcode) continue;
+
+            // Check if the PID pair pp mathces one of the PID pairs for the current_pcode process
+            // 
+            // @todo Do we also need to check c.c. combinations here?
+            // 
+            if(std::find(xs_info.pid_pairs.begin(), xs_info.pid_pairs.end(), pp) != xs_info.pid_pairs.end()) 
+            {
+              // Check that pc is itself in one of the active processes, i.e. listed in Dep::ProcessCodes
+              if(std::find(Dep::ProcessCodes->begin(), Dep::ProcessCodes->end(), pc) != Dep::ProcessCodes->end())  
+              {
+                // Add pc to the list of processes that share cross-section with current_pcode
+                xs_info.processes_sharing_xsec.push_back(pc);
+              }
+              else
+              {
+                std::stringstream errmsg_ss;
+                errmsg_ss << "For correct cross-section scaling of collider process " << current_pcode;
+                errmsg_ss << ", process " << pc << " must also be activated. Please check your collider settings." << endl;
+                ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+              }
+            }
+          }
+
+          // Store xs_info in the result map
+          result[current_pcode] = xs_info;
         }
+
 
 
       // // Fill NLO cross sections for turned-on processes

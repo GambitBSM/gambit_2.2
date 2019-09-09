@@ -42,6 +42,7 @@
 #include "gambit/ColliderBit/MCLoopInfo.hpp"
 #include "gambit/ColliderBit/MC_convergence.hpp"
 #include "gambit/ColliderBit/xsec.hpp"
+#include "gambit/ColliderBit/ProcessXsecInfo.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8Collider_typedefs.hpp"
 #include "gambit/ColliderBit/detectors/BuckFast.hpp"
@@ -110,6 +111,8 @@ namespace Gambit
     /// @brief Typedef for an int to xsec map, used to match Pythia process codes to cross-sections
     typedef std::map<int,xsec> map_int_xsec;
 
+    /// @brief Typedef for an int to ProcessXsecInfo map, used to combined Pythia process cross-sections with info needed for event weighting
+    typedef std::map<int,ProcessXsecInfo> map_int_ProcessXsecInfo;
 
   }
 }
