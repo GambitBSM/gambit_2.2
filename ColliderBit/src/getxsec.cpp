@@ -127,11 +127,9 @@ namespace Gambit
           {
             const PID_pair& pids = mm_it->second;
 
-            // Call cross-section calculator
+            // Call cross-section calculator here.
+            // (We're gonna assume that the calculator is smart enough to re-order two PIDs if it needs to.)
             xsec xs = dummyXsecFunction(slha, pids);
-            // 
-            // @todo Do we need to add a call with reversed PIDs, e.g. (PID2,PID1)? Depends on the calculator!
-            // 
 
             // Accumulate result in the ProcessXsecInfo::process_xsec variable
             xs_info.process_xsec.sum_xsecs(xs);
@@ -144,14 +142,10 @@ namespace Gambit
           xs_info.process_xsec.set_info_string(info_ss.str());
 
 
-          // Loop over all elements in Dep::ProcessCodeToPIDPairsMap
-          // - if element_process_code != current_pcode
-          // - if element_PID_pair (incl. cc?) is in xs_info.pid_pairs
-          //   then add element process_code to xs_info.processes_sharing_xsec
-          // - if element_process_code is *not* in Dep::ProcessCodes, 
-          //   then throw error (correct weighting depends on inactive Pythia process...)
+          // Now we figure out if the current_pcode process shares the cross-section
+          // stored in in xs_info.process_xsec with any other process codes
 
-          // Loop over *all* elements in the multimap
+          // Loop over *all* elements in the multimap Dep::ProcessCodeToPIDPairsMap
           for (auto mm_it = Dep::ProcessCodeToPIDPairsMap->begin(); mm_it != Dep::ProcessCodeToPIDPairsMap->end(); ++mm_it)
           {
             // Extract the process code (pc) and PID pair (pp)
@@ -161,9 +155,6 @@ namespace Gambit
             if (pc == current_pcode) continue;
 
             // Check if the PID pair pp mathces one of the PID pairs for the current_pcode process
-            // 
-            // @todo Do we also need to check c.c. combinations here?
-            // 
             if(std::find(xs_info.pid_pairs.begin(), xs_info.pid_pairs.end(), pp) != xs_info.pid_pairs.end()) 
             {
               // Check that pc is itself in one of the active processes, i.e. listed in Dep::ProcessCodes
@@ -176,7 +167,7 @@ namespace Gambit
               {
                 std::stringstream errmsg_ss;
                 errmsg_ss << "For correct cross-section scaling of collider process " << current_pcode;
-                errmsg_ss << ", process " << pc << " must also be activated. Please check your collider settings." << endl;
+                errmsg_ss << ", process " << pc << " must also be activated. Please check your collider settings.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
               }
             }
