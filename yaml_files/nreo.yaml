@@ -265,8 +265,8 @@ Rules:
       function: DDCalc_Couplings_NR_WCs
     
     # Use DarkSUSY or MicrOmegas for calculating direct detection couplings. from the HP_Develop branch in file capgentest.yaml
-    #- capability: DD_couplings
-    #  function: DD_couplings_DarkSUSY
+    - capability: DD_couplings
+      function: DD_couplings_DarkSUSY
     #  #function: DD_couplings_MicrOmegas
 
     # Neal working on ProcessCatalog stuff for NREO model (for annihilations to neutrinos (from solar capture wimps) for icecube likelihoods)
