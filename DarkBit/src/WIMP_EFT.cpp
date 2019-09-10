@@ -169,13 +169,21 @@ namespace Gambit
        // cp = c0 + c1
        // cn = c0 - c1
        // Change if needed!
+
+       // From Catena & Schwabe (2015) (arXiv 1501.03729, bottom of page 5):
+       // cp = (c0 + c1)/2
+       // cn = (c0 - c1)/2
+       // so
+       // c0 = cp + cn
+       // c1 = cp - cn
+       // I've implemented the change to the factor of 2
     
        // Compute non-zero isospin basis couplings from DM_nucleon_couplings entries
        // TODO: I also did this from memory, should check I got the operator numbers right
-       NREO_couplings.c0[1] = 0.5*(ddc.gps + ddc.gns);
-       NREO_couplings.c1[1] = 0.5*(ddc.gps - ddc.gns);
-       NREO_couplings.c0[4] = 0.5*(ddc.gpa + ddc.gna);
-       NREO_couplings.c1[4] = 0.5*(ddc.gpa - ddc.gna);
+       NREO_couplings.c0[1] = (ddc.gps + ddc.gns);
+       NREO_couplings.c1[1] = (ddc.gps - ddc.gns);
+       NREO_couplings.c0[4] = (ddc.gpa + ddc.gna);
+       NREO_couplings.c1[4] = (ddc.gpa - ddc.gna);
     }
 
     /* Non-relativistic Wilson Coefficients, model independent */
