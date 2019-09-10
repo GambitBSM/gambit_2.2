@@ -89,9 +89,10 @@ START_MODULE
   #define CAPABILITY SuperIso_obs_values
   START_CAPABILITY
     #define FUNCTION SI_compute_obs_list
-    START_FUNCTION(double)
+    START_FUNCTION(std::vector<double>)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
+    DEPENDENCY(SuperIso_obs_list, std::vector<std::string>)
 	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
@@ -101,9 +102,7 @@ START_MODULE
   #define CAPABILITY SuperIso_obs_list
   START_CAPABILITY
     #define FUNCTION SI_obs_list
-    START_FUNCTION(obsname)
-    BACKEND_REQ(make_obslist, (libsuperiso), void, (char**, obsname*, int*))
-    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+    START_FUNCTION(std::vector<std::string>)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -111,9 +110,10 @@ START_MODULE
   #define CAPABILITY SuperIso_theory_covariance
   START_CAPABILITY
     #define FUNCTION SI_theory_covariance
-    START_FUNCTION(double)
+    START_FUNCTION(std::vector<std::vector<double>>)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
+    DEPENDENCY(SuperIso_obs_list, std::vector<std::string>)
     BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
  	BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
 	BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))

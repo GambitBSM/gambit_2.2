@@ -557,54 +557,62 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
 	}
 
-    /// NEW! Define SuperIso list of observables for covariance calculation
-    void SI_obs_list(obsname &obslist)
+    /// NEW! Define SuperIso list of observables for value and covariance calculation
+    void SI_obs_list(std::vector<std::string>& obslist)
     {
       using namespace Pipes::SI_obs_list;
 	  if (flav_debug) cout<<"Starting SI_obs_list"<<endl;
 
-	  int nbobs=2;
-	  char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
-	 
-	  BEreq::make_obslist((char**)obsnames,&obslist,&nbobs);
-	  
+      //std::vector<std::string> names={"BRuntag_Bsmumu","BR_BXsgamma"}; // LIST TO BE DEFINED LATER
+      std::vector<std::string> names={"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98","FL_B0Kstar0mumu_0.1_0.98","AFB_B0Kstar0mumu_0.1_0.98","S3_B0Kstar0mumu_0.1_0.98","S4_B0Kstar0mumu_0.1_0.98","S5_B0Kstar0mumu_0.1_0.98","S7_B0Kstar0mumu_0.1_0.98","S8_B0Kstar0mumu_0.1_0.98","S9_B0Kstar0mumu_0.1_0.98","dGamma/dq2_B0Kstar0mumu_1.1_2.5","FL_B0Kstar0mumu_1.1_2.5","AFB_B0Kstar0mumu_1.1_2.5","S3_B0Kstar0mumu_1.1_2.5","S4_B0Kstar0mumu_1.1_2.5","S5_B0Kstar0mumu_1.1_2.5","S7_B0Kstar0mumu_1.1_2.5","S8_B0Kstar0mumu_1.1_2.5","S9_B0Kstar0mumu_1.1_2.5","dGamma/dq2_B0Kstar0mumu_2.5_4","FL_B0Kstar0mumu_2.5_4","AFB_B0Kstar0mumu_2.5_4","S3_B0Kstar0mumu_2.5_4","S4_B0Kstar0mumu_2.5_4","S5_B0Kstar0mumu_2.5_4","S7_B0Kstar0mumu_2.5_4","S8_B0Kstar0mumu_2.5_4","S9_B0Kstar0mumu_2.5_4","dGamma/dq2_B0Kstar0mumu_4_6","FL_B0Kstar0mumu_4_6","AFB_B0Kstar0mumu_4_6","S3_B0Kstar0mumu_4_6","S4_B0Kstar0mumu_4_6","S5_B0Kstar0mumu_4_6","S7_B0Kstar0mumu_4_6","S8_B0Kstar0mumu_4_6","S9_B0Kstar0mumu_4_6","dGamma/dq2_B0Kstar0mumu_6_8","FL_B0Kstar0mumu_6_8","AFB_B0Kstar0mumu_6_8","S3_B0Kstar0mumu_6_8","S4_B0Kstar0mumu_6_8","S5_B0Kstar0mumu_6_8","S7_B0Kstar0mumu_6_8","S8_B0Kstar0mumu_6_8","S9_B0Kstar0mumu_6_8","dGamma/dq2_B0Kstar0mumu_15_17","FL_B0Kstar0mumu_15_17","AFB_B0Kstar0mumu_15_17","S3_B0Kstar0mumu_15_17","S4_B0Kstar0mumu_15_17","S5_B0Kstar0mumu_15_17","S7_B0Kstar0mumu_15_17","S8_B0Kstar0mumu_15_17","S9_B0Kstar0mumu_15_17","dGamma/dq2_B0Kstar0mumu_17_19","FL_B0Kstar0mumu_17_19","AFB_B0Kstar0mumu_17_19","S3_B0Kstar0mumu_17_19","S4_B0Kstar0mumu_17_19","S5_B0Kstar0mumu_17_19","S7_B0Kstar0mumu_17_19","S8_B0Kstar0mumu_17_19","S9_B0Kstar0mumu_17_19","dGamma/dq2_BKstarmumu_1.1_6","dGamma/dq2_BKstarmumu_15_19","BR_B0Kstar0ee_0.1_19.2","R-1_B0Kstar0ll_0.045_1.1","R-1_B0Kstar0ll_1.1_6","R-1_B0Kstar0ll_0.045_1.1_Belle","R-1_B0Kstar0ll_1.1_6_Belle","R-1_B0Kstar0ll_0.1_8_Belle","R-1_B0Kstar0ll_15_19_Belle","dGamma/dq2_B0K0mumu_1.1_6","dGamma/dq2_B0K0mumu_15_22","dGamma/dq2_BKmumu_1.1_6","FH_BKmumu_1.1_6","dGamma/dq2_BKmumu_15_22","FH_BKmumu_15_22","R-1_BKll_1.1_6","dGamma/dq2_Bsphimumu_0.1_2","FL_Bsphimumu_0.1_2","S3_Bsphimumu_0.1_2","S4_Bsphimumu_0.1_2","S7_Bsphimumu_0.1_2","dGamma/dq2_Bsphimumu_2_5","FL_Bsphimumu_2_5","S3_Bsphimumu_2_5","S4_Bsphimumu_2_5","S7_Bsphimumu_2_5","dGamma/dq2_Bsphimumu_5_8","FL_Bsphimumu_5_8","S3_Bsphimumu_5_8","S4_Bsphimumu_5_8","S7_Bsphimumu_5_8","dGamma/dq2_Bsphimumu_15_17","FL_Bsphimumu_15_17","S3_Bsphimumu_15_17","S4_Bsphimumu_15_17","S7_Bsphimumu_15_17","dGamma/dq2_Bsphimumu_17_19","FL_Bsphimumu_17_19","S3_Bsphimumu_17_19","S4_Bsphimumu_17_19","S7_Bsphimumu_17_19"};  // LIST TO BE DEFINED LATER
+	  	  
+      obslist=names;
+      
       if (flav_debug) cout<<"Finished SI_obs_list"<<endl;
 	}
 
     /// NEW! Compute values of list of observables
-    void SI_compute_obs_list(double &result)  // TO BE MODIFIED
+    void SI_compute_obs_list(std::vector<double>& result)  // TO BE MODIFIED
     {
       using namespace Pipes::SI_compute_obs_list;
 	  if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       nuisance const& nuislist = *Dep::SuperIso_nuisance;
-
-	  //int nbobs=2;
-	  //char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
-	  int nbobs=113;
-	  char obsnames[nbobs][50]={"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98","FL_B0Kstar0mumu_0.1_0.98","AFB_B0Kstar0mumu_0.1_0.98","S3_B0Kstar0mumu_0.1_0.98","S4_B0Kstar0mumu_0.1_0.98","S5_B0Kstar0mumu_0.1_0.98","S7_B0Kstar0mumu_0.1_0.98","S8_B0Kstar0mumu_0.1_0.98","S9_B0Kstar0mumu_0.1_0.98","dGamma/dq2_B0Kstar0mumu_1.1_2.5","FL_B0Kstar0mumu_1.1_2.5","AFB_B0Kstar0mumu_1.1_2.5","S3_B0Kstar0mumu_1.1_2.5","S4_B0Kstar0mumu_1.1_2.5","S5_B0Kstar0mumu_1.1_2.5","S7_B0Kstar0mumu_1.1_2.5","S8_B0Kstar0mumu_1.1_2.5","S9_B0Kstar0mumu_1.1_2.5","dGamma/dq2_B0Kstar0mumu_2.5_4","FL_B0Kstar0mumu_2.5_4","AFB_B0Kstar0mumu_2.5_4","S3_B0Kstar0mumu_2.5_4","S4_B0Kstar0mumu_2.5_4","S5_B0Kstar0mumu_2.5_4","S7_B0Kstar0mumu_2.5_4","S8_B0Kstar0mumu_2.5_4","S9_B0Kstar0mumu_2.5_4","dGamma/dq2_B0Kstar0mumu_4_6","FL_B0Kstar0mumu_4_6","AFB_B0Kstar0mumu_4_6","S3_B0Kstar0mumu_4_6","S4_B0Kstar0mumu_4_6","S5_B0Kstar0mumu_4_6","S7_B0Kstar0mumu_4_6","S8_B0Kstar0mumu_4_6","S9_B0Kstar0mumu_4_6","dGamma/dq2_B0Kstar0mumu_6_8","FL_B0Kstar0mumu_6_8","AFB_B0Kstar0mumu_6_8","S3_B0Kstar0mumu_6_8","S4_B0Kstar0mumu_6_8","S5_B0Kstar0mumu_6_8","S7_B0Kstar0mumu_6_8","S8_B0Kstar0mumu_6_8","S9_B0Kstar0mumu_6_8","dGamma/dq2_B0Kstar0mumu_15_17","FL_B0Kstar0mumu_15_17","AFB_B0Kstar0mumu_15_17","S3_B0Kstar0mumu_15_17","S4_B0Kstar0mumu_15_17","S5_B0Kstar0mumu_15_17","S7_B0Kstar0mumu_15_17","S8_B0Kstar0mumu_15_17","S9_B0Kstar0mumu_15_17","dGamma/dq2_B0Kstar0mumu_17_19","FL_B0Kstar0mumu_17_19","AFB_B0Kstar0mumu_17_19","S3_B0Kstar0mumu_17_19","S4_B0Kstar0mumu_17_19","S5_B0Kstar0mumu_17_19","S7_B0Kstar0mumu_17_19","S8_B0Kstar0mumu_17_19","S9_B0Kstar0mumu_17_19","dGamma/dq2_BKstarmumu_1.1_6","dGamma/dq2_BKstarmumu_15_19","BR_B0Kstar0ee_0.1_19.2","R-1_B0Kstar0ll_0.045_1.1","R-1_B0Kstar0ll_1.1_6","R-1_B0Kstar0ll_0.045_1.1_Belle","R-1_B0Kstar0ll_1.1_6_Belle","R-1_B0Kstar0ll_0.1_8_Belle","R-1_B0Kstar0ll_15_19_Belle","dGamma/dq2_B0K0mumu_1.1_6","dGamma/dq2_B0K0mumu_15_22","dGamma/dq2_BKmumu_1.1_6","FH_BKmumu_1.1_6","dGamma/dq2_BKmumu_15_22","FH_BKmumu_15_22","R-1_BKll_1.1_6","dGamma/dq2_Bsphimumu_0.1_2","FL_Bsphimumu_0.1_2","S3_Bsphimumu_0.1_2","S4_Bsphimumu_0.1_2","S7_Bsphimumu_0.1_2","dGamma/dq2_Bsphimumu_2_5","FL_Bsphimumu_2_5","S3_Bsphimumu_2_5","S4_Bsphimumu_2_5","S7_Bsphimumu_2_5","dGamma/dq2_Bsphimumu_5_8","FL_Bsphimumu_5_8","S3_Bsphimumu_5_8","S4_Bsphimumu_5_8","S7_Bsphimumu_5_8","dGamma/dq2_Bsphimumu_15_17","FL_Bsphimumu_15_17","S3_Bsphimumu_15_17","S4_Bsphimumu_15_17","S7_Bsphimumu_15_17","dGamma/dq2_Bsphimumu_17_19","FL_Bsphimumu_17_19","S3_Bsphimumu_17_19","S4_Bsphimumu_17_19","S7_Bsphimumu_17_19"};  // LIST TO BE DEFINED LATER
-	  	  
+		
+	  std::vector<std::string> const& obslist = *Dep::SuperIso_obs_list;
+	  int nbobs=obslist.size();
+	  
+	  char obsnames[nbobs][50];
+	  for(int ie=0;ie<nbobs;ie++) strcpy(obsnames[ie],obslist[ie].c_str());
+	  
 	  double *res;
 	  res=(double *) malloc(nbobs*sizeof(double));	
 	  
 	  BEreq::get_predictions_nuisance((char**)obsnames,&nbobs,&res,&param,&nuislist);
+	 	  
+	  result.reserve(nbobs);
+	  for(int ie=0;ie<nbobs;ie++) result[ie]=res[ie]; // TO BE MODIFIED
 	 
-	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) printf("%s=%.4e\n",obsnames[ie],res[ie]);
-	  
-	  result=res[0]; // TO BE MODIFIED
-	  
+ 	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) printf("%s=%.4e\n",obsnames[ie],result[ie]);
+ 
       if (flav_debug) cout<<"Finished SI_compute_obs_list"<<endl;
 	}
 
     /// NEW! Compute covariance matrix for a list of observables
-    void SI_theory_covariance(double &result)  // TO BE MODIFIED
+    void SI_theory_covariance(std::vector<std::vector<double>>& result)  // TO BE MODIFIED
     {
       using namespace Pipes::SI_theory_covariance;
 	  if (flav_debug) cout<<"Starting SI_theory_covariance"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       nuisance const& nuislist = *Dep::SuperIso_nuisance;
+
+	  std::vector<std::string> const& obslist = *Dep::SuperIso_obs_list;
+	  int nbobs=obslist.size();
+	  
+	  char obsnames[nbobs][50];
+	  for(int ie=0;ie<nbobs;ie++) strcpy(obsnames[ie],obslist[ie].c_str());
 	  
 	  int nnuis=161;
 	  char namenuisance[nnuis+1][50];
@@ -1082,18 +1090,14 @@ namespace Gambit
 
 	  BEreq::convert_correlation((nuiscorr *)corrnuis,byVal(ncorrnuis),(double **)corr,(char **)namenuisance,byVal(nnuis));
 	
-	  //int nbobs=2;
-	  //char obsnames[nbobs][50]={"BRuntag_Bsmumu","BR_BXsgamma"};  // LIST TO BE DEFINED LATER
-	  int nbobs=113;
-	  char obsnames[nbobs][50]={"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98","FL_B0Kstar0mumu_0.1_0.98","AFB_B0Kstar0mumu_0.1_0.98","S3_B0Kstar0mumu_0.1_0.98","S4_B0Kstar0mumu_0.1_0.98","S5_B0Kstar0mumu_0.1_0.98","S7_B0Kstar0mumu_0.1_0.98","S8_B0Kstar0mumu_0.1_0.98","S9_B0Kstar0mumu_0.1_0.98","dGamma/dq2_B0Kstar0mumu_1.1_2.5","FL_B0Kstar0mumu_1.1_2.5","AFB_B0Kstar0mumu_1.1_2.5","S3_B0Kstar0mumu_1.1_2.5","S4_B0Kstar0mumu_1.1_2.5","S5_B0Kstar0mumu_1.1_2.5","S7_B0Kstar0mumu_1.1_2.5","S8_B0Kstar0mumu_1.1_2.5","S9_B0Kstar0mumu_1.1_2.5","dGamma/dq2_B0Kstar0mumu_2.5_4","FL_B0Kstar0mumu_2.5_4","AFB_B0Kstar0mumu_2.5_4","S3_B0Kstar0mumu_2.5_4","S4_B0Kstar0mumu_2.5_4","S5_B0Kstar0mumu_2.5_4","S7_B0Kstar0mumu_2.5_4","S8_B0Kstar0mumu_2.5_4","S9_B0Kstar0mumu_2.5_4","dGamma/dq2_B0Kstar0mumu_4_6","FL_B0Kstar0mumu_4_6","AFB_B0Kstar0mumu_4_6","S3_B0Kstar0mumu_4_6","S4_B0Kstar0mumu_4_6","S5_B0Kstar0mumu_4_6","S7_B0Kstar0mumu_4_6","S8_B0Kstar0mumu_4_6","S9_B0Kstar0mumu_4_6","dGamma/dq2_B0Kstar0mumu_6_8","FL_B0Kstar0mumu_6_8","AFB_B0Kstar0mumu_6_8","S3_B0Kstar0mumu_6_8","S4_B0Kstar0mumu_6_8","S5_B0Kstar0mumu_6_8","S7_B0Kstar0mumu_6_8","S8_B0Kstar0mumu_6_8","S9_B0Kstar0mumu_6_8","dGamma/dq2_B0Kstar0mumu_15_17","FL_B0Kstar0mumu_15_17","AFB_B0Kstar0mumu_15_17","S3_B0Kstar0mumu_15_17","S4_B0Kstar0mumu_15_17","S5_B0Kstar0mumu_15_17","S7_B0Kstar0mumu_15_17","S8_B0Kstar0mumu_15_17","S9_B0Kstar0mumu_15_17","dGamma/dq2_B0Kstar0mumu_17_19","FL_B0Kstar0mumu_17_19","AFB_B0Kstar0mumu_17_19","S3_B0Kstar0mumu_17_19","S4_B0Kstar0mumu_17_19","S5_B0Kstar0mumu_17_19","S7_B0Kstar0mumu_17_19","S8_B0Kstar0mumu_17_19","S9_B0Kstar0mumu_17_19","dGamma/dq2_BKstarmumu_1.1_6","dGamma/dq2_BKstarmumu_15_19","BR_B0Kstar0ee_0.1_19.2","R-1_B0Kstar0ll_0.045_1.1","R-1_B0Kstar0ll_1.1_6","R-1_B0Kstar0ll_0.045_1.1_Belle","R-1_B0Kstar0ll_1.1_6_Belle","R-1_B0Kstar0ll_0.1_8_Belle","R-1_B0Kstar0ll_15_19_Belle","dGamma/dq2_B0K0mumu_1.1_6","dGamma/dq2_B0K0mumu_15_22","dGamma/dq2_BKmumu_1.1_6","FH_BKmumu_1.1_6","dGamma/dq2_BKmumu_15_22","FH_BKmumu_15_22","R-1_BKll_1.1_6","dGamma/dq2_Bsphimumu_0.1_2","FL_Bsphimumu_0.1_2","S3_Bsphimumu_0.1_2","S4_Bsphimumu_0.1_2","S7_Bsphimumu_0.1_2","dGamma/dq2_Bsphimumu_2_5","FL_Bsphimumu_2_5","S3_Bsphimumu_2_5","S4_Bsphimumu_2_5","S7_Bsphimumu_2_5","dGamma/dq2_Bsphimumu_5_8","FL_Bsphimumu_5_8","S3_Bsphimumu_5_8","S4_Bsphimumu_5_8","S7_Bsphimumu_5_8","dGamma/dq2_Bsphimumu_15_17","FL_Bsphimumu_15_17","S3_Bsphimumu_15_17","S4_Bsphimumu_15_17","S7_Bsphimumu_15_17","dGamma/dq2_Bsphimumu_17_19","FL_Bsphimumu_17_19","S3_Bsphimumu_17_19","S4_Bsphimumu_17_19","S7_Bsphimumu_17_19"};  // LIST TO BE DEFINED LATER
-
 	  double **res;	
 	
 	  BEreq::get_th_covariance_nuisance(&res,(char**)obsnames,&nbobs,&param,&nuislist,(double **)corr);
-	 
-	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("Covariance %s - %s: %.4e\n",obsnames[ie],obsnames[je],res[ie][je]);
-	  
-	  result=res[0][0]; // TO BE MODIFIED
+	  	  
+	  result.resize(nbobs, std::vector<double>(nbobs));
+	  for(int ie=0;ie<nbobs;ie++) for(int je=0;je<nbobs;je++) result[ie][je]=res[ie][je]; // TO BE MODIFIED
+
+	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("Covariance %s - %s: %.4e\n",obsnames[ie],obsnames[je],result[ie][je]);
 	  
       if (flav_debug) cout<<"Finished SI_theory_covariance"<<endl;
 	}
