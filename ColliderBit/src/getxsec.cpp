@@ -96,11 +96,23 @@ namespace Gambit
     {
       using namespace Pipes::getProcessCrossSections;
 
+      // Use a static variable to communicate the result calculated on thread 0 during 
+      // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
+      static map_int_ProcessXsecInfo shared_result;
+
+      // Only thread 0
+      if(*Loop::iteration == COLLIDER_INIT)
+      {
+        shared_result.clear();
+      }
+
+      // All OMP threads
       if(*Loop::iteration == COLLIDER_INIT_OMP)
       {
         result.clear();
       }
 
+      // Only thread 0
       if(*Loop::iteration == XSEC_CALCULATION)
       {
         cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
@@ -109,13 +121,13 @@ namespace Gambit
         // Get an SLHA1 object
         const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
 
-        // Loop over all active processes and construct the cross-section map (result)
+        // Loop over all active processes and construct the cross-section map (shared_result)
         for (size_t i = 0; i != Dep::ProcessCodes->size(); ++i)
         {
           // Get process code
           int current_pcode = Dep::ProcessCodes->at(i);
 
-          // Construct a ProcessXsecInfo instance to be stored in the result map
+          // Construct a ProcessXsecInfo instance to be stored in the shared_result map
           ProcessXsecInfo xs_info;
           xs_info.process_code = current_pcode;
 
@@ -145,7 +157,7 @@ namespace Gambit
           // Now we figure out if the current_pcode process shares the cross-section
           // stored in in xs_info.process_xsec with any other process codes
 
-          // Loop over *all* elements in the multimap Dep::ProcessCodeToPIDPairsMap
+          // Loop over *all* entries (process code <--> PID pair) in the multimap Dep::ProcessCodeToPIDPairsMap
           for (auto mm_it = Dep::ProcessCodeToPIDPairsMap->begin(); mm_it != Dep::ProcessCodeToPIDPairsMap->end(); ++mm_it)
           {
             // Extract the process code (pc) and PID pair (pp)
@@ -173,31 +185,20 @@ namespace Gambit
             }
           }
 
-          // Store xs_info in the result map
-          result[current_pcode] = xs_info;
+          // Store xs_info in the shared_result map
+          shared_result[current_pcode] = xs_info;
         }
 
+        // Let thread 0 return the correct result already after iteration XSEC_CALCULATION
+        result = shared_result;
+      }
 
 
-      // // Fill NLO cross sections for turned-on processes
-      // for(vector<int>::iterator it = procs.begin(); it != procs.end(); ++it){
-      //   // Process code
-      //   int process = *it;
-      //   // Loop over and sum NLO cross sections from all PID combinations belonging to this process number
-      //   double NLOxsec = 0;
-      //   pair<multimap<int,PIDs>::iterator, multimap<int,PIDs>::iterator> range;
-      //   range = proc2PID.equal_range(process);
-      //   for (multimap<int,PIDs>::iterator mmit=range.first; mmit!=range.second; ++mmit){
-      //     int PID1 = mmit->second.PID1;
-      //     int PID2 = mmit->second.PID2;
-      //     double cross_section = external_xsec(PID1, PID2);       // This is the call to the external cross section tool
-      //     if(cross_section == 0) cross_section = external_xsec(PID2, PID1); // Should not be necessary if external tool is sensible, my example is not
-      //     NLOxsec += cross_section;
-      //   }
-      //   xsec.insert ( pair<int,double>(process,NLOxsec) );
-      // }
-
-        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, result.size() = " << result.size() << endl;          
+      // All OMP threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        // All threads read the result from shared_result
+        result = shared_result;
       }
 
     }

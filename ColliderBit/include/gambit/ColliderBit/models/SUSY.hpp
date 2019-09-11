@@ -73,6 +73,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
+    DEPENDENCY(ProcessCrossSections, map_int_ProcessXsecInfo)
     #undef FUNCTION
 
   #undef CAPABILITY

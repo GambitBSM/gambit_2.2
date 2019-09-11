@@ -53,6 +53,7 @@ namespace Gambit
     void generateEventPy8Collider(HEPUtils::Event& event,
                                   const MCLoopInfo& RunMC,
                                   const Py8Collider<PythiaT,EventT>& HardScatteringSim,
+                                  const map_int_ProcessXsecInfo & ProcessCrossSections,
                                   const int iteration,
                                   void(*wrapup)())
     {
@@ -72,12 +73,6 @@ namespace Gambit
 
       // If in any other special iteration, do nothing
       if (iteration < BASE_INIT) return;
-
-
-      // _Anders: Insert test here
-
-
-
 
       // Reset the Pythia and HEPUtils events
       pythia_event.clear();
@@ -153,6 +148,51 @@ namespace Gambit
         return;
       }
 
+      // Assign weight to event
+      // _Anders: work in progress
+      double weight = 1.0;
+      int process_code = HardScatteringSim.pythia()->info.code();
+
+      ProcessXsecInfo xs_info = ProcessCrossSections.at(process_code);
+
+      cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  pid_pairs.size(): " << xs_info.pid_pairs.size() << ",  processes_sharing_xs.size(): " << xs_info.processes_sharing_xsec.size() << endl;
+
+
+      event.set_weight(weight);
+
+      // //  Fra Are
+
+      // // Separate into two cases:
+      // // i)  Single set of PIDs for process, possible multiple processes with same PID (initial states)
+      // // ii) Multiple PIDs for same process (ccs), usually only one process with those PIDs
+      // //     (The exception is squark--anti-squark production, so we need also to loop over processes with same PID)
+      // int nPIDs = proc2PID.count(process);
+      // double PYxsec = 0;
+      // // Case i)
+      // if(nPIDs == 1){
+      //   // Find Pythia LO cross section from all processes with same PIDs
+      //   PIDs current = proc2PID.find(process)->second;
+      //   for(multimap<int,PIDs>::iterator it = proc2PID.begin(); it != proc2PID.end(); ++it){
+      //     if(it->second == current) PYxsec += info.sigmaGen(it->first);
+      //   }
+      //   weight = xsec[process]*1E-9/PYxsec;
+      // }
+      // // Case ii)
+      // else if(nPIDs > 1){
+      //   // The NLO cross section from all PID combinations is already stored in the xsec map
+      //   // Find Pythia LO cross section from all processes with same PIDs
+      //   PIDs current = proc2PID.find(process)->second; // Now this is not unique for the process code, but this does not matter
+      //   for(multimap<int,PIDs>::iterator it = proc2PID.begin(); it != proc2PID.end(); ++it){
+      //     if(it->second == current) PYxsec += info.sigmaGen(it->first);
+      //   }
+      //   weight = xsec[process]*1E-9/PYxsec;
+      // }
+      // else{
+      //   cout << "WARNING! Could not find the generated process " << process << " in NLO lookup! Using identity weight." << endl;
+      //   weight = 1.0;
+      // }
+      // //cout << "Weight: " << weight << endl;
+
     }
 
     /// Generate a hard scattering event with a specific Pythia
@@ -161,7 +201,8 @@ namespace Gambit
     {                                                            \
       using namespace Pipes::NAME;                               \
       generateEventPy8Collider(result, *Dep::RunMC,              \
-       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup); \
+       *Dep::HardScatteringSim, *Dep::ProcessCrossSections,      \
+       *Loop::iteration, Loop::wrapup);                          \
     }
 
   }
