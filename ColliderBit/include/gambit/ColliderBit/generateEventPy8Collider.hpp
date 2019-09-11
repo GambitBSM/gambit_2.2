@@ -39,6 +39,9 @@
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp"
 
+// _Anders
+#include<iomanip>
+
 // #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
@@ -148,15 +151,45 @@ namespace Gambit
         return;
       }
 
+      // 
       // Assign weight to event
-      // _Anders: work in progress
+      // 
       double weight = 1.0;
+
+      // Get process code from Pythia
       int process_code = HardScatteringSim.pythia()->info.code();
 
+      // Get the ProcessXsecInfo instance that holds the externally provided cross-section for this process
       ProcessXsecInfo xs_info = ProcessCrossSections.at(process_code);
 
-      cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  pid_pairs.size(): " << xs_info.pid_pairs.size() << ",  processes_sharing_xs.size(): " << xs_info.processes_sharing_xsec.size() << endl;
+      // Pythia cross-section for this process
+      double process_xsec_pythia = HardScatteringSim.pythia()->info.sigmaGen(process_code) * 1e-9;  // Pythia uses mb, we use pb
 
+      cout << std::scientific << std::setprecision(5);
+      cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim.pythia()->info.sigmaGen(process_code) * 1e-9 << endl;
+
+      // Add the Pythia cross-sections for other process codes which also 
+      // contribute to the externaly provided cross-section
+      for (int other_process_code : xs_info.processes_sharing_xsec)
+      {
+        process_xsec_pythia += HardScatteringSim.pythia()->info.sigmaGen(other_process_code) * 1e-9;  // Pythia uses mb, we use pb
+        cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim.pythia()->info.sigmaGen(other_process_code) * 1e-9 << endl;
+      }
+
+      // Event weight = external cross-section / sum of contributing Pythia cross-sections
+      if (process_xsec_pythia > 0.0)
+      {
+        weight = xs_info.process_xsec() / process_xsec_pythia;
+      }
+      else
+      {
+        std::stringstream errmsg_ss;
+        errmsg_ss << "Pythia generated an event of process " << process_code << " for which itself predicts a cross-section <= 0.0 pb... What am I supposed to do with that?";
+        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+      }
+
+      cout << std::scientific << std::setprecision(5);
+      cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
 
       event.set_weight(weight);
 

@@ -71,8 +71,17 @@ namespace Gambit
     {
       xsec xs_result;
 
-      // Calculate cross section
-      double xs_pb = 3.1415;
+      // "Calculate" cross section
+      // (only stop-stopbar production)
+      double xs_pb = 0.0;
+      if (pids.first == 1000002 && pids.second == -1000002)
+      {
+        xs_pb = 3.09816e-14 + 9.08223e-16;
+      }
+      else
+      {
+        xs_pb = 1.0;
+      }
       double xs_rel_err = 0.01;
       // double xs_err = xs_pb * xs_rel_err;
 
@@ -165,6 +174,10 @@ namespace Gambit
             const PID_pair& pp = mm_it->second;
 
             if (pc == current_pcode) continue;
+
+            // @todo What's the right choice here?
+            // // Don't add more copies of the same process code! ...Or should we?
+            // if(std::find(xs_info.processes_sharing_xsec.begin(), xs_info.processes_sharing_xsec.end(), pc) != xs_info.processes_sharing_xsec.end()) 
 
             // Check if the PID pair pp mathces one of the PID pairs for the current_pcode process
             if(std::find(xs_info.pid_pairs.begin(), xs_info.pid_pairs.end(), pp) != xs_info.pid_pairs.end()) 
