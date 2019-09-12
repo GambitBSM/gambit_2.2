@@ -29,5 +29,12 @@ namespace Gambit
     // Run event generator
     GET_PYTHIA_EVENT(generateEventPythia_EM)
 
+    // Template specialization for EM Pythia
+    template <>
+    void dropHepMCEventPy8Collider<Pythia_EM_8_212::Pythia8::Pythia>(const Pythia_EM_8_212::Pythia8::Pythia* Pythia, const safe_ptr<Options>& runOptions)
+    {
+       (void) Pythia;
+       (void) runOptions;
+    }
   }
 }
