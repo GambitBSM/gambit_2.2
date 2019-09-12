@@ -470,37 +470,35 @@ namespace Gambit
 
   }
 
-double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const char* exper_){
-	char const *tt = "23";
-	char const *of = "14";
-	int met_bin_size;
+  double *  Acc_Eff_CS(float m,float O1,float O2, const char* exper_){
+    char const *tt = "23";
+    char const *of = "14";
+    int met_bin_size;
 
-	if (exper_=="ATLAS"){
-		met_bin_size = atlas_bin_size;
-	}
-	else if (exper_=="CMS"){
-		met_bin_size = cms_bin_size;
-	}
+    if (exper_=="ATLAS"){
+      met_bin_size = atlas_bin_size;
+    }
+    else if (exper_=="CMS"){
+      met_bin_size = cms_bin_size;
+    }
 
-	double* YIELDS = new double[met_bin_size]; 
-	
-	double* A23;
-	double* A14;
+    double* YIELDS = new double[met_bin_size]; 
+    
+    double* A23;
+    double* A14;
 
-	A23 = Acceptance_CS(m,C62,C63,tt,exper_);
-	A14 = Acceptance_CS(m,C61,C64,of,exper_);
+    A23 = Acceptance_CS(m,O1,O2,tt,exper_);
+    A14 = Acceptance_CS(m,O1,O2,of,exper_);
 
-	for (int ii = 0; ii < met_bin_size-1; ++ii){
-		YIELDS[ii] = A23[ii] + A14[ii];
-		// YIELDS[ii] = A14[ii];
+    for (int ii = 0; ii < met_bin_size-1; ++ii){
+      YIELDS[ii] = A23[ii] + A14[ii];
+      // YIELDS[ii] = A14[ii];
 
-	}
+    }
 
-	return YIELDS;
-}
-		
-
-
+    return YIELDS;
+  }
+      
 
 
     void DMEFT_results(AnalysisNumbers &result){  
@@ -523,15 +521,12 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
       float C63 = *Pipes::DMEFT_results::Param["C63"];
       float C64 = *Pipes::DMEFT_results::Param["C64"];
             
-      // ***** What about DM mass?
-
-
       // Andre: will need too add interpolators for each bin (or some smarter way to do it for all bins and store the results)
       // ColliderBitInterpolator2D cross_C61_C64(colliderbitdata_path+"DMEFT/test_crosssec.dat","bicubic");
       // ColliderBitInterpolator2D eff_C61_C64_ATLAS(colliderbitdata_path+"DMEFT/test_eff.dat","bicubic");
       //ColliderBitInterpolator2D eff_C61_C64_CMS(...)
 
-      // double *yield_C61_C64_ATLAS;
+      double *yield_C61_C64_ATLAS;
 
       // Andre: for now am assuming that the yield is just 1000. * eff * crosssec
       // This will need to be updated
@@ -559,34 +554,41 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
 
       // Will need to set the vector _srnums to hold the interpolated yields in each bin
 
+      // Give dummy entries for now
       // Andre needs to put signal numbers for CMS bins here (output from interpolator)
-
-
-        // ----------------------------------------------------------------------------------------------------//
-         // --------------------------------CMS---------------------------------------------------------//
+      // Bins are defined as:
+      const static vector<double> metedges = {250, 280, 310, 340, 370, 400, 430, 470, 510, 550, 590,
+                                              640, 690, 740, 790, 840, 900, 960, 1020, 1090, 1160, 1250};
+ 
 
       // Test the function to see if it compiles. 
 	    double mass = 150;
 
-      double *_srnums;
-
-      _srnums = Acc_Eff_CS(mass,C61,C62,C63,C64,"CMS");
+      // Test functions
+      cout << Acc_Eff_CS(mass,0,1,"CMS")[0]<< " " << Acc_Eff_CS(mass,0,1,"ATLAS")[0]<<endl;
       
 
-      static const double OBSNUM[cms_bin_size] = {
+      double _srnums[cms_bin_size] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+      
+
+
+
+    // =---------------------------------------------------------------------=
+
+      static const double OBSNUM[NUMSR] = {
                               136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
                               926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29};
-      static const double BKGNUM[cms_bin_size] = {
+      static const double BKGNUM[NUMSR] = {
                                           134500, 73400, 42320, 25490, 15430, 10160, 8480, 4865, 2970, 1915, 1506,
                                           844, 526, 325, 223, 169, 107, 88.1, 52.8, 25.0, 25.5, 26.9
                                              };
-      static const double BKGERR[cms_bin_size] = { 
+      static const double BKGERR[NUMSR] = { 
                                           	3700, 2000, 810, 490, 310, 170, 140, 95, 49, 33, 32, 18, 14, 12, 9, 8, 6, 5.3, 3.9, 2.5, 2.6, 2.8
                                                 };
 
       std::vector<SignalRegionData> cmsBinnedResults;
       
-      for (size_t ibin = 0; ibin < cms_bin_size; ++ibin) {
+      for (size_t ibin = 0; ibin < NUMSR; ++ibin) {
         	std::stringstream ss; ss << "sr-" << ibin;
 	        cmsBinnedResults.push_back(SignalRegionData(ss.str(), OBSNUM[ibin], {_srnums[ibin],  0.}, {BKGNUM[ibin], BKGERR[ibin]}));
       }
@@ -618,29 +620,19 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
 
       Eigen::MatrixXd m_BKGCOV(22,22);
       for (int i = 0; i < 22; i++)
-	    m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size());
+	m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size());
       
       AnalysisData cmsData(cmsBinnedResults, m_BKGCOV);
 
 
-  // ----------------------------------------------------------------------------------------------------//
-  // ---------------------------------ATLAS----------------------------------------------------------//
+
+
 
       // Now put the ATLAS data into an equivalent object
       // Andre to add the relevant lines
       
 
-
-      double *_srnums_ATLAS;
-
-      _srnums_ATLAS = Acc_Eff_CS(mass,C61,C62,C63,C64,"ATLAS");
-
-
-
-
-
-
-  //--------------------------------------//
+      
       AnalysisNumbers total_results;
       //total_results_push_back(atlasData);
       total_results.push_back(cmsData);
