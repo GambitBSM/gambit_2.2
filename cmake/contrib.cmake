@@ -217,30 +217,6 @@ if(NOT EXCLUDE_HEPMC)
 endif()
 
 
-#contrib/HepMC2; built when building Pythia, for Pythia -> HepMC event output
-set(name "hepmc2")
-set(ver "2.06.08")
-set(dir "${PROJECT_SOURCE_DIR}/contrib/HepMC2-${ver}")
-set(lib "HepMC2")
-set(md5 "a2e889114cafc4f60742029d69abd907")
-set(dl "http://lcgapp.cern.ch/project/simu/HepMC/download/HepMC-${ver}.tar.gz")
-set(build_dir "${PROJECT_BINARY_DIR}/${name}-prefix/src/${name}-build")
-set(HEPMC2_PATH "${dir}")
-ExternalProject_Add(${name}
-  DOWNLOAD_COMMAND ${DL_CONTRIB} ${dl} ${md5} ${dir} ${name} ${ver}
-  SOURCE_DIR ${dir}
-  CMAKE_COMMAND ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${dir}/local -Dmomentum=GEV -Dlength=MM ..
-  CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS}
-  BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
-  INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
-  )
-# Add target
-# add_custom_target(${name})
-# Add clean-hepmc2 and nuke-hepmc2
-add_contrib_clean_and_nuke(${name} ${dir} clean)
-# endif()
-
-
 #contrib/fjcore-3.2.0
 set(fjcore_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/contrib/fjcore-3.2.0")
 include_directories("${fjcore_INCLUDE_DIR}")

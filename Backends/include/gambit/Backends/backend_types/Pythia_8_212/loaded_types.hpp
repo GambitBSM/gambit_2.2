@@ -1,7 +1,7 @@
 #ifndef __loaded_types_Pythia_8_212_hpp__
 #define __loaded_types_Pythia_8_212_hpp__ 1
 
-#include "wrapper_GAMBIT_hepmc2_writer.h"
+#include "wrapper_GAMBIT_hepmc_writer.h"
 #include "wrapper_Pythia.h"
 #include "wrapper_PartonLevel.h"
 #include "wrapper_ResonanceDecays.h"
@@ -34,7 +34,7 @@
 
 // Indicate which types are provided by this backend, and what the symbols of their factories are.
 #define Pythia_8_212_all_data \
-  (( /*class*/(Pythia8)(GAMBIT_hepmc2_writer),    /*constructors*/(("Factory_GAMBIT_hepmc2_writer_0__BOSS_1",())) )) \
+  (( /*class*/(Pythia8)(GAMBIT_hepmc_writer),    /*constructors*/(("Factory_GAMBIT_hepmc_writer_0__BOSS_1",())) )) \
   (( /*class*/(Pythia8)(Pythia),    /*constructors*/(("Factory_Pythia_0__BOSS_2",(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool))) (("Factory_Pythia_1__BOSS_3",(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >))) (("Factory_Pythia_2__BOSS_4",())) (("Factory_Pythia_3__BOSS_5",(my_ns::Pythia8::ParticleData&, my_ns::Pythia8::Settings&, bool))) (("Factory_Pythia_4__BOSS_6",(my_ns::Pythia8::ParticleData&, my_ns::Pythia8::Settings&))) )) \
   (( /*class*/(Pythia8)(PartonLevel),    /*constructors*/(("Factory_PartonLevel_0__BOSS_7",())) )) \
   (( /*class*/(Pythia8)(ResonanceDecays),    /*constructors*/(("Factory_ResonanceDecays_0__BOSS_8",())) )) \

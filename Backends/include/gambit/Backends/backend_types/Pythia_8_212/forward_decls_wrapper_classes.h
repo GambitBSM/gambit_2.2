@@ -10,7 +10,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     
     namespace Pythia8
     {
-        class GAMBIT_hepmc2_writer;
+        class GAMBIT_hepmc_writer;
     }
     namespace Pythia8
     {

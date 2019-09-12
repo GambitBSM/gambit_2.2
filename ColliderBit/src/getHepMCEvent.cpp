@@ -20,6 +20,10 @@
 ///          (a.kvellestad@imperial.ac.uk)
 ///  \date 2019 June
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Sep
+///
 ///  *********************************************
 
 #include "gambit/cmake/cmake_variables.hpp"
@@ -30,6 +34,7 @@
 #include "gambit/ColliderBit/hepmc2heputils.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "HepMC3/ReaderAsciiHepMC2.h"
+#include "HepMC3/ReaderAscii.h"
 
 //#define COLLIDERBIT_DEBUG
 
@@ -47,14 +52,23 @@ namespace Gambit
       result.clear();
 
       // Get the filename and initialise the HepMC reader
-      const static str hepmc_filename = runOptions->getValue<str>("hepmc_filename");
+      const static str HepMC2_filename = runOptions->getValueOrDef<str>("", "HepMC2_filename");
+      static bool HepMC2_ON = (HepMC2_filename == "");
+      const static str HepMC3_filename = runOptions->getValueOrDef<str>("", "HepMC3_filename");
+      static bool HepMC3_ON = (HepMC3_filename == "");
+
       static bool first = true;
       if (first)
       {
-        if (not Utils::file_exists(hepmc_filename)) throw std::runtime_error("HepMC event file "+hepmc_filename+" not found.  Quitting...");
+        if (HepMC2_ON and HepMC3_ON) throw std::runtime_error("Cannot read simultaneously from HepMC2 and HepMC3 files. Quitting...");
+        if (HepMC2_ON)
+          if (not Utils::file_exists(HepMC2_filename)) throw std::runtime_error("HepMC2 event file "+HepMC2_filename+" not found.  Quitting...");
+        else if (HepMC3_ON)
+          if (not Utils::file_exists(HepMC3_filename)) throw std::runtime_error("HepMC3 event file "+HepMC3_filename+" not found.  Quitting...");
+        else
+          throw std::runtime_error("Neither HepMC2 nor HepMC3 event file found. Quitting...");
         first = false;
       }
-      static HepMC3::ReaderAsciiHepMC2 hepmcio(hepmc_filename);
 
       // Don't do anything during special iterations
       if (*Loop::iteration < 0) return;
@@ -63,12 +77,18 @@ namespace Gambit
         cout << "Event number: " << *Loop::iteration << endl;
       #endif
 
+      static HepMC3::ReaderAsciiHepMC2 HepMC2io(HepMC2_filename);
+      static HepMC3::ReaderAscii HepMC3io(HepMC3_filename);
+
       // Attempt to read the next HepMC event as a HEPUtils event. If there are no more events, wrap up the loop and skip the rest of this iteration.
       HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
       bool event_retrieved = true;
       #pragma omp critical (reading_HepMCEvent)
       {
-        event_retrieved = hepmcio.read_event(ge);
+        if (HepMC2_ON)
+          event_retrieved = HepMC2io.read_event(ge);
+        else
+          event_retrieved = HepMC3io.read_event(ge);
 
         // FIXME This is a temp solution to ensure that the event reading
         //       stops when there are no more events in the HepMC file.

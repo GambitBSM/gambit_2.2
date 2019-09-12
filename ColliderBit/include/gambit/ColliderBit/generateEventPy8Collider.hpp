@@ -34,6 +34,10 @@
 ///  \date   2018 Jan
 ///  \date   2018 May
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Sep
+///
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
@@ -47,6 +51,45 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    /// Drop a HepMC file for the event
+    #ifndef EXCLUDE_HEPMC
+      template<typename PythiaT>
+      void dropHepMCEventPy8Collider(const PythiaT* Pythia, const safe_ptr<Options>& runOptions)
+      {
+        // Write event to HepMC file
+        static const bool drop_HepMC2_file = runOptions->getValueOrDef<bool>(false, "drop_HepMC2_file");
+        static const bool drop_HepMC3_file = runOptions->getValueOrDef<bool>(false, "drop_HepMC3_file");
+        if (drop_HepMC2_file or drop_HepMC3_file)
+        {
+          thread_local Pythia_default::Pythia8::GAMBIT_hepmc_writer hepmc_writer;
+          thread_local bool first = true;
+
+          if (first)
+          {
+            str filename = "GAMBIT_collider_events.omp_thread_";
+            filename += std::to_string(omp_get_thread_num());
+            filename += ".hepmc";
+            hepmc_writer.init(filename);
+            first = false;
+          }
+
+          if(drop_HepMC2_file)
+            hepmc_writer.write_event_HepMC2(const_cast<PythiaT*>(Pythia));
+          if(drop_HepMC3_file)
+            hepmc_writer.write_event_HepMC3(const_cast<PythiaT*>(Pythia));
+         
+        }
+      }
+
+      // Template specialization for EM Pythia
+      template <>
+      void dropHepMCEventPy8Collider<Pythia_EM_8_212::Pythia8::Pythia>(const Pythia_EM_8_212::Pythia8::Pythia* Pythia, const safe_ptr<Options>& runOptions)
+      { 
+         (void) Pythia;
+         (void) runOptions; 
+      }
+    #endif
+
     /// Generate a hard scattering event with Pythia
     template<typename PythiaT, typename EventT>
     void generateEventPy8Collider(HEPUtils::Event& event,
@@ -54,8 +97,7 @@ namespace Gambit
                                   const Py8Collider<PythiaT,EventT>& HardScatteringSim,
                                   const int iteration,
                                   void(*wrapup)(),
-                                  const safe_ptr<Options>& runOptions,
-                                  void(*output_hepmc2_event)(PythiaT*, const char*) = NULL)
+                                  const safe_ptr<Options>& runOptions)
     {
       static int nFailedEvents;
       thread_local EventT pythia_event;
@@ -111,25 +153,9 @@ namespace Gambit
         return;
       }
 
-
-      // // Write event to HepMC file?
-      // // TODO: This is closer to how it should work...
-      // static const bool drop_hepmc_file = runOptions->getValueOrDef<bool>(false, "drop_HepMC_file");
-      // thread_local Pythia_default::Pythia8::GAMBIT_hepmc2_writer hepmc2_writer;
-      // thread_local bool first = true;
-      // if (drop_hepmc_file)
-      // {
-      //   if (first)
-      //   {
-      //     str filename = "GAMBIT_collider_events.omp_thread_";
-      //     filename.append(std::to_string(omp_get_thread_num())).append(".hepmc");
-      //     hepmc2_writer.init(filename.c_str());
-      //     first = false;
-      //   }
-
-      //   hepmc2_writer.write_event(const_cast<PythiaT*>(HardScatteringSim.pythia()));
-      // }
-  
+      #ifndef EXCLUDE_HEPMC
+        dropHepMCEventPy8Collider<PythiaT>(HardScatteringSim.pythia(), runOptions);
+      #endif
 
 
       // Attempt to convert the Pythia event to a HEPUtils event
@@ -164,11 +190,7 @@ namespace Gambit
 
     }
 
-    /// TODO This split between GET_PYTHIA_EVENT and GET_PYTHIA_EVENT_NOHEPMC
-    ///      is a temporary solution. Work in progress...
-
     /// Generate a hard scattering event with a specific Pythia,
-    /// and include the possibility to write the event to a HepMC2 file
     #define GET_PYTHIA_EVENT(NAME)                               \
     void NAME(HEPUtils::Event& result)                           \
     {                                                            \
@@ -177,37 +199,7 @@ namespace Gambit
        *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup,  \
        runOptions);                                              \
                                                                  \
-      /* TODO: move everything below into generateEventPy8Collider */  \
-      if (*Loop::iteration <= BASE_INIT) return;                 \
-                                                                 \
-      static const bool drop_hepmc_file = runOptions->getValueOrDef<bool>(false, "drop_HepMC_file"); \
-      thread_local Pythia_default::Pythia8::GAMBIT_hepmc2_writer hepmc2_writer; \
-      thread_local bool first = true;                            \
-      if (drop_hepmc_file)                                       \
-      {                                                          \
-        if (first)                                               \
-        {                                                        \
-          str filename = "GAMBIT_collider_events.omp_thread_";   \
-          filename.append(std::to_string(omp_get_thread_num())).append(".hepmc"); \
-          hepmc2_writer.init(filename.c_str());                  \
-          first = false;                                         \
-        }                                                        \
-                                                                 \
-        hepmc2_writer.write_event(const_cast<Pythia_default::Pythia8::Pythia*>(Dep::HardScatteringSim->pythia())); \
-      }                                                          \
     }
-
-
-    /// Generate a hard scattering event with a specific Pythia
-    #define GET_PYTHIA_EVENT_NOHEPMC(NAME)                       \
-    void NAME(HEPUtils::Event& result)                           \
-    {                                                            \
-      using namespace Pipes::NAME;                               \
-      generateEventPy8Collider(result, *Dep::RunMC,              \
-       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup,  \
-       runOptions);                                              \
-    }
-
 
   }
 

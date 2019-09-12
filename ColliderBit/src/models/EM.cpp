@@ -27,7 +27,7 @@ namespace Gambit
     GET_PYTHIA_AS_BASE_COLLIDER(getPythia_EMAsBase)
 
     // Run event generator
-    GET_PYTHIA_EVENT_NOHEPMC(generateEventPythia_EM)
+    GET_PYTHIA_EVENT(generateEventPythia_EM)
 
   }
 }
