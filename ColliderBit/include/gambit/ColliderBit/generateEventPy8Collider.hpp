@@ -56,7 +56,7 @@ namespace Gambit
     void generateEventPy8Collider(HEPUtils::Event& event,
                                   const MCLoopInfo& RunMC,
                                   const Py8Collider<PythiaT,EventT>& HardScatteringSim,
-                                  const map_int_ProcessXsecInfo & ProcessCrossSections,
+                                  const EventWeightFunctionType& EventWeightFunction,
                                   const int iteration,
                                   void(*wrapup)())
     {
@@ -154,77 +154,49 @@ namespace Gambit
       // 
       // Assign weight to event
       // 
-      double weight = 1.0;
 
-      // Get process code from Pythia
-      int process_code = HardScatteringSim.pythia()->info.code();
+      cout << DEBUG_PREFIX << "This is generateEventPy8Collider: Will call EventWeightFunction(event) now..." << endl;
+      EventWeightFunction(event);
+      cout << DEBUG_PREFIX << "This is generateEventPy8Collider: event.weight() = " << event.weight() << endl;
 
-      // Get the ProcessXsecInfo instance that holds the externally provided cross-section for this process
-      ProcessXsecInfo xs_info = ProcessCrossSections.at(process_code);
+      // double weight = 1.0;
 
-      // Pythia cross-section for this process
-      double process_xsec_pythia = HardScatteringSim.pythia()->info.sigmaGen(process_code) * 1e-9;  // Pythia uses mb, we use pb
+      // // Get process code from Pythia
+      // int process_code = HardScatteringSim.pythia()->info.code();
 
-      cout << std::scientific << std::setprecision(5);
-      cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim.pythia()->info.sigmaGen(process_code) * 1e-9 << endl;
+      // // Get the ProcessXsecInfo instance that holds the externally provided cross-section for this process
+      // ProcessXsecInfo xs_info = ProcessCrossSections.at(process_code);
 
-      // Add the Pythia cross-sections for other process codes which also 
-      // contribute to the externaly provided cross-section
-      for (int other_process_code : xs_info.processes_sharing_xsec)
-      {
-        process_xsec_pythia += HardScatteringSim.pythia()->info.sigmaGen(other_process_code) * 1e-9;  // Pythia uses mb, we use pb
-        cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim.pythia()->info.sigmaGen(other_process_code) * 1e-9 << endl;
-      }
+      // // Pythia cross-section for this process
+      // double process_xsec_pythia = HardScatteringSim.pythia()->info.sigmaGen(process_code) * 1e-9;  // Pythia uses mb, we use pb
 
-      // Event weight = external cross-section / sum of contributing Pythia cross-sections
-      if (process_xsec_pythia > 0.0)
-      {
-        weight = xs_info.process_xsec() / process_xsec_pythia;
-      }
-      else
-      {
-        std::stringstream errmsg_ss;
-        errmsg_ss << "Pythia generated an event of process " << process_code << " for which itself predicts a cross-section <= 0.0 pb... What am I supposed to do with that?";
-        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-      }
+      // cout << std::scientific << std::setprecision(5);
+      // cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim.pythia()->info.sigmaGen(process_code) * 1e-9 << endl;
 
-      cout << std::scientific << std::setprecision(5);
-      cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
-
-      event.set_weight(weight);
-
-      // //  Fra Are
-
-      // // Separate into two cases:
-      // // i)  Single set of PIDs for process, possible multiple processes with same PID (initial states)
-      // // ii) Multiple PIDs for same process (ccs), usually only one process with those PIDs
-      // //     (The exception is squark--anti-squark production, so we need also to loop over processes with same PID)
-      // int nPIDs = proc2PID.count(process);
-      // double PYxsec = 0;
-      // // Case i)
-      // if(nPIDs == 1){
-      //   // Find Pythia LO cross section from all processes with same PIDs
-      //   PIDs current = proc2PID.find(process)->second;
-      //   for(multimap<int,PIDs>::iterator it = proc2PID.begin(); it != proc2PID.end(); ++it){
-      //     if(it->second == current) PYxsec += info.sigmaGen(it->first);
-      //   }
-      //   weight = xsec[process]*1E-9/PYxsec;
+      // // Add the Pythia cross-sections for other process codes which also 
+      // // contribute to the externaly provided cross-section
+      // for (int other_process_code : xs_info.processes_sharing_xsec)
+      // {
+      //   process_xsec_pythia += HardScatteringSim.pythia()->info.sigmaGen(other_process_code) * 1e-9;  // Pythia uses mb, we use pb
+      //   cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim.pythia()->info.sigmaGen(other_process_code) * 1e-9 << endl;
       // }
-      // // Case ii)
-      // else if(nPIDs > 1){
-      //   // The NLO cross section from all PID combinations is already stored in the xsec map
-      //   // Find Pythia LO cross section from all processes with same PIDs
-      //   PIDs current = proc2PID.find(process)->second; // Now this is not unique for the process code, but this does not matter
-      //   for(multimap<int,PIDs>::iterator it = proc2PID.begin(); it != proc2PID.end(); ++it){
-      //     if(it->second == current) PYxsec += info.sigmaGen(it->first);
-      //   }
-      //   weight = xsec[process]*1E-9/PYxsec;
+
+      // // Event weight = external cross-section / sum of contributing Pythia cross-sections
+      // if (process_xsec_pythia > 0.0)
+      // {
+      //   weight = xs_info.process_xsec() / process_xsec_pythia;
       // }
-      // else{
-      //   cout << "WARNING! Could not find the generated process " << process << " in NLO lookup! Using identity weight." << endl;
-      //   weight = 1.0;
+      // else
+      // {
+      //   std::stringstream errmsg_ss;
+      //   errmsg_ss << "Pythia generated an event of process " << process_code << " for which itself predicts a cross-section <= 0.0 pb... What am I supposed to do with that?";
+      //   ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
       // }
-      // //cout << "Weight: " << weight << endl;
+
+      // cout << std::scientific << std::setprecision(5);
+      // cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
+
+      // event.set_weight(weight);
 
     }
 
@@ -234,7 +206,7 @@ namespace Gambit
     {                                                            \
       using namespace Pipes::NAME;                               \
       generateEventPy8Collider(result, *Dep::RunMC,              \
-       *Dep::HardScatteringSim, *Dep::ProcessCrossSections,      \
+       *Dep::HardScatteringSim, *Dep::EventWeightFunction,       \
        *Loop::iteration, Loop::wrapup);                          \
     }
 

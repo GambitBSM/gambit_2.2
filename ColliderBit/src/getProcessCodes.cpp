@@ -26,17 +26,6 @@ namespace Gambit
   namespace ColliderBit
   {
 
-
-    // enum specialIterations { BASE_INIT = -1,
-    //                          COLLIDER_INIT = -2,
-    //                          START_SUBPROCESS = -3,
-    //                          COLLECT_CONVERGENCE_DATA = -4,
-    //                          CHECK_CONVERGENCE = -5,
-    //                          END_SUBPROCESS = -6,
-    //                          COLLIDER_FINALIZE = -7,
-    //                          BASE_FINALIZE = -8};
-
-
     /// Get the list of active Pythia process codes
     void getPythiaProcessCodes(std::vector<int>& result)
     {

@@ -49,33 +49,6 @@
   #undef CAPABILITY
 
 
-  /// Cross-sections for weighting events by production process
-  /// @{
-  #define CAPABILITY ProcessCrossSections
-  START_CAPABILITY
-
-    /// Cross-section from Monte Carlo
-    #define FUNCTION getProcessCrossSections
-    START_FUNCTION(map_int_ProcessXsecInfo)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
-    DEPENDENCY(MSSM_spectrum, Spectrum)
-    DEPENDENCY(ProcessCodes, std::vector<int>)
-    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)
-    #undef FUNCTION
-
-    // #define FUNCTION getProspinoxsec
-    // START_FUNCTION(xsec)
-    // NEEDS_MANAGER(RunMC, MCLoopInfo)
-    // ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
-    // DEPENDENCY(MSSM_spectrum, Spectrum)
-    // BACKEND_REQ(prospino_LHC_xsec, (libprospino), map_str_dbl, (const SLHAstruct&, const param_map_type&, prospino_settings&))
-    // #undef FUNCTION
-
-  #undef CAPABILITY
-  /// @}
-
-
   /// Cross-section calculators
   /// @{
   #define CAPABILITY CrossSection
@@ -376,6 +349,31 @@
     #undef FUNCTION
   #undef CAPABILITY
   /// @}
+
+
+  /// Provide functions that can be used for event weighting, e.g. for process-level cross-section scaling.
+  /// {@
+  #define CAPABILITY EventWeightFunction
+  START_CAPABILITY
+
+    /// This function is intended as a model-independent fallback option for when there's no
+    /// weighting info available or we simply want equally weighted events.
+    #define FUNCTION setEventWeightToUnity
+    START_FUNCTION(EventWeightFunctionType)
+    // NEEDS_MANAGER(RunMC, MCLoopInfo)
+    #undef FUNCTION
+
+    /// This function depends on the ProcessCrossSections capability, which is model dependent. 
+    /// Module functions providing this capability should be declared in the corresponding model headers.
+    #define FUNCTION setEventWeightByCrossSection
+    START_FUNCTION(EventWeightFunctionType)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ProcessCrossSections, map_int_ProcessXsecInfo)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+  /// @{
+
 
   // All other functions are declared in additional headers in the ColliderBit/models directory.
   // The following capabilities need to be provided for each new model:

@@ -114,6 +114,10 @@ namespace Gambit
     /// @brief Typedef for an int to ProcessXsecInfo map, used to combined Pythia process cross-sections with info needed for event weighting
     typedef std::map<int,ProcessXsecInfo> map_int_ProcessXsecInfo;
 
+    /// @brief Typedef for a function pointer to a void function taking a HEPUtils::Event& arguemnt
+    typedef HEPUtils::Event HEPUtils_Event;  // Extra typedef to avoid macro problem with namespaces
+    typedef std::function<void(HEPUtils_Event&)> EventWeightFunctionType;
+
   }
 }
 

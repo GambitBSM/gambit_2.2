@@ -73,10 +73,37 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    DEPENDENCY(ProcessCrossSections, map_int_ProcessXsecInfo)
+    DEPENDENCY(EventWeightFunction, EventWeightFunctionType)
     #undef FUNCTION
 
   #undef CAPABILITY
+
+
+  /// Cross-sections for weighting events by production process
+  /// @{
+  #define CAPABILITY ProcessCrossSections
+  START_CAPABILITY
+
+    /// Cross-section from Monte Carlo
+    #define FUNCTION getProcessCrossSections
+    START_FUNCTION(map_int_ProcessXsecInfo)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
+    DEPENDENCY(ProcessCodes, std::vector<int>)
+    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)
+    #undef FUNCTION
+
+    // #define FUNCTION getProspinoxsec
+    // START_FUNCTION(xsec)
+    // NEEDS_MANAGER(RunMC, MCLoopInfo)
+    // ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    // DEPENDENCY(MSSM_spectrum, Spectrum)
+    // BACKEND_REQ(prospino_LHC_xsec, (libprospino), map_str_dbl, (const SLHAstruct&, const param_map_type&, prospino_settings&))
+    // #undef FUNCTION
+
+  #undef CAPABILITY
+  /// @}
 
 
   // Get SLHA content from one or more SLHA files
