@@ -15,7 +15,7 @@
 ///
 ///  \author Anders Kvellestad
 ///          (a.kvellestad@imperial.ac.uk)
-///  \date   2019 Sept
+///  \date   2019 Sep
 ///
 ///  *********************************************
 

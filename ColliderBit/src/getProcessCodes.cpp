@@ -11,13 +11,13 @@
 ///
 ///  \author Anders Kvellestad
 ///          (a.kvellestad@imperial.ac.uk)
-///  \date   2019 Sept
+///  \date   2019 Sep
 ///
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -40,17 +40,6 @@ namespace Gambit
       {
         result = Dep::HardScatteringSim->codesHard();
       }
-
-      // if (*Loop::iteration == BASE_INIT) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in BASE_INIT: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == COLLIDER_INIT) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in COLLIDER_INIT: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == COLLIDER_INIT_OMP) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in COLLIDER_INIT_OMP: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == XSEC_CALCULATION) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in XSEC_CALCULATION: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == START_SUBPROCESS) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in START_SUBPROCESS: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == 0) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in ITERATION 0: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == 1) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in ITERATION 1: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == END_SUBPROCESS) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in END_SUBPROCESS: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == COLLIDER_FINALIZE) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in COLLIDER_FINALIZE: result.size() = " << result.size() << endl; }
-      // if (*Loop::iteration == BASE_FINALIZE) { cout << DEBUG_PREFIX << "getPythiaProcessCodes: in BASE_FINALIZE: result.size() = " << result.size() << endl; }
 
     }
 
@@ -581,45 +570,6 @@ namespace Gambit
       }
 
       result = process_to_PIDs;
-
-      // if (*Loop::iteration == COLLIDER_INIT)
-      // {
-      //   result.clear();
-      // }
-
-      // if (*Loop::iteration == XSEC_CALCULATION)
-      // {
-      //   std::vector<int> process_codes = *Dep::ProcessCodes;
-      //   for (int& c : process_codes)
-      //   {
-      //     // TODO: Should we use multimap::find here, which only finds the first
-      //     // matching process code, or should we use multimap::equal_range, 
-      //     // to get all the matching elements? 
-      //     // Depends on what the rest of the code assumes...
-      //     auto it = process_to_PIDs.find(c);
-      //     if (it == process_to_PIDs.end())
-      //     {
-      //       std::stringstream errmsg_ss;
-      //       errmsg_ss << "Can't find the Pythia process code " << c << " in the process_to_PIDs map." << endl;
-      //       ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-      //     } 
-      //     else
-      //     {
-      //       PID_pair& p = process_to_PIDs.find(c)->second;
-      //       result.push_back(p);
-      //     }
-      //   }
-      // }
-
-      // // _Anders
-      // if (*Loop::iteration == START_SUBPROCESS)
-      // {
-      //   cout << DEBUG_PREFIX << "getProcessPIDPairs: it = START_SUBPROCESS, result.size() = " << result.size() << endl;
-      //   for (PID_pair& p : result)
-      //   {
-      //     cout << DEBUG_PREFIX << "getProcessPIDPairs: it = START_SUBPROCESS, result element: (" << p.first << "," << p.second << ")" << endl;          
-      //   }
-      // }
 
     }
 

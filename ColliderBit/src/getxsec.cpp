@@ -61,7 +61,6 @@ namespace Gambit
         ColliderBit_error().raise(LOCAL_INFO, "Unknown combination of options for function convert_xsecs_to_fb.");
       }      
 
-      cout << "DEBUG: returning xsec [fb] = " << xsec_fb << " +/- " << xsec_uncert_fb << endl;
       return std::make_pair(xsec_fb, xsec_uncert_fb);
     }
 
