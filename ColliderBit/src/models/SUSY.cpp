@@ -16,6 +16,7 @@
 
 #include "gambit/ColliderBit/getPy8Collider.hpp"
 #include "gambit/ColliderBit/generateEventPy8Collider.hpp"
+#include "gambit/ColliderBit/collider_dependent_event_weights.hpp"
 
 namespace Gambit
 {
@@ -33,13 +34,8 @@ namespace Gambit
     GET_PYTHIA_EVENT(generateEventPythia)
 
 
-    // Get Monte Carlo event generator from SLHA file input
-    // GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
-    // GET_PYTHIA_AS_BASE_COLLIDER(getPythia_SLHAAsBase)
-
-    // // Run event generator
-    // GET_PYTHIA_EVENT(generateEventPythia_SLHA)
-
+    // Model-dependent event weight functions
+    SET_EVENT_WEIGHT_FROM_CROSS_SECTION(setEventWeight_fromCrossSection_Pythia, Pythia_default)
 
 
     // Get next SLHA file path and content (for use with model CB_SLHA_file_model)
@@ -132,10 +128,6 @@ namespace Gambit
 
       // Save result as a pair_str_SLHAstruct
       result = std::make_pair(filename_mod_ss.str(), new_content);
-
-      // DEBUG 
-      // cout << "DEBUG: new_content:" << endl;
-      // cout << new_content.str() << endl;
 
       /// @todo Add option to save the new SLHA content to file 
 

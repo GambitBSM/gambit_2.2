@@ -353,23 +353,17 @@
 
   /// Provide functions that can be used for event weighting, e.g. for process-level cross-section scaling.
   /// {@
-  #define CAPABILITY EventWeightFunction
+  #define CAPABILITY EventWeighterPy8Collider
   START_CAPABILITY
 
-    /// This function is intended as a model-independent fallback option for when there's no
-    /// weighting info available or we simply want equally weighted events.
-    #define FUNCTION setEventWeightToUnity
-    START_FUNCTION(EventWeightFunctionType)
-    // NEEDS_MANAGER(RunMC, MCLoopInfo)
+    /// This function is intended as a model-independent fallback option 
+    /// that simply assigns a unit weight to all events
+    #define FUNCTION setEventWeight_unity
+    START_FUNCTION(EventWeighterType_Py8Collider)
     #undef FUNCTION
 
-    /// This function depends on the ProcessCrossSections capability, which is model dependent. 
-    /// Module functions providing this capability should be declared in the corresponding model headers.
-    #define FUNCTION setEventWeightByCrossSection
-    START_FUNCTION(EventWeightFunctionType)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCrossSections, map_int_ProcessXsecInfo)
-    #undef FUNCTION
+    /// Event weight functions that depend on model-specific Py8Collider versions
+    /// should be declared in the corresponding model header in ColliderBit/models.
 
   #undef CAPABILITY
   /// @{
