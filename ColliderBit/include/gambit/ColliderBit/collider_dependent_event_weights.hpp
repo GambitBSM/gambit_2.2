@@ -21,7 +21,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -34,11 +34,15 @@ namespace Gambit
     template<typename PythiaT, typename EventT>
     void _setEventWeight_fromCrossSection(HEPUtils::Event& event, const BaseCollider* collider_ptr, const map_int_ProcessXsecInfo& ProcessCrossSections)
     {
-      cout << DEBUG_PREFIX << ": _setEventWeight_fromCrossSection: Starting function..." << endl;
+      #ifdef COLLIDERBIT_DEBUG
+        cout << DEBUG_PREFIX << ": _setEventWeight_fromCrossSection: Starting function..." << endl;
+      #endif
 
+      // Initialize weight
       double weight = 1.0;
 
       // Cast the collider ptr to the correct type
+      // @todo Can we turn this into a static cast?
       const Py8Collider<PythiaT,EventT>* HardScatteringSim_ptr = dynamic_cast<const Py8Collider<PythiaT,EventT>*>(collider_ptr);
 
       // Get process code from Pythia
@@ -50,18 +54,21 @@ namespace Gambit
       // Pythia cross-section for this process
       double process_xsec_pythia = HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-9;  // Pythia uses mb, we use pb
 
-      cout << std::scientific << std::setprecision(5);
-      cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-9 << endl;
+      #ifdef COLLIDERBIT_DEBUG
+        cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-9 << endl;
+      #endif
 
       // Add the Pythia cross-sections for other process codes which also 
       // contribute to the externaly provided cross-section
       for (int other_process_code : xs_info.processes_sharing_xsec)
       {
         process_xsec_pythia += HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-9;  // Pythia uses mb, we use pb
-        cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-9 << endl;
+        #ifdef COLLIDERBIT_DEBUG
+          cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-9 << endl;
+        #endif
       }
 
-      // Event weight = external cross-section / sum of contributing Pythia cross-sections
+      // Event weight = [external cross-section] / [sum of contributing Pythia cross-sections]
       if (process_xsec_pythia > 0.0)
       {
         weight = xs_info.process_xsec() / process_xsec_pythia;
@@ -73,8 +80,9 @@ namespace Gambit
         ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
       }
 
-      cout << std::scientific << std::setprecision(5);
-      cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
+      #ifdef COLLIDERBIT_DEBUG
+        cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
+      #endif
 
       event.set_weight(weight);
     }

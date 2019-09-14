@@ -152,11 +152,9 @@ namespace Gambit
       }
 
       // Assign weight to event
-      cout << DEBUG_PREFIX << "This is generateEventPy8Collider: Will call EventWeightFunction(event) now..." << endl;
       EventWeighterPy8Collider(event, &HardScatteringSim);
-      cout << DEBUG_PREFIX << "This is generateEventPy8Collider: event.weight() = " << event.weight() << endl;
-
     }
+
 
     /// Generate a hard scattering event with a specific Pythia
     #define GET_PYTHIA_EVENT(NAME)                               \

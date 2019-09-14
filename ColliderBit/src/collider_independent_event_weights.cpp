@@ -21,7 +21,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -41,7 +41,6 @@ namespace Gambit
     void setEventWeight_unity(EventWeighterType_Py8Collider& result)
     {
       using namespace Pipes::setEventWeight_unity;
-
       result = std::bind(_setEventWeight_unity, std::placeholders::_1, std::placeholders::_2);
     }
 
