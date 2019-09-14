@@ -68,6 +68,8 @@ namespace Gambit
   typedef std::map<std::string,std::map<std::string,double> > map_str_map_str_dbl;
   /// Shorthand for a string-to-string map
   typedef std::map<std::string,std::string> map_str_str;
+  /// Shorthand for a string-to-bool map
+  typedef std::map<std::string,bool> map_str_bool;
 
   /// Shorthand for an int to double map
   typedef std::map<int,double> map_int_dbl;
