@@ -23,14 +23,14 @@
 
   // Yields defined via interpolation of cross-section and efficiency
 
-  #define CAPABILITY InterpolatedAnalysisResults
+  /*#define CAPABILITY InterpolatedAnalysisResults
   START_CAPABILITY
     // DMEFT test model yield
     #define FUNCTION DMEFT_results
-  START_FUNCTION(AnalysisNumbers)
+  START_FUNCTION(AnalysisDataPointers)
     ALLOW_MODELS(DMEFT_WC_test)
     #undef FUNCTION
-  #undef CAPABILITY
+    #undef CAPABILITY*/
 
   #define CAPABILITY DMEFT_ColliderLogLikes
   START_CAPABILITY

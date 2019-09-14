@@ -44,6 +44,11 @@
     START_FUNCTION(MCLoopInfo, CAN_MANAGE_LOOPS)
     MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
+
+  // Make a dummy MCLoopInfo object for interpolated yield "colliders"
+    #define FUNCTION InterpolatedMCInfo
+    START_FUNCTION(MCLoopInfo)
+    #undef FUNCTION
   #undef CAPABILITY
 
   /// Cross-section calculators
@@ -172,6 +177,11 @@
     DEPENDENCY(ATLASAnalysisNumbers, AnalysisDataPointers)
     DEPENDENCY(CMSAnalysisNumbers, AnalysisDataPointers)
     DEPENDENCY(IdentityAnalysisNumbers, AnalysisDataPointers)
+    #undef FUNCTION
+
+    #define FUNCTION DMEFT_results
+    START_FUNCTION(AnalysisDataPointers)
+    ALLOW_MODELS(DMEFT_WC_test)
     #undef FUNCTION
   #undef CAPABILITY
 

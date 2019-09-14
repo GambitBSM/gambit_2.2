@@ -388,6 +388,8 @@ namespace Gambit
       std::exit(EXIT_SUCCESS);
       }
 
+    cout << "MJW a" << endl;
+    
     // Get x1,2 y1,2 : Mass and theta coordinates for interpolation
     double x1,x2,y1,y2;
     for(int ii = 0; ii < data_INC-1; ++ii) {
@@ -406,7 +408,7 @@ namespace Gambit
       }
 
     // Get C's
-
+    cout << "MJW b" << endl;
     double C11=0.0 ,C12=0.0,C21=0.0,C22=0.0;
 
     // Define Q's as array: One Q type for each met bin.
@@ -415,7 +417,7 @@ namespace Gambit
 
     double* accep = new double[met_bin_size]; 
     
-
+    cout << "MJW c" << endl;
     // NJets and Cross-section
     for (int Emiss = 0; Emiss < met_bin_size-1; ++Emiss ) {
       while (Q11[Emiss]==0.0 || Q12[Emiss]==0.0 || Q21[Emiss]== 0.0 || Q22[Emiss]==0.0 || C11==0.0 || C12==0.0 || C21== 0.0 || C22==0.0){ 
@@ -448,7 +450,7 @@ namespace Gambit
           }	
         }
 
-        
+      cout << "MJW d" << endl;
 
       // Need to check if this is good with Martin.
       double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
@@ -457,8 +459,12 @@ namespace Gambit
       accep[Emiss] = res;
     }
 
+    cout << "Returning" << endl;
+    
     return accep;
 
+    cout << "Still here" << endl;
+    
     std::fill_n(THETA,data_SIZE,0);
     std::fill_n(MASS,data_SIZE,0);
     std::fill_n(nJets,data_SIZE,0);
@@ -503,7 +509,7 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
 
 
 
-    void DMEFT_results(AnalysisNumbers &result){  
+    void DMEFT_results(AnalysisDataPointers &result){  
 
 
       // This routine will get the yields for both the ATLAS and CMS monojet analyses
@@ -566,8 +572,8 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
          // --------------------------------CMS---------------------------------------------------------//
 
       // Test the function to see if it compiles. 
-	    double mass = 150;
-
+      double mass = 150;
+	    
       double *_srnums;
 
       _srnums = Acc_Eff_CS(mass,C61,C62,C63,C64,"CMS");
@@ -620,8 +626,8 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
       for (int i = 0; i < 22; i++)
 	    m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size());
       
-      AnalysisData cmsData(cmsBinnedResults, m_BKGCOV);
-
+      AnalysisData  * cmsData = new AnalysisData(cmsBinnedResults, m_BKGCOV);
+      cmsData->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated";
 
   // ----------------------------------------------------------------------------------------------------//
   // ---------------------------------ATLAS----------------------------------------------------------//
@@ -630,18 +636,18 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
       // Andre to add the relevant lines
       
 
-
+      std::cout << "Making signal numbers" << std::endl;
       double *_srnums_ATLAS;
 
       _srnums_ATLAS = Acc_Eff_CS(mass,C61,C62,C63,C64,"ATLAS");
 
 
-
+      
 
 
 
   //--------------------------------------//
-      AnalysisNumbers total_results;
+      AnalysisDataPointers total_results;
       //total_results_push_back(atlasData);
       total_results.push_back(cmsData);
 
@@ -1123,10 +1129,18 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
     }
     
     
-	  
+    void InterpolatedMCInfo(MCLoopInfo& result)
+    {
+      
+      // This makes an MCLoopInfo object for satisfying the LHC
+      // likelihood calculation dependency
+
+      result.reset_flags();
+      
+    }
 	
 
     
-    }
+  }
     
   }

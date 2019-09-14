@@ -90,21 +90,35 @@ Scanner:
 
 ObsLikes:
 
-  - purpose:      LogLike
-    capability:   DMEFT_ColliderLogLikes
-    module:       ColliderBit
-    type:         double
+  #- purpose:      LogLike
+  #  capability:   DMEFT_ColliderLogLikes
+  #  module:       ColliderBit
+  #  type:         double
 
+  # LHC likelihoods
+  - purpose:    LogLike
+    capability: LHC_Combined_LogLike
+    module:     ColliderBit
+    type:	double
 
 Rules:
 
-  - capability: DMEFT_ColliderLogLikes
+  - capability: LHC_LogLikes
     backends:
     - {capability: lnlike_marg_poisson_lognormal_error}
     options:
       covariance_marg_convthres_abs: 0.05
       covariance_marg_convthres_rel: 0.05
       covariance_nsamples_start: 100000
+
+  # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
+  - capability: RunMC
+    function: InterpolatedMCInfo
+    module: ColliderBit
+
+  # Get analysis numbers from the DMEFT interpolated yields calculator
+  - capability: AllAnalysisNumbers
+    function: DMEFT_results
 
 
 Logger:
