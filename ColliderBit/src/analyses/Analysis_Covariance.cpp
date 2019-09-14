@@ -12,7 +12,7 @@ namespace Gambit {
 
       // Variables that holds the number of events passing
       // signal region cuts
-      int _numSR;
+      double _numSR;
 
     public:
 

@@ -276,12 +276,12 @@ namespace Gambit {
 
         // Fill signal region
         if (trigger && isDiphoton && DeltaR_gt_06 && mgg_gt_105 && !muVeto && !elVeto) {
-          if      (met > 100. && met < 115) _numSR["SR_MET_100-115"]++;
-          else if (met > 115. && met < 130) _numSR["SR_MET_115-130"]++;
-          else if (met > 130. && met < 150) _numSR["SR_MET_130-150"]++;
-          else if (met > 150. && met < 185) _numSR["SR_MET_150-185"]++;
-          else if (met > 185. && met < 250) _numSR["SR_MET_185-250"]++;
-          else if (met > 250.) _numSR["SR_MET_>250"]++;
+          if      (met > 100. && met < 115) _numSR["SR_MET_100-115"] += event->weight();
+          else if (met > 115. && met < 130) _numSR["SR_MET_115-130"] += event->weight();
+          else if (met > 130. && met < 150) _numSR["SR_MET_130-150"] += event->weight();
+          else if (met > 150. && met < 185) _numSR["SR_MET_150-185"] += event->weight();
+          else if (met > 185. && met < 250) _numSR["SR_MET_185-250"] += event->weight();
+          else if (met > 250.) _numSR["SR_MET_>250"] += event->weight();
         }
 
       }

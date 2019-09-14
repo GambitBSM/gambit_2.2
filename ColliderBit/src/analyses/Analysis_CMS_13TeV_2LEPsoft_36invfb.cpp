@@ -256,44 +256,44 @@ namespace Gambit {
         // Signal Regions
         // In the low ETmiss region, for each passing event we add 0.65 due to trigger efficiency
         if (EWpreselection && met>125. && met<200. && nSignalMuons == 2) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += 0.65;
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += 0.65;
-          if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += 0.65;
-          if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += 0.65;
-          // if (m_ll>4. && m_ll<9.) _numSR["SREW1"]++;
-          // if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"]++;
-          // if (m_ll>20. && m_ll<30.) _numSR["SREW3"]++;
-          // if (m_ll>30. && m_ll<50.) _numSR["SREW4"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += event->weight() * 0.65;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += event->weight() * 0.65;
+          if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += event->weight() * 0.65;
+          if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += event->weight() * 0.65;
+          // if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += event->weight();
+          // if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += event->weight();
+          // if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += event->weight();
+          // if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += event->weight();
         }
         if (EWpreselection && met>200. && met<250.) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW5"]++;
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW6"]++;
-          if (m_ll>20. && m_ll<30.) _numSR["SREW7"]++;
-          if (m_ll>30. && m_ll<50.) _numSR["SREW8"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SREW5"] += event->weight();
+          if (m_ll>10.5 && m_ll<20.) _numSR["SREW6"] += event->weight();
+          if (m_ll>20. && m_ll<30.) _numSR["SREW7"] += event->weight();
+          if (m_ll>30. && m_ll<50.) _numSR["SREW8"] += event->weight();
         }
         if (EWpreselection && met>250.) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW9"]++;
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW10"]++;
-          if (m_ll>20. && m_ll<30.) _numSR["SREW11"]++;
-          if (m_ll>30. && m_ll<50.) _numSR["SREW12"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SREW9"] += event->weight();
+          if (m_ll>10.5 && m_ll<20.) _numSR["SREW10"] += event->weight();
+          if (m_ll>20. && m_ll<30.) _numSR["SREW11"] += event->weight();
+          if (m_ll>30. && m_ll<50.) _numSR["SREW12"] += event->weight();
         }
         if (STpreselection && met>125. && met<200. && nSignalMuons == 2) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST1"]++;
-          if (leadpT>12. && leadpT<20.) _numSR["SRST2"]++;
-          if (leadpT>20. && leadpT<30.) _numSR["SRST3"]++;
+          if (leadpT>5. && leadpT<12.) _numSR["SRST1"] += event->weight();
+          if (leadpT>12. && leadpT<20.) _numSR["SRST2"] += event->weight();
+          if (leadpT>20. && leadpT<30.) _numSR["SRST3"] += event->weight();
         }
         if (STpreselection && met>200. && met<300.) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST4"]++;
-          if (leadpT>12. && leadpT<20.) _numSR["SRST5"]++;
-          if (leadpT>20. && leadpT<30.) _numSR["SRST6"]++;
+          if (leadpT>5. && leadpT<12.) _numSR["SRST4"] += event->weight();
+          if (leadpT>12. && leadpT<20.) _numSR["SRST5"] += event->weight();
+          if (leadpT>20. && leadpT<30.) _numSR["SRST6"] += event->weight();
         }
         if (STpreselection && met>300.) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST7"]++;
-          if (leadpT>12. && leadpT<20.) _numSR["SRST8"]++;
-          if (leadpT>20. && leadpT<30.) _numSR["SRST9"]++;
+          if (leadpT>5. && leadpT<12.) _numSR["SRST7"] += event->weight();
+          if (leadpT>12. && leadpT<20.) _numSR["SRST8"] += event->weight();
+          if (leadpT>20. && leadpT<30.) _numSR["SRST9"] += event->weight();
         }
 
         cutFlowVector_str[0] = "All events";

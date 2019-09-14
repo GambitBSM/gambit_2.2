@@ -300,63 +300,63 @@ namespace Gambit
 
         if (flag_SF) {
             if (nonbJets.size()==0){
-                if (mT2>100)             _numSR["SR-SF-0J-100"]++;
-                if (mT2>160)             _numSR["SR-SF-0J-160"]++;
-                if (mT2>100 and mT2<120) _numSR["SR-SF-0J-100-120"]++;
-                if (mT2>120 and mT2<160) _numSR["SR-SF-0J-120-160"]++;
+                if (mT2>100)             _numSR["SR-SF-0J-100"] += event->weight();
+                if (mT2>160)             _numSR["SR-SF-0J-160"] += event->weight();
+                if (mT2>100 and mT2<120) _numSR["SR-SF-0J-100-120"] += event->weight();
+                if (mT2>120 and mT2<160) _numSR["SR-SF-0J-120-160"] += event->weight();
                 // binned SRs
-                if (mT2>100 and mT2<105) _numSR_bin["SR-SF-0J-100-105"]++;
-                if (mT2>105 and mT2<110) _numSR_bin["SR-SF-0J-105-110"]++;
-                if (mT2>110 and mT2<120) _numSR_bin["SR-SF-0J-110-120"]++;
-                if (mT2>120 and mT2<140) _numSR_bin["SR-SF-0J-120-140"]++;
-                if (mT2>140 and mT2<160) _numSR_bin["SR-SF-0J-140-160"]++;
-                if (mT2>160 and mT2<180) _numSR_bin["SR-SF-0J-160-180"]++;
-                if (mT2>180 and mT2<220) _numSR_bin["SR-SF-0J-180-220"]++;
-                if (mT2>220            ) _numSR_bin["SR-SF-0J-220"]++;
+                if (mT2>100 and mT2<105) _numSR_bin["SR-SF-0J-100-105"] += event->weight();
+                if (mT2>105 and mT2<110) _numSR_bin["SR-SF-0J-105-110"] += event->weight();
+                if (mT2>110 and mT2<120) _numSR_bin["SR-SF-0J-110-120"] += event->weight();
+                if (mT2>120 and mT2<140) _numSR_bin["SR-SF-0J-120-140"] += event->weight();
+                if (mT2>140 and mT2<160) _numSR_bin["SR-SF-0J-140-160"] += event->weight();
+                if (mT2>160 and mT2<180) _numSR_bin["SR-SF-0J-160-180"] += event->weight();
+                if (mT2>180 and mT2<220) _numSR_bin["SR-SF-0J-180-220"] += event->weight();
+                if (mT2>220            ) _numSR_bin["SR-SF-0J-220"] += event->weight();
             } else {
-                if (mT2>100)             _numSR["SR-SF-1J-100"]++;
-                if (mT2>160)             _numSR["SR-SF-1J-160"]++;
-                if (mT2>100 and mT2<120) _numSR["SR-SF-1J-100-120"]++;
-                if (mT2>120 and mT2<160) _numSR["SR-SF-1J-120-160"]++;
+                if (mT2>100)             _numSR["SR-SF-1J-100"] += event->weight();
+                if (mT2>160)             _numSR["SR-SF-1J-160"] += event->weight();
+                if (mT2>100 and mT2<120) _numSR["SR-SF-1J-100-120"] += event->weight();
+                if (mT2>120 and mT2<160) _numSR["SR-SF-1J-120-160"] += event->weight();
                 // binned SRs
-                if (mT2>100 and mT2<105) _numSR_bin["SR-SF-1J-100-105"]++;
-                if (mT2>105 and mT2<110) _numSR_bin["SR-SF-1J-105-110"]++;
-                if (mT2>110 and mT2<120) _numSR_bin["SR-SF-1J-110-120"]++;
-                if (mT2>120 and mT2<140) _numSR_bin["SR-SF-1J-120-140"]++;
-                if (mT2>140 and mT2<160) _numSR_bin["SR-SF-1J-140-160"]++;
-                if (mT2>160 and mT2<180) _numSR_bin["SR-SF-1J-160-180"]++;
-                if (mT2>180 and mT2<220) _numSR_bin["SR-SF-1J-180-220"]++;
-                if (mT2>220            ) _numSR_bin["SR-SF-1J-220"]++;
+                if (mT2>100 and mT2<105) _numSR_bin["SR-SF-1J-100-105"] += event->weight();
+                if (mT2>105 and mT2<110) _numSR_bin["SR-SF-1J-105-110"] += event->weight();
+                if (mT2>110 and mT2<120) _numSR_bin["SR-SF-1J-110-120"] += event->weight();
+                if (mT2>120 and mT2<140) _numSR_bin["SR-SF-1J-120-140"] += event->weight();
+                if (mT2>140 and mT2<160) _numSR_bin["SR-SF-1J-140-160"] += event->weight();
+                if (mT2>160 and mT2<180) _numSR_bin["SR-SF-1J-160-180"] += event->weight();
+                if (mT2>180 and mT2<220) _numSR_bin["SR-SF-1J-180-220"] += event->weight();
+                if (mT2>220            ) _numSR_bin["SR-SF-1J-220"] += event->weight();
             }
         } else {
             if (nonbJets.size()==0){
-                if (mT2>100)             _numSR["SR-DF-0J-100"]++;
-                if (mT2>160)             _numSR["SR-DF-0J-160"]++;
-                if (mT2>100 and mT2<120) _numSR["SR-DF-0J-100-120"]++;
-                if (mT2>120 and mT2<160) _numSR["SR-DF-0J-120-160"]++;
+                if (mT2>100)             _numSR["SR-DF-0J-100"] += event->weight();
+                if (mT2>160)             _numSR["SR-DF-0J-160"] += event->weight();
+                if (mT2>100 and mT2<120) _numSR["SR-DF-0J-100-120"] += event->weight();
+                if (mT2>120 and mT2<160) _numSR["SR-DF-0J-120-160"] += event->weight();
                 // binned SRs
-                if (mT2>100 and mT2<105) _numSR_bin["SR-DF-0J-100-105"]++;
-                if (mT2>105 and mT2<110) _numSR_bin["SR-DF-0J-105-110"]++;
-                if (mT2>110 and mT2<120) _numSR_bin["SR-DF-0J-110-120"]++;
-                if (mT2>120 and mT2<140) _numSR_bin["SR-DF-0J-120-140"]++;
-                if (mT2>140 and mT2<160) _numSR_bin["SR-DF-0J-140-160"]++;
-                if (mT2>160 and mT2<180) _numSR_bin["SR-DF-0J-160-180"]++;
-                if (mT2>180 and mT2<220) _numSR_bin["SR-DF-0J-180-220"]++;
-                if (mT2>220            ) _numSR_bin["SR-DF-0J-220"]++;
+                if (mT2>100 and mT2<105) _numSR_bin["SR-DF-0J-100-105"] += event->weight();
+                if (mT2>105 and mT2<110) _numSR_bin["SR-DF-0J-105-110"] += event->weight();
+                if (mT2>110 and mT2<120) _numSR_bin["SR-DF-0J-110-120"] += event->weight();
+                if (mT2>120 and mT2<140) _numSR_bin["SR-DF-0J-120-140"] += event->weight();
+                if (mT2>140 and mT2<160) _numSR_bin["SR-DF-0J-140-160"] += event->weight();
+                if (mT2>160 and mT2<180) _numSR_bin["SR-DF-0J-160-180"] += event->weight();
+                if (mT2>180 and mT2<220) _numSR_bin["SR-DF-0J-180-220"] += event->weight();
+                if (mT2>220            ) _numSR_bin["SR-DF-0J-220"] += event->weight();
             } else {
-                if (mT2>100)             _numSR["SR-DF-1J-100"]++;
-                if (mT2>160)             _numSR["SR-DF-1J-160"]++;
-                if (mT2>100 and mT2<120) _numSR["SR-DF-1J-100-120"]++;
-                if (mT2>120 and mT2<160) _numSR["SR-DF-1J-120-160"]++;
+                if (mT2>100)             _numSR["SR-DF-1J-100"] += event->weight();
+                if (mT2>160)             _numSR["SR-DF-1J-160"] += event->weight();
+                if (mT2>100 and mT2<120) _numSR["SR-DF-1J-100-120"] += event->weight();
+                if (mT2>120 and mT2<160) _numSR["SR-DF-1J-120-160"] += event->weight();
                 // binned SRs
-                if (mT2>100 and mT2<105) _numSR_bin["SR-DF-1J-100-105"]++;
-                if (mT2>105 and mT2<110) _numSR_bin["SR-DF-1J-105-110"]++;
-                if (mT2>110 and mT2<120) _numSR_bin["SR-DF-1J-110-120"]++;
-                if (mT2>120 and mT2<140) _numSR_bin["SR-DF-1J-120-140"]++;
-                if (mT2>140 and mT2<160) _numSR_bin["SR-DF-1J-140-160"]++;
-                if (mT2>160 and mT2<180) _numSR_bin["SR-DF-1J-160-180"]++;
-                if (mT2>180 and mT2<220) _numSR_bin["SR-DF-1J-180-220"]++;
-                if (mT2>220            ) _numSR_bin["SR-DF-1J-220"]++;
+                if (mT2>100 and mT2<105) _numSR_bin["SR-DF-1J-100-105"] += event->weight();
+                if (mT2>105 and mT2<110) _numSR_bin["SR-DF-1J-105-110"] += event->weight();
+                if (mT2>110 and mT2<120) _numSR_bin["SR-DF-1J-110-120"] += event->weight();
+                if (mT2>120 and mT2<140) _numSR_bin["SR-DF-1J-120-140"] += event->weight();
+                if (mT2>140 and mT2<160) _numSR_bin["SR-DF-1J-140-160"] += event->weight();
+                if (mT2>160 and mT2<180) _numSR_bin["SR-DF-1J-160-180"] += event->weight();
+                if (mT2>180 and mT2<220) _numSR_bin["SR-DF-1J-180-220"] += event->weight();
+                if (mT2>220            ) _numSR_bin["SR-DF-1J-220"] += event->weight();
             }
 
         }

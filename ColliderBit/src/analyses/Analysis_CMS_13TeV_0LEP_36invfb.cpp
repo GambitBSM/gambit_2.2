@@ -185,7 +185,7 @@ namespace Gambit {
         // iht -= 1; //< change from the paper's indexing scheme to C++ zero-indexed
         // const size_t ibin = 40*inj + 10*inbj + (size_t)iht;
         // if (ibin >= NUMSR) throw std::runtime_error("ibin out of range");
-        // _srnums[ibin] += 1;
+        // _srnums[ibin] += event->weight();
 
 
         // Fill aggregate SR bins
@@ -198,18 +198,18 @@ namespace Gambit {
           if (btagged) nbjets += 1;
         }
 
-        if (njets >= 2 && nbjets == 0 && ht >=  500 && htmiss >= 500) _srnums[ 0] += 1;
-        if (njets >= 3 && nbjets == 0 && ht >= 1500 && htmiss >= 750) _srnums[ 1] += 1;
-        if (njets >= 5 && nbjets == 0 && ht >=  500 && htmiss >= 500) _srnums[ 2] += 1;
-        if (njets >= 5 && nbjets == 0 && ht >= 1500 && htmiss >= 750) _srnums[ 3] += 1;
-        if (njets >= 9 && nbjets == 0 && ht >= 1500 && htmiss >= 750) _srnums[ 4] += 1;
-        if (njets >= 2 && nbjets >= 2 && ht >=  500 && htmiss >= 500) _srnums[ 5] += 1;
-        if (njets >= 3 && nbjets >= 1 && ht >=  750 && htmiss >= 750) _srnums[ 6] += 1;
-        if (njets >= 5 && nbjets >= 3 && ht >=  500 && htmiss >= 500) _srnums[ 7] += 1;
-        if (njets >= 5 && nbjets >= 2 && ht >= 1500 && htmiss >= 750) _srnums[ 8] += 1;
-        if (njets >= 9 && nbjets >= 3 && ht >=  750 && htmiss >= 750) _srnums[ 9] += 1;
-        if (njets >= 7 && nbjets >= 1 && ht >=  300 && htmiss >= 300) _srnums[10] += 1;
-        if (njets >= 5 && nbjets >= 1 && ht >=  750 && htmiss >= 750) _srnums[11] += 1;
+        if (njets >= 2 && nbjets == 0 && ht >=  500 && htmiss >= 500) _srnums[ 0] += event->weight();
+        if (njets >= 3 && nbjets == 0 && ht >= 1500 && htmiss >= 750) _srnums[ 1] += event->weight();
+        if (njets >= 5 && nbjets == 0 && ht >=  500 && htmiss >= 500) _srnums[ 2] += event->weight();
+        if (njets >= 5 && nbjets == 0 && ht >= 1500 && htmiss >= 750) _srnums[ 3] += event->weight();
+        if (njets >= 9 && nbjets == 0 && ht >= 1500 && htmiss >= 750) _srnums[ 4] += event->weight();
+        if (njets >= 2 && nbjets >= 2 && ht >=  500 && htmiss >= 500) _srnums[ 5] += event->weight();
+        if (njets >= 3 && nbjets >= 1 && ht >=  750 && htmiss >= 750) _srnums[ 6] += event->weight();
+        if (njets >= 5 && nbjets >= 3 && ht >=  500 && htmiss >= 500) _srnums[ 7] += event->weight();
+        if (njets >= 5 && nbjets >= 2 && ht >= 1500 && htmiss >= 750) _srnums[ 8] += event->weight();
+        if (njets >= 9 && nbjets >= 3 && ht >=  750 && htmiss >= 750) _srnums[ 9] += event->weight();
+        if (njets >= 7 && nbjets >= 1 && ht >=  300 && htmiss >= 300) _srnums[10] += event->weight();
+        if (njets >= 5 && nbjets >= 1 && ht >=  750 && htmiss >= 750) _srnums[11] += event->weight();
 
       }
 

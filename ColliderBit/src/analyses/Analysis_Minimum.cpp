@@ -75,7 +75,7 @@ namespace Gambit {
         // Increment number of events passing signal region cuts
         // Dummy signal region: need 2 jets, met > 150 and no leptons
 
-        if((nElectrons+nMuons)==0 && nJets==2 && met>150.)_numSR++;
+        if((nElectrons+nMuons)==0 && nJets==2 && met>150.) _numSR += event->weight();
 
       }
 

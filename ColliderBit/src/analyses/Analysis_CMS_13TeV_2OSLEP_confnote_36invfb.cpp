@@ -189,18 +189,18 @@ namespace Gambit {
         if (preselection && mll>86. && mll<96. && met>100. && (nSignalJets==2 || nSignalJets==3)  && (baselineMuons.size()+baselineElectrons.size())==2 && pT_j1>35. && deltaPhi_met_j0>0.4 && deltaPhi_met_j1>0.4) {
           //VZ
           if (nSignalBJets==0 && mT2>80. && mjj<110.) {
-            if (met>50. && met<100.)_numSR1++;
-            if (met>100. && met<150.)_numSR2++;
-            if (met>150. && met<250.)_numSR3++;
-            if (met>250. && met<350.)_numSR4++;
-            if (met>350.)_numSR5++;
+            if (met>50. && met<100.) _numSR1 += event->weight();
+            if (met>100. && met<150.) _numSR2 += event->weight();
+            if (met>150. && met<250.) _numSR3 += event->weight();
+            if (met>250. && met<350.) _numSR4 += event->weight();
+            if (met>350.) _numSR5 += event->weight();
           }
           //HZ
           if (nSignalBJets==2 && mbb<150. && mT2>200.) {
-            if (met>50. && met<100.)_numSR6++;
-            if (met>100. && met<150.)_numSR7++;
-            if (met>150. && met<250.)_numSR8++;
-            if (met>250.)_numSR9++;
+            if (met>50. && met<100.) _numSR6 += event->weight();
+            if (met>100. && met<150.) _numSR7 += event->weight();
+            if (met>150. && met<250.) _numSR8 += event->weight();
+            if (met>250.) _numSR9 += event->weight();
           }
         }
 

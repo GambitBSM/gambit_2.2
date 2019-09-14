@@ -268,8 +268,8 @@ namespace Gambit {
         if (preselection && nSignalLeptons==2 && nSignalTaus==0 && met>60 && conversion_veto) {
           if (signalLeptons.at(0)->pid()*signalLeptons.at(1)->pid()>0) {
             if ((signalLeptons.at(0)->abspid()==11 && signalLeptons.at(0)->pT()>25) || (signalLeptons.at(0)->abspid()==13 && signalLeptons.at(0)->pT()>20)) {
-              if (num_ISRjets==0 && met>140 && mT>100) _numSR["SR1"]++;
-              if (num_ISRjets==1 && met>200 && mT<100 && pT_ll<100) _numSR["SR2"]++;
+              if (num_ISRjets==0 && met>140 && mT>100) _numSR["SR1"] += event->weight();
+              if (num_ISRjets==1 && met>200 && mT<100 && pT_ll<100) _numSR["SR2"] += event->weight();
             }
           }
         }
@@ -280,19 +280,19 @@ namespace Gambit {
           if (nSignalTaus<2) {
             if ((signalLightLeptons.at(0)->abspid()==11 && signalLightLeptons.at(0)->pT()>25) || (signalLightLeptons.at(0)->abspid()==13 && signalLightLeptons.at(0)->pT()>20 && nSignalMuons>1) || (signalLightLeptons.at(0)->abspid()==13 && signalLightLeptons.at(0)->pT()>25 && nSignalMuons==1)) {
               if (nSignalLightLeptons==3 && nSignalTaus==0) {
-                if (mT>120 && met>200) _numSR["SR3"]++;
-                if (met>250) _numSR["SR4"]++;
+                if (mT>120 && met>200) _numSR["SR3"] += event->weight();
+                if (met>250) _numSR["SR4"] += event->weight();
               }
-              if (nSignalLightLeptons==2 && nSignalTaus==1 && mT2>50 && met>200) _numSR["SR5"]++;
-              if (nSignalLeptons>3 && met>200) _numSR["SR8"]++;
+              if (nSignalLightLeptons==2 && nSignalTaus==1 && mT2>50 && met>200) _numSR["SR5"] += event->weight();
+              if (nSignalLeptons>3 && met>200) _numSR["SR8"] += event->weight();
             }
           }
 
           if (nSignalLightLeptons==1 && nSignalTaus==2) {
             if ((signalLightLeptons.at(0)->abspid()==11 && signalLightLeptons.at(0)->pT()>30) || (signalLightLeptons.at(0)->abspid()==13 && signalLightLeptons.at(0)->pT()>25)) {
               if (signalLeptons.at(0)->abseta()<2.1 && signalLeptons.at(1)->abseta()<2.1 && signalLeptons.at(2)->abseta()<2.1) {
-                if (mT2>50 && met>200) _numSR["SR6"]++;
-                if (met>75) _numSR["SR7"]++;
+                if (mT2>50 && met>200) _numSR["SR6"] += event->weight();
+                if (met>75) _numSR["SR7"] += event->weight();
               }
             }
           }

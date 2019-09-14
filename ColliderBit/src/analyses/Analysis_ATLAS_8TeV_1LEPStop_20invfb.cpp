@@ -46,7 +46,7 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int _numTN1Shape_bin1, _numTN1Shape_bin2, _numTN1Shape_bin3,
+      double _numTN1Shape_bin1, _numTN1Shape_bin2, _numTN1Shape_bin3,
         _numTN2, _numTN3, _numBC1, _numBC2,_numBC3;
 
       vector<int> cutFlowVector_alt;
@@ -652,9 +652,9 @@ namespace Gambit {
            passHadTop &&
            nBjets >= 1 &&
            bJets[0]->pT()>25.){
-          if(met>100. && met<125.)_numTN1Shape_bin1++;
-          if(met>125. && met<150.)_numTN1Shape_bin2++;
-          if(met>150.)_numTN1Shape_bin3++;
+          if(met>100. && met<125.) _numTN1Shape_bin1 += event->weight();
+          if(met>125. && met<150.) _numTN1Shape_bin2 += event->weight();
+          if(met>150.) _numTN1Shape_bin3 += event->weight();
         }
 
         //We're now ready to apply the cuts for each signal region
@@ -670,9 +670,9 @@ namespace Gambit {
              nBjets >= 1 &&
              bJets[0]->pT()>25.){
 
-            if(met>100. && met<125.)_numTN1Shape_bin1++;
-            if(met>125. && met<150.)_numTN1Shape_bin2++;
-            if(met>150.)_numTN1Shape_bin3++;
+            if(met>100. && met<125.) _numTN1Shape_bin1 += event->weight();
+            if(met>125. && met<150.) _numTN1Shape_bin2 += event->weight();
+            if(met>150.) _numTN1Shape_bin3 += event->weight();
           }
         }
 
@@ -684,7 +684,7 @@ namespace Gambit {
              mT>140. &&
              amt2>170. &&
              passHadTop &&
-             bJets[0]->pT()>25.)_numTN2++;
+             bJets[0]->pT()>25.) _numTN2 += event->weight();
         }
 
         //Do SRtN3
@@ -697,7 +697,7 @@ namespace Gambit {
              amt2>175. &&
              mt2tau>80. &&
              passHadTop &&
-             bJets[0]->pT()>25.)_numTN3++;
+             bJets[0]->pT()>25.) _numTN3 += event->weight();
         }
 
         //Do SRbC1
@@ -707,7 +707,7 @@ namespace Gambit {
              met>150. &&
              metOverSqrtHT>7. &&
              mT>120. &&
-             bJets[0]->pT()>25.)_numBC1++;
+             bJets[0]->pT()>25.) _numBC1 += event->weight();
         }
 
         //Do SRbC2
@@ -721,7 +721,7 @@ namespace Gambit {
              amt2>175. &&
              nBjets >=2 &&
              bJets[0]->pT()>100.&&
-             bJets[1]->pT()>50)_numBC2++;
+             bJets[1]->pT()>50) _numBC2 += event->weight();
         }
 
         //Do SRbC3
@@ -735,7 +735,7 @@ namespace Gambit {
              amt2>200. &&
              nBjets >=2 &&
              bJets[0]->pT()>120.&&
-             bJets[1]->pT()>90)_numBC3++;
+             bJets[1]->pT()>90) _numBC3 += event->weight();
         }
         return;
       }

@@ -336,7 +336,7 @@ namespace Gambit
         // --- 4L0T ---
 
         // SR0A
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.) _numSR["SR0A"]++;
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.) _numSR["SR0A"] += event->weight();
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0A ---" << endl;
@@ -349,11 +349,11 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0A"]++;
+        //   _numSR["SR0A"] += event->weight();
         // }
 
         // SR0B
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.) _numSR["SR0B"]++;
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.) _numSR["SR0B"] += event->weight();
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0B ---" << endl;
@@ -366,11 +366,11 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0B"]++;
+        //   _numSR["SR0B"] += event->weight();
         // }
 
         // SR0C
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _numSR["SR0C"]++;
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _numSR["SR0C"] += event->weight();
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0C ---" << endl;
@@ -383,11 +383,11 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0C"]++;
+        //   _numSR["SR0C"] += event->weight();
         // }
 
         // SR0D
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _numSR["SR0D"]++;
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _numSR["SR0D"] += event->weight();
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0D ---" << endl;
@@ -400,7 +400,7 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0D"]++;
+        //   _numSR["SR0D"] += event->weight();
         // }
 
         // Missing: signal regions SR1 (3L1T) and SR2 (2L2T)
