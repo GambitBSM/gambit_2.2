@@ -18,7 +18,8 @@ Parameters:
       range: [0, 1]
     C64:
       range: [0, 1]
-
+    mDM:
+      range: [100,500]
 
 Priors:
 
