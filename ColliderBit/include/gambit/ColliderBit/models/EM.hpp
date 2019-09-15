@@ -66,6 +66,16 @@
   #undef CAPABILITY
 
 
+  /// Get list of Pythia process codes for all active processes
+  #define CAPABILITY ProcessCodes
+    #define FUNCTION getPythiaProcessCodes_EM
+    START_FUNCTION(std::vector<int>)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringSim, Py8Collider_EM_defaultversion)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+
   /// Provide functions that can be used for event weighting, e.g. for process-level cross-section scaling.
   /// {@
   #define CAPABILITY EventWeighterPy8Collider
@@ -73,7 +83,7 @@
     #define FUNCTION setEventWeight_fromCrossSection_Pythia_EM
     START_FUNCTION(EventWeighterType_Py8Collider)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCrossSections, map_int_ProcessXsecInfo)
+    DEPENDENCY(ProcessCrossSectionsMap, map_int_ProcessXsecInfo)
     #undef FUNCTION
 
   #undef CAPABILITY

@@ -79,19 +79,28 @@
   #undef CAPABILITY
 
 
+  /// Get list of Pythia process codes for all active processes
+  #define CAPABILITY ProcessCodes
+    #define FUNCTION getPythiaProcessCodes
+    START_FUNCTION(std::vector<int>)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+
   /// Cross-sections for weighting events by production process
   /// @{
-  #define CAPABILITY ProcessCrossSections
+  #define CAPABILITY PIDPairCrossSectionFunc
   START_CAPABILITY
 
-    /// Cross-section from Monte Carlo
-    #define FUNCTION getProcessCrossSections
-    START_FUNCTION(map_int_ProcessXsecInfo)
+    // _Anders
+    /// Get a cross-section function which takes a PID_pair as input arguemnt
+    #define FUNCTION getPIDPairCrossSectionFunc_dummy
+    START_FUNCTION(PIDPairCrossSectionFuncType)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)
-    DEPENDENCY(ProcessCodes, std::vector<int>)
-    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)
     #undef FUNCTION
 
     // #define FUNCTION getProspinoxsec
@@ -113,7 +122,7 @@
     #define FUNCTION setEventWeight_fromCrossSection_Pythia
     START_FUNCTION(EventWeighterType_Py8Collider)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCrossSections, map_int_ProcessXsecInfo)
+    DEPENDENCY(ProcessCrossSectionsMap, map_int_ProcessXsecInfo)
     #undef FUNCTION
 
   #undef CAPABILITY

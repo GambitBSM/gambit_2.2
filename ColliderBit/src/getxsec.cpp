@@ -65,7 +65,7 @@ namespace Gambit
     }
 
 
-    /// Dummy function for testing getProcessCrossSections
+    /// Dummy function for testing getProcessCrossSectionsMap
     xsec dummyXsecFunction(const SLHAstruct& slha, const PID_pair& pids)
     {
       xsec xs_result;
@@ -96,13 +96,58 @@ namespace Gambit
     }
 
 
+    // _Anders
+    /// Dummy function for testing getProcessCrossSectionsMap
+    xsec dummyPIDPairCrossSectionFunc(const PID_pair& pids, const Spectrum& MSSM_spectrum)
+    {
+      xsec xs_result;
+
+      // Get an SLHA1 object
+      const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
+
+      // "Calculate" cross section
+      // (only stop-stopbar production)
+      double xs_pb = 0.0;
+      if (pids.first == 1000002 && pids.second == -1000002)
+      {
+        xs_pb = 3.09816e-14 + 9.08223e-16;
+      }
+      else
+      {
+        xs_pb = 1.0;
+      }
+      double xs_rel_err = 0.01;
+      // double xs_err = xs_pb * xs_rel_err;
+
+      // Save result in xs_result
+      xs_result.set_xsec(xs_pb, xs_rel_err);
+
+      // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
+      std::stringstream info_ss;
+      info_ss << "PID1:" << pids.first << ", " << "PID2:" << pids.second;
+      xs_result.set_info_string(info_ss.str());
+
+      return xs_result;
+    }
+
+    /// Get a std::function<xsec(PID_pair)> pointing to dummyPIDPairCrossSectionFunction,
+    /// with the second argument already filled by *Dep::MSSM_spectrum
+    void getPIDPairCrossSectionFunc_dummy(PIDPairCrossSectionFuncType& result)
+    {
+      using namespace Pipes::getPIDPairCrossSectionFunc_dummy;
+      result = std::bind(dummyPIDPairCrossSectionFunc, std::placeholders::_1, *Dep::MSSM_spectrum);
+    }
+
+
+
+
     // ======= Module functions =======
 
 
     /// Get a map between Pythia process codes and cross-sections
-    void getProcessCrossSections(map_int_ProcessXsecInfo& result)
+    void getProcessCrossSectionsMap(map_int_ProcessXsecInfo& result)
     {
-      using namespace Pipes::getProcessCrossSections;
+      using namespace Pipes::getProcessCrossSectionsMap;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
@@ -123,11 +168,11 @@ namespace Gambit
       // Only thread 0
       if(*Loop::iteration == XSEC_CALCULATION)
       {
-        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
-        cout << DEBUG_PREFIX << "getProcessCrossSections: it = XSEC_CALCULATION, ProcessCodeToPIDPairsMap.size() = " << Dep::ProcessCodeToPIDPairsMap->size() << endl;          
+        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
+        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ProcessCodeToPIDPairsMap.size() = " << Dep::ProcessCodeToPIDPairsMap->size() << endl;          
 
-        // Get an SLHA1 object
-        const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
+        // // Get an SLHA1 object
+        // const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
 
         // Loop over all active processes and construct the cross-section map (shared_result)
         for (size_t i = 0; i != Dep::ProcessCodes->size(); ++i)
@@ -149,7 +194,9 @@ namespace Gambit
 
             // Call cross-section calculator here.
             // (We're gonna assume that the calculator is smart enough to re-order two PIDs if it needs to.)
-            xsec xs = dummyXsecFunction(slha, pids);
+            // _Anders
+            // xsec xs = dummyXsecFunction(slha, pids);
+            xsec xs = (*Dep::PIDPairCrossSectionFunc)(pids);
 
             // Accumulate result in the ProcessXsecInfo::process_xsec variable
             xs_info.process_xsec.sum_xsecs(xs);

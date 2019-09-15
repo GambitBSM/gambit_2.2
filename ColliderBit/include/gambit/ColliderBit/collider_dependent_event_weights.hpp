@@ -32,7 +32,7 @@ namespace Gambit
 
     /// A function that sets the event weight based on the process cross-sections
     template<typename PythiaT, typename EventT>
-    void _setEventWeight_fromCrossSection(HEPUtils::Event& event, const BaseCollider* collider_ptr, const map_int_ProcessXsecInfo& ProcessCrossSections)
+    void _setEventWeight_fromCrossSection(HEPUtils::Event& event, const BaseCollider* collider_ptr, const map_int_ProcessXsecInfo& ProcessCrossSectionsMap)
     {
       #ifdef COLLIDERBIT_DEBUG
         cout << DEBUG_PREFIX << ": _setEventWeight_fromCrossSection: Starting function..." << endl;
@@ -49,7 +49,7 @@ namespace Gambit
       int process_code = HardScatteringSim_ptr->pythia()->info.code();
 
       // Get the ProcessXsecInfo instance that holds the externally provided cross-section for this process
-      ProcessXsecInfo xs_info = ProcessCrossSections.at(process_code);
+      ProcessXsecInfo xs_info = ProcessCrossSectionsMap.at(process_code);
 
       // Pythia cross-section for this process
       double process_xsec_pythia = HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-9;  // Pythia uses mb, we use pb
@@ -100,7 +100,7 @@ namespace Gambit
       result = std::bind(_setEventWeight_fromCrossSection<PYTHIA_NS::Pythia8::Pythia, PYTHIA_NS::Pythia8::Event>,  \
                          std::placeholders::_1,                                     \
                          std::placeholders::_2,                                     \
-                         *Dep::ProcessCrossSections);                               \
+                         *Dep::ProcessCrossSectionsMap);                            \
     }
 
   } 

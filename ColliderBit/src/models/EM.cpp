@@ -16,6 +16,7 @@
 
 #include "gambit/ColliderBit/getPy8Collider.hpp"
 #include "gambit/ColliderBit/generateEventPy8Collider.hpp"
+#include "gambit/ColliderBit/getPythiaProcessCodes.hpp"
 #include "gambit/ColliderBit/collider_dependent_event_weights.hpp"
 
 namespace Gambit
@@ -29,6 +30,9 @@ namespace Gambit
 
     // Run event generator
     GET_PYTHIA_EVENT(generateEventPythia_EM)
+
+    // Get list of active Pythia processes
+    GET_PYTHIA_PROCESS_CODES(getPythiaProcessCodes_EM)
 
     // Model-dependent event weight functions
     SET_EVENT_WEIGHT_FROM_CROSS_SECTION(setEventWeight_fromCrossSection_Pythia_EM, Pythia_EM_default)

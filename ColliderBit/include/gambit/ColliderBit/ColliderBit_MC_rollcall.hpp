@@ -27,6 +27,10 @@
 ///          (andy.buckley@cern.ch)
 ///  \date 2017 Jun
 ///
+///  \author Anders Kvellestad
+///          (a.kvellestad@imperial.ac.uk)
+///  \date 2019 Sep
+///
 ///  *********************************************
 
 #pragma once
@@ -104,18 +108,12 @@
   #undef CAPABILITY
 
 
-  /// Get list of Pythia process codes for all active processes
-  #define CAPABILITY ProcessCodes
-  START_CAPABILITY
-    #define FUNCTION getPythiaProcessCodes
-    START_FUNCTION(std::vector<int>)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    #undef FUNCTION
-  #undef CAPABILITY 
-
   /// Translate a list of Pythia process codes to list of (PID,PID) pairs
   /// for the two final state particles of the hard process
+  /// Note that the capability ProcessCodes depends on the exact Pythia collider, 
+  /// (i.e. on the Py8Collider specialization), which depends on the model. 
+  /// So module functions providing ProcessCodes are declared in the 
+  /// model headers in ColliderBit/models.
   #define CAPABILITY ProcessCodeToPIDPairsMap
   START_CAPABILITY
     #define FUNCTION getProcessCodeToPIDPairsMap
@@ -125,6 +123,24 @@
     #undef FUNCTION
   #undef CAPABILITY 
 
+
+  // _Anders
+  /// A map between Pythia process codes and cross-sections
+  #define CAPABILITY ProcessCrossSectionsMap
+  START_CAPABILITY
+
+    #define FUNCTION getProcessCrossSectionsMap
+    START_FUNCTION(map_int_ProcessXsecInfo)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ProcessCodes, std::vector<int>)
+    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)
+    // _Anders: uncomment and comment
+    DEPENDENCY(PIDPairCrossSectionFunc, PIDPairCrossSectionFuncType)
+    // ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    // DEPENDENCY(MSSM_spectrum, Spectrum)
+    #undef FUNCTION
+
+  #undef CAPABILITY
 
 
   /// Lists of analyses to run
@@ -385,6 +401,11 @@
     START_FUNCTION(HEPUtils::Event)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Process codes for the active collider processes
+  #define CAPABILITY ProcessCodes
+  START_CAPABILITY
   #undef CAPABILITY
 
 #undef MODULE

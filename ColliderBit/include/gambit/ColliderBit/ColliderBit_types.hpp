@@ -118,6 +118,9 @@ namespace Gambit
     typedef HEPUtils::Event HEPUtils_Event;  // Extra typedef to avoid macro problem with namespaces
     typedef std::function<void(HEPUtils_Event&, const BaseCollider*)> EventWeighterType_Py8Collider;
 
+    /// @brief Typedef for a std::function that takes a PID_pair as input and returns an xsec instance
+    typedef std::function<xsec(PID_pair)> PIDPairCrossSectionFuncType;
+
   }
 }
 
