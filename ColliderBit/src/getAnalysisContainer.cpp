@@ -84,7 +84,7 @@ namespace Gambit
         result.collect_and_add_signal();
         // result.scale(CrossSection.xsec_per_event());
         int ntot = RunMC.current_event_count();
-        double xs = (*TotalCrossSection)();
+        double xs = TotalCrossSection->xsec();
         double xs_per_event = 0;
         if (xs >= 0 && ntot > 0)
         {

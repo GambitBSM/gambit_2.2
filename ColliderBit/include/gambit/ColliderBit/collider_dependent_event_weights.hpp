@@ -71,7 +71,7 @@ namespace Gambit
       // Event weight = [external cross-section] / [sum of contributing Pythia cross-sections]
       if (process_xsec_pythia > 0.0)
       {
-        weight = xs_info.process_xsec() / process_xsec_pythia;
+        weight = xs_info.process_xsec.xsec() / process_xsec_pythia;
       }
       else
       {
@@ -81,7 +81,7 @@ namespace Gambit
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
+        cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec.xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
       #endif
 
       event.set_weight(weight);
