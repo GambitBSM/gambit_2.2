@@ -71,6 +71,10 @@
 ///  \date 2018 Jan, Mar, Apr
 ///  \date 2019 Mar, Apr, Jun
 ///
+///  \author Patrick Stöcker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2019 Sep
+///
 ///  *********************************************
 
 #ifndef __DarkBit_rollcall_hpp__
@@ -504,6 +508,14 @@ START_MODULE
       START_FUNCTION(bool)
       DEPENDENCY(GalacticHalo, GalacticHaloProperties)
       BACKEND_REQ(set_halo_profile, (gamLike), void, (int, const std::vector<double> &, const std::vector<double> &, double))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_Xray_toy
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_toy
+    START_FUNCTION(double)
+    ALLOW_MODEL(DecayingDM_photon)
     #undef FUNCTION
   #undef CAPABILITY
 
