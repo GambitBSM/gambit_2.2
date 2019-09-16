@@ -94,14 +94,23 @@
   #define CAPABILITY PIDPairCrossSectionFunc
   START_CAPABILITY
 
-    // _Anders
-    /// Get a cross-section function which takes a PID_pair as input arguemnt
+    /// Get a dummy test function as PIDPairCrossSectionFunc 
     #define FUNCTION getPIDPairCrossSectionFunc_dummy
     START_FUNCTION(PIDPairCrossSectionFuncType)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
+
+    /// Get a PIDPairCrossSectionFunc via the xsec_example backend
+    #define FUNCTION getPIDPairCrossSectionFunc_xsec_example
+    START_FUNCTION(PIDPairCrossSectionFuncType)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
+    // BACKEND_REQ(xsec_example_xsec_fb, (), double, (PID_pair&, map_str_dbl&, map_str_bool&))
+    #undef FUNCTION
+
 
     // #define FUNCTION getProspinoxsec
     // START_FUNCTION(xsec)

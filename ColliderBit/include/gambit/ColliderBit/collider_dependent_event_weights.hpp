@@ -21,7 +21,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -52,19 +52,19 @@ namespace Gambit
       ProcessXsecInfo xs_info = ProcessCrossSectionsMap.at(process_code);
 
       // Pythia cross-section for this process
-      double process_xsec_pythia = HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-9;  // Pythia uses mb, we use pb
+      double process_xsec_pythia = HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-12;  // Pythia uses mb, we use fb
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-9 << endl;
+        cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-12 << endl;
       #endif
 
       // Add the Pythia cross-sections for other process codes which also 
       // contribute to the externaly provided cross-section
       for (int other_process_code : xs_info.processes_sharing_xsec)
       {
-        process_xsec_pythia += HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-9;  // Pythia uses mb, we use pb
+        process_xsec_pythia += HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-12;  // Pythia uses mb, we use fb
         #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-9 << endl;
+          cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-12 << endl;
         #endif
       }
 
@@ -76,7 +76,7 @@ namespace Gambit
       else
       {
         std::stringstream errmsg_ss;
-        errmsg_ss << "Pythia generated an event of process " << process_code << " for which itself predicts a cross-section <= 0.0 pb... What am I supposed to do with that?";
+        errmsg_ss << "Pythia generated an event of process " << process_code << " for which itself predicts a cross-section <= 0. What am I supposed to do with that?";
         ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
       }
 

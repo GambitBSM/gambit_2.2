@@ -62,6 +62,8 @@ namespace Gambit
   typedef std::pair<str, str> sspair;
   /// Shorthand for a pair of doubles
   typedef std::pair<double, double> ddpair;
+  /// Shorthand for a pair of ints
+  typedef std::pair<int, int> iipair;
   /// Shorthand for a string-to-double map
   typedef std::map<std::string,double> map_str_dbl;
   /// Shorthand for a string-to-string-to-double map

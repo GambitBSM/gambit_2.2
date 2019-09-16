@@ -12,8 +12,14 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2019 Feb
 ///
+///  \author Anders Kvellestad
+///          (a.kvellestad@imperial.ac.uk)
+///  \date 2019 Sep
+///
 ///  *********************************************
 
+// _Anders
+#include <iostream>
 #include <cmath>
 #include <omp.h>
 #include "gambit/ColliderBit/xsec.hpp"
@@ -24,20 +30,145 @@ namespace Gambit
   namespace ColliderBit
   {
 
+
+    /// 
+    /// Definitions of xsec members
+    ///
+
     /// Constructor
-    xsec::xsec() : _ntot(0)
-                 , _xsec(0)
-                 , _xsecerr(0)
-                 , _info_string("")
-    {}
+    base_xsec::base_xsec() : _xsec(0)
+                           , _xsecerr(0)
+                           , _info_string("")
+    { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
-    void xsec::reset()
+    void base_xsec::reset()
     {
-      _ntot = 0;
       _xsec = 0;
       _xsecerr = 0;
       _info_string = "";
+    }
+
+    /// Return the cross-section (in fb).
+    double base_xsec::operator()() const { return _xsec; }
+
+    /// Return the cross-section error (in fb).
+    double base_xsec::xsec_err() const { return _xsecerr; }
+
+    /// Return the cross-section relative error.
+    double base_xsec::xsec_relerr() const { return _xsec > 0 ? _xsecerr/_xsec : 0; }
+
+    /// Set the cross-section and its error (in fb).
+    void base_xsec::set_xsec(double xs, double xserr) { _xsec = xs; _xsecerr = xserr; }
+
+    /// Average cross-sections and combine errors.
+    void base_xsec::average_xsec(double other_xsec, double other_xsecerr)
+    {
+      if (other_xsec > 0)
+      {
+        if (_xsec <= 0)
+        {
+          set_xsec(other_xsec, other_xsecerr);
+        }
+        else
+        {
+          double w = 1./(_xsecerr*_xsecerr);
+          double other_w = 1./(other_xsecerr*other_xsecerr);
+          _xsec = (w * _xsec + other_w * other_xsec) / (w + other_w);
+          _xsecerr = 1./sqrt(w + other_w);
+        }
+      }
+    }
+
+    void base_xsec::average_xsec(const base_xsec& other)
+    {
+      average_xsec(other(), other.xsec_err());
+    }
+
+    /// Sum cross-sections and add errors in quadrature.
+    void base_xsec::sum_xsecs(double other_xsec, double other_xsecerr)
+    {
+      if (other_xsec > 0)
+      {
+        if (_xsec <= 0)
+        {
+          set_xsec(other_xsec, other_xsecerr);
+        }
+        else
+        {
+          _xsec += other_xsec;
+          _xsecerr = sqrt(_xsecerr * _xsecerr + other_xsecerr * other_xsecerr);
+        }
+      }
+    }
+
+    void base_xsec::sum_xsecs(const base_xsec& other)
+    {
+      sum_xsecs(other(), other.xsec_err());
+    }
+
+    /// Get content as a <string,double> map (for easy printing).
+    std::map<std::string, double> base_xsec::get_content_as_map() const
+    {
+      std::map<std::string, double> content_map;
+      std::string key;
+      if (_info_string != "")
+      {        
+        key = _info_string + "__xsec_" + unit;
+        content_map[key] = (*this)();
+
+        key = _info_string + "__xsec_err_" + unit;
+        content_map[key] = this->xsec_err();
+
+        key = _info_string + "__xsec_relerr";
+        content_map[key] = this->xsec_relerr();
+      }
+      else
+      {
+        key = "xsec_" + unit;
+        content_map[key] = (*this)();
+
+        key = "xsec_err_" + unit;
+        content_map[key] = this->xsec_err();
+
+        key = "xsec_relerr";
+        content_map[key] = this->xsec_relerr();
+      }
+
+      return content_map;
+    }
+
+    /// Set the info string
+    void base_xsec::set_info_string(std::string info_string_in) { _info_string = info_string_in; }
+
+    /// Get the info string
+    std::string base_xsec::info_string() const { return _info_string; }
+
+    /// Set the unit string
+    const std::string base_xsec::unit = "fb";
+
+
+
+    // _Anders
+    /// 
+    /// Definitions of xsec members ?
+    ///
+
+
+    /// 
+    /// Definitions of MC_xsec members
+    ///
+
+    /// Constructor
+    MC_xsec::MC_xsec() : base_xsec::base_xsec() 
+                       , _ntot(0)
+    { }
+
+    /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
+    void MC_xsec::reset()
+    {
+      base_xsec::reset();
+      _ntot = 0;
 
       // Add this instance to the instances map if it's not there already.
       int thread = omp_get_thread_num();
@@ -51,131 +182,110 @@ namespace Gambit
     }
 
     /// Increment the number of events seen so far
-    void xsec::log_event() { _ntot += 1; }
+    void MC_xsec::log_event() { _ntot += 1; }
 
     /// Return the total number of events seen so far.
-    long long xsec::num_events() const { return _ntot; }
+    long long MC_xsec::num_events() const { return _ntot; }
 
-    /// Return the cross-section (in pb).
-    double xsec::operator()() const { return _xsec; }
-
-    /// Return the cross-section error (in pb).
-    double xsec::xsec_err() const { return _xsecerr; }
-
-    /// Return the cross-section relative error.
-    double xsec::xsec_relerr() const { return _xsec > 0 ? _xsecerr/_xsec : 0; }
-
-    /// Return the cross-section per event seen (in pb).
-    double xsec::xsec_per_event() const { return (_xsec >= 0 && _ntot > 0) ? _xsec/_ntot : 0; }
+    /// Return the cross-section per event seen (in fb).
+    double MC_xsec::xsec_per_event() const { return (_xsec >= 0 && _ntot > 0) ? _xsec/_ntot : 0; }
 
     /// Set the total number of events seen so far.
-    void xsec::set_num_events(long long n) { _ntot = n; }
-
-    /// Set the cross-section and its error (in pb).
-    void xsec::set_xsec(double xs, double xserr) { _xsec = xs; _xsecerr = xserr; }
+    void MC_xsec::set_num_events(long long n) { _ntot = n; }
 
     /// Average cross-sections and combine errors.
-    void xsec::average_xsec(double other_xsec, double other_xsecerr, long long other_ntot)
+    void MC_xsec::average_xsec(double other_xsec, double other_xsecerr, long long other_ntot)
     {
+      // Run base class function
+      base_xsec::average_xsec(other_xsec, other_xsecerr);
+
+      // Update _ntot
       if (other_xsec > 0)
       {
-        if (_xsec <= 0)
-        {
-          set_xsec(other_xsec, other_xsecerr);
-          set_num_events(other_ntot);
-        }
-        else
-        {
-          _ntot += other_ntot;
-          double w = 1./(_xsecerr*_xsecerr);
-          double other_w = 1./(other_xsecerr*other_xsecerr);
-          _xsec = (w * _xsec + other_w * other_xsec) / (w + other_w);
-          _xsecerr = 1./sqrt(w + other_w);
-        }
+        if (_xsec <= 0) set_num_events(other_ntot);
+        else _ntot += other_ntot;
       }
+    }
+
+    void MC_xsec::average_xsec(const MC_xsec& other)
+    {
+      MC_xsec::average_xsec(other(), other.xsec_err(), other.num_events());
     }
 
     /// Sum cross-sections and add errors in quadrature.
-    void xsec::sum_xsecs(double other_xsec, double other_xsecerr, long long other_ntot)
+    void MC_xsec::sum_xsecs(double other_xsec, double other_xsecerr, long long other_ntot)
     {
+      // Run base class function
+      base_xsec::sum_xsecs(other_xsec, other_xsecerr);
+
+      // Update _ntot
       if (other_xsec > 0)
       {
-        if (_xsec <= 0)
-        {
-          set_xsec(other_xsec, other_xsecerr);
-          set_num_events(other_ntot);          
-        }
-        else
-        {
-          _ntot += other_ntot;
-          _xsec += other_xsec;
-          _xsecerr = sqrt(_xsecerr * _xsecerr + other_xsecerr * other_xsecerr);
-        }
+        if (_xsec <= 0) set_num_events(other_ntot);
+        else _ntot += other_ntot;
       }
     }
 
-    void xsec::sum_xsecs(const xsec& other_xsec)
+    void MC_xsec::sum_xsecs(const MC_xsec& other)
     {
-      sum_xsecs(other_xsec(), other_xsec.xsec_err(), other_xsec.num_events());
+      MC_xsec::sum_xsecs(other(), other.xsec_err(), other.num_events());
     }
 
 
     /// Collect xsec predictions from other threads and do a weighted combination.
-    void xsec::gather_xsecs()
+    void MC_xsec::gather_xsecs()
     {
       int this_thread = omp_get_thread_num();
       for (auto& thread_xsec_pair : instances_map)
       {
         if (thread_xsec_pair.first == this_thread) continue;
-        const xsec& other_xsec = (*thread_xsec_pair.second);
-        average_xsec(other_xsec(), other_xsec.xsec_err(), other_xsec.num_events());
+        const MC_xsec& other = (*thread_xsec_pair.second);
+        average_xsec(other(), other.xsec_err(), other.num_events());
       }
     }
 
     /// Collect total events seen on all threads.
-    void xsec::gather_num_events()
+    void MC_xsec::gather_num_events()
     {
       int this_thread = omp_get_thread_num();
       for (auto& thread_xsec_pair : instances_map)
       {
         if (thread_xsec_pair.first == this_thread) continue;
-        const xsec& other_xsec = (*thread_xsec_pair.second);
-        _ntot += other_xsec.num_events();
+        const MC_xsec& other = (*thread_xsec_pair.second);
+        _ntot += other.num_events();
       }
     }
 
     /// Get content as a <string,double> map (for easy printing).
-    std::map<std::string, double> xsec::get_content_as_map() const
+    std::map<std::string, double> MC_xsec::get_content_as_map() const
     {
-      std::map<std::string, double> content_map;
+      // Get content from base class
+      std::map<std::string, double> content_map = base_xsec::get_content_as_map();
+
+      // Add content specific to this class
+      std::string key;
       if (_info_string != "")
       {        
-        content_map[std::string(_info_string).append("__xsec_pb")] = (*this)();
-        content_map[std::string(_info_string).append("__xsec_err_pb")] = this->xsec_err();
-        content_map[std::string(_info_string).append("__xsec_relerr")] = this->xsec_relerr();
-        content_map[std::string(_info_string).append("__xsec_per_event_pb")] = this->xsec_per_event();
-        content_map[std::string(_info_string).append("__logged_events")] = _ntot;
+        key = _info_string + "__xsec_per_event_" + unit;
+        content_map[key] = this->xsec_per_event();
+
+        key = _info_string + "__logged_events_" + unit;
+        content_map[key] = _ntot;
       }
       else
       {
-        content_map["xsec_pb"] = (*this)();
-        content_map["xsec_err_pb"] = this->xsec_err();
-        content_map["xsec_relerr"] = this->xsec_relerr();
-        content_map["xsec_per_event_pb"] = this->xsec_per_event();
-        content_map["logged_events"] = _ntot;
+        key = "xsec_per_event_" + unit;
+        content_map[key] = this->xsec_per_event();
+
+        key = "logged_events_" + unit;
+        content_map[key] = _ntot;
       }
 
       return content_map;
     }
 
-    /// Set the info string
-    void xsec::set_info_string(std::string info_string_in) { _info_string = info_string_in; }
-
-    /// Get the info string
-    std::string xsec::info_string() const { return _info_string; }
-
     /// A map with pointers to all instances of this class. The key is the thread number.
-    std::map<int, const xsec*> xsec::instances_map;
+    std::map<int, const MC_xsec*> MC_xsec::instances_map;
 
   }
 }

@@ -41,9 +41,11 @@ namespace Gambit
 
         /// @name Event generation and cross section functions:
         ///@{
-        /// Report the cross section (in pb) at the end of the subprocess.
+        /// Report the cross section (in fb or pb) at the end of the subprocess.
+        virtual double xsec_fb() const = 0;
         virtual double xsec_pb() const = 0;
-        /// Report the cross section uncertainty (in pb) at the end of the subprocess.
+        /// Report the cross section uncertainty (in fb or pb) at the end of the subprocess.
+        virtual double xsecErr_fb() const = 0;
         virtual double xsecErr_pb() const = 0;
         ///@}
 

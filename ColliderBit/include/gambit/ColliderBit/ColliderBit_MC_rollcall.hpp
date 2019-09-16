@@ -53,17 +53,38 @@
   #undef CAPABILITY
 
 
+
   /// Cross-section calculators
   /// @{
-  #define CAPABILITY CrossSection
+
+  #define CAPABILITY TotalCrossSectionFromMC
   START_CAPABILITY
 
-    /// Cross-section from Monte Carlo
     #define FUNCTION getMCxsec
-    START_FUNCTION(xsec)
+    START_FUNCTION(MC_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(HardScatteringSim, const BaseCollider*)
     #undef FUNCTION
+
+  #undef CAPABILITY
+
+
+  #define CAPABILITY TotalCrossSection
+  START_CAPABILITY
+
+    // Converters
+    #define FUNCTION get_MC_xsec_as_base
+    START_FUNCTION(const base_xsec*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalCrossSectionFromMC, MC_xsec)
+    #undef FUNCTION
+
+    #define FUNCTION get_xsec_as_base
+    START_FUNCTION(const base_xsec*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalCrossSection, xsec)
+    #undef FUNCTION
+
 
     /// Example function for interfacing alternative cross-section calculators
     #define FUNCTION getNLLFastxsec
@@ -97,13 +118,14 @@
   #undef CAPABILITY
   /// @}
 
+
   /// Get cross-section info as map_str_dbl (for simple printing)
-  #define CAPABILITY XsecInfo
+  #define CAPABILITY TotalCrossSectionAsMap
   START_CAPABILITY
-    #define FUNCTION getXsecInfoMap
+    #define FUNCTION getTotalCrossSectionAsMap
     START_FUNCTION(map_str_dbl)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(CrossSection, xsec)
+    DEPENDENCY(TotalCrossSection, const base_xsec*)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -134,7 +156,9 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ProcessCodes, std::vector<int>)
     DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)
-    // _Anders: uncomment and comment
+    // _Anders: Made this model-independent by depending on a PIDPairCrossSectionFunc 
+    //          that only requires a PID_pair input (spectrum info already provided 
+    //          to this function via model-dependent capabilities)
     DEPENDENCY(PIDPairCrossSectionFunc, PIDPairCrossSectionFuncType)
     // ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     // DEPENDENCY(MSSM_spectrum, Spectrum)
@@ -150,7 +174,7 @@
     #define FUNCTION getATLASAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(CrossSection, xsec)
+    DEPENDENCY(TotalCrossSection, const base_xsec*)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -159,7 +183,7 @@
     #define FUNCTION getCMSAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(CrossSection, xsec)
+    DEPENDENCY(TotalCrossSection, const base_xsec*)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -168,7 +192,7 @@
     #define FUNCTION getIdentityAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(CrossSection, xsec)
+    DEPENDENCY(TotalCrossSection, const base_xsec*)
     #undef FUNCTION
   #undef CAPABILITY
   /// @}

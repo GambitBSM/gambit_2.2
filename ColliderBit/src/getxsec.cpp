@@ -12,11 +12,15 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2019 Feb, May
 ///
+///  \author Anders Kvellestad
+///          (a.kvellestad@imperial.ac.uk)
+///  \date 2019 Sep
+///
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -65,40 +69,12 @@ namespace Gambit
     }
 
 
-    /// Dummy function for testing getProcessCrossSectionsMap
-    xsec dummyXsecFunction(const SLHAstruct& slha, const PID_pair& pids)
-    {
-      xsec xs_result;
 
-      // "Calculate" cross section
-      // (only stop-stopbar production)
-      double xs_pb = 0.0;
-      if (pids.first == 1000002 && pids.second == -1000002)
-      {
-        xs_pb = 3.09816e-14 + 9.08223e-16;
-      }
-      else
-      {
-        xs_pb = 1.0;
-      }
-      double xs_rel_err = 0.01;
-      // double xs_err = xs_pb * xs_rel_err;
-
-      // Save result in xs_result
-      xs_result.set_xsec(xs_pb, xs_rel_err);
-
-      // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
-      std::stringstream info_ss;
-      info_ss << "PID1:" << pids.first << ", " << "PID2:" << pids.second;
-      xs_result.set_info_string(info_ss.str());
-
-      return xs_result;
-    }
+    // ======= Module functions =======
 
 
-    // _Anders
-    /// Dummy function for testing getProcessCrossSectionsMap
-    xsec dummyPIDPairCrossSectionFunc(const PID_pair& pids, const Spectrum& MSSM_spectrum)
+    /// Dummy function for testing out how to return a PIDPairCrossSectionFunc
+    xsec PIDPairCrossSection_dummy(const PID_pair& pids, const Spectrum& MSSM_spectrum)
     {
       xsec xs_result;
 
@@ -107,20 +83,20 @@ namespace Gambit
 
       // "Calculate" cross section
       // (only stop-stopbar production)
-      double xs_pb = 0.0;
+      double xs_fb = 0.0;
       if (pids.first == 1000002 && pids.second == -1000002)
       {
-        xs_pb = 3.09816e-14 + 9.08223e-16;
+        xs_fb = 3.09816e-11 + 9.08223e-13;
       }
       else
       {
-        xs_pb = 1.0;
+        xs_fb = 1.0;
       }
       double xs_rel_err = 0.01;
-      // double xs_err = xs_pb * xs_rel_err;
+      // double xs_err = xs_fb * xs_rel_err;
 
       // Save result in xs_result
-      xs_result.set_xsec(xs_pb, xs_rel_err);
+      xs_result.set_xsec(xs_fb, xs_rel_err);
 
       // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
       std::stringstream info_ss;
@@ -130,18 +106,73 @@ namespace Gambit
       return xs_result;
     }
 
-    /// Get a std::function<xsec(PID_pair)> pointing to dummyPIDPairCrossSectionFunction,
+    /// Get a PIDPairCrossSectionFunc pointing to PIDPairCrossSection_dummy,
     /// with the second argument already filled by *Dep::MSSM_spectrum
     void getPIDPairCrossSectionFunc_dummy(PIDPairCrossSectionFuncType& result)
     {
       using namespace Pipes::getPIDPairCrossSectionFunc_dummy;
-      result = std::bind(dummyPIDPairCrossSectionFunc, std::placeholders::_1, *Dep::MSSM_spectrum);
+      result = std::bind(PIDPairCrossSection_dummy, std::placeholders::_1, *Dep::MSSM_spectrum);
+    }
+
+
+
+    /// Get the cross-section from the xsec_example backend
+    xsec PIDPairCrossSection_xsec_example(PID_pair pids, 
+                                          const Spectrum& MSSM_spectrum)
+                                          // double (*xsec_fb_fptr)(PID_pair&, map_str_dbl&, map_str_bool&))
+    {
+      xsec xs_result;
+
+      // Get an SLHA1 object
+      const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
+
+      // Call cross-section calculation 
+      map_str_dbl proc_params;
+      map_str_bool proc_flags;
+
+      double xs_fb = 3.1415;
+
+      // double xs_fb = 1.0e-3 * xsec_fb_fptr(pids, proc_params, proc_flags);
+
+      double xs_rel_err = 0.01;
+
+      // Save result in xs_result
+      xs_result.set_xsec(xs_fb, xs_rel_err);
+
+      // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
+      std::stringstream info_ss;
+      info_ss << "PID1:" << pids.first << ", " << "PID2:" << pids.second;
+      xs_result.set_info_string(info_ss.str());
+
+      return xs_result;
+    }
+
+
+    /// Get a PIDPairCrossSectionFunc pointing to the xsec_example backend
+    void getPIDPairCrossSectionFunc_xsec_example(PIDPairCrossSectionFuncType& result)
+    {
+      using namespace Pipes::getPIDPairCrossSectionFunc_xsec_example;
+
+      // result = std::bind(PIDPairCrossSection_xsec_example, std::placeholders::_1, *Dep::MSSM_spectrum, BEreq::xsec_example_xsec_fb.pointer());
+      result = std::bind(PIDPairCrossSection_xsec_example, std::placeholders::_1, *Dep::MSSM_spectrum);
+
+      // Bind to the backend function xsec_fb with the two first arguments fixed
+
+      // // Get an SLHA1 object
+      // const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
+
+      // _Anders
+      // BACKEND_REQ(xsec_example_xsec_fb, (), double, (std::vector<double>&, map_str_dbl&, map_str_bool&))
+
+      // map_str_dbl proc_params;
+      // map_str_bool proc_flags;
+
+      // result = std::bind(BEreq::xsec_example_xsec_fb.pointer(), std::placeholders::_1, proc_params, proc_flags);
     }
 
 
 
 
-    // ======= Module functions =======
 
 
     /// Get a map between Pythia process codes and cross-sections
@@ -159,7 +190,7 @@ namespace Gambit
         shared_result.clear();
       }
 
-      // All OMP threads
+      // All threads
       if(*Loop::iteration == COLLIDER_INIT_OMP)
       {
         result.clear();
@@ -170,9 +201,6 @@ namespace Gambit
       {
         cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
         cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ProcessCodeToPIDPairsMap.size() = " << Dep::ProcessCodeToPIDPairsMap->size() << endl;          
-
-        // // Get an SLHA1 object
-        // const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
 
         // Loop over all active processes and construct the cross-section map (shared_result)
         for (size_t i = 0; i != Dep::ProcessCodes->size(); ++i)
@@ -194,8 +222,6 @@ namespace Gambit
 
             // Call cross-section calculator here.
             // (We're gonna assume that the calculator is smart enough to re-order two PIDs if it needs to.)
-            // _Anders
-            // xsec xs = dummyXsecFunction(slha, pids);
             xsec xs = (*Dep::PIDPairCrossSectionFunc)(pids);
 
             // Accumulate result in the ProcessXsecInfo::process_xsec variable
@@ -253,7 +279,7 @@ namespace Gambit
       }
 
 
-      // All OMP threads
+      // All threads
       if (*Loop::iteration == START_SUBPROCESS)
       {
         // All threads read the result from shared_result
@@ -264,7 +290,7 @@ namespace Gambit
 
 
     /// Compute a cross-section from Monte Carlo
-    void getMCxsec(xsec& result)
+    void getMCxsec(MC_xsec& result)
     {
       using namespace Pipes::getMCxsec;
 
@@ -288,8 +314,8 @@ namespace Gambit
       {
         if (not Dep::RunMC->exceeded_maxFailedEvents)
         {
-          const double xs_fb = (*Dep::HardScatteringSim)->xsec_pb() * 1000.;
-          const double xserr_fb = (*Dep::HardScatteringSim)->xsecErr_pb() * 1000.;
+          const double xs_fb = (*Dep::HardScatteringSim)->xsec_fb();
+          const double xserr_fb = (*Dep::HardScatteringSim)->xsecErr_fb();
           result.set_xsec(xs_fb, xserr_fb);
           #ifdef COLLIDERBIT_DEBUG
             cout << DEBUG_PREFIX << "xs_fb = " << xs_fb << " +/- " << xserr_fb << endl;
@@ -305,34 +331,59 @@ namespace Gambit
 
     }
 
+    /// Return MC_xsec as const base_xsec*
+    void get_MC_xsec_as_base(const base_xsec*& result)
+    {
+      using namespace Pipes::get_MC_xsec_as_base;
+      result = &(*Dep::TotalCrossSectionFromMC);
+    }
+
+    /// Return xsec as const base_xsec*
+    void get_xsec_as_base(const base_xsec*& result)
+    {
+      using namespace Pipes::get_xsec_as_base;
+      result = &(*Dep::TotalCrossSection);
+    }
+
+
+
     /// Get a cross-section from NLL-FAST
     void getNLLFastxsec(xsec& result)
     {
       using namespace Pipes::getNLLFastxsec;
 
+      // Use a static variable to communicate the result calculated on thread 0 during 
+      // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
+      static xsec shared_result;
+
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
-      // Reset the xsec objects on all threads
-      if (*Loop::iteration == COLLIDER_INIT_OMP)
-      {
-        result.reset();
-      }
+      // Only thread 0
+      if(*Loop::iteration == COLLIDER_INIT) shared_result.reset();
+      
+      // All threads
+      if (*Loop::iteration == COLLIDER_INIT_OMP) result.reset();
 
-      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration >= 0)
-      {
-        result.log_event();
-      }
-
-      // Set the xsec and its error, and gather event counts from all threads.
-      if (*Loop::iteration == COLLIDER_FINALIZE)
+      // Set the xsec and its error.
+      // Only thread 0
+      if (*Loop::iteration == XSEC_CALCULATION)
       {
         double xs_fb = 0.1;             // replace with xsec from NLL-Fast
         double xserr_fb = 0.1 * xs_fb;  // or whatever
-        result.set_xsec(xs_fb, xserr_fb);
-        result.gather_num_events();
+        shared_result.set_xsec(xs_fb, xserr_fb);
+
+        // Let thread 0 return the correct result already after iteration XSEC_CALCULATION
+        result = shared_result;
       }
+
+      // All threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        // All threads copy the result from shared_result
+        result = shared_result;
+      }
+
     }
 
 
@@ -341,13 +392,16 @@ namespace Gambit
     {
       using namespace Pipes::getYAMLxsec;
 
+      // Use a static variable to communicate the result calculated on thread 0 during 
+      // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
+      static xsec shared_result;
+
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
       static std::pair<str,str> xsec_pnames;
       static str input_unit; 
       static bool input_fractional_uncert = false;
-
 
       static bool first = true;
       if (*Loop::iteration == BASE_INIT)
@@ -400,32 +454,34 @@ namespace Gambit
         }
       }
 
-
       // Retrieve the total cross-section and cross-section error
       const static double input_xsec = runOptions->getValue<double>(xsec_pnames.first);
       const static double input_xsec_uncert = runOptions->getValue<double>(xsec_pnames.second);
 
-      // Reset the xsec objects on all threads
-      if (*Loop::iteration == COLLIDER_INIT_OMP)
-      {
-        result.reset();
-      }
-
-      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration >= 0)
-      {
-        result.log_event();
-      }
+      // Only thread 0
+      if(*Loop::iteration == COLLIDER_INIT) shared_result.reset();
+      
+      // All threads
+      if (*Loop::iteration == COLLIDER_INIT_OMP) result.reset();
 
       // Set the xsec and its error
-      if (*Loop::iteration == COLLIDER_FINALIZE)
+      // Only thread 0
+      if (*Loop::iteration == XSEC_CALCULATION)
       {
         std::pair<double,double> temp = convert_xsecs_to_fb(input_xsec, input_xsec_uncert, input_unit, input_fractional_uncert);
         double xsec_fb = temp.first;
         double xsec_uncert_fb = temp.second;
+        shared_result.set_xsec(xsec_fb, xsec_uncert_fb);
 
-        result.set_xsec(xsec_fb, xsec_uncert_fb);
-        result.gather_num_events();
+        // Let thread 0 return the correct result already after iteration XSEC_CALCULATION
+        result = shared_result;
+      }
+
+      // All threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        // All threads copy the result from shared_result
+        result = shared_result;
       }
 
     }
@@ -436,6 +492,10 @@ namespace Gambit
     void getYAMLxsec_SLHA(xsec& result)
     {
       using namespace Pipes::getYAMLxsec_SLHA;
+
+      // Use a static variable to communicate the result calculated on thread 0 during 
+      // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
+      static xsec shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -512,20 +572,14 @@ namespace Gambit
         if (!colOptions_uncert.hasKey(filename)) piped_invalid_point.request(str("No fractional cross-section uncertainty found for SLHA file ").append(filename));
       }
 
-      // Reset the xsec objects on all threads
-      if (*Loop::iteration == COLLIDER_INIT_OMP)
-      {
-        result.reset();
-      }
-
-      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration >= 0)
-      {
-        result.log_event();
-      }
+      // Only thread 0
+      if(*Loop::iteration == COLLIDER_INIT) shared_result.reset();
+      
+      // All threads
+      if (*Loop::iteration == COLLIDER_INIT_OMP) result.reset();
 
       // Set the xsec and its error
-      if (*Loop::iteration == COLLIDER_FINALIZE)
+      if (*Loop::iteration == XSEC_CALCULATION)
       {
         double input_xsec = colOptions_xsec.getValue<double>(filename);
         double input_xsec_uncert = colOptions_uncert.getValue<double>(filename);
@@ -533,9 +587,17 @@ namespace Gambit
         std::pair<double,double> temp = convert_xsecs_to_fb(input_xsec, input_xsec_uncert, input_unit, input_fractional_uncert);
         double xsec_fb = temp.first;
         double xsec_uncert_fb = temp.second;
+        shared_result.set_xsec(xsec_fb, xsec_uncert_fb);
 
-        result.set_xsec(xsec_fb, xsec_uncert_fb);
-        result.gather_num_events();
+        // Let thread 0 return the correct result already after iteration XSEC_CALCULATION
+        result = shared_result;
+      }
+
+      // All threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        // All threads copy the result from shared_result
+        result = shared_result;
       }
 
     }
@@ -546,6 +608,10 @@ namespace Gambit
     void getYAMLxsec_param(xsec& result)
     {
       using namespace Pipes::getYAMLxsec_param;
+
+      // Use a static variable to communicate the result calculated on thread 0 during 
+      // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
+      static xsec shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -618,20 +684,15 @@ namespace Gambit
         }
       }
 
-      // Reset the xsec objects on all threads
-      if (*Loop::iteration == COLLIDER_INIT_OMP)
-      {
-        result.reset();
-      }
-
-      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration >= 0)
-      {
-        result.log_event();
-      }
+      // Only thread 0
+      if(*Loop::iteration == COLLIDER_INIT) shared_result.reset();
+      
+      // All threads
+      if (*Loop::iteration == COLLIDER_INIT_OMP) result.reset();
 
       // Set the xsec and its error
-      if (*Loop::iteration == COLLIDER_FINALIZE)
+      // Only thread 0
+      if (*Loop::iteration == XSEC_CALCULATION)
       {
         double input_xsec = *Param.at(xsec_pnames.first);
         double input_xsec_uncert = *Param.at(xsec_pnames.second); 
@@ -639,18 +700,26 @@ namespace Gambit
         std::pair<double,double> temp = convert_xsecs_to_fb(input_xsec, input_xsec_uncert, input_unit, input_fractional_uncert);
         double xsec_fb = temp.first;
         double xsec_uncert_fb = temp.second;
+        shared_result.set_xsec(xsec_fb, xsec_uncert_fb);
 
-        result.set_xsec(xsec_fb, xsec_uncert_fb);
-        result.gather_num_events();
+        // Let thread 0 return the correct result already after iteration XSEC_CALCULATION
+        result = shared_result;
+      }
+
+      // All threads
+      if (*Loop::iteration == START_SUBPROCESS)
+      {
+        // All threads copy the result from shared_result
+        result = shared_result;
       }
 
     }
 
 
     /// Get cross-section info as map_str_dbl (for simple printing)
-    void getXsecInfoMap(map_str_dbl& result)
+    void getTotalCrossSectionAsMap(map_str_dbl& result)
     {
-      using namespace Pipes::getXsecInfoMap;
+      using namespace Pipes::getTotalCrossSectionAsMap;
 
       // @todo Do we need this to ensure that the result map is always of the same length (for the printer)?
       // // Append the xsec info for the current collider to the result map
@@ -668,8 +737,7 @@ namespace Gambit
       // Append the xsec info for the current collider to the result map
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
-        const xsec& xs = (*Dep::CrossSection);
-        for(auto s_d_pair : xs.get_content_as_map())
+        for(auto s_d_pair : (*Dep::TotalCrossSection)->get_content_as_map())
         {
           std::string new_key(Dep::RunMC->current_collider());
           new_key.append("__").append(s_d_pair.first);
