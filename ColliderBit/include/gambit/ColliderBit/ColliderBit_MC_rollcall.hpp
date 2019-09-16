@@ -152,7 +152,7 @@
   START_CAPABILITY
 
     #define FUNCTION getProcessCrossSectionsMap
-    START_FUNCTION(map_int_ProcessXsecInfo)
+    START_FUNCTION(map_int_process_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ProcessCodes, std::vector<int>)
     DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)

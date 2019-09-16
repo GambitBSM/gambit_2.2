@@ -176,13 +176,13 @@ namespace Gambit
         /// Return the list of process codes that share this cross-section 
         /// (This is due to the many-to-many mapping between Pythia process 
         /// codes and the PID pairs we use as basis for external cross-section calculations)
-        std::vector<int> processes_sharing_xsec() const;
+        const std::vector<int>& processes_sharing_xsec() const;
 
         /// Add a process code to the list of processes sharing this cross-section 
         void add_process_sharing_xsec(int);
 
         /// Return the list of PID pairs contributing to this cross-section
-        vec_PID_pairs contributing_PID_pairs() const; 
+        const vec_PID_pairs& contributing_PID_pairs() const; 
 
         /// Add a PID pair to the list of PID pairs contributing to this cross-section
         void add_contributing_PID_pair(PID_pair); 

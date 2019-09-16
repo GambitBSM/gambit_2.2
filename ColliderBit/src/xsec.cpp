@@ -342,7 +342,7 @@ namespace Gambit
     /// Return the list of process codes that share this cross-section 
     /// (This is due to the many-to-many mapping between Pythia process 
     /// codes and the PID pairs we use as basis for external cross-section calculations)
-    std::vector<int> process_xsec_container::processes_sharing_xsec() const 
+    const std::vector<int>& process_xsec_container::processes_sharing_xsec() const 
     { return _processes_sharing_xsec; }
 
     /// Add a process code to the list of processes sharing this cross-section 
@@ -350,7 +350,7 @@ namespace Gambit
     { _processes_sharing_xsec.push_back(process_code_in); }
 
     /// Return the list of PID pairs contributing to this cross-section
-    process_xsec_container::vec_PID_pairs process_xsec_container::contributing_PID_pairs() const 
+    const process_xsec_container::vec_PID_pairs& process_xsec_container::contributing_PID_pairs() const 
     { return _contributing_PID_pairs; } 
 
     /// Add a PID pair to the list of PID pairs contributing to this cross-section

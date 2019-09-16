@@ -42,7 +42,6 @@
 #include "gambit/ColliderBit/MCLoopInfo.hpp"
 #include "gambit/ColliderBit/MC_convergence.hpp"
 #include "gambit/ColliderBit/xsec.hpp"
-#include "gambit/ColliderBit/ProcessXsecInfo.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8Collider_typedefs.hpp"
 #include "gambit/ColliderBit/detectors/BuckFast.hpp"
@@ -105,20 +104,20 @@ namespace Gambit
     typedef std::pair<int,int> PID_pair;
     typedef std::vector<std::pair<int,int>> vec_PID_pairs;
 
-    /// @brief Typedef for a multimap from Pythia process codes to PID pairs
+    /// @brief Typedef for a int-to-PID_pair multimap, used to match Pythia process codes to PID pairs
     typedef std::multimap<int,PID_pair> multimap_int_PID_pair;
 
-    /// @brief Typedef for an int to xsec map, used to match Pythia process codes to cross-sections
+    /// @brief Typedef for an int-to-xsec_container map
     typedef std::map<int,xsec_container> map_int_xsec;
 
-    /// @brief Typedef for an int to ProcessXsecInfo map, used to combined Pythia process cross-sections with info needed for event weighting
-    typedef std::map<int,ProcessXsecInfo> map_int_ProcessXsecInfo;
+    /// @brief Typedef for an int-to-process_xsec_container map
+    typedef std::map<int,process_xsec_container> map_int_process_xsec;
 
     /// @brief Typedef for a std::function that sets the weight for the input HEPUtils::Event
     typedef HEPUtils::Event HEPUtils_Event;  // Extra typedef to avoid macro problem with namespaces
     typedef std::function<void(HEPUtils_Event&, const BaseCollider*)> EventWeighterType_Py8Collider;
 
-    /// @brief Typedef for a std::function that takes a PID_pair as input and returns an xsec instance
+    /// @brief Typedef for a std::function that takes a PID_pair as input and returns an xsec_container instance
     typedef std::function<xsec_container(PID_pair)> PIDPairCrossSectionFuncType;
 
   }

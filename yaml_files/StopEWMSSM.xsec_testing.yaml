@@ -320,8 +320,8 @@ Rules:
 
   # Choose event weighting
   - capability: EventWeighterPy8Collider
-    # function: setEventWeight_fromCrossSection_Pythia
-    function: setEventWeight_unity
+    function: setEventWeight_fromCrossSection_Pythia
+    # function: setEventWeight_unity
     
   - capability: PIDPairCrossSectionFunc
     function: getPIDPairCrossSectionFunc_dummy

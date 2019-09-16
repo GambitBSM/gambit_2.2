@@ -176,13 +176,13 @@ namespace Gambit
 
 
     /// Get a map between Pythia process codes and cross-sections
-    void getProcessCrossSectionsMap(map_int_ProcessXsecInfo& result)
+    void getProcessCrossSectionsMap(map_int_process_xsec& result)
     {
       using namespace Pipes::getProcessCrossSectionsMap;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static map_int_ProcessXsecInfo shared_result;
+      static map_int_process_xsec shared_result;
 
       // Only thread 0
       if(*Loop::iteration == COLLIDER_INIT)
@@ -208,9 +208,9 @@ namespace Gambit
           // Get process code
           int current_pcode = Dep::ProcessCodes->at(i);
 
-          // Construct a ProcessXsecInfo instance to be stored in the shared_result map
-          ProcessXsecInfo xs_info;
-          xs_info.process_code = current_pcode;
+          // Construct a process_xsec_container instance to be stored in the shared_result map
+          process_xsec_container current_xs;
+          current_xs.set_process_code(current_pcode);
 
           // Get iterator bounds (as a pair) over the multimap entries that match the key current_pcode
           auto mm_range = Dep::ProcessCodeToPIDPairsMap->equal_range(current_pcode);
@@ -222,21 +222,23 @@ namespace Gambit
 
             // Call cross-section calculator here.
             // (We're gonna assume that the calculator is smart enough to re-order two PIDs if it needs to.)
+
+            // _Anders: This xsec_container should be replaced by a PID_pair_xsec_container
             xsec_container xs = (*Dep::PIDPairCrossSectionFunc)(pids);
 
-            // Accumulate result in the ProcessXsecInfo::process_xsec variable
-            xs_info.process_xsec.sum_xsecs(xs);
-            xs_info.pid_pairs.push_back(pids);
+            // Accumulate result in the process_xsec_container current_xs
+            current_xs.sum_xsecs(xs.xsec(), xs.xsec_err());
+            current_xs.add_contributing_PID_pair(pids);
           }
 
           // Construct info string of the form "ProcessCode:<current_pcode>"
           std::stringstream info_ss;
           info_ss << "ProcessCode:" << current_pcode;
-          xs_info.process_xsec.set_info_string(info_ss.str());
+          current_xs.set_info_string(info_ss.str());
 
 
           // Now we figure out if the current_pcode process shares the cross-section
-          // stored in in xs_info.process_xsec with any other process codes
+          // stored in in current_xs with any other process codes
 
           // Loop over *all* entries (process code <--> PID pair) in the multimap Dep::ProcessCodeToPIDPairsMap
           for (auto mm_it = Dep::ProcessCodeToPIDPairsMap->begin(); mm_it != Dep::ProcessCodeToPIDPairsMap->end(); ++mm_it)
@@ -249,16 +251,16 @@ namespace Gambit
 
             // @todo What's the right choice here?
             // // Don't add more copies of the same process code! ...Or should we?
-            // if(std::find(xs_info.processes_sharing_xsec.begin(), xs_info.processes_sharing_xsec.end(), pc) != xs_info.processes_sharing_xsec.end()) 
+            // if(std::find(current_xs.processes_sharing_xsec().begin(), current_xs.processes_sharing_xsec().end(), pc) != current_xs.processes_sharing_xsec().end()) 
 
             // Check if the PID pair pp mathces one of the PID pairs for the current_pcode process
-            if(std::find(xs_info.pid_pairs.begin(), xs_info.pid_pairs.end(), pp) != xs_info.pid_pairs.end()) 
+            if(std::find(current_xs.contributing_PID_pairs().begin(), current_xs.contributing_PID_pairs().end(), pp) != current_xs.contributing_PID_pairs().end()) 
             {
               // Check that pc is itself in one of the active processes, i.e. listed in Dep::ProcessCodes
               if(std::find(Dep::ProcessCodes->begin(), Dep::ProcessCodes->end(), pc) != Dep::ProcessCodes->end())  
               {
                 // Add pc to the list of processes that share cross-section with current_pcode
-                xs_info.processes_sharing_xsec.push_back(pc);
+                current_xs.add_process_sharing_xsec(pc);
               }
               else
               {
@@ -270,8 +272,8 @@ namespace Gambit
             }
           }
 
-          // Store xs_info in the shared_result map
-          shared_result[current_pcode] = xs_info;
+          // Store current_xs in the shared_result map
+          shared_result[current_pcode] = current_xs;
         }
 
         // Let thread 0 return the correct result already after iteration XSEC_CALCULATION

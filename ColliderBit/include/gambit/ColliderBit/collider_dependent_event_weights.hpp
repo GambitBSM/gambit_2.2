@@ -32,7 +32,7 @@ namespace Gambit
 
     /// A function that sets the event weight based on the process cross-sections
     template<typename PythiaT, typename EventT>
-    void _setEventWeight_fromCrossSection(HEPUtils::Event& event, const BaseCollider* collider_ptr, const map_int_ProcessXsecInfo& ProcessCrossSectionsMap)
+    void _setEventWeight_fromCrossSection(HEPUtils::Event& event, const BaseCollider* collider_ptr, const map_int_process_xsec& ProcessCrossSectionsMap)
     {
       #ifdef COLLIDERBIT_DEBUG
         cout << DEBUG_PREFIX << ": _setEventWeight_fromCrossSection: Starting function..." << endl;
@@ -48,8 +48,8 @@ namespace Gambit
       // Get process code from Pythia
       int process_code = HardScatteringSim_ptr->pythia()->info.code();
 
-      // Get the ProcessXsecInfo instance that holds the externally provided cross-section for this process
-      ProcessXsecInfo xs_info = ProcessCrossSectionsMap.at(process_code);
+      // Get the process_xsec_container instance that holds the externally provided cross-section for this process
+      process_xsec_container xs = ProcessCrossSectionsMap.at(process_code);
 
       // Pythia cross-section for this process
       double process_xsec_pythia = HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-12;  // Pythia uses mb, we use fb
@@ -60,7 +60,7 @@ namespace Gambit
 
       // Add the Pythia cross-sections for other process codes which also 
       // contribute to the externaly provided cross-section
-      for (int other_process_code : xs_info.processes_sharing_xsec)
+      for (int other_process_code : xs.processes_sharing_xsec())
       {
         process_xsec_pythia += HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-12;  // Pythia uses mb, we use fb
         #ifdef COLLIDERBIT_DEBUG
@@ -71,7 +71,7 @@ namespace Gambit
       // Event weight = [external cross-section] / [sum of contributing Pythia cross-sections]
       if (process_xsec_pythia > 0.0)
       {
-        weight = xs_info.process_xsec.xsec() / process_xsec_pythia;
+        weight = xs.xsec() / process_xsec_pythia;
       }
       else
       {
@@ -81,7 +81,7 @@ namespace Gambit
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs_info.process_xsec.xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
+        cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs.xsec() << ",  process_xsec_pythia: " << process_xsec_pythia << ",  weight: " << weight << endl;
       #endif
 
       event.set_weight(weight);

@@ -83,7 +83,7 @@
     #define FUNCTION setEventWeight_fromCrossSection_Pythia_EM
     START_FUNCTION(EventWeighterType_Py8Collider)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCrossSectionsMap, map_int_ProcessXsecInfo)
+    DEPENDENCY(ProcessCrossSectionsMap, map_int_process_xsec)
     #undef FUNCTION
 
   #undef CAPABILITY
