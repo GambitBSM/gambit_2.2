@@ -18,8 +18,7 @@
 ///
 ///  *********************************************
 
-// _Anders
-#include <iostream>
+#include <cassert>
 #include <cmath>
 #include <omp.h>
 #include "gambit/ColliderBit/xsec.hpp"
@@ -113,29 +112,20 @@ namespace Gambit
     std::map<std::string, double> base_xsec_container::get_content_as_map() const
     {
       std::map<std::string, double> content_map;
+
       std::string key;
-      if (_info_string != "")
-      {        
-        key = _info_string + "__xsec_" + unit;
-        content_map[key] = (*this)();
+      std::string base_key;
+      if (_info_string != "") base_key = _info_string + "__";
+      else base_key = "";
 
-        key = _info_string + "__xsec_err_" + unit;
-        content_map[key] = this->xsec_err();
+      key = base_key + "xsec_" + unit;
+      content_map[key] = this->xsec();
 
-        key = _info_string + "__xsec_relerr";
-        content_map[key] = this->xsec_relerr();
-      }
-      else
-      {
-        key = "xsec_" + unit;
-        content_map[key] = (*this)();
+      key = base_key + "xsec_err_" + unit;
+      content_map[key] = this->xsec_err();
 
-        key = "xsec_err_" + unit;
-        content_map[key] = this->xsec_err();
-
-        key = "xsec_relerr";
-        content_map[key] = this->xsec_relerr();
-      }
+      key = base_key + "xsec_relerr";
+      content_map[key] = this->xsec_relerr();
 
       return content_map;
     }
@@ -267,28 +257,105 @@ namespace Gambit
 
       // Add content specific to this class
       std::string key;
-      if (_info_string != "")
-      {        
-        key = _info_string + "__xsec_per_event_" + unit;
-        content_map[key] = this->xsec_per_event();
+      std::string base_key;
+      if (_info_string != "") base_key = _info_string + "__";
+      else base_key = "";
 
-        key = _info_string + "__logged_events_" + unit;
-        content_map[key] = _ntot;
-      }
-      else
-      {
-        key = "xsec_per_event_" + unit;
-        content_map[key] = this->xsec_per_event();
+      key = base_key + "xsec_per_event_" + unit;
+      content_map[key] = this->xsec_per_event();
 
-        key = "logged_events_" + unit;
-        content_map[key] = _ntot;
-      }
+      key = base_key + "logged_events_" + unit;
+      content_map[key] = _ntot;
 
       return content_map;
     }
 
     /// A map with pointers to all instances of this class. The key is the thread number.
     std::map<int, const MC_xsec_container*> MC_xsec_container::instances_map;
+
+
+
+    /// 
+    /// Definitions of process_xsec_container members
+    ///
+
+    /// Constructor
+    process_xsec_container::process_xsec_container() : 
+      base_xsec_container::base_xsec_container(),
+      _process_code(-1),
+      _processes_sharing_xsec(std::vector<int>()),
+      _contributing_PID_pairs(vec_PID_pairs())
+    { }
+
+    /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
+    void process_xsec_container::reset()
+    {
+      base_xsec_container::reset();
+      _process_code = -1;
+      _processes_sharing_xsec.clear();
+      _contributing_PID_pairs.clear();
+    }
+
+    /// Average cross-sections and combine errors.
+    void process_xsec_container::average_xsec(double other_xsec, double other_xsecerr)
+    {
+      // Run base class function
+      base_xsec_container::average_xsec(other_xsec, other_xsecerr);
+    }
+    void process_xsec_container::average_xsec(const process_xsec_container& other)
+    {
+      // Check that the process code of this instance is set
+      assert(_process_code > 0);
+      // Check that we are working with the same process code
+      assert(other.process_code() == _process_code);
+      // @todo Should we also check the content of the vectors 
+      //       _processes_sharing_xsec and _contributing_PID_pairs?
+      process_xsec_container::average_xsec(other.xsec(), other.xsec_err());
+    }
+
+    /// Sum cross-sections and add errors in quadrature.
+    void process_xsec_container::sum_xsecs(double other_xsec, double other_xsecerr)
+    {
+      // Run base class function
+      base_xsec_container::sum_xsecs(other_xsec, other_xsecerr);
+    }
+    void process_xsec_container::sum_xsecs(const process_xsec_container& other)
+    {
+      // Check that the process code of this instance is set
+      assert(_process_code > 0);
+      // Check that we are working with the same process code
+      assert(other.process_code() == _process_code);
+      // @todo Should we also check the content of the vectors 
+      //       _processes_sharing_xsec and _contributing_PID_pairs?
+      process_xsec_container::sum_xsecs(other.xsec(), other.xsec_err());
+    }
+
+
+    /// Return the process code
+    int process_xsec_container::process_code() const 
+    { return _process_code; }
+
+    /// Set the process code
+    void process_xsec_container::set_process_code(int process_code_in) 
+    { _process_code = process_code_in; } 
+
+    /// Return the list of process codes that share this cross-section 
+    /// (This is due to the many-to-many mapping between Pythia process 
+    /// codes and the PID pairs we use as basis for external cross-section calculations)
+    std::vector<int> process_xsec_container::processes_sharing_xsec() const 
+    { return _processes_sharing_xsec; }
+
+    /// Add a process code to the list of processes sharing this cross-section 
+    void process_xsec_container::add_process_sharing_xsec(int process_code_in) 
+    { _processes_sharing_xsec.push_back(process_code_in); }
+
+    /// Return the list of PID pairs contributing to this cross-section
+    process_xsec_container::vec_PID_pairs process_xsec_container::contributing_PID_pairs() const 
+    { return _contributing_PID_pairs; } 
+
+    /// Add a PID pair to the list of PID pairs contributing to this cross-section
+    void process_xsec_container::add_contributing_PID_pair(process_xsec_container::PID_pair pid_pair_in) 
+    { _contributing_PID_pairs.push_back(pid_pair_in); }  
 
   }
 }

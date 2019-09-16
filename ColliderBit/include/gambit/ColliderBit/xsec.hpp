@@ -18,6 +18,7 @@
 ///
 ///  *********************************************
 
+#include <vector>
 #include <map>
 #include <string>
 
@@ -140,6 +141,58 @@ namespace Gambit
         /// A map with pointers to all instances of this class. The key is the OMP thread number.
         static std::map<int, const MC_xsec_container*> instances_map;
     };
+
+
+
+    /// A class for holding a the cross-section of a single Pythia process (identified by the Pythia process code)
+    class process_xsec_container : public base_xsec_container
+    {
+
+      public:
+        /// Useful typedefs
+        typedef std::vector<std::pair<int,int>> vec_PID_pairs;
+        typedef std::pair<int,int> PID_pair;
+
+        process_xsec_container();
+        virtual ~process_xsec_container() { }
+
+        /// Reset this instance for reuse.
+        void reset();
+
+        /// Average cross-sections and combine errors.
+        void average_xsec(double, double);
+        void average_xsec(const process_xsec_container&);
+
+        /// Sum cross-sections and add errors in quadrature.
+        void sum_xsecs(double, double);
+        void sum_xsecs(const process_xsec_container&);
+
+        /// Return the process code
+        int process_code() const;
+
+        /// Set the process code
+        void set_process_code(int);
+
+        /// Return the list of process codes that share this cross-section 
+        /// (This is due to the many-to-many mapping between Pythia process 
+        /// codes and the PID pairs we use as basis for external cross-section calculations)
+        std::vector<int> processes_sharing_xsec() const;
+
+        /// Add a process code to the list of processes sharing this cross-section 
+        void add_process_sharing_xsec(int);
+
+        /// Return the list of PID pairs contributing to this cross-section
+        vec_PID_pairs contributing_PID_pairs() const; 
+
+        /// Add a PID pair to the list of PID pairs contributing to this cross-section
+        void add_contributing_PID_pair(PID_pair); 
+
+      private:
+        int _process_code;
+        std::vector<int> _processes_sharing_xsec;
+        vec_PID_pairs _contributing_PID_pairs;
+    };
+
 
   }
 }
