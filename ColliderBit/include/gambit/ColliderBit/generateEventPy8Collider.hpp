@@ -69,7 +69,7 @@ namespace Gambit
             str filename = "GAMBIT_collider_events.omp_thread_";
             filename += std::to_string(omp_get_thread_num());
             filename += ".hepmc";
-            hepmc_writer.init(filename);
+            hepmc_writer.init(filename, drop_HepMC2_file, drop_HepMC3_file);
             first = false;
           }
 

@@ -79,10 +79,8 @@ namespace Gambit
   /// Draw a single uniform random deviate in the range (0,1) using the chosen RNG engine
   double Random::draw()
   {
-    std::cout << "drawing random number" << std::endl;
     if (local_rng == NULL) create_rng_engine("default", -1);
-    //return std::generate_canonical<double, 32>(rng());
-    return 0.5768;
+    return std::generate_canonical<double, 32>(rng());
   }
 
 }

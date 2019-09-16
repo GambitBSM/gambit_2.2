@@ -514,6 +514,8 @@ if(EXCLUDE_HEPMC)
   endif()
 else()
   set(pythia_CXXFLAGS "${pythia_CXXFLAGS} -I${HEPMC_PATH}/local/include -I${HEPMC_PATH}/interfaces/pythia8/include")
+  # - Add HepMC3 library path
+  set(pythia_CXX_SHARED_FLAGS "${pythia_CXX_SHARED_FLAGS}  -L${HEPMC_PATH}/local/lib -Wl,-rpath ${HEPMC_PATH}/local/lib -lHepMC3")
   check_ditch_status(${name} ${ver} ${dir})
   if(NOT ditched_${name}_${ver})
     ExternalProject_Add(${name}_${ver}
