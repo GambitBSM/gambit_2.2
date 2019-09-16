@@ -31,18 +31,19 @@ namespace Gambit
 
 
     /// A base class for holding cross-section info within ColliderBit.
-    class base_xsec
+    class base_xsec_container
     {
       public:
 
-        base_xsec();
-        virtual ~base_xsec() { }
+        base_xsec_container();
+        virtual ~base_xsec_container() { }
 
         /// Reset this instance for reuse.
         void reset();
 
         /// Return the full cross-section (in fb).
         double operator()() const;
+        double xsec() const;
 
         /// Return the cross-section error (in fb).
         double xsec_err() const;
@@ -55,11 +56,11 @@ namespace Gambit
 
         /// Average cross-sections and combine errors.
         void average_xsec(double, double);
-        void average_xsec(const base_xsec&);
+        void average_xsec(const base_xsec_container&);
 
         /// Sum cross-sections and add errors in quadrature.
         void sum_xsecs(double, double);
-        void sum_xsecs(const base_xsec&);
+        void sum_xsecs(const base_xsec_container&);
 
         /// Get content as map <string,double> map (for easy printing).
         std::map<std::string, double> get_content_as_map() const;
@@ -82,8 +83,8 @@ namespace Gambit
 
 
 
-    /// A base class for holding a total cross-section.
-    class xsec : public base_xsec
+    /// A class for holding a total cross-section.
+    class xsec_container : public base_xsec_container
     {
         // @todo Do we need some special methods here?
     };
@@ -91,13 +92,13 @@ namespace Gambit
 
 
     /// A class for holding a total cross-section calculated via MC across multiple threads
-    class MC_xsec : public base_xsec
+    class MC_xsec_container : public base_xsec_container
     {
 
       public:
 
-        MC_xsec();
-        virtual ~MC_xsec() { }
+        MC_xsec_container();
+        virtual ~MC_xsec_container() { }
 
         /// Reset this instance for reuse.
         void reset();
@@ -117,11 +118,11 @@ namespace Gambit
 
         /// Average cross-sections and combine errors.
         void average_xsec(double, double, long long);
-        void average_xsec(const MC_xsec&);
+        void average_xsec(const MC_xsec_container&);
 
         /// Sum cross-sections and add errors in quadrature.
         void sum_xsecs(double, double, long long);
-        void sum_xsecs(const MC_xsec&);
+        void sum_xsecs(const MC_xsec_container&);
 
         /// Collect xsec predictions from other threads and do a weighted combination.
         void gather_xsecs();
@@ -137,7 +138,7 @@ namespace Gambit
         long long _ntot;
 
         /// A map with pointers to all instances of this class. The key is the OMP thread number.
-        static std::map<int, const MC_xsec*> instances_map;
+        static std::map<int, const MC_xsec_container*> instances_map;
     };
 
   }

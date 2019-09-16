@@ -109,7 +109,7 @@ namespace Gambit
     typedef std::multimap<int,PID_pair> multimap_int_PID_pair;
 
     /// @brief Typedef for an int to xsec map, used to match Pythia process codes to cross-sections
-    typedef std::map<int,xsec> map_int_xsec;
+    typedef std::map<int,xsec_container> map_int_xsec;
 
     /// @brief Typedef for an int to ProcessXsecInfo map, used to combined Pythia process cross-sections with info needed for event weighting
     typedef std::map<int,ProcessXsecInfo> map_int_ProcessXsecInfo;
@@ -119,7 +119,7 @@ namespace Gambit
     typedef std::function<void(HEPUtils_Event&, const BaseCollider*)> EventWeighterType_Py8Collider;
 
     /// @brief Typedef for a std::function that takes a PID_pair as input and returns an xsec instance
-    typedef std::function<xsec(PID_pair)> PIDPairCrossSectionFuncType;
+    typedef std::function<xsec_container(PID_pair)> PIDPairCrossSectionFuncType;
 
   }
 }

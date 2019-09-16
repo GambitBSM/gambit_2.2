@@ -74,9 +74,9 @@ namespace Gambit
 
 
     /// Dummy function for testing out how to return a PIDPairCrossSectionFunc
-    xsec PIDPairCrossSection_dummy(const PID_pair& pids, const Spectrum& MSSM_spectrum)
+    xsec_container PIDPairCrossSection_dummy(const PID_pair& pids, const Spectrum& MSSM_spectrum)
     {
-      xsec xs_result;
+      xsec_container xs_result;
 
       // Get an SLHA1 object
       const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
@@ -117,11 +117,11 @@ namespace Gambit
 
 
     /// Get the cross-section from the xsec_example backend
-    xsec PIDPairCrossSection_xsec_example(PID_pair pids, 
+    xsec_container PIDPairCrossSection_xsec_example(PID_pair pids, 
                                           const Spectrum& MSSM_spectrum)
                                           // double (*xsec_fb_fptr)(PID_pair&, map_str_dbl&, map_str_bool&))
     {
-      xsec xs_result;
+      xsec_container xs_result;
 
       // Get an SLHA1 object
       const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
@@ -222,7 +222,7 @@ namespace Gambit
 
             // Call cross-section calculator here.
             // (We're gonna assume that the calculator is smart enough to re-order two PIDs if it needs to.)
-            xsec xs = (*Dep::PIDPairCrossSectionFunc)(pids);
+            xsec_container xs = (*Dep::PIDPairCrossSectionFunc)(pids);
 
             // Accumulate result in the ProcessXsecInfo::process_xsec variable
             xs_info.process_xsec.sum_xsecs(xs);
@@ -290,7 +290,7 @@ namespace Gambit
 
 
     /// Compute a cross-section from Monte Carlo
-    void getMCxsec(MC_xsec& result)
+    void getMCxsec(MC_xsec_container& result)
     {
       using namespace Pipes::getMCxsec;
 
@@ -331,15 +331,15 @@ namespace Gambit
 
     }
 
-    /// Return MC_xsec as const base_xsec*
-    void get_MC_xsec_as_base(const base_xsec*& result)
+    /// Return MC_xsec_container as const base_xsec_container*
+    void get_MC_xsec_as_base(const base_xsec_container*& result)
     {
       using namespace Pipes::get_MC_xsec_as_base;
       result = &(*Dep::TotalCrossSectionFromMC);
     }
 
-    /// Return xsec as const base_xsec*
-    void get_xsec_as_base(const base_xsec*& result)
+    /// Return xsec_container as const base_xsec_container*
+    void get_xsec_as_base(const base_xsec_container*& result)
     {
       using namespace Pipes::get_xsec_as_base;
       result = &(*Dep::TotalCrossSection);
@@ -348,13 +348,13 @@ namespace Gambit
 
 
     /// Get a cross-section from NLL-FAST
-    void getNLLFastxsec(xsec& result)
+    void getNLLFastxsec(xsec_container& result)
     {
       using namespace Pipes::getNLLFastxsec;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec shared_result;
+      static xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -388,13 +388,13 @@ namespace Gambit
 
 
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
-    void getYAMLxsec(xsec& result)
+    void getYAMLxsec(xsec_container& result)
     {
       using namespace Pipes::getYAMLxsec;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec shared_result;
+      static xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -489,13 +489,13 @@ namespace Gambit
 
 
     /// A function that reads a list of (SLHA file, total cross-section) pairs from the input YAML file
-    void getYAMLxsec_SLHA(xsec& result)
+    void getYAMLxsec_SLHA(xsec_container& result)
     {
       using namespace Pipes::getYAMLxsec_SLHA;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec shared_result;
+      static xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -605,13 +605,13 @@ namespace Gambit
 
     /// A function that assigns a total cross-sections directly from the scan parameters
     /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
-    void getYAMLxsec_param(xsec& result)
+    void getYAMLxsec_param(xsec_container& result)
     {
       using namespace Pipes::getYAMLxsec_param;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec shared_result;
+      static xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;

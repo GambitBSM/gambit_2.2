@@ -36,13 +36,14 @@ namespace Gambit
     ///
 
     /// Constructor
-    base_xsec::base_xsec() : _xsec(0)
-                           , _xsecerr(0)
-                           , _info_string("")
+    base_xsec_container::base_xsec_container() : 
+      _xsec(0),
+      _xsecerr(0),
+      _info_string("")
     { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
-    void base_xsec::reset()
+    void base_xsec_container::reset()
     {
       _xsec = 0;
       _xsecerr = 0;
@@ -50,19 +51,20 @@ namespace Gambit
     }
 
     /// Return the cross-section (in fb).
-    double base_xsec::operator()() const { return _xsec; }
+    double base_xsec_container::operator()() const { return _xsec; }
+    double base_xsec_container::xsec() const { return _xsec; }
 
     /// Return the cross-section error (in fb).
-    double base_xsec::xsec_err() const { return _xsecerr; }
+    double base_xsec_container::xsec_err() const { return _xsecerr; }
 
     /// Return the cross-section relative error.
-    double base_xsec::xsec_relerr() const { return _xsec > 0 ? _xsecerr/_xsec : 0; }
+    double base_xsec_container::xsec_relerr() const { return _xsec > 0 ? _xsecerr/_xsec : 0; }
 
     /// Set the cross-section and its error (in fb).
-    void base_xsec::set_xsec(double xs, double xserr) { _xsec = xs; _xsecerr = xserr; }
+    void base_xsec_container::set_xsec(double xs, double xserr) { _xsec = xs; _xsecerr = xserr; }
 
     /// Average cross-sections and combine errors.
-    void base_xsec::average_xsec(double other_xsec, double other_xsecerr)
+    void base_xsec_container::average_xsec(double other_xsec, double other_xsecerr)
     {
       if (other_xsec > 0)
       {
@@ -80,13 +82,13 @@ namespace Gambit
       }
     }
 
-    void base_xsec::average_xsec(const base_xsec& other)
+    void base_xsec_container::average_xsec(const base_xsec_container& other)
     {
       average_xsec(other(), other.xsec_err());
     }
 
     /// Sum cross-sections and add errors in quadrature.
-    void base_xsec::sum_xsecs(double other_xsec, double other_xsecerr)
+    void base_xsec_container::sum_xsecs(double other_xsec, double other_xsecerr)
     {
       if (other_xsec > 0)
       {
@@ -102,13 +104,13 @@ namespace Gambit
       }
     }
 
-    void base_xsec::sum_xsecs(const base_xsec& other)
+    void base_xsec_container::sum_xsecs(const base_xsec_container& other)
     {
       sum_xsecs(other(), other.xsec_err());
     }
 
     /// Get content as a <string,double> map (for easy printing).
-    std::map<std::string, double> base_xsec::get_content_as_map() const
+    std::map<std::string, double> base_xsec_container::get_content_as_map() const
     {
       std::map<std::string, double> content_map;
       std::string key;
@@ -139,35 +141,36 @@ namespace Gambit
     }
 
     /// Set the info string
-    void base_xsec::set_info_string(std::string info_string_in) { _info_string = info_string_in; }
+    void base_xsec_container::set_info_string(std::string info_string_in) { _info_string = info_string_in; }
 
     /// Get the info string
-    std::string base_xsec::info_string() const { return _info_string; }
+    std::string base_xsec_container::info_string() const { return _info_string; }
 
     /// Set the unit string
-    const std::string base_xsec::unit = "fb";
+    const std::string base_xsec_container::unit = "fb";
 
 
 
     // _Anders
     /// 
-    /// Definitions of xsec members ?
+    /// Definitions of xsec_container members ?
     ///
 
 
     /// 
-    /// Definitions of MC_xsec members
+    /// Definitions of MC_xsec_container members
     ///
 
     /// Constructor
-    MC_xsec::MC_xsec() : base_xsec::base_xsec() 
-                       , _ntot(0)
+    MC_xsec_container::MC_xsec_container() : 
+      base_xsec_container::base_xsec_container(),
+      _ntot(0)
     { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
-    void MC_xsec::reset()
+    void MC_xsec_container::reset()
     {
-      base_xsec::reset();
+      base_xsec_container::reset();
       _ntot = 0;
 
       // Add this instance to the instances map if it's not there already.
@@ -182,22 +185,22 @@ namespace Gambit
     }
 
     /// Increment the number of events seen so far
-    void MC_xsec::log_event() { _ntot += 1; }
+    void MC_xsec_container::log_event() { _ntot += 1; }
 
     /// Return the total number of events seen so far.
-    long long MC_xsec::num_events() const { return _ntot; }
+    long long MC_xsec_container::num_events() const { return _ntot; }
 
     /// Return the cross-section per event seen (in fb).
-    double MC_xsec::xsec_per_event() const { return (_xsec >= 0 && _ntot > 0) ? _xsec/_ntot : 0; }
+    double MC_xsec_container::xsec_per_event() const { return (_xsec >= 0 && _ntot > 0) ? _xsec/_ntot : 0; }
 
     /// Set the total number of events seen so far.
-    void MC_xsec::set_num_events(long long n) { _ntot = n; }
+    void MC_xsec_container::set_num_events(long long n) { _ntot = n; }
 
     /// Average cross-sections and combine errors.
-    void MC_xsec::average_xsec(double other_xsec, double other_xsecerr, long long other_ntot)
+    void MC_xsec_container::average_xsec(double other_xsec, double other_xsecerr, long long other_ntot)
     {
       // Run base class function
-      base_xsec::average_xsec(other_xsec, other_xsecerr);
+      base_xsec_container::average_xsec(other_xsec, other_xsecerr);
 
       // Update _ntot
       if (other_xsec > 0)
@@ -207,16 +210,16 @@ namespace Gambit
       }
     }
 
-    void MC_xsec::average_xsec(const MC_xsec& other)
+    void MC_xsec_container::average_xsec(const MC_xsec_container& other)
     {
-      MC_xsec::average_xsec(other(), other.xsec_err(), other.num_events());
+      MC_xsec_container::average_xsec(other(), other.xsec_err(), other.num_events());
     }
 
     /// Sum cross-sections and add errors in quadrature.
-    void MC_xsec::sum_xsecs(double other_xsec, double other_xsecerr, long long other_ntot)
+    void MC_xsec_container::sum_xsecs(double other_xsec, double other_xsecerr, long long other_ntot)
     {
       // Run base class function
-      base_xsec::sum_xsecs(other_xsec, other_xsecerr);
+      base_xsec_container::sum_xsecs(other_xsec, other_xsecerr);
 
       // Update _ntot
       if (other_xsec > 0)
@@ -226,41 +229,41 @@ namespace Gambit
       }
     }
 
-    void MC_xsec::sum_xsecs(const MC_xsec& other)
+    void MC_xsec_container::sum_xsecs(const MC_xsec_container& other)
     {
-      MC_xsec::sum_xsecs(other(), other.xsec_err(), other.num_events());
+      MC_xsec_container::sum_xsecs(other(), other.xsec_err(), other.num_events());
     }
 
 
     /// Collect xsec predictions from other threads and do a weighted combination.
-    void MC_xsec::gather_xsecs()
+    void MC_xsec_container::gather_xsecs()
     {
       int this_thread = omp_get_thread_num();
       for (auto& thread_xsec_pair : instances_map)
       {
         if (thread_xsec_pair.first == this_thread) continue;
-        const MC_xsec& other = (*thread_xsec_pair.second);
+        const MC_xsec_container& other = (*thread_xsec_pair.second);
         average_xsec(other(), other.xsec_err(), other.num_events());
       }
     }
 
     /// Collect total events seen on all threads.
-    void MC_xsec::gather_num_events()
+    void MC_xsec_container::gather_num_events()
     {
       int this_thread = omp_get_thread_num();
       for (auto& thread_xsec_pair : instances_map)
       {
         if (thread_xsec_pair.first == this_thread) continue;
-        const MC_xsec& other = (*thread_xsec_pair.second);
+        const MC_xsec_container& other = (*thread_xsec_pair.second);
         _ntot += other.num_events();
       }
     }
 
     /// Get content as a <string,double> map (for easy printing).
-    std::map<std::string, double> MC_xsec::get_content_as_map() const
+    std::map<std::string, double> MC_xsec_container::get_content_as_map() const
     {
       // Get content from base class
-      std::map<std::string, double> content_map = base_xsec::get_content_as_map();
+      std::map<std::string, double> content_map = base_xsec_container::get_content_as_map();
 
       // Add content specific to this class
       std::string key;
@@ -285,7 +288,7 @@ namespace Gambit
     }
 
     /// A map with pointers to all instances of this class. The key is the thread number.
-    std::map<int, const MC_xsec*> MC_xsec::instances_map;
+    std::map<int, const MC_xsec_container*> MC_xsec_container::instances_map;
 
   }
 }

@@ -37,7 +37,7 @@ namespace Gambit
 
         int process_code;
         vec_PID_pairs pid_pairs;
-        xsec process_xsec;
+        xsec_container process_xsec;
         std::vector<int> processes_sharing_xsec;
     };
 
