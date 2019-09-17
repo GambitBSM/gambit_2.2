@@ -150,8 +150,8 @@ namespace Gambit
 
       public:
         /// Useful typedefs
-        typedef std::vector<std::pair<int,int>> vec_PID_pairs;
-        typedef std::pair<int,int> PID_pair;
+        typedef std::pair<int,int> iipair;
+        typedef std::vector<std::pair<int,int>> vec_iipair;
 
         process_xsec_container();
         virtual ~process_xsec_container() { }
@@ -182,15 +182,15 @@ namespace Gambit
         void add_process_sharing_xsec(int);
 
         /// Return the list of PID pairs contributing to this cross-section
-        const vec_PID_pairs& contributing_PID_pairs() const; 
+        const vec_iipair& contributing_PID_pairs() const; 
 
         /// Add a PID pair to the list of PID pairs contributing to this cross-section
-        void add_contributing_PID_pair(PID_pair); 
+        void add_contributing_PID_pair(iipair); 
 
       private:
         int _process_code;
         std::vector<int> _processes_sharing_xsec;
-        vec_PID_pairs _contributing_PID_pairs;
+        vec_iipair _contributing_PID_pairs;
     };
 
 

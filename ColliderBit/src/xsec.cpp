@@ -284,7 +284,7 @@ namespace Gambit
       base_xsec_container::base_xsec_container(),
       _process_code(-1),
       _processes_sharing_xsec(std::vector<int>()),
-      _contributing_PID_pairs(vec_PID_pairs())
+      _contributing_PID_pairs(vec_iipair())
     { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
@@ -350,11 +350,11 @@ namespace Gambit
     { _processes_sharing_xsec.push_back(process_code_in); }
 
     /// Return the list of PID pairs contributing to this cross-section
-    const process_xsec_container::vec_PID_pairs& process_xsec_container::contributing_PID_pairs() const 
+    const process_xsec_container::vec_iipair& process_xsec_container::contributing_PID_pairs() const 
     { return _contributing_PID_pairs; } 
 
     /// Add a PID pair to the list of PID pairs contributing to this cross-section
-    void process_xsec_container::add_contributing_PID_pair(process_xsec_container::PID_pair pid_pair_in) 
+    void process_xsec_container::add_contributing_PID_pair(process_xsec_container::iipair pid_pair_in) 
     { _contributing_PID_pairs.push_back(pid_pair_in); }  
 
   }

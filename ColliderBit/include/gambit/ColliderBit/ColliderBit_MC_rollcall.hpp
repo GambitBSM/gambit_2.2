@@ -72,20 +72,6 @@
   #define CAPABILITY TotalCrossSection
   START_CAPABILITY
 
-    // Converters
-    #define FUNCTION get_MC_xsec_as_base
-    START_FUNCTION(const base_xsec_container*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSectionFromMC, MC_xsec_container)
-    #undef FUNCTION
-
-    #define FUNCTION get_xsec_as_base
-    START_FUNCTION(const base_xsec_container*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSection, xsec_container)
-    #undef FUNCTION
-
-
     /// Example function for interfacing alternative cross-section calculators
     #define FUNCTION getNLLFastxsec
     START_FUNCTION(xsec_container)
@@ -115,6 +101,21 @@
     ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
 
+
+    /// Some simple 'converter' functions that convert TotalCrossSection capabilities of types MC_xsec_container 
+    /// and xsec_container to TotalCrossSection capabilities of the common base type base_xsec_container.
+    #define FUNCTION get_MC_xsec_as_base
+    START_FUNCTION(const base_xsec_container*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalCrossSectionFromMC, MC_xsec_container)
+    #undef FUNCTION
+
+    #define FUNCTION get_xsec_as_base
+    START_FUNCTION(const base_xsec_container*)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalCrossSection, xsec_container)
+    #undef FUNCTION
+
   #undef CAPABILITY
   /// @}
 
@@ -139,14 +140,13 @@
   #define CAPABILITY ProcessCodeToPIDPairsMap
   START_CAPABILITY
     #define FUNCTION getProcessCodeToPIDPairsMap
-    START_FUNCTION(multimap_int_PID_pair)
+    START_FUNCTION(multimap_int_iipair)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ProcessCodes, std::vector<int>)
     #undef FUNCTION
   #undef CAPABILITY 
 
 
-  // _Anders
   /// A map between Pythia process codes and cross-sections
   #define CAPABILITY ProcessCrossSectionsMap
   START_CAPABILITY
@@ -155,13 +155,23 @@
     START_FUNCTION(map_int_process_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ProcessCodes, std::vector<int>)
-    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_PID_pair)
-    // _Anders: Made this model-independent by depending on a PIDPairCrossSectionFunc 
-    //          that only requires a PID_pair input (spectrum info already provided 
-    //          to this function via model-dependent capabilities)
-    DEPENDENCY(PIDPairCrossSectionFunc, PIDPairCrossSectionFuncType)
-    // ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
-    // DEPENDENCY(MSSM_spectrum, Spectrum)
+    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_iipair)
+    // _Anders 
+    // DEPENDENCY(PIDPairCrossSectionFunc, PIDPairCrossSectionFuncType)
+    DEPENDENCY(PIDPairCrossSectionsMap, map_iipair_PID_pair_xsec) 
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+
+  /// A map between PID pairs and cross-sections
+  #define CAPABILITY PIDPairCrossSectionsMap
+  START_CAPABILITY
+
+    /// Test function for provding PIDPairCrossSectionsMap 
+    #define FUNCTION getPIDPairCrossSectionsMap_testing
+    START_FUNCTION(map_iipair_PID_pair_xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
   #undef CAPABILITY

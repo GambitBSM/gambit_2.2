@@ -52,19 +52,19 @@ namespace Gambit
       process_xsec_container xs = ProcessCrossSectionsMap.at(process_code);
 
       // Pythia cross-section for this process
-      double process_xsec_pythia = HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-12;  // Pythia uses mb, we use fb
+      double process_xsec_pythia = HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e12;  // Pythia uses mb, we use fb
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e-12 << endl;
+        cout << DEBUG_PREFIX << ": info.sigmaGen(" << process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(process_code) * 1e12 << endl;
       #endif
 
       // Add the Pythia cross-sections for other process codes which also 
       // contribute to the externaly provided cross-section
       for (int other_process_code : xs.processes_sharing_xsec())
       {
-        process_xsec_pythia += HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-12;  // Pythia uses mb, we use fb
+        process_xsec_pythia += HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e12;  // Pythia uses mb, we use fb
         #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e-12 << endl;
+          cout << DEBUG_PREFIX << ": info.sigmaGen(" << other_process_code << "): " << HardScatteringSim_ptr->pythia()->info.sigmaGen(other_process_code) * 1e12 << endl;
         #endif
       }
 

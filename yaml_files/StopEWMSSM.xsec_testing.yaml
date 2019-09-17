@@ -313,6 +313,12 @@ Rules:
   - capability: ProcessCodes
     function: getPythiaProcessCodes
 
+  # Set option for how to deal with missing cross-sections
+  - capabtility: ProcessCrossSectionsMap
+    function: getProcessCrossSectionsMap
+    options:
+      set_missing_xsecs_to_zero: true
+
   # Choose to where to get cross-sections from
   - capability: TotalCrossSection
     function: get_MC_xsec_as_base
