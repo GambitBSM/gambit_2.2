@@ -452,7 +452,7 @@ namespace Gambit
       if(*Loop::iteration == XSEC_CALCULATION)
       {
         cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ActiveProcessCodes.size() = " << Dep::ActiveProcessCodes->size() << endl;          
-        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ProcessCodeToPIDPairsMap.size() = " << Dep::ProcessCodeToPIDPairsMap->size() << endl;          
+        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ActiveProcessCodeToPIDPairsMap.size() = " << Dep::ActiveProcessCodeToPIDPairsMap->size() << endl;          
 
         // Loop over all active processes and construct the cross-section map (shared_result)
         for (size_t i = 0; i != Dep::ActiveProcessCodes->size(); ++i)
@@ -465,7 +465,7 @@ namespace Gambit
           current_xs.set_process_code(current_pcode);
 
           // Get iterator bounds (as a pair) over the multimap entries that match the key current_pcode
-          auto mm_range = Dep::ProcessCodeToPIDPairsMap->equal_range(current_pcode);
+          auto mm_range = Dep::ActiveProcessCodeToPIDPairsMap->equal_range(current_pcode);
 
           // Loop over these elements in the multimap
           for (auto mm_it = mm_range.first; mm_it != mm_range.second; ++mm_it)
@@ -519,8 +519,8 @@ namespace Gambit
           // Now we figure out if the current_pcode process shares the cross-section
           // stored in in current_xs with any other process codes
 
-          // Loop over *all* entries (process code <--> PID pair) in the multimap Dep::ProcessCodeToPIDPairsMap
-          for (auto mm_it = Dep::ProcessCodeToPIDPairsMap->begin(); mm_it != Dep::ProcessCodeToPIDPairsMap->end(); ++mm_it)
+          // Loop over *all* entries (process code <--> PID pair) in the multimap Dep::ActiveProcessCodeToPIDPairsMap
+          for (auto mm_it = Dep::ActiveProcessCodeToPIDPairsMap->begin(); mm_it != Dep::ActiveProcessCodeToPIDPairsMap->end(); ++mm_it)
           {
             // Extract the process code (pc) and PID pair (pp)
             int pc = mm_it->first;

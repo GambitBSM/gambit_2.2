@@ -140,7 +140,7 @@ ObsLikes:
 
     # Testing
     # - purpose:    Observable
-    #   capability: ProcessCodes
+    #   capability: ActiveProcessCodes
     #   printme:    false
 
     # - purpose:    Observable
@@ -310,7 +310,7 @@ Rules:
     function: generateEventPythia
 
   # Choose where to get the Pythia process codes from
-  - capability: ProcessCodes
+  - capability: ActiveProcessCodes
     function: getPythiaProcessCodes
 
   # Set option for how to deal with missing cross-sections

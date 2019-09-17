@@ -137,15 +137,27 @@
   /// (i.e. on the Py8Collider specialization), which depends on the model. 
   /// So module functions providing ActiveProcessCodes are declared in the 
   /// model headers in ColliderBit/models.
-  #define CAPABILITY ProcessCodeToPIDPairsMap
+  #define CAPABILITY ActiveProcessCodeToPIDPairsMap
   START_CAPABILITY
-    #define FUNCTION getProcessCodeToPIDPairsMap
+    #define FUNCTION getActiveProcessCodeToPIDPairsMap
     START_FUNCTION(multimap_int_iipair)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ActiveProcessCodes, std::vector<int>)
     #undef FUNCTION
   #undef CAPABILITY 
 
+  /// Get a list of all the PID pairs related to active process codes
+  #define CAPABILITY ActivePIDPairs
+  START_CAPABILITY
+    #define FUNCTION getPIDPairs
+    START_FUNCTION(vec_iipair)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_iipair)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+
+// _Anders
 
   /// A map between Pythia process codes and cross-sections
   #define CAPABILITY ProcessCrossSectionsMap
@@ -155,7 +167,7 @@
     START_FUNCTION(map_int_process_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ActiveProcessCodes, std::vector<int>)
-    DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_iipair)
+    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_iipair)
     // _Anders 
     // DEPENDENCY(PIDPairCrossSectionFunc, PIDPairCrossSectionFuncType)
     DEPENDENCY(PIDPairCrossSectionsMap, map_iipair_PID_pair_xsec) 
