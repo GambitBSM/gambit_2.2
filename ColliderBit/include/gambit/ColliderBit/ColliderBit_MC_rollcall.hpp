@@ -133,16 +133,16 @@
 
   /// Translate a list of Pythia process codes to list of (PID,PID) pairs
   /// for the two final state particles of the hard process
-  /// Note that the capability ProcessCodes depends on the exact Pythia collider, 
+  /// Note that the capability ActiveProcessCodes depends on the exact Pythia collider, 
   /// (i.e. on the Py8Collider specialization), which depends on the model. 
-  /// So module functions providing ProcessCodes are declared in the 
+  /// So module functions providing ActiveProcessCodes are declared in the 
   /// model headers in ColliderBit/models.
   #define CAPABILITY ProcessCodeToPIDPairsMap
   START_CAPABILITY
     #define FUNCTION getProcessCodeToPIDPairsMap
     START_FUNCTION(multimap_int_iipair)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCodes, std::vector<int>)
+    DEPENDENCY(ActiveProcessCodes, std::vector<int>)
     #undef FUNCTION
   #undef CAPABILITY 
 
@@ -154,7 +154,7 @@
     #define FUNCTION getProcessCrossSectionsMap
     START_FUNCTION(map_int_process_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCodes, std::vector<int>)
+    DEPENDENCY(ActiveProcessCodes, std::vector<int>)
     DEPENDENCY(ProcessCodeToPIDPairsMap, multimap_int_iipair)
     // _Anders 
     // DEPENDENCY(PIDPairCrossSectionFunc, PIDPairCrossSectionFuncType)
@@ -438,7 +438,7 @@
   #undef CAPABILITY
 
   /// Process codes for the active collider processes
-  #define CAPABILITY ProcessCodes
+  #define CAPABILITY ActiveProcessCodes
   START_CAPABILITY
   #undef CAPABILITY
 

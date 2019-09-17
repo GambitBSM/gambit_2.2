@@ -451,14 +451,14 @@ namespace Gambit
       // Only thread 0
       if(*Loop::iteration == XSEC_CALCULATION)
       {
-        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ProcessCodes.size() = " << Dep::ProcessCodes->size() << endl;          
+        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ActiveProcessCodes.size() = " << Dep::ActiveProcessCodes->size() << endl;          
         cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ProcessCodeToPIDPairsMap.size() = " << Dep::ProcessCodeToPIDPairsMap->size() << endl;          
 
         // Loop over all active processes and construct the cross-section map (shared_result)
-        for (size_t i = 0; i != Dep::ProcessCodes->size(); ++i)
+        for (size_t i = 0; i != Dep::ActiveProcessCodes->size(); ++i)
         {
           // Get process code
-          int current_pcode = Dep::ProcessCodes->at(i);
+          int current_pcode = Dep::ActiveProcessCodes->at(i);
 
           // Construct a process_xsec_container instance to be stored in the shared_result map
           process_xsec_container current_xs;
@@ -535,8 +535,8 @@ namespace Gambit
             // Check if the PID pair pp mathces one of the PID pairs for the current_pcode process
             if(std::find(current_xs.contributing_PID_pairs().begin(), current_xs.contributing_PID_pairs().end(), pp) != current_xs.contributing_PID_pairs().end()) 
             {
-              // Check that pc is itself in one of the active processes, i.e. listed in Dep::ProcessCodes
-              if(std::find(Dep::ProcessCodes->begin(), Dep::ProcessCodes->end(), pc) != Dep::ProcessCodes->end())  
+              // Check that pc is itself in one of the active processes, i.e. listed in Dep::ActiveProcessCodes
+              if(std::find(Dep::ActiveProcessCodes->begin(), Dep::ActiveProcessCodes->end(), pc) != Dep::ActiveProcessCodes->end())  
               {
                 // Add pc to the list of processes that share cross-section with current_pcode
                 current_xs.add_process_sharing_xsec(pc);

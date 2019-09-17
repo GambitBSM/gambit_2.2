@@ -80,7 +80,7 @@
 
 
   /// Get list of Pythia process codes for all active processes
-  #define CAPABILITY ProcessCodes
+  #define CAPABILITY ActiveProcessCodes
     #define FUNCTION getPythiaProcessCodes
     START_FUNCTION(std::vector<int>)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
