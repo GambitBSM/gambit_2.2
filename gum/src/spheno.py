@@ -601,7 +601,8 @@ def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path
 
     # Get all of the variables used in SPheno so we can store them as 
     # BE_VARIABLES. Keep track of those used for HiggsBounds too.
-    variables, hb_variables = harvest_spheno_model_variables(spheno_path, model_name, parameters)
+    variables, hb_variables = harvest_spheno_model_variables(spheno_path, model_name, 
+                                                             parameters)
 
     # Convert these to GAMBIT types too
     variable_dictionary = get_fortran_shapes(variables)
@@ -612,7 +613,9 @@ def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path
     spheno_src = write_spheno_frontend_src(model_name, 
                                            functions, 
                                            variables, 
-                                           flags)
+                                           flags,
+                                           particles, 
+                                           parameters)
     spheno_header = write_spheno_frontend_header(model_name, 
                                                  functions, 
                                                  type_dictionary, 
@@ -901,7 +904,8 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 # /harvesting
 # writing
 
-def write_spheno_frontend_src(model_name, function_signatures, variables, flags) :
+def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
+                              particles, parameters):
     """
     Writes source for 
     Backends/src/frontends/SARAHSPheno_<MODEL>_<VERSION>.cpp
@@ -1028,7 +1032,13 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
       "(*MFe)(3) = sminputs.mTau;\n"\
       "(*MFu)(1) = sminputs.mU;\n"\
       "(*MFu)(2) = sminputs.mCmC;\n"\
-      "(*MFu)(3) = sminputs.mT;\n"
+      "(*MFu)(3) = sminputs.mT;\n"\
+      "for (int i=1; i<=3; i++)\n"\
+      "{\n"\
+      "(*MFd2)(i) = pow((*MFd)(i),2);\n"\
+      "(*MFe2)(i) = pow((*MFe)(i),2);\n"\
+      "(*MFu2)(i) = pow((*MFu)(i),2);\n"\
+      "}\n"\
 
     # TODO: Fill model dependent particle masses
 
@@ -1039,7 +1049,17 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags)
       "\n\n"\
       "// Mixings\n"
 
-    # TODO: Fill model dependent mixings     
+    # TODO: Fill model dependent mixings
+
+    print "\nparameters:"
+
+    for p in parameters:
+      print p.name, p.tag, p.shape, p.block, p.index
+
+    print "\nparticles:"
+
+    for p in particles:
+      print p.name, p.mass, p.PDG_code
 
     towrite += "// Other parameters\n"
 

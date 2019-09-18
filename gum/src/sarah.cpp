@@ -632,7 +632,6 @@ namespace GUM
       std::string options;
       // TODO: options:
       // - InputFile (default $MODEL/SPheno.m)
-      // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
       // TODO: temp hack to make it faster
       options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
 
@@ -653,6 +652,7 @@ namespace GUM
       // TODO: options:
       // - ComplexParameters (automatic?)
       // - Scheme (DRbar for SUSY, MSbar for non-SUSY)  
+      options = "Version->\"++\"";
 
       // Write output.
       std::string command = "MakeVevacious[" + options + "];";
@@ -734,7 +734,7 @@ namespace GUM
       if (std::find(backends.begin(), backends.end(), "vevacious") != backends.end() )
       {
         model.write_vevacious_output();        // Location of Vevacious (vin) files
-        std::string vevdir = outputdir + "Vevacious";
+        std::string vevdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/Vevacious";
         std::replace(vevdir.begin(), vevdir.end(), ' ', '-');
         outputs.set_vev(vevdir);
       }

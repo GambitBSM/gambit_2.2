@@ -36,7 +36,7 @@ def get_model_parameters(parameters, partlist) :
         if param.block != "MINPAR" and param.block != "EXTPAR" : 
             model_parameters.append(param)
 
-    return model_parameters;
+    return model_parameters
 
 def get_model_par_name(paramname, parameters) :
     """

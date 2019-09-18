@@ -16,13 +16,13 @@ class Inputs:
                  dm_candidate, mathname = None,
                  lagrangian = None, restriction = None):
 
-        self.name = model_name
+        self.name = model_name.replace('-','_')
         self.base_model = base_model
         self.dm_pdg = dm_candidate
         self.math = mathpackage
         self.restriction = None
         self.LTot = lagrangian
-        self.spec = "{0}_spectrum".format(model_name)
+        self.spec = "{0}_spectrum".format(model_name.replace('-','_'))
 
         # If we want the new GAMBIT model to have a different 
         # name than the model file from Mathematica

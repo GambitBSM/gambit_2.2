@@ -41,12 +41,22 @@ def check_backends(outputs):
     # CalcHEP
     if outputs.ch:
 
-      if os.path.exists("./../Backends/installed/calchep/3.6.27/models/"):
-          print("Found CalcHEP.")
-      else:
-          raise GumError(("\n\nNo CalcHEP installation found. Please go to into"
-                          " the GAMBIT build directory and do"
-                          ":\n   make calchep"))
+        if os.path.exists("./../Backends/installed/calchep/3.6.27/models/"):
+            print("Found CalcHEP.")
+        else:
+            raise GumError(("\n\nNo CalcHEP installation found. Please go to into"
+                            " the GAMBIT build directory and do"
+                            ":\n   make calchep"))
+
+    if outputs.vev:
+
+        if os.path.exists("./../Backends/installed/vevacious/VevaciousPlusPlus/1.0/ModelFiles/"):
+            print("Found vevacious.")
+        else:
+            raise GumError(("\n\nNo vevacious installation found. Please go to into"
+                            " the GAMBIT build directory and do"
+                            ":\n   make vevacious"))
+
 
     print("\nAll backends found -- connecting to Mathematica!\n")
 

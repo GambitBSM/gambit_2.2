@@ -145,7 +145,6 @@ if args.file:
         # Hit it
         all_sarah(options, partlist, paramlist, outputs, backends, flags)
 
-
         # Get a list of all non-SM particles
         sarah_bsm = [x for x in partlist if x.SM() is False]
 
@@ -155,7 +154,6 @@ if args.file:
         # Initialise all of the model parameters, for writing spectra,
         # model files - remove all SM stuff from parameter list.
         parameters = sarah_params(paramlist, add_higgs)
-
 
 
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
@@ -181,33 +179,41 @@ if args.file:
     """
     MADGRAPH
     """
-    if output_opts.pythia:  #TODO this should eventually be conditional on a dedicated MadGraph flag, as it will eventually be needed for MadDM and other things than just Pythia.
 
-        # Link MadGraph files output by SARAH/FeynRules to MadGraph's contrib/MadGraph/models
-        # still TODO
+    # TODO this should eventually be conditional on a dedicated MadGraph flag, 
+    # as it will eventually be needed for MadDM and other things than just Pythia.
+    if output_opts.pythia:  
 
-        # Create the output directory for all generated MadGraph files
-        mg5_output_dir = output_dir + "/MadGraph5_aMC"
-        mkdir_if_absent(mg5_output_dir)
+        if output_opts.collider_processes:
+            # Link MadGraph files output by SARAH/FeynRules to MadGraph's contrib/MadGraph/models
+            # still TODO
 
-        # Clear and remake the copy of Pythia that will receive the matrix element code produced by MadGraph
-        pristine_pythia_dir = os.path.join(os.getcwd(),'contrib','pythia')
-        new_pythia_dir = mg5_output_dir + "/Pythia_patched"
-        remove_tree_quietly(new_pythia_dir)
-        copy_tree(pristine_pythia_dir, new_pythia_dir)
+            # Create the output directory for all generated MadGraph files
+            mg5_output_dir = output_dir + "/MadGraph5_aMC"
+            mkdir_if_absent(mg5_output_dir)
 
-        # Create the MadGraph script
-        # TODO determine all possible BSM processes automatically when collider_processes is missing from the .gum file
-        make_madgraph_script(mg5_output_dir, gum.name, output_opts.collider_processes, 
-                             output_opts.multiparticles)
+            # Clear and remake the copy of Pythia that will receive the matrix element code produced by MadGraph
+            pristine_pythia_dir = os.path.join(os.getcwd(),'contrib','pythia')
+            new_pythia_dir = mg5_output_dir + "/Pythia_patched"
+            remove_tree_quietly(new_pythia_dir)
+            copy_tree(pristine_pythia_dir, new_pythia_dir)
 
-        # Add MadGraph to path and import the python interface
-        mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
-        sys.path.append(mg5_dir)
-        import madgraph.interface.master_interface as mi
+            # Create the MadGraph script
+            # TODO determine all possible BSM processes automatically when collider_processes is missing from the .gum file
+            make_madgraph_script(mg5_output_dir, gum.name, output_opts.collider_processes, 
+                                 output_opts.multiparticles)
 
-        # Run MadGraph
-        call_madgraph(mg5_dir, mg5_output_dir, mi)
+            # Add MadGraph to path and import the python interface
+            mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
+            sys.path.append(mg5_dir)
+            import madgraph.interface.master_interface as mi
+
+            # Run MadGraph
+            call_madgraph(mg5_dir, mg5_output_dir, mi)
+
+        else:
+            raise GumError(("Pythia output requested but no collider_processes specified.\n"
+                            "Please amend your .gum file!"))
 
     print("")
     print("Finished running external codes. Now writing proposed GAMBIT code.")
@@ -304,6 +310,7 @@ if args.file:
         # DecayBit entry
         print("Writing SPheno module functions for DecayBit.")
         spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(clean_model_name)
+
 
     # Enough for now.
     sys.exit()
@@ -437,7 +444,7 @@ if args.file:
 
     spectrum_src = ""
 
-    if output_opts.spheno():
+    if output_opts.spheno:
         print("Writing SPheno SpecBit interface...")
         spectrum_src = write_spheno_spectrum_src(gum.name)
     # TODO: elif output_opts.flexiblesusy(): ...
@@ -446,8 +453,16 @@ if args.file:
         # TODO: determine when "simple_SMinputs" needed from FR/S model file
         spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs, gum.math)
 
-    spectrum_header = write_spectrum_header(gum.name, add_higgs, output_opts.spheno())
+    spectrum_header = write_spectrum_header(gum.name, add_higgs, output_opts.spheno)
     spec_rollcall = write_specbit_rollcall(gum.name)
+
+    """
+    VEVACIOUS
+    """
+
+    if output_opts.vev:
+        write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, model_parameters)
+
 
     """
     BACKENDS

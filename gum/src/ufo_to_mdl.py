@@ -1122,7 +1122,9 @@ def sort_vertex_by_lorentz_indices(vertex, mg_lorentz):
                     print("Coupling not found. Aborting.")
                     sys.exit()
 
-                # Count the number of Lorentz indices. 
+                print l.structure
+
+                # Count the number of Lorentz indices.
                 numgammas = l.structure.split(' ')[0].count("Gamma(")
                 numsigmas = l.structure.split(' ')[0].count("Sigma(")
 
@@ -1147,12 +1149,12 @@ def sort_vertex_by_lorentz_indices(vertex, mg_lorentz):
                     print("Weird number of Lorentz indices... I'm out!")
                     sys.exit()
 
-    # print no_lor
-    # print no_lor_coups
-    # print one_lor
-    # print one_lor_coups
-    # print two_lor
-    # print two_lor_coups
+    print no_lor
+    print no_lor_coups
+    print one_lor
+    print one_lor_coups
+    print two_lor
+    print two_lor_coups
 
     # Now create separate instances of the vertex for each set of interactions
     v = []
