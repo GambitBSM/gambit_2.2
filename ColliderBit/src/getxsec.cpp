@@ -19,6 +19,7 @@
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
+#include "gambit/ColliderBit/all_process_codes_to_PID_pairs.hpp"
 
 #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
@@ -111,9 +112,9 @@ namespace Gambit
 
 
     /// Test functions for provding PIDPairCrossSectionsMap (cross-sections in fb)
-    xsec_container silly_xsec_constructor(double xsec_val)
+    PID_pair_xsec_container silly_PID_xsec_constructor(double xsec_val)
     {
-      xsec_container result;
+      PID_pair_xsec_container result;
 
       result.reset();
       result.set_xsec(xsec_val, xsec_val * 0.01);
@@ -129,226 +130,226 @@ namespace Gambit
       if (first)
       {
         // Gluino--gluino
-        result[iipair(1000021,1000021)] = silly_xsec_constructor(0.623E-01 * 1e3);
+        result[iipair(1000021,1000021)] = silly_PID_xsec_constructor(0.623E-01 * 1e3);
         // Gluino--squark
-        result[iipair(1000001,1000021)] = silly_xsec_constructor(0.14855 * 1e3);
-        result[iipair(1000002,1000021)] = silly_xsec_constructor(0.57564E-01 * 1e3);
-        result[iipair(1000003,1000021)] = silly_xsec_constructor(0.67117E-02 * 1e3);
-        result[iipair(1000004,1000021)] = silly_xsec_constructor(0.31759E-02 * 1e3);
-        result[iipair(1000005,1000021)] = silly_xsec_constructor(0 * 1e3);
-        result[iipair(2000001,1000021)] = silly_xsec_constructor(0.16430 * 1e3);
-        result[iipair(2000002,1000021)] = silly_xsec_constructor(0.65192E-01 * 1e3);
-        result[iipair(2000003,1000021)] = silly_xsec_constructor(0.76990E-02 * 1e3);
-        result[iipair(2000004,1000021)] = silly_xsec_constructor(0.36025E-02 * 1e3);
-        result[iipair(2000005,1000021)] = silly_xsec_constructor(0 * 1e3);
+        result[iipair(1000001,1000021)] = silly_PID_xsec_constructor(0.14855 * 1e3);
+        result[iipair(1000002,1000021)] = silly_PID_xsec_constructor(0.57564E-01 * 1e3);
+        result[iipair(1000003,1000021)] = silly_PID_xsec_constructor(0.67117E-02 * 1e3);
+        result[iipair(1000004,1000021)] = silly_PID_xsec_constructor(0.31759E-02 * 1e3);
+        result[iipair(1000005,1000021)] = silly_PID_xsec_constructor(0 * 1e3);
+        result[iipair(2000001,1000021)] = silly_PID_xsec_constructor(0.16430 * 1e3);
+        result[iipair(2000002,1000021)] = silly_PID_xsec_constructor(0.65192E-01 * 1e3);
+        result[iipair(2000003,1000021)] = silly_PID_xsec_constructor(0.76990E-02 * 1e3);
+        result[iipair(2000004,1000021)] = silly_PID_xsec_constructor(0.36025E-02 * 1e3);
+        result[iipair(2000005,1000021)] = silly_PID_xsec_constructor(0 * 1e3);
         //
         // Squark--anti-squark
-        result[iipair(1000004,-1000004)] = silly_xsec_constructor(0.395E-02 * 1e3);
-        result[iipair(1000004,-1000003)] = silly_xsec_constructor(0.150E-04 * 1e3);
-        result[iipair(1000004,-1000001)] = silly_xsec_constructor(0.139E-03 * 1e3);
-        result[iipair(1000004,-1000002)] = silly_xsec_constructor(0.380E-03 * 1e3);
-        result[iipair(1000004,-2000002)] = silly_xsec_constructor(0.171E-02 * 1e3);
-        result[iipair(1000004,-2000001)] = silly_xsec_constructor(0.681E-03 * 1e3);
-        result[iipair(1000004,-2000003)] = silly_xsec_constructor(0.804E-04 * 1e3);
-        result[iipair(1000004,-2000004)] = silly_xsec_constructor(0.375E-04 * 1e3);
-        result[iipair(1000003,-1000003)] = silly_xsec_constructor(0.391E-02 * 1e3);
-        result[iipair(1000003,-1000001)] = silly_xsec_constructor(0.234E-03 * 1e3);
-        result[iipair(1000003,-1000002)] = silly_xsec_constructor(0.611E-03 * 1e3);
-        result[iipair(1000003,-2000002)] = silly_xsec_constructor(0.273E-02 * 1e3);
-        result[iipair(1000003,-2000001)] = silly_xsec_constructor(0.113E-02 * 1e3);
-        result[iipair(1000003,-2000003)] = silly_xsec_constructor(0.156E-03 * 1e3);
-        result[iipair(1000003,-2000004)] = silly_xsec_constructor(0.786E-04 * 1e3);
-        result[iipair(1000001,-1000001)] = silly_xsec_constructor(0.497E-02 * 1e3);
-        result[iipair(1000001,-1000002)] = silly_xsec_constructor(0.159E-02 * 1e3);
-        result[iipair(1000001,-2000002)] = silly_xsec_constructor(0.697E-02 * 1e3);
-        result[iipair(1000001,-2000001)] = silly_xsec_constructor(0.404E-02 * 1e3);
-        result[iipair(1000001,-2000003)] = silly_xsec_constructor(0.113E-02 * 1e3);
-        result[iipair(1000001,-2000004)] = silly_xsec_constructor(0.668E-03 * 1e3);
-        result[iipair(1000002,-1000002)] = silly_xsec_constructor(0.660E-02 * 1e3);
-        result[iipair(1000002,-2000002)] = silly_xsec_constructor(0.877E-02 * 1e3);
-        result[iipair(1000002,-2000001)] = silly_xsec_constructor(0.710E-02 * 1e3);
-        result[iipair(1000002,-2000003)] = silly_xsec_constructor(0.277E-02 * 1e3);
-        result[iipair(1000002,-2000004)] = silly_xsec_constructor(0.171E-02 * 1e3);
-        result[iipair(2000002,-2000002)] = silly_xsec_constructor(0.835E-02 * 1e3);
-        result[iipair(2000002,-2000001)] = silly_xsec_constructor(0.196E-02 * 1e3);
-        result[iipair(2000002,-2000003)] = silly_xsec_constructor(0.753E-03 * 1e3);
-        result[iipair(2000002,-2000004)] = silly_xsec_constructor(0.462E-03 * 1e3);
-        result[iipair(2000001,-2000001)] = silly_xsec_constructor(0.665E-02 * 1e3);
-        result[iipair(2000001,-2000003)] = silly_xsec_constructor(0.297E-03 * 1e3);
-        result[iipair(2000001,-2000004)] = silly_xsec_constructor(0.174E-03 * 1e3);
-        result[iipair(2000003,-2000003)] = silly_xsec_constructor(0.531E-02 * 1e3);
-        result[iipair(2000003,-2000004)] = silly_xsec_constructor(0.192E-04 * 1e3);
-        result[iipair(2000004,-2000004)] = silly_xsec_constructor(0.515E-02 * 1e3);
+        result[iipair(1000004,-1000004)] = silly_PID_xsec_constructor(0.395E-02 * 1e3);
+        result[iipair(1000004,-1000003)] = silly_PID_xsec_constructor(0.150E-04 * 1e3);
+        result[iipair(1000004,-1000001)] = silly_PID_xsec_constructor(0.139E-03 * 1e3);
+        result[iipair(1000004,-1000002)] = silly_PID_xsec_constructor(0.380E-03 * 1e3);
+        result[iipair(1000004,-2000002)] = silly_PID_xsec_constructor(0.171E-02 * 1e3);
+        result[iipair(1000004,-2000001)] = silly_PID_xsec_constructor(0.681E-03 * 1e3);
+        result[iipair(1000004,-2000003)] = silly_PID_xsec_constructor(0.804E-04 * 1e3);
+        result[iipair(1000004,-2000004)] = silly_PID_xsec_constructor(0.375E-04 * 1e3);
+        result[iipair(1000003,-1000003)] = silly_PID_xsec_constructor(0.391E-02 * 1e3);
+        result[iipair(1000003,-1000001)] = silly_PID_xsec_constructor(0.234E-03 * 1e3);
+        result[iipair(1000003,-1000002)] = silly_PID_xsec_constructor(0.611E-03 * 1e3);
+        result[iipair(1000003,-2000002)] = silly_PID_xsec_constructor(0.273E-02 * 1e3);
+        result[iipair(1000003,-2000001)] = silly_PID_xsec_constructor(0.113E-02 * 1e3);
+        result[iipair(1000003,-2000003)] = silly_PID_xsec_constructor(0.156E-03 * 1e3);
+        result[iipair(1000003,-2000004)] = silly_PID_xsec_constructor(0.786E-04 * 1e3);
+        result[iipair(1000001,-1000001)] = silly_PID_xsec_constructor(0.497E-02 * 1e3);
+        result[iipair(1000001,-1000002)] = silly_PID_xsec_constructor(0.159E-02 * 1e3);
+        result[iipair(1000001,-2000002)] = silly_PID_xsec_constructor(0.697E-02 * 1e3);
+        result[iipair(1000001,-2000001)] = silly_PID_xsec_constructor(0.404E-02 * 1e3);
+        result[iipair(1000001,-2000003)] = silly_PID_xsec_constructor(0.113E-02 * 1e3);
+        result[iipair(1000001,-2000004)] = silly_PID_xsec_constructor(0.668E-03 * 1e3);
+        result[iipair(1000002,-1000002)] = silly_PID_xsec_constructor(0.660E-02 * 1e3);
+        result[iipair(1000002,-2000002)] = silly_PID_xsec_constructor(0.877E-02 * 1e3);
+        result[iipair(1000002,-2000001)] = silly_PID_xsec_constructor(0.710E-02 * 1e3);
+        result[iipair(1000002,-2000003)] = silly_PID_xsec_constructor(0.277E-02 * 1e3);
+        result[iipair(1000002,-2000004)] = silly_PID_xsec_constructor(0.171E-02 * 1e3);
+        result[iipair(2000002,-2000002)] = silly_PID_xsec_constructor(0.835E-02 * 1e3);
+        result[iipair(2000002,-2000001)] = silly_PID_xsec_constructor(0.196E-02 * 1e3);
+        result[iipair(2000002,-2000003)] = silly_PID_xsec_constructor(0.753E-03 * 1e3);
+        result[iipair(2000002,-2000004)] = silly_PID_xsec_constructor(0.462E-03 * 1e3);
+        result[iipair(2000001,-2000001)] = silly_PID_xsec_constructor(0.665E-02 * 1e3);
+        result[iipair(2000001,-2000003)] = silly_PID_xsec_constructor(0.297E-03 * 1e3);
+        result[iipair(2000001,-2000004)] = silly_PID_xsec_constructor(0.174E-03 * 1e3);
+        result[iipair(2000003,-2000003)] = silly_PID_xsec_constructor(0.531E-02 * 1e3);
+        result[iipair(2000003,-2000004)] = silly_PID_xsec_constructor(0.192E-04 * 1e3);
+        result[iipair(2000004,-2000004)] = silly_PID_xsec_constructor(0.515E-02 * 1e3);
         //
-        result[iipair(1000005,-1000005)] = silly_xsec_constructor(0.702E-02 * 1e3);
-        result[iipair(1000006,-1000006)] = silly_xsec_constructor(0.255E-01 * 1e3);
-        result[iipair(2000005,-2000005)] = silly_xsec_constructor(0.512E-02 * 1e3);
-        result[iipair(2000006,-2000006)] = silly_xsec_constructor(0.508E-02 * 1e3);
+        result[iipair(1000005,-1000005)] = silly_PID_xsec_constructor(0.702E-02 * 1e3);
+        result[iipair(1000006,-1000006)] = silly_PID_xsec_constructor(0.255E-01 * 1e3);
+        result[iipair(2000005,-2000005)] = silly_PID_xsec_constructor(0.512E-02 * 1e3);
+        result[iipair(2000006,-2000006)] = silly_PID_xsec_constructor(0.508E-02 * 1e3);
         //  
         // Squark--squark
-        result[iipair(1000004,1000004)] = silly_xsec_constructor(0.208E-04 * 1e3);
-        result[iipair(1000004,1000003)] = silly_xsec_constructor(0.122E-03 * 1e3);
-        result[iipair(1000004,1000001)] = silly_xsec_constructor(0.105E-02 * 1e3);
-        result[iipair(1000004,1000002)] = silly_xsec_constructor(0.270E-02 * 1e3);
-        result[iipair(1000004,2000002)] = silly_xsec_constructor(0.742E-03 * 1e3);
-        result[iipair(1000004,2000001)] = silly_xsec_constructor(0.278E-03 * 1e3);
-        result[iipair(1000004,2000003)] = silly_xsec_constructor(0.304E-04 * 1e3);
-        result[iipair(1000004,2000004)] = silly_xsec_constructor(0.132E-04 * 1e3);
-        result[iipair(1000003,1000003)] = silly_xsec_constructor(0.912E-04 * 1e3);
-        result[iipair(1000003,1000001)] = silly_xsec_constructor(0.215E-02 * 1e3);
-        result[iipair(1000003,1000002)] = silly_xsec_constructor(0.534E-02 * 1e3);
-        result[iipair(1000003,2000002)] = silly_xsec_constructor(0.160E-02 * 1e3);
-        result[iipair(1000003,2000001)] = silly_xsec_constructor(0.622E-03 * 1e3);
-        result[iipair(1000003,2000003)] = silly_xsec_constructor(0.665E-04 * 1e3);
-        result[iipair(1000003,2000004)] = silly_xsec_constructor(0.298E-04 * 1e3);
-        result[iipair(1000001,1000001)] = silly_xsec_constructor(0.759E-02 * 1e3);
-        result[iipair(1000001,1000002)] = silly_xsec_constructor(0.481E-01 * 1e3);
-        result[iipair(1000001,2000002)] = silly_xsec_constructor(0.165E-01 * 1e3);
-        result[iipair(1000001,2000001)] = silly_xsec_constructor(0.665E-02 * 1e3);
-        result[iipair(1000001,2000003)] = silly_xsec_constructor(0.622E-03 * 1e3);
-        result[iipair(1000001,2000004)] = silly_xsec_constructor(0.274E-03 * 1e3);
-        result[iipair(1000002,1000002)] = silly_xsec_constructor(0.410E-01 * 1e3);
-        result[iipair(1000002,2000002)] = silly_xsec_constructor(0.398E-01 * 1e3);
-        result[iipair(1000002,2000001)] = silly_xsec_constructor(0.166E-01 * 1e3);
-        result[iipair(1000002,2000003)] = silly_xsec_constructor(0.162E-02 * 1e3);
-        result[iipair(1000002,2000004)] = silly_xsec_constructor(0.742E-03 * 1e3);
-        result[iipair(2000002,2000002)] = silly_xsec_constructor(0.481E-01 * 1e3);
-        result[iipair(2000002,2000001)] = silly_xsec_constructor(0.582E-01 * 1e3);
-        result[iipair(2000002,2000003)] = silly_xsec_constructor(0.673E-02 * 1e3);
-        result[iipair(2000002,2000004)] = silly_xsec_constructor(0.341E-02 * 1e3);
-        result[iipair(2000001,2000001)] = silly_xsec_constructor(0.944E-02 * 1e3);
-        result[iipair(2000001,2000003)] = silly_xsec_constructor(0.279E-02 * 1e3);
-        result[iipair(2000001,2000004)] = silly_xsec_constructor(0.137E-02 * 1e3);
-        result[iipair(2000003,2000003)] = silly_xsec_constructor(0.122E-03 * 1e3);
-        result[iipair(2000003,2000004)] = silly_xsec_constructor(0.163E-03 * 1e3);
-        result[iipair(2000004,2000004)] = silly_xsec_constructor(0.276E-04 * 1e3);
+        result[iipair(1000004,1000004)] = silly_PID_xsec_constructor(0.208E-04 * 1e3);
+        result[iipair(1000004,1000003)] = silly_PID_xsec_constructor(0.122E-03 * 1e3);
+        result[iipair(1000004,1000001)] = silly_PID_xsec_constructor(0.105E-02 * 1e3);
+        result[iipair(1000004,1000002)] = silly_PID_xsec_constructor(0.270E-02 * 1e3);
+        result[iipair(1000004,2000002)] = silly_PID_xsec_constructor(0.742E-03 * 1e3);
+        result[iipair(1000004,2000001)] = silly_PID_xsec_constructor(0.278E-03 * 1e3);
+        result[iipair(1000004,2000003)] = silly_PID_xsec_constructor(0.304E-04 * 1e3);
+        result[iipair(1000004,2000004)] = silly_PID_xsec_constructor(0.132E-04 * 1e3);
+        result[iipair(1000003,1000003)] = silly_PID_xsec_constructor(0.912E-04 * 1e3);
+        result[iipair(1000003,1000001)] = silly_PID_xsec_constructor(0.215E-02 * 1e3);
+        result[iipair(1000003,1000002)] = silly_PID_xsec_constructor(0.534E-02 * 1e3);
+        result[iipair(1000003,2000002)] = silly_PID_xsec_constructor(0.160E-02 * 1e3);
+        result[iipair(1000003,2000001)] = silly_PID_xsec_constructor(0.622E-03 * 1e3);
+        result[iipair(1000003,2000003)] = silly_PID_xsec_constructor(0.665E-04 * 1e3);
+        result[iipair(1000003,2000004)] = silly_PID_xsec_constructor(0.298E-04 * 1e3);
+        result[iipair(1000001,1000001)] = silly_PID_xsec_constructor(0.759E-02 * 1e3);
+        result[iipair(1000001,1000002)] = silly_PID_xsec_constructor(0.481E-01 * 1e3);
+        result[iipair(1000001,2000002)] = silly_PID_xsec_constructor(0.165E-01 * 1e3);
+        result[iipair(1000001,2000001)] = silly_PID_xsec_constructor(0.665E-02 * 1e3);
+        result[iipair(1000001,2000003)] = silly_PID_xsec_constructor(0.622E-03 * 1e3);
+        result[iipair(1000001,2000004)] = silly_PID_xsec_constructor(0.274E-03 * 1e3);
+        result[iipair(1000002,1000002)] = silly_PID_xsec_constructor(0.410E-01 * 1e3);
+        result[iipair(1000002,2000002)] = silly_PID_xsec_constructor(0.398E-01 * 1e3);
+        result[iipair(1000002,2000001)] = silly_PID_xsec_constructor(0.166E-01 * 1e3);
+        result[iipair(1000002,2000003)] = silly_PID_xsec_constructor(0.162E-02 * 1e3);
+        result[iipair(1000002,2000004)] = silly_PID_xsec_constructor(0.742E-03 * 1e3);
+        result[iipair(2000002,2000002)] = silly_PID_xsec_constructor(0.481E-01 * 1e3);
+        result[iipair(2000002,2000001)] = silly_PID_xsec_constructor(0.582E-01 * 1e3);
+        result[iipair(2000002,2000003)] = silly_PID_xsec_constructor(0.673E-02 * 1e3);
+        result[iipair(2000002,2000004)] = silly_PID_xsec_constructor(0.341E-02 * 1e3);
+        result[iipair(2000001,2000001)] = silly_PID_xsec_constructor(0.944E-02 * 1e3);
+        result[iipair(2000001,2000003)] = silly_PID_xsec_constructor(0.279E-02 * 1e3);
+        result[iipair(2000001,2000004)] = silly_PID_xsec_constructor(0.137E-02 * 1e3);
+        result[iipair(2000003,2000003)] = silly_PID_xsec_constructor(0.122E-03 * 1e3);
+        result[iipair(2000003,2000004)] = silly_PID_xsec_constructor(0.163E-03 * 1e3);
+        result[iipair(2000004,2000004)] = silly_PID_xsec_constructor(0.276E-04 * 1e3);
         //
         // Associated production
-        result[iipair(1000022,1000021)] = silly_xsec_constructor(0.380E-02 * 1e3);
-        result[iipair(1000023,1000021)] = silly_xsec_constructor(0.444E-02 * 1e3);
-        result[iipair(1000025,1000021)] = silly_xsec_constructor(0.292E-04 * 1e3);
-        result[iipair(1000035,1000021)] = silly_xsec_constructor(0.111E-03 * 1e3);
-        result[iipair(1000024,1000021)] = silly_xsec_constructor(0.712E-02 * 1e3);
-        result[iipair(-1000024,1000021)] = silly_xsec_constructor(0.245E-02 * 1e3);
-        result[iipair(1000037,1000021)] = silly_xsec_constructor(0.214E-03 * 1e3);
-        result[iipair(-1000037,1000021)] = silly_xsec_constructor(0.706E-04 * 1e3);
+        result[iipair(1000022,1000021)] = silly_PID_xsec_constructor(0.380E-02 * 1e3);
+        result[iipair(1000023,1000021)] = silly_PID_xsec_constructor(0.444E-02 * 1e3);
+        result[iipair(1000025,1000021)] = silly_PID_xsec_constructor(0.292E-04 * 1e3);
+        result[iipair(1000035,1000021)] = silly_PID_xsec_constructor(0.111E-03 * 1e3);
+        result[iipair(1000024,1000021)] = silly_PID_xsec_constructor(0.712E-02 * 1e3);
+        result[iipair(-1000024,1000021)] = silly_PID_xsec_constructor(0.245E-02 * 1e3);
+        result[iipair(1000037,1000021)] = silly_PID_xsec_constructor(0.214E-03 * 1e3);
+        result[iipair(-1000037,1000021)] = silly_PID_xsec_constructor(0.706E-04 * 1e3);
         //
-        result[iipair(1000022,1000004)] = silly_xsec_constructor(0.132E-04 * 1e3);
-        result[iipair(1000022,1000003)] = silly_xsec_constructor(0.345E-04 * 1e3);
-        result[iipair(1000022,1000001)] = silly_xsec_constructor(0.206E-03 * 1e3);
-        result[iipair(1000022,1000002)] = silly_xsec_constructor(0.299E-03 * 1e3);
-        result[iipair(1000022,2000002)] = silly_xsec_constructor(0.707E-02 * 1e3);
-        result[iipair(1000022,2000001)] = silly_xsec_constructor(0.858E-03 * 1e3);
-        result[iipair(1000022,2000003)] = silly_xsec_constructor(0.147E-03 * 1e3);
-        result[iipair(1000022,2000004)] = silly_xsec_constructor(0.325E-03 * 1e3);
-        result[iipair(1000023,1000004)] = silly_xsec_constructor(0.301E-03 * 1e3);
-        result[iipair(1000023,1000003)] = silly_xsec_constructor(0.532E-03 * 1e3);
-        result[iipair(1000023,1000001)] = silly_xsec_constructor(0.340E-02 * 1e3);
-        result[iipair(1000023,1000002)] = silly_xsec_constructor(0.775E-02 * 1e3);
-        result[iipair(1000023,2000002)] = silly_xsec_constructor(0.688E-05 * 1e3);
-        result[iipair(1000023,2000001)] = silly_xsec_constructor(0.806E-06 * 1e3);
-        result[iipair(1000023,2000003)] = silly_xsec_constructor(0.129E-06 * 1e3);
-        result[iipair(1000023,2000004)] = silly_xsec_constructor(0.277E-06 * 1e3);
-        result[iipair(1000025,1000004)] = silly_xsec_constructor(0.258E-06 * 1e3);
-        result[iipair(1000025,1000003)] = silly_xsec_constructor(0.798E-06 * 1e3);
-        result[iipair(1000025,1000001)] = silly_xsec_constructor(0.565E-05 * 1e3);
-        result[iipair(1000025,1000002)] = silly_xsec_constructor(0.804E-05 * 1e3);
-        result[iipair(1000025,2000002)] = silly_xsec_constructor(0.293E-05 * 1e3);
-        result[iipair(1000025,2000001)] = silly_xsec_constructor(0.327E-06 * 1e3);
-        result[iipair(1000025,2000003)] = silly_xsec_constructor(0.470E-07 * 1e3);
-        result[iipair(1000025,2000004)] = silly_xsec_constructor(0.970E-07 * 1e3);
-        result[iipair(1000035,1000004)] = silly_xsec_constructor(0.662E-05 * 1e3);
-        result[iipair(1000035,1000003)] = silly_xsec_constructor(0.158E-04 * 1e3);
-        result[iipair(1000035,1000001)] = silly_xsec_constructor(0.113E-03 * 1e3);
-        result[iipair(1000035,1000002)] = silly_xsec_constructor(0.208E-03 * 1e3);
-        result[iipair(1000035,2000002)] = silly_xsec_constructor(0.148E-04 * 1e3);
-        result[iipair(1000035,2000001)] = silly_xsec_constructor(0.165E-05 * 1e3);
-        result[iipair(1000035,2000003)] = silly_xsec_constructor(0.235E-06 * 1e3);
-        result[iipair(1000035,2000004)] = silly_xsec_constructor(0.485E-06 * 1e3);
-        result[iipair(1000024,1000004)] = silly_xsec_constructor(0.475E-03 * 1e3);
-        result[iipair(1000024,1000003)] = silly_xsec_constructor(0.287E-03 * 1e3);
-        result[iipair(1000024,1000001)] = silly_xsec_constructor(0.140E-01 * 1e3);
-        result[iipair(1000024,1000002)] = silly_xsec_constructor(0.976E-03 * 1e3);
-        result[iipair(1000024,2000002)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000024,2000001)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000024,2000003)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000024,2000004)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,1000004)] = silly_xsec_constructor(0.749E-05 * 1e3);
-        result[iipair(1000037,1000003)] = silly_xsec_constructor(0.104E-04 * 1e3);
-        result[iipair(1000037,1000001)] = silly_xsec_constructor(0.629E-03 * 1e3);
-        result[iipair(1000037,1000002)] = silly_xsec_constructor(0.157E-04 * 1e3);
-        result[iipair(1000037,2000002)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,2000001)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,2000003)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,2000004)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,1000004)] = silly_xsec_constructor(0.644E-03 * 1e3);
-        result[iipair(-1000024,1000003)] = silly_xsec_constructor(0.287E-03 * 1e3);
-        result[iipair(-1000024,1000001)] = silly_xsec_constructor(0.775E-03 * 1e3);
-        result[iipair(-1000024,1000002)] = silly_xsec_constructor(0.618E-02 * 1e3);
-        result[iipair(-1000024,2000002)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,2000001)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,2000003)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,2000004)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,1000004)] = silly_xsec_constructor(0.109E-04 * 1e3);
-        result[iipair(-1000037,1000003)] = silly_xsec_constructor(0.104E-04 * 1e3);
-        result[iipair(-1000037,1000001)] = silly_xsec_constructor(0.294E-04 * 1e3);
-        result[iipair(-1000037,1000002)] = silly_xsec_constructor(0.115E-03 * 1e3);
-        result[iipair(-1000037,2000002)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,2000001)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,2000003)] = silly_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,2000004)] = silly_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000022,1000004)] = silly_PID_xsec_constructor(0.132E-04 * 1e3);
+        result[iipair(1000022,1000003)] = silly_PID_xsec_constructor(0.345E-04 * 1e3);
+        result[iipair(1000022,1000001)] = silly_PID_xsec_constructor(0.206E-03 * 1e3);
+        result[iipair(1000022,1000002)] = silly_PID_xsec_constructor(0.299E-03 * 1e3);
+        result[iipair(1000022,2000002)] = silly_PID_xsec_constructor(0.707E-02 * 1e3);
+        result[iipair(1000022,2000001)] = silly_PID_xsec_constructor(0.858E-03 * 1e3);
+        result[iipair(1000022,2000003)] = silly_PID_xsec_constructor(0.147E-03 * 1e3);
+        result[iipair(1000022,2000004)] = silly_PID_xsec_constructor(0.325E-03 * 1e3);
+        result[iipair(1000023,1000004)] = silly_PID_xsec_constructor(0.301E-03 * 1e3);
+        result[iipair(1000023,1000003)] = silly_PID_xsec_constructor(0.532E-03 * 1e3);
+        result[iipair(1000023,1000001)] = silly_PID_xsec_constructor(0.340E-02 * 1e3);
+        result[iipair(1000023,1000002)] = silly_PID_xsec_constructor(0.775E-02 * 1e3);
+        result[iipair(1000023,2000002)] = silly_PID_xsec_constructor(0.688E-05 * 1e3);
+        result[iipair(1000023,2000001)] = silly_PID_xsec_constructor(0.806E-06 * 1e3);
+        result[iipair(1000023,2000003)] = silly_PID_xsec_constructor(0.129E-06 * 1e3);
+        result[iipair(1000023,2000004)] = silly_PID_xsec_constructor(0.277E-06 * 1e3);
+        result[iipair(1000025,1000004)] = silly_PID_xsec_constructor(0.258E-06 * 1e3);
+        result[iipair(1000025,1000003)] = silly_PID_xsec_constructor(0.798E-06 * 1e3);
+        result[iipair(1000025,1000001)] = silly_PID_xsec_constructor(0.565E-05 * 1e3);
+        result[iipair(1000025,1000002)] = silly_PID_xsec_constructor(0.804E-05 * 1e3);
+        result[iipair(1000025,2000002)] = silly_PID_xsec_constructor(0.293E-05 * 1e3);
+        result[iipair(1000025,2000001)] = silly_PID_xsec_constructor(0.327E-06 * 1e3);
+        result[iipair(1000025,2000003)] = silly_PID_xsec_constructor(0.470E-07 * 1e3);
+        result[iipair(1000025,2000004)] = silly_PID_xsec_constructor(0.970E-07 * 1e3);
+        result[iipair(1000035,1000004)] = silly_PID_xsec_constructor(0.662E-05 * 1e3);
+        result[iipair(1000035,1000003)] = silly_PID_xsec_constructor(0.158E-04 * 1e3);
+        result[iipair(1000035,1000001)] = silly_PID_xsec_constructor(0.113E-03 * 1e3);
+        result[iipair(1000035,1000002)] = silly_PID_xsec_constructor(0.208E-03 * 1e3);
+        result[iipair(1000035,2000002)] = silly_PID_xsec_constructor(0.148E-04 * 1e3);
+        result[iipair(1000035,2000001)] = silly_PID_xsec_constructor(0.165E-05 * 1e3);
+        result[iipair(1000035,2000003)] = silly_PID_xsec_constructor(0.235E-06 * 1e3);
+        result[iipair(1000035,2000004)] = silly_PID_xsec_constructor(0.485E-06 * 1e3);
+        result[iipair(1000024,1000004)] = silly_PID_xsec_constructor(0.475E-03 * 1e3);
+        result[iipair(1000024,1000003)] = silly_PID_xsec_constructor(0.287E-03 * 1e3);
+        result[iipair(1000024,1000001)] = silly_PID_xsec_constructor(0.140E-01 * 1e3);
+        result[iipair(1000024,1000002)] = silly_PID_xsec_constructor(0.976E-03 * 1e3);
+        result[iipair(1000024,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000024,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000024,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000024,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000037,1000004)] = silly_PID_xsec_constructor(0.749E-05 * 1e3);
+        result[iipair(1000037,1000003)] = silly_PID_xsec_constructor(0.104E-04 * 1e3);
+        result[iipair(1000037,1000001)] = silly_PID_xsec_constructor(0.629E-03 * 1e3);
+        result[iipair(1000037,1000002)] = silly_PID_xsec_constructor(0.157E-04 * 1e3);
+        result[iipair(1000037,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000037,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000037,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(1000037,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000024,1000004)] = silly_PID_xsec_constructor(0.644E-03 * 1e3);
+        result[iipair(-1000024,1000003)] = silly_PID_xsec_constructor(0.287E-03 * 1e3);
+        result[iipair(-1000024,1000001)] = silly_PID_xsec_constructor(0.775E-03 * 1e3);
+        result[iipair(-1000024,1000002)] = silly_PID_xsec_constructor(0.618E-02 * 1e3);
+        result[iipair(-1000024,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000024,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000024,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000024,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000037,1000004)] = silly_PID_xsec_constructor(0.109E-04 * 1e3);
+        result[iipair(-1000037,1000003)] = silly_PID_xsec_constructor(0.104E-04 * 1e3);
+        result[iipair(-1000037,1000001)] = silly_PID_xsec_constructor(0.294E-04 * 1e3);
+        result[iipair(-1000037,1000002)] = silly_PID_xsec_constructor(0.115E-03 * 1e3);
+        result[iipair(-1000037,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000037,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000037,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        result[iipair(-1000037,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
         //
         // EW
-        result[iipair(1000022,1000022)] = silly_xsec_constructor(0.990E-03 * 1e3);
-        result[iipair(1000022,1000023)] = silly_xsec_constructor(0.137E-03 * 1e3);
-        result[iipair(1000022,1000025)] = silly_xsec_constructor(0.744E-04 * 1e3);
-        result[iipair(1000022,1000035)] = silly_xsec_constructor(0.167E-04 * 1e3);
-        result[iipair(1000022,1000024)] = silly_xsec_constructor(0.350E-03 * 1e3);
-        result[iipair(1000022,1000037)] = silly_xsec_constructor(0.107E-03 * 1e3);
-        result[iipair(1000022,-1000024)] = silly_xsec_constructor(0.162E-03 * 1e3);
-        result[iipair(1000022,-1000037)] = silly_xsec_constructor(0.460E-04 * 1e3);
-        result[iipair(1000023,1000023)] = silly_xsec_constructor(0.142E-02 * 1e3);
-        result[iipair(1000023,1000025)] = silly_xsec_constructor(0.282E-03 * 1e3);
-        result[iipair(1000023,1000035)] = silly_xsec_constructor(0.678E-04 * 1e3);
-        result[iipair(1000023,1000024)] = silly_xsec_constructor(0.411E-01 * 1e3);
-        result[iipair(1000023,1000037)] = silly_xsec_constructor(0.183E-04 * 1e3);
-        result[iipair(1000023,-1000024)] = silly_xsec_constructor(0.191E-01 * 1e3);
-        result[iipair(1000023,-1000037)] = silly_xsec_constructor(0.719E-05 * 1e3);
-        result[iipair(1000025,000025)] = silly_xsec_constructor(0.141E-07 * 1e3);
-        result[iipair(1000025,1000035)] = silly_xsec_constructor(0.175E-02 * 1e3);
-        result[iipair(1000025,1000024)] = silly_xsec_constructor(0.412E-03 * 1e3);
-        result[iipair(1000025,1000037)] = silly_xsec_constructor(0.256E-02 * 1e3);
-        result[iipair(1000025,-1000024)] = silly_xsec_constructor(0.169E-03 * 1e3);
-        result[iipair(1000025,-1000037)] = silly_xsec_constructor(0.968E-03 * 1e3);
-        result[iipair(1000035,1000035)] = silly_xsec_constructor(0.834E-06 * 1e3);
-        result[iipair(1000035,1000024)] = silly_xsec_constructor(0.248E-04 * 1e3);
-        result[iipair(1000035,1000037)] = silly_xsec_constructor(0.248E-02 * 1e3);
-        result[iipair(1000035,-1000024)] = silly_xsec_constructor(0.968E-05 * 1e3);
-        result[iipair(1000035,-1000037)] = silly_xsec_constructor(0.935E-03 * 1e3);
-        result[iipair(1000024,-1000024)] = silly_xsec_constructor(0.322E-01 * 1e3);
-        result[iipair(1000024,-1000037)] = silly_xsec_constructor(0.130E-03 * 1e3);
-        result[iipair(1000037,-1000024)] = silly_xsec_constructor(0.130E-03 * 1e3);
-        result[iipair(1000037,-1000037)] = silly_xsec_constructor(0.183E-02 * 1e3);
+        result[iipair(1000022,1000022)] = silly_PID_xsec_constructor(0.990E-03 * 1e3);
+        result[iipair(1000022,1000023)] = silly_PID_xsec_constructor(0.137E-03 * 1e3);
+        result[iipair(1000022,1000025)] = silly_PID_xsec_constructor(0.744E-04 * 1e3);
+        result[iipair(1000022,1000035)] = silly_PID_xsec_constructor(0.167E-04 * 1e3);
+        result[iipair(1000022,1000024)] = silly_PID_xsec_constructor(0.350E-03 * 1e3);
+        result[iipair(1000022,1000037)] = silly_PID_xsec_constructor(0.107E-03 * 1e3);
+        result[iipair(1000022,-1000024)] = silly_PID_xsec_constructor(0.162E-03 * 1e3);
+        result[iipair(1000022,-1000037)] = silly_PID_xsec_constructor(0.460E-04 * 1e3);
+        result[iipair(1000023,1000023)] = silly_PID_xsec_constructor(0.142E-02 * 1e3);
+        result[iipair(1000023,1000025)] = silly_PID_xsec_constructor(0.282E-03 * 1e3);
+        result[iipair(1000023,1000035)] = silly_PID_xsec_constructor(0.678E-04 * 1e3);
+        result[iipair(1000023,1000024)] = silly_PID_xsec_constructor(0.411E-01 * 1e3);
+        result[iipair(1000023,1000037)] = silly_PID_xsec_constructor(0.183E-04 * 1e3);
+        result[iipair(1000023,-1000024)] = silly_PID_xsec_constructor(0.191E-01 * 1e3);
+        result[iipair(1000023,-1000037)] = silly_PID_xsec_constructor(0.719E-05 * 1e3);
+        result[iipair(1000025,000025)] = silly_PID_xsec_constructor(0.141E-07 * 1e3);
+        result[iipair(1000025,1000035)] = silly_PID_xsec_constructor(0.175E-02 * 1e3);
+        result[iipair(1000025,1000024)] = silly_PID_xsec_constructor(0.412E-03 * 1e3);
+        result[iipair(1000025,1000037)] = silly_PID_xsec_constructor(0.256E-02 * 1e3);
+        result[iipair(1000025,-1000024)] = silly_PID_xsec_constructor(0.169E-03 * 1e3);
+        result[iipair(1000025,-1000037)] = silly_PID_xsec_constructor(0.968E-03 * 1e3);
+        result[iipair(1000035,1000035)] = silly_PID_xsec_constructor(0.834E-06 * 1e3);
+        result[iipair(1000035,1000024)] = silly_PID_xsec_constructor(0.248E-04 * 1e3);
+        result[iipair(1000035,1000037)] = silly_PID_xsec_constructor(0.248E-02 * 1e3);
+        result[iipair(1000035,-1000024)] = silly_PID_xsec_constructor(0.968E-05 * 1e3);
+        result[iipair(1000035,-1000037)] = silly_PID_xsec_constructor(0.935E-03 * 1e3);
+        result[iipair(1000024,-1000024)] = silly_PID_xsec_constructor(0.322E-01 * 1e3);
+        result[iipair(1000024,-1000037)] = silly_PID_xsec_constructor(0.130E-03 * 1e3);
+        result[iipair(1000037,-1000024)] = silly_PID_xsec_constructor(0.130E-03 * 1e3);
+        result[iipair(1000037,-1000037)] = silly_PID_xsec_constructor(0.183E-02 * 1e3);
         //
         // Sleptons TODO: What do to with first and second generation equals
-        result[iipair(1000011,-1000011)] = silly_xsec_constructor(0.210E-02 * 1e3); // Equal for ~e and ~mu in Prospino
-        result[iipair(1000013,-1000013)] = silly_xsec_constructor(0.210E-02 * 1e3);
-        result[iipair(2000011,-2000011)] = silly_xsec_constructor(0.502E-02 * 1e3); // Equal for ~e and ~mu in Prospino
-        result[iipair(2000013,-2000013)] = silly_xsec_constructor(0.502E-02 * 1e3);
-        result[iipair(1000012,-1000012)] = silly_xsec_constructor(0.217E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
-        result[iipair(1000014,-1000014)] = silly_xsec_constructor(0.217E-02 * 1e3);
-        result[iipair(-1000011,1000012)] = silly_xsec_constructor(0.553E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
-        result[iipair(-1000013,1000014)] = silly_xsec_constructor(0.553E-02 * 1e3);
-        result[iipair(1000011,-1000012)] = silly_xsec_constructor(0.245E-02 * 1e3);
-        result[iipair(1000013,-1000014)] = silly_xsec_constructor(0.245E-02 * 1e3);
-        result[iipair(1000015,-1000015)] = silly_xsec_constructor(0.556E-02 * 1e3);
-        result[iipair(2000015,-2000015)] = silly_xsec_constructor(0.201E-02 * 1e3);
-        result[iipair(1000015,-2000015)] = silly_xsec_constructor(0.907E-04 * 1e3); // Equal for ~tau_1^- ~tau_2^+ and its cc in Prospino. Suspicious difference in value compared to Pythia LO
-        result[iipair(-1000015,2000015)] = silly_xsec_constructor(0.907E-04 * 1e3);
-        result[iipair(1000016,-1000016)] = silly_xsec_constructor(0.220E-02 * 1e3);
-        result[iipair(-1000015,1000016)] = silly_xsec_constructor(0.262E-03 * 1e3);
-        result[iipair(1000015,-1000016)] = silly_xsec_constructor(0.124E-03 * 1e3);
-        result[iipair(-2000015,1000016)] = silly_xsec_constructor(0.542E-02 * 1e3);
+        result[iipair(1000011,-1000011)] = silly_PID_xsec_constructor(0.210E-02 * 1e3); // Equal for ~e and ~mu in Prospino
+        result[iipair(1000013,-1000013)] = silly_PID_xsec_constructor(0.210E-02 * 1e3);
+        result[iipair(2000011,-2000011)] = silly_PID_xsec_constructor(0.502E-02 * 1e3); // Equal for ~e and ~mu in Prospino
+        result[iipair(2000013,-2000013)] = silly_PID_xsec_constructor(0.502E-02 * 1e3);
+        result[iipair(1000012,-1000012)] = silly_PID_xsec_constructor(0.217E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
+        result[iipair(1000014,-1000014)] = silly_PID_xsec_constructor(0.217E-02 * 1e3);
+        result[iipair(-1000011,1000012)] = silly_PID_xsec_constructor(0.553E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
+        result[iipair(-1000013,1000014)] = silly_PID_xsec_constructor(0.553E-02 * 1e3);
+        result[iipair(1000011,-1000012)] = silly_PID_xsec_constructor(0.245E-02 * 1e3);
+        result[iipair(1000013,-1000014)] = silly_PID_xsec_constructor(0.245E-02 * 1e3);
+        result[iipair(1000015,-1000015)] = silly_PID_xsec_constructor(0.556E-02 * 1e3);
+        result[iipair(2000015,-2000015)] = silly_PID_xsec_constructor(0.201E-02 * 1e3);
+        result[iipair(1000015,-2000015)] = silly_PID_xsec_constructor(0.907E-04 * 1e3); // Equal for ~tau_1^- ~tau_2^+ and its cc in Prospino. Suspicious difference in value compared to Pythia LO
+        result[iipair(-1000015,2000015)] = silly_PID_xsec_constructor(0.907E-04 * 1e3);
+        result[iipair(1000016,-1000016)] = silly_PID_xsec_constructor(0.220E-02 * 1e3);
+        result[iipair(-1000015,1000016)] = silly_PID_xsec_constructor(0.262E-03 * 1e3);
+        result[iipair(1000015,-1000016)] = silly_PID_xsec_constructor(0.124E-03 * 1e3);
+        result[iipair(-2000015,1000016)] = silly_PID_xsec_constructor(0.542E-02 * 1e3);
       }
 
     }
@@ -458,14 +459,14 @@ namespace Gambit
         for (size_t i = 0; i != Dep::ActiveProcessCodes->size(); ++i)
         {
           // Get process code
-          int current_pcode = Dep::ActiveProcessCodes->at(i);
+          int proc_code = Dep::ActiveProcessCodes->at(i);
 
           // Construct a process_xsec_container instance to be stored in the shared_result map
-          process_xsec_container current_xs;
-          current_xs.set_process_code(current_pcode);
+          process_xsec_container proc_xs;
+          proc_xs.set_process_code(proc_code);
 
-          // Get iterator bounds (as a pair) over the multimap entries that match the key current_pcode
-          auto mm_range = Dep::ActiveProcessCodeToPIDPairsMap->equal_range(current_pcode);
+          // Get iterator bounds (as a pair) over the multimap entries that match the key proc_code
+          auto mm_range = Dep::ActiveProcessCodeToPIDPairsMap->equal_range(proc_code);
 
           // Loop over these elements in the multimap
           for (auto mm_it = mm_range.first; mm_it != mm_range.second; ++mm_it)
@@ -473,23 +474,21 @@ namespace Gambit
             const iipair& pids = mm_it->second;
 
             // Obtain the cross-section from the PID pair via the PIDPairCrossSectionsMap (map_iipair_PID_pair_xsec) dependency
-            // _Anders: This xsec_container should be replaced by a PID_pair_xsec_container
             cout << DEBUG_PREFIX << "Looking up PID pair: " << pids.first << "," << pids.second << endl;
 
-            xsec_container xs;
+            PID_pair_xsec_container pids_xs;
             map_iipair_PID_pair_xsec::const_iterator iter = Dep::PIDPairCrossSectionsMap->find(pids);
             if (iter != Dep::PIDPairCrossSectionsMap->end())
             {
-              xs = iter->second;
-              cout << DEBUG_PREFIX << "--> Got it! Cross-section is: " << xs.xsec() << " fb" << endl;
-
+              pids_xs = iter->second;
+              cout << DEBUG_PREFIX << "--> Got it! Cross-section is: " << pids_xs.xsec() << " fb" << endl;
             }
             else
             {
               if(set_missing_xsecs_to_zero)
               {
                 cout << DEBUG_PREFIX << "--> Not found! Creating 0-valued xsec_container " << endl;
-                xs.set_xsec(0.0, 0.0);
+                pids_xs.set_xsec(0.0, 0.0);
               }
               else
               {
@@ -499,60 +498,53 @@ namespace Gambit
               }
             }
 
-            // Call cross-section calculator here.
-            // (We're gonna assume that the calculator is smart enough to re-order two PIDs if it needs to.)
-
-            // _Anders: This xsec_container should be replaced by a PID_pair_xsec_container
-            // xsec_container xs = (*Dep::PIDPairCrossSectionFunc)(pids);
-
-            // Accumulate result in the process_xsec_container current_xs
-            current_xs.sum_xsecs(xs.xsec(), xs.xsec_err());
-            current_xs.add_contributing_PID_pair(pids);
+            // Accumulate result in the process_xsec_container proc_xs
+            proc_xs.sum_xsecs(pids_xs.xsec(), pids_xs.xsec_err());
+            proc_xs.add_related_PID_pair(pids);
           }
 
-          // Construct info string of the form "ProcessCode:<current_pcode>"
+          // Construct info string of the form "ProcessCode:<proc_code>"
           std::stringstream info_ss;
-          info_ss << "ProcessCode:" << current_pcode;
-          current_xs.set_info_string(info_ss.str());
+          info_ss << "ProcessCode:" << proc_code;
+          proc_xs.set_info_string(info_ss.str());
 
+          // Now we figure out if the proc_code process shares the cross-section
+          // stored in in proc_xs with any other process codes
 
-          // Now we figure out if the current_pcode process shares the cross-section
-          // stored in in current_xs with any other process codes
-
-          // Loop over *all* entries (process code <--> PID pair) in the multimap Dep::ActiveProcessCodeToPIDPairsMap
-          for (auto mm_it = Dep::ActiveProcessCodeToPIDPairsMap->begin(); mm_it != Dep::ActiveProcessCodeToPIDPairsMap->end(); ++mm_it)
+          // Loop over *all* entries (process code <--> PID pair) in the multimap all_process_codes_to_PID_pairs
+          for (auto mm_it = all_process_codes_to_PID_pairs.begin(); mm_it != all_process_codes_to_PID_pairs.end(); ++mm_it)
           {
             // Extract the process code (pc) and PID pair (pp)
             int pc = mm_it->first;
             const iipair& pp = mm_it->second;
 
-            if (pc == current_pcode) continue;
+            if (pc == proc_code) continue;
 
             // @todo What's the right choice here?
             // // Don't add more copies of the same process code! ...Or should we?
-            // if(std::find(current_xs.processes_sharing_xsec().begin(), current_xs.processes_sharing_xsec().end(), pc) != current_xs.processes_sharing_xsec().end()) 
+            // if(std::find(proc_xs.processes_sharing_xsec().begin(), proc_xs.processes_sharing_xsec().end(), pc) != proc_xs.processes_sharing_xsec().end()) 
 
-            // Check if the PID pair pp mathces one of the PID pairs for the current_pcode process
-            if(std::find(current_xs.contributing_PID_pairs().begin(), current_xs.contributing_PID_pairs().end(), pp) != current_xs.contributing_PID_pairs().end()) 
+            // Check if the PID pair pp mathces one of the PID pairs for the proc_code process
+            if(std::find(proc_xs.related_PID_pairs().begin(), proc_xs.related_PID_pairs().end(), pp) != proc_xs.related_PID_pairs().end()) 
             {
               // Check that pc is itself in one of the active processes, i.e. listed in Dep::ActiveProcessCodes
               if(std::find(Dep::ActiveProcessCodes->begin(), Dep::ActiveProcessCodes->end(), pc) != Dep::ActiveProcessCodes->end())  
               {
-                // Add pc to the list of processes that share cross-section with current_pcode
-                current_xs.add_process_sharing_xsec(pc);
+                // Add pc to the list of processes that share cross-section with proc_code
+                proc_xs.add_process_sharing_xsec(pc);
               }
               else
               {
                 std::stringstream errmsg_ss;
-                errmsg_ss << "For correct cross-section scaling of collider process " << current_pcode;
+                errmsg_ss << "For correct cross-section scaling of collider process " << proc_code;
                 errmsg_ss << ", process " << pc << " must also be activated. Please check your collider settings.";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
               }
             }
           }
 
-          // Store current_xs in the shared_result map
-          shared_result[current_pcode] = current_xs;
+          // Store proc_xs in the shared_result map
+          shared_result[proc_code] = proc_xs;
         }
 
         // Let thread 0 return the correct result already after iteration XSEC_CALCULATION

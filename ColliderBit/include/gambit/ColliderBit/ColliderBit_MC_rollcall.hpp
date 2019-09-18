@@ -157,8 +157,6 @@
   #undef CAPABILITY 
 
 
-// _Anders
-
   /// A map between Pythia process codes and cross-sections
   #define CAPABILITY ProcessCrossSectionsMap
   START_CAPABILITY
@@ -168,8 +166,6 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ActiveProcessCodes, std::vector<int>)
     DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_iipair)
-    // _Anders 
-    // DEPENDENCY(PIDPairCrossSectionFunc, PIDPairCrossSectionFuncType)
     DEPENDENCY(PIDPairCrossSectionsMap, map_iipair_PID_pair_xsec) 
     #undef FUNCTION
 

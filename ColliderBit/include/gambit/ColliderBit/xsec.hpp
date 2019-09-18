@@ -144,7 +144,7 @@ namespace Gambit
 
 
 
-    /// A class for holding a the cross-section of a single Pythia process (identified by the Pythia process code)
+    /// A class for holding the cross-section of a single Pythia process (identified by the Pythia process code)
     class process_xsec_container : public base_xsec_container
     {
 
@@ -181,18 +181,68 @@ namespace Gambit
         /// Add a process code to the list of processes sharing this cross-section 
         void add_process_sharing_xsec(int);
 
-        /// Return the list of PID pairs contributing to this cross-section
-        const vec_iipair& contributing_PID_pairs() const; 
+        /// Return the list of PID pairs related to this cross-section
+        const vec_iipair& related_PID_pairs() const; 
 
-        /// Add a PID pair to the list of PID pairs contributing to this cross-section
-        void add_contributing_PID_pair(iipair); 
+        /// Add a PID pair to the list of processes related to this cross-section
+        void add_related_PID_pair(iipair); 
 
       private:
         int _process_code;
         std::vector<int> _processes_sharing_xsec;
-        vec_iipair _contributing_PID_pairs;
+        vec_iipair _related_PID_pairs;
     };
 
+
+
+    /// A class for holding the production cross-section for final state identified by the pair of PID codes
+    class PID_pair_xsec_container : public base_xsec_container
+    {
+
+      public:
+        /// Useful typedefs
+        typedef std::pair<int,int> iipair;
+        typedef std::vector<std::pair<int,int>> vec_iipair;
+
+        PID_pair_xsec_container();
+        virtual ~PID_pair_xsec_container() { }
+
+        /// Reset this instance for reuse.
+        void reset();
+
+        /// Average cross-sections and combine errors.
+        void average_xsec(double, double);
+        void average_xsec(const PID_pair_xsec_container&);
+
+        /// Sum cross-sections and add errors in quadrature.
+        void sum_xsecs(double, double);
+        void sum_xsecs(const PID_pair_xsec_container&);
+
+        /// Return the process code
+        iipair PID_pair() const;
+
+        /// Set the process code
+        void set_PID_pair(iipair);
+
+        /// Return the list of PID pairs that share this cross-section 
+        /// (This is due to the many-to-many mapping between Pythia process 
+        /// codes and the PID pairs we use as basis for external cross-section calculations)
+        const vec_iipair& PID_pairs_sharing_xsec() const;
+
+        /// Add a PID pair to the list of PID pairs sharing this cross-section 
+        void add_PID_pair_sharing_xsec(iipair);
+
+        /// Return the list of process codes related to this cross-section
+        const std::vector<int>& related_processes() const; 
+
+        /// Add a process code to the list of processes related to this cross-section
+        void add_related_process(int); 
+
+      private:
+        iipair _PID_pair;
+        vec_iipair _PID_pairs_sharing_xsec;
+        std::vector<int> _related_processes;
+    };
 
   }
 }

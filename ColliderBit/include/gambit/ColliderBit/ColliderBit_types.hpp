@@ -109,12 +109,10 @@ namespace Gambit
     typedef std::multimap<int,std::pair<int,int>> multimap_int_iipair;
     typedef std::map<int,xsec_container> map_int_xsec;
     typedef std::map<int,process_xsec_container> map_int_process_xsec;
-    // _Anders: Update this
-    typedef std::map<std::pair<int,int>,xsec_container> map_iipair_PID_pair_xsec;
-    // typedef std::map<std::pair<int,int>,PID_pair_xsec_container> map_iipair_PID_pair_xsec;
+    typedef std::map<std::pair<int,int>,PID_pair_xsec_container> map_iipair_PID_pair_xsec;
 
     /// @brief Typedef for a std::function that takes a PID pair (iipair) as input and returns an xsec_container instance
-    /// _Anders: Not sure we'll neet this now that we're giving up the PIDPairCrossSectionFunc capability...
+    /// _Anders: Not sure we'll need this now that we're giving up the PIDPairCrossSectionFunc capability...
     typedef std::function<xsec_container(std::pair<int,int>)> PIDPairCrossSectionFuncType;
 
     /// @brief Typedef for a std::function that sets the weight for the input HEPUtils::Event
