@@ -39,8 +39,9 @@ def sarah_part_to_gum_part(sarah_bsm):
     for i in xrange(len(sarah_bsm)):
         part = sarah_bsm[i]            
         bsm_list.append(Particle(part.name(), part.antiname(),
-        						 part.spinX2(), part.pdg(), 
-                                 part.mass()))
+        			 part.spinX2(), part.pdg(), 
+                                 part.mass(), part.alt_name(),
+                                 part.alt_mass()))
     
     return bsm_list, add_higgs
 

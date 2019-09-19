@@ -1040,7 +1040,27 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "(*MFu2)(i) = pow((*MFu)(i),2);\n"\
       "}\n"\
 
-    # TODO: Fill model dependent particle masses
+    for particle in particles:
+      print particle.name, particle.mass, particle.alt_name, particle.alt_mass_name
+      mass = re.sub("\d","",particle.alt_mass_name)
+      index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
+      print mass, index
+      towrite += "(*" + mass + ")"
+      if index != "" :
+        towrite += "(" + str(index) + ")"
+      # TODO: this is not the mass name we really want, we want the one in the spectrum
+      towrite += ' = spectrum.get(Par::Pole_Mass, "' + mass + '"'
+      if index != "" :
+        towrite += "," + str(index)
+      towrite += ");\n"
+      towrite += "(*" + mass + "2)"
+      if index > 0 :
+        towrite += "(" + str(index) + ")"
+      towrite += " = pow((*" + mass + ")"
+      if index > 0 :
+        towrite += "(" + str(index) + ")"
+      towrite += ",2);\n"
+        
 
     towrite += "*MVWm = spectrum.get(Par::Pole_Mass, \"W-\");\n"\
       "*MVWm2 = pow(*MVWm,2);\n"\
@@ -1055,11 +1075,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     for p in parameters:
       print p.name, p.tag, p.shape, p.block, p.index
-
-    print "\nparticles:"
-
-    for p in particles:
-      print p.name, p.mass, p.PDG_code
 
     towrite += "// Other parameters\n"
 

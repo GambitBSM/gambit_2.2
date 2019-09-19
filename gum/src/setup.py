@@ -13,13 +13,15 @@ class Particle:
     Particle class for internal use in GUM.
     """
 
-    def __init__(self, name, antiname, spinx2, pdg_code, mass_name):
+    def __init__(self, name, antiname, spinx2, pdg_code, mass_name, alt_name = None, alt_mass_name = None):
 
         self.name = name
         self.antiname = antiname
         self.spinX2 = spinx2
         self.PDG_code = pdg_code
         self.mass = mass_name
+        self.alt_name = alt_name
+        self.alt_mass_name = alt_mass_name
 
         self.own_conjugate = None
         if (name == antiname):

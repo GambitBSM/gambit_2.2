@@ -283,8 +283,8 @@ if args.file:
 
     if output_opts.spheno:
 
-        # SARAH removes hyphens for .f90 files...
-        clean_model_name = gum.name.replace('-','')
+        # SARAH removes hyphens and underscores for .f90 files...
+        clean_model_name = gum.name.replace('-','').replace('_','')
 
         # Move SPheno files from SARAH to Outputs.
         copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR, outputs.get_sph())

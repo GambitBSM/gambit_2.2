@@ -145,35 +145,35 @@ namespace GUM
 
     std::cout << "Extracting particles from SARAH model." << std::endl;
 
-    // Command to get a list with (most) particle info.
-    std::string command = "pl = ParticleDefinitions[EWSB];";
-    send_to_math(command);
+    std::string command = "";
 
-    // Find out how many particles we have to get.
-    command = "Length[pl]";
-    send_to_math(command);
-
-    int lenpl;
-
-    if (!WSGetInteger(link, &lenpl))
-        throw std::runtime_error("SARAH Error: Error getting 'Length[PartList]' from WSTP.");
-
-    std::cout << "Found " << lenpl << " particle sets." << std::endl;
-
-    // Get to parsing this monster.
-    for (int i=0; i<lenpl; i++)
+    try
     {
 
+      // Command to get a list with (most) particle info.
+      command = "pl = ParticleDefinitions[EWSB];";
+      send_to_math(command);
+
+      // Find out how many particles we have to get.
+      command = "Length[pl]";
+      send_to_math(command);
+
+      int lenpl;
+      get_from_math(lenpl);
+
+
+      std::cout << "Found " << lenpl << " particle sets." << std::endl;
+
+      // Get to parsing this monster.
+      for (int i=0; i<lenpl; i++)
+      {
+      
         // First things first, check to see if we are dealing with multiplets.
         // e.g., l = (e, mu, tau).
         int numelements;
         command = "Length[getPDG[pl[[" + std::to_string(i+1) + ", 1]]]]";
         send_to_math(command);
-        if (!WSGetInteger(link, &numelements))
-        {
-            std::cout << "Error getting number of elements from WSTP." << std::endl;
-            return;
-        }
+        get_from_math(numelements);
 
         // If there's no associated PDG code.
         if (numelements == 0)
@@ -184,9 +184,10 @@ namespace GUM
         for (int j=0; j<numelements; j++)
         {
             // Initialise all properties we wish to find out about a particle.
-            const char* name;
+            std::string name;
+            std::string alt_name;
             std::string outputname;
-            const char* antiname;
+            std::string antiname;
             std::string antioutputname;
             std::string mass;
             int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
@@ -200,72 +201,45 @@ namespace GUM
             // Assume a particle is SC unless we spot it.
             bool self_conjugate = true;
 
+            // Get SARAH name of the particle
+            send_to_math("pl[[" + std::to_string(i+1) + ", 1]]");
+            get_from_math(alt_name);
+
+            // Get the PDG
             command = "Part[getPDG[pl[[" + std::to_string(i+1) + ", 1]]], " + std::to_string(j+1) + "]";
             send_to_math(command);
-
-            if (!WSGetInteger(link, &pdg))
-            {
-                std::cout << "Error getting PDG code from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(pdg);
 
             // If it's got a PDG of 0 it's not a physical particle. Don't care about it.
             if (pdg == 0) { continue; }
 
             command = "Length[getOutputName[pl[[" + std::to_string(i+1) + ", 1]]]]";
             send_to_math(command);
-
-            if (!WSGetInteger(link, &num))
-            {
-                std::cout << "Error getting length of OutputNames." << std::endl;
-                return;
-            }
+            get_from_math(num);
 
             if (num == 2)
             {
                 self_conjugate = false;
                 command = "Part[getOutputName[pl[[" + std::to_string(i+1) + ", 1]]], 1]";
                 send_to_math(command);
+                get_from_math(name);
 
-                if (!WSGetString(link, &name))
-                {
-                    std::cerr << "Error getting particle name." << std::endl;
-                    return;
-                }
                 command = "Part[getOutputName[pl[[" + std::to_string(i+1) + ", 1]]], 2]";
                 send_to_math(command);
-
-                if (!WSGetString(link, &antiname))
-                {
-                    std::cerr << "Error getting particle antiname." << std::endl;
-                    return;
-                }
+                get_from_math(antiname);
             }
             else if (num == 0)
             {
                 command = "getOutputName[pl[[" + std::to_string(i+1) + ", 1]]]";
                 send_to_math(command);
-
-                if (!WSGetString(link, &name))
-                {
-                    std::cerr << "Error getting particle name." << std::endl;
-                    return;
-                }
+                get_from_math(name);
 
                 // Probe to see if it is self-conjugate
                 command = "TrueQ[pl[[" + std::to_string(i+1) + ", 1]] == conj[pl[[" + std::to_string(i+1) + ", 1]]]]";
                 send_to_math(command);
-
-                const char* is_sc;
-                if (!WSGetString(link, &is_sc))
-                {
-                    std::cerr << "Error getting self-conjugate status " 
-                              << "for particle " 
-                              << std::string(name) << "."
-                              << std::endl;
-                    return;
-                }
-                if (strcmp(is_sc, "True"))
+                bool is_sc;
+                get_from_math(is_sc);
+                if (is_sc)
                 {
                     self_conjugate = false;
                     capitalise = true;
@@ -281,7 +255,8 @@ namespace GUM
 
             if (numelements > 1)
             {
-                outputname = std::string(name) + std::to_string(j+1);
+                outputname = name + std::to_string(j+1);
+                alt_name = alt_name + std::to_string(j+1);
                 if (not self_conjugate && capitalise)
                 {
                     antioutputname = outputname;
@@ -292,14 +267,14 @@ namespace GUM
             else
             {
 
-                outputname = std::string(name);
+                outputname = name;
                 if (not self_conjugate)
                 {
-                    antioutputname = std::string(antiname);
+                    antioutputname = antiname;
                 }
                 else
                 {
-                    antioutputname = std::string(name);
+                    antioutputname = name;
                 }
             }
 
@@ -316,15 +291,22 @@ namespace GUM
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(outputname), spinX2, chargeX3, color, std::string(outputname), SM, mass, std::string(antioutputname));
+            Particle particle(pdg, outputname, spinX2, chargeX3, color, SM, mass, antioutputname, alt_name);
             partlist.push_back(particle);
 
         }
 
+      }
+
+      std::cout << "Done." << std::endl;
+
     }
-
-    std::cout << "Done." << std::endl;
-
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
+    }
   }
 
   // Get parameters list
@@ -333,27 +315,26 @@ namespace GUM
 
     std::cout << "Extracting parameters from SARAH model." << std::endl;
 
-    // Get list of parameters
-    std::string command = "pd = ParameterDefinitions;";
-    send_to_math(command);
+    std::string command = "";
 
-    // Find out how many parameters we have to get.
-    command = "Length[pd]";
-    send_to_math(command);
-
-    int lenpl;
-    try { get_from_math(lenpl); }
-    catch(std::runtime_error &e)
+    try
     {
-      std::stringstream ss; 
-      ss << e.what() << ": Error getting 'Length[ParamList]' from WSTP";
-      throw std::runtime_error(ss.str());
-    }
 
-    std::cout << "Found " << lenpl << " parameter sets." << std::endl;
+      // Get list of parameters
+      command = "pd = ParameterDefinitions;";
+      send_to_math(command);
 
-    for (int i=0; i<lenpl; i++)
-    {
+      // Find out how many parameters we have to get.
+      command = "Length[pd]";
+      send_to_math(command);
+
+      int lenpl;
+      get_from_math(lenpl);
+
+      std::cout << "Found " << lenpl << " parameter sets." << std::endl;
+
+      for (int i=0; i<lenpl; i++)
+      {
         std::string block;
         std::string paramname;
         std::string alt_paramname;
@@ -371,16 +352,7 @@ namespace GUM
 
         // Get the parameter name as it is known in SARAH. This
         // might change later.
-        try { get_from_math(paramname); }
-        catch(std::runtime_error &e)
-        {
-            std::stringstream ss;
-            ss << e.what()
-               << ": Error getting the parameter name "
-               << "at position " + i+1 
-               << "; please check your .m file.";
-            throw std::runtime_error(ss.str());
-        }
+        get_from_math(paramname);
 
         command = "Length[pd[[" + std::to_string(i+1) + ",2]]]";
         send_to_math(command);
@@ -397,50 +369,29 @@ namespace GUM
 
         // Does the parameter depend on some other combination
         // of parameters?
-        try
-        {
-          command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
-          send_to_math(command);
-          get_from_math(entry);
-        
-          // If it has a dependence -- not interested. Bin it.
-          if (entry != "DependenceNum" and entry != "None") continue;
+        command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+        send_to_math(command);
+        get_from_math(entry);
+      
+        // If it has a dependence -- not interested. Bin it.
+        if (entry != "DependenceNum" and entry != "None") continue;
 
-          // Same with DependenceSPheno
-          command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
-          send_to_math(command);
-          get_from_math(entry);
-          if (entry != "DependenceSPheno" and entry != "None") continue;
+        // Same with DependenceSPheno
+        command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+        send_to_math(command);
+        get_from_math(entry);
+        if (entry != "DependenceSPheno" and entry != "None") continue;
 
-          // Same with just Dependence
-          command = "Dependence /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
-          send_to_math(command); 
-          get_from_math(entry);
-          if (entry != "Dependence" and entry != "None") continue;
-        }
-        catch(std::runtime_error &e)
-        {
-            std::stringstream ss;
-            ss << e.what()
-               << ": Error querying Dependence for "
-               << i+1 << " from WSTP "
-               << "for the SARAH parameter " << paramname;
-            throw std::runtime_error(ss.str());
-        }
+        // Same with just Dependence
+        command = "Dependence /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+        send_to_math(command); 
+        get_from_math(entry);
+        if (entry != "Dependence" and entry != "None") continue;
 
         // Get block name
         command = "Head[LesHouches /. pd[[" + std::to_string(i+1) + ",2]]]";
         send_to_math(command);
-        try { get_from_math(entry); }
-        catch(std::runtime_error &e)
-        {
-            std::stringstream ss;
-            ss << e.what()
-               << ": Error querying LesHouches entry "
-               << i+1 << " from WSTP "
-               << "for the SARAH parameter " << paramname;
-            throw std::runtime_error(ss.str());
-        }
+        get_from_math(entry);
 
         // If we have a list, then there's a blockname and an index.
         if (entry == "List") 
@@ -448,16 +399,7 @@ namespace GUM
             command = "LesHouches /. pd[[" + std::to_string(i+1) + ",2]]";
             send_to_math(command);
             std::vector<std::string> leshouches;
-            try { get_from_math(leshouches); }             
-            catch(std::runtime_error &e)
-            {
-                std::stringstream ss;
-                ss << e.what() 
-                   << ": Error querying LesHouches info from WSTP "
-                   << "for the SARAH parameter " 
-                   << paramname << " with index" << i+1;
-                throw std::runtime_error(ss.str());
-            }
+            get_from_math(leshouches);
 
             // blockname
             block = leshouches[0];
@@ -470,16 +412,8 @@ namespace GUM
         // name than the internal SARAH name? If so, use it.
         command = "OutputName /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
         send_to_math(command);
-        try { get_from_math(entry); }
-        catch(std::runtime_error &e)
-        {
-            std::stringstream ss;
-            ss << e.what()
-               << ": Error querying OutputName for "
-               << i+1 << " from WSTP "
-               << "for the SARAH parameter " << paramname;
-            throw std::runtime_error(ss.str());
-        }
+        get_from_math(entry);
+
         // If it has a different output name to 
         // internal, we'd better use it, seeing as GAMBIT
         // is... output, I guess.
@@ -496,6 +430,14 @@ namespace GUM
             Parameter parameter(paramname, block, index, alt_paramname);
             paramlist.push_back(parameter);
         }
+
+      }
+    }
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
     }
   }
 
@@ -589,8 +531,26 @@ namespace GUM
             parameters.erase(param+1);
           }
     }
-        
+
   }
+
+  // Add the names of spheno masses to all particles
+  void SARAH::add_SPheno_mass_names(std::vector<Particle> &particles)
+  {
+    std::cout << "Adding SPheno masses" << std::endl;
+
+    for (auto part = particles.begin(); part != particles.end(); part++)
+    {
+      std::string sarah_mass;
+
+      send_to_math("SPhenoMass[" + part->alt_name() + "]");
+      get_from_math(sarah_mass);
+
+      Particle temp_part(part->pdg(), part->name(), part->spinX2(), part->chargeX3(), part->color(), part->SM(), part->mass(), part->antiname(), part->alt_name(), sarah_mass);
+      (*part) =  temp_part;
+    }
+  }
+ 
 
   // Write CalcHEP output.
   void SARAH::write_ch_output()
@@ -632,6 +592,7 @@ namespace GUM
       std::string options;
       // TODO: options:
       // - InputFile (default $MODEL/SPheno.m)
+      // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
       // TODO: temp hack to make it faster
       options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
 
@@ -652,7 +613,6 @@ namespace GUM
       // TODO: options:
       // - ComplexParameters (automatic?)
       // - Scheme (DRbar for SUSY, MSbar for non-SUSY)  
-      options = "Version->\"++\"";
 
       // Write output.
       std::string command = "MakeVevacious[" + options + "];";
@@ -724,6 +684,9 @@ namespace GUM
         // Get the parameters used to solve tadpoles and removed them from the list
         model.get_tadpoles(paramlist);
 
+        // Add SPheno mass names for all particles
+        model.add_SPheno_mass_names(partlist);
+
         // Location of SPheno files
         std::string sphdir = outputdir + "SPheno";
         std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
@@ -734,7 +697,7 @@ namespace GUM
       if (std::find(backends.begin(), backends.end(), "vevacious") != backends.end() )
       {
         model.write_vevacious_output();        // Location of Vevacious (vin) files
-        std::string vevdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/Vevacious";
+        std::string vevdir = outputdir + "Vevacious";
         std::replace(vevdir.begin(), vevdir.end(), ' ', '-');
         outputs.set_vev(vevdir);
       }
@@ -754,7 +717,7 @@ BOOST_PYTHON_MODULE(libsarah)
 {
   using namespace boost::python;
 
-  class_<Particle>("SARAHParticle", init<int, std::string, int, int, int, std::string, bool, std::string, std::string>())
+  class_<Particle>("SARAHParticle", init<int, std::string, int, int, int, bool, std::string, std::string, std::string, std::string>())
     .def("pdg",      &Particle::pdg)
     .def("name",     &Particle::name)
     .def("SM",       &Particle::SM)
@@ -764,6 +727,8 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("mass",     &Particle::mass)
     .def("SC",       &Particle::SC)
     .def("antiname", &Particle::antiname)
+    .def("alt_name", &Particle::alt_name)
+    .def("alt_mass", &Particle::alt_mass)
     ;
 
   class_<Parameter>("SARAHParameter", init<std::string, std::string, int, std::string, std::string >())

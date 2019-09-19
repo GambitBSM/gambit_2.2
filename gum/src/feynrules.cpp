@@ -401,7 +401,7 @@ namespace GUM
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, std::string(name), spinX2, chargeX3, color, std::string(fullname), SM, mass, std::string(antiname));
+            Particle particle(pdg, std::string(name), spinX2, chargeX3, color, SM, mass, std::string(antiname), std::string(fullname));
             partlist.push_back(particle);
         }
 
@@ -592,7 +592,7 @@ BOOST_PYTHON_MODULE(libfr)
 {
   using namespace boost::python;
 
-  class_<Particle>("FRParticle", init<int, std::string, int, int, int, std::string, bool, std::string, std::string>())
+  class_<Particle>("FRParticle", init<int, std::string, int, int, int, bool, std::string, std::string, std::string>())
     .def("pdg",      &Particle::pdg)
     .def("name",     &Particle::name)
     .def("SM",       &Particle::SM)

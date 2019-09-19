@@ -55,6 +55,9 @@ namespace GUM
       // Get boundary conditions
       void get_boundary_conditions(std::vector<Parameter>&);
 
+      // Add SPheno masses
+      void add_SPheno_mass_names(std::vector<Particle>&);
+
       // Get tadpoles
       void get_tadpoles(std::vector<Parameter>&);
     

@@ -605,7 +605,7 @@ def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
     for i in xrange(len(bsm_particle_list)):
         p = bsm_particle_list[i]
 
-        block = ""
+        block = "MASS"
         index = None
 
         # Check to see if the parameter name is in the list of model parameters currently.
@@ -625,7 +625,7 @@ def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
                 p.mass = "mH"
 
         # Add the new parameter to the list of model parameters.
-        x = SpectrumParameter(pdg_to_particle(p.PDG_code, gambit_pdgs),
+        x = SpectrumParameter("M"+pdg_to_particle(p.PDG_code, gambit_pdgs),
                               "Pole_Mass", gb_input=p.mass, block=block, index=index)
         parameters.append(x)
 
