@@ -156,6 +156,9 @@ if args.file:
         parameters = sarah_params(paramlist, add_higgs)
 
 
+    # Get the parameters sorted by block
+    blockparams = sort_params_by_block(parameters)
+
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
     # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.
     if output_opts.ch:
@@ -312,10 +315,6 @@ if args.file:
         spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(clean_model_name)
 
 
-    # Enough for now.
-    sys.exit()
-    
-
     """
     CALCHEP
     """
@@ -461,7 +460,13 @@ if args.file:
     """
 
     if output_opts.vev:
-        write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, model_parameters)
+
+        # Currently require SPheno output for vevacious since we need MINPAR etc. 
+        # TODO factorise this a bit
+        if not output_opts.spheno:
+            raise GumError(("Currently gum needs SPheno output to be able to produce Vevacious"
+                            " output. Please change your .gum file."))
+        write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, blockparams)
 
 
     """

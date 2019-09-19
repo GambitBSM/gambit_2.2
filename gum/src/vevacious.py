@@ -26,7 +26,7 @@ def copy_vevacious_files(model_name, vevdir):
     shutil.copyfile(vevdir + "/" + file[0], gb_target + "/" + model_name + ".vin")
     shutil.copyfile(vevdir + "/ScaleAndBlock.xml", gb_target + "/ScaleAndBlock.xml")
 
-def write_vevacious_src(model_name, vevdir, spectrum, parameters):
+def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
     """
     Writes source code for a new vevacious model.
     To go in SpecBit/src/SpecBit_VS.cpp.
@@ -131,66 +131,37 @@ def write_vevacious_src(model_name, vevdir, spectrum, parameters):
 
     """
 
-    for param in parameters:
+    # Dict of blocks - add the LHA reading routines to each
+    for block, contents in params_by_block.iteritems():
 
-        print param.name, param.block, param.index
+        towrite += write_readlhablock(block, contents)
 
-        # std::vector<std::pair<int,double>> gaugecouplings = 
-        # { { 1 , SLHAea::to<double>(slhaea.at("GAUGE").at(1).at(1))  }, { 2, SLHAea::to<double>(slhaea.at("GAUGE").at(2).at(1)) }, { 3, SLHAea::to<double>(slhaea.at("GAUGE").at(3).at(1)) } };
-        
-        # vevaciousPlusPlus.ReadLhaBlock( "GAUGE", scale , gaugecouplings, 1 );
+    towrite += "}\n"
 
-        # std::vector<std::pair<int,double>> Hmix = { { 1 , SLHAea::to<double>(slhaea.at("HMIX").at(1).at(1))},
-        #                       { 101, SLHAea::to<double>(slhaea.at("HMIX").at(101).at(1))},
-        #                       { 102, SLHAea::to<double>(slhaea.at("HMIX").at(102).at(1))},
-        #                       { 103, SLHAea::to<double>(slhaea.at("HMIX").at(103).at(1))},
-        #                       { 3, SLHAea::to<double>(slhaea.at("HMIX").at(3).at(1))}
-        #                       };
+    # todo: the lifetime routines -- hopefully can be factorised on the gambit side. 
+    # if not, add them here.
 
-        # vevaciousPlusPlus.ReadLhaBlock( "HMIX", scale , Hmix, 1 );
-      
-       
-        # std::vector<std::pair<int,double>> minpar = {  
-        #                       { 3, SLHAea::to<double>(slhaea.at("MINPAR").at(3).at(1))}
-        #                       };
-                            
-        # vevaciousPlusPlus.ReadLhaBlock( "MINPAR", scale , minpar, 1 );
-
-        #     std::vector<std::pair<int,double>> msu2 = { { 11 , SLHAea::to<double>(slhaea.at("MSU2").at(1,1).at(2))},
-        #                                                 { 12, SLHAea::to<double>(slhaea.at("MSU2").at(1,2).at(2))},
-        #                                                 { 13, SLHAea::to<double>(slhaea.at("MSU2").at(1,3).at(2))},
-        #                                                 { 21, SLHAea::to<double>(slhaea.at("MSU2").at(2,1).at(2))},
-        #                                                 { 22, SLHAea::to<double>(slhaea.at("MSU2").at(2,2).at(2))},
-        #                                                 { 23, SLHAea::to<double>(slhaea.at("MSU2").at(2,3).at(2))},
-        #                                                 { 31, SLHAea::to<double>(slhaea.at("MSU2").at(3,1).at(2))},
-        #                                                 { 32, SLHAea::to<double>(slhaea.at("MSU2").at(3,2).at(2))},
-        #                                                 { 33, SLHAea::to<double>(slhaea.at("MSU2").at(3,3).at(2))}
-        #     };
-                              
-        # vevaciousPlusPlus.ReadLhaBlock( "MSU2", scale , msu2, 2 );
+    return indent(towrite)
 
 
-def write_readlhablock(block, shape, entries=[]):
+def write_readlhablock(block, contents):
     """
     TODO
     Writes the ReadLhaBlock routine for a given block.
     """
+    
+    # Size of padding. Let's be aesthetically pleasing here.
+    pad = 38 + len(block)
+    entries = []
 
-    towrite = ""
-    pad = 40 + len(block)
+    towrite = "  std::vector<std::pair<int,double>> {0} = {{ ".format(block)
 
     # Matrix case
-    if shape.startswith('m'):
+    if "matrix" in contents:
 
-        # The size of the matrix
-        size = int(shape.split('x')[-1])
-
-        towrite += (
-                "std::vector<std::pair<int,double>> {0} = {{ "
-        ).format(block)
+        size = int( contents["matrix"].split('x')[0] )
 
         # Now do each element of the matrix
-        entries = []
         for i in range(size):
             for j in range(size):
                 entry = (
@@ -198,9 +169,25 @@ def write_readlhablock(block, shape, entries=[]):
                     ".at({0},{1}),at(2))}}"
                 ).format(i+1, j+1, block)
                 entries.append(entry)
-        
-        towrite += ",\n{:>{width}}".format("",width=pad).join(entries) +"\n};\n"
-        towrite += "vevaciousPlusPlus.ReadLhaBlock(\"{0}\", scale, {0}, 2);\n".format(block)
 
+        # Wrap it up.
+        towrite += ",\n{:>{width}}".format("",width=pad).join(entries) +"\n};\n"
+        towrite += "vevaciousPlusPlus.ReadLhaBlock(\"{0}\", scale, {0}, 2);\n\n".format(block)
+
+    
+    # Otherwise, piecewise
+    else:
+
+        for index, name in contents.iteritems():
+            entry = (
+                    "{{ {0}, SLHAea::to<double>(slhaea.at(\"{1}\")"
+                    ".at({0}),at(1))}}"
+            ).format(index, name)
+            entries.append(entry)      
+
+        # Wrap it up.
+        towrite += ",\n{:>{width}}".format("",width=pad).join(entries) +"\n};\n"
+        towrite += "vevaciousPlusPlus.ReadLhaBlock(\"{0}\", scale, {0}, 1);\n\n".format(block)
+    
     return towrite
 

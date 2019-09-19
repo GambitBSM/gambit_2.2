@@ -1070,12 +1070,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "// Mixings\n"
 
     # TODO: Fill model dependent mixings
-
-    print "\nparameters:"
-
-    for p in parameters:
-      print p.name, p.tag, p.shape, p.block, p.index
-
     towrite += "// Other parameters\n"
 
     # TODO: Fill model dependent other parameters

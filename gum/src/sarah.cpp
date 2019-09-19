@@ -612,7 +612,8 @@ namespace GUM
       std::string options;
       // TODO: options:
       // - ComplexParameters (automatic?)
-      // - Scheme (DRbar for SUSY, MSbar for non-SUSY)  
+      // - Scheme (DRbar for SUSY, MSbar for non-SUSY)
+      options = "Version->\"++\"";
 
       // Write output.
       std::string command = "MakeVevacious[" + options + "];";
@@ -687,6 +688,9 @@ namespace GUM
         // Add SPheno mass names for all particles
         model.add_SPheno_mass_names(partlist);
 
+        // TODO: 
+        // need to extract names of mixing matrices present: ZH, ZA, ZEL, etc., and their blocks.
+
         // Location of SPheno files
         std::string sphdir = outputdir + "SPheno";
         std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
@@ -696,8 +700,11 @@ namespace GUM
       /// Write Vevacious output
       if (std::find(backends.begin(), backends.end(), "vevacious") != backends.end() )
       {
-        model.write_vevacious_output();        // Location of Vevacious (vin) files
-        std::string vevdir = outputdir + "Vevacious";
+        model.write_vevacious_output();        
+
+        // Location of Vevacious (.vin + .xml) files
+        // Note these do not live in the same place the other output files do.
+        std::string vevdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/Vevacious";
         std::replace(vevdir.begin(), vevdir.end(), ' ', '-');
         outputs.set_vev(vevdir);
       }
