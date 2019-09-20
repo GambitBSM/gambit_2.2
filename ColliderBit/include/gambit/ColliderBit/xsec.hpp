@@ -21,6 +21,8 @@
 #include <vector>
 #include <map>
 #include <string>
+#include "gambit/ColliderBit/PID_pair.hpp"
+
 
 #pragma once
 
@@ -149,10 +151,6 @@ namespace Gambit
     {
 
       public:
-        /// Useful typedefs
-        typedef std::pair<int,int> iipair;
-        typedef std::vector<std::pair<int,int>> vec_iipair;
-
         process_xsec_container();
         virtual ~process_xsec_container() { }
 
@@ -182,15 +180,15 @@ namespace Gambit
         void add_process_sharing_xsec(int);
 
         /// Return the list of PID pairs related to this cross-section
-        const vec_iipair& related_PID_pairs() const; 
+        const std::vector<PID_pair>& related_pid_pairs() const; 
 
         /// Add a PID pair to the list of processes related to this cross-section
-        void add_related_PID_pair(iipair); 
+        void add_related_pid_pair(PID_pair); 
 
       private:
         int _process_code;
         std::vector<int> _processes_sharing_xsec;
-        vec_iipair _related_PID_pairs;
+        std::vector<PID_pair> _related_pid_pairs;
     };
 
 
@@ -200,10 +198,6 @@ namespace Gambit
     {
 
       public:
-        /// Useful typedefs
-        typedef std::pair<int,int> iipair;
-        typedef std::vector<std::pair<int,int>> vec_iipair;
-
         PID_pair_xsec_container();
         virtual ~PID_pair_xsec_container() { }
 
@@ -218,19 +212,19 @@ namespace Gambit
         void sum_xsecs(double, double);
         void sum_xsecs(const PID_pair_xsec_container&);
 
-        /// Return the process code
-        iipair PID_pair() const;
+        /// Return the PID pair
+        const PID_pair& pid_pair() const;
 
-        /// Set the process code
-        void set_PID_pair(iipair);
+        /// Set the PID pair
+        void set_pid_pair(const PID_pair&);
 
         /// Return the list of PID pairs that share this cross-section 
         /// (This is due to the many-to-many mapping between Pythia process 
         /// codes and the PID pairs we use as basis for external cross-section calculations)
-        const vec_iipair& PID_pairs_sharing_xsec() const;
+        const std::vector<PID_pair>& pid_pairs_sharing_xsec() const;
 
         /// Add a PID pair to the list of PID pairs sharing this cross-section 
-        void add_PID_pair_sharing_xsec(iipair);
+        void add_pid_pair_sharing_xsec(PID_pair);
 
         /// Return the list of process codes related to this cross-section
         const std::vector<int>& related_processes() const; 
@@ -239,8 +233,8 @@ namespace Gambit
         void add_related_process(int); 
 
       private:
-        iipair _PID_pair;
-        vec_iipair _PID_pairs_sharing_xsec;
+        PID_pair _pid_pair;
+        std::vector<PID_pair> _pid_pairs_sharing_xsec;
         std::vector<int> _related_processes;
     };
 

@@ -140,7 +140,7 @@
   #define CAPABILITY ActiveProcessCodeToPIDPairsMap
   START_CAPABILITY
     #define FUNCTION getActiveProcessCodeToPIDPairsMap
-    START_FUNCTION(multimap_int_iipair)
+    START_FUNCTION(multimap_int_PID_pair)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ActiveProcessCodes, std::vector<int>)
     #undef FUNCTION
@@ -150,9 +150,9 @@
   #define CAPABILITY ActivePIDPairs
   START_CAPABILITY
     #define FUNCTION getPIDPairs
-    START_FUNCTION(vec_iipair)
+    START_FUNCTION(vec_PID_pair)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_iipair)
+    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_PID_pair)
     #undef FUNCTION
   #undef CAPABILITY 
 
@@ -165,8 +165,8 @@
     START_FUNCTION(map_int_process_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ActiveProcessCodes, std::vector<int>)
-    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_iipair)
-    DEPENDENCY(PIDPairCrossSectionsMap, map_iipair_PID_pair_xsec) 
+    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_PID_pair)
+    DEPENDENCY(PIDPairCrossSectionsMap, map_PID_pair_PID_pair_xsec) 
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -178,8 +178,9 @@
 
     /// Test function for provding PIDPairCrossSectionsMap 
     #define FUNCTION getPIDPairCrossSectionsMap_testing
-    START_FUNCTION(map_iipair_PID_pair_xsec)
+    START_FUNCTION(map_PID_pair_PID_pair_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActivePIDPairs, vec_PID_pair)
     #undef FUNCTION
 
   #undef CAPABILITY

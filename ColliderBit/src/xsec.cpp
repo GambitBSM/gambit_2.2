@@ -284,7 +284,7 @@ namespace Gambit
       base_xsec_container::base_xsec_container(),
       _process_code(-1),
       _processes_sharing_xsec(std::vector<int>()),
-      _related_PID_pairs(vec_iipair())
+      _related_pid_pairs(std::vector<PID_pair>())
     { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
@@ -293,7 +293,7 @@ namespace Gambit
       base_xsec_container::reset();
       _process_code = -1;
       _processes_sharing_xsec.clear();
-      _related_PID_pairs.clear();
+      _related_pid_pairs.clear();
     }
 
     /// Average cross-sections and combine errors.
@@ -309,7 +309,7 @@ namespace Gambit
       // Check that we are working with the same process code
       assert(other.process_code() == _process_code);
       // @todo Should we also check the content of the vectors 
-      //       _processes_sharing_xsec and _related_PID_pairs?
+      //       _processes_sharing_xsec and _related_pid_pairs?
       process_xsec_container::average_xsec(other.xsec(), other.xsec_err());
     }
 
@@ -326,7 +326,7 @@ namespace Gambit
       // Check that we are working with the same process code
       assert(other.process_code() == _process_code);
       // @todo Should we also check the content of the vectors 
-      //       _processes_sharing_xsec and _related_PID_pairs?
+      //       _processes_sharing_xsec and _related_pid_pairs?
       process_xsec_container::sum_xsecs(other.xsec(), other.xsec_err());
     }
 
@@ -350,12 +350,12 @@ namespace Gambit
     { _processes_sharing_xsec.push_back(process_code_in); }
 
     /// Return the list of PID pairs related to this cross-section
-    const process_xsec_container::vec_iipair& process_xsec_container::related_PID_pairs() const 
-    { return _related_PID_pairs; } 
+    const std::vector<PID_pair>& process_xsec_container::related_pid_pairs() const 
+    { return _related_pid_pairs; } 
 
     /// Add a PID pair to the list of PID pairs related to this cross-section
-    void process_xsec_container::add_related_PID_pair(iipair pid_pair_in) 
-    { _related_PID_pairs.push_back(pid_pair_in); }  
+    void process_xsec_container::add_related_pid_pair(PID_pair pid_pair_in) 
+    { _related_pid_pairs.push_back(pid_pair_in); }  
 
 
 
@@ -366,8 +366,8 @@ namespace Gambit
     /// Constructor
     PID_pair_xsec_container::PID_pair_xsec_container() : 
       base_xsec_container::base_xsec_container(),
-      _PID_pair(iipair({0,0})),
-      _PID_pairs_sharing_xsec(vec_iipair()),
+      _pid_pair(PID_pair()),
+      _pid_pairs_sharing_xsec(std::vector<PID_pair>()),
       _related_processes(std::vector<int>())
     { }
 
@@ -375,8 +375,8 @@ namespace Gambit
     void PID_pair_xsec_container::reset()
     {
       base_xsec_container::reset();
-      _PID_pair = iipair({0,0});
-      _PID_pairs_sharing_xsec.clear();
+      _pid_pair = PID_pair();
+      _pid_pairs_sharing_xsec.clear();
       _related_processes.clear();
     }
 
@@ -389,11 +389,11 @@ namespace Gambit
     void PID_pair_xsec_container::average_xsec(const PID_pair_xsec_container& other)
     {
       // Check that the PID pair of this instance is set
-      assert((_PID_pair.first != 0) && (_PID_pair.second != 0));
+      assert((_pid_pair.pid1() != 0) && (_pid_pair.pid2() != 0));
       // Check that we are working with the same PID pair
-      assert(other.PID_pair() == _PID_pair);
+      assert(other.pid_pair() == _pid_pair);
       // @todo Should we also check the content of the vectors 
-      //       _PID_pairs_sharing_xsec and _related_processes?
+      //       _pid_pairs_sharing_xsec and _related_processes?
       PID_pair_xsec_container::average_xsec(other.xsec(), other.xsec_err());
     }
 
@@ -406,31 +406,31 @@ namespace Gambit
     void PID_pair_xsec_container::sum_xsecs(const PID_pair_xsec_container& other)
     {
       // Check that the PID pair of this instance is set
-      assert((_PID_pair.first != 0) && (_PID_pair.second != 0));
+      assert((_pid_pair.pid1() != 0) && (_pid_pair.pid2() != 0));
       // Check that we are working with the same PID pair
-      assert(other.PID_pair() == _PID_pair);
+      assert(other.pid_pair() == _pid_pair);
       // @todo Should we also check the content of the vectors 
-      //       _PID_pairs_sharing_xsec and _related_processes?
+      //       _pid_pairs_sharing_xsec and _related_processes?
       PID_pair_xsec_container::sum_xsecs(other.xsec(), other.xsec_err());
     }
 
     /// Return the PID pair
-    PID_pair_xsec_container::iipair PID_pair_xsec_container::PID_pair() const 
-    { return _PID_pair; }
+    const PID_pair& PID_pair_xsec_container::pid_pair() const 
+    { return _pid_pair; }
 
     /// Set the PID pair
-    void PID_pair_xsec_container::set_PID_pair(iipair PID_pair_in) 
-    { _PID_pair = PID_pair_in; } 
+    void PID_pair_xsec_container::set_pid_pair(const PID_pair& pid_pair_in) 
+    { _pid_pair = pid_pair_in; } 
 
     /// Return the list of PID pairs that share this cross-section 
     /// (This is due to the many-to-many mapping between Pythia process 
     /// codes and the PID pairs we use as basis for external cross-section calculations)
-    const PID_pair_xsec_container::vec_iipair& PID_pair_xsec_container::PID_pairs_sharing_xsec() const 
-    { return _PID_pairs_sharing_xsec; }
+    const std::vector<PID_pair>& PID_pair_xsec_container::pid_pairs_sharing_xsec() const 
+    { return _pid_pairs_sharing_xsec; }
 
     /// Add a PID pair to the list of PID pairs sharing this cross-section 
-    void PID_pair_xsec_container::add_PID_pair_sharing_xsec(iipair PID_pair_in) 
-    { _PID_pairs_sharing_xsec.push_back(PID_pair_in); }
+    void PID_pair_xsec_container::add_pid_pair_sharing_xsec(PID_pair pid_pair_in) 
+    { _pid_pairs_sharing_xsec.push_back(pid_pair_in); }
 
     /// Return the list of process codes related to this cross-section
     const std::vector<int>& PID_pair_xsec_container::related_processes() const 

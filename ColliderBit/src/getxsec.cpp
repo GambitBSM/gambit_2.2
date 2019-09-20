@@ -75,7 +75,7 @@ namespace Gambit
 
 
     /// Dummy function for testing out how to return a PIDPairCrossSectionFunc
-    xsec_container PIDPairCrossSection_dummy(const iipair& pids, const Spectrum& MSSM_spectrum)
+    xsec_container PIDPairCrossSection_dummy(const PID_pair& pids, const Spectrum& MSSM_spectrum)
     {
       xsec_container xs_result;
 
@@ -85,7 +85,7 @@ namespace Gambit
       // "Calculate" cross section
       // (only stop-stopbar production)
       double xs_fb = 0.0;
-      if (pids.first == 1000002 && pids.second == -1000002)
+      if (pids.pid1() == -1000002 && pids.pid2() == 1000002)
       {
         xs_fb = 3.09816e-11 + 9.08223e-13;
       }
@@ -101,7 +101,7 @@ namespace Gambit
 
       // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
       std::stringstream info_ss;
-      info_ss << "PID1:" << pids.first << ", " << "PID2:" << pids.second;
+      info_ss << "PID1:" << pids.pid1() << ", " << "PID2:" << pids.pid2();
       xs_result.set_info_string(info_ss.str());
 
       return xs_result;
@@ -112,245 +112,286 @@ namespace Gambit
 
 
     /// Test functions for provding PIDPairCrossSectionsMap (cross-sections in fb)
-    PID_pair_xsec_container silly_PID_xsec_constructor(double xsec_val)
+    PID_pair_xsec_container silly_pid_xsec_constructor(PID_pair pid_pair, double xsec_val)
     {
       PID_pair_xsec_container result;
 
       result.reset();
+      result.set_pid_pair(pid_pair);
       result.set_xsec(xsec_val, xsec_val * 0.01);
 
       return result;
     }
 
-    void getPIDPairCrossSectionsMap_testing(map_iipair_PID_pair_xsec& result)
+    void getPIDPairCrossSectionsMap_testing(map_PID_pair_PID_pair_xsec& result)
     {
       using namespace Pipes::getPIDPairCrossSectionsMap_testing;
 
       static bool first = true;
+      static map_PID_pair_PID_pair_xsec all_my_pid_pair_xsecs;
       if (first)
       {
         // Gluino--gluino
-        result[iipair(1000021,1000021)] = silly_PID_xsec_constructor(0.623E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000021,1000021)] = silly_pid_xsec_constructor( PID_pair(1000021,1000021), 0.623E-01 * 1e3);
         // Gluino--squark
-        result[iipair(1000001,1000021)] = silly_PID_xsec_constructor(0.14855 * 1e3);
-        result[iipair(1000002,1000021)] = silly_PID_xsec_constructor(0.57564E-01 * 1e3);
-        result[iipair(1000003,1000021)] = silly_PID_xsec_constructor(0.67117E-02 * 1e3);
-        result[iipair(1000004,1000021)] = silly_PID_xsec_constructor(0.31759E-02 * 1e3);
-        result[iipair(1000005,1000021)] = silly_PID_xsec_constructor(0 * 1e3);
-        result[iipair(2000001,1000021)] = silly_PID_xsec_constructor(0.16430 * 1e3);
-        result[iipair(2000002,1000021)] = silly_PID_xsec_constructor(0.65192E-01 * 1e3);
-        result[iipair(2000003,1000021)] = silly_PID_xsec_constructor(0.76990E-02 * 1e3);
-        result[iipair(2000004,1000021)] = silly_PID_xsec_constructor(0.36025E-02 * 1e3);
-        result[iipair(2000005,1000021)] = silly_PID_xsec_constructor(0 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,1000021)] = silly_pid_xsec_constructor( PID_pair(1000001,1000021), 0.14855 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,1000021)] = silly_pid_xsec_constructor( PID_pair(1000002,1000021), 0.57564E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,1000021)] = silly_pid_xsec_constructor( PID_pair(1000003,1000021), 0.67117E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,1000021)] = silly_pid_xsec_constructor( PID_pair(1000004,1000021), 0.31759E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000005,1000021)] = silly_pid_xsec_constructor( PID_pair(1000005,1000021), 0 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000001,1000021)] = silly_pid_xsec_constructor( PID_pair(2000001,1000021), 0.16430 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,1000021)] = silly_pid_xsec_constructor( PID_pair(2000002,1000021), 0.65192E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000003,1000021)] = silly_pid_xsec_constructor( PID_pair(2000003,1000021), 0.76990E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000004,1000021)] = silly_pid_xsec_constructor( PID_pair(2000004,1000021), 0.36025E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000005,1000021)] = silly_pid_xsec_constructor( PID_pair(2000005,1000021), 0 * 1e3);
         //
         // Squark--anti-squark
-        result[iipair(1000004,-1000004)] = silly_PID_xsec_constructor(0.395E-02 * 1e3);
-        result[iipair(1000004,-1000003)] = silly_PID_xsec_constructor(0.150E-04 * 1e3);
-        result[iipair(1000004,-1000001)] = silly_PID_xsec_constructor(0.139E-03 * 1e3);
-        result[iipair(1000004,-1000002)] = silly_PID_xsec_constructor(0.380E-03 * 1e3);
-        result[iipair(1000004,-2000002)] = silly_PID_xsec_constructor(0.171E-02 * 1e3);
-        result[iipair(1000004,-2000001)] = silly_PID_xsec_constructor(0.681E-03 * 1e3);
-        result[iipair(1000004,-2000003)] = silly_PID_xsec_constructor(0.804E-04 * 1e3);
-        result[iipair(1000004,-2000004)] = silly_PID_xsec_constructor(0.375E-04 * 1e3);
-        result[iipair(1000003,-1000003)] = silly_PID_xsec_constructor(0.391E-02 * 1e3);
-        result[iipair(1000003,-1000001)] = silly_PID_xsec_constructor(0.234E-03 * 1e3);
-        result[iipair(1000003,-1000002)] = silly_PID_xsec_constructor(0.611E-03 * 1e3);
-        result[iipair(1000003,-2000002)] = silly_PID_xsec_constructor(0.273E-02 * 1e3);
-        result[iipair(1000003,-2000001)] = silly_PID_xsec_constructor(0.113E-02 * 1e3);
-        result[iipair(1000003,-2000003)] = silly_PID_xsec_constructor(0.156E-03 * 1e3);
-        result[iipair(1000003,-2000004)] = silly_PID_xsec_constructor(0.786E-04 * 1e3);
-        result[iipair(1000001,-1000001)] = silly_PID_xsec_constructor(0.497E-02 * 1e3);
-        result[iipair(1000001,-1000002)] = silly_PID_xsec_constructor(0.159E-02 * 1e3);
-        result[iipair(1000001,-2000002)] = silly_PID_xsec_constructor(0.697E-02 * 1e3);
-        result[iipair(1000001,-2000001)] = silly_PID_xsec_constructor(0.404E-02 * 1e3);
-        result[iipair(1000001,-2000003)] = silly_PID_xsec_constructor(0.113E-02 * 1e3);
-        result[iipair(1000001,-2000004)] = silly_PID_xsec_constructor(0.668E-03 * 1e3);
-        result[iipair(1000002,-1000002)] = silly_PID_xsec_constructor(0.660E-02 * 1e3);
-        result[iipair(1000002,-2000002)] = silly_PID_xsec_constructor(0.877E-02 * 1e3);
-        result[iipair(1000002,-2000001)] = silly_PID_xsec_constructor(0.710E-02 * 1e3);
-        result[iipair(1000002,-2000003)] = silly_PID_xsec_constructor(0.277E-02 * 1e3);
-        result[iipair(1000002,-2000004)] = silly_PID_xsec_constructor(0.171E-02 * 1e3);
-        result[iipair(2000002,-2000002)] = silly_PID_xsec_constructor(0.835E-02 * 1e3);
-        result[iipair(2000002,-2000001)] = silly_PID_xsec_constructor(0.196E-02 * 1e3);
-        result[iipair(2000002,-2000003)] = silly_PID_xsec_constructor(0.753E-03 * 1e3);
-        result[iipair(2000002,-2000004)] = silly_PID_xsec_constructor(0.462E-03 * 1e3);
-        result[iipair(2000001,-2000001)] = silly_PID_xsec_constructor(0.665E-02 * 1e3);
-        result[iipair(2000001,-2000003)] = silly_PID_xsec_constructor(0.297E-03 * 1e3);
-        result[iipair(2000001,-2000004)] = silly_PID_xsec_constructor(0.174E-03 * 1e3);
-        result[iipair(2000003,-2000003)] = silly_PID_xsec_constructor(0.531E-02 * 1e3);
-        result[iipair(2000003,-2000004)] = silly_PID_xsec_constructor(0.192E-04 * 1e3);
-        result[iipair(2000004,-2000004)] = silly_PID_xsec_constructor(0.515E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-1000004)] = silly_pid_xsec_constructor( PID_pair(1000004,-1000004), 0.395E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-1000003)] = silly_pid_xsec_constructor( PID_pair(1000004,-1000003), 0.150E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-1000001)] = silly_pid_xsec_constructor( PID_pair(1000004,-1000001), 0.139E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-1000002)] = silly_pid_xsec_constructor( PID_pair(1000004,-1000002), 0.380E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-2000002)] = silly_pid_xsec_constructor( PID_pair(1000004,-2000002), 0.171E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-2000001)] = silly_pid_xsec_constructor( PID_pair(1000004,-2000001), 0.681E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-2000003)] = silly_pid_xsec_constructor( PID_pair(1000004,-2000003), 0.804E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,-2000004)] = silly_pid_xsec_constructor( PID_pair(1000004,-2000004), 0.375E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,-1000003)] = silly_pid_xsec_constructor( PID_pair(1000003,-1000003), 0.391E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,-1000001)] = silly_pid_xsec_constructor( PID_pair(1000003,-1000001), 0.234E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,-1000002)] = silly_pid_xsec_constructor( PID_pair(1000003,-1000002), 0.611E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,-2000002)] = silly_pid_xsec_constructor( PID_pair(1000003,-2000002), 0.273E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,-2000001)] = silly_pid_xsec_constructor( PID_pair(1000003,-2000001), 0.113E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,-2000003)] = silly_pid_xsec_constructor( PID_pair(1000003,-2000003), 0.156E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,-2000004)] = silly_pid_xsec_constructor( PID_pair(1000003,-2000004), 0.786E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,-1000001)] = silly_pid_xsec_constructor( PID_pair(1000001,-1000001), 0.497E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,-1000002)] = silly_pid_xsec_constructor( PID_pair(1000001,-1000002), 0.159E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,-2000002)] = silly_pid_xsec_constructor( PID_pair(1000001,-2000002), 0.697E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,-2000001)] = silly_pid_xsec_constructor( PID_pair(1000001,-2000001), 0.404E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,-2000003)] = silly_pid_xsec_constructor( PID_pair(1000001,-2000003), 0.113E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,-2000004)] = silly_pid_xsec_constructor( PID_pair(1000001,-2000004), 0.668E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,-1000002)] = silly_pid_xsec_constructor( PID_pair(1000002,-1000002), 0.660E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,-2000002)] = silly_pid_xsec_constructor( PID_pair(1000002,-2000002), 0.877E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,-2000001)] = silly_pid_xsec_constructor( PID_pair(1000002,-2000001), 0.710E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,-2000003)] = silly_pid_xsec_constructor( PID_pair(1000002,-2000003), 0.277E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,-2000004)] = silly_pid_xsec_constructor( PID_pair(1000002,-2000004), 0.171E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,-2000002)] = silly_pid_xsec_constructor( PID_pair(2000002,-2000002), 0.835E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,-2000001)] = silly_pid_xsec_constructor( PID_pair(2000002,-2000001), 0.196E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,-2000003)] = silly_pid_xsec_constructor( PID_pair(2000002,-2000003), 0.753E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,-2000004)] = silly_pid_xsec_constructor( PID_pair(2000002,-2000004), 0.462E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000001,-2000001)] = silly_pid_xsec_constructor( PID_pair(2000001,-2000001), 0.665E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000001,-2000003)] = silly_pid_xsec_constructor( PID_pair(2000001,-2000003), 0.297E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000001,-2000004)] = silly_pid_xsec_constructor( PID_pair(2000001,-2000004), 0.174E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000003,-2000003)] = silly_pid_xsec_constructor( PID_pair(2000003,-2000003), 0.531E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000003,-2000004)] = silly_pid_xsec_constructor( PID_pair(2000003,-2000004), 0.192E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000004,-2000004)] = silly_pid_xsec_constructor( PID_pair(2000004,-2000004), 0.515E-02 * 1e3);
         //
-        result[iipair(1000005,-1000005)] = silly_PID_xsec_constructor(0.702E-02 * 1e3);
-        result[iipair(1000006,-1000006)] = silly_PID_xsec_constructor(0.255E-01 * 1e3);
-        result[iipair(2000005,-2000005)] = silly_PID_xsec_constructor(0.512E-02 * 1e3);
-        result[iipair(2000006,-2000006)] = silly_PID_xsec_constructor(0.508E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000005,-1000005)] = silly_pid_xsec_constructor( PID_pair(1000005,-1000005), 0.702E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000006,-1000006)] = silly_pid_xsec_constructor( PID_pair(1000006,-1000006), 0.255E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000005,-2000005)] = silly_pid_xsec_constructor( PID_pair(2000005,-2000005), 0.512E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000006,-2000006)] = silly_pid_xsec_constructor( PID_pair(2000006,-2000006), 0.508E-02 * 1e3);
         //  
         // Squark--squark
-        result[iipair(1000004,1000004)] = silly_PID_xsec_constructor(0.208E-04 * 1e3);
-        result[iipair(1000004,1000003)] = silly_PID_xsec_constructor(0.122E-03 * 1e3);
-        result[iipair(1000004,1000001)] = silly_PID_xsec_constructor(0.105E-02 * 1e3);
-        result[iipair(1000004,1000002)] = silly_PID_xsec_constructor(0.270E-02 * 1e3);
-        result[iipair(1000004,2000002)] = silly_PID_xsec_constructor(0.742E-03 * 1e3);
-        result[iipair(1000004,2000001)] = silly_PID_xsec_constructor(0.278E-03 * 1e3);
-        result[iipair(1000004,2000003)] = silly_PID_xsec_constructor(0.304E-04 * 1e3);
-        result[iipair(1000004,2000004)] = silly_PID_xsec_constructor(0.132E-04 * 1e3);
-        result[iipair(1000003,1000003)] = silly_PID_xsec_constructor(0.912E-04 * 1e3);
-        result[iipair(1000003,1000001)] = silly_PID_xsec_constructor(0.215E-02 * 1e3);
-        result[iipair(1000003,1000002)] = silly_PID_xsec_constructor(0.534E-02 * 1e3);
-        result[iipair(1000003,2000002)] = silly_PID_xsec_constructor(0.160E-02 * 1e3);
-        result[iipair(1000003,2000001)] = silly_PID_xsec_constructor(0.622E-03 * 1e3);
-        result[iipair(1000003,2000003)] = silly_PID_xsec_constructor(0.665E-04 * 1e3);
-        result[iipair(1000003,2000004)] = silly_PID_xsec_constructor(0.298E-04 * 1e3);
-        result[iipair(1000001,1000001)] = silly_PID_xsec_constructor(0.759E-02 * 1e3);
-        result[iipair(1000001,1000002)] = silly_PID_xsec_constructor(0.481E-01 * 1e3);
-        result[iipair(1000001,2000002)] = silly_PID_xsec_constructor(0.165E-01 * 1e3);
-        result[iipair(1000001,2000001)] = silly_PID_xsec_constructor(0.665E-02 * 1e3);
-        result[iipair(1000001,2000003)] = silly_PID_xsec_constructor(0.622E-03 * 1e3);
-        result[iipair(1000001,2000004)] = silly_PID_xsec_constructor(0.274E-03 * 1e3);
-        result[iipair(1000002,1000002)] = silly_PID_xsec_constructor(0.410E-01 * 1e3);
-        result[iipair(1000002,2000002)] = silly_PID_xsec_constructor(0.398E-01 * 1e3);
-        result[iipair(1000002,2000001)] = silly_PID_xsec_constructor(0.166E-01 * 1e3);
-        result[iipair(1000002,2000003)] = silly_PID_xsec_constructor(0.162E-02 * 1e3);
-        result[iipair(1000002,2000004)] = silly_PID_xsec_constructor(0.742E-03 * 1e3);
-        result[iipair(2000002,2000002)] = silly_PID_xsec_constructor(0.481E-01 * 1e3);
-        result[iipair(2000002,2000001)] = silly_PID_xsec_constructor(0.582E-01 * 1e3);
-        result[iipair(2000002,2000003)] = silly_PID_xsec_constructor(0.673E-02 * 1e3);
-        result[iipair(2000002,2000004)] = silly_PID_xsec_constructor(0.341E-02 * 1e3);
-        result[iipair(2000001,2000001)] = silly_PID_xsec_constructor(0.944E-02 * 1e3);
-        result[iipair(2000001,2000003)] = silly_PID_xsec_constructor(0.279E-02 * 1e3);
-        result[iipair(2000001,2000004)] = silly_PID_xsec_constructor(0.137E-02 * 1e3);
-        result[iipair(2000003,2000003)] = silly_PID_xsec_constructor(0.122E-03 * 1e3);
-        result[iipair(2000003,2000004)] = silly_PID_xsec_constructor(0.163E-03 * 1e3);
-        result[iipair(2000004,2000004)] = silly_PID_xsec_constructor(0.276E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,1000004)] = silly_pid_xsec_constructor( PID_pair(1000004,1000004), 0.208E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,1000003)] = silly_pid_xsec_constructor( PID_pair(1000004,1000003), 0.122E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,1000001)] = silly_pid_xsec_constructor( PID_pair(1000004,1000001), 0.105E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,1000002)] = silly_pid_xsec_constructor( PID_pair(1000004,1000002), 0.270E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,2000002)] = silly_pid_xsec_constructor( PID_pair(1000004,2000002), 0.742E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,2000001)] = silly_pid_xsec_constructor( PID_pair(1000004,2000001), 0.278E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,2000003)] = silly_pid_xsec_constructor( PID_pair(1000004,2000003), 0.304E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000004,2000004)] = silly_pid_xsec_constructor( PID_pair(1000004,2000004), 0.132E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,1000003)] = silly_pid_xsec_constructor( PID_pair(1000003,1000003), 0.912E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,1000001)] = silly_pid_xsec_constructor( PID_pair(1000003,1000001), 0.215E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,1000002)] = silly_pid_xsec_constructor( PID_pair(1000003,1000002), 0.534E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,2000002)] = silly_pid_xsec_constructor( PID_pair(1000003,2000002), 0.160E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,2000001)] = silly_pid_xsec_constructor( PID_pair(1000003,2000001), 0.622E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,2000003)] = silly_pid_xsec_constructor( PID_pair(1000003,2000003), 0.665E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000003,2000004)] = silly_pid_xsec_constructor( PID_pair(1000003,2000004), 0.298E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,1000001)] = silly_pid_xsec_constructor( PID_pair(1000001,1000001), 0.759E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,1000002)] = silly_pid_xsec_constructor( PID_pair(1000001,1000002), 0.481E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,2000002)] = silly_pid_xsec_constructor( PID_pair(1000001,2000002), 0.165E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,2000001)] = silly_pid_xsec_constructor( PID_pair(1000001,2000001), 0.665E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,2000003)] = silly_pid_xsec_constructor( PID_pair(1000001,2000003), 0.622E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000001,2000004)] = silly_pid_xsec_constructor( PID_pair(1000001,2000004), 0.274E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,1000002)] = silly_pid_xsec_constructor( PID_pair(1000002,1000002), 0.410E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,2000002)] = silly_pid_xsec_constructor( PID_pair(1000002,2000002), 0.398E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,2000001)] = silly_pid_xsec_constructor( PID_pair(1000002,2000001), 0.166E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,2000003)] = silly_pid_xsec_constructor( PID_pair(1000002,2000003), 0.162E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000002,2000004)] = silly_pid_xsec_constructor( PID_pair(1000002,2000004), 0.742E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,2000002)] = silly_pid_xsec_constructor( PID_pair(2000002,2000002), 0.481E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,2000001)] = silly_pid_xsec_constructor( PID_pair(2000002,2000001), 0.582E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,2000003)] = silly_pid_xsec_constructor( PID_pair(2000002,2000003), 0.673E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000002,2000004)] = silly_pid_xsec_constructor( PID_pair(2000002,2000004), 0.341E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000001,2000001)] = silly_pid_xsec_constructor( PID_pair(2000001,2000001), 0.944E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000001,2000003)] = silly_pid_xsec_constructor( PID_pair(2000001,2000003), 0.279E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000001,2000004)] = silly_pid_xsec_constructor( PID_pair(2000001,2000004), 0.137E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000003,2000003)] = silly_pid_xsec_constructor( PID_pair(2000003,2000003), 0.122E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000003,2000004)] = silly_pid_xsec_constructor( PID_pair(2000003,2000004), 0.163E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000004,2000004)] = silly_pid_xsec_constructor( PID_pair(2000004,2000004), 0.276E-04 * 1e3);
         //
         // Associated production
-        result[iipair(1000022,1000021)] = silly_PID_xsec_constructor(0.380E-02 * 1e3);
-        result[iipair(1000023,1000021)] = silly_PID_xsec_constructor(0.444E-02 * 1e3);
-        result[iipair(1000025,1000021)] = silly_PID_xsec_constructor(0.292E-04 * 1e3);
-        result[iipair(1000035,1000021)] = silly_PID_xsec_constructor(0.111E-03 * 1e3);
-        result[iipair(1000024,1000021)] = silly_PID_xsec_constructor(0.712E-02 * 1e3);
-        result[iipair(-1000024,1000021)] = silly_PID_xsec_constructor(0.245E-02 * 1e3);
-        result[iipair(1000037,1000021)] = silly_PID_xsec_constructor(0.214E-03 * 1e3);
-        result[iipair(-1000037,1000021)] = silly_PID_xsec_constructor(0.706E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000021)] = silly_pid_xsec_constructor( PID_pair(1000022,1000021), 0.380E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000021)] = silly_pid_xsec_constructor( PID_pair(1000023,1000021), 0.444E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000021)] = silly_pid_xsec_constructor( PID_pair(1000025,1000021), 0.292E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000021)] = silly_pid_xsec_constructor( PID_pair(1000035,1000021), 0.111E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,1000021)] = silly_pid_xsec_constructor( PID_pair(1000024,1000021), 0.712E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,1000021)] = silly_pid_xsec_constructor( PID_pair(-1000024,1000021), 0.245E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,1000021)] = silly_pid_xsec_constructor( PID_pair(1000037,1000021), 0.214E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,1000021)] = silly_pid_xsec_constructor( PID_pair(-1000037,1000021), 0.706E-04 * 1e3);
         //
-        result[iipair(1000022,1000004)] = silly_PID_xsec_constructor(0.132E-04 * 1e3);
-        result[iipair(1000022,1000003)] = silly_PID_xsec_constructor(0.345E-04 * 1e3);
-        result[iipair(1000022,1000001)] = silly_PID_xsec_constructor(0.206E-03 * 1e3);
-        result[iipair(1000022,1000002)] = silly_PID_xsec_constructor(0.299E-03 * 1e3);
-        result[iipair(1000022,2000002)] = silly_PID_xsec_constructor(0.707E-02 * 1e3);
-        result[iipair(1000022,2000001)] = silly_PID_xsec_constructor(0.858E-03 * 1e3);
-        result[iipair(1000022,2000003)] = silly_PID_xsec_constructor(0.147E-03 * 1e3);
-        result[iipair(1000022,2000004)] = silly_PID_xsec_constructor(0.325E-03 * 1e3);
-        result[iipair(1000023,1000004)] = silly_PID_xsec_constructor(0.301E-03 * 1e3);
-        result[iipair(1000023,1000003)] = silly_PID_xsec_constructor(0.532E-03 * 1e3);
-        result[iipair(1000023,1000001)] = silly_PID_xsec_constructor(0.340E-02 * 1e3);
-        result[iipair(1000023,1000002)] = silly_PID_xsec_constructor(0.775E-02 * 1e3);
-        result[iipair(1000023,2000002)] = silly_PID_xsec_constructor(0.688E-05 * 1e3);
-        result[iipair(1000023,2000001)] = silly_PID_xsec_constructor(0.806E-06 * 1e3);
-        result[iipair(1000023,2000003)] = silly_PID_xsec_constructor(0.129E-06 * 1e3);
-        result[iipair(1000023,2000004)] = silly_PID_xsec_constructor(0.277E-06 * 1e3);
-        result[iipair(1000025,1000004)] = silly_PID_xsec_constructor(0.258E-06 * 1e3);
-        result[iipair(1000025,1000003)] = silly_PID_xsec_constructor(0.798E-06 * 1e3);
-        result[iipair(1000025,1000001)] = silly_PID_xsec_constructor(0.565E-05 * 1e3);
-        result[iipair(1000025,1000002)] = silly_PID_xsec_constructor(0.804E-05 * 1e3);
-        result[iipair(1000025,2000002)] = silly_PID_xsec_constructor(0.293E-05 * 1e3);
-        result[iipair(1000025,2000001)] = silly_PID_xsec_constructor(0.327E-06 * 1e3);
-        result[iipair(1000025,2000003)] = silly_PID_xsec_constructor(0.470E-07 * 1e3);
-        result[iipair(1000025,2000004)] = silly_PID_xsec_constructor(0.970E-07 * 1e3);
-        result[iipair(1000035,1000004)] = silly_PID_xsec_constructor(0.662E-05 * 1e3);
-        result[iipair(1000035,1000003)] = silly_PID_xsec_constructor(0.158E-04 * 1e3);
-        result[iipair(1000035,1000001)] = silly_PID_xsec_constructor(0.113E-03 * 1e3);
-        result[iipair(1000035,1000002)] = silly_PID_xsec_constructor(0.208E-03 * 1e3);
-        result[iipair(1000035,2000002)] = silly_PID_xsec_constructor(0.148E-04 * 1e3);
-        result[iipair(1000035,2000001)] = silly_PID_xsec_constructor(0.165E-05 * 1e3);
-        result[iipair(1000035,2000003)] = silly_PID_xsec_constructor(0.235E-06 * 1e3);
-        result[iipair(1000035,2000004)] = silly_PID_xsec_constructor(0.485E-06 * 1e3);
-        result[iipair(1000024,1000004)] = silly_PID_xsec_constructor(0.475E-03 * 1e3);
-        result[iipair(1000024,1000003)] = silly_PID_xsec_constructor(0.287E-03 * 1e3);
-        result[iipair(1000024,1000001)] = silly_PID_xsec_constructor(0.140E-01 * 1e3);
-        result[iipair(1000024,1000002)] = silly_PID_xsec_constructor(0.976E-03 * 1e3);
-        result[iipair(1000024,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000024,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000024,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000024,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,1000004)] = silly_PID_xsec_constructor(0.749E-05 * 1e3);
-        result[iipair(1000037,1000003)] = silly_PID_xsec_constructor(0.104E-04 * 1e3);
-        result[iipair(1000037,1000001)] = silly_PID_xsec_constructor(0.629E-03 * 1e3);
-        result[iipair(1000037,1000002)] = silly_PID_xsec_constructor(0.157E-04 * 1e3);
-        result[iipair(1000037,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(1000037,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,1000004)] = silly_PID_xsec_constructor(0.644E-03 * 1e3);
-        result[iipair(-1000024,1000003)] = silly_PID_xsec_constructor(0.287E-03 * 1e3);
-        result[iipair(-1000024,1000001)] = silly_PID_xsec_constructor(0.775E-03 * 1e3);
-        result[iipair(-1000024,1000002)] = silly_PID_xsec_constructor(0.618E-02 * 1e3);
-        result[iipair(-1000024,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000024,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,1000004)] = silly_PID_xsec_constructor(0.109E-04 * 1e3);
-        result[iipair(-1000037,1000003)] = silly_PID_xsec_constructor(0.104E-04 * 1e3);
-        result[iipair(-1000037,1000001)] = silly_PID_xsec_constructor(0.294E-04 * 1e3);
-        result[iipair(-1000037,1000002)] = silly_PID_xsec_constructor(0.115E-03 * 1e3);
-        result[iipair(-1000037,2000002)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,2000001)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,2000003)] = silly_PID_xsec_constructor(0.00 * 1e3);
-        result[iipair(-1000037,2000004)] = silly_PID_xsec_constructor(0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000004)] = silly_pid_xsec_constructor( PID_pair(1000022,1000004), 0.132E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000003)] = silly_pid_xsec_constructor( PID_pair(1000022,1000003), 0.345E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000001)] = silly_pid_xsec_constructor( PID_pair(1000022,1000001), 0.206E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000002)] = silly_pid_xsec_constructor( PID_pair(1000022,1000002), 0.299E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,2000002)] = silly_pid_xsec_constructor( PID_pair(1000022,2000002), 0.707E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,2000001)] = silly_pid_xsec_constructor( PID_pair(1000022,2000001), 0.858E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,2000003)] = silly_pid_xsec_constructor( PID_pair(1000022,2000003), 0.147E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,2000004)] = silly_pid_xsec_constructor( PID_pair(1000022,2000004), 0.325E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000004)] = silly_pid_xsec_constructor( PID_pair(1000023,1000004), 0.301E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000003)] = silly_pid_xsec_constructor( PID_pair(1000023,1000003), 0.532E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000001)] = silly_pid_xsec_constructor( PID_pair(1000023,1000001), 0.340E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000002)] = silly_pid_xsec_constructor( PID_pair(1000023,1000002), 0.775E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,2000002)] = silly_pid_xsec_constructor( PID_pair(1000023,2000002), 0.688E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,2000001)] = silly_pid_xsec_constructor( PID_pair(1000023,2000001), 0.806E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,2000003)] = silly_pid_xsec_constructor( PID_pair(1000023,2000003), 0.129E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,2000004)] = silly_pid_xsec_constructor( PID_pair(1000023,2000004), 0.277E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000004)] = silly_pid_xsec_constructor( PID_pair(1000025,1000004), 0.258E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000003)] = silly_pid_xsec_constructor( PID_pair(1000025,1000003), 0.798E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000001)] = silly_pid_xsec_constructor( PID_pair(1000025,1000001), 0.565E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000002)] = silly_pid_xsec_constructor( PID_pair(1000025,1000002), 0.804E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,2000002)] = silly_pid_xsec_constructor( PID_pair(1000025,2000002), 0.293E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,2000001)] = silly_pid_xsec_constructor( PID_pair(1000025,2000001), 0.327E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,2000003)] = silly_pid_xsec_constructor( PID_pair(1000025,2000003), 0.470E-07 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,2000004)] = silly_pid_xsec_constructor( PID_pair(1000025,2000004), 0.970E-07 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000004)] = silly_pid_xsec_constructor( PID_pair(1000035,1000004), 0.662E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000003)] = silly_pid_xsec_constructor( PID_pair(1000035,1000003), 0.158E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000001)] = silly_pid_xsec_constructor( PID_pair(1000035,1000001), 0.113E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000002)] = silly_pid_xsec_constructor( PID_pair(1000035,1000002), 0.208E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,2000002)] = silly_pid_xsec_constructor( PID_pair(1000035,2000002), 0.148E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,2000001)] = silly_pid_xsec_constructor( PID_pair(1000035,2000001), 0.165E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,2000003)] = silly_pid_xsec_constructor( PID_pair(1000035,2000003), 0.235E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,2000004)] = silly_pid_xsec_constructor( PID_pair(1000035,2000004), 0.485E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,1000004)] = silly_pid_xsec_constructor( PID_pair(1000024,1000004), 0.475E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,1000003)] = silly_pid_xsec_constructor( PID_pair(1000024,1000003), 0.287E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,1000001)] = silly_pid_xsec_constructor( PID_pair(1000024,1000001), 0.140E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,1000002)] = silly_pid_xsec_constructor( PID_pair(1000024,1000002), 0.976E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,2000002)] = silly_pid_xsec_constructor( PID_pair(1000024,2000002), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,2000001)] = silly_pid_xsec_constructor( PID_pair(1000024,2000001), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,2000003)] = silly_pid_xsec_constructor( PID_pair(1000024,2000003), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,2000004)] = silly_pid_xsec_constructor( PID_pair(1000024,2000004), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,1000004)] = silly_pid_xsec_constructor( PID_pair(1000037,1000004), 0.749E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,1000003)] = silly_pid_xsec_constructor( PID_pair(1000037,1000003), 0.104E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,1000001)] = silly_pid_xsec_constructor( PID_pair(1000037,1000001), 0.629E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,1000002)] = silly_pid_xsec_constructor( PID_pair(1000037,1000002), 0.157E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,2000002)] = silly_pid_xsec_constructor( PID_pair(1000037,2000002), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,2000001)] = silly_pid_xsec_constructor( PID_pair(1000037,2000001), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,2000003)] = silly_pid_xsec_constructor( PID_pair(1000037,2000003), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,2000004)] = silly_pid_xsec_constructor( PID_pair(1000037,2000004), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,1000004)] = silly_pid_xsec_constructor( PID_pair(-1000024,1000004), 0.644E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,1000003)] = silly_pid_xsec_constructor( PID_pair(-1000024,1000003), 0.287E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,1000001)] = silly_pid_xsec_constructor( PID_pair(-1000024,1000001), 0.775E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,1000002)] = silly_pid_xsec_constructor( PID_pair(-1000024,1000002), 0.618E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,2000002)] = silly_pid_xsec_constructor( PID_pair(-1000024,2000002), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,2000001)] = silly_pid_xsec_constructor( PID_pair(-1000024,2000001), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,2000003)] = silly_pid_xsec_constructor( PID_pair(-1000024,2000003), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000024,2000004)] = silly_pid_xsec_constructor( PID_pair(-1000024,2000004), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,1000004)] = silly_pid_xsec_constructor( PID_pair(-1000037,1000004), 0.109E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,1000003)] = silly_pid_xsec_constructor( PID_pair(-1000037,1000003), 0.104E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,1000001)] = silly_pid_xsec_constructor( PID_pair(-1000037,1000001), 0.294E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,1000002)] = silly_pid_xsec_constructor( PID_pair(-1000037,1000002), 0.115E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,2000002)] = silly_pid_xsec_constructor( PID_pair(-1000037,2000002), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,2000001)] = silly_pid_xsec_constructor( PID_pair(-1000037,2000001), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,2000003)] = silly_pid_xsec_constructor( PID_pair(-1000037,2000003), 0.00 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000037,2000004)] = silly_pid_xsec_constructor( PID_pair(-1000037,2000004), 0.00 * 1e3);
         //
         // EW
-        result[iipair(1000022,1000022)] = silly_PID_xsec_constructor(0.990E-03 * 1e3);
-        result[iipair(1000022,1000023)] = silly_PID_xsec_constructor(0.137E-03 * 1e3);
-        result[iipair(1000022,1000025)] = silly_PID_xsec_constructor(0.744E-04 * 1e3);
-        result[iipair(1000022,1000035)] = silly_PID_xsec_constructor(0.167E-04 * 1e3);
-        result[iipair(1000022,1000024)] = silly_PID_xsec_constructor(0.350E-03 * 1e3);
-        result[iipair(1000022,1000037)] = silly_PID_xsec_constructor(0.107E-03 * 1e3);
-        result[iipair(1000022,-1000024)] = silly_PID_xsec_constructor(0.162E-03 * 1e3);
-        result[iipair(1000022,-1000037)] = silly_PID_xsec_constructor(0.460E-04 * 1e3);
-        result[iipair(1000023,1000023)] = silly_PID_xsec_constructor(0.142E-02 * 1e3);
-        result[iipair(1000023,1000025)] = silly_PID_xsec_constructor(0.282E-03 * 1e3);
-        result[iipair(1000023,1000035)] = silly_PID_xsec_constructor(0.678E-04 * 1e3);
-        result[iipair(1000023,1000024)] = silly_PID_xsec_constructor(0.411E-01 * 1e3);
-        result[iipair(1000023,1000037)] = silly_PID_xsec_constructor(0.183E-04 * 1e3);
-        result[iipair(1000023,-1000024)] = silly_PID_xsec_constructor(0.191E-01 * 1e3);
-        result[iipair(1000023,-1000037)] = silly_PID_xsec_constructor(0.719E-05 * 1e3);
-        result[iipair(1000025,000025)] = silly_PID_xsec_constructor(0.141E-07 * 1e3);
-        result[iipair(1000025,1000035)] = silly_PID_xsec_constructor(0.175E-02 * 1e3);
-        result[iipair(1000025,1000024)] = silly_PID_xsec_constructor(0.412E-03 * 1e3);
-        result[iipair(1000025,1000037)] = silly_PID_xsec_constructor(0.256E-02 * 1e3);
-        result[iipair(1000025,-1000024)] = silly_PID_xsec_constructor(0.169E-03 * 1e3);
-        result[iipair(1000025,-1000037)] = silly_PID_xsec_constructor(0.968E-03 * 1e3);
-        result[iipair(1000035,1000035)] = silly_PID_xsec_constructor(0.834E-06 * 1e3);
-        result[iipair(1000035,1000024)] = silly_PID_xsec_constructor(0.248E-04 * 1e3);
-        result[iipair(1000035,1000037)] = silly_PID_xsec_constructor(0.248E-02 * 1e3);
-        result[iipair(1000035,-1000024)] = silly_PID_xsec_constructor(0.968E-05 * 1e3);
-        result[iipair(1000035,-1000037)] = silly_PID_xsec_constructor(0.935E-03 * 1e3);
-        result[iipair(1000024,-1000024)] = silly_PID_xsec_constructor(0.322E-01 * 1e3);
-        result[iipair(1000024,-1000037)] = silly_PID_xsec_constructor(0.130E-03 * 1e3);
-        result[iipair(1000037,-1000024)] = silly_PID_xsec_constructor(0.130E-03 * 1e3);
-        result[iipair(1000037,-1000037)] = silly_PID_xsec_constructor(0.183E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000022)] = silly_pid_xsec_constructor( PID_pair(1000022,1000022), 0.990E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000023)] = silly_pid_xsec_constructor( PID_pair(1000022,1000023), 0.137E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000025)] = silly_pid_xsec_constructor( PID_pair(1000022,1000025), 0.744E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000035)] = silly_pid_xsec_constructor( PID_pair(1000022,1000035), 0.167E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000024)] = silly_pid_xsec_constructor( PID_pair(1000022,1000024), 0.350E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,1000037)] = silly_pid_xsec_constructor( PID_pair(1000022,1000037), 0.107E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,-1000024)] = silly_pid_xsec_constructor( PID_pair(1000022,-1000024), 0.162E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000022,-1000037)] = silly_pid_xsec_constructor( PID_pair(1000022,-1000037), 0.460E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000023)] = silly_pid_xsec_constructor( PID_pair(1000023,1000023), 0.142E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000025)] = silly_pid_xsec_constructor( PID_pair(1000023,1000025), 0.282E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000035)] = silly_pid_xsec_constructor( PID_pair(1000023,1000035), 0.678E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000024)] = silly_pid_xsec_constructor( PID_pair(1000023,1000024), 0.411E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,1000037)] = silly_pid_xsec_constructor( PID_pair(1000023,1000037), 0.183E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,-1000024)] = silly_pid_xsec_constructor( PID_pair(1000023,-1000024), 0.191E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000023,-1000037)] = silly_pid_xsec_constructor( PID_pair(1000023,-1000037), 0.719E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,000025)] = silly_pid_xsec_constructor( PID_pair(1000025,000025), 0.141E-07 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000035)] = silly_pid_xsec_constructor( PID_pair(1000025,1000035), 0.175E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000024)] = silly_pid_xsec_constructor( PID_pair(1000025,1000024), 0.412E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,1000037)] = silly_pid_xsec_constructor( PID_pair(1000025,1000037), 0.256E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,-1000024)] = silly_pid_xsec_constructor( PID_pair(1000025,-1000024), 0.169E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000025,-1000037)] = silly_pid_xsec_constructor( PID_pair(1000025,-1000037), 0.968E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000035)] = silly_pid_xsec_constructor( PID_pair(1000035,1000035), 0.834E-06 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000024)] = silly_pid_xsec_constructor( PID_pair(1000035,1000024), 0.248E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,1000037)] = silly_pid_xsec_constructor( PID_pair(1000035,1000037), 0.248E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,-1000024)] = silly_pid_xsec_constructor( PID_pair(1000035,-1000024), 0.968E-05 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000035,-1000037)] = silly_pid_xsec_constructor( PID_pair(1000035,-1000037), 0.935E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,-1000024)] = silly_pid_xsec_constructor( PID_pair(1000024,-1000024), 0.322E-01 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000024,-1000037)] = silly_pid_xsec_constructor( PID_pair(1000024,-1000037), 0.130E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,-1000024)] = silly_pid_xsec_constructor( PID_pair(1000037,-1000024), 0.130E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000037,-1000037)] = silly_pid_xsec_constructor( PID_pair(1000037,-1000037), 0.183E-02 * 1e3);
         //
         // Sleptons TODO: What do to with first and second generation equals
-        result[iipair(1000011,-1000011)] = silly_PID_xsec_constructor(0.210E-02 * 1e3); // Equal for ~e and ~mu in Prospino
-        result[iipair(1000013,-1000013)] = silly_PID_xsec_constructor(0.210E-02 * 1e3);
-        result[iipair(2000011,-2000011)] = silly_PID_xsec_constructor(0.502E-02 * 1e3); // Equal for ~e and ~mu in Prospino
-        result[iipair(2000013,-2000013)] = silly_PID_xsec_constructor(0.502E-02 * 1e3);
-        result[iipair(1000012,-1000012)] = silly_PID_xsec_constructor(0.217E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
-        result[iipair(1000014,-1000014)] = silly_PID_xsec_constructor(0.217E-02 * 1e3);
-        result[iipair(-1000011,1000012)] = silly_PID_xsec_constructor(0.553E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
-        result[iipair(-1000013,1000014)] = silly_PID_xsec_constructor(0.553E-02 * 1e3);
-        result[iipair(1000011,-1000012)] = silly_PID_xsec_constructor(0.245E-02 * 1e3);
-        result[iipair(1000013,-1000014)] = silly_PID_xsec_constructor(0.245E-02 * 1e3);
-        result[iipair(1000015,-1000015)] = silly_PID_xsec_constructor(0.556E-02 * 1e3);
-        result[iipair(2000015,-2000015)] = silly_PID_xsec_constructor(0.201E-02 * 1e3);
-        result[iipair(1000015,-2000015)] = silly_PID_xsec_constructor(0.907E-04 * 1e3); // Equal for ~tau_1^- ~tau_2^+ and its cc in Prospino. Suspicious difference in value compared to Pythia LO
-        result[iipair(-1000015,2000015)] = silly_PID_xsec_constructor(0.907E-04 * 1e3);
-        result[iipair(1000016,-1000016)] = silly_PID_xsec_constructor(0.220E-02 * 1e3);
-        result[iipair(-1000015,1000016)] = silly_PID_xsec_constructor(0.262E-03 * 1e3);
-        result[iipair(1000015,-1000016)] = silly_PID_xsec_constructor(0.124E-03 * 1e3);
-        result[iipair(-2000015,1000016)] = silly_PID_xsec_constructor(0.542E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000011,-1000011)] = silly_pid_xsec_constructor( PID_pair(1000011,-1000011), 0.210E-02 * 1e3); // Equal for ~e and ~mu in Prospino
+        all_my_pid_pair_xsecs[PID_pair(1000013,-1000013)] = silly_pid_xsec_constructor( PID_pair(1000013,-1000013), 0.210E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000011,-2000011)] = silly_pid_xsec_constructor( PID_pair(2000011,-2000011), 0.502E-02 * 1e3); // Equal for ~e and ~mu in Prospino
+        all_my_pid_pair_xsecs[PID_pair(2000013,-2000013)] = silly_pid_xsec_constructor( PID_pair(2000013,-2000013), 0.502E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000012,-1000012)] = silly_pid_xsec_constructor( PID_pair(1000012,-1000012), 0.217E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
+        all_my_pid_pair_xsecs[PID_pair(1000014,-1000014)] = silly_pid_xsec_constructor( PID_pair(1000014,-1000014), 0.217E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000011,1000012)] = silly_pid_xsec_constructor( PID_pair(-1000011,1000012), 0.553E-02 * 1e3); // Equal for ~nu_e and ~nu_mu in Prospino
+        all_my_pid_pair_xsecs[PID_pair(-1000013,1000014)] = silly_pid_xsec_constructor( PID_pair(-1000013,1000014), 0.553E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000011,-1000012)] = silly_pid_xsec_constructor( PID_pair(1000011,-1000012), 0.245E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000013,-1000014)] = silly_pid_xsec_constructor( PID_pair(1000013,-1000014), 0.245E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000015,-1000015)] = silly_pid_xsec_constructor( PID_pair(1000015,-1000015), 0.556E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(2000015,-2000015)] = silly_pid_xsec_constructor( PID_pair(2000015,-2000015), 0.201E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000015,-2000015)] = silly_pid_xsec_constructor( PID_pair(1000015,-2000015), 0.907E-04 * 1e3); // Equal for ~tau_1^- ~tau_2^+ and its cc in Prospino. Suspicious difference in value compared to Pythia LO
+        all_my_pid_pair_xsecs[PID_pair(-1000015,2000015)] = silly_pid_xsec_constructor( PID_pair(-1000015,2000015), 0.907E-04 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000016,-1000016)] = silly_pid_xsec_constructor( PID_pair(1000016,-1000016), 0.220E-02 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-1000015,1000016)] = silly_pid_xsec_constructor( PID_pair(-1000015,1000016), 0.262E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(1000015,-1000016)] = silly_pid_xsec_constructor( PID_pair(1000015,-1000016), 0.124E-03 * 1e3);
+        all_my_pid_pair_xsecs[PID_pair(-2000015,1000016)] = silly_pid_xsec_constructor( PID_pair(-2000015,1000016), 0.542E-02 * 1e3);
       }
+
+      if(*Loop::iteration == COLLIDER_INIT)
+      {
+        result.clear();
+      }
+
+      if(*Loop::iteration == XSEC_CALCULATION)
+      {
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+          cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "Looking up xsec for [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]." << endl;
+          try
+          {
+            result[pid_pair] = all_my_pid_pair_xsecs.at(pid_pair);
+          }
+          catch (const std::out_of_range& err)
+          {
+            PID_pair cc_pid_pair = pid_pair.cc_pid_pair();
+            cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> Not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;            
+            result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
+            // try
+            // {
+            //   result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
+            // }
+            // catch (const std::out_of_range& err)
+            // {
+            //   cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> --> Also not found! Trying again with [" << cc_pid_pair.first << "," << cc_pid_pair.second << "]." << endl;                        
+            // }
+          }
+        }
+      } // end iteration
+
+
+  // try {
+  //   myvector.at(20)=100;      // vector::at throws an out-of-range
+  // }
+  // catch (const std::out_of_range& oor) {
+  //   std::cerr << "Out of Range error: " << oor.what() << '\n';
+  // }
 
     }
 
@@ -369,7 +410,7 @@ namespace Gambit
 
 
     /// Get the cross-section from the xsec_example backend
-    xsec_container PIDPairCrossSection_xsec_example(iipair pids, 
+    xsec_container PIDPairCrossSection_xsec_example(PID_pair pids, 
                                           const Spectrum& MSSM_spectrum)
                                           // double (*xsec_fb_fptr)(iipair&, map_str_dbl&, map_str_bool&))
     {
@@ -393,7 +434,7 @@ namespace Gambit
 
       // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
       std::stringstream info_ss;
-      info_ss << "PID1:" << pids.first << ", " << "PID2:" << pids.second;
+      info_ss << "PID1:" << pids.pid1() << ", " << "PID2:" << pids.pid2();
       xs_result.set_info_string(info_ss.str());
 
       return xs_result;
@@ -471,13 +512,13 @@ namespace Gambit
           // Loop over these elements in the multimap
           for (auto mm_it = mm_range.first; mm_it != mm_range.second; ++mm_it)
           {
-            const iipair& pids = mm_it->second;
+            const PID_pair& pids = mm_it->second;
 
-            // Obtain the cross-section from the PID pair via the PIDPairCrossSectionsMap (map_iipair_PID_pair_xsec) dependency
-            cout << DEBUG_PREFIX << "Looking up PID pair: " << pids.first << "," << pids.second << endl;
+            // Obtain the cross-section from the PID pair via the PIDPairCrossSectionsMap (map_PID_pair_PID_pair_xsec) dependency
+            cout << DEBUG_PREFIX << "Looking up PID pair: " << pids.pid1() << "," << pids.pid2() << endl;
 
             PID_pair_xsec_container pids_xs;
-            map_iipair_PID_pair_xsec::const_iterator iter = Dep::PIDPairCrossSectionsMap->find(pids);
+            map_PID_pair_PID_pair_xsec::const_iterator iter = Dep::PIDPairCrossSectionsMap->find(pids);
             if (iter != Dep::PIDPairCrossSectionsMap->end())
             {
               pids_xs = iter->second;
@@ -493,14 +534,14 @@ namespace Gambit
               else
               {
                 std::stringstream errmsg_ss;
-                errmsg_ss << "No cross-section provided for PID pair [" << pids.first << "," << pids.second <<"]. ";
+                errmsg_ss << "No cross-section provided for PID pair [" << pids.pid1() << "," << pids.pid2() <<"]. ";
                 ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
               }
             }
 
             // Accumulate result in the process_xsec_container proc_xs
             proc_xs.sum_xsecs(pids_xs.xsec(), pids_xs.xsec_err());
-            proc_xs.add_related_PID_pair(pids);
+            proc_xs.add_related_pid_pair(pids);
           }
 
           // Construct info string of the form "ProcessCode:<proc_code>"
@@ -516,7 +557,7 @@ namespace Gambit
           {
             // Extract the process code (pc) and PID pair (pp)
             int pc = mm_it->first;
-            const iipair& pp = mm_it->second;
+            const PID_pair& pp = mm_it->second;
 
             if (pc == proc_code) continue;
 
@@ -525,7 +566,7 @@ namespace Gambit
             // if(std::find(proc_xs.processes_sharing_xsec().begin(), proc_xs.processes_sharing_xsec().end(), pc) != proc_xs.processes_sharing_xsec().end()) 
 
             // Check if the PID pair pp mathces one of the PID pairs for the proc_code process
-            if(std::find(proc_xs.related_PID_pairs().begin(), proc_xs.related_PID_pairs().end(), pp) != proc_xs.related_PID_pairs().end()) 
+            if(std::find(proc_xs.related_pid_pairs().begin(), proc_xs.related_pid_pairs().end(), pp) != proc_xs.related_pid_pairs().end()) 
             {
               // Check that pc is itself in one of the active processes, i.e. listed in Dep::ActiveProcessCodes
               if(std::find(Dep::ActiveProcessCodes->begin(), Dep::ActiveProcessCodes->end(), pc) != Dep::ActiveProcessCodes->end())  

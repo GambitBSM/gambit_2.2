@@ -111,7 +111,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)
-    // BACKEND_REQ(xsec_example_xsec_fb, (), double, (iipair&, map_str_dbl&, map_str_bool&))
+    // BACKEND_REQ(xsec_example_xsec_fb, (), double, (PID_pair&, map_str_dbl&, map_str_bool&))
     #undef FUNCTION
 
 

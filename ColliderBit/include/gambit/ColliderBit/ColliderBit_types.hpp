@@ -41,6 +41,7 @@
 
 #include "gambit/ColliderBit/MCLoopInfo.hpp"
 #include "gambit/ColliderBit/MC_convergence.hpp"
+#include "gambit/ColliderBit/PID_pair.hpp"
 #include "gambit/ColliderBit/xsec.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8Collider.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8Collider_typedefs.hpp"
@@ -106,10 +107,16 @@ namespace Gambit
     // declared in Utils/include/gambit/Utils/util_types.hpp
 
     typedef std::vector<std::pair<int,int>> vec_iipair;
+    typedef std::vector<PID_pair> vec_PID_pair;
+
     typedef std::multimap<int,std::pair<int,int>> multimap_int_iipair;
+    typedef std::multimap<int,PID_pair> multimap_int_PID_pair;
+
     typedef std::map<int,xsec_container> map_int_xsec;
     typedef std::map<int,process_xsec_container> map_int_process_xsec;
+
     typedef std::map<std::pair<int,int>,PID_pair_xsec_container> map_iipair_PID_pair_xsec;
+    typedef std::map<PID_pair,PID_pair_xsec_container> map_PID_pair_PID_pair_xsec;
 
     /// @brief Typedef for a std::function that takes a PID pair (iipair) as input and returns an xsec_container instance
     /// _Anders: Not sure we'll need this now that we're giving up the PIDPairCrossSectionFunc capability...

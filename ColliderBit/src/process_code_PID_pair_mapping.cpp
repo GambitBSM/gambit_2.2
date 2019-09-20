@@ -30,7 +30,7 @@ namespace Gambit
 
     /// Get a multimap between the active Pythia process codes and the 
     /// corresponding PID pair for the two final state particles
-    void getActiveProcessCodeToPIDPairsMap(multimap_int_iipair& result)
+    void getActiveProcessCodeToPIDPairsMap(multimap_int_PID_pair& result)
     {
       using namespace Pipes::getActiveProcessCodeToPIDPairsMap;
 
@@ -53,8 +53,8 @@ namespace Gambit
           // Loop over these elements and construct the smaller result multimap
           for (auto mm_it = mm_range.first; mm_it != mm_range.second; ++mm_it)
           {
-            const iipair& pids = mm_it->second;
-            result.insert( std::pair<int,iipair>(pcode, pids) );
+            const PID_pair& pids = mm_it->second;
+            result.insert( std::pair<int,PID_pair>(pcode, pids) );
           }
         }
       }
@@ -63,7 +63,7 @@ namespace Gambit
 
 
     ///  Get a list of all the PID pairs related to active process codes
-    void getPIDPairs(vec_iipair& result)
+    void getPIDPairs(vec_PID_pair& result)
     {
       using namespace Pipes::getPIDPairs;
 
@@ -74,13 +74,23 @@ namespace Gambit
 
       if (*Loop::iteration == XSEC_CALCULATION)
       {
-        for (const std::pair<int,iipair>& entry : *Dep::ActiveProcessCodeToPIDPairsMap)
+        for (const std::pair<int,PID_pair>& entry : *Dep::ActiveProcessCodeToPIDPairsMap)
         {
-          if (std::find(result.begin(), result.end(), entry.second) == result.end())
+
+          PID_pair pid_pair = entry.second;
+
+          // if (std::find(result.begin(), result.end(), entry.second) == result.end())
+          if (std::find(result.begin(), result.end(), pid_pair) == result.end())
           {
-            result.push_back(entry.second);
+            result.push_back( PID_pair(pid_pair) );
           }
         }
+
+        for (const PID_pair& pid_pair : result)
+        {
+          cout << DEBUG_PREFIX << "getPIDPairs: - active PID pair: [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]" << endl;
+        }
+
       }
     }
 

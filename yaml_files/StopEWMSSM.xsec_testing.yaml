@@ -13,15 +13,35 @@ Parameters:
     Qin: 1000
     TanBeta: 20.6554
     mA: 3000
-    md2_3: 9e+06
-    me2_3: 9e+06
-    ml2_12: 9e+06
-    ml2_3: 9e+06
-    mq2_12: 9e+06
+    md2_3: 573377
+    me2_3: 573377
+    ml2_12: 573377
+    ml2_3: 573377
+    mq2_12: 573377
     mq2_3: 573377
     mu: -960.248
     mu2_3: 600000
     # mu2_3: 327127
+
+
+  # MSSM15atQ_mA:
+  #   A0: 0
+  #   Au_3: 0
+  #   M1: 21.3372
+  #   M2: 282.67
+  #   M3: 3000
+  #   Qin: 1000
+  #   TanBeta: 20.6554
+  #   mA: 3000
+  #   md2_3: 9e+06
+  #   me2_3: 9e+06
+  #   ml2_12: 9e+06
+  #   ml2_3: 9e+06
+  #   mq2_12: 9e+06
+  #   mq2_3: 573377
+  #   mu: -960.248
+  #   mu2_3: 600000
+  #   # mu2_3: 327127
 
   # MSSM15atQ_mA:
   #   A0: 0
@@ -399,14 +419,20 @@ Rules:
           - HadronLevel:all = on
           - TauDecays:mode = 0
           - TimeShower:pTmin = 2
-          - SUSY:all = off
-          - SUSY:gg2squarkantisquark = on
-          - SUSY:qqbar2squarkantisquark = on
-          - SUSY:qq2squarksquark = on
-          - SUSY:idVecA = 1000001,1000002,1000004
-          - SUSY:idVecB = 1000001,1000002,1000004
+          - SUSY:all = on
           - 23:mMin = 0.1
           - 24:mMin = 0.1
+
+
+          # - SUSY:idVecA = 1000021,1000022,1000023,1000024
+          # - SUSY:idVecB = 1000021,1000022,1000023,1000024
+
+          # - SUSY:all = off
+          # - SUSY:gg2squarkantisquark = on
+          # - SUSY:qqbar2squarkantisquark = on
+          # - SUSY:qq2squarksquark = on
+          # - SUSY:idVecA = 1000001,1000002,1000004
+          # - SUSY:idVecB = 1000001,1000002,1000004
 
           # - SUSY:qg2chi0squark = off
           # - SUSY:qg2chi0squark = off
