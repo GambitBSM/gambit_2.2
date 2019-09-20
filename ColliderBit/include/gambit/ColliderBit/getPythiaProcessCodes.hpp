@@ -17,7 +17,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -40,6 +40,13 @@ namespace Gambit
       if (iteration == XSEC_CALCULATION)
       {
         process_codes = HardScatteringSim.codesHard();
+
+        #ifdef COLLIDERBIT_DEBUG
+          for (int pcode : process_codes)
+          {
+            cout << DEBUG_PREFIX << "getPythiaProcessCodes: - active process: " << pcode << endl;
+          }
+        #endif
       }
     }
 

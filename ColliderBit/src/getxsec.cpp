@@ -372,15 +372,15 @@ namespace Gambit
           {
             PID_pair cc_pid_pair = pid_pair.cc_pid_pair();
             cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> Not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;            
-            result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
-            // try
-            // {
-            //   result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
-            // }
-            // catch (const std::out_of_range& err)
-            // {
-            //   cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> --> Also not found! Trying again with [" << cc_pid_pair.first << "," << cc_pid_pair.second << "]." << endl;                        
-            // }
+            // result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
+            try
+            {
+              result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
+            }
+            catch (const std::out_of_range& err)
+            {
+              cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> --> Also not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;                        
+            }
           }
         }
       } // end iteration
