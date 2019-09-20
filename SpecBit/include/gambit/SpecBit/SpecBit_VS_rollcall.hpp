@@ -115,6 +115,15 @@
   /* VEVACIOUS ROUTINES */
   /**********************/
 
+  /// Model dependent -- just tells vevacious the name and locations of the ini files
+  /// for each model, since they might not be just <MODELNAME>.vin, etc.
+  #define CAPABILITY vevacious_file_location
+  START_CAPABILITY
+    #define FUNCTION vevacious_file_location_MSSM
+    START_FUNCTION(map_str_str)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   // Initialize vevacious with a set of YAML runOptions.
   #define CAPABILITY init_vevacious
   START_CAPABILITY
@@ -124,22 +133,25 @@
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Model dependent -- just tells vevacious the name and locations of the ini files for each model.
-  #define CAPABILITY vevacious_file_location
+  // Function to pass spectra to vevacious (via SLHAea). Model dependent.
+  #define CAPABILITY pass_spectrum_to_vevacious
   START_CAPABILITY
-    #define FUNCTION vevacious_file_location_MSSM
-    START_FUNCTION(map_str_str)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // S.B. TODO: Might be able to factorise this a bit.
-  #define CAPABILITY check_stability
-  START_CAPABILITY
-    #define FUNCTION check_stability_MSSM
-    START_FUNCTION(SpecBit::VevaciousResultContainer)
+    #define FUNCTION pass_MSSM_spectrum_to_vevacious
+    START_FUNCTION(const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
     DEPENDENCY(init_vevacious, std::string)
     ALLOW_MODEL_DEPENDENCE(MSSM, CMSSM)
+  #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function for computing the stability of the scalar potential. Model independent. 
+  /// Just works with an initialised vevaciousPlusPlus object.
+  #define CAPABILITY check_vacuum_stability
+  START_CAPABILITY
+    #define FUNCTION check_vacuum_stability_vevacious
+    START_FUNCTION(SpecBit::VevaciousResultContainer)
+    DEPENDENCY(pass_spectrum_to_vevacious, const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)
+    DEPENDENCY(init_vevacious, std::string)
   #undef FUNCTION
   #undef CAPABILITY
 
@@ -148,7 +160,7 @@
   START_CAPABILITY
     #define FUNCTION get_likelihood_VS
       START_FUNCTION(double)
-      DEPENDENCY(check_stability, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -157,7 +169,7 @@
   START_CAPABILITY
     #define FUNCTION get_likelihood_VS_thermal
       START_FUNCTION(double)
-      DEPENDENCY(check_stability, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -165,7 +177,7 @@
   START_CAPABILITY
     #define FUNCTION print_VS_StraightPathGoodEnough
       START_FUNCTION(int)
-      DEPENDENCY(check_stability, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
   
@@ -173,7 +185,7 @@
   START_CAPABILITY
     #define FUNCTION print_VS_StraightPathGoodEnough_Thermal
       START_FUNCTION(int)
-      DEPENDENCY(check_stability, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -181,7 +193,7 @@
   START_CAPABILITY
     #define FUNCTION print_VS_ThresholdAndBounceActions
       START_FUNCTION(std::vector<double>)
-      DEPENDENCY(check_stability, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
   
@@ -189,7 +201,7 @@
   START_CAPABILITY
     #define FUNCTION print_VS_ThresholdAndBounceActions_Thermal
       START_FUNCTION(std::vector<double>)
-      DEPENDENCY(check_stability, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
 

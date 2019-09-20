@@ -480,7 +480,7 @@ namespace Gambit
     {
         using namespace Pipes::get_likelihood_VS;
         
-        VevaciousResultContainer vevacious_results = *Dep::check_stability;
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         double lifetime =  vevacious_results.get_lifetime();
 
         // This is based on the estimation of the past lightcone from 1806.11281
@@ -493,7 +493,7 @@ namespace Gambit
     {
         using namespace Pipes::get_likelihood_VS_thermal;
 
-        VevaciousResultContainer vevacious_results = *Dep::check_stability;
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         double thermalProbability =  vevacious_results.get_thermalProbability();
 
          if(thermalProbability == 0)
@@ -511,7 +511,7 @@ namespace Gambit
     {
         using namespace Pipes::print_VS_StraightPathGoodEnough;
         
-        VevaciousResultContainer vevacious_results = *Dep::check_stability;
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         // boolean false means that we are getting non-thermal values
         double threshold = vevacious_results.get_bounceActionThreshold(false);
         double straightPath = vevacious_results.get_bounceActionStraight(false);
@@ -535,7 +535,7 @@ namespace Gambit
     {
         using namespace Pipes::print_VS_StraightPathGoodEnough_Thermal;
         
-        VevaciousResultContainer vevacious_results = *Dep::check_stability;
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         // boolean true means that we are getting thermal values
         double threshold = vevacious_results.get_bounceActionThreshold(true);
         double straightPath = vevacious_results.get_bounceActionStraight(true);
@@ -560,7 +560,7 @@ namespace Gambit
         using namespace Pipes::print_VS_ThresholdAndBounceActions;
 
         result.clear();
-        VevaciousResultContainer vevacious_results = *Dep::check_stability;
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         
         // bool false since we are getting non-thermal values
         result.push_back(vevacious_results.get_bounceActionThreshold(false));
@@ -575,7 +575,7 @@ namespace Gambit
         using namespace Pipes::print_VS_ThresholdAndBounceActions_Thermal;
         
         result.clear();
-        VevaciousResultContainer vevacious_results = *Dep::check_stability;
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         
         // bool true since we are getting thermal values
         result.push_back(vevacious_results.get_bounceActionThreshold(true));
@@ -622,17 +622,13 @@ namespace Gambit
         result["ModelFile"] = modelfilesPath + "ModelFile.vin";
     }
 
-    // This function gives back the result for absolute stability, either "Stable" or "Metastable".
-    void check_stability_MSSM(VevaciousResultContainer & result)
+    /// This function passes the spectrum object (as SLHAea) to vevacious.
+    void pass_MSSM_spectrum_to_vevacious(const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus* &result)
     {
-        namespace myPipe = Pipes::check_stability_MSSM;
+        namespace myPipe = Pipes::pass_MSSM_spectrum_to_vevacious;
 
         //static std::string inputspath =  *myPipe::Dep::make_vevaciousPlusPlus_inputs;
         static std::string inputspath =  *myPipe::Dep::init_vevacious;
-
-        // reset all member variables of VevaciousResultContainer to -1
-        // to avoid that any value could be carried over from a previous calculated point
-        result.reset_results();
 
         // Getting mpi rank
         int rank;
@@ -645,7 +641,7 @@ namespace Gambit
         std::string rankstring = std::to_string(rank);
 
         std::string inputFilename = inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
-        vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
+        static vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
 
         // Get the spectrum object for the MSSM
         const Spectrum& fullspectrum = *myPipe::Dep::unimproved_MSSM_spectrum;
@@ -912,18 +908,33 @@ namespace Gambit
                               
         vevaciousPlusPlus.ReadLhaBlock( "MSU2", scale , msu2, 2 );
 
-        double M0input = *myPipe::Param["M0"];
-        double M12input = *myPipe::Param["M12"];
-        double A0input = *myPipe::Param["A0"];
-        double TanBetainput = *myPipe::Param["TanBeta"];
-        double SignMuinput = *myPipe::Param["SignMu"];
+        result = &vevaciousPlusPlus;
 
-        std::ostringstream InputsForLog;
-        //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
-        InputsForLog << std::fixed << std::setprecision(12) << "Running Vevacious with parameters: " << "M0="  << M0input << " M12="  << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput ;
-        std::string InputsForLogString = InputsForLog.str();
-        logger() << InputsForLogString << EOM;
-        
+    }
+
+    // This function gives back the result for absolute stability, either "Stable" or "Metastable".
+    void check_vacuum_stability_vevacious(VevaciousResultContainer &result)
+    {
+        namespace myPipe = Pipes::check_vacuum_stability_vevacious;
+
+        // reset all member variables of VevaciousResultContainer to -1
+        // to avoid that any value could be carried over from a previous calculated point
+        result.reset_results();
+
+        // double M0input = *myPipe::Param["M0"];
+        // double M12input = *myPipe::Param["M12"];
+        // double A0input = *myPipe::Param["A0"];
+        // double TanBetainput = *myPipe::Param["TanBeta"];
+        // double SignMuinput = *myPipe::Param["SignMu"];
+
+        // std::ostringstream InputsForLog;
+        // //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
+        // InputsForLog << std::fixed << std::setprecision(12) << "Running Vevacious with parameters: " << "M0="  << M0input << " M12="  << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput ;
+        // std::string InputsForLogString = InputsForLog.str();
+        // logger() << InputsForLogString << EOM;
+
+        vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = *(*myPipe::Dep::pass_spectrum_to_vevacious);
+        static std::string inputspath =  *myPipe::Dep::init_vevacious;
 
         /*// initialise vevacious outputs to -1. In case vevacious crashed or 
         // exitis with an exception we will use these to fill the 
@@ -1446,458 +1457,3 @@ namespace Gambit
 
   } // end namespace SpecBit
 } // end namespace Gambit
-
-
-
-
-    // OLD FUNCTION IS HERE IF YOU NEED IT!
-    // void make_vevaciousPlusPlus_inputs(std::string &inputspath)
-    // {
-    //     namespace myPipe = Pipes::make_vevaciousPlusPlus_inputs;
-    //     const Options& runOptions=*myPipe::runOptions;
-
-    //     static bool firstrun = true;
-    //     int rank;
-
-    //     // Here we make sure files are only written the first time this is run
-    //     if(firstrun) 
-    //     {
-    //         std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious","1.0");
-
-    //         std::string vevaciouspath = vevaciouslibpath + "/../";
-
-
-    //         // Get mpi rank
-
-    //         #ifdef WITH_MPI
-    //             MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    //         #else
-    //             rank = 0;
-    //         #endif
-
-    //         //Creating string with rank number
-    //         std::string rankstring = std::to_string(rank);
-
-    //         // Getting the run folder for saving initialization files
-    //         inputspath = runOptions.getValue<std::string>("where_to_save_input");
-
-    //         std::string initfilesPath = inputspath + "/InitializationFiles/mpirank_"+ rankstring + "/";
-    //         std::string modelfilesPath = inputspath + "/ModelFiles/mpirank_"+ rankstring + "/";
-
-
-    //         //Creating folders for initialization files
-
-    //         try
-    //         {
-    //           Utils::ensure_path_exists(initfilesPath);
-    //           Utils::ensure_path_exists(modelfilesPath);
-    //         }
-    //         catch(const std::exception& e)
-    //         {
-    //             std::ostringstream errmsg;
-    //             errmsg << "Error creating vevacious initialization and model files folders for MPI process " << rankstring;
-    //             SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
-    //         }
-
-    //         // Copying Vevacious Model files so that there is one for each process.
-
-    //         std::string ScaleAndBlockFileSource = vevaciouspath +
-    //                                         "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwo.xml";
-
-    //         std::string ModelFileSource = vevaciouspath + "ModelFiles/PotentialFunctions/RealMssmWithStauAndStopVevs.vin";
-
-    //         std::string ScaleAndBlockFile= modelfilesPath + "ScaleAndBlockFile.xml";
-
-    //         std::string ModelFile = modelfilesPath + "ModelFile.vin";
-
-    //         try
-    //         {
-
-    //             std::ifstream  ScaleAndBlocksrc(ScaleAndBlockFileSource , std::ios::binary);
-    //             std::ofstream  ScaleAndBlockdst(ScaleAndBlockFile ,   std::ios::binary);
-
-    //             ScaleAndBlockdst << ScaleAndBlocksrc.rdbuf();
-
-    //             std::ifstream  ModelFilesrc(ModelFileSource , std::ios::binary);
-    //             std::ofstream  ModelFiledst(ModelFile ,   std::ios::binary);
-
-    //             ModelFiledst << ModelFilesrc.rdbuf();
-    //         }
-    //         catch(const std::exception& e)
-    //         {
-    //             std::ostringstream errmsg;
-    //             errmsg << "Error copying model and scale/block vevacious files. Check they exist." << rankstring;
-    //             SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
-    //         }
-
-    //         // Getting Minuit strategy option
-
-
-    //         std::string MinuitStrategy = runOptions.getValueOrDef<std::string>("0", 
-    //                                                                            "minuit_strategy");
-    //         // Writing potential function initialization file
-
-
-    //         // Options that can be read from YAML file
-    //         std::string potentialfunctioninitpath = initfilesPath + "/PotentialFunctionInitialization.xml";
-
-    //         std::string PotentialFunctionClassType = runOptions.getValueOrDef<std::string>("FixedScaleOneLoopPotential", 
-    //                                                                                        "potential_type");
-    //         // std::string PotentialFunctionClassType = "FixedScaleOneLoopPotential";
-
-    //         // File contents
-    //         std::string potentialfunctioninit =
-    //             "<VevaciousPlusPlusPotentialFunctionInitialization>\n"
-    //             " <LagrangianParameterManagerClass>\n"
-    //             "    <ClassType>\n"
-    //             "      SlhaCompatibleWithSarahManager\n"
-    //             "    </ClassType>\n"
-    //             "    <ConstructorArguments>\n"
-    //             "      <ScaleAndBlockFile>\n"
-    //             "      " + ScaleAndBlockFile + "\n"
-    //             "      </ScaleAndBlockFile>\n"
-    //             "    </ConstructorArguments>\n"
-    //             "  </LagrangianParameterManagerClass>\n"
-    //             "  <PotentialFunctionClass>\n"
-    //             "    <ClassType>\n"
-    //             "      " + PotentialFunctionClassType + "\n"
-    //             "    </ClassType>\n"
-    //             "    <ConstructorArguments>\n"
-    //             "      <ModelFile>\n"
-    //             "         " + ModelFile +
-    //             "\n"
-    //             "      </ModelFile>\n"
-    //             "      <AssumedPositiveOrNegativeTolerance>\n"
-    //             "        0.5\n"
-    //             "      </AssumedPositiveOrNegativeTolerance>\n"
-    //             "    </ConstructorArguments>\n"
-    //             "  </PotentialFunctionClass>\n"
-    //             "</VevaciousPlusPlusPotentialFunctionInitialization>";
-    //         std::ofstream potentialfunctioninitwrite(potentialfunctioninitpath);
-    //         potentialfunctioninitwrite << potentialfunctioninit;
-    //         potentialfunctioninitwrite.close();
-            
-
-    //         // Writing potential minimizer initialization file
-
-    //         // Check whether user wants hom4ps2 or PHC as homotopy continuation backend
-    //         std::string homotopybackend = runOptions.getValueOrDef<std::string>("hom4ps",
-    //                                                                             "homotopy_backend");
-    //         std::string globalIsPanic = runOptions.getValueOrDef<std::string>("false",
-    //                                                                           "global_minimum_is_panic");
-    //         std::string potentialminimizerinitpath = initfilesPath +"/PotentialMinimizerInitialization.xml";
-    //         std::string potentialminimizerinit;
-
-    //         if(homotopybackend == "hom4ps") {
-
-    //             // Getting Path to hom4ps2
-
-    //             std::string PathToHom4ps2 = Backends::backendInfo().path_dir("hom4ps", "2.0");
-
-    //             // File contents
-    //             potentialminimizerinit =
-    //                     "<VevaciousPlusPlusPotentialMinimizerInitialization>\n"
-    //                     "  <PotentialMinimizerClass>\n"
-    //                     "    <ClassType>\n"
-    //                     "      GradientFromStartingPoints\n"
-    //                     "    </ClassType>\n"
-    //                     "    <ConstructorArguments>\n"
-    //                     "      <StartingPointFinderClass>\n"
-    //                     "        <ClassType>\n"
-    //                     "          PolynomialAtFixedScalesSolver\n"
-    //                     "        </ClassType>\n"
-    //                     "        <ConstructorArguments>\n"
-    //                     "          <NumberOfScales>\n"
-    //                     "            1\n"
-    //                     "          </NumberOfScales>\n"
-    //                     "          <ReturnOnlyPolynomialMinima>\n"
-    //                     "            No\n"
-    //                     "          </ReturnOnlyPolynomialMinima>\n"
-    //                     "          <PolynomialSystemSolver>\n"
-    //                     "            <ClassType>\n"
-    //                     "              Hom4ps2Runner\n"
-    //                     "            </ClassType>\n"
-    //                     "            <ConstructorArguments>\n"
-    //                     "              <PathToHom4ps2>\n"
-    //                     "        " + PathToHom4ps2 + "\n"
-    //                      "              </PathToHom4ps2>\n"
-    //                      "              <Hom4ps2Argument>\n"
-    //                      "                1\n"
-    //                      "              </Hom4ps2Argument>\n"
-    //                      "              <ResolutionSize>\n"
-    //                      "                1.0\n"
-    //                      "              </ResolutionSize>\n"
-    //                      "            </ConstructorArguments>\n"
-    //                      "          </PolynomialSystemSolver>\n"
-    //                      "        </ConstructorArguments>\n"
-    //                      "      </StartingPointFinderClass>\n"
-    //                      "      <GradientMinimizerClass>\n"
-    //                      "        <ClassType>\n"
-    //                      "          MinuitPotentialMinimizer\n"
-    //                      "        </ClassType>\n"
-    //                      "        <ConstructorArguments>\n"
-    //                      "          <InitialStepSizeFraction>\n"
-    //                      "            0.1\n"
-    //                      "          </InitialStepSizeFraction>\n"
-    //                      "          <MinimumInitialStepSize>\n"
-    //                      "            1.0\n"
-    //                      "          </MinimumInitialStepSize>\n"
-    //                      "          <MinuitStrategy>\n"
-    //                      "             "+ MinuitStrategy +"\n"
-    //                      "          </MinuitStrategy>\n"
-    //                      "        </ConstructorArguments>\n"
-    //                      "      </GradientMinimizerClass>\n"
-    //                      "      <ExtremumSeparationThresholdFraction>\n"
-    //                      "        0.05\n"
-    //                      "      </ExtremumSeparationThresholdFraction>\n"
-    //                      "      <NonDsbRollingToDsbScalingFactor>\n"
-    //                      "        4.0\n"
-    //                      "      </NonDsbRollingToDsbScalingFactor>\n"
-    //                      "      <GlobalIsPanic>\n"
-    //                      "        " + globalIsPanic + "\n"
-    //                      "      </GlobalIsPanic>\n"
-    //                      "    </ConstructorArguments>\n"
-    //                      "  </PotentialMinimizerClass>\n"
-    //                      "</VevaciousPlusPlusObjectInitialization>\n";
-    //         } else if(homotopybackend == "phc") {
-
-    //             // Getting path to PHC
-    //             std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
-    //             // Creating symlink to PHC in run folder
-    //             std::string PHCSymlink = inputspath + "/Homotopy/mpirank_"+ rankstring + "/";
-
-    //             try
-    //             {
-    //                 Utils::ensure_path_exists(PHCSymlink);
-    //             }
-    //             catch(const std::exception& e)
-    //             {
-    //                 std::ostringstream errmsg;
-    //                 errmsg << "Error creating PHC folder for MPI process " << rankstring;
-    //                 SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
-    //             }
-
-    //             std::string systemCommand( "ln -s " + PathToPHC + "/phc" + " " + PHCSymlink );
-
-    //             int systemReturn = system( systemCommand.c_str() ) ;
-    //             if( systemReturn == -1 )
-    //             {
-    //                 std::ostringstream errmsg;
-    //                 errmsg << "Error making symlink for PHC in process " << rankstring;
-    //                 SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
-    //             }
-
-    //             // File contents
-    //             potentialminimizerinit =
-    //                     "<VevaciousPlusPlusPotentialMinimizerInitialization>\n"
-    //                     "  <PotentialMinimizerClass>\n"
-    //                     "    <ClassType>\n"
-    //                     "      GradientFromStartingPoints\n"
-    //                     "    </ClassType>\n"
-    //                     "    <ConstructorArguments>\n"
-    //                     "      <StartingPointFinderClass>\n"
-    //                     "        <ClassType>\n"
-    //                     "          PolynomialAtFixedScalesSolver\n"
-    //                     "        </ClassType>\n"
-    //                     "        <ConstructorArguments>\n"
-    //                     "          <NumberOfScales>\n"
-    //                     "            1\n"
-    //                     "          </NumberOfScales>\n"
-    //                     "          <ReturnOnlyPolynomialMinima>\n"
-    //                     "            No\n"
-    //                     "          </ReturnOnlyPolynomialMinima>\n"
-    //                     "          <PolynomialSystemSolver>\n"
-    //                     "            <ClassType>\n"
-    //                     "              PHCRunner\n"
-    //                     "            </ClassType>\n"
-    //                     "            <ConstructorArguments>\n"
-    //                     "              <PathToPHC>\n"
-    //                     "        " + PHCSymlink + "\n"
-    //                      "              </PathToPHC>\n"
-    //                      "              <ResolutionSize>\n"
-    //                      "                1.0\n"
-    //                      "              </ResolutionSize>\n"
-    //                      "            <Tasks>\n "
-    //                      "             1                     "
-    //                      "            </Tasks>\n            "
-    //                      "            </ConstructorArguments>\n"
-    //                      "          </PolynomialSystemSolver>\n"
-    //                      "        </ConstructorArguments>\n"
-    //                      "      </StartingPointFinderClass>\n"
-    //                      "      <GradientMinimizerClass>\n"
-    //                      "        <ClassType>\n"
-    //                      "          MinuitPotentialMinimizer\n"
-    //                      "        </ClassType>\n"
-    //                      "        <ConstructorArguments>\n"
-    //                      "          <InitialStepSizeFraction>\n"
-    //                      "            0\n"
-    //                      "          </InitialStepSizeFraction>\n"
-    //                      "          <MinimumInitialStepSize>\n"
-    //                      "            0.5\n"
-    //                      "          </MinimumInitialStepSize>\n"
-    //                      "          <MinuitStrategy>\n"
-    //                      "            "+ MinuitStrategy +"\n"
-    //                      "          </MinuitStrategy>\n"
-    //                      "        </ConstructorArguments>\n"
-    //                      "      </GradientMinimizerClass>\n"
-    //                      "      <ExtremumSeparationThresholdFraction>\n"
-    //                      "        0.1\n"
-    //                      "      </ExtremumSeparationThresholdFraction>\n"
-    //                      "      <NonDsbRollingToDsbScalingFactor>\n"
-    //                      "        4.0\n"
-    //                      "      </NonDsbRollingToDsbScalingFactor>\n"
-    //                      "    </ConstructorArguments>\n"
-    //                      "  </PotentialMinimizerClass>\n"
-    //                      "</VevaciousPlusPlusObjectInitialization>\n";
-    //         } else
-    //         {
-    //             std::ostringstream errmsg;
-    //             errmsg << "The homotopy_backend option in the YAML file has not been set up properly. Check the input YAML file." << std::endl;
-    //             SpecBit_error().raise(LOCAL_INFO,errmsg.str());
-    //         }
-
-    //         std::ofstream potentialminimizerinitwrite(potentialminimizerinitpath);
-    //         potentialminimizerinitwrite << potentialminimizerinit;
-    //         potentialminimizerinitwrite.close();
-
-    //         // Writing tunneling calculator initialization file
-    //         std::string tunnelingcalculatorinitpath = initfilesPath +"/TunnelingCalculatorInitialization.xml";
-
-    //         // Options that can be read from YAML file
-
-    //         std::string TunnelingStrategy = runOptions.getValueOrDef<std::string>("JustQuantum",
-    //         "tunneling_strategy");
-
-    //         std::string pathFinidingTimeout = runOptions.getValueOrDef<std::string>("3600",
-    //                                                                                 "path_finding_timeout");
-
-    //         std::string SurvivalProbabilityThreshold = "0.01";
-
-    //         std::string radialResolution = runOptions.getValueOrDef<std::string>("0.1",
-    //         "radial_resolution_undershoot_overshoot");
-    //         std::string PathResolution = runOptions.getValueOrDef<std::string>("1000","PathResolution");
-
-    //         std::cout << "Scan settings: radialResolution = " << radialResolution << ", PathResolution = " << PathResolution << std::endl;
-    //         // File contents
-    //         std::string tunnelingcalculatorinit =
-    //             "<VevaciousPlusPlusObjectInitialization>\n"
-    //             "  <TunnelingClass>\n"
-    //             "    <ClassType>\n"
-    //             "      BounceAlongPathWithThreshold\n"
-    //             "    </ClassType>\n"
-    //             "    <ConstructorArguments>\n"
-    //             "      <TunnelingStrategy>\n"
-    //             "    " + TunnelingStrategy + "\n"
-    //             "      </TunnelingStrategy>\n"
-    //             "      <SurvivalProbabilityThreshold>\n"
-    //             "        " + SurvivalProbabilityThreshold + "\n"
-    //             "      </SurvivalProbabilityThreshold>\n"
-    //             "      <ThermalActionResolution>\n"
-    //             "        5\n"
-    //             "      </ThermalActionResolution>\n"
-    //             "      <CriticalTemperatureAccuracy>\n"
-    //             "        4\n"
-    //             "      </CriticalTemperatureAccuracy>\n"
-    //             "      <PathResolution>\n"
-    //             "        " + PathResolution + "\n"
-    //             "      </PathResolution>\n"
-    //             "      <Timeout>\n"
-    //             "        "+ pathFinidingTimeout +"\n"
-    //             "      </Timeout>\n"
-    //             "      <MinimumVacuumSeparationFraction>\n"
-    //             "        0.2\n"
-    //             "      </MinimumVacuumSeparationFraction>\n"
-    //             "      <BouncePotentialFit>\n"
-    //             "        <ClassType>\n"
-    //             "          BubbleShootingOnPathInFieldSpace\n"
-    //             "        </ClassType>\n"
-    //             "        <ConstructorArguments>\n"
-    //             "          <NumberShootAttemptsAllowed>\n"
-    //             "            32\n"
-    //             "          </NumberShootAttemptsAllowed>\n"
-    //             "          <RadialResolution>\n"
-    //             "            "+ radialResolution +"\n"
-    //             "          </RadialResolution>\n"
-    //             "        </ConstructorArguments>\n"
-    //             "      </BouncePotentialFit>\n"
-    //             "      <TunnelPathFinders>\n"
-    //             "        <PathFinder>\n"
-    //             "          <ClassType>\n"
-    //             "            MinuitOnPotentialOnParallelPlanes\n"
-    //             "          </ClassType>\n"
-    //             "          <ConstructorArguments>\n"
-    //             "            <NumberOfPathSegments>\n"
-    //             "              50 \n"
-    //             "            </NumberOfPathSegments>\n"
-    //             "            <MinuitStrategy>\n"
-    //             "             "+ MinuitStrategy +"\n"
-    //             "            </MinuitStrategy>\n"
-    //             "            <MinuitTolerance>\n"
-    //             "              1\n"
-    //             "            </MinuitTolerance>\n"
-    //             "          </ConstructorArguments>\n"
-    //             "        </PathFinder>\n"
-    //             "        <PathFinder>\n"
-    //             "          <ClassType>\n"
-    //             "            MinuitOnPotentialPerpendicularToPath\n"
-    //             "          </ClassType>\n"
-    //             "          <ConstructorArguments>\n"
-    //             "            <NumberOfPathSegments>\n"
-    //             "              50\n"
-    //             "            </NumberOfPathSegments>\n"
-    //             "            <NumberOfAllowedWorsenings>\n"
-    //             "              3\n"
-    //             "            </NumberOfAllowedWorsenings>\n"
-    //             "            <ConvergenceThresholdFraction>\n"
-    //             "              0.5\n"
-    //             "            </ConvergenceThresholdFraction>\n"
-    //             "            <MinuitDampingFraction>\n"
-    //             "              0.75\n"
-    //             "            </MinuitDampingFraction>\n"
-    //             "            <NeighborDisplacementWeights>\n"
-    //             "              0.5\n"
-    //             "              0.25\n"
-    //             "            </NeighborDisplacementWeights>\n"
-    //             "            <MinuitStrategy>\n"
-    //             "               "+ MinuitStrategy +"\n"
-    //             "            </MinuitStrategy>\n"
-    //             "            <MinuitTolerance>\n"
-    //             "              1\n"
-    //             "            </MinuitTolerance>\n"
-    //             "          </ConstructorArguments>\n"
-    //             "        </PathFinder>\n"
-    //             "      </TunnelPathFinders>\n"
-    //             "    </ConstructorArguments>\n"
-    //             "  </TunnelingClass>\n"
-    //             "</VevaciousPlusPlusObjectInitialization>";
-
-    //         std::ofstream tunnelingcalculatorinitwrite(tunnelingcalculatorinitpath);
-    //         tunnelingcalculatorinitwrite << tunnelingcalculatorinit;
-    //         tunnelingcalculatorinitwrite.close();
-
-    //         //Finally write the main input file for VevaciousPlusPlus
-
-    //         std::string inputFilename =
-    //                 inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
-
-    //         // File contents
-    //         std::string inputfile =
-    //             "<VevaciousPlusPlusObjectInitialization>\n"
-    //             "  <PotentialFunctionInitializationFile>\n"
-    //             "   " + potentialfunctioninitpath + "\n"
-    //             "  </PotentialFunctionInitializationFile>\n"
-    //             "  <PotentialMinimizerInitializationFile>\n"
-    //             "   " + potentialminimizerinitpath + "\n"
-    //             "  </PotentialMinimizerInitializationFile>\n"
-    //             "  <TunnelingCalculatorInitializationFile>\n"
-    //             "   " +
-    //             tunnelingcalculatorinitpath + "\n"
-    //             "  </TunnelingCalculatorInitializationFile>\n"
-    //             "</VevaciousPlusPlusObjectInitialization>";
-    //         std::ofstream inputwrite(inputFilename);
-    //         inputwrite << inputfile;
-    //         inputwrite.close();
-    //         firstrun = false;
-    //         }
-
-    //     }
