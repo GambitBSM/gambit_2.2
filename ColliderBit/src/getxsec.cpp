@@ -19,7 +19,7 @@
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
-#include "gambit/ColliderBit/all_process_codes_to_PID_pairs.hpp"
+#include "gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp"
 
 #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
@@ -131,6 +131,12 @@ namespace Gambit
       static map_PID_pair_PID_pair_xsec all_my_pid_pair_xsecs;
       if (first)
       {
+
+// DEBUG: OMP thread 0:  process_code: 1215,  process_xsec: 4.97,  process_xsec_pythia: 3.8704199079,  weight: 1.2840983971
+// DEBUG: OMP thread 0:  process_code: 1231,  process_xsec: 4.97,  process_xsec_pythia: 3.8695555984,  weight: 1.2843852152
+// DEBUG: OMP thread 0:  process_code: 1351,  process_xsec: 15.18,  process_xsec_pythia: 8.3286182374,  weight: 1.8226312658
+
+
         // Gluino--gluino
         all_my_pid_pair_xsecs[PID_pair(1000021,1000021)] = silly_pid_xsec_constructor( PID_pair(1000021,1000021), 0.623E-01 * 1e3);
         // Gluino--squark
@@ -352,6 +358,19 @@ namespace Gambit
         all_my_pid_pair_xsecs[PID_pair(-1000015,1000016)] = silly_pid_xsec_constructor( PID_pair(-1000015,1000016), 0.262E-03 * 1e3);
         all_my_pid_pair_xsecs[PID_pair(1000015,-1000016)] = silly_pid_xsec_constructor( PID_pair(1000015,-1000016), 0.124E-03 * 1e3);
         all_my_pid_pair_xsecs[PID_pair(-2000015,1000016)] = silly_pid_xsec_constructor( PID_pair(-2000015,1000016), 0.542E-02 * 1e3);
+
+
+        // _Anders DEBUG
+        // 1215, 1231
+        all_my_pid_pair_xsecs[PID_pair(1000001,-1000001)] = silly_pid_xsec_constructor( PID_pair(1000001,-1000001), 3.8695555984);
+
+        // 1351
+        all_my_pid_pair_xsecs[PID_pair(1000001,1000001)] = silly_pid_xsec_constructor( PID_pair(1000001,1000001), 0.5 * 8.3286182374);
+        all_my_pid_pair_xsecs[PID_pair(-1000001,-1000001)] = silly_pid_xsec_constructor( PID_pair(-1000001,-1000001), 0.5 * 8.3286182374);
+
+        // all_my_pid_pair_xsecs[PID_pair(1000001,1000001)] = silly_pid_xsec_constructor( PID_pair(1000001,1000001), 0.759E-02 * 1e3);
+
+
       }
 
       if(*Loop::iteration == COLLIDER_INIT)
@@ -364,24 +383,27 @@ namespace Gambit
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
           cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "Looking up xsec for [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]." << endl;
-          try
-          {
-            result[pid_pair] = all_my_pid_pair_xsecs.at(pid_pair);
-          }
-          catch (const std::out_of_range& err)
-          {
-            PID_pair cc_pid_pair = pid_pair.cc_pid_pair();
-            cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> Not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;            
-            // result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
-            try
-            {
-              result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
-            }
-            catch (const std::out_of_range& err)
-            {
-              cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> --> Also not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;                        
-            }
-          }
+
+          result[pid_pair] = all_my_pid_pair_xsecs.at(pid_pair);
+
+          // try
+          // {
+          //   result[pid_pair] = all_my_pid_pair_xsecs.at(pid_pair);
+          // }
+          // catch (const std::out_of_range& err)
+          // {
+          //   PID_pair cc_pid_pair = pid_pair.cc_pid_pair();
+          //   cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> Not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;            
+          //   // result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
+          //   try
+          //   {
+          //     result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
+          //   }
+          //   catch (const std::out_of_range& err)
+          //   {
+          //     cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> --> Also not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;                        
+          //   }
+          // }
         }
       } // end iteration
 

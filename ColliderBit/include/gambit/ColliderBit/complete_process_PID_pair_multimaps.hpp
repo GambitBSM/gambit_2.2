@@ -25,10 +25,18 @@
 
 #include "gambit/ColliderBit/ColliderBit_types.hpp"
 
+#pragma once
+
 namespace Gambit
 {
   namespace ColliderBit
   {
+
+    // Declare a function that returns the "reversed" version of the 
+    // all_process_codes_to_PID_pairs multimap below, i.e. a map 
+    // from PID_pair --> process_code
+    const multimap_PID_pair_int& all_PID_pairs_to_process_codes();
+
 
     // One giant map initializer:
     const static multimap_int_PID_pair all_process_codes_to_PID_pairs {

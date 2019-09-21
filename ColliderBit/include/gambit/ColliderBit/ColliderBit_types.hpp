@@ -112,6 +112,8 @@ namespace Gambit
     typedef std::multimap<int,std::pair<int,int>> multimap_int_iipair;
     typedef std::multimap<int,PID_pair> multimap_int_PID_pair;
 
+    typedef std::multimap<PID_pair,int> multimap_PID_pair_int;
+
     typedef std::map<int,xsec_container> map_int_xsec;
     typedef std::map<int,process_xsec_container> map_int_process_xsec;
 

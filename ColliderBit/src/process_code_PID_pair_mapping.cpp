@@ -17,7 +17,7 @@
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
-#include "gambit/ColliderBit/all_process_codes_to_PID_pairs.hpp"
+#include "gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp"
 
 // #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
@@ -45,6 +45,7 @@ namespace Gambit
       // and can return the relevant subset of the huge multimap above
       if(*Loop::iteration == XSEC_CALCULATION)
       {
+
         for(int pcode : *Dep::ActiveProcessCodes)
         {
           // Get iterator bounds (as a pair) over the multimap entries that match the key pcode.
