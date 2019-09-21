@@ -529,10 +529,10 @@ namespace Gambit
           proc_xs.set_process_code(proc_code);
 
           // Get iterator bounds (as a pair) over the multimap entries that match the key proc_code
-          auto mm_range = Dep::ActiveProcessCodeToPIDPairsMap->equal_range(proc_code);
+          auto mm_proc2pid_range = Dep::ActiveProcessCodeToPIDPairsMap->equal_range(proc_code);
 
           // Loop over these elements in the multimap
-          for (auto mm_it = mm_range.first; mm_it != mm_range.second; ++mm_it)
+          for (auto mm_it = mm_proc2pid_range.first; mm_it != mm_proc2pid_range.second; ++mm_it)
           {
             const PID_pair& pids = mm_it->second;
 
@@ -564,47 +564,45 @@ namespace Gambit
             // Accumulate result in the process_xsec_container proc_xs
             proc_xs.sum_xsecs(pids_xs.xsec(), pids_xs.xsec_err());
             proc_xs.add_related_pid_pair(pids);
+
+
+            // Check if the current PID pair is related to any other process_codes,
+            // using the multimap returned by all_PID_pairs_to_process_codes().
+            // If yes, check that these processes are among the active processes
+            // and register them in the proc_xs instance as processes sharing the cross-section
+
+            // Get iterator bounds (as a pair) over the multimap entries that match the key pids
+            auto mm_pid2proc_range = all_PID_pairs_to_process_codes().equal_range(pids);
+
+            // Loop over these elements in the multimap
+            for (auto mm_it = mm_pid2proc_range.first; mm_it != mm_pid2proc_range.second; ++mm_it)
+            {
+              // Get other process code
+              int other_proc_code = mm_it->second;
+
+              // Don't run around in circles...
+              if(other_proc_code == proc_code) continue;
+
+              // Check that other_proc_code is itself in one of the active processes, i.e. listed in Dep::ActiveProcessCodes
+              if(std::find(Dep::ActiveProcessCodes->begin(), Dep::ActiveProcessCodes->end(), other_proc_code) != Dep::ActiveProcessCodes->end())  
+              {
+                // Add other_proc_code to the list of processes that share cross-section with proc_code
+                proc_xs.add_process_sharing_xsec(other_proc_code);
+              }
+              else
+              {
+                std::stringstream errmsg_ss;
+                errmsg_ss << "For correct cross-section scaling of collider process " << proc_code;
+                errmsg_ss << ", process " << other_proc_code << " must also be activated. Please check your collider settings.";
+                ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+              }
+            }
           }
 
           // Construct info string of the form "ProcessCode:<proc_code>"
           std::stringstream info_ss;
           info_ss << "ProcessCode:" << proc_code;
           proc_xs.set_info_string(info_ss.str());
-
-          // Now we figure out if the proc_code process shares the cross-section
-          // stored in in proc_xs with any other process codes
-
-          // Loop over *all* entries (process code <--> PID pair) in the multimap all_process_codes_to_PID_pairs
-          for (auto mm_it = all_process_codes_to_PID_pairs.begin(); mm_it != all_process_codes_to_PID_pairs.end(); ++mm_it)
-          {
-            // Extract the process code (pc) and PID pair (pp)
-            int pc = mm_it->first;
-            const PID_pair& pp = mm_it->second;
-
-            if (pc == proc_code) continue;
-
-            // @todo What's the right choice here?
-            // // Don't add more copies of the same process code! ...Or should we?
-            // if(std::find(proc_xs.processes_sharing_xsec().begin(), proc_xs.processes_sharing_xsec().end(), pc) != proc_xs.processes_sharing_xsec().end()) 
-
-            // Check if the PID pair pp mathces one of the PID pairs for the proc_code process
-            if(std::find(proc_xs.related_pid_pairs().begin(), proc_xs.related_pid_pairs().end(), pp) != proc_xs.related_pid_pairs().end()) 
-            {
-              // Check that pc is itself in one of the active processes, i.e. listed in Dep::ActiveProcessCodes
-              if(std::find(Dep::ActiveProcessCodes->begin(), Dep::ActiveProcessCodes->end(), pc) != Dep::ActiveProcessCodes->end())  
-              {
-                // Add pc to the list of processes that share cross-section with proc_code
-                proc_xs.add_process_sharing_xsec(pc);
-              }
-              else
-              {
-                std::stringstream errmsg_ss;
-                errmsg_ss << "For correct cross-section scaling of collider process " << proc_code;
-                errmsg_ss << ", process " << pc << " must also be activated. Please check your collider settings.";
-                ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-              }
-            }
-          }
 
           // Store proc_xs in the shared_result map
           shared_result[proc_code] = proc_xs;
