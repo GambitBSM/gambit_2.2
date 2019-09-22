@@ -5,7 +5,7 @@ LHC cross-sections to GAMBIT
 from __future__ import print_function
 import xsec 
 import numpy as np 
-from modules import 
+from modules.my_cross_sections import all_xsec_fb, all_xsec_err_fb
 
 
 #
@@ -63,7 +63,9 @@ def xsec_fb(proc, proc_params, proc_flags):
     for k,v in proc_flags.items():
         print(prefix, "-", k, ":", v)
 
-    return 123.45
+    result = all_xsec_fb[proc]
+    print(prefix, "Will now return result:", result)
+    return result
 
 
 #
@@ -84,7 +86,9 @@ def xsec_err_fb(proc, proc_params, proc_flags):
     for k,v in proc_flags.items():
         print(prefix, "-", k, ":", v)
 
-    return np.array([1.1, 1.2])
+    result = all_xsec_err_fb[proc]
+    print(prefix, "Will now return result:", result)
+    return result
 
 
 
@@ -97,9 +101,9 @@ def xsec_err_fb(proc, proc_params, proc_flags):
 # flags_in = {'flag1': True, 'flag2': False}
 # set_flags(flags_in)
 
-# xsec_fb([1000021,1000022], {'LO_xsec_fb': 78.9}, {})
+# xsec_fb((1000021,1000021), {'LO_xsec_fb': 78.9}, {})
 
-# xsec_err_fb([1000021,1000022], {}, {'alphas_error': True})
+# xsec_err_fb((1000021,1000021), {}, {'alphas_error': True})
 
 
 
