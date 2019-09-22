@@ -18,6 +18,7 @@
 ///
 ///  *********************************************
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <omp.h>
@@ -345,17 +346,27 @@ namespace Gambit
     const std::vector<int>& process_xsec_container::processes_sharing_xsec() const 
     { return _processes_sharing_xsec; }
 
-    /// Add a process code to the list of processes sharing this cross-section 
-    void process_xsec_container::add_process_sharing_xsec(int process_code_in) 
-    { _processes_sharing_xsec.push_back(process_code_in); }
+    /// Add a process code to the list of processes sharing this cross-section, 
+    void process_xsec_container::register_process_sharing_xsec(int process_code_in) 
+    { 
+      if(std::find(_processes_sharing_xsec.begin(), _processes_sharing_xsec.end(), process_code_in) == _processes_sharing_xsec.end())
+      {
+        _processes_sharing_xsec.push_back(process_code_in); 
+      }
+    }
 
     /// Return the list of PID pairs related to this cross-section
     const std::vector<PID_pair>& process_xsec_container::related_pid_pairs() const 
     { return _related_pid_pairs; } 
 
     /// Add a PID pair to the list of PID pairs related to this cross-section
-    void process_xsec_container::add_related_pid_pair(PID_pair pid_pair_in) 
-    { _related_pid_pairs.push_back(pid_pair_in); }  
+    void process_xsec_container::register_related_pid_pair(PID_pair pid_pair_in) 
+    { 
+      if(std::find(_related_pid_pairs.begin(), _related_pid_pairs.end(), pid_pair_in) == _related_pid_pairs.end())
+      {
+        _related_pid_pairs.push_back(pid_pair_in); 
+      }
+    }  
 
 
 
@@ -429,16 +440,26 @@ namespace Gambit
     { return _pid_pairs_sharing_xsec; }
 
     /// Add a PID pair to the list of PID pairs sharing this cross-section 
-    void PID_pair_xsec_container::add_pid_pair_sharing_xsec(PID_pair pid_pair_in) 
-    { _pid_pairs_sharing_xsec.push_back(pid_pair_in); }
+    void PID_pair_xsec_container::register_pid_pair_sharing_xsec(PID_pair pid_pair_in) 
+    { 
+      if(std::find(_pid_pairs_sharing_xsec.begin(), _pid_pairs_sharing_xsec.end(), pid_pair_in) == _pid_pairs_sharing_xsec.end())
+      {
+        _pid_pairs_sharing_xsec.push_back(pid_pair_in); 
+      }
+    }
 
     /// Return the list of process codes related to this cross-section
     const std::vector<int>& PID_pair_xsec_container::related_processes() const 
     { return _related_processes; } 
 
     /// Add a process code to the list of processes related to this cross-section
-    void PID_pair_xsec_container::add_related_process(int process_code_in) 
-    { _related_processes.push_back(process_code_in); }  
+    void PID_pair_xsec_container::register_related_process(int process_code_in) 
+    { 
+      if(std::find(_related_processes.begin(), _related_processes.end(), process_code_in) == _related_processes.end())
+      {
+        _related_processes.push_back(process_code_in); 
+      }
+    }  
 
 
   }

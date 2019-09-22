@@ -120,7 +120,6 @@ Rules:
 
   # Choose event weighting
   - capability: EventWeighterFunction
-    # function: setEventWeight_fromCrossSection_Pythia
     function: setEventWeight_fromCrossSection
     # function: setEventWeight_unity
     
@@ -197,6 +196,8 @@ Rules:
           - SUSY:all = on
           - 23:mMin = 0.1
           - 24:mMin = 0.1
+          - SUSY:idVecA = 1000001,1000002,2000001,2000002,1000021
+          - SUSY:idVecB = 1000001,1000002,2000001,2000002,1000021
 
           # - SUSY:idVecA = 1000001
           # - SUSY:idVecB = 1000001
@@ -286,8 +287,8 @@ Rules:
       #     - CMS_8TeV_2LEPDMTOP_20invfb
       #     - CMS_8TeV_MONOJET_20invfb
       LHC_13TeV:
-        min_nEvents: 10000 # 100000
-        max_nEvents: 10000 # 100000
+        min_nEvents: 20000 # 100000
+        max_nEvents: 20000 # 100000
         events_between_convergence_checks: 100000000
         target_fractional_uncert: 0.3
         halt_when_systematic_dominated: true
