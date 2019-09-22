@@ -5,12 +5,13 @@ LHC cross-sections to GAMBIT
 from __future__ import print_function
 import xsec 
 import numpy as np 
+from modules import 
 
 
 #
 # This code will run when the library is loaded
 #
-prefix = "xsec_example_gambit:"
+prefix = "xsecBE_example_gambit:"
 print(prefix)
 print(prefix, "Starting up...")
 print(prefix, "Have loaded xsec version", xsec.__version__, "from", xsec.__path__[0])
@@ -21,7 +22,7 @@ print(prefix, "Have loaded numpy version", np.__version__, "from", np.__path__[0
 # Set global parameters
 #
 def set_parameters(params):
-    prefix = "xsec_example_gambit: set_parameters:"
+    prefix = "xsecBE_example_gambit: set_parameters:"
 
     print(prefix)
     print(prefix, "Starting function...")
@@ -34,7 +35,7 @@ def set_parameters(params):
 # Set global library flags
 #
 def set_flags(flags):
-    prefix = "xsec_example_gambit: set_flags:"
+    prefix = "xsecBE_example_gambit: set_flags:"
 
     print(prefix)
     print(prefix, "Starting function...")
@@ -48,7 +49,7 @@ def set_flags(flags):
 # Return the cross-section for a given process, identified by a PID pair
 #
 def xsec_fb(proc, proc_params, proc_flags):
-    prefix = "xsec_example_gambit: xsec_fb:"
+    prefix = "xsecBE_example_gambit: xsec_fb:"
 
     print(prefix)
     print(prefix, "Starting function...")
@@ -69,7 +70,7 @@ def xsec_fb(proc, proc_params, proc_flags):
 # Return the asymmetric cross-section error for a given process, identified by a PID pair
 #
 def xsec_err_fb(proc, proc_params, proc_flags):
-    prefix = "xsec_example_gambit: xsec_err_fb:"
+    prefix = "xsecBE_example_gambit: xsec_err_fb:"
 
     print(prefix)
     print(prefix, "Starting function...")

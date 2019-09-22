@@ -109,5 +109,5 @@ LibFarrayTest:
 libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
 
-xsec_example:
-  0.1.0:       ./Backends/examples/xsec_example/0.1.0/xsec_example_gambit.py
+xsecBE_example:
+  0.1.0:       ./Backends/examples/xsecBE_example/0.1.0/xsec_example_gambit.py
