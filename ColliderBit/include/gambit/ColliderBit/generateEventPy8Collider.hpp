@@ -57,7 +57,7 @@ namespace Gambit
     void generateEventPy8Collider(HEPUtils::Event& event,
                                   const MCLoopInfo& RunMC,
                                   const Py8Collider<PythiaT,EventT>& HardScatteringSim,
-                                  const EventWeighterType_Py8Collider& EventWeighterPy8Collider,
+                                  const EventWeighterFunctionType& EventWeighterFunction,
                                   const int iteration,
                                   void(*wrapup)())
     {
@@ -153,7 +153,7 @@ namespace Gambit
       }
 
       // Assign weight to event
-      EventWeighterPy8Collider(event, &HardScatteringSim);
+      EventWeighterFunction(event, &HardScatteringSim);
     }
 
 
@@ -163,7 +163,7 @@ namespace Gambit
     {                                                            \
       using namespace Pipes::NAME;                               \
       generateEventPy8Collider(result, *Dep::RunMC,              \
-       *Dep::HardScatteringSim, *Dep::EventWeighterPy8Collider,  \
+       *Dep::HardScatteringSim, *Dep::EventWeighterFunction,     \
        *Loop::iteration, Loop::wrapup);                          \
     }
 

@@ -73,20 +73,10 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    DEPENDENCY(EventWeighterPy8Collider, EventWeighterType_Py8Collider)
+    DEPENDENCY(EventWeighterFunction, EventWeighterFunctionType)
     #undef FUNCTION
 
   #undef CAPABILITY
-
-
-  /// Get list of Pythia process codes for all active processes
-  #define CAPABILITY ActiveProcessCodes
-    #define FUNCTION getPythiaProcessCodes
-    START_FUNCTION(std::vector<int>)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    #undef FUNCTION
-  #undef CAPABILITY 
 
 
 
@@ -97,6 +87,7 @@
   #define CAPABILITY PIDPairCrossSectionFunc
   START_CAPABILITY
 
+    /// @todo _Anders: remove this?
     /// Get a dummy test function as PIDPairCrossSectionFunc 
     #define FUNCTION getPIDPairCrossSectionFunc_dummy
     START_FUNCTION(PIDPairCrossSectionFuncType)
@@ -105,6 +96,7 @@
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
 
+    /// @todo _Anders: remove this?
     /// Get a PIDPairCrossSectionFunc via the xsec_example backend
     #define FUNCTION getPIDPairCrossSectionFunc_xsec_example
     START_FUNCTION(PIDPairCrossSectionFuncType)
@@ -126,19 +118,6 @@
   #undef CAPABILITY
   /// @}
 
-
-  /// Provide functions that can be used for event weighting, e.g. for process-level cross-section scaling.
-  /// {@
-  #define CAPABILITY EventWeighterPy8Collider
-
-    #define FUNCTION setEventWeight_fromCrossSection_Pythia
-    START_FUNCTION(EventWeighterType_Py8Collider)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCrossSectionsMap, map_int_process_xsec)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-  /// @}
 
 
   // Get SLHA content from one or more SLHA files

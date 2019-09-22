@@ -51,6 +51,10 @@ namespace Gambit
         virtual double xsecErr_fb(int) const = 0;
         virtual double xsecErr_pb() const = 0;
         virtual double xsecErr_pb(int) const = 0;
+        /// Report an integer process code for the last generated event
+        virtual int process_code() const = 0;
+        /// Report the list of all active process codes
+        virtual std::vector<int> all_active_process_codes() const = 0;
         ///@}
 
         /// @name (Re-)Initialization functions:

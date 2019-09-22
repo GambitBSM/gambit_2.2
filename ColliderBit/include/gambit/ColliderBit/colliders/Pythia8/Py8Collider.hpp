@@ -222,9 +222,11 @@ namespace Gambit
         double xsecErr_pb() const { return _pythiaInstance->info.sigmaErr() * 1e9; }
         double xsecErr_pb(int process_code) const { return _pythiaInstance->info.sigmaErr(process_code) * 1e9; }
 
+        /// Report an integer process code for the last generated event
+        int process_code() const { return _pythiaInstance->info.code(); }
 
-        /// Return the list of Pythia process codes for the active processes
-        std::vector<int> codesHard() const { return _pythiaInstance->info.codesHard(); }
+        /// Report the list of all active process codes
+        std::vector<int> all_active_process_codes() const { return _pythiaInstance->info.codesHard(); }
 
         ///@}
 

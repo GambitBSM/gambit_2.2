@@ -61,33 +61,8 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_EM, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_EM_defaultversion)
-    DEPENDENCY(EventWeighterPy8Collider, EventWeighterType_Py8Collider)
+    DEPENDENCY(EventWeighterFunction, EventWeighterFunctionType)
     #undef FUNCTION
   #undef CAPABILITY
-
-
-  /// Get list of Pythia process codes for all active processes
-  #define CAPABILITY ActiveProcessCodes
-    #define FUNCTION getPythiaProcessCodes_EM
-    START_FUNCTION(std::vector<int>)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(HardScatteringSim, Py8Collider_EM_defaultversion)
-    #undef FUNCTION
-  #undef CAPABILITY 
-
-
-  /// Provide functions that can be used for event weighting, e.g. for process-level cross-section scaling.
-  /// {@
-  #define CAPABILITY EventWeighterPy8Collider
-
-    #define FUNCTION setEventWeight_fromCrossSection_Pythia_EM
-    START_FUNCTION(EventWeighterType_Py8Collider)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ProcessCrossSectionsMap, map_int_process_xsec)
-    #undef FUNCTION
-
-  #undef CAPABILITY
-  /// @}
-
 
 #undef MODULE

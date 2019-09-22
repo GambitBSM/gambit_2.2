@@ -16,8 +16,6 @@
 
 #include "gambit/ColliderBit/getPy8Collider.hpp"
 #include "gambit/ColliderBit/generateEventPy8Collider.hpp"
-#include "gambit/ColliderBit/getPythiaProcessCodes.hpp"
-#include "gambit/ColliderBit/collider_dependent_event_weights.hpp"
 
 namespace Gambit
 {
@@ -33,12 +31,6 @@ namespace Gambit
 
     // Run event generator
     GET_PYTHIA_EVENT(generateEventPythia)
-
-    // Get list of active Pythia processes
-    GET_PYTHIA_PROCESS_CODES(getPythiaProcessCodes)
-
-    // Model-dependent event weight functions
-    SET_EVENT_WEIGHT_FROM_CROSS_SECTION(setEventWeight_fromCrossSection_Pythia, Pythia_default)
 
 
     // Get next SLHA file path and content (for use with model CB_SLHA_file_model)

@@ -64,9 +64,9 @@ namespace Gambit
 
 
     ///  Get a list of all the PID pairs related to active process codes
-    void getPIDPairs(vec_PID_pair& result)
+    void getActivePIDPairs(vec_PID_pair& result)
     {
-      using namespace Pipes::getPIDPairs;
+      using namespace Pipes::getActivePIDPairs;
 
       if (*Loop::iteration == COLLIDER_INIT)
       {
@@ -89,7 +89,7 @@ namespace Gambit
 
         for (const PID_pair& pid_pair : result)
         {
-          cout << DEBUG_PREFIX << "getPIDPairs: - active PID pair: [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]" << endl;
+          cout << DEBUG_PREFIX << "getActivePIDPairs: - active PID pair: [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]" << endl;
         }
 
       }

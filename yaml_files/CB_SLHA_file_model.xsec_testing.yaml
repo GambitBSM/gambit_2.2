@@ -106,7 +106,7 @@ Rules:
 
   # Choose where to get the Pythia process codes from
   - capability: ActiveProcessCodes
-    function: getPythiaProcessCodes
+    function: getActiveProcessCodes
 
   # Set option for how to deal with missing cross-sections
   - capabtility: ProcessCrossSectionsMap
@@ -119,8 +119,9 @@ Rules:
     function: get_MC_xsec_as_base
 
   # Choose event weighting
-  - capability: EventWeighterPy8Collider
-    function: setEventWeight_fromCrossSection_Pythia
+  - capability: EventWeighterFunction
+    # function: setEventWeight_fromCrossSection_Pythia
+    function: setEventWeight_fromCrossSection
     # function: setEventWeight_unity
     
   - capability: PIDPairCrossSectionFunc

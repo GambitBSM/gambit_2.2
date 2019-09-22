@@ -131,12 +131,28 @@
   #undef CAPABILITY
 
 
+  /// Get list of Pythia process codes for all active processes
+  #define CAPABILITY ActiveProcessCodes
+  START_CAPABILITY
+    #define FUNCTION getActiveProcessCodes
+    START_FUNCTION(std::vector<int>)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringSim, const BaseCollider*)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  /// Get a list of all the PID pairs related to active process codes
+  #define CAPABILITY ActivePIDPairs
+  START_CAPABILITY
+    #define FUNCTION getActivePIDPairs
+    START_FUNCTION(vec_PID_pair)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_PID_pair)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
   /// Translate a list of Pythia process codes to list of (PID,PID) pairs
-  /// for the two final state particles of the hard process
-  /// Note that the capability ActiveProcessCodes depends on the exact Pythia collider, 
-  /// (i.e. on the Py8Collider specialization), which depends on the model. 
-  /// So module functions providing ActiveProcessCodes are declared in the 
-  /// model headers in ColliderBit/models.
+  /// for the two final state particles of the hard process.
   #define CAPABILITY ActiveProcessCodeToPIDPairsMap
   START_CAPABILITY
     #define FUNCTION getActiveProcessCodeToPIDPairsMap
@@ -146,15 +162,8 @@
     #undef FUNCTION
   #undef CAPABILITY 
 
-  /// Get a list of all the PID pairs related to active process codes
-  #define CAPABILITY ActivePIDPairs
-  START_CAPABILITY
-    #define FUNCTION getPIDPairs
-    START_FUNCTION(vec_PID_pair)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_PID_pair)
-    #undef FUNCTION
-  #undef CAPABILITY 
+
+
 
 
   /// A map between Pythia process codes and cross-sections
@@ -412,13 +421,19 @@
 
   /// Provide functions that can be used for event weighting, e.g. for process-level cross-section scaling.
   /// {@
-  #define CAPABILITY EventWeighterPy8Collider
+  #define CAPABILITY EventWeighterFunction
   START_CAPABILITY
 
     /// This function is intended as a model-independent fallback option 
     /// that simply assigns a unit weight to all events
     #define FUNCTION setEventWeight_unity
-    START_FUNCTION(EventWeighterType_Py8Collider)
+    START_FUNCTION(EventWeighterFunctionType)
+    #undef FUNCTION
+
+    #define FUNCTION setEventWeight_fromCrossSection
+    START_FUNCTION(EventWeighterFunctionType)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ProcessCrossSectionsMap, map_int_process_xsec)
     #undef FUNCTION
 
     /// Event weight functions that depend on model-specific Py8Collider versions
@@ -446,9 +461,9 @@
     #undef FUNCTION
   #undef CAPABILITY
 
-  /// Process codes for the active collider processes
-  #define CAPABILITY ActiveProcessCodes
-  START_CAPABILITY
-  #undef CAPABILITY
+  // /// Process codes for the active collider processes
+  // #define CAPABILITY ActiveProcessCodes
+  // START_CAPABILITY
+  // #undef CAPABILITY
 
 #undef MODULE

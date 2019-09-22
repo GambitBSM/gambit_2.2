@@ -126,7 +126,7 @@ namespace Gambit
 
     /// @brief Typedef for a std::function that sets the weight for the input HEPUtils::Event
     typedef HEPUtils::Event HEPUtils_Event;  // Extra typedef to avoid macro problem with namespaces
-    typedef std::function<void(HEPUtils_Event&, const BaseCollider*)> EventWeighterType_Py8Collider;
+    typedef std::function<void(HEPUtils_Event&, const BaseCollider*)> EventWeighterFunctionType;
   }
 }
 
