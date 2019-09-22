@@ -74,39 +74,27 @@ namespace Gambit
     // ======= Module functions =======
 
 
-    /// Dummy function for testing out how to return a PIDPairCrossSectionFunc
-    xsec_container PIDPairCrossSection_dummy(const PID_pair& pids, const Spectrum& MSSM_spectrum)
+    // _Anders
+    void getPIDPairCrossSectionsMap_xsecBE_example(map_PID_pair_PID_pair_xsec& result)
     {
-      xsec_container xs_result;
+      using namespace Pipes::getPIDPairCrossSectionsMap_xsecBE_example;
 
-      // Get an SLHA1 object
-      const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
-
-      // "Calculate" cross section
-      // (only stop-stopbar production)
-      double xs_fb = 0.0;
-      if (pids.pid1() == -1000002 && pids.pid2() == 1000002)
+      if(*Loop::iteration == COLLIDER_INIT)
       {
-        xs_fb = 3.09816e-11 + 9.08223e-13;
+        result.clear();
       }
-      else
+
+      if(*Loop::iteration == XSEC_CALCULATION)
       {
-        xs_fb = 1.0;
-      }
-      double xs_rel_err = 0.01;
-      // double xs_err = xs_fb * xs_rel_err;
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+          //
+          // Get cross section from xsecBE_example
+          //
+        }
+      } // end iteration
 
-      // Save result in xs_result
-      xs_result.set_xsec(xs_fb, xs_rel_err);
-
-      // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
-      std::stringstream info_ss;
-      info_ss << "PID1:" << pids.pid1() << ", " << "PID2:" << pids.pid2();
-      xs_result.set_info_string(info_ss.str());
-
-      return xs_result;
     }
-
 
 
 
@@ -567,19 +555,6 @@ namespace Gambit
         all_my_pid_pair_xsecs[PID_pair(-2000011,2000011)] = silly_pid_xsec_constructor( PID_pair(-2000011,2000011), 0.00000e+00);
         all_my_pid_pair_xsecs[PID_pair(-2000013,2000013)] = silly_pid_xsec_constructor( PID_pair(-2000013,2000013), 0.00000e+00);
         all_my_pid_pair_xsecs[PID_pair(-2000015,2000015)] = silly_pid_xsec_constructor( PID_pair(-2000015,2000015), 0.00000e+00);
-
-
-        // Now multiply all cross-sections by 0.5 for all pairs of c.c. final states
-        // in the all_my_pid_pair_xsecs map.
-
-        // // _Anders DEBUG
-        // // 1215, 1231
-        // all_my_pid_pair_xsecs[PID_pair(1000001,-1000001)] = silly_pid_xsec_constructor( PID_pair(1000001,-1000001), 3.8695555984);
-
-        // // 1351
-        // all_my_pid_pair_xsecs[PID_pair(1000001,1000001)] = silly_pid_xsec_constructor( PID_pair(1000001,1000001), 0.5 * 8.3286182374);
-        // all_my_pid_pair_xsecs[PID_pair(-1000001,-1000001)] = silly_pid_xsec_constructor( PID_pair(-1000001,-1000001), 0.5 * 8.3286182374);
-
       }
 
       if(*Loop::iteration == COLLIDER_INIT)
@@ -592,101 +567,11 @@ namespace Gambit
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
           cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "Looking up xsec for [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]." << endl;
-
           result[pid_pair] = all_my_pid_pair_xsecs.at(pid_pair);
-
-          // try
-          // {
-          //   result[pid_pair] = all_my_pid_pair_xsecs.at(pid_pair);
-          // }
-          // catch (const std::out_of_range& err)
-          // {
-          //   PID_pair cc_pid_pair = pid_pair.cc_pid_pair();
-          //   cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> Not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;            
-          //   // result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
-          //   try
-          //   {
-          //     result[pid_pair] = all_my_pid_pair_xsecs.at(cc_pid_pair);
-          //   }
-          //   catch (const std::out_of_range& err)
-          //   {
-          //     cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "--> --> Also not found! Trying again with [" << cc_pid_pair.pid1() << "," << cc_pid_pair.pid2() << "]." << endl;                        
-          //   }
-          // }
         }
       } // end iteration
 
     }
-
-
-
-    /// Get a PIDPairCrossSectionFunc pointing to PIDPairCrossSection_dummy,
-    /// with the second argument already filled by *Dep::MSSM_spectrum
-    void getPIDPairCrossSectionFunc_dummy(PIDPairCrossSectionFuncType& result)
-    {
-      using namespace Pipes::getPIDPairCrossSectionFunc_dummy;
-      result = std::bind(PIDPairCrossSection_dummy, std::placeholders::_1, *Dep::MSSM_spectrum);
-    }
-
-
-
-
-
-    /// Get the cross-section from the xsec_example backend
-    xsec_container PIDPairCrossSection_xsec_example(PID_pair pids, 
-                                          const Spectrum& MSSM_spectrum)
-                                          // double (*xsec_fb_fptr)(iipair&, map_str_dbl&, map_str_bool&))
-    {
-      xsec_container xs_result;
-
-      // Get an SLHA1 object
-      const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
-
-      // Call cross-section calculation 
-      map_str_dbl proc_params;
-      map_str_bool proc_flags;
-
-      double xs_fb = 3.1415;
-
-      // double xs_fb = 1.0e-3 * xsec_fb_fptr(pids, proc_params, proc_flags);
-
-      double xs_rel_err = 0.01;
-
-      // Save result in xs_result
-      xs_result.set_xsec(xs_fb, xs_rel_err);
-
-      // Construct info string of the form "PID1:<PID1>, PID2:<PID2>"
-      std::stringstream info_ss;
-      info_ss << "PID1:" << pids.pid1() << ", " << "PID2:" << pids.pid2();
-      xs_result.set_info_string(info_ss.str());
-
-      return xs_result;
-    }
-
-
-    /// Get a PIDPairCrossSectionFunc pointing to the xsec_example backend
-    void getPIDPairCrossSectionFunc_xsec_example(PIDPairCrossSectionFuncType& result)
-    {
-      using namespace Pipes::getPIDPairCrossSectionFunc_xsec_example;
-
-      // result = std::bind(PIDPairCrossSection_xsec_example, std::placeholders::_1, *Dep::MSSM_spectrum, BEreq::xsec_example_xsec_fb.pointer());
-      result = std::bind(PIDPairCrossSection_xsec_example, std::placeholders::_1, *Dep::MSSM_spectrum);
-
-      // Bind to the backend function xsec_fb with the two first arguments fixed
-
-      // // Get an SLHA1 object
-      // const SLHAstruct& slha = MSSM_spectrum.getSLHAea(1);
-
-      // _Anders
-      // BACKEND_REQ(xsec_example_xsec_fb, (), double, (std::vector<double>&, map_str_dbl&, map_str_bool&))
-
-      // map_str_dbl proc_params;
-      // map_str_bool proc_flags;
-
-      // result = std::bind(BEreq::xsec_example_xsec_fb.pointer(), std::placeholders::_1, proc_params, proc_flags);
-    }
-
-
 
 
 

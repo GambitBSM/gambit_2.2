@@ -424,12 +424,13 @@
   #define CAPABILITY EventWeighterFunction
   START_CAPABILITY
 
-    /// This function is intended as a model-independent fallback option 
+    /// This function is intended as a fallback option 
     /// that simply assigns a unit weight to all events
     #define FUNCTION setEventWeight_unity
     START_FUNCTION(EventWeighterFunctionType)
     #undef FUNCTION
 
+    /// Weight events according to process cross-section 
     #define FUNCTION setEventWeight_fromCrossSection
     START_FUNCTION(EventWeighterFunctionType)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
@@ -460,10 +461,5 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
   #undef CAPABILITY
-
-  // /// Process codes for the active collider processes
-  // #define CAPABILITY ActiveProcessCodes
-  // START_CAPABILITY
-  // #undef CAPABILITY
 
 #undef MODULE

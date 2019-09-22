@@ -123,9 +123,9 @@ Rules:
     function: setEventWeight_fromCrossSection
     # function: setEventWeight_unity
     
-  - capability: PIDPairCrossSectionFunc
-    function: getPIDPairCrossSectionFunc_dummy
-    module: ColliderBit
+  # - capability: PIDPairCrossSectionFunc
+  #   function: getPIDPairCrossSectionFunc_dummy
+  #   module: ColliderBit
 
 
   # Choose Monte Carlo event simulator and options.

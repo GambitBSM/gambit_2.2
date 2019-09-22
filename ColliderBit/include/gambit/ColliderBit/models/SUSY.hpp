@@ -80,33 +80,23 @@
 
 
 
-  // _Anders: Add function to get PIDPairCrossSectionsMap
 
   /// Cross-sections for weighting events by production process
   /// @{
-  #define CAPABILITY PIDPairCrossSectionFunc
-  START_CAPABILITY
 
-    /// @todo _Anders: remove this?
-    /// Get a dummy test function as PIDPairCrossSectionFunc 
-    #define FUNCTION getPIDPairCrossSectionFunc_dummy
-    START_FUNCTION(PIDPairCrossSectionFuncType)
+  /// A map between PID pairs and cross-sections
+  #define CAPABILITY PIDPairCrossSectionsMap
+
+    /// Example of provding PIDPairCrossSectionsMap using a Python backend
+    #define FUNCTION getPIDPairCrossSectionsMap_xsecBE_example
+    START_FUNCTION(map_PID_pair_PID_pair_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActivePIDPairs, vec_PID_pair)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
 
-    /// @todo _Anders: remove this?
-    /// Get a PIDPairCrossSectionFunc via the xsec_example backend
-    #define FUNCTION getPIDPairCrossSectionFunc_xsec_example
-    START_FUNCTION(PIDPairCrossSectionFuncType)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
-    DEPENDENCY(MSSM_spectrum, Spectrum)
-    // BACKEND_REQ(xsec_example_xsec_fb, (), double, (PID_pair&, map_str_dbl&, map_str_bool&))
-    #undef FUNCTION
-
-
+  
     // #define FUNCTION getProspinoxsec
     // START_FUNCTION(xsec)
     // NEEDS_MANAGER(RunMC, MCLoopInfo)
