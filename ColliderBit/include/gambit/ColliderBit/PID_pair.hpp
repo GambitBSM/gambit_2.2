@@ -99,7 +99,7 @@ namespace Gambit
         }
 
         /// Check if |pid1| == |pid2|
-        bool is_antiparticle_pair()
+        bool is_antiparticle_pair() const
         {
           return (_pids.first == -_pids.second);
         }

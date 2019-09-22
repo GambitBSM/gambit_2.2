@@ -41,12 +41,16 @@ namespace Gambit
 
         /// @name Event generation and cross section functions:
         ///@{
-        /// Report the cross section (in fb or pb) at the end of the subprocess.
+        /// Report the total or process-specific cross section (in fb or pb).
         virtual double xsec_fb() const = 0;
+        virtual double xsec_fb(int) const = 0;
         virtual double xsec_pb() const = 0;
-        /// Report the cross section uncertainty (in fb or pb) at the end of the subprocess.
+        virtual double xsec_pb(int) const = 0;
+        /// Report the uncertainty in the total or process-specific cross section (in fb or pb).
         virtual double xsecErr_fb() const = 0;
+        virtual double xsecErr_fb(int) const = 0;
         virtual double xsecErr_pb() const = 0;
+        virtual double xsecErr_pb(int) const = 0;
         ///@}
 
         /// @name (Re-)Initialization functions:
