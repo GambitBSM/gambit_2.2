@@ -320,9 +320,9 @@ namespace Gambit
     //         Xray likelihoods          //
     ///////////////////////////////////////
 
-    void compute_lnL_Xray_toy(double& result)
+    void compute_lnL_Xray_WISPy(double& result)
     {
-      using namespace Pipes::compute_lnL_Xray_toy;
+      using namespace Pipes::compute_lnL_Xray_WISPy;
 
       static XrayInterpolator WISPy_bound;
       static bool first = true;
@@ -338,9 +338,10 @@ namespace Gambit
 
       const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
-      double logm = log10(*Param["mass"]) + 9; // In "DecayingDM_photon", the mass is given in GeV. Need to convert it into eV
+      double logm = log10(*Param["mass"]) + 9; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into eV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
       double frac = *Param["fraction"];
+      double BR = *Param["BR"];
 
       if (logm <= xlim.first || logm >= xlim.second)
       {
@@ -350,9 +351,121 @@ namespace Gambit
       else
       {
         double tau_bound = pow(10.,WISPy_bound.interpolate(logm));
-        bool within_bound = ((1./frac)*exp(t_universe/tau)*tau < tau_bound);
-        result = (within_bound ? -9.0 : 0.0);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        result = (excluded ? -9.0 : 0.0);
       }
     }
+
+    void compute_lnL_Xray_Integral(double& result)
+    {
+      using namespace Pipes::compute_lnL_Xray_Integral;
+
+      static XrayInterpolator sin2_2t_bound;
+      static bool first = true;
+      static std::pair<double,double> xlim;
+
+      if (first)
+      {
+        sin2_2t_bound = std::move(XrayInterpolator(GAMBIT_DIR "/DarkBit/data/Integral_sterile_nu_bound.dat","linear"));
+        xlim.first = sin2_2t_bound.lower();
+        xlim.second = sin2_2t_bound.upper();
+        first = false;
+      }
+
+      const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
+
+      double mass = *Param["mass"] * 1e6; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into keV
+      double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
+      double frac = *Param["fraction"];
+      double BR = *Param["BR"];
+
+      if (mass <= xlim.first || mass >= xlim.second)
+      {
+        // Bound can only be applied if the mass is within the range of the table.
+        result = 0.0;
+      }
+      else
+      {
+        double sin2_2t = sin2_2t_bound.interpolate(mass);
+        double tau_bound = 2./1.36038e-32 * pow(1e10*sin2_2t,-1.)*pow(mass,-5.);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        result = (excluded ? -9.0 : 0.0);
+      }
+    }
+
+    void compute_lnL_Xray_M31(double& result)
+    {
+      using namespace Pipes::compute_lnL_Xray_M31;
+
+      static XrayInterpolator sin2_2t_bound;
+      static bool first = true;
+      static std::pair<double,double> xlim;
+
+      if (first)
+      {
+        sin2_2t_bound = std::move(XrayInterpolator(GAMBIT_DIR "/DarkBit/data/M31_sterile_nu_bound.dat","linear"));
+        xlim.first = sin2_2t_bound.lower();
+        xlim.second = sin2_2t_bound.upper();
+        first = false;
+      }
+
+      const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
+
+      double mass = *Param["mass"] * 1e6; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into keV
+      double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
+      double frac = *Param["fraction"];
+      double BR = *Param["BR"];
+
+      if (mass <= xlim.first || mass >= xlim.second)
+      {
+        // Bound can only be applied if the mass is within the range of the table.
+        result = 0.0;
+      }
+      else
+      {
+        double sin2_2t = sin2_2t_bound.interpolate(mass);
+        double tau_bound = 2./1.36038e-32 * pow(1e10*sin2_2t,-1.)*pow(mass,-5.);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        result = (excluded ? -9.0 : 0.0);
+      }
+    }
+
+    void compute_lnL_Xray_NuSTAR(double& result)
+    {
+      using namespace Pipes::compute_lnL_Xray_NuSTAR;
+
+      static XrayInterpolator sin2_2t_bound;
+      static bool first = true;
+      static std::pair<double,double> xlim;
+
+      if (first)
+      {
+        sin2_2t_bound = std::move(XrayInterpolator(GAMBIT_DIR "/DarkBit/data/NuSTAR_sterile_nu_bound.dat","linear"));
+        xlim.first = sin2_2t_bound.lower();
+        xlim.second = sin2_2t_bound.upper();
+        first = false;
+      }
+
+      const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
+
+      double mass = *Param["mass"] * 1e6; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into keV
+      double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
+      double frac = *Param["fraction"];
+      double BR = *Param["BR"];
+
+      if (mass <= xlim.first || mass >= xlim.second)
+      {
+        // Bound can only be applied if the mass is within the range of the table.
+        result = 0.0;
+      }
+      else
+      {
+        double sin2_2t = sin2_2t_bound.interpolate(mass);
+        double tau_bound = 2./1.36038e-32 * pow(1e10*sin2_2t,-1.)*pow(mass,-5.);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        result = (excluded ? -9.0 : 0.0);
+      }
+    }
+
   }
 }

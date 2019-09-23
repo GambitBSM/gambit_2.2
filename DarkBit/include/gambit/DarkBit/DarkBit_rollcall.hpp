@@ -511,11 +511,35 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY lnL_Xray_toy
+  #define CAPABILITY lnL_Xray_WISPy
   START_CAPABILITY
-    #define FUNCTION compute_lnL_Xray_toy
+    #define FUNCTION compute_lnL_Xray_WISPy
     START_FUNCTION(double)
-    ALLOW_MODEL(DecayingDM_photon)
+    ALLOW_MODEL(DecayingDM_general)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_Xray_Integral
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_Integral
+    START_FUNCTION(double)
+    ALLOW_MODEL(DecayingDM_general)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_Xray_M31
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_M31
+    START_FUNCTION(double)
+    ALLOW_MODEL(DecayingDM_general)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_Xray_NuSTAR
+  START_CAPABILITY
+    #define FUNCTION compute_lnL_Xray_NuSTAR
+    START_FUNCTION(double)
+    ALLOW_MODEL(DecayingDM_general)
     #undef FUNCTION
   #undef CAPABILITY
 

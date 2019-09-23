@@ -10,7 +10,7 @@ Parameters:
 
    # lifetime in s
    lifetime:
-     range: [1e14, 1e29]
+     range: [1e14, 1e30]
      prior_type: log
 
    # (initial) fraction of decaying species to all of omega_cdm
@@ -43,7 +43,17 @@ Scanner:
 ObsLikes:
 
   - purpose:      LogLike
-    capability:   lnL_Xray_toy
+    capability:   lnL_Xray_Integral
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_Xray_M31
+    module:       DarkBit
+    type:         double
+
+  - purpose:      LogLike
+    capability:   lnL_Xray_NuSTAR
     module:       DarkBit
     type:         double
 
