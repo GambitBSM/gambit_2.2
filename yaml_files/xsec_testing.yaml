@@ -76,8 +76,8 @@ Rules:
     function: getMCxsec_as_base
     # function: getYAMLxsec
     # options:
-    #   xsec_fb: 123.0
-    #   xsec_uncert_fb: 1.23
+    #   cross_section_fb: 123.0
+    #   cross_section_uncert_fb: 1.23
 
 
   # Choose how to do event weighting 

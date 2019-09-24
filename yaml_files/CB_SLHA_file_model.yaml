@@ -92,11 +92,11 @@ Rules:
   - capability: CrossSection
     function: getYAMLxsec_SLHA
     options:
-      xsec_fb:
+      cross_section_fb:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.1
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 2.2
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 3.3
-      xsec_fractional_uncert:
+      cross_section_fractional_uncert:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 0.1
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 0.1
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 0.1

@@ -1003,31 +1003,31 @@ namespace Gambit
         if (first)
         {
           // Determine the correct combination of parameters
-          if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_uncert_fb")))
+          if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_uncert_fb")))
           {
-            xsec_pnames.first = "xsec_fb";
-            xsec_pnames.second = "xsec_uncert_fb";
+            xsec_pnames.first = "cross_section_fb";
+            xsec_pnames.second = "cross_section_uncert_fb";
             input_unit = "fb";
             input_fractional_uncert = false;
           }
-          else if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          else if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
           {
-            xsec_pnames.first = "xsec_fb";
-            xsec_pnames.second = "xsec_fractional_uncert";
+            xsec_pnames.first = "cross_section_fb";
+            xsec_pnames.second = "cross_section_fractional_uncert";
             input_unit = "fb";
             input_fractional_uncert = true;
           }
-          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_uncert_pb")))
+          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_uncert_pb")))
           {
-            xsec_pnames.first = "xsec_pb";
-            xsec_pnames.second = "xsec_uncert_pb";
+            xsec_pnames.first = "cross_section_pb";
+            xsec_pnames.second = "cross_section_uncert_pb";
             input_unit = "pb";
             input_fractional_uncert = false;
           }
-          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
           {
-            xsec_pnames.first = "xsec_pb";
-            xsec_pnames.second = "xsec_fractional_uncert";
+            xsec_pnames.first = "cross_section_pb";
+            xsec_pnames.second = "cross_section_fractional_uncert";
             input_unit = "pb";
             input_fractional_uncert = true;
           }
@@ -1036,10 +1036,10 @@ namespace Gambit
             std::stringstream errmsg_ss;
             errmsg_ss << "Unknown combination of options for function getYAMLxsec." << endl;
             errmsg_ss << "Needs one of the following sets of option names:" << endl;
-            errmsg_ss << "  xsec_fb, xsec_uncert_fb" << endl;
-            errmsg_ss << "  xsec_fb, xsec_fractional_uncert" << endl;
-            errmsg_ss << "  xsec_pb, xsec_uncert_pb" << endl;
-            errmsg_ss << "  xsec_pb, xsec_fractional_uncert" << endl;
+            errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
+            errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
+            errmsg_ss << "  cross_section_pb, cross_section_uncert_pb" << endl;
+            errmsg_ss << "  cross_section_pb, cross_section_fractional_uncert" << endl;
             ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
           }
 
@@ -1104,31 +1104,31 @@ namespace Gambit
         if (first)
         {
           // Determine the correct combination of parameters
-          if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_uncert_fb")))
+          if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_uncert_fb")))
           {
-            xsec_pnames.first = "xsec_fb";
-            xsec_pnames.second = "xsec_uncert_fb";
+            xsec_pnames.first = "cross_section_fb";
+            xsec_pnames.second = "cross_section_uncert_fb";
             input_unit = "fb";
             input_fractional_uncert = false;
           }
-          else if ((runOptions->hasKey("xsec_fb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          else if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
           {
-            xsec_pnames.first = "xsec_fb";
-            xsec_pnames.second = "xsec_fractional_uncert";
+            xsec_pnames.first = "cross_section_fb";
+            xsec_pnames.second = "cross_section_fractional_uncert";
             input_unit = "fb";
             input_fractional_uncert = true;
           }
-          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_uncert_pb")))
+          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_uncert_pb")))
           {
-            xsec_pnames.first = "xsec_pb";
-            xsec_pnames.second = "xsec_uncert_pb";
+            xsec_pnames.first = "cross_section_pb";
+            xsec_pnames.second = "cross_section_uncert_pb";
             input_unit = "pb";
             input_fractional_uncert = false;
           }
-          else if ((runOptions->hasKey("xsec_pb")) && (runOptions->hasKey("xsec_fractional_uncert")))
+          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
           {
-            xsec_pnames.first = "xsec_pb";
-            xsec_pnames.second = "xsec_fractional_uncert";
+            xsec_pnames.first = "cross_section_pb";
+            xsec_pnames.second = "cross_section_fractional_uncert";
             input_unit = "pb";
             input_fractional_uncert = true;
           }
@@ -1137,10 +1137,10 @@ namespace Gambit
             std::stringstream errmsg_ss;
             errmsg_ss << "Unknown combination of options for function getYAMLxsec_SLHA." << endl;
             errmsg_ss << "Needs one of the following sets of option names:" << endl;
-            errmsg_ss << "  xsec_fb, xsec_uncert_fb" << endl;
-            errmsg_ss << "  xsec_fb, xsec_fractional_uncert" << endl;
-            errmsg_ss << "  xsec_pb, xsec_uncert_pb" << endl;
-            errmsg_ss << "  xsec_pb, xsec_fractional_uncert" << endl;
+            errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
+            errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
+            errmsg_ss << "  cross_section_pb, cross_section_uncert_pb" << endl;
+            errmsg_ss << "  cross_section_pb, cross_section_fractional_uncert" << endl;
             ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
           }
 
@@ -1229,35 +1229,35 @@ namespace Gambit
           }
 
           // Determine the correct combination of parameters
-          if ((std::find(pnames.begin(), pnames.end(), "xsec_fb") != pnames.end()) 
-               && (std::find(pnames.begin(), pnames.end(), "xsec_uncert_fb") != pnames.end()))
+          if ((std::find(pnames.begin(), pnames.end(), "cross_section_fb") != pnames.end()) 
+               && (std::find(pnames.begin(), pnames.end(), "cross_section_uncert_fb") != pnames.end()))
           {
-            xsec_pnames.first = "xsec_fb";
-            xsec_pnames.second = "xsec_uncert_fb";
+            xsec_pnames.first = "cross_section_fb";
+            xsec_pnames.second = "cross_section_uncert_fb";
             input_unit = "fb";
             input_fractional_uncert = false;
           }
-          else if ((std::find(pnames.begin(), pnames.end(), "xsec_fb") != pnames.end()) 
-                    && (std::find(pnames.begin(), pnames.end(), "xsec_fractional_uncert") != pnames.end()))
+          else if ((std::find(pnames.begin(), pnames.end(), "cross_section_fb") != pnames.end()) 
+                    && (std::find(pnames.begin(), pnames.end(), "cross_section_fractional_uncert") != pnames.end()))
           {
-            xsec_pnames.first = "xsec_fb";
-            xsec_pnames.second = "xsec_fractional_uncert";
+            xsec_pnames.first = "cross_section_fb";
+            xsec_pnames.second = "cross_section_fractional_uncert";
             input_unit = "fb";
             input_fractional_uncert = true;
           }
-          else if ((std::find(pnames.begin(), pnames.end(), "xsec_pb") != pnames.end()) 
-                    && (std::find(pnames.begin(), pnames.end(), "xsec_uncert_pb") != pnames.end()))
+          else if ((std::find(pnames.begin(), pnames.end(), "cross_section_pb") != pnames.end()) 
+                    && (std::find(pnames.begin(), pnames.end(), "cross_section_uncert_pb") != pnames.end()))
           {
-            xsec_pnames.first = "xsec_pb";
-            xsec_pnames.second = "xsec_uncert_pb";
+            xsec_pnames.first = "cross_section_pb";
+            xsec_pnames.second = "cross_section_uncert_pb";
             input_unit = "pb";
             input_fractional_uncert = false;
           }
-          else if ((std::find(pnames.begin(), pnames.end(), "xsec_pb") != pnames.end()) 
-                    && (std::find(pnames.begin(), pnames.end(), "xsec_fractional_uncert") != pnames.end()))
+          else if ((std::find(pnames.begin(), pnames.end(), "cross_section_pb") != pnames.end()) 
+                    && (std::find(pnames.begin(), pnames.end(), "cross_section_fractional_uncert") != pnames.end()))
           {
-            xsec_pnames.first = "xsec_pb";
-            xsec_pnames.second = "xsec_fractional_uncert";
+            xsec_pnames.first = "cross_section_pb";
+            xsec_pnames.second = "cross_section_fractional_uncert";
             input_unit = "pb";
             input_fractional_uncert = true;
           }
@@ -1266,10 +1266,10 @@ namespace Gambit
             std::stringstream errmsg_ss;
             errmsg_ss << "Unknown combination of parameters for function getYAMLxsec_param." << endl;
             errmsg_ss << "Needs one of the following sets of parameter names:" << endl;
-            errmsg_ss << "  xsec_fb, xsec_uncert_fb" << endl;
-            errmsg_ss << "  xsec_fb, xsec_fractional_uncert" << endl;
-            errmsg_ss << "  xsec_pb, xsec_uncert_pb" << endl;
-            errmsg_ss << "  xsec_pb, xsec_fractional_uncert" << endl;
+            errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
+            errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
+            errmsg_ss << "  cross_section_pb, cross_section_uncert_pb" << endl;
+            errmsg_ss << "  cross_section_pb, cross_section_fractional_uncert" << endl;
             ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
           }
 

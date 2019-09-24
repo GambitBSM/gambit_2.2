@@ -283,8 +283,8 @@ Rules:
     function: getYAMLxsec
     module: ColliderBit
     options: 
-      xsec_pb: 0.79
-      xsec_fractional_uncert: 0.0001
+      cross_section_pb: 0.79
+      cross_section_fractional_uncert: 0.0001
 
   - capability: HardScatteringEvent
     function: generateEventPythia
