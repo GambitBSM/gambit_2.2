@@ -113,8 +113,8 @@ Rules:
   #   (cross_section_fb, cross_section_fractional_uncert),
   #   (cross_section_pb, cross_section_uncert_pb), 
   #   (cross_section_pb, cross_section_fractional_uncert)
-  - capability: CrossSection
-    function: getYAMLxsec_param
+  - capability: TotalCrossSection
+    function: getYAMLCrossSection_param
 
 
   # Generate evens (don't read LH event files)

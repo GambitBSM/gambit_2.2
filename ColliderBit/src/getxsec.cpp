@@ -804,9 +804,9 @@ namespace Gambit
 
 
     /// Compute a cross-section from Monte Carlo
-    void getMCxsec(MC_xsec_container& result)
+    void getEvGenCrossSection(MC_xsec_container& result)
     {
-      using namespace Pipes::getMCxsec;
+      using namespace Pipes::getEvGenCrossSection;
 
       static bool first = true;
       if (first)
@@ -933,17 +933,17 @@ namespace Gambit
     }
 
     /// Return MC_xsec_container as the base xsec_container
-    void getMCxsec_as_base(xsec_container& result)
+    void getEvGenCrossSection_as_base(xsec_container& result)
     {
-      using namespace Pipes::getMCxsec_as_base;
-      result = *Dep::TotalMCCrossSection;
+      using namespace Pipes::getEvGenCrossSection_as_base;
+      result = *Dep::TotalEvGenCrossSection;
     }
 
 
     /// Get a cross-section from NLL-FAST
-    void getNLLFastxsec(xsec_container& result)
+    void getNLLFastCrossSection(xsec_container& result)
     {
-      using namespace Pipes::getNLLFastxsec;
+      using namespace Pipes::getNLLFastCrossSection;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
@@ -981,9 +981,9 @@ namespace Gambit
 
 
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
-    void getYAMLxsec(xsec_container& result)
+    void getYAMLCrossSection(xsec_container& result)
     {
-      using namespace Pipes::getYAMLxsec;
+      using namespace Pipes::getYAMLCrossSection;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
@@ -1034,7 +1034,7 @@ namespace Gambit
           else
           {
             std::stringstream errmsg_ss;
-            errmsg_ss << "Unknown combination of options for function getYAMLxsec." << endl;
+            errmsg_ss << "Unknown combination of options for function getYAMLCrossSection." << endl;
             errmsg_ss << "Needs one of the following sets of option names:" << endl;
             errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
             errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
@@ -1082,9 +1082,9 @@ namespace Gambit
 
 
     /// A function that reads a list of (SLHA file, total cross-section) pairs from the input YAML file
-    void getYAMLxsec_SLHA(xsec_container& result)
+    void getYAMLCrossSection_SLHA(xsec_container& result)
     {
-      using namespace Pipes::getYAMLxsec_SLHA;
+      using namespace Pipes::getYAMLCrossSection_SLHA;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
@@ -1135,7 +1135,7 @@ namespace Gambit
           else
           {
             std::stringstream errmsg_ss;
-            errmsg_ss << "Unknown combination of options for function getYAMLxsec_SLHA." << endl;
+            errmsg_ss << "Unknown combination of options for function getYAMLCrossSection_SLHA." << endl;
             errmsg_ss << "Needs one of the following sets of option names:" << endl;
             errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
             errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
@@ -1198,9 +1198,9 @@ namespace Gambit
 
     /// A function that assigns a total cross-sections directly from the scan parameters
     /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
-    void getYAMLxsec_param(xsec_container& result)
+    void getYAMLCrossSection_param(xsec_container& result)
     {
-      using namespace Pipes::getYAMLxsec_param;
+      using namespace Pipes::getYAMLCrossSection_param;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
@@ -1264,7 +1264,7 @@ namespace Gambit
           else
           {
             std::stringstream errmsg_ss;
-            errmsg_ss << "Unknown combination of parameters for function getYAMLxsec_param." << endl;
+            errmsg_ss << "Unknown combination of parameters for function getYAMLCrossSection_param." << endl;
             errmsg_ss << "Needs one of the following sets of parameter names:" << endl;
             errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
             errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;

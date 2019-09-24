@@ -342,7 +342,7 @@ Rules:
   # Choose to where to get cross-sections from
   - capability: TotalCrossSection
     function: get_MC_xsec_as_base
-    # function: getMCxsec
+    # function: getEvGenCrossSection_as_base
 
   # Choose event weighting
   - capability: EventWeighterPy8Collider

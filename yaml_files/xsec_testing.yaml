@@ -45,8 +45,8 @@ ObsLikes:
     # Observables
     #
 
-    # - purpose:    Observable 
-    #   capability: TotalCrossSectionAsMap
+    - purpose:    Observable 
+      capability: TotalCrossSectionAsMap
 
     - purpose:    Observable
       capability: LHC_signals
@@ -73,8 +73,8 @@ Rules:
 
   # Choose to where to get total cross-sections from
   - capability: TotalCrossSection
-    function: getMCxsec_as_base
-    # function: getYAMLxsec
+    function: getEvGenCrossSection_as_base
+    # function: getYAMLCrossSection
     # options:
     #   cross_section_fb: 123.0
     #   cross_section_uncert_fb: 1.23

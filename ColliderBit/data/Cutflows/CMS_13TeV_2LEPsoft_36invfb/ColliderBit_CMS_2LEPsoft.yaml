@@ -169,8 +169,8 @@ Rules:
       skip_analyses: [ ]
 
   # Get cross-section from Pythia
-  - capability: CrossSection
-    function: getMCxsec
+  - capability: TotalCrossSection
+    function: getEvGenCrossSection_as_base
     module: ColliderBit
 
 

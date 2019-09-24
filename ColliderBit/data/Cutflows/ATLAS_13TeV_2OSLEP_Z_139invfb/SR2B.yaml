@@ -253,8 +253,8 @@ Rules:
     function: MSSM_higgs_couplings_pwid
 
   # Choose to estimate cross-sections from Monte Carlo
-  - capability: CrossSection
-    function: getMCxsec
+  - capability: TotalCrossSection
+    function: getEvGenCrossSection_as_base
     module: ColliderBit
 
   # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.

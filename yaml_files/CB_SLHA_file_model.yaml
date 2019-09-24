@@ -89,8 +89,8 @@ Rules:
         - 1000024;(any),2,1000022,24;0  # <-- BR for two-body decay 1000024 -> 1000022 24 
 
   # Assign cross-sections and uncertainties for each SLHA file
-  - capability: CrossSection
-    function: getYAMLxsec_SLHA
+  - capability: TotalCrossSection
+    function: getYAMLCrossSection_SLHA
     options:
       cross_section_fb:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.1
