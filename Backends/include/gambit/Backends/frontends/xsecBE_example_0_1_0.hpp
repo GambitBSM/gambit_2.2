@@ -38,15 +38,12 @@ LOAD_LIBRARY
  */
 
 
+BE_FUNCTION(set_parameters, void, (pybind11::dict&), "set_parameters", "xsecBE_example_set_parameters")
+BE_FUNCTION(set_flags, void, (pybind11::dict&), "set_flags", "xsecBE_example_set_flags")
 
-BE_FUNCTION(set_parameters, void, (map_str_dbl&), "set_parameters", "xsecBE_example_set_parameters")
-BE_FUNCTION(set_flags, void, (map_str_bool&), "set_flags", "xsecBE_example_set_flags")
+BE_FUNCTION(xsec_fb, double, (iipair&, pybind11::dict&, pybind11::dict&), "xsec_fb", "xsecBE_example_xsec_fb")
+BE_FUNCTION(xsec_err_fb, ddpair, (iipair&, pybind11::dict&, pybind11::dict&), "xsec_err_fb", "xsecBE_example_xsec_err_fb")
 
-BE_FUNCTION(xsec_fb, double, (iipair&, map_str_dbl&, map_str_bool&), "xsec_fb", "xsecBE_example_xsec_fb")
-BE_FUNCTION(xsec_err_fb, std::vector<double>, (iipair&, map_str_dbl&, map_str_bool&), "xsec_err_fb", "xsecBE_example_xsec_err_fb")
-
-// BE_FUNCTION(xsec_fb, double, (std::vector<int>&, map_str_dbl&, map_str_bool&), "xsec_fb", "xsecBE_example_xsec_fb")
-// BE_FUNCTION(xsec_err_fb, std::vector<double>, (std::vector<int>&, map_str_dbl&, map_str_bool&), "xsec_err_fb", "xsecBE_example_xsec_err_fb")
 
 /* At this point we have a minimal interface to the loaded library.
  * Any additional convenience functions could be constructed below

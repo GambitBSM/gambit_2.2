@@ -62,7 +62,8 @@ namespace Gambit
       double process_xsec_generator = HardScatteringSim_ptr->xsec_fb(process_code);
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << ": xsec_fb(" << process_code << "): " << HardScatteringSim_ptr->xsec_fb(process_code) << endl;
+        cout << DEBUG_PREFIX << endl;
+        cout << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code) << endl;
       #endif
 
       // Add the generator cross-sections for other process codes which also 
@@ -71,7 +72,7 @@ namespace Gambit
       {
         process_xsec_generator += HardScatteringSim_ptr->xsec_fb(other_process_code);
         #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << ": xsec_fb(" << other_process_code << "): " << HardScatteringSim_ptr->xsec_fb(other_process_code) << endl;
+          cout << DEBUG_PREFIX << "- process_code: " << other_process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(other_process_code) << endl;
         #endif
       }
 
@@ -88,7 +89,7 @@ namespace Gambit
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "process_code: " << process_code << ",  process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << endl;
+        cout << DEBUG_PREFIX << "Total process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << endl;
       #endif
 
       event.set_weight(weight);

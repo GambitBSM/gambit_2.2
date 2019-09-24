@@ -74,10 +74,13 @@ namespace Gambit
     // ======= Module functions =======
 
 
-    // _Anders
     void getPIDPairCrossSectionsMap_xsecBE_example(map_PID_pair_PID_pair_xsec& result)
     {
       using namespace Pipes::getPIDPairCrossSectionsMap_xsecBE_example;
+
+      // Get type converter for the SLHAstruct
+      using SLHAea::to;
+
 
       if(*Loop::iteration == COLLIDER_INIT)
       {
@@ -86,16 +89,109 @@ namespace Gambit
 
       if(*Loop::iteration == XSEC_CALCULATION)
       {
+        // Create dicts to pass parameters and flags to the backend
+        pybind11::dict xsecBE_pars;
+        pybind11::dict xsecBE_flags;
+
+        // First set the flags
+        xsecBE_flags["alphas_err"] = false;
+        xsecBE_flags["scale_err"] = true;
+        xsecBE_flags["pdf_err"] = true;
+        xsecBE_flags["regression_err"] = true;
+        BEreq::xsecBE_example_set_flags(xsecBE_flags);
+
+        // Then set the neceassary parameters and spectrum info:
+
+        // - Values from the GAMBIT model parameters
+        // xsecBE_pars["M1"] = *Param.at("M1");
+        // xsecBE_pars["M2"] = *Param.at("M2");
+        // xsecBE_pars["mu"] = *Param.at("mu");
+        // xsecBE_pars["TanBeta"] = *Param.at("TanBeta");
+
+        // - Values from the SLHA spectrum
+        const SLHAstruct& slha_spec = *Dep::SLHA1Spectrum;
+
+        xsecBE_pars["MASS_1000021"] = to<double>(slha_spec.at("MASS").at(1000021).at(1));
+
+        // (Remember that the EWino masses can be signed!)
+        xsecBE_pars["MASS_1000022"] = fabs( to<double>(slha_spec.at("MASS").at(1000022).at(1)) );
+        xsecBE_pars["MASS_1000023"] = fabs( to<double>(slha_spec.at("MASS").at(1000023).at(1)) );
+        xsecBE_pars["MASS_1000025"] = fabs( to<double>(slha_spec.at("MASS").at(1000025).at(1)) );
+        xsecBE_pars["MASS_1000035"] = fabs( to<double>(slha_spec.at("MASS").at(1000035).at(1)) );
+
+        xsecBE_pars["MASS_1000001"] = to<double>(slha_spec.at("MASS").at(1000001).at(1));
+        xsecBE_pars["MASS_1000002"] = to<double>(slha_spec.at("MASS").at(1000002).at(1));
+        xsecBE_pars["MASS_1000003"] = to<double>(slha_spec.at("MASS").at(1000003).at(1));
+        xsecBE_pars["MASS_1000004"] = to<double>(slha_spec.at("MASS").at(1000004).at(1));
+        xsecBE_pars["MASS_1000005"] = to<double>(slha_spec.at("MASS").at(1000005).at(1));
+        xsecBE_pars["MASS_1000006"] = to<double>(slha_spec.at("MASS").at(1000006).at(1));
+        xsecBE_pars["MASS_2000001"] = to<double>(slha_spec.at("MASS").at(2000001).at(1));
+        xsecBE_pars["MASS_2000002"] = to<double>(slha_spec.at("MASS").at(2000002).at(1));
+        xsecBE_pars["MASS_2000003"] = to<double>(slha_spec.at("MASS").at(2000003).at(1));
+        xsecBE_pars["MASS_2000004"] = to<double>(slha_spec.at("MASS").at(2000004).at(1));
+        xsecBE_pars["MASS_2000005"] = to<double>(slha_spec.at("MASS").at(2000005).at(1));
+        xsecBE_pars["MASS_2000006"] = to<double>(slha_spec.at("MASS").at(2000006).at(1));
+
+        xsecBE_pars["NMIX_1_1"] = to<double>(slha_spec.at("NMIX").at(1,1).at(2));
+        xsecBE_pars["NMIX_1_2"] = to<double>(slha_spec.at("NMIX").at(1,2).at(2));
+        xsecBE_pars["NMIX_1_3"] = to<double>(slha_spec.at("NMIX").at(1,3).at(2));
+        xsecBE_pars["NMIX_1_4"] = to<double>(slha_spec.at("NMIX").at(1,4).at(2));
+        xsecBE_pars["NMIX_2_1"] = to<double>(slha_spec.at("NMIX").at(2,1).at(2));
+        xsecBE_pars["NMIX_2_2"] = to<double>(slha_spec.at("NMIX").at(2,2).at(2));
+        xsecBE_pars["NMIX_2_3"] = to<double>(slha_spec.at("NMIX").at(2,3).at(2));
+        xsecBE_pars["NMIX_2_4"] = to<double>(slha_spec.at("NMIX").at(2,4).at(2));
+        xsecBE_pars["NMIX_3_1"] = to<double>(slha_spec.at("NMIX").at(3,1).at(2));
+        xsecBE_pars["NMIX_3_2"] = to<double>(slha_spec.at("NMIX").at(3,2).at(2));
+        xsecBE_pars["NMIX_3_3"] = to<double>(slha_spec.at("NMIX").at(3,3).at(2));
+        xsecBE_pars["NMIX_3_4"] = to<double>(slha_spec.at("NMIX").at(3,4).at(2));
+        xsecBE_pars["NMIX_4_1"] = to<double>(slha_spec.at("NMIX").at(4,1).at(2));
+        xsecBE_pars["NMIX_4_2"] = to<double>(slha_spec.at("NMIX").at(4,2).at(2));
+        xsecBE_pars["NMIX_4_3"] = to<double>(slha_spec.at("NMIX").at(4,3).at(2));
+        xsecBE_pars["NMIX_4_4"] = to<double>(slha_spec.at("NMIX").at(4,4).at(2));
+
+        BEreq::xsecBE_example_set_parameters(xsecBE_pars);
+
+
+        // Now get the cross-sections for all the requested PID pairs. Save the results
+        // in the result map (type map<PID_pair,PID_pair_xsec_container>)
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
-          //
-          // Get cross section from xsecBE_example
-          //
+
+          // Create PID_pair_xsec_container instance
+          // and set the PIDs
+          PID_pair_xsec_container pp_xs;
+          pp_xs.set_pid_pair(pid_pair);
+
+          // Fill dictionaries with any process-specific
+          // parameters (e.g. LO cross-sections) and program flags
+          pybind11::dict proc_params;
+          proc_params["LO_xsec"] = 3.1415;
+
+          pybind11::dict proc_flags;
+          proc_flags["some_process_flag"] = true;
+
+          // Get the PIDs as an iipair (= std::pair<int,int>)
+          iipair proc = pid_pair.PIDs();
+
+          // Get cross-section value from backend
+          // Get cross-section and asymmetric errors from backend. (ddpair = pair<double,double>)
+          double xs_fb = BEreq::xsecBE_example_xsec_fb(proc, proc_params, proc_flags);
+          ddpair xs_err_fb = BEreq::xsecBE_example_xsec_err_fb(proc, proc_params, proc_flags);
+
+          // The xsec_container classes don't have asymmetric errors yet,
+          // so let's take the max error for now
+          double xs_symm_err_fb = std::max(xs_err_fb.first, xs_err_fb.second);
+
+          // Update the PID_pair_xsec_container instance 
+          pp_xs.set_xsec(xs_fb, xs_symm_err_fb);
+
+          // Add it to the result map
+          result[pid_pair] = pp_xs;
         }
+
       } // end iteration
 
     }
-
 
 
 
@@ -566,7 +662,9 @@ namespace Gambit
       {
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
-          cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "Looking up xsec for [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]." << endl;
+          #ifdef COLLIDERBIT_DEBUG
+            cout << DEBUG_PREFIX << "getPIDPairCrossSectionsMap_testing: " << "Looking up xsec for [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]." << endl;
+          #endif
           result[pid_pair] = all_my_pid_pair_xsecs.at(pid_pair);
         }
       } // end iteration
@@ -601,9 +699,6 @@ namespace Gambit
       // Only thread 0
       if(*Loop::iteration == XSEC_CALCULATION)
       {
-        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ActiveProcessCodes.size() = " << Dep::ActiveProcessCodes->size() << endl;          
-        cout << DEBUG_PREFIX << "getProcessCrossSectionsMap: it = XSEC_CALCULATION, ActiveProcessCodeToPIDPairsMap.size() = " << Dep::ActiveProcessCodeToPIDPairsMap->size() << endl;          
-
         // Loop over all active processes and construct the cross-section map (shared_result)
         for (size_t i = 0; i != Dep::ActiveProcessCodes->size(); ++i)
         {
@@ -623,20 +718,16 @@ namespace Gambit
             const PID_pair& pids = mm_it->second;
 
             // Obtain the cross-section from the PID pair via the PIDPairCrossSectionsMap (map_PID_pair_PID_pair_xsec) dependency
-            cout << DEBUG_PREFIX << "Looking up PID pair: " << pids.pid1() << "," << pids.pid2() << endl;
-
             PID_pair_xsec_container pids_xs;
             map_PID_pair_PID_pair_xsec::const_iterator iter = Dep::PIDPairCrossSectionsMap->find(pids);
             if (iter != Dep::PIDPairCrossSectionsMap->end())
             {
               pids_xs = iter->second;
-              cout << DEBUG_PREFIX << "--> Got it! Cross-section is: " << pids_xs.xsec() << " fb" << endl;
             }
             else
             {
               if(set_missing_xsecs_to_zero)
               {
-                cout << DEBUG_PREFIX << "--> Not found! Creating 0-valued xsec_container " << endl;
                 pids_xs.set_xsec(0.0, 0.0);
               }
               else
@@ -743,114 +834,83 @@ namespace Gambit
           #endif
 
 
-          // _Anders DEBUG:
-          std::vector<PID_pair> all_pid_pairs;
-          std::map<int,int> pcode_counter;
+          //
+          // Debug code to print process cross-sections:
+          //
 
-          for (const std::pair<int,PID_pair>& elem : all_process_codes_to_PID_pairs)
-          {
-            int pcode = elem.first;
-            const PID_pair& pids = elem.second;
+          // #ifdef COLLIDERBIT_DEBUG
 
-            double LO_proc_xsec = (*Dep::HardScatteringSim)->xsec_fb(pcode);
+          //   std::vector<PID_pair> all_pid_pairs;
+          //   std::map<int,int> pcode_counter;
 
-            cout << std::fixed << std::setprecision(7);
-            cout << DEBUG_PREFIX << "All xsecs:  " << pcode << ", [" 
-                                                   << pids.pid1() << "," << pids.pid2() << "], "
-                                                   << std::scientific << std::setprecision(5)
-                                                   << LO_proc_xsec << endl;
+          //   for (const std::pair<int,PID_pair>& elem : all_process_codes_to_PID_pairs)
+          //   {
+          //     int pcode = elem.first;
+          //     const PID_pair& pids = elem.second;
 
-            // Get list of all unique PID_pairs
-            if (std::find(all_pid_pairs.begin(), all_pid_pairs.end(), pids) == all_pid_pairs.end())
-            {
-              all_pid_pairs.push_back( PID_pair(pids) );
-            }
+          //     double LO_proc_xsec = (*Dep::HardScatteringSim)->xsec_fb(pcode);
 
-            // Cound pcode
-            pcode_counter[pcode]++;
-          }
+          //     cout << std::fixed << std::setprecision(7);
+          //     cout << DEBUG_PREFIX << "All xsecs:  " << pcode << ", [" 
+          //                                            << pids.pid1() << "," << pids.pid2() << "], "
+          //                                            << std::scientific << std::setprecision(5)
+          //                                            << LO_proc_xsec << endl;
 
-          // Loop over PID_pairs
-          for (const PID_pair& pids : all_pid_pairs)
-          {
-            double pids_xsec_val = 0.0;
+          //     // Get list of all unique PID_pairs
+          //     if (std::find(all_pid_pairs.begin(), all_pid_pairs.end(), pids) == all_pid_pairs.end())
+          //     {
+          //       all_pid_pairs.push_back( PID_pair(pids) );
+          //     }
 
-            double sgn_pid1 = double(pids.pid1()) / double(abs(pids.pid1()));
-            double sgn_pid2 = double(pids.pid2()) / double(abs(pids.pid2()));
+          //     // Count pcode
+          //     pcode_counter[pcode]++;
+          //   }
 
-            PID_pair cc_pid_pair = pids.cc_pid_pair();
+          //   // Loop over PID_pairs
+          //   for (const PID_pair& pids : all_pid_pairs)
+          //   {
+          //     double pids_xsec_val = 0.0;
 
-            auto mm_pid2proc_range = all_PID_pairs_to_process_codes().equal_range(pids);
+          //     // double sgn_pid1 = double(pids.pid1()) / double(abs(pids.pid1()));
+          //     // double sgn_pid2 = double(pids.pid2()) / double(abs(pids.pid2()));
 
-            // Loop over these elements in the multimap
-            for (auto mm_it = mm_pid2proc_range.first; mm_it != mm_pid2proc_range.second; ++mm_it)
-            {
-              int pcode = mm_it->second;
+          //     PID_pair cc_pid_pair = pids.cc_pid_pair();
 
-              double factor = 1.0 / pcode_counter.at(pcode);
+          //     auto mm_pid2proc_range = all_PID_pairs_to_process_codes().equal_range(pids);
 
-              // if (pcode == 1491)
-              // {
-              //   cout << "DEBUG: pcode==1491: factor start at: " << factor << endl;
-              //   cout << "DEBUG: pcode==1491: pid1() = " << pids.pid1() << ",  pid2() = " << pids.pid2() << endl;
-              //   cout << "DEBUG: pcode==1491: sgn_pid1 = " << sgn_pid1 << ",  sgn_pid2 = " << sgn_pid2 << endl;
-              // }
+          //     // Loop over these elements in the multimap
+          //     for (auto mm_it = mm_pid2proc_range.first; mm_it != mm_pid2proc_range.second; ++mm_it)
+          //     {
+          //       int pcode = mm_it->second;
 
-              // if ((!pids.is_antiparticle_pair()) && (sgn_pid1 * sgn_pid2 < 0))
-              // {
-              //   // factor = factor * 2.0;
-              //   if (std::find(all_pid_pairs.begin(), all_pid_pairs.end(), cc_pid_pair) != all_pid_pairs.end() )
-              //   {
-              //     factor = factor * 2.0;
+          //       double factor = 1.0 / pcode_counter.at(pcode);
 
-              //     if (pcode == 1491)
-              //     {
-              //       cout << "DEBUG: pcode==1491: factor adjusted by 2: " << factor << endl;
-              //     }
+          //       // if ((!pids.is_antiparticle_pair()) && (sgn_pid1 * sgn_pid2 < 0))
+          //       // {
+          //       //   // factor = factor * 2.0;
+          //       //   if (std::find(all_pid_pairs.begin(), all_pid_pairs.end(), cc_pid_pair) != all_pid_pairs.end() )
+          //       //   {
+          //       //     factor = factor * 2.0;
 
-              //   }                
-              // }
+          //       //     if (pcode == 1491)
+          //       //     {
+          //       //       cout << "DEBUG: pcode==1491: factor adjusted by 2: " << factor << endl;
+          //       //     }
 
-              // if ((!pids.is_antiparticle_pair()) && (sgn_pid1 * sgn_pid2 > 0))
-              // {
-              //   if (std::find(all_pid_pairs.begin(), all_pid_pairs.end(), cc_pid_pair) != all_pid_pairs.end() )
-              //   {
-              //     factor = factor * 0.5;
+          //       //   }                
+          //       // }
 
-              //     if (pcode == 1491)
-              //     {
-              //       cout << "DEBUG: pcode==1491: factor adjusted by 0.5: " << factor << endl;
-              //     }
+          //       pids_xsec_val += (*Dep::HardScatteringSim)->xsec_fb(pcode) * factor;
+          //     }
 
-              //   }                
-              // }
+          //     cout << std::fixed << std::setprecision(7);
+          //     cout << DEBUG_PREFIX << "PIDs xsecs:  " << "[" 
+          //                                            << pids.pid1() << "," << pids.pid2() << "]: "
+          //                                            << std::scientific << std::setprecision(5)
+          //                                            << pids_xsec_val << endl;
+          //   }
 
-              // if (pcode == 1491)
-              // {
-              //   cout << "DEBUG: pcode==1491: factor ends at: " << factor << endl;
-              // }
-
-              // else if (pids.pid1() == pids.pid2())
-              // {
-              //   // factor = factor * 0.5;
-              //   if (std::find(all_pid_pairs.begin(), all_pid_pairs.end(), cc_pid_pair) != all_pid_pairs.end() )
-              //   {
-              //     factor = factor * 0.0;
-              //   }                
-              // }
-
-              pids_xsec_val += (*Dep::HardScatteringSim)->xsec_fb(pcode) * factor;
-            }
-
-
-            cout << std::fixed << std::setprecision(7);
-            cout << DEBUG_PREFIX << "PIDs xsecs:  " << "[" 
-                                                   << pids.pid1() << "," << pids.pid2() << "]: "
-                                                   << std::scientific << std::setprecision(5)
-                                                   << pids_xsec_val << endl;
-          }
-
-          // _Anders DEBUG END
+          // #endif
 
         }
       }

@@ -120,10 +120,6 @@ namespace Gambit
     typedef std::map<std::pair<int,int>,PID_pair_xsec_container> map_iipair_PID_pair_xsec;
     typedef std::map<PID_pair,PID_pair_xsec_container> map_PID_pair_PID_pair_xsec;
 
-    /// @brief Typedef for a std::function that takes a PID pair (iipair) as input and returns an xsec_container instance
-    /// _Anders: Not sure we'll need this now that we're giving up the PIDPairCrossSectionFunc capability...
-    typedef std::function<xsec_container(std::pair<int,int>)> PIDPairCrossSectionFuncType;
-
     /// @brief Typedef for a std::function that sets the weight for the input HEPUtils::Event
     typedef HEPUtils::Event HEPUtils_Event;  // Extra typedef to avoid macro problem with namespaces
     typedef std::function<void(HEPUtils_Event&, const BaseCollider*)> EventWeighterFunctionType;

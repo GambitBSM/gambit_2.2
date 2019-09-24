@@ -110,4 +110,4 @@ libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
 
 xsecBE_example:
-  0.1.0:       ./Backends/examples/xsecBE_example/0.1.0/xsec_example_gambit.py
+  0.1.0:       ./Backends/examples/xsecBE_example/0.1.0/xsecBE_example_gambit.py

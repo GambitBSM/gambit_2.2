@@ -141,8 +141,6 @@ namespace Gambit
     const std::string base_xsec_container::unit = "fb";
 
 
-
-    // _Anders
     /// 
     /// Definitions of xsec_container members ?
     ///

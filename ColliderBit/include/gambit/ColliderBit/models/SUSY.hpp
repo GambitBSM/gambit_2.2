@@ -92,15 +92,18 @@
     START_FUNCTION(map_PID_pair_PID_pair_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(ActivePIDPairs, vec_PID_pair)
-    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
-    DEPENDENCY(MSSM_spectrum, Spectrum)
+    DEPENDENCY(SLHA1Spectrum, SLHAstruct)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    BACKEND_REQ(xsecBE_example_xsec_fb, (), double, (iipair&, pybind11::dict&, pybind11::dict&))
+    BACKEND_REQ(xsecBE_example_xsec_err_fb, (), ddpair, (iipair&, pybind11::dict&, pybind11::dict&))
+    BACKEND_REQ(xsecBE_example_set_parameters, (), void, (pybind11::dict&))
+    BACKEND_REQ(xsecBE_example_set_flags, (), void, (pybind11::dict&))
     #undef FUNCTION
-
   
     // #define FUNCTION getProspinoxsec
     // START_FUNCTION(xsec)
     // NEEDS_MANAGER(RunMC, MCLoopInfo)
-    // ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    // ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     // DEPENDENCY(MSSM_spectrum, Spectrum)
     // BACKEND_REQ(prospino_LHC_xsec, (libprospino), map_str_dbl, (const SLHAstruct&, const param_map_type&, prospino_settings&))
     // #undef FUNCTION
@@ -110,27 +113,30 @@
 
 
 
-  // Get SLHA content from one or more SLHA files
+  /// Get SLHA content from one or more SLHA files
+  /// @{
   #define CAPABILITY SLHAFileNameAndContent
   START_CAPABILITY
 
-    // Get the next SLHA filename and content (for model CB_SLHA_file_model)
+    /// Get the next SLHA filename and content (for model CB_SLHA_file_model)
     #define FUNCTION getNextSLHAFileNameAndContent
     START_FUNCTION(pair_str_SLHAstruct)
     ALLOW_MODELS(CB_SLHA_file_model)
     #undef FUNCTION  
   
-    // Read single SLHA file and replace some entries 
-    // (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    /// Read single SLHA file and replace some entries 
+    /// (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
     #define FUNCTION getAndReplaceSLHAContent
     START_FUNCTION(pair_str_SLHAstruct)
     ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION  
 
   #undef CAPABILITY
+  /// @}
 
 
-  // Extract SLHA file elements (for model CB_SLHA_file_model)
+  /// Extract SLHA file elements (for model CB_SLHA_file_model)
+  /// @{
   #define CAPABILITY SLHAFileElements
   START_CAPABILITY
     #define FUNCTION getSLHAFileElements
@@ -139,5 +145,31 @@
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
     #undef FUNCTION
   #undef CAPABILITY
+  /// @}
+
+
+  /// Extract an SLHAstruct with the spectrum
+  /// @{
+  #define CAPABILITY SLHA1Spectrum
+  START_CAPABILITY
+    #define FUNCTION getSLHA1Spectrum
+    START_FUNCTION(SLHAstruct)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY SLHA2Spectrum
+  START_CAPABILITY
+    #define FUNCTION getSLHA2Spectrum
+    START_FUNCTION(SLHAstruct)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
+
 
 #undef MODULE
