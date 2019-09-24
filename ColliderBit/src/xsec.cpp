@@ -36,14 +36,14 @@ namespace Gambit
     ///
 
     /// Constructor
-    base_xsec_container::base_xsec_container() : 
+    xsec_container::xsec_container() : 
       _xsec(0),
       _xsecerr(0),
       _info_string("")
     { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
-    void base_xsec_container::reset()
+    void xsec_container::reset()
     {
       _xsec = 0;
       _xsecerr = 0;
@@ -51,20 +51,20 @@ namespace Gambit
     }
 
     /// Return the cross-section (in fb).
-    double base_xsec_container::operator()() const { return _xsec; }
-    double base_xsec_container::xsec() const { return _xsec; }
+    double xsec_container::operator()() const { return _xsec; }
+    double xsec_container::xsec() const { return _xsec; }
 
     /// Return the cross-section error (in fb).
-    double base_xsec_container::xsec_err() const { return _xsecerr; }
+    double xsec_container::xsec_err() const { return _xsecerr; }
 
     /// Return the cross-section relative error.
-    double base_xsec_container::xsec_relerr() const { return _xsec > 0 ? _xsecerr/_xsec : 0; }
+    double xsec_container::xsec_relerr() const { return _xsec > 0 ? _xsecerr/_xsec : 0; }
 
     /// Set the cross-section and its error (in fb).
-    void base_xsec_container::set_xsec(double xs, double xserr) { _xsec = xs; _xsecerr = xserr; }
+    void xsec_container::set_xsec(double xs, double xserr) { _xsec = xs; _xsecerr = xserr; }
 
     /// Average cross-sections and combine errors.
-    void base_xsec_container::average_xsec(double other_xsec, double other_xsecerr)
+    void xsec_container::average_xsec(double other_xsec, double other_xsecerr)
     {
       if (other_xsec > 0)
       {
@@ -82,13 +82,13 @@ namespace Gambit
       }
     }
 
-    void base_xsec_container::average_xsec(const base_xsec_container& other)
+    void xsec_container::average_xsec(const xsec_container& other)
     {
       average_xsec(other(), other.xsec_err());
     }
 
     /// Sum cross-sections and add errors in quadrature.
-    void base_xsec_container::sum_xsecs(double other_xsec, double other_xsecerr)
+    void xsec_container::sum_xsecs(double other_xsec, double other_xsecerr)
     {
       if (other_xsec > 0)
       {
@@ -104,13 +104,13 @@ namespace Gambit
       }
     }
 
-    void base_xsec_container::sum_xsecs(const base_xsec_container& other)
+    void xsec_container::sum_xsecs(const xsec_container& other)
     {
       sum_xsecs(other(), other.xsec_err());
     }
 
     /// Get content as a <string,double> map (for easy printing).
-    std::map<std::string, double> base_xsec_container::get_content_as_map() const
+    std::map<std::string, double> xsec_container::get_content_as_map() const
     {
       std::map<std::string, double> content_map;
 
@@ -132,18 +132,14 @@ namespace Gambit
     }
 
     /// Set the info string
-    void base_xsec_container::set_info_string(std::string info_string_in) { _info_string = info_string_in; }
+    void xsec_container::set_info_string(std::string info_string_in) { _info_string = info_string_in; }
 
     /// Get the info string
-    std::string base_xsec_container::info_string() const { return _info_string; }
+    std::string xsec_container::info_string() const { return _info_string; }
 
     /// Set the unit string
-    const std::string base_xsec_container::unit = "fb";
+    const std::string xsec_container::unit = "fb";
 
-
-    /// 
-    /// Definitions of xsec_container members ?
-    ///
 
 
     /// 
@@ -152,14 +148,14 @@ namespace Gambit
 
     /// Constructor
     MC_xsec_container::MC_xsec_container() : 
-      base_xsec_container::base_xsec_container(),
+      xsec_container::xsec_container(),
       _ntot(0)
     { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
     void MC_xsec_container::reset()
     {
-      base_xsec_container::reset();
+      xsec_container::reset();
       _ntot = 0;
 
       // Add this instance to the instances map if it's not there already.
@@ -189,7 +185,7 @@ namespace Gambit
     void MC_xsec_container::average_xsec(double other_xsec, double other_xsecerr, long long other_ntot)
     {
       // Run base class function
-      base_xsec_container::average_xsec(other_xsec, other_xsecerr);
+      xsec_container::average_xsec(other_xsec, other_xsecerr);
 
       // Update _ntot
       if (other_xsec > 0)
@@ -208,7 +204,7 @@ namespace Gambit
     void MC_xsec_container::sum_xsecs(double other_xsec, double other_xsecerr, long long other_ntot)
     {
       // Run base class function
-      base_xsec_container::sum_xsecs(other_xsec, other_xsecerr);
+      xsec_container::sum_xsecs(other_xsec, other_xsecerr);
 
       // Update _ntot
       if (other_xsec > 0)
@@ -252,7 +248,7 @@ namespace Gambit
     std::map<std::string, double> MC_xsec_container::get_content_as_map() const
     {
       // Get content from base class
-      std::map<std::string, double> content_map = base_xsec_container::get_content_as_map();
+      std::map<std::string, double> content_map = xsec_container::get_content_as_map();
 
       // Add content specific to this class
       std::string key;
@@ -280,7 +276,7 @@ namespace Gambit
 
     /// Constructor
     process_xsec_container::process_xsec_container() : 
-      base_xsec_container::base_xsec_container(),
+      xsec_container::xsec_container(),
       _process_code(-1),
       _processes_sharing_xsec(std::vector<int>()),
       _related_pid_pairs(std::vector<PID_pair>())
@@ -289,7 +285,7 @@ namespace Gambit
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
     void process_xsec_container::reset()
     {
-      base_xsec_container::reset();
+      xsec_container::reset();
       _process_code = -1;
       _processes_sharing_xsec.clear();
       _related_pid_pairs.clear();
@@ -299,7 +295,7 @@ namespace Gambit
     void process_xsec_container::average_xsec(double other_xsec, double other_xsecerr)
     {
       // Run base class function
-      base_xsec_container::average_xsec(other_xsec, other_xsecerr);
+      xsec_container::average_xsec(other_xsec, other_xsecerr);
     }
     void process_xsec_container::average_xsec(const process_xsec_container& other)
     {
@@ -316,7 +312,7 @@ namespace Gambit
     void process_xsec_container::sum_xsecs(double other_xsec, double other_xsecerr)
     {
       // Run base class function
-      base_xsec_container::sum_xsecs(other_xsec, other_xsecerr);
+      xsec_container::sum_xsecs(other_xsec, other_xsecerr);
     }
     void process_xsec_container::sum_xsecs(const process_xsec_container& other)
     {
@@ -374,7 +370,7 @@ namespace Gambit
 
     /// Constructor
     PID_pair_xsec_container::PID_pair_xsec_container() : 
-      base_xsec_container::base_xsec_container(),
+      xsec_container::xsec_container(),
       _pid_pair(PID_pair()),
       _pid_pairs_sharing_xsec(std::vector<PID_pair>()),
       _related_processes(std::vector<int>())
@@ -383,7 +379,7 @@ namespace Gambit
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
     void PID_pair_xsec_container::reset()
     {
-      base_xsec_container::reset();
+      xsec_container::reset();
       _pid_pair = PID_pair();
       _pid_pairs_sharing_xsec.clear();
       _related_processes.clear();
@@ -393,7 +389,7 @@ namespace Gambit
     void PID_pair_xsec_container::average_xsec(double other_xsec, double other_xsecerr)
     {
       // Run base class function
-      base_xsec_container::average_xsec(other_xsec, other_xsecerr);
+      xsec_container::average_xsec(other_xsec, other_xsecerr);
     }
     void PID_pair_xsec_container::average_xsec(const PID_pair_xsec_container& other)
     {
@@ -410,7 +406,7 @@ namespace Gambit
     void PID_pair_xsec_container::sum_xsecs(double other_xsec, double other_xsecerr)
     {
       // Run base class function
-      base_xsec_container::sum_xsecs(other_xsec, other_xsecerr);
+      xsec_container::sum_xsecs(other_xsec, other_xsecerr);
     }
     void PID_pair_xsec_container::sum_xsecs(const PID_pair_xsec_container& other)
     {

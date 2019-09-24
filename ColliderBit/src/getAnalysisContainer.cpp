@@ -50,7 +50,7 @@ namespace Gambit
     void getAnalysisContainer(AnalysisContainer& result,
                               const str& detname,
                               const MCLoopInfo& RunMC,
-                              const base_xsec_container& TotalCrossSection,
+                              const xsec_container& TotalCrossSection,
                               int iteration)
     {
       if (RunMC.analyses.empty() or iteration == BASE_INIT) return;

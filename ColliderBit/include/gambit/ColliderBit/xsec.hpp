@@ -34,12 +34,12 @@ namespace Gambit
 
 
     /// A base class for holding cross-section info within ColliderBit.
-    class base_xsec_container
+    class xsec_container
     {
       public:
 
-        base_xsec_container();
-        virtual ~base_xsec_container() { }
+        xsec_container();
+        virtual ~xsec_container() { }
 
         /// Reset this instance for reuse.
         void reset();
@@ -59,11 +59,11 @@ namespace Gambit
 
         /// Average cross-sections and combine errors.
         void average_xsec(double, double);
-        void average_xsec(const base_xsec_container&);
+        void average_xsec(const xsec_container&);
 
         /// Sum cross-sections and add errors in quadrature.
         void sum_xsecs(double, double);
-        void sum_xsecs(const base_xsec_container&);
+        void sum_xsecs(const xsec_container&);
 
         /// Get content as map <string,double> map (for easy printing).
         std::map<std::string, double> get_content_as_map() const;
@@ -85,17 +85,8 @@ namespace Gambit
     };
 
 
-
-    // /// A class for holding a total cross-section.
-    // class xsec_container : public base_xsec_container
-    // {
-    //     // @todo Do we need some special methods here?
-    // };
-
-
-
     /// A class for holding a total cross-section calculated via MC across multiple threads
-    class MC_xsec_container : public base_xsec_container
+    class MC_xsec_container : public xsec_container
     {
 
       public:
@@ -147,7 +138,7 @@ namespace Gambit
 
 
     /// A class for holding the cross-section of a single Pythia process (identified by the Pythia process code)
-    class process_xsec_container : public base_xsec_container
+    class process_xsec_container : public xsec_container
     {
 
       public:
@@ -194,7 +185,7 @@ namespace Gambit
 
 
     /// A class for holding the production cross-section for final state identified by the pair of PID codes
-    class PID_pair_xsec_container : public base_xsec_container
+    class PID_pair_xsec_container : public xsec_container
     {
 
       public:
