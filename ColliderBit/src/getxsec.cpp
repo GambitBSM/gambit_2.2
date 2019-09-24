@@ -30,6 +30,8 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    extern std::map<std::string,bool> event_weight_flags;
+
     // ======= Utility functions =======
 
 
@@ -806,6 +808,13 @@ namespace Gambit
     {
       using namespace Pipes::getMCxsec;
 
+      static bool first = true;
+      if (first)
+      {
+        event_weight_flags["total_cross_section_from_MC"] = true;
+        first = false;
+      }
+
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
@@ -923,30 +932,39 @@ namespace Gambit
 
     }
 
-    /// Return MC_xsec_container as const base_xsec_container*
-    void get_MC_xsec_as_base(const base_xsec_container*& result)
-    {
-      using namespace Pipes::get_MC_xsec_as_base;
-      result = &(*Dep::TotalCrossSectionFromMC);
-    }
+    // /// Return MC_xsec_container as const base_xsec_container*
+    // void get_MC_xsec_as_base(const base_xsec_container*& result)
+    // {
+    //   using namespace Pipes::get_MC_xsec_as_base;
+    //   result = &(*Dep::TotalCrossSection);
+    // }
 
-    /// Return xsec_container as const base_xsec_container*
-    void get_xsec_as_base(const base_xsec_container*& result)
+    // /// Return xsec_container as const base_xsec_container*
+    // void get_xsec_as_base(const base_xsec_container*& result)
+    // {
+    //   using namespace Pipes::get_xsec_as_base;
+    //   result = &(*Dep::TotalCrossSection);
+    // }
+
+
+    // _Anders
+    /// Return MC_xsec_container as const base_xsec_container*
+    void getMCxsec_as_base(base_xsec_container& result)
     {
-      using namespace Pipes::get_xsec_as_base;
-      result = &(*Dep::TotalCrossSection);
+      using namespace Pipes::getMCxsec_as_base;
+      result = *Dep::TotalMCCrossSection;
     }
 
 
 
     /// Get a cross-section from NLL-FAST
-    void getNLLFastxsec(xsec_container& result)
+    void getNLLFastxsec(base_xsec_container& result)
     {
       using namespace Pipes::getNLLFastxsec;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec_container shared_result;
+      static base_xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -980,13 +998,13 @@ namespace Gambit
 
 
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
-    void getYAMLxsec(xsec_container& result)
+    void getYAMLxsec(base_xsec_container& result)
     {
       using namespace Pipes::getYAMLxsec;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec_container shared_result;
+      static base_xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -1081,13 +1099,13 @@ namespace Gambit
 
 
     /// A function that reads a list of (SLHA file, total cross-section) pairs from the input YAML file
-    void getYAMLxsec_SLHA(xsec_container& result)
+    void getYAMLxsec_SLHA(base_xsec_container& result)
     {
       using namespace Pipes::getYAMLxsec_SLHA;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec_container shared_result;
+      static base_xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -1197,13 +1215,13 @@ namespace Gambit
 
     /// A function that assigns a total cross-sections directly from the scan parameters
     /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
-    void getYAMLxsec_param(xsec_container& result)
+    void getYAMLxsec_param(base_xsec_container& result)
     {
       using namespace Pipes::getYAMLxsec_param;
 
       // Use a static variable to communicate the result calculated on thread 0 during 
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
-      static xsec_container shared_result;
+      static base_xsec_container shared_result;
 
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
@@ -1329,7 +1347,8 @@ namespace Gambit
       // Append the xsec info for the current collider to the result map
       if (*Loop::iteration == COLLIDER_FINALIZE)
       {
-        for(auto s_d_pair : (*Dep::TotalCrossSection)->get_content_as_map())
+        // for(auto s_d_pair : (*Dep::TotalCrossSectionForScaling)->get_content_as_map())
+        for(auto s_d_pair : Dep::TotalCrossSection->get_content_as_map())
         {
           std::string new_key(Dep::RunMC->current_collider());
           new_key.append("__").append(s_d_pair.first);

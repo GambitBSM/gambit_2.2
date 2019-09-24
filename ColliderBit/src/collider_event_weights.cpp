@@ -30,6 +30,8 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    extern std::map<std::string,bool> event_weight_flags;
+
     /// A function that sets the event weight to unity
     void _setEventWeight_unity(HEPUtils::Event& event, const BaseCollider*)  // <-- Ignoring second argument
     {
@@ -100,6 +102,13 @@ namespace Gambit
     void setEventWeight_fromCrossSection(EventWeighterFunctionType& result)
     {
       using namespace Pipes::setEventWeight_fromCrossSection;
+
+      static bool first = true;
+      if (first)
+      {
+        event_weight_flags["weight_by_cross_section"] = true;
+        first = false;
+      }
 
       if(*Loop::iteration < 0) return;
 

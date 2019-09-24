@@ -54,40 +54,70 @@
 
 
 
-  /// Cross-section calculators
-  /// @{
+  // /// Cross-section calculators
+  // /// @{
 
-  #define CAPABILITY TotalCrossSectionFromMC
+  // #define CAPABILITY TotalCrossSectionFromMC
+  // START_CAPABILITY
+
+  //   #define FUNCTION getMCxsec
+  //   START_FUNCTION(MC_xsec_container)
+  //   NEEDS_MANAGER(RunMC, MCLoopInfo)
+  //   DEPENDENCY(HardScatteringSim, const BaseCollider*)
+  //   #undef FUNCTION
+
+  // #undef CAPABILITY
+
+
+
+    // // _Anders
+    // /// Return MC_xsec_container as const base_xsec_container*
+    // void get_MC_xsec_as_base_noptr(base_xsec_container& result)
+    // {
+    //   using namespace Pipes::get_MC_xsec_as_base_noptr;
+    //   result = *Dep::TotalCrossSection;
+    // }
+
+
+  #define CAPABILITY TotalMCCrossSection
   START_CAPABILITY
 
+    // Get total cross-section from event generator
     #define FUNCTION getMCxsec
     START_FUNCTION(MC_xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(HardScatteringSim, const BaseCollider*)
     #undef FUNCTION
 
+    #undef FUNCTION
   #undef CAPABILITY
 
 
   #define CAPABILITY TotalCrossSection
   START_CAPABILITY
 
+    #define FUNCTION getMCxsec_as_base
+    START_FUNCTION(base_xsec_container)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalMCCrossSection, MC_xsec_container)
+    #undef FUNCTION
+
     /// Example function for interfacing alternative cross-section calculators
     #define FUNCTION getNLLFastxsec
-    START_FUNCTION(xsec_container)
+    START_FUNCTION(base_xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
     #define FUNCTION getYAMLxsec
-    START_FUNCTION(xsec_container)
+    START_FUNCTION(base_xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
     /// A function that assigns a total cross-sections to a given SLHA input file
     /// (for model CB_SLHA_file_model)
     #define FUNCTION getYAMLxsec_SLHA
-    START_FUNCTION(xsec_container)
+    START_FUNCTION(base_xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_file_model)
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
@@ -96,37 +126,43 @@
     /// A function that assigns a total cross-sections directly from the scan parameters
     /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
     #define FUNCTION getYAMLxsec_param
-    START_FUNCTION(xsec_container)
+    START_FUNCTION(base_xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
-
-
-    /// Some simple 'converter' functions that convert TotalCrossSection capabilities of types MC_xsec_container 
-    /// and xsec_container to TotalCrossSection capabilities of the common base type base_xsec_container.
-    #define FUNCTION get_MC_xsec_as_base
-    START_FUNCTION(const base_xsec_container*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSectionFromMC, MC_xsec_container)
-    #undef FUNCTION
-
-    #define FUNCTION get_xsec_as_base
-    START_FUNCTION(const base_xsec_container*)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSection, xsec_container)
-    #undef FUNCTION
-
   #undef CAPABILITY
-  /// @}
 
 
-  /// Get cross-section info as map_str_dbl (for simple printing)
+  // /// The total cross-section used for global scaling of events
+  // #define CAPABILITY TotalCrossSectionForScaling
+  // START_CAPABILITY
+
+  //   /// Some simple 'converter' functions that convert TotalCrossSection capabilities of types MC_xsec_container 
+  //   /// and xsec_container to TotalCrossSectionForScaling capabilities of the common base type base_xsec_container.
+  //   #define FUNCTION get_MC_xsec_as_base
+  //   START_FUNCTION(const base_xsec_container*)
+  //   NEEDS_MANAGER(RunMC, MCLoopInfo)
+  //   DEPENDENCY(TotalCrossSection, MC_xsec_container)
+  //   #undef FUNCTION
+
+  //   #define FUNCTION get_xsec_as_base
+  //   START_FUNCTION(const base_xsec_container*)
+  //   NEEDS_MANAGER(RunMC, MCLoopInfo)
+  //   DEPENDENCY(TotalCrossSection, xsec_container)
+  //   #undef FUNCTION
+
+  // #undef CAPABILITY
+  // /// @}
+
+
+  /// Output info from the TotalCrossSectionForScaling as 
+  /// a str-double map, for easy printing
   #define CAPABILITY TotalCrossSectionAsMap
   START_CAPABILITY
     #define FUNCTION getTotalCrossSectionAsMap
     START_FUNCTION(map_str_dbl)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSection, const base_xsec_container*)
+    DEPENDENCY(TotalCrossSection, base_xsec_container)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -202,7 +238,7 @@
     #define FUNCTION getATLASAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSection, const base_xsec_container*)
+    DEPENDENCY(TotalCrossSection, base_xsec_container)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -211,7 +247,7 @@
     #define FUNCTION getCMSAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSection, const base_xsec_container*)
+    DEPENDENCY(TotalCrossSection, base_xsec_container)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -220,7 +256,7 @@
     #define FUNCTION getIdentityAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(TotalCrossSection, const base_xsec_container*)
+    DEPENDENCY(TotalCrossSection, base_xsec_container)
     #undef FUNCTION
   #undef CAPABILITY
   /// @}

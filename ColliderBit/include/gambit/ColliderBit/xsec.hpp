@@ -86,11 +86,11 @@ namespace Gambit
 
 
 
-    /// A class for holding a total cross-section.
-    class xsec_container : public base_xsec_container
-    {
-        // @todo Do we need some special methods here?
-    };
+    // /// A class for holding a total cross-section.
+    // class xsec_container : public base_xsec_container
+    // {
+    //     // @todo Do we need some special methods here?
+    // };
 
 
 

@@ -15,13 +15,6 @@ Printer:
 
   printer: cout
 
-  # printer: hdf5
-  # options:
-  #   output_file: "MSSMEW.hdf5"
-  #   group: "/MSSMEW"
-  #   delete_file_on_restart: true
-
-
 
 Scanner:
 
@@ -52,23 +45,8 @@ ObsLikes:
     # Observables
     #
 
-    # Testing
-    # - purpose:    Observable
-    #   capability: ActiveProcessCodes
-    #   printme:    false
-
-    # - purpose:    Observable
-    #   capability: ProcessPIDPairs
-    #   printme:    false
-
-    # - purpose:    Observable
-    #   capability: ProcessCrossSectionsMap
-    #   printme:    false
-
-
-    # Other observables
-    - purpose:    Observable 
-      capability: TotalCrossSectionAsMap
+    # - purpose:    Observable 
+    #   capability: TotalCrossSectionAsMap
 
     - purpose:    Observable
       capability: LHC_signals
@@ -93,40 +71,40 @@ Rules:
         - ColliderBit/data/slha1-example.slha
 
 
-  # # Tell all functions that are able to dump SLHA files to do so.
-  # - options:
-  #    drop_SLHA_file: true
+  # Choose to where to get total cross-sections from
+  - capability: TotalCrossSection
+    function: getMCxsec_as_base
+    # function: getYAMLxsec
+    # options:
+    #   xsec_fb: 123.0
+    #   xsec_uncert_fb: 1.23
 
 
-  ##### LHC Detector and Analysis rules #####
+  # Choose how to do event weighting 
+  - capability: EventWeighterFunction
+    # function: setEventWeight_unity
+    function: setEventWeight_fromCrossSection
+
+
+  # Choose where to get PID pair cross-sections from.
+  # Note: This is not required if the "setEventWeight_unity" 
+  #       function is chosen above.
+  - capability: PIDPairCrossSectionsMap
+    function: getPIDPairCrossSectionsMap_xsecBE_example
+    # function: getPIDPairCrossSectionsMap_testing
+
+    # WORK IN PROGRESS:
+    #
+    # function: getPIDPairCrossSectionsMap_prospino
+    # function: getPIDPairCrossSectionsMap_EWinoXsecsFromGlasgow
+    # function: getPIDPairCrossSectionsMap_xsec
+    # function: getPIDPairCrossSectionsMap_nllfast
+
+
 
   # Choose where to get scattering events from
   - capability: HardScatteringEvent
     function: generateEventPythia
-
-  # Choose where to get the Pythia process codes from
-  - capability: ActiveProcessCodes
-    function: getActiveProcessCodes
-
-  # Set option for how to deal with missing cross-sections
-  - capabtility: ProcessCrossSectionsMap
-    function: getProcessCrossSectionsMap
-    options:
-      set_missing_xsecs_to_zero: false
-
-  # Choose to where to get total cross-sections from
-  - capability: TotalCrossSection
-    function: get_MC_xsec_as_base
-
-  # Choose event weighting
-  - capability: EventWeighterFunction
-    function: setEventWeight_fromCrossSection
-    # function: setEventWeight_unity
-
-  # Choose where to get PID pair cross-sections from
-  - capability: PIDPairCrossSectionsMap
-    function: getPIDPairCrossSectionsMap_xsecBE_example
-    # function: getPIDPairCrossSectionsMap_testing
 
   # Choose Monte Carlo event simulator and options.
   - capability: HardScatteringSim
@@ -199,16 +177,6 @@ Rules:
           - SUSY:idVecA = 1000001,1000002,1000005,1000006,2000001,2000002,2000005,2000006,1000021,
           - SUSY:idVecB = 1000001,1000002,1000005,1000006,2000001,2000002,2000005,2000006,1000021,
 
-          # - SUSY:idVecA = 1000001
-          # - SUSY:idVecB = 1000001
-
-          # - SUSY:idVecA = 1000001,1000002,2000001,2000002
-          # - SUSY:idVecB = 1000001,1000002,2000001,2000002
-
-
-          # - SUSY:idVecA = 1000021,1000022,1000023,1000024
-          # - SUSY:idVecB = 1000021,1000022,1000023,1000024
-
           # - SUSY:all = off
           # - SUSY:gg2squarkantisquark = on
           # - SUSY:qqbar2squarkantisquark = on
@@ -216,9 +184,6 @@ Rules:
           # - SUSY:idVecA = 1000001,1000002,1000004
           # - SUSY:idVecB = 1000001,1000002,1000004
 
-          # - SUSY:qg2chi0squark = off
-          # - SUSY:qg2chi0squark = off
-          # - SUSY:qg2chi+-squark = off
 
 
   # Choose ATLAS detector simulation and options.
@@ -287,8 +252,8 @@ Rules:
       #     - CMS_8TeV_2LEPDMTOP_20invfb
       #     - CMS_8TeV_MONOJET_20invfb
       LHC_13TeV:
-        min_nEvents: 10000 # 20000
-        max_nEvents: 10000 # 20000
+        min_nEvents: 1000 # 20000
+        max_nEvents: 1000 # 20000
         events_between_convergence_checks: 100000000
         target_fractional_uncert: 0.3
         halt_when_systematic_dominated: true
@@ -419,7 +384,7 @@ KeyValues:
 
 
   dependency_resolution:
-    prefer_model_specific_functions: true
+    prefer_model_specific_functions: false
 
   likelihood:
     model_invalid_for_lnlike_below: -5e5

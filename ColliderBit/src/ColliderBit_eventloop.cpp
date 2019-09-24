@@ -46,6 +46,8 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    extern std::map<std::string,bool> event_weight_flags;
+
 
     /// LHC Loop Manager
     void operateLHCLoop(MCLoopInfo& result)
@@ -162,6 +164,23 @@ namespace Gambit
         piped_warnings.check(ColliderBit_warning());
         piped_errors.check(ColliderBit_error());
 
+        // Consistency check for the event weighting
+        static bool do_weights_check = true;
+        if (do_weights_check)
+        {
+          if(event_weight_flags["weight_by_cross_section"] && !event_weight_flags["total_cross_section_from_MC"])
+          {
+            std::stringstream errmsg_ss;
+            errmsg_ss << "Inconsistent choice for how to scale the generated events. "
+                      << "If you weight each event by a cross-section that's not from the event " 
+                      << "generator (function 'setEventWeight_fromCrossSection' for capability "
+                      << "'EventWeighterFunction'), you need to scale by the total cross-section "
+                      << "calculated by the event generator. (Choose function 'getMCxsec_as_base' "
+                      << "for capability 'TotalCrossSection'.)";
+            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+          }
+          do_weights_check = false;
+        } 
 
         //
         // The main OMP parallelized sections begin here
