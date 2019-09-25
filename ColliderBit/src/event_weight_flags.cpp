@@ -6,7 +6,7 @@ namespace Gambit
   namespace ColliderBit
   {
 
-  	// A strin-bool map used to check that consistent choices are
+  	// A string-bool map used to check that consistent choices are
   	// made for event weighting
   	// @todo This is really just a temporary fix until we have a system
   	//       that allows a module function to check which module function

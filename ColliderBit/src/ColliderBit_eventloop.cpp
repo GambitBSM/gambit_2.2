@@ -37,7 +37,7 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-#define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -56,8 +56,8 @@ namespace Gambit
       static std::streambuf *coutbuf = std::cout.rdbuf(); // save cout buffer for running the loop quietly
 
       #ifdef COLLIDERBIT_DEBUG
-      cout << DEBUG_PREFIX << endl;
-      cout << DEBUG_PREFIX << "~~~~ New point! ~~~~" << endl;
+        cout << DEBUG_PREFIX << endl;
+        cout << DEBUG_PREFIX << "~~~~ New point! ~~~~" << endl;
       #endif
 
       // Retrieve run options from the YAML file (or standalone code)
@@ -128,7 +128,7 @@ namespace Gambit
         result.current_event_count() = 0;
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Current collider is " << collider << "." << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Current collider is " << collider << "." << endl;
         #endif
 
         piped_invalid_point.check();
@@ -136,7 +136,7 @@ namespace Gambit
 
         // Do the single-thread part of the collider initialization
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT" << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT" << endl;
         #endif
         Loop::executeIteration(COLLIDER_INIT);
         // Any problem during COLLIDER_INIT step?
@@ -145,7 +145,7 @@ namespace Gambit
 
         // Do the OMP parallelized part of the collider initialization
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT_OMP" << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT_OMP" << endl;
         #endif
         #pragma omp parallel
         {
@@ -157,7 +157,7 @@ namespace Gambit
 
         // Execute the sigle-thread iteration XSEC_CALCULATION 
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute XSEC_CALCULATION" << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute XSEC_CALCULATION" << endl;
         #endif
         Loop::executeIteration(XSEC_CALCULATION);
         // Any problems during the XSEC_CALCULATION step?
@@ -186,7 +186,7 @@ namespace Gambit
         // The main OMP parallelized sections begin here
         //
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute START_SUBPROCESS" << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute START_SUBPROCESS" << endl;
         #endif
         int currentEvent = 0;
         #pragma omp parallel
@@ -204,7 +204,7 @@ namespace Gambit
           int eventCountBetweenConvergenceChecks = 0;
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "Starting main event loop.  Will do " << stoppingres.at(collider) << " events before testing convergence." << endl;
+            cout << DEBUG_PREFIX << "Starting main event loop.  Will do " << stoppingres.at(collider) << " events before testing convergence." << endl;
           #endif
 
           // Main event loop
@@ -242,7 +242,7 @@ namespace Gambit
           piped_errors.check(ColliderBit_error());
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "Did " << eventCountBetweenConvergenceChecks << " events of " << currentEvent << " simulated so far." << endl;
+            cout << DEBUG_PREFIX << "Did " << eventCountBetweenConvergenceChecks << " events of " << currentEvent << " simulated so far." << endl;
           #endif
 
           // Break convergence loop if too many events fail
@@ -350,22 +350,22 @@ namespace Gambit
 
 
       // #ifdef COLLIDERBIT_DEBUG
-      // cout << DEBUG_PREFIX << "CollectAnalyses: Current size of 'result': " << result.size() << endl;
-      // if (result.size() > 0)
-      // {
-      //   cout << DEBUG_PREFIX << "CollectAnalyses: Will loop through 'result'..." << endl;
-      //   for (auto& adp : result)
+      //   cout << DEBUG_PREFIX << "CollectAnalyses: Current size of 'result': " << result.size() << endl;
+      //   if (result.size() > 0)
       //   {
-      //     cout << DEBUG_PREFIX << "CollectAnalyses: 'result' contains AnalysisData pointer to " << adp << endl;
-      //     cout << DEBUG_PREFIX << "CollectAnalyses: -- Will now loop over all signal regions in " << adp << endl;
-      //     for (auto& sr : adp->srdata)
+      //     cout << DEBUG_PREFIX << "CollectAnalyses: Will loop through 'result'..." << endl;
+      //     for (auto& adp : result)
       //     {
-      //       cout << DEBUG_PREFIX << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal = " << sr.n_signal << ", n_signal_at_lumi = " << n_signal_at_lumi << endl;
+      //       cout << DEBUG_PREFIX << "CollectAnalyses: 'result' contains AnalysisData pointer to " << adp << endl;
+      //       cout << DEBUG_PREFIX << "CollectAnalyses: -- Will now loop over all signal regions in " << adp << endl;
+      //       for (auto& sr : adp->srdata)
+      //       {
+      //         cout << DEBUG_PREFIX << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal = " << sr.n_signal << ", n_signal_at_lumi = " << n_signal_at_lumi << endl;
+      //       }
+      //       cout << DEBUG_PREFIX << "CollectAnalyses: -- Done looping over signal regions in " << adp << endl;
       //     }
-      //     cout << DEBUG_PREFIX << "CollectAnalyses: -- Done looping over signal regions in " << adp << endl;
+      //     cout << DEBUG_PREFIX << "CollectAnalyses: ...Done looping through 'result'." << endl;
       //   }
-      //   cout << DEBUG_PREFIX << "CollectAnalyses: ...Done looping through 'result'." << endl;
-      // }
       // #endif
     }
 

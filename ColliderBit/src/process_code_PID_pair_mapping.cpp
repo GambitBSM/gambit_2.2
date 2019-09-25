@@ -87,11 +87,12 @@ namespace Gambit
           }
         }
 
-        for (const PID_pair& pid_pair : result)
-        {
-          cout << DEBUG_PREFIX << "getActivePIDPairs: - active PID pair: [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]" << endl;
-        }
-
+        #ifdef COLLIDERBIT_DEBUG
+          for (const PID_pair& pid_pair : result)
+          {
+            cout << DEBUG_PREFIX << "getActivePIDPairs: - active PID pair: [" << pid_pair.pid1() << "," << pid_pair.pid2() << "]" << endl;
+          }
+        #endif
       }
     }
 
