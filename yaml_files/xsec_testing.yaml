@@ -82,8 +82,8 @@ Rules:
 
   # Choose how to do event weighting 
   - capability: EventWeighterFunction
-    # function: setEventWeight_unity
     function: setEventWeight_fromCrossSection
+    # function: setEventWeight_unity
 
 
   # Choose where to get PID pair cross-sections from.
