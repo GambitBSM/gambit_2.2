@@ -3,8 +3,6 @@ A dummy example of a python code providing
 LHC cross-sections to GAMBIT  
 """
 from __future__ import print_function
-import numpy as np
-import xsec 
 from modules.my_cross_sections import all_xsec_fb, all_xsec_err_fb
 
 
@@ -13,9 +11,6 @@ from modules.my_cross_sections import all_xsec_fb, all_xsec_err_fb
 #
 prefix = "xsecBE_example_gambit:"
 print(prefix, "Starting up...", flush=True)
-print(prefix, "Imported numpy version", np.__version__, "from", np.__path__[0], ".", flush=True)
-print(prefix, "Imported xsec version", xsec.__version__, "from", xsec.__path__[0], ".", flush=True)
-
 
 
 #
