@@ -52,6 +52,9 @@ namespace GUM
       // MINPAR, EXTPAR
       void get_minpar_extpar(std::vector<Parameter>&);
 
+      // Get in-out blocks
+      void get_inout_blocks(std::vector<Parameter> &);
+
       // Get boundary conditions
       void get_boundary_conditions(std::vector<Parameter>&);
 
