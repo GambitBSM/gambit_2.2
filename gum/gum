@@ -10,7 +10,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019 
+#  \date 2017, 2018, 2019... forever
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
@@ -155,9 +155,13 @@ if args.file:
         # model files - remove all SM stuff from parameter list.
         parameters = sarah_params(paramlist, add_higgs)
 
+    print("Finished extracting parameters from " + gum.math + ".")
 
     # Get the parameters sorted by block
     blockparams = sort_params_by_block(parameters)
+
+    print("blockparams = ")
+    print(blockparams)
 
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
     # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.
@@ -466,7 +470,11 @@ if args.file:
         if not output_opts.spheno:
             raise GumError(("Currently gum needs SPheno output to be able to produce Vevacious"
                             " output. Please change your .gum file."))
-        write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, blockparams)
+        vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, 
+                                      blockparams)
+
+        import sys
+        sys.exit("Done for now.")
 
 
     """

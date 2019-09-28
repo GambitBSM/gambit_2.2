@@ -291,7 +291,8 @@ namespace GUM
             }
 
             // Add the particle to the list.
-            Particle particle(pdg, outputname, spinX2, chargeX3, color, SM, mass, antioutputname, alt_name);
+            Particle particle(pdg, outputname, spinX2, chargeX3, color, 
+                              SM, mass, antioutputname, alt_name);
             partlist.push_back(particle);
 
         }
@@ -324,6 +325,11 @@ namespace GUM
       command = "pd = ParameterDefinitions;";
       send_to_math(command);
 
+      // Here's another parameter list which has, crucically,
+      // the size of mixing matrices.
+      command = "p = parameters;";
+      send_to_math(command);
+
       // Find out how many parameters we have to get.
       command = "Length[pd]";
       send_to_math(command);
@@ -338,7 +344,7 @@ namespace GUM
         std::string block;
         std::string paramname;
         std::string alt_paramname;
-        int index = 0;
+        int index = 1;
 
         // Whether or not the parameter is defined by other parameters
         // of the model. If so, don't want it in GAMBIT
@@ -346,6 +352,9 @@ namespace GUM
 
         // Whether we've found an LH block
         bool LHblock = false;
+
+        // Whether the LHblock is a mixing matrix [of some size]
+        bool ismixing = false;
 
         command = "pd[[" + std::to_string(i+1) + ",1]]";
         send_to_math(command);
@@ -407,6 +416,23 @@ namespace GUM
             index = std::stoi(leshouches[1]);
             LHblock = true;
         }
+        // If not a list, but a symbol, then we've got a mixing block
+        else if(entry == "Symbol") 
+        {
+            // Get the blockname
+            command = "LesHouches /. pd[[" + std::to_string(i+1) + ",2]]";
+            send_to_math(command);
+            get_from_math(block);
+
+            ismixing = true;
+            LHblock = true;
+        }
+        else
+        {
+          throw std::runtime_error("Error in LesHouches block for the entry "
+                                   + paramname + " in SARAH -- please check "
+                                   "your SARAH model file.");
+        }
 
         // Does the parameter have a different external
         // name than the internal SARAH name? If so, use it.
@@ -425,9 +451,33 @@ namespace GUM
 
         // If it's a fundamental parameter of our theory, 
         // add it to the list (if it has an LH block!)
-        if (LHblock)
+        if (LHblock && !ismixing)
         {
             Parameter parameter(paramname, block, index, alt_paramname);
+            paramlist.push_back(parameter);
+        }
+        // If it's a mixing block then save it as as such 
+        else if (LHblock && ismixing)
+        {
+            std::string shape;
+            std::vector<std::string> shapesize;
+
+            // Get the position of the mixing block in the other param list
+            command = "pos = Position[p, " + alt_paramname + "]";
+            send_to_math(command);
+
+            // Extract the size of the matrix
+            command = "Extract[p, pos[[1,1]]][[3]]";
+            send_to_math(command);
+            get_from_math(shapesize);
+            shape = "m" + shapesize[0] + "x" + shapesize[1];
+            
+            // Add to the paramlist -- but only as an *output* parameter, 
+            // and with the shape of the matrix
+            bool is_output = true;
+
+            Parameter parameter(paramname, block, index, alt_paramname, 
+                                shape, is_output);
             paramlist.push_back(parameter);
         }
 
@@ -744,6 +794,8 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("index",     &Parameter::index)
     .def("alt_name",  &Parameter::alt_name)
     .def("bcs",       &Parameter::bcs)
+    .def("shape",     &Parameter::shape)
+    .def("is_output", &Parameter::is_output)
     ;
 
   class_<Options>("SARAHOptions", init<std::string, std::string, std::string, std::string, std::string>())

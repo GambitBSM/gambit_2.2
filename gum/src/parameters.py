@@ -81,7 +81,8 @@ def fr_params(paramlist, add_higgs):
             and (p.block() != 'CKMBLOCK')):
             
             # Create a new instance of SpectrumParameter
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), index=p.index())
+            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), 
+                                  index=p.index())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
@@ -217,13 +218,15 @@ def sarah_params(paramlist, add_higgs):
         p = paramlist[i]
         if (    (p.block() != 'SM')
             and (p.block() != 'SMINPUTS')
-            and (p.block() != 'VCKM')):
+            and (p.block() != 'VCKM'
+            and (p.is_output() != False))
+            ):
             
             # Create a new instance of SpectrumParameter
             # TODO: dimensionless atm! 
             x = SpectrumParameter(p.name(), "dimensionless", block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
-                                  bcs = p.bcs())
+                                  bcs = p.bcs(), shape = p.shape())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
@@ -295,7 +298,10 @@ def sort_params_by_block(parameters):
         if not par.block:
             continue
 
+        # If the parameter 
+
         shape = par.shape
+        print shape
 
         matrix = False
         if shape:
