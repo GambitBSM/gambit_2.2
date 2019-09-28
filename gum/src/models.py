@@ -32,8 +32,9 @@ def get_model_parameters(parameters, partlist) :
 
     for param in parameters:
  
-        # if the parameter is in MINPAR or EXTPAR it's not a model parameter
-        if param.block != "MINPAR" and param.block != "EXTPAR" : 
+        # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a model parameter
+        if param.block != "MINPAR" and param.block != "EXTPAR" :
+          if not (param.block != None and param.block.endswith("IN")) : 
             model_parameters.append(param)
 
     return model_parameters

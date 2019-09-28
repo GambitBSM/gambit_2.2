@@ -1071,6 +1071,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # TODO: Fill model dependent mixings
     towrite += "// Other parameters\n"
+    for par in parameters:
+      print par.name, par.block
 
     # TODO: Fill model dependent other parameters
     towrite += "// Call SPheno's function to calculate decays\n"\
@@ -1751,15 +1753,32 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
           towrite += '  *'+name
         towrite += ' = *inputs.param.at("'+model_par+'");\n'
 
-    # TODO: ParamIN blocks
-
+    # TODO  The name of model parameters might be wrong
+    thisblock = ""
+    for name, var in variables.iteritems():
+      if var.block != None and var.block.endswith("IN") :
+        if thisblock != var.block :
+          thisblock = var.block
+          towrite += '\n/*****************/\n'\
+            '/* Block '+thisblock+' */\n'\
+            '/*****************/\n'
+        model_par = get_model_par_name(name, variables)
+        towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'\
+          '{\n'
+        if var.type.startswith("Complex") :
+          towrite += name + 'IN->re'
+        else :
+          towrite += name + 'IN'
+        towrite += ' = *inputs.param.at("' + model_par+'");\n'\
+          '*InputValuefor'+name+' = true;\n'\
+          '}\n'
+      
     towrite += "\n"\
       '/*****************/\n'\
       '/* Block GAUGEIN */\n'\
       '/*****************/\n'\
       '// Irrelevant\n'
 
-    # TODO: Model dependent blocks
 
     towrite += "\n"\
       "// No other blocks are relevant at this stage\n"\

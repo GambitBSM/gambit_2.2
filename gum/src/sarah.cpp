@@ -532,6 +532,83 @@ namespace GUM
 
   }
 
+  // Get the blocks, entries and parameter names of the in-out blocks
+  void SARAH::get_inout_blocks(std::vector<Parameter> &parameters)
+  {
+    std::cout << "Extracting in-out blocks from SPheno" << std::endl;
+
+    // Check if Combindedblock is a list
+    bool is_list;
+    send_to_math("Head[CombindedBlock]===List");
+    get_from_math(is_list);
+
+    if(is_list)
+    {
+
+      // Get the length of the CombindedBlock, as the shape is not a vector<string>
+      int length;
+      send_to_math("Length[CombindedBlock]");
+      get_from_math(length);
+
+      for(int i=1; i<=length; i++)
+      {
+        // Get the name of the block
+        std::string blockname;
+        send_to_math("CombindedBlock[["+std::to_string(i)+",1]]");
+        get_from_math(blockname);
+        blockname = blockname + "IN";
+
+        // Now get the parameters in the block
+        std::vector<std::vector<std::string> > blockpars;
+        send_to_math("CombindedBlock[["+std::to_string(i)+",2;;]]");
+        get_from_math(blockpars);
+
+        for(auto blockpar :  blockpars)
+        {
+          // Get the output name and remove params that have dependencies
+          int pdlength;
+          send_to_math("Length[pd]");
+          get_from_math(pdlength);
+
+          for(int j=1; j<=pdlength; j++)
+          {
+            std::string name;
+            send_to_math("pd[["+std::to_string(j)+",1]]//ToString");
+            get_from_math(name);
+
+            if(name == blockpar[0])
+            {
+              std::string entry;
+
+              send_to_math("DependenceNum /. pd[[" + std::to_string(j) + ",2]] // ToString");
+              get_from_math(entry);
+              if (entry != "DependenceNum" and entry != "None") continue;
+
+              send_to_math("DependenceSPheno /. pd[[" + std::to_string(j) + ",2]] // ToString");
+              get_from_math(entry);
+              if (entry != "DependenceSPheno" and entry != "None") continue;
+
+              send_to_math("Dependence /. pd[[" + std::to_string(j) + ",2]] // ToString");
+              get_from_math(entry);
+              if (entry != "Dependence" and entry != "None") continue;
+
+              std::string outputname;
+              send_to_math("OutputName/.pd[["+std::to_string(j)+",2]]//ToString");
+              get_from_math(outputname);
+              if(outputname == "OutputName") outputname = blockpar[0];
+
+              parameters.push_back(Parameter(outputname, blockname, std::stoi(blockpar[1])));
+
+            }
+
+          }
+
+        }
+      }
+
+    }
+  }
+
   // Get the boundary conditions for all parameters in the parameter list
   void SARAH::get_boundary_conditions(std::vector<Parameter> &parameters)
   {
@@ -734,6 +811,9 @@ namespace GUM
 
         // Get the parameters used to solve tadpoles and removed them from the list
         model.get_tadpoles(paramlist);
+
+        // Get in-out blocks
+        model.get_inout_blocks(paramlist);
 
         // Add SPheno mass names for all particles
         model.add_SPheno_mass_names(partlist);
