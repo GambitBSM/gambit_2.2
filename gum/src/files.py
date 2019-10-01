@@ -313,7 +313,9 @@ def add_capability(module, capability, function, reset_dict,
 
         # If there's already the capability, then the only thing we need 
         # is the function. Add it to the existing capability.
-        amend_file(filename, module, func, cap_line-1, reset_dict)
+        amend_file(filename, module, func, cap_line+1, reset_dict)
+        # The +1 takes into account the START_CAPABILITY line. Hopefully 
+        # being a bit lazy here doesn't come back to bite me, but I doubt it.
 
     # Otherwise - add some capability tags either side and write it to the 
     # end of the file.
@@ -371,12 +373,11 @@ def write_function(function, returntype, dependencies=None,
             extras += "BACKEND_REQ({0})\n".format(add)
 
     towrite = (
-            "\n"
             "#define FUNCTION {0}\n"
-            "START_FUNCTION({1})\n"
+            "  START_FUNCTION({1})\n"
             "{2}"
             "#undef FUNCTION\n"
-    ).format(function, returntype, extras)
+    ).format(function, returntype, dumb_indent(2, extras))
 
     return dumb_indent(4, towrite)
 
