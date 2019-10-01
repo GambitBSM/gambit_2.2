@@ -113,24 +113,6 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
     # potential parameters to vevacious.
     towrite +="// Here we start passing the parameters form the SLHAea::Coll object.\n"
 
-    #towrite += write_readlhablock("YE", "m3x3")
-
-    # print indent(towrite)
-    #return indent(towrite)
-
-    """
-    TODO:
-
-    - get all expected blocks from vevacious
-    - need the following:
-        - input parameters (SMINPUTS, Yukawas, etc.)
-        - output parameters (GAUGE, mixings, some masses.)
-
-    - function to return a list/dict of all BLOCKS and their entries. in and out. 
-      needs the size of each block etc.
-
-    """
-
     # Dict of blocks - add the LHA reading routines to each
     for block, contents in params_by_block.iteritems():
 
@@ -138,11 +120,49 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
 
     towrite += "}\n"
 
-    # todo: the lifetime routines -- hopefully can be factorised on the gambit side. 
-    # if not, add them here.
-
     return indent(towrite)
 
+def write_vevacious_rollcall(model_name, spectrum, reset_dict):
+    """
+    Writes rollcall headers for vevacious.
+    """
+
+    # vevacious_file_location
+    add_capability(module="SpecBit",filename="SpecBit_VS_rollcall.hpp", 
+                   capability="vevacious_file_location",
+                   function="vevacious_file_location_"+model_name,
+                   reset_dict=reset_dict, returntype="map_str_str",
+                   allowed_models=model_name)
+
+    # pass_spectrum_to_vevacious
+    add_capability(module="SpecBit",filename="SpecBit_VS_rollcall.hpp", 
+                   capability="pass_spectrum_to_vevacious",
+                   function="pass_"+model_name+"_spectrum_to_vevacious",
+                   reset_dict=reset_dict,
+                   returntype="const vevacious_1_0::VevaciousPlusPlus::"+
+                              "VevaciousPlusPlus*",
+                   dependencies=[[spectrum, "Spectrum"],
+                                 ["init_vevacious", "std::string"]],
+                   allowed_models=model_name)
+
+    # # Entry for CAPABILITY vevacious_file_location
+    # file_loc = (
+    #     "#define FUNCTION vevacious_file_location_{0}\n"
+    #     "  START_FUNCTION(map_str_str)\n"
+    #     "#undef FUNCTION\n"
+    #     ).format(model_name)
+
+    # # Entry for CAPABILITY pass_spectrum_to_vevacious
+    # pass_spec = (
+    #     "#define FUNCTION pass_{0}_spectrum_to_vevacious\n"
+    #     "  START_FUNCTION(const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)\n"
+    #     "  DEPENDENCY({1}, Spectrum)\n"
+    #     "  DEPENDENCY(init_vevacious, std::string)\n"
+    #     "  ALLOW_MODEL_DEPENDENCE({0})\n"
+    #     "#undef FUNCTION\n"
+    #     ).format(model_name, spectrum)
+
+    # return file_loc, pass_spec
 
 def write_readlhablock(block, contents):
     """

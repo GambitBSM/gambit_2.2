@@ -473,8 +473,8 @@ if args.file:
         vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, 
                                       blockparams)
 
-        import sys
-        sys.exit("Done for now.")
+        # import sys
+        # sys.exit("Done for now.")
 
 
     """
@@ -605,7 +605,9 @@ if args.file:
         copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir, reset_contents, existing = False)
         copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir, reset_contents, existing = False)
         add_to_backend_locations("Pythia_"+gum.name, be+"/"+ver+"/lib/libpythia8.so", ver, reset_contents)
-    # MadDM
+    # Vevacious
+    if output_opts.vev:
+        write_vevacious_rollcall(gum.name, gum.spec, reset_contents)
 
     # Write a simple YAML file.
     if decaybit: drop_yaml_file(gum.name, parameters, add_higgs, reset_contents)
