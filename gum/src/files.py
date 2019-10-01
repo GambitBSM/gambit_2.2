@@ -252,8 +252,6 @@ def amend_file(filename, module, contents, line_number, reset_dict):
     from a given line number.
     """
 
-    print contents
-
     location = full_filename(filename, module)
 
     # Catch an error code
