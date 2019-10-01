@@ -1753,7 +1753,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
           towrite += '  *'+name
         towrite += ' = *inputs.param.at("'+model_par+'");\n'
 
-    # TODO  The name of model parameters might be wrong
+    # TODO:  The name of model parameters might be wrong
+    # TODO: this does not work for matrices
     thisblock = ""
     for name, var in variables.iteritems():
       if var.block != None and var.block.endswith("IN") :
