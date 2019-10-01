@@ -1233,8 +1233,73 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         'slha["VCKMIN"][""] << 3 << *rho_wolf << "# rho bar";\n'\
         'slha["VCKMIN"][""] << 4 << *eta_wolf << "# eta bar";\n'
 
-      # TODO: SCKM sutff
-      towrite += "}\n"
+      if flags["SupersymmetricModel"] :
+        towrite += '// Initialize temporary variables\n'\
+          'Farray<Fcomplex16,1,6,1,6> ZU_ckm = *ZU;\n'\
+          'Farray<Fcomplex16,1,6,1,6> ZD_ckm = *ZD;\n'\
+          'Farray<Fcomplex16,1,6,1,6> ZE_pmns = *ZE;\n'\
+          'Farray<Fcomplex16,1,3,1,3> ZV_pmns = *ZV;\n'\
+          '\n'\
+          'Farray<Fcomplex16,1,3,1,3> Yu_ckm, Yd_ckm, Tu_ckm, Td_ckm, mq2_ckm, mu2_ckm, md2_ckm;\n'\
+          'Farray<Fcomplex16,1,3,1,3> Ye_pmns, Te_pmns, ml2_pmns, me2_pmns, Ye_transpose, id3C;\n'\
+          'Farray<Fcomplex16,1,3,1,3> CKM_Q, PMNS_Q;\n'\
+          'for(int i=1; i<=3; i++)\n'\
+          '{\n'\
+          'for(int j=1; j<=3; j++)\n'\
+          '{\n'\
+          'Yu_ckm(i,j) = {0.0,0.0};\n'\
+          'Yd_ckm(i,j) = {0.0,0.0};\n'\
+          'Tu_ckm(i,j) = {0.0,0.0};\n'\
+          'Td_ckm(i,j) = {0.0,0.0};\n'\
+          'mq2_ckm(i,j) = {0.0,0.0};\n'\
+          'mu2_ckm (i,j) = {0.0,0.0};\n'\
+          'md2_ckm(i,j) = {0.0,0.0};\n'\
+          'Ye_pmns(i,j) = {0.0,0.0};\n'\
+          'Te_pmns(i,j) = {0.0,0.0};\n'\
+          'ml2_pmns(i,j) = {0.0,0.0};\n'\
+          'me2_pmns(i,j) = {0.0,0.0};\n'\
+          'Ye_transpose(i,j) = (*Ye)(j,i);\n'\
+          'id3C(i,j) = {0.0,0.0};\n'\
+          '}\n'\
+          'id3C(i,i) = {1.0,0.0};\n'\
+          '}\n'\
+          '\n'\
+          '// Convert to super-CKM and super-PMNS variables\n'\
+          'Flogical False = false;\n'\
+          'try{ Switch_to_superCKM(*Yd, *Yu, *Td, *Tu, *md2, *mq2, *mu2, Td_ckm, Tu_ckm, md2_ckm, mq2_ckm,mu2_ckm, False, ZD_ckm, ZU_ckm, *ZD, *ZU, CKM_Q, Yd_ckm, Yu_ckm); }\n'\
+          'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+          'try{ Switch_to_superPMNS(Ye_transpose, id3C, *Te, *me2, *ml2, Te_pmns, me2_pmns, ml2_pmns, False, ZE_pmns, ZV_pmns, *ZE, *ZV, PMNS_Q, Ye_pmns); }\n'\
+          'catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n'\
+          '\n'\
+          '// Save rotated values to old variables\n'\
+          '*Yd = Yd_ckm;\n'\
+          '*Yu = Yu_ckm;\n'\
+          '*Td = Td_ckm;\n'\
+          '*Tu = Tu_ckm;\n'\
+          '*md2 = md2_ckm;\n'\
+          '*mu2 = mu2_ckm;\n'\
+          '*mq2 = mq2_ckm;\n'\
+          '*ZU = ZU_ckm;\n'\
+          '*ZD = ZD_ckm;\n'\
+          '*Ye = Ye_pmns;\n'\
+          '*Te = Te_pmns;\n'\
+          '*ml2 = ml2_pmns;\n'\
+          '*me2 = me2_pmns;\n'\
+          '*ZE = ZE_pmns;\n'\
+          '*ZV = ZV_pmns;\n'\
+          '\n'\
+          '// Write output to new blocks\n'\
+          'SLHAea_add_block(slha, "VCKM", Q);\n'\
+          'SLHAea_add_block(slha, "IMVCKM", Q);\n'\
+          'for(int i=1; i<=3; i++)\n'\
+          '{\n'\
+          'for(int j=1; j<=3; j++)\n'\
+          '{\n'\
+          'slha["VCKM"][""] << i << j << CKM_Q(i,j).re << "# V_" << i << j;\n'\
+          'slha["IMVCKM"][""] << i << j << CKM_Q(i,j).im << "# Im(V_" << i << j << ")";\n'\
+          '}\n'\
+          '}\n'\
+          '}\n'
 
     # TODO: Many MD parameters
 
