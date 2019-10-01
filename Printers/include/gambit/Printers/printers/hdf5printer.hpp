@@ -57,7 +57,9 @@ namespace Gambit
   {
 
     // Parameter controlling the length of all the standard buffers
-    static const std::size_t BUFFERLENGTH = 100; // Change to 10000 or something. Currently cannot change this dynamically though, sorry.
+    //static const std::size_t BUFFERLENGTH = 100; // Change to 10000 or something. Currently cannot change this dynamically though, sorry.
+    static const std::size_t BUFFERLENGTH = 1; // Have changed this to 1 to save every point.
+
     /// Max number of PPIDpairs to be tracked
     /// i.e. chunks of RA output longer than this can potentially contain multiple writes to the same point.
     /// It is up to the combine script to apply the last scheduled write preferentially.
@@ -559,7 +561,7 @@ namespace Gambit
 
     // Register printer so it can be constructed via inifile instructions
     // First argument is string label for inifile access, second is class from which to construct printer
-    LOAD_PRINTER(hdf5, HDF5Printer)
+    LOAD_PRINTER(hdf5_v1, HDF5Printer)
 
   } // end namespace Printers
 
