@@ -19,6 +19,7 @@
 #  **************************************
 
 from files import *
+from setup import *
 from models import *
 from cmake_variables import *
 from distutils.dir_util import copy_tree
@@ -587,7 +588,8 @@ class SPhenoParameter:
         self.bcs = _bcs
 
 
-def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path, output_dir):
+def write_spheno_frontends(model_name, parameters, particles, flags, 
+                           spheno_path, output_dir, blockparams, gambit_pdgs, mixings):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -608,19 +610,15 @@ def write_spheno_frontends(model_name, parameters, particles, flags, spheno_path
     variable_dictionary = get_fortran_shapes(variables)
     hb_variable_dictionary = get_fortran_shapes(hb_variables)
 
-
     # Get the source and header files
-    spheno_src = write_spheno_frontend_src(model_name, 
-                                           functions, 
-                                           variables, 
-                                           flags,
-                                           particles, 
-                                           parameters)
-    spheno_header = write_spheno_frontend_header(model_name, 
-                                                 functions, 
+    spheno_src = write_spheno_frontend_src(model_name, functions,
+                                           variables, flags, particles, 
+                                           parameters, blockparams, 
+                                           gambit_pdgs, mixings)
+
+    spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
-                                                 locations, 
-                                                 variables,
+                                                 locations, variables,
                                                  variable_dictionary,
                                                  hb_variables,
                                                  hb_variable_dictionary)
@@ -713,7 +711,6 @@ def scrape_functions_from_spheno(spheno_path, model_name):
         get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
 
     return function_dictionary, args_dictionary, locations_dictionary
-
 
 
 def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
@@ -816,7 +813,6 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
     return parameters, hb_parameters
 
 
-
 def get_arguments_from_file(functions, file_path, function_dictionary,
                             argument_dictionary):
     """
@@ -858,8 +854,6 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
             func = s.group(1)
             # Split the definition up by the :: sign for definitions.
             defs = func.split('::')
-
-
 
             # Firstly, find out which arguments we need to obtain types for
             for v in function_dictionary.values():
@@ -905,7 +899,8 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 # writing
 
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
-                              particles, parameters):
+                              particles, parameters, blockparams, gambit_pdgs, mixings):
+
     """
     Writes source for 
     Backends/src/frontends/SARAHSPheno_<MODEL>_<VERSION>.cpp
@@ -918,202 +913,267 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     towrite = blame_gum(intro_message)
 
     # Headers, macros and callback function
-    towrite += "#include \"gambit/Backends/frontend_macros.hpp\"\n"\
-      "#include \"gambit/Backends/frontends/SARAHSPheno_"+model_name+"_"+safe_version+".hpp\"\n"\
-      "#include \"gambit/Elements/spectrum_factories.hpp\"\n"\
-      "#include \"gambit/Models/SimpleSpectra/"+model_name+"SimpleSpec.hpp\"\n"\
-      "#include \"gambit/Utils/version.hpp\"\n"\
-      "\n"\
-      "#define BACKEND_DEBUG 0\n"\
-      "\n"\
-      "// Callback function for error handling\n"\
-      "BE_NAMESPACE\n"\
-      "{\n"\
-       "// This function will be called from SPheno. Needs C linkage, and thus also\n"\
-      "// a backend-specific name to guard against name clashes.\n"\
-      "extern \"C\"\n"\
-      "void CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler)()\n"\
-      "{\n"\
-      "throw std::runtime_error(\"SARAHSPheno_"+model_name+" backend called TerminateProgram.\");\n"\
-      "}\n"\
-      "}\n"\
-      "END_BE_NAMESPACE\n"\
-      "\n"
+    towrite += (
+            "#include \"gambit/Backends/frontend_macros.hpp\"\n"
+            "#include \"gambit/Backends/frontends/SARAHSPheno_{0}_{1}.hpp\"\n"
+            "#include \"gambit/Elements/spectrum_factories.hpp\"\n"
+            "#include \"gambit/Models/SimpleSpectra/{0}SimpleSpec.hpp\"\n"
+            "#include \"gambit/Utils/version.hpp\"\n"
+            "\n"
+            "#define BACKEND_DEBUG 0\n"
+            "\n"
+            "// Callback function for error handling\n"
+            "BE_NAMESPACE\n"
+            "{{\n"
+            "// This function will be called from SPheno. Needs C linkage, and thus also\n"
+            "// a backend-specific name to guard against name clashes.\n"
+            "extern \"C\"\n"
+            "void CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler)()\n"
+            "{{\n"
+            "throw std::runtime_error(\"SARAHSPheno_{0} backend called TerminateProgram.\");\n"
+            "}}\n"
+            "}}\n"
+            "END_BE_NAMESPACE\n"
+            "\n"
+    ).format(model_name, safe_version)
 
     # Convenience functions
-    towrite += "// Convenience functions (definition)\n"\
-      "BE_NAMESPACE\n"\
-      "{\n"\
-      "\n"\
-      "// Variables and functions to keep and access decay info\n"\
-      "typedef std::tuple<std::vector<int>,int,double> channel_info_triplet; // {{pdgs of daughter particles}}, spheno index, correction factor\n"\
-      "namespace Fdecays\n"\
-      "{\n"\
-      "// A (pdg,vector) map, where the vector contains a channel_info_triplet for each\n"\
-      "// decay mode of the mother particle. (See typedef of channel_info_triplet above.)\n"\
-      "static std::map<int,std::vector<channel_info_triplet> > all_channel_info;\n"\
-      "\n"\
-      "// Flag indicating whether the decays need to be computed or not.\n"\
-      "static bool BRs_already_calculated = false;\n"\
-      "\n"\
-      "// Function that reads a table of all the possible decays in SARAHSPheno_"+model_name+"\n"\
-      "// and fills the all_channel_info map above\n"\
-      "void fill_all_channel_info(str);\n"\
-      "\n"\
-      "// Helper function to turn a vector<int> into a vector<pairs<int,int> > needed for\n"\
-      "// when calling the GAMBIT DecayTable::set_BF function\n"\
-      "std::vector<std::pair<int,int> > get_pdg_context_pairs(std::vector<int>);\n"\
-      "}\n"\
-      "\n"
+    towrite += (
+            "// Convenience functions (definition)\n"
+            "BE_NAMESPACE\n"
+            "{{\n"
+            "\n"
+            "// Variables and functions to keep and access decay info\n"
+            "typedef std::tuple<std::vector<int>,int,double> channel_info_triplet; // {{pdgs of daughter particles}}, spheno index, correction factor\n"
+            "namespace Fdecays\n"
+            "{{\n"
+            "// A (pdg,vector) map, where the vector contains a channel_info_triplet for each\n"
+            "// decay mode of the mother particle. (See typedef of channel_info_triplet above.)\n"
+            "static std::map<int,std::vector<channel_info_triplet> > all_channel_info;\n"
+            "\n"
+            "// Flag indicating whether the decays need to be computed or not.\n"
+            "static bool BRs_already_calculated = false;\n"
+            "\n"
+            "// Function that reads a table of all the possible decays in SARAHSPheno_{0}\n"
+            "// and fills the all_channel_info map above\n"
+            "void fill_all_channel_info(str);\n"
+            "\n"
+            "// Helper function to turn a vector<int> into a vector<pairs<int,int> > needed for\n"
+            "// when calling the GAMBIT DecayTable::set_BF function\n"
+            "std::vector<std::pair<int,int> > get_pdg_context_pairs(std::vector<int>);\n"
+            "}}\n"
+            "\n"
+    ).format(model_name)
 
     # run_SPheno function
-    towrite += "// Convenience function to run SPheno and obtain the spectrum\n"\
-      "int run_SPheno(Spectrum &spectrum, const Finputs &inputs)\n"\
-      "{\n"\
-      "\n"\
-      "*epsI = 1.0E-5;\n"\
-      "*deltaM = 1.0E-6;\n"\
-      "*mGUT = -1.0;\n"\
-      "*ratioWoM = 0.0;\n"\
-      "\n"\
-      "Set_All_Parameters_0();\n"\
-      "\n"\
-      "*kont = 0;\n"\
-      "*delta_mass = 1.0E-4;\n"\
-      "*CalcTBD = false;\n"\
-      "\n"\
-      "ReadingData(inputs);\n"\
-      "\n"\
-      "try{ SPheno_Main(); }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-      "\n"\
-      "if(*kont != 0)\n"\
-      "  ErrorHandling(*kont);\n"\
-      "if(*FoundIterativeSolution or *WriteOutputForNonConvergence)\n"\
-      "{\n"\
-      "\n"\
-      "spectrum = Spectrum_Out(inputs);\n"\
-      "\n"\
-      "}\n"\
-      "\n"\
-      "if(*kont != 0)\n"\
-      "  ErrorHandling(*kont);\n"\
-      "\n"\
-      "return *kont\n"\
-      "}\n"
+    towrite += (
+            "// Convenience function to run SPheno and obtain the spectrum\n"
+            "int run_SPheno(Spectrum &spectrum, const Finputs &inputs)\n"
+            "{\n"
+            "\n"
+            "*epsI = 1.0E-5;\n"
+            "*deltaM = 1.0E-6;\n"
+            "*mGUT = -1.0;\n"
+            "*ratioWoM = 0.0;\n"
+            "\n"
+            "Set_All_Parameters_0();\n"
+            "\n"
+            "*kont = 0;\n"
+            "*delta_mass = 1.0E-4;\n"
+            "*CalcTBD = false;\n"
+            "\n"
+            "ReadingData(inputs);\n"
+            "\n"
+            "try{ SPheno_Main(); }\n"
+            "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"
+            "\n"
+            "if(*kont != 0)\n"
+            "  ErrorHandling(*kont);\n"
+            "if(*FoundIterativeSolution or *WriteOutputForNonConvergence)\n"
+            "{\n"
+            "\n"
+            "spectrum = Spectrum_Out(inputs);\n"
+            "\n"
+            "}\n"
+            "\n"
+            "if(*kont != 0)\n"
+            "  ErrorHandling(*kont);\n"
+            "\n"
+            "return *kont\n"
+            "}\n"
+    )
     # End of run_SPheno function
 
     # fill_spectrum_calculate_BRs function
-    towrite += "\n"\
-      "// Helper function to pass the spectrum object to the SPheno frontend and compute the BRs.\n"\
-      "void fill_spectrum_calculate_BRs(const Spectrum &spectrum, const Finputs& inputs)\n"\
-      "{\n"\
-      "if (Fdecays::BRs_already_calculated) return;\n"\
-      "\n"\
-      "// Initialize some variables\n"\
-      "*Iname = 1;\n"\
-      "*CalcTBD = false;\n"\
-      "*ratioWoM = 0.0;\n"\
-      "*epsI = 1.0E-5;\n"\
-      "*deltaM = 1.0e-6;\n"\
-      "*kont =  0;\n"\
-      "\n"\
-      "// Read options and decay info\n"\
-      "ReadingData_decays(inputs);\n"\
-      "\n"\
-      "// Fill input parameters with spectrum imformation\n"\
-      "// Masses\n"\
-      "SMInputs sminputs = spectrum.get_SMInputs();\n"\
-      "(*MFd)(1) = sminputs.mD;\n"\
-      "(*MFd)(2) = sminputs.mS;\n"\
-      "(*MFd)(3) = sminputs.mBmB;\n"\
-      "(*MFe)(1) = sminputs.mE;\n"\
-      "(*MFe)(2) = sminputs.mMu;\n"\
-      "(*MFe)(3) = sminputs.mTau;\n"\
-      "(*MFu)(1) = sminputs.mU;\n"\
-      "(*MFu)(2) = sminputs.mCmC;\n"\
-      "(*MFu)(3) = sminputs.mT;\n"\
-      "for (int i=1; i<=3; i++)\n"\
-      "{\n"\
-      "(*MFd2)(i) = pow((*MFd)(i),2);\n"\
-      "(*MFe2)(i) = pow((*MFe)(i),2);\n"\
-      "(*MFu2)(i) = pow((*MFu)(i),2);\n"\
-      "}\n"\
+    towrite += (
+            "\n"
+            "// Helper function to pass the spectrum object to the SPheno frontend and compute the BRs.\n"
+            "void fill_spectrum_calculate_BRs(const Spectrum &spectrum, const Finputs& inputs)\n"
+            "{\n"
+            "if (Fdecays::BRs_already_calculated) return;\n"
+            "\n"
+            "// Initialize some variables\n"
+            "*Iname = 1;\n"
+            "*CalcTBD = false;\n"
+            "*ratioWoM = 0.0;\n"
+            "*epsI = 1.0E-5;\n"
+            "*deltaM = 1.0e-6;\n"
+            "*kont =  0;\n"
+            "\n"
+            "// Read options and decay info\n"
+            "ReadingData_decays(inputs);\n"
+            "\n"
+            "// Fill input parameters with spectrum imformation\n"
+            "\n"
+            "// Masses\n"
+            "SMInputs sminputs = spectrum.get_SMInputs();\n"
+            "(*MFd)(1) = sminputs.mD;\n"
+            "(*MFd)(2) = sminputs.mS;\n"
+            "(*MFd)(3) = sminputs.mBmB;\n"
+            "(*MFe)(1) = sminputs.mE;\n"
+            "(*MFe)(2) = sminputs.mMu;\n"
+            "(*MFe)(3) = sminputs.mTau;\n"
+            "(*MFu)(1) = sminputs.mU;\n"
+            "(*MFu)(2) = sminputs.mCmC;\n"
+            "(*MFu)(3) = sminputs.mT;\n"
+            "for (int i=1; i<=3; i++)\n"
+            "{\n"
+            "(*MFd2)(i) = pow((*MFd)(i),2);\n"
+            "(*MFe2)(i) = pow((*MFe)(i),2);\n"
+            "(*MFu2)(i) = pow((*MFu)(i),2);\n"
+            "}\n"
+    )
 
+    # A dictionary in which we save the SPheno particle name alongside the 
+    # gambit one. We'll use this for the mixings in a second.
+    mixingdict = {}
+
+    # Add each particle to the spectrum
     for particle in particles:
-      print particle.name, particle.mass, particle.alt_name, particle.alt_mass_name
-      mass = re.sub("\d","",particle.alt_mass_name)
-      index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
-      print mass, index
-      towrite += "(*" + mass + ")"
-      if index != "" :
-        towrite += "(" + str(index) + ")"
-      # TODO: this is not the mass name we really want, we want the one in the spectrum
-      towrite += ' = spectrum.get(Par::Pole_Mass, "' + mass + '"'
-      if index != "" :
-        towrite += "," + str(index)
-      towrite += ");\n"
-      towrite += "(*" + mass + "2)"
-      if index > 0 :
-        towrite += "(" + str(index) + ")"
-      towrite += " = pow((*" + mass + ")"
-      if index > 0 :
-        towrite += "(" + str(index) + ")"
-      towrite += ",2);\n"
+        mass = re.sub("\d","",particle.alt_mass_name)
+        index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
+        specmass = pdg_to_particle(particle.PDG_code, gambit_pdgs)
+        brace = "(" + str(index) + ")" if index else ""
         
+        eig = re.sub("\d","",particle.alt_name)
+        if not eig in mixingdict:
+            mixingdict[eig] = specmass.split('_')[0]
 
-    towrite += "*MVWm = spectrum.get(Par::Pole_Mass, \"W-\");\n"\
-      "*MVWm2 = pow(*MVWm,2);\n"\
-      "*MVZ = spectrum.get(Par::Pole_Mass, \"Z0\");\n"\
-      "*MVZ2 = pow(*MVZ,2);\n"\
-      "\n\n"\
-      "// Mixings\n"
+        towrite += (
+                "(*{0}){1} = spectrum.get(Par::Pole_Mass, \"{2}\");\n"
+                "(*{0}2){1} = pow((*{0}){1}, 2);\n"
+        ).format(mass, brace, specmass)
 
-    # TODO: Fill model dependent mixings
+    towrite += (
+            "*MVWm = spectrum.get(Par::Pole_Mass, \"W-\");\n"
+            "*MVWm2 = pow(*MVWm,2);\n"
+            "*MVZ = spectrum.get(Par::Pole_Mass, \"Z0\");\n"
+            "*MVZ2 = pow(*MVZ,2);\n"
+            "\n\n"
+    )
+
+    # Mixings.
+    towrite += "// Mixings\n"
+    for par in parameters:
+        # If there's no block, er... skip this.
+        if not par.block: continue
+        if not par.block in blockparams: continue
+        # Is it a mixing matrix?
+        if 'mixingmatrix' in blockparams[par.block]:
+            size = blockparams[par.block]['mixingmatrix']
+            i,j = size.split('x')
+
+            # This is the eigenstate 
+            eigenstate = mixings[par.name]
+            # TODO: currently doesn't work for SM particle mixing matrices: ZUL, ZEL, etc.
+            entry = "TODO"
+            if eigenstate in mixingdict:
+                entry = mixingdict[eigenstate]
+
+            towrite += (
+                    "for(int i=1; i<={0}; i++)\n"
+                    "{{\n"
+                    "for(int j=1; j<={1}; j++)\n"
+                    "{{\n"
+                    "(*{2})(i, j) = spectrum.get(Par::Pole_Mixing, \"{3}\", i, j);\n"
+                    "}}\n"
+                    "}}\n"
+            ).format(i, j, par.name, entry)
+
+      
+    # TODO: Fill model dependent other parameters
     towrite += "// Other parameters\n"
     for par in parameters:
-      print par.name, par.block
 
-    # TODO: Fill model dependent other parameters
-    towrite += "// Call SPheno's function to calculate decays\n"\
-      "try{ " + write_spheno_function("CalculateBR_2", function_signatures) + " }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-      "\n"\
-      "// Check for errors\n"\
-      "if(*kont != 0)\n"\
-      "  ErrorHandling(*kont);\n"\
-      "\n"\
-      "Fdecays::BRs_already_calculated = true;\n"\
-      "\n"\
-      "}\n\n"
+        # Don't want output (mixing matrices, basically) or masses. Already done those.
+        if not par.is_output and par.block != "MASS":
+
+            entry = par.alt_name if par.alt_name else par.name                
+
+            # Matrix case
+            if par.shape.startswith('m'):
+                size = par.shape[1:]
+                i,j = size.split('x')
+                towrite += (
+                        "for(int i=1; i<={0}; i++)\n"
+                        "{{\n"
+                        "for(int j=1; j<={1}; j++)\n"
+                        "{{\n"
+                        "(*{2})(i, j) = spectrum.get(Par::{3}, \"{2}\", i, j);\n"
+                        "}}\n"
+                        "}}\n"
+                ).format(i, j, entry, par.tag, par.name)
+            
+            else:
+                towrite += (
+                    "*{0} = spectrum.get(Par::{1}, \"{2}\");\n"
+                ).format(entry, par.tag, par.name)
+
+    # TODO:
+    # alphaH, betaH, TW, v, ZZ, ZW
+
+
+    towrite += (
+            "// Call SPheno's function to calculate decays\n"
+            "try{{ {0} }}\n"
+            "catch(std::runtime_error e) {{ invalid_point().raise(e.what()); }}\n"
+            "\n"
+            "// Check for errors\n"
+            "if(*kont != 0)\n"
+            "  ErrorHandling(*kont);\n"
+            "\n"
+            "Fdecays::BRs_already_calculated = true;\n"
+            "\n"
+            "}}\n\n"
+    ).format( write_spheno_function("CalculateBR_2", function_signatures) )
     # End of fill_spectrum_calculate_BRs function
 
     # run_SPheno_decays function
     towrite += "// Convenience function to run Spheno and obtain the decays\n"\
-      "int run_SPheno_decays(const Spectrum &spectrum, DecayTable& decays, const Finputs& inputs)\n"\
-      "{\n"\
-      "\n"\
-      "double BRMin = inputs.options->getValueOrDef<double>(1e-5, \"BRMin\");\n"\
-      "\n"\
-      "// Pass the GAMBIT spectrum to SPheno and fill the internal decay objects\n"\
-      "fill_spectrum_calculate_BRs(spectrum, inputs);\n"\
-      "\n"\
-      "if(*kont != 0)\n"\
-      "  ErrorHandling(*kont);\n"\
-      "\n"\
-      "// Fill in info about the entry for all decays\n"\
-      "DecayTable::Entry entry;\n"\
-      "entry.calculator = STRINGIFY(BACKENDNAME);\n"\
-      "entry.calculator_version = STRINGIFY(VERSION);\n"\
-      "entry.positive_error = 0.0;\n"\
-      "entry.negative_error = 0.0;\n"\
-      "\n"\
-      "// Helper variables\n"\
-      "std::vector<int> daughter_pdgs;\n"\
-      "int spheno_index;\n"\
-      "double corrf;\n"\
-      "\n"\
-      
+               "int run_SPheno_decays(const Spectrum &spectrum, DecayTable& decays, const Finputs& inputs)\n"\
+               "{\n"\
+               "\n"\
+               "double BRMin = inputs.options->getValueOrDef<double>(1e-5, \"BRMin\");\n"\
+               "\n"\
+               "// Pass the GAMBIT spectrum to SPheno and fill the internal decay objects\n"\
+               "fill_spectrum_calculate_BRs(spectrum, inputs);\n"\
+               "\n"\
+               "if(*kont != 0)\n"\
+               "  ErrorHandling(*kont);\n"\
+               "\n"\
+               "// Fill in info about the entry for all decays\n"\
+               "DecayTable::Entry entry;\n"\
+               "entry.calculator = STRINGIFY(BACKENDNAME);\n"\
+               "entry.calculator_version = STRINGIFY(VERSION);\n"\
+               "entry.positive_error = 0.0;\n"\
+               "entry.negative_error = 0.0;\n"\
+               "\n"\
+               "// Helper variables\n"\
+               "std::vector<int> daughter_pdgs;\n"\
+               "int spheno_index;\n"\
+               "double corrf;\n"\
+               "\n"\
+
     # TODO: Fill model dependent pdg vector
 
     towrite += "int n_particles = pdg.size();\n"
@@ -1121,28 +1181,28 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # TODO: Fill model dependent gT and BR lambdas
 
     towrite += "for(int i=0; i<n_particles; i++)\n"\
-      "{\n"\
-      "std::vector<channel_info_triplet> civ = Fdecays::all_channel_info.at(pdg[i]);\n"\
-      "entry.width_in_GeV = gT(i+1);\n"\
-      "entry.channels.clear();\n"\
-      "for(channel_info_triplet ci : civ)\n"\
-      "{\n"\
-      "std::tie(daughter_pdgs, spheno_index, corrf) = ci;\n"\
-      "if(BR(i+1,spheno_index) * corrf > BRMin)\n"\
-      "  entry.set_BF(BR(i+1,spheno_index) * corrf, 0.0, Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
-      "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"\
-      "else\n"\
-      "entry.set_BF(0., 0., Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
-      "}\n"\
-      "// SM fermions in flavour basis, everything else in mass basis\n"\
-      "if(abs(pdg[i]) < 17)\n"\
-      "  decays(Models::ParticleDB().long_name(pdg[i],1)) = entry;\n"\
-      "else\n"\
-      "  decays(Models::ParticleDB().long_name(pdg[i],0)) = entry;\n"\
-      "}\n"\
-      "\n"\
-      "return *kont;\n"\
-      "}\n\n"
+               "{\n"\
+               "std::vector<channel_info_triplet> civ = Fdecays::all_channel_info.at(pdg[i]);\n"\
+               "entry.width_in_GeV = gT(i+1);\n"\
+               "entry.channels.clear();\n"\
+               "for(channel_info_triplet ci : civ)\n"\
+               "{\n"\
+               "std::tie(daughter_pdgs, spheno_index, corrf) = ci;\n"\
+               "if(BR(i+1,spheno_index) * corrf > BRMin)\n"\
+               "  entry.set_BF(BR(i+1,spheno_index) * corrf, 0.0, Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
+               "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"\
+               "else\n"\
+               "entry.set_BF(0., 0., Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
+               "}\n"\
+               "// SM fermions in flavour basis, everything else in mass basis\n"\
+               "if(abs(pdg[i]) < 17)\n"\
+               "  decays(Models::ParticleDB().long_name(pdg[i],1)) = entry;\n"\
+               "else\n"\
+               "  decays(Models::ParticleDB().long_name(pdg[i],0)) = entry;\n"\
+               "}\n"\
+               "\n"\
+               "return *kont;\n"\
+               "}\n\n"
     # End of run_SPheno_decays
 
     # Spectrum_Out function
@@ -1192,7 +1252,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     towrite += '\n'\
       '// Block EXTPAR\n'\
-      'SLHAea_add_block(slha, "EXTPAR")\n'
+      'SLHAea_add_block(slha, "EXTPAR");\n'
 
     for name, var in variables.iteritems() :
       if var.block == "EXTPAR" :
@@ -1302,6 +1362,55 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
           '}\n'
 
     # TODO: Many MD parameters
+    # Go through each LH block we know about, and assign each entry to the SLHAea object.
+    for block, entry in blockparams.iteritems():
+        
+        # Firstly create the block
+        towrite += (
+                "\n"
+                "SLHAea_add_block(slha, \"{0}\", Q);\n"
+        ).format(block)
+
+        matrix = False
+        size = ""
+
+        # If it's a matrix, flag it, and get the size. 
+        if 'matrix' in entry:
+            matrix = True
+            size = entry['matrix'][1:]
+
+        elif 'mixingmatrix' in entry:
+            matrix = True
+            size = entry['mixingmatrix'][1:]
+
+        # If we don't have a matrix, use the block indices
+        if not matrix:
+            for index, param in entry.iteritems():
+                towrite += (
+                    "slha[\"{0}\"][\"\"] << {1} << *{2} << \"# {2}\";\n"
+                ).format(block, index, param)
+
+        # Matrix - gotta do these element by element
+        else:
+            # Add the imaginary block too
+            "SLHAea_add_block(slha, \"IM{0}\", Q);\n".format(block)
+
+            f = entry['outputname'] if 'outputname' in entry else block
+
+            i,j = size.split('x')
+            towrite += (
+                    "for(int i=1; i<={1}; i++)\n"
+                    "{{\n"
+                    "for(int j=1; j<={2}; j++)\n"
+                    "{{\n"
+                    "slha[\"{0}\"][\"\"] << i << j << (*{3})(i,j).re << "
+                    "\"# {0}(\" << i << \",\" << j << \")\";\n"
+                    "slha[\"IM{0}\"][\"\"] << i << j << (*{3})(i,j).im << "
+                    "\"# Im({0}(\" << i << \",\" << j << \"))\";\n"
+                    "}}\n"
+                    "}}\n"
+            ).format(block, i, j, f)
+
 
     towrite += "\n"\
       "// Block MASS\n"\

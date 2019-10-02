@@ -145,8 +145,8 @@ class Parameter
     int blockindex;
     std::string paramshape;
     std::string alt_paramname;
-    std::string boundary_conditions;
     bool output;
+    std::string boundary_conditions;
  
     public:
 

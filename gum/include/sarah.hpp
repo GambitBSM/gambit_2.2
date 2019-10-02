@@ -63,6 +63,9 @@ namespace GUM
 
       // Get tadpoles
       void get_tadpoles(std::vector<Parameter>&);
+
+      // Get mixings
+      void get_mixing_matrices(std::map<std::string, std::string>&);
     
       // Outputs: CalcHEP, MadGraph, ...
       void write_ch_output();
@@ -76,7 +79,8 @@ namespace GUM
 
    
   // Everything
-  void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&, std::map<std::string,bool>&);
+  void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&, 
+                 std::map<std::string,bool>&, std::map<std::string, std::string>&);
 
 } // namespace GUM
  

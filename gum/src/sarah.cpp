@@ -677,7 +677,78 @@ namespace GUM
       (*part) =  temp_part;
     }
   }
- 
+
+  // Returns the eigenstate & mixing matrix after EWSB 
+  void SARAH::get_mixing_matrices(std::map<std::string, std::string> &mixings)
+  {
+    std::cout << "Getting mixing matrices from SARAH..." << std::endl;
+
+    std::string command;
+    command = "d = DEFINITION[EWSB][MatterSector];";
+    send_to_math(command);
+
+    // Find out how many (sets of) mixing matrices there are...
+    int len;
+    command = "Length[d]";
+    send_to_math(command);
+    get_from_math(len);
+  
+    for(int i=1; i<=len; i++)
+    {
+      std::vector<std::string> eigenpairs;
+      // Make this one list, easier to parse
+      command = "a = Flatten[d[[" + std::to_string(i) + ",2]]]";
+      send_to_math(command);
+      get_from_math(eigenpairs);
+
+      // Check we haven't got additional entries
+      int size = eigenpairs.size();
+
+      if(size % 2)
+        throw std::runtime_error("Not an even number of matrix-eigenstate pairs! Check your SARAH file.");
+
+      // List should look like: {<EIGENSTATE_1>, <MIXING_MATRIX_1>, <EIGENSTATE_2>, <MIXING_MATRIX_2>, ...}
+      for(int i=0; i<size; i++)
+      {
+        std::string eigenstate = eigenpairs[i];
+        std::string mixingmat = eigenpairs[i+1];
+
+        int len2;
+
+        // Check to see if the mixing matrix has a different OutputName
+        command = "Length[pd]";
+        send_to_math(command);
+        get_from_math(len2);
+
+        for(int j=0; j<len2; j++)
+        {
+          std::string pname;
+          command = "pd[[" + std::to_string(j+1) + ",1]]";
+          send_to_math(command);
+          get_from_math(pname);
+          if(pname == mixingmat)
+          {
+            std::string oname;
+            command = "OutputName /. pd[[" + std::to_string(j+1) + ",2]] // ToString";
+            send_to_math(command);
+            get_from_math(oname);
+            if(oname == "OutputName")
+            {
+              mixings[mixingmat] = eigenstate;
+            }
+            else
+            {
+              mixings[oname] = eigenstate;
+            }
+          }
+        }
+        // Increment again; need to do +2 each iteration.
+        i++;
+      }
+
+    }
+
+  }
 
   // Write CalcHEP output.
   void SARAH::write_ch_output()
@@ -750,7 +821,9 @@ namespace GUM
   }
 
   // Do all operations with SARAH
-  void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends, std::map<std::string,bool> &flags)
+  void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, 
+                 std::vector<std::string> &backends, std::map<std::string,bool> &flags, 
+                 std::map<std::string, std::string> &mixings)
   {
 
     try
@@ -765,6 +838,9 @@ namespace GUM
 
       // And all parameters
       model.get_paramlist(paramlist);
+
+      // And mixings
+      model.get_mixing_matrices(mixings);
 
       // Where the outputs all live
       std::string outputdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/";
@@ -868,14 +944,14 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("alt_mass", &Particle::alt_mass)
     ;
 
-  class_<Parameter>("SARAHParameter", init<std::string, std::string, int, std::string, std::string >())
+  class_<Parameter>("SARAHParameter", init<std::string, std::string, int, std::string, std::string, bool, std::string>())
     .def("name",      &Parameter::name)
     .def("block",     &Parameter::block)
     .def("index",     &Parameter::index)
     .def("alt_name",  &Parameter::alt_name)
-    .def("bcs",       &Parameter::bcs)
     .def("shape",     &Parameter::shape)
     .def("is_output", &Parameter::is_output)
+    .def("bcs",       &Parameter::bcs)
     ;
 
   class_<Options>("SARAHOptions", init<std::string, std::string, std::string, std::string, std::string>())
@@ -904,6 +980,10 @@ BOOST_PYTHON_MODULE(libsarah)
 
   class_< std::vector<std::string> >("SARAHBackends")
     .def(vector_indexing_suite< std::vector<std::string> >() )
+    ;
+
+  class_< std::map<std::string, std::string> >("SARAHMixings")
+    .def(map_indexing_suite< std::map<std::string, std::string> >() )
     ;
 
   def("all_sarah", GUM::all_sarah);
