@@ -1247,11 +1247,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
       "\n"
 
-    # TODO: number of Chis
-    for par in parameters:
-      print par.name
-    for name, var in variables.iteritems():
-      print name
+    # TODO: Check this works for NMSSM when fixed
     if flags["SupersymmetricModel"] and ("Chi" in [par.name for par in parameters]):
         size = ""
         for par in parameters:
@@ -1262,10 +1258,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         towrite += "// Make sure to rotate back the sign on MChi\n"\
                  "if(not *RotateNegativeFermionMasses)\n"\
                  "{\n"\
-                 "for(int i=1; i<="+i+"; i++)\n"\
+                 "for(int i=1; i<=" + str(i) + "; i++)\n"\
                  "{\n"\
                  "double remax = 0, immax = 0;\n"\
-                 "for(int j=1; j<="+j+"; j++)\n"\
+                 "for(int j=1; j<=" + str(j) +"; j++)\n"\
                  "{\n"\
                  "if(abs((*ZN)(i,j).re) > remax) remax = abs((*ZN)(i,j).re);\n"\
                  "if(abs((*ZN)(i,j).im) > immax) immax = abs((*ZN)(i,j).im);\n"\
@@ -1273,7 +1269,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                  "if(immax > remax)\n"\
                  "{\n"\
                  "(*MChi)(i) *= -1;\n"\
-                 "for(int j=1; j<="+j+"; j++)\n"\
+                 "for(int j=1; j<=" + str(j) + "; j++)\n"\
                  "{\n"\
                  "double old = (*ZN)(i,j).re;\n"\
                  "(*ZN)(i,j).re = (*ZN)(i,j).im;\n"\
@@ -1307,6 +1303,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Block MINPAR\n'\
       'SLHAea_add_block(slha, "MINPAR");\n'
     
+    # TODO: All this missing from output, why?
     for name, var in variables.iteritems() :
       if var.block == "MINPAR" :
         towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
@@ -1319,6 +1316,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Block EXTPAR\n'\
       'SLHAea_add_block(slha, "EXTPAR");\n'
 
+    # TODO: All this missing from output, why?
     for name, var in variables.iteritems() :
       if var.block == "EXTPAR" :
         towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
@@ -1428,6 +1426,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # TODO: Many MD parameters
     # Go through each LH block we know about, and assign each entry to the SLHAea object.
+    # TODO: This assumes these are all complex, but it's not always so
     for block, entry in blockparams.iteritems():
         
         # Firstly create the block
@@ -1516,30 +1515,13 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         mass = re.sub("\d","",particle.alt_mass_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
 
-        towrite += 'slha["DMASS"][""] << ' + (particle.PDG_code) + ' << sqrt(pow((*mass_uncertainty_Q)(' + i+1 + '),2)+pow((*mass_uncertainty_Yt)(' + i+1 + '),2)) << "# ' + particle.name + "_" + str(index) + '";\n'
+        towrite += 'slha["DMASS"][""] << ' + str(particle.PDG_code) + ' << sqrt(pow((*mass_uncertainty_Q)(' + str(i+1) + '),2)+pow((*mass_uncertainty_Yt)(' + str(i+1) + '),2)) << "# ' + particle.name + "_" + str(index) + '";\n'
 
 
     towrite += "\n"\
       "// Do the W mass separately.  Here we use 10 MeV based on the size of corrections from two-loop papers and advice from Dominik Stockinger.\n"\
       'slha["DMASS"][""] << 24 << 0.01 / *mW << " # mW";\n'\
       '}\n'
-
-    # TODO: Might not be getting the right stuff, this is supposed to be all XXXMIX blocks
-    # TODO: If par is complex add .re to all and add IMXXXMIX block
-    for blockparam in blockparams:
-      print blockparam
-      towrite += 'SLHAea_add_block(slha, "' + blockparam + ', Q);\n'
-
-      size = blockparams[blockparam]['mixingmatrix']
-      i,j = size.split('x')
-      towrite += "for(int i=1; i<="+i+"; i++)\n"\
-                 "{\n"\
-                 "for(int j=1; j<="+j+"; j++)\n"\
-                 "{\n"\
-                 'slha["'+blockparam+'"][""] << i << j << (*' + param.name + ')(i,j) << "# ' + param.name + '(" << i << "," << j << ")";\n'\
-                 "}\n"\
-                 "}\n\n"
-
 
     towrite += "\n"\
       "// Block SPhenoINFO\n"\
@@ -1997,6 +1979,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '/****************/\n'
 
     # TODO: The name of model parameters might be wrong
+    # TODO: All this missing from output, why?
     for name, var in variables.iteritems():
       if var.block == "MINPAR" :
         model_par = get_model_par_name(name, variables)
@@ -2013,8 +1996,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "/****************/\n"
 
     # TODO: The name of model parameters might be wrong
+    # TODO: All this missing from output, why?
     for name, var in variables.iteritems():
-      print name, var.block
       if var.block == "EXTPAR" :
         model_par = get_model_par_name(name, variables)
         towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'
@@ -2026,6 +2009,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # TODO:  The name of model parameters might be wrong
     # TODO: this does not work for matrices
+    # TODO: All this missing from output, why?
     thisblock = ""
     for name, var in variables.iteritems():
       if var.block != None and var.block.endswith("IN") :
