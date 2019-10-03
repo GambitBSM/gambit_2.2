@@ -25,7 +25,7 @@ namespace Gambit {
 
       // Numbers passing cuts
       static const size_t NUMSR = 10;
-      double _srnums[10] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
+      double _srnums[NUMSR] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
       Cutflows _cutflows;
       enum SRNames { SR2J_1600=0, SR2J_2200, SR2J_2800,
                      SR4J_1000, SR4J_2200, SR4J_3400, SR5J_1600,
@@ -56,6 +56,7 @@ namespace Gambit {
         _flows.fillinit();
 
         // Missing energy
+        /// @todo Compute from hard objects instead?
         const P4 pmiss = event->missingmom();
         const double met = event->met();
 
@@ -68,6 +69,9 @@ namespace Gambit {
           }
         }
 
+        /// @todo Apply a random 9% loss / 0.91 reweight for jet quality criteria?
+
+
         // Get baseline electrons and apply efficiency
         vector<Particle*> baselineElectrons;
         for (Particle* electron : event->electrons()) {
@@ -79,34 +83,33 @@ namespace Gambit {
         // Get baseline muons and apply efficiency
         vector<Particle*> baselineMuons;
         for (Particle* muon : event->muons()) {
-          if (muon->pT() > 7. && muon->abseta() < 2.7)
+          if (muon->pT() > 6. && muon->abseta() < 2.7)
             baselineMuons.push_back(muon);
         }
         ATLAS::applyMuonEff(baselineMuons);
 
         // Remove any |eta| < 2.8 jet within dR = 0.2 of an electron
-        /// @todo Unless b-tagged (and pT > 50 && abseta < 2.5)
         vector<const Jet*> signalJets;
         for (const Jet* j : baselineJets)
           if (all_of(baselineElectrons, [&](const Particle* e){ return deltaR_rap(*e, *j) > 0.2; }))
             signalJets.push_back(j);
 
-        // Remove electrons with dR = 0.4 of surviving |eta| < 2.8 jets
-        /// @todo Actually only within 0.2--0.4...
+        // Remove electrons with dR = shrinking cone of surviving |eta| < 2.8 jets
         vector<const Particle*> signalElectrons;
         for (const Particle* e : baselineElectrons)
-          if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*e, *j) > 0.4; }))
+          if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*e, *j) > min(0.4, 0.04+10/e->pT()); }))
             signalElectrons.push_back(e);
         // Apply electron ID selection
         ATLAS::applyLooseIDElectronSelectionR2(signalElectrons);
+        /// @todo And tight ID for high purity... used where?
 
         // Remove muons with dR = 0.4 of surviving |eta| < 2.8 jets
-        /// @todo Actually only within 0.2--0.4...
-        /// @note Within 0.2, discard the *jet* based on jet track vs. muon criteria... can't be done here
+        /// @note Within 0.2, discard the *jet* based on jet track vs. muon criteria... can't be done yet
         vector<const Particle*> signalMuons;
         for (const Particle* m : baselineMuons)
-          if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*m, *j) > 0.4; }))
+          if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*m, *j) > min(0.4, 0.04+10/m->pT()); }))
             signalMuons.push_back(m);
+        /// @todo And tight ID for high purity... used where?
 
         // The subset of jets with pT > 50 GeV is used for several calculations
         vector<const Jet*> signalJets50;
@@ -123,40 +126,40 @@ namespace Gambit {
         const size_t nJets50 = signalJets50.size();
         const size_t nJets = signalJets.size();
 
-        // HT-related quantities (calculated over all >20 GeV jets)
+        // HT-related quantities (calculated over all >50 GeV jets)
         double sumptj = 0;
-        for (const Jet* j : signalJets) sumptj += j->pT();
+        for (const Jet* j : signalJets50) sumptj += j->pT();
         const double HT = sumptj;
         const double sqrtHT = sqrt(HT);
         const double met_sqrtHT = met/sqrtHT;
 
         // Meff-related quantities (calculated over >50 GeV jets only)
-        double sumptj50_4 = 0, sumptj50_5 = 0, sumptj50_6 = 0, sumptj50_incl = 0;
+        double sumptj50_incl = 0; // sumptj50_4 = 0, sumptj50_5 = 0, sumptj50_6 = 0;
         for (size_t i = 0; i < signalJets50.size(); ++i) {
           const Jet* j = signalJets50[i];
-          if (i < 4) sumptj50_4 += j->pT();
-          if (i < 5) sumptj50_5 += j->pT();
-          if (i < 6) sumptj50_6 += j->pT();
+          // if (i < 4) sumptj50_4 += j->pT();
+          // if (i < 5) sumptj50_5 += j->pT();
+          // if (i < 6) sumptj50_6 += j->pT();
           sumptj50_incl += j->pT();
         }
-        const double meff_4 = met + sumptj50_4;
-        const double meff_5 = met + sumptj50_5;
-        const double meff_6 = met + sumptj50_6;
-        const double meff_incl = met + sumptj50_incl;
-        const double met_meff_4 = met / meff_4;
-        const double met_meff_5 = met / meff_5;
-        const double met_meff_6 = met / meff_6;
+        // const double meff_4 = met + sumptj50_4;
+        // const double meff_5 = met + sumptj50_5;
+        // const double meff_6 = met + sumptj50_6;
+        // const double meff_incl = met + sumptj50_incl;
+        const double meff = met + sumptj50_incl;
+        // const double met_meff_4 = met / meff_4;
+        // const double met_meff_5 = met / meff_5;
+        // const double met_meff_6 = met / meff_6;
 
         // Jet |eta|s
-        double etamax_2 = 0;
-        for (size_t i = 0; i < min(2lu,signalJets.size()); ++i)
-          etamax_2 = max(etamax_2, signalJets[i]->abseta());
-        double etamax_4 = etamax_2;
-        for (size_t i = 2; i < min(4lu,signalJets.size()); ++i)
-          etamax_4 = max(etamax_4, signalJets[i]->abseta());
-        double etamax_6 = etamax_4;
-        for (size_t i = 4; i < min(6lu,signalJets.size()); ++i)
-          etamax_6 = max(etamax_6, signalJets[i]->abseta());
+        double etamax_2 = 0, etamax_4 = 0, etamax_5 = 0, etamax_6 = 0;
+        for (size_t i = 0; i < signalJets50.size(); ++i) {
+          const Jet* j = signalJets50[i];
+          if (i < 2) etamax_2 = max(etamax_2, j->abseta());
+          if (i < 4) etamax_4 = max(etamax_4, j->abseta());
+          if (i < 5) etamax_5 = max(etamax_5, j->abseta());
+          if (i < 6) etamax_6 = max(etamax_6, j->abseta());
+        }
 
         // Jet--MET dphis
         double dphimin_123 = DBL_MAX, dphimin_more = DBL_MAX;
@@ -187,49 +190,52 @@ namespace Gambit {
         ////////////////////////////////
         // Fill signal regions and cutflows
 
-        const bool leptonCut = (nElectrons == 0 && nMuons == 0);
-        const bool metCut = (met > 250.);
-        if (!nJets50 >= 2 || !leptonCut || !metCut) return;
+        // Preselection
+        if (nElectrons + nMuons != 0) return;
+        if (nJets50 < 2 || signalJets50[0]->pT() < 200) return;
+        if (met < 300) return;
+        if (meff < 800) return;
+        if (dphimin_123 < 0.4) return;
 
         _flows.fill(0);
         const double w = event->weight();
 
         // 2 jet regions
         if (_cutflows["2j-1600"].filltail({
-              nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, eta_j < 2.0,
+              nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, etamax_2 < 2.0,
               dphimin_123 > 0.8, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 1600})) _srnums[SR2J_1600] += w;
         if (_cutflows["2j-2200"].filltail({
-              nJets50 >= 2, signalJets[0]->pT() > 600, signalJets[1]->pT() >  50, eta_j < 2.8,
+              nJets50 >= 2, signalJets[0]->pT() > 600, signalJets[1]->pT() >  50, etamax_2 < 2.8,
               dphimin_123 > 0.4, dphimin_more > 0.2, true, met_sqrtHT > 16, meff > 2200})) _srnums[SR2J_2200] += w;
         if (_cutflows["2j-2800"].filltail({
-              nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, eta_j < 1.2,
+              nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, etamax_2 < 1.2,
               dphimin_123 > 0.8, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 2800})) _srnums[SR2J_2800] += w;
 
         // 4 jet regions
         if (_cutflows["4j-1000"].filltail({
-              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[1]->pT() > 100, eta_j < 2.0,
+              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
               dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 1000})) _srnums[SR4J_1000] += w;
         if (_cutflows["4j-2200"].filltail({
-              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[1]->pT() > 100, eta_j < 2.0,
+              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
               dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 2200})) _srnums[SR4J_2200] += w;
         if (_cutflows["4j-3400"].filltail({
-              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[1]->pT() > 100, eta_j < 2.0,
+              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
               dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 10, meff > 3400})) _srnums[SR4J_3400] += w;
 
         // 5 jet region
         if (_cutflows["5j-1600"].filltail({
-              nJets50 >= 5, signalJets[0]->pT() > 600, signalJets[1]->pT() > 50, eta_j < 2.8,
+              nJets50 >= 5, signalJets[0]->pT() > 600, signalJets[4]->pT() > 50, etamax_5 < 2.8,
               dphimin_123 > 0.4, dphimin_more > 0.2, true, met_sqrtHT > 16, meff > 1600})) _srnums[SR5J_1600] += w;
 
         // 6 jet regions
         if (_cutflows["6j-1000"].filltail({
-              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[1]->pT() > 75, eta_j < 2.0,
+              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
               dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 16, meff > 1000})) _srnums[SR6J_1000] += w;
         if (_cutflows["6j-2200"].filltail({
-              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[1]->pT() > 75, eta_j < 2.0,
+              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
               dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 16, meff > 2200})) _srnums[SR6J_2200] += w;
         if (_cutflows["6j-3400"].filltail({
-              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[1]->pT() > 75, eta_j < 2.0,
+              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
               dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 10, meff > 3400})) _srnums[SR6J_3400] += w;
 
 
@@ -318,57 +324,23 @@ namespace Gambit {
       void combine(const Analysis* other)
       {
         const Analysis_ATLAS_13TeV_0LEP_139invfb* specificOther = dynamic_cast<const Analysis_ATLAS_13TeV_0LEP_139invfb*>(other);
-        num_2j_1200 += specificOther->num_2j_1200;
-        num_2j_1600 += specificOther->num_2j_1600;
-        num_2j_2000 += specificOther->num_2j_2000;
-        num_2j_2400 += specificOther->num_2j_2400;
-        num_2j_2800 += specificOther->num_2j_2800;
-        num_2j_3600 += specificOther->num_2j_3600;
-        num_2j_2100 += specificOther->num_2j_2100;
-        num_3j_1300 += specificOther->num_3j_1300;
-        num_4j_1000 += specificOther->num_4j_1000;
-        num_4j_1400 += specificOther->num_4j_1400;
-        num_4j_1800 += specificOther->num_4j_1800;
-        num_4j_2200 += specificOther->num_4j_2200;
-        num_4j_2600 += specificOther->num_4j_2600;
-        num_4j_3000 += specificOther->num_4j_3000;
-        num_5j_1700 += specificOther->num_5j_1700;
-        num_5j_1600 += specificOther->num_5j_1600;
-        num_5j_2000 += specificOther->num_5j_2000;
-        num_5j_2600 += specificOther->num_5j_2600;
-        num_6j_1200 += specificOther->num_6j_1200;
-        num_6j_1800 += specificOther->num_6j_1800;
-        num_6j_2200 += specificOther->num_6j_2200;
-        num_6j_2600 += specificOther->num_6j_2600;
+        for (size_t i = 0; i < NUMSR; ++i) _srnums[i] += specificOther->_srnums[i];
       }
 
 
       /// Register results objects with the results for each SR; obs & bkg numbers from the CONF note
       void collect_results() {
-        add_result(SignalRegionData("meff-2j-1200", 611, {num_2j_1200,  0.}, {526., 31.}));
-        add_result(SignalRegionData("meff-2j-1600",  216, {num_2j_1600,  0.}, {228., 19.}));
-        add_result(SignalRegionData("meff-2j-2000",  73, {num_2j_2000,  0.}, { 90.,  10.}));
-        add_result(SignalRegionData("meff-2j-2400",  34, {num_2j_2400,  0.}, { 42.,  4.}));
-        add_result(SignalRegionData("meff-2j-2800",  19, {num_2j_2800,  0.}, { 17.3,  2.0}));
-        add_result(SignalRegionData("meff-2j-3600",  5, {num_2j_3600,  0.}, { 3.6,  0.9}));
-        add_result(SignalRegionData("meff-2j-2100",  190, {num_2j_2100,  0.}, { 153.,  14.}));
-        add_result(SignalRegionData("meff-3j-1300",  429, {num_3j_1300,  0.}, { 390.,  29.}));
-        add_result(SignalRegionData("meff-4j-1000",  142, {num_4j_1000,  0.}, { 124.,  12.}));
-        add_result(SignalRegionData("meff-4j-1400",  199, {num_4j_1400,  0.}, { 182.,  16.}));
-        add_result(SignalRegionData("meff-4j-1800",  55, {num_4j_1800,  0.}, { 49.,  7.}));
-        add_result(SignalRegionData("meff-4j-2200",  24, {num_4j_2200,  0.}, { 16.5,  2.7}));
-        add_result(SignalRegionData("meff-4j-2600",  4, {num_4j_2600,  0.}, { 5.8,  2.}));
-        add_result(SignalRegionData("meff-4j-3000",  2, {num_4j_3000,  0.}, { 2.0,  0.6}));
-        add_result(SignalRegionData("meff-5j-1700",  49, {num_5j_1700,  0.}, { 43.,  5.}));
-        add_result(SignalRegionData("meff-5j-1600",  135, {num_5j_1600,  0.}, { 128.,  14.}));
-        add_result(SignalRegionData("meff-5j-2000",  59, {num_5j_2000,  0.}, { 65.,  7.}));
-        add_result(SignalRegionData("meff-5j-2600",  10, {num_5j_2600,  0.}, { 9.4,  2.1}));
-        add_result(SignalRegionData("meff-6j-1200",  276, {num_6j_1200,  0.}, { 274.,  32.}));
-        add_result(SignalRegionData("meff-6j-1800",  9, {num_6j_1800,  0.}, { 5.1,  1.8}));
-        add_result(SignalRegionData("meff-6j-2200",  3, {num_6j_2200,  0.}, { 3.1,  1.3}));
-        add_result(SignalRegionData("meff-6j-2600",  1, {num_6j_2600,  0.}, { 2.2,  1.4}));
-
-        // const double sf = 13.3*crossSection()/femtobarn/sumOfWeights();
+        add_result(SignalRegionData("SR-2j-1600", 2111, {_srnums[SR2J_1600], 0.}, {2190., 130.}));
+        add_result(SignalRegionData("SR-2j-2200",  971, {_srnums[SR2J_2200], 0.}, { 980.,  50.}));
+        add_result(SignalRegionData("SR-2j-2800",   78, {_srnums[SR2J_2800], 0.}, {  87.,   8.}));
+        add_result(SignalRegionData("SR-4j-1000",  535, {_srnums[SR4J_1000], 0.}, { 536.,  31.}));
+        add_result(SignalRegionData("SR-4j-2200",   60, {_srnums[SR4J_2200], 0.}, {  60.,   5.}));
+        add_result(SignalRegionData("SR-4j-3400",    4, {_srnums[SR4J_3400], 0.}, {  5.7,  1.0}));
+        add_result(SignalRegionData("SR-5j-1600",  320, {_srnums[SR5J_1600], 0.}, { 319.,  19.}));
+        add_result(SignalRegionData("SR-6j-1000",   25, {_srnums[SR6J_1000], 0.}, {  21.,  2.9}));
+        add_result(SignalRegionData("SR-6j-2200",    5, {_srnums[SR6J_2200], 0.}, {  4.6,  1.0}));
+        add_result(SignalRegionData("SR-6j-3400",    0, {_srnums[SR6J_3400], 0.}, {  0.8,  0.4}));
+        // const double sf = 139*crossSection()/femtobarn/sumOfWeights();
         // _flows.scale(sf);
         // cout << "CUTFLOWS:\n\n" << _flows << endl;
       }
@@ -376,28 +348,7 @@ namespace Gambit {
 
     protected:
       void analysis_specific_reset() {
-        num_2j_1200=0;
-        num_2j_1600=0;
-        num_2j_2000=0;
-        num_2j_2400=0;
-        num_2j_2800=0;
-        num_2j_3600=0;
-        num_2j_2100=0;
-        num_3j_1300=0;
-        num_4j_1000=0;
-        num_4j_1400=0;
-        num_4j_1800=0;
-        num_4j_2200=0;
-        num_4j_2600=0;
-        num_4j_3000=0;
-        num_5j_1700=0;
-        num_5j_1600=0;
-        num_5j_2000=0;
-        num_5j_2600=0;
-        num_6j_1200=0;
-        num_6j_1800=0;
-        num_6j_2200=0;
-        num_6j_2600=0;
+        for (size_t i = 0; i < NUMSR; ++i) _srnums[i] = 0;
       }
 
 
