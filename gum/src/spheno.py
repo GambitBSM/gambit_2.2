@@ -1486,7 +1486,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
         brace = "(" + str(index) + ")" if index else ""
 
-        towrite += 'slha["MASS"][""] << ' + particle.PDG_code + ' << (*' + mass + ")" + brace + '<< "# ' + particle.name + "_" + str(index) + '";\n'
+        towrite += 'slha["MASS"][""] << ' + str(particle.PDG_code) + ' << (*' + mass + ")" + brace + '<< "# ' + particle.name + "_" + str(index) + '";\n'
 
     towrite += 'slha["MASS"][""] << 23 << *MVZ << "# VZ";\n'\
                'slha["MASS"][""] << 24 << *MVWm << "# VWm";\n'\
@@ -1516,7 +1516,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         mass = re.sub("\d","",particle.alt_mass_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
 
-        towrite += 'slha["DMASS"][""] << ' + particle.PDG_code + ' << sqrt(pow((*mass_uncertainty_Q)(' + i+1 + '),2)+pow((*mass_uncertainty_Yt)(' + i+1 + '),2)) << "# ' + particle.name + "_" + str(index) + '";\n'
+        towrite += 'slha["DMASS"][""] << ' + (particle.PDG_code) + ' << sqrt(pow((*mass_uncertainty_Q)(' + i+1 + '),2)+pow((*mass_uncertainty_Yt)(' + i+1 + '),2)) << "# ' + particle.name + "_" + str(index) + '";\n'
 
 
     towrite += "\n"\
