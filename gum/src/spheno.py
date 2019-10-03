@@ -1303,7 +1303,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Block MINPAR\n'\
       'SLHAea_add_block(slha, "MINPAR");\n'
     
-    # TODO: All this missing from output, why?
     for name, var in variables.iteritems() :
       if var.block == "MINPAR" :
         towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
@@ -1316,7 +1315,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Block EXTPAR\n'\
       'SLHAea_add_block(slha, "EXTPAR");\n'
 
-    # TODO: All this missing from output, why?
     for name, var in variables.iteritems() :
       if var.block == "EXTPAR" :
         towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
@@ -1979,7 +1977,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '/****************/\n'
 
     # TODO: The name of model parameters might be wrong
-    # TODO: All this missing from output, why?
     for name, var in variables.iteritems():
       if var.block == "MINPAR" :
         model_par = get_model_par_name(name, variables)
@@ -1996,7 +1993,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "/****************/\n"
 
     # TODO: The name of model parameters might be wrong
-    # TODO: All this missing from output, why?
     for name, var in variables.iteritems():
       if var.block == "EXTPAR" :
         model_par = get_model_par_name(name, variables)
@@ -2009,7 +2005,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # TODO:  The name of model parameters might be wrong
     # TODO: this does not work for matrices
-    # TODO: All this missing from output, why?
     thisblock = ""
     for name, var in variables.iteritems():
       if var.block != None and var.block.endswith("IN") :

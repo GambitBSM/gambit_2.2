@@ -218,8 +218,8 @@ def sarah_params(paramlist, add_higgs):
         p = paramlist[i]
         if (    (p.block() != 'SM')
             and (p.block() != 'SMINPUTS')
-            and (p.block() != 'VCKM'
-            and (p.is_output() != False))
+            and (p.block() != 'VCKM')
+            #and (p.is_output() != False)) TODO: TG: This line was killing most of the parameters
             ):
             
             # Create a new instance of SpectrumParameter
@@ -249,7 +249,6 @@ def sarah_params(paramlist, add_higgs):
     TODO: matrix handling for SARAH interface!
     """
 
-    # TODO: TG: Added this cause otherwise I don't know the parameters in SPheno
     for par in unsorted_params:
       params.append(par)
     
