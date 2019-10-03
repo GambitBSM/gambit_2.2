@@ -81,7 +81,8 @@ def fr_params(paramlist, add_higgs):
             and (p.block() != 'CKMBLOCK')):
             
             # Create a new instance of SpectrumParameter
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), index=p.index())
+            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), 
+                                  index=p.index())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
@@ -217,13 +218,16 @@ def sarah_params(paramlist, add_higgs):
         p = paramlist[i]
         if (    (p.block() != 'SM')
             and (p.block() != 'SMINPUTS')
-            and (p.block() != 'VCKM')):
+            and (p.block() != 'VCKM'
+            and (p.is_output() != False))
+            ):
             
             # Create a new instance of SpectrumParameter
             # TODO: dimensionless atm! 
             x = SpectrumParameter(p.name(), "dimensionless", block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
-                                  bcs = p.bcs())
+                                  bcs = p.bcs(), shape = p.shape(), 
+                                  is_output = p.is_output())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
@@ -282,6 +286,8 @@ def sort_params_by_block(parameters):
 
         # A block with just one entry, i.e. matrices:
         YE : { matrix: 3x3 },         # e.g. Yukawas
+
+        # A matrix block with a 
         SCALARMIX : { matrix: 2x2 },  # e.g. for the THDM
         ...
     }
@@ -295,6 +301,8 @@ def sort_params_by_block(parameters):
         if not par.block:
             continue
 
+        # If the parameter 
+
         shape = par.shape
 
         matrix = False
@@ -304,7 +312,10 @@ def sort_params_by_block(parameters):
 
         # If it's a matrix then it will be a new block
         if matrix:
-            newentry = { "matrix": par.shape[1:] }
+            if par.is_output:
+                newentry = { "mixingmatrix": par.shape[1:], "outputname": par.name }
+            else:
+                newentry = { "matrix": par.shape[1:] }
             params_by_block[par.block] = newentry
 
         # If it's not a matrix and is a new block, then create the entry

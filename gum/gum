@@ -10,7 +10,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019 
+#  \date 2017, 2018, 2019... forever
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
@@ -140,10 +140,11 @@ if args.file:
         flags = SARAHMapOfFlags()
         outputs = SARAHOutputs()
         backends = SARAHBackends()
+        mixings = SARAHMixings()
         backends.extend(x for x in output_opts.bes())
 
         # Hit it
-        all_sarah(options, partlist, paramlist, outputs, backends, flags)
+        all_sarah(options, partlist, paramlist, outputs, backends, flags, mixings)
 
         # Get a list of all non-SM particles
         sarah_bsm = [x for x in partlist if x.SM() is False]
@@ -155,6 +156,7 @@ if args.file:
         # model files - remove all SM stuff from parameter list.
         parameters = sarah_params(paramlist, add_higgs)
 
+    print("Finished extracting parameters from " + gum.math + ".")
 
     # Get the parameters sorted by block
     blockparams = sort_params_by_block(parameters)
@@ -305,7 +307,12 @@ if args.file:
 
         # Write frontends for SPheno. That's a lotta scrapin'.
         print("Writing SPheno frontends.")
-        spheno_src, spheno_header = write_spheno_frontends(clean_model_name, parameters, bsm_particle_list, flags, patched_spheno_dir, output_dir)
+        spheno_src, spheno_header = write_spheno_frontends(clean_model_name, parameters, bsm_particle_list, 
+                                                           flags, patched_spheno_dir, output_dir, 
+                                                           blockparams, gambit_pdgs, mixings)
+
+        import sys
+        sys.exit("Done for now.")
 
         # Write out the frontend header and source files
         write_backend_frontends(output_dir, gum.name, "SARAHSPheno", SPHENO_VERSION, spheno_header, spheno_src)
@@ -446,6 +453,7 @@ if args.file:
     if output_opts.spheno:
         print("Writing SPheno SpecBit interface...")
         spectrum_src = write_spheno_spectrum_src(gum.name)
+        
     # TODO: elif output_opts.flexiblesusy(): ...
     else:
         print("Writing basic container SpecBit interface...")
@@ -466,7 +474,9 @@ if args.file:
         if not output_opts.spheno:
             raise GumError(("Currently gum needs SPheno output to be able to produce Vevacious"
                             " output. Please change your .gum file."))
-        write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, blockparams)
+        vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, 
+                                      blockparams)
+
 
 
     """
@@ -597,7 +607,9 @@ if args.file:
         copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir, reset_contents, existing = False)
         copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir, reset_contents, existing = False)
         add_to_backend_locations("Pythia_"+gum.name, be+"/"+ver+"/lib/libpythia8.so", ver, reset_contents)
-    # MadDM
+    # Vevacious
+    if output_opts.vev:
+        write_vevacious_rollcall(gum.name, gum.spec, reset_contents)
 
     # Write a simple YAML file.
     if decaybit: drop_yaml_file(gum.name, parameters, add_higgs, reset_contents)

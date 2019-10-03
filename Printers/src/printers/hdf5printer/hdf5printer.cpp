@@ -170,7 +170,7 @@ namespace Gambit
     // But this should be no problem; if there are new processes added, the highest
     // previous PPID number for those ranks is just zero. If there are fewer, then
     // there will be still be matching old-process ranks for all of the new ranks.
-    //PPIDpair 
+    //PPIDpair
     std::map<unsigned long, unsigned long long int> HDF5Printer::get_highest_PPID_from_HDF5(hid_t group_id)
     {
        //unsigned long long int highest_pointID = 0; // Highest ID found so far
@@ -222,7 +222,7 @@ namespace Gambit
        {
           std::size_t offset = i*CHUNKLENGTH;
           std::size_t length;
-          
+
           if(i==NCHUNKS){ length = REMAINDER; }
           else          { length = CHUNKLENGTH; }
 
@@ -400,7 +400,7 @@ namespace Gambit
         bool overwrite_file  = options.getValueOrDef<bool>(false,"delete_file_on_restart");
 
         std::vector<unsigned long long int> highests(mpiSize);
-        
+
         if(myRank==0)
         {
           // Check whether a readable output file exists with the name that we want to use.
@@ -475,8 +475,16 @@ namespace Gambit
             }
             else
             {
-              set_resume(false);  //Tell ScannerBit that it shouldn't resume and do not find highest point.
               logger() << LogTags::info << "No process-level temporary files found; skipping combination step." << EOM;
+              if(not HDF5::checkFileReadable(tmp_comb_file))
+              {
+                // There is no combined output either, so disable resume mode
+                std::ostringstream msg;
+                msg<<"No temporary output from a previous scan found (or it is unreadable); this will be treated as a NEW scan";
+                std::cout<<msg.str()<<std::endl;
+                logger() << LogTags::info << msg.str();
+                set_resume(false);
+              }
             }
           }
           else // If we are not in resume mode, need to delete any temporary files left lying around in our target directory from previous incomplete runs
@@ -507,7 +515,7 @@ namespace Gambit
             }
           } // end if(resume)
 
-          std::cout <<"Rank "<<myRank<<" resume flag? "<<get_resume()<<std::endl; 
+          std::cout <<"Rank "<<myRank<<" resume flag? "<<get_resume()<<std::endl;
           if(get_resume())
           {
             //long highest = 0;
@@ -541,7 +549,7 @@ namespace Gambit
               std::map<unsigned long, unsigned long long int> highest_PPIDs = get_highest_PPID_from_HDF5(group_id);
               std::chrono::time_point<std::chrono::system_clock> end(std::chrono::system_clock::now());
               std::chrono::duration<double> time_taken = end - start;
-              
+
               for (size_t rank = 0; rank < mpiSize; rank++ )
               {
                   auto it = highest_PPIDs.find(rank);
@@ -568,7 +576,7 @@ namespace Gambit
             //get_point_id() = highest;
           }
         }
-        
+
 #ifdef WITH_MPI
         int resume_int = get_resume();
         myComm.Barrier();
@@ -588,7 +596,7 @@ namespace Gambit
             get_point_id() = highests[0];
         }
 #endif
-        
+
         /*if(myRank==0)
         {
 #ifdef WITH_MPI
@@ -694,7 +702,7 @@ namespace Gambit
       // Make sure a barrier or similar exists outside this function to make
       // sure master node does combination before workers try to retrieve
       // previous points
-      if(not get_resume() or not myRank==0)
+      if(not get_resume() or not (myRank==0))
       {
         std::ostringstream errmsg;
         errmsg << "HDF5Printer: Tried to run function 'prepare_and_combined_tmp_files', however GAMBIT is not in 'resume' mode, and this is not the process with rank 0, so this is forbidden. This indicates a bug in the HDF5Printer logic, please report it.";
@@ -812,7 +820,7 @@ namespace Gambit
       // has access to all the buffers.
       if(is_primary_printer)
       {
-        std::cout << "Running finalise() routine for HDF5Printer (with name=\""<<printer_name<<"\", early="<<abnormal<<")"<<std::endl; 
+        std::cout << "Running finalise() routine for HDF5Printer (with name=\""<<printer_name<<"\", early="<<abnormal<<")"<<std::endl;
         logger() << LogTags::printers << "Running finalise() routine for HDF5Printer (with name=\""<<printer_name<<"\")..." << EOM;
 
         // Make sure all the buffers are caught up to the final point.

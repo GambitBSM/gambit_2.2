@@ -104,13 +104,15 @@ class SpectrumParameter:
     def __init__(self, name, tag, block=None, index=1, 
                  shape=None, fullname=None,
                  sm=False, gb_input=None,
-                 alt_name=None, bcs=None):
+                 alt_name=None, bcs=None,
+                 is_output=False):
         self.name = name
         self.tag = tag
         self.shape = shape
         self.block = block
         self.index = index
         self.sm = sm
+        self.is_output = is_output;
         if not fullname:
             self.fullname = name
         else:

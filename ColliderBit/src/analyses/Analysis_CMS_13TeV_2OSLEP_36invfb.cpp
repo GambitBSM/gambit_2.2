@@ -49,7 +49,6 @@ namespace Gambit {
       vector<string> cutFlowVector_str;
       size_t NCUTS;
       vector<double> cutFlowVectorCMS_550_200;
-      double xsecCMS_550_200;
 
       ofstream cutflowFile;
 

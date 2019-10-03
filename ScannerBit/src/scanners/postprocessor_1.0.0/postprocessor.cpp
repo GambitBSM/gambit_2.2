@@ -39,8 +39,6 @@
 using namespace Gambit;
 using namespace Gambit::PostProcessor;
 
-// Forward declare this template specialisation as extern so that we use the definition compiled into baseprinter.cpp
-extern template std::size_t Gambit::Printers::getTypeID<double>();
 
 // The reweigher Scanner plugin
 scanner_plugin(postprocessor, version(1, 0, 0))
@@ -66,7 +64,7 @@ scanner_plugin(postprocessor, version(1, 0, 0))
   // Retrieve an integer from an environment variable
   int getintenv(const std::string& name)
   {
-     int x;
+     int x = 0;
      if(const char* env_p = std::getenv(name.c_str()))
      {
        std::stringstream env_s(env_p);

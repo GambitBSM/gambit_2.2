@@ -10,6 +10,7 @@ import datetime
 import numpy as np
 
 from setup import *
+from files import *
 
 def clean(line):
     """
@@ -245,7 +246,11 @@ def get_vertices(foldername):
                 if parts[1] != parts[2]:
 
                     # If so, add the antiparticle separately
-                    particle_PDG_conversion[parts[2]] = int('-' +  parts[3])
+                    # Check to see if the particle is defined as + or - 
+                    if parts[3].startswith('-'):
+                        particle_PDG_conversion[parts[2]] = int(parts[3][1:])
+                    else:
+                        particle_PDG_conversion[parts[2]] = int('-' +  parts[3])
 
                 # Is a particle an auxiliary particle?
                 if parts[8] == '*':

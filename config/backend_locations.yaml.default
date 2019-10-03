@@ -44,6 +44,7 @@ Pythia:
 
 gamLike:
   1.0.0:       ./Backends/installed/gamlike/1.0.0/lib/gamLike.so
+  1.0.1:       ./Backends/installed/gamlike/1.0.1/lib/gamLike.so
 
 gm2calc:
   1.2.0:       ./Backends/installed/gm2calc/1.2.0/src/libgm2calc.so
@@ -115,3 +116,12 @@ LibFarrayTest:
 
 libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
+
+vevacious:
+  1.0:         ./Backends/installed/vevacious/1.0/VevaciousPlusPlus/lib/libVevaciousPlusPlus.so
+
+hom4ps:
+  2.0:         ./Backends/installed/hom4ps/2.0/
+
+phc:
+  2.4.58:      ./Backends/installed/phc/2.4.58/

@@ -254,6 +254,12 @@ def amend_file(filename, module, contents, line_number, reset_dict):
 
     location = full_filename(filename, module)
 
+    # Catch an error code
+    if line_number == -1:
+        raise GumError(("Error in amend_file routine. Received line_number"
+                        " of " + line_number + " to write to the file "
+                        "" + location + ". I think something is wrong."))
+
     if not find_file(filename, module):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
@@ -277,24 +283,57 @@ def amend_file(filename, module, contents, line_number, reset_dict):
 
     print("File {} successfully amended.".format(location))
 
-def write_capability(capability, functions):
+def add_capability(module, capability, function, reset_dict,
+                   returntype, filename=None, dependencies=None, 
+                   allowed_models=None, backend_reqs=None):
     """
-    Writes a new capability, wrapped around (a) function(s),
-    for a rollcall header file.
+    Finds a capability in a given module. If it already exists, then add 
+    a new function entry to it. If it is not found, then add the 
+    capability too.
     """
 
-    towrite = (
+    cap_exists, cap_line = find_capability(capability, module, filename)
+
+    # Get the function signature for the rollcall
+    func = write_function(function, returntype, dependencies, 
+                          allowed_models, backend_reqs)
+
+    # If the capability is there...
+    if cap_exists:
+        # Check the function isn't already there too
+        func_exists, func_line = find_function(function, capability, 
+                                               module, filename)
+
+        if func_exists:
+            raise GumError(("The function "  + function + " already exists "
+                            "in the capability " + capability + " in the "
+                            "module " + module + "."))
+
+        # If there's already the capability, then the only thing we need 
+        # is the function. Add it to the existing capability.
+        amend_file(filename, module, func, cap_line+1, reset_dict)
+        # The +1 takes into account the START_CAPABILITY line. Hopefully 
+        # being a bit lazy here doesn't come back to bite me, but I doubt it.
+
+    # Otherwise - add some capability tags either side and write it to the 
+    # end of the file.
+    else:
+        contents = (
             "  #define CAPBILITY {0}\n"
             "  START_CAPABILITY\n"
             "  \n"
             "{1}"
             "  \n"
             "  #undef CAPABILITY\n"
-    ).format(capability, '\n'.join(functions))
+        ).format(capability, func)
 
-    print("Capability {} added.".format(capability))
+        n = -1
+        location = full_filename(filename, module)
+        with open(location) as f:
+            for num, line in enumerate(f, 1):
+                if "#undef CAPABILITY" in line: n = num
+        amend_file(filename, module, contents, n+1, reset_dict)
 
-    return towrite
 
 def write_function(function, returntype, dependencies=None,
                    allowed_models=None, backend_reqs=None):
@@ -309,7 +348,11 @@ def write_function(function, returntype, dependencies=None,
             extras += "DEPENDENCY({0}, {1})\n".format(dependencies[i][0],
                                                       dependencies[i][1])
     if allowed_models:
-        extras += "ALLOW_MODELS({0})\n".format(', '.join(allowed_models))
+        # List
+        if isinstance(allowed_models, list):
+            extras += "ALLOW_MODELS({0})\n".format(', '.join(allowed_models))
+        else:
+            extras += "ALLOW_MODELS({0})\n".format(allowed_models)
 
     if backend_reqs:
         for i in np.arange(len(backend_reqs)):
@@ -328,12 +371,11 @@ def write_function(function, returntype, dependencies=None,
             extras += "BACKEND_REQ({0})\n".format(add)
 
     towrite = (
-            "\n"
             "#define FUNCTION {0}\n"
-            "START_FUNCTION({1})\n"
+            "  START_FUNCTION({1})\n"
             "{2}"
             "#undef FUNCTION\n"
-    ).format(function, returntype, extras)
+    ).format(function, returntype, dumb_indent(2, extras))
 
     return dumb_indent(4, towrite)
 
@@ -410,11 +452,6 @@ def indent(text, numspaces=0):
         out += line
 
     return out
-
-def reformat(location):
-    """
-    Reformat all text in a file (indents, etc.)
-    """
 
 def revert(reset_file):
     """
@@ -652,24 +689,29 @@ def write_config_file(outputs, model_name, reset_contents):
 
     towrite = (
         "cd ../build\n"
+        "cmake ..\n"
+        "make -j4"
     )
 
     if outputs.pythia:
-        towrite += (
-            "cmake ..\n"
-            "make -j4 pythia_{0}\n"
-        ).format(model_name.lower())
+        towrite += " pythia_{0}\n".format(model_name.lower())
 
     if outputs.mo:
-        towrite += (
-            "cmake ..\n"
-            "make -j4 micromegas\n"
-        )
+        towrite += " micromegas_{0}\n".format(model_name.lower())
 
-    # spheno, flexiblesusy, etc.
+    if outputs.spheno:
+        towrite += " spheno_{0}".format(model_name.lower())
 
+    if outputs.vev:
+        towrite += " vevacious"
+
+    if outputs.ch:
+        towrite += " calchep"
+
+    # TODO : flexiblesusy.     
     towrite += (
-        "cmake ..\n"
+        "\n"
+        "cmake ..\n"      # Have to cmake here because of Pythia headers.
         "make -j4 gambit\n"
     )
 
