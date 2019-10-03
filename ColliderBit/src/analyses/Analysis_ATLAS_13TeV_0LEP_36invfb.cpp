@@ -11,10 +11,7 @@ namespace Gambit {
     using namespace HEPUtils;
 
 
-    /// @brief ATLAS Run 2 0-lepton jet+MET SUSY analysis, with 13/fb of data
-    ///
-    /// Based on:
-    ///   https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/SUSY-2016-07/
+    /// @brief ATLAS Run 2 0-lepton jet+MET SUSY analysis, with 36/fb of data
     ///
     /// Recursive jigsaw reconstruction signal regions are currently not included
     /// Boosted signal regions not currently used.
