@@ -105,7 +105,7 @@ class SpectrumParameter:
                  shape=None, fullname=None,
                  sm=False, gb_input=None,
                  alt_name=None, bcs=None,
-                 is_output=False):
+                 is_output=False, is_real=False):
         self.name = name
         self.tag = tag
         self.shape = shape
@@ -113,6 +113,7 @@ class SpectrumParameter:
         self.index = index
         self.sm = sm
         self.is_output = is_output;
+        self.is_real = is_real;
         if not fullname:
             self.fullname = name
         else:

@@ -227,7 +227,7 @@ def sarah_params(paramlist, add_higgs):
             x = SpectrumParameter(p.name(), "dimensionless", block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
                                   bcs = p.bcs(), shape = p.shape(), 
-                                  is_output = p.is_output())
+                                  is_output = p.is_output(), is_real = p.is_real())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
@@ -245,25 +245,21 @@ def sarah_params(paramlist, add_higgs):
             if j.block == i:
                 blockdict[i].append(j.name)
 
-    """
-    TODO: matrix handling for SARAH interface!
-    """
-
     for par in unsorted_params:
       params.append(par)
     
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
-        params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True))
+        params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True, is_real=True))
 
     # Add gauge couplings and Yukawas here? TODO: check! 
-    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True))
-    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True))
-    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True))
-    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True))
-    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True))
-    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True))
-    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True))
+    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=True))
+    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=True))
+    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=True))
     
     return params
 
@@ -286,8 +282,9 @@ def sort_params_by_block(parameters):
         # A block with just one entry, i.e. matrices:
         YE : { matrix: 3x3 },         # e.g. Yukawas
 
-        # A matrix block with a 
-        SCALARMIX : { matrix: 2x2 },  # e.g. for the THDM
+        # A matrix block with a different outputname in SPheno,
+        # e.g. for the THDM
+        SCALARMIX : { mixingmatrix: 2x2, outputname: ZH }
         ...
     }
     """
@@ -314,7 +311,7 @@ def sort_params_by_block(parameters):
             if par.is_output:
                 newentry = { "mixingmatrix": par.shape[1:], "outputname": par.name }
             else:
-                newentry = { "matrix": par.shape[1:] }
+                newentry = { "matrix": par.shape[1:], "outputname": par.name }
             params_by_block[par.block] = newentry
 
         # If it's not a matrix and is a new block, then create the entry
@@ -327,3 +324,54 @@ def sort_params_by_block(parameters):
             params_by_block[par.block][par.index] = par.name
 
     return params_by_block
+
+def parameter_reality_dict(parameters):
+    """
+    Get a dict of whether a parameter is most definitely real, or not.
+    """
+
+    reality_dict = {}
+
+    for param in parameters:
+        reality_dict[param.name] = param.is_real
+
+    return reality_dict
+
+def spheno_dependencies(sphenodeps):
+    """
+    Clean the spheno dependencies scraped from SARAH.
+    Here 'clean' means tidying up the CForm output Mathematica gives us.
+    Returns a dict of parameter-definition key-value pairs.
+    """    
+
+    deps = {}
+
+    # each p is an instance of SARAHParameter
+    for p in sphenodeps:
+
+        name = p.name() # As known to SPheno
+        # Don't need the block. index etc, we're using internal SPheno params here
+
+        description = p.alt_name()
+
+        # Common replacements to actual C(++) syntax
+        # Probably not complete, but the main culprits *should* be here
+        description = re.sub('ArcSin', 'asin', description)
+        description = re.sub('ArcCos', 'acos', description)
+        description = re.sub('ArcTan', 'atan', description)
+        description = re.sub('Abs', 'abs', description) 
+        description = re.sub('Sin', 'sin', description)
+        description = re.sub('Cos', 'cos', description)
+        description = re.sub('Tan', 'tan', description)
+        #description = re.sub('Power', 'pow', description)
+        description = re.sub('Sqrt', 'sqrt', description)
+
+        # If there's something that looks like param(i,j) make this (param)(i,j)
+        description = re.sub(r'([a-zA-Z]+)\(([0-9]),([0-9])\)',r'(*\1)(\2,\3)', description)
+
+        # If there's Power(param, num) -> pow(*param, num)
+        description = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(*\1,\2)', description)
+
+        deps[name] = description
+
+    return deps

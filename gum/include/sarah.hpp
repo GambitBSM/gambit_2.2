@@ -47,7 +47,7 @@ namespace GUM
       void get_partlist(std::vector<Particle>&);
   
       // Parameters list
-      void get_paramlist(std::vector<Parameter>&);
+      void get_paramlist(std::vector<Parameter>&, std::vector<Parameter>&);
 
       // MINPAR, EXTPAR
       void get_minpar_extpar(std::vector<Parameter>&);
@@ -81,7 +81,8 @@ namespace GUM
   // Everything
   void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, 
                  Outputs&, std::vector<std::string>&, std::map<std::string,bool>&, 
-                 std::map<std::string, std::string>&, Error &error);
+                 std::map<std::string, std::string>&,
+                 std::vector<Parameter>&, Error &error);
 
 } // namespace GUM
  

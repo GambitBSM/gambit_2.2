@@ -145,8 +145,10 @@ class Parameter
     int blockindex;
     std::string paramshape;
     std::string alt_paramname;
+    bool real;
     bool output;
     std::string boundary_conditions;
+
  
     public:
 
@@ -155,7 +157,7 @@ class Parameter
         bool operator!=(const Parameter&) {return true;}
 
         Parameter(std::string name, std::string block, int index, 
-                  std::string alt_name = "",
+                  std::string alt_name = "", bool is_real = false,
                   std::string shape = "scalar", bool is_output=false,
                   std::string bcs= "")
         {
@@ -166,6 +168,7 @@ class Parameter
             boundary_conditions = bcs;
             paramshape = shape;
             output = is_output;
+            real = is_real;
         }
 
         std::string name() { return paramname; }
@@ -175,6 +178,7 @@ class Parameter
         std::string bcs() { return boundary_conditions; }
         std::string shape() { return paramshape; }
         bool is_output() { return output; }
+        bool is_real() { return real; }
 
         void set_bcs(std::string bc) { boundary_conditions = bc; }
 

@@ -311,7 +311,7 @@ namespace GUM
   }
 
   // Get parameters list
-  void SARAH::get_paramlist(std::vector<Parameter> &paramlist)
+  void SARAH::get_paramlist(std::vector<Parameter> &paramlist, std::vector<Parameter> &sphenodependences)
   {
 
     std::cout << "Extracting parameters from SARAH model." << std::endl;
@@ -344,7 +344,9 @@ namespace GUM
         std::string block;
         std::string paramname;
         std::string alt_paramname;
+        bool real = false; // Assume it's complex unless we figure out that it's not.
         int index = 1;
+        bool sphenodeps = false; // Do we want to save this as a SPheno dep?
 
         // Whether or not the parameter is defined by other parameters
         // of the model. If so, don't want it in GAMBIT
@@ -375,27 +377,39 @@ namespace GUM
         // - blockname & index
         // - parameter name
         // - dependences
+        // - if a parameter is *definitely* real
 
-        // Does the parameter depend on some other combination
-        // of parameters?
-        command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+        command = "Real /. pd[[" + std::to_string(i+1) + ", 2]] // ToString";
         send_to_math(command);
         get_from_math(entry);
-      
-        // If it has a dependence -- not interested. Bin it.
-        if (entry != "DependenceNum" and entry != "None") continue;
 
-        // Same with DependenceSPheno
+        // If it's definitely a real parameter, store this information
+        if (entry == "True") real = true;
+
+      
+        // With DependenceSPheno -- flag it, so we can save it for later; we'll want it
         command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
         send_to_math(command);
         get_from_math(entry);
-        if (entry != "DependenceSPheno" and entry != "None") continue;
+        if (entry != "DependenceSPheno" and entry != "None") 
+        {
+          sphenodeps = true;
+        }
 
+        // Otherwise -- if we don't want to save it: 
+        // If it has a dependence -- not interested. Bin it.
+
+        // Numerical dependence?
+        command = "DependenceNum /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+        send_to_math(command);
+        get_from_math(entry);
+        if (entry != "DependenceNum" and entry != "None" and sphenodeps != true) continue;
+        
         // Same with just Dependence
         command = "Dependence /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
         send_to_math(command); 
         get_from_math(entry);
-        if (entry != "Dependence" and entry != "None") continue;
+        if (entry != "Dependence" and entry != "None" and sphenodeps != true) continue;
 
         // Get block name
         command = "Head[LesHouches /. pd[[" + std::to_string(i+1) + ",2]]]";
@@ -451,13 +465,13 @@ namespace GUM
 
         // If it's a fundamental parameter of our theory, 
         // add it to the list (if it has an LH block!)
-        if (LHblock && !ismixing)
+        if (LHblock && !ismixing && !sphenodeps)
         {
-            Parameter parameter(paramname, block, index, alt_paramname);
+            Parameter parameter(paramname, block, index, alt_paramname, real);
             paramlist.push_back(parameter);
         }
         // If it's a mixing block then save it as as such 
-        else if (LHblock && ismixing)
+        else if (LHblock && ismixing && !sphenodeps)
         {
             std::string shape;
             std::vector<std::string> shapesize;
@@ -477,8 +491,20 @@ namespace GUM
             bool is_output = true;
 
             Parameter parameter(paramname, block, index, alt_paramname, 
-                                shape, is_output);
+                                real, shape, is_output);
             paramlist.push_back(parameter);
+        }
+        // Save to the SPheno dependencies
+        else if (LHblock && sphenodeps)
+        {
+          // If there's a SPheno dep., use Mathematica's terrible CForm output.
+          // We'll amend this in GUM -- string replacement is nicer in Python :-)
+          command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // CForm // ToString";
+          send_to_math(command);
+          get_from_math(entry);
+          // Here we are storing the alt_paramname as the definition. Be careful!
+          Parameter sphenodep(paramname, block, index, entry, real);
+          sphenodependences.push_back(sphenodep);
         }
 
       }
@@ -755,6 +781,89 @@ namespace GUM
     }
   }
 
+  // // Gets all of the parameters that have a dependence in SPheno, and 
+  // // stores their definitions
+  // void SARAH::get_spheno_dependences(std::vector<Parameter> &dependentparams)
+  // {
+  //   std::cout << "Getting SPheno dependencies from SARAH..." << std::endl;
+
+  //   std::string command = "";
+
+  //   try 
+  //   {
+  //     // Find out how many parameters we have to get.
+  //     command = "Length[pd]";
+  //     send_to_math(command);
+
+  //     int lenpl;
+  //     get_from_math(lenpl);
+
+  //     for(int i=0; i<lenpl; i++)
+  //     {
+  //       std::string block;
+  //       std::string paramname;
+  //       std::string alt_paramname;
+  //       bool real = false;
+  //       int index = 1;
+  //       bool LHblock = false;
+        
+  //       std::string cdef;
+  //       std::string entry;
+
+  //       // See if there is a DependenceSPheno entry...
+  //       command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+  //       send_to_math(command);
+  //       get_from_math(entry);
+
+  //       // If there's something worth getting, use Mathematica's terrible CForm output.
+  //       // We'll amend this in GUM -- string replacement is nicer in Python :-)
+  //       if (entry != "DependenceSPheno" and entry != "None")
+  //       {
+  //         command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // CForm // ToString";
+  //         send_to_math(command);
+  //         get_from_math(cdef);
+  //       }
+  //       else continue;
+
+  //       command = "Real /. pd[[" + std::to_string(i+1) + ", 2]] // ToString";
+  //       send_to_math(command);
+  //       get_from_math(entry);
+  //       if (entry == "True") real = true;
+
+  //       // Get the paramname
+  //       command = "pd[[" + std::to_string(i+1) + ",1]]//ToString";
+  //       send_to_math(command);
+
+  //       // Get the parameter name as it is known in SARAH.
+  //       get_from_math(paramname);
+
+  //       // See if it is know as something different in SPheno
+  //       command = "OutputName /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
+  //       send_to_math(command);
+  //       get_from_math(entry);
+  //       if (entry != "OutputName") 
+  //       { 
+  //           paramname = entry;
+  //       }
+
+  //       Parameter parameter(paramname, block )
+  //       Parameter parameter(paramname, block, index, alt_paramname, 
+  //                           real, shape, is_output);
+  //       paramlist.push_back(parameter);
+
+  //       // Add it to the dict
+  //       dependentparams[paramname] = cdef;
+
+  //     }
+  //   }
+  //   catch (std::runtime_error &e)
+  //   {
+  //     std::stringstream ss;
+  //     ss << e.what() << ": Last command: " << command;
+  //     throw std::runtime_error(ss.str());
+  //   }
+  // }
+
   // Returns the eigenstate & mixing matrix after EWSB 
   void SARAH::get_mixing_matrices(std::map<std::string, std::string> &mixings)
   {
@@ -910,7 +1019,7 @@ namespace GUM
   void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist,
                  Outputs &outputs, std::vector<std::string> &backends,
                  std::map<std::string,bool> &flags, std::map<std::string, std::string> &mixings,
-                 Error &error)
+                 std::vector<Parameter> &sphenodependences, Error &error)
   {
 
     try
@@ -924,7 +1033,7 @@ namespace GUM
       model.get_partlist(partlist);
 
       // And all parameters
-      model.get_paramlist(paramlist);
+      model.get_paramlist(paramlist, sphenodependences);
 
       // And mixings
       model.get_mixing_matrices(mixings);
@@ -981,9 +1090,6 @@ namespace GUM
         // Add SPheno mass names for all particles
         model.add_SPheno_mass_names(partlist);
 
-        // TODO: 
-        // need to extract names of mixing matrices present: ZH, ZA, ZEL, etc., and their blocks.
-
         // Location of SPheno files
         std::string sphdir = outputdir + "SPheno";
         std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
@@ -1031,11 +1137,12 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("alt_mass", &Particle::alt_mass)
     ;
 
-  class_<Parameter>("SARAHParameter", init<std::string, std::string, int, std::string, std::string, bool, std::string>())
+  class_<Parameter>("SARAHParameter", init<std::string, std::string, int, std::string, bool, std::string, bool, std::string>())
     .def("name",      &Parameter::name)
     .def("block",     &Parameter::block)
     .def("index",     &Parameter::index)
     .def("alt_name",  &Parameter::alt_name)
+    .def("is_real",   &Parameter::is_real)
     .def("shape",     &Parameter::shape)
     .def("is_output", &Parameter::is_output)
     .def("bcs",       &Parameter::bcs)

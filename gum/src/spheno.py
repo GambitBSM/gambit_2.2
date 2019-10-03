@@ -589,7 +589,8 @@ class SPhenoParameter:
 
 
 def write_spheno_frontends(model_name, parameters, particles, flags, 
-                           spheno_path, output_dir, blockparams, gambit_pdgs, mixings):
+                           spheno_path, output_dir, blockparams, gambit_pdgs, mixings,
+                           reality_dict, sphenodeps):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -614,7 +615,8 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
     spheno_src = write_spheno_frontend_src(model_name, functions,
                                            variables, flags, particles, 
                                            parameters, blockparams, 
-                                           gambit_pdgs, mixings)
+                                           gambit_pdgs, mixings, reality_dict,
+                                           sphenodeps)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -899,7 +901,8 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 # writing
 
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
-                              particles, parameters, blockparams, gambit_pdgs, mixings):
+                              particles, parameters, blockparams, gambit_pdgs, mixings,
+                              reality_dict, sphenodeps):
 
     """
     Writes source for 
@@ -1101,15 +1104,15 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             ).format(i, j, par.name, entry)
 
       
-    # TODO: Fill model dependent other parameters
+    # Fill model dependent other parameters
     towrite += "// Other parameters\n"
     for par in parameters:
 
         # Don't want output (mixing matrices, basically) or masses. Already done those.
         if not par.is_output and par.block != "MASS":
 
-            entry = par.alt_name if par.alt_name else par.name                
-
+            entry = par.alt_name if par.alt_name else par.name
+            
             # Matrix case
             if par.shape.startswith('m'):
                 size = par.shape[1:]
@@ -1129,11 +1132,12 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                     "*{0} = spectrum.get(Par::{1}, \"{2}\");\n"
                 ).format(entry, par.tag, par.name)
 
-    # TODO:
-    # alphaH, betaH, TW, v, ZZ, ZW
-
+    # Go through the SPhenodeps and add these
+    for par, definition in sphenodeps.iteritems():
+        towrite += "*{0} = {1};\n".format(par, definition)
 
     towrite += (
+            "\n"
             "// Call SPheno's function to calculate decays\n"
             "try{{ {0} }}\n"
             "catch(std::runtime_error e) {{ invalid_point().raise(e.what()); }}\n"
@@ -1208,7 +1212,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         else :
             towrite += "else if(i==" + str(i+1) + ") return (*gT" + name + ")" + brace + ";\n"
     towrite += "return 0.0;\n"\
-               "}\n\n"
+               "};\n\n"
 
     towrite += "for(int i=0; i<n_particles; i++)\n"\
                "{\n"\
@@ -1300,8 +1304,14 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       'if(inputs.param.find("Qin") != inputs.param.end())\n'\
       '  slha["MODSEL"][""] << 12 << *inputs.param.at("Qin") << "# Qin";\n'\
       '\n'\
-      '// Block MINPAR\n'\
-      'SLHAea_add_block(slha, "MINPAR");\n'
+
+    """
+    SB: MINPAR/EXTPAR dealt with automatically
+    by the block writing routines now.
+    towrite += (
+            "// Block MINPAR\n"
+            "SLHAea_add_block(slha, \"MINPAR\");\n"
+    )
     
     for name, var in variables.iteritems() :
       if var.block == "MINPAR" :
@@ -1311,9 +1321,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         else :
           towrite += '*'+name+';\n'
 
-    towrite += '\n'\
-      '// Block EXTPAR\n'\
-      'SLHAea_add_block(slha, "EXTPAR");\n'
+    towrite +=  (
+            "\n"
+            "// Block EXTPAR\n"
+            "SLHAea_add_block(slha, \"EXTPAR\");\n"
+    )
 
     for name, var in variables.iteritems() :
       if var.block == "EXTPAR" :
@@ -1322,6 +1334,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
           towrite += name+'->re << "# '+name+'";\n'
         else :
           towrite += '*'+name+';\n'
+    """
+
 
 
     towrite += '\n'\
@@ -1422,16 +1436,22 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
           '}\n'\
           '}\n'
 
-    # TODO: Many MD parameters
+    # List of added blocks
+    addedblocks = []
+
     # Go through each LH block we know about, and assign each entry to the SLHAea object.
-    # TODO: This assumes these are all complex, but it's not always so
+    # TODO: 
+    # TG: This assumes these are all complex, but it's not always so
+    # SB: added param.is_real output, queried by SARAH, using this
     for block, entry in blockparams.iteritems():
-        
+
         # Firstly create the block
         towrite += (
                 "\n"
                 "SLHAea_add_block(slha, \"{0}\", Q);\n"
         ).format(block)
+
+        addedblocks.append(block)
 
         matrix = False
         size = ""
@@ -1439,44 +1459,85 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         # If it's a matrix, flag it, and get the size. 
         if 'matrix' in entry:
             matrix = True
-            size = entry['matrix'][1:]
+            size = entry['matrix']
 
         elif 'mixingmatrix' in entry:
             matrix = True
-            size = entry['mixingmatrix'][1:]
+            size = entry['mixingmatrix']
 
         # If we don't have a matrix, use the block indices
         if not matrix:
             for index, param in entry.iteritems():
-                towrite += (
-                    "slha[\"{0}\"][\"\"] << {1} << *{2} << \"# {2}\";\n"
-                ).format(block, index, param)
+
+                # Is it a real parameter?
+                real = reality_dict[param]                   
+
+                # If it's a real parameter don't need to take the real part.
+                # Just add it.
+                if real == True:
+                    towrite += (
+                        "slha[\"{0}\"][\"\"] << {1} << *{2} << \"# {2}\";\n"
+                    ).format(block, index, param)
+                # If it's complex, add both real and imaginary entries
+                else:
+                    # Make sure the block is added if we need it
+                    if not "IM"+block in addedblocks:
+                        towrite += "SLHAea_add_block(slha, \"IM{0}\", Q);\n".format(block)
+                        addedblocks.append("IM"+block)
+                    towrite += (
+                        "slha[\"{0}\"][\"\"] << {1} << *{2}.re << \"# Re({2})\";\n"
+                        "slha[\"IM{0}\"][\"\"] << {1} << *{2}.im << \"# Im({2})\";\n"
+                    ).format(block, index, param)
+
 
         # Matrix - gotta do these element by element
         else:
-            # Add the imaginary block too
-            "SLHAea_add_block(slha, \"IM{0}\", Q);\n".format(block)
+            # If there is an outputname, save it
+            oname = entry['outputname'] if 'outputname' in entry else block
 
-            f = entry['outputname'] if 'outputname' in entry else block
-
+            # Size of the matrix
             i,j = size.split('x')
-            towrite += (
-                    "for(int i=1; i<={1}; i++)\n"
-                    "{{\n"
-                    "for(int j=1; j<={2}; j++)\n"
-                    "{{\n"
-                    "slha[\"{0}\"][\"\"] << i << j << (*{3})(i,j).re << "
-                    "\"# {0}(\" << i << \",\" << j << \")\";\n"
-                    "slha[\"IM{0}\"][\"\"] << i << j << (*{3})(i,j).im << "
-                    "\"# Im({0}(\" << i << \",\" << j << \"))\";\n"
-                    "}}\n"
-                    "}}\n"
-            ).format(block, i, j, f)
+
+            # Is it a real matrix?
+            real = reality_dict[oname]
+
+            # If it's a real matrix don't need to take the real part.
+            # Just add it.
+            if real == True:
+                towrite += (
+                        "for(int i=1; i<={1}; i++)\n"
+                        "{{\n"
+                        "for(int j=1; j<={2}; j++)\n"
+                        "{{\n"
+                        "slha[\"{0}\"][\"\"] << i << j << (*{3})(i,j) << "
+                        "\"# {0}(\" << i << \",\" << j << \")\";\n"
+                        "}}\n"
+                        "}}\n"
+                ).format(block, i, j, oname)
+            else:
+                # Add the imaginary block if it's not declared real. 
+                # Then add the loop for the matrix.
+                addedblocks.append("IM"+block)
+                towrite += (
+                        "SLHAea_add_block(slha, \"IM{0}\", Q);\n"
+                        "for(int i=1; i<={1}; i++)\n"
+                        "{{\n"
+                        "for(int j=1; j<={2}; j++)\n"
+                        "{{\n"
+                        "slha[\"{0}\"][\"\"] << i << j << (*{3})(i,j).re << "
+                        "\"# {0}(\" << i << \",\" << j << \")\";\n"
+                        "slha[\"IM{0}\"][\"\"] << i << j << (*{3})(i,j).im << "
+                        "\"# Im({0}(\" << i << \",\" << j << \"))\";\n"
+                        "}}\n"
+                        "}}\n"
+                ).format(block, i, j, oname)
 
 
-    towrite += "\n"\
-      "// Block MASS\n"\
-      'SLHAea_add_block(slha, "MASS")\n'
+    towrite += (
+            "\n"
+            "// Block MASS\n"
+            "SLHAea_add_block(slha, \"MASS\")\n"
+    )
 
     for particle in particles:
         mass = re.sub("\d","",particle.alt_mass_name)
