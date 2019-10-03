@@ -11,4 +11,4 @@ math:
 # Outputs for GUM to hook up to GAMBIT
 output:
   spheno: true
-  vevacious: true
+  #vevacious: true

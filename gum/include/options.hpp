@@ -180,4 +180,31 @@ class Parameter
 
 };
 
+class Error
+{
+    bool _is_error;
+    std::string _what;
+
+    public:
+
+        // Needed for Boost.python interface
+        bool operator==(const Parameter&) {return false;}
+        bool operator!=(const Parameter&) {return true;}
+
+        Error()
+        {
+          _is_error = false;
+          _what = "";
+        }
+
+        bool is_error() { return _is_error; }
+        std::string what() { return _what; }
+
+        void raise(std::string what)
+        {
+          _is_error = true;
+          _what = what;
+        }
+};
+
 #endif

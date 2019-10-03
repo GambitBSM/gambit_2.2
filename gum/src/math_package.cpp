@@ -137,7 +137,7 @@ namespace GUM
   void Math_Package::get_from_math(int &val)
   {
     if(!WSGetInteger(link, &val))
-      throw std::runtime_error("WSTP Error: Failed to retrieve an interger");
+      throw std::runtime_error("WSTP Error: Failed to retrieve an integer");
   }
   
   // Get a float variable from Mathematica via WSTP

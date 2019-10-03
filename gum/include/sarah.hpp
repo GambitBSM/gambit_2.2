@@ -79,8 +79,9 @@ namespace GUM
 
    
   // Everything
-  void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&, 
-                 std::map<std::string,bool>&, std::map<std::string, std::string>&);
+  void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, 
+                 Outputs&, std::vector<std::string>&, std::map<std::string,bool>&, 
+                 std::map<std::string, std::string>&, Error &error);
 
 } // namespace GUM
  

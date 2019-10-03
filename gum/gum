@@ -141,10 +141,14 @@ if args.file:
         outputs = SARAHOutputs()
         backends = SARAHBackends()
         mixings = SARAHMixings()
+        error = SARAHError()
         backends.extend(x for x in output_opts.bes())
 
         # Hit it
-        all_sarah(options, partlist, paramlist, outputs, backends, flags, mixings)
+        all_sarah(options, partlist, paramlist, outputs, backends, flags, mixings, error)
+
+        if error.is_error():
+            raise GumError(error.what() )
 
         # Get a list of all non-SM particles
         sarah_bsm = [x for x in partlist if x.SM() is False]
@@ -310,9 +314,6 @@ if args.file:
         spheno_src, spheno_header = write_spheno_frontends(clean_model_name, parameters, bsm_particle_list, 
                                                            flags, patched_spheno_dir, output_dir, 
                                                            blockparams, gambit_pdgs, mixings)
-
-        import sys
-        sys.exit("Done for now.")
 
         # Write out the frontend header and source files
         write_backend_frontends(output_dir, gum.name, "SARAHSPheno", SPHENO_VERSION, spheno_header, spheno_src)
@@ -516,6 +517,8 @@ if args.file:
         print("Dry run finished.")
         print("")
         exit()
+    #TODO: for now do not write anything, ever
+    exit()
 
     print("")
     print("Now putting the new code into GAMBIT.")

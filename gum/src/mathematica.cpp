@@ -33,6 +33,7 @@ int main(int argc, char** argv)
     std::map<std::string, bool> flags;
     std::vector<std::string> backends;
     std::map<std::string, std::string> mixings;
+    Error error;
 
     // Attempt to parse the user's command line input...
     try
@@ -58,7 +59,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
         
-            GUM::all_sarah(options, partlist, paramlist, outputs, backends, flags, mixings);
+            GUM::all_sarah(options, partlist, paramlist, outputs, backends, flags, mixings, error);
         }
     }
     catch(const char* e)

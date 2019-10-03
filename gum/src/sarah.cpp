@@ -356,7 +356,7 @@ namespace GUM
         // Whether the LHblock is a mixing matrix [of some size]
         bool ismixing = false;
 
-        command = "pd[[" + std::to_string(i+1) + ",1]]";
+        command = "pd[[" + std::to_string(i+1) + ",1]]//ToString";
         send_to_math(command);
 
         // Get the parameter name as it is known in SARAH. This
@@ -499,35 +499,52 @@ namespace GUM
     std::vector<std::vector<std::string> > minpar;
     std::vector<std::vector<std::string> > extpar;
 
-    // Check if MINPAR is a list first
-    bool is_list;
-    send_to_math("Head[MINPAR]===List");
-    get_from_math(is_list);
+    std::string command = "";
 
-    if(is_list)
+    try
     {
-      // Get the MINPAR list
-      send_to_math("MINPAR");
-      get_from_math(minpar);
 
-      // Add MINPAR parameters to the parameter list
-      for(std::vector<std::string> par : minpar)
-        parameters.push_back(Parameter(par[1], "MINPAR", std::stoi(par[0])));
+      // Check if MINPAR is a list first
+      bool is_list;
+      command = "Head[MINPAR]===List";
+      send_to_math(command);
+      get_from_math(is_list);
+
+      if(is_list)
+      {
+        // Get the MINPAR list
+        command = "MINPAR";
+        send_to_math(command);
+        get_from_math(minpar);
+
+        // Add MINPAR parameters to the parameter list
+        for(std::vector<std::string> par : minpar)
+          parameters.push_back(Parameter(par[1], "MINPAR", std::stoi(par[0])));
+      }
+
+      // Check if EXTPAR is a list
+      command = "Head[EXTPAR]===List";
+      send_to_math(command);
+      get_from_math(is_list);
+
+      if(is_list)
+      {
+        // Get the EXTPAR list
+        command = "EXTPAR";
+        send_to_math(command);
+        get_from_math(extpar);
+
+        // Add EXTPAR parameters to the parameter list
+        for(std::vector<std::string> par : extpar)
+          parameters.push_back(Parameter(par[1], "EXTPAR", std::stoi(par[0])));
+      }
+
     }
-
-    // Check if EXTPAR is a list
-    send_to_math("Head[EXTPAR]===List");
-    get_from_math(is_list);
-
-    if(is_list)
+    catch (std::runtime_error &e)
     {
-      // Get the EXTPAR list
-      send_to_math("EXTPAR");
-      get_from_math(extpar);
-
-      // Add EXTPAR parameters to the parameter list
-      for(std::vector<std::string> par : extpar)
-        parameters.push_back(Parameter(par[1], "EXTPAR", std::stoi(par[0])));
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
     }
 
   }
@@ -537,75 +554,96 @@ namespace GUM
   {
     std::cout << "Extracting in-out blocks from SPheno" << std::endl;
 
-    // Check if Combindedblock is a list
-    bool is_list;
-    send_to_math("Head[CombindedBlock]===List");
-    get_from_math(is_list);
+    std::string command = "";
 
-    if(is_list)
+    try
     {
 
       // Get the length of the CombindedBlock, as the shape is not a vector<string>
       int length;
-      send_to_math("Length[CombindedBlock]");
+      command = "Length[CombindedBlock]";
+      send_to_math(command);
       get_from_math(length);
 
       for(int i=1; i<=length; i++)
       {
         // Get the name of the block
         std::string blockname;
-        send_to_math("CombindedBlock[["+std::to_string(i)+",1]]");
+        command = "CombindedBlock[["+std::to_string(i)+",1]]";
+        send_to_math(command);
         get_from_math(blockname);
         blockname = blockname + "IN";
 
         // Now get the parameters in the block
-        std::vector<std::vector<std::string> > blockpars;
-        send_to_math("CombindedBlock[["+std::to_string(i)+",2;;]]");
-        get_from_math(blockpars);
+        int block_length;
+        command = "Length[CombindedBlock[["+std::to_string(i)+"]]]";
+        send_to_math(command);
+        get_from_math(block_length);
 
-        for(auto blockpar :  blockpars)
+        for(int j=2; j<=block_length; j++)
         {
+
+          std::string parname;
+          command = "CombindedBlock[["+std::to_string(i)+","+std::to_string(j)+",1]] // ToString";
+          send_to_math(command);
+          get_from_math(parname);
+
+          std::string parindex;
+          command = "CombindedBlock[["+std::to_string(i)+","+std::to_string(j)+",2]]";
+          send_to_math(command);
+          get_from_math(parindex);
+
           // Get the output name and remove params that have dependencies
           int pdlength;
-          send_to_math("Length[pd]");
+          command = "Length[pd]";
+          send_to_math(command);
           get_from_math(pdlength);
 
           for(int j=1; j<=pdlength; j++)
           {
             std::string name;
-            send_to_math("pd[["+std::to_string(j)+",1]]//ToString");
+            command = "pd[["+std::to_string(j)+",1]]//ToString";
+            send_to_math(command);
             get_from_math(name);
 
-            if(name == blockpar[0])
+            if(name == parname)
             {
               std::string entry;
 
-              send_to_math("DependenceNum /. pd[[" + std::to_string(j) + ",2]] // ToString");
+              command = "DependenceNum /. pd[[" + std::to_string(j) + ",2]] // ToString";
+              send_to_math(command);
               get_from_math(entry);
               if (entry != "DependenceNum" and entry != "None") continue;
 
-              send_to_math("DependenceSPheno /. pd[[" + std::to_string(j) + ",2]] // ToString");
+              command = "DependenceSPheno /. pd[[" + std::to_string(j) + ",2]] // ToString";
+              send_to_math(command);
               get_from_math(entry);
               if (entry != "DependenceSPheno" and entry != "None") continue;
 
-              send_to_math("Dependence /. pd[[" + std::to_string(j) + ",2]] // ToString");
+              command = "Dependence /. pd[[" + std::to_string(j) + ",2]] // ToString";
+              send_to_math(command);
               get_from_math(entry);
               if (entry != "Dependence" and entry != "None") continue;
 
               std::string outputname;
-              send_to_math("OutputName/.pd[["+std::to_string(j)+",2]]//ToString");
+              command = "OutputName/.pd[["+std::to_string(j)+",2]]//ToString";
+              send_to_math(command);
               get_from_math(outputname);
-              if(outputname == "OutputName") outputname = blockpar[0];
+              if(outputname == "OutputName") outputname = parname;
 
-              parameters.push_back(Parameter(outputname, blockname, std::stoi(blockpar[1])));
+              parameters.push_back(Parameter(outputname, blockname, std::stoi(parindex)));
 
             }
-
           }
-
         }
-      }
 
+      }
+    }
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
     }
   }
 
@@ -614,26 +652,40 @@ namespace GUM
   {
     std::cout << "Getting boundary conditions" << std::endl;
 
-    // TODO: for now just get the low scale conditions
-    bool is_list;
-    send_to_math("Head[BoundaryLowScaleInput]===List");
-    get_from_math(is_list);
-    if(is_list)
-    {
-      std::vector<std::vector<std::string> > boundary_conditions;
-      send_to_math("BoundaryLowScaleInput");
-      get_from_math(boundary_conditions);
+    std::string command = "";
 
-      for(auto param = parameters.begin(); param != parameters.end(); param++)
+    try
+    {
+      // TODO: for now just get the low scale conditions
+      int bc_len;
+      command = "Length[BoundaryLowScaleInput]";
+      send_to_math(command);
+      get_from_math(bc_len);
+      for(int i=1; i<=bc_len; i++)
       {
-        for (auto bc: boundary_conditions)
+        std::string bc_name;
+        command = "BoundaryLowScaleInput[["+std::to_string(i)+",1]] // ToString";
+        send_to_math(command);
+        get_from_math(bc_name);
+
+        std::string bc;
+        command = "BoundaryLowScaleInput[["+std::to_string(i)+",2]] // ToString";
+        send_to_math(command);
+        get_from_math(bc);
+
+        for(auto param = parameters.begin(); param != parameters.end(); param++)
         {
-          if (param->name() == bc[0] or param->alt_name() == bc[0])
-            param->set_bcs(bc[1]);
+          if (param->name() == bc_name or param->alt_name() == bc_name)
+              param->set_bcs(bc);
         }
       }
     }
-
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
+    }
   }
 
   // Extract parameters used to solve tadpoles and remove them from the list
@@ -641,24 +693,36 @@ namespace GUM
   {
     std::cout << "Extracting parameters to solve tadpoles" << std::endl;
 
-    bool is_list; 
-    send_to_math("Head[ParametersToSolveTadpoles]===List");
-    get_from_math(is_list);
-    if(is_list)
+    std::string command = "";
+
+    try
     {
-      std::vector<std::string> tadpoles;
-      send_to_math("ParametersToSolveTadpoles");
-      get_from_math(tadpoles);
+      bool is_list; 
+      command = "Head[ParametersToSolveTadpoles]===List";
+      send_to_math(command);
+      get_from_math(is_list);
+      if(is_list)
+      {
+        std::vector<std::string> tadpoles;
+        command = "ParametersToSolveTadpoles";
+        send_to_math(command);
+        get_from_math(tadpoles);
 
-      for(auto param = parameters.begin(); param != parameters.end(); param++)
-        for(auto tp : tadpoles)
-          if (param->name() == tp or param->alt_name() == tp)
-          {
-            param--;
-            parameters.erase(param+1);
-          }
+        for(auto param = parameters.begin(); param != parameters.end(); param++)
+          for(auto tp : tadpoles)
+            if (param->name() == tp or param->alt_name() == tp)
+            {
+              param--;
+              parameters.erase(param+1);
+            }
+      }
     }
-
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
+    }
   }
 
   // Add the names of spheno masses to all particles
@@ -666,15 +730,28 @@ namespace GUM
   {
     std::cout << "Adding SPheno masses" << std::endl;
 
-    for (auto part = particles.begin(); part != particles.end(); part++)
+    std::string command = "";
+
+    try
     {
-      std::string sarah_mass;
 
-      send_to_math("SPhenoMass[" + part->alt_name() + "]");
-      get_from_math(sarah_mass);
+      for (auto part = particles.begin(); part != particles.end(); part++)
+      {
+        std::string sarah_mass;
 
-      Particle temp_part(part->pdg(), part->name(), part->spinX2(), part->chargeX3(), part->color(), part->SM(), part->mass(), part->antiname(), part->alt_name(), sarah_mass);
-      (*part) =  temp_part;
+        command = "SPhenoMass[" + part->alt_name() + "]";
+        send_to_math(command);
+        get_from_math(sarah_mass);
+
+        Particle temp_part(part->pdg(), part->name(), part->spinX2(), part->chargeX3(), part->color(), part->SM(), part->mass(), part->antiname(), part->alt_name(), sarah_mass);
+        (*part) =  temp_part;
+      }
+    }
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
     }
   }
 
@@ -683,71 +760,80 @@ namespace GUM
   {
     std::cout << "Getting mixing matrices from SARAH..." << std::endl;
 
-    std::string command;
-    command = "d = DEFINITION[EWSB][MatterSector];";
-    send_to_math(command);
+    std::string command = "";
 
-    // Find out how many (sets of) mixing matrices there are...
-    int len;
-    command = "Length[d]";
-    send_to_math(command);
-    get_from_math(len);
-  
-    for(int i=1; i<=len; i++)
+    try
     {
-      std::vector<std::string> eigenpairs;
-      // Make this one list, easier to parse
-      command = "a = Flatten[d[[" + std::to_string(i) + ",2]]]";
+      command = "d = DEFINITION[EWSB][MatterSector];";
       send_to_math(command);
-      get_from_math(eigenpairs);
 
-      // Check we haven't got additional entries
-      int size = eigenpairs.size();
-
-      if(size % 2)
-        throw std::runtime_error("Not an even number of matrix-eigenstate pairs! Check your SARAH file.");
-
-      // List should look like: {<EIGENSTATE_1>, <MIXING_MATRIX_1>, <EIGENSTATE_2>, <MIXING_MATRIX_2>, ...}
-      for(int i=0; i<size; i++)
+      // Find out how many (sets of) mixing matrices there are...
+      int len;
+      command = "Length[d]";
+      send_to_math(command);
+      get_from_math(len);
+  
+      for(int i=1; i<=len; i++)
       {
-        std::string eigenstate = eigenpairs[i];
-        std::string mixingmat = eigenpairs[i+1];
-
-        int len2;
-
-        // Check to see if the mixing matrix has a different OutputName
-        command = "Length[pd]";
+        std::vector<std::string> eigenpairs;
+        // Make this one list, easier to parse
+        command = "a = Flatten[d[[" + std::to_string(i) + ",2]]]";
         send_to_math(command);
-        get_from_math(len2);
+        get_from_math(eigenpairs);
 
-        for(int j=0; j<len2; j++)
+        // Check we haven't got additional entries
+        int size = eigenpairs.size();
+
+        if(size % 2)
+          throw std::runtime_error("Not an even number of matrix-eigenstate pairs! Check your SARAH file.");
+
+        // List should look like: {<EIGENSTATE_1>, <MIXING_MATRIX_1>, <EIGENSTATE_2>, <MIXING_MATRIX_2>, ...}
+        for(int i=0; i<size; i++)
         {
-          std::string pname;
-          command = "pd[[" + std::to_string(j+1) + ",1]]";
+          std::string eigenstate = eigenpairs[i];
+          std::string mixingmat = eigenpairs[i+1];
+ 
+          int len2;
+
+          // Check to see if the mixing matrix has a different OutputName
+          command = "Length[pd]";
           send_to_math(command);
-          get_from_math(pname);
-          if(pname == mixingmat)
+          get_from_math(len2);
+
+          for(int j=0; j<len2; j++)
           {
-            std::string oname;
-            command = "OutputName /. pd[[" + std::to_string(j+1) + ",2]] // ToString";
+            std::string pname;
+            command = "pd[[" + std::to_string(j+1) + ",1]] // ToString";
             send_to_math(command);
-            get_from_math(oname);
-            if(oname == "OutputName")
+            get_from_math(pname);
+            if(pname == mixingmat)
             {
-              mixings[mixingmat] = eigenstate;
-            }
-            else
-            {
-              mixings[oname] = eigenstate;
+              std::string oname;
+              command = "OutputName /. pd[[" + std::to_string(j+1) + ",2]] // ToString";
+              send_to_math(command);
+              get_from_math(oname);
+              if(oname == "OutputName")
+              {
+                mixings[mixingmat] = eigenstate;
+              }
+              else
+              {
+               mixings[oname] = eigenstate;
+              }
             }
           }
+          // Increment again; need to do +2 each iteration.
+          i++;
         }
-        // Increment again; need to do +2 each iteration.
-        i++;
+
       }
-
     }
-
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
+    }
   }
 
   // Write CalcHEP output.
@@ -821,9 +907,10 @@ namespace GUM
   }
 
   // Do all operations with SARAH
-  void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, 
-                 std::vector<std::string> &backends, std::map<std::string,bool> &flags, 
-                 std::map<std::string, std::string> &mixings)
+  void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist,
+                 Outputs &outputs, std::vector<std::string> &backends,
+                 std::map<std::string,bool> &flags, std::map<std::string, std::string> &mixings,
+                 Error &error)
   {
 
     try
@@ -918,7 +1005,7 @@ namespace GUM
     }
     catch(std::exception &e)
     {
-      std::cerr << e.what() << std::endl;
+      error.raise("SARAH Error: " + std::string(e.what()));
     }
   }
 
@@ -964,6 +1051,11 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("get_mg",   &Outputs::get_mg)
     .def("get_sph",  &Outputs::get_sph)
     .def("get_vev",  &Outputs::get_vev)
+    ;
+
+  class_<Error>("SARAHError", init<>())
+    .def("is_error", &Error::is_error)
+    .def("what", &Error::what)
     ;
 
   class_< std::vector<Particle> >("SARAHVectorOfParticles")

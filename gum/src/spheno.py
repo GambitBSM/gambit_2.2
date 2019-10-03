@@ -79,7 +79,7 @@ def patch_spheno(model_name, patch_dir, flags):
 
 
     if flags["SupersymmetricModel"] :
-        patch_model_data(model_name, flags, patch_dir)
+        patch_model_data(model_name, patch_dir)
         patch_3_body_decays_susy(model_name, patch_dir)
 
     print("SPheno files patched.")
@@ -1074,10 +1074,16 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # Mixings.
     towrite += "// Mixings\n"
+    for blockparam in blockparams:
+      print blockparam, blockparams[blockparam]
+    for mixing in mixings:
+      print mixing
     for par in parameters:
+        print par.name, par.block
         # If there's no block, er... skip this.
         if not par.block: continue
         if not par.block in blockparams: continue
+        print blockparams[par.block]
         # Is it a mixing matrix?
         if 'mixingmatrix' in blockparams[par.block]:
             size = blockparams[par.block]['mixingmatrix']
@@ -1174,11 +1180,41 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                "double corrf;\n"\
                "\n"\
 
-    # TODO: Fill model dependent pdg vector
+    towrite += "std::vector<int> pdg = {\n"
+    nparticles = len(particles);
+    for i, particle in enumerate(particles):
+        towrite += str(particle.PDG_code)
+        if i < nparticles-1: towrite += ", // " + particle.name + '\n'
+        else : towrite += " // " + particle.name + '\n'
 
-    towrite += "int n_particles = pdg.size();\n"
+    towrite += "};\n"\
+               "int n_particles = pdg.size();\n"
 
-    # TODO: Fill model dependent gT and BR lambdas
+    towrite += "auto gT = [&](int i)\n"\
+               "{\n"
+    for i, particle in enumerate(particles) :
+        name = re.sub("\d","",particle.alt_name)
+        index = re.sub(r"[A-Za-z]","",particle.alt_name)
+        brace = "(i-" + str(i-int(index)+1) + ")" if index else ""
+        if i == 0:
+            towrite += "if(i==1) return (*gT" + name + ")" + brace + ";\n"
+        else :
+            towrite += "else if(i==" + str(i+1) + ") return (*gT" + name + ")" + brace + ";\n"
+    towrite += "return 0.0;\n"\
+               "};\n"\
+               "\n"\
+               "auto BR = [&](int i, int j)\n"\
+               "{\n"
+    for i, particle in enumerate(particles) :
+        name = re.sub("\d","",particle.alt_name)
+        index = re.sub(r"[A-Za-z]","",particle.alt_name)
+        brace = "(i-" + str(i-int(index)+1) + " ,j)"
+        if i == 0:
+            towrite += "if(i==1) return (*gT" + name + ")" + brace + ";\n"
+        else :
+            towrite += "else if(i==" + str(i+1) + ") return (*gT" + name + ")" + brace + ";\n"
+    towrite += "return 0.0;\n"\
+               "}\n\n"
 
     towrite += "for(int i=0; i<n_particles; i++)\n"\
                "{\n"\
@@ -1217,7 +1253,42 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
       "\n"
 
-    # TODO: Add rotation of fermion masses in for SUSY models
+    # TODO: number of Chis
+    for par in parameters:
+      print par.name
+    for name, var in variables.iteritems():
+      print name
+    if flags["SupersymmetricModel"] and ("Chi" in [par.name for par in parameters]):
+        size = ""
+        for par in parameters:
+          if par.name == "ZN":
+            size = blockparams[par.block]['mixingmatrix']
+        i,j = size.split('x')
+
+        towrite += "// Make sure to rotate back the sign on MChi\n"\
+                 "if(not *RotateNegativeFermionMasses)\n"\
+                 "{\n"\
+                 "for(int i=1; i<="+i+"; i++)\n"\
+                 "{\n"\
+                 "double remax = 0, immax = 0;\n"\
+                 "for(int j=1; j<="+j+"; j++)\n"\
+                 "{\n"\
+                 "if(abs((*ZN)(i,j).re) > remax) remax = abs((*ZN)(i,j).re);\n"\
+                 "if(abs((*ZN)(i,j).im) > immax) immax = abs((*ZN)(i,j).im);\n"\
+                 "}\n"\
+                 "if(immax > remax)\n"\
+                 "{\n"\
+                 "(*MChi)(i) *= -1;\n"\
+                 "for(int j=1; j<="+j+"; j++)\n"\
+                 "{\n"\
+                 "double old = (*ZN)(i,j).re;\n"\
+                 "(*ZN)(i,j).re = (*ZN)(i,j).im;\n"\
+                 "(*ZN)(i,j).im = -old;\n"\
+                 "}\n"\
+                 "}\n"\
+                 "}\n"\
+                 "}\n"\
+                 "\n"
 
     towrite += "// Spectrum generator information\n"\
       'SLHAea_add_block(slha, "SPINFO");\n'\
@@ -1416,7 +1487,17 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "// Block MASS\n"\
       'SLHAea_add_block(slha, "MASS")\n'
 
-    # TODO: Particle masses
+    for particle in particles:
+        mass = re.sub("\d","",particle.alt_mass_name)
+        index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
+        brace = "(" + str(index) + ")" if index else ""
+
+        towrite += 'slha["MASS"][""] << ' + particle.PDG_code + ' << (*' + mass + ")" + brace + '<< "# ' + particle.name + "_" + str(index) + '";\n'
+
+    towrite += 'slha["MASS"][""] << 23 << *MVZ << "# VZ";\n'\
+               'slha["MASS"][""] << 24 << *MVWm << "# VWm";\n'\
+               '\n'
+
     towrite += "\n"\
       '// Check whether any of the masses is NaN\n'\
       'auto block = slha["MASS"];\n'\
@@ -1436,14 +1517,35 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '{\n'\
       'SLHAea_add_block(slha, "DMASS");\n'
 
-    # TODO: MD Mass uncertainty
+    # TODO: check that order of entries corresponds to order of particles
+    for i,particle in enumerate(particles):
+        mass = re.sub("\d","",particle.alt_mass_name)
+        index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
+
+        towrite += 'slha["DMASS"][""] << ' + particle.PDG_code + ' << sqrt(pow((*mass_uncertainty_Q)(' + i+1 + '),2)+pow((*mass_uncertainty_Yt)(' + i+1 + '),2)) << "# ' + particle.name + "_" + str(index) + '";\n'
+
 
     towrite += "\n"\
       "// Do the W mass separately.  Here we use 10 MeV based on the size of corrections from two-loop papers and advice from Dominik Stockinger.\n"\
       'slha["DMASS"][""] << 24 << 0.01 / *mW << " # mW";\n'\
       '}\n'
 
-    # TODO: MD Rotation matrices
+    # TODO: Might not be getting the right stuff, this is supposed to be all XXXMIX blocks
+    # TODO: If par is complex add .re to all and add IMXXXMIX block
+    for blockparam in blockparams:
+      print blockparam
+      towrite += 'SLHAea_add_block(slha, "' + blockparam + ', Q);\n'
+
+      size = blockparams[blockparam]['mixingmatrix']
+      i,j = size.split('x')
+      towrite += "for(int i=1; i<="+i+"; i++)\n"\
+                 "{\n"\
+                 "for(int j=1; j<="+j+"; j++)\n"\
+                 "{\n"\
+                 'slha["'+blockparam+'"][""] << i << j << (*' + param.name + ')(i,j) << "# ' + param.name + '(" << i << "," << j << ")";\n'\
+                 "}\n"\
+                 "}\n\n"
+
 
     towrite += "\n"\
       "// Block SPhenoINFO\n"\
@@ -1918,6 +2020,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # TODO: The name of model parameters might be wrong
     for name, var in variables.iteritems():
+      print name, var.block
       if var.block == "EXTPAR" :
         model_par = get_model_par_name(name, variables)
         towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'

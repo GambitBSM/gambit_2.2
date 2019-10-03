@@ -928,7 +928,7 @@ set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(sarahdir "${PROJECT_SOURCE_DIR}/Models/data/SARAH/${Model}/EWSB/SPheno")
 file(GLOB sarahfiles  "${sarahdir}/[a-zA-Z0-9]*")
 set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} COMMAND mkdir "${dir}/${Model}" COMMAND cp -r "${sarahfiles}" "${dir}/${Model}" COMMAND ls
