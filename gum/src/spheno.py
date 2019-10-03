@@ -1074,16 +1074,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # Mixings.
     towrite += "// Mixings\n"
-    for blockparam in blockparams:
-      print blockparam, blockparams[blockparam]
-    for mixing in mixings:
-      print mixing
     for par in parameters:
-        print par.name, par.block
         # If there's no block, er... skip this.
         if not par.block: continue
         if not par.block in blockparams: continue
-        print blockparams[par.block]
         # Is it a mixing matrix?
         if 'mixingmatrix' in blockparams[par.block]:
             size = blockparams[par.block]['mixingmatrix']
