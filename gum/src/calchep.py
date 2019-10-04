@@ -125,7 +125,7 @@ def clean_calchep_model_files(model_folder, model_name):
                 elif re.match("alphaH", first_entry):
                     temp.write(clean(line))
 
-                # Gluino phase (???)
+                # Gluino phase
                 elif re.match("pG", first_entry):
                     temp.write(clean(line))
 
@@ -142,9 +142,10 @@ def clean_calchep_model_files(model_folder, model_name):
             elif re.match("TW", first_entry):
                 temp.write(clean(line))
 
-            # Only want g3 of the SM coupling constants.
-            elif re.match("g3", first_entry):
-                temp.write(clean(line))
+            # This is ok I think.
+            # # Only want g3 of the SM coupling constants.
+            # elif re.match("g3", first_entry):
+            #     temp.write(clean(line))
 
             # If no criteria has been matched - go ahead. For example,
             # vertices & variables defined internally, e.g. Higgs self coupling
@@ -186,8 +187,6 @@ def clean_calchep_model_files(model_folder, model_name):
 
         print("CalcHEP model files cleaned!")
         
-        # TODO - move CalcHEP files to backend folder.
-
     # If the model folder does not exist
     else:
         raise GumError("\n\nCalcHEP model folder " + model_folder + " not found.")
@@ -225,6 +224,11 @@ def get_vertices(foldername):
 
         # Dict of particle + PDG code
         particle_PDG_conversion = {}
+        # Dict of PDG code + mass, known to CH
+        particle_mass_conversion = {}
+        # Dict of PDG code + width, known to CH
+        particle_width_converstion = {}
+
         aux_particles = []
 
         # Now take in information from particles file to convert interactions to PDG codes
@@ -241,6 +245,12 @@ def get_vertices(foldername):
 
                 # Add particle + code
                 particle_PDG_conversion[parts[1]] = int(parts[3])
+
+                # And PDG + mass
+                particle_mass_conversion[int(parts[3])] = parts[5]
+
+                # And PDG + width
+                particle_width_converstion[int(parts[3])] = parts[6]
 
                 # Is a particle it's own antiparticle?
                 if parts[1] != parts[2]:
@@ -305,7 +315,9 @@ def get_vertices(foldername):
             else:
                 interactions[i].SM = False
 
-        return interactions, particle_PDG_conversion, aux_particles
+        return( interactions, particle_PDG_conversion, 
+                particle_mass_conversion, particle_width_converstion,
+                aux_particles )
 
     # If the model folder does not exist
     else:

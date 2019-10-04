@@ -122,7 +122,10 @@ class SpectrumParameter:
             self.gb_in = name
         else:
             self.gb_in = gb_input
-        self.alt_name = alt_name
+        if not alt_name:
+            self.alt_name = name
+        else:
+            self.alt_name = alt_name
         self.bcs = bcs
           
 class BackendReq:

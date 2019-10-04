@@ -64,7 +64,7 @@ namespace GUM
         std::cout << "SARAH loaded from " << out << "." << std::endl;
     }
 
-    input+= "<<SARAH`";
+    input = "<<SARAH`";
     send_to_math(input);
 
   }
@@ -91,7 +91,6 @@ namespace GUM
       // ...Assuming someone hasn't set the model name to 'ModelName' which would be unbelievably annoying and vastly silly.
       if (modelname == "ModelName")
         throw std::runtime_error("SARAH Error: Could not load model " + model + ". Please check your SARAH file.");
-
 
       // All good.
       std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
@@ -137,6 +136,26 @@ namespace GUM
     
     }
     catch(...) { throw; }
+  }
+
+  // Computes the vertices at EWSB
+  void SARAH::calculate_vertices()
+  {
+    std::cout << "Calculating vertices..." << std::endl;
+
+    std::string command = "";
+
+    try
+    {
+      command = "MakeVertexList[EWSB];";
+      send_to_math(command);
+    }
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
+    }
   }
 
   // Get particles list
@@ -781,89 +800,6 @@ namespace GUM
     }
   }
 
-  // // Gets all of the parameters that have a dependence in SPheno, and 
-  // // stores their definitions
-  // void SARAH::get_spheno_dependences(std::vector<Parameter> &dependentparams)
-  // {
-  //   std::cout << "Getting SPheno dependencies from SARAH..." << std::endl;
-
-  //   std::string command = "";
-
-  //   try 
-  //   {
-  //     // Find out how many parameters we have to get.
-  //     command = "Length[pd]";
-  //     send_to_math(command);
-
-  //     int lenpl;
-  //     get_from_math(lenpl);
-
-  //     for(int i=0; i<lenpl; i++)
-  //     {
-  //       std::string block;
-  //       std::string paramname;
-  //       std::string alt_paramname;
-  //       bool real = false;
-  //       int index = 1;
-  //       bool LHblock = false;
-        
-  //       std::string cdef;
-  //       std::string entry;
-
-  //       // See if there is a DependenceSPheno entry...
-  //       command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
-  //       send_to_math(command);
-  //       get_from_math(entry);
-
-  //       // If there's something worth getting, use Mathematica's terrible CForm output.
-  //       // We'll amend this in GUM -- string replacement is nicer in Python :-)
-  //       if (entry != "DependenceSPheno" and entry != "None")
-  //       {
-  //         command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // CForm // ToString";
-  //         send_to_math(command);
-  //         get_from_math(cdef);
-  //       }
-  //       else continue;
-
-  //       command = "Real /. pd[[" + std::to_string(i+1) + ", 2]] // ToString";
-  //       send_to_math(command);
-  //       get_from_math(entry);
-  //       if (entry == "True") real = true;
-
-  //       // Get the paramname
-  //       command = "pd[[" + std::to_string(i+1) + ",1]]//ToString";
-  //       send_to_math(command);
-
-  //       // Get the parameter name as it is known in SARAH.
-  //       get_from_math(paramname);
-
-  //       // See if it is know as something different in SPheno
-  //       command = "OutputName /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
-  //       send_to_math(command);
-  //       get_from_math(entry);
-  //       if (entry != "OutputName") 
-  //       { 
-  //           paramname = entry;
-  //       }
-
-  //       Parameter parameter(paramname, block )
-  //       Parameter parameter(paramname, block, index, alt_paramname, 
-  //                           real, shape, is_output);
-  //       paramlist.push_back(parameter);
-
-  //       // Add it to the dict
-  //       dependentparams[paramname] = cdef;
-
-  //     }
-  //   }
-  //   catch (std::runtime_error &e)
-  //   {
-  //     std::stringstream ss;
-  //     ss << e.what() << ": Last command: " << command;
-  //     throw std::runtime_error(ss.str());
-  //   }
-  // }
-
   // Returns the eigenstate & mixing matrix after EWSB 
   void SARAH::get_mixing_matrices(std::map<std::string, std::string> &mixings)
   {
@@ -908,19 +844,21 @@ namespace GUM
           command = "Length[pd]";
           send_to_math(command);
           get_from_math(len2);
-
+          
           for(int j=0; j<len2; j++)
           {
             std::string pname;
             command = "pd[[" + std::to_string(j+1) + ",1]] // ToString";
             send_to_math(command);
             get_from_math(pname);
+
             if(pname == mixingmat)
             {
               std::string oname;
               command = "OutputName /. pd[[" + std::to_string(j+1) + ",2]] // ToString";
               send_to_math(command);
               get_from_math(oname);
+
               if(oname == "OutputName")
               {
                 mixings[mixingmat] = eigenstate;
@@ -929,12 +867,12 @@ namespace GUM
               {
                mixings[oname] = eigenstate;
               }
+              continue;
             }
           }
           // Increment again; need to do +2 each iteration.
           i++;
         }
-
       }
     }
     catch (std::runtime_error &e)
@@ -1029,6 +967,9 @@ namespace GUM
       // Create SARAH object, open link to Mathematica, load SARAH and the model
       SARAH model(opts.model());
 
+      // Compute the vertices here
+      model.calculate_vertices();
+
       // Get all of the particles
       model.get_partlist(partlist);
 
@@ -1041,8 +982,9 @@ namespace GUM
       // Where the outputs all live
       std::string outputdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/";
 
-      /// Write CalcHEP output
-      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+      /// Write CalcHEP output (for MicrOmegas also)
+      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end()   ||
+          std::find(backends.begin(), backends.end(), "micromegas") != backends.end() )
       {
         model.write_ch_output();
 

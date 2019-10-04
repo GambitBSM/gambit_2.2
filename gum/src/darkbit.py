@@ -587,7 +587,9 @@ def write_darkbit_rollcall(model_name, pc, dd):
 
 
 
-def write_micromegas(gambit_model_name, mathpackage, params):
+def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
+                         particles, gambit_pdg_codes, calchep_masses, 
+                         calchep_widths):
     """
     Writes frontend source and header files for a new MicrOmegas model.
 
@@ -610,9 +612,9 @@ def write_micromegas(gambit_model_name, mathpackage, params):
             "\n"
             "// Convenience functions (definitions)\n"
             "BE_NAMESPACE\n"
-            "{\n"
+            "{{\n"
             "double dNdE(double Ecm, double E, int inP, int outN)\n"
-            "{\n"
+            "{{\n"
             "// outN 0-5: gamma, e+, p-, nu_e, nu_mu, nu_tau\n"
             "// inP:  0 - 6: glu, d, u, s, c, b, t\n"
             "//       7 - 9: e, m, l\n"
@@ -623,17 +625,17 @@ def write_micromegas(gambit_model_name, mathpackage, params):
             "// readSpectra();\n"
             "mInterp(Ecm/2, inP, outN, tab);\n"
             "return zInterp(log(E/Ecm*2), tab);\n"
-            "}\n"
-            "}\n"
+            "}}\n"
+            "}}\n"
             "END_BE_NAMESPACE\n"
             "\n"
             "// Initialisation function (definition)\n"
             "BE_INI_FUNCTION\n"
-            "{\n"
+            "{{\n"
             "int error;\n"
             "char cdmName[10];\n"
             "\n"
-            "const Spectrum& spec = *Dep::{0}_spectrum;\n"
+            "const Spectrum& spec = *Dep::{1};\n"
             "const SMInputs& sminputs = spec.get_SMInputs();\n"
             "\n"
             "// YAML options for 3-body final states\n"
@@ -652,10 +654,10 @@ def write_micromegas(gambit_model_name, mathpackage, params):
             "// Uncomment below to force MicrOmegas to do calculations in unitary gauge\n"
             "*ForceUG=1;\n"
             "\n"
-    ).format(gambit_model_name)
+    ).format(gambit_model_name, spectrum)
 
     # Now we must assign the GAMBIT values for each parameter to MO for
-    # computation. First define a little function to make this neater.
+    # computation. First define a little function to make this neater. 
     mo_src += (
             "/// Assigns gambit value to parameter, with error-checking.\n"
             "void Assign_Value(char *parameter, double value)\n"
@@ -665,29 +667,102 @@ def write_micromegas(gambit_model_name, mathpackage, params):
             "if (error != 0) backend_error().raise(LOCAL_INFO, \""
             "Unable to set \" + std::string(parameter) +\n"
             "    \" in MicrOmegas. MicrOmegas error code: \" + std::to_string(error)"
-            "+ \". Please check your model files.\n\");\n"
-            "}\n"
+            "+ \". Please check your model files.\\n\");\n"
+            "}\n\n"
+            "// BSM parameters\n"
     )
 
+    donotassign = ["vev", "sinW2", "Yu", "Ye", "Yd", "g1", "g2", "g3"]
+
     # Firstly assign all BSM model parameters
-    # todo - from params ([SpectrumParameter])?
+    for param in params:
+
+        # Internally computed
+        if param.name in donotassign: continue
+
+        # Ignore the pole masses - do these separately
+        if  param.tag == "Pole_Mass": continue
+
+        # Scalar case
+        if param.shape == "scalar":
+            mo_src += (
+                    "Assign_Value((char*)\"{0}\", spec.get(Par::{1}, \"{2}\"));\n"
+            ).format(param.name, param.tag, param.alt_name)
+
+        # Vector case
+        if param.shape.startswith('v'):
+            size = param.shape[1:]
+            mo_src += (
+                "for(int i=1; i<{0}; i++)\n{{\n"
+                "std::string paramname = \"{2}\" + std::to_string(i);\n"
+                "Assign_Value((char*)paramname, spec.get(Par::{3}, \"{4}\"));\n"
+                "}}\n"
+            ).format(i, j, param.name, param.tag, param.alt_name)
+
+        # Matrix case
+        if param.shape.startswith('m'):
+            size = param.shape[1:]
+            i,j = size.split('x')
+
+            mo_src += (
+                "for(int i=1; i<{0}; i++)\n{{\n"
+                "for(int j=1; j<{1}; j++)\n{{\n"
+                "std::string paramname = \"{2}\" + std::to_string(i) + std::to_string(j);\n"
+                "Assign_Value((char*)paramname, spec.get(Par::{3}, \"{4}\"));\n"
+                "}}\n}}\n"
+            ).format(i, j, param.name, param.tag, param.alt_name)
+
+
+    # Do pole masses now
+    mo_src += "// Masses\n"
+    for part in particles:
+
+        chname = calchep_masses[part.PDG_code]
+        gbname = pdg_to_particle(part.PDG_code, gambit_pdg_codes)
+
+        mo_src += (
+               "Assign_Value((char*)\"{0}\", spec.get(Par::Pole_Mass, \"{1}\"));\n"
+        ).format(chname, gbname)
 
     # SMInputs
-    if mathpackage == 'sarah':
-        print("MO SARAH support not implemented yet.")
-        # Do something
-    elif mathpackage == 'feynrules':
-        print("MO FeynRules support not implemented yet.")
-        # Do a different thing
+    mo_src += "\n// SMInputs\n"
+
+    SMinputs = {1 : 'mD', 2 : 'mU', 3 : 'mS', 4 : 'mCmC', 5:'mBmB', 6:'mT',
+                11: 'mE', 13: 'mMu', 15: 'mTau', 23: 'mZ'}
+
+    for pdg, chmass in calchep_masses.iteritems():
+        if pdg in SMinputs:
+            mo_src += (
+                "Assign_Value((char*)\"{0}\", sminputs.{1});\n"
+            ).format(chmass, SMinputs[pdg])
+
+    # # These are handled slightly differently by SARAH and FeynRules
+    # if mathpackage == 'sarah':
+    #     print("MO SARAH support not implemented yet.")
+
+        
+    # elif mathpackage == 'feynrules':
+    #     print("MO FeynRules support not implemented yet.")
+    #     # Do a different thing
 
     # Widths ## TODO
     mo_src += (
+            "\n"
             "// Set particle widths in micrOmegas\n"
             "const DecayTable* tbl = &(*Dep::decay_rates);\n"
             "double width = 0.0;\n"
             "bool present = true;\n"
             "\n"
     )
+
+    for pdg, chwidth in calchep_widths.iteritems():
+        mo_src += (
+               "try {{ width = tbl->at(\"{0}\").width_in_GeV; }}\n"
+               " catch(std::std::exception& e) {{ present = false; }}\n"
+               "if (present) Assign_Value((char*)\"{1}\", width);\n"
+               "present = true;\n\n"
+        ).format(pdg_to_particle(pdg, gambit_pdg_codes), chwidth)
+
 
 
     # Get MicrOmegas to do it's thing.
@@ -701,6 +776,18 @@ def write_micromegas(gambit_model_name, mathpackage, params):
             "END_BE_INI_FUNCTION\n"
     )
 
+    return indent(mo_src)
+
+def write_micromegas_header(gambit_model_name, mathpackage, params):
+    """
+    Writes a header file for micromegas.
+    """
+
+    ## Frontend source file
+    intro_message = (
+            "///  Frontend for MicrOmegas {0}\n"
+            "///  3.6.9.2 backend."
+    ).format(gambit_model_name)
 
     # Frontend header file
     mo_head = blame_gum(intro_message)
@@ -745,5 +832,5 @@ def write_micromegas(gambit_model_name, mathpackage, params):
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
     ).format(gambit_model_name)
 
-    return indent(mo_src), indent (mo_head)
+    return indent(mo_head)
 

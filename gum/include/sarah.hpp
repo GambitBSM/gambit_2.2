@@ -42,6 +42,9 @@ namespace GUM
     
       // Get model name
       std::string get_modelname();
+
+      // Vertex list
+      void calculate_vertices();
     
       // Particle list
       void get_partlist(std::vector<Particle>&);
