@@ -53,7 +53,7 @@ namespace Gambit {
 
       void run(const Event* event) {
 
-        _flows.fillinit();
+        _cutflows.fillinit();
 
         // Missing energy
         /// @todo Compute from hard objects instead?
@@ -124,7 +124,7 @@ namespace Gambit {
         const size_t nElectrons = signalElectrons.size();
         const size_t nMuons = signalMuons.size();
         const size_t nJets50 = signalJets50.size();
-        const size_t nJets = signalJets.size();
+        //const size_t nJets = signalJets.size();
 
         // HT-related quantities (calculated over all >50 GeV jets)
         double sumptj = 0;
@@ -197,7 +197,7 @@ namespace Gambit {
         if (meff < 800) return;
         if (dphimin_123 < 0.4) return;
 
-        _flows.fill(0);
+        _cutflows.fill(0);
         const double w = event->weight();
 
         // 2 jet regions
@@ -341,8 +341,8 @@ namespace Gambit {
         add_result(SignalRegionData("SR-6j-2200",    5, {_srnums[SR6J_2200], 0.}, {  4.6,  1.0}));
         add_result(SignalRegionData("SR-6j-3400",    0, {_srnums[SR6J_3400], 0.}, {  0.8,  0.4}));
         // const double sf = 139*crossSection()/femtobarn/sumOfWeights();
-        // _flows.scale(sf);
-        // cout << "CUTFLOWS:\n\n" << _flows << endl;
+        // _cutflows.scale(sf);
+        // cout << "CUTFLOWS:\n\n" << _cutflows << endl;
       }
 
 
