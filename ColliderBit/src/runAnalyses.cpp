@@ -39,6 +39,7 @@
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 
 // #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -95,7 +96,7 @@ namespace Gambit
       //   {
       //     for (auto& sr : analysis_pointer_pair.second->get_results().srdata)
       //     {
-      //       cout << debug_prefix() << "run"+detname+"Analyses: signal region " << sr.sr_label << ", n_signal = " << sr.n_signal << endl;
+      //       cout << DEBUG_PREFIX << "run"+detname+"Analyses: signal region " << sr.sr_label << ", n_signal = " << sr.n_signal << endl;
       //     }
       //   }
       // }
@@ -107,7 +108,7 @@ namespace Gambit
         for (auto& analysis_pointer_pair : Container.get_current_analyses_map())
         {
           #ifdef COLLIDERBIT_DEBUG
-            cout << debug_prefix() << "run"+detname+"Analyses: Collecting result from " << analysis_pointer_pair.first << endl;
+            cout << DEBUG_PREFIX << "run"+detname+"Analyses: Collecting result from " << analysis_pointer_pair.first << endl;
           #endif
 
           str warning;
@@ -124,7 +125,7 @@ namespace Gambit
       {
         // Final iteration. Just return.
         #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "run"+detname+"Analyses: 'result' contains " << result.size() << " results." << endl;
+          cout << DEBUG_PREFIX << "run"+detname+"Analyses: 'result' contains " << result.size() << " results." << endl;
         #endif
         return;
       }

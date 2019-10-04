@@ -194,102 +194,102 @@ namespace Gambit {
         if ( not same_flavor ) {
             if (met<200) {
                 if (nbj==0 and nj ==0) { //SR1_{0tag}^{0jet}
-                    if      (mT2< 20) ++_srnums_chargino[ 0];
-                    else if (mT2< 40) ++_srnums_chargino[ 1];
-                    else if (mT2< 60) ++_srnums_chargino[ 2];
-                    else if (mT2< 80) ++_srnums_chargino[ 3];
-                    else if (mT2<100) ++_srnums_chargino[ 4];
-                    else if (mT2<120) ++_srnums_chargino[ 5];
-                    else              ++_srnums_chargino[ 6];
+                    if      (mT2< 20) _srnums_chargino[ 0] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[ 1] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[ 2] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[ 3] += event->weight();
+                    else if (mT2<100) _srnums_chargino[ 4] += event->weight();
+                    else if (mT2<120) _srnums_chargino[ 5] += event->weight();
+                    else              _srnums_chargino[ 6] += event->weight();
                 }
                 if (nbj==0 and nj >=1) { //SR1_{0tag}^{jets}
-                    if      (mT2< 20) ++_srnums_chargino[14];
-                    else if (mT2< 40) ++_srnums_chargino[15];
-                    else if (mT2< 60) ++_srnums_chargino[16];
-                    else if (mT2< 80) ++_srnums_chargino[17];
-                    else if (mT2<100) ++_srnums_chargino[18];
-                    else if (mT2<120) ++_srnums_chargino[19];
-                    else              ++_srnums_chargino[20];
+                    if      (mT2< 20) _srnums_chargino[14] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[15] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[16] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[17] += event->weight();
+                    else if (mT2<100) _srnums_chargino[18] += event->weight();
+                    else if (mT2<120) _srnums_chargino[19] += event->weight();
+                    else              _srnums_chargino[20] += event->weight();
                 }
             } else if (met<300){
                 if (nbj==0 and nj ==0) { //SR2_{0tag}^{0jet}
-                    if      (mT2< 20) ++_srnums_chargino[28];
-                    else if (mT2< 40) ++_srnums_chargino[29];
-                    else if (mT2< 60) ++_srnums_chargino[30];
-                    else if (mT2< 80) ++_srnums_chargino[31];
-                    else if (mT2<100) ++_srnums_chargino[32];
-                    else if (mT2<120) ++_srnums_chargino[33];
-                    else              ++_srnums_chargino[34];
+                    if      (mT2< 20) _srnums_chargino[28] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[29] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[30] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[31] += event->weight();
+                    else if (mT2<100) _srnums_chargino[32] += event->weight();
+                    else if (mT2<120) _srnums_chargino[33] += event->weight();
+                    else              _srnums_chargino[34] += event->weight();
                 }
                 if (nbj==0 and nj >=1) { //SR2_{0tag}^{jets}
-                    if      (mT2< 20) ++_srnums_chargino[42];
-                    else if (mT2< 40) ++_srnums_chargino[43];
-                    else if (mT2< 60) ++_srnums_chargino[44];
-                    else if (mT2< 80) ++_srnums_chargino[45];
-                    else if (mT2<100) ++_srnums_chargino[46];
-                    else if (mT2<120) ++_srnums_chargino[47];
-                    else              ++_srnums_chargino[48];
+                    if      (mT2< 20) _srnums_chargino[42] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[43] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[44] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[45] += event->weight();
+                    else if (mT2<100) _srnums_chargino[46] += event->weight();
+                    else if (mT2<120) _srnums_chargino[47] += event->weight();
+                    else              _srnums_chargino[48] += event->weight();
                 }
             } else {
                 if (nbj==0 and nj >=0) { //SR3_{0tag}
-                    if      (mT2< 20) ++_srnums_chargino[56];
-                    else if (mT2< 40) ++_srnums_chargino[57];
-                    else if (mT2< 60) ++_srnums_chargino[58];
-                    else if (mT2< 80) ++_srnums_chargino[59];
-                    else if (mT2<100) ++_srnums_chargino[60];
-                    else if (mT2<120) ++_srnums_chargino[61];
-                    else              ++_srnums_chargino[62];
+                    if      (mT2< 20) _srnums_chargino[56] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[57] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[58] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[59] += event->weight();
+                    else if (mT2<100) _srnums_chargino[60] += event->weight();
+                    else if (mT2<120) _srnums_chargino[61] += event->weight();
+                    else              _srnums_chargino[62] += event->weight();
                 }
             }
         } else {
             if (met<200) {
                 if (nbj==0 and nj ==0) { //SR1_{0tag}^{0jet}
-                    if      (mT2< 20) ++_srnums_chargino[ 7];
-                    else if (mT2< 40) ++_srnums_chargino[ 8];
-                    else if (mT2< 60) ++_srnums_chargino[ 9];
-                    else if (mT2< 80) ++_srnums_chargino[10];
-                    else if (mT2<100) ++_srnums_chargino[11];
-                    else if (mT2<120) ++_srnums_chargino[12];
-                    else              ++_srnums_chargino[13];
+                    if      (mT2< 20) _srnums_chargino[ 7] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[ 8] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[ 9] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[10] += event->weight();
+                    else if (mT2<100) _srnums_chargino[11] += event->weight();
+                    else if (mT2<120) _srnums_chargino[12] += event->weight();
+                    else              _srnums_chargino[13] += event->weight();
                 }
                 if (nbj==0 and nj >=1) { //SR1_{0tag}^{jets}
-                    if      (mT2< 20) ++_srnums_chargino[21];
-                    else if (mT2< 40) ++_srnums_chargino[22];
-                    else if (mT2< 60) ++_srnums_chargino[23];
-                    else if (mT2< 80) ++_srnums_chargino[24];
-                    else if (mT2<100) ++_srnums_chargino[25];
-                    else if (mT2<120) ++_srnums_chargino[26];
-                    else              ++_srnums_chargino[27];
+                    if      (mT2< 20) _srnums_chargino[21] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[22] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[23] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[24] += event->weight();
+                    else if (mT2<100) _srnums_chargino[25] += event->weight();
+                    else if (mT2<120) _srnums_chargino[26] += event->weight();
+                    else              _srnums_chargino[27] += event->weight();
 
                 }
             } else if (met<300){
                 if (nbj==0 and nj ==0) { //SR2_{0tag}^{0jet}
-                    if      (mT2< 20) ++_srnums_chargino[35];
-                    else if (mT2< 40) ++_srnums_chargino[36];
-                    else if (mT2< 60) ++_srnums_chargino[37];
-                    else if (mT2< 80) ++_srnums_chargino[38];
-                    else if (mT2<100) ++_srnums_chargino[39];
-                    else if (mT2<120) ++_srnums_chargino[40];
-                    else              ++_srnums_chargino[41];
+                    if      (mT2< 20) _srnums_chargino[35] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[36] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[37] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[38] += event->weight();
+                    else if (mT2<100) _srnums_chargino[39] += event->weight();
+                    else if (mT2<120) _srnums_chargino[40] += event->weight();
+                    else              _srnums_chargino[41] += event->weight();
                 }
                 if (nbj==0 and nj >=1) { //SR2_{0tag}^{jets}
-                    if      (mT2< 20) ++_srnums_chargino[49];
-                    else if (mT2< 40) ++_srnums_chargino[50];
-                    else if (mT2< 60) ++_srnums_chargino[51];
-                    else if (mT2< 80) ++_srnums_chargino[52];
-                    else if (mT2<100) ++_srnums_chargino[53];
-                    else if (mT2<120) ++_srnums_chargino[54];
-                    else              ++_srnums_chargino[55];
+                    if      (mT2< 20) _srnums_chargino[49] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[50] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[51] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[52] += event->weight();
+                    else if (mT2<100) _srnums_chargino[53] += event->weight();
+                    else if (mT2<120) _srnums_chargino[54] += event->weight();
+                    else              _srnums_chargino[55] += event->weight();
                 }
             } else {
                 if (nbj==0 and nj >=0) { //SR3_{0tag}
-                    if      (mT2< 20) ++_srnums_chargino[63];
-                    else if (mT2< 40) ++_srnums_chargino[64];
-                    else if (mT2< 60) ++_srnums_chargino[65];
-                    else if (mT2< 80) ++_srnums_chargino[66];
-                    else if (mT2<100) ++_srnums_chargino[67];
-                    else if (mT2<120) ++_srnums_chargino[68];
-                    else              ++_srnums_chargino[69];
+                    if      (mT2< 20) _srnums_chargino[63] += event->weight();
+                    else if (mT2< 40) _srnums_chargino[64] += event->weight();
+                    else if (mT2< 60) _srnums_chargino[65] += event->weight();
+                    else if (mT2< 80) _srnums_chargino[66] += event->weight();
+                    else if (mT2<100) _srnums_chargino[67] += event->weight();
+                    else if (mT2<120) _srnums_chargino[68] += event->weight();
+                    else              _srnums_chargino[69] += event->weight();
                 }
             }
         }
@@ -300,119 +300,119 @@ namespace Gambit {
         if ( not same_flavor ) {
             if (met<200) {
                 if (nbj==0) {                       //SR1_{0tag}
-                    if      (mT2< 20) ++_srnums_stop[42];
-                    else if (mT2< 40) ++_srnums_stop[43];
-                    else if (mT2< 60) ++_srnums_stop[44];
-                    else if (mT2< 80) ++_srnums_stop[45];
-                    else if (mT2<100) ++_srnums_stop[46];
-                    else if (mT2<120) ++_srnums_stop[47];
-                    else              ++_srnums_stop[48];
+                    if      (mT2< 20) _srnums_stop[42] += event->weight();
+                    else if (mT2< 40) _srnums_stop[43] += event->weight();
+                    else if (mT2< 60) _srnums_stop[44] += event->weight();
+                    else if (mT2< 80) _srnums_stop[45] += event->weight();
+                    else if (mT2<100) _srnums_stop[46] += event->weight();
+                    else if (mT2<120) _srnums_stop[47] += event->weight();
+                    else              _srnums_stop[48] += event->weight();
                 }
                 if (nbj>=1 and nj >=1) {            //SR1_{tags}
-                    if      (mT2< 20) ++_srnums_stop[ 0];
-                    else if (mT2< 40) ++_srnums_stop[ 1];
-                    else if (mT2< 60) ++_srnums_stop[ 2];
-                    else if (mT2< 80) ++_srnums_stop[ 3];
-                    else if (mT2<100) ++_srnums_stop[ 4];
-                    else if (mT2<120) ++_srnums_stop[ 5];
-                    else              ++_srnums_stop[ 6];
+                    if      (mT2< 20) _srnums_stop[ 0] += event->weight();
+                    else if (mT2< 40) _srnums_stop[ 1] += event->weight();
+                    else if (mT2< 60) _srnums_stop[ 2] += event->weight();
+                    else if (mT2< 80) _srnums_stop[ 3] += event->weight();
+                    else if (mT2<100) _srnums_stop[ 4] += event->weight();
+                    else if (mT2<120) _srnums_stop[ 5] += event->weight();
+                    else              _srnums_stop[ 6] += event->weight();
                 }
             } else if (met<300){
                 if (nbj==0) {                       //SR2_{0tag}
-                    if      (mT2< 20) ++_srnums_stop[56];
-                    else if (mT2< 40) ++_srnums_stop[57];
-                    else if (mT2< 60) ++_srnums_stop[58];
-                    else if (mT2< 80) ++_srnums_stop[59];
-                    else if (mT2<100) ++_srnums_stop[60];
-                    else if (mT2<120) ++_srnums_stop[61];
-                    else              ++_srnums_stop[62];
+                    if      (mT2< 20) _srnums_stop[56] += event->weight();
+                    else if (mT2< 40) _srnums_stop[57] += event->weight();
+                    else if (mT2< 60) _srnums_stop[58] += event->weight();
+                    else if (mT2< 80) _srnums_stop[59] += event->weight();
+                    else if (mT2<100) _srnums_stop[60] += event->weight();
+                    else if (mT2<120) _srnums_stop[61] += event->weight();
+                    else              _srnums_stop[62] += event->weight();
                 }
                 if (nbj>=1 and nj >=1) {            //SR2_{tags}
-                    if      (mT2< 20) ++_srnums_stop[14];
-                    else if (mT2< 40) ++_srnums_stop[15];
-                    else if (mT2< 60) ++_srnums_stop[16];
-                    else if (mT2< 80) ++_srnums_stop[17];
-                    else if (mT2<100) ++_srnums_stop[18];
-                    else if (mT2<120) ++_srnums_stop[19];
-                    else              ++_srnums_stop[20];
+                    if      (mT2< 20) _srnums_stop[14] += event->weight();
+                    else if (mT2< 40) _srnums_stop[15] += event->weight();
+                    else if (mT2< 60) _srnums_stop[16] += event->weight();
+                    else if (mT2< 80) _srnums_stop[17] += event->weight();
+                    else if (mT2<100) _srnums_stop[18] += event->weight();
+                    else if (mT2<120) _srnums_stop[19] += event->weight();
+                    else              _srnums_stop[20] += event->weight();
                 }
             } else {
                 if (nbj==0 and nj >=1 and nISR>0) { //SR3_{0tag}
-                    if      (mT2< 20) ++_srnums_stop[70];
-                    else if (mT2< 40) ++_srnums_stop[71];
-                    else if (mT2< 60) ++_srnums_stop[72];
-                    else if (mT2< 80) ++_srnums_stop[73];
-                    else if (mT2<100) ++_srnums_stop[74];
-                    else if (mT2<120) ++_srnums_stop[75];
-                    else              ++_srnums_stop[76];
+                    if      (mT2< 20) _srnums_stop[70] += event->weight();
+                    else if (mT2< 40) _srnums_stop[71] += event->weight();
+                    else if (mT2< 60) _srnums_stop[72] += event->weight();
+                    else if (mT2< 80) _srnums_stop[73] += event->weight();
+                    else if (mT2<100) _srnums_stop[74] += event->weight();
+                    else if (mT2<120) _srnums_stop[75] += event->weight();
+                    else              _srnums_stop[76] += event->weight();
                 }
                 if (nbj>=1 and nj >=2 and nISR>0) { //SR3_{tags}
-                    if      (mT2< 20) ++_srnums_stop[28];
-                    else if (mT2< 40) ++_srnums_stop[29];
-                    else if (mT2< 60) ++_srnums_stop[30];
-                    else if (mT2< 80) ++_srnums_stop[31];
-                    else if (mT2<100) ++_srnums_stop[32];
-                    else if (mT2<120) ++_srnums_stop[33];
-                    else              ++_srnums_stop[34];
+                    if      (mT2< 20) _srnums_stop[28] += event->weight();
+                    else if (mT2< 40) _srnums_stop[29] += event->weight();
+                    else if (mT2< 60) _srnums_stop[30] += event->weight();
+                    else if (mT2< 80) _srnums_stop[31] += event->weight();
+                    else if (mT2<100) _srnums_stop[32] += event->weight();
+                    else if (mT2<120) _srnums_stop[33] += event->weight();
+                    else              _srnums_stop[34] += event->weight();
                 }
             }
         } else {
             if (met<200) {
                 if (nbj==0) {                       //SR1_{0tag}
-                    if      (mT2< 20) ++_srnums_stop[49];
-                    else if (mT2< 40) ++_srnums_stop[50];
-                    else if (mT2< 60) ++_srnums_stop[51];
-                    else if (mT2< 80) ++_srnums_stop[52];
-                    else if (mT2<100) ++_srnums_stop[53];
-                    else if (mT2<120) ++_srnums_stop[54];
-                    else              ++_srnums_stop[55];
+                    if      (mT2< 20) _srnums_stop[49] += event->weight();
+                    else if (mT2< 40) _srnums_stop[50] += event->weight();
+                    else if (mT2< 60) _srnums_stop[51] += event->weight();
+                    else if (mT2< 80) _srnums_stop[52] += event->weight();
+                    else if (mT2<100) _srnums_stop[53] += event->weight();
+                    else if (mT2<120) _srnums_stop[54] += event->weight();
+                    else              _srnums_stop[55] += event->weight();
                 }
                 if (nbj>=1 and nj >=1) {            //SR1_{tags}
-                    if      (mT2< 20) ++_srnums_stop[ 7];
-                    else if (mT2< 40) ++_srnums_stop[ 8];
-                    else if (mT2< 60) ++_srnums_stop[ 9];
-                    else if (mT2< 80) ++_srnums_stop[10];
-                    else if (mT2<100) ++_srnums_stop[11];
-                    else if (mT2<120) ++_srnums_stop[12];
-                    else              ++_srnums_stop[13];
+                    if      (mT2< 20) _srnums_stop[ 7] += event->weight();
+                    else if (mT2< 40) _srnums_stop[ 8] += event->weight();
+                    else if (mT2< 60) _srnums_stop[ 9] += event->weight();
+                    else if (mT2< 80) _srnums_stop[10] += event->weight();
+                    else if (mT2<100) _srnums_stop[11] += event->weight();
+                    else if (mT2<120) _srnums_stop[12] += event->weight();
+                    else              _srnums_stop[13] += event->weight();
                 }
             } else if (met<300){
                 if (nbj==0) {                       //SR2_{0tag}
-                    if      (mT2< 20) ++_srnums_stop[63];
-                    else if (mT2< 40) ++_srnums_stop[64];
-                    else if (mT2< 60) ++_srnums_stop[65];
-                    else if (mT2< 80) ++_srnums_stop[66];
-                    else if (mT2<100) ++_srnums_stop[67];
-                    else if (mT2<120) ++_srnums_stop[68];
-                    else              ++_srnums_stop[69];
+                    if      (mT2< 20) _srnums_stop[63] += event->weight();
+                    else if (mT2< 40) _srnums_stop[64] += event->weight();
+                    else if (mT2< 60) _srnums_stop[65] += event->weight();
+                    else if (mT2< 80) _srnums_stop[66] += event->weight();
+                    else if (mT2<100) _srnums_stop[67] += event->weight();
+                    else if (mT2<120) _srnums_stop[68] += event->weight();
+                    else              _srnums_stop[69] += event->weight();
                 }
                 if (nbj>=1 and nj >=1) {            //SR2_{tags}
-                    if      (mT2< 20) ++_srnums_stop[21];
-                    else if (mT2< 40) ++_srnums_stop[22];
-                    else if (mT2< 60) ++_srnums_stop[23];
-                    else if (mT2< 80) ++_srnums_stop[24];
-                    else if (mT2<100) ++_srnums_stop[25];
-                    else if (mT2<120) ++_srnums_stop[26];
-                    else              ++_srnums_stop[27];
+                    if      (mT2< 20) _srnums_stop[21] += event->weight();
+                    else if (mT2< 40) _srnums_stop[22] += event->weight();
+                    else if (mT2< 60) _srnums_stop[23] += event->weight();
+                    else if (mT2< 80) _srnums_stop[24] += event->weight();
+                    else if (mT2<100) _srnums_stop[25] += event->weight();
+                    else if (mT2<120) _srnums_stop[26] += event->weight();
+                    else              _srnums_stop[27] += event->weight();
                 }
             } else {
                 if (nbj==0 and nj >=1 and nISR>0) { //SR3_{0tag}
-                    if      (mT2< 20) ++_srnums_stop[77];
-                    else if (mT2< 40) ++_srnums_stop[78];
-                    else if (mT2< 60) ++_srnums_stop[79];
-                    else if (mT2< 80) ++_srnums_stop[80];
-                    else if (mT2<100) ++_srnums_stop[81];
-                    else if (mT2<120) ++_srnums_stop[82];
-                    else              ++_srnums_stop[83];
+                    if      (mT2< 20) _srnums_stop[77] += event->weight();
+                    else if (mT2< 40) _srnums_stop[78] += event->weight();
+                    else if (mT2< 60) _srnums_stop[79] += event->weight();
+                    else if (mT2< 80) _srnums_stop[80] += event->weight();
+                    else if (mT2<100) _srnums_stop[81] += event->weight();
+                    else if (mT2<120) _srnums_stop[82] += event->weight();
+                    else              _srnums_stop[83] += event->weight();
                 }
                 if (nbj>=1 and nj >=2 and nISR>0) { //SR3_{tags}
-                    if      (mT2< 20) ++_srnums_stop[35];
-                    else if (mT2< 40) ++_srnums_stop[36];
-                    else if (mT2< 60) ++_srnums_stop[37];
-                    else if (mT2< 80) ++_srnums_stop[38];
-                    else if (mT2<100) ++_srnums_stop[39];
-                    else if (mT2<120) ++_srnums_stop[40];
-                    else              ++_srnums_stop[41];
+                    if      (mT2< 20) _srnums_stop[35] += event->weight();
+                    else if (mT2< 40) _srnums_stop[36] += event->weight();
+                    else if (mT2< 60) _srnums_stop[37] += event->weight();
+                    else if (mT2< 80) _srnums_stop[38] += event->weight();
+                    else if (mT2<100) _srnums_stop[39] += event->weight();
+                    else if (mT2<120) _srnums_stop[40] += event->weight();
+                    else              _srnums_stop[41] += event->weight();
                 }
 
             }

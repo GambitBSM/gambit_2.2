@@ -424,42 +424,42 @@ namespace Gambit {
               if (num_ISRjets==0) {
 
                 // The 0 jet regions
-                if(mT < 100 && pT_ll < 50 && met < 100) _numSR["SS01"]++;
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _numSR["SS02"]++;
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _numSR["SS03"]++;
-                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _numSR["SS04"]++;
-                if(mT < 100 && pT_ll < 50 && met > 200) _numSR["SS05"]++;
-                if(mT < 100 && pT_ll > 50 && met < 100) _numSR["SS06"]++;
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _numSR["SS07"]++;
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _numSR["SS08"]++;
-                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _numSR["SS09"]++;
-                if(mT < 100 && pT_ll > 50 && met > 200) _numSR["SS10"]++;
-                if(mT > 100 && met < 100) _numSR["SS11"]++;
-                if(mT > 100 && met >= 100 && met < 150 && pp) _numSR["SS12"]++;
-                if(mT > 100 && met >= 100 && met < 150 && mm) _numSR["SS13"]++;
-                if(mT > 100 && met >= 150 && met < 200) _numSR["SS14"]++;
-                if(mT > 100 && met > 200) _numSR["SS15"]++;
+                if(mT < 100 && pT_ll < 50 && met < 100) _numSR["SS01"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _numSR["SS02"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _numSR["SS03"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _numSR["SS04"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met > 200) _numSR["SS05"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met < 100) _numSR["SS06"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _numSR["SS07"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _numSR["SS08"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _numSR["SS09"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met > 200) _numSR["SS10"] += event->weight();
+                if(mT > 100 && met < 100) _numSR["SS11"] += event->weight();
+                if(mT > 100 && met >= 100 && met < 150 && pp) _numSR["SS12"] += event->weight();
+                if(mT > 100 && met >= 100 && met < 150 && mm) _numSR["SS13"] += event->weight();
+                if(mT > 100 && met >= 150 && met < 200) _numSR["SS14"] += event->weight();
+                if(mT > 100 && met > 200) _numSR["SS15"] += event->weight();
 
               }
 
               if (num_ISRjets==1){
 
                 // The 1 jet regions
-                if(mT < 100 && pT_ll < 50 && met < 100) _numSR["SS16"]++;
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _numSR["SS17"]++;
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _numSR["SS18"]++;
-                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _numSR["SS19"]++;
-                if(mT < 100 && pT_ll < 50 && met > 200) _numSR["SS20"]++;
-                if(mT < 100 && pT_ll > 50 && met < 100) _numSR["SS21"]++;
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _numSR["SS22"]++;
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _numSR["SS23"]++;
-                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _numSR["SS24"]++;
-                if(mT < 100 && pT_ll > 50 && met > 200) _numSR["SS25"]++;
-                if(mT > 100 && met < 100) _numSR["SS26"]++;
-                if(mT > 100 && met >= 100 && met < 150 && pp) _numSR["SS27"]++;
-                if(mT > 100 && met >= 100 && met < 150 && mm) _numSR["SS28"]++;
-                if(mT > 100 && met >= 150 && met < 200) _numSR["SS29"]++;
-                if(mT > 100 && met > 200) _numSR["SS30"]++;
+                if(mT < 100 && pT_ll < 50 && met < 100) _numSR["SS16"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _numSR["SS17"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _numSR["SS18"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _numSR["SS19"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met > 200) _numSR["SS20"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met < 100) _numSR["SS21"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _numSR["SS22"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _numSR["SS23"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _numSR["SS24"] += event->weight();
+                if(mT < 100 && pT_ll > 50 && met > 200) _numSR["SS25"] += event->weight();
+                if(mT > 100 && met < 100) _numSR["SS26"] += event->weight();
+                if(mT > 100 && met >= 100 && met < 150 && pp) _numSR["SS27"] += event->weight();
+                if(mT > 100 && met >= 100 && met < 150 && mm) _numSR["SS28"] += event->weight();
+                if(mT > 100 && met >= 150 && met < 200) _numSR["SS29"] += event->weight();
+                if(mT > 100 && met > 200) _numSR["SS30"] += event->weight();
 
               }
 
@@ -476,56 +476,56 @@ namespace Gambit {
 
                 // The three light lepton signal regions
 
-                if(mT < 100 && met >=50 && met < 100 && mll < 75) _numSR["A01"]++;
-                if(mT < 100 && met >=100 && met < 150 && mll < 75) _numSR["A02"]++;
-                if(mT < 100 && met >=150 && met < 200 && mll < 75) _numSR["A03"]++;
-                if(mT < 100 && met >=200 && met < 250 && mll < 75) _numSR["A04"]++;
-                if(mT < 100 && met >=250 && mll < 75) _numSR["A05"]++;
+                if(mT < 100 && met >=50 && met < 100 && mll < 75) _numSR["A01"] += event->weight();
+                if(mT < 100 && met >=100 && met < 150 && mll < 75) _numSR["A02"] += event->weight();
+                if(mT < 100 && met >=150 && met < 200 && mll < 75) _numSR["A03"] += event->weight();
+                if(mT < 100 && met >=200 && met < 250 && mll < 75) _numSR["A04"] += event->weight();
+                if(mT < 100 && met >=250 && mll < 75) _numSR["A05"] += event->weight();
 
-                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll < 75) _numSR["A06"]++;
-                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll < 75) _numSR["A07"]++;
-                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll < 75) _numSR["A08"]++;
-                if(mT >= 100 && mT < 160 && met >=200 && mll < 75) _numSR["A09"]++;
-                if(mT >= 160 && met >=50 && met < 100 && mll < 75) _numSR["A10"]++;
-                if(mT >= 160 && met >=100 && met < 150 && mll < 75) _numSR["A11"]++;
-                if(mT >= 160 && met >=150 && met < 200 && mll < 75) _numSR["A12"]++;
-                if(mT >= 160 && met >=200 && met < 250 && mll < 75) _numSR["A13"]++;
-                if(mT >= 160 && met >=250 && mll < 75) _numSR["A14"]++;
+                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll < 75) _numSR["A06"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll < 75) _numSR["A07"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll < 75) _numSR["A08"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=200 && mll < 75) _numSR["A09"] += event->weight();
+                if(mT >= 160 && met >=50 && met < 100 && mll < 75) _numSR["A10"] += event->weight();
+                if(mT >= 160 && met >=100 && met < 150 && mll < 75) _numSR["A11"] += event->weight();
+                if(mT >= 160 && met >=150 && met < 200 && mll < 75) _numSR["A12"] += event->weight();
+                if(mT >= 160 && met >=200 && met < 250 && mll < 75) _numSR["A13"] += event->weight();
+                if(mT >= 160 && met >=250 && mll < 75) _numSR["A14"] += event->weight();
 
                 // SR A15 overlaps with a CR and is not used for the results in arxiv:1709.05406
-                // if(mT < 100 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A15"]++;
-                if(mT < 100 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A16"]++;
-                if(mT < 100 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A17"]++;
-                if(mT < 100 && met >=200 && met < 250 && mll >= 75 && mll < 105) _numSR["A18"]++;
-                if(mT < 100 && met >=250 && met < 400 && mll >= 75 && mll < 105) _numSR["A19"]++;
-                if(mT < 100 && met >=400 && met < 550 && mll >= 75 && mll < 105) _numSR["A20"]++;
-                if(mT < 100 && met >=550 && mll >= 75 && mll < 105) _numSR["A21"]++;
-                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A22"]++;
-                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A23"]++;
-                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A24"]++;
-                if(mT >= 100 && mT < 160 && met >=200 && mll >= 75 && mll < 105) _numSR["A25"]++;
+                // if(mT < 100 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A15"] += event->weight();
+                if(mT < 100 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A16"] += event->weight();
+                if(mT < 100 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A17"] += event->weight();
+                if(mT < 100 && met >=200 && met < 250 && mll >= 75 && mll < 105) _numSR["A18"] += event->weight();
+                if(mT < 100 && met >=250 && met < 400 && mll >= 75 && mll < 105) _numSR["A19"] += event->weight();
+                if(mT < 100 && met >=400 && met < 550 && mll >= 75 && mll < 105) _numSR["A20"] += event->weight();
+                if(mT < 100 && met >=550 && mll >= 75 && mll < 105) _numSR["A21"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A22"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A23"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A24"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=200 && mll >= 75 && mll < 105) _numSR["A25"] += event->weight();
 
-                if(mT >= 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A26"]++;
-                if(mT >= 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A27"]++;
-                if(mT >= 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A28"]++;
-                if(mT >= 160 && met >=200 && met < 250 && mll >= 75 && mll < 105) _numSR["A29"]++;
-                if(mT >= 160 && met >=250 && met < 400 && mll >= 75 && mll < 105) _numSR["A30"]++;
-                if(mT >= 160 && met >= 400 && mll >= 75 && mll < 105) _numSR["A31"]++;
+                if(mT >= 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A26"] += event->weight();
+                if(mT >= 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A27"] += event->weight();
+                if(mT >= 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A28"] += event->weight();
+                if(mT >= 160 && met >=200 && met < 250 && mll >= 75 && mll < 105) _numSR["A29"] += event->weight();
+                if(mT >= 160 && met >=250 && met < 400 && mll >= 75 && mll < 105) _numSR["A30"] += event->weight();
+                if(mT >= 160 && met >= 400 && mll >= 75 && mll < 105) _numSR["A31"] += event->weight();
 
-                if(mT < 100 && met >=50 && met < 100 && mll >= 105) _numSR["A32"]++;
-                if(mT < 100 && met >=100 && met < 150 && mll >= 105) _numSR["A33"]++;
-                if(mT < 100 && met >=150 && met < 200 && mll >= 105) _numSR["A34"]++;
-                if(mT < 100 && met >=200 && met < 250 && mll >= 105) _numSR["A35"]++;
-                if(mT < 100 && met >=250 && mll >= 105) _numSR["A36"]++;
+                if(mT < 100 && met >=50 && met < 100 && mll >= 105) _numSR["A32"] += event->weight();
+                if(mT < 100 && met >=100 && met < 150 && mll >= 105) _numSR["A33"] += event->weight();
+                if(mT < 100 && met >=150 && met < 200 && mll >= 105) _numSR["A34"] += event->weight();
+                if(mT < 100 && met >=200 && met < 250 && mll >= 105) _numSR["A35"] += event->weight();
+                if(mT < 100 && met >=250 && mll >= 105) _numSR["A36"] += event->weight();
 
-                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 105) _numSR["A37"]++;
-                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 105) _numSR["A38"]++;
-                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 105) _numSR["A39"]++;
-                if(mT >= 100 && mT < 160 && met >=200 && mll >= 105) _numSR["A40"]++;
-                if(mT >= 160 && met >=50 && met < 100 && mll >= 105) _numSR["A41"]++;
-                if(mT >= 160 && met >=100 && met < 150 && mll >= 105) _numSR["A42"]++;
-                if(mT >= 160 && met >=150 && met < 200 && mll >= 105) _numSR["A43"]++;
-                if(mT >= 160 && met >=200 && mll >= 105) _numSR["A44"]++;
+                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 105) _numSR["A37"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 105) _numSR["A38"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 105) _numSR["A39"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=200 && mll >= 105) _numSR["A40"] += event->weight();
+                if(mT >= 160 && met >=50 && met < 100 && mll >= 105) _numSR["A41"] += event->weight();
+                if(mT >= 160 && met >=100 && met < 150 && mll >= 105) _numSR["A42"] += event->weight();
+                if(mT >= 160 && met >=150 && met < 200 && mll >= 105) _numSR["A43"] += event->weight();
+                if(mT >= 160 && met >=200 && mll >= 105) _numSR["A44"] += event->weight();
 
               }
             }
@@ -541,77 +541,77 @@ namespace Gambit {
               if (nSignalLightLeptons==3 && nSignalTaus==0) {
 
                 // The three light lepton signal regions
-                if(mll < 75 && mT < 100 && HT < 200 && met > 50 && met < 100) _numSR["SR01"]++;
-                if(mll < 75 && mT < 100 && HT < 200 && met > 100 && met < 150) _numSR["SR02"]++;
-                if(mll < 75 && mT < 100 && HT < 200 && met > 150 && met < 200) _numSR["SR03"]++;
-                if(mll < 75 && mT < 100 && HT < 200 && met > 200) _numSR["SR04"]++;
+                if(mll < 75 && mT < 100 && HT < 200 && met > 50 && met < 100) _numSR["SR01"] += event->weight();
+                if(mll < 75 && mT < 100 && HT < 200 && met > 100 && met < 150) _numSR["SR02"] += event->weight();
+                if(mll < 75 && mT < 100 && HT < 200 && met > 150 && met < 200) _numSR["SR03"] += event->weight();
+                if(mll < 75 && mT < 100 && HT < 200 && met > 200) _numSR["SR04"] += event->weight();
 
-                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 50 && met < 100) _numSR["SR05"]++;
-                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 100 && met < 150) _numSR["SR06"]++;
-                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 150) _numSR["SR07"]++;
+                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 50 && met < 100) _numSR["SR05"] += event->weight();
+                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 100 && met < 150) _numSR["SR06"] += event->weight();
+                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 150) _numSR["SR07"] += event->weight();
 
-                if(mll < 75 && mT > 160 && HT < 200 && met > 50 && met < 100) _numSR["SR08"]++;
-                if(mll < 75 && mT > 160 && HT < 200 && met > 100 && met < 150) _numSR["SR09"]++;
-                if(mll < 75 && mT > 160 && HT < 200 && met > 150 && met < 200) _numSR["SR10"]++;
-                if(mll < 75 && mT > 160 && HT < 200 && met > 200) _numSR["SR11"]++;
+                if(mll < 75 && mT > 160 && HT < 200 && met > 50 && met < 100) _numSR["SR08"] += event->weight();
+                if(mll < 75 && mT > 160 && HT < 200 && met > 100 && met < 150) _numSR["SR09"] += event->weight();
+                if(mll < 75 && mT > 160 && HT < 200 && met > 150 && met < 200) _numSR["SR10"] += event->weight();
+                if(mll < 75 && mT > 160 && HT < 200 && met > 200) _numSR["SR11"] += event->weight();
 
-                if(mll < 75 && mT < 100 && HT > 200 && met > 50) _numSR["SR12"]++;
-                if(mll < 75 && mT > 100 && mT < 160 && HT > 200 && met > 50) _numSR["SR13"]++;
-                if(mll < 75 && mT > 160 && HT > 200 && met > 50) _numSR["SR14"]++;
+                if(mll < 75 && mT < 100 && HT > 200 && met > 50) _numSR["SR12"] += event->weight();
+                if(mll < 75 && mT > 100 && mT < 160 && HT > 200 && met > 50) _numSR["SR13"] += event->weight();
+                if(mll < 75 && mT > 160 && HT > 200 && met > 50) _numSR["SR14"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 100 && met < 150) _numSR["SR15"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 150 && met < 200) _numSR["SR16"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 200 && met < 250) _numSR["SR17"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 250) _numSR["SR18"]++;
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 100 && met < 150) _numSR["SR15"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 150 && met < 200) _numSR["SR16"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 200 && met < 250) _numSR["SR17"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 250) _numSR["SR18"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 50 && met < 100) _numSR["SR19"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 100 && met < 150) _numSR["SR20"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 150 && met < 200) _numSR["SR21"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 200) _numSR["SR22"]++;
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 50 && met < 100) _numSR["SR19"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 100 && met < 150) _numSR["SR20"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 150 && met < 200) _numSR["SR21"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 200) _numSR["SR22"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 50 && met < 100) _numSR["SR23"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 100 && met < 150) _numSR["SR24"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 150 && met < 200) _numSR["SR25"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 200) _numSR["SR26"]++;
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 50 && met < 100) _numSR["SR23"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 100 && met < 150) _numSR["SR24"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 150 && met < 200) _numSR["SR25"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 200) _numSR["SR26"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR27"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR28"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR29"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 200 && met < 250) _numSR["SR30"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 250) _numSR["SR31"]++;
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR27"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR28"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR29"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 200 && met < 250) _numSR["SR30"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 250) _numSR["SR31"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR32"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR33"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR34"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 200) _numSR["SR35"]++;
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR32"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR33"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR34"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 200) _numSR["SR35"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR36"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR37"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR38"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 200) _numSR["SR39"]++;
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR36"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR37"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR38"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 200) _numSR["SR39"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 50 && met < 150) _numSR["SR40"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 150 && met < 250) _numSR["SR41"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 250 && met < 350) _numSR["SR42"]++;
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 350) _numSR["SR43"]++;
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 50 && met < 150) _numSR["SR40"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 150 && met < 250) _numSR["SR41"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 250 && met < 350) _numSR["SR42"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 350) _numSR["SR43"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 50 && met < 100) _numSR["SR44"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 100 && met < 150) _numSR["SR45"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 150 && met < 200) _numSR["SR46"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 200 && met < 250) _numSR["SR47"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 250 && met < 300) _numSR["SR48"]++;
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 300) _numSR["SR49"]++;
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 50 && met < 100) _numSR["SR44"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 100 && met < 150) _numSR["SR45"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 150 && met < 200) _numSR["SR46"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 200 && met < 250) _numSR["SR47"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 250 && met < 300) _numSR["SR48"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 300) _numSR["SR49"] += event->weight();
 
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 50 && met < 100) _numSR["SR50"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 100 && met < 150) _numSR["SR51"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 150 && met < 200) _numSR["SR52"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 200 && met < 250) _numSR["SR53"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 250 && met < 300) _numSR["SR54"]++;
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 300) _numSR["SR55"]++;
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 50 && met < 100) _numSR["SR50"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 100 && met < 150) _numSR["SR51"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 150 && met < 200) _numSR["SR52"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 200 && met < 250) _numSR["SR53"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 250 && met < 300) _numSR["SR54"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 300) _numSR["SR55"] += event->weight();
 
-                if(mll > 105 && mT < 100 && met > 50) _numSR["SR56"]++;
-                if(mll > 105 && mT > 100 && mT < 160 && met > 50) _numSR["SR57"]++;
-                if(mll > 105 && mT > 160 && met > 50) _numSR["SR58"]++;
+                if(mll > 105 && mT < 100 && met > 50) _numSR["SR56"] += event->weight();
+                if(mll > 105 && mT > 100 && mT < 160 && met > 50) _numSR["SR57"] += event->weight();
+                if(mll > 105 && mT > 160 && met > 50) _numSR["SR58"] += event->weight();
 
               }
             }

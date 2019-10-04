@@ -3,14 +3,24 @@
 ///  \file
 ///
 ///  Definitions for Gambit MPI C++ bindings.
-//
+///
+///  NOTE! I just learned something unfortunate,
+///  which is that all Isend's are supposed to be
+///  matched by MPI_Wait calls at some point, to
+///  ensure the operation is complete.
+///  We are not doing this. Things seem to work
+///  anyway, but it may explain some of the hangs
+///  on MPI_Finalize.
+///  I will fix the worst offenders of this asap,
+///  but the rest may take longer. 
+///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@fysik.su.se)
-///  \date 2015 Apr
+///          (b.farmer@imperial.ac.uk)
+///  \date 2015 - 2019
 ///  *********************************************
 
 #ifdef WITH_MPI // Contents of this file ignored if MPI not enabled
@@ -547,6 +557,44 @@ namespace Gambit
          LOGGER << "Leaving BarrierWithCommonTimeout (tag_entered="<<tag_entered<<")"<<EOM;
          return timedout;
       }
+
+      /// This routine exists for MPI debugging purposes, to help make sure that
+      /// all MPI messages are received before MPI_Finalize is called.
+      /// It doesn't fix any problems, it just lets us notice if they exist.
+      void Comm::check_for_unreceived_messages(int timeout)
+      {
+        int mpiSize = Get_size();
+        int myRank  = Get_rank();
+ 
+        // Wait 'timeout' seconds before checking for messages, to make sure
+        // that other processes don't send more after we check.
+        struct timespec sleeptime;
+        sleeptime.tv_sec = timeout;
+        sleeptime.tv_nsec = 0;
+        logger() << LogTags::core << LogTags::info << "Waiting "<<timeout<<" seconds for any pending MPI communication to be transmitted, then we will check for unreceived messages from all processes (in communicator group "<<Get_name()<<")"<<EOM; 
+        nanosleep(&sleeptime,NULL);
+
+        logger() << LogTags::core << LogTags::info << "Unreceived message report for communicator group "<<Get_name()<<":"<<std::endl;
+        bool unreceived_messages_detected(false);
+        for(int rank=0; rank<mpiSize; rank++)
+        {
+           if(rank!=myRank)
+           {
+              MPI_Status status;
+              if(Iprobe(rank, MPI_ANY_TAG, &status))
+              {
+                 unreceived_messages_detected = true;
+                 logger() << "  Unreceived messages detected from rank "<<rank<<" with tag "<<status.MPI_TAG<<std::endl;
+              }
+           }
+        }
+        if(not unreceived_messages_detected)
+        {
+           logger() << "  No unreceived messages detected!";
+        }
+        logger()<<EOM;
+      }
+ 
 
       /// @}
 

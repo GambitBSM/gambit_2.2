@@ -210,11 +210,23 @@ namespace Gambit
           }
         }
 
-        /// Report the cross section (in pb) at the end of the subprocess.
+        /// Report the total or process-specific cross section (in fb or pb).
+        double xsec_fb() const { return _pythiaInstance->info.sigmaGen() * 1e12; }
+        double xsec_fb(int process_code) const { return _pythiaInstance->info.sigmaGen(process_code) * 1e12; }
         double xsec_pb() const { return _pythiaInstance->info.sigmaGen() * 1e9; }
+        double xsec_pb(int process_code) const { return _pythiaInstance->info.sigmaGen(process_code) * 1e9; }
 
-        /// Report the cross section uncertainty (in pb) at the end of the subprocess.
+        /// Report the uncertainty in the total or process-specific cross section (in fb or pb).
+        double xsecErr_fb() const { return _pythiaInstance->info.sigmaErr() * 1e12; }
+        double xsecErr_fb(int process_code) const { return _pythiaInstance->info.sigmaErr(process_code) * 1e12; }
         double xsecErr_pb() const { return _pythiaInstance->info.sigmaErr() * 1e9; }
+        double xsecErr_pb(int process_code) const { return _pythiaInstance->info.sigmaErr(process_code) * 1e9; }
+
+        /// Report an integer process code for the last generated event
+        int process_code() const { return _pythiaInstance->info.code(); }
+
+        /// Report the list of all active process codes
+        std::vector<int> all_active_process_codes() const { return _pythiaInstance->info.codesHard(); }
 
         ///@}
 

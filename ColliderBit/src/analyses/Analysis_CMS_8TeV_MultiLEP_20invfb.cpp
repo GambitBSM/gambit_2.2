@@ -674,156 +674,156 @@ namespace Gambit {
           // SR group 1
           //
           if (SRgroup==1) {
-            if (mT<120 && met>50 && met<100 && mll<75)             _numSR["SR3l_OSSF_mT<120_ETmiss50-100_mll<75"]++;
-            if (mT<120 && met>50 && met<100 && mll>75 && mll<105)  _numSR["SR3l_OSSF_mT<120_ETmiss50-100_mll75-105"]++;
-            if (mT<120 && met>50 && met<100 && mll>105)            _numSR["SR3l_OSSF_mT<120_ETmiss50-100_mll>105"]++;
-            if (mT<120 && met>100 && met<150 && mll<75)            _numSR["SR3l_OSSF_mT<120_ETmiss100-150_mll<75"]++;
-            if (mT<120 && met>100 && met<150 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT<120_ETmiss100-150_mll75-105"]++;
-            if (mT<120 && met>100 && met<150 && mll>105)           _numSR["SR3l_OSSF_mT<120_ETmiss100-150_mll>105"]++;
-            if (mT<120 && met>150 && met<200 && mll<75)            _numSR["SR3l_OSSF_mT<120_ETmiss150-200_mll<75"]++;
-            if (mT<120 && met>150 && met<200 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT<120_ETmiss150-200_mll75-105"]++;
-            if (mT<120 && met>150 && met<200 && mll>105)           _numSR["SR3l_OSSF_mT<120_ETmiss150-200_mll>105"]++;
-            if (mT<120 && met>200 && met<250 && mll<75)            _numSR["SR3l_OSSF_mT<120_ETmiss200-250_mll<75"]++;
-            if (mT<120 && met>200 && met<250 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT<120_ETmiss200-250_mll75-105"]++;
-            if (mT<120 && met>200 && met<250 && mll>105)           _numSR["SR3l_OSSF_mT<120_ETmiss200-250_mll>105"]++;
+            if (mT<120 && met>50 && met<100 && mll<75)             _numSR["SR3l_OSSF_mT<120_ETmiss50-100_mll<75"] += event->weight();
+            if (mT<120 && met>50 && met<100 && mll>75 && mll<105)  _numSR["SR3l_OSSF_mT<120_ETmiss50-100_mll75-105"] += event->weight();
+            if (mT<120 && met>50 && met<100 && mll>105)            _numSR["SR3l_OSSF_mT<120_ETmiss50-100_mll>105"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll<75)            _numSR["SR3l_OSSF_mT<120_ETmiss100-150_mll<75"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT<120_ETmiss100-150_mll75-105"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll>105)           _numSR["SR3l_OSSF_mT<120_ETmiss100-150_mll>105"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll<75)            _numSR["SR3l_OSSF_mT<120_ETmiss150-200_mll<75"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT<120_ETmiss150-200_mll75-105"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll>105)           _numSR["SR3l_OSSF_mT<120_ETmiss150-200_mll>105"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll<75)            _numSR["SR3l_OSSF_mT<120_ETmiss200-250_mll<75"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT<120_ETmiss200-250_mll75-105"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll>105)           _numSR["SR3l_OSSF_mT<120_ETmiss200-250_mll>105"] += event->weight();
 
-            if (mT>120 && mT<160 && met>50 && met<100 && mll<75)             _numSR["SR3l_OSSF_mT120-160_ETmiss50-100_mll<75"]++;
-            if (mT>120 && mT<160 && met>50 && met<100 && mll>75 && mll<105)  _numSR["SR3l_OSSF_mT120-160_ETmiss50-100_mll75-105"]++;
-            if (mT>120 && mT<160 && met>50 && met<100 && mll>105)            _numSR["SR3l_OSSF_mT120-160_ETmiss50-100_mll>105"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll<75)            _numSR["SR3l_OSSF_mT120-160_ETmiss100-150_mll<75"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT120-160_ETmiss100-150_mll75-105"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll>105)           _numSR["SR3l_OSSF_mT120-160_ETmiss100-150_mll>105"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll<75)            _numSR["SR3l_OSSF_mT120-160_ETmiss150-200_mll<75"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT120-160_ETmiss150-200_mll75-105"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll>105)           _numSR["SR3l_OSSF_mT120-160_ETmiss150-200_mll>105"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll<75)            _numSR["SR3l_OSSF_mT120-160_ETmiss200-250_mll<75"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT120-160_ETmiss200-250_mll75-105"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll>105)           _numSR["SR3l_OSSF_mT120-160_ETmiss200-250_mll>105"]++;
+            if (mT>120 && mT<160 && met>50 && met<100 && mll<75)             _numSR["SR3l_OSSF_mT120-160_ETmiss50-100_mll<75"] += event->weight();
+            if (mT>120 && mT<160 && met>50 && met<100 && mll>75 && mll<105)  _numSR["SR3l_OSSF_mT120-160_ETmiss50-100_mll75-105"] += event->weight();
+            if (mT>120 && mT<160 && met>50 && met<100 && mll>105)            _numSR["SR3l_OSSF_mT120-160_ETmiss50-100_mll>105"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll<75)            _numSR["SR3l_OSSF_mT120-160_ETmiss100-150_mll<75"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT120-160_ETmiss100-150_mll75-105"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll>105)           _numSR["SR3l_OSSF_mT120-160_ETmiss100-150_mll>105"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll<75)            _numSR["SR3l_OSSF_mT120-160_ETmiss150-200_mll<75"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT120-160_ETmiss150-200_mll75-105"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll>105)           _numSR["SR3l_OSSF_mT120-160_ETmiss150-200_mll>105"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll<75)            _numSR["SR3l_OSSF_mT120-160_ETmiss200-250_mll<75"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT120-160_ETmiss200-250_mll75-105"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll>105)           _numSR["SR3l_OSSF_mT120-160_ETmiss200-250_mll>105"] += event->weight();
 
-            if (mT>160 && met>50 && met<100 && mll<75)             _numSR["SR3l_OSSF_mT>160_ETmiss50-100_mll<75"]++;
-            if (mT>160 && met>50 && met<100 && mll>75 && mll<105)  _numSR["SR3l_OSSF_mT>160_ETmiss50-100_mll75-105"]++;
-            if (mT>160 && met>50 && met<100 && mll>105)            _numSR["SR3l_OSSF_mT>160_ETmiss50-100_mll>105"]++;
-            if (mT>160 && met>100 && met<150 && mll<75)            _numSR["SR3l_OSSF_mT>160_ETmiss100-150_mll<75"]++;
-            if (mT>160 && met>100 && met<150 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT>160_ETmiss100-150_mll75-105"]++;
-            if (mT>160 && met>100 && met<150 && mll>105)           _numSR["SR3l_OSSF_mT>160_ETmiss100-150_mll>105"]++;
-            if (mT>160 && met>150 && met<200 && mll<75)            _numSR["SR3l_OSSF_mT>160_ETmiss150-200_mll<75"]++;
-            if (mT>160 && met>150 && met<200 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT>160_ETmiss150-200_mll75-105"]++;
-            if (mT>160 && met>150 && met<200 && mll>105)           _numSR["SR3l_OSSF_mT>160_ETmiss150-200_mll>105"]++;
-            if (mT>160 && met>200 && met<250 && mll<75)            _numSR["SR3l_OSSF_mT>160_ETmiss200-250_mll<75"]++;
-            if (mT>160 && met>200 && met<250 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT>160_ETmiss200-250_mll75-105"]++;
-            if (mT>160 && met>200 && met<250 && mll>105)           _numSR["SR3l_OSSF_mT>160_ETmiss200-250_mll>105"]++;
+            if (mT>160 && met>50 && met<100 && mll<75)             _numSR["SR3l_OSSF_mT>160_ETmiss50-100_mll<75"] += event->weight();
+            if (mT>160 && met>50 && met<100 && mll>75 && mll<105)  _numSR["SR3l_OSSF_mT>160_ETmiss50-100_mll75-105"] += event->weight();
+            if (mT>160 && met>50 && met<100 && mll>105)            _numSR["SR3l_OSSF_mT>160_ETmiss50-100_mll>105"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll<75)            _numSR["SR3l_OSSF_mT>160_ETmiss100-150_mll<75"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT>160_ETmiss100-150_mll75-105"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll>105)           _numSR["SR3l_OSSF_mT>160_ETmiss100-150_mll>105"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll<75)            _numSR["SR3l_OSSF_mT>160_ETmiss150-200_mll<75"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT>160_ETmiss150-200_mll75-105"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll>105)           _numSR["SR3l_OSSF_mT>160_ETmiss150-200_mll>105"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll<75)            _numSR["SR3l_OSSF_mT>160_ETmiss200-250_mll<75"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll>75 && mll<105) _numSR["SR3l_OSSF_mT>160_ETmiss200-250_mll75-105"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll>105)           _numSR["SR3l_OSSF_mT>160_ETmiss200-250_mll>105"] += event->weight();
           }
           //
           // SR group 2
           //
           else if (SRgroup==2) {
-            if (mT<120 && met>50 && met<100 && mll<100)  _numSR["SR3l_noOSSF_mT<120_ETmiss50-100_mll<100"]++;
-            if (mT<120 && met>50 && met<100 && mll>100)  _numSR["SR3l_noOSSF_mT<120_ETmiss50-100_mll>100"]++;
-            if (mT<120 && met>100 && met<150 && mll<100) _numSR["SR3l_noOSSF_mT<120_ETmiss100-150_mll<100"]++;
-            if (mT<120 && met>100 && met<150 && mll>100) _numSR["SR3l_noOSSF_mT<120_ETmiss100-150_mll>100"]++;
-            if (mT<120 && met>150 && met<200 && mll<100) _numSR["SR3l_noOSSF_mT<120_ETmiss150-200_mll<100"]++;
-            if (mT<120 && met>150 && met<200 && mll>100) _numSR["SR3l_noOSSF_mT<120_ETmiss150-200_mll>100"]++;
-            if (mT<120 && met>200 && met<250 && mll<100) _numSR["SR3l_noOSSF_mT<120_ETmiss200-250_mll<100"]++;
-            if (mT<120 && met>200 && met<250 && mll>100) _numSR["SR3l_noOSSF_mT<120_ETmiss200-250_mll>100"]++;
+            if (mT<120 && met>50 && met<100 && mll<100)  _numSR["SR3l_noOSSF_mT<120_ETmiss50-100_mll<100"] += event->weight();
+            if (mT<120 && met>50 && met<100 && mll>100)  _numSR["SR3l_noOSSF_mT<120_ETmiss50-100_mll>100"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll<100) _numSR["SR3l_noOSSF_mT<120_ETmiss100-150_mll<100"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll>100) _numSR["SR3l_noOSSF_mT<120_ETmiss100-150_mll>100"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll<100) _numSR["SR3l_noOSSF_mT<120_ETmiss150-200_mll<100"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll>100) _numSR["SR3l_noOSSF_mT<120_ETmiss150-200_mll>100"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll<100) _numSR["SR3l_noOSSF_mT<120_ETmiss200-250_mll<100"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll>100) _numSR["SR3l_noOSSF_mT<120_ETmiss200-250_mll>100"] += event->weight();
 
-            if (mT>120 && mT<160 && met>50 && met<100 && mll<100)  _numSR["SR3l_noOSSF_mT120-160_ETmiss50-100_mll<100"]++;
-            if (mT>120 && mT<160 && met>50 && met<100 && mll>100)  _numSR["SR3l_noOSSF_mT120-160_ETmiss50-100_mll>100"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll<100) _numSR["SR3l_noOSSF_mT120-160_ETmiss100-150_mll<100"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll>100) _numSR["SR3l_noOSSF_mT120-160_ETmiss100-150_mll>100"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll<100) _numSR["SR3l_noOSSF_mT120-160_ETmiss150-200_mll<100"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll>100) _numSR["SR3l_noOSSF_mT120-160_ETmiss150-200_mll>100"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll<100) _numSR["SR3l_noOSSF_mT120-160_ETmiss200-250_mll<100"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll>100) _numSR["SR3l_noOSSF_mT120-160_ETmiss200-250_mll>100"]++;
+            if (mT>120 && mT<160 && met>50 && met<100 && mll<100)  _numSR["SR3l_noOSSF_mT120-160_ETmiss50-100_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>50 && met<100 && mll>100)  _numSR["SR3l_noOSSF_mT120-160_ETmiss50-100_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll<100) _numSR["SR3l_noOSSF_mT120-160_ETmiss100-150_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll>100) _numSR["SR3l_noOSSF_mT120-160_ETmiss100-150_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll<100) _numSR["SR3l_noOSSF_mT120-160_ETmiss150-200_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll>100) _numSR["SR3l_noOSSF_mT120-160_ETmiss150-200_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll<100) _numSR["SR3l_noOSSF_mT120-160_ETmiss200-250_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll>100) _numSR["SR3l_noOSSF_mT120-160_ETmiss200-250_mll>100"] += event->weight();
 
-            if (mT>160 && met>50 && met<100 && mll<100)  _numSR["SR3l_noOSSF_mT>160_ETmiss50-100_mll<100"]++;
-            if (mT>160 && met>50 && met<100 && mll>100)  _numSR["SR3l_noOSSF_mT>160_ETmiss50-100_mll>100"]++;
-            if (mT>160 && met>100 && met<150 && mll<100) _numSR["SR3l_noOSSF_mT>160_ETmiss100-150_mll<100"]++;
-            if (mT>160 && met>100 && met<150 && mll>100) _numSR["SR3l_noOSSF_mT>160_ETmiss100-150_mll>100"]++;
-            if (mT>160 && met>150 && met<200 && mll<100) _numSR["SR3l_noOSSF_mT>160_ETmiss150-200_mll<100"]++;
-            if (mT>160 && met>150 && met<200 && mll>100) _numSR["SR3l_noOSSF_mT>160_ETmiss150-200_mll>100"]++;
-            if (mT>160 && met>200 && met<250 && mll<100) _numSR["SR3l_noOSSF_mT>160_ETmiss200-250_mll<100"]++;
-            if (mT>160 && met>200 && met<250 && mll>100) _numSR["SR3l_noOSSF_mT>160_ETmiss200-250_mll>100"]++;
+            if (mT>160 && met>50 && met<100 && mll<100)  _numSR["SR3l_noOSSF_mT>160_ETmiss50-100_mll<100"] += event->weight();
+            if (mT>160 && met>50 && met<100 && mll>100)  _numSR["SR3l_noOSSF_mT>160_ETmiss50-100_mll>100"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll<100) _numSR["SR3l_noOSSF_mT>160_ETmiss100-150_mll<100"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll>100) _numSR["SR3l_noOSSF_mT>160_ETmiss100-150_mll>100"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll<100) _numSR["SR3l_noOSSF_mT>160_ETmiss150-200_mll<100"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll>100) _numSR["SR3l_noOSSF_mT>160_ETmiss150-200_mll>100"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll<100) _numSR["SR3l_noOSSF_mT>160_ETmiss200-250_mll<100"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll>100) _numSR["SR3l_noOSSF_mT>160_ETmiss200-250_mll>100"] += event->weight();
           }
           //
           // SR group 3
           //
           else if (SRgroup==3) {
-            if (mT<120 && met>50 && met<100 && mll<100)  _numSR["SR3l_SS1tau_mT<120_ETmiss50-100_mll<100"]++;
-            if (mT<120 && met>50 && met<100 && mll>100)  _numSR["SR3l_SS1tau_mT<120_ETmiss50-100_mll>100"]++;
-            if (mT<120 && met>100 && met<150 && mll<100) _numSR["SR3l_SS1tau_mT<120_ETmiss100-150_mll<100"]++;
-            if (mT<120 && met>100 && met<150 && mll>100) _numSR["SR3l_SS1tau_mT<120_ETmiss100-150_mll>100"]++;
-            if (mT<120 && met>150 && met<200 && mll<100) _numSR["SR3l_SS1tau_mT<120_ETmiss150-200_mll<100"]++;
-            if (mT<120 && met>150 && met<200 && mll>100) _numSR["SR3l_SS1tau_mT<120_ETmiss150-200_mll>100"]++;
-            if (mT<120 && met>200 && met<250 && mll<100) _numSR["SR3l_SS1tau_mT<120_ETmiss200-250_mll<100"]++;
-            if (mT<120 && met>200 && met<250 && mll>100) _numSR["SR3l_SS1tau_mT<120_ETmiss200-250_mll>100"]++;
+            if (mT<120 && met>50 && met<100 && mll<100)  _numSR["SR3l_SS1tau_mT<120_ETmiss50-100_mll<100"] += event->weight();
+            if (mT<120 && met>50 && met<100 && mll>100)  _numSR["SR3l_SS1tau_mT<120_ETmiss50-100_mll>100"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll<100) _numSR["SR3l_SS1tau_mT<120_ETmiss100-150_mll<100"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll>100) _numSR["SR3l_SS1tau_mT<120_ETmiss100-150_mll>100"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll<100) _numSR["SR3l_SS1tau_mT<120_ETmiss150-200_mll<100"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll>100) _numSR["SR3l_SS1tau_mT<120_ETmiss150-200_mll>100"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll<100) _numSR["SR3l_SS1tau_mT<120_ETmiss200-250_mll<100"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll>100) _numSR["SR3l_SS1tau_mT<120_ETmiss200-250_mll>100"] += event->weight();
 
-            if (mT>120 && mT<160 && met>50 && met<100 && mll<100)  _numSR["SR3l_SS1tau_mT120-160_ETmiss50-100_mll<100"]++;
-            if (mT>120 && mT<160 && met>50 && met<100 && mll>100)  _numSR["SR3l_SS1tau_mT120-160_ETmiss50-100_mll>100"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll<100) _numSR["SR3l_SS1tau_mT120-160_ETmiss100-150_mll<100"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll>100) _numSR["SR3l_SS1tau_mT120-160_ETmiss100-150_mll>100"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll<100) _numSR["SR3l_SS1tau_mT120-160_ETmiss150-200_mll<100"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll>100) _numSR["SR3l_SS1tau_mT120-160_ETmiss150-200_mll>100"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll<100) _numSR["SR3l_SS1tau_mT120-160_ETmiss200-250_mll<100"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll>100) _numSR["SR3l_SS1tau_mT120-160_ETmiss200-250_mll>100"]++;
+            if (mT>120 && mT<160 && met>50 && met<100 && mll<100)  _numSR["SR3l_SS1tau_mT120-160_ETmiss50-100_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>50 && met<100 && mll>100)  _numSR["SR3l_SS1tau_mT120-160_ETmiss50-100_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll<100) _numSR["SR3l_SS1tau_mT120-160_ETmiss100-150_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll>100) _numSR["SR3l_SS1tau_mT120-160_ETmiss100-150_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll<100) _numSR["SR3l_SS1tau_mT120-160_ETmiss150-200_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll>100) _numSR["SR3l_SS1tau_mT120-160_ETmiss150-200_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll<100) _numSR["SR3l_SS1tau_mT120-160_ETmiss200-250_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll>100) _numSR["SR3l_SS1tau_mT120-160_ETmiss200-250_mll>100"] += event->weight();
 
-            if (mT>160 && met>50 && met<100 && mll<100)  _numSR["SR3l_SS1tau_mT>160_ETmiss50-100_mll<100"]++;
-            if (mT>160 && met>50 && met<100 && mll>100)  _numSR["SR3l_SS1tau_mT>160_ETmiss50-100_mll>100"]++;
-            if (mT>160 && met>100 && met<150 && mll<100) _numSR["SR3l_SS1tau_mT>160_ETmiss100-150_mll<100"]++;
-            if (mT>160 && met>100 && met<150 && mll>100) _numSR["SR3l_SS1tau_mT>160_ETmiss100-150_mll>100"]++;
-            if (mT>160 && met>150 && met<200 && mll<100) _numSR["SR3l_SS1tau_mT>160_ETmiss150-200_mll<100"]++;
-            if (mT>160 && met>150 && met<200 && mll>100) _numSR["SR3l_SS1tau_mT>160_ETmiss150-200_mll>100"]++;
-            if (mT>160 && met>200 && met<250 && mll<100) _numSR["SR3l_SS1tau_mT>160_ETmiss200-250_mll<100"]++;
-            if (mT>160 && met>200 && met<250 && mll>100) _numSR["SR3l_SS1tau_mT>160_ETmiss200-250_mll>100"]++;
+            if (mT>160 && met>50 && met<100 && mll<100)  _numSR["SR3l_SS1tau_mT>160_ETmiss50-100_mll<100"] += event->weight();
+            if (mT>160 && met>50 && met<100 && mll>100)  _numSR["SR3l_SS1tau_mT>160_ETmiss50-100_mll>100"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll<100) _numSR["SR3l_SS1tau_mT>160_ETmiss100-150_mll<100"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll>100) _numSR["SR3l_SS1tau_mT>160_ETmiss100-150_mll>100"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll<100) _numSR["SR3l_SS1tau_mT>160_ETmiss150-200_mll<100"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll>100) _numSR["SR3l_SS1tau_mT>160_ETmiss150-200_mll>100"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll<100) _numSR["SR3l_SS1tau_mT>160_ETmiss200-250_mll<100"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll>100) _numSR["SR3l_SS1tau_mT>160_ETmiss200-250_mll>100"] += event->weight();
           }
           //
           // SR group 4
           //
           else if (SRgroup==4) {
-            if (mT<120 && met>50 && met<100 && mll<100)  _numSR["SR3l_OS1tau_mT<120_ETmiss50-100_mll<100"]++;
-            if (mT<120 && met>50 && met<100 && mll>100)  _numSR["SR3l_OS1tau_mT<120_ETmiss50-100_mll>100"]++;
-            if (mT<120 && met>100 && met<150 && mll<100) _numSR["SR3l_OS1tau_mT<120_ETmiss100-150_mll<100"]++;
-            if (mT<120 && met>100 && met<150 && mll>100) _numSR["SR3l_OS1tau_mT<120_ETmiss100-150_mll>100"]++;
-            if (mT<120 && met>150 && met<200 && mll<100) _numSR["SR3l_OS1tau_mT<120_ETmiss150-200_mll<100"]++;
-            if (mT<120 && met>150 && met<200 && mll>100) _numSR["SR3l_OS1tau_mT<120_ETmiss150-200_mll>100"]++;
-            if (mT<120 && met>200 && met<250 && mll<100) _numSR["SR3l_OS1tau_mT<120_ETmiss200-250_mll<100"]++;
-            if (mT<120 && met>200 && met<250 && mll>100) _numSR["SR3l_OS1tau_mT<120_ETmiss200-250_mll>100"]++;
+            if (mT<120 && met>50 && met<100 && mll<100)  _numSR["SR3l_OS1tau_mT<120_ETmiss50-100_mll<100"] += event->weight();
+            if (mT<120 && met>50 && met<100 && mll>100)  _numSR["SR3l_OS1tau_mT<120_ETmiss50-100_mll>100"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll<100) _numSR["SR3l_OS1tau_mT<120_ETmiss100-150_mll<100"] += event->weight();
+            if (mT<120 && met>100 && met<150 && mll>100) _numSR["SR3l_OS1tau_mT<120_ETmiss100-150_mll>100"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll<100) _numSR["SR3l_OS1tau_mT<120_ETmiss150-200_mll<100"] += event->weight();
+            if (mT<120 && met>150 && met<200 && mll>100) _numSR["SR3l_OS1tau_mT<120_ETmiss150-200_mll>100"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll<100) _numSR["SR3l_OS1tau_mT<120_ETmiss200-250_mll<100"] += event->weight();
+            if (mT<120 && met>200 && met<250 && mll>100) _numSR["SR3l_OS1tau_mT<120_ETmiss200-250_mll>100"] += event->weight();
 
-            if (mT>120 && mT<160 && met>50 && met<100 && mll<100)  _numSR["SR3l_OS1tau_mT120-160_ETmiss50-100_mll<100"]++;
-            if (mT>120 && mT<160 && met>50 && met<100 && mll>100)  _numSR["SR3l_OS1tau_mT120-160_ETmiss50-100_mll>100"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll<100) _numSR["SR3l_OS1tau_mT120-160_ETmiss100-150_mll<100"]++;
-            if (mT>120 && mT<160 && met>100 && met<150 && mll>100) _numSR["SR3l_OS1tau_mT120-160_ETmiss100-150_mll>100"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll<100) _numSR["SR3l_OS1tau_mT120-160_ETmiss150-200_mll<100"]++;
-            if (mT>120 && mT<160 && met>150 && met<200 && mll>100) _numSR["SR3l_OS1tau_mT120-160_ETmiss150-200_mll>100"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll<100) _numSR["SR3l_OS1tau_mT120-160_ETmiss200-250_mll<100"]++;
-            if (mT>120 && mT<160 && met>200 && met<250 && mll>100) _numSR["SR3l_OS1tau_mT120-160_ETmiss200-250_mll>100"]++;
+            if (mT>120 && mT<160 && met>50 && met<100 && mll<100)  _numSR["SR3l_OS1tau_mT120-160_ETmiss50-100_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>50 && met<100 && mll>100)  _numSR["SR3l_OS1tau_mT120-160_ETmiss50-100_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll<100) _numSR["SR3l_OS1tau_mT120-160_ETmiss100-150_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>100 && met<150 && mll>100) _numSR["SR3l_OS1tau_mT120-160_ETmiss100-150_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll<100) _numSR["SR3l_OS1tau_mT120-160_ETmiss150-200_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>150 && met<200 && mll>100) _numSR["SR3l_OS1tau_mT120-160_ETmiss150-200_mll>100"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll<100) _numSR["SR3l_OS1tau_mT120-160_ETmiss200-250_mll<100"] += event->weight();
+            if (mT>120 && mT<160 && met>200 && met<250 && mll>100) _numSR["SR3l_OS1tau_mT120-160_ETmiss200-250_mll>100"] += event->weight();
 
-            if (mT>160 && met>50 && met<100 && mll<100)  _numSR["SR3l_OS1tau_mT>160_ETmiss50-100_mll<100"]++;
-            if (mT>160 && met>50 && met<100 && mll>100)  _numSR["SR3l_OS1tau_mT>160_ETmiss50-100_mll>100"]++;
-            if (mT>160 && met>100 && met<150 && mll<100) _numSR["SR3l_OS1tau_mT>160_ETmiss100-150_mll<100"]++;
-            if (mT>160 && met>100 && met<150 && mll>100) _numSR["SR3l_OS1tau_mT>160_ETmiss100-150_mll>100"]++;
-            if (mT>160 && met>150 && met<200 && mll<100) _numSR["SR3l_OS1tau_mT>160_ETmiss150-200_mll<100"]++;
-            if (mT>160 && met>150 && met<200 && mll>100) _numSR["SR3l_OS1tau_mT>160_ETmiss150-200_mll>100"]++;
-            if (mT>160 && met>200 && met<250 && mll<100) _numSR["SR3l_OS1tau_mT>160_ETmiss200-250_mll<100"]++;
-            if (mT>160 && met>200 && met<250 && mll>100) _numSR["SR3l_OS1tau_mT>160_ETmiss200-250_mll>100"]++;
+            if (mT>160 && met>50 && met<100 && mll<100)  _numSR["SR3l_OS1tau_mT>160_ETmiss50-100_mll<100"] += event->weight();
+            if (mT>160 && met>50 && met<100 && mll>100)  _numSR["SR3l_OS1tau_mT>160_ETmiss50-100_mll>100"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll<100) _numSR["SR3l_OS1tau_mT>160_ETmiss100-150_mll<100"] += event->weight();
+            if (mT>160 && met>100 && met<150 && mll>100) _numSR["SR3l_OS1tau_mT>160_ETmiss100-150_mll>100"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll<100) _numSR["SR3l_OS1tau_mT>160_ETmiss150-200_mll<100"] += event->weight();
+            if (mT>160 && met>150 && met<200 && mll>100) _numSR["SR3l_OS1tau_mT>160_ETmiss150-200_mll>100"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll<100) _numSR["SR3l_OS1tau_mT>160_ETmiss200-250_mll<100"] += event->weight();
+            if (mT>160 && met>200 && met<250 && mll>100) _numSR["SR3l_OS1tau_mT>160_ETmiss200-250_mll>100"] += event->weight();
           }
           //
           // SR group 5
           //
           else if (SRgroup==5) {
-            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met<30)            _numSR["SR4l_1OSSF0tau_ETmiss<30"]++;
-            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met>30 && met<50)  _numSR["SR4l_1OSSF0tau_ETmiss30-50"]++;
-            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met>50 && met<100) _numSR["SR4l_1OSSF0tau_ETmiss50-100"]++;
-            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met>100)           _numSR["SR4l_1OSSF0tau_ETmiss>100"]++;
+            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met<30)            _numSR["SR4l_1OSSF0tau_ETmiss<30"] += event->weight();
+            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met>30 && met<50)  _numSR["SR4l_1OSSF0tau_ETmiss30-50"] += event->weight();
+            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met>50 && met<100) _numSR["SR4l_1OSSF0tau_ETmiss50-100"] += event->weight();
+            if (nOSSFpairs==1 && nSignalTaus==0 && mll>75 && mll<105 && met>100)           _numSR["SR4l_1OSSF0tau_ETmiss>100"] += event->weight();
 
-            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met<30)            _numSR["SR4l_1OSSF1tau_ETmiss<30"]++;
-            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met>30 && met<50)  _numSR["SR4l_1OSSF1tau_ETmiss30-50"]++;
-            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met>50 && met<100) _numSR["SR4l_1OSSF1tau_ETmiss50-100"]++;
-            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met>100)           _numSR["SR4l_1OSSF1tau_ETmiss>100"]++;
+            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met<30)            _numSR["SR4l_1OSSF1tau_ETmiss<30"] += event->weight();
+            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met>30 && met<50)  _numSR["SR4l_1OSSF1tau_ETmiss30-50"] += event->weight();
+            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met>50 && met<100) _numSR["SR4l_1OSSF1tau_ETmiss50-100"] += event->weight();
+            if (nOSSFpairs==1 && nSignalTaus==1 && mll>75 && mll<105 && met>100)           _numSR["SR4l_1OSSF1tau_ETmiss>100"] += event->weight();
 
-            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met<30)            _numSR["SR4l_2OSSF0tau_ETmiss<30"]++;
-            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met>30 && met<50)  _numSR["SR4l_2OSSF0tau_ETmiss30-50"]++;
-            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met>50 && met<100) _numSR["SR4l_2OSSF0tau_ETmiss50-100"]++;
-            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met>100)           _numSR["SR4l_2OSSF0tau_ETmiss>100"]++;
+            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met<30)            _numSR["SR4l_2OSSF0tau_ETmiss<30"] += event->weight();
+            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met>30 && met<50)  _numSR["SR4l_2OSSF0tau_ETmiss30-50"] += event->weight();
+            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met>50 && met<100) _numSR["SR4l_2OSSF0tau_ETmiss50-100"] += event->weight();
+            if (nOSSFpairs==2 && nSignalTaus==0 && mll>75 && mll<105 && met>100)           _numSR["SR4l_2OSSF0tau_ETmiss>100"] += event->weight();
           }
         }
 

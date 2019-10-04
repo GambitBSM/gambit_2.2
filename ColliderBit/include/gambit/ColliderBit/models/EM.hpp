@@ -61,6 +61,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_EM, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_EM_defaultversion)
+    DEPENDENCY(EventWeighterFunction, EventWeighterFunctionType)
     #undef FUNCTION
   #undef CAPABILITY
 

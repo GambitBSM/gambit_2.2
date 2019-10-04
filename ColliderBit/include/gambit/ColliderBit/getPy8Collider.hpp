@@ -38,7 +38,8 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
- #define COLLIDERBIT_DEBUG
+// #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -50,21 +51,15 @@ namespace Gambit
     template<typename PythiaT, typename EventT>
     void getPy8Collider(Py8Collider<PythiaT, EventT>& result,
                         const MCLoopInfo& RunMC,
-                        const Spectrum& spectrum,
-                        const DecayTable& decay_rates,
+                        const SLHAstruct& slha,
                         const str model_suffix,
                         const int iteration,
                         void(*wrapup)(),
-                        const Options& runOptions,
-                        bool is_SUSY)
+                        const Options& runOptions)
     {
       static bool first = true;
-      static std::vector<str> filenames;
       static str pythia_doc_path;
-      static SLHAstruct slha;
-      static SLHAstruct slha_spectrum;
       static double xsec_veto_fb;
-      static unsigned int fileCounter = 0;
 
       if (iteration == BASE_INIT)
       {
@@ -75,57 +70,23 @@ namespace Gambit
           const str ver = Backends::backendInfo().default_version(be);
           pythia_doc_path = Backends::backendInfo().path_dir(be, ver) + "/../share/Pythia8/xmldoc/";
           result.banner(pythia_doc_path);
-          if (runOptions.hasKey("SLHA_filenames"))
-          {
-            filenames = runOptions.getValue<std::vector<str> >("SLHA_filenames");
-          }
           first = false;
         }
-
-        if (filenames.empty())
-        {
-          // SLHAea object constructed from dependencies on the spectrum and decays.
-          slha.clear();
-          slha_spectrum.clear();
-          slha = decay_rates.getSLHAea(2);
-          // SLHAea in SLHA2 format, please.
-          slha_spectrum = spectrum.getSLHAea(2);
-          slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());
-          if (is_SUSY)
-          {
-            if(slha.find("MODSEL") == slha.end())
-            {
-              SLHAea::Block block("MODSEL");
-              block.push_back("BLOCK MODSEL              # Model selection");
-              SLHAea::Line line;
-              line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";
-              block.push_back(line);
-              slha.push_front(block);
-            }
-          }
-        }
-        else
-        {
-          if (filenames.size() <= fileCounter) invalid_point().raise("No more SLHA files. My work is done.");
-        }
-
       }
-
 
       // To make sure that the Pythia instance on each OMP thread gets all the 
       // options it should, all the options parsing and initialisation happens in
-      // START_SUBPROCESS (OMP parallel) rather than COLLIDER_INIT (only thread 0).
+      // COLLIDER_INIT_OMP (OMP parallel) rather than COLLIDER_INIT (only thread 0).
       // We may want to split this up, so that all the yaml options are parsed in 
       // COLLIDER_INIT (by thread 0), and used to initialize the 'result' instance
-      // of each thread within START_SUBPROCESS.
+      // of each thread within COLLIDER_INIT_OMP.
       // 
       // else if (iteration == COLLIDER_INIT)
       // {
       //   // Do the option parsing here?
       // }
 
-
-      else if (iteration == START_SUBPROCESS)
+      else if (iteration == COLLIDER_INIT_OMP)
       {
 
         std::vector<str> pythiaOptions;
@@ -161,9 +122,8 @@ namespace Gambit
         // We need showProcesses for the xsec veto.
         pythiaOptions.push_back("Init:showProcesses = on");
 
-        // We need "SLHA:file = slhaea" for the SLHAea interface, and the filename for the SLHA interface.
-        str slha_string = (filenames.empty() ? "slhaea" : filenames.at(fileCounter));
-        pythiaOptions.push_back("SLHA:file = " + slha_string);
+        // We need "SLHA:file = slhaea" for the SLHAea interface.
+        pythiaOptions.push_back("SLHA:file = slhaea");
 
         // Variables needed for the xsec veto
         std::stringstream processLevelOutput;
@@ -178,27 +138,17 @@ namespace Gambit
 
         result.clear();
 
-        if (not filenames.empty() and omp_get_thread_num() == 0)
-          logger() << "Reading SLHA file: " << filenames.at(fileCounter) << EOM;
-
         // Add the thread-specific seed to the Pythia options
         str seed = std::to_string(int(Random::draw() * 899990000.));
         pythiaOptions.push_back("Random:seed = " + seed);
 
         #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "getPythia"+model_suffix+": My Pythia seed is: " << seed << endl;
+          cout << DEBUG_PREFIX << "getPythia"+model_suffix+": My Pythia seed is: " << seed << endl;
         #endif
 
         try
         {
-          if (filenames.empty())
-          {
             result.init(pythia_doc_path, pythiaOptions, &slha, processLevelOutput);
-          }
-          else
-          {
-            result.init(pythia_doc_path, pythiaOptions, processLevelOutput);
-          }
         }
         catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
         {
@@ -207,19 +157,12 @@ namespace Gambit
           pythiaOptions.push_back("Random:seed = " + std::to_string(newSeedBase));
           try
           {
-            if (filenames.empty())
-            {
-              result.init(pythia_doc_path, pythiaOptions, &slha, processLevelOutput);
-            }
-            else
-            {
-              result.init(pythia_doc_path, pythiaOptions, processLevelOutput);
-            }
+            result.init(pythia_doc_path, pythiaOptions, &slha, processLevelOutput);
           }
           catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
           {
             #ifdef COLLIDERBIT_DEBUG
-              cout << debug_prefix() << "Py8Collider::InitializationError caught in getPy8Collider. Will discard this point." << endl;
+              cout << DEBUG_PREFIX << "Py8Collider::InitializationError caught in getPy8Collider. Will discard this point." << endl;
             #endif
             piped_invalid_point.request("Bad point: Pythia can't initialize");
             wrapup();
@@ -249,14 +192,14 @@ namespace Gambit
         }
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << debug_prefix() << "totalxsec [fb] = " << totalxsec * 1e12 << ", veto limit [fb] = " << xsec_veto_fb << endl;
+          cout << DEBUG_PREFIX << "totalxsec [fb] = " << totalxsec * 1e12 << ", veto limit [fb] = " << xsec_veto_fb << endl;
         #endif
 
         // - Check for NaN xsec
         if (Utils::isnan(totalxsec))
         {
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Got NaN cross-section estimate from Pythia." << endl;
+          cout << DEBUG_PREFIX << "Got NaN cross-section estimate from Pythia." << endl;
           #endif
           piped_invalid_point.request("Got NaN cross-section estimate from Pythia.");
           wrapup();
@@ -267,16 +210,37 @@ namespace Gambit
         if (totalxsec * 1e12 < xsec_veto_fb)
         {
           #ifdef COLLIDERBIT_DEBUG
-          cout << debug_prefix() << "Cross-section veto applies. Will now call Loop::wrapup() to skip event generation for this collider." << endl;
+          cout << DEBUG_PREFIX << "Cross-section veto applies. Will now call Loop::wrapup() to skip event generation for this collider." << endl;
           #endif
           wrapup();
         }
 
+        // Create a dummy event to make Pythia fill its internal list of process codes
+        EventT dummy_pythia_event;
+        try
+        {
+          result.nextEvent(dummy_pythia_event);
+        }
+        catch (typename Py8Collider<PythiaT,EventT>::EventGenerationError& e)
+        {
+          piped_invalid_point.request("Failed to generate dummy test event. Will invalidate point.");
+
+          #ifdef COLLIDERBIT_DEBUG
+            cout << DEBUG_PREFIX << "Failed to generate dummy test event during COLLIDER_INIT_OMP in getPy8Collider. Check the logs for event details." << endl;
+          #endif
+          #pragma omp critical (pythia_event_failure)
+          {
+            std::stringstream ss;
+            dummy_pythia_event.list(ss, 1);
+            logger() << LogTags::debug << "Failed to generate dummy test event during COLLIDER_INIT_OMP iteration in getPy8Collider. Pythia record for the event that failed:\n" << ss.str() << EOM;
+          }
+        }
+
       }
 
-      else if (iteration == BASE_FINALIZE and not filenames.empty()) fileCounter++;
-
     }
+
+
 
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
     #define IS_SUSY true
@@ -286,10 +250,60 @@ namespace Gambit
                           PYTHIA_NS::Pythia8::Event> &result)                         \
     {                                                                                 \
       using namespace Pipes::NAME;                                                    \
-      getPy8Collider(result, *Dep::RunMC, *Dep::SPECTRUM,                             \
-       *Dep::decay_rates, #MODEL_EXTENSION, *Loop::iteration,                         \
-       Loop::wrapup, *runOptions, SUSY_FLAG);                                         \
+                                                                                      \
+      static SLHAstruct slha;                                                         \
+      static SLHAstruct slha_spectrum;                                                \
+                                                                                      \
+      if (*Loop::iteration == BASE_INIT)                                              \
+      {                                                                               \
+        /* SLHAea object constructed from dependencies on the spectrum and decays. */ \
+        slha.clear();                                                                 \
+        slha_spectrum.clear();                                                        \
+        slha = Dep::decay_rates->getSLHAea(2);                                        \
+        /* SLHAea in SLHA2 format, please. */                                         \
+        slha_spectrum = Dep::SPECTRUM->getSLHAea(2);                                  \
+        slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());        \
+        if (SUSY_FLAG)                                                                \
+        {                                                                             \
+          if(slha.find("MODSEL") == slha.end())                                       \
+          {                                                                           \
+            SLHAea::Block block("MODSEL");                                            \
+            block.push_back("BLOCK MODSEL              # Model selection");           \
+            SLHAea::Line line;                                                        \
+            line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";             \
+            block.push_back(line);                                                    \
+            slha.push_front(block);                                                   \
+          }                                                                           \
+        }                                                                             \
+      }                                                                               \
+                                                                                      \
+      getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \
+        *Loop::iteration, Loop::wrapup, *runOptions);                                 \
     }
+
+
+    /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
+    /// from reading a SLHA file rather than getting a Spectrum + DecayTable
+    #define GET_SPECIFIC_PYTHIA_SLHA(NAME, PYTHIA_NS, MODEL_EXTENSION)                \
+    void NAME(Py8Collider<PYTHIA_NS::Pythia8::Pythia,                                 \
+                          PYTHIA_NS::Pythia8::Event> &result)                         \
+    {                                                                                 \
+      using namespace Pipes::NAME;                                                    \
+      static SLHAstruct slha;                                                         \
+                                                                                      \
+      if (*Loop::iteration == COLLIDER_INIT)                                          \
+      {                                                                               \
+        const pair_str_SLHAstruct& filename_content_pair = *Dep::SLHAFileNameAndContent; \
+        if (filename_content_pair.first.empty())                                      \
+        {                                                                             \
+          piped_invalid_point.request("Got empty SLHA filename. Will invalidate point."); \
+        }                                                                             \
+      }                                                                               \
+                                                                                      \
+      getPy8Collider(result, *Dep::RunMC, Dep::SLHAFileNameAndContent->second,        \
+        #MODEL_EXTENSION, *Loop::iteration, Loop::wrapup, *runOptions);               \
+    }
+
 
     /// Get a specific Pythia hard-scattering sim as a generator-independent pointer-to-BaseCollider
     #define GET_PYTHIA_AS_BASE_COLLIDER(NAME)           \
