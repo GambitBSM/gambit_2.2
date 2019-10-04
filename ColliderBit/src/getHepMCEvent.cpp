@@ -52,31 +52,50 @@ namespace Gambit
       result.clear();
 
       // Get the filename and initialise the HepMC reader
-      const static str HepMC2_filename = runOptions->getValueOrDef<str>("", "HepMC2_filename");
-      static bool HepMC2_ON = (HepMC2_filename != "");
-      const static str HepMC3_filename = runOptions->getValueOrDef<str>("", "HepMC3_filename");
-      static bool HepMC3_ON = (HepMC3_filename != "");
+      const static str HepMC_filename = runOptions->getValueOrDef<str>("", "hepmc_filename");
+      static int HepMC_file_version = -1;
 
       static bool first = true;
       if (first)
       {
-        if (HepMC2_ON and HepMC3_ON) throw std::runtime_error("Cannot read simultaneously from HepMC2 and HepMC3 files. Quitting...");
-        if (HepMC2_ON)
+        if (not Utils::file_exists(HepMC_filename)) throw std::runtime_error("HepMC event file "+HepMC_filename+" not found. Quitting...");
+
+        // Figure out if the file is HepMC2 or HepMC3
+        std::ifstream infile(HepMC_filename);
+        if (infile.good())
         {
-          if (not Utils::file_exists(HepMC2_filename)) throw std::runtime_error("HepMC2 event file "+HepMC2_filename+" not found.  Quitting...");
+          std::string line;
+          while(std::getline(infile, line))
+          {
+            // Skip blank lines
+            if(line == "") continue;
+
+            // We look for "HepMC::Version 2" or "HepMC::Version 3", 
+            // so we only need the first 16 characters of the line
+            std::string short_line = line.substr(0,16);
+
+            if (short_line == "HepMC::Version 2")
+            {
+              HepMC_file_version = 2;
+              break;
+            }
+            else if (short_line == "HepMC::Version 3")
+            {
+              HepMC_file_version = 3;
+              break;
+            }
+            else
+            {
+              throw std::runtime_error("Could not determine HepMC version from the string '"+short_line+"' extracted from the line '"+line+"'. Quitting...");
+            }
+          }
         }
-        else if (HepMC3_ON)
-        {
-          if (not Utils::file_exists(HepMC3_filename)) throw std::runtime_error("HepMC3 event file "+HepMC3_filename+" not found.  Quitting...");
-        }
-        else
-          throw std::runtime_error("Neither HepMC2 nor HepMC3 event file found. Quitting...");
         first = false;
       }
 
-      if(HepMC2_ON) 
+      if(HepMC_file_version == 2) 
       {
-        static HepMC3::ReaderAsciiHepMC2 HepMC2io(HepMC2_filename);
+        static HepMC3::ReaderAsciiHepMC2 HepMC2io(HepMC_filename);
 
         // Don't do anything during special iterations
         if (*Loop::iteration < 0) return;
@@ -103,9 +122,9 @@ namespace Gambit
         get_HEPUtils_event(ge, result);
  
       }
-      else
+      else if(HepMC_file_version == 3)
       {
-        static HepMC3::ReaderAscii HepMC3io(HepMC3_filename);
+        static HepMC3::ReaderAscii HepMC3io(HepMC_filename);
 
         // Don't do anything during special iterations
         if (*Loop::iteration < 0) return;
@@ -130,7 +149,10 @@ namespace Gambit
 
         // Translate to HEPUtils event
         get_HEPUtils_event(ge, result);
- 
+      }
+      else
+      {
+        throw std::runtime_error("Failed to determine HepMC version for input file "+HepMC_filename+". Quitting...");        
       }
 
     }

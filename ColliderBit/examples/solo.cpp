@@ -82,7 +82,9 @@ int main(int argc, char* argv[])
     bool use_lnpiln = settings.getValueOrDef<bool>(false, "use_lognormal_distribution_for_1d_systematic");
     str event_filename = settings.getValue<str>("event_file");
     bool event_file_is_LHEF = Gambit::Utils::endsWith(event_filename, ".lhe");
-    bool event_file_is_HepMC = Gambit::Utils::endsWith(event_filename, ".hepmc");
+    bool event_file_is_HepMC = (   Gambit::Utils::endsWith(event_filename, ".hepmc")
+                                || Gambit::Utils::endsWith(event_filename, ".hepmc2")
+                                || Gambit::Utils::endsWith(event_filename, ".hepmc3") );
     if (not event_file_is_LHEF and not event_file_is_HepMC)
      throw std::runtime_error("Unrecognised event file format in "+event_filename+"; must be .lhe or .hepmc.");
 
