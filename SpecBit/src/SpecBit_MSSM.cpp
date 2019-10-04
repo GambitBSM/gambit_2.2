@@ -38,6 +38,7 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum_factories.hpp"
 #include "gambit/Elements/smlike_higgs.hpp"
+#include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
 #include "gambit/Utils/stream_overloads.hpp" // Just for more convenient output to logger
 #include "gambit/Utils/util_macros.hpp"
@@ -46,6 +47,8 @@
 #include "gambit/SpecBit/QedQcdWrapper.hpp"
 #include "gambit/SpecBit/MSSMSpec.hpp"
 #include "gambit/SpecBit/model_files_and_boxes.hpp" // #includes lots of flexiblesusy headers and defines interface classes
+#include "gambit/Printers/printermanager.hpp" // Needed by get_MSSM_spectrum_from_postprocessor to access reader object
+#include "gambit/Printers/baseprinter.hpp" // Needed by get_MSSM_spectrum_from_postprocessor to use reader object
 
 // Flexible SUSY stuff (should not be needed by the rest of gambit)
 #include "flexiblesusy/src/ew_input.hpp"
@@ -1180,6 +1183,32 @@ namespace Gambit
 
       // OK the GAMBIT block exists, add the data to the MSSM SubSpectrum object.
       result.get_HE().set_override(Par::mass1,SLHAea::to<double>(input_slha.at("GAMBIT").at(1).at(1)), "high_scale", false);
+    }
+
+    /// Get pre-computed MSSM spectrum from previous output file
+    /// This function ONLY works when the scan is driven by the postprocessor!
+    /// This is because it relies on the global reader object created by the
+    /// postprocessor to retrieve output.
+    void get_MSSM_spectrum_from_postprocessor(Spectrum& result)
+    {
+       // Retrieve the spectrum from whatever the point the global reader object is pointed at.
+       // This should be the same point that the postprocessor has retrieved the
+       // current set of ModelParameters from.
+       // Will throw an error if no reader object exists, i.e. if the postprocessor is not
+       // driving this scan.
+      
+       // Retrieve spectrum info into an SLHAea object 
+       MSSM_SLHAstruct mssm;
+       get_pp_reader().retrieve(mssm,"MSSM_spectrum");
+
+       // Combine with SM info to create full spectrum object
+       //result = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(input_slha, input_slha, mass_cut, mass_ratio_cut);
+    
+       // Dump spectrum to output for testing
+       std::cout<<"Dumping retrieved spectrum!"<<std::endl;
+       SLHAstruct out = mssm; // Only this type has stream overloads etc. defined
+       std::cout<<out;
+       exit(1);   
     }
 
     /// FeynHiggs SUSY masses and mixings
