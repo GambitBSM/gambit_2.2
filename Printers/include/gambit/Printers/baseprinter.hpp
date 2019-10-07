@@ -67,7 +67,7 @@ namespace Gambit
     bool parse_label_for_ModelParameters(const std::string& fulllabel, const std::string& modelname, std::string& out, std::string& rest, bool case_sensitive=true);
 
     /// Helper function for parsing Spectrum label strings
-    bool parse_label_for_spectrum_entry(const std::string& fulllabel, const std::string& req_capability, const std::string& req_module, const std::string& req_function, std::string& outname, std::string outtag, std::string& labelroot, bool case_sensitive=true);
+    bool parse_label_for_spectrum_entry(const std::string& fulllabel, const std::string& req_capability, const std::string& req_module, const std::string& req_function, std::string& outname, std::string& outtag, std::string& labelroot, bool case_sensitive=true);
 
     /// For debugging; print to stdout all the typeIDs for all types.
     void printAllTypeIDs(void);

@@ -126,7 +126,7 @@ namespace Gambit
      /// "labelroot" is a memory location to store the rest of the label (i.e. minus the entry name)
      // example label:
      // #MSSM_spectrum @SpecBit::get_MSSM_spectrum_as_map::~u_(6,6) Pole_Mixing
-     bool parse_label_for_spectrum_entry(const std::string& fulllabel, const std::string& req_capability, const std::string& req_module, const std::string& req_function, std::string& outname, std::string outtag, std::string& labelroot, bool case_sensitive)
+     bool parse_label_for_spectrum_entry(const std::string& fulllabel, const std::string& req_capability, const std::string& req_module, const std::string& req_function, std::string& outname, std::string& outtag, std::string& labelroot, bool case_sensitive)
      {
         bool result = false;
         std::istringstream iss(fulllabel);

@@ -58,6 +58,9 @@ namespace Gambit
        BuffPair() {}
     };
 
+    // Forward declaration
+    class SLHAcombo;
+
     /// Keeps track of vertex buffers local to a retrieve function
     /// Similar to the buffer manager for HDF5Printer. I considered
     /// trying to re-use that, but it is too integrated with the
@@ -187,6 +190,9 @@ namespace Gambit
            return selected_buffer.isvalid.get_entry(dset_index);
         }
 
+        /// Extra helper function for spectrum retrieval
+        bool retrieve_and_add_to_SLHAea(SLHAstruct& out, bool& found, const std::string& spec_type, const std::string& entry, const SLHAcombo& item, const std::set<std::string>& all_dataset_labels, const uint rank, const ulong pointID);
+ 
     };
 
     /// Buffer retrieve function

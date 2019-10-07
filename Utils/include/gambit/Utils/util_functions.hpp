@@ -108,6 +108,9 @@ namespace Gambit
     /// Perform a (possibly) case-insensitive string comparison
     EXPORT_SYMBOLS bool iequals(const std::string& a, const std::string& b, bool case_sensitive=false);
 
+    /// Convert a whole string to lowercase
+    EXPORT_SYMBOLS std::string strtolower(const std::string& a);
+ 
     /************************************************************************/
     /* Comparator for case-insensitive comparison in STL assos. containers  */
     /************************************************************************/

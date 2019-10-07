@@ -1191,6 +1191,9 @@ namespace Gambit
     /// postprocessor to retrieve output.
     void get_MSSM_spectrum_from_postprocessor(Spectrum& result)
     {
+       namespace myPipe = Pipes::get_MSSM_spectrum_from_postprocessor;
+       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS; // Retrieve dependency on SLHAstruct
+
        // Retrieve the spectrum from whatever the point the global reader object is pointed at.
        // This should be the same point that the postprocessor has retrieved the
        // current set of ModelParameters from.
@@ -1198,17 +1201,35 @@ namespace Gambit
        // driving this scan.
       
        // Retrieve spectrum info into an SLHAea object 
-       MSSM_SLHAstruct mssm;
-       get_pp_reader().retrieve(mssm,"MSSM_spectrum");
+       MSSM_SLHAstruct mssm_in; // Special type to trigger specialised MSSM retrieve routine
+       get_pp_reader().retrieve(mssm_in,"MSSM_spectrum");
 
-       // Combine with SM info to create full spectrum object
-       //result = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(input_slha, input_slha, mass_cut, mass_ratio_cut);
-    
        // Dump spectrum to output for testing
-       std::cout<<"Dumping retrieved spectrum!"<<std::endl;
-       SLHAstruct out = mssm; // Only this type has stream overloads etc. defined
-       std::cout<<out;
-       exit(1);   
+       std::cerr<<"Dumping retrieved spectrum!"<<std::endl;
+       SLHAstruct mssm = mssm_in; // Only this type has stream overloads etc. defined
+
+       // Turns out we don't generically save tan_beta(mZ)_DRBAR, so need to extract
+       // this from model parameters (it is always an input, so we should have it in those)
+       double tbmZ = *myPipe::Param.at("TanBeta");
+       SLHAea_add(mssm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
+
+       std::cerr<<mssm<<std::endl;
+       std::cerr<<"Dump complete!"<<std::endl;
+
+       // Retrieve any mass cuts (could just cut with postprocessor, but I
+       // guess can leave this feature in for compatibility with usage
+       // of other Spectrum objects.
+       static const Spectrum::mc_info mass_cut = myPipe::runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
+       static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
+
+       // Create HE simple SubSpectrum object from the SLHAea object
+       MSSMSimpleSpec he(mssm);
+
+       // Create SMSimpleSpec SubSpectrum object from SMInputs
+       SMSimpleSpec sm(sminputs);
+
+       // Create full Spectrum object
+       result = Spectrum(sm,he,sminputs,NULL,mass_cut,mass_ratio_cut);
     }
 
     /// FeynHiggs SUSY masses and mixings
