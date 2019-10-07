@@ -161,8 +161,8 @@ Rules:
         maxFailedEvents: 10
         invalidate_failed_points: true
         analyses:
-          # - ATLAS_13TeV_0LEP_139invfb
-          - ATLAS_13TeV_0LEP_36invfb
+          - ATLAS_13TeV_0LEP_139invfb
+          # - ATLAS_13TeV_0LEP_36invfb
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes

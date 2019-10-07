@@ -60,6 +60,7 @@ namespace Gambit {
         const P4 pmiss = event->missingmom();
         const double met = event->met();
 
+
         // Get baseline jets
         /// @todo Drop b-tag if pT < 50 GeV or |eta| > 2.5?
         vector<const Jet*> baselineJets;
@@ -69,8 +70,8 @@ namespace Gambit {
           }
         }
 
-        /// @todo Apply a random 9% loss / 0.91 reweight for jet quality criteria?
 
+        /// @todo Apply a random 9% loss / 0.91 reweight for jet quality criteria?
 
         // Get baseline electrons and apply efficiency
         vector<Particle*> baselineElectrons;
@@ -124,7 +125,7 @@ namespace Gambit {
         const size_t nElectrons = signalElectrons.size();
         const size_t nMuons = signalMuons.size();
         const size_t nJets50 = signalJets50.size();
-        //const size_t nJets = signalJets.size();
+        const size_t nJets = signalJets.size();
 
         // HT-related quantities (calculated over all >50 GeV jets)
         double sumptj = 0;
@@ -201,42 +202,50 @@ namespace Gambit {
         const double w = event->weight();
 
         // 2 jet regions
-        if (_cutflows["2j-1600"].filltail({
-              nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, etamax_2 < 2.0,
-              dphimin_123 > 0.8, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 1600})) _srnums[SR2J_1600] += w;
-        if (_cutflows["2j-2200"].filltail({
-              nJets50 >= 2, signalJets[0]->pT() > 600, signalJets[1]->pT() >  50, etamax_2 < 2.8,
-              dphimin_123 > 0.4, dphimin_more > 0.2, true, met_sqrtHT > 16, meff > 2200})) _srnums[SR2J_2200] += w;
-        if (_cutflows["2j-2800"].filltail({
-              nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, etamax_2 < 1.2,
-              dphimin_123 > 0.8, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 2800})) _srnums[SR2J_2800] += w;
+        if (nJets >= 2) {
+          if (_cutflows["2j-1600"].filltail({
+                nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, etamax_2 < 2.0,
+                dphimin_123 > 0.8, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 1600})) _srnums[SR2J_1600] += w;
+          if (_cutflows["2j-2200"].filltail({
+                nJets50 >= 2, signalJets[0]->pT() > 600, signalJets[1]->pT() >  50, etamax_2 < 2.8,
+                dphimin_123 > 0.4, dphimin_more > 0.2, true, met_sqrtHT > 16, meff > 2200})) _srnums[SR2J_2200] += w;
+          if (_cutflows["2j-2800"].filltail({
+                nJets50 >= 2, signalJets[0]->pT() > 250, signalJets[1]->pT() > 250, etamax_2 < 1.2,
+                dphimin_123 > 0.8, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 2800})) _srnums[SR2J_2800] += w;
+        }
 
         // 4 jet regions
-        if (_cutflows["4j-1000"].filltail({
-              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
-              dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 1000})) _srnums[SR4J_1000] += w;
-        if (_cutflows["4j-2200"].filltail({
-              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
-              dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 2200})) _srnums[SR4J_2200] += w;
-        if (_cutflows["4j-3400"].filltail({
-              nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
-              dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 10, meff > 3400})) _srnums[SR4J_3400] += w;
+        if (nJets >= 4) {
+          if (_cutflows["4j-1000"].filltail({
+                nJets50 >= 4, signalJets.at(0)->pT() > 200, signalJets.at(3)->pT() > 100, etamax_4 < 2.0,
+                dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 1000})) _srnums[SR4J_1000] += w;
+          if (_cutflows["4j-2200"].filltail({
+                nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
+                dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 16, meff > 2200})) _srnums[SR4J_2200] += w;
+          if (_cutflows["4j-3400"].filltail({
+                nJets50 >= 4, signalJets[0]->pT() > 200, signalJets[3]->pT() > 100, etamax_4 < 2.0,
+                dphimin_123 > 0.4, dphimin_more > 0.4, true, met_sqrtHT > 10, meff > 3400})) _srnums[SR4J_3400] += w;
+        }
 
         // 5 jet region
-        if (_cutflows["5j-1600"].filltail({
-              nJets50 >= 5, signalJets[0]->pT() > 600, signalJets[4]->pT() > 50, etamax_5 < 2.8,
-              dphimin_123 > 0.4, dphimin_more > 0.2, true, met_sqrtHT > 16, meff > 1600})) _srnums[SR5J_1600] += w;
+        if (nJets >= 5) {
+          if (_cutflows["5j-1600"].filltail({
+                nJets50 >= 5, signalJets[0]->pT() > 600, signalJets[4]->pT() > 50, etamax_5 < 2.8,
+                dphimin_123 > 0.4, dphimin_more > 0.2, true, met_sqrtHT > 16, meff > 1600})) _srnums[SR5J_1600] += w;
+        }
 
         // 6 jet regions
-        if (_cutflows["6j-1000"].filltail({
-              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
-              dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 16, meff > 1000})) _srnums[SR6J_1000] += w;
-        if (_cutflows["6j-2200"].filltail({
-              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
-              dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 16, meff > 2200})) _srnums[SR6J_2200] += w;
-        if (_cutflows["6j-3400"].filltail({
-              nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
-              dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 10, meff > 3400})) _srnums[SR6J_3400] += w;
+        if (nJets >= 6) {
+          if (_cutflows["6j-1000"].filltail({
+                nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
+                dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 16, meff > 1000})) _srnums[SR6J_1000] += w;
+          if (_cutflows["6j-2200"].filltail({
+                nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
+                dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 16, meff > 2200})) _srnums[SR6J_2200] += w;
+          if (_cutflows["6j-3400"].filltail({
+                nJets50 >= 6, signalJets[0]->pT() > 200, signalJets[5]->pT() > 75, etamax_6 < 2.0,
+                dphimin_123 > 0.4, dphimin_more > 0.2, aplanarity > 0.08, met_sqrtHT > 10, meff > 3400})) _srnums[SR6J_3400] += w;
+        }
 
 
         // if (dphimin_123 > 0.8 && dphimin_more > 0.4) {
@@ -319,6 +328,7 @@ namespace Gambit {
         // if (nJets >= 6) _flows["6j-2600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets>=6, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[5]->pT() > 100, true, aplanarity > 0.08, met_meff_6 > 0.15, meff_incl > 2600});
 
       }
+
 
       /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
       void combine(const Analysis* other)
