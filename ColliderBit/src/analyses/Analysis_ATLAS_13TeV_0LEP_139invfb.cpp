@@ -38,7 +38,9 @@ namespace Gambit {
         set_luminosity(139.0);
 
         // Book cut-flows
-        const vector<string> cutnames = {"Pre-sel", "Njet", "pT1", "pTx", "|eta_x|", "Dphi(j123,MET)min", "Dphi(j4+,MET)min", "Aplanarity", "MET/sqrt(HT)", "m_eff(incl)"};
+        const vector<string> cutnames = {"Pre-sel", "Njet", "pT1", "pTx", "|eta_x|",
+                                         "Dphi(j123,MET)min", "Dphi(j4+,MET)min",
+                                         "Aplanarity", "MET/sqrt(HT)", "m_eff(incl)",};
         _cutflows.addCutflow("2j-1600", cutnames);
         _cutflows.addCutflow("2j-2200", cutnames);
         _cutflows.addCutflow("2j-2800", cutnames);
@@ -352,13 +354,15 @@ namespace Gambit {
         add_result(SignalRegionData("SR-6j-1000",   25, {_srnums[SR6J_1000], 0.}, {  21.,  2.9}));
         add_result(SignalRegionData("SR-6j-2200",    5, {_srnums[SR6J_2200], 0.}, {  4.6,  1.0}));
         add_result(SignalRegionData("SR-6j-3400",    0, {_srnums[SR6J_3400], 0.}, {  0.8,  0.4}));
+
         // const double sf = 139*crossSection()/femtobarn/sumOfWeights();
         // _cutflows.scale(sf);
-        // cout << "CUTFLOWS:\n\n" << _cutflows << endl;
+        cout << "CUTFLOWS:\n\n" << _cutflows << endl;
       }
 
 
     protected:
+
       void analysis_specific_reset() {
         for (size_t i = 0; i < NUMSR; ++i) _srnums[i] = 0;
       }
