@@ -293,10 +293,6 @@ namespace Gambit
         /* Get spectrum */                                                                  \
         slha_spectrum = Dep::SPECTRUM->getSLHAea(2);                                        \
         result.insert(result.begin(), slha_spectrum.begin(), slha_spectrum.end());          \
-                                                                                            \
-        std::cout << "DEBUG: printing spectrum:" << std::endl;                              \
-        std::cout << result << std::endl;                                                   \
-        std::cout << "DEBUG: done printing spectrum:" << std::endl;                         \
       }                                                                                     \
     }
 
@@ -310,18 +306,12 @@ namespace Gambit
                           PYTHIA_NS::Pythia8::Event> &result)                         \
     {                                                                                 \
       using namespace Pipes::NAME;                                                    \
-                                                                                      \
       static SLHAstruct slha;                                                         \
-      cout << "AK DEBUG: GET_SPECIFIC_PYTHIA: *Loop::iteration = " << *Loop::iteration << endl; \
       if (*Loop::iteration == BASE_INIT)                                              \
       {                                                                               \
         /* SLHAea object constructed from dependencies on the spectrum and decays. */ \
-        cout << "AK DEBUG: GET_SPECIFIC_PYTHIA: Clear slha" << endl; \
         slha.clear();                                                                 \
-        cout << "AK DEBUG: Fill slha with *Dep::SpectrumAndDecaysForPythia" << endl; \
         slha = *Dep::SpectrumAndDecaysForPythia;                                      \
-        cout << "AK DEBUG: Print slha: " << slha << endl; \
-        cout << "AK DEBUG: Done printing slha: " << endl; \
       }                                                                               \
                                                                                       \
       getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \

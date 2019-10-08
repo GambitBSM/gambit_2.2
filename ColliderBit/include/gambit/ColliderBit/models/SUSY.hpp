@@ -99,6 +99,8 @@
   #define CAPABILITY PIDPairCrossSectionsMap
 
     /// Example of provding PIDPairCrossSectionsMap using a Python backend
+    /// @todo 1. Replace SLHA1Spectrum dependency with SpectrumAndDecaysForPythia (to ensure same spectrum)
+    /// @todo 2. Add a CB utility function that checks if a SLHAstruct is SLHA1 or SLHA2, and use it in this function
     #define FUNCTION getPIDPairCrossSectionsMap_xsecBE_example
     START_FUNCTION(map_PID_pair_PID_pair_xsec)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
