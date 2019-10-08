@@ -1202,8 +1202,14 @@ namespace Gambit
       
        // Retrieve spectrum info into an SLHAea object 
        MSSM_SLHAstruct mssm_in; // Special type to trigger specialised MSSM retrieve routine
-       get_pp_reader().retrieve(mssm_in,"MSSM_spectrum");
+       bool is_valid = get_pp_reader().retrieve(mssm_in,"MSSM_spectrum");
 
+       // Check if a valid spectrum was retrived
+       // (if the required datasets don't exist an error will be thrown,
+       //  so this is just checking that the spectrum was computed for
+       //  the current input point)
+       if(not is_valid) invalid_point().raise("Postprocessor: precomputed spectrum was set 'invalid' for this point");
+       
        // Dump spectrum to output for testing
        //std::cerr<<"Dumping retrieved spectrum!"<<std::endl;
        SLHAstruct mssm = mssm_in; // Only this type has stream overloads etc. defined
