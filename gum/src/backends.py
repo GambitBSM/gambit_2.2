@@ -31,12 +31,12 @@ def check_backends(outputs):
     """
     Diagonostics to check all backends exist in the GAMBIT repository.
     """
-    ## TO DO - SPheno, MadGraph, FlexibleSUSY, Vevacious...
+    ## TO DO - SPheno, MadGraph, FlexibleSUSY...
 
     if not isinstance(outputs, Outputs):
         raise GumError("\nRequested output not passed as class Outputs.\n")
 
-    print("\nChecking for backends before we get going...\n")
+    print("Checking for backends before we get going...")
 
     # CalcHEP
     if outputs.ch:
@@ -58,7 +58,7 @@ def check_backends(outputs):
                             ":\n   make vevacious"))
 
 
-    print("\nAll backends found -- connecting to Mathematica!\n")
+    print("All backends found -- connecting to Mathematica!\n")
 
 
 def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version):
@@ -154,10 +154,11 @@ def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
         raise GumError(("\n\tYou need to pass either a line number, or a string for "
                         "me to find, if you want to amend backends.cmake."))
 
-    # If the user specifies a 
+    # If the user specifies a line number
     if (linenum != 0):
         amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)
 
+    # If the user specifies a string to match, then patch before
     else:
         present, linenum = find_string("backends.cmake", "cmake", string)
         if present: amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)

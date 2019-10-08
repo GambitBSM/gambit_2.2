@@ -188,6 +188,12 @@ if args.file:
     todo: figure out what to return 
     """
 
+    # Create defaultdict for reset file.
+    # There are 2 nodes: new_files and amended_files.
+    # todo: add backend patches (e.g. pythia stuff) to reset_contents
+    # todo: write routines to: ADD_CAPABILITY, ADD_FUNCTION, DELETE_CAPABILITY, DELETE_FUNCTION, so ordering is not important.
+    reset_contents = defaultdict(lambda: defaultdict(list))
+
     """
     MADGRAPH
     """
@@ -336,6 +342,8 @@ if args.file:
         # Write out the frontend header and source files
         write_backend_frontends(output_dir, gum.name, "SARAHSPheno", SPHENO_VERSION, spheno_header, spheno_src)
  
+        # TODO add this to reset_dict (^amend that function above)
+
         # DecayBit entry
         print("Writing SPheno module functions for DecayBit.")
         spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(clean_model_name)
@@ -441,8 +449,21 @@ if args.file:
         # If micrOMEGAs requested
         if output_opts.mo:
 
+            print("Patching micrOMEGAs...")
+
+            # Pristine and patched micrOMEGAs
+            pristine_mo_dir = output_dir + "/micrOMEGAs"
+            patched_mo_dir = output_dir + "/micrOMEGAs_patched"
+
+            # Copy micromegas files to Backend patches from the cleaned
+            # CalcHEP directory
+            copy_micromegas_files(gum.name)
+
+            # Add the patch file to the directory too
+            patch_micromegas(gum.name, reset_contents)
+
             print("Writing micrOMEGAs interface for DarkBit.")
-            # TODO: write simple frontend for MO.
+
             mo_src = write_micromegas_src(gum.name, gum.spec, gum.math, 
                                           parameters, bsm_particle_list, 
                                           gambit_pdgs, calchep_masses, 
@@ -487,7 +508,7 @@ if args.file:
     else:
         print("Writing basic container SpecBit interface...")
         # TODO: determine when "simple_SMinputs" needed from FR/S model file
-        spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs, gum.math)
+        spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs)
 
     spectrum_header = write_spectrum_header(gum.name, add_higgs, output_opts.spheno)
     spec_rollcall = write_specbit_rollcall(gum.name)
@@ -513,12 +534,6 @@ if args.file:
     """
 
     print("Writing new frontends and patches for backend codes.")
-
-    # Create defaultdict for reset file.
-    # There are 2 nodes: new_files and amended_files.
-    # todo: add backend patches (e.g. pythia stuff) to reset_contents
-    # todo: write routines to: ADD_CAPABILITY, ADD_FUNCTION, DELETE_CAPABILITY, DELETE_FUNCTION, so ordering is not important.
-    reset_contents = defaultdict(lambda: defaultdict(list))
 
     # Conditional on CalcHEP files being made.
     if output_opts.ch:
@@ -546,7 +561,7 @@ if args.file:
         print("")
         exit()
     #TODO: for now do not write anything, ever
-    exit()
+    #exit()
 
     print("")
     print("Now putting the new code into GAMBIT.")
@@ -629,6 +644,7 @@ if args.file:
         write_file(f+".cpp", m, mo_src, reset_contents)
         write_file(f+".hpp", m, mo_head, reset_contents)
         add_to_backend_locations(be, be_loc, ver, reset_contents)
+        add_micromegas_to_cmake(gum.name, reset_contents)
         # TODO add entry to DarkBit_rollcall -> mo capabilities (Xf_micromegas?)
     # Pythia
     if output_opts.pythia:
@@ -644,7 +660,10 @@ if args.file:
         write_vevacious_rollcall(gum.name, gum.spec, reset_contents)        
 
     # Write a simple YAML file.
-    if decaybit: drop_yaml_file(gum.name, parameters, add_higgs, reset_contents)
+    if decaybit: 
+        drop_yaml_file(gum.name, parameters, add_higgs, reset_contents)
+        print(("GUM has dropped a test YAML file at "
+               "$GAMBIT/yaml_files/{0}.yaml!").format(gum.name))
 
     # Write a config file to make compilation easier
     write_config_file(output_opts, gum.name, reset_contents)

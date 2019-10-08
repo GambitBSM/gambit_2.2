@@ -3,6 +3,8 @@ Master module for all DarkBit related routines.
 """
 
 import numpy as np
+import shutil
+from distutils.dir_util import copy_tree
 
 from setup import *
 from files import *
@@ -352,15 +354,17 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     if sv:
         towrite += sv_src
 
-    for i in np.arange(len(propagators)):
-        if abs(propagators[i]) != abs(dm.PDG_code):
-            towrite += (
-                    "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
-                    "process_ann.resonances_thresholds.resonances.\n    "
-                    "push_back(TH_Resonance(spec.get(Par::Pole_Mass, \"{0}\"), "
-                    "tbl.at(\"{0}\").width_in_GeV));\n"
-            ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
-                 dm_mass)
+    if propagators:
+
+        for i in np.arange(len(propagators)):
+            if abs(propagators[i]) != abs(dm.PDG_code):
+                towrite += (
+                        "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
+                        "process_ann.resonances_thresholds.resonances.\n    "
+                        "push_back(TH_Resonance(spec.get(Par::Pole_Mass, \"{0}\"), "
+                        "tbl.at(\"{0}\").width_in_GeV));\n"
+                ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
+                     dm_mass)
 
     towrite += (
             "\n"
@@ -736,6 +740,8 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
                 "Assign_Value((char*)\"{0}\", sminputs.{1});\n"
             ).format(chmass, SMinputs[pdg])
 
+
+    # TODO GF, aS, aEWinv
     # # These are handled slightly differently by SARAH and FeynRules
     # if mathpackage == 'sarah':
     #     print("MO SARAH support not implemented yet.")
@@ -745,7 +751,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     #     print("MO FeynRules support not implemented yet.")
     #     # Do a different thing
 
-    # Widths ## TODO
+    # Widths
     mo_src += (
             "\n"
             "// Set particle widths in micrOmegas\n"
@@ -834,3 +840,86 @@ def write_micromegas_header(gambit_model_name, mathpackage, params):
 
     return indent(mo_head)
 
+
+def copy_micromegas_files(model_name):
+    """
+    Creates a copy of micrOMEGAs files in $BACKENDS/patches
+    """
+
+    # The location of the cleaned (GAMBIT-friendly) CH files
+    ch_location = "./../Backends/patches/calchep/3.6.27/Models/" + model_name
+
+    # Move the CH files to patches to copy across
+    gb_target = "./../Backends/patches/micromegas/3.6.9.2/" + model_name + "/mdlfiles"
+    if not os.path.exists(gb_target):
+        os.makedirs(gb_target)
+
+    shutil.copyfile(ch_location + "/func1.mdl", gb_target + "/func1.mdl")
+    shutil.copyfile(ch_location + "/vars1.mdl", gb_target + "/vars1.mdl")
+    shutil.copyfile(ch_location + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
+    shutil.copyfile(ch_location + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
+    shutil.copyfile(ch_location + "/extlib1.mdl", gb_target + "/extlib1.mdl")
+
+    print("micrOMEGAs files moved to backend dir.")
+
+def patch_micromegas(model_name, reset_dict):
+    """
+    Patches micrOMEGAs' Makefile to make it usable as a
+    shared library. This is generic for every new model.
+    """
+
+    towrite = (
+        "--- Makefile    2014-04-03 15:29:30.000000000 +0100\n"
+        "+++ Makefile_patched    2019-10-08 16:23:45.576576545 +0100\n"
+        "@@ -45,6 +45,13 @@ libs:\n"
+        "    $(MAKE) -C work\n"
+        "    $(MAKE) -C lib\n"
+        "\n"
+        "+sharedlib: all\n"
+        "+ifeq (,$(main)) \n"
+        "+   @echo Main program is not specified. Use gmake main='<code of main program>'\n"
+        "+else  \n"
+        "+   $(CXX) -shared -fPIC -o libmicromegas.so $(main) $(SSS) $(lDL)\n"
+        "+endif\n"
+        "+\n"
+        " clean: \n"
+        "    $(MAKE) -C lib  clean\n"
+        "    $(MAKE) -C work clean \n"
+    )
+
+    filename = "micromegas/3.6.9.2/"+model_name+"/patch_micromegas_3.6.9.2_"+model_name+".dif"
+
+    write_file(filename, "Backends", towrite, reset_dict)
+    
+    print("micrOMEGAs files patched.")
+
+def add_micromegas_to_cmake(model_name, reset_dict):
+    """
+    Add a new entry to cmake/backends.cmake for micrOMEGAs_<NEWMODEL>
+    """
+
+    towrite = (
+            "\n"
+            "# MicrOmegas "+model_name+" model\n"
+            "set(model \""+model_name+"\")\n"
+            "set(patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/"+model_name+"/patch_${name}_${ver}_${model}\")\n"
+            "set(patchdir \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/"+model_name+")\n"
+            "check_ditch_status(${name}_${model} ${ver} ${dir})\n"
+            "if(NOT ditched_${name}_${model}_${ver})\n"
+            "  ExternalProject_Add(${name}_${model}_${ver}\n"
+            "    DOWNLOAD_COMMAND ""\n"
+            "    SOURCE_DIR ${dir}\n"
+            "    PATCH_COMMAND ./newProject ${model} && patch -p1 < ${patch}\n"
+            "    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/mdlfiles ${dir}/work/models/\n"
+            "    BUILD_IN_SOURCE 1\n"
+            "    CONFIGURE_COMMAND ""\n"
+            "    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${CMAKE_MAKE_PROGRAM} sharedlib main=main.c\n"
+            "    INSTALL_COMMAND ""\n"
+            "  )\n"
+            "  add_extra_targets(\"backend model\" ${name} ${ver} ${dir}/${model} ${model} \"yes | clean\")\n"
+            "  set_as_default_version(\"backend model\" ${name}_${model} ${ver})\n"
+            "endif()\n"
+            "\n"
+    )
+
+    add_to_backends_cmake(towrite, reset_dict, string_to_find="# Pythia")
