@@ -974,6 +974,21 @@ START_MODULE
     #undef FUNCTION
  #undef CAPABILITY
 
+/// HEPLike LogLikelihood Bs -> Phi mu mu Angular + Br
+  #define CAPABILITY HEPLike_Bs2PhimumuBr_LogLikelihood
+  START_CAPABILITY
+    #define FUNCTION HEPLike_Bs2PhimumuBr_LogLikelihood
+    START_FUNCTION(double);
+    DEPENDENCY(BKstarmumu_0p1_0p98, Flav_KstarMuMu_obs); 
+    DEPENDENCY(BKstarmumu_11_25, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_25_40, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_40_60, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_60_80, Flav_KstarMuMu_obs);
+    DEPENDENCY(BKstarmumu_15_19, Flav_KstarMuMu_obs);
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+ #undef CAPABILITY
+
 
 
 
