@@ -495,6 +495,20 @@ namespace Gambit
            SLHAea_add(out, "HMIX", 4, mA2, "m_A^2 = BMu/(cb*sb) (Q)");
            // Normalisation of g1
            SLHAea_add(out, "GAUGE", 1, gprime, "g' (Q)", true);
+
+           // Add off-diagonal Yukawa terms (all zero due to SLHA conventions, but
+           // we require them internally due to automated handling of matrices
+           // We do this here rather than read the zeros from the output in case we
+           // don't bother to output them in the future.
+           std::vector<std::string> blocks = {"Yu","Yd","Ye"};
+           for(auto it=blocks.begin(); it!=blocks.end(); ++it)
+           {
+              for(int i=1; i<=3; i++){ for(int j=1; j<=3; j++) {
+                 std::stringstream label;
+                 label<<(*it)<<"_("<<i<<","<<j<<")";
+                 if(i!=j) SLHAea_add(out, (*it), i, j, 0, label.str());
+              }}
+           }
         }
         
         return is_valid;

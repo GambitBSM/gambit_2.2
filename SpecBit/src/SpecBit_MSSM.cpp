@@ -1791,7 +1791,18 @@ namespace Gambit
     {
       namespace myPipe = Pipes::get_MSSM_spectrum_as_map;
       const Spectrum& mssmspec(*myPipe::Dep::MSSM_spectrum);
-      fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      try
+      {
+         fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      }
+      catch(const Gambit::exception&)
+      {
+         // The above will fail for the SimpleSpectrum versions of the MSSM spectrum
+         // because it uses SM_slha rather than SM for the LE subspectrum
+         // TODO: Would be better to do this in a more elegant way than with exception
+         // handling
+         fill_map_from_subspectrum<SpectrumContents::SM_slha>  (specmap, mssmspec.get_LE()); 
+      }
       fill_map_from_subspectrum<SpectrumContents::MSSM>(specmap, mssmspec.get_HE());
       add_extra_MSSM_parameter_combinations(specmap, mssmspec.get_HE());
     }
@@ -1799,7 +1810,18 @@ namespace Gambit
     {
       namespace myPipe = Pipes::get_unimproved_MSSM_spectrum_as_map;
       const Spectrum& mssmspec(*myPipe::Dep::unimproved_MSSM_spectrum);
-      fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      try
+      {
+         fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      }
+      catch(const Gambit::exception&)
+      {
+         // The above will fail for the SimpleSpectrum versions of the MSSM spectrum
+         // because it uses SM_slha rather than SM for the LE subspectrum
+         // TODO: Would be better to do this in a more elegant way than with exception
+         // handling
+         fill_map_from_subspectrum<SpectrumContents::SM_slha>  (specmap, mssmspec.get_LE()); 
+      }
       fill_map_from_subspectrum<SpectrumContents::MSSM>(specmap, mssmspec.get_HE());
       add_extra_MSSM_parameter_combinations(specmap, mssmspec.get_HE());
     }
