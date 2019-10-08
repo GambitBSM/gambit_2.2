@@ -206,6 +206,9 @@ def write_file(filename, module, contents, reset_dict):
 
     reset_dict['new_files']['files'].append(location)
 
+    # Save a temp mug file, incase something goes wrong.
+    drop_mug_file("mug_files/temp.mug", reset_dict)
+
     # Make the directory if it doesn't exist
     mkdir_if_absent(location_parts[0])
     # Create new file
@@ -228,6 +231,9 @@ def copy_file(filename, module, output_dir, reset_dict, existing=True):
         reset_dict['copied_amended_files']['files'].append(location)
     else:
         reset_dict['new_files']['files'].append(location)
+
+    # Save a temp mug file, incase something goes wrong.
+    drop_mug_file("mug_files/temp.mug", reset_dict)
 
     mkdir_if_absent(location_parts[0])
     # Copy the file
@@ -264,9 +270,10 @@ def amend_file(filename, module, contents, line_number, reset_dict):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
 
-    # Get the indentation out the front of the contents
-
     reset_dict['amended_files'][location].append(contents)
+
+    # Save a temp mug file, incase something goes wrong.
+    drop_mug_file("mug_files/temp.mug", reset_dict)
 
     temp_location = location + "_temp"
     lines = open(location, 'r').readlines()
@@ -378,6 +385,64 @@ def write_function(function, returntype, dependencies=None,
     ).format(function, returntype, dumb_indent(2, extras))
 
     return dumb_indent(4, towrite)
+
+def add_new_model_to_function(filename, module, capability, function, model_name, reset_dict):
+    """
+    Adds a new entry to the ALLOW_MODELS macro for a given (pre-existing)
+    CAPABILITY and FUNCTION.
+    """
+
+    location = full_filename(filename, module)
+    temp_location = location + "_temp"
+
+    # Check the capability + function exist
+    exists, num = find_function(function, capability, module, filename)
+    if not exists:
+        raise GumError(("Could not find function {0} in capability "
+                        "{1} in {2}").format(function, capability, location))
+
+    counter = 0
+    pattern = "ALLOW_MODELS"
+    take_it_slow = False
+    modellist = ""
+    adding_to_modellist = False
+    done = False
+    with open(location, 'r') as f, open(temp_location, 'w+') as g:
+        # Write everything up to the function
+        for line in f:
+            counter += 1
+            if counter > num and not done:
+                # Be cool if we are nearby
+                take_it_slow = True
+            # If we're not nearby just go for it
+            if not take_it_slow:
+                g.write(line)
+            # If we're nearby then go through line-by-line
+            else:
+                if pattern in line:
+                    # Start adding to the list of models
+                    adding_to_modellist = True
+                elif not adding_to_modellist: 
+                    g.write(line)
+                if adding_to_modellist and not done:
+                    modellist += line
+                    # End of macro
+                    if ")" in line: 
+                        # Add the model name to the end
+                        modellist = re.sub(r'\)', ", "+model_name+')', modellist)
+                        g.write(modellist)
+                        adding_to_modellist = False
+                        take_it_slow = False
+                        done = True
+
+    # Add to the reset dictionary
+    reset_dict['new_models'][location+'|'+capability+'|'+function].append(model_name)
+
+    os.remove(location)
+    os.rename(temp_location, location)
+
+    print("Model {} added to capability {}.".format(model_name, capability))
+
 
 def blame_gum(message):
     """
@@ -493,6 +558,8 @@ def revert(reset_file):
 
         for filename, v in amended_files.iteritems():
 
+            print("Amending {0}...".format(filename))
+
             temp_file = filename + "_temp"
             with open(filename, 'r') as original_file:
                 text = original_file.read()
@@ -517,6 +584,53 @@ def revert(reset_file):
 
             os.remove(filename)
             os.rename(temp_file, filename)
+
+        # Now go through those amendments that are adding new models to an existing
+        # ALLOW_MODELS macro for a given capability
+        amended_capabilities = data['new_models']
+
+        for loc_cap_func, model in amended_capabilities.iteritems():
+            
+            location, capability, function = loc_cap_func.split('|')
+            module = location.split('/')[1]
+
+            print(("Removing model from capability {0}; function {1}; in {2}...")
+                   .format(capability, function, module))
+
+            temp_file = location + "_temp"
+            
+            exists, num = find_function(function, capability, module)
+            pattern = "ALLOW_MODELS"
+            
+            counter = 0
+            done = False
+            take_it_slow = False
+            modellist = ""
+            taking_from_modellist = False
+            
+            with open(location, 'r') as f, open(temp_file, 'w+') as g:
+                for line in f:
+                    counter += 1
+                    if counter > num and not done: 
+                        take_it_slow = True
+                    if not take_it_slow: 
+                        g.write(line)
+                    else:
+                        if pattern in line: 
+                            taking_from_modellist = True 
+                        elif not taking_from_modellist: g.write(line)
+                        if taking_from_modellist and not done:
+                            modellist += line
+                            if ")" in line: 
+                                # Take the model out of the list
+                                modellist = re.sub(', '+model[0], '', modellist)
+                                g.write(modellist)
+                                taking_from_modellist = False
+                                take_it_slow = False
+                                done = True
+
+            os.remove(location)
+            os.rename(temp_file, location)
 
     return
 
@@ -552,10 +666,21 @@ def drop_mug_file(mug_file, contents):
 
     d = dict(contents)
 
-    new_files = dict(d['new_files'])
-    amended_files = dict(d['amended_files'])
-
-    new_contents = {'new_files': new_files, 'amended_files': amended_files}
+    if 'new_files' in d:
+        new_files = dict(d['new_files'])
+    else:
+        new_files = {}
+    if 'amended_files' in d:
+        amended_files = dict(d['amended_files'])
+    else:
+        amended_files = {}
+    if 'new_models' in d:
+        new_models = dict(d['new_models'])
+    else:
+        new_models = {}
+        
+    new_contents = {'new_files': new_files, 'amended_files': amended_files, 
+                    'new_models' : new_models}
 
     with open(mug_file, 'w') as f:
         yaml.dump(new_contents, f, default_flow_style=False)

@@ -160,7 +160,7 @@ def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
 
     # If the user specifies a string to match, then patch before
     else:
-        present, linenum = find_string("backends.cmake", "cmake", string)
+        present, linenum = find_string("backends.cmake", "cmake", string_to_find)
         if present: amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)
 
 

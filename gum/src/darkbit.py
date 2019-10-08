@@ -8,6 +8,7 @@ from distutils.dir_util import copy_tree
 
 from setup import *
 from files import *
+from backends import *
 
 def sort_annihilations(dm, three_fields, four_fields):
     """
@@ -869,23 +870,23 @@ def patch_micromegas(model_name, reset_dict):
     """
 
     towrite = (
-        "--- Makefile    2014-04-03 15:29:30.000000000 +0100\n"
-        "+++ Makefile_patched    2019-10-08 16:23:45.576576545 +0100\n"
+        "--- {0}/Makefile    2014-04-03 15:29:30.000000000 +0100\n"
+        "+++ {0}/Makefile_patched    2019-10-08 16:23:45.576576545 +0100\n"
         "@@ -45,6 +45,13 @@ libs:\n"
         "    $(MAKE) -C work\n"
         "    $(MAKE) -C lib\n"
         "\n"
         "+sharedlib: all\n"
         "+ifeq (,$(main)) \n"
-        "+   @echo Main program is not specified. Use gmake main='<code of main program>'\n"
+        "+\t@echo Main program is not specified. Use gmake main='<code of main program>'\n"
         "+else  \n"
-        "+   $(CXX) -shared -fPIC -o libmicromegas.so $(main) $(SSS) $(lDL)\n"
+        "+\t$(CXX) -shared -fPIC -o libmicromegas.so $(main) $(SSS) $(lDL)\n"
         "+endif\n"
         "+\n"
         " clean: \n"
         "    $(MAKE) -C lib  clean\n"
         "    $(MAKE) -C work clean \n"
-    )
+    ).format(model_name)
 
     filename = "micromegas/3.6.9.2/"+model_name+"/patch_micromegas_3.6.9.2_"+model_name+".dif"
 
@@ -902,19 +903,19 @@ def add_micromegas_to_cmake(model_name, reset_dict):
             "\n"
             "# MicrOmegas "+model_name+" model\n"
             "set(model \""+model_name+"\")\n"
-            "set(patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/"+model_name+"/patch_${name}_${ver}_${model}\")\n"
-            "set(patchdir \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/"+model_name+")\n"
+            "set(patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/"+model_name+"/patch_${name}_${ver}_${model}.dif\")\n"
+            "set(patchdir \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/"+model_name+"\")\n"
             "check_ditch_status(${name}_${model} ${ver} ${dir})\n"
             "if(NOT ditched_${name}_${model}_${ver})\n"
             "  ExternalProject_Add(${name}_${model}_${ver}\n"
-            "    DOWNLOAD_COMMAND ""\n"
+            "    DOWNLOAD_COMMAND \"\"\n"
             "    SOURCE_DIR ${dir}\n"
-            "    PATCH_COMMAND ./newProject ${model} && patch -p1 < ${patch}\n"
-            "    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/mdlfiles ${dir}/work/models/\n"
+            "    PATCH_COMMAND ./newProject ${model} && patch -p0 < ${patch}\n"
+            "    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/mdlfiles ${dir}/${model}/work/models/\n"
             "    BUILD_IN_SOURCE 1\n"
-            "    CONFIGURE_COMMAND ""\n"
+            "    CONFIGURE_COMMAND \"\"\n"
             "    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${CMAKE_MAKE_PROGRAM} sharedlib main=main.c\n"
-            "    INSTALL_COMMAND ""\n"
+            "    INSTALL_COMMAND \"\"\n"
             "  )\n"
             "  add_extra_targets(\"backend model\" ${name} ${ver} ${dir}/${model} ${model} \"yes | clean\")\n"
             "  set_as_default_version(\"backend model\" ${name}_${model} ${ver})\n"
@@ -923,3 +924,45 @@ def add_micromegas_to_cmake(model_name, reset_dict):
     )
 
     add_to_backends_cmake(towrite, reset_dict, string_to_find="# Pythia")
+
+def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
+    """
+    Adds entries to the DarkBit rollcall for micrOMEGAs routines.
+    """
+
+    rollcall = full_filename("DarkBit_rollcall.hpp", "DarkBit")
+
+    # Relic density 
+
+    # find the CAPABILITY RD_oh2_Xf
+    exists, line = find_capability("RD_oh2_Xf", "DarkBit")
+
+    if not exists:
+        raise GumError(("CAPABILITY RD_oh2_Xf not found in DarkBit_rollcall.hpp. "
+                        "It should be there!"))
+    
+    # Now find the ALLOW_MODELS for the CAPABILITY
+    linenum = 0
+    with open(rollcall, 'r') as f:
+        # Start from the beginning of the CAPABILITY
+        for i in xrange(line):
+            f.next()
+        for num, line in enumerate(f, line):
+            if 'ALLOW_MODELS' in line: 
+                linenum = num
+                break
+
+    # What we want to write    
+    towrite = "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n".format(model_name)
+
+    if linenum != 0:
+        amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, reset_dict)
+    else:
+        raise GumError(("Could not find the string ALLOW_MODELS in DarkBit_rollcall, " 
+                        "which is very weird."))
+
+    add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", "RD_oh2_Xf", "RD_oh2_Xf_MicrOmegas", 
+                              model_name, reset_dict)
+
+    # Direct detection TODO
+

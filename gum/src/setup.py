@@ -48,7 +48,7 @@ class Particle:
         for generalisation.
         """
 
-        PDG_code = None
+        #PDG_code = None
 
         def __init__(self):
             self.PDG_code = self.PDG_code

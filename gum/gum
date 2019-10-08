@@ -641,6 +641,7 @@ if args.file:
         write_file(f+".hpp", m, mo_head, reset_contents)
         add_to_backend_locations(be, be_loc, ver, reset_contents)
         add_micromegas_to_cmake(gum.name, reset_contents)
+        add_micromegas_to_darkbit_rollcall(gum.name, reset_contents)
 
         # TODO add entry to DarkBit_rollcall -> mo capabilities (Xf_micromegas?)
     # Pythia
