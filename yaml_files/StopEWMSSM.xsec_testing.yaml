@@ -377,10 +377,10 @@ Rules:
   #   module: ColliderBit
 
 
-  - capability: SLHAeaForPy8
-    function: getSLHAeaForPy8_SUSY
+  - capability: SpectrumAndDecaysForPythia
+    function: getSpectrumAndDecaysForPythia
     options:
-      slha_version: 2
+      slha_version: 1
 
   # Choose Monte Carlo event simulator and options.
   - capability: HardScatteringSim
