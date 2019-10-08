@@ -93,68 +93,50 @@ namespace Gambit
         first = false;
       }
 
-      if(HepMC_file_version == 2) 
+      if(HepMC_file_version != 2 and HepMC_file_version != 3)
       {
-        static HepMC3::ReaderAsciiHepMC2 HepMC2io(HepMC_filename);
+        throw std::runtime_error("Failed to determine HepMC version for input file "+HepMC_filename+". Quitting...");
+      }
 
-        // Don't do anything during special iterations
-        if (*Loop::iteration < 0) return;
+      static HepMC3::Reader *HepMCio;
 
-        #ifdef COLLIDERBIT_DEBUG
-          cout << "Event number: " << *Loop::iteration << endl;
-        #endif
+      // Initialize the reader on the first iteration
+      if (*Loop::iteration == BASE_INIT)
+      {
+        if (HepMC_file_version == 2)
+          HepMCio = new HepMC3::ReaderAsciiHepMC2(HepMC_filename);
+        else
+          HepMCio = new HepMC3::ReaderAscii(HepMC_filename);
+      }
 
-        // Attempt to read the next HepMC event as a HEPUtils event. If there are no more events, wrap up the loop and skip the rest of this iteration.
-        HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
-        bool event_retrieved = true;
-        #pragma omp critical (reading_HepMCEvent)
-        {
-          event_retrieved = HepMC2io.read_event(ge);
-       
-          // FIXME This is a temp solution to ensure that the event reading
-          //       stops when there are no more events in the HepMC file.
-          //       Remove this once bugfix is implemented in HepMC.
-          if ((ge.particles().size() == 0) && (ge.vertices().size() == 0)) event_retrieved = false;
-        }
-        if (not event_retrieved) Loop::halt();
+      // Delete the reader in the last iteration
+      if (*Loop::iteration == BASE_FINALIZE)
+        delete HepMCio;
 
-        // Translate to HEPUtils event
-        get_HEPUtils_event(ge, result);
+      // Don't do anything else during special iterations
+      if (*Loop::iteration < 0) return;
+
+      #ifdef COLLIDERBIT_DEBUG
+        cout << "Event number: " << *Loop::iteration << endl;
+      #endif
+
+      // Attempt to read the next HepMC event as a HEPUtils event. If there are no more events, wrap up the loop and skip the rest of this iteration.
+      HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
+      bool event_retrieved = true;
+      #pragma omp critical (reading_HepMCEvent)
+      {
+        event_retrieved = HepMCio->read_event(ge);
+     
+        // FIXME This is a temp solution to ensure that the event reading
+        //       stops when there are no more events in the HepMC file.
+        //       Remove this once bugfix is implemented in HepMC.
+        if ((ge.particles().size() == 0) && (ge.vertices().size() == 0)) event_retrieved = false;
+      }
+      if (not event_retrieved) Loop::halt();
+
+      // Translate to HEPUtils event
+      get_HEPUtils_event(ge, result);
  
-      }
-      else if(HepMC_file_version == 3)
-      {
-        static HepMC3::ReaderAscii HepMC3io(HepMC_filename);
-
-        // Don't do anything during special iterations
-        if (*Loop::iteration < 0) return;
-
-        #ifdef COLLIDERBIT_DEBUG
-          cout << "Event number: " << *Loop::iteration << endl;
-        #endif
-
-        // Attempt to read the next HepMC event as a HEPUtils event. If there are no more events, wrap up the loop and skip the rest of this iteration.
-        HepMC3::GenEvent ge(HepMC3::Units::GEV, HepMC3::Units::MM);
-        bool event_retrieved = true;
-        #pragma omp critical (reading_HepMCEvent)
-        {
-          event_retrieved = HepMC3io.read_event(ge);
-
-          // FIXME This is a temp solution to ensure that the event reading
-          //       stops when there are no more events in the HepMC file.
-          //       Remove this once bugfix is implemented in HepMC.
-          if ((ge.particles().size() == 0) && (ge.vertices().size() == 0)) event_retrieved = false;
-        }
-        if (not event_retrieved) Loop::halt();
-
-        // Translate to HEPUtils event
-        get_HEPUtils_event(ge, result);
-      }
-      else
-      {
-        throw std::runtime_error("Failed to determine HepMC version for input file "+HepMC_filename+". Quitting...");        
-      }
-
     }
   }
 
