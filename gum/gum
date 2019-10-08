@@ -397,6 +397,9 @@ if args.file:
         all_decays_src, all_decays_header = \
             amend_all_decays_calchep(gum.name, gum.spec, new_decays)
 
+        # Entries for header file
+        ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
+
     """
     COLLIDERBIT
     """
@@ -448,19 +451,6 @@ if args.file:
 
         # If micrOMEGAs requested
         if output_opts.mo:
-
-            print("Patching micrOMEGAs...")
-
-            # Pristine and patched micrOMEGAs
-            pristine_mo_dir = output_dir + "/micrOMEGAs"
-            patched_mo_dir = output_dir + "/micrOMEGAs_patched"
-
-            # Copy micromegas files to Backend patches from the cleaned
-            # CalcHEP directory
-            copy_micromegas_files(gum.name)
-
-            # Add the patch file to the directory too
-            patch_micromegas(gum.name, reset_contents)
 
             print("Writing micrOMEGAs interface for DarkBit.")
 
@@ -535,9 +525,15 @@ if args.file:
 
     print("Writing new frontends and patches for backend codes.")
 
-    # Conditional on CalcHEP files being made.
-    if output_opts.ch:
-        ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, gum.spec)
+    # Stop now if we're just doing a dry run
+    if args.dryrun:
+        print("")
+        print("Dry run finished.")
+        print("")
+        exit()
+    #TODO: for now do not write anything, ever
+    #exit()
+        
 
     # Have we created a new Pythia backend?
     if output_opts.pythia:
@@ -554,20 +550,10 @@ if args.file:
         print("  Setting the default version of Pythia_"+gum.name+" for BOSSed classes to 8."+base_pythia_version)
         write_new_default_bossed_version("Pythia_"+gum.name, "8."+base_pythia_version, output_dir)
 
-    # Stop now if we're just doing a dry run
-    if args.dryrun:
-        print("")
-        print("Dry run finished.")
-        print("")
-        exit()
-    #TODO: for now do not write anything, ever
-    #exit()
-
     print("")
     print("Now putting the new code into GAMBIT.")
 
     # All file writing routines HERE, once everything has gone okay.
-
 
     # Models
     m = "Models"
@@ -637,6 +623,16 @@ if args.file:
         amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, reset_contents)
     # micrOMEGAs
     if output_opts.mo:
+        print("Patching micrOMEGAs...")
+        # Pristine and patched micrOMEGAs
+        pristine_mo_dir = output_dir + "/micrOMEGAs"
+        patched_mo_dir = output_dir + "/micrOMEGAs_patched"
+        # Copy micromegas files to Backend patches from the cleaned
+        # CalcHEP directory
+        copy_micromegas_files(gum.name)
+        # Add the patch file to the directory too
+        patch_micromegas(gum.name, reset_contents)
+        # Now write the headers
         ver = "3.6.9.2"
         be = "MicrOmegas_" + gum.name
         be_loc = "micromegas/{0}/{1}/libmicromegas.so".format(ver, gum.name)
@@ -645,6 +641,7 @@ if args.file:
         write_file(f+".hpp", m, mo_head, reset_contents)
         add_to_backend_locations(be, be_loc, ver, reset_contents)
         add_micromegas_to_cmake(gum.name, reset_contents)
+
         # TODO add entry to DarkBit_rollcall -> mo capabilities (Xf_micromegas?)
     # Pythia
     if output_opts.pythia:
