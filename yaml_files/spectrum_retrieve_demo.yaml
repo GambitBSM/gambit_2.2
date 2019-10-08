@@ -7,18 +7,45 @@
 
 
 Parameters:
-  # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
+  
   # Parameters to be read from the input data file need to have prior_type: none.
-  CMSSM:
-    A0:
+  #CMSSM:
+  #  A0:
+  #    prior_type: none
+  #  M0:
+  #    prior_type: none
+  #  M12:
+  #    prior_type: none
+  #  SignMu:
+  #    prior_type: none
+  #  TanBeta:
+  #    prior_type: none
+
+  # For EWMSSM version:
+  MSSM11atQ_mA:
+    Ad_3:
       prior_type: none
-    M0:
+    Ae_3:
       prior_type: none
-    M12:
+    Au_3:
       prior_type: none
-    SignMu:
+    M1:
+      prior_type: none
+    M2:
+      prior_type: none
+    M3:
+      prior_type: none
+    Qin:
       prior_type: none
     TanBeta:
+      prior_type: none
+    mA:
+      prior_type: none
+    ml2:
+      prior_type: none
+    mq2:
+      prior_type: none
+    mu:
       prior_type: none
 
   StandardModel_SLHA2: !import include/StandardModel_SLHA2_postprocessing.yaml
@@ -63,8 +90,13 @@ Scanner:
       # Information about input dataset to be postprocessed
       reader:
         type: hdf5
-        file: "/home/farmer/tmp/Janina_dataset/crash_test/VS-resume/samples/CMSSM_VS_Result.hdf5"
-        group: "/CMSSM"
+        # CMSSM version
+        #file: "/home/farmer/tmp/Janina_dataset/crash_test/VS-resume/samples/CMSSM_VS_Result.hdf5"
+        #group: "/CMSSM"
+        # EWMSSM version
+        file: "/home/farmer/repos/jpvc_analyses/data/MSSMEW_pp_final.hdf5"
+        group: "/MSSMEW"
+
 
 ObsLikes:
 

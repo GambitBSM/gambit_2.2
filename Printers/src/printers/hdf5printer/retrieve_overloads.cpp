@@ -161,7 +161,7 @@ namespace Gambit
         dataset_label<<"#"<<spec_type<<" @SpecBit::get_MSSM_spectrum_as_map::"<<entry;
         if(tag!="") dataset_label<<" "<<tag;
 
-        std::cout<<dataset_label.str()<<std::endl;
+        //std::cout<<dataset_label.str()<<std::endl;
         auto jt = all_dataset_labels.find(dataset_label.str());
         if(jt==all_dataset_labels.end())
         {
@@ -177,7 +177,7 @@ namespace Gambit
         double value = -999; // *output* of retrieve function
         bool tmp_is_valid = false;
         tmp_is_valid = _retrieve(value, dataset_label.str(), rank, pointID);
-        std::cout<<"Spectrum entry found! entry:"<<entry<<", tag:"<<tag<<", valid:"<<tmp_is_valid<<", value:"<<value<<std::endl;
+        //std::cout<<"Spectrum entry found! entry:"<<entry<<", tag:"<<tag<<", valid:"<<tmp_is_valid<<", value:"<<value<<std::endl;
         if(tmp_is_valid)
         {
             // Stick entry into the SLHAea object
@@ -291,6 +291,17 @@ namespace Gambit
         LABELNXN(6,"~d","Pole_Mixing","DSQMIX")
         LABELNXN(6,"~e-","Pole_Mixing","SELMIX")
         LABELNXN(3,"~nu","Pole_Mixing","SNUMIX")
+
+        // SCALARMIX, PSEUDOSCALARMIX, CHARGEMIX
+        // TODO: These are not SLHA! However we seem to
+        // require them at the moment in our
+        // MSSMSimpleSpec constructor. This is not
+        // good, but things will change in
+        // the SpecBit redesign so I am not going
+        // fix it until then.
+        LABELNXN(2,"h0","Pole_Mixing","SCALARMIX")
+        LABELNXN(2,"A0","Pole_Mixing","PSEUDOSCALARMIX")
+        LABELNXN(2,"H+","Pole_Mixing","CHARGEMIX")
         #undef LABELNXN
 
         // YD, YU, YE
@@ -306,20 +317,86 @@ namespace Gambit
         #undef LABEL3X3DIAG
 
         // GAUGE
-        labels_to_SLHA["g1"] = SLHAcombo("dimensionless", "TEMP", 3); // Convert to g'
+        //labels_to_SLHA["g1"] = SLHAcombo("dimensionless", "TEMP", 3); // Convert to g'
         labels_to_SLHA["g2"] = SLHAcombo("dimensionless", "GAUGE", 2);
         labels_to_SLHA["g3"] = SLHAcombo("dimensionless", "GAUGE", 3);
 
         // Read all dataset labels into a structure that we can search quickly
         std::set<std::string> all_dataset_labels = get_all_labels();
 
-        // Read the "scale" entry first, since we need to add this info to the block
+        // Macro to help retrive parameters for custom calculations
+        #define GETPAR(OUT,NAME,TAG,TEMP_INDEX) \
+        { \
+           bool found_tmp; \
+           retrieve_and_add_to_SLHAea(out, found_tmp, spec_type, NAME, SLHAcombo(TAG, "TEMP", TEMP_INDEX), all_dataset_labels, rank, pointID); \
+           if(not found_tmp) \
+           { \
+              std::ostringstream err; \
+              err<<"Failed to find "<<NAME<<" ("<<TAG<<") needed to compute SLHA spectrum information!"; \
+              printer_error().raise(LOCAL_INFO,err.str()); \
+           } \
+           OUT = SLHAea_get(out,"TEMP",TEMP_INDEX); \
+        }
+
+        // Another manual intervention is required for mA2. Seems we didn't used to save this.
+        // But again, we can compute it from other stuff: m^2_A=[m3^2/cosBsinB],
+        // where m3^2 is what we call BMu (or small b).
+        // Need tanb for this too.
+        double vd,vu,BMu;
+        GETPAR(vd,"vd","mass1",1)
+        GETPAR(vu,"vu","mass1",2)
+        GETPAR(BMu,"BMu","mass2",4)
+
+        double tb = vu/vd;
+        double cb = cos(atan(tb));
+        double c2b = cos(2*atan(tb));
+        double sb = sin(atan(tb));
+        double vev = sqrt(vu*vu + vd*vd);
+        double mA2 = BMu / (cb*sb);
+
+        double g1,g2,gprime;
+        GETPAR(g1,"g1","dimensionless",31)
+        GETPAR(g2,"g2","dimensionless",32)
+        gprime = g1*sqrt(3./5.);
+
+        double sin2thetaW;
+        sin2thetaW = (gprime*gprime) / (gprime*gprime + g2*g2);
+
+        double MZ,Mt; // Tree level Z and top masses
+        double TYu3,yt,At; // 3rd gen trilinear and Yukawa
+        GETPAR(TYu3,"TYu_(3,3)","mass1",41)
+        GETPAR(yt,"Yu_(3,3)","dimensionless",42)
+        At = TYu3 / yt;
+
+        MZ = (1/2.)*sqrt(gprime*gprime + g2*g2)*vev;
+        Mt = yt*vu/sqrt(2.);        
+
+        double Mu,Xt;
+        GETPAR(Mu,"Mu","mass1",51)
+        //Xt = At - Mu / (sqrt(2.)*tb);
+        Xt = At - Mu / tb; // Not sure if sqrt(2.) should be there in MSSM case.
+
+        double mq2_3, mu2_3;
+        GETPAR(mq2_3,"mq2_(3,3)","mass2",20)
+        GETPAR(mu2_3,"mu2_(3,3)","mass2",21)
+
+        double A, B, m2st1, m2st2;
+        A = mq2_3 + mu2_3 + 0.5*MZ*MZ*c2b + 2*Mt*Mt;
+        B = mq2_3 - mu2_3 + (0.5-(4./3.)*sin2thetaW)*MZ*MZ*c2b;
+        m2st1 = 0.5*(A - sqrt(B*B + 4*Mt*Mt*Xt*Xt));
+        m2st2 = 0.5*(A + sqrt(B*B + 4*Mt*Mt*Xt*Xt));
+
+        double MSUSY; // assuming no family mixing
+        MSUSY = sqrt(sqrt(m2st1)*sqrt(m2st2));
+        #undef GETPAR
+
+        // Read the "scale" entry, since we need to add this info to the block
         // top rows.
- 
+        double scale;
         bool found(true);
         retrieve_and_add_to_SLHAea(out, found, spec_type, "scale(Q)", SLHAcombo("", "TEMP", 0), all_dataset_labels, rank, pointID);
-        double scale;
         if(not found)
+        //if(true) // Testing
         {
            // In some older datasets we forgot to add the scale to the output.
            // For now we will assume the spectrum was output by FlexibleSUSY, in which case
@@ -331,36 +408,48 @@ namespace Gambit
            // I cannot even easily tell which ones are the stop pole masses. They are probably the lightest two though,
            // so I will just assume that for now.
 
-           double ms1,ms2=1e99;
-           for(int i=1; i<=6; i++)
-           {
-               std::stringstream ss;
-               ss<<"~u_"<<i;
-               bool found_temp(true);
-               retrieve_and_add_to_SLHAea(out, found_temp, spec_type, ss.str(), SLHAcombo("Pole_Mass", "TEMP", 10+i), all_dataset_labels, rank, pointID);
-               if(not found_temp)
-               {
-                   std::ostringstream err;
-                   err<<"Failed to find "<<ss.str()<<" (Pole_Mass) need for scale calculation!";
-                   printer_error().raise(LOCAL_INFO,err.str());
-               }
-               double m = SLHAea_get(out,"TEMP",10+i);
-               if(m<ms1)
-               {
-                   ms2 = ms1;
-                   ms1 = m;
-               } 
-               else if(m<ms2)
-               {
-                   ms2 = m;
-               }
-           }
-           scale = sqrt(ms1*ms2);   
+           // double ms1=1e99,ms2=1e99;
+           // for(int i=1; i<=6; i++)
+           // {
+           //     std::stringstream ss;
+           //     ss<<"~u_"<<i;
+           //     bool found_temp(true);
+           //     retrieve_and_add_to_SLHAea(out, found_temp, spec_type, ss.str(), SLHAcombo("Pole_Mass", "TEMP", 100+i), all_dataset_labels, rank, pointID);
+           //     if(not found_temp)
+           //     {
+           //         std::ostringstream err;
+           //         err<<"Failed to find "<<ss.str()<<" (Pole_Mass) need for scale calculation!";
+           //         printer_error().raise(LOCAL_INFO,err.str());
+           //     }
+           //     double m = SLHAea_get(out,"TEMP",100+i);
+           //     std::cout<<ss.str()<<" mass:"<<m<<std::endl;
+           //     if(m<ms1)
+           //     {
+           //         ms2 = ms1;
+           //         ms1 = m;
+           //     } 
+           //     else if(m<ms2)
+           //     {
+           //         ms2 = m;
+           //     }
+           // }
+           // double scale_pole = sqrt(ms1*ms2);   
+           
+           // Proper calculation of DRbar stop masses, from https://arxiv.org/pdf/0904.2169.pdf Eq. 29 (with non-MSSM bits removed)
+           // We assume that there is no flavour/family mixing, which I think is true
+           // for all our scans so far, maybe even in the full MSSM63. TODO: Make sure that scale is output if we do have this mixing
+           // in the future!
+           // Retrieve extra needed values first
+           scale = MSUSY;
+           //std::cout<<"MSUSY(pole) ="<<scale_pole<<std::endl;
+           //std::cout<<"MSUSY(DRbar)="<<scale<<std::endl;
+           // pole version seems plausibly close to DRbar, so hopefully that means it is correct. TODO: should test explicitly
         } 
         else
         { 
            scale = SLHAea_get(out,"TEMP",0);
         } 
+        //std::cout<<"scale(Q)="<<SLHAea_get(out,"TEMP",0)<<std::endl;
 
         // Add blocks that require scale info
         SLHAea_add_block(out, "GAUGE", scale);
@@ -377,35 +466,6 @@ namespace Gambit
         SLHAea_add_block(out, "MSU2", scale);
         SLHAea_add_block(out, "MSE2", scale);
         SLHAea_add_block(out, "MSOFT", scale);
-
-        // Another manual intervention is required for mA2. Seems we didn't used to save this.
-        // But again, we can compute it from other stuff: m^2_A=[m3^2/cosBsinB],
-        // where m3^2 is what we call BMu (or small b).
-        // Need tanb for this too.
-        #define GETPAR(OUT,NAME,TAG,TEMP_INDEX) \
-        { \
-           bool found_tmp; \
-           retrieve_and_add_to_SLHAea(out, found_tmp, spec_type, NAME, SLHAcombo(TAG, "TEMP", TEMP_INDEX), all_dataset_labels, rank, pointID); \
-           if(not found_tmp) \
-           { \
-              std::ostringstream err; \
-              err<<"Failed to find "<<NAME<<" ("<<TAG<<") need to compute HMIX block entries!"; \
-              printer_error().raise(LOCAL_INFO,err.str()); \
-           } \
-           OUT = SLHAea_get(out,"TEMP",TEMP_INDEX); \
-        }
-
-        double vd,vu,BMu;
-        GETPAR(vd,"vd","mass1",1)
-        GETPAR(vu,"vu","mass1",2)
-        GETPAR(BMu,"BMu","mass2",4)
-        #undef GETPAR
-
-        double tb = vu/vd;
-        double cb = cos(atan(tb));
-        double sb = sin(atan(tb));
-        double vev = sqrt(vu*vu + vd*vd);
-        double mA2 = BMu / (cb*sb);
         
         // Automatically extract and add the rest of the entries
         for(auto it=labels_to_SLHA.begin(); it!=labels_to_SLHA.end(); ++it)
@@ -434,135 +494,8 @@ namespace Gambit
            SLHAea_add(out, "HMIX", 3, vev, "Higgs vev (Q)");
            SLHAea_add(out, "HMIX", 4, mA2, "m_A^2 = BMu/(cb*sb) (Q)");
            // Normalisation of g1
-           double gprime = SLHAea_get(out,"TEMP",3)*sqrt(3./5.);
            SLHAea_add(out, "GAUGE", 1, gprime, "g' (Q)", true);
         }
-
-        // //std::cout << "Searching for Spectrum entries for spectrum '"<<spec_type<<"'"<<std::endl;
-        // // Iterate through names in HDF5 group
-        // for(std::vector<std::string>::const_iterator
-        //     it = all_datasets.begin();
-        //     it!= all_datasets.end(); ++it)
-        // {
-        //   std::cout << "Candidate: " <<*it<<std::endl;
-        //   std::string entry; // *output* of parsing function, spectrum entry name
-        //   std::string tag;   // *output* of parsing function, spectrum entry tag
-        //   std::string label_root; // *output* of parsing function, label minus entry name and tag
-        //           
-        //   if(parse_label_for_spectrum_entry(*it, spec_type, "SpecBit", "get_MSSM_spectrum_as_map", entry, tag, label_root))
-        //   {
-        //     // Ok, found! Now retrieve the data
-        //     double value = -999; // *output* of retrieve function
-        //     bool tmp_is_valid = false;
-        //     tmp_is_valid = _retrieve(value, *it, rank, pointID);
-        //     found_at_least_one = true;
-        //     std::cout<<"Spectrum entry found! entry:"<<entry<<", tag:"<<tag<<", valid:"<<tmp_is_valid<<", value:"<<value<<std::endl;
-        //     if(tmp_is_valid)
-        //     {
-        //       // Figure out where in the SLHAea object we need to put this entry.
-        //       // TODO: After the SpecBit redesign this should be possible to automate, since there will be routines that specify
-        //       // exactly what blocks certain spectrum information should live in. But for now we'll have to do it
-        //       // manually with a massive 'if' block
-        //       if(Utils::iequals(tag,"Pole_Mass"))
-        //       {
-        //          SLHAea_check_block(out, "MASS");
-        //          if     (Utils::iequals(entry, "A0")) SLHAea_add(out, "MASS", 36, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "H+")) SLHAea_add(out, "MASS", 37, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "W+")) SLHAea_add(out, "MASS", 24, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~g")) SLHAea_add(out, "MASS", 1000021, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "Z0")) ; // Do nothing, get this from SMINPUTS
-        //          else if(Utils::iequals(entry, "b")) ;
-        //          else if(Utils::iequals(entry, "d_3")) ;
-        //          else if(Utils::iequals(entry, "u_3")) ;
-        //          else if(Utils::iequals(entry, "e-")) ;
-        //          else if(Utils::iequals(entry, "mu-")) ;
-        //          else if(Utils::iequals(entry, "tau-")) ;
-        //          else if(Utils::iequals(entry, "e-_1")) ;
-        //          else if(Utils::iequals(entry, "e-_2")) ;
-        //          else if(Utils::iequals(entry, "e-_3")) ;
-        //          else if(Utils::iequals(entry, "nu_1")) ;
-        //          else if(Utils::iequals(entry, "nu_2")) ;
-        //          else if(Utils::iequals(entry, "nu_3")) ;
-        //          else if(Utils::iequals(entry, "g")) ;
-        //          else if(Utils::iequals(entry, "gamma")) ;
-        //          else if(Utils::iequals(entry, "t")) ;
-        //          else if(Utils::iequals(entry, "g")) ;
-        //          else if(Utils::iequals(entry, "g")) ;
-        //          else if(Utils::iequals(entry, "h0_1")) SLHAea_add(out, "MASS", 25, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "h0_2")) SLHAea_add(out, "MASS", 35, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~chi+_1")) SLHAea_add(out, "MASS", 1000024, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~chi+_2")) SLHAea_add(out, "MASS", 1000037, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~chi0_1")) SLHAea_add(out, "MASS", 1000022, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~chi0_2")) SLHAea_add(out, "MASS", 1000023, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~chi0_3")) SLHAea_add(out, "MASS", 1000025, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~chi0_4")) SLHAea_add(out, "MASS", 1000035, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~d_1")) SLHAea_add(out, "MASS", 1000001, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~d_2")) SLHAea_add(out, "MASS", 1000003, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~d_3")) SLHAea_add(out, "MASS", 1000005, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~d_4")) SLHAea_add(out, "MASS", 2000001, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~d_5")) SLHAea_add(out, "MASS", 2000003, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~d_6")) SLHAea_add(out, "MASS", 2000005, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~u_1")) SLHAea_add(out, "MASS", 1000002, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~u_2")) SLHAea_add(out, "MASS", 1000004, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~u_3")) SLHAea_add(out, "MASS", 1000006, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~u_4")) SLHAea_add(out, "MASS", 2000002, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~u_5")) SLHAea_add(out, "MASS", 2000004, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~u_6")) SLHAea_add(out, "MASS", 2000006, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~e-_1")) SLHAea_add(out, "MASS", 1000011, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~e-_2")) SLHAea_add(out, "MASS", 1000013, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~e-_3")) SLHAea_add(out, "MASS", 1000015, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~e-_4")) SLHAea_add(out, "MASS", 2000011, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~e-_5")) SLHAea_add(out, "MASS", 2000013, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~e-_6")) SLHAea_add(out, "MASS", 2000015, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~nu_1")) SLHAea_add(out, "MASS", 1000012, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~nu_2")) SLHAea_add(out, "MASS", 1000014, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "~nu_3")) SLHAea_add(out, "MASS", 1000016, value, entry+" ("+tag+")");
-        //          else
-        //          {
-        //             std::ostringstream err;
-        //             err << "Error! HDF5Reader encountered an error while attempting to read a spectrum of type '"<<spec_type<<"' from the HDF5 file:group "<<file<<":"<<group<<"' (while calling 'retrieve'). An unrecognised entry with tag 'Pole_Mass' was encountered (label was "<<entry<<")."<<std::endl<<"The full HDF5 entry label was: "<<*it;
-        //             printer_error().raise(LOCAL_INFO,err.str());
-        //          }
-        //       }
-        //       else if(Utils::iequals(tag,"mass1"))
-        //       {
-        //          SLHAea_check_block(out, "MSOFT");
-        //          SLHAea_check_block(out, "HMIX");
-        //          if     (Utils::iequals(entry, "M1")) SLHAea_add(out, "MSOFT", 1, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "M2")) SLHAea_add(out, "MSOFT", 2, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "M3")) SLHAea_add(out, "MSOFT", 3, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "Mu")) SLHAea_add(out, "HMIX", 1, value, entry+" ("+tag+")");
-        //          else if(Utils::iequals(entry, "d_1")) ;
-        //          else if(Utils::iequals(entry, "d_2")) ;
-        //          else if(Utils::iequals(entry, "d_3")) ;
-        //          else if(Utils::iequals(entry, "u_1")) ;
-        //          else if(Utils::iequals(entry, "u_2")) ;
-        //          else if(Utils::iequals(entry, "u_3")) ;
-        //          else if(Utils::iequals(entry, "e-_1")) ;
-        //          else if(Utils::iequals(entry, "e-_2")) ;
-        //          else if(Utils::iequals(entry, "e-_3")) ;
-        //          else if(Utils::iequals(entry, "g")) ;
-        //          else if(Utils::iequals(entry, "gamma")) ;
-        //          //...etc. TODO: incomplete!
-        //       } 
-        //     }
-        //     else
-        //     {
-        //       // If one entry is 'invalid' then we cannot reconstruct
-        //       // the Spectrum object, so we mark the whole thing invalid.
-        //       is_valid = false;
-        //     }
-        //   }
-        // }
-
-        // if(not found_at_least_one)
-        // {
-        //   // Didn't find any matches!
-        //    std::ostringstream err;
-        //    err << "Error! HDF5Reader failed to find any Spectrum entries matching the spectrum type '"<<spec_type<<"' in the HDF5 file:group "<<file<<":"<<group<<"' (while calling 'retrieve'). Please check that spectrum type and input file/group are correct.";
-        //    printer_error().raise(LOCAL_INFO,err.str());
-        // }
-        // /// done!
         
         return is_valid;
      }

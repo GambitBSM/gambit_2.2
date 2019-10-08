@@ -1205,16 +1205,16 @@ namespace Gambit
        get_pp_reader().retrieve(mssm_in,"MSSM_spectrum");
 
        // Dump spectrum to output for testing
-       std::cerr<<"Dumping retrieved spectrum!"<<std::endl;
+       //std::cerr<<"Dumping retrieved spectrum!"<<std::endl;
        SLHAstruct mssm = mssm_in; // Only this type has stream overloads etc. defined
 
-       // Turns out we don't generically save tan_beta(mZ)_DRBAR, so need to extract
+       // Turns out we don't generically save tan_beta(mZ)_DRbar, so need to extract
        // this from model parameters (it is always an input, so we should have it in those)
        double tbmZ = *myPipe::Param.at("TanBeta");
        SLHAea_add(mssm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
 
-       std::cerr<<mssm<<std::endl;
-       std::cerr<<"Dump complete!"<<std::endl;
+       //std::cerr<<mssm<<std::endl;
+       //std::cerr<<"Dump complete!"<<std::endl;
 
        // Retrieve any mass cuts (could just cut with postprocessor, but I
        // guess can leave this feature in for compatibility with usage
