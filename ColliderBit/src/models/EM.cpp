@@ -22,8 +22,11 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    // Get spectrum and decays for Pythia
+    GET_SPECTRUM_AND_DECAYS_FOR_PYTHIA_NONSUSY(getSpectrumAndDecaysForPythia_EM, EM_spectrum)
+
     // Get Monte Carlo event generator
-    GET_SPECIFIC_PYTHIA(getPythia_EM, Pythia_EM_default, EM_spectrum, _EM, NOT_SUSY)
+    GET_SPECIFIC_PYTHIA(getPythia_EM, Pythia_EM_default, _EM)
     GET_PYTHIA_AS_BASE_COLLIDER(getPythia_EMAsBase)
 
     // Run event generator

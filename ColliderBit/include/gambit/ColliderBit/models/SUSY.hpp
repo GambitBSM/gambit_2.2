@@ -33,6 +33,21 @@
 
 #define MODULE ColliderBit
 
+  // SLHAea object with spectrum and decays for a Pythia8 collider
+  #define CAPABILITY SpectrumAndDecaysForPythia
+
+    #define FUNCTION getSpectrumAndDecaysForPythia
+    START_FUNCTION(SLHAstruct)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)      // @todo Why is this needed?
+    DEPENDENCY(decay_rates, DecayTable)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
+    DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
+    #undef FUNCTION
+
+  #undef CAPABILITY
+
+
   // Get Monte Carlo event generator
   #define CAPABILITY HardScatteringSim
 
@@ -40,9 +55,7 @@
     START_FUNCTION(Py8Collider_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
-    DEPENDENCY(decay_rates, DecayTable)
-    DEPENDENCY(MSSM_spectrum, Spectrum)
+    DEPENDENCY(SpectrumAndDecaysForPythia, SLHAstruct)
     #undef FUNCTION
 
     #define FUNCTION getPythia_SLHA
@@ -52,8 +65,6 @@
     ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
     #undef FUNCTION
-
-
 
     #define FUNCTION getPythiaAsBase
     START_FUNCTION(const BaseCollider*)

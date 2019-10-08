@@ -22,12 +22,15 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    // Get spectrum and decays for Pythia
+    GET_SPECTRUM_AND_DECAYS_FOR_PYTHIA_SUSY(getSpectrumAndDecaysForPythia, MSSM_spectrum)
+
     // Get Monte Carlo event generator
-    GET_SPECIFIC_PYTHIA(getPythia, Pythia_default, MSSM_spectrum, , IS_SUSY)
+    GET_SPECIFIC_PYTHIA(getPythia, Pythia_default, /* blank MODEL_EXTENSION argument */ )
+    GET_PYTHIA_AS_BASE_COLLIDER(getPythiaAsBase)
+
     // Get Monte Carlo event generator from SLHA file input
     GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
-
-    GET_PYTHIA_AS_BASE_COLLIDER(getPythiaAsBase)
 
     // Run event generator
     GET_PYTHIA_EVENT(generateEventPythia)
@@ -253,8 +256,6 @@ namespace Gambit
         ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
       }
     }
-
-
 
   }
 }

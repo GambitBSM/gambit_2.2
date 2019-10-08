@@ -435,6 +435,11 @@
   // All other functions are declared in additional headers in the ColliderBit/models directory.
   // The following capabilities need to be provided for each new model:
 
+  // SLHAea object with spectrum and decays for a Pythia8 collider
+  #define CAPABILITY SpectrumAndDecaysForPythia
+  START_CAPABILITY
+  #undef CAPABILITY
+
   /// Collider sim capability.
   #define CAPABILITY HardScatteringSim
   START_CAPABILITY

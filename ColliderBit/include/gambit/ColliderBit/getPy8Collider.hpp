@@ -241,45 +241,129 @@ namespace Gambit
     }
 
 
+    // Get SLHAea object with spectrum and decays for Pythia -- SUSY version
+    #define GET_SPECTRUM_AND_DECAYS_FOR_PYTHIA_SUSY(NAME, SPECTRUM)                         \
+    void NAME(SLHAstruct& result)                                                           \
+    {                                                                                       \
+      using namespace Pipes::NAME;                                                          \
+      static SLHAstruct slha_spectrum;                                                      \
+      static const int slha_version = runOptions->getValueOrDef<int>(2, "slha_version");    \
+      if ((slha_version != 1) && (slha_version != 2))                                       \
+      {                                                                                     \
+        ColliderBit_error().raise(LOCAL_INFO,                                               \
+          "The option 'slha_version' must be set to 1 or 2 (default).");                    \
+      }                                                                                     \
+                                                                                            \
+      if (*Loop::iteration == BASE_INIT)                                                    \
+      {                                                                                     \
+        result.clear();                                                                     \
+        slha_spectrum.clear();                                                              \
+        /* Get decays */                                                                    \
+        result = Dep::decay_rates->getSLHAea(slha_version, false, *Dep::SLHA_pseudonyms);   \
+        /* Get spectrum */                                                                  \
+        slha_spectrum = Dep::SPECTRUM->getSLHAea(slha_version);                             \
+        result.insert(result.begin(), slha_spectrum.begin(), slha_spectrum.end());          \
+        /* Add MODSEL block if not found */                                                 \
+        if(result.find("MODSEL") == result.end())                                           \
+        {                                                                                   \
+          SLHAea::Block block("MODSEL");                                                    \
+          block.push_back("BLOCK MODSEL              # Model selection");                   \
+          SLHAea::Line line;                                                                \
+          line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";                     \
+          block.push_back(line);                                                            \
+          result.push_front(block);                                                         \
+        }                                                                                   \
+      }                                                                                     \
+    }
+
+
+    // Get SLHAea object with spectrum and decays for Pythia -- non-SUSY version
+    #define GET_SPECTRUM_AND_DECAYS_FOR_PYTHIA_NONSUSY(NAME, SPECTRUM)                      \
+    void NAME(SLHAstruct& result)                                                           \
+    {                                                                                       \
+      using namespace Pipes::NAME;                                                          \
+      static SLHAstruct slha_spectrum;                                                      \
+                                                                                            \
+      if (*Loop::iteration == BASE_INIT)                                                    \
+      {                                                                                     \
+        result.clear();                                                                     \
+        slha_spectrum.clear();                                                              \
+        /* Get decays */                                                                    \
+        result = Dep::decay_rates->getSLHAea(2);                                            \
+        /* Get spectrum */                                                                  \
+        slha_spectrum = Dep::SPECTRUM->getSLHAea(2);                                        \
+        result.insert(result.begin(), slha_spectrum.begin(), slha_spectrum.end());          \
+                                                                                            \
+        std::cout << "DEBUG: printing spectrum:" << std::endl;                              \
+        std::cout << result << std::endl;                                                   \
+        std::cout << "DEBUG: done printing spectrum:" << std::endl;                         \
+      }                                                                                     \
+    }
+
+
 
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
     #define IS_SUSY true
     #define NOT_SUSY false
-    #define GET_SPECIFIC_PYTHIA(NAME, PYTHIA_NS, SPECTRUM, MODEL_EXTENSION, SUSY_FLAG)\
+    #define GET_SPECIFIC_PYTHIA(NAME, PYTHIA_NS, MODEL_EXTENSION)                     \
     void NAME(Py8Collider<PYTHIA_NS::Pythia8::Pythia,                                 \
                           PYTHIA_NS::Pythia8::Event> &result)                         \
     {                                                                                 \
       using namespace Pipes::NAME;                                                    \
                                                                                       \
       static SLHAstruct slha;                                                         \
-      static SLHAstruct slha_spectrum;                                                \
-                                                                                      \
+      cout << "AK DEBUG: GET_SPECIFIC_PYTHIA: *Loop::iteration = " << *Loop::iteration << endl; \
       if (*Loop::iteration == BASE_INIT)                                              \
       {                                                                               \
         /* SLHAea object constructed from dependencies on the spectrum and decays. */ \
+        cout << "AK DEBUG: GET_SPECIFIC_PYTHIA: Clear slha" << endl; \
         slha.clear();                                                                 \
-        slha_spectrum.clear();                                                        \
-        slha = Dep::decay_rates->getSLHAea(2);                                        \
-        /* SLHAea in SLHA2 format, please. */                                         \
-        slha_spectrum = Dep::SPECTRUM->getSLHAea(2);                                  \
-        slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());        \
-        if (SUSY_FLAG)                                                                \
-        {                                                                             \
-          if(slha.find("MODSEL") == slha.end())                                       \
-          {                                                                           \
-            SLHAea::Block block("MODSEL");                                            \
-            block.push_back("BLOCK MODSEL              # Model selection");           \
-            SLHAea::Line line;                                                        \
-            line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";             \
-            block.push_back(line);                                                    \
-            slha.push_front(block);                                                   \
-          }                                                                           \
-        }                                                                             \
+        cout << "AK DEBUG: Fill slha with *Dep::SpectrumAndDecaysForPythia" << endl; \
+        slha = *Dep::SpectrumAndDecaysForPythia;                                      \
+        cout << "AK DEBUG: Print slha: " << slha << endl; \
+        cout << "AK DEBUG: Done printing slha: " << endl; \
       }                                                                               \
                                                                                       \
       getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \
         *Loop::iteration, Loop::wrapup, *runOptions);                                 \
     }
+
+
+    // {                                                                                 \
+    //   using namespace Pipes::NAME;                                                    \
+    //                                                                                   \
+    //   static SLHAstruct slha;                                                         \
+    //   static SLHAstruct slha_spectrum;                                                \
+    //   /* _Anders */                                                                   \
+    //   static const int slha_version = runOptions->getValueOrDef<int>(2, "slha_version");   \
+    //   /* _Anders: check that slha_version = 1 or 2 */                           \
+    //                                                                                   \
+    //   if (*Loop::iteration == BASE_INIT)                                              \
+    //   {                                                                               \
+    //     /* SLHAea object constructed from dependencies on the spectrum and decays. */ \
+    //     slha_spectrum.clear();                                                        \
+    //     slha = Dep::decay_rates->getSLHAea(slha_version, false, *Dep::SLHA_pseudonyms); \
+    //     /* SLHAea in SLHA2 format, please. */                                         \
+    //     slha_spectrum = Dep::SPECTRUM->getSLHAea(slha_version);                 \
+    //     slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());        \
+    //     if (SUSY_FLAG)                                                                \
+    //     {                                                                             \
+    //       if(slha.find("MODSEL") == slha.end())                                       \
+    //       {                                                                           \
+    //         SLHAea::Block block("MODSEL");                                            \
+    //         block.push_back("BLOCK MODSEL              # Model selection");           \
+    //         SLHAea::Line line;                                                        \
+    //         line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";             \
+    //         block.push_back(line);                                                    \
+    //         slha.push_front(block);                                                   \
+    //       }                                                                           \
+    //     }                                                                             \
+    //   }                                                                               \
+    //                                                                                   \
+    //   getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \
+    //     *Loop::iteration, Loop::wrapup, *runOptions);                                 \
+    // }
+
 
 
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation

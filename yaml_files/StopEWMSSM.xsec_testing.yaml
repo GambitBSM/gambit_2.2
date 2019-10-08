@@ -4,26 +4,6 @@ Parameters:
   # SM parameters.
   StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
-  MSSM15atQ_mA:
-    A0: 0
-    Au_3: 0
-    M1: 21.3372
-    M2: 282.67
-    M3: 3000
-    Qin: 1000
-    TanBeta: 20.6554
-    mA: 3000
-    md2_3: 573377
-    me2_3: 573377
-    ml2_12: 573377
-    ml2_3: 573377
-    mq2_12: 573377
-    mq2_3: 573377
-    mu: -960.248
-    mu2_3: 600000
-    # mu2_3: 327127
-
-
   # MSSM15atQ_mA:
   #   A0: 0
   #   Au_3: 0
@@ -33,15 +13,35 @@ Parameters:
   #   Qin: 1000
   #   TanBeta: 20.6554
   #   mA: 3000
-  #   md2_3: 9e+06
-  #   me2_3: 9e+06
-  #   ml2_12: 9e+06
-  #   ml2_3: 9e+06
-  #   mq2_12: 9e+06
+  #   md2_3: 573377
+  #   me2_3: 573377
+  #   ml2_12: 573377
+  #   ml2_3: 573377
+  #   mq2_12: 573377
   #   mq2_3: 573377
   #   mu: -960.248
   #   mu2_3: 600000
   #   # mu2_3: 327127
+
+
+  MSSM15atQ_mA:
+    A0: 0
+    Au_3: 0
+    M1: 21.3372
+    M2: 282.67
+    M3: 3000
+    Qin: 1000
+    TanBeta: 20.6554
+    mA: 3000
+    md2_3: 9e+06
+    me2_3: 9e+06
+    ml2_12: 9e+06
+    ml2_3: 9e+06
+    mq2_12: 9e+06
+    mq2_3: 573377
+    mu: -960.248
+    mu2_3: 600000
+    # mu2_3: 327127
 
   # MSSM15atQ_mA:
   #   A0: 0
@@ -167,39 +167,39 @@ ObsLikes:
     #   capability: ProcessPIDPairs
     #   printme:    false
 
-    - purpose:    Observable
-      capability: ProcessCrossSectionsMap
-      printme:    false
+    # - purpose:    Observable
+    #   capability: ProcessCrossSectionsMap
+    #   printme:    false
 
 
-    # LEP likelihoods
-    - purpose:    Observable
-      capability: L3_Neutralino_Leptonic_LLike
+    # # LEP likelihoods
+    # - purpose:    Observable
+    #   capability: L3_Neutralino_Leptonic_LLike
 
-    - purpose:    Observable
-      capability: L3_Chargino_Leptonic_LLike
+    # - purpose:    Observable
+    #   capability: L3_Chargino_Leptonic_LLike
 
-    - purpose:    Observable
-      capability: OPAL_Chargino_Hadronic_LLike
+    # - purpose:    Observable
+    #   capability: OPAL_Chargino_Hadronic_LLike
 
-    - purpose:    Observable
-      capability: OPAL_Chargino_SemiLeptonic_LLike
+    # - purpose:    Observable
+    #   capability: OPAL_Chargino_SemiLeptonic_LLike
 
-    - purpose:    Observable
-      capability: OPAL_Chargino_Leptonic_LLike
+    # - purpose:    Observable
+    #   capability: OPAL_Chargino_Leptonic_LLike
 
-    - purpose:    Observable
-      capability: OPAL_Neutralino_Hadronic_LLike
+    # - purpose:    Observable
+    #   capability: OPAL_Neutralino_Hadronic_LLike
 
-    - purpose:    Observable
-      capability: OPAL_Degenerate_Chargino_LLike
+    # - purpose:    Observable
+    #   capability: OPAL_Degenerate_Chargino_LLike
 
-    # Likelihoods for invisible decays of Z and Higgs bosons
-    - purpose:    Observable
-      capability: lnL_Z_inv
+    # # Likelihoods for invisible decays of Z and Higgs bosons
+    # - purpose:    Observable
+    #   capability: lnL_Z_inv
 
-    - purpose:    Observable
-      capability: lnL_Higgs_invWidth
+    # - purpose:    Observable
+    #   capability: lnL_Higgs_invWidth
 
     # Other observables
     - purpose:    Observable 
@@ -217,8 +217,8 @@ ObsLikes:
     - purpose:    Observable
       capability: LHCEventLoopInfo
 
-    - purpose:    Observable
-      capability: all_BFs
+    # - purpose:    Observable
+    #   capability: all_BFs
 
     - purpose:    Observable
       capability: SLHA1_violation
@@ -325,34 +325,62 @@ Rules:
 
   ##### LHC Detector and Analysis rules #####
 
+  # Choose to where to get total cross-sections from
+  - capability: TotalCrossSection
+    function: getEvGenCrossSection_as_base
+    # function: getYAMLCrossSection
+    # options:
+    #   cross_section_fb: 123.0
+    #   cross_section_uncert_fb: 1.23
+
+
+  # Choose how to do event weighting 
+  - capability: EventWeighterFunction
+    # function: setEventWeight_fromCrossSection
+    function: setEventWeight_unity
+
+
+  # # Choose where to get PID pair cross-sections from.
+  # # Note: This is not required if the "setEventWeight_unity" 
+  # #       function is chosen above.
+  # - capability: PIDPairCrossSectionsMap
+  #   function: getPIDPairCrossSectionsMap_xsecBE_example
+  #   # function: getPIDPairCrossSectionsMap_testing
+
+
   # Choose where to get scattering events from
   - capability: HardScatteringEvent
     function: generateEventPythia
 
-  # Choose where to get the Pythia process codes from
-  - capability: ActiveProcessCodes
-    function: getPythiaProcessCodes
+  # # Choose where to get the Pythia process codes from
+  # - capability: ActiveProcessCodes
+  #   function: getPythiaProcessCodes
 
-  # Set option for how to deal with missing cross-sections
-  - capabtility: ProcessCrossSectionsMap
-    function: getProcessCrossSectionsMap
-    options:
-      set_missing_xsecs_to_zero: true
+  # # Set option for how to deal with missing cross-sections
+  # - capabtility: ProcessCrossSectionsMap
+  #   function: getProcessCrossSectionsMap
+  #   options:
+  #     set_missing_xsecs_to_zero: true
 
-  # Choose to where to get cross-sections from
-  - capability: TotalCrossSection
-    function: get_MC_xsec_as_base
-    # function: getEvGenCrossSection_as_base
+  # # Choose to where to get cross-sections from
+  # - capability: TotalCrossSection
+  #   function: get_MC_xsec_as_base
+  #   # function: getEvGenCrossSection_as_base
 
-  # Choose event weighting
-  - capability: EventWeighterPy8Collider
-    function: setEventWeight_fromCrossSection_Pythia
-    # function: setEventWeight_unity
+  # # Choose event weighting
+  # - capability: EventWeighterPy8Collider
+  #   function: setEventWeight_fromCrossSection_Pythia
+  #   # function: setEventWeight_unity
     
-  - capability: PIDPairCrossSectionFunc
-    function: getPIDPairCrossSectionFunc_dummy
-    module: ColliderBit
+  # - capability: PIDPairCrossSectionFunc
+  #   function: getPIDPairCrossSectionFunc_dummy
+  #   module: ColliderBit
 
+
+  - capability: SLHAeaForPy8
+    function: getSLHAeaForPy8_SUSY
+    options:
+      slha_version: 2
 
   # Choose Monte Carlo event simulator and options.
   - capability: HardScatteringSim
@@ -519,46 +547,46 @@ Rules:
           # Squark/gluino production searches
           #
           - ATLAS_13TeV_0LEP_36invfb
-          - ATLAS_13TeV_0LEPStop_36invfb
-          - ATLAS_13TeV_1LEPStop_36invfb    # Needs RestFrames
-          - ATLAS_13TeV_2LEPStop_36invfb
-          - ATLAS_13TeV_2bMET_36invfb           
-          - ATLAS_13TeV_2OSLEP_Z_139invfb
-          - CMS_13TeV_0LEP_36invfb                        
-          - CMS_13TeV_1LEPStop_36invfb
-          - CMS_13TeV_2LEPStop_36invfb
-          - CMS_13TeV_2OSLEP_for_stop_36invfb
-          # - CMS_13TeV_2SSLEP_Stop_137invfb
-          - CMS_13TeV_2SSLEP_Stop_exclusive_36invfb   # Not included in combined loglike
-          - CMS_13TeV_2SSLEP_Stop_inclusive_36invfb   # Not included in combined loglike
-          #
-          # EWino production searches (not included in combined loglike)
-          #
-          - ATLAS_13TeV_MultiLEP_2Lep0Jets_36invfb
-          - ATLAS_13TeV_MultiLEP_2LepPlusJets_36invfb
-          - ATLAS_13TeV_MultiLEP_3Lep_36invfb
-          - ATLAS_13TeV_2OSLEP_chargino_inclusive_139invfb
-          - ATLAS_13TeV_2OSLEP_chargino_binned_139invfb
-          - ATLAS_13TeV_4LEP_36invfb
-          - ATLAS_13TeV_3b_24invfb
-          - ATLAS_13TeV_3b_discoverySR_24invfb
-          - ATLAS_13TeV_3b_36invfb
-          - ATLAS_13TeV_3b_discoverySR_36invfb
-          - ATLAS_13TeV_PhotonGGM_36invfb
-          - ATLAS_13TeV_ZGammaGrav_CONFNOTE_80invfb
-          - ATLAS_13TeV_RJ3L_lowmass_36invfb    # Needs RestFrames
-          - CMS_13TeV_1LEPbb_36invfb
-          - CMS_13TeV_2LEPsoft_36invfb
-          - CMS_13TeV_2OSLEP_36invfb
-          - CMS_13TeV_2OSLEP_for_chargino_36invfb
-          - CMS_13TeV_Photon_GMSB_36invfb
-          - CMS_13TeV_2Photon_GMSB_36invfb
-          - CMS_13TeV_MultiLEP_Full_2SSLep_36invfb
-          - CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb
-          #
-          # Other searches (not included in combined loglike)
-          #
-          - CMS_13TeV_MONOJET_36invfb
+          # - ATLAS_13TeV_0LEPStop_36invfb
+          # - ATLAS_13TeV_1LEPStop_36invfb    # Needs RestFrames
+          # - ATLAS_13TeV_2LEPStop_36invfb
+          # - ATLAS_13TeV_2bMET_36invfb           
+          # - ATLAS_13TeV_2OSLEP_Z_139invfb
+          # - CMS_13TeV_0LEP_36invfb                        
+          # - CMS_13TeV_1LEPStop_36invfb
+          # - CMS_13TeV_2LEPStop_36invfb
+          # - CMS_13TeV_2OSLEP_for_stop_36invfb
+          # # - CMS_13TeV_2SSLEP_Stop_137invfb
+          # - CMS_13TeV_2SSLEP_Stop_exclusive_36invfb   # Not included in combined loglike
+          # - CMS_13TeV_2SSLEP_Stop_inclusive_36invfb   # Not included in combined loglike
+          # #
+          # # EWino production searches (not included in combined loglike)
+          # #
+          # - ATLAS_13TeV_MultiLEP_2Lep0Jets_36invfb
+          # - ATLAS_13TeV_MultiLEP_2LepPlusJets_36invfb
+          # - ATLAS_13TeV_MultiLEP_3Lep_36invfb
+          # - ATLAS_13TeV_2OSLEP_chargino_inclusive_139invfb
+          # - ATLAS_13TeV_2OSLEP_chargino_binned_139invfb
+          # - ATLAS_13TeV_4LEP_36invfb
+          # - ATLAS_13TeV_3b_24invfb
+          # - ATLAS_13TeV_3b_discoverySR_24invfb
+          # - ATLAS_13TeV_3b_36invfb
+          # - ATLAS_13TeV_3b_discoverySR_36invfb
+          # - ATLAS_13TeV_PhotonGGM_36invfb
+          # - ATLAS_13TeV_ZGammaGrav_CONFNOTE_80invfb
+          # - ATLAS_13TeV_RJ3L_lowmass_36invfb    # Needs RestFrames
+          # - CMS_13TeV_1LEPbb_36invfb
+          # - CMS_13TeV_2LEPsoft_36invfb
+          # - CMS_13TeV_2OSLEP_36invfb
+          # - CMS_13TeV_2OSLEP_for_chargino_36invfb
+          # - CMS_13TeV_Photon_GMSB_36invfb
+          # - CMS_13TeV_2Photon_GMSB_36invfb
+          # - CMS_13TeV_MultiLEP_Full_2SSLep_36invfb
+          # - CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb
+          # #
+          # # Other searches (not included in combined loglike)
+          # #
+          # - CMS_13TeV_MONOJET_36invfb
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes
