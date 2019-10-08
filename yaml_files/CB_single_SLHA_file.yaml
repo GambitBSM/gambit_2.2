@@ -43,7 +43,7 @@ ObsLikes:
     # Observables
     #
 
-    - purpose:    Observable 
+    - purpose:    Observable
       capability: TotalCrossSectionAsMap
 
     - purpose:    Observable
@@ -78,14 +78,14 @@ Rules:
     #   cross_section_uncert_fb: 1.23
 
 
-  # Choose how to do event weighting 
+  # Choose how to do event weighting
   - capability: EventWeighterFunction
     function: setEventWeight_unity
     # function: setEventWeight_fromCrossSection
 
 
   # # Choose where to get PID pair cross-sections from.
-  # # Note: This is not required if the "setEventWeight_unity" 
+  # # Note: This is not required if the "setEventWeight_unity"
   # #       function is chosen above.
   # - capability: PIDPairCrossSectionsMap
   #   function: getPIDPairCrossSectionsMap_xsecBE_example
@@ -162,7 +162,7 @@ Rules:
         invalidate_failed_points: true
         analyses:
           - ATLAS_13TeV_0LEP_139invfb
-          # - ATLAS_13TeV_0LEP_36invfb
+          #- ATLAS_13TeV_0LEP_36invfb
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes

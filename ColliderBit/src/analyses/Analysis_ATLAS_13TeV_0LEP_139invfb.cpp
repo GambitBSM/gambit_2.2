@@ -31,6 +31,7 @@ namespace Gambit {
                      SR4J_1000, SR4J_2200, SR4J_3400, SR5J_1600,
                      SR6J_1000, SR6J_2200, SR6J_3400 };
 
+
       Analysis_ATLAS_13TeV_0LEP_139invfb() {
 
         set_analysis_name("ATLAS_13TeV_0LEP_139invfb");
@@ -52,6 +53,7 @@ namespace Gambit {
       }
 
       void run(const Event* event) {
+        //cout << "PROCESSING EVENT!!!" << endl;
 
         _cutflows.fillinit();
 
