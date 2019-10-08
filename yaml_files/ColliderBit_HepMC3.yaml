@@ -165,13 +165,13 @@ Rules:
 
   # Choose where to get scattering events from
   - capability: HardScatteringEvent
-    function: generateEventPythia
-    options:
-      drop_HepMC2_file: true
-      drop_HepMC3_file: true
-    #function: getHepMCEvent
+    #function: generateEventPythia
     #options:
-    #  HepMC3_filename: "./GAMBIT_collider_events.omp_thread_0.hepmc3"
+    #  drop_HepMC2_file: true
+    #  drop_HepMC3_file: true
+    function: getHepMCEvent
+    options:
+      hepmc_filename: "./GAMBIT_collider_events.omp_thread_0.hepmc3"
 
   # Choose to where to get cross-sections from
   - capability: CrossSection
