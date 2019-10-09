@@ -631,6 +631,18 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "mInterp(Ecm/2, inP, outN, tab);\n"
             "return zInterp(log(E/Ecm*2), tab);\n"
             "}}\n"
+            "\n"
+            "/// Assigns gambit value to parameter, with error-checking.\n"
+            "void Assign_Value(std::string parameter, double value)\n"
+            "{{\n"
+            "int error;\n"
+            "char *param = &parameter[0];\n"
+            "error = assignVal(param, value);\n"
+            "if (error != 0) backend_error().raise(LOCAL_INFO, \""
+            "Unable to set \" + std::string(parameter) +\n"
+            "    \" in MicrOmegas. MicrOmegas error code: \" + std::to_string(error)"
+            "+ \". Please check your model files.\\n\");\n"
+            "}}\n\n"
             "}}\n"
             "END_BE_NAMESPACE\n"
             "\n"
@@ -659,23 +671,9 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "// Uncomment below to force MicrOmegas to do calculations in unitary gauge\n"
             "*ForceUG=1;\n"
             "\n"
+            "// BSM parameters\n"
     ).format(gambit_model_name, spectrum)
 
-    # Now we must assign the GAMBIT values for each parameter to MO for
-    # computation. First define a little function to make this neater. 
-    mo_src += (
-            "/// Assigns gambit value to parameter, with error-checking.\n"
-            "void Assign_Value(char *parameter, double value)\n"
-            "{\n"
-            "int error;\n"
-            "error = assignVal(parameter, value);\n"
-            "if (error != 0) backend_error().raise(LOCAL_INFO, \""
-            "Unable to set \" + std::string(parameter) +\n"
-            "    \" in MicrOmegas. MicrOmegas error code: \" + std::to_string(error)"
-            "+ \". Please check your model files.\\n\");\n"
-            "}\n\n"
-            "// BSM parameters\n"
-    )
 
     donotassign = ["vev", "sinW2", "Yu", "Ye", "Yd", "g1", "g2", "g3"]
 
@@ -691,7 +689,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
         # Scalar case
         if param.shape == "scalar":
             mo_src += (
-                    "Assign_Value((char*)\"{0}\", spec.get(Par::{1}, \"{2}\"));\n"
+                    "Assign_Value(\"{0}\", spec.get(Par::{1}, \"{2}\"));\n"
             ).format(param.name, param.tag, param.alt_name)
 
         # Vector case
@@ -700,7 +698,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             mo_src += (
                 "for(int i=1; i<{0}; i++)\n{{\n"
                 "std::string paramname = \"{2}\" + std::to_string(i);\n"
-                "Assign_Value((char*)paramname, spec.get(Par::{3}, \"{4}\"));\n"
+                "Assign_Value(paramname, spec.get(Par::{3}, \"{4}\"));\n"
                 "}}\n"
             ).format(i, j, param.name, param.tag, param.alt_name)
 
@@ -713,7 +711,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
                 "for(int i=1; i<{0}; i++)\n{{\n"
                 "for(int j=1; j<{1}; j++)\n{{\n"
                 "std::string paramname = \"{2}\" + std::to_string(i) + std::to_string(j);\n"
-                "Assign_Value((char*)paramname, spec.get(Par::{3}, \"{4}\"));\n"
+                "Assign_Value(paramname, spec.get(Par::{3}, \"{4}\"));\n"
                 "}}\n}}\n"
             ).format(i, j, param.name, param.tag, param.alt_name)
 
@@ -726,7 +724,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
         gbname = pdg_to_particle(part.PDG_code, gambit_pdg_codes)
 
         mo_src += (
-               "Assign_Value((char*)\"{0}\", spec.get(Par::Pole_Mass, \"{1}\"));\n"
+               "Assign_Value(\"{0}\", spec.get(Par::Pole_Mass, \"{1}\"));\n"
         ).format(chname, gbname)
 
     # SMInputs
@@ -738,7 +736,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     for pdg, chmass in calchep_masses.iteritems():
         if pdg in SMinputs:
             mo_src += (
-                "Assign_Value((char*)\"{0}\", sminputs.{1});\n"
+                "Assign_Value(\"{0}\", sminputs.{1});\n"
             ).format(chmass, SMinputs[pdg])
 
 
@@ -765,8 +763,8 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     for pdg, chwidth in calchep_widths.iteritems():
         mo_src += (
                "try {{ width = tbl->at(\"{0}\").width_in_GeV; }}\n"
-               " catch(std::std::exception& e) {{ present = false; }}\n"
-               "if (present) Assign_Value((char*)\"{1}\", width);\n"
+               " catch(std::exception& e) {{ present = false; }}\n"
+               "if (present) Assign_Value(\"{1}\", width);\n"
                "present = true;\n\n"
         ).format(pdg_to_particle(pdg, gambit_pdg_codes), chwidth)
 

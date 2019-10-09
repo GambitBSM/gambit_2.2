@@ -209,6 +209,7 @@ namespace GUM
             std::string antiname;
             std::string antioutputname;
             std::string mass;
+            std::string colorrep;
             int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
             int chargeX3 = 0;
             int color = 0;
@@ -258,10 +259,11 @@ namespace GUM
                 send_to_math(command);
                 bool is_sc;
                 get_from_math(is_sc);
-                if (is_sc)
+                if (not is_sc)
                 {
                     self_conjugate = false;
                     capitalise = true;
+                    antiname = name; // This will get changed in a minute
                 }
             }
             else
@@ -276,28 +278,34 @@ namespace GUM
             {
                 outputname = name + std::to_string(j+1);
                 alt_name = alt_name + std::to_string(j+1);
-                if (not self_conjugate && capitalise)
-                {
-                    antioutputname = outputname;
-                    if (isupper(antioutputname[0])) { antioutputname = tolower(antioutputname[0]); }
-                    else { antioutputname[0] = toupper(antioutputname[0]); }
-                }
             }
             else
             {
-
                 outputname = name;
-                if (not self_conjugate)
-                {
-                    antioutputname = antiname;
-                }
-                else
-                {
-                    antioutputname = name;
-                }
+                antioutputname = antiname;
             }
 
+            if (not self_conjugate && capitalise)
+            {
+                antioutputname = outputname;
+                if (isupper(antioutputname[0])) { antioutputname = tolower(antioutputname[0]); }
+                else { antioutputname[0] = toupper(antioutputname[0]); }
+            }
+            else { antioutputname = outputname; }
+
             mass = "M" + outputname;
+
+            // Get the color rep
+            command = "getColorRep[pl[["+std::to_string(i+1)+",1]]] // ToString";
+            send_to_math(command);
+            get_from_math(colorrep);
+
+            // Translate this to a color that GAMBIT particle DB can use
+            if (colorrep == "S") color = 1;
+            else if(colorrep == "T") color = 3;
+            else if(colorrep == "O") color = 8;
+            else if(colorrep == "Six") color = 6;
+            else throw std::runtime_error("Unrecognised color - " + colorrep + " - found.");
 
             std::set<int> SM_pdgs = {1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24};
             if (SM_pdgs.count(abs(pdg)))

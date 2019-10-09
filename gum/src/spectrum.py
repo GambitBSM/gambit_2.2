@@ -237,7 +237,7 @@ def write_spectrum_header(model_name, add_higgs, is_spheno):
             "  #define CAPABILITY {0}_spectrum\n"
             "  START_CAPABILITY\n"
             "\n"
-    )
+    ).format(model_name)
 
     if is_spheno:
         towrite += (
