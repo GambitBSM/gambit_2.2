@@ -1084,13 +1084,16 @@ namespace Gambit
         /// (only gathers data from buffers known to that process)
         void MPI_flush_to_rank(const unsigned int rank);
 
+        /// Give process 'rank' permission to begin sending its buffer data
+        void MPI_request_buffer_data(const unsigned int rank);
+ 
         /// Receive buffer data from a specified process until a STOP message is received
         void MPI_recv_all_buffers(const unsigned int rank);
   
         /// Receive buffer data of a known type for a known dataset
         /// Requires status message resulting from a probe for the message to be received
         template<class T>
-        void MPI_recv_buffer(const unsigned int r, const std::string& dset_name)      
+        int MPI_recv_buffer(const unsigned int r, const std::string& dset_name)      
         {
             // Get number of points to be received
             MPI_Status status;
@@ -1108,6 +1111,7 @@ namespace Gambit
             buffer.MPI_recv_from_rank(r, Npoints);
             logger()<< LogTags::printers << LogTags::debug << "Received "<<Npoints<<" points from rank "<<r<<"'s buffers (for dataset: "<<dset_name<<")"<<EOM;
             //std::cout<<"(rank "<<myComm.Get_rank()<<") Received "<<Npoints<<" from rank "<<r<<". New buffer size is "<<buffer.N_items_in_buffer()<<" (name="<<buffer.dset_name()<<")"<<std::endl;
+            return Npoints;
         }
         #endif
 
@@ -1155,6 +1159,12 @@ namespace Gambit
  
         /// Get next available position in the synchronised output datasets
         std::size_t get_next_free_position();
+
+        /// Report number of buffers that we are managing
+        std::size_t get_Nbuffers();
+
+        /// Report upper limit estimate of size of all buffer data in MB
+        double get_sizeMB();
 
       private:
 
