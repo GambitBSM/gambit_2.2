@@ -35,8 +35,8 @@ namespace Gambit {
                      "Evt quality"}) //, "SR HTmiss", "SR HT", "SR Njet", "SR Nbjet"}
       {
         set_analysis_name("CMS_13TeV_0LEP_137invfb");
-        set_luminosity(137);
-        for (size_t i = 0; i < NUMSR; ++i) _srnums[i] = 0;
+        set_luminosity(137.0);
+        for (double& x : _srnums) x = 0;
       }
 
 
@@ -44,18 +44,23 @@ namespace Gambit {
 
         _cutflow.fillinit();
 
-        // FinalState isofs(Cuts::abseta < 3.0 && Cuts::abspid != PID::ELECTRON && Cuts::abspid != PID::MUON);
-        // FinalState cfs(Cuts::abseta < 2.5 && Cuts::abscharge != 0);
-
-        // Get baseline jets
+        // Get jets
         vector<const Jet*> jets24, jets50;
         for (const Jet* jet : event->jets()) {
           if (jet->pT() < 30) continue;
           if (jet->abseta() < 2.4) jets24.push_back(jet);
           if (jet->abseta() < 5.0) jets50.push_back(jet);
         }
-        if (jets24.size() < 2) return;
+        const size_t njets = jets24.size();
+        if (njets < 2) return;
         _cutflow.fill(1);
+
+        // Count b-jets
+        size_t nbjets = 0;
+        for (const Jet* j : jets24)
+          if (random_bool(j->btag() ? 0.65 : j->ctag() ? 0.13 : 0.016))
+            nbjets += 1;
+
 
         // HT cut
         double sumptj = 0;
@@ -138,7 +143,7 @@ namespace Gambit {
         _cutflow.fill(6);
 
         // Veto high-pT photons (should have negligible effect)
-        if (photons[0]->pT() > 100) return;
+        if (!photons.empty() && photons[0]->pT() > 100) return;
         _cutflow.fill(7);
 
 
@@ -153,23 +158,12 @@ namespace Gambit {
         _cutflow.fill(11);
 
 
-        // Random downweight for event quality inefficiency
+        // Downweight for event quality inefficiency
         const double w = 0.95 * event->weight();
         if (random_bool(0.95)) _cutflow.fill(12);
 
 
-        ////////
-
-
         // Fill aggregate SR bins
-        const size_t njets = jets24.size();
-
-        size_t nbjets = 0;
-        for (const Jet* j : jets24) {
-          const bool btagged = Random::draw() < (j->btag() ? 0.65 : j->ctag() ? 0.13 : 0.016);
-          if (btagged) nbjets += 1;
-        }
-
         if (htmiss >= 600 && ht >=  600 && njets >=  2 && nbjets == 0) _srnums[ 0] += w;
         if (htmiss >= 850 && ht >= 1700 && njets >=  4 && nbjets == 0) _srnums[ 1] += w;
         if (htmiss >= 600 && ht >=  600 && njets >=  6 && nbjets == 0) _srnums[ 2] += w;

@@ -162,6 +162,7 @@ Rules:
         invalidate_failed_points: true
         analyses:
           - ATLAS_13TeV_0LEP_139invfb
+          - CMS_13TeV_0LEP_137invfb
           #- ATLAS_13TeV_0LEP_36invfb
 
   # Choose LHC likelihood form and options.
