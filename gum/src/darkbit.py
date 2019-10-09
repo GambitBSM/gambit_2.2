@@ -928,41 +928,95 @@ def add_micromegas_to_cmake(model_name, reset_dict):
 def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
     """
     Adds entries to the DarkBit rollcall for micrOMEGAs routines.
+    - RD_oh2_Xf_MicrOmegas
+        - new BACKEND_OPTION
+        - adds to ALLOW_MODELS
+    - DD_couplings_MicrOmegas
+        - new BACKEND_OPTION
+        - adds to ALLOW_MODEL_DEPENDENCE
+        - adds to MODEL_GROUP(group2 (...))
     """
 
     rollcall = full_filename("DarkBit_rollcall.hpp", "DarkBit")
 
-    # Relic density 
-
-    # find the CAPABILITY RD_oh2_Xf
-    exists, line = find_capability("RD_oh2_Xf", "DarkBit")
-
-    if not exists:
-        raise GumError(("CAPABILITY RD_oh2_Xf not found in DarkBit_rollcall.hpp. "
-                        "It should be there!"))
     
-    # Now find the ALLOW_MODELS for the CAPABILITY
-    linenum = 0
-    with open(rollcall, 'r') as f:
-        # Start from the beginning of the CAPABILITY
-        for i in xrange(line):
-            f.next()
-        for num, line in enumerate(f, line):
-            if 'ALLOW_MODELS' in line: 
-                linenum = num
-                break
 
-    # What we want to write    
-    towrite = "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n".format(model_name)
+                # Function                  # Capability    # String to write above
+    entries = [ ["RD_oh2_Xf_MicrOmegas",    "RD_oh2_Xf",    "ALLOW_MODELS"],
+                ["DD_couplings_MicrOmegas", "DD_couplings", "FORCE_SAME_BACKEND"] ]
 
-    if linenum != 0:
-        amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, reset_dict)
-    else:
-        raise GumError(("Could not find the string ALLOW_MODELS in DarkBit_rollcall, " 
-                        "which is very weird."))
+    # Add the backend options to each entry - relic density and direct detection
+    for entry in entries:
+        function = entry[0]
+        capability = entry[1]
+        pattern = entry[2]
 
-    add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", "RD_oh2_Xf", "RD_oh2_Xf_MicrOmegas", 
-                              model_name, reset_dict)
+        # Find the CAPABILITY + FUNCTIONfunction RD_oh2_Xf_MicrOmegas
+        exists, line = find_function(function, capability, "DarkBit")
 
-    # Direct detection TODO
+        if not exists:
+            raise GumError(("Function {0} not found in DarkBit_rollcall.hpp. "
+                            "It should be there!").format(function))
+    
+        # Now find the ALLOW_MODELS for the CAPABILITY
+        linenum = 0
+        with open(rollcall, 'r') as f:
+            # Start from the beginning of the FUNCTION
+            for i in xrange(line):
+                f.next()
+            for num, line in enumerate(f, line):
+                if pattern in line: 
+                    linenum = num
+                    break
 
+        # What we want to write    
+        towrite = "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n".format(model_name)
+
+        if linenum != 0:
+            amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, reset_dict)
+        else:
+            raise GumError(("Could not find the string ALLOW_MODELS in DarkBit_rollcall, " 
+                            "which is very weird."))
+
+    # Add the model to the function arguments
+    file = "DarkBit_rollcall.hpp"
+    module = "DarkBit"
+    add_new_model_to_function(file, module, "RD_oh2_Xf", 
+                              "RD_oh2_Xf_MicrOmegas", model_name, reset_dict, 
+                              pattern="ALLOW_MODELS")    
+    add_new_model_to_function(file, module, "DD_couplings", 
+                              "DD_couplings_MicrOmegas", model_name, 
+                              reset_dict, pattern="ALLOW_MODEL_DEPENDENCE")   
+    add_new_model_to_function(file, module, "DD_couplings", 
+                              "DD_couplings_MicrOmegas", model_name, 
+                              reset_dict, pattern="MODEL_GROUP(group2")
+
+    """
+    Direct detection 
+    """
+    # # find the CAPABILITY DD_couplings, function DD_couplings_MicrOmegas
+    # exists, line = find_function("DD_couplings_MicrOmegas", "DD_couplings", "DarkBit")
+
+    # if not exists:
+    #     raise GumError(("Function DD_couplings_MicrOmegas not found in DarkBit_rollcall.hpp. "
+    #                     "It should be there!"))
+
+    # # Now find the ALLOW_MODELS for the CAPABILITY
+    # linenum = 0
+    # with open(rollcall, 'r') as f:
+    #     # Start from the beginning of the FUNCTION
+    #     for i in xrange(line):
+    #         f.next()
+    #     for num, line in enumerate(f, line):
+    #         if 'ALLOW_MODELS' in line: 
+    #             linenum = num
+    #             break
+
+    # # What we want to write    
+    # towrite = "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n".format(model_name)
+
+    # if linenum != 0:
+    #     amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, reset_dict)
+    # else:
+    #     raise GumError(("Could not find the string ALLOW_MODELS in DarkBit_rollcall, " 
+    #                     "which is very weird."))

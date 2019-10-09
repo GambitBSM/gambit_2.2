@@ -429,25 +429,25 @@ if args.file:
 
         print("Writing new module functions for DarkBit")
 
-        # Write process catalogue output
-        pc = True
 
         # Conditional on CalcHEP files being made.
         if output_opts.ch:
 
-          sv = True
+            sv = True
+            # Write process catalogue output
+            pc = True
 
-          # Obtain all three-field vertices
-          three_f = [interaction.particles for interaction in interactions
-                     if interaction.num_particles() == 3]
-          # And all 4-point BSM vertices
-          four_f = [interaction.particles for interaction in interactions
-                    if interaction.num_particles() == 4
-                    and interaction.is_sm() == False]
+            # Obtain all three-field vertices
+            three_f = [interaction.particles for interaction in interactions
+                         if interaction.num_particles() == 3]
+            # And all 4-point BSM vertices
+            four_f = [interaction.particles for interaction in interactions
+                        if interaction.num_particles() == 4
+                        and interaction.is_sm() == False]
 
-          # Get all annihilation products and propagators involved in
-          # DM + DM -> X + Y at tree-level
-          ann_products, propagators = sort_annihilations(dm, three_f, four_f)
+            # Get all annihilation products and propagators involved in
+            # DM + DM -> X + Y at tree-level
+            ann_products, propagators = sort_annihilations(dm, three_f, four_f)
 
         # If micrOMEGAs requested
         if output_opts.mo:

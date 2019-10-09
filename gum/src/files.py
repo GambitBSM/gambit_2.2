@@ -270,7 +270,14 @@ def amend_file(filename, module, contents, line_number, reset_dict):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
 
-    reset_dict['amended_files'][location].append(contents)
+    # Check there's not already an identical entry - happens sometimes!
+    present = False
+    if location in reset_dict['amended_files']:
+        if contents in reset_dict['amended_files'][location]:
+            present = True
+
+    if not present:
+        reset_dict['amended_files'][location].append(contents)
 
     # Save a temp mug file, incase something goes wrong.
     drop_mug_file("mug_files/temp.mug", reset_dict)
@@ -386,10 +393,12 @@ def write_function(function, returntype, dependencies=None,
 
     return dumb_indent(4, towrite)
 
-def add_new_model_to_function(filename, module, capability, function, model_name, reset_dict):
+def add_new_model_to_function(filename, module, capability, function, 
+                              model_name, reset_dict, pattern="ALLOW_MODELS"):
     """
     Adds a new entry to the ALLOW_MODELS macro for a given (pre-existing)
-    CAPABILITY and FUNCTION.
+    CAPABILITY and FUNCTION. Pattern can be overwritten by something else
+    to match e.g. ALLOW_MODEL_DEPENDENCEWS
     """
 
     location = full_filename(filename, module)
@@ -402,7 +411,6 @@ def add_new_model_to_function(filename, module, capability, function, model_name
                         "{1} in {2}").format(function, capability, location))
 
     counter = 0
-    pattern = "ALLOW_MODELS"
     take_it_slow = False
     modellist = ""
     adding_to_modellist = False
@@ -429,14 +437,17 @@ def add_new_model_to_function(filename, module, capability, function, model_name
                     # End of macro
                     if ")" in line: 
                         # Add the model name to the end
-                        modellist = re.sub(r'\)', ", "+model_name+')', modellist)
+                        modellist = re.sub(r'\)', ", "+model_name+')', 
+                                    modellist, 1) # Only do first occurence!
                         g.write(modellist)
                         adding_to_modellist = False
                         take_it_slow = False
                         done = True
 
+    # Entry for the mug file to parse
+    entry = location+'|'+capability+'|'+function+'|'+pattern
     # Add to the reset dictionary
-    reset_dict['new_models'][location+'|'+capability+'|'+function].append(model_name)
+    reset_dict['new_models'][entry].append(model_name)
 
     os.remove(location)
     os.rename(temp_location, location)
@@ -586,12 +597,12 @@ def revert(reset_file):
             os.rename(temp_file, filename)
 
         # Now go through those amendments that are adding new models to an existing
-        # ALLOW_MODELS macro for a given capability
+        # ALLOW_MODELS (or similar) macro for a given capability
         amended_capabilities = data['new_models']
 
-        for loc_cap_func, model in amended_capabilities.iteritems():
+        for loc_cap_func_pattern, model in amended_capabilities.iteritems():
             
-            location, capability, function = loc_cap_func.split('|')
+            location, capability, function, pattern = loc_cap_func_pattern.split('|')
             module = location.split('/')[1]
 
             print(("Removing model from capability {0}; function {1}; in {2}...")
@@ -600,7 +611,6 @@ def revert(reset_file):
             temp_file = location + "_temp"
             
             exists, num = find_function(function, capability, module)
-            pattern = "ALLOW_MODELS"
             
             counter = 0
             done = False
