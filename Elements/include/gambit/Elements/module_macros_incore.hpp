@@ -219,25 +219,5 @@
 #define CLASSLOAD_NEEDED(BACKEND, VERSION)               CORE_CLASSLOAD_NEEDED(BACKEND, VERSION, NOT_MODEL)
 /// @}
 
-// Determine whether to make registration calls to the Core in the
-// CORE_NEEDS_MANAGER macro, depending on STANDALONE flag
-#ifdef STANDALONE
-  #define CORE_NEEDS_MANAGER(...)                                              \
-          CORE_NEEDS_MANAGER_REDIRECT(__VA_ARGS__)
-#else
-  #define CORE_NEEDS_MANAGER(...)                                              \
-          CORE_NEEDS_MANAGER_REDIRECT(__VA_ARGS__)                             \
-          namespace Gambit { namespace MODULE { const int CAT(FUNCTION,        \
-           _registered3) = register_management_req(Functown::FUNCTION); } }
-#endif
-
-/// Variadic redirection for NEEDS_MANAGER when invoked within the Core
-/// @{
-#define CORE_NEEDS_MANAGER_REDIRECT_2(_1, _2) CORE_NEEDS_MANAGER_2(_1,  _2)
-#define CORE_NEEDS_MANAGER_REDIRECT_1(_1)     CORE_NEEDS_MANAGER_1(_1)
-#define CORE_NEEDS_MANAGER_REDIRECT(...)      VARARG(CORE_NEEDS_MANAGER_REDIRECT, __VA_ARGS__)
-/// @}
-
-
 #endif // defined __core_module_macros_incore_hpp__
 

@@ -494,6 +494,13 @@ START_MODULE
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
+    #define FUNCTION TH_ProcessCatalog_WIMP_EFT
+      START_FUNCTION(TH_ProcessCatalog)
+      DEPENDENCY(decay_rates, DecayTable)
+      DEPENDENCY(SM_spectrum, Spectrum)
+      DEPENDENCY(WIMP_properties, WIMPprops)
+      DEPENDENCY(generic_WIMP_sigmav, WIMP_annihilation)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY set_gamLike_GC_halo
@@ -728,7 +735,7 @@ START_MODULE
       /// Copying of NREO model parameters into NREO_DD_nucleon_couplings object
       #define FUNCTION NREO_couplings_from_parameters
       START_FUNCTION(NREO_DM_nucleon_couplings)
-      ALLOW_MODELS(NREO)
+      ALLOW_MODELS(NREO_scalarDM, NREO_MajoranaDM, NREO_DiracDM)
       #undef FUNCTION
 
       /// Translation of DDcalc couplings into NREO couplings
@@ -742,9 +749,7 @@ START_MODULE
       #define FUNCTION DD_nonrel_WCs_flavscheme
       START_FUNCTION(NREO_DM_nucleon_couplings)
       DEPENDENCY(DD_rel_WCs, map_str_dbl)
-      DEPENDENCY(mwimp, double)
-      DEPENDENCY(spinwimpx2, unsigned int)
-      DEPENDENCY(wimp_sc, bool)
+      DEPENDENCY(WIMP_properties,WIMPprops)
       BACKEND_REQ(get_NR_WCs_flav, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, int&, std::string&))
       #undef FUNCTION
 
@@ -753,9 +758,7 @@ START_MODULE
       #define FUNCTION DD_nonrel_WCs_EW
       START_FUNCTION(NREO_DM_nucleon_couplings)
       DEPENDENCY(DD_rel_WCs, map_str_dbl)
-      DEPENDENCY(mwimp, double)
-      DEPENDENCY(spinwimpx2, unsigned int)
-      DEPENDENCY(wimp_sc, bool)
+      DEPENDENCY(WIMP_properties,WIMPprops)
       BACKEND_REQ(get_NR_WCs_EW, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&))
       #undef FUNCTION
       
@@ -935,15 +938,24 @@ START_MODULE
 
   // INDIRECT DETECTION: NEUTRINOS =====================================
 
-  // Placeholder setting of WIMP spin for MSSM models
-  // (assumes neutralino dark matter; need chance for gravitino etc?)
-  #define CAPABILITY jwimp
-  START_CAPABILITY
-     #define FUNCTION jwimp_for_MSSM
-     START_FUNCTION(double)
-     ALLOW_MODELS(MSSM63atQ)
+  // WIMP spin (x2)
+  #define CAPABILITY spinwimpx2
+  //START_CAPABILITY // Don't need this; capability already created in a QUICK_FUNCTION above
+     #define FUNCTION jwimpx2_from_WIMPprops
+     START_FUNCTION(unsigned int)
+     DEPENDENCY(WIMP_properties,WIMPprops)
      #undef FUNCTION
   #undef CAPABILITY
+
+  // WIMP mass
+  #define CAPABILITY mwimp
+  //START_CAPABILITY // Don't need this; capability already created in a QUICK_FUNCTION above
+     #define FUNCTION mwimp_from_WIMPprops
+     START_FUNCTION(double)
+     DEPENDENCY(WIMP_properties,WIMPprops)
+     #undef FUNCTION
+  #undef CAPABILITY
+
 
   // Solar capture ------------------------
 
@@ -994,8 +1006,7 @@ START_MODULE
     BACKEND_REQ(captn_NREO,(CaptnGeneral),void,(const double&,const double&,const int&,const int&,double&))
     BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),void,(const double&,double&))
     BACKEND_REQ(populate_array,(CaptnGeneral),void,(const double&,const int&,const int&))
-    DEPENDENCY(mwimp,double)
-    DEPENDENCY(jwimp,double)
+    DEPENDENCY(WIMP_properties, WIMPprops)
     DEPENDENCY(DD_nonrel_WCs,NREO_DM_nucleon_couplings)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1373,9 +1384,9 @@ START_MODULE
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
-    #define FUNCTION DarkMatter_ID_NREO
+    #define FUNCTION DarkMatter_ID_EFT
     START_FUNCTION(std::string)
-    ALLOW_MODELS(NREO)
+    DEPENDENCY(WIMP_properties, WIMPprops)
     #undef FUNCTION
   #undef CAPABILITY
 

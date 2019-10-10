@@ -187,7 +187,8 @@ namespace Gambit
             int findChannel(std::string p1, std::string p2, std::string finalState) const;
     };
 
-  }
+
+ }
 }
 
 #endif // defined __DarkBit_types_hpp__
