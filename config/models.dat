@@ -549,10 +549,6 @@ ConstantMassALP: |
 
    A convenient version of the GeneralALP model for studies of ALPs with not explicitly temperature-dependent axion mass, i.e. beta = 0 and Tcrit is irrelevant.
 
-NREO: |
-
-   Non-relativistic effective operator model, coupling constants as defined in: https://arxiv.org/abs/1501.03729
-
 RightHandedNeutrinos: |
    Type I Seesaw model with 3 right handed neutrinos. The parameters include the masses of the RHNs and the mixing angles in the Casas-Ibarra parametrisations.
 
@@ -561,3 +557,9 @@ RightHandedNeutrinos_diff: |
 
 StandardModel_mNudiff: |
    Daughter model of the StandardModel_SLHA2 where the masses of neutrinos have been substituted by mass differences and the absolute lightest neutrino mass.
+
+NREO_DiracDM: |
+   Non-relativistic effective operator model, coupling constants as defined in: https://arxiv.org/abs/1501.03729
+
+WIMP_sigmav: |
+   General A + Bv^2 parameterisation of WIMP self-annihilation to all SM two-body final states

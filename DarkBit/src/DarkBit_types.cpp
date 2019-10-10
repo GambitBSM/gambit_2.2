@@ -187,6 +187,6 @@ namespace Gambit
       }
       return -1;
     }
-
+ 
   }
 }
