@@ -61,6 +61,7 @@ Printer:
     output_file: "spectrum_pp_results.hdf5"
     group: "/spec_pp"
     delete_file_on_restart: true
+    buffer_length: 1
 
   #printer: sqlite
   #options:
@@ -85,8 +86,8 @@ Scanner:
       permit_discard_old_likes: true
       update_interval: 10 # Frequency to print status update message
       batch_size: 100 # Number of points to distribute to worker processes each time they request more work
-       # Throw away all points outside the cuts
-      discard_points_outside_cuts: true
+      #Throw away all points outside the cuts
+      #discard_points_outside_cuts: true
       # Information about input dataset to be postprocessed
       reader:
         type: hdf5
@@ -131,6 +132,7 @@ Rules:
 
   - capability: unimproved_MSSM_spectrum
     function: get_MSSM_spectrum_from_postprocessor
+    type: Spectrum
 
   # Choose where to get the precision spectrum from
   # (No modification of retrieved spectrum)

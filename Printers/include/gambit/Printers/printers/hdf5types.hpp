@@ -36,7 +36,8 @@
 
 #define HDF5_RETRIEVABLE_TYPES \
   HDF5_TYPES \
-  (MSSM_SLHAstruct)
+  (MSSM_SLHAstruct) \
+  (SMslha_SLHAstruct)
 
 #define HDF5_MODULE_BACKEND_TYPES \
   (DM_nucleon_couplings)    \

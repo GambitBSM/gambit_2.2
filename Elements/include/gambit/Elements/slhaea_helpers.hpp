@@ -44,6 +44,7 @@ namespace Gambit
   /// that lets us create e.g. different print/retrieve functions for different sorts of 
   /// spectrum information
   BOOST_STRONG_TYPEDEF(SLHAstruct, MSSM_SLHAstruct)
+  BOOST_STRONG_TYPEDEF(SLHAstruct, SMslha_SLHAstruct)
 
   /// Read an SLHA file in to an SLHAea object with some error-checking
   SLHAstruct read_SLHA(str slha); 

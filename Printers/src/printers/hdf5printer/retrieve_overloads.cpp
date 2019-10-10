@@ -200,6 +200,54 @@ namespace Gambit
         return tmp_is_valid; 
      }
 
+     /// Retrieve (SLHA-only) SM spectrum information as an SLHAea object
+     bool HDF5Reader::_retrieve(SMslha_SLHAstruct& out_main, const std::string& spec_type, const uint rank, const ulong pointID)
+     {
+        SLHAstruct& out(out_main); // Interpret as ordinary SLHAea base class to get operator[] etc
+        bool is_valid = true;
+        std::map<std::string,SLHAcombo> labels_to_SLHA;
+ 
+        // Read all dataset labels into a structure that we can search quickly
+        std::set<std::string> all_dataset_labels = get_all_labels();
+
+        // MASS
+        labels_to_SLHA["Z0"     ] = SLHAcombo("Pole_Mass", "SMINPUTS", 4);
+        labels_to_SLHA["W+"     ] = SLHAcombo("Pole_Mass", "MASS", 24);
+        labels_to_SLHA["e-"     ] = SLHAcombo("Pole_Mass", "SMINPUTS", 11);
+        labels_to_SLHA["mu-"    ] = SLHAcombo("Pole_Mass", "SMINPUTS", 13);
+        labels_to_SLHA["tau-"   ] = SLHAcombo("Pole_Mass", "SMINPUTS", 7);
+        labels_to_SLHA["t"      ] = SLHAcombo("Pole_Mass", "SMINPUTS", 6);
+        labels_to_SLHA["b"      ] = SLHAcombo("Pole_Mass", "SMINPUTS", 5);
+        labels_to_SLHA["nu_1"   ] = SLHAcombo("Pole_Mass", "SMINPUTS", 12);
+        labels_to_SLHA["nu_2"   ] = SLHAcombo("Pole_Mass", "SMINPUTS", 14);
+        labels_to_SLHA["nu_3"   ] = SLHAcombo("Pole_Mass", "SMINPUTS", 8);
+
+        // Light quark running masses (always at 2 GeV, I think it is. Whatever SLHA standard says.)
+        labels_to_SLHA["u_1"   ] = SLHAcombo("mass1", "SMINPUTS", 22);
+        labels_to_SLHA["d_1"   ] = SLHAcombo("mass1", "SMINPUTS", 21);
+        labels_to_SLHA["d_2"   ] = SLHAcombo("mass1", "SMINPUTS", 23);
+
+        // Automatically extract and add the rest of the entries
+        for(auto it=labels_to_SLHA.begin(); it!=labels_to_SLHA.end(); ++it)
+        {
+           bool found(true);
+           bool tmp_is_valid = retrieve_and_add_to_SLHAea(out, found, spec_type, it->first, it->second, all_dataset_labels, rank, pointID);
+           if(not found)
+           {
+              std::ostringstream err;
+              err << "Error! HDF5Reader encountered an error while attempting to read a spectrum of type '"<<spec_type<<"' from the HDF5 file:group "<<file<<":"<<group<<"' (while calling 'retrieve'). A required dataset could not be found ("<<it->first<<")";
+              printer_error().raise(LOCAL_INFO,err.str());
+           }
+           else if(not tmp_is_valid)
+           {
+              // No need to read any more if some required spectrum entries are invalid. Whole spectrum is invalid.
+              is_valid = false;
+              break;
+           }
+        }
+        return is_valid;
+      }
+
      /// Retrieve MSSM spectrum information as an SLHAea object
      bool HDF5Reader::_retrieve(MSSM_SLHAstruct& out_main, const std::string& spec_type, const uint rank, const ulong pointID)
      {
@@ -248,7 +296,10 @@ namespace Gambit
         labels_to_SLHA["~nu_1"  ] = SLHAcombo("Pole_Mass", "MASS", 1000012);
         labels_to_SLHA["~nu_2"  ] = SLHAcombo("Pole_Mass", "MASS", 1000014);
         labels_to_SLHA["~nu_3"  ] = SLHAcombo("Pole_Mass", "MASS", 1000016);
-
+        // Standard Model masses. Turns out we do need to retrieve these, since
+        // they might have shifted from SMINPUTS in the spectrum generation process.
+        
+        
         // MSOFT
         labels_to_SLHA["M1"  ] = SLHAcombo("mass1", "MSOFT", 1);
         labels_to_SLHA["M2"  ] = SLHAcombo("mass1", "MSOFT", 2);

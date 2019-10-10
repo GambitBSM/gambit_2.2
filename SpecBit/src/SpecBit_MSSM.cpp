@@ -1200,24 +1200,31 @@ namespace Gambit
        // Will throw an error if no reader object exists, i.e. if the postprocessor is not
        // driving this scan.
       
-       // Retrieve spectrum info into an SLHAea object 
+       // Retrieve MSSM spectrum info into an SLHAea object 
        MSSM_SLHAstruct mssm_in; // Special type to trigger specialised MSSM retrieve routine
-       bool is_valid = get_pp_reader().retrieve(mssm_in,"MSSM_spectrum");
+       bool mssm_is_valid = get_pp_reader().retrieve(mssm_in,"MSSM_spectrum");
+
+       // Retrieve SM spectrum info into an SLHAea object
+       // (should really match SMINPUTS, but better to use what is actually in the reported output spectrum)
+       SMslha_SLHAstruct sm_in;
+       bool sm_is_valid = get_pp_reader().retrieve(sm_in,"MSSM_spectrum");
 
        // Check if a valid spectrum was retrived
        // (if the required datasets don't exist an error will be thrown,
        //  so this is just checking that the spectrum was computed for
        //  the current input point)
-       if(not is_valid) invalid_point().raise("Postprocessor: precomputed spectrum was set 'invalid' for this point");
+       if(not (mssm_is_valid and sm_is_valid)) invalid_point().raise("Postprocessor: precomputed spectrum was set 'invalid' for this point");
        
        // Dump spectrum to output for testing
        //std::cerr<<"Dumping retrieved spectrum!"<<std::endl;
        SLHAstruct mssm = mssm_in; // Only this type has stream overloads etc. defined
+       SLHAstruct sm = sm_in; 
 
        // Turns out we don't generically save tan_beta(mZ)_DRbar, so need to extract
        // this from model parameters (it is always an input, so we should have it in those)
        double tbmZ = *myPipe::Param.at("TanBeta");
        SLHAea_add(mssm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
+       SLHAea_add(sm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
 
        //std::cerr<<mssm<<std::endl;
        //std::cerr<<"Dump complete!"<<std::endl;
@@ -1232,10 +1239,10 @@ namespace Gambit
        MSSMSimpleSpec he(mssm);
 
        // Create SMSimpleSpec SubSpectrum object from SMInputs
-       SMSimpleSpec sm(sminputs);
+       SMSimpleSpec le(sm);
 
        // Create full Spectrum object
-       result = Spectrum(sm,he,sminputs,NULL,mass_cut,mass_ratio_cut);
+       result = Spectrum(le,he,sminputs,NULL,mass_cut,mass_ratio_cut);
     }
 
     /// FeynHiggs SUSY masses and mixings

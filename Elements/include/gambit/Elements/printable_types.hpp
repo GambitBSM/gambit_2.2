@@ -34,6 +34,7 @@
 // Generally needs to be the same as the printable types, i.e. should be able to retrieve everything.
 #define RETRIEVABLE_TYPES \
   PRINTABLE_TYPES \
-  (MSSM_SLHAstruct)
+  (MSSM_SLHAstruct) \
+  (SMslha_SLHAstruct)
 
 #endif // defined __printable_types_hpp__
