@@ -26,7 +26,7 @@
 #  \date 2016 Jan
 #
 #  \author Will Handley (wh260@cam.ac.uk)
-#  \date 2018 May
+#  \date 2018 May, Dec
 #
 #************************************************
 
@@ -44,7 +44,7 @@ if(MPI_Fortran_FOUND)
 else()
   set(diverFFLAGS "${BACKEND_Fortran_FLAGS}")
 endif()
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_DIR ${scanner_download}
@@ -71,7 +71,7 @@ if(MPI_Fortran_FOUND)
 else()
   set(diverFFLAGS "${BACKEND_Fortran_FLAGS}")
 endif()
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_DIR ${scanner_download}
@@ -97,7 +97,7 @@ if(MPI_Fortran_FOUND)
 else()
   set(diverFFLAGS "${BACKEND_Fortran_FLAGS}")
 endif()
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_DIR ${scanner_download}
@@ -114,17 +114,18 @@ endif()
 
 # PolyChord
 set(name "polychord")
-set(ver "1.14")
+set(ver "1.15")
 set(lib "libchord")
-set(md5 "85673d8ed12336c0f1da79ed943f9e0c")
-set(baseurl "https://ccpforge.cse.rl.ac.uk")
-set(endurl "/gf/download/frsrelease/617/9265/PolyChord_v${ver}.tar.gz")
-set(gateurl "/gf/account/?action=LoginAction")
-set(dl "${baseurl}${endurl}")
-set(dl2 "${baseurl}${gateurl}")
-set(login_data "password=${CCPForge_p1}${CCPForge_p2}${CCPForge_p3}&username=${CCPForge_user}&redirect=${endurl}")
+set(dl "null")
 set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
-set(pcSO_LINK "${CMAKE_Fortran_COMPILER} -shared ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS}")
+set(pcSO_LINK "${CMAKE_Fortran_COMPILER} ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS} ${CMAKE_CXX_MPI_SO_LINK_FLAGS}")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  string(REGEX REPLACE "(-lstdc\\+\\+)" "-lc++" pcSO_LINK "${pcSO_LINK}")
+  string(REGEX MATCH "(-lc\\+\\+)" LINKED_OK "${pcSO_LINK}")
+  if (NOT LINKED_OK)
+  set(pcSO_LINK "${pcSO_LINK} -lc++")
+  endif()
+endif()
 if(MPI_Fortran_FOUND)
   set(pcFFLAGS "${BACKEND_Fortran_FLAGS_PLUS_MPI}")
 else()
@@ -140,19 +141,20 @@ if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
 else()
   set(pcFFLAGS "${pcFFLAGS} -fno-stack-arrays")
 endif()
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver} "null" ${login_data} ${dl2}
+    GIT_REPOSITORY https://github.com/PolyChord/PolyChordLite
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} FC=${CMAKE_Fortran_COMPILER} FFLAGS=${pcFFLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${pcCXXFLAGS} LINKLIB=${pcSO_LINK}
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} libchord.so FC=${CMAKE_Fortran_COMPILER} FFLAGS=${pcFFLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${pcCXXFLAGS} LD=${pcSO_LINK}
     INSTALL_COMMAND ""
   )
   add_extra_targets("scanner" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("scanner" ${name} ${ver})
 endif()
+
 
 # MultiNest
 set(name "multinest")
@@ -175,7 +177,7 @@ if(MPI_Fortran_FOUND)
 else()
   set(mnFFLAGS "${BACKEND_Fortran_FLAGS}")
 endif()
-check_ditch_status(${name} ${ver})
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver} "null" ${login_data} ${dl2}
@@ -195,6 +197,44 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ""
   )
   add_extra_targets("scanner" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
+# MultiNest
+set(name "multinest")
+set(ver "3.11")
+set(lib "libnest3")
+set(md5 "ebaf960c348592a1b6e3a50b3794c357")
+set(dl "https://github.com/farhanferoz/MultiNest/archive/4b3709c6d659adbd62c85e3e95ff7eeb6e6617af.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
+set(mnSO_LINK "${CMAKE_Fortran_COMPILER} -shared ${OpenMP_Fortran_FLAGS} ${CMAKE_Fortran_MPI_SO_LINK_FLAGS}")
+if (NOT LAPACK_STATIC)
+  set(mnLAPACK "${LAPACK_LINKLIBS}")
+endif()
+if(MPI_Fortran_FOUND)
+  set(mnFFLAGS "${BACKEND_Fortran_FLAGS_PLUS_MPI}")
+else()
+  set(mnFFLAGS "${BACKEND_Fortran_FLAGS}")
+endif()
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_SCANNER} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND sed ${dashi} -e "s#nested.o[[:space:]]*$#nested.o cwrapper.o#g"
+                                   -e "s#-o[[:space:]]*\\(\\$\\)(LIBS)[[:space:]]*\\$@[[:space:]]*\\$^#-o \\$\\(LIBS\\)\\$@ \\$^ ${mnLAPACK}#g"
+                                   -e "s#default:#.NOTPARALLEL:${nl}${nl}default:#"
+                                   <SOURCE_DIR>/MultiNest_v${ver}/Makefile
+              COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/MultiNest_v${ver}/Makefile <SOURCE_DIR>/MultiNest_v${ver}/Makefile.tmp
+              COMMAND awk "{gsub(/${nl}/,${true_nl})}{print}" <SOURCE_DIR>/MultiNest_v${ver}/Makefile.tmp > <SOURCE_DIR>/MultiNest_v${ver}/Makefile
+              COMMAND ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/MultiNest_v${ver}/Makefile.tmp
+              COMMAND sed ${dashi} -e "s#function[[:space:]]*loglike_proto(Cube,n_dim,nPar,context)[[:space:]]*$#function loglike_proto(Cube,n_dim,nPar,context) bind(c)#g"
+                                   -e "s#subroutine[[:space:]]*dumper_proto(nSamples,nlive,nPar,physLive,posterior,paramConstr,maxLogLike,logZ,INSlogZ,logZerr,context)[[:space:]]*$#subroutine dumper_proto(nSamples,nlive,nPar,physLive,posterior,paramConstr,maxLogLike,logZ,INSlogZ,logZerr,context) bind(c)#g"
+                                   <SOURCE_DIR>/MultiNest_v${ver}/cwrapper.f90
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir MultiNest_v${ver} ${CMAKE_MAKE_PROGRAM} ${lib}.so FC=${CMAKE_Fortran_COMPILER} FFLAGS=${mnFFLAGS} LINKLIB=${mnSO_LINK} LIBS=${dir}/
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("scanner" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("scanner" ${name} ${ver})
 endif()
 
@@ -205,15 +245,19 @@ set(ver "1.0.0")
 set(lib "libgreat")
 set(dl "null")
 set(dir "${PROJECT_SOURCE_DIR}/ScannerBit/installed/${name}/${ver}")
-check_ditch_status(${name} ${ver})
+set(patch "${PROJECT_SOURCE_DIR}/ScannerBit/patches/${name}/${ver}/patch_${name}_${ver}.dif")
+set(build_dir "${PROJECT_BINARY_DIR}/${name}_${ver}-prefix/src/${name}_${ver}-build")
+check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     GIT_REPOSITORY https://gitlab.in2p3.fr/derome/GreAT.git
     SOURCE_DIR ${dir}
+    PATCH_COMMAND patch -p1 < ${patch}
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS}
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
-    INSTALL_COMMAND ""
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${name}
+    INSTALL_COMMAND ${CMAKE_COMMAND} -E create_symlink ${build_dir}/Manager/Manager_Dict_rdict.pcm ${build_dir}/lib/Manager_Dict_rdict.pcm
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${build_dir}/MCMC/MCMC_Dict_rdict.pcm ${build_dir}/lib/MCMC_Dict_rdict.pcm
   )
   add_extra_targets("scanner" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("scanner" ${name} ${ver})

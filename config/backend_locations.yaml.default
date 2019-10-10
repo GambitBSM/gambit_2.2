@@ -33,6 +33,7 @@ FlexibleSUSY_CMSSM:
 
 gamLike:
   1.0.0:       ./Backends/installed/gamlike/1.0.0/lib/gamLike.so
+  1.0.1:       ./Backends/installed/gamlike/1.0.1/lib/gamLike.so
 
 gm2calc:
   1.2.0:       ./Backends/installed/gm2calc/1.2.0/src/libgm2calc.so
@@ -67,6 +68,7 @@ nulike:
   1.0.4:       ./Backends/installed/nulike/1.0.4/lib/libnulike.so
   1.0.5:       ./Backends/installed/nulike/1.0.5/lib/libnulike.so
   1.0.6:       ./Backends/installed/nulike/1.0.6/lib/libnulike.so
+  1.0.7:       ./Backends/installed/nulike/1.0.7/lib/libnulike.so
 
 Pythia:
   8.212:       ./Backends/installed/pythia/8.212/lib/libpythia8.so
