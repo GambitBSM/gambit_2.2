@@ -635,8 +635,8 @@ namespace Gambit
       #endif
 
     }
-
-
+    
+    
     /// Check that the spectrum has a neutralino LSP.
     bool has_neutralino_LSP(const Spectrum& result)
     {
@@ -698,6 +698,34 @@ namespace Gambit
 
       // Convert into a spectrum object
       spectrum = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);
+
+    }
+
+    void get_MSSM_spectrum_SPhenoMSSM (Spectrum& spectrum)
+    {
+      namespace myPipe = Pipes::get_MSSM_spectrum_SPhenoMSSM;
+      const SMInputs &sminputs = *myPipe::Dep::SMINPUTS;
+
+      // Set up the input structure
+      Finputs inputs;
+      inputs.sminputs = sminputs;
+      inputs.param = myPipe::Param;
+      inputs.options = myPipe::runOptions;
+
+      // Retrieve any mass cuts
+      static const Spectrum::mc_info mass_cut = myPipe::runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
+      static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
+
+      // Get the spectrum from the Backend
+      cout << "calculating SPhenoMSSM spectrum" << endl;
+      myPipe::BEreq::SPhenoMSSM_MSSMspectrum(spectrum, inputs);
+      cout << "spectrum calculated" << endl;
+
+      // Get the SLHA struct from the spectrum object
+      //SLHAstruct slha = spectrum.getSLHAea(1);
+
+      // Convert into a spectrum object
+      //spectrum = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);
 
     }
 
@@ -841,7 +869,7 @@ namespace Gambit
       result = run_FS_spectrum_generator<CMSSM_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param);
 
       // Only allow neutralino LSPs.
-      if (not has_neutralino_LSP(result)) invalid_point().raise("Neutralino is not LSP.");
+      //if (not has_neutralino_LSP(result)) invalid_point().raise("Neutralino is not LSP.");
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -869,7 +897,7 @@ namespace Gambit
       }
       fill_MSSM63_input(input,myPipe::Param);
       result = run_FS_spectrum_generator<MSSM_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param);
-      if (not has_neutralino_LSP(result)) invalid_point().raise("Neutralino is not LSP.");
+    if (not has_neutralino_LSP(result)) invalid_point().raise("Neutralino is not LSP.");
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
     }
     #endif

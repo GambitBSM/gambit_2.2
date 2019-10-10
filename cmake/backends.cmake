@@ -50,10 +50,15 @@
 #  \author Tomas Gonzalo
 #          (t.e.gonzalo@fys.uio.no)
 #  \date 2016 Apr, Dec
+#  \date 2017 Nov
 #
 #  \author James McKay
 #          (j.mckay14@imperial.ac.uk)
 #  \date 2016 Aug
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017 May
 #
 #  \author Ankit Beniwal
 #      (ankit.beniwal@adelaide.edu.au)
@@ -908,7 +913,34 @@ if(NOT ditched_${name}_${ver})
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} $F90=${CMAKE_Fortran_COMPILER} FFLAGS=${BACKEND_Fortran_FLAGS} ${lib}
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} F90=${CMAKE_Fortran_COMPILER} FFLAGS=${GAMBIT_Fortran_FLAGS} ${lib}
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+endif()
+
+# SPheno-SARAH MSSM model
+set(model "mssm")
+set(Model "MSSM")
+set(name "spheno${model}")
+set(ver "3.3.8")
+set(lib "lib/libSPheno${Model}.so")
+set(dl "http://www.hepforge.org/archive/spheno/SPheno-${ver}.tar.gz")
+set(md5 "4307cb4b736cebca5e57ca6c5e0b5836")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(sarahdir "${PROJECT_SOURCE_DIR}/Models/data/SARAH/${Model}/EWSB/SPheno")
+file(GLOB sarahfiles  "${sarahdir}/[a-zA-Z0-9]*")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} COMMAND mkdir "${dir}/${Model}" COMMAND cp -r "${sarahfiles}" "${dir}/${Model}" COMMAND ls
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND patch -p1 < ${patch}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} Model=${model} F90=${CMAKE_Fortran_COMPILER} FFLAGS="${SPheno_FLAGS}" ${lib}
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
@@ -977,6 +1009,116 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+# Minuit2
+set(name "minuit2")
+set(ver "5.34.14")
+set(md5 "7fc00378a2ed1f731b719d4837d62d6a")
+set(dl "https://www.cern.ch/mathlibs/sw/5_34_14/Minuit2/Minuit2-5.34.14.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+    ExternalProject_Add(${name}_${ver}
+            DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+            SOURCE_DIR ${dir}
+            BUILD_IN_SOURCE 1
+            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=-fPIC ./configure --prefix=${dir} --disable-openmp --with-pic
+            BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+            INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
+            )
+    add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
+# phc
+set(name "phc")
+set(ver "2.4.58")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dl "http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz")
+  set(md5 "999c0a4471b0efa4e0bf1d847569b4c4")
+else()
+  set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
+  set(md5 "e1068bd9b67446cca63177d723e52ee6")
+endif()
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+
+endif()
+
+# hom4ps
+set(name "hom4ps")
+set(ver "2.0")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dl "http://www.math.nsysu.edu.tw/~leetsung/works/HOM4PS_soft_files/HOM4PS2_MacOSX.tar.gz")
+  set(md5 "daa880bd51fc166a9a2f85332b025fae")
+else()
+  set(dl "http://www.math.nsysu.edu.tw/~leetsung/works/HOM4PS_soft_files/HOM4PS2_64-bit.tar.gz")
+  set(md5 "134a2539faf2c0596eaf039e7ccc1677")
+endif()
+
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+  #add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} ) # FIGURE THIS OUT
+  set_as_default_version("backend" ${name} ${ver})
+
+endif()
+
+# Vevacious
+set(name "vevacious")
+set(ver "1.0")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(Minuit_name "minuit2")
+set(Minuit_lib_name "Minuit2")
+set(Minuit_ver "5.34.14")
+set(phc_ver "2.4.58")
+set(dl "null")
+set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
+set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
+set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DEPENDS ${Minuit_name}_${Minuit_ver}
+          DEPENDS phc_${phc_ver}
+          DEPENDS hom4ps_2.0
+          SOURCE_DIR ${dir}
+          GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
+          GIT_TAG origin/Gambit_BOSSED_debug
+          CONFIGURE_COMMAND ""
+          BINARY_DIR ${dir}/VevaciousPlusPlus
+          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} shared
+          INSTALL_COMMAND ""
+          COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
+          COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
+          )
+ # execute_process(COMMAND cp -r ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1.0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/)
+ # execute_process(COMMAND cp   ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/)
+
+  add_extra_targets("backend" ${name} ${ver} ${dir}/VevaciousPlusPlus ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+  #  BOSS_backend(${name} ${ver})
+endif()
+
 # SUSYHD
 set(name "susyhd")
 set(ver "1.0.2")
@@ -1026,6 +1168,45 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
+# SARAH
+set(name "sarah")
+set(ver "4.11.0")
+set(dl "http://www.hepforge.org/archive/${name}/SARAH-${ver}.tar.gz")
+set(md5  "e8cef704101f7e1c2e400ca49da26c36")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+ExternalProject_Add(${name}_${ver}
+  DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+  SOURCE_DIR ${dir}
+  BUILD_IN_SOURCE 1
+  PATCH_COMMAND ""
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND ""
+  INSTALL_COMMAND ""
+)
+add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+set_as_default_version("backend" ${name} ${ver})
+
+# CalcHEP
+set(name "calchep")
+set(ver "3.6.27")
+set(dl "http://theory.sinp.msu.ru/~pukhov/CALCHEP/calchep_3.6.27.tgz")
+set(md5 "7914181e15791fe03373bd37819ef638")
+set(lib "libcalchep")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/")
+ExternalProject_Add(${name}_${ver}
+  DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+  SOURCE_DIR ${dir}
+  BUILD_IN_SOURCE 1
+  CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/main.c ${dir}/c_source/dynamicME/main.c
+  COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
+  PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
+  BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+  INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
+)
+add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} "yes | clean")
+set_as_default_version("backend" ${name} ${ver})
 
 # Alternative download command for getting unreleased things from the gambit_internal repository.
 # If you don't know what that is, you don't need to tinker with these.
