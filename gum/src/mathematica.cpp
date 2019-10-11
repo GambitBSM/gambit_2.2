@@ -50,7 +50,7 @@ int main(int argc, char** argv)
             return 0;
             #endif
             
-            GUM::all_feynrules(options, partlist, paramlist, outputs, backends);
+            GUM::all_feynrules(options, partlist, paramlist, outputs, backends, error);
         }
         else if (options.package() == "sarah")
         {

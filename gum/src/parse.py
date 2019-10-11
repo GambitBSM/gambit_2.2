@@ -128,7 +128,7 @@ def fill_gum_object(data):
         lagrangian = data['math']['lagrangian']
         L = lagrangian.split('+')
         for l in L:
-            if not l.isalnum():
+            if not l.strip(' ').isalnum():
                 raise GumError(("Non-alphanumeric character detected in "
                                 " the Lagrangian. Please check your .gum "
                                 "file."))
@@ -157,6 +157,7 @@ def fill_gum_object(data):
     else:
         dm_candidate = None
 
+
     backends = ['calchep', 'pythia', 'spheno', 'flexiblesusy',
                 'micromegas', 'vevacious']
 
@@ -179,8 +180,17 @@ def fill_gum_object(data):
     else:
         for i in backends:
             opts[i] = True
-
+    
     outputs = Outputs(mathpackage, **opts)
+
+    # If the user wants MicrOMEGAs output but hasn't specified a DM candidate
+    if not dm_candidate and outputs.mo:
+        raise GumError(("\n\nYou have asked for MicrOMEGAs output but have not "
+                        "specified which particle is meant to be the DM "
+                        "candidate! Please add an entry to your .gum file "
+                        "like:\n\ndm_candidate: 9900001 # <--- insert the "
+                        "desired PDG code here!!\n")) 
+
 
     # FeynRules restriction files
     restriction = None

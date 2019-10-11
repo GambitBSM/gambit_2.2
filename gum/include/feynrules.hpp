@@ -62,7 +62,7 @@ namespace GUM
   };
 
   // Everything
-  void all_feynrules(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&);
+  void all_feynrules(Options, std::vector<Particle>&, std::vector<Parameter>&, Outputs&, std::vector<std::string>&, Error&);
 
 } // namespace GUM
 
