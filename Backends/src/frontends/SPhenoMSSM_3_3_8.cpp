@@ -56,7 +56,7 @@ BE_NAMESPACE
     {
 
       cout << "mHd = " << sqrt(*mHd2) <<  endl;
-      spectrum = Spectrum_Out(inputs.param);
+      //spectrum = Spectrum_Out(inputs.param);
 
 
     }
