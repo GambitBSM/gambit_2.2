@@ -125,13 +125,13 @@ def fill_gum_object(data):
     math = data['math']
     if 'lagrangian' in data['math']:
         # Check the Lagrangian makes sense (i.e. is all alphanumeric)
+        lagrangian = data['math']['lagrangian']
         L = lagrangian.split('+')
         for l in L:
             if not l.isalnum():
                 raise GumError(("Non-alphanumeric character detected in "
                                 " the Lagrangian. Please check your .gum "
                                 "file."))
-        lagrangian = data['math']['lagrangian']
     else:
         lagrangian = "LTotal"
     mathpackage = math['package']
