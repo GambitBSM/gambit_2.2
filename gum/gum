@@ -112,9 +112,14 @@ if args.file:
         outputs = FROutputs()
         backends = FRBackends()
         backends.extend(x for x in output_opts.bes())
+        error = FRError()
+
 
         # Hit it
-        all_feynrules(options, partlist, paramlist, outputs, backends)
+        all_feynrules(options, partlist, paramlist, outputs, backends, error)
+
+        if error.is_error():
+            raise GumError( error.what() )
 
         # Get a list of all non-SM particles
         fr_bsm = [x for x in partlist if x.SM() is False]
@@ -142,8 +147,8 @@ if args.file:
         backends = SARAHBackends()
         mixings = SARAHMixings()
         sphenodeps = SARAHVectorOfParameters()
-        error = SARAHError()
         backends.extend(x for x in output_opts.bes())
+        error = SARAHError()
 
         # Hit it
         all_sarah(options, partlist, paramlist, outputs, backends, flags, mixings, sphenodeps, error)

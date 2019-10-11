@@ -178,10 +178,11 @@ namespace GUM
         }
         else
         {
-            std::cout << "Your Lagrangian is not Hermitian." << std::endl;
-            std::cout << "FeynRules found " + std::to_string(lench) + " vertices in L-HC[L]." << std::endl;
-            std::cout << "Please check your FeynRules file." << std::endl;
-            return;
+            std::stringstream ss;
+            ss << "Your Lagrangian is not Hermitian." << std::endl;
+            ss << "FeynRules found " + std::to_string(lench) + " vertices in L-HC[L]." << std::endl;
+            ss << "Please check your FeynRules file." << std::endl;
+            throw std::runtime_error(ss.str());
         }
 
     }
@@ -530,7 +531,8 @@ namespace GUM
   }
 
   // Performs all FeynRules output.
-  void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
+  void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, 
+                     Outputs &outputs, std::vector<std::string> &backends, Error &error)
   {
     try
     {
@@ -581,7 +583,7 @@ namespace GUM
     }
     catch(std::exception &e)
     {
-     std::cerr << e.what() << std::endl;
+      error.raise("FeynRules Error: " + std::string(e.what()));
     }
   }
 
@@ -621,6 +623,11 @@ BOOST_PYTHON_MODULE(libfr)
   class_<Outputs>("FROutputs", init<>())
     .def("get_ch",  &Outputs::get_ch)
     .def("get_mg",  &Outputs::get_mg)
+    ;
+
+  class_<Error>("FRError", init<>())
+    .def("is_error", &Error::is_error)
+    .def("what", &Error::what)
     ;
 
   class_< std::vector<Particle> >("FRVectorOfParticles")

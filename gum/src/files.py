@@ -206,8 +206,6 @@ def write_file(filename, module, contents, reset_dict):
 
     reset_dict['new_files']['files'].append(location)
 
-    mkdir_if_absent("mug_files")
-
     # Save a temp mug file, incase something goes wrong.
     drop_mug_file("mug_files/temp.mug", reset_dict)
 
@@ -700,6 +698,9 @@ def drop_mug_file(mug_file, contents):
     """
     Drops a .mug (reset) file from the reset contents saved by GUM.
     """
+
+    # Make the folder for mug files. 
+    mkdir_if_absent("mug_files")
 
     d = dict(contents)
 
