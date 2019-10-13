@@ -524,15 +524,15 @@ namespace Gambit
         result.Im_DeltaCQ1 = *Param["Im_DeltaCQ1"];
         result.Re_DeltaCQ2 = *Param["Re_DeltaCQ2"];
         result.Im_DeltaCQ2 = *Param["Im_DeltaCQ2"];
-        
+
         /* Lines below are valid only in the flavour universal case
            deltaC[1..10] = Cmu[1..10], deltaC[11..20] = Ce[1..10], deltaC[21..30] = Ctau[1..10]
            deltaCQ[1,2] = CQmu[1,2], deltaCQ[1,2] = CQe[1,2], deltaCQ[1,2] = CQtau[1,2] */
-           
+
         result.deltaC[7]=result.deltaC[17]=result.deltaC[27]=std::complex<double>(result.Re_DeltaC7, result.Im_DeltaC7);
         result.deltaC[9]=result.deltaC[19]=result.deltaC[29]=std::complex<double>(result.Re_DeltaC9, result.Im_DeltaC9);
         result.deltaC[10]=result.deltaC[20]=result.deltaC[30]=std::complex<double>(result.Re_DeltaC10, result.Im_DeltaC10);
-        
+
         result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
         result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
       }
@@ -550,7 +550,7 @@ namespace Gambit
 
 	  BEreq::set_nuisance(&nuislist);
 	  BEreq::set_nuisance_value_from_param(&nuislist,&param);
-	  
+
 	  /* Here the nuisance parameters which should not be used for the correlation calculation have to be given a zero standard deviation.
 	     E.g. nuislist.mass_b.dev=0.; */
 
@@ -565,9 +565,9 @@ namespace Gambit
 
       //std::vector<std::string> names={"BRuntag_Bsmumu","BR_BXsgamma"}; // LIST TO BE DEFINED LATER
       std::vector<std::string> names={"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98","FL_B0Kstar0mumu_0.1_0.98","AFB_B0Kstar0mumu_0.1_0.98","S3_B0Kstar0mumu_0.1_0.98","S4_B0Kstar0mumu_0.1_0.98","S5_B0Kstar0mumu_0.1_0.98","S7_B0Kstar0mumu_0.1_0.98","S8_B0Kstar0mumu_0.1_0.98","S9_B0Kstar0mumu_0.1_0.98","dGamma/dq2_B0Kstar0mumu_1.1_2.5","FL_B0Kstar0mumu_1.1_2.5","AFB_B0Kstar0mumu_1.1_2.5","S3_B0Kstar0mumu_1.1_2.5","S4_B0Kstar0mumu_1.1_2.5","S5_B0Kstar0mumu_1.1_2.5","S7_B0Kstar0mumu_1.1_2.5","S8_B0Kstar0mumu_1.1_2.5","S9_B0Kstar0mumu_1.1_2.5","dGamma/dq2_B0Kstar0mumu_2.5_4","FL_B0Kstar0mumu_2.5_4","AFB_B0Kstar0mumu_2.5_4","S3_B0Kstar0mumu_2.5_4","S4_B0Kstar0mumu_2.5_4","S5_B0Kstar0mumu_2.5_4","S7_B0Kstar0mumu_2.5_4","S8_B0Kstar0mumu_2.5_4","S9_B0Kstar0mumu_2.5_4","dGamma/dq2_B0Kstar0mumu_4_6","FL_B0Kstar0mumu_4_6","AFB_B0Kstar0mumu_4_6","S3_B0Kstar0mumu_4_6","S4_B0Kstar0mumu_4_6","S5_B0Kstar0mumu_4_6","S7_B0Kstar0mumu_4_6","S8_B0Kstar0mumu_4_6","S9_B0Kstar0mumu_4_6","dGamma/dq2_B0Kstar0mumu_6_8","FL_B0Kstar0mumu_6_8","AFB_B0Kstar0mumu_6_8","S3_B0Kstar0mumu_6_8","S4_B0Kstar0mumu_6_8","S5_B0Kstar0mumu_6_8","S7_B0Kstar0mumu_6_8","S8_B0Kstar0mumu_6_8","S9_B0Kstar0mumu_6_8","dGamma/dq2_B0Kstar0mumu_15_17","FL_B0Kstar0mumu_15_17","AFB_B0Kstar0mumu_15_17","S3_B0Kstar0mumu_15_17","S4_B0Kstar0mumu_15_17","S5_B0Kstar0mumu_15_17","S7_B0Kstar0mumu_15_17","S8_B0Kstar0mumu_15_17","S9_B0Kstar0mumu_15_17","dGamma/dq2_B0Kstar0mumu_17_19","FL_B0Kstar0mumu_17_19","AFB_B0Kstar0mumu_17_19","S3_B0Kstar0mumu_17_19","S4_B0Kstar0mumu_17_19","S5_B0Kstar0mumu_17_19","S7_B0Kstar0mumu_17_19","S8_B0Kstar0mumu_17_19","S9_B0Kstar0mumu_17_19","dGamma/dq2_BKstarmumu_1.1_6","dGamma/dq2_BKstarmumu_15_19","BR_B0Kstar0ee_0.1_19.2","R-1_B0Kstar0ll_0.045_1.1","R-1_B0Kstar0ll_1.1_6","R-1_B0Kstar0ll_0.045_1.1_Belle","R-1_B0Kstar0ll_1.1_6_Belle","R-1_B0Kstar0ll_0.1_8_Belle","R-1_B0Kstar0ll_15_19_Belle","dGamma/dq2_B0K0mumu_1.1_6","dGamma/dq2_B0K0mumu_15_22","dGamma/dq2_BKmumu_1.1_6","FH_BKmumu_1.1_6","dGamma/dq2_BKmumu_15_22","FH_BKmumu_15_22","R-1_BKll_1.1_6","dGamma/dq2_Bsphimumu_0.1_2","FL_Bsphimumu_0.1_2","S3_Bsphimumu_0.1_2","S4_Bsphimumu_0.1_2","S7_Bsphimumu_0.1_2","dGamma/dq2_Bsphimumu_2_5","FL_Bsphimumu_2_5","S3_Bsphimumu_2_5","S4_Bsphimumu_2_5","S7_Bsphimumu_2_5","dGamma/dq2_Bsphimumu_5_8","FL_Bsphimumu_5_8","S3_Bsphimumu_5_8","S4_Bsphimumu_5_8","S7_Bsphimumu_5_8","dGamma/dq2_Bsphimumu_15_17","FL_Bsphimumu_15_17","S3_Bsphimumu_15_17","S4_Bsphimumu_15_17","S7_Bsphimumu_15_17","dGamma/dq2_Bsphimumu_17_19","FL_Bsphimumu_17_19","S3_Bsphimumu_17_19","S4_Bsphimumu_17_19","S7_Bsphimumu_17_19"};  // LIST TO BE DEFINED LATER
-	  	  
+
       obslist=names;
-      
+
       if (flav_debug) cout<<"Finished SI_obs_list"<<endl;
 	}
 
@@ -579,23 +579,23 @@ namespace Gambit
 
       parameters const& param = *Dep::SuperIso_modelinfo;
       nuisance const& nuislist = *Dep::SuperIso_nuisance;
-		
+
 	  std::vector<std::string> const& obslist = *Dep::SuperIso_obs_list;
 	  int nbobs=obslist.size();
-	  
+
 	  char obsnames[nbobs][50];
 	  for(int ie=0;ie<nbobs;ie++) strcpy(obsnames[ie],obslist[ie].c_str());
-	  
+
 	  double *res;
-	  res=(double *) malloc(nbobs*sizeof(double));	
-	  
+	  res=(double *) malloc(nbobs*sizeof(double));
+
 	  BEreq::get_predictions_nuisance((char**)obsnames,&nbobs,&res,&param,&nuislist);
-	 	  
+
 	  result.reserve(nbobs);
 	  for(int ie=0;ie<nbobs;ie++) result[ie]=res[ie]; // TO BE MODIFIED
-	 
+
  	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) printf("%s=%.4e\n",obsnames[ie],result[ie]);
- 
+
       if (flav_debug) cout<<"Finished SI_compute_obs_list"<<endl;
 	}
 
@@ -610,15 +610,15 @@ namespace Gambit
 
 	  std::vector<std::string> const& obslist = *Dep::SuperIso_obs_list;
 	  int nbobs=obslist.size();
-	  
+
 	  char obsnames[nbobs][50];
 	  for(int ie=0;ie<nbobs;ie++) strcpy(obsnames[ie],obslist[ie].c_str());
-	  
+
 	  int nnuis=161;
 	  char namenuisance[nnuis+1][50];
 	  BEreq::observables(0,NULL,0,NULL,NULL,&nuislist,(char **)namenuisance,&param); // Initialization of namenuisance
-  	  	    	  	  
-	  int ncorrnuis=463;
+
+	  const int ncorrnuis=463;
 	  nuiscorr corrnuis[ncorrnuis]={ // List of nuisance correlations, below between the form factors
 	  {"a00_BK","a10_BK",-0.39},
 	  {"a00_BK","a20_BK",-0.71},
@@ -1084,21 +1084,21 @@ namespace Gambit
 	  {"a0T23_Bsphi","a2T23_Bsphi",0.573289},
 	  {"a1T23_Bsphi","a2T23_Bsphi",0.899178},
 	  };
-	  	  
+
 	  double **corr=(double  **) malloc((nnuis+1)*sizeof(double *));  // Nuisance parameter correlations
-	  for(int ie=0;ie<=nnuis;ie++) corr[ie]=(double *) malloc((nnuis+1)*sizeof(double));	
+	  for(int ie=0;ie<=nnuis;ie++) corr[ie]=(double *) malloc((nnuis+1)*sizeof(double));
 
 	  BEreq::convert_correlation((nuiscorr *)corrnuis,byVal(ncorrnuis),(double **)corr,(char **)namenuisance,byVal(nnuis));
-	
-	  double **res;	
-	
+
+	  double **res;
+
 	  BEreq::get_th_covariance_nuisance(&res,(char**)obsnames,&nbobs,&param,&nuislist,(double **)corr);
-	  	  
+
 	  result.resize(nbobs, std::vector<double>(nbobs));
 	  for(int ie=0;ie<nbobs;ie++) for(int je=0;je<nbobs;je++) result[ie][je]=res[ie][je]; // TO BE MODIFIED
 
 	  if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("Covariance %s - %s: %.4e\n",obsnames[ie],obsnames[je],result[ie][je]);
-	  
+
       if (flav_debug) cout<<"Finished SI_theory_covariance"<<endl;
 	}
 
@@ -1485,7 +1485,7 @@ namespace Gambit
       result=BEreq::BKstarmumu_CONV(&param, Q2MIN, Q2MAX);                                \
       if (flav_debug) cout<<"Finished " STRINGIFY(CAT_4(SI_BKstarmumu_,Q2MIN_TAG,_,Q2MAX_TAG))<<endl; \
     }
-    DEFINE_BKSTARMUMU(0.1, 0.98, 0p1, 0p98) 
+    DEFINE_BKSTARMUMU(0.1, 0.98, 0p1, 0p98)
     DEFINE_BKSTARMUMU(1.1, 2.5, 11, 25)
     DEFINE_BKSTARMUMU(2.5, 4.0, 25, 40)
     DEFINE_BKSTARMUMU(4.0, 6.0, 40, 60)
@@ -1557,7 +1557,7 @@ namespace Gambit
       if (flav_debug) cout << "Finished RHN_RKstar_0045_11" << endl;
 
     }
- 
+
     // RK* for RHN, using same approximations as RK, intermediate q^2
     void RHN_RKstar_11_60(double &result)
     {
@@ -2193,7 +2193,7 @@ namespace Gambit
 
     }
 
-    // Helper function 
+    // Helper function
     double G(const double x)
     {
       if(x)
@@ -2964,7 +2964,7 @@ namespace Gambit
       result = gaussian.GetLogLikelihood(theory /* , theory_error */);
       if (flav_debug) std::cout << "hepLikeB2TauNuLogLikelihood result: " << result << std::endl;
     }
-    
+
     /// HEPLike LogLikelihood RD RDstar
     void HEPLike_RDRDstarLogLikelihood(double& result)
     {
@@ -3007,16 +3007,16 @@ namespace Gambit
       using namespace Pipes::HEPLike_B2mumuLogLikelihood;
       static const std::string inputfile_LHCb = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
       static const std::string inputfile_CMS = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CERN-EP-2017-100.yaml"; // THIS NEEDS TO BE IMPLEMENTED
-      
+
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile_LHCb);
-      //static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile_CMS); 
-      
+      //static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile_CMS);
+
       static bool first = true;
       if (first)
       {
         std::cout << "Debug: Reading HepLike data file: " << inputfile_LHCb << endl;
         nDimLikelihood.Read();
-  
+
         first = false;
       }
 
@@ -3031,7 +3031,7 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood;
-      
+
       static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_0.1_0.98.yaml";
       static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
       static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_2.5_4.0.yaml";
@@ -3043,8 +3043,8 @@ namespace Gambit
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_q2_2p5_4);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_q2_4_6);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_q2_6_8);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19); 
-      
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19);
+
       static bool first = true;
       if (first)
       {
@@ -3060,7 +3060,7 @@ namespace Gambit
         nDimBifurGaussian_4.Read();
         std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_15_19 << endl;
         nDimBifurGaussian_5.Read();
-        
+
         first = false;
       }
 
@@ -3068,31 +3068,31 @@ namespace Gambit
       // Code assumes each bin is calculated by the same dependency (decltype)
       auto get_theory = [](decltype(Dep::BKstarmumu_11_25) theory_dependency) { return std::vector<double>{
           theory_dependency->FL,
-          theory_dependency->S3, 
-          theory_dependency->S4, 
+          theory_dependency->S3,
+          theory_dependency->S4,
           theory_dependency->S5,
-          theory_dependency->AFB, 
-          theory_dependency->S7, 
-          theory_dependency->S8, 
+          theory_dependency->AFB,
+          theory_dependency->S7,
+          theory_dependency->S8,
           theory_dependency->S9
       }; };
 
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */); 
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */);
       result += nDimBifurGaussian_1.GetLogLikelihood(get_theory(Dep::BKstarmumu_11_25) /* , theory_error */);
       result += nDimBifurGaussian_2.GetLogLikelihood(get_theory(Dep::BKstarmumu_25_40) /* , theory_error */);
       result += nDimBifurGaussian_3.GetLogLikelihood(get_theory(Dep::BKstarmumu_40_60) /* , theory_error */);
       result += nDimBifurGaussian_4.GetLogLikelihood(get_theory(Dep::BKstarmumu_60_80) /* , theory_error */);
       result += nDimBifurGaussian_5.GetLogLikelihood(get_theory(Dep::BKstarmumu_15_19) /* , theory_error */);
-  
+
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
     /// HEPLike LogLikelihood B -> K* mu mu Angular
     void HEPLike_B2KstarmumuBr_LogLikelihood(double &result)
     {
-      
+
       using namespace Pipes::HEPLike_B2KstarmumuBr_LogLikelihood;
-      
+
       static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_0.1_0.98.yaml";
       static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_1.1_2.5.yaml";
       static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_2.5_4.0.yaml";
@@ -3104,7 +3104,7 @@ namespace Gambit
       static HepLike_default::HL_BifurGaussian BifurGaussian_2(inputfile_q2_2p5_4);
       static HepLike_default::HL_BifurGaussian BifurGaussian_3(inputfile_q2_4_6);
       static HepLike_default::HL_BifurGaussian BifurGaussian_4(inputfile_q2_6_8);
-      static HepLike_default::HL_BifurGaussian BifurGaussian_5(inputfile_q2_15_19); 
+      static HepLike_default::HL_BifurGaussian BifurGaussian_5(inputfile_q2_15_19);
 
       static bool first = true;
       if (first)
@@ -3121,25 +3121,25 @@ namespace Gambit
         BifurGaussian_4.Read();
         std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_15_19 << endl;
         BifurGaussian_5.Read();
-        
+
         first = false;
       }
 
       result = 0;
-      result += BifurGaussian_0.GetLogLikelihood(Dep::BKstarmumu_0p1_0p98->BR /* , theory_error */); 
+      result += BifurGaussian_0.GetLogLikelihood(Dep::BKstarmumu_0p1_0p98->BR /* , theory_error */);
       result += BifurGaussian_1.GetLogLikelihood(Dep::BKstarmumu_11_25->BR /* , theory_error */);
       result += BifurGaussian_2.GetLogLikelihood(Dep::BKstarmumu_25_40->BR /* , theory_error */);
       result += BifurGaussian_3.GetLogLikelihood(Dep::BKstarmumu_40_60->BR /* , theory_error */);
       result += BifurGaussian_4.GetLogLikelihood(Dep::BKstarmumu_60_80->BR /* , theory_error */);
       result += BifurGaussian_5.GetLogLikelihood(Dep::BKstarmumu_15_19->BR /* , theory_error */);
-  
+
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
         /// HEPLike LogLikelihood B -> K* mu mu Angular
     void HEPLike_Bs2Phimumu_LogLikelihood(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood;
-      
+
       static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_0.1_0.98.yaml";
       static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
       static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_2.5_4.0.yaml";
@@ -3151,8 +3151,8 @@ namespace Gambit
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_q2_2p5_4);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_q2_4_6);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_q2_6_8);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19); 
-      
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19);
+
       static bool first = true;
       if (first)
       {
@@ -3168,7 +3168,7 @@ namespace Gambit
         nDimBifurGaussian_4.Read();
         std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_15_19 << endl;
         nDimBifurGaussian_5.Read();
-        
+
         first = false;
       }
 
@@ -3176,27 +3176,27 @@ namespace Gambit
       // Code assumes each bin is calculated by the same dependency (decltype)
       auto get_theory = [](decltype(Dep::BKstarmumu_11_25) theory_dependency) { return std::vector<double>{
           theory_dependency->FL,
-          theory_dependency->S3, 
-          theory_dependency->S4, 
+          theory_dependency->S3,
+          theory_dependency->S4,
           theory_dependency->S5,
-          theory_dependency->AFB, 
-          theory_dependency->S7, 
-          theory_dependency->S8, 
+          theory_dependency->AFB,
+          theory_dependency->S7,
+          theory_dependency->S8,
           theory_dependency->S9
       }; };
 
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */); 
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */);
       result += nDimBifurGaussian_1.GetLogLikelihood(get_theory(Dep::BKstarmumu_11_25) /* , theory_error */);
       result += nDimBifurGaussian_2.GetLogLikelihood(get_theory(Dep::BKstarmumu_25_40) /* , theory_error */);
       result += nDimBifurGaussian_3.GetLogLikelihood(get_theory(Dep::BKstarmumu_40_60) /* , theory_error */);
       result += nDimBifurGaussian_4.GetLogLikelihood(get_theory(Dep::BKstarmumu_60_80) /* , theory_error */);
       result += nDimBifurGaussian_5.GetLogLikelihood(get_theory(Dep::BKstarmumu_15_19) /* , theory_error */);
-  
+
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
-    
-        
-    
+
+
+
   }
 }
