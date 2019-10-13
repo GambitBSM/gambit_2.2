@@ -373,32 +373,30 @@ int main(int argc, char** argv)
     std::cout << "B->X_s gamma log-likelihood: " << loglike << std::endl;
 
     std::cout << endl;
-
-	std::cout << "-------------------------------------" << std::endl;
-	std::cout << "testing new SuperIso v4.1 routines..." << std::endl;
-	std::cout << "-------------------------------------" << std::endl;
+    std::cout << "-------------------------------------" << std::endl;
+    std::cout << "testing new SuperIso v4.1 routines..." << std::endl;
+    std::cout << "-------------------------------------" << std::endl;
     std::cout << endl;
 
-	SI_nuisance_fill.resolveDependency(&SI_fill);
+    SI_nuisance_fill.resolveDependency(&SI_fill);
     SI_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance);
     SI_nuisance_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::set_nuisance_value_from_param);
 
-	SI_compute_obs_list.resolveDependency(&SI_fill);
-	SI_compute_obs_list.resolveDependency(&SI_nuisance_fill);
-	SI_compute_obs_list.resolveDependency(&SI_obs_list);
+    SI_compute_obs_list.setOption<std::vector<std::string>>("SuperIso_obs_list", {"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98"});
+    SI_compute_obs_list.resolveDependency(&SI_fill);
+    SI_compute_obs_list.resolveDependency(&SI_nuisance_fill);
     SI_compute_obs_list.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
 
-	SI_theory_covariance.resolveDependency(&SI_fill);
-	SI_theory_covariance.resolveDependency(&SI_nuisance_fill);
-	SI_theory_covariance.resolveDependency(&SI_obs_list);
+    SI_theory_covariance.setOption<std::vector<std::string>>("SuperIso_obs_list", {"AI_BKstargamma","BR_BXsgamma","BRuntag_Bsmumu","BR_Bdmumu","BR_BXsmumu_1_6","BR_BXsmumu_14.2_22","BR_BXsee_1_6","BR_BXsee_14.2_22","BR_B0Kstar0gamma","dGamma/dq2_B0Kstar0mumu_0.1_0.98"});
+    SI_theory_covariance.resolveDependency(&SI_fill);
+    SI_theory_covariance.resolveDependency(&SI_nuisance_fill);
     SI_theory_covariance.resolveBackendReq(&Backends::SuperIso_4_1::Functown::observables);
     SI_theory_covariance.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SI_theory_covariance.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
 
-	SI_obs_list.reset_and_calculate();
     SI_nuisance_fill.reset_and_calculate();
-	SI_compute_obs_list.reset_and_calculate();
-	SI_theory_covariance.reset_and_calculate();
+    SI_compute_obs_list.reset_and_calculate();
+    SI_theory_covariance.reset_and_calculate();
   }
 
   catch (std::exception& e)
