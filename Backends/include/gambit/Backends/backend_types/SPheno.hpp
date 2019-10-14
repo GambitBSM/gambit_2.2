@@ -85,4 +85,4 @@ namespace Gambit
 
 }
 
-#endif // defined __SPHENO_types_hpp__
+#endif // defined __SPHENO_types_hpp_

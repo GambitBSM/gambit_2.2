@@ -35,9 +35,14 @@
 #define __ColliderBit_LEP_rollcall_hpp__
 
 
+#define MODULE ColliderBit
+
   ///////////// LEP limits ////////////////////////
 
   #define MSSM30etal (MSSM30atQ, MSSM30atMGUT, MSSM30atQ_lightgravitino, MSSM30atMGUT_lightgravitino, NUHM2)
+  // CoM energy 207GeV
+  // LEP production cross sections and uncertainties: neutralinos
+  QUICK_FUNCTION(ColliderBit, LEP207_xsec_chi00_11, NEW_CAPABILITY, LEP207_SLHA1_convention_xsec_chi00_11, triplet<double>, (MSSM30atQ, MSSM30atMGUT, NUHM2), (MSSM_spectrum, Spectrum), (Z_decay_rates, DecayTable::Entry))
 
   // CoM energy 208GeV
   // LEP production cross sections and uncertainties: selectrons
@@ -206,5 +211,9 @@ QUICK_FUNCTION(ColliderBit, OPAL_Degenerate_Chargino_LLike, NEW_CAPABILITY, OPAL
   //QUICK_FUNCTION(ColliderBit, L3_Charged_Gaugino_Small_DeltaM_Any_Sneutrino_LLike, NEW_CAPABILITY, L3_Charged_Gaugino_Small_DeltaM_Any_Sneutrino_Conservative_LLike, double, MSSM30etal, (MSSM_spectrum, Spectrum), (LEP188_xsec_chipm_11, triplet<double>), (charginoplus_1_decay_rates, DecayTable::Entry), (W_plus_decay_rates, DecayTable::Entry))
   //QUICK_FUNCTION(ColliderBit, L3_Charged_Higgsino_Small_DeltaM, NEW_CAPABILITY, L3_Charged_Higgsino_Small_DeltaM, double, MSSM30etal, (MSSM_spectrum, Spectrum), (LEP188_xsec_chipm_11, triplet<double>), (charginoplus_1_decay_rates, DecayTable::Entry), (W_plus_decay_rates, DecayTable::Entry))
 
+  // L3 gravitino search
+  QUICK_FUNCTION(ColliderBit, L3_Gravitino_LLike, NEW_CAPABILITY, L3_Gravitino_LLike, double, (MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino), (MSSM_spectrum, Spectrum), (LEP207_xsec_chi00_11, triplet<double>), (decay_rates, DecayTable))
+
+#undef MODULE
 
 #endif /* defined __ColliderBit_LEP_rollcall_hpp__ */

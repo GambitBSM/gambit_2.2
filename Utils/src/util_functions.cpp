@@ -23,7 +23,7 @@
 #include <cstring>
 #include <chrono>  // chrono::system_clock
 #include <ctime>   // localtime
-#include <cctype>  // toupper
+#include <cctype>  // toupper, tolower
 #include <sstream> // stringstream
 #include <string>  // string
 
@@ -33,9 +33,12 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <libgen.h>
+#include <unistd.h>
 
 /// Gambit
 #include "gambit/Utils/util_functions.hpp"
+#include "gambit/cmake/cmake_variables.hpp"
+#include "gambit/Utils/mpiwrapper.hpp"
 
 namespace Gambit
 {
@@ -44,6 +47,18 @@ namespace Gambit
   {
 
     const char* whitespaces[] = {" ", "\t", "\n", "\f", "\r"};
+
+    /// Return the path to the run-specific scratch directory
+    const str& runtime_scratch()
+    {
+      #ifdef WITH_MPI
+        static const str master_procID = std::to_string(GMPI::Comm().MasterPID());
+      #else
+        static const str master_procID = std::to_string(getpid());
+      #endif
+      static const str path = ensure_path_exists(GAMBIT_DIR "/scratch/run_time/machine_" + std::to_string(gethostid()) + "/master_process_" + master_procID + "/");
+      return path;
+    }
 
     /// Split a string into a vector of strings using a delimiter,
     /// and remove any whitespace around the delimiters.
@@ -90,6 +105,28 @@ namespace Gambit
         for (int i = 0; i != 5; i++)
         {
           boost::replace_all(s, whitespaces[i]+ns+"::", whitespaces[i]);
+        }
+      #endif
+      return s;
+    }
+
+    /// Replaces a namespace at the start of a string, or after "const".
+    str replace_leading_namespace(str s, str ns, str ns_new)
+    {
+      #if GAMBIT_CONFIG_FLAG_use_regex     // Using regex :D
+        regex expression("(^|[\\s\\*\\&\\(\\,\\[])"+ns+"::");
+        s = regex_replace(s, expression, str("\\1")+ns_new+"::");
+      #else                                // Using lame-o methods >:(
+        int len = ns.length() + 2;
+        if (s.substr(0,len) == ns+str("::")) s.replace(0,len,ns_new+"::");
+        boost::replace_all(s, str(",")+ns+"::", str(",")+ns_new+"::");
+        boost::replace_all(s, str("*")+ns+"::", str("*")+ns_new+"::");
+        boost::replace_all(s, str("&")+ns+"::", str("&")+ns_new+"::");
+        boost::replace_all(s, str("(")+ns+"::", str("(")+ns_new+"::");
+        boost::replace_all(s, str("[")+ns+"::", str("[")+ns_new+"::");
+        for (int i = 0; i != 5; i++)
+        {
+          boost::replace_all(s, whitespaces[i]+ns+"::", whitespaces[i]+ns_new+"::");
         }
       #endif
       return s;
@@ -161,6 +198,20 @@ namespace Gambit
       arr[len-1] = ' ';
     }
 
+    /// Perform a simple case-insensitive string comparison
+    /// From: https://stackoverflow.com/a/4119881/1447953
+    bool iequals(const std::string& a, const std::string& b, bool case_sensitive)
+    {
+        if(case_sensitive)
+            return a==b;
+        unsigned int sz = a.size();
+        if (b.size() != sz)
+            return false;
+        for (unsigned int i = 0; i < sz; ++i)
+            if (tolower(a[i]) != tolower(b[i]))
+                return false;
+        return true;
+    }
 
     /// Ensure that a path exists (and then return the path, for chaining purposes)
     const std::string& ensure_path_exists(const std::string& path)
@@ -386,12 +437,19 @@ namespace Gambit
     }
 
     // Inspired by the above. Checks whether 'str' begins with 'prefix'
-    bool startsWith(const std::string& str, const std::string& prefix)
+    bool startsWith(const std::string& str, const std::string& prefix, bool case_sensitive)
     {
       if (&prefix == &str) return true; // str and prefix are the same string
       if (prefix.length() > str.length()) return false;
       for (size_t i = 0; i < prefix.length(); ++i) {
-          if (prefix[i] != str[i]) return false;
+          if(case_sensitive)
+          {
+             if (prefix[i] != str[i]) return false;
+          }
+          else
+          {
+             if (tolower(prefix[i]) != tolower(str[i])) return false;
+          }
       }
       return true;
     }
