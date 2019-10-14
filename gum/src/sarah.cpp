@@ -1003,7 +1003,8 @@ namespace GUM
       }
  
       /// Write MadGraph output
-      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
+      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() ||
+          std::find(backends.begin(), backends.end(), "ufo") != backends.end() )
       {
         model.write_madgraph_output();
 
@@ -1107,7 +1108,11 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("get_ch",   &Outputs::get_ch)
     .def("get_mg",   &Outputs::get_mg)
     .def("get_sph",  &Outputs::get_sph)
-    .def("get_vev",  &Outputs::get_vev)
+    .def("get_vev",  &Outputs::get_vev)    
+    .def("set_ch",   &Outputs::set_ch)
+    .def("set_mg",   &Outputs::set_mg)
+    .def("set_sph",  &Outputs::set_sph)
+    .def("set_vev",  &Outputs::set_vev)
     ;
 
   class_<Error>("SARAHError", init<>())

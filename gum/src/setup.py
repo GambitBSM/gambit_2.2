@@ -4,6 +4,7 @@ Master module containing class information, auto-writing codes, etc.
 
 import datetime
 import os
+import sys
 
 class GumError(Exception):
   pass
@@ -158,3 +159,9 @@ class Dependency:
         self.name = name
         self.cpptype = cpptype
       
+# Block & enable printing
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+def enablePrint():
+    sys.stdout = sys.__stdout__

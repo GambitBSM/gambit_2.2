@@ -44,16 +44,16 @@ class Outputs:
     """
 
     def __init__(self, mathpackage, calchep = False, pythia = False,
-                 micromegas = False, spheno = False, flexiblesusy = False,
-                 vevacious = False, collider_processes = None, 
+                 micromegas = False, spheno = False,
+                 vevacious = False, ufo = False, collider_processes = None, 
                  multiparticles = None, pythia_groups = None):
 
         self.ch = calchep
         self.pythia = pythia
         self.mo = micromegas
         self.spheno = spheno
-        self.fs = flexiblesusy
         self.vev = vevacious
+        self.ufo = ufo
         self.collider_processes = collider_processes
         self.multiparticles = multiparticles
         self.pythia_groups = pythia_groups
@@ -61,8 +61,10 @@ class Outputs:
         # Overwrite these, as the output does not exist.
         if mathpackage == 'feynrules':
             self.spheno = False
-            self.fs = False
             self.vev = False
+
+        # If Pythia is set then we also have UFO files, of course
+        if pythia == True: self.ufo = True
 
     def bes(self):
         backends = []
@@ -70,8 +72,8 @@ class Outputs:
         if self.pythia: backends.append('pythia')
         if self.mo: backends.append('micromegas')
         if self.spheno: backends.append('spheno')
-        if self.fs: backends.append('flexiblesusy')
         if self.vev: backends.append('vevacious')
+        if self.ufo: backends.append('ufo')
         return backends
 
 
@@ -158,7 +160,7 @@ def fill_gum_object(data):
         dm_candidate = None
 
 
-    backends = ['calchep', 'pythia', 'spheno', 'flexiblesusy',
+    backends = ['calchep', 'pythia', 'spheno', 'ufo',
                 'micromegas', 'vevacious']
 
     opts = {}

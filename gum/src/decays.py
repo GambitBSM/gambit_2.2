@@ -121,12 +121,14 @@ def decay_sorter(three_diagrams, aux_particles, antiparticle_dict):
 
     for i in np.arange(len(three_diagrams)):
 
-        # If there is any cross-over between the vertex, and the list of auxiliary particles,
-        # then we do not want them to be used in decays.
-        if set(three_diagrams[i]) & set(aux_particles):
+        td = three_diagrams[i]
+
+        # If there is any cross-over between the vertex, and the
+        # auxiliary particles, then we do not want them to be used in decays.
+        if any([particle in aux_particles for particle in td]):
             continue
 
-        vertex, decaytype = find_decay_type(three_diagrams[i])
+        vertex, decaytype = find_decay_type(td)
 
         # Ignore self-interactions
         if decaytype == "AAA":
@@ -347,12 +349,12 @@ def amend_all_decays_calchep(model_name, spectrum, new_decays):
         ).format(spectrum, model_name)
         
         src += indent((
-             "\n"
-             "// {0}-specific\n"
-             "if (ModelInUse(\"{0}\"))\n"
-             "{{\n"
-             "{1}"
-             "}}\n"
+            "\n"
+            "// {0}-specific\n"
+            "if (ModelInUse(\"{0}\"))\n"
+            "{{\n"
+            "{1}"
+            "}}\n"
         ).format(model_name, src_extra), 6)
     
     for i in xrange(len(new_decays)):

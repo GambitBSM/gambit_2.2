@@ -173,25 +173,30 @@ if args.file:
     # Dict of which parameters are real.
     reality_dict = parameter_reality_dict(parameters)
 
+    """ 
+    UFO2MDL
+
+    If we have both UFO and MDL files, run the files through ufo2mdl to compare outputs.
+    This will, e.g., add 4-fermion interactions to CalcHEP where FeynRules fails to do so.
+    """
+    if output_opts.ch and output_opts.ufo:
+        print("Calling UFO2MDL.")
+        blockPrint()
+        ch_location = compare_mg_and_ch(outputs.get_mg(), outputs.get_ch())
+        enablePrint()
+        if ch_location != outputs.get_ch(): 
+            print("Updating location of CalcHEP files in GUM...")
+            outputs.set_ch(ch_location)
+
+    # Move MadGraph files from SARAH/FeynRules to contrib/MadGraph/models
+    # TODO make this go to the Outputs dir instead, then ln -s from there to MadGraph later.
+    if output_opts.ufo:
+        copy_madgraph_files(outputs.get_mg(), gum.name)
+
     # Clean up calchep files from SARAH/FeynRules, then copy them to the GAMBIT backendDir
     # TODO make this go to the Outputs dir instead, then copy (or ln -s?) from there to CalcHEP later.
     if output_opts.ch or output_opts.mo:
         clean_calchep_model_files(outputs.get_ch(), gum.name)
-
-    # Move MadGraph files from SARAH/FeynRules to contrib/MadGraph/models
-    # TODO make this go to the Outputs dir instead, then ln -s from there to MadGraph later.
-    if output_opts.pythia:
-        copy_madgraph_files(outputs.get_mg(), gum.name)
-    
-    """
-    # If we have both UFO and MDL files, run the files through ufo2mdl to compare outputs.
-    # This will, e.g., add 4-fermion interactions to CalcHEP where FeynRules fails to do so.
-    if output_opts.ch and output_opts.pythia:
-    # TODO make this depend on opts.ufo also.
-    compare(outputs.get_ch(), outputs.get_mg()):
-
-    todo: figure out what to return 
-    """
 
     # Create defaultdict for reset file.
     # There are 2 nodes: new_files and amended_files.
@@ -282,6 +287,9 @@ if args.file:
 
     # Grab the antiparticles
     antiparticle_dict = get_antiparticles(partlist)
+
+    # Return a list of the PDG codes of all Higgses involved
+    higgses = get_higgses(bsm_particle_list)
     
     """
     MODELS
@@ -422,6 +430,9 @@ if args.file:
     """
     DARKBIT
     """
+
+    print antiparticle_dict
+
     if darkbit:
 
         pc = None
@@ -450,9 +461,13 @@ if args.file:
                         if interaction.num_particles() == 4
                         and interaction.is_sm() == False]
 
+            print three_f
+
             # Get all annihilation products and propagators involved in
             # DM + DM -> X + Y at tree-level
-            ann_products, propagators = sort_annihilations(dm, three_f, four_f)
+            ann_products, propagators = sort_annihilations(dm, three_f, four_f, 
+                                                           aux_particles,
+                                                           antiparticle_dict)
 
         # If micrOMEGAs requested
         if output_opts.mo:
@@ -485,7 +500,8 @@ if args.file:
 
         darkbit_src = write_darkbit_src(dm, pc, sv, dd, ann_products,
                                         propagators, gambit_pdgs, gum.name,
-                                        calchep_pdg_codes, bsm_particle_list)
+                                        calchep_pdg_codes, bsm_particle_list, 
+                                        higgses)
 
         pc_cap, dd_cap, dmid_cap = write_darkbit_rollcall(gum.name, pc, dd)
 
@@ -499,7 +515,6 @@ if args.file:
         print("Writing SPheno SpecBit interface...")
         spectrum_src = write_spheno_spectrum_src(gum.name)
         
-    # TODO: elif output_opts.flexiblesusy(): ...
     else:
         print("Writing basic container SpecBit interface...")
         # TODO: determine when "simple_SMinputs" needed from FR/S model file

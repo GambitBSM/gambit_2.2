@@ -81,8 +81,10 @@ def fr_params(paramlist, add_higgs):
             and (p.block() != 'CKMBLOCK')):
             
             # Create a new instance of SpectrumParameter
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), 
-                                  index=p.index())
+            # Everything is scalar by default. This can change later if we 
+            # identify a matrix or vector of parameters
+            x = SpectrumParameter(p.name(), "dimensionless", shape = "scalar",
+                                  block=p.block(), index=p.index())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
@@ -153,6 +155,52 @@ def fr_params(paramlist, add_higgs):
     params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True))
     
     return params
+
+
+def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
+    """
+    Adds the pole masses to the list of parameters. 
+    If the parameter name exists already, it is removed.
+    Double counting is known to occur in the following circumstances:
+
+      1) FeynRules: a shared tree-level mass term for a multiplet.
+
+    """
+
+    parameters_by_name = [x.name for x in parameters]
+
+    for i in xrange(len(bsm_particle_list)):
+        p = bsm_particle_list[i]
+        
+        # Mass block convention is the index of a *pole mass* is the PDG code
+        index = p.PDG_code 
+        block = "MASS"
+
+        # Check to see if the parameter name is in the list of model parameters 
+        # currently. If it is, remove it
+        if p.mass in parameters_by_name:
+            for i, o in enumerate(parameters):
+                if o.name == p.mass:
+                    block = o.block
+                    index = o.index
+                    del parameters[i]
+                    break
+
+        # Overwrite the parameter name for the Higgs mass, 
+        # to match the name within GAMBIT, 
+        # if this is a 1HDM.
+        if p.PDG_code == 25: 
+            if add_higgs:
+                p.mass = "mH"
+
+        # Add the new parameter to the list of model parameters.
+        x = SpectrumParameter("M"+pdg_to_particle(p.PDG_code, gambit_pdgs),
+                              "Pole_Mass", gb_input=p.mass, block=block, 
+                              index=index, shape="scalar")
+        parameters.append(x)
+
+    return parameters
+
 
 ###########
 ## SARAH ##
