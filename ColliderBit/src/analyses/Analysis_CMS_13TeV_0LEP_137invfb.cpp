@@ -210,7 +210,10 @@ namespace Gambit {
         // Cutflow printout
         // const double sf = 137*crossSection()/femtobarn/sumOfWeights();
         // _cutflows.scale(sf);
-        cout << "CUTFLOWS:\n\n" << _cutflow << endl;
+        cout << "\nCUTFLOWS:\n" << _cutflow << "\n" << endl;
+        cout << "\nSRCOUNTS:\n";
+        for (double x : _srnums) cout << x << "  ";
+        cout << "\n" << endl;
       }
 
 

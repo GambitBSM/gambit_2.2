@@ -355,9 +355,13 @@ namespace Gambit {
         add_result(SignalRegionData("SR-6j-2200",    5, {_srnums[SR6J_2200], 0.}, {  4.6,  1.0}));
         add_result(SignalRegionData("SR-6j-3400",    0, {_srnums[SR6J_3400], 0.}, {  0.8,  0.4}));
 
+        // Cutflow printout
         // const double sf = 139*crossSection()/femtobarn/sumOfWeights();
         // _cutflows.scale(sf);
-        cout << "CUTFLOWS:\n\n" << _cutflows << endl;
+        cout << "\nCUTFLOWS:\n" << _cutflows << endl;
+        cout << "\nSRCOUNTS:\n";
+        for (double x : _srnums) cout << x << "  ";
+        cout << "\n" << endl;
       }
 
 
