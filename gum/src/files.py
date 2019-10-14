@@ -871,7 +871,6 @@ def write_config_file(outputs, model_name, reset_contents):
     if outputs.ch:
         towrite += " calchep"
 
-    # TODO : flexiblesusy.     
     towrite += (
         "\n"
         "cmake ..\n"      # Have to cmake here because of Pythia headers.

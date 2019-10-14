@@ -11,7 +11,7 @@ BASIC SPECTRA - NO SPECTRUM GENERATION
 """
 
 def write_basic_spectrum(gambit_model_name, model_parameters, spec,
-                         add_higgs, FS=False):
+                         add_higgs):
     """
     Writes basic spectrum object wrapper for new model:
     SpecBit/src/SpecBit_<new_model_name>. 
@@ -45,12 +45,6 @@ def write_basic_spectrum(gambit_model_name, model_parameters, spec,
     		"#include \"gambit/Models/SimpleSpectra/SMHiggsSimpleSpec.hpp\"\n"
     		)
     
-    # Add FlexibleSUSY headers if flagged
-    # TODO - wait until template BOSS...
-    if FS:
-      towrite += (
-            "#include \"gambit/SpecBit/model_files_and_boxes.hpp\"\n"
-      )
           
     towrite += (
             "\n"

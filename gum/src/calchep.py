@@ -217,6 +217,10 @@ def convert(vertex, PDG_conversion):
 def get_vertices(foldername):
     """
     Pulls all vertices from a CalcHEP model file by PDG code.
+    Returns dicts of PDG code and [particle name, mass, width]
+    for internal use.
+    Returns a list of all auxiliary particles, so they are kept out of 
+    decays and resonances. 
     """
 
     # Check the folder exists
@@ -229,7 +233,7 @@ def get_vertices(foldername):
         # Dict of PDG code + width, known to CH
         particle_width_converstion = {}
 
-        aux_particles = []
+        aux_particles = {}
 
         # Now take in information from particles file to convert interactions to PDG codes
         with open(foldername + "/prtcls1.mdl") as prtcls:
@@ -243,29 +247,31 @@ def get_vertices(foldername):
                 # Read in particle list & rid of whitespace
                 parts = [i.strip(' ') for i in line.split('|')]
 
-                # Add particle + code
-                particle_PDG_conversion[parts[1]] = int(parts[3])
+                # First things first - check if it's an auxiliary particle.
+                if "*" in parts[8]:
+                    aux_particles[ parts[1] ] = parts[2] 
+                    aux_particles[ parts[2] ] = parts[1]
 
-                # And PDG + mass
-                particle_mass_conversion[int(parts[3])] = parts[5]
+                else:
+                    # Add particle + code
+                    particle_PDG_conversion[parts[1]] = int(parts[3])
 
-                # And PDG + width
-                particle_width_converstion[int(parts[3])] = parts[6]
+                    # And PDG + mass
+                    particle_mass_conversion[int(parts[3])] = parts[5]
 
-                # Is a particle it's own antiparticle?
-                if parts[1] != parts[2]:
+                    # And PDG + width
+                    particle_width_converstion[int(parts[3])] = parts[6]
 
-                    # If so, add the antiparticle separately
-                    # Check to see if the particle is defined as + or - 
-                    if parts[3].startswith('-'):
-                        particle_PDG_conversion[parts[2]] = int(parts[3][1:])
-                    else:
-                        particle_PDG_conversion[parts[2]] = int('-' +  parts[3])
+                    # Is a particle it's own antiparticle?
+                    if parts[1] != parts[2]:
 
-                # Is a particle an auxiliary particle?
-                if parts[8] == '*':
-                        aux_particles.append(int(parts[3]))
-                        aux_particles.append(int('-' + parts[3]))
+                        # If so, add the antiparticle separately
+                        # Check to see if the particle is defined as + or - 
+                        if parts[3].startswith('-'):
+                            particle_PDG_conversion[parts[2]] = int(parts[3][1:])
+                        else:
+                            particle_PDG_conversion[parts[2]] = int('-' +  parts[3])
+
 
         lines = []
         interactions = []

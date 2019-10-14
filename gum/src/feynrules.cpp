@@ -563,23 +563,28 @@ namespace GUM
       std::string output = std::string(FEYNRULES_PATH) + "/" + fr_model_name;
 
       /// Write CalcHEP output
-      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() ||
+          std::find(backends.begin(), backends.end(), "micromegas") != backends.end() )
+      {
         model.write_ch_output(opts.lagrangian());
 
-      // Location of CalcHEP files
-      std::string chdir = output + "-CH";
-      std::replace(chdir.begin(), chdir.end(), ' ', '-');
-      outputs.set_ch(chdir);
+        // Location of CalcHEP files
+        std::string chdir = output + "-CH";
+        std::replace(chdir.begin(), chdir.end(), ' ', '-');
+        outputs.set_ch(chdir);
+      }
 
       /// Same for MadGraph->Pythia
-      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
+      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() ||
+          std::find(backends.begin(), backends.end(), "ufo") != backends.end() )
+      {
         model.write_mg_output(opts.lagrangian());
 
-      // Location of MadGraph (UFO) files
-      std::string mgdir = output + "_UFO";
-      std::replace(mgdir.begin(), mgdir.end(), ' ', '_');
-      outputs.set_mg(mgdir);
-
+        // Location of MadGraph (UFO) files
+        std::string mgdir = output + "_UFO";
+        std::replace(mgdir.begin(), mgdir.end(), ' ', '_');
+        outputs.set_mg(mgdir);
+      }
     }
     catch(std::exception &e)
     {
@@ -623,6 +628,8 @@ BOOST_PYTHON_MODULE(libfr)
   class_<Outputs>("FROutputs", init<>())
     .def("get_ch",  &Outputs::get_ch)
     .def("get_mg",  &Outputs::get_mg)
+    .def("set_ch",  &Outputs::set_ch)
+    .def("set_mg",  &Outputs::set_mg)
     ;
 
   class_<Error>("FRError", init<>())

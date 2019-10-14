@@ -31,7 +31,7 @@ def check_backends(outputs):
     """
     Diagonostics to check all backends exist in the GAMBIT repository.
     """
-    ## TO DO - SPheno, MadGraph, FlexibleSUSY...
+    ## TO DO - SPheno, MadGraph...
 
     if not isinstance(outputs, Outputs):
         raise GumError("\nRequested output not passed as class Outputs.\n")

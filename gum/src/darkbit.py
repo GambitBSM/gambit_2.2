@@ -10,9 +10,12 @@ from setup import *
 from files import *
 from backends import *
 
-def sort_annihilations(dm, three_fields, four_fields):
+def sort_annihilations(dm, three_fields, four_fields, aux_particles, 
+                       antiparticles):
     """
-    Sorts BSM vertices, returns DM+DM -> X + Y
+    Sorts BSM vertices, returns DM+DM -> X + Y and a list of propagator
+    particles (not auxiliaries though -- the propagators are used for 
+    resonances)
     """
 
     if not isinstance(dm, Particle):
@@ -21,6 +24,8 @@ def sort_annihilations(dm, three_fields, four_fields):
     dm_dm_to_x_y = []
 
     # Add all 4-pt vertices that are DM + DM -> X + Y
+    # Shouldn't have to worry about auxiliary particles in a contact 
+    # interaction - sort of defeats the point.
     for i in range(0, len(four_fields)):
 
         if dm.is_sc and four_fields[i].count(dm.PDG_code) == 2:
@@ -45,30 +50,59 @@ def sort_annihilations(dm, three_fields, four_fields):
         # Self conjugate DM.
         if dm.is_sc():
 
+            # If there's just DM...
             if three_fields[i].count(dm.PDG_code) == 1:
                 v_with_dm.append(three_fields[i])
 
+            # If there's DM + DM 
             elif three_fields[i].count(dm.PDG_code) == 2:
                 v_with_2dm.append(three_fields[i])
                 # Add s-channel propagator: DM+DM -> prop
-                product = [f for f in three_fields[i] if f != dm.PDG_code]
+                product = []
+
+                for field in three_fields[i]:
+                    # If it's an integer then it's a PDG code
+                    if isinstance(field, int):
+                        if abs(field) != dm.PDG_code: product.append(field)
+                    # If it's a string it'll be an aux field
+                    elif isinstance(field, str): product.append(field)
+
+                # If there is not one field left over something's up.
+                if len(product) != 1:
+                    raise GumError(("ERROR with vertices."))
                 s_channel_propagators.append(product[0])
 
         # Not self-conjugate DM.
         elif not dm.is_sc():
 
+            # If there's one DM...
             if three_fields[i].count(dm.PDG_code) == 1:
 
+                # ... and no DMbar
                 if three_fields[i].count(dm.Conjugate.PDG_code) == 0:
                     v_with_dm.append(three_fields[i])
 
+                # ... and DMbar
                 elif three_fields[i].count(dm.Conjugate.PDG_code) == 1:
                     v_with_dmdmbar.append(three_fields[i])
+                    
                     # Add s-channel propagator: DM+DMbar -> prop
-                    product = [f for f in three_fields[i] if
-                               abs(f) != dm.PDG_code]
+                    product = []
+
+                    for field in three_fields[i]:
+                        # If it's an integer then it's a PDG code
+                        if isinstance(field, int):
+                            if abs(field) != dm.PDG_code: product.append(field)
+                        # If it's a string it'll be an aux field
+                        elif isinstance(field, str): product.append(field)
+
+                    # If there is not one field left over something's up.
+                    if len(product) != 1:
+                        raise GumError(("ERROR with vertices."))
+ 
                     s_channel_propagators.append(product[0])
 
+            # Just DMbar, no DM
             elif three_fields[i].count(dm.Conjugate.PDG_code) == 1:
                 v_with_dmbar.append(three_fields[i])
 
@@ -78,20 +112,44 @@ def sort_annihilations(dm, three_fields, four_fields):
     # See what each propagator can decay into.
     for i in range(0, len(s_channel_propagators)):
 
-        propagator_pdg = s_channel_propagators[i]
+        # If it's an integer then it's a PDG code
+        # Look for the 
+        if isinstance(s_channel_propagators[i], int):
+            propagator_pdg = s_channel_propagators[i]
 
-        for j in range(0, len(three_fields)):
+            for j in range(0, len(three_fields)):
 
-            curr_vertex = three_fields[j][:]
+                curr_vertex = three_fields[j][:]
 
-            if curr_vertex.count(propagator_pdg) >= 1:
-                # Copy the vertex & remove one instance of the propagator.
-                curr_vertex.remove(
-                    curr_vertex[curr_vertex.index(propagator_pdg)])
-                dm_dm_to_x_y.append(curr_vertex)
+                propconj = antiparticles[propagator_pdg]
+
+                if curr_vertex.count(propconj) >= 1:
+                    # Copy the vertex & remove one instance of the propagator.
+                    curr_vertex.remove(
+                        curr_vertex[curr_vertex.index(propconj)])
+                    dm_dm_to_x_y.append(curr_vertex)
+
+        # If it's a string then it's an auxiliary particle
+        elif isinstance(s_channel_propagators[i], str):
+            aux_part = s_channel_propagators[i]
+
+            for j in range(0, len(three_fields)):
+
+                curr_vertex = three_fields[j][:]
+
+                propconj = aux_particles[aux_part]
+
+                if curr_vertex.count(propconj) >= 1:
+                    # Copy the vertex & remove one instance of the propagator.
+                    curr_vertex.remove(
+                        curr_vertex[curr_vertex.index(propconj)])
+                    dm_dm_to_x_y.append(curr_vertex)
 
     # t/u-channel: sticking together
-    # DM + stuff -> propagator & propagator -> DMbar + otherstuff
+    # DM + stuff -> propagator & conj(propagator) -> DMbar + otherstuff
+
+    # S.B: I don't think we will ever have aux particles in t-channel 
+    # interactions... easy to add if so anyway
 
     t_channel_propagators = []
     t_channel_potential = []
@@ -146,17 +204,26 @@ def sort_annihilations(dm, three_fields, four_fields):
             # If DM is fermionic -> also allowed fermionic t-channel prop
             # TODO -- this requires continuous fermion chain
             else:
+                # Want to add DM + prop + X -> conj(DM) + conj(prop) + Y
+                # N.B this can also be DM as the propagator
                 pass
 
+    # Combine all propagators for resonances. Remove duplicates.
     propagators = s_channel_propagators + t_channel_propagators
     propagators[:] = list(set(propagators))
+
+    # Remove (unphysical) aux particles from the list of propagators
+    propagators = [p for p in propagators if not isinstance(p, str)]
 
     # Remove all duplicates within the list of annihilation products.
     ann_products = map(list,
                        sorted(set(map(tuple, dm_dm_to_x_y)), reverse=True))
     # Remove any DM-DM self-interactions
+    # If these are important they should be dealt with by e.g. micrOMEGAs 5.0+
+    # and the freeze-in routines, or Z3 models, etc.
     if [dm.PDG_code, dm.Conjugate.PDG_code] in ann_products:
         ann_products.remove([dm.PDG_code, dm.Conjugate.PDG_code])
+
     return np.array(ann_products), propagators
 
 
@@ -216,6 +283,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     p2 = ', '.join("\"{}\"".format(*t) for t in zip(out2g))
 
     towrite_pc = (
+            "\n"
             "// Instantiate new {0} object.\n"
             "auto pc = boost::make_shared<{0}>();\n"
             "\n"
@@ -238,7 +306,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
             "if ({1}*2 > mtot_final*0.5)\n"
             "{{\n"
             "daFunk::Funk kinematicFunction = daFunk::funcM("
-            "pc, &{0}::sv, channels[i], tbl, "
+            "pc, &{0}::sv, channels[i], tbl, \n"
             "BEreq::CH_Sigma_V.pointer(), daFunk::var(\"v\"));\n"
             "TH_Channel new_channel("
             "daFunk::vec<string>(p1[i], p2[i]), kinematicFunction);\n"
@@ -257,7 +325,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
 
 def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
              gambit_model_name, calchep_pdg_dict, model_specific_particles,
-             exclude_decays):
+             higgses):
     """
     Writes all entries for the Process Catalogue for DarkBit.
     """
@@ -335,22 +403,38 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             "\n"
             "// Import decay table from DecayBit\n"
             "DecayTable tbl = *Dep::decay_rates;\n"
-            "\n"
-            "// Set of imported decays\n"
-            "std::set<string> importedDecays;\n"
-            "\n"
-            "// Minimum branching ratio to include\n"
-            "double minBranching = runOptions->getValueOrDef<double>(0.0,"
-            " \"ProcessCatalog_MinBranching\");\n"
-            "\n"
-            "// Import relevant decays\n"
-            "using DarkBit_utils::ImportDecays;\n"
-            "\n"
-            "//      *** TODO: excludeDecays?? ***\n"
-            "//      *** And ImportDecays!! For all propagators? ***\n"
-            "//      *** and all final states?? Which to exclude...?\n"
-            "\n"
     )
+
+    # Use DarkBit_utils::ImportDecays to recursively import decays for final 
+    # state particles
+    # TODO confirm final state particles to exclude. ttbar *not* in the list
+    # currently but might have to be
+    if higgses or propagators:
+
+        towrite += (
+                "\n"
+                "// Set of imported decays\n"
+                "std::set<string> importedDecays;\n"
+                "\n"
+                "// Minimum branching ratio to include\n"
+                "double minBranching = runOptions->getValueOrDef<double>(0.0,"
+                " \"ProcessCatalog_MinBranching\");\n"
+                "\n"
+                "// Import relevant decays\n"
+                "using DarkBit_utils::ImportDecays;\n"
+                "\n"
+                "auto excludeDecays = daFunk::vec<std::string>("
+                "\"Z0\", \"W+\", \"W-\", \"u_3\", \"ubar_3\", "
+                "\"e+_2\", \"e-_2\", \"e+_3\", \"e-_3\");\n"
+                "\n"
+        )
+
+        for particle in higgses+propagators:
+
+            towrite += (
+                "ImportDecays(\"{0}\", catalog, importedDecays, &tbl, "
+                "minBranching, excludeDecays);\n"
+            ).format(pdg_to_particle(particle, gambit_pdg_dict))
 
     if sv:
         towrite += sv_src
@@ -381,7 +465,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
 
 def write_darkbit_src(dm, pc, sv, dd, ann_products, propagators,
                       gambit_pdg_dict, gambit_model_name, calchep_pdg_dict,
-                      model_specific_particles, exclude_decays = []):
+                      model_specific_particles, higgses):
     """
     Collects all source for DarkBit: process catalogue, direct detection...
     """
@@ -417,7 +501,7 @@ def write_darkbit_src(dm, pc, sv, dd, ann_products, propagators,
         towrite += proc_cat(dm, sv, ann_products, propagators,
                             gambit_pdg_dict, gambit_model_name,
                             calchep_pdg_dict, model_specific_particles,
-                            exclude_decays)
+                            higgses)
 
     if dd:
         towrite += write_direct_detection(gambit_model_name)
@@ -570,6 +654,7 @@ def write_darkbit_rollcall(model_name, pc, dd):
     else:
         pro_cat = None
 
+    # TODO
     if dd:
         dir_det = dumb_indent(4, (
                 "#define FUNCTION DD_couplings_{0}\n"

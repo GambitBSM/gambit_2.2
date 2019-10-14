@@ -318,3 +318,25 @@ def get_antiparticles(partlist):
             conjdict[-p.pdg()] = p.pdg()
 
     return conjdict
+
+def get_higgses(partlist):
+    """
+    Returns a list of all Higgses in the model, based on 
+    the existing entries in the GAMBIT particle database.
+
+    Please extend if needed...
+    14/10/2019: NMSSM-like Higgses - 3 scalars, 2 pseudoscalars, 1 charged
+    """
+
+    higgses_by_pdg = [
+                      25, 35, 45,  # h0_1, h0_2, h0_3
+                      36, 46,      # A0_1, A0_2
+                      37, -37      # H+, H-
+                     ]
+
+    
+
+    higgses = [x.PDG_code for x in partlist if x.PDG_code in higgses_by_pdg]
+    print "higgses", higgses
+
+    return higgses
