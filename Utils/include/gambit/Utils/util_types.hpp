@@ -643,10 +643,10 @@ namespace Gambit
   typedef std::string  MString;
   template <typename T> using MList = std::vector<T>;
 
-  struct Finputs
+  struct SpectrumInputs
   {
     SMInputs sminputs;
-    std::map<str, safe_ptr<double> > param;
+    std::map<str, safe_ptr<const double> > param;
     safe_ptr<Options> options;
   };
 
