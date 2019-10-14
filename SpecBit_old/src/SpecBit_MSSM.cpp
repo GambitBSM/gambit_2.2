@@ -41,6 +41,7 @@
 #include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
 #include "gambit/Utils/stream_overloads.hpp" // Just for more convenient output to logger
 #include "gambit/Utils/util_macros.hpp"
+#include "gambit/Utils/util_types.hpp" // struct SpectrumInputs
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
 #include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/QedQcdWrapper.hpp"
@@ -540,7 +541,7 @@ namespace Gambit
       const SMInputs &sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      Finputs inputs;
+      inputs SpectrumInputs;
       inputs.sminputs = sminputs;
       inputs.param = myPipe::Param;
       inputs.options = myPipe::runOptions;

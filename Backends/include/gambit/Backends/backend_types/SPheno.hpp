@@ -83,12 +83,6 @@ namespace Gambit
     typedef Farray<particle23,1,4> Farray_particle23_1_4;
     typedef Farray<particle23,1,6> Farray_particle23_1_6;
 
-    struct Finputs
-    {
-        SMInputs sminputs;
-        std::map<str, safe_ptr<const double> > param;
-        safe_ptr<Options> options;
-    };
 }
 
-#endif // defined __SPHENO_types_hpp__
+#endif // defined __SPHENO_types_hpp_

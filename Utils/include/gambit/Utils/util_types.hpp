@@ -643,6 +643,12 @@ namespace Gambit
   typedef std::string  MString;
   template <typename T> using MList = std::vector<T>;
 
+  struct SpectrumInputs
+  {
+    SMInputs sminputs;
+    std::map<str, safe_ptr<const double> > param;
+    safe_ptr<Options> options;
+  };
 
 }
 #endif //defined __util_types_hpp__
