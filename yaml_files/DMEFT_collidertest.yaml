@@ -6,7 +6,6 @@
 ## GreAT or Polychord).
 ##########################################################################
 
-
 Parameters:
   # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
   DMEFT_WC_test:
@@ -19,7 +18,7 @@ Parameters:
     C64:
       range: [0, 1]
     mDM:
-      range: [100,500]
+      range: [150,1000]
 
 Priors:
 
@@ -35,7 +34,7 @@ Printer:
   #  buffer_length: 1000
   #  delete_file_on_restart: true
 
-  printer: hdf5
+  printer: cout
   options:
     output_file: "results.hdf5"
     group: "/spartan"
@@ -91,19 +90,29 @@ Scanner:
 
 ObsLikes:
 
-  #- purpose:      LogLike
-  #  capability:   DMEFT_ColliderLogLikes
-  #  module:       ColliderBit
-  #  type:         double
-
   # LHC likelihoods
   - purpose:    LogLike
     capability: LHC_Combined_LogLike
     module:     ColliderBit
     type:	double
 
+  - purpose:    Observable
+    capability: LHC_signals
+
+  - purpose:    Observable
+    capability: LHC_LogLike_per_SR
+
+  - purpose:    Observable
+    capability: LHC_LogLike_SR_indices
+
+
+
 Rules:
 
+  # Get analysis numbers from the DMEFT interpolated yields calculator
+  - capability: AllAnalysisNumbers
+    function: DMEFT_results
+    
   - capability: LHC_LogLikes
     backends:
     - {capability: lnlike_marg_poisson_lognormal_error}
@@ -117,9 +126,6 @@ Rules:
     function: InterpolatedMCInfo
     module: ColliderBit
 
-  # Get analysis numbers from the DMEFT interpolated yields calculator
-  - capability: AllAnalysisNumbers
-    function: DMEFT_results
 
 
 Logger:
@@ -132,7 +138,7 @@ Logger:
 
 KeyValues:
 
-  default_output_path: "runs/spartan"
+  default_output_path: "runs/DMEFT_TEST"
 
   rng:
     generator: ranlux48

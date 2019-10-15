@@ -55,7 +55,7 @@ namespace Gambit
 
 
     /// Loop over all analyses and fill a map of predicted counts
-    void calc_LHC_signals(map_str_dbl& result)
+    void calc_LHC_signals(map_str_dbl& result) 
     {
       using namespace Pipes::calc_LHC_signals;
 
@@ -63,7 +63,7 @@ namespace Gambit
       result.clear();
 
       std::stringstream summary_line;
-      summary_line << "LHC signals per SR: ";
+      summary_line << "LHC signals per SR: "; 
 
       // Loop over analyses and collect the predicted events into the map
       for (size_t analysis = 0; analysis < Dep::AllAnalysisNumbers->size(); ++analysis)
@@ -86,6 +86,7 @@ namespace Gambit
           result[key + "_uncert"] = combined_uncertainty;
 
           summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_signal_at_lumi << "+-" << combined_uncertainty << ", ";
+
         }
       }
       logger() << LogTags::debug << summary_line.str() << EOM;
