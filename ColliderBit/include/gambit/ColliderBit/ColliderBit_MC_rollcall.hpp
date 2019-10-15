@@ -181,7 +181,7 @@
 
     #define FUNCTION DMEFT_results
     START_FUNCTION(AnalysisDataPointers)
-    ALLOW_MODELS(DMEFT_WC_test)
+    ALLOW_MODELS(DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 

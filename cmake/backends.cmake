@@ -458,6 +458,27 @@ if(NOT ditched_${name}_${model}_${ver})
   set_as_default_version("backend model" ${name}_${model} ${ver})
 endif()
 
+
+# MicrOmegas DMEFT model
+set(model "DMEFT")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/DMEFT/patch_${name}_${ver}_${model}.dif")
+set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/DMEFT")
+check_ditch_status(${name}_${model} ${ver} ${dir})
+if(NOT ditched_${name}_${model}_${ver})
+  ExternalProject_Add(${name}_${model}_${ver}
+    DOWNLOAD_COMMAND ""
+    SOURCE_DIR ${dir}
+    PATCH_COMMAND ./newProject ${model} && patch -p0 < ${patch}
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/mdlfiles ${dir}/${model}/work/models/
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${CMAKE_MAKE_PROGRAM} sharedlib main=main.c
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
+  set_as_default_version("backend model" ${name}_${model} ${ver})
+endif()
+
 # Pythia
 set(name "pythia")
 set(ver "8.212")

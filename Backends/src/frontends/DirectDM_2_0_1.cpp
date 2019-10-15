@@ -70,7 +70,7 @@ BE_NAMESPACE
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
   NREO_DM_nucleon_couplings get_NR_WCs_EW(map_str_dbl& relativistic_WCs,  double& mDM, double& dchi, double& Ychi, double& scale, std::string& DM_type)
   {
-    // S.B. 19/09: currently only Dirac supported
+    // S.B. 19/09/18: currently only Dirac supported
     if (DM_type != "D")
     {
       backend_error().raise(LOCAL_INFO, "DirectDM at unbroken scale currenly only supports Dirac DM.");

@@ -166,7 +166,8 @@ namespace Gambit
   // Interpolation functions // 
   // ---------------------------------------------------- //
 
-  double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* experiment){
+  double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* experiment)
+  {
     char const *i = (colliderbitdata_path+string("DMEFT/met_hist_ATLAS_C61_C64.txt")).c_str();
     char const *j = (colliderbitdata_path+string("DMEFT/met_hist_ATLAS_C62_C63.txt")).c_str();
     char const *k = (colliderbitdata_path+string("DMEFT/met_hist_CMS_C61_C64.txt")).c_str();
@@ -381,37 +382,39 @@ namespace Gambit
 
   }
 
-double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const char* exper_){
-	char const *tt = "23";
-	char const *of = "14";
-	int met_bin_size;
+    double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const char* exper_)
+    {
+    	char const *tt = "23";
+    	char const *of = "14";
+    	int met_bin_size;
 
-	if (exper_=="ATLAS"){
-		met_bin_size = atlas_bin_size;
-	}
-	else if (exper_=="CMS"){
-		met_bin_size = cms_bin_size;
-	}
+    	if (exper_=="ATLAS"){
+    		met_bin_size = atlas_bin_size;
+    	}
+    	else if (exper_=="CMS"){
+    		met_bin_size = cms_bin_size;
+    	}
 
-	double* YIELDS = new double[met_bin_size]; 
-	
-	double* A23;
-	double* A14;
+    	double* YIELDS = new double[met_bin_size]; 
+    	
+    	double* A23;
+    	double* A14;
 
-	A23 = Acceptance_CS(m,C62,C63,tt,exper_);
-	A14 = Acceptance_CS(m,C61,C64,of,exper_);
+    	A23 = Acceptance_CS(m,C62,C63,tt,exper_);
+    	A14 = Acceptance_CS(m,C61,C64,of,exper_);
 
-	for (int ii = 0; ii < met_bin_size-1; ++ii){
-		YIELDS[ii] = A23[ii] + A14[ii];
-		// YIELDS[ii] = A14[ii];
+    	for (int ii = 0; ii < met_bin_size-1; ++ii){
+    		YIELDS[ii] = A23[ii] + A14[ii];
+    		// YIELDS[ii] = A14[ii];
 
-	}
+    	}
 
-	return YIELDS;
-}
+    	return YIELDS;
+    }
 
-    void DMEFT_results(AnalysisDataPointers &result){  
-
+    void DMEFT_results(AnalysisDataPointers &result)
+    {  
+      using namespace Pipes::DMEFT_results;
 
       // This routine will get the yields for both the ATLAS and CMS monojet analyses
       // The results are stored in a vector of AnalysisData objects, which includes backgrounds yields, uncertainties and correlations
@@ -424,14 +427,24 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
       // Am assuming for now that this is fed the actual Wilson coefficients
       // You will need to add code that maps these to the mixing angle, etc
       
-    
-      float C61 = *Pipes::DMEFT_results::Param["C61"];
-      float C62 = *Pipes::DMEFT_results::Param["C62"];
-      float C63 = *Pipes::DMEFT_results::Param["C63"];
-      float C64 = *Pipes::DMEFT_results::Param["C64"];
-            
-      // ***** What about DM mass?
+      float C61 = *Param["C61"];
+      float C62 = *Param["C62"];
+      float C63 = *Param["C63"];
+      float C64 = *Param["C64"];
+      
+      /*
+      // There is now a spectrum object carrying all this information, so we can do 
+      // something like 
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      float C61 = spec.get(Par::dimensionless, "C61");
+      float C62 = spec.get(Par::dimensionless, "C62");
+      float C63 = spec.get(Par::dimensionless, "C63");
+      float C64 = spec.get(Par::dimensionless, "C64");
+      // instead of using the Pipes
+      */
 
+      // ***** What about DM mass?
+      // double mDM = spec.get(Par::Pole_Mass, "chi");
 
       // Andre: will need too add interpolators for each bin (or some smarter way to do it for all bins and store the results)
       // ColliderBitInterpolator2D cross_C61_C64(colliderbitdata_path+"DMEFT/test_crosssec.dat","bicubic");
@@ -474,6 +487,7 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
 
       // Test the function to see if it compiles. 
       double mass = 150;
+      //double mass = spec.get(Par::Pole_Mass, "chi");
 	    
       double *_srnums;
 
@@ -555,7 +569,7 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
       result = total_results;
       
       
-    };
+    }
     
     void InterpolatedMCInfo(MCLoopInfo& result)
     {
@@ -567,8 +581,7 @@ double *  Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const ch
       
     }
 	
-
     
-  }
+  } // namespace ColliderBit
     
-  }
+} // namespace Gambit

@@ -9,7 +9,8 @@
 
 Parameters:
   # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
-  DMEFT_WC_test:
+
+  DMEFT:
     C61:
       range: [0, 1]
     C62:
@@ -18,8 +19,21 @@ Parameters:
       range: [0, 1]
     C64:
       range: [0, 1]
-    mDM:
+    mchi:
       range: [100,500]
+    Lambda: 1000.
+    C51: 0.
+    C52: 0.
+    C71: 0.
+    C72: 0.
+    C73: 0.
+    C74: 0.
+    C75: 0.
+    C76: 0.
+    C77: 0.
+    C78: 0.
+    C79: 0.
+    C710: 0.
 
 Priors:
 

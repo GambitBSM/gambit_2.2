@@ -240,10 +240,11 @@ START_MODULE
       BACKEND_OPTION((MicrOmegas_VectorSingletDM_Z2), (gimmemicro))
       BACKEND_OPTION((MicrOmegas_MajoranaSingletDM_Z2), (gimmemicro))
       BACKEND_OPTION((MicrOmegas_DiracSingletDM_Z2),(gimmemicro))
+      BACKEND_OPTION((MicrOmegas_DMEFT),(gimmemicro))
       ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT,
                    ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                    ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
-                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2)
+                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2, DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -501,6 +502,13 @@ START_MODULE
       DEPENDENCY(WIMP_properties, WIMPprops)
       DEPENDENCY(generic_WIMP_sigmav, WIMP_annihilation)
     #undef FUNCTION
+    #define FUNCTION TH_ProcessCatalog_DMEFT
+      START_FUNCTION(DarkBit::TH_ProcessCatalog)
+      DEPENDENCY(decay_rates, DecayTable)
+      DEPENDENCY(DMEFT_spectrum, Spectrum)
+      BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, std::vector<str>&, double&, double&, const DecayTable&))
+      ALLOW_MODELS(DMEFT)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY set_gamLike_GC_halo
@@ -669,17 +677,18 @@ START_MODULE
       ALLOW_MODEL_DEPENDENCE(nuclear_params_fnq, MSSM63atQ,
                              ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                              ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
-                             VectorSingletDM_Z2)
+                             VectorSingletDM_Z2, DMEFT)
       MODEL_GROUP(group1, (nuclear_params_fnq))
       MODEL_GROUP(group2, (MSSM63atQ,
                            ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                            ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
-                           VectorSingletDM_Z2))
+                           VectorSingletDM_Z2, DMEFT))
       ALLOW_MODEL_COMBINATION(group1, group2)
       BACKEND_OPTION((MicrOmegas_MSSM),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z2),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z3),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_VectorSingletDM_Z2),(gimmemicro))
+      BACKEND_OPTION((MicrOmegas_DMEFT),(gimmemicro))
       FORCE_SAME_BACKEND(gimmemicro)
     #undef FUNCTION
 
@@ -724,6 +733,12 @@ START_MODULE
       START_FUNCTION(map_str_dbl)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODEL(DiracSingletDM_Z2)
+      #undef FUNCTION
+
+      #define FUNCTION DD_rel_WCs_DMEFT
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(DMEFT_spectrum, Spectrum)
+      ALLOW_MODEL(DMEFT)
       #undef FUNCTION
 
   #undef CAPABILITY
@@ -952,6 +967,15 @@ START_MODULE
   //START_CAPABILITY // Don't need this; capability already created in a QUICK_FUNCTION above
      #define FUNCTION mwimp_from_WIMPprops
      START_FUNCTION(double)
+     DEPENDENCY(WIMP_properties,WIMPprops)
+     #undef FUNCTION
+  #undef CAPABILITY
+
+  // WIMP self conjugacy
+  #define CAPABILITY wimp_sc
+  //START_CAPABILITY // Don't need this; capability already created in a QUICK_FUNCTION above
+     #define FUNCTION wimp_sc_from_WIMPprops
+     START_FUNCTION(bool)
      DEPENDENCY(WIMP_properties,WIMPprops)
      #undef FUNCTION
   #undef CAPABILITY
@@ -1387,6 +1411,10 @@ START_MODULE
     #define FUNCTION DarkMatter_ID_EFT
     START_FUNCTION(std::string)
     DEPENDENCY(WIMP_properties, WIMPprops)
+    #undef FUNCTION
+    #define FUNCTION DarkMatter_ID_DMEFT
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 

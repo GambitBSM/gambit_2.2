@@ -136,6 +136,13 @@ namespace Gambit
        result = Dep::WIMP_properties->mass;
     }
 
+    /// WIMP self conjugacy extractor
+    void wimp_sc_from_WIMPprops(bool& result)
+    {
+       using namespace Pipes::wimp_sc_from_WIMPprops;
+       result = Dep::WIMP_properties->sc;
+    }
+
 
 
     //////////////////////////////////////////////////////////////////////////

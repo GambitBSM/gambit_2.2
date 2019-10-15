@@ -96,6 +96,10 @@ SUSYHD:
 DirectDM:
   2.0.1:       ./Backends/installed/directdm/2.0.1/directdm
 
+# Added by GUM
+MicrOmegas_DMEFT:
+  3.6.9.2:         ./Backends/installed/micromegas/3.6.9.2/DMEFT/libmicromegas.so
+
 # Example/debug backends
 
 LibFirst:
