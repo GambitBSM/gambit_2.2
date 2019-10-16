@@ -47,8 +47,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     
                 virtual const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& get_spectrum_file() const =0;
     
-                virtual bool starts_with(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&, const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&) =0;
-    
             public:
                 virtual void pointer_assign__BOSS(Abstract_Command_line_options*) =0;
                 virtual Abstract_Command_line_options* pointer_copy__BOSS() =0;

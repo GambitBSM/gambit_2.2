@@ -14,11 +14,19 @@ namespace Gambit
         {
             namespace flexiblesusy
             {
-                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::Command_line_options Command_line_options;
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::CMSSM_input_parameters CMSSM_input_parameters;
             }
-            namespace softsusy
+            namespace flexiblesusy
             {
-                typedef ::FlexibleSUSY_CMSSM_2_4_0::softsusy::QedQcd QedQcd;
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::CMSSM_scales CMSSM_scales;
+            }
+            namespace flexiblesusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::CMSSM_slha_io CMSSM_slha_io;
+            }
+            namespace flexiblesusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::Physical_input Physical_input;
             }
             namespace flexiblesusy
             {
@@ -26,7 +34,23 @@ namespace Gambit
             }
             namespace flexiblesusy
             {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::Error Error;
+            }
+            namespace softsusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::softsusy::QedQcd QedQcd;
+            }
+            namespace flexiblesusy
+            {
                 typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::Spectrum_generator_settings Spectrum_generator_settings;
+            }
+            namespace flexiblesusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::CMSSM_parameter_getter CMSSM_parameter_getter;
+            }
+            namespace flexiblesusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::Command_line_options Command_line_options;
             }
         }
     }

@@ -78,11 +78,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             return get_BEptr()->get_spectrum_file();
         }
         
-        inline bool Command_line_options::starts_with(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& arg_1, const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& arg_2)
-        {
-            return get_BEptr()->starts_with(arg_1, arg_2);
-        }
-        
         
         // Wrappers for original constructors: 
         inline flexiblesusy::Command_line_options::Command_line_options() :

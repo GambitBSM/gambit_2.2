@@ -1046,15 +1046,17 @@ set(dl "https://flexiblesusy.hepforge.org/downloads/FlexibleSUSY-${ver}.tar.gz")
 set(md5 "585ce4e507268805a8d7ea04b70b5774")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/${model}")
 set(modelfiles "${PROJECT_SOURCE_DIR}/Models/data/FlexibleSUSY/${model}")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/${model}/patch_${name}_${ver}_${model}.dif")
 check_ditch_status(${name}_${model} ${ver} ${dir})
 if(NOT ditched_${name}_${model}_${ver})
   ExternalProject_add(${name}_${model}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
              COMMAND ${CMAKE_COMMAND} -E make_directory "${dir}/models"
              COMMAND cp -r "${modelfiles}" "${dir}/models/"
+             COMMAND ${CMAKE_COMMAND} -E echo "" > ${dir}/config/config.h
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
-    PATCH_COMMAND ""
+    PATCH_COMMAND patch -p1 < ${patch}
     CONFIGURE_COMMAND ./configure ${FS_OPTIONS} --with-models=${model}
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} alllib
     INSTALL_COMMAND ""

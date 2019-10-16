@@ -1,0 +1,18 @@
+diff -rupN FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_slha_io.hpp ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_slha_io.hpp
+--- FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_slha_io.hpp	2019-10-16 16:58:23.527664485 +1100
++++ ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_slha_io.hpp	2019-10-16 16:58:18.431605380 +1100
+@@ -370,12 +370,14 @@ void CMSSM_slha_io::set_extra(
+  *
+  * @param models model classes
+  */
++/* Commented by GAMBIT
+ template <class... Ts>
+ void CMSSM_slha_io::set_spectrum(const std::tuple<Ts...>& models)
+ {
+    boost::fusion::for_each(models,
+                            [this](auto model) { this->set_spectrum(model); });
+ }
++*/
+ 
+ /**
+  * Stores the model (DR-bar) parameters, masses and mixing matrices in
