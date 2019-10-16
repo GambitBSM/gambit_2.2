@@ -203,7 +203,14 @@ namespace Gambit
       using namespace Pipes::DD_nonrel_WCs_flavscheme;
 
       // Number of quark flavours used for matching (default 5)
-      int scheme = runOptions->getValueOrDef<int>(5,"flavs");
+      int scheme = runOptions->getValueOrDef<int>(5, "flavs");
+
+      // Only defined for 3, 4, + 5 flavour scheme.
+      if (scheme != 3 && scheme != 4 && scheme != 5)
+      {
+        DarkBit_error().raise(LOCAL_INFO, "DD_nonrel_WCs_flavscheme quark flavour matching "
+          "scheme must be for 3, 4 or 5 quark flavors only. Please check your YAML file.");
+      }
 
       // Obtain spin of DM particle, plus identify whether DM is self-conjugate
       double mDM = Dep::WIMP_properties->mass;
@@ -214,9 +221,11 @@ namespace Gambit
       std::string DM_type;
 
       // Fermion case
-      if (sDM == 1) { is_SC ? DM_type == "M" : DM_type == "D"; }
+      if (sDM == 1) { is_SC ? DM_type = "M" : DM_type = "D"; }
       // Scalar
-      else if (sDM == 0) { is_SC ? DM_type == "R" : DM_type == "C"; }
+      else if (sDM == 0) { is_SC ? DM_type = "R" : DM_type = "C"; }
+      // Vector etc. DM not supported by DirectDM
+      else DarkBit_error().raise(LOCAL_INFO, "DD_nonrel_WCs_flavscheme only usable for spin-0 and spin-1/2 DM.");
 
       // Relativistic Wilson Coefficients
       map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs;
@@ -247,11 +256,12 @@ namespace Gambit
       // Set DM_type based on the spin and & conjugacy of DM
       std::string DM_type;
 
-      // Set DM_type based on the spin and & conjugacy of DM
       // Fermion case: set DM_type to Majorana or Dirac
       if (sDM == 1) { is_SC ? DM_type = "M" : DM_type = "D"; }
       // Scalar case: set DM type to real or complex
       else if (sDM == 0) { is_SC ? DM_type = "R" : DM_type = "C"; }
+      // Vector etc. DM not supported by DirectDM
+      else DarkBit_error().raise(LOCAL_INFO, "DD_nonrel_WCs_EW only usable for spin-0 and spin-1/2 DM.");
 
       // Relativistic Wilson Coefficients
       map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs;

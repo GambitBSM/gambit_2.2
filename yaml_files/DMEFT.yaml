@@ -16,14 +16,19 @@ Parameters:
   DMEFT:
     C61:
       range: [0, 1]
+      prior_type: flat
     C62:
       range: [0, 1]
+      prior_type: flat
     C63:
       range: [0, 1]
+      prior_type: flat
     C64:
       range: [0, 1]
+      prior_type: flat
     mchi:
       range: [100,500]
+      prior_type: flat
     Lambda: 1000.
     C51: 0.
     C52: 0.
@@ -63,12 +68,15 @@ Priors:
 
 Printer:
 
-  printer: hdf5
+  # printer: hdf5
+  # options:
+  #   output_file: "DMEFT.hdf5"
+  #   delete_file_on_restart: true
+  #   group: "/DMEFT"
 
+  printer: ascii
   options:
-    output_file: "DMEFT.hdf5"
-    delete_file_on_restart: true
-    group: "/DMEFT"
+    output_file: "DMEFT.txt"
 
 Scanner:
 

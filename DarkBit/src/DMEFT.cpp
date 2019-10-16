@@ -231,21 +231,89 @@ namespace Gambit
       // So we need to rescale them by the appropriate scale
       result["C51"]  = C51/Lambda;
       result["C52"]  = C52/Lambda;
-      // No C53 + C54 in the model -- Higgs portals terms -- we have those models already.
-      result["C61"]  = C61/pow(Lambda, 2);
-      result["C62"]  = C62/pow(Lambda, 2);
-      result["C63"]  = C63/pow(Lambda, 2);
-      result["C64"]  = C64/pow(Lambda, 2);
+      // No C53 + C54 in the model -- Higgs portals terms
+
+      // Gluon operators -- universal anyway
       result["C71"]  = C71/pow(Lambda, 3);
       result["C72"]  = C72/pow(Lambda, 3);
       result["C73"]  = C73/pow(Lambda, 3);
       result["C74"]  = C74/pow(Lambda, 3);
-      result["C75"]  = C75/pow(Lambda, 3);
-      result["C76"]  = C76/pow(Lambda, 3);
-      result["C77"]  = C77/pow(Lambda, 3);
-      result["C78"]  = C78/pow(Lambda, 3);
-      result["C79"]  = C79/pow(Lambda, 3);
-      result["C710"] = C710/pow(Lambda, 3);
+      
+      // The following terms have a fermion bilinear so, in theory, can have a 
+      // different WC for each. We take these to be universal i.e. 
+      // C_{dim}{tag}(f) == C_{dim}{tag}
+      // Also only considering interactions with *quarks and gluons* -- 
+      // not leptons, so C_{7}{tag}(tau, mu, e) = 0
+
+      result["C61d"]  = C61/pow(Lambda, 2);
+      result["C61u"]  = C61/pow(Lambda, 2);
+      result["C61s"]  = C61/pow(Lambda, 2);
+      result["C61c"]  = C61/pow(Lambda, 2);
+      result["C61b"]  = C61/pow(Lambda, 2);
+      result["C61t"]  = C61/pow(Lambda, 2);
+
+      result["C62d"]  = C62/pow(Lambda, 2);
+      result["C62u"]  = C62/pow(Lambda, 2);
+      result["C62s"]  = C62/pow(Lambda, 2);
+      result["C62c"]  = C62/pow(Lambda, 2);
+      result["C62b"]  = C62/pow(Lambda, 2);
+      result["C62t"]  = C62/pow(Lambda, 2);
+
+      result["C63d"]  = C63/pow(Lambda, 2);
+      result["C63u"]  = C63/pow(Lambda, 2);
+      result["C63s"]  = C63/pow(Lambda, 2);
+      result["C63c"]  = C63/pow(Lambda, 2);
+      result["C63b"]  = C63/pow(Lambda, 2);
+      result["C63t"]  = C63/pow(Lambda, 2);
+
+      result["C64d"]  = C64/pow(Lambda, 2);
+      result["C64u"]  = C64/pow(Lambda, 2);
+      result["C64s"]  = C64/pow(Lambda, 2);
+      result["C64c"]  = C64/pow(Lambda, 2);
+      result["C64b"]  = C64/pow(Lambda, 2);
+      result["C64t"]  = C64/pow(Lambda, 2);
+
+      result["C75d"]  = C75/pow(Lambda, 3);
+      result["C75u"]  = C75/pow(Lambda, 3);
+      result["C75s"]  = C75/pow(Lambda, 3);
+      result["C75c"]  = C75/pow(Lambda, 3);
+      result["C75b"]  = C75/pow(Lambda, 3);
+      result["C75t"]  = C75/pow(Lambda, 3);
+
+      result["C76d"]  = C76/pow(Lambda, 3);
+      result["C76u"]  = C76/pow(Lambda, 3);
+      result["C76s"]  = C76/pow(Lambda, 3);
+      result["C76c"]  = C76/pow(Lambda, 3);
+      result["C76b"]  = C76/pow(Lambda, 3);
+      result["C76t"]  = C76/pow(Lambda, 3);
+
+      result["C77d"]  = C77/pow(Lambda, 3);
+      result["C77u"]  = C77/pow(Lambda, 3);
+      result["C77s"]  = C77/pow(Lambda, 3);
+      result["C77c"]  = C77/pow(Lambda, 3);
+      result["C77b"]  = C77/pow(Lambda, 3);
+      result["C77t"]  = C77/pow(Lambda, 3);
+
+      result["C78d"]  = C78/pow(Lambda, 3);
+      result["C78u"]  = C78/pow(Lambda, 3);
+      result["C78s"]  = C78/pow(Lambda, 3);
+      result["C78c"]  = C78/pow(Lambda, 3);
+      result["C78b"]  = C78/pow(Lambda, 3);
+      result["C78t"]  = C78/pow(Lambda, 3);
+
+      result["C79d"]  = C79/pow(Lambda, 3);
+      result["C79u"]  = C79/pow(Lambda, 3);
+      result["C79s"]  = C79/pow(Lambda, 3);
+      result["C79c"]  = C79/pow(Lambda, 3);
+      result["C79b"]  = C79/pow(Lambda, 3);
+      result["C79t"]  = C79/pow(Lambda, 3);
+
+      result["C710d"] = C710/pow(Lambda, 3);
+      result["C710u"] = C710/pow(Lambda, 3);
+      result["C710s"] = C710/pow(Lambda, 3);
+      result["C710c"] = C710/pow(Lambda, 3);
+      result["C710b"] = C710/pow(Lambda, 3);
+      result["C710t"] = C710/pow(Lambda, 3);
 
     }
     

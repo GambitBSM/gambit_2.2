@@ -22,6 +22,8 @@
 #include "gambit/Backends/frontends/DirectDM_2_0_1.hpp"
 #include "gambit/Backends/backend_types/DDCalc.hpp" // Using DDCalc (frontend) container objects
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include <pybind11/stl.h>
 
 BE_INI_FUNCTION
@@ -95,11 +97,29 @@ BE_NAMESPACE
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
   NREO_DM_nucleon_couplings get_NR_WCs_flav(map_str_dbl& relativistic_WCs, double& mDM, int& scheme, std::string& DM_type)
   {
-    // Only load up 3, 4, 5 flavour scheme.
-    if (scheme != 3 || scheme != 4 || scheme != 5)
+    // We can only load up 3, 4, 5 flavour scheme.
+    if (scheme != 3 && scheme != 4 && scheme != 5)
     {
       backend_error().raise(LOCAL_INFO, "DirectDM quark flavour matching scheme must be for "
         "3, 4 or 5 quark flavors.");
+    }
+
+    // Remove entries that should not be passed to DirectDM, i.e. any WC referring to a 
+    // quark not present in a given scheme.
+    for (auto &WC : relativistic_WCs)
+    {
+      // Always remove top quark specific couplings from these
+      if (boost::ends_with(WC.first, "t")) { relativistic_WCs.erase(WC.first); }
+      // Remove b quarks for schemes that are 3 and 4..
+      if (scheme < 5)
+      { 
+        if (boost::ends_with(WC.first, "b")) { relativistic_WCs.erase(WC.first); }
+      }
+      // And remove c for 3.
+      if (scheme == 3)
+      {
+        if (boost::ends_with(WC.first, "c")) { relativistic_WCs.erase(WC.first); }
+      }
     }
 
     // Python dictionary of non-relativistic Wilson Coefficients
