@@ -181,9 +181,9 @@ if args.file:
     """
     if output_opts.ch and output_opts.ufo:
         print("Calling UFO2MDL.")
-        blockPrint()
+        blockPrint()  # Stop the UFO2MDL output - there's lots of it
         ch_location = compare_mg_and_ch(outputs.get_mg(), outputs.get_ch())
-        enablePrint()
+        enablePrint() # Bring it back.
         if ch_location != outputs.get_ch(): 
             print("Updating location of CalcHEP files in GUM...")
             outputs.set_ch(ch_location)
@@ -362,6 +362,12 @@ if args.file:
         spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(clean_model_name)
 
 
+    with open("out.txt", "w+") as f:
+        f.write(spheno_src)
+
+    import sys
+    sys.exit("Enough for now.")
+
     """
     CALCHEP
     """
@@ -431,8 +437,6 @@ if args.file:
     DARKBIT
     """
 
-    print antiparticle_dict
-
     if darkbit:
 
         pc = None
@@ -460,8 +464,6 @@ if args.file:
             four_f = [interaction.particles for interaction in interactions
                         if interaction.num_particles() == 4
                         and interaction.is_sm() == False]
-
-            print three_f
 
             # Get all annihilation products and propagators involved in
             # DM + DM -> X + Y at tree-level

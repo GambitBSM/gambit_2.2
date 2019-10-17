@@ -616,7 +616,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                            variables, flags, particles, 
                                            parameters, blockparams, 
                                            gambit_pdgs, mixings, reality_dict,
-                                           sphenodeps)
+                                           sphenodeps, hb_variables)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -756,7 +756,7 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
 
     # A list of strings to match if we want to section it off to HB.
     # Just the starts of strings, there will be various suffixes.
-    hb_strings = ["ratioPP", "ratioGG", "CPL_H_H", "CPL_A_A", "CPL_A_H", "rHB", 
+    hb_strings = ["ratioP", "ratioGG", "CPL_H_H", "CPL_A_A", "CPL_A_H", "rHB", 
                   "BR_H", "BR_t"]
 
     # Each line looks like - TYPE :: definition(s)
@@ -902,7 +902,7 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
                               particles, parameters, blockparams, gambit_pdgs, mixings,
-                              reality_dict, sphenodeps):
+                              reality_dict, sphenodeps, hb_variables):
 
     """
     Writes source for 
@@ -1440,7 +1440,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     addedblocks = []
 
     # Go through each LH block we know about, and assign each entry to the SLHAea object.
-    # TODO: 
     # TG: This assumes these are all complex, but it's not always so
     # SB: added param.is_real output, queried by SARAH, using this
     for block, entry in blockparams.iteritems():
@@ -1635,29 +1634,139 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # End of Spectrum_Out
 
     # get_HiggsCouplingsTable function
-    towrite += "// Convenience function to obtain a HiggsCouplingsTable object for HiggsBounds"\
-      "int get_HiggsCouplingsTable(const Spectrum& spectrum, HiggsCouplingsTable& hctbl, const Finputs& inputs)"\
-      "{\n"\
-      "\n"\
-      "// Pass the GAMBIT spectrum to SPheno and fill the internal decay objects (if necessary)\n"\
-      "fill_spectrum_calculate_BRs(spectrum, inputs);\n"\
-      "\n"\
-      "if(*kont != 0)\n"\
-      "  ErrorHandling(*kont);\n"\
-      "\n"\
-      "/* Fill in effective coupling ratios.\n"\
-      "   These are the ratios of BR_BSM(channel)/BR_SM(channel) */\n"
+    # The targets for HiggsBounds
+    hb_targets = ["rHB_S_S_Fd",  "rHB_P_P_Fd", "rHB_S_S_Fu",  "rHB_P_P_Fu", 
+                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VWm",   "rHB_P_VWm",  
+                  "rHB_S_VZ",  "rHB_P_VZ", "ratioPP",  "ratioPPP",  
+                  "ratioGG",  "ratioPGG", "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
 
-    # TODO: MD Higgs couplings
+    hboutput = True
+    # If the targets aren't all there then don't write HiggsBounds output. 
+    # They should be!
+    if not all(param in hb_variables for param in hb_targets):
+        hboutput = False
 
-    towrite += "\n"\
-      "// Check there's no errors\n"\
-      "if(*kont != 0)\n"\
-      "                  ErrorHandling(*kont);\n"\
-      "\n"\
-      "return *kont;\n"\
-      "}\n"
-    # End of get_HiggsCouplingsTable
+    if hboutput:
+        # Get number of Higgses from the size of the vector 
+        # interacting with gauge bosons
+        numh0 = ( int(hb_variables["rHB_S_VZ"].size) if "rHB_S_VZ" 
+                    in hb_variables else 0 )
+        # Subtract 1 since A starts at (2), not (1)
+        numA0 = ( (int(hb_variables["rHB_P_VZ"].size)-1) 
+                   if "rHB_S_VZ" in hb_variables else 0 )
+
+    # Check there's more than 1 Higgs otherwise no need for this really. 
+    if hboutput and (numh0 + numA0 > 1):
+        towrite += (
+                "// Convenience function to obtain a HiggsCouplingsTable "
+                "object for HiggsBounds\n"
+                "int get_HiggsCouplingsTable(const Spectrum& spectrum, "
+                "HiggsCouplingsTable& hctbl, const Finputs& inputs)\n{\n"
+                "\n"
+                "// Pass the GAMBIT spectrum to SPheno and fill the "
+                "internal decay objects (if necessary)\n"
+                "fill_spectrum_calculate_BRs(spectrum, inputs);\n"
+                "\n"
+                "if(*kont != 0)\n"
+                "  ErrorHandling(*kont);\n"
+                "\n"
+                "/* Fill in effective coupling ratios.\n"
+                "  These are the ratios of BR_BSM(channel)/BR_SM(channel) */\n"
+        )
+
+        # Go through each entry in what we've harvested to give to HiggsBounds.
+        # Quarks and leptons first:
+        hb = "// Couplings to SM fermions and gauge bosons\n"
+
+        for i in range(numh0):
+            hb += (
+               "hctbl.C_ss2[{0}] = pow( (*rHB_S_S_Fd)({1},2), 2 );"
+               " // Coupling (h0_{1} s sbar)\n"
+               "hctbl.C_bb2[{0}] = pow( (*rHB_S_S_Fd)({1},3), 2 );"
+               " // Coupling (h0_{1} b bbar)\n"
+               "hctbl.C_cc2[{0}] = pow( (*rHB_S_S_Fu)({1},2), 2 );"
+               " // Coupling (h0_{1} c cbar)\n"
+               "hctbl.C_tt2[{0}] = pow( (*rHB_S_S_Fu)({1},3), 2 );"
+               " // Coupling (h0_{1} t tbar)\n"
+               "hctbl.C_mumu2[{0}] = pow( (*rHB_S_S_Fe)({1},2), 2 );"
+               " // Coupling (h0_{1} mu+ mu-)\n"
+               "hctbl.C_tautau2[{0}] = pow( (*rHB_S_S_Fe)({1},3), 2 );"
+               " // Coupling (h0_{1} tau+ tau-)\n"
+               "hbtbl.C_WW2[{0}] = (*rHB_S_VWm)({1});"
+               " // Coupling (h0_{1} W+ W-)\n"
+               "hbtbl.C_ZZ2[{0}] = (*rHB_S_VZ)({1});"
+               " // Coupling (h0_{1} Z Z)\n"
+               "hctbl.C_gaga2[{0}] = pow( (*ratioPP)({1}).re, 2 );"
+               " // Coupling (h0_{1} gamma gamma)\n"
+               "hctbl.C_gg2[{0}] = pow( (*ratioGG)({1}).re, 2 );"
+               " // Coupling (h0_{1} glu glu)\n"
+            ).format(i, i+1)
+        for i in range(numA0):
+            hb += (
+               "hctbl.C_ss2[{0}] = pow( (*rHB_P_P_Fd)({1},2), 2 );"
+               " // Coupling (A0_{2} s sbar)\n"
+               "hctbl.C_bb2[{0}] = pow( (*rHB_P_P_Fd)({1},3), 2 );"
+               " // Coupling (A0_{2} b bbar)\n"
+               "hctbl.C_cc2[{0}] = pow( (*rHB_P_P_Fu)({1},2), 2 );"
+               " // Coupling (A0_{2} c cbar)\n"
+               "hctbl.C_tt2[{0}] = pow( (*rHB_P_P_Fu)({1},3), 2 );"
+               " // Coupling (A0_{2} t tbar)\n"
+               "hctbl.C_mumu2[{0}] = pow( (*rHB_P_P_Fe)({1},2), 2 );"
+               " // Coupling (A0_{2} mu+ mu-)\n"
+               "hctbl.C_tautau2[{0}] = pow( (*rHB_P_P_Fe)({1},3), 2 );"
+               " // Coupling (A0_{2} tau+ tau-)\n"
+               "hbtbl.C_WW2[{0}] = (*rHB_P_VWm)({1});"
+               " // Coupling (A0_{2} W+ W-)\n"
+               "hbtbl.C_ZZ2[{0}] = (*rHB_P_VZ)({1});"
+               " // Coupling (A0_{2} Z Z)\n"
+               "hctbl.C_gaga2[{0}] = pow( (*ratioPPP)({1}).re, 2 );"
+               " // Coupling (A0_{2} gamma gamma)\n"
+               "hctbl.C_gg2[{0}] = pow( (*ratioPGG)({1}).re, 2 );"
+               " // Coupling (A0_{2} glu glu)\n"
+            ).format(numh0+i, i+2, i+1)
+
+        # Make this alphabetical, because it looks nice
+        towrite += "\n".join(sorted(hb.split("\n")))
+
+        # Two Higgses + Z
+        towrite += (
+            "\n\n// hhZ effective couplings. This is symmetrised "
+            "(i.e. j,i = i,j)\n"
+        )
+        # First HHZ
+        for i in range(numh0):
+            for j in range(numh0):
+                towrite += (
+                        "hctbl.C_hiZ2[{0}][{1}] = (*CPL_H_H_Z)({2},{3}).re;"
+                        " // Coupling (h0_{2} h0_{3} Z)\n"
+                ).format(i, j, i+1, j+1)
+        # Now HAZ
+        for i in range(numh0):
+            for j in range(numA0):
+                towrite += (
+                    "hctbl.C_hiZ2[{0}][{1}] = (*CPL_A_H_Z)({2},{3}).re;"
+                        " // Coupling (A0_{4} h0_{3} Z)\n"
+                    "hctbl.C_hiZ2[{1}][{0}] = (*CPL_A_H_Z)({2},{3}).re;"
+                        " // Coupling (h0_{3} A0_{4} Z)\n"
+                ).format(i, j, i+1, j+2, j+1)
+        # Finally AAZ
+        for i in range(numA0):
+            for j in range(numA0):
+                towrite += (
+                        "hctbl.C_hiZ2[{0}][{1}] = (*CPL_A_A_Z)({2},{3}).re;"
+                        " // Coupling (A0_{4} A0_{5} Z)\n" 
+                ).format(i, j, i+2, j+2, i+1, j+1)
+
+        towrite += (
+                "\n"
+                "// Check there's no errors\n"
+                "if(*kont != 0)\n"
+                "  ErrorHandling(*kont);\n"
+                "\n"
+                "return *kont;\n"
+                "}\n"
+        )
+        # End of get_HiggsCouplingsTable
 
     # ReadingData function
     towrite += "\n"\

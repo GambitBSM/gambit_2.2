@@ -337,6 +337,5 @@ def get_higgses(partlist):
     
 
     higgses = [x.PDG_code for x in partlist if x.PDG_code in higgses_by_pdg]
-    print "higgses", higgses
 
     return higgses

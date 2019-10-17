@@ -56,9 +56,7 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     """
     Adds a model to the model hierarchy. This means we create any
     new header files in the model directory, i.e.
-    Models/include/gambit/Models/models/<new_model>.hpp, and edit any
-    parent/children headers. Writes translation functions etc. in
-    Models/src/models/<new_model>.cpp if needed.
+    Models/include/gambit/Models/models/<new_model>.hpp
     """
 
     print("Writing new spectrum, {0}".format(spectrum_name))
@@ -78,11 +76,10 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     			   "\n"
     			   "  START_MODEL\n"
     			   "\n"
-
-    			   ).format(model_name)
+    ).format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    bsm_params = [x for x in model_params if x.name != 'h0_1' and x.sm == False]
+    bsm_params = [x for x in model_params if x.name != 'mH' and x.tag != 'Pole_Mass']
 
     params = []
 
@@ -212,6 +209,7 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
 
     # Now add each parameter to the model file.
     for i in np.arange(len(model_parameters)):
+
         if not isinstance(model_parameters[i], SpectrumParameter):
             raise GumError(("\n\nModel Parameters at position " + i +
                             "not passed as instance of class "
