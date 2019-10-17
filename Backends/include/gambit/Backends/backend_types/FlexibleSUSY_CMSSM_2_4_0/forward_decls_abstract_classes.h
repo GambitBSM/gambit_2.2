@@ -24,6 +24,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     
     namespace flexiblesusy
     {
+        class Abstract_CMSSM_spectrum_generator_Two_scale;
+        class Abstract_CMSSM_slha_Model_Two_scale;
         class Abstract_Spectrum_generator_settings;
         class Abstract_CMSSM_parameter_getter;
     }

@@ -42,6 +42,14 @@ namespace Gambit
             }
             namespace flexiblesusy
             {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::CMSSM_spectrum_generator_Two_scale CMSSM_spectrum_generator_Two_scale;
+            }
+            namespace flexiblesusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::CMSSM_slha_Model_Two_scale CMSSM_slha_Model_Two_scale;
+            }
+            namespace flexiblesusy
+            {
                 typedef ::FlexibleSUSY_CMSSM_2_4_0::flexiblesusy::Spectrum_generator_settings Spectrum_generator_settings;
             }
             namespace flexiblesusy

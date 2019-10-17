@@ -1,6 +1,6 @@
 diff -rupN FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_slha_io.hpp ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_slha_io.hpp
---- FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_slha_io.hpp	2019-10-16 16:58:23.527664485 +1100
-+++ ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_slha_io.hpp	2019-10-16 16:58:18.431605380 +1100
+--- FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_slha_io.hpp	2019-10-17 13:08:10.038543025 +1100
++++ ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_slha_io.hpp	2019-10-17 13:07:22.685987821 +1100
 @@ -370,12 +370,14 @@ void CMSSM_slha_io::set_extra(
   *
   * @param models model classes
@@ -16,3 +16,22 @@ diff -rupN FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_slha_io.hpp ../installed/flexib
  
  /**
   * Stores the model (DR-bar) parameters, masses and mixing matrices in
+diff -rupN FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp
+--- FlexibleSUSY-2.4.0/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp	2019-10-17 13:08:10.042543071 +1100
++++ ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp	2019-10-17 13:08:06.478501238 +1100
+@@ -57,6 +57,14 @@ private:
+    void calculate_spectrum();
+ };
+ 
++class CMSSM_spectrum_generator_Two_scale : public CMSSM_spectrum_generator<Two_scale>
++{
++};
++
++class CMSSM_slha_Model_Two_scale : public CMSSM_slha<CMSSM<Two_scale> >
++{
++};
++
+ } // namespace flexiblesusy
+ 
+ #endif
+/CMSSM/CMSSM_two_scale_model.hpp ../installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/CMSSM_two_scale_model.hpp

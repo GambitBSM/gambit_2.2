@@ -38,6 +38,14 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     }
     namespace flexiblesusy
     {
+        class CMSSM_spectrum_generator_Two_scale;
+    }
+    namespace flexiblesusy
+    {
+        class CMSSM_slha_Model_Two_scale;
+    }
+    namespace flexiblesusy
+    {
         class Spectrum_generator_settings;
     }
     namespace flexiblesusy

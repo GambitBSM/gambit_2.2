@@ -36,9 +36,6 @@ gambit_base_namespace  = ''
 
 # Use either absolute paths or paths relative to the main BOSS directory.
 input_files   = [
-#    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/lowe.h',
-#    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/spectrum_generator_settings.hpp',
-#    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/spectrum_generator_problems.hpp',
     '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/physical_input.hpp',
     '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/command_line_options.hpp',
 '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp',
@@ -70,6 +67,7 @@ load_classes = [
     'flexiblesusy::CMSSM_input_parameters',
     'flexiblesusy::CMSSM_parameter_getter',
     'flexiblesusy::CMSSM_spectrum_generator_Two_scale',
+    'flexiblesusy::CMSSM_slha_Model_Two_scale'
 ]
 
 load_functions = [
