@@ -3730,12 +3730,6 @@ nuclear_params_sigma0_sigmal_parameters: |
 nuclear_params_sigmas_sigmal_parameters: |
    Parameters for the model nuclear_params_sigmas_sigmal (see ./gambit nuclear_params_sigmas_sigmal)
 
-RightHandedNeutrinos_parameters: |
-   Parameters for the model RightHandedNeutrinos (see ./gambit RightHandedNeutrios)
-
-RightHandedNeutrinos_diff_parameters: |
-   Parameters for the model RightHandedNeutrinos_diff (see ./gambit RightHandedNeutrinos_diff)
-
 nuclear_params_ChPT_parameters: |
    Parameters for the model nuclear_params_ChPT (see ./gambit nuclear_params_ChPT)
 
