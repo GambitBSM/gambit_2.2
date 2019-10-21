@@ -36,13 +36,18 @@ gambit_base_namespace  = ''
 
 # Use either absolute paths or paths relative to the main BOSS directory.
 input_files   = [
-'../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/lowe.h',
-'../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/spectrum_generator_settings.hpp',
-'../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/spectrum_generator_problems.hpp',
-'../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/command_line_options.hpp',
-#'../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM/CMSSM_slha_io.hpp'
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/physical_input.hpp',
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/command_line_options.hpp',
+'../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp',
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM/CMSSM_slha_io.hpp'
 ]
-include_paths = ['../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src', '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM']
+include_paths = [
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src',
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM',
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/config',
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/slhaea',
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/model_specific/SM',
+]
 base_paths    = ['../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/']
 
 header_files_to = '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM'
@@ -52,12 +57,17 @@ src_files_to    = '../../../Backends/installed/flexiblesusy/'+gambit_backend_ver
 
 load_classes = [
     'softsusy::QedQcd',
-    'flexiblesusy::CMSSM_slha_io', 
-    'flexiblesusy::CMSSM_scales',
+    'flexiblesusy::Error',
     'flexiblesusy::Spectrum_generator_settings',
     'flexiblesusy::Spectrum_generator_problems',
-    'flexiblesusy::Command_line_options::get_parameter_value',
-    'flexiblesusy::Command_line_options::starts_with'
+    'flexiblesusy::Command_line_options',
+    'flexiblesusy::Physical_input',
+    'flexiblesusy::CMSSM_slha_io', 
+    'flexiblesusy::CMSSM_scales',
+    'flexiblesusy::CMSSM_input_parameters',
+    'flexiblesusy::CMSSM_parameter_getter',
+    'flexiblesusy::CMSSM_spectrum_generator_Two_scale',
+    'flexiblesusy::CMSSM_slha_Model_Two_scale'
 ]
 
 load_functions = [
@@ -67,7 +77,11 @@ ditch = [
     'softsusy::QedQcd::displayMass',
     'softsusy::QedQcd::displayAlphas',
     'softsusy::QedQcd::display_input_parameter_names',
-    'flexiblesusy::Command_line_options::get_parameter_value'
+    'flexiblesusy::Command_line_options::get_parameter_value',
+    'flexiblesusy::Command_line_options::starts_with',
+    'flexiblesusy::Physical_input::get_names',
+    'flexiblesusy::CMSSM_parameter_getter::get_number_of_masses',
+    #'flexiblesusy::Two_scale'
 ]
 
 

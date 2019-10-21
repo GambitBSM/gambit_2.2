@@ -54,8 +54,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
                 const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& get_spectrum_file() const;
         
-                bool starts_with(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& arg_1, const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& arg_2);
-        
         
                 // Wrappers for original constructors: 
             public:
