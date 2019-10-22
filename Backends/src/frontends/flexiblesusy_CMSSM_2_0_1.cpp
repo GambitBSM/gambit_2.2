@@ -11,6 +11,9 @@
 
 // Convenience functions (definitions)
 
+/// Not sure if this needs to be inside the BE_NAMESPACE
+/// not sure f we have to declare it as a BE_CONV_FUNC
+/// if I only want to use it here
 Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input) {
    //inputs.options = myPipe::runOptions;
    auto Options = Input.options;
@@ -87,10 +90,9 @@ BE_NAMESPACE
         const auto models = spectrum_generator.get_models_slha();
         const auto& problems = spectrum_generator.get_problems();
 
-        /// TODO:  add LSP checkk here?
+        /// TODO:  add LSP check here?
         // probably not could do this in module function that
         // calls this because LSP check is not FS routine
-
         
         /// get scales used by spectrum generator
         /// TODO: check we need these.
@@ -125,14 +127,41 @@ BE_NAMESPACE
         slha_io.set_spectrum(models);
         slha_io.set_extra(std::get<0>(models), scales, observables);
 
-        /// TODO: something like:
-        Spectrum spectrum
-           ///calling constrcutor 
-           // Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale, const bool ignore_input_transform=false); from spectrum.hpp in Elements
+        /// for a spectrum object we need an slhea object,
+        /// a SpectrumContents::contents, and a scale
 
+
+        /// we can get a scale from the model object, but actually
+        /// not sure why we need this if we pass the slhaea object
+        /// the slhae object should have the scale for the blocks
+        /// maybe in case they give blocks at multiple scales
+        double scale = std::get<0>(models).get_scale;
+
+        
+        //get SLHEA object from slha_io
+        SLHAea::Coll slha = slha_io.get_data();
+
+        /// Construct instance MSSM struct
+        /// Models/include/gambit/Models/SpectrumContents/RegisteredSpectra.hpp
+        /// Models/src/SpectrumContents/MSSM.cpp
+        /// which inherits from the Contents class 
+        SpectrumContents::MSSM mssm;
+        
+        /// Can we also use the existing SimpleSpectra?
+        /// Models/src/SimpleSpectra/MSSMSimpleSpec.cpp
+        /// Possiblly there are some stupid SARAH/SPheno issues
+        /// should check very carefully
+
+        
+        /// TODO: something like:
+        ///calling constructor 
+           // Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale, const bool ignore_input_transform=false); from spectrum.hpp in Elements
+        Spectrum spec(slha, mssm, scale, false);          
+        // fill Spectrum object --- should do in a nicer way obv, a fill_spectrum method in Spectrum class would be nice
+        Spectrum = spec; 
 
           
-        /// can we directly use FS slha_io object as above?
+        /// can we directly use FS slha_io object as above? 
         
         backend_warning().raise(LOCAL_INFO, "New FS spectrum calculation not implimented yet.");
         
