@@ -103,17 +103,17 @@ namespace Gambit
    return;
   }
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; SLHA index given by pdg code
+  /// Add an entry from a spectrum getter to an SLHAea object; SLHA index given by pdg code
   void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const std::pair<int, int>& pdg_pair, const str& block, const str& comment,
    const bool error_if_missing = true, const double rescale = 1.0);
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; 1 SLHA index
+  /// Add an entry from a spectrum getter to an SLHAea object; 1 SLHA index
   void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const str& name, const str& block, const int slha_index,
    const str& comment, const bool error_if_missing = true, const double rescale = 1.0);
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; two Spectrum getter indices, two SLHA indices
+  /// Add an entry from a spectrum getter to an SLHAea object; two Spectrum getter indices, two SLHA indices
   void SLHAea_add_from_spec(SLHAstruct& slha /*modify*/, const str local_info, const Spectrum& spec,
    const Par::Tags partype, const str& name, const int index1, const int index2, const str& block,
    const int slha_index1, const int slha_index2, const str& comment, const bool error_if_missing = true, const double rescale = 1.0);

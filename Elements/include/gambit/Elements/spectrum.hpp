@@ -15,12 +15,17 @@
 ///  \author Ben Farmer
 ///          (benjamin.farmer@imperial.ac.uk)
 ///  \date 2019 June
-//
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
 #ifndef __Spectrum_hpp__
 #define __Spectrum_hpp__
 
+#include "gambit/Elements/sminputs.hpp"
 #include "gambit/Models/spectrum_contents.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/yaml_options.hpp"
@@ -113,6 +118,9 @@ namespace Gambit
 
          /// Wrapped SLHAea object
          SLHAstruct mySLHAea;
+
+         /// Internal SMInputs struct
+         SMInputs SMINPUTS;
 
          /// Scale at which all running parameters are defined
          /// (except for certain parameters which are defined at fixed scales; these are not considered as "running")
@@ -212,6 +220,9 @@ namespace Gambit
          /// Helper function to drop SLHA files
          void drop_SLHAs_if_requested(const safe_ptr<Options>&, const str&);
 
+         /// Get the SMINPUTS struct
+         const SMInputs& get_SMInputs() const;
+ 
          /// CKM Wolfenstein (lambda, A, rhobar, etabar) --> V_qq standard parameterisation convertors
          /// @{
          static double Wolf2V_ud(double, double, double, double);

@@ -11,6 +11,7 @@
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2016 May, June
+///        2019 Oct
 ///
 ///  *********************************************
 
@@ -565,9 +566,9 @@ BE_VARIABLE(ratioWoM, Freal8, "__spheno_MOD_ratiowom","SPheno_internal")
 BE_VARIABLE(CalcTBD,Flogical, "__spheno_MOD_calctbd","SPheno_internal")
 
 // Convenience functions (registration)
-BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), "SPheno_MSSMspectrum")
-BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const std::map<str, safe_ptr<const double> >&), "SPheno_internal")
-BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), "SPheno_internal")
+BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const SpectrumInputs&), "SPheno_MSSMspectrum")
+BE_CONV_FUNCTION(Spectrum_Out, Spectrum&, (const std::map<str, safe_ptr<const double> >&), "SPheno_internal")
+BE_CONV_FUNCTION(ReadingData, void, (const SpectrumInputs&), "SPheno_internal")
 BE_CONV_FUNCTION(InitializeStandardModel, void, (const SMInputs&), "SPheno_internal")
 BE_CONV_FUNCTION(ErrorHandling, void, (const int&), "SPheno_internal")
 

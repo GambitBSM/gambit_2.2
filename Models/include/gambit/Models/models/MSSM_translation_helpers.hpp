@@ -17,6 +17,10 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2017 Aug
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
 #ifndef __MSSM_translation_helpers_hpp__
@@ -26,13 +30,13 @@
 
 namespace Gambit
 {
-   class SubSpectrum;
+   class Spectrum;
 
    /// Translation function for mA,mu parameterisation to mHu2,mHd2 parameterisation
-   void MSSM_mA_to_MSSM_mhud(const ModelParameters &myP, ModelParameters &targetP, const SubSpectrum& HE);
+   void MSSM_mA_to_MSSM_mhud(const ModelParameters &myP, ModelParameters &targetP, const Spectrum& spec);
 
    /// Translation function for MSSM defined at RGE-determined scale (e.g. GUT, SUSY) to arbitrary scale Q
-   void MSSMatX_to_MSSMatQ(const ModelParameters &myP, ModelParameters &targetP, const SubSpectrum& HE);
+   void MSSMatX_to_MSSMatQ(const ModelParameters &myP, ModelParameters &targetP, const Spectrum& spec);
 
    /// Translation functions for 20-parameter models to 25-parameter
    void MSSM20atX_to_MSSM25atX(const ModelParameters &myP, ModelParameters &targetP);

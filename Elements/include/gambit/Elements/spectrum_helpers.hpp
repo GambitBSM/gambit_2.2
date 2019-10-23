@@ -2,8 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  Helpers for using the spectrum and subspectrum
-///  classes.
+///  Helpers for using the spectrum classes.
 ///
 ///  *********************************************
 ///

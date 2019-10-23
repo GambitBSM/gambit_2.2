@@ -27,7 +27,7 @@ namespace Gambit
 
   /// Determine which MSSM higgs is most SM-like.
   /// Needs expansion to work with non-MSSM (e.g. *HDM) models
-  int SMlike_higgs_PDG_code(const SubSpectrum& mssm_spec)
+  int SMlike_higgs_PDG_code(const Spectrum& mssm_spec)
   {
     double sa =  - mssm_spec.get(Par::Pole_Mixing,"h0",1,1);
     double ca = mssm_spec.get(Par::Pole_Mixing,"h0",1,2);

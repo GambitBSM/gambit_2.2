@@ -49,8 +49,8 @@ void MODEL_NAMESPACE::MSSM63atMGUT_lightgravitino_to_MSSM63atQ_lightgravitino (c
 {
    USE_MODEL_PIPE(PARENT) // get pipe for "interpret as PARENT" function
    logger()<<"Running interpret_as_parent calculations for MSSM63atMGUT_lightgravitino --> MSSM63atQ_lightgravitino..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSMatX_to_MSSMatQ(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSMatX_to_MSSMatQ(myP, targetP, spec);
 }
 #undef MODEL
 
@@ -59,8 +59,8 @@ void MODEL_NAMESPACE::MSSM63atMSUSY_lightgravitino_to_MSSM63atQ_lightgravitino (
 {
    USE_MODEL_PIPE(PARENT) // get pipe for "interpret as PARENT" function
    logger()<<"Running interpret_as_parent calculations for MSSM63atMSUSY_lightgravitino --> MSSM63atQ_lightgravitino..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSMatX_to_MSSMatQ(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSMatX_to_MSSMatQ(myP, targetP, spec);
 }
 #undef MODEL
 #undef PARENT

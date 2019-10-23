@@ -15,6 +15,7 @@
 ///  *********************************************
 
 #include "gambit/Utils/util_types.hpp"
+#include "gambit/SpecBit/spectrum_types.hpp"
 
 #ifndef __SPHENO_types_hpp__
 #define __SPHENO_types_hpp__

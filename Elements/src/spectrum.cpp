@@ -15,10 +15,15 @@
 ///          (benjamin.farmer@imperial.ac.uk)
 ///  \date 2019 June
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 ///
 ///  \file
 ///
+
 #include <sstream>
 #include "gambit/Elements/spectrum.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
@@ -49,6 +54,7 @@ namespace Gambit
     : mySLHAea(contents.transformInputSLHAea(slha,ignore_input_transform))
     , myContents(contents)
     , scale(scale_in)
+    , SMINPUTS(mySLHAea)
    {
       /// DEBUG: Write internal file to disk so we can check problems raised by verify_contents
       std::ofstream ofs("pre_verify_contents_"+contents.getName()+".slha");
@@ -604,6 +610,10 @@ namespace Gambit
          writeSLHAfile(ss.str(),version);
       }
    }
+
+   /// Get the SMINPUTS struct
+   // TODO: Check with Ben if this is the right way
+   const SMInputs& Spectrum::get_SMInputs() const {return SMINPUTS;}
 
    // The expressions in all of the following CKM functions are from the CKMFitter paper hep-ph/0406184v3.
 

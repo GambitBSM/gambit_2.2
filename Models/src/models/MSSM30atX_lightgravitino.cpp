@@ -99,8 +99,8 @@ void MODEL_NAMESPACE::MSSM30atQ_mA_lightgravitino_to_MSSM30atQ_lightgravitino(co
 {
    logger()<<"Running interpret_as_X calculations for MSSM30atQ_mA_lightgravitino --> MSSM30atQ_lightgravitino."<<LogTags::info<<EOM;
    USE_MODEL_PIPE(MSSM30atQ_lightgravitino) // Need the pipe for the TARGET model
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef MODEL
 
@@ -109,8 +109,8 @@ void MODEL_NAMESPACE::MSSM30atMGUT_mA_lightgravitino_to_MSSM30atMGUT_lightgravit
 {
    logger()<<"Running interpret_as_X calculations for MSSM30atMGUT_mA_lightgravitino --> MSSM30atMGUT_lightgravitino."<<LogTags::info<<EOM;
    USE_MODEL_PIPE(MSSM30atMGUT_lightgravitino) // Need the pipe for the TARGET model
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef MODEL
 
@@ -119,8 +119,8 @@ void MODEL_NAMESPACE::MSSM30atMSUSY_mA_lightgravitino_to_MSSM30atMSUSY_lightgrav
 {
    logger()<<"Running interpret_as_X calculations for MSSM30atMSUSY_mA_lightgravitino --> MSSM30atMSUSY_lightgravitino."<<LogTags::info<<EOM;
    USE_MODEL_PIPE(MSSM30atMSUSY_lightgravitino) // Need the pipe for the TARGET model
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef MODEL
 /// @}
@@ -131,8 +131,8 @@ void MODEL_NAMESPACE::MSSM30atMGUT_lightgravitino_to_MSSM30atQ_lightgravitino (c
 {
    USE_MODEL_PIPE(MSSM30atQ_lightgravitino) // Need pipe for TARGET model
    logger()<<"Running interpret_as_X calculations for MSSM30atMGUT_lightgravitino --> MSSM30atQ_lightgravitino..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSMatX_to_MSSMatQ(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSMatX_to_MSSMatQ(myP, targetP, spec);
 }
 #undef MODEL
 
@@ -141,8 +141,8 @@ void MODEL_NAMESPACE::MSSM30atMSUSY_lightgravitino_to_MSSM30atQ_lightgravitino (
 {
    USE_MODEL_PIPE(MSSM30atQ_lightgravitino) // Need pipe for TARGET model
    logger()<<"Running interpret_as_X calculations for MSSM30atMSUSY_lightgravitino --> MSSM30atQ_lightgravitino..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSMatX_to_MSSMatQ(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSMatX_to_MSSMatQ(myP, targetP, spec);
 }
 #undef MODEL
 

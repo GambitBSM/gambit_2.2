@@ -12,6 +12,10 @@
 #          (p.scott@imperial.ac.uk)
 #  \date 2015 Apr
 #
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2019 Oct
+#
 #************************************************
 
 set(source_files src/decay_table.cpp
@@ -25,7 +29,6 @@ set(source_files src/decay_table.cpp
                  src/sminputs.cpp
                  src/smlike_higgs.cpp
                  src/spectrum.cpp
-                 src/subspectrum.cpp
                  src/terminator.cpp
                  src/type_equivalency.cpp
                  src/virtual_higgs.cpp
@@ -52,12 +55,8 @@ set(header_files include/gambit/Elements/decay_table.hpp
                  include/gambit/Elements/sminputs.hpp
                  include/gambit/Elements/smlike_higgs.hpp
                  include/gambit/Elements/spectrum.hpp
-                 include/gambit/Elements/spec_fptrfinder.hpp
-                 include/gambit/Elements/spectrum_factories.hpp
-                 include/gambit/Elements/spec.hpp
-                 include/gambit/Elements/spec_head.hpp
+                 include/gambit/Elements/spectrum_helpers.hpp
                  include/gambit/Elements/standalone_module.hpp
-                 include/gambit/Elements/subspectrum.hpp
                  include/gambit/Elements/terminator.hpp
                  include/gambit/Elements/type_equivalency.hpp
                  include/gambit/Elements/types_rollcall.hpp

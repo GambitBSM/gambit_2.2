@@ -230,8 +230,8 @@ void MODEL_NAMESPACE::MSSM30atQ_mA_to_MSSM30atQ(const ModelParameters &myP, Mode
 {
    logger()<<"Running interpret_as_X calculations for MSSM30atQ_mA --> MSSM30atQ."<<LogTags::info<<EOM;
    USE_MODEL_PIPE(MSSM30atQ) // Need the pipe for the TARGET model
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef MODEL
 
@@ -240,8 +240,8 @@ void MODEL_NAMESPACE::MSSM30atMGUT_mA_to_MSSM30atMGUT(const ModelParameters &myP
 {
    logger()<<"Running interpret_as_X calculations for MSSM30atMGUT_mA --> MSSM30atMGUT."<<LogTags::info<<EOM;
    USE_MODEL_PIPE(MSSM30atMGUT) // Need the pipe for the TARGET model
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef MODEL
 
@@ -250,8 +250,8 @@ void MODEL_NAMESPACE::MSSM30atMSUSY_mA_to_MSSM30atMSUSY(const ModelParameters &m
 {
    logger()<<"Running interpret_as_X calculations for MSSM30atMSUSY_mA --> MSSM30atMSUSY."<<LogTags::info<<EOM;
    USE_MODEL_PIPE(MSSM30atMSUSY) // Need the pipe for the TARGET model
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef MODEL
 /// @}
@@ -262,8 +262,8 @@ void MODEL_NAMESPACE::MSSM30atMGUT_to_MSSM30atQ (const ModelParameters &myP, Mod
 {
    USE_MODEL_PIPE(MSSM30atQ) // Need pipe for TARGET model
    logger()<<"Running interpret_as_X calculations for MSSM30atMGUT --> MSSM30atQ..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSMatX_to_MSSMatQ(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSMatX_to_MSSMatQ(myP, targetP, spec);
 }
 #undef MODEL
 
@@ -272,8 +272,8 @@ void MODEL_NAMESPACE::MSSM30atMSUSY_to_MSSM30atQ (const ModelParameters &myP, Mo
 {
    USE_MODEL_PIPE(MSSM30atQ) // Need pipe for TARGET model
    logger()<<"Running interpret_as_X calculations for MSSM30atMSUSY --> MSSM30atQ..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSMatX_to_MSSMatQ(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSMatX_to_MSSMatQ(myP, targetP, spec);
 }
 #undef MODEL
 

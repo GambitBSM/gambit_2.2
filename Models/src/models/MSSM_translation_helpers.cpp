@@ -30,16 +30,16 @@
 namespace Gambit
 {
 
-  void MSSMatX_to_MSSMatQ(const ModelParameters &myP, ModelParameters &targetP, const SubSpectrum& HE)
+  void MSSMatX_to_MSSMatQ(const ModelParameters &myP, ModelParameters &targetP, const Spectrum& spec)
   {
     // Copy all the parameters of MSSM63atMGUT into MSSM63atQ
     targetP.setValues(myP);
 
     // Now only the "Qin" parameter is left unset. Need to extract this from the Spectrum object dependency.
     // Make sure the high-scale value was correctly added to the spectrum wrapper object
-    if( HE.has(Par::mass1,"high_scale") )
+    if( spec.has(Par::mass1,"high_scale") )
     {
-       targetP.setValue("Qin", HE.get(Par::mass1,"high_scale") );
+       targetP.setValue("Qin", spec.get(Par::mass1,"high_scale") );
     }
     else
     {
@@ -48,7 +48,7 @@ namespace Gambit
     // Done!
   }
 
-  void MSSM_mA_to_MSSM_mhud(const ModelParameters &myP, ModelParameters &targetP, const SubSpectrum& HE)
+  void MSSM_mA_to_MSSM_mhud(const ModelParameters &myP, ModelParameters &targetP, const Spectrum& spec)
   {
      // Copy all the common parameters of MSSM63at<X>_mA into MSSM63at<X>
      targetP.setValues(myP,false); // Set "missing_is_error" flag to false since e.g. mA parameter from MSSM63atQ_mA does not exist in MSSM63atQ. Similar for variants at other scales.
@@ -58,10 +58,10 @@ namespace Gambit
 
      // Now only the "mHu2" and "mHd2" parameters are left unset. Extract these from the Spectrum object dependency.
      // Make sure the high-scale value was correctly added to the spectrum wrapper object
-     if (HE.has(Par::mass2,"mHu2") and HE.has(Par::mass2,"mHd2"))
+     if (spec.has(Par::mass2,"mHu2") and spec.has(Par::mass2,"mHd2"))
      {
-        targetP.setValue("mHu2", HE.get(Par::mass2,"mHu2"));
-        targetP.setValue("mHd2", HE.get(Par::mass2,"mHd2"));
+        targetP.setValue("mHu2", spec.get(Par::mass2,"mHu2"));
+        targetP.setValue("mHd2", spec.get(Par::mass2,"mHd2"));
      }
      else
      {

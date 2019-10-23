@@ -16,8 +16,7 @@
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/SPheno.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
-#include "gambit/Elements/spectrum_factories.hpp"
-#include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
+#include "gambit/Elements/spectrum.hpp"
 #include "gambit/Utils/version.hpp"
 
 // Convenience functions (definition)
@@ -218,7 +217,7 @@ BE_NAMESPACE
 
   }
 
-  Spectrum Spectrum_Out(const std::map<str, safe_ptr<const double> >& input_Param)
+  Spectrum &Spectrum_Out(const std::map<str, safe_ptr<const double> >& input_Param)
   {
 
     SLHAstruct slha;
@@ -701,12 +700,9 @@ BE_NAMESPACE
     slha["GAMBIT"][""] << 1 << *m_GUT << "# Input scale of (upper) boundary contidions, e.g. GUT scale";
 
     //Create Spectrum object
-    static const Spectrum::mc_info mass_cut;
-    static const Spectrum::mr_info mass_ratio_cut;
-    Spectrum spectrum = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);
-
-    // Add the high scale variable by hand
-    spectrum.get_HE().set_override(Par::mass1, SLHAea::to<double>(slha.at("GAMBIT").at(1).at(1)), "high_scale", true);
+    SpectrumContents::MSSM mssm;
+    double scale = *Qin;
+    Spectrum spectrum(slha, mssm, scale);
 
     return spectrum;
 

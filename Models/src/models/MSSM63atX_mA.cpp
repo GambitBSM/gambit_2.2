@@ -50,8 +50,8 @@ void MODEL_NAMESPACE::MSSM63atQ_mA_to_MSSM63atQ (const ModelParameters &myP, Mod
 {
    USE_MODEL_PIPE(PARENT)
    logger()<<"Running interpret_as_parent calculations for MSSM63atQ_mA --> MSSM63atQ..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef PARENT
 #undef MODEL
@@ -62,8 +62,8 @@ void MODEL_NAMESPACE::MSSM63atMSUSY_mA_to_MSSM63atMSUSY (const ModelParameters &
 {
    USE_MODEL_PIPE(PARENT)
    logger()<<"Running interpret_as_parent calculations for MSSM63atMSUSY_mA --> MSSM63atMSUSY..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef PARENT
 #undef MODEL
@@ -74,8 +74,8 @@ void MODEL_NAMESPACE::MSSM63atMGUT_mA_to_MSSM63atMGUT (const ModelParameters &my
 {
    USE_MODEL_PIPE(PARENT)
    logger()<<"Running interpret_as_parent calculations for MSSM63atMGUT_mA --> MSSM63atMGUT..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef PARENT
 #undef MODEL

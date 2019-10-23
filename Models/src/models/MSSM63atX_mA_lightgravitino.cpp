@@ -51,8 +51,8 @@ void MODEL_NAMESPACE::MSSM63atQ_mA_lightgravitino_to_MSSM63atQ_lightgravitino (c
 {
    USE_MODEL_PIPE(PARENT)
    logger()<<"Running interpret_as_parent calculations for MSSM63atQ_mA_lightgravitino --> MSSM63atQ_lightgravitino..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef PARENT
 #undef MODEL
@@ -63,8 +63,8 @@ void MODEL_NAMESPACE::MSSM63atMSUSY_mA_lightgravitino_to_MSSM63atMSUSY_lightgrav
 {
    USE_MODEL_PIPE(PARENT)
    logger()<<"Running interpret_as_parent calculations for MSSM63atMSUSY_mA_lightgravitino --> MSSM63atMSUSY_lightgravitino..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef PARENT
 #undef MODEL
@@ -75,8 +75,8 @@ void MODEL_NAMESPACE::MSSM63atMGUT_mA_lightgravitino_to_MSSM63atMGUT_lightgravit
 {
    USE_MODEL_PIPE(PARENT)
    logger()<<"Running interpret_as_parent calculations for MSSM63atMGUT_mA_lightgravitino --> MSSM63atMGUT_lightgravitino..."<<LogTags::info<<EOM;
-   const SubSpectrum& HE = Dep::unimproved_MSSM_spectrum->get_HE();
-   MSSM_mA_to_MSSM_mhud(myP, targetP, HE);
+   const Spectrum& spec = *Dep::unimproved_MSSM_spectrum;
+   MSSM_mA_to_MSSM_mhud(myP, targetP, spec);
 }
 #undef PARENT
 #undef MODEL

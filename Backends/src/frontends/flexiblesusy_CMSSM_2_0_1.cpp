@@ -1,12 +1,33 @@
+//   GAMBIT: Global and Modular BSM Inference Tool
+//   *********************************************
+///  \file
+///
+///  Frontend for FlexibleSUSY_CMSSM 2.4.0 backend
+///
+///  *********************************************
+///
+///  Authors (add name and date if you modify):
+///
+///  \author Peter Athron
+///          (peter.athron@monash.edu)
+///  \date 2019 Oct
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
+///  *********************************************
+
+
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/flexiblesusy_CMSSM_2_0_1.hpp"
-#include "gambit/Utils/util_types.hpp"
+#include "gambit/SpecBit/spectrum_types.hpp"
 #include "gambit/Elements/spectrum.hpp"
 // FlexibleSUSY headers
-#include "flexiblesusy/src/ew_input.hpp"
-#include "flexiblesusy/src/lowe.h" 
-#include "flexiblesusy/src/numerics2.hpp"
-#include "flexiblesusy/src/spectrum_generator_settings.hpp"
+//#include "flexiblesusy/src/ew_input.hpp"
+//#include "flexiblesusy/src/lowe.h" 
+//#include "flexiblesusy/src/numerics2.hpp"
+//#include "flexiblesusy/src/spectrum_generator_settings.hpp"
 
 
 // Convenience functions (definitions)
