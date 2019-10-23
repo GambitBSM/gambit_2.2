@@ -60,7 +60,7 @@ namespace Gambit
     /// Convert a hadron-level EventT into an unsmeared HEPUtils::Event
     /// @todo Overlap between jets and prompt containers: need some isolation in MET calculation
     template<typename EventT>
-    void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR)
+    void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR, double jet_pt_min)
     {
       result.clear();
 
@@ -263,7 +263,8 @@ if (TomeksCounter1 == 22)
       //}
 
       FJNS::ClusterSequence cseq(jetparticles, jet_def);
-      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(10));
+      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(jet_pt_min));
+
 
       //std::cout << "\n\nJETCLUSTER_DEBUG_INFO: " << std::endl;
       //std::cout << "AntiktR: " << antiktR << std::endl;
@@ -385,7 +386,7 @@ if (TomeksCounter1 == 3047 || TomeksCounter1 == 3048 || TomeksCounter1 == 3541 |
 
     /// Convert a partonic (no hadrons) EventT into an unsmeared HEPUtils::Event
     template<typename EventT>
-    void convertPartonEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR)
+    void convertPartonEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR, double jet_pt_min)
     {
       result.clear();
 
@@ -463,7 +464,8 @@ if (TomeksCounter1 == 3047 || TomeksCounter1 == 3048 || TomeksCounter1 == 3541 |
       /// @todo choose jet algorithm via _settings?
       const FJNS::JetDefinition jet_def(FJNS::antikt_algorithm, antiktR);
       FJNS::ClusterSequence cseq(jetparticles, jet_def);
-      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(10));
+      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(jet_pt_min));
+
       // Add to the event, with b-tagging info"
       for (const FJNS::PseudoJet& pj : pjets) {
         // Do jet b-tagging, etc. by looking for b quark constituents (i.e. user index = |parton ID| = 5)

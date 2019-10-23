@@ -51,7 +51,8 @@ namespace Gambit
 
       result.clear();
 
-      // Get the filename and initialise the HepMC reader
+      // Get yaml options and initialise the HepMC reader
+      const static double jet_pt_min = runOptions->getValueOrDef<double>(10.0, "jet_pt_min");
       const static str HepMC_filename = runOptions->getValueOrDef<str>("", "hepmc_filename");
       static int HepMC_file_version = -1;
 
@@ -135,7 +136,7 @@ namespace Gambit
       if (not event_retrieved) Loop::halt();
 
       // Translate to HEPUtils event
-      get_HEPUtils_event(ge, result);
+      get_HEPUtils_event(ge, result, jet_pt_min);
  
     }
   }

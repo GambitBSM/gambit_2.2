@@ -27,6 +27,6 @@ namespace HepMC3
 }
 
 /// Extract a HepMC event as a HEPUtils::Event
-void get_HEPUtils_event(const HepMC3::GenEvent&, HEPUtils::Event&);
+void get_HEPUtils_event(const HepMC3::GenEvent&, HEPUtils::Event&, double);
 
 #endif

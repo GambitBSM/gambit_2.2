@@ -79,7 +79,7 @@ inline double get_eta(HepMC3::ConstGenParticlePtr gp)
 }
 
 /// Extract a HepMC event as a HEPUtils::Event
-void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
+void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt, double jet_pt_min)
 {
   P4 vmet;
   vector<PseudoJet> jetparticles;
@@ -228,11 +228,9 @@ void get_HEPUtils_event(const HepMC3::GenEvent& ge, HEPUtils::Event& evt)
   vmet.setM(0);
   evt.set_missingmom(vmet);
   
-
   // Jets
-  vector<PseudoJet> jets = get_jets(jetparticles, 0.4, 10.0); //Cut off momentum edited to match gambit at 10.0
+  vector<PseudoJet> jets = get_jets(jetparticles, 0.4, jet_pt_min);
   
-
   for (const PseudoJet& pj : jets)
   {
     bool hasC = false, hasB = false, hastau = false;

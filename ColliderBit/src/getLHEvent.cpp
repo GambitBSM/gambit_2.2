@@ -39,7 +39,8 @@ namespace Gambit
 
       result.clear();
 
-      // Get the filename and initialise the LHEF reader
+      // Get yaml options and initialise the LHEF reader
+      const static double jet_pt_min = runOptions->getValueOrDef<double>(10.0, "jet_pt_min");
       const static str lhef_filename = runOptions->getValue<str>("lhef_filename");
       static bool first = true;
       if (first)
@@ -56,7 +57,7 @@ namespace Gambit
       bool event_retrieved = true;
       #pragma omp critical (reading_LHEvent)
       {
-        if (lhe.readEvent()) get_HEPUtils_event(lhe, result);
+        if (lhe.readEvent()) get_HEPUtils_event(lhe, result, jet_pt_min);
         else event_retrieved = false;
       }
       if (not event_retrieved) Loop::halt();
