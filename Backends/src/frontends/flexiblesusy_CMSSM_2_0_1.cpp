@@ -14,7 +14,9 @@
 /// Not sure if this needs to be inside the BE_NAMESPACE
 /// not sure f we have to declare it as a BE_CONV_FUNC
 /// if I only want to use it here
-Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input) {
+BE_NAMESPACE
+{
+   Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input) {
    //inputs.options = myPipe::runOptions;
    auto Options = Input.options;
    // Spectrum generator settings
@@ -60,8 +62,8 @@ Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings
       settings.set(Spectrum_generator_settings::threshold_corrections, Options->getValueOrDef<int>(123111321,"threshold_corrections"));
 }
 
-BE_NAMESPACE
-{
+
+
    void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Input)
      {
         using namespace flexiblesusy;
@@ -156,9 +158,9 @@ BE_NAMESPACE
         /// TODO: something like:
         ///calling constructor 
            // Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale, const bool ignore_input_transform=false); from spectrum.hpp in Elements
-        Spectrum spec(slha, mssm, scale, false);          
+        Spectrum spectrum(slha, mssm, scale, false);
         // fill Spectrum object --- should do in a nicer way obv, a fill_spectrum method in Spectrum class would be nice
-        Spectrum = spec; 
+        spec = std::move(spectrum);
 
           
         /// can we directly use FS slha_io object as above? 
