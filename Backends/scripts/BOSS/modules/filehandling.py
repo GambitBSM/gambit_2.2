@@ -814,12 +814,13 @@ def createFrontendHeader(function_xml_files_dict):
     frontend_content += '// Initialisation function (dependencies)\n'
     frontend_content += '\n'
     frontend_content += '// Convenience functions (registration)\n'
+    frontend_content += be_conv_function_macro_code
     frontend_content += '\n'
-    frontend_content += '// Initialisation function (definition)\n'
-    frontend_content += 'BE_INI_FUNCTION{} END_BE_INI_FUNCTION\n'
+    if cfg.ini_function_in_header :
+        frontend_content += '// Initialisation function (definition)\n'
+        frontend_content += 'BE_INI_FUNCTION{} END_BE_INI_FUNCTION\n'
     frontend_content += '\n'
     frontend_content += '// Convenience functions (definitions)\n'
-    frontend_content += be_conv_function_macro_code
 
     # - Include statement for backend_undefs.hpp
     frontend_content += '\n'

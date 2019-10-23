@@ -112,11 +112,6 @@ known_classes = {}
 # ~~~~~ Declarations to be added to the frontend header file ~~~~~
 
 convenience_functions = [
-    {'name' : 'run_FS_Spectrum', 
-     'returntype' : 'void', 
-     'argtypes' : ['Spectrum&', 'const SpectrumInputs&'], 
-     'capname' : 'FS_CMSSM_Spectrum'
-    }
 ]
 
 # ~~~~~ Pragma directives for the inclusion of BOSSed classes in GAMBIT ~~~~~

@@ -29,6 +29,7 @@ FeynHiggs:
   2.12.0:      ./Backends/installed/feynhiggs/2.12.0/lib/libFH.so
 
 FlexibleSUSY_CMSSM:
+  2.0.1:       ./Backends/installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/libCMSSM.so
   2.4.0:       ./Backends/installed/flexiblesusy/2.4.0/CMSSM/models/CMSSM/libCMSSM.so
 
 gamLike:

@@ -20,7 +20,7 @@
 
 
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/flexiblesusy_CMSSM_2_0_1.hpp"
+#include "gambit/Backends/frontends/FlexibleSUSY_CMSSM_2_0_1.hpp"
 #include "gambit/SpecBit/spectrum_types.hpp"
 #include "gambit/Elements/spectrum.hpp"
 // FlexibleSUSY headers
@@ -37,7 +37,7 @@
 /// if I only want to use it here
 BE_NAMESPACE
 {
-   Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input) {
+/*   Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input) {
    //inputs.options = myPipe::runOptions;
    auto Options = Input.options;
    // Spectrum generator settings
@@ -84,10 +84,10 @@ BE_NAMESPACE
 }
 
 
-
+*/
    void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Input)
      {
-        using namespace flexiblesusy;
+/*        using namespace flexiblesusy;
 
         const SMInputs sminputs = Input.sminputs;
         /// TODO: copy the way spheno routinbe uses param and options and
@@ -187,7 +187,14 @@ BE_NAMESPACE
         /// can we directly use FS slha_io object as above? 
         
         backend_warning().raise(LOCAL_INFO, "New FS spectrum calculation not implimented yet.");
-        
+  */      
      }
 }
 END_BE_NAMESPACE
+
+BE_INI_FUNCTION
+{
+
+}
+END_BE_INI_FUNCTION
+

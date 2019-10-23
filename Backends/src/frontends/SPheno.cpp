@@ -17,6 +17,7 @@
 #include "gambit/Backends/frontends/SPheno.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Elements/spectrum.hpp"
+#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Utils/version.hpp"
 
 // Convenience functions (definition)
@@ -24,7 +25,7 @@ BE_NAMESPACE
 {
 
   // Run SPheno
-  int run_SPheno(Spectrum &spectrum, const Finputs &inputs)
+  int run_SPheno(Spectrum &spectrum, const SpectrumInputs &inputs)
   {
     Set_All_Parameters_0();
 
@@ -99,7 +100,7 @@ BE_NAMESPACE
 
       *Q_in = sqrt(GetRenormalizationScale());
 
-      spectrum = Spectrum_Out(inputs.param);
+      Spectrum_Out(spectrum, inputs.param);
 
 
       *BRBtosgamma = 0.0;
@@ -217,7 +218,7 @@ BE_NAMESPACE
 
   }
 
-  Spectrum &Spectrum_Out(const std::map<str, safe_ptr<const double> >& input_Param)
+  void Spectrum_Out(Spectrum &spectrum, const std::map<str, safe_ptr<const double> >& input_Param)
   {
 
     SLHAstruct slha;
@@ -701,15 +702,13 @@ BE_NAMESPACE
 
     //Create Spectrum object
     SpectrumContents::MSSM mssm;
-    double scale = *Qin;
-    Spectrum spectrum(slha, mssm, scale);
-
-    return spectrum;
+    double scale = *Q_in;
+    spectrum = Spectrum(slha, mssm, scale);
 
   }
 
   // Function to read data from the Gambit inputs and fill SPheno internal variables
-  void ReadingData(const Finputs &inputs)
+  void ReadingData(const SpectrumInputs &inputs)
   {
 
     // Set up options, same as BLOCK SPHENOINPUT
