@@ -80,6 +80,7 @@ int main(int argc, char* argv[])
     // Translate relevant settings into appropriate variables
     bool debug = settings.getValueOrDef<bool>(false, "debug");
     bool use_lnpiln = settings.getValueOrDef<bool>(false, "use_lognormal_distribution_for_1d_systematic");
+    double jet_pt_min = settings.getValueOrDef<double>(10.0, "jet_pt_min");
     str event_filename = settings.getValue<str>("event_file");
     bool event_file_is_LHEF = Gambit::Utils::endsWith(event_filename, ".lhe");
     bool event_file_is_HepMC = (   Gambit::Utils::endsWith(event_filename, ".hepmc")
@@ -109,8 +110,9 @@ int main(int argc, char* argv[])
     operateLHCLoop.setOption<YAML::Node>("CBS", CBS);
     operateLHCLoop.setOption<bool>("silenceLoop", not debug);
 
-    // Pass the filename to the LHEF/HepMC reader function
+    // Pass the filename and the jet pt cutoff to the LHEF/HepMC reader function
     getEvent.setOption<str>((event_file_is_LHEF ? "lhef_filename" : "hepmc_filename"), event_filename);
+    getEvent.setOption<double>("jet_pt_min", jet_pt_min);
 
     // Pass options to the cross-section function
     if (settings.hasKey("xsec_pb"))
