@@ -9,7 +9,7 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author The GAMBIT Collaboration
-///  \date 07:54PM on October 23, 2019
+///  \date 08:21PM on October 23, 2019
 ///
 ///  *********************************************
 
@@ -78,6 +78,7 @@ namespace Gambit
 
 // Convenience functions (registration)
 BE_CONV_FUNCTION(run_FS_Spectrum, void, (Spectrum&, const SpectrumInputs&), "FS_CMSSM_Spectrum")
+
 
 // Convenience functions (definitions)
 
