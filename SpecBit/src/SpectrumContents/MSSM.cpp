@@ -123,13 +123,10 @@ namespace Gambit {
      addParameter(Par::mass1, "vu", scalar, "VEVS", 1); 
      addParameter(Par::mass1, "vd", scalar, "VEVS", 2);
 
-     addParameter(Par::mass1, "TYd", m3x3, "TD"); // TODO: Peter check this. I think TD,TE etc are something to do with the trilinears in SLHA2, more like AD,AE etc, not this presumably Yukawa-related thing. I guess the SpecBit paper explains it. 
-     addParameter(Par::mass1, "TYe", m3x3, "TE"); // UPDATE! Definitely need to change something here, at least in input transform. SLHA1 won't have "TD" etc blocks. So need to create them? From "ad" and yukawa blocks? Figure out how this should go. 
+     // trilinears T_{ij} = Y_{ij} A_{ij} (no sum on i,j)
+     addParameter(Par::mass1, "TYd", m3x3, "TD"); 
+     addParameter(Par::mass1, "TYe", m3x3, "TE");
      addParameter(Par::mass1, "TYu", m3x3, "TU");
-
-     //addParameter(Par::mass1, "ad" , m3x3, "AD"); // TODO: Should we really have both TYd and AD etc. here? Just related by AD=TYD/YD I think?
-     //addParameter(Par::mass1, "ae" , m3x3, "AE"); // Ok I making a call for now; leave out A version, just keep T versions.
-     //addParameter(Par::mass1, "au" , m3x3, "AU");
 
      // EXTRAS! Kind of logical to always include these, without forcing users to calculate them themselves
      addParameter(Par::dimensionless, "tanbeta", scalar, "HMIX", 2); // DRBAR tanbeta
