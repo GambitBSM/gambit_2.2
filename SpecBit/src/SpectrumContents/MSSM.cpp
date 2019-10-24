@@ -12,7 +12,7 @@
 ///
 ///  \author Ben Farmer
 ///          (benjamin.farmer@imperial.ac.uk)
-///  \date 2016 Feb, 2019 June
+///  \date 2016 Feb, 2019 June, Oct
 ///
 ///  *********************************************
 
@@ -21,7 +21,7 @@
 
 #include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Elements/mssm_slhahelp.hpp"
-#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Logs/logger.hpp"
 #include "SLHAea/slhaea.h"
 

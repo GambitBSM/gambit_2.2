@@ -23,7 +23,7 @@
 #ifndef __registeredspectra_hpp__
 #define __registeredspectra_hpp__
 
-#include "gambit/Models/spectrum_contents.hpp"
+#include "gambit/Elements/spectrum_contents.hpp"
 
 /// Just declare the Contents derived classes here; should be defined in source files
 

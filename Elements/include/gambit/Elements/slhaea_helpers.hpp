@@ -12,8 +12,8 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@monash.edu)
-///  \date 2015
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2015, 2019 Oct
 ///
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
@@ -27,7 +27,7 @@
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/util_types.hpp"
 #include "gambit/Elements/spectrum_helpers.hpp"
-#include "gambit/Models/spectrum_contents.hpp"
+#include "gambit/Elements/spectrum_contents.hpp"
 
 #include "SLHAea/slhaea.h"
 

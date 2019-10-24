@@ -12,15 +12,15 @@
 ///   
 ///  \author Ben Farmer
 ///          (benjamin.farmer@imperial.ac.uk)
-///  \date 2016 Feb, 2019 June
+///  \date 2016 Feb, 2019 June, Oct
 ///
 ///  *********************************************
 
 #include <fstream>
 
-#include "gambit/Models/spectrum_contents.hpp"
 #include "gambit/Models/partmap.hpp"
 #include "gambit/Elements/spectrum.hpp"
+#include "gambit/Elements/spectrum_contents.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Utils/stream_overloads.hpp"
 #include "gambit/Utils/util_functions.hpp"

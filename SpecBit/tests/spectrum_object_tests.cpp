@@ -16,7 +16,7 @@
 ///
 ///  \author Ben Farmer
 ///          (benjamin.farmer@imperial.ac.uk)
-///  \date 2019 June
+///  \date 2019 June, Oct
 ///
 ///  *********************************************
 
@@ -24,10 +24,10 @@
 #include "gambit/Utils/standalone_utils.hpp"
 #include "gambit/Utils/static_members.hpp"
 #include "gambit/Logs/logger.hpp"
-#include "gambit/Models/spectrum_contents.hpp"
-#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Elements/spectrum.hpp"
+#include "gambit/Elements/spectrum_contents.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
+#include "gambit/SpecBit/SpectrumContents/RegisteredSpectra.hpp"
 
 using namespace Gambit;
 

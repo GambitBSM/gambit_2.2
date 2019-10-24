@@ -13,7 +13,7 @@
 ///
 ///  \author Ben Farmer
 ///          (benjamin.farmer@fysik.su.se)
-///  \date 2016 Feb
+///  \date 2016 Feb, 2019 Oct
 ///
 ///  \author James McKay
 ///          (j.mckay14@imperial.ac.uk)
@@ -25,7 +25,7 @@
 ///
 ///  *********************************************
 
-#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/SpectrumContents/RegisteredSpectra.hpp"
 
 namespace Gambit
 {

@@ -3,8 +3,8 @@
 ///  \file
 ///
 ///  Class defining the parameters that SubSpectrum
-///  objects providing MajoranaSingletDM
-///  spectrum data must provide
+///  objects providing DiracSingletDM spectrum
+///  data must provide
 ///
 ///  *********************************************
 ///
@@ -23,27 +23,32 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2018 Sep
 ///
+///  \author Ben Farmer
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
-#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/SpectrumContents/RegisteredSpectra.hpp"
 
 namespace Gambit
 {
 
-  SpectrumContents::MajoranaSingletDM_Z2::MajoranaSingletDM_Z2()
-    : Contents("MajoranaSingletDM_Z3")
+  SpectrumContents::DiracSingletDM_Z2::DiracSingletDM_Z2()
+   : Contents("DiracSingletDM_Z2")
   {
+
      // shape prototypes
      std::vector<int> scalar; // Empty vector, i.e. no indices, i.e.. get(Par::Tag, "name")
      std::vector<int> m3x3 = initVector(3,3);
 
      addParameter(Par::mass1, "vev", scalar, "VEVS", 1);
-     addParameter(Par::dimensionless, "lX",       scalar, "COUPLINGS", 1);
+     addParameter(Par::dimensionless, "lF",       scalar, "COUPLINGS", 1);
      addParameter(Par::dimensionless, "lambda_h", scalar, "COUPLINGS", 2);
      addParameter(Par::dimensionless, "xi",       scalar, "COUPLINGS", 3);
 
-     addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS");
-     addParameter(Par::Pole_Mass, "X"   , scalar, "MASS");
+     addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS"); // Index is PDG code, determined using particle database
+     addParameter(Par::Pole_Mass, "F" ,   scalar, "MASS");
 
      addParameter(Par::dimensionless, "g1", scalar, "GAUGE", 1);
      addParameter(Par::dimensionless, "g2", scalar, "GAUGE", 2);
