@@ -16,6 +16,10 @@
 ///          (patscott@physics.mcgill.ca)
 ///  \date 2014 Nov
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
 #ifndef __default_bossed_versions_hpp__
@@ -25,5 +29,6 @@
 #define  Default_gm2calc 1_3_0
 #define  Default_Pythia 8_212
 #define  Default_Pythia_EM 8_212
+#define  Default_FlexibleSUSY_CMSSM 2_0_1
 
 #endif
