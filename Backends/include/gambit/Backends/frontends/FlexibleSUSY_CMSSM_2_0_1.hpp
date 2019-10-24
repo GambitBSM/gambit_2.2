@@ -9,7 +9,7 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author The GAMBIT Collaboration
-///  \date 08:21PM on October 23, 2019
+///  \date 06:30PM on October 24, 2019
 ///
 ///  *********************************************
 
