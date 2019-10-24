@@ -1035,6 +1035,7 @@ set(FS_OPTIONS ${FS_OPTIONS}
      --disable-meta
      --enable-shared-libs
      --with-shared-lib-ext=.so
+     --enable-threads
      --with-shared-lib-cmd=${FS_SO_LINK_COMMAND}
     #--enable-verbose flag causes verbose output at runtime as well. Maybe set it dynamically somehow in future.
    )
