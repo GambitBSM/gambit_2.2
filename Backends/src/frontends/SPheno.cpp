@@ -17,7 +17,7 @@
 #include "gambit/Backends/frontends/SPheno.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Elements/spectrum.hpp"
-#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 #include "gambit/Utils/version.hpp"
 
 // Convenience functions (definition)

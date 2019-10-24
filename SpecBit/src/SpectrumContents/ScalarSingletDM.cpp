@@ -23,9 +23,13 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2018 Sep
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
-#include "gambit/SpecBit/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 namespace Gambit
 {

@@ -14,6 +14,10 @@
 ///          (benjamin.farmer@imperial.ac.uk)
 ///  \date 2016 Feb, 2019 June, Oct
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
 #ifndef __mssmcontents_hpp__
@@ -21,7 +25,7 @@
 
 #include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Elements/mssm_slhahelp.hpp"
-#include "gambit/SpecBit/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 #include "gambit/Logs/logger.hpp"
 #include "SLHAea/slhaea.h"
 

@@ -1629,7 +1629,7 @@ def identifyIncludedHeaders(content, only_native=True):
         # - Cut down to file name only
         check_file_name = os.path.basename(check_file_path)
 
-        # - Keep XML id if the corresponding file name mathces with an identified header
+        # - Keep XML id if the corresponding file name matches with an identified header
         if check_file_name in headers_in_file:
             return_dict[check_file_name] = file_el.get('id')
 
