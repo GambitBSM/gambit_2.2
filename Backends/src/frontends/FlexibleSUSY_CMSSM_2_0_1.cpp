@@ -195,8 +195,8 @@ BE_NAMESPACE
         backend_warning().raise(LOCAL_INFO, "New FS spectrum calculation not implimented yet.");
      
      }
-}
 */
+}
 END_BE_NAMESPACE
 
 
