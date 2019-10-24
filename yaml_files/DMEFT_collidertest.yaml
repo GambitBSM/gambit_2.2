@@ -51,7 +51,7 @@ Printer:
 
 Scanner:
 
-  use_scanner: random
+  use_scanner: de
 
   scanners:
 
@@ -63,12 +63,12 @@ Scanner:
     de:
       plugin: diver
       like: LogLike
-      NP: 500
+      NP: 5
 
     multinest:
       plugin: multinest
       like:  LogLike
-      nlive: 2000
+      nlive: 100
       tol: 0.1
 
     mcmc:
@@ -96,14 +96,14 @@ ObsLikes:
     module:     ColliderBit
     type:	double
 
-  - purpose:    Observable
-    capability: LHC_signals
+  # - purpose:    Observable
+  #   capability: LHC_signals
 
-  - purpose:    Observable
-    capability: LHC_LogLike_per_SR
+  # - purpose:    Observable
+  #   capability: LHC_LogLike_per_SR
 
-  - purpose:    Observable
-    capability: LHC_LogLike_SR_indices
+  # - purpose:    Observable
+  #   capability: LHC_LogLike_SR_indices
 
 
 
@@ -120,6 +120,8 @@ Rules:
       covariance_marg_convthres_abs: 0.05
       covariance_marg_convthres_rel: 0.05
       covariance_nsamples_start: 100000
+      # covariance_nsamples_start: 100
+
 
   # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
   - capability: RunMC
@@ -132,8 +134,8 @@ Logger:
 
   redirection:
     [Default]      : "default.log"
-    [ExampleBit_A] : "ExampleBit_A.log"
-    [Scanner]      : "Scanner.log"
+    [ExampleBit_A] : "DMEFT.log"
+    [Scanner]      : "DMEFT_scan.log"
 
 
 KeyValues:

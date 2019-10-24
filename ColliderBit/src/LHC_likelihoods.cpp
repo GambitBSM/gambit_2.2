@@ -501,9 +501,9 @@ namespace Gambit
               result[ananame].combination_loglike = 0.0;
             }
 
-            // #ifdef COLLIDERBIT_DEBUG
+            #ifdef COLLIDERBIT_DEBUG
             cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
-            // #endif
+            #endif
 
             // Continue to next analysis
             continue;
@@ -637,9 +637,9 @@ namespace Gambit
           result[ananame].combination_sr_index = -1;
           result[ananame].combination_loglike = ana_dll;
 
-          // #ifdef COLLIDERBIT_DEBUG
+          #ifdef COLLIDERBIT_DEBUG
           cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << ana_dll << endl;
-          // #endif
+          #endif
 
 
         } else { // NO SR-CORRELATION INFO, OR USER CHOSE NOT TO USE IT:
@@ -648,9 +648,9 @@ namespace Gambit
           // We either take the result from the SR *expected* to be most
           // constraining under the s=0 assumption (default), or naively combine
           // the loglikes for all SRs (if combine_SRs_without_covariances=true).
-          // #ifdef COLLIDERBIT_DEBUG
+          #ifdef COLLIDERBIT_DEBUG
           cout << DEBUG_PREFIX << "calc_LHC_LogLikes: Analysis " << analysis << " has no covariance matrix: computing single best-expected loglike." << endl;
-          // #endif
+          #endif
 
           double bestexp_dll_exp = 0, bestexp_dll_obs = NAN;
           str bestexp_sr_label;
@@ -750,9 +750,9 @@ namespace Gambit
               bestexp_dll_obs = dll_obs;
               bestexp_sr_label = srData.sr_label;
               bestexp_sr_index = SR;
-              // #ifdef COLLIDERBIT_DEBUG
-              // cout << DEBUG_PREFIX << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << bestexp_dll_exp << ", LogL_obs = " << bestexp_dll_obs << endl;
-              // #endif
+              #ifdef COLLIDERBIT_DEBUG
+              cout << DEBUG_PREFIX << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << bestexp_dll_exp << ", LogL_obs = " << bestexp_dll_obs << endl;
+              #endif
             }
 
             // Store (obs) result for this SR
