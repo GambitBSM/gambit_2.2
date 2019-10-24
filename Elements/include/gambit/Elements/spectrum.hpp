@@ -14,7 +14,7 @@
 ///
 ///  \author Ben Farmer
 ///          (benjamin.farmer@imperial.ac.uk)
-///  \date 2019 June
+///  \date 2019 June, Oct
 ///
 ///  \author Tomas Gonzalo
 ///          (tomas.gonzalo@monash.edu)
@@ -26,7 +26,7 @@
 #define __Spectrum_hpp__
 
 #include "gambit/Elements/sminputs.hpp"
-#include "gambit/Models/spectrum_contents.hpp"
+#include "gambit/Elements/spectrum_contents.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/yaml_options.hpp"
 

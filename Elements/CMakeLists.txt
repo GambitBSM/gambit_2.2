@@ -29,6 +29,7 @@ set(source_files src/decay_table.cpp
                  src/sminputs.cpp
                  src/smlike_higgs.cpp
                  src/spectrum.cpp
+                 src/spectrum_contents.cpp
                  src/terminator.cpp
                  src/type_equivalency.cpp
                  src/virtual_higgs.cpp
@@ -55,6 +56,7 @@ set(header_files include/gambit/Elements/decay_table.hpp
                  include/gambit/Elements/sminputs.hpp
                  include/gambit/Elements/smlike_higgs.hpp
                  include/gambit/Elements/spectrum.hpp
+                 include/gambit/Elements/spectrum_contents.hpp
                  include/gambit/Elements/spectrum_helpers.hpp
                  include/gambit/Elements/standalone_module.hpp
                  include/gambit/Elements/terminator.hpp

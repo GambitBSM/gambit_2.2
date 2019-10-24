@@ -9,8 +9,8 @@
 ///  Authors:
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@fysik.su.se)
-///  \date 2015 Mar
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2015 Mar, 2019 Oct
 ///
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)

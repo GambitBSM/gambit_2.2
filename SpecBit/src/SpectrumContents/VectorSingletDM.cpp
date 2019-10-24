@@ -19,9 +19,17 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2018 Sep
 ///
+///  \author Ben Farmer
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2019 Oct
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
-#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 namespace Gambit
 {

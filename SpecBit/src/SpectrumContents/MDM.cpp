@@ -15,12 +15,20 @@
 ///          (j.mckay14@imperial.ac.uk)
 ///  \date 2018 April
 ///
+///  \author Ben Farmer
+///          (benjamin.farmer@imperial.ac.uk)
+///  \date 2019 Oct
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Oct
+///
 ///  *********************************************
 
 #ifndef __MDM_contents_hpp__
 #define __MDM_contents_hpp__
 
-#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 namespace Gambit {
 

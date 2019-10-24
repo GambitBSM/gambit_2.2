@@ -1116,6 +1116,7 @@ def getClassNameDict(class_el, abstract=False):
     class_name['long']        = class_name['long_templ'].split('<',1)[0]
     class_name['short_templ'] = class_el.get('name')
     class_name['short']       = class_name['short_templ'].split('<',1)[0]
+    class_name['namespace']   = '::'.join(namespaces_list[:-1])
 
     if abstract:
         abstr_class_name = {}
@@ -1145,7 +1146,11 @@ def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class
     # Construct inheritance line 
     inheritance_line = ''
     for parent_dict in loaded_parent_classes:
-        inheritance_line += 'virtual '*parent_dict['virtual'] + parent_dict['access'] + ' ' + parent_dict['class_name']['short'] + ', '
+        inheritance_line += 'virtual '*parent_dict['virtual'] + parent_dict['access'] + ' '
+        if parent_dict['class_name']['namespace'] == class_name['namespace'] :
+            inheritance_line += parent_dict['class_name']['short'] + ', '
+        else :
+            inheritance_line += parent_dict['class_name']['long'] + ', '
     inheritance_line = inheritance_line.rstrip(', ')
 
     # If no other parent classes, add WrapperBase
