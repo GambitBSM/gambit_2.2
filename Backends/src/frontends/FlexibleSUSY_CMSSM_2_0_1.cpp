@@ -37,7 +37,8 @@
 /// if I only want to use it here
 BE_NAMESPACE
 {
-/*   Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input) {
+   /*
+   Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input) {
    //inputs.options = myPipe::runOptions;
    auto Options = Input.options;
    // Spectrum generator settings
@@ -83,13 +84,41 @@ BE_NAMESPACE
       settings.set(Spectrum_generator_settings::threshold_corrections, Options->getValueOrDef<int>(123111321,"threshold_corrections"));
 }
 
+   */
 
+
+   /*
+  /// Initialise QedQcd object from SMInputs data
+       void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
+    {
+      // Set pole masses (to be treated specially)
+      oneset.setPoleMt(sminputs.mT);
+      //oneset.setPoleMb(...);
+      oneset.setPoleMtau(sminputs.mTau);
+      oneset.setMbMb(sminputs.mBmB);
+      /// set running quark masses
+      /// TODO: check if we should use
+      /// TODO: setMu2GeV, setMd2GeV, setMs2GeV, setMcMc
+      oneset.setMass(softsusy::mDown,    sminputs.mD);
+      oneset.setMass(softsusy::mUp,      sminputs.mU);
+      oneset.setMass(softsusy::mStrange, sminputs.mS);
+      oneset.setMass(softsusy::mCharm,   sminputs.mCmC);
+      /// set QED and QCD structure constants
+      oneset.setAlpha(softsusy::ALPHA, 1./sminputs.alphainv);
+      oneset.setAlpha(softsusy::ALPHAS, sminputs.alphaS);
+      //set electron, muon and z pole mass
+      // TODO: check if we should set set pole masses here instead
+      // TODO ie use setPoleMmuon, setPoleMel
+      // TODO: has no real impact anyway
+      oneset.setMass(softsusy::mElectron, sminputs.mE);
+      oneset.setMass(softsusy::mMuon,     sminputs.mMu);
+      oneset.setPoleMZ(sminputs.mZ);
+    }  
 */
-
-
    void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Input)
      {
-        /*    using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
+        /*
+        using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
         using namespace FlexibleSUSY_CMSSM_default::softsusy;
         
         const SMInputs sminputs = Input.sminputs;
@@ -100,7 +129,7 @@ BE_NAMESPACE
         Spectrum_generator_settings spectrum_generator_settings;
         /// fix FS settings from yaml options 
         Get_yaml_settings(spectrum_generator_settings, Input);
-
+       
         // Fill QedQcd object with SMInputs values
         setup_QedQcd(qedqcd,sminputs);
         
@@ -191,9 +220,9 @@ BE_NAMESPACE
 
           
         /// can we directly use FS slha_io object as above? 
-        
+        */
         backend_warning().raise(LOCAL_INFO, "New FS spectrum calculation not implimented yet.");
-        */     
+           
      }
 
 }
