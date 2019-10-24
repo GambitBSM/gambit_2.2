@@ -566,7 +566,7 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
         // Generate an 'sr-N' label 
         std::stringstream ss; ss << "sr-" << ibin;
 
-        // Construct a SignalRegionData instance and add it to atlasBinnedResults
+        // Construct a SignalRegionData instance and add it to cmsBinnedResults
         SignalRegionData sr;
         sr.sr_label = ss.str();
         sr.n_observed = CMS_OBSNUM[ibin];
@@ -642,6 +642,7 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
         sr.n_observed = ATLAS_OBSNUM[ibin];
         sr.n_signal = _srnums_ATLAS[ibin];
         sr.n_signal_at_lumi = _srnums_ATLAS[ibin];  // We have already scaled the signals in _srnums_ATLAS to xsec * lumi
+        // cout << "Check output: "<< sr.sr_label<< "  " << _srnums_ATLAS[ibin] <<endl;
         sr.signal_sys = 0.;
         sr.n_background = ATLAS_BKGNUM[ibin];
         sr.background_sys = ATLAS_BKGERR[ibin];
@@ -691,8 +692,13 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
       // This makes an MCLoopInfo object for satisfying the LHC
       // likelihood calculation dependency
 
+      // Andre Scaffidi HACKS: Event generation has been bypassed
+      // ------------------------------------------------------//
+      result.event_gen_BYPASS = true;
+      // ------------------------------------------------------//
       result.reset_flags();
       
+
     }
   
 

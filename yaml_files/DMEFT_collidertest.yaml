@@ -123,7 +123,7 @@ Rules:
 
   # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
   - capability: RunMC
-    function: InterpolatedMCInfo
+    function: InterpolatedMCInfo 
     module: ColliderBit
 
 

@@ -462,7 +462,7 @@ namespace Gambit
         }
         cout.precision(stream_precision); // restore previous precision
         #endif
-
+ 
 
         // Shortcut #1
         //
@@ -470,35 +470,47 @@ namespace Gambit
         // failed, short-circut the loop and return delta log-likelihood = 0 for
         // every SR in each analysis.
         //
-        /// @todo Needs more sophistication once we add analyses that don't use event generation.
-        if (not Dep::RunMC->event_generation_began || Dep::RunMC->exceeded_maxFailedEvents)
-        {
-          // If this is an analysis with covariance info, only add a single 0-entry in the map
-          if (USE_COVAR && has_covar)
+        /// @todo Needs more sophistication once we add analyses that don't use event generation. AS: YEP!!
+        // In DMEFT case event generation will not be called...dynamically set this ?
+         // -------------------------------------------------------------------------------------------
+         // Need to change for DMEFT. Just bypass this?
+         
+         // Introduce HACK: Gave MCLoopInfo object a new member event_gen_BYPASS set to false by default. 
+         // Bypass below shortcut if this flag manually set to true...
+
+
+        if (not Dep::RunMC->event_gen_BYPASS){
+          if (not Dep::RunMC->event_generation_began || Dep::RunMC->exceeded_maxFailedEvents)
           {
-            result[ananame].combination_sr_label = "none";
-            result[ananame].combination_loglike = 0.0;
-          }
-          // If this is an analysis without covariance info, add 0-entries for all SRs plus
-          // one for the combined LogLike
-          else
-          {
-            for (size_t SR = 0; SR < adata.size(); ++SR)
+            // If this is an analysis with covariance info, only add a single 0-entry in the map
+            if (USE_COVAR && has_covar)
             {
-              result[ananame].sr_indices[adata[SR].sr_label] = SR;
-              result[ananame].sr_loglikes[adata[SR].sr_label] = 0.0;
+              result[ananame].combination_sr_label = "none";
+              result[ananame].combination_loglike = 0.0;
             }
-            result[ananame].combination_sr_label = "none";
-            result[ananame].combination_loglike = 0.0;
+            // If this is an analysis without covariance info, add 0-entries for all SRs plus
+            // one for the combined LogLike
+            else
+            {
+              for (size_t SR = 0; SR < adata.size(); ++SR) 
+              {
+                result[ananame].sr_indices[adata[SR].sr_label] = SR;
+                result[ananame].sr_loglikes[adata[SR].sr_label] = 0.0;
+              }
+              result[ananame].combination_sr_label = "none";
+              result[ananame].combination_loglike = 0.0;
+            }
+
+            // #ifdef COLLIDERBIT_DEBUG
+            cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
+            // #endif
+
+            // Continue to next analysis
+            continue;
           }
-
-          #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << 0.0 << " (No events predicted / successfully generated. Skipped full calculation.)" << endl;
-          #endif
-
-          // Continue to next analysis
-          continue;
         }
+
+
 
 
         // Shortcut #2
@@ -625,9 +637,9 @@ namespace Gambit
           result[ananame].combination_sr_index = -1;
           result[ananame].combination_loglike = ana_dll;
 
-          #ifdef COLLIDERBIT_DEBUG
+          // #ifdef COLLIDERBIT_DEBUG
           cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << ananame << "_LogLike : " << ana_dll << endl;
-          #endif
+          // #endif
 
 
         } else { // NO SR-CORRELATION INFO, OR USER CHOSE NOT TO USE IT:
@@ -636,9 +648,9 @@ namespace Gambit
           // We either take the result from the SR *expected* to be most
           // constraining under the s=0 assumption (default), or naively combine
           // the loglikes for all SRs (if combine_SRs_without_covariances=true).
-          #ifdef COLLIDERBIT_DEBUG
+          // #ifdef COLLIDERBIT_DEBUG
           cout << DEBUG_PREFIX << "calc_LHC_LogLikes: Analysis " << analysis << " has no covariance matrix: computing single best-expected loglike." << endl;
-          #endif
+          // #endif
 
           double bestexp_dll_exp = 0, bestexp_dll_obs = NAN;
           str bestexp_sr_label;
@@ -778,8 +790,8 @@ namespace Gambit
         // Check for problems with the result
         for(auto& s_d_pair : result[ananame].sr_loglikes)
         {
-          if (Utils::isnan(s_d_pair.second))
-          {
+          // if (Utils::isnan(s_d_pair.second))
+          // {
             std::stringstream msg;
             msg << "Computation of loglike for signal region " << s_d_pair.first << " in analysis " << ananame << " returned NaN" << endl;
             msg << "Will now print the signal region data for this analysis:" << endl;
@@ -794,8 +806,8 @@ namespace Gambit
                   << ",  n_signal = " << srData.n_signal
                   << ",  signal_sys = " << srData.signal_sys
                   << endl;
-            }
-            invalid_point().raise(msg.str());
+            // }
+            // invalid_point().raise(msg.str());
           }          
         }
 
@@ -843,7 +855,7 @@ namespace Gambit
         {
           const str& sr_label = pair_j.first;
           const double& sr_loglike = pair_j.second;
-          const int sr_index = analysis_loglikes.sr_indices.at(sr_label);
+          const int sr_index = analysis_loglikes.sr_indices.at(sr_label); 
 
           const str key = analysis_name + "__" + sr_label + "__i" + std::to_string(sr_index) + "__LogLike";
           result[key] = sr_loglike;

@@ -70,7 +70,7 @@ namespace Gambit {
       {}
 
       /// Default constructor
-      SignalRegionData() {}
+      SignalRegionData() {} 
 
       /// Consistency check
       bool check() const {
@@ -224,6 +224,11 @@ namespace Gambit {
         // }
         return true;
       }
+
+      /// AS HAck 
+
+      bool event_gen_BYPASS = false;
+
 
 
       /// Analysis name

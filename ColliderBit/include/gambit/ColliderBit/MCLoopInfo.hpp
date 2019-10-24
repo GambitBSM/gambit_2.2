@@ -30,6 +30,11 @@ namespace Gambit
     /// @brief Container for event loop status data and settings
     struct MCLoopInfo
     {
+     
+      // Andre Scaffidi HACKS ------------
+      // Event genration has been bypassed: Default = false
+      bool event_gen_BYPASS = false;
+
       /// Event generation has started
       bool event_generation_began;
 
