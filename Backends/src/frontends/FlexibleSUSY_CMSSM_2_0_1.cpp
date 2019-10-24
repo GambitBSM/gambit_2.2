@@ -86,10 +86,10 @@ BE_NAMESPACE
 
 */
 
-/*
+
    void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Input)
      {
-        using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
+        /*    using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
         using namespace FlexibleSUSY_CMSSM_default::softsusy;
         
         const SMInputs sminputs = Input.sminputs;
@@ -193,9 +193,9 @@ BE_NAMESPACE
         /// can we directly use FS slha_io object as above? 
         
         backend_warning().raise(LOCAL_INFO, "New FS spectrum calculation not implimented yet.");
-     
+        */     
      }
-*/
+
 }
 END_BE_NAMESPACE
 
