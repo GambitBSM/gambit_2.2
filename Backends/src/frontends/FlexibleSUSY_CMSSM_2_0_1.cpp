@@ -85,10 +85,13 @@ BE_NAMESPACE
 
 
 */
+
+/*
    void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Input)
      {
-/*        using namespace flexiblesusy;
-
+        using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
+        using namespace FlexibleSUSY_CMSSM_default::softsusy;
+        
         const SMInputs sminputs = Input.sminputs;
         /// TODO: copy the way spheno routinbe uses param and options and
         /// TODO: use these to fill CMSSM inputs, qedqcd and settings
@@ -99,19 +102,22 @@ BE_NAMESPACE
         Get_yaml_settings(spectrum_generator_settings, Input);
 
         // Fill QedQcd object with SMInputs values
-        setup_QedQcd(oneset,sminputs);
+        setup_QedQcd(qedqcd,sminputs);
         
         // create instance of spectrum generator
-        CMSSM_spectrum_generator<Two_scale> spectrum_generator;
+        CMSSM_spectrum_generator_Two_scale spectrum_generator;
         spectrum_generator.set_settings(spectrum_generator_settings);
 
         // Generate spectrum
-        spectrum_generator.run(oneset, input);
+        spectrum_generator.run(qedqcd, input);
 
+        /// should probably catch errors here
+
+        
         // extract models and problems that have been found
         // by spectrum generator
-        const auto models = spectrum_generator.get_models_slha();
-        const auto& problems = spectrum_generator.get_problems();
+        const CMSSM_slha_Model_Two_scale  models = spectrum_generator.get_models_slha();
+        const Spectrum_generator_problems& problems = spectrum_generator.get_problems();
 
         /// TODO:  add LSP check here?
         // probably not could do this in module function that
@@ -187,10 +193,12 @@ BE_NAMESPACE
         /// can we directly use FS slha_io object as above? 
         
         backend_warning().raise(LOCAL_INFO, "New FS spectrum calculation not implimented yet.");
-  */      
+     
      }
 }
+*/
 END_BE_NAMESPACE
+
 
 BE_INI_FUNCTION
 {
