@@ -144,7 +144,10 @@ BE_NAMESPACE
     setup_QedQcd(qedqcd,sminputs);
         
     // create instance of spectrum generator
-    CMSSM_spectrum_generator_Two_scale spectrum_generator;
+    //GAMBIT BOSS type
+    //CMSSM_spectrum_generator_Two_scale spectrum_generator;
+    // Static FS type
+    CMSSM_spectrum_generator<Two_scale> spectrum_generator;
     spectrum_generator.set_settings(spectrum_generator_settings);
     // Generate spectrum
     spectrum_generator.run(qedqcd, input);
@@ -154,7 +157,10 @@ BE_NAMESPACE
 
     // extract models and problems that have been found
     // by spectrum generator
-    const CMSSM_slha_Model_Two_scale  models = spectrum_generator.get_models_slha();
+    // GAMBIT BOSS type
+    // const CMSSM_slha_Model_Two_scale  models = spectrum_generator.get_models_slha();
+    //static FS version
+    const CMSSM_slha<CMSSM<Two_scale>> models = spectrum_generator.get_models_slha();
     const Spectrum_generator_problems& problems = spectrum_generator.get_problems();
 
     /// TODO:  add LSP check here?
@@ -164,10 +170,10 @@ BE_NAMESPACE
     /// get scales used by spectrum generator
     /// TODO: check we need these.
     CMSSM_scales scales;
-   scales.HighScale = spectrum_generator.get_high_scale();
-   scales.SUSYScale = spectrum_generator.get_susy_scale();
-   scales.LowScale  = spectrum_generator.get_low_scale();
-   scales.pole_mass_scale = spectrum_generator.get_pole_mass_scale();
+    scales.HighScale = spectrum_generator.get_high_scale();
+    scales.SUSYScale = spectrum_generator.get_susy_scale();
+    scales.LowScale  = spectrum_generator.get_low_scale();
+    scales.pole_mass_scale = spectrum_generator.get_pole_mass_scale();
 
       
     //create FS slha_io object, as
