@@ -129,7 +129,15 @@ BE_NAMESPACE
     /// TODO: copy the way spheno routinbe uses param and options and
     /// TODO: use these to fill CMSSM inputs, qedqcd and settings
     softsusy::QedQcd qedqcd;
-    CMSSM_input_parameters input; 
+    CMSSM_input_parameters cmssm_input;
+
+    // fill cmssm inputs
+    cmssm_input.m0 = Inputs.param["M0"];
+    cmssm_input.m12 = Inputs.param["M12"];
+    cmssm_input.TanBeta = Inputs.param["TanBeta"];
+    cmssm_input.SignMu = Inputs.param["SignMu"];
+    cmssm_input.Azero = Inputs.param["A0"];
+
     Spectrum_generator_settings spectrum_generator_settings;
     /// fix FS settings from yaml options 
     Get_yaml_settings(spectrum_generator_settings, Input);
