@@ -213,7 +213,7 @@ BE_NAMESPACE
 
         
     //get SLHEA object from slha_io
-    SLHAea::Coll slha = slha_io.get_data();
+    SLHAea::Coll slha = slha_io.get_slha_io().get_data();
 
     /// Construct instance MSSM struct
     /// Models/include/gambit/Models/SpectrumContents/RegisteredSpectra.hpp
