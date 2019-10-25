@@ -39,10 +39,10 @@ BE_NAMESPACE
   // using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
   // using namespace FlexibleSUSY_CMSSM_default::softsusy;
 
-  using namespace flexiblesusy;
-  using namespace softsusy;
-   
- 
+   using namespace ::flexiblesusy;
+   using namespace ::softsusy;
+
+
     /// Initialise QedQcd object from SMInputs data
   void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
   {
@@ -69,7 +69,6 @@ BE_NAMESPACE
     oneset.setMass(softsusy::mMuon,     sminputs.mMu);
     oneset.setPoleMZ(sminputs.mZ);
   }  
-
 
   
   // Function to extract the FS settings form the yaml file
@@ -111,11 +110,11 @@ BE_NAMESPACE
     settings.set(Spectrum_generator_settings::beta_zero_threshold, Options->getValueOrDef<int>(1.000000000e-14,"beta_zero_threshold"));
     settings.set(Spectrum_generator_settings::calculate_observables, Options->getValueOrDef<int>(0,"calculate_observables")); // 
     settings.set(Spectrum_generator_settings::pole_mass_scale, Options->getValueOrDef<int>(0,"pole_mass_scale")); // Zero means use SUSYScale, otherwise gives scale for pole mass calculation. Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file.
-    settings.set(Spectrum_generator_settings::eftPoleMassScale, Options->getValueOrDef<int>(0,"eftPoleMassScale")); // Zero means use Mt. Otherwise sets the scale of the pole mass calculation in the EFT in GeV.Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file
-   settings.set(Spectrum_generator_settings::eftMatchingScale, Options->getValueOrDef<int>(0,"eftMatchingScale")); // Zero means use SUSYScale. Otherwise sets the EFT matching scale in GeV.  Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file.
+    settings.set(Spectrum_generator_settings::eft_pole_mass_scale, Options->getValueOrDef<int>(0,"eftPoleMassScale")); // Zero means use Mt. Otherwise sets the scale of the pole mass calculation in the EFT in GeV.Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file
+   settings.set(Spectrum_generator_settings::eft_matching_scale, Options->getValueOrDef<int>(0,"eftMatchingScale")); // Zero means use SUSYScale. Otherwise sets the EFT matching scale in GeV.  Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file.
     settings.set(Spectrum_generator_settings::eft_matching_loop_order_up, Options->getValueOrDef<int>(1,"eft_matching_loop_order_up"));
     settings.set(Spectrum_generator_settings::eft_matching_loop_order_down, Options->getValueOrDef<int>(1,"eft_matching_loop_order_down"));
-    settings.set(Spectrum_generator_settings::eftHiggsIndex, Options->getValueOrDef<int>(0,"eftHiggsIndex")); //If set to 0, the lightest field in the Higgs multiplet isinterpreted as SM-like Higgs. If set to 1, the 2nd lightest field is interpreted as SM-like etc
+    settings.set(Spectrum_generator_settings::eft_higgs_index, Options->getValueOrDef<int>(0,"eftHiggsIndex")); //If set to 0, the lightest field in the Higgs multiplet isinterpreted as SM-like Higgs. If set to 1, the 2nd lightest field is interpreted as SM-like etc
     settings.set(Spectrum_generator_settings::calculate_bsm_masses, Options->getValueOrDef<int>(1,"calculate_bsm_masses")); // enable/disable calculation of BSM pole masses, useful if e.g. only interested in Higgs mass calculation
     settings.set(Spectrum_generator_settings::threshold_corrections, Options->getValueOrDef<int>(123111321,"threshold_corrections"));
 
@@ -133,11 +132,11 @@ BE_NAMESPACE
     CMSSM_input_parameters cmssm_input;
 
     // fill cmssm inputs
-    cmssm_input.m0 = Inputs.param["M0"];
-    cmssm_input.m12 = Inputs.param["M12"];
-    cmssm_input.TanBeta = Inputs.param["TanBeta"];
-    cmssm_input.SignMu = Inputs.param["SignMu"];
-    cmssm_input.Azero = Inputs.param["A0"];
+    cmssm_input.m0 = *Input.param.at("M0");
+    cmssm_input.m12 = *Input.param.at("M12");
+    cmssm_input.TanBeta = *Input.param.at("TanBeta");
+    cmssm_input.SignMu = *Input.param.at("SignMu");
+    cmssm_input.Azero = *Input.param.at("A0");
 
     Spectrum_generator_settings spectrum_generator_settings;
     /// fix FS settings from yaml options 
@@ -153,7 +152,7 @@ BE_NAMESPACE
     CMSSM_spectrum_generator<Two_scale> spectrum_generator;
     spectrum_generator.set_settings(spectrum_generator_settings);
     // Generate spectrum
-    spectrum_generator.run(qedqcd, input);
+    spectrum_generator.run(qedqcd, cmssm_input);
 
     /// TODO: should probably catch errors here
 
@@ -163,7 +162,7 @@ BE_NAMESPACE
     // GAMBIT BOSS type
     // const CMSSM_slha_Model_Two_scale  models = spectrum_generator.get_models_slha();
     //static FS version
-    const CMSSM_slha<CMSSM<Two_scale>> models = spectrum_generator.get_models_slha();
+    auto models = spectrum_generator.get_models_slha();
     const Spectrum_generator_problems& problems = spectrum_generator.get_problems();
 
     /// TODO:  add LSP check here?
@@ -185,24 +184,22 @@ BE_NAMESPACE
    try
    {
      slha_io.fill(qedqcd);
-     slha_io.fill(input);
-     slha_io.fill(physical_input);
+     slha_io.fill(cmssm_input);
    }
    catch (const Error& error)
    {
       /// TODO: This should be a gambit error
-      ERROR(error.what());
-      return EXIT_FAILURE;
+      backend_error().raise(LOCAL_INFO, "FS does not fil slhal correctly.");
    }
 
     ///TODO:" make nice according to needs and create spectrum
     slha_io.set_spinfo(problems);
-    slha_io.set_input(input);
+    slha_io.set_input(cmssm_input);
     slha_io.set_print_imaginary_parts_of_majorana_mixings(
       spectrum_generator_settings.get(
       Spectrum_generator_settings::force_positive_masses));
     slha_io.set_spectrum(models);
-    slha_io.set_extra(std::get<0>(models), scales, observables);
+    //slha_io.set_extra(std::get<0>(models), scales, observables);
 
     /// for a spectrum object we need an slhea object,
     /// a SpectrumContents::contents, and a scale
@@ -212,7 +209,7 @@ BE_NAMESPACE
     /// not sure why we need this if we pass the slhaea object
     /// the slhae object should have the scale for the blocks
     /// maybe in case they give blocks at multiple scales
-    double scale = std::get<0>(models).get_scale;
+    double scale = std::get<0>(models).get_scale();
 
         
     //get SLHEA object from slha_io
