@@ -28,7 +28,7 @@
 //TODO: Static FS includes, remove when BOSSed FS works
 #include "flexiblesusy/src/lowe.h" // From softsusy; used by flexiblesusy
 #include "flexiblesusy/src/spectrum_generator_settings.hpp"
-#include "flexiblesusy/models/CMSSM/CMSSM_spectrum_generator.hppqq"
+#include "flexiblesusy/models/CMSSM/CMSSM_spectrum_generator.hpp"
 #include "flexiblesusy/models/CMSSM/CMSSM_slha_io.hpp"
 #include "flexiblesusy/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp"
 
