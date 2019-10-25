@@ -35,10 +35,13 @@
 // Convenience functions (definitions)
 BE_NAMESPACE
 {
+  // BOSS namespaces 
+  // using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
+  // using namespace FlexibleSUSY_CMSSM_default::softsusy;
 
-  using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
-  using namespace FlexibleSUSY_CMSSM_default::softsusy;
-
+  using namespace flexiblesusy;
+  using namespace softsusy;
+   
  
     /// Initialise QedQcd object from SMInputs data
   void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
@@ -58,7 +61,7 @@ BE_NAMESPACE
     /// set QED and QCD structure constants
     oneset.setAlpha(softsusy::ALPHA, 1./sminputs.alphainv);
     oneset.setAlpha(softsusy::ALPHAS, sminputs.alphaS);
-    //set electron, muon and z pole mass
+    // set electron, muon and z pole mass
     // TODO: check if we should set set pole masses here instead
     // TODO ie use setPoleMmuon, setPoleMel
     // TODO: has no real impact anyway
