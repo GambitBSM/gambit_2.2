@@ -78,6 +78,10 @@ def main(argv):
     full_type_headers=[]
     modules=set([])
 
+    #TESTING
+    verbose=True
+    print("Excluded: ",exclude_modules)
+
     # List of headers to search
     rollcall_headers = set(["gambit/Backends/backend_rollcall.hpp", "Models/include/gambit/Models/model_rollcall.hpp"])
     type_headers     = set(["gambit/Elements/types_rollcall.hpp"])
@@ -96,6 +100,7 @@ def main(argv):
 
     # List of directory names to ignore when searching for headers
     exclude_dirs=set([".git","build","doc","cmake","extras","config","contrib","runs","Logs","Printers","scratch","installed","scripts"])
+    exclude_dirs.update(exclude_modules)
 
     # Load up the sets of equivalent types and namespaces
     equiv_ns = get_default_boss_namespaces()

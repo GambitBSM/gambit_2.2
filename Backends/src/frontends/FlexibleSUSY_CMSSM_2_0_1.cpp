@@ -122,25 +122,25 @@ BE_NAMESPACE
 
 
   // Convenience function to compute the spectrum object
-  void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Input)
+  void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Inputs)
   {
        
-    const SMInputs sminputs = Input.sminputs;
+    const SMInputs sminputs = Inputs.sminputs;
     /// TODO: copy the way spheno routinbe uses param and options and
     /// TODO: use these to fill CMSSM inputs, qedqcd and settings
     softsusy::QedQcd qedqcd;
     CMSSM_input_parameters cmssm_input;
 
     // fill cmssm inputs
-    cmssm_input.m0 = Inputs.param["M0"];
-    cmssm_input.m12 = Inputs.param["M12"];
-    cmssm_input.TanBeta = Inputs.param["TanBeta"];
-    cmssm_input.SignMu = Inputs.param["SignMu"];
-    cmssm_input.Azero = Inputs.param["A0"];
+    cmssm_input.m0 = *Inputs.param.at("M0");
+    cmssm_input.m12 = *Inputs.param.at("M12");
+    cmssm_input.TanBeta = *Inputs.param.at("TanBeta");
+    cmssm_input.SignMu = *Inputs.param.at("SignMu");
+    cmssm_input.Azero = *Inputs.param.at("A0");
 
     Spectrum_generator_settings spectrum_generator_settings;
     /// fix FS settings from yaml options 
-    Get_yaml_settings(spectrum_generator_settings, Input);
+    Get_yaml_settings(spectrum_generator_settings, Inputs);
 
     // Fill QedQcd object with SMInputs values
 //    setup_QedQcd(qedqcd,sminputs);
@@ -179,7 +179,7 @@ BE_NAMESPACE
 //    try
 //    {
       slha_io.fill(qedqcd);
-      slha_io.fill(input);
+      slha_io.fill(cmssm_input);
 //      slha_io.fill(physical_input);
 //    }
 //    catch (const Error& error)
@@ -191,7 +191,7 @@ BE_NAMESPACE
 
     ///TODO:" make nice according to needs and create spectrum
 //    slha_io.set_spinfo(problems);
-    slha_io.set_input(input);
+    slha_io.set_input(cmssm_input);
 //    slha_io.set_print_imaginary_parts_of_majorana_mixings(
 //      spectrum_generator_settings.get(
 //      Spectrum_generator_settings::force_positive_masses));

@@ -490,7 +490,7 @@ def find_and_harvest_headers(header_set,fullheadlist,exclude_set,dir_exclude_set
 def retrieve_rollcall_headers(verbose,install_dir,excludes):
     rollcall_headers=[]
     core_exists = False
-    exclude_dirs=["build",".git","runs","scratch","contrib","Backends"]
+    exclude_dirs=["build",".git","runs","scratch","contrib","Backends"]+list(excludes)
     for root,dirs,files in os.walk(install_dir,topdown=True):
         [dirs.remove(d) for d in list(dirs) if d in exclude_dirs] # bit confusing, but avoids descending into excluded directories
         if (not core_exists and root == install_dir+"/Core/include/gambit/Core"): core_exists = True
@@ -512,7 +512,7 @@ def retrieve_rollcall_headers(verbose,install_dir,excludes):
 #Search the source tree to determine which modules type headers are present.
 def retrieve_module_type_headers(verbose,install_dir,excludes):
     type_headers=[]
-    exclude_dirs=["build",".git","runs","scratch","contrib","Backends"]
+    exclude_dirs=["build",".git","runs","scratch","contrib","Backends"]+list(excludes)
     for root,dirs,files in os.walk(install_dir,topdown=True):
         [dirs.remove(d) for d in list(dirs) if d in exclude_dirs] # bit confusing, but avoids descending into excluded directories
         for name in files:
