@@ -2,6 +2,8 @@
 Contains all routines for parsing input .gum file.
 """
 
+# TODO add mass dimension for new parameters in .gum file
+
 import yaml
 import re
 

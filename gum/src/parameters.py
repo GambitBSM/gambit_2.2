@@ -230,7 +230,8 @@ def sarah_part_to_gum_part(sarah_bsm):
     
     return bsm_list, add_higgs
 
-def sarah_params(paramlist, add_higgs):
+def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
+                 particles):
     """
     Removes all Standard Model parameters from those we wish
     to add to the GAMBIT model. This utilises the 'BlockName'
@@ -267,12 +268,22 @@ def sarah_params(paramlist, add_higgs):
         if (    (p.block() != 'SM')
             and (p.block() != 'SMINPUTS')
             and (p.block() != 'VCKM')
-            #and (p.is_output() != False)) TODO: TG: This line was killing most of the parameters
             ):
-            
+
+            # Mixing matrices
+            tag = "Pole_Mixing" if (p.is_output() == True and 
+                p.shape().startswith("m")) else "dimensionless"
+
+            # TODO pole_mixing still needs to be assigned to the correct particle here,
+            # so one can do spectrum.get(Par::Pole_Mixing, "h0") etc.
+
+
+            # print mixings
+            # for m in mixings: print m 
+
             # Create a new instance of SpectrumParameter
             # TODO: dimensionless atm! 
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(),
+            x = SpectrumParameter(p.name(), tag, block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
                                   bcs = p.bcs(), shape = p.shape(), 
                                   is_output = p.is_output(), is_real = p.is_real())
@@ -304,7 +315,7 @@ def sarah_params(paramlist, add_higgs):
     params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("sinW2", "Pole_Mixing", shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=True))
     params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=True))
     params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=True))
@@ -415,10 +426,12 @@ def spheno_dependencies(sphenodeps):
         description = re.sub('Sqrt', 'sqrt', description)
 
         # If there's something that looks like param(i,j) make this (param)(i,j)
-        description = re.sub(r'([a-zA-Z]+)\(([0-9]),([0-9])\)',r'(*\1)(\2,\3)', description)
+        description = re.sub(r'([a-zA-Z]+)\(([0-9]),([0-9])\)',r'(*\1)(\2,\3)',
+                             description)
 
         # If there's Power(param, num) -> pow(*param, num)
-        description = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(*\1,\2)', description)
+        description = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(*\1,\2)',
+                             description)
 
         deps[name] = description
 

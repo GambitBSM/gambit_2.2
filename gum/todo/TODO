@@ -5,28 +5,14 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 =============
 
 * Better termination of code
-  * C++ -- as soon as there is an error, call close_wstp_link();
   * Python -- better error throwing
-
-* Model parameters to be obtained (consistently).
-  * SARAH: ???
 
   * How to extract mass dimension of a parameter?
       * Does SARAH know...? Surely..
 
 * DarkBit:
   * Process Catalogue:
-    * importDecays - which things to include/exclude??
     * 2->2 processes for consistency with fermions
-
-* SARAH -> CalcHEP gives lots of zero vertices (e.g. including SUSY mixing matrices for non-SUSY models)
-  * Can this be controlled by a useful flag for the output? Or in the model files?
-  * If not -> CalcHEP cleaner
-
-* Re-design:
-  * calchep.py
-  * 2-2 processes/vertex sorters etc. (darkbit)
-  * decays.py
 
 * Option for choice of Lagrangian (potential) basis, or physical basis
   * SARAH: CalculateMasses -> True/False -- should work...
@@ -51,18 +37,11 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 
 * BSM contributions to Standard Model decays (W, Z, etc.) -- do not get added to DecayBit correctly
 
-* Auxiliary particles in CalcHEP to be ignored by decay/DM routines
-
 ==============
 =   GAMBIT   =
 ==============
 
 * Backends
-  * CalcHEP
-    * Re-design frontend: generate a list of model parameters to set in the INI file.
-  * SPheno
-    * Check -- is it backended "generally"?
-  * Vevacious
   * FlexibleSUSY
     * Needs template BOSS to be truly backended..?
     * Needs additional input to SARAH files?

@@ -145,28 +145,8 @@ def write_vevacious_rollcall(model_name, spectrum, reset_dict):
                                  ["init_vevacious", "std::string"]],
                    allowed_models=model_name)
 
-    # # Entry for CAPABILITY vevacious_file_location
-    # file_loc = (
-    #     "#define FUNCTION vevacious_file_location_{0}\n"
-    #     "  START_FUNCTION(map_str_str)\n"
-    #     "#undef FUNCTION\n"
-    #     ).format(model_name)
-
-    # # Entry for CAPABILITY pass_spectrum_to_vevacious
-    # pass_spec = (
-    #     "#define FUNCTION pass_{0}_spectrum_to_vevacious\n"
-    #     "  START_FUNCTION(const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)\n"
-    #     "  DEPENDENCY({1}, Spectrum)\n"
-    #     "  DEPENDENCY(init_vevacious, std::string)\n"
-    #     "  ALLOW_MODEL_DEPENDENCE({0})\n"
-    #     "#undef FUNCTION\n"
-    #     ).format(model_name, spectrum)
-
-    # return file_loc, pass_spec
-
 def write_readlhablock(block, contents):
     """
-    TODO
     Writes the ReadLhaBlock routine for a given block.
     """
     

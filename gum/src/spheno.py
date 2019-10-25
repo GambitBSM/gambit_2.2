@@ -590,7 +590,7 @@ class SPhenoParameter:
 
 def write_spheno_frontends(model_name, parameters, particles, flags, 
                            spheno_path, output_dir, blockparams, gambit_pdgs, mixings,
-                           reality_dict, sphenodeps):
+                           reality_dict, sphenodeps, bcs):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -616,7 +616,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                            variables, flags, particles, 
                                            parameters, blockparams, 
                                            gambit_pdgs, mixings, reality_dict,
-                                           sphenodeps, hb_variables)
+                                           sphenodeps, hb_variables, bcs)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -902,7 +902,7 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
                               particles, parameters, blockparams, gambit_pdgs, mixings,
-                              reality_dict, sphenodeps, hb_variables):
+                              reality_dict, sphenodeps, hb_variables, bcs):
 
     """
     Writes source for 
@@ -1089,19 +1089,28 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             # This is the eigenstate 
             eigenstate = mixings[par.name]
             # TODO: currently doesn't work for SM particle mixing matrices: ZUL, ZEL, etc.
-            entry = "TODO"
+            # These correspond to the U(3) rotations performed to diagonalise the Yukawa 
+            # terms of the Standard Model so don't correspond to a "pole_mixing" entry in the
+            # spectrum object.
+
+            # Decision: if Ye, Yu, Yd are defined in the SARAH file, then we don't need to 
+            # save the output of these matrices since they don't do anything.
+            entry = ""
             if eigenstate in mixingdict:
                 entry = mixingdict[eigenstate]
 
-            towrite += (
-                    "for(int i=1; i<={0}; i++)\n"
-                    "{{\n"
-                    "for(int j=1; j<={1}; j++)\n"
-                    "{{\n"
-                    "(*{2})(i, j) = spectrum.get(Par::Pole_Mixing, \"{3}\", i, j);\n"
-                    "}}\n"
-                    "}}\n"
-            ).format(i, j, par.name, entry)
+            if par.name in ["ZUL", "ZUR", "ZDL", "ZDR", "ZEL", "ZER"]:
+                continue
+            else:
+                towrite += (
+                        "for(int i=1; i<={0}; i++)\n"
+                        "{{\n"
+                        "for(int j=1; j<={1}; j++)\n"
+                        "{{\n"
+                        "(*{2})(i, j) = spectrum.get(Par::Pole_Mixing, \"{3}\", i, j);\n"
+                        "}}\n"
+                        "}}\n"
+                ).format(i, j, par.name, entry)
 
       
     # Fill model dependent other parameters
@@ -2146,16 +2155,36 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Block MINPAR //\n'\
       '/****************/\n'
 
-    # TODO: The name of model parameters might be wrong
-    for name, var in variables.iteritems():
-      if var.block == "MINPAR" :
-        model_par = get_model_par_name(name, variables)
-        towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'
-        if var.type.startswith("Complex") :
-          towrite += '  '+name+'->re'
-        else :
-          towrite += '  *'+name
-        towrite += ' = *inputs.param.at("'+model_par+'");\n'
+    # # TODO: The name of model parameters might be wrong
+    # for name, var in variables.iteritems():
+    #   if var.block == "MINPAR" :
+    #     model_par = get_model_par_name(name, variables)
+    #     towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'
+    #     if var.type.startswith("Complex") :
+    #       towrite += '  '+name+'->re'
+    #     else :
+    #       towrite += '  *'+name
+    #     towrite += ' = *inputs.param.at("'+model_par+'");\n'
+
+    for par in parameters:
+        if par.block == "MINPAR":
+            c = "*"+par.name if par.is_real else par.name+"->re"
+
+            # TODO
+            # If there's no BC then assume it's the parameter name?
+            e = par.name
+
+            # Check to see if 
+            if par.name in bcs: 
+                e = bcs[par.name]
+            elif par.alt_name in bcs:
+                e = bcs[par.alt_name]
+
+            towrite += (
+                "if(inputs.param.find(\"{0}\") != inputs.param.end())\n"
+                "  {1}"
+                " = *inputs.param.at(\"{0}\");\n"
+            ).format(e, c)
 
     towrite += "\n"\
       "/****************/\n"\
@@ -2163,15 +2192,35 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "/****************/\n"
 
     # TODO: The name of model parameters might be wrong
-    for name, var in variables.iteritems():
-      if var.block == "EXTPAR" :
-        model_par = get_model_par_name(name, variables)
-        towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'
-        if var.type.startswith("Complex") :
-          towrite += '  '+name+'->re'
-        else :
-          towrite += '  *'+name
-        towrite += ' = *inputs.param.at("'+model_par+'");\n'
+    # for name, var in variables.iteritems():
+    #   if var.block == "EXTPAR" :
+    #     model_par = get_model_par_name(name, variables)
+    #     towrite += 'if(inputs.param.find("'+model_par+'") != inputs.param.end())\n'
+    #     if var.type.startswith("Complex") :
+    #       towrite += '  '+name+'->re'
+    #     else :
+    #       towrite += '  *'+name
+    #     towrite += ' = *inputs.param.at("'+model_par+'");\n'
+
+    for par in parameters:
+        if par.block == "EXTPAR":
+            c = "*"+par.name if par.is_real else par.name+"->re"
+
+            # If there's no BC then assume it's the parameter name?
+            # TODO
+            e = par.name
+
+            # Check to see if 
+            if par.name in bcs: 
+                e = bcs[par.name]
+            elif par.alt_name in bcs:
+                e = bcs[par.alt_name]
+
+            towrite += (
+                "if(inputs.param.find(\"{0}\") != inputs.param.end())\n"
+                "  {1}"
+                " = *inputs.param.at(\"{0}\");\n"
+            ).format(e, c)
 
     # TODO:  The name of model parameters might be wrong
     # TODO: this does not work for matrices

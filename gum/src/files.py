@@ -442,27 +442,11 @@ def add_new_model_to_function(filename, module, capability, function,
                         # Add the model name to the end if there's
                         # less than ten (macro maximum)
                         if numentries < 10:
-                            # Only replacing first occurence of a ")"
                             modellist = re.sub(r'\)', ", "+model_name+')', 
                                         modellist, 1) 
                         # Otherwise add a new entry altogether
                         else:
-                            newentry = ""
-                            # If it's something like MODEL_GROUP(group2(...))
-                            # make a new group3 and add an 
-                            # ALLOW_MODEL_COMBINATION(group1, group3)
-                            # TODO check to see if group(n+1) already exists.
-                            m = re.search(r'MODEL_GROUP\(group(\d)', pattern)
-                            if m:
-                                p = m.group(1) # Index
-                                newentry = (
-                                    "\n      MODEL_GROUP(group{0}({1}))"
-                                    "\n      ALLOW_MODEL_COMBINATION(group1,group{0})"
-                                ).format((int(p)+1), model_name)
-                            # Write the new entry *before* the old one. This
-                            # way it will be appended to first by GUM.
-                            else:
-                                newentry = "\n      {0}({1})".format(pattern, model_name)
+                            newentry = "\n      {0}({1})".format(pattern, model_name)
                             g.write(newentry)
                         g.write(modellist)
                         adding_to_modellist = False

@@ -701,7 +701,8 @@ namespace GUM
   }
 
   // Get the boundary conditions for all parameters in the parameter list
-  void SARAH::get_boundary_conditions(std::vector<Parameter> &parameters)
+  void SARAH::get_boundary_conditions(std::map<std::string, std::string> &bcs, 
+                                      std::vector<Parameter> parameters)
   {
     std::cout << "Getting boundary conditions" << std::endl;
 
@@ -729,7 +730,9 @@ namespace GUM
         for(auto param = parameters.begin(); param != parameters.end(); param++)
         {
           if (param->name() == bc_name or param->alt_name() == bc_name)
-              param->set_bcs(bc);
+          {
+              bcs[bc] = param->name();
+          }
         }
       }
     }
@@ -949,9 +952,6 @@ namespace GUM
 
       // Options for Vevacious output.
       std::string options;
-      // TODO: options:
-      // - ComplexParameters (automatic?)
-      // - Scheme (DRbar for SUSY, MSbar for non-SUSY)
       options = "Version->\"++\"";
 
       // Write output.
@@ -965,6 +965,7 @@ namespace GUM
   void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist,
                  Outputs &outputs, std::vector<std::string> &backends,
                  std::map<std::string,bool> &flags, std::map<std::string, std::string> &mixings,
+                 std::map<std::string, std::string> &bcs,
                  std::vector<Parameter> &sphenodependences, Error &error)
   {
 
@@ -1030,7 +1031,7 @@ namespace GUM
         model.get_flags(flags);
 
         // Get the boundary conditions for the parameters
-        model.get_boundary_conditions(paramlist);
+        model.get_boundary_conditions(bcs, paramlist);
 
         // Get the parameters used to solve tadpoles and removed them from the list
         model.get_tadpoles(paramlist);
@@ -1136,7 +1137,7 @@ BOOST_PYTHON_MODULE(libsarah)
     .def(vector_indexing_suite< std::vector<std::string> >() )
     ;
 
-  class_< std::map<std::string, std::string> >("SARAHMixings")
+  class_< std::map<std::string, std::string> >("SARAHMapStrStr")
     .def(map_indexing_suite< std::map<std::string, std::string> >() )
     ;
 

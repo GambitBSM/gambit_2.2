@@ -407,8 +407,8 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
 
     # Use DarkBit_utils::ImportDecays to recursively import decays for final 
     # state particles
-    # TODO confirm final state particles to exclude. ttbar *not* in the list
-    # currently but might have to be
+    # TODO confirm final state particles to exclude. 
+    # TODO add SM fermion final states (excludedecays)
     if higgses or propagators:
 
         towrite += (
@@ -424,11 +424,12 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
                 "using DarkBit_utils::ImportDecays;\n"
                 "\n"
                 "auto excludeDecays = daFunk::vec<std::string>("
-                "\"Z0\", \"W+\", \"W-\", \"u_3\", \"ubar_3\", "
+                "\"Z0\", \"W+\", \"W-\", "
                 "\"e+_2\", \"e-_2\", \"e+_3\", \"e-_3\");\n"
                 "\n"
         )
 
+    # TODO add any final state, non-SM particles (external legs) 
         for particle in higgses+propagators:
 
             towrite += (
@@ -463,7 +464,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     return towrite
 
 
-def write_darkbit_src(dm, pc, sv, dd, ann_products, propagators,
+def write_darkbit_src(dm, pc, sv, ann_products, propagators,
                       gambit_pdg_dict, gambit_model_name, calchep_pdg_dict,
                       model_specific_particles, higgses):
     """
@@ -502,9 +503,6 @@ def write_darkbit_src(dm, pc, sv, dd, ann_products, propagators,
                             gambit_pdg_dict, gambit_model_name,
                             calchep_pdg_dict, model_specific_particles,
                             higgses)
-
-    if dd:
-        towrite += write_direct_detection(gambit_model_name)
 
     towrite += write_dm_id(gambit_model_name, gb_id)
 
@@ -604,38 +602,7 @@ def add_SM_macros(gambit_model_name):
 
     return towrite
 
-def write_direct_detection(model_name):
-    """
-    Writes direct detection bits in DarkBit... TODO
-    """
-
-    towrite = (
-            "\n"
-            "/// Direct detection couplings.\n"
-            "void DD_couplings_{0}(DM_nucleon_couplings & result)\n"
-            "{{\n"
-            "using namespace Pipes::DD_couplings_{0};\n"
-            "const Spectrum& spec = *Dep::{0}_spectrum;\n"
-            "\n"
-            "  *** TODO *** \n"
-            "result.gps = ();\n"
-            "result.gns = ();\n"
-            "result.gpa = ();\n"
-            "result.gna = ();\n"
-            "\n"
-            "logger() << LogTags::debug << '{0} DD couplings:' << std::endl;\n"
-            "logger() << ' gps = ' << result.gps << std::endl;\n"
-            "logger() << ' gns = ' << result.gns << std::endl;\n"
-            "logger() << ' gpa = ' << result.gpa << std::endl;\n"
-            "logger() << ' gna = ' << result.gna << EOM;\n"
-            "\n"
-            "}}\n"
-            "\n"
-    ).format(model_name)
-
-    return towrite
-
-def write_darkbit_rollcall(model_name, pc, dd):
+def write_darkbit_rollcall(model_name, pc):
     """
     Writes the rollcall header entries for new DarkBit entry.
     """
@@ -654,18 +621,6 @@ def write_darkbit_rollcall(model_name, pc, dd):
     else:
         pro_cat = None
 
-    # TODO
-    if dd:
-        dir_det = dumb_indent(4, (
-                "#define FUNCTION DD_couplings_{0}\n"
-                "START_FUNCTION(DM_nucleon_couplings)\n"
-                "DEPENDENCY({0}_spectrum, Spectrum)\n"
-                "*** TODO *** \n"
-                "#undef FUNCTION\n"
-        ).format(model_name))
-    else:
-        dir_det = None
-
     dm_id = dumb_indent(4, (
             "#define FUNCTION DarkMatter_ID_{0}\n"
             "START_FUNCTION(std::string)\n"
@@ -673,7 +628,7 @@ def write_darkbit_rollcall(model_name, pc, dd):
             "#undef FUNCTION\n"
     ).format(model_name))
 
-    return pro_cat, dir_det, dm_id
+    return pro_cat, dm_id
 
 
 
@@ -826,14 +781,29 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
 
 
     # TODO GF, aS, aEWinv
-    # # These are handled slightly differently by SARAH and FeynRules
-    # if mathpackage == 'sarah':
-    #     print("MO SARAH support not implemented yet.")
-
-        
-    # elif mathpackage == 'feynrules':
-    #     print("MO FeynRules support not implemented yet.")
-    #     # Do a different thing
+    # These are handled slightly differently by SARAH and FeynRules
+    if mathpackage == 'sarah':
+        mo_src += (
+            "// SMInputs constants"
+            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\");"
+            "// Fermi constant\n"
+            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\");"
+            "// alphaS \n"
+            "Assign_Value(\"alfSMZ\", spec.get(Par::dimensionless, \"alphaS\");"
+            "// alphaS at mZ - for internal running\n"
+            "Assign_Value(\"aEWinv\", spec.get(Par::dimensionless, \"alphainv\");"
+            "// Fine structure constant\n\n"
+        )
+    elif mathpackage == 'feynrules':
+        mo_src += (
+            "// SMInputs constants"
+            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\");"
+            "// Fermi constant\n"
+            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\");"
+            "// alphaS \n"
+            "Assign_Value(\"aEWM1\", spec.get(Par::dimensionless, \"alphainv\");"
+            "// Fine structure constant\n\n"
+        )
 
     # Widths
     mo_src += (
