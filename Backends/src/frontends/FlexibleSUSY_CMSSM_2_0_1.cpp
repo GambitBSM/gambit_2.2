@@ -40,7 +40,37 @@ BE_NAMESPACE
 
   using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
   using namespace FlexibleSUSY_CMSSM_default::softsusy;
- 
+
+ /*
+    /// Initialise QedQcd object from SMInputs data
+       void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
+    {
+      // Set pole masses (to be treated specially)
+      oneset.setPoleMt(sminputs.mT);
+      //oneset.setPoleMb(...);
+      oneset.setPoleMtau(sminputs.mTau);
+      oneset.setMbMb(sminputs.mBmB);
+      /// set running quark masses
+      /// TODO: check if we should use
+      /// TODO: setMu2GeV, setMd2GeV, setMs2GeV, setMcMc
+      oneset.setMass(softsusy::mDown,    sminputs.mD);
+      oneset.setMass(softsusy::mUp,      sminputs.mU);
+      oneset.setMass(softsusy::mStrange, sminputs.mS);
+      oneset.setMass(softsusy::mCharm,   sminputs.mCmC);
+      /// set QED and QCD structure constants
+      oneset.setAlpha(softsusy::ALPHA, 1./sminputs.alphainv);
+      oneset.setAlpha(softsusy::ALPHAS, sminputs.alphaS);
+      //set electron, muon and z pole mass
+      // TODO: check if we should set set pole masses here instead
+      // TODO ie use setPoleMmuon, setPoleMel
+      // TODO: has no real impact anyway
+      oneset.setMass(softsusy::mElectron, sminputs.mE);
+      oneset.setMass(softsusy::mMuon,     sminputs.mMu);
+      oneset.setPoleMZ(sminputs.mZ);
+    }  
+*/
+
+  
   // Function to extract the FS settings form the yaml file
   void Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input)
   {
