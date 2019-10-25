@@ -24,6 +24,10 @@
 #include "gambit/Elements/spectrum.hpp"
 #include "gambit/SpecBit/spectrum_types.hpp"
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
+
+//TODO: Static FS includes, remove when BOSSed FS works
+#include "flexiblesusy/src/lowe.h" // From softsusy; used by flexiblesusy
+#include "flexiblesusy/src/spectrum_generator_settings.hpp"
  
 
 // Convenience functions (definitions)

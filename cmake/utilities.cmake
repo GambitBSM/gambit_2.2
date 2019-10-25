@@ -414,10 +414,11 @@ function(add_standalone executablename)
       endif()
     endif()
 
+#TODO: Remove this when BOSSed FS works
     # Do ad hoc checks for stuff that will eventually be BOSSed and removed from here.
-#    if (USES_SPECBIT AND NOT EXCLUDE_FLEXIBLESUSY)
-#      set(ARG_LIBRARIES ${ARG_LIBRARIES} ${flexiblesusy_LDFLAGS})
-#    endif()
+    if (USES_SPECBIT AND NOT EXCLUDE_FLEXIBLESUSY)
+      set(ARG_LIBRARIES ${ARG_LIBRARIES} ${flexiblesusy_LDFLAGS})
+    endif()
 
     add_gambit_executable(${executablename} "${ARG_LIBRARIES}"
                           SOURCES ${STANDALONE_SOURCES}

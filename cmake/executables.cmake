@@ -26,9 +26,10 @@ include(cmake/standalones.cmake)
 
 # Add the main GAMBIT executable
 if(EXISTS "${PROJECT_SOURCE_DIR}/Core/")
-#  if (NOT EXCLUDE_FLEXIBLESUSY)
-#    set(gambit_XTRA ${flexiblesusy_LDFLAGS})
-#  endif()
+#TODO: remove this when BOSSed FS works
+  if (NOT EXCLUDE_FLEXIBLESUSY)
+    set(gambit_XTRA ${flexiblesusy_LDFLAGS})
+  endif()
   if (NOT EXCLUDE_ROOT)
     set(gambit_XTRA ${gambit_XTRA} ${ROOT_LIBRARIES})
     if (NOT EXCLUDE_RESTFRAMES)
@@ -55,9 +56,10 @@ endif()
 # Add the ScannerBit standalone executable
 if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
   if(EXISTS "${PROJECT_SOURCE_DIR}/Elements/")
-#    if (NOT EXCLUDE_FLEXIBLESUSY)
-#      set(ScannerBit_XTRA ${flexiblesusy_LDFLAGS})
-#    endif()
+#TODO: remove this when BOSSed FS works
+    if (NOT EXCLUDE_FLEXIBLESUSY)
+      set(ScannerBit_XTRA ${flexiblesusy_LDFLAGS})
+    endif()
   endif()
   add_gambit_executable(ScannerBit_standalone "${ScannerBit_XTRA}"
                         SOURCES ${PROJECT_SOURCE_DIR}/ScannerBit/examples/ScannerBit_standalone.cpp
@@ -66,9 +68,10 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/ScannerBit/")
                                 ${GAMBIT_BASIC_COMMON_OBJECTS}
   )
   if(EXISTS "${PROJECT_SOURCE_DIR}/Elements/")
-#    if (NOT EXCLUDE_FLEXIBLESUSY)
-#      add_dependencies(ScannerBit_standalone flexiblesusy)
-#    endif()
+#TODO: Remove this when BOSSed FS works
+    if (NOT EXCLUDE_FLEXIBLESUSY)
+      add_dependencies(ScannerBit_standalone flexiblesusy)
+    endif()
   else()
     # Make sure the printers compile OK if the rest of GAMBIT is missing
     target_compile_definitions(Printers PRIVATE SCANNER_STANDALONE)
