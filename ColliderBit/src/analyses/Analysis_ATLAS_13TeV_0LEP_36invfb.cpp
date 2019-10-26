@@ -398,6 +398,7 @@ namespace Gambit {
           if (nJets >= 2) _flows["2j-2800"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2800});
           if (nJets >= 2) _flows["2j-3600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, true, met_sqrtHT > 18, meff_incl > 3600});
           *///We need to add a row for njets, even though this is always true.
+          if (nJets >= 2) _flows["2j-1200"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 250, etamax_2 < 0.8, met_sqrtHT > 14, meff_incl > 1200});
           if (nJets >= 2) _flows["2j-1600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 300, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 1600});
           if (nJets >= 2) _flows["2j-2000"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2000});
           if (nJets >= 2) _flows["2j-2100"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 600, true, met_sqrtHT > 26, meff_incl > 2100});

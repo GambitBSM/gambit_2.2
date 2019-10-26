@@ -39,7 +39,7 @@
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp"
 
-#define COLLIDERBIT_DEBUG
+//#define COLLIDERBIT_DEBUG
 
 namespace Gambit
 {

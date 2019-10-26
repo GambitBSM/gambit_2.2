@@ -25,25 +25,185 @@
 #include "HEPUtils/Particle.h"
 #include "HEPUtils/FastJet.h"
 #include "MCUtils/PIDCodes.h"
-
-#include <fstream>
-#include <algorithm>//Used for sorting the particles so I know CBS and gambit get them in the same order - makes debugging easier.
-
-//#define MET_DEBUG
-//#define JET_CHECKING
-//#define SINGLE_EVENT_DEBUG
-
-//#define ELECTRON_PARENTAGE_DEBUG
-//#define ELECTRON_PARENTAGE_DEBUG_TWO
-
-#define NJET_DATA_OUTPUT
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenParticle.h"
+#include "HEPUtils/FastJet.h"
 
 
 
-inline bool compare_particles_by_pz(FJNS::PseudoJet jet1, FJNS::PseudoJet jet2)
+#ifndef UNIFIED_FUNCTIONS
+#define UNIFIED_FUNCTIONS
+
+//Namespace for all the overloaded functions so that the convertParticleEvent function
+//is fully general: basically, for every function there is a version for HEPMC::ConstGenParticlePtr
+//and a version for Pythia Particles (which are templated functions).
+//Tomek Procter Oct 2019 - maybe it would be cleaner if all these functions were in another header?
+namespace UnifiedEventConversionFunctions
 {
-  return (jet1.pz() > jet2.pz());
+  inline int get_unified_pid(const HepMC3::ConstGenParticlePtr &gp)
+  {
+    return gp->pid();
+  }
+  template<typename ParticleP>
+  int get_unified_pid(ParticleP p)
+  {
+    return p.id();
+  }
+
+
+  inline bool get_unified_isFinal(const HepMC3::ConstGenParticlePtr &gp)
+  {
+    return (gp->status() == 1);
+  }
+  template<typename ParticleP>
+  bool get_unified_isFinal(ParticleP p)
+  {
+    return (p.isFinal());
+  }
+
+
+  inline double get_unified_eta(const HepMC3::ConstGenParticlePtr &gp)
+  {
+    //n.b. I'm writing this manually because using the function in MCUtils/HepMCVectors.h
+    //at the moment seems to stop it compiling for some reason??
+    const HepMC3::FourVector& hp4 = gp->momentum();
+    double magnitude = sqrt(hp4.px()*hp4.px() + hp4.py()*hp4.py() + hp4.pz()*hp4.pz());
+    return atanh(hp4.pz()/magnitude);
+  }
+  template <typename ParticleP>
+  inline double get_unified_eta(ParticleP p)
+  {
+    return p.eta();
+  }
+
+
+  inline HEPUtils::P4 get_unified_momentum(const HepMC3::ConstGenParticlePtr &gp)
+  {
+    const HepMC3::FourVector& hp4 = gp->momentum();
+    return HEPUtils::P4::mkXYZE(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
+  }
+  template <typename ParticleP>
+  inline HEPUtils::P4 get_unified_momentum(ParticleP p)
+  {
+    return HEPUtils::P4::mkXYZE(p.px(), p.py(), p.pz(), p.e());
+  }
+
+
+
+  inline FJNS::PseudoJet get_unified_pseudojet(const HepMC3::ConstGenParticlePtr &gp)
+  {
+    const HepMC3::FourVector& hp4 = gp->momentum();
+    return FJNS::PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
+  }
+  template <typename ParticleP>
+  inline FJNS::PseudoJet get_unified_pseudojet(ParticleP p)
+  {
+    FJNS::PseudoJet psej = FJNS::PseudoJet(p.p().px(), p.p().py(), p.p().pz(), p.p().e());
+    return psej;
+  }
+
+
+  //Tomek Procter Aug 19. Note the MCUtils isParton function only checks
+  // for quarks/gluons (while in pythia, the function used in Gambit inlcudes
+  //diquarks too), so I'm manually defining this function using the isParton
+  //is diquark options in MCUtils
+  inline bool HEPMC3_isParton(int pid)
+  {
+    return (MCUtils::PID::isParton(pid) || MCUtils::PID::isDiquark(pid));
+  }
+  inline bool get_unified_fromHadron(const HepMC3::ConstGenParticlePtr gp, const std::vector<HepMC3::ConstGenParticlePtr> &pevt, int i)
+  {
+    //For HepMC3 events, I wrote this function, it mimics exactly what the Py8Utils.cpp function does.
+    //This seems highly unlikely to change - apparently this is just the standard way its done.
+    //Looping through parents is tricky so I won't unify it unless absolutely necesarry.
+    //note the meaningless int argument to make sure the same function call works both for hepmc3
+    //and pythia. 
+
+    if (MCUtils::PID::isHadron(gp->pid())) return true;
+    if (HEPMC3_isParton(abs(gp->pid()))) return false; // stop the walking at the end of the hadron level
+    auto parent_vector = (gp->parents());
+    if (parent_vector.size() == 0) return false;
+    for (const HepMC3::ConstGenParticlePtr parent : parent_vector)
+    {
+      if (get_unified_fromHadron(parent, pevt, i)) return true;
+    }
+    return false;
+  }
+  template <typename ParticleP, typename EventT>
+  inline bool get_unified_fromHadron(ParticleP &p,const EventT &pevt, int i)
+  {
+    //Just call the function in Py8Utils.cpp
+    return Gambit::ColliderBit::fromHadron(i, pevt);
+  }
+
+  inline int get_unified_mother1(const HepMC3::ConstGenParticlePtr &gp)
+  {
+    return 0;
+  }
+  inline int get_unified_mother2(const HepMC3::ConstGenParticlePtr &gp)
+  {
+    return 0;
+  }
+  template <typename ParticleP>
+  inline int get_unified_mother1(ParticleP &p)
+  {
+    return p.mother1();
+  }
+  template <typename ParticleP>
+  inline int get_unified_mother2(ParticleP &p)
+  {
+    return p.mother2();
+  }
+
+  template <typename ParticleP, typename EventT>
+  inline int get_unified_mother1_pid(ParticleP &p, EventT &pevt)
+  {
+    return pevt[p.mother1()].id();
+  }
+  template <typename ParticleP, typename EventT>
+  inline int get_unified_mother2_pid(ParticleP &p, EventT &pevt)
+  {
+    return pevt[p.mother2()].id();
+  }
+  //shouldn't ever need to call a hepmc3 version but for safety here's one that just returns 0.
+  inline int get_unified_mother1_pid(const HepMC3::ConstGenParticlePtr &gp, const std::vector<HepMC3::ConstGenParticlePtr> &pevt)
+  {
+    return 0;
+  }
+  //shouldn't ever need to call a hepmc3 version but for safety here's one that just returns 0.
+  inline int get_unified_mother2_pid(const HepMC3::ConstGenParticlePtr &gp, const std::vector<HepMC3::ConstGenParticlePtr> &pevt)
+  {
+    return 0;
+  }
+
+
+  //Note! The unified_child_id_results MUST BE EMPTY as I don't clear it in the function.
+  inline void get_unified_child_ids(const HepMC3::ConstGenParticlePtr &gp, const std::vector<HepMC3::ConstGenParticlePtr>&pevt, std::vector<int> &unified_child_id_results)
+  {
+    auto child_vector = gp->children();
+    for (const HepMC3::ConstGenParticlePtr child: child_vector)
+    {
+      unified_child_id_results.push_back(child->pid());
+    }
+  }
+  //Note! The unified_child_id_results MUST BE EMPTY as I don't clear it in the function.
+  template<typename ParticleP, typename EventT>
+  void get_unified_child_ids(ParticleP &p, EventT &pevt, std::vector<int> &unified_child_id_results)
+  {
+    std::vector<int> daughter_list = p.daughterList();
+    for (int daughter : daughter_list)
+    {
+      unified_child_id_results.push_back(pevt[daughter].id());
+    }
+  }
 }
+#endif
+
+
+
+
+
+
 
 
 namespace Gambit
@@ -52,233 +212,151 @@ namespace Gambit
   namespace ColliderBit
   {
 
-    #ifndef DODGY_GLOBAL_COUNTING_SHORTCUT
-    static int TomeksCounter1{0};
-    #define DODGY_GLOBAL_COUNTING_SHORTCUT
-    #endif
+    using namespace UnifiedEventConversionFunctions;
 
-    /// Convert a hadron-level EventT into an unsmeared HEPUtils::Event
-    /// @todo Overlap between jets and prompt containers: need some isolation in MET calculation
-    template<typename EventT>
-    void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR)
+
+    template <typename EventT>
+    void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR = 0.4)
     {
       result.clear();
-
-      //Want to see debug info in more detail.
-      //std::cout.precision(6);
 
       std::vector<FJNS::PseudoJet> bhadrons; //< for input to FastJet b-tagging
       std::vector<HEPUtils::Particle> bpartons, cpartons, tauCandidates;
       HEPUtils::P4 pout; //< Sum of momenta outside acceptance
+      std::vector<FJNS::PseudoJet> jetparticles;
 
-      // Make a first pass of non-final particles to gather b-hadrons and taus
-      for (int i = 0; i < pevt.size(); ++i)
+      for (size_t i = 0; i < pevt.size(); i++)
       {
-        const auto& p = pevt[i];
+        const auto &p = pevt[i];
+        const int pid = get_unified_pid(p);
+        const int apid = abs(pid);
+        const HEPUtils::P4 p4 = get_unified_momentum(p);
+      
 
-        // Find last b-hadrons in b decay chains as the best proxy for b-tagging
-        /// @todo Temporarily using quark-based tagging instead -- fix
-        if (p.idAbs() == 5) {
+      //b, c and tau idenitification:
+
+    // Find last b-hadrons in b decay chains as the best proxy for b-tagging
+    /// @todo Temporarily using quark-based tagging instead -- fix
+        if (apid == 5){
           bool isGoodB = true;
-          const std::vector<int> bDaughterList = p.daughterList();
-          for (size_t daughter = 0; daughter < bDaughterList.size(); daughter++)
+          std::vector<int> childIDs;
+          get_unified_child_ids(p, pevt, childIDs);
+          for (int childID : childIDs)
           {
-            const auto& pDaughter = pevt[bDaughterList[daughter]];
-            int daughterID = pDaughter.idAbs();
-            if (daughterID == 5) isGoodB = false;
+            if (abs(childID) == 5) isGoodB = false;
           }
           if (isGoodB)
-            bpartons.push_back(HEPUtils::Particle(mk_p4(p.p()), p.id()));
-        }
-
-        // Find last c-hadrons in decay chains as the best proxy for c-tagging
-        /// @todo Temporarily using quark-based tagging instead -- fix
-        if (p.idAbs() == 4) {
-          bool isGoodC = true;
-          const std::vector<int> cDaughterList = p.daughterList();
-          for (size_t daughter = 0; daughter < cDaughterList.size(); daughter++)
           {
-            const auto& pDaughter = pevt[cDaughterList[daughter]];
-            int daughterID = pDaughter.idAbs();
-            if (daughterID == 4) isGoodC = false;
+            bpartons.push_back(HEPUtils::Particle(p4,pid));
+          }
+        }
+    // Find last c-hadrons in decay chains as the best proxy for c-tagging
+      /// @todo Temporarily using quark-based tagging instead -- fix
+        if (apid == 4) {
+          bool isGoodC = true;
+          std::vector<int> childIDs;
+          get_unified_child_ids(p, pevt, childIDs);
+          for (int childID : childIDs)
+          {
+            if (abs(childID) == 4) isGoodC = false;
           }
           if (isGoodC)
-            cpartons.push_back(HEPUtils::Particle(mk_p4(p.p()), p.id()));
-        }
-
-        // Find tau candidates
-        if (p.idAbs() == MCUtils::PID::TAU) {
-          HEPUtils::P4 tmpMomentum;
-          bool isGoodTau=true;
-          const std::vector<int> tauDaughterList = p.daughterList();
-          for (size_t daughter = 0; daughter < tauDaughterList.size(); daughter++)
           {
-            const auto& pDaughter = pevt[tauDaughterList[daughter]];
-            int daughterID = pDaughter.idAbs();
+            cpartons.push_back(HEPUtils::Particle(p4,pid));
+          }
+        }
+        // Find tau candidates
+        if (apid == MCUtils::PID::TAU)
+        {
+          bool isGoodTau=true;
+          std::vector<int> childIDs;
+          get_unified_child_ids(p, pevt, childIDs);
+          int abschildID;
+          for (int childID : childIDs)
+          {
             // Veto leptonic taus
             /// @todo What's wrong with having a W daughter? Doesn't that just mark a final tau?
-            if (daughterID == MCUtils::PID::ELECTRON || daughterID == MCUtils::PID::MUON ||
-                daughterID == MCUtils::PID::WPLUSBOSON || daughterID == MCUtils::PID::TAU)
-              isGoodTau = false;
-            if (daughterID != MCUtils::PID::TAU) tmpMomentum += mk_p4(pDaughter.p());
+            abschildID = abs(childID);
+            if (abschildID == MCUtils::PID::ELECTRON || abschildID == MCUtils::PID::MUON ||
+                abschildID == MCUtils::PID::WPLUSBOSON || abschildID == MCUtils::PID::TAU)
+              {
+                isGoodTau = false;
+              }
           }
-
           if (isGoodTau) {
-            tauCandidates.push_back(HEPUtils::Particle(mk_p4(p.p()), p.id()));
+            tauCandidates.push_back(HEPUtils::Particle(p4, pid));
           }
         }
-      }
 
-#ifdef SINGLE_EVENT_DEBUG
-      std::fstream myfile;
-      myfile.open("GAMBIT_SINGLE_EVENT_FILE.csv", std::fstream::app);
-      myfile << "Particle ID, Prompt?, Visible?, Px, Py, Pz, Pe, Abs(eta), Parents, Parent Pe, etc.\n";
-#endif
+        //Now we consider final state particle for jet inputs and MET: Gambit originally
+        //did this in two loops, but CBS in just the one. I'm doing just one, it avoids a
+        //few redfinitions, I don't think it makes a huge difference either way?
 
-#ifdef JET_CHECKING
-    std::fstream jetfile;
-    if (TomeksCounter1 == 22)
-    {  
-      jetfile.open("GAMBIT Jetfile.csv", std::fstream::app);
-    }
-#endif
+        //We only want final state particles:
+        if (!get_unified_isFinal(p)) continue;
 
-
-
-      // Loop over final state particles for jet inputs and MET
-      std::vector<FJNS::PseudoJet> jetparticles;
-      for (int i = 0; i < pevt.size(); ++i)
-      {
-        const auto& p = pevt[i];
-
-
-        // Only consider final state particles
-        if (!p.isFinal()) continue;
-
-        
-
-        // Check there's no partons!!
-        if (p.id() == 21 || abs(p.id()) <= 6) {
+        //Check there's no partons.
+        //This wasn't implemented in CBS, but for completeness here it is.
+        if (pid == 21 || abs(pid) <= 6)
+        {
           std::ostringstream sid;
           bool gotmother = false;
-          if (p.mother1() != 0) { gotmother = true; sid << pevt[p.mother1()].id() << " "; }
-          if (p.mother2() != 0) { gotmother = true; sid << pevt[p.mother2()].id() << " "; }
+          //HepMC has no equivalent of the .mother1, .mother2 call as far as I can see, 
+          //so the HepMC3 mother function will just return 0, and gotmother will always 
+          //be false - which means it won't try and print non-existent event info.
+          if (get_unified_mother1(p) != 0 ){gotmother = true; sid << get_unified_mother1_pid(p, pevt);}
+          if (get_unified_mother2(p) != 0 ){gotmother = true; sid << get_unified_mother2_pid(p, pevt);}
           if (gotmother) sid << " -> ";
-          sid << p.id();
-          ColliderBit_error().forced_throw(LOCAL_INFO, "Found final-state parton " + sid.str() + " in particle-level event converter: "
-           "reconfigure your generator to include hadronization, or Gambit to use the partonic event converter.");
+          sid << pid;
+          //ColliderBit_error().forced_throw(LOCAL_INFO, "Found final-state parton " + sid.str() + " in particle-level event converter: "
+          //    "reconfigure your generator to include hadronization, or Gambit to use the partonic event converter.");
+          //Tomek Procter October 2019: This needs to be fixed so you can throw the error in BOTH CBS and Gambit (or else not to try and
+          //throw it in CBS, as it wasn't there before and didn't make any difference)
+          //commented out for now so I can get everything else working.
         }
 
-        // Add particle outside ATLAS/CMS acceptance to MET
+
+        // Add particle outside ATLAS/CMS acceptance to MET and then ignore said particle.
         /// @todo Move out-of-acceptance MET contribution to BuckFast
-        if (std::abs(p.eta()) > 5.0)
+        if (std::abs(get_unified_eta(p)) > 5.0)
         {
-          pout += mk_p4(p.p());
-          #ifdef MET_DEBUG
-          std::cout << "Adding particle to met - PID: " << (p.id()) << "; Pz: " << mk_p4(p.p()).pz() << ", m: " << mk_p4(p.p()).m() << std::endl;
-          #endif
+          pout += p4;
           continue;
         }
 
         // Promptness: for leptons and photons we're only interested if they don't come from hadron/tau decays
-        const bool prompt = !fromHadron(i, pevt); //&& !fromTau(i, pevt);
-        const bool visible = MCUtils::PID::isStrongInteracting(p.id()) || MCUtils::PID::isEMInteracting(p.id());
-
-#ifdef SINGLE_EVENT_DEBUG
-
-        /*std::vector<int>Full_Mother_List;
-        int mother_part = i;
-        while (pevt[mother_part].mother1() != 0)
-        {
-           Full_Mother_List.push_back(mother_part);
-           mother_part = pevt[mother_part].mother1();
-           //if (pevt[mother_part].mother1() != 0)
-               //std::cout << "MULTIPLE PARENTS!";
-        }
+        const bool prompt = !get_unified_fromHadron(p, pevt, i);
+        const bool visible = MCUtils::PID::isStrongInteracting(pid) || MCUtils::PID::isEMInteracting(pid);
         
-
-        myfile << p.id() << ", " << prompt << ", " << visible << ", " << p.p().px() << ", " << p.p().py() << ", " << p.p().pz() << ", " << p.p().e() << ", " << abs(p.eta()) << ", ";
-
-        for (int parent_part : Full_Mother_List)
-        {
-            myfile << pevt[parent_part].id() << ", " << pevt[parent_part].e() << ", ";
-        }
-        myfile << "\n";*/
-#endif
-
-
         // Add prompt and invisible particles as individual particles
         if (prompt || !visible)
         {
-          HEPUtils::Particle* gp = new HEPUtils::Particle(mk_p4(p.p()), p.id());
+          HEPUtils::Particle* gp = new HEPUtils::Particle(p4, pid);
           gp->set_prompt();
           result.add_particle(gp);
-          #ifdef JET_CHECKING
-          if (p.id() == 22)
-          {
-            std::cout << "Prompt Photon: pz = " << p.p().pz() << std::endl;
-          }
-          #endif
         }
 
         // All particles other than invisibles and muons are jet constituents
         // Matthias added test to keep non-prompt particles
-        if (visible && p.idAbs() != MCUtils::PID::MUON)
+        if (visible && apid != MCUtils::PID::MUON)
         {
-           jetparticles.push_back(mk_pseudojet(p.p()));
-           FJNS::PseudoJet temp = mk_pseudojet(p.p());
-#ifdef JET_CHECKING
-        if (TomeksCounter1 == 22)
-          {
-            jetfile << p.id() << ", " << temp.px() << ", " << temp.py() << ", " << temp.pz() << ", " << temp.e() << ", " << temp.rap() << ",\n";
-          }
-#endif
+          jetparticles.push_back(get_unified_pseudojet(p));
         }
-        // next case are visible non-prompt muons
-        //if (visible && p.idAbs() == MCUtils::PID::MUON && !prompt) jetparticles.push_back(mk_pseudojet(p.p()));
-        // next case are non-prompt neutrinos
-        //if (!visible && !prompt) jetparticles.push_back(mk_pseudojet(p.p()));
- 
       }
-#ifdef SINGLE_EVENT_DEBUG
-      myfile << "\n\n========\n\n";
-      myfile.close();
-#endif
-#ifdef JET_CHECKING
-if (TomeksCounter1 == 22)
-{
-      jetfile << "\n\n========\n\n";
-      jetfile.close();
-}
-#endif
+
       /// Jet finding
       /// @todo Choose jet algorithm via detector _settings? Run several algs?
       const FJNS::JetDefinition jet_def(FJNS::antikt_algorithm, antiktR);
-      //sort jet particles by p so gambit and CBS have same order.
-      std::sort(jetparticles.begin(), jetparticles.end(), compare_particles_by_pz);
-      //int TP_TEMP_COUNTER = 0;
-      //for (auto particle : jetparticles)
-      //{
-        //std::cout << "Particle Number: " << TP_TEMP_COUNTER++ << "; Pz: " << particle.pz() << "; Px: " << particle.px() <<std::endl;
-      //}
-
       FJNS::ClusterSequence cseq(jetparticles, jet_def);
       std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(10));
-
-      //std::cout << "\n\nJETCLUSTER_DEBUG_INFO: " << std::endl;
-      //std::cout << "AntiktR: " << antiktR << std::endl;
-      //std::cout << "pTmin: " << 10 << std::endl;
-      //std::cout << "Number of particles passed to algorithm is: " << jetparticles.size() << std::endl;
-      //std::cout << "Number of outputjets, unsorted: " << cseq.inclusive_jets(10).size() << std::endl;
-      //std::cout << "Number of outputjets, sorted: " << sorted_by_pt(cseq.inclusive_jets(10)).size() << std::endl;
 
 
       /// Do jet b-tagging, etc. and add to the Event
       /// @todo Use ghost tagging?
       /// @note We need to _remove_ this b-tag in the detector sim if outside the tracker acceptance!
-      for (auto& pj : pjets) {
+      for (auto& pj : pjets)
+      {
         HEPUtils::P4 jetMom = HEPUtils::mk_p4(pj);
-
         /// @todo Replace with HEPUtils::any(bhadrons, [&](const auto& pb){ pj.delta_R(pb) < 0.4 })
         bool isB = false;
         for (HEPUtils::Particle& pb : bpartons) {
@@ -298,7 +376,7 @@ if (TomeksCounter1 == 22)
 
         bool isTau = false;
         for (HEPUtils::Particle& ptau : tauCandidates){
-          if (jetMom.deltaR_eta(ptau.mom()) < 0.5){
+          if (jetMom.deltaR_eta(ptau.mom()) < 0.5){ ///< @todo Hard-coded radius!!!
             isTau = true;
             break;
           }
@@ -310,13 +388,7 @@ if (TomeksCounter1 == 22)
           gp->set_prompt();
           result.add_particle(gp);
         }
-
-
-
         result.add_jet(new HEPUtils::Jet(HEPUtils::mk_p4(pj), isB, isC));
-
-
-
       }
 
       /// Calculate missing momentum
@@ -335,53 +407,22 @@ if (TomeksCounter1 == 22)
       // From sum of invisibles, including those out of range
       for (size_t i = 0; i < result.invisible_particles().size(); ++i) {
         pout += result.invisible_particles()[i]->mom();
-        #ifdef MET_DEBUG
-        auto thingy = result.invisible_particles()[i];
-        std::cout << "Adding particle to met - PID: " << thingy->pid() << "; Pz: " << thingy->mom().pz() << ", m: " << thingy->mom().m() << std::endl;
-        #endif
       }
-      #ifdef MET_DEBUG
-      std::cout << "FINAL MISSING MOMENTUM IS: (" << pout.px() <<", "<<pout.py()<<", "<<pout.pz()<<", "<<pout.m()<<")"<<std::endl;
-      #endif
       result.set_missingmom(pout);
 
-#ifdef NJET_DATA_OUTPUT
-    double sumpT = 0;
-    for (int i{0}; i < result.jets().size(); i++)
-    {
-      sumpT += result.jets()[i]->pT();
+      #ifdef COLLIDERBIT_DEBUG
+        // Print event summary
+        cout << "  MET  = " << result.met() << " GeV" << endl;
+        cout << "  #e   = " << result.electrons().size() << endl;
+        cout << "  #mu  = " << result.muons().size() << endl;
+        cout << "  #tau = " << result.taus().size() << endl;
+        cout << "  #jet = " << result.jets().size() << endl;
+        cout << "  #pho  = " << result.photons().size() << endl;
+        cout << endl;
+      #endif
     }
-    std::fstream njetdatafile;
-    njetdatafile.open("GambitNjetFile.csv", std::fstream::app);
-    njetdatafile << result.jets().size() << ", " << result.met() << ", " << result.jets()[0]->pT() << ", " << sumpT << "\n";
-    njetdatafile.close();
-#endif
 
-#ifdef SINGLE_EVENT_DEBUG
-++TomeksCounter1;
-if (TomeksCounter1 == 3047 || TomeksCounter1 == 3048 || TomeksCounter1 == 3541 || TomeksCounter1 == 3542 || TomeksCounter1 == 3618 || TomeksCounter1 == 3619)
-    {
-      cout << TomeksCounter1 << ". Gambit Event Information\n";
-      cout << "  MET  = " << result.met() << " GeV" << endl;
-      cout << "  #e   = " << result.electrons().size() << endl;
-      cout << "  #mu  = " << result.muons().size() << endl;
-      cout << "  #tau = " << result.taus().size() << endl;
-      cout << "  #jet = " << result.jets().size() << endl;
-      for (int i{0}; i < result.jets().size(); i++)
-      {
-        cout << "   pT Jet " << i << ": " << result.jets()[i]->pT() << endl;
-      }
-      cout << "  #pho  = " << result.photons().size() << endl;
-      cout << endl;
-    }
-#endif
 
-#ifdef JET_CHECKING
-      jetfile << "\n\n========\n\n";
-      jetfile.close();    
-#endif  
-    }
-  
 
     /// Convert a partonic (no hadrons) EventT into an unsmeared HEPUtils::Event
     template<typename EventT>

@@ -20,6 +20,9 @@
 ///          (a.kvellestad@imperial.ac.uk)
 ///  \date 2019 June
 ///
+///  \author Tomek Procter
+///           (tsp116@ic.ac.uk)
+///  \date 2019 Octobet
 ///  *********************************************
 
 #include "gambit/cmake/cmake_variables.hpp"
@@ -27,9 +30,13 @@
 #ifndef EXCLUDE_HEPMC
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
-#include "gambit/ColliderBit/hepmc2heputils.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "HepMC3/ReaderAsciiHepMC2.h"
+#include "gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp"
+
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenParticle.h"
+
 
 //#define COLLIDERBIT_DEBUG
 
@@ -78,7 +85,19 @@ namespace Gambit
       if (not event_retrieved) Loop::halt();
 
       // Translate to HEPUtils event
-      get_HEPUtils_event(ge, result);
+
+      //A couple of things need to be done before we pass to the event conversion function: set the
+      //weight and 
+      result.set_weight(ge.weight());
+
+      //annoyingly, I have to add this extra step here, as I need an explicitly const vector of const particles,
+      //and I can't generate that without first making a const HepMC3::GenEvent.
+      const HepMC3::GenEvent ge2 = ge;
+      const std::vector<HepMC3::ConstGenParticlePtr> particles = ge2.particles();
+
+      //Call the unified HEPMC/Pythia event converter:
+      //n.b. the 0.4 is the antiktR -> its always been hardcoded in CBS, should it be?
+      Gambit::ColliderBit::convertParticleEvent(particles, result, 0.4);
     }
 
   }

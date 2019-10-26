@@ -43,7 +43,6 @@
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
 
-// #define COLLIDERBIT_DEBUG
 
 namespace Gambit
 {
@@ -142,21 +141,6 @@ namespace Gambit
         std::streamsize stream_precision = cout.precision();  // get current precision
         cout.precision(2);  // set precision
         cout << debug_prefix() << "calc_LHC_LogLikes: " << "Will print content of " << adata.analysis_name << " signal regions:" << endl;
-        for (size_t SR = 0; SR < adata.size(); ++SR)
-        {
-          const SignalRegionData& srData = adata[SR];
-          cout << std::fixed << debug_prefix()
-                                 << "calc_LHC_LogLikes: " << adata.analysis_name
-                                 << ", " << srData.sr_label
-                                 << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
-                                 << ",  n_obs = " << srData.n_observed
-                                 << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
-                                 << ",  n_s = " << srData.n_signal_at_lumi
-                                 << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_at_lumi << " +/- " << srData.background_sys
-                                 << ",  n_s_MC = " << srData.n_signal
-                                 << endl;
-        }
-        cout.precision(stream_precision); // restore previous precision
         #endif
 
 
@@ -207,13 +191,13 @@ namespace Gambit
             #ifdef COLLIDERBIT_DEBUG
             cout << debug_prefix() << "calc_LHC_LogLikes: " << adata.analysis_name << "_LogLike : " << 0.0 << " (No signal predicted. Skipped covariance calculation.)" <<endl;
             #endif
-
             // Continue to next analysis
             continue;
           }
 
           // Construct vectors of SR numbers
           Eigen::ArrayXd n_obs(adata.size()), logfact_n_obs(adata.size()), n_pred_b(adata.size()), n_pred_sb(adata.size()), abs_unc_s(adata.size());
+
           for (size_t SR = 0; SR < adata.size(); ++SR)
           {
             const SignalRegionData srData = adata[SR];
@@ -418,15 +402,6 @@ namespace Gambit
             }
 
             #ifdef COLLIDERBIT_DEBUG
-              cout << debug_prefix()
-                   << "diff_rel: " << diff_rel << endl
-                   <<  "   diff_abs: " << diff_abs << endl
-                   << "   ana_llr_prev: " << log(ana_like_sb_prev/ana_like_b_prev) << endl
-                   << "   ana_dll: " << log(ana_like_sb/ana_like_b) << endl
-                   << "   logl_sb: " << log(ana_like_sb) << endl
-                   << "   logl_b: " << log(ana_like_b) << endl;
-               cout << debug_prefix() << "NSAMPLE for the next iteration is: " << NSAMPLE << endl;
-              cout << debug_prefix() << endl;
             #endif
           }  // End while loop
 
@@ -503,11 +478,13 @@ namespace Gambit
             const double n_predicted_uncertain_b = srData.n_background;
             const double n_predicted_uncertain_sb = n_predicted_uncertain_s + n_predicted_uncertain_b;
 
+
             // Absolute errors for n_predicted_uncertain_*
             const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
             const double abs_uncertainty_s_sys = srData.signal_sys;
             const double abs_uncertainty_b = srData.background_sys;
             const double abs_uncertainty_sb = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys, abs_uncertainty_b);
+
 
             // Relative errors for n_predicted_uncertain_*
             const double frac_uncertainty_b = abs_uncertainty_b / n_predicted_uncertain_b;
@@ -515,6 +492,7 @@ namespace Gambit
 
             // Predicted total background, as an integer for use in Poisson functions
             const int n_predicted_total_b_int = (int) round(n_predicted_exact + n_predicted_uncertain_b);
+
 
             // Marginalise over systematic uncertainties on mean rates
             // Use a log-normal/Gaussia distribution for the nuisance parameter, as requested
@@ -536,9 +514,9 @@ namespace Gambit
               bestexp_dll_obs = llb_obs - llsb_obs;
               bestexp_sr_label = srData.sr_label;
               bestexp_sr_index = SR;
-              // #ifdef COLLIDERBIT_DEBUG
-              // cout << debug_prefix() << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << -bestexp_dll_exp << ", LogL_obs = " << -bestexp_dll_obs << endl;
-              // #endif
+              #ifdef COLLIDERBIT_DEBUG
+              cout << debug_prefix() << "Setting bestexp_sr_label to: " << bestexp_sr_label << ", LogL_exp = " << -bestexp_dll_exp << ", LogL_obs = " << -bestexp_dll_obs << endl;
+              #endif
             }
 
             // Store "observed LogLike" result for this SR
