@@ -309,8 +309,8 @@ namespace Gambit
           if (get_unified_mother2(p) != 0 ){gotmother = true; sid << get_unified_mother2_pid(p, pevt);}
           if (gotmother) sid << " -> ";
           sid << pid;
-          //ColliderBit_error().forced_throw(LOCAL_INFO, "Found final-state parton " + sid.str() + " in particle-level event converter: "
-          //    "reconfigure your generator to include hadronization, or Gambit to use the partonic event converter.");
+          ColliderBit_error().forced_throw(LOCAL_INFO, "Found final-state parton " + sid.str() + " in particle-level event converter: "
+              "reconfigure your generator to include hadronization, or Gambit to use the partonic event converter.");
           //Tomek Procter October 2019: This needs to be fixed so you can throw the error in BOTH CBS and Gambit (or else not to try and
           //throw it in CBS, as it wasn't there before and didn't make any difference)
           //commented out for now so I can get everything else working.
