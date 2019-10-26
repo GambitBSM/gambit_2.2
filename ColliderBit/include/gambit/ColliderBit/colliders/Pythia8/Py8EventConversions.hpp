@@ -34,7 +34,6 @@
 #ifndef UNIFIED_FUNCTIONS
 #define UNIFIED_FUNCTIONS
 
-<<<<<<< HEAD
 //Namespace for all the overloaded functions so that the convertParticleEvent function
 //is fully general: basically, for every function there is a version for HEPMC::ConstGenParticlePtr
 //and a version for Pythia Particles (which are templated functions).
@@ -50,9 +49,6 @@ namespace UnifiedEventConversionFunctions
   {
     return p.id();
   }
-=======
-//#define NJET_DATA_OUTPUT
->>>>>>> 603a960c75a357a59b98682dbf2564b4260e97c3
 
 
   inline bool get_unified_isFinal(const HepMC3::ConstGenParticlePtr &gp)
