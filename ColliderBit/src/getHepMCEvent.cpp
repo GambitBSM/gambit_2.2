@@ -20,9 +20,14 @@
 ///          (a.kvellestad@imperial.ac.uk)
 ///  \date 2019 June
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Sep
+///
 ///  \author Tomek Procter
 ///           (tsp116@ic.ac.uk)
-///  \date 2019 Octobet
+///  \date 2019 October
+///
 ///  *********************************************
 
 #include "gambit/cmake/cmake_variables.hpp"
@@ -33,10 +38,9 @@
 #include "gambit/Utils/util_functions.hpp"
 #include "HepMC3/ReaderAsciiHepMC2.h"
 #include "gambit/ColliderBit/colliders/Pythia8/Py8EventConversions.hpp"
-
 #include "HepMC3/GenEvent.h"
 #include "HepMC3/GenParticle.h"
-
+#include "HepMC3/ReaderAscii.h"
 
 //#define COLLIDERBIT_DEBUG
 
@@ -53,17 +57,70 @@ namespace Gambit
 
       result.clear();
 
-      // Get the filename and initialise the HepMC reader
-      const static str hepmc_filename = runOptions->getValue<str>("hepmc_filename");
+      // Get yaml options and initialise the HepMC reader
+      const static double jet_pt_min = runOptions->getValueOrDef<double>(10.0, "jet_pt_min");
+      const static str HepMC_filename = runOptions->getValueOrDef<str>("", "hepmc_filename");
+      static int HepMC_file_version = -1;
+
       static bool first = true;
       if (first)
       {
-        if (not Utils::file_exists(hepmc_filename)) throw std::runtime_error("HepMC event file "+hepmc_filename+" not found.  Quitting...");
+        if (not Utils::file_exists(HepMC_filename)) throw std::runtime_error("HepMC event file "+HepMC_filename+" not found. Quitting...");
+
+        // Figure out if the file is HepMC2 or HepMC3
+        std::ifstream infile(HepMC_filename);
+        if (infile.good())
+        {
+          std::string line;
+          while(std::getline(infile, line))
+          {
+            // Skip blank lines
+            if(line == "") continue;
+
+            // We look for "HepMC::Version 2" or "HepMC::Version 3", 
+            // so we only need the first 16 characters of the line
+            std::string short_line = line.substr(0,16);
+
+            if (short_line == "HepMC::Version 2")
+            {
+              HepMC_file_version = 2;
+              break;
+            }
+            else if (short_line == "HepMC::Version 3")
+            {
+              HepMC_file_version = 3;
+              break;
+            }
+            else
+            {
+              throw std::runtime_error("Could not determine HepMC version from the string '"+short_line+"' extracted from the line '"+line+"'. Quitting...");
+            }
+          }
+        }
         first = false;
       }
-      static HepMC3::ReaderAsciiHepMC2 hepmcio(hepmc_filename);
 
-      // Don't do anything during special iterations
+      if(HepMC_file_version != 2 and HepMC_file_version != 3)
+      {
+        throw std::runtime_error("Failed to determine HepMC version for input file "+HepMC_filename+". Quitting...");
+      }
+
+      static HepMC3::Reader *HepMCio;
+
+      // Initialize the reader on the first iteration
+      if (*Loop::iteration == BASE_INIT)
+      {
+        if (HepMC_file_version == 2)
+          HepMCio = new HepMC3::ReaderAsciiHepMC2(HepMC_filename);
+        else
+          HepMCio = new HepMC3::ReaderAscii(HepMC_filename);
+      }
+
+      // Delete the reader in the last iteration
+      if (*Loop::iteration == BASE_FINALIZE)
+        delete HepMCio;
+
+      // Don't do anything else during special iterations
       if (*Loop::iteration < 0) return;
 
       #ifdef COLLIDERBIT_DEBUG
@@ -75,8 +132,8 @@ namespace Gambit
       bool event_retrieved = true;
       #pragma omp critical (reading_HepMCEvent)
       {
-        event_retrieved = hepmcio.read_event(ge);
-
+        event_retrieved = HepMCio->read_event(ge);
+     
         // FIXME This is a temp solution to ensure that the event reading
         //       stops when there are no more events in the HepMC file.
         //       Remove this once bugfix is implemented in HepMC.
@@ -97,9 +154,8 @@ namespace Gambit
 
       //Call the unified HEPMC/Pythia event converter:
       //n.b. the 0.4 is the antiktR -> its always been hardcoded in CBS, should it be?
-      Gambit::ColliderBit::convertParticleEvent(particles, result, 0.4);
+      Gambit::ColliderBit::convertParticleEvent(particles, result, 0.4, jet_pt_min);
     }
-
   }
 
 }

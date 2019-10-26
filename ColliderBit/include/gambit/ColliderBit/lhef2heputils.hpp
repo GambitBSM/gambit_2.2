@@ -33,6 +33,6 @@
 namespace LHEF { class Reader; }
 
 /// Extract an LHE event as a HEPUtils::Event
-void get_HEPUtils_event(const LHEF::Reader&, HEPUtils::Event&);
+void get_HEPUtils_event(const LHEF::Reader&, HEPUtils::Event&, double);
 
 #endif

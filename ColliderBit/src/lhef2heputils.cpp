@@ -42,7 +42,7 @@ using namespace HEPUtils;
 using namespace FJNS;
 
 /// Extract an LHE event as a HEPUtils::Event
-void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt)
+void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt, double jet_pt_min)
 {
 
   P4 vmet;
@@ -97,7 +97,8 @@ void get_HEPUtils_event(const LHEF::Reader& lhe, Event& evt)
   evt.set_missingmom(vmet);
 
   // Jets
-  vector<PseudoJet> jets = get_jets(jetparticles, 0.4, 20.0);
+  vector<PseudoJet> jets = get_jets(jetparticles, 0.4, jet_pt_min);
+
   for (const PseudoJet& pj : jets)
   {
     bool hasC = false, hasB = false;

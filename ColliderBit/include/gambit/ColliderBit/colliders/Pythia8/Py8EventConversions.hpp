@@ -34,6 +34,7 @@
 #ifndef UNIFIED_FUNCTIONS
 #define UNIFIED_FUNCTIONS
 
+<<<<<<< HEAD
 //Namespace for all the overloaded functions so that the convertParticleEvent function
 //is fully general: basically, for every function there is a version for HEPMC::ConstGenParticlePtr
 //and a version for Pythia Particles (which are templated functions).
@@ -49,6 +50,9 @@ namespace UnifiedEventConversionFunctions
   {
     return p.id();
   }
+=======
+//#define NJET_DATA_OUTPUT
+>>>>>>> 603a960c75a357a59b98682dbf2564b4260e97c3
 
 
   inline bool get_unified_isFinal(const HepMC3::ConstGenParticlePtr &gp)
@@ -214,9 +218,10 @@ namespace Gambit
 
     using namespace UnifiedEventConversionFunctions;
 
-
-    template <typename EventT>
-    void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR = 0.4)
+    /// Convert a hadron-level EventT into an unsmeared HEPUtils::Event
+    /// @todo Overlap between jets and prompt containers: need some isolation in MET calculation
+    template<typename EventT>
+    void convertParticleEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR, double jet_pt_min)
     {
       result.clear();
 
@@ -348,7 +353,8 @@ namespace Gambit
       /// @todo Choose jet algorithm via detector _settings? Run several algs?
       const FJNS::JetDefinition jet_def(FJNS::antikt_algorithm, antiktR);
       FJNS::ClusterSequence cseq(jetparticles, jet_def);
-      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(10));
+      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(jet_pt_min));
+
 
 
       /// Do jet b-tagging, etc. and add to the Event
@@ -426,7 +432,7 @@ namespace Gambit
 
     /// Convert a partonic (no hadrons) EventT into an unsmeared HEPUtils::Event
     template<typename EventT>
-    void convertPartonEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR)
+    void convertPartonEvent(const EventT& pevt, HEPUtils::Event& result, double antiktR, double jet_pt_min)
     {
       result.clear();
 
@@ -504,7 +510,8 @@ namespace Gambit
       /// @todo choose jet algorithm via _settings?
       const FJNS::JetDefinition jet_def(FJNS::antikt_algorithm, antiktR);
       FJNS::ClusterSequence cseq(jetparticles, jet_def);
-      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(10));
+      std::vector<FJNS::PseudoJet> pjets = sorted_by_pt(cseq.inclusive_jets(jet_pt_min));
+
       // Add to the event, with b-tagging info"
       for (const FJNS::PseudoJet& pj : pjets) {
         // Do jet b-tagging, etc. by looking for b quark constituents (i.e. user index = |parton ID| = 5)

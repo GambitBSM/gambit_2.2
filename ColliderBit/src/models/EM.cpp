@@ -27,7 +27,16 @@ namespace Gambit
     GET_PYTHIA_AS_BASE_COLLIDER(getPythia_EMAsBase)
 
     // Run event generator
-    GET_PYTHIA_EVENT_NOHEPMC(generateEventPythia_EM)
+    GET_PYTHIA_EVENT(generateEventPythia_EM)
 
+    #ifndef EXCLUDE_HEPMC
+      // Template specialization for EM Pythia
+      template <>
+      void dropHepMCEventPy8Collider<Pythia_EM_8_212::Pythia8::Pythia>(const Pythia_EM_8_212::Pythia8::Pythia* Pythia, const safe_ptr<Options>& runOptions)
+      {
+         (void) Pythia;
+         (void) runOptions;
+      }
+    #endif
   }
 }
