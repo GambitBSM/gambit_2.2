@@ -62,6 +62,10 @@ ObsLikes:
 
 Rules:
 
+  # Just use unweighted cross-sections
+  - capability: EventWeighterFunction
+    function: setEventWeight_unity
+
   # Give the set of SLHA files that ColliderBit should use
   - capability: SLHAFileNameAndContent
     function: getNextSLHAFileNameAndContent
