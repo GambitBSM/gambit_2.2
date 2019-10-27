@@ -94,9 +94,9 @@ Rules:
   - capability: TotalCrossSection
     function: getYAMLCrossSection_SLHA
     options:
-      xsec_pb:
+      cross_section_pb:
         /home/tomasz/summer/Cutflows-2017/ATLAS_13TeV_0LEP/GluinoGluinoCase.slha: 0.0101
-      xsec_fractional_uncert:
+      cross_section_fractional_uncert:
         /home/tomasz/summer/Cutflows-2017/ATLAS_13TeV_0LEP/GluinoGluinoCase.slha: 0.1942
 
 
