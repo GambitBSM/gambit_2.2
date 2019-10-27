@@ -36,6 +36,51 @@ namespace Gambit
   namespace SpecBit
   {
 
+  /// Check that the spectrum has the canonical LSP for the model being scanned.
+    void check_LSP(const Spectrum& spec, const safe_ptr<Options>& runOptions, bool gravitino_is_canonical_LSP)
+    {
+      double msqd  = spec.get(Par::Pole_Mass, 1000001, 0);
+      double msqu  = spec.get(Par::Pole_Mass, 1000002, 0);
+      double msl   = spec.get(Par::Pole_Mass, 1000011, 0);
+      double msneu = spec.get(Par::Pole_Mass, 1000012, 0);
+      double mglui = spec.get(Par::Pole_Mass, 1000021, 0);
+      double mchi0 = std::abs(spec.get(Par::Pole_Mass, 1000022, 0));
+      double mchip = std::abs(spec.get(Par::Pole_Mass, 1000024, 0));
+      double m_canonical_LSP;
+
+      if (gravitino_is_canonical_LSP)
+      {
+        if (not runOptions->getValueOrDef<bool>(true, "only_gravitino_LSP")) return;
+        m_canonical_LSP = spec.get(Par::Pole_Mass, 1000039, 0);
+      }
+      else
+      {
+        if (not runOptions->getValueOrDef<bool>(true, "only_neutralino_LSP")) return;
+        m_canonical_LSP = mchi0;
+      }
+
+      // Check if the canonical LSP in the MSSM version scanned is actually the LSP for this point.
+      if (m_canonical_LSP > mchip ||
+          m_canonical_LSP > mglui ||
+          m_canonical_LSP > msl   ||
+          m_canonical_LSP > msneu ||
+          m_canonical_LSP > msqu  ||
+          m_canonical_LSP > msqd  ||
+          m_canonical_LSP > mchi0   )
+       {
+         str canonical_LSP = (gravitino_is_canonical_LSP ? "Gravitino" : "Neutralino");
+         invalid_point().raise(canonical_LSP + " is not LSP.");
+       }
+    }
+
+    /// Helper to work with pointer
+    void check_LSP(const Spectrum* spec, const safe_ptr<Options>& runOptions, bool gravitino_model)
+    {
+      check_LSP(*spec, runOptions, gravitino_model);
+    }
+
+  
+
     void get_MSSM_spectrum_SPheno (Spectrum& spectrum)
     {
       namespace myPipe = Pipes::get_MSSM_spectrum_SPheno;
@@ -84,6 +129,9 @@ namespace Gambit
       // Drop SLHA files if requested
       spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
+
+      /// TODO: add mass cuts, LSP check, gravitinbo mass etc      
+      
     }
 
   } // end namespace SpecBit
