@@ -11,7 +11,7 @@ analyses:
   - ATLAS_13TeV_0LEP_36invfb
 settings:
   debug: true
-  seed: -1
+  seed: 1337
   event_file: Atlas13_TeV_GluinoGluino_1events.hepmc
   xsec_pb: 0.0101
   xsec_fractional_uncert: 0.1942
