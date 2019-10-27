@@ -58,6 +58,7 @@ namespace Gambit
       result.clear();
 
       // Get yaml options and initialise the HepMC reader
+      const static double antiktR = colOptions.getValueOrDef<double>(0.4, "antiktR");
       const static double jet_pt_min = runOptions->getValueOrDef<double>(10.0, "jet_pt_min");
       const static str HepMC_filename = runOptions->getValueOrDef<str>("", "hepmc_filename");
       static int HepMC_file_version = -1;
@@ -77,7 +78,7 @@ namespace Gambit
             // Skip blank lines
             if(line == "") continue;
 
-            // We look for "HepMC::Version 2" or "HepMC::Version 3", 
+            // We look for "HepMC::Version 2" or "HepMC::Version 3",
             // so we only need the first 16 characters of the line
             std::string short_line = line.substr(0,16);
 
@@ -133,7 +134,7 @@ namespace Gambit
       #pragma omp critical (reading_HepMCEvent)
       {
         event_retrieved = HepMCio->read_event(ge);
-     
+
         // FIXME This is a temp solution to ensure that the event reading
         //       stops when there are no more events in the HepMC file.
         //       Remove this once bugfix is implemented in HepMC.
@@ -144,7 +145,7 @@ namespace Gambit
       // Translate to HEPUtils event
 
       //A couple of things need to be done before we pass to the event conversion function: set the
-      //weight and 
+      //weight and
       result.set_weight(ge.weight());
 
       //annoyingly, I have to add this extra step here, as I need an explicitly const vector of const particles,
@@ -153,8 +154,7 @@ namespace Gambit
       const std::vector<HepMC3::ConstGenParticlePtr> particles = ge2.particles();
 
       //Call the unified HEPMC/Pythia event converter:
-      //n.b. the 0.4 is the antiktR -> its always been hardcoded in CBS, should it be?
-      Gambit::ColliderBit::convertParticleEvent(particles, result, 0.4, jet_pt_min);
+      Gambit::ColliderBit::convertParticleEvent(particles, result, antiktR, jet_pt_min);
     }
   }
 
