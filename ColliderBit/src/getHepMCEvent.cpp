@@ -58,7 +58,7 @@ namespace Gambit
       result.clear();
 
       // Get yaml options and initialise the HepMC reader
-      const static double antiktR = colOptions.getValueOrDef<double>(0.4, "antiktR");
+      const static double antiktR = runOptions->getValueOrDef<double>(0.4, "antiktR");
       const static double jet_pt_min = runOptions->getValueOrDef<double>(10.0, "jet_pt_min");
       const static str HepMC_filename = runOptions->getValueOrDef<str>("", "hepmc_filename");
       static int HepMC_file_version = -1;
@@ -142,19 +142,11 @@ namespace Gambit
       }
       if (not event_retrieved) Loop::halt();
 
-      // Translate to HEPUtils event
-
-      //A couple of things need to be done before we pass to the event conversion function: set the
-      //weight and
+      //Set the weight
       result.set_weight(ge.weight());
 
-      //annoyingly, I have to add this extra step here, as I need an explicitly const vector of const particles,
-      //and I can't generate that without first making a const HepMC3::GenEvent.
-      const HepMC3::GenEvent ge2 = ge;
-      const std::vector<HepMC3::ConstGenParticlePtr> particles = ge2.particles();
-
-      //Call the unified HEPMC/Pythia event converter:
-      Gambit::ColliderBit::convertParticleEvent(particles, result, antiktR, jet_pt_min);
+      //Translate to HEPUtils event by calling the unified HEPMC/Pythia event converter:
+      Gambit::ColliderBit::convertParticleEvent(ge.particles(), result, antiktR, jet_pt_min);
     }
   }
 

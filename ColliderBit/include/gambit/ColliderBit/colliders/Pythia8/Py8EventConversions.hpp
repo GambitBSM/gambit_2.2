@@ -35,12 +35,12 @@
 #define UNIFIED_FUNCTIONS
 
 //Namespace for all the overloaded functions so that the convertParticleEvent function
-//is fully general: basically, for every function there is a version for HEPMC::ConstGenParticlePtr
+//is fully general: basically, for every function there is a version for HEPMC::GenParticlePtr
 //and a version for Pythia Particles (which are templated functions).
 //Tomek Procter Oct 2019 - maybe it would be cleaner if all these functions were in another header?
 namespace UnifiedEventConversionFunctions
 {
-  inline int get_unified_pid(const HepMC3::ConstGenParticlePtr &gp)
+  inline int get_unified_pid(const HepMC3::GenParticlePtr &gp)
   {
     return gp->pid();
   }
@@ -51,7 +51,7 @@ namespace UnifiedEventConversionFunctions
   }
 
 
-  inline bool get_unified_isFinal(const HepMC3::ConstGenParticlePtr &gp)
+  inline bool get_unified_isFinal(const HepMC3::GenParticlePtr &gp)
   {
     return (gp->status() == 1);
   }
@@ -62,7 +62,7 @@ namespace UnifiedEventConversionFunctions
   }
 
 
-  inline double get_unified_eta(const HepMC3::ConstGenParticlePtr &gp)
+  inline double get_unified_eta(const HepMC3::GenParticlePtr &gp)
   {
     //n.b. I'm writing this manually because using the function in MCUtils/HepMCVectors.h
     //at the moment seems to stop it compiling for some reason??
@@ -77,7 +77,7 @@ namespace UnifiedEventConversionFunctions
   }
 
 
-  inline HEPUtils::P4 get_unified_momentum(const HepMC3::ConstGenParticlePtr &gp)
+  inline HEPUtils::P4 get_unified_momentum(const HepMC3::GenParticlePtr &gp)
   {
     const HepMC3::FourVector& hp4 = gp->momentum();
     return HEPUtils::P4::mkXYZE(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
@@ -90,7 +90,7 @@ namespace UnifiedEventConversionFunctions
 
 
 
-  inline FJNS::PseudoJet get_unified_pseudojet(const HepMC3::ConstGenParticlePtr &gp)
+  inline FJNS::PseudoJet get_unified_pseudojet(const HepMC3::GenParticlePtr &gp)
   {
     const HepMC3::FourVector& hp4 = gp->momentum();
     return FJNS::PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
@@ -111,36 +111,36 @@ namespace UnifiedEventConversionFunctions
   {
     return (MCUtils::PID::isParton(pid) || MCUtils::PID::isDiquark(pid));
   }
-  inline bool get_unified_fromHadron(const HepMC3::ConstGenParticlePtr gp, const std::vector<HepMC3::ConstGenParticlePtr> &pevt, int i)
+  inline bool get_unified_fromHadron(const HepMC3::GenParticlePtr gp, const std::vector<HepMC3::GenParticlePtr> &pevt, int i)
   {
     //For HepMC3 events, I wrote this function, it mimics exactly what the Py8Utils.cpp function does.
     //This seems highly unlikely to change - apparently this is just the standard way its done.
     //Looping through parents is tricky so I won't unify it unless absolutely necesarry.
     //note the meaningless int argument to make sure the same function call works both for hepmc3
-    //and pythia. 
+    //and pythia.
 
     if (MCUtils::PID::isHadron(gp->pid())) return true;
     if (HEPMC3_isParton(abs(gp->pid()))) return false; // stop the walking at the end of the hadron level
     auto parent_vector = (gp->parents());
     if (parent_vector.size() == 0) return false;
-    for (const HepMC3::ConstGenParticlePtr parent : parent_vector)
+    for (const HepMC3::GenParticlePtr parent : parent_vector)
     {
       if (get_unified_fromHadron(parent, pevt, i)) return true;
     }
     return false;
   }
   template <typename ParticleP, typename EventT>
-  inline bool get_unified_fromHadron(ParticleP &p,const EventT &pevt, int i)
+  inline bool get_unified_fromHadron(ParticleP&, const EventT &pevt, int i)
   {
     //Just call the function in Py8Utils.cpp
     return Gambit::ColliderBit::fromHadron(i, pevt);
   }
 
-  inline int get_unified_mother1(const HepMC3::ConstGenParticlePtr &gp)
+  inline int get_unified_mother1(const HepMC3::GenParticlePtr&)
   {
     return 0;
   }
-  inline int get_unified_mother2(const HepMC3::ConstGenParticlePtr &gp)
+  inline int get_unified_mother2(const HepMC3::GenParticlePtr&)
   {
     return 0;
   }
@@ -166,22 +166,22 @@ namespace UnifiedEventConversionFunctions
     return pevt[p.mother2()].id();
   }
   //shouldn't ever need to call a hepmc3 version but for safety here's one that just returns 0.
-  inline int get_unified_mother1_pid(const HepMC3::ConstGenParticlePtr &gp, const std::vector<HepMC3::ConstGenParticlePtr> &pevt)
+  inline int get_unified_mother1_pid(const HepMC3::GenParticlePtr&, const std::vector<HepMC3::GenParticlePtr>&)
   {
     return 0;
   }
   //shouldn't ever need to call a hepmc3 version but for safety here's one that just returns 0.
-  inline int get_unified_mother2_pid(const HepMC3::ConstGenParticlePtr &gp, const std::vector<HepMC3::ConstGenParticlePtr> &pevt)
+  inline int get_unified_mother2_pid(const HepMC3::GenParticlePtr&, const std::vector<HepMC3::GenParticlePtr>&)
   {
     return 0;
   }
 
 
   //Note! The unified_child_id_results MUST BE EMPTY as I don't clear it in the function.
-  inline void get_unified_child_ids(const HepMC3::ConstGenParticlePtr &gp, const std::vector<HepMC3::ConstGenParticlePtr>&pevt, std::vector<int> &unified_child_id_results)
+  inline void get_unified_child_ids(const HepMC3::GenParticlePtr &gp, const std::vector<HepMC3::GenParticlePtr>&, std::vector<int> &unified_child_id_results)
   {
     auto child_vector = gp->children();
-    for (const HepMC3::ConstGenParticlePtr child: child_vector)
+    for (const HepMC3::GenParticlePtr child: child_vector)
     {
       unified_child_id_results.push_back(child->pid());
     }
@@ -232,7 +232,7 @@ namespace Gambit
         const int pid = get_unified_pid(p);
         const int apid = abs(pid);
         const HEPUtils::P4 p4 = get_unified_momentum(p);
-      
+
 
       //b, c and tau idenitification:
 
@@ -302,8 +302,8 @@ namespace Gambit
         {
           std::ostringstream sid;
           bool gotmother = false;
-          //HepMC has no equivalent of the .mother1, .mother2 call as far as I can see, 
-          //so the HepMC3 mother function will just return 0, and gotmother will always 
+          //HepMC has no equivalent of the .mother1, .mother2 call as far as I can see,
+          //so the HepMC3 mother function will just return 0, and gotmother will always
           //be false - which means it won't try and print non-existent event info.
           if (get_unified_mother1(p) != 0 ){gotmother = true; sid << get_unified_mother1_pid(p, pevt);}
           if (get_unified_mother2(p) != 0 ){gotmother = true; sid << get_unified_mother2_pid(p, pevt);}
@@ -328,7 +328,7 @@ namespace Gambit
         // Promptness: for leptons and photons we're only interested if they don't come from hadron/tau decays
         const bool prompt = !get_unified_fromHadron(p, pevt, i);
         const bool visible = MCUtils::PID::isStrongInteracting(pid) || MCUtils::PID::isEMInteracting(pid);
-        
+
         // Add prompt and invisible particles as individual particles
         if (prompt || !visible)
         {
@@ -497,7 +497,7 @@ namespace Gambit
           FJNS::PseudoJet pj = mk_pseudojet(p.p());
           //pj.set_user_index(std::abs(p.id()));
           jetparticles.push_back(pj);
-          
+
         }
 
       }

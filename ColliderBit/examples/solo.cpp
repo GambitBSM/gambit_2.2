@@ -201,7 +201,7 @@ int main(int argc, char* argv[])
     calc_combined_LHC_LogLike.reset_and_calculate();
 
     // Retrieve and print the predicted + observed counts and likelihoods for the individual SRs and analyses, as well as the total likelihood.
-    long long n_events = getYAMLCrossSection(0).num_events();
+    int n_events = operateLHCLoop(0).event_count.at("CBS");
     std::stringstream summary_line;
     for (size_t analysis = 0; analysis < CollectAnalyses(0).size(); ++analysis)
     {
