@@ -115,17 +115,17 @@ int main(int argc, char* argv[])
     getEvent.setOption<double>("jet_pt_min", jet_pt_min);
 
     // Pass options to the cross-section function
-    if (settings.hasKey("xsec_pb"))
+    if (settings.hasKey("cross_section_pb"))
     {
-      getYAMLxsec.setOption<double>("xsec_pb", settings.getValue<double>("xsec_pb"));
-      if (settings.hasKey("xsec_fractional_uncert")) { getYAMLxsec.setOption<double>("xsec_fractional_uncert", settings.getValue<double>("xsec_fractional_uncert")); }
-      else {getYAMLxsec.setOption<double>("xsec_uncert_pb", settings.getValue<double>("xsec_uncert_pb")); }
+      getYAMLCrossSection.setOption<double>("cross_section_pb", settings.getValue<double>("cross_section_pb"));
+      if (settings.hasKey("cross_section_fractional_uncert")) { getYAMLCrossSection.setOption<double>("cross_section_fractional_uncert", settings.getValue<double>("cross_section_fractional_uncert")); }
+      else {getYAMLCrossSection.setOption<double>("cross_section_uncert_pb", settings.getValue<double>("cross_section_uncert_pb")); }
     }
-    else // <-- must have option "xsec_fb"
+    else // <-- must have option "cross_section_fb"
     {
-      getYAMLxsec.setOption<double>("xsec_fb", settings.getValue<double>("xsec_fb"));
-      if (settings.hasKey("xsec_fractional_uncert")) { getYAMLxsec.setOption<double>("xsec_fractional_uncert", settings.getValue<double>("xsec_fractional_uncert")); }
-      else { getYAMLxsec.setOption<double>("xsec_uncert_fb", settings.getValue<double>("xsec_uncert_fb")); }
+      getYAMLCrossSection.setOption<double>("cross_section_fb", settings.getValue<double>("cross_section_fb"));
+      if (settings.hasKey("cross_section_fractional_uncert")) { getYAMLCrossSection.setOption<double>("cross_section_fractional_uncert", settings.getValue<double>("cross_section_fractional_uncert")); }
+      else { getYAMLCrossSection.setOption<double>("cross_section_uncert_fb", settings.getValue<double>("cross_section_uncert_fb")); }
     }
 
     // Pass options to the likelihood function
@@ -149,9 +149,9 @@ int main(int argc, char* argv[])
     runCMSAnalyses.resolveDependency(&smearEventCMS);
     runIdentityAnalyses.resolveDependency(&getIdentityAnalysisContainer);
     runIdentityAnalyses.resolveDependency(&copyEvent);
-    getATLASAnalysisContainer.resolveDependency(&getYAMLxsec);
-    getCMSAnalysisContainer.resolveDependency(&getYAMLxsec);
-    getIdentityAnalysisContainer.resolveDependency(&getYAMLxsec);
+    getATLASAnalysisContainer.resolveDependency(&getYAMLCrossSection);
+    getCMSAnalysisContainer.resolveDependency(&getYAMLCrossSection);
+    getIdentityAnalysisContainer.resolveDependency(&getYAMLCrossSection);
     smearEventATLAS.resolveDependency(&getBuckFastATLAS);
     smearEventATLAS.resolveDependency(&getEvent);
     smearEventCMS.resolveDependency(&getBuckFastCMS);
@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
     smearEventATLAS.resolveLoopManager(&operateLHCLoop);
     smearEventCMS.resolveLoopManager(&operateLHCLoop);
     copyEvent.resolveLoopManager(&operateLHCLoop);
-    getYAMLxsec.resolveLoopManager(&operateLHCLoop);
+    getYAMLCrossSection.resolveLoopManager(&operateLHCLoop);
     runATLASAnalyses.resolveLoopManager(&operateLHCLoop);
     runCMSAnalyses.resolveLoopManager(&operateLHCLoop);
     runIdentityAnalyses.resolveLoopManager(&operateLHCLoop);
@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
                                                                   &getBuckFastATLAS,
                                                                   &getBuckFastCMS,
                                                                   &getBuckFastIdentity,
-                                                                  &getYAMLxsec,
+                                                                  &getYAMLCrossSection,
                                                                   &getATLASAnalysisContainer,
                                                                   &getCMSAnalysisContainer,
                                                                   &getIdentityAnalysisContainer,
@@ -201,7 +201,7 @@ int main(int argc, char* argv[])
     calc_combined_LHC_LogLike.reset_and_calculate();
 
     // Retrieve and print the predicted + observed counts and likelihoods for the individual SRs and analyses, as well as the total likelihood.
-    long long n_events = getYAMLxsec(0).num_events();
+    long long n_events = getYAMLCrossSection(0).num_events();
     std::stringstream summary_line;
     for (size_t analysis = 0; analysis < CollectAnalyses(0).size(); ++analysis)
     {

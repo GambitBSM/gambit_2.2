@@ -31,11 +31,11 @@ namespace Gambit {
     private:
 
         // Numbers passing cuts
-        int _SRASF120, _SRADF120, _SRASF140, _SRADF140, _SRASF160, _SRADF160, _SRASF180, _SRADF180;
-        int _SRBSF120, _SRBDF120, _SRBSF140, _SRBDF140;
-        int _SRCSF110, _SRCDF110;
-        //int _SR3BodyTSF, _SR3BodyTDF, _SR3BodyWSF, _SR3BodyWDF;
-        int _SR4b;
+        double _SRASF120, _SRADF120, _SRASF140, _SRADF140, _SRASF160, _SRADF160, _SRASF180, _SRADF180;
+        double _SRBSF120, _SRBDF120, _SRBSF140, _SRBDF140;
+        double _SRCSF110, _SRCDF110;
+        //double _SR3BodyTSF, _SR3BodyTDF, _SR3BodyWSF, _SR3BodyWDF;
+        double _SR4b;
 
         // Cut Flow
         vector<int> cutFlowVector;
@@ -542,25 +542,25 @@ namespace Gambit {
             }
             // signal region
 
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2120 ) _SRASF120++;
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2120 ) _SRADF120++;
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2140 ) _SRASF140++;
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2140 ) _SRADF140++;
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2160 ) _SRASF160++;
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2160 ) _SRADF160++;
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2180 ) _SRASF180++;
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2180 ) _SRADF180++;
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2120 ) _SRASF120 += event->weight();
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2120 ) _SRADF120 += event->weight();
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2140 ) _SRASF140 += event->weight();
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2140 ) _SRADF140 += event->weight();
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2160 ) _SRASF160 += event->weight();
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2160 ) _SRADF160 += event->weight();
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2180 ) _SRASF180 += event->weight();
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2180 ) _SRADF180 += event->weight();
 
-            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _SRBSF120++;
-            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _SRBDF120++;
-            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _SRBSF140++;
-            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _SRBDF140++;
+            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _SRBSF120 += event->weight();
+            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _SRBDF120 += event->weight();
+            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _SRBSF140 += event->weight();
+            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _SRBDF140 += event->weight();
 
-            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _SRCSF110++;
-            if ( (!cABC_SF) &&                cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _SRCDF110++;
+            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _SRCSF110 += event->weight();
+            if ( (!cABC_SF) &&                cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _SRCDF110 += event->weight();
 
 
-            if (c4_METOSlepton && c4_mllGt10 && c4_SoftLepton && c4_Jet1PtGt150 && c4_Jet3PtMET && c4_R2l4j && c4_R2l && c4_2bjetveto) _SR4b++;
+            if (c4_METOSlepton && c4_mllGt10 && c4_SoftLepton && c4_Jet1PtGt150 && c4_Jet3PtMET && c4_R2l4j && c4_R2l && c4_2bjetveto) _SR4b += event->weight();
         return;
 
         }

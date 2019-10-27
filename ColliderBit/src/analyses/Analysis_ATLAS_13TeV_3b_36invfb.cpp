@@ -391,15 +391,15 @@ namespace Gambit {
 
         // Now increment signal region variables
         // First exclusion regions
-        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600. && meff < 850.) _numSR["SR-3b-meff1-A"]++;
-        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 850. && meff < 1100.) _numSR["SR-3b-meff2-A"]++;
-        if(nbJets >= 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 130. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 1100.) _numSR["SR-3b-meff3-A"]++;
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 850.) _numSR["SR-4b-meff1-A"]++;
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 850.) _numSR["SR-4b-meff1-B"]++;
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 1100.) _numSR["SR-4b-meff2-A"]++;
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 1100.) _numSR["SR-4b-meff2-B"]++;
+        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600. && meff < 850.) _numSR["SR-3b-meff1-A"] += event->weight();
+        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 850. && meff < 1100.) _numSR["SR-3b-meff2-A"] += event->weight();
+        if(nbJets >= 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 130. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 1100.) _numSR["SR-3b-meff3-A"] += event->weight();
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 850.) _numSR["SR-4b-meff1-A"] += event->weight();
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 850.) _numSR["SR-4b-meff1-B"] += event->weight();
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 1100.) _numSR["SR-4b-meff2-A"] += event->weight();
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 1100.) _numSR["SR-4b-meff2-B"] += event->weight();
         // Discovery regions
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600.) _numSR["SR-4b-meff1-A-disc"]++;
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600.) _numSR["SR-4b-meff1-A-disc"] += event->weight();
 
         return;
 

@@ -32,15 +32,15 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int _num_SR0tau_a_bin_1, _num_SR0tau_a_bin_2, _num_SR0tau_a_bin_3, _num_SR0tau_a_bin_4;
-      int _num_SR0tau_a_bin_5, _num_SR0tau_a_bin_6, _num_SR0tau_a_bin_7, _num_SR0tau_a_bin_8;
-      int _num_SR0tau_a_bin_9, _num_SR0tau_a_bin_10, _num_SR0tau_a_bin_11, _num_SR0tau_a_bin_12;
-      int _num_SR0tau_a_bin_13, _num_SR0tau_a_bin_14, _num_SR0tau_a_bin_15, _num_SR0tau_a_bin_16;
-      int _num_SR0tau_a_bin_17, _num_SR0tau_a_bin_18, _num_SR0tau_a_bin_19, _num_SR0tau_a_bin_20;
-      int _num_SR0tau_b;
-      int _num_SR1tau;
-      int _num_SR2tau_a;
-      int _num_SR2tau_b;
+      double _num_SR0tau_a_bin_1, _num_SR0tau_a_bin_2, _num_SR0tau_a_bin_3, _num_SR0tau_a_bin_4;
+      double _num_SR0tau_a_bin_5, _num_SR0tau_a_bin_6, _num_SR0tau_a_bin_7, _num_SR0tau_a_bin_8;
+      double _num_SR0tau_a_bin_9, _num_SR0tau_a_bin_10, _num_SR0tau_a_bin_11, _num_SR0tau_a_bin_12;
+      double _num_SR0tau_a_bin_13, _num_SR0tau_a_bin_14, _num_SR0tau_a_bin_15, _num_SR0tau_a_bin_16;
+      double _num_SR0tau_a_bin_17, _num_SR0tau_a_bin_18, _num_SR0tau_a_bin_19, _num_SR0tau_a_bin_20;
+      double _num_SR0tau_b;
+      double _num_SR1tau;
+      double _num_SR2tau_a;
+      double _num_SR2tau_b;
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
       const static int NCUTS=55;
@@ -466,30 +466,30 @@ namespace Gambit {
 
         if(trigger && signalLeptons.size()==3 && mSFOS12Cut && atLeastOneEorMu && separationCut && bJets.size()==0 && signalTaus.size()==0){
 
-          if(mSFOS>12. && mSFOS < 40. && mT>0. && mT<80. && met>50. && met<90.)_num_SR0tau_a_bin_1++;
-          if(mSFOS>12. && mSFOS < 40. && mT>0. && mT<80. && met>90.)_num_SR0tau_a_bin_2++;
-          if(mSFOS>12. && mSFOS < 40. && mT>80. && met>50. && met<75.)_num_SR0tau_a_bin_3++;
-          if(mSFOS>12. && mSFOS < 40. && mT>80. && met>75.)_num_SR0tau_a_bin_4++;
+          if(mSFOS>12. && mSFOS < 40. && mT>0. && mT<80. && met>50. && met<90.) _num_SR0tau_a_bin_1 += event->weight();
+          if(mSFOS>12. && mSFOS < 40. && mT>0. && mT<80. && met>90.) _num_SR0tau_a_bin_2 += event->weight();
+          if(mSFOS>12. && mSFOS < 40. && mT>80. && met>50. && met<75.) _num_SR0tau_a_bin_3 += event->weight();
+          if(mSFOS>12. && mSFOS < 40. && mT>80. && met>75.) _num_SR0tau_a_bin_4 += event->weight();
 
-          if(mSFOS>40. && mSFOS < 60. && mT>0. && mT<80. && met>50. && met<75. && !threelZVeto)_num_SR0tau_a_bin_5++;
-          if(mSFOS>40. && mSFOS < 60. && mT>0. && mT<80. && met>75.)_num_SR0tau_a_bin_6++;
-          if(mSFOS>40. && mSFOS < 60. && mT>80. && met>50. && met<135.)_num_SR0tau_a_bin_7++;
-          if(mSFOS>40. && mSFOS < 60. && mT>80. && met>135.)_num_SR0tau_a_bin_8++;
+          if(mSFOS>40. && mSFOS < 60. && mT>0. && mT<80. && met>50. && met<75. && !threelZVeto) _num_SR0tau_a_bin_5 += event->weight();
+          if(mSFOS>40. && mSFOS < 60. && mT>0. && mT<80. && met>75.) _num_SR0tau_a_bin_6 += event->weight();
+          if(mSFOS>40. && mSFOS < 60. && mT>80. && met>50. && met<135.) _num_SR0tau_a_bin_7 += event->weight();
+          if(mSFOS>40. && mSFOS < 60. && mT>80. && met>135.) _num_SR0tau_a_bin_8 += event->weight();
 
-          if(mSFOS>60. && mSFOS < 81.2 && mT>0. && mT<80. && met>50. && met<75. && !threelZVeto)_num_SR0tau_a_bin_9++;
-          if(mSFOS>60. && mSFOS < 81.2 && mT>80. && met>50. && met<75.)_num_SR0tau_a_bin_10++;
-          if(mSFOS>60. && mSFOS < 81.2 && mT>0. && mT<110. && met>75.)_num_SR0tau_a_bin_11++;
-          if(mSFOS>60. && mSFOS < 81.2 && mT>110. && met>75.)_num_SR0tau_a_bin_12++;
+          if(mSFOS>60. && mSFOS < 81.2 && mT>0. && mT<80. && met>50. && met<75. && !threelZVeto) _num_SR0tau_a_bin_9 += event->weight();
+          if(mSFOS>60. && mSFOS < 81.2 && mT>80. && met>50. && met<75.) _num_SR0tau_a_bin_10 += event->weight();
+          if(mSFOS>60. && mSFOS < 81.2 && mT>0. && mT<110. && met>75.) _num_SR0tau_a_bin_11 += event->weight();
+          if(mSFOS>60. && mSFOS < 81.2 && mT>110. && met>75.) _num_SR0tau_a_bin_12 += event->weight();
 
-          if(mSFOS>81.2 && mSFOS < 101.2 && mT>0. && mT<110. && met>50. && met<90. && !threelZVeto)_num_SR0tau_a_bin_13++;
-          if(mSFOS>81.2 && mSFOS < 101.2 && mT>0. && mT < 110. && met>90.)_num_SR0tau_a_bin_14++;
-          if(mSFOS>81.2 && mSFOS < 101.2 && mT>110. && met>50. && met < 135.)_num_SR0tau_a_bin_15++;
-          if(mSFOS>81.2 && mSFOS < 101.2 && mT>110. && met>135.)_num_SR0tau_a_bin_16++;
+          if(mSFOS>81.2 && mSFOS < 101.2 && mT>0. && mT<110. && met>50. && met<90. && !threelZVeto) _num_SR0tau_a_bin_13 += event->weight();
+          if(mSFOS>81.2 && mSFOS < 101.2 && mT>0. && mT < 110. && met>90.) _num_SR0tau_a_bin_14 += event->weight();
+          if(mSFOS>81.2 && mSFOS < 101.2 && mT>110. && met>50. && met < 135.) _num_SR0tau_a_bin_15 += event->weight();
+          if(mSFOS>81.2 && mSFOS < 101.2 && mT>110. && met>135.) _num_SR0tau_a_bin_16 += event->weight();
 
-          if(mSFOS > 101.2 && mT>0. && mT<180. && met>50. && met<210.)_num_SR0tau_a_bin_17++;
-          if(mSFOS > 101.2 && mT > 180. && met>50. && met<210.)_num_SR0tau_a_bin_18++;
-          if(mSFOS > 101.2 && mT>0. && mT<120. && met>210.)_num_SR0tau_a_bin_19++;
-          if(mSFOS > 101.2 && mT>120. && met>210.)_num_SR0tau_a_bin_20++;
+          if(mSFOS > 101.2 && mT>0. && mT<180. && met>50. && met<210.) _num_SR0tau_a_bin_17 += event->weight();
+          if(mSFOS > 101.2 && mT > 180. && met>50. && met<210.) _num_SR0tau_a_bin_18 += event->weight();
+          if(mSFOS > 101.2 && mT>0. && mT<120. && met>210.) _num_SR0tau_a_bin_19 += event->weight();
+          if(mSFOS > 101.2 && mT>120. && met>210.) _num_SR0tau_a_bin_20 += event->weight();
         }
         //Now do SR0tau_b
         //Need either two electrons or two muons, and they must have the same sign
@@ -535,7 +535,7 @@ namespace Gambit {
 
         if(trigger && signalLeptons.size()==3 && mSFOS12Cut && atLeastOneEorMu && separationCut && leptonTypeCut_SR0taub && bJets.size()==0 && signalTaus.size()==0){
 
-          if(met > 50. && leptonPTCut_SR0taub && dPhiLLMin < 1.)_num_SR0tau_b++;
+          if(met > 50. && leptonPTCut_SR0taub && dPhiLLMin < 1.) _num_SR0tau_b += event->weight();
 
         }
 
@@ -569,7 +569,7 @@ namespace Gambit {
         if(leptonTypeCut_SR1tau && signalLeptons[1]->pT()>30. && (signalLeptons[0]->pT()+signalLeptons[1]->pT())>70.)leptonPTCut_SR1tau=true;
 
         if(trigger && mSFOS12Cut && atLeastOneEorMu && separationCut && leptonTypeCut_SR1tau && bJets.size()==0){
-          if(met>50. && leptonPTCut_SR1tau && mltau < 120. && !eePairVeto)_num_SR1tau++;
+          if(met>50. && leptonPTCut_SR1tau && mltau < 120. && !eePairVeto) _num_SR1tau += event->weight();
         }
 
         //Now do SR2taua
@@ -610,13 +610,13 @@ namespace Gambit {
           }
         }
 
-        if(numTaus==2 && (numElectrons + numMuons)==1 && trigger && mSFOS12Cut && atLeastOneEorMu && separationCut && bJets.size()==0 && met > 50. && mT2max > 100.)_num_SR2tau_a++;
+        if(numTaus==2 && (numElectrons + numMuons)==1 && trigger && mSFOS12Cut && atLeastOneEorMu && separationCut && bJets.size()==0 && met > 50. && mT2max > 100.) _num_SR2tau_a += event->weight();
 
         //Finally do SR2taub
         double mtautau=0;
         if(numTaus==2)mtautau=(signalTaus[0]->mom()+signalTaus[1]->mom()).m();
 
-        if(numTaus==2 && (numElectrons + numMuons)==1 && trigger && mSFOS12Cut && atLeastOneEorMu && separationCut && (signalTaus[0]->pid() == -1*signalTaus[1]->pid()) && bJets.size()==0 && met > 60 && (signalTaus[0]->mom().pT() + signalTaus[1]->mom().pT())>110. && mtautau>70. && mtautau < 120.)_num_SR2tau_b++;
+        if(numTaus==2 && (numElectrons + numMuons)==1 && trigger && mSFOS12Cut && atLeastOneEorMu && separationCut && (signalTaus[0]->pid() == -1*signalTaus[1]->pid()) && bJets.size()==0 && met > 60 && (signalTaus[0]->mom().pT() + signalTaus[1]->mom().pT())>110. && mtautau>70. && mtautau < 120.) _num_SR2tau_b += event->weight();
 
         //Now do cutflow (for debugging)
 

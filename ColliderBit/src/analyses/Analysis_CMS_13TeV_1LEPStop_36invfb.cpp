@@ -290,15 +290,15 @@ namespace Gambit {
 //            if (baselineJets.size()<=3){
 //                if(tmod>10){
 //                    if(Mlb<175){
-//                        if( MET_250_350)_SR[0]+=1;
-//                        if( MET_350_450)_SR[1]+=1;
-//                        if( MET_450_600)_SR[2]+=1;
-//                        if( MET_600    )_SR[3]+=1;
+//                        if( MET_250_350)_SR[0] += event->weight();
+//                        if( MET_350_450)_SR[1] += event->weight();
+//                        if( MET_450_600)_SR[2] += event->weight();
+//                        if( MET_600    )_SR[3] += event->weight();
 //                    }else{//Mlb>175
 //                      if(N_tight_bJets>0){
-//                        if( MET_250_450)_SR[4]+=1;
-//                        if( MET_450_600)_SR[5]+=1;
-//                        if( MET_600    )_SR[6]+=1;
+//                        if( MET_250_450)_SR[4] += event->weight();
+//                        if( MET_450_600)_SR[5] += event->weight();
+//                        if( MET_600    )_SR[6] += event->weight();
 //                      }
 //                    }
 //                }
@@ -306,40 +306,40 @@ namespace Gambit {
 //            else{ // N_j>=4
 //                if(tmod<=0){
 //                    if(Mlb<175){
-//                        if( MET_250_350)_SR[7]+=1;
-//                        if( MET_350_450)_SR[8]+=1;
-//                        if( MET_450_550)_SR[9]+=1;
-//                        if( MET_550_650)_SR[10]+=1;
-//                        if( MET_650    )_SR[11]+=1;
+//                        if( MET_250_350)_SR[7] += event->weight();
+//                        if( MET_350_450)_SR[8] += event->weight();
+//                        if( MET_450_550)_SR[9] += event->weight();
+//                        if( MET_550_650)_SR[10] += event->weight();
+//                        if( MET_650    )_SR[11] += event->weight();
 //                    }else{//Mlb>175
 //                      if(N_tight_bJets>0){
-//                        if( MET_250_350)_SR[12]+=1;
-//                        if( MET_350_450)_SR[13]+=1;
-//                        if( MET_450_550)_SR[14]+=1;
-//                        if( MET_550    )_SR[15]+=1;
+//                        if( MET_250_350)_SR[12] += event->weight();
+//                        if( MET_350_450)_SR[13] += event->weight();
+//                        if( MET_450_550)_SR[14] += event->weight();
+//                        if( MET_550    )_SR[15] += event->weight();
 //                      }
 //                    }
 //                }else if (tmod<=10){
 //                    if(Mlb<175){
-//                        if( MET_250_350)_SR[16]+=1;
-//                        if( MET_350_550)_SR[17]+=1;
-//                        if( MET_550    )_SR[18]+=1;
+//                        if( MET_250_350)_SR[16] += event->weight();
+//                        if( MET_350_550)_SR[17] += event->weight();
+//                        if( MET_550    )_SR[18] += event->weight();
 //                    }else{//Mlb>175
 //                      if(N_tight_bJets>0){
-//                        if( MET_250_450)_SR[19]+=1;
-//                        if( MET_450    )_SR[20]+=1;
+//                        if( MET_250_450)_SR[19] += event->weight();
+//                        if( MET_450    )_SR[20] += event->weight();
 //                      }
 //                    }
 //                }else{ //tmod>10
 //                    if(Mlb<175){
-//                        if( MET_250_350)_SR[21]+=1;
-//                        if( MET_350_450)_SR[22]+=1;
-//                        if( MET_450_600)_SR[23]+=1;
-//                        if( MET_600    )_SR[24]+=1;
+//                        if( MET_250_350)_SR[21] += event->weight();
+//                        if( MET_350_450)_SR[22] += event->weight();
+//                        if( MET_450_600)_SR[23] += event->weight();
+//                        if( MET_600    )_SR[24] += event->weight();
 //                    }else{//Mlb>175
 //                      if(N_tight_bJets>0){
-//                        if( MET_250_450)_SR[25]+=1;
-//                        if( MET_450    )_SR[26]+=1;
+//                        if( MET_250_450)_SR[25] += event->weight();
+//                        if( MET_450    )_SR[26] += event->weight();
 //                      }
 //                    }
 //                }
@@ -347,20 +347,20 @@ namespace Gambit {
 //
 //            // compressed region
 //            if(baselineJets.size()>=5 and leadjet_nob and deltaPhi_j12 >0.5 and Leptons.at(0)->pT() < 150 and Leptons.at(0)->mom().deltaPhi(ptot)<2. ){
-//                if( MET_250_350)_SR[27]+=1;
-//                if( MET_350_450)_SR[28]+=1;
-//                if( MET_450_550)_SR[29]+=1;
-//                if( MET_550    )_SR[30]+=1;
+//                if( MET_250_350)_SR[27] += event->weight();
+//                if( MET_350_450)_SR[28] += event->weight();
+//                if( MET_450_550)_SR[29] += event->weight();
+//                if( MET_550    )_SR[30] += event->weight();
 //            }
 
             // aggregate signal region
-            if (baselineJets.size()<=3 and tmod>10              and met>=600) _aggregateSR[0]+=1;
-            if (baselineJets.size()>=4 and tmod<=0 and Mlb<=175 and met>=550) _aggregateSR[1]+=1;
-            if (baselineJets.size()>=4 and tmod>10 and Mlb<=175 and met>=450) _aggregateSR[2]+=1;
-            if (baselineJets.size()>=4 and tmod<=0 and Mlb> 175 and met>=450) _aggregateSR[3]+=1;
-            if (baselineJets.size()>=4 and tmod> 0 and Mlb> 175 and met>=450) _aggregateSR[4]+=1;
+            if (baselineJets.size()<=3 and tmod>10              and met>=600) _aggregateSR[0] += event->weight();
+            if (baselineJets.size()>=4 and tmod<=0 and Mlb<=175 and met>=550) _aggregateSR[1] += event->weight();
+            if (baselineJets.size()>=4 and tmod>10 and Mlb<=175 and met>=450) _aggregateSR[2] += event->weight();
+            if (baselineJets.size()>=4 and tmod<=0 and Mlb> 175 and met>=450) _aggregateSR[3] += event->weight();
+            if (baselineJets.size()>=4 and tmod> 0 and Mlb> 175 and met>=450) _aggregateSR[4] += event->weight();
             if(baselineJets.size()>=5 and leadjet_nob and deltaPhi_j12 >0.5 and Leptons.at(0)->pT() < 150 and Leptons.at(0)->mom().deltaPhi(ptot)<2. ){
-                if( met>=450 ) _aggregateSR[5]+=1;
+                if( met>=450 ) _aggregateSR[5] += event->weight();
             }
         return;
 

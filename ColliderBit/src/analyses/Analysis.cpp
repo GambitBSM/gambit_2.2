@@ -58,10 +58,10 @@ namespace Gambit
       run(e);
     }
 
-    /// Return the integrated luminosity (in inverse pb).
+    /// Return the integrated luminosity.
     double Analysis::luminosity() const { return _luminosity; }
 
-    /// Set the integrated luminosity (in inverse pb).
+    /// Set the integrated luminosity.
     void Analysis::set_luminosity(double lumi) { _luminosity_is_set = true; _luminosity = lumi; }
 
     /// Set the analysis name

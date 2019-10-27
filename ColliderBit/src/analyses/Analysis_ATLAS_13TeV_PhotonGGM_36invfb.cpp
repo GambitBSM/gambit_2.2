@@ -39,7 +39,7 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int num_SRaa_SL, num_SRaa_SH, num_SRaa_WL, num_SRaa_WH, num_SRaj_L, num_SRaj_L200, num_SRaj_H;
+      double num_SRaa_SL, num_SRaa_SH, num_SRaa_WL, num_SRaa_WH, num_SRaj_L, num_SRaj_L200, num_SRaj_H;
 
       // Cut Flow
       #ifdef CHECK_CUTFLOW
@@ -315,15 +315,15 @@ namespace Gambit {
         // All variables are now done
         // Increment signal region variables
         // 2a regions
-        if(preSelection2a && met > 150. && HT > 2750 && dphimin_j28met > 0.5) num_SRaa_SL++;
-        if(preSelection2a && met > 250. && HT > 2000 && dphimin_j28met > 0.5 && dphimin_amet > 0.5) num_SRaa_SH++;
-        if(preSelection2a && met > 150. && HT > 1500 && dphimin_j28met > 0.5) num_SRaa_WL++;
-        if(preSelection2a && met > 250. && HT > 1000 && dphimin_j28met > 0.5 && dphimin_amet > 0.5) num_SRaa_WH++;
+        if(preSelection2a && met > 150. && HT > 2750 && dphimin_j28met > 0.5) num_SRaa_SL += event->weight();
+        if(preSelection2a && met > 250. && HT > 2000 && dphimin_j28met > 0.5 && dphimin_amet > 0.5) num_SRaa_SH += event->weight();
+        if(preSelection2a && met > 150. && HT > 1500 && dphimin_j28met > 0.5) num_SRaa_WL += event->weight();
+        if(preSelection2a && met > 250. && HT > 1000 && dphimin_j28met > 0.5 && dphimin_amet > 0.5) num_SRaa_WH += event->weight();
 
         // aj regions
-        if(preSelectionSRLaj && nJets25 >=5 && nLep == 0 && met > 300. && meff > 2000. && RT4 < 0.90 && dphimin_j25met > 0.5 && dphimin_amet > 0.5) num_SRaj_L++;
-        if(preSelectionSRLaj && nJets25 >=5 && nLep == 0 && met > 200. && meff > 2000. && RT4 < 0.90 && dphimin_j25met > 0.5 && dphimin_amet > 0.5) num_SRaj_L200++;
-        if(preSelectionSRHaj && nJets25 >=3 && nLep == 0 && met > 400. && meff > 2400. && dphimin_j25met > 0.5 && dphimin_amet > 0.5) num_SRaj_H++;
+        if(preSelectionSRLaj && nJets25 >=5 && nLep == 0 && met > 300. && meff > 2000. && RT4 < 0.90 && dphimin_j25met > 0.5 && dphimin_amet > 0.5) num_SRaj_L += event->weight();
+        if(preSelectionSRLaj && nJets25 >=5 && nLep == 0 && met > 200. && meff > 2000. && RT4 < 0.90 && dphimin_j25met > 0.5 && dphimin_amet > 0.5) num_SRaj_L200 += event->weight();
+        if(preSelectionSRHaj && nJets25 >=3 && nLep == 0 && met > 400. && meff > 2400. && dphimin_j25met > 0.5 && dphimin_amet > 0.5) num_SRaj_H += event->weight();
 
 
         #ifdef CHECK_CUTFLOW

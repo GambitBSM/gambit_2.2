@@ -27,9 +27,15 @@
 ///          (andy.buckley@cern.ch)
 ///  \date 2017 Jun
 ///
+///  \author Anders Kvellestad
+///          (a.kvellestad@imperial.ac.uk)
+///  \date 2019 Sep
+///
 ///  *********************************************
 
 #pragma once
+
+#include "gambit/Utils/util_types.hpp"
 
 #define MODULE ColliderBit
 
@@ -46,34 +52,47 @@
     #undef FUNCTION
   #undef CAPABILITY
 
-  /// Cross-section calculators
-  /// @{
-  #define CAPABILITY CrossSection
-  START_CAPABILITY
 
-    /// Cross-section from Monte Carlo
-    #define FUNCTION getMCxsec
-    START_FUNCTION(xsec)
+
+  /// Total cross-section
+  /// @{
+  // Get total cross-section as calculated by the event generator
+  #define CAPABILITY TotalEvGenCrossSection
+  START_CAPABILITY
+    #define FUNCTION getEvGenCrossSection
+    START_FUNCTION(MC_xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     DEPENDENCY(HardScatteringSim, const BaseCollider*)
     #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY TotalCrossSection
+  START_CAPABILITY
+    /// Convert the TotalEvGenCrossSection (type MC_xsec_container) into 
+    /// a regular TotalCrossSection (type xsec_container)
+    #define FUNCTION getEvGenCrossSection_as_base
+    START_FUNCTION(xsec_container)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalEvGenCrossSection, MC_xsec_container)
+    #undef FUNCTION
 
     /// Example function for interfacing alternative cross-section calculators
-    #define FUNCTION getNLLFastxsec
-    START_FUNCTION(xsec)
+    #define FUNCTION getNLLFastCrossSection
+    START_FUNCTION(xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
-    /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
-    #define FUNCTION getYAMLxsec
-    START_FUNCTION(xsec)
+    /// A function that reads the total cross-section from the input file,
+    /// but builds up the number of events from the event loop
+    #define FUNCTION getYAMLCrossSection
+    START_FUNCTION(xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
     /// A function that assigns a total cross-sections to a given SLHA input file
     /// (for model CB_SLHA_file_model)
-    #define FUNCTION getYAMLxsec_SLHA
-    START_FUNCTION(xsec)
+    #define FUNCTION getYAMLCrossSection_SLHA
+    START_FUNCTION(xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_file_model)
     DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct)
@@ -81,14 +100,88 @@
 
     /// A function that assigns a total cross-sections directly from the scan parameters
     /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
-    #define FUNCTION getYAMLxsec_param
-    START_FUNCTION(xsec)
+    #define FUNCTION getYAMLCrossSection_param
+    START_FUNCTION(xsec_container)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     #undef FUNCTION
+  #undef CAPABILITY
 
+  /// Output info on TotalCrossSection as 
+  /// a str-double map, for easy printing
+  #define CAPABILITY TotalCrossSectionAsMap
+  START_CAPABILITY
+    #define FUNCTION getTotalCrossSectionAsMap
+    START_FUNCTION(map_str_dbl)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalCrossSection, xsec_container)
+    #undef FUNCTION
   #undef CAPABILITY
   /// @}
+
+
+  /// Process codes and PID pairs
+  /// @{
+  /// Get list of Pythia process codes for all active processes
+  #define CAPABILITY ActiveProcessCodes
+  START_CAPABILITY
+    #define FUNCTION getActiveProcessCodes
+    START_FUNCTION(std::vector<int>)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(HardScatteringSim, const BaseCollider*)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  /// Get a list of all the PID pairs related to active process codes
+  #define CAPABILITY ActivePIDPairs
+  START_CAPABILITY
+    #define FUNCTION getActivePIDPairs
+    START_FUNCTION(vec_PID_pair)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_PID_pair)
+    #undef FUNCTION
+  #undef CAPABILITY 
+
+  /// Translate a list of Pythia process codes to list of (PID,PID) pairs
+  /// for the two final state particles of the hard process.
+  #define CAPABILITY ActiveProcessCodeToPIDPairsMap
+  START_CAPABILITY
+    #define FUNCTION getActiveProcessCodeToPIDPairsMap
+    START_FUNCTION(multimap_int_PID_pair)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActiveProcessCodes, std::vector<int>)
+    #undef FUNCTION
+  #undef CAPABILITY 
+  /// @}
+
+
+
+  /// Process-level cross-sections
+  /// @{
+  /// A map between Pythia process codes and cross-sections
+  #define CAPABILITY ProcessCrossSectionsMap
+  START_CAPABILITY
+    #define FUNCTION getProcessCrossSectionsMap
+    START_FUNCTION(map_int_process_xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActiveProcessCodes, std::vector<int>)
+    DEPENDENCY(ActiveProcessCodeToPIDPairsMap, multimap_int_PID_pair)
+    DEPENDENCY(PIDPairCrossSectionsMap, map_PID_pair_PID_pair_xsec) 
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// A map between PID pairs and cross-sections
+  #define CAPABILITY PIDPairCrossSectionsMap
+  START_CAPABILITY
+    #define FUNCTION getPIDPairCrossSectionsMap_testing
+    START_FUNCTION(map_PID_pair_PID_pair_xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActivePIDPairs, vec_PID_pair)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
+
+
 
   /// Lists of analyses to run
   /// @{
@@ -97,7 +190,7 @@
     #define FUNCTION getATLASAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(CrossSection, xsec)
+    DEPENDENCY(TotalCrossSection, xsec_container)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -106,7 +199,7 @@
     #define FUNCTION getCMSAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(CrossSection, xsec)
+    DEPENDENCY(TotalCrossSection, xsec_container)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -115,7 +208,7 @@
     #define FUNCTION getIdentityAnalysisContainer
     START_FUNCTION(AnalysisContainer)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(CrossSection, xsec)
+    DEPENDENCY(TotalCrossSection, xsec_container)
     #undef FUNCTION
   #undef CAPABILITY
   /// @}
@@ -313,8 +406,39 @@
   #undef CAPABILITY
   /// @}
 
+
+  /// Provide functions that can be used for event weighting, e.g. for process-level cross-section scaling.
+  /// {@
+  #define CAPABILITY EventWeighterFunction
+  START_CAPABILITY
+
+    /// This function is intended as a fallback option 
+    /// that simply assigns a unit weight to all events
+    #define FUNCTION setEventWeight_unity
+    START_FUNCTION(EventWeighterFunctionType)
+    #undef FUNCTION
+
+    /// Weight events according to process cross-section 
+    #define FUNCTION setEventWeight_fromCrossSection
+    START_FUNCTION(EventWeighterFunctionType)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ProcessCrossSectionsMap, map_int_process_xsec)
+    #undef FUNCTION
+
+    /// Event weight functions that depend on model-specific Py8Collider versions
+    /// should be declared in the corresponding model header in ColliderBit/models.
+
+  #undef CAPABILITY
+  /// @{
+
+
   // All other functions are declared in additional headers in the ColliderBit/models directory.
   // The following capabilities need to be provided for each new model:
+
+  // SLHAea object with spectrum and decays for a Pythia8 collider
+  #define CAPABILITY SpectrumAndDecaysForPythia
+  START_CAPABILITY
+  #undef CAPABILITY
 
   /// Collider sim capability.
   #define CAPABILITY HardScatteringSim
