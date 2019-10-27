@@ -91,8 +91,8 @@ Rules:
         #- 1000024;(any),2,1000022,24;0  # <-- BR for two-body decay 1000024 -> 1000022 24
 
   # Assign cross-sections and uncertainties for each SLHA file
-  - capability: CrossSection
-    function: getYAMLxsec_SLHA
+  - capability: TotalCrossSection
+    function: getYAMLCrossSection_SLHA
     options:
       xsec_pb:
         /home/tomasz/summer/Cutflows-2017/ATLAS_13TeV_0LEP/GluinoGluinoCase.slha: 0.0101
