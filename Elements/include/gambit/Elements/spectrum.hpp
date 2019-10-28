@@ -103,14 +103,27 @@ namespace Gambit
          /// @{
          typedef std::vector<YAML::sdd>  mc_info;
          typedef std::vector<YAML::ssdd> mr_info;
+         typedef std::vector<YAML::ssdd> md_info;
+         struct cuts_info
+         {
+           mc_info cuts;
+           mr_info ratio_cuts;
+           md_info diff_cuts;
+
+           cuts_info() : cuts(), ratio_cuts(), diff_cuts() {}
+
+           cuts_info(mc_info mc, mr_info mr, md_info md) :
+             cuts(mc),
+             ratio_cuts(mr),
+             diff_cuts(md) {}
+         };
          /// @}
 
       private:
 
          /// Variables
          /// @{
-         mc_info mass_cuts;
-         mr_info mass_ratio_cuts;
+         cuts_info mass_cuts;
          /// @}
 
          ///Calculate Wolfenstein rho+i*eta from rhobar and etabar
@@ -129,6 +142,27 @@ namespace Gambit
          /// Contents requirements for this spectrum
          SpectrumContents::Contents myContents;
 
+         // Retrieve mass cuts from yaml iptions
+         inline cuts_info& retrieve_mass_cuts(const Options &options)
+         {
+           
+           mass_cuts = cuts_info(
+             options.getValueOrDef<mc_info>(mc_info(), "mass_cut"),
+             options.getValueOrDef<mr_info>(mr_info(), "mass_ratio_cut"),
+             options.getValueOrDef<md_info>(md_info(), "mass_diff_cut")
+           );
+
+           return mass_cuts;
+         }
+
+         // Overload with safe pointer
+         inline cuts_info& retrieve_mass_cuts(const safe_ptr<Options>& options)
+         { 
+           mass_cuts = retrieve_mass_cuts(*options);
+           return mass_cuts;
+         }
+
+
       public:
 
          /// @{ Constructors/Destructors
@@ -143,8 +177,7 @@ namespace Gambit
          Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale, const bool ignore_input_transform=false);
 
          /// Set constraints on masses and mass ratios that cause the spectrum to be declared "invalid" if they are violated
-         void set_mass_cuts(const mc_info&);
-         void set_mass_ratio_cuts(const mr_info&);
+         void set_mass_cuts(const cuts_info&);
          /// @}
 
          /// Return scale at which all running parameters are defined (in GeV)
@@ -152,7 +185,10 @@ namespace Gambit
          double GetScale() const;
 
          /// Check the that the spectrum satisifies any mass cuts requested from the yaml file.
-         void check_mass_cuts();
+         void check_mass_cuts(const Options &options);
+
+         /// Overload with safe pointer
+         void check_mass_cuts(const safe_ptr<Options>& options);
 
          /// @{ Pole mass getters
          //

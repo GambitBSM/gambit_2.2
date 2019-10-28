@@ -80,11 +80,14 @@ namespace Gambit
    }
 
    /// Check the that the spectrum satisifies any mass cuts requested from the yaml file.
-   void Spectrum::check_mass_cuts()
+   void Spectrum::check_mass_cuts(const Options &options)
    {
-     if (not mass_cuts.empty())
+     // Retrieve mass cuts from options 
+     mass_cuts = retrieve_mass_cuts(options);
+
+     if (not mass_cuts.cuts.empty())
      {
-       for (auto it = mass_cuts.begin(); it != mass_cuts.end(); ++it)
+       for (auto it = mass_cuts.cuts.begin(); it != mass_cuts.cuts.end(); ++it)
        {
          str p = it->first;
          bool absolute_value = is_abs(p);
@@ -102,9 +105,9 @@ namespace Gambit
          if (m < low or m > high) invalid_point().raise(p + " failed requested mass cut.");
        }
      }
-     if (not mass_ratio_cuts.empty())
+     if (not mass_cuts.ratio_cuts.empty())
      {
-       for (auto it = mass_ratio_cuts.begin(); it != mass_ratio_cuts.end(); ++it)
+       for (auto it = mass_cuts.ratio_cuts.begin(); it != mass_cuts.ratio_cuts.end(); ++it)
        {
          str p1 = it->first.first;
          str p2 = it->first.second;
@@ -131,8 +134,51 @@ namespace Gambit
          if (mratio < low or mratio > high) invalid_point().raise(p1 + "/" + p2 +" failed requested mass ratio cut.");
        }
      }
+     if (not mass_cuts.diff_cuts.empty())
+     {
+       for (auto it = mass_cuts.diff_cuts.begin(); it != mass_cuts.diff_cuts.end(); ++it)
+       {
+         str p1 = it->first.first;
+         str p2 = it->first.second;
+         bool absolute_value1 = is_abs(p1);
+         bool absolute_value2 = is_abs(p2);
+         const double& low = it->second.first;
+         const double& high = it->second.second;
+         #ifdef SPECTRUM_DEBUG
+           cout << "Applying mass diff cut " << low << " < |"
+                << (absolute_value1 ? "|mass("+p1+")|" : "mass("+p1+")") << " - "
+                << (absolute_value2 ? "|mass("+p2+")|" : "mass("+p2+")")
+                << "| < " << high << endl;
+         #endif
+         if (not has(Par::Pole_Mass, p1)) utils_error().raise(LOCAL_INFO, "Cannot cut on ratio with mass of unrecognised particle: " + p1);
+         if (not has(Par::Pole_Mass, p2)) utils_error().raise(LOCAL_INFO, "Cannot cut on ratio with mass of unrecognised particle: " + p2);
+         double m1 = get(Par::Pole_Mass, p1);
+         double m2 = get(Par::Pole_Mass, p2);
+         if (absolute_value1) m1 = std::abs(m1);
+         if (absolute_value2) m2 = std::abs(m2);
+         double mdiff = std::abs(m1 - m2);
+         #ifdef SPECTRUM_DEBUG
+           cout << "Actual value: " << mdiff << endl;
+         #endif
+         if (mdiff < low or mdiff > high) invalid_point().raise("|" + p1 + "-" + p2 +"| failed requested mass diff cut.");
+       }
+     }
+
    }
 
+   /// Overloade version of check_cuts with safe pointer
+   void Spectrum::check_mass_cuts(const safe_ptr<Options> &options)
+   {
+     check_mass_cuts(*options);
+   }
+ 
+  /// Set constraints on masses and mass ratios that cause the spectrum to be declared "invalid" if they are violated
+   void Spectrum::set_mass_cuts(const cuts_info& cuts)
+   {
+     mass_cuts.cuts       = cuts.cuts;
+     mass_cuts.ratio_cuts = cuts.ratio_cuts;
+     mass_cuts.diff_cuts  = cuts.diff_cuts;
+   }
  
    /// Master checker function to see if a parameter request matches the spectrum contents
    bool Spectrum::has(const Par::Tags partype, const std::string& name_in, const std::vector<int>& indices_in, bool auto_check_antiparticle_name) const
