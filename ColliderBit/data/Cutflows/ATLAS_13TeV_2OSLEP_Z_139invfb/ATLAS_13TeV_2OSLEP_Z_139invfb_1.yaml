@@ -199,8 +199,8 @@ Rules:
         - 1000023;(any),2,1000022,25;0  # <-- BR for two-body decay 1000023 -> 1000022 25
 
   # Assign cross-sections and uncertainties directly as parameters.
-  - capability: CrossSection
-    function: getYAMLxsec_param 
+  - capability: TotalCrossSection
+    function: getYAMLCrossSection_param 
 
 # Set the names of key log files
 Logger:

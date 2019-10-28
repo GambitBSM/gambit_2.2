@@ -57,8 +57,8 @@ Rules:
     function: generateEventPythia
 
   # Choose to where to get cross-sections from
-  - capability: CrossSection
-    function: getMCxsec
+  - capability: TotalCrossSection
+    function: getEvGenCrossSection_as_base
 
   # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
   - capability: RunMC

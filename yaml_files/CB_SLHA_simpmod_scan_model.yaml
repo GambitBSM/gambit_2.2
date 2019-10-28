@@ -8,9 +8,9 @@ Parameters:
       prior_type: none
     m2: 
       prior_type: none
-    xsec_fb:
+    cross_section_fb:
       prior_type: none
-    xsec_uncert_fb:
+    cross_section_uncert_fb:
       prior_type: none
     br1: 1.0
     br2: 1.0
@@ -31,8 +31,8 @@ Scanner:
       parameters:
         "CB_SLHA_simpmod_scan_model::m1": [25.0, 75.0, 25.0, 75.0, 125.0, 25.0, 75.0, 125.0, 175.0, 25.0, 75.0, 125.0, 175.0, 225.0, 25.0, 75.0, 125.0, 175.0, 225.0, 275.0, 25.0, 75.0, 125.0, 175.0, 225.0, 275.0, 325.0, 25.0, 75.0, 125.0, 175.0, 225.0, 275.0, 325.0, 375.0, 25.0, 75.0, 125.0, 175.0, 225.0, 275.0, 325.0, 375.0, 425.0]
         "CB_SLHA_simpmod_scan_model::m2": [100.0, 100.0, 150.0, 150.0, 150.0, 200.0, 200.0, 200.0, 200.0, 250.0, 250.0, 250.0, 250.0, 250.0, 300.0, 300.0, 300.0, 300.0, 300.0, 300.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 400.0, 400.0, 400.0, 400.0, 400.0, 400.0, 400.0, 400.0, 450.0, 450.0, 450.0, 450.0, 450.0, 450.0, 450.0, 450.0, 450.0]
-        "CB_SLHA_simpmod_scan_model::xsec_fb": [22670.1, 22670.1, 5180.9, 5180.9, 5180.9, 1807.4, 1807.4, 1807.4, 1807.4, 782.5, 782.5, 782.5, 782.5, 782.5, 386.9, 386.9, 386.9, 386.9, 386.9, 386.9, 209.4, 209.4, 209.4, 209.4, 209.4, 209.4, 209.4, 121.0, 121.0, 121.0, 121.0, 121.0, 121.0, 121.0, 121.0, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4]
-        "CB_SLHA_simpmod_scan_model::xsec_uncert_fb": [973.97, 973.97, 253.22, 253.22, 253.22, 101.32, 101.32, 101.32, 101.32, 48.75, 48.75, 48.75, 48.75, 48.75, 26.36, 26.36, 26.36, 26.36, 26.36, 26.36, 15.45, 15.45, 15.45, 15.45, 15.45, 15.45, 15.45, 9.62, 9.62, 9.62, 9.62, 9.62, 9.62, 9.62, 9.62, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24]
+        "CB_SLHA_simpmod_scan_model::cross_section_fb": [22670.1, 22670.1, 5180.9, 5180.9, 5180.9, 1807.4, 1807.4, 1807.4, 1807.4, 782.5, 782.5, 782.5, 782.5, 782.5, 386.9, 386.9, 386.9, 386.9, 386.9, 386.9, 209.4, 209.4, 209.4, 209.4, 209.4, 209.4, 209.4, 121.0, 121.0, 121.0, 121.0, 121.0, 121.0, 121.0, 121.0, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4, 73.4]
+        "CB_SLHA_simpmod_scan_model::cross_section_uncert_fb": [973.97, 973.97, 253.22, 253.22, 253.22, 101.32, 101.32, 101.32, 101.32, 48.75, 48.75, 48.75, 48.75, 48.75, 26.36, 26.36, 26.36, 26.36, 26.36, 26.36, 15.45, 15.45, 15.45, 15.45, 15.45, 15.45, 15.45, 9.62, 9.62, 9.62, 9.62, 9.62, 9.62, 9.62, 9.62, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24, 6.24]
 
 
 Printer:
@@ -109,12 +109,12 @@ Rules:
 
   # Assign cross-sections and uncertainties directly as parameters.
   # Accepted combinations of model parameter names:
-  #   (xsec_fb, xsec_uncert_fb), 
-  #   (xsec_fb, xsec_fractional_uncert),
-  #   (xsec_pb, xsec_uncert_pb), 
-  #   (xsec_pb, xsec_fractional_uncert)
-  - capability: CrossSection
-    function: getYAMLxsec_param
+  #   (cross_section_fb, cross_section_uncert_fb), 
+  #   (cross_section_fb, cross_section_fractional_uncert),
+  #   (cross_section_pb, cross_section_uncert_pb), 
+  #   (cross_section_pb, cross_section_fractional_uncert)
+  - capability: TotalCrossSection
+    function: getYAMLCrossSection_param
 
 
   # Generate evens (don't read LH event files)

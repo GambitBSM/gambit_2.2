@@ -33,6 +33,7 @@
 ///  \date   2017 March
 ///  \date   2018 Jan
 ///  \date   2018 May
+///  \date   2019 Sep
 ///
 ///  *********************************************
 
@@ -53,6 +54,7 @@ namespace Gambit
     void generateEventPy8Collider(HEPUtils::Event& event,
                                   const MCLoopInfo& RunMC,
                                   const Py8Collider<PythiaT,EventT>& HardScatteringSim,
+                                  const EventWeighterFunctionType& EventWeighterFunction,
                                   const int iteration,
                                   void(*wrapup)())
     {
@@ -147,7 +149,10 @@ namespace Gambit
         return;
       }
 
+      // Assign weight to event
+      EventWeighterFunction(event, &HardScatteringSim);
     }
+
 
     /// Generate a hard scattering event with a specific Pythia
     #define GET_PYTHIA_EVENT(NAME)                               \
@@ -155,7 +160,8 @@ namespace Gambit
     {                                                            \
       using namespace Pipes::NAME;                               \
       generateEventPy8Collider(result, *Dep::RunMC,              \
-       *Dep::HardScatteringSim, *Loop::iteration, Loop::wrapup); \
+       *Dep::HardScatteringSim, *Dep::EventWeighterFunction,     \
+       *Loop::iteration, Loop::wrapup);                          \
     }
 
   }

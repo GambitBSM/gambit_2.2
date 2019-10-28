@@ -11,10 +11,7 @@ namespace Gambit {
     using namespace HEPUtils;
 
 
-    /// @brief ATLAS Run 2 0-lepton jet+MET SUSY analysis, with 13/fb of data
-    ///
-    /// Based on:
-    ///   https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/SUSY-2016-07/
+    /// @brief ATLAS Run 2 0-lepton jet+MET SUSY analysis, with 36/fb of data
     ///
     /// Recursive jigsaw reconstruction signal regions are currently not included
     /// Boosted signal regions not currently used.
@@ -31,28 +28,28 @@ namespace Gambit {
       static const size_t NUMSR = 13;
       //double _srnums[13] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
 
-      int num_2j_1200;
-      int num_2j_1600;
-      int num_2j_2000;
-      int num_2j_2400;
-      int num_2j_2800;
-      int num_2j_3600;
-      int num_2j_2100;
-      int num_3j_1300;
-      int num_4j_1000;
-      int num_4j_1400;
-      int num_4j_1800;
-      int num_4j_2200;
-      int num_4j_2600;
-      int num_4j_3000;
-      int num_5j_1700;
-      int num_5j_1600;
-      int num_5j_2000;
-      int num_5j_2600;
-      int num_6j_1200;
-      int num_6j_1800;
-      int num_6j_2200;
-      int num_6j_2600;
+      double num_2j_1200;
+      double num_2j_1600;
+      double num_2j_2000;
+      double num_2j_2400;
+      double num_2j_2800;
+      double num_2j_3600;
+      double num_2j_2100;
+      double num_3j_1300;
+      double num_4j_1000;
+      double num_4j_1400;
+      double num_4j_1800;
+      double num_4j_2200;
+      double num_4j_2600;
+      double num_4j_3000;
+      double num_5j_1700;
+      double num_5j_1600;
+      double num_5j_2000;
+      double num_5j_2600;
+      double num_6j_1200;
+      double num_6j_1800;
+      double num_6j_2200;
+      double num_6j_2600;
 
       Cutflows _flows;
 
@@ -263,60 +260,60 @@ namespace Gambit {
           // 2 jet regions
           if (dphimin_123 > 0.8 && dphimin_more > 0.4) {
             if (signalJets[1]->pT() > 250 && etamax_2 < 0.8) { //< implicit pT[0] cut
-              if (met_sqrtHT > 14 && meff_incl > 1200) num_2j_1200 += 1;
+              if (met_sqrtHT > 14 && meff_incl > 1200) num_2j_1200 += event->weight();
             }
             if (signalJets[1]->pT() > 300 && etamax_2 < 1.2) { //< implicit pT[0] cut
-              if (met_sqrtHT > 18 && meff_incl > 1600) num_2j_1600 += 1;
+              if (met_sqrtHT > 18 && meff_incl > 1600) num_2j_1600 += event->weight();
             }
             if (signalJets[1]->pT() > 350 && etamax_2 < 1.2) { //< implicit pT[0] cut
-              if (met_sqrtHT > 18 && meff_incl > 2000) num_2j_2000 += 1;
-              if (met_sqrtHT > 18 && meff_incl > 2400) num_2j_2400 += 1;
-              if (met_sqrtHT > 18 && meff_incl > 2800) num_2j_2800 += 1;
+              if (met_sqrtHT > 18 && meff_incl > 2000) num_2j_2000 += event->weight();
+              if (met_sqrtHT > 18 && meff_incl > 2400) num_2j_2400 += event->weight();
+              if (met_sqrtHT > 18 && meff_incl > 2800) num_2j_2800 += event->weight();
             }
             if (signalJets[1]->pT() > 350) { //< implicit pT[0] cut
-              if (met_sqrtHT > 18 && meff_incl > 3600) num_2j_3600 += 1;
+              if (met_sqrtHT > 18 && meff_incl > 3600) num_2j_3600 += event->weight();
             }
           }
 
           if (dphimin_123 > 0.4 && dphimin_more > 0.2) {
             if(signalJets[0]->pT() > 600 && signalJets[1]->pT() > 50){
-              if (met_sqrtHT > 26 && meff_incl > 2100) num_2j_2100 += 1;
+              if (met_sqrtHT > 26 && meff_incl > 2100) num_2j_2100 += event->weight();
             }
           }
 
           // 3 jet region
           if (nJets50 >= 3 && dphimin_123 > 0.4 && dphimin_more > 0.2) {
             if (signalJets[0]->pT() > 600 && signalJets[2]->pT() > 50) { //< implicit pT[1] cut
-              if (met_sqrtHT > 16 && meff_incl > 1300) num_3j_1300 += 1;
+              if (met_sqrtHT > 16 && meff_incl > 1300) num_3j_1300 += event->weight();
             }
           }
 
           // 4 jet regions (note implicit pT[1,2] cuts)
           if (nJets50 >= 4 && dphimin_123 > 0.4 && dphimin_more > 0.4 && signalJets[0]->pT() > 200 && aplanarity > 0.04) {
-            if (signalJets[3]->pT() > 100 && etamax_4 < 1.2 && met_meff_4 > 0.3 && meff_incl > 1000) num_4j_1000 += 1;
-            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1400) num_4j_1400 += 1;
-            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1800) num_4j_1800 += 1;
-            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 2200) num_4j_2200 += 1;
-            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 2600) num_4j_2600 += 1;
-            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 3000) num_4j_3000 += 1;
+            if (signalJets[3]->pT() > 100 && etamax_4 < 1.2 && met_meff_4 > 0.3 && meff_incl > 1000) num_4j_1000 += event->weight();
+            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1400) num_4j_1400 += event->weight();
+            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1800) num_4j_1800 += event->weight();
+            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 2200) num_4j_2200 += event->weight();
+            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 2600) num_4j_2600 += event->weight();
+            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 3000) num_4j_3000 += event->weight();
           }
 
           // 5 jet regions (note implicit pT[1,2,3] cuts)
           if (nJets50 >= 5){
 
-            if(signalJets[0]->pT() > 700. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.3 &&  meff_incl > 1700) num_5j_1700 += 1;
-            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.15 &&  aplanarity > 0.08 && meff_incl > 1600) num_5j_1600 += 1;
-            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.4 && met_sqrtHT > 15 && meff_incl > 2000) num_5j_2000 += 1;
-            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.8 && dphimin_more > 0.4 && met_sqrtHT > 18 && meff_incl > 2600) num_5j_2600 += 1;
+            if(signalJets[0]->pT() > 700. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.3 &&  meff_incl > 1700) num_5j_1700 += event->weight();
+            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.15 &&  aplanarity > 0.08 && meff_incl > 1600) num_5j_1600 += event->weight();
+            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.4 && met_sqrtHT > 15 && meff_incl > 2000) num_5j_2000 += event->weight();
+            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.8 && dphimin_more > 0.4 && met_sqrtHT > 18 && meff_incl > 2600) num_5j_2600 += event->weight();
 
           }
 
           // 6 jet regions (note implicit pT[1,2,3,4] cuts)
           if (nJets50 >= 6 && dphimin_123 > 0.4 && dphimin_more > 0.2 && signalJets[0]->pT() > 200) {
-            if (signalJets[5]->pT() >  50 && etamax_6 < 2.0 && met_meff_6 > 0.25 && meff_incl > 1200) num_6j_1200 += 1;
-            if (signalJets[5]->pT() > 100 && etamax_6 < 2.0 && met_meff_6 > 0.2 && aplanarity > 0.04 && meff_incl > 1800) num_6j_1800 += 1;
-            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.2 && aplanarity > 0.08 && meff_incl > 2200) num_6j_2200 += 1;
-            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.15 && aplanarity > 0.08 && meff_incl > 2600) num_6j_2600 += 1;
+            if (signalJets[5]->pT() >  50 && etamax_6 < 2.0 && met_meff_6 > 0.25 && meff_incl > 1200) num_6j_1200 += event->weight();
+            if (signalJets[5]->pT() > 100 && etamax_6 < 2.0 && met_meff_6 > 0.2 && aplanarity > 0.04 && meff_incl > 1800) num_6j_1800 += event->weight();
+            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.2 && aplanarity > 0.08 && meff_incl > 2200) num_6j_2200 += event->weight();
+            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.15 && aplanarity > 0.08 && meff_incl > 2600) num_6j_2600 += event->weight();
           }
 
           // Cutflows

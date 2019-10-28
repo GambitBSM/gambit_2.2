@@ -26,13 +26,13 @@ namespace Gambit {
     private:
 
         // Numbers passing cuts
-        // int _SRSF[13], _SRDF[13], _SRALL[13],_SRA[3];
+        // double _SRSF[13], _SRDF[13], _SRALL[13],_SRA[3];
         static const size_t _SR_size = 13;
         static const size_t _SRA_size = 3;
-        std::vector<int> _SRSF;
-        std::vector<int> _SRDF;
-        std::vector<int> _SRALL;
-        std::vector<int> _SRA;
+        std::vector<double> _SRSF;
+        std::vector<double> _SRDF;
+        std::vector<double> _SRALL;
+        std::vector<double> _SRA;
 
         // Cut Flow
         vector<int> cutFlowVector;
@@ -360,7 +360,7 @@ namespace Gambit {
                    (j==10 && pre_cut && flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_80 )||
                    (j==11 && pre_cut && flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_200)||
                    (j==12 && pre_cut && flg_SF && sig_MT2ll_240)
-                   )_SRSF[j]++;
+                   )_SRSF[j] += event->weight();
                  // diferent flavour
                 if(
                    (j==0 && pre_cut && !flg_SF && sig_MT2ll_100 && sig_MT2bl_0   && sig_MET_80 )||
@@ -376,7 +376,7 @@ namespace Gambit {
                    (j==10 && pre_cut && !flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_80 )||
                    (j==11 && pre_cut && !flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_200)||
                    (j==12 && pre_cut && !flg_SF && sig_MT2ll_240)
-                   )_SRDF[j]++;
+                   )_SRDF[j] += event->weight();
                  // all
                 if(
                    (j==0 && pre_cut && sig_MT2ll_100 && sig_MT2bl_0   && sig_MET_80 )||
@@ -392,14 +392,14 @@ namespace Gambit {
                    (j==10 && pre_cut && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_80 )||
                    (j==11 && pre_cut && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_200)||
                    (j==12 && pre_cut && sig_MT2ll_240)
-                   )_SRALL[j]++;
+                   )_SRALL[j] += event->weight();
             }
             for(size_t j=0;j<_SRA_size;j++){
                 if(
                    (j==0  && pre_cut && sig_MT2ll_100 && sig_MET_200) ||
                    (j==1  && pre_cut && sig_MT2ll_140 && sig_MET_200)||
                    (j==2  && pre_cut && sig_MT2ll_240)
-                   )_SRA[j]++;
+                   )_SRA[j] += event->weight();
             }
         return;
 

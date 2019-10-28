@@ -149,9 +149,9 @@ namespace Gambit {
             dPhiMin2j = SmallestdPhi(signalJets,ptot.phi());
             //meff2j = met + signalJets[0]->pT() + signalJets[1]->pT();
             if (leptonCut && metCut && dPhiMin2j>0.4) {
-              if (met/sqrt(HT)>8. && meff_incl>800.) _num2jl += 1;
-              if (met/sqrt(HT)>15. && meff_incl>1200.) _num2jm += 1;
-              if (met/sqrt(HT)>15. && meff_incl>1600.) _num2jt += 1;
+              if (met/sqrt(HT)>8. && meff_incl>800.) _num2jl += event->weight();
+              if (met/sqrt(HT)>15. && meff_incl>1200.) _num2jm += event->weight();
+              if (met/sqrt(HT)>15. && meff_incl>1600.) _num2jt += event->weight();
             }
 
           }
@@ -166,7 +166,7 @@ namespace Gambit {
             dPhiMin3j = SmallestdPhi(signalJets,ptot.phi());
             meff3j = met + signalJets.at(0)->pT() + signalJets.at(1)->pT() + signalJets.at(2)->pT();
             if (leptonCut && metCut && dPhiMin3j > 0.4) {
-              if (met/meff3j>0.3 && meff_incl>2200.) _num3j += 1;
+              if (met/meff3j>0.3 && meff_incl>2200.) _num3j += event->weight();
             }
           }
         }
@@ -182,10 +182,10 @@ namespace Gambit {
             dPhiMin2 = SmallestRemainingdPhi(signalJets,ptot.phi());
             meff4j = met + signalJets.at(0)->pT() + signalJets.at(1)->pT() + signalJets.at(2)->pT() + signalJets.at(3)->pT();
             if (leptonCut && metCut && dPhiMin4 > 0.4 && dPhiMin2 > 0.2) {
-              if(met/sqrt(HT)>10. && meff_incl>700.)_num4jlm += 1;
-              if(met/sqrt(HT)>10. && meff_incl>1000.)_num4jl += 1;
-              if (met/meff4j>0.4 && meff_incl>1300.) _num4jm += 1;
-              if (met/meff4j>0.25 && meff_incl>2200.) _num4jt += 1;
+              if(met/sqrt(HT)>10. && meff_incl>700.)_num4jlm += event->weight();
+              if(met/sqrt(HT)>10. && meff_incl>1000.)_num4jl += event->weight();
+              if (met/meff4j>0.4 && meff_incl>1300.) _num4jm += event->weight();
+              if (met/meff4j>0.25 && meff_incl>2200.) _num4jt += event->weight();
             }
           }
         }
@@ -197,7 +197,7 @@ namespace Gambit {
             dPhiMin2 = SmallestRemainingdPhi(signalJets,ptot.phi());
             double meff5j = met + signalJets.at(0)->pT() + signalJets.at(1)->pT() + signalJets.at(2)->pT() + signalJets.at(3)->pT() + signalJets.at(4)->pT();
             if (leptonCut && metCut && dPhiMin4>0.4 && dPhiMin2>0.2) {
-              if (met/meff5j>0.2 && meff_incl>1200.) _num5j += 1;
+              if (met/meff5j>0.2 && meff_incl>1200.) _num5j += event->weight();
             }
           }
         }
@@ -210,10 +210,10 @@ namespace Gambit {
             dPhiMin2 = SmallestRemainingdPhi(signalJets,ptot.phi());
             meff6j = met + signalJets.at(0)->pT() + signalJets.at(1)->pT() + signalJets.at(2)->pT() + signalJets.at(3)->pT() + signalJets.at(4)->pT() + signalJets.at(5)->pT();
             if (leptonCut && metCut && dPhiMin4>0.4 && dPhiMin2>0.2) {
-              if (met/meff6j>0.2 && meff_incl>900.) _num6jl += 1;
-              if (met/meff6j>0.2 && meff_incl>1200.) _num6jm += 1;
-              if (met/meff6j>0.25 && meff_incl>1500.) _num6jt += 1;
-              if (met/meff6j>0.15 && meff_incl>1700.) _num6jtp += 1;
+              if (met/meff6j>0.2 && meff_incl>900.) _num6jl += event->weight();
+              if (met/meff6j>0.2 && meff_incl>1200.) _num6jm += event->weight();
+              if (met/meff6j>0.25 && meff_incl>1500.) _num6jt += event->weight();
+              if (met/meff6j>0.15 && meff_incl>1700.) _num6jtp += event->weight();
             }
           }
         }

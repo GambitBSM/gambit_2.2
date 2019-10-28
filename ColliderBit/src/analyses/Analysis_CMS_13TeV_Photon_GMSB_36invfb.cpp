@@ -133,10 +133,10 @@ namespace Gambit {
         _cutflow.fill(4);
 
         // Signal regions
-        if      (STgamma<800)  _numSR["SR-600-800"]++;
-        else if (STgamma<1000) _numSR["SR-800-1000"]++;
-        else if (STgamma<1300) _numSR["SR-1000-1300"]++;
-        else                   _numSR["SR-1300"]++;
+        if      (STgamma<800)  _numSR["SR-600-800"] += event->weight();
+        else if (STgamma<1000) _numSR["SR-800-1000"] += event->weight();
+        else if (STgamma<1300) _numSR["SR-1000-1300"] += event->weight();
+        else                   _numSR["SR-1300"] += event->weight();
 
       }
 

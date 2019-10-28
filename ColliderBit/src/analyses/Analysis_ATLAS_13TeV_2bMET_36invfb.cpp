@@ -822,23 +822,23 @@ namespace Gambit {
 
 	// Now increment signal region variables
 
-	if(met > 250. && dphiMin4 > 0.4 && met/meff2j>0.25 && nJets35>=2 && nJets35<=4 &&  signalJets35[0]->pT() > 130. && signalJets35[1]->pT() > 50. && (nJets35<4 || signalJets35[3]->pT() < 50.) && zeroLep && nBjets35==2 && bjetsLeading && mjj_35 > 200. && mCT > 550.)_numb0L_SRA550++;
+	if(met > 250. && dphiMin4 > 0.4 && met/meff2j>0.25 && nJets35>=2 && nJets35<=4 &&  signalJets35[0]->pT() > 130. && signalJets35[1]->pT() > 50. && (nJets35<4 || signalJets35[3]->pT() < 50.) && zeroLep && nBjets35==2 && bjetsLeading && mjj_35 > 200. && mCT > 550.) _numb0L_SRA550 += event->weight();
 
-	if(met > 250. && dphiMin4 > 0.4 && met/meff2j>0.25 && nJets35>=2 && nJets35<=4 &&  signalJets35[0]->pT() > 130. && signalJets35[1]->pT() > 50. && (nJets35<4 || signalJets35[3]->pT() < 50.) && zeroLep && nBjets35==2 && bjetsLeading && mjj_35 > 200. && mCT > 450.)_numb0L_SRA450++;
+	if(met > 250. && dphiMin4 > 0.4 && met/meff2j>0.25 && nJets35>=2 && nJets35<=4 &&  signalJets35[0]->pT() > 130. && signalJets35[1]->pT() > 50. && (nJets35<4 || signalJets35[3]->pT() < 50.) && zeroLep && nBjets35==2 && bjetsLeading && mjj_35 > 200. && mCT > 450.) _numb0L_SRA450 += event->weight();
 
-	if(met > 250. && dphiMin4 > 0.4 && met/meff2j>0.25 && nJets35>=2 && nJets35<=4 &&  signalJets35[0]->pT() > 130. && signalJets35[1]->pT() > 50. && (nJets35<4 || signalJets35[3]->pT() < 50.) && zeroLep && nBjets35==2 && bjetsLeading && mjj_35 > 200. && mCT > 350.)_numb0L_SRA350++;
+	if(met > 250. && dphiMin4 > 0.4 && met/meff2j>0.25 && nJets35>=2 && nJets35<=4 &&  signalJets35[0]->pT() > 130. && signalJets35[1]->pT() > 50. && (nJets35<4 || signalJets35[3]->pT() < 50.) && zeroLep && nBjets35==2 && bjetsLeading && mjj_35 > 200. && mCT > 350.) _numb0L_SRA350 += event->weight();
 
-	if(met > 250. && dphiMin4 > 0.4 && nJets35>=2 && nJets35<=4 && signalJets35[1]->pT() > 50. && zeroLep && nBjets35==2 && dphib1 < 2.0 && dphib2 < 2.5 && mtmin > 250.)_numb0L_SRB++;
+	if(met > 250. && dphiMin4 > 0.4 && nJets35>=2 && nJets35<=4 && signalJets35[1]->pT() > 50. && zeroLep && nBjets35==2 && dphib1 < 2.0 && dphib2 < 2.5 && mtmin > 250.) _numb0L_SRB += event->weight();
 
-	if(zeroLep && nJets20>=2 && nJets20<=5 && bjetsSublead && dphiMin1 > 2.5 && dphiMin2 > 0.2 && nBjets20==2 && ht4 < 70. && met > 500. && signalJets20[0]->pT() > 500. && meff4j > 1300. && asym > 0.8 && mjj_20 > 200.)_numb0L_SRC++;
+	if(zeroLep && nJets20>=2 && nJets20<=5 && bjetsSublead && dphiMin1 > 2.5 && dphiMin2 > 0.2 && nBjets20==2 && ht4 < 70. && met > 500. && signalJets20[0]->pT() > 500. && meff4j > 1300. && asym > 0.8 && mjj_20 > 200.) _numb0L_SRC += event->weight();
 
-	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 140. && mblmin < 170 && amt2 > 250 && mbb_35 > 200. && meff > 600.)_numb1L_SRA600++;
+	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 140. && mblmin < 170 && amt2 > 250 && mbb_35 > 200. && meff > 600.) _numb1L_SRA600 += event->weight();
 
-	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 140. && mblmin < 170 && amt2 > 250 && mbb_35 > 200. && meff > 750.)_numb1L_SRA750++;
+	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 140. && mblmin < 170 && amt2 > 250 && mbb_35 > 200. && meff > 750.) _numb1L_SRA750 += event->weight();
 
-	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 140. && mblmin < 170. && amt2 > 250. && mbb_35 > 200. && meff>300. && nJets35==2)_numb1L_SRA300_2j++;
+	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 140. && mblmin < 170. && amt2 > 250. && mbb_35 > 200. && meff>300. && nJets35==2) _numb1L_SRA300_2j += event->weight();
 
-	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 120. && mblmin < 170. && amt2 > 200. && mbb_35 < 200. && fabs(signalBJets35[0]->mom().deltaPhi(metVec)) > 2.0 && mtminb > 200.)_numb1L_SRB++;
+	if(oneLep && signalLeptons[0]->pT() > 27. &&  nJets35>=2 && dphiMin4 > 0.4 && nBjets35==2 && met > 200. && met/sqrt(ht) > 8 && mt > 120. && mblmin < 170. && amt2 > 200. && mbb_35 < 200. && fabs(signalBJets35[0]->mom().deltaPhi(metVec)) > 2.0 && mtminb > 200.) _numb1L_SRB += event->weight();
 
         return;
 

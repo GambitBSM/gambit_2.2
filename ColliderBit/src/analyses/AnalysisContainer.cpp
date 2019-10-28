@@ -57,6 +57,7 @@ namespace Gambit
       F(Covariance)                                  \
       F(ATLAS_13TeV_0LEP_13invfb)                    \
       F(ATLAS_13TeV_0LEP_36invfb)                    \
+      F(ATLAS_13TeV_0LEP_139invfb)                   \
       F(ATLAS_13TeV_0LEPStop_36invfb)                \
       F(ATLAS_13TeV_2LEPStop_36invfb)                \
       F(ATLAS_13TeV_MultiLEP_confnote_36invfb)       \
@@ -91,6 +92,7 @@ namespace Gambit
       F(ATLAS_7TeV_2LEPStop_4_7invfb)                \
       F(CMS_13TeV_0LEP_13invfb)                      \
       F(CMS_13TeV_0LEP_36invfb)                      \
+      F(CMS_13TeV_0LEP_137invfb)                     \
       F(CMS_13TeV_1LEPbb_36invfb)                    \
       F(CMS_13TeV_1LEPStop_36invfb)                  \
       F(CMS_13TeV_2LEPStop_36invfb)                  \

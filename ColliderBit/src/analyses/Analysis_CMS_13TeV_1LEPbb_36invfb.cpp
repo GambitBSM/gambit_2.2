@@ -187,9 +187,9 @@ namespace Gambit {
         //Signal Regions
         if (preselection && mbb>90 && mbb<150 && mCT>170. && met>125. && mT>150.) {
           //SRA
-          if (met>125. && met<200.)_numSRA++;
+          if (met>125. && met<200.) _numSRA += event->weight();
           //SRB
-          if (met>200.)_numSRB++;
+          if (met>200.) _numSRB += event->weight();
         }
 
         cutFlowVector_str[0] = "All events";

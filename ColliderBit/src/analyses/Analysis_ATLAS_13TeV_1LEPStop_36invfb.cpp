@@ -61,20 +61,20 @@ namespace Gambit {
       // Numbers passing cuts
       //int _numSRA_TT, _numSRA_TW, _numSRA_T0;
 
-      int num_tN_med;
-      int num_tN_high;
-      int num_bWN;
-      int num_bC2x_diag;
-      int num_bC2x_med;
-      int num_bCbv;
-      int num_DM_low_loose;
-      int num_DM_low;
-      int num_DM_high;
+      double num_tN_med;
+      double num_tN_high;
+      double num_bWN;
+      double num_bC2x_diag;
+      double num_bC2x_med;
+      double num_bCbv;
+      double num_DM_low_loose;
+      double num_DM_low;
+      double num_DM_high;
 
-      int num_bffN;
-      int num_bCsoft_diag;
-      int num_bCsoft_med;
-      int num_bCsoft_high;
+      double num_bffN;
+      double num_bCsoft_diag;
+      double num_bCsoft_med;
+      double num_bCsoft_high;
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
@@ -1342,20 +1342,20 @@ namespace Gambit {
 
         }
 
-        if(is_tN_med)num_tN_med++;
-        if(is_tN_high)num_tN_high++;
-        if(is_bWN)num_bWN++;
-        if(is_bC2x_diag)num_bC2x_diag++;
-        if(is_bC2x_med)num_bC2x_med++;
-        if(is_bCbv)num_bCbv++;
-        if(is_DM_low)num_DM_low_loose++;
-        if(is_DM_low)num_DM_low++;
-        if(is_DM_high)num_DM_high++;
+        if(is_tN_med) num_tN_med += event->weight();
+        if(is_tN_high) num_tN_high += event->weight();
+        if(is_bWN) num_bWN += event->weight();
+        if(is_bC2x_diag) num_bC2x_diag += event->weight();
+        if(is_bC2x_med) num_bC2x_med += event->weight();
+        if(is_bCbv) num_bCbv += event->weight();
+        if(is_DM_low) num_DM_low_loose += event->weight();
+        if(is_DM_low) num_DM_low += event->weight();
+        if(is_DM_high) num_DM_high += event->weight();
 
-        if(is_bffN)num_bffN++;
-        if(is_bCsoft_diag)num_bCsoft_diag++;
-        if(is_bCsoft_med)num_bCsoft_med++;
-        if(is_bCsoft_high)num_bCsoft_high++;
+        if(is_bffN) num_bffN += event->weight();
+        if(is_bCsoft_diag) num_bCsoft_diag += event->weight();
+        if(is_bCsoft_med) num_bCsoft_med += event->weight();
+        if(is_bCsoft_high) num_bCsoft_high += event->weight();
 
         return;
 

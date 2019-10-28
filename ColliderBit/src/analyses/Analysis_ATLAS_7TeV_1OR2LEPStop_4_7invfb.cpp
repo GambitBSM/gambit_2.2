@@ -314,7 +314,7 @@ Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb()
 		// check if we are in the 1LSR signal region
 		if (isOneLep && validTop && sqrtSsubMin < 250)
 		  {
-		    num1LSR++;
+		    num1LSR += event->weight();
 		    if (electrons.size() == 1) incrementCut(electron_sr);
 		    if (muons.size() == 1) incrementCut(muon_sr);
 		  }
@@ -381,12 +381,12 @@ Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb()
 		    
 		    if (sqrtSsubMin < 225)
 		      {
-			num2LSR1++;
+			num2LSR1 += event->weight();
 			incrementCut(num_2lsr1);
 		      }
 		    if (sqrtSsubMin < 235 && mlljj < 140)
 		      {
-			num2LSR2++;
+			num2LSR2 += event->weight();
 			incrementCut(num_2lsr2);
 		      }
 		  }

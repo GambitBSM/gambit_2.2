@@ -3,14 +3,25 @@
 ///  \file
 ///
 ///  Definitions for Gambit MPI C++ bindings.
-//
+///
+///  NOTE! I just learned something unfortunate,
+///  which is that all Isend's are supposed to be
+///  matched by MPI_Wait calls at some point, to
+///  ensure the operation is complete.
+///  We are not doing this. Things seem to work
+///  anyway, but it may explain some of the hangs
+///  on MPI_Finalize.
+///  I will fix the worst offenders of this asap,
+///  but the rest may take longer. 
+///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Ben Farmer
-///          (benjamin.farmer@fysik.su.se)
-///  \date 2015 Apr
+///          (b.farmer@imperial.ac.uk)
+///  \date 2015 - 2019
+///
 ///  *********************************************
 
 #ifdef WITH_MPI // Contents of this file ignored if MPI not enabled
@@ -20,6 +31,7 @@
 #include <iostream>
 #include <algorithm>
 #include <time.h> // For nanosleep (posix only)
+#include <sys/types.h>
 #include <chrono>
 
 #include "gambit/Utils/mpiwrapper.hpp"
@@ -35,6 +47,8 @@ namespace Gambit
    {
 
       /// @{ Main "Communicator" class
+
+      long int Comm::pid = getpid();
 
       /// @{ Constructors
       /// Default (attaches to MPI_COMM_WORLD):
@@ -555,13 +569,13 @@ namespace Gambit
       {
         int mpiSize = Get_size();
         int myRank  = Get_rank();
- 
+
         // Wait 'timeout' seconds before checking for messages, to make sure
         // that other processes don't send more after we check.
         struct timespec sleeptime;
         sleeptime.tv_sec = timeout;
         sleeptime.tv_nsec = 0;
-        logger() << LogTags::core << LogTags::info << "Waiting "<<timeout<<" seconds for any pending MPI communication to be transmitted, then we will check for unreceived messages from all processes (in communicator group "<<Get_name()<<")"<<EOM; 
+        logger() << LogTags::core << LogTags::info << "Waiting "<<timeout<<" seconds for any pending MPI communication to be transmitted, then we will check for unreceived messages from all processes (in communicator group "<<Get_name()<<")"<<EOM;
         nanosleep(&sleeptime,NULL);
 
         logger() << LogTags::core << LogTags::info << "Unreceived message report for communicator group "<<Get_name()<<":"<<std::endl;
@@ -584,7 +598,20 @@ namespace Gambit
         }
         logger()<<EOM;
       }
- 
+
+
+      /// Get the process ID of the master process (rank 0)
+      long int Comm::MasterPID()
+      {
+        if (not Is_initialized())
+        {
+          utils_error().raise(LOCAL_INFO, "Error retrieving process ID for rank0; MPI has not been initialised!");
+        }
+        return pid;
+      }
+
+      /// Get the process ID of the master process (rank 0)
+      void Comm::set_MasterPID(long int p) { pid = p; }
 
       /// @}
 
@@ -681,9 +708,20 @@ namespace Gambit
         // Create communicator and check out basic info
         Comm COMM_WORLD;
 
+        // Get the local process ID
+        long int pid = getpid();
+
         #ifdef MPI_DEBUG_OUTPUT
-        std::cerr << "  Process pool size : " << COMM_WORLD.Get_size() << std::endl;
-        std::cerr << "  I am process number " << COMM_WORLD.Get_rank() << std::endl;
+        std::cerr << "  Process pool size: " << COMM_WORLD.Get_size() << std::endl;
+        std::cerr << "  I am process number " << COMM_WORLD.Get_rank() << ", with PID " << pid << std::endl;
+        #endif
+
+        // Distribute and save the process ID of the master process
+        COMM_WORLD.Bcast(pid, 1, 0);
+        COMM_WORLD.set_MasterPID(pid);
+
+        #ifdef MPI_DEBUG_OUTPUT
+        std::cerr << "  Master process PID " << COMM_WORLD.MasterPID() << std::endl;
         #endif
 
         // Run externally defined initialisation functions

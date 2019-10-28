@@ -46,6 +46,8 @@ namespace Gambit
   namespace ColliderBit
   {
 
+    extern std::map<std::string,bool> event_weight_flags;
+
 
     /// LHC Loop Manager
     void operateLHCLoop(MCLoopInfo& result)
@@ -54,8 +56,8 @@ namespace Gambit
       static std::streambuf *coutbuf = std::cout.rdbuf(); // save cout buffer for running the loop quietly
 
       #ifdef COLLIDERBIT_DEBUG
-      cout << DEBUG_PREFIX << endl;
-      cout << DEBUG_PREFIX << "~~~~ New point! ~~~~" << endl;
+        cout << DEBUG_PREFIX << endl;
+        cout << DEBUG_PREFIX << "~~~~ New point! ~~~~" << endl;
       #endif
 
       // Retrieve run options from the YAML file (or standalone code)
@@ -126,25 +128,65 @@ namespace Gambit
         result.current_event_count() = 0;
 
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Current collider is " << collider << "." << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Current collider is " << collider << "." << endl;
         #endif
 
         piped_invalid_point.check();
         Loop::reset();
+
+        // Do the single-thread part of the collider initialization
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT" << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT" << endl;
         #endif
         Loop::executeIteration(COLLIDER_INIT);
-
         // Any problem during COLLIDER_INIT step?
         piped_warnings.check(ColliderBit_warning());
         piped_errors.check(ColliderBit_error());
 
+        // Do the OMP parallelized part of the collider initialization
+        #ifdef COLLIDERBIT_DEBUG
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute COLLIDER_INIT_OMP" << endl;
+        #endif
+        #pragma omp parallel
+        {
+          Loop::executeIteration(COLLIDER_INIT_OMP);
+        }
+        // Any problems during the COLLIDER_INIT_OMP step?
+        piped_warnings.check(ColliderBit_warning());
+        piped_errors.check(ColliderBit_error());
+
+        // Execute the sigle-thread iteration XSEC_CALCULATION 
+        #ifdef COLLIDERBIT_DEBUG
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute XSEC_CALCULATION" << endl;
+        #endif
+        Loop::executeIteration(XSEC_CALCULATION);
+        // Any problems during the XSEC_CALCULATION step?
+        piped_warnings.check(ColliderBit_warning());
+        piped_errors.check(ColliderBit_error());
+
+        // Consistency check for the event weighting
+        static bool do_weights_check = true;
+        if (do_weights_check)
+        {
+          if(event_weight_flags["weight_by_cross_section"] && !event_weight_flags["total_cross_section_from_MC"])
+          {
+            std::stringstream errmsg_ss;
+            errmsg_ss << "Inconsistent choice for how to scale the generated events. "
+                      << "If you weight each event by a cross-section that's not from the event " 
+                      << "generator (function 'setEventWeight_fromCrossSection' for capability "
+                      << "'EventWeighterFunction'), you need to scale by the total cross-section "
+                      << "calculated by the event generator. (Choose function 'getMCxsec_as_base' "
+                      << "for capability 'TotalCrossSection'.)";
+            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+          }
+          do_weights_check = false;
+        } 
+
         //
-        // OMP parallelized sections begin here
+        // The main OMP parallelized sections begin here
         //
         #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "operateLHCLoop: Will execute START_SUBPROCESS" << endl;
+          cout << DEBUG_PREFIX << "operateLHCLoop: Will execute START_SUBPROCESS" << endl;
         #endif
         int currentEvent = 0;
         #pragma omp parallel
@@ -155,13 +197,14 @@ namespace Gambit
         piped_warnings.check(ColliderBit_warning());
         piped_errors.check(ColliderBit_error());
 
+
         // Convergence loop
         while(currentEvent < max_nEvents.at(collider) and not *Loop::done)
         {
           int eventCountBetweenConvergenceChecks = 0;
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "Starting main event loop.  Will do " << stoppingres.at(collider) << " events before testing convergence." << endl;
+            cout << DEBUG_PREFIX << "Starting main event loop.  Will do " << stoppingres.at(collider) << " events before testing convergence." << endl;
           #endif
 
           // Main event loop
@@ -199,7 +242,7 @@ namespace Gambit
           piped_errors.check(ColliderBit_error());
 
           #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "Did " << eventCountBetweenConvergenceChecks << " events of " << currentEvent << " simulated so far." << endl;
+            cout << DEBUG_PREFIX << "Did " << eventCountBetweenConvergenceChecks << " events of " << currentEvent << " simulated so far." << endl;
           #endif
 
           // Break convergence loop if too many events fail
@@ -307,22 +350,22 @@ namespace Gambit
 
 
       // #ifdef COLLIDERBIT_DEBUG
-      // cout << DEBUG_PREFIX << "CollectAnalyses: Current size of 'result': " << result.size() << endl;
-      // if (result.size() > 0)
-      // {
-      //   cout << DEBUG_PREFIX << "CollectAnalyses: Will loop through 'result'..." << endl;
-      //   for (auto& adp : result)
+      //   cout << DEBUG_PREFIX << "CollectAnalyses: Current size of 'result': " << result.size() << endl;
+      //   if (result.size() > 0)
       //   {
-      //     cout << DEBUG_PREFIX << "CollectAnalyses: 'result' contains AnalysisData pointer to " << adp << endl;
-      //     cout << DEBUG_PREFIX << "CollectAnalyses: -- Will now loop over all signal regions in " << adp << endl;
-      //     for (auto& sr : adp->srdata)
+      //     cout << DEBUG_PREFIX << "CollectAnalyses: Will loop through 'result'..." << endl;
+      //     for (auto& adp : result)
       //     {
-      //       cout << DEBUG_PREFIX << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal = " << sr.n_signal << ", n_signal_at_lumi = " << n_signal_at_lumi << endl;
+      //       cout << DEBUG_PREFIX << "CollectAnalyses: 'result' contains AnalysisData pointer to " << adp << endl;
+      //       cout << DEBUG_PREFIX << "CollectAnalyses: -- Will now loop over all signal regions in " << adp << endl;
+      //       for (auto& sr : adp->srdata)
+      //       {
+      //         cout << DEBUG_PREFIX << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal = " << sr.n_signal << ", n_signal_at_lumi = " << n_signal_at_lumi << endl;
+      //       }
+      //       cout << DEBUG_PREFIX << "CollectAnalyses: -- Done looping over signal regions in " << adp << endl;
       //     }
-      //     cout << DEBUG_PREFIX << "CollectAnalyses: -- Done looping over signal regions in " << adp << endl;
+      //     cout << DEBUG_PREFIX << "CollectAnalyses: ...Done looping through 'result'." << endl;
       //   }
-      //   cout << DEBUG_PREFIX << "CollectAnalyses: ...Done looping through 'result'." << endl;
-      // }
       // #endif
     }
 

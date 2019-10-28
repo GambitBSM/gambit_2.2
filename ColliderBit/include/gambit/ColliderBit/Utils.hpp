@@ -27,6 +27,8 @@ namespace Gambit
     /// Use the HEPUtils P4 four-vector without needing namespace qualification
     using HEPUtils::P4;
 
+    /// Use the HEPUtils add_quad function without needing namespace qualification
+    using HEPUtils::add_quad;
 
     /// Typedef for a vector of Particle pointers
     typedef std::vector<HEPUtils::Particle*> ParticlePtrs;
@@ -45,14 +47,14 @@ namespace Gambit
     /// Identifier for jets true
     inline bool amIaJet(const HEPUtils::Jet *jet) { (void)jet; return true; }
 
-    /// Indentifier for b-jets true 
-    inline bool amIaBJet(const HEPUtils::Jet *jet) { return jet->btag(); } 
+    /// Indentifier for b-jets true
+    inline bool amIaBJet(const HEPUtils::Jet *jet) { return jet->btag(); }
 
     /// Identifier for jets false
     inline bool amIaJet(const HEPUtils::Particle *part) { (void)part; return false; }
 
     /// Indentifier for b-jets true
-    inline bool amIaBJet(const HEPUtils::Particle *part) { (void)part; return true; } 
+    inline bool amIaBJet(const HEPUtils::Particle *part) { (void)part; return true; }
 
     //@}
 

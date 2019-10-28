@@ -30,8 +30,8 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int _numSRA, _numSRB;
-      int _numSRA15, _numSRA20, _numSRA25, _numSRA30, _numSRA35;
+      double _numSRA, _numSRB;
+      double _numSRA15, _numSRA20, _numSRA25, _numSRA30, _numSRA35;
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
@@ -363,14 +363,14 @@ namespace Gambit {
         //_numSRA, _numSRB, _numSRA15, _numSRA20, _numSRA25, _numSRA30, _numSRA35;
 
         if(cut_ElectronVeto && cut_MuonVeto && cut_METGt150 && passSRAJetCut && passSRAbJetCut && cut_dPhiJets && cut_METmeff2 && mbb>200.) {
-          _numSRA++;
-          if(mCT>150.) _numSRA15++;
-          if(mCT>200.) _numSRA20++;
-          if(mCT>250.) _numSRA25++;
-          if(mCT>300.) _numSRA30++;
-          if(mCT>350.) _numSRA35++;
+          _numSRA += event->weight();
+          if(mCT>150.) _numSRA15 += event->weight();
+          if(mCT>200.) _numSRA20 += event->weight();
+          if(mCT>250.) _numSRA25 += event->weight();
+          if(mCT>300.) _numSRA30 += event->weight();
+          if(mCT>350.) _numSRA35 += event->weight();
         }
-        if(cut_ElectronVeto && cut_MuonVeto && cut_METGt250 && passSRBJetCut && passSRBbJetCut && cut_dPhiJets && cut_METmeff3 && ht3<50.) _numSRB ++;
+        if(cut_ElectronVeto && cut_MuonVeto && cut_METGt250 && passSRBJetCut && passSRBbJetCut && cut_dPhiJets && cut_METmeff3 && ht3<50.) _numSRB += event->weight();
 
 
         return;
