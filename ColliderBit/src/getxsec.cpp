@@ -980,6 +980,68 @@ namespace Gambit
     }
 
 
+    /// A helper function to check the YAML options for getYAMLCrossSection and getYAMLCrossSection_SLHA
+    bool checkOptions_getYAMLCrossSection(const Options& runOptions, const str calling_function, std::pair<str,str>& xsec_pnames, str& input_unit, bool& input_fractional_uncert, str& errmsg)
+    {
+
+      errmsg = "";
+
+      str valid_option_pairs_msg;
+      valid_option_pairs_msg  = "This function requires one of the following pairs of YAML options:\n";
+      valid_option_pairs_msg += "  cross_section_fb, cross_section_uncert_fb\n";
+      valid_option_pairs_msg += "  cross_section_fb, cross_section_fractional_uncert\n";
+      valid_option_pairs_msg += "  cross_section_pb, cross_section_uncert_pb\n";
+      valid_option_pairs_msg += "  cross_section_pb, cross_section_fractional_uncert\n";
+
+      // Check that enough options are provided
+      if (runOptions.getNames().size() < 2)
+      {
+        errmsg = "Not enough YAML options provided for function " + calling_function + ".\n";
+        errmsg += valid_option_pairs_msg;
+        return false;
+      }
+
+      // Check that a valid combination of options is provided, 
+      // and set variable references accordingly
+      if ((runOptions.hasKey("cross_section_fb")) && (runOptions.hasKey("cross_section_uncert_fb")))
+      {
+        xsec_pnames.first = "cross_section_fb";
+        xsec_pnames.second = "cross_section_uncert_fb";
+        input_unit = "fb";
+        input_fractional_uncert = false;
+      }
+      else if ((runOptions.hasKey("cross_section_fb")) && (runOptions.hasKey("cross_section_fractional_uncert")))
+      {
+        xsec_pnames.first = "cross_section_fb";
+        xsec_pnames.second = "cross_section_fractional_uncert";
+        input_unit = "fb";
+        input_fractional_uncert = true;
+      }
+      else if ((runOptions.hasKey("cross_section_pb")) && (runOptions.hasKey("cross_section_uncert_pb")))
+      {
+        xsec_pnames.first = "cross_section_pb";
+        xsec_pnames.second = "cross_section_uncert_pb";
+        input_unit = "pb";
+        input_fractional_uncert = false;
+      }
+      else if ((runOptions.hasKey("cross_section_pb")) && (runOptions.hasKey("cross_section_fractional_uncert")))
+      {
+        xsec_pnames.first = "cross_section_pb";
+        xsec_pnames.second = "cross_section_fractional_uncert";
+        input_unit = "pb";
+        input_fractional_uncert = true;
+      }
+      else
+      {
+        errmsg =  "Unknown combination of options provided for function " + calling_function + ".\n";
+        errmsg += valid_option_pairs_msg;
+        return false;
+      }
+
+      return true;
+    }
+
+
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
     void getYAMLCrossSection(xsec_container& result)
     {
@@ -1000,49 +1062,15 @@ namespace Gambit
       if (*Loop::iteration == BASE_INIT)
       {
 
+        // Check that the required YAML options are provided
         if (first)
         {
-          // Determine the correct combination of parameters
-          if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_uncert_fb")))
+          str errmsg;
+          bool valid_options = checkOptions_getYAMLCrossSection(*runOptions, "getYAMLCrossSection", xsec_pnames, input_unit, input_fractional_uncert, errmsg);
+          if (!valid_options)
           {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_uncert_fb";
-            input_unit = "fb";
-            input_fractional_uncert = false;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg);
           }
-          else if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "fb";
-            input_fractional_uncert = true;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_uncert_pb")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_uncert_pb";
-            input_unit = "pb";
-            input_fractional_uncert = false;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "pb";
-            input_fractional_uncert = true;
-          }
-          else
-          {
-            std::stringstream errmsg_ss;
-            errmsg_ss << "Unknown combination of options for function getYAMLCrossSection." << endl;
-            errmsg_ss << "Needs one of the following sets of option names:" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_uncert_pb" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_fractional_uncert" << endl;
-            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-          }
-
           first = false;
         }
       }
@@ -1100,50 +1128,15 @@ namespace Gambit
       static bool first = true;
       if (*Loop::iteration == BASE_INIT)
       {
-
+        // Check that the required YAML options are provided
         if (first)
         {
-          // Determine the correct combination of parameters
-          if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_uncert_fb")))
+          str errmsg;
+          bool valid_options = checkOptions_getYAMLCrossSection(*runOptions, "getYAMLCrossSection_SLHA", xsec_pnames, input_unit, input_fractional_uncert, errmsg);
+          if (!valid_options)
           {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_uncert_fb";
-            input_unit = "fb";
-            input_fractional_uncert = false;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg);
           }
-          else if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "fb";
-            input_fractional_uncert = true;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_uncert_pb")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_uncert_pb";
-            input_unit = "pb";
-            input_fractional_uncert = false;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "pb";
-            input_fractional_uncert = true;
-          }
-          else
-          {
-            std::stringstream errmsg_ss;
-            errmsg_ss << "Unknown combination of options for function getYAMLCrossSection_SLHA." << endl;
-            errmsg_ss << "Needs one of the following sets of option names:" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_uncert_pb" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_fractional_uncert" << endl;
-            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-          }
-
           first = false;
         }
       }
