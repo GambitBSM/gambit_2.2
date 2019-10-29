@@ -13,6 +13,21 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     {
         
         // Member functions: 
+        inline double Spectrum_generator_settings::get(flexiblesusy::Abstract_Spectrum_generator_settings::Settings arg_1) const
+        {
+            return get_BEptr()->get(arg_1);
+        }
+        
+        inline ::std::basic_string<char, std::char_traits<char>, std::allocator<char> > Spectrum_generator_settings::get_description(flexiblesusy::Abstract_Spectrum_generator_settings::Settings arg_1) const
+        {
+            return get_BEptr()->get_description(arg_1);
+        }
+        
+        inline void Spectrum_generator_settings::set(flexiblesusy::Abstract_Spectrum_generator_settings::Settings arg_1, double arg_2)
+        {
+            get_BEptr()->set(arg_1, arg_2);
+        }
+        
         inline void Spectrum_generator_settings::reset()
         {
             get_BEptr()->reset();
