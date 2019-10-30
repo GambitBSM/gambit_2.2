@@ -197,6 +197,75 @@ namespace Gambit
 
 
 
+    void getPIDPairCrossSectionsMap_xsecBE(map_PID_pair_PID_pair_xsec& result)
+    {
+      using namespace Pipes::getPIDPairCrossSectionsMap_xsecBE;
+
+      if(*Loop::iteration == COLLIDER_INIT)
+      {
+        result.clear();
+      }
+
+      if(*Loop::iteration == XSEC_CALCULATION)
+      {
+        // Create dicts to pass parameters and flags to the backend
+        pybind11::dict xsecBE_pars;
+        // pybind11::dict xsecBE_flags;
+
+        // // First set the flags
+        // xsecBE_flags["alphas_err"] = true;
+        // xsecBE_flags["scale_err"] = true;
+        // xsecBE_flags["pdf_err"] = true;
+        // xsecBE_flags["regression_err"] = true;
+        // BEreq::xsecBE_set_flags(xsecBE_flags);
+
+        // Then set the neceassary parameters and spectrum info:
+        // - Energy
+        // @todo This can't be hard-coded... Need to match it to collider energy!
+        xsecBE_pars["energy"] = 13000;
+        BEreq::xsecBE_set_parameters(xsecBE_pars);
+
+        // - Import the SLHA1 spectrum
+        const SLHAstruct& slha_spec = *Dep::SLHA1Spectrum;
+        str slha_string = slha_spec.str();
+        BEreq::xsecBE_import_slha_string(slha_string);
+
+
+        // Now get the cross-sections for all the requested PID pairs. Save the results
+        // in the result map (type map<PID_pair,PID_pair_xsec_container>)
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+
+          // Create PID_pair_xsec_container instance
+          // and set the PIDs
+          PID_pair_xsec_container pp_xs;
+          pp_xs.set_pid_pair(pid_pair);
+
+          // Get the PIDs as an iipair (= std::pair<int,int>)
+          iipair proc = pid_pair.PIDs();
+
+          // Get dictionary with cross-section results from backend
+          pybind11::dict xs_fb_dict = BEreq::xsecBE_get_xsection(proc);
+
+          // The xsec_container classes don't have asymmetric errors yet,
+          // so let's take the max error for now
+          double xs_fb = xs_fb_dict["central"].cast<double>();
+          double xs_symm_err_fb = std::max(xs_fb_dict["tot_err_down"].cast<double>(), xs_fb_dict["tot_err_up"].cast<double>());
+          // double xs_fb = xs_fb_dict["central"];
+          // double xs_symm_err_fb = std::max(xs_fb_dict["tot_err_down"], xs_fb_dict["tot_err_up"]);
+
+          // Update the PID_pair_xsec_container instance 
+          pp_xs.set_xsec(xs_fb, xs_symm_err_fb);
+
+          // Add it to the result map
+          result[pid_pair] = pp_xs;
+        }
+
+      } // end iteration
+
+    }
+
+
     /// Test functions for provding PIDPairCrossSectionsMap (cross-sections in fb)
     PID_pair_xsec_container silly_pid_xsec_constructor(PID_pair pid_pair, double xsec_val)
     {

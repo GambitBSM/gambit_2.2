@@ -113,6 +113,20 @@
     BACKEND_REQ(xsecBE_example_set_flags, (), void, (pybind11::dict&))
     #undef FUNCTION
   
+    /// Example of provding PIDPairCrossSectionsMap using a Python backend
+    /// @todo 1. Replace SLHA1Spectrum dependency with SpectrumAndDecaysForPythia (to ensure same spectrum)
+    /// @todo 2. Add a CB utility function that checks if a SLHAstruct is SLHA1 or SLHA2, and use it in this function
+    #define FUNCTION getPIDPairCrossSectionsMap_xsecBE
+    START_FUNCTION(map_PID_pair_PID_pair_xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActivePIDPairs, vec_PID_pair)
+    DEPENDENCY(SLHA1Spectrum, SLHAstruct)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    BACKEND_REQ(xsecBE_import_slha_string, (), void, (std::string&))
+    BACKEND_REQ(xsecBE_set_parameters, (), void, (pybind11::dict&))
+    BACKEND_REQ(xsecBE_get_xsection, (), pybind11::dict, (iipair&))
+    #undef FUNCTION
+
     // #define FUNCTION getProspinoxsec
     // START_FUNCTION(xsec)
     // NEEDS_MANAGER(RunMC, MCLoopInfo)
