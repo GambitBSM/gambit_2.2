@@ -17,6 +17,10 @@
 #          (p.scott@imperial.ac.uk)
 #  \date 2014 Nov, Dec
 #
+# \author Tomas GOnzalo
+#         (tomas.gonzalo@monash.edu)
+# \dae 2019 June
+#
 #************************************************
 
 include(ExternalProject)
@@ -173,6 +177,8 @@ if(WITH_HEPMC)
   message("-- HepMC-dependent functions in ColliderBit will be activated.")
   message("   HepMC v${ver} will be downloaded and installed when building GAMBIT.")
   message("   ColliderBit Solo (CBS) will be activated.")
+  message("   Pythia can now drop HepMC files.")
+  message("   Backends depending on HepMC will be enabled.")
   if(NOT ROOT_FOUND)
     message("   No ROOT found, ROOT-IO in HepMC will be deactivated.")
     set(HEPMC3_ROOTIO OFF)
@@ -183,6 +189,8 @@ if(WITH_HEPMC)
 else()
   message("   HepMC-dependent functions in ColliderBit will be deactivated.")
   message("   ColliderBit Solo (CBS) will be deactivated.")
+  message("   Pythia will not drop HepMC files.")
+  message("   Backends depending on HepMC (e.g. Rivet) will be disabled.")
   nuke_ditched_contrib_content(${name} ${dir})
   set(EXCLUDE_HEPMC TRUE)
 endif()
@@ -194,18 +202,23 @@ if(NOT EXCLUDE_HEPMC)
   set(build_dir "${PROJECT_BINARY_DIR}/${name}-prefix/src/${name}-build")
   include_directories("${dir}/include")
   set(HEPMC_LDFLAGS "-L${build_dir} -l${lib}")
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${dir}/lib")
+  set(HEPMC_PATH "${dir}")
+  set(HEPMC_LIB "${dir}/local/lib")
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${HEPMC_LIB}")
   ExternalProject_Add(${name}
     DOWNLOAD_COMMAND ${DL_CONTRIB} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
-    CMAKE_COMMAND ${CMAKE_COMMAND} -DHEPMC3_ENABLE_ROOTIO=${HEPMC3_ROOTIO} ..
+    CMAKE_COMMAND ${CMAKE_COMMAND} -DHEPMC3_ENABLE_ROOTIO=${HEPMC3_ROOTIO} -DCMAKE_INSTALL_PREFIX=${dir}/local -DHEPMC3_INSTALL_INTERFACES=on ..
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS}
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
-    INSTALL_COMMAND ""
+    INSTALL_COMMAND ${CMAKE_INSTALL_COMMAND}
     )
+  # Add target
+  #add_custom_target(${name})
   # Add clean-hepmc and nuke-hepmc
   add_contrib_clean_and_nuke(${name} ${dir} clean)
 endif()
+
 
 #contrib/fjcore-3.2.0
 set(fjcore_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/contrib/fjcore-3.2.0")

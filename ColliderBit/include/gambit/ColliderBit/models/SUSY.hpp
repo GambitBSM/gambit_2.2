@@ -139,7 +139,6 @@
   /// @}
 
 
-
   /// Get SLHA content from one or more SLHA files
   /// @{
   #define CAPABILITY SLHAFileNameAndContent
@@ -149,14 +148,14 @@
     #define FUNCTION getNextSLHAFileNameAndContent
     START_FUNCTION(pair_str_SLHAstruct)
     ALLOW_MODELS(CB_SLHA_file_model)
-    #undef FUNCTION  
-  
-    /// Read single SLHA file and replace some entries 
+    #undef FUNCTION
+
+    /// Read single SLHA file and replace some entries
     /// (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
     #define FUNCTION getAndReplaceSLHAContent
     START_FUNCTION(pair_str_SLHAstruct)
     ALLOW_MODELS(CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
-    #undef FUNCTION  
+    #undef FUNCTION
 
   #undef CAPABILITY
   /// @}

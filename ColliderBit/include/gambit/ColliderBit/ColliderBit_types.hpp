@@ -57,7 +57,6 @@
 /// TODO: see if we can use this one:
 //#include "gambit/ColliderBit/limits/L3SmallDeltaMGauginoLimits.hpp"
 
-#include "LHEF.h"
 #include "HEPUtils/Event.h"
 
 namespace Gambit

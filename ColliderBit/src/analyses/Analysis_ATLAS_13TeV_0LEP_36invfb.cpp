@@ -2,7 +2,9 @@
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
+#include "gambit/ColliderBit/analyses/Perf_Plot.hpp"
 #include "Eigen/Eigen"
+
 
 namespace Gambit {
   namespace ColliderBit {
@@ -18,6 +20,10 @@ namespace Gambit {
     ///
     /// Note: cutflows have not been updated yet (sincec 13 invfb analysis).
     ///
+    ///Tomek Procter July 2019: This version will be used to output some plots while
+    /// we debug
+
+
     class Analysis_ATLAS_13TeV_0LEP_36invfb : public Analysis {
     public:
 
@@ -53,9 +59,23 @@ namespace Gambit {
 
       Cutflows _flows;
 
+
+      Perf_Plot* plots_beginning;
+      Perf_Plot* plots_firstcut;
+      string analysisRunName;
+
       Analysis_ATLAS_13TeV_0LEP_36invfb() {
 
         set_analysis_name("ATLAS_13TeV_0LEP_36invfb");
+        analysisRunName = Analysis::analysis_name();
+
+
+        vector<const char*> variablesNames = {"met", "nJets", "HT", "pTjetOne", "pTjetTwo", "pTjetThree", "sumpTj", "etamax_2", "etamax_4", "dphimin_123", "dphimin_more", "aplanarity"};
+	      plots_beginning = new Perf_Plot(analysisRunName+"_beginning", &variablesNames);
+        plots_firstcut = new Perf_Plot(analysisRunName+"_firstcut", &variablesNames);
+
+
+
         set_luminosity(36.0);
 
         // Book cut-flows
@@ -174,10 +194,16 @@ namespace Gambit {
           if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*m, *j) > 0.4; }))
             signalMuons.push_back(m);
 
-        // The subset of jets with pT > 50 GeV is used for several calculations
+       // The subset of jets with pT > 50 GeV is used for several calculations
+        
         vector<const Jet*> signalJets50;
         for (const Jet* j : signalJets)
-          if (j->pT() > 50) signalJets50.push_back(j);
+        {
+          if (j->pT() > 50)
+          {
+            signalJets50.push_back(j);
+          }
+        }
 
 
         ////////////////////////////////
@@ -249,13 +275,51 @@ namespace Gambit {
         const double mineigenvalue = momtensor.eigenvalues().real().minCoeff();
         const double aplanarity = 1.5 * mineigenvalue;
 
+	
+
+	//TP July 2019:
+	//Some values I want to obtain just for plotting:
+
+	double pTjetOne;
+        double pTjetTwo;
+        double pTjetThree;
+
+	if (nJets >= 1)
+	{
+          pTjetOne = signalJets[0]->pT();
+          if (nJets >= 2)
+	  {
+            pTjetTwo = signalJets[1]->pT();
+            if (nJets >= 3)
+	      {
+                pTjetThree = signalJets[2]->pT();
+              } else pTjetThree = -3.0;
+          } else pTjetTwo = -2.0;
+        } else pTjetOne = -1.0;
+        
+
         ////////////////////////////////
         // Fill signal regions
 
+
+
         const bool leptonCut = (nElectrons == 0 && nMuons == 0);
         const bool metCut = (met > 250.);
+
+        //Now to plot: I'm not even doing this after preselection, I just want the initial values.
+	vector<double> variables={met, nJets, HT, pTjetOne, pTjetTwo, pTjetThree, sumptj, etamax_2, etamax_4, dphimin_123, dphimin_more, aplanarity};
+	if (1 == 1)//If I check post-cuts then I may have some conditions, may as well keep the structure in place.
+        {
+          plots_beginning->fill(&variables);
+        }
+
         if (nJets50 >= 2 && leptonCut && metCut) {
-          _flows.fill(0);
+
+        
+        
+          //_flows.fill(1);//This seems the easiest way to fix the discrepancy in how the cutflow reporting code fills the 2&3 jet regions.
+          
+          plots_firstcut->fill(&variables);
 
           // 2 jet regions
           if (dphimin_123 > 0.8 && dphimin_more > 0.4) {
@@ -316,20 +380,34 @@ namespace Gambit {
             if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.15 && aplanarity > 0.08 && meff_incl > 2600) num_6j_2600 += event->weight();
           }
 
+          //std::cout << "\n -- -- End Of Event -- -- \n";
+
           // Cutflows
           const vector<string> cuts23j = {"Pre-sel+MET+pT1+meff", "Njet", "Dphi_min(j123,MET)", "Dphi_min(j4+,MET)", "pT2", "eta_j12", "MET/sqrtHT", "m_eff(incl)"};
 
-          if (nJets >= 2) _flows["2j-1200"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 250, etamax_2 < 0.8, met_sqrtHT > 14, meff_incl > 1200});
+
+          //These entries don't have enough rows:
+          /*if (nJets >= 2) _flows["2j-1200"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 250, etamax_2 < 0.8, met_sqrtHT > 14, meff_incl > 1200});
           if (nJets >= 2) _flows["2j-1600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 300, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 1600});
           if (nJets >= 2) _flows["2j-2000"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2000});
           if (nJets >= 2) _flows["2j-2100"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 600, true, met_sqrtHT > 26, meff_incl > 2100});
           if (nJets >= 2) _flows["2j-2400"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2400});
           if (nJets >= 2) _flows["2j-2800"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2800});
           if (nJets >= 2) _flows["2j-3600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, true, met_sqrtHT > 18, meff_incl > 3600});
+          *///We need to add a row for njets, even though this is always true.
+          if (nJets >= 2) _flows["2j-1200"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 250, etamax_2 < 0.8, met_sqrtHT > 14, meff_incl > 1200});
+          if (nJets >= 2) _flows["2j-1600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 300, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 1600});
+          if (nJets >= 2) _flows["2j-2000"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2000});
+          if (nJets >= 2) _flows["2j-2100"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 600, true, met_sqrtHT > 26, meff_incl > 2100});
+          if (nJets >= 2) _flows["2j-2400"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2400});
+          if (nJets >= 2) _flows["2j-2800"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2800});
+          if (nJets >= 2) _flows["2j-3600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, true, met_sqrtHT > 18, meff_incl > 3600});
+          
 
-          if (nJets >= 3) _flows["3j-1300"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 700, true, met_sqrtHT > 18, meff_incl > 1300});
-
-          //const vector<string> cuts456j = {"Pre-sel+MET+pT1+meff", "Njet", "Dphi_min(j123,MET)", "Dphi_min(j4+,MET)", "pT4", "eta_j1234", "Aplanarity", "MET/m_eff(Nj)", "m_eff(incl)"};
+          //if (nJets >= 3) _flows["3j-1300"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 700, true, met_sqrtHT > 18, meff_incl > 1300});
+          //Tomek Procter: 3 Jets region filling fixed (I think) - it didn't include a 3 jet cut before!!!
+          if (nJets >= 3) _flows["3j-1300"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets >= 3, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 700, true, met_sqrtHT > 18, meff_incl > 1300});
+          
           if (nJets >= 4) _flows["4j-1000"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets>=4, dphimin_123 > 0.4, dphimin_more > 0.4, signalJets[3]->pT() > 100, etamax_4 < 1.2, aplanarity > 0.04, met_meff_4 > 0.3, meff_incl > 1000});
           if (nJets >= 4) _flows["4j-1400"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets>=4, dphimin_123 > 0.4, dphimin_more > 0.4, signalJets[3]->pT() > 100, etamax_4 < 2.0, aplanarity > 0.04, met_meff_4 > 0.25, meff_incl > 1400});
           if (nJets >= 4) _flows["4j-1800"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets>=4, dphimin_123 > 0.4, dphimin_more > 0.4, signalJets[3]->pT() > 100, etamax_4 < 2.0, aplanarity > 0.04, met_meff_4 > 0.25, meff_incl > 1800});
@@ -343,7 +421,7 @@ namespace Gambit {
           if (nJets >= 6) _flows["6j-1800"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets>=6, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[5]->pT() > 100, etamax_6 < 2.0, aplanarity > 0.04, met_meff_6 > 0.2, meff_incl > 1800});
           if (nJets >= 6) _flows["6j-2200"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets>=6, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[5]->pT() > 100, true, aplanarity > 0.08, met_meff_6 > 0.2, meff_incl > 2200});
           if (nJets >= 6) _flows["6j-2600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets>=6, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[5]->pT() > 100, true, aplanarity > 0.08, met_meff_6 > 0.15, meff_incl > 2600});
-
+          //QUESTION: Filling cutflows information it uses nJets but in the actual code above it uses nJets50???
 
         }
       }
@@ -402,9 +480,13 @@ namespace Gambit {
         add_result(SignalRegionData("meff-6j-2200",  3, {num_6j_2200,  0.}, { 3.1,  1.3}));
         add_result(SignalRegionData("meff-6j-2600",  1, {num_6j_2600,  0.}, { 2.2,  1.4}));
 
-        // const double sf = 13.3*crossSection()/femtobarn/sumOfWeights();
-        // _flows.scale(sf);
-        // cout << "CUTFLOWS:\n\n" << _flows << endl;
+        //const double sf = 13.3*crossSection()/femtobarn/sumOfWeights();
+        //_flows.scale(sf);
+        cout << "CUTFLOWS:\n\n" << _flows << endl;
+
+        plots_beginning->createFile(luminosity(),(36.1/100000));
+        plots_firstcut->createFile(luminosity(),(36.1/100000));
+
       }
 
 
