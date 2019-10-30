@@ -621,16 +621,20 @@ macro(BOSS_backend name backend_version)
       set(dl "https://data.kitware.com/api/v1/file/57b5dea08d777f10f2696379/download")
       set(dl_filename "castxml-linux.tar.gz")
     endif()
+    set(BOSS_backend_types_include_dir "BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/include/backend_types/${name_in_frontend}_${backend_version_safe}")
+    set(BOSS_backend_types_source_dir "BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/source/backend_types/${name_in_frontend}_${backend_version_safe}")
+    set(GB_backend_types_include_dir "${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types")
+    set(GB_backend_types_source_dir "${PROJECT_SOURCE_DIR}/Backends/src/backend_types")
     ExternalProject_Add_Step(${name}_${ver} BOSS
       # Check for castxml binaries and download if they do not exist
       COMMAND ${PROJECT_SOURCE_DIR}/cmake/scripts/download_castxml_binaries.sh ${BOSS_dir} ${CMAKE_COMMAND} ${dl} ${dl_filename}
       # Run BOSS
       COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py ${BOSS_castxml_cc} ${BOSS_includes} ${name}_${backend_version_safe}
       # Copy BOSS-generated files to correct folders within Backends/include
-      COMMAND cp -r BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/include/backend_types/${name_in_frontend}_${backend_version_safe} ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/
+      COMMAND cp -r ${BOSS_backend_types_include_dir} ${GB_backend_types_include_dir}
       COMMAND cp BOSS_output/${name_in_frontend}_${backend_version_safe}/frontends/${name_in_frontend}_${backend_version_safe}.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/${name_in_frontend}_${backend_version_safe}.hpp
       # Copy BOSS-generated files to correct folders within Backends/src
-      COMMAND cp -r BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/src/backend_types/${name_in_frontend}_${backend_version_safe} ${PROJECT_SOURCE_DIR}/Backends/src/backend_types/
+      COMMAND cp -r ${BOSS_backend_types_source_dir} ${GB_backend_types_source_dir}
       DEPENDEES patch
       DEPENDERS configure
     )
