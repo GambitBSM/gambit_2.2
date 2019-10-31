@@ -1419,9 +1419,7 @@ namespace Gambit
         {
           const PID_pair& pp = PID_pair_xsec_pair.first;
           const PID_pair_xsec_container& xs = PID_pair_xsec_pair.second;
-          // Map key: "<collider name>_PID_pair_<PID1>_<PID2>_cross_section_fb"
           result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_cross_section_fb"] = xs.xsec();
-          // Map key: "<collider name>_PID_pair_<PID1>_<PID2>_cross_section_err_fb"
           result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_cross_section_err_fb"] = xs.xsec_err();
         }
       }
