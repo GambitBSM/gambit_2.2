@@ -851,6 +851,20 @@ namespace GUM
  
           int len2;
 
+          // Check to see if the particle name is a Weyl fermion
+          bool is_weyl;
+          command = "MemberQ[WeylFermionAndIndermediate[[;;,1]],"+eigenstate+"]";
+          send_to_math(command);
+          get_from_math(is_weyl);
+
+          // If it's a Weyl fermion, get the Dirac fermion
+          if(is_weyl)
+          {
+            command = "Select[DEFINITION[EWSB][DiracSpinors], MemberQ[#[[2]],"+eigenstate+", 2] &][[1,1]]";
+            send_to_math(command);
+            get_from_math(eigenstate);
+          }
+
           // Check to see if the mixing matrix has a different OutputName
           command = "Length[pd]";
           send_to_math(command);

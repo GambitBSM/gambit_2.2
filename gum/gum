@@ -290,7 +290,7 @@ if args.file:
                                   partlist)
 
     # Get the parameters sorted by block
-    blockparams = sort_params_by_block(parameters)
+    blockparams = sort_params_by_block(parameters, mixings)
     # Dict of which parameters are real.
     reality_dict = parameter_reality_dict(parameters)
 

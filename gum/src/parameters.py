@@ -327,7 +327,7 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
 # Other routines #
 ##################
 
-def sort_params_by_block(parameters):
+def sort_params_by_block(parameters, mixings):
     """
     Returns a dictionary of the LH blocks of a new model,
     with all entries.
@@ -365,9 +365,16 @@ def sort_params_by_block(parameters):
             if shape.startswith('m'): 
                 matrix = True
 
+        try:
+          mixings[par.name]
+          is_mixing = True
+        except:
+          is_mixing = False
+
         # If it's a matrix then it will be a new block
         if matrix:
-            if par.is_output:
+            # if it's a mixing matrix
+            if par.is_output and is_mixing :
                 newentry = { "mixingmatrix": par.shape[1:], "outputname": par.name }
             else:
                 newentry = { "matrix": par.shape[1:], "outputname": par.name }
