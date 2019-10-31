@@ -1401,5 +1401,32 @@ namespace Gambit
       }
     }
 
+
+    /// Output PID pair cross-sections as a str-dbl map, for easy printing
+    void getPIDPairCrossSectionsInfo(map_str_dbl& result)
+    {
+      using namespace Pipes::getPIDPairCrossSectionsInfo;
+
+      if (*Loop::iteration == BASE_INIT)
+      {
+        result.clear();
+      }
+
+      // Add cross-sections for each collider
+      if (*Loop::iteration == XSEC_CALCULATION)
+      {
+        for(const auto& PID_pair_xsec_pair : *Dep::PIDPairCrossSectionsMap)
+        {
+          const PID_pair& pp = PID_pair_xsec_pair.first;
+          const PID_pair_xsec_container& xs = PID_pair_xsec_pair.second;
+          // Map key: "<collider name>_PID_pair_<PID1>_<PID2>_cross_section_fb"
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_cross_section_fb"] = xs.xsec();
+          // Map key: "<collider name>_PID_pair_<PID1>_<PID2>_cross_section_err_fb"
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_cross_section_err_fb"] = xs.xsec_err();
+        }
+      }
+
+    }
+
   }
 }
