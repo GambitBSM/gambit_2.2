@@ -872,15 +872,18 @@ LSM:= LGauge + LFermions + LHiggs + LYukawa + LGhost;
 (* *****  Dark Matter EFT Lagrangian   ***** *)
 (* ***************************************** *)
 
-LDM5:= C51/Lambda  * ( e/(8*Pi^2) ) (chibar.Sig[mu,nu].chi)         (FS[A,mu,nu]) +
-       C52/Lambda  * ( e/(8*Pi^2) ) (chibar.Sig[mu,nu].I.Ga[5].chi) (FS[A,mu,nu]);
+Sigm[mu_,nu_,a_,b_] := I/2 (Ga[mu,a,c] Ga[nu,c,b] - Ga[nu,a,c] Ga[mu,c,b]);
+(*Sigm[mu_,nu_,a_,b_] := I (Ga[mu,a,c] Ga[nu,c,b] - ME[mu,nu] IndexDelta[a,b]);*)
+
+L51:= ExpandIndices [ C51/Lambda* ( ee/(8*Pi^2) ) (chibar[s1] chi[p1] ) (FS[A,mu,nu]) Sigm[mu,nu,s1,p1] ];
+L52:= ExpandIndices [ C52/Lambda* ( ee/(8*Pi^2) ) (chibar[s1] chi[p1] ) (FS[A,mu,nu]) I Ga[5,s1,a] Sigm[mu,nu,a,p1] ];
 
 LDM6:= C61/Lambda^2 * ( (chibar.Ga[mu].chi)       ( (dqbar.Ga[mu].dq) +  (uqbar.Ga[mu].uq) ) ) +
        C62/Lambda^2 * ( (chibar.Ga[mu].Ga[5].chi) ( (dqbar.Ga[mu].dq) +  (uqbar.Ga[mu].uq) ) ) +
        C63/Lambda^2 * ( (chibar.Ga[mu].chi)       ( (dqbar.Ga[mu].Ga[5].dq) +  (uqbar.Ga[mu].Ga[5].uq) ) ) +
        C64/Lambda^2 * ( (chibar.Ga[mu].Ga[5].chi) ( (dqbar.Ga[mu].Ga[5].dq) +  (uqbar.Ga[mu].Ga[5].uq) ) );
 
-Sigm[mu_,nu_,a_,b_] := I/2 (Ga[mu,a,c].Ga[nu,c,b] - Ga[nu,a,c].Ga[mu,c,b]);
+
 
 LDM7:= C71/Lambda^3  * ( aS/(12*Pi) ) (chibar.chi)                     				( FS[G,mu,nu,a] FS[G,mu,nu,a] ) +
        C72/Lambda^3  * ( aS/(12*Pi) ) (chibar.I.Ga[5].chi)             				( FS[G,mu,nu,a] FS[G,mu,nu,a] ) +
@@ -889,9 +892,11 @@ LDM7:= C71/Lambda^3  * ( aS/(12*Pi) ) (chibar.chi)                     				( FS[
        C75/Lambda^3  *                (chibar.chi)                    				( Md[i] (dqbar[s,i,c].dq[s,i,c]) 				+ Mu[i] (uqbar[s,i,c].uq[s,i,c]) ) +
        C76/Lambda^3  *                (chibar.I.Ga[5].chi)             				( Md[i] (dqbar[s,i,c].dq[s,i,c]) 				+ Mu[i] (uqbar[s,i,c].uq[s,i,c]) ) +
        C77/Lambda^3  *                (chibar.chi)                     				( Md[i] (dqbar[s,i,c].I.Ga[5,s,p].dq[p,i,c]) 	+ Mu[i] (uqbar[s,i,c].I.Ga[5,s,p].uq[p,i,c]) ) +
-       C78/Lambda^3  *                (chibar.I.Ga[5].chi)             				( Md[i] (dqbar[s,i,c].I.Ga[5,s,p].dq[p,i,c]) 	+ Mu[i] (uqbar[s,i,c].I.Ga[5,s,p].uq[p,i,c]) ) +
-       C79/Lambda^3  *                (chibar[s].Sigm[mu,nu,s,p].chi[p])  			( Md[i] (dqbar[s,i,c].Sigm[mu,nu,s,p].dq[p,i,c]) + Mu[i] (uqbar[s,i,c].Sigm[mu,nu,s,p].uq[p,i,c]) ) + 
-       C710/Lambda^3 *                (chibar[s].Sigm[mu,nu,a,p].I.Ga[5,s,a].chi[p])( Md[i] (dqbar[s,i,c].Sigm[mu,nu,s,p].dq[p,i,c]) + Mu[i] (uqbar[s,i,c].Sigm[mu,nu,s,p].uq[p,i,c]) );
+       C78/Lambda^3  *                (chibar.I.Ga[5].chi)             				( Md[i] (dqbar[s,i,c].I.Ga[5,s,p].dq[p,i,c]) 	+ Mu[i] (uqbar[s,i,c].I.Ga[5,s,p].uq[p,i,c]) );
 
 
-LTotal:= LSM + LDM6 + LDM7;
+L79 :=   ExpandIndices [ C79/Lambda^3  * ( chibar[s1] chi[p1] ) ( Md[i] dqbar[s2,i,c1] dq[p2,i,c1] + Mu[j] uqbar[s2,j,c2] uq[p2,j,c2]) Sigm[mu,nu,s1,p1] Sigm[mu,nu,s2,p2] ];
+L710 :=  ExpandIndices [ C710/Lambda^3 * ( chibar[s1] chi[p1] ) ( Md[i] dqbar[s2,i,c1] dq[p2,i,c1] + Mu[j] uqbar[s2,j,c2] uq[p2,j,c2]) I Ga[5,s1,a] Sigm[mu,nu,a,p1] Sigm[mu,nu,s2,p2] ];
+
+
+LTotal:= LSM + L51 + L52 + LDM6 + LDM7 + L79 + L710;

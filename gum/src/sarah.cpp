@@ -64,7 +64,7 @@ namespace GUM
         std::cout << "SARAH loaded from " << out << "." << std::endl;
     }
 
-    input+= "<<SARAH`";
+    input = "<<SARAH`";
     send_to_math(input);
 
   }
@@ -91,7 +91,6 @@ namespace GUM
       // ...Assuming someone hasn't set the model name to 'ModelName' which would be unbelievably annoying and vastly silly.
       if (modelname == "ModelName")
         throw std::runtime_error("SARAH Error: Could not load model " + model + ". Please check your SARAH file.");
-
 
       // All good.
       std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
@@ -137,6 +136,26 @@ namespace GUM
     
     }
     catch(...) { throw; }
+  }
+
+  // Computes the vertices at EWSB
+  void SARAH::calculate_vertices()
+  {
+    std::cout << "Calculating vertices..." << std::endl;
+
+    std::string command = "";
+
+    try
+    {
+      command = "MakeVertexList[EWSB];";
+      send_to_math(command);
+    }
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
+    }
   }
 
   // Get particles list
@@ -190,6 +209,7 @@ namespace GUM
             std::string antiname;
             std::string antioutputname;
             std::string mass;
+            std::string colorrep;
             int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
             int chargeX3 = 0;
             int color = 0;
@@ -239,10 +259,11 @@ namespace GUM
                 send_to_math(command);
                 bool is_sc;
                 get_from_math(is_sc);
-                if (is_sc)
+                if (not is_sc)
                 {
                     self_conjugate = false;
                     capitalise = true;
+                    antiname = name; // This will get changed in a minute
                 }
             }
             else
@@ -257,28 +278,34 @@ namespace GUM
             {
                 outputname = name + std::to_string(j+1);
                 alt_name = alt_name + std::to_string(j+1);
-                if (not self_conjugate && capitalise)
-                {
-                    antioutputname = outputname;
-                    if (isupper(antioutputname[0])) { antioutputname = tolower(antioutputname[0]); }
-                    else { antioutputname[0] = toupper(antioutputname[0]); }
-                }
             }
             else
             {
-
                 outputname = name;
-                if (not self_conjugate)
-                {
-                    antioutputname = antiname;
-                }
-                else
-                {
-                    antioutputname = name;
-                }
+                antioutputname = antiname;
             }
 
+            if (not self_conjugate && capitalise)
+            {
+                antioutputname = outputname;
+                if (isupper(antioutputname[0])) { antioutputname = tolower(antioutputname[0]); }
+                else { antioutputname[0] = toupper(antioutputname[0]); }
+            }
+            else { antioutputname = outputname; }
+
             mass = "M" + outputname;
+
+            // Get the color rep
+            command = "getColorRep[pl[["+std::to_string(i+1)+",1]]] // ToString";
+            send_to_math(command);
+            get_from_math(colorrep);
+
+            // Translate this to a color that GAMBIT particle DB can use
+            if (colorrep == "S") color = 1;
+            else if(colorrep == "T") color = 3;
+            else if(colorrep == "O") color = 8;
+            else if(colorrep == "Six") color = 6;
+            else throw std::runtime_error("Unrecognised color - " + colorrep + " - found.");
 
             std::set<int> SM_pdgs = {1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24};
             if (SM_pdgs.count(abs(pdg)))
@@ -674,7 +701,8 @@ namespace GUM
   }
 
   // Get the boundary conditions for all parameters in the parameter list
-  void SARAH::get_boundary_conditions(std::vector<Parameter> &parameters)
+  void SARAH::get_boundary_conditions(std::map<std::string, std::string> &bcs, 
+                                      std::vector<Parameter> parameters)
   {
     std::cout << "Getting boundary conditions" << std::endl;
 
@@ -702,7 +730,9 @@ namespace GUM
         for(auto param = parameters.begin(); param != parameters.end(); param++)
         {
           if (param->name() == bc_name or param->alt_name() == bc_name)
-              param->set_bcs(bc);
+          {
+              bcs[bc] = param->name();
+          }
         }
       }
     }
@@ -781,89 +811,6 @@ namespace GUM
     }
   }
 
-  // // Gets all of the parameters that have a dependence in SPheno, and 
-  // // stores their definitions
-  // void SARAH::get_spheno_dependences(std::vector<Parameter> &dependentparams)
-  // {
-  //   std::cout << "Getting SPheno dependencies from SARAH..." << std::endl;
-
-  //   std::string command = "";
-
-  //   try 
-  //   {
-  //     // Find out how many parameters we have to get.
-  //     command = "Length[pd]";
-  //     send_to_math(command);
-
-  //     int lenpl;
-  //     get_from_math(lenpl);
-
-  //     for(int i=0; i<lenpl; i++)
-  //     {
-  //       std::string block;
-  //       std::string paramname;
-  //       std::string alt_paramname;
-  //       bool real = false;
-  //       int index = 1;
-  //       bool LHblock = false;
-        
-  //       std::string cdef;
-  //       std::string entry;
-
-  //       // See if there is a DependenceSPheno entry...
-  //       command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
-  //       send_to_math(command);
-  //       get_from_math(entry);
-
-  //       // If there's something worth getting, use Mathematica's terrible CForm output.
-  //       // We'll amend this in GUM -- string replacement is nicer in Python :-)
-  //       if (entry != "DependenceSPheno" and entry != "None")
-  //       {
-  //         command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // CForm // ToString";
-  //         send_to_math(command);
-  //         get_from_math(cdef);
-  //       }
-  //       else continue;
-
-  //       command = "Real /. pd[[" + std::to_string(i+1) + ", 2]] // ToString";
-  //       send_to_math(command);
-  //       get_from_math(entry);
-  //       if (entry == "True") real = true;
-
-  //       // Get the paramname
-  //       command = "pd[[" + std::to_string(i+1) + ",1]]//ToString";
-  //       send_to_math(command);
-
-  //       // Get the parameter name as it is known in SARAH.
-  //       get_from_math(paramname);
-
-  //       // See if it is know as something different in SPheno
-  //       command = "OutputName /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
-  //       send_to_math(command);
-  //       get_from_math(entry);
-  //       if (entry != "OutputName") 
-  //       { 
-  //           paramname = entry;
-  //       }
-
-  //       Parameter parameter(paramname, block )
-  //       Parameter parameter(paramname, block, index, alt_paramname, 
-  //                           real, shape, is_output);
-  //       paramlist.push_back(parameter);
-
-  //       // Add it to the dict
-  //       dependentparams[paramname] = cdef;
-
-  //     }
-  //   }
-  //   catch (std::runtime_error &e)
-  //   {
-  //     std::stringstream ss;
-  //     ss << e.what() << ": Last command: " << command;
-  //     throw std::runtime_error(ss.str());
-  //   }
-  // }
-
   // Returns the eigenstate & mixing matrix after EWSB 
   void SARAH::get_mixing_matrices(std::map<std::string, std::string> &mixings)
   {
@@ -908,19 +855,21 @@ namespace GUM
           command = "Length[pd]";
           send_to_math(command);
           get_from_math(len2);
-
+          
           for(int j=0; j<len2; j++)
           {
             std::string pname;
             command = "pd[[" + std::to_string(j+1) + ",1]] // ToString";
             send_to_math(command);
             get_from_math(pname);
+
             if(pname == mixingmat)
             {
               std::string oname;
               command = "OutputName /. pd[[" + std::to_string(j+1) + ",2]] // ToString";
               send_to_math(command);
               get_from_math(oname);
+
               if(oname == "OutputName")
               {
                 mixings[mixingmat] = eigenstate;
@@ -929,12 +878,12 @@ namespace GUM
               {
                mixings[oname] = eigenstate;
               }
+              continue;
             }
           }
           // Increment again; need to do +2 each iteration.
           i++;
         }
-
       }
     }
     catch (std::runtime_error &e)
@@ -1003,9 +952,6 @@ namespace GUM
 
       // Options for Vevacious output.
       std::string options;
-      // TODO: options:
-      // - ComplexParameters (automatic?)
-      // - Scheme (DRbar for SUSY, MSbar for non-SUSY)
       options = "Version->\"++\"";
 
       // Write output.
@@ -1019,6 +965,7 @@ namespace GUM
   void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist,
                  Outputs &outputs, std::vector<std::string> &backends,
                  std::map<std::string,bool> &flags, std::map<std::string, std::string> &mixings,
+                 std::map<std::string, std::string> &bcs,
                  std::vector<Parameter> &sphenodependences, Error &error)
   {
 
@@ -1028,6 +975,9 @@ namespace GUM
 
       // Create SARAH object, open link to Mathematica, load SARAH and the model
       SARAH model(opts.model());
+
+      // Compute the vertices here
+      model.calculate_vertices();
 
       // Get all of the particles
       model.get_partlist(partlist);
@@ -1041,8 +991,9 @@ namespace GUM
       // Where the outputs all live
       std::string outputdir = std::string(SARAH_PATH) + "/Output/" + opts.model() + "/EWSB/";
 
-      /// Write CalcHEP output
-      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+      /// Write CalcHEP output (for MicrOmegas also)
+      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end()   ||
+          std::find(backends.begin(), backends.end(), "micromegas") != backends.end() )
       {
         model.write_ch_output();
 
@@ -1053,7 +1004,8 @@ namespace GUM
       }
  
       /// Write MadGraph output
-      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
+      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() ||
+          std::find(backends.begin(), backends.end(), "ufo") != backends.end() )
       {
         model.write_madgraph_output();
 
@@ -1079,7 +1031,7 @@ namespace GUM
         model.get_flags(flags);
 
         // Get the boundary conditions for the parameters
-        model.get_boundary_conditions(paramlist);
+        model.get_boundary_conditions(bcs, paramlist);
 
         // Get the parameters used to solve tadpoles and removed them from the list
         model.get_tadpoles(paramlist);
@@ -1157,7 +1109,11 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("get_ch",   &Outputs::get_ch)
     .def("get_mg",   &Outputs::get_mg)
     .def("get_sph",  &Outputs::get_sph)
-    .def("get_vev",  &Outputs::get_vev)
+    .def("get_vev",  &Outputs::get_vev)    
+    .def("set_ch",   &Outputs::set_ch)
+    .def("set_mg",   &Outputs::set_mg)
+    .def("set_sph",  &Outputs::set_sph)
+    .def("set_vev",  &Outputs::set_vev)
     ;
 
   class_<Error>("SARAHError", init<>())
@@ -1181,7 +1137,7 @@ BOOST_PYTHON_MODULE(libsarah)
     .def(vector_indexing_suite< std::vector<std::string> >() )
     ;
 
-  class_< std::map<std::string, std::string> >("SARAHMixings")
+  class_< std::map<std::string, std::string> >("SARAHMapStrStr")
     .def(map_indexing_suite< std::map<std::string, std::string> >() )
     ;
 

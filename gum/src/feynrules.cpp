@@ -178,10 +178,11 @@ namespace GUM
         }
         else
         {
-            std::cout << "Your Lagrangian is not Hermitian." << std::endl;
-            std::cout << "FeynRules found " + std::to_string(lench) + " vertices in L-HC[L]." << std::endl;
-            std::cout << "Please check your FeynRules file." << std::endl;
-            return;
+            std::stringstream ss;
+            ss << "Your Lagrangian is not Hermitian." << std::endl;
+            ss << "FeynRules found " + std::to_string(lench) + " vertices in L-HC[L]." << std::endl;
+            ss << "Please check your FeynRules file." << std::endl;
+            throw std::runtime_error(ss.str());
         }
 
     }
@@ -530,7 +531,8 @@ namespace GUM
   }
 
   // Performs all FeynRules output.
-  void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, Outputs &outputs, std::vector<std::string> &backends)
+  void all_feynrules(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist, 
+                     Outputs &outputs, std::vector<std::string> &backends, Error &error)
   {
     try
     {
@@ -561,27 +563,32 @@ namespace GUM
       std::string output = std::string(FEYNRULES_PATH) + "/" + fr_model_name;
 
       /// Write CalcHEP output
-      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() )
+      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end() ||
+          std::find(backends.begin(), backends.end(), "micromegas") != backends.end() )
+      {
         model.write_ch_output(opts.lagrangian());
 
-      // Location of CalcHEP files
-      std::string chdir = output + "-CH";
-      std::replace(chdir.begin(), chdir.end(), ' ', '-');
-      outputs.set_ch(chdir);
+        // Location of CalcHEP files
+        std::string chdir = output + "-CH";
+        std::replace(chdir.begin(), chdir.end(), ' ', '-');
+        outputs.set_ch(chdir);
+      }
 
       /// Same for MadGraph->Pythia
-      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() )
+      if (std::find(backends.begin(), backends.end(), "pythia") != backends.end() ||
+          std::find(backends.begin(), backends.end(), "ufo") != backends.end() )
+      {
         model.write_mg_output(opts.lagrangian());
 
-      // Location of MadGraph (UFO) files
-      std::string mgdir = output + "_UFO";
-      std::replace(mgdir.begin(), mgdir.end(), ' ', '_');
-      outputs.set_mg(mgdir);
-
+        // Location of MadGraph (UFO) files
+        std::string mgdir = output + "_UFO";
+        std::replace(mgdir.begin(), mgdir.end(), ' ', '_');
+        outputs.set_mg(mgdir);
+      }
     }
     catch(std::exception &e)
     {
-     std::cerr << e.what() << std::endl;
+      error.raise("FeynRules Error: " + std::string(e.what()));
     }
   }
 
@@ -621,6 +628,13 @@ BOOST_PYTHON_MODULE(libfr)
   class_<Outputs>("FROutputs", init<>())
     .def("get_ch",  &Outputs::get_ch)
     .def("get_mg",  &Outputs::get_mg)
+    .def("set_ch",  &Outputs::set_ch)
+    .def("set_mg",  &Outputs::set_mg)
+    ;
+
+  class_<Error>("FRError", init<>())
+    .def("is_error", &Error::is_error)
+    .def("what", &Error::what)
     ;
 
   class_< std::vector<Particle> >("FRVectorOfParticles")

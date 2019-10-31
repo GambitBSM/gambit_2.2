@@ -42,6 +42,9 @@ namespace GUM
     
       // Get model name
       std::string get_modelname();
+
+      // Vertex list
+      void calculate_vertices();
     
       // Particle list
       void get_partlist(std::vector<Particle>&);
@@ -56,7 +59,8 @@ namespace GUM
       void get_inout_blocks(std::vector<Parameter> &);
 
       // Get boundary conditions
-      void get_boundary_conditions(std::vector<Parameter>&);
+      //void get_boundary_conditions(std::vector<Parameter>&);
+      void get_boundary_conditions(std::map<std::string, std::string>&, std::vector<Parameter>);
 
       // Add SPheno masses
       void add_SPheno_mass_names(std::vector<Particle>&);
@@ -81,7 +85,7 @@ namespace GUM
   // Everything
   void all_sarah(Options, std::vector<Particle>&, std::vector<Parameter>&, 
                  Outputs&, std::vector<std::string>&, std::map<std::string,bool>&, 
-                 std::map<std::string, std::string>&,
+                 std::map<std::string, std::string>&, std::map<std::string, std::string>&,
                  std::vector<Parameter>&, Error &error);
 
 } // namespace GUM

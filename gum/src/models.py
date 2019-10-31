@@ -56,9 +56,7 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     """
     Adds a model to the model hierarchy. This means we create any
     new header files in the model directory, i.e.
-    Models/include/gambit/Models/models/<new_model>.hpp, and edit any
-    parent/children headers. Writes translation functions etc. in
-    Models/src/models/<new_model>.cpp if needed.
+    Models/include/gambit/Models/models/<new_model>.hpp
     """
 
     print("Writing new spectrum, {0}".format(spectrum_name))
@@ -78,11 +76,10 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     			   "\n"
     			   "  START_MODEL\n"
     			   "\n"
-
-    			   ).format(model_name)
+    ).format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    bsm_params = [x for x in model_params if x.name != 'h0_1' and x.sm == False]
+    bsm_params = [x for x in model_params if x.name != 'mH' and x.tag != 'Pole_Mass']
 
     params = []
 
@@ -212,6 +209,7 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
 
     # Now add each parameter to the model file.
     for i in np.arange(len(model_parameters)):
+
         if not isinstance(model_parameters[i], SpectrumParameter):
             raise GumError(("\n\nModel Parameters at position " + i +
                             "not passed as instance of class "
@@ -590,44 +588,3 @@ def add_to_registered_spectra(gambit_model):
                 raise GumError(("\n\nModel {0} already exists in GAMBIT.").format(gambit_model))
 
     return newentry, linenum
-
-def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
-    """
-    Adds the pole masses to the list of parameters. 
-    If the parameter name exists already, it is removed.
-    Double counting is known to occur in the following circumstances:
-
-      1) FeynRules: a shared tree-level mass term for a multiplet.
-
-    """
-
-    parameters_by_name = [x.name for x in parameters]
-
-    for i in xrange(len(bsm_particle_list)):
-        p = bsm_particle_list[i]
-
-        block = "MASS"
-        index = None
-
-        # Check to see if the parameter name is in the list of model parameters currently.
-        # If it is, remove it
-        if p.mass in parameters_by_name:
-            for i, o in enumerate(parameters):
-                if o.name == p.mass:
-                    block = o.block
-                    index = o.index
-                    del parameters[i]
-                    break
-
-        # Overwrite the parameter name for the Higgs mass, to match the name within GAMBIT, 
-        # if this is a 1HDM.
-        if p.PDG_code == 25: 
-            if add_higgs:
-                p.mass = "mH"
-
-        # Add the new parameter to the list of model parameters.
-        x = SpectrumParameter("M"+pdg_to_particle(p.PDG_code, gambit_pdgs),
-                              "Pole_Mass", gb_input=p.mass, block=block, index=index)
-        parameters.append(x)
-
-    return parameters

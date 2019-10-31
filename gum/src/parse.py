@@ -2,7 +2,10 @@
 Contains all routines for parsing input .gum file.
 """
 
+# TODO add mass dimension for new parameters in .gum file
+
 import yaml
+import re
 
 from setup import *
 
@@ -43,16 +46,16 @@ class Outputs:
     """
 
     def __init__(self, mathpackage, calchep = False, pythia = False,
-                 micromegas = False, spheno = False, flexiblesusy = False,
-                 vevacious = False, collider_processes = None, 
+                 micromegas = False, spheno = False,
+                 vevacious = False, ufo = False, collider_processes = None, 
                  multiparticles = None, pythia_groups = None):
 
         self.ch = calchep
         self.pythia = pythia
         self.mo = micromegas
         self.spheno = spheno
-        self.fs = flexiblesusy
         self.vev = vevacious
+        self.ufo = ufo
         self.collider_processes = collider_processes
         self.multiparticles = multiparticles
         self.pythia_groups = pythia_groups
@@ -60,8 +63,10 @@ class Outputs:
         # Overwrite these, as the output does not exist.
         if mathpackage == 'feynrules':
             self.spheno = False
-            self.fs = False
             self.vev = False
+
+        # If Pythia is set then we also have UFO files, of course
+        if pythia == True: self.ufo = True
 
     def bes(self):
         backends = []
@@ -69,8 +74,8 @@ class Outputs:
         if self.pythia: backends.append('pythia')
         if self.mo: backends.append('micromegas')
         if self.spheno: backends.append('spheno')
-        if self.fs: backends.append('flexiblesusy')
         if self.vev: backends.append('vevacious')
+        if self.ufo: backends.append('ufo')
         return backends
 
 
@@ -123,7 +128,14 @@ def fill_gum_object(data):
 
     math = data['math']
     if 'lagrangian' in data['math']:
+        # Check the Lagrangian makes sense (i.e. is all alphanumeric)
         lagrangian = data['math']['lagrangian']
+        L = lagrangian.split('+')
+        for l in L:
+            if not l.strip(' ').isalnum():
+                raise GumError(("Non-alphanumeric character detected in "
+                                " the Lagrangian. Please check your .gum "
+                                "file."))
     else:
         lagrangian = "LTotal"
     mathpackage = math['package']
@@ -149,7 +161,8 @@ def fill_gum_object(data):
     else:
         dm_candidate = None
 
-    backends = ['calchep', 'pythia', 'spheno', 'flexiblesusy',
+
+    backends = ['calchep', 'pythia', 'spheno', 'ufo',
                 'micromegas', 'vevacious']
 
     opts = {}
@@ -171,8 +184,17 @@ def fill_gum_object(data):
     else:
         for i in backends:
             opts[i] = True
-
+    
     outputs = Outputs(mathpackage, **opts)
+
+    # If the user wants MicrOMEGAs output but hasn't specified a DM candidate
+    if not dm_candidate and outputs.mo:
+        raise GumError(("\n\nYou have asked for MicrOMEGAs output but have not "
+                        "specified which particle is meant to be the DM "
+                        "candidate! Please add an entry to your .gum file "
+                        "like:\n\ndm_candidate: 9900001 # <--- insert the "
+                        "desired PDG code here!!\n")) 
+
 
     # FeynRules restriction files
     restriction = None

@@ -206,6 +206,9 @@ def write_file(filename, module, contents, reset_dict):
 
     reset_dict['new_files']['files'].append(location)
 
+    # Save a temp mug file, incase something goes wrong.
+    drop_mug_file("mug_files/temp.mug", reset_dict)
+
     # Make the directory if it doesn't exist
     mkdir_if_absent(location_parts[0])
     # Create new file
@@ -228,6 +231,9 @@ def copy_file(filename, module, output_dir, reset_dict, existing=True):
         reset_dict['copied_amended_files']['files'].append(location)
     else:
         reset_dict['new_files']['files'].append(location)
+
+    # Save a temp mug file, incase something goes wrong.
+    drop_mug_file("mug_files/temp.mug", reset_dict)
 
     mkdir_if_absent(location_parts[0])
     # Copy the file
@@ -264,9 +270,17 @@ def amend_file(filename, module, contents, line_number, reset_dict):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
 
-    # Get the indentation out the front of the contents
+    # Check there's not already an identical entry - happens sometimes!
+    present = False
+    if location in reset_dict['amended_files']:
+        if contents in reset_dict['amended_files'][location]:
+            present = True
 
-    reset_dict['amended_files'][location].append(contents)
+    if not present:
+        reset_dict['amended_files'][location].append(contents)
+
+    # Save a temp mug file, incase something goes wrong.
+    drop_mug_file("mug_files/temp.mug", reset_dict)
 
     temp_location = location + "_temp"
     lines = open(location, 'r').readlines()
@@ -378,6 +392,77 @@ def write_function(function, returntype, dependencies=None,
     ).format(function, returntype, dumb_indent(2, extras))
 
     return dumb_indent(4, towrite)
+
+def add_new_model_to_function(filename, module, capability, function, 
+                              model_name, reset_dict, pattern="ALLOW_MODELS"):
+    """
+    Adds a new entry to the ALLOW_MODELS macro for a given (pre-existing)
+    CAPABILITY and FUNCTION. Pattern can be overwritten by something else
+    to match e.g. ALLOW_MODEL_DEPENDENCES
+    """
+
+    location = full_filename(filename, module)
+    temp_location = location + "_temp"
+
+    # Check the capability + function exist
+    exists, num = find_function(function, capability, module, filename)
+    if not exists:
+        raise GumError(("Could not find function {0} in capability "
+                        "{1} in {2}").format(function, capability, location))
+
+    counter = 0
+    take_it_slow = False
+    modellist = ""
+    adding_to_modellist = False
+    done = False
+
+    with open(location, 'r') as f, open(temp_location, 'w+') as g:
+        # Write everything up to the function
+        for line in f:
+            counter += 1
+            if counter > num and not done:
+                # Be cool if we are nearby
+                take_it_slow = True
+            # If we're not nearby just go for it
+            if not take_it_slow:
+                g.write(line)
+            # If we're nearby then go through line-by-line
+            else:
+                if pattern in line:
+                    # Start adding to the list of models
+                    adding_to_modellist = True
+                elif not adding_to_modellist: 
+                    g.write(line)
+                if adding_to_modellist and not done:
+                    modellist += line
+                    # End of macro
+                    if ")" in line: 
+                        # Check there's no more than ten here. 
+                        numentries = len(modellist.split(','))
+                        # Add the model name to the end if there's
+                        # less than ten (macro maximum)
+                        if numentries < 10:
+                            modellist = re.sub(r'\)', ", "+model_name+')', 
+                                        modellist, 1) 
+                        # Otherwise add a new entry altogether
+                        else:
+                            newentry = "\n      {0}({1})".format(pattern, model_name)
+                            g.write(newentry)
+                        g.write(modellist)
+                        adding_to_modellist = False
+                        take_it_slow = False
+                        done = True
+
+    # Entry for the mug file to parse
+    entry = location+'|'+capability+'|'+function+'|'+pattern
+    # Add to the reset dictionary
+    reset_dict['new_models'][entry].append(model_name)
+
+    os.remove(location)
+    os.rename(temp_location, location)
+
+    print("Model {} added to capability {}.".format(model_name, capability))
+
 
 def blame_gum(message):
     """
@@ -493,6 +578,8 @@ def revert(reset_file):
 
         for filename, v in amended_files.iteritems():
 
+            print("Amending {0}...".format(filename))
+
             temp_file = filename + "_temp"
             with open(filename, 'r') as original_file:
                 text = original_file.read()
@@ -517,6 +604,52 @@ def revert(reset_file):
 
             os.remove(filename)
             os.rename(temp_file, filename)
+
+        # Now go through those amendments that are adding new models to an existing
+        # ALLOW_MODELS (or similar) macro for a given capability
+        amended_capabilities = data['new_models']
+
+        for loc_cap_func_pattern, model in amended_capabilities.iteritems():
+            
+            location, capability, function, pattern = loc_cap_func_pattern.split('|')
+            module = location.split('/')[1]
+
+            print(("Removing model from capability {0}; function {1}; in {2}...")
+                   .format(capability, function, module))
+
+            temp_file = location + "_temp"
+            
+            exists, num = find_function(function, capability, module)
+            
+            counter = 0
+            done = False
+            take_it_slow = False
+            modellist = ""
+            taking_from_modellist = False
+            
+            with open(location, 'r') as f, open(temp_file, 'w+') as g:
+                for line in f:
+                    counter += 1
+                    if counter > num and not done: 
+                        take_it_slow = True
+                    if not take_it_slow: 
+                        g.write(line)
+                    else:
+                        if pattern in line: 
+                            taking_from_modellist = True 
+                        elif not taking_from_modellist: g.write(line)
+                        if taking_from_modellist and not done:
+                            modellist += line
+                            if ")" in line: 
+                                # Take the model out of the list
+                                modellist = re.sub(', '+model[0], '', modellist)
+                                g.write(modellist)
+                                taking_from_modellist = False
+                                take_it_slow = False
+                                done = True
+
+            os.remove(location)
+            os.rename(temp_file, location)
 
     return
 
@@ -550,12 +683,26 @@ def drop_mug_file(mug_file, contents):
     Drops a .mug (reset) file from the reset contents saved by GUM.
     """
 
+    # Make the folder for mug files. 
+    mkdir_if_absent("mug_files")
+
     d = dict(contents)
 
-    new_files = dict(d['new_files'])
-    amended_files = dict(d['amended_files'])
-
-    new_contents = {'new_files': new_files, 'amended_files': amended_files}
+    if 'new_files' in d:
+        new_files = dict(d['new_files'])
+    else:
+        new_files = {}
+    if 'amended_files' in d:
+        amended_files = dict(d['amended_files'])
+    else:
+        amended_files = {}
+    if 'new_models' in d:
+        new_models = dict(d['new_models'])
+    else:
+        new_models = {}
+        
+    new_contents = {'new_files': new_files, 'amended_files': amended_files, 
+                    'new_models' : new_models}
 
     with open(mug_file, 'w') as f:
         yaml.dump(new_contents, f, default_flow_style=False)
@@ -697,7 +844,7 @@ def write_config_file(outputs, model_name, reset_contents):
         towrite += " pythia_{0}\n".format(model_name.lower())
 
     if outputs.mo:
-        towrite += " micromegas_{0}\n".format(model_name.lower())
+        towrite += " micromegas_{0}\n".format(model_name)
 
     if outputs.spheno:
         towrite += " spheno_{0}".format(model_name.lower())
@@ -708,7 +855,6 @@ def write_config_file(outputs, model_name, reset_contents):
     if outputs.ch:
         towrite += " calchep"
 
-    # TODO : flexiblesusy.     
     towrite += (
         "\n"
         "cmake ..\n"      # Have to cmake here because of Pythia headers.

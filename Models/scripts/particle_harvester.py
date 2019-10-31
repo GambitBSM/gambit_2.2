@@ -74,9 +74,9 @@ def create_entry(macro, particle_list):
       color = entry['color']
 
     # If we do not recognise the color assignment, throw an error
-    if color not in [-1, 1, 3, 6, 8]: 
-      print('Color for particle with name {}').format(entry['name'])
-      print('given as {}. GAMBIT only knows [1, 3, 6, 8].').format(color)
+    if color not in [-1, 1, 3, 6, 8]:
+      print(('Color for particle with name {}').format(entry['name']))
+      print(('given as {}. GAMBIT only knows [1, 3, 6, 8].').format(color))
       print('Please check particle_database.yaml.')
       sys.exit()
 

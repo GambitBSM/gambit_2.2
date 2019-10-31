@@ -1082,8 +1082,10 @@ def compare_vertices(mg_verts, mg_parts, mg_params,
             add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, 
                                           lorentz_dict, part_dict, mg_parts, 
                                           mg_lorentz, mg_couplings)
+            return False
     else:
         print("All vertices are consistent...")
+        return True
 
 
 """
@@ -1122,8 +1124,6 @@ def sort_vertex_by_lorentz_indices(vertex, mg_lorentz):
                     print("Coupling not found. Aborting.")
                     sys.exit()
 
-                print l.structure
-
                 # Count the number of Lorentz indices.
                 numgammas = l.structure.split(' ')[0].count("Gamma(")
                 numsigmas = l.structure.split(' ')[0].count("Sigma(")
@@ -1148,13 +1148,6 @@ def sort_vertex_by_lorentz_indices(vertex, mg_lorentz):
                 else: 
                     print("Weird number of Lorentz indices... I'm out!")
                     sys.exit()
-
-    print no_lor
-    print no_lor_coups
-    print one_lor
-    print one_lor_coups
-    print two_lor
-    print two_lor_coups
 
     # Now create separate instances of the vertex for each set of interactions
     v = []
@@ -1698,7 +1691,7 @@ def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz
 Main functions
 """
 
-def convert(mg_location):
+def convert_mg_to_ch(mg_location):
     """
     Create CalcHEP files from a given set of MadGraph files.
     """
@@ -1729,7 +1722,7 @@ def convert(mg_location):
     print("Done.")
     
     
-def compare(mg_location, ch_location):
+def compare_mg_and_ch(mg_location, ch_location):
     """
     Compare a list of vertices from MadGraph with those from CalcHEP.
     By this, we simply check that each vertex is present in each set of 
@@ -1806,11 +1799,20 @@ def compare(mg_location, ch_location):
 
     lorentz_dict = get_mg_ch_lorentz_dict(mg_lorentz)
 
-    compare_vertices(mg_verts, mg_parts, mg_params, mg_lorentz, mg_couplings,
-                     ch_verts, ch_parts, ch_params,
-                     ch_location, param_dict, lorentz_dict, part_dict)
+    all_present = compare_vertices(mg_verts, mg_parts, mg_params, mg_lorentz, 
+                                   mg_couplings, ch_verts, ch_parts, ch_params,
+                                   ch_location, param_dict, lorentz_dict, part_dict)
 
     print("Done!")
+
+    # If they're all there then return the original CalcHEP location
+    if all_present:
+        print("All vertices consistent between CH and MG.")
+        return ( os.path.abspath(ch_location) )
+    else:
+        print("Added new vertices to CalcHEP files.")
+        return ( os.path.abspath(ch_location) + "_ufo2mdl" )
+    return 
     
 def usage():
     """
@@ -1838,7 +1840,7 @@ if __name__ == '__main__':
         usage()
         
     elif len(sys.argv) == 2:
-        convert(sys.argv[1])
+        convert_mg_to_ch(sys.argv[1])
         
     elif len(sys.argv) == 3:
-        compare(sys.argv[1], sys.argv[2])
+        compare_mg_and_ch(sys.argv[1], sys.argv[2])

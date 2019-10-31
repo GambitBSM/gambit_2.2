@@ -81,8 +81,10 @@ def fr_params(paramlist, add_higgs):
             and (p.block() != 'CKMBLOCK')):
             
             # Create a new instance of SpectrumParameter
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(), 
-                                  index=p.index())
+            # Everything is scalar by default. This can change later if we 
+            # identify a matrix or vector of parameters
+            x = SpectrumParameter(p.name(), "dimensionless", shape = "scalar",
+                                  block=p.block(), index=p.index())
             unsorted_params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
@@ -154,6 +156,52 @@ def fr_params(paramlist, add_higgs):
     
     return params
 
+
+def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
+    """
+    Adds the pole masses to the list of parameters. 
+    If the parameter name exists already, it is removed.
+    Double counting is known to occur in the following circumstances:
+
+      1) FeynRules: a shared tree-level mass term for a multiplet.
+
+    """
+
+    parameters_by_name = [x.name for x in parameters]
+
+    for i in xrange(len(bsm_particle_list)):
+        p = bsm_particle_list[i]
+        
+        # Mass block convention is the index of a *pole mass* is the PDG code
+        index = p.PDG_code 
+        block = "MASS"
+
+        # Check to see if the parameter name is in the list of model parameters 
+        # currently. If it is, remove it
+        if p.mass in parameters_by_name:
+            for i, o in enumerate(parameters):
+                if o.name == p.mass:
+                    block = o.block
+                    index = o.index
+                    del parameters[i]
+                    break
+
+        # Overwrite the parameter name for the Higgs mass, 
+        # to match the name within GAMBIT, 
+        # if this is a 1HDM.
+        if p.PDG_code == 25: 
+            if add_higgs:
+                p.mass = "mH"
+
+        # Add the new parameter to the list of model parameters.
+        x = SpectrumParameter("M"+pdg_to_particle(p.PDG_code, gambit_pdgs),
+                              "Pole_Mass", gb_input=p.mass, block=block, 
+                              index=index, shape="scalar")
+        parameters.append(x)
+
+    return parameters
+
+
 ###########
 ## SARAH ##
 ###########
@@ -182,7 +230,8 @@ def sarah_part_to_gum_part(sarah_bsm):
     
     return bsm_list, add_higgs
 
-def sarah_params(paramlist, add_higgs):
+def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
+                 particles):
     """
     Removes all Standard Model parameters from those we wish
     to add to the GAMBIT model. This utilises the 'BlockName'
@@ -219,12 +268,22 @@ def sarah_params(paramlist, add_higgs):
         if (    (p.block() != 'SM')
             and (p.block() != 'SMINPUTS')
             and (p.block() != 'VCKM')
-            #and (p.is_output() != False)) TODO: TG: This line was killing most of the parameters
             ):
-            
+
+            # Mixing matrices
+            tag = "Pole_Mixing" if (p.is_output() == True and 
+                p.shape().startswith("m")) else "dimensionless"
+
+            # TODO pole_mixing still needs to be assigned to the correct particle here,
+            # so one can do spectrum.get(Par::Pole_Mixing, "h0") etc.
+
+
+            # print mixings
+            # for m in mixings: print m 
+
             # Create a new instance of SpectrumParameter
             # TODO: dimensionless atm! 
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(),
+            x = SpectrumParameter(p.name(), tag, block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
                                   bcs = p.bcs(), shape = p.shape(), 
                                   is_output = p.is_output(), is_real = p.is_real())
@@ -256,7 +315,7 @@ def sarah_params(paramlist, add_higgs):
     params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("sinW2", "Pole_Mixing", shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=True))
     params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=True))
     params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=True))
@@ -367,10 +426,12 @@ def spheno_dependencies(sphenodeps):
         description = re.sub('Sqrt', 'sqrt', description)
 
         # If there's something that looks like param(i,j) make this (param)(i,j)
-        description = re.sub(r'([a-zA-Z]+)\(([0-9]),([0-9])\)',r'(*\1)(\2,\3)', description)
+        description = re.sub(r'([a-zA-Z]+)\(([0-9]),([0-9])\)',r'(*\1)(\2,\3)',
+                             description)
 
         # If there's Power(param, num) -> pow(*param, num)
-        description = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(*\1,\2)', description)
+        description = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(*\1,\2)',
+                             description)
 
         deps[name] = description
 
