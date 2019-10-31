@@ -57,6 +57,10 @@ namespace Gambit
       // Get process code from the generator
       int process_code = HardScatteringSim_ptr->process_code();
 
+      #ifdef COLLIDERBIT_DEBUG
+        cout << DEBUG_PREFIX << "Current process_code: " << process_code << endl;
+      #endif
+
       // Get the process_xsec_container instance that holds the externally provided cross-section for this process
       process_xsec_container xs = ProcessCrossSectionsMap.at(process_code);
 
@@ -64,7 +68,6 @@ namespace Gambit
       double process_xsec_generator = HardScatteringSim_ptr->xsec_fb(process_code);
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << endl;
         cout << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code) << endl;
       #endif
 
