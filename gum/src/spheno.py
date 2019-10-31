@@ -623,7 +623,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                                  locations, variables,
                                                  variable_dictionary,
                                                  hb_variables,
-                                                 hb_variable_dictionary)
+                                                 hb_variable_dictionary, flags)
 
 
     return spheno_src, spheno_header
@@ -1955,7 +1955,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// 80, maximal mass counted as numerical zero\n'\
       '*MaxMassNumericalZero = inputs.options->getValueOrDef<Freal8>(1.0E-8, "MaxMassNumericalZero");\n'\
       '\n'\
-      '// 95, force mass mastrices at 1-loop to be real\n'\
+      '// 95, force mass matrices at 1-loop to be real\n'\
       '*ForceRealMatrices = inputs.options->getValueOrDef<bool>(false, "ForceRealMatrices");\n'\
       '\n'\
       '// 150, use 1l2lshifts\n'\
@@ -2506,7 +2506,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
 def write_spheno_frontend_header(model_name, function_signatures, 
                                  type_dictionary, locations, 
-                                 variables, var_dict, hb_variables, hb_dict):
+                                 variables, var_dict, hb_variables, hb_dict, flags):
     """
     Writes code for 
     Backends/include/gambit/Backends/SARAHSPheno_<MODEL>_<VERSION>.hpp
@@ -2734,8 +2734,8 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(Scale_LoopDecays, Freal8, \"__settings_MOD_scale_loopdecays\", \"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name)
 
-    # TODO: if is_susy:
-    if "MSSM" in model_name: 
+    if flags["SupersymmetricModel"] : 
+    # TODO: Add check per particle, in case some don't exist
         towrite += (
                 "BE_VARIABLE(Calc3BodyDecay_Glu, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_glu\", \"SARAHSPheno_{1}_internal\")\n"
                 "BE_VARIABLE(Calc3BodyDecay_Chi, Flogical, \"__model_data_{0}_MOD_calc3bodydecay_chi\", \"SARAHSPheno_{1}_internal\")\n"
