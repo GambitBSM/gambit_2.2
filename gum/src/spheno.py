@@ -744,9 +744,9 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
             # If we are done.
             elif "Contains" in line:
                 started = False
-            elif started:
+                break
+            elif started or line.startswith("Logical"):
                 src += line
-
     # Source output -- clean it up a bit to make it easier to parse
     src = src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
     #hb_src = hb_src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
@@ -1311,38 +1311,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       'if(inputs.param.find("Qin") != inputs.param.end())\n'\
       '  slha["MODSEL"][""] << 12 << *inputs.param.at("Qin") << "# Qin";\n'\
       '\n'\
-
-    """
-    SB: MINPAR/EXTPAR dealt with automatically
-    by the block writing routines now.
-    towrite += (
-            "// Block MINPAR\n"
-            "SLHAea_add_block(slha, \"MINPAR\");\n"
-    )
-    
-    for name, var in variables.iteritems() :
-      if var.block == "MINPAR" :
-        towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
-        if var.type.startswith("Complex") :
-          towrite += name+'->re << "# '+name+'";\n'
-        else :
-          towrite += '*'+name+';\n'
-
-    towrite +=  (
-            "\n"
-            "// Block EXTPAR\n"
-            "SLHAea_add_block(slha, \"EXTPAR\");\n"
-    )
-
-    for name, var in variables.iteritems() :
-      if var.block == "EXTPAR" :
-        towrite += 'slha["MINPAR"][""] << '+str(var.index)+' << '
-        if var.type.startswith("Complex") :
-          towrite += name+'->re << "# '+name+'";\n'
-        else :
-          towrite += '*'+name+';\n'
-    """
-
 
 
     towrite += '\n'\
@@ -2300,7 +2268,12 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '/**********************/\n'\
       '\n'
 
-    # TODO: i, Calc3BodyDecay_<particle_i>
+    # Calc3BodyDecay_<particle_i>,  CalcLoopDecay_<particle_i>
+    for name, var in variables.iteritems() :
+        if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") :
+            towrite += "// " + name + '\n'\
+                '*' + name + ' = inputs.options->getValueOrdef<bool>(true, "' + name + '");\n'\
+                '\n'
       
     if flags["SupersymmetricModel"] :
       towrite += '// Calculate 3 body decays with only SUSY particles\n'\
@@ -2310,8 +2283,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '*CalcLoopDecay_LoopInducedOnly = inputs.options->getValueOrDef<bool>(false, "CalcLoopDecay_LoopInducedOnly");\n'\
       '\n'
 
-    # TODO: 100i, CalcLoopDecay_<particle_i>
-      
     towrite += '// 1101, divonly_save\n'\
       '*divonly_save = inputs.options->getValueOrDef<Finteger>(1,"divonly_save");\n'\
       '\n'\
@@ -2763,6 +2734,9 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
         # We'll put this in with SMINPUTS, otherwise it'll be a duplicate.
         if name == "MZ_input": continue
+ 
+        # These go with decay info
+        if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") : continue
 
         string = (
                "BE_VARIABLE({0}, {1}, \"__model_data_{2}_MOD_{3}\",\"SARAHSPheno_{4}_internal\")\n"
@@ -2892,26 +2866,14 @@ def write_spheno_frontend_header(model_name, function_signatures,
     ).format(clean_model_name)
 
     for name, param in sorted(variables.iteritems()):
-      print name
-      print param
 
-    # TODO: No particles in this function, so it won't work, probably better to try finding the variables
-    """oldname = ""
-    for particle in particles:
+        # Add Calc3BodyDecay_<particle> and CalcLoopDecay_<particle>
+        if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") :
 
-        name = re.sub("\d","",particle.alt_name)
-
-        # If this type of particle has already been write, skip
-        if name == oldname:
-            continue
-
-        # Add Calc3BodyDecay_<particle> and CalcLoopDecay_<particle> per particle
-        towrite += (
-            "BE_VARIABLE(Calc3BodyDecay_{0}, Flogical, \"__model_data_{1}_MOD_calc3bodydecay_sv\", \"SARAHSPheno_{2}_internal\")\n"
-            "BE_VARIABLE(CalcLoopDecay_{0}, Flogical, \"__model_data_{1}_MOD_calcloopdecay_sd\", \"SARAHSPheno_{2}_internal\")\n"
-        ).format(name, clean_model_name.lower(), clean_model_name)
+            towrite += (
+                "BE_VARIABLE({0}, Flogical, \"__model_data_{1}_MOD_{2}\", \"SARAHSPheno_{3}_internal\")\n"
+            ).format(name, clean_model_name.lower(), name.lower(), clean_model_name)
  
-    """
     if flags["SupersymmetricModel"] : 
         towrite += (
                 "BE_VARIABLE(CalcSUSY3BodyDecays, Flogical, \"__model_data_{0}_MOD_calcsusy3bodydecays\", \"SARAHSPheno_{1}_internal\")\n"
