@@ -745,14 +745,21 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
             elif "Contains" in line:
                 started = False
                 break
-            elif started or line.startswith("Logical"):
+            # If its a Logical flag defined before that mass_uncertanity, add it
+            elif line.startswith("Logical"):
                 src += line
+            # Additional control variables we need and are before mass_uncertainty
+            elif "unitarity_s" in line or "TUcutLevel" in line :
+                src += line
+            elif started:
+                src += line
+
     # Source output -- clean it up a bit to make it easier to parse
     src = src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
     #hb_src = hb_src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
 
     # The list of possible types a parameter could be
-    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical"]
+    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical", "Character"]
 
     # A list of strings to match if we want to section it off to HB.
     # Just the starts of strings, there will be various suffixes.
@@ -2726,6 +2733,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     # MODEL VARIABLES
     # EXTPAR VARIABLES
     # MINPAR VARIABLES
+    # SPHENOINPUT VARIABLES
     towrite += "\n// Model-dependent variables\n" 
     br_entry = "" # Branching ratio parameters can go later, with the rest.
 
@@ -2748,8 +2756,9 @@ def write_spheno_frontend_header(model_name, function_signatures,
         else: 
             towrite += string
 
-    # SPHENOINPUT VARIABLES
-    # TODO
+    # Add MODSEL variable if missing
+    if "HighScaleModel" not in [name for name, param in variables.iteritems()] :
+        towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, "__settings_MOD_highscalemodel", "SARAHSPheno_' + clean_model_name + '_internal")\n'
 
     # SMINPUTS
     towrite += (
