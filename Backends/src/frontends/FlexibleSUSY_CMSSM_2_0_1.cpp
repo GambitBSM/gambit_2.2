@@ -188,8 +188,7 @@ BE_NAMESPACE
    }
    catch (const Error& error)
    {
-      /// TODO: This should be a gambit error
-      backend_error().raise(LOCAL_INFO, "FS does not fil slhal correctly.");
+      backend_error().raise(LOCAL_INFO, "FS does not fill slha correctly.");
    }
 
     ///TODO:" make nice according to needs and create spectrum
