@@ -202,7 +202,6 @@ namespace Gambit
         while(currentEvent < max_nEvents.at(collider) and not *Loop::done)
         {
           int eventCountBetweenConvergenceChecks = 0;
-
           #ifdef COLLIDERBIT_DEBUG
             cout << DEBUG_PREFIX << "Starting main event loop.  Will do " << stoppingres.at(collider) << " events before testing convergence." << endl;
           #endif
@@ -219,21 +218,34 @@ namespace Gambit
                   )
             {
               result.event_generation_began = true;
+
+              // Increment counters before executing the corresponding event loop iteration, 
+              // to stop other threads from starting any event iterations beyond max_nEvents.
+              #pragma omp critical
+              {
+                currentEvent++;
+                eventCountBetweenConvergenceChecks++;
+              }
+              if (currentEvent > max_nEvents.at(collider)) break;
+
+              // Execute event loop iteration
               try
               {
                 Loop::executeIteration(currentEvent);
-                #pragma omp critical
-                {
-                  currentEvent++;
-                  eventCountBetweenConvergenceChecks++;
-                }
               }
               catch (std::domain_error& e)
               {
-                cout << "\n   Continuing to the next event...\n\n";
+                cout << "\n   Caught std::domain_error. Continuing to the next event...\n\n";
+                // Decrement counters since the event iteration failed
+                #pragma omp critical
+                {
+                  currentEvent--;
+                  eventCountBetweenConvergenceChecks--;
+                }
               }
             }
-          }
+          } // end omp parallel block
+
           // Update the flag indicating if there have been warnings raised about exceeding the maximum allowed number of failed events
           result.exceeded_maxFailedEvents = result.exceeded_maxFailedEvents or piped_warnings.inquire("exceeded maxFailedEvents");
 
