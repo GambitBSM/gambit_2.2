@@ -365,11 +365,11 @@ if args.file:
         spheno_decay_src, spheno_decay_header = write_spheno_decay_entry(clean_model_name)
 
 
-    with open("out.txt", "w+") as f:
-        f.write(spheno_src)
+    # with open("out.txt", "w+") as f:
+    #     f.write(spheno_src)
 
-    import sys
-    sys.exit("Enough for now.")
+    # import sys
+    # sys.exit("Enough for now.")
 
     """
     CALCHEP

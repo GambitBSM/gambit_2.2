@@ -10,6 +10,81 @@ from setup import *
 from files import *
 from backends import *
 
+class VertexMerger:
+
+    """
+    Class used for 2-2 processes
+    """
+
+    def __init__(self, vertexA, vertexB):
+
+        self.vA = vertexA
+        self.vB = vertexB
+        self.v6 = vertexA + vertexB
+
+    def has_dm_dmbar(self, dm):
+        """
+        Return whether a merged vertex has a DM particle and its conjugate
+        """
+
+        if not isinstance(dm, Particle):
+            raise GumError("DM not passed over as instance of class Particle...")
+
+        if dm.is_sc:
+            if (self.v6.count(dm.PDG_code) > 1):
+                return True
+            else: return False
+        else:   
+            if (self.v6.count(dm.PDG_code) > 0 and 
+                self.v6.count(dm.Conjugate.PDG_code) > 0):
+                return True
+            else: return False
+
+    def find_ann(self, dm, antiparticles, aux_particles, propagators, products):
+        """
+        For each particle in vertexA, check to see if its antiparticle 
+        is in vertexB. If so, we can consider this a propagator particle.
+        Add this to the list of propagators and add the products to a list too
+        """
+
+        for particle in self.vA:
+
+            # Create a copy of the six body mess, then remove an instance of DM and DMbar
+            l = self.v6[:]
+            l.remove(l[l.index(dm.PDG_code)])         
+            l.remove(l[l.index(dm.Conjugate.PDG_code)]) 
+
+            # Firstly check the type of the field
+            # If it's an integer then it's a PDG code
+            if isinstance(particle, int):
+                # If we have DM + DMbar only accept this if it's a t-channel 
+                # exchange, (chi + X ---> chi/chi~ <--- X~ chi~)
+                if (particle == dm.PDG_code or 
+                    particle == dm.Conjugate.PDG_code):
+                    if not dm.is_sc():
+                        if not self.v6.count(dm.PDG_code) == 2: continue
+                    elif dm.is_sc():
+                        if not self.v6.count(dm.PDG_code) == 4: continue
+                
+                if antiparticles[particle] in self.vB:
+                    propagators.append(particle)
+                    propagators.append(antiparticles[particle])
+                    # Get the products
+                    l.remove(l[l.index(particle)])         
+                    l.remove(l[l.index(antiparticles[particle])]) 
+                    products.append(l)
+
+            # If it's a string it'll be an aux field
+            elif isinstance(particle, str):
+                if aux_particles[particle] in self.vB:
+                    # Just add the products, don't want to earmark auxiliary
+                    # particles for resonances
+                    # Get the products
+                    l.remove(l[l.index(particle)])         
+                    l.remove(l[l.index(aux_particles[particle])]) 
+                    products.append(l)   
+        
+
 def sort_annihilations(dm, three_fields, four_fields, aux_particles, 
                        antiparticles):
     """
@@ -17,11 +92,12 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
     particles (not auxiliaries though -- the propagators are used for 
     resonances)
     """
-
+    
     if not isinstance(dm, Particle):
         GumError("\n\nDM not passed over as an instance of class Particle.")
 
-    dm_dm_to_x_y = []
+    propagators = []
+    products = []
 
     # Add all 4-pt vertices that are DM + DM -> X + Y
     # Shouldn't have to worry about auxiliary particles in a contact 
@@ -29,203 +105,56 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
     for i in range(0, len(four_fields)):
 
         if dm.is_sc and four_fields[i].count(dm.PDG_code) == 2:
-            products = [f for f in four_fields[i] if f not in {dm.PDG_code}]
-            dm_dm_to_x_y.append(products)
+            p = [f for f in four_fields[i] if f not in {dm.PDG_code}]
+            products.append(p)
 
         elif not dm.is_sc and four_fields[i].count(dm.PDG_code) == 1 and \
                 four_fields[i].count(dm.Conjugate.PDG_code) == 1:
-            products = [f for f in four_fields[i] if
+            p = [f for f in four_fields[i] if
                         f not in {dm.PDG_code, dm.Conjugate.PDG_code}]
-            dm_dm_to_x_y.append(products)
+            products.append(p)
 
-    v_with_dm = []
-    v_with_dmbar = []
-    v_with_2dm = []
-    v_with_dmdmbar = []
-    s_channel_propagators = []
+    """
+    2 to 2 processes at tree-level.
+    1. Create a big list of all possible combinations of 3 particle vertices
+    2. Only keep those that have DM and DMbar in
+    3. Check to see if they have a particle + antiparticle, coming from distinct
+       three-body vertices
+    """
 
-    # Separate all vertices
-    for i in range(0, len(three_fields)):
 
-        # Self conjugate DM.
-        if dm.is_sc():
+    for i in three_fields:
+        for j in three_fields:
+            v = VertexMerger(i,j) 
+            
+            # If there's at least one dm, and one dmbar,
+            # then let's have a closer look
+            if not v.has_dm_dmbar(dm):
+                continue
 
-            # If there's just DM...
-            if three_fields[i].count(dm.PDG_code) == 1:
-                v_with_dm.append(three_fields[i])
+            # Check to see if there is a DM+DMbar-> X + Y process in the 
+            # merged vertex, and record any (physical) propagators and products
+            v.find_ann(dm, antiparticles, aux_particles, propagators, products)
+                
+    # Remove duplicates
+    propagators = list(set(propagators))
+    products = [list(x) for x in set(tuple(y) for y in products)]
 
-            # If there's DM + DM 
-            elif three_fields[i].count(dm.PDG_code) == 2:
-                v_with_2dm.append(three_fields[i])
-                # Add s-channel propagator: DM+DM -> prop
-                product = []
-
-                for field in three_fields[i]:
-                    # If it's an integer then it's a PDG code
-                    if isinstance(field, int):
-                        if abs(field) != dm.PDG_code: product.append(field)
-                    # If it's a string it'll be an aux field
-                    elif isinstance(field, str): product.append(field)
-
-                # If there is not one field left over something's up.
-                if len(product) != 1:
-                    raise GumError(("ERROR with vertices."))
-                s_channel_propagators.append(product[0])
-
-        # Not self-conjugate DM.
-        elif not dm.is_sc():
-
-            # If there's one DM...
-            if three_fields[i].count(dm.PDG_code) == 1:
-
-                # ... and no DMbar
-                if three_fields[i].count(dm.Conjugate.PDG_code) == 0:
-                    v_with_dm.append(three_fields[i])
-
-                # ... and DMbar
-                elif three_fields[i].count(dm.Conjugate.PDG_code) == 1:
-                    v_with_dmdmbar.append(three_fields[i])
-                    
-                    # Add s-channel propagator: DM+DMbar -> prop
-                    product = []
-
-                    for field in three_fields[i]:
-                        # If it's an integer then it's a PDG code
-                        if isinstance(field, int):
-                            if abs(field) != dm.PDG_code: product.append(field)
-                        # If it's a string it'll be an aux field
-                        elif isinstance(field, str): product.append(field)
-
-                    # If there is not one field left over something's up.
-                    if len(product) != 1:
-                        raise GumError(("ERROR with vertices."))
- 
-                    s_channel_propagators.append(product[0])
-
-            # Just DMbar, no DM
-            elif three_fields[i].count(dm.Conjugate.PDG_code) == 1:
-                v_with_dmbar.append(three_fields[i])
-
-    # s-channel: sticking together
-    # DM + DMbar -> propagator & propagator -> stuff + otherstuff
-
-    # See what each propagator can decay into.
-    for i in range(0, len(s_channel_propagators)):
-
-        # If it's an integer then it's a PDG code
-        # Look for the 
-        if isinstance(s_channel_propagators[i], int):
-            propagator_pdg = s_channel_propagators[i]
-
-            for j in range(0, len(three_fields)):
-
-                curr_vertex = three_fields[j][:]
-
-                propconj = antiparticles[propagator_pdg]
-
-                if curr_vertex.count(propconj) >= 1:
-                    # Copy the vertex & remove one instance of the propagator.
-                    curr_vertex.remove(
-                        curr_vertex[curr_vertex.index(propconj)])
-                    dm_dm_to_x_y.append(curr_vertex)
-
-        # If it's a string then it's an auxiliary particle
-        elif isinstance(s_channel_propagators[i], str):
-            aux_part = s_channel_propagators[i]
-
-            for j in range(0, len(three_fields)):
-
-                curr_vertex = three_fields[j][:]
-
-                propconj = aux_particles[aux_part]
-
-                if curr_vertex.count(propconj) >= 1:
-                    # Copy the vertex & remove one instance of the propagator.
-                    curr_vertex.remove(
-                        curr_vertex[curr_vertex.index(propconj)])
-                    dm_dm_to_x_y.append(curr_vertex)
-
-    # t/u-channel: sticking together
-    # DM + stuff -> propagator & conj(propagator) -> DMbar + otherstuff
-
-    # S.B: I don't think we will ever have aux particles in t-channel 
-    # interactions... easy to add if so anyway
-
-    t_channel_propagators = []
-    t_channel_potential = []
-
-    # self-conj:
-    if dm.is_sc():
-
-        dm_verts = v_with_dm + v_with_2dm
-        verts = dm_verts[:]
-
-        # Remove one instance of DM from each vertex -- the incoming DM.
-        for i in range(0, len(verts)):
-            verts[i].remove(verts[i][verts[i].index(dm.PDG_code)])
-            t_channel_potential.append(verts[i])
-
-        vertsbar = verts
-
-    elif not dm.is_sc():
-
-        verts = v_with_dm[:]
-        vertsbar = v_with_dmbar[:]
-
-        # Remove one instance of DM from each vertex -- the incoming DM.
-        for i in range(0, len(verts)):
-            verts[i].remove(verts[i][verts[i].index(dm.PDG_code)])
-            t_channel_potential.append(verts[i])
-
-        # Remove DMbar from each vertex too -- also incoming.
-        for i in range(0, len(vertsbar)):
-            vertsbar[i].remove(
-                vertsbar[i][vertsbar[i].index(dm.Conjugate.PDG_code)])
-
-    # Remove any duplicate t-channel props.
-    t_channel_propagators = list(set(t_channel_propagators))
-
-    for i in range(0, len(t_channel_potential)):
-
-        for j in range(0, len(vertsbar)):
-
-            curr_vertex = vertsbar[j][:]
-
-            if dm.spinX2 != 1:
-                for k in range(2):
-                    # If the mediator shows up in the DMbar ->
-                    # add the two products and the mediator to respective lists.
-                    if t_channel_potential[i][k] in curr_vertex:
-                        ind = curr_vertex.index(t_channel_potential[i][k])
-                        dm_dm_to_x_y.append([t_channel_potential[i][k - 1],
-                                             curr_vertex[ind - 1]])
-                        t_channel_propagators.append(t_channel_potential[i][k])
-
-            # If DM is fermionic -> also allowed fermionic t-channel prop
-            # TODO -- this requires continuous fermion chain
-            else:
-                # Want to add DM + prop + X -> conj(DM) + conj(prop) + Y
-                # N.B this can also be DM as the propagator
-                pass
-
-    # Combine all propagators for resonances. Remove duplicates.
-    propagators = s_channel_propagators + t_channel_propagators
-    propagators[:] = list(set(propagators))
-
-    # Remove (unphysical) aux particles from the list of propagators
-    propagators = [p for p in propagators if not isinstance(p, str)]
-
-    # Remove all duplicates within the list of annihilation products.
-    ann_products = map(list,
-                       sorted(set(map(tuple, dm_dm_to_x_y)), reverse=True))
     # Remove any DM-DM self-interactions
     # If these are important they should be dealt with by e.g. micrOMEGAs 5.0+
     # and the freeze-in routines, or Z3 models, etc.
-    if [dm.PDG_code, dm.Conjugate.PDG_code] in ann_products:
-        ann_products.remove([dm.PDG_code, dm.Conjugate.PDG_code])
+    if [dm.PDG_code, dm.Conjugate.PDG_code] in products:
+        products.remove([dm.PDG_code, dm.Conjugate.PDG_code])
+    if [dm.Conjugate.PDG_code, dm.PDG_code] in products:
+        products.remove([dm.Conjugate.PDG_code, dm.PDG_code])
 
-    return np.array(ann_products), propagators
+    # Remove DM itself from the list of propagators
+    if dm.PDG_code in propagators:
+        propagators.remove(dm.PDG_code)
+    if dm.Conjugate.PDG_code in propagators:
+        propagators.remove(dm.Conjugate.PDG_code)
 
+    return np.array(products), propagators
 
 def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
           calchep_pdg_dict):
@@ -430,7 +359,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
         )
 
     # TODO add any final state, non-SM particles (external legs) 
-        for particle in higgses+propagators:
+        for particle in list(set(higgses+propagators)):
 
             towrite += (
                 "ImportDecays(\"{0}\", catalog, importedDecays, &tbl, "
