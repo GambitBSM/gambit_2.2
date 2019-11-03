@@ -188,7 +188,7 @@ namespace Gambit
         #ifdef COLLIDERBIT_DEBUG
           cout << DEBUG_PREFIX << "operateLHCLoop: Will execute START_SUBPROCESS" << endl;
         #endif
-        int currentEvent = 0;
+        result.current_event_count() = 0;
         #pragma omp parallel
         {
           Loop::executeIteration(START_SUBPROCESS);
@@ -197,9 +197,8 @@ namespace Gambit
         piped_warnings.check(ColliderBit_warning());
         piped_errors.check(ColliderBit_error());
 
-
         // Convergence loop
-        while(currentEvent < max_nEvents.at(collider) and not *Loop::done)
+        while(result.current_event_count() < max_nEvents.at(collider) and not *Loop::done)
         {
           int eventCountBetweenConvergenceChecks = 0;
           #ifdef COLLIDERBIT_DEBUG
@@ -207,61 +206,75 @@ namespace Gambit
           #endif
 
           // Main event loop
+          result.event_generation_began = true;
           #pragma omp parallel
           {
             while(eventCountBetweenConvergenceChecks < stoppingres.at(collider) and
-                  currentEvent < max_nEvents.at(collider) and
+                  result.current_event_count() < max_nEvents.at(collider) and
                   not *Loop::done and
+                  not result.end_of_event_file and
                   not result.exceeded_maxFailedEvents and
-                  not piped_warnings.inquire("exceeded maxFailedEvents") and
                   not piped_errors.inquire()
                   )
             {
-              result.event_generation_began = true;
+              bool thread_do_iteration = true;
+              int thread_my_iteration;
 
               // Increment counters before executing the corresponding event loop iteration, 
               // to stop other threads from starting any event iterations beyond max_nEvents.
               #pragma omp critical
               {
-                currentEvent++;
-                eventCountBetweenConvergenceChecks++;
-              }
-              if (currentEvent > max_nEvents.at(collider)) break;
-
-              // Execute event loop iteration
-              try
-              {
-                Loop::executeIteration(currentEvent);
-              }
-              catch (std::domain_error& e)
-              {
-                cout << "\n   Caught std::domain_error. Continuing to the next event...\n\n";
-                // Decrement counters since the event iteration failed
-                #pragma omp critical
+                if(result.current_event_count() < max_nEvents.at(collider))
                 {
-                  currentEvent--;
-                  eventCountBetweenConvergenceChecks--;
+                  result.current_event_count()++;
+                  thread_my_iteration = result.current_event_count();
+                  eventCountBetweenConvergenceChecks++;
+                }
+                else
+                {
+                  thread_do_iteration = false;
                 }
               }
-            }
+              
+              if(thread_do_iteration)
+              {
+                try
+                {
+                  // Execute event loop iteration
+                  Loop::executeIteration(thread_my_iteration);
+                }
+                catch (std::domain_error& e)
+                {
+                  cout << "\n   Caught std::domain_error. Continuing to the next event...\n\n";
+                  // Decrement counters since the event iteration failed
+                  #pragma omp critical
+                  {
+                    result.current_event_count()--;
+                    eventCountBetweenConvergenceChecks--;
+                  }
+                }
+              }
+
+            } // end while loop
+
           } // end omp parallel block
 
           // Update the flag indicating if there have been warnings raised about exceeding the maximum allowed number of failed events
-          result.exceeded_maxFailedEvents = result.exceeded_maxFailedEvents or piped_warnings.inquire("exceeded maxFailedEvents");
+          // result.exceeded_maxFailedEvents = result.exceeded_maxFailedEvents or piped_warnings.inquire("exceeded maxFailedEvents");
 
           // Any problems during the main event loop?
           piped_warnings.check(ColliderBit_warning());
           piped_errors.check(ColliderBit_error());
 
           #ifdef COLLIDERBIT_DEBUG
-            cout << DEBUG_PREFIX << "Did " << eventCountBetweenConvergenceChecks << " events of " << currentEvent << " simulated so far." << endl;
+            cout << DEBUG_PREFIX << "Did " << eventCountBetweenConvergenceChecks << " events of " << result.current_event_count() << " simulated so far." << endl;
           #endif
 
           // Break convergence loop if too many events fail
           if(result.exceeded_maxFailedEvents) break;
 
           // Don't bother with convergence stuff if we haven't passed the minimum number of events yet
-          if (currentEvent >= min_nEvents.at(collider))
+          if (result.current_event_count() >= min_nEvents.at(collider))
           {
             #pragma omp parallel
             {
@@ -279,8 +292,9 @@ namespace Gambit
 
         }
 
-        // Store the number of generated events
-        result.current_event_count() = currentEvent;
+        #ifdef COLLIDERBIT_DEBUG
+          cerr << DEBUG_PREFIX << "Final event count: current_event_count() = " << result.current_event_count() << endl;
+        #endif
 
         // Skip to next collider if too many events fail
         if(result.exceeded_maxFailedEvents) continue;

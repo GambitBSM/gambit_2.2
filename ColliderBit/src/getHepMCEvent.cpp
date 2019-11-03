@@ -42,6 +42,7 @@
 #include "HepMC3/GenParticle.h"
 #include "HepMC3/ReaderAscii.h"
 
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 //#define COLLIDERBIT_DEBUG
 
 namespace Gambit
@@ -125,7 +126,7 @@ namespace Gambit
       if (*Loop::iteration < 0) return;
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << "Event number: " << *Loop::iteration << endl;
+        cout << DEBUG_PREFIX << "Event number: " << *Loop::iteration << endl;
       #endif
 
       // Attempt to read the next HepMC event as a HEPUtils event. If there are no more events, wrap up the loop and skip the rest of this iteration.
@@ -140,7 +141,12 @@ namespace Gambit
         //       Remove this once bugfix is implemented in HepMC.
         if ((ge.particles().size() == 0) && (ge.vertices().size() == 0)) event_retrieved = false;
       }
-      if (not event_retrieved) Loop::halt();
+      if (not event_retrieved)
+      {
+        // Tell the MCLoopInfo instance that we have reached the end of the file
+        Dep::RunMC->report_end_of_event_file();
+        Loop::halt();
+      }
 
       //Set the weight
       result.set_weight(ge.weight());
