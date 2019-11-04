@@ -76,7 +76,7 @@ namespace Gambit
   const char* met_CMS_14   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
 
   // Initialize all data
-  static const size_t data_INC           = 16;
+  static const size_t data_INC           = 20;
   static const size_t data_SIZE          = pow(data_INC,2);
   static const size_t cms_bin_size       = 22;
   static const size_t atlas_bin_size     = 10;
@@ -92,23 +92,47 @@ namespace Gambit
   double theta[data_INC];
   double mass[data_INC];
 
-  double BilinearInterpolation(float q11, float q12, float q21, float q22, 
-    float x1, float x2, float y1, float y2, float x, float y)  
-  {
-    double x2x1, y2y1, x2x, y2y, yy1, xx1;
-    x2x1 = x2 - x1;
-    y2y1 = y2 - y1;
-    x2x = x2 - x;
-    y2y = y2 - y;
-    yy1 = y - y1;
-    xx1 = x - x1;
-    return 1.0 / (x2x1 * y2y1) * (
-      q11 * x2x * y2y +
-      q21 * xx1 * y2y +
-      q12 * x2x * yy1 +
-      q22 * xx1 * yy1
-    );
-  }
+double LinearInterpolation(double y2, double y1, double y, double q1,double q2){
+	return  ( 1.0 / (y2-y1) ) * ( (y2 - y)*q1 + (y-y1)*q2 );
+}
+
+
+double BilinearInterpolation(double q11, double q12, double q21, double q22, 
+		double x1, double x2, double y1, double y2, double x, double y, double yalpha=0) 
+{
+
+	if (q11 < 0 ){
+		q11 = LinearInterpolation(y2,yalpha,y1,-1*q11,q12);
+	}
+
+	if (q21 < 0 ){
+		q21 = LinearInterpolation(y2,yalpha,y1,-1*q21,q22);
+	}
+
+	if (q22 < 0 ){
+		q22 = LinearInterpolation(yalpha,y1,y2,q21,-1*q22);
+	}
+
+	if (q12 < 0 ){
+		q12 = LinearInterpolation(yalpha,y1,y2,q11,-1*q12);
+	}
+
+
+
+	double x2x1, y2y1, x2x, y2y, yy1, xx1;
+	x2x1 = x2 - x1;
+	y2y1 = y2 - y1;
+	x2x = x2 - x;
+	y2y = y2 - y;
+	yy1 = y - y1;
+	xx1 = x - x1;
+	return 1.0 / (x2x1 * y2y1) * (
+		q11 * x2x * y2y +
+		q21 * xx1 * y2y +
+		q12 * x2x * yy1 +
+		q22 * xx1 * yy1
+	);
+}
 
  
 
@@ -224,6 +248,9 @@ namespace Gambit
 
     // char const *l = "/fast/users/a1607156/gambitgit/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
 
+    // cout << " Acceptance_CS DEBUG: 1" << endl;
+
+
     int met_bin_size ;
     double ** MET_HIST = new double*[data_SIZE];
 
@@ -243,6 +270,7 @@ namespace Gambit
           }
         }
     }
+
 
     else if (experiment=="CMS" && pair == "23"){
       // cout << "CMS _getdata debug 1" <<endl;
@@ -292,6 +320,7 @@ namespace Gambit
         }
     }
 
+    // cout << " Acceptance_CS DEBUG: 3" << endl;
 
     // DEBUG stuff 
     // cout << "Met bin size" << " "<< met_bin_size<<" "<<data_SIZE<<endl;
@@ -341,14 +370,17 @@ namespace Gambit
       cout<<" Error! Theta param out of range with value " << th << " Exiting..."<<endl;
       std::exit(EXIT_SUCCESS);
       }
+    // cout << " Acceptance_CS DEBUG: 4" << endl;
 
     
     // Get x1,2 y1,2 : Mass and theta coordinates for interpolation
     double x1,x2,y1,y2;
+    int xi,yj;
     for(int ii = 0; ii < data_INC-1; ++ii) {
       if (m >= mass[ii] && m <= mass[ii+1]){
         x1 = mass[ii];
-        x2 = mass[ii+1];
+        x2 = mass[ii+1]; 
+        xi = ii;
         break;
         }
       }
@@ -356,13 +388,14 @@ namespace Gambit
       if (th >= theta[jj] && th <= theta[jj+1]){
         y1 = theta[jj];
         y2 = theta[jj+1];
+        yj = jj;
         break;
         }
       }
 
 
     // Get C's
-    double C11=0.0 ,C12=0.0,C21=0.0,C22=0.0;
+    double C11=0.0 ,C12=0.0,C21=0.0,C22=0.0,yalpha=0;
 
     // Define Q's as array: One Q type for each met bin.
 
@@ -378,6 +411,8 @@ namespace Gambit
     // Q22[met_bin_size]   = {};
     
     // NJets and Cross-section
+    // // !!!!!!!!!!!!!!!!!!!! HERE AGAIN BUGS !!!!! << endl;
+
     for (int Emiss = 0; Emiss < met_bin_size; ++Emiss ) {
       Q11[Emiss] = 0.0;
       Q12[Emiss] = 0.0;
@@ -385,38 +420,89 @@ namespace Gambit
       Q22[Emiss] = 0.0;
       // cout << " Emiss = "<< Emiss<< " Inital Q's: "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
       while (Q11[Emiss]==0.0 || Q12[Emiss]==0.0 || Q21[Emiss]== 0.0 || Q22[Emiss]==0.0 || C11==0.0 || C12==0.0 || C21== 0.0 || C22==0.0){ 
+          // cout << Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
+        // cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
         for(int kk = 0; kk < data_SIZE; ++kk) {
           // cout << MASS[kk]<<" "<< THETA[kk]<< " Emiss = "<< Emiss <<"|  |"<<MET_HIST[kk][Emiss]<<" " << kk<< " |     |" << x2<<" " << y2<<" "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
-          
-          if (MASS[kk]==x1 && THETA[kk]==y1){
-            // Q11[Emiss] = nJets[kk];
-            Q11[Emiss] = MET_HIST[kk][Emiss];
-            C11 = CS[kk];
+           
+				if (MASS[kk]==x1 && THETA[kk]==y1){
+					// Q11[Emiss] = nJets[kk];
+						if (MET_HIST[kk][Emiss] < 0){
+							Q11[Emiss] = -1*MET_HIST[kk-1][Emiss];
+							C11        = -1*CS[kk-1];
+							yalpha     = THETA[kk-1];
+							// cout << "Have made the hack" << endl;
+						}
+						else {
+							Q11[Emiss] = MET_HIST[kk][Emiss];
+							C11 = CS[kk];
+							// cout << "Q11 = " << Q22[Emiss] << " mass, th = "    << MASS[kk]<< "  "<< THETA[kk]<<endl;
+						} 
 
-            }
-          else if (MASS[kk]==x1 && THETA[kk]==y2){
-            Q12[Emiss] = MET_HIST[kk][Emiss];
-            C12 = CS[kk];
+					}
 
-            }
-          else if (MASS[kk]==x2 && THETA[kk]==y1){
-            Q21[Emiss] = MET_HIST[kk][Emiss];
-            C21 = CS[kk];
 
-            }
-          else if (MASS[kk]==x2 && THETA[kk]==y2){
-            Q22[Emiss] = MET_HIST[kk][Emiss];
-            C22 = CS[kk];
+				else if (MASS[kk]==x1 && THETA[kk]==y2){
+					// cout << "Here in loop. K = "<< kk<< " x1 = "<< x1<< " y2 = "<< y2<< " met_hist = " << MET_HIST[kk][Emiss]<<endl;
+					
+						if (MET_HIST[kk][Emiss] < 0){
+							Q12[Emiss] = -1*MET_HIST[kk+1][Emiss];
+							C12        = -1*CS[kk+1];
+							yalpha     = THETA[kk+1];
+							// cout << "Have made the hack" << endl;
+						}
+						else {
+							Q12[Emiss] = MET_HIST[kk][Emiss];
+							C12 = CS[kk];
+						}
+					}
 
-            // cout << " Q22"<< " "<< Q22[Emiss]<<endl;
 
-            } 
+
+
+
+				else if (MASS[kk]==x2 && THETA[kk]==y1){
+
+						if (MET_HIST[kk][Emiss] < 0){
+							Q21[Emiss] = -1*MET_HIST[kk-1][Emiss];
+							C21        = -1*CS[kk-1];
+							yalpha     = THETA[kk-1];
+							// cout << "Have made the hack" << endl;
+						}	
+
+					else{
+						Q21[Emiss] = MET_HIST[kk][Emiss];
+						C21 = CS[kk];
+
+					}
+
+					}
+
+				else if (MASS[kk]==x2 && THETA[kk]==y2){
+
+						if (MET_HIST[kk][Emiss] < 0){
+							Q22[Emiss] = -1*MET_HIST[kk+1][Emiss];
+							C22        = -1*CS[kk+1];
+							yalpha     = THETA[kk+1];
+							// cout << "Have made the hack " << Q22[Emiss]<< " "<< C22<< " "<< yalpha <<  endl;
+						}	
+
+					else {
+						Q22[Emiss] = MET_HIST[kk][Emiss];
+						C22 = CS[kk];
+					}
+					// cout << " Q22"<< " "<< Q22[Emiss]<<endl;
+
+					}	
+
+
           } 
         }
 
+      // cout << " Acceptance_CS DEBUG: 5 - Fixed" << endl;
 
       // Luminoscity scaling gets applied at the end...
-      double res =  36000.0*Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
+      double res =  36000.0*Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha); 
       // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
       // cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
      
@@ -474,7 +560,8 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
 }
 
     void DMEFT_results(AnalysisDataPointers &result){  
-
+      // cout << "Start of DMEFT_results..."<<endl;
+      
 
       // This routine will get the yields for both the ATLAS and CMS monojet analyses
       // The results are stored in a vector of AnalysisData objects, which includes backgrounds yields, uncertainties and correlations
@@ -541,6 +628,8 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
 
       _srnums_CMS = L_Acc_Eff_CS(mass,C61,C62,C63,C64,"CMS");
       
+      // cout << "first _srnums call ..."<<endl;
+
 
       static const double CMS_OBSNUM[cms_bin_size] = {
                               136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
@@ -610,6 +699,7 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
 
       AnalysisData  * cmsData = new AnalysisData(cmsBinnedResults, m_BKGCOV);
       cmsData->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated";
+      // cout << "after cms definition ..."<<endl;
 
   // **----------------------------------------------------------------------------------------------------//
   // **-------------------------------------ATLAS----------------------------------------------------------//
@@ -649,6 +739,8 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
         atlasBinnedResults.push_back(sr);
       }
 
+      // cout << "after signal region data efinition ..."<<endl;
+
     //  // --- ATLAS covarance matrix: Identity!
     //  std::vector< std::vector<double> > aBKGCOV;
 
@@ -673,6 +765,7 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
 
   // ******** Create total results ***********// 
   // //--------------------------------------//
+      // cout << "Before pushback ..."<<endl;
 
       result.push_back(atlasData);
       result.push_back(cmsData);
@@ -682,23 +775,26 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
       //   cout << "DEBUG: sr-" << ibin << " n_signal = " << result[0]->srdata[ibin].n_signal << endl;
       //   cout << "DEBUG: sr-" << ibin << " n_signal_at_lumi = " << result[0]->srdata[ibin].n_signal_at_lumi << endl;
       // }
+      // cout << "End of likelihood calculator ..." <<endl;
       
+
     };
      
-
+ 
     void InterpolatedMCInfo(MCLoopInfo& result)
     {
-      
+      // cout << "Have run the void..."<<endl;
       // This makes an MCLoopInfo object for satisfying the LHC
       // likelihood calculation dependency
 
       // Andre Scaffidi HACKS: Event generation has been bypassed
       // ------------------------------------------------------//
       result.event_gen_BYPASS = true;
+      // cout << "Have run the void 2..."<<endl;
       // ------------------------------------------------------//
       result.reset_flags();
       
-
+      // cout << "Have run the void 3..."<<endl;
     }
   
 
