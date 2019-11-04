@@ -63,7 +63,7 @@ def copy_spheno_files(model_name, output_dir, spheno_oob_path, sarah_spheno_path
 PATCHING
 """
 
-def patch_spheno(model_name, patch_dir, flags):
+def patch_spheno(model_name, patch_dir, flags, particles):
     """
     Applies all patches to SPheno in the GUM 
     Outputs/... directory.
@@ -80,7 +80,7 @@ def patch_spheno(model_name, patch_dir, flags):
 
     if flags["SupersymmetricModel"] :
         patch_model_data(model_name, patch_dir)
-        patch_3_body_decays_susy(model_name, patch_dir)
+        patch_3_body_decays_susy(model_name, patch_dir, particles)
 
     print("SPheno files patched.")
 
@@ -524,22 +524,34 @@ def patch_model_data(model_name, patch_dir):
     os.rename(temp_filename, filename)
 
 
-def patch_3_body_decays_susy(model_name, patch_dir):
+def patch_3_body_decays_susy(model_name, patch_dir, bsm_particles):
     """
     Patches the 3-body decays in: 
     $SPheno/<MODEL>/3-Body-Decays/X_<MODEL>.f90
     where X is a superfield.
     """
 
-    particles = {"Cha", "Chi", "Glu", "Sd", "Su", "Se", "Sv"}
-    channels = {"Cha": {"ChacChaCha", "ChaChiChi"},
-                            "Chi": {"ChicChaCha", "ChiChiChi"},
-                            "Glu": {},
-                            "Sd": {"ChaGluSu", "SdChacCha", "SdChiChi", "ChiGluSd", "GluGluSd"},
-                            "Su": {"SuChiChi", "ChiGluSu", "SdChicCha", "GluGluSu", "GluSdcCha", "SuChacCha"},
-                            "Se": {"SvChaChi", "SeChacCha", "SeChiChi"},
-                            "Sv": {"SvChiChi", "SeChicCha", "SvChacCha"}}
-    # TODO: these channels work for the NMSSM, other susy models may have others
+    partnames = []
+    for part in bsm_particles:
+        name = re.sub("\d","",part.alt_name)
+        if name not in partnames:
+           partnames.append(name)
+
+    # Check if any of these susy particles are in the particle list
+    susy_particles = ["Cha", "Chi", "Glu", "Sd", "Su", "Se", "Sv"]
+    susy_channels = {"Cha": ["ChacChaCha", "ChaChiChi"],
+                     "Chi": ["ChicChaCha", "ChiChiChi"],
+                     "Glu": [],
+                     "Sd": ["ChaGluSu", "SdChacCha", "SdChiChi", "ChiGluSd", "GluGluSd"],
+                     "Su": ["SuChiChi", "ChiGluSu", "SdChicCha", "GluGluSu", "GluSdcCha", "SuChacCha"],
+                     "Se": ["SvChaChi", "SeChacCha", "SeChiChi"],
+                     "Sv": ["SvChiChi", "SeChicCha", "SvChacCha"]}
+    particles = []
+    channels = {}
+    for susy_particle in susy_particles:
+        if susy_particle in partnames:
+            particles.append(susy_particle)
+            channels[susy_particle] = susy_channels[susy_particle]
 
     for particle in particles :
  
