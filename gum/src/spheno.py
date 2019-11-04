@@ -2128,7 +2128,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Block MINPAR //\n'\
       '/****************/\n'
 
-    # # TODO: The name of model parameters might be wrong
+    # # The name of model parameters might be wrong
     # for name, var in variables.iteritems():
     #   if var.block == "MINPAR" :
     #     model_par = get_model_par_name(name, variables)
@@ -2143,17 +2143,17 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         if par.block == "MINPAR":
             c = "*"+par.name if par.is_real else par.name+"->re"
 
-            # TODO
             # If there's no BC then assume it's the parameter name?
             e = par.name
 
-            # Check to see if 
+            # Check to see if the parameter has a boundary condition
             if par.name in bcs: 
                 e = bcs[par.name]
             elif par.alt_name in bcs:
                 e = bcs[par.alt_name]
 
-           #  TODO: here and below the complex check is missing, as well as the dereference (*)
+            # TODO: here and below the complex check is missing, as well as the dereference (*)
+            # S.B. the (poorly named) variable 'c' above has this check & the de-ref. 
             towrite += (
                 "if(inputs.param.find(\"{0}\") != inputs.param.end())\n"
                 "  {1}"
@@ -2165,7 +2165,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "/* Block EXTPAR */\n"\
       "/****************/\n"
 
-    # TODO: The name of model parameters might be wrong
+    # # The name of model parameters might be wrong
     # for name, var in variables.iteritems():
     #   if var.block == "EXTPAR" :
     #     model_par = get_model_par_name(name, variables)
@@ -2181,10 +2181,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             c = "*"+par.name if par.is_real else par.name+"->re"
 
             # If there's no BC then assume it's the parameter name?
-            # TODO
             e = par.name
 
-            # Check to see if 
+            # Check to see if the parameter has a boundary condition
             if par.name in bcs: 
                 e = bcs[par.name]
             elif par.alt_name in bcs:

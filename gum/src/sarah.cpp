@@ -247,8 +247,6 @@ namespace GUM
                 command = "Part[getOutputName[pl[[" + std::to_string(i+1) + ", 1]]], 2]";
                 send_to_math(command);
                 get_from_math(antiname);
-
-                std::cout << "name " << name << " antiname " << antiname << std::endl;
             }
             else if (num == 0)
             {
@@ -270,10 +268,11 @@ namespace GUM
             }
             else
             {
-                std::cerr << "More than 2 particles here; "
-                          << "what weird symmetries have you got???" 
-                          << std::endl;
-                return;
+                std::stringstream err;
+                err << "More than 2 particles here; "
+                    << "what weird symmetries have you got???" 
+                    << std::endl;
+                throw std::runtime_error(err.str());
             }
 
             if (numelements > 1)

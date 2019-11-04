@@ -275,7 +275,7 @@ if args.file:
     antiparticle_dict = get_antiparticles(partlist)
 
     # Return a list of the PDG codes of all Higgses involved
-    higgses = get_higgses(bsm_particle_list)
+    higgses, neutral_higgses, charged_higgses = get_higgses(bsm_particle_list)
 
     """
     PARAMETERS
@@ -367,9 +367,6 @@ if args.file:
 
     # with open("out.txt", "w+") as f:
     #     f.write(spheno_src)
-
-    # import sys
-    # sys.exit("Enough for now.")
 
     """
     CALCHEP
@@ -495,19 +492,28 @@ if args.file:
     SPECBIT
     """
 
-    spectrum_src = ""
+    #spectrum_src = ""
 
-    if output_opts.spheno:
-        print("Writing SPheno SpecBit interface...")
-        spectrum_src = write_spheno_spectrum_src(gum.name)
+    # if output_opts.spheno:
+    #     print("Writing SPheno SpecBit interface...")
+    #     spectrum_src = write_spheno_spectrum_src(gum.name)
         
-    else:
-        print("Writing basic container SpecBit interface...")
-        # TODO: determine when "simple_SMinputs" needed from FR/S model file
-        spectrum_src = write_basic_spectrum(gum.name, parameters, gum.spec, add_higgs)
+    print("Writing basic container SpecBit interface...")
+    spectrum_src = write_spectrum(gum.name, parameters, gum.spec, add_higgs, 
+                                  output_opts.spheno, gambit_pdgs,
+                                  neutral_higgses, charged_higgses)
 
-    spectrum_header = write_spectrum_header(gum.name, add_higgs, output_opts.spheno)
+    spectrum_header = write_spectrum_header(gum.name, add_higgs, 
+                                            output_opts.spheno, higgses)
     spec_rollcall = write_specbit_rollcall(gum.name)
+
+    # with open("out2.txt", "w+") as f:
+    #     f.write(spectrum_src)
+    #     f.write("\n=============\n")
+    #     f.write(spectrum_header)
+
+    import sys
+    sys.exit("Enough for now.")
 
     """
     VEVACIOUS
@@ -518,8 +524,9 @@ if args.file:
         # Currently require SPheno output for vevacious since we need MINPAR etc. 
         # TODO factorise this a bit
         if not output_opts.spheno:
-            raise GumError(("Currently gum needs SPheno output to be able to produce Vevacious"
-                            " output. Please change your .gum file."))
+            raise GumError(("Currently gum needs SPheno output to be able to "
+                            "produce Vevacious output. Please change your "
+                            ".gum file."))
         vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, 
                                       blockparams)
 
