@@ -80,6 +80,9 @@ namespace Gambit
     using namespace std;
     namespace ublas = boost::numeric::ublas;
 
+    typedef std::map<const std::string, double> SI_observable_map;
+    typedef std::map<const std::string, std::map<const std::string, double>> SI_covariance_map;
+
     const bool flav_debug =
     #ifdef FLAVBIT_DEBUG
       true;
