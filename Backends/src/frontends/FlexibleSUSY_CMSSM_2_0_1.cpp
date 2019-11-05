@@ -26,25 +26,25 @@
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 //TODO: Static FS includes, remove when BOSSed FS works
-#include "flexiblesusy/src/lowe.h" // From softsusy; used by flexiblesusy
-#include "flexiblesusy/src/spectrum_generator_settings.hpp"
-#include "flexiblesusy/models/CMSSM/CMSSM_spectrum_generator.hpp"
-#include "flexiblesusy/models/CMSSM/CMSSM_slha_io.hpp"
-#include "flexiblesusy/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp"
+//#include "flexiblesusy/src/lowe.h" // From softsusy; used by flexiblesusy
+//#include "flexiblesusy/src/spectrum_generator_settings.hpp"
+//#include "flexiblesusy/models/CMSSM/CMSSM_spectrum_generator.hpp"
+//#include "flexiblesusy/models/CMSSM/CMSSM_slha_io.hpp"
+//#include "flexiblesusy/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp"
 
 // Convenience functions (definitions)
 BE_NAMESPACE
 {
   // BOSS namespaces 
-  // using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
-  // using namespace FlexibleSUSY_CMSSM_default::softsusy;
+  using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
+  using namespace FlexibleSUSY_CMSSM_default::softsusy;
 
-   using namespace ::flexiblesusy;
-   using namespace ::softsusy;
+  // using namespace ::flexiblesusy;
+  // using namespace ::softsusy;
 
 
     /// Initialise QedQcd object from SMInputs data
-  void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
+  /*void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
   {
     // Set pole masses (to be treated specially)
     oneset.setPoleMt(sminputs.mT);
@@ -68,11 +68,11 @@ BE_NAMESPACE
     oneset.setMass(softsusy::mElectron, sminputs.mE);
     oneset.setMass(softsusy::mMuon,     sminputs.mMu);
     oneset.setPoleMZ(sminputs.mZ);
-  }  
+  } */ 
 
   
   // Function to extract the FS settings form the yaml file
-  void Get_yaml_settings(const Spectrum_generator_settings& spectrum_generator_settings, const SpectrumInputs& Input)
+  void Get_yaml_settings(Spectrum_generator_settings& settings, const SpectrumInputs& Input)
   {
     //inputs.options = myPipe::runOptions;
     auto Options = Input.options;
@@ -94,7 +94,6 @@ BE_NAMESPACE
     // | higgs_2loop_correction_at_at     | 0, 1                         | 1 (= enabled)   |
     // | higgs_2loop_correction_atau_atau | 0, 1                         | 1 (= enabled)   |
 
-    Spectrum_generator_settings settings;
     settings.set(Spectrum_generator_settings::precision, Options->getValueOrDef<double>(1.0e-4,"precision_goal"));
     settings.set(Spectrum_generator_settings::max_iterations, Options->getValueOrDef<double>(0,"max_iterations"));
     settings.set(Spectrum_generator_settings::calculate_sm_masses, Options->getValueOrDef<bool> (false, "calculate_sm_masses"));
@@ -111,7 +110,7 @@ BE_NAMESPACE
     settings.set(Spectrum_generator_settings::calculate_observables, Options->getValueOrDef<int>(0,"calculate_observables")); // 
     settings.set(Spectrum_generator_settings::pole_mass_scale, Options->getValueOrDef<int>(0,"pole_mass_scale")); // Zero means use SUSYScale, otherwise gives scale for pole mass calculation. Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file.
     settings.set(Spectrum_generator_settings::eft_pole_mass_scale, Options->getValueOrDef<int>(0,"eftPoleMassScale")); // Zero means use Mt. Otherwise sets the scale of the pole mass calculation in the EFT in GeV.Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file
-   settings.set(Spectrum_generator_settings::eft_matching_scale, Options->getValueOrDef<int>(0,"eftMatchingScale")); // Zero means use SUSYScale. Otherwise sets the EFT matching scale in GeV.  Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file.
+    settings.set(Spectrum_generator_settings::eft_matching_scale, Options->getValueOrDef<int>(0,"eftMatchingScale")); // Zero means use SUSYScale. Otherwise sets the EFT matching scale in GeV.  Mostly used for estimation of errors so unlikely to be used a sgeneral setting chosen in yaml file.
     settings.set(Spectrum_generator_settings::eft_matching_loop_order_up, Options->getValueOrDef<int>(1,"eft_matching_loop_order_up"));
     settings.set(Spectrum_generator_settings::eft_matching_loop_order_down, Options->getValueOrDef<int>(1,"eft_matching_loop_order_down"));
     settings.set(Spectrum_generator_settings::eft_higgs_index, Options->getValueOrDef<int>(0,"eftHiggsIndex")); //If set to 0, the lightest field in the Higgs multiplet isinterpreted as SM-like Higgs. If set to 1, the 2nd lightest field is interpreted as SM-like etc
@@ -129,30 +128,30 @@ BE_NAMESPACE
     /// TODO: copy the way spheno routinbe uses param and options and
     /// TODO: use these to fill CMSSM inputs, qedqcd and settings
     softsusy::QedQcd qedqcd;
-    CMSSM_input_parameters cmssm_input;
+    //CMSSM_input_parameters cmssm_input;
 
     // fill cmssm inputs
-    cmssm_input.m0 = *Input.param.at("M0");
-    cmssm_input.m12 = *Input.param.at("M12");
-    cmssm_input.TanBeta = *Input.param.at("TanBeta");
-    cmssm_input.SignMu = *Input.param.at("SignMu");
-    cmssm_input.Azero = *Input.param.at("A0");
+    //cmssm_input.m0 = *Input.param.at("M0");
+    //cmssm_input.m12 = *Input.param.at("M12");
+    //cmssm_input.TanBeta = *Input.param.at("TanBeta");
+    //cmssm_input.SignMu = *Input.param.at("SignMu");
+    //cmssm_input.Azero = *Input.param.at("A0");
 
     Spectrum_generator_settings spectrum_generator_settings;
     /// fix FS settings from yaml options 
     Get_yaml_settings(spectrum_generator_settings, Input);
 
     // Fill QedQcd object with SMInputs values
-    setup_QedQcd(qedqcd,sminputs);
+    //setup_QedQcd(qedqcd,sminputs);
         
     // create instance of spectrum generator
     //GAMBIT BOSS type
     //CMSSM_spectrum_generator_Two_scale spectrum_generator;
     // Static FS type
-    CMSSM_spectrum_generator<Two_scale> spectrum_generator;
-    spectrum_generator.set_settings(spectrum_generator_settings);
+    //CMSSM_spectrum_generator<Two_scale> spectrum_generator;
+    //spectrum_generator.set_settings(spectrum_generator_settings);
     // Generate spectrum
-    spectrum_generator.run(qedqcd, cmssm_input);
+    //spectrum_generator.run(qedqcd, cmssm_input);
 
     /// TODO: should probably catch errors here
 
@@ -162,8 +161,8 @@ BE_NAMESPACE
     // GAMBIT BOSS type
     // const CMSSM_slha_Model_Two_scale  models = spectrum_generator.get_models_slha();
     //static FS version
-    auto models = spectrum_generator.get_models_slha();
-    const Spectrum_generator_problems& problems = spectrum_generator.get_problems();
+    //auto models = spectrum_generator.get_models_slha();
+    //const Spectrum_generator_problems& problems = spectrum_generator.get_problems();
 
     /// TODO:  add LSP check here?
     // probably not could do this in module function that
@@ -171,33 +170,33 @@ BE_NAMESPACE
        
     /// get scales used by spectrum generator
     /// TODO: check we need these.
-    CMSSM_scales scales;
-    scales.HighScale = spectrum_generator.get_high_scale();
-    scales.SUSYScale = spectrum_generator.get_susy_scale();
-    scales.LowScale  = spectrum_generator.get_low_scale();
-    scales.pole_mass_scale = spectrum_generator.get_pole_mass_scale();
+    //CMSSM_scales scales;
+    //scales.HighScale = spectrum_generator.get_high_scale();
+    //scales.SUSYScale = spectrum_generator.get_susy_scale();
+    //scales.LowScale  = spectrum_generator.get_low_scale();
+    //scales.pole_mass_scale = spectrum_generator.get_pole_mass_scale();
 
       
     //create FS slha_io object, as
     // TODO: I think we can use this to wrap slhae object
-    CMSSM_slha_io slha_io;
-   try
-   {
-     slha_io.fill(qedqcd);
-     slha_io.fill(cmssm_input);
-   }
-   catch (const Error& error)
-   {
-      backend_error().raise(LOCAL_INFO, "FS does not fill slha correctly.");
-   }
+    //CMSSM_slha_io slha_io;
+    //try
+    //{
+    //  slha_io.fill(qedqcd);
+    //  slha_io.fill(cmssm_input);
+    //}
+    //catch (const Error& error)
+    //{
+    //   backend_error().raise(LOCAL_INFO, "FS does not fill slha correctly.");
+    //}
 
     ///TODO:" make nice according to needs and create spectrum
-    slha_io.set_spinfo(problems);
-    slha_io.set_input(cmssm_input);
-    slha_io.set_print_imaginary_parts_of_majorana_mixings(
-      spectrum_generator_settings.get(
-      Spectrum_generator_settings::force_positive_masses));
-    slha_io.set_spectrum(models);
+    //slha_io.set_spinfo(problems);
+    //slha_io.set_input(cmssm_input);
+    //slha_io.set_print_imaginary_parts_of_majorana_mixings(
+    //  spectrum_generator_settings.get(
+    //  Spectrum_generator_settings::force_positive_masses));
+    //slha_io.set_spectrum(models);
     //slha_io.set_extra(std::get<0>(models), scales, observables);
 
     /// for a spectrum object we need an slhea object,
@@ -208,11 +207,11 @@ BE_NAMESPACE
     /// not sure why we need this if we pass the slhaea object
     /// the slhae object should have the scale for the blocks
     /// maybe in case they give blocks at multiple scales
-    double scale = std::get<0>(models).get_scale();
+    //double scale = std::get<0>(models).get_scale();
 
         
     //get SLHEA object from slha_io
-    SLHAea::Coll slha = slha_io.get_slha_io().get_data();
+    //SLHAea::Coll slha = slha_io.get_slha_io().get_data();
 
     /// Construct instance MSSM struct
     /// Models/include/gambit/Models/SpectrumContents/RegisteredSpectra.hpp
@@ -223,9 +222,9 @@ BE_NAMESPACE
     /// TODO: something like:
     ///calling constructor 
     // from spectrum.hpp in Elements
-    Spectrum spectrum(slha, mssm, scale, false);
+    //Spectrum spectrum(slha, mssm, scale, false);
     // fill Spectrum object -- a fill_spectrum method in Spectrum class would be nice
-    spec = std::move(spectrum);
+    //spec = std::move(spectrum);
 
     backend_warning().raise(LOCAL_INFO, "New FS spectrum calculation not implimented yet.");
      
