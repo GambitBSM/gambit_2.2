@@ -65,7 +65,7 @@
     ALLOW_MODEL_COMBINATION(higgs, singlet)
     #undef FUNCTION
 
-		#define FUNCTION find_min_lambda_ScalarSingletDM_Z3
+    #define FUNCTION find_min_lambda_ScalarSingletDM_Z3
     START_FUNCTION(dbl_dbl_bool)
     DEPENDENCY(SMINPUTS, SMInputs)
     DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum)
@@ -75,7 +75,7 @@
     ALLOW_MODEL_COMBINATION(higgs, singlet)
     #undef FUNCTION
 
-	  #define FUNCTION find_min_lambda_MDM
+    #define FUNCTION find_min_lambda_MDM
     START_FUNCTION(dbl_dbl_bool)
     DEPENDENCY(SMINPUTS, SMInputs)
     DEPENDENCY(MDM_spectrum, Spectrum)
