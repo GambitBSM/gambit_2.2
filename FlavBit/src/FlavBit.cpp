@@ -1100,6 +1100,7 @@ namespace Gambit
       {"a1T23_Bsphi","a2T23_Bsphi",0.899178},
       };
 
+      // Reserve memory
       double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
       for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
           corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
@@ -1118,6 +1119,12 @@ namespace Gambit
               result[iObservable][jObservable]=res[iObservable][jObservable]; // TO BE MODIFIED
           }
       }
+
+      // Free memory
+      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+          free(corr[iObservable]);
+      }
+      free(corr);
 
       if (flav_debug) {
           for(int iObservable=0; iObservable < nObservables; ++iObservable) {
