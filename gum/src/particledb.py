@@ -328,14 +328,18 @@ def get_higgses(partlist):
     14/10/2019: NMSSM-like Higgses - 3 scalars, 2 pseudoscalars, 1 charged
     """
 
-    higgses_by_pdg = [
-                      25, 35, 45,  # h0_1, h0_2, h0_3
-                      36, 46,      # A0_1, A0_2
-                      37, -37      # H+, H-
-                     ]
+    neutral_higgses_by_pdg = [
+                              25, 35, 45,  # h0_1, h0_2, h0_3
+                              36, 46,      # A0_1, A0_2
+                             ]
+    charged_higgses_by_pdg = [
+                              37, -37      # H+, H-
+                             ]
 
-    
+    neutral_higgses = [x.PDG_code for x in partlist if x.PDG_code in 
+                       neutral_higgses_by_pdg]
+    charged_higgses = [x.PDG_code for x in partlist if x.PDG_code in 
+                       charged_higgses_by_pdg]
+    higgses = neutral_higgses + charged_higgses
 
-    higgses = [x.PDG_code for x in partlist if x.PDG_code in higgses_by_pdg]
-
-    return higgses
+    return higgses, neutral_higgses, charged_higgses

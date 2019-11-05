@@ -252,10 +252,12 @@ def delete_file(filename, module):
         os.remove(location)
         print("File {} successfully removed.".format(location))
 
-def amend_file(filename, module, contents, line_number, reset_dict):
+def amend_file(filename, module, contents, line_number, reset_dict, 
+               is_capability=False, capability="", function=""):
     """
     Amends a file in a specified location with 'contents', starting
     from a given line number.
+    If it's a capability then add the capability and function
     """
 
     location = full_filename(filename, module)
@@ -269,6 +271,15 @@ def amend_file(filename, module, contents, line_number, reset_dict):
     if not find_file(filename, module):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
+
+    # Add the capability
+    if is_capability:
+        print("here")
+        reset_dict['capabilities'][location].append(capability+'|'+function)
+        print("here")
+
+    # todo when working
+    #else:
 
     # Check there's not already an identical entry - happens sometimes!
     present = False
@@ -325,7 +336,9 @@ def add_capability(module, capability, function, reset_dict,
 
         # If there's already the capability, then the only thing we need 
         # is the function. Add it to the existing capability.
-        amend_file(filename, module, func, cap_line+1, reset_dict)
+        amend_file(filename, module, func, cap_line+1, reset_dict, 
+                   is_capability = True, capability = capability, 
+                   function = function)
         # The +1 takes into account the START_CAPABILITY line. Hopefully 
         # being a bit lazy here doesn't come back to bite me, but I doubt it.
 
@@ -346,7 +359,9 @@ def add_capability(module, capability, function, reset_dict,
         with open(location) as f:
             for num, line in enumerate(f, 1):
                 if "#undef CAPABILITY" in line: n = num
-        amend_file(filename, module, contents, n+1, reset_dict)
+        amend_file(filename, module, contents, n+1, reset_dict,
+                   is_capability = True, capability = capability, 
+                   function = function)
 
 
 def write_function(function, returntype, dependencies=None,
@@ -446,7 +461,8 @@ def add_new_model_to_function(filename, module, capability, function,
                                         modellist, 1) 
                         # Otherwise add a new entry altogether
                         else:
-                            newentry = "\n      {0}({1})".format(pattern, model_name)
+                            newentry = "\n      {0}({1})".format(pattern, 
+                                                                 model_name)
                             g.write(newentry)
                         g.write(modellist)
                         adding_to_modellist = False
@@ -554,20 +570,31 @@ def revert(reset_file):
         try:
             data = yaml.safe_load(f)
         except yaml.YAMLError as exc:
-            print(exc)
-            return
+            raise(exc)
 
         # The files GUM wrote as new.
         # GUM can just simply delete these.
         new_files = data['new_files']['files']
-
 
         for i in new_files:
             if os.path.isfile(i):
                 print("Deleting {0}...".format(i))
                 os.remove(i)
             else:
-                print("Tried deleting {0}, but it seems to have already been removed.".format(i))
+                print(("Tried deleting {0}, but it seems to have already been "
+                      "removed.".format(i)))
+        
+        # Go through the new capabilities and functions
+        if 'capabilities' in data:
+            capabilities = data['capabilities']
+            for filename, entries in capabilities.iteritems():
+                print filename
+                print entries
+                for entry in entries:
+                    print entry
+                    capability, function = entry.split('|')
+                    print capability
+                    print function
 
         # The files that existed previously, that GUM added stuff to.
         # These are a little more annoying to deal with.
@@ -575,7 +602,6 @@ def revert(reset_file):
 
         # We want to match *strings* and not line numbers or anything like that.
         # This way, there is no order needed to perform resets in.
-
         for filename, v in amended_files.iteritems():
 
             print("Amending {0}...".format(filename))
@@ -605,51 +631,55 @@ def revert(reset_file):
             os.remove(filename)
             os.rename(temp_file, filename)
 
-        # Now go through those amendments that are adding new models to an existing
-        # ALLOW_MODELS (or similar) macro for a given capability
-        amended_capabilities = data['new_models']
+        # Now go through those amendments that are adding new models to an 
+        # existing ALLOW_MODELS (or similar) macro for a given capability
+        if 'new_models' in data:
+            amended_capabilities = data['new_models']
 
-        for loc_cap_func_pattern, model in amended_capabilities.iteritems():
-            
-            location, capability, function, pattern = loc_cap_func_pattern.split('|')
-            module = location.split('/')[1]
+            for loc_cap_func_pattern, model in amended_capabilities.iteritems():
+                
+                location, capability, function, pattern = \
+                                                 loc_cap_func_pattern.split('|')
+                module = location.split('/')[1]
 
-            print(("Removing model from capability {0}; function {1}; in {2}...")
-                   .format(capability, function, module))
+                print(("Removing model from capability {0}; function {1};"
+                       " in {2}..."
+                       ).format(capability, function, module))
 
-            temp_file = location + "_temp"
-            
-            exists, num = find_function(function, capability, module)
-            
-            counter = 0
-            done = False
-            take_it_slow = False
-            modellist = ""
-            taking_from_modellist = False
-            
-            with open(location, 'r') as f, open(temp_file, 'w+') as g:
-                for line in f:
-                    counter += 1
-                    if counter > num and not done: 
-                        take_it_slow = True
-                    if not take_it_slow: 
-                        g.write(line)
-                    else:
-                        if pattern in line: 
-                            taking_from_modellist = True 
-                        elif not taking_from_modellist: g.write(line)
-                        if taking_from_modellist and not done:
-                            modellist += line
-                            if ")" in line: 
-                                # Take the model out of the list
-                                modellist = re.sub(', '+model[0], '', modellist)
-                                g.write(modellist)
-                                taking_from_modellist = False
-                                take_it_slow = False
-                                done = True
+                temp_file = location + "_temp"
+                
+                exists, num = find_function(function, capability, module)
+                
+                counter = 0
+                done = False
+                take_it_slow = False
+                modellist = ""
+                taking_from_modellist = False
+                
+                with open(location, 'r') as f, open(temp_file, 'w+') as g:
+                    for line in f:
+                        counter += 1
+                        if counter > num and not done: 
+                            take_it_slow = True
+                        if not take_it_slow: 
+                            g.write(line)
+                        else:
+                            if pattern in line: 
+                                taking_from_modellist = True 
+                            elif not taking_from_modellist: g.write(line)
+                            if taking_from_modellist and not done:
+                                modellist += line
+                                if ")" in line: 
+                                    # Take the model out of the list
+                                    modellist = re.sub(', '+model[0], '', 
+                                                       modellist)
+                                    g.write(modellist)
+                                    taking_from_modellist = False
+                                    take_it_slow = False
+                                    done = True
 
-            os.remove(location)
-            os.rename(temp_file, location)
+                os.remove(location)
+                os.rename(temp_file, location)
 
     return
 
@@ -659,24 +689,34 @@ def check_for_existing_entries(model_name, darkbit, colliderbit, output_opts):
     """
 
     # Models entries
-    if ( find_file("models/" + model_name + ".hpp", "Models") or
-         find_file("SpectrumContents/" + model_name + ".cpp", "Models") or 
-         find_file("SimpleSpectra/" + model_name + "SimpleSpec" + ".hpp", "Models") or 
-         find_file("SpecBit_" + model_name + ".cpp", "SpecBit") or 
-         find_file("SpecBit_" + model_name + "_rollcall.hpp", "SpecBit")
+    m = "Models"
+    if ( find_file("models/" + model_name + ".hpp", m) or
+         find_file("SpectrumContents/" + model_name + ".cpp", m) or 
+         find_file("SimpleSpectra/" + model_name + "SimpleSpec" + ".hpp", m)
        ):
-        raise GumError(("Model {0} already exists in the Model Hierarchy.").format(model_name))
+       raise GumError(("Model {0} already exists in {1}").format(model_name, m))
+    m = "SpecBit"
+    if (
+         find_file("SpecBit_" + model_name + ".cpp", m) or 
+         find_file("SpecBit_" + model_name + "_rollcall.hpp", m)
+       ):
+       raise GumError(("Model {0} already exists in {1}").format(model_name, m))
 
     if darkbit:
-        if find_file(model_name + ".cpp", "DarkBit"):
-            raise GumError(("Model {0} already exists in DarkBit.").format(model_name))
+        m = "DarkBit"
+        if find_file(model_name + ".cpp", m):
+            raise GumError(("Model {0} already exists in {1}"
+                            ).format(model_name))
         if output_opts.mo:
             ver = "3.6.9.2"
-            f = "frontends/MicrOmegas_{0}_{1}".format(model_name, ver.replace('.','_'))
+            f = "frontends/MicrOmegas_{0}_{1}".format(model_name, 
+                                                      ver.replace('.','_'))
             if ( find_file(f+".cpp", "Backends") or 
                  find_file(f+".hpp", "Backends")
                ):
-                raise GumError(("MicrOmegas entry already exists for model {0}").format(model_name))
+                raise GumError((
+                                "MicrOmegas entry already exists for model {0}"
+                               ).format(model_name))
 
 def drop_mug_file(mug_file, contents):
     """
@@ -700,9 +740,13 @@ def drop_mug_file(mug_file, contents):
         new_models = dict(d['new_models'])
     else:
         new_models = {}
+    if 'capabilities' in d:
+        capabilities = dict(d['capabilities'])
+    else:
+        capabilities = {}
         
     new_contents = {'new_files': new_files, 'amended_files': amended_files, 
-                    'new_models' : new_models}
+                    'new_models' : new_models, 'capabilities' : capabilities}
 
     with open(mug_file, 'w') as f:
         yaml.dump(new_contents, f, default_flow_style=False)
@@ -715,17 +759,18 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
     """
 
     towrite = (
-        "##########################################################################\n"
+        "####################################################################\n"
         "## GAMBIT configuration for a random scan of the {0} model\n"
         "##\n"
         "## Includes simply the decays of the new model.\n"
-        "##########################################################################\n"
+        "####################################################################\n"
         "\n"
         "\n"
         "Parameters:\n"
         "\n"
         "  # SM parameters.\n"
-        "  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml\n"
+        "  StandardModel_SLHA2: !import "
+        "include/StandardModel_SLHA2_defaults.yaml\n"
         "\n"
     ).format(model_name)
 
@@ -739,7 +784,8 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
     towrite += ("  {0}:\n").format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    bsm_params = [x for x in model_parameters if x.name != 'h0_1' and x.sm == False]
+    bsm_params = [x for x in model_parameters if x.name != 'h0_1'
+                  and x.sm == False]
     params = []
 
     for i in bsm_params:
@@ -797,7 +843,8 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "\n"
         "Rules:\n"
         "\n"
-        "  # Choose to get decays from DecayBit proper, not from an SLHA file.\n"
+        "  # Choose to get decays from DecayBit proper, not from an SLHA file."
+        "\n"
         "  - capability: decay_rates\n"
         "    function: all_decays\n"
         "Logger:\n"

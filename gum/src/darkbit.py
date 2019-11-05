@@ -354,7 +354,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
                 "\n"
                 "auto excludeDecays = daFunk::vec<std::string>("
                 "\"Z0\", \"W+\", \"W-\", "
-                "\"e+_2\", \"e-_2\", \"e+_3\", \"e-_3\");\n"
+                "\"e+_1\", \"e-_1\", \"e+_2\", \"e-_2\");\n"
                 "\n"
         )
 
@@ -709,7 +709,6 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             ).format(chmass, SMinputs[pdg])
 
 
-    # TODO GF, aS, aEWinv
     # These are handled slightly differently by SARAH and FeynRules
     if mathpackage == 'sarah':
         mo_src += (
