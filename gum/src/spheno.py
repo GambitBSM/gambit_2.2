@@ -589,7 +589,8 @@ class SPhenoParameter:
     Container type for a SPheno parameter.
     """
     
-    def __init__(self, _name, _type, _size, _block="", _index=0, _alt_name="", _bcs=""):
+    def __init__(self, _name, _type, _size, _block="", _index=0, _alt_name="",
+                 _bcs=""):
 
         self.name = _name
         self.type = _type
@@ -601,8 +602,9 @@ class SPhenoParameter:
 
 
 def write_spheno_frontends(model_name, parameters, particles, flags, 
-                           spheno_path, output_dir, blockparams, gambit_pdgs, mixings,
-                           reality_dict, sphenodeps, bcs):
+                           spheno_path, output_dir, blockparams, gambit_pdgs, 
+                           mixings, reality_dict, sphenodeps, bcs, 
+                           charged_higgses, neutral_higgses):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -616,19 +618,25 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
 
     # Get all of the variables used in SPheno so we can store them as 
     # BE_VARIABLES. Keep track of those used for HiggsBounds too.
-    variables, hb_variables = harvest_spheno_model_variables(spheno_path, model_name, 
+    variables, hb_variables = harvest_spheno_model_variables(spheno_path, 
+                                                             model_name, 
                                                              parameters)
 
     # Convert these to GAMBIT types too
     variable_dictionary = get_fortran_shapes(variables)
     hb_variable_dictionary = get_fortran_shapes(hb_variables)
 
+    # Get the indices for the mass_uncertainties
+    mass_uncertainty_dict = get_mass_uncert(spheno_path, model_name)
+
     # Get the source and header files
     spheno_src = write_spheno_frontend_src(model_name, functions,
                                            variables, flags, particles, 
                                            parameters, blockparams, 
                                            gambit_pdgs, mixings, reality_dict,
-                                           sphenodeps, hb_variables, bcs)
+                                           sphenodeps, hb_variables, bcs,
+                                           charged_higgses, neutral_higgses,
+                                           mass_uncertainty_dict)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -771,7 +779,8 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
     #hb_src = hb_src.replace(' ','').replace('&\n',' ').replace('&','').split('\n')
 
     # The list of possible types a parameter could be
-    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical", "Character"]
+    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical", 
+                      "Character"]
 
     # A list of strings to match if we want to section it off to HB.
     # Just the starts of strings, there will be various suffixes.
@@ -833,6 +842,30 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
     
     return parameters, hb_parameters
 
+def get_mass_uncert(spheno_path, model_name):
+    """
+    Scrape the mass_uncertainty PDG code : index and return a dict.
+    """
+
+    mud = {}
+
+    clean_model_name = model_name.replace('-','')
+    location = "{0}/{1}/InputOutput_{1}.f90".format(spheno_path, 
+                                                    clean_model_name)
+
+    src = []
+    # Scrape every line with a Sqrt(mass_uncertainty_Q in it
+    with open(location, 'r') as f:
+        for line in f:
+            if "Sqrt(mass_uncertainty_Q" in line:
+                src.append( line )
+
+    for entry in src:
+        pdg = re.search(r'INT\(Abs\((.*?)\)\)', entry).group(1)
+        index = re.search(r'Sqrt\(mass_uncertainty_Q\((.*?)\)', entry).group(1)
+        mud[pdg] = index
+
+    return mud
 
 def get_arguments_from_file(functions, file_path, function_dictionary,
                             argument_dictionary):
@@ -842,7 +875,8 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
     """
 
     # The list of possible types a parameter could be
-    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical"]
+    possible_types = ["Real(dp)", "Integer", "Complex(dp)", "Logical", 
+                      "Character"]
 
     with open(file_path) as f:
         data = f.readlines()
@@ -921,7 +955,9 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
 
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
                               particles, parameters, blockparams, gambit_pdgs, mixings,
-                              reality_dict, sphenodeps, hb_variables, bcs):
+                              reality_dict, sphenodeps, hb_variables, bcs,
+                              charged_higgses, neutral_higgses,
+                              mass_uncertainty_dict):
 
     """
     Writes source for 
@@ -1181,30 +1217,32 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # End of fill_spectrum_calculate_BRs function
 
     # run_SPheno_decays function
-    towrite += "// Convenience function to run Spheno and obtain the decays\n"\
-               "int run_SPheno_decays(const Spectrum &spectrum, DecayTable& decays, const Finputs& inputs)\n"\
-               "{\n"\
-               "\n"\
-               "double BRMin = inputs.options->getValueOrDef<double>(1e-5, \"BRMin\");\n"\
-               "\n"\
-               "// Pass the GAMBIT spectrum to SPheno and fill the internal decay objects\n"\
-               "fill_spectrum_calculate_BRs(spectrum, inputs);\n"\
-               "\n"\
-               "if(*kont != 0)\n"\
-               "  ErrorHandling(*kont);\n"\
-               "\n"\
-               "// Fill in info about the entry for all decays\n"\
-               "DecayTable::Entry entry;\n"\
-               "entry.calculator = STRINGIFY(BACKENDNAME);\n"\
-               "entry.calculator_version = STRINGIFY(VERSION);\n"\
-               "entry.positive_error = 0.0;\n"\
-               "entry.negative_error = 0.0;\n"\
-               "\n"\
-               "// Helper variables\n"\
-               "std::vector<int> daughter_pdgs;\n"\
-               "int spheno_index;\n"\
-               "double corrf;\n"\
-               "\n"\
+    towrite += (
+            "// Convenience function to run Spheno and obtain the decays\n"
+            "int run_SPheno_decays(const Spectrum &spectrum, DecayTable& decays, const Finputs& inputs)\n"
+            "{\n"
+            "\n"
+            "double BRMin = inputs.options->getValueOrDef<double>(1e-5, \"BRMin\");\n"
+            "\n"
+            "// Pass the GAMBIT spectrum to SPheno and fill the internal decay objects\n"
+            "fill_spectrum_calculate_BRs(spectrum, inputs);\n"
+            "\n"
+            "if(*kont != 0)\n"
+            "  ErrorHandling(*kont);\n"
+            "\n"
+            "// Fill in info about the entry for all decays\n"
+            "DecayTable::Entry entry;\n"
+            "entry.calculator = STRINGIFY(BACKENDNAME);\n"
+            "entry.calculator_version = STRINGIFY(VERSION);\n"
+            "entry.positive_error = 0.0;\n"
+            "entry.negative_error = 0.0;\n"
+            "\n"
+            "// Helper variables\n"
+            "std::vector<int> daughter_pdgs;\n"
+            "int spheno_index;\n"
+            "double corrf;\n"
+            "\n"
+    )
 
     towrite += "std::vector<int> pdg = {\n"
     nparticles = len(particles);
@@ -1219,7 +1257,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     towrite += "auto gT = [&](int i)\n"\
                "{\n"
     for i, particle in enumerate(particles) :
-        name = re.sub("\d","",particle.alt_name)
+        name = re.sub(r"\d","",particle.alt_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-int(index)+1) + ")" if index else ""
         if i == 0:
@@ -1232,7 +1270,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                "auto BR = [&](int i, int j)\n"\
                "{\n"
     for i, particle in enumerate(particles) :
-        name = re.sub("\d","",particle.alt_name)
+        name = re.sub(r"\d","",particle.alt_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-( int(index) if index != "" else 0 )+1) + " ,j)"
         if i == 0:
@@ -1242,73 +1280,79 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     towrite += "return 0.0;\n"\
                "};\n\n"
 
-    towrite += "for(int i=0; i<n_particles; i++)\n"\
-               "{\n"\
-               "std::vector<channel_info_triplet> civ = Fdecays::all_channel_info.at(pdg[i]);\n"\
-               "entry.width_in_GeV = gT(i+1);\n"\
-               "entry.channels.clear();\n"\
-               "for(channel_info_triplet ci : civ)\n"\
-               "{\n"\
-               "std::tie(daughter_pdgs, spheno_index, corrf) = ci;\n"\
-               "if(BR(i+1,spheno_index) * corrf > BRMin)\n"\
-               "  entry.set_BF(BR(i+1,spheno_index) * corrf, 0.0, Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
-               "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"\
-               "else\n"\
-               "entry.set_BF(0., 0., Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"\
-               "}\n"\
-               "// SM fermions in flavour basis, everything else in mass basis\n"\
-               "if(abs(pdg[i]) < 17)\n"\
-               "  decays(Models::ParticleDB().long_name(pdg[i],1)) = entry;\n"\
-               "else\n"\
-               "  decays(Models::ParticleDB().long_name(pdg[i],0)) = entry;\n"\
-               "}\n"\
-               "\n"\
-               "return *kont;\n"\
-               "}\n\n"
+    towrite += (
+            "for(int i=0; i<n_particles; i++)\n"
+            "{\n"
+            "std::vector<channel_info_triplet> civ = Fdecays::all_channel_info.at(pdg[i]);\n"
+            "entry.width_in_GeV = gT(i+1);\n"
+            "entry.channels.clear();\n"
+            "for(channel_info_triplet ci : civ)\n"
+            "{\n"
+            "std::tie(daughter_pdgs, spheno_index, corrf) = ci;\n"
+            "if(BR(i+1,spheno_index) * corrf > BRMin)\n"
+            "  entry.set_BF(BR(i+1,spheno_index) * corrf, 0.0, Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"
+            "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"
+            "else\n"
+            "entry.set_BF(0., 0., Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"
+            "}\n"
+            "// SM fermions in flavour basis, everything else in mass basis\n"
+            "if(abs(pdg[i]) < 17)\n"
+            "  decays(Models::ParticleDB().long_name(pdg[i],1)) = entry;\n"
+            "else\n"
+            "  decays(Models::ParticleDB().long_name(pdg[i],0)) = entry;\n"
+            "}\n"
+            "\n"
+            "return *kont;\n"
+            "}\n\n"
+    )
     # End of run_SPheno_decays
 
     # Spectrum_Out function
-    towrite += "// Convenience function to convert internal SPheno variables into a Spectrum object\n"\
-      "Spectrum Spectrum_Out(const Finputs &inputs)\n"\
-      "{\n"\
-      "\n"\
-      "SLHAstruct slha;\n"\
-      "\n"\
-      "Freal8 Q;\n"\
-      "try{ Q = sqrt(GetRenormalizationScale()); }\n"\
-      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"\
-      "\n"
+    towrite += (
+            "// Convenience function to convert internal SPheno variables into a Spectrum object\n"
+            "Spectrum Spectrum_Out(const Finputs &inputs)\n"
+            "{\n"
+            "\n"
+            "SLHAstruct slha;\n"
+            "\n"
+            "Freal8 Q;\n"
+            "try{ Q = sqrt(GetRenormalizationScale()); }\n"
+            "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"
+            "\n"
+    )
     if flags["SupersymmetricModel"] and any([particle.alt_name.startswith("Chi") for particle in particles]):
         size = ""
         for par in parameters:
-          if par.name == "ZN":
-            size = blockparams[par.block]['mixingmatrix']
+            if par.name == "ZN":
+                size = blockparams[par.block]['mixingmatrix']
         i,j = size.split('x')
 
-        towrite += "// Make sure to rotate back the sign on MChi\n"\
-                 "if(not *RotateNegativeFermionMasses)\n"\
-                 "{\n"\
-                 "for(int i=1; i<=" + str(i) + "; i++)\n"\
-                 "{\n"\
-                 "double remax = 0, immax = 0;\n"\
-                 "for(int j=1; j<=" + str(j) +"; j++)\n"\
-                 "{\n"\
-                 "if(abs((*ZN)(i,j).re) > remax) remax = abs((*ZN)(i,j).re);\n"\
-                 "if(abs((*ZN)(i,j).im) > immax) immax = abs((*ZN)(i,j).im);\n"\
-                 "}\n"\
-                 "if(immax > remax)\n"\
-                 "{\n"\
-                 "(*MChi)(i) *= -1;\n"\
-                 "for(int j=1; j<=" + str(j) + "; j++)\n"\
-                 "{\n"\
-                 "double old = (*ZN)(i,j).re;\n"\
-                 "(*ZN)(i,j).re = (*ZN)(i,j).im;\n"\
-                 "(*ZN)(i,j).im = -old;\n"\
-                 "}\n"\
-                 "}\n"\
-                 "}\n"\
-                 "}\n"\
-                 "\n"
+        towrite += (
+                "// Make sure to rotate back the sign on MChi\n"
+                "if(not *RotateNegativeFermionMasses)\n"
+                "{\n"
+                "for(int i=1; i<={" + str(i) + "}; i++)\n"
+                "{\n"
+                "double remax = 0, immax = 0;\n"
+                "for(int j=1; j<=" + str(j) +"; j++)\n"
+                "{\n"
+                "if(abs((*ZN)(i,j).re) > remax) remax = abs((*ZN)(i,j).re);\n"
+                "if(abs((*ZN)(i,j).im) > immax) immax = abs((*ZN)(i,j).im);\n"
+                "}\n"
+                "if(immax > remax)\n"
+                "{\n"
+                "(*MChi)(i) *= -1;\n"
+                "for(int j=1; j<=" + str(j) + "; j++)\n"
+                "{\n"
+                "double old = (*ZN)(i,j).re;\n"
+                "(*ZN)(i,j).re = (*ZN)(i,j).im;\n"
+                "(*ZN)(i,j).im = -old;\n"
+                "}\n"
+                "}\n"
+                "}\n"
+                "}\n"
+                "\n"
+        )
 
     towrite += "// Spectrum generator information\n"\
       'SLHAea_add_block(slha, "SPINFO");\n'\
@@ -1533,98 +1577,115 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     )
 
     for particle in particles:
-        mass = re.sub("\d","",particle.alt_mass_name)
+        mass = re.sub(r"\d","",particle.alt_mass_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
         brace = "(" + str(index) + ")" if index else ""
 
-        towrite += 'slha["MASS"][""] << ' + str(particle.PDG_code) + ' << (*' + mass + ")" + brace + '<< "# ' + particle.name + "_" + str(index) + '";\n'
+        towrite += (
+                "slha[\"MASS\"][\"\"] << {0} << (*{1}){2} << \"# {3}_{4}\";\n"
+        ).format(particle.PDG_code, mass, brace, particle.name, str(index))
 
-    towrite += 'slha["MASS"][""] << 23 << *MVZ << "# VZ";\n'\
-               'slha["MASS"][""] << 24 << *MVWm << "# VWm";\n'\
-               '\n'
-
-    towrite += "\n"\
-      '// Check whether any of the masses is NaN\n'\
-      'auto block = slha["MASS"];\n'\
-      'for(auto it = block.begin(); it != block.end(); it++)\n'\
-      '{\n'\
-      'if((*it)[0] != "BLOCK" and Utils::isnan(stod((*it)[1])) )\n'\
-      '{\n'\
-      'std::stringstream message;\n'\
-      'message << "Error in spectrum generator: mass of " << Models::ParticleDB().long_name(std::pair<int,int>(stoi((*it)[0]),0)) << " is NaN";\n'\
-      'logger() << message.str() << EOM;\n'\
-      'invalid_point().raise(message.str());\n'\
-      '}\n'\
-      '}\n'\
-      '\n'\
-      '// Block DMASS\n'\
-      'if(*GetMassUncertainty)\n'\
-      '{\n'\
-      'SLHAea_add_block(slha, "DMASS");\n'
+    towrite +=  (
+            "slha[\"MASS\"][\"\"] << 23 << *MVZ << \"# VZ\";\n"
+            "slha[\"MASS\"][\"\"] << 24 << *MVWm << \"# VWm\";\n"
+            "\n"
+            "// Check whether any of the masses is NaN\n"
+            "auto block = slha[\"MASS\"];\n"
+            "for(auto it = block.begin(); it != block.end(); it++)\n"
+            "{\n"
+            "if((*it)[0] != \"BLOCK\" and Utils::isnan(stod((*it)[1])) )\n"
+            "{\n"
+            "std::stringstream message;\n"
+            "message << \"Error in spectrum generator: mass of \" "
+            "<< Models::ParticleDB().long_name(std::pair<int,int>(stoi((*it)[0]),0))"
+            " << \" is NaN\";\n"
+            "logger() << message.str() << EOM;\n"
+            "invalid_point().raise(message.str());\n"
+            "}\n"
+            "}\n"
+            "\n"
+            "// Block DMASS\n"
+            "if(*GetMassUncertainty)\n"
+            "{\n"
+            "SLHAea_add_block(slha, \"DMASS\");\n"
+    )
 
     # TODO: check that order of entries corresponds to order of particles
-    for i,particle in enumerate(particles):
-        mass = re.sub("\d","",particle.alt_mass_name)
+    # S.B. Harvested the PDG code : index from SPheno -- the order is 
+    # non-trivial due the way mass lists are imported in SARAH
+    for i, particle in enumerate(particles):
+        mass = re.sub(r"\d","",particle.alt_mass_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
+        mud_index = mass_uncertainty_dict[str(particle.PDG_code)]    
 
-        towrite += 'slha["DMASS"][""] << ' + str(particle.PDG_code) + ' << sqrt(pow((*mass_uncertainty_Q)(' + str(i+1) + '),2)+pow((*mass_uncertainty_Yt)(' + str(i+1) + '),2)) << "# ' + particle.name + "_" + str(index) + '";\n'
+        towrite += (
+                "slha[\"DMASS\"][\"\"] << {0} << "
+                "sqrt(pow((*mass_uncertainty_Q)({1}),2)"
+                "+pow((*mass_uncertainty_Yt)({1}),2)) << "
+                "\"# {2}_{3}\";\n"
+        ).format(particle.PDG_code, str(mud_index), particle.name, str(index))
+   
+    towrite += (
+                "\n"
+                "// Do the W mass separately.  Here we use 10 MeV based on "
+                "the size of corrections from two-loop papers and advice from "
+                "Dominik Stockinger.\n"
+                "slha[\"DMASS\"][\"\"] << 24 << 0.01 / *mW << \" # mW\";\n"
+                "}\n"
+    )
 
-
-    towrite += "\n"\
-      "// Do the W mass separately.  Here we use 10 MeV based on the size of corrections from two-loop papers and advice from Dominik Stockinger.\n"\
-      'slha["DMASS"][""] << 24 << 0.01 / *mW << " # mW";\n'\
-      '}\n'
-
-    towrite += "\n"\
-      "// Block SPhenoINFO\n"\
-      'SLHAea_add_block(slha, "SPhenoInput");\n'\
-      'slha["SPheno"][""] << 1 << *ErrorLevel << "# ErrorLevel";\n'\
-      'slha["SPheno"][""] << 2 << *SPA_convention << "# SPA_conventions";\n'\
-      'slha["SPheno"][""] << 8 << *TwoLoopMethod << "# Two Loop Method";\n'\
-      'slha["SPheno"][""] << 9 << *GaugelessLimit << "# Gauge-less limit";\n'\
-      'slha["SPheno"][""] << 31 << *mGUT << "# GUT scale";\n'\
-      'slha["SPheno"][""] << 33 << Q << "# Renormalization scale";\n'\
-      'slha["SPheno"][""] << 34 << *delta_mass << "# Precision";\n'\
-      'slha["SPheno"][""] << 35 << *n_run << "# Iterations";\n'\
-      'if(*TwoLoopRGE)\n'\
-      '  slha["SPheno"][""] << 38 << 2 << "# RGE level";\n'\
-      'else\n'\
-      'slha["SPheno"][""] << 38 << 1 << "# RGE level";\n'\
-      'slha["SPheno"][""] << 40 << 1.0 / *Alpha << "# Alpha^-1";\n'\
-      'slha["SPheno"][""] << 41 << *gamZ << "# Gamma_Z";\n'\
-      'slha["SPheno"][""] << 42 << *gamW << "# Gamma_W";\n'\
-      'slha["SPheno"][""] << 50 << *RotateNegativeFermionMasses << "# Rotate negative fermion masses";\n'\
-      'slha["SPheno"][""] << 51 << *SwitchToSCKM << "# Switch to SCKM matrix";\n'\
-      'slha["SPheno"][""] << 52 << *IgnoreNegativeMasses << "# Ignore negative masses";\n'\
-      'slha["SPheno"][""] << 53 << *IgnoreNegativeMassesMZ << "# Ignore negative masses at MZ";\n'\
-      'slha["SPheno"][""] << 55 << *CalculateOneLoopMasses << "# Calculate one loop masses";\n'\
-      'slha["SPheno"][""] << 56 << *CalculateTwoLoopHiggsMasses << "# Calculate two-loop Higgs masses";\n'\
-      'slha["SPheno"][""] << 57 << *CalculateLowEnergy << "# Calculate low energy";\n'\
-      'slha["SPheno"][""] << 60 << *KineticMixing << "# Include kinetic mixing";\n'\
-      'slha["SPheno"][""] << 65 << *SolutionTadpoleNr << "# Solution of tadpole equation";\n'\
-      '\n'\
-      '// Retrieve mass cuts\n'\
-      'static const Spectrum::cuts_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n'\
-      '\n'\
-      '// Has the user chosen to override any pole mass values?\n'\
-      '// This will typically break consistency, but may be useful in some special cases\n'\
-      'if (inputs.options->hasKey("override_pole_masses"))\n'\
-      '{\n'\
-      'std::vector<str> particle_names = inputs.options->getNames("override_pole_masses");\n'\
-      'for (auto& name : particle_names)\n'\
-      '{\n'\
-      'double mass = inputs.options->getValue<double>("override_pole_masses", name);\n'\
-      'SLHAea_add(slha, "MASS", Models::ParticleDB().pdg_pair(name).first, mass, name, true);\n'\
-      '}\n'\
-      '}\n'\
-      '\n'\
-      '//Create Spectrum object\n'\
-      'Spectrum spectrum = spectrum_from_SLHAea<'+model_name+'SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n'\
-      '\n'\
-      'return spectrum;\n'\
-      '\n'\
-      '}\n'\
-      '\n'
+    towrite += (
+            "\n"
+            "// Block SPhenoINFO\n"
+            "SLHAea_add_block(slha, \"SPhenoInput\");\n"
+            "slha[\"SPheno\"][\"\"] << 1 << *ErrorLevel << \"# ErrorLevel\";\n"
+            "slha[\"SPheno\"][\"\"] << 2 << *SPA_convention << \"# SPA_conventions\";\n"
+            "slha[\"SPheno\"][\"\"] << 8 << *TwoLoopMethod << \"# Two Loop Method\";\n"
+            "slha[\"SPheno\"][\"\"] << 9 << *GaugelessLimit << \"# Gauge-less limit\";\n"
+            "slha[\"SPheno\"][\"\"] << 31 << *mGUT << \"# GUT scale\";\n"
+            "slha[\"SPheno\"][\"\"] << 33 << Q << \"# Renormalization scale\";\n"
+            "slha[\"SPheno\"][\"\"] << 34 << *delta_mass << \"# Precision\";\n"
+            "slha[\"SPheno\"][\"\"] << 35 << *n_run << \"# Iterations\";\n"
+            "if(*TwoLoopRGE)\n"
+            "  slha[\"SPheno\"][\"\"] << 38 << 2 << \"# RGE level\";\n"
+            "else\n"
+            "slha[\"SPheno\"][\"\"] << 38 << 1 << \"# RGE level\";\n"
+            "slha[\"SPheno\"][\"\"] << 40 << 1.0 / *Alpha << \"# Alpha^-1\";\n"
+            "slha[\"SPheno\"][\"\"] << 41 << *gamZ << \"# Gamma_Z\";\n"
+            "slha[\"SPheno\"][\"\"] << 42 << *gamW << \"# Gamma_W\";\n"
+            "slha[\"SPheno\"][\"\"] << 50 << *RotateNegativeFermionMasses << \"# Rotate negative fermion masses\";\n"
+            "slha[\"SPheno\"][\"\"] << 51 << *SwitchToSCKM << \"# Switch to SCKM matrix\";\n"
+            "slha[\"SPheno\"][\"\"] << 52 << *IgnoreNegativeMasses << \"# Ignore negative masses\";\n"
+            "slha[\"SPheno\"][\"\"] << 53 << *IgnoreNegativeMassesMZ << \"# Ignore negative masses at MZ\";\n"
+            "slha[\"SPheno\"][\"\"] << 55 << *CalculateOneLoopMasses << \"# Calculate one loop masses\";\n"
+            "slha[\"SPheno\"][\"\"] << 56 << *CalculateTwoLoopHiggsMasses << \"# Calculate two-loop Higgs masses\";\n"
+            "slha[\"SPheno\"][\"\"] << 57 << *CalculateLowEnergy << \"# Calculate low energy\";\n"
+            "slha[\"SPheno\"][\"\"] << 60 << *KineticMixing << \"# Include kinetic mixing\";\n"
+            "slha[\"SPheno\"][\"\"] << 65 << *SolutionTadpoleNr << \"# Solution of tadpole equation\";\n"
+            "\n"
+            "// Retrieve mass cuts\n"
+            "static const Spectrum::cuts_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n"
+            "\n"
+            "// Has the user chosen to override any pole mass values?\n"
+            "// This will typically break consistency, but may be useful in some special cases\n"
+            "if (inputs.options->hasKey(\"override_pole_masses\"))\n"
+            "{\n"
+            "std::vector<str> particle_names = inputs.options->getNames(\"override_pole_masses\");\n"
+            "for (auto& name : particle_names)\n"
+            "{\n"
+            "double mass = inputs.options->getValue<double>(\"override_pole_masses\", name);\n"
+            "SLHAea_add(slha, \"MASS\", Models::ParticleDB().pdg_pair(name).first, mass, name, true);\n"
+            "}\n"
+            "}\n"
+            "\n"
+            "//Create Spectrum object\n"
+            "Spectrum spectrum = spectrum_from_SLHAea<'+model_name+'SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n"
+            "\n"
+            "return spectrum;\n"
+            "\n"
+            "}\n"
+            "\n"
+    )
     # End of Spectrum_Out
 
     # get_HiggsCouplingsTable function

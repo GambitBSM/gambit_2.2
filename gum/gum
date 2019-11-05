@@ -379,7 +379,8 @@ if args.file:
                                        bsm_particle_list, flags, 
                                        patched_spheno_dir, output_dir, 
                                        blockparams, gambit_pdgs, mixings, 
-                                       reality_dict, deps, bcs)
+                                       reality_dict, deps, bcs,
+                                       charged_higgses, neutral_higgses)
 
             # Write out the frontend header and source files
             write_backend_frontends(output_dir, gum.name, "SARAHSPheno", 
@@ -393,8 +394,8 @@ if args.file:
                 write_spheno_decay_entry(clean_model_name)
 
 
-        # with open("out.txt", "w+") as f:
-        #     f.write(spheno_src)
+        with open("out.txt", "w+") as f:
+            f.write(spheno_src)
 
         """
         CALCHEP
@@ -544,8 +545,8 @@ if args.file:
         #     f.write("\n=============\n")
         #     f.write(spectrum_header)
 
-        # import sys
-        # sys.exit("Enough for now.")
+        import sys
+        sys.exit("Enough for now.")
 
         """
         VEVACIOUS
@@ -758,7 +759,6 @@ if args.file:
         print("")
 
     except Exception as exc:
-        # TODO call gum in reset mode here with temp.mug if necessary
         print("\n\nGUM has failed!")
         if os.path.exists("mug_files/temp.mug"):
             print("Removing all added content...")
@@ -777,7 +777,8 @@ elif args.reset:
     	model = os.path.split(args.reset)[-1].strip('.mug')
     	print("GUM has removed the model '{0}' from GAMBIT.".format(model))
     except Exception as exc:
-        raise(exc)
+        import traceback
+        traceback.print_exc()
 
 else:
     raise GumError(("\n\n\tHi! You must be new here. Usage: gum -f inifile.gum"
