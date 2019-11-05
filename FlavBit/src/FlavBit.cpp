@@ -571,25 +571,33 @@ namespace Gambit
       const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
       // --- Needed for SuperIso backend
-      int nbobs=obslist.size();
+      int nObservables = obslist.size();
 
-      char obsnames[nbobs][50];
-      for(int ie=0; ie<nbobs; ie++) {
-          strcpy(obsnames[ie], obslist[ie].c_str());
+      char obsnames[nObservables][50];
+      for(int iObservable = 0; iObservable < nObservables; iObservable++) {
+          strcpy(obsnames[iObservable], obslist[iObservable].c_str());
       }
 
       double *res;
-      res=(double *) malloc(nbobs*sizeof(double));
+      res=(double *) malloc(nObservables*sizeof(double));
       // --- Needed for SuperIso backend
 
-      BEreq::get_predictions_nuisance((char**)obsnames, &nbobs, &res, &param, &nuislist);
+      BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &res, &param, &nuislist);
 
-      result.reserve(nbobs);
-      for(int ie=0;ie<nbobs;ie++) result[ie]=res[ie]; // TO BE MODIFIED
+      result.reserve(nObservables);
+      for(int iObservable = 0; iObservable<nObservables; ++iObservable) {
+          result[iObservable] = res[iObservable]; // TO BE MODIFIED
+      }
 
-      if (flav_debug) for(int ie=0;ie<nbobs;ie++) printf("%s=%.4e\n",obsnames[ie],result[ie]);
+      if (flav_debug) {
+          for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
+              printf("%s=%.4e\n", obsnames[iObservable], result[iObservable]);
+          }
+      }
 
-      if (flav_debug) cout<<"Finished SI_compute_obs_list"<<endl;
+      if (flav_debug) {
+          cout<<"Finished SI_compute_obs_list"<<endl;
+      }
     }
 
     /// NEW! Compute covariance matrix for a list of observables
