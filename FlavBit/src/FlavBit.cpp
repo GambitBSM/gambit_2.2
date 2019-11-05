@@ -613,18 +613,21 @@ namespace Gambit
       using namespace Pipes::SI_theory_covariance;
       if (flav_debug) cout<<"Starting SI_theory_covariance"<<endl;
 
-      parameters const& param = *Dep::SuperIso_modelinfo;
-      nuisance const& nuislist = *Dep::SuperIso_nuisance;
+      const parameters& param = *Dep::SuperIso_modelinfo;
+      const nuisance& nuislist = *Dep::SuperIso_nuisance;
+      const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
-      std::vector<std::string> const& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
-      int nbobs=obslist.size();
+      // --- Needed for SuperIso backend
+      int nObservables = obslist.size();
 
-      char obsnames[nbobs][50];
-      for(int ie=0;ie<nbobs;ie++) strcpy(obsnames[ie],obslist[ie].c_str());
+      char obsnames[nObservables][50];
+      for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
+          strcpy(obsnames[iObservable], obslist[iObservable].c_str());
+      }
 
-      int nnuis=161;
-      char namenuisance[nnuis+1][50];
-      BEreq::observables(0,NULL,0,NULL,NULL,&nuislist,(char **)namenuisance,&param); // Initialization of namenuisance
+      int nNuisance=161;
+      char namenuisance[nNuisance+1][50];
+      BEreq::observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
 
       const int ncorrnuis=463;
       nuiscorr corrnuis[ncorrnuis]={ // List of nuisance correlations, below between the form factors
@@ -1093,20 +1096,37 @@ namespace Gambit
       {"a1T23_Bsphi","a2T23_Bsphi",0.899178},
       };
 
-      double **corr=(double  **) malloc((nnuis+1)*sizeof(double *));  // Nuisance parameter correlations
-      for(int ie=0;ie<=nnuis;ie++) corr[ie]=(double *) malloc((nnuis+1)*sizeof(double));
+      double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
+      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+          corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
+      }
+      // --- Needed for SuperIso backend
 
-      BEreq::convert_correlation((nuiscorr *)corrnuis,byVal(ncorrnuis),(double **)corr,(char **)namenuisance,byVal(nnuis));
+      BEreq::convert_correlation((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
 
       double **res;
 
-      BEreq::get_th_covariance_nuisance(&res,(char**)obsnames,&nbobs,&param,&nuislist,(double **)corr);
+      BEreq::get_th_covariance_nuisance(&res, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
 
-      result.resize(nbobs, std::vector<double>(nbobs));
-      for(int ie=0;ie<nbobs;ie++) for(int je=0;je<nbobs;je++) result[ie][je]=res[ie][je]; // TO BE MODIFIED
+      result.resize(nObservables, std::vector<double>(nObservables));
+      for(int iObservable=0; iObservable < nObservables; ++iObservable) {
+          for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
+              result[iObservable][jObservable]=res[iObservable][jObservable]; // TO BE MODIFIED
+          }
+      }
 
-      if (flav_debug) for(int ie=0;ie<nbobs;ie++) for(int je=ie;je<nbobs;je++) printf("Covariance %s - %s: %.4e\n",obsnames[ie],obsnames[je],result[ie][je]);
-      if (flav_debug) cout<<"Finished SI_theory_covariance"<<endl;
+      if (flav_debug) {
+          for(int iObservable=0; iObservable < nObservables; ++iObservable) {
+              for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
+                  printf("Covariance %s - %s: %.4e\n",
+                          obsnames[iObservable], obsnames[jObservable], result[iObservable][jObservable]);
+              }
+          }
+      }
+
+      if (flav_debug) {
+          cout<<"Finished SI_theory_covariance"<<endl;
+      }
 
     }
 
