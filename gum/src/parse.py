@@ -89,7 +89,12 @@ def check_gum_file(inputfile):
     if inputfile.endswith(".gum"):
         pass
     else:
-        raise GumError("\n\nInput filetype must be .gum.")
+        if inputfile.endswith(".mug"):
+            raise GumError(("\n\nGUM called with a .mug file in normal mode --"
+                            " you probably want to call gum with the -r flag:"
+                            "\n\n  ./gum -r " + inputfile + "\n"))
+        else:
+            raise GumError("\n\nInput filetype must be .gum.")
 
     with open(inputfile, "r") as f:
         try:
