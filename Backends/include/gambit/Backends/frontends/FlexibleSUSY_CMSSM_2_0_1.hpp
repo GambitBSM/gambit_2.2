@@ -9,7 +9,6 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author The GAMBIT Collaboration
-///  \date 06:30PM on October 24, 2019
 ///
 ///  *********************************************
 
@@ -23,50 +22,14 @@ namespace Gambit
     {
         namespace FlexibleSUSY_CMSSM_2_0_1
         {
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_input_parameters CMSSM_input_parameters;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_scales CMSSM_scales;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_slha_io CMSSM_slha_io;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::Spectrum_generator_problems Spectrum_generator_problems;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::Physical_input Physical_input;
-            // }
-            // namespace softsusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::softsusy::QedQcd QedQcd;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_spectrum_generator_Two_scale CMSSM_spectrum_generator_Two_scale;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_slha_Model_Two_scale CMSSM_slha_Model_Two_scale;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::Spectrum_generator_settings Spectrum_generator_settings;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_parameter_getter CMSSM_parameter_getter;
-            // }
-            // namespace flexiblesusy
-            // {
-            //     typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::Command_line_options Command_line_options;
-            // }
+            namespace softsusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_0_1::softsusy::QedQcd QedQcd;
+            }
+            namespace flexiblesusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::Spectrum_generator_settings Spectrum_generator_settings;
+            }
         }
     }
 }

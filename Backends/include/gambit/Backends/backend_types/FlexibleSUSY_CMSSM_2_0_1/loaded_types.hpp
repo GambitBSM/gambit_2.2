@@ -3,13 +3,15 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include "wrapper_QedQcd.h"
 #include "wrapper_Spectrum_generator_settings.h"
 #include "identification.hpp"
 #pragma GCC diagnostic pop
 
 // Indicate which types are provided by this backend, and what the symbols of their factories are.
 #define FlexibleSUSY_CMSSM_2_0_1_all_data \
-  (( /*class*/(flexiblesusy)(Spectrum_generator_settings),    /*constructors*/(("Factory_Spectrum_generator_settings_0__BOSS_1",())) )) \
+  (( /*class*/(softsusy)(QedQcd),    /*constructors*/(("Factory_QedQcd_0__BOSS_1",())) )) \
+  (( /*class*/(flexiblesusy)(Spectrum_generator_settings),    /*constructors*/(("Factory_Spectrum_generator_settings_0__BOSS_2",())) )) \
 
 // If the default version has been loaded, set it as default.
 #if ALREADY_LOADED(CAT_3(BACKENDNAME,_,CAT(Default_,BACKENDNAME)))

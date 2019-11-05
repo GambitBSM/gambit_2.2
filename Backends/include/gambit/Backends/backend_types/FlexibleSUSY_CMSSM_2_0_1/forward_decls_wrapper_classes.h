@@ -8,6 +8,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
 {
     
     
+    namespace softsusy
+    {
+        class QedQcd;
+    }
     namespace flexiblesusy
     {
         class Spectrum_generator_settings;

@@ -476,6 +476,7 @@ def copyFilesToSourceTree(verbose=False):
     #   Will create a similar directory in the include path of the original source tree
     if len(gb.classes_done) > 0:
         source_dir = os.path.join(gb.boss_output_dir, gb.backend_types_basedir, gb.gambit_backend_name_full)
+
         target_dir = os.path.join(cfg.header_files_to, gb.backend_types_basedir, gb.gambit_backend_name_full)
         source_files = [ os.path.join(source_dir,f) for f in os.listdir(source_dir) if os.path.isfile( os.path.join(source_dir,f) ) ]
         for file_path in source_files:
@@ -487,11 +488,11 @@ def copyFilesToSourceTree(verbose=False):
 
     # - Add source file for the wrapper classes
     for class_name in gb.classes_done:
-
-        if class_name in gb.needs_wrapper_source_file :
+    
+        if class_name['short'] in gb.needs_wrapper_source_file :
             wrapper_source_file_name= gb.wrapper_source_prefix + class_name['short'] + cfg.source_extension
 
-            cp_source = os.path.join(gb.boss_output_dir, wrapper_source_file_name)
+            cp_source = os.path.join(gb.for_gambit_backend_types_source_dir_complete, wrapper_source_file_name)
             cp_target = os.path.join(cfg.src_files_to, wrapper_source_file_name)
             source_target_tuples.append( (cp_source, cp_target) )
             new_files.append(cp_target)
@@ -827,7 +828,6 @@ def createFrontendHeader(function_xml_files_dict):
         '///  Authors (add name and date if you modify):\n'\
         '///\n'\
         '///  \\author The GAMBIT Collaboration\n'\
-        '///  \date '+datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")+'\n'\
         '///\n'\
         '///  *********************************************\n'
 
