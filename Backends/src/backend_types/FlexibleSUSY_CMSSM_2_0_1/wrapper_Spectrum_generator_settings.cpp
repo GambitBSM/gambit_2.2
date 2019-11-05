@@ -1,4 +1,4 @@
-#include "identification.hpp"
+#include "gambit/Backends/identification.hpp"
 
 namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
 {
