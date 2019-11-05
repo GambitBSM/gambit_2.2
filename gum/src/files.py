@@ -135,7 +135,9 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
-            amend_file(filename, module, contents, no-1, reset_dict)
+            amend_file(filename, module, contents, no-1, reset_dict,
+                       is_capability = True, capability = capability, 
+                       function = contents)
     else:
         raise GumError(("\n\nCapability {0} not found in "
                         "{1}!").format(capability, filename))
@@ -171,12 +173,13 @@ def find_function(function, capability, module, filename=None):
 
     return False, 0
 
-def find_string(filename, module, string):
+def find_string(filename, module, string, filename_overwrite = ""):
     """
     Tries to find a generic string in a given file.
     """
 
     location = full_filename(filename, module)
+    if filename_overwrite: location = filename_overwrite
 
     if find_file(filename, module):
         pass
@@ -272,23 +275,20 @@ def amend_file(filename, module, contents, line_number, reset_dict,
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
 
-    # Add the capability
+    # If it's a capability, add this to the capability node
     if is_capability:
-        print("here")
         reset_dict['capabilities'][location].append(capability+'|'+function)
-        print("here")
+        
+    # Otherwise just the generic 'amended' stuff will do.
+    else:
+        # Check there's not already an identical entry - happens sometimes!
+        present = False
+        if location in reset_dict['amended_files']:
+            if contents in reset_dict['amended_files'][location]:
+                present = True
 
-    # todo when working
-    #else:
-
-    # Check there's not already an identical entry - happens sometimes!
-    present = False
-    if location in reset_dict['amended_files']:
-        if contents in reset_dict['amended_files'][location]:
-            present = True
-
-    if not present:
-        reset_dict['amended_files'][location].append(contents)
+        if not present:
+            reset_dict['amended_files'][location].append(contents)
 
     # Save a temp mug file, incase something goes wrong.
     drop_mug_file("mug_files/temp.mug", reset_dict)
@@ -588,19 +588,87 @@ def revert(reset_file):
         if 'capabilities' in data:
             capabilities = data['capabilities']
             for filename, entries in capabilities.iteritems():
-                print filename
-                print entries
+
+                temp_file = filename + "_temp"
+                with open(filename, 'r') as original_file:
+                    text = original_file.read()
+                    lines = text.splitlines()
+
                 for entry in entries:
-                    print entry
                     capability, function = entry.split('|')
-                    print capability
-                    print function
+                    print((
+                           "Removing FUNCTION: {0}, in CAPABILITY: {1}, in "
+                           "file {2}..."
+                           ).format(capability, function, filename))
+
+                    # 1. Find the FUNCTION within the CAPABILITY
+                    func_line = find_string("","",function,filename)
+                    if not func_line[0]:
+                        print(("Tried deleting the FUNCTION {0} from "
+                              "file {1}, but I could not find it -- "
+                              "perhaps it has already been removed?"
+                              ).format(function, filename))
+                    # 2. Remove the strings between the #define FUNCTION
+                    # and #undef FUNCTION lines
+                    else:
+                        tomatch_start = "#define FUNCTION " + function
+                        tomatch_end = "#undef FUNCTION"
+                        writing = False
+                        s = ""
+                        for line in lines:
+                            if tomatch_start in line:
+                                writing = True
+                            if writing:
+                                if "START_CAPABILITY" in line: continue
+                                else: s += line + "\n"
+                            if writing:
+                                if tomatch_end in line: writing = False
+                        text = text.replace(s, '')
+                        new_file = open(temp_file, 'w')
+                        new_file.write(text)
+                        new_file.close()
+                        os.remove(filename)
+                        os.rename(temp_file, filename)
+                        # 3. Check to see if the CAPABILITY is empty - 
+                        # nuke it if so
+                        with open(filename, 'r') as original_file:
+                            text = original_file.read()
+                            lines = text.splitlines()
+
+                        cap_line = find_string("","",capability,filename)
+                        if not cap_line[0]:
+                            print(("Tried deleting the CAPABILITY {0} from "
+                                  "file {1}, but I could not find it -- "
+                                  "perhaps it has already been removed?"
+                                  ).format(function, filename))
+                        else:
+                            writing = False
+                            tomatch_start = "#define CAPABILITY " + capability
+                            tomatch_end = "#undef CAPABILITY"
+                            pat = '{}(.*?){}'.format(tomatch_start, tomatch_end)
+                            newtext = re.search(pat, text, re.DOTALL).group(1)
+                            s = ""
+                            t = newtext.strip()
+                            if t == "START_CAPABILITY":
+                                for line in lines:
+                                    if tomatch_start in line:
+                                        writing = True
+                                    if writing:
+                                        s += line + "\n"
+                                    if writing:
+                                        if tomatch_end in line: writing = False
+                                text = text.replace(s, '')
+                                new_file = open(temp_file, 'w')
+                                new_file.write(text)
+                                new_file.close()
+                                os.remove(filename)
+                                os.rename(temp_file, filename)
 
         # The files that existed previously, that GUM added stuff to.
         # These are a little more annoying to deal with.
         amended_files = data['amended_files']
 
-        # We want to match *strings* and not line numbers or anything like that.
+        # We want to match strings and not line numbers or anything like that.
         # This way, there is no order needed to perform resets in.
         for filename, v in amended_files.iteritems():
 
@@ -609,7 +677,6 @@ def revert(reset_file):
             temp_file = filename + "_temp"
             with open(filename, 'r') as original_file:
                 text = original_file.read()
-                lines = text.splitlines()
 
             # This is the YAML node for the strings needing to be deleted
             for string in v:

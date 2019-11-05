@@ -215,8 +215,6 @@ if args.file:
         # Create defaultdict for reset file.
         # There are 2 nodes: new_files and amended_files.
         # todo: add backend patches (e.g. pythia stuff) to reset_contents
-        # todo: write routines to: 
-        # ADD_CAPABILITY, ADD_FUNCTION, DELETE_CAPABILITY, DELETE_FUNCTION, 
         # so ordering is not important.
         reset_contents = defaultdict(lambda: defaultdict(list))
 
@@ -424,7 +422,7 @@ if args.file:
             decaybit_src_ch = ""
 
             """
-            PART I: DECAYBIT
+            DECAYBIT
             """
             # TODO: if we have SPheno output, do we /really/ want 
             # to provide CalcHEP DecayBit entries too? 
@@ -563,8 +561,6 @@ if args.file:
                                 "your .gum file."))
             vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, 
                                           blockparams)
-
-
 
         """
         BACKENDS
