@@ -584,6 +584,13 @@ namespace Gambit
 
       BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &res, &param, &nuislist);
 
+      SI_observable_map observables;  // This has to be removed when the function argument changes to the map.
+      assert(nObservables == sizeof(res) / sizeof(res[0]));
+      for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
+          observables[obslist[iObservable]] = res[iObservable];
+      }
+
+      // The following 4 lines can be removed, when the function argument changes to the map.
       result.reserve(nObservables);
       for(int iObservable = 0; iObservable<nObservables; ++iObservable) {
           result[iObservable] = res[iObservable]; // TO BE MODIFIED
