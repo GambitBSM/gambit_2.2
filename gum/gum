@@ -14,7 +14,7 @@
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
-#  \date 2019 July
+#  \date 2019
 #
 #  **************************************
 
@@ -361,7 +361,8 @@ if args.file:
 
             # Patch the files
             print("Patching SPheno...")
-            patch_spheno(clean_model_name, patched_spheno_dir, flags)
+            patch_spheno(clean_model_name, patched_spheno_dir, flags, 
+                         bsm_particle_list)
 
             # Create a diff vs. the out of the [SARAH]box
             write_backend_patch(output_dir, pristine_spheno_dir, 
