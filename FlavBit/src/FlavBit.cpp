@@ -566,10 +566,10 @@ namespace Gambit
       using namespace Pipes::SI_compute_obs_list;
       if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
 
-      parameters const& param = *Dep::SuperIso_modelinfo;
-      nuisance const& nuislist = *Dep::SuperIso_nuisance;
+      const parameters& param = *Dep::SuperIso_modelinfo;
+      const nuisance& nuislist = *Dep::SuperIso_nuisance;
+      const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
-      std::vector<std::string> const& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
       int nbobs=obslist.size();
 
       char obsnames[nbobs][50];
