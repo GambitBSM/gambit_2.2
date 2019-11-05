@@ -570,15 +570,19 @@ namespace Gambit
       const nuisance& nuislist = *Dep::SuperIso_nuisance;
       const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
+      // --- Needed for SuperIso backend
       int nbobs=obslist.size();
 
       char obsnames[nbobs][50];
-      for(int ie=0;ie<nbobs;ie++) strcpy(obsnames[ie],obslist[ie].c_str());
+      for(int ie=0; ie<nbobs; ie++) {
+          strcpy(obsnames[ie], obslist[ie].c_str());
+      }
 
       double *res;
       res=(double *) malloc(nbobs*sizeof(double));
+      // --- Needed for SuperIso backend
 
-      BEreq::get_predictions_nuisance((char**)obsnames,&nbobs,&res,&param,&nuislist);
+      BEreq::get_predictions_nuisance((char**)obsnames, &nbobs, &res, &param, &nuislist);
 
       result.reserve(nbobs);
       for(int ie=0;ie<nbobs;ie++) result[ie]=res[ie]; // TO BE MODIFIED
