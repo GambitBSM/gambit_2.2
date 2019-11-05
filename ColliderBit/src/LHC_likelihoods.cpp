@@ -44,7 +44,7 @@
 #include <gsl/gsl_sf_gamma.h>
 #include "gambit/ColliderBit/multimin.h"
 
-// #define COLLIDERBIT_DEBUG
+//#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -201,6 +201,12 @@ namespace Gambit
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
+
+      // @todo Remove this when reinstating the block below
+      std::vector<double> nuisances(nSR, 0.0);
+
+      // @todo Comment out this until we've figured out a memory issue...
+      /*
       const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
       // Set nuisances to an informed starting position
@@ -223,6 +229,8 @@ namespace Gambit
           nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
         }
       }
+      */
+
 
       // Optimiser parameters
       // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
@@ -434,24 +442,24 @@ namespace Gambit
         const bool has_covar = adata.srcov.rows() > 0;
 
         #ifdef COLLIDERBIT_DEBUG
-        std::streamsize stream_precision = cout.precision();  // get current precision
-        cout.precision(2);  // set precision
-        cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
-        for (size_t SR = 0; SR < adata.size(); ++SR)
-        {
-          const SignalRegionData& srData = adata[SR];
-          cout << std::fixed << DEBUG_PREFIX
-                                 << "calc_LHC_LogLikes: " << ananame
-                                 << ", " << srData.sr_label
-                                 << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
-                                 << ",  n_obs = " << srData.n_observed
-                                 << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
-                                 << ",  n_s = " << srData.n_signal_at_lumi
-                                 << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_at_lumi << " +/- " << srData.background_sys
-                                 << ",  n_s_MC = " << srData.n_signal
-                                 << endl;
-        }
-        cout.precision(stream_precision); // restore previous precision
+          std::streamsize stream_precision = cout.precision();  // get current precision
+          cout.precision(2);  // set precision
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
+          for (size_t SR = 0; SR < adata.size(); ++SR)
+          {
+            const SignalRegionData& srData = adata[SR];
+            cout << std::fixed << DEBUG_PREFIX
+                                   << "calc_LHC_LogLikes: " << ananame
+                                   << ", " << srData.sr_label
+                                   << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
+                                   << ",  n_obs = " << srData.n_observed
+                                   << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
+                                   << ",  n_s = " << srData.n_signal_at_lumi
+                                   << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_at_lumi << " +/- " << srData.background_sys
+                                   << ",  n_s_MC = " << srData.n_signal
+                                   << endl;
+          }
+          cout.precision(stream_precision); // restore previous precision
         #endif
 
 
@@ -668,6 +676,7 @@ namespace Gambit
             const double n_obs = round(srData.n_observed);
             const double n_pred_b_int = round(n_pred_b);
 
+
             // Absolute errors for n_predicted_uncertain_*
             const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
             const double abs_uncertainty_s_sys = srData.signal_sys;
@@ -702,25 +711,25 @@ namespace Gambit
               std::stringstream msg;
               msg << "Computation of ll_b_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_b_obs))
             {
               std::stringstream msg;
               msg << "Computation of ll_b_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_sb_exp))
             {
               std::stringstream msg;
               msg << "Computation of ll_sb_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_sb_obs))
             {
               std::stringstream msg;
               msg << "Computation of ll_sb_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
 
             // Update the running best-expected-exclusion detail
             if (dll_exp < bestexp_dll_exp || SR == 0)
@@ -787,7 +796,7 @@ namespace Gambit
                   << endl;
             }
             invalid_point().raise(msg.str());
-          }          
+          }
         }
 
       } // end analysis loop

@@ -279,12 +279,12 @@ Rules:
                       "CMS_13TeV_MultiLEP_Full_3Lep_rebinned_36invfb" ]
 
   # Get cross-section from Pythia
-  - capability: CrossSection
-    function: getYAMLxsec
+  - capability: TotalCrossSection
+    function: getYAMLCrossSection
     module: ColliderBit
     options: 
-      xsec_pb: 0.79
-      xsec_fractional_uncert: 0.0001
+      cross_section_pb: 0.79
+      cross_section_fractional_uncert: 0.0001
 
   - capability: HardScatteringEvent
     function: generateEventPythia

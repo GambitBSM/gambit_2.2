@@ -218,7 +218,7 @@ BE_NAMESPACE
 
   }
 
-  Spectrum Spectrum_Out(const std::map<str, safe_ptr<double> >& input_Param)
+  Spectrum Spectrum_Out(const std::map<str, safe_ptr<const double> >& input_Param)
   {
 
     SLHAstruct slha;
@@ -705,8 +705,9 @@ BE_NAMESPACE
     static const Spectrum::mr_info mass_ratio_cut;
     Spectrum spectrum = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);
 
-    // Add the high scale variable by hand
+    // Add the scale variables by hand
     spectrum.get_HE().set_override(Par::mass1, SLHAea::to<double>(slha.at("GAMBIT").at(1).at(1)), "high_scale", true);
+    spectrum.get_HE().set_override(Par::mass1, *Q_in, "susy_scale", true);
 
     return spectrum;
 

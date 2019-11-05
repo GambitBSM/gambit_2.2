@@ -305,63 +305,63 @@ namespace Gambit {
             // SR HH
             if ( leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() > 25.) {
                 if (Nb==0) {
-                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300)               _SRHH[0]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300_1125)          _SRHH[1]++;
-                    if (SSHH_combine)                                                     _SRHH[2]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125)          _SRHH[3]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and pp)   _SRHH[4]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and !pp)  _SRHH[5]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_5   and HT_300_1125)          _SRHH[6]++;
-                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and pp)   _SRHH[7]++;
-                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and !pp)  _SRHH[8]++;
-                    if (MTmiss_g_120 and((met_50_200&&Nj_5)||met_200_300)and HT_300_1125) _SRHH[9]++;
+                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300)               _SRHH[0] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300_1125)          _SRHH[1] += event->weight();
+                    if (SSHH_combine)                                                     _SRHH[2] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125)          _SRHH[3] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and pp)   _SRHH[4] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and !pp)  _SRHH[5] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_5   and HT_300_1125)          _SRHH[6] += event->weight();
+                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and pp)   _SRHH[7] += event->weight();
+                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and !pp)  _SRHH[8] += event->weight();
+                    if (MTmiss_g_120 and((met_50_200&&Nj_5)||met_200_300)and HT_300_1125) _SRHH[9] += event->weight();
                 } else if (Nb==1) {
-                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300)              _SRHH[10]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300_1125)         _SRHH[11]++;
-                    if (SSHH_combine and pp)                                             _SRHH[12]++;
-                    if (SSHH_combine and !pp)                                            _SRHH[13]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and pp)  _SRHH[14]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and !pp) _SRHH[15]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHH[16]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHH[17]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_5   and HT_300_1125)         _SRHH[18]++;
-                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and pp)  _SRHH[19]++;
-                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and !pp) _SRHH[20]++;
-                    if (MTmiss_g_120 and((met_50_200&&Nj_5)||met_200_300)and HT_300_1125) _SRHH[21]++;
+                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300)              _SRHH[10] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300_1125)         _SRHH[11] += event->weight();
+                    if (SSHH_combine and pp)                                             _SRHH[12] += event->weight();
+                    if (SSHH_combine and !pp)                                            _SRHH[13] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and pp)  _SRHH[14] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and !pp) _SRHH[15] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHH[16] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHH[17] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_5   and HT_300_1125)         _SRHH[18] += event->weight();
+                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and pp)  _SRHH[19] += event->weight();
+                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and !pp) _SRHH[20] += event->weight();
+                    if (MTmiss_g_120 and((met_50_200&&Nj_5)||met_200_300)and HT_300_1125) _SRHH[21] += event->weight();
                 } else if (Nb==2){
-                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300)              _SRHH[22]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300_1125)         _SRHH[23]++;
-                    if (SSHH_combine and pp)                                             _SRHH[24]++;
-                    if (SSHH_combine and !pp)                                            _SRHH[25]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and pp)  _SRHH[26]++;
-                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and !pp) _SRHH[27]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHH[28]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHH[29]++;
-                    if (MTmiss_l_120 and met_200_300 and Nj_5   and HT_300_1125)         _SRHH[30]++;
-                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and pp)  _SRHH[31]++;
-                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and !pp) _SRHH[32]++;
-                    if (MTmiss_g_120 and((met_50_200&&Nj_5)||met_200_300)and HT_300_1125) _SRHH[33]++;
+                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300)              _SRHH[22] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_2_4 and HT_300_1125)         _SRHH[23] += event->weight();
+                    if (SSHH_combine and pp)                                             _SRHH[24] += event->weight();
+                    if (SSHH_combine and !pp)                                            _SRHH[25] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and pp)  _SRHH[26] += event->weight();
+                    if (MTmiss_l_120 and met_50_200  and Nj_5   and HT_300_1125 and !pp) _SRHH[27] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHH[28] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHH[29] += event->weight();
+                    if (MTmiss_l_120 and met_200_300 and Nj_5   and HT_300_1125)         _SRHH[30] += event->weight();
+                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and pp)  _SRHH[31] += event->weight();
+                    if (MTmiss_g_120 and met_50_200  and Nj_2_4 and HT_300_1125 and !pp) _SRHH[32] += event->weight();
+                    if (MTmiss_g_120 and((met_50_200&&Nj_5)||met_200_300)and HT_300_1125) _SRHH[33] += event->weight();
                 } else if (Nb>=3){
-                    if (MTmiss_l_120 and met<300                and HT_300 and pp)       _SRHH[34]++;
-                    if (MTmiss_l_120 and met<300                and HT_300 and !pp)      _SRHH[35]++;
-                    if (MTmiss_l_120 and met_50_200             and HT_300_1125 and pp)  _SRHH[36]++;
-                    if (MTmiss_l_120 and met_50_200             and HT_300_1125 and !pp) _SRHH[37]++;
-                    if (MTmiss_l_120 and met_200_300            and HT_300_1125)         _SRHH[38]++;
-                    if (MTmiss_g_120 and met<300                and HT_300)              _SRHH[39]++;
-                    if (MTmiss_g_120 and met<300                and HT_300_1125)         _SRHH[40]++;   
+                    if (MTmiss_l_120 and met<300                and HT_300 and pp)       _SRHH[34] += event->weight();
+                    if (MTmiss_l_120 and met<300                and HT_300 and !pp)      _SRHH[35] += event->weight();
+                    if (MTmiss_l_120 and met_50_200             and HT_300_1125 and pp)  _SRHH[36] += event->weight();
+                    if (MTmiss_l_120 and met_50_200             and HT_300_1125 and !pp) _SRHH[37] += event->weight();
+                    if (MTmiss_l_120 and met_200_300            and HT_300_1125)         _SRHH[38] += event->weight();
+                    if (MTmiss_g_120 and met<300                and HT_300)              _SRHH[39] += event->weight();
+                    if (MTmiss_g_120 and met<300                and HT_300_1125)         _SRHH[40] += event->weight();   
                 }
                 
-                if (met_300_500 and HT>300       and pp)  _SRHH[41]++;
-                if (met_300_500 and HT>300       and !pp) _SRHH[42]++;
-                if (met_500     and HT>300       and pp)  _SRHH[43]++;
-                if (met_500     and HT>300       and !pp) _SRHH[44]++;
+                if (met_300_500 and HT>300       and pp)  _SRHH[41] += event->weight();
+                if (met_300_500 and HT>300       and !pp) _SRHH[42] += event->weight();
+                if (met_500     and HT>300       and pp)  _SRHH[43] += event->weight();
+                if (met_500     and HT>300       and !pp) _SRHH[44] += event->weight();
                 
-                if (met<300     and HT_1125_1300 and pp)  _SRHH[45]++;
-                if (met<300     and HT_1125_1300 and !pp) _SRHH[46]++;
-                if (met<300     and HT_1300_1600 and pp)  _SRHH[47]++;
-                if (met<300     and HT_1300_1600 and !pp) _SRHH[48]++;
-                if (met<300     and HT_1600 and pp)  _SRHH[48]++;
-                if (met<300     and HT_1600 and !pp) _SRHH[50]++;
+                if (met<300     and HT_1125_1300 and pp)  _SRHH[45] += event->weight();
+                if (met<300     and HT_1125_1300 and !pp) _SRHH[46] += event->weight();
+                if (met<300     and HT_1300_1600 and pp)  _SRHH[47] += event->weight();
+                if (met<300     and HT_1300_1600 and !pp) _SRHH[48] += event->weight();
+                if (met<300     and HT_1600 and pp)  _SRHH[48] += event->weight();
+                if (met<300     and HT_1600 and !pp) _SRHH[50] += event->weight();
                 
             }
             
@@ -370,54 +370,54 @@ namespace Gambit {
             // SR HL
             if ( leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() < 25.) {
                 if (Nb==0 and MTmiss_l_120) {
-                    if ( met_50_200  and Nj_2_4 and HT_300)              _SRHL[0]++;
-                    if ( met_50_200  and Nj_2_4 and HT_300_1125)         _SRHL[1]++;
-                    if ( SSHL_combine)                                   _SRHL[2]++;
-                    if ( met_50_200  and Nj_5 and HT_300_1125)           _SRHL[3]++;
-                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHL[4]++;
-                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHL[5]++;
-                    if ( met_200_300 and Nj_5 and HT_300_1125)           _SRHL[6]++;
+                    if ( met_50_200  and Nj_2_4 and HT_300)              _SRHL[0] += event->weight();
+                    if ( met_50_200  and Nj_2_4 and HT_300_1125)         _SRHL[1] += event->weight();
+                    if ( SSHL_combine)                                   _SRHL[2] += event->weight();
+                    if ( met_50_200  and Nj_5 and HT_300_1125)           _SRHL[3] += event->weight();
+                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHL[4] += event->weight();
+                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHL[5] += event->weight();
+                    if ( met_200_300 and Nj_5 and HT_300_1125)           _SRHL[6] += event->weight();
                 } else if(Nb==1 and MTmiss_l_120) {
-                    if ( met_50_200  and Nj_2_4 and HT_300)              _SRHL[7]++;
-                    if ( met_50_200  and Nj_2_4 and HT_300_1125)         _SRHL[8]++;
-                    if ( SSHL_combine and pp)                            _SRHL[9]++;
-                    if ( SSHL_combine and !pp)                           _SRHL[10]++;
-                    if ( met_50_200  and Nj_5 and HT_300_1125 and pp)    _SRHL[11]++;
-                    if ( met_50_200  and Nj_5 and HT_300_1125 and !pp)   _SRHL[12]++;
-                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHL[13]++;
-                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHL[14]++;
+                    if ( met_50_200  and Nj_2_4 and HT_300)              _SRHL[7] += event->weight();
+                    if ( met_50_200  and Nj_2_4 and HT_300_1125)         _SRHL[8] += event->weight();
+                    if ( SSHL_combine and pp)                            _SRHL[9] += event->weight();
+                    if ( SSHL_combine and !pp)                           _SRHL[10] += event->weight();
+                    if ( met_50_200  and Nj_5 and HT_300_1125 and pp)    _SRHL[11] += event->weight();
+                    if ( met_50_200  and Nj_5 and HT_300_1125 and !pp)   _SRHL[12] += event->weight();
+                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHL[13] += event->weight();
+                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHL[14] += event->weight();
                     
-                    if ( met_200_300 and Nj_5 and HT_300_1125 and pp)    _SRHL[15]++;
-                    if ( met_200_300 and Nj_5 and HT_300_1125 and !pp)   _SRHL[16]++;
+                    if ( met_200_300 and Nj_5 and HT_300_1125 and pp)    _SRHL[15] += event->weight();
+                    if ( met_200_300 and Nj_5 and HT_300_1125 and !pp)   _SRHL[16] += event->weight();
                 } else if(Nb==2 and MTmiss_l_120) {
-                    if ( met_50_200  and Nj_2_4 and HT_300)              _SRHL[17]++;
-                    if ( met_50_200  and Nj_2_4 and HT_300_1125)         _SRHL[18]++;
-                    if ( SSHL_combine and pp)                            _SRHL[19]++;
-                    if ( SSHL_combine and !pp)                           _SRHL[20]++;
-                    if ( met_50_200  and Nj_5 and HT_300_1125 and pp)    _SRHL[21]++;
-                    if ( met_50_200  and Nj_5 and HT_300_1125 and !pp)   _SRHL[22]++;
-                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHL[23]++;
-                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHL[24]++;
-                    if ( met_200_300 and Nj_5 and HT_300_1125)           _SRHL[25]++;
+                    if ( met_50_200  and Nj_2_4 and HT_300)              _SRHL[17] += event->weight();
+                    if ( met_50_200  and Nj_2_4 and HT_300_1125)         _SRHL[18] += event->weight();
+                    if ( SSHL_combine and pp)                            _SRHL[19] += event->weight();
+                    if ( SSHL_combine and !pp)                           _SRHL[20] += event->weight();
+                    if ( met_50_200  and Nj_5 and HT_300_1125 and pp)    _SRHL[21] += event->weight();
+                    if ( met_50_200  and Nj_5 and HT_300_1125 and !pp)   _SRHL[22] += event->weight();
+                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _SRHL[23] += event->weight();
+                    if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _SRHL[24] += event->weight();
+                    if ( met_200_300 and Nj_5 and HT_300_1125)           _SRHL[25] += event->weight();
                 }else if(Nb==3 and MTmiss_l_120) {
-                    if ( met_50_200 and HT_300 and pp)                   _SRHL[26]++;
-                    if ( met_50_200 and HT_300 and !pp)                  _SRHL[27]++;
-                    if ( met_50_200 and HT_300_1125 and pp)              _SRHL[28]++;
-                    if ( met_50_200 and HT_300_1125 and !pp)             _SRHL[29]++;
-                    if ( met_200_300 and HT_300_1125)                    _SRHL[30]++;
+                    if ( met_50_200 and HT_300 and pp)                   _SRHL[26] += event->weight();
+                    if ( met_50_200 and HT_300 and !pp)                  _SRHL[27] += event->weight();
+                    if ( met_50_200 and HT_300_1125 and pp)              _SRHL[28] += event->weight();
+                    if ( met_50_200 and HT_300_1125 and !pp)             _SRHL[29] += event->weight();
+                    if ( met_200_300 and HT_300_1125)                    _SRHL[30] += event->weight();
                 }
-                if (MTmiss_g_120 and met<300 and HT_300)       _SRHL[31]++;
-                if (MTmiss_g_120 and met<300 and HT_300_1125)  _SRHL[32]++;
+                if (MTmiss_g_120 and met<300 and HT_300)       _SRHL[31] += event->weight();
+                if (MTmiss_g_120 and met<300 and HT_300_1125)  _SRHL[32] += event->weight();
                 
-                if (met_300_500  and HT>300 and pp)  _SRHL[33]++;
-                if (met_300_500  and HT>300 and !pp) _SRHL[34]++;
-                if (met_500      and HT>300 and pp)  _SRHL[35]++;
-                if (met_500      and HT>300 and !pp) _SRHL[36]++;
+                if (met_300_500  and HT>300 and pp)  _SRHL[33] += event->weight();
+                if (met_300_500  and HT>300 and !pp) _SRHL[34] += event->weight();
+                if (met_500      and HT>300 and pp)  _SRHL[35] += event->weight();
+                if (met_500      and HT>300 and !pp) _SRHL[36] += event->weight();
                 
-                if (met<300      and HT_1125_1300 and pp)  _SRHL[37]++;
-                if (met<300      and HT_1125_1300 and !pp) _SRHL[38]++;
-                if (met<300      and HT_1300 and pp)       _SRHL[39]++;
-                if (met<300      and HT_1300 and !pp)      _SRHL[40]++;
+                if (met<300      and HT_1125_1300 and pp)  _SRHL[37] += event->weight();
+                if (met<300      and HT_1125_1300 and !pp) _SRHL[38] += event->weight();
+                if (met<300      and HT_1300 and pp)       _SRHL[39] += event->weight();
+                if (met<300      and HT_1300 and !pp)      _SRHL[40] += event->weight();
             }
 
             // SR LL
@@ -425,68 +425,68 @@ namespace Gambit {
                 if (HT>300) {
                     if (MTmiss_l_120) {
                         if (Nb==0) {
-                            if (met_50_200) _SRLL[0]++;
-                            else            _SRLL[1]++;
+                            if (met_50_200) _SRLL[0] += event->weight();
+                            else            _SRLL[1] += event->weight();
                         } else if (Nb==1) {
-                            if (met_50_200) _SRLL[2]++;
-                            else            _SRLL[3]++;
+                            if (met_50_200) _SRLL[2] += event->weight();
+                            else            _SRLL[3] += event->weight();
                         } else if (Nb==2) {
-                            if (met_50_200) _SRLL[4]++;
-                            else            _SRLL[5]++;
-                        } else if (Nb>=3)   _SRLL[6]++;
-                    } else                  _SRLL[7]++;
+                            if (met_50_200) _SRLL[4] += event->weight();
+                            else            _SRLL[5] += event->weight();
+                        } else if (Nb>=3)   _SRLL[6] += event->weight();
+                    } else                  _SRLL[7] += event->weight();
                 }
             }
             
             // Inclusive SR
             if (  leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() > 25. ) {
                 // Nj>=2 and met>50 have been applied
-                if ( Nb==0 and HT>=1200)               _SRinc[0]++;
-                if ( Nb>=2 and HT>=1100)               _SRinc[1]++;
-                if ( Nb==0 and met>450)                _SRinc[2]++;
-                if ( Nb>=2 and met>300)                _SRinc[3]++;
-                if ( Nb==0 and met>250 and MTmiss>120) _SRinc[4]++;
-                if ( Nb>=2 and met>150 and MTmiss>120) _SRinc[5]++;
-                if ( Nb==0 and HT>900 and met>200)     _SRinc[6]++;
-                if ( Nb>=2 and HT>900 and met>200)     _SRinc[7]++;
-                if ( Nj>=7)                            _SRinc[8]++;
-                if ( Nj>=4 and MTmiss>120)             _SRinc[9]++;
-                if ( Nb>=3)                            _SRinc[10]++;
-                if ( HT>700)                           _SRinc[11]++;
+                if ( Nb==0 and HT>=1200)               _SRinc[0] += event->weight();
+                if ( Nb>=2 and HT>=1100)               _SRinc[1] += event->weight();
+                if ( Nb==0 and met>450)                _SRinc[2] += event->weight();
+                if ( Nb>=2 and met>300)                _SRinc[3] += event->weight();
+                if ( Nb==0 and met>250 and MTmiss>120) _SRinc[4] += event->weight();
+                if ( Nb>=2 and met>150 and MTmiss>120) _SRinc[5] += event->weight();
+                if ( Nb==0 and HT>900 and met>200)     _SRinc[6] += event->weight();
+                if ( Nb>=2 and HT>900 and met>200)     _SRinc[7] += event->weight();
+                if ( Nj>=7)                            _SRinc[8] += event->weight();
+                if ( Nj>=4 and MTmiss>120)             _SRinc[9] += event->weight();
+                if ( Nb>=3)                            _SRinc[10] += event->weight();
+                if ( HT>700)                           _SRinc[11] += event->weight();
             }
             
             if (  leptons[SS_1[0]]->pT() < 25. and leptons[SS_2[0]]->pT() < 25. ) {
                 // Nj>=2 and met>50 have been applied
-                if (met>200) _SRinc[12]++;
-                if (Nj>=5)   _SRinc[13]++;
-                if (Nb>=3)   _SRinc[14]++;
+                if (met>200) _SRinc[12] += event->weight();
+                if (Nj>=5)   _SRinc[13] += event->weight();
+                if (Nb>=3)   _SRinc[14] += event->weight();
             }
             
             // Exclusive SR
             if (  leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() > 25. ) {
                 // Nj>=2 and met>50 have been applied
-                if (Nb==0 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[0]++;
-                if (Nb==0 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[1]++;
-                if (Nb==1 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[2]++;
-                if (Nb==1 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[3]++;
-                if (Nb==2 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[4]++;
-                if (Nb==2 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[5]++;
-                if (Nb>=3 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[6]++;
-                if (Nb>=3 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[7]++;
-                if (          met>300 and             HT>300)                 _SRexc[8]++;
-                if (          met<300 and HT>1125)                            _SRexc[9]++;
+                if (Nb==0 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[0] += event->weight();
+                if (Nb==0 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[1] += event->weight();
+                if (Nb==1 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[2] += event->weight();
+                if (Nb==1 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[3] += event->weight();
+                if (Nb==2 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[4] += event->weight();
+                if (Nb==2 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[5] += event->weight();
+                if (Nb>=3 and met<300 and HT<1125 and (HT<300 or MTmiss<120)) _SRexc[6] += event->weight();
+                if (Nb>=3 and met<300 and HT<1125 and HT>300 and MTmiss>120)  _SRexc[7] += event->weight();
+                if (          met>300 and             HT>300)                 _SRexc[8] += event->weight();
+                if (          met<300 and HT>1125)                            _SRexc[9] += event->weight();
             }
             
             if (  leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() < 25. ) {
                 // Nj>=2 and met>50 have been applied
-                if (met<300 and HT<1125 and MTmiss<120) _SRexc[10]++;
-                if (met<300 and HT<1125 and MTmiss>120) _SRexc[11]++;
-                if (met>300 and HT>300)                 _SRexc[12]++;
-                if (met<300 and HT>1125)                _SRexc[13]++;
+                if (met<300 and HT<1125 and MTmiss<120) _SRexc[10] += event->weight();
+                if (met<300 and HT<1125 and MTmiss>120) _SRexc[11] += event->weight();
+                if (met>300 and HT>300)                 _SRexc[12] += event->weight();
+                if (met<300 and HT>1125)                _SRexc[13] += event->weight();
             }
             if (  leptons[SS_1[0]]->pT() < 25. and leptons[SS_2[0]]->pT() < 25. ) {
                 // Nj>=2 and met>50 have been applied
-                if (HT>300) _SRexc[14]++;
+                if (HT>300) _SRexc[14] += event->weight();
             }
             
             return;

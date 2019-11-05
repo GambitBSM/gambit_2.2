@@ -55,10 +55,10 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int _numSRA_TT, _numSRA_TW, _numSRA_T0;
-      int _numSRB_TT, _numSRB_TW, _numSRB_T0;
-      int _numSRC1, _numSRC2, _numSRC3, _numSRC4, _numSRC5;
-      int _numSRD_low, _numSRD_high, _numSRE;
+      double _numSRA_TT, _numSRA_TW, _numSRA_T0;
+      double _numSRB_TT, _numSRB_TW, _numSRB_T0;
+      double _numSRC1, _numSRC2, _numSRC3, _numSRC4, _numSRC5;
+      double _numSRD_low, _numSRD_high, _numSRE;
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
@@ -1117,20 +1117,20 @@ namespace Gambit {
         if(devSkim && cut_LeptonVeto && signalJets.size()>3 && signalBJets.size()>1 && Met > 550. && cut_dPhiJets_AB && signalJets[1]->pT()>80. && signalJets[3]->pT()>40. && AntiKt8M_0 > 120. && AntiKt8M_1 > 80. && Ht > 800. && HtSig > 18. && MtBMin > 200.)isSRE=true;
 
 
-        if(isSRA_TT)_numSRA_TT++;
-        if(isSRA_TW)_numSRA_TW++;
-        if(isSRA_T0)_numSRA_T0++;
-        if(isSRB_TT)_numSRB_TT++;
-        if(isSRB_TW)_numSRB_TW++;
-        if(isSRB_T0)_numSRB_T0++;
-        if(isSRC1)_numSRC1++;
-        if(isSRC2)_numSRC2++;
-        if(isSRC3)_numSRC3++;
-        if(isSRC4)_numSRC4++;
-        if(isSRC5)_numSRC5++;
-        if(isSRD_low)_numSRD_low++;
-        if(isSRD_high)_numSRD_high++;
-        if(isSRE)_numSRE++;
+        if(isSRA_TT) _numSRA_TT += event->weight();
+        if(isSRA_TW) _numSRA_TW += event->weight();
+        if(isSRA_T0) _numSRA_T0 += event->weight();
+        if(isSRB_TT) _numSRB_TT += event->weight();
+        if(isSRB_TW) _numSRB_TW += event->weight();
+        if(isSRB_T0) _numSRB_T0 += event->weight();
+        if(isSRC1) _numSRC1 += event->weight();
+        if(isSRC2) _numSRC2 += event->weight();
+        if(isSRC3) _numSRC3 += event->weight();
+        if(isSRC4) _numSRC4 += event->weight();
+        if(isSRC5) _numSRC5 += event->weight();
+        if(isSRD_low) _numSRD_low += event->weight();
+        if(isSRD_high) _numSRD_high += event->weight();
+        if(isSRE) _numSRE += event->weight();
 
         return;
 

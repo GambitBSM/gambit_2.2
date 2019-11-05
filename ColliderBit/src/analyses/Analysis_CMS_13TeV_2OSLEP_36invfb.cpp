@@ -263,17 +263,17 @@ namespace Gambit {
           //VZ
           if (nSignalBJets==0 && mT2>80. && mjj<110.)
           {
-            if (met>100. && met<150.) _numSR["SR1"]++;
-            if (met>150. && met<250.) _numSR["SR2"]++;
-            if (met>250. && met<350.) _numSR["SR3"]++;
-            if (met>350.) _numSR["SR4"]++;
+            if (met>100. && met<150.) _numSR["SR1"] += event->weight();
+            if (met>150. && met<250.) _numSR["SR2"] += event->weight();
+            if (met>250. && met<350.) _numSR["SR3"] += event->weight();
+            if (met>350.) _numSR["SR4"] += event->weight();
           }
           //HZ
           if (nSignalBJets==2 && mbb<150. && mT2>200.)
           {
-            if (met>100. && met<150.) _numSR["SR5"]++;
-            if (met>150. && met<250.) _numSR["SR6"]++;
-            if (met>250.) _numSR["SR7"]++;
+            if (met>100. && met<150.) _numSR["SR5"] += event->weight();
+            if (met>150. && met<250.) _numSR["SR6"] += event->weight();
+            if (met>250.) _numSR["SR7"] += event->weight();
           }
         }
 

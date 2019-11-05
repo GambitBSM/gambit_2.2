@@ -26,15 +26,22 @@
 #include "gambit/ColliderBit/CMSEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
+#define CUTFLOW
+
 using namespace std;
 
 namespace Gambit {
   namespace ColliderBit {
 
-    // This analysis class is also a base class for the class
-    // Analysis_CMS_13TeV_2LEPsoft_36invfb_nocovar defined further down.
-    // This is the same analysis, but it does not make use of the
-    // SR covariance information.
+    // This analysis class only returns the results from the EWino signal regions.
+    // The stop signal regions are returned from the derived class 
+    // Analysis_CMS_13TeV_2LEPsoft_stop_36invfb below.
+    //
+    // There also the derived classes 
+    // - Analysis_CMS_13TeV_2LEPsoft_36invfb_nocovar
+    // - Analysis_CMS_13TeV_2LEPsoft_stop_36invfb_nocovar
+    // that don't make use of the the covariance matrices
+
     class Analysis_CMS_13TeV_2LEPsoft_36invfb : public Analysis {
 
     protected:
@@ -64,13 +71,14 @@ namespace Gambit {
         {"SRST9", 0},
       };
 
-    private:
-
       vector<double> cutFlowVector;
       vector<string> cutFlowVector_str;
       size_t NCUTS;
       vector<double> cutFlowVectorCMS_150_130;
       vector<double> cutFlowVectorCMS_150_143;
+      vector<double> cutFlowVectorCMS_350_330;
+      vector<double> cutFlowVectorCMS_350_340;
+ 
       // double xsecCMS_150_143;
       // double xsecCMS_150_130;
 
@@ -98,6 +106,8 @@ namespace Gambit {
           cutFlowVector.push_back(0);
           cutFlowVectorCMS_150_130.push_back(0);
           cutFlowVectorCMS_150_143.push_back(0);
+          cutFlowVectorCMS_350_330.push_back(0);
+          cutFlowVectorCMS_350_340.push_back(0);
           cutFlowVector_str.push_back("");
         }
       }
@@ -246,44 +256,44 @@ namespace Gambit {
         // Signal Regions
         // In the low ETmiss region, for each passing event we add 0.65 due to trigger efficiency
         if (EWpreselection && met>125. && met<200. && nSignalMuons == 2) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += 0.65;
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += 0.65;
-          if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += 0.65;
-          if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += 0.65;
-          // if (m_ll>4. && m_ll<9.) _numSR["SREW1"]++;
-          // if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"]++;
-          // if (m_ll>20. && m_ll<30.) _numSR["SREW3"]++;
-          // if (m_ll>30. && m_ll<50.) _numSR["SREW4"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += event->weight() * 0.65;
+          if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += event->weight() * 0.65;
+          if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += event->weight() * 0.65;
+          if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += event->weight() * 0.65;
+          // if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += event->weight();
+          // if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += event->weight();
+          // if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += event->weight();
+          // if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += event->weight();
         }
         if (EWpreselection && met>200. && met<250.) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW5"]++;
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW6"]++;
-          if (m_ll>20. && m_ll<30.) _numSR["SREW7"]++;
-          if (m_ll>30. && m_ll<50.) _numSR["SREW8"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SREW5"] += event->weight();
+          if (m_ll>10.5 && m_ll<20.) _numSR["SREW6"] += event->weight();
+          if (m_ll>20. && m_ll<30.) _numSR["SREW7"] += event->weight();
+          if (m_ll>30. && m_ll<50.) _numSR["SREW8"] += event->weight();
         }
         if (EWpreselection && met>250.) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW9"]++;
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW10"]++;
-          if (m_ll>20. && m_ll<30.) _numSR["SREW11"]++;
-          if (m_ll>30. && m_ll<50.) _numSR["SREW12"]++;
+          if (m_ll>4. && m_ll<9.) _numSR["SREW9"] += event->weight();
+          if (m_ll>10.5 && m_ll<20.) _numSR["SREW10"] += event->weight();
+          if (m_ll>20. && m_ll<30.) _numSR["SREW11"] += event->weight();
+          if (m_ll>30. && m_ll<50.) _numSR["SREW12"] += event->weight();
         }
         if (STpreselection && met>125. && met<200. && nSignalMuons == 2) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST1"]++;
-          if (leadpT>12. && leadpT<20.) _numSR["SRST2"]++;
-          if (leadpT>20. && leadpT<30.) _numSR["SRST3"]++;
+          if (leadpT>5. && leadpT<12.) _numSR["SRST1"] += event->weight();
+          if (leadpT>12. && leadpT<20.) _numSR["SRST2"] += event->weight();
+          if (leadpT>20. && leadpT<30.) _numSR["SRST3"] += event->weight();
         }
         if (STpreselection && met>200. && met<300.) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST4"]++;
-          if (leadpT>12. && leadpT<20.) _numSR["SRST5"]++;
-          if (leadpT>20. && leadpT<30.) _numSR["SRST6"]++;
+          if (leadpT>5. && leadpT<12.) _numSR["SRST4"] += event->weight();
+          if (leadpT>12. && leadpT<20.) _numSR["SRST5"] += event->weight();
+          if (leadpT>20. && leadpT<30.) _numSR["SRST6"] += event->weight();
         }
         if (STpreselection && met>300.) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST7"]++;
-          if (leadpT>12. && leadpT<20.) _numSR["SRST8"]++;
-          if (leadpT>20. && leadpT<30.) _numSR["SRST9"]++;
+          if (leadpT>5. && leadpT<12.) _numSR["SRST7"] += event->weight();
+          if (leadpT>12. && leadpT<20.) _numSR["SRST8"] += event->weight();
+          if (leadpT>20. && leadpT<30.) _numSR["SRST9"] += event->weight();
         }
 
         cutFlowVector_str[0] = "All events";
@@ -333,6 +343,35 @@ namespace Gambit {
         cutFlowVectorCMS_150_143[11] =  3.0;
         cutFlowVectorCMS_150_143[12] =  2.7;
         cutFlowVectorCMS_150_143[13] =  2.2;
+
+        // Cut flow from CMS email
+        cutFlowVectorCMS_350_330[0] = 125715.;
+        cutFlowVectorCMS_350_330[1] = 141.3;
+        cutFlowVectorCMS_350_330[2] = 141.3;
+        cutFlowVectorCMS_350_330[3] = 127.3;
+        cutFlowVectorCMS_350_330[4] = 123.8;
+        cutFlowVectorCMS_350_330[5] = 115.4;
+        cutFlowVectorCMS_350_330[6] = 14.1;
+        cutFlowVectorCMS_350_330[7] = 8.9;
+        cutFlowVectorCMS_350_330[8] = 8.2;
+        cutFlowVectorCMS_350_330[9] = 6.1;
+        cutFlowVectorCMS_350_330[10] = 4.4;
+        cutFlowVectorCMS_350_330[11] = 4.0;
+        cutFlowVectorCMS_350_330[12] = 3.7;
+
+        cutFlowVectorCMS_350_340[0] = 125715.;
+        cutFlowVectorCMS_350_340[1] = 18.0;
+        cutFlowVectorCMS_350_340[2] = 18.0;
+        cutFlowVectorCMS_350_340[3] = 10.7;
+        cutFlowVectorCMS_350_340[4] = 10.7;
+        cutFlowVectorCMS_350_340[5] = 10.6;
+        cutFlowVectorCMS_350_340[6] = 1.4;
+        cutFlowVectorCMS_350_340[7] = 0.8;
+        cutFlowVectorCMS_350_340[8] = 0.7;
+        cutFlowVectorCMS_350_340[9] = 0.7;
+        cutFlowVectorCMS_350_340[10] = 0.6;
+        cutFlowVectorCMS_350_340[11] = 0.5;
+        cutFlowVectorCMS_350_340[12] = 0.5;
 
 
         for (size_t j=0;j<NCUTS;j++){
@@ -393,21 +432,38 @@ namespace Gambit {
 
       virtual void collect_results() {
 
-        // // double scale_by= 172004. / 250000.;
-        // //double scale_by= 172004. / 1000000.;
-        // double scale_by = 1;
-        // cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
-        // cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb "<<endl;
-        // cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
-        // cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
-        //      << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
-        // for (int j=0; j<NCUTS; j++) {
-        //   cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
-        //        << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
-        //        << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_130[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_130[j]) << endl;
-        // }
-        // cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+        #ifdef CUTFLOW
+          // double scale_by= 172004. / 250000.;
+          // double scale_by= 172004. / 1000000.;
+          double scale_by = 1;
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+          cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb: Signal Region 1 "<<endl;
+          cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
+          cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
+               << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
+          for (size_t j=0; j<NCUTS; j++) {
+            cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
+                 << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
+                 << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_130[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_130[j]) << endl;
+          }
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+ 
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+          cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb: Signal Region 2 "<<endl;
+          cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
+          cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
+               << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
+          for (size_t j=0; j<NCUTS; j++) {
+            cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
+                 << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
+                 << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_143[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_143[j]) << endl;
+          }
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+        #endif
 
+
+        // The stop signal regions are collected in the derived analysis class 
+        // Analysis_CMS_13TeV_2LEPsoft_stop_36invfb below.
 
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
         add_result(SignalRegionData("SREW1",  2.,  {_numSR["SREW1"],  0.}, {3.5, 1.}));
@@ -422,16 +478,6 @@ namespace Gambit {
         add_result(SignalRegionData("SREW10", 1.,  {_numSR["SREW10"], 0.}, {1.5, 0.6}));
         add_result(SignalRegionData("SREW11", 2.,  {_numSR["SREW11"], 0.}, {1.5, 0.8}));
         add_result(SignalRegionData("SREW12", 0.,  {_numSR["SREW12"], 0.}, {1.2, 0.6}));
-        add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
-        add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
-        add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
-        add_result(SignalRegionData("SRST4",  23., {_numSR["SRST4"],  0.}, {23.0,3.5}));
-        add_result(SignalRegionData("SRST5",  40., {_numSR["SRST5"],  0.}, {41.0,5.6}));
-        add_result(SignalRegionData("SRST6",  44., {_numSR["SRST6"],  0.}, {45.0,7.0}));
-        add_result(SignalRegionData("SRST7",  4.,  {_numSR["SRST7"],  0.}, {4.7,1.3}));
-        add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
-        add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
-
 
         // Covariance matrix
         static const vector< vector<double> > BKGCOV = {
@@ -468,7 +514,82 @@ namespace Gambit {
 
 
     //
-    // Derived analysis class that does not make use of the SR covariance matrix
+    // Derived analysis class that for the stop search signal regions
+    //
+    class Analysis_CMS_13TeV_2LEPsoft_stop_36invfb : public Analysis_CMS_13TeV_2LEPsoft_36invfb {
+
+    public:
+      Analysis_CMS_13TeV_2LEPsoft_stop_36invfb() {
+        set_analysis_name("CMS_13TeV_2LEPsoft_stop_36invfb");
+      }
+
+      virtual void collect_results() {
+
+        #ifdef CUTFLOW
+          double scale_by = 1;
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+          cout << "CUT FLOW: CMS_13TeV_2LEPsoft_stop_36invfb: Signal Region 1 "<<endl;
+          cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
+          cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
+               << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
+          for (size_t j=0; j<NCUTS-1; j++) {
+            cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
+                 << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
+                 << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_350_330[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_350_330[j]) << endl;
+          }
+
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+          cout << "CUT FLOW: CMS_13TeV_2LEPsoft_stop_36invfb: Signal Region 2 "<<endl;
+          cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
+          cout << right << setw(40) << "CUT," << setw(20) << "RAW," << setw(20) << "SCALED,"
+               << setw(20) << "%," << setw(20) << "CMS," << setw(20) << "GAMBIT(scaled)/CMS" << endl;
+          for (size_t j=0; j<NCUTS-1; j++) {
+            cout << right <<  setw(40) << cutFlowVector_str[j].c_str() <<  "," << setw(20)
+                 << cutFlowVector[j] <<  "," << setw(20) << cutFlowVector[j]*scale_by <<  "," << setw(20)
+                 << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_350_340[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_350_340[j]) << endl;
+          }
+          cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
+        #endif
+
+
+        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
+        add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
+        add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
+        add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
+        add_result(SignalRegionData("SRST4",  23., {_numSR["SRST4"],  0.}, {23.0,3.5}));
+        add_result(SignalRegionData("SRST5",  40., {_numSR["SRST5"],  0.}, {41.0,5.6}));
+        add_result(SignalRegionData("SRST6",  44., {_numSR["SRST6"],  0.}, {45.0,7.0}));
+        add_result(SignalRegionData("SRST7",  4.,  {_numSR["SRST7"],  0.}, {4.7,1.3}));
+        add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
+        add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
+
+        // Covariance matrix
+        static const vector< vector<double> > BKGCOV = {
+          { 6.09,  4.71,  3.20,  2.50,  1.91,  2.77,  0.54,  0.89,  0.73 },
+          { 4.71, 42.34, 27.35,  7.02,  8.98, 26.59,  2.10,  5.75,  8.78 },
+          { 3.20, 27.35, 43.20,  6.86, 13.80, 32.28,  2.33,  6.71,  9.86 },
+          { 2.50,  7.02,  6.86, 12.11,  6.86,  8.32,  1.13,  2.35,  2.85 },
+          { 1.91,  8.98, 13.80,  6.86, 22.57, 16.73,  1.46,  3.93,  5.61 },
+          { 2.77, 26.59, 32.28,  8.32, 16.73, 44.78,  2.58,  7.69, 12.14 },
+          { 0.54,  2.10,  2.33,  1.13,  1.46,  2.58,  1.56,  0.66,  0.79 },
+          { 0.89,  5.75,  6.71,  2.35,  3.93,  7.69,  0.66,  3.88,  2.55 },
+          { 0.73,  8.78,  9.86,  2.85,  5.61, 12.14,  0.79,  2.55,  6.54 },
+        };
+
+        set_covariance(BKGCOV);
+
+      }
+
+    };
+
+    // Factory fn
+    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_stop_36invfb)
+
+
+
+    //
+    // Derived EWino analysis class that does not make use of the SR covariance matrix
     //
     class Analysis_CMS_13TeV_2LEPsoft_36invfb_nocovar : public Analysis_CMS_13TeV_2LEPsoft_36invfb {
 
@@ -492,6 +613,28 @@ namespace Gambit {
         add_result(SignalRegionData("SREW10", 1.,  {_numSR["SREW10"], 0.}, {1.5, 0.6}));
         add_result(SignalRegionData("SREW11", 2.,  {_numSR["SREW11"], 0.}, {1.5, 0.8}));
         add_result(SignalRegionData("SREW12", 0.,  {_numSR["SREW12"], 0.}, {1.2, 0.6}));
+
+      }
+
+    };
+
+    // Factory fn
+    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_36invfb_nocovar)
+
+
+    //
+    // Derived stop-search analysis class that does not make use of the SR covariance matrix
+    //
+    class Analysis_CMS_13TeV_2LEPsoft_stop_36invfb_nocovar : public Analysis_CMS_13TeV_2LEPsoft_36invfb {
+
+    public:
+      Analysis_CMS_13TeV_2LEPsoft_stop_36invfb_nocovar() {
+        set_analysis_name("CMS_13TeV_2LEPsoft_stop_36invfb_nocovar");
+      }
+
+      virtual void collect_results() {
+
+        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
         add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
         add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
         add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
@@ -502,13 +645,12 @@ namespace Gambit {
         add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
         add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
 
-
       }
 
     };
 
     // Factory fn
-    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_36invfb_nocovar)
+    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_2LEPsoft_stop_36invfb_nocovar)
 
 
   }

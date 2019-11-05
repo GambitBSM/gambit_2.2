@@ -33,8 +33,8 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int _numSRA1, _numSRA2, _numSRA3, _numSRA4;
-      int _numSRC1, _numSRC2, _numSRC3;
+      double _numSRA1, _numSRA2, _numSRA3, _numSRA4;
+      double _numSRC1, _numSRC2, _numSRC3;
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
@@ -645,14 +645,14 @@ namespace Gambit {
         //We're now ready to apply the cuts for each signal region
         //_numSR1, _numSR2, _numSR3;
 
-        if(isSRA1)_numSRA1++;
-        if(isSRA2)_numSRA2++;
-        if(isSRA3)_numSRA3++;
-        if(isSRA4)_numSRA4++;
+        if(isSRA1) _numSRA1 += event->weight();
+        if(isSRA2) _numSRA2 += event->weight();
+        if(isSRA3) _numSRA3 += event->weight();
+        if(isSRA4) _numSRA4 += event->weight();
 
-        if(isSRC1)_numSRC1++;
-        if(isSRC2)_numSRC2++;
-        if(isSRC3)_numSRC3++;
+        if(isSRC1) _numSRC1 += event->weight();
+        if(isSRC2) _numSRC2 += event->weight();
+        if(isSRC3) _numSRC3 += event->weight();
 
         return;
 

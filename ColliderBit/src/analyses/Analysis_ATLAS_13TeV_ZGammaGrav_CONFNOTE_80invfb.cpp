@@ -137,7 +137,7 @@ namespace Gambit {
         cutflow[ncut++] += 1;
 
         // Signal count
-        nsig += 1;
+        nsig += event->weight();
 
       }
 
@@ -179,7 +179,7 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int nsig = 0;
+      double nsig = 0;
 
       // Cut flow
       const static int NCUTS = 6;

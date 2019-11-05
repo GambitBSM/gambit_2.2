@@ -19,7 +19,7 @@
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
-// #define CHECK_CUTFLOW
+#define CHECK_CUTFLOW
 
 using namespace std;
 
@@ -307,7 +307,7 @@ namespace Gambit
             // -
             mT23l > 100.
            ) 
-          _numSR["SR1A"]++;
+          _numSR["SR1A"] += event->weight();
 
         // SR1B
         if (preselection && 
@@ -320,7 +320,7 @@ namespace Gambit
             pTll > 150.
             // -
            ) 
-          _numSR["SR1B"]++;
+          _numSR["SR1B"] += event->weight();
 
         // SR2A
         if (preselection && 
@@ -333,7 +333,7 @@ namespace Gambit
             pTll < 50. 
             // -
            ) 
-          _numSR["SR2A"]++;
+          _numSR["SR2A"] += event->weight();
 
         // SR2B
         if (preselection && 
@@ -346,7 +346,7 @@ namespace Gambit
            pTll > 150.
            // -
            ) 
-          _numSR["SR2B"]++;
+          _numSR["SR2B"] += event->weight();
 
         // Cutflows
         

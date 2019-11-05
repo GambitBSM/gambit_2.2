@@ -459,63 +459,63 @@ namespace Gambit {
 
         // Now increment signal region variables
         // First exclusion regions
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met < 20.) _numSR["meff160_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met > 20. && met < 45.) _numSR["meff160_ETmiss20"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met < 20.) _numSR["meff160_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met > 20. && met < 45.) _numSR["meff160_ETmiss20"] += event->weight();
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met < 20.) _numSR["meff200_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 20. && met < 45.) _numSR["meff200_ETmiss20"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 45. && met < 70.) _numSR["meff200_ETmiss45"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 70. && met < 100.) _numSR["meff200_ETmiss70"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met < 20.) _numSR["meff200_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 20. && met < 45.) _numSR["meff200_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 45. && met < 70.) _numSR["meff200_ETmiss45"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 70. && met < 100.) _numSR["meff200_ETmiss70"] += event->weight();
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met < 20.) _numSR["meff260_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 20. && met < 45.) _numSR["meff260_ETmiss20"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 45. && met < 70.) _numSR["meff260_ETmiss45"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 70. && met < 100.) _numSR["meff260_ETmiss70"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 100. && met < 150.) _numSR["meff260_ETmiss100"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met < 20.) _numSR["meff260_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 20. && met < 45.) _numSR["meff260_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 45. && met < 70.) _numSR["meff260_ETmiss45"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 70. && met < 100.) _numSR["meff260_ETmiss70"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 100. && met < 150.) _numSR["meff260_ETmiss100"] += event->weight();
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met < 20.) _numSR["meff340_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 20. && met < 45.) _numSR["meff340_ETmiss20"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 45. && met < 70.) _numSR["meff340_ETmiss45"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 70. && met < 100.) _numSR["meff340_ETmiss70"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 100. && met < 150.) _numSR["meff340_ETmiss100"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 150. && met < 200.) _numSR["meff340_ETmiss150"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 200.) _numSR["meff340_ETmiss200"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met < 20.) _numSR["meff340_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 20. && met < 45.) _numSR["meff340_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 45. && met < 70.) _numSR["meff340_ETmiss45"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 70. && met < 100.) _numSR["meff340_ETmiss70"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 100. && met < 150.) _numSR["meff340_ETmiss100"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 150. && met < 200.) _numSR["meff340_ETmiss150"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 200.) _numSR["meff340_ETmiss200"] += event->weight();
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met < 20.) _numSR["meff440_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 20. && met < 45.) _numSR["meff440_ETmiss20"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 45. && met < 70.) _numSR["meff440_ETmiss45"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 70. && met < 100.) _numSR["meff440_ETmiss70"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 100. && met < 150.) _numSR["meff440_ETmiss100"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 150. && met < 200.) _numSR["meff440_ETmiss150"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 200.) _numSR["meff440_ETmiss200"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met < 20.) _numSR["meff440_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 20. && met < 45.) _numSR["meff440_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 45. && met < 70.) _numSR["meff440_ETmiss45"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 70. && met < 100.) _numSR["meff440_ETmiss70"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 100. && met < 150.) _numSR["meff440_ETmiss100"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 150. && met < 200.) _numSR["meff440_ETmiss150"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 200.) _numSR["meff440_ETmiss200"] += event->weight();
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met < 20.) _numSR["meff560_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 20. && met < 45.) _numSR["meff560_ETmiss20"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 45. && met < 70.) _numSR["meff560_ETmiss45"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 70. && met < 100.) _numSR["meff560_ETmiss70"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 100. && met < 150.) _numSR["meff560_ETmiss100"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 150. && met < 200.) _numSR["meff560_ETmiss150"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 200.) _numSR["meff560_ETmiss200"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met < 20.) _numSR["meff560_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 20. && met < 45.) _numSR["meff560_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 45. && met < 70.) _numSR["meff560_ETmiss45"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 70. && met < 100.) _numSR["meff560_ETmiss70"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 100. && met < 150.) _numSR["meff560_ETmiss100"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 150. && met < 200.) _numSR["meff560_ETmiss150"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 200.) _numSR["meff560_ETmiss200"] += event->weight();
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met < 20.) _numSR["meff700_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 20. && met < 45.) _numSR["meff700_ETmiss20"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 45. && met < 70.) _numSR["meff700_ETmiss45"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 70. && met < 100.) _numSR["meff700_ETmiss70"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 100. && met < 150.) _numSR["meff700_ETmiss100"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 150. && met < 200.) _numSR["meff700_ETmiss150"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 200.) _numSR["meff700_ETmiss200"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met < 20.) _numSR["meff700_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 20. && met < 45.) _numSR["meff700_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 45. && met < 70.) _numSR["meff700_ETmiss45"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 70. && met < 100.) _numSR["meff700_ETmiss70"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 100. && met < 150.) _numSR["meff700_ETmiss100"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 150. && met < 200.) _numSR["meff700_ETmiss150"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 200.) _numSR["meff700_ETmiss200"] += event->weight();
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met < 20.) _numSR["meff860_ETmiss0"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 20. && met < 45.) _numSR["meff860_ETmiss20"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 45. && met < 70.) _numSR["meff860_ETmiss45"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 70. && met < 100.) _numSR["meff860_ETmiss70"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 100. && met < 150.) _numSR["meff860_ETmiss100"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 150. && met < 200.) _numSR["meff860_ETmiss150"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 200.) _numSR["meff860_ETmiss200"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met < 20.) _numSR["meff860_ETmiss0"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 20. && met < 45.) _numSR["meff860_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 45. && met < 70.) _numSR["meff860_ETmiss45"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 70. && met < 100.) _numSR["meff860_ETmiss70"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 100. && met < 150.) _numSR["meff860_ETmiss100"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 150. && met < 200.) _numSR["meff860_ETmiss150"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 200.) _numSR["meff860_ETmiss200"] += event->weight();
 
         // Discovery regions
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440.) _numSR["low-SR-MET0meff440"]++;
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && met > 150.) _numSR["low-SR-MET150meff440"]++;
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440.) _numSR["low-SR-MET0meff440"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && met > 150.) _numSR["low-SR-MET150meff440"] += event->weight();
 
         return;
 

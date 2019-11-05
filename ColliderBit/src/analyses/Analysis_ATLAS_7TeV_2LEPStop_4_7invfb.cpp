@@ -109,18 +109,18 @@ namespace Gambit
                 // ee channel
                 if (electrons.size() == 2 && electrons[0]->pT() > 17)
                   {
-                    numEE++;
+                    numEE += event->weight();
                   }
                 // mu-mu channel
                 if (muons.size() == 2 && muons[0]->pT() > 12 && AnalysisUtil::muonFilter7TeV(muons))
                   {
-                    numUU++;
+                    numUU += event->weight();
                   }
               }
             // e-mu channel
             if (muons.size() == 1 && electrons.size() == 1 && electrons[0]->pT() > 17 && muons[0]->pT() > 12)
               {
-                numEU++;
+                numEU += event->weight();
               }
           }
         // cout << numEE << ", " << numEU << ", " << numUU << endl;

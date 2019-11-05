@@ -268,6 +268,25 @@ namespace Gambit
                #endif
             }
 
+            /// Blocking synchronous send (will not return until matching Recv is posted)
+            void Ssend(void *buf, int count, MPI_Datatype datatype,
+                                  int destination, int tag)
+            {
+               #ifdef MPI_MSG_DEBUG
+               std::cout<<"rank "<<Get_rank()<<": Ssend() called (count="<<count<<", destination="<<destination<<", tag="<<tag<<")"<<std::endl;
+               #endif
+               int errflag;
+               errflag = MPI_Ssend(buf, count, datatype, destination, tag, boundcomm);
+               if(errflag!=0) {
+                 std::ostringstream errmsg;
+                 errmsg << "Error performing MPI_Ssend! Received error flag: "<<errflag;
+                 utils_error().raise(LOCAL_INFO, errmsg.str());
+               }
+               #ifdef MPI_MSG_DEBUG
+               std::cout<<"rank "<<Get_rank()<<": Ssend() finished"<<std::endl;
+               #endif
+            }
+
             /// Templated blocking send
             template<class T>
             void Send(T *buf, int count,
@@ -277,6 +296,14 @@ namespace Gambit
                Send(buf, count, datatype, destination, tag);
             }
 
+            /// Templated blocking synchronous send
+            template<class T>
+            void Ssend(T *buf, int count,
+                      int destination, int tag)
+            {
+               static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
+               Ssend(buf, count, datatype, destination, tag);
+            }
 
             /// Non-blocking send
             void Isend(void *buf, int count, MPI_Datatype datatype,
@@ -306,12 +333,18 @@ namespace Gambit
             }
 
             /// Blocking wait for e.g. Isend to complete
-            //void Wait(MPI_Request *request, MPI_Status *status)
-            //{
-            //   MPI_Wait(MPI_Request *request, MPI_Status *status)
-            // }
+            void Wait(MPI_Request *request)
+            {
+               MPI_Status status;
+               int errflag = MPI_Wait(request, &status);
+               if(errflag!=0) {
+                 std::ostringstream errmsg;
+                 errmsg << "Error performing MPI_Wait! Received error flag: "<<errflag;
+                 utils_error().raise(LOCAL_INFO, errmsg.str());
+               }
+            }
 
-            // Probe for messages waiting to be delivered
+            // Non-blocking probe for messages waiting to be delivered
             bool Iprobe(int source, int tag, MPI_Status* in_status=NULL /*out*/)
             {
               //#ifdef MPI_MSG_DEBUG
@@ -326,7 +359,7 @@ namespace Gambit
                } else {
                  status = &def_status;
                }
-               MPI_Iprobe(source, 1, boundcomm, &you_have_mail, status);
+               //MPI_Iprobe(source, 1, boundcomm, &you_have_mail, status);
                errflag = MPI_Iprobe(source, tag, boundcomm, &you_have_mail, status);
                if(errflag!=0) {
                  std::ostringstream errmsg;
@@ -339,6 +372,20 @@ namespace Gambit
                }
                #endif
                return (you_have_mail != 0);
+            }
+
+            // Blocking probe for a message. Doesn't return until matching message found.
+            // No point having default NULL status this time, because the only reason to
+            // use this function is to inspect the message status.
+            void Probe(int source, int tag, MPI_Status* status)
+            {
+               int errflag;
+               errflag = MPI_Probe(source, tag, boundcomm, status);
+               if(errflag!=0) {
+                 std::ostringstream errmsg;
+                 errmsg << "Error performing MPI_Probe! Received error flag: "<<errflag;
+                 utils_error().raise(LOCAL_INFO, errmsg.str());
+               }
             }
 
             // Perform an Isend to all other processes
@@ -363,10 +410,10 @@ namespace Gambit
             }
 
             template <typename T>
-            void Bcast (T &buffer, int count, int root) 
+            void Bcast (T &buffer, int count, int root)
             {
                 static const MPI_Datatype datatype = get_mpi_data_type<T>::type();
-                
+
                 MPI_Bcast (&buffer, count, datatype, root, boundcomm);
             }
 
@@ -464,6 +511,12 @@ namespace Gambit
             /// Get pointer to raw bound communicator
             MPI_Comm* get_boundcomm() { return &boundcomm; }
 
+            /// Get the process ID of the master process (rank 0)
+            long int MasterPID();
+
+            /// Set the process ID of the master process (rank 0)
+            void set_MasterPID(long int p);
+
          private:
 
             // The MPI communicator to which the current object "talks".
@@ -471,6 +524,9 @@ namespace Gambit
 
             // A name to identify the communicator group to which this object is bound
             std::string myname;
+
+            // The process ID of the master process (rank 0)
+            static long int pid;
       };
 
       /// Check if MPI_Init has been called (it is an error to call it twice)

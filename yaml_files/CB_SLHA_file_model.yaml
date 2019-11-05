@@ -30,7 +30,7 @@ Scanner:
 
     random:
       plugin: random
-      point_number: 3
+      point_number: 1
       output_file:  output
       like:  LogLike
       files:
@@ -58,7 +58,7 @@ ObsLikes:
 
     - purpose:    Observable
       capability: SLHAFileElements
-    
+
 
 Rules:
 
@@ -68,8 +68,6 @@ Rules:
     options:
       SLHA_filenames:
         - ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha
-        - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha
-        - ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha
 
   # List the SLHA file entries that should be stored in the GAMBIT output.
   # Use SLHAea syntax for the SLHA_keys: <block/pdg> ; <line identifier> ; <line index of requested element>
@@ -86,26 +84,27 @@ Rules:
         - NMIX;1,3;2
         - NMIX;1,4;2
         - 1000024;DECAY;2               # <-- Total decay width for 1000024 (chargino1)
-        - 1000024;(any),2,1000022,24;0  # <-- BR for two-body decay 1000024 -> 1000022 24 
+        - 1000024;(any),2,1000022,24;0  # <-- BR for two-body decay 1000024 -> 1000022 24
 
   # Assign cross-sections and uncertainties for each SLHA file
-  - capability: CrossSection
-    function: getYAMLxsec_SLHA
+  - capability: TotalCrossSection
+    function: getYAMLCrossSection_SLHA
     options:
-      xsec_fb:
+      cross_section_fb:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 1.1
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 2.2
         ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 3.3
-      xsec_fractional_uncert:
+      cross_section_fractional_uncert:
         ColliderBit/data/ATLAS_13TeV_2OSLEP_chargino_80invfb.slha: 0.1
-        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_T5Wg.slha: 0.1
-        ColliderBit/data/CMS_13TeV_Photon_GMSB_36invfb_TChiWg.slha: 0.1
 
 
   # Generate evens (don't read LH event files)
   - capability: HardScatteringEvent
     function: generateEventPythia
     module: ColliderBit
+    options:
+      drop_HepMC_file: false
+      # Warning: the HepMC files can quickly become very large... (20 events take ~1MB)
 
   # # Generate evens (don't read LH event files)
   # - capability: HardScatteringEvent
@@ -136,14 +135,17 @@ Rules:
     function: getPythia_SLHA   # <-- The function to use for the model CB_SLHA_file_model
     options:
       LHC_13TeV_SUSY_EWonly:
-        xsec_veto: 0.028  # 0.028 fb corresponds to ~1 expected event at L = 36 fb^-1.
+        # 0.028 fb corresponds to ~1 expected event at L = 36 fb^-1.
+        xsec_veto: 0.028
+        partonOnly: false
+        antiktR: 0.4
         pythia_settings:
           - SLHA:verbose = 1
           - Next:numberShowProcess = 1
           - Print:quiet = off
           - Next:numberCount = 500
           - Random:setSeed = on
-          - Beams:eCM = 13000          
+          - Beams:eCM = 13000
           - PartonLevel:MPI = off
           - PartonLevel:ISR = on
           - PartonLevel:FSR = on
@@ -154,20 +156,6 @@ Rules:
           - SUSY:qqbar2chi+chi- = on
           - TauDecays:mode = 0
           - TimeShower:pTmin = 2
-
-  # Choose ATLAS detector simulation and options.
-  - capability: ATLASDetectorSim
-    options:
-      LHC_13TeV_SUSY_EWonly:
-        partonOnly: false
-        antiktR: 0.4
-
-  # Choose CMS detector simulation and options.
-  - capability: CMSDetectorSim
-    options:
-      LHC_13TeV_SUSY_EWonly:
-        partonOnly: false
-        antiktR: 0.4
 
   # Choose LHC likelihood form and options.
   - capability: LHC_LogLikes

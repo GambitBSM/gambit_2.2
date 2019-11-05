@@ -92,7 +92,7 @@ namespace Gambit {
         const static vector<double> metedges = {250, 280, 310, 340, 370, 400, 430, 470, 510, 550, 590,
                                                 640, 690, 740, 790, 840, 900, 960, 1020, 1090, 1160, 1250};
         const int i_sr = binIndex(met, metedges, true);
-        if (i_sr >= 0) _srnums[i_sr] += trigweight;
+        if (i_sr >= 0) _srnums[i_sr] += event->weight() * trigweight;
 
       }
 

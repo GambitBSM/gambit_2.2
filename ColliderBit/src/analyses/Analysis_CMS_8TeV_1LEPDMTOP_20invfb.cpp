@@ -33,7 +33,7 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      int _numSR;
+      double _numSR;
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
@@ -204,7 +204,7 @@ namespace Gambit {
         //We're now ready to apply the cuts for each signal region
         //_numSR1, _numSR2, _numSR3;
 
-        if(passPresel && met > 320. && mT > 160. && MT2W > 300. && dPhiMin12 > 1.2)_numSR++;
+        if(passPresel && met > 320. && mT > 160. && MT2W > 300. && dPhiMin12 > 1.2) _numSR += event->weight();
 
         return;
       }

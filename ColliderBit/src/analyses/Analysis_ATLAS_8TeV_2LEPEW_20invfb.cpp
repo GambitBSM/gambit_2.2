@@ -362,17 +362,17 @@ namespace Gambit {
           if(mt2>150.)cut_SRMT2150=true;
 
           //Signal region increments use the trigger efficiencies for ee, emu and mumu triggers
-          if(mt2 > 90. && (numElectrons==1 && numMuons==1))_num_MT2_90_DF=_num_MT2_90_DF+0.89;
-          if(passZVeto && mt2 > 90. && (numElectrons==2 && fabs(mll-91.)>10))_num_MT2_90_SF=_num_MT2_90_SF+0.97;
-          if(passZVeto && mt2 > 90. && (numMuons==2 && fabs(mll-91.)>10))_num_MT2_90_SF=_num_MT2_90_SF+0.75;
+          if(mt2 > 90. && (numElectrons==1 && numMuons==1)) _num_MT2_90_DF += event->weight() * 0.89;
+          if(passZVeto && mt2 > 90. && (numElectrons==2 && fabs(mll-91.)>10)) _num_MT2_90_SF += event->weight() * 0.97;
+          if(passZVeto && mt2 > 90. && (numMuons==2 && fabs(mll-91.)>10)) _num_MT2_90_SF += event->weight() * 0.75;
 
-          if(mt2 > 120. && (numElectrons==1 && numMuons==1))_num_MT2_120_DF=_num_MT2_120_DF+0.89;
-          if(passZVeto && mt2 > 120. && (numElectrons==2 && fabs(mll-91.)>10))_num_MT2_120_SF=_num_MT2_120_SF+0.97;
-          if(passZVeto && mt2 > 120. &&  (numMuons==2 && fabs(mll-91.)>10))_num_MT2_120_SF=_num_MT2_120_SF+0.75;
+          if(mt2 > 120. && (numElectrons==1 && numMuons==1)) _num_MT2_120_DF += event->weight() * 0.89;
+          if(passZVeto && mt2 > 120. && (numElectrons==2 && fabs(mll-91.)>10)) _num_MT2_120_SF += event->weight() * 0.97;
+          if(passZVeto && mt2 > 120. &&  (numMuons==2 && fabs(mll-91.)>10)) _num_MT2_120_SF += event->weight() * 0.75;
 
-          if(mt2 > 150. && (numElectrons==1 && numMuons==1))_num_MT2_150_DF=_num_MT2_150_DF+0.89;
-          if(passZVeto && mt2 > 150. && (numElectrons==2 && fabs(mll-91.)>10))_num_MT2_150_SF=_num_MT2_150_SF+0.97;
-          if(passZVeto && mt2 > 150. && (numMuons==2 && fabs(mll-91.)>10))_num_MT2_150_SF=_num_MT2_150_SF+0.75;
+          if(mt2 > 150. && (numElectrons==1 && numMuons==1)) _num_MT2_150_DF += event->weight() * 0.89;
+          if(passZVeto && mt2 > 150. && (numElectrons==2 && fabs(mll-91.)>10)) _num_MT2_150_SF += event->weight() * 0.97;
+          if(passZVeto && mt2 > 150. && (numMuons==2 && fabs(mll-91.)>10)) _num_MT2_150_SF += event->weight() * 0.75;
 
         }
 
@@ -443,36 +443,36 @@ namespace Gambit {
           if((signalLeptons[0]->mom() + signalLeptons[1]->mom()).pT() > 80. &&
              ETmiss_rel > 80. &&
              mll < 120. &&
-             (numElectrons==1 && numMuons==1))_num_WWa_DF=_num_WWa_DF+0.89;
+             (numElectrons==1 && numMuons==1)) _num_WWa_DF += event->weight() * 0.89;
 
           if((signalLeptons[0]->mom() + signalLeptons[1]->mom()).pT() > 80. &&
              ETmiss_rel > 80. &&
              mll < 120. &&
-             (numElectrons==2 && fabs(mll-91.)>10.))_num_WWa_SF=_num_WWa_SF+0.97;
+             (numElectrons==2 && fabs(mll-91.)>10.)) _num_WWa_SF += event->weight() * 0.97;
 
           if((signalLeptons[0]->mom() + signalLeptons[1]->mom()).pT() > 80. &&
              ETmiss_rel > 80. &&
              mll < 120. &&
-             (numMuons==2 && fabs(mll-91.)>10.))_num_WWa_SF=_num_WWa_SF+0.75;
+             (numMuons==2 && fabs(mll-91.)>10.)) _num_WWa_SF += event->weight() * 0.75;
 
           if(mt2 > 90. &&
              mll < 170. &&
-             (numElectrons==1 && numMuons==1))_num_WWb_DF=_num_WWb_DF+0.89;
+             (numElectrons==1 && numMuons==1)) _num_WWb_DF += event->weight() * 0.89;
 
           if(mt2 > 90. &&
              mll < 170. &&
-             (numElectrons==2 && fabs(mll-91.)>10.))_num_WWb_SF=_num_WWb_SF+0.97;
+             (numElectrons==2 && fabs(mll-91.)>10.)) _num_WWb_SF += event->weight() * 0.97;
 
 
           if(mt2 > 90. &&
              mll < 170. &&
-             (numMuons==2 && fabs(mll-91.)>10.))_num_WWb_SF=_num_WWb_SF+0.75;
+             (numMuons==2 && fabs(mll-91.)>10.)) _num_WWb_SF += event->weight() * 0.75;
 
-          if(mt2 > 100. && (numElectrons==1 && numMuons==1))_num_WWc_DF=_num_WWc_DF+0.89;
+          if(mt2 > 100. && (numElectrons==1 && numMuons==1)) _num_WWc_DF += event->weight() * 0.89;
 
-          if(mt2 > 100. && (numElectrons==2 && fabs(mll-91.)>10.))_num_WWc_SF=_num_WWc_SF+0.97;
+          if(mt2 > 100. && (numElectrons==2 && fabs(mll-91.)>10.)) _num_WWc_SF += event->weight() * 0.97;
 
-          if(mt2 > 100. && (numMuons==2 && fabs(mll-91.)>10.))_num_WWc_SF=_num_WWc_SF+0.75;
+          if(mt2 > 100. && (numMuons==2 && fabs(mll-91.)>10.)) _num_WWc_SF += event->weight() * 0.75;
 
         }
 
@@ -528,9 +528,9 @@ namespace Gambit {
           if(!(mjj > 50. && mjj<100.))passMjj=false;
           if(!(centralNonBJets[0]->pT()>45. && centralNonBJets[1]->pT()>45.))passJetPT=false;
 
-          if(fabs(mll-91.)<10 && ETmiss_rel>80. && (signalLeptons[0]->mom()+signalLeptons[1]->mom()).pT()>80. && dRll > 0.3 && dRll < 1.5 && mjj > 50. && mjj<100. && passJetPT && (numElectrons==2 && numMuons==0))_num_Zjets=_num_Zjets+0.97;
+          if(fabs(mll-91.)<10 && ETmiss_rel>80. && (signalLeptons[0]->mom()+signalLeptons[1]->mom()).pT()>80. && dRll > 0.3 && dRll < 1.5 && mjj > 50. && mjj<100. && passJetPT && (numElectrons==2 && numMuons==0)) _num_Zjets += event->weight() * 0.97;
 
-          if(fabs(mll-91.)<10 && ETmiss_rel>80. && (signalLeptons[0]->mom()+signalLeptons[1]->mom()).pT()>80. && dRll > 0.3 && dRll < 1.5 && mjj > 50. && mjj<100. && passJetPT && (numElectrons==0 && numMuons==2))_num_Zjets=_num_Zjets+0.75;
+          if(fabs(mll-91.)<10 && ETmiss_rel>80. && (signalLeptons[0]->mom()+signalLeptons[1]->mom()).pT()>80. && dRll > 0.3 && dRll < 1.5 && mjj > 50. && mjj<100. && passJetPT && (numElectrons==0 && numMuons==2)) _num_Zjets += event->weight() * 0.75;
 
         }
 

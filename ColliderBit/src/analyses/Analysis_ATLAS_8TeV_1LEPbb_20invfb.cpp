@@ -243,11 +243,11 @@ namespace Gambit {
         bool SRB=false;
         if (preselection && nSignalBJets==2 && met>100. && mCT>160. && mbb>105. && mbb<135.) {
           if (mT>100. && mT<130.) {
-            _numSRA++;
+            _numSRA += event->weight();
             SRA=true;
           }
           if (mT>130.) {
-            _numSRB++;
+            _numSRB += event->weight();
             SRB=true;
           }
         }
