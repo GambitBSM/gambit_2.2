@@ -579,7 +579,8 @@ namespace Gambit
       }
 
       double *res;
-      res=(double *) malloc(nObservables*sizeof(double));
+      // Reserve memory
+      res = (double *) calloc(nObservables, sizeof(double));
       // --- Needed for SuperIso backend
 
       BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &res, &param, &nuislist);
@@ -595,6 +596,9 @@ namespace Gambit
       for(int iObservable = 0; iObservable<nObservables; ++iObservable) {
           result[iObservable] = res[iObservable]; // TO BE MODIFIED
       }
+
+      // Free memory
+      free(res);
 
       if (flav_debug) {
           for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
