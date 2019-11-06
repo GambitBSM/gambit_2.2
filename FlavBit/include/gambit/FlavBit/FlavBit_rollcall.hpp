@@ -101,7 +101,7 @@ START_MODULE
   #define CAPABILITY SuperIso_theory_covariance
   START_CAPABILITY
     #define FUNCTION SI_theory_covariance
-    START_FUNCTION(std::vector<std::vector<double>>)
+    START_FUNCTION(SI_covariance_map)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))

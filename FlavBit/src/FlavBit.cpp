@@ -602,7 +602,7 @@ namespace Gambit
     }
 
     /// NEW! Compute covariance matrix for a list of observables
-    void SI_theory_covariance(std::vector<std::vector<double>>& result)  // TO BE MODIFIED
+    void SI_theory_covariance(SI_covariance_map& result)  // TO BE MODIFIED
     {
       using namespace Pipes::SI_theory_covariance;
       if (flav_debug) cout<<"Starting SI_theory_covariance"<<endl;
@@ -1103,10 +1103,9 @@ namespace Gambit
 
       BEreq::get_th_covariance_nuisance(&res, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
 
-      result.resize(nObservables, std::vector<double>(nObservables));
       for(int iObservable=0; iObservable < nObservables; ++iObservable) {
           for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
-              result[iObservable][jObservable]=res[iObservable][jObservable]; // TO BE MODIFIED
+              result[obslist[iObservable]][obslist[jObservable]] = res[iObservable][jObservable];
           }
       }
 
@@ -1120,7 +1119,7 @@ namespace Gambit
           for(int iObservable=0; iObservable < nObservables; ++iObservable) {
               for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
                   printf("Covariance %s - %s: %.4e\n",
-                          obsnames[iObservable], obsnames[jObservable], result[iObservable][jObservable]);
+                          obsnames[iObservable], obsnames[jObservable], result[obslist[iObservable]][obslist[jObservable]]);
               }
           }
       }
