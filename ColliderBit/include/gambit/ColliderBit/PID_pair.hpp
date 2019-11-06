@@ -16,6 +16,7 @@
 ///  *********************************************
 
 #include <utility>
+#include <string>
 
 #pragma once
 
@@ -130,6 +131,15 @@ namespace Gambit
         {
           _pids = iipair({0,0});
         }
+
+
+        /// Get the PID pair as a string: "<pid1>_<pid2>"
+        std::string str() const
+        {
+          std::string pids_str = std::to_string(_pids.first) + "_" + std::to_string(_pids.second);
+          return pids_str;
+        }
+
 
       private:
 

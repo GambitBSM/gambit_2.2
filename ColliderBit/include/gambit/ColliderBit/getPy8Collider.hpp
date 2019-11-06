@@ -319,43 +319,6 @@ namespace Gambit
     }
 
 
-    // {                                                                                 \
-    //   using namespace Pipes::NAME;                                                    \
-    //                                                                                   \
-    //   static SLHAstruct slha;                                                         \
-    //   static SLHAstruct slha_spectrum;                                                \
-    //   /* _Anders */                                                                   \
-    //   static const int slha_version = runOptions->getValueOrDef<int>(2, "slha_version");   \
-    //   /* _Anders: check that slha_version = 1 or 2 */                           \
-    //                                                                                   \
-    //   if (*Loop::iteration == BASE_INIT)                                              \
-    //   {                                                                               \
-    //     /* SLHAea object constructed from dependencies on the spectrum and decays. */ \
-    //     slha_spectrum.clear();                                                        \
-    //     slha = Dep::decay_rates->getSLHAea(slha_version, false, *Dep::SLHA_pseudonyms); \
-    //     /* SLHAea in SLHA2 format, please. */                                         \
-    //     slha_spectrum = Dep::SPECTRUM->getSLHAea(slha_version);                 \
-    //     slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());        \
-    //     if (SUSY_FLAG)                                                                \
-    //     {                                                                             \
-    //       if(slha.find("MODSEL") == slha.end())                                       \
-    //       {                                                                           \
-    //         SLHAea::Block block("MODSEL");                                            \
-    //         block.push_back("BLOCK MODSEL              # Model selection");           \
-    //         SLHAea::Line line;                                                        \
-    //         line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";             \
-    //         block.push_back(line);                                                    \
-    //         slha.push_front(block);                                                   \
-    //       }                                                                           \
-    //     }                                                                             \
-    //   }                                                                               \
-    //                                                                                   \
-    //   getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \
-    //     *Loop::iteration, Loop::wrapup, *runOptions);                                 \
-    // }
-
-
-
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
     /// from reading a SLHA file rather than getting a Spectrum + DecayTable
     #define GET_SPECIFIC_PYTHIA_SLHA(NAME, PYTHIA_NS, MODEL_EXTENSION)                \

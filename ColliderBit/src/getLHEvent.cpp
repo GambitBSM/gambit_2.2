@@ -60,7 +60,13 @@ namespace Gambit
         if (lhe.readEvent()) get_HEPUtils_event(lhe, result, jet_pt_min);
         else event_retrieved = false;
       }
-      if (not event_retrieved) Loop::halt();
+      if (not event_retrieved)
+      {
+        // Tell the MCLoopInfo instance that we have reached the end of the file
+        Dep::RunMC->report_end_of_event_file();
+        Loop::halt();
+      }
+
     }
 
   }

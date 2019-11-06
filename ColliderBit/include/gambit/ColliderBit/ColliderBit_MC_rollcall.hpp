@@ -179,8 +179,18 @@
     DEPENDENCY(ActivePIDPairs, vec_PID_pair)
     #undef FUNCTION
   #undef CAPABILITY
-  /// @}
 
+  /// Output PID pair cross-sections as a 
+  /// str-dbl map, for easy printing
+  #define CAPABILITY PIDPairCrossSectionsInfo
+  START_CAPABILITY
+    #define FUNCTION getPIDPairCrossSectionsInfo
+    START_FUNCTION(map_str_dbl)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(PIDPairCrossSectionsMap, map_PID_pair_PID_pair_xsec)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
 
 
   /// Lists of analyses to run
