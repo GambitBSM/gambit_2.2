@@ -99,7 +99,7 @@ def check_gum_file(inputfile):
     with open(inputfile, "r") as f:
         try:
             data = yaml.load(f)
-        except yaml.YAMLerror as exc:
+        except yaml.YAMLError as exc:
             print(exc)
 
         if not 'math' in data:
