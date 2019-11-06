@@ -49,7 +49,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
                 void setPoleMZ(double mz);
         
+                void setMass(softsusy::mass mno, double m);
+        
                 void setNeutrinoPoleMass(int i, double m);
+        
+                void setAlpha(softsusy::leGauge ai, double ap);
         
                 void setAlphaEmInput(double a);
         
@@ -72,6 +76,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 double displayPoleMZ() const;
         
                 double displayNeutrinoPoleMass(int i) const;
+        
+                double displayAlpha(softsusy::leGauge ai) const;
         
                 double displayAlphaEmInput() const;
         

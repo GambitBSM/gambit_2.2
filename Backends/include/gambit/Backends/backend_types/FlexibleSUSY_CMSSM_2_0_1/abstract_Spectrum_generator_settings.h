@@ -9,6 +9,8 @@
 #include <cstddef>
 #include <iostream>
 
+#include "enum_decl_copies.h"
+
 #include "identification.hpp"
 
 namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)

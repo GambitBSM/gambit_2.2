@@ -144,8 +144,8 @@ def moveFilesAround():
     # -- header with forward declarations for all wrapper classes
     files_list += [ os.path.join(gb.boss_output_dir, gb.frwd_decls_wrp_fname + cfg.header_extension) ]
 
-    # # -- header with copies of all enum type declarations
-    # files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
+    # -- header with copies of all enum type declarations
+    files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
 
     # -- identification.hpp
     files_list += [ os.path.join(gb.boss_output_dir, 'identification.hpp') ]
@@ -172,8 +172,8 @@ def moveFilesAround():
     # -- header with forward declarations for all wrapper classes
     files_list += [ os.path.join(gb.boss_output_dir, gb.frwd_decls_wrp_fname + cfg.header_extension) ]
 
-    # # -- header with copies of all enum type declarations
-    # files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
+    # -- header with copies of all enum type declarations
+    files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
 
     # -- identification.hpp
     files_list += [ os.path.join(gb.boss_output_dir, 'identification.hpp') ]
@@ -217,8 +217,8 @@ def moveFilesAround():
     # -- header with forward declarations for all wrapper classes
     files_list += [ os.path.join(gb.boss_output_dir, gb.frwd_decls_wrp_fname + cfg.header_extension) ]
 
-    # # -- header with copies of all enum type declarations
-    # files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
+    # -- header with copies of all enum type declarations
+    files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
 
     # -- identification.hpp
     files_list += [ os.path.join(gb.boss_output_dir, 'identification.hpp') ]
@@ -242,8 +242,8 @@ def moveFilesAround():
     # # -- header with forward declarations for all wrapper classes
     # move_files_list += [ os.path.join(gb.boss_output_dir, gb.frwd_decls_wrp_fname + cfg.header_extension) ]
 
-    # # # -- header with copies of all enum type declarations
-    # # move_files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
+    # # -- header with copies of all enum type declarations
+    # move_files_list += [ os.path.join(gb.boss_output_dir, gb.enum_decls_wrp_fname + cfg.header_extension) ]
 
     # # -- identification.hpp
     # move_files_list += [ os.path.join(gb.boss_output_dir, 'identification.hpp') ]

@@ -37,6 +37,7 @@
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2018 Feb
+///  \date 2019 Nov
 ///
 ///  \author Jeriek Van den Abeele
 ///          (jeriekvda@fys.uio.no)
@@ -512,9 +513,9 @@ namespace Gambit
     void Ref_SM_other_Higgs_decays_table(DecayTable::Entry& result)
     {
       using namespace Pipes::Ref_SM_other_Higgs_decays_table;
-      const SubSpectrum& spec = Dep::MSSM_spectrum->get_HE();
+      const Spectrum& spec = *Dep::MSSM_spectrum;
       int other_higgs = (SMlike_higgs_PDG_code(spec) == 25 ? 35 : 25);
-      double m_other = Dep::MSSM_spectrum->get(Par::Pole_Mass, other_higgs, 0);
+      double m_other = spec.get(Par::Pole_Mass, other_higgs, 0);
       compute_SM_higgs_decays(result, m_other);
     }
     /// Reference SM Higgs decays from LHCHiggsXSWG: A0
@@ -529,7 +530,7 @@ namespace Gambit
     void Ref_SM_Higgs_decays_FH(DecayTable::Entry& result)
     {
       using namespace Pipes::Ref_SM_Higgs_decays_FH;
-      const SubSpectrum& spec = Dep::MSSM_spectrum->get_HE();
+      const Spectrum& spec = *Dep::MSSM_spectrum;
       int higgs = (SMlike_higgs_PDG_code(spec) == 25 ? 1 : 2);
       bool invalidate = runOptions->getValueOrDef<bool>(false, "invalid_point_for_negative_width");
       set_FH_neutral_h_decay(result, higgs, *Dep::FH_Couplings_output, *(Dep::SLHA_pseudonyms), invalidate, true);
@@ -538,7 +539,7 @@ namespace Gambit
     void Ref_SM_other_Higgs_decays_FH(DecayTable::Entry& result)
     {
       using namespace Pipes::Ref_SM_other_Higgs_decays_FH;
-      const SubSpectrum& spec = Dep::MSSM_spectrum->get_HE();
+      const Spectrum& spec = *Dep::MSSM_spectrum;
       int other_higgs = (SMlike_higgs_PDG_code(spec) == 25 ? 2 : 1);
       bool invalidate = runOptions->getValueOrDef<bool>(false, "invalid_point_for_negative_width");
       set_FH_neutral_h_decay(result, other_higgs, *Dep::FH_Couplings_output, *(Dep::SLHA_pseudonyms), invalidate, true);
@@ -2429,12 +2430,11 @@ namespace Gambit
       mass_es_pseudonyms psn = *(Dep::SLHA_pseudonyms);
 
       // Get spectrum objects
-      const Spectrum& spec = *Dep::MSSM_spectrum;
-      const SubSpectrum& mssm = spec.get_HE();
+      const Spectrum& mssm = *Dep::MSSM_spectrum;
 
       // Get SUSY masses
-      const double m_N_signed = spec.get(Par::Pole_Mass,"~chi0_1");
-      const double m_C_signed = spec.get(Par::Pole_Mass,"~chi+_1");
+      const double m_N_signed = mssm.get(Par::Pole_Mass,"~chi0_1");
+      const double m_C_signed = mssm.get(Par::Pole_Mass,"~chi+_1");
       const double m_N = abs(m_N_signed);
       const double m_C = abs(m_C_signed);
 
@@ -2746,11 +2746,10 @@ namespace Gambit
       mass_es_pseudonyms psn = *(Dep::SLHA_pseudonyms);
 
       // Get spectrum objects
-      const Spectrum& spec = *Dep::MSSM_spectrum;
-      const SubSpectrum& mssm = spec.get_HE();
+      const Spectrum& mssm = *Dep::MSSM_spectrum;
 
       // Get neutralino mass and mixing
-      const double m_N = abs(spec.get(Par::Pole_Mass,"~chi0_1"));
+      const double m_N = abs(mssm.get(Par::Pole_Mass,"~chi0_1"));
 
       const double N11 = mssm.get(Par::Pole_Mixing,"~chi0",1,1);  // ~B component
       const double N12 = mssm.get(Par::Pole_Mixing,"~chi0",1,2);  // ~W3 component
@@ -2764,7 +2763,8 @@ namespace Gambit
       // Also get the names ("~e-_1", "~e-_2", ..., "~e-_6") that correspond to the light and heavy stau states.
       std::vector<double> stau_mix_4vec = slhahelp::family_state_mix_matrix("~e-", 3, m_light, m_heavy, mssm, ftol, LOCAL_INFO, fpt_error);
       // Get the mass of the lightest stau state
-      const double m_stau = spec.safeget(Par::Pole_Mass,m_light);
+      // TODO: This was safeget before, there is no safeget now
+      const double m_stau = spec.get(Par::Pole_Mass,m_light);
       // Get the gauge mixing
       const double F11 = stau_mix_4vec[0];
       const double F12 = stau_mix_4vec[1];
@@ -2967,21 +2967,23 @@ namespace Gambit
       using namespace Pipes::neutralino_1_decays_gravitino;
 
       // Get spectrum objects
-      const Spectrum &spec = *Dep::MSSM_spectrum;
-      const SubSpectrum &mssm = spec.get_HE();
+      const Spectrum &mssm = *Dep::MSSM_spectrum;
       const SMInputs &sm = Dep::MSSM_spectrum->get_SMInputs();
 
       // Get gravitino mass
-      const double m_G = mssm.safeget(Par::Pole_Mass, "~G"); // [GeV]
+      // TODO: This was safeget before, there is no safeget now
+      const double m_G = mssm.get(Par::Pole_Mass, "~G"); // [GeV]
 
       // Get other SUSY masses
       const double m_Neu1_signed = spec.safeget(Par::Pole_Mass, "~chi0_1");
       const double m_Neu1 = abs(m_Neu1_signed); // [GeV]
 
       // Get MSSM parameters
-      const double sin_alpha = mssm.safeget(Par::Pole_Mixing, "h0", 2, 2); // SCALARMIX (2,2) = sin(alpha)
+      // TODO: This was safeget before, there is no safeget now
+      const double sin_alpha = mssm.get(Par::Pole_Mixing, "h0", 2, 2); // SCALARMIX (2,2) = sin(alpha)
       const double cos_alpha = sqrt(1. - pow2(sin_alpha));
-      const double tan_beta = mssm.safeget(Par::dimensionless, "tanbeta");
+      // TODO: This was safeget before, there is no safeget now
+      const double tan_beta = mssm.get(Par::dimensionless, "tanbeta");
       const double cos_beta = 1. / sqrt(1. + pow2(tan_beta));
       const double sin_beta = sqrt(1. - pow2(cos_beta));
 

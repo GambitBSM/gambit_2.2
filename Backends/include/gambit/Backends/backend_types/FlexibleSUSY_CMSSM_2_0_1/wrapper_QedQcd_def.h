@@ -72,9 +72,19 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->setPoleMZ(mz);
         }
         
+        inline void QedQcd::setMass(softsusy::mass mno, double m)
+        {
+            get_BEptr()->setMass(mno, m);
+        }
+        
         inline void QedQcd::setNeutrinoPoleMass(int i, double m)
         {
             get_BEptr()->setNeutrinoPoleMass(i, m);
+        }
+        
+        inline void QedQcd::setAlpha(softsusy::leGauge ai, double ap)
+        {
+            get_BEptr()->setAlpha(ai, ap);
         }
         
         inline void QedQcd::setAlphaEmInput(double a)
@@ -130,6 +140,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         inline double QedQcd::displayNeutrinoPoleMass(int i) const
         {
             return get_BEptr()->displayNeutrinoPoleMass(i);
+        }
+        
+        inline double QedQcd::displayAlpha(softsusy::leGauge ai) const
+        {
+            return get_BEptr()->displayAlpha(ai);
         }
         
         inline double QedQcd::displayAlphaEmInput() const

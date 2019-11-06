@@ -38,7 +38,8 @@ gambit_base_namespace  = ''
 input_files   = [
 #    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/command_line_options.hpp',
 #    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp',
-    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM/CMSSM_slha_io.hpp',
+#    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/models/CMSSM/CMSSM_slha_io.hpp',
+    '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/lowe.h',
     '../../../Backends/installed/flexiblesusy/'+gambit_backend_version+'/CMSSM/src/spectrum_generator_settings.hpp'
 ]
 include_paths = [

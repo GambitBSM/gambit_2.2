@@ -7,6 +7,8 @@
 #include <cstddef>
 #include <iostream>
 
+#include "enum_decl_copies.h"
+
 #include "identification.hpp"
 
 namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
@@ -45,7 +47,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     
                 virtual void setPoleMZ(double) =0;
     
+                virtual void setMass(softsusy::mass, double) =0;
+    
                 virtual void setNeutrinoPoleMass(int, double) =0;
+    
+                virtual void setAlpha(softsusy::leGauge, double) =0;
     
                 virtual void setAlphaEmInput(double) =0;
     
@@ -68,6 +74,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual double displayPoleMZ() const =0;
     
                 virtual double displayNeutrinoPoleMass(int) const =0;
+    
+                virtual double displayAlpha(softsusy::leGauge) const =0;
     
                 virtual double displayAlphaEmInput() const =0;
     

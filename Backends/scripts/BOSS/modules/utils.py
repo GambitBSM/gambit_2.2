@@ -1016,7 +1016,7 @@ def isAcceptedType(input_el):
             is_accepted_type = True
 
     elif type_el.tag in ['FundamentalType', 'Enumeration']:
-        #TODO: seems like the name doesn't get the namespace
+        # Accept both the name with and without the namespace
         if type_name in gb.accepted_types:
             is_accepted_type = True
         type_name = type_el.get('name')
@@ -2141,7 +2141,7 @@ def constrLoadedTypesHeaderContent():
 
 # ====== constrEnumDeclHeader ========
 
-def constrEnumDeclHeader(enum_el_list, file_output_path):
+def constrEnumDeclHeader(file_output_path):
 
     import modules.classutils as classutils
 
@@ -2159,7 +2159,7 @@ def constrEnumDeclHeader(enum_el_list, file_output_path):
     insert_code = ''
     tag_pos = current_code.find('__INSERT_CODE_HERE__')
 
-    for enum_el in enum_el_list:
+    for enum_name, enum_el in gb.enum_dict.items():
 
         # Skip any enumerated type that is not native to the external code
         if not isNative(enum_el):
@@ -2449,10 +2449,11 @@ def fillAcceptedTypesList():
             # Enumeration type?
             #
             # TG: for now consider only enumerations that belong to a loaded class
+            # TODO: changed my mind, all are allowed
             is_enumeration = isEnumeration(el)
             if is_enumeration:
-                parent = '::'.join(getNamespaces(el, include_self=False))
-                if parent and parent in new_loaded_classes:
+            #    parent = '::'.join(getNamespaces(el, include_self=False))
+            #    if parent and parent in new_loaded_classes:
                     new_enumeration_types.append(full_name)
 
 
@@ -2671,6 +2672,7 @@ def clearGlobalXMLdicts():
     gb.typedef_dict.clear()
     gb.loaded_classes_in_xml.clear()
     gb.func_dict.clear()
+    gb.enum_dict.clear()
 
 # ====== END: clearGlobalXMLdicts ========
 
@@ -2764,6 +2766,19 @@ def initGlobalXMLdicts(xml_path, id_and_name_only=False):
                 else:
                     pass
 
+        # Create an enum dictionary
+        if el.tag == 'Enumeration':
+
+            # Only accept native enumerations
+            if isNative(el):
+  
+                enum_name = el.get('name')
+
+                # Only take enumerations that are not members of a class or a struct
+                parent = gb.id_dict[el.get('context')]
+                if not parent.tag in ('Class', 'Struct') :
+
+                    gb.enum_dict[enum_name] = el
 
         # Update global dict: function name --> function xml element
         if el.tag == 'Function':
