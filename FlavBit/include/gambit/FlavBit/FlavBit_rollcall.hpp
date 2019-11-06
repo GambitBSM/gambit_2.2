@@ -89,7 +89,7 @@ START_MODULE
   #define CAPABILITY SuperIso_obs_values
   START_CAPABILITY
     #define FUNCTION SI_compute_obs_list
-    START_FUNCTION(std::vector<double>)
+    START_FUNCTION(SI_observable_map)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
 	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))

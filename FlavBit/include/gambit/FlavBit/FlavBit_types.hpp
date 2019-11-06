@@ -83,6 +83,10 @@ namespace Gambit
       int dim;
     };
 
+    /// Maps for holding SI observables and covariance matrix.
+    typedef std::map<const std::string, double> SI_observable_map;
+    typedef std::map<const std::string, std::map<const std::string, double>> SI_covariance_map;
+
   }
 }
 

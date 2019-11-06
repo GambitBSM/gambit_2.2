@@ -80,9 +80,6 @@ namespace Gambit
     using namespace std;
     namespace ublas = boost::numeric::ublas;
 
-    typedef std::map<const std::string, double> SI_observable_map;
-    typedef std::map<const std::string, std::map<const std::string, double>> SI_covariance_map;
-
     const bool flav_debug =
     #ifdef FLAVBIT_DEBUG
       true;
@@ -561,7 +558,7 @@ namespace Gambit
     }
 
     /// NEW! Compute values of list of observables
-    void SI_compute_obs_list(std::vector<double>& result)  // TO BE MODIFIED
+    void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
     {
       using namespace Pipes::SI_compute_obs_list;
       if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
@@ -585,16 +582,9 @@ namespace Gambit
 
       BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &res, &param, &nuislist);
 
-      SI_observable_map observables;  // This has to be removed when the function argument changes to the map.
       assert(nObservables == sizeof(res) / sizeof(res[0]));
       for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-          observables[obslist[iObservable]] = res[iObservable];
-      }
-
-      // The following 4 lines can be removed, when the function argument changes to the map.
-      result.reserve(nObservables);
-      for(int iObservable = 0; iObservable<nObservables; ++iObservable) {
-          result[iObservable] = res[iObservable]; // TO BE MODIFIED
+          result[obslist[iObservable]] = res[iObservable];
       }
 
       // Free memory
@@ -602,7 +592,7 @@ namespace Gambit
 
       if (flav_debug) {
           for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-              printf("%s=%.4e\n", obsnames[iObservable], result[iObservable]);
+              printf("%s=%.4e\n", obsnames[iObservable], result[obslist[iObservable]]);
           }
       }
 
