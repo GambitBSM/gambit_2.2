@@ -73,6 +73,9 @@ load_classes = [
 load_functions = [
 ]
 
+load_enums = [
+]
+
 ditch = [
     'softsusy::QedQcd::displayMass',
     'softsusy::QedQcd::displayAlphas',

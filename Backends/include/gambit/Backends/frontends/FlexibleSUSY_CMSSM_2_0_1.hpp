@@ -35,6 +35,37 @@ namespace Gambit
 }
 
 // Functions
+
+// Enums
+namespace Gambit
+{
+    namespace Backends
+    {
+        namespace FlexibleSUSY_CMSSM_2_0_1
+        {
+            namespace softsusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mass mass;
+                constexpr mass mUp = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mUp;
+                constexpr mass mCharm = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mCharm;
+                constexpr mass mTop = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mTop;
+                constexpr mass mDown = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mDown;
+                constexpr mass mStrange = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mStrange;
+                constexpr mass mBottom = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mBottom;
+                constexpr mass mElectron = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mElectron;
+                constexpr mass mMuon = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mMuon;
+                constexpr mass mTau = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::mTau;
+            }
+            namespace softsusy
+            {
+                typedef ::FlexibleSUSY_CMSSM_2_0_1::softsusy::leGauge leGauge;
+                constexpr leGauge ALPHA = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::ALPHA;
+                constexpr leGauge ALPHAS = ::FlexibleSUSY_CMSSM_2_0_1::softsusy::ALPHAS;
+            }
+        }
+    }
+}
+
 // Variables
 
 // Initialisation function (dependencies)
