@@ -76,7 +76,7 @@ EXTERNALPROJECT_ADD(
 # Download MadGraph
 EXTERNALPROJECT_ADD(
     MadGraph
-    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.6.tar.gz
+    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.7.tar.gz
     UPDATE_COMMAND ""
     PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" input/mg5_configuration.txt
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/MadGraph

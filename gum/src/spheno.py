@@ -1267,12 +1267,12 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # Add each particle to the spectrum
     for particle in particles:
-        mass = re.sub("\d","",particle.alt_mass_name)
+        mass = re.sub(r"\d","",particle.alt_mass_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_mass_name)
         specmass = pdg_to_particle(particle.PDG_code, gambit_pdgs)
         brace = "(" + str(index) + ")" if index else ""
         
-        eig = re.sub("\d","",particle.alt_name)
+        eig = re.sub(r"\d","",particle.alt_name)
         if not eig in mixingdict:
             mixingdict[eig] = specmass.split('_')[0]
 
@@ -2402,39 +2402,47 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 " = *inputs.param.at(\"{0}\");\n"
             ).format(e, c)
 
+    # List all the blocks:
+    blocks = []
+    for name, var in variables.iteritems():
+        if var.block != None and var.block.endswith("IN"):
+            blocks.append(var.block)
+    blocks = list(set(blocks))
+
+    text = ""
+    for block in blocks:
+        text += "/* - {0: <13} */ \n".format(block)
+    towrite += (
+            "\n"
+            "/*****************/\n"
+            "/* Blocks:       */\n"
+            "{0}"
+            "/*****************/\n"
+            ).format(text)
+
     # Input parameters
     # TODO:  The name of model parameters might be wrong
     # TODO: this does not work for matrices
-    thisblock = ""
     for name, var in variables.iteritems():
 
-        # print name
-        # print var.name, var.type, var.size, var.block, var.index, var.alt_name, var.bcs
-
         if var.block != None and var.block.endswith("IN") :
-            if thisblock != var.block :
-                thisblock = var.block
-                towrite += (
-                        "\n"
-                        "/*****************/\n"
-                        "/* Block {0} */\n"
-                        "/*****************/\n"
-                ).format(thisblock)
+            
 
             model_par = get_model_par_name(name, variables)
             
             # If it's *not* a matrix
             if not var.size:
 
-                e = "IN->re" if var.type.startswith("Complex") else "IN"
+                e = (name+"IN->re" if var.type.startswith("Complex") 
+                                   else "*"+name+"IN" )
                 towrite += (
                         "if(inputs.param.find(\"{0}\") != inputs.param.end())\n"
                         "{{\n"
-                        "{1}{2}"
+                        "{1}"
                         " = *inputs.param.at(\"{0}\");\n"
-                        "*InputValuefor{1} = true;\n"
+                        "*InputValuefor{2} = true;\n"
                         "}}\n"
-                ).format(model_par, name, e)
+                ).format(model_par, e, name)
 
             # Matrix case
             else:

@@ -32,24 +32,26 @@ def get_model_parameters(parameters, partlist) :
 
     for param in parameters:
  
-        # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a model parameter
+        # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a
+        # model parameter
         if param.block != "MINPAR" and param.block != "EXTPAR" :
-          if not (param.block != None and param.block.endswith("IN")) : 
-            model_parameters.append(param)
+            if not (param.block != None and param.block.endswith("IN")) : 
+                model_parameters.append(param)
 
     return model_parameters
 
 def get_model_par_name(paramname, parameters) :
     """
-    Get the output name of the model parameter with name or altname equal to paramname
+    Get the output name of the model parameter with 
+    name or alt_name equal to paramname
     """
     
     for name, param in parameters.iteritems():
-      if paramname == param.bcs :
-        return name
+        if paramname == param.bcs :
+            return name
     for name, param in parameters.iteritems():
-      if paramname == param.name or paramname == param.alt_name :
-        return param.name
+        if paramname == param.name or paramname == param.alt_name :
+            return param.name
 
 
 def add_to_model_hierarchy(spectrum_name, model_name, model_params):
@@ -79,7 +81,8 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     ).format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    bsm_params = [x for x in model_params if x.name != 'mH' and x.tag != 'Pole_Mass']
+    bsm_params = [x for x in model_params if
+                  x.name != 'mH' and x.tag != 'Pole_Mass']
 
     params = []
 

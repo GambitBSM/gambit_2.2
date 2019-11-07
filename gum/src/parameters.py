@@ -259,8 +259,14 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     Maybe worth adding a new parameter tag, like Par::unspecified.
     """
 
-    unsorted_params = []
     params = []
+
+    # Convert the C++ dict to python properly
+    mixingdict = dict((m.key(),m.data()) for m in mixings)
+    
+    # List of parameters which have been added. Dupes can arise
+    # from the Pole_Mixings for multiple particles
+    addedpars = [] 
 
     # Add all parameters from the parameter list from SARAH
     for i in xrange(len(paramlist)):
@@ -274,38 +280,48 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
             tag = "Pole_Mixing" if (p.is_output() == True and 
                 p.shape().startswith("m")) else "dimensionless"
 
-            # TODO pole_mixing still needs to be assigned to the correct particle here,
-            # so one can do spectrum.get(Par::Pole_Mixing, "h0") etc.
+            name = p.name()
 
+            if tag == "Pole_Mixing":
+                found = False
+                
+                # Throw an error if we don't know what the mixing matrix is.
+                if not name in mixingdict:
+                    raise GumError(("Could not find which particle "
+                                    "eigenstates the mixing matrix {0} "
+                                    "couples to!")).format(name)
 
-            # print mixings
-            # for m in mixings: print m 
+                entry = mixingdict[name]
+
+                for particle in particles:
+
+                    # Strip numbers and try to align particles
+                    tomatch = ''.join([i for i in particle.alt_name()
+                                       if not i.isdigit()])
+                
+                    if tomatch in entry:
+                        name = pdg_to_particle(particle.pdg(), 
+                                               gambit_pdgs).split('_')[0]
+                        found = True
+                        continue
+
+            if name in addedpars: 
+                continue
+            else:
+                addedpars.append(name)
+
 
             # Create a new instance of SpectrumParameter
-            # TODO: dimensionless atm! 
-            x = SpectrumParameter(p.name(), tag, block=p.block(),
+            # TODO: still need to find mass dimension for parameters that aren't
+            # pole masses and pole mixings. 
+            x = SpectrumParameter(name, tag, block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
                                   bcs = p.bcs(), shape = p.shape(), 
                                   is_output = p.is_output(), is_real = p.is_real())
-            unsorted_params.append(x)
+            params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
     # are elements of a matrix.
-
-    # Firstly, get the name of each block
-    blocks = list(set([i.block for i in unsorted_params]))
-
-    # For each block, add the parameters to a dictionary...
-    from collections import defaultdict
-    blockdict = defaultdict(list)
-
-    for i in blocks:
-        for j in unsorted_params:
-            if j.block == i:
-                blockdict[i].append(j.name)
-
-    for par in unsorted_params:
-      params.append(par)
     
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:

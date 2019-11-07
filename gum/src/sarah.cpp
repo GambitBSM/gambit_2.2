@@ -418,7 +418,6 @@ namespace GUM
         // If it's definitely a real parameter, store this information
         if (entry == "True") real = true;
 
-      
         // With DependenceSPheno -- flag it, so we can save it for later; we'll want it
         command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
         send_to_math(command);
@@ -948,6 +947,7 @@ namespace GUM
   void SARAH::write_spheno_output()
   {
       std::cout << "Writing SPheno output." << std::endl;
+      std::cout << "Strap in tight -- this might take a while..." << std::endl;
       
       // Options for SPheno output.
       std::string options;
@@ -955,7 +955,8 @@ namespace GUM
       // - InputFile (default $MODEL/SPheno.m)
       // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
       // TODO: temp hack to make it faster
-      options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
+      //options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
+      options = "IncludeFlavorKit->False";
 
       // Write output.
       std::string command = "MakeSPheno[" + options + "];";
@@ -971,7 +972,7 @@ namespace GUM
 
       // Options for Vevacious output.
       std::string options;
-      options = "Version->\"++\"";
+      options = "Version->\"++\", ReadLists->True";
 
       // Write output.
       std::string command = "MakeVevacious[" + options + "];";
@@ -1157,7 +1158,7 @@ BOOST_PYTHON_MODULE(libsarah)
     ;
 
   class_< std::map<std::string, std::string> >("SARAHMapStrStr")
-    .def(map_indexing_suite< std::map<std::string, std::string> >() )
+    .def(map_indexing_suite< std::map<std::string, std::string>, true>() )
     ;
 
   def("all_sarah", GUM::all_sarah);
