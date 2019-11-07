@@ -38,7 +38,10 @@ namespace GUM
       void load_model(std::string model, std::string base_model);
 
       // Load restriction e.g. diagonal CKM, etc.
-      void load_restriction(std::string model, std::string rst);
+      void load_restriction(std::string model, std::string base_model, std::string rst);
+
+      // Check the Lagrangian makes sense
+      void check_lagrangian(std::string LTot);
 
       // Hermiticity check
       void check_herm(std::string);
