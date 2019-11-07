@@ -305,7 +305,7 @@ namespace Gambit
       if (ModelInUse("MSSM63atQ") or ModelInUse("MSSM63atMGUT") or ModelInUse("MSSM63atQ_lightgravitino") or ModelInUse("MSSM63atMGUT_lightgravitino"))
       {
         // The scale doesn't come through in MODSEL with all spectrum generators
-        result.Q = Dep::MSSM_spectrum->get_HE().GetScale();
+        result.Q = Dep::MSSM_spectrum->GetScale();
 
         if (!spectrum["ALPHA"].empty()) if (spectrum["ALPHA"].back().is_data_line()) result.alpha=SLHAea::to<double>(spectrum["ALPHA"].back().at(0));
 
