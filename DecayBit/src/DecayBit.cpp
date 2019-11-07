@@ -2763,8 +2763,7 @@ namespace Gambit
       // Also get the names ("~e-_1", "~e-_2", ..., "~e-_6") that correspond to the light and heavy stau states.
       std::vector<double> stau_mix_4vec = slhahelp::family_state_mix_matrix("~e-", 3, m_light, m_heavy, mssm, ftol, LOCAL_INFO, fpt_error);
       // Get the mass of the lightest stau state
-      // TODO: This was safeget before, there is no safeget now
-      const double m_stau = spec.get(Par::Pole_Mass,m_light);
+      const double m_stau = mssm.safeget(Par::Pole_Mass,m_light);
       // Get the gauge mixing
       const double F11 = stau_mix_4vec[0];
       const double F12 = stau_mix_4vec[1];
@@ -2792,7 +2791,7 @@ namespace Gambit
       const double m_tau = *Param["mTau"];
       // @todo Get w_tau properly from DecayBit
       const double w_tau = Dep::tau_minus_decay_rates->width_in_GeV;
-      const double m_W = spec.safeget(Par::Pole_Mass,24,0);
+      const double m_W = mssm.safeget(Par::Pole_Mass,24,0);
       const double g_2 = mssm.safeget(Par::dimensionless,"g2");
       const double sinW2 = mssm.safeget(Par::dimensionless,"sinW2");
       const double m_pi = meson_masses.pi_plus;
@@ -2971,19 +2970,16 @@ namespace Gambit
       const SMInputs &sm = Dep::MSSM_spectrum->get_SMInputs();
 
       // Get gravitino mass
-      // TODO: This was safeget before, there is no safeget now
-      const double m_G = mssm.get(Par::Pole_Mass, "~G"); // [GeV]
+      const double m_G = mssm.safeget(Par::Pole_Mass, "~G"); // [GeV]
 
       // Get other SUSY masses
-      const double m_Neu1_signed = spec.safeget(Par::Pole_Mass, "~chi0_1");
+      const double m_Neu1_signed = mssm.safeget(Par::Pole_Mass, "~chi0_1");
       const double m_Neu1 = abs(m_Neu1_signed); // [GeV]
 
       // Get MSSM parameters
-      // TODO: This was safeget before, there is no safeget now
-      const double sin_alpha = mssm.get(Par::Pole_Mixing, "h0", 2, 2); // SCALARMIX (2,2) = sin(alpha)
+      const double sin_alpha = mssm.safeget(Par::Pole_Mixing, "h0", 2, 2); // SCALARMIX (2,2) = sin(alpha)
       const double cos_alpha = sqrt(1. - pow2(sin_alpha));
-      // TODO: This was safeget before, there is no safeget now
-      const double tan_beta = mssm.get(Par::dimensionless, "tanbeta");
+      const double tan_beta = mssm.safeget(Par::dimensionless, "tanbeta");
       const double cos_beta = 1. / sqrt(1. + pow2(tan_beta));
       const double sin_beta = sqrt(1. - pow2(cos_beta));
 
@@ -3121,15 +3117,14 @@ namespace Gambit
       using namespace Pipes::chargino_plus_1_decays_gravitino;
 
       // Get spectrum objects
-      const Spectrum &spec = *Dep::MSSM_spectrum;
-      const SubSpectrum &mssm = spec.get_HE();
+      const Spectrum &mssm = *Dep::MSSM_spectrum;
       // const SMInputs &sm = Dep::SM_spectrum->get_SMInputs();
 
       // Get gravitino mass
       const double m_G = mssm.safeget(Par::Pole_Mass, "~G"); // [GeV]
 
       // Get other SUSY masses
-      const double m_Cha1_signed = spec.safeget(Par::Pole_Mass, "~chi+_1");
+      const double m_Cha1_signed = mssm.safeget(Par::Pole_Mass, "~chi+_1");
       const double m_Cha1 = abs(m_Cha1_signed); // [GeV]
 
       // Get MSSM parameters
@@ -3252,12 +3247,12 @@ namespace Gambit
         self_conjugate = false;
       }
       else DecayBit_error().raise(LOCAL_INFO, "No valid model for ScalarSingletDM_Higgs_decays.");
-      const SubSpectrum& he = (*spectrum_dependency)->get_HE();
+      const Spectrum& spec = **spectrum_dependency;
 
-      double mass = (*spectrum_dependency)->get(Par::Pole_Mass,"S");
-      double lambda = he.get(Par::dimensionless,"lambda_hS");
-      double v0 = he.get(Par::mass1,"vev");
-      double mhpole = (*spectrum_dependency)->get(Par::Pole_Mass,"h0_1");
+      double mass = spec.get(Par::Pole_Mass,"S");
+      double lambda = spec.get(Par::dimensionless,"lambda_hS");
+      double v0 = spec.get(Par::mass1,"vev");
+      double mhpole = spec.get(Par::Pole_Mass,"h0_1");
 
       // Get the reference SM Higgs decays
       result = *Dep::Reference_SM_Higgs_decay_rates;
@@ -3293,10 +3288,9 @@ namespace Gambit
 
       // Get the spectrum information
       const Spectrum& spec = *Dep::VectorSingletDM_Z2_spectrum;
-      const SubSpectrum& he = spec.get_HE();
       double mass = spec.get(Par::Pole_Mass,"V");
-      double lambda = he.get(Par::dimensionless,"lambda_hV");
-      double v0 = he.get(Par::mass1,"vev");
+      double lambda = spec.get(Par::dimensionless,"lambda_hV");
+      double v0 = spec.get(Par::mass1,"vev");
       double mhpole = spec.get(Par::Pole_Mass,"h0_1");
 
       // Get the reference SM Higgs decays
@@ -3335,11 +3329,10 @@ namespace Gambit
 
       // Get the spectrum information
       const Spectrum& spec = *Dep::MajoranaSingletDM_Z2_spectrum;
-      const SubSpectrum& he = spec.get_HE();
       double mass = spec.get(Par::Pole_Mass,"X");
-      double lambda = he.get(Par::dimensionless,"lX");
-      double cxi = std::cos(he.get(Par::dimensionless,"xi"));
-      double v0 = he.get(Par::mass1,"vev");
+      double lambda = spec.get(Par::dimensionless,"lX");
+      double cxi = std::cos(spec.get(Par::dimensionless,"xi"));
+      double v0 = spec.get(Par::mass1,"vev");
       double mhpole = spec.get(Par::Pole_Mass,"h0_1");
 
       // Get the reference SM Higgs decays
@@ -3378,11 +3371,10 @@ namespace Gambit
 
       // Get the spectrum information
       const Spectrum& spec = *Dep::DiracSingletDM_Z2_spectrum;
-      const SubSpectrum& he = spec.get_HE();
       double mass = spec.get(Par::Pole_Mass,"F");
-      double lambda = he.get(Par::dimensionless,"lF");
-      double cxi = std::cos(he.get(Par::dimensionless,"xi"));
-      double v0 = he.get(Par::mass1,"vev");
+      double lambda = spec.get(Par::dimensionless,"lF");
+      double cxi = std::cos(spec.get(Par::dimensionless,"xi"));
+      double v0 = spec.get(Par::mass1,"vev");
       double mhpole = spec.get(Par::Pole_Mass,"h0_1");
 
       // Get the reference SM Higgs decays
@@ -3463,7 +3455,7 @@ namespace Gambit
             Dep::H_plus_decay_rates->calculator == "FeynHiggs" or
             Dep::t_decay_rates->calculator == "FeynHiggs")
         {
-          if (not Dep::MSSM_spectrum->get_HE().has(Par::dimensionless, "h mass from: SpecBit::FH_HiggsMass, SpecBit::FH_HeavyHiggsMasses"))
+          if (not Dep::MSSM_spectrum->has(Par::dimensionless, "h mass from: SpecBit::FH_HiggsMass, SpecBit::FH_HeavyHiggsMasses"))
            DecayBit_error().raise(LOCAL_INFO, "You must use Higgs masses from FeynHiggs if you choose to use FeynHiggs "
                                               "to calculate h or t decays.\nPlease modify your yaml file accordingly.");
         }
@@ -3626,7 +3618,7 @@ namespace Gambit
     void get_mass_es_pseudonyms(mass_es_pseudonyms& result)
     {
       using namespace Pipes::get_mass_es_pseudonyms;
-      const SubSpectrum& mssm = (*Dep::MSSM_spectrum).get_HE();
+      const Spectrum& mssm = *Dep::MSSM_spectrum;
 
       const static double tol = runOptions->getValueOrDef<double>(1e-2, "gauge_mixing_tolerance");
       const static bool pt_error = runOptions->getValueOrDef<bool>(true, "gauge_mixing_tolerance_invalidates_point_only");
@@ -3645,7 +3637,7 @@ namespace Gambit
       const static double tol = runOptions->getValueOrDef<double>(1e-2, "gauge_mixing_tolerance");
       result = 0;
       double max_mixing;
-      const SubSpectrum& mssm = (*Dep::MSSM_spectrum).get_HE();
+      const Spectrum& mssm = *Dep::MSSM_spectrum;
       str x = slhahelp::mass_es_from_gauge_es("~u_L", max_mixing, mssm);
       if((max_mixing*max_mixing) <= 1-tol) result = 1;
       x = slhahelp::mass_es_from_gauge_es("~u_R", max_mixing, mssm);
@@ -3701,7 +3693,6 @@ namespace Gambit
       */
       using namespace Pipes::MSSM_inv_Higgs_BF;
       const Spectrum& spec = *Dep::MSSM_spectrum;
-      const SubSpectrum& MSSM = Dep::MSSM_spectrum->get_HE();
       const SMInputs& SM = Dep::MSSM_spectrum->get_SMInputs();
 
       // Neutralino masses with phases
@@ -3717,7 +3708,7 @@ namespace Gambit
       {
         for (int j = 0; j <= 3; j += 1)
         {
-          Z[i][j] = MSSM.get(Par::Pole_Mixing, "~chi0", i + 1, j + 1);
+          Z[i][j] = spec.get(Par::Pole_Mixing, "~chi0", i + 1, j + 1);
         }
       }
 
@@ -3734,19 +3725,19 @@ namespace Gambit
       {
         for (int j = 0; j <= 1; j += 1)
         {
-          U[i][j] = MSSM.get(Par::Pole_Mixing, "~chi-", i + 1, j + 1);
-          V[i][j] = MSSM.get(Par::Pole_Mixing, "~chi+", i + 1, j + 1);
+          U[i][j] = spec.get(Par::Pole_Mixing, "~chi-", i + 1, j + 1);
+          V[i][j] = spec.get(Par::Pole_Mixing, "~chi+", i + 1, j + 1);
         }
       }
 
       // SM parameters
-      const double mh = MSSM.get(Par::Pole_Mass, "h0_1");
-      const double mw = MSSM.get(Par::Pole_Mass, "W+");
+      const double mh = spec.get(Par::Pole_Mass, "h0_1");
+      const double mw = spec.get(Par::Pole_Mass, "W+");
       const double GF = SM.GF;
-      const double sw2 = MSSM.safeget(Par::dimensionless, "sinW2");
+      const double sw2 = spec.safeget(Par::dimensionless, "sinW2");
 
       // Higgs mixing angle
-      const double beta = atan(MSSM.safeget(Par::dimensionless, "tanbeta"));
+      const double beta = atan(spec.safeget(Par::dimensionless, "tanbeta"));
       const double alpha = beta - 0.5 * pi;
 
       // Higgs invisible width
@@ -3982,7 +3973,6 @@ namespace Gambit
       using namespace Pipes::Z_gamma_chi_0_MSSM_tree;
 
       const Spectrum& spec = *Dep::MSSM_spectrum;
-      const SubSpectrum& MSSM = Dep::MSSM_spectrum->get_HE();
       const SMInputs& SM = Dep::MSSM_spectrum->get_SMInputs();
 
       // Neutralino masses without phases
@@ -3998,13 +3988,13 @@ namespace Gambit
       {
         for (int j = 0; j <= 3; j += 1)
         {
-          Z[i][j] = MSSM.get(Par::Pole_Mixing, "~chi0", i + 1, j + 1);
+          Z[i][j] = spec.get(Par::Pole_Mixing, "~chi0", i + 1, j + 1);
         }
       }
 
       // SM nuisance parameters
-      const double g2 = MSSM.safeget(Par::dimensionless, "g2");
-      const double sw2 = MSSM.safeget(Par::dimensionless, "sinW2");
+      const double g2 = spec.safeget(Par::dimensionless, "g2");
+      const double sw2 = spec.safeget(Par::dimensionless, "sinW2");
       const double MZ = SM.mZ;
 
       // Set elements of triplet to the width and its error

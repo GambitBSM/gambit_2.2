@@ -507,6 +507,16 @@ namespace Gambit
    }
 
    double Spectrum::safeget(const Par::Tags partype,
+                            const std::string& mass, 
+                            const int index1, const int index2) const
+   {
+      double result = get(partype, mass, index1, index2);
+      if (Utils::isnan(result))
+         utils_error().raise(LOCAL_INFO,"Spectrum parameter is nan!!");
+      return result;
+   }
+
+   double Spectrum::safeget(const Par::Tags partype,
                             const int pdg_code, const int context) const
    {
       double result = get(partype, pdg_code, context);

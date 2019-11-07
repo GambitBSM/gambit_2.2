@@ -230,6 +230,7 @@ namespace Gambit
          /// @{ Getters which first check the sanity of the thing they are returning
          double safeget(const Par::Tags partype, const std::string& mass) const;
          double safeget(const Par::Tags partype, const std::string& mass, const int index) const;
+         double safeget(const Par::Tags partype, const std::string& mass, const int index1, const int index2) const;
          double safeget(const Par::Tags partype, const int pdg_code, const int context) const;
          double safeget(const Par::Tags partype, const std::pair<int,int> pdgpr) const;
          double safeget(const Par::Tags partype, const std::pair<str,int> shortpr) const;
