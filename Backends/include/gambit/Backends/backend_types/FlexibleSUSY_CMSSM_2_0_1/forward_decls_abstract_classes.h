@@ -8,14 +8,22 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
 {
     
     
+    namespace flexiblesusy
+    {
+        class Abstract_Two_scale;
+        template <Two_scale>
+        class Abstract_Two_scale>;
+        class Abstract_Two_scale>;
+        class Abstract_CMSSM_input_parameters;
+        template <class T>
+        class Abstract_Two_scale>;
+        class Abstract_Two_scale>;
+        class Abstract_Spectrum_generator_settings;
+        class Abstract_Beta_function;
+    }
     namespace softsusy
     {
         class Abstract_QedQcd;
-    }
-    
-    namespace flexiblesusy
-    {
-        class Abstract_Spectrum_generator_settings;
     }
     
     

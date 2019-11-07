@@ -139,6 +139,18 @@ namespace Gambit
 }
 
 // Functions
+
+// Enums
+namespace Gambit
+{
+    namespace Backends
+    {
+        namespace Pythia_8_212
+        {
+        }
+    }
+}
+
 // Variables
 
 // Initialisation function (dependencies)

@@ -1,6 +1,6 @@
 diff -rupN FlexibleSUSY-2.0.1/models/CMSSM/module.mk ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/module.mk
---- FlexibleSUSY-2.0.1/models/CMSSM/module.mk	2019-11-07 18:25:47.948761097 +1100
-+++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/module.mk	2019-11-07 17:59:26.865791669 +1100
+--- FlexibleSUSY-2.0.1/models/CMSSM/module.mk	2019-10-25 17:05:37.158486939 +1100
++++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/module.mk	2019-10-25 17:04:59.146079585 +1100
 @@ -276,7 +276,7 @@ endif
  $(LLCMSSM_OBJ) $(LLCMSSM_LIB): \
  	CPPFLAGS += $(shell $(MATH_INC_PATHS) --math-cmd="$(MATH)" -I --librarylink --mathlink)
@@ -11,8 +11,8 @@ diff -rupN FlexibleSUSY-2.0.1/models/CMSSM/module.mk ../installed/flexiblesusy/2
  
  $(DIR)/%.x: $(DIR)/%.o $(LIBCMSSM) $(LIBFLEXI) $(filter-out -%,$(LOOPFUNCLIBS))
 diff -rupN FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_slha_io.hpp ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_slha_io.hpp
---- FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_slha_io.hpp	2019-11-07 18:25:47.944761049 +1100
-+++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_slha_io.hpp	2019-11-07 17:59:26.869791718 +1100
+--- FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_slha_io.hpp	2019-10-25 17:05:37.158486939 +1100
++++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_slha_io.hpp	2019-10-25 17:04:59.146079585 +1100
 @@ -298,7 +298,7 @@ void CMSSM_slha_io::set_extra(
              << FORMAT_ELEMENT(1, (MODELPARAMETER(Mu)), "Mu")
              << FORMAT_ELEMENT(2, (MODELPARAMETER(vu)/MODELPARAMETER(vd)), "vu/vd")
@@ -23,20 +23,28 @@ diff -rupN FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_slha_io.hpp ../installed/flexib
              << FORMAT_ELEMENT(102, (MODELPARAMETER(vd)), "vd")
              << FORMAT_ELEMENT(103, (MODELPARAMETER(vu)), "vu")
 diff -rupN FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp
---- FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp	2019-11-07 18:25:47.948761097 +1100
-+++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp	2019-11-07 18:25:02.160212783 +1100
-@@ -30,7 +30,7 @@ namespace softsusy { class QedQcd; }
+--- FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp	2019-10-25 17:05:37.158486939 +1100
++++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_two_scale_spectrum_generator.hpp	2019-10-25 17:04:59.146079585 +1100
+@@ -57,6 +57,16 @@ private:
+    void calculate_spectrum();
+ };
  
- namespace flexiblesusy {
++class CMSSM_spectrum_generator_Two_scale : public CMSSM_spectrum_generator<Two_scale>
++{
++
++};
++
++class CMSSM_slha_Model_Two_scale : public CMSSM_slha<CMSSM<Two_scale> >
++{
++
++};
++
+ } // namespace flexiblesusy
  
--class Two_scale;
-+class Two_scale {};
- 
- template <>
- class CMSSM_spectrum_generator<Two_scale>
+ #endif
 diff -rupN FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_two_scale_susy_scale_constraint.cpp ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_two_scale_susy_scale_constraint.cpp
---- FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_two_scale_susy_scale_constraint.cpp	2019-11-07 18:25:47.948761097 +1100
-+++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_two_scale_susy_scale_constraint.cpp	2019-11-07 17:59:26.869791718 +1100
+--- FlexibleSUSY-2.0.1/models/CMSSM/CMSSM_two_scale_susy_scale_constraint.cpp	2019-10-25 17:05:37.158486939 +1100
++++ ../installed/flexiblesusy/2.0.1/CMSSM/models/CMSSM/CMSSM_two_scale_susy_scale_constraint.cpp	2019-10-25 17:04:59.150079628 +1100
 @@ -137,12 +137,13 @@ void CMSSM_susy_scale_constraint<Two_sca
     check_model_ptr();
  

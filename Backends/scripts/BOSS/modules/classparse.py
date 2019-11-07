@@ -274,8 +274,6 @@ def constrAbstractClassHeaderCode(class_el, class_name, abstr_class_name, namesp
     class_decl += include_statements_code
 
     # Add include statement for the enum declaration header. 
-    # TODO:This is not needed, remove comment : Put this inside a #ifndef ... #endif block
-    # to avoid multiple declaration when the abstract class header is included from the original class header. 
     if len(gb.enums_done) > 0 :
         enum_include_statement_code  = ''
         enum_include_statement_code += '#include "' + gb.enum_decls_wrp_fname + cfg.header_extension + '"\n'
@@ -286,6 +284,7 @@ def constrAbstractClassHeaderCode(class_el, class_name, abstr_class_name, namesp
     if (is_template == True) and (class_name['long'] in templ_spec_done):
         pass
     elif (is_template == True) and (class_name['long'] not in templ_spec_done):
+        spec_template_types = utils.getSpecTemplateTypes(class_el)
         class_decl += classutils.constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
                                                          indent=cfg.indent, file_for_gambit=file_for_gambit, 
                                                          template_types=spec_template_types, construct_assignment_operator=construct_assignment_operator)
@@ -335,8 +334,10 @@ def addAbsClassToInheritanceList(class_el, class_name, abstr_class_name, is_temp
 
         # - Prepare the template bracket string
         if src_is_specialization:
+            spec_template_types = utils.getSpecTemplateTypes(class_el)
             add_template_bracket = '<' + ','.join(spec_template_types) + '>'
         else:
+            template_bracket, template_types = utils.getTemplateBracket(class_el)
             add_template_bracket = '<' + ','.join(template_types) + '>'
 
 

@@ -61,12 +61,12 @@ def isLoadable(class_el, print_warning=False, check_pure_virtual_members=True):
         return is_loadable
 
     # - Check if class is a template class. BOSS cannot handle this yet.
-    if isTemplateClass(class_el):
-        is_loadable = False
-        if print_warning:
-            reason = "This is a template class. BOSS cannot yet handle this."
-            infomsg.ClassNotLoadable(class_name['long_templ'], reason).printMessage()
-        return is_loadable
+    #if isTemplateClass(class_el):
+    #    is_loadable = False
+    #    if print_warning:
+    #        reason = "This is a template class. BOSS cannot yet handle this."
+    #        infomsg.ClassNotLoadable(class_name['long_templ'], reason).printMessage()
+    #    return is_loadable
 
     # - Check that class is complete (not only forward declared).
     if not isComplete(class_el):

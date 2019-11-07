@@ -210,7 +210,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         // Wrappers for original constructors: 
         inline softsusy::QedQcd::QedQcd() :
-            WrapperBase(__factory0())
+            Beta_function(__factory0())
         {
             get_BEptr()->set_wptr(this);
             get_BEptr()->set_delete_wrapper(false);
@@ -218,7 +218,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         // Special pointer-based constructor: 
         inline softsusy::QedQcd::QedQcd(softsusy::Abstract_QedQcd* in) :
-            WrapperBase(in)
+            Beta_function(in)
         {
             get_BEptr()->set_wptr(this);
             get_BEptr()->set_delete_wrapper(false);
@@ -226,7 +226,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         // Copy constructor: 
         inline softsusy::QedQcd::QedQcd(const QedQcd& in) :
-            WrapperBase(in.get_BEptr()->pointer_copy__BOSS())
+            Beta_function(in.get_BEptr()->pointer_copy__BOSS())
         {
             get_BEptr()->set_wptr(this);
             get_BEptr()->set_delete_wrapper(false);
