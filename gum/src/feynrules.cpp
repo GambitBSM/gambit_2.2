@@ -19,6 +19,7 @@
 #include <set>
 #include <algorithm>
 #include <cstring>
+#include <fstream>
 
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -58,11 +59,12 @@ namespace GUM
     const char* out;
     if (!WSGetString(link, &out))
     {
-        std::cerr << "Error loading FeynRules. Please check that FeynRules actually lives"
-                  << "\nwhere CMake put it, in:\n"
-                  << "  " + std::string(FEYNRULES_PATH)
-                  << "\nPlease try rebuilding." << std::endl;
-        return;
+        std::stringstream ss;
+        ss << "Error loading FeynRules. Please check that FeynRules actually lives"
+           << "\nwhere CMake put it, in:\n"
+           << "  " + std::string(FEYNRULES_PATH)
+           << "\nPlease try rebuilding." << std::endl;
+        throw std::runtime_error(ss.str());
     }
     else
     {
@@ -82,7 +84,6 @@ namespace GUM
     std::cout << "... " << std::endl;
 
     // LoadModel command.
-
     if (base_model.empty()) 
     {
         std::string command = "LoadModel[\"Models/" + model + "/" + model + ".fr\"]";
@@ -118,23 +119,29 @@ namespace GUM
     std::string command = "M$ModelName";
     send_to_math(command);
 
-    const char* out;
-    if (!WSGetString(link, &out))
-    {
-        throw std::runtime_error("FeyRules Error: Error getting Model name.");
-    }
-
-    return std::string(out);
+    std::string modelname;
+    get_from_math(modelname);
+    return modelname;
   }
 
-  void FeynRules::load_restriction(std::string model, std::string rst)
+  /// Load a restriction file up. Firstly tries to find it in the model directory,
+  /// then the base_model directory.
+  void FeynRules::load_restriction(std::string model, std::string base_model, std::string rst)
   {
    
-    std::cout << "Loading restriction " + rst + "... ";
+    std::cout << "Attempting to load restriction " + rst + "... ";
 
-    // LoadModel command.
-    std::string command = "LoadRestriction[\"Models/" + model + "/" + rst + ".rst\"]";
-    std::cout << command << std::endl;
+    std::string filename;
+    filename = model + "/" + rst + ".rst";
+    std::ifstream infile(filename.c_str());
+    // If it's not in the model directory, try the base_model...
+    if (!infile.good() and base_model != "") 
+    {
+        filename = base_model + "/" + rst + ".rst";
+    }
+
+    // LoadRestriction command.
+    std::string command = "LoadRestriction[\"Models/" + filename + "\"]";
     send_to_math(command);
 
     // Some sort of check here?
@@ -143,13 +150,40 @@ namespace GUM
     send_to_math(command);
 
     int out;
-    if (!WSGetInteger(link, &out))
-        throw std::runtime_error("FeynRules Error: Error loading restriction.");
-
+    get_from_math(out);
     if (out == 0)
-        throw std::runtime_error("FeynRules Error: No restrictions loaded. Please check your .gum file and \nthat your .rst files are in the correct place.");
+        throw std::runtime_error("FeynRules Error: No restrictions loaded. Please check "
+                                 "your .gum file and \nthat your .rst files are in the "
+                                 "correct place.");
 
     std::cout << "Restriction " + rst + " loaded successfully." << std::endl;
+  }
+
+  // Check to see the Lagrangian returns something sensible
+  void FeynRules::check_lagrangian(std::string LTot)
+  {
+    std::cout << "Checking the Lagrangian..." << std::endl;
+
+    std::string command = "Head@("+LTot+") // ToString";
+    send_to_math(command);
+
+    std::string entry;
+    get_from_math(entry);
+    if (entry == "Symbol")
+    {
+        command = LTot + "// ToString";
+        send_to_math(command);
+        get_from_math(entry);
+        if (entry == LTot)
+        {
+            std::stringstream ss;
+            ss << "Lagrangian has not been loaded successfully." << std::endl;
+            ss << "Please check your .gum file and .fr file(s)." << std::endl;
+            throw std::runtime_error(ss.str());
+        }
+    }
+
+    std::cout << "Lagrangian seems OK..." << std::endl;
   }
 
   // Check a model is Hermitian (it should be...)
@@ -167,24 +201,19 @@ namespace GUM
     send_to_math(command);
 
     int lench;
+    get_from_math(lench);
 
-    if (!WSGetInteger(link, &lench))
-        throw std::runtime_error("Error getting 'Length[ch]' from WSTP.");
+    if (lench == 0)
+    {
+        std::cout << "Your Lagrangian is Hermitian." << std::endl;
+    }
     else
     {
-        if (lench == 0)
-        {
-            std::cout << "Your Lagrangian is Hermitian." << std::endl;
-        }
-        else
-        {
-            std::stringstream ss;
-            ss << "Your Lagrangian is not Hermitian." << std::endl;
-            ss << "FeynRules found " + std::to_string(lench) + " vertices in L-HC[L]." << std::endl;
-            ss << "Please check your FeynRules file." << std::endl;
-            throw std::runtime_error(ss.str());
-        }
-
+        std::stringstream ss;
+        ss << "Your Lagrangian is not Hermitian." << std::endl;
+        ss << "FeynRules found " + std::to_string(lench) + " vertices in L-HC[L]." << std::endl;
+        ss << "Please check your FeynRules file." << std::endl;
+        throw std::runtime_error(ss.str());
     }
 
   }
@@ -203,14 +232,10 @@ namespace GUM
     command = "Length[pl]";
     send_to_math(command);
 
+    std::stringstream ss;
+
     int lenpl;
-
-    if (!WSGetInteger(link, &lenpl))
-    {
-        std::cout << "Error getting 'Length[PartList]' from WSTP." << std::endl;
-        return;
-    }
-
+    get_from_math(lenpl);
     std::cout << "Found " << lenpl << " particle sets." << std::endl;
 
     // Get to parsing this monster.
@@ -222,22 +247,18 @@ namespace GUM
         int numelements;
         command = "Length[pl[[" + std::to_string(i+1) + ",2]]]";
         send_to_math(command);
-        if (!WSGetInteger(link, &numelements))
-        {
-            std::cout << "Error getting number of elements from WSTP." << std::endl;
-            return;
-        }
+        get_from_math(numelements);
 
         for (int j=0; j<numelements; j++)
         {
 
             // Initialise all properties we wish to find out about a particle.
-            const char* name;
-            const char* antiname;
-            const char* spin;
-            const char* fullname;
-            const char* eaten;
-            const char* mass;
+            std::string name;
+            std::string antiname;
+            std::string  spin;
+            std::string  fullname;
+            std::string  eaten;
+            std::string  mass;
             // Needs to initialise these to suppress compiler warnings.
             int color = 1;
             int chargeX3 = 0;
@@ -248,47 +269,32 @@ namespace GUM
             // Firstly, find the name
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",1]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &name))
-            {
-                std::cout << "Error getting particle name from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(name);
 
             // Then, the antiparticle name
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",2]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &antiname))
-            {
-                std::cout << "Error getting antiparticle name from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(antiname);
 
             // Next, find out the spin.
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",3]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &spin))
-            {
-                std::cout << "Error getting spin from WSTP." << std::endl;
-                return;
-            }
-            if (not std::strcmp(spin, "V"))
+            get_from_math(spin);
+            if (spin == "V")
             {
                 spinX2 = 2;
             }
-            else if (not std::strcmp(spin, "F"))
+            else if (spin == "F")
             {
                 spinX2 = 1;
             }
-            else if (not std::strcmp(spin, "S"))
+            else if (spin == "S")
             {
                 spinX2 = 0;
             }
             // Don't try and parse ghosts; it'll give us an error. We also
             // don't care about them from a pheno (GUM) standpoint.
-            else if (not std::strcmp(spin, "U"))
+            else if (spin == "U")
             {
                 continue;
             }
@@ -296,42 +302,23 @@ namespace GUM
             // PDG code.
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",9]]";
             send_to_math(command);
-            if (!WSGetInteger(link, &pdg))
-            {
-                std::cout << "Error getting pdg code from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(pdg);
 
             // "Full name"
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",10]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &fullname))
-            {
-                std::cout << "Error getting fullname from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(fullname);
 
             // Name of the mass parameter.
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",5]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &mass))
-            {
-                std::cout << "Error getting mass from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(mass);
 
             // Check it doesn't get eaten - this isn't a physical particle.
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",13]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &eaten))
-            {
-                std::cout << "Error getting Goldstone info from WSTP." << std::endl;
-                return;
-            }
-            if (std::strcmp(eaten, "NoGS"))
+            get_from_math(eaten);
+            if (eaten != "NoGS")
             {
                 continue;
             }
@@ -340,22 +327,17 @@ namespace GUM
             command = "pl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",7]]";
             send_to_math(command);
 
-            const char* colorstr;
-
-            if (!WSGetString(link, &colorstr))
-            {
-                std::cout << "Error getting Color info from WSTP." << std::endl;
-                return;
-            }
-            if (!std::strcmp(colorstr, "S"))
+            std::string colorstr;
+            get_from_math(colorstr);
+            if (colorstr == "S")
             {
                 color = 1;
             }
-            else if (!std::strcmp(colorstr, "T"))
+            else if (colorstr == "T")
             {
                 color = 3;
             }
-            else if (!std::strcmp(colorstr, "O"))
+            else if (colorstr == "O")
             {
                 color = 8;
             }
@@ -364,28 +346,17 @@ namespace GUM
 
             // Firsly, need to get the name of the Class in FeynRules (in case there's
             // multiple entries -- they will all have the same QNUMBERS.)
-            const char* classname;
+            std::string classname;
             command = "pl[[" + std::to_string(i+1) + ",1,2]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &classname))
-            {
-                std::cout << "Error getting classname from WSTP." << std::endl;
-                return;
-            }
-            std::string str(classname);
+            get_from_math(classname);
             
             // Now see if there is a charge entry
             float charge = 0.;
 
-            command = "N[Q[" + str + "]]";
+            command = "N[Q[" + classname + "]]";
             send_to_math(command);
-
-            if (!WSGetFloat(link, &charge))
-            {
-                std::cout << "Error getting charge info from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(charge);
 
             chargeX3 = int(round(charge * 3));
 
@@ -422,55 +393,36 @@ namespace GUM
     command = "Length[epl]";
     send_to_math(command);
 
-    int lenepl;
+    std::stringstream ss;
 
-    if (!WSGetInteger(link, &lenepl))
-    {
-        std::cout << "Error getting 'Length[EParamList]' from WSTP." << std::endl;
-        return;
-    }
+    int lenepl;
+    get_from_math(lenepl);
 
     std::cout << "Found " << lenepl << " parameter blocks." << std::endl;
 
-    const char* block;
+    std::string block;
 
     for (int i=0; i<lenepl; i++)
     {
         command = "epl[[" + std::to_string(i+1) + ",1]]";
         send_to_math(command);
-
-        if (!WSGetString(link, &block))
-        {
-            std::cout << "Error getting block info from WSTP. "
-                      << "Please check every parameter has a BlockName in your .fr file."
-                      << std::endl;
-            return;
-        }
+        get_from_math(block);
 
         // First things first, check how many elements are in each block.
         // e.g., SMINPUTS = (aEWM1, Gf, alphaS).
         int numelements;
         command = "Length[epl[[" + std::to_string(i+1) + ",2]]]";
         send_to_math(command);
-        if (!WSGetInteger(link, &numelements))
-        {
-            std::cout << "Error getting number of elements from WSTP." << std::endl;
-            return;
-        }
+        get_from_math(numelements);
 
         for (int j=0; j<numelements; j++)
         {
 
-            const char* paramname;
+            std::string paramname;
 
             command = "epl[[" + std::to_string(i+1) + ",2," + std::to_string(j+1) + ",2,1]]";
             send_to_math(command);
-
-            if (!WSGetString(link, &paramname))
-            {
-                std::cout << "Error getting paramname from WSTP." << std::endl;
-                return;
-            }
+            get_from_math(paramname);
 
             Parameter parameter(paramname, block, int(j+1));
             paramlist.push_back(parameter);
@@ -483,10 +435,11 @@ namespace GUM
   {
     if ((gauge != "feynman") && (gauge != "unitary"))
     {
-        std::cerr << "set_gauge() called with an incorrect option, "
+        std::stringstream ss;
+        ss << "set_gauge() called with an incorrect option, "
                   << gauge << ".\n Allowed options: 'feynman' or 'unitary'."
                   << std::endl;
-        return;
+        throw std::runtime_error(ss.str());
     }
     std::string command;
     if (gauge == "feynman")
@@ -544,8 +497,11 @@ namespace GUM
       // Load restrictions - if there are any.
       if (not opts.restriction().empty())
       {
-        model.load_restriction(opts.model(), opts.restriction());
+        model.load_restriction(opts.model(), opts.base_model(), opts.restriction());
       }
+
+      // Check the Lagrangian seems to exist.
+      model.check_lagrangian(opts.lagrangian());
 
       // Diagnositics -- check it is hermitian
       model.check_herm(opts.lagrangian());
