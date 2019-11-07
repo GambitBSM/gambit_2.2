@@ -53,7 +53,7 @@ We'll build micrOMEGAs later once we've added the new model, but we have to buil
 CalcHEP first, and DarkSUSY before we scan -- but there's no time like the present.
 From the GAMBIT build directory,
 
-	make -j2 calchep darksusy
+	make -j4 calchep darksusy
 
 0. You may need to build GUM, if this is your first encounter. Let's do that,
    starting from the GUM directory
