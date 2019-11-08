@@ -23,8 +23,9 @@
 namespace Gambit
 {
 
-    struct prospino_settings
+    class prospino_settings
     {
+    public:
         Finteger inlo;
         Finteger isq_ng_in;
         Finteger icoll_in;
@@ -36,6 +37,40 @@ namespace Gambit
         Finteger ipart2_in;
         Finteger isquark1_in;
         Finteger isquark2_in;
+
+        // Constructor
+        prospino_settings(Finteger inlo_input, Finteger isq_ng_in_input, 
+                          Finteger icoll_in_input, Fdouble energy_in_input,
+                          Finteger i_error_in_input, Fstring<2> final_state_in_input,
+                          Finteger ipart1_in_input, Finteger ipart2_in_input,
+                          Finteger isquark1_in_input, Finteger isquark2_in_input) : 
+            inlo(inlo_input),
+            isq_ng_in(isq_ng_in_input),
+            icoll_in(icoll_in_input),
+            energy_in(energy_in_input),
+            i_error_in(i_error_in_input),
+            final_state_in(final_state_in_input),
+            ipart1_in(ipart1_in_input),
+            ipart2_in(ipart2_in_input),
+            isquark1_in(isquark1_in_input),
+            isquark2_in(isquark2_in_input)
+        { }
+
+        // Copy-constructor
+        prospino_settings(const prospino_settings& ps_in)
+        {
+            inlo = ps_in.inlo;
+            isq_ng_in = ps_in.isq_ng_in;
+            icoll_in = ps_in.icoll_in;
+            energy_in = ps_in.energy_in;
+            i_error_in = ps_in.i_error_in;
+            final_state_in = ps_in.final_state_in;
+            ipart1_in = ps_in.ipart1_in;
+            ipart2_in = ps_in.ipart2_in;
+            isquark1_in = ps_in.isquark1_in;
+            isquark2_in = ps_in.isquark2_in;
+        }
+
     };
 
 }

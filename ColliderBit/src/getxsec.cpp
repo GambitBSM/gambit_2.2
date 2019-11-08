@@ -20,6 +20,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp"
+#include "gambit/ColliderBit/PID_pairs_to_prospino_settings.hpp"
 
 // #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ": " << __FILE__ << ":" << __LINE__ << ":  "
@@ -309,6 +310,21 @@ namespace Gambit
 
         */
 
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+
+          // Create PID_pair_xsec_container instance
+          // and set the PIDs
+          PID_pair_xsec_container pp_xs;
+          pp_xs.set_pid_pair(pid_pair);
+
+          // Get prospino settings for this PID_pair
+          prospino_settings ps( PID_pairs_to_prospino_settings.at(pid_pair) );
+
+          cerr << DEBUG_PREFIX << "-----------------------" << endl;
+          cerr << DEBUG_PREFIX << "PID_pair: " << pid_pair.pid1() << "," << pid_pair.pid2() << endl;
+          cerr << DEBUG_PREFIX << "prospino_settings: " << ps.isquark1_in << ", " << ps.isquark2_in << endl;
+        }
       }
 
 
