@@ -9,12 +9,12 @@
 ///  Authors (add name and date if you modify):
 ///  
 ///  \author Anders Kvellestad
-///  \date 2019 Jun
+///  \date 2019 Jun, Nov
 ///
 ///  *********************************************
 
 #include <map>
-
+#include "gambit/Utils/PID_pair.hpp"
 #include "gambit/Utils/util_types.hpp"
 
 #ifndef __PROSPINO_types_hpp__

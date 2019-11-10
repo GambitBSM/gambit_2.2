@@ -351,6 +351,11 @@ Rules:
     options:
       fixed_relative_cross_section_uncertainty: 0.10
       set_missing_cross_sections_to_zero: true
+      # inlo: 1
+      # isq_ng_in: 1
+      # icoll_in: 1
+      # energy_in: 13000.0
+      # i_error_in: 0
     # function: getPIDPairCrossSectionsMap_xsecBE
     # function: getPIDPairCrossSectionsMap_xsecBE_example
     # function: getPIDPairCrossSectionsMap_testing

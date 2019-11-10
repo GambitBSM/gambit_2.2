@@ -9,7 +9,7 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Anders Kvellestad
-///  \date 2019 Apr
+///  \date 2019 Apr, Nov
 ///
 ///  *********************************************
 
@@ -24,13 +24,189 @@
 #define BACKEND_DEBUG 0
 
 
+// Map from PID_pair to prospino_settings
+BE_NAMESPACE
+{
+  // One giant map initializer:
+  static const std::map<PID_pair, prospino_settings> PID_pairs_to_prospino_settings {
+    //
+    // Prospino settings: inlo, isq_ng_in, icoll_in, energy_in, i_error_in, finalState, ipart1, ipart2, isquark1_in, isquark2_in
+    // gg
+    std::make_pair( PID_pair(1000021, 1000021), prospino_settings(1, 1, 1, 13000., 0, "gg", 1, 1, 0, 0) ),
+    // sg
+    std::make_pair( PID_pair(1000021, 1000004), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 4, 4) ),
+    std::make_pair( PID_pair(1000021, 1000003), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(1000021, 1000001), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(1000021, 1000002), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(1000021, 2000002), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(1000021, 2000001), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(1000021, 2000003), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(1000021, 2000004), prospino_settings(1, 1, 1, 13000., 0, "sg", 1, 1, 4, 4) ),
+    // sb
+    std::make_pair( PID_pair(1000004,-1000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 4) ),
+    std::make_pair( PID_pair(1000004,-1000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 3) ),
+    std::make_pair( PID_pair(1000004,-1000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 2) ),
+    std::make_pair( PID_pair(1000004,-1000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 1) ),
+    std::make_pair( PID_pair(1000004,-2000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 1) ),
+    std::make_pair( PID_pair(1000004,-2000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 2) ),
+    std::make_pair( PID_pair(1000004,-2000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 3) ),
+    std::make_pair( PID_pair(1000004,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 4) ),
+    std::make_pair( PID_pair(1000003,-1000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(1000003,-1000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 2) ),
+    std::make_pair( PID_pair(1000003,-1000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 1) ),
+    std::make_pair( PID_pair(1000003,-2000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 1) ),
+    std::make_pair( PID_pair(1000003,-2000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 2) ),
+    std::make_pair( PID_pair(1000003,-2000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(1000003,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 4) ),
+    std::make_pair( PID_pair(1000001,-1000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(1000001,-1000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 1) ),
+    std::make_pair( PID_pair(1000001,-2000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 1) ),
+    std::make_pair( PID_pair(1000001,-2000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(1000001,-2000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 3) ),
+    std::make_pair( PID_pair(1000001,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 4) ),
+    std::make_pair( PID_pair(1000002,-1000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(1000002,-2000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(1000002,-2000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 2) ),
+    std::make_pair( PID_pair(1000002,-2000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 3) ),
+    std::make_pair( PID_pair(1000002,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 4) ),
+    std::make_pair( PID_pair(2000002,-2000002), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(2000002,-2000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 2) ),
+    std::make_pair( PID_pair(2000002,-2000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 3) ),
+    std::make_pair( PID_pair(2000002,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 1, 4) ),
+    std::make_pair( PID_pair(2000001,-2000001), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(2000001,-2000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 3) ),
+    std::make_pair( PID_pair(2000001,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 2, 4) ),
+    std::make_pair( PID_pair(2000003,-2000003), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(2000003,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 3, 4) ),
+    std::make_pair( PID_pair(2000004,-2000004), prospino_settings(1, 1, 1, 13000., 0, "sb", 1, 1, 4, 4) ),
+    // ss
+    std::make_pair( PID_pair(1000004, 1000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 4) ),
+    std::make_pair( PID_pair(1000004, 1000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 3) ),
+    std::make_pair( PID_pair(1000004, 1000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 2) ),
+    std::make_pair( PID_pair(1000004, 1000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 1) ),
+    std::make_pair( PID_pair(1000004, 2000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 1) ),
+    std::make_pair( PID_pair(1000004, 2000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 2) ),
+    std::make_pair( PID_pair(1000004, 2000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 3) ),
+    std::make_pair( PID_pair(1000004, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 4) ),
+    std::make_pair( PID_pair(1000003, 1000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(1000003, 1000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 2) ),
+    std::make_pair( PID_pair(1000003, 1000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 1) ),
+    std::make_pair( PID_pair(1000003, 2000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 1) ),
+    std::make_pair( PID_pair(1000003, 2000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 2) ),
+    std::make_pair( PID_pair(1000003, 2000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(1000003, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 4) ),
+    std::make_pair( PID_pair(1000001, 1000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(1000001, 1000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 1) ),
+    std::make_pair( PID_pair(1000001, 2000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 1) ),
+    std::make_pair( PID_pair(1000001, 2000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(1000001, 2000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 3) ),
+    std::make_pair( PID_pair(1000001, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 4) ),
+    std::make_pair( PID_pair(1000002, 1000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(1000002, 2000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(1000002, 2000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 2) ),
+    std::make_pair( PID_pair(1000002, 2000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 3) ),
+    std::make_pair( PID_pair(1000002, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 4) ),
+    std::make_pair( PID_pair(2000002, 2000002), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 1) ),
+    std::make_pair( PID_pair(2000002, 2000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 2) ),
+    std::make_pair( PID_pair(2000002, 2000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 3) ),
+    std::make_pair( PID_pair(2000002, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 1, 4) ),
+    std::make_pair( PID_pair(2000001, 2000001), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 2) ),
+    std::make_pair( PID_pair(2000001, 2000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 3) ),
+    std::make_pair( PID_pair(2000001, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 2, 4) ),
+    std::make_pair( PID_pair(2000003, 2000003), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 3) ),
+    std::make_pair( PID_pair(2000003, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 3, 4) ),
+    std::make_pair( PID_pair(2000004, 2000004), prospino_settings(1, 1, 1, 13000., 0, "ss", 1, 1, 4, 4) ),
+    // tb
+    std::make_pair( PID_pair(1000006,-1000006), prospino_settings(1, 1, 1, 13000., 0, "tb", 1, 1, 0, 0) ),
+    std::make_pair( PID_pair(2000006,-2000006), prospino_settings(1, 1, 1, 13000., 0, "tb", 2, 2, 0, 0) ),
+    // bb
+    std::make_pair( PID_pair(1000005,-1000005), prospino_settings(1, 1, 1, 13000., 0, "bb", 1, 1, 0, 0) ),
+    std::make_pair( PID_pair(2000005,-2000005), prospino_settings(1, 1, 1, 13000., 0, "bb", 2, 2, 0, 0) ),
+    // nn
+    std::make_pair( PID_pair(1000022, 1000022), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000022, 1000023), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 2, 0, 0) ),
+    std::make_pair( PID_pair(1000022, 1000025), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 3, 0, 0) ),
+    std::make_pair( PID_pair(1000022, 1000035), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 4, 0, 0) ),
+    std::make_pair( PID_pair(1000022, 1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 5, 0, 0) ),
+    std::make_pair( PID_pair(1000022, 1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 6, 0, 0) ),
+    std::make_pair( PID_pair(1000022,-1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 7, 0, 0) ),
+    std::make_pair( PID_pair(1000022,-1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 1, 8, 0, 0) ),
+    std::make_pair( PID_pair(1000023, 1000023), prospino_settings(1, 1, 1, 13000., 0, "nn", 2, 2, 0, 0) ),
+    std::make_pair( PID_pair(1000023, 1000025), prospino_settings(1, 1, 1, 13000., 0, "nn", 2, 3, 0, 0) ),
+    std::make_pair( PID_pair(1000023, 1000035), prospino_settings(1, 1, 1, 13000., 0, "nn", 2, 4, 0, 0) ),
+    std::make_pair( PID_pair(1000023, 1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 2, 5, 0, 0) ),
+    std::make_pair( PID_pair(1000023, 1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 2, 6, 0, 0) ),
+    std::make_pair( PID_pair(1000023,-1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 2, 7, 0, 0) ),
+    std::make_pair( PID_pair(1000023,-1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 2, 8, 0, 0) ),
+    std::make_pair( PID_pair(1000025, 1000025), prospino_settings(1, 1, 1, 13000., 0, "nn", 3, 3, 0, 0) ),
+    std::make_pair( PID_pair(1000025, 1000035), prospino_settings(1, 1, 1, 13000., 0, "nn", 3, 4, 0, 0) ),
+    std::make_pair( PID_pair(1000025, 1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 3, 5, 0, 0) ),
+    std::make_pair( PID_pair(1000025, 1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 3, 6, 0, 0) ),
+    std::make_pair( PID_pair(1000025,-1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 3, 7, 0, 0) ),
+    std::make_pair( PID_pair(1000025,-1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 3, 8, 0, 0) ),
+    std::make_pair( PID_pair(1000035, 1000035), prospino_settings(1, 1, 1, 13000., 0, "nn", 4, 4, 0, 0) ),
+    std::make_pair( PID_pair(1000035, 1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 4, 5, 0, 0) ),
+    std::make_pair( PID_pair(1000035, 1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 4, 6, 0, 0) ),
+    std::make_pair( PID_pair(1000035,-1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 4, 7, 0, 0) ),
+    std::make_pair( PID_pair(1000035,-1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 4, 8, 0, 0) ),
+    std::make_pair( PID_pair(1000024, 1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 5, 5, 0, 0) ),
+    std::make_pair( PID_pair(1000024, 1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 5, 6, 0, 0) ),
+    std::make_pair( PID_pair(1000024,-1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 5, 7, 0, 0) ),
+    std::make_pair( PID_pair(1000024,-1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 5, 8, 0, 0) ),
+    std::make_pair( PID_pair(1000037, 1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 6, 6, 0, 0) ),
+    std::make_pair( PID_pair(1000037,-1000024), prospino_settings(1, 1, 1, 13000., 0, "nn", 6, 7, 0, 0) ),
+    std::make_pair( PID_pair(1000037,-1000037), prospino_settings(1, 1, 1, 13000., 0, "nn", 6, 8, 0, 0) ),
+    // ll
+    std::make_pair( PID_pair(1000011,-1000011), prospino_settings(1, 1, 1, 13000., 0, "ll", 1, 1, 0, 0) ),
+    std::make_pair( PID_pair(2000011,-2000011), prospino_settings(1, 1, 1, 13000., 0, "ll", 2, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000012,-1000012), prospino_settings(1, 1, 1, 13000., 0, "ll", 3, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000012,-1000011), prospino_settings(1, 1, 1, 13000., 0, "ll", 4, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000011,-1000012), prospino_settings(1, 1, 1, 13000., 0, "ll", 5, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000015,-1000015), prospino_settings(1, 1, 1, 13000., 0, "ll", 6, 1, 0, 0) ),
+    std::make_pair( PID_pair(2000015,-2000015), prospino_settings(1, 1, 1, 13000., 0, "ll", 7, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000015,-2000015), prospino_settings(1, 1, 1, 13000., 0, "ll", 8, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000016,-1000016), prospino_settings(1, 1, 1, 13000., 0, "ll", 9, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000016,-1000015), prospino_settings(1, 1, 1, 13000., 0, "ll", 10, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000015,-1000016), prospino_settings(1, 1, 1, 13000., 0, "ll", 11, 1, 0, 0) ),
+    std::make_pair( PID_pair(1000016,-2000015), prospino_settings(1, 1, 1, 13000., 0, "ll", 12, 1, 0, 0) ),
+    std::make_pair( PID_pair(2000015,-1000016), prospino_settings(1, 1, 1, 13000., 0, "ll", 13, 1, 0, 0) ),
+  };
+
+  // Input arrays for prospino 
+  Farray<Fdouble,1,20> unimass;
+  Farray<Fdouble,0,99> lowmass;
+  Farray<Fdouble,1,2,1,2> uu_in, vv_in;
+  Farray<Fdouble,1,4,1,4> bw_in;
+  Farray<Fdouble,1,2,1,2> mst_in, msb_in, msl_in;
+
+}
+END_BE_NAMESPACE
+
+
 // Backend init function
 BE_INI_FUNCTION
 {
+  // Scan-level initialisation
+  static bool scan_level = true;
+  if (scan_level)
+  {
     // Help Prospino find itself
     std::string prospino_dir = Backends::backendInfo().path_dir(STRINGIFY(BACKENDNAME), STRINGIFY(VERSION));
     Fstring<500> prospino_dir_in = prospino_dir.c_str();
     prospino_gb_init(prospino_dir_in);
+  }
+  scan_level = false;
+
+  // Point-level initialisation
+  // Clear the input arrays
+  std::fill(std::begin(unimass.array), std::end(unimass.array), 0.0);
+  std::fill(std::begin(lowmass.array), std::end(lowmass.array), 0.0);
+  std::fill(std::begin(uu_in.array), std::end(uu_in.array), 0.0);
+  std::fill(std::begin(vv_in.array), std::end(vv_in.array), 0.0);
+  std::fill(std::begin(bw_in.array), std::end(bw_in.array), 0.0);
+  std::fill(std::begin(mst_in.array), std::end(mst_in.array), 0.0);
+  std::fill(std::begin(msb_in.array), std::end(msb_in.array), 0.0);
+  std::fill(std::begin(msl_in.array), std::end(msl_in.array), 0.0);
 }
 END_BE_INI_FUNCTION
 
@@ -38,23 +214,13 @@ END_BE_INI_FUNCTION
 // Convenience functions (definition)
 BE_NAMESPACE
 {
-  // Convenience function to run Prospino and get a vector of cross-sections
-  map_str_dbl run_prospino(const SLHAstruct& slha, prospino_settings& ps)
+  // Convenience function to fill Prospino arrays from SLHA1 input
+  void prospino_read_slha1_input(const SLHAstruct& slha)
   {
-
     // Get type converter 
     using SLHAea::to;
 
-    std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
-
-    Farray<Fdouble,1,20> unimass;
-    Farray<Fdouble,0,99> lowmass;
-
-    Farray<Fdouble,1,2,1,2> uu_in, vv_in;
-    Farray<Fdouble,1,4,1,4> bw_in;
-    Farray<Fdouble,1,2,1,2> mst_in, msb_in, msl_in;
-
-
+    // Fill input arrays
     lowmass(0) = to<double>(slha.at("HMIX").at(1).at(1));
     lowmass(1) = to<double>(slha.at("MSOFT").at(1).at(1));
     lowmass(2) = to<double>(slha.at("MSOFT").at(2).at(1));
@@ -189,16 +355,62 @@ BE_NAMESPACE
     msl_in(1,2) = to<double>(slha.at("STAUMIX").at(1,2).at(2));
     msl_in(2,1) = to<double>(slha.at("STAUMIX").at(2,1).at(2));
     msl_in(2,2) = to<double>(slha.at("STAUMIX").at(2,2).at(2));
+  }
 
+
+  // Convenience function to run Prospino and get a vector of cross-sections
+  map_str_dbl prospino_run(const PID_pair& pid_pair, const Options& runOptions)
+  {
+    std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
+
+    // Get run options
+    // @todo Should the collider settings (e.g. energy) be automatically matched to the Pythia instance?
+    const static Finteger inlo = runOptions.getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
+    const static Finteger isq_ng_in = runOptions.getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
+    const static Finteger icoll_in = runOptions.getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
+    const static Fdouble energy_in = runOptions.getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
+    const static Finteger i_error_in = runOptions.getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
+    const static bool set_missing_cross_sections_to_zero = runOptions.getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
+
+    // Check that we have a set of prospino settings for the given PID_pair
+    if(PID_pairs_to_prospino_settings.find(pid_pair) == PID_pairs_to_prospino_settings.end())
+    {
+      if(set_missing_cross_sections_to_zero)
+      {
+        map_str_dbl result;
+        result["LO[pb]"] = 0.0;
+        result["LO_rel_error"] = 0.0;
+        result["NLO[pb]"] = 0.0;
+        result["NLO_rel_error"] = 0.0;
+        result["K"] = 0.0;
+        result["LO_ms[pb]"] = 0.0;
+        result["NLO_ms[pb]"] = 0.0;
+        return result;
+      }
+      else
+      {
+        str errmsg;
+        errmsg = "No prospino settings found for the PID_pair " + pid_pair.str() + ".";
+        backend_error().raise(LOCAL_INFO, errmsg);
+      }
+    }
+
+    // Get prospino settings
+    prospino_settings ps( PID_pairs_to_prospino_settings.at(pid_pair) );
+
+    // Update the prospino_settings instance with the run options
+    ps.inlo = inlo;
+    ps.isq_ng_in = isq_ng_in;
+    ps.icoll_in = icoll_in;
+    ps.energy_in = energy_in;
+    ps.i_error_in = i_error_in;
 
     // Call prospino
     Farray<Fdouble,0,6> prospino_result;
-
     prospino_gb(prospino_result, ps.inlo, ps.isq_ng_in, ps.icoll_in, ps.energy_in, ps.i_error_in, 
                 ps.final_state_in, ps.ipart1_in, ps.ipart2_in, ps.isquark1_in, ps.isquark2_in,
                 unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
 
-    
     std::cout << "DEBUG: run_prospino: " << std::endl;
     std::cout << "DEBUG: run_prospino: prospino_result(0) = " << prospino_result(0) << std::endl;
     std::cout << "DEBUG: run_prospino: prospino_result(1) = " << prospino_result(1) << std::endl;
@@ -209,7 +421,6 @@ BE_NAMESPACE
     std::cout << "DEBUG: run_prospino: prospino_result(6) = " << prospino_result(6) << std::endl;
     std::cout << "DEBUG: run_prospino: " << std::endl;
     std::cout << "DEBUG: run_prospino: ...End" << std::endl;
-
 
     // Fill the result map with the content of prospino_result
     map_str_dbl result;
@@ -222,7 +433,6 @@ BE_NAMESPACE
     result["NLO_ms[pb]"] = prospino_result(6);
 
     return result;
-
   }
 }
 END_BE_NAMESPACE

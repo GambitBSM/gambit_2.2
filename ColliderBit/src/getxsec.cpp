@@ -14,13 +14,12 @@
 ///
 ///  \author Anders Kvellestad
 ///          (a.kvellestad@imperial.ac.uk)
-///  \date 2019 Sep
+///  \date 2019 Sep, Oct, Nov
 ///
 ///  *********************************************
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 #include "gambit/ColliderBit/complete_process_PID_pair_multimaps.hpp"
-#include "gambit/ColliderBit/PID_pairs_to_prospino_settings.hpp"
 
 // #define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ": " << __FILE__ << ":" << __LINE__ << ":  "
@@ -273,16 +272,7 @@ namespace Gambit
       using namespace Pipes::getPIDPairCrossSectionsMap_prospino;
 
       // Read options from yaml file
-      // @todo Should the collider settings (e.g. energy) be automatically matched to the Pythia instance?
-      const static Finteger inlo_yaml = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
-      const static Finteger isq_ng_in_yaml = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
-      const static Finteger icoll_in_yaml = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
-      const static Fdouble energy_in_yaml = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
-      const static Finteger i_error_in_yaml = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
-
-      const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
       const static double fixed_xs_rel_err = runOptions->getValueOrDef<double>(-1.0, "fixed_relative_cross_section_uncertainty");
-
 
       if(*Loop::iteration == COLLIDER_INIT)
       {
@@ -293,7 +283,6 @@ namespace Gambit
       {
 
         // Get a copy of the SLHA1 spectrum that we can modify
-        // const SLHAstruct& slha = *Dep::SLHA1Spectrum;
         SLHAstruct slha(*Dep::SLHA1Spectrum);
 
         // // Get the GAMBIT model parameters
@@ -334,56 +323,30 @@ namespace Gambit
         slha["EXTPAR"][""] << 48 << sqrt(*Param.at("md2_22")) << "# M_(D,22)";
         slha["EXTPAR"][""] << 49 << sqrt(*Param.at("md2_33")) << "# M_(D,33)";
 
+        // Pass SLHA1 input to prospino
+        BEreq::prospino_read_slha1_input(slha);        
+
         // Loop over each PID_pair in ActivePIDPairs
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
-
           // Create PID_pair_xsec_container instance and set the PIDs
           PID_pair_xsec_container pp_xs;
           pp_xs.set_pid_pair(pid_pair);
 
-          // Get prospino settings and run prospino for this PID_pair
-          if(PID_pairs_to_prospino_settings.find(pid_pair) != PID_pairs_to_prospino_settings.end())
-          {
-            // Get prospino settings
-            prospino_settings ps( PID_pairs_to_prospino_settings.at(pid_pair) );
+          // Call Prospino and get the result in a map<string,double>
+          map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions);
 
-            // Update prospino_settings instance with YAML settings
-            ps.inlo = inlo_yaml;
-            ps.isq_ng_in = isq_ng_in_yaml;
-            ps.icoll_in = icoll_in_yaml;
-            ps.energy_in = energy_in_yaml;
-            ps.i_error_in = i_error_in_yaml;
+          // Update the PID_pair_xsec_container instance with the Prospino result
+          double xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
+          double xs_rel_err = prospino_output.at("NLO_rel_error");
+          // Should we rather use the fixed uncertainty from the YAML file?
+          if(fixed_xs_rel_err >= 0.0) { xs_rel_err = fixed_xs_rel_err; }
+          double xs_err_fb = xs_fb * xs_rel_err;
 
-            // Call Prospino and get the result in a map<string,double>
-            map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, ps);
-
-            // Update the PID_pair_xsec_container instance 
-            double xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
-            double xs_rel_err = prospino_output.at("NLO_rel_error");
-            // Should we rather use the fixed uncertainty from the YAML file?
-            if(fixed_xs_rel_err >= 0.0) { xs_rel_err = fixed_xs_rel_err; }
-            double xs_err_fb = xs_fb * xs_rel_err;
-
-            pp_xs.set_xsec(xs_fb, xs_err_fb);
-          }
-          else // if pid_pair is not in the PID_pairs_to_prospino_settings map
-          {
-            if(set_missing_cross_sections_to_zero)
-            {
-              pp_xs.set_xsec(0.0, 0.0);
-            }
-            else
-            {
-              str errmsg;
-              errmsg = "No prospino settings found for the PID_pair " + pid_pair.str() + ".";
-              ColliderBit_error().raise(LOCAL_INFO, errmsg);
-            }
-          }
+          pp_xs.set_xsec(xs_fb, xs_err_fb);
 
           // Add the PID_pair_xsec_container instance to the result map
           result[pid_pair] = pp_xs;
-
         }
       }
     } // end getPIDPairCrossSectionsMap_prospino
