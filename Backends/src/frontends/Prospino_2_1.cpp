@@ -361,8 +361,6 @@ BE_NAMESPACE
   // Convenience function to run Prospino and get a vector of cross-sections
   map_str_dbl prospino_run(const PID_pair& pid_pair, const Options& runOptions)
   {
-    std::cout << "DEBUG: run_prospino: Begin..." << std::endl;
-
     // Get run options
     // @todo Should the collider settings (e.g. energy) be automatically matched to the Pythia instance?
     const static Finteger inlo = runOptions.getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
@@ -410,17 +408,6 @@ BE_NAMESPACE
     prospino_gb(prospino_result, ps.inlo, ps.isq_ng_in, ps.icoll_in, ps.energy_in, ps.i_error_in, 
                 ps.final_state_in, ps.ipart1_in, ps.ipart2_in, ps.isquark1_in, ps.isquark2_in,
                 unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
-
-    std::cout << "DEBUG: run_prospino: " << std::endl;
-    std::cout << "DEBUG: run_prospino: prospino_result(0) = " << prospino_result(0) << std::endl;
-    std::cout << "DEBUG: run_prospino: prospino_result(1) = " << prospino_result(1) << std::endl;
-    std::cout << "DEBUG: run_prospino: prospino_result(2) = " << prospino_result(2) << std::endl;
-    std::cout << "DEBUG: run_prospino: prospino_result(3) = " << prospino_result(3) << std::endl;
-    std::cout << "DEBUG: run_prospino: prospino_result(4) = " << prospino_result(4) << std::endl;
-    std::cout << "DEBUG: run_prospino: prospino_result(5) = " << prospino_result(5) << std::endl;
-    std::cout << "DEBUG: run_prospino: prospino_result(6) = " << prospino_result(6) << std::endl;
-    std::cout << "DEBUG: run_prospino: " << std::endl;
-    std::cout << "DEBUG: run_prospino: ...End" << std::endl;
 
     // Fill the result map with the content of prospino_result
     map_str_dbl result;

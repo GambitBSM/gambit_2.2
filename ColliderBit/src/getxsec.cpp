@@ -273,6 +273,7 @@ namespace Gambit
 
       // Read options from yaml file
       const static double fixed_xs_rel_err = runOptions->getValueOrDef<double>(-1.0, "fixed_relative_cross_section_uncertainty");
+      const static int inlo = runOptions->getValueOrDef<int>(1, "inlo");
 
       if(*Loop::iteration == COLLIDER_INIT)
       {
@@ -337,8 +338,18 @@ namespace Gambit
           map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions);
 
           // Update the PID_pair_xsec_container instance with the Prospino result
-          double xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
-          double xs_rel_err = prospino_output.at("NLO_rel_error");
+          double xs_fb;
+          double xs_rel_err;
+          if(inlo == 0)
+          {
+            xs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
+            xs_rel_err = prospino_output.at("LO_rel_error");
+          }
+          else
+          {
+            xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
+            xs_rel_err = prospino_output.at("NLO_rel_error");
+          }
           // Should we rather use the fixed uncertainty from the YAML file?
           if(fixed_xs_rel_err >= 0.0) { xs_rel_err = fixed_xs_rel_err; }
           double xs_err_fb = xs_fb * xs_rel_err;
