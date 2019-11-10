@@ -135,7 +135,7 @@
     DEPENDENCY(SLHA1Spectrum, SLHAstruct)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     /// @todo Extend to ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
-    BACKEND_REQ(prospino_LHC_xsec, (libprospino), map_str_dbl, (const SLHAstruct&, const param_map_type&, prospino_settings&))
+    BACKEND_REQ(prospino_LHC_xsec, (libprospino), map_str_dbl, (const SLHAstruct&, prospino_settings&))
     #undef FUNCTION
 
   #undef CAPABILITY

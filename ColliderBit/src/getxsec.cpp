@@ -292,32 +292,47 @@ namespace Gambit
       if(*Loop::iteration == XSEC_CALCULATION)
       {
 
-        /*
-          Todo:
+        // Get a copy of the SLHA1 spectrum that we can modify
+        // const SLHAstruct& slha = *Dep::SLHA1Spectrum;
+        SLHAstruct slha(*Dep::SLHA1Spectrum);
 
-          - Construct map that translates from PID_pair to prospino settings:
-            Example: 
-              - PID_pair: (10000021,10000023)
-              - Prospino settings:
-                  ps.final_state_in = "ng";  // process group
-                  ps.ipart1_in = 2;    // chi02
-                  ps.ipart2_in = 1;    // default value
-                  ps.isquark1_in = 0;  // default value
-                  ps.isquark2_in = 0;  // default value
+        // // Get the GAMBIT model parameters
+        // const param_map_type& model_params = Param;
 
-          - Loop: For each PID_pair in ActivePIDPairs
-            - construct prospino settings instance 'ps'
-            - call prospino:  map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
-            - use prospino output to construct a PID_pair_xsec_container
-            - Add the PID_pair_xsec_container to the 'result' map (type map_PID_pair_PID_pair_xsec) 
+        // Contstruct EXTPAR block from the GAMBIT model parameters
+        SLHAea_add_block(slha, "EXTPAR");
 
-        */
+        slha["EXTPAR"][""] << 0 << *Param.at("Qin") << "# scale Q where the parameters below are defined";
 
-        // Get the SLHA1 spectrum
-        const SLHAstruct& slha = *Dep::SLHA1Spectrum;
+        slha["EXTPAR"][""] << 1 << *Param.at("M1") << "# M_1";
+        slha["EXTPAR"][""] << 2 << *Param.at("M2") << "# M_2";
+        slha["EXTPAR"][""] << 3 << *Param.at("M3") << "# M_3";
 
-        // Get the GAMBIT model parameters
-        const param_map_type& model_params = Param;
+        slha["EXTPAR"][""] << 11 << *Param.at("Au_33") << "# A_t";
+        slha["EXTPAR"][""] << 12 << *Param.at("Ad_33") << "# A_b";
+        slha["EXTPAR"][""] << 13 << *Param.at("Ae_33") << "# A_l";
+
+        /// @todo Add model-dependent check to decide which set of Higgs sector parameters to use
+        // slha["EXTPAR"][""] << 21 << *Param.at("mHd2") << "# m_Hd^2";
+        // slha["EXTPAR"][""] << 22 << *Param.at("mHd2") << "# m_Hu^2";
+        slha["EXTPAR"][""] << 23 << *Param.at("mu") << "# mu";
+        slha["EXTPAR"][""] << 24 << pow(*Param.at("mA"),2) << "# m_A^2";
+
+        slha["EXTPAR"][""] << 31 << sqrt(*Param.at("ml2_11")) << "# M_(L,11)";
+        slha["EXTPAR"][""] << 32 << sqrt(*Param.at("ml2_22")) << "# M_(L,22)";
+        slha["EXTPAR"][""] << 33 << sqrt(*Param.at("ml2_33")) << "# M_(L,33)";
+        slha["EXTPAR"][""] << 34 << sqrt(*Param.at("me2_11")) << "# M_(E,11)";
+        slha["EXTPAR"][""] << 35 << sqrt(*Param.at("me2_22")) << "# M_(E,22)";
+        slha["EXTPAR"][""] << 36 << sqrt(*Param.at("me2_33")) << "# M_(E,33)";
+        slha["EXTPAR"][""] << 41 << sqrt(*Param.at("mq2_11")) << "# M_(Q,11)";
+        slha["EXTPAR"][""] << 42 << sqrt(*Param.at("mq2_22")) << "# M_(Q,22)";
+        slha["EXTPAR"][""] << 43 << sqrt(*Param.at("mq2_33")) << "# M_(Q,33)";
+        slha["EXTPAR"][""] << 44 << sqrt(*Param.at("mu2_11")) << "# M_(U,11)";
+        slha["EXTPAR"][""] << 45 << sqrt(*Param.at("mu2_22")) << "# M_(U,22)";
+        slha["EXTPAR"][""] << 46 << sqrt(*Param.at("mu2_33")) << "# M_(U,33)";
+        slha["EXTPAR"][""] << 47 << sqrt(*Param.at("md2_11")) << "# M_(D,11)";
+        slha["EXTPAR"][""] << 48 << sqrt(*Param.at("md2_22")) << "# M_(D,22)";
+        slha["EXTPAR"][""] << 49 << sqrt(*Param.at("md2_33")) << "# M_(D,33)";
 
         // Loop over each PID_pair in ActivePIDPairs
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
@@ -341,7 +356,7 @@ namespace Gambit
             ps.i_error_in = i_error_in_yaml;
 
             // Call Prospino and get the result in a map<string,double>
-            map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
+            map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, ps);
 
             // Update the PID_pair_xsec_container instance 
             double xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
