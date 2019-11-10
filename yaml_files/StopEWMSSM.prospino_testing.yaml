@@ -29,18 +29,18 @@ Parameters:
     Au_3: 0
     M1: 21.3372
     M2: 282.67
-    M3: 3000
+    M3: 2000
     Qin: 1000
     TanBeta: 20.6554
-    mA: 3000
-    md2_3: 9e+06
-    me2_3: 9e+06
-    ml2_12: 9e+06
-    ml2_3: 9e+06
-    mq2_12: 9e+06
-    mq2_3: 573377
+    mA: 2000
+    md2_3: 4e+06
+    me2_3: 4e+06
+    ml2_12: 4e+06
+    ml2_3: 4e+06
+    mq2_12: 4e+06
+    mq2_3: 200000 # 573377
     mu: -960.248
-    mu2_3: 600000
+    mu2_3: 200000 # 600000
     # mu2_3: 327127
 
   # MSSM15atQ_mA:
@@ -205,6 +205,9 @@ ObsLikes:
     - purpose:    Observable 
       capability: TotalCrossSectionAsMap
 
+    - purpose:    Observable 
+      capability: PIDPairCrossSectionsInfo
+
     - purpose:    Observable
       capability: LHC_signals
 
@@ -336,16 +339,21 @@ Rules:
 
   # Choose how to do event weighting 
   - capability: EventWeighterFunction
-    # function: setEventWeight_fromCrossSection
-    function: setEventWeight_unity
+    function: setEventWeight_fromCrossSection
+    # function: setEventWeight_unity
 
 
-  # # Choose where to get PID pair cross-sections from.
-  # # Note: This is not required if the "setEventWeight_unity" 
-  # #       function is chosen above.
-  # - capability: PIDPairCrossSectionsMap
-  #   function: getPIDPairCrossSectionsMap_xsecBE_example
-  #   # function: getPIDPairCrossSectionsMap_testing
+  # Choose where to get PID pair cross-sections from.
+  # Note: This is not required if the "setEventWeight_unity" 
+  #       function is chosen above.
+  - capability: PIDPairCrossSectionsMap
+    function: getPIDPairCrossSectionsMap_prospino
+    options:
+      fixed_relative_cross_section_uncertainty: 0.10
+      set_missing_cross_sections_to_zero: true
+    # function: getPIDPairCrossSectionsMap_xsecBE
+    # function: getPIDPairCrossSectionsMap_xsecBE_example
+    # function: getPIDPairCrossSectionsMap_testing
 
 
   # Choose where to get scattering events from
@@ -361,21 +369,6 @@ Rules:
   #   function: getProcessCrossSectionsMap
   #   options:
   #     set_missing_cross_sections_to_zero: true
-
-  # # Choose to where to get cross-sections from
-  # - capability: TotalCrossSection
-  #   function: get_MC_xsec_as_base
-  #   # function: getEvGenCrossSection_as_base
-
-  # # Choose event weighting
-  # - capability: EventWeighterPy8Collider
-  #   function: setEventWeight_fromCrossSection_Pythia
-  #   # function: setEventWeight_unity
-    
-  # - capability: PIDPairCrossSectionFunc
-  #   function: getPIDPairCrossSectionFunc_dummy
-  #   module: ColliderBit
-
 
   - capability: SpectrumAndDecaysForPythia
     function: getSpectrumAndDecaysForPythia
@@ -437,6 +430,7 @@ Rules:
         partonOnly: false
         antiktR: 0.4
         pythia_settings:
+          - SLHA:verbose = 1
           - Print:quiet = off
           - Next:numberCount = 10
           - Random:setSeed = on
@@ -447,9 +441,25 @@ Rules:
           - HadronLevel:all = on
           - TauDecays:mode = 0
           - TimeShower:pTmin = 2
-          - SUSY:all = on
+          - SUSY:all = off
+          - SUSY:gg2squarkantisquark = on
+          - SUSY:qqbar2squarkantisquark = on
           - 23:mMin = 0.1
           - 24:mMin = 0.1
+          - SUSY:idVecA = 1000005,1000006,2000006
+          - SUSY:idVecB = 1000005,1000006,2000006
+
+          # - SUSY:idVecA = 1000001,1000002,1000004
+          # - SUSY:idVecB = 1000001,1000002,1000004
+
+
+          # # SLHA2
+          # - SUSY:idVecA = 1000001,1000002,1000004
+          # - SUSY:idVecB = 1000001,1000002,1000004
+          # # SLHA1
+          # - SUSY:idVecA = 1000005,1000006,2000006
+          # - SUSY:idVecB = 1000005,1000006,2000006
+
 
 
           # - SUSY:idVecA = 1000021,1000022,1000023,1000024
@@ -480,7 +490,7 @@ Rules:
         partonOnly: false
         antiktR: 0.4
 
-
+  
   # Choose CMS detector simulation and options.
   - capability: CMSDetectorSim
     options:
@@ -535,7 +545,7 @@ Rules:
       LHC_13TeV:
         min_nEvents: 500 # 100000
         max_nEvents: 500 # 100000
-        events_between_convergence_checks: 100000000
+        events_between_convergence_checks: 100
         target_fractional_uncert: 0.3
         halt_when_systematic_dominated: true
         all_analyses_must_converge: false

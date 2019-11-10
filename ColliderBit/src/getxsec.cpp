@@ -273,13 +273,16 @@ namespace Gambit
       using namespace Pipes::getPIDPairCrossSectionsMap_prospino;
 
       // Read options from yaml file
-      static bool first = true;
+      // @todo Should the collider settings (e.g. energy) be automatically matched to the Pythia instance?
+      const static Finteger inlo_yaml = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
+      const static Finteger isq_ng_in_yaml = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
+      const static Finteger icoll_in_yaml = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
+      const static Fdouble energy_in_yaml = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
+      const static Finteger i_error_in_yaml = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
 
-      const static Finteger inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
-      const static Finteger isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
-      const static Finteger icoll_in = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
-      const static Fdouble energy_in = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
-      const static Finteger i_error_in = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
+      const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
+      const static double fixed_xs_rel_err = runOptions->getValueOrDef<double>(-1.0, "fixed_relative_cross_section_uncertainty");
+
 
       if(*Loop::iteration == COLLIDER_INIT)
       {
@@ -310,273 +313,64 @@ namespace Gambit
 
         */
 
+        // Get the SLHA1 spectrum
+        const SLHAstruct& slha = *Dep::SLHA1Spectrum;
+
+        // Get the GAMBIT model parameters
+        const param_map_type& model_params = Param;
+
+        // Loop over each PID_pair in ActivePIDPairs
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
 
-          // Create PID_pair_xsec_container instance
-          // and set the PIDs
+          // Create PID_pair_xsec_container instance and set the PIDs
           PID_pair_xsec_container pp_xs;
           pp_xs.set_pid_pair(pid_pair);
 
-          // Get prospino settings for this PID_pair
-          prospino_settings ps( PID_pairs_to_prospino_settings.at(pid_pair) );
-
-          cerr << DEBUG_PREFIX << "-----------------------" << endl;
-          cerr << DEBUG_PREFIX << "PID_pair: " << pid_pair.pid1() << "," << pid_pair.pid2() << endl;
-          cerr << DEBUG_PREFIX << "prospino_settings: " << ps.isquark1_in << ", " << ps.isquark2_in << endl;
-        }
-      }
-
-
-      // _Anders ========== OLD CODE START ============
-
-      /*
-      // Read options from yaml file
-      static bool first = true;
-
-      const static Finteger inlo = runOptions->getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
-      const static Finteger isq_ng_in = runOptions->getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
-      const static Finteger icoll_in = runOptions->getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
-      const static Fdouble energy_in = runOptions->getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
-      const static Finteger i_error_in = runOptions->getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
-
-      // ng
-      const static bool ng_all = runOptions->getValueOrDef<bool>(false, "ng_all");
-      static std::vector<int> ng_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "ng_ipart1");
-
-      // nn
-      const static bool nn_all = runOptions->getValueOrDef<bool>(false, "nn_all");
-      static std::vector<std::pair<int,int> > nn_ipart1_ipart2 = runOptions->getValueOrDef<std::vector<std::pair<int,int>>>(std::vector<std::pair<int,int>>(), "nn_ipart1_ipart2");
-
-      // ns
-      const static bool ns_all = runOptions->getValueOrDef<bool>(false, "ns_all");
-      static std::vector<std::pair<int,int> > ns_ipart1_isquark1 = runOptions->getValueOrDef<std::vector<std::pair<int,int>>>(std::vector<std::pair<int,int>>(), "ns_ipart1_isquark1");
-
-      // ll
-      const static bool ll_all = runOptions->getValueOrDef<bool>(false, "ll_all");
-      static std::vector<int> ll_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "ll_ipart1");
-
-      // tb
-      const static bool tb_all = runOptions->getValueOrDef<bool>(false, "tb_all");
-      static std::vector<int> tb_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "tb_ipart1");
-
-      // bb
-      const static bool bb_all = runOptions->getValueOrDef<bool>(false, "bb_all");
-      static std::vector<int> bb_ipart1 = runOptions->getValueOrDef<std::vector<int>>(std::vector<int>(), "bb_ipart1");
-
-
-      // Use complete process sets?
-      if (first) {
-
-        first = false;
-
-        // ng
-        if (ng_all) {
-          std::vector<int> ng_all_processes = {1, 2, 3, 4, 5, 6, 7, 8};
-          ng_ipart1.clear();
-          ng_ipart1 = ng_all_processes;
-        }
-
-        // nn
-        if (nn_all) {
-          std::vector<std::pair<int, int> > nn_all_processes = {
-            {1,1}, {1,2}, {1,3}, {1,4}, {1,5}, {1,6}, {1,7}, {1,8},
-            {2,2}, {2,3}, {2,4}, {2,5}, {2,6}, {2,7}, {2,8},
-            {3,3}, {3,4}, {3,5}, {3,6}, {3,7}, {3,8},
-            {4,4}, {4,5}, {4,6}, {4,7}, {4,8},
-            {5,5}, {5,6}, {5,7}, {5,8},
-            {6,6}, {6,7}, {6,8},
-            {7,7}, {7,8},
-            {8,8}
-          };
-          nn_ipart1_ipart2.clear();
-          nn_ipart1_ipart2 = nn_all_processes;
-        }
-
-        // ns
-        if (ns_all) {
-          std::vector<std::pair<int, int> > ns_all_processes = {
-            {1,-5}, {1,-4}, {1,-3}, {1,-2}, {1,-1}, {1,1}, {1,2}, {1,3}, {1,4}, {1,5},
-            {2,-5}, {2,-4}, {2,-3}, {2,-2}, {2,-1}, {2,1}, {2,2}, {2,3}, {2,4}, {2,5},
-            {3,-5}, {3,-4}, {3,-3}, {3,-2}, {3,-1}, {3,1}, {3,2}, {3,3}, {3,4}, {3,5},
-            {4,-5}, {4,-4}, {4,-3}, {4,-2}, {4,-1}, {4,1}, {4,2}, {4,3}, {4,4}, {4,5},
-            {5,-5}, {5,-4}, {5,-3}, {5,-2}, {5,-1}, {5,1}, {5,2}, {5,3}, {5,4}, {5,5},
-            {6,-5}, {6,-4}, {6,-3}, {6,-2}, {6,-1}, {6,1}, {6,2}, {6,3}, {6,4}, {6,5},
-            {7,-5}, {7,-4}, {7,-3}, {7,-2}, {7,-1}, {7,1}, {7,2}, {7,3}, {7,4}, {7,5},
-            {8,-5}, {8,-4}, {8,-3}, {8,-2}, {8,-1}, {8,1}, {8,2}, {8,3}, {8,4}, {8,5}
-          };
-          ns_ipart1_isquark1.clear();
-          ns_ipart1_isquark1 = ns_all_processes;
-        }
-
-        // ll
-        if (ll_all) {
-          std::vector<int> ll_all_processes = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-          ll_ipart1.clear();
-          ll_ipart1 = ll_all_processes;
-        }
-
-        // tb
-        if (tb_all) {
-          std::vector<int> tb_all_processes = {1, 2};
-          tb_ipart1.clear();
-          tb_ipart1 = tb_all_processes;
-        }
-
-        // bb
-        if (bb_all) {
-          std::vector<int> bb_all_processes = {1, 2};
-          bb_ipart1.clear();
-          bb_ipart1 = bb_all_processes;
-        }
-
-
-      }
-
-      // Default values
-      Finteger ipart1_in = 1;
-      Finteger ipart2_in = 1;
-      Finteger isquark1_in = 0;
-      Finteger isquark2_in = 0;
-
-      // 
-      // FIXME: make process loop 
-      // 
-
-      // std::string final_state_in = "nn";
-      // ipart1_in = nn_ipart1_ipart2.at(0).first;
-      // ipart2_in = nn_ipart1_ipart2.at(0).second;
-
-      // std::string final_state_in = "ng";
-      // ipart1_in = ng_ipart1.at(0);
-
-      // std::string final_state_in = "tb";
-      // ipart1_in = ng_ipart1.at(0);
-
-      // Reset the xsec object on the main thread (other threads do not matter)
-      if (*Loop::iteration == BASE_INIT)
-      {
-        result.reset();
-
-        // Testing...
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: Requesting dependency BE::prospino_LHC_xsec..." << endl;
-
-        // Accumulators
-        double combined_xsec_pb = 0.0;
-        double combined_xsec_err = 0.0;
-        double combined_xsec_rel_err = 0.0;
-
-        // Get an SLHA1 object for Prospino.
-        const SLHAstruct& slha = Dep::MSSM_spectrum->getSLHAea(1);
-
-        // Get the GAMBIT model parameters for Prospino
-        const param_map_type& model_params = Param;
-
-        // Create struct with settings Prospino
-        prospino_settings ps;
-
-        ps.inlo = inlo;
-        ps.isq_ng_in = isq_ng_in;
-        ps.icoll_in = icoll_in;
-        ps.energy_in = energy_in;
-        ps.i_error_in = i_error_in;
-
-        // ng
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: " << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: --------------------------------" << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: Process: ng" << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: --------------------------------" << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: " << endl;
-        for (int& ip1 : ng_ipart1) {
-
-          ps.final_state_in = "ng";
-          ps.ipart1_in = ip1;
-          ps.ipart2_in = 1;
-          ps.isquark1_in = 0;
-          ps.isquark2_in = 0;
-
-          // Call Prospino and get the result in a map<string,double>
-          map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
-
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: process: ng" << endl;
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: ipart1, ipart2: " << ps.ipart1_in << ", " << ps.ipart2_in << endl;
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: isquark1, isquark2: " << ps.isquark1_in << ", " << ps.isquark2_in << endl;
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: got this result from Prospino:" << endl;
-          for (auto& element : prospino_output)
+          // Get prospino settings and run prospino for this PID_pair
+          if(PID_pairs_to_prospino_settings.find(pid_pair) != PID_pairs_to_prospino_settings.end())
           {
-            cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: " << element.first << " = " << element.second << endl;
+            // Get prospino settings
+            prospino_settings ps( PID_pairs_to_prospino_settings.at(pid_pair) );
+
+            // Update prospino_settings instance with YAML settings
+            ps.inlo = inlo_yaml;
+            ps.isq_ng_in = isq_ng_in_yaml;
+            ps.icoll_in = icoll_in_yaml;
+            ps.energy_in = energy_in_yaml;
+            ps.i_error_in = i_error_in_yaml;
+
+            // Call Prospino and get the result in a map<string,double>
+            map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
+
+            // Update the PID_pair_xsec_container instance 
+            double xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
+            double xs_rel_err = prospino_output.at("NLO_rel_error");
+            // Should we rather use the fixed uncertainty from the YAML file?
+            if(fixed_xs_rel_err >= 0.0) { xs_rel_err = fixed_xs_rel_err; }
+            double xs_err_fb = xs_fb * xs_rel_err;
+
+            pp_xs.set_xsec(xs_fb, xs_err_fb);
+          }
+          else // if pid_pair is not in the PID_pairs_to_prospino_settings map
+          {
+            if(set_missing_cross_sections_to_zero)
+            {
+              pp_xs.set_xsec(0.0, 0.0);
+            }
+            else
+            {
+              str errmsg;
+              errmsg = "No prospino settings found for the PID_pair " + pid_pair.str() + ".";
+              ColliderBit_error().raise(LOCAL_INFO, errmsg);
+            }
           }
 
-          double xs_pb = prospino_output.at("NLO_ms[pb]");
-          double xs_rel_err = prospino_output.at("NLO_rel_error");
-          double xs_err = xs_pb * xs_rel_err;
+          // Add the PID_pair_xsec_container instance to the result map
+          result[pid_pair] = pp_xs;
 
-          combined_xsec_pb += xs_pb;
-          combined_xsec_err = sqrt(pow(combined_xsec_err,2) + pow(xs_err,2));
-          combined_xsec_rel_err = combined_xsec_err / combined_xsec_pb;
-
-          result.set_xsec(combined_xsec_pb, combined_xsec_rel_err);
         }
-
-
-        // nn
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: " << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: --------------------------------" << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: Process: nn" << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: --------------------------------" << endl;
-        cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: " << endl;
-        for (std::pair<int,int>& ip1_ip2_pair : nn_ipart1_ipart2) {
-
-          ps.final_state_in = "nn";
-          ps.ipart1_in = ip1_ip2_pair.first;
-          ps.ipart2_in = ip1_ip2_pair.second;
-          ps.isquark1_in = 0;
-          ps.isquark2_in = 0;
-
-          // Call Prospino and get the result in a map<string,double>
-          map_str_dbl prospino_output = BEreq::prospino_LHC_xsec(slha, model_params, ps);
-
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: process: nn" << endl;
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: ipart1, ipart2: " << ps.ipart1_in << ", " << ps.ipart2_in << endl;
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: isquark1, isquark2: " << ps.isquark1_in << ", " << ps.isquark2_in << endl;
-          cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: got this result from Prospino:" << endl;
-          for (auto& element : prospino_output)
-          {
-            cout << "DEBUG: getPIDPairCrossSectionsMap_prospino: " << element.first << " = " << element.second << endl;
-          }
-
-          double xs_pb = prospino_output.at("NLO_ms[pb]");
-          double xs_rel_err = prospino_output.at("NLO_rel_error");
-          double xs_err = xs_pb * xs_rel_err;
-
-          combined_xsec_pb += xs_pb;
-          combined_xsec_err = sqrt(pow(combined_xsec_err,2) + pow(xs_err,2));
-          combined_xsec_rel_err = combined_xsec_err / combined_xsec_pb;
-
-          result.set_xsec(combined_xsec_pb, combined_xsec_rel_err);
-        }
-
-        // 
-        // Add more process blocks here...
-        //
-
-      } // end iteration BASE_INIT
-
-      // If we are in the main event loop, count the event towards cross-section normalisation on this thread
-      if (*Loop::iteration >= 0)
-      {
-        result.log_event();
       }
-
-      // Set the xsec and its error
-      if (*Loop::iteration == COLLIDER_FINALIZE)
-      {
-        result.gather_num_events();
-      }
-
-      // _Anders ========== OLD CODE END ============
-      */
-
     } // end getPIDPairCrossSectionsMap_prospino
 
 
@@ -1068,7 +862,7 @@ namespace Gambit
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
       static map_int_process_xsec shared_result;
 
-      const static bool set_missing_xsecs_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_xsecs_to_zero");
+      const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
       // Only thread 0
       if(*Loop::iteration == COLLIDER_INIT)
@@ -1112,7 +906,7 @@ namespace Gambit
             }
             else
             {
-              if(set_missing_xsecs_to_zero)
+              if(set_missing_cross_sections_to_zero)
               {
                 pids_xs.set_xsec(0.0, 0.0);
               }
