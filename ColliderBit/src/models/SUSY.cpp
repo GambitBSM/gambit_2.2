@@ -210,7 +210,8 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA1Spectrum;
 
-      if(ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT"))
+      if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT") 
+          || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
       {
         result = Dep::MSSM_spectrum->getSLHAea(1);
       }
@@ -236,7 +237,8 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA2Spectrum;
 
-      if(ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT"))
+      if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT") 
+          || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
       {
         result = Dep::MSSM_spectrum->getSLHAea(2);
       }

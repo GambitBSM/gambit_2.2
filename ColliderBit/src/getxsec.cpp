@@ -303,11 +303,20 @@ namespace Gambit
         slha["EXTPAR"][""] << 12 << *Param.at("Ad_33") << "# A_b";
         slha["EXTPAR"][""] << 13 << *Param.at("Ae_33") << "# A_l";
 
-        /// @todo Add model-dependent check to decide which set of Higgs sector parameters to use
-        // slha["EXTPAR"][""] << 21 << *Param.at("mHd2") << "# m_Hd^2";
-        // slha["EXTPAR"][""] << 22 << *Param.at("mHd2") << "# m_Hu^2";
-        slha["EXTPAR"][""] << 23 << *Param.at("mu") << "# mu";
-        slha["EXTPAR"][""] << 24 << pow(*Param.at("mA"),2) << "# m_A^2";
+        if(Param.find("mu") != Param.end() && Param.find("mA") != Param.end())
+        {
+          slha["EXTPAR"][""] << 23 << *Param.at("mu") << "# mu";
+          slha["EXTPAR"][""] << 24 << pow(*Param.at("mA"),2) << "# m_A^2";
+        }
+        else if(Param.find("mHd2") != Param.end() && Param.find("mHd2") != Param.end())
+        {
+          slha["EXTPAR"][""] << 21 << *Param.at("mHd2") << "# m_Hd^2";
+          slha["EXTPAR"][""] << 22 << *Param.at("mHu2") << "# m_Hu^2";
+        }
+        else
+        {
+          ColliderBit_error().raise(LOCAL_INFO, "Got an unknown combination of Higgs sector parameters when trying to fill an SLHA EXTPAR block.");
+        }
 
         slha["EXTPAR"][""] << 31 << sqrt(*Param.at("ml2_11")) << "# M_(L,11)";
         slha["EXTPAR"][""] << 32 << sqrt(*Param.at("ml2_22")) << "# M_(L,22)";
