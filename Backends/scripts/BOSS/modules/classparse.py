@@ -107,23 +107,25 @@ def run():
 
 
         # Treat the first specialization of a template class differently
-        if is_template and class_name['long'] not in template_done:
-            template_bracket, template_types = utils.getTemplateBracket(class_el)
-            
-            empty_templ_class_decl = ''
-            empty_templ_class_decl += classutils.constrEmptyTemplClassDecl(abstr_class_name['short'], namespaces, template_bracket, indent=cfg.indent)
-            empty_templ_class_decl += classutils.constrTemplForwDecl(class_name['short'], namespaces, template_bracket, indent=cfg.indent)
-
-            gb.new_code[abstr_class_fname]['code_tuples'].append( (0, empty_templ_class_decl) )
+        # TODO: TG: I don't see why this is needed
+        #if is_template and class_name['long'] not in template_done:
+        #    template_bracket, template_types = utils.getTemplateBracket(class_el)
+        #    
+        #    empty_templ_class_decl = ''
+        #    empty_templ_class_decl += classutils.constrEmptyTemplClassDecl(abstr_class_name['short'], namespaces, template_bracket, indent=cfg.indent)
+        #    empty_templ_class_decl += classutils.constrTemplForwDecl(class_name['short'], namespaces, template_bracket, indent=cfg.indent)
+        #
+        #    gb.new_code[abstr_class_fname]['code_tuples'].append( (0, empty_templ_class_decl) )
 
 
         # Get template arguments for specialization, 
         # and check that they are acceptable
-        if is_template and class_name['long'] not in templ_spec_done:
-            spec_template_types = utils.getSpecTemplateTypes(class_el)
-            for template_type in spec_template_types:
-                if (template_type not in gb.accepted_types):
-                    raise Exception("The template specialization type '" + template_type + "' for class " + class_name['long'] + " is not among accepted types.")
+        # TODO: TG: I don't think we need specializations here
+        #if is_template and class_name['long'] not in templ_spec_done:
+        #    spec_template_types = utils.getSpecTemplateTypes(class_el)
+        #    for template_type in spec_template_types:
+        #        if (template_type not in gb.accepted_types):
+        #            raise Exception("The template specialization type '" + template_type + "' for class " + class_name['long'] + " is not among accepted types.")
 
 
         #

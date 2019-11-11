@@ -23,16 +23,18 @@ import modules.infomsg as infomsg
 
 def getAbstractClassName(input_name, prefix=gb.abstr_class_prefix, short=False):
 
-    if '::' in input_name:
-        namespaces, short_class_name = input_name.rsplit('::',1)
+    # TODO: TG: remove template brackets from name
+    input_name_no_template = input_name.split('<',1)[0]
+    if '::' in input_name_no_template:
+        namespaces, short_class_name = input_name_no_template.rsplit('::',1)
         abstract_class_name = namespaces + '::' + gb.abstr_class_prefix + short_class_name
     else:
-        abstract_class_name = gb.abstr_class_prefix + input_name
+        abstract_class_name = gb.abstr_class_prefix + input_name_no_template
 
     if short == True:
-        return abstract_class_name.rsplit('::',1)[-1]
-    else:
-        return abstract_class_name
+        abstract_class_name = abstract_class_name.rsplit('::',1)[-1]
+
+    return abstract_class_name + input_name.split('<',1)[-1]
 
 # ====== END: getAbstractClassName ========
 
@@ -113,8 +115,10 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     class_decl += utils.constrNamespace(namespaces, 'open')
 
     # - If this class is a template specialization, add 'template <>' at the top
+    # TODO: TG: I think we do not need specialization, go for full template
     if is_template == True:
-        class_decl += ' '*n_indents*indent + 'template <>\n'
+    #    class_decl += ' '*n_indents*indent + 'template <>\n'
+        class_decl += ' '*n_indents*indent + 'template<class T>\n'
 
     # - Construct the declaration line, with inheritance of abstract classes
     inheritance_line = ''
@@ -143,10 +147,12 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
 
 
     class_decl += ' '*n_indents*indent
-    if is_template:
-        class_decl += 'class ' + abstr_class_name['short'] + '<' + ','.join(template_types) + '>' + inheritance_line + '\n'
-    else:
-        class_decl += 'class ' + abstr_class_name['short'] + inheritance_line + '\n'
+    # TODO: TG: not needed for full template
+    #if is_template:
+    #    class_decl += 'class ' + abstr_class_name['short'] + '<' + ','.join(template_types) + '>' + inheritance_line + '\n'
+    #else:
+    #    class_decl += 'class ' + abstr_class_name['short'] + inheritance_line + '\n'
+    class_decl += 'class ' + abstr_class_name['short'] + inheritance_line + '\n'
 
     # - Construct body of class declaration
     current_access = ''
@@ -355,11 +361,19 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     # - Construct code needed for 'destructor pattern' (abstract class and wrapper class must can delete each other)
     class_decl += '\n'
     class_decl += ' '*(n_indents+1)*indent + 'private:\n'
-    class_decl += ' '*(n_indents+2)*indent +  class_name['short'] + '* wptr;\n'
+    # TODO: TG: Added for testing
+    if is_template:
+      class_decl +=  ' '*(n_indents+2)*indent +  class_name['short'] + '<T>* wptr;\n'
+    else :
+      class_decl += ' '*(n_indents+2)*indent +  class_name['short'] + '* wptr;\n'
     class_decl += ' '*(n_indents+2)*indent + 'bool delete_wrapper;\n'
     class_decl += ' '*(n_indents+1)*indent + 'public:\n'
-    class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '* get_wptr() { return wptr; }\n'
-    class_decl += ' '*(n_indents+2)*indent + 'void set_wptr(' + class_name['short'] + '* wptr_in) { wptr = wptr_in; }\n'
+    if is_template:
+        class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '<T>* get_wptr() { return wptr; }\n'
+        class_decl += ' '*(n_indents+2)*indent + 'void set_wptr(' + class_name['short'] + '<T>* wptr_in) { wptr = wptr_in; }\n'
+    else :
+        class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '* get_wptr() { return wptr; }\n'
+        class_decl += ' '*(n_indents+2)*indent + 'void set_wptr(' + class_name['short'] + '* wptr_in) { wptr = wptr_in; }\n'
     class_decl += ' '*(n_indents+2)*indent + 'bool get_delete_wrapper() { return delete_wrapper; }\n'
     class_decl += ' '*(n_indents+2)*indent + 'void set_delete_wrapper(bool del_wrp_in) { delete_wrapper = del_wrp_in; }\n'
 
@@ -431,7 +445,11 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
 
     # - Function get_init_wptr()
     class_decl += '\n'
-    class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '* get_init_wptr()\n'
+    # TODO: TG: Added for testing
+    if is_template :
+        class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '<T>* get_init_wptr()\n'
+    else :
+        class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '* get_init_wptr()\n'
     class_decl += ' '*(n_indents+2)*indent + '{\n'
     class_decl += ' '*(n_indents+3)*indent + 'init_wrapper();\n'
     class_decl += ' '*(n_indents+3)*indent + 'return wptr;\n'
@@ -439,7 +457,11 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
 
     # - Function get_init_wref()
     class_decl += '\n'
-    class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '& get_init_wref()\n'
+    # TODO: TG: Added for testing
+    if is_template :
+        class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '<T>& get_init_wref()\n'
+    else :
+        class_decl += ' '*(n_indents+2)*indent + class_name['short'] + '& get_init_wref()\n'
     class_decl += ' '*(n_indents+2)*indent + '{\n'
     class_decl += ' '*(n_indents+3)*indent + 'init_wrapper();\n'
     class_decl += ' '*(n_indents+3)*indent + 'return *wptr;\n'
@@ -489,7 +511,12 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     if not file_for_gambit:
         frwd_decl_creator  = '\n'
         frwd_decl_creator += '// Forward declaration for wrapper_creator.\n'
-        frwd_decl_creator += gb.gambit_backend_namespace + '::' + class_name['long'] + '* wrapper_creator(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + '*);\n'
+        # TODO: TG: Added for testing
+        if is_template:
+            frwd_decl_creator += 'template <class T>\n'
+            frwd_decl_creator += gb.gambit_backend_namespace + '::' + class_name['long'] + '<T>* wrapper_creator(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + '<T>*);\n'
+        else : 
+            frwd_decl_creator += gb.gambit_backend_namespace + '::' + class_name['long'] + '* wrapper_creator(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + '*);\n'
         # frwd_decl_creator += 'void wrapper_creator(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + '*);\n'
         frwd_decl_creator += '\n'
 
@@ -500,7 +527,12 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     if not file_for_gambit:
         frwd_decl_deleter  = '\n'
         frwd_decl_deleter += '// Forward declaration needed by the destructor pattern.\n'
-        frwd_decl_deleter += 'void wrapper_deleter(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '*);\n'
+        # TODO: TG: Added for testing
+        if is_template:
+            frwd_decl_deleter += 'template <class T>\n'
+            frwd_decl_deleter += 'void wrapper_deleter(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '<T>*);\n'
+        else :
+            frwd_decl_deleter += 'void wrapper_deleter(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '*);\n'
         frwd_decl_deleter += '\n'
 
         class_decl = frwd_decl_deleter + class_decl
@@ -509,7 +541,12 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     if not file_for_gambit:
         frwd_decl_setdel  = '\n'
         frwd_decl_setdel += '// Forward declaration needed by the destructor pattern.\n'
-        frwd_decl_setdel += 'void set_delete_BEptr(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '*, bool);\n'
+        # TODO: TG: Added for testing
+        if is_template:
+            frwd_decl_setdel += 'template <class T>\n'
+            frwd_decl_setdel += 'void set_delete_BEptr(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '<T>*, bool);\n'
+        else :
+            frwd_decl_setdel += 'void set_delete_BEptr(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '*, bool);\n'
         frwd_decl_setdel += '\n'
 
         class_decl = frwd_decl_setdel + class_decl
@@ -1171,7 +1208,9 @@ def getClassNameDict(class_el, abstract=False):
     if abstract:
         abstr_class_name = {}
         abstr_class_name['long_templ']  = getAbstractClassName(class_name['long_templ'], prefix=gb.abstr_class_prefix)
+        print(abstr_class_name['long_templ'])
         abstr_class_name['long']        = abstr_class_name['long_templ'].split('<',1)[0]
+        print(abstr_class_name['long']) 
         abstr_class_name['short_templ'] = getAbstractClassName(class_name['long_templ'], prefix=gb.abstr_class_prefix, short=True)
         abstr_class_name['short']       = abstr_class_name['short_templ'].split('<',1)[0]
 

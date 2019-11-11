@@ -306,38 +306,47 @@ def getTemplateBracket(el):
     file_content_nocomments = removeComments(file_content, insert_blanks=True)
 
     # Find index of the \n in line number line_number
-    count = 0
-    prev_pos = 0
-    for index,char in enumerate(file_content_nocomments):
-        if char=='\n':
-            count += 1
-        if count == line_number:
-            break
-        if char=='\n':         # STUPID HACK
-            prev_pos = index
-
-    newline_pos = index
-
+    # TODO: TG: I think this is better
+    file_content_list = file_content_nocomments.split('\n')
+    #count = 0
+    #prev_pos = 0
+    #for index,char in enumerate(file_content_nocomments):
+    #    if char=='\n':
+    #        count += 1
+    #    if count == line_number:
+    #        break
+    #    if char=='\n':         # STUPID HACK
+    #        prev_pos = index
+    #
+    #newline_pos = index
 
     # Find the template parameter bracket, e.g. <typename A, typename B>
-    search_content = file_content_nocomments[:newline_pos]
+    #search_content = file_content_nocomments[:newline_pos]
+    if "template" in file_content_list[line_number-1] :
+        search_content = file_content_list[line_number-1]
+    elif "template" in file_content_list[line_number-2] :
+        search_content = file_content_list[line_number-2]
+    else :
+        # This means there is no template, should never happen
+        return
+    template_bracket = '<' + search_content.split('<')[-1].split('>')[0] + '>'
 
-    start_pos = 0
-    end_pos = search_content.rfind('>')
-    if end_pos != -1:
-        balance = -1
-        for i in range(end_pos-1, -1, -1):
-            char = search_content[i]
-            if char == '>':
-                balance -= 1
-            elif char == '<':
-                balance += 1
-            if (balance == 0):
-                start_pos = i
-                break
-        template_bracket = search_content[start_pos:end_pos+1]
-    else:
-        template_bracket = '<>'
+    #start_pos = 0
+    #end_pos = search_content.rfind('>')
+    #if end_pos != -1:
+    #    balance = -1
+    #    for i in range(end_pos-1, -1, -1):
+    #        char = search_content[i]
+    #        if char == '>':
+    #            balance -= 1
+    #        elif char == '<':
+    #            balance += 1
+    #        if (balance == 0):
+    #            start_pos = i
+    #            break
+    #    template_bracket = search_content[start_pos:end_pos+1]
+    #else:
+    #    template_bracket = '<>'
 
     # print('TEMPLATE BRACKET: ', template_bracket)
 
@@ -1166,7 +1175,8 @@ def constrAbsForwardDeclHeader(file_output_path):
         if is_template:
             insert_code += full_indent + 'template ' + template_bracket + '\n'
             insert_code += full_indent + 'class ' + abstr_class_name['short'] + ';\n'
-            insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
+            #TODO: TG: I don't think specializations are needed
+            #insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
         else:
             insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
 
