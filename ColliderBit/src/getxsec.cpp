@@ -256,6 +256,7 @@ namespace Gambit
 
           // Update the PID_pair_xsec_container instance 
           pp_xs.set_xsec(xs_fb, xs_symm_err_fb);
+          pp_xs.set_info_string("xsecBE_NLO");
 
           // Add it to the result map
           result[pid_pair] = pp_xs;
@@ -344,11 +345,13 @@ namespace Gambit
           {
             xs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
             xs_rel_err = prospino_output.at("LO_rel_error");
+            pp_xs.set_info_string("prospino_LO");
           }
           else
           {
             xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
             xs_rel_err = prospino_output.at("NLO_rel_error");
+            pp_xs.set_info_string("prospino_NLO");
           }
           // Should we rather use the fixed uncertainty from the YAML file?
           if(fixed_xs_rel_err >= 0.0) { xs_rel_err = fixed_xs_rel_err; }
@@ -1516,8 +1519,8 @@ namespace Gambit
         {
           const PID_pair& pp = PID_pair_xsec_pair.first;
           const PID_pair_xsec_container& xs = PID_pair_xsec_pair.second;
-          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_cross_section_fb"] = xs.xsec();
-          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_cross_section_err_fb"] = xs.xsec_err();
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_fb"] = xs.xsec();
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_err_fb"] = xs.xsec_err();
         }
       }
 
