@@ -24,7 +24,7 @@ diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
  #
 +# build the prospino shared library
 +#
-+libprospino:	                ${FILES_DIRECT} \
++libprospino.so:	            ${FILES_DIRECT} \
 +	                            ${FILES_MACROS} \
 +                                   ${FILES_MATRIX} \
 +                                   ${FILES_INTEGS} \
