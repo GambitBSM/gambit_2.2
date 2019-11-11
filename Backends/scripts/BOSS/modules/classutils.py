@@ -34,7 +34,10 @@ def getAbstractClassName(input_name, prefix=gb.abstr_class_prefix, short=False):
     if short == True:
         abstract_class_name = abstract_class_name.rsplit('::',1)[-1]
 
-    return abstract_class_name + input_name.split('<',1)[-1]
+    if len(input_name.split('<',1) > 1
+        return abstract_class_name + '<' + input_name.split('<',1)[-1]
+    else
+        return abstract_class_name
 
 # ====== END: getAbstractClassName ========
 
