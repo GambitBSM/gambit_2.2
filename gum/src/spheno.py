@@ -616,6 +616,9 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
     # Convert the arguments to GAMBIT types
     type_dictionary = get_fortran_shapes(arguments)
 
+    # Add the new types to backend_types
+    backend_types, linenum = add_to_spheno_backend_types(type_dictionary)
+
     # Get all of the variables used in SPheno so we can store them as 
     # BE_VARIABLES. Keep track of those used for HiggsBounds too.
     variables, hb_variables = harvest_spheno_model_variables(spheno_path, 
@@ -646,7 +649,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                                  hb_variable_dictionary, flags)
 
 
-    return spheno_src, spheno_header
+    return spheno_src, spheno_header, backend_types, linenum
 
 def write_spheno_function(name, function_signatures, no_star = []) :
     """
@@ -661,6 +664,8 @@ def write_spheno_function(name, function_signatures, no_star = []) :
 def get_fortran_shapes(parameters):
     """
     Returns a dictionary of GAMBIT fortran-shape for a SPheno parameter
+
+    TODO some types have size e.g. (3,0) -- figure out what to do with these
     """
 
     type_dictionary = {}
@@ -669,7 +674,7 @@ def get_fortran_shapes(parameters):
 
         if not isinstance(parameter, SPhenoParameter):
             raise GumError(("Parameter not passed as instance of "
-                            "SPhenoParameter to function get_fortran_shape."))
+                            "SPhenoParameter to function get_fortran_shapes."))
 
         fortran_type = ""
         
@@ -705,6 +710,50 @@ def get_fortran_shapes(parameters):
         type_dictionary[name] = fortran_type  
 
     return type_dictionary
+
+def add_to_spheno_backend_types(type_dictionary):
+    """
+    Checks all new types are in the SPheno backend_types.
+    """
+
+    # New types from the harvesting
+    types = []
+    for t in type_dictionary.values():
+        if t.startswith('Farray_'): types.append(t)
+
+    # Remove dupes
+    types = list(set(types))
+
+    btypes = "../Backends/include/gambit/Backends/backend_types/SPheno.hpp"
+
+    # Already registered types that GAMBIT knows about 
+    registered_types = []
+
+    num = 0 # Index of last entry
+    with open(btypes, "r") as f:
+        for i, line in enumerate(f, start=1):
+            if "typedef" in line:
+                # Save the type
+                r = re.search(r"Farray_(.*?);", line)
+                if r:
+                    registered_types.append('Farray_'+r.group(1))
+            elif "particle2" in line:
+                # Done
+                num = i
+                break
+            
+    toadd = []
+    for t in types:
+        if t not in registered_types:
+            t2 = t.replace('_','<',1) # Replace the first _ with a <
+            t2 = t2[::-1].replace('_',',') # Replace all other _ with ,
+            t2 = t2[::-1]
+            string = "typedef {0}> {1};".format(t2, t)
+            toadd.append(string)
+
+    towrite = "\n".join(toadd) + "\n"
+
+    return dumb_indent(4, towrite), num
 
 # harvesting
 
@@ -2465,22 +2514,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                         "}}\n"
                 ).format(str(i), str(j), model_par, name, e)
 
-    # for(int i=1; i<=3; i++)
-    #   for(int j=1; j<=3; j++)
-    #   {
-    #     /********/
-    #     /* TUIN */
-    #     /********/
-    #     std::stringstream parname;
-    #     parname << "Au_" << i << j;
-    #     if(inputs.param.find(parname.str()) != inputs.param.end())
-    #     {
-    #       *InputValueforTu = true;
-    #       (*TuIN)(i,j).re = *inputs.param.at(parname.str());
-    #     }
-    # }
-
-      
+     
     # So we don't need Block GAUGEIN generically?
     towrite += (
             "\n"

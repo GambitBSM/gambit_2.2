@@ -374,7 +374,7 @@ if args.file:
 
             # Write frontends for SPheno. That's a lotta scrapin'.
             print("Writing SPheno frontends.")
-            spheno_src, spheno_header = \
+            spheno_src, spheno_header, backend_types, btnum = \
                 write_spheno_frontends(clean_model_name, parameters, 
                                        bsm_particle_list, flags, 
                                        patched_spheno_dir, output_dir, 
@@ -398,11 +398,12 @@ if args.file:
                 write_spheno_decay_entry(clean_model_name)
 
             # HiggsCouplingsTable
-            if len(higgses) > 1:
-                print("Writing HiggsCouplingsTable interface.")
-                hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
-                                                   neutral_higgses, gambit_pdgs)
-                print("done")
+            # TODO needs NMSSM merging into gum
+            # if len(higgses) > 1:
+            #     print("Writing HiggsCouplingsTable interface.")
+            #     hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
+            #                                        neutral_higgses, gambit_pdgs)
+            #     print("done")
 
         """
         CALCHEP
@@ -668,14 +669,15 @@ if args.file:
             copy_file("models/"+gum.name+".cpp", m, output_dir, reset_contents, 
                       existing = False)
         # HiggsBounds interface
-        if output_opts.spheno and len(higgses) > 1:
-            num = find_string("ColliderBit_Higgs.cpp", m, 
-                    "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
-            amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, reset_contents)
-            num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
-                    "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
-            amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
-                       reset_contents)
+        # TODO need NMSSM merging into gum
+        # if output_opts.spheno and len(higgses) > 1:
+        #     num = find_string("ColliderBit_Higgs.cpp", m, 
+        #             "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
+        #     amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, reset_contents)
+        #     num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
+        #             "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
+        #     amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
+        #                reset_contents)
 
         # Backends
         m = "Backends"
@@ -741,6 +743,10 @@ if args.file:
                 "data/SARAHSPheno_{0}_{1}_decays_info.dat"
             ).format(gum.name, SPHENO_VERSION.replace('.','_'))
             write_file(filename, m, sph_decays, reset_contents)
+            # SPheno backend_types 
+            amend_file("backend_types/SPheno.hpp", m, backend_types, btnum-2, 
+                       reset_contents)
+
 
         # Vevacious
         if output_opts.vev:
