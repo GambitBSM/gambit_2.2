@@ -342,6 +342,10 @@ if args.file:
         subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
+        print model_header
+        import sys
+        sys.exit()
+
         """
         SPHENO
         """
@@ -396,6 +400,11 @@ if args.file:
             print("Writing SPheno module functions for DecayBit.")
             spheno_decay_src, spheno_decay_header = \
                 write_spheno_decay_entry(clean_model_name)
+
+            # HiggsCouplingsTable
+            if len(higgses) > 1:
+                hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
+                                                   neutral_higgses)
 
 
         with open("out.txt", "w+") as f:
@@ -549,9 +558,6 @@ if args.file:
         #     f.write("\n=============\n")
         #     f.write(spectrum_header)
 
-        with open("sph_decays","w+") as f:
-            f.write(sph_decays)
-
         import sys
         sys.exit("Enough for now.")
 
@@ -563,7 +569,6 @@ if args.file:
 
             # Currently require SPheno output for vevacious since we need MINPAR
             # etc. 
-            # TODO factorise this a bit
             if not output_opts.spheno:
                 raise GumError(("Currently gum needs SPheno output to be able "
                                 "to produce Vevacious output. Please change "
@@ -676,6 +681,15 @@ if args.file:
                       existing = False)
             copy_file("models/"+gum.name+".cpp", m, output_dir, reset_contents, 
                       existing = False)
+        # HiggsBounds interface
+        if output_opts.spheno and len(higgses) > 1:
+            num = find_string("ColliderBit_Higgs", m, 
+                            "No valid model for MSSMLikeHiggs_ModelParameters.")
+            amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, reset_contents)
+            num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
+                              "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
+            amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
+                       reset_contents)
 
         # Backends
         m = "Backends"
