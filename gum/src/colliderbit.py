@@ -5,6 +5,7 @@ Master module for all ColliderBit-related routines.
 import datetime
 
 from files import *
+from setup import *
 
 
 def new_colliderbit_model(cb_output_dir, model):
@@ -27,7 +28,7 @@ def new_colliderbit_model(cb_output_dir, model):
                 f_new.write(newline)
 
 
-def new_hct_switch(model_name, spectrum, neutral_higgses):
+def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs):
     """
     Adds a new ModelInUse switch to the HiggsCouplingsTable
     routines in ColliderBit/src/ColliderBit_Higgs.cpp.
@@ -38,9 +39,16 @@ def new_hct_switch(model_name, spectrum, neutral_higgses):
     for higgs in neutral_higgses:
         entry.append("\""+pdg_to_particle(higgs, gambit_pdgs)+"\"")
 
+    print neutral_higgses
+    print entry
+
+
     # Sort the higgses in numerical order - with the neutral ones first
     entry = sorted(entry, key=str.swapcase)
     listhiggses = ','.join(entry)
+
+    print entry
+    print listhiggses
 
     towrite_src = (
                 "if (ModelInUse(\"{0}\"))\n"
@@ -48,8 +56,10 @@ def new_hct_switch(model_name, spectrum, neutral_higgses):
                 "spectrum_dependency = &Dep::{1};\n"
                 "Higgses = initvector<str>({2});\n"
                 "}}\n"
-    ).format(model_name, spectrum, higgses)
+    ).format(model_name, spectrum, listhiggses)
 
     towrite_head = (
-                 "MODEL_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})"
+                 "    MODEL_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})"
     ).format(spectrum, model_name)
+
+    return dumb_indent(6, towrite_src), towrite_head

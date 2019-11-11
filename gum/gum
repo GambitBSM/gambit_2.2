@@ -342,10 +342,6 @@ if args.file:
         subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
-        print model_header
-        import sys
-        sys.exit()
-
         """
         SPHENO
         """
@@ -403,12 +399,10 @@ if args.file:
 
             # HiggsCouplingsTable
             if len(higgses) > 1:
+                print("Writing HiggsCouplingsTable interface.")
                 hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
-                                                   neutral_higgses)
-
-
-        with open("out.txt", "w+") as f:
-            f.write(spheno_src)
+                                                   neutral_higgses, gambit_pdgs)
+                print("done")
 
         """
         CALCHEP
@@ -553,14 +547,6 @@ if args.file:
                                                 output_opts.spheno, higgses)
         spec_rollcall = write_specbit_rollcall(gum.name)
 
-        # with open("out2.txt", "w+") as f:
-        #     f.write(spectrum_src)
-        #     f.write("\n=============\n")
-        #     f.write(spectrum_header)
-
-        import sys
-        sys.exit("Enough for now.")
-
         """
         VEVACIOUS
         """
@@ -683,11 +669,11 @@ if args.file:
                       existing = False)
         # HiggsBounds interface
         if output_opts.spheno and len(higgses) > 1:
-            num = find_string("ColliderBit_Higgs", m, 
-                            "No valid model for MSSMLikeHiggs_ModelParameters.")
+            num = find_string("ColliderBit_Higgs.cpp", m, 
+                    "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
             amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, reset_contents)
             num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
-                              "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
+                    "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
             amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
                        reset_contents)
 
