@@ -210,25 +210,30 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA1Spectrum;
 
-      if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT") 
-          || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
+      if(*Loop::iteration == BASE_INIT)
       {
-        result = Dep::MSSM_spectrum->getSLHAea(1);
-      }
-      else if (ModelInUse("CB_SLHA_file_model") ||
-               ModelInUse("CB_SLHA_simpmod_scan_model") ||
-               ModelInUse("CB_SLHA_scan_model"))
-      {
-        result = Dep::SLHAFileNameAndContent->second;
-      }
-      else
-      {
-        // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
-        // without also changing this function
-        std::stringstream errmsg_ss;
-        errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
-                  << "Please expand the function getSLHA1Spectrum if you want to use it with for new models.!";
-        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        result.clear();
+
+        if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT")
+            || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
+        {
+          result = Dep::MSSM_spectrum->getSLHAea(1);
+        }
+        else if (ModelInUse("CB_SLHA_file_model") ||
+                 ModelInUse("CB_SLHA_simpmod_scan_model") ||
+                 ModelInUse("CB_SLHA_scan_model"))
+        {
+          result = Dep::SLHAFileNameAndContent->second;
+        }
+        else
+        {
+          // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
+          // without also changing this function
+          std::stringstream errmsg_ss;
+          errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
+                    << "Please expand the function getSLHA1Spectrum if you want to use it with for new models.!";
+          ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        }
       }
     }
 
@@ -237,25 +242,30 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA2Spectrum;
 
-      if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT") 
-          || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
+      if(*Loop::iteration == BASE_INIT)
       {
-        result = Dep::MSSM_spectrum->getSLHAea(2);
-      }
-      else if (ModelInUse("CB_SLHA_file_model") ||
-               ModelInUse("CB_SLHA_simpmod_scan_model") ||
-               ModelInUse("CB_SLHA_scan_model"))
-      {
-        result = Dep::SLHAFileNameAndContent->second;
-      }
-      else
-      {
-        // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
-        // without also changing this function
-        std::stringstream errmsg_ss;
-        errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
-                  << "Please expand the function getSLHA2Spectrum if you want to use it with for new models.!";
-        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        result.clear();
+
+        if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT") 
+            || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
+        {
+          result = Dep::MSSM_spectrum->getSLHAea(2);
+        }
+        else if (ModelInUse("CB_SLHA_file_model") ||
+                 ModelInUse("CB_SLHA_simpmod_scan_model") ||
+                 ModelInUse("CB_SLHA_scan_model"))
+        {
+          result = Dep::SLHAFileNameAndContent->second;
+        }
+        else
+        {
+          // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
+          // without also changing this function
+          std::stringstream errmsg_ss;
+          errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
+                    << "Please expand the function getSLHA2Spectrum if you want to use it with for new models.!";
+          ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        }
       }
     }
 

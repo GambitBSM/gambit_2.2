@@ -230,7 +230,6 @@ namespace Gambit
         str slha_string = slha_spec.str();
         BEreq::xsecBE_import_slha_string(slha_string);
 
-
         // Now get the cross-sections for all the requested PID pairs. Save the results
         // in the result map (type map<PID_pair,PID_pair_xsec_container>)
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)

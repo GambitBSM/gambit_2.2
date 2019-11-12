@@ -190,6 +190,7 @@
   START_CAPABILITY
     #define FUNCTION getSLHA1Spectrum
     START_FUNCTION(SLHAstruct)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)      // @todo Why is this needed?
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
@@ -202,6 +203,7 @@
   START_CAPABILITY
     #define FUNCTION getSLHA2Spectrum
     START_FUNCTION(SLHAstruct)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)      // @todo Why is this needed?
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
