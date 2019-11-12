@@ -375,8 +375,8 @@ namespace Gambit {
         results_2jl.sr_label = "2jl";
         results_2jl.n_observed = 12315.;
         results_2jl.n_background = 13000.;
-        results_2jl.background_sys = 1000.;
-        results_2jl.signal_sys = 0.;
+        results_2jl.n_background_err = 1000.;
+        results_2jl.n_signal_MC_sys = 0.;
         results_2jl.n_signal_MC = _num2jl;
         add_result(results_2jl);
 
@@ -384,8 +384,8 @@ namespace Gambit {
         results_2jm.sr_label = "2jm";
         results_2jm.n_observed = 715.;
         results_2jm.n_background = 760.;
-        results_2jm.background_sys = 50.;
-        results_2jm.signal_sys = 0.;
+        results_2jm.n_background_err = 50.;
+        results_2jm.n_signal_MC_sys = 0.;
         results_2jm.n_signal_MC = _num2jm;
         add_result(results_2jm);
 
@@ -393,8 +393,8 @@ namespace Gambit {
         results_2jt.sr_label = "2jt";
         results_2jt.n_observed = 133.;
         results_2jt.n_background = 125.;
-        results_2jt.background_sys = 10.;
-        results_2jt.signal_sys = 0.;
+        results_2jt.n_background_err = 10.;
+        results_2jt.n_signal_MC_sys = 0.;
         results_2jt.n_signal_MC = _num2jt;
         add_result(results_2jt);
 
@@ -402,8 +402,8 @@ namespace Gambit {
         results_3j.sr_label = "3j";
         results_3j.n_observed = 7.;
         results_3j.n_background = 5.;
-        results_3j.background_sys = 1.2;
-        results_3j.signal_sys = 0.;
+        results_3j.n_background_err = 1.2;
+        results_3j.n_signal_MC_sys = 0.;
         results_3j.n_signal_MC = _num3j;
         add_result(results_3j);
 
@@ -411,8 +411,8 @@ namespace Gambit {
         results_4jlm.sr_label = "4jlm";
         results_4jlm.n_observed = 2169.;
         results_4jlm.n_background = 2120.;
-        results_4jlm.background_sys = 110.;
-        results_4jlm.signal_sys = 0.;
+        results_4jlm.n_background_err = 110.;
+        results_4jlm.n_signal_MC_sys = 0.;
         results_4jlm.n_signal_MC = _num4jlm;
         add_result(results_4jlm);
 
@@ -420,8 +420,8 @@ namespace Gambit {
         results_4jl.sr_label = "4jl";
         results_4jl.n_observed = 608.;
         results_4jl.n_background = 630.;
-        results_4jl.background_sys = 50.;
-        results_4jl.signal_sys = 0.;
+        results_4jl.n_background_err = 50.;
+        results_4jl.n_signal_MC_sys = 0.;
         results_4jl.n_signal_MC = _num4jl;
         add_result(results_4jl);
 
@@ -429,8 +429,8 @@ namespace Gambit {
         results_4jm.sr_label = "4jm";
         results_4jm.n_observed = 24.;
         results_4jm.n_background = 37.;
-        results_4jm.background_sys = 6.;
-        results_4jm.signal_sys = 0.;
+        results_4jm.n_background_err = 6.;
+        results_4jm.n_signal_MC_sys = 0.;
         results_4jm.n_signal_MC = _num4jm;
         add_result(results_4jm);
 
@@ -438,8 +438,8 @@ namespace Gambit {
         results_4jt.sr_label = "4jt";
         results_4jt.n_observed = 0.;
         results_4jt.n_background = 2.5;
-        results_4jt.background_sys = 1.;
-        results_4jt.signal_sys = 0.;
+        results_4jt.n_background_err = 1.;
+        results_4jt.n_signal_MC_sys = 0.;
         results_4jt.n_signal_MC = _num4jt;
         add_result(results_4jt);
 
@@ -447,8 +447,8 @@ namespace Gambit {
         results_5j.sr_label = "5j";
         results_5j.n_observed = 121.;
         results_5j.n_background = 126.;
-        results_5j.background_sys = 13.;
-        results_5j.signal_sys = 0.;
+        results_5j.n_background_err = 13.;
+        results_5j.n_signal_MC_sys = 0.;
         results_5j.n_signal_MC = _num5j;
         add_result(results_5j);
 
@@ -456,8 +456,8 @@ namespace Gambit {
         results_6jl.sr_label = "6jl";
         results_6jl.n_observed = 121.;
         results_6jl.n_background = 111.;
-        results_6jl.background_sys = 11.;
-        results_6jl.signal_sys = 0.;
+        results_6jl.n_background_err = 11.;
+        results_6jl.n_signal_MC_sys = 0.;
         results_6jl.n_signal_MC = _num6jl;
         add_result(results_6jl);
 
@@ -465,8 +465,8 @@ namespace Gambit {
         results_6jm.sr_label = "6jm";
         results_6jm.n_observed = 39.;
         results_6jm.n_background = 33.;
-        results_6jm.background_sys = 6.;
-        results_6jm.signal_sys = 0.;
+        results_6jm.n_background_err = 6.;
+        results_6jm.n_signal_MC_sys = 0.;
         results_6jm.n_signal_MC = _num6jm;
         add_result(results_6jm);
 
@@ -474,8 +474,8 @@ namespace Gambit {
         results_6jt.sr_label = "6jt";
         results_6jt.n_observed = 5.;
         results_6jt.n_background = 5.2;
-        results_6jt.background_sys = 1.4;
-        results_6jt.signal_sys = 0.;
+        results_6jt.n_background_err = 1.4;
+        results_6jt.n_signal_MC_sys = 0.;
         results_6jt.n_signal_MC = _num6jt;
         add_result(results_6jt);
 
@@ -483,8 +483,8 @@ namespace Gambit {
         results_6jtp.sr_label = "6jtp";
         results_6jtp.n_observed = 6.;
         results_6jtp.n_background = 4.9;
-        results_6jtp.background_sys = 1.6;
-        results_6jtp.signal_sys = 0.;
+        results_6jtp.n_background_err = 1.6;
+        results_6jtp.n_signal_MC_sys = 0.;
         results_6jtp.n_signal_MC = _num6jt;
         add_result(results_6jtp);
       }

@@ -228,8 +228,8 @@ namespace Gambit {
         results_SR.sr_label = "SR";
         results_SR.n_observed = 1.;
         results_SR.n_background = 1.89;
-        results_SR.background_sys = 0.66;
-        results_SR.signal_sys = 0.;
+        results_SR.n_background_err = 0.66;
+        results_SR.n_signal_MC_sys = 0.;
         results_SR.n_signal_MC = _numSR;
 
         add_result(results_SR);

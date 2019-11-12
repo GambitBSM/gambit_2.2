@@ -79,10 +79,10 @@ namespace Gambit {
       /// Constructor with separate n & nsys args
       SignalRegionData(const std::string& sr,
                        double nobs, double nsigMC, double nbkg,
-                       double syssig, double sysbkg, double nsigscaled=0)
+                       double nsigMCsys, double nbkgerr, double nsigscaled=0)
        : sr_label(sr),
          n_observed(nobs), n_signal_MC(nsigMC), n_signal_scaled(nsigscaled), n_background(nbkg),
-         signal_sys(syssig), background_sys(sysbkg)
+         n_signal_MC_sys(nsigMCsys), n_background_err(nbkgerr)
       {}
 
       /// Default constructor
@@ -94,6 +94,28 @@ namespace Gambit {
         /// @todo Add SR consistency checks
         return consistent;
       }
+
+      /// Uncertainty calculators
+      double scalefactor() const { return n_signal_MC == 0 ? 1 : n_signal_scaled / n_signal_MC; }
+
+      double n_sig_MC_sys() const { return n_signal_MC_sys; }
+
+      double n_sig_MC_stat() const { return sqrt(n_signal_MC); }
+
+      double n_sig_MC_err() const { return sqrt( n_sig_MC_stat() * n_sig_MC_stat() + n_sig_MC_sys() * n_sig_MC_sys() ); }
+
+      double n_sig_scaled_stat() const { return scalefactor() * n_sig_MC_stat(); }
+
+      double n_sig_scaled_sys() const { return scalefactor() * n_sig_MC_sys(); }
+
+      double n_sig_scaled_err() const { return scalefactor() * n_sig_MC_err(); }
+
+      double n_bkg_err() const { return n_background_err; }
+
+      /// @todo Add sensible n_bkg_stat() function and a n_bkg_err() function
+
+      /// @todo Switch to using the n_bkg_err() function 
+      double n_sigbkg_err() const { return sqrt( n_sig_scaled_err() * n_sig_scaled_err() + n_bkg_err() * n_bkg_err()); }
 
 
       /// @name Signal region specification
@@ -107,8 +129,8 @@ namespace Gambit {
       double n_signal_MC = 0; ///< The number of simulated model events passing selection for this signal region
       double n_signal_scaled = 0; ///< n_signal_MC, scaled to luminosity * cross-section
       double n_background = 0; ///< The number of standard model events expected to pass the selection for this signal region, as reported by the experiment.
-      double signal_sys = 0; ///< The absolute systematic error of n_signal_MC
-      double background_sys = 0; ///< The absolute systematic error of n_background
+      double n_signal_MC_sys = 0; ///< The absolute systematic error of n_signal_MC
+      double n_background_err = 0; ///< The absolute error of n_background
       //@}
 
     };
@@ -182,7 +204,7 @@ namespace Gambit {
         {
           sr.n_signal_MC = 0;
           sr.n_signal_scaled = 0;
-          sr.signal_sys = 0;
+          sr.n_signal_MC_sys = 0;
         }
         srcov = Eigen::MatrixXd();
         #ifdef ANALYSISDATA_DEBUG
@@ -233,7 +255,7 @@ namespace Gambit {
         for (const SignalRegionData& srd : srdata) srd.check();
         assert(srcov.rows() == 0 || srcov.rows() == (int) srdata.size());
         // for (int isr = 0; isr < srcov.rows(); ++isr) {
-        //   const double& srbg = srdata[isr].background_sys;
+        //   const double& srbg = srdata[isr].n_background_err;
         //   #ifdef ANALYSISDATA_DEBUG
         //     std::cerr << "DEBUG: AnalysisData: isr:" << isr << ", srbg:" << srbg << ", srcov(isr,isr):" << srcov(isr,isr) << std::endl;
         //   #endif

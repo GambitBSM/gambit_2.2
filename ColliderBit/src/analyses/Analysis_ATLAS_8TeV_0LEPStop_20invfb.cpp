@@ -685,56 +685,56 @@ namespace Gambit {
         results_SRA1.sr_label = "SRA1";
         results_SRA1.n_observed = 11.;
         results_SRA1.n_background = 15.8;
-        results_SRA1.background_sys = 1.9;
-        results_SRA1.signal_sys = 0.;
+        results_SRA1.n_background_err = 1.9;
+        results_SRA1.n_signal_MC_sys = 0.;
         results_SRA1.n_signal_MC = _numSRA1;
 
         SignalRegionData results_SRA2;
         results_SRA2.sr_label = "SRA2";
         results_SRA2.n_observed = 4.;
         results_SRA2.n_background = 4.1;
-        results_SRA2.background_sys = 0.8;
-        results_SRA2.signal_sys = 0.;
+        results_SRA2.n_background_err = 0.8;
+        results_SRA2.n_signal_MC_sys = 0.;
         results_SRA2.n_signal_MC = _numSRA2;
 
         SignalRegionData results_SRA3;
         results_SRA3.sr_label = "SRA3";
         results_SRA3.n_observed = 5.;
         results_SRA3.n_background = 4.1;
-        results_SRA3.background_sys = 0.9;
-        results_SRA3.signal_sys = 0.;
+        results_SRA3.n_background_err = 0.9;
+        results_SRA3.n_signal_MC_sys = 0.;
         results_SRA3.n_signal_MC = _numSRA3;
 
         SignalRegionData results_SRA4;
         results_SRA4.sr_label = "SRA4";
         results_SRA4.n_observed = 4.;
         results_SRA4.n_background = 2.4;
-        results_SRA4.background_sys = 0.7;
-        results_SRA4.signal_sys = 0.;
+        results_SRA4.n_background_err = 0.7;
+        results_SRA4.n_signal_MC_sys = 0.;
         results_SRA4.n_signal_MC = _numSRA4;
 
         SignalRegionData results_SRC1;
         results_SRC1.sr_label = "SRC1";
         results_SRC1.n_observed = 59.;
         results_SRC1.n_background = 68.;
-        results_SRC1.background_sys = 7.;
-        results_SRC1.signal_sys = 0.;
+        results_SRC1.n_background_err = 7.;
+        results_SRC1.n_signal_MC_sys = 0.;
         results_SRC1.n_signal_MC = _numSRC1;
 
         SignalRegionData results_SRC2;
         results_SRC2.sr_label = "SRC2";
         results_SRC2.n_observed = 30.;
         results_SRC2.n_background = 34.;
-        results_SRC2.background_sys = 5.;
-        results_SRC2.signal_sys = 0.;
+        results_SRC2.n_background_err = 5.;
+        results_SRC2.n_signal_MC_sys = 0.;
         results_SRC2.n_signal_MC = _numSRC2;
 
         SignalRegionData results_SRC3;
         results_SRC3.sr_label = "SRC3";
         results_SRC3.n_observed = 15.;
         results_SRC3.n_background = 20.3;
-        results_SRC3.background_sys = 3.;
-        results_SRC3.signal_sys = 0.;
+        results_SRC3.n_background_err = 3.;
+        results_SRC3.n_signal_MC_sys = 0.;
         results_SRC3.n_signal_MC = _numSRC3;
 
         add_result(results_SRA1);

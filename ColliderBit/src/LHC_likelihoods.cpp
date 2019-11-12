@@ -80,14 +80,10 @@ namespace Gambit
           const SignalRegionData srData = adata[SR];
           const str key = adata.analysis_name + "__" + srData.sr_label + "__i" + std::to_string(SR) + "__signal";
           result[key] = srData.n_signal_scaled;
+          const double n_signal_scaled_err = srData.n_sig_scaled_err();
+          result[key + "_uncert"] = n_signal_scaled_err;
 
-          const double scale = srData.n_signal_scaled / srData.n_signal_MC;
-          const double abs_uncertainty_s_stat = (srData.n_signal_MC == 0 ? 0 : scale * sqrt(srData.n_signal_MC));
-          const double abs_uncertainty_s_sys = (srData.n_signal_MC == 0 ? 0 : scale * srData.signal_sys);
-          const double combined_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
-          result[key + "_uncert"] = combined_uncertainty;
-
-          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_signal_scaled << "+-" << combined_uncertainty << ", ";
+          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_signal_scaled << "+-" << n_signal_scaled_err << ", ";
         }
       }
       logger() << LogTags::debug << summary_line.str() << EOM;
@@ -453,11 +449,11 @@ namespace Gambit
             cout << std::fixed << DEBUG_PREFIX
                                    << "calc_LHC_LogLikes: " << ananame
                                    << ", " << srData.sr_label
-                                   << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
+                                   << ",  n_b = " << srData.n_background << " +/- " << srData.n_background_err
                                    << ",  n_obs = " << srData.n_observed
-                                   << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
+                                   << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.n_background_err
                                    << ",  n_s = " << srData.n_signal_scaled
-                                   << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_scaled << " +/- " << srData.background_sys
+                                   << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_scaled << " +/- " << srData.n_background_err
                                    << ",  n_s_MC = " << srData.n_signal_MC
                                    << endl;
           }
@@ -574,11 +570,7 @@ namespace Gambit
             n_pred_sb(SR) = srData.n_signal_scaled + srData.n_background;
 
             // Absolute errors for n_predicted_uncertain_*
-            const double scale = srData.n_signal_scaled / srData.n_signal_MC;
-            const double abs_uncertainty_s_stat = (srData.n_signal_MC == 0 ? 0 : scale * sqrt(srData.n_signal_MC));
-            const double abs_uncertainty_s_sys = (srData.n_signal_MC == 0 ? 0 : scale * srData.signal_sys);
-
-            abs_unc_s(SR) = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
+            abs_unc_s(SR) = srData.n_sig_scaled_err();
           }
 
           // Diagonalise the background-only covariance matrix, extracting the correlation and rotation matrices
@@ -680,13 +672,10 @@ namespace Gambit
             const double n_obs = round(srData.n_observed);
             const double n_pred_b_int = round(n_pred_b);
 
-
             // Absolute errors for n_predicted_uncertain_*
-            const double scale = srData.n_signal_scaled / srData.n_signal_MC;
-            const double abs_uncertainty_s_stat = (srData.n_signal_MC == 0 ? 0 : scale * sqrt(srData.n_signal_MC));
-            const double abs_uncertainty_s_sys = (srData.n_signal_MC == 0 ? 0 : scale * srData.signal_sys);
-            const double abs_uncertainty_b = std::max(srData.background_sys, 0.001); // <-- Avoid trouble with b_err==0
-            const double abs_uncertainty_sb = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys, abs_uncertainty_b);
+            const double abs_uncertainty_b = std::max(srData.n_bkg_err(), 0.001); // <-- Avoid trouble with b_err==0
+            const double abs_uncertainty_sb = std::max(srData.n_sigbkg_err(), 0.001); // <-- Avoid trouble with sb_err==0
+
 
             // Construct dummy 1-element Eigen objects for passing to the general likelihood calculator
             /// @todo Use newer (?) one-step Eigen constructors for (const) single-element arrays
@@ -793,11 +782,11 @@ namespace Gambit
               const SignalRegionData& srData = adata[SR];
               msg << srData.sr_label
                   << ",  n_background = " << srData.n_background
-                  << ",  background_sys = " << srData.background_sys
+                  << ",  n_background_err = " << srData.n_background_err
                   << ",  n_observed = " << srData.n_observed
                   << ",  n_signal_scaled = " << srData.n_signal_scaled
                   << ",  n_signal_MC = " << srData.n_signal_MC
-                  << ",  signal_sys = " << srData.signal_sys
+                  << ",  n_signal_MC_sys = " << srData.n_signal_MC_sys
                   << endl;
             }
             invalid_point().raise(msg.str());

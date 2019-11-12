@@ -772,40 +772,40 @@ namespace Gambit {
         results_BC1.sr_label = "BC1";
         results_BC1.n_observed = 456.;
         results_BC1.n_background = 482.;
-        results_BC1.background_sys = 76.;
-        results_BC1.signal_sys = 0.;
+        results_BC1.n_background_err = 76.;
+        results_BC1.n_signal_MC_sys = 0.;
         results_BC1.n_signal_MC = _numBC1;
 
         SignalRegionData results_BC2;
         results_BC2.sr_label = "BC2";
         results_BC2.n_observed = 25.;
         results_BC2.n_background = 18.;
-        results_BC2.background_sys = 5.;
-        results_BC2.signal_sys = 0.;
+        results_BC2.n_background_err = 5.;
+        results_BC2.n_signal_MC_sys = 0.;
         results_BC2.n_signal_MC = _numBC2;
 
         SignalRegionData results_BC3;
         results_BC3.sr_label = "BC3";
         results_BC3.n_observed = 6.;
         results_BC3.n_background = 7.;
-        results_BC3.background_sys = 3.;
-        results_BC3.signal_sys = 0.;
+        results_BC3.n_background_err = 3.;
+        results_BC3.n_signal_MC_sys = 0.;
         results_BC3.n_signal_MC = _numBC3;
 
         SignalRegionData results_TN2;
         results_TN2.sr_label = "TN2";
         results_TN2.n_observed = 14.;
         results_TN2.n_background = 13.;
-        results_TN2.background_sys = 3.;
-        results_TN2.signal_sys = 0.;
+        results_TN2.n_background_err = 3.;
+        results_TN2.n_signal_MC_sys = 0.;
         results_TN2.n_signal_MC = _numTN2;
 
         SignalRegionData results_TN3;
         results_TN3.sr_label = "TN3";
         results_TN3.n_observed = 7.;
         results_TN3.n_background = 5.;
-        results_TN3.background_sys = 2.;
-        results_TN3.signal_sys = 0.;
+        results_TN3.n_background_err = 2.;
+        results_TN3.n_signal_MC_sys = 0.;
         results_TN3.n_signal_MC = _numTN3;
 
         add_result(results_BC1);

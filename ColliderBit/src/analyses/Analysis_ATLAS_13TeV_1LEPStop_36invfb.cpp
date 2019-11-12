@@ -1411,8 +1411,8 @@ namespace Gambit {
         results_tN_med.sr_label = "tN_med";
         results_tN_med.n_observed = 50;
         results_tN_med.n_background = 36.3;
-        results_tN_med.background_sys = 6.6;
-        results_tN_med.signal_sys = 0.;
+        results_tN_med.n_background_err = 6.6;
+        results_tN_med.n_signal_MC_sys = 0.;
         results_tN_med.n_signal_MC = num_tN_med;
         add_result(results_tN_med);
 
@@ -1420,8 +1420,8 @@ namespace Gambit {
         results_tN_high.sr_label = "tN_med";
         results_tN_high.n_observed = 8;
         results_tN_high.n_background = 3.8;
-        results_tN_high.background_sys = 1.0;
-        results_tN_high.signal_sys = 0.;
+        results_tN_high.n_background_err = 1.0;
+        results_tN_high.n_signal_MC_sys = 0.;
         results_tN_high.n_signal_MC = num_tN_high;
         add_result(results_tN_high);
 
@@ -1429,8 +1429,8 @@ namespace Gambit {
         results_bWN.sr_label = "tN_med";
         results_bWN.n_observed = 68;
         results_bWN.n_background = 71;
-        results_bWN.background_sys = 16;
-        results_bWN.signal_sys = 0.;
+        results_bWN.n_background_err = 16;
+        results_bWN.n_signal_MC_sys = 0.;
         results_bWN.n_signal_MC = num_bWN;
         add_result(results_bWN);
 
@@ -1438,8 +1438,8 @@ namespace Gambit {
         results_bC2x_diag.sr_label = "bC2x_diag";
         results_bC2x_diag.n_observed = 22;
         results_bC2x_diag.n_background = 21.3;
-        results_bC2x_diag.background_sys = 5.0;
-        results_bC2x_diag.signal_sys = 0.;
+        results_bC2x_diag.n_background_err = 5.0;
+        results_bC2x_diag.n_signal_MC_sys = 0.;
         results_bC2x_diag.n_signal_MC = num_bC2x_diag;
         add_result(results_bC2x_diag);
 
@@ -1447,8 +1447,8 @@ namespace Gambit {
         results_bC2x_med.sr_label = "bC2x_med";
         results_bC2x_med.n_observed = 4;
         results_bC2x_med.n_background = 5.8;
-        results_bC2x_med.background_sys = 1.6;
-        results_bC2x_med.signal_sys = 0.;
+        results_bC2x_med.n_background_err = 1.6;
+        results_bC2x_med.n_signal_MC_sys = 0.;
         results_bC2x_med.n_signal_MC = num_bC2x_med;
         add_result(results_bC2x_med);
 
@@ -1456,8 +1456,8 @@ namespace Gambit {
         results_bCbv.sr_label = "bCbv";
         results_bCbv.n_observed = 25;
         results_bCbv.n_background = 25.1;
-        results_bCbv.background_sys = 3.8;
-        results_bCbv.signal_sys = 0.;
+        results_bCbv.n_background_err = 3.8;
+        results_bCbv.n_signal_MC_sys = 0.;
         results_bCbv.n_signal_MC = num_bCbv;
         add_result(results_bCbv);
 
@@ -1465,8 +1465,8 @@ namespace Gambit {
         results_DM_low_loose.sr_label = "DM_low_loose";
         results_DM_low_loose.n_observed = 65;
         results_DM_low_loose.n_background = 48.3;
-        results_DM_low_loose.background_sys = 8.2;
-        results_DM_low_loose.signal_sys = 0.;
+        results_DM_low_loose.n_background_err = 8.2;
+        results_DM_low_loose.n_signal_MC_sys = 0.;
         results_DM_low_loose.n_signal_MC = num_DM_low_loose;
         add_result(results_DM_low_loose);
 
@@ -1474,8 +1474,8 @@ namespace Gambit {
         results_DM_low.sr_label = "DM_low";
         results_DM_low.n_observed = 13;
         results_DM_low.n_background = 13.8;
-        results_DM_low.background_sys = 3.6;
-        results_DM_low.signal_sys = 0.;
+        results_DM_low.n_background_err = 3.6;
+        results_DM_low.n_signal_MC_sys = 0.;
         results_DM_low.n_signal_MC = num_DM_low;
         add_result(results_DM_low);
 
@@ -1483,8 +1483,8 @@ namespace Gambit {
         results_DM_high.sr_label = "DM_high";
         results_DM_high.n_observed = 5;
         results_DM_high.n_background = 7.4;
-        results_DM_high.background_sys = 2.1;
-        results_DM_high.signal_sys = 0.;
+        results_DM_high.n_background_err = 2.1;
+        results_DM_high.n_signal_MC_sys = 0.;
         results_DM_high.n_signal_MC = num_DM_high;
         add_result(results_DM_high);
 
@@ -1492,8 +1492,8 @@ namespace Gambit {
         results_bffN.sr_label = "bffN";
         results_bffN.n_observed = 70;
         results_bffN.n_background = 60.5;
-        results_bffN.background_sys = 6.1;
-        results_bffN.signal_sys = 0.;
+        results_bffN.n_background_err = 6.1;
+        results_bffN.n_signal_MC_sys = 0.;
         results_bffN.n_signal_MC = num_bffN;
         add_result(results_bffN);
 
@@ -1501,8 +1501,8 @@ namespace Gambit {
         results_bCsoft_diag.sr_label = "bCsoft_diag";
         results_bCsoft_diag.n_observed = 33;
         results_bCsoft_diag.n_background = 24.7;
-        results_bCsoft_diag.background_sys = 3.1;
-        results_bCsoft_diag.signal_sys = 0.;
+        results_bCsoft_diag.n_background_err = 3.1;
+        results_bCsoft_diag.n_signal_MC_sys = 0.;
         results_bCsoft_diag.n_signal_MC = num_bCsoft_diag;
         add_result(results_bCsoft_diag);
 
@@ -1510,8 +1510,8 @@ namespace Gambit {
         results_bCsoft_med.sr_label = "bCsoft_med";
         results_bCsoft_med.n_observed = 19;
         results_bCsoft_med.n_background = 13.7;
-        results_bCsoft_med.background_sys = 2.1;
-        results_bCsoft_med.signal_sys = 0.;
+        results_bCsoft_med.n_background_err = 2.1;
+        results_bCsoft_med.n_signal_MC_sys = 0.;
         results_bCsoft_med.n_signal_MC = num_bCsoft_med;
         add_result(results_bCsoft_med);
 
@@ -1519,8 +1519,8 @@ namespace Gambit {
         results_bCsoft_high.sr_label = "bCsoft_high";
         results_bCsoft_high.n_observed = 2;
         results_bCsoft_high.n_background = 1.8;
-        results_bCsoft_high.background_sys = 0.3;
-        results_bCsoft_high.signal_sys = 0.;
+        results_bCsoft_high.n_background_err = 0.3;
+        results_bCsoft_high.n_signal_MC_sys = 0.;
         results_bCsoft_high.n_signal_MC = num_bCsoft_high;
         add_result(results_bCsoft_high);
 

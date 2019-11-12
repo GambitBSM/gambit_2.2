@@ -892,8 +892,8 @@ namespace Gambit {
         results_b0L_SRA350.sr_label = "b0L-SRA350";    // label must be unique for each signal region
         results_b0L_SRA350.n_observed = 81.;           // set number of observed events (in LHC paper)
         results_b0L_SRA350.n_background = 70.;         // set number of predicted background events (in LHC paper)
-        results_b0L_SRA350.background_sys = 13.;       // set background uncertainty (in LHC paper)
-        results_b0L_SRA350.signal_sys = 0.;            // set signal uncertainty
+        results_b0L_SRA350.n_background_err = 13.;       // set background uncertainty (in LHC paper)
+        results_b0L_SRA350.n_signal_MC_sys = 0.;            // set signal uncertainty
         results_b0L_SRA350.n_signal_MC = _numb0L_SRA350;  // set this to number of signal events incremented in the analysis above
         add_result(results_b0L_SRA350);
 
@@ -901,8 +901,8 @@ namespace Gambit {
         results_b0L_SRA450.sr_label = "b0L-SRA450";
         results_b0L_SRA450.n_observed = 24.;
         results_b0L_SRA450.n_background = 22.;
-        results_b0L_SRA450.background_sys = 5.;
-        results_b0L_SRA450.signal_sys = 0.;
+        results_b0L_SRA450.n_background_err = 5.;
+        results_b0L_SRA450.n_signal_MC_sys = 0.;
         results_b0L_SRA450.n_signal_MC = _numb0L_SRA450;
         add_result(results_b0L_SRA450);
 
@@ -910,8 +910,8 @@ namespace Gambit {
         results_b0L_SRA550.sr_label = "b0L-SRA550";
         results_b0L_SRA550.n_observed = 10.;
         results_b0L_SRA550.n_background = 7.2;
-        results_b0L_SRA550.background_sys = 1.5;
-        results_b0L_SRA550.signal_sys = 0.;
+        results_b0L_SRA550.n_background_err = 1.5;
+        results_b0L_SRA550.n_signal_MC_sys = 0.;
         results_b0L_SRA550.n_signal_MC = _numb0L_SRA550;
         add_result(results_b0L_SRA550);
 
@@ -919,8 +919,8 @@ namespace Gambit {
         results_b0L_SRB.sr_label = "b0L-SRB";
         results_b0L_SRB.n_observed = 45.;
         results_b0L_SRB.n_background = 37.;
-        results_b0L_SRB.background_sys = 7.;
-        results_b0L_SRB.signal_sys = 0.;
+        results_b0L_SRB.n_background_err = 7.;
+        results_b0L_SRB.n_signal_MC_sys = 0.;
         results_b0L_SRB.n_signal_MC = _numb0L_SRB;
         add_result(results_b0L_SRB);
 
@@ -928,8 +928,8 @@ namespace Gambit {
         results_b0L_SRC.sr_label = "b0L-SRC";
         results_b0L_SRC.n_observed = 7.;
         results_b0L_SRC.n_background = 5.5;
-        results_b0L_SRC.background_sys = 1.5;
-        results_b0L_SRC.signal_sys = 0.;
+        results_b0L_SRC.n_background_err = 1.5;
+        results_b0L_SRC.n_signal_MC_sys = 0.;
         results_b0L_SRC.n_signal_MC = _numb0L_SRC;
         add_result(results_b0L_SRC);
 
@@ -939,8 +939,8 @@ namespace Gambit {
         results_b1L_SRA600.sr_label = "b1L-SRA600";
         results_b1L_SRA600.n_observed = 21.;
         results_b1L_SRA600.n_background = 24.;
-        results_b1L_SRA600.background_sys = 6.;
-        results_b1L_SRA600.signal_sys = 0.;
+        results_b1L_SRA600.n_background_err = 6.;
+        results_b1L_SRA600.n_signal_MC_sys = 0.;
         results_b1L_SRA600.n_signal_MC = _numb1L_SRA600;
         add_result(results_b1L_SRA600);
 
@@ -948,8 +948,8 @@ namespace Gambit {
         results_b1L_SR750.sr_label = "b1L-SR750";
         results_b1L_SR750.n_observed = 13.;
         results_b1L_SR750.n_background = 15.;
-        results_b1L_SR750.background_sys = 4.;
-        results_b1L_SR750.signal_sys = 0.;
+        results_b1L_SR750.n_background_err = 4.;
+        results_b1L_SR750.n_signal_MC_sys = 0.;
         results_b1L_SR750.n_signal_MC = _numb1L_SRA750;
         add_result(results_b1L_SR750);
 
@@ -957,8 +957,8 @@ namespace Gambit {
         results_b1L_SR300_2j.sr_label = "b1L-SR300-2j";
         results_b1L_SR300_2j.n_observed = 12.;
         results_b1L_SR300_2j.n_background = 6.7;
-        results_b1L_SR300_2j.background_sys = 2.3;
-        results_b1L_SR300_2j.signal_sys = 0.;
+        results_b1L_SR300_2j.n_background_err = 2.3;
+        results_b1L_SR300_2j.n_signal_MC_sys = 0.;
         results_b1L_SR300_2j.n_signal_MC = _numb1L_SRA300_2j;
         add_result(results_b1L_SR300_2j);
 
@@ -966,8 +966,8 @@ namespace Gambit {
         results_b1L_SRB.sr_label = "b1L-SRB";
         results_b1L_SRB.n_observed = 69.;
         results_b1L_SRB.n_background = 53.;
-        results_b1L_SRB.background_sys = 12.;
-        results_b1L_SRB.signal_sys = 0.;
+        results_b1L_SRB.n_background_err = 12.;
+        results_b1L_SRB.n_signal_MC_sys = 0.;
         results_b1L_SRB.n_signal_MC = _numb1L_SRB;
         add_result(results_b1L_SRB);*/
 

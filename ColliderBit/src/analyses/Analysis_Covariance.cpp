@@ -33,8 +33,8 @@ namespace Gambit {
                 SR_names << "\"" << srd->sr_label << "__i"<<i << "\", ";
                 SR_n     << srd->n_observed     << ", ";
                 SR_b     << srd->n_background   << ", ";
-                SR_b_sys << srd->background_sys << ", ";
-                //SR_s_sys << srd->signal_sys     << ", ";
+                SR_b_sys << srd->n_background_err << ", ";
+                //SR_s_sys << srd->n_signal_MC_sys     << ", ";
                 //SR_s     << srd->n_signal_MC       << ", ";
              }
              SR_names << "]";
@@ -101,8 +101,8 @@ namespace Gambit {
         results_SR1.sr_label = "SR1"; // label must be unique for each signal region
         results_SR1.n_observed = 100; // set number of observed events (in LHC paper)
         results_SR1.n_background = 95; // set number of predicted background events (in LHC paper)
-        results_SR1.background_sys = 9.5; // set background uncertainty (in LHC paper)
-        results_SR1.signal_sys = 0; // set signal uncertainty
+        results_SR1.n_background_err = 9.5; // set background uncertainty (in LHC paper)
+        results_SR1.n_signal_MC_sys = 0; // set signal uncertainty
         results_SR1.n_signal_MC = 120; // dummy number of signal events (usually incremented in the analysis code)
         add_result(results_SR1);
 
@@ -110,8 +110,8 @@ namespace Gambit {
         results_SR2.sr_label = "SR2"; // label must be unique for each signal region
         results_SR2.n_observed = 10; // set number of observed events (in LHC paper)
         results_SR2.n_background = 9; // set number of predicted background events (in LHC paper)
-        results_SR2.background_sys = 4; // set background uncertainty (in LHC paper)
-        results_SR2.signal_sys = 0; // set signal uncertainty
+        results_SR2.n_background_err = 4; // set background uncertainty (in LHC paper)
+        results_SR2.n_signal_MC_sys = 0; // set signal uncertainty
         results_SR2.n_signal_MC = 15; // dummy number of signal events (usually incremented in the analysis code)
         add_result(results_SR2);
 

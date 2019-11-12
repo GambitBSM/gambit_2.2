@@ -549,8 +549,8 @@ namespace Gambit {
             results_SRSF0.sr_label = "SRSF0";
             results_SRSF0.n_observed = 112.;
             results_SRSF0.n_background = 131.;
-            results_SRSF0.background_sys = 30.;
-            results_SRSF0.signal_sys = 0.;
+            results_SRSF0.n_background_err = 30.;
+            results_SRSF0.n_signal_MC_sys = 0.;
             results_SRSF0.n_signal_MC = _SRSF[0];
             add_result(results_SRSF0);
 
@@ -558,8 +558,8 @@ namespace Gambit {
             results_SRSF1.sr_label = "SRSF1";
             results_SRSF1.n_observed = 7.;
             results_SRSF1.n_background = 4.1;
-            results_SRSF1.background_sys = 1.1;
-            results_SRSF1.signal_sys = 0.;
+            results_SRSF1.n_background_err = 1.1;
+            results_SRSF1.n_signal_MC_sys = 0.;
             results_SRSF1.n_signal_MC = _SRSF[1];
             add_result(results_SRSF1);
 
@@ -567,8 +567,8 @@ namespace Gambit {
             results_SRSF2.sr_label = "SRSF2";
             results_SRSF2.n_observed = 69.;
             results_SRSF2.n_background = 60.;
-            results_SRSF2.background_sys = 13.;
-            results_SRSF2.signal_sys = 0.;
+            results_SRSF2.n_background_err = 13.;
+            results_SRSF2.n_signal_MC_sys = 0.;
             results_SRSF2.n_signal_MC = _SRSF[2];
             add_result(results_SRSF2);
 
@@ -576,8 +576,8 @@ namespace Gambit {
             results_SRSF3.sr_label = "SRSF3";
             results_SRSF3.n_observed = 1.;
             results_SRSF3.n_background = 4.8;
-            results_SRSF3.background_sys = 1.2;
-            results_SRSF3.signal_sys = 0.;
+            results_SRSF3.n_background_err = 1.2;
+            results_SRSF3.n_signal_MC_sys = 0.;
             results_SRSF3.n_signal_MC = _SRSF[3];
             add_result(results_SRSF3);
 
@@ -585,8 +585,8 @@ namespace Gambit {
             results_SRSF4.sr_label = "SRSF4";
             results_SRSF4.n_observed = 0.;
             results_SRSF4.n_background = 0.5;
-            results_SRSF4.background_sys = 0.2;
-            results_SRSF4.signal_sys = 0.;
+            results_SRSF4.n_background_err = 0.2;
+            results_SRSF4.n_signal_MC_sys = 0.;
             results_SRSF4.n_signal_MC = _SRSF[4];
             add_result(results_SRSF4);
 
@@ -594,8 +594,8 @@ namespace Gambit {
             results_SRSF5.sr_label = "SRSF5";
             results_SRSF5.n_observed = 2.;
             results_SRSF5.n_background = 1.9;
-            results_SRSF5.background_sys = 0.5;
-            results_SRSF5.signal_sys = 0.;
+            results_SRSF5.n_background_err = 0.5;
+            results_SRSF5.n_signal_MC_sys = 0.;
             results_SRSF5.n_signal_MC = _SRSF[5];
             add_result(results_SRSF5);
 
@@ -603,8 +603,8 @@ namespace Gambit {
             results_SRSF6.sr_label = "SRSF6";
             results_SRSF6.n_observed = 2.;
             results_SRSF6.n_background = 1.1;
-            results_SRSF6.background_sys = 0.6;
-            results_SRSF6.signal_sys = 0.;
+            results_SRSF6.n_background_err = 0.6;
+            results_SRSF6.n_signal_MC_sys = 0.;
             results_SRSF6.n_signal_MC = _SRSF[6];
             add_result(results_SRSF6);
 
@@ -612,8 +612,8 @@ namespace Gambit {
             results_SRSF7.sr_label = "SRSF7";
             results_SRSF7.n_observed = 2.;
             results_SRSF7.n_background = 0.6;
-            results_SRSF7.background_sys = 0.3;
-            results_SRSF7.signal_sys = 0.;
+            results_SRSF7.n_background_err = 0.3;
+            results_SRSF7.n_signal_MC_sys = 0.;
             results_SRSF7.n_signal_MC = _SRSF[7];
             add_result(results_SRSF7);
 
@@ -621,8 +621,8 @@ namespace Gambit {
             results_SRSF8.sr_label = "SRSF8";
             results_SRSF8.n_observed = 1.;
             results_SRSF8.n_background = 2.1;
-            results_SRSF8.background_sys = 0.7;
-            results_SRSF8.signal_sys = 0.;
+            results_SRSF8.n_background_err = 0.7;
+            results_SRSF8.n_signal_MC_sys = 0.;
             results_SRSF8.n_signal_MC = _SRSF[8];
             add_result(results_SRSF8);
 
@@ -630,8 +630,8 @@ namespace Gambit {
             results_SRSF9.sr_label = "SRSF9";
             results_SRSF9.n_observed = 1.;
             results_SRSF9.n_background = 1.6;
-            results_SRSF9.background_sys = 0.4;
-            results_SRSF9.signal_sys = 0.;
+            results_SRSF9.n_background_err = 0.4;
+            results_SRSF9.n_signal_MC_sys = 0.;
             results_SRSF9.n_signal_MC = _SRSF[9];
             add_result(results_SRSF9);
 
@@ -639,8 +639,8 @@ namespace Gambit {
             results_SRSF10.sr_label = "SRSF10";
             results_SRSF10.n_observed = 0.;
             results_SRSF10.n_background = 0.3;
-            results_SRSF10.background_sys = 0.1;
-            results_SRSF10.signal_sys = 0.;
+            results_SRSF10.n_background_err = 0.1;
+            results_SRSF10.n_signal_MC_sys = 0.;
             results_SRSF10.n_signal_MC = _SRSF[10];
             add_result(results_SRSF10);
 
@@ -648,8 +648,8 @@ namespace Gambit {
             results_SRSF11.sr_label = "SRSF11";
             results_SRSF11.n_observed = 2.;
             results_SRSF11.n_background = 1.7;
-            results_SRSF11.background_sys = 0.4;
-            results_SRSF11.signal_sys = 0.;
+            results_SRSF11.n_background_err = 0.4;
+            results_SRSF11.n_signal_MC_sys = 0.;
             results_SRSF11.n_signal_MC = _SRSF[11];
             add_result(results_SRSF11);
 
@@ -657,8 +657,8 @@ namespace Gambit {
             results_SRSF12.sr_label = "SRSF12";
             results_SRSF12.n_observed = 1.;
             results_SRSF12.n_background = 0.7;
-            results_SRSF12.background_sys = 0.3;
-            results_SRSF12.signal_sys = 0.;
+            results_SRSF12.n_background_err = 0.3;
+            results_SRSF12.n_signal_MC_sys = 0.;
             results_SRSF12.n_signal_MC = _SRSF[12];
             add_result(results_SRSF12);
 
@@ -667,8 +667,8 @@ namespace Gambit {
             results_SRDF0.sr_label = "SRDF0";
             results_SRDF0.n_observed = 141.;
             results_SRDF0.n_background = 139.;
-            results_SRDF0.background_sys = 32.;
-            results_SRDF0.signal_sys = 0.;
+            results_SRDF0.n_background_err = 32.;
+            results_SRDF0.n_signal_MC_sys = 0.;
             results_SRDF0.n_signal_MC = _SRDF[0];
             add_result(results_SRDF0);
 
@@ -676,8 +676,8 @@ namespace Gambit {
             results_SRDF1.sr_label = "SRDF1";
             results_SRDF1.n_observed = 6.;
             results_SRDF1.n_background = 4.0;
-            results_SRDF1.background_sys = 1.1;
-            results_SRDF1.signal_sys = 0.;
+            results_SRDF1.n_background_err = 1.1;
+            results_SRDF1.n_signal_MC_sys = 0.;
             results_SRDF1.n_signal_MC = _SRDF[1];
             add_result(results_SRDF1);
 
@@ -685,8 +685,8 @@ namespace Gambit {
             results_SRDF2.sr_label = "SRDF2";
             results_SRDF2.n_observed = 67.;
             results_SRDF2.n_background = 70.;
-            results_SRDF2.background_sys = 17.;
-            results_SRDF2.signal_sys = 0.;
+            results_SRDF2.n_background_err = 17.;
+            results_SRDF2.n_signal_MC_sys = 0.;
             results_SRDF2.n_signal_MC = _SRDF[2];
             add_result(results_SRDF2);
 
@@ -694,8 +694,8 @@ namespace Gambit {
             results_SRDF3.sr_label = "SRDF3";
             results_SRDF3.n_observed = 5.;
             results_SRDF3.n_background = 3.9;
-            results_SRDF3.background_sys = 1.0;
-            results_SRDF3.signal_sys = 0.;
+            results_SRDF3.n_background_err = 1.0;
+            results_SRDF3.n_signal_MC_sys = 0.;
             results_SRDF3.n_signal_MC = _SRDF[3];
             add_result(results_SRDF3);
 
@@ -703,8 +703,8 @@ namespace Gambit {
             results_SRDF4.sr_label = "SRDF4";
             results_SRDF4.n_observed = 1.;
             results_SRDF4.n_background = 0.7;
-            results_SRDF4.background_sys = 0.2;
-            results_SRDF4.signal_sys = 0.;
+            results_SRDF4.n_background_err = 0.2;
+            results_SRDF4.n_signal_MC_sys = 0.;
             results_SRDF4.n_signal_MC = _SRDF[4];
             add_result(results_SRDF4);
 
@@ -712,8 +712,8 @@ namespace Gambit {
             results_SRDF5.sr_label = "SRDF5";
             results_SRDF5.n_observed = 1.;
             results_SRDF5.n_background = 2.1;
-            results_SRDF5.background_sys = 0.5;
-            results_SRDF5.signal_sys = 0.;
+            results_SRDF5.n_background_err = 0.5;
+            results_SRDF5.n_signal_MC_sys = 0.;
             results_SRDF5.n_signal_MC = _SRDF[5];
             add_result(results_SRDF5);
 
@@ -721,8 +721,8 @@ namespace Gambit {
             results_SRDF6.sr_label = "SRDF6";
             results_SRDF6.n_observed = 1.;
             results_SRDF6.n_background = 0.5;
-            results_SRDF6.background_sys = 0.2;
-            results_SRDF6.signal_sys = 0.;
+            results_SRDF6.n_background_err = 0.2;
+            results_SRDF6.n_signal_MC_sys = 0.;
             results_SRDF6.n_signal_MC = _SRDF[6];
             add_result(results_SRDF6);
 
@@ -730,8 +730,8 @@ namespace Gambit {
             results_SRDF7.sr_label = "SRDF7";
             results_SRDF7.n_observed = 0.;
             results_SRDF7.n_background = 0.3;
-            results_SRDF7.background_sys = 0.2;
-            results_SRDF7.signal_sys = 0.;
+            results_SRDF7.n_background_err = 0.2;
+            results_SRDF7.n_signal_MC_sys = 0.;
             results_SRDF7.n_signal_MC = _SRDF[7];
             add_result(results_SRDF7);
 
@@ -739,8 +739,8 @@ namespace Gambit {
             results_SRDF8.sr_label = "SRDF8";
             results_SRDF8.n_observed = 1.;
             results_SRDF8.n_background = 0.8;
-            results_SRDF8.background_sys = 0.2;
-            results_SRDF8.signal_sys = 0.;
+            results_SRDF8.n_background_err = 0.2;
+            results_SRDF8.n_signal_MC_sys = 0.;
             results_SRDF8.n_signal_MC = _SRDF[8];
             add_result(results_SRDF8);
 
@@ -748,8 +748,8 @@ namespace Gambit {
             results_SRDF9.sr_label = "SRDF9";
             results_SRDF9.n_observed = 0.;
             results_SRDF9.n_background = 0.9;
-            results_SRDF9.background_sys = 0.3;
-            results_SRDF9.signal_sys = 0.;
+            results_SRDF9.n_background_err = 0.3;
+            results_SRDF9.n_signal_MC_sys = 0.;
             results_SRDF9.n_signal_MC = _SRDF[9];
             add_result(results_SRDF9);
 
@@ -757,8 +757,8 @@ namespace Gambit {
             results_SRDF10.sr_label = "SRDF10";
             results_SRDF10.n_observed = 0.;
             results_SRDF10.n_background = 0.1;
-            results_SRDF10.background_sys = 0.1;
-            results_SRDF10.signal_sys = 0.;
+            results_SRDF10.n_background_err = 0.1;
+            results_SRDF10.n_signal_MC_sys = 0.;
             results_SRDF10.n_signal_MC = _SRDF[10];
             add_result(results_SRDF10);
 
@@ -766,8 +766,8 @@ namespace Gambit {
             results_SRDF11.sr_label = "SRDF11";
             results_SRDF11.n_observed = 1.;
             results_SRDF11.n_background = 1.2;
-            results_SRDF11.background_sys = 0.3;
-            results_SRDF11.signal_sys = 0.;
+            results_SRDF11.n_background_err = 0.3;
+            results_SRDF11.n_signal_MC_sys = 0.;
             results_SRDF11.n_signal_MC = _SRDF[11];
             add_result(results_SRDF11);
 
@@ -775,8 +775,8 @@ namespace Gambit {
             results_SRDF12.sr_label = "SRDF12";
             results_SRDF12.n_observed = 0.;
             results_SRDF12.n_background = 0.5;
-            results_SRDF12.background_sys = 0.2;
-            results_SRDF12.signal_sys = 0.;
+            results_SRDF12.n_background_err = 0.2;
+            results_SRDF12.n_signal_MC_sys = 0.;
             results_SRDF12.n_signal_MC = _SRDF[12];
             add_result(results_SRDF12);
 
@@ -785,8 +785,8 @@ namespace Gambit {
             results_SRALL0.sr_label = "SRALL0";
             results_SRALL0.n_observed = 253.;
             results_SRALL0.n_background = 271.;
-            results_SRALL0.background_sys = 61.;
-            results_SRALL0.signal_sys = 0.;
+            results_SRALL0.n_background_err = 61.;
+            results_SRALL0.n_signal_MC_sys = 0.;
             results_SRALL0.n_signal_MC = _SRALL[0];
             add_result(results_SRALL0);
 
@@ -794,8 +794,8 @@ namespace Gambit {
             results_SRALL1.sr_label = "SRALL1";
             results_SRALL1.n_observed = 13.;
             results_SRALL1.n_background = 8.1;
-            results_SRALL1.background_sys = 2.0;
-            results_SRALL1.signal_sys = 0.;
+            results_SRALL1.n_background_err = 2.0;
+            results_SRALL1.n_signal_MC_sys = 0.;
             results_SRALL1.n_signal_MC = _SRALL[1];
             add_result(results_SRALL1);
 
@@ -803,8 +803,8 @@ namespace Gambit {
             results_SRALL2.sr_label = "SRALL2";
             results_SRALL2.n_observed = 136.;
             results_SRALL2.n_background = 130.;
-            results_SRALL2.background_sys = 29.;
-            results_SRALL2.signal_sys = 0.;
+            results_SRALL2.n_background_err = 29.;
+            results_SRALL2.n_signal_MC_sys = 0.;
             results_SRALL2.n_signal_MC = _SRALL[2];
             add_result(results_SRALL2);
 
@@ -812,8 +812,8 @@ namespace Gambit {
             results_SRALL3.sr_label = "SRALL3";
             results_SRALL3.n_observed = 6.;
             results_SRALL3.n_background = 8.7;
-            results_SRALL3.background_sys = 2.0;
-            results_SRALL3.signal_sys = 0.;
+            results_SRALL3.n_background_err = 2.0;
+            results_SRALL3.n_signal_MC_sys = 0.;
             results_SRALL3.n_signal_MC = _SRALL[3];
             add_result(results_SRALL3);
 
@@ -821,8 +821,8 @@ namespace Gambit {
             results_SRALL4.sr_label = "SRALL4";
             results_SRALL4.n_observed = 1.;
             results_SRALL4.n_background = 1.2;
-            results_SRALL4.background_sys = 0.4;
-            results_SRALL4.signal_sys = 0.;
+            results_SRALL4.n_background_err = 0.4;
+            results_SRALL4.n_signal_MC_sys = 0.;
             results_SRALL4.n_signal_MC = _SRALL[4];
             add_result(results_SRALL4);
 
@@ -830,8 +830,8 @@ namespace Gambit {
             results_SRALL5.sr_label = "SRALL5";
             results_SRALL5.n_observed = 3.;
             results_SRALL5.n_background = 4.0;
-            results_SRALL5.background_sys = 0.8;
-            results_SRALL5.signal_sys = 0.;
+            results_SRALL5.n_background_err = 0.8;
+            results_SRALL5.n_signal_MC_sys = 0.;
             results_SRALL5.n_signal_MC = _SRALL[5];
             add_result(results_SRALL5);
 
@@ -839,8 +839,8 @@ namespace Gambit {
             results_SRALL6.sr_label = "SRALL6";
             results_SRALL6.n_observed = 3.;
             results_SRALL6.n_background = 1.5;
-            results_SRALL6.background_sys = 0.7;
-            results_SRALL6.signal_sys = 0.;
+            results_SRALL6.n_background_err = 0.7;
+            results_SRALL6.n_signal_MC_sys = 0.;
             results_SRALL6.n_signal_MC = _SRALL[6];
             add_result(results_SRALL6);
 
@@ -848,8 +848,8 @@ namespace Gambit {
             results_SRALL7.sr_label = "SRALL7";
             results_SRALL7.n_observed = 2.;
             results_SRALL7.n_background = 0.8;
-            results_SRALL7.background_sys = 0.3;
-            results_SRALL7.signal_sys = 0.;
+            results_SRALL7.n_background_err = 0.3;
+            results_SRALL7.n_signal_MC_sys = 0.;
             results_SRALL7.n_signal_MC = _SRALL[7];
             add_result(results_SRALL7);
 
@@ -857,8 +857,8 @@ namespace Gambit {
             results_SRALL8.sr_label = "SRALL8";
             results_SRALL8.n_observed = 2.;
             results_SRALL8.n_background = 2.9;
-            results_SRALL8.background_sys = 0.7;
-            results_SRALL8.signal_sys = 0.;
+            results_SRALL8.n_background_err = 0.7;
+            results_SRALL8.n_signal_MC_sys = 0.;
             results_SRALL8.n_signal_MC = _SRALL[8];
             add_result(results_SRALL8);
 
@@ -866,8 +866,8 @@ namespace Gambit {
             results_SRALL9.sr_label = "SRALL9";
             results_SRALL9.n_observed = 1.;
             results_SRALL9.n_background = 2.5;
-            results_SRALL9.background_sys = 0.5;
-            results_SRALL9.signal_sys = 0.;
+            results_SRALL9.n_background_err = 0.5;
+            results_SRALL9.n_signal_MC_sys = 0.;
             results_SRALL9.n_signal_MC = _SRALL[9];
             add_result(results_SRALL9);
 
@@ -875,8 +875,8 @@ namespace Gambit {
             results_SRALL10.sr_label = "SRALL10";
             results_SRALL10.n_observed = 0.;
             results_SRALL10.n_background = 0.4;
-            results_SRALL10.background_sys = 0.2;
-            results_SRALL10.signal_sys = 0.;
+            results_SRALL10.n_background_err = 0.2;
+            results_SRALL10.n_signal_MC_sys = 0.;
             results_SRALL10.n_signal_MC = _SRALL[10];
             add_result(results_SRALL10);
 
@@ -884,8 +884,8 @@ namespace Gambit {
             results_SRALL11.sr_label = "SRALL11";
             results_SRALL11.n_observed = 3.;
             results_SRALL11.n_background = 2.9;
-            results_SRALL11.background_sys = 0.6;
-            results_SRALL11.signal_sys = 0.;
+            results_SRALL11.n_background_err = 0.6;
+            results_SRALL11.n_signal_MC_sys = 0.;
             results_SRALL11.n_signal_MC = _SRALL[11];
             add_result(results_SRALL11);
 
@@ -893,8 +893,8 @@ namespace Gambit {
             results_SRALL12.sr_label = "SRALL12";
             results_SRALL12.n_observed = 1.;
             results_SRALL12.n_background = 1.1;
-            results_SRALL12.background_sys = 0.4;
-            results_SRALL12.signal_sys = 0.;
+            results_SRALL12.n_background_err = 0.4;
+            results_SRALL12.n_signal_MC_sys = 0.;
             results_SRALL12.n_signal_MC = _SRALL[12];
             add_result(results_SRALL12);*/
 
@@ -903,8 +903,8 @@ namespace Gambit {
             results_SRA0.sr_label = "SRA0";
             results_SRA0.n_observed = 22.;
             results_SRA0.n_background = 20.8;
-            results_SRA0.background_sys = 4.4;
-            results_SRA0.signal_sys = 0.;
+            results_SRA0.n_background_err = 4.4;
+            results_SRA0.n_signal_MC_sys = 0.;
             results_SRA0.n_signal_MC = _SRA[0];
             add_result(results_SRA0);
 
@@ -912,8 +912,8 @@ namespace Gambit {
             results_SRA1.sr_label = "SRA1";
             results_SRA1.n_observed = 6.;
             results_SRA1.n_background = 6.2;
-            results_SRA1.background_sys = 1.0;
-            results_SRA1.signal_sys = 0.;
+            results_SRA1.n_background_err = 1.0;
+            results_SRA1.n_signal_MC_sys = 0.;
             results_SRA1.n_signal_MC = _SRA[1];
             add_result(results_SRA1);
 
@@ -921,8 +921,8 @@ namespace Gambit {
             results_SRA2.sr_label = "SRA2";
             results_SRA2.n_observed = 1.;
             results_SRA2.n_background = 1.1;
-            results_SRA2.background_sys = 0.4;
-            results_SRA2.signal_sys = 0.;
+            results_SRA2.n_background_err = 0.4;
+            results_SRA2.n_signal_MC_sys = 0.;
             results_SRA2.n_signal_MC = _SRA[2];
             add_result(results_SRA2);*/
 
