@@ -136,7 +136,7 @@ namespace Gambit
       assert(factor >= 0);
       for (SignalRegionData& sr : _results)
       {
-        sr.n_signal_at_lumi = factor * sr.n_signal;
+        sr.n_signal_scaled = factor * sr.n_signal;
       }
       _is_scaled = true;
     }

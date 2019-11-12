@@ -79,15 +79,15 @@ namespace Gambit
           // Save SR numbers and absolute uncertainties
           const SignalRegionData srData = adata[SR];
           const str key = adata.analysis_name + "__" + srData.sr_label + "__i" + std::to_string(SR) + "__signal";
-          result[key] = srData.n_signal_at_lumi;
+          result[key] = srData.n_signal_scaled;
 
-          const double scale = srData.n_signal_at_lumi / srData.n_signal;
+          const double scale = srData.n_signal_scaled / srData.n_signal;
           const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
           const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
           const double combined_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
           result[key + "_uncert"] = combined_uncertainty;
 
-          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_signal_at_lumi << "+-" << combined_uncertainty << ", ";
+          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_signal_scaled << "+-" << combined_uncertainty << ", ";
         }
       }
       logger() << LogTags::debug << summary_line.str() << EOM;
@@ -456,8 +456,8 @@ namespace Gambit
                                    << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
                                    << ",  n_obs = " << srData.n_observed
                                    << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
-                                   << ",  n_s = " << srData.n_signal_at_lumi
-                                   << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_at_lumi << " +/- " << srData.background_sys
+                                   << ",  n_s = " << srData.n_signal_scaled
+                                   << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_scaled << " +/- " << srData.background_sys
                                    << ",  n_s_MC = " << srData.n_signal
                                    << endl;
           }
@@ -571,10 +571,10 @@ namespace Gambit
 
             // A contribution to the predicted number of events that is not known exactly
             n_pred_b(SR) = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
-            n_pred_sb(SR) = srData.n_signal_at_lumi + srData.n_background;
+            n_pred_sb(SR) = srData.n_signal_scaled + srData.n_background;
 
             // Absolute errors for n_predicted_uncertain_*
-            const double scale = srData.n_signal_at_lumi / srData.n_signal;
+            const double scale = srData.n_signal_scaled / srData.n_signal;
             const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
             const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
 
@@ -674,7 +674,7 @@ namespace Gambit
 
             // A contribution to the predicted number of events that is not known exactly
             const double n_pred_b = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
-            const double n_pred_sb = n_pred_b + srData.n_signal_at_lumi;
+            const double n_pred_sb = n_pred_b + srData.n_signal_scaled;
 
             // Actual observed number of events and predicted background, as integers cf. Poisson stats
             const double n_obs = round(srData.n_observed);
@@ -682,7 +682,7 @@ namespace Gambit
 
 
             // Absolute errors for n_predicted_uncertain_*
-            const double scale = srData.n_signal_at_lumi / srData.n_signal;
+            const double scale = srData.n_signal_scaled / srData.n_signal;
             const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
             const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
             const double abs_uncertainty_b = std::max(srData.background_sys, 0.001); // <-- Avoid trouble with b_err==0
@@ -795,7 +795,7 @@ namespace Gambit
                   << ",  n_background = " << srData.n_background
                   << ",  background_sys = " << srData.background_sys
                   << ",  n_observed = " << srData.n_observed
-                  << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
+                  << ",  n_signal_scaled = " << srData.n_signal_scaled
                   << ",  n_signal = " << srData.n_signal
                   << ",  signal_sys = " << srData.signal_sys
                   << endl;

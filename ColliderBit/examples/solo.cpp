@@ -212,8 +212,9 @@ int main(int argc, char* argv[])
       for (size_t sr_index = 0; sr_index < adata.size(); ++sr_index)
       {
         const Gambit::ColliderBit::SignalRegionData srData = adata[sr_index];
-        const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-        const double abs_uncertainty_s_sys = srData.signal_sys;
+        const double scale = srData.n_signal_scaled / srData.n_signal;
+        const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
+        const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
         const double combined_s_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
         const double abs_uncertainty_bg_stat = (srData.n_background == 0 ? 0 : sqrt(srData.n_background));
         const double abs_uncertainty_bg_sys = srData.background_sys;
@@ -221,7 +222,7 @@ int main(int argc, char* argv[])
         summary_line << "    Signal region " << srData.sr_label << " (SR index " << sr_index << "):" << endl;
         summary_line << "      Observed events: " << srData.n_observed << endl;
         summary_line << "      SM prediction: " << srData.n_background << " +/- " << combined_bg_uncertainty << endl;
-        summary_line << "      Signal prediction: " << srData.n_signal_at_lumi << " +/- " << combined_s_uncertainty << endl;
+        summary_line << "      Signal prediction: " << srData.n_signal_scaled << " +/- " << combined_s_uncertainty << endl;
         auto loglike_it = analysis_loglikes.sr_loglikes.find(srData.sr_label);
         if (loglike_it != analysis_loglikes.sr_loglikes.end())
         {
