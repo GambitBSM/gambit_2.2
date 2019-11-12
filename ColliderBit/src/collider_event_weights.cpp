@@ -21,7 +21,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -68,9 +68,11 @@ namespace Gambit
 
       // Get the generator cross-section for this process
       double process_xsec_generator = HardScatteringSim_ptr->xsec_fb(process_code);
+      double process_xsec_err_generator_sq = pow(HardScatteringSim_ptr->xsecErr_fb(process_code), 2);
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code) << endl;
+          cout << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code)
+                                                                     << ", xsec_err_fb: " << HardScatteringSim_ptr->xsecErr_fb(process_code) << endl;
       #endif
 
       // Add the generator cross-sections for other process codes which also 
@@ -78,17 +80,20 @@ namespace Gambit
       for (int other_process_code : xs.processes_sharing_xsec())
       {
         process_xsec_generator += HardScatteringSim_ptr->xsec_fb(other_process_code);
+        process_xsec_err_generator_sq += pow(HardScatteringSim_ptr->xsecErr_fb(other_process_code), 2);
         #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "- process_code: " << other_process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(other_process_code) << endl;
+          cout << DEBUG_PREFIX << "- process_code: " << other_process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(other_process_code)
+                                                                           << ", xsec_err_fb: " << HardScatteringSim_ptr->xsecErr_fb(other_process_code) << endl;
         #endif
       }
+      double process_xsec_err_generator = sqrt(process_xsec_err_generator_sq);
 
       // Event weight = [external cross-section] / [sum of contributing generator cross-sections]
       if (process_xsec_generator > 0.0)
       {
         weight = xs.xsec() / process_xsec_generator;
-        // @todo Include uncertainty from process_xsec_generator
-        weight_err = xs.xsec_err() / process_xsec_generator;
+        weight_err = sqrt(  pow(xs.xsec_err() / process_xsec_generator, 2) 
+                          + pow(xs.xsec() * process_xsec_err_generator / pow(process_xsec_generator, 2), 2) );
       }
       else
       {
