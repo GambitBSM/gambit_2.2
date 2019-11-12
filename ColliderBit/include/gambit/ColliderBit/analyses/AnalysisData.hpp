@@ -39,6 +39,7 @@
 #include <memory>
 #include <iomanip>
 #include <algorithm>
+#include "gambit/ColliderBit/analyses/EventCounter.hpp"
 
 // #define ANALYSISDATA_DEBUG
 
@@ -53,6 +54,20 @@ namespace Gambit {
     /// A simple container for the result of one signal region from one analysis.
     struct SignalRegionData
     {
+
+      /// Constructor with EventCounter arg for the signal count and SR name
+      SignalRegionData(const EventCounter& scounter,
+                       double nobs, const std::pair<double,double>& nbkg,
+                       double nsigatlumi=0)
+       : SignalRegionData(scounter.name(), nobs, scounter.weight_sum(), nbkg.first, scounter.weight_sum_err(), nbkg.second, nsigatlumi)
+      {}
+
+      /// Constructor with EventCounter arg for the signal count, but separate name
+      SignalRegionData(const std::string& sr,
+                       double nobs, const EventCounter& scounter, const std::pair<double,double>& nbkg,
+                       double nsigatlumi=0)
+       : SignalRegionData(sr, nobs, scounter.weight_sum(), nbkg.first, scounter.weight_sum_err(), nbkg.second, nsigatlumi)
+      {}
 
       /// Constructor with {n,nsys} pair args
       SignalRegionData(const std::string& sr,
