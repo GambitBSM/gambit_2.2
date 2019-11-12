@@ -43,15 +43,33 @@ namespace Gambit {
         _weight_sum_err(0.0)
       { }
 
-      EventCounter(std::string name) :
+      EventCounter(const std::string name) :
         _name(name),
         _sum(0),
         _weight_sum(0.0),
         _weight_sum_err(0.0)
       { }
 
+
+      // Initialize
+      void init(const std::string name)
+      {
+        _name = name;
+        _sum = 0;
+        _weight_sum = 0;
+        _weight_sum_err = 0;        
+      }
+
+      // Reset
+      void reset() 
+      { 
+        _sum = 0;
+        _weight_sum = 0;
+        _weight_sum_err = 0;
+      }
+
       // Set name
-      void set_name(std::string name) { _name = name; }
+      void set_name(const std::string name) { _name = name; }
       // Get name
       std::string name() const { return _name; }
 
@@ -82,6 +100,22 @@ namespace Gambit {
       void add_event(const HEPUtils::Event& event)
       {
         add_event(event.weight(), event.weight_err());
+      }
+
+      // Increment event count with the operator+= and HEPUtils::Event input
+      EventCounter& operator+=(const HEPUtils::Event& event)
+      {
+        add_event(event);
+        return *this;
+      }
+
+      // Increment event count with the operator+= and EventCounter input
+      EventCounter& operator+=(const EventCounter& rhs)
+      {
+        _sum += rhs.sum();
+        _weight_sum += rhs.weight_sum();
+        _weight_sum_err = sqrt( (_weight_sum_err * _weight_sum_err) + (rhs.weight_sum_err() * rhs.weight_sum_err()) );
+        return *this;
       }
 
     };

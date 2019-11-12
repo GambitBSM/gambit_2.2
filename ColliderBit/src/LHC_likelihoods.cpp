@@ -80,8 +80,10 @@ namespace Gambit
           const SignalRegionData srData = adata[SR];
           const str key = adata.analysis_name + "__" + srData.sr_label + "__i" + std::to_string(SR) + "__signal";
           result[key] = srData.n_signal_at_lumi;
-          const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-          const double abs_uncertainty_s_sys = srData.signal_sys;
+
+          const double scale = srData.n_signal_at_lumi / srData.n_signal;
+          const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
+          const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
           const double combined_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
           result[key + "_uncert"] = combined_uncertainty;
 
@@ -572,8 +574,10 @@ namespace Gambit
             n_pred_sb(SR) = srData.n_signal_at_lumi + srData.n_background;
 
             // Absolute errors for n_predicted_uncertain_*
-            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-            const double abs_uncertainty_s_sys = srData.signal_sys;
+            const double scale = srData.n_signal_at_lumi / srData.n_signal;
+            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
+            const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
+
             abs_unc_s(SR) = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
           }
 
@@ -678,8 +682,9 @@ namespace Gambit
 
 
             // Absolute errors for n_predicted_uncertain_*
-            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-            const double abs_uncertainty_s_sys = srData.signal_sys;
+            const double scale = srData.n_signal_at_lumi / srData.n_signal;
+            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
+            const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
             const double abs_uncertainty_b = std::max(srData.background_sys, 0.001); // <-- Avoid trouble with b_err==0
             const double abs_uncertainty_sb = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys, abs_uncertainty_b);
 
