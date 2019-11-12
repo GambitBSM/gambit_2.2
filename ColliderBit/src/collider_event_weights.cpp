@@ -32,10 +32,11 @@ namespace Gambit
 
     extern std::map<std::string,bool> event_weight_flags;
 
-    /// A function that sets the event weight to unity
+    /// A function that sets the event weight to unity, with zero uncertainty
     void _setEventWeight_unity(HEPUtils::Event& event, const BaseCollider*)  // <-- Ignoring second argument
     {
       event.set_weight(1.0);
+      event.set_weight_err(0.0);
     }
 
     /// Module function providing an instance of EventWeighterFunctionType
@@ -53,6 +54,7 @@ namespace Gambit
     {
       // Initialize weight
       double weight = 1.0;
+      double weight_err = 0.0;
 
       // Get process code from the generator
       int process_code = HardScatteringSim_ptr->process_code();
@@ -85,6 +87,8 @@ namespace Gambit
       if (process_xsec_generator > 0.0)
       {
         weight = xs.xsec() / process_xsec_generator;
+        // @todo Include uncertainty from process_xsec_generator
+        weight_err = xs.xsec_err() / process_xsec_generator;
       }
       else
       {
@@ -94,10 +98,11 @@ namespace Gambit
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "Total process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << endl;
+        cout << DEBUG_PREFIX << "Total process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << ",  weight_err: " << weight_err << endl;
       #endif
 
       event.set_weight(weight);
+      event.set_weight_err(weight_err);
     }
 
     /// Module function providing an instance of EventWeighterFunctionType

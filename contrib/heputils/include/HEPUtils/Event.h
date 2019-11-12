@@ -24,6 +24,7 @@ namespace HEPUtils {
 
     /// Event weights
     std::vector<double> _weights;
+    std::vector<double> _weight_errs;
 
     /// @name Separate particle collections
     //@{
@@ -45,6 +46,7 @@ namespace HEPUtils {
     void operator = (const Event& e) {
       clear(); //< Delete current particles
       _weights = e._weights;
+      _weight_errs = e._weight_errs;
       _photons = e._photons;
       _electrons = e._electrons;
       _muons = e._muons;
@@ -63,10 +65,13 @@ namespace HEPUtils {
     /// Default constructor
     Event() { clear(); }
 
-    /// Constructor from a list of Particles
-    Event(const std::vector<Particle*>& ps, const std::vector<double>& weights=std::vector<double>()) {
+    /// Constructor from list of Particles, plus (optional) event weights and weight errors
+    Event(const std::vector<Particle*>& ps, 
+          const std::vector<double>& weights=std::vector<double>(),
+          const std::vector<double>& weight_errs=std::vector<double>()) {
       clear();
       _weights = weights;
+      _weight_errs = weight_errs;
       add_particles(ps);
     }
 
@@ -94,6 +99,7 @@ namespace HEPUtils {
     /// Clone a deep copy (new Particles and Jets allocated) into the provided event object
     void cloneTo(Event& e) const {
       e.set_weights(_weights);
+      e.set_weight_errs(_weight_errs);
       const std::vector<Particle*> ps = particles();
       for (size_t i = 0; i < ps.size(); ++i) {
         e.add_particle(new Particle(*ps[i]));
@@ -111,6 +117,7 @@ namespace HEPUtils {
     /// Empty the event's particle, jet and MET collections
     void clear() {
       _weights.clear();
+      _weight_errs.clear();
       // TODO: indexed loop -> for (Particle* p : particles()) delete p;
       #define DELCLEAR(v) do { if (!v.empty()) for (size_t i = 0; i < v.size(); ++i) delete v[i]; v.clear(); } while (0)
       DELCLEAR(_photons);
@@ -133,10 +140,20 @@ namespace HEPUtils {
       _weights = ws;
     }
 
+    void set_weight_errs(const std::vector<double>& werrs) {
+      _weight_errs = werrs;
+    }
+
     /// Set the event weights to the single given weight
     void set_weight(double w) {
       _weights.clear();
       _weights.push_back(w);
+    }
+
+    /// Set the event weight errors to the single given error
+    void set_weight_err(double werr) {
+      _weight_errs.clear();
+      _weight_errs.push_back(werr);
     }
 
     /// Get the event weights (const)
@@ -149,6 +166,16 @@ namespace HEPUtils {
       return _weights;
     }
 
+    /// Get the event weight errors (const)
+    const std::vector<double>& weight_errs() const {
+      return _weight_errs;
+    }
+
+    /// Get the event weight errors (non-const)
+    std::vector<double>& weight_errs() {
+      return _weight_errs;
+    }
+
     /// Get a single event weight -- the nominal, by default
     double weight(size_t i=0) const {
       if (_weights.empty()) {
@@ -156,6 +183,15 @@ namespace HEPUtils {
         throw std::runtime_error("Trying to access non-default weight from empty weight vector");
       }
       return _weights[i];
+    }
+
+    /// Get a single event weight error -- the nominal, by default
+    double weight_err(size_t i=0) const {
+      if (_weight_errs.empty()) {
+        if (i == 0) return 0;
+        throw std::runtime_error("Trying to access non-default weight error from empty weight errors vector");
+      }
+      return _weight_errs[i];
     }
 
 
