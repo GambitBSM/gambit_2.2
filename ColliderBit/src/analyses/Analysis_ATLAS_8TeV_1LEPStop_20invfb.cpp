@@ -774,7 +774,7 @@ namespace Gambit {
         results_BC1.n_background = 482.;
         results_BC1.background_sys = 76.;
         results_BC1.signal_sys = 0.;
-        results_BC1.n_signal = _numBC1;
+        results_BC1.n_signal_MC = _numBC1;
 
         SignalRegionData results_BC2;
         results_BC2.sr_label = "BC2";
@@ -782,7 +782,7 @@ namespace Gambit {
         results_BC2.n_background = 18.;
         results_BC2.background_sys = 5.;
         results_BC2.signal_sys = 0.;
-        results_BC2.n_signal = _numBC2;
+        results_BC2.n_signal_MC = _numBC2;
 
         SignalRegionData results_BC3;
         results_BC3.sr_label = "BC3";
@@ -790,7 +790,7 @@ namespace Gambit {
         results_BC3.n_background = 7.;
         results_BC3.background_sys = 3.;
         results_BC3.signal_sys = 0.;
-        results_BC3.n_signal = _numBC3;
+        results_BC3.n_signal_MC = _numBC3;
 
         SignalRegionData results_TN2;
         results_TN2.sr_label = "TN2";
@@ -798,7 +798,7 @@ namespace Gambit {
         results_TN2.n_background = 13.;
         results_TN2.background_sys = 3.;
         results_TN2.signal_sys = 0.;
-        results_TN2.n_signal = _numTN2;
+        results_TN2.n_signal_MC = _numTN2;
 
         SignalRegionData results_TN3;
         results_TN3.sr_label = "TN3";
@@ -806,7 +806,7 @@ namespace Gambit {
         results_TN3.n_background = 5.;
         results_TN3.background_sys = 2.;
         results_TN3.signal_sys = 0.;
-        results_TN3.n_signal = _numTN3;
+        results_TN3.n_signal_MC = _numTN3;
 
         add_result(results_BC1);
         add_result(results_BC2);

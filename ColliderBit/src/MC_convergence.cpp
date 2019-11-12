@@ -92,7 +92,7 @@ namespace Gambit
         for (auto& sr : analysis_pointer_pair.second->get_results())
         {
           // Update the number of accepted events in this signal region
-          n_signals[my_thread].push_back(sr.n_signal);
+          n_signals[my_thread].push_back(sr.n_signal_MC);
         }
       }
     }

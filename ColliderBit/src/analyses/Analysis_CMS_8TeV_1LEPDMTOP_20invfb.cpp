@@ -235,7 +235,7 @@ namespace Gambit {
         results_SR.n_background = 16.4;
         results_SR.background_sys = 3.48;
         results_SR.signal_sys = 0.;
-        results_SR.n_signal = _numSR;
+        results_SR.n_signal_MC = _numSR;
 
         add_result(results_SR);
 

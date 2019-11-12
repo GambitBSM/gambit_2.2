@@ -894,7 +894,7 @@ namespace Gambit {
         results_b0L_SRA350.n_background = 70.;         // set number of predicted background events (in LHC paper)
         results_b0L_SRA350.background_sys = 13.;       // set background uncertainty (in LHC paper)
         results_b0L_SRA350.signal_sys = 0.;            // set signal uncertainty
-        results_b0L_SRA350.n_signal = _numb0L_SRA350;  // set this to number of signal events incremented in the analysis above
+        results_b0L_SRA350.n_signal_MC = _numb0L_SRA350;  // set this to number of signal events incremented in the analysis above
         add_result(results_b0L_SRA350);
 
         SignalRegionData results_b0L_SRA450;
@@ -903,7 +903,7 @@ namespace Gambit {
         results_b0L_SRA450.n_background = 22.;
         results_b0L_SRA450.background_sys = 5.;
         results_b0L_SRA450.signal_sys = 0.;
-        results_b0L_SRA450.n_signal = _numb0L_SRA450;
+        results_b0L_SRA450.n_signal_MC = _numb0L_SRA450;
         add_result(results_b0L_SRA450);
 
         SignalRegionData results_b0L_SRA550;
@@ -912,7 +912,7 @@ namespace Gambit {
         results_b0L_SRA550.n_background = 7.2;
         results_b0L_SRA550.background_sys = 1.5;
         results_b0L_SRA550.signal_sys = 0.;
-        results_b0L_SRA550.n_signal = _numb0L_SRA550;
+        results_b0L_SRA550.n_signal_MC = _numb0L_SRA550;
         add_result(results_b0L_SRA550);
 
         SignalRegionData results_b0L_SRB;
@@ -921,7 +921,7 @@ namespace Gambit {
         results_b0L_SRB.n_background = 37.;
         results_b0L_SRB.background_sys = 7.;
         results_b0L_SRB.signal_sys = 0.;
-        results_b0L_SRB.n_signal = _numb0L_SRB;
+        results_b0L_SRB.n_signal_MC = _numb0L_SRB;
         add_result(results_b0L_SRB);
 
         SignalRegionData results_b0L_SRC;
@@ -930,7 +930,7 @@ namespace Gambit {
         results_b0L_SRC.n_background = 5.5;
         results_b0L_SRC.background_sys = 1.5;
         results_b0L_SRC.signal_sys = 0.;
-        results_b0L_SRC.n_signal = _numb0L_SRC;
+        results_b0L_SRC.n_signal_MC = _numb0L_SRC;
         add_result(results_b0L_SRC);
 
 	// MJW removes these regions for the Feb 2018 MareNostrum scans, since the aMT2 variable is not well-described.
@@ -941,7 +941,7 @@ namespace Gambit {
         results_b1L_SRA600.n_background = 24.;
         results_b1L_SRA600.background_sys = 6.;
         results_b1L_SRA600.signal_sys = 0.;
-        results_b1L_SRA600.n_signal = _numb1L_SRA600;
+        results_b1L_SRA600.n_signal_MC = _numb1L_SRA600;
         add_result(results_b1L_SRA600);
 
         SignalRegionData results_b1L_SR750;
@@ -950,7 +950,7 @@ namespace Gambit {
         results_b1L_SR750.n_background = 15.;
         results_b1L_SR750.background_sys = 4.;
         results_b1L_SR750.signal_sys = 0.;
-        results_b1L_SR750.n_signal = _numb1L_SRA750;
+        results_b1L_SR750.n_signal_MC = _numb1L_SRA750;
         add_result(results_b1L_SR750);
 
         SignalRegionData results_b1L_SR300_2j;
@@ -959,7 +959,7 @@ namespace Gambit {
         results_b1L_SR300_2j.n_background = 6.7;
         results_b1L_SR300_2j.background_sys = 2.3;
         results_b1L_SR300_2j.signal_sys = 0.;
-        results_b1L_SR300_2j.n_signal = _numb1L_SRA300_2j;
+        results_b1L_SR300_2j.n_signal_MC = _numb1L_SRA300_2j;
         add_result(results_b1L_SR300_2j);
 
         SignalRegionData results_b1L_SRB;
@@ -968,7 +968,7 @@ namespace Gambit {
         results_b1L_SRB.n_background = 53.;
         results_b1L_SRB.background_sys = 12.;
         results_b1L_SRB.signal_sys = 0.;
-        results_b1L_SRB.n_signal = _numb1L_SRB;
+        results_b1L_SRB.n_signal_MC = _numb1L_SRB;
         add_result(results_b1L_SRB);*/
 
         return;

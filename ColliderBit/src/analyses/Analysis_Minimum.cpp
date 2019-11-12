@@ -99,7 +99,7 @@ namespace Gambit {
         results_SR.n_background = 95.; // set number of predicted background events (in LHC paper)
         results_SR.background_sys = 9.5; // set background uncertainty (in LHC paper)
         results_SR.signal_sys = 0.; // set signal uncertainty
-        results_SR.n_signal = _numSR; // set this to number of signal events incremented in the analysis above
+        results_SR.n_signal_MC = _numSR; // set this to number of signal events incremented in the analysis above
         add_result(results_SR);
 
       }

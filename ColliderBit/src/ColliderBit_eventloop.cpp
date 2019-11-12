@@ -386,7 +386,7 @@ namespace Gambit
       //       cout << DEBUG_PREFIX << "CollectAnalyses: -- Will now loop over all signal regions in " << adp << endl;
       //       for (auto& sr : adp->srdata)
       //       {
-      //         cout << DEBUG_PREFIX << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal = " << sr.n_signal << ", n_signal_scaled = " << n_signal_scaled << endl;
+      //         cout << DEBUG_PREFIX << "CollectAnalyses: -- " << adp << " contains signal region: " << sr.sr_label << ", n_signal_MC = " << sr.n_signal_MC << ", n_signal_scaled = " << n_signal_scaled << endl;
       //       }
       //       cout << DEBUG_PREFIX << "CollectAnalyses: -- Done looping over signal regions in " << adp << endl;
       //     }

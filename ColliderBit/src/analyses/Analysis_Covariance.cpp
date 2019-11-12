@@ -35,7 +35,7 @@ namespace Gambit {
                 SR_b     << srd->n_background   << ", ";
                 SR_b_sys << srd->background_sys << ", ";
                 //SR_s_sys << srd->signal_sys     << ", ";
-                //SR_s     << srd->n_signal       << ", ";
+                //SR_s     << srd->n_signal_MC       << ", ";
              }
              SR_names << "]";
              SR_n     << "]";
@@ -103,7 +103,7 @@ namespace Gambit {
         results_SR1.n_background = 95; // set number of predicted background events (in LHC paper)
         results_SR1.background_sys = 9.5; // set background uncertainty (in LHC paper)
         results_SR1.signal_sys = 0; // set signal uncertainty
-        results_SR1.n_signal = 120; // dummy number of signal events (usually incremented in the analysis code)
+        results_SR1.n_signal_MC = 120; // dummy number of signal events (usually incremented in the analysis code)
         add_result(results_SR1);
 
         SignalRegionData results_SR2;
@@ -112,7 +112,7 @@ namespace Gambit {
         results_SR2.n_background = 9; // set number of predicted background events (in LHC paper)
         results_SR2.background_sys = 4; // set background uncertainty (in LHC paper)
         results_SR2.signal_sys = 0; // set signal uncertainty
-        results_SR2.n_signal = 15; // dummy number of signal events (usually incremented in the analysis code)
+        results_SR2.n_signal_MC = 15; // dummy number of signal events (usually incremented in the analysis code)
         add_result(results_SR2);
 
         // Hard-code the a covariance matrix  between these (representing the bkg sys values above, rotated by 30 deg)

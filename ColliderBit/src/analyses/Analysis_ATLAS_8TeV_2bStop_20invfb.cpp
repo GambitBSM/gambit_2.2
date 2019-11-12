@@ -405,7 +405,7 @@ namespace Gambit {
         results_SRA15.n_background = 94.;
         results_SRA15.background_sys = 13.;
         results_SRA15.signal_sys = 0.;
-        results_SRA15.n_signal = _numSRA15;
+        results_SRA15.n_signal_MC = _numSRA15;
 
         SignalRegionData results_SRA20;
         results_SRA20.sr_label = "SRA20";
@@ -413,7 +413,7 @@ namespace Gambit {
         results_SRA20.n_background = 39.;
         results_SRA20.background_sys = 6.;
         results_SRA20.signal_sys = 0.;
-        results_SRA20.n_signal = _numSRA20;
+        results_SRA20.n_signal_MC = _numSRA20;
 
         SignalRegionData results_SRA25;
         results_SRA25.sr_label = "SRA25";
@@ -421,7 +421,7 @@ namespace Gambit {
         results_SRA25.n_background = 15.8;
         results_SRA25.background_sys = 2.8;
         results_SRA25.signal_sys = 0.;
-        results_SRA25.n_signal = _numSRA25;
+        results_SRA25.n_signal_MC = _numSRA25;
 
         SignalRegionData results_SRA30;
         results_SRA30.sr_label = "SRA30";
@@ -429,7 +429,7 @@ namespace Gambit {
         results_SRA30.n_background = 5.9;
         results_SRA30.background_sys = 1.1;
         results_SRA30.signal_sys = 0.;
-        results_SRA30.n_signal = _numSRA30;
+        results_SRA30.n_signal_MC = _numSRA30;
 
         SignalRegionData results_SRA35;
         results_SRA35.sr_label = "SRA35";
@@ -437,7 +437,7 @@ namespace Gambit {
         results_SRA35.n_background = 2.5;
         results_SRA35.background_sys = 0.6;
         results_SRA35.signal_sys = 0.;
-        results_SRA35.n_signal = _numSRA35;
+        results_SRA35.n_signal_MC = _numSRA35;
 
         SignalRegionData results_SRB;
         results_SRB.sr_label = "SRB";
@@ -445,7 +445,7 @@ namespace Gambit {
         results_SRB.n_background = 64.;
         results_SRB.background_sys = 10.;
         results_SRB.signal_sys = 0.;
-        results_SRB.n_signal = _numSRB;
+        results_SRB.n_signal_MC = _numSRB;
 
         add_result(results_SRA15);
         add_result(results_SRA20);

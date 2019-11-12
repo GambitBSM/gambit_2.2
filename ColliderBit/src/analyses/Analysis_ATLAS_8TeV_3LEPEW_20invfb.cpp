@@ -836,7 +836,7 @@ namespace Gambit {
         results_SR0tau_a_bin_1.n_background = 23.;
         results_SR0tau_a_bin_1.background_sys = 4.;
         results_SR0tau_a_bin_1.signal_sys = 0.;
-        results_SR0tau_a_bin_1.n_signal = _num_SR0tau_a_bin_1;
+        results_SR0tau_a_bin_1.n_signal_MC = _num_SR0tau_a_bin_1;
 
         SignalRegionData results_SR0tau_a_bin_2;
         results_SR0tau_a_bin_2.sr_label = "SR0tau_a_bin_2";
@@ -844,7 +844,7 @@ namespace Gambit {
         results_SR0tau_a_bin_2.n_background = 4.2;
         results_SR0tau_a_bin_2.background_sys = 1.5;
         results_SR0tau_a_bin_2.signal_sys = 0.;
-        results_SR0tau_a_bin_2.n_signal = _num_SR0tau_a_bin_2;
+        results_SR0tau_a_bin_2.n_signal_MC = _num_SR0tau_a_bin_2;
 
         SignalRegionData results_SR0tau_a_bin_3;
         results_SR0tau_a_bin_3.sr_label = "SR0tau_a_bin_3";
@@ -852,7 +852,7 @@ namespace Gambit {
         results_SR0tau_a_bin_3.n_background = 10.6;
         results_SR0tau_a_bin_3.background_sys = 1.8;
         results_SR0tau_a_bin_3.signal_sys = 0.;
-        results_SR0tau_a_bin_3.n_signal = _num_SR0tau_a_bin_3;
+        results_SR0tau_a_bin_3.n_signal_MC = _num_SR0tau_a_bin_3;
 
         SignalRegionData results_SR0tau_a_bin_4;
         results_SR0tau_a_bin_4.sr_label = "SR0tau_a_bin_4";
@@ -860,7 +860,7 @@ namespace Gambit {
         results_SR0tau_a_bin_4.n_background = 8.5;
         results_SR0tau_a_bin_4.background_sys = 1.7;
         results_SR0tau_a_bin_4.signal_sys = 0.;
-        results_SR0tau_a_bin_4.n_signal = _num_SR0tau_a_bin_4;
+        results_SR0tau_a_bin_4.n_signal_MC = _num_SR0tau_a_bin_4;
 
         SignalRegionData results_SR0tau_a_bin_5;
         results_SR0tau_a_bin_5.sr_label = "SR0tau_a_bin_5";
@@ -868,7 +868,7 @@ namespace Gambit {
         results_SR0tau_a_bin_5.n_background = 12.9;
         results_SR0tau_a_bin_5.background_sys = 2.4;
         results_SR0tau_a_bin_5.signal_sys = 0.;
-        results_SR0tau_a_bin_5.n_signal = _num_SR0tau_a_bin_5;
+        results_SR0tau_a_bin_5.n_signal_MC = _num_SR0tau_a_bin_5;
 
         SignalRegionData results_SR0tau_a_bin_6;
         results_SR0tau_a_bin_6.sr_label = "SR0tau_a_bin_6";
@@ -876,7 +876,7 @@ namespace Gambit {
         results_SR0tau_a_bin_6.n_background = 6.6;
         results_SR0tau_a_bin_6.background_sys = 1.9;
         results_SR0tau_a_bin_6.signal_sys = 0.;
-        results_SR0tau_a_bin_6.n_signal = _num_SR0tau_a_bin_6;
+        results_SR0tau_a_bin_6.n_signal_MC = _num_SR0tau_a_bin_6;
 
         SignalRegionData results_SR0tau_a_bin_7;
         results_SR0tau_a_bin_7.sr_label = "SR0tau_a_bin_7";
@@ -884,7 +884,7 @@ namespace Gambit {
         results_SR0tau_a_bin_7.n_background = 14.1;
         results_SR0tau_a_bin_7.background_sys = 2.2;
         results_SR0tau_a_bin_7.signal_sys = 0.;
-        results_SR0tau_a_bin_7.n_signal = _num_SR0tau_a_bin_7;
+        results_SR0tau_a_bin_7.n_signal_MC = _num_SR0tau_a_bin_7;
 
         SignalRegionData results_SR0tau_a_bin_8;
         results_SR0tau_a_bin_8.sr_label = "SR0tau_a_bin_8";
@@ -892,7 +892,7 @@ namespace Gambit {
         results_SR0tau_a_bin_8.n_background = 1.1;
         results_SR0tau_a_bin_8.background_sys = 0.4;
         results_SR0tau_a_bin_8.signal_sys = 0.;
-        results_SR0tau_a_bin_8.n_signal = _num_SR0tau_a_bin_8;
+        results_SR0tau_a_bin_8.n_signal_MC = _num_SR0tau_a_bin_8;
 
         SignalRegionData results_SR0tau_a_bin_9;
         results_SR0tau_a_bin_9.sr_label = "SR0tau_a_bin_9";
@@ -900,7 +900,7 @@ namespace Gambit {
         results_SR0tau_a_bin_9.n_background = 22.4;
         results_SR0tau_a_bin_9.background_sys = 3.6;
         results_SR0tau_a_bin_9.signal_sys = 0.;
-        results_SR0tau_a_bin_9.n_signal = _num_SR0tau_a_bin_9;
+        results_SR0tau_a_bin_9.n_signal_MC = _num_SR0tau_a_bin_9;
 
         SignalRegionData results_SR0tau_a_bin_10;
         results_SR0tau_a_bin_10.sr_label = "SR0tau_a_bin_10";
@@ -908,7 +908,7 @@ namespace Gambit {
         results_SR0tau_a_bin_10.n_background = 16.4;
         results_SR0tau_a_bin_10.background_sys = 2.8;
         results_SR0tau_a_bin_10.signal_sys = 0.;
-        results_SR0tau_a_bin_10.n_signal = _num_SR0tau_a_bin_10;
+        results_SR0tau_a_bin_10.n_signal_MC = _num_SR0tau_a_bin_10;
 
         SignalRegionData results_SR0tau_a_bin_11;
         results_SR0tau_a_bin_11.sr_label = "SR0tau_a_bin_11";
@@ -916,7 +916,7 @@ namespace Gambit {
         results_SR0tau_a_bin_11.n_background = 27.;
         results_SR0tau_a_bin_11.background_sys = 5.;
         results_SR0tau_a_bin_11.signal_sys = 0.;
-        results_SR0tau_a_bin_11.n_signal = _num_SR0tau_a_bin_11;
+        results_SR0tau_a_bin_11.n_signal_MC = _num_SR0tau_a_bin_11;
 
         SignalRegionData results_SR0tau_a_bin_12;
         results_SR0tau_a_bin_12.sr_label = "SR0tau_a_bin_12";
@@ -924,7 +924,7 @@ namespace Gambit {
         results_SR0tau_a_bin_12.n_background = 5.5;
         results_SR0tau_a_bin_12.background_sys = 1.5;
         results_SR0tau_a_bin_12.signal_sys = 0.;
-        results_SR0tau_a_bin_12.n_signal = _num_SR0tau_a_bin_12;
+        results_SR0tau_a_bin_12.n_signal_MC = _num_SR0tau_a_bin_12;
 
         SignalRegionData results_SR0tau_a_bin_13;
         results_SR0tau_a_bin_13.sr_label = "SR0tau_a_bin_13";
@@ -932,7 +932,7 @@ namespace Gambit {
         results_SR0tau_a_bin_13.n_background = 715.;
         results_SR0tau_a_bin_13.background_sys = 70.;
         results_SR0tau_a_bin_13.signal_sys = 0.;
-        results_SR0tau_a_bin_13.n_signal = _num_SR0tau_a_bin_13;
+        results_SR0tau_a_bin_13.n_signal_MC = _num_SR0tau_a_bin_13;
 
         SignalRegionData results_SR0tau_a_bin_14;
         results_SR0tau_a_bin_14.sr_label = "SR0tau_a_bin_14";
@@ -940,7 +940,7 @@ namespace Gambit {
         results_SR0tau_a_bin_14.n_background = 219.;
         results_SR0tau_a_bin_14.background_sys = 33.;
         results_SR0tau_a_bin_14.signal_sys = 0.;
-        results_SR0tau_a_bin_14.n_signal = _num_SR0tau_a_bin_14;
+        results_SR0tau_a_bin_14.n_signal_MC = _num_SR0tau_a_bin_14;
 
         SignalRegionData results_SR0tau_a_bin_15;
         results_SR0tau_a_bin_15.sr_label = "SR0tau_a_bin_15";
@@ -948,7 +948,7 @@ namespace Gambit {
         results_SR0tau_a_bin_15.n_background = 65.;
         results_SR0tau_a_bin_15.background_sys = 13.;
         results_SR0tau_a_bin_15.signal_sys = 0.;
-        results_SR0tau_a_bin_15.n_signal = _num_SR0tau_a_bin_15;
+        results_SR0tau_a_bin_15.n_signal_MC = _num_SR0tau_a_bin_15;
 
         SignalRegionData results_SR0tau_a_bin_16;
         results_SR0tau_a_bin_16.sr_label = "SR0tau_a_bin_16";
@@ -956,7 +956,7 @@ namespace Gambit {
         results_SR0tau_a_bin_16.n_background = 4.6;
         results_SR0tau_a_bin_16.background_sys = 1.7;
         results_SR0tau_a_bin_16.signal_sys = 0.;
-        results_SR0tau_a_bin_16.n_signal = _num_SR0tau_a_bin_16;
+        results_SR0tau_a_bin_16.n_signal_MC = _num_SR0tau_a_bin_16;
 
         SignalRegionData results_SR0tau_a_bin_17;
         results_SR0tau_a_bin_17.sr_label = "SR0tau_a_bin_17";
@@ -964,7 +964,7 @@ namespace Gambit {
         results_SR0tau_a_bin_17.n_background = 69.;
         results_SR0tau_a_bin_17.background_sys = 9.;
         results_SR0tau_a_bin_17.signal_sys = 0.;
-        results_SR0tau_a_bin_17.n_signal = _num_SR0tau_a_bin_17;
+        results_SR0tau_a_bin_17.n_signal_MC = _num_SR0tau_a_bin_17;
 
         SignalRegionData results_SR0tau_a_bin_18;
         results_SR0tau_a_bin_18.sr_label = "SR0tau_a_bin_18";
@@ -972,7 +972,7 @@ namespace Gambit {
         results_SR0tau_a_bin_18.n_background = 3.4;
         results_SR0tau_a_bin_18.background_sys = 1.4;
         results_SR0tau_a_bin_18.signal_sys = 0.;
-        results_SR0tau_a_bin_18.n_signal = _num_SR0tau_a_bin_18;
+        results_SR0tau_a_bin_18.n_signal_MC = _num_SR0tau_a_bin_18;
 
         SignalRegionData results_SR0tau_a_bin_19;
         results_SR0tau_a_bin_19.sr_label = "SR0tau_a_bin_19";
@@ -980,7 +980,7 @@ namespace Gambit {
         results_SR0tau_a_bin_19.n_background = 1.2;
         results_SR0tau_a_bin_19.background_sys = 0.4;
         results_SR0tau_a_bin_19.signal_sys = 0.;
-        results_SR0tau_a_bin_19.n_signal = _num_SR0tau_a_bin_19;
+        results_SR0tau_a_bin_19.n_signal_MC = _num_SR0tau_a_bin_19;
 
         SignalRegionData results_SR0tau_a_bin_20;
         results_SR0tau_a_bin_20.sr_label = "SR0tau_a_bin_20";
@@ -988,7 +988,7 @@ namespace Gambit {
         results_SR0tau_a_bin_20.n_background = 0.29;
         results_SR0tau_a_bin_20.background_sys = 0.18;
         results_SR0tau_a_bin_20.signal_sys = 0.;
-        results_SR0tau_a_bin_20.n_signal = _num_SR0tau_a_bin_20;
+        results_SR0tau_a_bin_20.n_signal_MC = _num_SR0tau_a_bin_20;
 
         SignalRegionData results_SR1tau;
         results_SR1tau.sr_label = "SR1tau";
@@ -996,7 +996,7 @@ namespace Gambit {
         results_SR1tau.n_background = 10.3;
         results_SR1tau.background_sys = 1.2;
         results_SR1tau.signal_sys = 0.;
-        results_SR1tau.n_signal = _num_SR1tau;
+        results_SR1tau.n_signal_MC = _num_SR1tau;
 
         SignalRegionData results_SR2tau_a;
         results_SR2tau_a.sr_label = "SR2tau_a";
@@ -1004,7 +1004,7 @@ namespace Gambit {
         results_SR2tau_a.n_background = 6.9;
         results_SR2tau_a.background_sys = 0.8;
         results_SR2tau_a.signal_sys = 0.;
-        results_SR2tau_a.n_signal = _num_SR2tau_a;
+        results_SR2tau_a.n_signal_MC = _num_SR2tau_a;
 
         SignalRegionData results_SR2tau_b;
         results_SR2tau_b.sr_label = "SR2tau_b";
@@ -1012,7 +1012,7 @@ namespace Gambit {
         results_SR2tau_b.n_background = 7.2;
         results_SR2tau_b.background_sys = 0.8;
         results_SR2tau_b.signal_sys = 0.;
-        results_SR2tau_b.n_signal = _num_SR2tau_b;
+        results_SR2tau_b.n_signal_MC = _num_SR2tau_b;
 
         add_result(results_SR0tau_a_bin_1);
         add_result(results_SR0tau_a_bin_2);

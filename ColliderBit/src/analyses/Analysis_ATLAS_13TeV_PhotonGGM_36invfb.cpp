@@ -600,7 +600,7 @@ namespace Gambit {
         results_SRaa_SL.n_background = 0.50;
         results_SRaa_SL.background_sys = 0.30;
         results_SRaa_SL.signal_sys = 0.;
-        results_SRaa_SL.n_signal = num_SRaa_SL;
+        results_SRaa_SL.n_signal_MC = num_SRaa_SL;
         add_result(results_SRaa_SL);
 
         SignalRegionData results_SRaa_SH;
@@ -609,7 +609,7 @@ namespace Gambit {
         results_SRaa_SH.n_background = 0.48;
         results_SRaa_SH.background_sys = 0.30;
         results_SRaa_SH.signal_sys = 0.;
-        results_SRaa_SH.n_signal = num_SRaa_SH;
+        results_SRaa_SH.n_signal_MC = num_SRaa_SH;
         add_result(results_SRaa_SH);
 
         SignalRegionData results_SRaa_WL;
@@ -618,7 +618,7 @@ namespace Gambit {
         results_SRaa_WL.n_background = 3.7;
         results_SRaa_WL.background_sys = 1.1;
         results_SRaa_WL.signal_sys = 0.;
-        results_SRaa_WL.n_signal = num_SRaa_WL;
+        results_SRaa_WL.n_signal_MC = num_SRaa_WL;
         add_result(results_SRaa_WL);
 
         SignalRegionData results_SRaa_WH;
@@ -627,7 +627,7 @@ namespace Gambit {
         results_SRaa_WH.n_background = 2.05;
         results_SRaa_WH.background_sys = 0.65;
         results_SRaa_WH.signal_sys = 0.;
-        results_SRaa_WH.n_signal = num_SRaa_WH;
+        results_SRaa_WH.n_signal_MC = num_SRaa_WH;
         add_result(results_SRaa_WH);
 
         SignalRegionData results_SRaj_L;
@@ -636,7 +636,7 @@ namespace Gambit {
         results_SRaj_L.n_background = 1.33;
         results_SRaj_L.background_sys = 0.54;
         results_SRaj_L.signal_sys = 0.;
-        results_SRaj_L.n_signal = num_SRaj_L;
+        results_SRaj_L.n_signal_MC = num_SRaj_L;
         add_result(results_SRaj_L);
 
         SignalRegionData results_SRaj_L200;
@@ -645,7 +645,7 @@ namespace Gambit {
         results_SRaj_L200.n_background = 2.68;
         results_SRaj_L200.background_sys = 0.64;
         results_SRaj_L200.signal_sys = 0.;
-        results_SRaj_L200.n_signal = num_SRaj_L200;
+        results_SRaj_L200.n_signal_MC = num_SRaj_L200;
         add_result(results_SRaj_L200);
 
         SignalRegionData results_SRaj_H;
@@ -654,7 +654,7 @@ namespace Gambit {
         results_SRaj_H.n_background = 1.14;
         results_SRaj_H.background_sys = 0.61;
         results_SRaj_H.signal_sys = 0.;
-        results_SRaj_H.n_signal = num_SRaj_H;
+        results_SRaj_H.n_signal_MC = num_SRaj_H;
         add_result(results_SRaj_H);
 
         return;

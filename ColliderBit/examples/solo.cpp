@@ -212,9 +212,9 @@ int main(int argc, char* argv[])
       for (size_t sr_index = 0; sr_index < adata.size(); ++sr_index)
       {
         const Gambit::ColliderBit::SignalRegionData srData = adata[sr_index];
-        const double scale = srData.n_signal_scaled / srData.n_signal;
-        const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
-        const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
+        const double scale = srData.n_signal_scaled / srData.n_signal_MC;
+        const double abs_uncertainty_s_stat = (srData.n_signal_MC == 0 ? 0 : scale * sqrt(srData.n_signal_MC));
+        const double abs_uncertainty_s_sys = (srData.n_signal_MC == 0 ? 0 : scale * srData.signal_sys);
         const double combined_s_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
         const double abs_uncertainty_bg_stat = (srData.n_background == 0 ? 0 : sqrt(srData.n_background));
         const double abs_uncertainty_bg_sys = srData.background_sys;

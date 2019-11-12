@@ -390,7 +390,7 @@ namespace Gambit {
         results_SRA.n_background = 7.5;
         results_SRA.background_sys = 2.5;
         results_SRA.signal_sys = 0.;
-        results_SRA.n_signal = _numSRA;
+        results_SRA.n_signal_MC = _numSRA;
         add_result(results_SRA);
 
         SignalRegionData results_SRB;
@@ -399,7 +399,7 @@ namespace Gambit {
         results_SRB.n_background = 8.7;
         results_SRB.background_sys = 2.2;
         results_SRB.signal_sys = 0.;
-        results_SRB.n_signal = _numSRB;
+        results_SRB.n_signal_MC = _numSRB;
         add_result(results_SRB);
 
       }

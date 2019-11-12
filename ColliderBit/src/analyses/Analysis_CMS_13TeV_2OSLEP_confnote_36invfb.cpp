@@ -356,7 +356,7 @@ namespace Gambit {
         // results_SR1.n_background = 793.;
         // results_SR1.background_sys = 32.2;
         // results_SR1.signal_sys = 0.;
-        // results_SR1.n_signal = _numSR1;
+        // results_SR1.n_signal_MC = _numSR1;
         // add_result(results_SR1);
 
         // SignalRegionData results_SR2;
@@ -365,7 +365,7 @@ namespace Gambit {
         // results_SR2.n_background = 54.9;
         // results_SR2.background_sys = 7.;
         // results_SR2.signal_sys = 0.;
-        // results_SR2.n_signal = _numSR2;
+        // results_SR2.n_signal_MC = _numSR2;
         // add_result(results_SR2);
 
         // SignalRegionData results_SR3;
@@ -374,7 +374,7 @@ namespace Gambit {
         // results_SR3.n_background = 21.6;
         // results_SR3.background_sys = 5.6;
         // results_SR3.signal_sys = 0.;
-        // results_SR3.n_signal = _numSR3;
+        // results_SR3.n_signal_MC = _numSR3;
         // add_result(results_SR3);
 
         // SignalRegionData results_SR4;
@@ -383,7 +383,7 @@ namespace Gambit {
         // results_SR4.n_background = 6.;
         // results_SR4.background_sys = 1.9;
         // results_SR4.signal_sys = 0.;
-        // results_SR4.n_signal = _numSR4;
+        // results_SR4.n_signal_MC = _numSR4;
         // add_result(results_SR4);
 
         // SignalRegionData results_SR5;
@@ -392,7 +392,7 @@ namespace Gambit {
         // results_SR5.n_background = 2.5;
         // results_SR5.background_sys = 0.9;
         // results_SR5.signal_sys = 0.;
-        // results_SR5.n_signal = _numSR5;
+        // results_SR5.n_signal_MC = _numSR5;
         // add_result(results_SR5);
 
         // SignalRegionData results_SR6;
@@ -401,7 +401,7 @@ namespace Gambit {
         // results_SR6.n_background = 82.;
         // results_SR6.background_sys = 9.5;
         // results_SR6.signal_sys = 0.;
-        // results_SR6.n_signal = _numSR6;
+        // results_SR6.n_signal_MC = _numSR6;
         // add_result(results_SR6);
 
         // SignalRegionData results_SR7;
@@ -410,7 +410,7 @@ namespace Gambit {
         // results_SR7.n_background = 7.6;
         // results_SR7.background_sys = 2.8;
         // results_SR7.signal_sys = 0.;
-        // results_SR7.n_signal = _numSR7;
+        // results_SR7.n_signal_MC = _numSR7;
         // add_result(results_SR7);
 
         // SignalRegionData results_SR8;
@@ -419,7 +419,7 @@ namespace Gambit {
         // results_SR8.n_background = 5.6;
         // results_SR8.background_sys = 1.6;
         // results_SR8.signal_sys = 0.;
-        // results_SR8.n_signal = _numSR8;
+        // results_SR8.n_signal_MC = _numSR8;
         // add_result(results_SR8);
 
         // SignalRegionData results_SR9;
@@ -428,7 +428,7 @@ namespace Gambit {
         // results_SR9.n_background = 1.3;
         // results_SR9.background_sys = 0.4;
         // results_SR9.signal_sys = 0.;
-        // results_SR9.n_signal = _numSR9;
+        // results_SR9.n_signal_MC = _numSR9;
         // add_result(results_SR9);
 
       // }

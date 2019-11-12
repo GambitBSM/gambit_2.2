@@ -81,9 +81,9 @@ namespace Gambit
           const str key = adata.analysis_name + "__" + srData.sr_label + "__i" + std::to_string(SR) + "__signal";
           result[key] = srData.n_signal_scaled;
 
-          const double scale = srData.n_signal_scaled / srData.n_signal;
-          const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
-          const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
+          const double scale = srData.n_signal_scaled / srData.n_signal_MC;
+          const double abs_uncertainty_s_stat = (srData.n_signal_MC == 0 ? 0 : scale * sqrt(srData.n_signal_MC));
+          const double abs_uncertainty_s_sys = (srData.n_signal_MC == 0 ? 0 : scale * srData.signal_sys);
           const double combined_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
           result[key + "_uncert"] = combined_uncertainty;
 
@@ -458,7 +458,7 @@ namespace Gambit
                                    << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
                                    << ",  n_s = " << srData.n_signal_scaled
                                    << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_scaled << " +/- " << srData.background_sys
-                                   << ",  n_s_MC = " << srData.n_signal
+                                   << ",  n_s_MC = " << srData.n_signal_MC
                                    << endl;
           }
           cout.precision(stream_precision); // restore previous precision
@@ -508,7 +508,7 @@ namespace Gambit
         bool all_zero_signal = true;
         for (size_t SR = 0; SR < nSR; ++SR)
         {
-          if (adata[SR].n_signal != 0)
+          if (adata[SR].n_signal_MC != 0)
           {
             all_zero_signal = false;
             break;
@@ -574,9 +574,9 @@ namespace Gambit
             n_pred_sb(SR) = srData.n_signal_scaled + srData.n_background;
 
             // Absolute errors for n_predicted_uncertain_*
-            const double scale = srData.n_signal_scaled / srData.n_signal;
-            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
-            const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
+            const double scale = srData.n_signal_scaled / srData.n_signal_MC;
+            const double abs_uncertainty_s_stat = (srData.n_signal_MC == 0 ? 0 : scale * sqrt(srData.n_signal_MC));
+            const double abs_uncertainty_s_sys = (srData.n_signal_MC == 0 ? 0 : scale * srData.signal_sys);
 
             abs_unc_s(SR) = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
           }
@@ -652,8 +652,8 @@ namespace Gambit
           {
             const SignalRegionData& srData = adata[SR];
 
-            // Shortcut: If n_signal == 0, we know the delta log-likelihood is 0.
-            if(srData.n_signal == 0)
+            // Shortcut: If n_signal_MC == 0, we know the delta log-likelihood is 0.
+            if(srData.n_signal_MC == 0)
             {
               // Store (obs) result for this SR
               result[ananame].sr_indices[srData.sr_label] = SR;
@@ -682,9 +682,9 @@ namespace Gambit
 
 
             // Absolute errors for n_predicted_uncertain_*
-            const double scale = srData.n_signal_scaled / srData.n_signal;
-            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : scale * sqrt(srData.n_signal));
-            const double abs_uncertainty_s_sys = (srData.n_signal == 0 ? 0 : scale * srData.signal_sys);
+            const double scale = srData.n_signal_scaled / srData.n_signal_MC;
+            const double abs_uncertainty_s_stat = (srData.n_signal_MC == 0 ? 0 : scale * sqrt(srData.n_signal_MC));
+            const double abs_uncertainty_s_sys = (srData.n_signal_MC == 0 ? 0 : scale * srData.signal_sys);
             const double abs_uncertainty_b = std::max(srData.background_sys, 0.001); // <-- Avoid trouble with b_err==0
             const double abs_uncertainty_sb = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys, abs_uncertainty_b);
 
@@ -796,7 +796,7 @@ namespace Gambit
                   << ",  background_sys = " << srData.background_sys
                   << ",  n_observed = " << srData.n_observed
                   << ",  n_signal_scaled = " << srData.n_signal_scaled
-                  << ",  n_signal = " << srData.n_signal
+                  << ",  n_signal_MC = " << srData.n_signal_MC
                   << ",  signal_sys = " << srData.signal_sys
                   << endl;
             }

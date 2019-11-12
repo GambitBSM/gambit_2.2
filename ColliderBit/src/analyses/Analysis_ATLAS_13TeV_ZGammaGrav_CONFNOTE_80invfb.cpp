@@ -159,7 +159,7 @@ namespace Gambit {
         results.n_background = 2.1;
         results.background_sys = 0.5;
         results.signal_sys = 0.;
-        results.n_signal = nsig;
+        results.n_signal_MC = nsig;
         add_result(results);
 
         // cout << "\nCUTFLOW" << endl;

@@ -618,7 +618,7 @@ namespace Gambit {
             results_SRASF120.n_background = 20.0;
             results_SRASF120.background_sys = 4.6;
             results_SRASF120.signal_sys = 0.;
-            results_SRASF120.n_signal = _SRASF120;
+            results_SRASF120.n_signal_MC = _SRASF120;
             add_result(results_SRASF120);
 
             SignalRegionData results_SRADF120;
@@ -627,7 +627,7 @@ namespace Gambit {
             results_SRADF120.n_background = 23.8;
             results_SRADF120.background_sys = 4.2;
             results_SRADF120.signal_sys = 0.;
-            results_SRADF120.n_signal = _SRADF120;
+            results_SRADF120.n_signal_MC = _SRADF120;
             add_result(results_SRADF120);
 
             SignalRegionData results_SRASF140;
@@ -636,7 +636,7 @@ namespace Gambit {
             results_SRASF140.n_background = 11.0;
             results_SRASF140.background_sys = 2.5;
             results_SRASF140.signal_sys = 0.;
-            results_SRASF140.n_signal = _SRASF140;
+            results_SRASF140.n_signal_MC = _SRASF140;
             add_result(results_SRASF140);
 
             SignalRegionData results_SRADF140;
@@ -645,7 +645,7 @@ namespace Gambit {
             results_SRADF140.n_background = 10.8;
             results_SRADF140.background_sys = 2.1;
             results_SRADF140.signal_sys = 0.;
-            results_SRADF140.n_signal = _SRADF140;
+            results_SRADF140.n_signal_MC = _SRADF140;
             add_result(results_SRADF140);
 
             SignalRegionData results_SRASF160;
@@ -654,7 +654,7 @@ namespace Gambit {
             results_SRASF160.n_background = 5.6;
             results_SRASF160.background_sys = 1.8;
             results_SRASF160.signal_sys = 0.;
-            results_SRASF160.n_signal = _SRASF160;
+            results_SRASF160.n_signal_MC = _SRASF160;
             add_result(results_SRASF160);
 
             SignalRegionData results_SRADF160;
@@ -663,7 +663,7 @@ namespace Gambit {
             results_SRADF160.n_background = 6.4;
             results_SRADF160.background_sys = 1.3;
             results_SRADF160.signal_sys = 0.;
-            results_SRADF160.n_signal = _SRADF160;
+            results_SRADF160.n_signal_MC = _SRADF160;
             add_result(results_SRADF160);
 
             SignalRegionData results_SRASF180;
@@ -672,7 +672,7 @@ namespace Gambit {
             results_SRASF180.n_background = 12.3;
             results_SRASF180.background_sys = 2.6;
             results_SRASF180.signal_sys = 0.;
-            results_SRASF180.n_signal = _SRASF180;
+            results_SRASF180.n_signal_MC = _SRASF180;
             add_result(results_SRASF180);
 
             SignalRegionData results_SRADF180;
@@ -681,7 +681,7 @@ namespace Gambit {
             results_SRADF180.n_background = 5.4;
             results_SRADF180.background_sys = 1.7;
             results_SRADF180.signal_sys = 0.;
-            results_SRADF180.n_signal = _SRADF180;
+            results_SRADF180.n_signal_MC = _SRADF180;
             add_result(results_SRADF180);
 
             // signal regin 2-body B
@@ -691,7 +691,7 @@ namespace Gambit {
             results_SRBSF120.n_background = 16.3;
             results_SRBSF120.background_sys = 6.2;
             results_SRBSF120.signal_sys = 0.;
-            results_SRBSF120.n_signal = _SRBSF120;
+            results_SRBSF120.n_signal_MC = _SRBSF120;
             add_result(results_SRBSF120);
 
             SignalRegionData results_SRBDF120;
@@ -700,7 +700,7 @@ namespace Gambit {
             results_SRBDF120.n_background = 16.1;
             results_SRBDF120.background_sys = 5.3;
             results_SRBDF120.signal_sys = 0.;
-            results_SRBDF120.n_signal = _SRBDF120;
+            results_SRBDF120.n_signal_MC = _SRBDF120;
             add_result(results_SRBDF120);
 
             SignalRegionData results_SRBSF140;
@@ -709,7 +709,7 @@ namespace Gambit {
             results_SRBSF140.n_background = 7.4;
             results_SRBSF140.background_sys = 1.1;
             results_SRBSF140.signal_sys = 0.;
-            results_SRBSF140.n_signal = _SRBSF140;
+            results_SRBSF140.n_signal_MC = _SRBSF140;
             add_result(results_SRBSF140);
 
             SignalRegionData results_SRBDF140;
@@ -718,7 +718,7 @@ namespace Gambit {
             results_SRBDF140.n_background = 4.8;
             results_SRBDF140.background_sys = 1.0;
             results_SRBDF140.signal_sys = 0.;
-            results_SRBDF140.n_signal = _SRBDF140;
+            results_SRBDF140.n_signal_MC = _SRBDF140;
             add_result(results_SRBDF140);
 
             // signal regin 2-body C
@@ -728,7 +728,7 @@ namespace Gambit {
             results_SRCSF110.n_background = 5.3;
             results_SRCSF110.background_sys = 1.8;
             results_SRCSF110.signal_sys = 0.;
-            results_SRCSF110.n_signal = _SRCSF110;
+            results_SRCSF110.n_signal_MC = _SRCSF110;
             add_result(results_SRCSF110);
 
             SignalRegionData results_SRCDF110;
@@ -737,7 +737,7 @@ namespace Gambit {
             results_SRCDF110.n_background = 3.8;
             results_SRCDF110.background_sys = 1.5;
             results_SRCDF110.signal_sys = 0.;
-            results_SRCDF110.n_signal = _SRCDF110;
+            results_SRCDF110.n_signal_MC = _SRCDF110;
             add_result(results_SRCDF110);
 
 
@@ -748,7 +748,7 @@ namespace Gambit {
             results_SR4b.n_background = 28.;
             results_SR4b.background_sys = 6.;
             results_SR4b.signal_sys = 0.;
-            results_SR4b.n_signal = _SR4b;
+            results_SR4b.n_signal_MC = _SR4b;
             add_result(results_SR4b);
             return;
         }

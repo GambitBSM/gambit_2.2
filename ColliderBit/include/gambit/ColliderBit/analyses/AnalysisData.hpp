@@ -71,17 +71,17 @@ namespace Gambit {
 
       /// Constructor with {n,nsys} pair args
       SignalRegionData(const std::string& sr,
-                       double nobs, const std::pair<double,double>& nsig, const std::pair<double,double>& nbkg,
+                       double nobs, const std::pair<double,double>& nsigMC, const std::pair<double,double>& nbkg,
                        double nsigscaled=0)
-       : SignalRegionData(sr, nobs, nsig.first, nbkg.first, nsig.second, nbkg.second, nsigscaled)
+       : SignalRegionData(sr, nobs, nsigMC.first, nbkg.first, nsigMC.second, nbkg.second, nsigscaled)
       {}
 
       /// Constructor with separate n & nsys args
       SignalRegionData(const std::string& sr,
-                       double nobs, double nsig, double nbkg,
+                       double nobs, double nsigMC, double nbkg,
                        double syssig, double sysbkg, double nsigscaled=0)
        : sr_label(sr),
-         n_observed(nobs), n_signal(nsig), n_signal_scaled(nsigscaled), n_background(nbkg),
+         n_observed(nobs), n_signal_MC(nsigMC), n_signal_scaled(nsigscaled), n_background(nbkg),
          signal_sys(syssig), background_sys(sysbkg)
       {}
 
@@ -104,10 +104,10 @@ namespace Gambit {
       /// @name Signal region data
       //@{
       double n_observed = 0; ///< The number of events passing selection for this signal region as reported by the experiment
-      double n_signal = 0; ///< The number of simulated model events passing selection for this signal region
-      double n_signal_scaled = 0; ///< n_signal, scaled to luminosity * cross-section
+      double n_signal_MC = 0; ///< The number of simulated model events passing selection for this signal region
+      double n_signal_scaled = 0; ///< n_signal_MC, scaled to luminosity * cross-section
       double n_background = 0; ///< The number of standard model events expected to pass the selection for this signal region, as reported by the experiment.
-      double signal_sys = 0; ///< The absolute systematic error of n_signal
+      double signal_sys = 0; ///< The absolute systematic error of n_signal_MC
       double background_sys = 0; ///< The absolute systematic error of n_background
       //@}
 
@@ -180,7 +180,7 @@ namespace Gambit {
       {
         for (auto& sr : srdata)
         {
-          sr.n_signal = 0;
+          sr.n_signal_MC = 0;
           sr.n_signal_scaled = 0;
           sr.signal_sys = 0;
         }
@@ -222,7 +222,7 @@ namespace Gambit {
         else
         {
           // If it does, just update the signal count in the existing SignalRegionData object
-          srdata[loc->second].n_signal = srd.n_signal;
+          srdata[loc->second].n_signal_MC = srd.n_signal_MC;
         }
         check();
       }
