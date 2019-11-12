@@ -15,6 +15,7 @@
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
+#include "gambit/Elements/spectrum.hpp"
 //#include "gambit/Elements/spectrum_factories.hpp"
 //#include "gambit/Elements/smlike_higgs.hpp"
 //#include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
