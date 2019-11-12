@@ -68,6 +68,7 @@ namespace Gambit
   // ---- Define my interpolation fucntions here as well as get data functions
   const char* colliderbitdata_path = GAMBIT_DIR "/ColliderBit/data/"; 
   #define PI 3.14159265
+
   // -----Define met_hist files
 
   const char* met_ATLAS_23 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
@@ -87,6 +88,7 @@ namespace Gambit
   double Total_events[data_SIZE];
   double MET_HIST_CMS[data_SIZE][cms_bin_size];
   double MET_HIST_ATLAS[data_SIZE][atlas_bin_size];
+  double Norm,th;
 
   // Define just mass and angle arrays
   double theta[data_INC];
@@ -341,7 +343,7 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
     
     // Get scale factor and phase theta
     
-    double Norm,th;
+
 
     if (O1==0){
       Norm = pow(O2,2);
@@ -420,7 +422,7 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
       Q22[Emiss] = 0.0;
       // cout << " Emiss = "<< Emiss<< " Inital Q's: "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
       while (Q11[Emiss]==0.0 || Q12[Emiss]==0.0 || Q21[Emiss]== 0.0 || Q22[Emiss]==0.0 || C11==0.0 || C12==0.0 || C21== 0.0 || C22==0.0){ 
-          // cout << Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
+          // cout << Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q21[Emiss] <<" "<< Q22[Emiss]<<endl;
         // cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
         for(int kk = 0; kk < data_SIZE; ++kk) {
           // cout << MASS[kk]<<" "<< THETA[kk]<< " Emiss = "<< Emiss <<"|  |"<<MET_HIST[kk][Emiss]<<" " << kk<< " |     |" << x2<<" " << y2<<" "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
@@ -433,14 +435,15 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
 							yalpha     = THETA[kk-1];
 							// cout << "Have made the hack" << endl;
 						}
+            
 						else {
 							Q11[Emiss] = MET_HIST[kk][Emiss];
 							C11 = CS[kk];
 							// cout << "Q11 = " << Q22[Emiss] << " mass, th = "    << MASS[kk]<< "  "<< THETA[kk]<<endl;
 						} 
 
-					}
-
+					} 
+ 
 
 				else if (MASS[kk]==x1 && THETA[kk]==y2){
 					// cout << "Here in loop. K = "<< kk<< " x1 = "<< x1<< " y2 = "<< y2<< " met_hist = " << MET_HIST[kk][Emiss]<<endl;
@@ -476,7 +479,7 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
 
 					}
 
-					}
+					}  
 
 				else if (MASS[kk]==x2 && THETA[kk]==y2){
 
@@ -502,13 +505,15 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
       // cout << " Acceptance_CS DEBUG: 5 - Fixed" << endl;
 
       // Luminoscity scaling gets applied at the end...
-      double res =  36000.0*Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha); 
+      double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
+      double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
+      double res =  36000.0*Norm*A*Norm*B; 
       // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
       // cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
      
      
-     
-     
+    //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
+    
       accep[Emiss] = res;
     }
 
@@ -525,6 +530,7 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
     MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
     MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
     MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
+    
     return accep;
 
   }
