@@ -117,6 +117,10 @@ def run():
         #
         #    gb.new_code[abstr_class_fname]['code_tuples'].append( (0, empty_templ_class_decl) )
 
+        # TODO: TG: Only do each templated class once
+        if is_template and class_name['long'] in template_done:
+            continue;
+
 
         # Get template arguments for specialization, 
         # and check that they are acceptable
@@ -213,14 +217,14 @@ def run():
         # Add typedef to 'abstracttypedefs.hpp'
         #
 
-        addAbstractTypedefs(abstr_class_name, namespaces)
+        addAbstractTypedefs(abstr_class_name, namespaces, class_el)
 
 
         #
         # Add typedef to 'wrappertypdefs.hpp'
         #
 
-        addWrapperTypedefs(class_name, namespaces)
+        addWrapperTypedefs(class_name, namespaces, class_el)
 
 
         #
@@ -895,14 +899,21 @@ def constrWrapperUtils(class_name):
 
 # Add typedef to 'abstracttypedefs.hpp'
 
-def addAbstractTypedefs(abstr_class_name, namespaces):
+def addAbstractTypedefs(abstr_class_name, namespaces, class_el=None):
 
     indent = ' '*cfg.indent*len(namespaces)
     abstr_typedef_code  = ''
     abstr_typedef_code += utils.constrNamespace(namespaces, 'open', indent=cfg.indent)
 
     temp_namespace_list = [gb.gambit_backend_namespace] + namespaces
-    abstr_typedef_code += indent + 'typedef ' + '::'.join(temp_namespace_list) + '::' + abstr_class_name['short'] + ' ' + abstr_class_name['short'] + ';\n'
+    
+    # TODO: TG: With templates we need aliases not typedefs
+    if class_el is not None and utils.isTemplateClass(class_el) :
+        templ_bracket, templ_vars = utils.getTemplateBracket(class_el)
+        abstr_typedef_code += indent + 'template ' + templ_bracket + '\n'
+        abstr_typedef_code += indent + 'using ' + abstr_class_name['short'] + ' = ' + '::'.join(temp_namespace_list) + '::' + abstr_class_name['short'] + '<' + ','.join(templ_vars) + '>;\n'
+    else :
+        abstr_typedef_code += indent + 'typedef ' + '::'.join(temp_namespace_list) + '::' + abstr_class_name['short'] + ' ' + abstr_class_name['short'] + ';\n'
 
     abstr_typedef_code += utils.constrNamespace(namespaces, 'close', indent=cfg.indent)
     abstr_typedef_code += '\n'
@@ -929,7 +940,7 @@ def addAbstractTypedefs(abstr_class_name, namespaces):
 
 # Add typedef to 'wrappertypdefs.hpp'
 
-def addWrapperTypedefs(class_name, namespaces):
+def addWrapperTypedefs(class_name, namespaces, class_el=None):
 
     short_wrapper_class_name = classutils.toWrapperType(class_name['short'])
 
@@ -939,7 +950,14 @@ def addWrapperTypedefs(class_name, namespaces):
     wrapper_typedef_code += utils.constrNamespace(namespaces,'open')
 
     temp_namespace_list = [gb.gambit_backend_namespace] + namespaces
-    wrapper_typedef_code += indent + 'typedef ' + '::'.join(temp_namespace_list) + '::' + class_name['short'] + ' ' + short_wrapper_class_name + ';\n'
+
+    # TODO: TG: With templates we need aliases not typedefs
+    if class_el is not None and utils.isTemplateClass(class_el) :
+        templ_bracket, templ_vars = utils.getTemplateBracket(class_el)
+        wrapper_typedef_code += indent + 'template ' + templ_bracket + '\n'
+        wrapper_typedef_code += indent + 'using ' + short_wrapper_class_name + ' = ' + '::'.join(temp_namespace_list) + '::' + class_name['short'] + '<' + ','.join(templ_vars) + '>;\n'
+    else :
+        wrapper_typedef_code += indent + 'typedef ' + '::'.join(temp_namespace_list) + '::' + class_name['short'] + ' ' + short_wrapper_class_name + ';\n'
 
     wrapper_typedef_code += utils.constrNamespace(namespaces,'close')
     wrapper_typedef_code += '\n'

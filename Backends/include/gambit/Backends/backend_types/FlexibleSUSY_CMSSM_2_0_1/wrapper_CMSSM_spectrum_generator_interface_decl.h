@@ -18,6 +18,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace flexiblesusy
     {
         
+        template<class T>
         class CMSSM_spectrum_generator_interface : public WrapperBase
         {
                 // Member variables: 
@@ -32,7 +33,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             public:
         
                 // Special pointer-based constructor: 
-                CMSSM_spectrum_generator_interface(flexiblesusy::CMSSM_spectrum_generator_interface* in);
+                CMSSM_spectrum_generator_interface(flexiblesusy::Abstract_CMSSM_spectrum_generator_interface<T>* in);
         
                 // Copy constructor: 
                 CMSSM_spectrum_generator_interface(const CMSSM_spectrum_generator_interface& in);
@@ -44,7 +45,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~CMSSM_spectrum_generator_interface();
         
                 // Returns correctly casted pointer to Abstract class: 
-                flexiblesusy::CMSSM_spectrum_generator_interface* get_BEptr() const;
+                flexiblesusy::Abstract_CMSSM_spectrum_generator_interface<T>* get_BEptr() const;
         
         };
     }

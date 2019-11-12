@@ -151,13 +151,14 @@ def isKnownClass(el, class_name=None):
 
 # ====== isTemplateClass ========
 
-def isTemplateClass(class_el):
+def isTemplateClass(class_el, class_name=None):
 
     import modules.classutils as classutils
 
     is_template = False
 
-    class_name = classutils.getClassNameDict(class_el)
+    if class_name is None:
+        class_name = classutils.getClassNameDict(class_el)
 
     if '<' in class_name['long_templ']:
         is_template = True
@@ -1172,7 +1173,6 @@ def constrAbsForwardDeclHeader(file_output_path):
         if is_template:
             template_bracket = getTemplateBracket(class_el)[0]
 
-        if is_template:
             insert_code += full_indent + 'template ' + template_bracket + '\n'
             insert_code += full_indent + 'class ' + abstr_class_name['short'] + ';\n'
             #TODO: TG: I don't think specializations are needed
@@ -1218,9 +1218,11 @@ def constrWrpForwardDeclHeader(file_output_path):
     insert_code = ''
     tag_pos = current_code.find('__INSERT_CODE_HERE__')
 
-    for class_name in gb.loaded_classes_in_xml.keys():
+    current_namespaces = []
+    for class_name, class_el in gb.loaded_classes_in_xml.items():
 
         namespace, class_name_short = removeNamespace(class_name, return_namespace=True)
+        namespaces    = getNamespaces(class_el)
 
         if namespace == '':
             namespace_list = []
@@ -1228,17 +1230,38 @@ def constrWrpForwardDeclHeader(file_output_path):
             namespace_list = namespace.split('::')
 
         n_indents = len(namespace_list)
+        full_indent = ' '*n_indents*cfg.indent
 
 
-        # - Open namespace
-        insert_code += constrNamespace(namespace_list, 'open')
+        if namespaces != current_namespaces:
+            # close current namespace
+            insert_code += constrNamespace(current_namespaces, 'close', indent=cfg.indent)
+            # open new namespace
+            insert_code += constrNamespace(namespaces, 'open', indent=cfg.indent)
+            # update current namespace
+            current_namespaces = namespaces
 
         # - Forward declaration
-        insert_code += ' '*n_indents*cfg.indent + 'class ' + class_name_short + ';\n'
+        # TODO: TG: Added this for testing
+        if '<' in class_name_short:
+            is_template = True
+        else:
+            is_template = False
 
-        # - Close namespace
-        insert_code += constrNamespace(namespace_list, 'close')
+        if is_template:
+            template_bracket = getTemplateBracket(class_el)[0]
 
+            insert_code += full_indent + 'template ' + template_bracket + '\n'
+            insert_code += full_indent + 'class ' + removeTemplateBracket(class_name_short) + ';\n'
+            #TODO: TG: I don't think specializations are needed
+            #insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
+        else:
+            insert_code += full_indent + 'class ' + class_name_short + ';\n'
+
+
+    # Close current namespace
+    insert_code += constrNamespace(current_namespaces, 'close', indent=cfg.indent)
+    insert_code += '\n'
 
     new_code = current_code[:tag_pos] + insert_code + current_code[tag_pos:]
 

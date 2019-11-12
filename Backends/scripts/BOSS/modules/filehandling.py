@@ -725,13 +725,29 @@ def createFrontendHeader(function_xml_files_dict):
 
             class_namespace, class_name_short = utils.removeNamespace(class_name['long'], return_namespace=True)
 
+            # TODO: TG: Check for templates
+            is_template = False
+            if '<' in class_name['long_templ']:
+                is_template = True
+                templ_bracket, templ_var_list = utils.getTemplateBracket(gb.loaded_classes_in_xml[class_name['long_templ']])
+                templ_vars = '<' + ','.join(templ_var_list) + '>'
+
+            # TODO: TG: Modified for templates which use aliases, not typedefs
             if class_namespace == '':
-                class_typedef_code += 'typedef ::' + gb.gambit_backend_name_full + '::' + class_name['long'] + ' ' + class_name['short'] + ';\n'
+                if is_template:
+                    class_typedef_code += "template " + templ_brackets + '\n'
+                    class_typedef_code += "using " + class_name['short'] + ' = ' + '::' + gb.gambit_backend_name_full + '::' + class_name['long'] + templ_vars + ';\n'
+                else : 
+                    class_typedef_code += 'typedef ::' + gb.gambit_backend_name_full + '::' + class_name['long'] + ' ' + class_name['short'] + ';\n'
             else:
                 class_namespace_list = class_namespace.split('::')
 
                 class_typedef_code += utils.constrNamespace(class_namespace_list, 'open', indent=cfg.indent)
-                class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'typedef ::' + gb.gambit_backend_name_full + '::' + class_name['long'] + ' ' + class_name['short'] + ';\n'
+                if is_template:
+                    class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'template ' + templ_brackets + '\n'
+                    class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'using ' + class_name['short'] + '::' + gb.gambit_backend_name_full + '::' + class_name['long'] + templ_vars + ';\n'
+                else : 
+                    class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'typedef ::' + gb.gambit_backend_name_full + '::' + class_name['long'] + ' ' + class_name['short'] + ';\n'
                 class_typedef_code += utils.constrNamespace(class_namespace_list, 'close', indent=cfg.indent)
 
             class_typedef_code = utils.addIndentation(class_typedef_code, 3*cfg.indent)

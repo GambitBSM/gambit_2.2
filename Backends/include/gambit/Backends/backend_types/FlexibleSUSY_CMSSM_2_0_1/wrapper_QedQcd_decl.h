@@ -5,7 +5,6 @@
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_QedQcd.h"
-#include "wrapper_Beta_function_decl.h"
 
 #include "identification.hpp"
 
@@ -15,7 +14,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace softsusy
     {
         
-        class QedQcd : public flexiblesusy::Beta_function
+        class QedQcd : public WrapperBase
         {
                 // Member variables: 
             public:

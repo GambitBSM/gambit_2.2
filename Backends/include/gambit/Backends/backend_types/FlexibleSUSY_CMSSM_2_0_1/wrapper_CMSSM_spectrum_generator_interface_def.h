@@ -16,7 +16,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         // Member functions: 
         // Special pointer-based constructor: 
-        inline flexiblesusy::CMSSM_spectrum_generator_interface::CMSSM_spectrum_generator_interface(flexiblesusy::CMSSM_spectrum_generator_interface* in) :
+        inline flexiblesusy::CMSSM_spectrum_generator_interface::CMSSM_spectrum_generator_interface(flexiblesusy::Abstract_CMSSM_spectrum_generator_interface<T>* in) :
             WrapperBase(in)
         {
             get_BEptr()->set_wptr(this);
@@ -58,9 +58,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Returns correctly casted pointer to Abstract class: 
-        inline flexiblesusy::CMSSM_spectrum_generator_interface* flexiblesusy::CMSSM_spectrum_generator_interface::get_BEptr() const
+        inline flexiblesusy::Abstract_CMSSM_spectrum_generator_interface<T>* flexiblesusy::CMSSM_spectrum_generator_interface::get_BEptr() const
         {
-            return dynamic_cast<flexiblesusy::CMSSM_spectrum_generator_interface*>(BEptr);
+            return dynamic_cast<flexiblesusy::Abstract_CMSSM_spectrum_generator_interface<T>*>(BEptr);
         }
     }
     

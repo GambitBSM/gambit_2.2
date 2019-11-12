@@ -37,14 +37,13 @@ BE_NAMESPACE
 {
   // BOSS namespaces 
   using namespace FlexibleSUSY_CMSSM_default::flexiblesusy;
-  using namespace FlexibleSUSY_CMSSM_default::softsusy;
+  //using namespace FlexibleSUSY_CMSSM_default::softsusy;
 
   // using namespace ::flexiblesusy;
   // using namespace ::softsusy;
 
-
     /// Initialise QedQcd object from SMInputs data
-  /*void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
+/*  void setup_QedQcd(softsusy::QedQcd& oneset, const SMInputs& sminputs)
   {
     // Set pole masses (to be treated specially)
     oneset.setPoleMt(sminputs.mT);
@@ -68,11 +67,11 @@ BE_NAMESPACE
     oneset.setMass(softsusy::mElectron, sminputs.mE);
     oneset.setMass(softsusy::mMuon,     sminputs.mMu);
     oneset.setPoleMZ(sminputs.mZ);
-  } */ 
-
+  }  
+*/
   
   // Function to extract the FS settings form the yaml file
-  void Get_yaml_settings(Spectrum_generator_settings& settings, const SpectrumInputs& Input)
+/*  void Get_yaml_settings(Spectrum_generator_settings& settings, const SpectrumInputs& Input)
   {
     //inputs.options = myPipe::runOptions;
     auto Options = Input.options;
@@ -118,7 +117,7 @@ BE_NAMESPACE
     settings.set(Spectrum_generator_settings::threshold_corrections, Options->getValueOrDef<int>(123111321,"threshold_corrections"));
 
   }
-
+*/
 
   // Convenience function to compute the spectrum object
   void run_FS_Spectrum(Spectrum& spec, const SpectrumInputs& Input)
@@ -127,22 +126,22 @@ BE_NAMESPACE
     const SMInputs sminputs = Input.sminputs;
     /// TODO: copy the way spheno routinbe uses param and options and
     /// TODO: use these to fill CMSSM inputs, qedqcd and settings
-    softsusy::QedQcd qedqcd;
-    //CMSSM_input_parameters cmssm_input;
+//    softsusy::QedQcd qedqcd;
+//    CMSSM_input_parameters cmssm_input;
 
     // fill cmssm inputs
-    //cmssm_input.m0 = *Input.param.at("M0");
-    //cmssm_input.m12 = *Input.param.at("M12");
-    //cmssm_input.TanBeta = *Input.param.at("TanBeta");
-    //cmssm_input.SignMu = *Input.param.at("SignMu");
-    //cmssm_input.Azero = *Input.param.at("A0");
+//    cmssm_input.m0 = *Input.param.at("M0");
+//    cmssm_input.m12 = *Input.param.at("M12");
+//    cmssm_input.TanBeta = *Input.param.at("TanBeta");
+//    cmssm_input.SignMu = *Input.param.at("SignMu");
+//    cmssm_input.Azero = *Input.param.at("A0");
 
-    Spectrum_generator_settings spectrum_generator_settings;
+//    Spectrum_generator_settings spectrum_generator_settings;
     /// fix FS settings from yaml options 
-    Get_yaml_settings(spectrum_generator_settings, Input);
+//    Get_yaml_settings(spectrum_generator_settings, Input);
 
     // Fill QedQcd object with SMInputs values
-    //setup_QedQcd(qedqcd,sminputs);
+//    setup_QedQcd(qedqcd,sminputs);
         
     // create instance of spectrum generator
     //GAMBIT BOSS type

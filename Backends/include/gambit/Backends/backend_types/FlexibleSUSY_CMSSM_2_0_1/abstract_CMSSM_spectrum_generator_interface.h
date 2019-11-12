@@ -21,50 +21,50 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     
     namespace flexiblesusy
     {
-        template <>
-        class Abstract_Two_scale><flexiblesusy::Two_scale> : public virtual AbstractBase
+        template <class T>
+        class Abstract_CMSSM_spectrum_generator_interface : public virtual AbstractBase
         {
             public:
     
             private:
-                CMSSM_spectrum_generator_interface* wptr;
+                CMSSM_spectrum_generator_interface<T>* wptr;
                 bool delete_wrapper;
             public:
-                CMSSM_spectrum_generator_interface* get_wptr() { return wptr; }
-                void set_wptr(CMSSM_spectrum_generator_interface* wptr_in) { wptr = wptr_in; }
+                CMSSM_spectrum_generator_interface<T>* get_wptr() { return wptr; }
+                void set_wptr(CMSSM_spectrum_generator_interface<T>* wptr_in) { wptr = wptr_in; }
                 bool get_delete_wrapper() { return delete_wrapper; }
                 void set_delete_wrapper(bool del_wrp_in) { delete_wrapper = del_wrp_in; }
     
             public:
-                Abstract_Two_scale>()
+                Abstract_CMSSM_spectrum_generator_interface()
                 {
                     wptr = 0;
                     delete_wrapper = false;
                 }
     
-                Abstract_Two_scale>(const Abstract_Two_scale>&)
+                Abstract_CMSSM_spectrum_generator_interface(const Abstract_CMSSM_spectrum_generator_interface&)
                 {
                     wptr = 0;
                     delete_wrapper = false;
                 }
     
-                Abstract_Two_scale>& operator=(const Abstract_Two_scale>&) { return *this; }
+                Abstract_CMSSM_spectrum_generator_interface& operator=(const Abstract_CMSSM_spectrum_generator_interface&) { return *this; }
     
                 virtual void init_wrapper() =0;
     
-                CMSSM_spectrum_generator_interface* get_init_wptr()
+                CMSSM_spectrum_generator_interface<T>* get_init_wptr()
                 {
                     init_wrapper();
                     return wptr;
                 }
     
-                CMSSM_spectrum_generator_interface& get_init_wref()
+                CMSSM_spectrum_generator_interface<T>& get_init_wref()
                 {
                     init_wrapper();
                     return *wptr;
                 }
     
-                virtual ~Abstract_Two_scale>() =0;
+                virtual ~Abstract_CMSSM_spectrum_generator_interface() =0;
         };
     }
     
