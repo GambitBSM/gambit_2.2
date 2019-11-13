@@ -23,7 +23,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
     
     modelSS = gambit_model_name + "SimpleSpec"
     modelclass = gambit_model_name + "Model"
-    modelcont = gambit_model_name + "model`"
+    modelcont = gambit_model_name + "model"
     
     intro_message = (
             "///  Implementation of SpecBit routines for \n"
