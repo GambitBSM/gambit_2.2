@@ -561,6 +561,11 @@ def write_darkbit_rollcall(model_name, pc):
 
 
 
+"""
+MICROMEGAS 
+"""
+
+
 def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
                          particles, gambit_pdg_codes, calchep_masses, 
                          calchep_widths):
@@ -713,23 +718,23 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     if mathpackage == 'sarah':
         mo_src += (
             "// SMInputs constants"
-            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\");"
+            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\"));"
             "// Fermi constant\n"
-            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\");"
+            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\"));"
             "// alphaS \n"
-            "Assign_Value(\"alfSMZ\", spec.get(Par::dimensionless, \"alphaS\");"
+            "Assign_Value(\"alfSMZ\", spec.get(Par::dimensionless, \"alphaS\"));"
             "// alphaS at mZ - for internal running\n"
-            "Assign_Value(\"aEWinv\", spec.get(Par::dimensionless, \"alphainv\");"
+            "Assign_Value(\"aEWinv\", spec.get(Par::dimensionless, \"alphainv\"));"
             "// Fine structure constant\n\n"
         )
     elif mathpackage == 'feynrules':
         mo_src += (
             "// SMInputs constants"
-            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\");"
+            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\"));"
             "// Fermi constant\n"
-            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\");"
+            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\"));"
             "// alphaS \n"
-            "Assign_Value(\"aEWM1\", spec.get(Par::dimensionless, \"alphainv\");"
+            "Assign_Value(\"aEWM1\", spec.get(Par::dimensionless, \"alphainv\"));"
             "// Fine structure constant\n\n"
         )
 
@@ -932,7 +937,7 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
         capability = entry[1]
         pattern = entry[2]
 
-        # Find the CAPABILITY + FUNCTIONfunction RD_oh2_Xf_MicrOmegas
+        # Find the CAPABILITY + FUNCTION RD_oh2_Xf_MicrOmegas
         exists, line = find_function(function, capability, "DarkBit")
 
         if not exists:
@@ -951,13 +956,16 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
                     break
 
         # What we want to write    
-        towrite = "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n".format(model_name)
+        towrite = (
+            "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n"
+            ).format(model_name)
 
         if linenum != 0:
-            amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, reset_dict)
+            amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, 
+                       reset_dict)
         else:
-            raise GumError(("Could not find the string ALLOW_MODELS in DarkBit_rollcall, " 
-                            "which is very weird."))
+            raise GumError(("Could not find the string ALLOW_MODELS in "
+                            "DarkBit_rollcall, which is very weird."))
 
     # Add the model to the function arguments
     file = "DarkBit_rollcall.hpp"
@@ -971,33 +979,3 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
     add_new_model_to_function(file, module, "DD_couplings", 
                               "DD_couplings_MicrOmegas", model_name, 
                               reset_dict, pattern="MODEL_GROUP(group2")
-
-    """
-    Direct detection 
-    """
-    # # find the CAPABILITY DD_couplings, function DD_couplings_MicrOmegas
-    # exists, line = find_function("DD_couplings_MicrOmegas", "DD_couplings", "DarkBit")
-
-    # if not exists:
-    #     raise GumError(("Function DD_couplings_MicrOmegas not found in DarkBit_rollcall.hpp. "
-    #                     "It should be there!"))
-
-    # # Now find the ALLOW_MODELS for the CAPABILITY
-    # linenum = 0
-    # with open(rollcall, 'r') as f:
-    #     # Start from the beginning of the FUNCTION
-    #     for i in xrange(line):
-    #         f.next()
-    #     for num, line in enumerate(f, line):
-    #         if 'ALLOW_MODELS' in line: 
-    #             linenum = num
-    #             break
-
-    # # What we want to write    
-    # towrite = "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n".format(model_name)
-
-    # if linenum != 0:
-    #     amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, reset_dict)
-    # else:
-    #     raise GumError(("Could not find the string ALLOW_MODELS in DarkBit_rollcall, " 
-    #                     "which is very weird."))
