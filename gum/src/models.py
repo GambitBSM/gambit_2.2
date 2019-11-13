@@ -291,10 +291,11 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         else:
         	e = gambit_model_name + "_"
 
-        paramname = e + model_parameters[i].fullname
-
+        # Remove the trailing 'm' for a Pole_Mass
         if model_parameters[i].tag == "Pole_Mass":
-            paramname += "_Pole_Mass"
+            paramname = e + model_parameters[i].fullname[1:] + "_Pole_Mass"
+        else:
+            paramname = e + model_parameters[i].fullname
 
         shape = "scalar"
         size = 1
