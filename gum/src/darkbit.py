@@ -279,7 +279,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     towrite += (
             "\n"
             "}};\n\n"
-            "void TH_ProcessCatalog_{0}(DarkBit::TH_ProcessCatalog &result)\n"
+            "void TH_ProcessCatalog_{0}(TH_ProcessCatalog &result)\n"
             "{{\n"
             "using namespace Pipes::TH_ProcessCatalog_{0};\n"
             "using std::vector;\n"

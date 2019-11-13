@@ -80,9 +80,11 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     			   "\n"
     ).format(model_name)
 
-    # Don't want the SM-like Higgs mass a fundamental parameter
+    # Don't want the SM-like Higgs mass a fundamental parameter, nor any
+    # of the SM Yukawas etc, nor any Pole_Mixings.
     bsm_params = [x for x in model_params if
-                  x.name != 'mH' and x.tag != 'Pole_Mass' and x.tag != 'Pole_Mixing']
+                  x.name != 'mH' and x.tag != 'Pole_Mass' and x.tag != 'Pole_Mixing'
+                  and x.sm == False]
 
     params = []
 
