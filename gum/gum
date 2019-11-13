@@ -115,6 +115,7 @@ if args.file:
             outputs = FROutputs()
             backends = FRBackends()
             backends.extend(x for x in output_opts.bes())
+            mixings = {}
             err = FRError()
 
             # Hit it
@@ -645,8 +646,8 @@ if args.file:
                                    num-2, reset_contents)
                 if len(new_decays) > 0:
                     num = find_string("DecayBit_rollcall.hpp", m, 
-                                      ("MODEL_CONDITIONAL_DEPENDENCY"
-                                       "(MSSM_spectrum")[1])
+                                      "MODEL_CONDITIONAL_DEPENDENCY"\
+                                      "(MSSM_spectrum")[1]
                     amend_file("DecayBit_rollcall.hpp", m, all_decays_header, 
                                num-1, reset_contents)
                     num = find_string("DecayBit.cpp", m, "decays(\"omega\")")[1]
@@ -789,7 +790,8 @@ if args.file:
             enablePrint()                    # Allow printing again
             os.remove("mug_files/temp.mug")  # Remove the temp mug file
             print("\nError message:\n")
-        raise(exc)
+        import traceback
+        traceback.print_exc()
 
 
 # If reset is called

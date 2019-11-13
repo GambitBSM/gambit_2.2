@@ -73,7 +73,9 @@ namespace GUM
       
     if(link == (WSLINK)0 || WSerrno != WSEOK)
     {
-      std::cout << "Unable to create link to the Kernel" << std::endl;
+      std::cout << "Unable to create link to the Kernel!" << std::endl;
+      std::cout << "GUM expects the executable 'math' to be executable from the command line." << std::endl;
+      std::cout << "If you can't do this, please add the executable 'math' to your $PATH, and try again." << std::endl;
       WSNewPacket(link);
     }
     else
