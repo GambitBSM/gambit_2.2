@@ -611,145 +611,29 @@ namespace Gambit {
             // }
             // cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
 
+            
+            // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
+
             // signal regin 2-body A
-            SignalRegionData results_SRASF120;
-            results_SRASF120.sr_label = "SRASF120";
-            results_SRASF120.n_obs = 22.;
-            results_SRASF120.n_bkg = 20.0;
-            results_SRASF120.n_bkg_err = 4.6;
-            results_SRASF120.n_sig_MC_sys = 0.;
-            results_SRASF120.n_sig_MC = _SRASF120;
-            add_result(results_SRASF120);
-
-            SignalRegionData results_SRADF120;
-            results_SRADF120.sr_label = "SRADF120";
-            results_SRADF120.n_obs = 27.;
-            results_SRADF120.n_bkg = 23.8;
-            results_SRADF120.n_bkg_err = 4.2;
-            results_SRADF120.n_sig_MC_sys = 0.;
-            results_SRADF120.n_sig_MC = _SRADF120;
-            add_result(results_SRADF120);
-
-            SignalRegionData results_SRASF140;
-            results_SRASF140.sr_label = "SRASF140";
-            results_SRASF140.n_obs = 6.;
-            results_SRASF140.n_bkg = 11.0;
-            results_SRASF140.n_bkg_err = 2.5;
-            results_SRASF140.n_sig_MC_sys = 0.;
-            results_SRASF140.n_sig_MC = _SRASF140;
-            add_result(results_SRASF140);
-
-            SignalRegionData results_SRADF140;
-            results_SRADF140.sr_label = "SRADF140";
-            results_SRADF140.n_obs = 6.;
-            results_SRADF140.n_bkg = 10.8;
-            results_SRADF140.n_bkg_err = 2.1;
-            results_SRADF140.n_sig_MC_sys = 0.;
-            results_SRADF140.n_sig_MC = _SRADF140;
-            add_result(results_SRADF140);
-
-            SignalRegionData results_SRASF160;
-            results_SRASF160.sr_label = "SRASF160";
-            results_SRASF160.n_obs = 10.;
-            results_SRASF160.n_bkg = 5.6;
-            results_SRASF160.n_bkg_err = 1.8;
-            results_SRASF160.n_sig_MC_sys = 0.;
-            results_SRASF160.n_sig_MC = _SRASF160;
-            add_result(results_SRASF160);
-
-            SignalRegionData results_SRADF160;
-            results_SRADF160.sr_label = "SRADF160";
-            results_SRADF160.n_obs = 7.;
-            results_SRADF160.n_bkg = 6.4;
-            results_SRADF160.n_bkg_err = 1.3;
-            results_SRADF160.n_sig_MC_sys = 0.;
-            results_SRADF160.n_sig_MC = _SRADF160;
-            add_result(results_SRADF160);
-
-            SignalRegionData results_SRASF180;
-            results_SRASF180.sr_label = "SRASF180";
-            results_SRASF180.n_obs = 16.;
-            results_SRASF180.n_bkg = 12.3;
-            results_SRASF180.n_bkg_err = 2.6;
-            results_SRASF180.n_sig_MC_sys = 0.;
-            results_SRASF180.n_sig_MC = _SRASF180;
-            add_result(results_SRASF180);
-
-            SignalRegionData results_SRADF180;
-            results_SRADF180.sr_label = "SRADF180";
-            results_SRADF180.n_obs = 8.;
-            results_SRADF180.n_bkg = 5.4;
-            results_SRADF180.n_bkg_err = 1.7;
-            results_SRADF180.n_sig_MC_sys = 0.;
-            results_SRADF180.n_sig_MC = _SRADF180;
-            add_result(results_SRADF180);
-
+            add_result(SignalRegionData("SRASF120", 22., {_SRASF120, 0.}, { 20.0, 4.6}));
+            add_result(SignalRegionData("SRADF120", 27., {_SRADF120, 0.}, { 23.8, 4.2}));
+            add_result(SignalRegionData("SRASF140", 6., {_SRASF140, 0.}, { 11.0, 2.5}));
+            add_result(SignalRegionData("SRADF140", 6., {_SRADF140, 0.}, { 10.8, 2.1}));
+            add_result(SignalRegionData("SRASF160", 10., {_SRASF160, 0.}, { 5.6, 1.8}));
+            add_result(SignalRegionData("SRADF160", 7., {_SRADF160, 0.}, { 6.4, 1.3}));
+            add_result(SignalRegionData("SRASF180", 16., {_SRASF180, 0.}, { 12.3, 2.6}));
+            add_result(SignalRegionData("SRADF180", 8., {_SRADF180, 0.}, { 5.4, 1.7}));
             // signal regin 2-body B
-            SignalRegionData results_SRBSF120;
-            results_SRBSF120.sr_label = "SRBSF120";
-            results_SRBSF120.n_obs = 17.;
-            results_SRBSF120.n_bkg = 16.3;
-            results_SRBSF120.n_bkg_err = 6.2;
-            results_SRBSF120.n_sig_MC_sys = 0.;
-            results_SRBSF120.n_sig_MC = _SRBSF120;
-            add_result(results_SRBSF120);
-
-            SignalRegionData results_SRBDF120;
-            results_SRBDF120.sr_label = "SRBDF120";
-            results_SRBDF120.n_obs = 13.;
-            results_SRBDF120.n_bkg = 16.1;
-            results_SRBDF120.n_bkg_err = 5.3;
-            results_SRBDF120.n_sig_MC_sys = 0.;
-            results_SRBDF120.n_sig_MC = _SRBDF120;
-            add_result(results_SRBDF120);
-
-            SignalRegionData results_SRBSF140;
-            results_SRBSF140.sr_label = "SRBSF140";
-            results_SRBSF140.n_obs = 9.;
-            results_SRBSF140.n_bkg = 7.4;
-            results_SRBSF140.n_bkg_err = 1.1;
-            results_SRBSF140.n_sig_MC_sys = 0.;
-            results_SRBSF140.n_sig_MC = _SRBSF140;
-            add_result(results_SRBSF140);
-
-            SignalRegionData results_SRBDF140;
-            results_SRBDF140.sr_label = "SRBDF140";
-            results_SRBDF140.n_obs = 7.;
-            results_SRBDF140.n_bkg = 4.8;
-            results_SRBDF140.n_bkg_err = 1.0;
-            results_SRBDF140.n_sig_MC_sys = 0.;
-            results_SRBDF140.n_sig_MC = _SRBDF140;
-            add_result(results_SRBDF140);
-
+            add_result(SignalRegionData("SRBSF120", 17., {_SRBSF120, 0.}, { 16.3, 6.2}));
+            add_result(SignalRegionData("SRBDF120", 13., {_SRBDF120, 0.}, { 16.1, 5.3}));
+            add_result(SignalRegionData("SRBSF140", 9., {_SRBSF140, 0.}, { 7.4, 1.1}));
+            add_result(SignalRegionData("SRBDF140", 7., {_SRBDF140, 0.}, { 4.8, 1.0}));
             // signal regin 2-body C
-            SignalRegionData results_SRCSF110;
-            results_SRCSF110.sr_label = "SRCSF110";
-            results_SRCSF110.n_obs = 11.;
-            results_SRCSF110.n_bkg = 5.3;
-            results_SRCSF110.n_bkg_err = 1.8;
-            results_SRCSF110.n_sig_MC_sys = 0.;
-            results_SRCSF110.n_sig_MC = _SRCSF110;
-            add_result(results_SRCSF110);
-
-            SignalRegionData results_SRCDF110;
-            results_SRCDF110.sr_label = "SRCDF110";
-            results_SRCDF110.n_obs = 7.;
-            results_SRCDF110.n_bkg = 3.8;
-            results_SRCDF110.n_bkg_err = 1.5;
-            results_SRCDF110.n_sig_MC_sys = 0.;
-            results_SRCDF110.n_sig_MC = _SRCDF110;
-            add_result(results_SRCDF110);
-
-
+            add_result(SignalRegionData("SRCSF110", 11., {_SRCSF110, 0.}, { 5.3, 1.8}));
+            add_result(SignalRegionData("SRCDF110", 7., {_SRCDF110, 0.}, { 3.8, 1.5}));
             // signal regin 4-body
-            SignalRegionData results_SR4b;
-            results_SR4b.sr_label = "SR4b";
-            results_SR4b.n_obs = 30.;
-            results_SR4b.n_bkg = 28.;
-            results_SR4b.n_bkg_err = 6.;
-            results_SR4b.n_sig_MC_sys = 0.;
-            results_SR4b.n_sig_MC = _SR4b;
-            add_result(results_SR4b);
+            add_result(SignalRegionData("SR4b", 30., {_SR4b, 0.}, { 28., 6.}));
+
             return;
         }
 

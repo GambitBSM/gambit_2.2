@@ -383,42 +383,13 @@ namespace Gambit {
 
 
       void collect_results() {
-        SignalRegionData results_SRM90;
-        results_SRM90.sr_label = "SRM90";
-        results_SRM90.n_obs = 274.;
-        results_SRM90.n_bkg = 300.;
-        results_SRM90.n_bkg_err = 50.;
-        results_SRM90.n_sig_MC_sys = 0.;
-        results_SRM90.n_sig_MC = _numSRM90SF+_numSRM90DF;
 
-        SignalRegionData results_SRM100;
-        results_SRM100.sr_label = "SRM100";
-        results_SRM100.n_obs = 3.;
-        results_SRM100.n_bkg = 5.2;
-        results_SRM100.n_bkg_err = 2.2;
-        results_SRM100.n_sig_MC_sys = 0.;
-        results_SRM100.n_sig_MC = _numSRM100SF+_numSRM100DF;
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
-        SignalRegionData results_SRM110;
-        results_SRM110.sr_label = "SRM110";
-        results_SRM110.n_obs = 8.;
-        results_SRM110.n_bkg = 9.3;
-        results_SRM110.n_bkg_err = 3.5;
-        results_SRM110.n_sig_MC_sys = 0.;
-        results_SRM110.n_sig_MC = _numSRM110SF+_numSRM110DF;
-
-        SignalRegionData results_SRM120;
-        results_SRM120.sr_label = "SRM120";
-        results_SRM120.n_obs = 18.;
-        results_SRM120.n_bkg = 19.;
-        results_SRM120.n_bkg_err = 9.;
-        results_SRM120.n_sig_MC_sys = 0.;
-        results_SRM120.n_sig_MC = _numSRM120SF+_numSRM120DF;
-
-        add_result(results_SRM90);
-        add_result(results_SRM100);
-        add_result(results_SRM110);
-        add_result(results_SRM120);
+        add_result(SignalRegionData("SRM90", 274., {_numSRM90SF + _numSRM90DF, 0.}, {300., 50.}));
+        add_result(SignalRegionData("SRM100", 3., {_numSRM100SF + _numSRM100DF, 0.}, {5.2, 2.2}));
+        add_result(SignalRegionData("SRM110", 8., {_numSRM110SF + _numSRM110DF, 0.}, {9.3, 3.5}));
+        add_result(SignalRegionData("SRM120", 18., {_numSRM120SF + _numSRM120DF, 0.}, {19., 9.}));
 
         return;
       }

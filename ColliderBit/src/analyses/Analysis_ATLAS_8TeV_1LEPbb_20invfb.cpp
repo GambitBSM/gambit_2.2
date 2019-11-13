@@ -329,67 +329,10 @@ namespace Gambit {
 
       void collect_results() {
 
-        // string path = "ColliderBit/results/cutflow_";
-        // path.append(analysis_name());
-        // path.append(".txt");
-        // cutflowFile.open(path.c_str());
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
- //        if (analysis_name().find("250_0") != string::npos) {
- //          cutflowFile<<"\\begin{table}[H] \n\\caption{$\\tilde{\\chi}_{1}^{\\pm}\\tilde{\\chi}_{2}^{0}$ decay via $W/h$, $[\\tilde{\\chi}_{1}^{\\pm}\\tilde{\\chi}_{2}^{0},\\tilde{\\chi}_{1}^{0}]: [250,0] [GeV]$} \n\\makebox[\\linewidth]{ \n\\renewcommand{\\arraystretch}{0.4} \n\\begin{tabular}{c c c c c} \n\\hline"<<endl;
-        //   cutflowFile<<"& ATLAS & GAMBIT & GAMBIT/ATLAS & $\\sigma$-corrected GAMBIT/ATLAS \\\\ \\hline"<<endl;
-        //   cutflowFile<<"$\\sigma (pp\\to \\tilde{\\chi}_{1}^{\\pm}, \\tilde{\\chi}_{2}^{0})$ &"<<setprecision(4)<<xsecATLAS_250_0<<" $fb$ &"<<setprecision(4)<<xsec()<<"$fb$ &"<<setprecision(4)<<xsec()/xsecATLAS_250_0<<" & 1\\\\"<<endl;
-        //   cutflowFile<<"Generated Events &"<<setprecision(4)<<cutFlowVectorATLAS_250_0[0]<<"&"<<setprecision(4)<<cutFlowVector[0]<<"& - & -\\\\ \\hline"<<endl;
-        //   cutflowFile<<"\\multicolumn{5}{c}{Expected events at 20.3 $fb^{-1}$} \\\\ \\hline"<<endl;
- //          for (size_t i=1; i<NCUTS; i++) {
- //            cutflowFile<<cutFlowVector_str[i]<<"&"<<setprecision(4)<<cutFlowVectorATLAS_250_0[i]<<"&"<<setprecision(4)<<cutFlowVector[i]*xsec_per_event()*luminosity()<<"&"<<setprecision(4)<<cutFlowVector[i]*xsec_per_event()*luminosity()/cutFlowVectorATLAS_250_0[i]<<"&"<<setprecision(4)<<(xsecATLAS_250_0/xsec())*cutFlowVector[i]*xsec_per_event()*luminosity()/cutFlowVectorATLAS_250_0[i]<<"\\\\"<< endl;
- //          }
- //          for (size_t i=1; i<NCUTS; i++) {
- //            cutflowFile<<cutFlowVector_str[i]<<"&"<<setprecision(4)<<cutFlowVectorATLAS_250_0[i]*100./cutFlowVectorATLAS_250_0[1]<<"&"<<setprecision(4)<<cutFlowVector[i]*100./cutFlowVector[1]<<"& - & -\\\\"<< endl;
- //          }
- //          cutflowFile<<"\\end{tabular} \n} \n\\end{table}"<<endl;
-        // }
- //        if (analysis_name().find("130_0") != string::npos) {
- //          cutflowFile<<"\\begin{table}[H] \n\\caption{$\\tilde{\\chi}_{1}^{\\pm}\\tilde{\\chi}_{2}^{0}$ decay via $W/h$, $[\\tilde{\\chi}_{1}^{\\pm}\\tilde{\\chi}_{2}^{0},\\tilde{\\chi}_{1}^{0}]: [130,0] [GeV]$} \n\\makebox[\\linewidth]{ \n\\renewcommand{\\arraystretch}{0.4} \n\\begin{tabular}{c c c c c} \n\\hline"<<endl;
-        //   cutflowFile<<"& ATLAS & GAMBIT & GAMBIT/ATLAS & $\\sigma$-corrected GAMBIT/ATLAS \\\\ \\hline"<<endl;
-        //   cutflowFile<<"$\\sigma (pp\\to \\tilde{\\chi}_{1}^{\\pm}, \\tilde{\\chi}_{2}^{0})$ &"<<setprecision(4)<<xsecATLAS_130_0<<" $fb$ &"<<setprecision(4)<<xsec()<<"$fb$ &"<<setprecision(4)<<xsec()/xsecATLAS_130_0<<" & 1\\\\"<<endl;
-        //   cutflowFile<<"Generated Events &"<<setprecision(4)<<cutFlowVectorATLAS_130_0[0]<<"&"<<setprecision(4)<<cutFlowVector[0]<<"& - & -\\\\ \\hline"<<endl;
-        //   cutflowFile<<"\\multicolumn{5}{c}{Expected events at 20.3 $fb^{-1}$} \\\\ \\hline"<<endl;
- //          for (size_t i=1; i<NCUTS; i++) {
- //            cutflowFile<<cutFlowVector_str[i]<<"&"<<setprecision(4)<<cutFlowVectorATLAS_130_0[i]<<"&"<<setprecision(4)<<cutFlowVector[i]*xsec_per_event()*luminosity()<<"&"<<setprecision(4)<<cutFlowVector[i]*xsec_per_event()*luminosity()/cutFlowVectorATLAS_130_0[i]<<"&"<<setprecision(4)<<(xsecATLAS_130_0/xsec())*cutFlowVector[i]*xsec_per_event()*luminosity()/cutFlowVectorATLAS_130_0[i]<<"\\\\"<< endl;
- //          }
-        //   cutflowFile<<"\\hline \\multicolumn{5}{c}{Percentage (\\%)} \\\\ \\hline"<<endl;
- //          for (size_t i=1; i<NCUTS; i++) {
- //            cutflowFile<<cutFlowVector_str[i]<<"&"<<setprecision(4)<<cutFlowVectorATLAS_130_0[i]*100./cutFlowVectorATLAS_130_0[1]<<"&"<<setprecision(4)<<cutFlowVector[i]*100./cutFlowVector[1]<<"& - & -\\\\"<< endl;
- //          }
- //          cutflowFile<<"\\end{tabular} \n} \n\\end{table}"<<endl;
-        // }
-        // cutflowFile.close();
-
-        // plots_2bjets->createFile(luminosity(),xsec_per_event());
-        // plots_mbb->createFile(luminosity(),xsec_per_event());
-        // plots_HEPmct->createFile(luminosity(),xsec_per_event());
-        // plots_HEPmt->createFile(luminosity(),xsec_per_event());
- //        plots_HEPnbj->createFile(luminosity(),xsec_per_event());
-        // plots_HEPmbb->createFile(luminosity(),xsec_per_event());
-
-// cout<<"NUMSRA: "<<_numSRA<<" NUMSRB: "<<_numSRB<<endl;
-        SignalRegionData results_SRA;
-        results_SRA.sr_label = "SRA";
-        results_SRA.n_obs = 4.;
-        results_SRA.n_bkg = 5.69;
-        results_SRA.n_bkg_err = 1.10;
-        results_SRA.n_sig_MC_sys = 0.;
-        results_SRA.n_sig_MC = _numSRA;
-        add_result(results_SRA);
-
-        SignalRegionData results_SRB;
-        results_SRB.sr_label = "SRB";
-        results_SRB.n_obs = 3.;
-        results_SRB.n_bkg = 2.67;
-        results_SRB.n_bkg_err = 0.69;
-        results_SRB.n_sig_MC_sys = 0.;
-        results_SRB.n_sig_MC = _numSRB;
-        add_result(results_SRB);
+        add_result(SignalRegionData("SRA", 4., {_numSRA, 0.}, {5.69, 1.10}));
+        add_result(SignalRegionData("SRB", 3., {_numSRB, 0.}, {2.67, 0.69}));
 
       }
 

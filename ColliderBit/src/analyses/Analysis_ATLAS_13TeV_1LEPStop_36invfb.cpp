@@ -1407,122 +1407,21 @@ namespace Gambit {
 
         /// Register results objects with the results for each SR; obs & bkg numbers from the paper
 
-        SignalRegionData results_tN_med;
-        results_tN_med.sr_label = "tN_med";
-        results_tN_med.n_obs = 50;
-        results_tN_med.n_bkg = 36.3;
-        results_tN_med.n_bkg_err = 6.6;
-        results_tN_med.n_sig_MC_sys = 0.;
-        results_tN_med.n_sig_MC = num_tN_med;
-        add_result(results_tN_med);
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
-        SignalRegionData results_tN_high;
-        results_tN_high.sr_label = "tN_med";
-        results_tN_high.n_obs = 8;
-        results_tN_high.n_bkg = 3.8;
-        results_tN_high.n_bkg_err = 1.0;
-        results_tN_high.n_sig_MC_sys = 0.;
-        results_tN_high.n_sig_MC = num_tN_high;
-        add_result(results_tN_high);
-
-        SignalRegionData results_bWN;
-        results_bWN.sr_label = "tN_med";
-        results_bWN.n_obs = 68;
-        results_bWN.n_bkg = 71;
-        results_bWN.n_bkg_err = 16;
-        results_bWN.n_sig_MC_sys = 0.;
-        results_bWN.n_sig_MC = num_bWN;
-        add_result(results_bWN);
-
-        SignalRegionData results_bC2x_diag;
-        results_bC2x_diag.sr_label = "bC2x_diag";
-        results_bC2x_diag.n_obs = 22;
-        results_bC2x_diag.n_bkg = 21.3;
-        results_bC2x_diag.n_bkg_err = 5.0;
-        results_bC2x_diag.n_sig_MC_sys = 0.;
-        results_bC2x_diag.n_sig_MC = num_bC2x_diag;
-        add_result(results_bC2x_diag);
-
-        SignalRegionData results_bC2x_med;
-        results_bC2x_med.sr_label = "bC2x_med";
-        results_bC2x_med.n_obs = 4;
-        results_bC2x_med.n_bkg = 5.8;
-        results_bC2x_med.n_bkg_err = 1.6;
-        results_bC2x_med.n_sig_MC_sys = 0.;
-        results_bC2x_med.n_sig_MC = num_bC2x_med;
-        add_result(results_bC2x_med);
-
-        SignalRegionData results_bCbv;
-        results_bCbv.sr_label = "bCbv";
-        results_bCbv.n_obs = 25;
-        results_bCbv.n_bkg = 25.1;
-        results_bCbv.n_bkg_err = 3.8;
-        results_bCbv.n_sig_MC_sys = 0.;
-        results_bCbv.n_sig_MC = num_bCbv;
-        add_result(results_bCbv);
-
-        SignalRegionData results_DM_low_loose;
-        results_DM_low_loose.sr_label = "DM_low_loose";
-        results_DM_low_loose.n_obs = 65;
-        results_DM_low_loose.n_bkg = 48.3;
-        results_DM_low_loose.n_bkg_err = 8.2;
-        results_DM_low_loose.n_sig_MC_sys = 0.;
-        results_DM_low_loose.n_sig_MC = num_DM_low_loose;
-        add_result(results_DM_low_loose);
-
-        SignalRegionData results_DM_low;
-        results_DM_low.sr_label = "DM_low";
-        results_DM_low.n_obs = 13;
-        results_DM_low.n_bkg = 13.8;
-        results_DM_low.n_bkg_err = 3.6;
-        results_DM_low.n_sig_MC_sys = 0.;
-        results_DM_low.n_sig_MC = num_DM_low;
-        add_result(results_DM_low);
-
-        SignalRegionData results_DM_high;
-        results_DM_high.sr_label = "DM_high";
-        results_DM_high.n_obs = 5;
-        results_DM_high.n_bkg = 7.4;
-        results_DM_high.n_bkg_err = 2.1;
-        results_DM_high.n_sig_MC_sys = 0.;
-        results_DM_high.n_sig_MC = num_DM_high;
-        add_result(results_DM_high);
-
-        SignalRegionData results_bffN;
-        results_bffN.sr_label = "bffN";
-        results_bffN.n_obs = 70;
-        results_bffN.n_bkg = 60.5;
-        results_bffN.n_bkg_err = 6.1;
-        results_bffN.n_sig_MC_sys = 0.;
-        results_bffN.n_sig_MC = num_bffN;
-        add_result(results_bffN);
-
-        SignalRegionData results_bCsoft_diag;
-        results_bCsoft_diag.sr_label = "bCsoft_diag";
-        results_bCsoft_diag.n_obs = 33;
-        results_bCsoft_diag.n_bkg = 24.7;
-        results_bCsoft_diag.n_bkg_err = 3.1;
-        results_bCsoft_diag.n_sig_MC_sys = 0.;
-        results_bCsoft_diag.n_sig_MC = num_bCsoft_diag;
-        add_result(results_bCsoft_diag);
-
-        SignalRegionData results_bCsoft_med;
-        results_bCsoft_med.sr_label = "bCsoft_med";
-        results_bCsoft_med.n_obs = 19;
-        results_bCsoft_med.n_bkg = 13.7;
-        results_bCsoft_med.n_bkg_err = 2.1;
-        results_bCsoft_med.n_sig_MC_sys = 0.;
-        results_bCsoft_med.n_sig_MC = num_bCsoft_med;
-        add_result(results_bCsoft_med);
-
-        SignalRegionData results_bCsoft_high;
-        results_bCsoft_high.sr_label = "bCsoft_high";
-        results_bCsoft_high.n_obs = 2;
-        results_bCsoft_high.n_bkg = 1.8;
-        results_bCsoft_high.n_bkg_err = 0.3;
-        results_bCsoft_high.n_sig_MC_sys = 0.;
-        results_bCsoft_high.n_sig_MC = num_bCsoft_high;
-        add_result(results_bCsoft_high);
+        add_result(SignalRegionData("tN_med", 50., {num_tN_med, 0.}, { 36.3, 6.6}));
+        add_result(SignalRegionData("tN_med", 8., {num_tN_high, 0.}, { 3.8, 1.0}));
+        add_result(SignalRegionData("tN_med", 68., {num_bWN, 0.}, { 71, 16}));
+        add_result(SignalRegionData("bC2x_diag", 22., {num_bC2x_diag, 0.}, { 21.3, 5.0}));
+        add_result(SignalRegionData("bC2x_med", 4., {num_bC2x_med, 0.}, { 5.8, 1.6}));
+        add_result(SignalRegionData("bCbv", 25., {num_bCbv, 0.}, { 25.1, 3.8}));
+        add_result(SignalRegionData("DM_low_loose", 65., {num_DM_low_loose, 0.}, { 48.3, 8.2}));
+        add_result(SignalRegionData("DM_low", 13., {num_DM_low, 0.}, { 13.8, 3.6}));
+        add_result(SignalRegionData("DM_high", 5., {num_DM_high, 0.}, { 7.4, 2.1}));
+        add_result(SignalRegionData("bffN", 70., {num_bffN, 0.}, { 60.5, 6.1}));
+        add_result(SignalRegionData("bCsoft_diag", 33., {num_bCsoft_diag, 0.}, { 24.7, 3.1}));
+        add_result(SignalRegionData("bCsoft_med", 19., {num_bCsoft_med, 0.}, { 13.7, 2.1}));
+        add_result(SignalRegionData("bCsoft_high", 2., {num_bCsoft_high, 0.}, { 1.8, 0.3}));
 
         return;
       }

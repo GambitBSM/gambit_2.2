@@ -594,68 +594,15 @@ namespace Gambit {
           cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
         #endif
 
-        SignalRegionData results_SRaa_SL;
-        results_SRaa_SL.sr_label = "SRaa_SL";
-        results_SRaa_SL.n_obs = 0.;
-        results_SRaa_SL.n_bkg = 0.50;
-        results_SRaa_SL.n_bkg_err = 0.30;
-        results_SRaa_SL.n_sig_MC_sys = 0.;
-        results_SRaa_SL.n_sig_MC = num_SRaa_SL;
-        add_result(results_SRaa_SL);
+          // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
-        SignalRegionData results_SRaa_SH;
-        results_SRaa_SH.sr_label = "SRaa_SH";
-        results_SRaa_SH.n_obs = 0.;
-        results_SRaa_SH.n_bkg = 0.48;
-        results_SRaa_SH.n_bkg_err = 0.30;
-        results_SRaa_SH.n_sig_MC_sys = 0.;
-        results_SRaa_SH.n_sig_MC = num_SRaa_SH;
-        add_result(results_SRaa_SH);
-
-        SignalRegionData results_SRaa_WL;
-        results_SRaa_WL.sr_label = "SRaa_WL";
-        results_SRaa_WL.n_obs = 6.;
-        results_SRaa_WL.n_bkg = 3.7;
-        results_SRaa_WL.n_bkg_err = 1.1;
-        results_SRaa_WL.n_sig_MC_sys = 0.;
-        results_SRaa_WL.n_sig_MC = num_SRaa_WL;
-        add_result(results_SRaa_WL);
-
-        SignalRegionData results_SRaa_WH;
-        results_SRaa_WH.sr_label = "SRaa_WH";
-        results_SRaa_WH.n_obs = 1.;
-        results_SRaa_WH.n_bkg = 2.05;
-        results_SRaa_WH.n_bkg_err = 0.65;
-        results_SRaa_WH.n_sig_MC_sys = 0.;
-        results_SRaa_WH.n_sig_MC = num_SRaa_WH;
-        add_result(results_SRaa_WH);
-
-        SignalRegionData results_SRaj_L;
-        results_SRaj_L.sr_label = "SRaj_L";
-        results_SRaj_L.n_obs = 4.;
-        results_SRaj_L.n_bkg = 1.33;
-        results_SRaj_L.n_bkg_err = 0.54;
-        results_SRaj_L.n_sig_MC_sys = 0.;
-        results_SRaj_L.n_sig_MC = num_SRaj_L;
-        add_result(results_SRaj_L);
-
-        SignalRegionData results_SRaj_L200;
-        results_SRaj_L200.sr_label = "SRaj_L200";
-        results_SRaj_L200.n_obs = 8.;
-        results_SRaj_L200.n_bkg = 2.68;
-        results_SRaj_L200.n_bkg_err = 0.64;
-        results_SRaj_L200.n_sig_MC_sys = 0.;
-        results_SRaj_L200.n_sig_MC = num_SRaj_L200;
-        add_result(results_SRaj_L200);
-
-        SignalRegionData results_SRaj_H;
-        results_SRaj_H.sr_label = "SRaj_H";
-        results_SRaj_H.n_obs = 3.;
-        results_SRaj_H.n_bkg = 1.14;
-        results_SRaj_H.n_bkg_err = 0.61;
-        results_SRaj_H.n_sig_MC_sys = 0.;
-        results_SRaj_H.n_sig_MC = num_SRaj_H;
-        add_result(results_SRaj_H);
+          add_result(SignalRegionData("SRaa_SL", 0., {num_SRaa_SL, 0.}, { 0.50, 0.30}));
+          add_result(SignalRegionData("SRaa_SH", 0., {num_SRaa_SH, 0.}, { 0.48, 0.30}));
+          add_result(SignalRegionData("SRaa_WL", 6., {num_SRaa_WL, 0.}, { 3.7, 1.1}));
+          add_result(SignalRegionData("SRaa_WH", 1., {num_SRaa_WH, 0.}, { 2.05, 0.65}));
+          add_result(SignalRegionData("SRaj_L", 4., {num_SRaj_L, 0.}, { 1.33, 0.54}));
+          add_result(SignalRegionData("SRaj_L200", 8., {num_SRaj_L200, 0.}, { 2.68, 0.64}));
+          add_result(SignalRegionData("SRaj_H", 3., {num_SRaj_H, 0.}, { 1.14, 0.61}));
 
         return;
       }

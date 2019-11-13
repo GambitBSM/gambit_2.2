@@ -93,15 +93,9 @@ namespace Gambit {
         // Now fill a results object with the result for our signal region
         // We have made up a number of observed events
         // We have also made up a number of predicted background events (with a made up uncertainty)
-        SignalRegionData results_SR;
-        results_SR.sr_label = "SR"; // label must be unique for each signal region
-        results_SR.n_obs = 100.; // set number of observed events (in LHC paper)
-        results_SR.n_bkg = 95.; // set number of predicted background events (in LHC paper)
-        results_SR.n_bkg_err = 9.5; // set background uncertainty (in LHC paper)
-        results_SR.n_sig_MC_sys = 0.; // set signal uncertainty
-        results_SR.n_sig_MC = _numSR; // set this to number of signal events incremented in the analysis above
-        add_result(results_SR);
 
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
+        add_result(SignalRegionData("SR", 100., {_numSR, 0.}, {95., 9.5}));
       }
 
 

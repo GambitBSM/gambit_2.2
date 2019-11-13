@@ -153,14 +153,9 @@ namespace Gambit {
 
       void collect_results() {
 
-        SignalRegionData results;
-        results.sr_label = "SR";
-        results.n_obs = 3.;
-        results.n_bkg = 2.1;
-        results.n_bkg_err = 0.5;
-        results.n_sig_MC_sys = 0.;
-        results.n_sig_MC = nsig;
-        add_result(results);
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
+
+        add_result(SignalRegionData("SR", 3., {nsig, 0.}, {2.1, 0.5}));
 
         // cout << "\nCUTFLOW" << endl;
         // const string cutnames[NCUTS] = {"mll near mZ", "y1 > 25 GeV", "MET > 95 GeV", "ZH pT balance", "ZH dphi", "ll dphi"};

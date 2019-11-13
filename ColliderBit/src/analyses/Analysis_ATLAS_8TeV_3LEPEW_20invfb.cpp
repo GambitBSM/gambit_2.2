@@ -830,220 +830,32 @@ namespace Gambit {
 
 
       void collect_results() {
-        SignalRegionData results_SR0tau_a_bin_1;
-        results_SR0tau_a_bin_1.sr_label = "SR0tau_a_bin_1";
-        results_SR0tau_a_bin_1.n_obs = 36.;
-        results_SR0tau_a_bin_1.n_bkg = 23.;
-        results_SR0tau_a_bin_1.n_bkg_err = 4.;
-        results_SR0tau_a_bin_1.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_1.n_sig_MC = _num_SR0tau_a_bin_1;
 
-        SignalRegionData results_SR0tau_a_bin_2;
-        results_SR0tau_a_bin_2.sr_label = "SR0tau_a_bin_2";
-        results_SR0tau_a_bin_2.n_obs = 5.;
-        results_SR0tau_a_bin_2.n_bkg = 4.2;
-        results_SR0tau_a_bin_2.n_bkg_err = 1.5;
-        results_SR0tau_a_bin_2.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_2.n_sig_MC = _num_SR0tau_a_bin_2;
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
-        SignalRegionData results_SR0tau_a_bin_3;
-        results_SR0tau_a_bin_3.sr_label = "SR0tau_a_bin_3";
-        results_SR0tau_a_bin_3.n_obs = 9.;
-        results_SR0tau_a_bin_3.n_bkg = 10.6;
-        results_SR0tau_a_bin_3.n_bkg_err = 1.8;
-        results_SR0tau_a_bin_3.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_3.n_sig_MC = _num_SR0tau_a_bin_3;
-
-        SignalRegionData results_SR0tau_a_bin_4;
-        results_SR0tau_a_bin_4.sr_label = "SR0tau_a_bin_4";
-        results_SR0tau_a_bin_4.n_obs = 9.;
-        results_SR0tau_a_bin_4.n_bkg = 8.5;
-        results_SR0tau_a_bin_4.n_bkg_err = 1.7;
-        results_SR0tau_a_bin_4.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_4.n_sig_MC = _num_SR0tau_a_bin_4;
-
-        SignalRegionData results_SR0tau_a_bin_5;
-        results_SR0tau_a_bin_5.sr_label = "SR0tau_a_bin_5";
-        results_SR0tau_a_bin_5.n_obs = 11.;
-        results_SR0tau_a_bin_5.n_bkg = 12.9;
-        results_SR0tau_a_bin_5.n_bkg_err = 2.4;
-        results_SR0tau_a_bin_5.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_5.n_sig_MC = _num_SR0tau_a_bin_5;
-
-        SignalRegionData results_SR0tau_a_bin_6;
-        results_SR0tau_a_bin_6.sr_label = "SR0tau_a_bin_6";
-        results_SR0tau_a_bin_6.n_obs = 13.;
-        results_SR0tau_a_bin_6.n_bkg = 6.6;
-        results_SR0tau_a_bin_6.n_bkg_err = 1.9;
-        results_SR0tau_a_bin_6.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_6.n_sig_MC = _num_SR0tau_a_bin_6;
-
-        SignalRegionData results_SR0tau_a_bin_7;
-        results_SR0tau_a_bin_7.sr_label = "SR0tau_a_bin_7";
-        results_SR0tau_a_bin_7.n_obs = 15.;
-        results_SR0tau_a_bin_7.n_bkg = 14.1;
-        results_SR0tau_a_bin_7.n_bkg_err = 2.2;
-        results_SR0tau_a_bin_7.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_7.n_sig_MC = _num_SR0tau_a_bin_7;
-
-        SignalRegionData results_SR0tau_a_bin_8;
-        results_SR0tau_a_bin_8.sr_label = "SR0tau_a_bin_8";
-        results_SR0tau_a_bin_8.n_obs = 1.;
-        results_SR0tau_a_bin_8.n_bkg = 1.1;
-        results_SR0tau_a_bin_8.n_bkg_err = 0.4;
-        results_SR0tau_a_bin_8.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_8.n_sig_MC = _num_SR0tau_a_bin_8;
-
-        SignalRegionData results_SR0tau_a_bin_9;
-        results_SR0tau_a_bin_9.sr_label = "SR0tau_a_bin_9";
-        results_SR0tau_a_bin_9.n_obs = 28.;
-        results_SR0tau_a_bin_9.n_bkg = 22.4;
-        results_SR0tau_a_bin_9.n_bkg_err = 3.6;
-        results_SR0tau_a_bin_9.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_9.n_sig_MC = _num_SR0tau_a_bin_9;
-
-        SignalRegionData results_SR0tau_a_bin_10;
-        results_SR0tau_a_bin_10.sr_label = "SR0tau_a_bin_10";
-        results_SR0tau_a_bin_10.n_obs = 24.;
-        results_SR0tau_a_bin_10.n_bkg = 16.4;
-        results_SR0tau_a_bin_10.n_bkg_err = 2.8;
-        results_SR0tau_a_bin_10.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_10.n_sig_MC = _num_SR0tau_a_bin_10;
-
-        SignalRegionData results_SR0tau_a_bin_11;
-        results_SR0tau_a_bin_11.sr_label = "SR0tau_a_bin_11";
-        results_SR0tau_a_bin_11.n_obs = 29.;
-        results_SR0tau_a_bin_11.n_bkg = 27.;
-        results_SR0tau_a_bin_11.n_bkg_err = 5.;
-        results_SR0tau_a_bin_11.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_11.n_sig_MC = _num_SR0tau_a_bin_11;
-
-        SignalRegionData results_SR0tau_a_bin_12;
-        results_SR0tau_a_bin_12.sr_label = "SR0tau_a_bin_12";
-        results_SR0tau_a_bin_12.n_obs = 8.;
-        results_SR0tau_a_bin_12.n_bkg = 5.5;
-        results_SR0tau_a_bin_12.n_bkg_err = 1.5;
-        results_SR0tau_a_bin_12.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_12.n_sig_MC = _num_SR0tau_a_bin_12;
-
-        SignalRegionData results_SR0tau_a_bin_13;
-        results_SR0tau_a_bin_13.sr_label = "SR0tau_a_bin_13";
-        results_SR0tau_a_bin_13.n_obs = 714.;
-        results_SR0tau_a_bin_13.n_bkg = 715.;
-        results_SR0tau_a_bin_13.n_bkg_err = 70.;
-        results_SR0tau_a_bin_13.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_13.n_sig_MC = _num_SR0tau_a_bin_13;
-
-        SignalRegionData results_SR0tau_a_bin_14;
-        results_SR0tau_a_bin_14.sr_label = "SR0tau_a_bin_14";
-        results_SR0tau_a_bin_14.n_obs = 214.;
-        results_SR0tau_a_bin_14.n_bkg = 219.;
-        results_SR0tau_a_bin_14.n_bkg_err = 33.;
-        results_SR0tau_a_bin_14.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_14.n_sig_MC = _num_SR0tau_a_bin_14;
-
-        SignalRegionData results_SR0tau_a_bin_15;
-        results_SR0tau_a_bin_15.sr_label = "SR0tau_a_bin_15";
-        results_SR0tau_a_bin_15.n_obs = 63.;
-        results_SR0tau_a_bin_15.n_bkg = 65.;
-        results_SR0tau_a_bin_15.n_bkg_err = 13.;
-        results_SR0tau_a_bin_15.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_15.n_sig_MC = _num_SR0tau_a_bin_15;
-
-        SignalRegionData results_SR0tau_a_bin_16;
-        results_SR0tau_a_bin_16.sr_label = "SR0tau_a_bin_16";
-        results_SR0tau_a_bin_16.n_obs = 3.;
-        results_SR0tau_a_bin_16.n_bkg = 4.6;
-        results_SR0tau_a_bin_16.n_bkg_err = 1.7;
-        results_SR0tau_a_bin_16.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_16.n_sig_MC = _num_SR0tau_a_bin_16;
-
-        SignalRegionData results_SR0tau_a_bin_17;
-        results_SR0tau_a_bin_17.sr_label = "SR0tau_a_bin_17";
-        results_SR0tau_a_bin_17.n_obs = 60.;
-        results_SR0tau_a_bin_17.n_bkg = 69.;
-        results_SR0tau_a_bin_17.n_bkg_err = 9.;
-        results_SR0tau_a_bin_17.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_17.n_sig_MC = _num_SR0tau_a_bin_17;
-
-        SignalRegionData results_SR0tau_a_bin_18;
-        results_SR0tau_a_bin_18.sr_label = "SR0tau_a_bin_18";
-        results_SR0tau_a_bin_18.n_obs = 1.;
-        results_SR0tau_a_bin_18.n_bkg = 3.4;
-        results_SR0tau_a_bin_18.n_bkg_err = 1.4;
-        results_SR0tau_a_bin_18.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_18.n_sig_MC = _num_SR0tau_a_bin_18;
-
-        SignalRegionData results_SR0tau_a_bin_19;
-        results_SR0tau_a_bin_19.sr_label = "SR0tau_a_bin_19";
-        results_SR0tau_a_bin_19.n_obs = 0.;
-        results_SR0tau_a_bin_19.n_bkg = 1.2;
-        results_SR0tau_a_bin_19.n_bkg_err = 0.4;
-        results_SR0tau_a_bin_19.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_19.n_sig_MC = _num_SR0tau_a_bin_19;
-
-        SignalRegionData results_SR0tau_a_bin_20;
-        results_SR0tau_a_bin_20.sr_label = "SR0tau_a_bin_20";
-        results_SR0tau_a_bin_20.n_obs = 0.;
-        results_SR0tau_a_bin_20.n_bkg = 0.29;
-        results_SR0tau_a_bin_20.n_bkg_err = 0.18;
-        results_SR0tau_a_bin_20.n_sig_MC_sys = 0.;
-        results_SR0tau_a_bin_20.n_sig_MC = _num_SR0tau_a_bin_20;
-
-        SignalRegionData results_SR1tau;
-        results_SR1tau.sr_label = "SR1tau";
-        results_SR1tau.n_obs = 13.;
-        results_SR1tau.n_bkg = 10.3;
-        results_SR1tau.n_bkg_err = 1.2;
-        results_SR1tau.n_sig_MC_sys = 0.;
-        results_SR1tau.n_sig_MC = _num_SR1tau;
-
-        SignalRegionData results_SR2tau_a;
-        results_SR2tau_a.sr_label = "SR2tau_a";
-        results_SR2tau_a.n_obs = 6.;
-        results_SR2tau_a.n_bkg = 6.9;
-        results_SR2tau_a.n_bkg_err = 0.8;
-        results_SR2tau_a.n_sig_MC_sys = 0.;
-        results_SR2tau_a.n_sig_MC = _num_SR2tau_a;
-
-        SignalRegionData results_SR2tau_b;
-        results_SR2tau_b.sr_label = "SR2tau_b";
-        results_SR2tau_b.n_obs = 5.;
-        results_SR2tau_b.n_bkg = 7.2;
-        results_SR2tau_b.n_bkg_err = 0.8;
-        results_SR2tau_b.n_sig_MC_sys = 0.;
-        results_SR2tau_b.n_sig_MC = _num_SR2tau_b;
-
-        add_result(results_SR0tau_a_bin_1);
-        add_result(results_SR0tau_a_bin_2);
-        add_result(results_SR0tau_a_bin_3);
-        add_result(results_SR0tau_a_bin_4);
-        add_result(results_SR0tau_a_bin_5);
-        add_result(results_SR0tau_a_bin_6);
-        add_result(results_SR0tau_a_bin_7);
-        add_result(results_SR0tau_a_bin_8);
-        add_result(results_SR0tau_a_bin_9);
-        add_result(results_SR0tau_a_bin_10);
-        add_result(results_SR0tau_a_bin_11);
-        add_result(results_SR0tau_a_bin_12);
-        add_result(results_SR0tau_a_bin_13);
-        add_result(results_SR0tau_a_bin_14);
-        add_result(results_SR0tau_a_bin_15);
-        add_result(results_SR0tau_a_bin_16);
-        add_result(results_SR0tau_a_bin_17);
-        add_result(results_SR0tau_a_bin_18);
-        add_result(results_SR0tau_a_bin_19);
-        add_result(results_SR0tau_a_bin_20);
-        add_result(results_SR1tau);
-        add_result(results_SR2tau_a);
-        add_result(results_SR2tau_b);
-
-        /*  add_result(results_SRnoZa);
-            add_result(results_SRnoZb);
-            add_result(results_SRnoZc);
-            add_result(results_SRZa);
-            add_result(results_SRZb);
-            add_result(results_SRZc);*/
+        add_result(SignalRegionData("SR0tau_a_bin_1", 36., {_num_SR0tau_a_bin_1, 0.}, { 23., 4. }));
+        add_result(SignalRegionData("SR0tau_a_bin_2", 5., {_num_SR0tau_a_bin_2, 0.}, { 4.2,  1.5}));
+        add_result(SignalRegionData("SR0tau_a_bin_3", 9., {_num_SR0tau_a_bin_3, 0.}, { 10.6,  1.8}));
+        add_result(SignalRegionData("SR0tau_a_bin_4", 9., {_num_SR0tau_a_bin_4, 0.}, { 8.5,  1.7}));
+        add_result(SignalRegionData("SR0tau_a_bin_5", 11., {_num_SR0tau_a_bin_5, 0.}, { 12.9,  2.4}));
+        add_result(SignalRegionData("SR0tau_a_bin_6", 13., {_num_SR0tau_a_bin_6, 0.}, { 6.6,  1.9}));
+        add_result(SignalRegionData("SR0tau_a_bin_7", 15., {_num_SR0tau_a_bin_7, 0.}, { 14.1,  2.2}));
+        add_result(SignalRegionData("SR0tau_a_bin_8", 1., {_num_SR0tau_a_bin_8, 0.}, { 1.1,  0.4}));
+        add_result(SignalRegionData("SR0tau_a_bin_9", 28., {_num_SR0tau_a_bin_9, 0.}, { 22.4,  3.6}));
+        add_result(SignalRegionData("SR0tau_a_bin_10", 24., {_num_SR0tau_a_bin_10, 0.}, { 16.4,  2.8}));
+        add_result(SignalRegionData("SR0tau_a_bin_11", 29., {_num_SR0tau_a_bin_11, 0.}, { 27., 5. }));
+        add_result(SignalRegionData("SR0tau_a_bin_12", 8., {_num_SR0tau_a_bin_12, 0.}, { 5.5,  1.5}));
+        add_result(SignalRegionData("SR0tau_a_bin_13", 714., {_num_SR0tau_a_bin_13, 0.}, { 715., 70. }));
+        add_result(SignalRegionData("SR0tau_a_bin_14", 214., {_num_SR0tau_a_bin_14, 0.}, { 219., 33. }));
+        add_result(SignalRegionData("SR0tau_a_bin_15", 63., {_num_SR0tau_a_bin_15, 0.}, { 65., 13. }));
+        add_result(SignalRegionData("SR0tau_a_bin_16", 3., {_num_SR0tau_a_bin_16, 0.}, { 4.6,  1.7}));
+        add_result(SignalRegionData("SR0tau_a_bin_17", 60., {_num_SR0tau_a_bin_17, 0.}, { 69., 9. }));
+        add_result(SignalRegionData("SR0tau_a_bin_18", 1., {_num_SR0tau_a_bin_18, 0.}, { 3.4,  1.4}));
+        add_result(SignalRegionData("SR0tau_a_bin_19", 0., {_num_SR0tau_a_bin_19, 0.}, { 1.2,  0.4}));
+        add_result(SignalRegionData("SR0tau_a_bin_20", 0., {_num_SR0tau_a_bin_20, 0.}, { 0.29,  0.18}));
+        add_result(SignalRegionData("SR1tau", 13., {_num_SR1tau, 0.}, { 10.3,  1.2}));
+        add_result(SignalRegionData("SR2tau_a", 6., {_num_SR2tau_a, 0.}, { 6.9,  0.8}));
+        add_result(SignalRegionData("SR2tau_b", 5., {_num_SR2tau_b, 0.}, { 7.2,  0.8}));
 
         return;
       }

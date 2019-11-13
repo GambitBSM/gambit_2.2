@@ -860,123 +860,22 @@ namespace Gambit {
 
 
       void collect_results() {
-        SignalRegionData results_MT2_90_SF;
-        results_MT2_90_SF.sr_label = "MT2_90_SF";
-        results_MT2_90_SF.n_obs = 33.;
-        results_MT2_90_SF.n_bkg = 38.2;
-        results_MT2_90_SF.n_bkg_err = 5.1;
-        results_MT2_90_SF.n_sig_MC_sys = 0.;
-        results_MT2_90_SF.n_sig_MC = _num_MT2_90_SF;
+        
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
-        SignalRegionData results_MT2_90_DF;
-        results_MT2_90_DF.sr_label = "MT2_90_DF";
-        results_MT2_90_DF.n_obs = 21.;
-        results_MT2_90_DF.n_bkg = 23.3;
-        results_MT2_90_DF.n_bkg_err = 3.7;
-        results_MT2_90_DF.n_sig_MC_sys = 0.;
-        results_MT2_90_DF.n_sig_MC = _num_MT2_90_DF;
-
-        SignalRegionData results_MT2_120_SF;
-        results_MT2_120_SF.sr_label = "MT2_120_SF";
-        results_MT2_120_SF.n_obs = 5.;
-        results_MT2_120_SF.n_bkg = 8.9;
-        results_MT2_120_SF.n_bkg_err = 2.1;
-        results_MT2_120_SF.n_sig_MC_sys = 0.;
-        results_MT2_120_SF.n_sig_MC = _num_MT2_120_SF;
-
-        SignalRegionData results_MT2_120_DF;
-        results_MT2_120_DF.sr_label = "MT2_120_DF";
-        results_MT2_120_DF.n_obs = 5.;
-        results_MT2_120_DF.n_bkg = 3.6;
-        results_MT2_120_DF.n_bkg_err = 1.2;
-        results_MT2_120_DF.n_sig_MC_sys = 0.;
-        results_MT2_120_DF.n_sig_MC = _num_MT2_120_DF;
-
-        SignalRegionData results_MT2_150_SF;
-        results_MT2_150_SF.sr_label = "MT2_150_SF";
-        results_MT2_150_SF.n_obs = 3.;
-        results_MT2_150_SF.n_bkg = 3.2;
-        results_MT2_150_SF.n_bkg_err = 0.7;
-        results_MT2_150_SF.n_sig_MC_sys = 0.;
-        results_MT2_150_SF.n_sig_MC = _num_MT2_150_SF;
-
-        SignalRegionData results_MT2_150_DF;
-        results_MT2_150_DF.sr_label = "MT2_150_DF";
-        results_MT2_150_DF.n_obs = 2.;
-        results_MT2_150_DF.n_bkg = 1.0;
-        results_MT2_150_DF.n_bkg_err = 0.5;
-        results_MT2_150_DF.n_sig_MC_sys = 0.;
-        results_MT2_150_DF.n_sig_MC = _num_MT2_150_DF;
-
-        SignalRegionData results_WWa_SF;
-        results_WWa_SF.sr_label = "WWa_SF";
-        results_WWa_SF.n_obs = 73.;
-        results_WWa_SF.n_bkg = 86.5;
-        results_WWa_SF.n_bkg_err = 7.4;
-        results_WWa_SF.n_sig_MC_sys = 0.;
-        results_WWa_SF.n_sig_MC = _num_WWa_SF;
-
-        SignalRegionData results_WWa_DF;
-        results_WWa_DF.sr_label = "WWa_DF";
-        results_WWa_DF.n_obs = 70.;
-        results_WWa_DF.n_bkg = 73.6;
-        results_WWa_DF.n_bkg_err = 7.9;
-        results_WWa_DF.n_sig_MC_sys = 0.;
-        results_WWa_DF.n_sig_MC = _num_WWa_DF;
-
-        SignalRegionData results_WWb_SF;
-        results_WWb_SF.sr_label = "WWb_SF";
-        results_WWb_SF.n_obs = 26.;
-        results_WWb_SF.n_bkg = 30.2;
-        results_WWb_SF.n_bkg_err = 3.5;
-        results_WWb_SF.n_sig_MC_sys = 0.;
-        results_WWb_SF.n_sig_MC = _num_WWb_SF;
-
-        SignalRegionData results_WWb_DF;
-        results_WWb_DF.sr_label = "WWb_DF";
-        results_WWb_DF.n_obs = 17.;
-        results_WWb_DF.n_bkg = 18.1;
-        results_WWb_DF.n_bkg_err = 2.6;
-        results_WWb_DF.n_sig_MC_sys = 0.;
-        results_WWb_DF.n_sig_MC = _num_WWb_DF;
-
-        SignalRegionData results_WWc_SF;
-        results_WWc_SF.sr_label = "WWc_SF";
-        results_WWc_SF.n_obs = 10.;
-        results_WWc_SF.n_bkg = 20.3;
-        results_WWc_SF.n_bkg_err = 3.5;
-        results_WWc_SF.n_sig_MC_sys = 0.;
-        results_WWc_SF.n_sig_MC = _num_WWc_SF;
-
-        SignalRegionData results_WWc_DF;
-        results_WWc_DF.sr_label = "WWc_DF";
-        results_WWc_DF.n_obs = 11.;
-        results_WWc_DF.n_bkg = 9.0;
-        results_WWc_DF.n_bkg_err = 2.2;
-        results_WWc_DF.n_sig_MC_sys = 0.;
-        results_WWc_DF.n_sig_MC = _num_WWc_DF;
-
-        SignalRegionData results_Zjets;
-        results_Zjets.sr_label = "Zjets";
-        results_Zjets.n_obs = 1.;
-        results_Zjets.n_bkg = 1.4;
-        results_Zjets.n_bkg_err = 0.6;
-        results_Zjets.n_sig_MC_sys = 0.;
-        results_Zjets.n_sig_MC = _num_Zjets;
-
-        add_result(results_MT2_90_SF);
-        add_result(results_MT2_90_DF);
-        add_result(results_MT2_120_SF);
-        add_result(results_MT2_120_DF);
-        add_result(results_MT2_150_SF);
-        add_result(results_MT2_150_DF);
-        add_result(results_WWa_SF);
-        add_result(results_WWa_DF);
-        add_result(results_WWb_SF);
-        add_result(results_WWb_DF);
-        add_result(results_WWc_SF);
-        add_result(results_WWc_DF);
-        add_result(results_Zjets);
+        add_result(SignalRegionData("MT2_90_SF", 33., {_num_MT2_90_SF, 0.}, {38.2, 5.1}));
+        add_result(SignalRegionData("MT2_90_DF", 21., {_num_MT2_90_DF, 0.}, {23.3, 3.7}));
+        add_result(SignalRegionData("MT2_120_SF", 5., {_num_MT2_120_SF, 0.}, {8.9, 2.1}));
+        add_result(SignalRegionData("MT2_120_DF", 5., {_num_MT2_120_DF, 0.}, {3.6, 1.2}));
+        add_result(SignalRegionData("MT2_150_SF", 3., {_num_MT2_150_SF, 0.}, {3.2, 0.7}));
+        add_result(SignalRegionData("MT2_150_DF", 2., {_num_MT2_150_DF, 0.}, {1.0, 0.5}));
+        add_result(SignalRegionData("WWa_SF", 73., {_num_WWa_SF, 0.}, {86.5, 7.4}));
+        add_result(SignalRegionData("WWa_DF", 70., {_num_WWa_DF, 0.}, {73.6, 7.9}));
+        add_result(SignalRegionData("WWb_SF", 26., {_num_WWb_SF, 0.}, {30.2, 3.5}));
+        add_result(SignalRegionData("WWb_DF", 17., {_num_WWb_DF, 0.}, {18.1, 2.6}));
+        add_result(SignalRegionData("WWc_SF", 10., {_num_WWc_SF, 0.}, {20.3, 3.5}));
+        add_result(SignalRegionData("WWc_DF", 11., {_num_WWc_DF, 0.}, {9.0, 2.2}));
+        add_result(SignalRegionData("Zjets", 1., {_num_Zjets, 0.}, {1.4, 0.6}));
 
         return;
       }

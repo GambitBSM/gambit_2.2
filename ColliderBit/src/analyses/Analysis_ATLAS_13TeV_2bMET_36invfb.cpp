@@ -886,97 +886,30 @@ namespace Gambit {
         // cout << "-------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 
 
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));        
+
+        add_result(SignalRegionData("b0L-SRA350", 81., {_numb0L_SRA350, 0.}, { 70., 13.}));
+        add_result(SignalRegionData("b0L-SRA450", 24., {_numb0L_SRA450, 0.}, { 22., 5.}));
+        add_result(SignalRegionData("b0L-SRA550", 10., {_numb0L_SRA550, 0.}, { 7.2, 1.5}));
+        add_result(SignalRegionData("b0L-SRB", 45., {_numb0L_SRB, 0.}, { 37., 7.}));
+        add_result(SignalRegionData("b0L-SRC", 7., {_numb0L_SRC, 0.}, { 5.5, 1.5}));
 
 
-        SignalRegionData results_b0L_SRA350;
-        results_b0L_SRA350.sr_label = "b0L-SRA350";    // label must be unique for each signal region
-        results_b0L_SRA350.n_obs = 81.;           // set number of observed events (in LHC paper)
-        results_b0L_SRA350.n_bkg = 70.;         // set number of predicted background events (in LHC paper)
-        results_b0L_SRA350.n_bkg_err = 13.;       // set background uncertainty (in LHC paper)
-        results_b0L_SRA350.n_sig_MC_sys = 0.;            // set signal uncertainty
-        results_b0L_SRA350.n_sig_MC = _numb0L_SRA350;  // set this to number of signal events incremented in the analysis above
-        add_result(results_b0L_SRA350);
+        // MJW removes these regions for the Feb 2018 MareNostrum scans, since the aMT2 variable is not well-described.
 
-        SignalRegionData results_b0L_SRA450;
-        results_b0L_SRA450.sr_label = "b0L-SRA450";
-        results_b0L_SRA450.n_obs = 24.;
-        results_b0L_SRA450.n_bkg = 22.;
-        results_b0L_SRA450.n_bkg_err = 5.;
-        results_b0L_SRA450.n_sig_MC_sys = 0.;
-        results_b0L_SRA450.n_sig_MC = _numb0L_SRA450;
-        add_result(results_b0L_SRA450);
-
-        SignalRegionData results_b0L_SRA550;
-        results_b0L_SRA550.sr_label = "b0L-SRA550";
-        results_b0L_SRA550.n_obs = 10.;
-        results_b0L_SRA550.n_bkg = 7.2;
-        results_b0L_SRA550.n_bkg_err = 1.5;
-        results_b0L_SRA550.n_sig_MC_sys = 0.;
-        results_b0L_SRA550.n_sig_MC = _numb0L_SRA550;
-        add_result(results_b0L_SRA550);
-
-        SignalRegionData results_b0L_SRB;
-        results_b0L_SRB.sr_label = "b0L-SRB";
-        results_b0L_SRB.n_obs = 45.;
-        results_b0L_SRB.n_bkg = 37.;
-        results_b0L_SRB.n_bkg_err = 7.;
-        results_b0L_SRB.n_sig_MC_sys = 0.;
-        results_b0L_SRB.n_sig_MC = _numb0L_SRB;
-        add_result(results_b0L_SRB);
-
-        SignalRegionData results_b0L_SRC;
-        results_b0L_SRC.sr_label = "b0L-SRC";
-        results_b0L_SRC.n_obs = 7.;
-        results_b0L_SRC.n_bkg = 5.5;
-        results_b0L_SRC.n_bkg_err = 1.5;
-        results_b0L_SRC.n_sig_MC_sys = 0.;
-        results_b0L_SRC.n_sig_MC = _numb0L_SRC;
-        add_result(results_b0L_SRC);
-
-	// MJW removes these regions for the Feb 2018 MareNostrum scans, since the aMT2 variable is not well-described.
-
-        /*SignalRegionData results_b1L_SRA600;
-        results_b1L_SRA600.sr_label = "b1L-SRA600";
-        results_b1L_SRA600.n_obs = 21.;
-        results_b1L_SRA600.n_bkg = 24.;
-        results_b1L_SRA600.n_bkg_err = 6.;
-        results_b1L_SRA600.n_sig_MC_sys = 0.;
-        results_b1L_SRA600.n_sig_MC = _numb1L_SRA600;
-        add_result(results_b1L_SRA600);
-
-        SignalRegionData results_b1L_SR750;
-        results_b1L_SR750.sr_label = "b1L-SR750";
-        results_b1L_SR750.n_obs = 13.;
-        results_b1L_SR750.n_bkg = 15.;
-        results_b1L_SR750.n_bkg_err = 4.;
-        results_b1L_SR750.n_sig_MC_sys = 0.;
-        results_b1L_SR750.n_sig_MC = _numb1L_SRA750;
-        add_result(results_b1L_SR750);
-
-        SignalRegionData results_b1L_SR300_2j;
-        results_b1L_SR300_2j.sr_label = "b1L-SR300-2j";
-        results_b1L_SR300_2j.n_obs = 12.;
-        results_b1L_SR300_2j.n_bkg = 6.7;
-        results_b1L_SR300_2j.n_bkg_err = 2.3;
-        results_b1L_SR300_2j.n_sig_MC_sys = 0.;
-        results_b1L_SR300_2j.n_sig_MC = _numb1L_SRA300_2j;
-        add_result(results_b1L_SR300_2j);
-
-        SignalRegionData results_b1L_SRB;
-        results_b1L_SRB.sr_label = "b1L-SRB";
-        results_b1L_SRB.n_obs = 69.;
-        results_b1L_SRB.n_bkg = 53.;
-        results_b1L_SRB.n_bkg_err = 12.;
-        results_b1L_SRB.n_sig_MC_sys = 0.;
-        results_b1L_SRB.n_sig_MC = _numb1L_SRB;
-        add_result(results_b1L_SRB);*/
+        /*
+        add_result(SignalRegionData("b1L-SRA600", 21., {_numb1L_SRA600, 0.}, { 24., 6.}));
+        add_result(SignalRegionData("b1L-SR750", 13., {_numb1L_SRA750, 0.}, { 15., 4.}));
+        add_result(SignalRegionData("b1L-SR300-2j", 12., {_numb1L_SRA300_2j, 0.}, { 6.7, 2.3}));
+        add_result(SignalRegionData("b1L-SRB", 69., {_numb1L_SRB, 0.}, { 53., 12.}));
+        */
 
         return;
       }
 
       void analysis_specific_reset() {
 
-	_numb0L_SRA350=0; _numb0L_SRA450=0; _numb0L_SRA550=0;
+        _numb0L_SRA350=0; _numb0L_SRA450=0; _numb0L_SRA550=0;
         _numb0L_SRB=0; _numb0L_SRC=0;
 
         _numb1L_SRA600=0; _numb1L_SRA750=0; _numb1L_SRA300_2j=0; _numb1L_SRB=0;

@@ -219,69 +219,16 @@ namespace Gambit {
 
       void collect_results()
       {
-        SignalRegionData results_250;
-        results_250.sr_label = "250";
-        results_250.n_obs = 52200.;
-        results_250.n_bkg = 51800.;
-        results_250.n_bkg_err = 2000.;
-        results_250.n_sig_MC_sys = 0.;
-        results_250.n_sig_MC = _num250;
 
-        SignalRegionData results_300;
-        results_300.sr_label = "300";
-        results_300.n_obs = 19800.;
-        results_300.n_bkg = 19600.;
-        results_300.n_bkg_err = 830.;
-        results_300.n_sig_MC_sys = 0.;
-        results_300.n_sig_MC = _num300;
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
-        SignalRegionData results_350;
-        results_350.sr_label = "350";
-        results_350.n_obs = 8320.;
-        results_350.n_bkg = 8190.;
-        results_350.n_bkg_err = 400.;
-        results_350.n_sig_MC_sys = 0.;
-        results_350.n_sig_MC = _num350;
-
-        SignalRegionData results_400;
-        results_400.sr_label = "400";
-        results_400.n_obs = 3830.;
-        results_400.n_bkg = 3930.;
-        results_400.n_bkg_err = 230.;
-        results_400.n_sig_MC_sys = 0.;
-        results_400.n_sig_MC = _num400;
-
-        SignalRegionData results_450;
-        results_450.sr_label = "450";
-        results_450.n_obs = 1830.;
-        results_450.n_bkg = 2050.;
-        results_450.n_bkg_err = 150.;
-        results_450.n_sig_MC_sys = 0.;
-        results_450.n_sig_MC = _num450;
-
-        SignalRegionData results_500;
-        results_500.sr_label = "500";
-        results_500.n_obs = 934.;
-        results_500.n_bkg = 1040.;
-        results_500.n_bkg_err = 100.;
-        results_500.n_sig_MC_sys = 0.;
-        results_500.n_sig_MC = _num500;
-
-        SignalRegionData results_550;
-        results_550.sr_label = "550";
-        results_550.n_obs = 519.;
-        results_550.n_bkg = 509.;
-        results_550.n_bkg_err = 66.;
-        results_550.n_sig_MC_sys = 0.;
-        results_550.n_sig_MC = _num550;
-
-        add_result(results_250);
-        add_result(results_300);
-        add_result(results_350);
-        add_result(results_400);
-        add_result(results_450);
-        add_result(results_500);
-        add_result(results_550);
+        add_result(SignalRegionData("250", 52200., {_num250, 0}, { 51800.,  2000.}));
+        add_result(SignalRegionData("300", 19800., {_num300, 0}, { 19600.,  830.}));
+        add_result(SignalRegionData("350", 8320., {_num350, 0}, { 8190.,  400.}));
+        add_result(SignalRegionData("400", 3830., {_num400, 0}, { 3930.,  230.}));
+        add_result(SignalRegionData("450", 1830., {_num450, 0}, { 2050.,  150.}));
+        add_result(SignalRegionData("500", 934., {_num500, 0}, { 1040.,  100.}));
+        add_result(SignalRegionData("550", 519., {_num550, 0}, { 509.,  66.}));
 
         return;
       }
