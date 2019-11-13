@@ -170,6 +170,10 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     # Arrays of final states (GAMBIT names)
     out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])
     out2g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,1]])
+    # Arrays of final states (CalcHEP names names)
+    out1c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in ann_products[:,0]])
+    out2c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in ann_products[:,1]])
+    
     # DM (and conjugate) as known to CalcHEP
     dm_chep = pdg_to_particle(dm.PDG_code, calchep_pdg_dict)
     dm_chepc = pdg_to_particle(dm.Conjugate.PDG_code, calchep_pdg_dict)
@@ -354,7 +358,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
                 "\n"
                 "auto excludeDecays = daFunk::vec<std::string>("
                 "\"Z0\", \"W+\", \"W-\", "
-                "\"e+_1\", \"e-_1\", \"e+_2\", \"e-_2\");\n"
+                "\"e+_3\", \"e-_3\", \"e+_2\", \"e-_2\");\n"
                 "\n"
         )
 

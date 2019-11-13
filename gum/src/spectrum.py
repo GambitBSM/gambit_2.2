@@ -106,7 +106,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 # If it's a scalar shape, just add it one by one
                 if shape == "scalar":
                     towrite += (
-                            "{0}.{1}_{2}{3} = *myPipe::Param.at(\"{4}\");\n"
+                            "{0}.{1}_{2}{3} = *myPipe::Param[\"{4}\"];\n"
                     ).format(modelcont, gambit_model_name, par.fullname, toadd, par.gb_in)
 
                 # If it's a matrix then do each element individually
@@ -114,14 +114,14 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                     for i in xrange(int(size)):
                         for j in xrange(int(size)):
                             towrite += (
-                                "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param.at(\"{6}{7}x{8}\");\n"
+                                "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
                             ).format(modelcont, gambit_model_name, par.fullname, toadd, i, j, par.gb_in, i+1, j+1)
 
                 # Same deal for a vector
                 elif shape == "vector":
                 	for i in xrange(int(size)):
                 		towrite += (
-                				"{0}.{1}_{2}{3}[{4}] = *myPipe::Param.at(\"{5}{6}\");\n"
+                				"{0}.{1}_{2}{3}[{4}] = *myPipe::Param[\"{5}{6}\"];\n"
                 			).format(modelcont, gambit_model_name, par.fullname, toadd, i, par.gb_in, i+1)
 
                 else:
