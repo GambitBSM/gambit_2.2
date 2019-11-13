@@ -240,10 +240,12 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
 
         # Write the addParameter macro to initialise each SpectrumParameter
         # object within the SubSpectrum.
+
+        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name 
         towrite += (
                 "addParameter(Par::{0}, \"{1}\", {2}{3});\n"
                 ).format(mp.tag.replace("\"",""), 
-                         mp.name, shape, extra)
+                         e, shape, extra)
 
 
     towrite += (
@@ -309,15 +311,12 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
                 shape = "matrix"
                 size = model_parameters[i].shape[-1]
 
-        getter = "get_" + model_parameters[i].fullname
-
         if model_parameters[i].tag == "Pole_Mass":
-            getter += "PoleMass"
-
-        setter = "set_" + model_parameters[i].fullname
-
-        if model_parameters[i].tag == "Pole_Mass":
-            setter += "PoleMass"
+            setter = "set_" + model_parameters[i].fullname[1:] + "PoleMass"
+            getter = "get_" + model_parameters[i].fullname[1:] + "PoleMass"
+        else:
+            setter = "set_" + model_parameters[i].fullname
+            setter = "get_" + model_parameters[i].fullname
 
         x = SpecGetAndSet(shape, size, paramname, getter, setter)
         spectrumparameters.append(x)

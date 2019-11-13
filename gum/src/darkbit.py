@@ -199,8 +199,8 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     for i in np.arange(len(ann_products)):
         towrite_class += (
                 "if (channel == \"{0}, {1}\") "
-                "out = {{\"{0}\", \"{1}\"}};\n"
-        ).format(out1g[i], out2g[i])
+                "out = {{\"{2}\", \"{3}\"}};\n"
+        ).format(out1g[i], out2g[i], out1c[i], out2c[i])
 
     towrite_class += (
             "\n"
