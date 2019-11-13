@@ -26,6 +26,24 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         {
             public:
     
+                virtual int get_exit_code() const =0;
+    
+                virtual double get_reached_precision() const =0;
+    
+                virtual const flexiblesusy::Abstract_Spectrum_generator_settings& get_settings__BOSS() const =0;
+    
+                virtual void set_parameter_output_scale(double) =0;
+    
+                virtual void set_settings__BOSS(const flexiblesusy::Abstract_Spectrum_generator_settings&) =0;
+    
+                virtual void run__BOSS(const softsusy::Abstract_QedQcd&, const flexiblesusy::Abstract_CMSSM_input_parameters&) =0;
+    
+                virtual void write_running_couplings(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&, double, double) const =0;
+    
+                virtual void write_spectrum(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&) const =0;
+    
+                virtual void write_spectrum__BOSS() const =0;
+    
             private:
                 CMSSM_spectrum_generator_interface<T>* wptr;
                 bool delete_wrapper;

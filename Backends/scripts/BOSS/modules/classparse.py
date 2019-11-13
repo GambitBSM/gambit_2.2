@@ -46,7 +46,8 @@ def run():
         infomsg.clearInfoMessages()
 
         # Generate dicts with different variations of the class name
-        class_name       = classutils.getClassNameDict(class_el)
+        # TODO: TG: Request template info for templated class
+        class_name       = classutils.getClassNameDict(class_el, add_template_info=True)
         abstr_class_name = classutils.getClassNameDict(class_el, abstract=True)
 
         # Print current class
@@ -124,12 +125,11 @@ def run():
 
         # Get template arguments for specialization, 
         # and check that they are acceptable
-        # TODO: TG: I don't think we need specializations here
-        #if is_template and class_name['long'] not in templ_spec_done:
-        #    spec_template_types = utils.getSpecTemplateTypes(class_el)
-        #    for template_type in spec_template_types:
-        #        if (template_type not in gb.accepted_types):
-        #            raise Exception("The template specialization type '" + template_type + "' for class " + class_name['long'] + " is not among accepted types.")
+        if is_template and class_name['long'] not in templ_spec_done:
+            spec_template_types = utils.getSpecTemplateTypes(class_el)
+            for template_type in spec_template_types:
+                if (template_type not in gb.accepted_types):
+                    raise Exception("The template specialization type '" + template_type + "' for class " + class_name['long'] + " is not among accepted types.")
 
 
         #

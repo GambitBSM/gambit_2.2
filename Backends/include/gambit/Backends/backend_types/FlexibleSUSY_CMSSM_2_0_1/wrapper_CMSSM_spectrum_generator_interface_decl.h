@@ -24,13 +24,34 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
+                static flexiblesusy::Abstract_CMSSM_spectrum_generator_interface<T>* (*__factory0)();
         
                 // -- Other member variables: 
         
                 // Member functions: 
+            public:
+                int get_exit_code() const;
+        
+                double get_reached_precision() const;
+        
+                const flexiblesusy::Spectrum_generator_settings& get_settings() const;
+        
+                void set_parameter_output_scale(double s);
+        
+                void set_settings(const flexiblesusy::Spectrum_generator_settings& arg_1);
+        
+                void run(const softsusy::QedQcd& arg_1, const flexiblesusy::CMSSM_input_parameters& arg_2);
+        
+                void write_running_couplings(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& filename, double arg_1, double arg_2) const;
+        
+                void write_spectrum(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& filename) const;
+        
+                void write_spectrum() const;
+        
         
                 // Wrappers for original constructors: 
             public:
+                CMSSM_spectrum_generator_interface();
         
                 // Special pointer-based constructor: 
                 CMSSM_spectrum_generator_interface(flexiblesusy::Abstract_CMSSM_spectrum_generator_interface<T>* in);

@@ -381,7 +381,7 @@ def getSpecTemplateTypes(input_type, byname=False):
         # Classes and functions must be treated differently
         if el.tag in ['Class', 'Struct']:
             input_name = el.get('name')
-        elif el.tag in ['Function', 'Method', 'OperatorMethod', 'OperatorFunction']:
+        elif el.tag in ['Constructor', 'Function', 'Method', 'OperatorMethod', 'OperatorFunction']:
             namespaces_list = getNamespaces(el, include_self=True)
             input_name = '::'.join(namespaces_list)
         else:

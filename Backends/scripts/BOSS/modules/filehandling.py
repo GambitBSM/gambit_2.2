@@ -717,6 +717,7 @@ def createFrontendHeader(function_xml_files_dict):
     # Loop over all classes
     for class_name in gb.classes_done:
 
+        print(class_name)
         if not class_name['long'] in gb.factory_info.keys():
             continue
         else:
@@ -729,8 +730,8 @@ def createFrontendHeader(function_xml_files_dict):
             is_template = False
             if '<' in class_name['long_templ']:
                 is_template = True
-                templ_bracket, templ_var_list = utils.getTemplateBracket(gb.loaded_classes_in_xml[class_name['long_templ']])
-                templ_vars = '<' + ','.join(templ_var_list) + '>'
+                templ_bracket = class_name['templ_bracket']
+                templ_vars = class_name['templ_vars']
 
             # TODO: TG: Modified for templates which use aliases, not typedefs
             if class_namespace == '':
