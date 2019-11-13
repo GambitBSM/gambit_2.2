@@ -955,10 +955,10 @@ def write_config_file(outputs, model_name, reset_contents):
     )
 
     if outputs.pythia:
-        towrite += " pythia_{0}\n".format(model_name.lower())
+        towrite += " pythia_{0}".format(model_name.lower())
 
     if outputs.mo:
-        towrite += " micromegas_{0}\n".format(model_name)
+        towrite += " micromegas_{0}".format(model_name)
 
     if outputs.spheno:
         towrite += " spheno_{0}".format(model_name.lower())
