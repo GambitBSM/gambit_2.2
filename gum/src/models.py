@@ -80,11 +80,15 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     			   "\n"
     ).format(model_name)
 
+    bsm_params = []
+
     # Don't want the SM-like Higgs mass a fundamental parameter, nor any
     # of the SM Yukawas etc, nor any Pole_Mixings.
-    bsm_params = [x for x in model_params if
-                  x.name != 'mH' and x.tag != 'Pole_Mass' and x.tag != 'Pole_Mixing'
-                  and x.sm == False]
+    for p in model_params:
+        if p.gb_in == "mH" and p.tag == "Pole_Mass": continue
+        if p.tag == "Pole_Mixing": continue
+        if p.sm == True: continue
+        bsm_params.append(p)
 
     params = []
 
@@ -139,7 +143,7 @@ def find_parents_params(parent):
     with open(location, 'r') as f:
         for num, line in enumerate(f, 1+num):
             if "DEFINEPARS" in line:
-                params = re.compile( "\((.*)\)" ).search(line).group(1)
+                params = re.compile(r"\((.*)\)").search(line).group(1)
                 parent_params += params.split(",")
             if term in line:
                 break

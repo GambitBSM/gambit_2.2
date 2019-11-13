@@ -539,7 +539,7 @@ def write_darkbit_rollcall(model_name, pc):
     if pc:
         pro_cat = dumb_indent(4, (
                 "#define FUNCTION TH_ProcessCatalog_{0}\n"
-                "  START_FUNCTION(DarkBit::TH_ProcessCatalog)\n"
+                "  START_FUNCTION(TH_ProcessCatalog)\n"
                 "  DEPENDENCY(decay_rates, DecayTable)\n"
                 "  DEPENDENCY({0}_spectrum, Spectrum)\n"
                 "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, "
