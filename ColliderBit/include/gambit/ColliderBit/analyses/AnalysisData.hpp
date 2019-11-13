@@ -81,8 +81,8 @@ namespace Gambit {
                        double nobs, double nsigMC, double nbkg,
                        double nsigMCsys, double nbkgerr, double nsigscaled=0)
        : sr_label(sr),
-         n_observed(nobs), n_signal_MC(nsigMC), n_signal_scaled(nsigscaled), n_background(nbkg),
-         n_signal_MC_sys(nsigMCsys), n_background_err(nbkgerr)
+         n_obs(nobs), n_sig_MC(nsigMC), n_sig_scaled(nsigscaled), n_bkg(nbkg),
+         n_sig_MC_sys(nsigMCsys), n_bkg_err(nbkgerr)
       {}
 
       /// Default constructor
@@ -96,27 +96,29 @@ namespace Gambit {
       }
 
       /// Uncertainty calculators
-      double scalefactor() const { return n_signal_MC == 0 ? 1 : n_signal_scaled / n_signal_MC; }
+      double scalefactor() const { return n_sig_MC == 0 ? 1 : n_sig_scaled / n_sig_MC; }
 
-      double n_sig_MC_sys() const { return n_signal_MC_sys; }
+      double calc_n_sig_MC_stat() const { return sqrt(n_sig_MC); }
 
-      double n_sig_MC_stat() const { return sqrt(n_signal_MC); }
+      double calc_n_sig_MC_err() const 
+      { 
+        double n_sig_MC_stat = calc_n_sig_MC_stat();
+        return sqrt( n_sig_MC_stat * n_sig_MC_stat + n_sig_MC_sys * n_sig_MC_sys ); 
+      }
 
-      double n_sig_MC_err() const { return sqrt( n_sig_MC_stat() * n_sig_MC_stat() + n_sig_MC_sys() * n_sig_MC_sys() ); }
+      double calc_n_sig_scaled_stat() const { return scalefactor() * calc_n_sig_MC_stat(); }
 
-      double n_sig_scaled_stat() const { return scalefactor() * n_sig_MC_stat(); }
+      double calc_n_sig_scaled_sys() const { return scalefactor() * n_sig_MC_sys; }
 
-      double n_sig_scaled_sys() const { return scalefactor() * n_sig_MC_sys(); }
+      double calc_n_sig_scaled_err() const { return scalefactor() * calc_n_sig_MC_err(); }
 
-      double n_sig_scaled_err() const { return scalefactor() * n_sig_MC_err(); }
+      double calc_n_sigbkg_err() const 
+      { 
+        double n_sig_scaled_err = calc_n_sig_scaled_err();
+        return sqrt( n_sig_scaled_err * n_sig_scaled_err + n_bkg_err * n_bkg_err );  
+      }
 
-      double n_bkg_err() const { return n_background_err; }
-
-      /// @todo Add sensible n_bkg_stat() function and a n_bkg_err() function
-
-      /// @todo Switch to using the n_bkg_err() function 
-      double n_sigbkg_err() const { return sqrt( n_sig_scaled_err() * n_sig_scaled_err() + n_bkg_err() * n_bkg_err()); }
-
+      /// @todo Set up a more complete system of getters/setters and make the member variables private
 
       /// @name Signal region specification
       //@{
@@ -125,12 +127,12 @@ namespace Gambit {
 
       /// @name Signal region data
       //@{
-      double n_observed = 0; ///< The number of events passing selection for this signal region as reported by the experiment
-      double n_signal_MC = 0; ///< The number of simulated model events passing selection for this signal region
-      double n_signal_scaled = 0; ///< n_signal_MC, scaled to luminosity * cross-section
-      double n_background = 0; ///< The number of standard model events expected to pass the selection for this signal region, as reported by the experiment.
-      double n_signal_MC_sys = 0; ///< The absolute systematic error of n_signal_MC
-      double n_background_err = 0; ///< The absolute error of n_background
+      double n_obs = 0; ///< The number of events passing selection for this signal region as reported by the experiment
+      double n_sig_MC = 0; ///< The number of simulated model events passing selection for this signal region
+      double n_sig_scaled = 0; ///< n_sig_MC, scaled to luminosity * cross-section
+      double n_bkg = 0; ///< The number of standard model events expected to pass the selection for this signal region, as reported by the experiment.
+      double n_sig_MC_sys = 0; ///< The absolute systematic error of n_sig_MC
+      double n_bkg_err = 0; ///< The absolute error of n_bkg
       //@}
 
     };
@@ -202,9 +204,9 @@ namespace Gambit {
       {
         for (auto& sr : srdata)
         {
-          sr.n_signal_MC = 0;
-          sr.n_signal_scaled = 0;
-          sr.n_signal_MC_sys = 0;
+          sr.n_sig_MC = 0;
+          sr.n_sig_scaled = 0;
+          sr.n_sig_MC_sys = 0;
         }
         srcov = Eigen::MatrixXd();
         #ifdef ANALYSISDATA_DEBUG
@@ -244,7 +246,7 @@ namespace Gambit {
         else
         {
           // If it does, just update the signal count in the existing SignalRegionData object
-          srdata[loc->second].n_signal_MC = srd.n_signal_MC;
+          srdata[loc->second].n_sig_MC = srd.n_sig_MC;
         }
         check();
       }
@@ -255,7 +257,7 @@ namespace Gambit {
         for (const SignalRegionData& srd : srdata) srd.check();
         assert(srcov.rows() == 0 || srcov.rows() == (int) srdata.size());
         // for (int isr = 0; isr < srcov.rows(); ++isr) {
-        //   const double& srbg = srdata[isr].n_background_err;
+        //   const double& srbg = srdata[isr].n_bkg_err;
         //   #ifdef ANALYSISDATA_DEBUG
         //     std::cerr << "DEBUG: AnalysisData: isr:" << isr << ", srbg:" << srbg << ", srcov(isr,isr):" << srcov(isr,isr) << std::endl;
         //   #endif

@@ -770,43 +770,43 @@ namespace Gambit {
 
         SignalRegionData results_BC1;
         results_BC1.sr_label = "BC1";
-        results_BC1.n_observed = 456.;
-        results_BC1.n_background = 482.;
-        results_BC1.n_background_err = 76.;
-        results_BC1.n_signal_MC_sys = 0.;
-        results_BC1.n_signal_MC = _numBC1;
+        results_BC1.n_obs = 456.;
+        results_BC1.n_bkg = 482.;
+        results_BC1.n_bkg_err = 76.;
+        results_BC1.n_sig_MC_sys = 0.;
+        results_BC1.n_sig_MC = _numBC1;
 
         SignalRegionData results_BC2;
         results_BC2.sr_label = "BC2";
-        results_BC2.n_observed = 25.;
-        results_BC2.n_background = 18.;
-        results_BC2.n_background_err = 5.;
-        results_BC2.n_signal_MC_sys = 0.;
-        results_BC2.n_signal_MC = _numBC2;
+        results_BC2.n_obs = 25.;
+        results_BC2.n_bkg = 18.;
+        results_BC2.n_bkg_err = 5.;
+        results_BC2.n_sig_MC_sys = 0.;
+        results_BC2.n_sig_MC = _numBC2;
 
         SignalRegionData results_BC3;
         results_BC3.sr_label = "BC3";
-        results_BC3.n_observed = 6.;
-        results_BC3.n_background = 7.;
-        results_BC3.n_background_err = 3.;
-        results_BC3.n_signal_MC_sys = 0.;
-        results_BC3.n_signal_MC = _numBC3;
+        results_BC3.n_obs = 6.;
+        results_BC3.n_bkg = 7.;
+        results_BC3.n_bkg_err = 3.;
+        results_BC3.n_sig_MC_sys = 0.;
+        results_BC3.n_sig_MC = _numBC3;
 
         SignalRegionData results_TN2;
         results_TN2.sr_label = "TN2";
-        results_TN2.n_observed = 14.;
-        results_TN2.n_background = 13.;
-        results_TN2.n_background_err = 3.;
-        results_TN2.n_signal_MC_sys = 0.;
-        results_TN2.n_signal_MC = _numTN2;
+        results_TN2.n_obs = 14.;
+        results_TN2.n_bkg = 13.;
+        results_TN2.n_bkg_err = 3.;
+        results_TN2.n_sig_MC_sys = 0.;
+        results_TN2.n_sig_MC = _numTN2;
 
         SignalRegionData results_TN3;
         results_TN3.sr_label = "TN3";
-        results_TN3.n_observed = 7.;
-        results_TN3.n_background = 5.;
-        results_TN3.n_background_err = 2.;
-        results_TN3.n_signal_MC_sys = 0.;
-        results_TN3.n_signal_MC = _numTN3;
+        results_TN3.n_obs = 7.;
+        results_TN3.n_bkg = 5.;
+        results_TN3.n_bkg_err = 2.;
+        results_TN3.n_sig_MC_sys = 0.;
+        results_TN3.n_sig_MC = _numTN3;
 
         add_result(results_BC1);
         add_result(results_BC2);

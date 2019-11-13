@@ -386,20 +386,20 @@ namespace Gambit {
 
         SignalRegionData results_SRA;
         results_SRA.sr_label = "SRA";
-        results_SRA.n_observed = 11.;
-        results_SRA.n_background = 7.5;
-        results_SRA.n_background_err = 2.5;
-        results_SRA.n_signal_MC_sys = 0.;
-        results_SRA.n_signal_MC = _numSRA;
+        results_SRA.n_obs = 11.;
+        results_SRA.n_bkg = 7.5;
+        results_SRA.n_bkg_err = 2.5;
+        results_SRA.n_sig_MC_sys = 0.;
+        results_SRA.n_sig_MC = _numSRA;
         add_result(results_SRA);
 
         SignalRegionData results_SRB;
         results_SRB.sr_label = "SRB";
-        results_SRB.n_observed = 7.;
-        results_SRB.n_background = 8.7;
-        results_SRB.n_background_err = 2.2;
-        results_SRB.n_signal_MC_sys = 0.;
-        results_SRB.n_signal_MC = _numSRB;
+        results_SRB.n_obs = 7.;
+        results_SRB.n_bkg = 8.7;
+        results_SRB.n_bkg_err = 2.2;
+        results_SRB.n_sig_MC_sys = 0.;
+        results_SRB.n_sig_MC = _numSRB;
         add_result(results_SRB);
 
       }

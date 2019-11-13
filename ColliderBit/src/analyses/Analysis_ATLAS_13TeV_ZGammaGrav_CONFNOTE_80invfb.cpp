@@ -155,11 +155,11 @@ namespace Gambit {
 
         SignalRegionData results;
         results.sr_label = "SR";
-        results.n_observed = 3.;
-        results.n_background = 2.1;
-        results.n_background_err = 0.5;
-        results.n_signal_MC_sys = 0.;
-        results.n_signal_MC = nsig;
+        results.n_obs = 3.;
+        results.n_bkg = 2.1;
+        results.n_bkg_err = 0.5;
+        results.n_sig_MC_sys = 0.;
+        results.n_sig_MC = nsig;
         add_result(results);
 
         // cout << "\nCUTFLOW" << endl;

@@ -1075,7 +1075,7 @@ namespace Gambit {
           temp.second = lepton_charge;
           //temp.third = lepton_origin->at(lep_signal_index[ilep]);
           //temp.fourth = lepton_type->at(lep_signal_index[ilep]);
-          //temp = make_tuple(tlv_temp,lepton_charge->at(lep_signal_index[ilep]),lepton_origin->at(lep_signal_index_[ilep]),lepton_type->at(lepton_signal_index[ilep]));
+          //temp = make_tuple(tlv_temp,lepton_charge->at(lep_signal_index[ilep]),lepton_origin->at(lep_signal_index_[ilep]),lepton_type->at(lepton_sig_index[ilep]));
           myLeptons.push_back(temp);
         }
 

@@ -401,51 +401,51 @@ namespace Gambit {
       void collect_results() {
         SignalRegionData results_SRA15;
         results_SRA15.sr_label = "SRA15";
-        results_SRA15.n_observed = 102.;
-        results_SRA15.n_background = 94.;
-        results_SRA15.n_background_err = 13.;
-        results_SRA15.n_signal_MC_sys = 0.;
-        results_SRA15.n_signal_MC = _numSRA15;
+        results_SRA15.n_obs = 102.;
+        results_SRA15.n_bkg = 94.;
+        results_SRA15.n_bkg_err = 13.;
+        results_SRA15.n_sig_MC_sys = 0.;
+        results_SRA15.n_sig_MC = _numSRA15;
 
         SignalRegionData results_SRA20;
         results_SRA20.sr_label = "SRA20";
-        results_SRA20.n_observed = 48.;
-        results_SRA20.n_background = 39.;
-        results_SRA20.n_background_err = 6.;
-        results_SRA20.n_signal_MC_sys = 0.;
-        results_SRA20.n_signal_MC = _numSRA20;
+        results_SRA20.n_obs = 48.;
+        results_SRA20.n_bkg = 39.;
+        results_SRA20.n_bkg_err = 6.;
+        results_SRA20.n_sig_MC_sys = 0.;
+        results_SRA20.n_sig_MC = _numSRA20;
 
         SignalRegionData results_SRA25;
         results_SRA25.sr_label = "SRA25";
-        results_SRA25.n_observed = 14.;
-        results_SRA25.n_background = 15.8;
-        results_SRA25.n_background_err = 2.8;
-        results_SRA25.n_signal_MC_sys = 0.;
-        results_SRA25.n_signal_MC = _numSRA25;
+        results_SRA25.n_obs = 14.;
+        results_SRA25.n_bkg = 15.8;
+        results_SRA25.n_bkg_err = 2.8;
+        results_SRA25.n_sig_MC_sys = 0.;
+        results_SRA25.n_sig_MC = _numSRA25;
 
         SignalRegionData results_SRA30;
         results_SRA30.sr_label = "SRA30";
-        results_SRA30.n_observed = 7.;
-        results_SRA30.n_background = 5.9;
-        results_SRA30.n_background_err = 1.1;
-        results_SRA30.n_signal_MC_sys = 0.;
-        results_SRA30.n_signal_MC = _numSRA30;
+        results_SRA30.n_obs = 7.;
+        results_SRA30.n_bkg = 5.9;
+        results_SRA30.n_bkg_err = 1.1;
+        results_SRA30.n_sig_MC_sys = 0.;
+        results_SRA30.n_sig_MC = _numSRA30;
 
         SignalRegionData results_SRA35;
         results_SRA35.sr_label = "SRA35";
-        results_SRA35.n_observed = 3.;
-        results_SRA35.n_background = 2.5;
-        results_SRA35.n_background_err = 0.6;
-        results_SRA35.n_signal_MC_sys = 0.;
-        results_SRA35.n_signal_MC = _numSRA35;
+        results_SRA35.n_obs = 3.;
+        results_SRA35.n_bkg = 2.5;
+        results_SRA35.n_bkg_err = 0.6;
+        results_SRA35.n_sig_MC_sys = 0.;
+        results_SRA35.n_sig_MC = _numSRA35;
 
         SignalRegionData results_SRB;
         results_SRB.sr_label = "SRB";
-        results_SRB.n_observed = 65.;
-        results_SRB.n_background = 64.;
-        results_SRB.n_background_err = 10.;
-        results_SRB.n_signal_MC_sys = 0.;
-        results_SRB.n_signal_MC = _numSRB;
+        results_SRB.n_obs = 65.;
+        results_SRB.n_bkg = 64.;
+        results_SRB.n_bkg_err = 10.;
+        results_SRB.n_sig_MC_sys = 0.;
+        results_SRB.n_sig_MC = _numSRB;
 
         add_result(results_SRA15);
         add_result(results_SRA20);

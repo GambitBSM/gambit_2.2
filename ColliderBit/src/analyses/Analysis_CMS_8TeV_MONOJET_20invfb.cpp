@@ -221,59 +221,59 @@ namespace Gambit {
       {
         SignalRegionData results_250;
         results_250.sr_label = "250";
-        results_250.n_observed = 52200.;
-        results_250.n_background = 51800.;
-        results_250.n_background_err = 2000.;
-        results_250.n_signal_MC_sys = 0.;
-        results_250.n_signal_MC = _num250;
+        results_250.n_obs = 52200.;
+        results_250.n_bkg = 51800.;
+        results_250.n_bkg_err = 2000.;
+        results_250.n_sig_MC_sys = 0.;
+        results_250.n_sig_MC = _num250;
 
         SignalRegionData results_300;
         results_300.sr_label = "300";
-        results_300.n_observed = 19800.;
-        results_300.n_background = 19600.;
-        results_300.n_background_err = 830.;
-        results_300.n_signal_MC_sys = 0.;
-        results_300.n_signal_MC = _num300;
+        results_300.n_obs = 19800.;
+        results_300.n_bkg = 19600.;
+        results_300.n_bkg_err = 830.;
+        results_300.n_sig_MC_sys = 0.;
+        results_300.n_sig_MC = _num300;
 
         SignalRegionData results_350;
         results_350.sr_label = "350";
-        results_350.n_observed = 8320.;
-        results_350.n_background = 8190.;
-        results_350.n_background_err = 400.;
-        results_350.n_signal_MC_sys = 0.;
-        results_350.n_signal_MC = _num350;
+        results_350.n_obs = 8320.;
+        results_350.n_bkg = 8190.;
+        results_350.n_bkg_err = 400.;
+        results_350.n_sig_MC_sys = 0.;
+        results_350.n_sig_MC = _num350;
 
         SignalRegionData results_400;
         results_400.sr_label = "400";
-        results_400.n_observed = 3830.;
-        results_400.n_background = 3930.;
-        results_400.n_background_err = 230.;
-        results_400.n_signal_MC_sys = 0.;
-        results_400.n_signal_MC = _num400;
+        results_400.n_obs = 3830.;
+        results_400.n_bkg = 3930.;
+        results_400.n_bkg_err = 230.;
+        results_400.n_sig_MC_sys = 0.;
+        results_400.n_sig_MC = _num400;
 
         SignalRegionData results_450;
         results_450.sr_label = "450";
-        results_450.n_observed = 1830.;
-        results_450.n_background = 2050.;
-        results_450.n_background_err = 150.;
-        results_450.n_signal_MC_sys = 0.;
-        results_450.n_signal_MC = _num450;
+        results_450.n_obs = 1830.;
+        results_450.n_bkg = 2050.;
+        results_450.n_bkg_err = 150.;
+        results_450.n_sig_MC_sys = 0.;
+        results_450.n_sig_MC = _num450;
 
         SignalRegionData results_500;
         results_500.sr_label = "500";
-        results_500.n_observed = 934.;
-        results_500.n_background = 1040.;
-        results_500.n_background_err = 100.;
-        results_500.n_signal_MC_sys = 0.;
-        results_500.n_signal_MC = _num500;
+        results_500.n_obs = 934.;
+        results_500.n_bkg = 1040.;
+        results_500.n_bkg_err = 100.;
+        results_500.n_sig_MC_sys = 0.;
+        results_500.n_sig_MC = _num500;
 
         SignalRegionData results_550;
         results_550.sr_label = "550";
-        results_550.n_observed = 519.;
-        results_550.n_background = 509.;
-        results_550.n_background_err = 66.;
-        results_550.n_signal_MC_sys = 0.;
-        results_550.n_signal_MC = _num550;
+        results_550.n_obs = 519.;
+        results_550.n_bkg = 509.;
+        results_550.n_bkg_err = 66.;
+        results_550.n_sig_MC_sys = 0.;
+        results_550.n_sig_MC = _num550;
 
         add_result(results_250);
         add_result(results_300);

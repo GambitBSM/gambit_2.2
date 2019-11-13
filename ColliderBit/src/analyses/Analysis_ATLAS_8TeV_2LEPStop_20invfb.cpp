@@ -385,35 +385,35 @@ namespace Gambit {
       void collect_results() {
         SignalRegionData results_SRM90;
         results_SRM90.sr_label = "SRM90";
-        results_SRM90.n_observed = 274.;
-        results_SRM90.n_background = 300.;
-        results_SRM90.n_background_err = 50.;
-        results_SRM90.n_signal_MC_sys = 0.;
-        results_SRM90.n_signal_MC = _numSRM90SF+_numSRM90DF;
+        results_SRM90.n_obs = 274.;
+        results_SRM90.n_bkg = 300.;
+        results_SRM90.n_bkg_err = 50.;
+        results_SRM90.n_sig_MC_sys = 0.;
+        results_SRM90.n_sig_MC = _numSRM90SF+_numSRM90DF;
 
         SignalRegionData results_SRM100;
         results_SRM100.sr_label = "SRM100";
-        results_SRM100.n_observed = 3.;
-        results_SRM100.n_background = 5.2;
-        results_SRM100.n_background_err = 2.2;
-        results_SRM100.n_signal_MC_sys = 0.;
-        results_SRM100.n_signal_MC = _numSRM100SF+_numSRM100DF;
+        results_SRM100.n_obs = 3.;
+        results_SRM100.n_bkg = 5.2;
+        results_SRM100.n_bkg_err = 2.2;
+        results_SRM100.n_sig_MC_sys = 0.;
+        results_SRM100.n_sig_MC = _numSRM100SF+_numSRM100DF;
 
         SignalRegionData results_SRM110;
         results_SRM110.sr_label = "SRM110";
-        results_SRM110.n_observed = 8.;
-        results_SRM110.n_background = 9.3;
-        results_SRM110.n_background_err = 3.5;
-        results_SRM110.n_signal_MC_sys = 0.;
-        results_SRM110.n_signal_MC = _numSRM110SF+_numSRM110DF;
+        results_SRM110.n_obs = 8.;
+        results_SRM110.n_bkg = 9.3;
+        results_SRM110.n_bkg_err = 3.5;
+        results_SRM110.n_sig_MC_sys = 0.;
+        results_SRM110.n_sig_MC = _numSRM110SF+_numSRM110DF;
 
         SignalRegionData results_SRM120;
         results_SRM120.sr_label = "SRM120";
-        results_SRM120.n_observed = 18.;
-        results_SRM120.n_background = 19.;
-        results_SRM120.n_background_err = 9.;
-        results_SRM120.n_signal_MC_sys = 0.;
-        results_SRM120.n_signal_MC = _numSRM120SF+_numSRM120DF;
+        results_SRM120.n_obs = 18.;
+        results_SRM120.n_bkg = 19.;
+        results_SRM120.n_bkg_err = 9.;
+        results_SRM120.n_sig_MC_sys = 0.;
+        results_SRM120.n_sig_MC = _numSRM120SF+_numSRM120DF;
 
         add_result(results_SRM90);
         add_result(results_SRM100);

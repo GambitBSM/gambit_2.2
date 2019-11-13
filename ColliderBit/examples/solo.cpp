@@ -212,12 +212,12 @@ int main(int argc, char* argv[])
       for (size_t sr_index = 0; sr_index < adata.size(); ++sr_index)
       {
         const Gambit::ColliderBit::SignalRegionData srData = adata[sr_index];
-        const double combined_s_uncertainty = srData.n_sig_scaled_err();
-        const double combined_bg_uncertainty = srData.n_bkg_err();
+        const double combined_s_uncertainty = srData.calc_n_sig_scaled_err();
+        const double combined_bg_uncertainty = srData.n_bkg_err;
         summary_line << "    Signal region " << srData.sr_label << " (SR index " << sr_index << "):" << endl;
-        summary_line << "      Observed events: " << srData.n_observed << endl;
-        summary_line << "      SM prediction: " << srData.n_background << " +/- " << combined_bg_uncertainty << endl;
-        summary_line << "      Signal prediction: " << srData.n_signal_scaled << " +/- " << combined_s_uncertainty << endl;
+        summary_line << "      Observed events: " << srData.n_obs << endl;
+        summary_line << "      SM prediction: " << srData.n_bkg << " +/- " << combined_bg_uncertainty << endl;
+        summary_line << "      Signal prediction: " << srData.n_sig_scaled << " +/- " << combined_s_uncertainty << endl;
         auto loglike_it = analysis_loglikes.sr_loglikes.find(srData.sr_label);
         if (loglike_it != analysis_loglikes.sr_loglikes.end())
         {

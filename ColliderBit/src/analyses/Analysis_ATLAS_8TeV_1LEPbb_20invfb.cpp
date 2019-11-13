@@ -375,20 +375,20 @@ namespace Gambit {
 // cout<<"NUMSRA: "<<_numSRA<<" NUMSRB: "<<_numSRB<<endl;
         SignalRegionData results_SRA;
         results_SRA.sr_label = "SRA";
-        results_SRA.n_observed = 4.;
-        results_SRA.n_background = 5.69;
-        results_SRA.n_background_err = 1.10;
-        results_SRA.n_signal_MC_sys = 0.;
-        results_SRA.n_signal_MC = _numSRA;
+        results_SRA.n_obs = 4.;
+        results_SRA.n_bkg = 5.69;
+        results_SRA.n_bkg_err = 1.10;
+        results_SRA.n_sig_MC_sys = 0.;
+        results_SRA.n_sig_MC = _numSRA;
         add_result(results_SRA);
 
         SignalRegionData results_SRB;
         results_SRB.sr_label = "SRB";
-        results_SRB.n_observed = 3.;
-        results_SRB.n_background = 2.67;
-        results_SRB.n_background_err = 0.69;
-        results_SRB.n_signal_MC_sys = 0.;
-        results_SRB.n_signal_MC = _numSRB;
+        results_SRB.n_obs = 3.;
+        results_SRB.n_bkg = 2.67;
+        results_SRB.n_bkg_err = 0.69;
+        results_SRB.n_sig_MC_sys = 0.;
+        results_SRB.n_sig_MC = _numSRB;
         add_result(results_SRB);
 
       }
