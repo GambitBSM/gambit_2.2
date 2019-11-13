@@ -76,6 +76,13 @@ From the GAMBIT build directory,
 
 	cp $GUM/Tutorial/MDMSM.gum $GUM/gum_files/MDMSM.gum
 
+3.5. Let's check that 'math' is in your $PATH. From the command line do
+
+	math
+
+	If a Wolfram kernel pops up then we're good to go. If not, add the directory
+	of your Mathematica installation to $PATH. 
+
 4. That's all we need to run GUM! So let's do it.
 
 	cd $GUM

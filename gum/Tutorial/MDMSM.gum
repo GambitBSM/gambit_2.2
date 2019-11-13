@@ -6,6 +6,9 @@ math:
     model: MDMSM
     base_model: SM
     restriction: DiagonalCKM
+    lagrangian: LDM + LSM
+
+dm_candidate: 99901
 
 output:
     calchep: true
