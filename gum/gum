@@ -664,7 +664,13 @@ if args.file:
                 add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", 
                                           "RD_spectrum", 
                                           "RD_spectrum_from_ProcessCatalog",
-                                           reset_dict, pattern="ALLOW_MODELS")
+                                          gum.name, reset_dict, 
+                                          pattern="ALLOW_MODELS")
+               add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", 
+                                         "RD_eff_annrate", 
+                                         "RD_eff_annrate_from_ProcessCatalog",
+                                          gum.name, reset_dict, 
+                                          pattern="ALLOW_MODELS")
 
         # ColliderBit
         m = "ColliderBit"
