@@ -26,7 +26,7 @@
 #include "gambit/ColliderBit/CMSEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
-#define CUTFLOW
+// #define CUTFLOW
 
 using namespace std;
 
@@ -47,28 +47,28 @@ namespace Gambit {
     protected:
 
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
-        {"SREW1", 0},
-        {"SREW2", 0},
-        {"SREW3", 0},
-        {"SREW4", 0},
-        {"SREW5", 0},
-        {"SREW6", 0},
-        {"SREW7", 0},
-        {"SREW8", 0},
-        {"SREW9", 0},
-        {"SREW10", 0},
-        {"SREW11", 0},
-        {"SREW12", 0},
-        {"SRST1", 0},
-        {"SRST2", 0},
-        {"SRST3", 0},
-        {"SRST4", 0},
-        {"SRST5", 0},
-        {"SRST6", 0},
-        {"SRST7", 0},
-        {"SRST8", 0},
-        {"SRST9", 0},
+      std::map<string, EventCounter> _counters = {
+        {"SREW1", EventCounter("SREW1")},
+        {"SREW2", EventCounter("SREW2")},
+        {"SREW3", EventCounter("SREW3")},
+        {"SREW4", EventCounter("SREW4")},
+        {"SREW5", EventCounter("SREW5")},
+        {"SREW6", EventCounter("SREW6")},
+        {"SREW7", EventCounter("SREW7")},
+        {"SREW8", EventCounter("SREW8")},
+        {"SREW9", EventCounter("SREW9")},
+        {"SREW10", EventCounter("SREW10")},
+        {"SREW11", EventCounter("SREW11")},
+        {"SREW12", EventCounter("SREW12")},
+        {"SRST1", EventCounter("SRST1")},
+        {"SRST2", EventCounter("SRST2")},
+        {"SRST3", EventCounter("SRST3")},
+        {"SRST4", EventCounter("SRST4")},
+        {"SRST5", EventCounter("SRST5")},
+        {"SRST6", EventCounter("SRST6")},
+        {"SRST7", EventCounter("SRST7")},
+        {"SRST8", EventCounter("SRST8")},
+        {"SRST9", EventCounter("SRST9")},
       };
 
       vector<double> cutFlowVector;
@@ -256,44 +256,44 @@ namespace Gambit {
         // Signal Regions
         // In the low ETmiss region, for each passing event we add 0.65 due to trigger efficiency
         if (EWpreselection && met>125. && met<200. && nSignalMuons == 2) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += event->weight() * 0.65;
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += event->weight() * 0.65;
-          if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += event->weight() * 0.65;
-          if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += event->weight() * 0.65;
-          // if (m_ll>4. && m_ll<9.) _numSR["SREW1"] += event->weight();
-          // if (m_ll>10.5 && m_ll<20.) _numSR["SREW2"] += event->weight();
-          // if (m_ll>20. && m_ll<30.) _numSR["SREW3"] += event->weight();
-          // if (m_ll>30. && m_ll<50.) _numSR["SREW4"] += event->weight();
+          if (m_ll>4. && m_ll<9.) _counters.at("SREW1").add_event(event);
+          if (m_ll>10.5 && m_ll<20.) _counters.at("SREW2").add_event(event);
+          if (m_ll>20. && m_ll<30.) _counters.at("SREW3").add_event(event);
+          if (m_ll>30. && m_ll<50.) _counters.at("SREW4").add_event(event);
+          // if (m_ll>4. && m_ll<9.) _counters.at("SREW1").add_event(event);
+          // if (m_ll>10.5 && m_ll<20.) _counters.at("SREW2").add_event(event);
+          // if (m_ll>20. && m_ll<30.) _counters.at("SREW3").add_event(event);
+          // if (m_ll>30. && m_ll<50.) _counters.at("SREW4").add_event(event);
         }
         if (EWpreselection && met>200. && met<250.) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW5"] += event->weight();
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW6"] += event->weight();
-          if (m_ll>20. && m_ll<30.) _numSR["SREW7"] += event->weight();
-          if (m_ll>30. && m_ll<50.) _numSR["SREW8"] += event->weight();
+          if (m_ll>4. && m_ll<9.) _counters.at("SREW5").add_event(event);
+          if (m_ll>10.5 && m_ll<20.) _counters.at("SREW6").add_event(event);
+          if (m_ll>20. && m_ll<30.) _counters.at("SREW7").add_event(event);
+          if (m_ll>30. && m_ll<50.) _counters.at("SREW8").add_event(event);
         }
         if (EWpreselection && met>250.) {
-          if (m_ll>4. && m_ll<9.) _numSR["SREW9"] += event->weight();
-          if (m_ll>10.5 && m_ll<20.) _numSR["SREW10"] += event->weight();
-          if (m_ll>20. && m_ll<30.) _numSR["SREW11"] += event->weight();
-          if (m_ll>30. && m_ll<50.) _numSR["SREW12"] += event->weight();
+          if (m_ll>4. && m_ll<9.) _counters.at("SREW9").add_event(event);
+          if (m_ll>10.5 && m_ll<20.) _counters.at("SREW10").add_event(event);
+          if (m_ll>20. && m_ll<30.) _counters.at("SREW11").add_event(event);
+          if (m_ll>30. && m_ll<50.) _counters.at("SREW12").add_event(event);
         }
         if (STpreselection && met>125. && met<200. && nSignalMuons == 2) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST1"] += event->weight();
-          if (leadpT>12. && leadpT<20.) _numSR["SRST2"] += event->weight();
-          if (leadpT>20. && leadpT<30.) _numSR["SRST3"] += event->weight();
+          if (leadpT>5. && leadpT<12.) _counters.at("SRST1").add_event(event);
+          if (leadpT>12. && leadpT<20.) _counters.at("SRST2").add_event(event);
+          if (leadpT>20. && leadpT<30.) _counters.at("SRST3").add_event(event);
         }
         if (STpreselection && met>200. && met<300.) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST4"] += event->weight();
-          if (leadpT>12. && leadpT<20.) _numSR["SRST5"] += event->weight();
-          if (leadpT>20. && leadpT<30.) _numSR["SRST6"] += event->weight();
+          if (leadpT>5. && leadpT<12.) _counters.at("SRST4").add_event(event);
+          if (leadpT>12. && leadpT<20.) _counters.at("SRST5").add_event(event);
+          if (leadpT>20. && leadpT<30.) _counters.at("SRST6").add_event(event);
         }
         if (STpreselection && met>300.) {
           double leadpT = signalLeptons.at(0)->pT();
-          if (leadpT>5. && leadpT<12.) _numSR["SRST7"] += event->weight();
-          if (leadpT>12. && leadpT<20.) _numSR["SRST8"] += event->weight();
-          if (leadpT>20. && leadpT<30.) _numSR["SRST9"] += event->weight();
+          if (leadpT>5. && leadpT<12.) _counters.at("SRST7").add_event(event);
+          if (leadpT>12. && leadpT<20.) _counters.at("SRST8").add_event(event);
+          if (leadpT>20. && leadpT<30.) _counters.at("SRST9").add_event(event);
         }
 
         cutFlowVector_str[0] = "All events";
@@ -417,14 +417,12 @@ namespace Gambit {
         const Analysis_CMS_13TeV_2LEPsoft_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_2LEPsoft_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (size_t j = 0; j < NCUTS; j++) {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
-        }
-
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR.at(el.first);
         }
 
       }
@@ -465,19 +463,18 @@ namespace Gambit {
         // The stop signal regions are collected in the derived analysis class 
         // Analysis_CMS_13TeV_2LEPsoft_stop_36invfb below.
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SREW1",  2.,  {_numSR["SREW1"],  0.}, {3.5, 1.}));
-        add_result(SignalRegionData("SREW2",  15., {_numSR["SREW2"],  0.}, {12, 2.3}));
-        add_result(SignalRegionData("SREW3",  19., {_numSR["SREW3"],  0.}, {17, 2.4}));
-        add_result(SignalRegionData("SREW4",  18., {_numSR["SREW4"],  0.}, {11, 2.}));
-        add_result(SignalRegionData("SREW5",  1.,  {_numSR["SREW5"],  0.}, {1.6, 0.7}));
-        add_result(SignalRegionData("SREW6",  0.,  {_numSR["SREW6"],  0.}, {3.5, 0.9}));
-        add_result(SignalRegionData("SREW7",  3.,  {_numSR["SREW7"],  0.}, {2., 0.7}));
-        add_result(SignalRegionData("SREW8",  1.,  {_numSR["SREW8"],  0.}, {0.51, 0.52}));
-        add_result(SignalRegionData("SREW9",  2.,  {_numSR["SREW9"],  0.}, {1.4, 0.7}));
-        add_result(SignalRegionData("SREW10", 1.,  {_numSR["SREW10"], 0.}, {1.5, 0.6}));
-        add_result(SignalRegionData("SREW11", 2.,  {_numSR["SREW11"], 0.}, {1.5, 0.8}));
-        add_result(SignalRegionData("SREW12", 0.,  {_numSR["SREW12"], 0.}, {1.2, 0.6}));
+        add_result(SignalRegionData(_counters.at("SREW1"),  2.,  {3.5, 1.}));
+        add_result(SignalRegionData(_counters.at("SREW2"),  15., {12, 2.3}));
+        add_result(SignalRegionData(_counters.at("SREW3"),  19., {17, 2.4}));
+        add_result(SignalRegionData(_counters.at("SREW4"),  18., {11, 2.}));
+        add_result(SignalRegionData(_counters.at("SREW5"),  1.,  {1.6, 0.7}));
+        add_result(SignalRegionData(_counters.at("SREW6"),  0.,  {3.5, 0.9}));
+        add_result(SignalRegionData(_counters.at("SREW7"),  3.,  {2., 0.7}));
+        add_result(SignalRegionData(_counters.at("SREW8"),  1.,  {0.51, 0.52}));
+        add_result(SignalRegionData(_counters.at("SREW9"),  2.,  {1.4, 0.7}));
+        add_result(SignalRegionData(_counters.at("SREW10"), 1.,  {1.5, 0.6}));
+        add_result(SignalRegionData(_counters.at("SREW11"), 2.,  {1.5, 0.8}));
+        add_result(SignalRegionData(_counters.at("SREW12"), 0.,  {1.2, 0.6}));
 
         // Covariance matrix
         static const vector< vector<double> > BKGCOV = {
@@ -502,7 +499,7 @@ namespace Gambit {
     protected:
       void analysis_specific_reset() {
 
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
@@ -552,17 +549,15 @@ namespace Gambit {
           cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
         #endif
 
-
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
-        add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
-        add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
-        add_result(SignalRegionData("SRST4",  23., {_numSR["SRST4"],  0.}, {23.0,3.5}));
-        add_result(SignalRegionData("SRST5",  40., {_numSR["SRST5"],  0.}, {41.0,5.6}));
-        add_result(SignalRegionData("SRST6",  44., {_numSR["SRST6"],  0.}, {45.0,7.0}));
-        add_result(SignalRegionData("SRST7",  4.,  {_numSR["SRST7"],  0.}, {4.7,1.3}));
-        add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
-        add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
+        add_result(SignalRegionData(_counters.at("SRST1"),  16., {14.0,2.3}));
+        add_result(SignalRegionData(_counters.at("SRST2"),  51., {37.0,6.8}));
+        add_result(SignalRegionData(_counters.at("SRST3"),  67., {54.0,6.5}));
+        add_result(SignalRegionData(_counters.at("SRST4"),  23., {23.0,3.5}));
+        add_result(SignalRegionData(_counters.at("SRST5"),  40., {41.0,5.6}));
+        add_result(SignalRegionData(_counters.at("SRST6"),  44., {45.0,7.0}));
+        add_result(SignalRegionData(_counters.at("SRST7"),  4.,  {4.7,1.3}));
+        add_result(SignalRegionData(_counters.at("SRST8"),  11., {10.0,1.9}));
+        add_result(SignalRegionData(_counters.at("SRST9"),  9.,  {10.0,2.5}));
 
         // Covariance matrix
         static const vector< vector<double> > BKGCOV = {
@@ -600,19 +595,18 @@ namespace Gambit {
 
       virtual void collect_results() {
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SREW1",  2.,  {_numSR["SREW1"],  0.}, {3.5, 1.}));
-        add_result(SignalRegionData("SREW2",  15., {_numSR["SREW2"],  0.}, {12, 2.3}));
-        add_result(SignalRegionData("SREW3",  19., {_numSR["SREW3"],  0.}, {17, 2.4}));
-        add_result(SignalRegionData("SREW4",  18., {_numSR["SREW4"],  0.}, {11, 2.}));
-        add_result(SignalRegionData("SREW5",  1.,  {_numSR["SREW5"],  0.}, {1.6, 0.7}));
-        add_result(SignalRegionData("SREW6",  0.,  {_numSR["SREW6"],  0.}, {3.5, 0.9}));
-        add_result(SignalRegionData("SREW7",  3.,  {_numSR["SREW7"],  0.}, {2., 0.7}));
-        add_result(SignalRegionData("SREW8",  1.,  {_numSR["SREW8"],  0.}, {0.51, 0.52}));
-        add_result(SignalRegionData("SREW9",  2.,  {_numSR["SREW9"],  0.}, {1.4, 0.7}));
-        add_result(SignalRegionData("SREW10", 1.,  {_numSR["SREW10"], 0.}, {1.5, 0.6}));
-        add_result(SignalRegionData("SREW11", 2.,  {_numSR["SREW11"], 0.}, {1.5, 0.8}));
-        add_result(SignalRegionData("SREW12", 0.,  {_numSR["SREW12"], 0.}, {1.2, 0.6}));
+        add_result(SignalRegionData(_counters.at("SREW1"),  2.,  {3.5, 1.}));
+        add_result(SignalRegionData(_counters.at("SREW2"),  15., {12, 2.3}));
+        add_result(SignalRegionData(_counters.at("SREW3"),  19., {17, 2.4}));
+        add_result(SignalRegionData(_counters.at("SREW4"),  18., {11, 2.}));
+        add_result(SignalRegionData(_counters.at("SREW5"),  1.,  {1.6, 0.7}));
+        add_result(SignalRegionData(_counters.at("SREW6"),  0.,  {3.5, 0.9}));
+        add_result(SignalRegionData(_counters.at("SREW7"),  3.,  {2., 0.7}));
+        add_result(SignalRegionData(_counters.at("SREW8"),  1.,  {0.51, 0.52}));
+        add_result(SignalRegionData(_counters.at("SREW9"),  2.,  {1.4, 0.7}));
+        add_result(SignalRegionData(_counters.at("SREW10"), 1.,  {1.5, 0.6}));
+        add_result(SignalRegionData(_counters.at("SREW11"), 2.,  {1.5, 0.8}));
+        add_result(SignalRegionData(_counters.at("SREW12"), 0.,  {1.2, 0.6}));
 
       }
 
@@ -634,16 +628,15 @@ namespace Gambit {
 
       virtual void collect_results() {
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SRST1",  16., {_numSR["SRST1"],  0.}, {14.0,2.3}));
-        add_result(SignalRegionData("SRST2",  51., {_numSR["SRST2"],  0.}, {37.0,6.8}));
-        add_result(SignalRegionData("SRST3",  67., {_numSR["SRST3"],  0.}, {54.0,6.5}));
-        add_result(SignalRegionData("SRST4",  23., {_numSR["SRST4"],  0.}, {23.0,3.5}));
-        add_result(SignalRegionData("SRST5",  40., {_numSR["SRST5"],  0.}, {41.0,5.6}));
-        add_result(SignalRegionData("SRST6",  44., {_numSR["SRST6"],  0.}, {45.0,7.0}));
-        add_result(SignalRegionData("SRST7",  4.,  {_numSR["SRST7"],  0.}, {4.7,1.3}));
-        add_result(SignalRegionData("SRST8",  11., {_numSR["SRST8"],  0.}, {10.0,1.9}));
-        add_result(SignalRegionData("SRST9",  9.,  {_numSR["SRST9"],  0.}, {10.0,2.5}));
+        add_result(SignalRegionData(_counters.at("SRST1"),  16., {14.0,2.3}));
+        add_result(SignalRegionData(_counters.at("SRST2"),  51., {37.0,6.8}));
+        add_result(SignalRegionData(_counters.at("SRST3"),  67., {54.0,6.5}));
+        add_result(SignalRegionData(_counters.at("SRST4"),  23., {23.0,3.5}));
+        add_result(SignalRegionData(_counters.at("SRST5"),  40., {41.0,5.6}));
+        add_result(SignalRegionData(_counters.at("SRST6"),  44., {45.0,7.0}));
+        add_result(SignalRegionData(_counters.at("SRST7"),  4.,  {4.7,1.3}));
+        add_result(SignalRegionData(_counters.at("SRST8"),  11., {10.0,1.9}));
+        add_result(SignalRegionData(_counters.at("SRST9"),  9.,  {10.0,2.5}));
 
       }
 

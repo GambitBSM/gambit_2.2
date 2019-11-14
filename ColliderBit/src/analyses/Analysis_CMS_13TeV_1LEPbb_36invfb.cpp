@@ -23,7 +23,10 @@ namespace Gambit {
     class Analysis_CMS_13TeV_1LEPbb_36invfb : public Analysis {
     private:
 
-      double _numSRA, _numSRB;
+      std::map<string, EventCounter> _counters = {
+        {"SRA", EventCounter("SRA")},
+        {"SRB", EventCounter("SRB")},
+      };
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
@@ -50,9 +53,6 @@ namespace Gambit {
 
         set_analysis_name("CMS_13TeV_1LEPbb_36invfb");
         set_luminosity(35.9);
-
-        _numSRA=0;
-        _numSRB=0;
 
         NCUTS=10;
 
@@ -187,9 +187,9 @@ namespace Gambit {
         //Signal Regions
         if (preselection && mbb>90 && mbb<150 && mCT>170. && met>125. && mT>150.) {
           //SRA
-          if (met>125. && met<200.) _numSRA += event->weight();
+          if (met>125. && met<200.) _counters.at("SRA").add_event(event);
           //SRB
-          if (met>200.) _numSRB += event->weight();
+          if (met>200.) _counters.at("SRB").add_event(event);
         }
 
         cutFlowVector_str[0] = "All events";
@@ -291,30 +291,29 @@ namespace Gambit {
         const Analysis_CMS_13TeV_1LEPbb_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_1LEPbb_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (size_t j = 0; j < NCUTS; j++) {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
         }
-        _numSRA += specificOther->_numSRA;
-        _numSRB += specificOther->_numSRB;
       }
 
 
       void collect_results() {
 
-        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
-        add_result(SignalRegionData("SRA", 11., {_numSRA, 0.}, {7.5, 2.5}));
-        add_result(SignalRegionData("SRB", 7., {_numSRB, 0.}, {8.7, 2.2}));
+        add_result(SignalRegionData(_counters.at("SRA"), 11., {7.5, 2.5}));
+        add_result(SignalRegionData(_counters.at("SRB"), 7., {8.7, 2.2}));
 
       }
 
 
     protected:
       void analysis_specific_reset() {
-        _numSRA=0;
-        _numSRB=0;
-
+        
+        for (auto& pair : _counters) { pair.second.reset(); }
+        
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
 

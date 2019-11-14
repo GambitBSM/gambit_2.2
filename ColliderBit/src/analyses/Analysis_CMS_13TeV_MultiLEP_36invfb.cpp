@@ -32,15 +32,15 @@ namespace Gambit {
 
     protected:
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
-        {"SR1", 0.},
-        {"SR2", 0.},
-        {"SR3", 0.},
-        {"SR4", 0.},
-        {"SR5", 0.},
-        {"SR6", 0.},
-        {"SR7", 0.},
-        {"SR8", 0.}
+      std::map<string, EventCounter> _counters = {
+        {"SR1", EventCounter("SR1")},
+        {"SR2", EventCounter("SR2")},
+        {"SR3", EventCounter("SR3")},
+        {"SR4", EventCounter("SR4")},
+        {"SR5", EventCounter("SR5")},
+        {"SR6", EventCounter("SR6")},
+        {"SR7", EventCounter("SR7")},
+        {"SR8", EventCounter("SR8")},
       };
 
     private:
@@ -268,8 +268,8 @@ namespace Gambit {
         if (preselection && nSignalLeptons==2 && nSignalTaus==0 && met>60 && conversion_veto) {
           if (signalLeptons.at(0)->pid()*signalLeptons.at(1)->pid()>0) {
             if ((signalLeptons.at(0)->abspid()==11 && signalLeptons.at(0)->pT()>25) || (signalLeptons.at(0)->abspid()==13 && signalLeptons.at(0)->pT()>20)) {
-              if (num_ISRjets==0 && met>140 && mT>100) _numSR["SR1"] += event->weight();
-              if (num_ISRjets==1 && met>200 && mT<100 && pT_ll<100) _numSR["SR2"] += event->weight();
+              if (num_ISRjets==0 && met>140 && mT>100) _counters.at("SR1").add_event(event);
+              if (num_ISRjets==1 && met>200 && mT<100 && pT_ll<100) _counters.at("SR2").add_event(event);
             }
           }
         }
@@ -280,19 +280,19 @@ namespace Gambit {
           if (nSignalTaus<2) {
             if ((signalLightLeptons.at(0)->abspid()==11 && signalLightLeptons.at(0)->pT()>25) || (signalLightLeptons.at(0)->abspid()==13 && signalLightLeptons.at(0)->pT()>20 && nSignalMuons>1) || (signalLightLeptons.at(0)->abspid()==13 && signalLightLeptons.at(0)->pT()>25 && nSignalMuons==1)) {
               if (nSignalLightLeptons==3 && nSignalTaus==0) {
-                if (mT>120 && met>200) _numSR["SR3"] += event->weight();
-                if (met>250) _numSR["SR4"] += event->weight();
+                if (mT>120 && met>200) _counters.at("SR3").add_event(event);
+                if (met>250) _counters.at("SR4").add_event(event);
               }
-              if (nSignalLightLeptons==2 && nSignalTaus==1 && mT2>50 && met>200) _numSR["SR5"] += event->weight();
-              if (nSignalLeptons>3 && met>200) _numSR["SR8"] += event->weight();
+              if (nSignalLightLeptons==2 && nSignalTaus==1 && mT2>50 && met>200) _counters.at("SR5").add_event(event);
+              if (nSignalLeptons>3 && met>200) _counters.at("SR8").add_event(event);
             }
           }
 
           if (nSignalLightLeptons==1 && nSignalTaus==2) {
             if ((signalLightLeptons.at(0)->abspid()==11 && signalLightLeptons.at(0)->pT()>30) || (signalLightLeptons.at(0)->abspid()==13 && signalLightLeptons.at(0)->pT()>25)) {
               if (signalLeptons.at(0)->abseta()<2.1 && signalLeptons.at(1)->abseta()<2.1 && signalLeptons.at(2)->abseta()<2.1) {
-                if (mT2>50 && met>200) _numSR["SR6"] += event->weight();
-                if (met>75) _numSR["SR7"] += event->weight();
+                if (mT2>50 && met>200) _counters.at("SR6").add_event(event);
+                if (met>75) _counters.at("SR7").add_event(event);
               }
             }
           }
@@ -495,6 +495,8 @@ namespace Gambit {
         const Analysis_CMS_13TeV_MultiLEP_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_MultiLEP_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         if (NCUTS1 != specificOther->NCUTS1) NCUTS1 = specificOther->NCUTS1;
         if (NCUTS2 != specificOther->NCUTS2) NCUTS2 = specificOther->NCUTS2;
         if (NCUTS3 != specificOther->NCUTS3) NCUTS3 = specificOther->NCUTS3;
@@ -514,10 +516,6 @@ namespace Gambit {
         for (size_t j = 0; j < NCUTS4; j++) {
           cutFlowVector4[j] += specificOther->cutFlowVector4[j];
           cutFlowVector_str4[j] = specificOther->cutFlowVector_str4[j];
-        }
-
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR.at(el.first);
         }
       }
 
@@ -624,15 +622,14 @@ namespace Gambit {
 
         //Now fill a results object with the results for each SR
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR1", 13., {_numSR["SR1"], 0.}, {12., 3.}));
-        add_result(SignalRegionData("SR2", 18., {_numSR["SR2"], 0.}, {18., 4.}));
-        add_result(SignalRegionData("SR3", 19., {_numSR["SR3"], 0.}, {19., 4.}));
-        add_result(SignalRegionData("SR4", 128., {_numSR["SR4"], 0.}, {142, 34.}));
-        add_result(SignalRegionData("SR5", 18., {_numSR["SR5"], 0.}, {22, 5.}));
-        add_result(SignalRegionData("SR6", 2., {_numSR["SR6"], 0.}, {1, 0.6}));
-        add_result(SignalRegionData("SR7", 82., {_numSR["SR7"], 0.}, {109, 28.}));
-        add_result(SignalRegionData("SR8", 166., {_numSR["SR8"], 0.}, {197, 42.}));
+        add_result(SignalRegionData(_counters.at("SR1"), 13., {12., 3.}));
+        add_result(SignalRegionData(_counters.at("SR2"), 18., {18., 4.}));
+        add_result(SignalRegionData(_counters.at("SR3"), 19., {19., 4.}));
+        add_result(SignalRegionData(_counters.at("SR4"), 128., {142, 34.}));
+        add_result(SignalRegionData(_counters.at("SR5"), 18., {22, 5.}));
+        add_result(SignalRegionData(_counters.at("SR6"), 2., {1, 0.6}));
+        add_result(SignalRegionData(_counters.at("SR7"), 82., {109, 28.}));
+        add_result(SignalRegionData(_counters.at("SR8"), 166., {197, 42.}));
       }
 
 
@@ -685,7 +682,7 @@ namespace Gambit {
     protected:
       void analysis_specific_reset() {
 
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector1.begin(), cutFlowVector1.end(), 0);
         std::fill(cutFlowVector2.begin(), cutFlowVector2.end(), 0);
@@ -712,9 +709,8 @@ namespace Gambit {
       }
 
       virtual void collect_results() {
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR1", 13., {_numSR["SR1"], 0.}, {12., 3.}));
-        add_result(SignalRegionData("SR2", 18., {_numSR["SR2"], 0.}, {18., 4.}));
+        add_result(SignalRegionData(_counters.at("SR1"), 13., {12., 3.}));
+        add_result(SignalRegionData(_counters.at("SR2"), 18., {18., 4.}));
       }
 
     };
@@ -735,13 +731,12 @@ namespace Gambit {
       }
 
       virtual void collect_results() {
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR3", 19., {_numSR["SR3"], 0.}, {19., 4.}));
-        add_result(SignalRegionData("SR4", 128., {_numSR["SR4"], 0.}, {142, 34.}));
-        add_result(SignalRegionData("SR5", 18., {_numSR["SR5"], 0.}, {22, 5.}));
-        add_result(SignalRegionData("SR6", 2., {_numSR["SR6"], 0.}, {1, 0.6}));
-        add_result(SignalRegionData("SR7", 82., {_numSR["SR7"], 0.}, {109, 28.}));
-        add_result(SignalRegionData("SR8", 166., {_numSR["SR8"], 0.}, {197, 42.}));
+        add_result(SignalRegionData(_counters.at("SR3"), 19., {19., 4.}));
+        add_result(SignalRegionData(_counters.at("SR4"), 128., {142, 34.}));
+        add_result(SignalRegionData(_counters.at("SR5"), 18., {22, 5.}));
+        add_result(SignalRegionData(_counters.at("SR6"), 2., {1, 0.6}));
+        add_result(SignalRegionData(_counters.at("SR7"), 82., {109, 28.}));
+        add_result(SignalRegionData(_counters.at("SR8"), 166., {197, 42.}));
       }
 
     };

@@ -33,14 +33,14 @@ namespace Gambit {
     protected:
 
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
-        {"SR1", 0},
-        {"SR2", 0},
-        {"SR3", 0},
-        {"SR4", 0},
-        {"SR5", 0},
-        {"SR6", 0},
-        {"SR7", 0},
+      std::map<string, EventCounter> _counters = {
+        {"SR1", EventCounter("SR1")},
+        {"SR2", EventCounter("SR2")},
+        {"SR3", EventCounter("SR3")},
+        {"SR4", EventCounter("SR4")},
+        {"SR5", EventCounter("SR5")},
+        {"SR6", EventCounter("SR6")},
+        {"SR7", EventCounter("SR7")},
       };
 
     private:
@@ -263,17 +263,17 @@ namespace Gambit {
           //VZ
           if (nSignalBJets==0 && mT2>80. && mjj<110.)
           {
-            if (met>100. && met<150.) _numSR["SR1"] += event->weight();
-            if (met>150. && met<250.) _numSR["SR2"] += event->weight();
-            if (met>250. && met<350.) _numSR["SR3"] += event->weight();
-            if (met>350.) _numSR["SR4"] += event->weight();
+            if (met>100. && met<150.) _counters.at("SR1").add_event(event);
+            if (met>150. && met<250.) _counters.at("SR2").add_event(event);
+            if (met>250. && met<350.) _counters.at("SR3").add_event(event);
+            if (met>350.) _counters.at("SR4").add_event(event);
           }
           //HZ
           if (nSignalBJets==2 && mbb<150. && mT2>200.)
           {
-            if (met>100. && met<150.) _numSR["SR5"] += event->weight();
-            if (met>150. && met<250.) _numSR["SR6"] += event->weight();
-            if (met>250.) _numSR["SR7"] += event->weight();
+            if (met>100. && met<150.) _counters.at("SR5").add_event(event);
+            if (met>150. && met<250.) _counters.at("SR6").add_event(event);
+            if (met>250.) _counters.at("SR7").add_event(event);
           }
         }
 
@@ -346,6 +346,8 @@ namespace Gambit {
         const Analysis_CMS_13TeV_2OSLEP_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_2OSLEP_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (size_t j = 0; j < NCUTS; j++)
         {
@@ -353,23 +355,19 @@ namespace Gambit {
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
         }
 
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR.at(el.first);
-        }
-
       }
 
 
       virtual void collect_results()
       {
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR1", 57., {_numSR["SR1"], 0.}, {54.9, 7.}));
-        add_result(SignalRegionData("SR2", 29., {_numSR["SR2"], 0.}, {21.6, 5.6}));
-        add_result(SignalRegionData("SR3", 2.,  {_numSR["SR3"], 0.}, {6., 1.9}));
-        add_result(SignalRegionData("SR4", 0.,  {_numSR["SR4"], 0.}, {2.5, 0.9}));
-        add_result(SignalRegionData("SR5", 9.,  {_numSR["SR5"], 0.}, {7.6, 2.8}));
-        add_result(SignalRegionData("SR6", 5.,  {_numSR["SR6"], 0.}, {5.6, 1.6}));
-        add_result(SignalRegionData("SR7", 1.,  {_numSR["SR7"], 0.}, {1.3, 0.4}));
+
+        add_result(SignalRegionData(_counters.at("SR1"), 57., {54.9, 7.}));
+        add_result(SignalRegionData(_counters.at("SR2"), 29., {21.6, 5.6}));
+        add_result(SignalRegionData(_counters.at("SR3"), 2.,  {6., 1.9}));
+        add_result(SignalRegionData(_counters.at("SR4"), 0.,  {2.5, 0.9}));
+        add_result(SignalRegionData(_counters.at("SR5"), 9.,  {7.6, 2.8}));
+        add_result(SignalRegionData(_counters.at("SR6"), 5.,  {5.6, 1.6}));
+        add_result(SignalRegionData(_counters.at("SR7"), 1.,  {1.3, 0.4}));
 
         // Covariance matrix
         static const vector< vector<double> > BKGCOV = {
@@ -441,7 +439,7 @@ namespace Gambit {
     protected:
       void analysis_specific_reset() {
 
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
@@ -465,14 +463,13 @@ namespace Gambit {
 
       virtual void collect_results() {
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR1", 57., {_numSR["SR1"], 0.}, {54.9, 7.}));
-        add_result(SignalRegionData("SR2", 29., {_numSR["SR2"], 0.}, {21.6, 5.6}));
-        add_result(SignalRegionData("SR3", 2.,  {_numSR["SR3"], 0.}, {6., 1.9}));
-        add_result(SignalRegionData("SR4", 0.,  {_numSR["SR4"], 0.}, {2.5, 0.9}));
-        add_result(SignalRegionData("SR5", 9.,  {_numSR["SR5"], 0.}, {7.6, 2.8}));
-        add_result(SignalRegionData("SR6", 5.,  {_numSR["SR6"], 0.}, {5.6, 1.6}));
-        add_result(SignalRegionData("SR7", 1.,  {_numSR["SR7"], 0.}, {1.3, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR1"), 57., {54.9, 7.}));
+        add_result(SignalRegionData(_counters.at("SR2"), 29., {21.6, 5.6}));
+        add_result(SignalRegionData(_counters.at("SR3"), 2.,  {6., 1.9}));
+        add_result(SignalRegionData(_counters.at("SR4"), 0.,  {2.5, 0.9}));
+        add_result(SignalRegionData(_counters.at("SR5"), 9.,  {7.6, 2.8}));
+        add_result(SignalRegionData(_counters.at("SR6"), 5.,  {5.6, 1.6}));
+        add_result(SignalRegionData(_counters.at("SR7"), 1.,  {1.3, 0.4}));
 
       }
 

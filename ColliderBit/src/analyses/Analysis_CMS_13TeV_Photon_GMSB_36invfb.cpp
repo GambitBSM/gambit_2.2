@@ -37,11 +37,11 @@ namespace Gambit {
       static constexpr const char* detector = "CMS";
 
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
-        {"SR-600-800",   0},
-        {"SR-800-1000",  0},
-        {"SR-1000-1300", 0},
-        {"SR-1300",      0}
+      std::map<string, EventCounter> _counters = {
+        {"SR-600-800", EventCounter("SR-600-800")},
+        {"SR-800-1000", EventCounter("SR-800-1000")},
+        {"SR-1000-1300", EventCounter("SR-1000-1300")},
+        {"SR-1300", EventCounter("SR-1300")},
       };
 
 
@@ -133,10 +133,10 @@ namespace Gambit {
         _cutflow.fill(4);
 
         // Signal regions
-        if      (STgamma<800)  _numSR["SR-600-800"] += event->weight();
-        else if (STgamma<1000) _numSR["SR-800-1000"] += event->weight();
-        else if (STgamma<1300) _numSR["SR-1000-1300"] += event->weight();
-        else                   _numSR["SR-1300"] += event->weight();
+        if      (STgamma<800)  _counters.at("SR-600-800").add_event(event);
+        else if (STgamma<1000) _counters.at("SR-800-1000").add_event(event);
+        else if (STgamma<1300) _counters.at("SR-1000-1300").add_event(event);
+        else                   _counters.at("SR-1300").add_event(event);
 
       }
 
@@ -145,34 +145,32 @@ namespace Gambit {
       {
         const Analysis_CMS_13TeV_Photon_GMSB_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_Photon_GMSB_36invfb*>(other);
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR.at(el.first);
-        }
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
       }
 
 
       virtual void collect_results()
       {
         #ifdef CHECK_CUTFLOW
-        cout << _cutflow << endl;
-        for (auto& el : _numSR) {
-            cout << el.first << "\t" << _numSR[el.first] << endl;
-        }
+          cout << _cutflow << endl;
+          // Note: The EventCount::sum() call below gives the raw MC event count.
+          //       Use weight_sum() to get the sum of event weights.
+          for (auto& pair : _counters) {
+              cout << pair.first << "\t" << pair.second.sum() << endl;
+          }
         #endif
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR-600-800"  , 281., {_numSR["SR-600-800"],   0.}, {267,  27.2}));
-        add_result(SignalRegionData("SR-800-1000" , 101., {_numSR["SR-800-1000"],  0.}, {100.2,10.8}));
-        add_result(SignalRegionData("SR-1000-1300",  65., {_numSR["SR-1000-1300"], 0.}, {52.8, 6.16}));
-        add_result(SignalRegionData("SR-1300"     ,  24., {_numSR["SR-1300"],      0.}, {17.6, 2.76}));
+        add_result(SignalRegionData(_counters.at("SR-600-800")  , 281., {267,  27.2}));
+        add_result(SignalRegionData(_counters.at("SR-800-1000") , 101., {100.2,10.8}));
+        add_result(SignalRegionData(_counters.at("SR-1000-1300"),  65., {52.8, 6.16}));
+        add_result(SignalRegionData(_counters.at("SR-1300")     ,  24., {17.6, 2.76}));
 
       }
 
 
-
     protected:
       void analysis_specific_reset() {
-       for (auto& el : _numSR) { el.second = 0.;}
+       for (auto& pair : _counters) { pair.second.reset(); }
       }
 
     };

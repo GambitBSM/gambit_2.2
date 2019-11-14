@@ -26,13 +26,55 @@ namespace Gambit {
     private:
 
         // Numbers passing cuts
-        // double _SRSF[13], _SRDF[13], _SRALL[13],_SRA[3];
+        std::map<string, EventCounter> _counters = {
+            {"SF-SR-0", EventCounter("SF-SR-0")},
+            {"DF-SR-0", EventCounter("DF-SR-0")},
+            {"SF-SR-1", EventCounter("SF-SR-1")},
+            {"DF-SR-1", EventCounter("DF-SR-1")},
+            {"SF-SR-2", EventCounter("SF-SR-2")},
+            {"DF-SR-2", EventCounter("DF-SR-2")},
+            {"SF-SR-3", EventCounter("SF-SR-3")},
+            {"DF-SR-3", EventCounter("DF-SR-3")},
+            {"SF-SR-4", EventCounter("SF-SR-4")},
+            {"DF-SR-4", EventCounter("DF-SR-4")},
+            {"SF-SR-5", EventCounter("SF-SR-5")},
+            {"DF-SR-5", EventCounter("DF-SR-5")},
+            {"SF-SR-6", EventCounter("SF-SR-6")},
+            {"DF-SR-6", EventCounter("DF-SR-6")},
+            {"SF-SR-7", EventCounter("SF-SR-7")},
+            {"DF-SR-7", EventCounter("DF-SR-7")},
+            {"SF-SR-8", EventCounter("SF-SR-8")},
+            {"DF-SR-8", EventCounter("DF-SR-8")},
+            {"SF-SR-9", EventCounter("SF-SR-9")},
+            {"DF-SR-9", EventCounter("DF-SR-9")},
+            {"SF-SR-10", EventCounter("SF-SR-10")},
+            {"DF-SR-10", EventCounter("DF-SR-10")},
+            {"SF-SR-11", EventCounter("SF-SR-11")},
+            {"DF-SR-11", EventCounter("DF-SR-11")},
+            {"SF-SR-12", EventCounter("SF-SR-12")},
+            {"DF-SR-12", EventCounter("DF-SR-12")},
+            // 
+            {"ALL-SR-0", EventCounter("ALL-SR-0")},
+            {"ALL-SR-1", EventCounter("ALL-SR-1")},
+            {"ALL-SR-2", EventCounter("ALL-SR-2")},
+            {"ALL-SR-3", EventCounter("ALL-SR-3")},
+            {"ALL-SR-4", EventCounter("ALL-SR-4")},
+            {"ALL-SR-5", EventCounter("ALL-SR-5")},
+            {"ALL-SR-6", EventCounter("ALL-SR-6")},
+            {"ALL-SR-7", EventCounter("ALL-SR-7")},
+            {"ALL-SR-8", EventCounter("ALL-SR-8")},
+            {"ALL-SR-9", EventCounter("ALL-SR-9")},
+            {"ALL-SR-10", EventCounter("ALL-SR-10")},
+            {"ALL-SR-11", EventCounter("ALL-SR-11")},
+            {"ALL-SR-12", EventCounter("ALL-SR-12")},
+            // 
+            {"A-SR-0", EventCounter("A-SR-0")},
+            {"A-SR-1", EventCounter("A-SR-1")},
+            {"A-SR-2", EventCounter("A-SR-2")},
+        };
+
         static const size_t _SR_size = 13;
         static const size_t _SRA_size = 3;
-        std::vector<double> _SRSF;
-        std::vector<double> _SRDF;
-        std::vector<double> _SRALL;
-        std::vector<double> _SRA;
 
         // Cut Flow
         vector<int> cutFlowVector;
@@ -103,16 +145,7 @@ namespace Gambit {
             set_analysis_name("CMS_13TeV_2LEPStop_36invfb");
             set_luminosity(35.9);
 
-            for(size_t i=0;i<_SR_size;i++){
-                _SRSF.push_back(0);
-                _SRDF.push_back(0);
-                _SRALL.push_back(0);
-            }
-            for(size_t i=0;i<_SRA_size;i++){
-                _SRA.push_back(0);
-            }
             NCUTS= 11;
-
             for(int i=0;i<NCUTS;i++){
                 cutFlowVector.push_back(0);
                 cutFlowVector_str.push_back("");
@@ -360,7 +393,11 @@ namespace Gambit {
                    (j==10 && pre_cut && flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_80 )||
                    (j==11 && pre_cut && flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_200)||
                    (j==12 && pre_cut && flg_SF && sig_MT2ll_240)
-                   )_SRSF[j] += event->weight();
+                   ) 
+                {
+                    stringstream sr_key; sr_key << "SF-SR-" << j;
+                    _counters.at(sr_key.str()).add_event(event);
+                }
                  // diferent flavour
                 if(
                    (j==0 && pre_cut && !flg_SF && sig_MT2ll_100 && sig_MT2bl_0   && sig_MET_80 )||
@@ -376,7 +413,11 @@ namespace Gambit {
                    (j==10 && pre_cut && !flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_80 )||
                    (j==11 && pre_cut && !flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_200)||
                    (j==12 && pre_cut && !flg_SF && sig_MT2ll_240)
-                   )_SRDF[j] += event->weight();
+                   )
+                {
+                    stringstream sr_key; sr_key << "DF-SR-" << j;
+                    _counters.at(sr_key.str()).add_event(event);
+                }
                  // all
                 if(
                    (j==0 && pre_cut && sig_MT2ll_100 && sig_MT2bl_0   && sig_MET_80 )||
@@ -392,14 +433,24 @@ namespace Gambit {
                    (j==10 && pre_cut && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_80 )||
                    (j==11 && pre_cut && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_200)||
                    (j==12 && pre_cut && sig_MT2ll_240)
-                   )_SRALL[j] += event->weight();
+                   )
+                {
+                    stringstream sr_key; sr_key << "ALL-SR-" << j;
+                    _counters.at(sr_key.str()).add_event(event);
+                }
+
             }
             for(size_t j=0;j<_SRA_size;j++){
                 if(
                    (j==0  && pre_cut && sig_MT2ll_100 && sig_MET_200) ||
                    (j==1  && pre_cut && sig_MT2ll_140 && sig_MET_200)||
                    (j==2  && pre_cut && sig_MT2ll_240)
-                   )_SRA[j] += event->weight();
+                   )
+                {
+                    stringstream sr_key; sr_key << "A-SR-" << j;
+                    _counters.at(sr_key.str()).add_event(event);
+                }
+
             }
         return;
 
@@ -411,6 +462,8 @@ namespace Gambit {
             const Analysis_CMS_13TeV_2LEPStop_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_2LEPStop_36invfb*>(other);
 
+            for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
             if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
 
             for (int j=0; j<NCUTS; j++)
@@ -419,17 +472,6 @@ namespace Gambit {
                 cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
             }
 
-            for (size_t j=0; j<_SR_size; j++)
-            {
-                _SRSF[j] += specificOther->_SRSF[j];
-                _SRDF[j] += specificOther->_SRDF[j];
-                _SRALL[j] += specificOther->_SRALL[j];
-            }
-
-            for (size_t j=0; j<_SRA_size; j++)
-            {
-                _SRA[j] += specificOther->_SRA[j];
-            }
         }
 
 
@@ -473,41 +515,35 @@ namespace Gambit {
            //  }
            //  cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
 
-            // Observed event counts, same-flavor signal regions
-            static const double OBSNUM_SF[_SR_size] = {
-                112., 7., 69., 1., 0., 2., 2., 2., 1., 1., 0., 2., 1.
-            };
-            // Background estimates, same-flavor signal regions
-            static const double BKGNUM_SF[_SR_size] = {
-                131., 4.1, 60., 4.8, 0.5, 1.9, 1.1, 0.6, 2.1, 1.6, 0.3, 1.7, 0.7
-            };
-            // Background uncertainties, same-flavor signal regions
-            static const double BKGERR_SF[_SR_size] = {
-                30., 1.1, 13., 1.2, 0.2, 0.5, 0.6, 0.3, 0.7, 0.4, 0.1, 0.4, 0.3
-            };
 
-            // Observed event counts, different-flavor signal regions
-            static const double OBSNUM_DF[_SR_size] = {
-                141., 6., 67., 5., 1., 1., 1., 0., 1., 0., 0., 1., 0.
-            };
-            // Background estimates, different-flavor signal regions
-            static const double BKGNUM_DF[_SR_size] = {
-                139., 4.0, 70., 3.9, 0.7, 2.1, 0.5, 0.3, 0.8, 0.9, 0.1, 1.2, 0.5
-            };
-            // Background uncertainties, different-flavor signal regions
-            static const double BKGERR_DF[_SR_size] = {
-                32., 1.1, 17., 1.0, 0.2, 0.5, 0.2, 0.2, 0.2, 0.3, 0.1, 0.3, 0.2
-            };
+            // The ordering here is important! (Must match the ordering in the covariance matrix.)
 
-            for (size_t ibin = 0; ibin < _SR_size; ++ibin)
-            {
-                stringstream ss_SF; ss_SF << "SF-SR-" << ibin;
-                stringstream ss_DF; ss_DF << "DF-SR-" << ibin;
-                // The ordering here is important -- first add SF then DF regions.
-                // (Must match the ordering in the covariance matrix.)
-                add_result(SignalRegionData(ss_SF.str(), OBSNUM_SF[ibin], {_SRSF[ibin],  0.}, {BKGNUM_SF[ibin], BKGERR_SF[ibin]}));
-                add_result(SignalRegionData(ss_DF.str(), OBSNUM_DF[ibin], {_SRDF[ibin],  0.}, {BKGNUM_DF[ibin], BKGERR_DF[ibin]}));
-            }
+            add_result(SignalRegionData(_counters.at("SF-SR-0"), 112., {131., 30.}));
+            add_result(SignalRegionData(_counters.at("DF-SR-0"), 141., {139., 32.}));
+            add_result(SignalRegionData(_counters.at("SF-SR-1"), 7., {4.1, 1.1}));
+            add_result(SignalRegionData(_counters.at("DF-SR-1"), 6., {4.0, 1.1}));
+            add_result(SignalRegionData(_counters.at("SF-SR-2"), 69., {60., 13.}));
+            add_result(SignalRegionData(_counters.at("DF-SR-2"), 67., {70., 17.}));
+            add_result(SignalRegionData(_counters.at("SF-SR-3"), 1., {4.8, 1.2}));
+            add_result(SignalRegionData(_counters.at("DF-SR-3"), 5., {3.9, 1.0}));
+            add_result(SignalRegionData(_counters.at("SF-SR-4"), 0., {0.5, 0.2}));
+            add_result(SignalRegionData(_counters.at("DF-SR-4"), 1., {0.7, 0.2}));
+            add_result(SignalRegionData(_counters.at("SF-SR-5"), 2., {1.9, 0.5}));
+            add_result(SignalRegionData(_counters.at("DF-SR-5"), 1., {2.1, 0.5}));
+            add_result(SignalRegionData(_counters.at("SF-SR-6"), 2., {1.1, 0.6}));
+            add_result(SignalRegionData(_counters.at("DF-SR-6"), 1., {0.5, 0.2}));
+            add_result(SignalRegionData(_counters.at("SF-SR-7"), 2., {0.6, 0.3}));
+            add_result(SignalRegionData(_counters.at("DF-SR-7"), 0., {0.3, 0.2}));
+            add_result(SignalRegionData(_counters.at("SF-SR-8"), 1., {2.1, 0.7}));
+            add_result(SignalRegionData(_counters.at("DF-SR-8"), 1., {0.8, 0.2}));
+            add_result(SignalRegionData(_counters.at("SF-SR-9"), 1., {1.6, 0.4}));
+            add_result(SignalRegionData(_counters.at("DF-SR-9"), 0., {0.9, 0.3}));
+            add_result(SignalRegionData(_counters.at("SF-SR-10"), 0., {0.3, 0.1}));
+            add_result(SignalRegionData(_counters.at("DF-SR-10"), 0., {0.1, 0.1}));
+            add_result(SignalRegionData(_counters.at("SF-SR-11"), 2., {1.7, 0.4}));
+            add_result(SignalRegionData(_counters.at("DF-SR-11"), 1., {1.2, 0.3}));
+            add_result(SignalRegionData(_counters.at("SF-SR-12"), 1., {0.7, 0.3}));
+            add_result(SignalRegionData(_counters.at("DF-SR-12"), 0., {0.5, 0.2}));
 
             // Covariance
             static const vector< vector<double> > BKGCOV = {
@@ -548,10 +584,7 @@ namespace Gambit {
     protected:
       void analysis_specific_reset() {
 
-        std::fill(_SRSF.begin(), _SRSF.end(), 0);
-        std::fill(_SRDF.begin(), _SRDF.end(), 0);
-        std::fill(_SRALL.begin(), _SRALL.end(), 0);
-        std::fill(_SRA.begin(), _SRA.end(), 0);
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
 

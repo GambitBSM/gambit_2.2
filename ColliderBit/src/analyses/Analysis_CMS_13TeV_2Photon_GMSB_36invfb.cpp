@@ -70,13 +70,13 @@ namespace Gambit {
       static constexpr const char* detector = "CMS";
 
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
-        {"SR_MET_100-115",  0},
-        {"SR_MET_115-130",  0},
-        {"SR_MET_130-150",  0},
-        {"SR_MET_150-185",  0},
-        {"SR_MET_185-250",  0},
-        {"SR_MET_>250",  0},
+      std::map<string, EventCounter> _counters = {
+        {"SR_MET_100-115", EventCounter("SR_MET_100-115")},
+        {"SR_MET_115-130", EventCounter("SR_MET_115-130")},
+        {"SR_MET_130-150", EventCounter("SR_MET_130-150")},
+        {"SR_MET_150-185", EventCounter("SR_MET_150-185")},
+        {"SR_MET_185-250", EventCounter("SR_MET_185-250")},
+        {"SR_MET_>250", EventCounter("SR_MET_>250")},
       };
 
       // Cutflow _cutflow;
@@ -276,12 +276,12 @@ namespace Gambit {
 
         // Fill signal region
         if (trigger && isDiphoton && DeltaR_gt_06 && mgg_gt_105 && !muVeto && !elVeto) {
-          if      (met > 100. && met < 115) _numSR["SR_MET_100-115"] += event->weight();
-          else if (met > 115. && met < 130) _numSR["SR_MET_115-130"] += event->weight();
-          else if (met > 130. && met < 150) _numSR["SR_MET_130-150"] += event->weight();
-          else if (met > 150. && met < 185) _numSR["SR_MET_150-185"] += event->weight();
-          else if (met > 185. && met < 250) _numSR["SR_MET_185-250"] += event->weight();
-          else if (met > 250.) _numSR["SR_MET_>250"] += event->weight();
+          if      (met > 100. && met < 115) _counters.at("SR_MET_100-115").add_event(event);
+          else if (met > 115. && met < 130) _counters.at("SR_MET_115-130").add_event(event);
+          else if (met > 130. && met < 150) _counters.at("SR_MET_130-150").add_event(event);
+          else if (met > 150. && met < 185) _counters.at("SR_MET_150-185").add_event(event);
+          else if (met > 185. && met < 250) _counters.at("SR_MET_185-250").add_event(event);
+          else if (met > 250.) _counters.at("SR_MET_>250").add_event(event);
         }
 
       }
@@ -292,34 +292,25 @@ namespace Gambit {
       {
         const Analysis_CMS_13TeV_2Photon_GMSB_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_2Photon_GMSB_36invfb*>(other);
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR.at(el.first);
-        }
+
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
       }
 
 
       virtual void collect_results()
       {
-        // #ifdef CHECK_CUTFLOW
-        // cout << _cutflow << endl;
-        // for (auto& el : _numSR) {
-        //     cout << el.first << "\t" << _numSR[el.first] << endl;
-        // }
-        // #endif
-
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR_MET_100-115", 105, {_numSR["SR_MET_100-115"], 0.}, {114., 13.}));
-        add_result(SignalRegionData("SR_MET_115-130", 39, {_numSR["SR_MET_115-130"], 0.}, {42.9, 7.5}));
-        add_result(SignalRegionData("SR_MET_130-150", 21, {_numSR["SR_MET_130-150"], 0.}, {27.3, 5.6}));
-        add_result(SignalRegionData("SR_MET_150-185", 21, {_numSR["SR_MET_150-185"], 0.}, {17.4, 4.1}));
-        add_result(SignalRegionData("SR_MET_185-250", 11, {_numSR["SR_MET_185-250"], 0.}, {10.2, 2.7}));
-        add_result(SignalRegionData("SR_MET_>250", 12, {_numSR["SR_MET_>250"], 0.}, {5.4, 1.6}));
+        add_result(SignalRegionData(_counters.at("SR_MET_100-115"), 105, {114., 13.}));
+        add_result(SignalRegionData(_counters.at("SR_MET_115-130"), 39, {42.9, 7.5}));
+        add_result(SignalRegionData(_counters.at("SR_MET_130-150"), 21, {27.3, 5.6}));
+        add_result(SignalRegionData(_counters.at("SR_MET_150-185"), 21, {17.4, 4.1}));
+        add_result(SignalRegionData(_counters.at("SR_MET_185-250"), 11, {10.2, 2.7}));
+        add_result(SignalRegionData(_counters.at("SR_MET_>250"), 12, {5.4, 1.6}));
       }
 
 
     protected:
       void analysis_specific_reset() {
-       for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
       }
 
     };
