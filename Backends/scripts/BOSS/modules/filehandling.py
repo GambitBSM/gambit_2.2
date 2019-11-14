@@ -736,7 +736,7 @@ def createFrontendHeader(function_xml_files_dict):
             # TODO: TG: Modified for templates which use aliases, not typedefs
             if class_namespace == '':
                 if is_template:
-                    class_typedef_code += "template " + templ_brackets + '\n'
+                    class_typedef_code += "template " + templ_bracket + '\n'
                     class_typedef_code += "using " + class_name['short'] + ' = ' + '::' + gb.gambit_backend_name_full + '::' + class_name['long'] + templ_vars + ';\n'
                 else : 
                     class_typedef_code += 'typedef ::' + gb.gambit_backend_name_full + '::' + class_name['long'] + ' ' + class_name['short'] + ';\n'
@@ -745,7 +745,7 @@ def createFrontendHeader(function_xml_files_dict):
 
                 class_typedef_code += utils.constrNamespace(class_namespace_list, 'open', indent=cfg.indent)
                 if is_template:
-                    class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'template ' + templ_brackets + '\n'
+                    class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'template ' + templ_bracket + '\n'
                     class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'using ' + class_name['short'] + '::' + gb.gambit_backend_name_full + '::' + class_name['long'] + templ_vars + ';\n'
                 else : 
                     class_typedef_code += ' '*cfg.indent*len(class_namespace_list) + 'typedef ::' + gb.gambit_backend_name_full + '::' + class_name['long'] + ' ' + class_name['short'] + ';\n'

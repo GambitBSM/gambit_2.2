@@ -6,7 +6,6 @@
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_Spectrum_generator_settings.h"
 #include <string>
-#include <array>
 
 #include "identification.hpp"
 

@@ -2,7 +2,6 @@
 #define __wrapper_Spectrum_generator_settings_def_FlexibleSUSY_CMSSM_2_0_1_h__
 
 #include <string>
-#include <array>
 
 #include "identification.hpp"
 

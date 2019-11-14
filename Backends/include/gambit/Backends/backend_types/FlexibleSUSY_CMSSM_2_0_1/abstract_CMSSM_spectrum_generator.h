@@ -21,54 +21,65 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace flexiblesusy
     {
         template <>
-        class Abstract_Two_scale><flexiblesusy::Two_scale> : virtual public flexiblesusy::CMSSM_spectrum_generator_interface<flexiblesusy::Abstract_Two_scale>
+        class Abstract_CMSSM_spectrum_generator : public virtual AbstractBase
         {
             public:
     
+                virtual double get_high_scale() const =0;
+    
+                virtual double get_susy_scale() const =0;
+    
+                virtual double get_low_scale() const =0;
+    
+                virtual double get_pole_mass_scale() const =0;
+    
+                virtual void write_running_couplings(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&) const =0;
+    
+                virtual void write_running_couplings__BOSS() const =0;
+    
             public:
-                virtual void pointer_assign__BOSS(Abstract_Two_scale>*) =0;
-                virtual Abstract_Two_scale>* pointer_copy__BOSS() =0;
+                virtual void pointer_assign__BOSS(Abstract_CMSSM_spectrum_generator*) =0;
+                virtual Abstract_CMSSM_spectrum_generator* pointer_copy__BOSS() =0;
     
             private:
-                CMSSM_spectrum_generator* wptr;
+                CMSSM_spectrum_generator<>* wptr;
                 bool delete_wrapper;
             public:
-                CMSSM_spectrum_generator* get_wptr() { return wptr; }
-                void set_wptr(CMSSM_spectrum_generator* wptr_in) { wptr = wptr_in; }
+                CMSSM_spectrum_generator<>* get_wptr() { return wptr; }
+                void set_wptr(CMSSM_spectrum_generator<>* wptr_in) { wptr = wptr_in; }
                 bool get_delete_wrapper() { return delete_wrapper; }
                 void set_delete_wrapper(bool del_wrp_in) { delete_wrapper = del_wrp_in; }
     
             public:
-                Abstract_Two_scale>()
+                Abstract_CMSSM_spectrum_generator()
                 {
                     wptr = 0;
                     delete_wrapper = false;
                 }
     
-                Abstract_Two_scale>(const Abstract_Two_scale>& in) : 
-                    flexiblesusy::CMSSM_spectrum_generator_interface<flexiblesusy::Abstract_Two_scale>(in)
+                Abstract_CMSSM_spectrum_generator(const Abstract_CMSSM_spectrum_generator&)
                 {
                     wptr = 0;
                     delete_wrapper = false;
                 }
     
-                Abstract_Two_scale>& operator=(const Abstract_Two_scale>&) { return *this; }
+                Abstract_CMSSM_spectrum_generator& operator=(const Abstract_CMSSM_spectrum_generator&) { return *this; }
     
                 virtual void init_wrapper() =0;
     
-                CMSSM_spectrum_generator* get_init_wptr()
+                CMSSM_spectrum_generator<>* get_init_wptr()
                 {
                     init_wrapper();
                     return wptr;
                 }
     
-                CMSSM_spectrum_generator& get_init_wref()
+                CMSSM_spectrum_generator<>& get_init_wref()
                 {
                     init_wrapper();
                     return *wptr;
                 }
     
-                virtual ~Abstract_Two_scale>() =0;
+                virtual ~Abstract_CMSSM_spectrum_generator() =0;
         };
     }
     

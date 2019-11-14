@@ -777,6 +777,45 @@ def findNewLinePos(content, line_number):
 # ====== END: findNewLinePos ========
 
 
+# ====== getBracketLength =======
+
+def getBracketLength(content, line_number):
+
+    length = 0
+    count = 0
+    found_first_bracket = False
+    first_bracket_open = False
+    n_brackets = 0
+
+    print(content[line_number:])
+    
+    while first_bracket_open or not found_first_bracket :
+
+        c = content[line_number+count]
+        print(c)
+
+        if c == '<' and not found_first_bracket : 
+            found_first_bracket = True
+            first_bracket_open = True
+            n_brackets += 1
+
+        elif c == '<' and first_bracket_open :
+            n_brackets += 1
+
+        elif c == '>' and first_bracket_open :
+            n_brackets -= 1
+            if n_brackets == 0:
+                first_bracket_open = False
+
+        if first_bracket_open:
+            length += 1
+
+        count += 1
+
+    print(length)
+    return length
+   
+# ====== END: getBracketLength =======
 
 # ====== getBracketPositions ========
 
@@ -2566,6 +2605,7 @@ def isProblematicType(el):
             pass
 
         else:
+
             for templ_arg in unpacked_template_args:
 
                 # Remove asterix and/or ampersand
@@ -2580,10 +2620,13 @@ def isProblematicType(el):
                 if type_el is not None:
 
                     # If this is a native type, the input type is problematic for BOSS
+                    # TODO: TG: Why? It should be fine
                     if isNative(type_el):
-
-                        is_problematic = True
+                    #
+                    #    is_problematic = True
                         return is_problematic
+                else :
+                    is_problematic = True
 
     return is_problematic
 

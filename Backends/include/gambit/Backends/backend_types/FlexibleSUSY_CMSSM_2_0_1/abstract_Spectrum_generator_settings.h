@@ -5,7 +5,6 @@
 #include "forward_decls_abstract_classes.h"
 #include "forward_decls_wrapper_classes.h"
 #include <string>
-#include <array>
 #include <cstddef>
 #include <iostream>
 

@@ -342,6 +342,8 @@ def addAbsClassToInheritanceList(class_el, class_name, abstr_class_name, is_temp
         if src_is_specialization:
             spec_template_types = utils.getSpecTemplateTypes(class_el)
             add_template_bracket = '<' + ','.join(spec_template_types) + '>'
+            # TODO: TG: Get actual bracket length
+            bracket_length = utils.getBracketLength(original_file_content_nocomments, class_name_pos)
         else:
             template_bracket, template_types = utils.getTemplateBracket(class_el)
             add_template_bracket = '<' + ','.join(template_types) + '>'
@@ -353,7 +355,9 @@ def addAbsClassToInheritanceList(class_el, class_name, abstr_class_name, is_temp
         # - Calculate insert position
         insert_pos = class_name_pos + len(class_name['short'])
         if is_template and src_is_specialization:
-            insert_pos += len(add_template_bracket)
+            # TODO: TG: This fails is the template specialization uses the short name
+            #insert_pos += len(add_template_bracket)
+            insert_pos += bracket_length
 
         # - Generate code
         add_code = ' : public virtual ' + abstr_class_name['short']
@@ -365,10 +369,14 @@ def addAbsClassToInheritanceList(class_el, class_name, abstr_class_name, is_temp
 
         # - Get colon position
         if is_template and src_is_specialization:
-            temp_pos = class_name_pos + len(class_name['short']) + len(add_template_bracket)
+            # TODO: TG: This fails is the template specialization uses the short name
+            #temp_pos = class_name_pos + len(class_name['short']) + len(add_template_bracket)
+            temp_pos = class_name_pos + len(class_name['short']) + bracket_length
         else:
             temp_pos = class_name_pos + len(class_name['short'])
-        colon_pos = temp_pos + original_file_content_nocomments[temp_pos:newline_pos].find(':')
+        # TODO: TG: This fails if the colon is the next line
+        #colon_pos = temp_pos + original_file_content_nocomments[temp_pos:newline_pos].find(':')
+        colon_pos = temp_pos + original_file_content_nocomments[temp_pos:].find(':')
 
         # - Calculate insert position
         insert_pos = colon_pos + 1
