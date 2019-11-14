@@ -57,14 +57,16 @@ namespace Gambit {
 
     protected:
       // Numbers passing cuts
-      double _num2L2JHIGH;
-      double _num2L2JINT;
-      double _num2L2JLOW;
-      double _num2L2JCOMP;
-      double _num3LHIGH;
-      double _num3LINT;
-      double _num3LLOW;
-      double _num3LCOMP;
+      std::map<string, EventCounter> _counters = {
+        {"2L2JHIGH", EventCounter("2L2JHIGH")},
+        {"2L2JINT", EventCounter("2L2JINT")},
+        {"2L2JLOW", EventCounter("2L2JLOW")},
+        {"2L2JCOMP", EventCounter("2L2JCOMP")},
+        {"3LHIGH", EventCounter("3LHIGH")},
+        {"3LINT", EventCounter("3LINT")},
+        {"3LLOW", EventCounter("3LLOW")},
+        {"3LCOMP", EventCounter("3LCOMP")},
+      };
 
     private:
 
@@ -249,15 +251,6 @@ namespace Gambit {
 
         set_analysis_name("ATLAS_13TeV_RJ3L_lowmass_36invfb");
         set_luminosity(36.);
-
-        _num2L2JHIGH=0;
-        _num2L2JINT=0;
-        _num2L2JLOW=0;
-        _num2L2JCOMP=0;
-        _num3LHIGH=0;
-        _num3LINT=0;
-        _num3LLOW=0;
-        _num3LCOMP=0;
 
         NCUTS=70;
 
@@ -2083,22 +2076,22 @@ namespace Gambit {
 
         // Now apply the signal region cuts
 
-        if(m_is2Lep2Jet && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && signalJets.size()>=2 && m_mll>80. && m_mll<100. && m_mjj>60. && m_mjj<100. && m_R_minH2P_minH3P>0.8 && m_RPT_HT5PP< 0.05 && m_dphiVP>0.3 && m_dphiVP<2.8 && m_H5PP>800.) _num2L2JHIGH += event->weight();
+        if(m_is2Lep2Jet && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && signalJets.size()>=2 && m_mll>80. && m_mll<100. && m_mjj>60. && m_mjj<100. && m_R_minH2P_minH3P>0.8 && m_RPT_HT5PP< 0.05 && m_dphiVP>0.3 && m_dphiVP<2.8 && m_H5PP>800.) _counters.at("2L2JHIGH").add_event(event);
 
-        if(m_is2Lep2Jet && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && signalJets.size()>=2 && m_mll>80. && m_mll<100. && m_mjj>60. && m_mjj<100. && m_R_minH2P_minH3P>0.8 && m_RPT_HT5PP<0.05 && m_dphiVP>0.6 && m_dphiVP<2.6 && m_H5PP>600.) _num2L2JINT += event->weight();
+        if(m_is2Lep2Jet && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && signalJets.size()>=2 && m_mll>80. && m_mll<100. && m_mjj>60. && m_mjj<100. && m_R_minH2P_minH3P>0.8 && m_RPT_HT5PP<0.05 && m_dphiVP>0.6 && m_dphiVP<2.6 && m_H5PP>600.) _counters.at("2L2JINT").add_event(event);
 
 
-        if(m_is2Lep2Jet && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && signalJets.size()==2 && m_mll>80. && m_mll<100. && m_mjj>70. && m_mjj<90. && m_H2PP/m_H5PP>0.35 && m_H2PP/m_H5PP<0.6 && m_RPT_HT5PP<0.05 && m_minDphi>2.4 && m_H5PP>400.) _num2L2JLOW += event->weight();
+        if(m_is2Lep2Jet && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && signalJets.size()==2 && m_mll>80. && m_mll<100. && m_mjj>70. && m_mjj<90. && m_H2PP/m_H5PP>0.35 && m_H2PP/m_H5PP<0.6 && m_RPT_HT5PP<0.05 && m_minDphi>2.4 && m_H5PP>400.) _counters.at("2L2JLOW").add_event(event);
 
-        if(m_is2L2JInt && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && m_NjS==2 && m_NjISR>0 && m_MZ>80. && m_MZ<100. &&  m_MJ>50. && m_MJ<110. && m_dphiISRI>2.8 && m_RISR > 0.40 && m_RISR < 0.75 && m_PTISR > 180. && m_PTI > 100. && m_PTCM < 20.) _num2L2JCOMP += event->weight();
+        if(m_is2L2JInt && m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign) && m_lept1Pt>25. && m_lept2Pt>25. && m_jet1Pt>30. && m_jet2Pt>30. && signalBJets.size()==0 && m_NjS==2 && m_NjISR>0 && m_MZ>80. && m_MZ<100. &&  m_MJ>50. && m_MJ<110. && m_dphiISRI>2.8 && m_RISR > 0.40 && m_RISR < 0.75 && m_PTISR > 180. && m_PTI > 100. && m_PTCM < 20.) _counters.at("2L2JCOMP").add_event(event);
 
-        if(m_is3Lep && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>60. && m_lept2Pt>60. && m_lept3Pt>40. && signalBJets.size()==0 && signalJets.size()<3 && m_mll>75. && m_mll<105. && m_mTW>150. && m_HT4PP/m_H4PP > 0.75 && m_R_minH2P_minH3P>0.8 && m_H4PP > 550. && m_RPT_HT4PP < 0.2) _num3LHIGH += event->weight();
+        if(m_is3Lep && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>60. && m_lept2Pt>60. && m_lept3Pt>40. && signalBJets.size()==0 && signalJets.size()<3 && m_mll>75. && m_mll<105. && m_mTW>150. && m_HT4PP/m_H4PP > 0.75 && m_R_minH2P_minH3P>0.8 && m_H4PP > 550. && m_RPT_HT4PP < 0.2) _counters.at("3LHIGH").add_event(event);
 
-        if(m_is3Lep && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>60. && m_lept2Pt>50. && m_lept3Pt>30. && signalBJets.size()==0 && signalJets.size()<3 && m_mll>75. && m_mll<105. && m_mTW>130. && m_HT4PP/m_H4PP > 0.8 && m_R_minH2P_minH3P>0.75 && m_H4PP > 450. && m_RPT_HT4PP < 0.15) _num3LINT += event->weight();
+        if(m_is3Lep && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>60. && m_lept2Pt>50. && m_lept3Pt>30. && signalBJets.size()==0 && signalJets.size()<3 && m_mll>75. && m_mll<105. && m_mTW>130. && m_HT4PP/m_H4PP > 0.8 && m_R_minH2P_minH3P>0.75 && m_H4PP > 450. && m_RPT_HT4PP < 0.15) _counters.at("3LINT").add_event(event);
 
-        if(m_is3LInt && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>25. && m_lept2Pt>25. && m_lept3Pt>20. && signalBJets.size()==0 && signalJets.size()<4 && m_mll>75. && m_mll<105. && m_mTW>100. && m_dphiISRI>2.0 && m_RISR>0.55 && m_RISR<1.0 && m_PTISR>100. && m_PTI>80. && m_PTCM<25.) _num3LCOMP += event->weight();
+        if(m_is3LInt && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>25. && m_lept2Pt>25. && m_lept3Pt>20. && signalBJets.size()==0 && signalJets.size()<4 && m_mll>75. && m_mll<105. && m_mTW>100. && m_dphiISRI>2.0 && m_RISR>0.55 && m_RISR<1.0 && m_PTISR>100. && m_PTI>80. && m_PTCM<25.) _counters.at("3LCOMP").add_event(event);
 
-        if(m_is3Lep && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>60. && m_lept2Pt>40. && m_lept3Pt>30. && signalBJets.size()==0 && signalJets.size()==0 && m_mll>75. && m_mll<105. && m_mTW>100. && m_HT4PP/m_H4PP > 0.9 && m_H4PP > 250. && m_RPT_HT4PP < 0.05) _num3LLOW += event->weight();
+        if(m_is3Lep && (((m_lept1sign*m_lept2sign<0 && abs(m_lept1sign)==abs(m_lept2sign)) || (m_lept1sign*m_lept3sign<0 && abs(m_lept1sign)==abs(m_lept3sign)) || (m_lept2sign*m_lept3sign<0 && abs(m_lept2sign)==abs(m_lept3sign)))) && m_lept1Pt>60. && m_lept2Pt>40. && m_lept3Pt>30. && signalBJets.size()==0 && signalJets.size()==0 && m_mll>75. && m_mll<105. && m_mTW>100. && m_HT4PP/m_H4PP > 0.9 && m_H4PP > 250. && m_RPT_HT4PP < 0.05) _counters.at("3LLOW").add_event(event);
 
         return;
 
@@ -2110,6 +2103,8 @@ namespace Gambit {
         const Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb* specificOther
           = dynamic_cast<const Analysis_ATLAS_13TeV_RJ3L_lowmass_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
 
         for (int j=0; j<NCUTS; j++)
@@ -2118,7 +2113,6 @@ namespace Gambit {
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
         }
 
-        _num3LLOW+= specificOther->_num3LLOW;
       }
 
 
@@ -2138,15 +2132,15 @@ namespace Gambit {
           }
           cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
 */
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("2L2JHIGH", 0,  {_num2L2JHIGH,  0.}, {1.9, 0.8}));
-        add_result(SignalRegionData("2L2JINT",  1,  {_num2L2JINT,   0.}, {2.4, 0.9}));
-        add_result(SignalRegionData("2L2JLOW",  19, {_num2L2JLOW,   0.}, {8.4, 5.8}));
-        add_result(SignalRegionData("2L2JCOMP", 11, {_num2L2JCOMP,  0.}, {2.7, 2.7}));
-        add_result(SignalRegionData("3LHIGH",   2,  {_num3LHIGH,    0.}, {1.1, 0.5}));
-        add_result(SignalRegionData("3LINT",    1,  {_num3LINT,     0.}, {2.3, 0.5}));
-        add_result(SignalRegionData("3LLOW",    20, {_num3LLOW,     0.}, {10., 2.0}));
-        add_result(SignalRegionData("3LCOMP",   12, {_num3LCOMP,    0.}, {3.9, 1.0}));
+
+        add_result(SignalRegionData(_counters.at("2L2JHIGH"), 0,  {1.9, 0.8}));
+        add_result(SignalRegionData(_counters.at("2L2JINT"),  1,  {2.4, 0.9}));
+        add_result(SignalRegionData(_counters.at("2L2JLOW"),  19, {8.4, 5.8}));
+        add_result(SignalRegionData(_counters.at("2L2JCOMP"), 11, {2.7, 2.7}));
+        add_result(SignalRegionData(_counters.at("3LHIGH"),   2,  {1.1, 0.5}));
+        add_result(SignalRegionData(_counters.at("3LINT"),    1,  {2.3, 0.5}));
+        add_result(SignalRegionData(_counters.at("3LLOW"),    20, {10., 2.0}));
+        add_result(SignalRegionData(_counters.at("3LCOMP"),   12, {3.9, 1.0}));
 
         return;
       }
@@ -2154,14 +2148,8 @@ namespace Gambit {
 
     protected:
       void analysis_specific_reset() {
-        _num2L2JHIGH=0;
-        _num2L2JINT=0;
-        _num2L2JLOW=0;
-        _num2L2JCOMP=0;
-        _num3LHIGH=0;
-        _num3LINT=0;
-        _num3LLOW=0;
-        _num3LCOMP=0;
+
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
@@ -2180,10 +2168,10 @@ namespace Gambit {
         set_analysis_name("ATLAS_13TeV_RJ3L_2Lep2Jets_36invfb");
       }
       virtual void collect_results() {
-        add_result(SignalRegionData("2L2JHIGH", 0,  {_num2L2JHIGH,  0.}, {1.9, 0.8}));
-        add_result(SignalRegionData("2L2JINT",  1,  {_num2L2JINT,   0.}, {2.4, 0.9}));
-        add_result(SignalRegionData("2L2JLOW",  19, {_num2L2JLOW,   0.}, {8.4, 5.8}));
-        add_result(SignalRegionData("2L2JCOMP", 11, {_num2L2JCOMP,  0.}, {2.7, 2.7}));
+        add_result(SignalRegionData(_counters.at("2L2JHIGH"), 0,  {1.9, 0.8}));
+        add_result(SignalRegionData(_counters.at("2L2JINT"),  1,  {2.4, 0.9}));
+        add_result(SignalRegionData(_counters.at("2L2JLOW"),  19, {8.4, 5.8}));
+        add_result(SignalRegionData(_counters.at("2L2JCOMP"), 11, {2.7, 2.7}));
       }
 
     };
@@ -2196,10 +2184,10 @@ namespace Gambit {
         set_analysis_name("ATLAS_13TeV_RJ3L_3Lep_36invfb");
       }
       virtual void collect_results() {
-        add_result(SignalRegionData("3LHIGH",   2,  {_num3LHIGH,    0.}, {1.1, 0.5}));
-        add_result(SignalRegionData("3LINT",    1,  {_num3LINT,     0.}, {2.3, 0.5}));
-        add_result(SignalRegionData("3LLOW",    20, {_num3LLOW,     0.}, {10., 2.0}));
-        add_result(SignalRegionData("3LCOMP",   12, {_num3LCOMP,    0.}, {3.9, 1.0}));
+        add_result(SignalRegionData(_counters.at("3LHIGH"),   2,  {1.1, 0.5}));
+        add_result(SignalRegionData(_counters.at("3LINT"),    1,  {2.3, 0.5}));
+        add_result(SignalRegionData(_counters.at("3LLOW"),    20, {10., 2.0}));
+        add_result(SignalRegionData(_counters.at("3LCOMP"),   12, {3.9, 1.0}));
       }
 
     };

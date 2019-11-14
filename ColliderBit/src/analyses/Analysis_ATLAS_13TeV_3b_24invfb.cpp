@@ -30,55 +30,57 @@ namespace Gambit {
 
     protected:
       // Signal region map
-      std::map<string,double> _numSR = {
-        {"meff160_ETmiss0", 0.},        // Exclusion regions
-        {"meff160_ETmiss20", 0.},
-        {"meff200_ETmiss0", 0.},
-        {"meff200_ETmiss20", 0.},
-        {"meff200_ETmiss45", 0.},
-        {"meff200_ETmiss70", 0.},
-        {"meff260_ETmiss0", 0.},
-        {"meff260_ETmiss20", 0.},
-        {"meff260_ETmiss45", 0.},
-        {"meff260_ETmiss70", 0.},
-        {"meff260_ETmiss100", 0.},
-        {"meff340_ETmiss0", 0.},
-        {"meff340_ETmiss20", 0.},
-        {"meff340_ETmiss45", 0.},
-        {"meff340_ETmiss70", 0.},
-        {"meff340_ETmiss100", 0.},
-        {"meff340_ETmiss150", 0.},
-        {"meff340_ETmiss200", 0.},
-        {"meff440_ETmiss0", 0.},
-        {"meff440_ETmiss20", 0.},
-        {"meff440_ETmiss45", 0.},
-        {"meff440_ETmiss70", 0.},
-        {"meff440_ETmiss100", 0.},
-        {"meff440_ETmiss150", 0.},
-        {"meff440_ETmiss200", 0.},
-        {"meff560_ETmiss0", 0.},
-        {"meff560_ETmiss20", 0.},
-        {"meff560_ETmiss45", 0.},
-        {"meff560_ETmiss70", 0.},
-        {"meff560_ETmiss100", 0.},
-        {"meff560_ETmiss150", 0.},
-        {"meff560_ETmiss200", 0.},
-        {"meff700_ETmiss0", 0.},
-        {"meff700_ETmiss20", 0.},
-        {"meff700_ETmiss45", 0.},
-        {"meff700_ETmiss70", 0.},
-        {"meff700_ETmiss100", 0.},
-        {"meff700_ETmiss150", 0.},
-        {"meff700_ETmiss200", 0.},
-        {"meff860_ETmiss0", 0.},
-        {"meff860_ETmiss20", 0.},
-        {"meff860_ETmiss45", 0.},
-        {"meff860_ETmiss70", 0.},
-        {"meff860_ETmiss100", 0.},
-        {"meff860_ETmiss150", 0.},
-        {"meff860_ETmiss200", 0.},
-        {"low-SR-MET0meff440", 0.},       // Discovery regions
-        {"low-SR-MET150meff440", 0.}
+      std::map<string, EventCounter> _counters = {
+        // Exclusion regions
+        {"meff160_ETmiss0", EventCounter("meff160_ETmiss0")},
+        {"meff160_ETmiss20", EventCounter("meff160_ETmiss20")},
+        {"meff200_ETmiss0", EventCounter("meff200_ETmiss0")},
+        {"meff200_ETmiss20", EventCounter("meff200_ETmiss20")},
+        {"meff200_ETmiss45", EventCounter("meff200_ETmiss45")},
+        {"meff200_ETmiss70", EventCounter("meff200_ETmiss70")},
+        {"meff260_ETmiss0", EventCounter("meff260_ETmiss0")},
+        {"meff260_ETmiss20", EventCounter("meff260_ETmiss20")},
+        {"meff260_ETmiss45", EventCounter("meff260_ETmiss45")},
+        {"meff260_ETmiss70", EventCounter("meff260_ETmiss70")},
+        {"meff260_ETmiss100", EventCounter("meff260_ETmiss100")},
+        {"meff340_ETmiss0", EventCounter("meff340_ETmiss0")},
+        {"meff340_ETmiss20", EventCounter("meff340_ETmiss20")},
+        {"meff340_ETmiss45", EventCounter("meff340_ETmiss45")},
+        {"meff340_ETmiss70", EventCounter("meff340_ETmiss70")},
+        {"meff340_ETmiss100", EventCounter("meff340_ETmiss100")},
+        {"meff340_ETmiss150", EventCounter("meff340_ETmiss150")},
+        {"meff340_ETmiss200", EventCounter("meff340_ETmiss200")},
+        {"meff440_ETmiss0", EventCounter("meff440_ETmiss0")},
+        {"meff440_ETmiss20", EventCounter("meff440_ETmiss20")},
+        {"meff440_ETmiss45", EventCounter("meff440_ETmiss45")},
+        {"meff440_ETmiss70", EventCounter("meff440_ETmiss70")},
+        {"meff440_ETmiss100", EventCounter("meff440_ETmiss100")},
+        {"meff440_ETmiss150", EventCounter("meff440_ETmiss150")},
+        {"meff440_ETmiss200", EventCounter("meff440_ETmiss200")},
+        {"meff560_ETmiss0", EventCounter("meff560_ETmiss0")},
+        {"meff560_ETmiss20", EventCounter("meff560_ETmiss20")},
+        {"meff560_ETmiss45", EventCounter("meff560_ETmiss45")},
+        {"meff560_ETmiss70", EventCounter("meff560_ETmiss70")},
+        {"meff560_ETmiss100", EventCounter("meff560_ETmiss100")},
+        {"meff560_ETmiss150", EventCounter("meff560_ETmiss150")},
+        {"meff560_ETmiss200", EventCounter("meff560_ETmiss200")},
+        {"meff700_ETmiss0", EventCounter("meff700_ETmiss0")},
+        {"meff700_ETmiss20", EventCounter("meff700_ETmiss20")},
+        {"meff700_ETmiss45", EventCounter("meff700_ETmiss45")},
+        {"meff700_ETmiss70", EventCounter("meff700_ETmiss70")},
+        {"meff700_ETmiss100", EventCounter("meff700_ETmiss100")},
+        {"meff700_ETmiss150", EventCounter("meff700_ETmiss150")},
+        {"meff700_ETmiss200", EventCounter("meff700_ETmiss200")},
+        {"meff860_ETmiss0", EventCounter("meff860_ETmiss0")},
+        {"meff860_ETmiss20", EventCounter("meff860_ETmiss20")},
+        {"meff860_ETmiss45", EventCounter("meff860_ETmiss45")},
+        {"meff860_ETmiss70", EventCounter("meff860_ETmiss70")},
+        {"meff860_ETmiss100", EventCounter("meff860_ETmiss100")},
+        {"meff860_ETmiss150", EventCounter("meff860_ETmiss150")},
+        {"meff860_ETmiss200", EventCounter("meff860_ETmiss200")},
+        // Discovery regions
+        {"low-SR-MET0meff440", EventCounter("low-SR-MET0meff440")},
+        {"low-SR-MET150meff440", EventCounter("low-SR-MET150meff440")},
       };
 
     private:
@@ -459,63 +461,63 @@ namespace Gambit {
 
         // Now increment signal region variables
         // First exclusion regions
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met < 20.) _numSR["meff160_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met > 20. && met < 45.) _numSR["meff160_ETmiss20"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met < 20.) _counters.at("meff160_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 160. && meff < 200. && met > 20. && met < 45.) _counters.at("meff160_ETmiss20").add_event(event);
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met < 20.) _numSR["meff200_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 20. && met < 45.) _numSR["meff200_ETmiss20"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 45. && met < 70.) _numSR["meff200_ETmiss45"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 70. && met < 100.) _numSR["meff200_ETmiss70"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met < 20.) _counters.at("meff200_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 20. && met < 45.) _counters.at("meff200_ETmiss20").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 45. && met < 70.) _counters.at("meff200_ETmiss45").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 200. && meff < 260. && met > 70. && met < 100.) _counters.at("meff200_ETmiss70").add_event(event);
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met < 20.) _numSR["meff260_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 20. && met < 45.) _numSR["meff260_ETmiss20"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 45. && met < 70.) _numSR["meff260_ETmiss45"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 70. && met < 100.) _numSR["meff260_ETmiss70"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 100. && met < 150.) _numSR["meff260_ETmiss100"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met < 20.) _counters.at("meff260_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 20. && met < 45.) _counters.at("meff260_ETmiss20").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 45. && met < 70.) _counters.at("meff260_ETmiss45").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 70. && met < 100.) _counters.at("meff260_ETmiss70").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 260. && meff < 340. && met > 100. && met < 150.) _counters.at("meff260_ETmiss100").add_event(event);
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met < 20.) _numSR["meff340_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 20. && met < 45.) _numSR["meff340_ETmiss20"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 45. && met < 70.) _numSR["meff340_ETmiss45"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 70. && met < 100.) _numSR["meff340_ETmiss70"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 100. && met < 150.) _numSR["meff340_ETmiss100"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 150. && met < 200.) _numSR["meff340_ETmiss150"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 200.) _numSR["meff340_ETmiss200"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met < 20.) _counters.at("meff340_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 20. && met < 45.) _counters.at("meff340_ETmiss20").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 45. && met < 70.) _counters.at("meff340_ETmiss45").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 70. && met < 100.) _counters.at("meff340_ETmiss70").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 100. && met < 150.) _counters.at("meff340_ETmiss100").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 150. && met < 200.) _counters.at("meff340_ETmiss150").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 340. && meff < 440. && met > 200.) _counters.at("meff340_ETmiss200").add_event(event);
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met < 20.) _numSR["meff440_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 20. && met < 45.) _numSR["meff440_ETmiss20"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 45. && met < 70.) _numSR["meff440_ETmiss45"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 70. && met < 100.) _numSR["meff440_ETmiss70"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 100. && met < 150.) _numSR["meff440_ETmiss100"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 150. && met < 200.) _numSR["meff440_ETmiss150"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 200.) _numSR["meff440_ETmiss200"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met < 20.) _counters.at("meff440_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 20. && met < 45.) _counters.at("meff440_ETmiss20").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 45. && met < 70.) _counters.at("meff440_ETmiss45").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 70. && met < 100.) _counters.at("meff440_ETmiss70").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 100. && met < 150.) _counters.at("meff440_ETmiss100").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 150. && met < 200.) _counters.at("meff440_ETmiss150").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && meff < 560. && met > 200.) _counters.at("meff440_ETmiss200").add_event(event);
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met < 20.) _numSR["meff560_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 20. && met < 45.) _numSR["meff560_ETmiss20"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 45. && met < 70.) _numSR["meff560_ETmiss45"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 70. && met < 100.) _numSR["meff560_ETmiss70"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 100. && met < 150.) _numSR["meff560_ETmiss100"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 150. && met < 200.) _numSR["meff560_ETmiss150"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 200.) _numSR["meff560_ETmiss200"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met < 20.) _counters.at("meff560_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 20. && met < 45.) _counters.at("meff560_ETmiss20").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 45. && met < 70.) _counters.at("meff560_ETmiss45").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 70. && met < 100.) _counters.at("meff560_ETmiss70").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 100. && met < 150.) _counters.at("meff560_ETmiss100").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 150. && met < 200.) _counters.at("meff560_ETmiss150").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 560. && meff < 700. && met > 200.) _counters.at("meff560_ETmiss200").add_event(event);
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met < 20.) _numSR["meff700_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 20. && met < 45.) _numSR["meff700_ETmiss20"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 45. && met < 70.) _numSR["meff700_ETmiss45"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 70. && met < 100.) _numSR["meff700_ETmiss70"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 100. && met < 150.) _numSR["meff700_ETmiss100"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 150. && met < 200.) _numSR["meff700_ETmiss150"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 200.) _numSR["meff700_ETmiss200"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met < 20.) _counters.at("meff700_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 20. && met < 45.) _counters.at("meff700_ETmiss20").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 45. && met < 70.) _counters.at("meff700_ETmiss45").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 70. && met < 100.) _counters.at("meff700_ETmiss70").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 100. && met < 150.) _counters.at("meff700_ETmiss100").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 150. && met < 200.) _counters.at("meff700_ETmiss150").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 700. && meff < 860. && met > 200.) _counters.at("meff700_ETmiss200").add_event(event);
 
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met < 20.) _numSR["meff860_ETmiss0"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 20. && met < 45.) _numSR["meff860_ETmiss20"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 45. && met < 70.) _numSR["meff860_ETmiss45"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 70. && met < 100.) _numSR["meff860_ETmiss70"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 100. && met < 150.) _numSR["meff860_ETmiss100"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 150. && met < 200.) _numSR["meff860_ETmiss150"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 200.) _numSR["meff860_ETmiss200"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met < 20.) _counters.at("meff860_ETmiss0").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 20. && met < 45.) _counters.at("meff860_ETmiss20").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 45. && met < 70.) _counters.at("meff860_ETmiss45").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 70. && met < 100.) _counters.at("meff860_ETmiss70").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 100. && met < 150.) _counters.at("meff860_ETmiss100").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 150. && met < 200.) _counters.at("meff860_ETmiss150").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 860. && met > 200.) _counters.at("meff860_ETmiss200").add_event(event);
 
         // Discovery regions
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440.) _numSR["low-SR-MET0meff440"] += event->weight();
-        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && met > 150.) _numSR["low-SR-MET150meff440"] += event->weight();
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440.) _counters.at("low-SR-MET0meff440").add_event(event);
+        if(nbJets > 3 && nLeptons == 0 && notop && higgs && Xhh < 1.6 && meff > 440. && met > 150.) _counters.at("low-SR-MET150meff440").add_event(event);
 
         return;
 
@@ -527,6 +529,8 @@ namespace Gambit {
         const Analysis_ATLAS_13TeV_3b_24invfb* specificOther
           = dynamic_cast<const Analysis_ATLAS_13TeV_3b_24invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         #ifdef CHECK_CUTFLOW
           if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
           for (size_t j=0; j<NCUTS; j++) {
@@ -534,11 +538,6 @@ namespace Gambit {
             cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
           }
         #endif
-
-        for (auto& el : _numSR)
-        {
-          el.second += specificOther->_numSR.at(el.first);
-        }
 
       }
 
@@ -575,67 +574,67 @@ namespace Gambit {
 
         // Now fill a results object with the results for each SR
         // Only exclusion regions here
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("meff160_ETmiss0",    20., {_numSR["meff160_ETmiss0"], 0.}, {16.21, 0.11}));
-        add_result(SignalRegionData("meff160_ETmiss20",    3., {_numSR["meff160_ETmiss20"], 0.}, {0.6503, 0.0747}));
 
-        add_result(SignalRegionData("meff200_ETmiss0",  1503., {_numSR["meff200_ETmiss0"], 0.},  {1480., 26.}));
-        add_result(SignalRegionData("meff200_ETmiss20", 1137., {_numSR["meff200_ETmiss20"], 0.}, {1088.,  7.}));
-        add_result(SignalRegionData("meff200_ETmiss45",   65., {_numSR["meff200_ETmiss45"], 0.}, {58.05, 0.39}));
-        add_result(SignalRegionData("meff200_ETmiss70",    0., {_numSR["meff200_ETmiss70"], 0.}, {0.2691, 0.0547}));
+        add_result(SignalRegionData(_counters.at("meff160_ETmiss0"),    20.,  {16.21, 0.11}));
+        add_result(SignalRegionData(_counters.at("meff160_ETmiss20"),    3.,  {0.6503, 0.0747}));
 
-        add_result(SignalRegionData("meff260_ETmiss0",  1329., {_numSR["meff260_ETmiss0"], 0.},  {1297.,  8.}));
-        add_result(SignalRegionData("meff260_ETmiss20", 2877., {_numSR["meff260_ETmiss20"], 0.}, {2860., 36.}));
-        add_result(SignalRegionData("meff260_ETmiss45",  951., {_numSR["meff260_ETmiss45"], 0.}, { 991., 6.5}));
-        add_result(SignalRegionData("meff260_ETmiss70",  150., {_numSR["meff260_ETmiss70"], 0.}, {149.4, 1.0}));
-        add_result(SignalRegionData("meff260_ETmiss100",   2., {_numSR["meff260_ETmiss100"], 0.}, {2.024, 1.426}));
+        add_result(SignalRegionData(_counters.at("meff200_ETmiss0"),  1503.,  {1480., 26.}));
+        add_result(SignalRegionData(_counters.at("meff200_ETmiss20"), 1137.,  {1088.,  7.}));
+        add_result(SignalRegionData(_counters.at("meff200_ETmiss45"),   65.,  {58.05, 0.39}));
+        add_result(SignalRegionData(_counters.at("meff200_ETmiss70"),    0.,  {0.2691, 0.0547}));
 
-        add_result(SignalRegionData("meff340_ETmiss0",   373., {_numSR["meff340_ETmiss0"], 0.},  {390.1,  2.6}));
-        add_result(SignalRegionData("meff340_ETmiss20",  873., {_numSR["meff340_ETmiss20"], 0.}, {884.6, 13.1}));
-        add_result(SignalRegionData("meff340_ETmiss45",  444., {_numSR["meff340_ETmiss45"], 0.}, {472.6,  3.0}));
-        add_result(SignalRegionData("meff340_ETmiss70",  164., {_numSR["meff340_ETmiss70"], 0.}, {171.1,  1.1}));
-        add_result(SignalRegionData("meff340_ETmiss100",  40., {_numSR["meff340_ETmiss100"], 0.}, {36.24, 0.24}));
-        add_result(SignalRegionData("meff340_ETmiss150",   3., {_numSR["meff340_ETmiss150"], 0.}, {1.457, 0.111}));
-        add_result(SignalRegionData("meff340_ETmiss200",   0., {_numSR["meff340_ETmiss200"], 0.}, {0.006531, 0.004409}));
+        add_result(SignalRegionData(_counters.at("meff260_ETmiss0"),  1329.,  {1297.,  8.}));
+        add_result(SignalRegionData(_counters.at("meff260_ETmiss20"), 2877.,  {2860., 36.}));
+        add_result(SignalRegionData(_counters.at("meff260_ETmiss45"),  951.,  { 991., 6.5}));
+        add_result(SignalRegionData(_counters.at("meff260_ETmiss70"),  150.,  {149.4, 1.0}));
+        add_result(SignalRegionData(_counters.at("meff260_ETmiss100"),   2.,  {2.024, 1.426}));
 
-        add_result(SignalRegionData("meff440_ETmiss0",   121., {_numSR["meff440_ETmiss0"], 0.},  {130.3,  0.8}));
-        add_result(SignalRegionData("meff440_ETmiss20",  304., {_numSR["meff440_ETmiss20"], 0.}, {310.8,  9.5}));
-        add_result(SignalRegionData("meff440_ETmiss45",  170., {_numSR["meff440_ETmiss45"], 0.}, {176.6,  1.2}));
-        add_result(SignalRegionData("meff440_ETmiss70",   62., {_numSR["meff440_ETmiss70"], 0.}, { 65.1,  1.1}));
-        add_result(SignalRegionData("meff440_ETmiss100",  31., {_numSR["meff440_ETmiss100"], 0.}, {22.16, 6.03}));
-        add_result(SignalRegionData("meff440_ETmiss150",   3., {_numSR["meff440_ETmiss150"], 0.}, {3.895, 0.14}));
-        add_result(SignalRegionData("meff440_ETmiss200",   1., {_numSR["meff440_ETmiss200"], 0.}, {0.4816, 0.0551}));
+        add_result(SignalRegionData(_counters.at("meff340_ETmiss0"),   373.,  {390.1,  2.6}));
+        add_result(SignalRegionData(_counters.at("meff340_ETmiss20"),  873.,  {884.6, 13.1}));
+        add_result(SignalRegionData(_counters.at("meff340_ETmiss45"),  444.,  {472.6,  3.0}));
+        add_result(SignalRegionData(_counters.at("meff340_ETmiss70"),  164.,  {171.1,  1.1}));
+        add_result(SignalRegionData(_counters.at("meff340_ETmiss100"),  40.,  {36.24, 0.24}));
+        add_result(SignalRegionData(_counters.at("meff340_ETmiss150"),   3.,  {1.457, 0.111}));
+        add_result(SignalRegionData(_counters.at("meff340_ETmiss200"),   0.,  {0.006531, 0.004409}));
 
-        add_result(SignalRegionData("meff560_ETmiss0",    40., {_numSR["meff560_ETmiss0"], 0.},  { 43.46,   0.29}));
-        add_result(SignalRegionData("meff560_ETmiss20",   95., {_numSR["meff560_ETmiss20"], 0.}, {102.6,    6.6}));
-        add_result(SignalRegionData("meff560_ETmiss45",   75., {_numSR["meff560_ETmiss45"], 0.}, { 68.03,   0.45}));
-        add_result(SignalRegionData("meff560_ETmiss70",   20., {_numSR["meff560_ETmiss70"], 0.}, { 30.72,   0.2}));
-        add_result(SignalRegionData("meff560_ETmiss100",  15., {_numSR["meff560_ETmiss100"], 0.},{ 14.13,   3.19}));
-        add_result(SignalRegionData("meff560_ETmiss150",   2., {_numSR["meff560_ETmiss150"], 0.},{  2.358,  1.02}));
-        add_result(SignalRegionData("meff560_ETmiss200",   2., {_numSR["meff560_ETmiss200"], 0.},{  1.08,   0.23}));
+        add_result(SignalRegionData(_counters.at("meff440_ETmiss0"),   121.,  {130.3,  0.8}));
+        add_result(SignalRegionData(_counters.at("meff440_ETmiss20"),  304.,  {310.8,  9.5}));
+        add_result(SignalRegionData(_counters.at("meff440_ETmiss45"),  170.,  {176.6,  1.2}));
+        add_result(SignalRegionData(_counters.at("meff440_ETmiss70"),   62.,  { 65.1,  1.1}));
+        add_result(SignalRegionData(_counters.at("meff440_ETmiss100"),  31.,  {22.16, 6.03}));
+        add_result(SignalRegionData(_counters.at("meff440_ETmiss150"),   3.,  {3.895, 0.14}));
+        add_result(SignalRegionData(_counters.at("meff440_ETmiss200"),   1.,  {0.4816, 0.0551}));
 
-        add_result(SignalRegionData("meff700_ETmiss0",    17., {_numSR["meff700_ETmiss0"], 0.},  { 13.56,   0.09}));
-        add_result(SignalRegionData("meff700_ETmiss20",   30., {_numSR["meff700_ETmiss20"], 0.}, { 32.67,   3.39}));
-        add_result(SignalRegionData("meff700_ETmiss45",   22., {_numSR["meff700_ETmiss45"], 0.}, { 23.78,   0.15}));
-        add_result(SignalRegionData("meff700_ETmiss70",   12., {_numSR["meff700_ETmiss70"], 0.}, { 12.47,   0.08}));
-        add_result(SignalRegionData("meff700_ETmiss100",   6., {_numSR["meff700_ETmiss100"], 0.},{  5.549,  0.873}));
-        add_result(SignalRegionData("meff700_ETmiss150",   2., {_numSR["meff700_ETmiss150"], 0.},{  1.728,  0.879}));
-        add_result(SignalRegionData("meff700_ETmiss200",   2., {_numSR["meff700_ETmiss200"], 0.},{  0.8551, 0.1211}));
+        add_result(SignalRegionData(_counters.at("meff560_ETmiss0"),    40.,  { 43.46,   0.29}));
+        add_result(SignalRegionData(_counters.at("meff560_ETmiss20"),   95.,  {102.6,    6.6}));
+        add_result(SignalRegionData(_counters.at("meff560_ETmiss45"),   75.,  { 68.03,   0.45}));
+        add_result(SignalRegionData(_counters.at("meff560_ETmiss70"),   20.,  { 30.72,   0.2}));
+        add_result(SignalRegionData(_counters.at("meff560_ETmiss100"),  15.,  { 14.13,   3.19}));
+        add_result(SignalRegionData(_counters.at("meff560_ETmiss150"),   2.,  {  2.358,  1.02}));
+        add_result(SignalRegionData(_counters.at("meff560_ETmiss200"),   2.,  {  1.08,   0.23}));
 
-        add_result(SignalRegionData("meff860_ETmiss0",     2., {_numSR["meff860_ETmiss0"], 0.},  {  2.816,   0.246}));
-        add_result(SignalRegionData("meff860_ETmiss20",    7., {_numSR["meff860_ETmiss20"], 0.}, {  7.766,   2.114}));
-        add_result(SignalRegionData("meff860_ETmiss45",   10., {_numSR["meff860_ETmiss45"], 0.}, {  8.968,   2.332}));
-        add_result(SignalRegionData("meff860_ETmiss70",    5., {_numSR["meff860_ETmiss70"], 0.}, {  4.297,   0.335}));
-        add_result(SignalRegionData("meff860_ETmiss100",   2., {_numSR["meff860_ETmiss100"], 0.},{  2.785,   0.29}));
-        add_result(SignalRegionData("meff860_ETmiss150",   4., {_numSR["meff860_ETmiss150"], 0.},{  0.9345,  0.2345}));
-        add_result(SignalRegionData("meff860_ETmiss200",   1., {_numSR["meff860_ETmiss200"], 0.},{  0.4297,  0.0719}));
+        add_result(SignalRegionData(_counters.at("meff700_ETmiss0"),    17.,  { 13.56,   0.09}));
+        add_result(SignalRegionData(_counters.at("meff700_ETmiss20"),   30.,  { 32.67,   3.39}));
+        add_result(SignalRegionData(_counters.at("meff700_ETmiss45"),   22.,  { 23.78,   0.15}));
+        add_result(SignalRegionData(_counters.at("meff700_ETmiss70"),   12.,  { 12.47,   0.08}));
+        add_result(SignalRegionData(_counters.at("meff700_ETmiss100"),   6.,  {  5.549,  0.873}));
+        add_result(SignalRegionData(_counters.at("meff700_ETmiss150"),   2.,  {  1.728,  0.879}));
+        add_result(SignalRegionData(_counters.at("meff700_ETmiss200"),   2.,  {  0.8551, 0.1211}));
+
+        add_result(SignalRegionData(_counters.at("meff860_ETmiss0"),     2.,  {  2.816,   0.246}));
+        add_result(SignalRegionData(_counters.at("meff860_ETmiss20"),    7.,  {  7.766,   2.114}));
+        add_result(SignalRegionData(_counters.at("meff860_ETmiss45"),   10.,  {  8.968,   2.332}));
+        add_result(SignalRegionData(_counters.at("meff860_ETmiss70"),    5.,  {  4.297,   0.335}));
+        add_result(SignalRegionData(_counters.at("meff860_ETmiss100"),   2.,  {  2.785,   0.29}));
+        add_result(SignalRegionData(_counters.at("meff860_ETmiss150"),   4.,  {  0.9345,  0.2345}));
+        add_result(SignalRegionData(_counters.at("meff860_ETmiss200"),   1.,  {  0.4297,  0.0719}));
 
         return;
       }
 
       void analysis_specific_reset() {
         // Clear signal regions
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         #ifdef CHECK_CUTFLOW
           // Clear cut flow vector
@@ -663,8 +662,8 @@ namespace Gambit {
 
       virtual void collect_results() {
         // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("low-SR-MET0meff440", 1063., {_numSR["low-SR-MET0meff440"], 0.}, {1100., 25.}));
-        add_result(SignalRegionData("low-SR-MET150meff440", 17., {_numSR["low-SR-MET150meff440"], 0.}, {12., 8.}));
+        add_result(SignalRegionData(_counters.at("low-SR-MET0meff440"), 1063., {1100., 25.}));
+        add_result(SignalRegionData(_counters.at("low-SR-MET150meff440"), 17., {12., 8.}));
       }
 
     };

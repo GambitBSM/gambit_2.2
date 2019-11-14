@@ -28,15 +28,17 @@ namespace Gambit {
 
     protected:
       // Signal region map
-      std::map<string,double> _numSR = {
-        {"SR-3b-meff1-A", 0.},       // Exclusion regions, disjoint
-        {"SR-3b-meff2-A", 0.},
-        {"SR-3b-meff3-A", 0.},
-        {"SR-4b-meff1-A", 0.},
-        {"SR-4b-meff1-B", 0.},
-        {"SR-4b-meff2-A", 0.},
-        {"SR-4b-meff2-B", 0.},
-        {"SR-4b-meff1-A-disc", 0.}   // Discovery regions, SR-4b-meff1-A and SR-4b-meff2-A are subsets
+      std::map<string, EventCounter> _counters = {
+        // Exclusion regions, disjoint
+        {"SR-3b-meff1-A", EventCounter("SR-3b-meff1-A")},
+        {"SR-3b-meff2-A", EventCounter("SR-3b-meff2-A")},
+        {"SR-3b-meff3-A", EventCounter("SR-3b-meff3-A")},
+        {"SR-4b-meff1-A", EventCounter("SR-4b-meff1-A")},
+        {"SR-4b-meff1-B", EventCounter("SR-4b-meff1-B")},
+        {"SR-4b-meff2-A", EventCounter("SR-4b-meff2-A")},
+        {"SR-4b-meff2-B", EventCounter("SR-4b-meff2-B")},
+        // Discovery regions, SR-4b-meff1-A and SR-4b-meff2-A are subsets
+        {"SR-4b-meff1-A-disc", EventCounter("SR-4b-meff1-A-disc")},
       };
 
     private:
@@ -391,15 +393,15 @@ namespace Gambit {
 
         // Now increment signal region variables
         // First exclusion regions
-        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600. && meff < 850.) _numSR["SR-3b-meff1-A"] += event->weight();
-        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 850. && meff < 1100.) _numSR["SR-3b-meff2-A"] += event->weight();
-        if(nbJets >= 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 130. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 1100.) _numSR["SR-3b-meff3-A"] += event->weight();
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 850.) _numSR["SR-4b-meff1-A"] += event->weight();
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 850.) _numSR["SR-4b-meff1-B"] += event->weight();
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 1100.) _numSR["SR-4b-meff2-A"] += event->weight();
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 1100.) _numSR["SR-4b-meff2-B"] += event->weight();
+        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600. && meff < 850.) _counters.at("SR-3b-meff1-A").add_event(event);
+        if(nbJets == 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 150. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 850. && meff < 1100.) _counters.at("SR-3b-meff2-A").add_event(event);
+        if(nbJets >= 3 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mTmin > 130. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 1100.) _counters.at("SR-3b-meff3-A").add_event(event);
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 850.) _counters.at("SR-4b-meff1-A").add_event(event);
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && meff > 600. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 850.) _counters.at("SR-4b-meff1-B").add_event(event);
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff < 1100.) _counters.at("SR-4b-meff2-A").add_event(event);
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 6 && meff > 850. && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 1.4 && Rbbmax < 2.4 && meff < 1100.) _counters.at("SR-4b-meff2-B").add_event(event);
         // Discovery regions
-        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600.) _numSR["SR-4b-meff1-A-disc"] += event->weight();
+        if(nbJets >= 4 && met > 200 && nLeptons == 0 && phi4min > 0.4 && nJets >= 4 && nJets <= 5 && mlead > 110. && mlead < 150. && msubl > 90. && msubl < 140. && Rbbmax > 0.4 && Rbbmax < 1.4 && meff > 600.) _counters.at("SR-4b-meff1-A-disc").add_event(event);
 
         return;
 
@@ -411,14 +413,12 @@ namespace Gambit {
         const Analysis_ATLAS_13TeV_3b_36invfb* specificOther
           = dynamic_cast<const Analysis_ATLAS_13TeV_3b_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+        
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (size_t j=0; j<NCUTS; j++) {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
-        }
-
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR.at(el.first);
         }
 
       }
@@ -447,21 +447,20 @@ namespace Gambit {
 
         // Now fill a results object with the results for each SR
         // Only exclusion regions here
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR-3b-meff1-A", 4., {_numSR["SR-3b-meff1-A"], 0.}, {2.5, 1.0}));
-        add_result(SignalRegionData("SR-3b-meff2-A", 3., {_numSR["SR-3b-meff2-A"], 0.}, {2.0, 0.5}));
-        add_result(SignalRegionData("SR-3b-meff3-A", 0., {_numSR["SR-3b-meff3-A"], 0.}, {0.8, 0.5}));
-        add_result(SignalRegionData("SR-4b-meff1-A", 1., {_numSR["SR-4b-meff1-A"], 0.}, {0.43, 0.31}));
-        add_result(SignalRegionData("SR-4b-meff1-B", 2., {_numSR["SR-4b-meff1-B"], 0.}, {2.6, 0.9}));
-        add_result(SignalRegionData("SR-4b-meff2-A", 1., {_numSR["SR-4b-meff2-A"], 0.}, {0.43, 0.27}));
-        add_result(SignalRegionData("SR-4b-meff2-B", 0., {_numSR["SR-4b-meff2-B"], 0.}, {1.3, 0.6}));
+        add_result(SignalRegionData(_counters.at("SR-3b-meff1-A"), 4., {2.5, 1.0}));
+        add_result(SignalRegionData(_counters.at("SR-3b-meff2-A"), 3., {2.0, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR-3b-meff3-A"), 0., {0.8, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR-4b-meff1-A"), 1., {0.43, 0.31}));
+        add_result(SignalRegionData(_counters.at("SR-4b-meff1-B"), 2., {2.6, 0.9}));
+        add_result(SignalRegionData(_counters.at("SR-4b-meff2-A"), 1., {0.43, 0.27}));
+        add_result(SignalRegionData(_counters.at("SR-4b-meff2-B"), 0., {1.3, 0.6}));
 
         return;
       }
 
       void analysis_specific_reset() {
         // Clear signal regions
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         // Clear cut flow vector
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
@@ -486,8 +485,8 @@ namespace Gambit {
       }
 
       virtual void collect_results() {
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR-4b-meff1-A-disc", 2., {_numSR["SR-4b-meff1-A-disc"], 0.}, {0.7, 0.5}));
+
+        add_result(SignalRegionData(_counters.at("SR-4b-meff1-A-disc"), 2., {0.7, 0.5}));
       }
 
     };

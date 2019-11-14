@@ -19,7 +19,7 @@
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
-#define CHECK_CUTFLOW
+// #define CHECK_CUTFLOW
 
 using namespace std;
 
@@ -34,11 +34,11 @@ namespace Gambit
     protected:
 
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
-        {"SR1A", 0},
-        {"SR1B", 0},
-        {"SR2A", 0},
-        {"SR2B", 0},
+      std::map<string, EventCounter> _counters = {
+        {"SR1A", EventCounter("SR1A")},
+        {"SR1B", EventCounter("SR1B")},
+        {"SR2A", EventCounter("SR2A")},
+        {"SR2B", EventCounter("SR2B")},
       };
 
        vector<Cutflow> _cutflow;
@@ -80,7 +80,7 @@ namespace Gambit
                      Cutflow(cutflow_name, SR1B),
                      Cutflow(cutflow_name, SR2A), 
                      Cutflow(cutflow_name, SR2B) };
-	//_test = {0,0,0,0,0};
+        //_test = {0,0,0,0,0};
         //_test2 = 0;
 
       }
@@ -307,7 +307,7 @@ namespace Gambit
             // -
             mT23l > 100.
            ) 
-          _numSR["SR1A"] += event->weight();
+          _counters.at("SR1A").add_event(event);
 
         // SR1B
         if (preselection && 
@@ -320,7 +320,7 @@ namespace Gambit
             pTll > 150.
             // -
            ) 
-          _numSR["SR1B"] += event->weight();
+          _counters.at("SR1B").add_event(event);
 
         // SR2A
         if (preselection && 
@@ -333,7 +333,7 @@ namespace Gambit
             pTll < 50. 
             // -
            ) 
-          _numSR["SR2A"] += event->weight();
+          _counters.at("SR2A").add_event(event);
 
         // SR2B
         if (preselection && 
@@ -346,7 +346,7 @@ namespace Gambit
            pTll > 150.
            // -
            ) 
-          _numSR["SR2B"] += event->weight();
+          _counters.at("SR2B").add_event(event);
 
         // Cutflows
         
@@ -453,22 +453,17 @@ namespace Gambit
         const Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb* specificOther
                 = dynamic_cast<const Analysis_ATLAS_13TeV_2OSLEP_Z_139invfb*>(other);
 
-        for (auto& el : _numSR)
-        {
-          el.second += specificOther->_numSR.at(el.first);
-        }
-
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
       }
 
       // This function can be overridden by the derived SR-specific classes
       virtual void collect_results()
       {
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR1A", 3., {_numSR["SR1A"], 0.}, {5.4, 0.7}));
-        add_result(SignalRegionData("SR1B", 14., {_numSR["SR1B"], 0.}, {12.8, 1.6}));
-        add_result(SignalRegionData("SR2A", 3., {_numSR["SR2A"], 0.}, {5.7, 1.7}));
-        add_result(SignalRegionData("SR2B", 6., {_numSR["SR2B"], 0.}, {5.4, 0.8}));
+        add_result(SignalRegionData(_counters.at("SR1A"), 3., {5.4, 0.7}));
+        add_result(SignalRegionData(_counters.at("SR1B"), 14., {12.8, 1.6}));
+        add_result(SignalRegionData(_counters.at("SR2A"), 3., {5.7, 1.7}));
+        add_result(SignalRegionData(_counters.at("SR2B"), 6., {5.4, 0.8}));
 
         #ifdef CHECK_CUTFLOW
           cout << _cutflow << endl;
@@ -487,7 +482,7 @@ namespace Gambit
     protected:
       void analysis_specific_reset()
       {
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
       }
 
     };

@@ -34,11 +34,11 @@ namespace Gambit
     protected:
 
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
-        {"SR0A", 0},
-        {"SR0B", 0},
-        {"SR0C", 0},
-        {"SR0D", 0},
+      std::map<string, EventCounter> _counters = {
+        {"SR0A", EventCounter("SR0A")},
+        {"SR0B", EventCounter("SR0B")},
+        {"SR0C", EventCounter("SR0C")},
+        {"SR0D", EventCounter("SR0D")},
       };
 
     private:
@@ -336,7 +336,7 @@ namespace Gambit
         // --- 4L0T ---
 
         // SR0A
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.) _numSR["SR0A"] += event->weight();
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.) _counters.at("SR0A").add_event(event);
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0A ---" << endl;
@@ -349,11 +349,11 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0A"] += event->weight();
+        //   _counters.at("SR0A").add_event(event);
         // }
 
         // SR0B
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.) _numSR["SR0B"] += event->weight();
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.) _counters.at("SR0B").add_event(event);
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0B ---" << endl;
@@ -366,11 +366,11 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0B"] += event->weight();
+        //   _counters.at("SR0B").add_event(event);
         // }
 
         // SR0C
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _numSR["SR0C"] += event->weight();
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _counters.at("SR0C").add_event(event);
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0C ---" << endl;
@@ -383,11 +383,11 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0C"] += event->weight();
+        //   _counters.at("SR0C").add_event(event);
         // }
 
         // SR0D
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _numSR["SR0D"] += event->weight();
+        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _counters.at("SR0D").add_event(event);
         // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0D ---" << endl;
@@ -400,7 +400,7 @@ namespace Gambit
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
 
-        //   _numSR["SR0D"] += event->weight();
+        //   _counters.at("SR0D").add_event(event);
         // }
 
         // Missing: signal regions SR1 (3L1T) and SR2 (2L2T)
@@ -468,6 +468,8 @@ namespace Gambit
         const Analysis_ATLAS_13TeV_4LEP_36invfb* specificOther
                 = dynamic_cast<const Analysis_ATLAS_13TeV_4LEP_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         #ifdef CHECK_CUTFLOW
           // if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
           for (size_t j = 0; j < NCUTS; j++) {
@@ -475,22 +477,15 @@ namespace Gambit
             cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
           }
         #endif
-
-        for (auto& el : _numSR)
-        {
-          el.second += specificOther->_numSR.at(el.first);
-        }
-
       }
 
       // This function can be overridden by the derived SR-specific classes
       virtual void collect_results() {
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR0A", 13., {_numSR["SR0A"], 0.}, {10.2, 2.1}));
-        add_result(SignalRegionData("SR0B",  2., {_numSR["SR0B"], 0.}, {1.31, 0.24}));
-        add_result(SignalRegionData("SR0C", 47., {_numSR["SR0C"], 0.}, {37., 9.}));
-        add_result(SignalRegionData("SR0D", 10., {_numSR["SR0D"], 0.}, {4.1, 0.7}));
+        add_result(SignalRegionData(_counters.at("SR0A"), 13., {10.2, 2.1}));
+        add_result(SignalRegionData(_counters.at("SR0B"),  2., {1.31, 0.24}));
+        add_result(SignalRegionData(_counters.at("SR0C"), 47., {37., 9.}));
+        add_result(SignalRegionData(_counters.at("SR0D"), 10., {4.1, 0.7}));
 
 
         #ifdef CHECK_CUTFLOW
@@ -516,7 +511,7 @@ namespace Gambit
 
     protected:
       void analysis_specific_reset() {
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
         #ifdef CHECK_CUTFLOW
           std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
         #endif
