@@ -102,6 +102,11 @@ namespace Gambit {
         add_event(event.weight(), event.weight_err());
       }
 
+      void add_event(const HEPUtils::Event* event_ptr) 
+      { 
+        add_event(*event_ptr); 
+      }
+
       // Increment event count with the operator+= and HEPUtils::Event input
       EventCounter& operator+=(const HEPUtils::Event& event)
       {

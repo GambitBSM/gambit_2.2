@@ -55,10 +55,23 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      double _numSRA_TT, _numSRA_TW, _numSRA_T0;
-      double _numSRB_TT, _numSRB_TW, _numSRB_T0;
-      double _numSRC1, _numSRC2, _numSRC3, _numSRC4, _numSRC5;
-      double _numSRD_low, _numSRD_high, _numSRE;
+
+      std::map<string, EventCounter> _counters = {
+        {"SRA_TT", EventCounter("SRA_TT")},
+        {"SRA_TW", EventCounter("SRA_TW")},
+        {"SRA_T0", EventCounter("SRA_T0")},
+        {"SRB_TT", EventCounter("SRB_TT")},
+        {"SRB_TW", EventCounter("SRB_TW")},
+        {"SRB_T0", EventCounter("SRB_T0")},
+        {"SRC1", EventCounter("SRC1")},
+        {"SRC2", EventCounter("SRC2")},
+        {"SRC3", EventCounter("SRC3")},
+        {"SRC4", EventCounter("SRC4")},
+        {"SRC5", EventCounter("SRC5")},
+        {"SRD_low", EventCounter("SRD_low")},
+        {"SRD_high", EventCounter("SRD_high")},
+        {"SRE", EventCounter("SRE")},
+      };
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
@@ -165,11 +178,6 @@ namespace Gambit {
 
         set_analysis_name("ATLAS_13TeV_0LEPStop_36invfb");
         set_luminosity(36.);
-
-        _numSRA_TT=0;  _numSRA_TW=0; _numSRA_T0=0;
-        _numSRB_TT=0; _numSRB_TW=0; _numSRB_T0=0;
-        _numSRC1=0;  _numSRC2=0;  _numSRC3=0; _numSRC4=0; _numSRC5=0;
-        _numSRD_low=0; _numSRD_high=0; _numSRE=0;
 
         NCUTS=120;
 
@@ -1117,20 +1125,20 @@ namespace Gambit {
         if(devSkim && cut_LeptonVeto && signalJets.size()>3 && signalBJets.size()>1 && Met > 550. && cut_dPhiJets_AB && signalJets[1]->pT()>80. && signalJets[3]->pT()>40. && AntiKt8M_0 > 120. && AntiKt8M_1 > 80. && Ht > 800. && HtSig > 18. && MtBMin > 200.)isSRE=true;
 
 
-        if(isSRA_TT) _numSRA_TT += event->weight();
-        if(isSRA_TW) _numSRA_TW += event->weight();
-        if(isSRA_T0) _numSRA_T0 += event->weight();
-        if(isSRB_TT) _numSRB_TT += event->weight();
-        if(isSRB_TW) _numSRB_TW += event->weight();
-        if(isSRB_T0) _numSRB_T0 += event->weight();
-        if(isSRC1) _numSRC1 += event->weight();
-        if(isSRC2) _numSRC2 += event->weight();
-        if(isSRC3) _numSRC3 += event->weight();
-        if(isSRC4) _numSRC4 += event->weight();
-        if(isSRC5) _numSRC5 += event->weight();
-        if(isSRD_low) _numSRD_low += event->weight();
-        if(isSRD_high) _numSRD_high += event->weight();
-        if(isSRE) _numSRE += event->weight();
+        if(isSRA_TT) _counters.at("SRA_TT").add_event(event);
+        if(isSRA_TW) _counters.at("SRA_TW").add_event(event);
+        if(isSRA_T0) _counters.at("SRA_T0").add_event(event);
+        if(isSRB_TT) _counters.at("SRB_TT").add_event(event);
+        if(isSRB_TW) _counters.at("SRB_TW").add_event(event);
+        if(isSRB_T0) _counters.at("SRB_T0").add_event(event);
+        if(isSRC1) _counters.at("SRC1").add_event(event);
+        if(isSRC2) _counters.at("SRC2").add_event(event);
+        if(isSRC3) _counters.at("SRC3").add_event(event);
+        if(isSRC4) _counters.at("SRC4").add_event(event);
+        if(isSRC5) _counters.at("SRC5").add_event(event);
+        if(isSRD_low) _counters.at("SRD_low").add_event(event);
+        if(isSRD_high) _counters.at("SRD_high").add_event(event);
+        if(isSRE) _counters.at("SRE").add_event(event);
 
         return;
 
@@ -1142,26 +1150,13 @@ namespace Gambit {
         const Analysis_ATLAS_13TeV_0LEPStop_36invfb* specificOther
                 = dynamic_cast<const Analysis_ATLAS_13TeV_0LEPStop_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (int j=0; j<NCUTS; j++) {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
         }
-
-        _numSRA_TT += specificOther->_numSRA_TT;
-        _numSRA_TW += specificOther->_numSRA_TW;
-        _numSRA_T0 += specificOther->_numSRA_T0;
-        _numSRB_TT += specificOther->_numSRB_TT;
-        _numSRB_TW += specificOther->_numSRB_TW;
-        _numSRB_T0 += specificOther->_numSRB_T0;
-        _numSRC1 += specificOther->_numSRC1;
-        _numSRC2 += specificOther->_numSRC2;
-        _numSRC3 += specificOther->_numSRC3;
-        _numSRC4 += specificOther->_numSRC4;
-        _numSRC5 += specificOther->_numSRC5;
-        _numSRD_low += specificOther->_numSRD_low;
-        _numSRD_high += specificOther->_numSRD_high;
-        _numSRE += specificOther->_numSRE;
       }
 
 
@@ -1183,29 +1178,27 @@ namespace Gambit {
 
         /// Register results objects with the results for each SR; obs & bkg numbers from the paper
 
-        /*int _numSRA_TT, _numSRA_TW, _numSRA_T0;
-        int _numSRB_TT, _numSRB_TW, _numSRB_T0;
-        int _numSRC1, _numSRC2, _numSRC3, _numSRC4, _numSRC5;
-        int _numSRD_low, _numSRD_high, _numSRE;*/
-
-        add_result(SignalRegionData("SRA-TT", 11, {_numSRA_TT,  0.}, {8.6, 2.1}));
-        add_result(SignalRegionData("SRA-TW", 9, {_numSRA_TW,  0.}, {9.3, 2.2}));
-        add_result(SignalRegionData("SRA-T0",  18, {_numSRA_T0,  0.}, {18.7, 2.7}));
-        add_result(SignalRegionData("SRB-TT",  38, {_numSRB_TT,  0.}, { 39.3,  7.6}));
-        add_result(SignalRegionData("SRB-TW", 53, {_numSRB_TW,  0.}, {52.4, 7.4}));
-        add_result(SignalRegionData("SRB-T0", 206, {_numSRB_T0,  0.}, { 179.,  26.}));
+        add_result(SignalRegionData(_counters.at("SRA-TT"), 11, {8.6, 2.1}));
+        add_result(SignalRegionData(_counters.at("SRA-TW"), 9, {9.3, 2.2}));
+        add_result(SignalRegionData(_counters.at("SRA-T0"),  18, {18.7, 2.7}));
+        add_result(SignalRegionData(_counters.at("SRB-TT"),  38, { 39.3,  7.6}));
+        add_result(SignalRegionData(_counters.at("SRB-TW"), 53, {52.4, 7.4}));
+        add_result(SignalRegionData(_counters.at("SRB-T0"), 206, { 179.,  26.}));
 
         // MJW removes the recursive jigsaw signal regions for the Feb 2018 SUSY scans
         // The ISR modelling in Pythia does not give reliable answers
-        /* add_result(SignalRegionData("SRC1", 20, {_numSRC1,  0.}, { 20.6,  6.5}));
-        add_result(SignalRegionData("SRC2", 22, {_numSRC2,  0.}, { 27.6,  4.9}));
-        add_result(SignalRegionData("SRC3", 22, {_numSRC3,  0.}, {  18.9, 3.4}));
-        add_result(SignalRegionData("SRC4", 1, {_numSRC4,  0.}, {  7.7, 1.2}));
-        add_result(SignalRegionData("SRC5", 0, {_numSRC5, 0.}, { 0.91,  0.73}));*/
 
-        add_result(SignalRegionData("SRD-low", 27, {_numSRD_low, 0.}, {  25.1, 6.2}));
-        add_result(SignalRegionData("SRD-high", 11, {_numSRD_high, 0.}, {  8.5,1.5}));
-        add_result(SignalRegionData("SRE", 3, {_numSRE, 0.}, {  3.64,0.79}));
+        /*
+        add_result(SignalRegionData(_counters.at("SRC1"), 20, { 20.6,  6.5}));
+        add_result(SignalRegionData(_counters.at("SRC2"), 22, { 27.6,  4.9}));
+        add_result(SignalRegionData(_counters.at("SRC3"), 22, {  18.9, 3.4}));
+        add_result(SignalRegionData(_counters.at("SRC4"), 1, {  7.7, 1.2}));
+        add_result(SignalRegionData(_counters.at("SRC5"), 0, { 0.91,  0.73}));
+        */
+
+        add_result(SignalRegionData(_counters.at("SRD-low"), 27, {  25.1, 6.2}));
+        add_result(SignalRegionData(_counters.at("SRD-high"), 11, {  8.5,1.5}));
+        add_result(SignalRegionData(_counters.at("SRE"), 3, {  3.64,0.79}));
 
         return;
       }
@@ -1213,10 +1206,7 @@ namespace Gambit {
 
     protected:
       void analysis_specific_reset() {
-        _numSRA_TT=0; _numSRA_TW=0; _numSRA_T0=0;
-        _numSRB_TT=0; _numSRB_TW=0; _numSRB_T0=0;
-        _numSRC1=0; _numSRC2=0; _numSRC3=0; _numSRC4=0; _numSRC5=0;
-        _numSRD_low=0; _numSRD_high=0; _numSRE=0;
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }

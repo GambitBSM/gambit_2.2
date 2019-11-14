@@ -59,27 +59,25 @@ namespace Gambit {
     private:
 
       // Numbers passing cuts
-      //int _numSRA_TT, _numSRA_TW, _numSRA_T0;
-
-      double num_tN_med;
-      double num_tN_high;
-      double num_bWN;
-      double num_bC2x_diag;
-      double num_bC2x_med;
-      double num_bCbv;
-      double num_DM_low_loose;
-      double num_DM_low;
-      double num_DM_high;
-
-      double num_bffN;
-      double num_bCsoft_diag;
-      double num_bCsoft_med;
-      double num_bCsoft_high;
+      std::map<string, EventCounter> _counters = {
+        {"tN_med", EventCounter("tN_med")},
+        {"tN_high", EventCounter("tN_high")},
+        {"bWN", EventCounter("bWN")},
+        {"bC2x_diag", EventCounter("bC2x_diag")},
+        {"bC2x_med", EventCounter("bC2x_med")},
+        {"bCbv", EventCounter("bCbv")},
+        {"DM_low_loose", EventCounter("DM_low_loose")},
+        {"DM_low", EventCounter("DM_low")},
+        {"DM_high", EventCounter("DM_high")},
+        {"bffN", EventCounter("bffN")},
+        {"bCsoft_diag", EventCounter("bCsoft_diag")},
+        {"bCsoft_med", EventCounter("bCsoft_med")},
+        {"bCsoft_high", EventCounter("bCsoft_high")},
+      };
 
       vector<int> cutFlowVector;
       vector<string> cutFlowVector_str;
       int NCUTS; //=16;
-
 
 
       void LeptonLeptonOverlapRemoval(vector<HEPUtils::Particle*> &lep1vec, vector<HEPUtils::Particle*> &lep2vec, double DeltaRMax)
@@ -180,21 +178,6 @@ namespace Gambit {
 
         set_analysis_name("ATLAS_13TeV_1LEPStop_36invfb");
         set_luminosity(36.);
-
-        num_tN_med=0;
-        num_tN_high=0;
-        num_bWN=0;
-        num_bC2x_diag=0;
-        num_bC2x_med=0;
-        num_bCbv=0;
-        num_DM_low_loose=0;
-        num_DM_low=0;
-        num_DM_high=0;
-
-        num_bffN=0;
-        num_bCsoft_diag=0;
-        num_bCsoft_med=0;
-        num_bCsoft_high=0;
 
         NCUTS=150;
 
@@ -1342,20 +1325,20 @@ namespace Gambit {
 
         }
 
-        if(is_tN_med) num_tN_med += event->weight();
-        if(is_tN_high) num_tN_high += event->weight();
-        if(is_bWN) num_bWN += event->weight();
-        if(is_bC2x_diag) num_bC2x_diag += event->weight();
-        if(is_bC2x_med) num_bC2x_med += event->weight();
-        if(is_bCbv) num_bCbv += event->weight();
-        if(is_DM_low) num_DM_low_loose += event->weight();
-        if(is_DM_low) num_DM_low += event->weight();
-        if(is_DM_high) num_DM_high += event->weight();
+        if(is_tN_med) _counters.at("tN_med").add_event(event);
+        if(is_tN_high) _counters.at("tN_high").add_event(event);
+        if(is_bWN) _counters.at("bWN").add_event(event);
+        if(is_bC2x_diag) _counters.at("bC2x_diag").add_event(event);
+        if(is_bC2x_med) _counters.at("bC2x_med").add_event(event);
+        if(is_bCbv) _counters.at("bCbv").add_event(event);
+        if(is_DM_low) _counters.at("DM_low_loose").add_event(event);
+        if(is_DM_low) _counters.at("DM_low").add_event(event);
+        if(is_DM_high) _counters.at("DM_high").add_event(event);
 
-        if(is_bffN) num_bffN += event->weight();
-        if(is_bCsoft_diag) num_bCsoft_diag += event->weight();
-        if(is_bCsoft_med) num_bCsoft_med += event->weight();
-        if(is_bCsoft_high) num_bCsoft_high += event->weight();
+        if(is_bffN) _counters.at("bffN").add_event(event);
+        if(is_bCsoft_diag) _counters.at("bCsoft_diag").add_event(event);
+        if(is_bCsoft_med) _counters.at("bCsoft_med").add_event(event);
+        if(is_bCsoft_high) _counters.at("bCsoft_high").add_event(event);
 
         return;
 
@@ -1367,22 +1350,14 @@ namespace Gambit {
         const Analysis_ATLAS_13TeV_1LEPStop_36invfb* specificOther
                 = dynamic_cast<const Analysis_ATLAS_13TeV_1LEPStop_36invfb*>(other);
 
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+        
         if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
         for (int j=0; j<NCUTS; j++)
         {
           cutFlowVector[j] += specificOther->cutFlowVector[j];
           cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
         }
-
-        num_tN_med += specificOther->num_tN_med;
-        num_tN_high += specificOther->num_tN_high;
-        num_bWN += specificOther->num_bWN;
-        num_bC2x_diag += specificOther->num_bC2x_diag;
-        num_bC2x_med += specificOther->num_bC2x_med;
-        num_bCbv += specificOther->num_bCbv;
-        num_DM_low_loose += specificOther->num_DM_low_loose;
-        num_DM_low += specificOther->num_DM_low;
-        num_DM_high += specificOther->num_DM_high;
       }
 
 
@@ -1407,21 +1382,19 @@ namespace Gambit {
 
         /// Register results objects with the results for each SR; obs & bkg numbers from the paper
 
-        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
-
-        add_result(SignalRegionData("tN_med", 50., {num_tN_med, 0.}, { 36.3, 6.6}));
-        add_result(SignalRegionData("tN_med", 8., {num_tN_high, 0.}, { 3.8, 1.0}));
-        add_result(SignalRegionData("tN_med", 68., {num_bWN, 0.}, { 71, 16}));
-        add_result(SignalRegionData("bC2x_diag", 22., {num_bC2x_diag, 0.}, { 21.3, 5.0}));
-        add_result(SignalRegionData("bC2x_med", 4., {num_bC2x_med, 0.}, { 5.8, 1.6}));
-        add_result(SignalRegionData("bCbv", 25., {num_bCbv, 0.}, { 25.1, 3.8}));
-        add_result(SignalRegionData("DM_low_loose", 65., {num_DM_low_loose, 0.}, { 48.3, 8.2}));
-        add_result(SignalRegionData("DM_low", 13., {num_DM_low, 0.}, { 13.8, 3.6}));
-        add_result(SignalRegionData("DM_high", 5., {num_DM_high, 0.}, { 7.4, 2.1}));
-        add_result(SignalRegionData("bffN", 70., {num_bffN, 0.}, { 60.5, 6.1}));
-        add_result(SignalRegionData("bCsoft_diag", 33., {num_bCsoft_diag, 0.}, { 24.7, 3.1}));
-        add_result(SignalRegionData("bCsoft_med", 19., {num_bCsoft_med, 0.}, { 13.7, 2.1}));
-        add_result(SignalRegionData("bCsoft_high", 2., {num_bCsoft_high, 0.}, { 1.8, 0.3}));
+        add_result(SignalRegionData(_counters.at("tN_med"), 50., { 36.3, 6.6}));
+        add_result(SignalRegionData(_counters.at("tN_med"), 8., { 3.8, 1.0}));
+        add_result(SignalRegionData(_counters.at("tN_med"), 68., { 71, 16}));
+        add_result(SignalRegionData(_counters.at("bC2x_diag"), 22., { 21.3, 5.0}));
+        add_result(SignalRegionData(_counters.at("bC2x_med"), 4., { 5.8, 1.6}));
+        add_result(SignalRegionData(_counters.at("bCbv"), 25., { 25.1, 3.8}));
+        add_result(SignalRegionData(_counters.at("DM_low_loose"), 65., { 48.3, 8.2}));
+        add_result(SignalRegionData(_counters.at("DM_low"), 13., { 13.8, 3.6}));
+        add_result(SignalRegionData(_counters.at("DM_high"), 5., { 7.4, 2.1}));
+        add_result(SignalRegionData(_counters.at("bffN"), 70., { 60.5, 6.1}));
+        add_result(SignalRegionData(_counters.at("bCsoft_diag"), 33., { 24.7, 3.1}));
+        add_result(SignalRegionData(_counters.at("bCsoft_med"), 19., { 13.7, 2.1}));
+        add_result(SignalRegionData(_counters.at("bCsoft_high"), 2., { 1.8, 0.3}));
 
         return;
       }
@@ -1430,20 +1403,7 @@ namespace Gambit {
     protected:
       void analysis_specific_reset()
       {
-        num_tN_med=0;
-        num_tN_high=0;
-        num_bWN=0;
-        num_bC2x_diag=0;
-        num_bC2x_med=0;
-        num_bCbv=0;
-        num_DM_low_loose=0;
-        num_DM_low=0;
-        num_DM_high=0;
-
-        num_bffN=0;
-        num_bCsoft_diag=0;
-        num_bCsoft_med=0;
-        num_bCsoft_high=0;
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }

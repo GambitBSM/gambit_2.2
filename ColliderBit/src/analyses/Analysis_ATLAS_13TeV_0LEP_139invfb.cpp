@@ -24,12 +24,27 @@ namespace Gambit {
       static constexpr const char* detector = "ATLAS";
 
       // Numbers passing cuts
-      static const size_t NUMSR = 10;
-      double _srnums[NUMSR] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
+      std::map<string, EventCounter> _counters = {
+        {"2j-1600", EventCounter("2j-1600")},
+        {"2j-2200", EventCounter("2j-2200")},
+        {"2j-2800", EventCounter("2j-2800")},
+        {"4j-1000", EventCounter("4j-1000")},
+        {"4j-2200", EventCounter("4j-2200")},
+        {"4j-3400", EventCounter("4j-3400")},
+        {"5j-1600", EventCounter("5j-1600")},
+        {"6j-1000", EventCounter("6j-1000")},
+        {"6j-2200", EventCounter("6j-2200")},
+        {"6j-3400", EventCounter("6j-3400")},
+      };
+
       Cutflows _cutflows;
-      enum SRNames { SR2J_1600=0, SR2J_2200, SR2J_2800,
-                     SR4J_1000, SR4J_2200, SR4J_3400, SR5J_1600,
-                     SR6J_1000, SR6J_2200, SR6J_3400 };
+
+
+      // static const size_t NUMSR = 10;
+      // double _srnums[NUMSR] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
+      // enum SRNames { SR2J_1600=0, "2j_2200", "2j_2800",
+      //                "4j_1000", "4j_2200", "4j_3400", "5j_1600",
+      //                "6j_1000", "6j_2200", "6j_3400" };
 
 
       Analysis_ATLAS_13TeV_0LEP_139invfb() {
@@ -222,18 +237,18 @@ namespace Gambit {
                 signalJets[0]->pT() > 250,
                 dphimin_123 > 0.8, dphimin_more > 0.4,
                 signalJets[1]->pT() > 250, etamax_2 < 2.0,
-                true, met_sqrtHT > 16, meff > 1600}, w)) _srnums[SR2J_1600] += w;
+                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("2j_1600").add_event(event);
 
           if (_cutflows["2j-2200"].fillnext({
                 signalJets[0]->pT() > 600,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[1]->pT() >  50, etamax_2 < 2.8,
-                true, met_sqrtHT > 16, meff > 2200}, w)) _srnums[SR2J_2200] += w;
+                true, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("2j_2200").add_event(event);
           if (_cutflows["2j-2800"].fillnext({
                 signalJets[0]->pT() > 250,
                 dphimin_123 > 0.8, dphimin_more > 0.4,
                 signalJets[1]->pT() > 250, etamax_2 < 1.2,
-                true, met_sqrtHT > 16, meff > 2800}, w)) _srnums[SR2J_2800] += w;
+                true, met_sqrtHT > 16, meff > 2800}, w)) _counters.at("2j_2800").add_event(event);
         }
 
         // 4 jet regions
@@ -242,17 +257,17 @@ namespace Gambit {
                 signalJets.at(0)->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.4,
                 signalJets.at(3)->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 16, meff > 1000}, w)) _srnums[SR4J_1000] += w;
+                aplanarity > 0.04, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("4j_1000").add_event(event);
           if (_cutflows["4j-2200"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.4,
                 signalJets[3]->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 16, meff > 2200}, w)) _srnums[SR4J_2200] += w;
+                aplanarity > 0.04, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("4j_2200").add_event(event);
           if (_cutflows["4j-3400"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.4,
                 signalJets[3]->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 10, meff > 3400}, w)) _srnums[SR4J_3400] += w;
+                aplanarity > 0.04, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("4j_3400").add_event(event);
         }
 
         // 5 jet region
@@ -261,7 +276,7 @@ namespace Gambit {
                 signalJets[0]->pT() > 600,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[4]->pT() > 50, etamax_5 < 2.8,
-                true, met_sqrtHT > 16, meff > 1600}, w)) _srnums[SR5J_1600] += w;
+                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("5j_1600").add_event(event);
         }
 
         // 6 jet regions
@@ -270,17 +285,17 @@ namespace Gambit {
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 16, meff > 1000}, w)) _srnums[SR6J_1000] += w;
+                aplanarity > 0.08, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("6j_1000").add_event(event);
           if (_cutflows["6j-2200"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 16, meff > 2200}, w)) _srnums[SR6J_2200] += w;
+                aplanarity > 0.08, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("6j_2200").add_event(event);
           if (_cutflows["6j-3400"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 10, meff > 3400}, w)) _srnums[SR6J_3400] += w;
+                aplanarity > 0.08, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("6j_3400").add_event(event);
         }
 
       }
@@ -290,22 +305,22 @@ namespace Gambit {
       void combine(const Analysis* other)
       {
         const Analysis_ATLAS_13TeV_0LEP_139invfb* specificOther = dynamic_cast<const Analysis_ATLAS_13TeV_0LEP_139invfb*>(other);
-        for (size_t i = 0; i < NUMSR; ++i) _srnums[i] += specificOther->_srnums[i];
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
       }
 
 
       /// Register results objects with the results for each SR; obs & bkg numbers from the CONF note
       void collect_results() {
-        add_result(SignalRegionData("SR-2j-1600", 2111, {_srnums[SR2J_1600], 0.}, {2190., 130.}));
-        add_result(SignalRegionData("SR-2j-2200",  971, {_srnums[SR2J_2200], 0.}, { 980.,  50.}));
-        add_result(SignalRegionData("SR-2j-2800",   78, {_srnums[SR2J_2800], 0.}, {  87.,   8.}));
-        add_result(SignalRegionData("SR-4j-1000",  535, {_srnums[SR4J_1000], 0.}, { 536.,  31.}));
-        add_result(SignalRegionData("SR-4j-2200",   60, {_srnums[SR4J_2200], 0.}, {  60.,   5.}));
-        add_result(SignalRegionData("SR-4j-3400",    4, {_srnums[SR4J_3400], 0.}, {  5.7,  1.0}));
-        add_result(SignalRegionData("SR-5j-1600",  320, {_srnums[SR5J_1600], 0.}, { 319.,  19.}));
-        add_result(SignalRegionData("SR-6j-1000",   25, {_srnums[SR6J_1000], 0.}, {  21.,  2.9}));
-        add_result(SignalRegionData("SR-6j-2200",    5, {_srnums[SR6J_2200], 0.}, {  4.6,  1.0}));
-        add_result(SignalRegionData("SR-6j-3400",    0, {_srnums[SR6J_3400], 0.}, {  0.8,  0.4}));
+        add_result(SignalRegionData(_counters.at("2j_1600"), 2111, {2190., 130.}));
+        add_result(SignalRegionData(_counters.at("2j_2200"),  971, { 980.,  50.}));
+        add_result(SignalRegionData(_counters.at("2j_2800"),   78, {  87.,   8.}));
+        add_result(SignalRegionData(_counters.at("4j_1000"),  535, { 536.,  31.}));
+        add_result(SignalRegionData(_counters.at("4j_2200"),   60, {  60.,   5.}));
+        add_result(SignalRegionData(_counters.at("4j_3400"),    4, {  5.7,  1.0}));
+        add_result(SignalRegionData(_counters.at("5j_1600"),  320, { 319.,  19.}));
+        add_result(SignalRegionData(_counters.at("6j_1000"),   25, {  21.,  2.9}));
+        add_result(SignalRegionData(_counters.at("6j_2200"),    5, {  4.6,  1.0}));
+        add_result(SignalRegionData(_counters.at("6j_3400"),    0, {  0.8,  0.4}));
 
         // Cutflow printout
         // const double sf = 139*crossSection()/femtobarn/sumOfWeights();
@@ -321,7 +336,8 @@ namespace Gambit {
         _cutflows["6j-3400"].normalize(6101, 1);
         cout << "\nCUTFLOWS:\n" << _cutflows << endl;
         cout << "\nSRCOUNTS:\n";
-        for (double x : _srnums) cout << x << "  ";
+        // for (double x : _srnums) cout << x << "  ";
+        for (auto& pair : _counters) cout << pair.second.weight_sum() << "  ";
         cout << "\n" << endl;
       }
 
@@ -329,10 +345,8 @@ namespace Gambit {
     protected:
 
       void analysis_specific_reset() {
-        for (size_t i = 0; i < NUMSR; ++i) _srnums[i] = 0;
+        for (auto& pair : _counters) { pair.second.reset(); }
       }
-
-
 
     };
 

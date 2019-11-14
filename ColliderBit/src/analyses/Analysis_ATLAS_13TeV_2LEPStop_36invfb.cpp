@@ -31,11 +31,23 @@ namespace Gambit {
     private:
 
         // Numbers passing cuts
-        double _SRASF120, _SRADF120, _SRASF140, _SRADF140, _SRASF160, _SRADF160, _SRASF180, _SRADF180;
-        double _SRBSF120, _SRBDF120, _SRBSF140, _SRBDF140;
-        double _SRCSF110, _SRCDF110;
-        //double _SR3BodyTSF, _SR3BodyTDF, _SR3BodyWSF, _SR3BodyWDF;
-        double _SR4b;
+        std::map<string, EventCounter> _counters = {
+            {"SRASF120", EventCounter("SRASF120")},
+            {"SRADF120", EventCounter("SRADF120")},
+            {"SRASF140", EventCounter("SRASF140")},
+            {"SRADF140", EventCounter("SRADF140")},
+            {"SRASF160", EventCounter("SRASF160")},
+            {"SRADF160", EventCounter("SRADF160")},
+            {"SRASF180", EventCounter("SRASF180")},
+            {"SRADF180", EventCounter("SRADF180")},
+            {"SRBSF120", EventCounter("SRBSF120")},
+            {"SRBDF120", EventCounter("SRBDF120")},
+            {"SRBSF140", EventCounter("SRBSF140")},
+            {"SRBDF140", EventCounter("SRBDF140")},
+            {"SRCSF110", EventCounter("SRCSF110")},
+            {"SRCDF110", EventCounter("SRCDF110")},
+            {"SR4b", EventCounter("SR4b")},
+        };
 
         // Cut Flow
         vector<int> cutFlowVector;
@@ -108,13 +120,6 @@ namespace Gambit {
 
             set_analysis_name("ATLAS_13TeV_2LEPStop_36invfb");
             set_luminosity(36.1);
-
-            _SRASF120=0; _SRADF120=0; _SRASF140=0; _SRADF140=0;
-            _SRASF160=0; _SRADF160=0; _SRASF180=0; _SRADF180=0;
-            _SRBSF120=0; _SRBDF120=0; _SRBSF140=0; _SRBDF140=0;
-            _SRCSF110=0; _SRCDF110=0;
-            //_SR3BodyTSF=0; _SR3BodyTDF=0; _SR3BodyWSF=0; _SR3BodyWDF=0;
-            _SR4b=0;
 
             NCUTS= 66;
 
@@ -278,7 +283,7 @@ namespace Gambit {
             bool cC_METGt200    =false;
             bool cC_MT2110      =false;
 
-	    //Lepton Num
+            //Lepton Num
             if(sgLeptons.size() == 2){
 
                 // Opposite sign leptons, pT(l1,l2)>25,20GeV, mll>20GeV
@@ -542,25 +547,25 @@ namespace Gambit {
             }
             // signal region
 
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2120 ) _SRASF120 += event->weight();
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2120 ) _SRADF120 += event->weight();
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2140 ) _SRASF140 += event->weight();
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2140 ) _SRADF140 += event->weight();
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2160 ) _SRASF160 += event->weight();
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2160 ) _SRADF160 += event->weight();
-            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2180 ) _SRASF180 += event->weight();
-            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2180 ) _SRADF180 += event->weight();
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2120 ) _counters.at("SRASF120").add_event(event);
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2120 ) _counters.at("SRADF120").add_event(event);
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2140 ) _counters.at("SRASF140").add_event(event);
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2140 ) _counters.at("SRADF140").add_event(event);
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2160 ) _counters.at("SRASF160").add_event(event);
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2160 ) _counters.at("SRADF160").add_event(event);
+            if (   cABC_SF  && cA_mllGt111 && cA_nobjet && CA_R2l2j && cA_deltaX && cA_MT2180 ) _counters.at("SRASF180").add_event(event);
+            if ( (!cABC_SF)                && cA_nobjet             && cA_deltaX && cA_MT2180 ) _counters.at("SRADF180").add_event(event);
 
-            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _SRBSF120 += event->weight();
-            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _SRBDF120 += event->weight();
-            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _SRBSF140 += event->weight();
-            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _SRBDF140 += event->weight();
+            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _counters.at("SRBSF120").add_event(event);
+            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2120 ) _counters.at("SRBDF120").add_event(event);
+            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _counters.at("SRBSF140").add_event(event);
+            if ( (!cABC_SF)                && cBC_nbnj && cB_DelBoost && cB_MT2140 ) _counters.at("SRBDF140").add_event(event);
 
-            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _SRCSF110 += event->weight();
-            if ( (!cABC_SF) &&                cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _SRCDF110 += event->weight();
+            if (   cABC_SF  && cBC_mllExMz && cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _counters.at("SRCSF110").add_event(event);
+            if ( (!cABC_SF) &&                cBC_nbnj && cC_njGt2 && cC_R2lGt1o2 && cC_METGt200 && cC_MT2110 ) _counters.at("SRCDF110").add_event(event);
 
 
-            if (c4_METOSlepton && c4_mllGt10 && c4_SoftLepton && c4_Jet1PtGt150 && c4_Jet3PtMET && c4_R2l4j && c4_R2l && c4_2bjetveto) _SR4b += event->weight();
+            if (c4_METOSlepton && c4_mllGt10 && c4_SoftLepton && c4_Jet1PtGt150 && c4_Jet3PtMET && c4_R2l4j && c4_R2l && c4_2bjetveto) _counters.at("SR4b").add_event(event);
         return;
 
         }
@@ -571,27 +576,14 @@ namespace Gambit {
             const Analysis_ATLAS_13TeV_2LEPStop_36invfb* specificOther
                 = dynamic_cast<const Analysis_ATLAS_13TeV_2LEPStop_36invfb*>(other);
 
+            for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
+
             if (NCUTS != specificOther->NCUTS) NCUTS = specificOther->NCUTS;
             for (int j=0; j<NCUTS; j++)
             {
                 cutFlowVector[j] += specificOther->cutFlowVector[j];
                 cutFlowVector_str[j] = specificOther->cutFlowVector_str[j];
             }
-
-            _SRASF120 += specificOther->_SRASF120;
-            _SRASF140 += specificOther->_SRASF140;
-            _SRADF140 += specificOther->_SRADF140;
-            _SRASF160 += specificOther->_SRASF160;
-            _SRADF160 += specificOther->_SRADF160;
-            _SRASF180 += specificOther->_SRASF180;
-            _SRADF180 += specificOther->_SRADF180;
-            _SRBSF120 += specificOther->_SRBSF120;
-            _SRBDF120 += specificOther->_SRBDF120;
-            _SRBSF140 += specificOther->_SRBSF140;
-            _SRBDF140 += specificOther->_SRBDF140;
-            _SRCSF110 += specificOther->_SRCSF110;
-            _SRCDF110 += specificOther->_SRCDF110;
-            _SR4b += specificOther->_SR4b;
         }
 
 
@@ -615,41 +607,33 @@ namespace Gambit {
             // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
             // signal regin 2-body A
-            add_result(SignalRegionData("SRASF120", 22., {_SRASF120, 0.}, { 20.0, 4.6}));
-            add_result(SignalRegionData("SRADF120", 27., {_SRADF120, 0.}, { 23.8, 4.2}));
-            add_result(SignalRegionData("SRASF140", 6., {_SRASF140, 0.}, { 11.0, 2.5}));
-            add_result(SignalRegionData("SRADF140", 6., {_SRADF140, 0.}, { 10.8, 2.1}));
-            add_result(SignalRegionData("SRASF160", 10., {_SRASF160, 0.}, { 5.6, 1.8}));
-            add_result(SignalRegionData("SRADF160", 7., {_SRADF160, 0.}, { 6.4, 1.3}));
-            add_result(SignalRegionData("SRASF180", 16., {_SRASF180, 0.}, { 12.3, 2.6}));
-            add_result(SignalRegionData("SRADF180", 8., {_SRADF180, 0.}, { 5.4, 1.7}));
+            add_result(SignalRegionData(_counters.at("SRASF120"), 22., { 20.0, 4.6}));
+            add_result(SignalRegionData(_counters.at("SRADF120"), 27., { 23.8, 4.2}));
+            add_result(SignalRegionData(_counters.at("SRASF140"), 6., { 11.0, 2.5}));
+            add_result(SignalRegionData(_counters.at("SRADF140"), 6., { 10.8, 2.1}));
+            add_result(SignalRegionData(_counters.at("SRASF160"), 10., { 5.6, 1.8}));
+            add_result(SignalRegionData(_counters.at("SRADF160"), 7., { 6.4, 1.3}));
+            add_result(SignalRegionData(_counters.at("SRASF180"), 16., { 12.3, 2.6}));
+            add_result(SignalRegionData(_counters.at("SRADF180"), 8., { 5.4, 1.7}));
             // signal regin 2-body B
-            add_result(SignalRegionData("SRBSF120", 17., {_SRBSF120, 0.}, { 16.3, 6.2}));
-            add_result(SignalRegionData("SRBDF120", 13., {_SRBDF120, 0.}, { 16.1, 5.3}));
-            add_result(SignalRegionData("SRBSF140", 9., {_SRBSF140, 0.}, { 7.4, 1.1}));
-            add_result(SignalRegionData("SRBDF140", 7., {_SRBDF140, 0.}, { 4.8, 1.0}));
+            add_result(SignalRegionData(_counters.at("SRBSF120"), 17., { 16.3, 6.2}));
+            add_result(SignalRegionData(_counters.at("SRBDF120"), 13., { 16.1, 5.3}));
+            add_result(SignalRegionData(_counters.at("SRBSF140"), 9., { 7.4, 1.1}));
+            add_result(SignalRegionData(_counters.at("SRBDF140"), 7., { 4.8, 1.0}));
             // signal regin 2-body C
-            add_result(SignalRegionData("SRCSF110", 11., {_SRCSF110, 0.}, { 5.3, 1.8}));
-            add_result(SignalRegionData("SRCDF110", 7., {_SRCDF110, 0.}, { 3.8, 1.5}));
+            add_result(SignalRegionData(_counters.at("SRCSF110"), 11., { 5.3, 1.8}));
+            add_result(SignalRegionData(_counters.at("SRCDF110"), 7., { 3.8, 1.5}));
             // signal regin 4-body
-            add_result(SignalRegionData("SR4b", 30., {_SR4b, 0.}, { 28., 6.}));
+            add_result(SignalRegionData(_counters.at("SR4b"), 30., { 28., 6.}));
 
             return;
         }
 
     protected:
       void analysis_specific_reset() {
-	_SRASF120=0; _SRADF120=0; _SRASF140=0; _SRADF140=0;
-	_SRASF160=0; _SRADF160=0; _SRASF180=0; _SRADF180=0;
-	_SRBSF120=0; _SRBDF120=0; _SRBSF140=0; _SRBDF140=0;
-	_SRCSF110=0; _SRCDF110=0;
-	//_SR3BodyTSF=0; _SR3BodyTDF=0; _SR3BodyWSF=0; _SR3BodyWDF=0;
-	_SR4b=0;
-
+        for (auto& pair : _counters) { pair.second.reset(); }
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
-
-
 
     };
 
