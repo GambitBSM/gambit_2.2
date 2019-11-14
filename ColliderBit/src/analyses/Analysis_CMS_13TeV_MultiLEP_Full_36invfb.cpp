@@ -39,143 +39,143 @@ namespace Gambit {
 
     protected:
       // Counters for the number of accepted events for each signal region
-      std::map<string,double> _numSR = {
+      std::map<string, EventCounter> _counters = {
         // 2SSLep SRs
-        {"SS01", 0.},
-        {"SS02", 0.},
-        {"SS03", 0.},
-        {"SS04", 0.},
-        {"SS05", 0.},
-        {"SS06", 0.},
-        {"SS07", 0.},
-        {"SS08", 0.},
-        {"SS09", 0.},
-        {"SS10", 0.},
-        {"SS11", 0.},
-        {"SS12", 0.},
-        {"SS13", 0.},
-        {"SS14", 0.},
-        {"SS15", 0.},
-        {"SS16", 0.},
-        {"SS17", 0.},
-        {"SS18", 0.},
-        {"SS19", 0.},
-        {"SS20", 0.},
-        {"SS21", 0.},
-        {"SS22", 0.},
-        {"SS23", 0.},
-        {"SS24", 0.},
-        {"SS25", 0.},
-        {"SS26", 0.},
-        {"SS27", 0.},
-        {"SS28", 0.},
-        {"SS29", 0.},
-        {"SS30", 0.},
+        {"SS01", EventCounter("SS01")},
+        {"SS02", EventCounter("SS02")},
+        {"SS03", EventCounter("SS03")},
+        {"SS04", EventCounter("SS04")},
+        {"SS05", EventCounter("SS05")},
+        {"SS06", EventCounter("SS06")},
+        {"SS07", EventCounter("SS07")},
+        {"SS08", EventCounter("SS08")},
+        {"SS09", EventCounter("SS09")},
+        {"SS10", EventCounter("SS10")},
+        {"SS11", EventCounter("SS11")},
+        {"SS12", EventCounter("SS12")},
+        {"SS13", EventCounter("SS13")},
+        {"SS14", EventCounter("SS14")},
+        {"SS15", EventCounter("SS15")},
+        {"SS16", EventCounter("SS16")},
+        {"SS17", EventCounter("SS17")},
+        {"SS18", EventCounter("SS18")},
+        {"SS19", EventCounter("SS19")},
+        {"SS20", EventCounter("SS20")},
+        {"SS21", EventCounter("SS21")},
+        {"SS22", EventCounter("SS22")},
+        {"SS23", EventCounter("SS23")},
+        {"SS24", EventCounter("SS24")},
+        {"SS25", EventCounter("SS25")},
+        {"SS26", EventCounter("SS26")},
+        {"SS27", EventCounter("SS27")},
+        {"SS28", EventCounter("SS28")},
+        {"SS29", EventCounter("SS29")},
+        {"SS30", EventCounter("SS30")},
         // 3Lep SRs
-        {"A01", 0.},
-        {"A02", 0.},
-        {"A03", 0.},
-        {"A04", 0.},
-        {"A05", 0.},
-        {"A06", 0.},
-        {"A07", 0.},
-        {"A08", 0.},
-        {"A09", 0.},
-        {"A10", 0.},
-        {"A11", 0.},
-        {"A12", 0.},
-        {"A13", 0.},
-        {"A14", 0.},
+        {"A01", EventCounter("A01")},
+        {"A02", EventCounter("A02")},
+        {"A03", EventCounter("A03")},
+        {"A04", EventCounter("A04")},
+        {"A05", EventCounter("A05")},
+        {"A06", EventCounter("A06")},
+        {"A07", EventCounter("A07")},
+        {"A08", EventCounter("A08")},
+        {"A09", EventCounter("A09")},
+        {"A10", EventCounter("A10")},
+        {"A11", EventCounter("A11")},
+        {"A12", EventCounter("A12")},
+        {"A13", EventCounter("A13")},
+        {"A14", EventCounter("A14")},
         // SR A15 overlaps with a CR and is not used for the results in arxiv:1709.05406
-        // {"A15", 0.},
-        {"A16", 0.},
-        {"A17", 0.},
-        {"A18", 0.},
-        {"A19", 0.},
-        {"A20", 0.},
-        {"A21", 0.},
-        {"A22", 0.},
-        {"A23", 0.},
-        {"A24", 0.},
-        {"A25", 0.},
-        {"A26", 0.},
-        {"A27", 0.},
-        {"A28", 0.},
-        {"A29", 0.},
-        {"A30", 0.},
-        {"A31", 0.},
-        {"A32", 0.},
-        {"A33", 0.},
-        {"A34", 0.},
-        {"A35", 0.},
-        {"A36", 0.},
-        {"A37", 0.},
-        {"A38", 0.},
-        {"A39", 0.},
-        {"A40", 0.},
-        {"A41", 0.},
-        {"A42", 0.},
-        {"A43", 0.},
-        {"A44", 0.},
+        // {"A15", EventCounter("A16")},
+        {"A16", EventCounter("A16")},
+        {"A17", EventCounter("A17")},
+        {"A18", EventCounter("A18")},
+        {"A19", EventCounter("A19")},
+        {"A20", EventCounter("A20")},
+        {"A21", EventCounter("A21")},
+        {"A22", EventCounter("A22")},
+        {"A23", EventCounter("A23")},
+        {"A24", EventCounter("A24")},
+        {"A25", EventCounter("A25")},
+        {"A26", EventCounter("A26")},
+        {"A27", EventCounter("A27")},
+        {"A28", EventCounter("A28")},
+        {"A29", EventCounter("A29")},
+        {"A30", EventCounter("A30")},
+        {"A31", EventCounter("A31")},
+        {"A32", EventCounter("A32")},
+        {"A33", EventCounter("A33")},
+        {"A34", EventCounter("A34")},
+        {"A35", EventCounter("A35")},
+        {"A36", EventCounter("A36")},
+        {"A37", EventCounter("A37")},
+        {"A38", EventCounter("A38")},
+        {"A39", EventCounter("A39")},
+        {"A40", EventCounter("A40")},
+        {"A41", EventCounter("A41")},
+        {"A42", EventCounter("A42")},
+        {"A43", EventCounter("A43")},
+        {"A44", EventCounter("A44")},
         // 3Lep_rebinned SRs
-        {"SR01", 0.},
-        {"SR02", 0.},
-        {"SR03", 0.},
-        {"SR04", 0.},
-        {"SR05", 0.},
-        {"SR06", 0.},
-        {"SR07", 0.},
-        {"SR08", 0.},
-        {"SR09", 0.},
-        {"SR10", 0.},
-        {"SR11", 0.},
-        {"SR12", 0.},
-        {"SR13", 0.},
-        {"SR14", 0.},
-        {"SR15", 0.},
-        {"SR16", 0.},
-        {"SR17", 0.},
-        {"SR18", 0.},
-        {"SR19", 0.},
-        {"SR20", 0.},
-        {"SR21", 0.},
-        {"SR22", 0.},
-        {"SR23", 0.},
-        {"SR24", 0.},
-        {"SR25", 0.},
-        {"SR26", 0.},
-        {"SR27", 0.},
-        {"SR28", 0.},
-        {"SR29", 0.},
-        {"SR30", 0.},
-        {"SR31", 0.},
-        {"SR32", 0.},
-        {"SR33", 0.},
-        {"SR34", 0.},
-        {"SR35", 0.},
-        {"SR36", 0.},
-        {"SR37", 0.},
-        {"SR38", 0.},
-        {"SR39", 0.},
-        {"SR40", 0.},
-        {"SR41", 0.},
-        {"SR42", 0.},
-        {"SR43", 0.},
-        {"SR44", 0.},
-        {"SR45", 0.},
-        {"SR46", 0.},
-        {"SR47", 0.},
-        {"SR48", 0.},
-        {"SR49", 0.},
-        {"SR50", 0.},
-        {"SR51", 0.},
-        {"SR52", 0.},
-        {"SR53", 0.},
-        {"SR54", 0.},
-        {"SR55", 0.},
-        {"SR56", 0.},
-        {"SR57", 0.},
-        {"SR58", 0.},
+        {"SR01", EventCounter("SR01")},
+        {"SR02", EventCounter("SR02")},
+        {"SR03", EventCounter("SR03")},
+        {"SR04", EventCounter("SR04")},
+        {"SR05", EventCounter("SR05")},
+        {"SR06", EventCounter("SR06")},
+        {"SR07", EventCounter("SR07")},
+        {"SR08", EventCounter("SR08")},
+        {"SR09", EventCounter("SR09")},
+        {"SR10", EventCounter("SR10")},
+        {"SR11", EventCounter("SR11")},
+        {"SR12", EventCounter("SR12")},
+        {"SR13", EventCounter("SR13")},
+        {"SR14", EventCounter("SR14")},
+        {"SR15", EventCounter("SR15")},
+        {"SR16", EventCounter("SR16")},
+        {"SR17", EventCounter("SR17")},
+        {"SR18", EventCounter("SR18")},
+        {"SR19", EventCounter("SR19")},
+        {"SR20", EventCounter("SR20")},
+        {"SR21", EventCounter("SR21")},
+        {"SR22", EventCounter("SR22")},
+        {"SR23", EventCounter("SR23")},
+        {"SR24", EventCounter("SR24")},
+        {"SR25", EventCounter("SR25")},
+        {"SR26", EventCounter("SR26")},
+        {"SR27", EventCounter("SR27")},
+        {"SR28", EventCounter("SR28")},
+        {"SR29", EventCounter("SR29")},
+        {"SR30", EventCounter("SR30")},
+        {"SR31", EventCounter("SR31")},
+        {"SR32", EventCounter("SR32")},
+        {"SR33", EventCounter("SR33")},
+        {"SR34", EventCounter("SR34")},
+        {"SR35", EventCounter("SR35")},
+        {"SR36", EventCounter("SR36")},
+        {"SR37", EventCounter("SR37")},
+        {"SR38", EventCounter("SR38")},
+        {"SR39", EventCounter("SR39")},
+        {"SR40", EventCounter("SR40")},
+        {"SR41", EventCounter("SR41")},
+        {"SR42", EventCounter("SR42")},
+        {"SR43", EventCounter("SR43")},
+        {"SR44", EventCounter("SR44")},
+        {"SR45", EventCounter("SR45")},
+        {"SR46", EventCounter("SR46")},
+        {"SR47", EventCounter("SR47")},
+        {"SR48", EventCounter("SR48")},
+        {"SR49", EventCounter("SR49")},
+        {"SR50", EventCounter("SR50")},
+        {"SR51", EventCounter("SR51")},
+        {"SR52", EventCounter("SR52")},
+        {"SR53", EventCounter("SR53")},
+        {"SR54", EventCounter("SR54")},
+        {"SR55", EventCounter("SR55")},
+        {"SR56", EventCounter("SR56")},
+        {"SR57", EventCounter("SR57")},
+        {"SR58", EventCounter("SR58")},
       };
 
     private:
@@ -424,42 +424,42 @@ namespace Gambit {
               if (num_ISRjets==0) {
 
                 // The 0 jet regions
-                if(mT < 100 && pT_ll < 50 && met < 100) _numSR["SS01"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _numSR["SS02"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _numSR["SS03"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _numSR["SS04"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met > 200) _numSR["SS05"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met < 100) _numSR["SS06"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _numSR["SS07"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _numSR["SS08"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _numSR["SS09"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met > 200) _numSR["SS10"] += event->weight();
-                if(mT > 100 && met < 100) _numSR["SS11"] += event->weight();
-                if(mT > 100 && met >= 100 && met < 150 && pp) _numSR["SS12"] += event->weight();
-                if(mT > 100 && met >= 100 && met < 150 && mm) _numSR["SS13"] += event->weight();
-                if(mT > 100 && met >= 150 && met < 200) _numSR["SS14"] += event->weight();
-                if(mT > 100 && met > 200) _numSR["SS15"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met < 100) _counters.at("SS01").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _counters.at("SS02").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _counters.at("SS03").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _counters.at("SS04").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met > 200) _counters.at("SS05").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met < 100) _counters.at("SS06").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _counters.at("SS07").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _counters.at("SS08").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _counters.at("SS09").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met > 200) _counters.at("SS10").add_event(event);
+                if(mT > 100 && met < 100) _counters.at("SS11").add_event(event);
+                if(mT > 100 && met >= 100 && met < 150 && pp) _counters.at("SS12").add_event(event);
+                if(mT > 100 && met >= 100 && met < 150 && mm) _counters.at("SS13").add_event(event);
+                if(mT > 100 && met >= 150 && met < 200) _counters.at("SS14").add_event(event);
+                if(mT > 100 && met > 200) _counters.at("SS15").add_event(event);
 
               }
 
               if (num_ISRjets==1){
 
                 // The 1 jet regions
-                if(mT < 100 && pT_ll < 50 && met < 100) _numSR["SS16"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _numSR["SS17"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _numSR["SS18"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _numSR["SS19"] += event->weight();
-                if(mT < 100 && pT_ll < 50 && met > 200) _numSR["SS20"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met < 100) _numSR["SS21"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _numSR["SS22"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _numSR["SS23"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _numSR["SS24"] += event->weight();
-                if(mT < 100 && pT_ll > 50 && met > 200) _numSR["SS25"] += event->weight();
-                if(mT > 100 && met < 100) _numSR["SS26"] += event->weight();
-                if(mT > 100 && met >= 100 && met < 150 && pp) _numSR["SS27"] += event->weight();
-                if(mT > 100 && met >= 100 && met < 150 && mm) _numSR["SS28"] += event->weight();
-                if(mT > 100 && met >= 150 && met < 200) _numSR["SS29"] += event->weight();
-                if(mT > 100 && met > 200) _numSR["SS30"] += event->weight();
+                if(mT < 100 && pT_ll < 50 && met < 100) _counters.at("SS16").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && pp) _counters.at("SS17").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met >= 100 && met < 150 && mm) _counters.at("SS18").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met >= 150 && met < 200) _counters.at("SS19").add_event(event);
+                if(mT < 100 && pT_ll < 50 && met > 200) _counters.at("SS20").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met < 100) _counters.at("SS21").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && pp) _counters.at("SS22").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met >= 100 && met < 150 && mm) _counters.at("SS23").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met >= 150 && met < 200) _counters.at("SS24").add_event(event);
+                if(mT < 100 && pT_ll > 50 && met > 200) _counters.at("SS25").add_event(event);
+                if(mT > 100 && met < 100) _counters.at("SS26").add_event(event);
+                if(mT > 100 && met >= 100 && met < 150 && pp) _counters.at("SS27").add_event(event);
+                if(mT > 100 && met >= 100 && met < 150 && mm) _counters.at("SS28").add_event(event);
+                if(mT > 100 && met >= 150 && met < 200) _counters.at("SS29").add_event(event);
+                if(mT > 100 && met > 200) _counters.at("SS30").add_event(event);
 
               }
 
@@ -476,56 +476,56 @@ namespace Gambit {
 
                 // The three light lepton signal regions
 
-                if(mT < 100 && met >=50 && met < 100 && mll < 75) _numSR["A01"] += event->weight();
-                if(mT < 100 && met >=100 && met < 150 && mll < 75) _numSR["A02"] += event->weight();
-                if(mT < 100 && met >=150 && met < 200 && mll < 75) _numSR["A03"] += event->weight();
-                if(mT < 100 && met >=200 && met < 250 && mll < 75) _numSR["A04"] += event->weight();
-                if(mT < 100 && met >=250 && mll < 75) _numSR["A05"] += event->weight();
+                if(mT < 100 && met >=50 && met < 100 && mll < 75) _counters.at("A01").add_event(event);
+                if(mT < 100 && met >=100 && met < 150 && mll < 75) _counters.at("A02").add_event(event);
+                if(mT < 100 && met >=150 && met < 200 && mll < 75) _counters.at("A03").add_event(event);
+                if(mT < 100 && met >=200 && met < 250 && mll < 75) _counters.at("A04").add_event(event);
+                if(mT < 100 && met >=250 && mll < 75) _counters.at("A05").add_event(event);
 
-                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll < 75) _numSR["A06"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll < 75) _numSR["A07"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll < 75) _numSR["A08"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=200 && mll < 75) _numSR["A09"] += event->weight();
-                if(mT >= 160 && met >=50 && met < 100 && mll < 75) _numSR["A10"] += event->weight();
-                if(mT >= 160 && met >=100 && met < 150 && mll < 75) _numSR["A11"] += event->weight();
-                if(mT >= 160 && met >=150 && met < 200 && mll < 75) _numSR["A12"] += event->weight();
-                if(mT >= 160 && met >=200 && met < 250 && mll < 75) _numSR["A13"] += event->weight();
-                if(mT >= 160 && met >=250 && mll < 75) _numSR["A14"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll < 75) _counters.at("A06").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll < 75) _counters.at("A07").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll < 75) _counters.at("A08").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=200 && mll < 75) _counters.at("A09").add_event(event);
+                if(mT >= 160 && met >=50 && met < 100 && mll < 75) _counters.at("A10").add_event(event);
+                if(mT >= 160 && met >=100 && met < 150 && mll < 75) _counters.at("A11").add_event(event);
+                if(mT >= 160 && met >=150 && met < 200 && mll < 75) _counters.at("A12").add_event(event);
+                if(mT >= 160 && met >=200 && met < 250 && mll < 75) _counters.at("A13").add_event(event);
+                if(mT >= 160 && met >=250 && mll < 75) _counters.at("A14").add_event(event);
 
                 // SR A15 overlaps with a CR and is not used for the results in arxiv:1709.05406
-                // if(mT < 100 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A15"] += event->weight();
-                if(mT < 100 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A16"] += event->weight();
-                if(mT < 100 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A17"] += event->weight();
-                if(mT < 100 && met >=200 && met < 250 && mll >= 75 && mll < 105) _numSR["A18"] += event->weight();
-                if(mT < 100 && met >=250 && met < 400 && mll >= 75 && mll < 105) _numSR["A19"] += event->weight();
-                if(mT < 100 && met >=400 && met < 550 && mll >= 75 && mll < 105) _numSR["A20"] += event->weight();
-                if(mT < 100 && met >=550 && mll >= 75 && mll < 105) _numSR["A21"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A22"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A23"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A24"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=200 && mll >= 75 && mll < 105) _numSR["A25"] += event->weight();
+                // if(mT < 100 && met >=50 && met < 100 && mll >= 75 && mll < 105) _counters.at("A15").add_event(event);
+                if(mT < 100 && met >=100 && met < 150 && mll >= 75 && mll < 105) _counters.at("A16").add_event(event);
+                if(mT < 100 && met >=150 && met < 200 && mll >= 75 && mll < 105) _counters.at("A17").add_event(event);
+                if(mT < 100 && met >=200 && met < 250 && mll >= 75 && mll < 105) _counters.at("A18").add_event(event);
+                if(mT < 100 && met >=250 && met < 400 && mll >= 75 && mll < 105) _counters.at("A19").add_event(event);
+                if(mT < 100 && met >=400 && met < 550 && mll >= 75 && mll < 105) _counters.at("A20").add_event(event);
+                if(mT < 100 && met >=550 && mll >= 75 && mll < 105) _counters.at("A21").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _counters.at("A22").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _counters.at("A23").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _counters.at("A24").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=200 && mll >= 75 && mll < 105) _counters.at("A25").add_event(event);
 
-                if(mT >= 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _numSR["A26"] += event->weight();
-                if(mT >= 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _numSR["A27"] += event->weight();
-                if(mT >= 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _numSR["A28"] += event->weight();
-                if(mT >= 160 && met >=200 && met < 250 && mll >= 75 && mll < 105) _numSR["A29"] += event->weight();
-                if(mT >= 160 && met >=250 && met < 400 && mll >= 75 && mll < 105) _numSR["A30"] += event->weight();
-                if(mT >= 160 && met >= 400 && mll >= 75 && mll < 105) _numSR["A31"] += event->weight();
+                if(mT >= 160 && met >=50 && met < 100 && mll >= 75 && mll < 105) _counters.at("A26").add_event(event);
+                if(mT >= 160 && met >=100 && met < 150 && mll >= 75 && mll < 105) _counters.at("A27").add_event(event);
+                if(mT >= 160 && met >=150 && met < 200 && mll >= 75 && mll < 105) _counters.at("A28").add_event(event);
+                if(mT >= 160 && met >=200 && met < 250 && mll >= 75 && mll < 105) _counters.at("A29").add_event(event);
+                if(mT >= 160 && met >=250 && met < 400 && mll >= 75 && mll < 105) _counters.at("A30").add_event(event);
+                if(mT >= 160 && met >= 400 && mll >= 75 && mll < 105) _counters.at("A31").add_event(event);
 
-                if(mT < 100 && met >=50 && met < 100 && mll >= 105) _numSR["A32"] += event->weight();
-                if(mT < 100 && met >=100 && met < 150 && mll >= 105) _numSR["A33"] += event->weight();
-                if(mT < 100 && met >=150 && met < 200 && mll >= 105) _numSR["A34"] += event->weight();
-                if(mT < 100 && met >=200 && met < 250 && mll >= 105) _numSR["A35"] += event->weight();
-                if(mT < 100 && met >=250 && mll >= 105) _numSR["A36"] += event->weight();
+                if(mT < 100 && met >=50 && met < 100 && mll >= 105) _counters.at("A32").add_event(event);
+                if(mT < 100 && met >=100 && met < 150 && mll >= 105) _counters.at("A33").add_event(event);
+                if(mT < 100 && met >=150 && met < 200 && mll >= 105) _counters.at("A34").add_event(event);
+                if(mT < 100 && met >=200 && met < 250 && mll >= 105) _counters.at("A35").add_event(event);
+                if(mT < 100 && met >=250 && mll >= 105) _counters.at("A36").add_event(event);
 
-                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 105) _numSR["A37"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 105) _numSR["A38"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 105) _numSR["A39"] += event->weight();
-                if(mT >= 100 && mT < 160 && met >=200 && mll >= 105) _numSR["A40"] += event->weight();
-                if(mT >= 160 && met >=50 && met < 100 && mll >= 105) _numSR["A41"] += event->weight();
-                if(mT >= 160 && met >=100 && met < 150 && mll >= 105) _numSR["A42"] += event->weight();
-                if(mT >= 160 && met >=150 && met < 200 && mll >= 105) _numSR["A43"] += event->weight();
-                if(mT >= 160 && met >=200 && mll >= 105) _numSR["A44"] += event->weight();
+                if(mT >= 100 && mT < 160 && met >=50 && met < 100 && mll >= 105) _counters.at("A37").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=100 && met < 150 && mll >= 105) _counters.at("A38").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=150 && met < 200 && mll >= 105) _counters.at("A39").add_event(event);
+                if(mT >= 100 && mT < 160 && met >=200 && mll >= 105) _counters.at("A40").add_event(event);
+                if(mT >= 160 && met >=50 && met < 100 && mll >= 105) _counters.at("A41").add_event(event);
+                if(mT >= 160 && met >=100 && met < 150 && mll >= 105) _counters.at("A42").add_event(event);
+                if(mT >= 160 && met >=150 && met < 200 && mll >= 105) _counters.at("A43").add_event(event);
+                if(mT >= 160 && met >=200 && mll >= 105) _counters.at("A44").add_event(event);
 
               }
             }
@@ -541,77 +541,77 @@ namespace Gambit {
               if (nSignalLightLeptons==3 && nSignalTaus==0) {
 
                 // The three light lepton signal regions
-                if(mll < 75 && mT < 100 && HT < 200 && met > 50 && met < 100) _numSR["SR01"] += event->weight();
-                if(mll < 75 && mT < 100 && HT < 200 && met > 100 && met < 150) _numSR["SR02"] += event->weight();
-                if(mll < 75 && mT < 100 && HT < 200 && met > 150 && met < 200) _numSR["SR03"] += event->weight();
-                if(mll < 75 && mT < 100 && HT < 200 && met > 200) _numSR["SR04"] += event->weight();
+                if(mll < 75 && mT < 100 && HT < 200 && met > 50 && met < 100) _counters.at("SR01").add_event(event);
+                if(mll < 75 && mT < 100 && HT < 200 && met > 100 && met < 150) _counters.at("SR02").add_event(event);
+                if(mll < 75 && mT < 100 && HT < 200 && met > 150 && met < 200) _counters.at("SR03").add_event(event);
+                if(mll < 75 && mT < 100 && HT < 200 && met > 200) _counters.at("SR04").add_event(event);
 
-                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 50 && met < 100) _numSR["SR05"] += event->weight();
-                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 100 && met < 150) _numSR["SR06"] += event->weight();
-                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 150) _numSR["SR07"] += event->weight();
+                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 50 && met < 100) _counters.at("SR05").add_event(event);
+                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 100 && met < 150) _counters.at("SR06").add_event(event);
+                if(mll < 75 && mT > 100 && mT < 160 && HT < 200 && met > 150) _counters.at("SR07").add_event(event);
 
-                if(mll < 75 && mT > 160 && HT < 200 && met > 50 && met < 100) _numSR["SR08"] += event->weight();
-                if(mll < 75 && mT > 160 && HT < 200 && met > 100 && met < 150) _numSR["SR09"] += event->weight();
-                if(mll < 75 && mT > 160 && HT < 200 && met > 150 && met < 200) _numSR["SR10"] += event->weight();
-                if(mll < 75 && mT > 160 && HT < 200 && met > 200) _numSR["SR11"] += event->weight();
+                if(mll < 75 && mT > 160 && HT < 200 && met > 50 && met < 100) _counters.at("SR08").add_event(event);
+                if(mll < 75 && mT > 160 && HT < 200 && met > 100 && met < 150) _counters.at("SR09").add_event(event);
+                if(mll < 75 && mT > 160 && HT < 200 && met > 150 && met < 200) _counters.at("SR10").add_event(event);
+                if(mll < 75 && mT > 160 && HT < 200 && met > 200) _counters.at("SR11").add_event(event);
 
-                if(mll < 75 && mT < 100 && HT > 200 && met > 50) _numSR["SR12"] += event->weight();
-                if(mll < 75 && mT > 100 && mT < 160 && HT > 200 && met > 50) _numSR["SR13"] += event->weight();
-                if(mll < 75 && mT > 160 && HT > 200 && met > 50) _numSR["SR14"] += event->weight();
+                if(mll < 75 && mT < 100 && HT > 200 && met > 50) _counters.at("SR12").add_event(event);
+                if(mll < 75 && mT > 100 && mT < 160 && HT > 200 && met > 50) _counters.at("SR13").add_event(event);
+                if(mll < 75 && mT > 160 && HT > 200 && met > 50) _counters.at("SR14").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 100 && met < 150) _numSR["SR15"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 150 && met < 200) _numSR["SR16"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 200 && met < 250) _numSR["SR17"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 250) _numSR["SR18"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 100 && met < 150) _counters.at("SR15").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 150 && met < 200) _counters.at("SR16").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 200 && met < 250) _counters.at("SR17").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT < 100 && met > 250) _counters.at("SR18").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 50 && met < 100) _numSR["SR19"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 100 && met < 150) _numSR["SR20"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 150 && met < 200) _numSR["SR21"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 200) _numSR["SR22"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 50 && met < 100) _counters.at("SR19").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 100 && met < 150) _counters.at("SR20").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 150 && met < 200) _counters.at("SR21").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT < 100 && met > 200) _counters.at("SR22").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 50 && met < 100) _numSR["SR23"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 100 && met < 150) _numSR["SR24"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 150 && met < 200) _numSR["SR25"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 200) _numSR["SR26"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 50 && met < 100) _counters.at("SR23").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 100 && met < 150) _counters.at("SR24").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 150 && met < 200) _counters.at("SR25").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT < 100 && met > 200) _counters.at("SR26").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR27"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR28"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR29"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 200 && met < 250) _numSR["SR30"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 250) _numSR["SR31"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 50 && met < 100) _counters.at("SR27").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 100 && met < 150) _counters.at("SR28").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 150 && met < 200) _counters.at("SR29").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 200 && met < 250) _counters.at("SR30").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 100 && HT < 200 && met > 250) _counters.at("SR31").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR32"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR33"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR34"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 200) _numSR["SR35"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _counters.at("SR32").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _counters.at("SR33").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _counters.at("SR34").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 100 && HT < 200 && met > 200) _counters.at("SR35").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _numSR["SR36"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _numSR["SR37"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _numSR["SR38"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 200) _numSR["SR39"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 50 && met < 100) _counters.at("SR36").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 100 && met < 150) _counters.at("SR37").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 150 && met < 200) _counters.at("SR38").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 100 && HT < 200 && met > 200) _counters.at("SR39").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 50 && met < 150) _numSR["SR40"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 150 && met < 250) _numSR["SR41"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 250 && met < 350) _numSR["SR42"] += event->weight();
-                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 350) _numSR["SR43"] += event->weight();
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 50 && met < 150) _counters.at("SR40").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 150 && met < 250) _counters.at("SR41").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 250 && met < 350) _counters.at("SR42").add_event(event);
+                if(mll > 75 && mll < 105 && mT < 100 && HT > 200 && met > 350) _counters.at("SR43").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 50 && met < 100) _numSR["SR44"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 100 && met < 150) _numSR["SR45"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 150 && met < 200) _numSR["SR46"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 200 && met < 250) _numSR["SR47"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 250 && met < 300) _numSR["SR48"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 300) _numSR["SR49"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 50 && met < 100) _counters.at("SR44").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 100 && met < 150) _counters.at("SR45").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 150 && met < 200) _counters.at("SR46").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 200 && met < 250) _counters.at("SR47").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 250 && met < 300) _counters.at("SR48").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 100 && mT < 160 && HT > 200 && met > 300) _counters.at("SR49").add_event(event);
 
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 50 && met < 100) _numSR["SR50"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 100 && met < 150) _numSR["SR51"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 150 && met < 200) _numSR["SR52"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 200 && met < 250) _numSR["SR53"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 250 && met < 300) _numSR["SR54"] += event->weight();
-                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 300) _numSR["SR55"] += event->weight();
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 50 && met < 100) _counters.at("SR50").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 100 && met < 150) _counters.at("SR51").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 150 && met < 200) _counters.at("SR52").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 200 && met < 250) _counters.at("SR53").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 250 && met < 300) _counters.at("SR54").add_event(event);
+                if(mll > 75 && mll < 105 && mT > 160 && HT > 200 && met > 300) _counters.at("SR55").add_event(event);
 
-                if(mll > 105 && mT < 100 && met > 50) _numSR["SR56"] += event->weight();
-                if(mll > 105 && mT > 100 && mT < 160 && met > 50) _numSR["SR57"] += event->weight();
-                if(mll > 105 && mT > 160 && met > 50) _numSR["SR58"] += event->weight();
+                if(mll > 105 && mT < 100 && met > 50) _counters.at("SR56").add_event(event);
+                if(mll > 105 && mT > 100 && mT < 160 && met > 50) _counters.at("SR57").add_event(event);
+                if(mll > 105 && mT > 160 && met > 50) _counters.at("SR58").add_event(event);
 
               }
             }
@@ -626,6 +626,8 @@ namespace Gambit {
       {
         const Analysis_CMS_13TeV_MultiLEP_Full_36invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_MultiLEP_Full_36invfb*>(other);
+
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
 
         if (NCUTS1 != specificOther->NCUTS1) NCUTS1 = specificOther->NCUTS1;
         if (NCUTS2 != specificOther->NCUTS2) NCUTS2 = specificOther->NCUTS2;
@@ -648,9 +650,6 @@ namespace Gambit {
           cutFlowVector_str4[j] = specificOther->cutFlowVector_str4[j];
         }
 
-        for (auto& el : _numSR) {
-          el.second += specificOther->_numSR.at(el.first);
-        }
       }
 
 
@@ -659,142 +658,141 @@ namespace Gambit {
 
         //Now fill a results object with the results for each SR
 
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SS01", 1193., {_numSR["SS01"], 0.}, {1430., 180.}));
-        add_result(SignalRegionData("SS02", 50., {_numSR["SS02"], 0.}, {56., 9.}));
-        add_result(SignalRegionData("SS03", 25., {_numSR["SS03"], 0.}, {36., 7.}));
-        add_result(SignalRegionData("SS04", 7., {_numSR["SS04"], 0.}, {5.9, 1.2}));
-        add_result(SignalRegionData("SS05", 2., {_numSR["SS05"], 0.}, {4.5, 3.5}));
-        add_result(SignalRegionData("SS06", 143., {_numSR["SS06"], 0.}, {163., 19.}));
-        add_result(SignalRegionData("SS07", 41., {_numSR["SS07"], 0.}, {38., 6.}));
-        add_result(SignalRegionData("SS08", 24., {_numSR["SS08"], 0.}, {23., 4.}));
-        add_result(SignalRegionData("SS09", 11., {_numSR["SS09"], 0.}, {14.4, 3.2}));
-        add_result(SignalRegionData("SS10", 6., {_numSR["SS10"], 0.}, {6.3, 0.9}));
-        add_result(SignalRegionData("SS11", 67., {_numSR["SS11"], 0.}, {82., 12.}));
-        add_result(SignalRegionData("SS12", 19., {_numSR["SS12"], 0.}, {27., 4.}));
-        add_result(SignalRegionData("SS13", 18., {_numSR["SS13"], 0.}, {18., 4.}));
-        add_result(SignalRegionData("SS14", 9., {_numSR["SS14"], 0.}, {5.0, 0.8}));
-        add_result(SignalRegionData("SS15", 3., {_numSR["SS15"], 0.}, {5.1, 2.6}));
-        add_result(SignalRegionData("SS16", 591., {_numSR["SS16"], 0.}, {603., 80.}));
-        add_result(SignalRegionData("SS17", 116., {_numSR["SS17"], 0.}, {98., 14.}));
-        add_result(SignalRegionData("SS18", 69., {_numSR["SS18"], 0.}, {66., 10.}));
-        add_result(SignalRegionData("SS19", 43., {_numSR["SS19"], 0.}, {33., 6.}));
-        add_result(SignalRegionData("SS20", 13., {_numSR["SS20"], 0.}, {11.4, 1.7}));
-        add_result(SignalRegionData("SS21", 232., {_numSR["SS21"], 0.}, {264., 31.}));
-        add_result(SignalRegionData("SS22", 52., {_numSR["SS22"], 0.}, {51., 7.}));
-        add_result(SignalRegionData("SS23", 35., {_numSR["SS23"], 0.}, {31., 4.}));
-        add_result(SignalRegionData("SS24", 28., {_numSR["SS24"], 0.}, {29., 5.}));
-        add_result(SignalRegionData("SS25", 27., {_numSR["SS25"], 0.}, {22.2, 3.4}));
-        add_result(SignalRegionData("SS26", 49., {_numSR["SS26"], 0.}, {44., 7.}));
-        add_result(SignalRegionData("SS27", 18., {_numSR["SS27"], 0.}, {16.4, 2.9}));
-        add_result(SignalRegionData("SS28", 13., {_numSR["SS28"], 0.}, {10.7, 1.9}));
-        add_result(SignalRegionData("SS29", 9., {_numSR["SS29"], 0.}, {6.7, 1.1}));
-        add_result(SignalRegionData("SS30", 7., {_numSR["SS30"], 0.}, {3.9, 0.8}));
+        add_result(SignalRegionData(_counters.at("SS01"), 1193., {1430., 180.}));
+        add_result(SignalRegionData(_counters.at("SS02"), 50., {56., 9.}));
+        add_result(SignalRegionData(_counters.at("SS03"), 25., {36., 7.}));
+        add_result(SignalRegionData(_counters.at("SS04"), 7., {5.9, 1.2}));
+        add_result(SignalRegionData(_counters.at("SS05"), 2., {4.5, 3.5}));
+        add_result(SignalRegionData(_counters.at("SS06"), 143., {163., 19.}));
+        add_result(SignalRegionData(_counters.at("SS07"), 41., {38., 6.}));
+        add_result(SignalRegionData(_counters.at("SS08"), 24., {23., 4.}));
+        add_result(SignalRegionData(_counters.at("SS09"), 11., {14.4, 3.2}));
+        add_result(SignalRegionData(_counters.at("SS10"), 6., {6.3, 0.9}));
+        add_result(SignalRegionData(_counters.at("SS11"), 67., {82., 12.}));
+        add_result(SignalRegionData(_counters.at("SS12"), 19., {27., 4.}));
+        add_result(SignalRegionData(_counters.at("SS13"), 18., {18., 4.}));
+        add_result(SignalRegionData(_counters.at("SS14"), 9., {5.0, 0.8}));
+        add_result(SignalRegionData(_counters.at("SS15"), 3., {5.1, 2.6}));
+        add_result(SignalRegionData(_counters.at("SS16"), 591., {603., 80.}));
+        add_result(SignalRegionData(_counters.at("SS17"), 116., {98., 14.}));
+        add_result(SignalRegionData(_counters.at("SS18"), 69., {66., 10.}));
+        add_result(SignalRegionData(_counters.at("SS19"), 43., {33., 6.}));
+        add_result(SignalRegionData(_counters.at("SS20"), 13., {11.4, 1.7}));
+        add_result(SignalRegionData(_counters.at("SS21"), 232., {264., 31.}));
+        add_result(SignalRegionData(_counters.at("SS22"), 52., {51., 7.}));
+        add_result(SignalRegionData(_counters.at("SS23"), 35., {31., 4.}));
+        add_result(SignalRegionData(_counters.at("SS24"), 28., {29., 5.}));
+        add_result(SignalRegionData(_counters.at("SS25"), 27., {22.2, 3.4}));
+        add_result(SignalRegionData(_counters.at("SS26"), 49., {44., 7.}));
+        add_result(SignalRegionData(_counters.at("SS27"), 18., {16.4, 2.9}));
+        add_result(SignalRegionData(_counters.at("SS28"), 13., {10.7, 1.9}));
+        add_result(SignalRegionData(_counters.at("SS29"), 9., {6.7, 1.1}));
+        add_result(SignalRegionData(_counters.at("SS30"), 7., {3.9, 0.8}));
 
-        add_result(SignalRegionData("A01", 186., {_numSR["A01"], 0.}, {185., 22.}));
-        add_result(SignalRegionData("A02", 34., {_numSR["A02"], 0.}, {35., 6.}));
-        add_result(SignalRegionData("A03", 11., {_numSR["A03"], 0.}, {9.3, 2.2}));
-        add_result(SignalRegionData("A04", 1., {_numSR["A04"], 0.}, {3.3, 1.0}));
-        add_result(SignalRegionData("A05", 5., {_numSR["A05"], 0.}, {4., 1.}));
-        add_result(SignalRegionData("A06", 60., {_numSR["A06"], 0.}, {50., 8.}));
-        add_result(SignalRegionData("A07", 19., {_numSR["A07"], 0.}, {15., 4.}));
-        add_result(SignalRegionData("A08", 1., {_numSR["A08"], 0.}, {1.9, 0.6}));
-        add_result(SignalRegionData("A09", 3., {_numSR["A09"], 0.}, {0.8, 0.4}));
-        add_result(SignalRegionData("A10", 16., {_numSR["A10"], 0.}, {13., 2.8}));
-        add_result(SignalRegionData("A11", 17., {_numSR["A11"], 0.}, {11.9, 3.2}));
-        add_result(SignalRegionData("A12", 4., {_numSR["A12"], 0.}, {3.1, 1.2}));
-        add_result(SignalRegionData("A13", 3., {_numSR["A13"], 0.}, {2.1, 0.8}));
-        add_result(SignalRegionData("A14", 1., {_numSR["A14"], 0.}, {0.9, 0.4}));
+        add_result(SignalRegionData(_counters.at("A01"), 186., {185., 22.}));
+        add_result(SignalRegionData(_counters.at("A02"), 34., {35., 6.}));
+        add_result(SignalRegionData(_counters.at("A03"), 11., {9.3, 2.2}));
+        add_result(SignalRegionData(_counters.at("A04"), 1., {3.3, 1.0}));
+        add_result(SignalRegionData(_counters.at("A05"), 5., {4., 1.}));
+        add_result(SignalRegionData(_counters.at("A06"), 60., {50., 8.}));
+        add_result(SignalRegionData(_counters.at("A07"), 19., {15., 4.}));
+        add_result(SignalRegionData(_counters.at("A08"), 1., {1.9, 0.6}));
+        add_result(SignalRegionData(_counters.at("A09"), 3., {0.8, 0.4}));
+        add_result(SignalRegionData(_counters.at("A10"), 16., {13., 2.8}));
+        add_result(SignalRegionData(_counters.at("A11"), 17., {11.9, 3.2}));
+        add_result(SignalRegionData(_counters.at("A12"), 4., {3.1, 1.2}));
+        add_result(SignalRegionData(_counters.at("A13"), 3., {2.1, 0.8}));
+        add_result(SignalRegionData(_counters.at("A14"), 1., {0.9, 0.4}));
         // SR A15 overlaps with a CR and is not used for the results in arxiv:1709.05406
-        // add_result(SignalRegionData("A15", 2278., {_numSR["A15"], 0.}, {2180., 260}));
-        add_result(SignalRegionData("A16", 429., {_numSR["A16"], 0.}, {440., 70}));
-        add_result(SignalRegionData("A17", 123., {_numSR["A17"], 0.}, {129., 28}));
-        add_result(SignalRegionData("A18", 37., {_numSR["A18"], 0.}, {48., 10}));
-        add_result(SignalRegionData("A19", 38., {_numSR["A19"], 0.}, {42., 9}));
-        add_result(SignalRegionData("A20", 5., {_numSR["A20"], 0.}, {8.5, 2.1}));
-        add_result(SignalRegionData("A21", 2., {_numSR["A21"], 0.}, {2.6, 0.8}));
-        add_result(SignalRegionData("A22", 391., {_numSR["A22"], 0.}, {390, 50}));
-        add_result(SignalRegionData("A23", 61., {_numSR["A23"], 0.}, {72, 19}));
-        add_result(SignalRegionData("A24", 9., {_numSR["A24"], 0.}, {10, 4}));
-        add_result(SignalRegionData("A25", 8., {_numSR["A25"], 0.}, {4.9, 1.9}));
-        add_result(SignalRegionData("A26", 35., {_numSR["A26"], 0.}, {37, 9}));
-        add_result(SignalRegionData("A27", 17., {_numSR["A27"], 0.}, {21., 8.}));
-        add_result(SignalRegionData("A28", 7., {_numSR["A28"], 0.}, {8.9, 3.1}));
-        add_result(SignalRegionData("A29", 5., {_numSR["A29"], 0.}, {3.6, 1.3}));
-        add_result(SignalRegionData("A30", 3., {_numSR["A30"], 0.}, {4.1, 1.6}));
-        add_result(SignalRegionData("A31", 1., {_numSR["A31"], 0.}, {1.0, 0.5}));
-        add_result(SignalRegionData("A32", 123., {_numSR["A32"], 0.}, {121., 14.}));
-        add_result(SignalRegionData("A33", 32., {_numSR["A33"], 0.}, {32.0, 5.}));
-        add_result(SignalRegionData("A34", 4., {_numSR["A34"], 0.}, {11.6, 2.6}));
-        add_result(SignalRegionData("A35", 6., {_numSR["A35"], 0.}, {2.9, 0.8}));
-        add_result(SignalRegionData("A36", 5., {_numSR["A36"], 0.}, {3.7, 1.0}));
-        add_result(SignalRegionData("A37", 17., {_numSR["A37"], 0.}, {32., 5.}));
-        add_result(SignalRegionData("A38", 9., {_numSR["A38"], 0.}, {9.6, 2.4}));
-        add_result(SignalRegionData("A39", 0., {_numSR["A39"], 0.}, {2.4, 0.7}));
-        add_result(SignalRegionData("A40", 2., {_numSR["A40"], 0.}, {1.0, 0.4}));
-        add_result(SignalRegionData("A41", 9., {_numSR["A41"], 0.}, {9.4, 2.4}));
-        add_result(SignalRegionData("A42", 3., {_numSR["A42"], 0.}, {6.6, 2.1}));
-        add_result(SignalRegionData("A43", 0., {_numSR["A43"], 0.}, {3.1, 1.0}));
-        add_result(SignalRegionData("A44", 1., {_numSR["A44"], 0.}, {2.5, 0.8}));
+        // add_result(SignalRegionData(_counters.at("A15"), 2278., {2180., 260}));
+        add_result(SignalRegionData(_counters.at("A16"), 429., {440., 70}));
+        add_result(SignalRegionData(_counters.at("A17"), 123., {129., 28}));
+        add_result(SignalRegionData(_counters.at("A18"), 37., {48., 10}));
+        add_result(SignalRegionData(_counters.at("A19"), 38., {42., 9}));
+        add_result(SignalRegionData(_counters.at("A20"), 5., {8.5, 2.1}));
+        add_result(SignalRegionData(_counters.at("A21"), 2., {2.6, 0.8}));
+        add_result(SignalRegionData(_counters.at("A22"), 391., {390, 50}));
+        add_result(SignalRegionData(_counters.at("A23"), 61., {72, 19}));
+        add_result(SignalRegionData(_counters.at("A24"), 9., {10, 4}));
+        add_result(SignalRegionData(_counters.at("A25"), 8., {4.9, 1.9}));
+        add_result(SignalRegionData(_counters.at("A26"), 35., {37, 9}));
+        add_result(SignalRegionData(_counters.at("A27"), 17., {21., 8.}));
+        add_result(SignalRegionData(_counters.at("A28"), 7., {8.9, 3.1}));
+        add_result(SignalRegionData(_counters.at("A29"), 5., {3.6, 1.3}));
+        add_result(SignalRegionData(_counters.at("A30"), 3., {4.1, 1.6}));
+        add_result(SignalRegionData(_counters.at("A31"), 1., {1.0, 0.5}));
+        add_result(SignalRegionData(_counters.at("A32"), 123., {121., 14.}));
+        add_result(SignalRegionData(_counters.at("A33"), 32., {32.0, 5.}));
+        add_result(SignalRegionData(_counters.at("A34"), 4., {11.6, 2.6}));
+        add_result(SignalRegionData(_counters.at("A35"), 6., {2.9, 0.8}));
+        add_result(SignalRegionData(_counters.at("A36"), 5., {3.7, 1.0}));
+        add_result(SignalRegionData(_counters.at("A37"), 17., {32., 5.}));
+        add_result(SignalRegionData(_counters.at("A38"), 9., {9.6, 2.4}));
+        add_result(SignalRegionData(_counters.at("A39"), 0., {2.4, 0.7}));
+        add_result(SignalRegionData(_counters.at("A40"), 2., {1.0, 0.4}));
+        add_result(SignalRegionData(_counters.at("A41"), 9., {9.4, 2.4}));
+        add_result(SignalRegionData(_counters.at("A42"), 3., {6.6, 2.1}));
+        add_result(SignalRegionData(_counters.at("A43"), 0., {3.1, 1.0}));
+        add_result(SignalRegionData(_counters.at("A44"), 1., {2.5, 0.8}));
 
-        add_result(SignalRegionData("SR01", 166., {_numSR["SR01"], 0.}, {175., 20.}));
-        add_result(SignalRegionData("SR02", 23., {_numSR["SR02"], 0.}, {27., 4.}));
-        add_result(SignalRegionData("SR03", 6., {_numSR["SR03"], 0.}, {5., 1.}));
-        add_result(SignalRegionData("SR04", 1., {_numSR["SR04"], 0.}, {2.5, 0.8}));
-        add_result(SignalRegionData("SR05", 56., {_numSR["SR05"], 0.}, {50., 8.}));
-        add_result(SignalRegionData("SR06", 13., {_numSR["SR06"], 0.}, {12., 3.}));
-        add_result(SignalRegionData("SR07", 1., {_numSR["SR07"], 0.}, {1.2, 0.4}));
-        add_result(SignalRegionData("SR08", 13., {_numSR["SR08"], 0.}, {12., 2.}));
-        add_result(SignalRegionData("SR09", 14., {_numSR["SR09"], 0.}, {11., 3.}));
-        add_result(SignalRegionData("SR10", 2., {_numSR["SR10"], 0.}, {2.6, 0.9}));
-        add_result(SignalRegionData("SR11", 1., {_numSR["SR11"], 0.}, {1.2, 0.5}));
-        add_result(SignalRegionData("SR12", 41., {_numSR["SR12"], 0.}, {39., 6.}));
-        add_result(SignalRegionData("SR13", 13., {_numSR["SR13"], 0.}, {10., 3.}));
-        add_result(SignalRegionData("SR14", 11., {_numSR["SR14"], 0.}, {6., 2.}));
-        add_result(SignalRegionData("SR15", 260., {_numSR["SR15"], 0.}, {286., 44.}));
-        add_result(SignalRegionData("SR16", 51., {_numSR["SR16"], 0.}, {62., 14.}));
-        add_result(SignalRegionData("SR17", 10., {_numSR["SR17"], 0.}, {20., 5.}));
-        add_result(SignalRegionData("SR18", 9., {_numSR["SR18"], 0.}, {16., 4.}));
-        add_result(SignalRegionData("SR19", 297., {_numSR["SR19"], 0.}, {321., 42.}));
-        add_result(SignalRegionData("SR20", 38., {_numSR["SR20"], 0.}, {50., 14.}));
-        add_result(SignalRegionData("SR21", 2., {_numSR["SR21"], 0.}, {5., 2.}));
-        add_result(SignalRegionData("SR22", 2., {_numSR["SR22"], 0.}, {1.1, 0.5}));
-        add_result(SignalRegionData("SR23", 18., {_numSR["SR23"], 0.}, {25., 6.}));
-        add_result(SignalRegionData("SR24", 13., {_numSR["SR24"], 0.}, {12., 5.}));
-        add_result(SignalRegionData("SR25", 5., {_numSR["SR25"], 0.}, {5., 2.}));
-        add_result(SignalRegionData("SR26", 2., {_numSR["SR26"], 0.}, {4., 2.}));
-        add_result(SignalRegionData("SR27", 250., {_numSR["SR27"], 0.}, {279., 34.}));
-        add_result(SignalRegionData("SR28", 81., {_numSR["SR28"], 0.}, {87., 13.}));
-        add_result(SignalRegionData("SR29", 20., {_numSR["SR29"], 0.}, {26., 6.}));
-        add_result(SignalRegionData("SR30", 10., {_numSR["SR30"], 0.}, {8., 2.}));
-        add_result(SignalRegionData("SR31", 5., {_numSR["SR31"], 0.}, {6., 1.}));
-        add_result(SignalRegionData("SR32", 49., {_numSR["SR32"], 0.}, {54., 8.}));
-        add_result(SignalRegionData("SR33", 11., {_numSR["SR33"], 0.}, {11., 3.}));
-        add_result(SignalRegionData("SR34", 2., {_numSR["SR34"], 0.}, {2.2, 0.9}));
-        add_result(SignalRegionData("SR35", 2., {_numSR["SR35"], 0.}, {0.5, 0.4}));
-        add_result(SignalRegionData("SR36", 5., {_numSR["SR36"], 0.}, {6., 2.}));
-        add_result(SignalRegionData("SR37", 2., {_numSR["SR37"], 0.}, {3.0, 1.3}));
-        add_result(SignalRegionData("SR38", 0., {_numSR["SR38"], 0.}, {1.1, 0.4}));
-        add_result(SignalRegionData("SR39", 3., {_numSR["SR39"], 0.}, {0.9, 0.4}));
-        add_result(SignalRegionData("SR40", 292., {_numSR["SR40"], 0.}, {310., 40.}));
-        add_result(SignalRegionData("SR41", 69., {_numSR["SR41"], 0.}, {81., 18.}));
-        add_result(SignalRegionData("SR42", 23., {_numSR["SR42"], 0.}, {25., 6.}));
-        add_result(SignalRegionData("SR43", 8., {_numSR["SR43"], 0.}, {13., 3.}));
-        add_result(SignalRegionData("SR44", 45., {_numSR["SR44"], 0.}, {45., 6.}));
-        add_result(SignalRegionData("SR45", 12., {_numSR["SR45"], 0.}, {14., 3.}));
-        add_result(SignalRegionData("SR46", 5., {_numSR["SR46"], 0.}, {4., 2.}));
-        add_result(SignalRegionData("SR47", 1., {_numSR["SR47"], 0.}, {1.9, 0.8}));
-        add_result(SignalRegionData("SR48", 2., {_numSR["SR48"], 0.}, {1.8, 0.8}));
-        add_result(SignalRegionData("SR49", 1., {_numSR["SR49"], 0.}, {1.0, 0.5}));
-        add_result(SignalRegionData("SR50", 12., {_numSR["SR50"], 0.}, {9., 3.}));
-        add_result(SignalRegionData("SR51", 2., {_numSR["SR51"], 0.}, {4., 2.}));
-        add_result(SignalRegionData("SR52", 2., {_numSR["SR52"], 0.}, {2.0, 0.7}));
-        add_result(SignalRegionData("SR53", 2., {_numSR["SR53"], 0.}, {1.5, 0.7}));
-        add_result(SignalRegionData("SR54", 1., {_numSR["SR54"], 0.}, {0.6, 0.3}));
-        add_result(SignalRegionData("SR55", 1., {_numSR["SR55"], 0.}, {1.1, 0.5}));
-        add_result(SignalRegionData("SR56", 170., {_numSR["SR56"], 0.}, {173., 21.}));
-        add_result(SignalRegionData("SR57", 28., {_numSR["SR57"], 0.}, {44., 7.}));
-        add_result(SignalRegionData("SR58", 12., {_numSR["SR58"], 0.}, {23., 6.}));
+        add_result(SignalRegionData(_counters.at("SR01"), 166., {175., 20.}));
+        add_result(SignalRegionData(_counters.at("SR02"), 23., {27., 4.}));
+        add_result(SignalRegionData(_counters.at("SR03"), 6., {5., 1.}));
+        add_result(SignalRegionData(_counters.at("SR04"), 1., {2.5, 0.8}));
+        add_result(SignalRegionData(_counters.at("SR05"), 56., {50., 8.}));
+        add_result(SignalRegionData(_counters.at("SR06"), 13., {12., 3.}));
+        add_result(SignalRegionData(_counters.at("SR07"), 1., {1.2, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR08"), 13., {12., 2.}));
+        add_result(SignalRegionData(_counters.at("SR09"), 14., {11., 3.}));
+        add_result(SignalRegionData(_counters.at("SR10"), 2., {2.6, 0.9}));
+        add_result(SignalRegionData(_counters.at("SR11"), 1., {1.2, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR12"), 41., {39., 6.}));
+        add_result(SignalRegionData(_counters.at("SR13"), 13., {10., 3.}));
+        add_result(SignalRegionData(_counters.at("SR14"), 11., {6., 2.}));
+        add_result(SignalRegionData(_counters.at("SR15"), 260., {286., 44.}));
+        add_result(SignalRegionData(_counters.at("SR16"), 51., {62., 14.}));
+        add_result(SignalRegionData(_counters.at("SR17"), 10., {20., 5.}));
+        add_result(SignalRegionData(_counters.at("SR18"), 9., {16., 4.}));
+        add_result(SignalRegionData(_counters.at("SR19"), 297., {321., 42.}));
+        add_result(SignalRegionData(_counters.at("SR20"), 38., {50., 14.}));
+        add_result(SignalRegionData(_counters.at("SR21"), 2., {5., 2.}));
+        add_result(SignalRegionData(_counters.at("SR22"), 2., {1.1, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR23"), 18., {25., 6.}));
+        add_result(SignalRegionData(_counters.at("SR24"), 13., {12., 5.}));
+        add_result(SignalRegionData(_counters.at("SR25"), 5., {5., 2.}));
+        add_result(SignalRegionData(_counters.at("SR26"), 2., {4., 2.}));
+        add_result(SignalRegionData(_counters.at("SR27"), 250., {279., 34.}));
+        add_result(SignalRegionData(_counters.at("SR28"), 81., {87., 13.}));
+        add_result(SignalRegionData(_counters.at("SR29"), 20., {26., 6.}));
+        add_result(SignalRegionData(_counters.at("SR30"), 10., {8., 2.}));
+        add_result(SignalRegionData(_counters.at("SR31"), 5., {6., 1.}));
+        add_result(SignalRegionData(_counters.at("SR32"), 49., {54., 8.}));
+        add_result(SignalRegionData(_counters.at("SR33"), 11., {11., 3.}));
+        add_result(SignalRegionData(_counters.at("SR34"), 2., {2.2, 0.9}));
+        add_result(SignalRegionData(_counters.at("SR35"), 2., {0.5, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR36"), 5., {6., 2.}));
+        add_result(SignalRegionData(_counters.at("SR37"), 2., {3.0, 1.3}));
+        add_result(SignalRegionData(_counters.at("SR38"), 0., {1.1, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR39"), 3., {0.9, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR40"), 292., {310., 40.}));
+        add_result(SignalRegionData(_counters.at("SR41"), 69., {81., 18.}));
+        add_result(SignalRegionData(_counters.at("SR42"), 23., {25., 6.}));
+        add_result(SignalRegionData(_counters.at("SR43"), 8., {13., 3.}));
+        add_result(SignalRegionData(_counters.at("SR44"), 45., {45., 6.}));
+        add_result(SignalRegionData(_counters.at("SR45"), 12., {14., 3.}));
+        add_result(SignalRegionData(_counters.at("SR46"), 5., {4., 2.}));
+        add_result(SignalRegionData(_counters.at("SR47"), 1., {1.9, 0.8}));
+        add_result(SignalRegionData(_counters.at("SR48"), 2., {1.8, 0.8}));
+        add_result(SignalRegionData(_counters.at("SR49"), 1., {1.0, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR50"), 12., {9., 3.}));
+        add_result(SignalRegionData(_counters.at("SR51"), 2., {4., 2.}));
+        add_result(SignalRegionData(_counters.at("SR52"), 2., {2.0, 0.7}));
+        add_result(SignalRegionData(_counters.at("SR53"), 2., {1.5, 0.7}));
+        add_result(SignalRegionData(_counters.at("SR54"), 1., {0.6, 0.3}));
+        add_result(SignalRegionData(_counters.at("SR55"), 1., {1.1, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR56"), 170., {173., 21.}));
+        add_result(SignalRegionData(_counters.at("SR57"), 28., {44., 7.}));
+        add_result(SignalRegionData(_counters.at("SR58"), 12., {23., 6.}));
 
       }
 
@@ -849,7 +847,7 @@ namespace Gambit {
     protected:
       void analysis_specific_reset() {
 
-        for (auto& el : _numSR) { el.second = 0.;}
+        for (auto& pair : _counters) { pair.second.reset(); }
 
         std::fill(cutFlowVector1.begin(), cutFlowVector1.end(), 0);
         std::fill(cutFlowVector2.begin(), cutFlowVector2.end(), 0);
@@ -876,37 +874,37 @@ namespace Gambit {
       }
 
       virtual void collect_results() {
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SS01", 1193., {_numSR["SS01"], 0.}, {1430., 180.}));
-        add_result(SignalRegionData("SS02", 50., {_numSR["SS02"], 0.}, {56., 9.}));
-        add_result(SignalRegionData("SS03", 25., {_numSR["SS03"], 0.}, {36., 7.}));
-        add_result(SignalRegionData("SS04", 7., {_numSR["SS04"], 0.}, {5.9, 1.2}));
-        add_result(SignalRegionData("SS05", 2., {_numSR["SS05"], 0.}, {4.5, 3.5}));
-        add_result(SignalRegionData("SS06", 143., {_numSR["SS06"], 0.}, {163., 19.}));
-        add_result(SignalRegionData("SS07", 41., {_numSR["SS07"], 0.}, {38., 6.}));
-        add_result(SignalRegionData("SS08", 24., {_numSR["SS08"], 0.}, {23., 4.}));
-        add_result(SignalRegionData("SS09", 11., {_numSR["SS09"], 0.}, {14.4, 3.2}));
-        add_result(SignalRegionData("SS10", 6., {_numSR["SS10"], 0.}, {6.3, 0.9}));
-        add_result(SignalRegionData("SS11", 67., {_numSR["SS11"], 0.}, {82., 12.}));
-        add_result(SignalRegionData("SS12", 19., {_numSR["SS12"], 0.}, {27., 4.}));
-        add_result(SignalRegionData("SS13", 18., {_numSR["SS13"], 0.}, {18., 4.}));
-        add_result(SignalRegionData("SS14", 9., {_numSR["SS14"], 0.}, {5.0, 0.8}));
-        add_result(SignalRegionData("SS15", 3., {_numSR["SS15"], 0.}, {5.1, 2.6}));
-        add_result(SignalRegionData("SS16", 591., {_numSR["SS16"], 0.}, {603., 80.}));
-        add_result(SignalRegionData("SS17", 116., {_numSR["SS17"], 0.}, {98., 14.}));
-        add_result(SignalRegionData("SS18", 69., {_numSR["SS18"], 0.}, {66., 10.}));
-        add_result(SignalRegionData("SS19", 43., {_numSR["SS19"], 0.}, {33., 6.}));
-        add_result(SignalRegionData("SS20", 13., {_numSR["SS20"], 0.}, {11.4, 1.7}));
-        add_result(SignalRegionData("SS21", 232., {_numSR["SS21"], 0.}, {264., 31.}));
-        add_result(SignalRegionData("SS22", 52., {_numSR["SS22"], 0.}, {51., 7.}));
-        add_result(SignalRegionData("SS23", 35., {_numSR["SS23"], 0.}, {31., 4.}));
-        add_result(SignalRegionData("SS24", 28., {_numSR["SS24"], 0.}, {29., 5.}));
-        add_result(SignalRegionData("SS25", 27., {_numSR["SS25"], 0.}, {22.2, 3.4}));
-        add_result(SignalRegionData("SS26", 49., {_numSR["SS26"], 0.}, {44., 7.}));
-        add_result(SignalRegionData("SS27", 18., {_numSR["SS27"], 0.}, {16.4, 2.9}));
-        add_result(SignalRegionData("SS28", 13., {_numSR["SS28"], 0.}, {10.7, 1.9}));
-        add_result(SignalRegionData("SS29", 9., {_numSR["SS29"], 0.}, {6.7, 1.1}));
-        add_result(SignalRegionData("SS30", 7., {_numSR["SS30"], 0.}, {3.9, 0.8}));
+
+        add_result(SignalRegionData(_counters.at("SS01"), 1193., {1430., 180.}));
+        add_result(SignalRegionData(_counters.at("SS02"), 50., {56., 9.}));
+        add_result(SignalRegionData(_counters.at("SS03"), 25., {36., 7.}));
+        add_result(SignalRegionData(_counters.at("SS04"), 7., {5.9, 1.2}));
+        add_result(SignalRegionData(_counters.at("SS05"), 2., {4.5, 3.5}));
+        add_result(SignalRegionData(_counters.at("SS06"), 143., {163., 19.}));
+        add_result(SignalRegionData(_counters.at("SS07"), 41., {38., 6.}));
+        add_result(SignalRegionData(_counters.at("SS08"), 24., {23., 4.}));
+        add_result(SignalRegionData(_counters.at("SS09"), 11., {14.4, 3.2}));
+        add_result(SignalRegionData(_counters.at("SS10"), 6., {6.3, 0.9}));
+        add_result(SignalRegionData(_counters.at("SS11"), 67., {82., 12.}));
+        add_result(SignalRegionData(_counters.at("SS12"), 19., {27., 4.}));
+        add_result(SignalRegionData(_counters.at("SS13"), 18., {18., 4.}));
+        add_result(SignalRegionData(_counters.at("SS14"), 9., {5.0, 0.8}));
+        add_result(SignalRegionData(_counters.at("SS15"), 3., {5.1, 2.6}));
+        add_result(SignalRegionData(_counters.at("SS16"), 591., {603., 80.}));
+        add_result(SignalRegionData(_counters.at("SS17"), 116., {98., 14.}));
+        add_result(SignalRegionData(_counters.at("SS18"), 69., {66., 10.}));
+        add_result(SignalRegionData(_counters.at("SS19"), 43., {33., 6.}));
+        add_result(SignalRegionData(_counters.at("SS20"), 13., {11.4, 1.7}));
+        add_result(SignalRegionData(_counters.at("SS21"), 232., {264., 31.}));
+        add_result(SignalRegionData(_counters.at("SS22"), 52., {51., 7.}));
+        add_result(SignalRegionData(_counters.at("SS23"), 35., {31., 4.}));
+        add_result(SignalRegionData(_counters.at("SS24"), 28., {29., 5.}));
+        add_result(SignalRegionData(_counters.at("SS25"), 27., {22.2, 3.4}));
+        add_result(SignalRegionData(_counters.at("SS26"), 49., {44., 7.}));
+        add_result(SignalRegionData(_counters.at("SS27"), 18., {16.4, 2.9}));
+        add_result(SignalRegionData(_counters.at("SS28"), 13., {10.7, 1.9}));
+        add_result(SignalRegionData(_counters.at("SS29"), 9., {6.7, 1.1}));
+        add_result(SignalRegionData(_counters.at("SS30"), 7., {3.9, 0.8}));
 
       }
 
@@ -928,52 +926,52 @@ namespace Gambit {
       }
 
       virtual void collect_results() {
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("A01", 186., {_numSR["A01"], 0.}, {185., 22.}));
-        add_result(SignalRegionData("A02", 34., {_numSR["A02"], 0.}, {35., 6.}));
-        add_result(SignalRegionData("A03", 11., {_numSR["A03"], 0.}, {9.3, 2.2}));
-        add_result(SignalRegionData("A04", 1., {_numSR["A04"], 0.}, {3.3, 1.0}));
-        add_result(SignalRegionData("A05", 5., {_numSR["A05"], 0.}, {4., 1.}));
-        add_result(SignalRegionData("A06", 60., {_numSR["A06"], 0.}, {50., 8.}));
-        add_result(SignalRegionData("A07", 19., {_numSR["A07"], 0.}, {15., 4.}));
-        add_result(SignalRegionData("A08", 1., {_numSR["A08"], 0.}, {1.9, 0.6}));
-        add_result(SignalRegionData("A09", 3., {_numSR["A09"], 0.}, {0.8, 0.4}));
-        add_result(SignalRegionData("A10", 16., {_numSR["A10"], 0.}, {13., 2.8}));
-        add_result(SignalRegionData("A11", 17., {_numSR["A11"], 0.}, {11.9, 3.2}));
-        add_result(SignalRegionData("A12", 4., {_numSR["A12"], 0.}, {3.1, 1.2}));
-        add_result(SignalRegionData("A13", 3., {_numSR["A13"], 0.}, {2.1, 0.8}));
-        add_result(SignalRegionData("A14", 1., {_numSR["A14"], 0.}, {0.9, 0.4}));
+
+        add_result(SignalRegionData(_counters.at("A01"), 186., {185., 22.}));
+        add_result(SignalRegionData(_counters.at("A02"), 34., {35., 6.}));
+        add_result(SignalRegionData(_counters.at("A03"), 11., {9.3, 2.2}));
+        add_result(SignalRegionData(_counters.at("A04"), 1., {3.3, 1.0}));
+        add_result(SignalRegionData(_counters.at("A05"), 5., {4., 1.}));
+        add_result(SignalRegionData(_counters.at("A06"), 60., {50., 8.}));
+        add_result(SignalRegionData(_counters.at("A07"), 19., {15., 4.}));
+        add_result(SignalRegionData(_counters.at("A08"), 1., {1.9, 0.6}));
+        add_result(SignalRegionData(_counters.at("A09"), 3., {0.8, 0.4}));
+        add_result(SignalRegionData(_counters.at("A10"), 16., {13., 2.8}));
+        add_result(SignalRegionData(_counters.at("A11"), 17., {11.9, 3.2}));
+        add_result(SignalRegionData(_counters.at("A12"), 4., {3.1, 1.2}));
+        add_result(SignalRegionData(_counters.at("A13"), 3., {2.1, 0.8}));
+        add_result(SignalRegionData(_counters.at("A14"), 1., {0.9, 0.4}));
         // SR A15 overlaps with a CR and is not used for the results in arxiv:1709.05406
-        // add_result(SignalRegionData("A15", 2278., {_numSR["A15"], 0.}, {2180., 260}));
-        add_result(SignalRegionData("A16", 429., {_numSR["A16"], 0.}, {440., 70}));
-        add_result(SignalRegionData("A17", 123., {_numSR["A17"], 0.}, {129., 28}));
-        add_result(SignalRegionData("A18", 37., {_numSR["A18"], 0.}, {48., 10}));
-        add_result(SignalRegionData("A19", 38., {_numSR["A19"], 0.}, {42., 9}));
-        add_result(SignalRegionData("A20", 5., {_numSR["A20"], 0.}, {8.5, 2.1}));
-        add_result(SignalRegionData("A21", 2., {_numSR["A21"], 0.}, {2.6, 0.8}));
-        add_result(SignalRegionData("A22", 391., {_numSR["A22"], 0.}, {390, 50}));
-        add_result(SignalRegionData("A23", 61., {_numSR["A23"], 0.}, {72, 19}));
-        add_result(SignalRegionData("A24", 9., {_numSR["A24"], 0.}, {10, 4}));
-        add_result(SignalRegionData("A25", 8., {_numSR["A25"], 0.}, {4.9, 1.9}));
-        add_result(SignalRegionData("A26", 35., {_numSR["A26"], 0.}, {37, 9}));
-        add_result(SignalRegionData("A27", 17., {_numSR["A27"], 0.}, {21., 8.}));
-        add_result(SignalRegionData("A28", 7., {_numSR["A28"], 0.}, {8.9, 3.1}));
-        add_result(SignalRegionData("A29", 5., {_numSR["A29"], 0.}, {3.6, 1.3}));
-        add_result(SignalRegionData("A30", 3., {_numSR["A30"], 0.}, {4.1, 1.6}));
-        add_result(SignalRegionData("A31", 1., {_numSR["A31"], 0.}, {1.0, 0.5}));
-        add_result(SignalRegionData("A32", 123., {_numSR["A32"], 0.}, {121., 14.}));
-        add_result(SignalRegionData("A33", 32., {_numSR["A33"], 0.}, {32.0, 5.}));
-        add_result(SignalRegionData("A34", 4., {_numSR["A34"], 0.}, {11.6, 2.6}));
-        add_result(SignalRegionData("A35", 6., {_numSR["A35"], 0.}, {2.9, 0.8}));
-        add_result(SignalRegionData("A36", 5., {_numSR["A36"], 0.}, {3.7, 1.0}));
-        add_result(SignalRegionData("A37", 17., {_numSR["A37"], 0.}, {32., 5.}));
-        add_result(SignalRegionData("A38", 9., {_numSR["A38"], 0.}, {9.6, 2.4}));
-        add_result(SignalRegionData("A39", 0., {_numSR["A39"], 0.}, {2.4, 0.7}));
-        add_result(SignalRegionData("A40", 2., {_numSR["A40"], 0.}, {1.0, 0.4}));
-        add_result(SignalRegionData("A41", 9., {_numSR["A41"], 0.}, {9.4, 2.4}));
-        add_result(SignalRegionData("A42", 3., {_numSR["A42"], 0.}, {6.6, 2.1}));
-        add_result(SignalRegionData("A43", 0., {_numSR["A43"], 0.}, {3.1, 1.0}));
-        add_result(SignalRegionData("A44", 1., {_numSR["A44"], 0.}, {2.5, 0.8}));
+        // add_result(SignalRegionData(_counters.at("A15"), 2278., {2180., 260}));
+        add_result(SignalRegionData(_counters.at("A16"), 429., {440., 70}));
+        add_result(SignalRegionData(_counters.at("A17"), 123., {129., 28}));
+        add_result(SignalRegionData(_counters.at("A18"), 37., {48., 10}));
+        add_result(SignalRegionData(_counters.at("A19"), 38., {42., 9}));
+        add_result(SignalRegionData(_counters.at("A20"), 5., {8.5, 2.1}));
+        add_result(SignalRegionData(_counters.at("A21"), 2., {2.6, 0.8}));
+        add_result(SignalRegionData(_counters.at("A22"), 391., {390, 50}));
+        add_result(SignalRegionData(_counters.at("A23"), 61., {72, 19}));
+        add_result(SignalRegionData(_counters.at("A24"), 9., {10, 4}));
+        add_result(SignalRegionData(_counters.at("A25"), 8., {4.9, 1.9}));
+        add_result(SignalRegionData(_counters.at("A26"), 35., {37, 9}));
+        add_result(SignalRegionData(_counters.at("A27"), 17., {21., 8.}));
+        add_result(SignalRegionData(_counters.at("A28"), 7., {8.9, 3.1}));
+        add_result(SignalRegionData(_counters.at("A29"), 5., {3.6, 1.3}));
+        add_result(SignalRegionData(_counters.at("A30"), 3., {4.1, 1.6}));
+        add_result(SignalRegionData(_counters.at("A31"), 1., {1.0, 0.5}));
+        add_result(SignalRegionData(_counters.at("A32"), 123., {121., 14.}));
+        add_result(SignalRegionData(_counters.at("A33"), 32., {32.0, 5.}));
+        add_result(SignalRegionData(_counters.at("A34"), 4., {11.6, 2.6}));
+        add_result(SignalRegionData(_counters.at("A35"), 6., {2.9, 0.8}));
+        add_result(SignalRegionData(_counters.at("A36"), 5., {3.7, 1.0}));
+        add_result(SignalRegionData(_counters.at("A37"), 17., {32., 5.}));
+        add_result(SignalRegionData(_counters.at("A38"), 9., {9.6, 2.4}));
+        add_result(SignalRegionData(_counters.at("A39"), 0., {2.4, 0.7}));
+        add_result(SignalRegionData(_counters.at("A40"), 2., {1.0, 0.4}));
+        add_result(SignalRegionData(_counters.at("A41"), 9., {9.4, 2.4}));
+        add_result(SignalRegionData(_counters.at("A42"), 3., {6.6, 2.1}));
+        add_result(SignalRegionData(_counters.at("A43"), 0., {3.1, 1.0}));
+        add_result(SignalRegionData(_counters.at("A44"), 1., {2.5, 0.8}));
 
         // Covariance matrix
         // Note that this is a 43x43 matrix, since the row & column corresponding to SR A15 has been removed
@@ -1045,65 +1043,65 @@ namespace Gambit {
       }
 
       virtual void collect_results() {
-        // add_result(SignalRegionData("SR label", n_obs, {s, s_sys}, {b, b_sys}));
-        add_result(SignalRegionData("SR01", 166., {_numSR["SR01"], 0.}, {175., 20.}));
-        add_result(SignalRegionData("SR02", 23., {_numSR["SR02"], 0.}, {27., 4.}));
-        add_result(SignalRegionData("SR03", 6., {_numSR["SR03"], 0.}, {5., 1.}));
-        add_result(SignalRegionData("SR04", 1., {_numSR["SR04"], 0.}, {2.5, 0.8}));
-        add_result(SignalRegionData("SR05", 56., {_numSR["SR05"], 0.}, {50., 8.}));
-        add_result(SignalRegionData("SR06", 13., {_numSR["SR06"], 0.}, {12., 3.}));
-        add_result(SignalRegionData("SR07", 1., {_numSR["SR07"], 0.}, {1.2, 0.4}));
-        add_result(SignalRegionData("SR08", 13., {_numSR["SR08"], 0.}, {12., 2.}));
-        add_result(SignalRegionData("SR09", 14., {_numSR["SR09"], 0.}, {11., 3.}));
-        add_result(SignalRegionData("SR10", 2., {_numSR["SR10"], 0.}, {2.6, 0.9}));
-        add_result(SignalRegionData("SR11", 1., {_numSR["SR11"], 0.}, {1.2, 0.5}));
-        add_result(SignalRegionData("SR12", 41., {_numSR["SR12"], 0.}, {39., 6.}));
-        add_result(SignalRegionData("SR13", 13., {_numSR["SR13"], 0.}, {10., 3.}));
-        add_result(SignalRegionData("SR14", 11., {_numSR["SR14"], 0.}, {6., 2.}));
-        add_result(SignalRegionData("SR15", 260., {_numSR["SR15"], 0.}, {286., 44.}));
-        add_result(SignalRegionData("SR16", 51., {_numSR["SR16"], 0.}, {62., 14.}));
-        add_result(SignalRegionData("SR17", 10., {_numSR["SR17"], 0.}, {20., 5.}));
-        add_result(SignalRegionData("SR18", 9., {_numSR["SR18"], 0.}, {16., 4.}));
-        add_result(SignalRegionData("SR19", 297., {_numSR["SR19"], 0.}, {321., 42.}));
-        add_result(SignalRegionData("SR20", 38., {_numSR["SR20"], 0.}, {50., 14.}));
-        add_result(SignalRegionData("SR21", 2., {_numSR["SR21"], 0.}, {5., 2.}));
-        add_result(SignalRegionData("SR22", 2., {_numSR["SR22"], 0.}, {1.1, 0.5}));
-        add_result(SignalRegionData("SR23", 18., {_numSR["SR23"], 0.}, {25., 6.}));
-        add_result(SignalRegionData("SR24", 13., {_numSR["SR24"], 0.}, {12., 5.}));
-        add_result(SignalRegionData("SR25", 5., {_numSR["SR25"], 0.}, {5., 2.}));
-        add_result(SignalRegionData("SR26", 2., {_numSR["SR26"], 0.}, {4., 2.}));
-        add_result(SignalRegionData("SR27", 250., {_numSR["SR27"], 0.}, {279., 34.}));
-        add_result(SignalRegionData("SR28", 81., {_numSR["SR28"], 0.}, {87., 13.}));
-        add_result(SignalRegionData("SR29", 20., {_numSR["SR29"], 0.}, {26., 6.}));
-        add_result(SignalRegionData("SR30", 10., {_numSR["SR30"], 0.}, {8., 2.}));
-        add_result(SignalRegionData("SR31", 5., {_numSR["SR31"], 0.}, {6., 1.}));
-        add_result(SignalRegionData("SR32", 49., {_numSR["SR32"], 0.}, {54., 8.}));
-        add_result(SignalRegionData("SR33", 11., {_numSR["SR33"], 0.}, {11., 3.}));
-        add_result(SignalRegionData("SR34", 2., {_numSR["SR34"], 0.}, {2.2, 0.9}));
-        add_result(SignalRegionData("SR35", 2., {_numSR["SR35"], 0.}, {0.5, 0.4}));
-        add_result(SignalRegionData("SR36", 5., {_numSR["SR36"], 0.}, {6., 2.}));
-        add_result(SignalRegionData("SR37", 2., {_numSR["SR37"], 0.}, {3.0, 1.3}));
-        add_result(SignalRegionData("SR38", 0., {_numSR["SR38"], 0.}, {1.1, 0.4}));
-        add_result(SignalRegionData("SR39", 3., {_numSR["SR39"], 0.}, {0.9, 0.4}));
-        add_result(SignalRegionData("SR40", 292., {_numSR["SR40"], 0.}, {310., 40.}));
-        add_result(SignalRegionData("SR41", 69., {_numSR["SR41"], 0.}, {81., 18.}));
-        add_result(SignalRegionData("SR42", 23., {_numSR["SR42"], 0.}, {25., 6.}));
-        add_result(SignalRegionData("SR43", 8., {_numSR["SR43"], 0.}, {13., 3.}));
-        add_result(SignalRegionData("SR44", 45., {_numSR["SR44"], 0.}, {45., 6.}));
-        add_result(SignalRegionData("SR45", 12., {_numSR["SR45"], 0.}, {14., 3.}));
-        add_result(SignalRegionData("SR46", 5., {_numSR["SR46"], 0.}, {4., 2.}));
-        add_result(SignalRegionData("SR47", 1., {_numSR["SR47"], 0.}, {1.9, 0.8}));
-        add_result(SignalRegionData("SR48", 2., {_numSR["SR48"], 0.}, {1.8, 0.8}));
-        add_result(SignalRegionData("SR49", 1., {_numSR["SR49"], 0.}, {1.0, 0.5}));
-        add_result(SignalRegionData("SR50", 12., {_numSR["SR50"], 0.}, {9., 3.}));
-        add_result(SignalRegionData("SR51", 2., {_numSR["SR51"], 0.}, {4., 2.}));
-        add_result(SignalRegionData("SR52", 2., {_numSR["SR52"], 0.}, {2.0, 0.7}));
-        add_result(SignalRegionData("SR53", 2., {_numSR["SR53"], 0.}, {1.5, 0.7}));
-        add_result(SignalRegionData("SR54", 1., {_numSR["SR54"], 0.}, {0.6, 0.3}));
-        add_result(SignalRegionData("SR55", 1., {_numSR["SR55"], 0.}, {1.1, 0.5}));
-        add_result(SignalRegionData("SR56", 170., {_numSR["SR56"], 0.}, {173., 21.}));
-        add_result(SignalRegionData("SR57", 28., {_numSR["SR57"], 0.}, {44., 7.}));
-        add_result(SignalRegionData("SR58", 12., {_numSR["SR58"], 0.}, {23., 6.}));
+
+        add_result(SignalRegionData(_counters.at("SR01"), 166., {175., 20.}));
+        add_result(SignalRegionData(_counters.at("SR02"), 23., {27., 4.}));
+        add_result(SignalRegionData(_counters.at("SR03"), 6., {5., 1.}));
+        add_result(SignalRegionData(_counters.at("SR04"), 1., {2.5, 0.8}));
+        add_result(SignalRegionData(_counters.at("SR05"), 56., {50., 8.}));
+        add_result(SignalRegionData(_counters.at("SR06"), 13., {12., 3.}));
+        add_result(SignalRegionData(_counters.at("SR07"), 1., {1.2, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR08"), 13., {12., 2.}));
+        add_result(SignalRegionData(_counters.at("SR09"), 14., {11., 3.}));
+        add_result(SignalRegionData(_counters.at("SR10"), 2., {2.6, 0.9}));
+        add_result(SignalRegionData(_counters.at("SR11"), 1., {1.2, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR12"), 41., {39., 6.}));
+        add_result(SignalRegionData(_counters.at("SR13"), 13., {10., 3.}));
+        add_result(SignalRegionData(_counters.at("SR14"), 11., {6., 2.}));
+        add_result(SignalRegionData(_counters.at("SR15"), 260., {286., 44.}));
+        add_result(SignalRegionData(_counters.at("SR16"), 51., {62., 14.}));
+        add_result(SignalRegionData(_counters.at("SR17"), 10., {20., 5.}));
+        add_result(SignalRegionData(_counters.at("SR18"), 9., {16., 4.}));
+        add_result(SignalRegionData(_counters.at("SR19"), 297., {321., 42.}));
+        add_result(SignalRegionData(_counters.at("SR20"), 38., {50., 14.}));
+        add_result(SignalRegionData(_counters.at("SR21"), 2., {5., 2.}));
+        add_result(SignalRegionData(_counters.at("SR22"), 2., {1.1, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR23"), 18., {25., 6.}));
+        add_result(SignalRegionData(_counters.at("SR24"), 13., {12., 5.}));
+        add_result(SignalRegionData(_counters.at("SR25"), 5., {5., 2.}));
+        add_result(SignalRegionData(_counters.at("SR26"), 2., {4., 2.}));
+        add_result(SignalRegionData(_counters.at("SR27"), 250., {279., 34.}));
+        add_result(SignalRegionData(_counters.at("SR28"), 81., {87., 13.}));
+        add_result(SignalRegionData(_counters.at("SR29"), 20., {26., 6.}));
+        add_result(SignalRegionData(_counters.at("SR30"), 10., {8., 2.}));
+        add_result(SignalRegionData(_counters.at("SR31"), 5., {6., 1.}));
+        add_result(SignalRegionData(_counters.at("SR32"), 49., {54., 8.}));
+        add_result(SignalRegionData(_counters.at("SR33"), 11., {11., 3.}));
+        add_result(SignalRegionData(_counters.at("SR34"), 2., {2.2, 0.9}));
+        add_result(SignalRegionData(_counters.at("SR35"), 2., {0.5, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR36"), 5., {6., 2.}));
+        add_result(SignalRegionData(_counters.at("SR37"), 2., {3.0, 1.3}));
+        add_result(SignalRegionData(_counters.at("SR38"), 0., {1.1, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR39"), 3., {0.9, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR40"), 292., {310., 40.}));
+        add_result(SignalRegionData(_counters.at("SR41"), 69., {81., 18.}));
+        add_result(SignalRegionData(_counters.at("SR42"), 23., {25., 6.}));
+        add_result(SignalRegionData(_counters.at("SR43"), 8., {13., 3.}));
+        add_result(SignalRegionData(_counters.at("SR44"), 45., {45., 6.}));
+        add_result(SignalRegionData(_counters.at("SR45"), 12., {14., 3.}));
+        add_result(SignalRegionData(_counters.at("SR46"), 5., {4., 2.}));
+        add_result(SignalRegionData(_counters.at("SR47"), 1., {1.9, 0.8}));
+        add_result(SignalRegionData(_counters.at("SR48"), 2., {1.8, 0.8}));
+        add_result(SignalRegionData(_counters.at("SR49"), 1., {1.0, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR50"), 12., {9., 3.}));
+        add_result(SignalRegionData(_counters.at("SR51"), 2., {4., 2.}));
+        add_result(SignalRegionData(_counters.at("SR52"), 2., {2.0, 0.7}));
+        add_result(SignalRegionData(_counters.at("SR53"), 2., {1.5, 0.7}));
+        add_result(SignalRegionData(_counters.at("SR54"), 1., {0.6, 0.3}));
+        add_result(SignalRegionData(_counters.at("SR55"), 1., {1.1, 0.5}));
+        add_result(SignalRegionData(_counters.at("SR56"), 170., {173., 21.}));
+        add_result(SignalRegionData(_counters.at("SR57"), 28., {44., 7.}));
+        add_result(SignalRegionData(_counters.at("SR58"), 12., {23., 6.}));
 
         // Covariance matrix
         static const vector< vector<double> > BKGCOV = {
