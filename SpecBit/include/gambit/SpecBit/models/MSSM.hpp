@@ -71,16 +71,6 @@
     #undef FUNCTION
 
     // ==============================
-    // MSSM parameterised with input at (user-defined) scale Q
-    #define FUNCTION get_MSSMatQ_spectrum_FS
-    START_FUNCTION(Spectrum)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atQ_lightgravitino)
-    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
-    BACKEND_REQ(FS_MSSMatQ_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
-    BACKEND_OPTION((FlexibleSUSY_MSSMatQ, 2.0.1), (FSMSSMSpectrum))
-    #undef FUNCTION
-
-    // ==============================
     // MSSM parameterised by mA and mu (instead of mHu2 and mHd2) at GUT scale
     #define FUNCTION get_MSSMatMGUT_mA_spectrum_FS
     START_FUNCTION(Spectrum)
@@ -88,6 +78,16 @@
     DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
     BACKEND_REQ(FS_MSSMatMGUT_mA_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
     BACKEND_OPTION((FlexibleSUSY_MSSMatMGUT_mA, 2.0.1), (FSMSSMSpectrum))
+    #undef FUNCTION
+
+    // ==============================
+    // MSSM parameterised with input at (user-defined) scale Q
+    #define FUNCTION get_MSSMatQ_spectrum_FS
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atQ_lightgravitino)
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    BACKEND_REQ(FS_MSSMatQ_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
+    BACKEND_OPTION((FlexibleSUSY_MSSMatQ, 2.0.1), (FSMSSMSpectrum))
     #undef FUNCTION
 
     // ==============================
@@ -100,6 +100,74 @@
     BACKEND_OPTION((FlexibleSUSY_MSSMatQ_mA, 2.0.1), (FSMSSMSpectrum))
     #undef FUNCTION
 
+    // ==============================
+    // MSSM parameterised by mA and mu (instead of mHu2 and mHd2) at SUSY scale
+    #define FUNCTION get_MSSMatMSUSY_mA_spectrum_FS
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atMSUSY_mA, MSSM63atMSUSY_mA_lightgravitino)
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    BACKEND_REQ(FS_MSSMatMSUSY_mA_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
+    BACKEND_OPTION((FlexibleSUSY_MSSMatMSUSY_mA, 2.0.1), (FSMSSMSpectrum))
+    #undef FUNCTION
+
+    // ==============================
+    // MSSM at GUT scale with EFTHiggs
+    #define FUNCTION get_MSSMatMGUT_spectrum_FEFTHiggs
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atMGUT, MSSM63atMGUT_lightgravitino)
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    BACKEND_REQ(FS_MSSMatMGUTEFTHiggs_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
+    BACKEND_OPTION((FlexibleSUSY_MSSMatMGUTEFTHiggs, 2.0.1), (FSMSSMSpectrum))
+    #undef FUNCTION
+
+    // ==============================
+    // MSSM parameterised by mA and mu (instead of mHu2 and mHd2) at GUT scale
+    // with EFTHiggs
+    #define FUNCTION get_MSSMatMGUT_mA_spectrum_FEFTHiggs
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atMGUT_mA, MSSM63atMGUT_mA_lightgravitino)
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    BACKEND_REQ(FS_MSSMatMGUTEFTHiggs_mA_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
+    BACKEND_OPTION((FlexibleSUSY_MSSMatMGUTEFTHiggs_mA, 2.0.1), (FSMSSMSpectrum))
+    #undef FUNCTION
+
+    // ==============================
+    // MSSM parameterised by mHu2 and mHd2 (instead of mu and Bmu) at
+    // user chosen scale via FlexibleEFTHiggs (FlexibleSUSY hybrid
+    // EFT / Fixed order calculation)
+    #define FUNCTION get_MSSMatQ_spectrum_FEFTHiggs
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atQ_lightgravitino)
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    BACKEND_REQ(FS_MSSMatQEFTHiggs_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
+    BACKEND_OPTION((FlexibleSUSY_MSSMatQEFTHiggs, 2.0.1), (FSMSSMSpectrum))
+    #undef FUNCTION
+
+    // ============================== 
+    //MSSM parameterised by mA and mu (instead of mHu2 and mHd2) at
+    // user chosen scale via FlexibleEFTHiggs (FlexibleSUSY hybrid
+    // EFT / Fixed order  calculation)
+    #define FUNCTION get_MSSMatQ_mA_spectrum_FEFTHiggs
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atQ_mA_lightgravitino)
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    BACKEND_REQ(FS_MSSMatQEFTHiggs_mA_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
+    BACKEND_OPTION((FlexibleSUSY_MSSMatQEFTHiggs_mA, 2.0.1), (FSMSSMSpectrum))
+    #undef FUNCTION
+
+    // ==============================
+    // MSSM parameterised by mA and mu (instead of mHu2 and mHd2) at SUSY scale
+    // via FlexibleEFTHiggs (FlexibleSUSY hybrid EFT / Fixed order calculation)
+    #define FUNCTION get_MSSMatMSUSY_mA_spectrum_FEFTHiggs
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atMSUSY_mA, MSSM63atMSUSY_mA_lightgravitino)
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to set up spectrum generator
+    BACKEND_REQ(FS_MSSMatMSUSYEFTHiggs_mA_Spectrum, (FSMSSMSpectrum), void, (Spectrum&, const SpectrumInputs &) )
+    BACKEND_OPTION((FlexibleSUSY_MSSMatMSUSYEFTHiggs_mA, 2.0.1), (FSMSSMSpectrum))
+    #undef FUNCTION
+
+ 
   #undef CAPABILITY
 
   /// @}

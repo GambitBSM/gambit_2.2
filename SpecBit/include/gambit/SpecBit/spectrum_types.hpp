@@ -32,6 +32,12 @@ namespace Gambit
     SMInputs sminputs;
     std::map<str, safe_ptr<const double> > param;
     safe_ptr<Options> options;
+
+    SpectrumInputs(SMInputs smi, std::map<str, safe_ptr<const double> > par, safe_ptr<Options> opt):
+      sminputs(smi),
+      param(par), 
+      options(opt)
+    {}
   };
 
 }

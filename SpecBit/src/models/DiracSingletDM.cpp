@@ -31,11 +31,11 @@
 #include <sstream>
 
 #include "gambit/Elements/gambit_module_headers.hpp"
-
 #include "gambit/Elements/spectrum.hpp"
 
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
+
 #include "gambit/Models/partmap.hpp"
 
 // Switch for debug mode
