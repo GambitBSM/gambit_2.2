@@ -2,7 +2,7 @@
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
-#include "gambit/ColliderBit/analyses/Perf_Plot.hpp"
+// #include "gambit/ColliderBit/analyses/Perf_Plot.hpp"
 #include "Eigen/Eigen"
 
 
@@ -58,8 +58,8 @@ namespace Gambit {
 
       Cutflows _flows;
 
-      Perf_Plot* plots_beginning;
-      Perf_Plot* plots_firstcut;
+      // Perf_Plot* plots_beginning;
+      // Perf_Plot* plots_firstcut;
       string analysisRunName;
 
       Analysis_ATLAS_13TeV_0LEP_36invfb() {
@@ -70,8 +70,8 @@ namespace Gambit {
         set_luminosity(36.0);
 
         vector<const char*> variablesNames = {"met", "nJets", "HT", "pTjetOne", "pTjetTwo", "pTjetThree", "sumpTj", "etamax_2", "etamax_4", "dphimin_123", "dphimin_more", "aplanarity"};
-	      plots_beginning = new Perf_Plot(analysisRunName+"_beginning", &variablesNames);
-        plots_firstcut = new Perf_Plot(analysisRunName+"_firstcut", &variablesNames);
+        // plots_beginning = new Perf_Plot(analysisRunName+"_beginning", &variablesNames);
+        // plots_firstcut = new Perf_Plot(analysisRunName+"_firstcut", &variablesNames);
 
         // Book cut-flows
         const vector<string> cuts23j = {"Pre-sel+MET+pT1+meff", "Njet", "Dphi_min(j123,MET)", "Dphi_min(j4+,MET)", "pT2", "eta_j12", "MET/sqrtHT", "m_eff(incl)"};
@@ -247,28 +247,29 @@ namespace Gambit {
         const double mineigenvalue = momtensor.eigenvalues().real().minCoeff();
         const double aplanarity = 1.5 * mineigenvalue;
 
-	
+        
 
-	//TP July 2019:
-	//Some values I want to obtain just for plotting:
+        //TP July 2019:
+        //Some values I want to obtain just for plotting:
 
-	double pTjetOne;
+        /*
+        double pTjetOne;
         double pTjetTwo;
         double pTjetThree;
 
-	if (nJets >= 1)
-	{
+        if (nJets >= 1)
+        {
           pTjetOne = signalJets[0]->pT();
           if (nJets >= 2)
-	  {
+          {
             pTjetTwo = signalJets[1]->pT();
             if (nJets >= 3)
-	      {
+              {
                 pTjetThree = signalJets[2]->pT();
               } else pTjetThree = -3.0;
           } else pTjetTwo = -2.0;
         } else pTjetOne = -1.0;
-        
+        */        
 
         ////////////////////////////////
         // Fill signal regions
@@ -279,19 +280,20 @@ namespace Gambit {
         const bool metCut = (met > 250.);
 
         //Now to plot: I'm not even doing this after preselection, I just want the initial values.
-	vector<double> variables={met, nJets, HT, pTjetOne, pTjetTwo, pTjetThree, sumptj, etamax_2, etamax_4, dphimin_123, dphimin_more, aplanarity};
-	if (1 == 1)//If I check post-cuts then I may have some conditions, may as well keep the structure in place.
+        /*
+        vector<double> variables={met, nJets, HT, pTjetOne, pTjetTwo, pTjetThree, sumptj, etamax_2, etamax_4, dphimin_123, dphimin_more, aplanarity};
+        if (1 == 1)//If I check post-cuts then I may have some conditions, may as well keep the structure in place.
         {
           plots_beginning->fill(&variables);
         }
+        */
 
         if (nJets50 >= 2 && leptonCut && metCut) {
-
         
         
           //_flows.fill(1);//This seems the easiest way to fix the discrepancy in how the cutflow reporting code fills the 2&3 jet regions.
           
-          plots_firstcut->fill(&variables);
+          // plots_firstcut->fill(&variables);
 
           // 2 jet regions
           if (dphimin_123 > 0.8 && dphimin_more > 0.4) {
@@ -433,10 +435,10 @@ namespace Gambit {
 
         //const double sf = 13.3*crossSection()/femtobarn/sumOfWeights();
         //_flows.scale(sf);
-        cout << "CUTFLOWS:\n\n" << _flows << endl;
+        // cout << "CUTFLOWS:\n\n" << _flows << endl;
 
-        plots_beginning->createFile(luminosity(),(36.1/100000));
-        plots_firstcut->createFile(luminosity(),(36.1/100000));
+        // plots_beginning->createFile(luminosity(),(36.1/100000));
+        // plots_firstcut->createFile(luminosity(),(36.1/100000));
 
       }
 
