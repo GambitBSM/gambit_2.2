@@ -1154,10 +1154,15 @@ set(dl "https://www.thphys.uni-heidelberg.de/~plehn/includes/prospino/on_the_web
 set(md5 "40e73d6b56a5008c134cc89c769e274c")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
-# Prospino fails to compile with -fopenmp flag
+# Prospino fails to compile with -openmp flags
 set(PROSPINO_Fortran_FLAGS "${BACKEND_Fortran_FLAGS}")
 string(REGEX REPLACE "-fopenmp" "" PROSPINO_Fortran_FLAGS "${PROSPINO_Fortran_FLAGS}")
-
+string(REGEX REPLACE "-qopenmp" "" PROSPINO_Fortran_FLAGS "${PROSPINO_Fortran_FLAGS}")
+# Some extra optimization for Intel
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+  # Options used in xsec project: -fast -xAVX -mkl -fno-alias -fomit-frame-pointer -O3 -finline-functions
+  set(PROSPINO_Fortran_FLAGS "${PROSPINO_Fortran_FLAGS} -fast -mkl -O3 -fno-alias -fomit-frame-pointer -finline-functions")
+endif()
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
