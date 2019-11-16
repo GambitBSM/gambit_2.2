@@ -1,15 +1,19 @@
 diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
 --- prospino_2.1_original/Makefile	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Makefile	2019-11-11 14:00:55.653633943 +0100
-@@ -9,6 +9,7 @@
++++ prospino_2.1_patched/Makefile	2019-11-16 20:44:38.149368099 +0100
+@@ -9,6 +9,11 @@
  #OPTION = -O0
  # these options needed for the NAG compiler
  #OPTION = -ieee=full -gline -dcfuns#
 +# OPTION = -shared -fPIC
++#
++# The -xAVX setting is for Intel processors, otherwise try using -mavx
++# OPTION = -fast -xAVX -mkl -fno-alias -fomit-frame-pointer -O3 -finline-functions
++OPTION = 
  #
  # paths, compiler, etc -> feel free to edit 
  #
-@@ -43,7 +44,7 @@ FILES_MACROS = ${MACROS}Xsugra.o \
+@@ -43,7 +48,7 @@ FILES_MACROS = ${MACROS}Xsugra.o \
                 ${MACROS}Xrunning_mass.o \
                 ${MACROS}Xvegas_array.o \
  	       ${MACROS}Xread_les_houches.o \
@@ -18,19 +22,27 @@ diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
  #tq5	       ${MACROS}XCtq5Pdf.o 
  #tq6	       ${MACROS}XCteq61Pdf.o 
  #tqx	       ${MACROS}Cteq6Pdf-2008.o 
-@@ -139,6 +140,21 @@ prospino:	prospino_main.f90  ${FILES_DIR
+@@ -132,13 +137,28 @@ prospino:	prospino_main.f90  ${FILES_DIR
+                                    ${FILES_INTEGS} \
+                                    ${FILES_STRONG} \
+                                    ${FILES_INTERF} 
+-	${COMP} prospino_main.f90  ${FILES_DIRECT} \
++	${COMP} ${OPTION} prospino_main.f90  ${FILES_DIRECT} \
+ 	                           ${FILES_MACROS} \
+                                    ${FILES_MATRIX} \
+                                    ${FILES_INTEGS} \
                                     ${FILES_STRONG} \
                                     ${FILES_INTERF} -o prospino_2.run
  #
 +# build the prospino shared library
 +#
-+libprospino.so:	            ${FILES_DIRECT} \
++libprospino.so:	                ${FILES_DIRECT} \
 +	                            ${FILES_MACROS} \
 +                                   ${FILES_MATRIX} \
 +                                   ${FILES_INTEGS} \
 +                                   ${FILES_STRONG} \
 +                                   ${FILES_INTERF}
-+	${COMP} -fPIC -shared          ${FILES_DIRECT} \
++	${COMP} ${OPTION} -fPIC -shared  ${FILES_DIRECT} \
 +	                           ${FILES_MACROS} \
 +                                   ${FILES_MATRIX} \
 +                                   ${FILES_INTEGS} \
@@ -40,7 +52,16 @@ diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
  #
  #
  validate:	     validate.f90  ${FILES_DIRECT} \
-@@ -157,46 +173,47 @@ validate:	     validate.f90  ${FILES_DIR
+@@ -147,7 +167,7 @@ validate:	     validate.f90  ${FILES_DIR
+                                    ${FILES_INTEGS} \
+                                    ${FILES_STRONG} \
+                                    ${FILES_INTERF} 
+-	${COMP}      validate.f90  ${FILES_DIRECT} \
++	${COMP} ${OPTION} validate.f90  ${FILES_DIRECT} \
+ 	                           ${FILES_MACROS} \
+                                    ${FILES_MATRIX} \
+                                    ${FILES_INTEGS} \
+@@ -157,46 +177,47 @@ validate:	     validate.f90  ${FILES_DIR
  #
  #
  clean:
@@ -69,37 +90,37 @@ diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
  #
  ${DIRECT}%.o:  ${DIRECT}%.f90
 -	${COMP} -c -o $@ $<
-+	${COMP} -fPIC -c -o $@ $<
++	${COMP} ${OPTION} -fPIC -c -o $@ $<
  #
  # prepare all the object files from the directory 'Pro2_interface' [INTERF]
  #
  ${INTERF}%.o:  ${INTERF}%.f
 -	${COMP} -c -o $@ $<
-+	${COMP} -fPIC -c -o $@ $<
++	${COMP} ${OPTION} -fPIC -c -o $@ $<
  #
  # prepare all the object files from the directory 'Pro2_subroutines' [MACROS]
  #
  ${MACROS}%.o:  ${MACROS}%.f
 -	${COMP} -c -o $@ $<
-+	${COMP} -fPIC -c -o $@ $<
++	${COMP} ${OPTION} -fPIC -c -o $@ $<
  #
  # prepare all the object files from the directory 'Pro2_integrals' [INTEGS]
  #
  ${INTEGS}%.o:  ${INTEGS}%.f
 -	${COMP} -c -o $@ $<
-+	${COMP} -fPIC -c -o $@ $<
++	${COMP} ${OPTION} -fPIC -c -o $@ $<
  #
  # prepare all the object files from the directory 'Pro2_matrix' [MATRIX]
  #
  ${MATRIX}%.o:  ${MATRIX}%.f
 -	${COMP} -c -o $@ $<
-+	${COMP} -fPIC -c -o $@ $<
++	${COMP} ${OPTION} -fPIC -c -o $@ $<
  #
  # prepare all the object files from the directory 'Pro2_sq_gl' [STRONG]
  #
  ${STRONG}%.o:  ${STRONG}%.f
 -	${COMP} -c -o $@ $<
-+	${COMP} -fPIC -c -o $@ $<
++	${COMP} ${OPTION} -fPIC -c -o $@ $<
  #
  
  

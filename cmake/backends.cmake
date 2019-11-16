@@ -1154,6 +1154,10 @@ set(dl "https://www.thphys.uni-heidelberg.de/~plehn/includes/prospino/on_the_web
 set(md5 "40e73d6b56a5008c134cc89c769e274c")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
+# Prospino fails to compile with -fopenmp flag
+set(PROSPINO_Fortran_FLAGS "${BACKEND_Fortran_FLAGS}")
+string(REGEX REPLACE "-fopenmp" "" PROSPINO_Fortran_FLAGS "${PROSPINO_Fortran_FLAGS}")
+
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1162,7 +1166,7 @@ if(NOT ditched_${name}_${ver})
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${lib}.so FF=${CMAKE_Fortran_COMPILER} FOPT=${BACKEND_Fortran_FLAGS} MODULE=${FMODULE}
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${lib}.so COMP=${CMAKE_Fortran_COMPILER} OPTION=${PROSPINO_Fortran_FLAGS}
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
