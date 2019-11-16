@@ -237,18 +237,18 @@ namespace Gambit {
                 signalJets[0]->pT() > 250,
                 dphimin_123 > 0.8, dphimin_more > 0.4,
                 signalJets[1]->pT() > 250, etamax_2 < 2.0,
-                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("2j_1600").add_event(event);
+                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("2j-1600").add_event(event);
 
           if (_cutflows["2j-2200"].fillnext({
                 signalJets[0]->pT() > 600,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[1]->pT() >  50, etamax_2 < 2.8,
-                true, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("2j_2200").add_event(event);
+                true, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("2j-2200").add_event(event);
           if (_cutflows["2j-2800"].fillnext({
                 signalJets[0]->pT() > 250,
                 dphimin_123 > 0.8, dphimin_more > 0.4,
                 signalJets[1]->pT() > 250, etamax_2 < 1.2,
-                true, met_sqrtHT > 16, meff > 2800}, w)) _counters.at("2j_2800").add_event(event);
+                true, met_sqrtHT > 16, meff > 2800}, w)) _counters.at("2j-2800").add_event(event);
         }
 
         // 4 jet regions
@@ -257,17 +257,17 @@ namespace Gambit {
                 signalJets.at(0)->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.4,
                 signalJets.at(3)->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("4j_1000").add_event(event);
+                aplanarity > 0.04, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("4j-1000").add_event(event);
           if (_cutflows["4j-2200"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.4,
                 signalJets[3]->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("4j_2200").add_event(event);
+                aplanarity > 0.04, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("4j-2200").add_event(event);
           if (_cutflows["4j-3400"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.4,
                 signalJets[3]->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("4j_3400").add_event(event);
+                aplanarity > 0.04, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("4j-3400").add_event(event);
         }
 
         // 5 jet region
@@ -276,7 +276,7 @@ namespace Gambit {
                 signalJets[0]->pT() > 600,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[4]->pT() > 50, etamax_5 < 2.8,
-                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("5j_1600").add_event(event);
+                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("5j-1600").add_event(event);
         }
 
         // 6 jet regions
@@ -285,17 +285,17 @@ namespace Gambit {
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("6j_1000").add_event(event);
+                aplanarity > 0.08, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("6j-1000").add_event(event);
           if (_cutflows["6j-2200"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("6j_2200").add_event(event);
+                aplanarity > 0.08, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("6j-2200").add_event(event);
           if (_cutflows["6j-3400"].fillnext({
                 signalJets[0]->pT() > 200,
                 dphimin_123 > 0.4, dphimin_more > 0.2,
                 signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("6j_3400").add_event(event);
+                aplanarity > 0.08, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("6j-3400").add_event(event);
         }
 
       }
@@ -311,16 +311,16 @@ namespace Gambit {
 
       /// Register results objects with the results for each SR; obs & bkg numbers from the CONF note
       void collect_results() {
-        add_result(SignalRegionData(_counters.at("2j_1600"), 2111, {2190., 130.}));
-        add_result(SignalRegionData(_counters.at("2j_2200"),  971, { 980.,  50.}));
-        add_result(SignalRegionData(_counters.at("2j_2800"),   78, {  87.,   8.}));
-        add_result(SignalRegionData(_counters.at("4j_1000"),  535, { 536.,  31.}));
-        add_result(SignalRegionData(_counters.at("4j_2200"),   60, {  60.,   5.}));
-        add_result(SignalRegionData(_counters.at("4j_3400"),    4, {  5.7,  1.0}));
-        add_result(SignalRegionData(_counters.at("5j_1600"),  320, { 319.,  19.}));
-        add_result(SignalRegionData(_counters.at("6j_1000"),   25, {  21.,  2.9}));
-        add_result(SignalRegionData(_counters.at("6j_2200"),    5, {  4.6,  1.0}));
-        add_result(SignalRegionData(_counters.at("6j_3400"),    0, {  0.8,  0.4}));
+        add_result(SignalRegionData(_counters.at("2j-1600"), 2111, {2190., 130.}));
+        add_result(SignalRegionData(_counters.at("2j-2200"),  971, { 980.,  50.}));
+        add_result(SignalRegionData(_counters.at("2j-2800"),   78, {  87.,   8.}));
+        add_result(SignalRegionData(_counters.at("4j-1000"),  535, { 536.,  31.}));
+        add_result(SignalRegionData(_counters.at("4j-2200"),   60, {  60.,   5.}));
+        add_result(SignalRegionData(_counters.at("4j-3400"),    4, {  5.7,  1.0}));
+        add_result(SignalRegionData(_counters.at("5j-1600"),  320, { 319.,  19.}));
+        add_result(SignalRegionData(_counters.at("6j-1000"),   25, {  21.,  2.9}));
+        add_result(SignalRegionData(_counters.at("6j-2200"),    5, {  4.6,  1.0}));
+        add_result(SignalRegionData(_counters.at("6j-3400"),    0, {  0.8,  0.4}));
 
         // Cutflow printout
         // const double sf = 139*crossSection()/femtobarn/sumOfWeights();

@@ -1178,12 +1178,12 @@ namespace Gambit {
 
         /// Register results objects with the results for each SR; obs & bkg numbers from the paper
 
-        add_result(SignalRegionData(_counters.at("SRA-TT"), 11, {8.6, 2.1}));
-        add_result(SignalRegionData(_counters.at("SRA-TW"), 9, {9.3, 2.2}));
-        add_result(SignalRegionData(_counters.at("SRA-T0"),  18, {18.7, 2.7}));
-        add_result(SignalRegionData(_counters.at("SRB-TT"),  38, { 39.3,  7.6}));
-        add_result(SignalRegionData(_counters.at("SRB-TW"), 53, {52.4, 7.4}));
-        add_result(SignalRegionData(_counters.at("SRB-T0"), 206, { 179.,  26.}));
+        add_result(SignalRegionData(_counters.at("SRA_TT"), 11, {8.6, 2.1}));
+        add_result(SignalRegionData(_counters.at("SRA_TW"), 9, {9.3, 2.2}));
+        add_result(SignalRegionData(_counters.at("SRA_T0"),  18, {18.7, 2.7}));
+        add_result(SignalRegionData(_counters.at("SRB_TT"),  38, { 39.3,  7.6}));
+        add_result(SignalRegionData(_counters.at("SRB_TW"), 53, {52.4, 7.4}));
+        add_result(SignalRegionData(_counters.at("SRB_T0"), 206, { 179.,  26.}));
 
         // MJW removes the recursive jigsaw signal regions for the Feb 2018 SUSY scans
         // The ISR modelling in Pythia does not give reliable answers
@@ -1196,8 +1196,8 @@ namespace Gambit {
         add_result(SignalRegionData(_counters.at("SRC5"), 0, { 0.91,  0.73}));
         */
 
-        add_result(SignalRegionData(_counters.at("SRD-low"), 27, {  25.1, 6.2}));
-        add_result(SignalRegionData(_counters.at("SRD-high"), 11, {  8.5,1.5}));
+        add_result(SignalRegionData(_counters.at("SRD_low"), 27, {  25.1, 6.2}));
+        add_result(SignalRegionData(_counters.at("SRD_high"), 11, {  8.5,1.5}));
         add_result(SignalRegionData(_counters.at("SRE"), 3, {  3.64,0.79}));
 
         return;

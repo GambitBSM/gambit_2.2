@@ -647,7 +647,7 @@ namespace Gambit {
         cutFlowVector_str[21] = "b0L-SRC: Zero leptons ";
         cutFlowVector_str[22] = "b0L-SRC: 2-5 jets (pT > 20 GeV) ";
         cutFlowVector_str[23] = "b0L-SRC: Leading light jet ";
-        cutFlowVector_str[24] = "b0-SRC: dPhi(j1,met) > 2.5";
+        cutFlowVector_str[24] = "b0L-SRC: dPhi(j1,met) > 2.5";
         cutFlowVector_str[25] = "b0L-SRC: dPhi(j2,met) > 0.2";
         cutFlowVector_str[26] = "b0L-SRC: Subleading jet b-tagged ";
         cutFlowVector_str[27] = "b0L-SRC: 2 b jets ";
@@ -882,19 +882,19 @@ namespace Gambit {
 
         // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));        
 
-        add_result(SignalRegionData(_counters.at("b0L-SRA350"), 81., { 70., 13.}));
-        add_result(SignalRegionData(_counters.at("b0L-SRA450"), 24., { 22., 5.}));
-        add_result(SignalRegionData(_counters.at("b0L-SRA550"), 10., { 7.2, 1.5}));
-        add_result(SignalRegionData(_counters.at("b0L-SRB"), 45., { 37., 7.}));
-        add_result(SignalRegionData(_counters.at("b0L-SRC"), 7., { 5.5, 1.5}));
+        add_result(SignalRegionData(_counters.at("0L_SRA350"), 81., { 70., 13.}));
+        add_result(SignalRegionData(_counters.at("0L_SRA450"), 24., { 22., 5.}));
+        add_result(SignalRegionData(_counters.at("0L_SRA550"), 10., { 7.2, 1.5}));
+        add_result(SignalRegionData(_counters.at("0L_SRB"), 45., { 37., 7.}));
+        add_result(SignalRegionData(_counters.at("0L_SRC"), 7., { 5.5, 1.5}));
 
         // MJW removes these regions for the Feb 2018 MareNostrum scans, since the aMT2 variable is not well-described.
 
         /*
-        add_result(SignalRegionData(_counters.at("b1L-SRA600"), 21., { 24., 6.}));
-        add_result(SignalRegionData(_counters.at("b1L-SR750"), 13., { 15., 4.}));
-        add_result(SignalRegionData(_counters.at("b1L-SR300-2j"), 12., { 6.7, 2.3}));
-        add_result(SignalRegionData(_counters.at("b1L-SRB"), 69., { 53., 12.}));
+        add_result(SignalRegionData(_counters.at("1L_SRA600"), 21., { 24., 6.}));
+        add_result(SignalRegionData(_counters.at("1L_SR750"), 13., { 15., 4.}));
+        add_result(SignalRegionData(_counters.at("1L_SR300-2j"), 12., { 6.7, 2.3}));
+        add_result(SignalRegionData(_counters.at("1L_SRB"), 69., { 53., 12.}));
         */
 
         return;

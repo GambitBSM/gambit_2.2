@@ -32,28 +32,28 @@ namespace Gambit {
 
       // Counters for the number of accepted events for each signal region
       std::map<string, EventCounter> _counters = {
-        {"2j_1200", EventCounter("2j_1200")},
-        {"2j_1600", EventCounter("2j_1600")},
-        {"2j_2000", EventCounter("2j_2000")},
-        {"2j_2400", EventCounter("2j_2400")},
-        {"2j_2800", EventCounter("2j_2800")},
-        {"2j_3600", EventCounter("2j_3600")},
-        {"2j_2100", EventCounter("2j_2100")},
-        {"3j_1300", EventCounter("3j_1300")},
-        {"4j_1000", EventCounter("4j_1000")},
-        {"4j_1400", EventCounter("4j_1400")},
-        {"4j_1800", EventCounter("4j_1800")},
-        {"4j_2200", EventCounter("4j_2200")},
-        {"4j_2600", EventCounter("4j_2600")},
-        {"4j_3000", EventCounter("4j_3000")},
-        {"5j_1700", EventCounter("5j_1700")},
-        {"5j_1600", EventCounter("5j_1600")},
-        {"5j_2000", EventCounter("5j_2000")},
-        {"5j_2600", EventCounter("5j_2600")},
-        {"6j_1200", EventCounter("6j_1200")},
-        {"6j_1800", EventCounter("6j_1800")},
-        {"6j_2200", EventCounter("6j_2200")},
-        {"6j_2600", EventCounter("6j_2600")},
+        {"2j-1200", EventCounter("2j-1200")},
+        {"2j-1600", EventCounter("2j-1600")},
+        {"2j-2000", EventCounter("2j-2000")},
+        {"2j-2400", EventCounter("2j-2400")},
+        {"2j-2800", EventCounter("2j-2800")},
+        {"2j-3600", EventCounter("2j-3600")},
+        {"2j-2100", EventCounter("2j-2100")},
+        {"3j-1300", EventCounter("3j-1300")},
+        {"4j-1000", EventCounter("4j-1000")},
+        {"4j-1400", EventCounter("4j-1400")},
+        {"4j-1800", EventCounter("4j-1800")},
+        {"4j-2200", EventCounter("4j-2200")},
+        {"4j-2600", EventCounter("4j-2600")},
+        {"4j-3000", EventCounter("4j-3000")},
+        {"5j-1700", EventCounter("5j-1700")},
+        {"5j-1600", EventCounter("5j-1600")},
+        {"5j-2000", EventCounter("5j-2000")},
+        {"5j-2600", EventCounter("5j-2600")},
+        {"6j-1200", EventCounter("6j-1200")},
+        {"6j-1800", EventCounter("6j-1800")},
+        {"6j-2200", EventCounter("6j-2200")},
+        {"6j-2600", EventCounter("6j-2600")},
       };
 
       Cutflows _flows;
@@ -298,60 +298,60 @@ namespace Gambit {
           // 2 jet regions
           if (dphimin_123 > 0.8 && dphimin_more > 0.4) {
             if (signalJets[1]->pT() > 250 && etamax_2 < 0.8) { //< implicit pT[0] cut
-              if (met_sqrtHT > 14 && meff_incl > 1200) _counters.at("2j_1200").add_event(event);
+              if (met_sqrtHT > 14 && meff_incl > 1200) _counters.at("2j-1200").add_event(event);
             }
             if (signalJets[1]->pT() > 300 && etamax_2 < 1.2) { //< implicit pT[0] cut
-              if (met_sqrtHT > 18 && meff_incl > 1600) _counters.at("2j_1600").add_event(event);
+              if (met_sqrtHT > 18 && meff_incl > 1600) _counters.at("2j-1600").add_event(event);
             }
             if (signalJets[1]->pT() > 350 && etamax_2 < 1.2) { //< implicit pT[0] cut
-              if (met_sqrtHT > 18 && meff_incl > 2000) _counters.at("2j_2000").add_event(event);
-              if (met_sqrtHT > 18 && meff_incl > 2400) _counters.at("2j_2400").add_event(event);
-              if (met_sqrtHT > 18 && meff_incl > 2800) _counters.at("2j_2800").add_event(event);
+              if (met_sqrtHT > 18 && meff_incl > 2000) _counters.at("2j-2000").add_event(event);
+              if (met_sqrtHT > 18 && meff_incl > 2400) _counters.at("2j-2400").add_event(event);
+              if (met_sqrtHT > 18 && meff_incl > 2800) _counters.at("2j-2800").add_event(event);
             }
             if (signalJets[1]->pT() > 350) { //< implicit pT[0] cut
-              if (met_sqrtHT > 18 && meff_incl > 3600) _counters.at("2j_3600").add_event(event);
+              if (met_sqrtHT > 18 && meff_incl > 3600) _counters.at("2j-3600").add_event(event);
             }
           }
 
           if (dphimin_123 > 0.4 && dphimin_more > 0.2) {
             if(signalJets[0]->pT() > 600 && signalJets[1]->pT() > 50){
-              if (met_sqrtHT > 26 && meff_incl > 2100) _counters.at("2j_2100").add_event(event);
+              if (met_sqrtHT > 26 && meff_incl > 2100) _counters.at("2j-2100").add_event(event);
             }
           }
 
           // 3 jet region
           if (nJets50 >= 3 && dphimin_123 > 0.4 && dphimin_more > 0.2) {
             if (signalJets[0]->pT() > 600 && signalJets[2]->pT() > 50) { //< implicit pT[1] cut
-              if (met_sqrtHT > 16 && meff_incl > 1300) _counters.at("3j_1300").add_event(event);
+              if (met_sqrtHT > 16 && meff_incl > 1300) _counters.at("3j-1300").add_event(event);
             }
           }
 
           // 4 jet regions (note implicit pT[1,2] cuts)
           if (nJets50 >= 4 && dphimin_123 > 0.4 && dphimin_more > 0.4 && signalJets[0]->pT() > 200 && aplanarity > 0.04) {
-            if (signalJets[3]->pT() > 100 && etamax_4 < 1.2 && met_meff_4 > 0.3 && meff_incl > 1000) _counters.at("4j_1000").add_event(event);
-            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1400) _counters.at("4j_1400").add_event(event);
-            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1800) _counters.at("4j_1800").add_event(event);
-            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 2200) _counters.at("4j_2200").add_event(event);
-            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 2600) _counters.at("4j_2600").add_event(event);
-            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 3000) _counters.at("4j_3000").add_event(event);
+            if (signalJets[3]->pT() > 100 && etamax_4 < 1.2 && met_meff_4 > 0.3 && meff_incl > 1000) _counters.at("4j-1000").add_event(event);
+            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1400) _counters.at("4j-1400").add_event(event);
+            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 1800) _counters.at("4j-1800").add_event(event);
+            if (signalJets[3]->pT() > 100 && etamax_4 < 2.0 && met_meff_4 > 0.25 && meff_incl > 2200) _counters.at("4j-2200").add_event(event);
+            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 2600) _counters.at("4j-2600").add_event(event);
+            if (signalJets[3]->pT() > 150 && etamax_4 < 2.0 && met_meff_4 > 0.20 && meff_incl > 3000) _counters.at("4j-3000").add_event(event);
           }
 
           // 5 jet regions (note implicit pT[1,2,3] cuts)
           if (nJets50 >= 5){
 
-            if(signalJets[0]->pT() > 700. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.3 &&  meff_incl > 1700) _counters.at("5j_1700").add_event(event);
-            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.15 &&  aplanarity > 0.08 && meff_incl > 1600) _counters.at("5j_1600").add_event(event);
-            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.4 && met_sqrtHT > 15 && meff_incl > 2000) _counters.at("5j_2000").add_event(event);
-            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.8 && dphimin_more > 0.4 && met_sqrtHT > 18 && meff_incl > 2600) _counters.at("5j_2600").add_event(event);
+            if(signalJets[0]->pT() > 700. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.3 &&  meff_incl > 1700) _counters.at("5j-1700").add_event(event);
+            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.2 && met_meff_5 > 0.15 &&  aplanarity > 0.08 && meff_incl > 1600) _counters.at("5j-1600").add_event(event);
+            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.4 && dphimin_more > 0.4 && met_sqrtHT > 15 && meff_incl > 2000) _counters.at("5j-2000").add_event(event);
+            if(signalJets[0]->pT() > 200. && signalJets[4]->pT() > 50. && dphimin_123 > 0.8 && dphimin_more > 0.4 && met_sqrtHT > 18 && meff_incl > 2600) _counters.at("5j-2600").add_event(event);
 
           }
 
           // 6 jet regions (note implicit pT[1,2,3,4] cuts)
           if (nJets50 >= 6 && dphimin_123 > 0.4 && dphimin_more > 0.2 && signalJets[0]->pT() > 200) {
-            if (signalJets[5]->pT() >  50 && etamax_6 < 2.0 && met_meff_6 > 0.25 && meff_incl > 1200) _counters.at("6j_1200").add_event(event);
-            if (signalJets[5]->pT() > 100 && etamax_6 < 2.0 && met_meff_6 > 0.2 && aplanarity > 0.04 && meff_incl > 1800) _counters.at("6j_1800").add_event(event);
-            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.2 && aplanarity > 0.08 && meff_incl > 2200) _counters.at("6j_2200").add_event(event);
-            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.15 && aplanarity > 0.08 && meff_incl > 2600) _counters.at("6j_2600").add_event(event);
+            if (signalJets[5]->pT() >  50 && etamax_6 < 2.0 && met_meff_6 > 0.25 && meff_incl > 1200) _counters.at("6j-1200").add_event(event);
+            if (signalJets[5]->pT() > 100 && etamax_6 < 2.0 && met_meff_6 > 0.2 && aplanarity > 0.04 && meff_incl > 1800) _counters.at("6j-1800").add_event(event);
+            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.2 && aplanarity > 0.08 && meff_incl > 2200) _counters.at("6j-2200").add_event(event);
+            if (signalJets[5]->pT() > 100 &&                   met_meff_6 > 0.15 && aplanarity > 0.08 && meff_incl > 2600) _counters.at("6j-2600").add_event(event);
           }
 
           //std::cout << "\n -- -- End Of Event -- -- \n";
@@ -410,28 +410,28 @@ namespace Gambit {
 
       /// Register results objects with the results for each SR; obs & bkg numbers from the CONF note
       void collect_results() {
-        add_result(SignalRegionData(_counters.at("2j_1200"), 611, {526., 31.}));
-        add_result(SignalRegionData(_counters.at("2j_1600"), 216, {228., 19.}));
-        add_result(SignalRegionData(_counters.at("2j_2000"), 73, { 90.,  10.}));
-        add_result(SignalRegionData(_counters.at("2j_2400"), 34, { 42.,  4.}));
-        add_result(SignalRegionData(_counters.at("2j_2800"), 19, { 17.3,  2.0}));
-        add_result(SignalRegionData(_counters.at("2j_3600"), 5, { 3.6,  0.9}));
-        add_result(SignalRegionData(_counters.at("2j_2100"), 190, { 153.,  14.}));
-        add_result(SignalRegionData(_counters.at("3j_1300"), 429, { 390.,  29.}));
-        add_result(SignalRegionData(_counters.at("4j_1000"), 142, { 124.,  12.}));
-        add_result(SignalRegionData(_counters.at("4j_1400"), 199, { 182.,  16.}));
-        add_result(SignalRegionData(_counters.at("4j_1800"), 55, { 49.,  7.}));
-        add_result(SignalRegionData(_counters.at("4j_2200"), 24, { 16.5,  2.7}));
-        add_result(SignalRegionData(_counters.at("4j_2600"), 4, { 5.8,  2.}));
-        add_result(SignalRegionData(_counters.at("4j_3000"), 2, { 2.0,  0.6}));
-        add_result(SignalRegionData(_counters.at("5j_1700"), 49, { 43.,  5.}));
-        add_result(SignalRegionData(_counters.at("5j_1600"), 135, { 128.,  14.}));
-        add_result(SignalRegionData(_counters.at("5j_2000"), 59, { 65.,  7.}));
-        add_result(SignalRegionData(_counters.at("5j_2600"), 10, { 9.4,  2.1}));
-        add_result(SignalRegionData(_counters.at("6j_1200"), 276, { 274.,  32.}));
-        add_result(SignalRegionData(_counters.at("6j_1800"), 9, { 5.1,  1.8}));
-        add_result(SignalRegionData(_counters.at("6j_2200"), 3, { 3.1,  1.3}));
-        add_result(SignalRegionData(_counters.at("6j_2600"), 1, { 2.2,  1.4}));
+        add_result(SignalRegionData(_counters.at("2j-1200"), 611, {526., 31.}));
+        add_result(SignalRegionData(_counters.at("2j-1600"), 216, {228., 19.}));
+        add_result(SignalRegionData(_counters.at("2j-2000"), 73, { 90.,  10.}));
+        add_result(SignalRegionData(_counters.at("2j-2400"), 34, { 42.,  4.}));
+        add_result(SignalRegionData(_counters.at("2j-2800"), 19, { 17.3,  2.0}));
+        add_result(SignalRegionData(_counters.at("2j-3600"), 5, { 3.6,  0.9}));
+        add_result(SignalRegionData(_counters.at("2j-2100"), 190, { 153.,  14.}));
+        add_result(SignalRegionData(_counters.at("3j-1300"), 429, { 390.,  29.}));
+        add_result(SignalRegionData(_counters.at("4j-1000"), 142, { 124.,  12.}));
+        add_result(SignalRegionData(_counters.at("4j-1400"), 199, { 182.,  16.}));
+        add_result(SignalRegionData(_counters.at("4j-1800"), 55, { 49.,  7.}));
+        add_result(SignalRegionData(_counters.at("4j-2200"), 24, { 16.5,  2.7}));
+        add_result(SignalRegionData(_counters.at("4j-2600"), 4, { 5.8,  2.}));
+        add_result(SignalRegionData(_counters.at("4j-3000"), 2, { 2.0,  0.6}));
+        add_result(SignalRegionData(_counters.at("5j-1700"), 49, { 43.,  5.}));
+        add_result(SignalRegionData(_counters.at("5j-1600"), 135, { 128.,  14.}));
+        add_result(SignalRegionData(_counters.at("5j-2000"), 59, { 65.,  7.}));
+        add_result(SignalRegionData(_counters.at("5j-2600"), 10, { 9.4,  2.1}));
+        add_result(SignalRegionData(_counters.at("6j-1200"), 276, { 274.,  32.}));
+        add_result(SignalRegionData(_counters.at("6j-1800"), 9, { 5.1,  1.8}));
+        add_result(SignalRegionData(_counters.at("6j-2200"), 3, { 3.1,  1.3}));
+        add_result(SignalRegionData(_counters.at("6j-2600"), 1, { 2.2,  1.4}));
 
         //const double sf = 13.3*crossSection()/femtobarn/sumOfWeights();
         //_flows.scale(sf);

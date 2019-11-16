@@ -1383,8 +1383,8 @@ namespace Gambit {
         /// Register results objects with the results for each SR; obs & bkg numbers from the paper
 
         add_result(SignalRegionData(_counters.at("tN_med"), 50., { 36.3, 6.6}));
-        add_result(SignalRegionData(_counters.at("tN_med"), 8., { 3.8, 1.0}));
-        add_result(SignalRegionData(_counters.at("tN_med"), 68., { 71, 16}));
+        add_result(SignalRegionData(_counters.at("tN_high"), 8., { 3.8, 1.0}));
+        add_result(SignalRegionData(_counters.at("bWN"), 68., { 71, 16}));
         add_result(SignalRegionData(_counters.at("bC2x_diag"), 22., { 21.3, 5.0}));
         add_result(SignalRegionData(_counters.at("bC2x_med"), 4., { 5.8, 1.6}));
         add_result(SignalRegionData(_counters.at("bCbv"), 25., { 25.1, 3.8}));
