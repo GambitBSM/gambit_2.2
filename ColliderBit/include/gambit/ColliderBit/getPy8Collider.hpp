@@ -248,6 +248,7 @@ namespace Gambit
       using namespace Pipes::NAME;                                                          \
       static SLHAstruct slha_spectrum;                                                      \
       static const int slha_version = runOptions->getValueOrDef<int>(2, "slha_version");    \
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");  \
       if ((slha_version != 1) && (slha_version != 2))                                       \
       {                                                                                     \
         ColliderBit_error().raise(LOCAL_INFO,                                               \
@@ -272,6 +273,13 @@ namespace Gambit
           line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";                     \
           block.push_back(line);                                                            \
           result.push_front(block);                                                         \
+        }                                                                                   \
+                                                                                            \
+        if(write_summary_to_log)                                                            \
+        {                                                                                   \
+          std::stringstream SLHA_log_output;                                                \
+          SLHA_log_output << "SLHA" << slha_version << " input to Pythia:\n" << result.str() << "\n";  \
+          logger() << SLHA_log_output.str() << EOM;                                         \
         }                                                                                   \
       }                                                                                     \
     }
