@@ -901,9 +901,9 @@ namespace Gambit
       std::stringstream summary_line_combined_loglike; 
       summary_line_combined_loglike << "calc_combined_LHC_LogLike: combined LogLike: ";
       std::stringstream summary_line_skipped_analyses;
-      summary_line_combined_loglike << "calc_combined_LHC_LogLike: skipped analyses: ";
+      summary_line_skipped_analyses << "calc_combined_LHC_LogLike: skipped analyses: ";
       std::stringstream summary_line_included_analyses;
-      summary_line_combined_loglike << "calc_combined_LHC_LogLike: included analyses: ";
+      summary_line_included_analyses << "calc_combined_LHC_LogLike: included analyses: ";
 
       // Read analysis names from the yaml file
       std::vector<str> default_skip_analyses;  // The default is empty lists of analyses to skip
