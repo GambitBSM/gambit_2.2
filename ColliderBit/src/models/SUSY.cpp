@@ -210,6 +210,8 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA1Spectrum;
 
+      static const bool write_SLHA_to_log = runOptions->getValueOrDef<bool>(false, "write_SLHA_to_log");
+      
       if(*Loop::iteration == BASE_INIT)
       {
         result.clear();
@@ -234,6 +236,13 @@ namespace Gambit
                     << "Please expand the function getSLHA1Spectrum if you want to use it with for new models.!";
           ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
         }
+
+        if(write_SLHA_to_log)
+        {
+          std::stringstream SLHA_log_output;
+          SLHA_log_output << "getSLHA1Spectrum:\n" << result.str() << "\n";
+          logger() << SLHA_log_output.str() << EOM;
+        }
       }
     }
 
@@ -241,6 +250,8 @@ namespace Gambit
     void getSLHA2Spectrum(SLHAstruct& result)
     {
       using namespace Pipes::getSLHA2Spectrum;
+
+      static const bool write_SLHA_to_log = runOptions->getValueOrDef<bool>(false, "write_SLHA_to_log");
 
       if(*Loop::iteration == BASE_INIT)
       {
@@ -265,6 +276,13 @@ namespace Gambit
           errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
                     << "Please expand the function getSLHA2Spectrum if you want to use it with for new models.!";
           ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        }
+
+        if(write_SLHA_to_log)
+        {
+          std::stringstream SLHA_log_output;
+          SLHA_log_output << "getSLHA2Spectrum:\n" << result.str() << "\n";
+          logger() << SLHA_log_output.str() << EOM;
         }
       }
     }

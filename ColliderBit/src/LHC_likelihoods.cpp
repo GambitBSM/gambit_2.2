@@ -896,6 +896,15 @@ namespace Gambit
       using namespace Pipes::calc_combined_LHC_LogLike;
       result = 0.0;
 
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+
+      std::stringstream summary_line_combined_loglike; 
+      summary_line_combined_loglike << "calc_combined_LHC_LogLike: combined LogLike: ";
+      std::stringstream summary_line_skipped_analyses;
+      summary_line_combined_loglike << "calc_combined_LHC_LogLike: skipped analyses: ";
+      std::stringstream summary_line_included_analyses;
+      summary_line_combined_loglike << "calc_combined_LHC_LogLike: included analyses: ";
+
       // Read analysis names from the yaml file
       std::vector<str> default_skip_analyses;  // The default is empty lists of analyses to skip
       static const std::vector<str> skip_analyses = runOptions->getValueOrDef<std::vector<str> >(default_skip_analyses, "skip_analyses");
@@ -922,6 +931,13 @@ namespace Gambit
             cout.precision(5);
             cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Leaving out analysis " << analysis_name << " with LogL = " << analysis_loglike << endl;
           #endif
+
+          // Add to log summary
+          if(write_summary_to_log)
+          {
+            summary_line_skipped_analyses << analysis_name << "__LogLike:" << analysis_loglike << ", ";
+          }
+
           continue;
         }
 
@@ -935,6 +951,12 @@ namespace Gambit
         else
         {
           result += analysis_loglike;
+        }
+
+        // Add to log summary
+        if(write_summary_to_log)
+        {
+          summary_line_included_analyses << analysis_name << "__LogLike:" << analysis_loglike << ", ";
         }
 
         #ifdef COLLIDERBIT_DEBUG
@@ -954,9 +976,15 @@ namespace Gambit
         result = std::min(result, 0.0);
       }
 
-      std::stringstream summary_line;
-      summary_line << "LHC combined loglike:" << result;
-      logger() << LogTags::debug << summary_line.str() << EOM;
+      // Write log summary
+      if(write_summary_to_log)
+      {
+        summary_line_combined_loglike << result;
+
+        logger() << summary_line_combined_loglike.str() << EOM;
+        logger() << summary_line_included_analyses.str() << EOM;
+        logger() << summary_line_skipped_analyses.str() << EOM;
+      }  
     }
 
   }
