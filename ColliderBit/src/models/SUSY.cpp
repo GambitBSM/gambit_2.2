@@ -210,7 +210,7 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA1Spectrum;
 
-      static const bool write_SLHA_to_log = runOptions->getValueOrDef<bool>(false, "write_SLHA_to_log");
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
       
       if(*Loop::iteration == BASE_INIT)
       {
@@ -237,7 +237,7 @@ namespace Gambit
           ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
         }
 
-        if(write_SLHA_to_log)
+        if(write_summary_to_log)
         {
           std::stringstream SLHA_log_output;
           SLHA_log_output << "getSLHA1Spectrum:\n" << result.str() << "\n";
@@ -251,7 +251,7 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA2Spectrum;
 
-      static const bool write_SLHA_to_log = runOptions->getValueOrDef<bool>(false, "write_SLHA_to_log");
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
 
       if(*Loop::iteration == BASE_INIT)
       {
@@ -278,7 +278,7 @@ namespace Gambit
           ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
         }
 
-        if(write_SLHA_to_log)
+        if(write_summary_to_log)
         {
           std::stringstream SLHA_log_output;
           SLHA_log_output << "getSLHA2Spectrum:\n" << result.str() << "\n";
