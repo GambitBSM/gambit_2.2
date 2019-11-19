@@ -73,7 +73,7 @@ namespace Gambit
      addParameter(Par::dimensionless, "lambda_hS", scalar, "COUPLINGS", 1);
      addParameter(Par::dimensionless, "lambda_S" , scalar, "COUPLINGS", 2);
      addParameter(Par::dimensionless, "lambda_h" , scalar, "COUPLINGS", 3);
-     addParameter(Par::mass1, "mu3", scalar, "MASS1", 1); // TODO: Probably want a better block name
+     addParameter(Par::mass1, "mu3", scalar, "COUPLINGS", 4);
 
      addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS");
      addParameter(Par::Pole_Mass, "S"   , scalar, "MASS");

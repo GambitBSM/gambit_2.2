@@ -137,8 +137,8 @@ namespace Gambit
       slha["SINTHETAW"][""] << 1 << sinW2 << "# sinW2";
 
       // gauge couplings
-      slha["GAUGE"][""] << 1 << e / sqrt(sinW2) << "# g1";
-      slha["GAUGE"][""] << 2 << e / sqrt(cosW2) << "# g2";
+      slha["GAUGE"][""] << 1 << sqrt(5/3) * e / sqrt(cosW2) << "# g1";
+      slha["GAUGE"][""] << 2 << e / sqrt(sinW2) << "# g2";
       slha["GAUGE"][""] << 3 << pow( 4*pi*( sminputs.alphaS ),0.5) << "# g3";
 
       // Yukawas
