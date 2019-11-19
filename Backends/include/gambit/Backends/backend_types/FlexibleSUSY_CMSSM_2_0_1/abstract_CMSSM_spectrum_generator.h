@@ -21,7 +21,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace flexiblesusy
     {
         template <>
-        class Abstract_CMSSM_spectrum_generator : public virtual AbstractBase
+        class Abstract_CMSSM_spectrum_generator<flexiblesusy::Two_scale> : public virtual AbstractBase
         {
             public:
     
@@ -42,11 +42,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual Abstract_CMSSM_spectrum_generator* pointer_copy__BOSS() =0;
     
             private:
-                CMSSM_spectrum_generator<>* wptr;
+                CMSSM_spectrum_generator<flexiblesusy::Two_scale>* wptr;
                 bool delete_wrapper;
             public:
-                CMSSM_spectrum_generator<>* get_wptr() { return wptr; }
-                void set_wptr(CMSSM_spectrum_generator<>* wptr_in) { wptr = wptr_in; }
+                CMSSM_spectrum_generator<flexiblesusy::Two_scale>* get_wptr() { return wptr; }
+                void set_wptr(CMSSM_spectrum_generator<flexiblesusy::Two_scale>* wptr_in) { wptr = wptr_in; }
                 bool get_delete_wrapper() { return delete_wrapper; }
                 void set_delete_wrapper(bool del_wrp_in) { delete_wrapper = del_wrp_in; }
     
@@ -67,13 +67,13 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     
                 virtual void init_wrapper() =0;
     
-                CMSSM_spectrum_generator<>* get_init_wptr()
+                CMSSM_spectrum_generator<flexiblesusy::Two_scale>* get_init_wptr()
                 {
                     init_wrapper();
                     return wptr;
                 }
     
-                CMSSM_spectrum_generator<>& get_init_wref()
+                CMSSM_spectrum_generator<flexiblesusy::Two_scale>& get_init_wref()
                 {
                     init_wrapper();
                     return *wptr;

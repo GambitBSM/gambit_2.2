@@ -25,7 +25,9 @@ START_MODULE
 
 #include "gambit/SpecBit/models/DiracSingletDM.hpp"
 #include "gambit/SpecBit/models/MajoranaSingletDM.hpp"
+#include "gambit/SpecBit/models/MDM.hpp"
 #include "gambit/SpecBit/models/MSSM.hpp"
+#include "gambit/SpecBit/models/ScalarSingletDM.hpp"
 #include "gambit/SpecBit/models/VectorSingletDM.hpp"
 
 

@@ -196,9 +196,8 @@ namespace Gambit
     {
       using namespace Pipes::DD_couplings_VectorSingletDM_Z2;
       const Spectrum& spec = *Dep::VectorSingletDM_Z2_spectrum;
-      const SubSpectrum& he = spec.get_HE();
       double mass = spec.get(Par::Pole_Mass,"V");
-      double lambda = he.get(Par::dimensionless,"lambda_hV");
+      double lambda = spec.get(Par::dimensionless,"lambda_hV");
       double mh = spec.get(Par::Pole_Mass,"h0_1");
 
       // Expressions taken from Cline et al. (2013, PRD 88:055025, arXiv:1306.4710)

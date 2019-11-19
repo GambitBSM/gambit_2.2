@@ -787,12 +787,9 @@ def getBracketLength(content, line_number):
     first_bracket_open = False
     n_brackets = 0
 
-    print(content[line_number:])
-    
     while first_bracket_open or not found_first_bracket :
 
         c = content[line_number+count]
-        print(c)
 
         if c == '<' and not found_first_bracket : 
             found_first_bracket = True
@@ -812,7 +809,6 @@ def getBracketLength(content, line_number):
 
         count += 1
 
-    print(length)
     return length
    
 # ====== END: getBracketLength =======
@@ -1211,11 +1207,21 @@ def constrAbsForwardDeclHeader(file_output_path):
 
         if is_template:
             template_bracket = getTemplateBracket(class_el)[0]
+            spec_template_types = getSpecTemplateTypes(class_el)
+
+            # TODO: TG: If it's a specialized template we declare the full template
+            if template_bracket == '<>' and len(spec_template_types) > 0:
+                temp_types = ['class T' + str(i+1) for i in range(len(spec_template_types))]
+                template_bracket = '<' + ','.join(temp_types) + '>'
 
             insert_code += full_indent + 'template ' + template_bracket + '\n'
             insert_code += full_indent + 'class ' + abstr_class_name['short'] + ';\n'
-            #TODO: TG: I don't think specializations are needed
-            #insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
+
+            # TODO: TG: Add the template specificiation
+            # TODO: Maybe no need to forward declare this
+            #if len(spec_template_types) > 0:
+            #    insert_code += full_indent + 'template <>\n';
+            #    insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
         else:
             insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
 
@@ -1289,11 +1295,22 @@ def constrWrpForwardDeclHeader(file_output_path):
 
         if is_template:
             template_bracket = getTemplateBracket(class_el)[0]
+            spec_template_types = getSpecTemplateTypes(class_el)
+
+            # TODO: TG: If it's a specialized template we declare the full template
+            if template_bracket == '<>' and len(spec_template_types) > 0:
+                temp_types = ['class T' + str(i+1) for i in range(len(spec_template_types))]
+                template_bracket = '<' + ','.join(temp_types) + '>'
 
             insert_code += full_indent + 'template ' + template_bracket + '\n'
             insert_code += full_indent + 'class ' + removeTemplateBracket(class_name_short) + ';\n'
-            #TODO: TG: I don't think specializations are needed
-            #insert_code += full_indent + 'class ' + abstr_class_name['short_templ'] + ';\n'
+
+            # TODO: TG: Add the template specificiation
+            # TODO: Maybe no need to forward declare this
+            #if len(spec_template_types) > 0:
+            #    insert_code += full_indent + 'template <>\n';
+            #    insert_code += full_indent + 'class ' + class_name_short + ';\n'
+
         else:
             insert_code += full_indent + 'class ' + class_name_short + ';\n'
 

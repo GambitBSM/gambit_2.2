@@ -917,9 +917,15 @@ def addAbstractTypedefs(abstr_class_name, namespaces, class_el=None):
     
     # TODO: TG: With templates we need aliases not typedefs
     if class_el is not None and utils.isTemplateClass(class_el) :
-        templ_bracket, templ_vars = utils.getTemplateBracket(class_el)
+        templ_bracket, templ_var_list = utils.getTemplateBracket(class_el)
+        templ_vars = '<' + ','.join(templ_var_list) + '>'
+        # If it's a specialized template, construct the bracket
+        if templ_bracket == '<>' :
+            specs = utils.getSpecTemplateTypes(class_el)
+            templ_bracket = '<' + ','.join(['class T' + str(i+1) for i in range(len(specs))]) + '>'
+            templ_vars = '<' + ','.join(['T' + str(i+1) for i in range(len(specs))]) + '>'
         abstr_typedef_code += indent + 'template ' + templ_bracket + '\n'
-        abstr_typedef_code += indent + 'using ' + abstr_class_name['short'] + ' = ' + '::'.join(temp_namespace_list) + '::' + abstr_class_name['short'] + '<' + ','.join(templ_vars) + '>;\n'
+        abstr_typedef_code += indent + 'using ' + abstr_class_name['short'] + ' = ' + '::'.join(temp_namespace_list) + '::' + abstr_class_name['short'] + templ_vars + ';\n'
     else :
         abstr_typedef_code += indent + 'typedef ' + '::'.join(temp_namespace_list) + '::' + abstr_class_name['short'] + ' ' + abstr_class_name['short'] + ';\n'
 
@@ -961,9 +967,15 @@ def addWrapperTypedefs(class_name, namespaces, class_el=None):
 
     # TODO: TG: With templates we need aliases not typedefs
     if class_el is not None and utils.isTemplateClass(class_el) :
-        templ_bracket, templ_vars = utils.getTemplateBracket(class_el)
+        templ_bracket, templ_var_list = utils.getTemplateBracket(class_el)
+        templ_vars = '<' + ','.join(templ_var_list) + '>'
+       # If it's a specialized template, construct the bracket
+        if templ_bracket == '<>' :
+            specs = utils.getSpecTemplateTypes(class_el)
+            templ_bracket = '<' + ','.join(['class T' + str(i+1) for i in range(len(specs))]) + '>'
+            templ_vars = '<' + ','.join(['T' + str(i+1) for i in range(len(specs))]) + '>'
         wrapper_typedef_code += indent + 'template ' + templ_bracket + '\n'
-        wrapper_typedef_code += indent + 'using ' + short_wrapper_class_name + ' = ' + '::'.join(temp_namespace_list) + '::' + class_name['short'] + '<' + ','.join(templ_vars) + '>;\n'
+        wrapper_typedef_code += indent + 'using ' + short_wrapper_class_name + ' = ' + '::'.join(temp_namespace_list) + '::' + class_name['short'] + templ_vars + ';\n'
     else :
         wrapper_typedef_code += indent + 'typedef ' + '::'.join(temp_namespace_list) + '::' + class_name['short'] + ' ' + short_wrapper_class_name + ';\n'
 

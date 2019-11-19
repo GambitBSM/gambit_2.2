@@ -93,11 +93,17 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     n_indents = len(namespaces)
 
     # Check template_types argument:
-    # TODO: TG: Need the full bracket
+    # TODO: TG: Need the full bracket for unspecified templates
     if utils.isTemplateClass(class_el):
         is_template = True
-        templ_bracket, templ_var_list = utils.getTemplateBracket(class_el)
-        templ_vars = '<' + ','.join(templ_var_list) + '>'
+        if len(template_types) > 0:
+            is_specification = True
+            templ_bracket = '<>'
+            templ_vars = '<' + ','.join(template_types) + '>'
+        else :
+            is_specification = False
+            templ_bracket, templ_var_list = utils.getTemplateBracket(class_el)
+            templ_vars = '<' + ','.join(templ_var_list) + '>'
     else:
         is_template = False
 
@@ -120,9 +126,8 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     class_decl += utils.constrNamespace(namespaces, 'open')
 
     # - If this class is a template specialization, add 'template <>' at the top
-    # TODO: TG: I think we do not need specialization, go for full template
+    # TODO: TG: If it's a for full template, add the full bracket
     if is_template == True:
-    #    class_decl += ' '*n_indents*indent + 'template <>\n'
         class_decl += ' '*n_indents*indent + 'template ' + templ_bracket + '\n'
 
     # - Construct the declaration line, with inheritance of abstract classes
@@ -152,12 +157,11 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
 
 
     class_decl += ' '*n_indents*indent
-    # TODO: TG: not needed for full template
-    #if is_template:
-    #    class_decl += 'class ' + abstr_class_name['short'] + '<' + ','.join(template_types) + '>' + inheritance_line + '\n'
-    #else:
-    #    class_decl += 'class ' + abstr_class_name['short'] + inheritance_line + '\n'
-    class_decl += 'class ' + abstr_class_name['short'] + inheritance_line + '\n'
+    # TODO: TG: Only add for template specifications
+    if is_template and is_specification :
+        class_decl += 'class ' + abstr_class_name['short'] + templ_vars + inheritance_line + '\n'
+    else:
+        class_decl += 'class ' + abstr_class_name['short'] + inheritance_line + '\n'
 
     # - Construct body of class declaration
     current_access = ''

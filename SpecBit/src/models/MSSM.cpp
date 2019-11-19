@@ -29,17 +29,9 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum.hpp"
 
-//#include "gambit/Elements/spectrum_factories.hpp"
-//#include "gambit/Elements/smlike_higgs.hpp"
-//#include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
-//#include "gambit/Utils/stream_overloads.hpp" // Just for more convenient output to logger
-//#include "gambit/Utils/util_macros.hpp"
-//#include "gambit/Utils/util_types.hpp" // struct SpectrumInputs
-
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
-#include "gambit/SpecBit/RegisteredSpectra.hpp"
-
 //#include "gambit/SpecBit/SpecBit_helpers.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 // Switch for debug mode
 //#define SPECBIT_DEBUG

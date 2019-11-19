@@ -717,7 +717,6 @@ def createFrontendHeader(function_xml_files_dict):
     # Loop over all classes
     for class_name in gb.classes_done:
 
-        print(class_name)
         if not class_name['long'] in gb.factory_info.keys():
             continue
         else:

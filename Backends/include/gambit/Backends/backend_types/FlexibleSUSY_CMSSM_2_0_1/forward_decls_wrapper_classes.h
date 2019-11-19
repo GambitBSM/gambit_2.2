@@ -11,7 +11,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace flexiblesusy
     {
         class Two_scale;
-        template <>
+        template <class T1>
         class CMSSM_spectrum_generator;
         class CMSSM_input_parameters;
         class Spectrum_generator_settings;
