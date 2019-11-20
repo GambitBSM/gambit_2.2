@@ -528,7 +528,10 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
         # TODO: TG: Needs templates everywhere
         if is_template:
             frwd_decl_creator += 'template ' + templ_bracket + '\n'
-            frwd_decl_creator += gb.gambit_backend_namespace + '::' + class_name['long'] + templ_vars + '* wrapper_creator(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + templ_vars + '*);\n'
+            frwd_decl_creator += gb.gambit_backend_namespace + '::' + class_name['long'] + templ_vars + '* wrapper_creator'
+            if is_specification:
+                frwd_decl_creator += templ_vars
+            frwd_decl_creator += '(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + templ_vars + '*);\n'
         else : 
             frwd_decl_creator += gb.gambit_backend_namespace + '::' + class_name['long'] + '* wrapper_creator(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + '*);\n'
         # frwd_decl_creator += 'void wrapper_creator(' + gb.gambit_backend_namespace + '::' + abstr_class_name['long'] + '*);\n'
@@ -544,7 +547,10 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
         # TODO: TG: Needs templates everywhere
         if is_template:
             frwd_decl_deleter += 'template ' + templ_bracket + '\n'
-            frwd_decl_deleter += 'void wrapper_deleter(' + gb.gambit_backend_namespace + '::' + class_name['long'] + templ_vars + '*);\n'
+            frwd_decl_deleter += 'void wrapper_deleter'
+            if is_specification:
+                frwd_decl_deleter += templ_vars
+            frwd_decl_deleter += '(' + gb.gambit_backend_namespace + '::' + class_name['long'] + templ_vars + '*);\n'
         else :
             frwd_decl_deleter += 'void wrapper_deleter(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '*);\n'
         frwd_decl_deleter += '\n'
@@ -558,7 +564,10 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
         # TODO: TG: Needs templates everywhere
         if is_template:
             frwd_decl_setdel += 'template ' + templ_bracket + '\n'
-            frwd_decl_setdel += 'void set_delete_BEptr(' + gb.gambit_backend_namespace + '::' + class_name['long'] + templ_vars + '*, bool);\n'
+            frwd_decl_setdel += 'void set_delete_BEptr'
+            if is_specification:
+                frwd_decl_setdel += templ_vars
+            frwd_decl_setdel += '(' + gb.gambit_backend_namespace + '::' + class_name['long'] + templ_vars + '*, bool);\n'
         else :
             frwd_decl_setdel += 'void set_delete_BEptr(' + gb.gambit_backend_namespace + '::' + class_name['long'] + '*, bool);\n'
         frwd_decl_setdel += '\n'
