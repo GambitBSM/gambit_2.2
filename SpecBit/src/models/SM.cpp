@@ -15,6 +15,10 @@
 ///          (benjamin.farmer@fysik.su.se)
 ///    \date 2014 Sep - Dec, 2015 Jan - Mar
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Nov
+///
 ///  *********************************************
 
 #include <string>
@@ -22,15 +26,10 @@
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum.hpp"
-#include "gambit/Utils/stream_overloads.hpp" // Just for more convenient output to logger
-#include "gambit/Utils/util_macros.hpp"
-#include "gambit/SpecBit/SpecBit_rollcall.hpp"
-#include "gambit/SpecBit/SpecBit_helpers.hpp"
-#include "gambit/SpecBit/QedQcdWrapper.hpp"
-#include "gambit/Models/SimpleSpectra/SMHiggsSimpleSpec.hpp"
 
-// QedQcd header from SoftSUSY (via FlexibleSUSY)
-#include "flexiblesusy/src/lowe.h"
+#include "gambit/SpecBit/SpecBit_rollcall.hpp"
+//#include "gambit/SpecBit/SpecBit_helpers.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 // Switch for debug mode
 //#define SpecBit_DBUG
@@ -40,39 +39,9 @@ namespace Gambit
 
   namespace SpecBit
   {
-    using namespace LogTags;
 
-    /// Construct a SubSpectrum object from SMInputs using QedQcdWrapper
-    void get_QedQcd_spectrum(const SubSpectrum* &result)
-    {
-      // Access the pipes for this function to get model and parameter information, and dependencies
-      namespace myPipe = Pipes::get_QedQcd_spectrum;
-
-      // Get SLHA2 SMINPUTS values
-      const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
-
-      // SoftSUSY object used to set quark and lepton masses and gauge
-      // couplings in QEDxQCD effective theory
-      // Will be initialised by default using values in lowe.h, which we will
-      // override next.
-      softsusy::QedQcd oneset;
-
-      // Fill QedQcd object with SMInputs values
-      setup_QedQcd(oneset,sminputs);
-
-      // Run everything to Mz
-      oneset.toMz();
-
-      // Create a Spectrum object to wrap the qedqcd object
-      static QedQcdWrapper qedqcdspec(oneset,sminputs);
-      // TODO: This probably doesn't work, and only gets us one copy of the object once.
-      // Unfortunately we cannot copy SubSpectrum objects, so this is a little tricky to
-      // solve...
-
-      result = &qedqcdspec;
-    }
-
-    /// Get a Spectrum object wrapper for Standard-Model-only information
+    /// Get a Spectrum object for Standard-Model-only information
+    /// This contains pole masses not in SMInputs and the Higgs mass
     void get_SM_spectrum(Spectrum &result)
     {
       namespace myPipe = Pipes::get_SM_spectrum;
