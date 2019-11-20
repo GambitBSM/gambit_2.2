@@ -135,9 +135,6 @@ ObsLikes:
       capability: TotalCrossSectionAsMap
 
     - purpose:    Observable 
-      capability: TotalCrossSectionAsMap
-
-    - purpose:    Observable 
       capability: PIDPairCrossSectionsInfo
 
     - purpose:    Observable
@@ -526,6 +523,7 @@ Rules:
 
   - capability: LHC_Combined_LogLike
     options:
+      write_summary_to_log: true
       cap_loglike: true
       cap_loglike_individual_analyses: false
       skip_analyses:
