@@ -21,8 +21,8 @@
 
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/FlexibleSUSY_CMSSM_2_0_1.hpp"
+#include "gambit/Backends/backend_types/FlexibleSUSY.hpp"
 #include "gambit/Elements/spectrum.hpp"
-#include "gambit/SpecBit/spectrum_types.hpp"
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 //TODO: Static FS includes, remove when BOSSed FS works

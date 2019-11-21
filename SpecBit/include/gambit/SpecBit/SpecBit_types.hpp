@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  General small utility classes, typedefs, etc.
+///  SpecBit specific types.
 ///
 ///  *********************************************
 ///
@@ -18,8 +18,8 @@
 ///
 ///  *********************************************
 
-#ifndef __spectrum_types_hpp__
-#define __spectrum_types_hpp__
+#ifndef __SpecBit_types_hpp__
+#define __SpecBit_types_hpp__
 
 #include "gambit/Utils/util_types.hpp"
 #include "gambit/Elements/sminputs.hpp"
@@ -41,4 +41,4 @@ namespace Gambit
   };
 
 }
-#endif //defined __spectrum_types_hpp__
+#endif //defined __SpecBit_types_hpp__

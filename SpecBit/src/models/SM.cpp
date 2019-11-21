@@ -39,43 +39,164 @@ namespace Gambit
 
   namespace SpecBit
   {
+    /// Set SMINPUTS (SLHA2) struct to match StandardModel_SLHA2 parameters.
+    //  Effectively just changes these model parameters into a more convenient form.
+    //  But also opens up the possibility of rebuilding this struct from some other
+    //  parameterisation.
+    void get_SMINPUTS(SMInputs &result)
+    {
+      namespace myPipe = Pipes::get_SMINPUTS;
+      SMInputs sminputs;
+
+      // Get values from Params pipe
+      // (as defined in SLHA2)
+      if(myPipe::ModelInUse("StandardModel_SLHA2"))
+      {
+         sminputs.alphainv = *myPipe::Param["alphainv"];
+         sminputs.GF       = *myPipe::Param["GF"      ];
+         sminputs.alphaS   = *myPipe::Param["alphaS"  ];
+
+         sminputs.mZ       = *myPipe::Param["mZ"      ];
+
+         sminputs.mE       = *myPipe::Param["mE"      ];
+         sminputs.mMu      = *myPipe::Param["mMu"     ];
+         sminputs.mTau     = *myPipe::Param["mTau"    ];
+
+         sminputs.mNu1     = *myPipe::Param["mNu1"    ];
+         sminputs.mNu2     = *myPipe::Param["mNu2"    ];
+         sminputs.mNu3     = *myPipe::Param["mNu3"    ];
+
+         sminputs.mD       = *myPipe::Param["mD"      ];
+         sminputs.mU       = *myPipe::Param["mU"      ];
+         sminputs.mS       = *myPipe::Param["mS"      ];
+         sminputs.mCmC     = *myPipe::Param["mCmC"    ];
+         sminputs.mBmB     = *myPipe::Param["mBmB"    ];
+         sminputs.mT       = *myPipe::Param["mT"      ];
+
+         sminputs.mNu1     = *myPipe::Param["mNu1"    ];
+         sminputs.mNu2     = *myPipe::Param["mNu2"    ];
+         sminputs.mNu3     = *myPipe::Param["mNu3"    ];
+
+         // CKM
+         sminputs.CKM.lambda   = *myPipe::Param["CKM_lambda" ];
+         sminputs.CKM.A        = *myPipe::Param["CKM_A" ];
+         sminputs.CKM.rhobar   = *myPipe::Param["CKM_rhobar" ];
+         sminputs.CKM.etabar   = *myPipe::Param["CKM_etabar" ];
+
+         // PMNS
+         sminputs.PMNS.theta12 = *myPipe::Param["theta12"];
+         sminputs.PMNS.theta23 = *myPipe::Param["theta23"];
+         sminputs.PMNS.theta13 = *myPipe::Param["theta13"];
+         sminputs.PMNS.delta13 = *myPipe::Param["delta13"];
+         sminputs.PMNS.alpha1  = *myPipe::Param["alpha1"];
+         sminputs.PMNS.alpha2  = *myPipe::Param["alpha2"];
+
+         // W mass.  Stick with the observed value (set in the default constructor) unless instructed otherwise.
+         if (myPipe::runOptions->getValueOrDef<bool>(false,"enforce_tree_level_MW"))
+         {
+           // Calculate MW from alpha, mZ and G_F, assuming the tree-level relation.
+           const double pionroot2 = pi * pow(2,-0.5);
+           double cosW2 = 0.5 + pow(0.25 - pionroot2 / (sminputs.alphainv * sminputs.GF * pow(sminputs.mZ,2.0)), 0.5);
+           sminputs.mW = sminputs.mZ * pow(cosW2,0.5);
+         }
+
+      }
+      else
+      {
+         std::ostringstream errmsg;
+         errmsg << "Error mapping Standard Model parameters to SMINPUTS capabilities!";
+         errmsg << "Perhaps you have added a new model to the ALLOWED_MODELS of this ";
+         errmsg << "module function but have not added a corresponding case in the ";
+         errmsg << "function source (here)." << std::endl;
+         SpecBit_error().raise(LOCAL_INFO,errmsg.str());
+      }
+      // Return filled struct
+      result = sminputs;
+    }
+
 
     /// Get a Spectrum object for Standard-Model-only information
-    /// This contains pole masses not in SMInputs and the Higgs mass
+    /// This contains pole masses not in SMInputs
     void get_SM_spectrum(Spectrum &result)
     {
       namespace myPipe = Pipes::get_SM_spectrum;
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
-      // SoftSUSY object used to set quark and lepton masses and gauge
-      // couplings in QEDxQCD effective theory
-      softsusy::QedQcd oneset;
+      // Initialise an SLHAea object to carry the SM information
+      SLHAea::Coll slha;
+      SLHAea_add_block(slha, "SMINPUTS");
+      SLHAea_add_block(slha, "SINTHETAW");
+      SLHAea_add_block(slha, "MASS");
+      //SLHAea_add_block(slha, "VEVS"); //TODO: No higgs in SM spectrum
 
-      // Fill QedQcd object with SMInputs values
-      setup_QedQcd(oneset,sminputs);
+      // SMInputs parameters
+      slha["SMINPUTS"][""] << 1 << sminputs.alphainv << "# alphainv";
+      slha["SMINPUTS"][""] << 2 << sminputs.GF << "# GF";
+      slha["SMINPUTS"][""] << 3 << sminputs.alphaS << "# alphaS";
 
-      // Run everything to Mz
-      oneset.toMz();
+      slha["SMINPUTS"][""] << 4 << sminputs.mZ << "# mZ";
 
-      // Create a SubSpectrum object to wrap the qedqcd object
-      // Attach the sminputs object as well, so that SM pole masses can be passed on (these aren't easily
-      // extracted from the QedQcd object, so use the values that we put into it.)
-      QedQcdWrapper qedqcdspec(oneset,sminputs);
+      slha["SMINPUTS"][""] << 5 << sminputs.mBmB << "# mb(mb)";
+      slha["SMINPUTS"][""] << 6 << sminputs.mT << "# mt";
+      slha["SMINPUTS"][""] << 7 << sminputs.mTau << "# mtau";
 
-      // Initialise an object to carry Higgs sector information
-      SMHiggsModel higgsmodel;
-      higgsmodel.HiggsPoleMass = *myPipe::Param.at("mH");
-      higgsmodel.HiggsVEV      = 1. / sqrt(sqrt(2.)*sminputs.GF);
+      slha["SMINPUTS"][""] << 8 << sminputs.mNu3 << "# mnu_tau";
+      slha["SMINPUTS"][""] << 11 << sminputs.mE << "# me";
+      slha["SMINPUTS"][""] << 12 << sminputs.mNu1 << "# mnu_e";
+      slha["SMINPUTS"][""] << 13 << sminputs.mMu << "# mmu";
+      slha["SMINPUTS"][""] << 14 << sminputs.mNu2 << "# mnu_mu";
 
-      // Create a SubSpectrum object to wrap the EW sector information
-      SMHiggsSimpleSpec higgsspec(higgsmodel);
+      slha["SMINPUTS"][""] << 21 << sminputs.mD << "# md(2 GeV)";
+      slha["SMINPUTS"][""] << 22 << sminputs.mU << "# mu(2 GeV)";
+      slha["SMINPUTS"][""] << 23 << sminputs.mS << "# ms(2 GeV)";
+      slha["SMINPUTS"][""] << 24 << sminputs.mCmC << "# mc(mc)";
+
+      // Weinberg angle
+      double alpha_em = 1.0 / sminputs.alphainv;
+      double C = alpha_em * pi / (sminputs.GF * pow(2,0.5));
+      double sinW2 = 0.5 - pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);
+      slha["SINTHETAW"][""] << 2 << sinW2 << "# sinW2";
+
+      // Pole masses and masses not in sminputs
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("gamma").first << 0 << "# gamma";
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("g").first << 0 << "# g";
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("W+").first << sminputs.mW << "# mW";
+
+      // For light quarks use MSbar masses as pole masses
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("d").first << sminputs.mD << "# md";
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("u").first << sminputs.mU << "# mu";
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("s").first << sminputs.mS << "# ms";
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("c").first << sminputs.mCmC << "# mc";
+
+      // For the bottom quark, we compute its pole mass
+      double mb = get_b_pole(sminputs);
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("b").first << mb << "# mb";
+
+      // Charged lepton masses are pole mass in sminputs
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("e-").first << sminputs.mE << "# me";
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("mu-").first << sminputs.mMu << "# mmu";
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("tau-").first << sminputs.mTau << "# mtau";
+
+      // Top quark is a pole mass in sminputs
+      slha["MASS"][""] << Models::ParticleDB().pdg_pair("t").first << sminputs.mT << "# mt";
+
+      // TODO: No higgs or vev on the SM Spectrum?
+      //double mh   = *myPipe::Param.at("mH");
+      //std::pair<int,int> pdg = Models::ParticleDB().pdg_pair("h0_1");
+      //slha["MASS"][""] << pdg.first << mh << "# mH";
+
+      //double vev        = 1. / sqrt(sqrt(2.)*sminputs.GF);
+      //slha["VEVS"][""] << 1 << vev << " # vev";
+
+      // SpectrumContents struct
+      SpectrumContents::SM sm;
+
+      // Create spectrum object
+      // Take mZ as the spectrum scale
+      result = Spectrum(slha, sm, sminputs.mZ, false);
 
       // Retrieve any mass cuts
-      static const Spectrum::mc_info mass_cut = myPipe::runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
-      static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
-
-      // Create full Spectrum object from components above (SubSpectrum objects will be "cloned" into the Spectrum object)
-      result = Spectrum(qedqcdspec,higgsspec,sminputs,&myPipe::Param,mass_cut,mass_ratio_cut);
+      result.check_mass_cuts(*myPipe::runOptions)
     }
 
     /// Put together the SM Higgs couplings

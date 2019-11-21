@@ -14,7 +14,7 @@
 ///
 ///  *********************************************
 
-#include "gambit/SpecBit/spectrum_types.hpp"
+#include "gambit/SpecBit/SpecBit_types.hpp"
 
 #ifndef __FLEXIBLESUSY_types_hpp__
 #define __FLEXIBLESUSY_types_hpp__

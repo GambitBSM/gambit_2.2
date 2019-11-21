@@ -41,7 +41,7 @@ namespace Gambit
      addParameter(Par::mass1, "u_1", scalar, "SMINPUTS", 22); // u
      addParameter(Par::mass1, "d_1", scalar, "SMINPUTS", 21); // d
      addParameter(Par::mass1, "d_2", scalar, "SMINPUTS", 23); // s
-
+     addParameter(Par::mass1, "u_2", scalar, "SMINPUTS", 24); // c
 
      // Some extra stuff from SMINPUTS that we need to store just so that we can spit it out again when writing SLHA files
      addParameter(Par::dimensionless, "invalpha_em(MZ)_MSbar", scalar, "SMINPUTS", 1);
@@ -62,7 +62,7 @@ namespace Gambit
      addParameter(Par::Pole_Mass, "W+"   , scalar, "MASS");
 
      addParameter(Par::Pole_Mass, "u_3" , scalar, "SMINPUTS", 6); // t
-     addParameter(Par::Pole_Mass, "d_3" , scalar, "SMINPUTS", 5); // b (technically mb(mb)^{MSbar}, not pole)
+     addParameter(Par::mass1, "d_3" , scalar, "SMINPUTS", 5); // b (technically mb(mb)^{MSbar}, not pole)
 
      //addParameter(Par::Pole_Mass, "e-", v3, "MASS");
      // These need to point to SMINPUTS. Our system is slightly limited when it comes to
