@@ -316,7 +316,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             getter = "get_" + model_parameters[i].fullname[1:] + "PoleMass"
         else:
             setter = "set_" + model_parameters[i].fullname
-            setter = "get_" + model_parameters[i].fullname
+            getter = "get_" + model_parameters[i].fullname
 
         x = SpecGetAndSet(shape, size, paramname, getter, setter)
         spectrumparameters.append(x)
@@ -508,10 +508,12 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.getter, index)
 
+        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name
+
         towrite += (
                 "getters[{0}].map{1}"
                 "W[\"{2}\"] = {3};\n"
-        ).format(mp.tag, size, mp.name, finf)
+        ).format(mp.tag, size, e, finf)
 
     towrite += (
             "\n"
@@ -560,10 +562,12 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index)
 
+        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name
+
         towrite += (
                 "setters[{0}].map{1}"
                 "W[\"{2}\"] = {3};\n"
-        ).format(mp.tag, size, mp.name, finf)
+        ).format(mp.tag, size, e, finf)
 
     towrite += (
             "\n"
