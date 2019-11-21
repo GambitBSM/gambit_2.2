@@ -97,40 +97,39 @@ ObsLikes:
     - purpose:    LogLike
       capability: LHC_Combined_LogLike
 
+    # LEP likelihoods
+    - purpose:    LogLike
+      capability: L3_Neutralino_Leptonic_LLike
+
+    - purpose:    LogLike
+      capability: L3_Chargino_Leptonic_LLike
+
+    - purpose:    LogLike
+      capability: OPAL_Chargino_Hadronic_LLike
+
+    - purpose:    LogLike
+      capability: OPAL_Chargino_SemiLeptonic_LLike
+
+    - purpose:    LogLike
+      capability: OPAL_Chargino_Leptonic_LLike
+
+    - purpose:    LogLike
+      capability: OPAL_Neutralino_Hadronic_LLike
+
+    - purpose:    LogLike
+      capability: OPAL_Degenerate_Chargino_LLike
+
+    # Likelihoods for invisible decays of Z and Higgs bosons
+    - purpose:    LogLike
+      capability: lnL_Z_inv
+
+    - purpose:    LogLike
+      capability: lnL_Higgs_invWidth
+
     #
     # Observables
     #
 
-    # LEP likelihoods
-    - purpose:    Observable
-      capability: L3_Neutralino_Leptonic_LLike
-
-    - purpose:    Observable
-      capability: L3_Chargino_Leptonic_LLike
-
-    - purpose:    Observable
-      capability: OPAL_Chargino_Hadronic_LLike
-
-    - purpose:    Observable
-      capability: OPAL_Chargino_SemiLeptonic_LLike
-
-    - purpose:    Observable
-      capability: OPAL_Chargino_Leptonic_LLike
-
-    - purpose:    Observable
-      capability: OPAL_Neutralino_Hadronic_LLike
-
-    - purpose:    Observable
-      capability: OPAL_Degenerate_Chargino_LLike
-
-    # Likelihoods for invisible decays of Z and Higgs bosons
-    - purpose:    Observable
-      capability: lnL_Z_inv
-
-    - purpose:    Observable
-      capability: lnL_Higgs_invWidth
-
-    # Other observables
     - purpose:    Observable 
       capability: TotalCrossSectionAsMap
 
