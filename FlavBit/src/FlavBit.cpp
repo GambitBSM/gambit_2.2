@@ -3115,7 +3115,7 @@ namespace Gambit
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
-    /// HEPLike LogLikelihood B -> K* mu mu Angular
+    /// HEPLike LogLikelihood B -> K* mu mu Br
     void HEPLike_B2KstarmumuBr_LogLikelihood(double &result)
     {
 
@@ -3163,7 +3163,8 @@ namespace Gambit
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
-        /// HEPLike LogLikelihood B -> K* mu mu Angular
+
+    /// HEPLike LogLikelihood Bs -> Phi mu mu
     void HEPLike_Bs2Phimumu_LogLikelihood(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood;
