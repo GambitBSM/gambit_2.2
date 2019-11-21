@@ -3024,8 +3024,15 @@ namespace Gambit
         gaussian.Read();
         first = false;
       }
-      const double theory = *Dep::bsgamma;
-      result = gaussian.GetLogLikelihood(theory /* , theory_error */);
+
+      const std::string observable{"BR_BXsgamma"};
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      result = gaussian.GetLogLikelihood(
+              SI_theory[observable],
+              SI_theory_covariance[observable][observable]
+              );
       if (flav_debug) std::cout << "hepLikeB2SGammaLogLikelihood result: " << result << std::endl;
     }
 
