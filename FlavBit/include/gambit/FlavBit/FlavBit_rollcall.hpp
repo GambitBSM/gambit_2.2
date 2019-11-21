@@ -928,8 +928,8 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumuLogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(Bsmumu_untag, double)
-    DEPENDENCY(Bmumu, double)
+    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY

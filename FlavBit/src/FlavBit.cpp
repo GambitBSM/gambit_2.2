@@ -3055,9 +3055,19 @@ namespace Gambit
         first = false;
       }
 
-      std::vector<double> theory_central{*Dep::Bsmumu_untag, *Dep::Bmumu};
-      // nDimLikelihood does not support theory errors
-      result = nDimLikelihood.GetLogLikelihood(theory_central);
+      const std::vector<std::string> observables{"BRuntag_Bsmumu", "BR_Bdmumu"};
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      // auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;  // Not needed, as nDimLikelhood does not support covariance
+
+      std::vector<double> obs_theory;
+      obs_theory.reserve(observables.size());
+      // C++14 allows auto instead of decltype(observables[0])
+      std::transform(observables.begin(), observables.end(), obs_theory.begin(), [SI_theory](decltype(observables[0])& obs){ return SI_theory.at(obs); });
+
+      result = nDimLikelihood.GetLogLikelihood(
+              obs_theory
+              /* nDimLikelihood does not support theory errors */
+              );
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
