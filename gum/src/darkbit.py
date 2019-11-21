@@ -245,7 +245,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
             "daFunk::vec<string>(p1[i], p2[i]), kinematicFunction);\n"
             "process_ann.channelList.push_back(new_channel);\n"
             "}}\n"
-            "if ({1}*2 > mtot_final)\n"
+            "if ({1}*2 < mtot_final)\n"
             "{{\n"
             "process_ann.resonances_thresholds.threshold_energy.\n"
             "push_back(mtot_final);\n"
@@ -721,24 +721,26 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     # These are handled slightly differently by SARAH and FeynRules
     if mathpackage == 'sarah':
         mo_src += (
+            "\n"
             "// SMInputs constants"
-            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\"));"
+            "Assign_Value(\"Gf\", sminputs.GF); "
             "// Fermi constant\n"
-            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\"));"
+            "Assign_Value(\"aS\", sminputs.alphaS); "
             "// alphaS \n"
-            "Assign_Value(\"alfSMZ\", spec.get(Par::dimensionless, \"alphaS\"));"
+            "Assign_Value(\"alfSMZ\", sminputs.alphaS); "
             "// alphaS at mZ - for internal running\n"
-            "Assign_Value(\"aEWinv\", spec.get(Par::dimensionless, \"alphainv\"));"
+            "Assign_Value(\"aEWinv\", sminputs.alphainv); "
             "// Fine structure constant\n\n"
         )
     elif mathpackage == 'feynrules':
         mo_src += (
+            "\n"
             "// SMInputs constants"
-            "Assign_Value(\"Gf\", spec.get(Par::dimensionless, \"GF\"));"
+            "Assign_Value(\"Gf\", sminputs.GF); "
             "// Fermi constant\n"
-            "Assign_Value(\"aS\", spec.get(Par::dimensionless, \"alphaS\"));"
+            "Assign_Value(\"aS\", sminputs.alphaS); "
             "// alphaS \n"
-            "Assign_Value(\"aEWM1\", spec.get(Par::dimensionless, \"alphainv\"));"
+            "Assign_Value(\"aEWM1\", sminputs.alphainv); "
             "// Fine structure constant\n\n"
         )
 
@@ -753,6 +755,8 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     )
 
     for pdg, chwidth in calchep_widths.iteritems():
+        # If a particle has zero width don't try and assign it
+        if chwidth == "0": continue
         mo_src += (
                "try {{ width = tbl->at(\"{0}\").width_in_GeV; }}\n"
                " catch(std::exception& e) {{ present = false; }}\n"
