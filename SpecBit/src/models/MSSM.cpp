@@ -93,10 +93,7 @@ namespace Gambit
       const SMInputs &sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs;
-      inputs.sminputs = sminputs;
-      inputs.param = myPipe::Param;
-      inputs.options = myPipe::runOptions;
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // Get the spectrum from the Backend
       myPipe::BEreq::SPheno_MSSM_Spectrum(spectrum, inputs);
@@ -129,7 +126,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // Get the spectrum from the Backend
       myPipe::BEreq::FS_CMSSM_Spectrum(spectrum, inputs);
@@ -153,7 +150,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMatMGUT_input_parameters input;
@@ -169,7 +166,7 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUT_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatMGUT_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -177,7 +174,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSM spectrum generator with GUT scale input (boundary conditions)
@@ -191,7 +188,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMatMGUT_mAmu_input_parameters input;
@@ -204,7 +201,7 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUT_mA_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatMGUT_mA_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -212,7 +209,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
  
     // Runs FlexibleSUSY MSSM spectrum generator with EWSB scale input (boundary conditions)
@@ -225,7 +222,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSM_input_parameters input;
@@ -242,7 +239,7 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQ_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatQ_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -250,7 +247,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSM spectrum generator with EWSB scale input (boundary conditions)
@@ -264,7 +261,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSM_mAmu_input_parameters input;
@@ -278,7 +275,7 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQ_mA_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatQ_mA_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -286,7 +283,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSM spectrum generator with SUSY scale input (boundary conditions)
@@ -300,7 +297,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMatMSUSY_mAmu_input_parameters input;
@@ -313,7 +310,7 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMSUSY_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatMSUSY_mA_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -321,7 +318,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMatMGUTEFTHiggs model spectrum generator
@@ -336,7 +333,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMatMGUTEFTHiggs_input_parameters input;
@@ -353,7 +350,7 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -361,7 +358,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMatMGUTEFTHiggs model spectrum generator
@@ -376,7 +373,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMatMGUTEFTHiggs_mAmu_input_parameters input;
@@ -390,7 +387,7 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_mA_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_mA_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -398,7 +395,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMEFTHiggs model spectrum generator
@@ -413,7 +410,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMEFTHiggs_input_parameters input;
@@ -425,7 +422,7 @@ namespace Gambit
       //fill_MSSM63_input_altnames(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQEFTHiggs_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatQEFTHiggs_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -433,7 +430,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMEFTHiggs_mAmu spectrum generator with
@@ -449,7 +446,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMEFTHiggs_mAmu_input_parameters input;
@@ -465,7 +462,7 @@ namespace Gambit
       //fill_MSSM63_input_altnames(input,myPipe::Param);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQEFTHiggs_mA_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatQEFTHiggs_mA_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -473,7 +470,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
  
     // Runs FlexibleSUSY MSSMEFTHiggs model spectrum generator with SUSY
@@ -489,7 +486,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MSSM(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This all goes to the backend source file
       //MSSMatMSUSYEFTHiggs_mAmu_input_parameters input;
@@ -499,7 +496,7 @@ namespace Gambit
       //fill_MSSM63_input_altnames(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMSUSYEFTHiggs_mA_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MSSMatMSUSYEFTHiggs_mA_Spectrum(result, inputs);
 
       /// TODO: add LSP check, gravitino mass etc      
 
@@ -507,7 +504,7 @@ namespace Gambit
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
   

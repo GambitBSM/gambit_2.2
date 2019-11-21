@@ -38,7 +38,6 @@ namespace Gambit
         SM_slha();
         static SLHAstruct generateOutputSLHAea(const Spectrum&, const int version);
     };
-    struct SMHiggs              : Contents { SMHiggs(); };
     struct MSSM                 : Contents 
     { 
         MSSM();

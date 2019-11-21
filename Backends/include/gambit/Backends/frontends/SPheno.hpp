@@ -567,7 +567,7 @@ BE_VARIABLE(CalcTBD,Flogical, "__spheno_MOD_calctbd","SPheno_internal")
 
 // Convenience functions (registration)
 BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const SpectrumInputs&), "SPheno_MSSM_Spectrum")
-BE_CONV_FUNCTION(Spectrum_Out, void, (Spectrum&, const std::map<str, safe_ptr<const double> >&), "SPheno_internal")
+BE_CONV_FUNCTION(Spectrum_Out, void, (Spectrum&, const SpectrumInputs&), "SPheno_internal")
 BE_CONV_FUNCTION(ReadingData, void, (const SpectrumInputs&), "SPheno_internal")
 BE_CONV_FUNCTION(InitializeStandardModel, void, (const SMInputs&), "SPheno_internal")
 BE_CONV_FUNCTION(ErrorHandling, void, (const int&), "SPheno_internal")

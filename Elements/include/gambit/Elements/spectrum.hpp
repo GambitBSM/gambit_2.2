@@ -135,12 +135,12 @@ namespace Gambit
          /// Internal SMInputs struct
          SMInputs SMINPUTS;
 
+         /// Contents requirements for this spectrum
+         SpectrumContents::Contents myContents;
+
          /// Scale at which all running parameters are defined
          /// (except for certain parameters which are defined at fixed scales; these are not considered as "running")
          double scale;
-
-         /// Contents requirements for this spectrum
-         SpectrumContents::Contents myContents;
 
          // Retrieve mass cuts from yaml iptions
          inline cuts_info& retrieve_mass_cuts(const Options &options)

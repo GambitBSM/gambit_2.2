@@ -23,7 +23,6 @@
 #include "gambit/Backends/frontends/FlexibleSUSY_CMSSM_2_0_1.hpp"
 #include "gambit/Backends/backend_types/FlexibleSUSY.hpp"
 #include "gambit/Elements/spectrum.hpp"
-#include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 //TODO: Static FS includes, remove when BOSSed FS works
 //#include "flexiblesusy/src/lowe.h" // From softsusy; used by flexiblesusy
@@ -216,12 +215,14 @@ BE_NAMESPACE
     /// Models/include/gambit/Models/SpectrumContents/RegisteredSpectra.hpp
     /// Models/src/SpectrumContents/MSSM.cpp
     /// which inherits from the Contents class 
-    SpectrumContents::MSSM mssm;
+    // TODO: RegisteredSpectra lives now on Specbit, so this would break if Specbit is ditched
+    // So now the contents is a part of the SpectrumInputs struct
+    //SpectrumContents::MSSM mssm;
         
     /// TODO: something like:
     ///calling constructor 
     // from spectrum.hpp in Elements
-    //Spectrum spectrum(slha, mssm, scale, false);
+    //Spectrum spectrum(slha, Input.content, scale, false);
     // fill Spectrum object -- a fill_spectrum method in Spectrum class would be nice
     //spec = std::move(spectrum);
 

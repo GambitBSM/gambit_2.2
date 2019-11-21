@@ -52,9 +52,9 @@ namespace Gambit
    /// Construct from SLHAea object (also specifying what SpectrumContents should apply, which defines how to interpret the SLHAea blocks)
    Spectrum::Spectrum(const SLHAstruct& slha, const SpectrumContents::Contents& contents, const double scale_in, const bool ignore_input_transform)
     : mySLHAea(contents.transformInputSLHAea(slha,ignore_input_transform))
+    , SMINPUTS(mySLHAea)
     , myContents(contents)
     , scale(scale_in)
-    , SMINPUTS(mySLHAea)
    {
       /// DEBUG: Write internal file to disk so we can check problems raised by verify_contents
       std::ofstream ofs("pre_verify_contents_"+contents.getName()+".slha");

@@ -125,16 +125,16 @@ namespace Gambit
       const Options& runOptions=*myPipe::runOptions;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::ScalarSingletDM_Z2(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This is handled by the backend
       //fill_ScalarSingletDM_input(input,myPipe::Param,sminputs);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_ScalarSingletDM_Z2_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_ScalarSingletDM_Z2_Spectrum(result, inputs);
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
 
       int check_perturb_pts = runOptions.getValueOrDef<double>(10,"check_perturb_pts");
       double do_check_perturb = runOptions.getValueOrDef<bool>(false,"check_perturb");
@@ -149,6 +149,7 @@ namespace Gambit
       {
         static const SpectrumContents::ScalarSingletDM_Z2 contents;
         static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
+        /* TODO: Not yet ready
         if (!check_perturb(result,required_parameters,check_perturb_scale,check_perturb_pts))
         {
           // invalidate point as spectrum not perturbative up to scale
@@ -158,7 +159,7 @@ namespace Gambit
             cout << "Spectrum not perturbative up to scale = " << check_perturb_scale <<  endl;
           #endif
           invalid_point().raise(msg.str());
-        }
+        }*/
       }
 
     }
@@ -250,17 +251,17 @@ namespace Gambit
       const Options& runOptions=*myPipe::runOptions;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::ScalarSingletDM_Z3(), myPipe::Param, myPipe::runOptions);
 
       // TODO: This is handled by the backend
       //fill_ScalarSingletDM_input(input,myPipe::Param,sminputs);
       //fill_extra_input(input,myPipe::Param);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_ScalarSingletDM_Z3_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_ScalarSingletDM_Z3_Spectrum(result, inputs);
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
 
       int check_perturb_pts = runOptions.getValueOrDef<double>(10,"check_perturb_pts");
       double do_check_perturb = runOptions.getValueOrDef<bool>(false,"check_perturb");
@@ -275,6 +276,7 @@ namespace Gambit
       {
         static const SpectrumContents::ScalarSingletDM_Z3 contents;
         static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
+        /* TODO: Not yet ready
         if (!check_perturb(result,required_parameters,check_perturb_scale,check_perturb_pts))
         {
           // invalidate point as spectrum not perturbative up to scale
@@ -285,16 +287,17 @@ namespace Gambit
             cout << "Spectrum not perturbative up to scale = " << check_perturb_scale <<  endl;
           #endif
           invalid_point().raise(msg.str());
-        }
+        }*/
       }
 
     }
 
     /// @}
 
-    bool check_perturb(const Spectrum& spec, const std::vector<SpectrumParameter>& required_parameters, double scale, int pts)
+/* TODO: Not yet ready
+    bool check_perturb(const Spectrum& spec, const std::vector<SpectrumContents::Parameter>& required_parameters, double scale, int pts)
     {
-      std::unique_ptr<SubSpectrum> ScalarSingletDM = spec.clone_HE();
+      std::unique_ptr<Spectrum> ScalarSingletDM = spec.clone_HE();
       double step = log10(scale) / pts;
       double runto;
       double ul = 4.0 * pi;
@@ -365,97 +368,86 @@ namespace Gambit
       return true;
 
     }
+*/
 
-
-		#if(FS_MODEL_ScalarSingletDM_Z2_IS_BUILT)
-		void find_non_perturb_scale_ScalarSingletDM_Z2(double &result)
-		{
-			using namespace flexiblesusy;
-      using namespace softsusy;
+    void find_non_perturb_scale_ScalarSingletDM_Z2(double &result)
+    {
       namespace myPipe = Pipes::find_non_perturb_scale_ScalarSingletDM_Z2;
-      using namespace Gambit;
-      using namespace SpecBit;
 
       const Spectrum& fullspectrum = *myPipe::Dep::ScalarSingletDM_Z2_spectrum;
 
-		  // bound x by (a,b)
+      // bound x by (a,b)
+      double ms = *myPipe::Param.at("mS");
 
-		  double ms = *myPipe::Param.at("mS");
+      double a = log10(ms);
 
-		  double a = log10(ms);
-
-		  if (a > 20.0)
-		  {
-			  std::ostringstream msg;
+      if (a > 20.0)
+      {
+        std::ostringstream msg;
         msg << "Scalar mass larger than 10^20 GeV " << std::endl;
         invalid_point().raise(msg.str());
       }
 
-		  double b = 20.0;
-		  double x = 0.5 * ( b + ms );
+      double b = 20.0;
+      double x = 0.5 * ( b + ms );
 
-		  while (abs(a-b)>1e-10)
-		  {
-		    x=0.5*(b-a)+a;
+      while (abs(a-b)>1e-10)
+      {
+        x=0.5*(b-a)+a;
         static const SpectrumContents::ScalarSingletDM_Z2 contents;
-        static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
-		    if (!check_perturb(fullspectrum,required_parameters,pow(10,x),3))
-		    {
-		      b=x;
-		    }
-		    else
-		    {
-		      a=x;
-		    }
-		  }
-		  result = pow(10,0.5*(a+b));
-		}
-		#endif
+        static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
+        /* TODO: Not ready yet
+        if (!check_perturb(fullspectrum,required_parameters,pow(10,x),3))
+        {
+          b=x;
+        }
+        else
+        {
+          a=x;
+        }*/
+      }
+      result = pow(10,0.5*(a+b));
+    }
 
-		#if(FS_MODEL_ScalarSingletDM_Z3_IS_BUILT)
-		void find_non_perturb_scale_ScalarSingletDM_Z3(double &result)
-		{
-			using namespace flexiblesusy;
-      using namespace softsusy;
+    void find_non_perturb_scale_ScalarSingletDM_Z3(double &result)
+    {
       namespace myPipe = Pipes::find_non_perturb_scale_ScalarSingletDM_Z3;
-      using namespace Gambit;
-      using namespace SpecBit;
 
       const Spectrum& fullspectrum = *myPipe::Dep::ScalarSingletDM_Z3_spectrum;
 
-		  // bound x by (a,b)
+      // bound x by (a,b)
 
-		  double ms = *myPipe::Param.at("mS");
+      double ms = *myPipe::Param.at("mS");
 
-		  double a = log10(ms);
+      double a = log10(ms);
 
-		  if (a > 20.0)
-		  {
-			  std::ostringstream msg;
+      if (a > 20.0)
+      {
+        std::ostringstream msg;
         msg << "Scalar mass larger than 10^20 GeV " << std::endl;
         invalid_point().raise(msg.str());
       }
 
-		  double b = 20.0;
-		  double x = 0.5 * ( b + ms );
+      double b = 20.0;
+      double x = 0.5 * ( b + ms );
 
-		  while (abs(a-b)>1e-10)
-		  {
-		    x=0.5*(b-a)+a;
+      while (abs(a-b)>1e-10)
+      {
+        x=0.5*(b-a)+a;
         static const SpectrumContents::ScalarSingletDM_Z3 contents;
-        static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
-		    if (!check_perturb(fullspectrum,required_parameters,pow(10,x),3))
-		    {
-		      b=x;
-		    }
-		    else
-		    {
-		      a=x;
-		    }
-		  }
-		  result = pow(10,0.5*(a+b));
-		}
-    #endif
+        static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
+        /* TODO: Not ready yet
+        if (!check_perturb(fullspectrum,required_parameters,pow(10,x),3))
+        {
+          b=x;
+        }
+        else
+        {
+          a=x;
+        }*/
+      }
+      result = pow(10,0.5*(a+b));
+    }
 
     /// Put together the Higgs couplings for the ScalarSingletDM models, from partial widths only
     void ScalarSingletDM_higgs_couplings_pwid(HiggsCouplingsTable &result)
@@ -471,7 +463,7 @@ namespace Gambit
         spectrum_dependency = &Dep::ScalarSingletDM_Z3_spectrum;
       }
       else SpecBit_error().raise(LOCAL_INFO, "No valid model for ScalarSingletDM_higgs_couplings_pwid.");
-      const SubSpectrum& spec = (*spectrum_dependency)->get_HE();
+      const Spectrum& spec = **spectrum_dependency;
 
       // Set the CP of the Higgs.
       result.CP[0] = 1;
@@ -488,10 +480,11 @@ namespace Gambit
     }
 
     /// Print ScalarSingletDM spectra out. Stripped down copy of MSSM version with variable names changed
-    void fill_map_from_ScalarSingletDM_spectrum(std::map<std::string,double>& specmap, const Spectrum& singletdmspec,
-                                         const std::vector<SpectrumParameter>& required_parameters)
+    void fill_map_from_ScalarSingletDM_spectrum(std::map<std::string,double>& specmap, 
+         const Spectrum& singletdmspec,
+         const std::vector<SpectrumContents::Parameter>& required_parameters)
     {
-      for(std::vector<SpectrumParameter>::const_iterator it = required_parameters.begin();
+      for(std::vector<SpectrumContents::Parameter>::const_iterator it = required_parameters.begin();
            it != required_parameters.end(); ++it)
       {
          const Par::Tags        tag   = it->tag();
@@ -505,7 +498,7 @@ namespace Gambit
          {
            std::ostringstream label;
            label << name <<" "<< Par::toString.at(tag);
-           specmap[label.str()] = singletdmspec.get_HE().get(tag,name);
+           specmap[label.str()] = singletdmspec.get(tag,name);
          }
          // Check vector case
          else if(shape.size()==1 and shape[0]>1)
@@ -513,7 +506,7 @@ namespace Gambit
            for(int i = 1; i<=shape[0]; ++i) {
              std::ostringstream label;
              label << name <<"_"<<i<<" "<< Par::toString.at(tag);
-             specmap[label.str()] = singletdmspec.get_HE().get(tag,name,i);
+             specmap[label.str()] = singletdmspec.get(tag,name,i);
            }
          }
          // Check matrix case
@@ -523,7 +516,7 @@ namespace Gambit
              for(int j = 1; j<=shape[0]; ++j) {
                std::ostringstream label;
                label << name <<"_("<<i<<","<<j<<") "<<Par::toString.at(tag);
-               specmap[label.str()] = singletdmspec.get_HE().get(tag,name,i,j);
+               specmap[label.str()] = singletdmspec.get(tag,name,i,j);
              }
            }
          }
@@ -545,16 +538,16 @@ namespace Gambit
       namespace myPipe = Pipes::get_ScalarSingletDM_Z2_spectrum_as_map;
       static const Spectrum& spec = *myPipe::Dep::ScalarSingletDM_Z2_spectrum;
       static const SpectrumContents::ScalarSingletDM_Z2 contents;
-      static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters();
+      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters();
       fill_map_from_ScalarSingletDM_spectrum(specmap, spec, required_parameters);
     }
 
-		void get_ScalarSingletDM_Z3_spectrum_as_map (std::map<std::string,double>& specmap)
+    void get_ScalarSingletDM_Z3_spectrum_as_map (std::map<std::string,double>& specmap)
     {
       namespace myPipe = Pipes::get_ScalarSingletDM_Z3_spectrum_as_map;
       static const Spectrum& spec = *myPipe::Dep::ScalarSingletDM_Z3_spectrum;
       static const SpectrumContents::ScalarSingletDM_Z3 contents;
-      static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters();
+      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters();
       fill_map_from_ScalarSingletDM_spectrum(specmap, spec, required_parameters);
     }
 

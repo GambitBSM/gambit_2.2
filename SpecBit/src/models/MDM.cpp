@@ -59,11 +59,9 @@ namespace Gambit
 
     }
 
+    /* TODO: Not ready yet
     bool check_perturb_MDM(const Spectrum& spec,double scale,int pts)
     {
-      using namespace flexiblesusy;
-      using namespace Gambit;
-      using namespace SpecBit;
       std::unique_ptr<SubSpectrum> MDM = spec.clone_HE();
       double step = log10(scale) / pts;
       double runto;
@@ -132,7 +130,7 @@ namespace Gambit
 
       return true;
 
-    }
+    }*/
 
     void get_MDM_spectrum(Spectrum& result)
     {
@@ -141,16 +139,16 @@ namespace Gambit
       const Options& runOptions=*myPipe::runOptions;
 
       // Set up the input structure
-      SpectrumInputs inputs(sminputs, myPipe::Param, myPipe::runOptions);
+      SpectrumInputs inputs(sminputs, SpectrumContents::MDM(),  myPipe::Param, myPipe::runOptions);
 
       // TODO: This is handled by the backend
       //fill_MDM_input(input,myPipe::Param,sminputs);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MDM_Spectrum(spectrum, inputs);
+      myPipe::BEreq::FS_MDM_Spectrum(result, inputs);
 
       // Retrieve any mass cuts
-      spectrum.check_mass_cuts(*myPipe::runOptions);
+      result.check_mass_cuts(*myPipe::runOptions);
 
       int check_perturb_pts = runOptions.getValueOrDef<double>(10,"check_perturb_pts");
       double do_check_perturb = runOptions.getValueOrDef<bool>(false,"check_perturb");
@@ -163,6 +161,7 @@ namespace Gambit
 
       if (do_check_perturb)
       {
+        /* TODO: Not ready yet
         if (!check_perturb_MDM(result,check_perturb_scale,check_perturb_pts))
         {
           // invalidate point as spectrum not perturbative up to scale
@@ -172,7 +171,7 @@ namespace Gambit
             cout << "Spectrum not perturbative up to scale = " << check_perturb_scale <<  endl;
           #endif
           invalid_point().raise(msg.str());
-        }
+        }*/
       }
 
 
@@ -182,50 +181,45 @@ namespace Gambit
     void find_non_perturb_scale_MDM(double &result)
     {
 
-     using namespace flexiblesusy;
-      using namespace softsusy;
       namespace myPipe = Pipes::find_non_perturb_scale_MDM;
-      using namespace Gambit;
-      using namespace SpecBit;
 
       const Spectrum& fullspectrum = *myPipe::Dep::MDM_spectrum;
 
-		  // bound x by (a,b)
-		  // do all this is log space please
+      // bound x by (a,b)
+      // do all this is log space please
 
-		  double ms = *myPipe::Param.at("mS");
+      double ms = *myPipe::Param.at("mS");
 
-		  double a = log10(ms);
+      double a = log10(ms);
 
-		  if (a > 20.0)
-		  {
-			  std::ostringstream msg;
+      if (a > 20.0)
+      {
+        std::ostringstream msg;
         msg << "Scalar mass larger than 10^20 GeV " << std::endl;
         invalid_point().raise(msg.str());
       }
 
-		  double b = 20.0;
-		  double x = 0.5 * ( b + ms );
+      double b = 20.0;
+      double x = 0.5 * ( b + ms );
 
-		  while (abs(a-b)>1e-10)
-		  {
-		    //cout<< "\r" << "(a,b) = " << a << "  " << b << endl;
-		    //std::cout << std::flush;
+      while (abs(a-b)>1e-10)
+      {
+        //cout<< "\r" << "(a,b) = " << a << "  " << b << endl;
+        //std::cout << std::flush;
+        x=0.5*(b-a)+a;
 
-		    x=0.5*(b-a)+a;
-
-
-		    if (!check_perturb_MDM(fullspectrum,pow(10,x),3))
-		    {
-		      b=x;
-		    }
-		    else
-		    {
-		      a=x;
-		    }
-		  }
-		  result = pow(10,0.5*(a+b));
-		}
+        /* TODO: Not ready yet
+        if (!check_perturb_MDM(fullspectrum,pow(10,x),3))
+        {
+          b=x;
+        }
+        else
+        {
+          a=x;
+        }*/
+      }
+      result = pow(10,0.5*(a+b));
+    }
 
 
     /// Print MDM spectrum out. Stripped down copy from MSSM version with variable names changed
@@ -242,9 +236,9 @@ namespace Gambit
     {
       /// Add everything... use spectrum contents routines to automate task
       static const SpectrumContents::MDM contents;
-      static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters();
+      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters();
 
-      for(std::vector<SpectrumParameter>::const_iterator it = required_parameters.begin();
+      for(std::vector<SpectrumContents::Parameter>::const_iterator it = required_parameters.begin();
            it != required_parameters.end(); ++it)
       {
          const Par::Tags        tag   = it->tag();
@@ -258,7 +252,7 @@ namespace Gambit
          {
            std::ostringstream label;
            label << name <<" "<< Par::toString.at(tag);
-           specmap[label.str()] = mdmspec.get_HE().get(tag,name);
+           specmap[label.str()] = mdmspec.get(tag,name);
          }
          // Check vector case
          else if(shape.size()==1 and shape[0]>1)
@@ -266,7 +260,7 @@ namespace Gambit
            for(int i = 1; i<=shape[0]; ++i) {
              std::ostringstream label;
              label << name <<"_"<<i<<" "<< Par::toString.at(tag);
-             specmap[label.str()] = mdmspec.get_HE().get(tag,name,i);
+             specmap[label.str()] = mdmspec.get(tag,name,i);
            }
          }
          // Check matrix case
@@ -276,7 +270,7 @@ namespace Gambit
              for(int j = 1; j<=shape[0]; ++j) {
                std::ostringstream label;
                label << name <<"_("<<i<<","<<j<<") "<<Par::toString.at(tag);
-               specmap[label.str()] = mdmspec.get_HE().get(tag,name,i,j);
+               specmap[label.str()] = mdmspec.get(tag,name,i,j);
              }
            }
          }
