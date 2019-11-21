@@ -3110,25 +3110,97 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      // Code assumes each bin is calculated by the same dependency (decltype)
-      auto get_theory = [](decltype(Dep::BKstarmumu_11_25) theory_dependency) { return std::vector<double>{
-          theory_dependency->FL,
-          theory_dependency->S3,
-          theory_dependency->S4,
-          theory_dependency->S5,
-          theory_dependency->AFB,
-          theory_dependency->S7,
-          theory_dependency->S8,
-          theory_dependency->S9
-      }; };
+      const std::vector<std::string> observables0p1_0p98{
+        "FL_B0Kstar0mumu_0.1_0.98",
+        "S3_B0Kstar0mumu_0.1_0.98",
+        "S4_B0Kstar0mumu_0.1_0.98",
+        "S5_B0Kstar0mumu_0.1_0.98",
+        "AFB_B0Kstar0mumu_0.1_0.98",
+        "S7_B0Kstar0mumu_0.1_0.98",
+        "S8_B0Kstar0mumu_0.1_0.98",
+        "S9_B0Kstar0mumu_0.1_0.98",
+      };
+      const std::vector<std::string> observables1p1_2p5{
+        "FL_B0Kstar0mumu_1.1_2.5",
+        "S3_B0Kstar0mumu_1.1_2.5",
+        "S4_B0Kstar0mumu_1.1_2.5",
+        "S5_B0Kstar0mumu_1.1_2.5",
+        "AFB_B0Kstar0mumu_1.1_2.5",
+        "S7_B0Kstar0mumu_1.1_2.5",
+        "S8_B0Kstar0mumu_1.1_2.5",
+        "S9_B0Kstar0mumu_1.1_2.5",
+      };
+      const std::vector<std::string> observables2p5_4{
+        "FL_B0Kstar0mumu_2.5_4",
+        "S3_B0Kstar0mumu_2.5_4",
+        "S4_B0Kstar0mumu_2.5_4",
+        "S5_B0Kstar0mumu_2.5_4",
+        "AFB_B0Kstar0mumu_2.5_4",
+        "S7_B0Kstar0mumu_2.5_4",
+        "S8_B0Kstar0mumu_2.5_4",
+        "S9_B0Kstar0mumu_2.5_4",
+      };
+      const std::vector<std::string> observables4_6{
+        "FL_B0Kstar0mumu_4_6",
+        "S3_B0Kstar0mumu_4_6",
+        "S4_B0Kstar0mumu_4_6",
+        "S5_B0Kstar0mumu_4_6",
+        "AFB_B0Kstar0mumu_4_6",
+        "S7_B0Kstar0mumu_4_6",
+        "S8_B0Kstar0mumu_4_6",
+        "S9_B0Kstar0mumu_4_6",
+      };
+      const std::vector<std::string> observables6_8{
+        "FL_B0Kstar0mumu_6_8",
+        "S3_B0Kstar0mumu_6_8",
+        "S4_B0Kstar0mumu_6_8",
+        "S5_B0Kstar0mumu_6_8",
+        "AFB_B0Kstar0mumu_6_8",
+        "S7_B0Kstar0mumu_6_8",
+        "S8_B0Kstar0mumu_6_8",
+        "S9_B0Kstar0mumu_6_8",
+      };
+      const std::vector<std::string> observables15_19{
+        "FL_B0Kstar0mumu_15_19",
+        "S3_B0Kstar0mumu_15_19",
+        "S4_B0Kstar0mumu_15_19",
+        "S5_B0Kstar0mumu_15_19",
+        "AFB_B0Kstar0mumu_15_19",
+        "S7_B0Kstar0mumu_15_19",
+        "S8_B0Kstar0mumu_15_19",
+        "S9_B0Kstar0mumu_15_19",
+      };
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      // C++14 allows auto instead of decltype(observables0p1_0p98)
+      auto get_obs_theory = [SI_theory](decltype(observables0p1_0p98)& observables){
+        std::vector<double> obs_theory;
+        obs_theory.reserve(observables.size());
+        // C++14 allows auto instead of decltype(observables[0])
+        std::transform(observables.begin(), observables.end(), obs_theory.begin(),
+                [SI_theory](decltype(observables[0])& obs){ return SI_theory.at(obs); });
+        return obs_theory;
+      };
+
+      auto get_obs_covariance = [SI_theory_covariance](decltype(observables0p1_0p98)& observables){
+        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          for (unsigned int j = 0; j < observables.size(); ++j) {
+            obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+          }
+        }
+        return obs_covariance;
+      };
 
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */);
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_theory(Dep::BKstarmumu_11_25) /* , theory_error */);
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_theory(Dep::BKstarmumu_25_40) /* , theory_error */);
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_theory(Dep::BKstarmumu_40_60) /* , theory_error */);
-      result += nDimBifurGaussian_4.GetLogLikelihood(get_theory(Dep::BKstarmumu_60_80) /* , theory_error */);
-      result += nDimBifurGaussian_5.GetLogLikelihood(get_theory(Dep::BKstarmumu_15_19) /* , theory_error */);
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables0p1_0p98) /*, get_obs_covariance(observables0p1_0p98) */);
+      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(observables1p1_2p5) /*, get_obs_covariance(observables1p1_2p5) */);
+      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(observables2p5_4) /*, get_obs_covariance(observables2p5_4) */);
+      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(observables4_6) /*, get_obs_covariance(observables4_6) */);
+      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(observables6_8) /*, get_obs_covariance(observables6_8) */);
+      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(observables15_19) /*, get_obs_covariance(observables15_19) */);
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
