@@ -1,0 +1,12 @@
+# Input GUM file for the MDMSM (Majorana DM, scalar mediator)
+# model in GUM
+
+math:
+    package: feynrules
+    model: MDMSM
+    base_model: SM
+    restriction: DiagonalCKM
+
+output:
+    calchep: true
+    micromegas: true
