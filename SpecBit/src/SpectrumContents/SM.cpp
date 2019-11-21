@@ -4,8 +4,7 @@
 ///
 ///  Class defining the parameters that Spectrum
 ///  objects providing Standard Model parameters
-///  (minus the Higgs sector) must provide.
-///  Includes the SMInputs info plus pole masses
+///  must provide.
 ///
 ///  *********************************************
 ///
@@ -32,14 +31,6 @@ namespace Gambit {
   {
      std::vector<int> scalar; // Empty vector means no indices   // i.e. get(Par::Tag, "name")
      std::vector<int> v3     = initVector(3);   // i.e. get(Par::Tag, "name", i)
-
-     // TODO: I am not sure we need these
-     //addParameter(Par::mass1, "u"   , v3, "MSBARMASS", 1); // TODO: Completely made up. Coordinate with SM_slha?
-     //addParameter(Par::mass1, "d"   , v3, "MSBARMASS", 4);
-     //addParameter(Par::mass1, "e-"  , v3, "MSBARMASS", 7);
-
-     //addParameter(Par::mass1, "gamma", scalar, "MSBARMASS", 10);
-     //addParameter(Par::mass1, "g"    , scalar, "MSBARMASS", 11);
 
      addParameter(Par::dimensionless, "alphainv", scalar, "SMINPUTS", 1); // TODO: Was 'alpha'. Needs consideration.
      addParameter(Par::imass2, "GF", scalar, "SMINPUTS", 2); // So far the only example of inverse mass dimension usage. Should be useful for other EFT couplings though.
@@ -68,21 +59,13 @@ namespace Gambit {
      addParameter(Par::Pole_Mass, "e-_3", scalar, "SMINPUTS", 7);
 
 
+     // Weinberg angle
      addParameter(Par::Pole_Mixing, "sinW2", scalar, "SINTHETAW", 2);
 
      // Additional pole masses for SMInputs running masses
-     addParameter(Par::Pole_Mass, "u_1", scalar, "MASS"); // u
-     addParameter(Par::Pole_Mass, "d_1", scalar, "MASS"); // d
-     addParameter(Par::Pole_Mass, "d_2", scalar, "MASS"); // s
-     addParameter(Par::Pole_Mass, "u_2", scalar, "MASS"); // c
      addParameter(Par::Pole_Mass, "d_3", scalar, "MASS"); // b
 
      // Nearest flavour 'aliases' for the SM mass eigenstates
-     addParameter(Par::Pole_Mass, "u", scalar, "MASS"); // u
-     addParameter(Par::Pole_Mass, "d", scalar, "MASS"); // d
-     addParameter(Par::Pole_Mass, "s", scalar, "MASS"); // s
-     addParameter(Par::Pole_Mass, "c", scalar, "MASS"); // c
- 
      addParameter(Par::Pole_Mass, "t" , scalar, "MASS");
      addParameter(Par::Pole_Mass, "b" , scalar, "MASS");
 
@@ -90,8 +73,23 @@ namespace Gambit {
      addParameter(Par::Pole_Mass, "mu-" , scalar, "MASS");
      addParameter(Par::Pole_Mass, "tau-", scalar, "MASS");
 
-     // TODO: Considering adding CKM and PMNS here
+     // Higgs mass and vev
+     addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS");
+     addParameter(Par::mass1, "v", scalar, "VEVS");
 
+     // CKM matrix
+     addParameter(Par::dimensionless, "CKM_lambda", "VCKM", 1);
+     addParameter(Par::dimensionless, "CKM_A", "VCKM", 2);
+     addParameter(Par::dimensionless, "CKM_rhobar", "VCKM", 3);
+     addParameter(Par::dimensionless, "CKM_etabar", "VCKM", 4);
+
+     // PMNS matrix
+     addParameter(Par::dimensionless, "theta12", "UPMNS", 1);
+     addParameter(Par::dimensionless, "theta23", "UPMNS", 2);
+     addParameter(Par::dimensionless, "theta13", "UPMNS", 3);
+     addParameter(Par::dimensionless, "delta13", "UPMNS", 4);
+     addParameter(Par::dimensionless, "alpha1", "UPMNS", 5);
+     addParameter(Par::dimensionless, "alpha2", "UPMNS", 6);
   }
 
 }

@@ -28,11 +28,6 @@ namespace Gambit
             }
             namespace flexiblesusy
             {
-                template <>
-                using CMSSM_spectrum_generator::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_spectrum_generator<>;
-            }
-            namespace flexiblesusy
-            {
                 typedef ::FlexibleSUSY_CMSSM_2_0_1::flexiblesusy::CMSSM_input_parameters CMSSM_input_parameters;
             }
             namespace flexiblesusy

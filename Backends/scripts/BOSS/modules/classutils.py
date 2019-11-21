@@ -544,7 +544,7 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
     if not file_for_gambit:
         frwd_decl_deleter  = '\n'
         frwd_decl_deleter += '// Forward declaration needed by the destructor pattern.\n'
-        # TODO: TG: Needs templates everywhere
+        # TODO: TG: Forward declarations neeed full templates
         if is_template:
             frwd_decl_deleter += 'template ' + templ_bracket + '\n'
             frwd_decl_deleter += 'void wrapper_deleter'

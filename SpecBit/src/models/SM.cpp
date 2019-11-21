@@ -116,7 +116,6 @@ namespace Gambit
 
 
     /// Get a Spectrum object for Standard-Model-only information
-    /// This contains pole masses not in SMInputs
     void get_SM_spectrum(Spectrum &result)
     {
       namespace myPipe = Pipes::get_SM_spectrum;
@@ -127,7 +126,9 @@ namespace Gambit
       SLHAea_add_block(slha, "SMINPUTS");
       SLHAea_add_block(slha, "SINTHETAW");
       SLHAea_add_block(slha, "MASS");
-      //SLHAea_add_block(slha, "VEVS"); //TODO: No higgs in SM spectrum
+      SLHAea_add_block(slha, "VEVS");
+      SLHAea_add_block(slha, "VCKM");
+      SLHAea_add_block(slha, "UPMNS");
 
       // SMInputs parameters
       slha["SMINPUTS"][""] << 1 << sminputs.alphainv << "# alphainv";
@@ -162,12 +163,6 @@ namespace Gambit
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("g").first << 0 << "# g";
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("W+").first << sminputs.mW << "# mW";
 
-      // For light quarks use MSbar masses as pole masses
-      slha["MASS"][""] << Models::ParticleDB().pdg_pair("d").first << sminputs.mD << "# md";
-      slha["MASS"][""] << Models::ParticleDB().pdg_pair("u").first << sminputs.mU << "# mu";
-      slha["MASS"][""] << Models::ParticleDB().pdg_pair("s").first << sminputs.mS << "# ms";
-      slha["MASS"][""] << Models::ParticleDB().pdg_pair("c").first << sminputs.mCmC << "# mc";
-
       // For the bottom quark, we compute its pole mass
       double mb = get_b_pole(sminputs);
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("b").first << mb << "# mb";
@@ -180,13 +175,27 @@ namespace Gambit
       // Top quark is a pole mass in sminputs
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("t").first << sminputs.mT << "# mt";
 
-      // TODO: No higgs or vev on the SM Spectrum?
-      //double mh   = *myPipe::Param.at("mH");
-      //std::pair<int,int> pdg = Models::ParticleDB().pdg_pair("h0_1");
-      //slha["MASS"][""] << pdg.first << mh << "# mH";
+      // Higgs mass and vev
+      double mh   = *myPipe::Param.at("mH");
+      std::pair<int,int> pdg = Models::ParticleDB().pdg_pair("h0_1");
+      slha["MASS"][""] << pdg.first << mh << "# mH";
 
-      //double vev        = 1. / sqrt(sqrt(2.)*sminputs.GF);
-      //slha["VEVS"][""] << 1 << vev << " # vev";
+      double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);
+      slha["VEVS"][""] << 1 << vev << " # vev";
+
+      // CKM matrix
+      slha["VCKM"][""] << 1 << sminputs.CKM_lambda << "# lambda (CKM)";
+      slha["VCKM"][""] << 2 << sminputs.CKM_A << "# A (CKM)";
+      slha["VCKM"][""] << 3 << sminputs.CKM_rhobar << "# rhobar (CKM)";
+      slha["VCKM"][""] << 4 << sminputs.CKM_etabar << "# etabar (CKM)";
+
+      // PMNS matrix
+      slha["UPMNS"][""] << 1 << sminputs.theta12 << "# theta_12 (PMNS)";
+      slha["UPMNS"][""] << 2 << sminputs.theta23 << "# theta_23 (PMNS)";
+      slha["UPMNS"][""] << 3 << sminputs.theta13 << "# theta_13 (PMNS)";
+      slha["UPMNS"][""] << 4 << sminputs.delta13 << "# delta_13 (PMNS)";
+      slha["UPMNS"][""] << 5 << sminputs.alpha1 << "# alpha_1 (PMNS)";
+      slha["UPMNS"][""] << 6 << sminputs.alpha2 << "# alpha_2 (PMNS)";
 
       // SpectrumContents struct
       SpectrumContents::SM sm;

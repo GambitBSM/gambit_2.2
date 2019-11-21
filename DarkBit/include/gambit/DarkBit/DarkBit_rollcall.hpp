@@ -70,6 +70,11 @@
 ///  \date 2017 Feb, Sep, Dec
 ///  \date 2018 Jan, Mar, Apr
 ///
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2019 Nov
+///
 ///  *********************************************
 
 #ifndef __DarkBit_rollcall_hpp__
@@ -451,6 +456,7 @@ START_MODULE
       //ALLOW_MODELS(MSSM63atQ)
       DEPENDENCY(DarkSUSY_PointInit, bool)
       DEPENDENCY(MSSM_spectrum, Spectrum)
+      DEPENDENCY(SM_spectrum, Spectrum)
       DEPENDENCY(DarkMatter_ID, std::string)
       DEPENDENCY(decay_rates,DecayTable)
       //BACKEND_REQ(mspctm, (), DS_MSPCTM)
@@ -465,12 +471,14 @@ START_MODULE
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum)
+      DEPENDENCY(SM_spectrum, Spectrum)
       ALLOW_MODELS(ScalarSingletDM_Z2,ScalarSingletDM_Z2_running)
     #undef FUNCTION
     #define FUNCTION TH_ProcessCatalog_ScalarSingletDM_Z3
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum)
+      DEPENDENCY(SM_spectrum, Spectrum)
       BACKEND_REQ(calcSpectrum, (gimmemicro) , double,  (int, double*, double*, double*, double*, double*, double*, int*))
       BACKEND_REQ(vSigmaCh, (gimmemicro), MicrOmegas::aChannel*)
       FORCE_SAME_BACKEND(gimmemicro)
@@ -479,12 +487,14 @@ START_MODULE
     #define FUNCTION TH_ProcessCatalog_VectorSingletDM_Z2
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(VectorSingletDM_Z2_spectrum, Spectrum)
+      DEPENDENCY(SM_spectrum, Spectrum)
       DEPENDENCY(decay_rates, DecayTable)
       ALLOW_MODELS(VectorSingletDM_Z2)
     #undef FUNCTION
     #define FUNCTION TH_ProcessCatalog_MajoranaSingletDM_Z2
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
+      DEPENDENCY(SM_spectrum, Spectrum)
       DEPENDENCY(decay_rates, DecayTable)
       ALLOW_MODELS(MajoranaSingletDM_Z2)
     #undef FUNCTION
@@ -492,6 +502,7 @@ START_MODULE
       START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
+      DEPENDENCY(SM_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
   #undef CAPABILITY

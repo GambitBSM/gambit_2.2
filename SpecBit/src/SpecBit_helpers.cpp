@@ -40,5 +40,3 @@ namespace Gambit
   }
 }
 
-#endif
-
