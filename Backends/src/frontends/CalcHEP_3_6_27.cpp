@@ -423,6 +423,15 @@ BE_NAMESPACE
       M_squared += dcos*(cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err)); // dcos * dM_squared/dcos
     }
 
+    if (M_squared < 0)
+    { 
+
+      logger() << "Squared matrix element has returned a negative value from CalcHEP." << std::endl;
+      logger() << "Final states are " << out[0] << " " << out[1] << " for relative velocity " << v_rel << std::endl;
+      logger() << "Returning 0 instead, probably a divide by 0 due to 0 velocity, but check." << EOM;
+      return 0;
+    }
+
     // Release all memory allocated by "new" before returning
     delete libname;
     delete inbound_1;
