@@ -78,18 +78,18 @@ namespace Gambit {
      addParameter(Par::mass1, "v", scalar, "VEVS");
 
      // CKM matrix
-     addParameter(Par::dimensionless, "CKM_lambda", "VCKM", 1);
-     addParameter(Par::dimensionless, "CKM_A", "VCKM", 2);
-     addParameter(Par::dimensionless, "CKM_rhobar", "VCKM", 3);
-     addParameter(Par::dimensionless, "CKM_etabar", "VCKM", 4);
+     addParameter(Par::dimensionless, "CKM_lambda", scalar, "VCKM", 1);
+     addParameter(Par::dimensionless, "CKM_A", scalar, "VCKM", 2);
+     addParameter(Par::dimensionless, "CKM_rhobar", scalar, "VCKM", 3);
+     addParameter(Par::dimensionless, "CKM_etabar", scalar, "VCKM", 4);
 
      // PMNS matrix
-     addParameter(Par::dimensionless, "theta12", "UPMNS", 1);
-     addParameter(Par::dimensionless, "theta23", "UPMNS", 2);
-     addParameter(Par::dimensionless, "theta13", "UPMNS", 3);
-     addParameter(Par::dimensionless, "delta13", "UPMNS", 4);
-     addParameter(Par::dimensionless, "alpha1", "UPMNS", 5);
-     addParameter(Par::dimensionless, "alpha2", "UPMNS", 6);
+     addParameter(Par::dimensionless, "theta12", scalar, "UPMNS", 1);
+     addParameter(Par::dimensionless, "theta23", scalar, "UPMNS", 2);
+     addParameter(Par::dimensionless, "theta13", scalar, "UPMNS", 3);
+     addParameter(Par::dimensionless, "delta13", scalar, "UPMNS", 4);
+     addParameter(Par::dimensionless, "alpha1", scalar, "UPMNS", 5);
+     addParameter(Par::dimensionless, "alpha2", scalar, "UPMNS", 6);
   }
 
 }

@@ -32,7 +32,7 @@
 
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
 //#include "gambit/SpecBit/SpecBit_helpers.hpp"
-#include "gambit/Specbit/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 // Switch for debug mode
 //#define SPECBIT_DEBUG

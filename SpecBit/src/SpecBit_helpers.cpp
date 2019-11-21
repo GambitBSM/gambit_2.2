@@ -31,7 +31,7 @@ namespace Gambit
     //  These are not known to Gambit, but perform helper tasks used by the
     //  Gambit module functions.
 
-    double get_b_pole(SMInputs sminputs)
+    double get_b_pole_mass(SMInputs sminputs)
     {
       // TODO: Should do some computations here to return the pole mass
       return sminputs.mBmB;

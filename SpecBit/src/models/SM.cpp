@@ -28,7 +28,7 @@
 #include "gambit/Elements/spectrum.hpp"
 
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
-//#include "gambit/SpecBit/SpecBit_helpers.hpp"
+#include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 // Switch for debug mode
@@ -164,7 +164,7 @@ namespace Gambit
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("W+").first << sminputs.mW << "# mW";
 
       // For the bottom quark, we compute its pole mass
-      double mb = get_b_pole(sminputs);
+      double mb = get_b_pole_mass(sminputs);
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("b").first << mb << "# mb";
 
       // Charged lepton masses are pole mass in sminputs
@@ -184,18 +184,18 @@ namespace Gambit
       slha["VEVS"][""] << 1 << vev << " # vev";
 
       // CKM matrix
-      slha["VCKM"][""] << 1 << sminputs.CKM_lambda << "# lambda (CKM)";
-      slha["VCKM"][""] << 2 << sminputs.CKM_A << "# A (CKM)";
-      slha["VCKM"][""] << 3 << sminputs.CKM_rhobar << "# rhobar (CKM)";
-      slha["VCKM"][""] << 4 << sminputs.CKM_etabar << "# etabar (CKM)";
+      slha["VCKM"][""] << 1 << sminputs.CKM.lambda << "# lambda (CKM)";
+      slha["VCKM"][""] << 2 << sminputs.CKM.A << "# A (CKM)";
+      slha["VCKM"][""] << 3 << sminputs.CKM.rhobar << "# rhobar (CKM)";
+      slha["VCKM"][""] << 4 << sminputs.CKM.etabar << "# etabar (CKM)";
 
       // PMNS matrix
-      slha["UPMNS"][""] << 1 << sminputs.theta12 << "# theta_12 (PMNS)";
-      slha["UPMNS"][""] << 2 << sminputs.theta23 << "# theta_23 (PMNS)";
-      slha["UPMNS"][""] << 3 << sminputs.theta13 << "# theta_13 (PMNS)";
-      slha["UPMNS"][""] << 4 << sminputs.delta13 << "# delta_13 (PMNS)";
-      slha["UPMNS"][""] << 5 << sminputs.alpha1 << "# alpha_1 (PMNS)";
-      slha["UPMNS"][""] << 6 << sminputs.alpha2 << "# alpha_2 (PMNS)";
+      slha["UPMNS"][""] << 1 << sminputs.PMNS.theta12 << "# theta_12 (PMNS)";
+      slha["UPMNS"][""] << 2 << sminputs.PMNS.theta23 << "# theta_23 (PMNS)";
+      slha["UPMNS"][""] << 3 << sminputs.PMNS.theta13 << "# theta_13 (PMNS)";
+      slha["UPMNS"][""] << 4 << sminputs.PMNS.delta13 << "# delta_13 (PMNS)";
+      slha["UPMNS"][""] << 5 << sminputs.PMNS.alpha1 << "# alpha_1 (PMNS)";
+      slha["UPMNS"][""] << 6 << sminputs.PMNS.alpha2 << "# alpha_2 (PMNS)";
 
       // SpectrumContents struct
       SpectrumContents::SM sm;
@@ -205,7 +205,7 @@ namespace Gambit
       result = Spectrum(slha, sm, sminputs.mZ, false);
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions)
+      result.check_mass_cuts(*myPipe::runOptions);
     }
 
     /// Put together the SM Higgs couplings
