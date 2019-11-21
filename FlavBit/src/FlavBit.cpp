@@ -3182,67 +3182,64 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood Bs -> Phi mu mu
-    void HEPLike_Bs2Phimumu_LogLikelihood(double &result)
-    {
-      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood;
-
-      static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_0.1_0.98.yaml";
-      static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
-      static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_2.5_4.0.yaml";
-      static const std::string inputfile_q2_4_6 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_4.0_6.0.yaml";
-      static const std::string inputfile_q2_6_8 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_6.0_8.0.yaml";
-      static const std::string inputfile_q2_15_19 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_15.0_19.yaml";
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_q2_0p1_1p1);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_q2_1p1_2p5);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_q2_2p5_4);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_q2_4_6);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_q2_6_8);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19);
-
-      static bool first = true;
-      if (first)
-      {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_0p1_1p1 << endl;
-        nDimBifurGaussian_0.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_1p1_2p5 << endl;
-        nDimBifurGaussian_1.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_2p5_4 << endl;
-        nDimBifurGaussian_2.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_4_6 << endl;
-        nDimBifurGaussian_3.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_6_8 << endl;
-        nDimBifurGaussian_4.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_15_19 << endl;
-        nDimBifurGaussian_5.Read();
-
-        first = false;
-      }
-
-      // Ordering of observables defined by HEPLike
-      // Code assumes each bin is calculated by the same dependency (decltype)
-      auto get_theory = [](decltype(Dep::BKstarmumu_11_25) theory_dependency) { return std::vector<double>{
-          theory_dependency->FL,
-          theory_dependency->S3,
-          theory_dependency->S4,
-          theory_dependency->S5,
-          theory_dependency->AFB,
-          theory_dependency->S7,
-          theory_dependency->S8,
-          theory_dependency->S9
-      }; };
-
-      result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */);
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_theory(Dep::BKstarmumu_11_25) /* , theory_error */);
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_theory(Dep::BKstarmumu_25_40) /* , theory_error */);
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_theory(Dep::BKstarmumu_40_60) /* , theory_error */);
-      result += nDimBifurGaussian_4.GetLogLikelihood(get_theory(Dep::BKstarmumu_60_80) /* , theory_error */);
-      result += nDimBifurGaussian_5.GetLogLikelihood(get_theory(Dep::BKstarmumu_15_19) /* , theory_error */);
-
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
-    }
-
-
-
+//    void HEPLike_Bs2PhimumuBr_LogLikelihood(double &result)
+//    {
+//      using namespace Pipes::HEPLike_Bs2PhimumuBr_LogLikelihood;
+//
+//      static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_0.1_0.98.yaml";
+//      static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
+//      static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_2.5_4.0.yaml";
+//      static const std::string inputfile_q2_4_6 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_4.0_6.0.yaml";
+//      static const std::string inputfile_q2_6_8 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_6.0_8.0.yaml";
+//      static const std::string inputfile_q2_15_19 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_15.0_19.yaml";
+//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_q2_0p1_1p1);
+//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_q2_1p1_2p5);
+//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_q2_2p5_4);
+//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_q2_4_6);
+//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_q2_6_8);
+//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19);
+//
+//      static bool first = true;
+//      if (first)
+//      {
+//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_0p1_1p1 << endl;
+//        nDimBifurGaussian_0.Read();
+//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_1p1_2p5 << endl;
+//        nDimBifurGaussian_1.Read();
+//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_2p5_4 << endl;
+//        nDimBifurGaussian_2.Read();
+//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_4_6 << endl;
+//        nDimBifurGaussian_3.Read();
+//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_6_8 << endl;
+//        nDimBifurGaussian_4.Read();
+//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_15_19 << endl;
+//        nDimBifurGaussian_5.Read();
+//
+//        first = false;
+//      }
+//
+//      // Ordering of observables defined by HEPLike
+//      // Code assumes each bin is calculated by the same dependency (decltype)
+//      auto get_theory = [](decltype(Dep::BKstarmumu_11_25) theory_dependency) { return std::vector<double>{
+//          theory_dependency->FL,
+//          theory_dependency->S3,
+//          theory_dependency->S4,
+//          theory_dependency->S5,
+//          theory_dependency->AFB,
+//          theory_dependency->S7,
+//          theory_dependency->S8,
+//          theory_dependency->S9
+//      }; };
+//
+//      result = 0;
+//      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */);
+//      result += nDimBifurGaussian_1.GetLogLikelihood(get_theory(Dep::BKstarmumu_11_25) /* , theory_error */);
+//      result += nDimBifurGaussian_2.GetLogLikelihood(get_theory(Dep::BKstarmumu_25_40) /* , theory_error */);
+//      result += nDimBifurGaussian_3.GetLogLikelihood(get_theory(Dep::BKstarmumu_40_60) /* , theory_error */);
+//      result += nDimBifurGaussian_4.GetLogLikelihood(get_theory(Dep::BKstarmumu_60_80) /* , theory_error */);
+//      result += nDimBifurGaussian_5.GetLogLikelihood(get_theory(Dep::BKstarmumu_15_19) /* , theory_error */);
+//
+//      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+//    }
   }
 }
