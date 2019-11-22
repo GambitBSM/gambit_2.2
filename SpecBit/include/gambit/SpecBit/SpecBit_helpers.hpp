@@ -23,7 +23,13 @@
 #ifndef __SpecBit_helpers_hpp__
 #define __SpecBit_helpers_hpp__
 
+#include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/sminputs.hpp"
+#include "gambit/Elements/spectrum.hpp"
+
+#include "gambit/SpecBit/SpecBit_rollcall.hpp"
+
+#include "gambit/Models/partmap.hpp"
 
 namespace Gambit
 {
@@ -38,7 +44,17 @@ namespace Gambit
     //  These are not known to Gambit, but perform helper tasks used by the
     //  Gambit module functions.
 
-    double get_b_pole_mass(SMInputs sminputs);
+    /// Check that the spectrum has the canonical LSP for the model being scanned.
+    void check_LSP(const Spectrum& spec, std::vector<int> LSPs);
+
+    /// Helper to work with pointer
+    void check_LSP(const Spectrum* spec, std::vector<int> LSPs);
+
+    /// Add gravitino mass to the spectrum and list of LSPs
+    void add_gravitino_mass(Spectrum& spec, std::vector<int> &LSPs, double mG, const safe_ptr<Options>& runOptions);
+  
+
+
 
   }
 }

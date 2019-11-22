@@ -30,7 +30,7 @@
 #include "gambit/Elements/spectrum.hpp"
 
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
-//#include "gambit/SpecBit/SpecBit_helpers.hpp"
+#include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 // Switch for debug mode
@@ -42,51 +42,7 @@ namespace Gambit
   namespace SpecBit
   {
 
-  /// Check that the spectrum has the canonical LSP for the model being scanned.
-    void check_LSP(const Spectrum& spec, const safe_ptr<Options>& runOptions, bool gravitino_is_canonical_LSP)
-    {
-      double msqd  = spec.get(Par::Pole_Mass, 1000001, 0);
-      double msqu  = spec.get(Par::Pole_Mass, 1000002, 0);
-      double msl   = spec.get(Par::Pole_Mass, 1000011, 0);
-      double msneu = spec.get(Par::Pole_Mass, 1000012, 0);
-      double mglui = spec.get(Par::Pole_Mass, 1000021, 0);
-      double mchi0 = std::abs(spec.get(Par::Pole_Mass, 1000022, 0));
-      double mchip = std::abs(spec.get(Par::Pole_Mass, 1000024, 0));
-      double m_canonical_LSP;
-
-      if (gravitino_is_canonical_LSP)
-      {
-        if (not runOptions->getValueOrDef<bool>(true, "only_gravitino_LSP")) return;
-        m_canonical_LSP = spec.get(Par::Pole_Mass, 1000039, 0);
-      }
-      else
-      {
-        if (not runOptions->getValueOrDef<bool>(true, "only_neutralino_LSP")) return;
-        m_canonical_LSP = mchi0;
-      }
-
-      // Check if the canonical LSP in the MSSM version scanned is actually the LSP for this point.
-      if (m_canonical_LSP > mchip ||
-          m_canonical_LSP > mglui ||
-          m_canonical_LSP > msl   ||
-          m_canonical_LSP > msneu ||
-          m_canonical_LSP > msqu  ||
-          m_canonical_LSP > msqd  ||
-          m_canonical_LSP > mchi0   )
-       {
-         str canonical_LSP = (gravitino_is_canonical_LSP ? "Gravitino" : "Neutralino");
-         invalid_point().raise(canonical_LSP + " is not LSP.");
-       }
-    }
-
-    /// Helper to work with pointer
-    void check_LSP(const Spectrum* spec, const safe_ptr<Options>& runOptions, bool gravitino_model)
-    {
-      check_LSP(*spec, runOptions, gravitino_model);
-    }
-
-  
-
+    // MSSM spectrum from SPheno
     void get_MSSM_spectrum_SPheno (Spectrum& spectrum)
     {
       namespace myPipe = Pipes::get_MSSM_spectrum_SPheno;
@@ -98,13 +54,19 @@ namespace Gambit
       // Get the spectrum from the Backend
       myPipe::BEreq::SPheno_MSSM_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
 
-      // Add the gravitino mass if it is present
-      // TODO: probably this should be an override of sorts
-      //if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
-      //add_gravitino_mass(slha, myPipe::Param, myPipe::runOptions);
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
 
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
+      
       // Drop SLHA files if requested
       spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
@@ -131,7 +93,18 @@ namespace Gambit
       // Get the spectrum from the Backend
       myPipe::BEreq::FS_CMSSM_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
       spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
@@ -141,7 +114,7 @@ namespace Gambit
     }
 
     // Runs FlexibleSUSY MSSM spectrum generator with GUT scale input (boundary conditions)
-    void get_MSSMatMGUT_spectrum_FS (Spectrum& result)
+    void get_MSSMatMGUT_spectrum_FS (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatMGUT_spectrum_FS;
@@ -166,20 +139,31 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUT_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatMGUT_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSM spectrum generator with GUT scale input (boundary conditions)
     // but with mA and mu as parameters instead of mHu2 and mHd2
-    void get_MSSMatMGUT_mA_spectrum_FS (Spectrum& result)
+    void get_MSSMatMGUT_mA_spectrum_FS (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatMGUT_mA_spectrum_FS;
@@ -201,19 +185,30 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUT_mA_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatMGUT_mA_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
  
     // Runs FlexibleSUSY MSSM spectrum generator with EWSB scale input (boundary conditions)
-    void get_MSSMatQ_spectrum_FS (Spectrum& result)
+    void get_MSSMatQ_spectrum_FS (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatQ_spectrum_FS;
@@ -239,20 +234,31 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQ_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatQ_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSM spectrum generator with EWSB scale input (boundary conditions)
     // but with mA and mu as parameters instead of mHu2 and mHd2
-    void get_MSSMatQ_mA_spectrum_FS (Spectrum& result)
+    void get_MSSMatQ_mA_spectrum_FS (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatQ_mA_spectrum_FS;
@@ -275,20 +281,31 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQ_mA_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatQ_mA_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSM spectrum generator with SUSY scale input (boundary conditions)
     // but with mA and mu as parameters instead of mHu2 and mHd2
-    void get_MSSMatMSUSY_mA_spectrum_FS (Spectrum& result)
+    void get_MSSMatMSUSY_mA_spectrum_FS (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatMSUSY_mA_spectrum_FS;
@@ -310,21 +327,32 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMSUSY_mA_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatMSUSY_mA_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMatMGUTEFTHiggs model spectrum generator
     // and has m3^2 and mu as EWSB outputs, so it is for the
     // MSSMatMGUT_model.
-    void get_MSSMatMGUT_spectrum_FlexibleEFTHiggs (Spectrum& result)
+    void get_MSSMatMGUT_spectrum_FlexibleEFTHiggs (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatMGUT_spectrum_FlexibleEFTHiggs;
@@ -350,21 +378,32 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMatMGUTEFTHiggs model spectrum generator
     // and has m3^2 and mu as EWSB outputs, so it is for the
     // MSSMatMGUT_model.
-    void get_MSSMatMGUT_mA_spectrum_FlexibleEFTHiggs (Spectrum& result)
+    void get_MSSMatMGUT_mA_spectrum_FlexibleEFTHiggs (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatMGUT_mA_spectrum_FlexibleEFTHiggs;
@@ -387,21 +426,32 @@ namespace Gambit
       //fill_MSSM63_input(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_mA_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatMGUTEFTHiggs_mA_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or 
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {   
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMEFTHiggs model spectrum generator
     // and has m3^2 and mu as EWSB outputs, so it is for the
     // MSSMatQ_model.
-    void get_MSSMatQ_spectrum_FlexibleEFTHiggs (Spectrum& result)
+    void get_MSSMatQ_spectrum_FlexibleEFTHiggs (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatQ_spectrum_FlexibleEFTHiggs;
@@ -422,22 +472,33 @@ namespace Gambit
       //fill_MSSM63_input_altnames(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQEFTHiggs_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatQEFTHiggs_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
     // Runs FlexibleSUSY MSSMEFTHiggs_mAmu spectrum generator with
     // boundary conditions at a user specified scale, ie accepts MSSM
     // parameters at Q, and has DRbar mA and mu as an input and mHu2
     // and mHd2 as EWSB outputs, so it is for the MSSMatMSUSY_mA model.
-    void get_MSSMatQ_mA_spectrum_FlexibleEFTHiggs (Spectrum& result)
+    void get_MSSMatQ_mA_spectrum_FlexibleEFTHiggs (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatQ_mA_spectrum_FlexibleEFTHiggs;
@@ -462,22 +523,33 @@ namespace Gambit
       //fill_MSSM63_input_altnames(input,myPipe::Param);
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatQEFTHiggs_mA_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatQEFTHiggs_mA_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
  
     // Runs FlexibleSUSY MSSMEFTHiggs model spectrum generator with SUSY
     // scale boundary conditions, ie accepts MSSM parameters at MSUSY,
     // and has DRbar mA and mu as an input and mHu2 and mHd2 as EWSB
     // outputs, so it is for the MSSMatMSUSY_mA model.
-    void get_MSSMatMSUSY_mA_spectrum_FlexibleEFTHiggs (Spectrum& result)
+    void get_MSSMatMSUSY_mA_spectrum_FlexibleEFTHiggs (Spectrum& spectrum)
     {
       // Access the pipes for this function to get model and parameter information
       namespace myPipe = Pipes::get_MSSMatMSUSY_mA_spectrum_FlexibleEFTHiggs;
@@ -496,15 +568,26 @@ namespace Gambit
       //fill_MSSM63_input_altnames(input,myPipe::Param); // Fill the rest
 
       // Get the spectrum from the Backend
-      myPipe::BEreq::FS_MSSMatMSUSYEFTHiggs_mA_Spectrum(result, inputs);
+      myPipe::BEreq::FS_MSSMatMSUSYEFTHiggs_mA_Spectrum(spectrum, inputs);
 
-      /// TODO: add LSP check, gravitino mass etc      
+      // Neutralino is canonical LSP
+      std::vector<int> LSPs = {1000022};
+
+      // Add gravitino to the spectrum and LSP list
+      if (myPipe::ModelInUse("MSSM63atQ_lightgravitino") or
+          myPipe::ModelInUse("MSSM63atMGUT_lightgravitino"))
+      {
+        add_gravitino_mass(spectrum, LSPs, *myPipe::Param.at("mG"), myPipe::runOptions);
+      }
+
+      // Check that the LSP is the canonical LSP
+      check_LSP(spectrum, LSPs);
 
       // Drop SLHA files if requested
-      result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
+      spectrum.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");
 
       // Retrieve any mass cuts
-      result.check_mass_cuts(*myPipe::runOptions);
+      spectrum.check_mass_cuts(*myPipe::runOptions);
     }
 
   

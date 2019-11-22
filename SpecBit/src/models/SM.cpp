@@ -164,7 +164,8 @@ namespace Gambit
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("W+").first << sminputs.mW << "# mW";
 
       // For the bottom quark, we compute its pole mass
-      double mb = get_b_pole_mass(sminputs);
+      // We take the sminputs msbar mass and pass it as a pole mass
+      double mb = sminputs.mBmB;
       slha["MASS"][""] << Models::ParticleDB().pdg_pair("b").first << mb << "# mb";
 
       // Charged lepton masses are pole mass in sminputs
