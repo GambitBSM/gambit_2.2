@@ -946,17 +946,13 @@ START_MODULE
  #undef CAPABILITY
 
 
-/// HEPLike LogLikelihood B -> K* mu mu Angular
+/// HEPLike LogLikelihood B -> K* mu mu BR
   #define CAPABILITY HEPLike_B2KstarmumuBr_LogLikelihood
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuBr_LogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(BKstarmumu_0p1_0p98, Flav_KstarMuMu_obs)
-    DEPENDENCY(BKstarmumu_11_25, Flav_KstarMuMu_obs)
-    DEPENDENCY(BKstarmumu_25_40, Flav_KstarMuMu_obs)
-    DEPENDENCY(BKstarmumu_40_60, Flav_KstarMuMu_obs)
-    DEPENDENCY(BKstarmumu_60_80, Flav_KstarMuMu_obs)
-    DEPENDENCY(BKstarmumu_15_19, Flav_KstarMuMu_obs)
+    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
  #undef CAPABILITY

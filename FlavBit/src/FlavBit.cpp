@@ -3244,13 +3244,38 @@ namespace Gambit
         first = false;
       }
 
+      // Ordering of observables defined by HEPLike
+      const std::vector<std::string> observables{
+        "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
+        "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
+        "dGamma/dq2_B0Kstar0mumu_2.5_4",
+        "dGamma/dq2_B0Kstar0mumu_4_6",
+        "dGamma/dq2_B0Kstar0mumu_6_8",
+        "dGamma/dq2_BKstarmumu_15_19",
+      };
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      std::vector<double> theory_central;
+      theory_central.reserve(observables.size());
+      std::vector<double> theory_uncertainty;
+      theory_uncertainty.reserve(observables.size());
+
+      for (const auto& obs : observables) {
+        theory_central.push_back(SI_theory[obs]);
+        theory_uncertainty.push_back(SI_theory_covariance[obs][obs]);
+      }
+
+      // FIXME: Transform dGamma/dq2 into dBR/dq2
+
       result = 0;
-      result += BifurGaussian_0.GetLogLikelihood(Dep::BKstarmumu_0p1_0p98->BR /* , theory_error */);
-      result += BifurGaussian_1.GetLogLikelihood(Dep::BKstarmumu_11_25->BR /* , theory_error */);
-      result += BifurGaussian_2.GetLogLikelihood(Dep::BKstarmumu_25_40->BR /* , theory_error */);
-      result += BifurGaussian_3.GetLogLikelihood(Dep::BKstarmumu_40_60->BR /* , theory_error */);
-      result += BifurGaussian_4.GetLogLikelihood(Dep::BKstarmumu_60_80->BR /* , theory_error */);
-      result += BifurGaussian_5.GetLogLikelihood(Dep::BKstarmumu_15_19->BR /* , theory_error */);
+      result += BifurGaussian_0.GetLogLikelihood(SI_theory.at(observables[0]), SI_theory_covariance.at(observables[0]).at(observables[0]));
+      result += BifurGaussian_1.GetLogLikelihood(SI_theory.at(observables[1]), SI_theory_covariance.at(observables[1]).at(observables[1]));
+      result += BifurGaussian_2.GetLogLikelihood(SI_theory.at(observables[2]), SI_theory_covariance.at(observables[2]).at(observables[2]));
+      result += BifurGaussian_3.GetLogLikelihood(SI_theory.at(observables[3]), SI_theory_covariance.at(observables[3]).at(observables[3]));
+      result += BifurGaussian_4.GetLogLikelihood(SI_theory.at(observables[4]), SI_theory_covariance.at(observables[4]).at(observables[4]));
+      result += BifurGaussian_5.GetLogLikelihood(SI_theory.at(observables[5]), SI_theory_covariance.at(observables[5]).at(observables[5]));
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
