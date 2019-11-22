@@ -22,8 +22,6 @@
 #ifndef __SpecBit_SM_hpp__
 #define __SpecBit_SM_hpp__
 
-#define MODULE SpecBit
-
   /// Produce an SMInputs object (SLHA2 conventions)
   // i.e. provide Standard Model parameters in SLHA2 input conventions
   #define CAPABILITY SMINPUTS
@@ -60,8 +58,6 @@
     #undef FUNCTION
 
   #undef CAPABILITY
-
-#undef MODULE
 
 #endif
 

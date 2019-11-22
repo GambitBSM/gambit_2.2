@@ -22,8 +22,6 @@
 #ifndef __SpecBit_MDM_hpp__
 #define __SpecBit_MDM_hpp__
 
-#define MODULE SpecBit
-
   #define CAPABILITY MDM_spectrum
   START_CAPABILITY
     #define FUNCTION get_MDM_spectrum
@@ -56,8 +54,6 @@
     #undef FUNCTION
 
   #undef CAPABILITY
-
-#undef MODULE
 
 #endif
 

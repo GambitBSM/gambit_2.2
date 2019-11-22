@@ -21,7 +21,6 @@
 
 #define MODULE SpecBit
 START_MODULE
-#undef MODULE
 
 #include "gambit/SpecBit/models/DiracSingletDM.hpp"
 #include "gambit/SpecBit/models/MajoranaSingletDM.hpp"
@@ -31,6 +30,9 @@ START_MODULE
 #include "gambit/SpecBit/models/SM.hpp"
 #include "gambit/SpecBit/models/VectorSingletDM.hpp"
 
+#include "gambit/SpecBit/SpecBit_VS_rollcall.hpp"
+
+#undef MODULE
 
 #endif /* defined(__SpecBit_rollcall_hpp__) */
 

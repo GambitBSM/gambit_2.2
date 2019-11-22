@@ -27,8 +27,6 @@
 #ifndef __SpecBit_MSSM_hpp__
 #define __SpecBit_MSSM_hpp__
 
-#define MODULE SpecBit
-
 
   /// @{ Functions to supply particle spectra in various forms
 
@@ -341,8 +339,6 @@
 
   /// @}
 
-
-#undef MODULE
 
 #endif
 

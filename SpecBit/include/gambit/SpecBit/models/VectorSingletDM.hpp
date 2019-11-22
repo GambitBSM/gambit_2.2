@@ -18,8 +18,6 @@
 #ifndef __SpecBit_VectorSingletDM_Z2_hpp__
 #define __SpecBit_VectorSingletDM_Z2_hpp__
 
-#define MODULE SpecBit
-
   // Spectrum object for VectorSingletDM_Z2 model  (tree-level masses)
   #define CAPABILITY VectorSingletDM_Z2_spectrum
   START_CAPABILITY
@@ -42,8 +40,6 @@
     #undef FUNCTION
 
   #undef CAPABILITY
-
-#undef MODULE
 
 #endif
 
