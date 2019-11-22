@@ -31,7 +31,7 @@
 //#include "gambit/Utils/util_macros.hpp"
 
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
-//#include "gambit/SpecBit/SpecBit_helpers.hpp"
+#include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 // Switch for debug mode
@@ -479,76 +479,21 @@ namespace Gambit
       // Leave all the effective couplings for all neutral higgses set to unity (done at construction).
     }
 
-    /// Print ScalarSingletDM spectra out. Stripped down copy of MSSM version with variable names changed
-    void fill_map_from_ScalarSingletDM_spectrum(std::map<std::string,double>& specmap, 
-         const Spectrum& singletdmspec,
-         const std::vector<SpectrumContents::Parameter>& required_parameters)
-    {
-      for(std::vector<SpectrumContents::Parameter>::const_iterator it = required_parameters.begin();
-           it != required_parameters.end(); ++it)
-      {
-         const Par::Tags        tag   = it->tag();
-         const std::string      name  = it->name();
-         const std::vector<int> shape = it->shape();
 
-         /// Verification routine should have taken care of invalid shapes etc, so won't check for that here.
-
-         // Check scalar case
-         if(shape.size()==1 and shape[0]==1)
-         {
-           std::ostringstream label;
-           label << name <<" "<< Par::toString.at(tag);
-           specmap[label.str()] = singletdmspec.get(tag,name);
-         }
-         // Check vector case
-         else if(shape.size()==1 and shape[0]>1)
-         {
-           for(int i = 1; i<=shape[0]; ++i) {
-             std::ostringstream label;
-             label << name <<"_"<<i<<" "<< Par::toString.at(tag);
-             specmap[label.str()] = singletdmspec.get(tag,name,i);
-           }
-         }
-         // Check matrix case
-         else if(shape.size()==2)
-         {
-           for(int i = 1; i<=shape[0]; ++i) {
-             for(int j = 1; j<=shape[0]; ++j) {
-               std::ostringstream label;
-               label << name <<"_("<<i<<","<<j<<") "<<Par::toString.at(tag);
-               specmap[label.str()] = singletdmspec.get(tag,name,i,j);
-             }
-           }
-         }
-         // Deal with all other cases
-         else
-         {
-           // ERROR
-           std::ostringstream errmsg;
-           errmsg << "Error, invalid parameter received while converting SingletDMspectrum to map of strings! This should no be possible if the spectrum content verification routines were working correctly; they must be buggy, please report this.";
-           errmsg << "Problematic parameter was: "<< tag <<", " << name << ", shape="<< shape;
-           utils_error().forced_throw(LOCAL_INFO,errmsg.str());
-         }
-      }
-
-    }
-
+    // Convert ScalarSingletDM_Z2 spectrum into a standard map so that it can be printed
     void get_ScalarSingletDM_Z2_spectrum_as_map (std::map<std::string,double>& specmap)
     {
       namespace myPipe = Pipes::get_ScalarSingletDM_Z2_spectrum_as_map;
       static const Spectrum& spec = *myPipe::Dep::ScalarSingletDM_Z2_spectrum;
-      static const SpectrumContents::ScalarSingletDM_Z2 contents;
-      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters();
-      fill_map_from_ScalarSingletDM_spectrum(specmap, spec, required_parameters);
+      fill_map_from_spectrum<SpectrumContents::ScalarSingletDM_Z2>(specmap, spec);
     }
 
+    // Convert ScalarSingletDM_Z3 spectrum into a standard map so that it can be printed
     void get_ScalarSingletDM_Z3_spectrum_as_map (std::map<std::string,double>& specmap)
     {
       namespace myPipe = Pipes::get_ScalarSingletDM_Z3_spectrum_as_map;
       static const Spectrum& spec = *myPipe::Dep::ScalarSingletDM_Z3_spectrum;
-      static const SpectrumContents::ScalarSingletDM_Z3 contents;
-      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters();
-      fill_map_from_ScalarSingletDM_spectrum(specmap, spec, required_parameters);
+      fill_map_from_spectrum<SpectrumContents::ScalarSingletDM_Z3>(specmap, spec);
     }
 
   } // end namespace SpecBit

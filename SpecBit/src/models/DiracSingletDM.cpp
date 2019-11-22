@@ -34,6 +34,7 @@
 #include "gambit/Elements/spectrum.hpp"
 
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
+#include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/RegisteredSpectra.hpp"
 
 #include "gambit/Models/partmap.hpp"
@@ -165,67 +166,12 @@ namespace Gambit
 
     }
 
-    // print spectrum out, stripped down copy from MSSM version with variable names changed
-    void fill_map_from_DiracSingletDM_Z2spectrum(std::map<std::string,double>& specmap, const Spectrum& diracdmspec)
-    {
-      /// Add everything... use spectrum contents routines to automate task
-      static const SpectrumContents::DiracSingletDM_Z2 contents;
-      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters();
-
-      for(std::vector<SpectrumContents::Parameter>::const_iterator it = required_parameters.begin();
-           it != required_parameters.end(); ++it)
-      {
-         const Par::Tags        tag   = it->tag();
-         const std::string      name  = it->name();
-         const std::vector<int> shape = it->shape();
-
-         /// Verification routine should have taken care of invalid shapes etc, so won't check for that here.
-
-         // Check scalar case
-         if(shape.size()==1 and shape[0]==1)
-         {
-           std::ostringstream label;
-           label << name <<" "<< Par::toString.at(tag);
-           specmap[label.str()] = diracdmspec.get(tag,name);
-         }
-         // Check vector case
-         else if(shape.size()==1 and shape[0]>1)
-         {
-           for(int i = 1; i<=shape[0]; ++i) {
-             std::ostringstream label;
-             label << name <<"_"<<i<<" "<< Par::toString.at(tag);
-             specmap[label.str()] = diracdmspec.get(tag,name,i);
-           }
-         }
-         // Check matrix case
-         else if(shape.size()==2)
-         {
-           for(int i = 1; i<=shape[0]; ++i) {
-             for(int j = 1; j<=shape[0]; ++j) {
-               std::ostringstream label;
-               label << name <<"_("<<i<<","<<j<<") "<<Par::toString.at(tag);
-               specmap[label.str()] = diracdmspec.get(tag,name,i,j);
-             }
-           }
-         }
-         // Deal with all other cases
-         else
-         {
-           // ERROR
-           std::ostringstream errmsg;
-           errmsg << "Error, invalid parameter received while converting DiracSingletDM_Z2spectrum to map of strings! This should no be possible if the spectrum content verification routines were working correctly; they must be buggy, please report this.";
-           errmsg << "Problematic parameter was: "<< tag <<", " << name << ", shape="<< shape;
-           utils_error().forced_throw(LOCAL_INFO,errmsg.str());
-         }
-      }
-
-    }
-
+    // Convert a DiracSingletDM_Z2 spectrum into a standard map so that it can be printed
     void get_DiracSingletDM_Z2_spectrum_as_map (std::map<std::string,double>& specmap)
     {
       namespace myPipe = Pipes::get_DiracSingletDM_Z2_spectrum_as_map;
       const Spectrum& diracdmspec(*myPipe::Dep::DiracSingletDM_Z2_spectrum);
-      fill_map_from_DiracSingletDM_Z2spectrum(specmap, diracdmspec);
+      fill_map_from_spectrum<SpectrumContents::DiracSingletDM_Z2>(specmap, diracdmspec);
     }
 
   } // end namespace SpecBit
