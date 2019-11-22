@@ -176,6 +176,15 @@ Rules:
     options:
       allow_stable_charged_particles: false
 
+  # Require a small, additional mass difference before switching on new decay decay modes in the 
+  # limit of small chargino--neutralino mass difference. Can help avoid problems with chargino
+  # decays in Pythia (due to Pythia's MSAFETY check).
+  - capability: 
+    function: chargino_plus_1_decays_smallsplit
+    options:
+      m_safety: 0.0011  
+
+  # Choose which BFs to print
   - capability: all_BFs
     function: get_decaytable_as_map
     options:
