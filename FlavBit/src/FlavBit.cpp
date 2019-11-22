@@ -3061,8 +3061,9 @@ namespace Gambit
 
       std::vector<double> obs_theory;
       obs_theory.reserve(observables.size());
-      // C++14 allows auto instead of decltype(observables[0])
-      std::transform(observables.begin(), observables.end(), obs_theory.begin(), [SI_theory](decltype(observables[0])& obs){ return SI_theory.at(obs); });
+      for (unsigned int i = 0; i < observables.size(); ++i) {
+        obs_theory.push_back(SI_theory[observables[i]]);
+      }
 
       result = nDimLikelihood.GetLogLikelihood(
               obs_theory
@@ -3178,9 +3179,9 @@ namespace Gambit
       auto get_obs_theory = [SI_theory](decltype(observables0p1_0p98)& observables){
         std::vector<double> obs_theory;
         obs_theory.reserve(observables.size());
-        // C++14 allows auto instead of decltype(observables[0])
-        std::transform(observables.begin(), observables.end(), obs_theory.begin(),
-                [SI_theory](decltype(observables[0])& obs){ return SI_theory.at(obs); });
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          obs_theory.push_back(SI_theory.at(observables[i]));
+        }
         return obs_theory;
       };
 
@@ -3204,6 +3205,7 @@ namespace Gambit
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
+
     /// HEPLike LogLikelihood B -> K* mu mu Br
     void HEPLike_B2KstarmumuBr_LogLikelihood(double &result)
     {
