@@ -24,6 +24,7 @@
 #include "gambit/Logs/logger.hpp"
 
 #include <stdio.h>
+#include <string.h>
 #include <iostream>
 
 // Boost
@@ -83,7 +84,48 @@ namespace Gambit {
          } \
          return out_id; \
       }
- 
+
+      hid_t closeFile(hid_t id)
+      {
+         if(id < 0)
+         {
+            std::ostringstream errmsg;
+            errmsg << "Failed to close HDF5 file with ID "<<id<<"! The supplied id does not point to a successfully opened file.";
+            printer_error().raise(LOCAL_INFO, errmsg.str());
+         }
+  
+         // Check for any open objects! These should all be closed before the file is closed for maximum safety
+         ssize_t count = H5Fget_obj_count(id, H5F_OBJ_ALL);
+         if(count > 1)
+         {
+            logger()<<LogTags::warn<<LogTags::repeat_to_cerr;
+            logger() << "Warning! "<<count<<" open objects detected when closing HDF5 file with ID "<<id<<"! Please check your code and ensure that all datasets, groups, selections, etc. are closed before closing the files they belong to."<<std::endl;
+            logger() << "Beginning analysis of open objects..."<<std::endl;
+            count = H5Fget_obj_count(id, H5F_OBJ_FILE);
+            if(count>1) logger() << "   "<<count<<" H5F_OBJ_FILE detected (should only be 1, for the open file itself)"<<std::endl;
+            count = H5Fget_obj_count(id, H5F_OBJ_GROUP);
+            if(count>0) logger() << "   "<<count<<" H5F_OBJ_GROUP detected"<<std::endl;
+            count = H5Fget_obj_count(id, H5F_OBJ_DATASET);
+            if(count>0) logger() << "   "<<count<<" H5F_OBJ_DATASET detected"<<std::endl;
+            count = H5Fget_obj_count(id, H5F_OBJ_DATATYPE);
+            if(count>0) logger() << "   "<<count<<" H5F_OBJ_DATATYPE detected"<<std::endl;
+            count = H5Fget_obj_count(id, H5F_OBJ_ATTR);
+            if(count>0) logger() << "   "<<count<<" H5F_OBJ_ATTR detected"<<std::endl;
+            logger()<<EOM;
+         }
+
+         hid_t out_id = H5Fclose(id);
+         if(out_id < 0)
+         {
+            std::ostringstream errmsg;
+            errmsg << "Failed to close HDF5 file with ID "<<id<<"! See HDF5 error output for more details.";
+            printer_error().raise(LOCAL_INFO, errmsg.str());
+         }
+         //std::cout<<"Called H5Fclose on file with ID "<<id<<std::endl;
+         return out_id;
+      }
+
+
       template<>
       std::vector<bool> getChunk(const hid_t dset_id, std::size_t offset, std::size_t length)
       {
@@ -133,6 +175,9 @@ namespace Gambit {
       /// third argument "oldfile" is used to report whether an existing file was opened (true if yes)
       hid_t openFile(const std::string& fname, bool overwrite, bool& oldfile, const char access_type)
       {
+          //Debug
+          //std::cerr<<"Attempting to open file "<<fname<<" in mode "<<access_type<<" (overwrite="<<overwrite<<")"<<std::endl;
+
           hid_t file_id;  // file handle
 
           unsigned int atype=0;
@@ -204,6 +249,9 @@ namespace Gambit {
              oldfile = true;
           }
 
+          // DEBUG
+          //std::cout<<"Opened file "<<fname<<" in mode "<<access_type<<", and assigned it ID "<<file_id<<std::endl;
+
           /* Return the file handle */
           return file_id;
       }
@@ -235,6 +283,8 @@ namespace Gambit {
             }
             readable=true;
           }
+          // DEBUG
+          std::cout<<"Checked that file "<<fname<<" was readable (had RDONLY access and ID "<<file_id<<")"<<std::endl;
           return readable;
       }
 
@@ -569,6 +619,12 @@ namespace Gambit {
       hid_t getH5DatasetType(hid_t group_id, const std::string& dset_name)
       {
           hid_t dataset_id = openDataset(group_id, dset_name);
+          if(dataset_id<0)
+          {
+            std::ostringstream errmsg;
+            errmsg << "Failed to open dataset '"<<dset_name<<"' while attempting to check its HDF5 data type! See stderr output for more details.";
+            printer_error().raise(LOCAL_INFO, errmsg.str());
+          }
           hid_t type_id = H5Dget_type(dataset_id);
           if(type_id<0)
           {
@@ -582,9 +638,6 @@ namespace Gambit {
 
       /// Close hdf5 type ID
       SIMPLE_CALL(hid_t, closeType,  hid_t, H5Tclose, "close", "type ID", "type ID")
-
-      /// Close hdf5 file
-      SIMPLE_CALL(hid_t, closeFile,  hid_t, H5Fclose, "close", "file", "file")
 
       /// Close hdf5 group
       SIMPLE_CALL(hid_t, closeGroup,  hid_t, H5Gclose, "close", "group", "group")
@@ -713,7 +766,55 @@ namespace Gambit {
       }
 
       /// @}
-      
+ 
+      // Match fixed integers to HDF5 types
+      int inttype_from_h5type(hid_t h5type)
+      {
+          #define ELSEIF(r,data,elem) \
+            else if(H5Tequal(h5type,get_hdf5_data_type<elem>::type())) \
+            { \
+               out = h5v2_type<elem>(); \
+            }
+
+          int out;
+          if(h5type==-1)
+          {
+              std::ostringstream errmsg;
+              errmsg<<"No fixed ID assigned for this type! (h5type = "<<h5type<<")!";
+              printer_error().raise(LOCAL_INFO, errmsg.str());        
+          }
+          BOOST_PP_SEQ_FOR_EACH(ELSEIF, _, H5_OUTPUT_TYPES)
+          #undef ELSEIF
+          else
+          {
+              std::ostringstream errmsg;
+              errmsg<<"Unrecognised HDF5 type (h5type = "<<h5type<<")!";
+              printer_error().raise(LOCAL_INFO, errmsg.str());       
+          }
+          return out;
+      }
+
+      // Query whether type integer indicates general 'float' or 'int'
+      bool is_float_type(int inttype)
+      {
+          bool out(false);
+          switch(inttype)
+          {
+              case h5v2_type<int               >():
+              case h5v2_type<unsigned int      >():
+              case h5v2_type<long              >():
+              case h5v2_type<unsigned long     >():
+              case h5v2_type<long long         >():
+              case h5v2_type<unsigned long long>():
+                  out = false;
+                  break;
+              case h5v2_type<float             >():
+              case h5v2_type<double            >():
+                  out = true;
+                  break;
+          }
+          return out;
+      }
 
     }
 
