@@ -83,12 +83,50 @@ namespace GUM
     if (not base_model.empty()) { std::cout << ", piggybacking off of " << base_model; }
     std::cout << "... " << std::endl;
 
-    // LoadModel command.
+    std::string modelpath;
+    
+    // Check to see if the model is in the FeynRules directory
+    modelpath = "Models/" + model + "/" + model + ".fr";
+    std::ifstream modelpath1(modelpath.c_str());
+
+    // If it's not in the FeynRules directory, try the gum Models dir...
+    if (!modelpath1.good())
+    {
+        modelpath = std::string(GUM_DIR) + "/Models/" + model + "/" + model + ".fr";
+        std::ifstream modelpath2(modelpath.c_str());
+        if (!modelpath2.good())
+        {
+            throw std::runtime_error("GUM Error:Unable to find the model " + model + " in either the "
+                                     "FeynRules model directory, or the GUM model directory!");
+        }
+    }
+
+    // Same for base_model
+    if (!base_model.empty())
+    {
+        std::string basepath = "Models/" + base_model + "/" + base_model + ".fr";
+
+        std::ifstream basepath1(basepath.c_str());
+        if (!basepath1.good())
+        {
+            basepath = std::string(GUM_DIR) + "/Models/" + base_model + "/" + base_model + ".fr";
+            std::ifstream basepath2(basepath.c_str());
+            if (!basepath2.good())
+            {
+            throw std::runtime_error("GUM Error:Unable to find the base model " + base_model + " in either"
+                                     " the FeynRules model directory, or the GUM model directory!");
+            }
+        }
+    }
+
+    // First case: no base model
     if (base_model.empty()) 
     {
-        std::string command = "LoadModel[\"Models/" + model + "/" + model + ".fr\"]";
+        // Fire off the LoadModel command.
+        std::string command = "LoadModel[\"" + modelpath + "\"]";
         send_to_math(command);
     }
+    // Otherwise got to check for both
     else
     {
         std::string command = "LoadModel[\"Models/" + base_model + "/" + base_model + ".fr\",\"Models/" + model + "/" + model + ".fr\"]";
@@ -162,7 +200,8 @@ namespace GUM
   // Check to see the Lagrangian returns something sensible
   void FeynRules::check_lagrangian(std::string LTot)
   {
-    std::cout << "Checking the Lagrangian..." << std::endl;
+    std::cout << "Checking the Lagrangian... you have specified the following: ";
+    std::cout << LTot << std::endl; 
 
     std::string command = "Head@("+LTot+") // ToString";
     send_to_math(command);
@@ -191,8 +230,6 @@ namespace GUM
   {
 
     std::cout << "Checking the model is Hermitian... ";
-
-    std::cout << "The total Lagrangian is given by : " << LTot << std::endl;
 
     std::string command = "ch = CheckHermiticity[" + LTot + "]";
     send_to_math(command);

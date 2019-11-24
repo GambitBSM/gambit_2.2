@@ -24,6 +24,8 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
+#include <boost/filesystem.hpp>
+
 #include "sarah.hpp"
 
 namespace GUM
@@ -126,14 +128,57 @@ namespace GUM
       bool is_SARAH_model;
       get_from_math(is_SARAH_model);
       if(is_SARAH_model)
+      {
         return true;
+      }
 
-      // If not check if it's on the GUM model database
-      std::string model_paths = std::string(GUM_DIR) + "/Models";
+      // If not check if it's in the GUM model database
       // TODO: check if it's in the models dir and if it is move it to the SARAH dir
+      std::string modelpath = std::string(GUM_DIR) + "/Models/" + modelname + "/" + modelname + ".m";
 
-      return false;
-    
+      // If it exists, then copy the folder to the SARAH model dir
+      if (!boost::filesystem::exists(modelpath))
+      {
+        std::cout << "Copying SARAH files from GUM directory to SARAH directory..." << std::endl;
+        std::string dest = std::string(SARAH_PATH) + "/Models/" + modelname;
+        std::string src = std::string(GUM_DIR) + "/Models/" + modelname;
+
+        // Create the folder in SARAH...
+        if (!boost::filesystem::create_directory(dest))
+        {
+            throw std::runtime_error("Unable to create new model folder in SARAH: " + dest + ".");
+        }
+        // Copy all files from the GUM dir to the SARAH dir
+        for (boost::filesystem::directory_iterator file(src); file != boost::filesystem::directory_iterator();
+             ++ file)
+        {
+            try
+            {
+                boost::filesystem::path current(file->path());
+                // Leave folders behind
+                if(boost::filesystem::is_directory(current)) {  continue; }
+                else
+                {
+                    boost::filesystem::copy_file(current, dest / current.filename());
+                }
+            }
+            catch(boost::filesystem::filesystem_error const & e)
+            {
+                throw std::runtime_error( e.what() );
+            }
+        }
+      }
+
+      // Let's try that again.
+      get_from_math(is_SARAH_model);
+      if(is_SARAH_model)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
     catch(...) { throw; }
   }

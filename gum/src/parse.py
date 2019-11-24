@@ -16,12 +16,12 @@ class Inputs:
     """
 
     def __init__(self, model_name, base_model, mathpackage,
-                 dm_candidate, mathname = None,
+                 wimp_candidate, mathname = None,
                  lagrangian = None, restriction = None):
 
         self.name = model_name.replace('-','_')
         self.base_model = base_model
-        self.dm_pdg = dm_candidate
+        self.dm_pdg = wimp_candidate
         self.math = mathpackage
         self.restriction = None
         self.LTot = lagrangian
@@ -161,10 +161,10 @@ def fill_gum_object(data):
     else:
         base_model = ""
 
-    if 'dm_candidate' in data:
-        dm_candidate = data['dm_candidate']
+    if 'wimp_candidate' in data:
+        wimp_candidate = data['wimp_candidate']
     else:
-        dm_candidate = None
+        wimp_candidate = None
 
 
     backends = ['calchep', 'pythia', 'spheno', 'ufo',
@@ -193,11 +193,11 @@ def fill_gum_object(data):
     outputs = Outputs(mathpackage, **opts)
 
     # If the user wants MicrOMEGAs output but hasn't specified a DM candidate
-    if not dm_candidate and outputs.mo:
+    if not wimp_candidate and outputs.mo:
         raise GumError(("\n\nYou have asked for MicrOMEGAs output but have not "
                         "specified which particle is meant to be the DM "
                         "candidate! Please add an entry to your .gum file "
-                        "like:\n\ndm_candidate: 9900001 # <--- insert the "
+                        "like:\n\nwimp_candidate: 9900001 # <--- insert the "
                         "desired PDG code here!!\n")) 
 
 
@@ -207,7 +207,7 @@ def fill_gum_object(data):
         restriction = math['restriction']
 
     gum_info = Inputs(gambit_model, base_model, mathpackage, 
-                      dm_candidate, mathname, lagrangian, restriction)
+                      wimp_candidate, mathname, lagrangian, restriction)
 
 
     return gum_info, outputs
