@@ -215,22 +215,8 @@ namespace Gambit {
         double deltaPhi_met_j0=0;
         double deltaPhi_met_j1=0;
 
-        // When picking out the SFOS lepton pair, should we loop through all leptons (use function getSFOSpairs)
-        // or only check the two leptons with highest PT, as we currently do below?
 
-        // vector<vector<HEPUtils::Particle*>> SFOSpair_cont = getSFOSpairs(signalLeptons);
-        vector<vector<HEPUtils::Particle*>> SFOSpair_cont;
-        if (signalLeptons.size() >= 2)
-        {
-          if (signalLeptons.at(0)->abspid()==signalLeptons.at(1)->abspid() && signalLeptons.at(0)->pid()!=signalLeptons.at(1)->pid())
-          {
-            vector<HEPUtils::Particle*> SFOSpair;
-            SFOSpair.push_back(signalLeptons.at(0));
-            SFOSpair.push_back(signalLeptons.at(1));
-            SFOSpair_cont.push_back(SFOSpair);
-          }
-        }
-
+        vector<vector<HEPUtils::Particle*>> SFOSpair_cont = getSFOSpairs(signalLeptons);
         for (size_t iPa=0;iPa<SFOSpair_cont.size();iPa++)
         {
           vector<HEPUtils::Particle*> pair = SFOSpair_cont.at(iPa);
