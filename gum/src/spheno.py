@@ -1234,7 +1234,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # run_SPheno function
     towrite += (
             "// Convenience function to run SPheno and obtain the spectrum\n"
-            "int run_SPheno(Spectrum &spectrum, const Finputs &inputs)\n"
+            "int run_SPheno(Spectrum &spectrum, const SpectrumInputs &inputs)\n"
             "{\n"
             "\n"
             "*epsI = 1.0E-5;\n"
@@ -1258,7 +1258,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "if(*FoundIterativeSolution or *WriteOutputForNonConvergence)\n"
             "{\n"
             "\n"
-            "spectrum = Spectrum_Out(inputs);\n"
+            "Spectrum_Out(spectrum, inputs);\n"
             "\n"
             "}\n"
             "\n"
@@ -1274,7 +1274,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     towrite += (
             "\n"
             "// Helper function to pass the spectrum object to the SPheno frontend and compute the BRs.\n"
-            "void fill_spectrum_calculate_BRs(const Spectrum &spectrum, const Finputs& inputs)\n"
+            "void fill_spectrum_calculate_BRs(const Spectrum &spectrum, const SpectrumInputs& inputs)\n"
             "{\n"
             "if (Fdecays::BRs_already_calculated) return;\n"
             "\n"
@@ -1427,7 +1427,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # run_SPheno_decays function
     towrite += (
             "// Convenience function to run Spheno and obtain the decays\n"
-            "int run_SPheno_decays(const Spectrum &spectrum, DecayTable& decays, const Finputs& inputs)\n"
+            "int run_SPheno_decays(const Spectrum &spectrum, DecayTable& decays, const SpectrumInputs& inputs)\n"
             "{\n"
             "\n"
             "double BRMin = inputs.options->getValueOrDef<double>(1e-5, \"BRMin\");\n"
@@ -1518,7 +1518,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # Spectrum_Out function
     towrite += (
             "// Convenience function to convert internal SPheno variables into a Spectrum object\n"
-            "Spectrum Spectrum_Out(const Finputs &inputs)\n"
+            "void Spectrum_Out(Spectrum &spectrum, const SpectrumInputs &inputs)\n"
             "{\n"
             "\n"
             "SLHAstruct slha;\n"
@@ -1856,7 +1856,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "if(*TwoLoopRGE)\n"
             "  slha[\"SPheno\"][\"\"] << 38 << 2 << \"# RGE level\";\n"
             "else\n"
-            "slha[\"SPheno\"][\"\"] << 38 << 1 << \"# RGE level\";\n"
+            "  slha[\"SPheno\"][\"\"] << 38 << 1 << \"# RGE level\";\n"
             "slha[\"SPheno\"][\"\"] << 40 << 1.0 / *Alpha << \"# Alpha^-1\";\n"
             "slha[\"SPheno\"][\"\"] << 41 << *gamZ << \"# Gamma_Z\";\n"
             "slha[\"SPheno\"][\"\"] << 42 << *gamW << \"# Gamma_W\";\n"
@@ -1870,25 +1870,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "slha[\"SPheno\"][\"\"] << 60 << *KineticMixing << \"# Include kinetic mixing\";\n"
             "slha[\"SPheno\"][\"\"] << 65 << *SolutionTadpoleNr << \"# Solution of tadpole equation\";\n"
             "\n"
-            "// Retrieve mass cuts\n"
-            "static const Spectrum::cuts_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n"
-            "\n"
-            "// Has the user chosen to override any pole mass values?\n"
-            "// This will typically break consistency, but may be useful in some special cases\n"
-            "if (inputs.options->hasKey(\"override_pole_masses\"))\n"
-            "{\n"
-            "std::vector<str> particle_names = inputs.options->getNames(\"override_pole_masses\");\n"
-            "for (auto& name : particle_names)\n"
-            "{\n"
-            "double mass = inputs.options->getValue<double>(\"override_pole_masses\", name);\n"
-            "SLHAea_add(slha, \"MASS\", Models::ParticleDB().pdg_pair(name).first, mass, name, true);\n"
-            "}\n"
-            "}\n"
-            "\n"
             "//Create Spectrum object\n"
-            "Spectrum spectrum = spectrum_from_SLHAea<'+model_name+'SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n"
-            "\n"
-            "return spectrum;\n"
+            "double scale = *Q_in;\n"
+            "spectrum = Spectrum(slha, inputs.contents, scale);\n"
             "\n"
             "}\n"
             "\n"
@@ -1923,7 +1907,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 "// Convenience function to obtain a HiggsCouplingsTable "
                 "object for HiggsBounds\n"
                 "int get_HiggsCouplingsTable(const Spectrum& spectrum, "
-                "HiggsCouplingsTable& hctbl, const Finputs& inputs)\n{\n"
+                "HiggsCouplingsTable& hctbl, const SpectrumInputs& inputs)\n{\n"
                 "\n"
                 "// Pass the GAMBIT spectrum to SPheno and fill the "
                 "internal decay objects (if necessary)\n"
@@ -2033,7 +2017,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # ReadingData function
     towrite += "\n"\
       "// Function to read data from the Gambit inputs and fill SPheno internal variables\n"\
-      "void ReadingData(const Finputs &inputs)\n"\
+      "void ReadingData(const SpectrumInputs &inputs)\n"\
       "{\n"\
       "\n"\
       "InitializeStandardModel(inputs.sminputs);\n"\
@@ -3201,12 +3185,12 @@ def write_spheno_frontend_header(model_name, function_signatures,
     towrite += (
             "\n"
             "// Convenience functions (registration)\n"
-            "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), \"{0}_spectrum\")\n"
-            "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const Finputs&), \"{0}_decays\")\n"
-            "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const std::map<str, safe_ptr<double> >&), \"SARAHSPheno_{0}_internal\")\n"
-            "BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"{0}_HiggsCouplingsTable\")\n"
-            "BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
-            "BE_CONV_FUNCTION(ReadingData_decays, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
+            "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const SpectrumInputs&), \"{0}_spectrum\")\n"
+            "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const SpectrumInputs&), \"{0}_decays\")\n"
+            "BE_CONV_FUNCTION(Spectrum_Out, void, (Spectrum&, const SpectrumInputs&), \"SARAHSPheno_{0}_internal\")\n"
+            "BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const SpectrumInputs&), \"{0}_HiggsCouplingsTable\")\n"
+            "BE_CONV_FUNCTION(ReadingData, void, (const SpectrumInputs&), \"SARAHSPheno_{0}_internal\")\n"
+            "BE_CONV_FUNCTION(ReadingData_decays, void, (const SpectrumInputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(InitializeStandardModel, void, (const SMInputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(ErrorHandling, void, (const int&), \"SARAHSPheno_{0}_internal\")\n"
             "\n"

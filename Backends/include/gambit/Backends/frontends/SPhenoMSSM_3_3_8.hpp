@@ -532,9 +532,9 @@ BE_VARIABLE(ratioWoM, Freal8, "__sphenomssm_MOD_ratiowom","SPhenoMSSM_internal")
 BE_VARIABLE(CalcTBD, Flogical, "__sphenomssm_MOD_calctbd","SPhenoMSSM_internal")
 
 // Convenience functions (registration)
-BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), "SPhenoMSSM_MSSMspectrum")
-BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const std::map<str, safe_ptr<double> >&), "SPhenoMSSM_internal")
-BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), "SPhenoMSSM_internal")
+BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const SpectrumInputs&), "SPhenoMSSM_MSSMspectrum")
+BE_CONV_FUNCTION(Spectrum_Out, void, (Spectrum&, const SpectrumInputs&), "SPhenoMSSM_internal")
+BE_CONV_FUNCTION(ReadingData, void, (const SpectrumInputs&), "SPhenoMSSM_internal")
 BE_CONV_FUNCTION(InitializeStandardModel, void, (const SMInputs&), "SPhenoMSSM_internal")
 BE_CONV_FUNCTION(ErrorHandling, void, (const int&), "SPhenoMSSM_internal")
 
