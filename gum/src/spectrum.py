@@ -103,7 +103,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                         shape = "matrix"
                         size = par.shape[-1]
 
-                e = par.fullname[1:] if par.tag == "Pole_Mass" else par.fullname
+                e = par.fullname[1:].strip('~') if par.tag == "Pole_Mass" else par.fullname
 
                 # If it's a scalar shape, just add it one by one
                 if shape == "scalar":

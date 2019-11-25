@@ -295,7 +295,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
 
         # Remove the trailing 'm' for a Pole_Mass
         if model_parameters[i].tag == "Pole_Mass":
-            paramname = e + model_parameters[i].fullname[1:] + "_Pole_Mass"
+            paramname = e + model_parameters[i].fullname[1:].strip('~') + "_Pole_Mass"
         else:
             paramname = e + model_parameters[i].fullname
 
@@ -312,8 +312,8 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
                 size = model_parameters[i].shape[-1]
 
         if model_parameters[i].tag == "Pole_Mass":
-            setter = "set_" + model_parameters[i].fullname[1:] + "PoleMass"
-            getter = "get_" + model_parameters[i].fullname[1:] + "PoleMass"
+            setter = "set_" + model_parameters[i].fullname[1:].strip('~') + "PoleMass"
+            getter = "get_" + model_parameters[i].fullname[1:].strip('~') + "PoleMass"
         else:
             setter = "set_" + model_parameters[i].fullname
             getter = "get_" + model_parameters[i].fullname

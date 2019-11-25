@@ -204,17 +204,31 @@ BE_NAMESPACE
     Assign_Value(pdg2mass(6), spec.get(Par::Pole_Mass, "u_3"));    // mT(mT) MSbar
   }
 
-  /// Passes the width of each BSM particle in the model, from DecayTable to CalcHEP. For every 2->2 process -- for internal lines.
+  /// Passes the width of each BSM particle in the model, from DecayTable to CalcHEP. 
+  /// Don't set the widths of anything SM, except the top, which can get BSM contributions.
   void Assign_Widths(const DecayTable& tbl)
   {
-    // Obtain all SM pdg codes. We don't want to set these widths at every point.
+    // Obtain all generic pdg codes. We can't set these widths..
+    const std::vector<std::pair<int, int>> generic_particles = Models::ParticleDB().partmap::get_generic_particles();
     const std::vector<std::pair<int, int>> SM_particles = Models::ParticleDB().partmap::get_SM_particles();
-
-    // Iterate through DecayTable. If it is not in the SM particles (i.e. changes at every point), then assign the width in CalcHEP.
-    for (auto it = tbl.particles.begin(); it != tbl.particles.end(); ++it)
+    
+    // Iterate through DecayTable. If it is not in the generic particles, or the SM, then go for it.
+    for (std::map<std::pair<int, int>, Gambit::DecayTable::Entry>::const_iterator it = tbl.particles.begin(); 
+          it != tbl.particles.end(); ++it)
     {
+      std::cout << "Current entry " << it->first << std::endl;
+      if (std::find(generic_particles.begin(), generic_particles.end(), it->first) != generic_particles.end())
+      {
+        continue; 
+      }
+      if (std::find(SM_particles.begin(), SM_particles.end(), it->first) != SM_particles.end())
+      {
+        continue; 
+      }
       Assign_Value(pdg2width(it->first.first), tbl.at(it->first).width_in_GeV);
     }
+    // Assign the top separately as they can have BSM contributions e.g. decaying to charged higgses
+    Assign_Value(pdg2width(6), tbl.at("t").width_in_GeV);
   }
 
   /// Provides spin-averaged decay width for 2 body decay process in CM frame at tree-level.

@@ -312,7 +312,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     towrite += add_SM_macros(gambit_model_name)
 
     # Add the new BSM particles to the Process Catalog
-    dm_mass = "m" + gb_id.replace("\"", "")
+    dm_mass = "m" + gb_id.strip('~').replace("\"", "")
 
     towrite += (
             "// {0}-specific masses\n"
