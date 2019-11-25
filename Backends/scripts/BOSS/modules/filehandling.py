@@ -819,7 +819,8 @@ def createFrontendHeader(function_xml_files_dict):
     outer_namespace_list = ['Gambit', 'Backends', gb.gambit_backend_name_full]
 
     enums_code  = ''
-    enums_code += utils.constrNamespace(outer_namespace_list, 'open', indent=cfg.indent)
+    if len(gb.enums_done) > 0 :
+        enums_code += utils.constrNamespace(outer_namespace_list, 'open', indent=cfg.indent)
 
     for enum_name in gb.enums_done :
 
@@ -843,7 +844,8 @@ def createFrontendHeader(function_xml_files_dict):
         enum_code = utils.addIndentation(enum_code, 3*cfg.indent)
         enums_code += enum_code
 
-    enums_code += utils.constrNamespace(outer_namespace_list, 'close', indent=cfg.indent)
+    if len(gb.enums_done) > 0 :
+        enums_code += utils.constrNamespace(outer_namespace_list, 'close', indent=cfg.indent)
 
 
     #

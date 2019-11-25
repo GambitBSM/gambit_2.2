@@ -22,6 +22,15 @@
 #define MODULE SpecBit
 START_MODULE
 
+// Predefine capabilities that appear in more than one model, to avoid ordering problems
+  #define CAPABILITY Higgs_Couplings
+  START_CAPABILITY
+  #undef CAPABILITY
+
+  #define CAPABILITY scale_of_nonperturbativity
+  START_CAPABILITY
+  #undef CAPABILITY
+
 #include "gambit/SpecBit/models/DiracSingletDM.hpp"
 #include "gambit/SpecBit/models/MajoranaSingletDM.hpp"
 #include "gambit/SpecBit/models/MDM.hpp"
