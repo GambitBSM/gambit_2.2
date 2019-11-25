@@ -3245,6 +3245,8 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
+      // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
+      //            This holds true for SuperIso 4.1, could change in future versions though.
       const std::vector<std::string> observables{
         "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
         "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
@@ -3267,8 +3269,6 @@ namespace Gambit
         theory_uncertainty.push_back(SI_theory_covariance[obs][obs]);
       }
 
-      // FIXME: Transform dGamma/dq2 into dBR/dq2
-
       result = 0;
       result += BifurGaussian_0.GetLogLikelihood(SI_theory.at(observables[0]), SI_theory_covariance.at(observables[0]).at(observables[0]));
       result += BifurGaussian_1.GetLogLikelihood(SI_theory.at(observables[1]), SI_theory_covariance.at(observables[1]).at(observables[1]));
@@ -3280,65 +3280,77 @@ namespace Gambit
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
 
-    /// HEPLike LogLikelihood Bs -> Phi mu mu
-//    void HEPLike_Bs2PhimumuBr_LogLikelihood(double &result)
-//    {
-//      using namespace Pipes::HEPLike_Bs2PhimumuBr_LogLikelihood;
-//
-//      static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_0.1_0.98.yaml";
-//      static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
-//      static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_2.5_4.0.yaml";
-//      static const std::string inputfile_q2_4_6 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_4.0_6.0.yaml";
-//      static const std::string inputfile_q2_6_8 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_6.0_8.0.yaml";
-//      static const std::string inputfile_q2_15_19 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_15.0_19.yaml";
-//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_q2_0p1_1p1);
-//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_q2_1p1_2p5);
-//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_q2_2p5_4);
-//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_q2_4_6);
-//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_q2_6_8);
-//      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19);
-//
-//      static bool first = true;
-//      if (first)
-//      {
-//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_0p1_1p1 << endl;
-//        nDimBifurGaussian_0.Read();
-//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_1p1_2p5 << endl;
-//        nDimBifurGaussian_1.Read();
-//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_2p5_4 << endl;
-//        nDimBifurGaussian_2.Read();
-//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_4_6 << endl;
-//        nDimBifurGaussian_3.Read();
-//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_6_8 << endl;
-//        nDimBifurGaussian_4.Read();
-//        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_15_19 << endl;
-//        nDimBifurGaussian_5.Read();
-//
-//        first = false;
-//      }
-//
-//      // Ordering of observables defined by HEPLike
-//      // Code assumes each bin is calculated by the same dependency (decltype)
-//      auto get_theory = [](decltype(Dep::BKstarmumu_11_25) theory_dependency) { return std::vector<double>{
-//          theory_dependency->FL,
-//          theory_dependency->S3,
-//          theory_dependency->S4,
-//          theory_dependency->S5,
-//          theory_dependency->AFB,
-//          theory_dependency->S7,
-//          theory_dependency->S8,
-//          theory_dependency->S9
-//      }; };
-//
-//      result = 0;
-//      result += nDimBifurGaussian_0.GetLogLikelihood(get_theory(Dep::BKstarmumu_0p1_0p98) /* , theory_error */);
-//      result += nDimBifurGaussian_1.GetLogLikelihood(get_theory(Dep::BKstarmumu_11_25) /* , theory_error */);
-//      result += nDimBifurGaussian_2.GetLogLikelihood(get_theory(Dep::BKstarmumu_25_40) /* , theory_error */);
-//      result += nDimBifurGaussian_3.GetLogLikelihood(get_theory(Dep::BKstarmumu_40_60) /* , theory_error */);
-//      result += nDimBifurGaussian_4.GetLogLikelihood(get_theory(Dep::BKstarmumu_60_80) /* , theory_error */);
-//      result += nDimBifurGaussian_5.GetLogLikelihood(get_theory(Dep::BKstarmumu_15_19) /* , theory_error */);
-//
-//      if (flav_debug) std::cout << "%s result: " << result << std::endl;
-//    }
+    void HEPLike_Bs2PhimumuBr_LogLikelihood(double &result)
+    {
+      using namespace Pipes::HEPLike_Bs2PhimumuBr_LogLikelihood;
+
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_0.1_2.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_11_12.5.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_15_19.yaml";
+      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_1_6.yaml";
+      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_2_5.yaml";
+      static const std::string inputfile_5 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_5_8.yaml";
+      static HepLike_default::HL_BifurGaussian bifurGaussian_0(inputfile_0);
+      static HepLike_default::HL_BifurGaussian bifurGaussian_1(inputfile_1);
+      static HepLike_default::HL_BifurGaussian bifurGaussian_2(inputfile_2);
+      static HepLike_default::HL_BifurGaussian bifurGaussian_3(inputfile_3);
+      static HepLike_default::HL_BifurGaussian bifurGaussian_4(inputfile_4);
+      static HepLike_default::HL_BifurGaussian bifurGaussian_5(inputfile_5);
+
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        bifurGaussian_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
+        bifurGaussian_1.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
+        bifurGaussian_2.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
+        bifurGaussian_3.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_4 << endl;
+        bifurGaussian_4.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_5 << endl;
+        bifurGaussian_5.Read();
+
+        first = false;
+      }
+
+      // Ordering of observables defined by HEPLike
+      // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
+      //            This holds true for SuperIso 4.1, could change in future versions though.
+      const std::vector<std::string> observables{
+              "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
+              "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
+              "dGamma/dq2_B0Kstar0mumu_2.5_4",
+              "dGamma/dq2_B0Kstar0mumu_4_6",
+              "dGamma/dq2_B0Kstar0mumu_6_8",
+              "dGamma/dq2_BKstarmumu_15_19",
+      };
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      std::vector<double> theory_central;
+      theory_central.reserve(observables.size());
+      std::vector<double> theory_uncertainty;
+      theory_uncertainty.reserve(observables.size());
+
+      for (const auto& obs : observables) {
+        theory_central.push_back(SI_theory[obs]);
+        theory_uncertainty.push_back(SI_theory_covariance[obs][obs]);
+      }
+
+      result = 0;
+      result += bifurGaussian_0.GetLogLikelihood(SI_theory.at(observables[0]), SI_theory_covariance.at(observables[0]).at(observables[0]));
+      result += bifurGaussian_1.GetLogLikelihood(SI_theory.at(observables[1]), SI_theory_covariance.at(observables[1]).at(observables[1]));
+      result += bifurGaussian_2.GetLogLikelihood(SI_theory.at(observables[2]), SI_theory_covariance.at(observables[2]).at(observables[2]));
+      result += bifurGaussian_3.GetLogLikelihood(SI_theory.at(observables[3]), SI_theory_covariance.at(observables[3]).at(observables[3]));
+      result += bifurGaussian_4.GetLogLikelihood(SI_theory.at(observables[4]), SI_theory_covariance.at(observables[4]).at(observables[4]));
+      result += bifurGaussian_5.GetLogLikelihood(SI_theory.at(observables[5]), SI_theory_covariance.at(observables[5]).at(observables[5]));
+
+
+      std::cout << "%s result: " << result << std::endl;
+    }
   }
 }
