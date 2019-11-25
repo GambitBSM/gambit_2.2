@@ -3025,7 +3025,8 @@ namespace Gambit
         first = false;
       }
 
-      const std::string observable{"BR_BXsgamma"};
+      static const std::string observable{"BR_BXsgamma"};
+
       auto SI_theory = *Dep::SuperIso_obs_values;
       auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
 
@@ -3055,18 +3056,36 @@ namespace Gambit
         first = false;
       }
 
-      const std::vector<std::string> observables{"BRuntag_Bsmumu", "BR_Bdmumu"};
-      auto SI_theory = *Dep::SuperIso_obs_values;
-      // auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;  // Not needed, as nDimLikelhood does not support covariance
+      static const std::array<std::string, 2> observables{
+        "BRuntag_Bsmumu",
+        "BR_Bdmumu"
+      };
 
-      std::vector<double> obs_theory;
-      obs_theory.reserve(observables.size());
-      for (unsigned int i = 0; i < observables.size(); ++i) {
-        obs_theory.push_back(SI_theory[observables[i]]);
-      }
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      // C++14 allows auto instead of decltype(observables0p1_0p98)
+      auto get_obs_theory = [SI_theory](decltype(observables)& observables){
+          std::vector<double> obs_theory;
+          obs_theory.reserve(observables.size());
+          for (unsigned int i = 0; i < observables.size(); ++i) {
+            obs_theory.push_back(SI_theory.at(observables[i]));
+          }
+          return obs_theory;
+      };
+
+      auto get_obs_covariance = [SI_theory_covariance](decltype(observables)& observables){
+          boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+          for (unsigned int i = 0; i < observables.size(); ++i) {
+            for (unsigned int j = 0; j < observables.size(); ++j) {
+              obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+            }
+          }
+          return obs_covariance;
+      };
 
       result = nDimLikelihood.GetLogLikelihood(
-              obs_theory
+              get_obs_theory(observables)
               /* nDimLikelihood does not support theory errors */
               );
 
@@ -3111,7 +3130,7 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      const std::vector<std::string> observables0p1_0p98{
+      static const std::array<std::string, 8> observables0p1_0p98{
         "FL_B0Kstar0mumu_0.1_0.98",
         "S3_B0Kstar0mumu_0.1_0.98",
         "S4_B0Kstar0mumu_0.1_0.98",
@@ -3121,7 +3140,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_0.1_0.98",
         "S9_B0Kstar0mumu_0.1_0.98",
       };
-      const std::vector<std::string> observables1p1_2p5{
+      static const std::array<std::string, 8> observables1p1_2p5{
         "FL_B0Kstar0mumu_1.1_2.5",
         "S3_B0Kstar0mumu_1.1_2.5",
         "S4_B0Kstar0mumu_1.1_2.5",
@@ -3131,7 +3150,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_1.1_2.5",
         "S9_B0Kstar0mumu_1.1_2.5",
       };
-      const std::vector<std::string> observables2p5_4{
+      static const std::array<std::string, 8> observables2p5_4{
         "FL_B0Kstar0mumu_2.5_4",
         "S3_B0Kstar0mumu_2.5_4",
         "S4_B0Kstar0mumu_2.5_4",
@@ -3141,7 +3160,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_2.5_4",
         "S9_B0Kstar0mumu_2.5_4",
       };
-      const std::vector<std::string> observables4_6{
+      static const std::array<std::string, 8> observables4_6{
         "FL_B0Kstar0mumu_4_6",
         "S3_B0Kstar0mumu_4_6",
         "S4_B0Kstar0mumu_4_6",
@@ -3151,7 +3170,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_4_6",
         "S9_B0Kstar0mumu_4_6",
       };
-      const std::vector<std::string> observables6_8{
+      static const std::array<std::string, 8> observables6_8{
         "FL_B0Kstar0mumu_6_8",
         "S3_B0Kstar0mumu_6_8",
         "S4_B0Kstar0mumu_6_8",
@@ -3161,7 +3180,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_6_8",
         "S9_B0Kstar0mumu_6_8",
       };
-      const std::vector<std::string> observables15_19{
+      static const std::array<std::string, 8> observables15_19{
         "FL_B0Kstar0mumu_15_19",
         "S3_B0Kstar0mumu_15_19",
         "S4_B0Kstar0mumu_15_19",
@@ -3247,7 +3266,7 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
-      const std::vector<std::string> observables{
+      static const std::array<std::string, 6> observables{
         "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
         "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
         "dGamma/dq2_B0Kstar0mumu_2.5_4",
@@ -3259,23 +3278,13 @@ namespace Gambit
       auto SI_theory = *Dep::SuperIso_obs_values;
       auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
 
-      std::vector<double> theory_central;
-      theory_central.reserve(observables.size());
-      std::vector<double> theory_uncertainty;
-      theory_uncertainty.reserve(observables.size());
-
-      for (const auto& obs : observables) {
-        theory_central.push_back(SI_theory[obs]);
-        theory_uncertainty.push_back(SI_theory_covariance[obs][obs]);
-      }
-
       result = 0;
-      result += BifurGaussian_0.GetLogLikelihood(SI_theory.at(observables[0]), SI_theory_covariance.at(observables[0]).at(observables[0]));
-      result += BifurGaussian_1.GetLogLikelihood(SI_theory.at(observables[1]), SI_theory_covariance.at(observables[1]).at(observables[1]));
-      result += BifurGaussian_2.GetLogLikelihood(SI_theory.at(observables[2]), SI_theory_covariance.at(observables[2]).at(observables[2]));
-      result += BifurGaussian_3.GetLogLikelihood(SI_theory.at(observables[3]), SI_theory_covariance.at(observables[3]).at(observables[3]));
-      result += BifurGaussian_4.GetLogLikelihood(SI_theory.at(observables[4]), SI_theory_covariance.at(observables[4]).at(observables[4]));
-      result += BifurGaussian_5.GetLogLikelihood(SI_theory.at(observables[5]), SI_theory_covariance.at(observables[5]).at(observables[5]));
+      result += BifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
+      result += BifurGaussian_1.GetLogLikelihood(SI_theory[observables[1]], SI_theory_covariance[observables[1]][observables[1]]);
+      result += BifurGaussian_2.GetLogLikelihood(SI_theory[observables[2]], SI_theory_covariance[observables[2]][observables[2]]);
+      result += BifurGaussian_3.GetLogLikelihood(SI_theory[observables[3]], SI_theory_covariance[observables[3]][observables[3]]);
+      result += BifurGaussian_4.GetLogLikelihood(SI_theory[observables[4]], SI_theory_covariance[observables[4]][observables[4]]);
+      result += BifurGaussian_5.GetLogLikelihood(SI_theory[observables[5]], SI_theory_covariance[observables[5]][observables[5]]);
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
@@ -3319,7 +3328,7 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
-      const std::vector<std::string> observables{
+      static const std::array<std::string, 6> observables{
               "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
               "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
               "dGamma/dq2_B0Kstar0mumu_2.5_4",
@@ -3331,24 +3340,14 @@ namespace Gambit
       auto SI_theory = *Dep::SuperIso_obs_values;
       auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
 
-      std::vector<double> theory_central;
-      theory_central.reserve(observables.size());
-      std::vector<double> theory_uncertainty;
-      theory_uncertainty.reserve(observables.size());
-
-      for (const auto& obs : observables) {
-        theory_central.push_back(SI_theory[obs]);
-        theory_uncertainty.push_back(SI_theory_covariance[obs][obs]);
-      }
-
+      // FIXME: The experimental and theory binning do not overlap. This gives false results.
       result = 0;
-      result += bifurGaussian_0.GetLogLikelihood(SI_theory.at(observables[0]), SI_theory_covariance.at(observables[0]).at(observables[0]));
-      result += bifurGaussian_1.GetLogLikelihood(SI_theory.at(observables[1]), SI_theory_covariance.at(observables[1]).at(observables[1]));
-      result += bifurGaussian_2.GetLogLikelihood(SI_theory.at(observables[2]), SI_theory_covariance.at(observables[2]).at(observables[2]));
-      result += bifurGaussian_3.GetLogLikelihood(SI_theory.at(observables[3]), SI_theory_covariance.at(observables[3]).at(observables[3]));
-      result += bifurGaussian_4.GetLogLikelihood(SI_theory.at(observables[4]), SI_theory_covariance.at(observables[4]).at(observables[4]));
-      result += bifurGaussian_5.GetLogLikelihood(SI_theory.at(observables[5]), SI_theory_covariance.at(observables[5]).at(observables[5]));
-
+      result += bifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
+      result += bifurGaussian_1.GetLogLikelihood(SI_theory[observables[1]], SI_theory_covariance[observables[1]][observables[1]]);
+      result += bifurGaussian_2.GetLogLikelihood(SI_theory[observables[2]], SI_theory_covariance[observables[2]][observables[2]]);
+      result += bifurGaussian_3.GetLogLikelihood(SI_theory[observables[3]], SI_theory_covariance[observables[3]][observables[3]]);
+      result += bifurGaussian_4.GetLogLikelihood(SI_theory[observables[4]], SI_theory_covariance[observables[4]][observables[4]]);
+      result += bifurGaussian_5.GetLogLikelihood(SI_theory[observables[5]], SI_theory_covariance[observables[5]][observables[5]]);
 
       std::cout << "%s result: " << result << std::endl;
     }
