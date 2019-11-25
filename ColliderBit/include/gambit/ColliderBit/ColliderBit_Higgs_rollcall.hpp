@@ -51,7 +51,7 @@
     START_FUNCTION(hb_ModelParameters)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino)
     #undef FUNCTION
 
   #undef CAPABILITY

@@ -90,7 +90,7 @@ namespace Gambit
     }
 
     /// Helper function for populating a HiggsBounds/Signals ModelParameters object for SM-like Higgs.
-    void set_SMLikeHiggs_ModelParameters(const SubSpectrum& spec, const HiggsCouplingsTable& couplings, hb_ModelParameters &result)
+    void set_SMLikeHiggs_ModelParameters(const Spectrum& spec, const HiggsCouplingsTable& couplings, hb_ModelParameters &result)
     {
       // Retrieve the decays
       const DecayTable::Entry& decays = couplings.get_neutral_decays(0);
@@ -198,7 +198,7 @@ namespace Gambit
     void SMHiggs_ModelParameters(hb_ModelParameters &result)
     {
       using namespace Pipes::SMHiggs_ModelParameters;
-      set_SMLikeHiggs_ModelParameters(Dep::SM_spectrum->get_HE(), *Dep::Higgs_Couplings, result);
+      set_SMLikeHiggs_ModelParameters(*Dep::SM_spectrum, *Dep::Higgs_Couplings, result);
     }
 
     /// SM-like (SM + possible invisibles) Higgs model parameters for HiggsBounds/Signals
@@ -209,7 +209,7 @@ namespace Gambit
       if (ModelInUse("ScalarSingletDM_Z2") or ModelInUse("ScalarSingletDM_Z2_running")) spectrum_dependency = &Dep::ScalarSingletDM_Z2_spectrum;
       else if (ModelInUse("ScalarSingletDM_Z3") or ModelInUse("ScalarSingletDM_Z3_running")) spectrum_dependency = &Dep::ScalarSingletDM_Z3_spectrum;
       else ColliderBit_error().raise(LOCAL_INFO, "No valid model for SMLikeHiggs_ModelParameters.");
-      const SubSpectrum& spec = (*spectrum_dependency)->get_HE();
+      const Spectrum& spec = **spectrum_dependency;
       set_SMLikeHiggs_ModelParameters(spec, *Dep::Higgs_Couplings, result);
     }
 
@@ -230,8 +230,7 @@ namespace Gambit
       const DecayTable::Entry& t_widths = Dep::Higgs_Couplings->get_t_decays();
 
       // Retrieve masses
-      const Spectrum& fullspectrum = *Dep::MSSM_spectrum;
-      const SubSpectrum& spec = fullspectrum.get_HE();
+      const Spectrum& spec = *Dep::MSSM_spectrum;
 
       // Neutral higgs masses and errors
       for(int i = 0; i < 3; i++)
