@@ -45,7 +45,6 @@
 
   // Find scale at which spectrum becomes non-perturbative
   #define CAPABILITY scale_of_nonperturbativity
-  START_CAPABILITY
 
     #define FUNCTION find_non_perturb_scale_MDM
     START_FUNCTION(double)
