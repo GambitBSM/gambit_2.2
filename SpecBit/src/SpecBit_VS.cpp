@@ -639,16 +639,15 @@ namespace Gambit
         static vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
 
         // Get the spectrum object for the MSSM
-        const Spectrum& fullspectrum = *myPipe::Dep::unimproved_MSSM_spectrum;
+        const Spectrum& spectrum = *myPipe::Dep::unimproved_MSSM_spectrum;
         //double runscale = 1000;
-        const SubSpectrum& spectrumHE = fullspectrum.get_HE();
         //std::unique_ptr<SubSpectrum> SpecRun = spectrumHE.clone();
         //SpecRun->RunToScale(runscale);
         // Here we get the SLHAea::Coll object from the spectrum
-        SLHAea::Coll slhaea = spectrumHE.getSLHAea(2);
+        SLHAea::Coll slhaea = spectrum.getSLHAea(2);
 
         // Here we get the scale from the high-energy spectrum for Vevacious.
-        double scale = spectrumHE.GetScale();
+        double scale = spectrum.GetScale();
         cout << "VEVACIOUS SCALE:  "<< scale << endl;
 
         // Here we start passing the parameters form the SLHAea::Coll  object
@@ -923,7 +922,7 @@ namespace Gambit
         // double SignMuinput = *myPipe::Param["SignMu"];
 
         // std::ostringstream InputsForLog;
-        // //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
+        // //spectrum.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
         // InputsForLog << std::fixed << std::setprecision(12) << "Running Vevacious with parameters: " << "M0="  << M0input << " M12="  << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput ;
         // std::string InputsForLogString = InputsForLog.str();
         // logger() << InputsForLogString << EOM;
@@ -945,7 +944,7 @@ namespace Gambit
         // Tell Vevacious we are using the point we just read by giving it "internal".
         try 
         {
-            //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
+            //spectrum.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
             // Run vevacious
             struct stat buffer; //Checking if file exists, fastest method.
             std::string HomotopyLockfile = inputspath + "/Homotopy/busy.lock";
@@ -1024,7 +1023,7 @@ namespace Gambit
 
         catch(const std::exception& e)
         {
-            //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
+            //spectrum.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
             lifetime = 2.0E+100; //Vevacious has crashed
             thermalProbability= 1;
 

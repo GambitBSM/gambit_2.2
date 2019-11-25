@@ -29,6 +29,8 @@
 #include "gambit/Elements/spectrum_helpers.hpp"
 #include "gambit/Elements/spectrum_contents.hpp"
 
+#include "gambit/Models/partmap.hpp"
+
 #include "SLHAea/slhaea.h"
 
 
@@ -119,7 +121,8 @@ namespace Gambit
    const int slha_index1, const int slha_index2, const str& comment, const bool error_if_missing = true, const double rescale = 1.0);
 
   /// Write a Spectrum to an SLHAea object.
-  void add_Spec_to_SLHAea(const Spectrum&, SLHAstruct&, SpectrumContents&);
+  // TODO: This function is unnecessary now that Spectrum is a SLHAea wrapper
+  //void add_Spec_to_SLHAea(const Spectrum&, SLHAstruct&, SpectrumContents&);
 
 }
 

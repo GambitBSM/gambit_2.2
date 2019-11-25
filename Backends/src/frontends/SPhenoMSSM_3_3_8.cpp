@@ -16,8 +16,7 @@
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/SPhenoMSSM_3_3_8.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
-#include "gambit/Elements/spectrum_factories.hpp"
-#include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
+#include "gambit/Elements/spectrum.hpp"
 #include "gambit/Utils/version.hpp"
 
 // Convenience functions (definition)
@@ -68,7 +67,7 @@ BE_NAMESPACE
 
   }
 
-  Spectrum Spectrum_Out(Spectrum &spectrum, const SpectrumInputs &inputs)
+  void Spectrum_Out(Spectrum &spectrum, const SpectrumInputs &inputs)
   {
 
     SLHAstruct slha;
@@ -493,7 +492,7 @@ BE_NAMESPACE
     slha["GAMBIT"][""] << 1 << *mGUT << "# Input scale of (upper) boundary contidions, e.g. GUT scale";
 
     //Create Spectrum object
-    double scale = *Q_in;
+    double scale = *Qin;
     spectrum = Spectrum(slha, inputs.contents, scale);
 
   }

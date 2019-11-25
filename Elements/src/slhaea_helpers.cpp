@@ -454,7 +454,8 @@ namespace Gambit
   }
 
   /// Write a SimpleSpectrum to an SLHAea object.
-  void add_Spec_to_SLHAea(const Spectrum& spec, SLHAstruct& slha, SpectrumContents::Contents& contents)
+  // TODO: This function is unnecessary now the Spectrum is a wrapper around SLHAea
+  /*void add_Spec_to_SLHAea(const Spectrum& spec, SLHAstruct& slha, SpectrumContents::Contents& contents)
   {
 
     // Pick out the parameters whose SLHA block name is not: SMINPUTS, CKMBLOCK, YUKAWA, or empty.
@@ -508,6 +509,6 @@ namespace Gambit
       }
     }
 
-  } 
+  } */
 
 } 
