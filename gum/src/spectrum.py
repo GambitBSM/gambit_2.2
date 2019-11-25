@@ -103,11 +103,13 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                         shape = "matrix"
                         size = par.shape[-1]
 
+                e = par.fullname[1:].strip('~') if par.tag == "Pole_Mass" else par.fullname
+
                 # If it's a scalar shape, just add it one by one
                 if shape == "scalar":
                     towrite += (
                             "{0}.{1}_{2}{3} = *myPipe::Param[\"{4}\"];\n"
-                    ).format(modelcont, gambit_model_name, par.fullname, toadd, par.gb_in)
+                    ).format(modelcont, gambit_model_name, e, toadd, par.gb_in)
 
                 # If it's a matrix then do each element individually
                 elif shape == "matrix":
@@ -115,14 +117,14 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                         for j in xrange(int(size)):
                             towrite += (
                                 "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
-                            ).format(modelcont, gambit_model_name, par.fullname, toadd, i, j, par.gb_in, i+1, j+1)
+                            ).format(modelcont, gambit_model_name, e, toadd, i, j, par.gb_in, i+1, j+1)
 
                 # Same deal for a vector
                 elif shape == "vector":
                 	for i in xrange(int(size)):
                 		towrite += (
                 				"{0}.{1}_{2}{3}[{4}] = *myPipe::Param[\"{5}{6}\"];\n"
-                			).format(modelcont, gambit_model_name, par.fullname, toadd, i, par.gb_in, i+1)
+                			).format(modelcont, gambit_model_name, e, toadd, i, par.gb_in, i+1)
 
                 else:
                     raise GumError("Parameter with shape " + shape + " is not currently supported.")

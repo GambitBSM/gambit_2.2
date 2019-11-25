@@ -539,6 +539,7 @@ if args.file:
 
             pc_cap, dmid_cap = write_darkbit_rollcall(gum.name, pc)
 
+
         """
         SPECBIT
         """
@@ -668,7 +669,9 @@ if args.file:
             m = "DarkBit"
             amend_rollcall("DarkMatter_ID", m, dmid_cap, reset_contents)
             write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
+            print ("doing darkbit")
             if pc:
+                print("doing pc")
                 amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)
                 add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", 
                                           "RD_spectrum", 
@@ -680,6 +683,8 @@ if args.file:
                                           "RD_eff_annrate_from_ProcessCatalog",
                                           gum.name, reset_contents, 
                                           pattern="ALLOW_MODELS")
+                print("done pc")
+
 
         # ColliderBit
         m = "ColliderBit"

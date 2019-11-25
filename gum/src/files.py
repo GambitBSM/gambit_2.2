@@ -85,12 +85,12 @@ def find_capability(capability, module, filename=None):
         raise GumError(("\n\nCannot find capability {0} in rollcall header file"
                         " {1} as the file does not exist!!").format(capability,
                                                                     location))
-
-    lookup = "#define CAPABILITY " + capability
+    pat = r'#define CAPABILITY {}\b'.format(capability)
 
     with open(location) as f:
         for num, line in enumerate(f, 1):
-            if lookup in line:
+            r = re.search(pat, line)
+            if r:
                 return True, num
 
     return False, 0
@@ -115,13 +115,14 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
                         " {1} as the file does not exist!!").format(capability,
                                                                     location))
 
-    lookup = "#define CAPABILITY " + capability
+    pat = r'#define CAPABILITY {}\b'.format(capability)
 
     found = False
 
     with open(location) as f:
         for num, line in enumerate(f, 1):
-            if lookup in line:
+            r = re.search(pat, line)
+            if r:
                 found = True
                 break
 
@@ -135,9 +136,11 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
-            amend_file(filename, module, contents, no-1, reset_dict,
-                       is_capability = True, capability = capability, 
-                       function = contents)
+
+        amend_file(filename, module, contents, no-1, reset_dict,
+                   is_capability = True, capability = capability, 
+                   function = contents)
+
     else:
         raise GumError(("\n\nCapability {0} not found in "
                         "{1}!").format(capability, filename))
@@ -159,14 +162,18 @@ def find_function(function, capability, module, filename=None):
     # First check the capability exists...
     exists, num = find_capability(capability, module, filename)
 
-    lookup = "#define FUNCTION " + function
+    if not exists:
+        return False, 0
+
+    pat = r'#define FUNCTION {}\b'.format(function)
     terminate = "#undef CAPABILITY"
 
     with open(location) as f:
         for i in xrange(num):
             f.next()
         for no, line in enumerate(f, 1+num):
-            if lookup in line:
+            r = re.search(pat, line)
+            if r:
                 return True, no
             if terminate in line:
                 return False, 0
