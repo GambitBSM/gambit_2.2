@@ -79,8 +79,6 @@ load_functions = [
     'GetChi2(double, double )',
     'GetLikelihood(double, double )',
     'GetLogLikelihood(double, double )',
-
-    
 ]
 
 print('Funcitions: ', load_functions)
@@ -111,8 +109,7 @@ indent = 3
 #                    "AnotherNamespace::KnownClassTwo" : "path_to_header/KnownClassTwo.hpp" }
 
 known_classes = {
-    "Eigen::Matrix" : "<Eigen/Core>",
-    "Eigen::Array" : "<Eigen/Core>",
+    "boost::numeric::ublas::matrix" : "<boost/numeric/ublas/matrix.hpp>",
     "YAML::Node" : "yaml-cpp/yaml.h"
 }
 
