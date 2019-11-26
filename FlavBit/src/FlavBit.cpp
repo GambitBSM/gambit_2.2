@@ -3272,7 +3272,7 @@ namespace Gambit
         "dGamma/dq2_B0Kstar0mumu_2.5_4",
         "dGamma/dq2_B0Kstar0mumu_4_6",
         "dGamma/dq2_B0Kstar0mumu_6_8",
-        "dGamma/dq2_BKstarmumu_15_19",
+        "dGamma/dq2_B0Kstarmumu_15_19",
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
