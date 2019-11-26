@@ -22,6 +22,8 @@
 #include "gambit/Models/partmap.hpp"
 #include "gambit/Backends/frontends/CalcHEP_3_6_27.hpp"
 #include "gambit/Elements/decay_table.hpp"
+#include "gambit/Elements/spectrum_contents.hpp"
+
 #include <unistd.h>
 
 BE_INI_FUNCTION
@@ -56,16 +58,9 @@ BE_INI_FUNCTION
 
   if (ModelInUse("ScalarSingletDM_Z2"))
   {
-    // Obtain model contents
-    static const SpectrumContents::ScalarSingletDM_Z2 ScalarSingletDM_Z2_contents;
-
-    // Obtain list of all parameters within model
-    static const std::vector<SpectrumParameter> ScalarSingletDM_Z2_params = ScalarSingletDM_Z2_contents.all_parameters();
-
     // Obtain spectrum information to pass to CalcHEP
     const Spectrum& spec = *Dep::ScalarSingletDM_Z2_spectrum;
-
-    Assign_All_Values(spec, ScalarSingletDM_Z2_params);
+    Assign_All_Values(spec);
   }
 
 }
@@ -73,6 +68,7 @@ END_BE_INI_FUNCTION
 
 BE_NAMESPACE
 {
+
   /// Assigns gambit value to parameter, with error-checking.
   void Assign_Value(char *parameter, double value)
   {
@@ -82,8 +78,8 @@ BE_NAMESPACE
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
   }
 
-  /// Assigns gambit value to parameter, with error-checking, for parameters that may have two different names in GAMBIT.
-  /// Useful for parameters that have different names, such as aEWM1 (FeynRules) and aEWinv (SARAH)
+  /// Assigns gambit value to parameter, with error-checking, for parameters that may 
+  /// have two different names in CalcHEP, such as alphainv : aEWM1 (FeynRules) / aEWinv (SARAH)
   void Assign_Value(char *parameter1, char *parameter2, double value)
   {
     int error;
@@ -99,8 +95,11 @@ BE_NAMESPACE
   }
 
   /// Takes all parameters in a model, and assigns them by value to the appropriate CalcHEP parameter names.
-  void Assign_All_Values(const Spectrum& spec, std::vector<SpectrumParameter> params)
+  void Assign_All_Values(const Spectrum& spec)
   {
+
+    const SpectrumContents::Contents contents = spec.get_SpectrumContents();
+    std::vector<SpectrumContents::Parameter> params = contents.all_parameters();
 
     // Iterate through the expected spectrum parameters of the model. Pass the value of pole masses
     // to CalcHEP from the spectrum, by PDG code.
@@ -108,7 +107,7 @@ BE_NAMESPACE
     {
       // Don't add the SM vev, Gauge couplings, Yukawas,
       // as CalcHEP computes these internally.
-      std::list<str> doNotAssign = {"g1", "g2", "g3", "v", "Yu", "Ye", "Yd", "sinW2", "vev"};
+      std::list<std::string> doNotAssign = {"g1", "g2", "g3", "v", "Yu", "Ye", "Yd", "sinW2", "vev"};
 
       // Fetch the iterator of element with the parameter name
       std::list<std::string>::iterator it2 = std::find(doNotAssign.begin(), doNotAssign.end(), it->name());
@@ -213,7 +212,6 @@ BE_NAMESPACE
     for (std::map<std::pair<int, int>, Gambit::DecayTable::Entry>::const_iterator it = tbl.particles.begin(); 
           it != tbl.particles.end(); ++it)
     {
-      std::cout << "Current entry " << it->first << std::endl;
       if (std::find(generic_particles.begin(), generic_particles.end(), it->first) != generic_particles.end())
       {
         continue; 

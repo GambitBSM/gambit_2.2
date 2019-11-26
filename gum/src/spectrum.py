@@ -7,11 +7,12 @@ from files import *
 from cmake_variables import *
 
 def write_spectrum(gambit_model_name, model_parameters, spec,
-                         add_higgs, with_spheno, gambit_pdgs,
-                         neutral_higgses, charged_higgses):
+                   add_higgs, with_spheno, gambit_pdgs,
+                   neutral_higgses, charged_higgses, blockdict, 
+                   particles):
     """
     Writes the spectrum object wrapper for new model:
-    SpecBit/src/SpecBit_<new_model_name>.
+    SpecBit/src/models/<new_model_name>.cpp.
 
     GUM will create a basic spectrum container unless the user has
     specified SPheno output. If so the spectrum object will be built by 
@@ -20,11 +21,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
     """
 
     is_susy = True if "MSSM" in gambit_model_name else False
-    
-    modelSS = gambit_model_name + "SimpleSpec"
-    modelclass = gambit_model_name + "Model"
-    modelcont = gambit_model_name + "model"
-    
+        
     intro_message = (
             "///  Implementation of SpecBit routines for \n"
             "///  " + gambit_model_name + "."
@@ -36,23 +33,16 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
     if not with_spheno:
 
         towrite += (
+                "#include <string>\n"
+                "#include <sstream>\n"
+                "\n"
                 "#include \"gambit/Elements/gambit_module_headers.hpp\"\n"
                 "#include \"gambit/Elements/spectrum.hpp\"\n"
-                "#include \"gambit/Utils/stream_overloads.hpp\"\n"
-                "#include \"gambit/Utils/util_macros.hpp\"\n"
+                "#include \"gambit/Elements/smlike_higgs.hpp\"\n"
+                "\n"
                 "#include \"gambit/SpecBit/SpecBit_rollcall.hpp\"\n"
                 "#include \"gambit/SpecBit/SpecBit_helpers.hpp\"\n"
-                "#include \"gambit/SpecBit/QedQcdWrapper.hpp\"\n"
-                "#include \"gambit/Models/SimpleSpectra/{0}.hpp\"\n"
-        ).format(modelSS, gambit_model_name)
-
-        # If there's a Higgs dependency 
-        if add_higgs:
-        	towrite += (
-        		"#include \"gambit/Models/SimpleSpectra/SMHiggsSimpleSpec.hpp\"\n"
-        		)
-        
-        towrite += (
+                "#include \"gambit/SpecBit/RegisteredSpectra.hpp\"\n"
                 "\n"
                 "namespace Gambit\n"
                 "{{\n"
@@ -61,95 +51,79 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 "{{\n"
                 "using namespace LogTags;\n"
                 "\n"
-                "/// Get a simple wrapper for Spectrum object.\n"
+                "/// Get a (simple) Spectrum object wrapper for {0} model.\n"
                 "void get_{0}(Spectrum& result)\n"
                 "{{\n"
                 "namespace myPipe = Pipes::get_{0};\n"
                 "const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;\n"
                 "\n"
-                "// Initialise model object \n"
-                "Models::{1} {2};\n\n"
-                "// BSM parameters\n"
-        ).format(spec, modelclass, modelcont)
-        
-        
-        # Now add each BSM model parameter to spectrum
-        for i in range(0, len(model_parameters)):
-        
-            par = model_parameters[i] 
+                "// // Initialise an SLHAea object to carry the model info.\n"
+                "SLHAea::Coll slha;\n"
+        ).format(spec)
 
-            # Don't have anything that's an output of spectrum computation as 
-            # a scan parameter
-            if par.is_output: continue
-          
-            if not isinstance(par, SpectrumParameter):
-                raise GumError(("\n\nModel Parameters at position " + i + 
-                                "not passed as instance of class "
-                                "SpectrumParameter."))
-              
-            if not par.sm:
-                
-                # If it's a pole mass then append this information onto the parameter name
-                toadd = "_Pole_Mass" if par.tag == "Pole_Mass" else ""
-                shape = "scalar"
-                size = 1
+        # Add each block to the spectrum
+        for block in sorted(blockdict.keys()):
+            if block in ["UELMIX","UDLMIX","UULMIX"]: continue
+            towrite += (
+                    "SLHAea_add_block(slha, \"{0}\");\n"
+            ).format(block)
 
-                if model_parameters[i].shape:
-                    if re.match("v[2-9]", par.shape):
-                        shape = "vector"
-                        size = par.shape[-1]
-                    elif re.match("m[2-9]x[2-9]", par.shape):
-                        # Assuming all matrices will be square...
-                        shape = "matrix"
-                        size = par.shape[-1]
+        # Add the intermediate container spectrum quantities
+        towrite += add_simple_sminputs()
 
-                e = par.fullname[1:].strip('~') if par.tag == "Pole_Mass" else par.fullname
+        towrite += "\n// Masses\n"
 
-                # If it's a scalar shape, just add it one by one
-                if shape == "scalar":
-                    towrite += (
-                            "{0}.{1}_{2}{3} = *myPipe::Param[\"{4}\"];\n"
-                    ).format(modelcont, gambit_model_name, e, toadd, par.gb_in)
+        for particle in particles:
+            pdg = particle.PDG_code
+            towrite += (
+                    "slha[\"MASS\"][\"\"] << {0} << "
+                    "*myPipe::Param.at(\"{1}\") \"# {2}\";\n"
+            ).format(pdg, particle.mass, pdg_to_particle(pdg, gambit_pdgs))
 
-                # If it's a matrix then do each element individually
-                elif shape == "matrix":
-                    for i in xrange(int(size)):
-                        for j in xrange(int(size)):
+        towrite += "\n/* BSM parameters \n /*"
+
+        # Add each entry to the SLHAea structure
+        for block, entries in blockdict.iteritems():
+            # Already done the MASS block separately
+            if block == "MASS": continue
+            # Don't do the Yukawas
+            # TODO mixings
+            # TODO if we have extended gauge groups...
+            if block in ["YE","YU","YD","UELMIX","UDLMIX","UULMIX","GAUGE"]: 
+                continue
+            else:
+                towrite += "\n// {0}\n".format(block)
+                if "matrix" in entries:
+                    size = int( entries["matrix"].split('x')[0] )
+                    # Now do each element of the matrix
+                    for i in range(size):
+                        for j in range(size):
                             towrite += (
-                                "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
-                            ).format(modelcont, gambit_model_name, e, toadd, i, j, par.gb_in, i+1, j+1)
-
-                # Same deal for a vector
-                elif shape == "vector":
-                	for i in xrange(int(size)):
-                		towrite += (
-                				"{0}.{1}_{2}{3}[{4}] = *myPipe::Param[\"{5}{6}\"];\n"
-                			).format(modelcont, gambit_model_name, e, toadd, i, par.gb_in, i+1)
-
+                                    "slha[\"{0}\"][\"\"] << {1} << {2} << "
+                                    "*myPipe::Param.at(\"{0}{1}x{2}\"); "
+                                    "\"# {0}({1},{2})\" \n"
+                            ).format(block, i+1, j+1)
                 else:
-                    raise GumError("Parameter with shape " + shape + " is not currently supported.")
-
-        if add_higgs:
-            towrite += add_simple_sminputs(modelcont)
+                    for index, entry in entries.iteritems():
+                        towrite += (
+                                "slha[\"{0}\"][\"\"] << {1} << "
+                                "*myPipe::Param.at(\"{2}\"); \"# {2}\" \n"
+                        ).format(block, index, entry)
 
         towrite += (
                 "\n"
-                "// Create a SubSpectrum object wrapper\n"
-                "Models::{0} spec({1});\n\n" 
+                "// SpectrumContents struct\n"
+                "SpectrumContents::{0} contents;\n"
+                "\n"
+                "// Create spectrum object\n"
+                "// Take mZ as the spectrum scale\n"
+                "result = Spectrum(slha, contents, sminputs.mZ, false);\n"
+                "\n"
                 "// Retrieve any mass cuts\n"
-                "static const Spectrum::mc_info mass_cut = "
-                "myPipe::runOptions->getValueOrDef<Spectrum::mc_info>"
-                "(Spectrum::mc_info(), \"mass_cut\");\n"
-                "static const Spectrum::mr_info mass_ratio_cut = "
-                "myPipe::runOptions->getValueOrDef<Spectrum::mr_info>"
-                "(Spectrum::mr_info(), \"mass_ratio_cut\");\n\n"
-                "// We don't supply a LE subspectrum here; an "
-                "SMSimpleSpec will therefore be automatically created "
-                "from 'sminputs'\n"
-                "result = Spectrum(spec,sminputs,&myPipe::Param,"
-                "mass_cut,mass_ratio_cut);\n"
-                "}}\n\n"
-        ).format(modelSS, modelcont)
+                "result.check_mass_cuts(*myPipe::runOptions);\n"
+                "\n"
+                "}}\n"
+        ).format(gambit_model_name)
 
     # If we have SPheno, make the spectrum use it.
     # TODO SpecBit/include/NEWMODELSpec.hpp does not get generated by GUM (yet)
@@ -185,79 +159,16 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
 
     # Printing, fill_map_from_spectrum, and wrap it up. 
     towrite += (
-            "// Declaration: print spectrum out\n"
-            "void fill_map_from_{2}_spectrum(std::map<std::string,double>&, "
-            "const Spectrum&);\n\n"
-            "void get_{2}_spectrum_as_map" 
-            "(std::map<std::string,double>& specmap)\n"
+            "// Convert a {0} spectrum into a map to be printed\n"
+            "void get_{1}_as_map(std::map<std::string,double>&, specmap)\n"
             "{{\n"
-            "namespace myPipe = Pipes::get_{3}_as_map;\n"
-            "const Spectrum& spec(*myPipe::Dep::{3});\n"
-            "fill_map_from_{2}_spectrum(specmap, spec);\n"
+            "namespace myPipe = Pipes::get_{1}_as_map;\n"
+            "const Spectrum& spec(*myPipe::Dep::{1});\n"
+            "fill_map_from_{1}(specmap, spec);\n"
             "}}\n\n"
-            "void fill_map_from_{2}_spectrum"
-            "(std::map<std::string, double>& specmap, "
-            "const Spectrum& spec)\n"
-            "{{\n"
-            "/// Use SpectrumContents routines to automate\n"
-            "static const SpectrumContents::{2} contents;\n"
-            "static const std::vector<SpectrumParameter> "
-            "required_parameters = contents.all_parameters();\n\n"
-            "for(std::vector<SpectrumParameter>::const_iterator "
-            "it = required_parameters.begin(); "
-            "it != required_parameters.end(); ++it)\n"
-            "{{\n"
-            "const Par::Tags        tag   = it->tag();\n"
-            "const std::string      name  = it->name();\n"
-            "const std::vector<int> shape = it->shape();\n"
-            "\n"
-            "// Scalar case\n"
-            "if(shape.size()==1 and shape[0]==1)\n"
-            "{{\n"
-            "std::ostringstream label;\n"
-            "label << name <<\" \"<< Par::toString.at(tag);\n"
-            "specmap[label.str()] = spec.get_HE().get(tag,name);\n"
-            "}}\n"
-            "// Vector case\n"
-            "else if(shape.size()==1 and shape[0]>1)\n"
-            "{{\n"
-            "for(int i = 1; i<=shape[0]; ++i)\n"
-            "{{\n"
-            "std::ostringstream label;\n"
-            "label << name <<\"_\"<<i<<\" \"<< Par::toString.at(tag);\n"
-            "specmap[label.str()] = spec.get_HE().get(tag,name,i);\n"
-            "}}\n"
-            "}}\n"
-            "// Matrix case\n"
-            "else if(shape.size()==2)\n"
-            "{{\n"
-            "for(int i = 1; i<=shape[0]; ++i)\n"
-            "{{\n"
-            "for(int j = 1; j<=shape[0]; ++j)\n"
-            "{{\n"
-            "std::ostringstream label;\n"
-            "label << name <<\"_(\"<<i<<\",\"<<j<<\") \""
-            "<<Par::toString.at(tag);\n"
-            "specmap[label.str()] = spec.get_HE().get(tag,name,i,j);\n"
-            "}}\n"
-            "}}\n"
-            "}}\n"
-            "// Deal with all other cases\n"
-            "else\n"
-            "{{\n"
-            "// ERROR\n"
-            "std::ostringstream errmsg;\n"
-            "errmsg << \"Invalid parameter received while converting " 
-            "{3} to map of strings!\";\n"
-            "errmsg << \"Problematic parameter was: \"<< tag "
-            "<<\", \" << name << \", shape=\"<< shape;\n"
-            "utils_error().forced_throw(LOCAL_INFO,errmsg.str());\n"
-            "}}\n"
-            "}}\n"
-            "}}\n\n"
-            "}}\n\n"
-            "}}\n"
-    ).format(modelSS, modelcont, gambit_model_name, spec)
+            "}} // end namespace SpecBit\n"
+            "}} // end namespace Gambit\n"
+    ).format(gambit_model_name, spec)
             
     return indent(towrite)
     
@@ -407,7 +318,7 @@ def write_specbit_rollcall(model_name):
     
     return dumb_indent(2, towrite)
     
-def add_simple_sminputs(model):
+def add_simple_sminputs():
     """
     Adds simple SMInputs definitions to a spectrum object.
     """
@@ -422,24 +333,37 @@ def add_simple_sminputs(model):
             "double e = pow( 4*pi*( alpha_em ),0.5);\n"
             "double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
             "\n"
-            "// Gauge couplings\n"
-            "{0}.vev = vev;\n"    
-            "{0}.g1 = e / sqrt(sinW2);\n"    
-            "{0}.g2 = e / sqrt(cosW2);\n"    
-            "{0}.g3 = pow( 4*pi*( sminputs.alphaS ),0.5);\n"    
+            "// Standard model\n"
+            "slha[\"SINTHETAW\"][\"\"] << 1 << sinW2 << \"# sinW2\";\n"
+            "\n"
+            "// gauge couplings\n"
+            "slha[\"GAUGE\"][\"\"] << 1 << sqrt(5/3) * e / sqrt(cosW2) "
+            "<< \"# g1\";\n"
+            "slha[\"GAUGE\"][\"\"] << 2 << e / sqrt(sinW2) << \"# g2\";\n"
+            "slha[\"GAUGE\"][\"\"] << 3 << pow( 4*pi*( sminputs.alphaS ),0.5) "
+            "<< \"# g3\";\n"
             "\n"
             "// Yukawas\n"
             "double sqrt2v = pow(2.0,0.5)/vev;\n"
-            "{0}.Yu[0][0] = sqrt2v * sminputs.mU;\n"
-            "{0}.Yu[1][1] = sqrt2v * sminputs.mCmC;\n"
-            "{0}.Yu[2][2] = sqrt2v * sminputs.mT;\n"
-            "{0}.Ye[0][0] = sqrt2v * sminputs.mE;\n"
-            "{0}.Ye[1][1] = sqrt2v * sminputs.mMu;\n"
-            "{0}.Ye[2][2] = sqrt2v * sminputs.mTau;\n"
-            "{0}.Yd[0][0] = sqrt2v * sminputs.mD;\n"
-            "{0}.Yd[1][1] = sqrt2v * sminputs.mS;\n"
-            "{0}.Yd[2][2] = sqrt2v * sminputs.mBmB;\n"
-    ).format(model)
+            "slha[\"YU\"][\"\"] << 1 << 1 << sqrt2v * sminputs.mU   << "
+            "\"# Yu(1,1)\";\n"
+            "slha[\"YU\"][\"\"] << 2 << 2 << sqrt2v * sminputs.mCmC << "
+            "\"# Yu(2,2)\";\n"
+            "slha[\"YU\"][\"\"] << 3 << 3 << sqrt2v * sminputs.mT   << "
+            "\"# Yu(3,3)\";\n"
+            "slha[\"YE\"][\"\"] << 1 << 1 << sqrt2v * sminputs.mE   << "
+            "\"# Ye(1,1)\";\n"
+            "slha[\"YE\"][\"\"] << 2 << 2 << sqrt2v * sminputs.mMu  << "
+            "\"# Ye(2,2)\";\n"
+            "slha[\"YE\"][\"\"] << 3 << 3 << sqrt2v * sminputs.mTau << "
+            "\"# Ye(3,3)\";\n"
+            "slha[\"YD\"][\"\"] << 1 << 1 << sqrt2v * sminputs.mD   << "
+            "\"# Yd(1,1)\";\n"
+            "slha[\"YD\"][\"\"] << 2 << 2 << sqrt2v * sminputs.mS   << "
+            "\"# Yd(2,2)\";\n"
+            "slha[\"YD\"][\"\"] << 3 << 3 << sqrt2v * sminputs.mBmB << "
+            "\"# Yd(3,3)\";\n"
+    )
       
     return towrite
     
@@ -705,7 +629,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
             "// The SPheno frontend provides the invisible width for each Higgs, however this requires\n"
             "// loads of additional function calls. Just use the helper function instead.\n"
             "result.invisibles = get_invisibles(he);\n"
-            # TODO is the invisibles function generic? Just for SUSY?
+            # TODO add invisible particles somehow??
             "}}\n\n"
     ).format(model_name)
 

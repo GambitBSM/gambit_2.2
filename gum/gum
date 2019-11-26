@@ -186,7 +186,7 @@ if args.file:
 
             # If the user has requested MicrOMEGAs output and the DM candidate
             # does not begin with a tilde, then complain
-            if not dm.name().startswith('~') and output_opts.mo:
+            if not dm.name.startswith('~') and output_opts.mo:
             	raise GumError(("You have requested MicrOMEGAs output, but your"
             					"DM candidate has to begin with a '~' for "
             					"MicrOMEGAs to recognise it as an odd particle"
@@ -553,7 +553,8 @@ if args.file:
         print("Writing basic container SpecBit interface...")
         spectrum_src = write_spectrum(gum.name, parameters, gum.spec, add_higgs, 
                                       output_opts.spheno, gambit_pdgs,
-                                      neutral_higgses, charged_higgses)
+                                      neutral_higgses, charged_higgses, 
+                                      blockparams, bsm_particle_list)
 
         spectrum_header = write_spectrum_header(gum.name, add_higgs, 
                                                 output_opts.spheno, higgses)

@@ -584,13 +584,13 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
 
 def add_to_registered_spectra(gambit_model):
     """
-    Adds new model entry to RegisteredSpectra.hpp
+    Adds new model entry to SpecBit/RegisteredSpectra.hpp
     """
 
     lookup = "SubSpectrumContents"
     newentry = "    struct {0:21}: SubSpectrumContents {{ {0}(); }};\n".format(gambit_model)
-    filename = "SpectrumContents/RegisteredSpectra.hpp"
-    module = "Models"
+    filename = "RegisteredSpectra.hpp"
+    module = "SpecBit"
     location = full_filename(filename, module)
     linenum = 0 # Position of last entry in RegisteredSpectra
     with open(location) as f:
