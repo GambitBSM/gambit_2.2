@@ -259,6 +259,9 @@ namespace Gambit
 
          /// Get the SMINPUTS struct
          const SMInputs& get_SMInputs() const;
+
+         /// Get the SpectrumContents for this spectrum
+         const SpectrumContents::Contents& get_SpectrumContents() const;
  
          /// CKM Wolfenstein (lambda, A, rhobar, etabar) --> V_qq standard parameterisation convertors
          /// @{
