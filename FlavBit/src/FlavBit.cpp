@@ -3312,7 +3312,7 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
-      static const std::array<std::string, 6> observables{
+      static const std::array<std::string, 2> observables{
               "dGamma/dq2_Bsphimumu_1_6",
               "dGamma/dq2_Bsphimumu_15_19",
       };
