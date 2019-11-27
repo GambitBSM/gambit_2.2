@@ -582,7 +582,6 @@ namespace Gambit
 
       BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &res, &param, &nuislist);
 
-      assert(nObservables == sizeof(res) / sizeof(res[0]));
       for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
           result[obslist[iObservable]] = res[iObservable];
       }
