@@ -3292,8 +3292,8 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_Bs2PhimumuBr_LogLikelihood;
 
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_1_6.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_15_19.yaml";
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_1_6.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_15_19.yaml";
       static HepLike_default::HL_BifurGaussian bifurGaussian_0(inputfile_0);
       static HepLike_default::HL_BifurGaussian bifurGaussian_1(inputfile_1);
 
