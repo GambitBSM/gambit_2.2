@@ -3293,18 +3293,10 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_Bs2PhimumuBr_LogLikelihood;
 
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_0.1_2.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_11_12.5.yaml";
-      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_15_19.yaml";
-      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_1_6.yaml";
-      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_2_5.yaml";
-      static const std::string inputfile_5 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_5_8.yaml";
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_1_6.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_15_19.yaml";
       static HepLike_default::HL_BifurGaussian bifurGaussian_0(inputfile_0);
       static HepLike_default::HL_BifurGaussian bifurGaussian_1(inputfile_1);
-      static HepLike_default::HL_BifurGaussian bifurGaussian_2(inputfile_2);
-      static HepLike_default::HL_BifurGaussian bifurGaussian_3(inputfile_3);
-      static HepLike_default::HL_BifurGaussian bifurGaussian_4(inputfile_4);
-      static HepLike_default::HL_BifurGaussian bifurGaussian_5(inputfile_5);
 
       static bool first = true;
       if (first)
@@ -3313,14 +3305,6 @@ namespace Gambit
         bifurGaussian_0.Read();
         std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
         bifurGaussian_1.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
-        bifurGaussian_2.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
-        bifurGaussian_3.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_4 << endl;
-        bifurGaussian_4.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_5 << endl;
-        bifurGaussian_5.Read();
 
         first = false;
       }
@@ -3329,27 +3313,18 @@ namespace Gambit
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
       static const std::array<std::string, 6> observables{
-              "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
-              "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
-              "dGamma/dq2_B0Kstar0mumu_2.5_4",
-              "dGamma/dq2_B0Kstar0mumu_4_6",
-              "dGamma/dq2_B0Kstar0mumu_6_8",
-              "dGamma/dq2_BKstarmumu_15_19",
+              "dGamma/dq2_Bsphimumu_1_6",
+              "dGamma/dq2_Bsphimumu_15_19",
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
       auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
 
-      // FIXME: The experimental and theory binning do not overlap. This gives false results.
       result = 0;
       result += bifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
       result += bifurGaussian_1.GetLogLikelihood(SI_theory[observables[1]], SI_theory_covariance[observables[1]][observables[1]]);
-      result += bifurGaussian_2.GetLogLikelihood(SI_theory[observables[2]], SI_theory_covariance[observables[2]][observables[2]]);
-      result += bifurGaussian_3.GetLogLikelihood(SI_theory[observables[3]], SI_theory_covariance[observables[3]][observables[3]]);
-      result += bifurGaussian_4.GetLogLikelihood(SI_theory[observables[4]], SI_theory_covariance[observables[4]][observables[4]]);
-      result += bifurGaussian_5.GetLogLikelihood(SI_theory[observables[5]], SI_theory_covariance[observables[5]][observables[5]]);
 
-      std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
   }
 }
