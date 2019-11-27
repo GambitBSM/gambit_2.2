@@ -77,10 +77,10 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
             pdg = particle.PDG_code
             towrite += (
                     "slha[\"MASS\"][\"\"] << {0} << "
-                    "*myPipe::Param.at(\"{1}\") \"# {2}\";\n"
+                    "*myPipe::Param.at(\"{1}\") << \"# {2}\";\n"
             ).format(pdg, particle.mass, pdg_to_particle(pdg, gambit_pdgs))
 
-        towrite += "\n/* BSM parameters \n /*"
+        towrite += "\n/* BSM parameters */\n"
 
         # Add each entry to the SLHAea structure
         for block, entries in blockdict.iteritems():
@@ -89,7 +89,9 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
             # Don't do the Yukawas
             # TODO mixings
             # TODO if we have extended gauge groups...
-            if block in ["YE","YU","YD","UELMIX","UDLMIX","UULMIX","GAUGE"]: 
+            if block in ["YE","YU","YD",
+                         "UELMIX","UDLMIX","UULMIX",
+                         "GAUGE","SINTHETAW"]: 
                 continue
             else:
                 towrite += "\n// {0}\n".format(block)
@@ -100,14 +102,14 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                         for j in range(size):
                             towrite += (
                                     "slha[\"{0}\"][\"\"] << {1} << {2} << "
-                                    "*myPipe::Param.at(\"{0}{1}x{2}\"); "
-                                    "\"# {0}({1},{2})\" \n"
+                                    "*myPipe::Param.at(\"{0}{1}x{2}\") << "
+                                    "\"# {0}({1},{2})\"; \n"
                             ).format(block, i+1, j+1)
                 else:
                     for index, entry in entries.iteritems():
                         towrite += (
                                 "slha[\"{0}\"][\"\"] << {1} << "
-                                "*myPipe::Param.at(\"{2}\"); \"# {2}\" \n"
+                                "*myPipe::Param.at(\"{2}\") << \"# {2}\"; \n"
                         ).format(block, index, entry)
 
         towrite += (
@@ -160,11 +162,11 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
     # Printing, fill_map_from_spectrum, and wrap it up. 
     towrite += (
             "// Convert a {0} spectrum into a map to be printed\n"
-            "void get_{1}_as_map(std::map<std::string,double>&, specmap)\n"
+            "void get_{1}_as_map(std::map<std::string,double>& specmap)\n"
             "{{\n"
             "namespace myPipe = Pipes::get_{1}_as_map;\n"
             "const Spectrum& spec(*myPipe::Dep::{1});\n"
-            "fill_map_from_{1}(specmap, spec);\n"
+            "fill_map_from_spectrum<SpectrumContents::{0}>(specmap, spec);\n"
             "}}\n\n"
             "}} // end namespace SpecBit\n"
             "}} // end namespace Gambit\n"
@@ -310,13 +312,10 @@ def write_specbit_rollcall(model_name):
     """
     
     towrite = (
-            "\n"
-            "/// Module function declarations for SpecBit_{0}.cpp\n"
-            "#include \"gambit/SpecBit/SpecBit_{0}_rollcall.hpp\"\n"
-            "\n"
+            "#include \"gambit/SpecBit/models/{0}.hpp\"\n"
     ).format(model_name)
     
-    return dumb_indent(2, towrite)
+    return towrite
     
 def add_simple_sminputs():
     """

@@ -168,6 +168,7 @@ if args.file:
         # Check to see if the DM particle exists in the model file.
         # First, initialise DM particle from particle list
         if darkbit:
+            dm_set = False
             for i in xrange(len(partlist)):
                 part = partlist[i]
                 # If specified, initialise the DM candidate
@@ -175,23 +176,25 @@ if args.file:
                     dm = Particle(part.name(), part.antiname(),
                                   part.spinX2(), part.pdg(),
                                   part.mass())
+                    dm_set = True
 
             # If we haven't found the DM candidate in the particle list, 
             # throw an error
-            if not dm:
-                raise GumError(("\n\nThe DM candidate specified has not been "
+            if not dm_set:
+                raise GumError(("\n\nThe WIMP candidate specified has not been "
                                 "found in the {0} file. Please check your .gum "
-                                "file and {0} file are consistent."
-                                ).format(gum.math))
+                                "file and {0} file are consistent.\n"
+                                "PDG code given = {1}"
+                                ).format(gum.math, gum.dm_pdg))
 
             # If the user has requested MicrOMEGAs output and the DM candidate
             # does not begin with a tilde, then complain
             if not dm.name.startswith('~') and output_opts.mo:
-            	raise GumError(("You have requested MicrOMEGAs output, but your"
-            					"DM candidate has to begin with a '~' for "
-            					"MicrOMEGAs to recognise it as an odd particle"
-            					". Please change the DM name in your {} file!"
-            					).format(gum.math))
+                raise GumError(("You have requested MicrOMEGAs output, but your"
+                                "DM candidate has to begin with a '~' for "
+                                "MicrOMEGAs to recognise it as an odd particle"
+                                ". Please change the DM name in your {} file!"
+                                ).format(gum.math))
 
         """ 
         UFO2MDL
@@ -349,7 +352,6 @@ if args.file:
         model_header = add_to_model_hierarchy(gum.spec, gum.name, 
                                               model_parameters)
         spec_contents = write_spectrumcontents(gum.name, model_parameters)
-        subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
         """
@@ -620,22 +622,20 @@ if args.file:
         m = "Models"
         write_file("models/" + gum.name + ".hpp", m, model_header, 
                    reset_contents)
-        write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, 
-                   reset_contents)
-        write_file("SimpleSpectra/" + gum.name + "SimpleSpec" + ".hpp", m, 
-                    subspec_wrapper, reset_contents)
-        amend_file("SpectrumContents/RegisteredSpectra.hpp", m, reg_spec, 
-                    reg_spec_num, reset_contents)
 
         # SpecBit
         m = "SpecBit"
-        write_file("SpecBit_" + gum.name + ".cpp", m, spectrum_src, 
+        write_file("models/" + gum.name + ".cpp", m, spectrum_src, 
                    reset_contents)
-        write_file("SpecBit_" + gum.name + "_rollcall.hpp", m, spectrum_header, 
-                   reset_contents)
+        write_file("models/" + gum.name + ".hpp", m, spectrum_header, 
+                    reset_contents)
         num = find_string("SpecBit_rollcall.hpp", m, 
-                          "SpecBit_tests_rollcall.hpp")[1]
-        amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num, 
+                          "SpecBit_VS_rollcall.hpp")[1]
+        amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num-2, 
+                   reset_contents)
+        amend_file("RegisteredSpectra.hpp", m, reg_spec, 
+                    reg_spec_num, reset_contents)
+        write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, 
                    reset_contents)
 
         # DecayBit
@@ -670,9 +670,7 @@ if args.file:
             m = "DarkBit"
             amend_rollcall("DarkMatter_ID", m, dmid_cap, reset_contents)
             write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
-            print ("doing darkbit")
             if pc:
-                print("doing pc")
                 amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)
                 add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", 
                                           "RD_spectrum", 
@@ -684,8 +682,6 @@ if args.file:
                                           "RD_eff_annrate_from_ProcessCatalog",
                                           gum.name, reset_contents, 
                                           pattern="ALLOW_MODELS")
-                print("done pc")
-
 
         # ColliderBit
         m = "ColliderBit"

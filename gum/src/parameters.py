@@ -143,16 +143,24 @@ def fr_params(paramlist, add_higgs):
 
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
-        params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True))
+        params.append(SpectrumParameter("vev", "mass1", shape="scalar", 
+                                        block="VEVS", sm=True))
 
-    # Add gauge couplings and Yukawas here? TODO: check! 
-    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True))
-    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True))
-    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True))
-    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True))
-    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True))
-    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True))
-    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True))
+    # Add gauge couplings and Yukawas here
+    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", 
+                                    index=1, shape="scalar", sm=True))
+    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", 
+                                    index=2, shape="scalar", sm=True))
+    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", 
+                                    index=3, shape="scalar", sm=True))
+    params.append(SpectrumParameter("sinW2", "dimensionless", block="SINTHETAW",
+                                    shape="scalar", sm=True))
+    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", 
+                                    shape="m3x3", sm=True))
+    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", 
+                                    shape="m3x3", sm=True))
+    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", 
+                                    shape="m3x3", sm=True))
     
     return params
 

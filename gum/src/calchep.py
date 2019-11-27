@@ -383,8 +383,7 @@ def add_calchep_switch(model_name, spectrum):
            "if (ModelInUse(\"{0}\"))\n"
            "{{\n"
            "// Obtain spectrum information to pass to CalcHEP\n"
-           "const Spectrum& spec = *Dep::{1};\n\n"
-           "// Pass spectrum"
+           "const Spectrum& spec = *Dep::{1};\n"
            "Assign_All_Values(spec);\n"
            "}}\n\n"
     ).format(model_name, spectrum))
