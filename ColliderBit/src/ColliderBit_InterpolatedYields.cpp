@@ -64,40 +64,26 @@ namespace Gambit
   {
     
 // ---------------------------------- FUNCTION OF INTEREST ------------------------------------------------
-
-  // ---- Define my interpolation fucntions here as well as get data functions
   const char* colliderbitdata_path = GAMBIT_DIR "/ColliderBit/data/"; 
   #define PI 3.14159265
-
-  // -----Define met_hist files
-
-  const char* met_ATLAS_23 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
-  const char* met_ATLAS_14 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C634txt";
-  const char* met_CMS_23   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
-  const char* met_CMS_14   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
-
   // Initialize all data
-  static const size_t data_INC           = 20;
+  static const size_t data_INC           = 15;
   static const size_t data_SIZE          = pow(data_INC,2);
   static const size_t cms_bin_size       = 22;
   static const size_t atlas_bin_size     = 10;
-  double THETA[data_SIZE];
-  double MASS[data_SIZE];
-  double nJets[data_SIZE];
-  double CS[data_SIZE];
-  double Total_events[data_SIZE];
-  double MET_HIST_CMS[data_SIZE][cms_bin_size];
-  double MET_HIST_ATLAS[data_SIZE][atlas_bin_size];
-  double Norm,th;
 
-  // Define just mass and angle arrays
-  double theta[data_INC];
-  double mass[data_INC];
+  const char* met_ATLAS_23 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
+  const char* met_ATLAS_14 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64.txt";
+  const char* met_CMS_23   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
+  const char* met_CMS_14   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
 
+
+  // ----------------------------------//
+
+ 
 double LinearInterpolation(double y2, double y1, double y, double q1,double q2){
 	return  ( 1.0 / (y2-y1) ) * ( (y2 - y)*q1 + (y-y1)*q2 );
 }
-
 
 double BilinearInterpolation(double q11, double q12, double q21, double q22, 
 		double x1, double x2, double y1, double y2, double x, double y, double yalpha=0) 
@@ -119,8 +105,6 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
 		q12 = LinearInterpolation(yalpha,y1,y2,q11,-1*q12);
 	}
 
-
-
 	double x2x1, y2y1, x2x, y2y, yy1, xx1;
 	x2x1 = x2 - x1;
 	y2y1 = y2 - y1;
@@ -136,214 +120,221 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
 	);
 }
 
- 
-
-  void Get_data(const char* file_grid, const char* file_X_Y, const char* file_met_hist ){
-    // Load Data
+// ---------------------------------------------------------------------------------------------------- 
 
 
-    // cout <<"File output in Get_data start = "<< file_grid << " " << file_X_Y << " " << file_met_hist <<endl;
-
-    // cout << file_met_hist << " Check file at at start... "<<endl;           
-
-    
-
-    if (file_met_hist ==  met_ATLAS_23 ||  file_met_hist == met_ATLAS_14 ){
-      // cout << "If statement ATLAS being called ..." << endl;
-
-      ifstream mb(file_met_hist);
-
-      for(int row = 0; row < data_SIZE; row++) {  
-        for(int column = 0; column < atlas_bin_size; column++){
-          mb >> MET_HIST_ATLAS[row][column];
-        }
-        }
-      // }
-      mb.close();
-    } 
-
-    else if (file_met_hist ==  met_CMS_23 || file_met_hist ==  met_CMS_14   )    {
-      // cout << "If statement CMS being called ..." << endl;
-      // cout <<"File output in if statement = "<< file_grid << " " << file_X_Y << " " << file_met_hist <<endl;
-      ifstream mb(file_met_hist);
-     
-      // std::string str;
-      // while(getline(mb,str)){
-        for(int row = 0; row < data_SIZE; row++) {  
-          for(int column = 0; column < cms_bin_size; column++){
-            mb >> MET_HIST_CMS[row][column];
-            // cout <<  MET_HIST_CMS[row][column]<< " "<< row << " "<< column<<endl;
-          }
-        }
-      // }
-
-
-    } 
-
-    // cout << file_X_Y<< " Check file0... "<<endl;           
-      
-    // std::exit(EXIT_SUCCESS);
-
-    float p1,p2,p3,p4,p5;
-    FILE * pp = fopen(file_grid,"r");              // file containing numbers in 5 columns 
-    for (int ll = 0; ll < data_SIZE; ++ll){
-      fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
-      // cout << p1 << endl;
-      MASS[ll] = p1; 
-      // cout <<"Mass_check = "<< MASS[ll]<<" "<<ll<<endl;
-      THETA[ll]= p2;
-      nJets[ll]= p3;
-      CS[ll]   = p4;   
-    }
-    fclose(pp);
-
-    // cout << file_X_Y<< " Check file2... "<<endl;           
-
-    float var1,var2;
-    FILE * fp = fopen(file_X_Y,"r");  
-    // FILE * fp = fopen("/fast/users/a1607156/gambitgit/ColliderBit/data/DMEFT/X_Y_CMS_C62_C63.txt","r");
-      
-
-    // Remove once solved:
-    for (int ll = 0; ll < data_INC; ++ll){
-      fscanf(fp,"%f %f", &var1, &var2);
-    // cout << file_X_Y<< " Check file3... "<<endl;           
-
-      mass[ll] = var1;
-      // cout <<"Mass_check = "<< mass[ll]<<" "<<ll<<endl; 
-
-      theta[ll]= var2;
-      }
-    fclose(fp); 
-
-
-  }
   // ---------------------------------------------------- //
   // Interpolation functions // 
   // ---------------------------------------------------- //
+double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* experiment){
+  static bool first = true;
+   // -----Define met_hist files
+  static double MET_HIST_CMS_14[data_SIZE][cms_bin_size];
+  static double MET_HIST_ATLAS_14[data_SIZE][atlas_bin_size];
+  static double MET_HIST_CMS_23[data_SIZE][cms_bin_size];
+  static double MET_HIST_ATLAS_23[data_SIZE][atlas_bin_size];
+  static double THETA_CMS_14[data_SIZE];
+  static double THETA_CMS_23[data_SIZE];
+  static double THETA_ATLAS_14[data_SIZE];  
+  static double THETA_ATLAS_23[data_SIZE];  
+  static double MASS_CMS_14[data_SIZE];
+  static double MASS_CMS_23[data_SIZE];
+  static double MASS_ATLAS_14[data_SIZE];  
+  static double MASS_ATLAS_23[data_SIZE];  
+  static double CS_CMS_14[data_SIZE];
+  static double CS_CMS_23[data_SIZE];
+  static double CS_ATLAS_14[data_SIZE];  
+  static double CS_ATLAS_23[data_SIZE];  
+  static double nJets[data_SIZE];
+   // ----------------------------------//
+   // Define just mass and angle arrays // 
+  static double theta[data_INC];
+  static double mass[data_INC]; 
+  if (first)
+      {
+        cout << "RAN IFFFFFFFFF"<<cout;
+        float var1,var2;
+        FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63.txt","r");   // The masses and thetas are the same for each! 
+        for (int ll = 0; ll < data_INC; ++ll){
+          fscanf(fp,"%f %f", &var1, &var2);
+          mass[ll] = var1;
+          theta[ll]= var2;
+          // cout << mass[ll]<<endl;
+        }
+        fclose(fp); 
+        
 
-  double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* experiment){
-  // char const *i = "met_hist_ATLAS_C61_C64.txt";
-  // char const *j = "met_hist_ATLAS_C62_C63.txt";
-  // char const *k = "met_hist_CMS_C61_C64.txt";
-  // char const *l = "met_hist_CMS_C62_C63.txt";
-  // char const *b = "X_Y_ATLAS_C62_C63.txt";
-  // char const *a = "grid_output_ATLAS_C62_C63.txt";
-  // char const *h = "X_Y_CMS_C61_C64.txt";
-  // char const *g = "grid_output_CMS_C61_C64.txt";
-  // char const *f = "X_Y_ATLAS_C61_C64.txt";
-  // char const *e = "grid_output_ATLAS_C61_C64.txt";
-  // char const *d = "X_Y_CMS_C62_C63.txt";
-  // char const *c = "grid_output_CMS_C62_C63.txt";
-    const char *i = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64.txt";
-    const char *j = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
-    const char *k = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
-    const char *b = GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63.txt";
-    const char *a = GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C62_C63.txt";
-    const char *h = GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_CMS_C61_C64.txt";
-    const char *g = GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C61_C64.txt";
-    const char *f = GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C61_C64.txt";
-    const char *e = GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C61_C64.txt";
-    const char *d = GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_CMS_C62_C63.txt";
-    const char *c = GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C62_C63.txt";
-    const char *z = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
+        ifstream mb(met_ATLAS_23);
 
-    // char const *l = "/fast/users/a1607156/gambitgit/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
-
-    // cout << " Acceptance_CS DEBUG: 1" << endl;
+        for(int row = 0; row < data_SIZE; row++) {  
+          for(int column = 0; column < atlas_bin_size; column++){
+            mb >> MET_HIST_ATLAS_23[row][column];
+          }
+          }
+        mb.close();
 
 
-    int met_bin_size ;
+        ifstream mba14(met_ATLAS_14);
+        for(int row = 0; row < data_SIZE; row++) {  
+          for(int column = 0; column < atlas_bin_size; column++){
+            mba14 >> MET_HIST_ATLAS_14[row][column];
+          }
+          }
+        mba14.close();
+
+        ifstream mbc23(met_CMS_23);
+
+          for(int row = 0; row < data_SIZE; row++) {  
+            for(int column = 0; column < cms_bin_size; column++){
+              mbc23 >> MET_HIST_CMS_23[row][column];
+            }
+          }
+
+
+        mbc23.close();     
+
+        ifstream mbc14(met_CMS_14);
+          for(int row = 0; row < data_SIZE; row++) {  
+            for(int column = 0; column < cms_bin_size; column++){
+              mbc14 >> MET_HIST_CMS_14[row][column];
+            }
+          }
+        mbc14.close();
+
+
+
+        float p1,p2,p3,p4;
+        FILE * pp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C61_C64.txt","r");              // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE; ++ll){
+          fscanf(pp,"%f %f %f %f", &p1,&p2,&p3,&p4);
+          MASS_ATLAS_14[ll] = p1; 
+          THETA_ATLAS_14[ll]= p2;
+          nJets[ll]         = p3;
+          CS_ATLAS_14[ll]   = p4;   
+        }
+        fclose(pp);
+
+
+        float a1,a2,a3,a4;
+        FILE * ap = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_ATLAS_C62_C63.txt","r");             // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE; ++ll){
+          fscanf(ap,"%f %f %f %f", &a1,&a2,&a3,&a4);
+          MASS_ATLAS_23[ll] = a1; 
+          THETA_ATLAS_23[ll]= a2;
+          nJets[ll]         = a3;
+          CS_ATLAS_23[ll]   = a4;   
+        }
+        fclose(ap);
+        
+        float d1,d2,d3,d4;
+        FILE *dp=fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C61_C64.txt","r");              // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE; ++ll){
+          fscanf(dp,"%f %f %f %f", &d1,&d2,&d3,&d4);
+          MASS_CMS_14[ll] = d1; 
+          THETA_CMS_14[ll]= d2;
+          nJets[ll]       = d3;
+          CS_CMS_14[ll]   = d4;   
+        }
+        fclose(dp);
+
+        float b1,b2,b3,b4;
+        FILE * bp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/grid_output_CMS_C62_C63.txt","r");              // file containing numbers in 5 columns 
+        for (int ll = 0; ll < data_SIZE; ++ll){
+          fscanf(bp,"%f %f %f %f", &b1,&b2,&b3,&b4);
+          MASS_CMS_23[ll] = b1; 
+          THETA_CMS_23[ll]= b2;
+          nJets[ll]       = b3;
+          CS_CMS_23[ll]   = b4;   
+        }
+        fclose(bp);
+
+        // first = false;
+      }
+
+
+
+
+    cout << "Check things "<<mass[0]<<endl;  
+    int met_bin_size;
     double ** MET_HIST = new double*[data_SIZE];
+    double THETA[data_SIZE];
+    double MASS[data_SIZE];
+    double CS[data_SIZE];
 
-    
-    if (experiment=="ATLAS" && pair == "23"){
-      Get_data(a,b,j);
+  if (experiment=="ATLAS" && pair == "23"){
       met_bin_size = atlas_bin_size;
 
       // double** MET_HIST = new double*[data_SIZE];
-      for(int i = 0; i < data_SIZE; ++i)
+      for(int i = 0; i < data_SIZE; ++i){
         MET_HIST[i] = new double[met_bin_size];
-
+        MASS[i]     = MASS_ATLAS_23[i];
+        THETA[i]    = THETA_ATLAS_23[i];
+        CS[i]       = CS_ATLAS_23[i];
+      }
       // Assign met histogram to current experiment
       for (int kk = 0; kk<data_SIZE;++kk){
         for (int j = 0; j<met_bin_size;++j){
-          MET_HIST[kk][j] = MET_HIST_ATLAS[kk][j];
+          MET_HIST[kk][j] = MET_HIST_ATLAS_23[kk][j];
           }
         }
     }
 
-
     else if (experiment=="CMS" && pair == "23"){
-      // cout << "CMS _getdata debug 1" <<endl;
-      Get_data(c,d,z);
 
       met_bin_size = cms_bin_size;
       
       for(int i = 0; i <= data_SIZE; ++i){
         MET_HIST[i] = new double[met_bin_size];
+        MASS[i]     = MASS_CMS_23[i];
+        THETA[i]    = THETA_CMS_23[i];
+        CS[i]       = CS_CMS_23[i];
       }
       // Assign met histogram to current experiment
       for (int kk = 0; kk<data_SIZE;++kk){
         for (int j = 0; j<met_bin_size;++j){
-          MET_HIST[kk][j] = MET_HIST_CMS[kk][j];
+          MET_HIST[kk][j] = MET_HIST_CMS_23[kk][j];
           }
-        }
-      
+        }		
     }
 
     else if (experiment=="ATLAS" && pair == "14"){
-      Get_data(e,f,i);
       met_bin_size = atlas_bin_size;
       // double** MET_HIST = new double*[data_SIZE];
-      for(int i = 0; i < data_SIZE; ++i)
+      for(int i = 0; i < data_SIZE; ++i){
         MET_HIST[i] = new double[met_bin_size];
+        MASS[i]     = MASS_ATLAS_14[i];
+        THETA[i]    = THETA_ATLAS_14[i];
+        CS[i]       = CS_ATLAS_14[i];
+      }
       // Assign met histogram to current experiment
       for (int kk = 0; kk<data_SIZE;++kk){
         for (int j = 0; j<met_bin_size;++j){
-          MET_HIST[kk][j] = MET_HIST_ATLAS[kk][j];
+          MET_HIST[kk][j] = MET_HIST_ATLAS_14[kk][j];
           }
         }
     }
+
 
     else if (experiment=="CMS" && pair == "14"){
-      // cout << "CMS _getdata debug 2" <<endl;
-
-      Get_data(g,h,k);
       met_bin_size = cms_bin_size;
       // double** MET_HIST = new double*[data_SIZE];
-      for(int i = 0; i < data_SIZE; ++i)
+      for(int i = 0; i < data_SIZE; ++i){
         MET_HIST[i] = new double[met_bin_size];
+        MASS[i]     = MASS_CMS_14[i];
+        THETA[i]    = THETA_CMS_14[i];
+        CS[i]       = CS_CMS_14[i];
+      }
       // Assign met histogram to current experiment
       for (int kk = 0; kk<data_SIZE;++kk){
         for (int j = 0; j<met_bin_size;++j){
-          MET_HIST[kk][j] = MET_HIST_CMS[kk][j];
+          MET_HIST[kk][j] = MET_HIST_CMS_14[kk][j];
           }
         }
     }
 
-    // cout << " Acceptance_CS DEBUG: 3" << endl;
-
-    // DEBUG stuff 
-    // cout << "Met bin size" << " "<< met_bin_size<<" "<<data_SIZE<<endl;
-
-
-    // for (int kk = 0; kk<data_SIZE;++kk){
-    //  for (int j = 0; j<met_bin_size-1;++j){
-    //    // cout << kk << " "<< j<<" "<< MET_HIST[kk][j] <<endl;
-    //    if (MET_HIST[kk][j] == 0){
-    //      cout << "Zero! Bin = " <<" "<<j<<": mass,theta ="<<MASS[kk]<< " "<<THETA[kk]<< " " << "CMS val = "<< " "<<MET_HIST_CMS[kk][j] << endl;
-    //    }
-    //  }
-    // }
-    // cout << "Done!"<<endl;
-
-
-
     
-    // Get scale factor and phase theta
-    
-
+    // Calculate normalisation
+    double Norm,th;
 
     if (O1==0){
       Norm = pow(O2,2);
@@ -407,11 +398,7 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
     double *Q22   = new double[met_bin_size];
     double* accep = new double[met_bin_size]; 
 
-    // Q11[met_bin_size]   = {};
-    // Q12[met_bin_size]   = {};
-    // Q21[met_bin_size]   = {};
-    // Q22[met_bin_size]   = {};
-    
+
     // NJets and Cross-section
     // // !!!!!!!!!!!!!!!!!!!! HERE AGAIN BUGS !!!!! << endl;
 
@@ -426,77 +413,73 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
         // cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
         for(int kk = 0; kk < data_SIZE; ++kk) {
           // cout << MASS[kk]<<" "<< THETA[kk]<< " Emiss = "<< Emiss <<"|  |"<<MET_HIST[kk][Emiss]<<" " << kk<< " |     |" << x2<<" " << y2<<" "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
-           
-				if (MASS[kk]==x1 && THETA[kk]==y1){
-					// Q11[Emiss] = nJets[kk];
-						if (MET_HIST[kk][Emiss] < 0){
-							Q11[Emiss] = -1*MET_HIST[kk-1][Emiss];
-							C11        = -1*CS[kk-1];
-							yalpha     = THETA[kk-1];
-							// cout << "Have made the hack" << endl;
-						}
+          
+        if (MASS[kk]==x1 && THETA[kk]==y1){
+          // Q11[Emiss] = nJets[kk];
+            if (MET_HIST[kk][Emiss] < 0){
+              Q11[Emiss] = -1*MET_HIST[kk-1][Emiss];
+              C11        = -1*CS[kk-1];
+              yalpha     = THETA[kk-1];
+              // cout << "Have made the hack" << endl;
+            }
             
-						else {
-							Q11[Emiss] = MET_HIST[kk][Emiss];
-							C11 = CS[kk];
-							// cout << "Q11 = " << Q22[Emiss] << " mass, th = "    << MASS[kk]<< "  "<< THETA[kk]<<endl;
-						} 
+            else {
+              Q11[Emiss] = MET_HIST[kk][Emiss];
+              C11 = CS[kk];
+              // cout << "Q11 = " << Q22[Emiss] << " mass, th = "    << MASS[kk]<< "  "<< THETA[kk]<<endl;
+            } 
 
-					} 
- 
-
-				else if (MASS[kk]==x1 && THETA[kk]==y2){
-					// cout << "Here in loop. K = "<< kk<< " x1 = "<< x1<< " y2 = "<< y2<< " met_hist = " << MET_HIST[kk][Emiss]<<endl;
-					
-						if (MET_HIST[kk][Emiss] < 0){
-							Q12[Emiss] = -1*MET_HIST[kk+1][Emiss];
-							C12        = -1*CS[kk+1];
-							yalpha     = THETA[kk+1];
-							// cout << "Have made the hack" << endl;
-						}
-						else {
-							Q12[Emiss] = MET_HIST[kk][Emiss];
-							C12 = CS[kk];
-						}
-					}
+          } 
 
 
+        else if (MASS[kk]==x1 && THETA[kk]==y2){
+          // cout << "Here in loop. K = "<< kk<< " x1 = "<< x1<< " y2 = "<< y2<< " met_hist = " << MET_HIST[kk][Emiss]<<endl;
+          
+            if (MET_HIST[kk][Emiss] < 0){
+              Q12[Emiss] = -1*MET_HIST[kk+1][Emiss];
+              C12        = -1*CS[kk+1];
+              yalpha     = THETA[kk+1];
+              // cout << "Have made the hack" << endl;
+            }
+            else {
+              Q12[Emiss] = MET_HIST[kk][Emiss];
+              C12 = CS[kk];
+            }
+          }
 
+        else if (MASS[kk]==x2 && THETA[kk]==y1){
 
+            if (MET_HIST[kk][Emiss] < 0){
+              Q21[Emiss] = -1*MET_HIST[kk-1][Emiss];
+              C21        = -1*CS[kk-1];
+              yalpha     = THETA[kk-1];
+              // cout << "Have made the hack" << endl;
+            }	
 
-				else if (MASS[kk]==x2 && THETA[kk]==y1){
+          else{
+            Q21[Emiss] = MET_HIST[kk][Emiss];
+            C21 = CS[kk];
 
-						if (MET_HIST[kk][Emiss] < 0){
-							Q21[Emiss] = -1*MET_HIST[kk-1][Emiss];
-							C21        = -1*CS[kk-1];
-							yalpha     = THETA[kk-1];
-							// cout << "Have made the hack" << endl;
-						}	
+          }
 
-					else{
-						Q21[Emiss] = MET_HIST[kk][Emiss];
-						C21 = CS[kk];
+          }  
 
-					}
+        else if (MASS[kk]==x2 && THETA[kk]==y2){
 
-					}  
+            if (MET_HIST[kk][Emiss] < 0){
+              Q22[Emiss] = -1*MET_HIST[kk+1][Emiss];
+              C22        = -1*CS[kk+1];
+              yalpha     = THETA[kk+1];
+              // cout << "Have made the hack " << Q22[Emiss]<< " "<< C22<< " "<< yalpha <<  endl;
+            }	
 
-				else if (MASS[kk]==x2 && THETA[kk]==y2){
+          else {
+            Q22[Emiss] = MET_HIST[kk][Emiss];
+            C22 = CS[kk];
+          }
+          // cout << " Q22"<< " "<< Q22[Emiss]<<endl;
 
-						if (MET_HIST[kk][Emiss] < 0){
-							Q22[Emiss] = -1*MET_HIST[kk+1][Emiss];
-							C22        = -1*CS[kk+1];
-							yalpha     = THETA[kk+1];
-							// cout << "Have made the hack " << Q22[Emiss]<< " "<< C22<< " "<< yalpha <<  endl;
-						}	
-
-					else {
-						Q22[Emiss] = MET_HIST[kk][Emiss];
-						C22 = CS[kk];
-					}
-					// cout << " Q22"<< " "<< Q22[Emiss]<<endl;
-
-					}	
+          }	
 
 
           } 
@@ -510,32 +493,33 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
       double res =  36000.0*Norm*A*Norm*B; 
       // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
       // cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
-     
-     
+    
+    
     //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
     
       accep[Emiss] = res;
     }
 
 
-    
+
     std::fill_n(THETA,data_SIZE,0);
     std::fill_n(MASS,data_SIZE,0);
-    std::fill_n(nJets,data_SIZE,0);
     std::fill_n(CS,data_SIZE,0);
-    std::fill_n(Total_events,data_SIZE,0);
-    std::fill_n(mass,data_INC,0);
-    std::fill_n(theta,data_INC,0);
-    MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
-    MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
-    MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
-    MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
-    
+
+
+    // MET_HIST[data_SIZE][cms_bin_size] = {};
+    // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
+    // MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
+    // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
+
     return accep;
 
   }
 
+
+
 double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const char* exper_){
+
   char const *tt = "23";
   char const *of = "14";
   int met_bin_size;
@@ -547,7 +531,7 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
     met_bin_size = cms_bin_size;
   }
 
-  double* YIELDS = new double[met_bin_size]; 
+  double YIELDS[met_bin_size]; 
   
   double* A23;
   double* A14;
@@ -558,16 +542,22 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
 
   for (int ii = 0; ii < met_bin_size; ++ii){
     YIELDS[ii] = A23[ii] + A14[ii];
-    // YIELDS[ii] = A14[ii];
 
   }
-
+  // cout << "Finished here...."<<endl;
   return YIELDS;
 }
 
-    void DMEFT_results(AnalysisDataPointers &result){  
-      // cout << "Start of DMEFT_results..."<<endl;
-      
+void DMEFT_results(AnalysisDataPointers &result){
+      const size_t data_INC           = 15;
+      const size_t data_SIZE          = pow(data_INC,2);
+      const size_t cms_bin_size       = 22;
+      const size_t atlas_bin_size     = 10;
+
+      cout << "void is run"<< endl;
+
+      // Do not get segfault when I do a get data here.....
+
 
       // This routine will get the yields for both the ATLAS and CMS monojet analyses
       // The results are stored in a vector of AnalysisData objects, which includes backgrounds yields, uncertainties and correlations
@@ -585,7 +575,7 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
       float C62 = *Pipes::DMEFT_results::Param["C62"];
       float C63 = *Pipes::DMEFT_results::Param["C63"];
       float C64 = *Pipes::DMEFT_results::Param["C64"];
-      float mass= *Pipes::DMEFT_results::Param["mDM"]; 
+      float mchi= *Pipes::DMEFT_results::Param["mDM"]; 
             
 
 
@@ -632,9 +622,9 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
       
       double *_srnums_CMS;
 
-      _srnums_CMS = L_Acc_Eff_CS(mass,C61,C62,C63,C64,"CMS");
+      _srnums_CMS = L_Acc_Eff_CS(mchi,C61,C62,C63,C64,"CMS");
       
-      // cout << "first _srnums call ..."<<endl;
+      cout << "first _srnums call ..."<<endl;
 
 
       static const double CMS_OBSNUM[cms_bin_size] = {
@@ -717,13 +707,18 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
       // std::cout << "Making signal numbers" << std::endl; 
 
       double *_srnums_ATLAS;
- 
-      _srnums_ATLAS = L_Acc_Eff_CS(mass,C61,C62,C63,C64,"ATLAS"); 
+      
+      cout<<"Just b4 atlas srnums"<<endl;
 
-    
+      _srnums_ATLAS = L_Acc_Eff_CS(mchi,C61,C62,C63,C64,"ATLAS"); 
+
+      cout << "Atlas srnums defined" <<endl;
+
       static const double ATLAS_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
       static const double ATLAS_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
       static const double ATLAS_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
+
+      cout << "After static atlas" <<endl;
 
       std::vector<SignalRegionData> atlasBinnedResults;
 
@@ -781,26 +776,25 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
       //   cout << "DEBUG: sr-" << ibin << " n_signal = " << result[0]->srdata[ibin].n_signal << endl;
       //   cout << "DEBUG: sr-" << ibin << " n_signal_at_lumi = " << result[0]->srdata[ibin].n_signal_at_lumi << endl;
       // }
-      // cout << "End of likelihood calculator ..." <<endl;
+      cout << "End of likelihood calculator ..." <<endl;
       
 
     };
      
  
-    void InterpolatedMCInfo(MCLoopInfo& result)
+void InterpolatedMCInfo(MCLoopInfo& result)
     {
       // cout << "Have run the void..."<<endl;
       // This makes an MCLoopInfo object for satisfying the LHC
       // likelihood calculation dependency
+      // ------------------------------- //
 
-      // Andre Scaffidi HACKS: Event generation has been bypassed
+      // Event generation has been bypassed:
       // ------------------------------------------------------//
       result.event_gen_BYPASS = true;
-      // cout << "Have run the void 2..."<<endl;
       // ------------------------------------------------------//
       result.reset_flags();
       
-      // cout << "Have run the void 3..."<<endl;
     }
   
 
