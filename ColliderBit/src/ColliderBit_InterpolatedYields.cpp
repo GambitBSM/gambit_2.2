@@ -126,7 +126,9 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
   // ---------------------------------------------------- //
   // Interpolation functions // 
   // ---------------------------------------------------- //
-double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* experiment){
+
+  
+void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, const char* experiment){
   static bool first = true;
    // -----Define met_hist files
   static double MET_HIST_CMS_14[data_SIZE][cms_bin_size];
@@ -150,6 +152,9 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
    // Define just mass and angle arrays // 
   static double theta[data_INC];
   static double mass[data_INC]; 
+
+  pair = "23";
+  
   if (first)
       {
         cout << "RAN IFFFFFFFFF"<<endl;
@@ -248,7 +253,7 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
         }
         fclose(bp);
 
-        // first = false;
+        first = false;
       }
 
 
@@ -260,6 +265,7 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
     double THETA[data_SIZE];
     double MASS[data_SIZE];
     double CS[data_SIZE];
+    cout << "Check things 2 <<mass[0]"<<endl;  
 
   if (experiment=="ATLAS" && pair == "23"){
       met_bin_size = atlas_bin_size;
@@ -280,10 +286,11 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
     }
 
     else if (experiment=="CMS" && pair == "23"){
+      std::cout << "BITE" << std::endl;
 
       met_bin_size = cms_bin_size;
-      
-      for(int i = 0; i <= data_SIZE; ++i){
+      // double** MET_HIST = new double*[data_SIZE];
+      for(int i = 0; i < data_SIZE; ++i){
         MET_HIST[i] = new double[met_bin_size];
         MASS[i]     = MASS_CMS_23[i];
         THETA[i]    = THETA_CMS_23[i];
@@ -294,7 +301,7 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
         for (int j = 0; j<met_bin_size;++j){
           MET_HIST[kk][j] = MET_HIST_CMS_23[kk][j];
           }
-        }		
+        }	
     }
 
     else if (experiment=="ATLAS" && pair == "14"){
@@ -331,6 +338,7 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
           }
         }
     }
+    cout << "Check things 5"<<mass[0]<<endl;  
 
     
     // Calculate normalisation
@@ -354,6 +362,8 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
     }
 
     // Checks to go ahead with interpolation
+    cout << "Check things 6"<<mass[0]<<endl;  
+
 
     if (m<mass[0] || m>mass[data_INC-1]){
       cout<<" Error! Mass param out of range with value "<< m << " Itterator location = " << mass[data_INC-1]<< " Exiting..."<<endl;
@@ -386,27 +396,31 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
         }
       }
 
+    cout << "Check things 7"<<mass[0]<<endl;  
 
     // Get C's
     double C11=0.0 ,C12=0.0,C21=0.0,C22=0.0,yalpha=0;
 
     // Define Q's as array: One Q type for each met bin.
 
-    double *Q11   = new double[met_bin_size];
-    double *Q12   = new double[met_bin_size];
-    double *Q21   = new double[met_bin_size];
-    double *Q22   = new double[met_bin_size];
-    double* accep = new double[met_bin_size]; 
+    double Q11[met_bin_size];
+    double Q12[met_bin_size];
+    double Q21[met_bin_size];
+    double Q22[met_bin_size];
 
+    cout << "Check things 8"<<mass[0]<<endl;  
 
     // NJets and Cross-section
     // // !!!!!!!!!!!!!!!!!!!! HERE AGAIN BUGS !!!!! << endl;
 
-    for (int Emiss = 0; Emiss < met_bin_size; ++Emiss ) {
+    std::cout << "met_bin_size: " << met_bin_size << std::endl;
+
+    for (int Emiss = 0; Emiss < met_bin_size; Emiss++ ) {
       Q11[Emiss] = 0.0;
       Q12[Emiss] = 0.0;
       Q21[Emiss] = 0.0;
       Q22[Emiss] = 0.0;
+      
       // cout << " Emiss = "<< Emiss<< " Inital Q's: "<< Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q12[Emiss] <<" "<< Q22[Emiss]<<endl;
       while (Q11[Emiss]==0.0 || Q12[Emiss]==0.0 || Q21[Emiss]== 0.0 || Q22[Emiss]==0.0 || C11==0.0 || C12==0.0 || C21== 0.0 || C22==0.0){ 
           // cout << Q11[Emiss]<<" "<< Q12[Emiss]<<" "<< Q21[Emiss] <<" "<< Q22[Emiss]<<endl;
@@ -484,6 +498,7 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
 
           } 
         }
+    cout << "Check things 9"<<mass[0]<<endl;  
 
       // cout << " Acceptance_CS DEBUG: 5 - Fixed" << endl;
 
@@ -494,13 +509,27 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
       // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
       // cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
     
+    cout << "Check things 10"<<mass[0]<<endl;  
     
-    //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
+     cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
     
       accep[Emiss] = res;
+      
+
+
+    }
+
+    cout << &accep << std::endl;
+      cout << sizeof(accep) << std::endl;
+    cout << "Check things after accep"<<endl;  
+
+    for(int j=0; j<22; j++) {
+      cout << &accep[j] << std::endl;
+       cout << accep[j] << std::endl;
     }
 
 
+    cout << "Check things b4 filling"<<endl;  
 
     std::fill_n(THETA,data_SIZE,0);
     std::fill_n(MASS,data_SIZE,0);
@@ -511,14 +540,14 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
     // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
     // MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
     // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
-
-    return accep;
+    cout << "Check things after fillinge "<<endl;  
 
   }
 
 
 
-double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const char* exper_){
+void L_Acc_Eff_CS(double * YIELDS, float m,float C61,float C62,float C63, float C64 , const char* exper_){
+    cout << "Check things 11 "<<endl;  
 
   char const *tt = "23";
   char const *of = "14";
@@ -531,21 +560,24 @@ double *  L_Acc_Eff_CS(float m,float C61,float C62,float C63, float C64 , const 
     met_bin_size = cms_bin_size;
   }
 
-  double YIELDS[met_bin_size]; 
-  
-  double* A23;
-  double* A14;
+  double A23[met_bin_size];
+  double A14[met_bin_size];
 
-  A23 = Acceptance_CS(m,C62,C63,tt,exper_);
+  cout << "Check things12 "<<endl;
 
-  A14 = Acceptance_CS(m,C61,C64,of,exper_);
+  Acceptance_CS(A23, m, C62, C63, tt, exper_);
+    cout << "Check things 14"<<endl;  
+
+  Acceptance_CS(A14, m,C61,C64,of,exper_);
+    cout << "Check things 15 "<<endl;  
 
   for (int ii = 0; ii < met_bin_size; ++ii){
     YIELDS[ii] = A23[ii] + A14[ii];
 
   }
-  // cout << "Finished here...."<<endl;
-  return YIELDS;
+    cout << "Check things 16"<<endl;  
+
+  cout << "Finished YIELDS here...."<<endl;
 }
 
 void DMEFT_results(AnalysisDataPointers &result){
@@ -619,10 +651,10 @@ void DMEFT_results(AnalysisDataPointers &result){
       //** --------------------------------CMS---------------------------------------------------------//
 
       // Test the function to see if it compiles. 
-      
-      double *_srnums_CMS;
 
-      _srnums_CMS = L_Acc_Eff_CS(mchi,C61,C62,C63,C64,"CMS");
+      const int CMS_SIZE = 22;
+      double _srnums_CMS[CMS_SIZE];
+      L_Acc_Eff_CS(_srnums_CMS, mchi,C61,C62,C63,C64,"CMS");
       
       cout << "first _srnums call ..."<<endl;
 
@@ -706,11 +738,10 @@ void DMEFT_results(AnalysisDataPointers &result){
 
       // std::cout << "Making signal numbers" << std::endl; 
 
-      double *_srnums_ATLAS;
-      
       cout<<"Just b4 atlas srnums"<<endl;
 
-      _srnums_ATLAS = L_Acc_Eff_CS(mchi,C61,C62,C63,C64,"ATLAS"); 
+      double _srnums_ATLAS[atlas_bin_size];
+      L_Acc_Eff_CS(_srnums_ATLAS,mchi,C61,C62,C63,C64,"ATLAS"); 
 
       cout << "Atlas srnums defined" <<endl;
 
