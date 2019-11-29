@@ -152,7 +152,7 @@ double * Acceptance_CS(float m,float O1,float O2, const char* pair, const char* 
   static double mass[data_INC]; 
   if (first)
       {
-        cout << "RAN IFFFFFFFFF"<<cout;
+        cout << "RAN IFFFFFFFFF"<<endl;
         float var1,var2;
         FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63.txt","r");   // The masses and thetas are the same for each! 
         for (int ll = 0; ll < data_INC; ++ll){
