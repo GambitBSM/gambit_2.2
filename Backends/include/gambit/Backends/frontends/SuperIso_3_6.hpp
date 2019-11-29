@@ -23,6 +23,7 @@
 #define BACKENDLANG CC
 #define VERSION 3.6
 #define SAFE_VERSION 3_6
+#define REFERENCE key
 
 LOAD_LIBRARY
 

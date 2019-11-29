@@ -19,6 +19,7 @@
 #define BACKENDLANG FORTRAN
 #define VERSION 1.5
 #define SAFE_VERSION 1_5
+#define REFERENCE key
 
 // Let's go.
 LOAD_LIBRARY

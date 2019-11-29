@@ -23,6 +23,7 @@
 #define BACKENDLANG Fortran
 #define VERSION 1.0.6
 #define SAFE_VERSION 1_0_6
+#define REFERENCE key
 
 // Load it
 LOAD_LIBRARY

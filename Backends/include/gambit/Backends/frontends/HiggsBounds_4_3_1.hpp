@@ -21,6 +21,7 @@
 #define BACKENDLANG FORTRAN
 #define VERSION 4.3.1
 #define SAFE_VERSION 4_3_1
+#define REFERENCE key
 
 /* The following macro loads the library using dlopen
  * when this header file is included somewhere. */

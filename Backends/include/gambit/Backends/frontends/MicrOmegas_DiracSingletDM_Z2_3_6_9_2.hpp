@@ -17,6 +17,7 @@
 #define BACKENDLANG CC
 #define VERSION 3.6.9.2
 #define SAFE_VERSION 3_6_9_2
+#define REFERENCE key //Belanger:2001fz,Belanger:2004yn,
 
 LOAD_LIBRARY
 

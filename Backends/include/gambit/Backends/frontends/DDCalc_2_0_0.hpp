@@ -39,6 +39,7 @@
 #define BACKENDLANG Fortran
 #define VERSION 2.0.0
 #define SAFE_VERSION 2_0_0
+#define REFERENCE key
 
 // Load it
 LOAD_LIBRARY

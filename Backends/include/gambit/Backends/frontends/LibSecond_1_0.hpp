@@ -21,6 +21,7 @@
 #define BACKENDLANG Python2
 #define VERSION 1.0
 #define SAFE_VERSION 1_0
+#define REFERENCE key
 
 /* The following macro imports the module in the Python interpreter
  * when this header file is included somewhere. */
