@@ -153,7 +153,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
   static double theta[data_INC];
   static double mass[data_INC]; 
 
-  pair = "23";
+  
   
   if (first)
       {
@@ -257,15 +257,14 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
       }
 
 
-
-
-    cout << "Check things "<<mass[0]<<endl;  
+    // Define temp. arrays for storing yields. 
+    // cout << "Check things "<<mass[0]<<endl;  
     int met_bin_size;
     double ** MET_HIST = new double*[data_SIZE];
     double THETA[data_SIZE];
     double MASS[data_SIZE];
     double CS[data_SIZE];
-    cout << "Check things 2 <<mass[0]"<<endl;  
+    // cout << "Check things 2 <<mass[0]"<<endl;  
 
   if (experiment=="ATLAS" && pair == "23"){
       met_bin_size = atlas_bin_size;
@@ -286,7 +285,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
     }
 
     else if (experiment=="CMS" && pair == "23"){
-      std::cout << "BITE" << std::endl;
+      // std::cout << "BITE" << std::endl;
 
       met_bin_size = cms_bin_size;
       // double** MET_HIST = new double*[data_SIZE];
@@ -338,7 +337,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
           }
         }
     }
-    cout << "Check things 5"<<mass[0]<<endl;  
+    // cout << "Check things 5"<<mass[0]<<endl;  
 
     
     // Calculate normalisation
@@ -362,7 +361,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
     }
 
     // Checks to go ahead with interpolation
-    cout << "Check things 6"<<mass[0]<<endl;  
+    // cout << "Check things 6"<<mass[0]<<endl;  
 
 
     if (m<mass[0] || m>mass[data_INC-1]){
@@ -396,7 +395,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
         }
       }
 
-    cout << "Check things 7"<<mass[0]<<endl;  
+    // cout << "Check things 7"<<mass[0]<<endl;  
 
     // Get C's
     double C11=0.0 ,C12=0.0,C21=0.0,C22=0.0,yalpha=0;
@@ -408,12 +407,12 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
     double Q21[met_bin_size];
     double Q22[met_bin_size];
 
-    cout << "Check things 8"<<mass[0]<<endl;  
+    // cout << "Check things 8"<<mass[0]<<endl;  
 
     // NJets and Cross-section
     // // !!!!!!!!!!!!!!!!!!!! HERE AGAIN BUGS !!!!! << endl;
 
-    std::cout << "met_bin_size: " << met_bin_size << std::endl;
+    // std::cout << "met_bin_size: " << met_bin_size << std::endl;
 
     for (int Emiss = 0; Emiss < met_bin_size; Emiss++ ) {
       Q11[Emiss] = 0.0;
@@ -498,7 +497,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
 
           } 
         }
-    cout << "Check things 9"<<mass[0]<<endl;  
+    // cout << "Check things 9"<<mass[0]<<endl;  
 
       // cout << " Acceptance_CS DEBUG: 5 - Fixed" << endl;
 
@@ -509,9 +508,9 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
       // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
       // cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
     
-    cout << "Check things 10"<<mass[0]<<endl;  
+    // cout << "Check things 10"<<mass[0]<<endl;  
     
-     cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
+    //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
     
       accep[Emiss] = res;
       
@@ -519,35 +518,44 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
 
     }
 
-    cout << &accep << std::endl;
-      cout << sizeof(accep) << std::endl;
-    cout << "Check things after accep"<<endl;  
+    // cout << &accep << std::endl;
+      // cout << sizeof(accep) << std::endl;
+    // cout << "Check things after accep"<<endl;  
 
-    for(int j=0; j<22; j++) {
-      cout << &accep[j] << std::endl;
-       cout << accep[j] << std::endl;
-    }
+    // for(int j=0; j<22; j++) {
+    //   cout << &accep[j] << std::endl;
+    //    cout << accep[j] << std::endl;
+    // }
 
 
-    cout << "Check things b4 filling"<<endl;  
+    // cout << "Check things b4 filling"<<endl;  
 
     std::fill_n(THETA,data_SIZE,0);
     std::fill_n(MASS,data_SIZE,0);
     std::fill_n(CS,data_SIZE,0);
 
 
-    // MET_HIST[data_SIZE][cms_bin_size] = {};
+    // MET_HIST[data_SIZE][met_bin_size] = {};
+        //Free each sub-array
+    for(int i = 0; i < data_SIZE; ++i) {
+        delete[] MET_HIST[i];   
+    }
+    //Free the array of pointers
+    delete[] MET_HIST;
+
+
+
     // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
     // MET_HIST_CMS[data_SIZE][cms_bin_size] = {};
     // MET_HIST_ATLAS[data_SIZE][atlas_bin_size] = {};
-    cout << "Check things after fillinge "<<endl;  
+    // cout << "Check things after fillinge "<<endl;  
 
   }
 
 
 
 void L_Acc_Eff_CS(double * YIELDS, float m,float C61,float C62,float C63, float C64 , const char* exper_){
-    cout << "Check things 11 "<<endl;  
+    // cout << "Check things 11 "<<endl;  
 
   char const *tt = "23";
   char const *of = "14";
@@ -563,21 +571,21 @@ void L_Acc_Eff_CS(double * YIELDS, float m,float C61,float C62,float C63, float 
   double A23[met_bin_size];
   double A14[met_bin_size];
 
-  cout << "Check things12 "<<endl;
+  // cout << "Check things12 "<<endl;
 
   Acceptance_CS(A23, m, C62, C63, tt, exper_);
-    cout << "Check things 14"<<endl;  
+    // cout << "Check things 14"<<endl;  
 
   Acceptance_CS(A14, m,C61,C64,of,exper_);
-    cout << "Check things 15 "<<endl;  
+    // cout << "Check things 15 "<<endl;  
 
   for (int ii = 0; ii < met_bin_size; ++ii){
     YIELDS[ii] = A23[ii] + A14[ii];
 
   }
-    cout << "Check things 16"<<endl;  
+    // cout << "Check things 16"<<endl;  
 
-  cout << "Finished YIELDS here...."<<endl;
+  // cout << "Finished YIELDS here...."<<endl;
 }
 
 void DMEFT_results(AnalysisDataPointers &result){
@@ -654,6 +662,7 @@ void DMEFT_results(AnalysisDataPointers &result){
 
       const int CMS_SIZE = 22;
       double _srnums_CMS[CMS_SIZE];
+
       L_Acc_Eff_CS(_srnums_CMS, mchi,C61,C62,C63,C64,"CMS");
       
       cout << "first _srnums call ..."<<endl;
@@ -807,7 +816,7 @@ void DMEFT_results(AnalysisDataPointers &result){
       //   cout << "DEBUG: sr-" << ibin << " n_signal = " << result[0]->srdata[ibin].n_signal << endl;
       //   cout << "DEBUG: sr-" << ibin << " n_signal_at_lumi = " << result[0]->srdata[ibin].n_signal_at_lumi << endl;
       // }
-      cout << "End of likelihood calculator ..." <<endl;
+      // cout << "End of likelihood calculator ..." <<endl;
       
 
     };
