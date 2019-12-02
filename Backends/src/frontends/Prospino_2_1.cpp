@@ -358,17 +358,26 @@ BE_NAMESPACE
   }
 
 
-  // Convenience function to run Prospino and get a vector of cross-sections
+  // Convenience function to run Prospino and get a vector of cross-sections,
+  // with Prospino settings from YAML options
   map_str_dbl prospino_run(const PID_pair& pid_pair, const Options& runOptions)
   {
     // Get run options
     // @todo Should the collider settings (e.g. energy) be automatically matched to the Pythia instance?
-    const static Finteger inlo = runOptions.getValueOrDef<Finteger>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
-    const static Finteger isq_ng_in = runOptions.getValueOrDef<Finteger>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
-    const static Finteger icoll_in = runOptions.getValueOrDef<Finteger>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
-    const static Fdouble energy_in = runOptions.getValueOrDef<Fdouble>(13000.0, "energy_in");  // collider energy in GeV
-    const static Finteger i_error_in = runOptions.getValueOrDef<Finteger>(0, "i_error_in");     // with central scale [0] or scale variation [1]
+    const static int inlo = runOptions.getValueOrDef<int>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
+    const static int isq_ng_in = runOptions.getValueOrDef<int>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
+    const static int icoll_in = runOptions.getValueOrDef<int>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
+    const static double energy_in = runOptions.getValueOrDef<double>(13000.0, "energy_in");  // collider energy in GeV
+    const static int i_error_in = runOptions.getValueOrDef<int>(0, "i_error_in");     // with central scale [0] or scale variation [1]
     const static bool set_missing_cross_sections_to_zero = runOptions.getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
+
+    return prospino_run(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+  }
+
+  // Convenience function to run Prospino and get a vector of cross-sections,
+  // with Prospino settings directly as function arguments
+  map_str_dbl prospino_run(const PID_pair& pid_pair, int inlo, int isq_ng_in, int icoll_in, double energy_in, int i_error_in, bool set_missing_cross_sections_to_zero)
+  {
 
     // Check that we have a set of prospino settings for the given PID_pair
     if(PID_pairs_to_prospino_settings.find(pid_pair) == PID_pairs_to_prospino_settings.end())

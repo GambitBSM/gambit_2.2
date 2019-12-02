@@ -145,6 +145,26 @@
     BACKEND_REQ(prospino_read_slha1_input, (libprospino), void, (const SLHAstruct&))
     #undef FUNCTION
 
+    /// Get the PIDPairCrossSectionsMap using the 'salami' backend
+    /// @todo 1. Replace SLHA1Spectrum dependency with SpectrumAndDecaysForPythia (to ensure same spectrum)
+    /// @todo 2. Add a CB utility function that checks if a SLHAstruct is SLHA1 or SLHA2, and use it in this function
+    #define FUNCTION getPIDPairCrossSectionsMap_salami
+    START_FUNCTION(map_PID_pair_PID_pair_xsec)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(ActivePIDPairs, vec_PID_pair)
+    DEPENDENCY(SLHA1Spectrum, SLHAstruct)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
+    ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
+    BACKEND_REQ(salami_import_slha_string, (), void, (std::string&))
+    BACKEND_REQ(salami_set_parameters, (), void, (pybind11::dict&))
+    BACKEND_REQ(salami_get_xsection, (), pybind11::dict, (iipair&))
+    // Needs Prospino to get LO cross-section
+    BACKEND_REQ(prospino_run, (libprospino), map_str_dbl, (const PID_pair&, int, int, int, double, int, bool))
+    BACKEND_REQ(prospino_read_slha1_input, (libprospino), void, (const SLHAstruct&))
+    #undef FUNCTION
+
+
   #undef CAPABILITY
   /// @}
 
