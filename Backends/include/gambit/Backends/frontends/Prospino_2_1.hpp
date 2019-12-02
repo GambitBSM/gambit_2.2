@@ -39,7 +39,7 @@ BE_FUNCTION(prospino_gb, void, (Farray<Fdouble,0,6>&, Finteger&, Finteger&, Fint
 // BE_CONV_FUNCTION(run_prospino, map_str_dbl, (const SLHAstruct&, prospino_settings&), "prospino_LHC_xsec")
 // BE_CONV_FUNCTION(run_prospino, map_str_dbl, (const SLHAstruct&, const PID_pair&, const Options&), "prospino_LHC_xsec")
 BE_CONV_FUNCTION(prospino_run, map_str_dbl, (const PID_pair&, const Options&), "prospino_run")
-BE_CONV_FUNCTION(prospino_run, map_str_dbl, (const PID_pair&, int, int, int, double, int, bool), "prospino_run")
+BE_CONV_FUNCTION(prospino_run_alloptions, map_str_dbl, (const PID_pair&, const int&, const int&, const int&, const double&, const int&, const bool&), "prospino_run_alloptions")
 BE_CONV_FUNCTION(prospino_read_slha1_input, void, (const SLHAstruct&), "prospino_read_slha1_input")
 
 // Undefine macros to avoid conflict with other backends

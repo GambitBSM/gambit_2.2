@@ -371,12 +371,12 @@ BE_NAMESPACE
     const static int i_error_in = runOptions.getValueOrDef<int>(0, "i_error_in");     // with central scale [0] or scale variation [1]
     const static bool set_missing_cross_sections_to_zero = runOptions.getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
-    return prospino_run(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+    return prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
   }
 
   // Convenience function to run Prospino and get a vector of cross-sections,
   // with Prospino settings directly as function arguments
-  map_str_dbl prospino_run(const PID_pair& pid_pair, int inlo, int isq_ng_in, int icoll_in, double energy_in, int i_error_in, bool set_missing_cross_sections_to_zero)
+  map_str_dbl prospino_run_alloptions(const PID_pair& pid_pair, const int& inlo, const int& isq_ng_in, const int& icoll_in, const double& energy_in, const int& i_error_in, const bool& set_missing_cross_sections_to_zero)
   {
 
     // Check that we have a set of prospino settings for the given PID_pair

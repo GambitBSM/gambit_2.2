@@ -160,7 +160,7 @@
     BACKEND_REQ(salami_set_parameters, (), void, (pybind11::dict&))
     BACKEND_REQ(salami_get_xsection, (), pybind11::dict, (iipair&))
     // Needs Prospino to get LO cross-section
-    BACKEND_REQ(prospino_run, (libprospino), map_str_dbl, (const PID_pair&, int, int, int, double, int, bool))
+    BACKEND_REQ(prospino_run_alloptions, (libprospino), map_str_dbl, (const PID_pair&, const int&, const int&, const int&, const double&, const int&, const bool&))
     BACKEND_REQ(prospino_read_slha1_input, (libprospino), void, (const SLHAstruct&))
     #undef FUNCTION
 
