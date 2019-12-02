@@ -98,23 +98,6 @@
 
   /// A map between PID pairs and cross-sections
   #define CAPABILITY PIDPairCrossSectionsMap
-
-    /// Example of provding PIDPairCrossSectionsMap using a Python backend
-    /// @todo 1. Replace SLHA1Spectrum dependency with SpectrumAndDecaysForPythia (to ensure same spectrum)
-    /// @todo 2. Add a CB utility function that checks if a SLHAstruct is SLHA1 or SLHA2, and use it in this function
-    #define FUNCTION getPIDPairCrossSectionsMap_xsecBE_example
-    START_FUNCTION(map_PID_pair_PID_pair_xsec)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    DEPENDENCY(ActivePIDPairs, vec_PID_pair)
-    DEPENDENCY(SLHA1Spectrum, SLHAstruct)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
-    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
-    ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
-    BACKEND_REQ(xsecBE_example_xsec_fb, (), double, (iipair&, pybind11::dict&, pybind11::dict&))
-    BACKEND_REQ(xsecBE_example_xsec_err_fb, (), ddpair, (iipair&, pybind11::dict&, pybind11::dict&))
-    BACKEND_REQ(xsecBE_example_set_parameters, (), void, (pybind11::dict&))
-    BACKEND_REQ(xsecBE_example_set_flags, (), void, (pybind11::dict&))
-    #undef FUNCTION
   
     /// Get the PIDPairCrossSectionsMap using the 'xsec' backend
     /// @todo 1. Replace SLHA1Spectrum dependency with SpectrumAndDecaysForPythia (to ensure same spectrum)

@@ -76,127 +76,7 @@ namespace Gambit
     // ======= Module functions =======
 
 
-    void getPIDPairCrossSectionsMap_xsecBE_example(map_PID_pair_PID_pair_xsec& result)
-    {
-      using namespace Pipes::getPIDPairCrossSectionsMap_xsecBE_example;
-
-      // Get type converter for the SLHAstruct
-      using SLHAea::to;
-
-
-      if(*Loop::iteration == COLLIDER_INIT)
-      {
-        result.clear();
-      }
-
-      if(*Loop::iteration == XSEC_CALCULATION)
-      {
-        // Create dicts to pass parameters and flags to the backend
-        pybind11::dict xsecBE_pars;
-        pybind11::dict xsecBE_flags;
-
-        // First set the flags
-        xsecBE_flags["alphas_err"] = false;
-        xsecBE_flags["scale_err"] = true;
-        xsecBE_flags["pdf_err"] = true;
-        xsecBE_flags["regression_err"] = true;
-        BEreq::xsecBE_example_set_flags(xsecBE_flags);
-
-        // Then set the neceassary parameters and spectrum info:
-
-        // - Values from the GAMBIT model parameters
-        // xsecBE_pars["M1"] = *Param.at("M1");
-        // xsecBE_pars["M2"] = *Param.at("M2");
-        // xsecBE_pars["mu"] = *Param.at("mu");
-        // xsecBE_pars["TanBeta"] = *Param.at("TanBeta");
-
-        // - Values from the SLHA spectrum
-        const SLHAstruct& slha_spec = *Dep::SLHA1Spectrum;
-
-        xsecBE_pars["MASS_1000021"] = to<double>(slha_spec.at("MASS").at(1000021).at(1));
-
-        // (Remember that the EWino masses can be signed!)
-        xsecBE_pars["MASS_1000022"] = fabs( to<double>(slha_spec.at("MASS").at(1000022).at(1)) );
-        xsecBE_pars["MASS_1000023"] = fabs( to<double>(slha_spec.at("MASS").at(1000023).at(1)) );
-        xsecBE_pars["MASS_1000025"] = fabs( to<double>(slha_spec.at("MASS").at(1000025).at(1)) );
-        xsecBE_pars["MASS_1000035"] = fabs( to<double>(slha_spec.at("MASS").at(1000035).at(1)) );
-
-        xsecBE_pars["MASS_1000001"] = to<double>(slha_spec.at("MASS").at(1000001).at(1));
-        xsecBE_pars["MASS_1000002"] = to<double>(slha_spec.at("MASS").at(1000002).at(1));
-        xsecBE_pars["MASS_1000003"] = to<double>(slha_spec.at("MASS").at(1000003).at(1));
-        xsecBE_pars["MASS_1000004"] = to<double>(slha_spec.at("MASS").at(1000004).at(1));
-        xsecBE_pars["MASS_1000005"] = to<double>(slha_spec.at("MASS").at(1000005).at(1));
-        xsecBE_pars["MASS_1000006"] = to<double>(slha_spec.at("MASS").at(1000006).at(1));
-        xsecBE_pars["MASS_2000001"] = to<double>(slha_spec.at("MASS").at(2000001).at(1));
-        xsecBE_pars["MASS_2000002"] = to<double>(slha_spec.at("MASS").at(2000002).at(1));
-        xsecBE_pars["MASS_2000003"] = to<double>(slha_spec.at("MASS").at(2000003).at(1));
-        xsecBE_pars["MASS_2000004"] = to<double>(slha_spec.at("MASS").at(2000004).at(1));
-        xsecBE_pars["MASS_2000005"] = to<double>(slha_spec.at("MASS").at(2000005).at(1));
-        xsecBE_pars["MASS_2000006"] = to<double>(slha_spec.at("MASS").at(2000006).at(1));
-
-        xsecBE_pars["NMIX_1_1"] = to<double>(slha_spec.at("NMIX").at(1,1).at(2));
-        xsecBE_pars["NMIX_1_2"] = to<double>(slha_spec.at("NMIX").at(1,2).at(2));
-        xsecBE_pars["NMIX_1_3"] = to<double>(slha_spec.at("NMIX").at(1,3).at(2));
-        xsecBE_pars["NMIX_1_4"] = to<double>(slha_spec.at("NMIX").at(1,4).at(2));
-        xsecBE_pars["NMIX_2_1"] = to<double>(slha_spec.at("NMIX").at(2,1).at(2));
-        xsecBE_pars["NMIX_2_2"] = to<double>(slha_spec.at("NMIX").at(2,2).at(2));
-        xsecBE_pars["NMIX_2_3"] = to<double>(slha_spec.at("NMIX").at(2,3).at(2));
-        xsecBE_pars["NMIX_2_4"] = to<double>(slha_spec.at("NMIX").at(2,4).at(2));
-        xsecBE_pars["NMIX_3_1"] = to<double>(slha_spec.at("NMIX").at(3,1).at(2));
-        xsecBE_pars["NMIX_3_2"] = to<double>(slha_spec.at("NMIX").at(3,2).at(2));
-        xsecBE_pars["NMIX_3_3"] = to<double>(slha_spec.at("NMIX").at(3,3).at(2));
-        xsecBE_pars["NMIX_3_4"] = to<double>(slha_spec.at("NMIX").at(3,4).at(2));
-        xsecBE_pars["NMIX_4_1"] = to<double>(slha_spec.at("NMIX").at(4,1).at(2));
-        xsecBE_pars["NMIX_4_2"] = to<double>(slha_spec.at("NMIX").at(4,2).at(2));
-        xsecBE_pars["NMIX_4_3"] = to<double>(slha_spec.at("NMIX").at(4,3).at(2));
-        xsecBE_pars["NMIX_4_4"] = to<double>(slha_spec.at("NMIX").at(4,4).at(2));
-
-        BEreq::xsecBE_example_set_parameters(xsecBE_pars);
-
-
-        // Now get the cross-sections for all the requested PID pairs. Save the results
-        // in the result map (type map<PID_pair,PID_pair_xsec_container>)
-        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
-        {
-
-          // Create PID_pair_xsec_container instance
-          // and set the PIDs
-          PID_pair_xsec_container pp_xs;
-          pp_xs.set_pid_pair(pid_pair);
-
-          // Fill dictionaries with any process-specific
-          // parameters (e.g. LO cross-sections) and program flags
-          pybind11::dict proc_params;
-          proc_params["LO_xsec"] = 3.1415;
-
-          pybind11::dict proc_flags;
-          proc_flags["some_process_flag"] = true;
-
-          // Get the PIDs as an iipair (= std::pair<int,int>)
-          iipair proc = pid_pair.PIDs();
-
-          // Get cross-section value from backend
-          // Get cross-section and asymmetric errors from backend. (ddpair = pair<double,double>)
-          double xs_fb = BEreq::xsecBE_example_xsec_fb(proc, proc_params, proc_flags);
-          ddpair xs_err_fb = BEreq::xsecBE_example_xsec_err_fb(proc, proc_params, proc_flags);
-
-          // The xsec_container classes don't have asymmetric errors yet,
-          // so let's take the max error for now
-          double xs_symm_err_fb = std::max(xs_err_fb.first, xs_err_fb.second);
-
-          // Update the PID_pair_xsec_container instance 
-          pp_xs.set_xsec(xs_fb, xs_symm_err_fb);
-
-          // Add it to the result map
-          result[pid_pair] = pp_xs;
-        }
-
-      } // end iteration
-
-    }
-
-
-
+    /// Get a cross-section from the xsecBE backend
     void getPIDPairCrossSectionsMap_xsecBE(map_PID_pair_PID_pair_xsec& result)
     {
       using namespace Pipes::getPIDPairCrossSectionsMap_xsecBE;
@@ -266,6 +146,7 @@ namespace Gambit
     }
 
 
+    /// Get a cross-section from the salami backend (using Prospino for LO)
     void getPIDPairCrossSectionsMap_salami(map_PID_pair_PID_pair_xsec& result)
     {
       using namespace Pipes::getPIDPairCrossSectionsMap_salami;
