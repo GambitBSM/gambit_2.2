@@ -332,11 +332,38 @@ namespace Gambit
 
         // We only want the LO cross-section from Prospino
         const static int inlo = 0;
+        const static int isq_ng_in = 1;  // specify degenerate [0] or free [1] squark masses
+        const static int icoll_in = 1;   // collider : tevatron[0], lhc[1]
+        const static double energy_in = 13000.0;  // collider energy in GeV
+        const static int i_error_in = 0; // with central scale [0] or scale variation [1]
+        const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
         // Pass SLHA1 input to prospino
         BEreq::prospino_read_slha1_input(slha);        
 
+        // Loop over each PID_pair in ActivePIDPairs
+        // and calculate LO cross-sections
+        std::map<PID_pair, PID_pair_xsec_container> pp_LOxs_map; 
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+          // Create PID_pair_xsec_container instance and set the PIDs
+          PID_pair_xsec_container pp_LOxs;
+          pp_LOxs.set_pid_pair(pid_pair);
 
+          // Call Prospino and get the result in a map<string,double>
+          map_str_dbl prospino_output = BEreq::prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+
+          // Update the PID_pair_xsec_container instance with the Prospino result
+          double LOxs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
+          double LOxs_rel_err = prospino_output.at("LO_rel_error");
+          pp_LOxs.set_info_string("prospino_LO");
+
+          double LOxs_err_fb = LOxs_fb * LOxs_rel_err;
+          pp_LOxs.set_xsec(LOxs_fb, LOxs_err_fb);
+
+          // Put the LO cross-section in the map
+          pp_LOxs_map[pid_pair] = pp_LOxs;
+        }
 
 
         // Create dicts to pass parameters and flags to the backend
