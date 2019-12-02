@@ -368,19 +368,11 @@ namespace Gambit
 
         // Create dicts to pass parameters and flags to the backend
         pybind11::dict salami_pars;
-        // pybind11::dict salami_flags;
-
-        // // First set the flags
-        // salami_flags["alphas_err"] = true;
-        // salami_flags["scale_err"] = true;
-        // salami_flags["pdf_err"] = true;
-        // salami_flags["regression_err"] = true;
-        // BEreq::salami_set_flags(salami_flags);
 
         // Then set the neceassary parameters and spectrum info:
         // - Energy
         // @todo This can't be hard-coded... Need to match it to collider energy!
-        salami_pars["energy"] = 13000;
+        // salami_pars["energy"] = 13000;
         BEreq::salami_set_parameters(salami_pars);
 
         // - Import the SLHA1 spectrum
@@ -390,7 +382,6 @@ namespace Gambit
         // in the result map (type map<PID_pair,PID_pair_xsec_container>)
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
-
           // Create PID_pair_xsec_container instance
           // and set the PIDs
           PID_pair_xsec_container pp_xs;
@@ -399,18 +390,27 @@ namespace Gambit
           // Get the PIDs as an iipair (= std::pair<int,int>)
           iipair proc = pid_pair.PIDs();
 
+          // Get LO cross-section value from map
+          double LOxs_fb = pp_LOxs_map.at(pid_pair).xsec();
+
           // Get dictionary with cross-section results from backend
-          pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc);
+          pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, LOxs_fb);
 
           // The xsec_container classes don't have asymmetric errors yet,
           // so let's take the max error for now
           double xs_fb = xs_fb_dict["central"].cast<double>();
-          double xs_symm_err_fb = std::max(xs_fb_dict["tot_err_down"].cast<double>(), xs_fb_dict["tot_err_up"].cast<double>());
+          double xs_err_fb = std::max(xs_fb_dict["tot_err_down"].cast<double>(), xs_fb_dict["tot_err_up"].cast<double>());
           // double xs_fb = xs_fb_dict["central"];
-          // double xs_symm_err_fb = std::max(xs_fb_dict["tot_err_down"], xs_fb_dict["tot_err_up"]);
+          // double xs_err_fb = std::max(xs_fb_dict["tot_err_down"], xs_fb_dict["tot_err_up"]);
+
+          // Should we rather use the fixed uncertainty from the YAML file?
+          if(fixed_xs_rel_err >= 0.0)
+          {
+            xs_err_fb = xs_fb * fixed_xs_rel_err;
+          }
 
           // Update the PID_pair_xsec_container instance 
-          pp_xs.set_xsec(xs_fb, xs_symm_err_fb);
+          pp_xs.set_xsec(xs_fb, xs_err_fb);
           pp_xs.set_info_string("salami_NLO");
 
           // Add it to the result map
