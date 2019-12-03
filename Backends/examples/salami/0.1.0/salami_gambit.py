@@ -73,7 +73,7 @@ def get_xsection(energy, proc, xsec_lo):
     print("Load process:", proc)
     try:
         energy = str(int(energy))
-        pidkey = list(sorted(proc)) #< TODO: sort on abs value of the PIDs
+        pidkey = list(sorted(proc, key=abs))
         proskey = pids_to_prosids[pidkey]
         key = "{}_{}".format(energy, proskey)
         if proskey not in KPREDS:
