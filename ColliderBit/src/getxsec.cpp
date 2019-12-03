@@ -165,7 +165,6 @@ namespace Gambit
 
         // Get a copy of the SLHA1 spectrum that we can modify
         SLHAstruct slha(*Dep::SLHA1Spectrum);
-        str slha_string = slha.str();
 
         // Contstruct EXTPAR block from the GAMBIT model parameters
         // @todo Put this in a separate utils function 'contruct_extpar_block'. 
@@ -206,6 +205,9 @@ namespace Gambit
         slha["EXTPAR"][""] << 47 << sqrt(*Param.at("md2_11")) << "# M_(D,11)";
         slha["EXTPAR"][""] << 48 << sqrt(*Param.at("md2_22")) << "# M_(D,22)";
         slha["EXTPAR"][""] << 49 << sqrt(*Param.at("md2_33")) << "# M_(D,33)";
+
+        // Create a SLHA string
+        str slha_string = slha.str();
 
         // 
         // Init Prospino
