@@ -115,11 +115,8 @@ LibFarrayTest:
 libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
 
-xsecBE_example:
-  0.1.0:       ./Backends/examples/xsecBE_example/0.1.0/xsecBE_example_gambit.py
-
 xsecBE:
   0.1.0:       ./Backends/installed/xsecBE/0.1.0/xsecBE_gambit.py
 
 salami:
-  0.1.0:       ./Backends/installed/salami/0.1.0/salami_gambit.py
+  0.1.0:       ./Backends/examples/salami/0.1.0/salami_gambit.py

@@ -364,12 +364,12 @@ BE_NAMESPACE
   {
     // Get run options
     // @todo Should the collider settings (e.g. energy) be automatically matched to the Pythia instance?
-    const static int inlo = runOptions.getValueOrDef<int>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
-    const static int isq_ng_in = runOptions.getValueOrDef<int>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
-    const static int icoll_in = runOptions.getValueOrDef<int>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
-    const static double energy_in = runOptions.getValueOrDef<double>(13000.0, "energy_in");  // collider energy in GeV
-    const static int i_error_in = runOptions.getValueOrDef<int>(0, "i_error_in");     // with central scale [0] or scale variation [1]
-    const static bool set_missing_cross_sections_to_zero = runOptions.getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
+    int inlo = runOptions.getValueOrDef<int>(1, "inlo");                 // specify LO only[0] or complete NLO (slower)[1]
+    int isq_ng_in = runOptions.getValueOrDef<int>(1, "isq_ng_in");       // specify degenerate [0] or free [1] squark masses
+    int icoll_in = runOptions.getValueOrDef<int>(1, "icoll_in");         // collider : tevatron[0], lhc[1]
+    double energy_in = runOptions.getValueOrDef<double>(13000.0, "energy_in");  // collider energy in GeV
+    int i_error_in = runOptions.getValueOrDef<int>(0, "i_error_in");     // with central scale [0] or scale variation [1]
+    bool set_missing_cross_sections_to_zero = runOptions.getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
     return prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
   }
