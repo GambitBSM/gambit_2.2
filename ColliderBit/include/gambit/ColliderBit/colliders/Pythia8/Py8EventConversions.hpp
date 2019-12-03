@@ -24,11 +24,13 @@
 #include "HEPUtils/Event.h"
 #include "HEPUtils/Particle.h"
 #include "HEPUtils/FastJet.h"
+#include "HEPUtils/FastJet.h"
 #include "MCUtils/PIDCodes.h"
+
+#ifndef EXCLUDE_HEPMC
 #include "HepMC3/GenEvent.h"
 #include "HepMC3/GenParticle.h"
-#include "HEPUtils/FastJet.h"
-
+#endif
 
 
 #ifndef UNIFIED_FUNCTIONS
@@ -40,10 +42,14 @@
 //Tomek Procter Oct 2019 - maybe it would be cleaner if all these functions were in another header?
 namespace UnifiedEventConversionFunctions
 {
+
+  #ifndef EXCLUDE_HEPMC
   inline int get_unified_pid(const HepMC3::GenParticlePtr &gp)
   {
     return gp->pid();
   }
+  #endif
+
   template<typename ParticleP>
   int get_unified_pid(ParticleP p)
   {
@@ -51,10 +57,13 @@ namespace UnifiedEventConversionFunctions
   }
 
 
+  #ifndef EXCLUDE_HEPMC
   inline bool get_unified_isFinal(const HepMC3::GenParticlePtr &gp)
   {
     return (gp->status() == 1);
   }
+  #endif
+
   template<typename ParticleP>
   bool get_unified_isFinal(ParticleP p)
   {
@@ -62,6 +71,7 @@ namespace UnifiedEventConversionFunctions
   }
 
 
+  #ifndef EXCLUDE_HEPMC
   inline double get_unified_eta(const HepMC3::GenParticlePtr &gp)
   {
     //n.b. I'm writing this manually because using the function in MCUtils/HepMCVectors.h
@@ -70,6 +80,8 @@ namespace UnifiedEventConversionFunctions
     double magnitude = sqrt(hp4.px()*hp4.px() + hp4.py()*hp4.py() + hp4.pz()*hp4.pz());
     return atanh(hp4.pz()/magnitude);
   }
+  #endif
+
   template <typename ParticleP>
   inline double get_unified_eta(ParticleP p)
   {
@@ -77,11 +89,14 @@ namespace UnifiedEventConversionFunctions
   }
 
 
+  #ifndef EXCLUDE_HEPMC
   inline HEPUtils::P4 get_unified_momentum(const HepMC3::GenParticlePtr &gp)
   {
     const HepMC3::FourVector& hp4 = gp->momentum();
     return HEPUtils::P4::mkXYZE(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
   }
+  #endif
+
   template <typename ParticleP>
   inline HEPUtils::P4 get_unified_momentum(ParticleP p)
   {
@@ -89,12 +104,14 @@ namespace UnifiedEventConversionFunctions
   }
 
 
-
+  #ifndef EXCLUDE_HEPMC
   inline FJNS::PseudoJet get_unified_pseudojet(const HepMC3::GenParticlePtr &gp)
   {
     const HepMC3::FourVector& hp4 = gp->momentum();
     return FJNS::PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
   }
+  #endif
+
   template <typename ParticleP>
   inline FJNS::PseudoJet get_unified_pseudojet(ParticleP p)
   {
@@ -104,21 +121,22 @@ namespace UnifiedEventConversionFunctions
 
 
   //Tomek Procter Aug 19. Note the MCUtils isParton function only checks
-  // for quarks/gluons (while in pythia, the function used in Gambit inlcudes
+  // for quarks/gluons (while in pythia, the function used in Gambit includes
   //diquarks too), so I'm manually defining this function using the isParton
   //is diquark options in MCUtils
   inline bool HEPMC3_isParton(int pid)
   {
     return (MCUtils::PID::isParton(pid) || MCUtils::PID::isDiquark(pid));
   }
+
+  #ifndef EXCLUDE_HEPMC
   inline bool get_unified_fromHadron(const HepMC3::GenParticlePtr gp, const std::vector<HepMC3::GenParticlePtr> &pevt, int i)
   {
-    //For HepMC3 events, I wrote this function, it mimics exactly what the Py8Utils.cpp function does.
-    //This seems highly unlikely to change - apparently this is just the standard way its done.
-    //Looping through parents is tricky so I won't unify it unless absolutely necesarry.
-    //note the meaningless int argument to make sure the same function call works both for hepmc3
-    //and pythia.
-
+    // For HepMC3 events, I wrote this function, it mimics exactly what the Py8Utils.cpp function does.
+    // This seems highly unlikely to change - apparently this is just the standard way its done.
+    // Looping through parents is tricky so I won't unify it unless absolutely necesarry.
+    // note the meaningless int argument to make sure the same function call works both for hepmc3
+    // and pythia.
     if (MCUtils::PID::isHadron(gp->pid())) return true;
     if (HEPMC3_isParton(abs(gp->pid()))) return false; // stop the walking at the end of the hadron level
     auto parent_vector = (gp->parents());
@@ -129,6 +147,8 @@ namespace UnifiedEventConversionFunctions
     }
     return false;
   }
+  #endif
+
   template <typename ParticleP, typename EventT>
   inline bool get_unified_fromHadron(ParticleP&, const EventT &pevt, int i)
   {
@@ -136,6 +156,7 @@ namespace UnifiedEventConversionFunctions
     return Gambit::ColliderBit::fromHadron(i, pevt);
   }
 
+  #ifndef EXCLUDE_HEPMC
   inline int get_unified_mother1(const HepMC3::GenParticlePtr&)
   {
     return 0;
@@ -144,6 +165,8 @@ namespace UnifiedEventConversionFunctions
   {
     return 0;
   }
+  #endif
+
   template <typename ParticleP>
   inline int get_unified_mother1(ParticleP &p)
   {
@@ -165,6 +188,8 @@ namespace UnifiedEventConversionFunctions
   {
     return pevt[p.mother2()].id();
   }
+
+  #ifndef EXCLUDE_HEPMC
   //shouldn't ever need to call a hepmc3 version but for safety here's one that just returns 0.
   inline int get_unified_mother1_pid(const HepMC3::GenParticlePtr&, const std::vector<HepMC3::GenParticlePtr>&)
   {
@@ -175,8 +200,10 @@ namespace UnifiedEventConversionFunctions
   {
     return 0;
   }
+  #endif
 
 
+  #ifndef EXCLUDE_HEPMC
   //Note! The unified_child_id_results MUST BE EMPTY as I don't clear it in the function.
   inline void get_unified_child_ids(const HepMC3::GenParticlePtr &gp, const std::vector<HepMC3::GenParticlePtr>&, std::vector<int> &unified_child_id_results)
   {
@@ -186,6 +213,8 @@ namespace UnifiedEventConversionFunctions
       unified_child_id_results.push_back(child->pid());
     }
   }
+  #endif
+
   //Note! The unified_child_id_results MUST BE EMPTY as I don't clear it in the function.
   template<typename ParticleP, typename EventT>
   void get_unified_child_ids(ParticleP &p, EventT &pevt, std::vector<int> &unified_child_id_results)
@@ -197,9 +226,8 @@ namespace UnifiedEventConversionFunctions
     }
   }
 }
+
 #endif
-
-
 
 
 
@@ -226,7 +254,7 @@ namespace Gambit
       HEPUtils::P4 pout; //< Sum of momenta outside acceptance
       std::vector<FJNS::PseudoJet> jetparticles;
 
-      for (size_t i = 0; i < pevt.size(); i++)
+      for (int i = 0; i < pevt.size(); i++)
       {
         const auto &p = pevt[i];
         const int pid = get_unified_pid(p);
