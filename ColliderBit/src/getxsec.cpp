@@ -372,6 +372,10 @@ namespace Gambit
         // Loop over each PID_pair in ActivePIDPairs
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
+          // _Anders
+          cerr << DEBUG_PREFIX << "PID_pair: " << pid_pair.str() << endl;
+
+
           // Create PID_pair_xsec_container instance and set the PIDs
           PID_pair_xsec_container pp_xs;
           pp_xs.set_pid_pair(pid_pair);
