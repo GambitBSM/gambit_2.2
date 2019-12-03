@@ -46,6 +46,7 @@ using namespace std;
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
+#include "gambit/Utils/file_lock.hpp"
 
 // Needs GSL 2 
 #include <gsl/gsl_math.h>
@@ -86,7 +87,7 @@ double LinearInterpolation(double y2, double y1, double y, double q1,double q2){
 }
 
 double BilinearInterpolation(double q11, double q12, double q21, double q22, 
-		double x1, double x2, double y1, double y2, double x, double y, double yalpha=0) 
+		double x1, double x2, double y1, double y2, double x, double y, double yalpha=0,bool debug=false) 
 {
 
 	if (q11 < 0 ){
@@ -112,7 +113,13 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
 	y2y = y2 - y;
 	yy1 = y - y1;
 	xx1 = x - x1;
-	return 1.0 / (x2x1 * y2y1) * (
+
+  if (debug){
+    cout << " Oh dear..." << x2x1 << " "<< y2y1<< " "<< x2x << " " << y2y << " "<< yy1<< " "<<xx1<< " x and y "<< x<< " "<< y<<endl;
+    cout << " Oh dear..." << y1 << " "<< y2 << endl;
+
+  }
+	return float(1.0) / float(x2x1 * y2y1) * (
 		q11 * x2x * y2y +
 		q21 * xx1 * y2y +
 		q12 * x2x * yy1 +
@@ -123,13 +130,17 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
 // ---------------------------------------------------------------------------------------------------- 
 
 
-  // ---------------------------------------------------- //
-  // Interpolation functions // 
-  // ---------------------------------------------------- //
+// ---------------------------------------------------- //
+// Interpolation functions // 
+// ---------------------------------------------------- //
 
   
 void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, const char* experiment){
   static bool first = true;
+
+  Utils::FileLock mylock("Get_data_once");
+
+
    // -----Define met_hist files
   static double MET_HIST_CMS_14[data_SIZE][cms_bin_size];
   static double MET_HIST_ATLAS_14[data_SIZE][atlas_bin_size];
@@ -157,6 +168,8 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
   
   if (first)
       {
+        mylock.get_lock();
+
         cout << "RAN IFFFFFFFFF"<<endl;
         float var1,var2;
         FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63.txt","r");   // The masses and thetas are the same for each! 
@@ -252,8 +265,11 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
           CS_CMS_23[ll]   = b4;   
         }
         fclose(bp);
+        
+        mylock.release_lock();
 
         first = false;
+
       }
 
 
@@ -352,14 +368,18 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
       // cout << " O2 is zero"<< endl;
     }
     else{
-      th    = 0.5*asin(2*O1*O2/(pow(O1,2)+pow(O2,2)));
+      th    = 0.5*asin(float(2*O1*O2)/float((pow(O1,2)+pow(O2,2))));
+
       if (O1*O2 < 0){
-        th = th + PI;
+        th = th + float(PI);
       }
       // cout << "Theta = "<< th<<endl;
       Norm  = 2*O1*O2/(sin(2.0*th));
     }
 
+      if (std::isnan(th)){
+      cout << " ok th is shit. "<< th << " "<< O1<< " "<< O2 <<endl;
+    }
     // Checks to go ahead with interpolation
     // cout << "Check things 6"<<mass[0]<<endl;  
 
@@ -431,6 +451,9 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
           // Q11[Emiss] = nJets[kk];
             if (MET_HIST[kk][Emiss] < 0){
               Q11[Emiss] = -1*MET_HIST[kk-1][Emiss];
+              if ( std::isnan(Q11[Emiss])){
+                cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }
               C11        = -1*CS[kk-1];
               yalpha     = THETA[kk-1];
               // cout << "Have made the hack" << endl;
@@ -438,10 +461,15 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
             
             else {
               Q11[Emiss] = MET_HIST[kk][Emiss];
+              if ( std::isnan(Q11[Emiss])){
+                cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }
               C11 = CS[kk];
               // cout << "Q11 = " << Q22[Emiss] << " mass, th = "    << MASS[kk]<< "  "<< THETA[kk]<<endl;
             } 
-
+            if (Q11[Emiss] == 0){
+              cout << "Q11 not set" << Q11[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+            }
           } 
 
 
@@ -450,13 +478,25 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
           
             if (MET_HIST[kk][Emiss] < 0){
               Q12[Emiss] = -1*MET_HIST[kk+1][Emiss];
+
+              if ( std::isnan(Q12[Emiss])){
+                cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }
+
               C12        = -1*CS[kk+1];
               yalpha     = THETA[kk+1];
               // cout << "Have made the hack" << endl;
             }
             else {
               Q12[Emiss] = MET_HIST[kk][Emiss];
+              if ( std::isnan(Q12[Emiss])){
+                cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }
+
               C12 = CS[kk];
+            }
+            if (Q12[Emiss] == 0){
+              cout << "Q12 not set" << Q12[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
             }
           }
 
@@ -464,6 +504,10 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
 
             if (MET_HIST[kk][Emiss] < 0){
               Q21[Emiss] = -1*MET_HIST[kk-1][Emiss];
+
+              if ( std::isnan(Q21[Emiss])){
+                cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }
               C21        = -1*CS[kk-1];
               yalpha     = THETA[kk-1];
               // cout << "Have made the hack" << endl;
@@ -471,16 +515,26 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
 
           else{
             Q21[Emiss] = MET_HIST[kk][Emiss];
+              if ( std::isnan(Q21[Emiss])){
+                cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }
+
             C21 = CS[kk];
 
           }
-
+            if (Q21[Emiss] == 0){
+              cout << "Q21 not set" << Q21[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+            }
           }  
 
         else if (MASS[kk]==x2 && THETA[kk]==y2){
 
             if (MET_HIST[kk][Emiss] < 0){
               Q22[Emiss] = -1*MET_HIST[kk+1][Emiss];
+
+              if ( std::isnan(Q22[Emiss])){
+                cout << "NAN in dodgey!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }  
               C22        = -1*CS[kk+1];
               yalpha     = THETA[kk+1];
               // cout << "Have made the hack " << Q22[Emiss]<< " "<< C22<< " "<< yalpha <<  endl;
@@ -488,15 +542,22 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
 
           else {
             Q22[Emiss] = MET_HIST[kk][Emiss];
+              if ( std::isnan(Q22[Emiss])){
+                cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+              }
             C22 = CS[kk];
           }
           // cout << " Q22"<< " "<< Q22[Emiss]<<endl;
-
+            if (Q22[Emiss] == 0){
+              cout << "Q22 not set" << Q22[Emiss]<< " "<< Emiss<< " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+            }
           }	
 
 
           } 
         }
+
+        // cout << "Exited while loop..." << endl;
     // cout << "Check things 9"<<mass[0]<<endl;  
 
       // cout << " Acceptance_CS DEBUG: 5 - Fixed" << endl;
@@ -506,15 +567,19 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
       double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
       double res =  36000.0*Norm*A*Norm*B; 
       // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
-      // cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
-    
+     
+    if (std::isnan(res)){
+      cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,0,true)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,true) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
+      cout << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+      cout << "th is the problem = "<< th<<endl;
+     }
     // cout << "Check things 10"<<mass[0]<<endl;  
     
     //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
     
       accep[Emiss] = res;
       
-
+      
 
     }
 
@@ -594,7 +659,7 @@ void DMEFT_results(AnalysisDataPointers &result){
       const size_t cms_bin_size       = 22;
       const size_t atlas_bin_size     = 10;
 
-      cout << "void is run"<< endl;
+      // cout << "void is run"<< endl;
 
       // Do not get segfault when I do a get data here.....
 
@@ -665,7 +730,7 @@ void DMEFT_results(AnalysisDataPointers &result){
 
       L_Acc_Eff_CS(_srnums_CMS, mchi,C61,C62,C63,C64,"CMS");
       
-      cout << "first _srnums call ..."<<endl;
+      // cout << "first _srnums call ..."<<endl;
 
 
       static const double CMS_OBSNUM[cms_bin_size] = {
@@ -747,18 +812,18 @@ void DMEFT_results(AnalysisDataPointers &result){
 
       // std::cout << "Making signal numbers" << std::endl; 
 
-      cout<<"Just b4 atlas srnums"<<endl;
+      // cout<<"Just b4 atlas srnums"<<endl;
 
       double _srnums_ATLAS[atlas_bin_size];
       L_Acc_Eff_CS(_srnums_ATLAS,mchi,C61,C62,C63,C64,"ATLAS"); 
 
-      cout << "Atlas srnums defined" <<endl;
+      // cout << "Atlas srnums defined" <<endl;
 
       static const double ATLAS_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
       static const double ATLAS_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
       static const double ATLAS_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
 
-      cout << "After static atlas" <<endl;
+      // cout << "After static atlas" <<endl;
 
       std::vector<SignalRegionData> atlasBinnedResults;
 
