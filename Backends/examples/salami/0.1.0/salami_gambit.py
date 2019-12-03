@@ -1,5 +1,5 @@
 from __future__ import print_function
-import numpy as np
+#import numpy as np
 
 #
 # This will run when this backend is first loaded, i.e. during GAMBIT startup
@@ -21,71 +21,86 @@ def import_slha_string(slha_string):
     global SLHA
     print("Reading SLHA input...")
     import pyslha
+    print(slha_string)
     SLHA = pyslha.readSLHA(slha_string)
     print("...done")
 
 
-# #
-# # Set parameters
-# #
-# def set_parameters(params):
+#
+# Set parameters
+#
+def set_parameters(params):
 
-#     for k,v in params.items():
-#         xsec.set_parameter(k, v)
+    for k,v in params.items():
+        xsec.set_parameter(k, v)
 
 
 #
 # Return the cross-section for a given process, identified by a PID pair
 #
-def get_xsection(energy, proc, xsec_lo):
+def get_xsection(proc, xsec_lo):
+    energy = 13000
+    xsec_lo = 1.0
 
-    pids_to_prosids = { [ 1000022,  1000022] : "11",
-                        [ 1000022,  1000023] : "12",
-                        [ 1000022,  1000025] : "13",
-                        [ 1000022,  1000035] : "14",
-                        [ 1000023,  1000023] : "22",
-                        [ 1000023,  1000025] : "23",
-                        [ 1000023,  1000035] : "24",
-                        [ 1000025,  1000025] : "33",
-                        [ 1000025,  1000035] : "34",
-                        [ 1000035,  1000035] : "44",
-                        [ 1000022,  1000024] : "15",
-                        [ 1000022,  1000034] : "16",
-                        [ 1000023,  1000024] : "25",
-                        [ 1000023,  1000034] : "26",
-                        [ 1000025,  1000024] : "35",
-                        [ 1000025,  1000034] : "36",
-                        [ 1000035,  1000024] : "45",
-                        [ 1000035,  1000034] : "46",
-                        [ 1000024,  1000024] : "55",
-                        [ 1000024,  1000034] : "56",
-                        [ 1000034,  1000034] : "66",
-                        [-1000024, -1000024] : "77",
-                        [-1000024, -1000034] : "78",
-                        [-1000034, -1000034] : "88",
-                        [ 1000024, -1000024] : "57",
-                        [ 1000024, -1000034] : "58",
-                        [ 1000034, -1000024] : "67",
-                        [ 1000034, -1000034] : "68" }
+    pids_to_prosids = {
+        # nn
+        ( 1000022,  1000022) : "11",
+        ( 1000022,  1000023) : "12",
+        ( 1000022,  1000025) : "13",
+        ( 1000022,  1000035) : "14",
+        ( 1000023,  1000023) : "22",
+        ( 1000023,  1000025) : "23",
+        ( 1000023,  1000035) : "24",
+        ( 1000025,  1000025) : "33",
+        ( 1000025,  1000035) : "34",
+        ( 1000035,  1000035) : "44",
+        # nc
+        ( 1000022,  1000024) : "15",
+        ( 1000022,  1000037) : "16",
+        ( 1000022, -1000024) : "17",
+        ( 1000022, -1000037) : "18",
+        ( 1000023,  1000024) : "25",
+        ( 1000023,  1000037) : "26",
+        ( 1000023, -1000024) : "27",
+        ( 1000023, -1000037) : "28",
+        ( 1000024,  1000025) : "35",
+        ( 1000025,  1000037) : "36",
+        (-1000024,  1000025) : "37",
+        ( 1000025, -1000037) : "38",
+        ( 1000024,  1000035) : "45",
+        ( 1000035,  1000037) : "46",
+        (-1000024,  1000035) : "47",
+        ( 1000035, -1000037) : "48",
+        # cc
+        ( 1000024,  1000024) : "55",
+        ( 1000024,  1000037) : "56",
+        ( 1000024, -1000024) : "57",
+        ( 1000024, -1000037) : "58",
+        ( 1000037,  1000037) : "66",
+        (-1000024,  1000037) : "67",
+        ( 1000037, -1000037) : "68",
+        (-1000024, -1000024) : "77",
+        (-1000024, -1000037) : "78",
+        (-1000037, -1000037) : "88",
+    }
 
-    # Load process
-    known_process = True
-    print("Load process:", proc)
+    # Load/cache predictor for this process
+    energy = str(int(energy))
+    pidkey = tuple(sorted(proc, key=lambda x : [abs(x), x < 0]))
+    proskey = pids_to_prosids[pidkey]
+    key = "{}_{}".format(energy, proskey)
     try:
-        energy = str(int(energy))
-        pidkey = list(sorted(proc, key=lambda x : [abs(x), x < 0]))
-        proskey = pids_to_prosids[pidkey]
-        key = "{}_{}".format(energy, proskey)
         if proskey not in KPREDS:
+            print("Load process:", proc)
             KPREDS[key] = salami.KPred(energy, proskey)
-        kpred = KPREDS[key]
-    except KeyError:
-        print("Unknown process", proc, "-- setting cross-section to 0")
-        known_process = False
+    except:
+        print("Unknown process", proc, "-- using LO cross-section")
+        KPREDS[key] = salami.KPredDummy(1.0)
 
     # Evaluate cross-sections and errors (factor of 1000 for Prospino pb -> Gambit fb conversion)
+    kpred = KPREDS[key]
     result_dict = {}
-    result_dict["central"] = 1000*kpred.predict_xsec(slha, xsec_lo) if known_process else 0.0
+    result_dict["central"] = 1000*kpred.predict_xsec(SLHA, xsec_lo)
     # result_dict["regdown_rel"] = 0.0
     # result_dict["regup_rel"] = 0.0
     # result_dict["scaledown_rel"] = 0.0
