@@ -251,11 +251,11 @@ Rules:
   # Note: This is not required if the "setEventWeight_unity" 
   #       function is chosen above.
   - capability: PIDPairCrossSectionsMap
-    # function: getPIDPairCrossSectionsMap_salami
+    function: getPIDPairCrossSectionsMap_salami
     # function: getPIDPairCrossSectionsMap_xsecBE
-    function: getPIDPairCrossSectionsMap_prospino
-    options:
-      set_missing_cross_sections_to_zero: true
+    # function: getPIDPairCrossSectionsMap_prospino
+    # options:
+    #   set_missing_cross_sections_to_zero: true
 
   # Choose where to get scattering events from
   - capability: HardScatteringEvent
