@@ -26,8 +26,6 @@ To-do list for GUMMY things, and GAMBIT 2.0.0.
 
 * BSM contributions to Standard Model decays (W, Z, etc.) -- do not get added to DecayBit
 
-* Runtime -> FeynRules models from $GUM/Models/
-
 ==============
 =   GAMBIT   =
 ==============

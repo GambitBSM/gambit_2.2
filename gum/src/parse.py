@@ -1,5 +1,6 @@
 """
-Contains all routines for parsing input .gum file.
+Contains all routines for parsing input .gum files and 
+the SARAH/FeynRules model files.
 """
 
 # TODO add mass dimension for new parameters in .gum file
@@ -8,6 +9,10 @@ import yaml
 import re
 
 from setup import *
+
+"""
+.GUM FILE PARSING
+"""
 
 class Inputs:
     """
@@ -155,7 +160,8 @@ def fill_gum_object(data):
             gambit_model = data['gambit_opts']['model_name']
 
     # FeynRules specific -- a "base" model to build a pheno model on top of.
-    # Tyically this is the SM, plus the BSM contribution defined in a separate file.
+    # Tyically this is the SM, plus the BSM contribution defined in a 
+    # separate file.
     if 'base_model' in data['math']:
         base_model = data['math']['base_model']
     else:
@@ -212,3 +218,160 @@ def fill_gum_object(data):
 
     return gum_info, outputs
 
+"""
+FEYNRULES PARSING
+"""
+
+def parse_feynrules_model_file(fr_file_path, outputs):
+    """
+    Parses a FeynRules model file. Checks for the following:
+        - Every parameter has an LH block and an
+        - No particles have an external name with underscores etc.
+        - Every parameter has an interaction order specified *if* the user
+          requests UFO output
+        - ComplexParameters and CalcHEP output
+    """
+
+    payattn = False
+
+    # Read the input in
+    with open(fr_file_path, 'r') as f:
+        lines = f.readlines()
+
+    # Flatten the string
+    contents = "".join(lines).replace("\n","")
+
+    # Parse the contents
+
+    # 1. Parameters
+    blocks = {}
+    interactionorders = {}
+
+    numbraces = 0
+
+    # Remove all the stuff before parameters
+    s1 = contents[contents.find('M$Parameters'):]
+
+    # Search through the string and count the number of curly braces. 
+    # When we get to zero then we're done.
+    numbraces = 0
+    started = False
+    commenting = False
+    s2 = ""
+    for char in s1:
+        if numbraces > 0: started = True
+        if char == "{" and not commenting:   numbraces += 1
+        elif char == "}" and not commenting: numbraces -= 1
+        # Don't count braces if we're in a comment, just in case someone is 
+        # truly twisted
+        elif char == "\"": commenting = not commenting
+        if started: s2 += char
+        if numbraces == 0 and started: break
+
+    # Get the param names
+    params = []
+    for i in s2.split('==')[:-1]:
+        params.append( i.strip(' ').split(' ')[-1])
+    
+    # Get the contents between each parameter
+    matches = []
+    for i in range(len(params)-1):
+        pat = r'{}(.*?){}'.format(params[i], params[i+1])
+        matches.append( re.search(pat, s2).group(1) )
+    matches.append( s2[s2.find(params[-1]):])
+
+    for i in range(len(matches)):
+        match = matches[i]
+        blockmatch = re.search(r'BlockName\s*->(.*?),', match)
+        ordermatch = re.search(r'OrderBlock\s*->(.*?),', match)
+        if blockmatch:
+            if ordermatch: 
+                blocks[ params[i] ] = { blockmatch.group(1) : 
+                                        ordermatch.group(1) }
+            else:
+                blocks[ params[i] ] = blockmatch.group(1)
+        # else:
+        #     raise GumError(("No BlockName specified for the parameter "
+        #                     "{0}. GUM and GAMBIT need this information "
+        #                     "so please change your .fr file!"
+        #                     ).format(params[i]))
+        interactionmatch = re.search(r'InteractionOrder\s*->\s*\{(.*?),(.*?)\}',
+                                     match)
+        if interactionmatch:
+            interactionorders[ params[i] ] = interactionmatch.group(1)
+        else:
+            interactionorders[ params[i] ] = "NULL"
+
+    # Check for InteractionOrder
+    # TODO need to specify *which* parameters actually need these...
+    if outputs.ufo:
+        for param, orders in interactionorders.iteritems():
+            if orders == "NULL":
+                raise GumError(("No interaction order specified for the "
+                                "parameter {0}, and you have asked for UFO "
+                                "output. If you want to use UFO output, every "
+                                "parameter needs an InteractionOrder specified."
+                                " Please consult the FeynRules and/or MadGraph "
+                                "manuals for details.").format(param))
+
+    # 2. Particles
+    numbraces = 0
+
+    # Remove all the stuff before parameters
+    s3 = contents[contents.find('M$ClassesDescription'):]
+
+    # Search through the string and count the number of curly braces. 
+    # When we get to zero then we're done.
+    numbraces = 0
+    started = False
+    commenting = False
+    s4 = ""
+    for char in s3:
+        if numbraces > 0: started = True
+        if char == "{" and not commenting:   numbraces += 1
+        elif char == "}" and not commenting: numbraces -= 1
+        # Don't count braces if we're in a comment, just in case someone is 
+        # truly twisted
+        elif char == "\"": commenting = not commenting
+        if started: s4 += char
+        if numbraces == 0 and started: break
+
+    # Get the particles names
+    particles = []
+    for i in s4.split('==')[:-1]:
+        particles.append( i.strip(' ').split(' ')[-1])
+    
+    # Get the contents between each parameter
+    partmatches = []
+    for i in range(len(particles)-1):
+        p1 = particles[i].replace('[',r'\[').replace(']',r'\]')
+        p2 = particles[i+1].replace('[',r'\[').replace(']',r'\]')
+        pat = r'{}(.*?){}'.format(p1, p2)
+        partmatches.append( re.search(pat, s4).group(1) )
+    partmatches.append( s4[s4.find(particles[-1]):])
+
+    for i in range(len(partmatches)):
+        # PDG codes for ghosts don't matter
+        if re.match(r'U\[\d*\]', particles[i]):
+            continue
+        match = partmatches[i]
+        # Unphysical fieldsd don't matter either
+        unphysmatch = re.search(r'Unphysical\s*->\s*True', match)
+        if unphysmatch:
+            continue
+        partmatch = re.search(r'ClassName\s*->(.*?),', match)
+        if not partmatch:
+            raise GumError(("The particle with description {0} "
+                            "does not have a class name. Your FeynRules "
+                            "file shouldn't work..."
+                             ).format(particles[i]))
+        # Try to match a set of PDG codes first
+        pdgmatch = re.search(r'PDG\s*->\s*\{(.*?)\}\s*', match)
+        if not pdgmatch:
+            pdgmatch = re.search(r'PDG\s*->(.*?)\s*,', match)
+
+        if not pdgmatch:
+            raise GumError(("Particle {0} does not have a PDG code; "
+                            "please give it one in your .fr file, as "
+                            "GUM and GAMBIT need this information."
+                            ).format(particles[i]))
