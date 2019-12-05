@@ -369,7 +369,7 @@ namespace Gambit                                                              \
         STRINGIFY(BACKENDNAME),                                               \
         STRINGIFY(VERSION),                                                   \
         STRINGIFY(SAFE_VERSION),					      \
-	STRINGIFY(REFERENCE),                                                 \
+	SAFE_STRINGIFY(REFERENCE),                                                 \
         Models::ModelDB());                                                   \
       } /* end namespace Functown */                                          \
                                                                               \
@@ -477,7 +477,7 @@ namespace Gambit                                                                
          STRINGIFY(BACKENDNAME),                                                                \
          STRINGIFY(VERSION),                                                                    \
          STRINGIFY(SAFE_VERSION),                                                               \
-	 STRINGIFY(REFERENCE),									\
+	 SAFE_STRINGIFY(REFERENCE),									\
          Models::ModelDB());                                                                    \
       } /* end namespace Functown */                                                            \
                                                                                                 \
@@ -545,7 +545,7 @@ namespace Gambit                                                                
          STRINGIFY(BACKENDNAME),                                                                \
          STRINGIFY(VERSION),                                                                    \
          STRINGIFY(SAFE_VERSION)  BOOST_PP_COMMA()                                              \
-	 STRINGIFY(REFERENCE),									\
+	 SAFE_STRINGIFY(REFERENCE),									\
          Models::ModelDB());                                                                    \
       } /* end namespace Functown */                                                            \
                                                                                                 \
