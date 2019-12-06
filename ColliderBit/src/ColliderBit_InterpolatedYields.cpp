@@ -40,8 +40,6 @@
 #include <stdlib.h>
 using namespace std;
 
-
- 
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
@@ -126,18 +124,12 @@ double BilinearInterpolation(double q11, double q12, double q21, double q22,
 		q22 * xx1 * yy1
 	);
 }
-
-// ---------------------------------------------------------------------------------------------------- 
-
-
 // ---------------------------------------------------- //
 // Interpolation functions // 
-// ---------------------------------------------------- //
-
-  
+// ---------------------------------------------------- //  
 void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, const char* experiment){
   static bool first = true;
-
+  // cout << " MASS = " << m <<endl;
   Utils::FileLock mylock("Get_data_once");
 
 
@@ -377,9 +369,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
       Norm  = 2*O1*O2/(sin(2.0*th));
     }
 
-      if (std::isnan(th)){
-      cout << " ok th is shit. "<< th << " "<< O1<< " "<< O2 <<endl;
-    }
+
     // Checks to go ahead with interpolation
     // cout << "Check things 6"<<mass[0]<<endl;  
 
@@ -516,7 +506,7 @@ void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, 
           else{
             Q21[Emiss] = MET_HIST[kk][Emiss];
               if ( std::isnan(Q21[Emiss])){
-                cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y1 X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
+                cout << "NAN!!! Emiss = "<< Emiss<< ", " << " X1 Y X2 Y2  = " << x1<< "  " << y1<< " " <<x2<< " " << y2 << endl;
               }
 
             C21 = CS[kk];
@@ -641,7 +631,7 @@ void L_Acc_Eff_CS(double * YIELDS, float m,float C61,float C62,float C63, float 
   Acceptance_CS(A23, m, C62, C63, tt, exper_);
     // cout << "Check things 14"<<endl;  
 
-  Acceptance_CS(A14, m,C61,C64,of,exper_);
+  Acceptance_CS(A14, m, C61, C64, of, exper_);
     // cout << "Check things 15 "<<endl;  
 
   for (int ii = 0; ii < met_bin_size; ++ii){
@@ -888,6 +878,7 @@ void DMEFT_results(AnalysisDataPointers &result){
      
  
 void InterpolatedMCInfo(MCLoopInfo& result)
+
     {
       // cout << "Have run the void..."<<endl;
       // This makes an MCLoopInfo object for satisfying the LHC
