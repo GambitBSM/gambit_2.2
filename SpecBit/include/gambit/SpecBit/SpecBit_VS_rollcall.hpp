@@ -132,28 +132,77 @@
     DEPENDENCY(vevacious_file_location, map_str_str)
     #undef FUNCTION
   #undef CAPABILITY
-
+  
   // Function to pass spectra to vevacious (via SLHAea). Model dependent.
   #define CAPABILITY pass_spectrum_to_vevacious
   START_CAPABILITY
-    #define FUNCTION pass_MSSM_spectrum_to_vevacious
-    START_FUNCTION(const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)
+
+  #define FUNCTION prepare_pass_MSSM_spectrum_to_vevacious
+    START_FUNCTION(SpecBit::SpectrumEntriesForVevacious)
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
     DEPENDENCY(init_vevacious, std::string)
-    ALLOW_MODEL_DEPENDENCE(MSSM, CMSSM)
+    ALLOW_MODELS(MSSM, CMSSM)
+  #undef FUNCTION
+  #undef CAPABILITY
+ 
+  /// Function for computing the stability of the scalar potential w.r.t. global minimum. Model independent. 
+  /// Just works with a filled instance of SpectrumEntriesForVevacious for the respective Model.
+  #define CAPABILITY check_vacuum_stability_global
+  START_CAPABILITY
+    #define FUNCTION check_vacuum_stability_vevacious_global
+    START_FUNCTION(SpecBit::VevaciousResultContainer)
+    DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
+    DEPENDENCY(init_vevacious, std::string)
+  #undef FUNCTION
+  #undef CAPABILITY
+  
+  /// Function for computing the stability of the scalar potential w.r.t to nearest minimum. Model independent. 
+  /// Just works with a filled instance of SpectrumEntriesForVevacious for the respective Model.
+  #define CAPABILITY check_vacuum_stability_nearest
+  START_CAPABILITY
+    #define FUNCTION check_vacuum_stability_vevacious_nearest
+    START_FUNCTION(SpecBit::VevaciousResultContainer)
+    DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
+    DEPENDENCY(init_vevacious, std::string)
   #undef FUNCTION
   #undef CAPABILITY
 
-  /// Function for computing the stability of the scalar potential. Model independent. 
-  /// Just works with an initialised vevaciousPlusPlus object.
-  #define CAPABILITY check_vacuum_stability
+  // Tunnelling likelihood
+  #define CAPABILITY VS_likelihood_global
   START_CAPABILITY
-    #define FUNCTION check_vacuum_stability_vevacious
-    START_FUNCTION(SpecBit::VevaciousResultContainer)
-    DEPENDENCY(pass_spectrum_to_vevacious, const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)
-    DEPENDENCY(init_vevacious, std::string)
-  #undef FUNCTION
+    #define FUNCTION get_likelihood_VS_global
+      START_FUNCTION(double)
+      DEPENDENCY(check_vacuum_stability_global, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
   #undef CAPABILITY
+  
+  // Tunnelling likelihood
+  #define CAPABILITY VS_likelihood_nearest
+  START_CAPABILITY
+    #define FUNCTION get_likelihood_VS_nearest
+      START_FUNCTION(double)
+      DEPENDENCY(check_vacuum_stability_nearest, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+  
+  // Tunnelling likelihood
+  #define CAPABILITY VS_results_global
+  START_CAPABILITY
+    #define FUNCTION get_VS_results_global
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(check_vacuum_stability_global, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+  
+  // Tunnelling likelihood
+  #define CAPABILITY VS_results_nearest
+  START_CAPABILITY
+    #define FUNCTION get_VS_results_nearest
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(check_vacuum_stability_nearest, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+  
 
   // Tunnelling likelihood
   #define CAPABILITY VS_likelihood

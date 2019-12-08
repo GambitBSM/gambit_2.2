@@ -27,6 +27,7 @@ namespace Gambit
   namespace SpecBit
   {
 
+
     // initialise all members to -1 => in case vevacious does not run
     // and/or the bounce actions are not calculated this will be printed
     // to the output file
@@ -56,10 +57,26 @@ namespace Gambit
       vevaciousRunFlag = false;
     }
 
-    VevaciousResultContainer::~VevaciousResultContainer()
-    {
-      std::cout << "AAHHHGHG I DIED" << std::endl;
+    /// delete all entries of the vevacious results map and set
+    /// lifetime, probability and bounceActionThreshould to -1
+    /// to be able to easily filter point out for which vevacious
+    /// did not run successfully 
+    void VevaciousResultContainer::clear_results(str panic_vacuum)
+    { 
+      result_map[panic_vacuum].clear();
+      std::cout << " VevaciousResultContainer clearing all entries for " << panic_vacuum << std::endl;
+      result_map[panic_vacuum]["lifetime"] = -1;                
+      result_map[panic_vacuum]["thermalProbability"] = -1;
+      result_map[panic_vacuum]["bounceActionThreshold_[0]"] = -1;  
+      result_map[panic_vacuum]["bounceActionThresholdThermal_[0]"] = -1;
+
     }
+
+    void SpectrumEntriesForVevacious::add_entry (std::string name, vec_pair_int_dbl vec, int setting)
+    {
+        pair_int_spectrum_vec pair = make_pair(setting, vec);
+        spec_entry_map[name]= pair;
+    };
 
     void VevaciousResultContainer::set_bounceActionThreshold(double val, bool thermal)
     {
