@@ -27,14 +27,14 @@ Priors:
 
 Printer:
 
-  # printer: cout
+  printer: cout
 
-  printer: hdf5
-  options:
-    output_file: "EWMSSM.hdf5"
-    group: "/EWMSSM"
-    delete_file_on_restart: true
-    buffer_length: 1
+  # printer: hdf5
+  # options:
+  #   output_file: "EWMSSM.hdf5"
+  #   group: "/EWMSSM"
+  #   delete_file_on_restart: true
+  #   buffer_length: 1
 
 
 Scanner:
@@ -69,34 +69,34 @@ ObsLikes:
     - purpose:    LogLike
       capability: LHC_Combined_LogLike
 
-    # LEP likelihoods
-    - purpose:    LogLike
-      capability: L3_Neutralino_Leptonic_LLike
+    # # LEP likelihoods
+    # - purpose:    LogLike
+    #   capability: L3_Neutralino_Leptonic_LLike
 
-    - purpose:    LogLike
-      capability: L3_Chargino_Leptonic_LLike
+    # - purpose:    LogLike
+    #   capability: L3_Chargino_Leptonic_LLike
 
-    - purpose:    LogLike
-      capability: OPAL_Chargino_Hadronic_LLike
+    # - purpose:    LogLike
+    #   capability: OPAL_Chargino_Hadronic_LLike
 
-    - purpose:    LogLike
-      capability: OPAL_Chargino_SemiLeptonic_LLike
+    # - purpose:    LogLike
+    #   capability: OPAL_Chargino_SemiLeptonic_LLike
 
-    - purpose:    LogLike
-      capability: OPAL_Chargino_Leptonic_LLike
+    # - purpose:    LogLike
+    #   capability: OPAL_Chargino_Leptonic_LLike
 
-    - purpose:    LogLike
-      capability: OPAL_Neutralino_Hadronic_LLike
+    # - purpose:    LogLike
+    #   capability: OPAL_Neutralino_Hadronic_LLike
 
-    - purpose:    LogLike
-      capability: OPAL_Degenerate_Chargino_LLike
+    # - purpose:    LogLike
+    #   capability: OPAL_Degenerate_Chargino_LLike
 
-    # Likelihoods for invisible decays of Z and Higgs bosons
-    - purpose:    LogLike
-      capability: lnL_Z_inv
+    # # Likelihoods for invisible decays of Z and Higgs bosons
+    # - purpose:    LogLike
+    #   capability: lnL_Z_inv
 
-    - purpose:    LogLike
-      capability: lnL_Higgs_invWidth
+    # - purpose:    LogLike
+    #   capability: lnL_Higgs_invWidth
 
     #
     # Observables
