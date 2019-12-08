@@ -1,6 +1,6 @@
 diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
 --- prospino_2.1_original/Makefile	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Makefile	2019-11-16 20:44:38.149368099 +0100
++++ prospino_2.1_patched/Makefile	2019-12-08 21:39:48.912168692 +0100
 @@ -9,6 +9,11 @@
  #OPTION = -O0
  # these options needed for the NAG compiler
@@ -126,7 +126,7 @@ diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
  
 diff -rupN prospino_2.1_original/Pro2_interface/Xget_pdf.f prospino_2.1_patched/Pro2_interface/Xget_pdf.f
 --- prospino_2.1_original/Pro2_interface/Xget_pdf.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_interface/Xget_pdf.f	2019-11-11 14:00:55.653633943 +0100
++++ prospino_2.1_patched/Pro2_interface/Xget_pdf.f	2019-12-08 21:39:48.916168657 +0100
 @@ -89,19 +89,23 @@ ctq5         lambda_qcd = 0.226D0
  
  c -----------------------------------------------
@@ -157,27 +157,9 @@ diff -rupN prospino_2.1_original/Pro2_interface/Xget_pdf.f prospino_2.1_patched/
        else
           print*, " INIT_PDF: inlo set wrongly ",inlo
        end if
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_bb_qb.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_bb_qb.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ll_c.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ll_c.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ll_r.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ll_r.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ll_v.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ll_v.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ng_c.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ng_c.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ng_r.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ng_r.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ng_v.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ng_v.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_nn_c.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_nn_c.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_nn_r.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_nn_r.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_nn_v.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_nn_v.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ns_gg.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ns_gg.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ns_qb.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ns_qb.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ns_qg.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ns_qg.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ns_qq.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ns_qq.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_ns_v.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_ns_v.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_tb_cr.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_tb_cr.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_tb_gg.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_tb_gg.o differ
-Binary files prospino_2.1_original/Pro2_matrix/Xmatrix_tb_qb.o and prospino_2.1_patched/Pro2_matrix/Xmatrix_tb_qb.o differ
 diff -rupN prospino_2.1_original/Pro2_subroutines/Cteq6Pdf-2008.f prospino_2.1_patched/Pro2_subroutines/Cteq6Pdf-2008.f
 --- prospino_2.1_original/Pro2_subroutines/Cteq6Pdf-2008.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_subroutines/Cteq6Pdf-2008.f	2019-11-11 14:00:55.665633983 +0100
++++ prospino_2.1_patched/Pro2_subroutines/Cteq6Pdf-2008.f	2019-12-08 21:39:48.944168407 +0100
 @@ -247,25 +247,29 @@ C        put a warning for calling extra
  C                             ********************
        End
@@ -318,11 +300,9 @@ diff -rupN prospino_2.1_original/Pro2_subroutines/Cteq6Pdf-2008.f prospino_2.1_p
          Else
            Print *, 'Invalid Iset number in SetCtq6 :', Iset
            Stop
-Binary files prospino_2.1_original/Pro2_subroutines/Cteq6Pdf-2008.o and prospino_2.1_patched/Pro2_subroutines/Cteq6Pdf-2008.o differ
-Binary files prospino_2.1_original/Pro2_subroutines/Xalphas_smooth.o and prospino_2.1_patched/Pro2_subroutines/Xalphas_smooth.o differ
 diff -rupN prospino_2.1_original/Pro2_subroutines/XCteq61Pdf.f prospino_2.1_patched/Pro2_subroutines/XCteq61Pdf.f
 --- prospino_2.1_original/Pro2_subroutines/XCteq61Pdf.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_subroutines/XCteq61Pdf.f	2019-11-11 14:00:55.665633983 +0100
++++ prospino_2.1_patched/Pro2_subroutines/XCteq61Pdf.f	2019-12-08 21:39:48.944168407 +0100
 @@ -144,6 +144,7 @@ ctp     > / 'cteq6m', 'cteq6d', 'cteq6l'
        Data Isetmin2,Isetmax2 /200,240/
        save
@@ -333,7 +313,7 @@ diff -rupN prospino_2.1_original/Pro2_subroutines/XCteq61Pdf.f prospino_2.1_patc
           IU= NextUn()
 diff -rupN prospino_2.1_original/Pro2_subroutines/XCtq5Pdf.f prospino_2.1_patched/Pro2_subroutines/XCtq5Pdf.f
 --- prospino_2.1_original/Pro2_subroutines/XCtq5Pdf.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_subroutines/XCtq5Pdf.f	2019-11-11 14:00:55.665633983 +0100
++++ prospino_2.1_patched/Pro2_subroutines/XCtq5Pdf.f	2019-12-08 21:39:48.948168372 +0100
 @@ -197,10 +197,13 @@ C
  C                        ****************************
        END
@@ -368,13 +348,9 @@ diff -rupN prospino_2.1_original/Pro2_subroutines/XCtq5Pdf.f prospino_2.1_patche
              Open(IU, File=Tablefile, Status='OLD', Err=100)
  	 Endif
           Call ReadTbl (IU)
-Binary files prospino_2.1_original/Pro2_subroutines/Xread_les_houches.o and prospino_2.1_patched/Pro2_subroutines/Xread_les_houches.o differ
-Binary files prospino_2.1_original/Pro2_subroutines/Xrunning_mass.o and prospino_2.1_patched/Pro2_subroutines/Xrunning_mass.o differ
-Binary files prospino_2.1_original/Pro2_subroutines/Xsugra.o and prospino_2.1_patched/Pro2_subroutines/Xsugra.o differ
-Binary files prospino_2.1_original/Pro2_subroutines/Xvegas_array.o and prospino_2.1_patched/Pro2_subroutines/Xvegas_array.o differ
 diff -rupN prospino_2.1_original/Xinitialize.f90 prospino_2.1_patched/Xinitialize.f90
 --- prospino_2.1_original/Xinitialize.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xinitialize.f90	2019-11-11 14:00:55.653633943 +0100
++++ prospino_2.1_patched/Xinitialize.f90	2019-12-08 21:39:48.912168692 +0100
 @@ -4,6 +4,8 @@ module xx_initialize
    use xx_public_variables
    use xx_pass_integ
@@ -592,17 +568,9 @@ diff -rupN prospino_2.1_original/Xinitialize.f90 prospino_2.1_patched/Xinitializ
  ! ------------------------------
  ! routine to take care of critical mass choices 
  ! solve by overwriting in xx_pass_integ
-Binary files prospino_2.1_original/Xinitialize.o and prospino_2.1_patched/Xinitialize.o differ
-Binary files prospino_2.1_original/Xin_out.o and prospino_2.1_patched/Xin_out.o differ
-Binary files prospino_2.1_original/Xinteg_hh.o and prospino_2.1_patched/Xinteg_hh.o differ
-Binary files prospino_2.1_original/Xinteg_ht.o and prospino_2.1_patched/Xinteg_ht.o differ
-Binary files prospino_2.1_original/Xinteg_le.o and prospino_2.1_patched/Xinteg_le.o differ
-Binary files prospino_2.1_original/Xinteg_ll.o and prospino_2.1_patched/Xinteg_ll.o differ
-Binary files prospino_2.1_original/Xinteg_lq.o and prospino_2.1_patched/Xinteg_lq.o differ
-Binary files prospino_2.1_original/Xinteg_ng.o and prospino_2.1_patched/Xinteg_ng.o differ
 diff -rupN prospino_2.1_original/Xinteg_nn.f90 prospino_2.1_patched/Xinteg_nn.f90
 --- prospino_2.1_original/Xinteg_nn.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xinteg_nn.f90	2019-11-17 02:49:27.063173807 +0100
++++ prospino_2.1_patched/Xinteg_nn.f90	2019-12-08 21:39:48.912168692 +0100
 @@ -48,10 +48,11 @@ contains
  
      m1 = mass_n(ipart1)                                        ! assign the final state masses 
@@ -619,12 +587,9 @@ diff -rupN prospino_2.1_original/Xinteg_nn.f90 prospino_2.1_patched/Xinteg_nn.f9
  
      if ( (abs(m1)+abs(m2))**2 > 0.98*sc ) then
  !tp       print*, " collider energy not large enough ",m1,m2,sqrt(sc)
-Binary files prospino_2.1_original/Xinteg_nn.o and prospino_2.1_patched/Xinteg_nn.o differ
-Binary files prospino_2.1_original/Xinteg_ns.o and prospino_2.1_patched/Xinteg_ns.o differ
-Binary files prospino_2.1_original/Xinteg_tb.o and prospino_2.1_patched/Xinteg_tb.o differ
 diff -rupN prospino_2.1_original/Xprospino_subroutine.f90 prospino_2.1_patched/Xprospino_subroutine.f90
 --- prospino_2.1_original/Xprospino_subroutine.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xprospino_subroutine.f90	2019-11-17 02:47:22.414834193 +0100
++++ prospino_2.1_patched/Xprospino_subroutine.f90	2019-12-08 21:39:48.912168692 +0100
 @@ -14,6 +14,8 @@ module xx_prospino_subroutine
    use xx_integral_ht
    use xx_initialize
@@ -634,7 +599,7 @@ diff -rupN prospino_2.1_original/Xprospino_subroutine.f90 prospino_2.1_patched/X
    implicit none 
    private :: GET_UNITS_READ_WRITE
    public :: PROSPINO, PROSPINO_OPEN_CLOSE
-@@ -379,6 +381,399 @@ contains
+@@ -379,6 +381,398 @@ contains
      
    end subroutine GET_UNITS_READ_WRITE
  
@@ -672,7 +637,6 @@ diff -rupN prospino_2.1_original/Xprospino_subroutine.f90 prospino_2.1_patched/X
 +    real(kind=double), dimension(2,2)    :: uu_in,vv_in
 +    real(kind=double), dimension(2,2)    :: mst_in,msb_in,msl_in
 +    real(kind=double), dimension(4,4)    :: bw_in
-+    character(len=2)                     :: final_state
 +    character(len=2)                     :: final_state_new
 +    ! character(kind=c_char)               :: final_state_new
 +    logical                              :: lvalid_global,lvalid_iteration
@@ -704,7 +668,7 @@ diff -rupN prospino_2.1_original/Xprospino_subroutine.f90 prospino_2.1_patched/X
 +    isq_ng          = isq_ng_in
 +
 +    call c_f_pointer (c_loc(final_state_in), f_final_state_in)
-+    final_state     = f_final_state_in
++    final_state = f_final_state_in
 +    final_state_new = f_final_state_in                                                          ! copy for second select statement
 +
 +!----------------------------------------------------------------------------------------
@@ -1034,10 +998,9 @@ diff -rupN prospino_2.1_original/Xprospino_subroutine.f90 prospino_2.1_patched/X
  end module xx_prospino_subroutine
  
  
-Binary files prospino_2.1_original/Xprospino_subroutine.o and prospino_2.1_patched/Xprospino_subroutine.o differ
 diff -rupN prospino_2.1_original/Xvital.f90 prospino_2.1_patched/Xvital.f90
 --- prospino_2.1_original/Xvital.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xvital.f90	2019-11-11 14:00:55.653633943 +0100
++++ prospino_2.1_patched/Xvital.f90	2019-12-08 21:39:48.912168692 +0100
 @@ -69,4 +69,14 @@ module xx_public_variables   ! all kind
  end module xx_public_variables
  
@@ -1053,20 +1016,3 @@ diff -rupN prospino_2.1_original/Xvital.f90 prospino_2.1_patched/Xvital.f90
 +
 +
  
-Binary files prospino_2.1_original/Xvital.o and prospino_2.1_patched/Xvital.o differ
-Binary files prospino_2.1_original/xx_gambit_variables.mod and prospino_2.1_patched/xx_gambit_variables.mod differ
-Binary files prospino_2.1_original/xx_initialize.mod and prospino_2.1_patched/xx_initialize.mod differ
-Binary files prospino_2.1_original/xx_in_out.mod and prospino_2.1_patched/xx_in_out.mod differ
-Binary files prospino_2.1_original/xx_integral_hh.mod and prospino_2.1_patched/xx_integral_hh.mod differ
-Binary files prospino_2.1_original/xx_integral_ht.mod and prospino_2.1_patched/xx_integral_ht.mod differ
-Binary files prospino_2.1_original/xx_integral_le.mod and prospino_2.1_patched/xx_integral_le.mod differ
-Binary files prospino_2.1_original/xx_integral_ll.mod and prospino_2.1_patched/xx_integral_ll.mod differ
-Binary files prospino_2.1_original/xx_integral_lq.mod and prospino_2.1_patched/xx_integral_lq.mod differ
-Binary files prospino_2.1_original/xx_integral_ng.mod and prospino_2.1_patched/xx_integral_ng.mod differ
-Binary files prospino_2.1_original/xx_integral_nn.mod and prospino_2.1_patched/xx_integral_nn.mod differ
-Binary files prospino_2.1_original/xx_integral_ns.mod and prospino_2.1_patched/xx_integral_ns.mod differ
-Binary files prospino_2.1_original/xx_integral_tb.mod and prospino_2.1_patched/xx_integral_tb.mod differ
-Binary files prospino_2.1_original/xx_kinds.mod and prospino_2.1_patched/xx_kinds.mod differ
-Binary files prospino_2.1_original/xx_pass_integ.mod and prospino_2.1_patched/xx_pass_integ.mod differ
-Binary files prospino_2.1_original/xx_prospino_subroutine.mod and prospino_2.1_patched/xx_prospino_subroutine.mod differ
-Binary files prospino_2.1_original/xx_public_variables.mod and prospino_2.1_patched/xx_public_variables.mod differ
