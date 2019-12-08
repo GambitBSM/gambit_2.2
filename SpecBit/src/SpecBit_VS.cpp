@@ -661,6 +661,115 @@ namespace Gambit
         return vevaciousPlusPlus;
       }
 
+    // This function calls vevacious  either "Stable" or "Metastable".
+    void helper_run_vevacious(vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus &vevaciousPlusPlus,VevaciousResultContainer& result, std::string panic_vacuum, std::string inputPath)
+    {
+       
+        double lifetime, thermalProbability;
+
+        //Checking if file exists, fastest method.
+        struct stat buffer; 
+        std::string HomotopyLockfile = inputPath + "/Homotopy/busy.lock";
+        // Check if homotopy binary is being used
+        //Here I check it the busy.lock file exists and if it does I go into a
+        // while loop that either breaks when the file is deleted or after
+        // 30 seconds have passed.
+        // This deals with the problem of MARCONI not liking a binary accessed by too many
+        // processes at the same time
+        std::chrono::system_clock::time_point tStart = Utils::get_clock_now();
+              
+        while(stat(HomotopyLockfile.c_str(), &buffer)==0)
+        {
+          std::chrono::system_clock::time_point tNow = Utils::get_clock_now();
+          std::chrono::seconds tSofar = std::chrono::duration_cast<std::chrono::seconds>(tNow - tStart);
+          if(tSofar >= std::chrono::seconds(30) )
+          {
+            remove( HomotopyLockfile.c_str());
+            break; 
+          }
+        }
+
+        // call vevacious and pass the setting for which vacuum is supposed
+        // to be used for tunneling calculation as string
+        vevaciousPlusPlus.RunPoint(panic_vacuum);
+
+        // get vevacious results
+        lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
+        thermalProbability = vevaciousPlusPlus.GetThermalProbability();
+
+        // decide how to deal with different vevacious outcomes
+        // here -1 from Vevacious Means that the point is stable. 
+        if(lifetime == -1 && thermalProbability == -1 )
+        { 
+            lifetime = 3.0E+100;
+            thermalProbability = 1;
+        }
+        else if(lifetime == -1 && thermalProbability != -1)
+        {
+            lifetime = 3.0E+100;
+        }
+        else if(lifetime != -1 && thermalProbability == -1)
+        {
+            thermalProbability = 1;
+        }
+
+        cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+        cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
+        std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
+   
+        // return a vector containing the results from vevacious, these are filled
+        // in any successfully run case with the entries
+        //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
+        //              "best result from path_finder 1", "best result from path_finder 2",...]
+        //   Note that the entries "best result from path_finder x" are only filled if the
+        //               "straight path bounce action" (entry 1) is higher than the "bounce Action Threshold"
+        //                (entry 0). The vector length depends on how many different path finders are implemented in
+        //                vevacious
+        std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
+        std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
+            
+        std::cout << "VEVACIOUS RESULT size "<< BounceActions_vec.size() << endl;
+
+        // set calculated bounce actions values & the threshold if they were calculated
+        // bool false means that we are not setting the thermal values here
+        for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii) 
+        {
+          std::cout << "Setting bounceActionThreshold_[" << ii << "]"<< BounceActions_vec.at(ii) << '\n'; 
+          result.set_results(panic_vacuum, "bounceActionThreshold_[" + std::to_string(ii) + "]", BounceActions_vec.at(ii));
+        }
+
+        for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii) 
+        {
+          std::cout << "Setting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii) << '\n'; 
+          result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
+        }
+        cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
+
+        result.set_results(panic_vacuum,"lifetime", lifetime);
+        result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
+    }
+
+
+    // decide how to deal with a failed vevacious run --> set lifetime and thermalProbability
+    // conservatively to a value easy to identify in analysis
+    void helper_catch_vevacious(VevaciousResultContainer& result, std::string panic_vacuum)
+    {
+
+      //Vevacious has crashed -- set results to fixed values
+      double lifetime = 2.0E+100; 
+      double thermalProbability= 1;
+
+      cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+      std::string vevacious_result = "Inconclusive";
+      cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
+      logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+      
+      result.set_results(panic_vacuum,"lifetime", lifetime);
+      result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
+
+    }
+
+
     // This function gives back the result for absolute stability, either "Stable" or "Metastable".
     void check_vacuum_stability_vevacious_global(VevaciousResultContainer &result)
     {
@@ -670,133 +779,48 @@ namespace Gambit
         // to avoid that any value could be carried over from a previous calculated point
         std::string panic_vacuum = "global";
         result.clear_results(panic_vacuum);
-
-        double lifetime, thermalProbability;
-
+        
         // read in option how often you want to re-run vevacious in case you get an INCONCLUSIVE RESULT
-        int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
+        static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
         static bool firstrun = true;
         if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;}
 
         int trial = 0;
         bool successful_run = false;
         
+        // get the object that holds all inputs that need to be passed to vevacious
         SpectrumEntriesForVevacious pass_spectrum = (*myPipe::Dep::pass_spectrum_to_vevacious);
-
-        static std::string inputspath = pass_spectrum.get_inputPath();
-
-        std::cout << "before entering pass_spectrum with input file " << inputspath << " and filename " << pass_spectrum.get_inputFilename() << std::endl;
-
-
-        // Tell Vevacious to use vacuum specified with string 'panic_vacuum' for 
-        // tunneling calculation and the spectrum for the point set with help of the 
-        // instance 'pass_spectrum' of SpectrumEntriesForVevacious
+        
+        // run vevacious until it runs successfully or the maximum number of trials is reached
         while(trial < maxTrials and not successful_run)
         { 
-
           try 
           {    
+              // create vevaciousPlusPlus object new for every try since spectrum 
+              // vevacious deletes spectrum after each run => to be able to do this 
+              // we need the non-rollcalled helper function that gets executed everytime 
+              // we get to this line (unlike a dependency)
               vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
-              //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
-              // Run vevacious     struct stat buffer; //Checking if file exists, fastest method.
-              struct stat buffer; //Checking if file exists, fastest method.
-              std::string HomotopyLockfile = inputspath + "/Homotopy/busy.lock";
-              // Check if homotopy binary is being used
-              //Here I check it the busy.lock file exists and if it does I go into a
-              // while loop that either breaks when the file is deleted or after
-              // 30 seconds have passed.
-              // This deals with the problem of MARCONI not liking a binary accessed by too many
-              // processes at the same time
-              std::chrono::system_clock::time_point tStart = Utils::get_clock_now();
               
-              while(stat(HomotopyLockfile.c_str(), &buffer)==0)
-              {
-                std::chrono::system_clock::time_point tNow = Utils::get_clock_now();
-                std::chrono::seconds tSofar = std::chrono::duration_cast<std::chrono::seconds>(tNow - tStart);
-                
-                if(tSofar >= std::chrono::seconds(30) )
-                {
-                  remove( HomotopyLockfile.c_str());
-                  break; 
-                }
-              }
+              // helper function to set lifetime & thermal probability accordingly 
+              // (this is a separate function s.t. we don't have to reproduce code 
+              // for different panic vacua)
+              helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
 
-              vevaciousPlusPlus.RunPoint(panic_vacuum);
-
-              lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
-              thermalProbability = vevaciousPlusPlus.GetThermalProbability();
-
-              if(lifetime == -1 && thermalProbability == -1 )
-              { // Here -1 from Vevacious Means that the point is stable. 
-                  lifetime = 3.0E+100;
-                  thermalProbability = 1;
-              }
-              else if(lifetime == -1 && thermalProbability != -1)
-              {
-                  lifetime = 3.0E+100;
-              }
-              else if(lifetime != -1 && thermalProbability == -1)
-              {
-                  thermalProbability = 1;
-              }
-
-              cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-              cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
-              std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
-
-              // If you get up to this point vevacious ran successfully -- no need to run again! 
+              // congrats -- if you got up to this point vevacious did not crash!
               successful_run = true;
-              
-              // return a vector containing the results from vevacious, the Thermal ones are filled
-              // in any successfully run case with the entries
-              //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
-              //              "best result from path_finder 1", "best result from path_finder 2",...]
-              //          Note that the entries "best result from path_finder x" are only filled if the
-              //               "straight path bounce action" (entry 1) is higher than the "bounce Action Threshold"
-              //                (entry 0). The vector length depends on how many different path finders are implemented in
-              //                vevacious
-              std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
-              std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
-            
-              std::cout << "VEVACIOUS RESULT size "<< BounceActions_vec.size() << endl;
-              // set calculated bounce actions values & the threshold if they were calculated
-              // bool false means that we are not setting the thermal values here
-              for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii) 
-              {
-                std::cout << "Setting bounceActionThreshold_[" << ii << "]"<< BounceActions_vec.at(ii) << '\n'; 
-                result.set_results(panic_vacuum, "bounceActionThreshold_[" + std::to_string(ii) + "]", BounceActions_vec.at(ii));
-              }
-
-              for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii) 
-              {
-                std::cout << "Setting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii) << '\n'; 
-                result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
-              }
-
-              cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
           }
 
           catch(const std::exception& e)
           {
-              //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
-              lifetime = 2.0E+100; //Vevacious has crashed
-              thermalProbability= 1;
-
-              cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-              std::string vevacious_result = "Inconclusive";
-              cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
-              logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+              // call function that sets the lifetime & thermal probability if vevacious
+              // has crashed for some reason
+              helper_catch_vevacious(result, panic_vacuum);
               logger() << "Error occurred: " << e.what() << EOM;
-              //std::ostringstream errmsg;
-              //errmsg << "Vevacious could not calculate lifetime. Conservatively setting it to large value." << rankstring;
-              //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
           }
 
           trial += 1;
         }
-
-        result.set_results(panic_vacuum,"lifetime", lifetime);
-        result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
     }
 
     // This function gives back the result for absolute stability, either "Stable" or "Metastable".
@@ -809,131 +833,47 @@ namespace Gambit
         std::string panic_vacuum = "nearest";
         result.clear_results(panic_vacuum);
 
-        double lifetime, thermalProbability;
-
-        // read in option how often you want to re-run vevacious in case you get an INCONCLUSIVE RESULT
-        int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
+                // read in option how often you want to re-run vevacious in case you get an INCONCLUSIVE RESULT
+        static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
         static bool firstrun = true;
         if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;}
 
         int trial = 0;
         bool successful_run = false;
         
+        // get the object that holds all inputs that need to be passed to vevacious
         SpectrumEntriesForVevacious pass_spectrum = (*myPipe::Dep::pass_spectrum_to_vevacious);
-
-        static std::string inputspath = pass_spectrum.get_inputPath();
-
-        std::cout << "before entering pass_spectrum with input file " << inputspath << " and filename " << pass_spectrum.get_inputFilename() << std::endl;
-
-
-        // Tell Vevacious to use vacuum specified with string 'panic_vacuum' for 
-        // tunneling calculation and the spectrum for the point set with help of the 
-        // instance 'pass_spectrum' of SpectrumEntriesForVevacious
+        
+        // run vevacious until it runs successfully or the maximum number of trials is reached
         while(trial < maxTrials and not successful_run)
         { 
-
           try 
           {    
+              // create vevaciousPlusPlus object new for every try since spectrum 
+              // vevacious deletes spectrum after each run => to be able to do this 
+              // we need the non-rollcalled helper function that gets executed everytime 
+              // we get to this line (unlike a dependency)
               vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
-              //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
-              // Run vevacious
-              struct stat buffer; //Checking if file exists, fastest method.
-              std::string HomotopyLockfile = inputspath + "/Homotopy/busy.lock";
-              // Check if homotopy binary is being used
-              //Here I check it the busy.lock file exists and if it does I go into a
-              // while loop that either breaks when the file is deleted or after
-              // 30 seconds have passed.
-              // This deals with the problem of MARCONI not liking a binary accessed by too many
-              // processes at the same time
-              std::chrono::system_clock::time_point tStart = Utils::get_clock_now();
               
-              while(stat(HomotopyLockfile.c_str(), &buffer)==0)
-              {
-                std::chrono::system_clock::time_point tNow = Utils::get_clock_now();
-                std::chrono::seconds tSofar = std::chrono::duration_cast<std::chrono::seconds>(tNow - tStart);
-                
-                if(tSofar >= std::chrono::seconds(30) )
-                {
-                  remove( HomotopyLockfile.c_str());
-                  break; 
-                }
-              }
+              // helper function to set lifetime & thermal probability accordingly 
+              // (this is a separate function s.t. we don't have to reproduce code 
+              // for different panic vacua)
+              helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
 
-              vevaciousPlusPlus.RunPoint(panic_vacuum);
-
-              lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
-              thermalProbability = vevaciousPlusPlus.GetThermalProbability();
-
-              if(lifetime == -1 && thermalProbability == -1 )
-              { // Here -1 from Vevacious Means that the point is stable. 
-                  lifetime = 3.0E+100;
-                  thermalProbability = 1;
-              }
-              else if(lifetime == -1 && thermalProbability != -1)
-              {
-                  lifetime = 3.0E+100;
-              }
-              else if(lifetime != -1 && thermalProbability == -1)
-              {
-                  thermalProbability = 1;
-              }
-
-              cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-              cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
-              std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
-
-              // If you get up to this point vevacious ran successfully -- no need to run again! 
+              // congrats -- if you got up to this point vevacious did not crash!
               successful_run = true;
-              
-              // return a vector containing the results from vevacious, the Thermal ones are filled
-              // in any successfully run case with the entries
-              //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
-              //              "best result from path_finder 1", "best result from path_finder 2",...]
-              //          Note that the entries "best result from path_finder x" are only filled if the
-              //               "straight path bounce action" (entry 1) is higher than the "bounce Action Threshold"
-              //                (entry 0). The vector length depends on how many different path finders are implemented in
-              //                vevacious
-              std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
-              std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
-            
-              std::cout << "VEVACIOUS RESULT size "<< BounceActions_vec.size() << endl;
-              // set calculated bounce actions values & the threshold if they were calculated
-              // bool false means that we are not setting the thermal values here
-              for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii) 
-              {
-                std::cout << "Setting bounceActionThreshold_[" << (ii) << "]"<< BounceActions_vec.at(ii) << '\n'; 
-                result.set_results(panic_vacuum, "bounceActionThreshold_[" + std::to_string(ii) + "]", BounceActions_vec.at(ii));
-              }
-
-              for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii) 
-              {
-                std::cout << "Setting bounceActionThreshold_thermal_[" << (ii) << "]"<< BounceActionsThermal_vec.at(ii) << '\n'; 
-                result.set_results(panic_vacuum, "bounceActionThreshold_thermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
-              }
-              cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
           }
 
           catch(const std::exception& e)
           {
-              //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
-              lifetime = 2.0E+100; //Vevacious has crashed
-              thermalProbability= 1;
-
-              cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-              std::string vevacious_result = "Inconclusive";
-              cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
-              logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+              // call function that sets the lifetime & thermal probability if vevacious
+              // has crashed for some reason
+              helper_catch_vevacious(result, panic_vacuum);
               logger() << "Error occurred: " << e.what() << EOM;
-              //std::ostringstream errmsg;
-              //errmsg << "Vevacious could not calculate lifetime. Conservatively setting it to large value." << rankstring;
-              //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
           }
 
           trial += 1;
         }
-
-        result.set_results(panic_vacuum,"lifetime", lifetime);
-        result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
     }
 
     
@@ -1377,8 +1317,7 @@ namespace Gambit
         std::string rankstring = std::to_string(rank);
 
         std::string inputFilename = inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
-        //static vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
-
+        
         result.set_inputFilename(inputFilename);
         result.set_inputPath(inputspath);
 
