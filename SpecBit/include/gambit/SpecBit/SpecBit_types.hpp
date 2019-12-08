@@ -94,59 +94,28 @@ namespace Gambit
       public:
         // constructor initialises every member to -1 to avoid 
         // problems when printing results when vevacious did not run
-        VevaciousResultContainer();
+        VevaciousResultContainer(){};
 
-        // reset all memember variables to value -1
-        void reset_results();
+        // clear all maps and set value of lifetime and thermalProbability to -1
+        void clear_results(str panic_vaccum);
+
+        //void reset_results();
         void vevacious_ran(){vevaciousRunFlag = true;};
         void vevacious_ran_reset(){vevaciousRunFlag = false;};
 
-        // setter functions for members, set bool thermal to true
-        // to set thermal values
-        void set_lifetime(double val) {lifetime = val;};
-        void set_thermalProbability(double val) {thermalProbability = val;};
-        
-        void set_bounceActionThreshold  (double val, bool thermal);
-        void set_bounceActionStraight   (double val, bool thermal);
-        void set_firstPathFinder        (double val, bool thermal);
-        void set_secondPathFinder       (double val, bool thermal);
-
-        // getter functions for members, set thermal to ture to 
-        // get thermal values
-        double get_lifetime()           {return lifetime;};
-        double get_thermalProbability() {return thermalProbability;};
-
-        double get_bounceActionThreshold(bool thermal);
-        double get_bounceActionStraight (bool thermal);
-        double get_firstPathFinder      (bool thermal);
-        double get_secondPathFinder     (bool thermal);
-
+        // setter functions for lifetime, thermal Prob & vectors containing bounce Actions & threshold
         void set_results (str panic_vaccum, str name, double val){result_map[panic_vaccum][name]=val;}
-        void clear_results(str panic_vaccum);
 
+        // return map containing results for nearest/global run
         map_str_dbl get_nearest_results() {return result_map["nearest"];}
         map_str_dbl get_global_results() {return result_map["global"];}
+
+        // return lifetime for nearest/global minimum
         double get_lifetime(str panic_vaccum) {return result_map[panic_vaccum]["lifetime"];};
+        double get_thermalProbability(str panic_vaccum) {return result_map[panic_vaccum]["thermalProbability"];};
         
       private:
-        bool vevaciousRunFlag; 
-        double lifetime;
-        double thermalProbability;
-
-        double bounceActionThreshold;
-        double bounceActionThresholdThermal;
-
-        double bounceActionStraight;
-        double bounceActionStraightThermal;
-
-        double firstPathFinder;
-        double firstPathFinderThermal;
-
-        double secondPathFinder;
-        double secondPathFinderThermal;  
-
-        //map_str_dbl global_results;
-        //map_str_dbl nearest_results;   
+        bool vevaciousRunFlag;  
         map_str_map_str_dbl result_map;   
     };
   }

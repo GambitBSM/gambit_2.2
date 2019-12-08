@@ -95,6 +95,12 @@ ObsLikes:
 
   - capability:   VS_likelihood_nearest
     purpose:      LogLike
+  
+  - capability:   VS_likelihood_nearest_thermal
+    purpose:      LogLike
+  
+  - capability:   VS_likelihood_global_thermal
+    purpose:      LogLike
 
   - capability:   VS_results_global
     purpose:      Obs

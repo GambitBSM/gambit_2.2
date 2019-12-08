@@ -489,18 +489,15 @@ namespace Gambit
         result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
     }
 
-    /// Vacuum stability likelihood from a Vevacious run
-    /// calculating the lifetime of & tunneling probability to the nearest minimum
-    void get_likelihood_VS_nearest(double &result)
+    void get_likelihood_VS_global_thermal(double &result)
     {
-        using namespace Pipes::get_likelihood_VS_nearest;
-        
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_nearest;
-        double lifetime =  vevacious_results.get_lifetime("nearest");
+        using namespace Pipes::get_likelihood_VS_global_thermal;
 
-        // This is based on the estimation of the past lightcone from 1806.11281
-        double conversion = (6.5821195e-25)/(31536000);
-        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_global;
+        double thermalProbability = vevacious_results.get_thermalProbability("global");
+
+        if(thermalProbability == 0){result = -1e100;} 
+        else{result = std::log(thermalProbability);}
     }
 
 
@@ -515,6 +512,31 @@ namespace Gambit
     }
 
     /// Store all results form vevacious for a run using the global minimum as 
+    /// Vacuum stability likelihood from a Vevacious run
+    /// calculating the lifetime of & tunneling probability to the nearest minimum
+    void get_likelihood_VS_nearest(double &result)
+    {
+        using namespace Pipes::get_likelihood_VS_nearest;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_nearest;
+        double lifetime =  vevacious_results.get_lifetime("nearest");
+
+        // This is based on the estimation of the past lightcone from 1806.11281
+        double conversion = (6.5821195e-25)/(31536000);
+        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
+    }
+
+    void get_likelihood_VS_nearest_thermal(double &result)
+    {
+        using namespace Pipes::get_likelihood_VS_nearest_thermal;
+
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_nearest;
+        double thermalProbability = vevacious_results.get_thermalProbability("nearest");
+
+        if(thermalProbability == 0){result = -1e100;} 
+        else{result = std::log(thermalProbability);}
+    }
+
     /// panic vacuum in a str to dbl map so it is printable
     void get_VS_results_nearest(map_str_dbl &result)
     {
@@ -525,40 +547,8 @@ namespace Gambit
     }
 
 
-
-
-    /// Vacuum stability likelihood from a Vevacious run
-    void get_likelihood_VS(double &result)
-    {
-        using namespace Pipes::get_likelihood_VS;
-        
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        double lifetime =  vevacious_results.get_lifetime();
-
-        // This is based on the estimation of the past lightcone from 1806.11281
-        double conversion = (6.5821195e-25)/(31536000);
-        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
-    }
-
-    /// Thermal vacuum stability likelihood from a Vevacious run
-    void get_likelihood_VS_thermal(double &result)
-    {
-        using namespace Pipes::get_likelihood_VS_thermal;
-
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        double thermalProbability =  vevacious_results.get_thermalProbability();
-
-         if(thermalProbability == 0)
-         {
-             result = -1e100;
-         } else
-         {
-             result= std::log(thermalProbability);
-         }
-    }
-
+    /* (JR) still need to do this with new interface 
     /// Some debugging (printing) routines.
-
     void print_VS_StraightPathGoodEnough(int &result)
     {
         using namespace Pipes::print_VS_StraightPathGoodEnough;
@@ -605,38 +595,9 @@ namespace Gambit
         // straigh path was not good enough
         else{result = 0;}
 
-    }
+    } */
     
-    void print_VS_ThresholdAndBounceActions(std::vector<double> &result)
-    {
-        using namespace Pipes::print_VS_ThresholdAndBounceActions;
-
-        result.clear();
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        
-        // bool false since we are getting non-thermal values
-        result.push_back(vevacious_results.get_bounceActionThreshold(false));
-        result.push_back(vevacious_results.get_bounceActionStraight(false));
-        result.push_back(vevacious_results.get_firstPathFinder(false));
-        result.push_back(vevacious_results.get_secondPathFinder(false));
-
-    }
     
-    void print_VS_ThresholdAndBounceActions_Thermal(std::vector<double> &result)
-    {
-        using namespace Pipes::print_VS_ThresholdAndBounceActions_Thermal;
-        
-        result.clear();
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        
-        // bool true since we are getting thermal values
-        result.push_back(vevacious_results.get_bounceActionThreshold(true));
-        result.push_back(vevacious_results.get_bounceActionStraight(true));
-        result.push_back(vevacious_results.get_firstPathFinder(true));
-        result.push_back(vevacious_results.get_secondPathFinder(true));
-
-    }
-
     /********/
     /* MSSM */
     /********/
@@ -687,21 +648,18 @@ namespace Gambit
         double scale = pass_spectrum.get_scale();
         map_str_pair_int_spectrum_vec spec_entry_map = pass_spectrum.get_spec_entry_map();
 
-        std::cout << "Testing what is passed to ReadLhaBlock.. this can only go wrong" << std::endl;
+        //std::cout << "Testing what is passed to ReadLhaBlock.. this can only go wrong" << std::endl;
         for (auto it=spec_entry_map.begin(); it!=spec_entry_map.end(); ++it) 
         {
           std::string name =  it->first;
 
           // first entry of pair is int setting, second is vector
           pair_int_spectrum_vec vec = it->second;
-          std::cout << name << " " << scale << " " << vec.second << " " << vec.first << std::endl;
           vevaciousPlusPlus.ReadLhaBlock(name, scale , vec.second, vec.first );
         }  
 
         return vevaciousPlusPlus;
       }
-
-
 
     // This function gives back the result for absolute stability, either "Stable" or "Metastable".
     void check_vacuum_stability_vevacious_global(VevaciousResultContainer &result)
@@ -814,16 +772,6 @@ namespace Gambit
                 std::cout << "Setting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii) << '\n'; 
                 result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
               }
-
-
-            //if(BounceActions_vec.size()>0) {result.set_bounceActionThreshold(BounceActions_vec.at(0), false);}
-            //if(BounceActions_vec.size()>1) {result.set_bounceActionStraight(BounceActions_vec.at(1), false);}
-            //if(BounceActions_vec.size()>2) {result.set_firstPathFinder(BounceActions_vec.at(2), false);}
-            //if(BounceActions_vec.size()>3) {result.set_secondPathFinder(BounceActions_vec.at(3), false);}
-            //if(BounceActionsThermal_vec.size()>0) {result.set_bounceActionThreshold(BounceActionsThermal_vec.at(0), true);}
-            //if(BounceActionsThermal_vec.size()>1) {result.set_bounceActionStraight(BounceActionsThermal_vec.at(1), true);}
-            //if(BounceActionsThermal_vec.size()>2) {result.set_firstPathFinder(BounceActionsThermal_vec.at(2), true);}
-            //if(BounceActionsThermal_vec.size()>3) {result.set_secondPathFinder(BounceActionsThermal_vec.at(3), true);}
 
               cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
           }
@@ -962,17 +910,6 @@ namespace Gambit
                 std::cout << "Setting bounceActionThreshold_thermal_[" << (ii) << "]"<< BounceActionsThermal_vec.at(ii) << '\n'; 
                 result.set_results(panic_vacuum, "bounceActionThreshold_thermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
               }
-
-
-            //if(BounceActions_vec.size()>0) {result.set_bounceActionThreshold(BounceActions_vec.at(0), false);}
-            //if(BounceActions_vec.size()>1) {result.set_bounceActionStraight(BounceActions_vec.at(1), false);}
-            //if(BounceActions_vec.size()>2) {result.set_firstPathFinder(BounceActions_vec.at(2), false);}
-            //if(BounceActions_vec.size()>3) {result.set_secondPathFinder(BounceActions_vec.at(3), false);}
-            //if(BounceActionsThermal_vec.size()>0) {result.set_bounceActionThreshold(BounceActionsThermal_vec.at(0), true);}
-            //if(BounceActionsThermal_vec.size()>1) {result.set_bounceActionStraight(BounceActionsThermal_vec.at(1), true);}
-            //if(BounceActionsThermal_vec.size()>2) {result.set_firstPathFinder(BounceActionsThermal_vec.at(2), true);}
-            //if(BounceActionsThermal_vec.size()>3) {result.set_secondPathFinder(BounceActionsThermal_vec.at(3), true);}
-
               cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
           }
 
@@ -998,8 +935,6 @@ namespace Gambit
         result.set_results(panic_vacuum,"lifetime", lifetime);
         result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
     }
-
-
 
     
     /// Helper function that takes any YAML options and makes the vevacious input,
@@ -1484,6 +1419,7 @@ namespace Gambit
                               { 2  ,  SLHAea::to<double>(slhaea.at("MSOFT").at(2).at(1))},
                               { 3   , SLHAea::to<double>(slhaea.at("MSOFT").at(3).at(1))}};       
         result.add_entry("MSOFT", msoft, 1);
+        
         // Check if the block "TREEMSOFT" is present
         try 
         {

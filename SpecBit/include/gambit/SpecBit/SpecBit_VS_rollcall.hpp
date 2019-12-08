@@ -176,15 +176,15 @@
     #undef FUNCTION
   #undef CAPABILITY
   
-  // Tunnelling likelihood
-  #define CAPABILITY VS_likelihood_nearest
+  // thermal Tunnelling lieklihodd
+  #define CAPABILITY VS_likelihood_global_thermal
   START_CAPABILITY
-    #define FUNCTION get_likelihood_VS_nearest
+    #define FUNCTION get_likelihood_VS_global_thermal
       START_FUNCTION(double)
-      DEPENDENCY(check_vacuum_stability_nearest, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(check_vacuum_stability_global, SpecBit::VevaciousResultContainer)
     #undef FUNCTION
   #undef CAPABILITY
-  
+ 
   // Tunnelling likelihood
   #define CAPABILITY VS_results_global
   START_CAPABILITY
@@ -195,6 +195,24 @@
   #undef CAPABILITY
   
   // Tunnelling likelihood
+  #define CAPABILITY VS_likelihood_nearest
+  START_CAPABILITY
+    #define FUNCTION get_likelihood_VS_nearest
+      START_FUNCTION(double)
+      DEPENDENCY(check_vacuum_stability_nearest, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+ // thermal Tunnelling lieklihodd
+  #define CAPABILITY VS_likelihood_nearest_thermal
+  START_CAPABILITY
+    #define FUNCTION get_likelihood_VS_nearest_thermal
+      START_FUNCTION(double)
+      DEPENDENCY(check_vacuum_stability_nearest, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+    
+  // Tunnelling likelihood
   #define CAPABILITY VS_results_nearest
   START_CAPABILITY
     #define FUNCTION get_VS_results_nearest
@@ -203,57 +221,5 @@
     #undef FUNCTION
   #undef CAPABILITY
   
-
-  // Tunnelling likelihood
-  #define CAPABILITY VS_likelihood
-  START_CAPABILITY
-    #define FUNCTION get_likelihood_VS
-      START_FUNCTION(double)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // Thermal likelihood
-  #define CAPABILITY VS_likelihood_thermal
-  START_CAPABILITY
-    #define FUNCTION get_likelihood_VS_thermal
-      START_FUNCTION(double)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY VS_StraightPathGoodEnough
-  START_CAPABILITY
-    #define FUNCTION print_VS_StraightPathGoodEnough
-      START_FUNCTION(int)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-  
-  #define CAPABILITY VS_StraightPathGoodEnough_Thermal
-  START_CAPABILITY
-    #define FUNCTION print_VS_StraightPathGoodEnough_Thermal
-      START_FUNCTION(int)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-#define CAPABILITY VS_ThresholdAndBounceActions
-  START_CAPABILITY
-    #define FUNCTION print_VS_ThresholdAndBounceActions
-      START_FUNCTION(std::vector<double>)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-  
-  #define CAPABILITY VS_ThresholdAndBounceActions_Thermal
-  START_CAPABILITY
-    #define FUNCTION print_VS_ThresholdAndBounceActions_Thermal
-      START_FUNCTION(std::vector<double>)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-
 #endif
 
