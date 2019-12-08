@@ -1355,17 +1355,16 @@ namespace Gambit
         std::ostringstream InputsForLog;
 
         InputsForLog << std::fixed << std::setprecision(12) << "Passing parameters to Vevacious with values: ";
-        std::string InputsForLogString = InputsForLog.str();
         
         for (auto it=myPipe::Param.begin(); it != myPipe::Param.end(); it++)
         {
-            std::cout << "            In for loop "<< std::endl;
             std::string name = it->first;
             double value = *myPipe::Param[name];
-            InputsForLog << " " << name << " = " << value;
+            InputsForLog << "\n  " << name << ": " << value;
+            std::cout << " " << name << " = " << value << std::endl;
         }
-        //logger() << InputsForLogString << EOM;
-        std::cout << InputsForLogString << std::endl;
+        std::string InputsForLogString = InputsForLog.str();
+        logger() << InputsForLogString << EOM;
 
         // Getting mpi rank
         int rank;
