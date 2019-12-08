@@ -76,6 +76,7 @@ nulike:
   1.0.5:       ./Backends/installed/nulike/1.0.5/lib/libnulike.so
   1.0.6:       ./Backends/installed/nulike/1.0.6/lib/libnulike.so
   1.0.7:       ./Backends/installed/nulike/1.0.7/lib/libnulike.so
+  1.0.8:       ./Backends/installed/nulike/1.0.8/lib/libnulike.so
 
 Rivet:
   3.0.0:       ./Backends/installed/Rivet/3.0.0/local/lib/libRivet.so
