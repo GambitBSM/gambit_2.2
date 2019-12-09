@@ -44,6 +44,8 @@ BE_INI_FUNCTION
      char cdmName[10];
 
      const Spectrum& spec = *Dep::MajoranaSingletDM_Z2_spectrum;
+     const SubSpectrum& he = spec.get_HE();
+     const SubSpectrum& le = spec.get_LE();
      const SMInputs& sminputs = spec.get_SMInputs();
 
      int VZdecayOpt, VWdecayOpt; // 0=no 3 body final states
@@ -62,9 +64,9 @@ BE_INI_FUNCTION
 
      double mX = spec.get(Par::Pole_Mass,"X");
      double mH = spec.get(Par::Pole_Mass,"h0_1");
-     double mW = spec.get(Par::Pole_Mass, "W+");
-     double lX = spec.get(Par::dimensionless,"lX");
-     double cxi = std::cos(spec.get(Par::dimensionless,"xi"));
+     double mW = le.get(Par::Pole_Mass, "W+");
+     double lX = he.get(Par::dimensionless,"lX");
+     double cxi = std::cos(he.get(Par::dimensionless,"xi"));
 
      error = assignVal((char*)"mX", mX);
      if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set mX in"

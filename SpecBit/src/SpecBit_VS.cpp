@@ -41,11 +41,20 @@
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum.hpp"
-
+#include "gambit/Utils/stream_overloads.hpp"
+#include "gambit/Utils/util_macros.hpp"
 #include "gambit/SpecBit/SpecBit_rollcall.hpp"
 #include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/SpecBit_types.hpp"
-#include "gambit/SpecBit/RegisteredSpectra.hpp"
+#include "gambit/SpecBit/QedQcdWrapper.hpp"
+
+#include "gambit/SpecBit/model_files_and_boxes.hpp" // #includes lots of flexiblesusy headers and defines interface classes
+
+// Flexible SUSY stuff (should not be needed by the rest of gambit)
+#include "flexiblesusy/src/ew_input.hpp"
+#include "flexiblesusy/src/lowe.h" // From softsusy; used by flexiblesusy
+#include "flexiblesusy/src/numerics2.hpp"
+
 
 // Switch for debug mode
 //#define SPECBIT_DEBUG
@@ -56,18 +65,21 @@ namespace Gambit
   namespace SpecBit
   {
 
+    using namespace LogTags;
+    using namespace flexiblesusy;
+
     void check_EW_stability_ScalarSingletDM_Z3(double &result)
     {
       // check that the electroweak scale stability conditions are satisfied
       namespace myPipe = Pipes::check_EW_stability_ScalarSingletDM_Z3;
 
-      const Spectrum& spectrum = *myPipe::Dep::ScalarSingletDM_Z3_spectrum;
+      const Spectrum& fullspectrum = *myPipe::Dep::ScalarSingletDM_Z3_spectrum;
 
-      double lambda_h = spectrum.get(Par::dimensionless,"lambda_h");
-      double lambda_s = spectrum.get(Par::dimensionless,"lambda_S");
-      double lambda_hs = spectrum.get(Par::dimensionless,"lambda_hS");
-      double mu3 = spectrum.get(Par::mass1,"mu3");
-      double ms = spectrum.get(Par::Pole_Mass,"S");
+      double lambda_h = fullspectrum.get(Par::dimensionless,"lambda_h");
+      double lambda_s = fullspectrum.get(Par::dimensionless,"lambda_S");
+      double lambda_hs = fullspectrum.get(Par::dimensionless,"lambda_hS");
+      double mu3 = fullspectrum.get(Par::mass1,"mu3");
+      double ms = fullspectrum.get(Par::Pole_Mass,"S");
 
       double check = 0;
 
@@ -87,9 +99,8 @@ namespace Gambit
       }
     }
 
-    /* TODO: Not working yet
     bool check_perturb_to_min_lambda(const Spectrum& spec,double scale,int pts
-    ,const std::vector<SpectrumContents::Parameter> required_parameters)
+    ,const std::vector<SpectrumParameter> required_parameters)
     {
 
       std::unique_ptr<SubSpectrum> subspec = spec.clone_HE();
@@ -153,9 +164,7 @@ namespace Gambit
 
       return true;
     }
-    */
 
-    /* TODO: Not working yet
     double run_lambda(double scale ,  void *params)
     {
 
@@ -186,14 +195,13 @@ namespace Gambit
 
       return lambda;
     }
-    */
 
-     /* TODO: not working yet
-     void find_min_lambda_Helper(dbl_dbl_bool& vs_tuple, const Spectrum& spectrum,
+
+     void find_min_lambda_Helper(dbl_dbl_bool& vs_tuple, const Spectrum& fullspectrum,
                                  double high_energy_limit, int check_perturb_pts,
-                                 const std::vector<SpectrumContentes::Parameter> required_parameters)
+                                 const std::vector<SpectrumParameter> required_parameters)
      {
-      std::unique_ptr<SubSpectrum> speccloned = spectrum.clone_HE();
+             std::unique_ptr<SubSpectrum> speccloned = fullspectrum.clone_HE();
 
       // three scales at which we choose to run the quartic coupling up to, and then use a Lagrange interpolating polynomial
       // to get an estimate for the location of the minimum, this is an efficient way to narrow down over a huge energy range
@@ -314,14 +322,14 @@ namespace Gambit
         // vacuum is stable
       }
       // now do a check on the perturbativity of the couplings up to this scale
-      bool perturbative=check_perturb_to_min_lambda(spectrum,LB,check_perturb_pts,required_parameters);
+      bool perturbative=check_perturb_to_min_lambda(fullspectrum,LB,check_perturb_pts,required_parameters);
       double perturb=float(!perturbative);
       #ifdef SPECBIT_DEBUG
         cout << "perturbativity checked up to " << LB << " result = " << perturbative << endl;
-        cout << "Higgs pole mass = " << spectrum.get(Par::Pole_Mass, "h0_1") << endl;
+        cout << "Higgs pole mass = " << fullspectrum.get(Par::Pole_Mass, "h0_1") << endl;
       #endif
       vs_tuple = dbl_dbl_bool(lifetime,LB,perturb);
-    }*/
+    }
 
 
     void find_min_lambda_ScalarSingletDM_Z2(dbl_dbl_bool& vs_tuple)
@@ -330,9 +338,8 @@ namespace Gambit
       double high_energy_limit = myPipe::runOptions->getValueOrDef<double>(1.22e19,"set_high_scale");
       int check_perturb_pts = myPipe::runOptions->getValueOrDef<double>(10,"check_perturb_pts");
       static const SpectrumContents::ScalarSingletDM_Z2 contents;
-      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
-      // TODO: Not working yet
-      //find_min_lambda_Helper(vs_tuple, *myPipe::Dep::ScalarSingletDM_Z2_spectrum, high_energy_limit, check_perturb_pts, required_parameters);
+      static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
+      find_min_lambda_Helper(vs_tuple, *myPipe::Dep::ScalarSingletDM_Z2_spectrum, high_energy_limit, check_perturb_pts, required_parameters);
     }
 
     void find_min_lambda_ScalarSingletDM_Z3(dbl_dbl_bool& vs_tuple)
@@ -341,9 +348,8 @@ namespace Gambit
       double high_energy_limit = myPipe::runOptions->getValueOrDef<double>(1.22e19,"set_high_scale");
       int check_perturb_pts = myPipe::runOptions->getValueOrDef<double>(10,"check_perturb_pts");
       static const SpectrumContents::ScalarSingletDM_Z2 contents;
-      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
-      // TODO: Not working yet
-      //find_min_lambda_Helper(vs_tuple, *myPipe::Dep::ScalarSingletDM_Z3_spectrum, high_energy_limit, check_perturb_pts, required_parameters);
+      static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
+      find_min_lambda_Helper(vs_tuple, *myPipe::Dep::ScalarSingletDM_Z3_spectrum, high_energy_limit, check_perturb_pts, required_parameters);
     }
 
     void find_min_lambda_MDM(dbl_dbl_bool& vs_tuple)
@@ -352,9 +358,8 @@ namespace Gambit
       double high_energy_limit = myPipe::runOptions->getValueOrDef<double>(1.22e19,"set_high_scale");
       int check_perturb_pts = myPipe::runOptions->getValueOrDef<double>(10,"check_perturb_pts");
       static const SpectrumContents::MDM contents;
-      static const std::vector<SpectrumContents::Parameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
-      // TODO: Not working yet
-      //find_min_lambda_Helper(vs_tuple, *myPipe::Dep::MDM_spectrum, high_energy_limit, check_perturb_pts, required_parameters);
+      static const std::vector<SpectrumParameter> required_parameters = contents.all_parameters_with_tag(Par::dimensionless);
+      find_min_lambda_Helper(vs_tuple, *myPipe::Dep::MDM_spectrum, high_energy_limit, check_perturb_pts, required_parameters);
     }
 
 
@@ -388,13 +393,13 @@ namespace Gambit
 
       if (demand_stable && (vs_tuple.second < stability_scale))
       {
-        result = -1e100;
-      }
-      else
-      {
-        double conversion = (6.5821195e-25)/(31536000);
-        result=((- ( 1 / ( vs_tuple.first/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
-      }
+                result = -1e100;
+            }
+            else
+            {
+                double conversion = (6.5821195e-25)/(31536000);
+                result=((- ( 1 / ( vs_tuple.first/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
+            }
 
     }
 

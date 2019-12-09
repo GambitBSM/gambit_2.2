@@ -39,7 +39,6 @@ if(NOT EXCLUDE_RESTFRAMES)
   add_dependencies(fortran restframes)
   add_dependencies(FarrayTest restframes)  
 endif()
-#TODO: Removed this when BOSSes FS works
 if(NOT EXCLUDE_FLEXIBLESUSY)
   add_dependencies(first flexiblesusy)
   add_dependencies(fortran flexiblesusy)

@@ -43,6 +43,8 @@ BE_INI_FUNCTION
      char cdmName[10];
 
      const Spectrum& spec = *Dep::VectorSingletDM_Z2_spectrum;
+     const SubSpectrum& he = spec.get_HE();
+     const SubSpectrum& le = spec.get_LE();
      const SMInputs& sminputs = spec.get_SMInputs();
 
      int VZdecayOpt, VWdecayOpt; // 0=no 3 body final states
@@ -61,8 +63,8 @@ BE_INI_FUNCTION
 
      double mV = spec.get(Par::Pole_Mass,"V");
      double mH = spec.get(Par::Pole_Mass,"h0_1");
-     double mW = spec.get(Par::Pole_Mass, "W+");
-     double lambda_hV = spec.get(Par::dimensionless,"lambda_hV");
+     double mW = le.get(Par::Pole_Mass, "W+");
+     double lambda_hV = he.get(Par::dimensionless,"lambda_hV");
 
      error = assignVal((char*)"mV", mV);
      if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set mV in"

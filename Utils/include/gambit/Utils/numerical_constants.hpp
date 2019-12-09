@@ -17,11 +17,7 @@
 ///          (c.weniger@uva.nl)
 ///  \date   2015 Apr
 ///  \date   2016 Mar
-///
-///  \author Jeriek Van den Abeele
-///          (jeriekvda@fys.uio.no)
-///  \date 2018 Sep
-///
+//
 ///  *********************************************
 
 #ifndef __numerical_constants_hpp__

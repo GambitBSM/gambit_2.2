@@ -74,9 +74,6 @@ load_functions = [
   'gm2calc::calculate_uncertainty_amu_2loop(const gm2calc::MSSMNoFV_onshell&)'
 ]
 
-load_enums = [
-]
-
 ditch = []
 
 
@@ -106,12 +103,6 @@ known_classes = {
     "Eigen::Matrix" : "<Eigen/Core>",
     "Eigen::Array" : "<Eigen/Core>",
 }
-
-# ~~~~~ Declarations to be added to the frontend header file ~~~~~
-
-convenience_functions = []
-
-ini_function_in_header = True
 
 
 # ~~~~~ Pragma directives for the inclusion of BOSSed classes in GAMBIT ~~~~~

@@ -19,10 +19,6 @@
 ///          <p.scott@imperial.ac.uk>
 ///  \date 2015 May, Jul
 ///
-///  \author Tomas Gonzalo
-///          (tomas.gonzalo@monash.edu)
-///  \date 2019 Nov
-///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -202,8 +198,9 @@ namespace Gambit
     /// Common code for different scalar singlet direct detection coupling routines
     void get_ScalarSingletDM_DD_couplings(const Spectrum &spec, DM_nucleon_couplings &result, Models::safe_param_map<safe_ptr<const double> > &Param)
     {
+      const SubSpectrum& he = spec.get_HE();
       double mass = spec.get(Par::Pole_Mass,"S");
-      double lambda = spec.get(Par::dimensionless,"lambda_hS");
+      double lambda = he.get(Par::dimensionless,"lambda_hS");
       double mh = spec.get(Par::Pole_Mass,"h0_1");
 
       // Expressions taken from Cline et al. (2013, PRD 88:055025, arXiv:1306.4710)
@@ -267,12 +264,13 @@ namespace Gambit
 
       // Import Spectrum objects
       const Spectrum& spec = *Dep::ScalarSingletDM_Z2_spectrum;
-      const Spectrum& SM = *Dep::SM_spectrum;
+      const SubSpectrum& he = spec.get_HE();
+      const SubSpectrum& SM = spec.get_LE();
       const SMInputs& SMI   = spec.get_SMInputs();
 
       // Import couplings
-      double lambda = spec.get(Par::dimensionless,"lambda_hS");
-      double v = spec.get(Par::mass1,"vev");
+      double lambda = he.get(Par::dimensionless,"lambda_hS");
+      double v = he.get(Par::mass1,"vev");
 
       // Get SM pole masses
       getSMmass("e-_1",     1)
@@ -510,12 +508,13 @@ namespace Gambit
 
       // Import Spectrum objects
       const Spectrum& spec = *Dep::ScalarSingletDM_Z3_spectrum;
-      const Spectrum& SM = *Dep::SM_spectrum;
+      const SubSpectrum& he = spec.get_HE();
+      const SubSpectrum& SM = spec.get_LE();
       const SMInputs& SMI   = spec.get_SMInputs();
 
       // Import couplings
-      double lambda = spec.get(Par::dimensionless,"lambda_hS");
-      double v = spec.get(Par::mass1,"vev");
+      double lambda = he.get(Par::dimensionless,"lambda_hS");
+      double v = he.get(Par::mass1,"vev");
 
       // Get SM pole masses
       getSMmass("e-_1",     1)

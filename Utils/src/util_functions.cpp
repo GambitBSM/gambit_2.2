@@ -23,7 +23,7 @@
 #include <cstring>
 #include <chrono>  // chrono::system_clock
 #include <ctime>   // localtime
-#include <cctype>  // toupper, tolower
+#include <cctype>  // ::tolower function
 #include <sstream> // stringstream
 #include <string>  // string
 
@@ -240,37 +240,6 @@ namespace Gambit
        return path;
     }
 
-    /// @{ From: http://nion.modprobe.de/blog/archives/357-Recursive-directory-creation.html
-    // Author: Nico Golde (2005)
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <fcntl.h>
-    #include <string.h>
-    #include <dirent.h>
-    #include <sys/stat.h>
-    #include <unistd.h>
-    void recursive_mkdir(const char *path)
-    {
-            char opath[256];
-            char *p;
-            size_t len;
-    
-            strncpy(opath, path, sizeof(opath));
-            len = strlen(opath);
-            if(opath[len - 1] == '/')
-                    opath[len - 1] = '\0';
-            for(p = opath; *p; p++)
-                    if(*p == '/') {
-                            *p = '\0';
-                            if(access(opath, F_OK))
-                                    mkdir(opath, ACCESSPERMS);
-                            *p = '/';
-                    }
-            if(access(opath, F_OK))         /* if path is not terminated with / */
-                    mkdir(opath, ACCESSPERMS);
-    }
-    /// @}
-
     /// Check if a file exists
     bool file_exists(const std::string& filename)
     {
@@ -278,15 +247,6 @@ namespace Gambit
         //return not file.fail();
         struct stat buffer;
         return (stat(filename.c_str(), &buffer) == 0);
-    }
-
-    /// Convert a string to upper case
-    std::string toUpper(const std::string& str)
-    {
-        // Will use the C STL library function for this, for now at least. ASCII only, won't work for unicode or anything fancy.
-        std::string out(str); 
-        for (auto & c: out) c = std::toupper(c);
-        return out;
     }
 
     /// Return a vector of strings listing the contents of a directory (POSIX)

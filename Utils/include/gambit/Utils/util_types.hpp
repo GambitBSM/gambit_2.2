@@ -643,5 +643,6 @@ namespace Gambit
   typedef std::string  MString;
   template <typename T> using MList = std::vector<T>;
 
+
 }
 #endif //defined __util_types_hpp__

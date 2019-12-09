@@ -7,11 +7,10 @@
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
-///
-///  \author Tomas Gonzalo
+///   
+///  \author Tomas Gonzalo 
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2016 May, June
-///        2019 Oct
 ///
 ///  *********************************************
 
@@ -23,8 +22,8 @@
 // Begin
 LOAD_LIBRARY
 
-// Allow for CMSSM, MSSM63atMGUT, MSSM63atQ, MSSM63atMGUT_lightgravitino and MSSM63atQ_lightgravitino
-BE_ALLOW_MODELS(CMSSM,MSSM63atMGUT,MSSM63atQ,MSSM63atMGUT_lightgravitino,MSSM63atQ_lightgravitino)
+// Allow for CMSSM, MSSM63atMGUT and MSSM63atQ
+BE_ALLOW_MODELS(CMSSM,MSSM63atMGUT,MSSM63atQ)
 
 // Functions
 BE_FUNCTION(Set_All_Parameters_0, void, (), "__model_data_MOD_set_all_parameters_0", "SPheno_internal")
@@ -38,7 +37,7 @@ BE_FUNCTION(Initialize_MSSM, void, (Flogical&, // GenerationMixing
 				Farray_Finteger_1_3&, // id_d
 				Farray_Finteger_1_3&, // id_u
 				Finteger&), // id_grav
-	"__mssm_data_MOD_initialize_mssm", "SPheno_internal")
+	"__mssm_data_MOD_initialize_mssm", "SPheno_internal") 
 BE_FUNCTION(InitializeLoopFunctions, void, (), "__loopfunctions_MOD_initializeloopfunctions", "SPheno_internal")
 BE_FUNCTION(CalculateRunningMasses, void, (Farray_Freal8_1_3&, //mf_l_in
 					Farray_Freal8_1_3&, // mf_d_in
@@ -49,10 +48,10 @@ BE_FUNCTION(CalculateRunningMasses, void, (Farray_Freal8_1_3&, //mf_l_in
                                         Freal8&, // Qhigh
                                         Farray_Freal8_1_3&, // mf_l_out
                                         Farray_Freal8_1_3&, // mf_d_out
-                                        Farray_Freal8_1_3&, // mf_u_out
+                                        Farray_Freal8_1_3&, // mf_u_out 
                                         Finteger&), //kont))
 	 "__standardmodel_MOD_calculaterunningmasses", "SPheno_internal")
-BE_FUNCTION(CalculateSpectrum, void,
+BE_FUNCTION(CalculateSpectrum, void, 
 	(Finteger&, // n_run
 	 Freal8&, // delta
 	 Flogical&, // WriteOut
@@ -128,7 +127,7 @@ BE_FUNCTION(Low_Energy_Constraints_MSSM, void,
          Farray_Fcomplex16_1_3_1_3&, // Y_l
          Farray_Fcomplex16_1_3_1_3&, // Y_d
          Farray_Fcomplex16_1_3_1_3&, // Y_u
-         Farray_Fcomplex16_1_3_1_3&, // A_l
+         Farray_Fcomplex16_1_3_1_3&, // A_l 
          Farray_Fcomplex16_1_3_1_3&, // A_d
          Farray_Fcomplex16_1_3_1_3&, // A_u
          Farray_Fcomplex16_1_3&, // Mi
@@ -173,11 +172,11 @@ BE_FUNCTION(Low_Energy_Constraints_MSSM, void,
          Freal8&, // BrTau3e
          Freal8&, // BrTau3Mu
          Freal8&, // BR_Z_e_mu
-         Freal8&, // BR_Z_e_tau
+         Freal8&, // BR_Z_e_tau 
          Freal8& // BR_Z_mu_tau
-       ), "__lowenergy_MOD_low_energy_constraints_mssm", "SPheno_internal")
+       ), "__lowenergy_MOD_low_energy_constraints_mssm", "SPheno_internal")    
 
-BE_FUNCTION(CalculateBR_MSSM, void,
+BE_FUNCTION(CalculateBR_MSSM, void, 
 	(Finteger&, // n_nu
          Farray_Finteger_1_3&, // id_nu
          Finteger&, // n_l
@@ -256,7 +255,7 @@ BE_FUNCTION(CalculateCrossSectionsMSSM, void,
          Fstring<20>&, // "Tesla800"
          Farray_Freal8_1_6&, //  mSup
          Farray_Fcomplex16_1_6_1_6&, // RSup
-         Farray_Freal8_1_3&, // mf_u
+         Farray_Freal8_1_3&, // mf_u 
          Farray_Freal8_1_6&, // mSdown
          Farray_Fcomplex16_1_6_1_6&, // RSdown
          Farray_Freal8_1_3&, // mf_d
@@ -274,7 +273,7 @@ BE_FUNCTION(CalculateCrossSectionsMSSM, void,
          Farray_Fcomplex16_1_2_1_2&, // U
          Farray_Fcomplex16_1_2_1_2&, // V
          Farray_Freal8_1_4&, // mChi0
-         Farray_Fcomplex16_1_4_1_4&, // N
+         Farray_Fcomplex16_1_4_1_4&, // N 
          Farray_Freal8_1_2_1_2&, // SigC
          Farray_Freal8_1_4_1_4&, // SigChi0
          Farray_Freal8_1_2&, // mS0
@@ -310,7 +309,7 @@ BE_VARIABLE(BR_Higgs_with_offshell_V, Flogical, "__inputoutput_MOD_br_higgs_with
 BE_VARIABLE(L_CS, Flogical, "__control_MOD_l_cs", "SPheno_internal")
 BE_VARIABLE(delta_mass, Freal8, "__control_MOD_delta_mass", "SPheno_internal")
 BE_VARIABLE(n_run, Finteger, "__control_MOD_n_run", "SPheno_internal")
-BE_VARIABLE(WriteOut, Flogical, "__control_MOD_writeout", "SPheno_internal")
+BE_VARIABLE(WriteOut, Flogical, "__control_MOD_writeout", "SPheno_internal") 
 BE_VARIABLE(TwoLoopRGE, Flogical, "__rges_MOD_twolooprge", "SPheno_internal")
 BE_VARIABLE(Write_SLHA1, Flogical, "__inputoutput_MOD_write_slha1", "SPheno_internal")
 BE_VARIABLE(Non_Zero_Exit, Flogical, "__control_MOD_non_zero_exit", "SPheno_internal")
@@ -492,7 +491,7 @@ BE_VARIABLE(id_l, Farray_Finteger_1_3, "__spheno_MOD_id_l","SPheno_internal")
 BE_VARIABLE(id_d, Farray_Finteger_1_3, "__spheno_MOD_id_d","SPheno_internal")
 BE_VARIABLE(id_u, Farray_Finteger_1_3, "__spheno_MOD_id_u", "SPheno_internal")
 // Low energy observables variables
-BE_VARIABLE(rho_parameter, Freal8, "__standardmodel_MOD_rho_parameter", "SPheno_internal")
+BE_VARIABLE(rho_parameter, Freal8, "__standardmodel_MOD_rho_parameter", "SPheno_internal") 
 BE_VARIABLE(DeltaMBd, Fcomplex16, "__spheno_MOD_deltambd", "SPheno_internal")
 BE_VARIABLE(DeltaMBs, Fcomplex16, "__spheno_MOD_deltambs", "SPheno_internal")
 BE_VARIABLE(BRBtosgamma, Freal8, "__spheno_MOD_brbtosgamma", "SPheno_internal")
@@ -566,9 +565,9 @@ BE_VARIABLE(ratioWoM, Freal8, "__spheno_MOD_ratiowom","SPheno_internal")
 BE_VARIABLE(CalcTBD,Flogical, "__spheno_MOD_calctbd","SPheno_internal")
 
 // Convenience functions (registration)
-BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const SpectrumInputs&), "SPheno_MSSM_Spectrum")
-BE_CONV_FUNCTION(Spectrum_Out, void, (Spectrum&, const SpectrumInputs&), "SPheno_internal")
-BE_CONV_FUNCTION(ReadingData, void, (const SpectrumInputs&), "SPheno_internal")
+BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), "SPheno_MSSMspectrum")
+BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const std::map<str, safe_ptr<const double> >&), "SPheno_internal")
+BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), "SPheno_internal")
 BE_CONV_FUNCTION(InitializeStandardModel, void, (const SMInputs&), "SPheno_internal")
 BE_CONV_FUNCTION(ErrorHandling, void, (const int&), "SPheno_internal")
 

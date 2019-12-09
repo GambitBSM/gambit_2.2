@@ -15,7 +15,6 @@
 ///  *********************************************
 
 #include "gambit/Utils/util_types.hpp"
-#include "gambit/Elements/spectrum_types.hpp"
 
 #ifndef __SPHENO_types_hpp__
 #define __SPHENO_types_hpp__
@@ -84,6 +83,12 @@ namespace Gambit
     typedef Farray<particle23,1,4> Farray_particle23_1_4;
     typedef Farray<particle23,1,6> Farray_particle23_1_6;
 
+    struct Finputs
+    {
+        SMInputs sminputs;
+        std::map<str, safe_ptr<const double> > param;
+        safe_ptr<Options> options;
+    };
 }
 
-#endif // defined __SPHENO_types_hpp_
+#endif // defined __SPHENO_types_hpp__

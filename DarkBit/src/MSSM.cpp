@@ -22,10 +22,6 @@
 ///  \date 2014 Oct
 ///  \date 2015 Jan, Feb
 ///
-///  \author Tomas Gonzalo
-///          (tomas.gonzalo@monash.edu)
-///  \date 2019 Nov
-///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -51,7 +47,7 @@ namespace Gambit
      * indicating if point initialization was successful, which is essentially
      * always true for models that satisfy the dependency resolver.
      *
-     * Supported models: MSSM63atQ, MSSM63atMGUT, MSSM63atQ_lightgravitino, MSSM63atMGUT_lightgravitino
+     * Supported models: MSSM63atQ
      */
     void DarkSUSY_PointInit_MSSM(bool &result)
     {
@@ -125,9 +121,7 @@ namespace Gambit
         }
       }
 
-      else if (ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT")
-            || ModelInUse("MSSM63atQ_lightgravitino") || ModelInUse("MSSM63atMGUT_lightgravitino")
-            || ModelInUse("CMSSM"))
+      else if (ModelInUse("MSSM63atQ") || ModelInUse("CMSSM"))
       {
         SLHAstruct mySLHA;
         /// Option use_dsSLHAread<bool>: Use DS internal SLHA reader to initialize backend (false)
@@ -273,9 +267,10 @@ namespace Gambit
       ///////////////////////////
 
       // Import based on Spectrum objects
-      const Spectrum& spec = *Dep::MSSM_spectrum;
-      const Spectrum& SM   = *Dep::SM_spectrum;
-      const SMInputs& SMI  = spec.get_SMInputs();
+      const Spectrum& matched_spectra = *Dep::MSSM_spectrum;
+      const SubSpectrum& spec = matched_spectra.get_HE();
+      const SubSpectrum& SM   = matched_spectra.get_LE();
+      const SMInputs& SMI  = matched_spectra.get_SMInputs();
 
       // Get SM masses
       #define getSMmass(Name, spinX2)                                         \
@@ -399,10 +394,10 @@ namespace Gambit
 
       // Declare DM annihilation process
       TH_Process process(DMid, DMid);
-
+      
       // Explicitly state that Neutralino DM is self-conjugate
       process.isSelfConj = true;
-
+      
       double M_DM = catalog.getParticleProperty(DMid).mass;
       // Helper variables
       int index;

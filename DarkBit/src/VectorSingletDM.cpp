@@ -22,10 +22,6 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date Sep 2018
 ///
-///  \author Tomas Gonzalo
-///          (tomas.gonzalo@monash.edu)
-///  \date 2019 Nov
-///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -200,8 +196,9 @@ namespace Gambit
     {
       using namespace Pipes::DD_couplings_VectorSingletDM_Z2;
       const Spectrum& spec = *Dep::VectorSingletDM_Z2_spectrum;
+      const SubSpectrum& he = spec.get_HE();
       double mass = spec.get(Par::Pole_Mass,"V");
-      double lambda = spec.get(Par::dimensionless,"lambda_hV");
+      double lambda = he.get(Par::dimensionless,"lambda_hV");
       double mh = spec.get(Par::Pole_Mass,"h0_1");
 
       // Expressions taken from Cline et al. (2013, PRD 88:055025, arXiv:1306.4710)
@@ -249,12 +246,13 @@ namespace Gambit
 
       // Import Spectrum objects
       const Spectrum& spec = *Dep::VectorSingletDM_Z2_spectrum;
-      const Spectrum& SM = *Dep::SM_spectrum;
+      const SubSpectrum& he = spec.get_HE();
+      const SubSpectrum& SM = spec.get_LE();
       const SMInputs& SMI   = spec.get_SMInputs();
 
       // Import couplings
-      double lambda = spec.get(Par::dimensionless,"lambda_hV");
-      double v = spec.get(Par::mass1,"vev");
+      double lambda = he.get(Par::dimensionless,"lambda_hV");
+      double v = he.get(Par::mass1,"vev");
       double alpha_s = SMI.alphaS;      // alpha_s(mZ)^MSbar
 
       // Get SM pole masses
