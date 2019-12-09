@@ -23,7 +23,6 @@
 #include "gambit/Backends/frontends/CalcHEP_3_6_27.hpp"
 #include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Elements/decay_table.hpp"
-#include "gambit/Elements/spectrum_contents.hpp"
 
 #include <unistd.h>
 
@@ -59,9 +58,16 @@ BE_INI_FUNCTION
 
   if (ModelInUse("ScalarSingletDM_Z2"))
   {
+    // Obtain model contents
+    static const SpectrumContents::ScalarSingletDM_Z2 ScalarSingletDM_Z2_contents;
+
+    // Obtain list of all parameters within model
+    static const std::vector<SpectrumParameter> ScalarSingletDM_Z2_params = ScalarSingletDM_Z2_contents.all_parameters();
+
     // Obtain spectrum information to pass to CalcHEP
     const Spectrum& spec = *Dep::ScalarSingletDM_Z2_spectrum;
-    Assign_All_Values(spec);
+
+    Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
 
 }
@@ -95,13 +101,10 @@ BE_NAMESPACE
           " CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
   }
 
-  /// Takes all parameters in a model, and assigns them by value to the appropriate CalcHEP parameter names.
-  void Assign_All_Values(const Spectrum& spec)
+  /// Takes all parameters in a model, and assigns them by 
+  /// value to the appropriate CalcHEP parameter names.
+  void Assign_All_Values(const Spectrum& spec, std::vector<SpectrumParameter> params)
   {
-
-    const SpectrumContents::Contents contents = spec.get_SpectrumContents();
-    std::vector<SpectrumContents::Parameter> params = contents.all_parameters();
-
     // Iterate through the expected spectrum parameters of the model. Pass the value of pole masses
     // to CalcHEP from the spectrum, by PDG code.
     for (auto it = params.begin(); it != params.end(); ++it)

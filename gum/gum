@@ -275,7 +275,7 @@ if args.file:
                 else:
                     raise GumError(("Pythia output requested but no "
                                     "collider_processes specified.\n"
-                                "Please amend your .gum file!"))
+                                    "Please amend your .gum file!"))
 
         print("")
         print("Finished running external codes...")
@@ -351,6 +351,7 @@ if args.file:
 
         model_header = add_to_model_hierarchy(gum.spec, gum.name, 
                                               model_parameters)
+        subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
         spec_contents = write_spectrumcontents(gum.name, model_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
@@ -545,12 +546,6 @@ if args.file:
         """
         SPECBIT
         """
-
-        #spectrum_src = ""
-
-        # if output_opts.spheno:
-        #     print("Writing SPheno SpecBit interface...")
-        #     spectrum_src = write_spheno_spectrum_src(gum.name)
             
         print("Writing basic container SpecBit interface...")
         spectrum_src = write_spectrum(gum.name, parameters, gum.spec, add_higgs, 
@@ -622,21 +617,28 @@ if args.file:
         m = "Models"
         write_file("models/" + gum.name + ".hpp", m, model_header, 
                    reset_contents)
+        write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, 
+                   reset_contents)
+        write_file("SimpleSpectra/" + gum.name + "SimpleSpec" + ".hpp", m, 
+                    subspec_wrapper, reset_contents)
+        amend_file("SpectrumContents/RegisteredSpectra.hpp", m, reg_spec, 
+                    reg_spec_num, reset_contents)
+
 
         # SpecBit
         m = "SpecBit"
-        write_file("models/" + gum.name + ".cpp", m, spectrum_src, 
+        write_file("SpecBit_" + gum.name + ".cpp", m, spectrum_src, 
                    reset_contents)
-        write_file("models/" + gum.name + ".hpp", m, spectrum_header, 
+        write_file("SpecBit_" + gum.name + "_rollcall.hpp", m, spectrum_header, 
                     reset_contents)
         num = find_string("SpecBit_rollcall.hpp", m, 
-                          "SpecBit_VS_rollcall.hpp")[1]
-        amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num-2, 
+                          "SpecBit_tests_rollcall.hpp")[1]
+        amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num, 
                    reset_contents)
-        amend_file("RegisteredSpectra.hpp", m, reg_spec, 
-                    reg_spec_num, reset_contents)
-        write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, 
-                   reset_contents)
+        # amend_file("RegisteredSpectra.hpp", m, reg_spec, 
+        #             reg_spec_num, reset_contents)
+        # write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, 
+        #            reset_contents)
 
         # DecayBit
         if decaybit:
@@ -690,6 +692,7 @@ if args.file:
                       existing = False)
             copy_file("models/"+gum.name+".cpp", m, output_dir, reset_contents, 
                       existing = False)
+
         # HiggsBounds interface
         # TODO need NMSSM merging into gum
         # if output_opts.spheno and len(higgses) > 1:

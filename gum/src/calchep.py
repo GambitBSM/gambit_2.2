@@ -384,7 +384,12 @@ def add_calchep_switch(model_name, spectrum):
            "{{\n"
            "// Obtain spectrum information to pass to CalcHEP\n"
            "const Spectrum& spec = *Dep::{1};\n"
-           "Assign_All_Values(spec);\n"
+           "// Obtain model contents\n"
+           "static const SpectrumContents::{0} {0}_contents;\n\n"
+           "// Obtain list of all parameters within model\n"
+           "static const std::vector<SpectrumParameter> {0}_params = "
+           "{0}_contents.all_parameters();\n\n"
+           "Assign_All_Values(spec, {0}_params);\n"
            "}}\n\n"
     ).format(model_name, spectrum))
 
