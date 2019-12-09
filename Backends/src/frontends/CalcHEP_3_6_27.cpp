@@ -21,6 +21,7 @@
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Models/partmap.hpp"
 #include "gambit/Backends/frontends/CalcHEP_3_6_27.hpp"
+#include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Elements/decay_table.hpp"
 #include "gambit/Elements/spectrum_contents.hpp"
 
@@ -143,11 +144,13 @@ BE_NAMESPACE
       // Otherwise, should all have the right names
       else 
       { 
+        const SubSpectrum& HE = spec.get_HE();
+
         // Scalar case
         if (it->shape().size()==1 and it->shape()[0] == 1)
         {
           char *chepname = const_cast<char*> ( it->name().c_str() );
-          Assign_Value(chepname, spec.get(it->tag(), it->name()));
+          Assign_Value(chepname, HE.get(it->tag(), it->name()));
         }
         // Vector case
         else if (it->shape().size()==1 and it->shape()[0] > 1)
@@ -156,7 +159,7 @@ BE_NAMESPACE
           {
             str long_name = it->name() + std::to_string(i+1);
             char *chepname = const_cast<char*> ( long_name.c_str() );
-            Assign_Value(chepname, spec.get(it->tag(), it->name(), i+1));
+            Assign_Value(chepname, HE.get(it->tag(), it->name(), i+1));
           }
         }
         // Matrix
@@ -168,7 +171,7 @@ BE_NAMESPACE
             {
               str long_name = it->name() + std::to_string(i+1) + "x" + std::to_string(j+1);
               char *chepname = const_cast<char*> ( long_name.c_str() );
-              Assign_Value(chepname, spec.get(it->tag(), it->name(), i+1, j+1));
+              Assign_Value(chepname, HE.get(it->tag(), it->name(), i+1, j+1));
             }
           }
         }

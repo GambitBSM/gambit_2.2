@@ -410,6 +410,6 @@ namespace Gambit
       }
     }
 
-  } */
+  } 
 
 } 

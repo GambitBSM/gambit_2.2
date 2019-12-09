@@ -29,8 +29,6 @@
 #include "gambit/Elements/spectrum_helpers.hpp"
 #include "gambit/Models/SpectrumContents/subspectrum_contents.hpp"
 
-#include "gambit/Models/partmap.hpp"
-
 #include "SLHAea/slhaea.h"
 
 

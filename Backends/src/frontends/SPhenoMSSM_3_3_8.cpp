@@ -16,7 +16,8 @@
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/SPhenoMSSM_3_3_8.hpp"
 #include "gambit/Elements/slhaea_helpers.hpp"
-#include "gambit/Elements/spectrum.hpp"
+#include "gambit/Elements/spectrum_factories.hpp"
+#include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
 #include "gambit/Utils/version.hpp"
 
 // Convenience functions (definition)
