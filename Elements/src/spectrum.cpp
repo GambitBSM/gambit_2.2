@@ -444,9 +444,6 @@ namespace Gambit
      return HE->PDG_translator();
    }
 
-   /// Get the SpectrumContents
-   const SpectrumContents::Contents& Spectrum::get_SpectrumContents() const { return myContents; }
-
    // The expressions in all of the following CKM functions are from the CKMFitter paper hep-ph/0406184v3.
 
    ///Helper function to calculate Wolfenstein rho+i*eta from rhobar and etabar
