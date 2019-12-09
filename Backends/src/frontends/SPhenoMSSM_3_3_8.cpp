@@ -24,7 +24,7 @@ BE_NAMESPACE
 {
 
   // Run SPheno
-  int run_SPheno(Spectrum &spectrum, const SpectrumInputs &inputs)
+  int run_SPheno(Spectrum &spectrum, const Finputs &inputs)
   {
     //*epsI = 1.0E-5;
     *delta_mass = 1.0E-6;
@@ -55,7 +55,7 @@ BE_NAMESPACE
     {
 
       cout << "mHd = " << sqrt(*mHd2) <<  endl;
-      Spectrum_Out(spectrum, inputs);
+      spectrum = Spectrum_Out(inputs.param);
 
 
     }
@@ -67,7 +67,7 @@ BE_NAMESPACE
 
   }
 
-  void Spectrum_Out(Spectrum &spectrum, const SpectrumInputs &inputs)
+  Spectrum Spectrum_Out(const std::map<str, safe_ptr<double> >& input_Param)
   {
 
     SLHAstruct slha;
@@ -97,65 +97,65 @@ BE_NAMESPACE
 
     // Block MINPAR
     SLHAea_add_block(slha, "MINPAR");
-    if(inputs.param.find("M0") != inputs.param.end())
-      slha["MINPAR"][""] << 1 << *inputs.param.at("M0") << "# m0";
-    if(inputs.param.find("M12") != inputs.param.end())
-      slha["MINPAR"][""] << 2 << *inputs.param.at("M12") << "# m12";
-    slha["MINPAR"][""] << 3 << *inputs.param.at("TanBeta") << "# tanb at m_Z";
-    slha["MINPAR"][""] << 4 << *inputs.param.at("SignMu") << "# cos(phase_mu)";
-    if(inputs.param.find("A0") != inputs.param.end())
-      slha["MINPAR"][""] << 5 << *inputs.param.at("A0") << "# A0";
+    if(input_Param.find("M0") != input_Param.end())
+      slha["MINPAR"][""] << 1 << *input_Param.at("M0") << "# m0";
+    if(input_Param.find("M12") != input_Param.end())
+      slha["MINPAR"][""] << 2 << *input_Param.at("M12") << "# m12";
+    slha["MINPAR"][""] << 3 << *input_Param.at("TanBeta") << "# tanb at m_Z";
+    slha["MINPAR"][""] << 4 << *input_Param.at("SignMu") << "# cos(phase_mu)";
+    if(input_Param.find("A0") != input_Param.end())
+      slha["MINPAR"][""] << 5 << *input_Param.at("A0") << "# A0";
 
     // Block EXTPAR
     SLHAea_add_block(slha, "EXTPAR");
-    if(inputs.param.find("Qin") != inputs.param.end())
-      slha["EXTPAR"][""] << 0 << *inputs.param.at("Qin") << "# scale Q where the parameters below are defined";
-    if(inputs.param.find("M1") != inputs.param.end())
-      slha["EXTPAR"][""] << 1 << *inputs.param.at("M1") << "# M_1";
-    if(inputs.param.find("M2") != inputs.param.end())
-      slha["EXTPAR"][""] << 2 << *inputs.param.at("M2") << "# M_2";
-    if(inputs.param.find("M3") != inputs.param.end())
-      slha["EXTPAR"][""] << 3 << *inputs.param.at("M3") << "# M_3";
-    if(inputs.param.find("Au_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 11 << *inputs.param.at("Au_33") << "# A_t";
-    if(inputs.param.find("Ad_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 12 << *inputs.param.at("Ad_33") << "# A_b";
-    if(inputs.param.find("Ae_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 13 << *inputs.param.at("Ae_33") << "# A_l";
-    if(inputs.param.find("mHd2") != inputs.param.end())
-      slha["EXTPAR"][""] << 21 << *inputs.param.at("mHd2") << "# m_Hd^2";
-    if(inputs.param.find("mHu2") != inputs.param.end())
-      slha["EXTPAR"][""] << 22 << *inputs.param.at("mHd2") << "# m_Hu^2";
-    if(inputs.param.find("ml2_11") != inputs.param.end())
-      slha["EXTPAR"][""] << 31 << sqrt(*inputs.param.at("ml2_11")) << "# M_(L,11)";
-    if(inputs.param.find("ml2_22") != inputs.param.end())
-      slha["EXTPAR"][""] << 32 << sqrt(*inputs.param.at("ml2_22")) << "# M_(L,22)";
-    if(inputs.param.find("ml2_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 33 << sqrt(*inputs.param.at("ml2_33")) << "# M_(L,33)";
-    if(inputs.param.find("me2_11") != inputs.param.end())
-      slha["EXTPAR"][""] << 34 << sqrt(*inputs.param.at("me2_11")) << "# M_(E,11)";
-    if(inputs.param.find("me2_22") != inputs.param.end())
-      slha["EXTPAR"][""] << 35 << sqrt(*inputs.param.at("me2_22")) << "# M_(E,22)";
-    if(inputs.param.find("me2_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 36 << sqrt(*inputs.param.at("me2_33")) << "# M_(E,33)";
-    if(inputs.param.find("mq2_11") != inputs.param.end())
-      slha["EXTPAR"][""] << 41 << sqrt(*inputs.param.at("mq2_11")) << "# M_(Q,11)";
-    if(inputs.param.find("mq2_22") != inputs.param.end())
-      slha["EXTPAR"][""] << 42 << sqrt(*inputs.param.at("mq2_22")) << "# M_(Q,22)";
-    if(inputs.param.find("mq2_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 43 << sqrt(*inputs.param.at("mq2_33")) << "# M_(Q,33)";
-    if(inputs.param.find("mu2_11") != inputs.param.end())
-      slha["EXTPAR"][""] << 44 << sqrt(*inputs.param.at("mu2_11")) << "# M_(U,11)";
-    if(inputs.param.find("mu2_22") != inputs.param.end())
-      slha["EXTPAR"][""] << 45 << sqrt(*inputs.param.at("mu2_22")) << "# M_(U,22)";
-    if(inputs.param.find("mu2_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 46 << sqrt(*inputs.param.at("mu2_33")) << "# M_(U,33)";
-    if(inputs.param.find("md2_11") != inputs.param.end())
-      slha["EXTPAR"][""] << 47 << sqrt(*inputs.param.at("md2_11")) << "# M_(D,11)";
-    if(inputs.param.find("md2_22") != inputs.param.end())
-      slha["EXTPAR"][""] << 48 << sqrt(*inputs.param.at("md2_22")) << "# M_(D,22)";
-    if(inputs.param.find("md2_33") != inputs.param.end())
-      slha["EXTPAR"][""] << 49 << sqrt(*inputs.param.at("md2_33")) << "# M_(D,33)";
+    if(input_Param.find("Qin") != input_Param.end())
+      slha["EXTPAR"][""] << 0 << *input_Param.at("Qin") << "# scale Q where the parameters below are defined";
+    if(input_Param.find("M1") != input_Param.end())
+      slha["EXTPAR"][""] << 1 << *input_Param.at("M1") << "# M_1";
+    if(input_Param.find("M2") != input_Param.end())
+      slha["EXTPAR"][""] << 2 << *input_Param.at("M2") << "# M_2";
+    if(input_Param.find("M3") != input_Param.end())
+      slha["EXTPAR"][""] << 3 << *input_Param.at("M3") << "# M_3";
+    if(input_Param.find("Au_33") != input_Param.end())
+      slha["EXTPAR"][""] << 11 << *input_Param.at("Au_33") << "# A_t";
+    if(input_Param.find("Ad_33") != input_Param.end())
+      slha["EXTPAR"][""] << 12 << *input_Param.at("Ad_33") << "# A_b";
+    if(input_Param.find("Ae_33") != input_Param.end())
+      slha["EXTPAR"][""] << 13 << *input_Param.at("Ae_33") << "# A_l";
+    if(input_Param.find("mHd2") != input_Param.end())
+      slha["EXTPAR"][""] << 21 << *input_Param.at("mHd2") << "# m_Hd^2";
+    if(input_Param.find("mHu2") != input_Param.end())
+      slha["EXTPAR"][""] << 22 << *input_Param.at("mHd2") << "# m_Hu^2";
+    if(input_Param.find("ml2_11") != input_Param.end())
+      slha["EXTPAR"][""] << 31 << sqrt(*input_Param.at("ml2_11")) << "# M_(L,11)";
+    if(input_Param.find("ml2_22") != input_Param.end())
+      slha["EXTPAR"][""] << 32 << sqrt(*input_Param.at("ml2_22")) << "# M_(L,22)";
+    if(input_Param.find("ml2_33") != input_Param.end())
+      slha["EXTPAR"][""] << 33 << sqrt(*input_Param.at("ml2_33")) << "# M_(L,33)";
+    if(input_Param.find("me2_11") != input_Param.end())
+      slha["EXTPAR"][""] << 34 << sqrt(*input_Param.at("me2_11")) << "# M_(E,11)";
+    if(input_Param.find("me2_22") != input_Param.end())
+      slha["EXTPAR"][""] << 35 << sqrt(*input_Param.at("me2_22")) << "# M_(E,22)";
+    if(input_Param.find("me2_33") != input_Param.end())
+      slha["EXTPAR"][""] << 36 << sqrt(*input_Param.at("me2_33")) << "# M_(E,33)";
+    if(input_Param.find("mq2_11") != input_Param.end())
+      slha["EXTPAR"][""] << 41 << sqrt(*input_Param.at("mq2_11")) << "# M_(Q,11)";
+    if(input_Param.find("mq2_22") != input_Param.end())
+      slha["EXTPAR"][""] << 42 << sqrt(*input_Param.at("mq2_22")) << "# M_(Q,22)";
+    if(input_Param.find("mq2_33") != input_Param.end())
+      slha["EXTPAR"][""] << 43 << sqrt(*input_Param.at("mq2_33")) << "# M_(Q,33)";
+    if(input_Param.find("mu2_11") != input_Param.end())
+      slha["EXTPAR"][""] << 44 << sqrt(*input_Param.at("mu2_11")) << "# M_(U,11)";
+    if(input_Param.find("mu2_22") != input_Param.end())
+      slha["EXTPAR"][""] << 45 << sqrt(*input_Param.at("mu2_22")) << "# M_(U,22)";
+    if(input_Param.find("mu2_33") != input_Param.end())
+      slha["EXTPAR"][""] << 46 << sqrt(*input_Param.at("mu2_33")) << "# M_(U,33)";
+    if(input_Param.find("md2_11") != input_Param.end())
+      slha["EXTPAR"][""] << 47 << sqrt(*input_Param.at("md2_11")) << "# M_(D,11)";
+    if(input_Param.find("md2_22") != input_Param.end())
+      slha["EXTPAR"][""] << 48 << sqrt(*input_Param.at("md2_22")) << "# M_(D,22)";
+    if(input_Param.find("md2_33") != input_Param.end())
+      slha["EXTPAR"][""] << 49 << sqrt(*input_Param.at("md2_33")) << "# M_(D,33)";
 
     // Block GAUGEGUT
     SLHAea_add_block(slha, "GAUGEGUT", *mGUT);
@@ -491,14 +491,22 @@ BE_NAMESPACE
     SLHAea_add_block(slha, "GAMBIT");
     slha["GAMBIT"][""] << 1 << *mGUT << "# Input scale of (upper) boundary contidions, e.g. GUT scale";
 
+    cout << slha << endl;
+
     //Create Spectrum object
-    double scale = *Qin;
-    spectrum = Spectrum(slha, inputs.contents, scale);
+    static const Spectrum::mc_info mass_cut;
+    static const Spectrum::mr_info mass_ratio_cut;
+    Spectrum spectrum = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);
+
+    // Add the high scale variable by hand
+    spectrum.get_HE().set_override(Par::mass1, SLHAea::to<double>(slha.at("GAMBIT").at(1).at(1)), "high_scale", true);
+
+    return spectrum;
 
   }
 
   // Function to read data from the Gambit inputs and fill SPheno internal variables
-  void ReadingData(const SpectrumInputs &inputs)
+  void ReadingData(const Finputs &inputs)
   {
 
     InitializeStandardModel(inputs.sminputs);
