@@ -31,6 +31,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
       return get_BEptr()->GetLogLikelihood(theory);
    }
    
+   inline double HL_nDimLikelihood::GetLogLikelihood(::std::vector<double, std::allocator<double> > theory, ::std::vector<double, std::allocator<double> > theory_error)
+   {
+      return get_BEptr()->GetLogLikelihood(theory, theory_error);
+   }
+   
    inline void HL_nDimLikelihood::Profile()
    {
       get_BEptr()->Profile();

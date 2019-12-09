@@ -44,6 +44,8 @@
 ///  \author Jihyun Bhom
 ///          (jihyun.bhom@ifj.edu.pl)
 ///  \date 2019 July
+///  \date 2019 Nov
+///  \date 2019 Dec
 ///
 ///  \author Markus Prim
 ///          (markus.prim@kit.edu)
@@ -588,7 +590,6 @@ namespace Gambit
 
       // Free memory
       free(res);
-
       if (flav_debug) {
           for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
               printf("%s=%.4e\n", obsnames[iObservable], result[obslist[iObservable]]);
@@ -3192,7 +3193,7 @@ namespace Gambit
 
       auto SI_theory = *Dep::SuperIso_obs_values;
       auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
-
+      
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_0p98)& observables){
         std::vector<double> obs_theory;
@@ -3212,7 +3213,6 @@ namespace Gambit
         }
         return obs_covariance;
       };
-
       result = 0;
       result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables0p1_0p98), get_obs_covariance(observables0p1_0p98));
       result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(observables1p1_2p5), get_obs_covariance(observables1p1_2p5));
@@ -3271,7 +3271,7 @@ namespace Gambit
         "dGamma/dq2_B0Kstar0mumu_2.5_4",
         "dGamma/dq2_B0Kstar0mumu_4_6",
         "dGamma/dq2_B0Kstar0mumu_6_8",
-        "dGamma/dq2_B0Kstarmumu_15_19",
+        "dGamma/dq2_B0Kstar0mumu_15_19",
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;

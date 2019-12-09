@@ -160,7 +160,7 @@ set(HLver "1.0")
 
 set(dl "https://github.com/mchrzasz/HEPLikeData/archive/master.zip")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(md5 "0d15dba1d5be69930461c1c1025b3712")
+set(md5 "8d53daa4260c52594468e638c3e7ff32")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -168,7 +168,7 @@ if(NOT ditched_${name}_${ver})
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""   
-    BUILD_COMMAND ${CMAKE_COMMAND} -E echo 'cp  ${dir}/data/ ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}' > make_hepliedata.sh
+    BUILD_COMMAND ${CMAKE_COMMAND} -E echo 'cp  ${dir}/HEPLikeData-master/data/ ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}' > make_hepliedata.sh
           COMMAND chmod u+x make_hepliedata.sh
     
 #    CONFIGURE_COMMAND ""

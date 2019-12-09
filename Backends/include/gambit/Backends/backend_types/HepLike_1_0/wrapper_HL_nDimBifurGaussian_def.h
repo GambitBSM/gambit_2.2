@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <boost/numeric/ublas/matrix.hpp>
 
 #include "identification.hpp"
 
@@ -29,6 +30,21 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    inline double HL_nDimBifurGaussian::GetLogLikelihood(::std::vector<double, std::allocator<double> > theory)
    {
       return get_BEptr()->GetLogLikelihood(theory);
+   }
+   
+   inline double HL_nDimBifurGaussian::GetChi2(::std::vector<double, std::allocator<double> > theory, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > theory_cov)
+   {
+      return get_BEptr()->GetChi2(theory, theory_cov);
+   }
+   
+   inline double HL_nDimBifurGaussian::GetLikelihood(::std::vector<double, std::allocator<double> > theory, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > theory_cov)
+   {
+      return get_BEptr()->GetLikelihood(theory, theory_cov);
+   }
+   
+   inline double HL_nDimBifurGaussian::GetLogLikelihood(::std::vector<double, std::allocator<double> > theory, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > theory_cov)
+   {
+      return get_BEptr()->GetLogLikelihood(theory, theory_cov);
    }
    
    inline bool HL_nDimBifurGaussian::Restrict(::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > arg_1)

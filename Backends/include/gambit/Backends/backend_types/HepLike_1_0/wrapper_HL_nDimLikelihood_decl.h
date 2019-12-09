@@ -35,6 +35,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
          double GetLogLikelihood(::std::vector<double, std::allocator<double> > theory);
    
+         double GetLogLikelihood(::std::vector<double, std::allocator<double> > theory, ::std::vector<double, std::allocator<double> > theory_error);
+   
          void Profile();
    
          double GetChi2_profile(double theory, ::std::basic_string<char, std::char_traits<char>, std::allocator<char> > arg_1);

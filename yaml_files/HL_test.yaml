@@ -92,11 +92,11 @@ ObsLikes:
   - purpose:    B2SGammaTest
     capability: HEPLike_B2SGammaLogLikelihood
 
-#  - purpose:    B2LLTest
-#    capability: HEPLike_B2mumuLogLikelihood
+  - purpose:    B2LLTest
+    capability: HEPLike_B2mumuLogLikelihood
 
-#  - purpose:    B2KStarMuMuAngularTest
-#    capability: HEPLike_B2KstarmumuAng_LogLikelihood
+  - purpose:    B2KStarMuMuAngularTest
+    capability: HEPLike_B2KstarmumuAng_LogLikelihood
 
 #  - purpose:    B2KStarMuMuBranchingRatioTest
 #    capability: HEPLike_B2KstarmumuBr_LogLikelihood
@@ -162,26 +162,16 @@ Rules:
         S7_B0Kstar0mumu_6_8,
         S8_B0Kstar0mumu_6_8,
         S9_B0Kstar0mumu_6_8,
-        dGamma/dq2_B0Kstar0mumu_15_17,
-        FL_B0Kstar0mumu_15_17,
-        AFB_B0Kstar0mumu_15_17,
-        S3_B0Kstar0mumu_15_17,
-        S4_B0Kstar0mumu_15_17,
-        S5_B0Kstar0mumu_15_17,
-        S7_B0Kstar0mumu_15_17,
-        S8_B0Kstar0mumu_15_17,
-        S9_B0Kstar0mumu_15_17,
-        dGamma/dq2_B0Kstar0mumu_17_19,
-        FL_B0Kstar0mumu_17_19,
-        AFB_B0Kstar0mumu_17_19,
-        S3_B0Kstar0mumu_17_19,
-        S4_B0Kstar0mumu_17_19,
-        S5_B0Kstar0mumu_17_19,
-        S7_B0Kstar0mumu_17_19,
-        S8_B0Kstar0mumu_17_19,
-        S9_B0Kstar0mumu_17_19,
-        dGamma/dq2_B0Kstar0mumu_1.1_6,
         dGamma/dq2_B0Kstar0mumu_15_19,
+        FL_B0Kstar0mumu_15_19,
+        AFB_B0Kstar0mumu_15_19,
+        S3_B0Kstar0mumu_15_19,
+        S4_B0Kstar0mumu_15_19,
+        S5_B0Kstar0mumu_15_19,
+        S7_B0Kstar0mumu_15_19,
+        S8_B0Kstar0mumu_15_19,
+        S9_B0Kstar0mumu_15_19,
+        dGamma/dq2_B0Kstar0mumu_1.1_6,
         BR_B0Kstar0ee_0.1_19.2,
         R-1_B0Kstar0ll_0.045_1.1,
         R-1_B0Kstar0ll_1.1_6,

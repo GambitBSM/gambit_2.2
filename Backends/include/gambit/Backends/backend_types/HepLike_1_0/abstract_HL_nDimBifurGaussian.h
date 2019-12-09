@@ -6,6 +6,7 @@
 #include "forward_decls_wrapper_classes.h"
 #include <string>
 #include <vector>
+#include <boost/numeric/ublas/matrix.hpp>
 #include "wrapper_HL_Data_decl.h"
 #include <cstddef>
 #include <iostream>
@@ -27,6 +28,12 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
          virtual double GetLikelihood(::std::vector<double, std::allocator<double> >) =0;
    
          virtual double GetLogLikelihood(::std::vector<double, std::allocator<double> >) =0;
+   
+         virtual double GetChi2(::std::vector<double, std::allocator<double> >, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > >) =0;
+   
+         virtual double GetLikelihood(::std::vector<double, std::allocator<double> >, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > >) =0;
+   
+         virtual double GetLogLikelihood(::std::vector<double, std::allocator<double> >, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > >) =0;
    
          virtual bool Restrict(::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > >) =0;
    
