@@ -13,6 +13,7 @@
 ///  \author Anders Kvellestad
 ///  \author Pat Scott
 ///  \author Martin White
+///  \author Tomas Gonzalo
 ///
 ///  *********************************************
 
@@ -24,12 +25,16 @@
 #include "HEPUtils/Event.h"
 #include "HEPUtils/Particle.h"
 #include "HEPUtils/FastJet.h"
-#include "MCUtils/PIDCodes.h"
-#include "HepMC3/GenEvent.h"
-#include "HepMC3/GenParticle.h"
 #include "HEPUtils/FastJet.h"
 
+#include "MCUtils/PIDCodes.h"
 
+#ifndef EXCLUDE_HEPMC
+
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenParticle.h"
+
+#endif
 
 #ifndef UNIFIED_FUNCTIONS
 #define UNIFIED_FUNCTIONS
@@ -40,27 +45,90 @@
 //Tomek Procter Oct 2019 - maybe it would be cleaner if all these functions were in another header?
 namespace UnifiedEventConversionFunctions
 {
-  inline int get_unified_pid(const HepMC3::GenParticlePtr &gp)
-  {
-    return gp->pid();
-  }
+
   template<typename ParticleP>
   int get_unified_pid(ParticleP p)
   {
     return p.id();
   }
 
-
-  inline bool get_unified_isFinal(const HepMC3::GenParticlePtr &gp)
-  {
-    return (gp->status() == 1);
-  }
   template<typename ParticleP>
   bool get_unified_isFinal(ParticleP p)
   {
     return (p.isFinal());
   }
 
+  template <typename ParticleP>
+  inline double get_unified_eta(ParticleP p)
+  {
+    return p.eta();
+  }
+
+  template <typename ParticleP>
+  inline HEPUtils::P4 get_unified_momentum(ParticleP p)
+  {
+    return HEPUtils::P4::mkXYZE(p.px(), p.py(), p.pz(), p.e());
+  }
+
+  template <typename ParticleP>
+  inline FJNS::PseudoJet get_unified_pseudojet(ParticleP p)
+  {
+    FJNS::PseudoJet psej = FJNS::PseudoJet(p.p().px(), p.p().py(), p.p().pz(), p.p().e());
+    return psej;
+  }
+
+  template <typename ParticleP, typename EventT>
+  inline bool get_unified_fromHadron(ParticleP&, const EventT &pevt, int i)
+  {
+    //Just call the function in Py8Utils.cpp
+    return Gambit::ColliderBit::fromHadron(i, pevt);
+  }
+
+  template <typename ParticleP>
+  inline int get_unified_mother1(ParticleP &p)
+  {
+    return p.mother1();
+  }
+  template <typename ParticleP>
+  inline int get_unified_mother2(ParticleP &p)
+  {
+    return p.mother2();
+  }
+
+  template <typename ParticleP, typename EventT>
+  inline int get_unified_mother1_pid(ParticleP &p, EventT &pevt)
+  {
+    return pevt[p.mother1()].id();
+  }
+  template <typename ParticleP, typename EventT>
+  inline int get_unified_mother2_pid(ParticleP &p, EventT &pevt)
+  {
+    return pevt[p.mother2()].id();
+  }
+
+  //Note! The unified_child_id_results MUST BE EMPTY as I don't clear it in the function.
+  template<typename ParticleP, typename EventT>
+  void get_unified_child_ids(ParticleP &p, EventT &pevt, std::vector<int> &unified_child_id_results)
+  {
+    std::vector<int> daughter_list = p.daughterList();
+    for (int daughter : daughter_list)
+    {
+      unified_child_id_results.push_back(pevt[daughter].id());
+    }
+  }
+
+
+  #ifndef EXCLUDE_HEPMC
+
+  inline int get_unified_pid(const HepMC3::GenParticlePtr &gp)
+  {
+    return gp->pid();
+  }
+
+  inline bool get_unified_isFinal(const HepMC3::GenParticlePtr &gp)
+  {
+    return (gp->status() == 1);
+  }
 
   inline double get_unified_eta(const HepMC3::GenParticlePtr &gp)
   {
@@ -70,38 +138,18 @@ namespace UnifiedEventConversionFunctions
     double magnitude = sqrt(hp4.px()*hp4.px() + hp4.py()*hp4.py() + hp4.pz()*hp4.pz());
     return atanh(hp4.pz()/magnitude);
   }
-  template <typename ParticleP>
-  inline double get_unified_eta(ParticleP p)
-  {
-    return p.eta();
-  }
-
 
   inline HEPUtils::P4 get_unified_momentum(const HepMC3::GenParticlePtr &gp)
   {
     const HepMC3::FourVector& hp4 = gp->momentum();
     return HEPUtils::P4::mkXYZE(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
   }
-  template <typename ParticleP>
-  inline HEPUtils::P4 get_unified_momentum(ParticleP p)
-  {
-    return HEPUtils::P4::mkXYZE(p.px(), p.py(), p.pz(), p.e());
-  }
-
-
 
   inline FJNS::PseudoJet get_unified_pseudojet(const HepMC3::GenParticlePtr &gp)
   {
     const HepMC3::FourVector& hp4 = gp->momentum();
     return FJNS::PseudoJet(hp4.px(), hp4.py(), hp4.pz(), hp4.e());
   }
-  template <typename ParticleP>
-  inline FJNS::PseudoJet get_unified_pseudojet(ParticleP p)
-  {
-    FJNS::PseudoJet psej = FJNS::PseudoJet(p.p().px(), p.p().py(), p.p().pz(), p.p().e());
-    return psej;
-  }
-
 
   //Tomek Procter Aug 19. Note the MCUtils isParton function only checks
   // for quarks/gluons (while in pythia, the function used in Gambit inlcudes
@@ -129,12 +177,6 @@ namespace UnifiedEventConversionFunctions
     }
     return false;
   }
-  template <typename ParticleP, typename EventT>
-  inline bool get_unified_fromHadron(ParticleP&, const EventT &pevt, int i)
-  {
-    //Just call the function in Py8Utils.cpp
-    return Gambit::ColliderBit::fromHadron(i, pevt);
-  }
 
   inline int get_unified_mother1(const HepMC3::GenParticlePtr&)
   {
@@ -144,27 +186,7 @@ namespace UnifiedEventConversionFunctions
   {
     return 0;
   }
-  template <typename ParticleP>
-  inline int get_unified_mother1(ParticleP &p)
-  {
-    return p.mother1();
-  }
-  template <typename ParticleP>
-  inline int get_unified_mother2(ParticleP &p)
-  {
-    return p.mother2();
-  }
 
-  template <typename ParticleP, typename EventT>
-  inline int get_unified_mother1_pid(ParticleP &p, EventT &pevt)
-  {
-    return pevt[p.mother1()].id();
-  }
-  template <typename ParticleP, typename EventT>
-  inline int get_unified_mother2_pid(ParticleP &p, EventT &pevt)
-  {
-    return pevt[p.mother2()].id();
-  }
   //shouldn't ever need to call a hepmc3 version but for safety here's one that just returns 0.
   inline int get_unified_mother1_pid(const HepMC3::GenParticlePtr&, const std::vector<HepMC3::GenParticlePtr>&)
   {
@@ -186,16 +208,9 @@ namespace UnifiedEventConversionFunctions
       unified_child_id_results.push_back(child->pid());
     }
   }
-  //Note! The unified_child_id_results MUST BE EMPTY as I don't clear it in the function.
-  template<typename ParticleP, typename EventT>
-  void get_unified_child_ids(ParticleP &p, EventT &pevt, std::vector<int> &unified_child_id_results)
-  {
-    std::vector<int> daughter_list = p.daughterList();
-    for (int daughter : daughter_list)
-    {
-      unified_child_id_results.push_back(pevt[daughter].id());
-    }
-  }
+
+  #endif 
+
 }
 #endif
 
@@ -226,7 +241,7 @@ namespace Gambit
       HEPUtils::P4 pout; //< Sum of momenta outside acceptance
       std::vector<FJNS::PseudoJet> jetparticles;
 
-      for (size_t i = 0; i < pevt.size(); i++)
+      for (int i = 0; i < pevt.size(); i++)
       {
         const auto &p = pevt[i];
         const int pid = get_unified_pid(p);
