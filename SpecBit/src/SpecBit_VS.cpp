@@ -1063,6 +1063,8 @@ namespace Gambit
                 std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
                 // Creating symlink to PHC in run folder
                 std::string PHCSymlink = inputspath + "/Homotopy/mpirank_"+ rankstring + "/";
+                // Generating a Random seed from Gambit random generator
+                std::string randomseed = std::to_string(int(Random::draw() * 2 * 1987.));
 
                 try
                 {
@@ -1115,6 +1117,9 @@ namespace Gambit
                         "              <ResolutionSize>\n"
                         "                1.0\n"
                         "              </ResolutionSize>\n"
+                        "              <RandomSeed>\n"
+                        "               " + randomseed + "\n"
+                        "              </Randomseed>\n"
                         "            <Tasks>\n "
                         "             1                     "
                         "            </Tasks>\n            "
