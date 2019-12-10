@@ -1062,29 +1062,30 @@ namespace Gambit
                 // Getting path to PHC
                 std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
                 // Creating symlink to PHC in run folder
-                std::string PHCSymlink = inputspath + "/Homotopy/mpirank_"+ rankstring + "/";
+                std::string PHCSymlink = inputspath + "Homotopy/mpirank_"+ rankstring + "/";
                 // Generating a Random seed from Gambit random generator
                 std::string randomseed = std::to_string(int(Random::draw() * 2 * 1987.));
 
-                try
+                // Here we check whether the symlink to phc already exists. 
+                std::string filename(PHCSymlink + "/phc");
+                std::ifstream in(filename.c_str(), std::ios::binary);
+                if(in.good())
                 {
-                    Utils::ensure_path_exists(PHCSymlink);
+                    std::cout << "Symlink for phc already exists, skipping creating it." << std::endl;
                 }
-                catch(const std::exception& e)
+                else
                 {
-                    std::ostringstream errmsg;
-                    errmsg << "Error creating PHC folder for MPI process " << rankstring;
-                    SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
-                }
 
-                std::string systemCommand( "ln -s " + PathToPHC + "/phc" + " " + PHCSymlink );
+                    std::cout << "Creating PHC symlink" << std::endl;
+                    std::string systemCommand( "ln -s " + PathToPHC + "/phc" + " " + PHCSymlink );
 
-                int systemReturn = system( systemCommand.c_str() ) ;
-                if( systemReturn == -1 )
-                {
-                    std::ostringstream errmsg;
-                    errmsg << "Error making symlink for PHC in process " << rankstring;
-                    SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+                    int systemReturn = system( systemCommand.c_str() ) ;
+                    if( systemReturn == -1 )
+                    {
+                        std::ostringstream errmsg;
+                        errmsg << "Error making symlink for PHC in process " << rankstring;
+                        SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+                    }
                 }
 
                 // File contents
