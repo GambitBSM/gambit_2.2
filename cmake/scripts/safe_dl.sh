@@ -122,10 +122,12 @@ $2 -E tar -xf $1/${filename}
 if [ "retain container folder" != "$8" ]; then
   if [ $(ls -1 | wc -l) = "1" ]; then
     dirname=$(ls)
-    if cd ${dirname}; then
-      mv * ../
-      cd ../
-      $2 -E remove_directory ${dirname}
+    if [ -d ${dirname} ]; then
+      if cd ${dirname}; then
+        mv * ../
+        cd ../
+        $2 -E remove_directory ${dirname}
+      fi
     fi
   fi
 fi
