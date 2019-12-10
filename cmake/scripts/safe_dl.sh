@@ -99,20 +99,22 @@ if [ "${axel_worked}" = "0" ]; then
   fi
 fi
 # Check the MD5 sum
-$2 -E md5sum $1/${filename} |
-{
-  read md5 name;
-  if [ "${md5}" != "$4" ]; then
-    $2 -E cmake_echo_color --red --bold  "ERROR: MD5 sum of downloaded file $1/${filename} does not match"
-    $2 -E cmake_echo_color --red --bold  "Expected: $4"
-    $2 -E cmake_echo_color --red --bold  "Found:    ${md5}"
-    $2 -E cmake_echo_color --red --bold  "Deleting downloaded file."
-    # Delete the file if the md5 is bad, and make a stamp saying so, as cmake does not actually check if DOWNLOAD_COMMAND fails.
-    $2 -E remove $1/${filename}
-    $2 -E touch $6_$7-stamp/$6_$7-download-failed
-    exit 1
-  fi
-}
+if [ "$4" != "none" ]; then
+  $2 -E md5sum $1/${filename} |
+  {
+    read md5 name;
+    if [ "${md5}" != "$4" ]; then
+      $2 -E cmake_echo_color --red --bold  "ERROR: MD5 sum of downloaded file $1/${filename} does not match"
+      $2 -E cmake_echo_color --red --bold  "Expected: $4"
+      $2 -E cmake_echo_color --red --bold  "Found:    ${md5}"
+      $2 -E cmake_echo_color --red --bold  "Deleting downloaded file."
+      # Delete the file if the md5 is bad, and make a stamp saying so, as cmake does not actually check if DOWNLOAD_COMMAND fails.
+      $2 -E remove $1/${filename}
+      $2 -E touch $6_$7-stamp/$6_$7-download-failed
+      exit 1
+    fi
+  }
+fi
 # Do the extraction
 cd $5
 $2 -E tar -xf $1/${filename}
