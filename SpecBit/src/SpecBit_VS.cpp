@@ -635,33 +635,35 @@ namespace Gambit
         result["ModelFile"] = modelfilesPath + "ModelFile.vin";
     }
 
-    /// This function executes the passing of the spectrum object (as SLHAea) to vevacious. It is a helper function and not a 
+    /// Execute the passing of the spectrum object (as SLHAea) to vevacious. It is a helper function and not a 
     /// capability since this has to be executed before every single vevacious run. vevacious can run multiple times for 
-    /// a single point in parameter space depending on setting -> global and nearest minimum for tunneling requested? 
-    /// multiple attempts for one vevacious runs allowed?
+    /// a single point in parameter space depending on settings: 
+    ///   -> global and nearest minimum for tunneling requested? 
+    ///   -> multiple attempts for one vevacious runs allowed?
     vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus exec_pass_spectrum_to_vevacious(SpectrumEntriesForVevacious &pass_spectrum )
     {
         
+        // get inputFilename and initialise vevaciousPlusPlus object with it
         static std::string inputFilename = pass_spectrum.get_inputFilename();
         vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus(inputFilename);
 
+        // get scale and the map containing all spectrum entries that need to be passed to vevacious
         double scale = pass_spectrum.get_scale();
-        map_str_pair_int_spectrum_vec spec_entry_map = pass_spectrum.get_spec_entry_map();
+        map_str_SpectrumEntry spec_entry_map = pass_spectrum.get_spec_entry_map();
 
-        //std::cout << "Testing what is passed to ReadLhaBlock.. this can only go wrong" << std::endl;
+        // iterate through map and call vevacious' 'ReadLhaBlock' to read spectrum entries
         for (auto it=spec_entry_map.begin(); it!=spec_entry_map.end(); ++it) 
         {
-          std::string name =  it->first;
-
-          // first entry of pair is int setting, second is vector
-          pair_int_spectrum_vec vec = it->second;
-          vevaciousPlusPlus.ReadLhaBlock(name, scale , vec.second, vec.first );
+          SpectrumEntry entry = it->second;
+          logger() << LogTags::debug << "Passing ReadLhaBlock option  "<< entry.name  << " scale " << scale << " parameters" << entry.parameters <<" and dimension " << entry.dimension << " to vevacious" << EOM;
+          vevaciousPlusPlus.ReadLhaBlock(entry.name, scale , entry.parameters, entry.dimension );
         }  
 
         return vevaciousPlusPlus;
       }
 
-    // This function calls vevacious  either "Stable" or "Metastable".
+    /// Call vevacious, the result is either "Stable", "Metastable" or "Inconclusive" in case
+    /// a vevacious run failed for some reason
     void helper_run_vevacious(vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus &vevaciousPlusPlus,VevaciousResultContainer& result, std::string panic_vacuum, std::string inputPath)
     {
        
@@ -698,7 +700,7 @@ namespace Gambit
         thermalProbability = vevaciousPlusPlus.GetThermalProbability();
 
         // decide how to deal with different vevacious outcomes
-        // here -1 from Vevacious Means that the point is stable. 
+        // here -1 from Vevacious means that the point is stable. 
         if(lifetime == -1 && thermalProbability == -1 )
         { 
             lifetime = 3.0E+100;
@@ -716,6 +718,7 @@ namespace Gambit
         cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
         cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
         std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
+        cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
    
         // return a vector containing the results from vevacious, these are filled
         // in any successfully run case with the entries
@@ -731,26 +734,25 @@ namespace Gambit
         std::cout << "VEVACIOUS RESULT size "<< BounceActions_vec.size() << endl;
 
         // set calculated bounce actions values & the threshold if they were calculated
-        // bool false means that we are not setting the thermal values here
         for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii) 
         {
           std::cout << "Setting bounceActionThreshold_[" << ii << "]"<< BounceActions_vec.at(ii) << '\n'; 
           result.set_results(panic_vacuum, "bounceActionThreshold_[" + std::to_string(ii) + "]", BounceActions_vec.at(ii));
         }
 
+        // set calculated thermal bounce actions values & the threshold if they were calculated
         for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii) 
         {
           std::cout << "Setting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii) << '\n'; 
           result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
         }
-        cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
 
         result.set_results(panic_vacuum,"lifetime", lifetime);
         result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
     }
 
 
-    // decide how to deal with a failed vevacious run --> set lifetime and thermalProbability
+    // Decide how to deal with a failed vevacious run --> set lifetime and thermalProbability
     // conservatively to a value easy to identify in analysis
     void helper_catch_vevacious(VevaciousResultContainer& result, std::string panic_vacuum)
     {
@@ -770,7 +772,7 @@ namespace Gambit
     }
 
 
-    // This function gives back the result for absolute stability, either "Stable" or "Metastable".
+    /// Check stability of global vacuum of the potential with vevacious
     void check_vacuum_stability_vevacious_global(VevaciousResultContainer &result)
     {
         namespace myPipe = Pipes::check_vacuum_stability_vevacious_global;
@@ -780,7 +782,7 @@ namespace Gambit
         std::string panic_vacuum = "global";
         result.clear_results(panic_vacuum);
         
-        // read in option how often you want to re-run vevacious in case you get an INCONCLUSIVE RESULT
+        // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
         static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
         static bool firstrun = true;
         if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;}
@@ -818,12 +820,11 @@ namespace Gambit
               helper_catch_vevacious(result, panic_vacuum);
               logger() << "Error occurred: " << e.what() << EOM;
           }
-
           trial += 1;
         }
     }
 
-    // This function gives back the result for absolute stability, either "Stable" or "Metastable".
+    /// Check stability of global vacuum of the potential with vevacious
     void check_vacuum_stability_vevacious_nearest(VevaciousResultContainer &result)
     {
         namespace myPipe = Pipes::check_vacuum_stability_vevacious_nearest;
@@ -833,7 +834,7 @@ namespace Gambit
         std::string panic_vacuum = "nearest";
         result.clear_results(panic_vacuum);
 
-                // read in option how often you want to re-run vevacious in case you get an INCONCLUSIVE RESULT
+        // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
         static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
         static bool firstrun = true;
         if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;}
@@ -871,7 +872,6 @@ namespace Gambit
               helper_catch_vevacious(result, panic_vacuum);
               logger() << "Error occurred: " << e.what() << EOM;
           }
-
           trial += 1;
         }
     }

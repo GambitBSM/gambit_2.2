@@ -42,10 +42,18 @@ namespace Gambit
 
     }
 
-    void SpectrumEntriesForVevacious::add_entry (std::string name, vec_pair_int_dbl vec, int setting)
-    {
-        pair_int_spectrum_vec pair = make_pair(setting, vec);
-        spec_entry_map[name]= pair;
+    /// add a SpectrumEntry type to the 'spec_entry_map' map. GAMBIT will iterate through it and 
+    /// pass all contents to vevacious before it is called.
+    void SpectrumEntriesForVevacious::add_entry (std::string name, vec_pair_int_dbl parameters, int dimension)
+    { 
+        // create spectrum entry 
+        SpectrumEntry entry;
+        entry.name = name;
+        entry.parameters = parameters;
+        entry.dimension = dimension;
+
+        // .. and store it in map
+        spec_entry_map[entry.name]= entry;
     };
   }
 }

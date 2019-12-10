@@ -39,20 +39,34 @@ namespace Gambit
   namespace SpecBit
   {
 
-    // thisis the type we need to pass the spectrum entries to vevacious
+    // this vector of <int,double> pairs is the type the routine 'ReadLhaBlock' of vevacious uses to read
+    // in the passed parameters 
     typedef std::vector<std::pair<int,double>> vec_pair_int_dbl;
 
-    // each of the vectors defined above have another int-type setting that 
-    // needs to be passed to vevacious to read in the vector (don't know what it is...)
-    // so we need to safe this information as well to be able to read in the stuff properly
-    typedef std::pair<int,vec_pair_int_dbl> pair_int_spectrum_vec;
+    // create a spectrum entry type storing all information necessary for the vevacious function 'ReadLhaBlock'
+    // => store name, parameters & dimension of an entry
+    struct SpectrumEntry
+    {
+        std::string name;
+        vec_pair_int_dbl parameters;
+        int dimension;
+    };
 
-    // now the map to this horrible type
-    typedef std::map<std::string,pair_int_spectrum_vec> map_str_pair_int_spectrum_vec;
+    // typdef to avoid having to use 'struct SpectrumEntry' every time
+    typedef struct SpectrumEntry SpectrumEntry;
+
+    /// map mapping the name of a spectrum entry to the SpectrumEntry type. 
+    /// in principle one could just use a vector instead of a map. However, 
+    /// this requires a lot of caution to avoid filling up the vector with 
+    /// more & more entries with the same name but different parameters 
+    /// after one point is run so I thought this was the safer option
+    typedef std::map<std::string,SpectrumEntry> map_str_SpectrumEntry;
 
 
-    // => in the end we want a map looking something like this
-    // map[name] = [int other_setting, vector_pair_int_dbl]
+    /// class for setting & storing all spectrum entries of type SpectrumEntry 
+    /// that need to be passed to vevacious
+    /// also has some information about the input path and files that need to 
+    /// passed to vevacious before calling it
     class SpectrumEntriesForVevacious
     {
         public:
@@ -69,10 +83,10 @@ namespace Gambit
             std::string get_inputPath () {return inputPath;};
 
             // adds an entry to the spec_entry_map
-            void add_entry (std::string name, vec_pair_int_dbl vec, int setting);
+            void add_entry (std::string name, vec_pair_int_dbl vec, int dimension);
 
             // return spec_entry_map -> iterate through it to pass all entries to vevacious
-            map_str_pair_int_spectrum_vec get_spec_entry_map() {return spec_entry_map;};
+            map_str_SpectrumEntry get_spec_entry_map() {return spec_entry_map;};
 
         private:
             double scale;
@@ -81,7 +95,7 @@ namespace Gambit
             std::string inputFilename;
             std::string inputPath;
             vec_pair_int_dbl vec;
-            map_str_pair_int_spectrum_vec spec_entry_map;
+            map_str_SpectrumEntry spec_entry_map;
 
     };
 
@@ -99,10 +113,6 @@ namespace Gambit
         // clear all maps and set value of lifetime and thermalProbability to -1
         void clear_results(str panic_vaccum);
 
-        //void reset_results();
-        void vevacious_ran(){vevaciousRunFlag = true;};
-        void vevacious_ran_reset(){vevaciousRunFlag = false;};
-
         // setter functions for lifetime, thermal Prob & vectors containing bounce Actions & threshold
         void set_results (str panic_vaccum, str name, double val){result_map[panic_vaccum][name]=val;}
 
@@ -115,7 +125,6 @@ namespace Gambit
         double get_thermalProbability(str panic_vaccum) {return result_map[panic_vaccum]["thermalProbability"];};
         
       private:
-        bool vevaciousRunFlag;  
         map_str_map_str_dbl result_map;   
     };
   }
