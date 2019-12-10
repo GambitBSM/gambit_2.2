@@ -153,6 +153,7 @@
     START_FUNCTION(SpecBit::VevaciousResultContainer)
     DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
     DEPENDENCY(init_vevacious, std::string)
+    NEEDS_CLASSES_FROM(vevacious, default)
   #undef FUNCTION
   #undef CAPABILITY
   
@@ -164,6 +165,7 @@
     START_FUNCTION(SpecBit::VevaciousResultContainer)
     DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
     DEPENDENCY(init_vevacious, std::string)
+    NEEDS_CLASSES_FROM(vevacious, default)
   #undef FUNCTION
   #undef CAPABILITY
 
