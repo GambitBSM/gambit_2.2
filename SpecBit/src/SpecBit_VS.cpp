@@ -1144,6 +1144,9 @@ namespace Gambit
                         "      <NonDsbRollingToDsbScalingFactor>\n"
                         "        4.0\n"
                         "      </NonDsbRollingToDsbScalingFactor>\n"
+                        "      <GlobalIsPanic>\n"
+                        "        " + opts.at("globalIsPanic") + "\n"
+                        "      </GlobalIsPanic>\n"
                         "    </ConstructorArguments>\n"
                         "  </PotentialMinimizerClass>\n"
                         "</VevaciousPlusPlusObjectInitialization>\n";
