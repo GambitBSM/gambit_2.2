@@ -202,23 +202,37 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
             "{{\n"
             "setName(\"{0}\");\n"
             "\n"
-            # TODO generate list of sizes required from the parameters.
-            "std::vector<int> scalar = initVector(1);"
-            " // i.e. get(Par::Tag, \"name\")\n"
-            "std::vector<int> v2     = initVector(2);"
-            " // i.e. get(Par::Tag, \"name\", i)\n"
-            "std::vector<int> v3     = initVector(3);   // \"\n"
-            "std::vector<int> v4     = initVector(4);   // \"\n"
-            "std::vector<int> v5     = initVector(5);   // \"\n"
-            "std::vector<int> v6     = initVector(6);   // \"\n"
-            "std::vector<int> m2x2   = initVector(2,2);"
-            " // i.e. get(Par::Tag, \"name\", i, j)\n"
-            "std::vector<int> m3x3   = initVector(3,3); // \"\n"
-            "std::vector<int> m4x4   = initVector(4,4); // \"\n"
-            "std::vector<int> m5x5   = initVector(5,5); // \"\n"
-            "std::vector<int> m6x6   = initVector(6,6); // \"\n"
-            "\n"
     ).format(gambit_model_name)
+
+    # Extract all shapes from here
+    shapes = sorted(list(set([mp.shape for mp in model_parameters])), 
+                             reverse=True)
+
+    # Scalars first...
+    if "scalar" in shapes:
+        towrite += (
+                "std::vector<int> scalar = initVector(1);"
+                " // i.e. get(Par::Tag, \"name\")\n"
+        )
+
+    for shape in shapes:
+        if re.search(r'v\d', shape):
+            towrite += (
+                    "std::vector<int> {0}     = initVector({1});"
+                    " // i.e. get(Par::Tag, \"name\", i)\n"
+            ).format(shape, shape[1:])
+            continue
+        elif re.search(r'm\dx\d', shape):
+            towrite += (
+                    "std::vector<int> {0}  = initVector({1});"
+                    " // i.e. get(Par::Tag, \"name\", i, j)\n"
+            ).format(shape, shape[1:])
+            continue
+        elif shape == "scalar": continue
+        else:
+            raise GumError(("Shape {0} not recognised...").format(shape))
+
+    towrite += "\n"
 
     # Now add each parameter to the model file.
     for i in np.arange(len(model_parameters)):
