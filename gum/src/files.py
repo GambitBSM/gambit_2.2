@@ -100,6 +100,16 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
     Adds a new FUNCTION to an existing CAPABILITY in a rollcall header.
     """
 
+    print contents
+
+    # Get the actual function name from the contents
+    fpat = r'#define FUNCTION\s*(.*)\s*'
+    s = re.search(fpat, contents)
+    function = s.group(1) if s else ""
+    if not function:
+        raise GumError(("No FUNCTION found in contents of amend_rollcall for "
+                        "CAPABILITY {0}!").format(capability))
+
     module.strip('/')
 
     if not filename:
@@ -139,7 +149,7 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
 
         amend_file(filename, module, contents, no-1, reset_dict,
                    is_capability = True, capability = capability, 
-                   function = contents)
+                   function = function)
 
     else:
         raise GumError(("\n\nCapability {0} not found in "
@@ -267,7 +277,7 @@ def amend_file(filename, module, contents, line_number, reset_dict,
     """
     Amends a file in a specified location with 'contents', starting
     from a given line number.
-    If it's a capability then add the capability and function
+    If it's a capability then add the capability and function names.
     """
 
     location = full_filename(filename, module)
@@ -603,6 +613,7 @@ def revert(reset_file):
 
                 for entry in entries:
                     capability, function = entry.split('|')
+                    print entry
                     print((
                            "Removing FUNCTION: {0}, in CAPABILITY: {1}, in "
                            "file {2}..."
@@ -611,7 +622,7 @@ def revert(reset_file):
                     # 1. Find the FUNCTION within the CAPABILITY
                     func_line = find_string("","",function,filename)
                     if not func_line[0]:
-                        print(("Tried deleting the FUNCTION {0} from "
+                        print(("Tried deleting the FUNCTION {0}:\n from "
                               "file {1}, but I could not find it -- "
                               "perhaps it has already been removed?"
                               ).format(function, filename))
@@ -693,10 +704,11 @@ def revert(reset_file):
                     text = text.replace(string, '')
                 # Otherwise assume someone has messed with it
                 else:
-                    print(("Tried deleting the following entry from "
-                           "{0}, but I could not find it:\n\n{1}\n\n"
-                           "Perhaps it has already been removed."
-                           ).format(filename, string))
+                    print()
+                    # print(("Tried deleting the following entry from "
+                    #        "{0}, but I could not find it:\n\n{1}\n\n"
+                    #        "Perhaps it has already been removed."
+                    #        ).format(filename, string))
 
             # Write the new amended file
             new_file = open(temp_file, 'w')
@@ -826,7 +838,8 @@ def drop_mug_file(mug_file, contents):
         yaml.dump(new_contents, f, default_flow_style=False)
 
 
-def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
+def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
+                   spectrum):
     """
     Drops an example YAML file with all decays of a new model
     added.
@@ -836,7 +849,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "####################################################################\n"
         "## GAMBIT configuration for a random scan of the {0} model\n"
         "##\n"
-        "## Includes simply the decays of the new model.\n"
+        "## Simply prints the spectrum of the new model.\n"
         "####################################################################\n"
         "\n"
         "\n"
@@ -905,30 +918,23 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "\n"
         "    random:\n"
         "      plugin: random\n"
-        "      point_number: 10\n"
+        "      point_number: 1\n"
         "      like:  LogLike\n"
         "\n"
         "ObsLikes:\n"
         "\n"
         "  - purpose:      Observable\n"
-        "    capability:   decay_rates\n"
-        "    type:         DecayTable\n"
-        "    printme:      false\n"
+        "    capability:   {1}\n"
+        "    type:         map_str_dbl\n"
         "\n"
         "Rules:\n"
+        "  # None needed\n"
         "\n"
-        "  # Choose to get decays from DecayBit proper, not from an SLHA file."
-        "\n"
-        "  - capability: decay_rates\n"
-        "    function: all_decays\n"
         "Logger:\n"
         "\n"
         "  redirection:\n"
         "    [Debug] : \"debug.log\"\n"
         "    [Default] : \"default.log\"\n"
-        "    [DecayBit] : \"DecayBit.log\"\n"
-        "    [PrecisionBit] : \"PrecisionBit.log\"\n"
-        "    [ColliderBit] : \"ColliderBit.log\"\n"
         "    [SpecBit] : \"SpecBit.log\"\n"
         "    [Dependency Resolver] : \"dep_resolver.log\"\n"
         "\n"
@@ -945,9 +951,10 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "\n"
         "  debug: false\n"
         "\n"
-    ).format(model_name)
+    ).format(model_name, spectrum)
 
-    write_file(model_name + '.yaml', 'yaml_files', towrite, reset_contents)
+    write_file(model_name + '_example.yaml', 'yaml_files', 
+               towrite, reset_contents)
 
 def write_config_file(outputs, model_name, reset_contents):
     """

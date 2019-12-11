@@ -778,10 +778,9 @@ if args.file:
             write_vevacious_rollcall(gum.name, gum.spec, reset_contents)        
 
         # Write a simple YAML file.
-        if decaybit: 
-            drop_yaml_file(gum.name, parameters, add_higgs, reset_contents)
-            print(("GUM has dropped a test YAML file at "
-                   "$GAMBIT/yaml_files/{0}.yaml!").format(gum.name))
+        drop_yaml_file(gum.name, parameters, add_higgs, reset_contents,gum.spec)
+        print(("\nGUM has dropped a test YAML file at "
+               "$GAMBIT/yaml_files/{0}_example.yaml!").format(gum.name))
 
         # Write a config file to make compilation easier
         write_config_file(output_opts, gum.name, reset_contents)
