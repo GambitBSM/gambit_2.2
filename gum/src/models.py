@@ -38,6 +38,11 @@ def get_model_parameters(parameters, partlist) :
             if not (param.block != None and param.block.endswith("IN")) : 
                 model_parameters.append(param)
 
+
+    # Replace all trailing + and - with pm
+    for param in parameters:
+      param.name = re.sub(r'(.*)[-+]', r'\1pm', param.name)
+
     return model_parameters
 
 def get_model_par_name(paramname, parameters) :
