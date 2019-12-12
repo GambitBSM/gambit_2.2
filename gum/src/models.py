@@ -224,9 +224,9 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
             continue
         elif re.search(r'm\dx\d', shape):
             towrite += (
-                    "std::vector<int> {0}  = initVector({1});"
+                    "std::vector<int> {0}  = initVector({1},{2});"
                     " // i.e. get(Par::Tag, \"name\", i, j)\n"
-            ).format(shape, shape[1:])
+            ).format(shape, shape[1], shape[3])
             continue
         elif shape == "scalar": continue
         else:
