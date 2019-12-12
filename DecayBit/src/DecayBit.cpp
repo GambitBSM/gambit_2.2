@@ -1008,6 +1008,8 @@ namespace Gambit
       using namespace Pipes::stop_1_decays;
       mass_es_pseudonyms psn = *(Dep::SLHA_pseudonyms);
 
+      static const bool allow_offshell_modes = runOptions->getValueOrDef<bool>(true, "allow_offshell_modes_in_decay_table");
+      
       result.calculator = BEreq::cb_sd_stopwidth.origin();
       result.calculator_version = BEreq::cb_sd_stopwidth.version();
 
@@ -1058,6 +1060,23 @@ namespace Gambit
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_stop3body->brstelsbnu(1,1) : 0.0), 0.0, psn.isb1, "mu+", "nu_mu");
       result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_stop3body->brstelsbnu(1,2) : 0.0), 0.0, psn.isb2, "mu+", "nu_mu");
 
+      if (BEreq::cb_sd_stop4body->br4bodoffshelltau > BEreq::cb_sd_stop3body->brstopw(1,1))
+      {
+        // Take the total 4-body BR(~t_1 -->  ~chi0_1 b f f') and assign to the off-shell mode BR(~t_1 -->  ~chi0_1 b W(*))
+        if(allow_offshell_modes)
+        {      
+          result.set_BF((result.width_in_GeV > 0 ? BEreq::cb_sd_stop4body->br4bodoffshelltau : 0.0), 0.0, "~chi0_1", "b", "W+");
+        }
+        // This is a temp solution
+        else
+        {
+          result.set_BF((result.width_in_GeV > 0 ? 0.1071 * BEreq::cb_sd_stop4body->br4bodoffshelltau : 0.0), 0.0, "~chi0_1", "b", "e+", "nu_e");
+          result.set_BF((result.width_in_GeV > 0 ? 0.1063 * BEreq::cb_sd_stop4body->br4bodoffshelltau : 0.0), 0.0, "~chi0_1", "b", "mu+", "nu_mu");
+          result.set_BF((result.width_in_GeV > 0 ? 0.1138 * BEreq::cb_sd_stop4body->br4bodoffshelltau : 0.0), 0.0, "~chi0_1", "b", "tau+", "nu_tau");
+          result.set_BF((result.width_in_GeV > 0 ? 0.6741 * BEreq::cb_sd_stop4body->br4bodoffshelltau : 0.0), 0.0, "~chi0_1", "b", "hadron", "hadron");
+        }
+      }
+      
       check_width(LOCAL_INFO, result.width_in_GeV, runOptions->getValueOrDef<bool>(false, "invalid_point_for_negative_width"));
     }
 
