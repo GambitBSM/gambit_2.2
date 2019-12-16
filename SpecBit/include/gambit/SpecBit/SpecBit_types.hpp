@@ -111,10 +111,11 @@ namespace Gambit
         VevaciousResultContainer(){};
 
         // clear all maps and set value of lifetime and thermalProbability to -1
-        void clear_results(str panic_vaccum);
+        void clear_results(const str panic_vaccum, int pathFinder_number);
 
         // setter functions for lifetime, thermal Prob & vectors containing bounce Actions & threshold
         void set_results (str panic_vaccum, str name, double val){result_map[panic_vaccum][name]=val;}
+        void add_straightPathGoodEnough(str panic_vacuum);
 
         // return map containing results for nearest/global run
         map_str_dbl get_nearest_results() {return result_map["nearest"];}

@@ -151,6 +151,7 @@
   START_CAPABILITY
     #define FUNCTION check_vacuum_stability_vevacious_global
     START_FUNCTION(SpecBit::VevaciousResultContainer)
+    //BACKEND_REQ(get_pathFinder_number,(vevtag), int, ())
     DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
     DEPENDENCY(init_vevacious, std::string)
     NEEDS_CLASSES_FROM(vevacious, default)
@@ -163,6 +164,7 @@
   START_CAPABILITY
     #define FUNCTION check_vacuum_stability_vevacious_nearest
     START_FUNCTION(SpecBit::VevaciousResultContainer)
+    //BACKEND_REQ(get_pathFinder_number,(vevtag), int, ())
     DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
     DEPENDENCY(init_vevacious, std::string)
     NEEDS_CLASSES_FROM(vevacious, default)

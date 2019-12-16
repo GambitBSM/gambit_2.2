@@ -747,6 +747,13 @@ namespace Gambit
           result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
         }
 
+        // add entry 'straightPathGoodEnough' to result map
+        // -> -1 if no bounce actions calculated
+        // ->  1 if threshold > straightPath
+        // ->  0 else
+        // Note that this has to be done after the bounceActionThreshold results are set
+        result.add_straightPathGoodEnough(panic_vacuum);
+
         result.set_results(panic_vacuum,"lifetime", lifetime);
         result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
     }
@@ -779,8 +786,12 @@ namespace Gambit
 
         // reset all entries of the of VevaciousResultContainer map holding the results
         // to avoid that any value could be carried over from a previous calculated point
-        std::string panic_vacuum = "global";
-        result.clear_results(panic_vacuum);
+        static const std::string panic_vacuum = "global";
+        // This is the number of different pathFinders implemented in vevacious. It should be 
+        // returned by a BE convenience function, I tried to do it but didn't manage to 
+        // with the BOSS stuff -- that should probably be fixed  # todo 
+        static int pathFinder_number = 2;
+        result.clear_results(panic_vacuum, pathFinder_number);
         
         // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
         static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
@@ -831,8 +842,12 @@ namespace Gambit
 
         // reset all entries of the of VevaciousResultContainer map holding the results
         // to avoid that any value could be carried over from a previous calculated point
-        std::string panic_vacuum = "nearest";
-        result.clear_results(panic_vacuum);
+        static const std::string panic_vacuum = "nearest";
+        // This is the number of different pathFinders implemented in vevacious. It should be 
+        // returned by a BE convenience function, I tried to do it but didn't manage to 
+        // with the BOSS stuff -- that should probably be fixed  # todo 
+        static int pathFinder_number = 2;
+        result.clear_results(panic_vacuum, pathFinder_number);
 
         // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
         static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
