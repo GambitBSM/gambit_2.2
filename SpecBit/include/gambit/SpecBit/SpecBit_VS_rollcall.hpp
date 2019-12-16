@@ -141,7 +141,7 @@
     START_FUNCTION(SpecBit::SpectrumEntriesForVevacious)
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
     DEPENDENCY(init_vevacious, std::string)
-    ALLOW_MODELS(MSSM, CMSSM)
+    ALLOW_MODELS(MSSM, CMSSM, NUHM2) // (JR) I don't know which models should or should not be allowed here, best to check with Eliel
   #undef FUNCTION
   #undef CAPABILITY
  

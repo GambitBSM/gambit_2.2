@@ -37,9 +37,21 @@ namespace Gambit
       std::cout << " VevaciousResultContainer clearing all entries for " << panic_vacuum << std::endl;
       result_map[panic_vacuum]["lifetime"] = -1;                
       result_map[panic_vacuum]["thermalProbability"] = -1;
-      result_map[panic_vacuum]["bounceActionThreshold_[0]"] = -1;  
-      result_map[panic_vacuum]["bounceActionThresholdThermal_[0]"] = -1;
 
+      // reset all bounceActionThreshold (non-thermal and thermal) entries to -1
+      static std::vector<std::string> bounceAction = {"bounceActionThreshold", "bounceActionThresholdThermal"};
+      // maximum length of bounce action vector with currenct vevacious interface
+      static int max_length = 4;
+
+      // loop through thermal/non-thermal entries & vector length
+      for(auto&& action_str: bounceAction)
+      {
+        for(int ii =0; ii < max_length; ii ++)
+        {
+          result_map[panic_vacuum][ action_str+"_["+std::to_string(ii)+"]"] = -1;  
+        }
+      }
+      
     }
 
     /// add a SpectrumEntry type to the 'spec_entry_map' map. GAMBIT will iterate through it and 
