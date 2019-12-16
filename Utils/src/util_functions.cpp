@@ -33,9 +33,12 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <libgen.h>
+#include <unistd.h>
 
 /// Gambit
 #include "gambit/Utils/util_functions.hpp"
+#include "gambit/cmake/cmake_variables.hpp"
+#include "gambit/Utils/mpiwrapper.hpp"
 
 
 namespace Gambit
@@ -45,6 +48,18 @@ namespace Gambit
   {
 
     const char* whitespaces[] = {" ", "\t", "\n", "\f", "\r"};
+
+    /// Return the path to the run-specific scratch directory
+    const str& runtime_scratch()
+    {
+      #ifdef WITH_MPI
+        static const str master_procID = std::to_string(GMPI::Comm().MasterPID());
+      #else
+        static const str master_procID = std::to_string(getpid());
+      #endif
+      static const str path = ensure_path_exists(GAMBIT_DIR "/scratch/run_time/machine_" + std::to_string(gethostid()) + "/master_process_" + master_procID + "/");
+      return path;
+    }
 
     /// Split a string into a vector of strings using a delimiter,
     /// and remove any whitespace around the delimiters.
@@ -197,6 +212,16 @@ namespace Gambit
             if (tolower(a[i]) != tolower(b[i]))
                 return false;
         return true;
+    }
+
+    /// Convert a whole string to lowercase
+    std::string strtolower(const std::string& a)
+    {
+        unsigned int sz = a.size();
+        std::string b = a;
+        for (unsigned int i = 0; i < sz; ++i)
+        { b[i] = tolower(a[i]); }
+        return b;
     }
 
     /// Ensure that a path exists (and then return the path, for chaining purposes)
@@ -394,7 +419,7 @@ namespace Gambit
           }
           else
           {
-             if (tolower(prefix[i]) != tolower(str[i])) return false; 
+             if (tolower(prefix[i]) != tolower(str[i])) return false;
           }
       }
       return true;

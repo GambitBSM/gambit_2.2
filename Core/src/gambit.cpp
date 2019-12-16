@@ -36,6 +36,7 @@ void do_cleanup()
 /// Main GAMBIT program
 int main(int argc, char* argv[])
 {
+
   std::set_terminate(terminator);
   cout << std::setprecision(Core().get_outprec());
 
@@ -155,6 +156,9 @@ int main(int argc, char* argv[])
 
       // Set up the printer manager for redirection of scan output.
       Printers::PrinterManager printerManager(iniFile.getPrinterNode(),Core().resume);
+
+      // Assign printer manager to a global variable from which it can be retrieved in module functions that need it
+      set_global_printer_manager(&printerManager);
 
       // Set up dependency resolver
       DRes::DependencyResolver dependencyResolver(Core(), Models::ModelDB(), iniFile, Utils::typeEquivalencies(), *(printerManager.printerptr));
@@ -333,7 +337,7 @@ int main(int argc, char* argv[])
   } // End main scope; want to destruct all communicators before MPI_Finalize() is called
 
   #ifdef WITH_MPI
-  if (allow_finalize) 
+  if (allow_finalize)
   {
       logger()<<"Calling MPI_Finalize..."<<EOM;
       GMPI::Finalize();
@@ -341,7 +345,7 @@ int main(int argc, char* argv[])
   }
   else
   {
-      logger()<<"MPI_Finalize has been disabled (e.g. due to an error) and will not be called."<<EOM; 
+      logger()<<"MPI_Finalize has been disabled (e.g. due to an error) and will not be called."<<EOM;
   }
   #endif
 
