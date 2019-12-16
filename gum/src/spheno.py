@@ -604,7 +604,7 @@ class SPhenoParameter:
 def write_spheno_frontends(model_name, parameters, particles, flags, 
                            spheno_path, output_dir, blockparams, gambit_pdgs, 
                            mixings, reality_dict, sphenodeps, bcs, 
-                           charged_higgses, neutral_higgses):
+                           charged_higgses, neutral_higgses, fullmodelname):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -616,9 +616,6 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
     # Convert the arguments to GAMBIT types
     type_dictionary = get_fortran_shapes(arguments)
 
-    # Add the new types to backend_types
-    backend_types, linenum = add_to_spheno_backend_types(type_dictionary)
-
     # Get all of the variables used in SPheno so we can store them as 
     # BE_VARIABLES. Keep track of those used for HiggsBounds too.
     variables, hb_variables = harvest_spheno_model_variables(spheno_path, 
@@ -628,6 +625,10 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
     # Convert these to GAMBIT types too
     variable_dictionary = get_fortran_shapes(variables)
     hb_variable_dictionary = get_fortran_shapes(hb_variables)
+
+    # Add the new types to backend_types
+    backend_types, linenum = add_to_spheno_backend_types(type_dictionary, 
+                                                         variable_dictionary)
 
     # Get the indices for the mass_uncertainties
     mass_uncertainty_dict = get_mass_uncert(spheno_path, model_name)
@@ -639,7 +640,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                            gambit_pdgs, mixings, reality_dict,
                                            sphenodeps, hb_variables, bcs,
                                            charged_higgses, neutral_higgses,
-                                           mass_uncertainty_dict)
+                                           mass_uncertainty_dict, fullmodelname)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -711,7 +712,7 @@ def get_fortran_shapes(parameters):
 
     return type_dictionary
 
-def add_to_spheno_backend_types(type_dictionary):
+def add_to_spheno_backend_types(type_dictionary, variable_dictionary):
     """
     Checks all new types are in the SPheno backend_types.
     """
@@ -719,6 +720,8 @@ def add_to_spheno_backend_types(type_dictionary):
     # New types from the harvesting
     types = []
     for t in type_dictionary.values():
+        if t.startswith('Farray_'): types.append(t)   
+    for t in variable_dictionary.values():
         if t.startswith('Farray_'): types.append(t)
 
     # Remove dupes
@@ -1162,10 +1165,10 @@ def make_spheno_decay_tables(spheno_path, model_name):
 # writing
 
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
-                              particles, parameters, blockparams, gambit_pdgs, mixings,
-                              reality_dict, sphenodeps, hb_variables, bcs,
-                              charged_higgses, neutral_higgses,
-                              mass_uncertainty_dict):
+                              particles, parameters, blockparams, gambit_pdgs, 
+                              mixings, reality_dict, sphenodeps, hb_variables,
+                              bcs, charged_higgses, neutral_higgses,
+                              mass_uncertainty_dict, fullmodelname):
 
     """
     Writes source for 
@@ -1181,9 +1184,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # Headers, macros and callback function
     towrite += (
             "#include \"gambit/Backends/frontend_macros.hpp\"\n"
-            "#include \"gambit/Backends/frontends/SARAHSPheno_{0}_{1}.hpp\"\n"
+            "#include \"gambit/Backends/frontends/SARAHSPheno_{2}_{1}.hpp\"\n"
             "#include \"gambit/Elements/spectrum_factories.hpp\"\n"
-            "#include \"gambit/Models/SimpleSpectra/{0}SimpleSpec.hpp\"\n"
+            "#include \"gambit/Models/SimpleSpectra/{2}SimpleSpec.hpp\"\n"
             "#include \"gambit/Utils/version.hpp\"\n"
             "\n"
             "#define BACKEND_DEBUG 0\n"
@@ -1201,7 +1204,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "}}\n"
             "END_BE_NAMESPACE\n"
             "\n"
-    ).format(model_name, safe_version)
+    ).format(model_name, safe_version, fullmodelname)
 
     # Convenience functions
     towrite += (
@@ -1886,7 +1889,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "}\n"
             "\n"
             "//Create Spectrum object\n"
-            "Spectrum spectrum = spectrum_from_SLHAea<'+model_name+'SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n"
+            "Spectrum spectrum = spectrum_from_SLHAea<"+model_name+"SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n"
             "\n"
             "return spectrum;\n"
             "\n"
@@ -1916,6 +1919,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         # Subtract 1 since A starts at (2), not (1)
         numA0 = ( (int(hb_variables["rHB_P_VZ"].size)-1) 
                    if "rHB_S_VZ" in hb_variables else 0 )
+
+    # TODO don't write HiggsBounds output yet, until merges from NMSSM merged in
+    hboutput = False
 
     # Check there's more than 1 Higgs otherwise no need for this really. 
     if hboutput and (numh0 + numA0 > 1):
@@ -3236,3 +3242,53 @@ def write_spheno_frontend_header(model_name, function_signatures,
             print "Duplication of ", k, "- it appeared", v, "times."
 
     return indent(towrite)
+
+
+def write_spheno_cmake_entry(model_name, spheno_ver):
+    """
+    Writes a CMake entry for a new SPheno model.
+    """
+
+    towrite = (
+            "# SARAH-SPheno "+model_name+" model\n"
+            "set(name \"sarah-spheno\")\n"
+            "set(model \""+model_name+"\")\n"
+            "set(ver \""+spheno_ver+"\")\n"
+            "set(lib \"lib/libSPheno${model}.so\")\n"
+            "set(dl \"http://www.hepforge.org/archive/spheno/SPheno-"
+            "${ver}.tar.gz\")\n"
+            "set(md5 \"64787d6c8ce03cac38aec53d34ac46ad\")\n"
+            "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}"
+            "/${ver}/${model}\")\n"
+            "set(sarahdir \"${PROJECT_SOURCE_DIR}/Models/data/SARAH/"
+            "${model}/EWSB/SPheno\")\n"
+            "file(GLOB sarahfiles  \"${sarahdir}/[a-zA-Z0-9]*\")\n"
+            "string(REGEX REPLACE \"(-cpp)|(-fpp)\" \"\" SPheno_FLAGS "
+            "\"${BACKEND_Fortran_FLAGS}\") #SPheno hates the preprocessor\n"
+            "set(SPheno_FLAGS \"-c ${SPheno_FLAGS} -${FMODULE} ${dir}/include "
+            "-I${dir}/include\")\n"
+            "set(patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/"
+            "${ver}/${model}/patch_${name}_${ver}_${model}.dif\")\n"
+            "check_ditch_status(${name}_${model} ${ver} ${dir})\n"
+            "if(NOT ditched_${name}_${model}_${ver})\n"
+            "  ExternalProject_Add(${name}_${model}_${ver}\n"
+            "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}\n"
+            "             COMMAND ${CMAKE_COMMAND} -E make_directory "
+            "\"${dir}/${model}\"\n"
+            "             COMMAND cp -r \"${sarahfiles}\" \"${dir}/${model}\"\n"
+            "    SOURCE_DIR ${dir}\n"
+            "    BUILD_IN_SOURCE 1\n"
+            "    PATCH_COMMAND patch -p1 < ${patch}\n"
+            "    CONFIGURE_COMMAND \"\"\n"
+            "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} Model=${model} "
+            "F90=${CMAKE_Fortran_COMPILER} FFLAGS=\"${SPheno_FLAGS}\" ${lib}\n"
+            "    INSTALL_COMMAND \"\"\n"
+            "  )\n"
+            "  add_extra_targets(\"backend\" ${name}_${model} ${ver} ${dir} "
+            "${dl} cleanall)\n"
+            "  set_as_default_version(\"backend\" ${name}_${model} ${ver})\n"
+            "endif()\n"
+            "\n"
+    )
+
+    return towrite

@@ -341,6 +341,13 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             setter = "set_" + model_parameters[i].fullname
             getter = "get_" + model_parameters[i].fullname
 
+        # Replace all plusses and minuses with 'pm'
+        setter = setter.replace("-","pm").replace("+","pm")
+        getter = getter.replace("-","pm").replace("+","pm")
+        paramname = paramname.replace("-","pm").replace("+","pm")
+
+        print setter, getter, paramname
+
         x = SpecGetAndSet(shape, size, paramname, getter, setter)
         spectrumparameters.append(x)
 

@@ -12,6 +12,10 @@
 #          (sanjay.bloor12@imperial.ac.uk)
 #  \date 2017, 2018, 2019
 #
+#  \author Pat Scott
+#          (pat.scott@uq.edu.au)
+#  \date 2018 Dec, 2019 Jan
+#
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
 #  \date 2019 July, August
@@ -61,19 +65,34 @@ def check_backends(outputs):
     print("All backends found -- connecting to Mathematica!\n")
 
 
-def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version):
+def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version,
+                        fullpath = "", fullfile = ""):
     """
     Writes a backend patch (i.e. just a diff) from a pristine 
     and a modified version of a backend.
     """
+
     import subprocess
-    full_output_dir = output_dir+"/Backends/patches/"+backend+"/"+version
+
+    if fullpath:
+        full_output_dir = output_dir + "/" + fullpath
+    else:
+        full_output_dir = output_dir+"/Backends/patches/"+backend+"/"+version
+
     mkdir_if_absent(full_output_dir)
-    outfile = full_output_dir+"/patch_"+backend+"_"+version+".dif"
+
+    if fullfile:
+        outfile = full_output_dir+"/"+fullfile+".dif"
+    else:
+        outfile = full_output_dir+"/patch_"+backend+"_"+version+".dif"
+
+    print "outfile", outfile
+    
     pristine_parts = os.path.split(pristine_dir)
     cwd = os.getcwd()
     os.chdir(pristine_parts[0])
-    subprocess.call("diff -rupN "+pristine_parts[1]+" "+patched_dir+" > "+outfile, shell=True)
+    command = "diff -rupN "+pristine_parts[1]+" "+patched_dir+" > "+outfile
+    subprocess.call(command, shell=True)
     os.chdir(cwd)
 
 
@@ -106,7 +125,7 @@ def write_new_default_bossed_version(backend, version, output_dir):
                 comment_exists = True
         if not comment_exists:
             f_new.write("\n// Defaults added by GUM (do not remove this comment).\n")
-        f_new.write(signature+re.sub("\.", "_", version)+"\n")
+        f_new.write(signature+re.sub(r"\.", "_", version)+"\n")
 
 
 def add_to_backend_locations(backend_name, backend_location, version_number, reset_dict):
@@ -118,7 +137,8 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
     # backend_locations.yaml.default (as long as it hasn't been removed)
 
     if not os.path.isfile("./../config/backend_locations.yaml.default"):
-        raise GumError("backend_locations.yaml.default is missing. What have you done to GAMBIT!?")
+        raise GumError(("backend_locations.yaml.default is missing. What have "
+                        "you done to GAMBIT!?"))
 
     target = "backend_locations.yaml"
 
@@ -162,28 +182,3 @@ def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
     else:
         present, linenum = find_string("backends.cmake", "cmake", string_to_find)
         if present: amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)
-
-
-def write_backend_frontends(output_dir, model_name, backend_name, backend_version, header_content, src_content) :
-    """
-    Adds frontend headers and source files for backend to output directory
-    """
-
-    # Header and source directories
-    header_dir = output_dir + "/Backends/include/gambit/Backends/frontends/"
-    src_dir = output_dir + "/Backends/src/frontends/"
-
-    mkdir_if_absent(header_dir)
-    mkdir_if_absent(src_dir)
-
-    # Name of files (except extension)
-    clean_model_name = model_name.replace("-","")
-    safe_version = backend_version.replace(".","_")
-    filename = backend_name + "_" + clean_model_name + "_" + safe_version
-
-    # Write to files now
-    with open(header_dir + "/" + filename + ".hpp", 'w') as f_header :
-      f_header.write(header_content)
-
-    with open(src_dir + "/" + filename + ".cpp", 'w') as f_src :
-      f_src.write(src_content)

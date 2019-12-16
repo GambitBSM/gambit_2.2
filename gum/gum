@@ -67,6 +67,9 @@ if args.file:
         inputs = check_gum_file(args.file)
         gum, output_opts = fill_gum_object(inputs)
 
+        # SARAH removes hyphens and underscores for .f90 files...
+        clean_model_name = gum.name.replace('-','').replace('_','')
+
         # First, check the required backends are installed
         check_backends(output_opts)
 
@@ -361,9 +364,6 @@ if args.file:
 
         if output_opts.spheno:
 
-            # SARAH removes hyphens and underscores for .f90 files...
-            clean_model_name = gum.name.replace('-','').replace('_','')
-
             # Move SPheno files from SARAH to Outputs.
             copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR, 
                               outputs.get_sph())
@@ -377,10 +377,17 @@ if args.file:
             patch_spheno(clean_model_name, patched_spheno_dir, flags, 
                          bsm_particle_list)
 
+            fullpath = "Backends/patches/sarah-spheno/{0}/{1}".format(
+                                                               SPHENO_VERSION,
+                                                               gum.name)
+            fullfile = "patch_sarah-spheno_"+SPHENO_VERSION+"_"+gum.name.lower()
             # Create a diff vs. the out of the [SARAH]box
             write_backend_patch(output_dir, pristine_spheno_dir, 
-                                patched_spheno_dir, "spheno_"+gum.name.lower(), 
-                                SPHENO_VERSION)
+                                patched_spheno_dir, 
+                                "sarah-spheno",
+                                SPHENO_VERSION, 
+                                fullpath = fullpath,
+                                fullfile = fullfile)
 
             # Get the defs of any SPheno dependencies
             deps = spheno_dependencies(sphenodeps)
@@ -393,13 +400,11 @@ if args.file:
                                        patched_spheno_dir, output_dir, 
                                        blockparams, gambit_pdgs, mixings, 
                                        reality_dict, deps, bcs,
-                                       charged_higgses, neutral_higgses)
+                                       charged_higgses, neutral_higgses, 
+                                       gum.name)
 
-            # Write out the frontend header and source files
-            write_backend_frontends(output_dir, gum.name, "SARAHSPheno", 
-                                    SPHENO_VERSION, spheno_header, spheno_src)
-     
-            # TODO add this to reset_dict (^amend that function above)
+            # cmake entry
+            spheno_cmake = write_spheno_cmake_entry(gum.name, SPHENO_VERSION)
 
             print("Writing SPheno decay table.")
             sph_decays = make_spheno_decay_tables(patched_spheno_dir, 
@@ -413,10 +418,8 @@ if args.file:
             # HiggsCouplingsTable
             # TODO needs NMSSM merging into gum
             # if len(higgses) > 1:
-            #     print("Writing HiggsCouplingsTable interface.")
             #     hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
             #                                        neutral_higgses, gambit_pdgs)
-            #     print("done")
 
         """
         CALCHEP
@@ -584,8 +587,6 @@ if args.file:
             print("Dry run finished.")
             print("")
             exit()
-        #TODO: for now do not write anything, ever
-        #exit()
             
         # Have we created a new Pythia backend?
         if output_opts.pythia:
@@ -763,6 +764,21 @@ if args.file:
 
         # SPheno
         if output_opts.spheno:
+            ver = SPHENO_VERSION
+            be = "SARAHSPheno_"+gum.name
+            be_loc = "sarah-spheno/{0}/{1}/lib/libSPheno{1}.so".format(ver,
+                                                                       gum.name)
+            f = "frontends/SARAHSPheno_{0}_{1}".format(gum.name,
+                                                       ver.replace('.','_'))
+            write_file(f+".cpp", m, spheno_src, reset_contents)
+            write_file(f+".hpp", m, spheno_header, reset_contents)
+            add_to_backend_locations(be, be_loc, ver, reset_contents)
+            add_to_backends_cmake(spheno_cmake, reset_contents, 
+                                  string_to_find="# gm2calc")
+            patchloc = (
+                     "sarah-spheno/{0}/{1}/patch_sarah-spheno_{0}_{2}.dif"
+            ).format(ver, gum.name, gum.name.lower())
+            copy_file(patchloc, m, output_dir, reset_contents, existing = False)
             # SPheno DecayTable
             filename = (
                 "data/SARAHSPheno_{0}_{1}_decays_info.dat"

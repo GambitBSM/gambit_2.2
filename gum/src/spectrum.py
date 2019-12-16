@@ -184,11 +184,12 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
 
         # If we have a non-SM like number of Higgses then write an interface
         # to HiggsCouplingTable via SPheno 
-        if len(neutral_higgses+charged_higgses) > 1:
-            towrite += write_spheno_higgsbounds_interface(gambit_model_name, 
-                                                          gambit_pdgs,
-                                                          neutral_higgses,
-                                                          charged_higgses)
+        # TODO when NMSSM merged in
+        # if len(neutral_higgses+charged_higgses) > 1:
+        #     towrite += write_spheno_higgsbounds_interface(gambit_model_name, 
+        #                                                   gambit_pdgs,
+        #                                                   neutral_higgses,
+        #                                                   charged_higgses)
 
     # Printing, fill_map_from_spectrum, and wrap it up. 
     towrite += (
@@ -297,7 +298,7 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
                 "START_FUNCTION(Spectrum)\n"
                 "ALLOW_MODELS({0})\n"
                 "DEPENDENCY(SMINPUTS, SMInputs)\n"
-                "BACKEND_REQ({0}_spectrum, (libSPheno{0}), int, (Spectrum&, const Finputs&) )\n"
+                "BACKEND_REQ(SARAHSPheno_{0}_spectrum, (libSPheno{0}), int, (Spectrum&, const Finputs&) )\n"
                 "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{0}))\n"
                 "#undef FUNCTION\n"
                 "\n"
@@ -339,8 +340,10 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
         "\n"
     ).format(model_name)
 
+    # TODO don't write HB output just yet
+    hboutput = False
 
-    if with_spheno and len(higgses) > 1:
+    if with_spheno and len(higgses) > 1 and hboutput:
         # Go through all Higgses and add the dependencies to the rollcall 
         # for known higgses.
         # If the user has extra higgses you will need to add additional 
@@ -473,8 +476,11 @@ def write_spheno_spectrum_src(model_name, is_susy):
             "inputs.options = myPipe::runOptions;\n"
             "\n"
             "// Retrieve any mass cuts\n"
-            "static Spectrum::cuts_info mass_cuts = Spectrum::"
-            "retrieve_mass_cuts(myPipe::runOptions);\n"
+            # "static Spectrum::cuts_info mass_cuts = Spectrum::"
+            # "retrieve_mass_cuts(myPipe::runOptions);\n"
+            "static const Spectrum::mc_info mass_cuts = myPipe::runOptions->"
+            "getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), \"mass_cut\""
+            ");\n"
             "\n"
             "// Get the spectrum from the Backend\n"
             "myPipe::BEreq::SARAHSPheno_{0}_spectrum(spectrum, inputs);\n"

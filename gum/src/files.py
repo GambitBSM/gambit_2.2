@@ -236,7 +236,8 @@ def write_file(filename, module, contents, reset_dict):
 
     print("File {} successfully created.".format(location))
 
-def copy_file(filename, module, output_dir, reset_dict, existing=True):
+def copy_file(filename, module, output_dir, reset_dict, 
+              existing=True):
     """
     Copies an output file in a specified location.
     """
@@ -518,7 +519,7 @@ def blame_gum(message):
             "///       *** Automatically created by GUM ***     \n"
             "///                                                \n"
             "///  \\author The GAMBIT Collaboration             \n"
-            "///  \date " +
+            "///  \\date " +
             datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") +
             "\n"
             "///                                                \n"
@@ -704,11 +705,10 @@ def revert(reset_file):
                     text = text.replace(string, '')
                 # Otherwise assume someone has messed with it
                 else:
-                    print()
-                    # print(("Tried deleting the following entry from "
-                    #        "{0}, but I could not find it:\n\n{1}\n\n"
-                    #        "Perhaps it has already been removed."
-                    #        ).format(filename, string))
+                    print(("Tried deleting the following entry from "
+                           "{0}, but I could not find it:\n\n{1}\n\n"
+                           "Perhaps it has already been removed."
+                           ).format(filename, string))
 
             # Write the new amended file
             new_file = open(temp_file, 'w')
