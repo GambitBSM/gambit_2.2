@@ -12,7 +12,7 @@
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
-///  \date 2019 July
+///  \date 2019 July, Dec
 ///  *********************************************
 
 #include <string>
@@ -33,8 +33,8 @@ namespace Gambit
     /// did not run successfully 
     void VevaciousResultContainer::clear_results(const str panic_vacuum, int pathFinder_number)
     { 
+      
       result_map[panic_vacuum].clear();
-      std::cout << " VevaciousResultContainer clearing all entries for " << panic_vacuum << std::endl;
       result_map[panic_vacuum]["lifetime"] = -1;                
       result_map[panic_vacuum]["thermalProbability"] = -1;
 
@@ -51,14 +51,36 @@ namespace Gambit
       // loop through thermal/non-thermal entries & vector length
       for(auto&& thermal: thermal_string)
       {
+        // reset straightPathGoodEnough
+        result_map[panic_vacuum]["straightPathGoodEnough"+thermal] = -1;
+
+        // reset bounce actions
         for(int ii =0; ii < max_length; ii ++)
         {
           result_map[panic_vacuum]["bounceActionThreshold"+thermal+"_["+std::to_string(ii)+"]"] = -1;  
         }
       }
-      
     }
 
+    /// add entries to vevacious result map
+    void VevaciousResultContainer::set_results(str panic_vaccum, str name, double val)
+    {
+        // for thermalProbability entry check if 
+        // == -1 -> hasn't been computed 
+        // == 0 -> set to a conservative value
+        // else: take log
+        if(name == "thermalProbability")
+        {
+          if     (val == 0) {val = -1e100;} 
+          else if(val == -1){val = -1;} 
+          else              {val = std::log(val);}
+        }
+
+        result_map[panic_vaccum][name]=val;
+    }
+
+    /// add information to vevacious result map whether the action of drawing a straight path between the 
+    /// physical & panic vacuum is already below the action threshold. 
     void VevaciousResultContainer::add_straightPathGoodEnough(str panic_vacuum)
     {
         // action threshold and action of straight path
@@ -85,7 +107,6 @@ namespace Gambit
 
           result_map[panic_vacuum]["straightPathGoodEnough"+thermal] = straightPathGoodEnough;
         }
-
     }
 
     /// add a SpectrumEntry type to the 'spec_entry_map' map. GAMBIT will iterate through it and 

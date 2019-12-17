@@ -19,7 +19,7 @@
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
-///  \date 2019 July
+///  \date 2019 July, Dec
 ///
 ///  *********************************************
 
@@ -56,7 +56,7 @@ namespace Gambit
     typedef struct SpectrumEntry SpectrumEntry;
 
     /// map mapping the name of a spectrum entry to the SpectrumEntry type. 
-    /// in principle one could just use a vector instead of a map. However, 
+    /// In principle one could just use a vector instead of a map. However, 
     /// this requires a lot of caution to avoid filling up the vector with 
     /// more & more entries with the same name but different parameters 
     /// after one point is run so I thought this was the safer option
@@ -64,8 +64,8 @@ namespace Gambit
 
 
     /// class for setting & storing all spectrum entries of type SpectrumEntry 
-    /// that need to be passed to vevacious
-    /// also has some information about the input path and files that need to 
+    /// that need to be passed to vevacious (scale, input filenames & paths as 
+    /// well as spectrum entries)
     /// passed to vevacious before calling it
     class SpectrumEntriesForVevacious
     {
@@ -90,13 +90,9 @@ namespace Gambit
 
         private:
             double scale;
-            int other_setting;
-            std::string name;
             std::string inputFilename;
             std::string inputPath;
-            vec_pair_int_dbl vec;
             map_str_SpectrumEntry spec_entry_map;
-
     };
 
 
@@ -113,8 +109,10 @@ namespace Gambit
         // clear all maps and set value of lifetime and thermalProbability to -1
         void clear_results(const str panic_vaccum, int pathFinder_number);
 
-        // setter functions for lifetime, thermal Prob & vectors containing bounce Actions & threshold
-        void set_results (str panic_vaccum, str name, double val){result_map[panic_vaccum][name]=val;}
+        // setter functions for results lifetime, thermal probability & bounce action vectors 
+        // straightPathGoodEnough checks wethere the action of drawing a straigh path between the 
+        // physical & panic vacuum is already below the action threshold. 
+        void set_results (str panic_vaccum, str name, double val);
         void add_straightPathGoodEnough(str panic_vacuum);
 
         // return map containing results for nearest/global run
