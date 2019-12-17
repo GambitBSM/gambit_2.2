@@ -30,6 +30,7 @@ import numpy as np
 from src import *
 
 from collections import defaultdict
+from distutils.dir_util import copy_tree
 
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
                                              "(GAMBIT Universal Models)")
@@ -380,7 +381,7 @@ if args.file:
             fullpath = "Backends/patches/sarah-spheno/{0}/{1}".format(
                                                                SPHENO_VERSION,
                                                                gum.name)
-            fullfile = "patch_sarah-spheno_"+SPHENO_VERSION+"_"+gum.name.lower()
+            fullfile = "patch_sarah-spheno_"+SPHENO_VERSION+"_"+gum.name
             # Create a diff vs. the out of the [SARAH]box
             write_backend_patch(output_dir, pristine_spheno_dir, 
                                 patched_spheno_dir, 
@@ -404,7 +405,8 @@ if args.file:
                                        gum.name)
 
             # cmake entry
-            spheno_cmake = write_spheno_cmake_entry(gum.name, SPHENO_VERSION)
+            spheno_cmake = write_spheno_cmake_entry(gum.name, SPHENO_VERSION,
+                                                    clean_model_name)
 
             print("Writing SPheno decay table.")
             sph_decays = make_spheno_decay_tables(patched_spheno_dir, 
@@ -766,8 +768,9 @@ if args.file:
         if output_opts.spheno:
             ver = SPHENO_VERSION
             be = "SARAHSPheno_"+gum.name
-            be_loc = "sarah-spheno/{0}/{1}/lib/libSPheno{1}.so".format(ver,
-                                                                       gum.name)
+            be_loc = (
+                   "sarah-spheno/{0}/{1}/lib/libSPheno{1}.so"
+            ).format(ver, clean_model_name)
             f = "frontends/SARAHSPheno_{0}_{1}".format(gum.name,
                                                        ver.replace('.','_'))
             write_file(f+".cpp", m, spheno_src, reset_contents)
@@ -775,9 +778,16 @@ if args.file:
             add_to_backend_locations(be, be_loc, ver, reset_contents)
             add_to_backends_cmake(spheno_cmake, reset_contents, 
                                   string_to_find="# gm2calc")
+            # Move SPheno files to Backend/patches/...
+            src = output_dir + "/SPheno/" + clean_model_name
+            dst = (
+                "../Backends/patches/sarah-spheno/{0}/{1}/unpatched"
+            ).format(ver, gum.name)
+            mkdir_if_absent(dst)
+            copy_tree(src, dst)
             patchloc = (
-                     "sarah-spheno/{0}/{1}/patch_sarah-spheno_{0}_{2}.dif"
-            ).format(ver, gum.name, gum.name.lower())
+                     "sarah-spheno/{0}/{1}/patch_sarah-spheno_{0}_{1}.dif"
+            ).format(ver, gum.name)
             copy_file(patchloc, m, output_dir, reset_contents, existing = False)
             # SPheno DecayTable
             filename = (

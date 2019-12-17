@@ -3244,7 +3244,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     return indent(towrite)
 
 
-def write_spheno_cmake_entry(model_name, spheno_ver):
+def write_spheno_cmake_entry(model_name, spheno_ver, clean_model_name):
     """
     Writes a CMake entry for a new SPheno model.
     """
@@ -3253,15 +3253,16 @@ def write_spheno_cmake_entry(model_name, spheno_ver):
             "# SARAH-SPheno "+model_name+" model\n"
             "set(name \"sarah-spheno\")\n"
             "set(model \""+model_name+"\")\n"
+            "set(cleanmodel \""+clean_model_name+"\")\n"
             "set(ver \""+spheno_ver+"\")\n"
-            "set(lib \"lib/libSPheno${model}.so\")\n"
+            "set(lib \"lib/libSPheno${cleanmodel}.so\")\n"
             "set(dl \"http://www.hepforge.org/archive/spheno/SPheno-"
             "${ver}.tar.gz\")\n"
             "set(md5 \"64787d6c8ce03cac38aec53d34ac46ad\")\n"
             "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}"
             "/${ver}/${model}\")\n"
-            "set(sarahdir \"${PROJECT_SOURCE_DIR}/Models/data/SARAH/"
-            "${model}/EWSB/SPheno\")\n"
+            "set(sarahdir \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/"
+            "${ver}/${model}/unpatched/\")\n"
             "file(GLOB sarahfiles  \"${sarahdir}/[a-zA-Z0-9]*\")\n"
             "string(REGEX REPLACE \"(-cpp)|(-fpp)\" \"\" SPheno_FLAGS "
             "\"${BACKEND_Fortran_FLAGS}\") #SPheno hates the preprocessor\n"
@@ -3274,13 +3275,14 @@ def write_spheno_cmake_entry(model_name, spheno_ver):
             "  ExternalProject_Add(${name}_${model}_${ver}\n"
             "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}\n"
             "             COMMAND ${CMAKE_COMMAND} -E make_directory "
-            "\"${dir}/${model}\"\n"
-            "             COMMAND cp -r \"${sarahfiles}\" \"${dir}/${model}\"\n"
+            "\"${dir}/${cleanmodel}\"\n"
+            "             COMMAND cp -r \"${sarahfiles}\" \"${dir}/"
+            "${cleanmodel}\"\n"
             "    SOURCE_DIR ${dir}\n"
             "    BUILD_IN_SOURCE 1\n"
             "    PATCH_COMMAND patch -p1 < ${patch}\n"
             "    CONFIGURE_COMMAND \"\"\n"
-            "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} Model=${model} "
+            "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} Model=${cleanmodel} "
             "F90=${CMAKE_Fortran_COMPILER} FFLAGS=\"${SPheno_FLAGS}\" ${lib}\n"
             "    INSTALL_COMMAND \"\"\n"
             "  )\n"
