@@ -24,6 +24,10 @@
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date Sep 2019
 ///
+///  \author Janina Renk
+///          (janina.renk@fysik.su.se)
+///  \date 2019 July, Dec
+///
 ///  *********************************************
 
 #ifdef WITH_MPI
@@ -429,6 +433,59 @@ namespace Gambit
       }
     }
 
+    /******************************************/
+    /* Vacuum stability likelihoods & results */
+    /******************************************/
+
+    /// Vacuum stability likelihood from a Vevacious run
+    /// calculating the lifetime of & tunneling probability to the global minimum
+    void get_likelihood_VS_global(double &result)
+    {
+        using namespace Pipes::get_likelihood_VS_global;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_global;
+        double lifetime =  vevacious_results.get_lifetime("global");
+
+        // This is based on the estimation of the past lightcone from 1806.11281
+        double conversion = (6.5821195e-25)/(31536000);
+        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
+    }
+
+    /// Vacuum stability likelihood from a Vevacious run
+    /// calculating the lifetime of & tunneling probability to the nearest minimum
+    void get_likelihood_VS_nearest(double &result)
+    {
+        using namespace Pipes::get_likelihood_VS_nearest;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_nearest;
+        double lifetime =  vevacious_results.get_lifetime("nearest");
+
+        // This is based on the estimation of the past lightcone from 1806.11281
+        double conversion = (6.5821195e-25)/(31536000);
+        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
+    }
+
+    /// get all results from VS as str to dbl map to easily print them
+    /// (global vacuum is panic)
+    void get_VS_results_global(map_str_dbl &result)
+    {
+        using namespace Pipes::get_VS_results_global;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_global;
+        result =  vevacious_results.get_global_results();
+    }
+
+    /// get all results from VS as str to dbl map to easily print them
+    /// (nearest vacuum is panic)
+    void get_VS_results_nearest(map_str_dbl &result)
+    {
+        using namespace Pipes::get_VS_results_nearest;
+        
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_nearest;
+        result =  vevacious_results.get_nearest_results();
+    }
+    
+
     /**********************/
     /* VEVACIOUS ROUTINES */
     /**********************/
@@ -451,6 +508,10 @@ namespace Gambit
             // Create a map of opts to pass to the helper function
             map_str_str opts;
 
+            // Generating a Random seed from Gambit random generator
+            std::string randomseed_gen = std::to_string(int(Random::draw() * 2 * 1987.));
+            
+            opts["phc_random_seed"] =               runOptions.getValueOrDef<std::string>(randomseed_gen, "phc_random_seed");
             opts["MinuitStrategy"] =                runOptions.getValueOrDef<std::string>("0", "minuit_strategy");
             opts["PotentialFunctionClassType"] =    runOptions.getValueOrDef<std::string>("FixedScaleOneLoopPotential", "potential_type");
             opts["homotopybackend"] =               runOptions.getValueOrDef<std::string>("hom4ps", "homotopy_backend");
@@ -475,116 +536,273 @@ namespace Gambit
         // Done.
     }
 
-    /// Vacuum stability likelihood from a Vevacious run
-    void get_likelihood_VS(double &result)
+    /// Execute the passing of the spectrum object (as SLHAea) to vevacious. It is a helper function and not a 
+    /// capability since this has to be executed before every single vevacious run. vevacious can run multiple times for 
+    /// a single point in parameter space depending on settings: 
+    ///   -> global and/or nearest minimum for tunneling requested? 
+    ///   -> multiple attempts for one vevacious run allowed?
+    vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus exec_pass_spectrum_to_vevacious(SpectrumEntriesForVevacious &pass_spectrum )
     {
-        using namespace Pipes::get_likelihood_VS;
         
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        double lifetime =  vevacious_results.get_lifetime();
+        // get inputFilename and initialise vevaciousPlusPlus object with it
+        static std::string inputFilename = pass_spectrum.get_inputFilename();
+        vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus(inputFilename);
 
-        // This is based on the estimation of the past lightcone from 1806.11281
-        double conversion = (6.5821195e-25)/(31536000);
-        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
-    }
+        // get scale and the map containing all spectrum entries that need to be passed to vevacious
+        double scale = pass_spectrum.get_scale();
+        map_str_SpectrumEntry spec_entry_map = pass_spectrum.get_spec_entry_map();
 
-    /// Thermal vacuum stability likelihood from a Vevacious run
-    void get_likelihood_VS_thermal(double &result)
-    {
-        using namespace Pipes::get_likelihood_VS_thermal;
-
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        double thermalProbability =  vevacious_results.get_thermalProbability();
-
-         if(thermalProbability == 0)
-         {
-             result = -1e100;
-         } else
-         {
-             result= std::log(thermalProbability);
-         }
-    }
-
-    /// Some debugging (printing) routines.
-
-    void print_VS_StraightPathGoodEnough(int &result)
-    {
-        using namespace Pipes::print_VS_StraightPathGoodEnough;
-        
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        // boolean false means that we are getting non-thermal values
-        double threshold = vevacious_results.get_bounceActionThreshold(false);
-        double straightPath = vevacious_results.get_bounceActionStraight(false);
-        
-        if(threshold == -1)
+        // iterate through map and call vevacious' 'ReadLhaBlock' to read spectrum entries
+        for (auto it=spec_entry_map.begin(); it!=spec_entry_map.end(); ++it) 
         {
-            // vevacious did not run
-            result = -1;
-        }
-        else if(threshold > straightPath)
-        {
-            // straight path was good enough
-            result = 1;
-        }
-        // straigh path was not good enough
-        else{result = 0;}
+          SpectrumEntry entry = it->second;
+          logger() << LogTags::debug << "Passing ReadLhaBlock option  "<< entry.name  << " scale " << scale << " parameters" << entry.parameters <<" and dimension " << entry.dimension << " to vevacious" << EOM;
+          vevaciousPlusPlus.ReadLhaBlock(entry.name, scale , entry.parameters, entry.dimension );
+        }  
 
-    }
+        return vevaciousPlusPlus;
+      }
+
+    /// Call vevacious, the result is either "Stable", "Metastable" or "Inconclusive" in case
+    /// a vevacious run failed for some reason
+    void helper_run_vevacious(vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus &vevaciousPlusPlus,VevaciousResultContainer& result, std::string panic_vacuum, std::string inputPath)
+    {
+       
+        double lifetime, thermalProbability;
+
+        //Checking if file exists, fastest method.
+        struct stat buffer; 
+        std::string HomotopyLockfile = inputPath + "/Homotopy/busy.lock";
+        // Check if homotopy binary is being used
+        //Here I check it the busy.lock file exists and if it does I go into a
+        // while loop that either breaks when the file is deleted or after
+        // 30 seconds have passed.
+        // This deals with the problem of MARCONI not liking a binary accessed by too many
+        // processes at the same time
+        std::chrono::system_clock::time_point tStart = Utils::get_clock_now();
+              
+        while(stat(HomotopyLockfile.c_str(), &buffer)==0)
+        {
+          std::chrono::system_clock::time_point tNow = Utils::get_clock_now();
+          std::chrono::seconds tSofar = std::chrono::duration_cast<std::chrono::seconds>(tNow - tStart);
+          if(tSofar >= std::chrono::seconds(30) )
+          {
+            remove( HomotopyLockfile.c_str());
+            break; 
+          }
+        }
+
+        // call vevacious and pass the setting for which vacuum is supposed
+        // to be used for tunneling calculation as string
+        vevaciousPlusPlus.RunPoint(panic_vacuum);
+
+        // get vevacious results
+        lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
+        thermalProbability = vevaciousPlusPlus.GetThermalProbability();
+
+        // decide how to deal with different vevacious outcomes
+        // here -1 from Vevacious means that the point is stable. 
+        if(lifetime == -1 && thermalProbability == -1 )
+        { 
+            lifetime = 3.0E+100;
+            thermalProbability = 1;
+        }
+        else if(lifetime == -1 && thermalProbability != -1)
+        {
+            lifetime = 3.0E+100;
+        }
+        else if(lifetime != -1 && thermalProbability == -1)
+        {
+            thermalProbability = 1;
+        }
+
+        cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+        cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
+        std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
+        cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
     
-    void print_VS_StraightPathGoodEnough_Thermal(int &result)
-    {
-        using namespace Pipes::print_VS_StraightPathGoodEnough_Thermal;
-        
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        // boolean true means that we are getting thermal values
-        double threshold = vevacious_results.get_bounceActionThreshold(true);
-        double straightPath = vevacious_results.get_bounceActionStraight(true);
-        
-        if(threshold == -1)
+        // return a vector containing the results from vevacious, these are filled
+        // in any successfully run case with the entries
+        //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
+        //              "best result from path_finder 1", "best result from path_finder 2",...]
+        //   Note that the entries "best result from path_finder x" are only filled if the
+        //               "straight path bounce action" (entry 1) is higher than the "bounce Action Threshold"
+        //                (entry 0). The vector length depends on how many different path finders are implemented in
+        //                vevacious
+        std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
+        std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
+            
+        logger() << LogTags::debug  << "VEVACIOUS result size "<< BounceActions_vec.size();
+        logger() << LogTags::debug  << "\nVEVACIOUS thermal result size "<< BounceActionsThermal_vec.size();
+        std::cout  << "VEVACIOUS thermal result size "<< BounceActionsThermal_vec.size() << std::endl;
+
+        // set bounce actions values & the threshold if they were calculated
+        for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii) 
         {
-            // vevacious did not run
-            result = -1;
+          logger() << LogTags::debug << "\nSetting bounceActionThreshold_[" << ii << "]"<< BounceActions_vec.at(ii); 
+          result.set_results(panic_vacuum, "bounceActionThreshold_[" + std::to_string(ii) + "]", BounceActions_vec.at(ii));
         }
-        else if(threshold > straightPath)
+
+        // set thermal bounce actions values & the threshold if they were calculated
+        for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii) 
         {
-            // straight path was good enough
-            result = 1;
+          logger() << LogTags::debug << "\nSetting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii); 
+          std::cout << "Setting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii) << std::endl; 
+          result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
         }
-        // straigh path was not good enough
-        else{result = 0;}
 
+        logger() << LogTags::debug << EOM;
+
+        // add entry 'straightPathGoodEnough' to result map
+        // -> -1 if no bounce actions calculated
+        // ->  1 if threshold > straightPath
+        // ->  0 else
+        // Note that this has to be done after the bounceActionThreshold results are set
+        result.add_straightPathGoodEnough(panic_vacuum);
+
+        // set lifetime & thermal probability
+        result.set_results(panic_vacuum,"lifetime", lifetime);
+        result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
     }
-    
-    void print_VS_ThresholdAndBounceActions(std::vector<double> &result)
+
+
+    /// Decide how to deal with a failed vevacious run --> set lifetime and thermalProbability
+    /// conservatively to a value easy to identify in analysis
+    void helper_catch_vevacious(VevaciousResultContainer& result, std::string panic_vacuum)
     {
-        using namespace Pipes::print_VS_ThresholdAndBounceActions;
 
-        result.clear();
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        
-        // bool false since we are getting non-thermal values
-        result.push_back(vevacious_results.get_bounceActionThreshold(false));
-        result.push_back(vevacious_results.get_bounceActionStraight(false));
-        result.push_back(vevacious_results.get_firstPathFinder(false));
-        result.push_back(vevacious_results.get_secondPathFinder(false));
+      //Vevacious has crashed -- set results to fixed values
+      double lifetime = 2.0E+100; 
+      double thermalProbability= 1;
+
+      cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
+      std::string vevacious_result = "Inconclusive";
+      cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
+      logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+      
+      result.set_results(panic_vacuum,"lifetime", lifetime);
+      result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
 
     }
-    
-    void print_VS_ThresholdAndBounceActions_Thermal(std::vector<double> &result)
+
+
+    /// Check stability of global vacuum of the potential with vevacious
+    void check_vacuum_stability_vevacious_global(VevaciousResultContainer &result)
     {
-        using namespace Pipes::print_VS_ThresholdAndBounceActions_Thermal;
-        
-        result.clear();
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        
-        // bool true since we are getting thermal values
-        result.push_back(vevacious_results.get_bounceActionThreshold(true));
-        result.push_back(vevacious_results.get_bounceActionStraight(true));
-        result.push_back(vevacious_results.get_firstPathFinder(true));
-        result.push_back(vevacious_results.get_secondPathFinder(true));
+        namespace myPipe = Pipes::check_vacuum_stability_vevacious_global;
 
+        // global vacuum is panic in this capability
+        static const std::string panic_vacuum = "global";
+        // This is the number of different pathFinders implemented in vevacious. It should be 
+        // returned by a BE convenience function, I tried to do it but didn't manage to 
+        // with the BOSS stuff -- that should probably be fixed  # todo 
+        static int pathFinder_number = 2;
+        // reset all entries of the of VevaciousResultContainer map holding the results
+        // to avoid that any value could be carried over from a previous calculated point
+        result.clear_results(panic_vacuum, pathFinder_number);
+        
+        // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
+        static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
+        static bool firstrun = true;
+        if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;firstrun=false;}
+
+        int trial = 0;
+        bool successful_run = false;
+        
+        // get the object that holds all inputs that needs to be passed to vevacious
+        SpectrumEntriesForVevacious pass_spectrum = (*myPipe::Dep::pass_spectrum_to_vevacious);
+        
+        // run vevacious until it runs successfully or the maximum number of trials is reached
+        while(trial < maxTrials and not successful_run)
+        { 
+          try 
+          {    
+              // create vevaciousPlusPlus object new for every try since spectrum 
+              // vevacious deletes spectrum after each run => to be able to do this 
+              // we need the non-rollcalled helper function that gets executed every time 
+              // we get to this line (unlike a dependency)
+              vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
+              
+              // helper function to set lifetime & thermal probability accordingly 
+              // (this is a separate function s.t. we don't have to reproduce code 
+              // for different panic vacua)
+              helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
+
+              // congrats -- if you got up to this point vevacious did not crash!
+              successful_run = true;
+          }
+
+          catch(const std::exception& e)
+          {
+              // call function that sets the lifetime & thermal probability if vevacious
+              // has crashed for some reason
+              helper_catch_vevacious(result, panic_vacuum);
+              logger() << "Error occurred: " << e.what() << EOM;
+          }
+          // and here we go for the next try -- fingers crossed!
+          trial += 1;
+        }
     }
 
+    /// Check stability of global vacuum of the potential with vevacious
+    void check_vacuum_stability_vevacious_nearest(VevaciousResultContainer &result)
+    {
+        namespace myPipe = Pipes::check_vacuum_stability_vevacious_nearest;
+
+        // nearest vacuum is panic in this capability
+        static const std::string panic_vacuum = "nearest";
+        // This is the number of different pathFinders implemented in vevacious. It should be 
+        // returned by a BE convenience function, I tried to do it but didn't manage to 
+        // with the BOSS stuff -- that should probably be fixed  # todo 
+        static int pathFinder_number = 2;
+        // reset all entries of the of VevaciousResultContainer map holding the results
+        // to avoid that any value could be carried over from a previous calculated point
+        result.clear_results(panic_vacuum, pathFinder_number);
+
+        // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
+        static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
+        static bool firstrun = true;
+        if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;firstrun=false;}
+
+        int trial = 0;
+        bool successful_run = false;
+        
+        // get the object that holds all inputs that needs to be passed to vevacious
+        SpectrumEntriesForVevacious pass_spectrum = (*myPipe::Dep::pass_spectrum_to_vevacious);
+        
+        // run vevacious until it runs successfully or the maximum number of trials is reached
+        while(trial < maxTrials and not successful_run)
+        { 
+          try 
+          {    
+              // create vevaciousPlusPlus object new for every try since spectrum 
+              // vevacious deletes spectrum after each run => to be able to do this 
+              // we need the non-rollcalled helper function that gets executed every time 
+              // we get to this line (unlike a dependency)
+              vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
+              
+              // helper function to set lifetime & thermal probability accordingly 
+              // (this is a separate function s.t. we don't have to reproduce code 
+              // for different panic vacua)
+              helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
+
+              // congrats -- if you got up to this point vevacious did not crash!
+              successful_run = true;
+          }
+
+          catch(const std::exception& e)
+          {
+              // call function that sets the lifetime & thermal probability if vevacious
+              // has crashed for some reason
+              helper_catch_vevacious(result, panic_vacuum);
+              logger() << "Error occurred: " << e.what() << EOM;
+          }
+          // and here we go for the next try -- fingers crossed!
+          trial += 1;
+        }
+    }
+   
+    
     /********/
     /* MSSM */
     /********/
@@ -622,432 +840,7 @@ namespace Gambit
         result["ModelFile"] = modelfilesPath + "ModelFile.vin";
     }
 
-    /// This function passes the spectrum object (as SLHAea) to vevacious.
-    void pass_MSSM_spectrum_to_vevacious(const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus* &result)
-    {
-        namespace myPipe = Pipes::pass_MSSM_spectrum_to_vevacious;
-
-        //static std::string inputspath =  *myPipe::Dep::make_vevaciousPlusPlus_inputs;
-        static std::string inputspath =  *myPipe::Dep::init_vevacious;
-
-        // Getting mpi rank
-        int rank;
-        #ifdef WITH_MPI
-                    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-        #else
-                    rank = 0;
-        #endif
-
-        std::string rankstring = std::to_string(rank);
-
-        std::string inputFilename = inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
-        static vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus( inputFilename );
-
-        // Get the spectrum object for the MSSM
-        const Spectrum& fullspectrum = *myPipe::Dep::unimproved_MSSM_spectrum;
-        //double runscale = 1000;
-        const SubSpectrum& spectrumHE = fullspectrum.get_HE();
-        //std::unique_ptr<SubSpectrum> SpecRun = spectrumHE.clone();
-        //SpecRun->RunToScale(runscale);
-        // Here we get the SLHAea::Coll object from the spectrum
-        SLHAea::Coll slhaea = spectrumHE.getSLHAea(2);
-
-        // Here we get the scale from the high-energy spectrum for Vevacious.
-        double scale = spectrumHE.GetScale();
-        cout << "VEVACIOUS SCALE:  "<< scale << endl;
-
-        // Here we start passing the parameters form the SLHAea::Coll  object
-
-        std::vector<std::pair<int,double>> gaugecouplings = 
-        { { 1 , SLHAea::to<double>(slhaea.at("GAUGE").at(1).at(1))  }, { 2, SLHAea::to<double>(slhaea.at("GAUGE").at(2).at(1)) }, { 3, SLHAea::to<double>(slhaea.at("GAUGE").at(3).at(1)) } };
-        
-        vevaciousPlusPlus.ReadLhaBlock( "GAUGE", scale , gaugecouplings, 1 );
-
-        std::vector<std::pair<int,double>> Hmix = { { 1 , SLHAea::to<double>(slhaea.at("HMIX").at(1).at(1))},
-                              { 101, SLHAea::to<double>(slhaea.at("HMIX").at(101).at(1))},
-                              { 102, SLHAea::to<double>(slhaea.at("HMIX").at(102).at(1))},
-                              { 103, SLHAea::to<double>(slhaea.at("HMIX").at(103).at(1))},
-                              { 3, SLHAea::to<double>(slhaea.at("HMIX").at(3).at(1))}
-                              };
-
-        vevaciousPlusPlus.ReadLhaBlock( "HMIX", scale , Hmix, 1 );
-      
-       
-        std::vector<std::pair<int,double>> minpar = {  
-                              { 3, SLHAea::to<double>(slhaea.at("MINPAR").at(3).at(1))}
-                              };
-                            
-        vevaciousPlusPlus.ReadLhaBlock( "MINPAR", scale , minpar, 1 );
-      
-        std::vector<std::pair<int,double>> msoft = { { 21 , SLHAea::to<double>(slhaea.at("MSOFT").at(21).at(1))},
-                              { 22  , SLHAea::to<double>(slhaea.at("MSOFT").at(22).at(1))},
-                              { 1  ,  SLHAea::to<double>(slhaea.at("MSOFT").at(1).at(1))},
-                              { 2  ,  SLHAea::to<double>(slhaea.at("MSOFT").at(2).at(1))},
-                              { 3   , SLHAea::to<double>(slhaea.at("MSOFT").at(3).at(1))}
-                              };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "MSOFT", scale , msoft, 1 );
-            // Here we check if the block "TREEMSOFT" is present
-            try {
-
-                std::vector<std::pair<int, double>> treemsoft = {{21, SLHAea::to<double>(slhaea.at("TREEMSOFT").at(21).at(1))},
-                                                                 {22, SLHAea::to<double>(slhaea.at("TREEMSOFT").at(22).at(1))} };
-
-                vevaciousPlusPlus.ReadLhaBlock("TREEMSOFT", scale, treemsoft, 1);
-            }
-            catch (const std::exception& e)
-            {
-                cout << "No TREEMSOFT, skipping" << endl;
-            }
-            // Here we check if the block "LOOPMSOFT" is present
-
-            try {
-                std::vector<std::pair<int, double>> loopmsoft = {{21, SLHAea::to<double>(slhaea.at("LOOPMSOFT").at(21).at(1))},
-                                                                 {22, SLHAea::to<double>(slhaea.at("LOOPMSOFT").at(22).at(1))}};
-
-                vevaciousPlusPlus.ReadLhaBlock("LOOPMSOFT", scale, loopmsoft, 1);
-            }
-            catch (const std::exception& e)
-            {
-                cout << "No LOOPMSOFT, skipping" << endl;
-            }
-
-            bool diagonalYukawas = false;
-            // Here we check if the Yukawas are diagonal or not, i.e if the "YX" blocks have off-diagonal entries.
-            try {
-                SLHAea::to<double>(slhaea.at("YU").at(1,2));
-            }
-            catch (const std::exception& e)
-            {
-                cout << "Diagonal Yukawas detected"<< endl;
-                diagonalYukawas = true;
-            }
-
-            // If diagonal pass the diagonal values to Vevacious
-            if (diagonalYukawas) {
-                std::vector<std::pair<int,double>> Yu = { { 11 , SLHAea::to<double>(slhaea.at("YU").at(1,1).at(2))},
-                                                          { 12, 0},
-                                                          { 13, 0},
-                                                          { 21, 0},
-                                                          { 22, SLHAea::to<double>(slhaea.at("YU").at(2,2).at(2))},
-                                                          { 23, 0},
-                                                          { 31, 0},
-                                                          { 32, 0},
-                                                          { 33, SLHAea::to<double>(slhaea.at("YU").at(3,3).at(2))}
-                };
-
-                vevaciousPlusPlus.ReadLhaBlock( "YU", scale , Yu, 2 );
-
-                std::vector<std::pair<int,double>> Yd = { { 11 , SLHAea::to<double>(slhaea.at("YD").at(1,1).at(2))},
-                                                          { 12, 0},
-                                                          { 13, 0},
-                                                          { 21, 0},
-                                                          { 22, SLHAea::to<double>(slhaea.at("YD").at(2,2).at(2))},
-                                                          { 23, 0},
-                                                          { 31, 0},
-                                                          { 32, 0},
-                                                          { 33, SLHAea::to<double>(slhaea.at("YD").at(3,3).at(2))}
-                };
-
-                vevaciousPlusPlus.ReadLhaBlock( "YD", scale , Yd, 2 );
-
-                std::vector<std::pair<int,double>> Ye = { { 11 , SLHAea::to<double>(slhaea.at("YE").at(1,1).at(2))},
-                                                          { 12, 0},
-                                                          { 13, 0},
-                                                          { 21, 0},
-                                                          { 22, SLHAea::to<double>(slhaea.at("YE").at(2,2).at(2))},
-                                                          { 23, 0},
-                                                          { 31, 0},
-                                                          { 32, 0},
-                                                          { 33, SLHAea::to<double>(slhaea.at("YE").at(3,3).at(2))}
-                };
-
-                vevaciousPlusPlus.ReadLhaBlock( "YE", scale , Ye, 2 );
-            } else { // If NOT diagonal pass values to Vevacious
-                std::vector<std::pair<int, double>> Yu = {{11, SLHAea::to<double>(slhaea.at("YU").at(1, 1).at(2))},
-                                                          {12, SLHAea::to<double>(slhaea.at("YU").at(1, 2).at(2))},
-                                                          {13, SLHAea::to<double>(slhaea.at("YU").at(1, 3).at(2))},
-                                                          {21, SLHAea::to<double>(slhaea.at("YU").at(2, 1).at(2))},
-                                                          {22, SLHAea::to<double>(slhaea.at("YU").at(2, 2).at(2))},
-                                                          {23, SLHAea::to<double>(slhaea.at("YU").at(2, 3).at(2))},
-                                                          {31, SLHAea::to<double>(slhaea.at("YU").at(3, 1).at(2))},
-                                                          {32, SLHAea::to<double>(slhaea.at("YU").at(3, 2).at(2))},
-                                                          {33, SLHAea::to<double>(slhaea.at("YU").at(3, 3).at(2))}
-                };
-
-                vevaciousPlusPlus.ReadLhaBlock("YU", scale, Yu, 2);
-
-                std::vector<std::pair<int, double>> Yd = {{11, SLHAea::to<double>(slhaea.at("YD").at(1, 1).at(2))},
-                                                          {12, SLHAea::to<double>(slhaea.at("YD").at(1, 2).at(2))},
-                                                          {13, SLHAea::to<double>(slhaea.at("YD").at(1, 3).at(2))},
-                                                          {21, SLHAea::to<double>(slhaea.at("YD").at(2, 1).at(2))},
-                                                          {22, SLHAea::to<double>(slhaea.at("YD").at(2, 2).at(2))},
-                                                          {23, SLHAea::to<double>(slhaea.at("YD").at(2, 3).at(2))},
-                                                          {31, SLHAea::to<double>(slhaea.at("YD").at(3, 1).at(2))},
-                                                          {32, SLHAea::to<double>(slhaea.at("YD").at(3, 2).at(2))},
-                                                          {33, SLHAea::to<double>(slhaea.at("YD").at(3, 3).at(2))}
-                };
-
-                vevaciousPlusPlus.ReadLhaBlock("YD", scale, Yd, 2);
-
-                std::vector<std::pair<int, double>> Ye = {{11, SLHAea::to<double>(slhaea.at("YE").at(1, 1).at(2))},
-                                                          {12, SLHAea::to<double>(slhaea.at("YE").at(1, 2).at(2))},
-                                                          {13, SLHAea::to<double>(slhaea.at("YE").at(1, 3).at(2))},
-                                                          {21, SLHAea::to<double>(slhaea.at("YE").at(2, 1).at(2))},
-                                                          {22, SLHAea::to<double>(slhaea.at("YE").at(2, 2).at(2))},
-                                                          {23, SLHAea::to<double>(slhaea.at("YE").at(2, 3).at(2))},
-                                                          {31, SLHAea::to<double>(slhaea.at("YE").at(3, 1).at(2))},
-                                                          {32, SLHAea::to<double>(slhaea.at("YE").at(3, 2).at(2))},
-                                                          {33, SLHAea::to<double>(slhaea.at("YE").at(3, 3).at(2))}
-                };
-
-                vevaciousPlusPlus.ReadLhaBlock("YE", scale, Ye, 2);
-            }
-                std::vector<std::pair<int, double>> Tu = {{11, SLHAea::to<double>(slhaea.at("TU").at(1, 1).at(2))},
-                                                          {12, SLHAea::to<double>(slhaea.at("TU").at(1, 2).at(2))},
-                                                          {13, SLHAea::to<double>(slhaea.at("TU").at(1, 3).at(2))},
-                                                          {21, SLHAea::to<double>(slhaea.at("TU").at(2, 1).at(2))},
-                                                          {22, SLHAea::to<double>(slhaea.at("TU").at(2, 2).at(2))},
-                                                          {23, SLHAea::to<double>(slhaea.at("TU").at(2, 3).at(2))},
-                                                          {31, SLHAea::to<double>(slhaea.at("TU").at(3, 1).at(2))},
-                                                          {32, SLHAea::to<double>(slhaea.at("TU").at(3, 2).at(2))},
-                                                          {33, SLHAea::to<double>(slhaea.at("TU").at(3, 3).at(2))}
-                };
-
-        vevaciousPlusPlus.ReadLhaBlock( "TU", scale , Tu, 2 );
-
-            std::vector<std::pair<int,double>> Td = { { 11 , SLHAea::to<double>(slhaea.at("TD").at(1,1).at(2))},
-                                                      { 12, SLHAea::to<double>(slhaea.at("TD").at(1,2).at(2))},
-                                                      { 13, SLHAea::to<double>(slhaea.at("TD").at(1,3).at(2))},
-                                                      { 21, SLHAea::to<double>(slhaea.at("TD").at(2,1).at(2))},
-                                                      { 22, SLHAea::to<double>(slhaea.at("TD").at(2,2).at(2))},
-                                                      { 23, SLHAea::to<double>(slhaea.at("TD").at(2,3).at(2))},
-                                                      { 31, SLHAea::to<double>(slhaea.at("TD").at(3,1).at(2))},
-                                                      { 32, SLHAea::to<double>(slhaea.at("TD").at(3,2).at(2))},
-                                                      { 33, SLHAea::to<double>(slhaea.at("TD").at(3,3).at(2))}
-            };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "TD", scale , Td, 2 );
-
-            std::vector<std::pair<int,double>> Te = { { 11 , SLHAea::to<double>(slhaea.at("TE").at(1,1).at(2))},
-                                                      { 12, SLHAea::to<double>(slhaea.at("TE").at(1,2).at(2))},
-                                                      { 13, SLHAea::to<double>(slhaea.at("TE").at(1,3).at(2))},
-                                                      { 21, SLHAea::to<double>(slhaea.at("TE").at(2,1).at(2))},
-                                                      { 22, SLHAea::to<double>(slhaea.at("TE").at(2,2).at(2))},
-                                                      { 23, SLHAea::to<double>(slhaea.at("TE").at(2,3).at(2))},
-                                                      { 31, SLHAea::to<double>(slhaea.at("TE").at(3,1).at(2))},
-                                                      { 32, SLHAea::to<double>(slhaea.at("TE").at(3,2).at(2))},
-                                                      { 33, SLHAea::to<double>(slhaea.at("TE").at(3,3).at(2))}
-            };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "TE", scale , Te, 2 );
-
-
-            std::vector<std::pair<int,double>> msq2 = { { 11 , SLHAea::to<double>(slhaea.at("MSQ2").at(1,1).at(2))},
-                                                      { 12, SLHAea::to<double>(slhaea.at("MSQ2").at(1,2).at(2))},
-                                                      { 13, SLHAea::to<double>(slhaea.at("MSQ2").at(1,3).at(2))},
-                                                      { 21, SLHAea::to<double>(slhaea.at("MSQ2").at(2,1).at(2))},
-                                                      { 22, SLHAea::to<double>(slhaea.at("MSQ2").at(2,2).at(2))},
-                                                      { 23, SLHAea::to<double>(slhaea.at("MSQ2").at(2,3).at(2))},
-                                                      { 31, SLHAea::to<double>(slhaea.at("MSQ2").at(3,1).at(2))},
-                                                      { 32, SLHAea::to<double>(slhaea.at("MSQ2").at(3,2).at(2))},
-                                                      { 33, SLHAea::to<double>(slhaea.at("MSQ2").at(3,3).at(2))}
-            };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "MSQ2", scale , msq2, 2 );
-
-            std::vector<std::pair<int,double>> msl2 = { { 11 , SLHAea::to<double>(slhaea.at("MSL2").at(1,1).at(2))},
-                                                        { 12, SLHAea::to<double>(slhaea.at("MSL2").at(1,2).at(2))},
-                                                        { 13, SLHAea::to<double>(slhaea.at("MSL2").at(1,3).at(2))},
-                                                        { 21, SLHAea::to<double>(slhaea.at("MSL2").at(2,1).at(2))},
-                                                        { 22, SLHAea::to<double>(slhaea.at("MSL2").at(2,2).at(2))},
-                                                        { 23, SLHAea::to<double>(slhaea.at("MSL2").at(2,3).at(2))},
-                                                        { 31, SLHAea::to<double>(slhaea.at("MSL2").at(3,1).at(2))},
-                                                        { 32, SLHAea::to<double>(slhaea.at("MSL2").at(3,2).at(2))},
-                                                        { 33, SLHAea::to<double>(slhaea.at("MSL2").at(3,3).at(2))}
-            };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "MSL2", scale , msl2, 2 );
-
-            std::vector<std::pair<int,double>> msd2 = { { 11 , SLHAea::to<double>(slhaea.at("MSD2").at(1,1).at(2))},
-                                                        { 12, SLHAea::to<double>(slhaea.at("MSD2").at(1,2).at(2))},
-                                                        { 13, SLHAea::to<double>(slhaea.at("MSD2").at(1,3).at(2))},
-                                                        { 21, SLHAea::to<double>(slhaea.at("MSD2").at(2,1).at(2))},
-                                                        { 22, SLHAea::to<double>(slhaea.at("MSD2").at(2,2).at(2))},
-                                                        { 23, SLHAea::to<double>(slhaea.at("MSD2").at(2,3).at(2))},
-                                                        { 31, SLHAea::to<double>(slhaea.at("MSD2").at(3,1).at(2))},
-                                                        { 32, SLHAea::to<double>(slhaea.at("MSD2").at(3,2).at(2))},
-                                                        { 33, SLHAea::to<double>(slhaea.at("MSD2").at(3,3).at(2))}
-            };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "MSD2", scale , msd2, 2 );
-
-            std::vector<std::pair<int,double>> mse2 = { { 11 , SLHAea::to<double>(slhaea.at("MSE2").at(1,1).at(2))},
-                                                        { 12, SLHAea::to<double>(slhaea.at("MSE2").at(1,2).at(2))},
-                                                        { 13, SLHAea::to<double>(slhaea.at("MSE2").at(1,3).at(2))},
-                                                        { 21, SLHAea::to<double>(slhaea.at("MSE2").at(2,1).at(2))},
-                                                        { 22, SLHAea::to<double>(slhaea.at("MSE2").at(2,2).at(2))},
-                                                        { 23, SLHAea::to<double>(slhaea.at("MSE2").at(2,3).at(2))},
-                                                        { 31, SLHAea::to<double>(slhaea.at("MSE2").at(3,1).at(2))},
-                                                        { 32, SLHAea::to<double>(slhaea.at("MSE2").at(3,2).at(2))},
-                                                        { 33, SLHAea::to<double>(slhaea.at("MSE2").at(3,3).at(2))}
-            };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "MSE2", scale , mse2, 2 );
-
-            std::vector<std::pair<int,double>> msu2 = { { 11 , SLHAea::to<double>(slhaea.at("MSU2").at(1,1).at(2))},
-                                                        { 12, SLHAea::to<double>(slhaea.at("MSU2").at(1,2).at(2))},
-                                                        { 13, SLHAea::to<double>(slhaea.at("MSU2").at(1,3).at(2))},
-                                                        { 21, SLHAea::to<double>(slhaea.at("MSU2").at(2,1).at(2))},
-                                                        { 22, SLHAea::to<double>(slhaea.at("MSU2").at(2,2).at(2))},
-                                                        { 23, SLHAea::to<double>(slhaea.at("MSU2").at(2,3).at(2))},
-                                                        { 31, SLHAea::to<double>(slhaea.at("MSU2").at(3,1).at(2))},
-                                                        { 32, SLHAea::to<double>(slhaea.at("MSU2").at(3,2).at(2))},
-                                                        { 33, SLHAea::to<double>(slhaea.at("MSU2").at(3,3).at(2))}
-            };
-                              
-        vevaciousPlusPlus.ReadLhaBlock( "MSU2", scale , msu2, 2 );
-
-        result = &vevaciousPlusPlus;
-
-    }
-
-    // This function gives back the result for absolute stability, either "Stable" or "Metastable".
-    void check_vacuum_stability_vevacious(VevaciousResultContainer &result)
-    {
-        namespace myPipe = Pipes::check_vacuum_stability_vevacious;
-
-        // reset all member variables of VevaciousResultContainer to -1
-        // to avoid that any value could be carried over from a previous calculated point
-        result.reset_results();
-
-        // double M0input = *myPipe::Param["M0"];
-        // double M12input = *myPipe::Param["M12"];
-        // double A0input = *myPipe::Param["A0"];
-        // double TanBetainput = *myPipe::Param["TanBeta"];
-        // double SignMuinput = *myPipe::Param["SignMu"];
-
-        // std::ostringstream InputsForLog;
-        // //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousTest.slha");
-        // InputsForLog << std::fixed << std::setprecision(12) << "Running Vevacious with parameters: " << "M0="  << M0input << " M12="  << M12input << " A0=" << A0input << " Tanb=" << TanBetainput << " Sign Mu=" << SignMuinput ;
-        // std::string InputsForLogString = InputsForLog.str();
-        // logger() << InputsForLogString << EOM;
-
-        vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = *(*myPipe::Dep::pass_spectrum_to_vevacious);
-        static std::string inputspath =  *myPipe::Dep::init_vevacious;
-
-        /*// initialise vevacious outputs to -1. In case vevacious crashed or 
-        // exitis with an exception we will use these to fill the 
-        // VevaciousResultContainer result
-        double BounceActionThermal = -1, BounceAction = -1;
-        double StraightPathThermal = -1, StraightPath = -1;
-
-        double FirstPathFinderThermal = -1, FirstPathFinder = -1;
-        double SecondPathFinderThermal = -1, SecondPathFinder = -1;*/
-
-        double lifetime, thermalProbability;
-
-        // Tell Vevacious we are using the point we just read by giving it "internal".
-        try 
-        {
-            //spectrumHE.writeSLHAfile(2, "SpecBit/ProblemPoint.slha");
-            // Run vevacious
-            struct stat buffer; //Checking if file exists, fastest method.
-            std::string HomotopyLockfile = inputspath + "/Homotopy/busy.lock";
-            // Check if homotopy binary is being used
-
-            //Here I check it the busy.lock file exists and if it does I go into a
-            // while loop that either breaks when the file is deleted or after
-            // 30 seconds have passed.
-            // This deals with the problem of MARCONI not liking a binary accessed by too many
-            // processes at the same time
-
-            std::chrono::system_clock::time_point tStart = Utils::get_clock_now();
-
-            while(stat(HomotopyLockfile.c_str(), &buffer)==0)
-            {
-            std::chrono::system_clock::time_point tNow = Utils::get_clock_now();
-
-            std::chrono::seconds tSofar = std::chrono::duration_cast<std::chrono::seconds>(tNow - tStart);
-
-            if(tSofar >= std::chrono::seconds(30) )
-            {
-                remove( HomotopyLockfile.c_str());
-                break; 
-            }
-            }
-
-            vevaciousPlusPlus.RunPoint("internal");
-
-            lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
-            thermalProbability = vevaciousPlusPlus.GetThermalProbability();
-
-            if(lifetime == -1 && thermalProbability == -1 ){ // Here -1 from Vevacious Means that the point is stable. 
-                lifetime = 3.0E+100;
-                thermalProbability = 1;
-            }
-            else if(lifetime == -1 && thermalProbability != -1)
-            {
-                lifetime = 3.0E+100;
-            }
-            else if(lifetime != -1 && thermalProbability == -1)
-            {
-                thermalProbability = 1;
-            }
-
-            cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-            cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
-            std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
-            
-            // return a vector caintaining the results from vevacious, the Thermal ones are filled
-            // in any succesffull run case with the entries
-            //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
-            //              "best result from path_finder 1", "best result from path_finder 2",...]
-            //          Note that the entries "best result from path_finder x" are only filled if the
-            //               "straight path bounce action" (entry 1) is higher than the "boucne Action Threshold"
-            //                (entry 0). The vector length depends on how many different path finders are implemented in
-            //                vevacious
-            std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
-            std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
-            
-            cout << "VEVACIOUS RESULT size "<< BounceActions_vec.size() << endl;
-
-            // set claculated bounce actions values & the threshold if they were calculated
-            // bool false means that we are not setting the thermal values here
-            if(BounceActions_vec.size()>0) {result.set_bounceActionThreshold(BounceActions_vec.at(0), false);}
-            if(BounceActions_vec.size()>1) {result.set_bounceActionStraight(BounceActions_vec.at(1), false);}
-            if(BounceActions_vec.size()>2) {result.set_firstPathFinder(BounceActions_vec.at(2), false);}
-            if(BounceActions_vec.size()>3) {result.set_secondPathFinder(BounceActions_vec.at(3), false);}
-
-            if(BounceActionsThermal_vec.size()>0) {result.set_bounceActionThreshold(BounceActionsThermal_vec.at(0), true);}
-            if(BounceActionsThermal_vec.size()>1) {result.set_bounceActionStraight(BounceActionsThermal_vec.at(1), true);}
-            if(BounceActionsThermal_vec.size()>2) {result.set_firstPathFinder(BounceActionsThermal_vec.at(2), true);}
-            if(BounceActionsThermal_vec.size()>3) {result.set_secondPathFinder(BounceActionsThermal_vec.at(3), true);}
-
-            cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
-        }
-
-        catch(const std::exception& e)
-        {
-            //spectrumHE.writeSLHAfile(2, "SpecBit/VevaciousCrashed.slha");
-            lifetime = 2.0E+100; //Vevacious has crashed
-            thermalProbability= 1;
-
-            cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-            std::string vevacious_result = "Inconclusive";
-            cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
-            logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
-            logger() << "Error occurred: " << e.what() << EOM;
-            //std::ostringstream errmsg;
-            //errmsg << "Vevacious could not calculate lifetime. Conservatively setting it to large value." << rankstring;
-            //SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
-        }
-
-        result.set_lifetime(lifetime);
-        result.set_thermalProbability(thermalProbability);
-
-    }
-
+    
     /// Helper function that takes any YAML options and makes the vevacious input,
     /// in the form of .xml files.
     void make_vpp_inputs(map_str_str &opts)
@@ -1233,8 +1026,11 @@ namespace Gambit
                 // Getting path to PHC
                 std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
                 // Creating symlink to PHC in run folder
-                std::string PHCSymlink = inputspath + "/Homotopy/mpirank_"+ rankstring + "/";
+                std::string PHCSymlink = inputspath + "Homotopy/mpirank_"+ rankstring + "/";
 
+                // random seed for phc (can be fixed as input option)
+                std::string randomseed = opts["phc_random_seed"];
+                
                 try
                 {
                     Utils::ensure_path_exists(PHCSymlink);
@@ -1246,14 +1042,26 @@ namespace Gambit
                     SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
                 }
 
-                std::string systemCommand( "ln -s " + PathToPHC + "/phc" + " " + PHCSymlink );
-
-                int systemReturn = system( systemCommand.c_str() ) ;
-                if( systemReturn == -1 )
+                // Here we check whether the symlink to phc already exists. 
+                std::string filename(PHCSymlink + "/phc");
+                std::ifstream in(filename.c_str(), std::ios::binary);
+                if(in.good())
                 {
-                    std::ostringstream errmsg;
-                    errmsg << "Error making symlink for PHC in process " << rankstring;
-                    SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+                    std::cout << "Symlink for phc already exists, skipping creating it." << std::endl;
+                }
+                else
+                {
+
+                    std::cout << "Creating PHC symlink" << std::endl;
+                    std::string systemCommand( "ln -s " + PathToPHC + "/phc" + " " + PHCSymlink );
+
+                    int systemReturn = system( systemCommand.c_str() ) ;
+                    if( systemReturn == -1 )
+                    {
+                        std::ostringstream errmsg;
+                        errmsg << "Error making symlink for PHC in process " << rankstring;
+                        SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
+                    }
                 }
 
                 // File contents
@@ -1286,6 +1094,9 @@ namespace Gambit
                         "              <ResolutionSize>\n"
                         "                1.0\n"
                         "              </ResolutionSize>\n"
+                        "              <RandomSeed>\n"
+                        "               " + randomseed + "\n"
+                        "              </Randomseed>\n"
                         "            <Tasks>\n "
                         "             1                     "
                         "            </Tasks>\n            "
@@ -1315,6 +1126,9 @@ namespace Gambit
                         "      <NonDsbRollingToDsbScalingFactor>\n"
                         "        4.0\n"
                         "      </NonDsbRollingToDsbScalingFactor>\n"
+                        "      <GlobalIsPanic>\n"
+                        "        " + opts.at("globalIsPanic") + "\n"
+                        "      </GlobalIsPanic>\n"
                         "    </ConstructorArguments>\n"
                         "  </PotentialMinimizerClass>\n"
                         "</VevaciousPlusPlusObjectInitialization>\n";
@@ -1454,6 +1268,269 @@ namespace Gambit
 
     }
 
+    /// This function adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious
+    /// to an instance of type SpectrumEntriesForVevacious. The actual passing happens in the helper function 
+    /// exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. 
+    /// Model dependent. 
+    void prepare_pass_MSSM_spectrum_to_vevacious(SpectrumEntriesForVevacious &result)
+    {
+        namespace myPipe = Pipes::prepare_pass_MSSM_spectrum_to_vevacious;
 
+        static std::string inputspath =  *myPipe::Dep::init_vevacious;
+
+        // print input parameters for vevaciouswith full precision to be able to reproduce 
+        // vevacious run with the exact same parameters
+        std::ostringstream InputsForLog;
+        InputsForLog << std::fixed << std::setprecision(12) << "Passing parameters to Vevacious with values: ";
+        
+        for (auto it=myPipe::Param.begin(); it != myPipe::Param.end(); it++)
+        {
+            std::string name = it->first;
+            double value = *myPipe::Param[name];
+            InputsForLog << "\n  " << name << ": " << value;
+            //std::cout << " " << name << " = " << value << std::endl;
+        }
+        std::string InputsForLogString = InputsForLog.str();
+        logger() << InputsForLogString << EOM;
+
+        // Getting mpi rank
+        int rank;
+        #ifdef WITH_MPI
+                    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        #else
+                    rank = 0;
+        #endif
+
+        std::string rankstring = std::to_string(rank);
+
+        std::string inputFilename = inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
+        
+        result.set_inputFilename(inputFilename);
+        result.set_inputPath(inputspath);
+
+        // Get the spectrum object for the MSSM
+        const Spectrum& fullspectrum = *myPipe::Dep::unimproved_MSSM_spectrum;
+        const SubSpectrum& spectrumHE = fullspectrum.get_HE();
+
+        // Get the SLHAea::Coll object & scale from the spectrum
+        SLHAea::Coll slhaea = spectrumHE.getSLHAea(2);
+        double scale = spectrumHE.GetScale();
+
+        cout << "VEVACIOUS SCALE:  "<< scale << endl;
+        result.set_scale(scale);
+
+        // safe parameters form the SLHAea::Coll object in SpectrumEntriesForVevacious 
+        // by calling the method .add_entry => pass name, vector with <int,double> pairs
+        // and the third setting (some int, don't know what it does @Sanjay? ) 
+        std::vector<std::pair<int,double>> gaugecouplings = { { 1 , SLHAea::to<double>(slhaea.at("GAUGE").at(1).at(1))  }, 
+                      { 2, SLHAea::to<double>(slhaea.at("GAUGE").at(2).at(1)) }, 
+                      { 3, SLHAea::to<double>(slhaea.at("GAUGE").at(3).at(1)) }};
+        result.add_entry("GAUGE", gaugecouplings, 1);
+
+        std::vector<std::pair<int,double>> Hmix = { { 1 , SLHAea::to<double>(slhaea.at("HMIX").at(1).at(1))},
+                      { 101, SLHAea::to<double>(slhaea.at("HMIX").at(101).at(1))},
+                      { 102, SLHAea::to<double>(slhaea.at("HMIX").at(102).at(1))},
+                      { 103, SLHAea::to<double>(slhaea.at("HMIX").at(103).at(1))},
+                      { 3, SLHAea::to<double>(slhaea.at("HMIX").at(3).at(1))}};
+        result.add_entry("HMIX", Hmix, 1);
+      
+       
+        std::vector<std::pair<int,double>> minpar = {{ 3, SLHAea::to<double>(slhaea.at("MINPAR").at(3).at(1))}};
+        result.add_entry("MINPAR", minpar, 1);
+      
+        std::vector<std::pair<int,double>> msoft = { { 21 , SLHAea::to<double>(slhaea.at("MSOFT").at(21).at(1))},
+                              { 22  , SLHAea::to<double>(slhaea.at("MSOFT").at(22).at(1))},
+                              { 1  ,  SLHAea::to<double>(slhaea.at("MSOFT").at(1).at(1))},
+                              { 2  ,  SLHAea::to<double>(slhaea.at("MSOFT").at(2).at(1))},
+                              { 3   , SLHAea::to<double>(slhaea.at("MSOFT").at(3).at(1))}};       
+        result.add_entry("MSOFT", msoft, 1);
+        
+        // Check if the block "TREEMSOFT" is present
+        try 
+        {
+            std::vector<std::pair<int, double>> treemsoft = {{21, SLHAea::to<double>(slhaea.at("TREEMSOFT").at(21).at(1))},
+                                                             {22, SLHAea::to<double>(slhaea.at("TREEMSOFT").at(22).at(1))} };
+            result.add_entry("TREEMSOFT", treemsoft, 1);
+        }
+        catch (const std::exception& e){ cout << "No TREEMSOFT, skipping" << endl;}
+        
+        // Check if the block "LOOPMSOFT" is present
+        try 
+        {
+            std::vector<std::pair<int, double>> loopmsoft = {{21, SLHAea::to<double>(slhaea.at("LOOPMSOFT").at(21).at(1))},
+                                                             {22, SLHAea::to<double>(slhaea.at("LOOPMSOFT").at(22).at(1))}};
+            result.add_entry("LOOPMSOFT", loopmsoft, 1);
+        }
+        catch (const std::exception& e) {cout << "No LOOPMSOFT, skipping" << endl;}
+
+        bool diagonalYukawas = false;
+        // Here we check if the Yukawas are diagonal or not, i.e if the "YX" blocks have off-diagonal entries.
+        try 
+        {
+          SLHAea::to<double>(slhaea.at("YU").at(1,2));
+        }
+        catch (const std::exception& e) {diagonalYukawas = true; cout << "Diagonal Yukawas detected"<< endl;}
+
+        // If diagonal pass the diagonal values to Vevacious
+        if (diagonalYukawas) 
+        {
+            std::vector<std::pair<int,double>> Yu = { { 11 , SLHAea::to<double>(slhaea.at("YU").at(1,1).at(2))},
+                                                      { 12, 0},
+                                                      { 13, 0},
+                                                      { 21, 0},
+                                                      { 22, SLHAea::to<double>(slhaea.at("YU").at(2,2).at(2))},
+                                                      { 23, 0},
+                                                      { 31, 0},
+                                                      { 32, 0},
+                                                      { 33, SLHAea::to<double>(slhaea.at("YU").at(3,3).at(2))}};
+            result.add_entry("YU", Yu, 2);
+
+            std::vector<std::pair<int,double>> Yd = { { 11 , SLHAea::to<double>(slhaea.at("YD").at(1,1).at(2))},
+                                                      { 12, 0},
+                                                      { 13, 0},
+                                                      { 21, 0},
+                                                      { 22, SLHAea::to<double>(slhaea.at("YD").at(2,2).at(2))},
+                                                      { 23, 0},
+                                                      { 31, 0},
+                                                      { 32, 0},
+                                                      { 33, SLHAea::to<double>(slhaea.at("YD").at(3,3).at(2))}};
+            result.add_entry("YD", Yd, 2);
+
+            std::vector<std::pair<int,double>> Ye = { { 11 , SLHAea::to<double>(slhaea.at("YE").at(1,1).at(2))},
+                                                      { 12, 0},
+                                                      { 13, 0},
+                                                      { 21, 0},
+                                                      { 22, SLHAea::to<double>(slhaea.at("YE").at(2,2).at(2))},
+                                                      { 23, 0},
+                                                      { 31, 0},
+                                                      { 32, 0},
+                                                      { 33, SLHAea::to<double>(slhaea.at("YE").at(3,3).at(2))}};
+            result.add_entry("YE", Ye, 2);
+        } 
+        // If NOT diagonal pass values to Vevacious
+        else 
+        { 
+            std::vector<std::pair<int, double>> Yu = {{11, SLHAea::to<double>(slhaea.at("YU").at(1, 1).at(2))},
+                                                      {12, SLHAea::to<double>(slhaea.at("YU").at(1, 2).at(2))},
+                                                      {13, SLHAea::to<double>(slhaea.at("YU").at(1, 3).at(2))},
+                                                      {21, SLHAea::to<double>(slhaea.at("YU").at(2, 1).at(2))},
+                                                      {22, SLHAea::to<double>(slhaea.at("YU").at(2, 2).at(2))},
+                                                      {23, SLHAea::to<double>(slhaea.at("YU").at(2, 3).at(2))},
+                                                      {31, SLHAea::to<double>(slhaea.at("YU").at(3, 1).at(2))},
+                                                      {32, SLHAea::to<double>(slhaea.at("YU").at(3, 2).at(2))},
+                                                      {33, SLHAea::to<double>(slhaea.at("YU").at(3, 3).at(2))}};
+            result.add_entry("YU", Yu, 2);
+
+            std::vector<std::pair<int, double>> Yd = {{11, SLHAea::to<double>(slhaea.at("YD").at(1, 1).at(2))},
+                                                      {12, SLHAea::to<double>(slhaea.at("YD").at(1, 2).at(2))},
+                                                      {13, SLHAea::to<double>(slhaea.at("YD").at(1, 3).at(2))},
+                                                      {21, SLHAea::to<double>(slhaea.at("YD").at(2, 1).at(2))},
+                                                      {22, SLHAea::to<double>(slhaea.at("YD").at(2, 2).at(2))},
+                                                      {23, SLHAea::to<double>(slhaea.at("YD").at(2, 3).at(2))},
+                                                      {31, SLHAea::to<double>(slhaea.at("YD").at(3, 1).at(2))},
+                                                      {32, SLHAea::to<double>(slhaea.at("YD").at(3, 2).at(2))},
+                                                      {33, SLHAea::to<double>(slhaea.at("YD").at(3, 3).at(2))}};
+            result.add_entry("YD", Yd, 2);
+
+            std::vector<std::pair<int, double>> Ye = {{11, SLHAea::to<double>(slhaea.at("YE").at(1, 1).at(2))},
+                                                      {12, SLHAea::to<double>(slhaea.at("YE").at(1, 2).at(2))},
+                                                      {13, SLHAea::to<double>(slhaea.at("YE").at(1, 3).at(2))},
+                                                      {21, SLHAea::to<double>(slhaea.at("YE").at(2, 1).at(2))},
+                                                      {22, SLHAea::to<double>(slhaea.at("YE").at(2, 2).at(2))},
+                                                      {23, SLHAea::to<double>(slhaea.at("YE").at(2, 3).at(2))},
+                                                      {31, SLHAea::to<double>(slhaea.at("YE").at(3, 1).at(2))},
+                                                      {32, SLHAea::to<double>(slhaea.at("YE").at(3, 2).at(2))},
+                                                      {33, SLHAea::to<double>(slhaea.at("YE").at(3, 3).at(2))}};
+            result.add_entry("YE", Ye, 2);
+        }
+        std::vector<std::pair<int, double>> Tu = {{11, SLHAea::to<double>(slhaea.at("TU").at(1, 1).at(2))},
+                                                  {12, SLHAea::to<double>(slhaea.at("TU").at(1, 2).at(2))},
+                                                  {13, SLHAea::to<double>(slhaea.at("TU").at(1, 3).at(2))},
+                                                  {21, SLHAea::to<double>(slhaea.at("TU").at(2, 1).at(2))},
+                                                  {22, SLHAea::to<double>(slhaea.at("TU").at(2, 2).at(2))},
+                                                  {23, SLHAea::to<double>(slhaea.at("TU").at(2, 3).at(2))},
+                                                  {31, SLHAea::to<double>(slhaea.at("TU").at(3, 1).at(2))},
+                                                  {32, SLHAea::to<double>(slhaea.at("TU").at(3, 2).at(2))},
+                                                  {33, SLHAea::to<double>(slhaea.at("TU").at(3, 3).at(2))}};
+        result.add_entry("TU", Tu, 2);
+
+        std::vector<std::pair<int,double>> Td = { { 11 , SLHAea::to<double>(slhaea.at("TD").at(1,1).at(2))},
+                                                  { 12, SLHAea::to<double>(slhaea.at("TD").at(1,2).at(2))},
+                                                  { 13, SLHAea::to<double>(slhaea.at("TD").at(1,3).at(2))},
+                                                  { 21, SLHAea::to<double>(slhaea.at("TD").at(2,1).at(2))},
+                                                  { 22, SLHAea::to<double>(slhaea.at("TD").at(2,2).at(2))},
+                                                  { 23, SLHAea::to<double>(slhaea.at("TD").at(2,3).at(2))},
+                                                  { 31, SLHAea::to<double>(slhaea.at("TD").at(3,1).at(2))},
+                                                  { 32, SLHAea::to<double>(slhaea.at("TD").at(3,2).at(2))},
+                                                  { 33, SLHAea::to<double>(slhaea.at("TD").at(3,3).at(2))}};                      
+        result.add_entry("TD", Td, 2);
+
+        std::vector<std::pair<int,double>> Te = { { 11 , SLHAea::to<double>(slhaea.at("TE").at(1,1).at(2))},
+                                                  { 12, SLHAea::to<double>(slhaea.at("TE").at(1,2).at(2))},
+                                                  { 13, SLHAea::to<double>(slhaea.at("TE").at(1,3).at(2))},
+                                                  { 21, SLHAea::to<double>(slhaea.at("TE").at(2,1).at(2))},
+                                                  { 22, SLHAea::to<double>(slhaea.at("TE").at(2,2).at(2))},
+                                                  { 23, SLHAea::to<double>(slhaea.at("TE").at(2,3).at(2))},
+                                                  { 31, SLHAea::to<double>(slhaea.at("TE").at(3,1).at(2))},
+                                                  { 32, SLHAea::to<double>(slhaea.at("TE").at(3,2).at(2))},
+                                                  { 33, SLHAea::to<double>(slhaea.at("TE").at(3,3).at(2))}};              
+        result.add_entry("TE", Te, 2);
+
+
+        std::vector<std::pair<int,double>> msq2 = { { 11 , SLHAea::to<double>(slhaea.at("MSQ2").at(1,1).at(2))},
+                                                  { 12, SLHAea::to<double>(slhaea.at("MSQ2").at(1,2).at(2))},
+                                                  { 13, SLHAea::to<double>(slhaea.at("MSQ2").at(1,3).at(2))},
+                                                  { 21, SLHAea::to<double>(slhaea.at("MSQ2").at(2,1).at(2))},
+                                                  { 22, SLHAea::to<double>(slhaea.at("MSQ2").at(2,2).at(2))},
+                                                  { 23, SLHAea::to<double>(slhaea.at("MSQ2").at(2,3).at(2))},
+                                                  { 31, SLHAea::to<double>(slhaea.at("MSQ2").at(3,1).at(2))},
+                                                  { 32, SLHAea::to<double>(slhaea.at("MSQ2").at(3,2).at(2))},
+                                                  { 33, SLHAea::to<double>(slhaea.at("MSQ2").at(3,3).at(2))}};               
+        result.add_entry("MSQ2", msq2, 2);
+
+        std::vector<std::pair<int,double>> msl2 = { { 11 , SLHAea::to<double>(slhaea.at("MSL2").at(1,1).at(2))},
+                                                    { 12, SLHAea::to<double>(slhaea.at("MSL2").at(1,2).at(2))},
+                                                    { 13, SLHAea::to<double>(slhaea.at("MSL2").at(1,3).at(2))},
+                                                    { 21, SLHAea::to<double>(slhaea.at("MSL2").at(2,1).at(2))},
+                                                    { 22, SLHAea::to<double>(slhaea.at("MSL2").at(2,2).at(2))},
+                                                    { 23, SLHAea::to<double>(slhaea.at("MSL2").at(2,3).at(2))},
+                                                    { 31, SLHAea::to<double>(slhaea.at("MSL2").at(3,1).at(2))},
+                                                    { 32, SLHAea::to<double>(slhaea.at("MSL2").at(3,2).at(2))},
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSL2").at(3,3).at(2))}};               
+        result.add_entry("MSL2", msl2, 2);
+
+        std::vector<std::pair<int,double>> msd2 = { { 11 , SLHAea::to<double>(slhaea.at("MSD2").at(1,1).at(2))},
+                                                    { 12, SLHAea::to<double>(slhaea.at("MSD2").at(1,2).at(2))},
+                                                    { 13, SLHAea::to<double>(slhaea.at("MSD2").at(1,3).at(2))},
+                                                    { 21, SLHAea::to<double>(slhaea.at("MSD2").at(2,1).at(2))},
+                                                    { 22, SLHAea::to<double>(slhaea.at("MSD2").at(2,2).at(2))},
+                                                    { 23, SLHAea::to<double>(slhaea.at("MSD2").at(2,3).at(2))},
+                                                    { 31, SLHAea::to<double>(slhaea.at("MSD2").at(3,1).at(2))},
+                                                    { 32, SLHAea::to<double>(slhaea.at("MSD2").at(3,2).at(2))},
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSD2").at(3,3).at(2))}};               
+        result.add_entry("MSD2", msd2, 2);
+
+        std::vector<std::pair<int,double>> mse2 = { { 11 , SLHAea::to<double>(slhaea.at("MSE2").at(1,1).at(2))},
+                                                    { 12, SLHAea::to<double>(slhaea.at("MSE2").at(1,2).at(2))},
+                                                    { 13, SLHAea::to<double>(slhaea.at("MSE2").at(1,3).at(2))},
+                                                    { 21, SLHAea::to<double>(slhaea.at("MSE2").at(2,1).at(2))},
+                                                    { 22, SLHAea::to<double>(slhaea.at("MSE2").at(2,2).at(2))},
+                                                    { 23, SLHAea::to<double>(slhaea.at("MSE2").at(2,3).at(2))},
+                                                    { 31, SLHAea::to<double>(slhaea.at("MSE2").at(3,1).at(2))},
+                                                    { 32, SLHAea::to<double>(slhaea.at("MSE2").at(3,2).at(2))},
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSE2").at(3,3).at(2))}};                
+        result.add_entry("MSE2", mse2, 2);
+
+        std::vector<std::pair<int,double>> msu2 = { { 11 , SLHAea::to<double>(slhaea.at("MSU2").at(1,1).at(2))},
+                                                    { 12, SLHAea::to<double>(slhaea.at("MSU2").at(1,2).at(2))},
+                                                    { 13, SLHAea::to<double>(slhaea.at("MSU2").at(1,3).at(2))},
+                                                    { 21, SLHAea::to<double>(slhaea.at("MSU2").at(2,1).at(2))},
+                                                    { 22, SLHAea::to<double>(slhaea.at("MSU2").at(2,2).at(2))},
+                                                    { 23, SLHAea::to<double>(slhaea.at("MSU2").at(2,3).at(2))},
+                                                    { 31, SLHAea::to<double>(slhaea.at("MSU2").at(3,1).at(2))},
+                                                    { 32, SLHAea::to<double>(slhaea.at("MSU2").at(3,2).at(2))},
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSU2").at(3,3).at(2))}};            
+        result.add_entry("MSU2", msu2, 2);
+    }
   } // end namespace SpecBit
 } // end namespace Gambit

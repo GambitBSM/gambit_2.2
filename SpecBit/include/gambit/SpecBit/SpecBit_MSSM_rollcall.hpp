@@ -218,6 +218,13 @@
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum) // Takes a Spectrum object and returns an SLHAstruct
     #undef FUNCTION
 
+    // Get MSSM spectrum from previous GAMBIT output via the postprocessor scanner
+    #define FUNCTION get_MSSM_spectrum_from_postprocessor
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atMGUT,MSSM63atMGUT_mA,MSSM63atQ,MSSM63atQ_mA) // Needed for tanbeta(mZ)_DRbar only
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to create full Spectrum object
+    #undef FUNCTION
+
   #undef CAPABILITY
 
 

@@ -1047,7 +1047,7 @@ if(NOT ditched_${name}_${ver})
           BUILD_COMMAND ""
           INSTALL_COMMAND ""
           )
-  #add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} ) # FIGURE THIS OUT
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean) # FIGURE THIS OUT
   set_as_default_version("backend" ${name} ${ver})
 
 endif()
@@ -1060,6 +1060,7 @@ set(Minuit_name "minuit2")
 set(Minuit_lib_name "Minuit2")
 set(Minuit_ver "5.34.14")
 set(phc_ver "2.4.58")
+set(hom4ps_ver "2.0")
 set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
@@ -1069,7 +1070,7 @@ if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
           DEPENDS ${Minuit_name}_${Minuit_ver}
           DEPENDS phc_${phc_ver}
-          DEPENDS hom4ps_2.0
+          DEPENDS hom4ps_${hom4ps_ver}
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
           GIT_TAG origin/Gambit_BOSSED_debug
@@ -1077,12 +1078,9 @@ if(NOT ditched_${name}_${ver})
           BINARY_DIR ${dir}/VevaciousPlusPlus
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} shared
           INSTALL_COMMAND ""
-          COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
-          COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
+          #COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
+          #COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
           )
- # execute_process(COMMAND cp -r ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1.0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/)
- # execute_process(COMMAND cp   ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/)
-
   add_extra_targets("backend" ${name} ${ver} ${dir}/VevaciousPlusPlus ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
   #  BOSS_backend(${name} ${ver})

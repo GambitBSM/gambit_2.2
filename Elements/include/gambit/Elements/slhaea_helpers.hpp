@@ -31,6 +31,7 @@
 
 #include "SLHAea/slhaea.h"
 
+#include <boost/serialization/strong_typedef.hpp>
 
 namespace Gambit
 {
@@ -39,6 +40,12 @@ namespace Gambit
 
   /// Less confusing name for SLHAea container class
   typedef SLHAea::Coll SLHAstruct;
+
+  /// Create a strong typedef (different classes underneath, but can be assigned to each other etc.)
+  /// that lets us create e.g. different print/retrieve functions for different sorts of 
+  /// spectrum information
+  BOOST_STRONG_TYPEDEF(SLHAstruct, MSSM_SLHAstruct)
+  BOOST_STRONG_TYPEDEF(SLHAstruct, SMslha_SLHAstruct)
 
   /// Read an SLHA file in to an SLHAea object with some error-checking
   SLHAstruct read_SLHA(str slha); 

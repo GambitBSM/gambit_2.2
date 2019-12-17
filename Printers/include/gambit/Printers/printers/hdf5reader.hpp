@@ -58,6 +58,9 @@ namespace Gambit
        BuffPair() {}
     };
 
+    // Forward declaration
+    class SLHAcombo;
+
     /// Keeps track of vertex buffers local to a retrieve function
     /// Similar to the buffer manager for HDF5Printer. I considered
     /// trying to re-use that, but it is too integrated with the
@@ -122,7 +125,7 @@ namespace Gambit
         /// Retrieve functions
         using BaseReader::_retrieve; // Tell compiler we are using some of the base class overloads of this on purpose.
         #define DECLARE_RETRIEVE(r,data,i,elem) bool _retrieve(elem&, const std::string&, const uint, const ulong);
-        BOOST_PP_SEQ_FOR_EACH_I(DECLARE_RETRIEVE, , HDF5_TYPES)
+        BOOST_PP_SEQ_FOR_EACH_I(DECLARE_RETRIEVE, , HDF5_RETRIEVABLE_TYPES)
         #ifndef SCANNER_STANDALONE
           BOOST_PP_SEQ_FOR_EACH_I(DECLARE_RETRIEVE, , HDF5_MODULE_BACKEND_TYPES)
         #endif
@@ -196,6 +199,9 @@ namespace Gambit
            return selected_buffer.isvalid.get_entry(dset_index);
         }
 
+        /// Extra helper function for spectrum retrieval
+        bool retrieve_and_add_to_SLHAea(SLHAstruct& out, bool& found, const std::string& spec_type, const std::string& entry, const SLHAcombo& item, const std::set<std::string>& all_dataset_labels, const uint rank, const ulong pointID);
+ 
     };
 
     /// Buffer retrieve function
