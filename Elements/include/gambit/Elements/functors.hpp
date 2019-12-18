@@ -311,7 +311,7 @@ namespace Gambit
       str myVersion;
       /// Purpose of the function (relevant for output and next-to-output functors)
       str myPurpose;
-      /// Citation key: reference code of the ArXiv paper used.
+      /// Citation key: BibTex key of the reference.
       str myCitationKey;
       /// Bound model functor claw, for checking relationships between models
       const Models::ModelFunctorClaw* myClaw;
