@@ -11,6 +11,7 @@
 ///  \author Sanjay Bloor
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date 2018 Sep, Oct
+///        2019 Dec
 ///
 ///  \author Ben Farmer
 ///          (b.farmer@imperial.ac.uk)
@@ -48,19 +49,26 @@ BE_NAMESPACE
 
     for(int OpCoeff=1; OpCoeff<=15; OpCoeff++)
     {
-       std::stringstream sp;
-       std::stringstream sn;
-       sp<<"cNR"<<OpCoeff<<"p";
-       sp<<"cNR"<<OpCoeff<<"n";
-       auto icp = nonrel_WCs.find(sp.str());
-       auto icn = nonrel_WCs.find(sn.str());
-       double cp=0;
-       double cn=0;
-       if(icp!=nonrel_WCs.end()) cp=(icp->second);
-       if(icn!=nonrel_WCs.end()) cn=(icn->second);
-       NRWCs.c0[OpCoeff] = cp + cn;
-       NRWCs.c1[OpCoeff] = cp - cn;
-    } 
+      std::stringstream sp;
+      std::stringstream sn;
+      sp<<"cNR"<<OpCoeff<<"p";
+      sn<<"cNR"<<OpCoeff<<"n";
+      auto icp = nonrel_WCs.find(sp.str());
+      auto icn = nonrel_WCs.find(sn.str());
+      double cp=0;
+      double cn=0;
+      if(icp!=nonrel_WCs.end())
+        cp=(icp->second);
+      else
+        backend_error().raise(LOCAL_INFO, "Operator " + sp.str() + " not found in nonrel_WCs!");
+      if(icn!=nonrel_WCs.end()) 
+        cn=(icn->second);
+      else
+        backend_error().raise(LOCAL_INFO, "Operator " + sn.str() + " not found in nonrel_WCs!");
+      NRWCs.c0[OpCoeff] = cp + cn;
+      NRWCs.c1[OpCoeff] = cp - cn;
+    }
+
     return NRWCs;
   }
 
@@ -144,7 +152,7 @@ BE_NAMESPACE
     }
 
     // Cast python dictionary to C++ type known to GAMBIT    
-    map_str_dbl nonrel_WCs = cNRs.cast<map_str_dbl>(); 
+    map_str_dbl nonrel_WCs = cNRs.cast<map_str_dbl>();
 
     // Copy coefficients into GAMBIT container object (converting to isoscalar/isovector basis in the process)
     return copy_couplings_to_NREO_container(nonrel_WCs);

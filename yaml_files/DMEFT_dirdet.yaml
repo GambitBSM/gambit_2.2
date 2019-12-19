@@ -14,36 +14,56 @@ Parameters:
      mH: 125.09
 
   DMEFT:
-    C61:
-      range: [0, 1]
-    C62:
-      range: [0, 1]
-    C63:
-      range: [0, 1]
-    C64:
-      range: [0, 1]
+    # DM mass
     mchi:
       range: [100,500]
+    # Scale of new physics
     Lambda: 1000.
+    # EM interactions (only turn on at loop-level -- not concerned with these)
     C51: 0.
     C52: 0.
-    C71: 0.
-    C72: 0.
-    C73: 0.
-    C74: 0.
-    C75: 0.
-    C76: 0.
-    C77: 0.
-    C78: 0.
-    C79: 0.
-    C710: 0.
-
-  # nuclear_params_sigmas_sigmal:
-  #   sigmas: 43
-  #   sigmal: 50
-  #   deltau: 0.842
-  #   deltad: -0.427
-  #   deltas: -0.085
+    # Dim 6 -- qq chi chi bilinears
+    # vector vector
+    C61:
+      range: [0, 1]
+    # axial-vector vector
+    C62: 
+      range: [0, 1]
+    # vector axial-vector
+    C63: 
+      range: [0, 1]
+    # axial-vector axial-vector
+    C64: 
+      range: [0, 1]
+    # Dim 7 -- gluons
+    C71:  
+      range: [0, 1]
+    C72:  
+      range: [0, 1]
+    C73:  
+      range: [0, 1]
+    C74:  
+      range: [0, 1]
+    # Dim 7 -- Higgs induced bilinears
+    # Scalar scalar
+    C75:  
+      range: [0, 1]
+    # Pseudoscalar scalar
+    C76:  
+      range: [0, 1]
+    # Scalar pseudoscalar
+    C77:  
+      range: [0, 1]
+    # Pseudoscalar pseudoscalar
+    C78:  
+      range: [0, 1]
+    # Dim 7 -- tensor currents
+    # sigma sigma
+    C79:  
+      range: [0, 1]
+    # sigma*ig5 sigma
+    C710:  
+      range: [0, 1]
 
   Halo_gNFW_rho0:
     rho0: 0.4
@@ -59,7 +79,6 @@ Parameters:
 Priors:
 
   # All the priors are simple for this scan, so they are specified directly in the Parameters section.
-
 
 Printer:
 
@@ -89,6 +108,9 @@ ObsLikes:
 
   - capability: XENON1T_2018_LogLikelihood
     purpose:    LogLike
+
+  # - capability: DD_rel_WCs
+  #   purpose:    observable
 
 Rules:
 
