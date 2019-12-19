@@ -16,19 +16,14 @@ Parameters:
   DMEFT:
     C61:
       range: [0, 1]
-      prior_type: flat
     C62:
       range: [0, 1]
-      prior_type: flat
     C63:
       range: [0, 1]
-      prior_type: flat
     C64:
       range: [0, 1]
-      prior_type: flat
     mchi:
       range: [100,500]
-      prior_type: flat
     Lambda: 1000.
     C51: 0.
     C52: 0.
@@ -68,15 +63,12 @@ Priors:
 
 Printer:
 
-  # printer: hdf5
-  # options:
-  #   output_file: "DMEFT.hdf5"
-  #   delete_file_on_restart: true
-  #   group: "/DMEFT"
-
-  printer: ascii
+  printer: cout
   options:
-    output_file: "DMEFT.txt"
+    output_file: "results.txt"
+    # group: "/spartan"
+    delete_file_on_restart: true
+    buffer_length: 10000
 
 Scanner:
 
@@ -138,7 +130,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT/"
+  default_output_path: "runs/DMEFT_dirdet/"
 
   debug: false
 
