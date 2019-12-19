@@ -66,15 +66,6 @@
     BACKEND_OPTION((SPheno, 3.3.8), (libSPheno))
     #undef FUNCTION
 
-    /// SPheno spectrum function
-    #define FUNCTION get_MSSM_spectrum_SPhenoMSSM
-    START_FUNCTION(Spectrum)
-    ALLOW_MODELS(CMSSM, MSSM63atMGUT, MSSM63atQ)
-    DEPENDENCY(SMINPUTS, SMInputs)
-    BACKEND_REQ(SPhenoMSSM_MSSMspectrum, (libSPhenoMSSM), int, (Spectrum&, const Finputs&) )
-    BACKEND_OPTION((SPhenoMSSM, 3.3.8), (libSPhenoMSSM))
-    #undef FUNCTION
-
     /// Get MSSM spectrum from CMSSM boundary conditions
     //  The type, (const) Spectrum, is a class containing two SubSpectrum* members and an SMInputs
     //  member. The SubSpectrum* members point to a "UV" Spectrum object (the MSSM) and an
@@ -225,6 +216,13 @@
     #define FUNCTION get_MSSM_spectrum_as_SLHAea_SLHA2
     START_FUNCTION(SLHAstruct)
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum) // Takes a Spectrum object and returns an SLHAstruct
+    #undef FUNCTION
+
+    // Get MSSM spectrum from previous GAMBIT output via the postprocessor scanner
+    #define FUNCTION get_MSSM_spectrum_from_postprocessor
+    START_FUNCTION(Spectrum)
+    ALLOW_MODELS(MSSM63atMGUT,MSSM63atMGUT_mA,MSSM63atQ,MSSM63atQ_mA) // Needed for tanbeta(mZ)_DRbar only
+    DEPENDENCY(SMINPUTS, SMInputs) // Need SLHA2 SMINPUTS to create full Spectrum object
     #undef FUNCTION
 
   #undef CAPABILITY

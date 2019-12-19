@@ -32,33 +32,38 @@ def get_model_parameters(parameters, partlist) :
 
     for param in parameters:
  
-        # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a model parameter
+        # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a
+        # model parameter
         if param.block != "MINPAR" and param.block != "EXTPAR" :
-          if not (param.block != None and param.block.endswith("IN")) : 
-            model_parameters.append(param)
+            if not (param.block != None and param.block.endswith("IN")) : 
+                model_parameters.append(param)
+
+
+    # Replace all trailing + and - with pm
+    for param in parameters:
+      param.name = re.sub(r'(.*)[-+]', r'\1pm', param.name)
 
     return model_parameters
 
 def get_model_par_name(paramname, parameters) :
     """
-    Get the output name of the model parameter with name or altname equal to paramname
+    Get the output name of the model parameter with 
+    name or alt_name equal to paramname
     """
     
     for name, param in parameters.iteritems():
-      if paramname == param.bcs :
-        return name
+        if paramname == param.bcs :
+            return name
     for name, param in parameters.iteritems():
-      if paramname == param.name or paramname == param.alt_name :
-        return param.name
+        if paramname == param.name or paramname == param.alt_name :
+            return param.name
 
 
 def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     """
     Adds a model to the model hierarchy. This means we create any
     new header files in the model directory, i.e.
-    Models/include/gambit/Models/models/<new_model>.hpp, and edit any
-    parent/children headers. Writes translation functions etc. in
-    Models/src/models/<new_model>.cpp if needed.
+    Models/include/gambit/Models/models/<new_model>.hpp
     """
 
     print("Writing new spectrum, {0}".format(spectrum_name))
@@ -78,11 +83,17 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     			   "\n"
     			   "  START_MODEL\n"
     			   "\n"
+    ).format(model_name)
 
-    			   ).format(model_name)
+    bsm_params = []
 
-    # Don't want the SM-like Higgs mass a fundamental parameter
-    bsm_params = [x for x in model_params if x.name != 'h0_1' and x.sm == False]
+    # Don't want the SM-like Higgs mass a fundamental parameter, nor any
+    # of the SM Yukawas etc, nor any Pole_Mixings.
+    for p in model_params:
+        if p.gb_in == "mH" and p.tag == "Pole_Mass": continue
+        if p.tag == "Pole_Mixing": continue
+        if p.sm == True: continue
+        bsm_params.append(p)
 
     params = []
 
@@ -137,7 +148,7 @@ def find_parents_params(parent):
     with open(location, 'r') as f:
         for num, line in enumerate(f, 1+num):
             if "DEFINEPARS" in line:
-                params = re.compile( "\((.*)\)" ).search(line).group(1)
+                params = re.compile(r"\((.*)\)").search(line).group(1)
                 parent_params += params.split(",")
             if term in line:
                 break
@@ -183,6 +194,7 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
 
     towrite = blame_gum(intro)
 
+
     towrite += (
             "#ifndef __{0}_contents_hpp__\n"
             "#define __{0}_contents_hpp__\n\n"
@@ -195,23 +207,41 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
             "{{\n"
             "setName(\"{0}\");\n"
             "\n"
-            "std::vector<int> scalar = initVector(1);"
-            " // i.e. get(Par::Tag, \"name\")\n"
-            "std::vector<int> v2     = initVector(2);"
-            " // i.e. get(Par::Tag, \"name\", i)\n"
-            "std::vector<int> v3     = initVector(3);   // \"\n"
-            "std::vector<int> v4     = initVector(4);   // \"\n"
-            "std::vector<int> v6     = initVector(6);   // \"\n"
-            "std::vector<int> m2x2   = initVector(2,2);"
-            " // i.e. get(Par::Tag, \"name\", i, j)\n"
-            "std::vector<int> m3x3   = initVector(3,3); // \"\n"
-            "std::vector<int> m4x4   = initVector(4,4); // \"\n"
-            "std::vector<int> m6x6   = initVector(6,6); // \"\n"
-            "\n"
     ).format(gambit_model_name)
+
+    # Extract all shapes from here
+    shapes = sorted(list(set([mp.shape for mp in model_parameters])), 
+                             reverse=True)
+
+    # Scalars first...
+    if "scalar" in shapes:
+        towrite += (
+                "std::vector<int> scalar = initVector(1);"
+                " // i.e. get(Par::Tag, \"name\")\n"
+        )
+
+    for shape in shapes:
+        if re.search(r'v\d', shape):
+            towrite += (
+                    "std::vector<int> {0}     = initVector({1});"
+                    " // i.e. get(Par::Tag, \"name\", i)\n"
+            ).format(shape, shape[1:])
+            continue
+        elif re.search(r'm\dx\d', shape):
+            towrite += (
+                    "std::vector<int> {0}  = initVector({1},{2});"
+                    " // i.e. get(Par::Tag, \"name\", i, j)\n"
+            ).format(shape, shape[1], shape[3])
+            continue
+        elif shape == "scalar": continue
+        else:
+            raise GumError(("Shape {0} not recognised...").format(shape))
+
+    towrite += "\n"
 
     # Now add each parameter to the model file.
     for i in np.arange(len(model_parameters)):
+
         if not isinstance(model_parameters[i], SpectrumParameter):
             raise GumError(("\n\nModel Parameters at position " + i +
                             "not passed as instance of class "
@@ -233,10 +263,12 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
 
         # Write the addParameter macro to initialise each SpectrumParameter
         # object within the SubSpectrum.
+
+        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name 
         towrite += (
                 "addParameter(Par::{0}, \"{1}\", {2}{3});\n"
                 ).format(mp.tag.replace("\"",""), 
-                         mp.name, shape, extra)
+                         e, shape, extra)
 
 
     towrite += (
@@ -280,14 +312,15 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
                             "SpectrumParameter."))
 
         if model_parameters[i].sm:
-        	e = ""
+          e = ""
         else:
-        	e = gambit_model_name + "_"
+          e = gambit_model_name + "_"
 
-        paramname = e + model_parameters[i].fullname
-
+        # Remove the trailing 'm' for a Pole_Mass
         if model_parameters[i].tag == "Pole_Mass":
-            paramname += "_Pole_Mass"
+            paramname = e + model_parameters[i].fullname[1:].strip('~') + "_Pole_Mass"
+        else:
+            paramname = e + model_parameters[i].fullname
 
         shape = "scalar"
         size = 1
@@ -301,15 +334,17 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
                 shape = "matrix"
                 size = model_parameters[i].shape[-1]
 
-        getter = "get_" + model_parameters[i].fullname
-
         if model_parameters[i].tag == "Pole_Mass":
-            getter += "PoleMass"
+            setter = "set_" + model_parameters[i].fullname[1:].strip('~') + "PoleMass"
+            getter = "get_" + model_parameters[i].fullname[1:].strip('~') + "PoleMass"
+        else:
+            setter = "set_" + model_parameters[i].fullname
+            getter = "get_" + model_parameters[i].fullname
 
-        setter = "set_" + model_parameters[i].fullname
-
-        if model_parameters[i].tag == "Pole_Mass":
-            setter += "PoleMass"
+        # Replace all plusses and minuses with 'pm'
+        setter = setter.replace("-","pm").replace("+","pm")
+        getter = getter.replace("-","pm").replace("+","pm")
+        paramname = paramname.replace("-","pm").replace("+","pm")
 
         x = SpecGetAndSet(shape, size, paramname, getter, setter)
         spectrumparameters.append(x)
@@ -501,10 +536,12 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.getter, index)
 
+        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name
+
         towrite += (
                 "getters[{0}].map{1}"
                 "W[\"{2}\"] = {3};\n"
-        ).format(mp.tag, size, mp.name, finf)
+        ).format(mp.tag, size, e, finf)
 
     towrite += (
             "\n"
@@ -553,10 +590,12 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index)
 
+        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name
+
         towrite += (
                 "setters[{0}].map{1}"
                 "W[\"{2}\"] = {3};\n"
-        ).format(mp.tag, size, mp.name, finf)
+        ).format(mp.tag, size, e, finf)
 
     towrite += (
             "\n"

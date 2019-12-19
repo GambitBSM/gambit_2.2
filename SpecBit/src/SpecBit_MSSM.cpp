@@ -38,6 +38,7 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum_factories.hpp"
 #include "gambit/Elements/smlike_higgs.hpp"
+#include "gambit/Elements/slhaea_helpers.hpp"
 #include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
 #include "gambit/Utils/stream_overloads.hpp" // Just for more convenient output to logger
 #include "gambit/Utils/util_macros.hpp"
@@ -46,6 +47,8 @@
 #include "gambit/SpecBit/QedQcdWrapper.hpp"
 #include "gambit/SpecBit/MSSMSpec.hpp"
 #include "gambit/SpecBit/model_files_and_boxes.hpp" // #includes lots of flexiblesusy headers and defines interface classes
+#include "gambit/Printers/printermanager.hpp" // Needed by get_MSSM_spectrum_from_postprocessor to access reader object
+#include "gambit/Printers/baseprinter.hpp" // Needed by get_MSSM_spectrum_from_postprocessor to use reader object
 
 // Flexible SUSY stuff (should not be needed by the rest of gambit)
 #include "flexiblesusy/src/ew_input.hpp"
@@ -701,33 +704,6 @@ namespace Gambit
 
     }
 
-    void get_MSSM_spectrum_SPhenoMSSM (Spectrum& spectrum)
-    {
-      namespace myPipe = Pipes::get_MSSM_spectrum_SPhenoMSSM;
-      const SMInputs &sminputs = *myPipe::Dep::SMINPUTS;
-
-      // Set up the input structure
-      Finputs inputs;
-      inputs.sminputs = sminputs;
-      inputs.param = myPipe::Param;
-      inputs.options = myPipe::runOptions;
-
-      // Retrieve any mass cuts
-      static const Spectrum::mc_info mass_cut = myPipe::runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
-      static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
-
-      // Get the spectrum from the Backend
-      cout << "calculating SPhenoMSSM spectrum" << endl;
-      myPipe::BEreq::SPhenoMSSM_MSSMspectrum(spectrum, inputs);
-      cout << "spectrum calculated" << endl;
-
-      // Get the SLHA struct from the spectrum object
-      //SLHAstruct slha = spectrum.getSLHAea(1);
-
-      // Convert into a spectrum object
-      //spectrum = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);
-
-    }
 
   // Runs FlexibleSUSY MSSMEFTHiggs model spectrum generator with SUSY
   // scale boundary conditions, ie accepts MSSM parameters at MSUSY,
@@ -1208,6 +1184,66 @@ namespace Gambit
 
       // OK the GAMBIT block exists, add the data to the MSSM SubSpectrum object.
       result.get_HE().set_override(Par::mass1,SLHAea::to<double>(input_slha.at("GAMBIT").at(1).at(1)), "high_scale", false);
+    }
+
+    /// Get pre-computed MSSM spectrum from previous output file
+    /// This function ONLY works when the scan is driven by the postprocessor!
+    /// This is because it relies on the global reader object created by the
+    /// postprocessor to retrieve output.
+    void get_MSSM_spectrum_from_postprocessor(Spectrum& result)
+    {
+       namespace myPipe = Pipes::get_MSSM_spectrum_from_postprocessor;
+       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS; // Retrieve dependency on SLHAstruct
+
+       // Retrieve the spectrum from whatever the point the global reader object is pointed at.
+       // This should be the same point that the postprocessor has retrieved the
+       // current set of ModelParameters from.
+       // Will throw an error if no reader object exists, i.e. if the postprocessor is not
+       // driving this scan.
+      
+       // Retrieve MSSM spectrum info into an SLHAea object 
+       MSSM_SLHAstruct mssm_in; // Special type to trigger specialised MSSM retrieve routine
+       bool mssm_is_valid = get_pp_reader().retrieve(mssm_in,"MSSM_spectrum");
+
+       // Retrieve SM spectrum info into an SLHAea object
+       // (should really match SMINPUTS, but better to use what is actually in the reported output spectrum)
+       SMslha_SLHAstruct sm_in;
+       bool sm_is_valid = get_pp_reader().retrieve(sm_in,"MSSM_spectrum");
+
+       // Check if a valid spectrum was retrived
+       // (if the required datasets don't exist an error will be thrown,
+       //  so this is just checking that the spectrum was computed for
+       //  the current input point)
+       if(not (mssm_is_valid and sm_is_valid)) invalid_point().raise("Postprocessor: precomputed spectrum was set 'invalid' for this point");
+       
+       // Dump spectrum to output for testing
+       //std::cerr<<"Dumping retrieved spectrum!"<<std::endl;
+       SLHAstruct mssm = mssm_in; // Only this type has stream overloads etc. defined
+       SLHAstruct sm = sm_in; 
+
+       // Turns out we don't generically save tan_beta(mZ)_DRbar, so need to extract
+       // this from model parameters (it is always an input, so we should have it in those)
+       double tbmZ = *myPipe::Param.at("TanBeta");
+       SLHAea_add(mssm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
+       SLHAea_add(sm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
+
+       //std::cerr<<mssm<<std::endl;
+       //std::cerr<<"Dump complete!"<<std::endl;
+
+       // Retrieve any mass cuts (could just cut with postprocessor, but I
+       // guess can leave this feature in for compatibility with usage
+       // of other Spectrum objects.
+       static const Spectrum::mc_info mass_cut = myPipe::runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
+       static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
+
+       // Create HE simple SubSpectrum object from the SLHAea object
+       MSSMSimpleSpec he(mssm);
+
+       // Create SMSimpleSpec SubSpectrum object from SMInputs
+       SMSimpleSpec le(sm);
+
+       // Create full Spectrum object
+       result = Spectrum(le,he,sminputs,NULL,mass_cut,mass_ratio_cut);
     }
 
     /// FeynHiggs SUSY masses and mixings
@@ -1763,7 +1799,18 @@ namespace Gambit
     {
       namespace myPipe = Pipes::get_MSSM_spectrum_as_map;
       const Spectrum& mssmspec(*myPipe::Dep::MSSM_spectrum);
-      fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      try
+      {
+         fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      }
+      catch(const Gambit::exception&)
+      {
+         // The above will fail for the SimpleSpectrum versions of the MSSM spectrum
+         // because it uses SM_slha rather than SM for the LE subspectrum
+         // TODO: Would be better to do this in a more elegant way than with exception
+         // handling
+         fill_map_from_subspectrum<SpectrumContents::SM_slha>  (specmap, mssmspec.get_LE()); 
+      }
       fill_map_from_subspectrum<SpectrumContents::MSSM>(specmap, mssmspec.get_HE());
       add_extra_MSSM_parameter_combinations(specmap, mssmspec.get_HE());
     }
@@ -1771,7 +1818,18 @@ namespace Gambit
     {
       namespace myPipe = Pipes::get_unimproved_MSSM_spectrum_as_map;
       const Spectrum& mssmspec(*myPipe::Dep::unimproved_MSSM_spectrum);
-      fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      try
+      {
+         fill_map_from_subspectrum<SpectrumContents::SM>  (specmap, mssmspec.get_LE());
+      }
+      catch(const Gambit::exception&)
+      {
+         // The above will fail for the SimpleSpectrum versions of the MSSM spectrum
+         // because it uses SM_slha rather than SM for the LE subspectrum
+         // TODO: Would be better to do this in a more elegant way than with exception
+         // handling
+         fill_map_from_subspectrum<SpectrumContents::SM_slha>  (specmap, mssmspec.get_LE()); 
+      }
       fill_map_from_subspectrum<SpectrumContents::MSSM>(specmap, mssmspec.get_HE());
       add_extra_MSSM_parameter_combinations(specmap, mssmspec.get_HE());
     }

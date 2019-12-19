@@ -85,12 +85,12 @@ def find_capability(capability, module, filename=None):
         raise GumError(("\n\nCannot find capability {0} in rollcall header file"
                         " {1} as the file does not exist!!").format(capability,
                                                                     location))
-
-    lookup = "#define CAPABILITY " + capability
+    pat = r'#define CAPABILITY {}\b'.format(capability)
 
     with open(location) as f:
         for num, line in enumerate(f, 1):
-            if lookup in line:
+            r = re.search(pat, line)
+            if r:
                 return True, num
 
     return False, 0
@@ -99,6 +99,16 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
     """
     Adds a new FUNCTION to an existing CAPABILITY in a rollcall header.
     """
+
+    print contents
+
+    # Get the actual function name from the contents
+    fpat = r'#define FUNCTION\s*(.*)\s*'
+    s = re.search(fpat, contents)
+    function = s.group(1) if s else ""
+    if not function:
+        raise GumError(("No FUNCTION found in contents of amend_rollcall for "
+                        "CAPABILITY {0}!").format(capability))
 
     module.strip('/')
 
@@ -115,13 +125,14 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
                         " {1} as the file does not exist!!").format(capability,
                                                                     location))
 
-    lookup = "#define CAPABILITY " + capability
+    pat = r'#define CAPABILITY {}\b'.format(capability)
 
     found = False
 
     with open(location) as f:
         for num, line in enumerate(f, 1):
-            if lookup in line:
+            r = re.search(pat, line)
+            if r:
                 found = True
                 break
 
@@ -135,7 +146,11 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
-            amend_file(filename, module, contents, no-1, reset_dict)
+
+        amend_file(filename, module, contents, no-1, reset_dict,
+                   is_capability = True, capability = capability, 
+                   function = function)
+
     else:
         raise GumError(("\n\nCapability {0} not found in "
                         "{1}!").format(capability, filename))
@@ -157,26 +172,31 @@ def find_function(function, capability, module, filename=None):
     # First check the capability exists...
     exists, num = find_capability(capability, module, filename)
 
-    lookup = "#define FUNCTION " + function
+    if not exists:
+        return False, 0
+
+    pat = r'#define FUNCTION {}\b'.format(function)
     terminate = "#undef CAPABILITY"
 
     with open(location) as f:
         for i in xrange(num):
             f.next()
         for no, line in enumerate(f, 1+num):
-            if lookup in line:
+            r = re.search(pat, line)
+            if r:
                 return True, no
             if terminate in line:
                 return False, 0
 
     return False, 0
 
-def find_string(filename, module, string):
+def find_string(filename, module, string, filename_overwrite = ""):
     """
     Tries to find a generic string in a given file.
     """
 
     location = full_filename(filename, module)
+    if filename_overwrite: location = filename_overwrite
 
     if find_file(filename, module):
         pass
@@ -216,7 +236,8 @@ def write_file(filename, module, contents, reset_dict):
 
     print("File {} successfully created.".format(location))
 
-def copy_file(filename, module, output_dir, reset_dict, existing=True):
+def copy_file(filename, module, output_dir, reset_dict, 
+              existing=True):
     """
     Copies an output file in a specified location.
     """
@@ -252,10 +273,12 @@ def delete_file(filename, module):
         os.remove(location)
         print("File {} successfully removed.".format(location))
 
-def amend_file(filename, module, contents, line_number, reset_dict):
+def amend_file(filename, module, contents, line_number, reset_dict, 
+               is_capability=False, capability="", function=""):
     """
     Amends a file in a specified location with 'contents', starting
     from a given line number.
+    If it's a capability then add the capability and function names.
     """
 
     location = full_filename(filename, module)
@@ -270,14 +293,20 @@ def amend_file(filename, module, contents, line_number, reset_dict):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
                         ", but it does not exist."))
 
-    # Check there's not already an identical entry - happens sometimes!
-    present = False
-    if location in reset_dict['amended_files']:
-        if contents in reset_dict['amended_files'][location]:
-            present = True
+    # If it's a capability, add this to the capability node
+    if is_capability:
+        reset_dict['capabilities'][location].append(capability+'|'+function)
+        
+    # Otherwise just the generic 'amended' stuff will do.
+    else:
+        # Check there's not already an identical entry - happens sometimes!
+        present = False
+        if location in reset_dict['amended_files']:
+            if contents in reset_dict['amended_files'][location]:
+                present = True
 
-    if not present:
-        reset_dict['amended_files'][location].append(contents)
+        if not present:
+            reset_dict['amended_files'][location].append(contents)
 
     # Save a temp mug file, incase something goes wrong.
     drop_mug_file("mug_files/temp.mug", reset_dict)
@@ -325,7 +354,9 @@ def add_capability(module, capability, function, reset_dict,
 
         # If there's already the capability, then the only thing we need 
         # is the function. Add it to the existing capability.
-        amend_file(filename, module, func, cap_line+1, reset_dict)
+        amend_file(filename, module, func, cap_line+1, reset_dict, 
+                   is_capability = True, capability = capability, 
+                   function = function)
         # The +1 takes into account the START_CAPABILITY line. Hopefully 
         # being a bit lazy here doesn't come back to bite me, but I doubt it.
 
@@ -346,7 +377,9 @@ def add_capability(module, capability, function, reset_dict,
         with open(location) as f:
             for num, line in enumerate(f, 1):
                 if "#undef CAPABILITY" in line: n = num
-        amend_file(filename, module, contents, n+1, reset_dict)
+        amend_file(filename, module, contents, n+1, reset_dict,
+                   is_capability = True, capability = capability, 
+                   function = function)
 
 
 def write_function(function, returntype, dependencies=None,
@@ -442,27 +475,12 @@ def add_new_model_to_function(filename, module, capability, function,
                         # Add the model name to the end if there's
                         # less than ten (macro maximum)
                         if numentries < 10:
-                            # Only replacing first occurence of a ")"
                             modellist = re.sub(r'\)', ", "+model_name+')', 
                                         modellist, 1) 
                         # Otherwise add a new entry altogether
                         else:
-                            newentry = ""
-                            # If it's something like MODEL_GROUP(group2(...))
-                            # make a new group3 and add an 
-                            # ALLOW_MODEL_COMBINATION(group1, group3)
-                            # TODO check to see if group(n+1) already exists.
-                            m = re.search(r'MODEL_GROUP\(group(\d)', pattern)
-                            if m:
-                                p = m.group(1) # Index
-                                newentry = (
-                                    "\n      MODEL_GROUP(group{0}({1}))"
-                                    "\n      ALLOW_MODEL_COMBINATION(group1,group{0})"
-                                ).format((int(p)+1), model_name)
-                            # Write the new entry *before* the old one. This
-                            # way it will be appended to first by GUM.
-                            else:
-                                newentry = "\n      {0}({1})".format(pattern, model_name)
+                            newentry = "\n      {0}({1})".format(pattern, 
+                                                                 model_name)
                             g.write(newentry)
                         g.write(modellist)
                         adding_to_modellist = False
@@ -501,7 +519,7 @@ def blame_gum(message):
             "///       *** Automatically created by GUM ***     \n"
             "///                                                \n"
             "///  \\author The GAMBIT Collaboration             \n"
-            "///  \date " +
+            "///  \\date " +
             datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") +
             "\n"
             "///                                                \n"
@@ -570,28 +588,107 @@ def revert(reset_file):
         try:
             data = yaml.safe_load(f)
         except yaml.YAMLError as exc:
-            print(exc)
-            return
+            raise(exc)
 
         # The files GUM wrote as new.
         # GUM can just simply delete these.
         new_files = data['new_files']['files']
-
 
         for i in new_files:
             if os.path.isfile(i):
                 print("Deleting {0}...".format(i))
                 os.remove(i)
             else:
-                print("Tried deleting {0}, but it seems to have already been removed.".format(i))
+                print(("Tried deleting {0}, but it seems to have already been "
+                      "removed.".format(i)))
+        
+        # Go through the new capabilities and functions
+        if 'capabilities' in data:
+            capabilities = data['capabilities']
+            for filename, entries in capabilities.iteritems():
+
+                temp_file = filename + "_temp"
+                with open(filename, 'r') as original_file:
+                    text = original_file.read()
+                    lines = text.splitlines()
+
+                for entry in entries:
+                    capability, function = entry.split('|')
+                    print entry
+                    print((
+                           "Removing FUNCTION: {0}, in CAPABILITY: {1}, in "
+                           "file {2}..."
+                           ).format(capability, function, filename))
+
+                    # 1. Find the FUNCTION within the CAPABILITY
+                    func_line = find_string("","",function,filename)
+                    if not func_line[0]:
+                        print(("Tried deleting the FUNCTION {0}:\n from "
+                              "file {1}, but I could not find it -- "
+                              "perhaps it has already been removed?"
+                              ).format(function, filename))
+                    # 2. Remove the strings between the #define FUNCTION
+                    # and #undef FUNCTION lines
+                    else:
+                        tomatch_start = "#define FUNCTION " + function
+                        tomatch_end = "#undef FUNCTION"
+                        writing = False
+                        s = ""
+                        for line in lines:
+                            if tomatch_start in line:
+                                writing = True
+                            if writing:
+                                if "START_CAPABILITY" in line: continue
+                                else: s += line + "\n"
+                            if writing:
+                                if tomatch_end in line: writing = False
+                        text = text.replace(s, '')
+                        new_file = open(temp_file, 'w')
+                        new_file.write(text)
+                        new_file.close()
+                        os.remove(filename)
+                        os.rename(temp_file, filename)
+                        # 3. Check to see if the CAPABILITY is empty - 
+                        # nuke it if so
+                        with open(filename, 'r') as original_file:
+                            text = original_file.read()
+                            lines = text.splitlines()
+
+                        cap_line = find_string("","",capability,filename)
+                        if not cap_line[0]:
+                            print(("Tried deleting the CAPABILITY {0} from "
+                                  "file {1}, but I could not find it -- "
+                                  "perhaps it has already been removed?"
+                                  ).format(function, filename))
+                        else:
+                            writing = False
+                            tomatch_start = "#define CAPABILITY " + capability
+                            tomatch_end = "#undef CAPABILITY"
+                            pat = '{}(.*?){}'.format(tomatch_start, tomatch_end)
+                            newtext = re.search(pat, text, re.DOTALL).group(1)
+                            s = ""
+                            t = newtext.strip()
+                            if t == "START_CAPABILITY":
+                                for line in lines:
+                                    if tomatch_start in line:
+                                        writing = True
+                                    if writing:
+                                        s += line + "\n"
+                                    if writing:
+                                        if tomatch_end in line: writing = False
+                                text = text.replace(s, '')
+                                new_file = open(temp_file, 'w')
+                                new_file.write(text)
+                                new_file.close()
+                                os.remove(filename)
+                                os.rename(temp_file, filename)
 
         # The files that existed previously, that GUM added stuff to.
         # These are a little more annoying to deal with.
         amended_files = data['amended_files']
 
-        # We want to match *strings* and not line numbers or anything like that.
+        # We want to match strings and not line numbers or anything like that.
         # This way, there is no order needed to perform resets in.
-
         for filename, v in amended_files.iteritems():
 
             print("Amending {0}...".format(filename))
@@ -599,7 +696,6 @@ def revert(reset_file):
             temp_file = filename + "_temp"
             with open(filename, 'r') as original_file:
                 text = original_file.read()
-                lines = text.splitlines()
 
             # This is the YAML node for the strings needing to be deleted
             for string in v:
@@ -621,51 +717,55 @@ def revert(reset_file):
             os.remove(filename)
             os.rename(temp_file, filename)
 
-        # Now go through those amendments that are adding new models to an existing
-        # ALLOW_MODELS (or similar) macro for a given capability
-        amended_capabilities = data['new_models']
+        # Now go through those amendments that are adding new models to an 
+        # existing ALLOW_MODELS (or similar) macro for a given capability
+        if 'new_models' in data:
+            amended_capabilities = data['new_models']
 
-        for loc_cap_func_pattern, model in amended_capabilities.iteritems():
-            
-            location, capability, function, pattern = loc_cap_func_pattern.split('|')
-            module = location.split('/')[1]
+            for loc_cap_func_pattern, model in amended_capabilities.iteritems():
+                
+                location, capability, function, pattern = \
+                                                 loc_cap_func_pattern.split('|')
+                module = location.split('/')[1]
 
-            print(("Removing model from capability {0}; function {1}; in {2}...")
-                   .format(capability, function, module))
+                print(("Removing model from capability {0}; function {1};"
+                       " in {2}..."
+                       ).format(capability, function, module))
 
-            temp_file = location + "_temp"
-            
-            exists, num = find_function(function, capability, module)
-            
-            counter = 0
-            done = False
-            take_it_slow = False
-            modellist = ""
-            taking_from_modellist = False
-            
-            with open(location, 'r') as f, open(temp_file, 'w+') as g:
-                for line in f:
-                    counter += 1
-                    if counter > num and not done: 
-                        take_it_slow = True
-                    if not take_it_slow: 
-                        g.write(line)
-                    else:
-                        if pattern in line: 
-                            taking_from_modellist = True 
-                        elif not taking_from_modellist: g.write(line)
-                        if taking_from_modellist and not done:
-                            modellist += line
-                            if ")" in line: 
-                                # Take the model out of the list
-                                modellist = re.sub(', '+model[0], '', modellist)
-                                g.write(modellist)
-                                taking_from_modellist = False
-                                take_it_slow = False
-                                done = True
+                temp_file = location + "_temp"
+                
+                exists, num = find_function(function, capability, module)
+                
+                counter = 0
+                done = False
+                take_it_slow = False
+                modellist = ""
+                taking_from_modellist = False
+                
+                with open(location, 'r') as f, open(temp_file, 'w+') as g:
+                    for line in f:
+                        counter += 1
+                        if counter > num and not done: 
+                            take_it_slow = True
+                        if not take_it_slow: 
+                            g.write(line)
+                        else:
+                            if pattern in line: 
+                                taking_from_modellist = True 
+                            elif not taking_from_modellist: g.write(line)
+                            if taking_from_modellist and not done:
+                                modellist += line
+                                if ")" in line: 
+                                    # Take the model out of the list
+                                    modellist = re.sub(', '+model[0], '', 
+                                                       modellist)
+                                    g.write(modellist)
+                                    taking_from_modellist = False
+                                    take_it_slow = False
+                                    done = True
 
-            os.remove(location)
-            os.rename(temp_file, location)
+                os.remove(location)
+                os.rename(temp_file, location)
 
     return
 
@@ -675,24 +775,34 @@ def check_for_existing_entries(model_name, darkbit, colliderbit, output_opts):
     """
 
     # Models entries
-    if ( find_file("models/" + model_name + ".hpp", "Models") or
-         find_file("SpectrumContents/" + model_name + ".cpp", "Models") or 
-         find_file("SimpleSpectra/" + model_name + "SimpleSpec" + ".hpp", "Models") or 
-         find_file("SpecBit_" + model_name + ".cpp", "SpecBit") or 
-         find_file("SpecBit_" + model_name + "_rollcall.hpp", "SpecBit")
+    m = "Models"
+    if ( find_file("models/" + model_name + ".hpp", m) or
+         find_file("SpectrumContents/" + model_name + ".cpp", m) or 
+         find_file("SimpleSpectra/" + model_name + "SimpleSpec" + ".hpp", m)
        ):
-        raise GumError(("Model {0} already exists in the Model Hierarchy.").format(model_name))
+       raise GumError(("Model {0} already exists in {1}").format(model_name, m))
+    m = "SpecBit"
+    if (
+         find_file("SpecBit_" + model_name + ".cpp", m) or 
+         find_file("SpecBit_" + model_name + "_rollcall.hpp", m)
+       ):
+       raise GumError(("Model {0} already exists in {1}").format(model_name, m))
 
     if darkbit:
-        if find_file(model_name + ".cpp", "DarkBit"):
-            raise GumError(("Model {0} already exists in DarkBit.").format(model_name))
+        m = "DarkBit"
+        if find_file(model_name + ".cpp", m):
+            raise GumError(("Model {0} already exists in {1}"
+                            ).format(model_name))
         if output_opts.mo:
             ver = "3.6.9.2"
-            f = "frontends/MicrOmegas_{0}_{1}".format(model_name, ver.replace('.','_'))
+            f = "frontends/MicrOmegas_{0}_{1}".format(model_name, 
+                                                      ver.replace('.','_'))
             if ( find_file(f+".cpp", "Backends") or 
                  find_file(f+".hpp", "Backends")
                ):
-                raise GumError(("MicrOmegas entry already exists for model {0}").format(model_name))
+                raise GumError((
+                                "MicrOmegas entry already exists for model {0}"
+                               ).format(model_name))
 
 def drop_mug_file(mug_file, contents):
     """
@@ -716,32 +826,38 @@ def drop_mug_file(mug_file, contents):
         new_models = dict(d['new_models'])
     else:
         new_models = {}
+    if 'capabilities' in d:
+        capabilities = dict(d['capabilities'])
+    else:
+        capabilities = {}
         
     new_contents = {'new_files': new_files, 'amended_files': amended_files, 
-                    'new_models' : new_models}
+                    'new_models' : new_models, 'capabilities' : capabilities}
 
     with open(mug_file, 'w') as f:
         yaml.dump(new_contents, f, default_flow_style=False)
 
 
-def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
+def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
+                   spectrum):
     """
     Drops an example YAML file with all decays of a new model
     added.
     """
 
     towrite = (
-        "##########################################################################\n"
+        "####################################################################\n"
         "## GAMBIT configuration for a random scan of the {0} model\n"
         "##\n"
-        "## Includes simply the decays of the new model.\n"
-        "##########################################################################\n"
+        "## Simply prints the spectrum of the new model.\n"
+        "####################################################################\n"
         "\n"
         "\n"
         "Parameters:\n"
         "\n"
         "  # SM parameters.\n"
-        "  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml\n"
+        "  StandardModel_SLHA2: !import "
+        "include/StandardModel_SLHA2_defaults.yaml\n"
         "\n"
     ).format(model_name)
 
@@ -755,7 +871,8 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
     towrite += ("  {0}:\n").format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    bsm_params = [x for x in model_parameters if x.name != 'h0_1' and x.sm == False]
+    bsm_params = [x for x in model_parameters if x.name != 'h0_1'
+                  and x.sm == False]
     params = []
 
     for i in bsm_params:
@@ -801,29 +918,23 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "\n"
         "    random:\n"
         "      plugin: random\n"
-        "      point_number: 10\n"
+        "      point_number: 1\n"
         "      like:  LogLike\n"
         "\n"
         "ObsLikes:\n"
         "\n"
         "  - purpose:      Observable\n"
-        "    capability:   decay_rates\n"
-        "    type:         DecayTable\n"
-        "    printme:      false\n"
+        "    capability:   {1}\n"
+        "    type:         map_str_dbl\n"
         "\n"
         "Rules:\n"
+        "  # None needed\n"
         "\n"
-        "  # Choose to get decays from DecayBit proper, not from an SLHA file.\n"
-        "  - capability: decay_rates\n"
-        "    function: all_decays\n"
         "Logger:\n"
         "\n"
         "  redirection:\n"
         "    [Debug] : \"debug.log\"\n"
         "    [Default] : \"default.log\"\n"
-        "    [DecayBit] : \"DecayBit.log\"\n"
-        "    [PrecisionBit] : \"PrecisionBit.log\"\n"
-        "    [ColliderBit] : \"ColliderBit.log\"\n"
         "    [SpecBit] : \"SpecBit.log\"\n"
         "    [Dependency Resolver] : \"dep_resolver.log\"\n"
         "\n"
@@ -840,9 +951,10 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents):
         "\n"
         "  debug: false\n"
         "\n"
-    ).format(model_name)
+    ).format(model_name, spectrum)
 
-    write_file(model_name + '.yaml', 'yaml_files', towrite, reset_contents)
+    write_file(model_name + '_example.yaml', 'yaml_files', 
+               towrite, reset_contents)
 
 def write_config_file(outputs, model_name, reset_contents):
     """
@@ -857,10 +969,10 @@ def write_config_file(outputs, model_name, reset_contents):
     )
 
     if outputs.pythia:
-        towrite += " pythia_{0}\n".format(model_name.lower())
+        towrite += " pythia_{0}".format(model_name.lower())
 
     if outputs.mo:
-        towrite += " micromegas_{0}\n".format(model_name)
+        towrite += " micromegas_{0}".format(model_name)
 
     if outputs.spheno:
         towrite += " spheno_{0}".format(model_name.lower())

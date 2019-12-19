@@ -18,7 +18,7 @@ endif()
 
 # Check for Boost.  Not that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
 set(Boost_NO_BOOST_CMAKE ON)
-find_package(Boost 1.41 COMPONENTS "python")
+find_package(Boost 1.41 COMPONENTS "python" "filesystem")
 if(Boost_FOUND)
   include_directories("${Boost_INCLUDE_DIR}")
 else()
@@ -76,7 +76,7 @@ EXTERNALPROJECT_ADD(
 # Download MadGraph
 EXTERNALPROJECT_ADD(
     MadGraph
-    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.6.tar.gz
+    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.7.tar.gz
     UPDATE_COMMAND ""
     PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" input/mg5_configuration.txt
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/MadGraph
@@ -155,13 +155,13 @@ else()
   endif()
 endif()
 
-# Check for Boost & dump FeynRules/SARAH shared object files.
+# Check for Boost & drop FeynRules/SARAH shared object files.
 set(Boost_NO_BOOST_CMAKE ON)
 FIND_PACKAGE(Boost 1.41)
 if(Boost_FOUND)
   set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined" )
   include_directories("${Boost_INCLUDE_DIR}")
-  FIND_PACKAGE(Boost 1.41.0 COMPONENTS python)
+  FIND_PACKAGE(Boost 1.41.0 COMPONENTS python filesystem)
   ADD_LIBRARY(fr SHARED src/feynrules.cpp src/math_package.cpp)
   TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
   ADD_LIBRARY(sarah SHARED src/sarah.cpp src/math_package.cpp)

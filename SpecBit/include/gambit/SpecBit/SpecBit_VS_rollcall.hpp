@@ -21,6 +21,10 @@
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date Sep 2019
 ///
+///  \author Janina Renk
+///          (janina.renk@fysik.su.se)
+///  \date 2019 July, Dec
+///
 ///  *********************************************
 
 #ifndef __SpecBit_VS_rollcall_hpp__
@@ -65,7 +69,7 @@
     ALLOW_MODEL_COMBINATION(higgs, singlet)
     #undef FUNCTION
 
-		#define FUNCTION find_min_lambda_ScalarSingletDM_Z3
+    #define FUNCTION find_min_lambda_ScalarSingletDM_Z3
     START_FUNCTION(dbl_dbl_bool)
     DEPENDENCY(SMINPUTS, SMInputs)
     DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum)
@@ -75,7 +79,7 @@
     ALLOW_MODEL_COMBINATION(higgs, singlet)
     #undef FUNCTION
 
-	  #define FUNCTION find_min_lambda_MDM
+    #define FUNCTION find_min_lambda_MDM
     START_FUNCTION(dbl_dbl_bool)
     DEPENDENCY(SMINPUTS, SMInputs)
     DEPENDENCY(MDM_spectrum, Spectrum)
@@ -111,6 +115,46 @@
     #undef FUNCTION
   #undef CAPABILITY
 
+  /******************************************/
+  /* Vacuum stability likelihoods & results */
+  /******************************************/
+
+  /// Tunnelling likelihood using global minimum as panic vacuum
+  #define CAPABILITY VS_likelihood_global
+  START_CAPABILITY
+    #define FUNCTION get_likelihood_VS_global
+      START_FUNCTION(double)
+      DEPENDENCY(check_vacuum_stability_global, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Tunnelling likelihood using nearest minimum as panic vacuum
+  #define CAPABILITY VS_likelihood_nearest
+  START_CAPABILITY
+    #define FUNCTION get_likelihood_VS_nearest
+      START_FUNCTION(double)
+      DEPENDENCY(check_vacuum_stability_nearest, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+  
+  /// Get all vevacious results from a global run as str to dbl map to print them
+  #define CAPABILITY VS_results_global
+  START_CAPABILITY
+    #define FUNCTION get_VS_results_global
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(check_vacuum_stability_global, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+    
+  /// Get all vevacious results from a nearest run as str to dbl map to print them
+  #define CAPABILITY VS_results_nearest
+  START_CAPABILITY
+    #define FUNCTION get_VS_results_nearest
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(check_vacuum_stability_nearest, SpecBit::VevaciousResultContainer)
+    #undef FUNCTION
+  #undef CAPABILITY
+  
   /**********************/
   /* VEVACIOUS ROUTINES */
   /**********************/
@@ -132,79 +176,52 @@
     DEPENDENCY(vevacious_file_location, map_str_str)
     #undef FUNCTION
   #undef CAPABILITY
+   
+  /// Function for computing the stability of the scalar potential w.r.t. global minimum. Model independent. 
+  /// Just works with a filled instance of SpectrumEntriesForVevacious for the respective Model.
+  /// calls two non-rollcalled helper functions: helper_run_vevacious & helper_catch_vevacious
+  #define CAPABILITY check_vacuum_stability_global
+  START_CAPABILITY
+    #define FUNCTION check_vacuum_stability_vevacious_global
+    START_FUNCTION(SpecBit::VevaciousResultContainer)
+    // should eventually get the number of implemented pathFinders in vevacious in a non-hard coded way # todo
+    //BACKEND_REQ(get_pathFinder_number,(vevtag), int, ())
+    DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
+    DEPENDENCY(init_vevacious, std::string)
+    NEEDS_CLASSES_FROM(vevacious, default)
+  #undef FUNCTION
+  #undef CAPABILITY
+  
+  /// Function for computing the stability of the scalar potential w.r.t to nearest minimum. Model independent. 
+  /// Just works with a filled instance of SpectrumEntriesForVevacious for the respective Model.
+  /// calls two non-rollcalled helper functions: helper_run_vevacious & helper_catch_vevacious
+  #define CAPABILITY check_vacuum_stability_nearest
+  START_CAPABILITY
+    #define FUNCTION check_vacuum_stability_vevacious_nearest
+    START_FUNCTION(SpecBit::VevaciousResultContainer)
+    // should eventually get the number of implemented pathFinders in vevacious in a non-hard coded way # todo
+    //BACKEND_REQ(get_pathFinder_number,(vevtag), int, ())
+    DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
+    DEPENDENCY(init_vevacious, std::string)
+    NEEDS_CLASSES_FROM(vevacious, default)
+  #undef FUNCTION
+  #undef CAPABILITY
 
-  // Function to pass spectra to vevacious (via SLHAea). Model dependent.
+  /// Function to create an object of type SpectrumEntriesForVevacious, holding all spectrum entries
+  /// that have to be passed to vevacious (via SLHAea). Model dependent.
+  /// Note that the actual execution of the passing is done in a non-rollcalled helper function 
+  /// (exec_pass_spectrum_to_vevacious) to allow for several vevacious runs per parameter point. 
   #define CAPABILITY pass_spectrum_to_vevacious
   START_CAPABILITY
-    #define FUNCTION pass_MSSM_spectrum_to_vevacious
-    START_FUNCTION(const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)
+
+  #define FUNCTION prepare_pass_MSSM_spectrum_to_vevacious
+    START_FUNCTION(SpecBit::SpectrumEntriesForVevacious)
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
     DEPENDENCY(init_vevacious, std::string)
-    ALLOW_MODEL_DEPENDENCE(MSSM, CMSSM)
+    // (JR) I don't know which models should or should not be allowed here, best to check with Eliel # todo
+    ALLOW_MODELS(MSSM, CMSSM, NUHM2) 
   #undef FUNCTION
   #undef CAPABILITY
-
-  /// Function for computing the stability of the scalar potential. Model independent. 
-  /// Just works with an initialised vevaciousPlusPlus object.
-  #define CAPABILITY check_vacuum_stability
-  START_CAPABILITY
-    #define FUNCTION check_vacuum_stability_vevacious
-    START_FUNCTION(SpecBit::VevaciousResultContainer)
-    DEPENDENCY(pass_spectrum_to_vevacious, const vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus*)
-    DEPENDENCY(init_vevacious, std::string)
-  #undef FUNCTION
-  #undef CAPABILITY
-
-  // Tunnelling likelihood
-  #define CAPABILITY VS_likelihood
-  START_CAPABILITY
-    #define FUNCTION get_likelihood_VS
-      START_FUNCTION(double)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // Thermal likelihood
-  #define CAPABILITY VS_likelihood_thermal
-  START_CAPABILITY
-    #define FUNCTION get_likelihood_VS_thermal
-      START_FUNCTION(double)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY VS_StraightPathGoodEnough
-  START_CAPABILITY
-    #define FUNCTION print_VS_StraightPathGoodEnough
-      START_FUNCTION(int)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-  
-  #define CAPABILITY VS_StraightPathGoodEnough_Thermal
-  START_CAPABILITY
-    #define FUNCTION print_VS_StraightPathGoodEnough_Thermal
-      START_FUNCTION(int)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-#define CAPABILITY VS_ThresholdAndBounceActions
-  START_CAPABILITY
-    #define FUNCTION print_VS_ThresholdAndBounceActions
-      START_FUNCTION(std::vector<double>)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-  
-  #define CAPABILITY VS_ThresholdAndBounceActions_Thermal
-  START_CAPABILITY
-    #define FUNCTION print_VS_ThresholdAndBounceActions_Thermal
-      START_FUNCTION(std::vector<double>)
-      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
-    #undef FUNCTION
-  #undef CAPABILITY
-
 
 #endif
 

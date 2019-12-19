@@ -941,34 +941,6 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
-# SPheno-SARAH MSSM model
-set(model "mssm")
-set(Model "MSSM")
-set(name "spheno${model}")
-set(ver "3.3.8")
-set(lib "lib/libSPheno${Model}.so")
-set(dl "http://www.hepforge.org/archive/spheno/SPheno-${ver}.tar.gz")
-set(md5 "4307cb4b736cebca5e57ca6c5e0b5836")
-set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(sarahdir "${PROJECT_SOURCE_DIR}/Models/data/SARAH/${Model}/EWSB/SPheno")
-file(GLOB sarahfiles  "${sarahdir}/[a-zA-Z0-9]*")
-set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif")
-check_ditch_status(${name} ${ver} ${dir})
-if(NOT ditched_${name}_${ver})
-  ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} COMMAND mkdir "${dir}/${Model}" COMMAND cp -r "${sarahfiles}" "${dir}/${Model}" COMMAND ls
-    SOURCE_DIR ${dir}
-    BUILD_IN_SOURCE 1
-    PATCH_COMMAND patch -p1 < ${patch}
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} Model=${model} F90=${CMAKE_Fortran_COMPILER} FFLAGS="${SPheno_FLAGS}" ${lib}
-    INSTALL_COMMAND ""
-  )
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
-endif()
-
-
 # gm2calc
 set(name "gm2calc")
 set(ver "1.3.0")
@@ -1055,10 +1027,11 @@ set(ver "2.4.58")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(dl "http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz")
-  set(md5 "999c0a4471b0efa4e0bf1d847569b4c4")
+#  set(md5 "999c0a4471b0efa4e0bf1d847569b4c4")
 else()
   set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
-  set(md5 "e1068bd9b67446cca63177d723e52ee6")
+#  set(md5 "7b589002b78037c40a8c52269bf39c0e")
+set(md5 "none")
 endif()
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver} ${dir})
@@ -1099,7 +1072,7 @@ if(NOT ditched_${name}_${ver})
           BUILD_COMMAND ""
           INSTALL_COMMAND ""
           )
-  #add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} ) # FIGURE THIS OUT
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean) # FIGURE THIS OUT
   set_as_default_version("backend" ${name} ${ver})
 
 endif()
@@ -1112,6 +1085,7 @@ set(Minuit_name "minuit2")
 set(Minuit_lib_name "Minuit2")
 set(Minuit_ver "5.34.14")
 set(phc_ver "2.4.58")
+set(hom4ps_ver "2.0")
 set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
@@ -1121,7 +1095,7 @@ if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
           DEPENDS ${Minuit_name}_${Minuit_ver}
           DEPENDS phc_${phc_ver}
-          DEPENDS hom4ps_2.0
+          DEPENDS hom4ps_${hom4ps_ver}
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
           GIT_TAG origin/Gambit_BOSSED_debug
@@ -1129,12 +1103,9 @@ if(NOT ditched_${name}_${ver})
           BINARY_DIR ${dir}/VevaciousPlusPlus
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} shared
           INSTALL_COMMAND ""
-          COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
-          COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
+          #COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
+          #COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
           )
- # execute_process(COMMAND cp -r ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1.0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/)
- # execute_process(COMMAND cp   ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/)
-
   add_extra_targets("backend" ${name} ${ver} ${dir}/VevaciousPlusPlus ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
   #  BOSS_backend(${name} ${ver})

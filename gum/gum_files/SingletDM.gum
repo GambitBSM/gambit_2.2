@@ -10,7 +10,7 @@ math:
   #lagrangian: LSM + LScalar
 
 # PDG code of the DM candidate.
-dm_candidate: 9900001
+wimp_candidate: 9900001
 
 # Outputs for GUM to hook up to GAMBIT
 output:

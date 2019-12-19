@@ -143,16 +143,24 @@ def fr_params(paramlist, add_higgs):
 
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
-        params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True))
+        params.append(SpectrumParameter("vev", "mass1", shape="scalar", 
+                                        block="VEVS", sm=True))
 
-    # Add gauge couplings and Yukawas here? TODO: check! 
-    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True))
-    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True))
-    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True))
-    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True))
-    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True))
-    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True))
-    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True))
+    # Add gauge couplings and Yukawas here
+    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", 
+                                    index=1, shape="scalar", sm=True))
+    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", 
+                                    index=2, shape="scalar", sm=True))
+    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", 
+                                    index=3, shape="scalar", sm=True))
+    params.append(SpectrumParameter("sinW2", "dimensionless", block="SINTHETAW",
+                                    shape="scalar", sm=True))
+    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", 
+                                    shape="m3x3", sm=True))
+    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", 
+                                    shape="m3x3", sm=True))
+    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", 
+                                    shape="m3x3", sm=True))
     
     return params
 
@@ -193,9 +201,10 @@ def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
             if add_higgs:
                 p.mass = "mH"
 
+        mass = "m"+pdg_to_particle(p.PDG_code, gambit_pdgs).strip('~')
+
         # Add the new parameter to the list of model parameters.
-        x = SpectrumParameter("M"+pdg_to_particle(p.PDG_code, gambit_pdgs),
-                              "Pole_Mass", gb_input=p.mass, block=block, 
+        x = SpectrumParameter(mass, "Pole_Mass", gb_input=p.mass, block=block, 
                               index=index, shape="scalar")
         parameters.append(x)
 
@@ -230,7 +239,8 @@ def sarah_part_to_gum_part(sarah_bsm):
     
     return bsm_list, add_higgs
 
-def sarah_params(paramlist, add_higgs):
+def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
+                 particles):
     """
     Removes all Standard Model parameters from those we wish
     to add to the GAMBIT model. This utilises the 'BlockName'
@@ -258,8 +268,14 @@ def sarah_params(paramlist, add_higgs):
     Maybe worth adding a new parameter tag, like Par::unspecified.
     """
 
-    unsorted_params = []
     params = []
+
+    # Convert the C++ dict to python properly
+    mixingdict = dict((m.key(),m.data()) for m in mixings)
+    
+    # List of parameters which have been added. Dupes can arise
+    # from the Pole_Mixings for multiple particles
+    addedpars = [] 
 
     # Add all parameters from the parameter list from SARAH
     for i in xrange(len(paramlist)):
@@ -267,34 +283,54 @@ def sarah_params(paramlist, add_higgs):
         if (    (p.block() != 'SM')
             and (p.block() != 'SMINPUTS')
             and (p.block() != 'VCKM')
-            #and (p.is_output() != False)) TODO: TG: This line was killing most of the parameters
             ):
-            
+
+            # Mixing matrices
+            tag = "Pole_Mixing" if (p.is_output() == True and 
+                p.shape().startswith("m")) else "dimensionless"
+
+            name = p.name()
+
+            if tag == "Pole_Mixing":
+                found = False
+                
+                # Throw an error if we don't know what the mixing matrix is.
+                if not name in mixingdict:
+                    raise GumError(("Could not find which particle "
+                                    "eigenstates the mixing matrix {0} "
+                                    "couples to!")).format(name)
+
+                entry = mixingdict[name]
+
+                for particle in particles:
+
+                    # Strip numbers and try to align particles
+                    tomatch = ''.join([i for i in particle.alt_name()
+                                       if not i.isdigit()])
+                
+                    if tomatch in entry:
+                        name = pdg_to_particle(particle.pdg(), 
+                                               gambit_pdgs).split('_')[0]
+                        found = True
+                        continue
+
+            if name in addedpars: 
+                continue
+            else:
+                addedpars.append(name)
+
+
             # Create a new instance of SpectrumParameter
-            # TODO: dimensionless atm! 
-            x = SpectrumParameter(p.name(), "dimensionless", block=p.block(),
+            # TODO: still need to find mass dimension for parameters that aren't
+            # pole masses and pole mixings. 
+            x = SpectrumParameter(name, tag, block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
                                   bcs = p.bcs(), shape = p.shape(), 
                                   is_output = p.is_output(), is_real = p.is_real())
-            unsorted_params.append(x)
+            params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them
     # are elements of a matrix.
-
-    # Firstly, get the name of each block
-    blocks = list(set([i.block for i in unsorted_params]))
-
-    # For each block, add the parameters to a dictionary...
-    from collections import defaultdict
-    blockdict = defaultdict(list)
-
-    for i in blocks:
-        for j in unsorted_params:
-            if j.block == i:
-                blockdict[i].append(j.name)
-
-    for par in unsorted_params:
-      params.append(par)
     
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
@@ -304,7 +340,7 @@ def sarah_params(paramlist, add_higgs):
     params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("sinW2", "dimensionless", shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("sinW2", "Pole_Mixing", shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=True))
     params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=True))
     params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=True))
@@ -316,7 +352,7 @@ def sarah_params(paramlist, add_higgs):
 # Other routines #
 ##################
 
-def sort_params_by_block(parameters):
+def sort_params_by_block(parameters, mixings):
     """
     Returns a dictionary of the LH blocks of a new model,
     with all entries.
@@ -354,9 +390,16 @@ def sort_params_by_block(parameters):
             if shape.startswith('m'): 
                 matrix = True
 
+        try:
+          mixings[par.name]
+          is_mixing = True
+        except:
+          is_mixing = False
+
         # If it's a matrix then it will be a new block
         if matrix:
-            if par.is_output:
+            # if it's a mixing matrix
+            if par.is_output and is_mixing :
                 newentry = { "mixingmatrix": par.shape[1:], "outputname": par.name }
             else:
                 newentry = { "matrix": par.shape[1:], "outputname": par.name }
@@ -415,10 +458,12 @@ def spheno_dependencies(sphenodeps):
         description = re.sub('Sqrt', 'sqrt', description)
 
         # If there's something that looks like param(i,j) make this (param)(i,j)
-        description = re.sub(r'([a-zA-Z]+)\(([0-9]),([0-9])\)',r'(*\1)(\2,\3)', description)
+        description = re.sub(r'([a-zA-Z]+)\(([0-9]),([0-9])\)',r'(*\1)(\2,\3)',
+                             description)
 
         # If there's Power(param, num) -> pow(*param, num)
-        description = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(*\1,\2)', description)
+        description = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(*\1,\2)',
+                             description)
 
         deps[name] = description
 

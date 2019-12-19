@@ -24,6 +24,8 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
+#include <boost/filesystem.hpp>
+
 #include "sarah.hpp"
 
 namespace GUM
@@ -126,14 +128,57 @@ namespace GUM
       bool is_SARAH_model;
       get_from_math(is_SARAH_model);
       if(is_SARAH_model)
+      {
         return true;
+      }
 
-      // If not check if it's on the GUM model database
-      std::string model_paths = std::string(GUM_DIR) + "/Models";
+      // If not check if it's in the GUM model database
       // TODO: check if it's in the models dir and if it is move it to the SARAH dir
+      std::string modelpath = std::string(GUM_DIR) + "/Models/" + modelname + "/" + modelname + ".m";
 
-      return false;
-    
+      // If it exists, then copy the folder to the SARAH model dir
+      if (!boost::filesystem::exists(modelpath))
+      {
+        std::cout << "Copying SARAH files from GUM directory to SARAH directory..." << std::endl;
+        std::string dest = std::string(SARAH_PATH) + "/Models/" + modelname;
+        std::string src = std::string(GUM_DIR) + "/Models/" + modelname;
+
+        // Create the folder in SARAH...
+        if (!boost::filesystem::create_directory(dest))
+        {
+            throw std::runtime_error("Unable to create new model folder in SARAH: " + dest + ".");
+        }
+        // Copy all files from the GUM dir to the SARAH dir
+        for (boost::filesystem::directory_iterator file(src); file != boost::filesystem::directory_iterator();
+             ++ file)
+        {
+            try
+            {
+                boost::filesystem::path current(file->path());
+                // Leave folders behind
+                if(boost::filesystem::is_directory(current)) {  continue; }
+                else
+                {
+                    boost::filesystem::copy_file(current, dest / current.filename());
+                }
+            }
+            catch(boost::filesystem::filesystem_error const & e)
+            {
+                throw std::runtime_error( e.what() );
+            }
+        }
+      }
+
+      // Let's try that again.
+      get_from_math(is_SARAH_model);
+      if(is_SARAH_model)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
     catch(...) { throw; }
   }
@@ -268,10 +313,11 @@ namespace GUM
             }
             else
             {
-                std::cerr << "More than 2 particles here; "
-                          << "what weird symmetries have you got???" 
-                          << std::endl;
-                return;
+                std::stringstream err;
+                err << "More than 2 particles here; "
+                    << "what weird symmetries have you got???" 
+                    << std::endl;
+                throw std::runtime_error(err.str());
             }
 
             if (numelements > 1)
@@ -290,6 +336,10 @@ namespace GUM
                 antioutputname = outputname;
                 if (isupper(antioutputname[0])) { antioutputname = tolower(antioutputname[0]); }
                 else { antioutputname[0] = toupper(antioutputname[0]); }
+            }
+            else if (not self_conjugate && not capitalise)
+            {
+                antioutputname = antiname;
             }
             else { antioutputname = outputname; }
 
@@ -413,7 +463,6 @@ namespace GUM
         // If it's definitely a real parameter, store this information
         if (entry == "True") real = true;
 
-      
         // With DependenceSPheno -- flag it, so we can save it for later; we'll want it
         command = "DependenceSPheno /. pd[[" + std::to_string(i+1) + ",2]] // ToString";
         send_to_math(command);
@@ -701,7 +750,8 @@ namespace GUM
   }
 
   // Get the boundary conditions for all parameters in the parameter list
-  void SARAH::get_boundary_conditions(std::vector<Parameter> &parameters)
+  void SARAH::get_boundary_conditions(std::map<std::string, std::string> &bcs, 
+                                      std::vector<Parameter> parameters)
   {
     std::cout << "Getting boundary conditions" << std::endl;
 
@@ -729,7 +779,9 @@ namespace GUM
         for(auto param = parameters.begin(); param != parameters.end(); param++)
         {
           if (param->name() == bc_name or param->alt_name() == bc_name)
-              param->set_bcs(bc);
+          {
+              bcs[bc] = param->name();
+          }
         }
       }
     }
@@ -848,6 +900,20 @@ namespace GUM
  
           int len2;
 
+          // Check to see if the particle name is a Weyl fermion
+          bool is_weyl;
+          command = "MemberQ[WeylFermionAndIndermediate[[;;,1]],"+eigenstate+"]";
+          send_to_math(command);
+          get_from_math(is_weyl);
+
+          // If it's a Weyl fermion, get the Dirac fermion
+          if(is_weyl)
+          {
+            command = "Select[DEFINITION[EWSB][DiracSpinors], MemberQ[#[[2]],"+eigenstate+", 2] &][[1,1]]";
+            send_to_math(command);
+            get_from_math(eigenstate);
+          }
+
           // Check to see if the mixing matrix has a different OutputName
           command = "Length[pd]";
           send_to_math(command);
@@ -926,6 +992,7 @@ namespace GUM
   void SARAH::write_spheno_output()
   {
       std::cout << "Writing SPheno output." << std::endl;
+      std::cout << "Strap in tight -- this might take a while..." << std::endl;
       
       // Options for SPheno output.
       std::string options;
@@ -933,7 +1000,8 @@ namespace GUM
       // - InputFile (default $MODEL/SPheno.m)
       // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
       // TODO: temp hack to make it faster
-      options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
+      //options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
+      options = "IncludeFlavorKit->False";
 
       // Write output.
       std::string command = "MakeSPheno[" + options + "];";
@@ -949,10 +1017,7 @@ namespace GUM
 
       // Options for Vevacious output.
       std::string options;
-      // TODO: options:
-      // - ComplexParameters (automatic?)
-      // - Scheme (DRbar for SUSY, MSbar for non-SUSY)
-      options = "Version->\"++\"";
+      options = "Version->\"++\", ReadLists->True";
 
       // Write output.
       std::string command = "MakeVevacious[" + options + "];";
@@ -965,6 +1030,7 @@ namespace GUM
   void all_sarah(Options opts, std::vector<Particle> &partlist, std::vector<Parameter> &paramlist,
                  Outputs &outputs, std::vector<std::string> &backends,
                  std::map<std::string,bool> &flags, std::map<std::string, std::string> &mixings,
+                 std::map<std::string, std::string> &bcs,
                  std::vector<Parameter> &sphenodependences, Error &error)
   {
 
@@ -1030,7 +1096,7 @@ namespace GUM
         model.get_flags(flags);
 
         // Get the boundary conditions for the parameters
-        model.get_boundary_conditions(paramlist);
+        model.get_boundary_conditions(bcs, paramlist);
 
         // Get the parameters used to solve tadpoles and removed them from the list
         model.get_tadpoles(paramlist);
@@ -1136,8 +1202,8 @@ BOOST_PYTHON_MODULE(libsarah)
     .def(vector_indexing_suite< std::vector<std::string> >() )
     ;
 
-  class_< std::map<std::string, std::string> >("SARAHMixings")
-    .def(map_indexing_suite< std::map<std::string, std::string> >() )
+  class_< std::map<std::string, std::string> >("SARAHMapStrStr")
+    .def(map_indexing_suite< std::map<std::string, std::string>, true>() )
     ;
 
   def("all_sarah", GUM::all_sarah);
