@@ -27,6 +27,7 @@
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/util_types.hpp"
 #include "gambit/Elements/spectrum_helpers.hpp"
+#include "gambit/Models/SpectrumContents/subspectrum_contents.hpp"
 
 #include "SLHAea/slhaea.h"
 
@@ -48,7 +49,7 @@ namespace Gambit
   /// Get an entry from an SLHAea object as a double; raise a warning and use a default value if the entry is missing
   double SLHAea_get(const SLHAstruct& slha, const str& block, const int index, const double defvalue);
 
-  /// Add a new block to an SLHAea object, with our without a scale
+  /// Add a new block to an SLHAea object, with or without a scale
   void SLHAea_add_block(SLHAstruct&, const str& name, const double scale = -1);
 
   /// Delete an entire block from an SLHAea object, if it exists (actually just the first block matching the given name)
@@ -107,6 +108,9 @@ namespace Gambit
   void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
    const Par::Tags partype, const str& name, const int index1, const int index2, const str& block,
    const int slha_index1, const int slha_index2, const str& comment, const bool error_if_missing = true, const double rescale = 1.0);
+
+  /// Write a SimpleSpectrum to an SLHAea object.
+  void add_SimpleSpec_to_SLHAea(const SubSpectrum&, SLHAstruct&, const SubSpectrumContents&);
 
 }
 

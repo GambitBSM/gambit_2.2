@@ -1,0 +1,144 @@
+##########################################################################
+## GAMBIT configuration for a random scan of the DMEFT model
+##
+## Includes simply the decays of the new model.
+##########################################################################
+
+
+Parameters:
+
+  # SM parameters.
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+
+  StandardModel_Higgs:
+     mH: 125.09
+
+  DMEFT:
+    C61:
+      range: [0, 1]
+      prior_type: flat
+    C62:
+      range: [0, 1]
+      prior_type: flat
+    C63:
+      range: [0, 1]
+      prior_type: flat
+    C64:
+      range: [0, 1]
+      prior_type: flat
+    mchi:
+      range: [100,500]
+      prior_type: flat
+    Lambda: 1000.
+    C51: 0.
+    C52: 0.
+    C71: 0.
+    C72: 0.
+    C73: 0.
+    C74: 0.
+    C75: 0.
+    C76: 0.
+    C77: 0.
+    C78: 0.
+    C79: 0.
+    C710: 0.
+
+  # nuclear_params_sigmas_sigmal:
+  #   sigmas: 43
+  #   sigmal: 50
+  #   deltau: 0.842
+  #   deltad: -0.427
+  #   deltas: -0.085
+
+  Halo_gNFW_rho0:
+    rho0: 0.4
+    v0: 240
+    vesc: 533
+    vrot: 240
+    rs: 20.0
+    r_sun: 8.5
+    alpha: 1
+    beta: 3
+    gamma: 1
+
+Priors:
+
+  # All the priors are simple for this scan, so they are specified directly in the Parameters section.
+
+
+Printer:
+
+  # printer: hdf5
+  # options:
+  #   output_file: "DMEFT.hdf5"
+  #   delete_file_on_restart: true
+  #   group: "/DMEFT"
+
+  printer: ascii
+  options:
+    output_file: "DMEFT.txt"
+
+Scanner:
+
+  use_scanner: random
+
+  scanners:
+
+    random:
+      plugin: random
+      point_number: 10
+      like:  LogLike
+
+ObsLikes:
+
+  # Direct detection
+  - capability: LUX_2016_LogLikelihood
+    purpose:    LogLike
+
+  - capability: XENON1T_2018_LogLikelihood
+    purpose:    LogLike
+
+Rules:
+
+  - capability: RD_fraction
+    function: RD_fraction_one
+
+  - capability: DDCalc_Couplings
+    function: DDCalc_Couplings_NR_WCs
+
+  - capability: mwimp
+    function: mwimp_from_WIMPprops
+
+  - capability: wimp_sc
+    function: wimp_sc_from_WIMPprops
+
+  - capability: spinwimpx2
+    function: jwimpx2_from_WIMPprops
+
+  - capability: DD_nonrel_WCs
+    function: DD_nonrel_WCs_flavscheme
+
+Logger:
+
+  redirection:
+    [Debug] : "debug.log"
+    [Default] : "default.log"
+    [DecayBit] : "DecayBit.log"
+    [PrecisionBit] : "PrecisionBit.log"
+    [ColliderBit] : "ColliderBit.log"
+    [SpecBit] : "SpecBit.log"
+    [Dependency Resolver] : "dep_resolver.log"
+
+KeyValues:
+
+  dependency_resolution:
+    prefer_model_specific_functions: true
+
+  likelihood:
+    model_invalid_for_lnlike_below: -5e5
+    model_invalid_for_lnlike_below_alt: -1e5
+
+  default_output_path: "runs/DMEFT/"
+
+  debug: false
+

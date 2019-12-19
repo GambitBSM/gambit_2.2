@@ -27,8 +27,9 @@
   START_CAPABILITY
     // DMEFT test model yield
     #define FUNCTION DMEFT_results
-  START_FUNCTION(AnalysisDataPointers)
-    ALLOW_MODELS(DMEFT_WC_test)
+    START_FUNCTION(AnalysisDataPointers)
+    DEPENDENCY(DMEFT_spectrum, Spectrum)
+    ALLOW_MODELS(DMEFT)
     #undef FUNCTION
     #undef CAPABILITY*/
 
@@ -40,6 +41,7 @@
     BACKEND_REQ_FROM_GROUP(lnlike_marg_poisson, lnlike_marg_poisson_lognormal_error, (), double, (const int&, const double&, const double&, const double&) )
     BACKEND_REQ_FROM_GROUP(lnlike_marg_poisson, lnlike_marg_poisson_gaussian_error, (), double, (const int&, const double&, const double&, const double&) )
     BACKEND_GROUP(lnlike_marg_poisson)
+    ALLOW_MODELS(DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 
