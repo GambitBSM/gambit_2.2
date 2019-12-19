@@ -335,6 +335,16 @@
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Calculate the total LHC log likelihood
+  #define CAPABILITY LHC_LogLike_scan_guide
+  START_CAPABILITY
+    #define FUNCTION calc_LHC_LogLike_scan_guide
+    START_FUNCTION(double)
+    DEPENDENCY(LHC_Combined_LogLike, double)
+    DEPENDENCY(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// Output some info about the event loop
   #define CAPABILITY LHCEventLoopInfo
   START_CAPABILITY

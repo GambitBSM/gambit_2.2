@@ -39,6 +39,7 @@
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/Utils/statistics.hpp" 
 
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
@@ -987,6 +988,32 @@ namespace Gambit
       }  
     }
 
-  }
 
+    /// A dummy log-likelihood that helps the scanner track a given 
+    /// range of collider log-likelihood values
+    void calc_LHC_LogLike_scan_guide(double& result)
+    {
+      using namespace Pipes::calc_LHC_LogLike_scan_guide;
+      result = 0.0;
+
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+      static const double target_LHC_loglike = runOptions->getValue<double>("target_LHC_loglike");
+      static const double target_width = runOptions->getValue<double>("width_LHC_loglike");
+
+      // Get the combined LHC loglike
+      double LHC_loglike = *Dep::LHC_Combined_LogLike;
+
+      // Calculate the dummy scan guide loglike using a gaussian centered on the target LHC loglike value
+      result = Stats::gaussian_loglikelihood(LHC_loglike, target_LHC_loglike, 0.0, target_width, false);
+
+      // Write log summary
+      if(write_summary_to_log)
+      {
+        std::stringstream summary_line; 
+        summary_line << "LHC_LogLike_scan_guide: " << result;
+        logger() << summary_line.str() << EOM;
+      }  
+    }
+
+  }
 }
