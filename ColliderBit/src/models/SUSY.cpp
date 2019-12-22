@@ -287,5 +287,34 @@ namespace Gambit
       }
     }
 
+
+    // Advanced mass-cuts to aid SUSY scans
+    void calc_susy_spectrum_scan_guide(double& result)
+    {
+      using namespace Pipes::calc_susy_spectrum_scan_guide;
+      bool discard_point = false;
+
+      result = 0.0;
+
+      // Get masses
+      const Spectrum& spec = *Dep::MSSM_spectrum;
+
+      const double m_N1_signed = spec.get(Par::Pole_Mass,"~chi0_1");
+      const double m_N1 = abs(m_N1_signed);
+      // const double m_C1_signed = spec.get(Par::Pole_Mass,"~chi+_1");
+      // const double m_C1 = abs(m_C1_signed);
+      const double m_st1 = spec.get(Par::Pole_Mass,"~t_1");
+
+      // Define cuts
+      if (m_N1 < 250. && m_st1 < 750.)  discard_point = true;
+      if (m_N1 > 600.)  discard_point = true;
+      if (m_st1 > 1100.)  discard_point = true;
+
+      // Discard point?
+      if (discard_point) invalid_point().raise("Point discarded by susy_spectrum_scan_guide.");
+
+    }
+
+
   }
 }
