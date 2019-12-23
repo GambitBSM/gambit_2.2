@@ -297,13 +297,14 @@ namespace Gambit
       result = 0.0;
 
       // Get masses
+      mass_es_pseudonyms psn = *(Dep::SLHA_pseudonyms);
       const Spectrum& spec = *Dep::MSSM_spectrum;
 
       const double m_N1_signed = spec.get(Par::Pole_Mass,"~chi0_1");
       const double m_N1 = abs(m_N1_signed);
       // const double m_C1_signed = spec.get(Par::Pole_Mass,"~chi+_1");
       // const double m_C1 = abs(m_C1_signed);
-      const double m_st1 = spec.get(Par::Pole_Mass,"~t_1");
+      const double m_st1 = spec.get(Par::Pole_Mass, psn.ist1);
 
       // Define cuts
       if (m_N1 < 250. && m_st1 < 750.)  discard_point = true;
