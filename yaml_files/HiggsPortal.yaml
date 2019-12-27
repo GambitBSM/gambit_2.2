@@ -1,0 +1,116 @@
+##########################################################################
+## GAMBIT configuration for an ultra-minimal MultiNest scan of a toy model.
+##
+## Only needs ExampleBit_A and a scanner (either one of the built-ins like
+## the random sampler or TWalk, or an external like Diver, MultiNest,
+## GreAT or Polychord).
+##########################################################################
+
+
+Parameters:
+  # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
+  SuperRenormalizableHiggsPortalDM:
+    mS:
+      range: [1, 1e3]
+    theta:
+      range: [1e-10, 1e-8]
+
+
+Priors:
+
+  # None needed: flat priors are automatically generated for mu and sigma
+
+
+Printer:
+
+  #printer: sqlite
+  #options:
+  #  output_file: "results.sql"
+  #  table_name: "spartan"
+  #  buffer_length: 1000
+  #  delete_file_on_restart: true
+
+  #printer: hdf5
+  #options:
+    #output_file: "results.hdf5"
+    #group: "/spartan"
+    #delete_file_on_restart: true
+    #buffer_length: 1000
+    #disable_autorepair: true
+
+  printer: ascii
+  options:
+    output_file: "results.dat"
+    buffer_length: 10
+    delete_file_on_restart: true
+
+  #printer: cout
+
+Scanner:
+
+  use_scanner: random
+
+  scanners:
+
+    random:
+      plugin: random
+      like: LogLike
+      point_number: 1000
+
+    de:
+      plugin: diver
+      like: LogLike
+      NP: 5000
+
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 2000
+      #tol: 0.0001
+      tol: 0.1
+
+    mcmc:
+      plugin: great
+      like: LogLike
+      nTrialLists: 5
+      nTrials: 10000
+
+    twalk:
+      plugin: twalk
+      like: LogLike
+      sqrtR: 1.001
+
+    polychord:
+      plugin: polychord
+      like:  LogLike
+      tol: 0.1
+
+
+ObsLikes:
+
+  - purpose:      Observable
+    capability:   SuperRenormalizableHiggsPortalDM_decay_rate
+    module:       DarkBit
+    type:         double
+
+
+Rules:
+
+  # None required, since no module dependencies to be resolved.
+  - capability: SuperRenormalizableHiggsPortalDM_decay_rate
+    options:
+        probability_of_validity: 1.0
+
+Logger:
+
+  redirection:
+    [Default]      : "default.log"
+    [DarkBit]      : "DarkBit.log"
+    [Scanner]      : "Scanner.log"
+  debug: true
+
+KeyValues:
+
+  default_output_path: "runs/HiggsPortal"
+
+  print_timing_data: true

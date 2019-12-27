@@ -70,6 +70,10 @@
 ///  \date 2017 Feb, Sep, Dec
 ///  \date 2018 Jan, Mar, Apr
 ///
+///  \author Iñigo Saez Casares
+///          (i.saezcasares@uq.edu.au)
+///  \date 2019 December
+///
 ///  *********************************************
 
 #ifndef __DarkBit_rollcall_hpp__
@@ -1489,6 +1493,18 @@ START_MODULE
     ALLOW_MODEL(GeneralALP)
     #undef FUNCTION
   #undef CAPABILITY
+
+  // Super Renormalizable Higgs Portal DM relative observables and likelihoods
+
+  #define CAPABILITY SuperRenormalizableHiggsPortalDM_decay_rate
+  START_CAPABILITY
+    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_decay_rate 
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+
 
 #undef MODULE
 #endif /* defined(__DarkBit_rollcall_hpp__) */
