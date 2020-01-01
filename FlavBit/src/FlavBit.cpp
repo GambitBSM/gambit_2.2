@@ -3232,10 +3232,10 @@ namespace Gambit
 
       static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_0.1_0.98.yaml";
       static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_1.1_2.5.yaml";
-      static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_2.5_4.0.yaml";
-      static const std::string inputfile_q2_4_6 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_4.0_6.0.yaml";
-      static const std::string inputfile_q2_6_8 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_6.0_8.0.yaml";
-      static const std::string inputfile_q2_15_19 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_15.0_19.yaml";
+      static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_2.5_4.yaml";
+      static const std::string inputfile_q2_4_6 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_4_6.yaml";
+      static const std::string inputfile_q2_6_8 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_6_8.yaml";
+      static const std::string inputfile_q2_15_19 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_15_19.yaml";
       static HepLike_default::HL_BifurGaussian BifurGaussian_0(inputfile_q2_0p1_1p1);
       static HepLike_default::HL_BifurGaussian BifurGaussian_1(inputfile_q2_1p1_2p5);
       static HepLike_default::HL_BifurGaussian BifurGaussian_2(inputfile_q2_2p5_4);

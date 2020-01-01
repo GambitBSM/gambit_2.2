@@ -98,8 +98,8 @@ ObsLikes:
   - purpose:    B2KStarMuMuAngularTest
     capability: HEPLike_B2KstarmumuAng_LogLikelihood
 
-#  - purpose:    B2KStarMuMuBranchingRatioTest
-#    capability: HEPLike_B2KstarmumuBr_LogLikelihood
+  - purpose:    B2KStarMuMuBranchingRatioTest
+    capability: HEPLike_B2KstarmumuBr_LogLikelihood
 
 #  - purpose:    Bs2PhiMuMuBranchingRatioTest
 #    capability: HEPLike_Bs2PhimumuBr_LogLikelihood
