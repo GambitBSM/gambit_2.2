@@ -207,14 +207,14 @@ if args.file:
         compare outputs. This will, e.g., add 4-fermion interactions to CalcHEP
         where FeynRules fails to do so.
         """
-        if output_opts.ch and output_opts.ufo:
-            print("Calling UFO2MDL.")
-            blockPrint()  # Stop the UFO2MDL output - there's lots of it
-            ch_location = compare_mg_and_ch(outputs.get_mg(), outputs.get_ch())
-            enablePrint() # Bring it back.
-            if ch_location != outputs.get_ch(): 
-                print("Updating location of CalcHEP files in GUM...")
-                outputs.set_ch(ch_location)
+        # if output_opts.ch and output_opts.ufo:
+        #     print("Calling UFO2MDL.")
+        #     blockPrint()  # Stop the UFO2MDL output - there's lots of it
+        #     ch_location = compare_mg_and_ch(outputs.get_mg(), outputs.get_ch())
+        #     enablePrint() # Bring it back.
+        #     if ch_location != outputs.get_ch(): 
+        #         print("Updating location of CalcHEP files in GUM...")
+        #         outputs.set_ch(ch_location)
 
         # Move MadGraph files from SARAH/FeynRules to contrib/MadGraph/models
         # TODO make this go to the Outputs dir instead, then ln -s from there 

@@ -165,7 +165,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
 
     # DM mass parameter
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    dm_mass = "m" + gb_id.replace("\"", "")
+    dm_mass = "m" + gb_id.strip('~').replace("\"", "")
 
     # Arrays of final states (GAMBIT names)
     out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])

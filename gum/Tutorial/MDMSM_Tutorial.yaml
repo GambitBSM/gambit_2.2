@@ -17,9 +17,9 @@ Parameters:
 
   StandardModel_Higgs:
     mH: 125.09
-  MDMSM:
 
-    mChi:
+  MDMSM:
+    mchi:
       range: [45, 10000]
       prior_type: log
     mY:

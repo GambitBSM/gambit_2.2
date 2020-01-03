@@ -51,8 +51,7 @@ namespace GUM
 
     std::cout << "Loading FeynRules... ";
 
-    std::string input;
-    input+= "$FeynRulesPath = SetDirectory[\"" + std::string(FEYNRULES_PATH) + "\"]";
+    std::string input = "$FeynRulesPath = SetDirectory[\"" + std::string(FEYNRULES_PATH) + "\"]";
 
     send_to_math(input);
 
@@ -71,7 +70,7 @@ namespace GUM
         std::cout << "FeynRules loaded from " << out << "." << std::endl;
     }
 
-    input+= "<<FeynRules`";
+    input = "<<FeynRules`";
     send_to_math(input);
 
   }
@@ -86,7 +85,7 @@ namespace GUM
     std::string modelpath;
     
     // Check to see if the model is in the FeynRules directory
-    modelpath = "Models/" + model + "/" + model + ".fr";
+    modelpath = std::string(FEYNRULES_PATH) + "/Models/" + model + "/" + model + ".fr";
     std::ifstream modelpath1(modelpath.c_str());
 
     // If it's not in the FeynRules directory, try the gum Models dir...
@@ -96,15 +95,15 @@ namespace GUM
         std::ifstream modelpath2(modelpath.c_str());
         if (!modelpath2.good())
         {
-            throw std::runtime_error("GUM Error:Unable to find the model " + model + " in either the "
+            throw std::runtime_error("GUM Error: Unable to find the model " + model + " in either the "
                                      "FeynRules model directory, or the GUM model directory!");
         }
     }
 
-    // Same for base_model
+    // Same process for the base_model
     if (!base_model.empty())
     {
-        std::string basepath = "Models/" + base_model + "/" + base_model + ".fr";
+        std::string basepath = std::string(FEYNRULES_PATH) + "Models/" + base_model + "/" + base_model + ".fr";
 
         std::ifstream basepath1(basepath.c_str());
         if (!basepath1.good())
@@ -113,25 +112,31 @@ namespace GUM
             std::ifstream basepath2(basepath.c_str());
             if (!basepath2.good())
             {
-            throw std::runtime_error("GUM Error:Unable to find the base model " + base_model + " in either"
+            throw std::runtime_error("GUM Error: Unable to find the base model " + base_model + " in either"
                                      " the FeynRules model directory, or the GUM model directory!");
             }
         }
+        // Fire off the LoadModel command with the model and the base model.
+        std::string command = "LoadModel[\"" + basepath + "\",\"" + modelpath + "\"]";
+        send_to_math(command);
     }
-
-    // First case: no base model
-    if (base_model.empty()) 
+    else
     {
-        // Fire off the LoadModel command.
+        // Fire off the LoadModel command with just the model.
         std::string command = "LoadModel[\"" + modelpath + "\"]";
         send_to_math(command);
     }
-    // Otherwise got to check for both
-    else
-    {
-        std::string command = "LoadModel[\"Models/" + base_model + "/" + base_model + ".fr\",\"Models/" + model + "/" + model + ".fr\"]";
-        send_to_math(command);
-    }
+
+    // // First case: no base model
+    // if (base_model.empty()) 
+    // {
+
+    // }
+    // // Otherwise got to check for both
+    // else
+    // {
+        
+    // }
 
     // Check the model has been loaded by querying the model name. If it has changed from the default then we're set.
     // TODO: need to check for duplicate definitions of gauge groups, field contents etc - this makes gum freeze 
@@ -144,7 +149,8 @@ namespace GUM
         throw std::runtime_error("FeynRules Error: GUM is for BSM physics, yo!");
     else if ((modelname == "Standard Model") and (not base_model.empty()))
         throw std::runtime_error("FeynRules Error: GUM tried to import something on top of the Standard Model, but your model file did not import properly. Please check it.");
-
+    else if ((modelname == "M$ModelName"))
+        throw std::runtime_error("FeynRules Error: models not loaded correctly, given as 'M$ModelName'. Please check your FeynRules files.");
     // All good. else {
     std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
     //}
