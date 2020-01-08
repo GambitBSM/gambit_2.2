@@ -638,7 +638,6 @@ namespace Gambit {
         // Jets
         vector<HEPUtils::Jet*> bJets;
         vector<HEPUtils::Jet*> nonBJets;
-        vector<HEPUtils::Jet*> trueBJets; //for debugging
 
         // Get b jets
         /// @note We assume that b jets have previously been 100% tagged
@@ -649,7 +648,7 @@ namespace Gambit {
         for (HEPUtils::Jet* jet : event->jets()) {
           bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if (jet->pT() > 20. && fabs(jet->eta()) < 2.4) {
-            if(jet->btag() && hasTag && fabs(jet->eta()) < 2.4 && jet->pT() > 20.){
+            if(jet->btag() && hasTag){
               bJets.push_back(jet);
             } else {
               nonBJets.push_back(jet);
@@ -657,8 +656,24 @@ namespace Gambit {
           }
         }
 
+        // Overlap removal is the same as the 8 TeV analysis
+        JetLeptonOverlapRemoval(nonBJets,baselineElectrons,0.2);
+        LeptonJetOverlapRemoval(baselineElectrons,nonBJets,0.4);
+        LeptonJetOverlapRemoval(baselineElectrons,bJets,0.4);
+        LeptonJetOverlapRemoval(baselineMuons,nonBJets,0.4);
+        LeptonJetOverlapRemoval(baselineMuons,bJets,0.4);
 
-        // Overlap removal
+        // Fill a jet-pointer-to-bool map to make it easy to check
+        // if a given jet is treated as a b-jet in this analysis
+        map<HEPUtils::Jet*,bool> analysisBtags;
+        for (HEPUtils::Jet* jet : bJets) {
+          analysisBtags[jet] = true;
+        }
+        for (HEPUtils::Jet* jet : nonBJets) {
+          analysisBtags[jet] = false;
+        }
+
+        // Signal object containers
         vector<HEPUtils::Particle*> signalElectrons;
         vector<HEPUtils::Particle*> signalMuons;
         vector<HEPUtils::Particle*> signalLeptons;
@@ -669,28 +684,16 @@ namespace Gambit {
         vector<HEPUtils::Jet*> signalBJets;
         vector<HEPUtils::Jet*> signalNonBJets;
 
-        // Overlap removal is the same as the 8 TeV analysis
-        JetLeptonOverlapRemoval(nonBJets,baselineElectrons,0.2);
-        LeptonJetOverlapRemoval(baselineElectrons,nonBJets,0.4);
-        LeptonJetOverlapRemoval(baselineElectrons,bJets,0.4);
-        LeptonJetOverlapRemoval(baselineMuons,nonBJets,0.4);
-        LeptonJetOverlapRemoval(baselineMuons,bJets,0.4);
-
-
-        // Also we have already sorted jets by their b tag properties, so reset the b tag variable for each jet to the right category
-        // i.e. this was previously 100% true for true b jets then the efficiency map was applied above
         for (HEPUtils::Jet* jet : bJets) {
-          jet->set_btag(true);
+          // pT > 20 and |eta| < 2.4 already required for jets in bJets
           signalJets.push_back(jet);
           signalBJets.push_back(jet);
         }
 
         for (HEPUtils::Jet* jet : nonBJets) {
-          if(jet->pT() > 20. && fabs(jet->eta()) < 2.4) {
-            jet->set_btag(false);
-            signalJets.push_back(jet);
-            signalNonBJets.push_back(jet);
-          }
+          // pT > 20 and |eta| < 2.4 already required for jets in nonBJets
+          signalJets.push_back(jet);
+          signalNonBJets.push_back(jet);
         }
 
         //Put signal jets in pT order
@@ -1631,10 +1634,10 @@ namespace Gambit {
           for(int i = 0; i < int(signalJets.size()); i++){
             if(JETS_comb->GetFrame(jetID[i]) == *J_comb){
               m_NjS++;
-              if(signalJets[i]->btag()) m_NbS++;
+              if( analysisBtags.at(signalJets[i]) ) m_NbS++;
             } else {
               m_NjISR++;
-              if(signalJets[i]->btag()) m_NbISR++;
+              if( analysisBtags.at(signalJets[i]) ) m_NbISR++;
             }
           }
 
