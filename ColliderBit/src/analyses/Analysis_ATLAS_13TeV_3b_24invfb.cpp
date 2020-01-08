@@ -353,15 +353,15 @@ namespace Gambit {
 
           // Cut flow from paper
           // Higgsino 130 GeV
-          cutFlowVectorATLAS[0] = 169015.8;
-          cutFlowVectorATLAS[1] =  11206.7;
-          cutFlowVectorATLAS[2] =   1250.8;
-          cutFlowVectorATLAS[3] =   1015.9;
-          cutFlowVectorATLAS[4] =   1015.9;
-          cutFlowVectorATLAS[5] =    961.9;
-          cutFlowVectorATLAS[6] =    559.8;
-          cutFlowVectorATLAS[7] =    217.4;
-          cutFlowVectorATLAS[8] =      0.0;
+          // cutFlowVectorATLAS[0] = 169015.8;
+          // cutFlowVectorATLAS[1] =  11206.7;
+          // cutFlowVectorATLAS[2] =   1250.8;
+          // cutFlowVectorATLAS[3] =   1015.9;
+          // cutFlowVectorATLAS[4] =   1015.9;
+          // cutFlowVectorATLAS[5] =    961.9;
+          // cutFlowVectorATLAS[6] =    559.8;
+          // cutFlowVectorATLAS[7] =    217.4;
+          // cutFlowVectorATLAS[8] =      0.0;
           // // Higgsino 150 GeV
           // cutFlowVectorATLAS[0] = 93125.1;
           // cutFlowVectorATLAS[1] =  6630.9;
@@ -383,15 +383,15 @@ namespace Gambit {
           // cutFlowVectorATLAS[7] =    62.5;
           // cutFlowVectorATLAS[8] =     8.7;
           // // Higgsino 250 GeV
-          // cutFlowVectorATLAS[0] = 14028.7;
-          // cutFlowVectorATLAS[1] =  1454.7;
-          // cutFlowVectorATLAS[2] =   163.0;
-          // cutFlowVectorATLAS[3] =   126.4;
-          // cutFlowVectorATLAS[4] =   126.1;
-          // cutFlowVectorATLAS[5] =   108.4;
-          // cutFlowVectorATLAS[6] =    53.4;
-          // cutFlowVectorATLAS[7] =    37.0;
-          // cutFlowVectorATLAS[8] =    14.2;
+          cutFlowVectorATLAS[0] = 14028.7;
+          cutFlowVectorATLAS[1] =  1454.7;
+          cutFlowVectorATLAS[2] =   163.0;
+          cutFlowVectorATLAS[3] =   126.4;
+          cutFlowVectorATLAS[4] =   126.1;
+          cutFlowVectorATLAS[5] =   108.4;
+          cutFlowVectorATLAS[6] =    53.4;
+          cutFlowVectorATLAS[7] =    37.0;
+          cutFlowVectorATLAS[8] =    14.2;
           // // Higgsino 300 GeV
           // cutFlowVectorATLAS[0] = 6922.0;
           // cutFlowVectorATLAS[1] =  877.3;
@@ -546,10 +546,10 @@ namespace Gambit {
 
         #ifdef CHECK_CUTFLOW
           double L = 24.3;
-          double xsec = 6955.; // 130 GeV
+          // double xsec = 6955.; // 130 GeV
           // double xsec = 3830.; // 150 GeV
           // double xsec = 1336.; // 200 GeV
-          // double xsec =  577.3; // 250 GeV
+          double xsec =  577.3; // 250 GeV
           // double xsec =  284.9; // 300 GeV
           // double xsec =   88.73; // 400 GeV
           // double xsec = 14.67; // 600 GeV
@@ -566,7 +566,7 @@ namespace Gambit {
             double GAMBIT_scaled = eff * xsec * L;
 
             double ratio = GAMBIT_scaled/ATLAS_abs;
-            cout << "DEBUG 1: i: " << i << ":   " << setprecision(4) << ATLAS_abs << "\t" << GAMBIT_scaled << "\t" << "\t" << ratio << "\t\t" << cutFlowVector_str[i] << endl;
+            cout << "DEBUG 1: i: " << i << ":   " << setprecision(4) << ATLAS_abs << "\t\t\t" << GAMBIT_scaled << "\t\t\t" << ratio << "\t\t\t" << cutFlowVector[i] << "\t\t\t" << cutFlowVector_str[i] << endl;
           }
           cout << "DEBUG:" << endl;
         #endif
@@ -579,9 +579,9 @@ namespace Gambit {
         add_result(SignalRegionData(_counters.at("meff160_ETmiss20"),    3.,  {0.6503, 0.0747}));
 
         add_result(SignalRegionData(_counters.at("meff200_ETmiss0"),  1503.,  {1480., 26.}));
-        add_result(SignalRegionData(_counters.at("meff200_ETmiss20"), 1137.,  {1088.,  7.}));
-        add_result(SignalRegionData(_counters.at("meff200_ETmiss45"),   65.,  {58.05, 0.39}));
-        add_result(SignalRegionData(_counters.at("meff200_ETmiss70"),    0.,  {0.2691, 0.0547}));
+        add_result(SignalRegionData(_counters.at("meff200_ETmiss20"), 1137.,  {1096.,  7.}));
+        add_result(SignalRegionData(_counters.at("meff200_ETmiss45"),   65.,  {58.43, 0.39}));
+        add_result(SignalRegionData(_counters.at("meff200_ETmiss70"),    0.,  {0.3238, 0.0547}));
 
         add_result(SignalRegionData(_counters.at("meff260_ETmiss0"),  1329.,  {1297.,  8.}));
         add_result(SignalRegionData(_counters.at("meff260_ETmiss20"), 2877.,  {2860., 36.}));
