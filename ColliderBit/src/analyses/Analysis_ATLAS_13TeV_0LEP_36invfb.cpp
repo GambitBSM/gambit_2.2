@@ -67,7 +67,7 @@ namespace Gambit {
         set_analysis_name("ATLAS_13TeV_0LEP_36invfb");
         analysisRunName = Analysis::analysis_name();
 
-        set_luminosity(36.0);
+        set_luminosity(36.1);
 
         vector<const char*> variablesNames = {"met", "nJets", "HT", "pTjetOne", "pTjetTwo", "pTjetThree", "sumpTj", "etamax_2", "etamax_4", "dphimin_123", "dphimin_more", "aplanarity"};
         // plots_beginning = new Perf_Plot(analysisRunName+"_beginning", &variablesNames);
@@ -167,7 +167,7 @@ namespace Gambit {
             signalMuons.push_back(m);
 
        // The subset of jets with pT > 50 GeV is used for several calculations
-        
+
         vector<const Jet*> signalJets50;
         for (const Jet* j : signalJets)
         {
@@ -247,7 +247,7 @@ namespace Gambit {
         const double mineigenvalue = momtensor.eigenvalues().real().minCoeff();
         const double aplanarity = 1.5 * mineigenvalue;
 
-        
+
 
         //TP July 2019:
         //Some values I want to obtain just for plotting:
@@ -269,7 +269,7 @@ namespace Gambit {
               } else pTjetThree = -3.0;
           } else pTjetTwo = -2.0;
         } else pTjetOne = -1.0;
-        */        
+        */
 
         ////////////////////////////////
         // Fill signal regions
@@ -289,10 +289,10 @@ namespace Gambit {
         */
 
         if (nJets50 >= 2 && leptonCut && metCut) {
-        
-        
+
+
           //_flows.fill(1);//This seems the easiest way to fix the discrepancy in how the cutflow reporting code fills the 2&3 jet regions.
-          
+
           // plots_firstcut->fill(&variables);
 
           // 2 jet regions
@@ -376,12 +376,12 @@ namespace Gambit {
           if (nJets >= 2) _flows["2j-2400"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2400});
           if (nJets >= 2) _flows["2j-2800"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, etamax_2 < 1.2, met_sqrtHT > 18, meff_incl > 2800});
           if (nJets >= 2) _flows["2j-3600"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200., nJets >= 2, dphimin_123 > 0.8, dphimin_more > 0.4, signalJets[1]->pT() > 350, true, met_sqrtHT > 18, meff_incl > 3600});
-          
+
 
           //if (nJets >= 3) _flows["3j-1300"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 700, true, met_sqrtHT > 18, meff_incl > 1300});
           //Tomek Procter: 3 Jets region filling fixed (I think) - it didn't include a 3 jet cut before!!!
           if (nJets >= 3) _flows["3j-1300"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets >= 3, dphimin_123 > 0.4, dphimin_more > 0.2, signalJets[0]->pT() > 700, true, met_sqrtHT > 18, meff_incl > 1300});
-          
+
           if (nJets >= 4) _flows["4j-1000"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets>=4, dphimin_123 > 0.4, dphimin_more > 0.4, signalJets[3]->pT() > 100, etamax_4 < 1.2, aplanarity > 0.04, met_meff_4 > 0.3, meff_incl > 1000});
           if (nJets >= 4) _flows["4j-1400"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets>=4, dphimin_123 > 0.4, dphimin_more > 0.4, signalJets[3]->pT() > 100, etamax_4 < 2.0, aplanarity > 0.04, met_meff_4 > 0.25, meff_incl > 1400});
           if (nJets >= 4) _flows["4j-1800"].filltail({meff_incl > 800 && signalJets[0]->pT() > 200. , nJets>=4, dphimin_123 > 0.4, dphimin_more > 0.4, signalJets[3]->pT() > 100, etamax_4 < 2.0, aplanarity > 0.04, met_meff_4 > 0.25, meff_incl > 1800});
@@ -404,7 +404,7 @@ namespace Gambit {
       void combine(const Analysis* other)
       {
         const Analysis_ATLAS_13TeV_0LEP_36invfb* specificOther = dynamic_cast<const Analysis_ATLAS_13TeV_0LEP_36invfb*>(other);
-        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }        
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
       }
 
 
