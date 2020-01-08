@@ -453,7 +453,28 @@ namespace Gambit {
           }
         }
 
-        // Overlap removal
+        // Note: use paper description instead of code snippet
+        // This is not identical to the overlap removal in the paper
+        // Probably good enough though
+        LeptonLeptonOverlapRemoval(baselineMuons,baselineElectrons,0.01); // mimics shared track requirement
+        JetLeptonOverlapRemoval(nonBJets,baselineElectrons,0.2);
+        LeptonJetOverlapRemoval(baselineElectrons,nonBJets);
+        LeptonJetOverlapRemoval(baselineElectrons,bJets);
+        LeptonJetOverlapRemoval(baselineMuons,nonBJets);
+        LeptonJetOverlapRemoval(baselineMuons,bJets);
+        LeptonLeptonOverlapRemoval(baselineTaus,baselineElectrons,0.1);
+
+        // Fill a jet-pointer-to-bool map to make it easy to check
+        // if a given jet is treated as a b-jet in this analysis
+        map<HEPUtils::Jet*,bool> analysisBtags;
+        for (HEPUtils::Jet* jet : bJets) {
+          analysisBtags[jet] = true;
+        }
+        for (HEPUtils::Jet* jet : nonBJets) {
+          analysisBtags[jet] = false;
+        }
+
+        // Signal object containers
         vector<HEPUtils::Particle*> signalElectrons;
         vector<HEPUtils::Particle*> signalSoftElectrons;
         vector<HEPUtils::Particle*> signalMuons;
@@ -467,23 +488,11 @@ namespace Gambit {
         vector<HEPUtils::Jet*> signalBJets;
         vector<HEPUtils::Jet*> signalNonBJets;
 
-        // Note: use paper description instead of code snippet
-        // This is not identical to the overlap removal in the paper
-        // Probably good enough though
-        LeptonLeptonOverlapRemoval(baselineMuons,baselineElectrons,0.01); // mimics shared track requirement
-        JetLeptonOverlapRemoval(nonBJets,baselineElectrons,0.2);
-        LeptonJetOverlapRemoval(baselineElectrons,nonBJets);
-        LeptonJetOverlapRemoval(baselineElectrons,bJets);
-        LeptonJetOverlapRemoval(baselineMuons,nonBJets);
-        LeptonJetOverlapRemoval(baselineMuons,bJets);
-        LeptonLeptonOverlapRemoval(baselineTaus,baselineElectrons,0.1);
-
         // Now apply signal jet cuts
         for (HEPUtils::Jet* jet : bJets)
         {
           if(jet->pT() > 25. && fabs(jet->eta())<2.5)
           {
-            jet->set_btag(true);
             signalJets.push_back(jet);
             signalBJets.push_back(jet);
           }
@@ -493,7 +502,6 @@ namespace Gambit {
         {
           if(jet->pT() > 25. && fabs(jet->eta())<2.5)
           {
-            jet->set_btag(false);
             signalJets.push_back(jet);
             signalNonBJets.push_back(jet);
           }
@@ -542,7 +550,7 @@ namespace Gambit {
 
         for (unsigned int i = 0; i < signalJets.size(); ++i)
         {
-          if (!signalJets[i]->btag()) continue;
+          if (!analysisBtags.at(signalJets[i])) continue;
           if (bJet1 == -1)
             bJet1 = i;
           else if (bJet2 == -1)
@@ -555,7 +563,7 @@ namespace Gambit {
         {
           for (unsigned int i = 0; i < signalJets.size(); ++i)
           {
-            if (signalJets[i]->btag()) continue;
+            if (analysisBtags.at(signalJets[i])) continue;
             if (bJet1 == -1)
               bJet1 = i;
             else if (bJet2 == -1)
@@ -574,7 +582,7 @@ namespace Gambit {
 
         for (int i = 0; i < (int)signalJets.size(); ++i)
         {
-          if (!signalJets[i]->btag()) signalNotBjet.push_back(signalJets.at(i));
+          if (!analysisBtags.at(signalJets[i])) signalNotBjet.push_back(signalJets.at(i));
           if (i == bJet1 || i == bJet2) continue;
           signalNotBjetLike.push_back(signalJets.at(i));
         }
@@ -920,12 +928,12 @@ namespace Gambit {
         //bffN
         if (nJets > 1 && nBJets > 0 && preselSoftLep && signalJets[0]->pT() > 400 && Met > 300 && mT < 160 &&
             pTLepOverMet < 0.02 && minDPhiMetBJet < 1.5 && absDPhiJMet0 > 0.4 && absDPhiJMet1 > 0.4 &&
-            topReclM < 150 && !signalJets[0]->btag())is_bffN=true;
+            topReclM < 150 && !analysisBtags.at(signalJets[0]))is_bffN=true;
 
         //bCsoft_diag
         if (nJets > 1 && nBJets > 0 && preselSoftLep && signalJets[0]->pT() > 400 && Met > 300 && mT < 50 &&
             pTLepOverMet < 0.02 && minDPhiMetBJet < 1.5 && absDPhiJMet0 > 0.4 && absDPhiJMet1 > 0.4 &&
-            topReclM < 150 && !signalJets[0]->btag())is_bCsoft_diag=true;
+            topReclM < 150 && !analysisBtags.at(signalJets[0]))is_bCsoft_diag=true;
 
         //bCsoft_med
         if (nJets > 2 && nBJets > 1 && preselSoftLep && signalJets[0]->pT() > 120 && signalJets[1]->pT() > 60 &&
@@ -1157,15 +1165,15 @@ namespace Gambit {
 
              (j==42 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160.) ||
 
-             (j==43 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !signalJets[0]->btag()) ||
+             (j==43 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !analysisBtags.at(signalJets[0])) ||
 
-             (j==44 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !signalJets[0]->btag() && minDPhiMetBJet < 1.5) ||
+             (j==44 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !analysisBtags.at(signalJets[0]) && minDPhiMetBJet < 1.5) ||
 
-             (j==45 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !signalJets[0]->btag() && minDPhiMetBJet < 1.5 && pTLepOverMet < 0.05) ||
+             (j==45 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !analysisBtags.at(signalJets[0]) && minDPhiMetBJet < 1.5 && pTLepOverMet < 0.05) ||
 
-             (j==46 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !signalJets[0]->btag() && minDPhiMetBJet < 1.5 && pTLepOverMet < 0.05 && topReclM < 150) ||
+             (j==46 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !analysisBtags.at(signalJets[0]) && minDPhiMetBJet < 1.5 && pTLepOverMet < 0.05 && topReclM < 150) ||
 
-             (j==47 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !signalJets[0]->btag() && minDPhiMetBJet < 1.5 && pTLepOverMet < 0.05 && topReclM < 150 && pTLepOverMet < 0.02) ||
+             (j==47 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && nJets > 0 && signalJets[0]->pT() > 400. && mT < 160. &&  !analysisBtags.at(signalJets[0]) && minDPhiMetBJet < 1.5 && pTLepOverMet < 0.05 && topReclM < 150 && pTLepOverMet < 0.02) ||
 
              // bC2x_diag cutflow
 
@@ -1251,17 +1259,17 @@ namespace Gambit {
 
              (j==85 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160) ||
 
-             (j==86 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !signalJets[0]->btag()) ||
+             (j==86 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !analysisBtags.at(signalJets[0])) ||
 
-             (j==87 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !signalJets[0]->btag() && mT < 50) ||
+             (j==87 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !analysisBtags.at(signalJets[0]) && mT < 50) ||
 
-             (j==88 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !signalJets[0]->btag() && mT < 50 && minDPhiMetBJet < 1.5) ||
+             (j==88 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !analysisBtags.at(signalJets[0]) && mT < 50 && minDPhiMetBJet < 1.5) ||
 
-             (j==89 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !signalJets[0]->btag() && mT < 50 && minDPhiMetBJet < 1.5 &&  pTLepOverMet < 0.05) ||
+             (j==89 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !analysisBtags.at(signalJets[0]) && mT < 50 && minDPhiMetBJet < 1.5 &&  pTLepOverMet < 0.05) ||
 
-             (j==90 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !signalJets[0]->btag() && mT < 50 && minDPhiMetBJet < 1.5 &&  pTLepOverMet < 0.05 && topReclM < 150 ) ||
+             (j==90 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !analysisBtags.at(signalJets[0]) && mT < 50 && minDPhiMetBJet < 1.5 &&  pTLepOverMet < 0.05 && topReclM < 150 ) ||
 
-             (j==91 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !signalJets[0]->btag() && mT < 50 && minDPhiMetBJet < 1.5 &&  pTLepOverMet < 0.05 && topReclM < 150 &&  pTLepOverMet < 0.02) ||
+             (j==91 && baselineLeptons.size()==1 && nJets > 1 && nBJets > 0 && preselSoftLep && Met > 300. && signalJets[0]->pT() > 400 && mT < 160 && !analysisBtags.at(signalJets[0]) && mT < 50 && minDPhiMetBJet < 1.5 &&  pTLepOverMet < 0.05 && topReclM < 150 &&  pTLepOverMet < 0.02) ||
 
              // bCsoft_med cutflow
 

@@ -291,6 +291,24 @@ namespace Gambit {
         }
 
         // Overlap removal
+        // Note: use paper description instead of code snippet
+        JetLeptonOverlapRemoval(nonBJets,baselineElectrons,0.2);
+        LeptonJetOverlapRemoval(baselineElectrons,nonBJets,0.4);
+        LeptonJetOverlapRemoval(baselineElectrons,bJets,0.4);
+        LeptonJetOverlapRemoval(baselineMuons,nonBJets,0.4);
+        LeptonJetOverlapRemoval(baselineMuons,bJets,0.4);
+
+        // Fill a jet-pointer-to-bool map to make it easy to check
+        // if a given jet is treated as a b-jet in this analysis
+        map<HEPUtils::Jet*,bool> analysisBtags;
+        for (HEPUtils::Jet* jet : bJets) {
+          analysisBtags[jet] = true;
+        }
+        for (HEPUtils::Jet* jet : nonBJets) {
+          analysisBtags[jet] = false;
+        }
+
+        // Signal object containers
         vector<HEPUtils::Particle*> signalElectrons;
         vector<HEPUtils::Particle*> signalMuons;
         vector<HEPUtils::Particle*> electronsForVeto;
@@ -300,25 +318,13 @@ namespace Gambit {
         vector<HEPUtils::Jet*> signalBJets;
         vector<HEPUtils::Jet*> signalNonBJets;
 
-        // Note: use paper description instead of code snippet
-        JetLeptonOverlapRemoval(nonBJets,baselineElectrons,0.2);
-        LeptonJetOverlapRemoval(baselineElectrons,nonBJets,0.4);
-        LeptonJetOverlapRemoval(baselineElectrons,bJets,0.4);
-        LeptonJetOverlapRemoval(baselineMuons,nonBJets,0.4);
-        LeptonJetOverlapRemoval(baselineMuons,bJets,0.4);
-
-
         // It seems that there are no extra signal jet requirements (unlike 8 TeV analysis)
-        // Also we have already sorted jets by their b tag properties, so reset the b tag variable for each jet to the right category
-        // i.e. this was previously 100% true for true b jets then the efficiency map was applied above
         for (HEPUtils::Jet* jet : bJets) {
-          jet->set_btag(true);
           signalJets.push_back(jet);
           signalBJets.push_back(jet);
         }
 
         for (HEPUtils::Jet* jet : nonBJets) {
-          jet->set_btag(false);
           signalJets.push_back(jet);
           signalNonBJets.push_back(jet);
         }
@@ -579,12 +585,12 @@ namespace Gambit {
             if (VIS->GetFrame(jetID[i]) == *V){ // sparticle group
               m_NjV++;
               if (m_NjV == 4) m_pTjV4 = signalJets[i]->pT();
-              if (signalJets[i]->btag() && fabs(signalJets[i]->eta())<2.5) {
+              if ( analysisBtags.at(signalJets[i]) && fabs(signalJets[i]->eta())<2.5) {
                 m_NbV++;
                 if (m_NbV == 1) m_pTbV1 = signalJets[i]->pT();
               }
             } else {
-              if (signalJets[i]->btag() && fabs(signalJets[i]->eta())<2.5)
+              if ( analysisBtags.at(signalJets[i]) && fabs(signalJets[i]->eta())<2.5)
                 m_NbISR++;
             }
           }
