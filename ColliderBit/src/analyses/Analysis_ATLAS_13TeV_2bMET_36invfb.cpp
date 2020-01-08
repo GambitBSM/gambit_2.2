@@ -1,4 +1,5 @@
 #include <vector>
+#include <map>
 #include <cmath>
 #include <memory>
 #include <iomanip>
@@ -322,6 +323,7 @@ namespace Gambit {
 
         // Get b jets
         /// @note We assume that b jets have previously been 100% tagged
+
         const std::vector<double>  a = {0,10.};
         const std::vector<double>  b = {0,10000.};
         const std::vector<double> c = {0.77}; // set b-tag efficiency to 77%
@@ -337,7 +339,7 @@ namespace Gambit {
           }
         }
 
-
+        // Overlap removal
         JetLeptonOverlapRemoval(nonBJets,electrons,0.2);
         LeptonJetOverlapRemoval(electrons,nonBJets);
         LeptonJetOverlapRemoval(electrons,bJets);
@@ -345,6 +347,17 @@ namespace Gambit {
         SpecialLeptonJetOverlapRemoval(muons,nonBJets);
         SpecialLeptonJetOverlapRemoval(muons,bJets);
 
+        // Fill a jet-pointer-to-bool map to make it easy to check
+        // if a given jet is treated as a b-jet in this analysis
+        map<HEPUtils::Jet*,bool> analysisBtags;
+        for (HEPUtils::Jet* jet : bJets) {
+          analysisBtags[jet] = true;
+        }
+        for (HEPUtils::Jet* jet : nonBJets) {
+          analysisBtags[jet] = false;
+        }
+
+        // Signal object containers
         vector<HEPUtils::Jet*> signalJets20;
         vector<HEPUtils::Jet*> signalJets35;
         vector<HEPUtils::Particle*> signalElectrons;
@@ -355,7 +368,6 @@ namespace Gambit {
 
         // Now apply signal jet cuts
         for (HEPUtils::Jet* jet : bJets) {
-          jet->set_btag(true);
           if(jet->pT() > 20. && fabs(jet->eta())<2.8){
             signalJets20.push_back(jet);
             if(fabs(jet->eta())<2.5)signalBJets20.push_back(jet);
@@ -369,7 +381,6 @@ namespace Gambit {
         }
 
         for (HEPUtils::Jet* jet : nonBJets) {
-          jet->set_btag(false);
           if(jet->pT() > 20. && fabs(jet->eta())<2.8){
             signalJets20.push_back(jet);
           }
@@ -467,7 +478,8 @@ namespace Gambit {
             else if(nBjets35>0) mblmin = (signalLeptons[0]->mom() + signalBJets35[0]->mom()).m();
           }
 
-          bjetsLeading = (signalJets35[0]->btag() && signalJets35[1]->btag());
+          // Check if the two leading jets in signalJets35 have been b-tagged
+          bjetsLeading = ( analysisBtags.at(signalJets35[0]) && analysisBtags.at(signalJets35[1]) );
         }
 
 
@@ -497,7 +509,7 @@ namespace Gambit {
 
         /*int bj1=-1; int bj2=-1;
         for(unsigned int ij=0; ij < signalJets35.size() ; ij++){
-          if( signalJets35[ij]->btag() ){
+          if( analysisBtags.at(signalJets35[ij]) ){
             if(bj1<0){
               bj1=ij;
             }else{
@@ -597,8 +609,15 @@ namespace Gambit {
           meff4j += signalJets20[jet]->pT();
         }
 
-        bool bjetsSublead = (nJets20>=3 && !signalJets20[0]->btag() && signalJets20[1]->btag() &&
-                             (!signalJets20[2]->btag() || (nJets20>=4 && signalJets20[3]->btag())));
+        bool bjetsSublead = (nJets20>=3 && !analysisBtags.at(signalJets20[0]) 
+                                        && analysisBtags.at(signalJets20[1]) 
+                                        && ( analysisBtags.at(signalJets20[2]) 
+                                             || (nJets20>=4 && analysisBtags.at(signalJets20[3]) ) ) );
+        // NOTE: 
+        //   Table 1 in the paper suggests that we should also allow for a b-tagged signalJets20[4] 
+        //   in the definition of bjetsSublead above, but the ATLAS code snippet at 
+        //   https://www.hepdata.net/record/79317 only check the jets up to signalJets20[3].
+        //   We follow the ATLAS code snippet here.
 
 
         double  dphiMin1  = 0;
@@ -739,11 +758,11 @@ namespace Gambit {
 
              (j==22 && zeroLep && nJets20>=2 && nJets20<=5) ||
 
-             (j==23 && zeroLep && nJets20>=2 && nJets20<=5 && !signalJets20[0]->btag()) ||
+             (j==23 && zeroLep && nJets20>=2 && nJets20<=5 && !analysisBtags.at(signalJets20[0])) ||
 
-             (j==24 && zeroLep && nJets20>=2 && nJets20<=5 && !signalJets20[0]->btag() && dphiMin1 > 2.5) ||
+             (j==24 && zeroLep && nJets20>=2 && nJets20<=5 && !analysisBtags.at(signalJets20[0]) && dphiMin1 > 2.5) ||
 
-             (j==25 && zeroLep && nJets20>=2 && nJets20<=5 && !signalJets20[0]->btag() && dphiMin1 > 2.5 && dphiMin2 > 0.2) ||
+             (j==25 && zeroLep && nJets20>=2 && nJets20<=5 && !analysisBtags.at(signalJets20[0]) && dphiMin1 > 2.5 && dphiMin2 > 0.2) ||
 
              (j==26 && zeroLep && nJets20>=2 && nJets20<=5 && bjetsSublead && dphiMin1 > 2.5 && dphiMin2 > 0.2) ||
 
