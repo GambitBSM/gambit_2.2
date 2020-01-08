@@ -1,6 +1,54 @@
 Dirac DMEFT
  Constraints
   Name         |> Expression                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <|
+%*slhaFound    |1+access("vars1.lha", 0)                                                                                       %Check whether LHA file is present.
+%*rdSLHA       |if(slhaFound,slhaRead("vars1.lha", 0),-1)                                                                      %Read LHA file.
+%cabi          |if(slhaFound,if(slhaValExists("CKMBLOCK",1,1),slhaVal("CKMBLOCK",0,1,1),cabiDef),cabiDef)                      %Cabibbo angle                                     
+%aEWM1         |if(slhaFound,if(slhaValExists("SMINPUTS",1,1),slhaVal("SMINPUTS",0,1,1),aEWM1Def),aEWM1Def)                    %Inverse of the EW coupling constant at the Z pole 
+%Gf            |if(slhaFound,if(slhaValExists("SMINPUTS",1,2),slhaVal("SMINPUTS",0,1,2),GfDef),GfDef)                          %Fermi constant                                    
+%aS            |if(slhaFound,if(slhaValExists("SMINPUTS",1,3),slhaVal("SMINPUTS",0,1,3),aSDef),aSDef)                          %Strong coupling constant at the Z pole            
+%Lambda        |if(slhaFound,if(slhaValExists("WILSON",1,1),slhaVal("WILSON",0,1,1),LambdaDef),LambdaDef)                      %Scale of new physics                              
+%C51           |if(slhaFound,if(slhaValExists("WILSON",1,2),slhaVal("WILSON",0,1,2),C51Def),C51Def)                            %Dimensionless Wilson coefficient for Q{5,1}       
+%C52           |if(slhaFound,if(slhaValExists("WILSON",1,3),slhaVal("WILSON",0,1,3),C52Def),C52Def)                            %Dimensionless Wilson coefficient for Q{5,2}       
+%C61           |if(slhaFound,if(slhaValExists("WILSON",1,4),slhaVal("WILSON",0,1,4),C61Def),C61Def)                            %Dimensionless Wilson coefficient for Q{6,1}       
+%C62           |if(slhaFound,if(slhaValExists("WILSON",1,5),slhaVal("WILSON",0,1,5),C62Def),C62Def)                            %Dimensionless Wilson coefficient for Q{6,2}       
+%C63           |if(slhaFound,if(slhaValExists("WILSON",1,6),slhaVal("WILSON",0,1,6),C63Def),C63Def)                            %Dimensionless Wilson coefficient for Q{6,3}       
+%C64           |if(slhaFound,if(slhaValExists("WILSON",1,7),slhaVal("WILSON",0,1,7),C64Def),C64Def)                            %Dimensionless Wilson coefficient for Q{6,4}       
+%C71           |if(slhaFound,if(slhaValExists("WILSON",1,8),slhaVal("WILSON",0,1,8),C71Def),C71Def)                            %Dimensionless Wilson coefficient for Q{7,1}       
+%C72           |if(slhaFound,if(slhaValExists("WILSON",1,9),slhaVal("WILSON",0,1,9),C72Def),C72Def)                            %Dimensionless Wilson coefficient for Q{7,2}       
+%C73           |if(slhaFound,if(slhaValExists("WILSON",1,10),slhaVal("WILSON",0,1,10),C73Def),C73Def)                          %Dimensionless Wilson coefficient for Q{7,3}       
+%C74           |if(slhaFound,if(slhaValExists("WILSON",1,11),slhaVal("WILSON",0,1,11),C74Def),C74Def)                          %Dimensionless Wilson coefficient for Q{7,4}       
+%C75           |if(slhaFound,if(slhaValExists("WILSON",1,12),slhaVal("WILSON",0,1,12),C75Def),C75Def)                          %Dimensionless Wilson coefficient for Q{7,5}       
+%C76           |if(slhaFound,if(slhaValExists("WILSON",1,13),slhaVal("WILSON",0,1,13),C76Def),C76Def)                          %Dimensionless Wilson coefficient for Q{7,6}       
+%C77           |if(slhaFound,if(slhaValExists("WILSON",1,14),slhaVal("WILSON",0,1,14),C77Def),C77Def)                          %Dimensionless Wilson coefficient for Q{7,7}       
+%C78           |if(slhaFound,if(slhaValExists("WILSON",1,15),slhaVal("WILSON",0,1,15),C78Def),C78Def)                          %Dimensionless Wilson coefficient for Q{7,8}       
+%C79           |if(slhaFound,if(slhaValExists("WILSON",1,16),slhaVal("WILSON",0,1,16),C79Def),C79Def)                          %Dimensionless Wilson coefficient for Q{7,9}       
+%C710          |if(slhaFound,if(slhaValExists("WILSON",1,17),slhaVal("WILSON",0,1,17),C710Def),C710Def)                        %Dimensionless Wilson coefficient for Q{7,10}      
+%ymdo          |if(slhaFound,if(slhaValExists("YUKAWA",1,1),slhaVal("YUKAWA",0,1,1),ymdoDef),ymdoDef)                          %Down Yukawa mass                                  
+%ymup          |if(slhaFound,if(slhaValExists("YUKAWA",1,2),slhaVal("YUKAWA",0,1,2),ymupDef),ymupDef)                          %Up Yukawa mass                                    
+%yms           |if(slhaFound,if(slhaValExists("YUKAWA",1,3),slhaVal("YUKAWA",0,1,3),ymsDef),ymsDef)                            %Strange Yukawa mass                               
+%ymc           |if(slhaFound,if(slhaValExists("YUKAWA",1,4),slhaVal("YUKAWA",0,1,4),ymcDef),ymcDef)                            %Charm Yukawa mass                                 
+%ymb           |if(slhaFound,if(slhaValExists("YUKAWA",1,5),slhaVal("YUKAWA",0,1,5),ymbDef),ymbDef)                            %Bottom Yukawa mass                                
+%ymt           |if(slhaFound,if(slhaValExists("YUKAWA",1,6),slhaVal("YUKAWA",0,1,6),ymtDef),ymtDef)                            %Top Yukawa mass                                   
+%yme           |if(slhaFound,if(slhaValExists("YUKAWA",1,11),slhaVal("YUKAWA",0,1,11),ymeDef),ymeDef)                          %Electron Yukawa mass                              
+%ymm           |if(slhaFound,if(slhaValExists("YUKAWA",1,13),slhaVal("YUKAWA",0,1,13),ymmDef),ymmDef)                          %Muon Yukawa mass                                  
+%ymtau         |if(slhaFound,if(slhaValExists("YUKAWA",1,15),slhaVal("YUKAWA",0,1,15),ymtauDef),ymtauDef)                      %Tau Yukawa mass                                   
+%MZ            |if(slhaFound,if(slhaValExists("MASS",1,23),slhaVal("MASS",0,1,23),MZDef),MZDef)                                %Mass of G0.                                       
+%Me            |if(slhaFound,if(slhaValExists("MASS",1,11),slhaVal("MASS",0,1,11),MeDef),MeDef)                                %Mass of e.                                        
+%MMU           |if(slhaFound,if(slhaValExists("MASS",1,13),slhaVal("MASS",0,1,13),MMUDef),MMUDef)                              %Mass of mu.                                       
+%MTA           |if(slhaFound,if(slhaValExists("MASS",1,15),slhaVal("MASS",0,1,15),MTADef),MTADef)                              %Mass of ta.                                       
+%MU            |if(slhaFound,if(slhaValExists("MASS",1,2),slhaVal("MASS",0,1,2),MUDef),MUDef)                                  %Mass of u.                                        
+%MC            |if(slhaFound,if(slhaValExists("MASS",1,4),slhaVal("MASS",0,1,4),MCDef),MCDef)                                  %Mass of c.                                        
+%MT            |if(slhaFound,if(slhaValExists("MASS",1,6),slhaVal("MASS",0,1,6),MTDef),MTDef)                                  %Mass of t.                                        
+%MD            |if(slhaFound,if(slhaValExists("MASS",1,1),slhaVal("MASS",0,1,1),MDDef),MDDef)                                  %Mass of d.                                        
+%MS            |if(slhaFound,if(slhaValExists("MASS",1,3),slhaVal("MASS",0,1,3),MSDef),MSDef)                                  %Mass of s.                                        
+%MB            |if(slhaFound,if(slhaValExists("MASS",1,5),slhaVal("MASS",0,1,5),MBDef),MBDef)                                  %Mass of b.                                        
+%mchi          |if(slhaFound,if(slhaValExists("MASS",1,62),slhaVal("MASS",0,1,62),mchiDef),mchiDef)                            %Mass of chi.                                      
+%MH            |if(slhaFound,if(slhaValExists("MASS",1,25),slhaVal("MASS",0,1,25),MHDef),MHDef)                                %Mass of H.                                        
+%WZ            |if(slhaFound,if(1+slhaDecayExists(23),slhaWidth(23),WZDef),WZDef)                                              %Width of G0.                                      
+%WW            |if(slhaFound,if(1+slhaDecayExists(24),slhaWidth(24),WWDef),WWDef)                                              %Width of GP.                                      
+%WT            |if(slhaFound,if(1+slhaDecayExists(6),slhaWidth(6),WTDef),WTDef)                                                %Width of t.                                       
+%WH            |if(slhaFound,if(1+slhaDecayExists(25),slhaWidth(25),WHDef),WHDef)                                              %Width of H.                                       
 aEW            |pow(aEWM1,-1)                                                                                                  % Electroweak coupling contant                      
 MW             |pow(pow(MZ,2)/2.+pow(-(aEW*Pi*pow(2,-0.5)*pow(Gf,-1)*pow(MZ,2))+pow(MZ,4)/4.,0.5),0.5)                         % W mass                                            
 sw2            |1-pow(MW,2)*pow(MZ,-2)                                                                                         % Squared Sin of the Weinberg angle                 
@@ -341,69 +389,3 @@ x171x1         |-C51                                                            
 x171x2         |C51                                                                                                            % a    chi~ chi      coupling.
 x171x3         |-C52                                                                                                           % a    chi~ chi      coupling.
 x171x4         |C52                                                                                                            % a    chi~ chi      coupling.
-GUM000         |-((C76*MD)*pow(Lambda,-3))  % Optimisation by GUM
-GUM001         |(C75*i*MD)*pow(Lambda,-3)  % Optimisation by GUM
-GUM002         |-((C77*MD)*pow(Lambda,-3))  % Optimisation by GUM
-GUM003         |-((C78*i*MD)*pow(Lambda,-3))  % Optimisation by GUM
-GUM004         |(C64*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM005         |(C63*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM006         |(C61*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM007         |(C62*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM008         |(C710*MD)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM009         |(C79*i*MD)/(4.*pow(Lambda,3))  % Optimisation by GUM
-GUM010         |-(C79*i*MD)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM011         |-((C76*MS)*pow(Lambda,-3))  % Optimisation by GUM
-GUM012         |(C75*i*MS)*pow(Lambda,-3)  % Optimisation by GUM
-GUM013         |-((C77*MS)*pow(Lambda,-3))  % Optimisation by GUM
-GUM014         |-((C78*i*MS)*pow(Lambda,-3))  % Optimisation by GUM
-GUM015         |(C64*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM016         |(C63*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM017         |(C61*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM018         |(C62*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM019         |(C710*MS)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM020         |(C79*i*MS)/(4.*pow(Lambda,3))  % Optimisation by GUM
-GUM021         |-(C79*i*MS)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM022         |-((C76*MB)*pow(Lambda,-3))  % Optimisation by GUM
-GUM023         |(C75*i*MB)*pow(Lambda,-3)  % Optimisation by GUM
-GUM024         |-((C77*MB)*pow(Lambda,-3))  % Optimisation by GUM
-GUM025         |-((C78*i*MB)*pow(Lambda,-3))  % Optimisation by GUM
-GUM026         |(C64*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM027         |(C63*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM028         |(C61*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM029         |(C62*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM030         |(C710*MB)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM031         |(C79*i*MB)/(4.*pow(Lambda,3))  % Optimisation by GUM
-GUM032         |-(C79*i*MB)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM033         |-((C76*MU)*pow(Lambda,-3))  % Optimisation by GUM
-GUM034         |(C75*i*MU)*pow(Lambda,-3)  % Optimisation by GUM
-GUM035         |-((C77*MU)*pow(Lambda,-3))  % Optimisation by GUM
-GUM036         |-((C78*i*MU)*pow(Lambda,-3))  % Optimisation by GUM
-GUM037         |(C64*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM038         |(C63*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM039         |(C61*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM040         |(C62*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM041         |(C710*MU)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM042         |(C79*i*MU)/(4.*pow(Lambda,3))  % Optimisation by GUM
-GUM043         |-(C79*i*MU)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM044         |-((C76*MC)*pow(Lambda,-3))  % Optimisation by GUM
-GUM045         |(C75*i*MC)*pow(Lambda,-3)  % Optimisation by GUM
-GUM046         |-((C77*MC)*pow(Lambda,-3))  % Optimisation by GUM
-GUM047         |-((C78*i*MC)*pow(Lambda,-3))  % Optimisation by GUM
-GUM048         |(C64*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM049         |(C63*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM050         |(C61*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM051         |(C62*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM052         |(C710*MC)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM053         |(C79*i*MC)/(4.*pow(Lambda,3))  % Optimisation by GUM
-GUM054         |-(C79*i*MC)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM055         |-((C76*MT)*pow(Lambda,-3))  % Optimisation by GUM
-GUM056         |(C75*i*MT)*pow(Lambda,-3)  % Optimisation by GUM
-GUM057         |-((C77*MT)*pow(Lambda,-3))  % Optimisation by GUM
-GUM058         |-((C78*i*MT)*pow(Lambda,-3))  % Optimisation by GUM
-GUM059         |(C64*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM060         |(C63*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM061         |(C61*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM062         |(C62*i)*pow(Lambda,-2)  % Optimisation by GUM
-GUM063         |(C710*MT)/(2.*pow(Lambda,3))  % Optimisation by GUM
-GUM064         |(C79*i*MT)/(4.*pow(Lambda,3))  % Optimisation by GUM
-GUM065         |-(C79*i*MT)/(2.*pow(Lambda,3))  % Optimisation by GUM

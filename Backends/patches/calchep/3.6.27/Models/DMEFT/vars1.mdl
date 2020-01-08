@@ -50,5 +50,5 @@ WT             |1.50833649   |Width of t.                                       
 WH             |0.00407      |Width of H.                                                               |
 E              |2.71828182845|The base of the natural logarithm.                                        |
 Pi             |3.14159265358|The circumference of a circle divided by the diameter.                    |
-Maux           |1            |Auxiliary mass parameter                                                 | 
-half           |0.5          |One divided by two                                                       | 
+Maux           |1            |Auxiliary mass parameter                                                  | 
+half           |0.5          |One divided by two                                                        | 
