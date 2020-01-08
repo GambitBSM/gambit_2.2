@@ -44,6 +44,7 @@ just revert back to a single core, and you'll have to just wait a long time for 
 scan to run.
 
 Next let's install the scanning algorithm we want to use for this study, diver.
+
     make diver
     cmake ..
 

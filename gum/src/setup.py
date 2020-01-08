@@ -106,15 +106,19 @@ class SpectrumParameter:
                  shape=None, fullname=None,
                  sm=False, gb_input=None,
                  alt_name=None, bcs=None,
-                 is_output=False, is_real=False):
+                 is_output=False, is_real=False, 
+                 fullparticlename = None):
+
         self.name = name
         self.tag = tag
         self.shape = shape
         self.block = block
         self.index = index
         self.sm = sm
-        self.is_output = is_output;
-        self.is_real = is_real;
+        self.is_output = is_output
+        self.is_real = is_real
+        self.fullparticlename = fullparticlename
+
         if not fullname:
             self.fullname = name
         else:

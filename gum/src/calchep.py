@@ -383,7 +383,7 @@ def add_calchep_switch(model_name, spectrum):
            "if (ModelInUse(\"{0}\"))\n"
            "{{\n"
            "// Obtain spectrum information to pass to CalcHEP\n"
-           "const Spectrum& spec = *Dep::{1};\n"
+           "const Spectrum& spec = *Dep::{1};\n\n"
            "// Obtain model contents\n"
            "static const SpectrumContents::{0} {0}_contents;\n\n"
            "// Obtain list of all parameters within model\n"
