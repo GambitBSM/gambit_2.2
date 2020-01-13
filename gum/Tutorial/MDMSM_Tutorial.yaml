@@ -17,7 +17,7 @@ Parameters:
 
   StandardModel_Higgs:
     mH: 125.09
-
+    
   MDMSM:
     mchi:
       range: [45, 10000]
@@ -83,6 +83,22 @@ ObsLikes:
   
   - capability: XENON1T_2018_LogLikelihood
     purpose: LogLike
+
+  # Other observables
+  - capability: RD_oh2
+    purpose:    Observable
+
+  - capability: mwimp
+    purpose:    Observable
+
+  - capability: sigmav
+    purpose:    Observable
+
+  - capability: sigma_SI_p
+    purpose:    Observable
+
+  - capability: sigma_SI_n
+    purpose:    Observable
 
 Rules:
 
