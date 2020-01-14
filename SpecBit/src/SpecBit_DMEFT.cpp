@@ -57,8 +57,8 @@ namespace Gambit
       DMEFTmodel.DMEFT_C78 = *myPipe::Param.at("C78");
       DMEFTmodel.DMEFT_C79 = *myPipe::Param.at("C79");
       DMEFTmodel.DMEFT_C710 = *myPipe::Param.at("C710");
-      DMEFTmodel.DMEFT_Mchi_Pole_Mass = *myPipe::Param.at("mchi");
-      DMEFTmodel.DMEFT_Mh0_1_Pole_Mass = *myPipe::Param.at("mH");
+      DMEFTmodel.DMEFT_chi_Pole_Mass = *myPipe::Param.at("mchi");
+      DMEFTmodel.DMEFT_h0_1_Pole_Mass = *myPipe::Param.at("mH");
       
       // quantities needed to fill container spectrum
       double alpha_em = 1.0 / sminputs.alphainv;

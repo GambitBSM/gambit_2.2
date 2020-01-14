@@ -72,7 +72,7 @@ BE_INI_FUNCTION
   *ForceUG=1;
   
   // BSM parameters
-  Assign_Value("Lambda", spec.get(Par::dimensionless, "Lambda"));
+  Assign_Value("Lambda", spec.get(Par::mass1, "Lambda"));
   Assign_Value("C51", spec.get(Par::dimensionless, "C51"));
   Assign_Value("C52", spec.get(Par::dimensionless, "C52"));
   Assign_Value("C61", spec.get(Par::dimensionless, "C61"));
@@ -110,76 +110,11 @@ BE_INI_FUNCTION
   double width = 0.0;
   bool present = true;
   
-  try { width = tbl->at("d_1").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("u_1").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("d_2").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("u_2").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("d_3").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
   try { width = tbl->at("u_3").width_in_GeV; }
    catch(std::exception& e) { present = false; }
   if (present) Assign_Value("WT", width);
   present = true;
-  
-  try { width = tbl->at("e-_1").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("nu_1").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("e-_2").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("nu_2").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("e-_3").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("nu_3").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("g").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
-  try { width = tbl->at("gamma").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
+    
   try { width = tbl->at("Z0").width_in_GeV; }
    catch(std::exception& e) { present = false; }
   if (present) Assign_Value("WZ", width);
@@ -194,12 +129,7 @@ BE_INI_FUNCTION
    catch(std::exception& e) { present = false; }
   if (present) Assign_Value("WH", width);
   present = true;
-  
-  try { width = tbl->at("chi").width_in_GeV; }
-   catch(std::exception& e) { present = false; }
-  if (present) Assign_Value("0", width);
-  present = true;
-  
+
   // Initialise micrOMEGAs mass spectrum
   error = sortOddParticles(byVal(cdmName));
   if (error != 0) backend_error().raise(LOCAL_INFO, "MicrOmegas function "

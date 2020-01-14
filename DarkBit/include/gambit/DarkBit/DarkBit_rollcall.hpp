@@ -139,7 +139,7 @@ START_MODULE
       DEPENDENCY(DarkMatter_ID, std::string)
       ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                    ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
-                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2)
+                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2, DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -172,7 +172,7 @@ START_MODULE
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
       DEPENDENCY(DarkMatter_ID, std::string)
       ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
-                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2)
+                   DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2, DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -503,7 +503,7 @@ START_MODULE
       DEPENDENCY(generic_WIMP_sigmav, WIMP_annihilation)
     #undef FUNCTION
     #define FUNCTION TH_ProcessCatalog_DMEFT
-      START_FUNCTION(DarkBit::TH_ProcessCatalog)
+      START_FUNCTION(TH_ProcessCatalog)
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(DMEFT_spectrum, Spectrum)
       BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, std::vector<str>&, double&, double&, const DecayTable&))

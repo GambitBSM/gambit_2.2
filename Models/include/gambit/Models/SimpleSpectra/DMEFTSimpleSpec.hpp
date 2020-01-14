@@ -51,8 +51,8 @@ namespace Gambit
       double Yd[3][3];
       double Yu[3][3];
       double Ye[3][3];
-      double DMEFT_Mchi_Pole_Mass;
-      double DMEFT_Mh0_1_Pole_Mass;
+      double DMEFT_chi_Pole_Mass;
+      double DMEFT_h0_1_Pole_Mass;
     };
     
     /// Forward declare the wrapper class so that we can use it
@@ -124,8 +124,8 @@ namespace Gambit
       double get_Yd(int i, int j) const { return params.Yd[i][j]; }
       double get_Yu(int i, int j) const { return params.Yu[i][j]; }
       double get_Ye(int i, int j) const { return params.Ye[i][j]; }
-      double get_MchiPoleMass() const { return params.DMEFT_Mchi_Pole_Mass; }
-      double get_Mh0_1PoleMass() const { return params.DMEFT_Mh0_1_Pole_Mass; }
+      double get_chiPoleMass() const { return params.DMEFT_chi_Pole_Mass; }
+      double get_h0_1PoleMass() const { return params.DMEFT_h0_1_Pole_Mass; }
       
       void set_Lambda(double in) { params.DMEFT_Lambda=in; }
       void set_C51(double in) { params.DMEFT_C51=in; }
@@ -152,8 +152,8 @@ namespace Gambit
       void set_Yd(double in, int i, int j) { params.Yd[i][j]=in; }
       void set_Yu(double in, int i, int j) { params.Yu[i][j]=in; }
       void set_Ye(double in, int i, int j) { params.Ye[i][j]=in; }
-      void set_MchiPoleMass(double in) { params.DMEFT_Mchi_Pole_Mass=in; }
-      void set_Mh0_1PoleMass(double in) { params.DMEFT_Mh0_1_Pole_Mass=in; }
+      void set_chiPoleMass(double in) { params.DMEFT_chi_Pole_Mass=in; }
+      void set_h0_1PoleMass(double in) { params.DMEFT_h0_1_Pole_Mass=in; }
       
       /// Map fillers
       static GetterMaps fill_getter_maps()
@@ -191,8 +191,8 @@ namespace Gambit
         getters[dimensionless].map2W["Yd"] = FInfo2W(&Self::get_Yd, i012, i012);
         getters[dimensionless].map2W["Yu"] = FInfo2W(&Self::get_Yu, i012, i012);
         getters[dimensionless].map2W["Ye"] = FInfo2W(&Self::get_Ye, i012, i012);
-        getters[Pole_Mass].map0W["Mchi"] =  &Self::get_MchiPoleMass;
-        getters[Pole_Mass].map0W["Mh0_1"] =  &Self::get_Mh0_1PoleMass;
+        getters[Pole_Mass].map0W["chi"] =  &Self::get_chiPoleMass;
+        getters[Pole_Mass].map0W["h0_1"] =  &Self::get_h0_1PoleMass;
         
         return getters;
       }
@@ -232,8 +232,8 @@ namespace Gambit
         setters[dimensionless].map2W["Yd"] = FInfo2W(&Self::set_Yd, i012, i012);
         setters[dimensionless].map2W["Yu"] = FInfo2W(&Self::set_Yu, i012, i012);
         setters[dimensionless].map2W["Ye"] = FInfo2W(&Self::set_Ye, i012, i012);
-        setters[Pole_Mass].map0W["Mchi"] =  &Self::set_MchiPoleMass;
-        setters[Pole_Mass].map0W["Mh0_1"] =  &Self::set_Mh0_1PoleMass;
+        setters[Pole_Mass].map0W["chi"] =  &Self::set_chiPoleMass;
+        setters[Pole_Mass].map0W["h0_1"] =  &Self::set_h0_1PoleMass;
         
         return setters;
       }

@@ -26,14 +26,7 @@ namespace Gambit
     setName("DMEFT");
     
     std::vector<int> scalar = initVector(1); // i.e. get(Par::Tag, "name")
-    std::vector<int> v2     = initVector(2); // i.e. get(Par::Tag, "name", i)
-    std::vector<int> v3     = initVector(3);   // "
-    std::vector<int> v4     = initVector(4);   // "
-    std::vector<int> v6     = initVector(6);   // "
-    std::vector<int> m2x2   = initVector(2,2); // i.e. get(Par::Tag, "name", i, j)
-    std::vector<int> m3x3   = initVector(3,3); // "
-    std::vector<int> m4x4   = initVector(4,4); // "
-    std::vector<int> m6x6   = initVector(6,6); // "
+    std::vector<int> m3x3   = initVector(3,3); // i.e. get(Par::Tag, "name", i, j)
     
     addParameter(Par::mass1, "Lambda", scalar, "WILSON", 1);
     addParameter(Par::dimensionless, "C51", scalar, "WILSON", 2);
@@ -60,8 +53,8 @@ namespace Gambit
     addParameter(Par::dimensionless, "Yd", m3x3, "YD", 1);
     addParameter(Par::dimensionless, "Yu", m3x3, "YU", 1);
     addParameter(Par::dimensionless, "Ye", m3x3, "YE", 1);
-    addParameter(Par::Pole_Mass, "Mchi", scalar, "MASS", 62);
-    addParameter(Par::Pole_Mass, "Mh0_1", scalar, "MASS", 25);
+    addParameter(Par::Pole_Mass, "chi", scalar, "MASS", 62);
+    addParameter(Par::Pole_Mass, "h0_1", scalar, "MASS", 25);
     
   } // namespace Models
 } // namespace Gambit

@@ -147,7 +147,7 @@ Logger:
 
   redirection:
     [Default]      : "default.log"
-    [ExampleBit_A] : "DMEFT.log"
+    #[ExampleBit_A] : "DMEFT.log"
     [Scanner]      : "DMEFT_scan.log"
 
 

@@ -47,12 +47,12 @@ namespace Gambit
         str model = "DMEFT"; // CalcHEP model name
         std::vector<str> in = {"chi", "chi~"}; // In states: DM+DMbar
         std::vector<str> out; // Out states
-        if (channel == "dbar_1, d_1") out = {"dbar_1", "d_1"};
-        if (channel == "ubar_1, u_1") out = {"ubar_1", "u_1"};
-        if (channel == "dbar_2, d_2") out = {"dbar_2", "d_2"};
-        if (channel == "ubar_2, u_2") out = {"ubar_2", "u_2"};
-        if (channel == "dbar_3, d_3") out = {"dbar_3", "d_3"};
-        if (channel == "ubar_3, u_3") out = {"ubar_3", "u_3"};
+        if (channel == "dbar_1, d_1") out = {"d~", "d"};
+        if (channel == "ubar_1, u_1") out = {"u~", "u"};
+        if (channel == "dbar_2, d_2") out = {"s~", "s"};
+        if (channel == "ubar_2, u_2") out = {"c~", "c"};
+        if (channel == "dbar_3, d_3") out = {"b~", "b"};
+        if (channel == "ubar_3, u_3") out = {"t~", "t"};
         
         // Check the channel has been filled
         if (out.size() > 1) return sigmav(model, in, out, QCD_coupling, v_rel, tbl)*GeV2tocm3s1;
@@ -70,12 +70,11 @@ namespace Gambit
       
       // Initialize empty catalog, main annihilation process
       TH_ProcessCatalog catalog;
-      TH_Process process_ann("chi", "chi~");
+      TH_Process process_ann("chi", "chi");
       
       // Explicitly state that Dirac DM is not self-conjugate to add extra 
       // factors of 1/2 where necessary
       process_ann.isSelfConj = false;
-      
       
       // Import particle masses 
       
