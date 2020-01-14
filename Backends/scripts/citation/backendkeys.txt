@@ -293,9 +293,11 @@ key(s) inserted into SUSY-HIT_1_5.hpp: Djouadi:2006bz,Muhlleitner:2003vg,Djouadi
 
 _____________________________________________________________
 file: SUSYPOPE_0_2
-SUSYPOPE references:
-no matches! 
-
-key(s) inserted into SUSYPOPE_0_2.hpp: key 
+SUSYPOPE references: hep-ph/0604147
+BibTex key = Heinemeyer:2006px
+SUSYPOPE references: 0710.2972
+BibTex key = Heinemeyer:2007bw
+key(s) inserted into SUSYPOPE_0_2.hpp: Heinemeyer:2006px,Heinemeyer:2007bw 
 
 _____________________________________________________________
+

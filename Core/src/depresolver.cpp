@@ -408,16 +408,16 @@ namespace Gambit
         SortedParentVertices[*it] = getSortedParentVertices(*it, masterGraph, function_order);
       }
 
-      // Get BibTex key entries for each vertex functor
+      // Get BibTex key entries for each vertex
       std::vector<std::string> keyList;
       for(auto it = order.begin(); it != order.end(); ++it)
       {
-        std::string bibkey = (*masterGraph[*it]).citationKey();    // this is wrong
+        std::string bibkey = (*masterGraph[*it]).citationKey();
         if (bibkey != ""){
          keyList.push_back(bibkey);
         }
       }
-      // Print contents of vector key_list
+      // Print contents of vector keyList
       for (std::vector<std::string>::const_iterator it = keyList.begin(); it != keyList.end(); ++it)
       {
         std::cout << *it << "\n";
