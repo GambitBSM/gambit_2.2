@@ -264,7 +264,7 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
         # Write the addParameter macro to initialise each SpectrumParameter
         # object within the SubSpectrum.
 
-        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name 
+        e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
         towrite += (
                 "addParameter(Par::{0}, \"{1}\", {2}{3});\n"
                 ).format(mp.tag.replace("\"",""), 
@@ -536,7 +536,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.getter, index)
 
-        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name
+        e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
 
         towrite += (
                 "getters[{0}].map{1}"
@@ -590,7 +590,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index)
 
-        e = mp.name[1:] if mp.tag == "Pole_Mass" else mp.name
+        e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
 
         towrite += (
                 "setters[{0}].map{1}"

@@ -696,7 +696,7 @@ def translate_four_fermion_lorentz(lorentz):
     elif len(strings) == 5:
         # We probably have contractions with a gamma5 in this case.
         # Just check explicitly:
-        search = ["Gamma\(", "Gamma5\("]
+        search = [r"Gamma\(", r"Gamma5\("]
         to_search = re.compile('|'.join(sorted(search, key=len, reverse=True)))
         matches = (to_search.search(el) for el in strings)
         counts = Counter(match.group() for match in matches if match)
@@ -709,15 +709,16 @@ def translate_four_fermion_lorentz(lorentz):
             # Find the gamma matrix attached to the fermions labelled 1 and 4
             first_index = 0
             last_index = 0
+
             for i in strings:
                 # Grab the indices labelling the gamma matrices
                 nums = re.search(r'\((.*?)\)',i).group(1).split(',')
                 # Make these integers
                 nums = [int(x) for x in nums]
-        
-                if 1 in nums:
+
+                if 2 in nums:
                     first_index = nums[0]
-                if 4 in nums:
+                if 3 in nums:
                     last_index = nums[0]
 
             # Just put the CalcHEP syntax in here.
@@ -727,12 +728,12 @@ def translate_four_fermion_lorentz(lorentz):
                 sys.exit()
             # (mu,nu)(nu,mu)
             if first_index == last_index:
-                left.append("G(m3)*G(M3)")
-                right.append("G5*G(M3)*G(m3)")
+                left.append("G5*G(m3)*G(M3)")
+                right.append("G(M3)*G(m3)")
             # (mu,nu)(mu,nu)
             else:
-                left.append("G(m3)*G(M3)")
-                right.append("G5*G(m3)*G(M3)")
+                left.append("G5*G(m3)*G(M3)")
+                right.append("G(m3)*G(M3)")
 
         # *Pretty* sure this is the only dim 5 operator we'll get...
         else:
@@ -783,10 +784,10 @@ def translate_four_fermion_lorentz(lorentz):
             n_r.append([int(x) for x in i.split(',')])
 
         for i in n_l:
-            if 1 in i:
+            if 2 in i:
                 first_index = i[0]
         for j in n_r:
-            if 4 in j:
+            if 3 in j:
                 last_index = j[0]
 
         if first_index == 0 or last_index == 0:
@@ -1308,10 +1309,13 @@ def c_ify_couplings(mg_couplings, param_dict):
         t = re.sub(r'complex\(0,1\)', 'i', t)
         # cmath.pi --> Pi
         t = re.sub(r'cmath.pi', 'Pi', t)
-        # 1/a**b --> pow(a,-b)
-        t = re.sub(r'/(\w+)\*\*(\w+)', r'*pow(\1,-\2)', t)
-        # a**b --> pow(a,b)
-        t = re.sub(r'(\w+)\*\*(\w+)', r'pow(\1,\2)', t)
+        # 1/a**b --> 1/a^b
+        t = re.sub(r'/(\w+)\*\*(\w+)', r'/\1^\2', t)
+        # a**b --> a^b
+        t = re.sub(r'(\w+)\*\*(\w+)', r'\1^\2', t)
+        # Any floating point number with a dot after it -> remove the dot
+        # e.g. 2.*Lambda -> 2*Lambda. Obviously not if it's a number like 1.5.
+        t = re.sub(r'(\d+)\.([^0-9]+)', r'\1\2', t)
 
         # ComplexConjugate
         # TODO - since CalcHEP can't hack complex parameters, will want to 
@@ -1498,7 +1502,7 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict,
         optimisedout = ""
         for k, v in optimisations.iteritems():
             if v == coupling: 
-                optimisedout = k
+                optimisedout = v + "*Maux"
         # todo error
 
         newentry = ""
@@ -1582,11 +1586,11 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict,
 
         # TODO check this!!!
         if lorentz_indices == 0:
-            v2coups = "Maux"
+            v2coups = "-i*Maux"
         elif lorentz_indices == 1:
-            v2coups = "i*Maux"
+            v2coups = "-i*Maux"
         elif lorentz_indices == 2:
-            v2coups = "1"
+            v2coups = "i"
 
         vertex1 = MGVertex("vertex1", v1parts, "", lorentz[0], optimisedout)
         vertex2 = MGVertex("vertex2", v2parts, "", lorentz[1], v2coups)
@@ -1659,15 +1663,16 @@ def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz
 
     # Add Maux to the vars file, if we need auxiliary particles...
     with open(new_ch_loc+"/vars1.mdl", 'a') as f:
-        f.write("Maux           |1            |Auxiliary mass parameter                                                 | \n")
-        f.write("half           |0.5          |One divided by two                                                       | \n")
+        f.write("Maux           |1            |Auxiliary mass parameter                                                  | \n")
+        f.write("half           |0.5          |One divided by two                                                        | \n")
 
-    # Go through the optimisations and add the new definitions
-    global optimisations
-    with open(new_ch_loc+"/func1.mdl", 'a') as f:
-        for k, v in sorted(optimisations.iteritems()):
-            towrite = "{0: <15}".format(k) + "|" + v + "  % Optimisation by GUM\n"
-            f.write(towrite)
+    ## SB 8/1/20 REMOVED AS OF NOW
+    ## Go through the optimisations and add the new definitions
+    #global optimisations
+    # with open(new_ch_loc+"/func1.mdl", 'a') as f:
+    #     for k, v in sorted(optimisations.iteritems()):
+    #         towrite = "{0: <15}".format(k) + "|" + v + "  % Optimisation by GUM\n"
+    #         f.write(towrite)
 
     print("New CalcHEP vertices added to {}.").format(new_ch_loc)
 

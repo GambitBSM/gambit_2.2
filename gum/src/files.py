@@ -100,8 +100,6 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
     Adds a new FUNCTION to an existing CAPABILITY in a rollcall header.
     """
 
-    print contents
-
     # Get the actual function name from the contents
     fpat = r'#define FUNCTION\s*(.*)\s*'
     s = re.search(fpat, contents)

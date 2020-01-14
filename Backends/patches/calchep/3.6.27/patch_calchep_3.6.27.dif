@@ -41,3 +41,13 @@
 - 
 \ No newline at end of file
 + 
+
+--- c_source/chep_crt/include/syst.h    2014-10-24 11:01:02.000000000 +0100
++++ c_source_patched/chep_crt/include/syst.h    2020-01-14 20:33:01.880797556 +0000
+@@ -2,7 +2,7 @@
+ #define __SYST_
+ 
+ #ifndef STRSIZ
+-#define STRSIZ 4096
++#define STRSIZ 16384
+ #endif
