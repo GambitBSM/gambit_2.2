@@ -86,8 +86,8 @@ namespace Gambit {
 
 
         // jets
-        vector<HEPUtils::Jet*> Jets;
-        for (HEPUtils::Jet* jet : event->jets())
+        vector<const HEPUtils::Jet*> Jets;
+        for (const HEPUtils::Jet* jet : event->jets())
         {
           if (jet->pT()>30. &&fabs(jet->eta())<3.0) Jets.push_back(jet);
         }
@@ -101,14 +101,14 @@ namespace Gambit {
 	    for (HEPUtils::Particle* photon  : Photons){
 	        if (photon->pT()>180. && fabs(photon->eta()) < 1.44) {
 	            high_pT_photon = true;
-	            for (HEPUtils::Jet* jet : Jets){
+	            for (const HEPUtils::Jet* jet : Jets){
 	                if ( jet->mom().deltaR_eta(photon->mom()) < 0.5 ) delta_R_g_j=true;
 	            }
 	        }
 	    }
         if (not high_pT_photon) return;
         if (delta_R_g_j) return;
-        for (HEPUtils::Jet* jet : Jets){
+        for (const HEPUtils::Jet* jet : Jets){
             if (jet->pT()>100. && jet->mom().deltaPhi(ptot) < 0.3 ) delta_phi_j_MET=true;
         }
         if (delta_phi_j_MET) return;

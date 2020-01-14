@@ -62,7 +62,7 @@ namespace Gambit {
       } comparePt;
 
       struct ptJetComparison {
-        bool operator() (HEPUtils::Jet* i,HEPUtils::Jet* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Jet* i,const HEPUtils::Jet* j) {return (i->pT()>j->pT());}
       } compareJetPt;
 
       Analysis_CMS_13TeV_2OSLEP_36invfb()
@@ -138,8 +138,8 @@ namespace Gambit {
         }
 
         // Baseline jets
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets())
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets())
         {
           // We use 25 GeV rather than 35 GeV
           // if (jet->pT()>35. &&fabs(jet->eta())<2.4) baselineJets.push_back(jet);
@@ -151,8 +151,8 @@ namespace Gambit {
         vector<HEPUtils::Particle*> signalLeptons;
         vector<HEPUtils::Particle*> signalElectrons;
         vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
 
         // Signal electrons
         for (size_t iEl=0;iEl<baselineElectrons.size();iEl++)
@@ -371,7 +371,7 @@ namespace Gambit {
 
 
 
-      double get_mjj(vector<HEPUtils::Jet*> jets) {
+      double get_mjj(vector<const HEPUtils::Jet*> jets) {
         double mjj=0;
         double deltaPhi_min=999;
         for (size_t iJet1=0;iJet1<jets.size();iJet1++) {
@@ -388,7 +388,7 @@ namespace Gambit {
         return mjj;
       }
 
-      double get_mT2(vector<HEPUtils::Particle*> leptons, vector<HEPUtils::Jet*> bjets, HEPUtils::P4 met) {
+      double get_mT2(vector<HEPUtils::Particle*> leptons, vector<const HEPUtils::Jet*> bjets, HEPUtils::P4 met) {
         double mT2=0;
         if (bjets.size()<2) {
           double pLep0[3] = {leptons.at(0)->mass(), leptons.at(0)->mom().px(), leptons.at(0)->mom().py()};

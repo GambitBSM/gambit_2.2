@@ -34,10 +34,10 @@ namespace Gambit {
   namespace ColliderBit {
 
     // This analysis class only returns the results from the EWino signal regions.
-    // The stop signal regions are returned from the derived class 
+    // The stop signal regions are returned from the derived class
     // Analysis_CMS_13TeV_2LEPsoft_stop_36invfb below.
     //
-    // There also the derived classes 
+    // There also the derived classes
     // - Analysis_CMS_13TeV_2LEPsoft_36invfb_nocovar
     // - Analysis_CMS_13TeV_2LEPsoft_stop_36invfb_nocovar
     // that don't make use of the the covariance matrices
@@ -78,7 +78,7 @@ namespace Gambit {
       vector<double> cutFlowVectorCMS_150_143;
       vector<double> cutFlowVectorCMS_350_330;
       vector<double> cutFlowVectorCMS_350_340;
- 
+
       // double xsecCMS_150_143;
       // double xsecCMS_150_130;
 
@@ -121,8 +121,8 @@ namespace Gambit {
         vector<HEPUtils::Particle*> signalLeptons;
         vector<HEPUtils::Particle*> signalElectrons;
         vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
 
         //@note Numbers digitized from https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/2d_full_pteta_el_048_ttbar.pdf
         //@note The efficiency map has been extended to cover the low-pT region, using the efficiencies from BuckFast (CMSEfficiencies.hpp)
@@ -168,7 +168,7 @@ namespace Gambit {
           else if (met > 300. && muon->pT()>3.5 && muon->pT()<30. && fabs(muon->eta())<2.4 && isMu) signalMuons.push_back(muon);
         }
 
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>25. && fabs(jet->eta())<2.4) {
            signalJets.push_back(jet);
            if (jet->btag())signalBJets.push_back(jet);
@@ -441,7 +441,7 @@ namespace Gambit {
                  << 100.*cutFlowVector[j]/cutFlowVector[0] << "%,"  << setw(20) << cutFlowVectorCMS_150_130[j] << "," << setw(20) << (cutFlowVector[j]*scale_by / cutFlowVectorCMS_150_130[j]) << endl;
           }
           cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
- 
+
           cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
           cout << "CUT FLOW: CMS_13TeV_2LEPsoft_36invfb: Signal Region 2 "<<endl;
           cout << "------------------------------------------------------------------------------------------------------------------------------"<<endl;
@@ -456,7 +456,7 @@ namespace Gambit {
         #endif
 
 
-        // The stop signal regions are collected in the derived analysis class 
+        // The stop signal regions are collected in the derived analysis class
         // Analysis_CMS_13TeV_2LEPsoft_stop_36invfb below.
 
         add_result(SignalRegionData(_counters.at("SREW1"),  2.,  {3.5, 1.}));

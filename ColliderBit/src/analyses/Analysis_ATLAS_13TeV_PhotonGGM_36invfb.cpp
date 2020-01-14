@@ -31,7 +31,7 @@ using namespace std;
 namespace Gambit {
   namespace ColliderBit {
 
-    bool sortByPT_jet(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
+    bool sortByPT_jet(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
     bool sortByPT_lep(HEPUtils::Particle* lep1, HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT()); }
 
 
@@ -62,15 +62,15 @@ namespace Gambit {
       // Overlap removal -- discard from first list if deltaR < deltaR1 and
       // discard from the second list deltaR1 < deltaR < deltaR2
       /*
-      void JetParticleOverlapRemoval2(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &particlevec, double deltaR1, double deltaR2, bool use_rapidity=false) {
+      void JetParticleOverlapRemoval2(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &particlevec, double deltaR1, double deltaR2, bool use_rapidity=false) {
 
-        vector<HEPUtils::Jet*> keep_jets;
-        vector<HEPUtils::Jet*> kill_jets;
+        vector<const HEPUtils::Jet*> keep_jets;
+        vector<const HEPUtils::Jet*> kill_jets;
 
         vector<HEPUtils::Particle*> keep_particles;
         vector<HEPUtils::Particle*> kill_particles;
 
-        for(HEPUtils::Jet* j : jetvec) {
+        for(const HEPUtils::Jet* j : jetvec) {
 
           for(HEPUtils::Particle* p : particlevec) {
 
@@ -88,7 +88,7 @@ namespace Gambit {
         }
 
         // All jets that are not in kill_jets should go into keep_jets
-        for(HEPUtils::Jet* j : jetvec) {
+        for(const HEPUtils::Jet* j : jetvec) {
           if ( find(kill_jets.begin(), kill_jets.end(), j) ==  kill_jets.end() ) keep_jets.push_back(j);
         }
 
@@ -165,9 +165,9 @@ namespace Gambit {
         ATLAS::applyPhotonEfficiencyR2(baselinePhotons);
 
         // Jets
-        vector<HEPUtils::Jet*> jets28;
-        vector<HEPUtils::Jet*> jets28_nophooverlap;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> jets28;
+        vector<const HEPUtils::Jet*> jets28_nophooverlap;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 30. && fabs(jet->eta()) < 2.8) {
             jets28.push_back(jet);
             jets28_nophooverlap.push_back(jet);
@@ -190,8 +190,8 @@ namespace Gambit {
 
 
         // Make |eta| < 2.5 jets
-        vector<HEPUtils::Jet*> jets25;
-        for (HEPUtils::Jet* jet : jets28){
+        vector<const HEPUtils::Jet*> jets25;
+        for (const HEPUtils::Jet* jet : jets28){
           if (fabs(jet->eta()) < 2.5) jets25.push_back(jet);
         }
 
@@ -205,19 +205,19 @@ namespace Gambit {
 
 
         // Function used to get b jets
-        vector<HEPUtils::Jet*> bJets25;
-        vector<HEPUtils::Jet*> bJets28;
+        vector<const HEPUtils::Jet*> bJets25;
+        vector<const HEPUtils::Jet*> bJets28;
 
         const std::vector<double>  a = {0,10.};
         const std::vector<double>  b = {0,10000.};
         const std::vector<double> c = {0.77};
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
-        for (HEPUtils::Jet* jet : jets25) {
+        for (const HEPUtils::Jet* jet : jets25) {
           bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(jet->btag() && hasTag) bJets25.push_back(jet);
         }
 
-        for (HEPUtils::Jet* jet : jets28) {
+        for (const HEPUtils::Jet* jet : jets28) {
           bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(jet->btag() && hasTag) bJets28.push_back(jet);
         }
@@ -250,7 +250,7 @@ namespace Gambit {
         for(HEPUtils::Particle* muon : baselineMuons) {
           HT += muon->pT();
         }
-        for(HEPUtils::Jet* jet : jets28_nophooverlap) {
+        for(const HEPUtils::Jet* jet : jets28_nophooverlap) {
           HT += jet->pT();
         }
 
@@ -267,7 +267,7 @@ namespace Gambit {
         }
 
         // Note that meff is only used for aj signal regions -> |jet eta| < 2.5
-        for(HEPUtils::Jet* jet : jets25) {
+        for(const HEPUtils::Jet* jet : jets25) {
           meff += jet->pT();
         }
 
@@ -306,7 +306,7 @@ namespace Gambit {
           RT4 = jets25[0]->pT() + jets25[1]->pT() + jets25[2]->pT() + jets25[3]->pT();
         }
         double denom=0.;
-        for(HEPUtils::Jet* jet : jets25){
+        for(const HEPUtils::Jet* jet : jets25){
           denom += jet->pT();
         }
         RT4=RT4/denom;

@@ -57,7 +57,7 @@ namespace Gambit {
         }
       }
 
-      double SmallestdPhi(std::vector<HEPUtils::Jet *> jets,double phi_met)
+      double SmallestdPhi(std::vector<const HEPUtils::Jet*> jets,double phi_met)
       {
         if (jets.size()<2) return(999);
         double dphi1 = std::acos(std::cos(jets.at(0)->phi()-phi_met));
@@ -103,10 +103,10 @@ namespace Gambit {
         vector<HEPUtils::Particle*> baselineLeptons = baselineElectrons;
         baselineLeptons.insert(baselineLeptons.end(), baselineMuons.begin(), baselineMuons.end() );
 
-        vector<HEPUtils::Jet*> baselineJets;
+        vector<const HEPUtils::Jet*> baselineJets;
         //vector<LorentzVector> jets;
         vector<HEPUtils::P4> jets;
-        vector<HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> bJets;
         vector<bool> btag;
 
         const std::vector<double>  a = {0,10.};
@@ -114,7 +114,7 @@ namespace Gambit {
         const std::vector<double> c = {0.60};
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
 
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 30. && fabs(jet->eta()) < 4.0) {
             baselineJets.push_back(jet);
             //LorentzVector j1 (jet->mom().px(),jet->mom().py(),jet->mom().pz(),jet->mom().E()) ;

@@ -57,15 +57,15 @@ namespace Gambit
 
       struct ptJetComparison
       {
-        bool operator() (HEPUtils::Jet* i,HEPUtils::Jet* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Jet* i,const HEPUtils::Jet* j) {return (i->pT()>j->pT());}
       } compareJetPt;
 
       // Jet lepton overlap removal
       // Discards jets if they are within DeltaRMax of a lepton
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*>& jets, vector<HEPUtils::Particle*>& leptons, double DeltaRMax)
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*>& jets, vector<HEPUtils::Particle*>& leptons, double DeltaRMax)
       {
-        vector<HEPUtils::Jet*> survivors;
-        for(HEPUtils::Jet* jet : jets)
+        vector<const HEPUtils::Jet*> survivors;
+        for(const HEPUtils::Jet* jet : jets)
         {
           bool overlap = false;
           for(HEPUtils::Particle* lepton : leptons)
@@ -81,13 +81,13 @@ namespace Gambit
 
       // Lepton jet overlap removal
       // Discards leptons if they are within DeltaRMax of a jet
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*>& leptons, vector<HEPUtils::Jet*>& jets, double DeltaRMax)
+      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*>& leptons, vector<const HEPUtils::Jet*>& jets, double DeltaRMax)
       {
         vector<HEPUtils::Particle*> survivors;
         for(HEPUtils::Particle* lepton : leptons)
         {
           bool overlap = false;
-          for(HEPUtils::Jet* jet : jets)
+          for(const HEPUtils::Jet* jet : jets)
           {
             double dR = jet->mom().deltaR_eta(lepton->mom());
             if(fabs(dR) <= DeltaRMax) overlap = true;
@@ -175,7 +175,7 @@ namespace Gambit
         vector<HEPUtils::Particle*> baselineElectrons;
         vector<HEPUtils::Particle*> baselineMuons;
         vector<HEPUtils::Particle*> baselineTaus;
-        vector<HEPUtils::Jet*> baselineJets;
+        vector<const HEPUtils::Jet*> baselineJets;
         double met = event->met();
 
         #ifdef  CHECK_CUTFLOW
@@ -224,7 +224,7 @@ namespace Gambit
         // Since tau efficiencies are not applied as part of the BuckFast ATLAS sim we apply it here
         ATLAS::applyTauEfficiencyR2(baselineTaus);
 
-        for (HEPUtils::Jet* jet : event->jets())
+        for (const HEPUtils::Jet* jet : event->jets())
         {
           if (jet->pT()>20. && jet->abseta()<2.8) baselineJets.push_back(jet);
         }
@@ -268,7 +268,7 @@ namespace Gambit
 
 
         // Signal objects
-        vector<HEPUtils::Jet*> signalJets = baselineJets;
+        vector<const HEPUtils::Jet*> signalJets = baselineJets;
         vector<HEPUtils::Particle*> signalElectrons = baselineElectrons;
         vector<HEPUtils::Particle*> signalMuons = baselineMuons;
         vector<HEPUtils::Particle*> signalTaus = baselineTaus;
@@ -325,7 +325,7 @@ namespace Gambit
         {
           meff += l->pT();
         }
-        for (HEPUtils::Jet* jet : signalJets)
+        for (const HEPUtils::Jet* jet : signalJets)
         {
           if(jet->pT()>40.) meff += jet->pT();
         }

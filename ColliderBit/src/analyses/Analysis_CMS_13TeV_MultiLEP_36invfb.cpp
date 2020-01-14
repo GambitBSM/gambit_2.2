@@ -176,8 +176,8 @@ namespace Gambit {
           if (tau->pT()>20. &&fabs(tau->eta())<2.3 && isTau)baselineTaus.push_back(tau);
         }
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>25. &&fabs(jet->eta())<2.4)baselineJets.push_back(jet);
         }
 
@@ -192,8 +192,8 @@ namespace Gambit {
         sort(signalLightLeptons.begin(),signalLightLeptons.end(),comparePt);
         sort(signalLeptons.begin(),signalLeptons.end(),comparePt);
 
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
         int num_ISRjets=0;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
           bool overlap=false;

@@ -51,7 +51,7 @@ namespace Gambit {
       } compareParticlePt;
 
       struct jetComparison {
-        bool operator() (HEPUtils::Jet* i,HEPUtils::Jet* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Jet* i,const HEPUtils::Jet* j) {return (i->pT()>j->pT());}
       } compareJetPt;
 
       Analysis_ATLAS_8TeV_1LEPbb_20invfb() {
@@ -108,8 +108,8 @@ namespace Gambit {
         // Apply muon efficiency
         ATLAS::applyMuonEff(baselineMuons);
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>20. && fabs(jet->eta())<4.5) baselineJets.push_back(jet);
         }
 
@@ -117,7 +117,7 @@ namespace Gambit {
         vector<HEPUtils::Particle*> overlapElectrons1;
         vector<HEPUtils::Particle*> overlapElectrons2;
         vector<HEPUtils::Particle*> overlapMuons;
-        vector<HEPUtils::Jet*> overlapJets;
+        vector<const HEPUtils::Jet*> overlapJets;
 
         vector<size_t> overlapEl;
         for (size_t iEl1=0;iEl1<baselineElectrons.size();iEl1++) {
@@ -158,8 +158,8 @@ namespace Gambit {
         vector<HEPUtils::Particle*> signalLeptons;
         vector<HEPUtils::Particle*> signalElectrons;
         vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
 
         for (size_t iEl=0;iEl<overlapElectrons2.size();iEl++) {
           if (overlapElectrons2.at(iEl)->pT()>25.)signalElectrons.push_back(overlapElectrons2.at(iEl));
@@ -336,7 +336,7 @@ namespace Gambit {
 
       }
 
-      bool isLeadingBJets(vector<HEPUtils::Jet*> jets, vector<HEPUtils::Jet*> bjets) {
+      bool isLeadingBJets(vector<const HEPUtils::Jet*> jets, vector<const HEPUtils::Jet*> bjets) {
         sort(jets.begin(), jets.end(), compareJetPt);
         sort(bjets.begin(), bjets.end(), compareJetPt);
         int nbjet = bjets.size();

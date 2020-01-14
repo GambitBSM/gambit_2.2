@@ -37,9 +37,9 @@ using namespace std;
 namespace Gambit {
   namespace ColliderBit {
 
-    bool sortByPT_RJ3L(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
+    bool sortByPT_RJ3L(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
     bool sortLepByPT_RJ3L(HEPUtils::Particle* lep1, HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT());}
-    //bool sortByMass(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->mass() > jet2->mass()); }
+    //bool sortByMass(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->mass() > jet2->mass()); }
 
     bool SortLeptons(const pair<TLorentzVector,int> lv1, const pair<TLorentzVector,int> lv2)
     //bool VariableConstruction::SortLeptons(const lep lv1, const lep lv2)
@@ -191,11 +191,11 @@ namespace Gambit {
 
       // Debug histos
 
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -216,7 +216,7 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
@@ -636,8 +636,8 @@ namespace Gambit {
 
 
         // Jets
-        vector<HEPUtils::Jet*> bJets;
-        vector<HEPUtils::Jet*> nonBJets;
+        vector<const HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> nonBJets;
 
         // Get b jets
         /// @note We assume that b jets have previously been 100% tagged
@@ -645,7 +645,7 @@ namespace Gambit {
         const std::vector<double>  b = {0,10000.};
         const std::vector<double> c = {0.77}; // set b-tag efficiency to 77%
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if (jet->pT() > 20. && fabs(jet->eta()) < 2.4) {
             if(jet->btag() && hasTag){
@@ -665,11 +665,11 @@ namespace Gambit {
 
         // Fill a jet-pointer-to-bool map to make it easy to check
         // if a given jet is treated as a b-jet in this analysis
-        map<HEPUtils::Jet*,bool> analysisBtags;
-        for (HEPUtils::Jet* jet : bJets) {
+        map<const HEPUtils::Jet*,bool> analysisBtags;
+        for (const HEPUtils::Jet* jet : bJets) {
           analysisBtags[jet] = true;
         }
-        for (HEPUtils::Jet* jet : nonBJets) {
+        for (const HEPUtils::Jet* jet : nonBJets) {
           analysisBtags[jet] = false;
         }
 
@@ -680,17 +680,17 @@ namespace Gambit {
         vector<HEPUtils::Particle*> electronsForVeto;
         vector<HEPUtils::Particle*> muonsForVeto;
 
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
-        vector<HEPUtils::Jet*> signalNonBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalNonBJets;
 
-        for (HEPUtils::Jet* jet : bJets) {
+        for (const HEPUtils::Jet* jet : bJets) {
           // pT > 20 and |eta| < 2.4 already required for jets in bJets
           signalJets.push_back(jet);
           signalBJets.push_back(jet);
         }
 
-        for (HEPUtils::Jet* jet : nonBJets) {
+        for (const HEPUtils::Jet* jet : nonBJets) {
           // pT > 20 and |eta| < 2.4 already required for jets in nonBJets
           signalJets.push_back(jet);
           signalNonBJets.push_back(jet);

@@ -112,11 +112,11 @@ namespace Gambit
       }
 
       // The following section copied from Analysis_ATLAS_1LEPStop_20invfb.cpp
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -137,7 +137,7 @@ namespace Gambit
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec) {
+      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within dR of a jet as defined in analysis paper
 
@@ -198,15 +198,15 @@ namespace Gambit
         ATLAS::applyMuonEff(muons);
 
         // Jets
-        vector<HEPUtils::Jet*> candJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> candJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 2.5)
             candJets.push_back(jet);
         }
 
         // Scalar sum of the transverse momenta from all the reconstructed hard objects
         double HT = 0.0;
-        for (HEPUtils::Jet* j : candJets) HT += j->pT();
+        for (const HEPUtils::Jet* j : candJets) HT += j->pT();
         for (HEPUtils::Particle* e : electrons) HT += e->pT();
         for (HEPUtils::Particle* mu : muons) HT += mu->pT();
 
@@ -217,13 +217,13 @@ namespace Gambit
         LeptonJetOverlapRemoval(muons,candJets);
 
         // Jets
-        vector<HEPUtils::Jet*> bJets;
-        vector<HEPUtils::Jet*> nonbJets;
+        vector<const HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> nonbJets;
 
         // Find b-jets
         // Copied from ATLAS_13TeV_3b_24invfb
         double btag = 0.85; double cmisstag = 1/12.; double misstag = 1./381.;
-        for (HEPUtils::Jet* jet : candJets) {
+        for (const HEPUtils::Jet* jet : candJets) {
           // Tag
           if( jet->btag() && random_bool(btag) ) bJets.push_back(jet);
           // Misstag c-jet

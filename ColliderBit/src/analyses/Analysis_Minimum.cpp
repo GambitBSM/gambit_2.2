@@ -55,8 +55,8 @@ namespace Gambit {
         }
 
         // Baseline jets
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 4.5) baselineJets.push_back(jet);
         }
 

@@ -137,11 +137,11 @@ namespace Gambit {
         return;
       }
 
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -162,7 +162,7 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
@@ -212,10 +212,10 @@ namespace Gambit {
         // Apply muon efficiency
         ATLAS::applyMuonEff(signalMuons);
 
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> bJets;
 
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 2.5) signalJets.push_back(jet);
           //if(jet->btag() && fabs(jet->eta()) < 2.5 && jet->pT() > 20.) bJets.push_back(jet);
         }
@@ -298,7 +298,7 @@ namespace Gambit {
         const std::vector<double> c = {0.8};
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
 
-        for (HEPUtils::Jet* jet : signalJets) {
+        for (const HEPUtils::Jet* jet : signalJets) {
           bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(jet->btag() && hasTag)bJets.push_back(jet);
         }

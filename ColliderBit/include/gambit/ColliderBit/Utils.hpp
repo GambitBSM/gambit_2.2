@@ -35,11 +35,8 @@ namespace Gambit
     /// Typedef for a vector of const Particle pointers
     typedef std::vector<const HEPUtils::Particle*> ConstParticlePtrs;
 
-
     /// Typedef for a vector of Jet pointers
-    typedef std::vector<HEPUtils::Jet*> JetPtrs;
-    /// Typedef for a vector of const Jet pointers
-    typedef std::vector<const HEPUtils::Jet*> ConstJetPtrs;
+    typedef std::vector<const HEPUtils::Jet*> JetPtrs;
 
     /// @name Particle IDs
     //@{
@@ -109,8 +106,8 @@ namespace Gambit
 
     /// In-place filter a supplied jet vector by rejecting those which fail a supplied cut
     inline void ifilter_reject(JetPtrs& jets,
-                               std::function<bool(Jet*)> rejfn, bool do_delete=true) {
-      iremoveerase(jets, [&](Jet* j) {
+                               std::function<bool(const Jet*)> rejfn, bool do_delete=true) {
+      iremoveerase(jets, [&](const Jet* j) {
           const bool rm = rejfn(j);
           if (rm && do_delete) delete j;
           return rm;
@@ -119,15 +116,15 @@ namespace Gambit
 
     /// In-place filter a supplied jet vector by keeping those which pass a supplied cut
     inline void ifilter_select(JetPtrs& jets,
-                               std::function<bool(Jet*)> selfn, bool do_delete=true) {
-      ifilter_reject(jets, [&](Jet* j) { return !selfn(j); }, do_delete);
+                               std::function<bool(const Jet*)> selfn, bool do_delete=true) {
+      ifilter_reject(jets, [&](const Jet* j) { return !selfn(j); }, do_delete);
     }
 
 
     /// Filter a supplied particle vector by rejecting those which fail a supplied cut
     /// @todo Optimise by only copying those which are selected (filter_select is canonical)
     inline JetPtrs filter_reject(const JetPtrs& jets,
-                                 std::function<bool(Jet*)> rejfn, bool do_delete=true) {
+                                 std::function<bool(const Jet*)> rejfn, bool do_delete=true) {
       JetPtrs rtn = jets;
       ifilter_reject(rtn, rejfn, do_delete);
       return rtn;
@@ -135,8 +132,8 @@ namespace Gambit
 
     /// Filter a supplied particle vector by keeping those which pass a supplied cut
     inline JetPtrs filter_select(const JetPtrs& jets,
-                                 std::function<bool(Jet*)> selfn, bool do_delete=true) {
-      return filter_reject(jets, [&](Jet* j) { return !selfn(j); }, do_delete);
+                                 std::function<bool(const Jet*)> selfn, bool do_delete=true) {
+      return filter_reject(jets, [&](const Jet* j) { return !selfn(j); }, do_delete);
     }
 
     //@}

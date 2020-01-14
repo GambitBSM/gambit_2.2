@@ -106,8 +106,8 @@ namespace Gambit {
           if (tau->pT()>20. && tau->abseta()<2.3)baselineTaus.push_back(tau);
         }
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>25. &&fabs(jet->eta())<2.4)baselineJets.push_back(jet);
         }
 
@@ -115,8 +115,8 @@ namespace Gambit {
         vector<HEPUtils::Particle*> signalLeptons;
         vector<HEPUtils::Particle*> signalElectrons;
         vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
 
         for (size_t iEl=0;iEl<baselineElectrons.size();iEl++) {
           if (baselineElectrons.at(iEl)->pT()>30. && baselineElectrons.at(iEl)->abseta()<1.44)signalElectrons.push_back(baselineElectrons.at(iEl));
@@ -132,7 +132,7 @@ namespace Gambit {
             if (baselineJets.at(iJet)->btag())signalBJets.push_back(baselineJets.at(iJet));
           }
         }
-        vector<HEPUtils::Jet*> signalBJets_temp=signalBJets;
+        vector<const HEPUtils::Jet*> signalBJets_temp=signalBJets;
         CMS::applyCSVv2MediumBtagEff(signalBJets_temp);
         if (signalBJets_temp.size()>0) {
           CMS::applyCSVv2LooseBtagEff(signalBJets_temp);
@@ -311,9 +311,9 @@ namespace Gambit {
 
     protected:
       void analysis_specific_reset() {
-        
+
         for (auto& pair : _counters) { pair.second.reset(); }
-        
+
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
 

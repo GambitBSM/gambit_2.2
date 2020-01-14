@@ -264,8 +264,8 @@ namespace Gambit {
         }
 
         // Baseline jets
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets())
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets())
         {
           if (jet->pT()>20. &&fabs(jet->eta())<2.4) baselineJets.push_back(jet);
         }
@@ -282,7 +282,7 @@ namespace Gambit {
         const vector<double> bBJet={0,30., 40., 50., 70., 80., 90., 100.,150., 200., 10000.};
         const vector<double> cBJet={0.63, 0.705, 0.745, 0.76, 0.775, 0.79,0.795, 0.805, 0.795, 0.76};
         HEPUtils::BinnedFn2D<double> _eff2d(aBJet,bBJet,cBJet);
-        vector<HEPUtils::Jet*> signalJets,signalBJets;
+        vector<const HEPUtils::Jet*> signalJets,signalBJets;
         bool ISR_btag=false;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
           bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->abseta(), baselineJets.at(iJet)->pT());

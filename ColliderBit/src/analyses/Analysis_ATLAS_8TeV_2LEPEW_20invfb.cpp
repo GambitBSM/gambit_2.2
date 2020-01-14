@@ -137,11 +137,11 @@ namespace Gambit {
         return;
       }
 
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -160,7 +160,7 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
@@ -236,8 +236,8 @@ namespace Gambit {
         // Apply muon efficiency
         ATLAS::applyMuonEff(signalMuons);
 
-        vector<HEPUtils::Jet*> signalJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> signalJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 4.5) signalJets.push_back(jet);
           //if(jet->btag() && fabs(jet->eta()) < 2.5 && jet->pT() > 20.) bJets.push_back(jet);
         }
@@ -277,16 +277,16 @@ namespace Gambit {
 
 
         //Classify jets into various categories
-        vector<HEPUtils::Jet*> centralBJets;
-        vector<HEPUtils::Jet*> centralNonBJets;
-        vector<HEPUtils::Jet*> forwardJets;
+        vector<const HEPUtils::Jet*> centralBJets;
+        vector<const HEPUtils::Jet*> centralNonBJets;
+        vector<const HEPUtils::Jet*> forwardJets;
 
         const std::vector<double> a = {0,10.};
         const std::vector<double> b = {0,10000.};
         const std::vector<double> c = {0.8};
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
 
-        for (HEPUtils::Jet* jet : signalJets) {
+        for (const HEPUtils::Jet* jet : signalJets) {
           bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(fabs(jet->eta()) < 2.4){
             if(jet->btag() && hasTag){
@@ -390,12 +390,12 @@ namespace Gambit {
 
           //Calculate ETmiss_rel
           double dPhiMin=9999;
-          for(HEPUtils::Jet* jet : centralBJets){
+          for(const HEPUtils::Jet* jet : centralBJets){
             double dphi=fabs(jet->mom().deltaPhi(ptot));
             if(fabs(dphi)<dPhiMin)dPhiMin=dphi;
           }
 
-          for(HEPUtils::Jet* jet : centralNonBJets){
+          for(const HEPUtils::Jet* jet : centralNonBJets){
             double dphi=fabs(jet->mom().deltaPhi(ptot));
             if(fabs(dphi)<dPhiMin)dPhiMin=dphi;
           }
@@ -491,12 +491,12 @@ namespace Gambit {
 
           //Calculate ETmiss_rel
           double dPhiMin=9999;
-          for(HEPUtils::Jet* jet : centralBJets){
+          for(const HEPUtils::Jet* jet : centralBJets){
             double dphi=jet->mom().deltaPhi(ptot);
             if(dphi<dPhiMin)dPhiMin=dphi;
           }
 
-          for(HEPUtils::Jet* jet : centralNonBJets){
+          for(const HEPUtils::Jet* jet : centralNonBJets){
             double dphi=jet->mom().deltaPhi(ptot);
             if(dphi<dPhiMin)dPhiMin=dphi;
           }
@@ -860,7 +860,7 @@ namespace Gambit {
 
 
       void collect_results() {
-        
+
         // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
         add_result(SignalRegionData("MT2_90_SF", 33., {_num_MT2_90_SF, 0.}, {38.2, 5.1}));

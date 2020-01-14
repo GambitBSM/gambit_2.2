@@ -18,15 +18,15 @@ public:
     return (particle1->pT() > particle2->pT());
   }
 
-  static bool sortJetsByPt(HEPUtils::Jet *jet1, HEPUtils::Jet *jet2)
+  static bool sortJetsByPt(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2)
   {
     return (jet1->pT() > jet2->pT());
   }
 
-  static std::vector<HEPUtils::Jet*> filterPtEta(std::vector<HEPUtils::Jet*> jets, double pT, double absEta)
+  static std::vector<const HEPUtils::Jet*> filterPtEta(std::vector<const HEPUtils::Jet*> jets, double pT, double absEta)
   {
-    std::vector<HEPUtils::Jet*> outJets;
-    for (HEPUtils::Jet* jet : jets)
+    std::vector<const HEPUtils::Jet*> outJets;
+    for (const HEPUtils::Jet* jet : jets)
     {
       if (jet->pT() > pT && jet->abseta() < absEta)
       {
@@ -49,10 +49,10 @@ public:
     return outParticles;
   }
 
-  static std::vector<HEPUtils::Jet*> jetLeptonOverlapRemoval(std::vector<HEPUtils::Jet*> jets, std::vector<HEPUtils::Particle*> leptons, double dR)
+  static std::vector<const HEPUtils::Jet*> jetLeptonOverlapRemoval(std::vector<const HEPUtils::Jet*> jets, std::vector<HEPUtils::Particle*> leptons, double dR)
   {
-    std::vector<HEPUtils::Jet*> outJets;
-    for (HEPUtils::Jet* jet : jets)
+    std::vector<const HEPUtils::Jet*> outJets;
+    for (const HEPUtils::Jet* jet : jets)
     {
       bool overlap = false;
       for (HEPUtils::Particle* lepton : leptons)
@@ -70,13 +70,13 @@ public:
   }
 
 
-  static std::vector<HEPUtils::Particle*> leptonJetOverlapRemoval(std::vector<HEPUtils::Particle*> leptons, std::vector<HEPUtils::Jet*> jets, double dR)
+  static std::vector<HEPUtils::Particle*> leptonJetOverlapRemoval(std::vector<HEPUtils::Particle*> leptons, std::vector<const HEPUtils::Jet*> jets, double dR)
   {
     std::vector<HEPUtils::Particle*> outLeptons;
     for (HEPUtils::Particle* lepton : leptons)
     {
       bool overlap = false;
-      for (HEPUtils::Jet* jet : jets)
+      for (const HEPUtils::Jet* jet : jets)
       {
         double dRLeptonJet = lepton->mom().deltaR_eta(jet->mom());
         if (fabs(dRLeptonJet) < dR)
@@ -135,10 +135,10 @@ public:
     return mom1.px() * mom2.px() + mom1.py() * mom2.py();
   }
 
-  static std::vector<HEPUtils::Jet*> filterMaxEta(const std::vector<HEPUtils::Jet*>& jets, double maxAbsEta)
+  static std::vector<const HEPUtils::Jet*> filterMaxEta(const std::vector<const HEPUtils::Jet*>& jets, double maxAbsEta)
   {
-    std::vector<HEPUtils::Jet*> outJets;
-    for (HEPUtils::Jet* jet : jets)
+    std::vector<const HEPUtils::Jet*> outJets;
+    for (const HEPUtils::Jet* jet : jets)
     {
       if (jet->abseta() < maxAbsEta)
       {

@@ -31,11 +31,11 @@ namespace Gambit {
   namespace ColliderBit {
 
     // Need two different functions here for use with std::sort
-    bool sortByPT13(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
+    bool sortByPT13(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
     bool sortByPT13_sharedptr(std::shared_ptr<HEPUtils::Jet> jet1, std::shared_ptr<HEPUtils::Jet> jet2) { return sortByPT13(jet1.get(), jet2.get()); }
 
     // Need two different functions here for use with std::sort
-    bool sortByMass(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->mass() > jet2->mass()); }
+    bool sortByMass(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->mass() > jet2->mass()); }
     bool sortByMass_sharedptr(std::shared_ptr<HEPUtils::Jet> jet1, std::shared_ptr<HEPUtils::Jet> jet2) { return sortByMass(jet1.get(), jet2.get()); }
 
     double calcMT(HEPUtils::P4 jetMom,HEPUtils::P4 metMom){
@@ -118,11 +118,11 @@ namespace Gambit {
         return;
       }
 
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -143,7 +143,7 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
@@ -269,9 +269,9 @@ namespace Gambit {
 
 
         // Jets
-        vector<HEPUtils::Jet*> bJets;
-        vector<HEPUtils::Jet*> nonBJets;
-        vector<HEPUtils::Jet*> trueBJets; //for debugging
+        vector<const HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> nonBJets;
+        vector<const HEPUtils::Jet*> trueBJets; //for debugging
 
         // Get b jets
         /// @note We assume that b jets have previously been 100% tagged
@@ -279,12 +279,17 @@ namespace Gambit {
         const std::vector<double>  b = {0,10000.};
         const std::vector<double> c = {0.77}; // set b-tag efficiency to 77%
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets())
+        {
           bool hasTag=has_tag(_eff2d, fabs(jet->eta()), jet->pT());
-          if (jet->pT() > 20. && fabs(jet->eta()) < 2.8) {
-            if(jet->btag() && hasTag && fabs(jet->eta()) < 2.5 && jet->pT() > 20.){
+          if (jet->pT() > 20. && fabs(jet->eta()) < 2.8)
+          {
+            if(jet->btag() && hasTag && fabs(jet->eta()) < 2.5 && jet->pT() > 20.)
+            {
               bJets.push_back(jet);
-            } else {
+            }
+            else
+            {
               nonBJets.push_back(jet);
             }
           }
@@ -300,13 +305,9 @@ namespace Gambit {
 
         // Fill a jet-pointer-to-bool map to make it easy to check
         // if a given jet is treated as a b-jet in this analysis
-        map<HEPUtils::Jet*,bool> analysisBtags;
-        for (HEPUtils::Jet* jet : bJets) {
-          analysisBtags[jet] = true;
-        }
-        for (HEPUtils::Jet* jet : nonBJets) {
-          analysisBtags[jet] = false;
-        }
+        map<const HEPUtils::Jet*,bool> analysisBtags;
+        for (const HEPUtils::Jet* jet : bJets) analysisBtags[jet] = true;
+        for (const HEPUtils::Jet* jet : nonBJets) analysisBtags[jet] = false;
 
         // Signal object containers
         vector<HEPUtils::Particle*> signalElectrons;
@@ -314,17 +315,17 @@ namespace Gambit {
         vector<HEPUtils::Particle*> electronsForVeto;
         vector<HEPUtils::Particle*> muonsForVeto;
 
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
-        vector<HEPUtils::Jet*> signalNonBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalNonBJets;
 
         // It seems that there are no extra signal jet requirements (unlike 8 TeV analysis)
-        for (HEPUtils::Jet* jet : bJets) {
+        for (const HEPUtils::Jet* jet : bJets) {
           signalJets.push_back(jet);
           signalBJets.push_back(jet);
         }
 
-        for (HEPUtils::Jet* jet : nonBJets) {
+        for (const HEPUtils::Jet* jet : nonBJets) {
           signalJets.push_back(jet);
           signalNonBJets.push_back(jet);
         }
@@ -375,7 +376,7 @@ namespace Gambit {
         double dPhi_min = 1000.;
         double dPhi_max = 0.;
         if (signalBJets.size()>=2)  {
-          for (HEPUtils::Jet* jet : signalBJets) {
+          for (const HEPUtils::Jet* jet : signalBJets) {
             double dphi = fabs(metVec.deltaPhi(jet->mom()));
             if (dphi<dPhi_min) {
               dPhi_min=dphi;

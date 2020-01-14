@@ -107,10 +107,10 @@ namespace Gambit {
         }
         CMS::applyTauEfficiency(baselineTaus);
 
-        vector<HEPUtils::Jet*> baselineJets;
+        vector<const HEPUtils::Jet*> baselineJets;
         vector<HEPUtils::P4> jets;
 
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 30. && fabs(jet->eta()) < 4.5) {
             baselineJets.push_back(jet);
           }

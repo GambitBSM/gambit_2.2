@@ -76,7 +76,7 @@ namespace Gambit {
       }
 
 
-      MT2 MT2helper(vector<HEPUtils::Jet*> jets, vector<HEPUtils::Particle*>  electrons,  vector<HEPUtils::Particle*> muons, HEPUtils::P4 metVec){
+      MT2 MT2helper(vector<const HEPUtils::Jet*> jets, vector<HEPUtils::Particle*>  electrons,  vector<HEPUtils::Particle*> muons, HEPUtils::P4 metVec){
 
         MT2 results;
 
@@ -95,11 +95,11 @@ namespace Gambit {
         //We have all b jets tagged (with 100% efficiency), so can use the two highest pT b jets
         //This corresponds to using the 2 b jets that are first in the collection
 
-        HEPUtils::Jet* trueBjet1 = NULL; //need to assign this
-        HEPUtils::Jet* trueBjet2 = NULL; //nee to assign this
+        const HEPUtils::Jet* trueBjet1 = NULL; //need to assign this
+        const HEPUtils::Jet* trueBjet2 = NULL; //nee to assign this
 
         int nTrueBJets=0;
-        for(HEPUtils::Jet* tmpJet: jets){
+        for(const HEPUtils::Jet* tmpJet: jets){
           if(tmpJet->btag()){
             trueBjet1=tmpJet;
             nTrueBJets++;
@@ -107,7 +107,7 @@ namespace Gambit {
           }
         }
 
-        for(HEPUtils::Jet* tmpJet: jets){
+        for(const HEPUtils::Jet* tmpJet: jets){
           if(tmpJet->btag() && tmpJet!=trueBjet1){
             trueBjet2=tmpJet;
             nTrueBJets++;
@@ -172,8 +172,8 @@ namespace Gambit {
         results.aMT2_BM=aMT2_BM;
 
         if (nJet > 3){
-          HEPUtils::Jet* jet3=0;
-          for(HEPUtils::Jet* current: jets){
+          const HEPUtils::Jet* jet3=0;
+          for(const HEPUtils::Jet* current: jets){
             if (current == trueBjet1)continue;
             if (current == trueBjet2)continue;
             jet3 = current;
@@ -231,8 +231,8 @@ namespace Gambit {
         ATLAS::applyMuonEff(baselineMuons);
 
         // Get b jets with efficiency and mistag (fake) rates
-        vector<HEPUtils::Jet*> baselineJets, bJets; // trueBJets; //for debugging
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets, bJets; // trueBJets; //for debugging
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && jet->abseta() < 10.0) baselineJets.push_back(jet);
           if (jet->abseta() < 2.5 && jet->pT() > 25.) {
             if ((jet->btag() && Random::draw() < 0.75) || (!jet->btag() && Random::draw() < 0.02)) bJets.push_back(jet);
@@ -246,14 +246,14 @@ namespace Gambit {
         // Overlap removal
         vector<HEPUtils::Particle*> signalElectrons, signalMuons;
         vector<HEPUtils::Particle*> electronsForVeto, muonsForVeto;
-        vector<HEPUtils::Jet*> goodJets, signalJets;
+        vector<const HEPUtils::Jet*> goodJets, signalJets;
 
         // Note that ATLAS use |eta|<10 for removing jets close to electrons
         // Then 2.8 is used for the rest of the overlap process
         // Then the signal cut is applied for signal jets
 
         // Remove any jet within dR=0.2 of an electron
-        for (HEPUtils::Jet* j : baselineJets) {
+        for (const HEPUtils::Jet* j : baselineJets) {
           if (!any(baselineElectrons, [&](HEPUtils::Particle* e){ return deltaR_eta(*e, *j) < 0.2; })) {
             if (j->abseta() < 2.8) goodJets.push_back(j);
             if (j->abseta() < 2.5 && j->pT() > 25) signalJets.push_back(j);
@@ -330,7 +330,7 @@ namespace Gambit {
 
         //Calculate meff (all jets with pT>30 GeV, lepton pT and met)
         double meff = met + lepVec.pT();
-        for (HEPUtils::Jet* jet : signalJets) {
+        for (const HEPUtils::Jet* jet : signalJets) {
           if(jet->pT()>30.)meff += jet->pT();
         }
         //Cutflow flags

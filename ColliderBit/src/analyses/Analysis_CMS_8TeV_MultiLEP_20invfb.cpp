@@ -357,16 +357,16 @@ namespace Gambit {
 
       struct ptJetComparison
       {
-        bool operator() (HEPUtils::Jet* i,HEPUtils::Jet* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Jet* i,const HEPUtils::Jet* j) {return (i->pT()>j->pT());}
       } compareJetPt;
 
 
       // Jet lepton overlap removal
       // Discards jets if they are within DeltaRMax of a lepton
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*>& jets, vector<HEPUtils::Particle*>& leptons, double DeltaRMax)
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*>& jets, vector<HEPUtils::Particle*>& leptons, double DeltaRMax)
       {
-        vector<HEPUtils::Jet*> survivors;
-        for(HEPUtils::Jet* jet : jets)
+        vector<const HEPUtils::Jet*> survivors;
+        for(const HEPUtils::Jet* jet : jets)
         {
           bool overlap = false;
           for(HEPUtils::Particle* lepton : leptons)
@@ -475,9 +475,9 @@ namespace Gambit {
         CMS::applyTauEfficiency(signalTaus);
 
         // - jets
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBjets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBjets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 30. && fabs(jet->eta()) < 2.5) signalJets.push_back(jet);
           if(jet->btag() && fabs(jet->eta()) < 2.5 && jet->pT() > 30.) signalBjets.push_back(jet);
         }

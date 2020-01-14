@@ -97,10 +97,10 @@ namespace Gambit {
         }
         ATLAS::applyTauEfficiencyR1(baselineTaus);
 
-        vector<HEPUtils::Jet*> baselineJets;
-        vector<HEPUtils::Jet*> bJets;
-        vector<HEPUtils::Jet*> trueBJets; //for debugging
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        vector<const HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> trueBJets; //for debugging
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 2.5) baselineJets.push_back(jet);
           if(jet->btag() && fabs(jet->eta()) < 2.5 && jet->pT() > 20.) bJets.push_back(jet);
         }
@@ -111,8 +111,8 @@ namespace Gambit {
         vector<HEPUtils::Particle*> signalMuons;
         vector<HEPUtils::Particle*> electronsForVeto;
         vector<HEPUtils::Particle*> muonsForVeto;
-        vector<HEPUtils::Jet*> goodJets;
-        vector<HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> goodJets;
+        vector<const HEPUtils::Jet*> signalJets;
 
         //Note that ATLAS use |eta|<10 for removing jets close to electrons
         //Then 2.8 is used for the rest of the overlap process

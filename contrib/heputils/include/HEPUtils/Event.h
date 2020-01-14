@@ -33,6 +33,7 @@ namespace HEPUtils {
 
     /// Jets collection (mutable to allow sorting)
     mutable std::vector<Jet*> _jets;
+    mutable std::vector<const Jet*> _cjets;
 
     /// Missing momentum vector
     P4 _pmiss;
@@ -53,6 +54,7 @@ namespace HEPUtils {
       _taus = e._taus;
       _invisibles = e._invisibles;
       _jets = e._jets;
+      _cjets = e._cjets;
       _pmiss = e._pmiss;
     }
 
@@ -66,7 +68,7 @@ namespace HEPUtils {
     Event() { clear(); }
 
     /// Constructor from list of Particles, plus (optional) event weights and weight errors
-    Event(const std::vector<Particle*>& ps, 
+    Event(const std::vector<Particle*>& ps,
           const std::vector<double>& weights=std::vector<double>(),
           const std::vector<double>& weight_errs=std::vector<double>()) {
       clear();
@@ -104,7 +106,7 @@ namespace HEPUtils {
       for (size_t i = 0; i < ps.size(); ++i) {
         e.add_particle(new Particle(*ps[i]));
       }
-      const std::vector<Jet*> js = jets();
+      const std::vector<const Jet*> js = jets();
       for (size_t i = 0; i < js.size(); ++i) {
         e.add_jet(new Jet(*js[i]));
       }
@@ -128,6 +130,7 @@ namespace HEPUtils {
       DELCLEAR(_jets);
       #undef DELCLEAR
 
+      _cjets.clear();
       _pmiss.clear();
     }
 
@@ -332,9 +335,9 @@ namespace HEPUtils {
     //@{
 
     /// @brief Get anti-kT 0.4 jets (not including charged leptons or photons)
-    const std::vector<Jet*>& jets() const {
-      std::sort(_jets.begin(), _jets.end(), _cmpPtDesc);
-      return _jets;
+    const std::vector<const Jet*>& jets() const {
+      std::sort(_cjets.begin(), _cjets.end(), _cmpPtDesc);
+      return _cjets;
     }
 
     /// @brief Get anti-kT 0.4 jets (not including charged leptons or photons) (non-const)
@@ -348,6 +351,8 @@ namespace HEPUtils {
     /// The Jets should be new'd; Event will take ownership.
     void set_jets(const std::vector<Jet*>& jets) {
       _jets = jets;
+      _cjets.clear();
+      for (Jet* j : jets ) _cjets.push_back(j);
     }
 
     /// @brief Add a jet to the jets collection
@@ -355,6 +360,7 @@ namespace HEPUtils {
     /// The Jet should be new'd; Event will take ownership.
     void add_jet(Jet* j) {
       _jets.push_back(j);
+      _cjets.push_back(j);
     }
 
     //@}
