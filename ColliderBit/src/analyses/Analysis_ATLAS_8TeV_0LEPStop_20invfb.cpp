@@ -42,7 +42,7 @@ namespace Gambit {
 
       // Debug histos
 
-      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
@@ -67,11 +67,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -124,22 +124,22 @@ namespace Gambit {
 
 
         // Baseline lepton objects
-        vector<HEPUtils::Particle*> baselineElectrons, baselineMuons, baselineTaus;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons, baselineMuons, baselineTaus;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && electron->abseta() < 2.47) baselineElectrons.push_back(electron);
         }
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
 
-        for (HEPUtils::Particle* muon : event->muons()) {
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && muon->abseta() < 2.4) baselineMuons.push_back(muon);
         }
 
         // Apply muon efficiency
         ATLAS::applyMuonEff(baselineMuons);
 
-        for (HEPUtils::Particle* tau : event->taus()) {
+        for (const HEPUtils::Particle* tau : event->taus()) {
           if (tau->pT() > 10. && tau->abseta() < 2.47) baselineTaus.push_back(tau);
         }
         ATLAS::applyTauEfficiencyR1(baselineTaus);
@@ -171,10 +171,10 @@ namespace Gambit {
 
 
         // Overlap removal
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> electronsForVeto;
-        vector<HEPUtils::Particle*> muonsForVeto;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> electronsForVeto;
+        vector<const HEPUtils::Particle*> muonsForVeto;
 
         vector<const HEPUtils::Jet*> signalJets;
         vector<const HEPUtils::Jet*> signalBJets;
@@ -205,11 +205,11 @@ namespace Gambit {
         std::sort(signalBJets.begin(), signalBJets.end(), sortByPT);
         std::sort(signalNonBJets.begin(), signalNonBJets.end(), sortByPT);
 
-        for (HEPUtils::Particle* electron : baselineElectrons) {
+        for (const HEPUtils::Particle* electron : baselineElectrons) {
           signalElectrons.push_back(electron);
         }
 
-        for (HEPUtils::Particle* muon : baselineMuons) {
+        for (const HEPUtils::Particle* muon : baselineMuons) {
           signalMuons.push_back(muon);
         }
 

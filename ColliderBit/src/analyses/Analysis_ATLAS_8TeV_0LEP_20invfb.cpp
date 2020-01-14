@@ -60,16 +60,16 @@ namespace Gambit {
         double met = event->met();
 
         // Now define vectors of baseline objects
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && fabs(electron->eta()) < 2.47) baselineElectrons.push_back(electron);
         }
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
 
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && fabs(muon->eta()) < 2.4) baselineMuons.push_back(muon);
         }
 
@@ -82,8 +82,8 @@ namespace Gambit {
         }
 
         // Overlap removal: only applied to jets with |eta|<2.8
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
         vector<const HEPUtils::Jet*> signalJets;
 
         // Remove any jet within dR=0.2 of an electrons

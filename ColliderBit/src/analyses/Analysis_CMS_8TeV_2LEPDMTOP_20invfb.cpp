@@ -76,8 +76,8 @@ namespace Gambit {
         double met = event->met();
 
         // Baseline electrons
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 20. && fabs(electron->eta()) < 2.5) {
             baselineElectrons.push_back(electron);
           }
@@ -87,8 +87,8 @@ namespace Gambit {
         CMS::applyElectronEff(baselineElectrons);
 
         // Baseline muons
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 20. && fabs(muon->eta()) < 2.4) {
             baselineMuons.push_back(muon);
           }
@@ -98,7 +98,7 @@ namespace Gambit {
         CMS::applyMuonEff(baselineMuons);
 
         // All baseline leptons
-        vector<HEPUtils::Particle*> baselineLeptons = baselineElectrons;
+        vector<const HEPUtils::Particle*> baselineLeptons = baselineElectrons;
         baselineLeptons.insert(baselineLeptons.end(), baselineMuons.begin(), baselineMuons.end() );
 
         vector<const HEPUtils::Jet*> baselineJets;

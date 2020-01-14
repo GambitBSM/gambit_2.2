@@ -66,8 +66,8 @@ namespace Gambit {
         double met = event->met();
 
         // Now define vector of baseline electrons
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 7. && fabs(electron->eta()) < 2.47) baselineElectrons.push_back(electron);
         }
 
@@ -75,8 +75,8 @@ namespace Gambit {
         ATLAS::applyElectronEff(baselineElectrons);
 
         // Now define vector of baseline muons
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 6. && fabs(muon->eta()) < 2.4) baselineMuons.push_back(muon);
         }
 
@@ -97,10 +97,10 @@ namespace Gambit {
         }
 
         // Overlap removal
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> electronsForVeto;
-        vector<HEPUtils::Particle*> muonsForVeto;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> electronsForVeto;
+        vector<const HEPUtils::Particle*> muonsForVeto;
         vector<const HEPUtils::Jet*> goodJets;
         vector<const HEPUtils::Jet*> signalJets;
 

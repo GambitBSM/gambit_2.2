@@ -209,8 +209,8 @@ Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb()
 	//HEPUtilsAnalysis::analyze(event);
 	//cout << "Event number: " << num_events() << endl;
 	incrementCut(Total_events);
-	std::vector<Particle*> electrons = event->electrons();
-	std::vector<Particle*> muons = event->muons();
+	std::vector<const Particle*> electrons = event->electrons();
+	std::vector<const Particle*> muons = event->muons();
 	std::vector<const Jet*> jets = event->jets();
 
 	electrons = AnalysisUtil::filterPtEta(electrons, 20, 2.47);
@@ -228,7 +228,7 @@ Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb()
 
 	ATLAS::applyTightIDElectronSelection(electrons);
 
-	std::vector<Particle*> leptons = AnalysisUtil::getSortedLeptons({electrons, muons});
+	std::vector<const Particle*> leptons = AnalysisUtil::getSortedLeptons({electrons, muons});
 	std::sort(electrons.begin(), electrons.end(), AnalysisUtil::sortParticlesByPt);
 	std::sort(muons.begin(), muons.end(), AnalysisUtil::sortParticlesByPt);
 	std::sort(jets.begin(), jets.end(), AnalysisUtil::sortJetsByPt);

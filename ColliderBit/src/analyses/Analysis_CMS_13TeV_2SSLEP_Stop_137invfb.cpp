@@ -221,7 +221,7 @@ namespace Gambit {
         }
 
         struct ptComparison {
-            bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+            bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
         } comparePt;
 
         void run(const HEPUtils::Event* event) {
@@ -245,8 +245,8 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,     0.0,     0.0,     0.0,     0.0// eta > 2.5
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-            vector<HEPUtils::Particle*> electrons;
-            for (HEPUtils::Particle* electron : event->electrons()) {
+            vector<const HEPUtils::Particle*> electrons;
+            for (const HEPUtils::Particle* electron : event->electrons()) {
                 bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
                 if (electron->pT() > 15. && fabs(electron->eta()) < 2.5 && isEl)
                     electrons.push_back(electron);
@@ -265,8 +265,8 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,      0.0,    0.0,     0.0,     0.0,     0.0// eta > 2.4
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-            vector<HEPUtils::Particle*> muons;
-            for (HEPUtils::Particle* muon : event->muons()) {
+            vector<const HEPUtils::Particle*> muons;
+            for (const HEPUtils::Particle* muon : event->muons()) {
                 bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
                 if (muon->pT() > 10.&& fabs(muon->eta()) < 2.4 && isMu)
                     muons.push_back(muon);
@@ -310,7 +310,7 @@ namespace Gambit {
             size_t Nj=nonbJets.size();
 
             // Leptons = electrons + muons
-            vector<HEPUtils::Particle*> leptons;
+            vector<const HEPUtils::Particle*> leptons;
             leptons=electrons;
             leptons.insert(leptons.end(),muons.begin(),muons.end());
             sort(leptons.begin(),leptons.end(),comparePt);

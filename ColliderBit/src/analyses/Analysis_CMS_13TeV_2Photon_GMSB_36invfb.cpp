@@ -119,8 +119,8 @@ namespace Gambit {
                                      0.0,    0.0,      0.0,      0.0,      0.0,     // eta > 2.5
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dPhoton(aPhoton,bPhoton,cPhoton);
-        vector<HEPUtils::Particle*> photons;
-        for (HEPUtils::Particle* photon : event->photons())
+        vector<const HEPUtils::Particle*> photons;
+        for (const HEPUtils::Particle* photon : event->photons())
         {
           bool isPhoton=has_tag(_eff2dPhoton, photon->abseta(), photon->pT());
           if (isPhoton && photon->pT()>15.) photons.push_back(photon);
@@ -162,8 +162,8 @@ namespace Gambit {
                                    0.0,    0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.5
                                   };
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        vector<HEPUtils::Particle*> electrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> electrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           bool isEl=has_tag(_eff2dEl, electron->abseta(), electron->pT());
           // No info in the paper on pT or |eta| cuts for baseline electrons,
           // but the above efficieny map effectively requires pT > 10 and |eta| < 2.5
@@ -194,8 +194,8 @@ namespace Gambit {
                                      0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.4
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        vector<HEPUtils::Particle*> muons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> muons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           bool isMu=has_tag(_eff2dMu, muon->abseta(), muon->pT());
           // No info in the paper on pT or |eta| cuts for baseline muons,
           // but the above efficieny map effectively requires pT > 10 and |eta| < 2.4
@@ -217,8 +217,8 @@ namespace Gambit {
 
 
         // Select signal photon candidates
-        vector<HEPUtils::Particle*> signalPhotons;
-        for (HEPUtils::Particle* photon : photons)
+        vector<const HEPUtils::Particle*> signalPhotons;
+        for (const HEPUtils::Particle* photon : photons)
         {
           if (photon->pT() > 15. && photon->abseta() < 1.44) signalPhotons.push_back(photon);
           // NOTE: there should also be an isolation cut based on pT sums of other objects
@@ -226,12 +226,12 @@ namespace Gambit {
         }
 
         // Requirements on the two highest-pT EM objects
-        vector<HEPUtils::Particle*> EMobjects;
+        vector<const HEPUtils::Particle*> EMobjects;
         EMobjects.insert(EMobjects.end(), signalPhotons.begin(), signalPhotons.end());
         EMobjects.insert(EMobjects.end(), electrons.begin(), electrons.end());
         sortByPt(EMobjects);
 
-        vector<HEPUtils::Particle*> signalEMobjects;
+        vector<const HEPUtils::Particle*> signalEMobjects;
         if (EMobjects.size() < 2) {
           signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.end());
         }
@@ -244,8 +244,8 @@ namespace Gambit {
         bool mgg_gt_105 = false;
         if (signalEMobjects.size() >= 2) {
 
-          HEPUtils::Particle* obj1 = signalEMobjects.at(0);
-          HEPUtils::Particle* obj2 = signalEMobjects.at(1);
+          const HEPUtils::Particle* obj1 = signalEMobjects.at(0);
+          const HEPUtils::Particle* obj2 = signalEMobjects.at(1);
 
           if (obj1->pid() == 22 && obj2->pid() == 22) isDiphoton = true;
 
@@ -256,7 +256,7 @@ namespace Gambit {
 
         // Vetos on muons
         bool muVeto = false;
-        for (HEPUtils::Particle* muon : muons) {
+        for (const HEPUtils::Particle* muon : muons) {
           if (muon->pT() > 25. && muon->abseta() < 2.4) {
             muVeto = true;
             break;
@@ -265,7 +265,7 @@ namespace Gambit {
 
         // Veto on electrons not part of the two signalEMobjects
         bool elVeto = false;
-        for (HEPUtils::Particle* electron : electrons) {
+        for (const HEPUtils::Particle* electron : electrons) {
           if (electron->pT() > 25. && electron->abseta() < 2.5) {
             if (electron != signalEMobjects.at(0) && electron != signalEMobjects.at(1)) {
               elVeto = true;

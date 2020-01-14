@@ -38,7 +38,7 @@ namespace Gambit {
   namespace ColliderBit {
 
     bool sortByPT_RJ3L(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
-    bool sortLepByPT_RJ3L(HEPUtils::Particle* lep1, HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT());}
+    bool sortLepByPT_RJ3L(const HEPUtils::Particle* lep1, const HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT());}
     //bool sortByMass(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->mass() > jet2->mass()); }
 
     bool SortLeptons(const pair<TLorentzVector,int> lv1, const pair<TLorentzVector,int> lv2)
@@ -191,7 +191,7 @@ namespace Gambit {
 
       // Debug histos
 
-      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
@@ -216,11 +216,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -605,16 +605,16 @@ namespace Gambit {
         ETMiss.SetXYZ(ptot.px(),ptot.py(),0.0);
 
         // Baseline lepton objects
-        vector<HEPUtils::Particle*> baselineElectrons, baselineMuons, baselineTaus;
+        vector<const HEPUtils::Particle*> baselineElectrons, baselineMuons, baselineTaus;
 
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && electron->abseta() < 2.47) baselineElectrons.push_back(electron);
         }
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
 
-        for (HEPUtils::Particle* muon : event->muons()) {
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && muon->abseta() < 2.4) baselineMuons.push_back(muon);
         }
 
@@ -622,14 +622,14 @@ namespace Gambit {
         ATLAS::applyMuonEff(baselineMuons);
 
         // Photons
-        vector<HEPUtils::Particle*> signalPhotons;
-        for (HEPUtils::Particle* photon : event->photons()) {
+        vector<const HEPUtils::Particle*> signalPhotons;
+        for (const HEPUtils::Particle* photon : event->photons()) {
           signalPhotons.push_back(photon);
         }
 
 
         // No taus used in 13 TeV analysis?
-        //for (HEPUtils::Particle* tau : event->taus()) {
+        //for (const HEPUtils::Particle* tau : event->taus()) {
           //if (tau->pT() > 10. && tau->abseta() < 2.47) baselineTaus.push_back(tau);
         //}
         //ATLAS::applyTauEfficiencyR1(baselineTaus);
@@ -674,11 +674,11 @@ namespace Gambit {
         }
 
         // Signal object containers
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Particle*> electronsForVeto;
-        vector<HEPUtils::Particle*> muonsForVeto;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> electronsForVeto;
+        vector<const HEPUtils::Particle*> muonsForVeto;
 
         vector<const HEPUtils::Jet*> signalJets;
         vector<const HEPUtils::Jet*> signalBJets;
@@ -701,12 +701,12 @@ namespace Gambit {
         std::sort(signalBJets.begin(), signalBJets.end(), sortByPT_RJ3L);
         std::sort(signalNonBJets.begin(), signalNonBJets.end(), sortByPT_RJ3L);
 
-        for (HEPUtils::Particle* electron : baselineElectrons) {
+        for (const HEPUtils::Particle* electron : baselineElectrons) {
           signalElectrons.push_back(electron);
           signalLeptons.push_back(electron);
         }
 
-        for (HEPUtils::Particle* muon : baselineMuons) {
+        for (const HEPUtils::Particle* muon : baselineMuons) {
           signalMuons.push_back(muon);
           signalLeptons.push_back(muon);
         }

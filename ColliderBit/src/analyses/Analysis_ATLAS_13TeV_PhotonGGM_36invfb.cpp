@@ -32,7 +32,7 @@ namespace Gambit {
   namespace ColliderBit {
 
     bool sortByPT_jet(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
-    bool sortByPT_lep(HEPUtils::Particle* lep1, HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT()); }
+    bool sortByPT_lep(const HEPUtils::Particle* lep1, const HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT()); }
 
 
     class Analysis_ATLAS_13TeV_PhotonGGM_36invfb : public Analysis {
@@ -62,17 +62,17 @@ namespace Gambit {
       // Overlap removal -- discard from first list if deltaR < deltaR1 and
       // discard from the second list deltaR1 < deltaR < deltaR2
       /*
-      void JetParticleOverlapRemoval2(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &particlevec, double deltaR1, double deltaR2, bool use_rapidity=false) {
+      void JetParticleOverlapRemoval2(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &particlevec, double deltaR1, double deltaR2, bool use_rapidity=false) {
 
         vector<const HEPUtils::Jet*> keep_jets;
         vector<const HEPUtils::Jet*> kill_jets;
 
-        vector<HEPUtils::Particle*> keep_particles;
-        vector<HEPUtils::Particle*> kill_particles;
+        vector<const HEPUtils::Particle*> keep_particles;
+        vector<const HEPUtils::Particle*> kill_particles;
 
         for(const HEPUtils::Jet* j : jetvec) {
 
-          for(HEPUtils::Particle* p : particlevec) {
+          for(const HEPUtils::Particle* p : particlevec) {
 
               const double dR = (use_rapidity) ? j->mom().deltaR_rap(p->mom()) : j->mom().deltaR_eta(p->mom());
 
@@ -93,7 +93,7 @@ namespace Gambit {
         }
 
         // All particles that are not in kill_particles should go into keep_particles
-        for(HEPUtils::Particle* p : particlevec) {
+        for(const HEPUtils::Particle* p : particlevec) {
           if ( find(kill_particles.begin(), kill_particles.end(), p) ==  kill_particles.end() ) keep_particles.push_back(p);
         }
 
@@ -135,10 +135,10 @@ namespace Gambit {
         const double met = pmiss.pT();
 
         // Baseline lepton objects
-        vector<HEPUtils::Particle*> baselineElectrons, baselineMuons;
+        vector<const HEPUtils::Particle*> baselineElectrons, baselineMuons;
 
         // Baseline electrons
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           bool crack = (electron->abseta() > 1.37) && (electron->abseta() < 1.52);
           if (electron->pT() > 25. && electron->abseta() < 2.47 && !crack) baselineElectrons.push_back(electron);
         }
@@ -149,7 +149,7 @@ namespace Gambit {
         // Apply tight electron selection
         ATLAS::applyTightIDElectronSelection(baselineElectrons);
 
-        for (HEPUtils::Particle* muon : event->muons()) {
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 25. && muon->abseta() < 2.7) baselineMuons.push_back(muon);
         }
 
@@ -157,8 +157,8 @@ namespace Gambit {
         ATLAS::applyMuonEff(baselineMuons);
 
         // Photons
-        vector<HEPUtils::Particle*> baselinePhotons;
-        for (HEPUtils::Particle* photon : event->photons()) {
+        vector<const HEPUtils::Particle*> baselinePhotons;
+        for (const HEPUtils::Particle* photon : event->photons()) {
           bool crack = (photon->abseta() > 1.37) && (photon->abseta() < 1.52);
           if (photon->pT() > 25. && photon->abseta() < 2.37 && !crack) baselinePhotons.push_back(photon);
         }
@@ -241,13 +241,13 @@ namespace Gambit {
         // Useful variables
         // "Photon-enhanced" HT, with no overlap removal of photons-jets
         double HT = 0.;
-        for(HEPUtils::Particle* photon : baselinePhotons) {
+        for(const HEPUtils::Particle* photon : baselinePhotons) {
           HT += photon->pT();
         }
-        for(HEPUtils::Particle* electron : baselineElectrons) {
+        for(const HEPUtils::Particle* electron : baselineElectrons) {
           HT += electron->pT();
         }
-        for(HEPUtils::Particle* muon : baselineMuons) {
+        for(const HEPUtils::Particle* muon : baselineMuons) {
           HT += muon->pT();
         }
         for(const HEPUtils::Jet* jet : jets28_nophooverlap) {
@@ -256,13 +256,13 @@ namespace Gambit {
 
         // meff
         double meff = met;
-        for(HEPUtils::Particle* photon : baselinePhotons) {
+        for(const HEPUtils::Particle* photon : baselinePhotons) {
           meff += photon->pT();
         }
-        for(HEPUtils::Particle* electron : baselineElectrons) {
+        for(const HEPUtils::Particle* electron : baselineElectrons) {
           meff += electron->pT();
         }
-        for(HEPUtils::Particle* muon : baselineMuons) {
+        for(const HEPUtils::Particle* muon : baselineMuons) {
           meff += muon->pT();
         }
 

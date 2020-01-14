@@ -143,7 +143,7 @@ namespace Gambit {
       }
 
       struct ptComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       struct ptJetComparison {
@@ -155,8 +155,8 @@ namespace Gambit {
         double met = event->met();
 
         // Baseline electrons
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT()>10. && electron->abseta()<2.47)baselineElectrons.push_back(electron);
         }
 
@@ -167,8 +167,8 @@ namespace Gambit {
         ATLAS::applyLooseIDElectronSelectionR2(baselineElectrons);
 
         // Baseline muons
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT()>10. && muon->abseta()<2.4)baselineMuons.push_back(muon);
         }
 
@@ -181,9 +181,9 @@ namespace Gambit {
         }
 
         //Overlap Removal + Signal Objects
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
         vector<const HEPUtils::Jet*> signalJets;
         vector<const HEPUtils::Jet*> signalBJets;
 
@@ -194,7 +194,7 @@ namespace Gambit {
 
         vector<const HEPUtils::Jet*> overlapJet;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
-          vector<HEPUtils::Particle*> overlapEl;
+          vector<const HEPUtils::Particle*> overlapEl;
           bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->abseta(), baselineJets.at(iJet)->pT());
           for (size_t iEl=0;iEl<baselineElectrons.size();iEl++) {
             if (baselineElectrons.at(iEl)->mom().deltaR_eta(baselineJets.at(iJet)->mom())<0.2)overlapEl.push_back(baselineElectrons.at(iEl));
@@ -248,8 +248,8 @@ namespace Gambit {
         size_t nSignalJets=signalJets.size();
         size_t nSignalBJets=signalBJets.size();
 
-        vector<vector<HEPUtils::Particle*>> SFOSpairs=getSFOSpairs(signalLeptons);
-        vector<vector<HEPUtils::Particle*>> OSpairs=getOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> SFOSpairs=getSFOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> OSpairs=getOSpairs(signalLeptons);
 
         //Variables
         double pT_l0=0.;

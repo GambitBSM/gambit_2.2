@@ -83,7 +83,7 @@ namespace Gambit {
 
 
         // Jet overlap removal
-        void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+        void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
             //Routine to do jet-lepton check
             //Discards jets if they are within DeltaRMax of a lepton
 
@@ -109,11 +109,11 @@ namespace Gambit {
         }
 
         // Lepton overlap removal
-        void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+        void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
             //Routine to do lepton-jet check
             //Discards leptons if they are within DeltaRMax of a jet
 
-            vector<HEPUtils::Particle*> Survivors;
+            vector<const HEPUtils::Particle*> Survivors;
 
             for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
                 bool overlap = false;
@@ -166,12 +166,12 @@ namespace Gambit {
             HEPUtils::BinnedFn2D<double> _eff2dEl(a,b,cEl);
             const vector<double> cMu={0.89};
             HEPUtils::BinnedFn2D<double> _eff2dMu(a,b,cMu);
-            vector<HEPUtils::Particle*> baselineElectrons, baselineMuons;
-            for (HEPUtils::Particle* electron : event->electrons()) {
+            vector<const HEPUtils::Particle*> baselineElectrons, baselineMuons;
+            for (const HEPUtils::Particle* electron : event->electrons()) {
                 bool hasTrig=has_tag(_eff2dEl, electron->abseta(), electron->pT());
                 if (electron->pT() > 15. && electron->abseta() < 2.4 && hasTrig) baselineElectrons.push_back(electron);
             }
-            for (HEPUtils::Particle* muon : event->muons()) {
+            for (const HEPUtils::Particle* muon : event->muons()) {
                 bool hasTrig=has_tag(_eff2dMu, muon->abseta(), muon->pT());
                 if (muon->pT() > 15. && muon->abseta() < 2.4 && hasTrig) baselineMuons.push_back(muon);
             }
@@ -190,11 +190,11 @@ namespace Gambit {
             int LooseLepNum = baselineElectrons.size()+baselineMuons.size();
             //Signal Leptons
             ATLAS::applyMediumIDElectronSelectionR2(baselineElectrons);
-            vector<HEPUtils::Particle*> signalLeptons;
-            for (HEPUtils::Particle* electron : baselineElectrons) {
+            vector<const HEPUtils::Particle*> signalLeptons;
+            for (const HEPUtils::Particle* electron : baselineElectrons) {
                 signalLeptons.push_back(electron);
             }
-            for (HEPUtils::Particle* muon : baselineMuons) {
+            for (const HEPUtils::Particle* muon : baselineMuons) {
                 signalLeptons.push_back(muon);
             }
 

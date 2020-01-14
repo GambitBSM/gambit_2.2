@@ -31,9 +31,7 @@ namespace Gambit
     using HEPUtils::add_quad;
 
     /// Typedef for a vector of Particle pointers
-    typedef std::vector<HEPUtils::Particle*> ParticlePtrs;
-    /// Typedef for a vector of const Particle pointers
-    typedef std::vector<const HEPUtils::Particle*> ConstParticlePtrs;
+    typedef std::vector<const HEPUtils::Particle*> ParticlePtrs;
 
     /// Typedef for a vector of Jet pointers
     typedef std::vector<const HEPUtils::Jet*> JetPtrs;
@@ -67,8 +65,8 @@ namespace Gambit
 
     /// In-place filter a supplied particle vector by rejecting those which fail a supplied cut
     inline void ifilter_reject(ParticlePtrs& particles,
-                               std::function<bool(Particle*)> rejfn, bool do_delete=true) {
-      iremoveerase(particles, [&](Particle* p) {
+                               std::function<bool(const Particle*)> rejfn, bool do_delete=true) {
+      iremoveerase(particles, [&](const Particle* p) {
           const bool rm = rejfn(p);
           if (rm && do_delete) delete p;
           return rm;
@@ -77,15 +75,15 @@ namespace Gambit
 
     /// In-place filter a supplied particle vector by keeping those which pass a supplied cut
     inline void ifilter_select(ParticlePtrs& particles,
-                               std::function<bool(Particle*)> selfn, bool do_delete=true) {
-      ifilter_reject(particles, [&](Particle* p) { return !selfn(p); }, do_delete);
+                               std::function<bool(const Particle*)> selfn, bool do_delete=true) {
+      ifilter_reject(particles, [&](const Particle* p) { return !selfn(p); }, do_delete);
     }
 
 
     /// Filter a supplied particle vector by rejecting those which fail a supplied cut
     /// @todo Optimise by only copying those which are selected (filter_select is canonical)
     inline ParticlePtrs filter_reject(const ParticlePtrs& particles,
-                                      std::function<bool(Particle*)> rejfn, bool do_delete=true) {
+                                      std::function<bool(const Particle*)> rejfn, bool do_delete=true) {
       ParticlePtrs rtn = particles;
       ifilter_reject(rtn, rejfn, do_delete);
       return rtn;
@@ -93,8 +91,8 @@ namespace Gambit
 
     /// Filter a supplied particle vector by keeping those which pass a supplied cut
     inline ParticlePtrs filter_select(const ParticlePtrs& particles,
-                                      std::function<bool(Particle*)> selfn, bool do_delete=true) {
-      return filter_reject(particles, [&](Particle* p) { return !selfn(p); }, do_delete);
+                                      std::function<bool(const Particle*)> selfn, bool do_delete=true) {
+      return filter_reject(particles, [&](const Particle* p) { return !selfn(p); }, do_delete);
     }
 
     //@}
@@ -167,16 +165,16 @@ namespace Gambit
     //@{
 
     /// Utility function for filtering a supplied particle vector by sampling wrt an efficiency scalar
-    void filtereff(std::vector<HEPUtils::Particle*>& particles, double eff, bool do_delete=false);
+    void filtereff(std::vector<const HEPUtils::Particle*>& particles, double eff, bool do_delete=false);
 
     /// Utility function for filtering a supplied particle vector by sampling an efficiency returned by a provided function object
-    void filtereff(std::vector<HEPUtils::Particle*>& particles, std::function<double(HEPUtils::Particle*)> eff_fn, bool do_delete=false);
+    void filtereff(std::vector<const HEPUtils::Particle*>& particles, std::function<double(HEPUtils::Particle*)> eff_fn, bool do_delete=false);
 
     /// Utility function for filtering a supplied particle vector by sampling wrt a binned 1D efficiency map in pT
-    void filtereff_pt(std::vector<HEPUtils::Particle*>& particles, const HEPUtils::BinnedFn1D<double>& eff_pt, bool do_delete=false);
+    void filtereff_pt(std::vector<const HEPUtils::Particle*>& particles, const HEPUtils::BinnedFn1D<double>& eff_pt, bool do_delete=false);
 
     /// Utility function for filtering a supplied particle vector by sampling wrt a binned 2D efficiency map in |eta| and pT
-    void filtereff_etapt(std::vector<HEPUtils::Particle*>& particles, const HEPUtils::BinnedFn2D<double>& eff_etapt, bool do_delete=false);
+    void filtereff_etapt(std::vector<const HEPUtils::Particle*>& particles, const HEPUtils::BinnedFn2D<double>& eff_etapt, bool do_delete=false);
 
     //@}
 
@@ -299,13 +297,13 @@ namespace Gambit
 
 
     /// Utility function for returning a collection of same-flavour, oppsosite-sign particle pairs
-    std::vector<std::vector<HEPUtils::Particle*>> getSFOSpairs(std::vector<HEPUtils::Particle*> particles);
+    std::vector<std::vector<const HEPUtils::Particle*>> getSFOSpairs(std::vector<const HEPUtils::Particle*> particles);
 
     /// Utility function for returning a collection of oppsosite-sign particle pairs
-    std::vector<std::vector<HEPUtils::Particle*>> getOSpairs(std::vector<HEPUtils::Particle*> particles);
+    std::vector<std::vector<const HEPUtils::Particle*>> getOSpairs(std::vector<const HEPUtils::Particle*> particles);
 
     /// Utility function for returning a collection of same-sign particle pairs
-    std::vector<std::vector<HEPUtils::Particle*>> getSSpairs(std::vector<HEPUtils::Particle*> particles);
+    std::vector<std::vector<const HEPUtils::Particle*>> getSSpairs(std::vector<const HEPUtils::Particle*> particles);
 
 
     /// @name Sorting

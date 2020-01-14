@@ -47,7 +47,7 @@ namespace Gambit {
       static constexpr const char* detector = "ATLAS";
 
       struct particleComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } compareParticlePt;
 
       struct jetComparison {
@@ -89,8 +89,8 @@ namespace Gambit {
         double met = event->met();
 
         // Baseline objects
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT()>10. && electron->abseta()<2.47)baselineElectrons.push_back(electron);
         }
 
@@ -100,8 +100,8 @@ namespace Gambit {
         // Apply medium electron selection
         ATLAS::applyMediumIDElectronSelection(baselineElectrons);
 
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT()>10. && muon->abseta()<2.4)baselineMuons.push_back(muon);
         }
 
@@ -114,9 +114,9 @@ namespace Gambit {
         }
 
         //Overlap Removal
-        vector<HEPUtils::Particle*> overlapElectrons1;
-        vector<HEPUtils::Particle*> overlapElectrons2;
-        vector<HEPUtils::Particle*> overlapMuons;
+        vector<const HEPUtils::Particle*> overlapElectrons1;
+        vector<const HEPUtils::Particle*> overlapElectrons2;
+        vector<const HEPUtils::Particle*> overlapMuons;
         vector<const HEPUtils::Jet*> overlapJets;
 
         vector<size_t> overlapEl;
@@ -155,9 +155,9 @@ namespace Gambit {
         }
 
         //Signal Objects
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
         vector<const HEPUtils::Jet*> signalJets;
         vector<const HEPUtils::Jet*> signalBJets;
 

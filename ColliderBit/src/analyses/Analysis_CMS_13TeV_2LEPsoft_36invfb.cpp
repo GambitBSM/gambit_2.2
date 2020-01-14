@@ -90,7 +90,7 @@ namespace Gambit {
       static constexpr const char* detector = "CMS";
 
       struct ptComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       Analysis_CMS_13TeV_2LEPsoft_36invfb() {
@@ -118,9 +118,9 @@ namespace Gambit {
         double met = event->met();
 
         // Signal objects
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
         vector<const HEPUtils::Jet*> signalJets;
         vector<const HEPUtils::Jet*> signalBJets;
 
@@ -141,7 +141,7 @@ namespace Gambit {
         // const vector<double> bEl={5.,10.,15.,20.,25.,DBL_MAX};  // Assuming flat efficiency above pT = 30 GeV, where the CMS map stops.
         // const vector<double> cEl={0.336,0.412,0.465,0.496,0.503,0.344,0.402,0.448,0.476,0.482,0.233,0.299,0.25,0.261,0.255,0.309,0.359,0.394,0.408,0.418,0.243,0.287,0.327,0.341,0.352};
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (electron->pT()>5. && electron->pT()<30. && fabs(electron->eta())<2.5 && isEl)signalElectrons.push_back(electron);
         }
@@ -162,7 +162,7 @@ namespace Gambit {
         // const vector<double> bMu={3.5,10.,15.,20.,25.,DBL_MAX};  // Assuming flat efficiency above pT = 30 GeV, where the CMS map stops.
         // const vector<double> cMu={0.647,0.718,0.739,0.76,0.763,0.627,0.662,0.694,0.725,0.733,0.61,0.66,0.678,0.685,0.723,0.566,0.629,0.655,0.67,0.696};
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        for (HEPUtils::Particle* muon : event->muons()) {
+        for (const HEPUtils::Particle* muon : event->muons()) {
           bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (met < 300. && muon->pT()>5. && muon->pT()<30. && fabs(muon->eta())<2.4 && isMu) signalMuons.push_back(muon);
           else if (met > 300. && muon->pT()>3.5 && muon->pT()<30. && fabs(muon->eta())<2.4 && isMu) signalMuons.push_back(muon);

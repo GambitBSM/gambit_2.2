@@ -175,7 +175,7 @@ namespace Gambit {
         Cutflow _cutflow;
 
       // The following section copied from Analysis_ATLAS_1LEPStop_20invfb.cpp
-      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
@@ -200,11 +200,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within dR of a jet as defined in analysis paper
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -239,7 +239,7 @@ namespace Gambit {
         }
 
         struct ptComparison {
-            bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+            bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
         } comparePt;
 
         void run(const HEPUtils::Event* event) {
@@ -263,8 +263,8 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,     0.0,     0.0,     0.0,     0.0// eta > 2.5
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-            vector<HEPUtils::Particle*> electrons;
-            for (HEPUtils::Particle* electron : event->electrons()) {
+            vector<const HEPUtils::Particle*> electrons;
+            for (const HEPUtils::Particle* electron : event->electrons()) {
                 bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
                 if (electron->pT() > 15. && fabs(electron->eta()) < 2.5 && isEl)
                     electrons.push_back(electron);
@@ -283,8 +283,8 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,      0.0,    0.0,     0.0,     0.0,     0.0// eta > 2.4
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-            vector<HEPUtils::Particle*> muons;
-            for (HEPUtils::Particle* muon : event->muons()) {
+            vector<const HEPUtils::Particle*> muons;
+            for (const HEPUtils::Particle* muon : event->muons()) {
                 bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
                 if (muon->pT() > 10.&& fabs(muon->eta()) < 2.4 && isMu)
                     muons.push_back(muon);
@@ -331,7 +331,7 @@ namespace Gambit {
             size_t Nj=nonbJets.size();
 
             // Leptons = electrons + muons
-            vector<HEPUtils::Particle*> leptons;
+            vector<const HEPUtils::Particle*> leptons;
             leptons=electrons;
             leptons.insert(leptons.end(),muons.begin(),muons.end());
             sort(leptons.begin(),leptons.end(),comparePt);
@@ -393,7 +393,7 @@ namespace Gambit {
             // M_T^{miss}
             // The smallest of the transverse masses constructed between p^miss_T and each of the leptons.
             double MTmiss = 9999;
-            for (HEPUtils::Particle* lep : leptons) {
+            for (const HEPUtils::Particle* lep : leptons) {
                 double MTmiss_temp = sqrt(2.*lep->pT()*met*(1. - cos(lep->mom().deltaPhi(ptot))));
                 if (MTmiss_temp<MTmiss) {
                     MTmiss = MTmiss_temp;

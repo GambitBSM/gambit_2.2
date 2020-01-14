@@ -78,7 +78,7 @@ namespace Gambit {
       }
 
       // The following section copied from Analysis_ATLAS_1LEPStop_20invfb.cpp
-      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
@@ -103,11 +103,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within dR of a jet as defined in analysis paper
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -128,11 +128,11 @@ namespace Gambit {
         return;
       }
 
-      void SpecialLeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
+      void SpecialLeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within dR of a jet as defined in analysis paper
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -154,7 +154,7 @@ namespace Gambit {
       }
 
 
-      MT2 MT2helper(vector<const HEPUtils::Jet*> jets, vector<HEPUtils::Particle*>  electrons,  vector<HEPUtils::Particle*> muons, HEPUtils::P4 metVec){
+      MT2 MT2helper(vector<const HEPUtils::Jet*> jets, vector<const HEPUtils::Particle*>  electrons,  vector<const HEPUtils::Particle*> muons, HEPUtils::P4 metVec){
 
         MT2 results;
 
@@ -290,8 +290,8 @@ namespace Gambit {
         // Now define vectors of baseline objects, including:
         // - retrieval of electron, muon and jets from the event
         // - application of basic pT and eta cuts
-        vector<HEPUtils::Particle*> electrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> electrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10.
               && fabs(electron->eta()) < 2.47)
             electrons.push_back(electron);
@@ -300,8 +300,8 @@ namespace Gambit {
         // Apply electron efficiency
         ATLAS::applyElectronEff(electrons);
 
-        vector<HEPUtils::Particle*> muons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> muons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10.
               && fabs(muon->eta()) < 2.7)
             muons.push_back(muon);
@@ -360,9 +360,9 @@ namespace Gambit {
         // Signal object containers
         vector<const HEPUtils::Jet*> signalJets20;
         vector<const HEPUtils::Jet*> signalJets35;
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
         vector<const HEPUtils::Jet*> signalBJets20;
         vector<const HEPUtils::Jet*> signalBJets35;
 
@@ -399,14 +399,14 @@ namespace Gambit {
         std::sort(signalBJets20.begin(), signalBJets20.end(), sortByPT);
 
 
-        for (HEPUtils::Particle* electron : electrons) {
+        for (const HEPUtils::Particle* electron : electrons) {
           if(electron->pT() > 20. && fabs(electron->eta()) < 2.47){
             signalElectrons.push_back(electron);
             signalLeptons.push_back(electron);
           }
         }
 
-        for (HEPUtils::Particle* muon : muons) {
+        for (const HEPUtils::Particle* muon : muons) {
           if(muon->pT() > 20. && fabs(muon->eta()) < 2.5){
             signalMuons.push_back(muon);
             signalLeptons.push_back(muon);
@@ -415,7 +415,7 @@ namespace Gambit {
 
         HEPUtils::P4 metVecCorr = metVec;
 
-        for(HEPUtils::Particle* lep : signalLeptons){
+        for(const HEPUtils::Particle* lep : signalLeptons){
           metVecCorr+=lep->mom();
         }
 

@@ -76,7 +76,7 @@ namespace Gambit {
         Cutflow _cutflow;
 
         // Jet overlap removal
-        void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+        void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
             //Routine to do jet-lepton check
             //Discards jets if they are within DeltaRMax of a lepton
 
@@ -136,16 +136,16 @@ namespace Gambit {
             if (met<120) return;
 
             // Electron objects
-            vector<HEPUtils::Particle*> baselineElectrons;
-            for (HEPUtils::Particle* electron : event->electrons())
+            vector<const HEPUtils::Particle*> baselineElectrons;
+            for (const HEPUtils::Particle* electron : event->electrons())
                 if (electron->pT() > 5. && electron->abseta() < 2.4 ) baselineElectrons.push_back(electron);
 
             // Apply electron efficiency
             CMS::applyElectronEff(baselineElectrons);
 
             // Muon objects
-            vector<HEPUtils::Particle*> baselineMuons;
-            for (HEPUtils::Particle* muon : event->muons())
+            vector<const HEPUtils::Particle*> baselineMuons;
+            for (const HEPUtils::Particle* muon : event->muons())
                 if (muon->pT() > 5. && muon->abseta() < 2.4 ) baselineMuons.push_back(muon);
 
             // Apply muon efficiency
@@ -160,9 +160,9 @@ namespace Gambit {
             }
 
             // Electron isolation
-            vector<HEPUtils::Particle*> Electrons;
+            vector<const HEPUtils::Particle*> Electrons;
             double Rrel;
-            for (HEPUtils::Particle* e : baselineElectrons) {
+            for (const HEPUtils::Particle* e : baselineElectrons) {
                 if (e->pT() < 50.) Rrel=0.2;
                 else if (e->pT() < 200.) Rrel=10./e->pT();
                 else Rrel=0.05;
@@ -173,8 +173,8 @@ namespace Gambit {
             }
 
             // Muon isolation
-            vector<HEPUtils::Particle*> Muons;
-            for (HEPUtils::Particle* mu : baselineMuons) {
+            vector<const HEPUtils::Particle*> Muons;
+            for (const HEPUtils::Particle* mu : baselineMuons) {
                 if (mu->pT() < 50.) Rrel=0.2;
                 else if (mu->pT() < 200.) Rrel=10./mu->pT();
                 else Rrel=0.05;
@@ -185,11 +185,11 @@ namespace Gambit {
             }
 
             // Selected lepton
-            vector<HEPUtils::Particle*> Leptons;
-            for (HEPUtils::Particle* e : Electrons) {
+            vector<const HEPUtils::Particle*> Leptons;
+            for (const HEPUtils::Particle* e : Electrons) {
                 if (e->pT() > 20. && e->abseta() < 1.442 ) Leptons.push_back(e);
             }
-            for (HEPUtils::Particle* mu : Muons) {
+            for (const HEPUtils::Particle* mu : Muons) {
                 if (mu->pT() > 20. && mu->abseta() < 2.4 ) Leptons.push_back(mu);
             }
 
@@ -201,11 +201,11 @@ namespace Gambit {
             HEPUtils::P4 HTmiss(0,0,0,0);
             for (const HEPUtils::Jet* j : baselineJets) HTmiss += j->mom();
             bool lep_trigger=false;
-            for (HEPUtils::Particle* e : Electrons) {
+            for (const HEPUtils::Particle* e : Electrons) {
                 if ((HTmiss + e->mom()).pT()>120 ) lep_trigger=true;
                 if (e->pT() > 25. && e->abseta() < 2.1 ) lep_trigger=true;
             }
-            for (HEPUtils::Particle* mu : Muons) {
+            for (const HEPUtils::Particle* mu : Muons) {
                 if ((HTmiss + mu->mom()).pT()>120 ) lep_trigger=true;
                 if (mu->pT() > 22. && mu->abseta() < 2.4 ) lep_trigger=true;
             }

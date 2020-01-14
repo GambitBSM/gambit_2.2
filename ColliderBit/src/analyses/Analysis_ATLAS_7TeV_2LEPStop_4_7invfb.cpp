@@ -41,8 +41,8 @@ namespace Gambit
       {
 
 
-        std::vector<Particle*> electrons = event->electrons();
-        std::vector<Particle*> muons = event->muons();
+        std::vector<const Particle*> electrons = event->electrons();
+        std::vector<const Particle*> muons = event->muons();
         std::sort(electrons.begin(), electrons.end(), AnalysisUtil::sortParticlesByPt);
         std::sort(muons.begin(), muons.end(), AnalysisUtil::sortParticlesByPt);
 
@@ -68,7 +68,7 @@ namespace Gambit
         ATLAS::applyTightIDElectronSelection(electrons);
 
         // fill a vector with all of the leptons
-        std::vector<Particle*> leptons;
+        std::vector<const Particle*> leptons;
         leptons.insert(leptons.end(), electrons.begin(), electrons.end());
         leptons.insert(leptons.end(), muons.begin(), muons.end());
 
@@ -87,8 +87,8 @@ namespace Gambit
             return;
           }
 
-        Particle* lep0 = leptons[0];
-        Particle* lep1 = leptons[1];
+        const Particle* lep0 = leptons[0];
+        const Particle* lep1 = leptons[1];
 
         // calculate discriminating variables
         double mll = (*lep0 + *lep1).m();

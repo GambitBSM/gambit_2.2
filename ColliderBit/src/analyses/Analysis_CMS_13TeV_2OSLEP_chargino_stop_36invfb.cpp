@@ -209,7 +209,7 @@ namespace Gambit {
       }
 
       struct ptComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       void run(const HEPUtils::Event* event)
@@ -234,8 +234,8 @@ namespace Gambit {
                                     0.0,    0.0,     0.0,       0.0,      0.0,     0.0,      0.0,   // eta > 2.5
                                   };
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons())
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons())
         {
           bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (isEl && electron->pT()>15. && fabs(electron->eta())<2.4) baselineElectrons.push_back(electron);
@@ -256,8 +256,8 @@ namespace Gambit {
                                      0.0,    0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.4
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons())
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons())
         {
           bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (isMu && muon->pT()>15. && fabs(muon->eta())<2.4) baselineMuons.push_back(muon);
@@ -272,7 +272,7 @@ namespace Gambit {
 
 
         // Signal leptons = electrons + muons
-        vector<HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalLeptons;
         signalLeptons=baselineElectrons;
         signalLeptons.insert(signalLeptons.end(),baselineMuons.begin(),baselineMuons.end());
         sort(signalLeptons.begin(),signalLeptons.end(),comparePt);

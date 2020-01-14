@@ -50,7 +50,7 @@ namespace Gambit
 
       struct ptComparison
       {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       struct ptJetComparison
@@ -89,9 +89,9 @@ namespace Gambit
       {
 
         // Baseline objects
-        vector<HEPUtils::Particle*> baselineElectrons;
-        vector<HEPUtils::Particle*> baselineMuons;
-        vector<HEPUtils::Particle*> baselineTaus;
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        vector<const HEPUtils::Particle*> baselineMuons;
+        vector<const HEPUtils::Particle*> baselineTaus;
         vector<const HEPUtils::Jet*> baselineJets;
         vector<const HEPUtils::Jet*> baselineBJets;
         vector<const HEPUtils::Jet*> baselineNonBJets;
@@ -108,7 +108,7 @@ namespace Gambit
           _cutflow[i].fillinit();
 
         // Electron candidates are reconstructed from isolated electromagnetic calorimeter energy deposits matched to ID tracks and are required to have |η| < 2.47, a transverse momentum pT > 4.5 GeV, and to pass the “LooseAndBLayer” requirement in arXiv: 1902.04655 [hep-ex].
-        for (HEPUtils::Particle* electron : event->electrons())
+        for (const HEPUtils::Particle* electron : event->electrons())
         {
           if (electron->pT()>4.5 && electron->abseta()<2.47) baselineElectrons.push_back(electron);
         }
@@ -118,7 +118,7 @@ namespace Gambit
         ATLAS::applyElectronIDEfficiency2019(baselineElectrons, "Loose");
 
         // Muon candidates are reconstructed in the region |η| < 2.4 from muon spectrometer tracks matching ID tracks. Candidate muons must have pT > 4 GeV and pass the medium identification requirements defined in arXiv: 1603.05598 [hep-ex].
-        for (HEPUtils::Particle* muon : event->muons())
+        for (const HEPUtils::Particle* muon : event->muons())
         {
           if (muon->pT()>4. && muon->abseta()<2.4) baselineMuons.push_back(muon);
         }
@@ -178,16 +178,16 @@ namespace Gambit
         // Signal objects
         vector<const HEPUtils::Jet*> signalJets = baselineJets;
         vector<const HEPUtils::Jet*> signalBJets = baselineBJets;
-        vector<HEPUtils::Particle*> signalElectrons = baselineElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons = baselineElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
 
         // Signal electrons must satisfy the “medium” identification requirement as defined in arXiv: 1902.04655 [hep-ex]
         ATLAS::applyElectronIDEfficiency2019(signalElectrons, "Medium");
 
 
         // Signal muons must have pT > 5 GeV.
-        for (HEPUtils::Particle* signalMuon : baselineMuons)
+        for (const HEPUtils::Particle* signalMuon : baselineMuons)
         {
           if (signalMuon->pT() > 5.) signalMuons.push_back(signalMuon);
         }
@@ -217,12 +217,12 @@ namespace Gambit
         size_t nSignalBJets = signalBJets.size();
 
         // Get SFOS pairs
-        vector<vector<HEPUtils::Particle*>> SFOSpairs = getSFOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> SFOSpairs = getSFOSpairs(signalLeptons);
 
         // Get SFOS pairs masses and pTs
         vector<double> SFOSpair_masses;
         vector<double> SFOSpair_pTs;
-        for (vector<HEPUtils::Particle*> pair : SFOSpairs)
+        for (vector<const HEPUtils::Particle*> pair : SFOSpairs)
         {
           SFOSpair_masses.push_back( (pair.at(0)->mom() + pair.at(1)->mom()).m() );
           SFOSpair_pTs.push_back( (pair.at(0)->mom() + pair.at(1)->mom()).pT() );
@@ -243,10 +243,10 @@ namespace Gambit
         preselection = nSignalLeptons >= 3 && SFOSpairs.size() >= 1 && signalLeptons.at(0)->pT() > 40. && signalLeptons.at(1)->pT() > 20. && Zlike;
 
         // Construct the mT23l variable for the pair of SFOS with invariant mass closest to mZ and highest pT lepton not in the pair
-        vector<HEPUtils::Particle*> SFOSpairClosestToMZ;
+        vector<const HEPUtils::Particle*> SFOSpairClosestToMZ;
         double mll =  0;
         // Find the SFOS pair high inv mass closest to mZ
-        for (vector<HEPUtils::Particle*> pair: SFOSpairs)
+        for (vector<const HEPUtils::Particle*> pair: SFOSpairs)
         {
           if( fabs( (pair.at(0)->mom() + pair.at(1)->mom()).m() - mZ ) < fabs(mll - mZ) )
           {
@@ -264,7 +264,7 @@ namespace Gambit
         double mT23l = 0.0;
         if(nSignalLeptons >= 3 and SFOSpairClosestToMZ.size() == 2)
         {
-          HEPUtils::Particle* thirdLepton;
+          const HEPUtils::Particle* thirdLepton;
           if(signalLeptons.at(0) != SFOSpairClosestToMZ.at(0) && signalLeptons.at(0) != SFOSpairClosestToMZ.at(1))
             thirdLepton = signalLeptons.at(0);
           else if(signalLeptons.at(1) != SFOSpairClosestToMZ.at(0) && signalLeptons.at(1) != SFOSpairClosestToMZ.at(1))

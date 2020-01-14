@@ -53,7 +53,7 @@ namespace Gambit {
       static constexpr const char* detector = "CMS";
 
       struct ptComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       struct ptJetComparison {
@@ -81,18 +81,18 @@ namespace Gambit {
         double met = event->met();
 
         // Baseline objects
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT()>10. && fabs(electron->eta())<2.5)baselineElectrons.push_back(electron);
         }
 
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT()>10. &&fabs(muon->eta())<2.4)baselineMuons.push_back(muon);
         }
 
-        vector<HEPUtils::Particle*> baselinePhotons;
-        for (HEPUtils::Particle* photon : event->photons()) {
+        vector<const HEPUtils::Particle*> baselinePhotons;
+        for (const HEPUtils::Particle* photon : event->photons()) {
           if (photon->pT()>25. && fabs(photon->eta())<2.4 && (fabs(photon->eta())<1.4 || fabs(photon->eta())>1.6) && fabs(photon->phi()-event->missingmom().phi())>0.4)baselinePhotons.push_back(photon);
         }
 
@@ -102,9 +102,9 @@ namespace Gambit {
         }
 
         // Signal objects
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
         vector<const HEPUtils::Jet*> signalJets;
         vector<const HEPUtils::Jet*> signalBJets;
 
@@ -167,9 +167,9 @@ namespace Gambit {
         double deltaPhi_met_j0=0;
         double deltaPhi_met_j1=0;
 
-        vector<vector<HEPUtils::Particle*>> SFOSpair_cont = getSFOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> SFOSpair_cont = getSFOSpairs(signalLeptons);
         for (size_t iPa=0;iPa<SFOSpair_cont.size();iPa++) {
-          vector<HEPUtils::Particle*> pair = SFOSpair_cont.at(iPa);
+          vector<const HEPUtils::Particle*> pair = SFOSpair_cont.at(iPa);
           sort(pair.begin(),pair.end(),comparePt);
           if (pair.at(0)->pT()>25. && fabs(pair.at(0)->mom().deltaR_eta(pair.at(1)->mom()))>0.1 && (pair.at(0)->mom()+pair.at(1)->mom()).pT()>25)preselection=true;
         }
@@ -345,7 +345,7 @@ namespace Gambit {
         return mjj;
       }
 
-      double get_mT2(vector<HEPUtils::Particle*> leptons, vector<const HEPUtils::Jet*> bjets, HEPUtils::P4 met) {
+      double get_mT2(vector<const HEPUtils::Particle*> leptons, vector<const HEPUtils::Jet*> bjets, HEPUtils::P4 met) {
         double mT2=0;
         if (bjets.size()<2) {
           double pLep0[3] = {leptons.at(0)->mass(), leptons.at(0)->mom().px(), leptons.at(0)->mom().py()};

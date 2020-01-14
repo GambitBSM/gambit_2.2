@@ -77,8 +77,8 @@ namespace Gambit {
                                      0.0,    0.0,      0.0,      0.0,      0.0,     // eta > 2.5
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dPhoton(aPhoton,bPhoton,cPhoton);
-        vector<HEPUtils::Particle*> Photons;
-        for (HEPUtils::Particle* photon : event->photons())
+        vector<const HEPUtils::Particle*> Photons;
+        for (const HEPUtils::Particle* photon : event->photons())
         {
           bool isPhoton=has_tag(_eff2dPhoton, photon->abseta(), photon->pT());
           if (isPhoton && photon->pT()>15.) Photons.push_back(photon);
@@ -98,7 +98,7 @@ namespace Gambit {
         bool high_pT_photon = false;  // At least one high-pT photon;
         bool delta_R_g_j = false;     // Photons are required to have delta_R>0.5 to the nearest jet;
         bool delta_phi_j_MET = false; // Jets with pT>100 GeV must fulfill delta_phi(MET,jet)>0.3;
-	    for (HEPUtils::Particle* photon  : Photons){
+	    for (const HEPUtils::Particle* photon  : Photons){
 	        if (photon->pT()>180. && fabs(photon->eta()) < 1.44) {
 	            high_pT_photon = true;
 	            for (const HEPUtils::Jet* jet : Jets){
@@ -126,7 +126,7 @@ namespace Gambit {
 
         // S_T^gamma > 600 GeV
         double STgamma = met;
-	    for (HEPUtils::Particle* photon  : Photons){
+	    for (const HEPUtils::Particle* photon  : Photons){
 	        STgamma += photon->pT();
 	    }
         if (STgamma<600) return;

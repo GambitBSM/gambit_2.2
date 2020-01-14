@@ -72,13 +72,13 @@ namespace Gambit {
         const double trigweight = (met < 350) ? 0.97 : 1.0;
 
         // Electron objects
-        vector<HEPUtils::Particle*> baselineElectrons = event->electrons();
+        vector<const HEPUtils::Particle*> baselineElectrons = event->electrons();
 
         // Apply electron efficiency
         CMS::applyElectronEff(baselineElectrons);
 
         // Muon objects
-        vector<HEPUtils::Particle*> baselineMuons = event->muons();
+        vector<const HEPUtils::Particle*> baselineMuons = event->muons();
 
         // Apply muon efficiency
         CMS::applyMuonEff(baselineMuons);
