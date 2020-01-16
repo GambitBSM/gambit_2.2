@@ -681,7 +681,7 @@ def get_fortran_shapes(parameters):
         
         # If it is not a scalar, then it's an Farray
         if parameter.size:
-            fortran_type += "Farray_"
+           fortran_type += "Farray_"
 
         # If it's complex
         if parameter.type == "Complex(dp)":
@@ -700,6 +700,11 @@ def get_fortran_shapes(parameters):
         if parameter.size:
             fortran_type += "_1_"
             fortran_type += parameter.size.replace(',','_1_')
+
+        # If any of the dimensions is 0, set to void
+        if parameter.size:
+            if any([x == '0' for x in parameter.size.split(',')]):
+                fortran_type = "void"
 
         # If we haven't been able to convert it, throw an error.
         if not fortran_type:
