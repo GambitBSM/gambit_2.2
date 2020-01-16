@@ -681,7 +681,7 @@ def get_fortran_shapes(parameters):
         
         # If it is not a scalar, then it's an Farray
         if parameter.size:
-           fortran_type += "Farray_"
+            fortran_type += "Farray_"
 
         # If it's complex
         if parameter.type == "Complex(dp)":
