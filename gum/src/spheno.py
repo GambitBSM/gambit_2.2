@@ -707,8 +707,6 @@ def get_fortran_shapes(parameters):
         # If any of the dimensions is 0, set to void
         if parameter.size:
             if any([x == '0' for x in parameter.size.split(',')]):
-
-                print name, parameter, fortran_type
                 fortran_type = "void"
 
         # If we haven't been able to convert it, throw an error.
