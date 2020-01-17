@@ -282,9 +282,14 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     # Add all parameters from the parameter list from SARAH
     for i in xrange(len(paramlist)):
         p = paramlist[i]
-        if (    (p.block() != 'SM')
-            and (p.block() != 'SMINPUTS')
-            and (p.block() != 'VCKM')
+        # TODO: TG: I understand that we want to remove SM parameters here, right? That means also the gauge and yukawa blocks
+        if (    (p.block().lower() != 'sm')
+            and (p.block().lower() != 'sminputs')
+            and (p.block().lower() != 'vckm')
+            and (p.block().lower() != 'gauge')
+            and (p.block().lower() != 'ye')
+            and (p.block().lower() != 'yu')
+            and (p.block().lower() != 'yd')
             ):
 
             # Mixing matrices
@@ -293,13 +298,16 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
 
             name = p.name()
 
+            # TODO: TG: This is causing problems, and I don't think is really neded, 
+            # store the parameter names as it is and get the particle name only when needed
+            '''
             if tag == "Pole_Mixing":
                 found = False
                 
                 # Throw an error if we don't know what the mixing matrix is.
                 if not name in mixingdict:
-                    raise GumError(("Could not find which particle "
-                                    "eigenstates the mixing matrix {0} "
+                    raise GumError(("Could not find which particle "\
+                                    "eigenstates the mixing matrix {0} "\
                                     "couples to!")).format(name)
 
                 entry = mixingdict[name]
@@ -320,7 +328,7 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
                 continue
             else:
                 addedpars.append(name)
-
+            '''
 
             # Create a new instance of SpectrumParameter
             # TODO: still need to find mass dimension for parameters that aren't

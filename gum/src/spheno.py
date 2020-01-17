@@ -1351,6 +1351,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # Mixings.
     towrite += "// Mixings\n"
+ 
     for par in parameters:
         # If there's no block, er... skip this.
         if not par.block: continue
@@ -1388,13 +1389,17 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
       
     # Fill model dependent other parameters
-    towrite += "// Other parameters\n"
+    towrite += "\n// Other parameters\n"
+
     for par in parameters:
 
         # Don't want output (mixing matrices, basically) or masses. Already done those.
-        if not par.is_output and par.block != "MASS":
+        # Also don't want MINPAR or EXTPAR parameters
+        if not par.is_output and par.block != "MASS" and par.block != "MINPAR" and par.block != "EXTPAR" :
 
-            entry = par.alt_name if par.alt_name else par.name
+            # TODO: TG: Looks like it needs the output names for this, can't remember why we thought to use the alt_name
+            entry = par.name
+            #entry = par.alt_name if par.alt_name else par.name
             
             # Matrix case
             if par.shape.startswith('m'):

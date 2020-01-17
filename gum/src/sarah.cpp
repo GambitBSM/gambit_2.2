@@ -474,12 +474,13 @@ namespace GUM
 
         // Otherwise -- if we don't want to save it: 
         // If it has a dependence -- not interested. Bin it.
+        // TODO: TG: It seems that we need some parameters with dependence, e.g. vd and vu from THDMII
 
         // Numerical dependence?
-        command = "DependenceNum /. pdgum[[" + std::to_string(i+1) + ",2]] // ToString";
-        send_to_math(command);
-        get_from_math(entry);
-        if (entry != "DependenceNum" and entry != "None" and sphenodeps != true) continue;
+        //command = "DependenceNum /. pdgum[[" + std::to_string(i+1) + ",2]] // ToString";
+        //send_to_math(command);
+        //get_from_math(entry);
+        //if (entry != "DependenceNum" and entry != "None" and sphenodeps != true) continue;
         
         // Same with just Dependence
         command = "Dependence /. pdgum[[" + std::to_string(i+1) + ",2]] // ToString";
@@ -514,8 +515,11 @@ namespace GUM
             send_to_math(command);
             get_from_math(block);
 
-            ismixing = true;
-            LHblock = true;
+            if(block != "None")
+            {
+              ismixing = true;
+              LHblock = true;
+            }
         }
         else
         {
@@ -839,7 +843,7 @@ namespace GUM
 
     try
     {
-
+      std::vector<Particle> newParticles;
       for (auto part = particles.begin(); part != particles.end(); part++)
       {
         std::string sarah_mass;
@@ -848,9 +852,72 @@ namespace GUM
         send_to_math(command);
         get_from_math(sarah_mass);
 
-        Particle temp_part(part->pdg(), part->name(), part->spinX2(), part->chargeX3(), part->color(), part->SM(), part->mass(), part->antiname(), part->alt_name(), sarah_mass);
-        (*part) =  temp_part;
+        newParticles.push_back(Particle(part->pdg(), part->name(), part->spinX2(), part->chargeX3(), part->color(), part->SM(), part->mass(), part->antiname(), part->alt_name(), sarah_mass));
       }
+      particles = newParticles;
+    }
+    catch (std::runtime_error &e)
+    {
+      std::stringstream ss;
+      ss << e.what() << ": Last command: " << command;
+      throw std::runtime_error(ss.str());
+    }
+  }
+
+  // Leave only the parameters that SPheno uses
+  void SARAH::SPheno_parameters(std::vector<Parameter> &parameters)
+  {
+    std::cout << "Getting SPheno parameters" << std::endl;
+
+    std::string command;
+
+    try
+    {
+      bool is_list;
+      std::vector<std::string> SPhenoparams;
+      std::vector<std::string> SPhenomassparams;
+
+      command = "Head[listAllParametersAndVEVs]===List";
+      send_to_math(command);
+      get_from_math(is_list);
+      if(is_list)
+      {
+        command = "SPhenoForm/@listAllParametersAndVEVs";
+        send_to_math(command);
+        get_from_math(SPhenoparams);
+
+      }
+
+      command = "Head[NewMassParameters]===List";
+      send_to_math(command);
+      get_from_math(is_list);
+      if(is_list)
+      {
+        command = "SPhenoForm/@NewMassParameters";
+        send_to_math(command);
+        get_from_math(SPhenomassparams);
+      }
+
+      std::vector<Parameter> newParameters;
+      for(auto param : parameters)
+      {
+        for(auto SPhenoparam :  SPhenoparams)
+        {
+          if(param.name() == SPhenoparam or param.alt_name() == SPhenoparam)
+          {
+            newParameters.push_back(Parameter(SPhenoparam, param.block(), param.index(), param.alt_name(), param.is_real(), param.shape(), param.is_output(), param.bcs()));
+          }
+        }
+        for(auto SPhenomassparam :  SPhenomassparams)
+        {
+          if(param.name() == SPhenomassparam or param.alt_name() == SPhenomassparam)
+          {
+            newParameters.push_back(Parameter(SPhenomassparam, param.block(), param.index(), param.alt_name(), param.is_real(), param.shape(), param.is_output(), param.bcs()));
+          }
+        }
+      }
+
+      parameters = newParameters;
     }
     catch (std::runtime_error &e)
     {
@@ -1000,8 +1067,8 @@ namespace GUM
       // - InputFile (default $MODEL/SPheno.m)
       // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
       // TODO: temp hack to make it faster
-      //options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
-      options = "IncludeFlavorKit->False";
+      options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
+      //options = "IncludeFlavorKit->False";
 
       // Write output.
       std::string command = "MakeSPheno[" + options + "];";
@@ -1085,6 +1152,9 @@ namespace GUM
       {
         model.write_spheno_output();
 
+        // Leave only the parameters that SPheno uses
+        model.SPheno_parameters(paramlist);
+
         // Get minpar and extpar parameters
         model.get_minpar_extpar(paramlist);
 
@@ -1099,7 +1169,7 @@ namespace GUM
         // Get the boundary conditions for the parameters
         model.get_boundary_conditions(bcs, paramlist);
 
-        // Get the parameters used to solve tadpoles and removed them from the list
+        // Get the parameters used to solve tadpoles and remove them from the list
         model.get_tadpoles(paramlist);
 
         // Get in-out blocks
