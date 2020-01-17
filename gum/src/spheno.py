@@ -3042,7 +3042,10 @@ def write_spheno_frontend_header(model_name, function_signatures,
         # Now list all arguments, with a nice comment next to it, to make it 
         # lovely and readable.
         arguments = []
-        arguments.append(type_dictionary[sig[0]] + '&, // ' + sig[0])
+        if type_dictionary[sig[0]] == 'void' :
+            arguments.append(type_dictionary[sig[0]] + ', //' + sig[0])
+        else :
+            arguments.append(type_dictionary[sig[0]] + '&, // ' + sig[0])
         for argument in sig[1:-1]:
             arguments.append("   "+type_dictionary[argument]+"&, // "+argument)
         arguments.append("   "+type_dictionary[sig[-1]]+"& // "+sig[-1]+"\n")
