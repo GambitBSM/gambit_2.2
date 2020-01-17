@@ -616,6 +616,12 @@ namespace GUM
       send_to_math(command);
       get_from_math(is_list);
 
+      // Find out how many parameters we have...
+      command = "Length[pdgum]";
+      send_to_math(command);
+      int lenpl;
+      get_from_math(lenpl);
+
       if(is_list)
       {
         // Get the MINPAR list
@@ -625,7 +631,29 @@ namespace GUM
 
         // Add MINPAR parameters to the parameter list
         for(std::vector<std::string> par : minpar)
-          parameters.push_back(Parameter(par[1], "MINPAR", std::stoi(par[0])));
+        {
+          // Query the parameter list, as the MINPAR entry may end up being a BC already,
+          // such as TanBeta. Then we should find out if it's real or not.
+          std::string paramname;
+          bool real = false;
+          for (int i=0; i<lenpl; i++)
+          {
+            command = "pdgum[[" + std::to_string(i+1) + ",1]] // ToString";
+            send_to_math(command);
+            get_from_math(paramname);
+
+            if(par[1] == paramname)
+            {
+              command = "Real /. pdgum[[" + std::to_string(i+1) + ", 2]] // ToString";
+              std::cout << command << std::endl;
+              send_to_math(command);
+              std::string entry;
+              get_from_math(entry);
+              if(entry == "True") real = true;
+            }
+          }
+          parameters.push_back(Parameter(par[1], "MINPAR", std::stoi(par[0]), par[1], real));
+        }
       }
 
       // Check if EXTPAR is a list
@@ -642,7 +670,29 @@ namespace GUM
 
         // Add EXTPAR parameters to the parameter list
         for(std::vector<std::string> par : extpar)
-          parameters.push_back(Parameter(par[1], "EXTPAR", std::stoi(par[0])));
+        {
+          // Query the parameter list, as the EXTPAR entry may end up being a BC already,
+          // such as TanBeta. Then we should find out if it's real or not.
+          std::string paramname;
+          bool real = false;
+          for (int i=0; i<lenpl; i++)
+          {
+            command = "pdgum[[" + std::to_string(i+1) + ",1]] // ToString";
+            send_to_math(command);
+            get_from_math(paramname);
+
+            if(par[1] == paramname)
+            {
+              command = "Real /. pdgum[[" + std::to_string(i+1) + ", 2]] // ToString";
+              std::cout << command << std::endl;
+              send_to_math(command);
+              std::string entry;
+              get_from_math(entry);
+              if(entry == "True") real = true;
+            }
+          }
+          parameters.push_back(Parameter(par[1], "EXTPAR", std::stoi(par[0]), par[1], real));
+        }
       }
 
     }
@@ -732,12 +782,18 @@ namespace GUM
               if (entry != "Dependence" and entry != "None") continue;
 
               std::string outputname;
-              command = "OutputName/.pdgum[["+std::to_string(j)+",2]]//ToString";
+              command = "OutputName /. pdgum[[" + std::to_string(j) + ",2]] // ToString";
               send_to_math(command);
               get_from_math(outputname);
               if(outputname == "OutputName") outputname = parname;
 
-              parameters.push_back(Parameter(outputname, blockname, std::stoi(parindex)));
+              bool real = false;
+              command = "Real /. pdgum[[" + std::to_string(j) + ", 2]] // ToString";
+              send_to_math(command);
+              get_from_math(entry);
+              if(entry == "True") real = true;
+
+              parameters.push_back(Parameter(outputname, blockname, std::stoi(parindex), outputname, real));
 
             }
           }
@@ -1067,8 +1123,8 @@ namespace GUM
       // - InputFile (default $MODEL/SPheno.m)
       // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
       // TODO: temp hack to make it faster
-      options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
-      //options = "IncludeFlavorKit->False";
+      //options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
+      options = "IncludeFlavorKit->False";
 
       // Write output.
       std::string command = "MakeSPheno[" + options + "];";
@@ -1152,6 +1208,7 @@ namespace GUM
       {
         model.write_spheno_output();
 
+
         // Leave only the parameters that SPheno uses
         model.SPheno_parameters(paramlist);
 
@@ -1183,6 +1240,7 @@ namespace GUM
         std::replace(sphdir.begin(), sphdir.end(), ' ', '-');
         outputs.set_sph(sphdir);
       }
+
 
       /// Write Vevacious output
       if (std::find(backends.begin(), backends.end(), "vevacious") != backends.end() )

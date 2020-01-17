@@ -235,9 +235,9 @@ def sarah_part_to_gum_part(sarah_bsm):
     for i in xrange(len(sarah_bsm)):
         part = sarah_bsm[i]            
         bsm_list.append(Particle(part.name(), part.antiname(),
-        			 part.spinX2(), part.pdg(), 
-                                 part.mass(), part.alt_name(),
-                                 part.alt_mass()))
+                        part.spinX2(), part.pdg(), 
+                        part.mass(), part.alt_name(),
+                        part.alt_mass()))
     
     return bsm_list, add_higgs
 
@@ -248,7 +248,7 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     to add to the GAMBIT model. This utilises the 'BlockName'
     tag (i.e. the SLHA Block the parameters will be placed in)
     to distinguish between Standard Model parameters, and 
-    parameters the user has implemented in their own FeynRules
+    parameters the user has implemented in their own SARAH
     model file.
 
     Behaviour mimics the default imported SARAH conventions, which
@@ -260,7 +260,9 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     - overwrite any parameter definitions that have the same
      *descriptions* in both files with that from the defaults.
     Anything that is given in the following blocks will be ignored:
-    'SMINPUTS', 'CKMBLOCK', 'SM'
+
+    'SMINPUTS', 'CKMBLOCK', 'SM', 'VCKM', 'GAUGE', 'YE', 'YU', 'YD'...
+    
     Everything else is fair game. 
 
     Default assumption is that everything is a dimensionless
@@ -282,7 +284,8 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     # Add all parameters from the parameter list from SARAH
     for i in xrange(len(paramlist)):
         p = paramlist[i]
-        # TODO: TG: I understand that we want to remove SM parameters here, right? That means also the gauge and yukawa blocks
+        # TODO: TG: I understand that we want to remove SM parameters here, 
+        # right? That means also the gauge and yukawa blocks
         if (    (p.block().lower() != 'sm')
             and (p.block().lower() != 'sminputs')
             and (p.block().lower() != 'vckm')
@@ -391,8 +394,7 @@ def sort_params_by_block(parameters, mixings):
         if not par.block:
             continue
 
-        # If the parameter 
-
+        # If the parameter
         shape = par.shape
 
         matrix = False

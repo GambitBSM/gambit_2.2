@@ -1182,9 +1182,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     Writes source for 
     Backends/src/frontends/SARAHSPheno_<MODEL>_<VERSION>.cpp
     """ 
-    intro_message = "Frontend for SARAH-SPheno "+SPHENO_VERSION+" backend, for the "\
-                    " "+model_name+" model."
 
+    intro_message = "Frontend header for SARAH-SPheno {0} backend,\n" \
+                    "/// for the {1} model.".format(SPHENO_VERSION, model_name)
     safe_version = SPHENO_VERSION.replace('.','_')
 
     towrite = blame_gum(intro_message)
@@ -1731,7 +1731,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             for index, param in entry.iteritems():
 
                 # Is it a real parameter?
-                real = reality_dict[param]                   
+                real = reality_dict[param]
 
                 # If it's a real parameter don't need to take the real part.
                 # Just add it.
@@ -1746,9 +1746,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                         towrite += "SLHAea_add_block(slha, \"IM{0}\", Q);\n".format(block)
                         addedblocks.append("IM"+block)
                     towrite += (
-                        #"slha[\"{0}\"][\"\"] << {1} << *{2}.re << \"# Re({2})\";\n"
                         "slha[\"{0}\"][\"\"] << {1} << {2}->re << \"# Re({2})\";\n"
-                        #"slha[\"IM{0}\"][\"\"] << {1} << *{2}.im << \"# Im({2})\";\n"
                         "slha[\"IM{0}\"][\"\"] << {1} << {2}->im << \"# Im({2})\";\n"
                     ).format(block, index, param)
 
@@ -1889,7 +1887,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "slha[\"SPheno\"][\"\"] << 65 << *SolutionTadpoleNr << \"# Solution of tadpole equation\";\n"
             "\n"
             "// Retrieve mass cuts\n"
-            "static const Spectrum::cuts_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n"
+            #"static const Spectrum::cuts_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n"
+            "static const Spectrum::mc_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n"
             "\n"
             "// Has the user chosen to override any pole mass values?\n"
             "// This will typically break consistency, but may be useful in some special cases\n"
@@ -1904,7 +1903,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "}\n"
             "\n"
             "//Create Spectrum object\n"
-            "Spectrum spectrum = spectrum_from_SLHAea<"+model_name+"SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n"
+            "Spectrum spectrum = spectrum_from_SLHAea<Gambit::Modles::"+fullmodelname+"SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n"
             "\n"
             "return spectrum;\n"
             "\n"
@@ -2611,7 +2610,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     for name, var in variables.iteritems() :
         if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") :
             towrite += "// " + name + '\n'\
-                '*' + name + ' = inputs.options->getValueOrdef<bool>(true, "' + name + '");\n'\
+                '*' + name + ' = inputs.options->getValueOrDef<bool>(true, "' + name + '");\n'\
                 '\n'
       
     if flags["SupersymmetricModel"] :
@@ -2800,7 +2799,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # end of InitializeStandardModel
 
     # ErrorHandling function
-    towrite += "/ Function that handles errors\n"\
+    towrite += "// Function that handles errors\n"\
       'void ErrorHandling(const int &kont)\n'\
       '{\n'\
       '\n'\
@@ -3128,6 +3127,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(mf_l2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_l2\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(mf_u2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_u2\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(mf_d2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_d2\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(sinW2, Freal8, \"__spheno{1}_MOD_sinw2\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(MNuR, Freal8, \"__model_data_MOD_mnur\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(Q_light_quarks, Freal8, \"__standardmodel_MOD_q_light_quarks\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(Delta_Alpha_Lepton, Freal8, \"__standardmodel_MOD_delta_alpha_lepton\", \"SARAHSPheno_{0}_internal\")\n"
@@ -3144,38 +3144,89 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(A_wolf, Freal8, \"__standardmodel_MOD_a_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(rho_wolf, Freal8, \"__standardmodel_MOD_rho_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(eta_wolf, Freal8, \"__standardmodel_MOD_eta_wolf\", \"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name)
+    ).format(clean_model_name, clean_model_name.lower())
 
-    # CONTROL + "OTHER" VARIABLES
+    # CONTROL + SETTINGS + "OTHER" VARIABLES
     towrite += (
             "\n"
             "// Control Variables\n"
-            "BE_VARIABLE(Iname, Finteger, \"__control_MOD_iname\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(kont, Finteger, \"__spheno{1}_MOD_kont\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteOut, Flogical, \"__control_MOD_writeout\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CTBD, Flogical, \"__spheno{1}_MOD_calctbd\",\"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(epsI, Freal8, \"__spheno{1}_MOD_epsi\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(deltaM, Freal8, \"__spheno{1}_MOD_deltam\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(sinW2, Freal8, \"__spheno{1}_MOD_sinw2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mGUT, Freal8, \"__spheno{1}_MOD_mgut\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ErrCan, Finteger, \"__control_MOD_errcan\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(GenerationMixing, Flogical, \"__control_MOD_generationmixing\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(FoundIterativeSolution, Flogical, \"__settings_MOD_founditerativesolution\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Math_Error, Farray_Fstring60_1_31, \"__control_MOD_math_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SM_Error, Farray_Fstring60_1_2, \"__control_MOD_sm_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SusyM_Error, Farray_Fstring60_1_33, \"__control_MOD_susym_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(InOut_Error, Farray_Fstring60_1_15, \"__control_MOD_inout_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Sugra_Error, Farray_Fstring60_1_22, \"__control_MOD_sugra_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(LoopMass_Error, Farray_Fstring60_1_25, \"__control_MOD_loopmass_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, \"__control_MOD_twoloophiggs_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MathQP_Error, Farray_Fstring60_1_10, \"__control_MOD_mathqp_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteOutputForNonConvergence, Flogical, \"__settings_MOD_writeoutputfornonconvergence\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(kont, Finteger, \"__spheno{1}_MOD_kont\", \"SARAHSPheno_{0}_internal\")\n"
+            "\n"
+            "// Settings\n"
+            "BE_VARIABLE(Calculate_mh_within_SM, Flogical, \"__settings_MOD_calculate_mh_within_sm\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateLowEnergy, Flogical, \"__settings_MOD_calculatelowenergy\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateMSSM2Loop, Flogical, \"__settings_MOD_calculatemssm2loop\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateOneLoopMasses, Flogical, \"__settings_MOD_calculateoneloopmasses\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateTwoLoopHiggsMasses, Flogical, \"__settings_MOD_calculatetwoloophiggsmasses\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(DecoupleAtRenScale, Flogical, \"__settings_MOD_decoupleatrenscale\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(delta_mass, Freal8, \"__control_MOD_delta_mass\", \"SARAHSPheno_{0}_internal\")\n"
-
-            "\n"   
+            "BE_VARIABLE(ErrCan, Finteger, \"__control_MOD_errcan\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ErrorLevel, Finteger, \"__control_MOD_errorlevel\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(External_Higgs, Flogical, \"__control_MOD_external_higgs\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(External_Spectrum, Flogical, \"__control_MOD_external_spectrum\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(FermionMassResummation, Flogical, \"__control_MOD_fermionmassresummation\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Force_mh_within_SM, Flogical, \"__settings_MOD_force_mh_within_sm\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ForceRealMatrices, Flogical, \"__settings_MOD_forcerealmatrices\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(FoundIterativeSolution, Flogical, \"__settings_MOD_founditerativesolution\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(GaugelessLimit, Finteger, \"__settings_MOD_gaugelesslimit\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(GenerationMixing, Flogical, \"__control_MOD_generationmixing\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(HigherOrderDiboson, Flogical, \"__settings_MOD_higherorderdiboson\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(hstep_pn, Freal8, \"__settings_MOD_hstep_pn\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(hstep_sa, Freal8, \"__settings_MOD_hstep_sa\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Iname, Finteger, \"__control_MOD_iname\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(include1l2lshift, Flogical, \"__settings_MOD_include1l2lshift\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(IncludeBSMdeltaVB, Flogical, \"__settings_MOD_includebsmdeltavb\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(IncludeDeltaVB, Flogical, \"__settings_MOD_includedeltavb\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(InOut_Error, Farray_Fstring60_1_15, \"__control_MOD_inout_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(L_CS, Flogical, \"__control_MOD_l_cs\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(LoopMass_Error, Farray_Fstring60_1_25, \"__control_MOD_loopmass_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MatchingOrder, Finteger, \"__settings_MOD_matchingorder\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MatchZWpoleMasses, Flogical, \"__settings_MOD_matchzwpolemasses\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Math_Error, Farray_Fstring60_1_31, \"__control_MOD_math_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MathQP_Error, Farray_Fstring60_1_10, \"__control_MOD_mathqp_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MaxMassLoop, Freal8, \"__settings_MOD_maxmassloop\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MaxMassNumericalZero, Freal8, \"__settings_MOD_maxmassnumericalzero\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mGUT, Freal8, \"__spheno{1}_MOD_mgut\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MinimalNumberIterations, Finteger, \"__settings_MOD_minimalnumberiterations\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(n_run, Finteger, \"__control_MOD_n_run\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(NewGBC, Flogical, \"__settings_MOD_newgbc\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Non_Zero_Exit, Flogical, \"__control_MOD_non_zero_exit\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OutputForMG, Flogical, \"__settings_MOD_outputformg\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OutputForMO, Flogical, \"__settings_MOD_outputformo\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PoleMassesInLoops, Flogical, \"__settings_MOD_polemassesinloops\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PrintDebugInformation, Flogical, \"__settings_MOD_printdebuginformation\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PurelyNumericalEffPot, Flogical, \"__settings_MOD_purelynumericaleffpot\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningSMparametersLowEnergy, Flogical, \"__settings_MOD_runningsmparameterslowenergy\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningSUSYparametersLowEnergy, Flogical, \"__settings_MOD_runningsusyparameterslowenergy\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RXiNew, Freal8, \"__settings_MOD_rxinew\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SilenceOutput, Flogical, \"__control_MOD_silenceoutput\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SM_Error, Farray_Fstring60_1_2, \"__control_MOD_sm_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SPA_convention, Finteger, \"__settings_MOD_spa_convention\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Sugra_Error, Farray_Fstring60_1_22, \"__control_MOD_sugra_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SusyM_Error, Farray_Fstring60_1_33, \"__control_MOD_susym_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SwitchToSCKM, Flogical, \"__settings_MOD_switchtosckm\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, \"__control_MOD_twoloophiggs_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopMethod, Finteger, \"__settings_MOD_twoloopmethod\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopMethod, Finteger, \"__settings_MOD_twoloopmethod\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopRegulatorMass, Freal8, \"__settings_MOD_twoloopregulatormass\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopRGE, Flogical, \"__settings_MOD_twolooprge\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopSafeMode, Flogical, \"__settings_MOD_twoloopsafemode\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WidthToBeInvisible, Freal8, \"__settings_MOD_widthtobeinvisible\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Write_HiggsBounds, Flogical, \"__inputoutput_{1}_MOD_write_higgsbounds\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Write_WCXF, Flogical, \"__settings_MOD_write_wcxf\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteGUTvalues, Flogical, \"__settings_MOD_writegutvalues\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteOut, Flogical, \"__control_MOD_writeout\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteOutputForNonConvergence, Flogical, \"__settings_MOD_writeoutputfornonconvergence\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteParametersAtQ, Flogical, \"__settings_MOD_writeparametersatq\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteSLHA1, Flogical, \"__settings_MOD_writeslha1\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteTreeLevelTadpoleParameters, Flogical, \"__settings_MOD_writetreeleveltadpoleparameters\", \"SARAHSPheno_{0}_internal\")\n"            "\n"   
+            "\n"
             "// Other variables\n"
             "BE_VARIABLE(Qin, Freal8, \"__spheno{1}_MOD_qin\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(ratioWoM, Freal8, \"__spheno{1}_MOD_ratiowom\",\"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CTBD, Flogical, \"__spheno{1}_MOD_calctbd\",\"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name, clean_model_name.lower())
 
     # BRANCHING RATIOS
