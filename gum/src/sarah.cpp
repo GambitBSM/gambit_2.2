@@ -1091,7 +1091,8 @@ namespace GUM
         // Get useful SPheno flags, default to False
         flags = {
           {"SupersymmetricModel",false}, 
-          {"OnlyLowEnergySPheno", false}
+          {"OnlyLowEnergySPheno", false},
+          {"UseHiggs2LoopMSSM", false}
         };
         model.get_flags(flags);
 

@@ -70,7 +70,7 @@ def patch_spheno(model_name, patch_dir, flags, particles):
     """
 
     patch_spheno_makefile(model_name, patch_dir)
-    patch_spheno_model_makefile(model_name, patch_dir)
+    patch_spheno_model_makefile(model_name, patch_dir, flags)
     patch_spheno_src_makefile(model_name, patch_dir)
     patch_control(model_name, patch_dir)
     patch_spheno_model(model_name, patch_dir)
@@ -124,7 +124,7 @@ def patch_spheno_makefile(model_name, patch_dir):
         f.write(content)
 
 
-def patch_spheno_model_makefile(model_name, patch_dir):
+def patch_spheno_model_makefile(model_name, patch_dir, flags):
     """
     Patches $SPheno/<MODEL>/Makefile
     """
@@ -179,18 +179,21 @@ def patch_spheno_model_makefile(model_name, patch_dir):
                 content = "${shared}:\n"\
                           "\tcd ../src ; ${MAKE} F90=${F90}\n"\
                           "\t${MAKE} F90=${F90} ${name}\n"\
-                          "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
-                          "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
-                          "\t${F90} -shared -fPIC -o ../${shared} ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
-                          "bin/SPheno" + model_name + ":\n"\
-                          "ifeq (${cVersion},1)\n"\
-                          "\tcd ../src ; ${MAKE} F90=${F90}\n"\
-                          "\t${MAKE} F90=${F90} ${name}\n"\
-                          "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
-                          "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
-                          "\t${F90} -o -fPIC SPheno" + model_name + " ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
-                          "\tmv SPheno" + model_name + "../bin\n"\
-                          "\trm SPheno" + model_name + ".o\n"
+                          "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"
+                if flags['UseHiggs2LoopMSSM']:
+                    content += "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
+                               "\t${F90} -shared -fPIC -o ../${shared} ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"
+                else:
+                    content += "\t${F90} -shared -fPIC -o ../${shared} ${LFlagsB} SPheno" + model_name + ".o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"
+                content += "bin/SPheno" + model_name + ":\n"\
+                           "ifeq (${cVersion},1)\n"\
+                           "\tcd ../src ; ${MAKE} F90=${F90}\n"\
+                           "\t${MAKE} F90=${F90} ${name}\n"\
+                           "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
+                           "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
+                           "\t${F90} -o -fPIC SPheno" + model_name + " ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
+                           "\tmv SPheno" + model_name + "../bin\n"\
+                           "\trm SPheno" + model_name + ".o\n"
                 g.write(content)
                 for i in range(7): next(f)
                 skip_next_lines = False
