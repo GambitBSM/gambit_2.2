@@ -13,7 +13,7 @@ namespace Gambit {
 
     /// @brief CMS Run 2 0-lepton jet+MET SUSY analysis, with 13/fb of data
     ///
-    /// Based on:
+    /// Based on: CMS-SUS-16-014,  http://cms-results.web.cern.ch/cms-results/public-results/preliminary-results/SUS-16-014/index.html
     ///
     class Analysis_CMS_13TeV_0LEP_13invfb : public Analysis {
     public:
