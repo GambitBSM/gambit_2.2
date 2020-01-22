@@ -651,6 +651,8 @@ namespace Gambit
 
     void DMEFT_results(AnalysisDataPointers &result)
     {
+      result.clear();
+
       const size_t data_INC           = 15;
       const size_t data_SIZE          = pow(data_INC,2);
       const size_t cms_bin_size       = 22;
