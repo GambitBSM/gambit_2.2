@@ -143,7 +143,7 @@ if(NOT ditched_${name}_${ver})
     # getting heplikedata
 #          COMMAND cd "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}"
 #          COMMAND pwd
-#          COMMAND wget 
+#          COMMAND wget
     INSTALL_COMMAND ""
     )
   BOSS_backend_with_ROOT(${name} ${ver})
@@ -160,28 +160,28 @@ set(HLver "1.0")
 
 set(dl "https://github.com/mchrzasz/HEPLikeData/archive/master.zip")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(md5 "68474bb029e39696758d90c6e6e55eb8")
+set(md5 "f59f1301fc0c05d42373c654f9249c2a")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""   
+    CONFIGURE_COMMAND ""
     BUILD_COMMAND ${CMAKE_COMMAND} -E echo 'cp  ${dir}/HEPLikeData-master/data/ ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}' > make_hepliedata.sh
           COMMAND chmod u+x make_hepliedata.sh
-    
+
 #    CONFIGURE_COMMAND ""
 #    BUILD_COMMAND  pwd
 #          COMMAND echo 'aaa'
-#    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}    
+#    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
 #    CMAKE_COMMAND ""
     INSTALL_COMMAND ""
     )
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean) 
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
 
-endif()    
+endif()
 
 
 # SuperIso
