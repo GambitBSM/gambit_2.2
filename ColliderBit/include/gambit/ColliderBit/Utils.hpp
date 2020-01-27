@@ -168,7 +168,7 @@ namespace Gambit
     void filtereff(std::vector<const HEPUtils::Particle*>& particles, double eff, bool do_delete=false);
 
     /// Utility function for filtering a supplied particle vector by sampling an efficiency returned by a provided function object
-    void filtereff(std::vector<const HEPUtils::Particle*>& particles, std::function<double(HEPUtils::Particle*)> eff_fn, bool do_delete=false);
+    void filtereff(std::vector<const HEPUtils::Particle*>& particles, std::function<double(const HEPUtils::Particle*)> eff_fn, bool do_delete=false);
 
     /// Utility function for filtering a supplied particle vector by sampling wrt a binned 1D efficiency map in pT
     void filtereff_pt(std::vector<const HEPUtils::Particle*>& particles, const HEPUtils::BinnedFn1D<double>& eff_pt, bool do_delete=false);

@@ -137,11 +137,18 @@ namespace HEPUtils {
       #undef DELCLEAR
 
       _photons.clear();
+      _cphotons.clear();
       _electrons.clear();
+      _celectrons.clear();
       _muons.clear();
+      _cmuons.clear();
       _taus.clear();
+      _ctaus.clear();
       _invisibles.clear();
+      _cinvisibles.clear();
+      _jets.clear();
       _cjets.clear();
+
       _pmiss.clear();
     }
 
