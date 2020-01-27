@@ -116,8 +116,8 @@ namespace Gambit {
           }
 
         // Get baseline electrons
-        vector<Particle*> baselineElectrons;
-        for (Particle* electron : event->electrons())
+        vector<const Particle*> baselineElectrons;
+        for (const Particle* electron : event->electrons())
           if (electron->pT() > 7. && electron->abseta() < 2.47)
             baselineElectrons.push_back(electron);
 
@@ -125,8 +125,8 @@ namespace Gambit {
         ATLAS::applyElectronEff(baselineElectrons);
 
         // Get baseline muons
-        vector<Particle*> baselineMuons;
-        for (Particle* muon : event->muons())
+        vector<const Particle*> baselineMuons;
+        for (const Particle* muon : event->muons())
           if (muon->pT() > 7. && muon->abseta() < 2.7)
             baselineMuons.push_back(muon);
 

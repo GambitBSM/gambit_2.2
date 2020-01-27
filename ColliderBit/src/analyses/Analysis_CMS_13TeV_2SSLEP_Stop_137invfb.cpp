@@ -221,12 +221,12 @@ namespace Gambit {
         }
 
         struct ptComparison {
-            bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+            bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
         } comparePt;
-        
+
         void run(const HEPUtils::Event* event) {
             _cutflow.fillinit();
-            
+
             // Missing energy
             double met = event->met();
             HEPUtils::P4 ptot = event->missingmom();
@@ -245,13 +245,13 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,     0.0,     0.0,     0.0,     0.0// eta > 2.5
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-            vector<HEPUtils::Particle*> electrons;
-            for (HEPUtils::Particle* electron : event->electrons()) {
+            vector<const HEPUtils::Particle*> electrons;
+            for (const HEPUtils::Particle* electron : event->electrons()) {
                 bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
                 if (electron->pT() > 15. && fabs(electron->eta()) < 2.5 && isEl)
                     electrons.push_back(electron);
             }
-            
+
             // Muons
             //@note Numbers digitized from https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/2d_full_pteta_mu_035_ttbar.pdf
             const vector<double> aMu={0., 0.9, 1.2, 2.1, 2.4, DBL_MAX};   // Bin edges in eta
@@ -265,17 +265,17 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,      0.0,    0.0,     0.0,     0.0,     0.0// eta > 2.4
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-            vector<HEPUtils::Particle*> muons;
-            for (HEPUtils::Particle* muon : event->muons()) {
+            vector<const HEPUtils::Particle*> muons;
+            for (const HEPUtils::Particle* muon : event->muons()) {
                 bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
                 if (muon->pT() > 10.&& fabs(muon->eta()) < 2.4 && isMu)
                     muons.push_back(muon);
             }
-            
+
             double HT;
             // Jets
-            vector<HEPUtils::Jet*> candJets;
-            for (HEPUtils::Jet* jet : event->jets()) {
+            vector<const HEPUtils::Jet*> candJets;
+            for (const HEPUtils::Jet* jet : event->jets()) {
                 if (jet->pT() > 25. && fabs(jet->eta()) < 2.4){
                     HT += jet->pT();
                     candJets.push_back(jet);
@@ -283,13 +283,13 @@ namespace Gambit {
             }
 
             // Jets
-            vector<HEPUtils::Jet*> bJets;
-            vector<HEPUtils::Jet*> nonbJets;
-            
+            vector<const HEPUtils::Jet*> bJets;
+            vector<const HEPUtils::Jet*> nonbJets;
+
             // Find b-jets
             // Copied from ATLAS_13TeV_3b_24invfb
             double btag = 0.85; double cmisstag = 1/12.; double misstag = 1./381.;
-            for (HEPUtils::Jet* jet : candJets) {
+            for (const HEPUtils::Jet* jet : candJets) {
                 // Tag
                 if( jet->btag() && random_bool(btag) ) bJets.push_back(jet);
                 // Misstag c-jet
@@ -305,19 +305,19 @@ namespace Gambit {
 //            LeptonJetOverlapRemoval(electrons,candJets);
 //            JetLeptonOverlapRemoval(candJets,muons,0.4);
 //            LeptonJetOverlapRemoval(muons,candJets);
-            
+
             size_t Nb=bJets.size();
             size_t Nj=nonbJets.size();
-            
+
             // Leptons = electrons + muons
-            vector<HEPUtils::Particle*> leptons;
+            vector<const HEPUtils::Particle*> leptons;
             leptons=electrons;
             leptons.insert(leptons.end(),muons.begin(),muons.end());
             sort(leptons.begin(),leptons.end(),comparePt);
 
             // At least two light leptons
             if (leptons.size()<2) return;
-            
+
             // Find pair same sign (SS) leptons
             vector<size_t> SS_1,SS_2;
             for (size_t i=0; i<leptons.size(); ++i) {
@@ -333,15 +333,15 @@ namespace Gambit {
                 }
             }
             _cutflow.fill(1);
-            
+
             // One SS lepton pair
             if (SS_1.size()==0) return;
             _cutflow.fill(2);
-            
+
             // At least two jets and MET>50
             if (nonbJets.size()<2 or  met<50) return;
             _cutflow.fill(3);
-            
+
             // Find the only SS lepton pair
             size_t SS1 = SS_1[0];
             size_t SS2 = SS_2[0];
@@ -361,13 +361,13 @@ namespace Gambit {
                     find_one_muon = true;
                 }
             }
-            
+
             // M_T^{miss}
             double MTmiss = sqrt(2.*leptons[SS1]->pT()*met*(1. - cos(leptons[SS1]->mom().deltaPhi(ptot))));
             if (MTmiss>sqrt(2.*leptons[SS2]->pT()*met*(1. - cos(leptons[SS2]->mom().deltaPhi(ptot))))) {
                 MTmiss = sqrt(2.*leptons[SS2]->pT()*met*(1. - cos(leptons[SS2]->mom().deltaPhi(ptot))));
             }
-            
+
             bool pp = leptons[SS1]->pid()>0;
             bool met_50_200 = met>50 and met<200;
             bool met_200_300 = met>200 and met<300;
@@ -384,7 +384,7 @@ namespace Gambit {
             bool HT_1300 = HT>1300;
             bool HT_1600 = HT>1600;
             bool SSHH_combine = ((MTmiss_l_120&&((met_50_200&&Nj_5)||met_200_300)) or (MTmiss_g_120&&met<300) )&&HT_300 ;
-            
+
             // SSHH: exactly 2 leptons, both with PT>25 GeV, and MET>50 GeV
             if (leptons.size()==2 and leptons[1]->pT() > 25.) {
                 if (Nb==0) {
@@ -437,7 +437,7 @@ namespace Gambit {
                     if (MTmiss_g_120 and met<300     and Nj_5   and HT_300_1125 and pp)  _counters.at("SRHH-43").add_event(event);
                     if (MTmiss_g_120 and met<300     and Nj_5   and HT_300_1125 and !pp) _counters.at("SRHH-44").add_event(event);
                 }
-                
+
                 if (met_300_500 and Nj_2_4 and HT>300 and pp)  _counters.at("SRHH-45").add_event(event);
                 if (met_300_500 and Nj_2_4 and HT>300 and !pp) _counters.at("SRHH-46").add_event(event);
                 if (met_500     and Nj_2_4 and HT>300 and pp)  _counters.at("SRHH-47").add_event(event);
@@ -446,22 +446,22 @@ namespace Gambit {
                 if (met_300_500 and Nj_5   and HT>300 and !pp) _counters.at("SRHH-50").add_event(event);
                 if (met_500     and Nj_5   and HT>300 and pp)  _counters.at("SRHH-51").add_event(event);
                 if (met_500     and Nj_5   and HT>300 and !pp) _counters.at("SRHH-52").add_event(event);
-                
+
                 if (HT_1125_1300 and met<300 and Nj<5) _counters.at("SRHH-53").add_event(event);
                 if (HT_1300_1600 and met<300 and Nj<5) _counters.at("SRHH-54").add_event(event);
                 if (HT_1600      and met<300 and Nj<5) _counters.at("SRHH-55").add_event(event);
-                
+
                 if (HT_1125_1300 and met<300 and Nj==5 and Nj==6) _counters.at("SRHH-56").add_event(event);
                 if (HT_1300_1600 and met<300 and Nj==5 and Nj==6) _counters.at("SRHH-57").add_event(event);
                 if (HT_1600      and met<300 and Nj==5 and Nj==6) _counters.at("SRHH-58").add_event(event);
-                
+
                 if (HT_1125_1300 and met<300 and Nj<5) _counters.at("SRHH-59").add_event(event);
                 if (HT_1300_1600 and met<300 and Nj<5) _counters.at("SRHH-60").add_event(event);
                 if (HT_1600      and met<300 and Nj<5) _counters.at("SRHH-61").add_event(event);
             }
-            
+
             bool SSHL_combine = MTmiss_l_120&&( (met_50_200&&Nj_5) or met_200_300 )&&HT_300 ;
-            
+
             // SSHL: exactly 2 leptons, one with PT>25 GeV, one with PT<25 GeV,  and MET>50 GeV
             if (leptons.size()==2 and leptons[0]->pT() > 25. and leptons[1]->pT() < 25.) {
                 if (Nb==0 and MTmiss_l_120) {
@@ -472,7 +472,7 @@ namespace Gambit {
                     if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _counters.at("SRHL-4").add_event(event);
                     if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _counters.at("SRHL-5").add_event(event);
                     if ( met_200_300 and Nj_5 and HT_300_1125)           _counters.at("SRHL-6").add_event(event);
-                    
+
                 } else if(Nb==1 and MTmiss_l_120) {
                     if ( met_50_200  and Nj_2_4 and HT_300)              _counters.at("SRHL-7").add_event(event);
                     if ( met_50_200  and Nj_2_4 and HT_300_1125)         _counters.at("SRHL-8").add_event(event);
@@ -509,7 +509,7 @@ namespace Gambit {
                 if (met_300_500 and Nj_5 and HT>300 and pp)    _counters.at("SRHL-36").add_event(event);
                 if (met_300_500 and Nj_5 and HT>300 and !pp)   _counters.at("SRHL-37").add_event(event);
                 if (met_500 and Nj_5 and HT>300)               _counters.at("SRHL-38").add_event(event);
-                
+
                 if (HT_1125_1300 and pp)  _counters.at("SRHL-39").add_event(event);
                 if (HT_1125_1300 and !pp) _counters.at("SRHL-40").add_event(event);
                 if (HT_1300 and pp)       _counters.at("SRHL-41").add_event(event);
@@ -561,7 +561,7 @@ namespace Gambit {
                     }
                 }
             }
-            
+
             // ML: >=3 leptons, at least one with PT>25 GeV, and MET>50 GeV
             if (leptons.size()>=3 and leptons[0]->pT() > 25.) {
                 bool on_Z=false;
@@ -578,7 +578,7 @@ namespace Gambit {
                     }
                     if (on_Z) break;
                 }
-                                
+
                 if (not on_Z){ // off-Z
                     if (Nb==0) {
                         if (HT<400) {
@@ -630,7 +630,7 @@ namespace Gambit {
                     }
                 } else { // on-Z
                     // M_T^{miss} for on-Z
-                    double MTmiss_Z = 1000;  
+                    double MTmiss_Z = 1000;
                     for (size_t i=0; i<leptons.size(); ++i) {
                         if ( (i != Z_l1) and (i != Z_l2)) {
                             double MTmiss_try = sqrt(2.*leptons[i]->pT()*met*(1. - cos(leptons[i]->mom().deltaPhi(ptot))));
@@ -693,7 +693,7 @@ namespace Gambit {
                     }
                 }
             }
-            
+
             return;
         }
 
@@ -702,8 +702,8 @@ namespace Gambit {
         {
             const Analysis_CMS_13TeV_2SSLEP_Stop_137invfb* specificOther
                 = dynamic_cast<const Analysis_CMS_13TeV_2SSLEP_Stop_137invfb*>(other);
-            
-            for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }                
+
+            for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
         }
 
 

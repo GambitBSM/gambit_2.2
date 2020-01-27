@@ -87,8 +87,8 @@ static constexpr const char* detector = "ATLAS";
       }
 
       P4 getBestHadronicTop(
-			    std::vector<Jet *> bJets,
-			    std::vector<Jet *> lightJets,
+			    std::vector<const Jet *> bJets,
+			    std::vector<const Jet *> lightJets,
 			    const P4& leptonMom,
 			    const P4& metMom,
 			    double width,
@@ -110,9 +110,9 @@ static constexpr const char* detector = "ATLAS";
 	    nu.setPE(metMom.px(), metMom.py(), nuPz, nuE);
 	    P4 WLep = leptonMom + nu;
 	    // go through every bJet
-	    for (Jet* firstBJet : bJets)
+	    for (const Jet* firstBJet : bJets)
 	      {
-		for (Jet* secondBJet : bJets)
+		for (const Jet* secondBJet : bJets)
 		  {
 		    if (firstBJet == secondBJet)
 		      {
@@ -120,9 +120,9 @@ static constexpr const char* detector = "ATLAS";
 		      }
 		    P4 topLep = *firstBJet + WLep;
 		    // go through every combination of two light jets
-		    for (Jet* firstLightJet : lightJets)
+		    for (const Jet* firstLightJet : lightJets)
 		      {
-			for (Jet* secondLightJet : lightJets)
+			for (const Jet* secondLightJet : lightJets)
 			  {
 			    // don't want to use a light jet with itself
 			    if (firstLightJet == secondLightJet)
@@ -166,16 +166,16 @@ static constexpr const char* detector = "ATLAS";
       }
 
       void getBJets(
-		    std::vector<Jet*>& jets,
-		    std::vector<Jet*>* bJets,
-		    std::vector<Jet*>* lightJets)
+		    std::vector<const Jet*>& jets,
+		    std::vector<const Jet*>* bJets,
+		    std::vector<const Jet*>* lightJets)
       {
 	/// @note We assume that b jets have previously been 100% tagged
 	const std::vector<double> a = {0, 10.};
 	const std::vector<double> b = {0, 10000.};
 	const std::vector<double> c = {0.60};
 	BinnedFn2D<double> _eff2d(a,b,c);
-	for (Jet* jet : jets)
+	for (const Jet* jet : jets)
 	  {
 	    bool hasTag = has_tag(_eff2d, jet->eta(), jet->pT());
 	    if(jet->btag() && hasTag && jet->abseta() < 2.5)
@@ -209,15 +209,15 @@ Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb()
 	//HEPUtilsAnalysis::analyze(event);
 	//cout << "Event number: " << num_events() << endl;
 	incrementCut(Total_events);
-	std::vector<Particle*> electrons = event->electrons();
-	std::vector<Particle*> muons = event->muons();
-	std::vector<Jet*> jets = event->jets();
+	std::vector<const Particle*> electrons = event->electrons();
+	std::vector<const Particle*> muons = event->muons();
+	std::vector<const Jet*> jets = event->jets();
 
 	electrons = AnalysisUtil::filterPtEta(electrons, 20, 2.47);
 	muons = AnalysisUtil::filterPtEta(muons, 10, 2.4);
 	jets = AnalysisUtil::filterPtEta(jets, 20, 4.5);
 
-	std::vector<Jet*> bJets, lightJets;
+	std::vector<const Jet*> bJets, lightJets;
 	getBJets(jets, &bJets, &lightJets);
 
 	jets = AnalysisUtil::jetLeptonOverlapRemoval(jets, electrons, 0.2);
@@ -228,7 +228,7 @@ Analysis_ATLAS_7TeV_1OR2LEPStop_4_7invfb()
 
 	ATLAS::applyTightIDElectronSelection(electrons);
 
-	std::vector<Particle*> leptons = AnalysisUtil::getSortedLeptons({electrons, muons});
+	std::vector<const Particle*> leptons = AnalysisUtil::getSortedLeptons({electrons, muons});
 	std::sort(electrons.begin(), electrons.end(), AnalysisUtil::sortParticlesByPt);
 	std::sort(muons.begin(), muons.end(), AnalysisUtil::sortParticlesByPt);
 	std::sort(jets.begin(), jets.end(), AnalysisUtil::sortJetsByPt);

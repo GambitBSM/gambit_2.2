@@ -36,7 +36,7 @@ namespace Gambit {
 
         // Electrons
         ParticlePtrs electrons;
-        for (Particle* e : event->electrons()) {
+        for (const Particle* e : event->electrons()) {
           const bool crack = e->abseta() > 1.37 && e->abseta() < 1.52;
           if (e->pT() > 10. && e->abseta() < 2.47 && !crack)
             electrons.push_back(e);
@@ -51,7 +51,7 @@ namespace Gambit {
         // Muons
         // NB. medium muon ID for pT > 10 ~ 99%: https://cds.cern.ch/record/2047831/files/ATL-PHYS-PUB-2015-037.pdf
         ParticlePtrs muons;
-        for (Particle* m : event->muons())
+        for (const Particle* m : event->muons())
           if (m->pT() > 10. && m->abseta() < 2.7 && random_bool(0.99))
             muons.push_back(m);
 
@@ -60,14 +60,14 @@ namespace Gambit {
 
         // Photons
         ParticlePtrs photons;
-        for (Particle* y : event->photons())
+        for (const Particle* y : event->photons())
           if (y->pT() > 20.)
             photons.push_back(y);
         ATLAS::applyPhotonEfficiencyR2(photons);
 
         // Jets
         JetPtrs jets;
-        for (Jet* j : event->jets())
+        for (const Jet* j : event->jets())
           if (j->pT() > 20. && j->absrap() < 4.4)
             jets.push_back(j);
 

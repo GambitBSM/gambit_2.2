@@ -194,7 +194,7 @@ namespace Gambit {
       static constexpr const char* detector = "CMS";
 
       struct ptComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       Analysis_CMS_13TeV_MultiLEP_Full_36invfb() {
@@ -271,8 +271,8 @@ namespace Gambit {
         // const vector<double> bEl={0.,20.,25.,30.,40.,50.,10000.};  // Assuming flat efficiency above pT = 200 GeV, where the CMS map stops.
         // const vector<double> cEl={0.507,0.619,0.682,0.742,0.798,0.863,0.429,0.546,0.619,0.710,0.734,0.833,0.256,0.221,0.315,0.351,0.373,0.437,0.249,0.404,0.423,0.561,0.642,0.749,0.195,0.245,0.380,0.441,0.533,0.644};
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (electron->pT()>15. && fabs(electron->eta())<2.5 && isEl)baselineElectrons.push_back(electron);
         }
@@ -293,8 +293,8 @@ namespace Gambit {
         // const vector<double> bMu={0.,15.,20.,25.,30.,40.,50.,10000.};  // Assuming flat efficiency above pT = 200 GeV, where the CMS map stops.
         // const vector<double> cMu={0.704,0.797,0.855,0.88,0.906,0.927,0.931,0.639,0.776,0.836,0.875,0.898,0.94,0.93,0.569,0.715,0.84,0.862,0.891,0.906,0.925,0.0522,0.720,0.764,0.803,0.807,0.885,0.877};
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (muon->pT()>10. &&fabs(muon->eta())<2.4 && isMu)baselineMuons.push_back(muon);
         }
@@ -305,30 +305,30 @@ namespace Gambit {
         // The tau efficiencies should be corrected with a data/simulation scale factor of 0.95, as instructed here: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SUSMoriond2017ObjectsEfficiency
         const vector<double> cTau={0.38*0.95, 0.48*0.95, 0.5*0.95, 0.49*0.95, 0.51*0.95, 0.49*0.95, 0.47*0.95, 0.45*0.95, 0.48*0.95, 0.5*0.95};
         HEPUtils::BinnedFn2D<double> _eff2dTau(aTau,bTau,cTau);
-        vector<HEPUtils::Particle*> baselineTaus;
-        for (HEPUtils::Particle* tau : event->taus()) {
+        vector<const HEPUtils::Particle*> baselineTaus;
+        for (const HEPUtils::Particle* tau : event->taus()) {
           bool isTau=has_tag(_eff2dTau, fabs(tau->eta()), tau->pT());
           if (tau->pT()>20. &&fabs(tau->eta())<2.3 && isTau)baselineTaus.push_back(tau);
         }
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>25. &&fabs(jet->eta())<2.4)baselineJets.push_back(jet);
         }
 
         // Signal objects
-        vector<HEPUtils::Particle*> signalElectrons=baselineElectrons;
-        vector<HEPUtils::Particle*> signalMuons=baselineMuons;
-        vector<HEPUtils::Particle*> signalTaus=baselineTaus;
-        vector<HEPUtils::Particle*> signalLightLeptons=signalElectrons;
+        vector<const HEPUtils::Particle*> signalElectrons=baselineElectrons;
+        vector<const HEPUtils::Particle*> signalMuons=baselineMuons;
+        vector<const HEPUtils::Particle*> signalTaus=baselineTaus;
+        vector<const HEPUtils::Particle*> signalLightLeptons=signalElectrons;
         signalLightLeptons.insert(signalLightLeptons.end(),signalMuons.begin(),signalMuons.end());
-        vector<HEPUtils::Particle*> signalLeptons=signalTaus;
+        vector<const HEPUtils::Particle*> signalLeptons=signalTaus;
         signalLeptons.insert(signalLeptons.end(),signalLightLeptons.begin(),signalLightLeptons.end());
         sort(signalLightLeptons.begin(),signalLightLeptons.end(),comparePt);
         sort(signalLeptons.begin(),signalLeptons.end(),comparePt);
 
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
         int num_ISRjets=0;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
           bool overlap=false;
@@ -362,8 +362,8 @@ namespace Gambit {
         // double mT2=0;
         double mll=0;
         double HT=0;
-        vector<vector<HEPUtils::Particle*>> SFOSpair_cont = getSFOSpairs(signalLeptons);
-        vector<vector<HEPUtils::Particle*>> OSpair_cont = getOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> SFOSpair_cont = getSFOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> OSpair_cont = getOSpairs(signalLeptons);
 
         // Calculate HT
         for (size_t iJet=0; iJet<signalJets.size(); iJet++){
@@ -798,7 +798,7 @@ namespace Gambit {
 
 
       // Helper function to calculate mll and mT
-      vector<double> get_mll_mT(vector<vector<HEPUtils::Particle*>> pair_cont, vector<HEPUtils::Particle*> leptons, HEPUtils::P4 met, int type) {
+      vector<double> get_mll_mT(vector<vector<const HEPUtils::Particle*>> pair_cont, vector<const HEPUtils::Particle*> leptons, HEPUtils::P4 met, int type) {
         vector<double> mll_mT;
         vector<vector<double>> mll_mT_container;
         for (size_t iPa=0;iPa<pair_cont.size();iPa++) {
@@ -833,7 +833,7 @@ namespace Gambit {
       }
 
       // Helper function to get min mT
-      double get_mTmin(vector<HEPUtils::Particle*> leptons, HEPUtils::P4 met) {
+      double get_mTmin(vector<const HEPUtils::Particle*> leptons, HEPUtils::P4 met) {
         vector<double> mT_container;
         for (size_t iLe=0;iLe<leptons.size();iLe++) {
           mT_container.push_back(sqrt(2*met.pT()*leptons.at(iLe)->pT()*(1-cos(leptons.at(iLe)->phi()-met.phi()))));

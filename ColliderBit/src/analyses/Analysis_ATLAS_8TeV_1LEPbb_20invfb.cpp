@@ -47,11 +47,11 @@ namespace Gambit {
       static constexpr const char* detector = "ATLAS";
 
       struct particleComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } compareParticlePt;
 
       struct jetComparison {
-        bool operator() (HEPUtils::Jet* i,HEPUtils::Jet* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Jet* i,const HEPUtils::Jet* j) {return (i->pT()>j->pT());}
       } compareJetPt;
 
       Analysis_ATLAS_8TeV_1LEPbb_20invfb() {
@@ -89,8 +89,8 @@ namespace Gambit {
         double met = event->met();
 
         // Baseline objects
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT()>10. && electron->abseta()<2.47)baselineElectrons.push_back(electron);
         }
 
@@ -100,24 +100,24 @@ namespace Gambit {
         // Apply medium electron selection
         ATLAS::applyMediumIDElectronSelection(baselineElectrons);
 
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT()>10. && muon->abseta()<2.4)baselineMuons.push_back(muon);
         }
 
         // Apply muon efficiency
         ATLAS::applyMuonEff(baselineMuons);
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>20. && fabs(jet->eta())<4.5) baselineJets.push_back(jet);
         }
 
         //Overlap Removal
-        vector<HEPUtils::Particle*> overlapElectrons1;
-        vector<HEPUtils::Particle*> overlapElectrons2;
-        vector<HEPUtils::Particle*> overlapMuons;
-        vector<HEPUtils::Jet*> overlapJets;
+        vector<const HEPUtils::Particle*> overlapElectrons1;
+        vector<const HEPUtils::Particle*> overlapElectrons2;
+        vector<const HEPUtils::Particle*> overlapMuons;
+        vector<const HEPUtils::Jet*> overlapJets;
 
         vector<size_t> overlapEl;
         for (size_t iEl1=0;iEl1<baselineElectrons.size();iEl1++) {
@@ -155,11 +155,11 @@ namespace Gambit {
         }
 
         //Signal Objects
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
 
         for (size_t iEl=0;iEl<overlapElectrons2.size();iEl++) {
           if (overlapElectrons2.at(iEl)->pT()>25.)signalElectrons.push_back(overlapElectrons2.at(iEl));
@@ -336,7 +336,7 @@ namespace Gambit {
 
       }
 
-      bool isLeadingBJets(vector<HEPUtils::Jet*> jets, vector<HEPUtils::Jet*> bjets) {
+      bool isLeadingBJets(vector<const HEPUtils::Jet*> jets, vector<const HEPUtils::Jet*> bjets) {
         sort(jets.begin(), jets.end(), compareJetPt);
         sort(bjets.begin(), bjets.end(), compareJetPt);
         int nbjet = bjets.size();

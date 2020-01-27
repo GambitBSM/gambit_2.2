@@ -41,15 +41,15 @@ namespace Gambit
       {
 
 
-        std::vector<Particle*> electrons = event->electrons();
-        std::vector<Particle*> muons = event->muons();
+        std::vector<const Particle*> electrons = event->electrons();
+        std::vector<const Particle*> muons = event->muons();
         std::sort(electrons.begin(), electrons.end(), AnalysisUtil::sortParticlesByPt);
         std::sort(muons.begin(), muons.end(), AnalysisUtil::sortParticlesByPt);
 
         // get the jets and leptons filtered by their pt and eta requirements
         electrons = AnalysisUtil::filterPtEta(electrons, 10, 2.47);
         muons = AnalysisUtil::filterPtEta(muons, 10, 2.4);
-        std::vector<Jet*> jets = AnalysisUtil::filterPtEta(event->jets(), 20, 4.5);
+        std::vector<const Jet*> jets = AnalysisUtil::filterPtEta(event->jets(), 20, 4.5);
 
         // check if any of the triggers were triggered
         bool eeTrigger = AnalysisUtil::isMultipleParticleTriggered(electrons, {17, 17});
@@ -68,7 +68,7 @@ namespace Gambit
         ATLAS::applyTightIDElectronSelection(electrons);
 
         // fill a vector with all of the leptons
-        std::vector<Particle*> leptons;
+        std::vector<const Particle*> leptons;
         leptons.insert(leptons.end(), electrons.begin(), electrons.end());
         leptons.insert(leptons.end(), muons.begin(), muons.end());
 
@@ -87,15 +87,15 @@ namespace Gambit
             return;
           }
 
-        Particle* lep0 = leptons[0];
-        Particle* lep1 = leptons[1];
+        const Particle* lep0 = leptons[0];
+        const Particle* lep1 = leptons[1];
 
         // calculate discriminating variables
         double mll = (*lep0 + *lep1).m();
         bool zVeto = mll <= 81 || mll >= 101;
 
         double Ht = lep0->pT() + lep1->pT();
-        for (Jet* jet : jets)
+        for (const Jet* jet : jets)
           {
             Ht += jet->pT();
           }

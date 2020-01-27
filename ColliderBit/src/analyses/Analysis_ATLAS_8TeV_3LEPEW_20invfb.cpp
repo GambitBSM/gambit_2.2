@@ -87,10 +87,10 @@ namespace Gambit {
 
       }
 
-      void EleEleOverlapRemoval(vector<HEPUtils::Particle*> &vec1, vector<HEPUtils::Particle*> &vec2, double DeltaRMax) {
+      void EleEleOverlapRemoval(vector<const HEPUtils::Particle*> &vec1, vector<const HEPUtils::Particle*> &vec2, double DeltaRMax) {
         //Routine to do electron-electron overlap check
         //Discard lowest energy electron if two are found overlapping
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int it1 = 0; it1 < vec1.size(); it1++) {
           bool overlap = false;
@@ -113,9 +113,9 @@ namespace Gambit {
       }
 
 
-      void LepLepOverlapRemoval(vector<HEPUtils::Particle*> &vec1, vector<HEPUtils::Particle*> &vec2, double DeltaRMax) {
+      void LepLepOverlapRemoval(vector<const HEPUtils::Particle*> &vec1, vector<const HEPUtils::Particle*> &vec2, double DeltaRMax) {
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int it1 = 0; it1 < vec1.size(); it1++) {
           bool overlap = false;
@@ -137,11 +137,11 @@ namespace Gambit {
         return;
       }
 
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -162,11 +162,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -195,8 +195,8 @@ namespace Gambit {
         double met = event->met();
 
         // Now define vector of baseline electrons
-        vector<HEPUtils::Particle*> signalElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> signalElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && fabs(electron->eta()) < 2.47) signalElectrons.push_back(electron);
         }
 
@@ -204,24 +204,24 @@ namespace Gambit {
         ATLAS::applyElectronEff(signalElectrons);
 
         // Now define vector of baseline muons
-        vector<HEPUtils::Particle*> signalMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> signalMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && fabs(muon->eta()) < 2.4) signalMuons.push_back(muon);
         }
 
         // Apply muon efficiency
         ATLAS::applyMuonEff(signalMuons);
 
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> bJets;
 
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 2.5) signalJets.push_back(jet);
           //if(jet->btag() && fabs(jet->eta()) < 2.5 && jet->pT() > 20.) bJets.push_back(jet);
         }
 
-        vector<HEPUtils::Particle*> signalTaus;
-        for (HEPUtils::Particle* tau : event->taus()) {
+        vector<const HEPUtils::Particle*> signalTaus;
+        for (const HEPUtils::Particle* tau : event->taus()) {
           if (tau->pT() > 20. && fabs(tau->eta()) < 2.47) signalTaus.push_back(tau);
         }
         ATLAS::applyTauEfficiencyR1(signalTaus);
@@ -298,7 +298,7 @@ namespace Gambit {
         const std::vector<double> c = {0.8};
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
 
-        for (HEPUtils::Jet* jet : signalJets) {
+        for (const HEPUtils::Jet* jet : signalJets) {
           bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
           if(jet->btag() && hasTag)bJets.push_back(jet);
         }
@@ -360,18 +360,18 @@ namespace Gambit {
         bool triggerEMU=false;
         bool triggerMUE=false;
 
-        for(HEPUtils::Particle* ele : signalElectrons){
+        for(const HEPUtils::Particle* ele : signalElectrons){
           if(ele->pT()>25.)triggerE=true;
         }
 
-        for(HEPUtils::Particle* muo : signalMuons){
+        for(const HEPUtils::Particle* muo : signalMuons){
           if(muo->pT()>25.)triggerMU=true;
         }
 
         int numMuonsGt14=0;
         int numMuonsGt18=0;
 
-        for(HEPUtils::Particle* muo : signalMuons){
+        for(const HEPUtils::Particle* muo : signalMuons){
           if(muo->pT()>14.)numMuonsGt14++;
           if(muo->pT()>18.)numMuonsGt18++;
         }
@@ -382,7 +382,7 @@ namespace Gambit {
         int numEleGt14=0;
         int numEleGt25=0;
 
-        for(HEPUtils::Particle* ele : signalElectrons){
+        for(const HEPUtils::Particle* ele : signalElectrons){
           if(ele->pT()>14.)numEleGt14++;
           if(ele->pT()>25.)numEleGt25++;
 
@@ -415,13 +415,13 @@ namespace Gambit {
         }
 
         //Now find the lepton that isn't in that invariant mass
-        vector<HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalLeptons;
 
-        for (HEPUtils::Particle* ele : signalElectrons) {
+        for (const HEPUtils::Particle* ele : signalElectrons) {
           signalLeptons.push_back(ele);
         }
 
-        for (HEPUtils::Particle* muo : signalMuons) {
+        for (const HEPUtils::Particle* muo : signalMuons) {
           signalLeptons.push_back(muo);
         }
 
@@ -578,17 +578,17 @@ namespace Gambit {
         if(numTaus==2 && (numElectrons + numMuons)==1){
 
           //Calculate MT2 for all pairs of leptonsand take the largest
-          vector<HEPUtils::Particle*> mt2Leptons;
+          vector<const HEPUtils::Particle*> mt2Leptons;
 
-          for (HEPUtils::Particle* ele : signalElectrons) {
+          for (const HEPUtils::Particle* ele : signalElectrons) {
             mt2Leptons.push_back(ele);
           }
 
-          for (HEPUtils::Particle* muo : signalMuons) {
+          for (const HEPUtils::Particle* muo : signalMuons) {
             mt2Leptons.push_back(muo);
           }
 
-          for (HEPUtils::Particle* tau : signalTaus) {
+          for (const HEPUtils::Particle* tau : signalTaus) {
             mt2Leptons.push_back(tau);
           }
 

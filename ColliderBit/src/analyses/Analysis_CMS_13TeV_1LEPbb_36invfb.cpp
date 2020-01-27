@@ -84,8 +84,8 @@ namespace Gambit {
         const vector<double> bEl={0,40.,50.,10000.};
         const vector<double> cEl={0.654,0.705,0.731,0.665,0.655,0.722};
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           bool isEl=has_tag(_eff2dEl, electron->abseta(), electron->pT());
           if (electron->pT()>5. && electron->abseta()<2.5 && isEl)baselineElectrons.push_back(electron);
         }
@@ -95,28 +95,28 @@ namespace Gambit {
         const vector<double> bMu={0,30.,40.,50.,10000.};
         const vector<double> cMu={0.761,0.804,0.814,0.805,0.769,0.813,0.846,0.82,0.819,0.847,0.834,0.852};
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           bool isMu=has_tag(_eff2dMu, muon->abseta(), muon->pT());
           if (muon->pT()>5. && muon->abseta()<2.4 && isMu)baselineMuons.push_back(muon);
         }
 
-        vector<HEPUtils::Particle*> baselineTaus;
-        for (HEPUtils::Particle* tau : event->taus()) {
+        vector<const HEPUtils::Particle*> baselineTaus;
+        for (const HEPUtils::Particle* tau : event->taus()) {
           if (tau->pT()>20. && tau->abseta()<2.3)baselineTaus.push_back(tau);
         }
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>25. &&fabs(jet->eta())<2.4)baselineJets.push_back(jet);
         }
 
         // Signal objects
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
 
         for (size_t iEl=0;iEl<baselineElectrons.size();iEl++) {
           if (baselineElectrons.at(iEl)->pT()>30. && baselineElectrons.at(iEl)->abseta()<1.44)signalElectrons.push_back(baselineElectrons.at(iEl));
@@ -132,7 +132,7 @@ namespace Gambit {
             if (baselineJets.at(iJet)->btag())signalBJets.push_back(baselineJets.at(iJet));
           }
         }
-        vector<HEPUtils::Jet*> signalBJets_temp=signalBJets;
+        vector<const HEPUtils::Jet*> signalBJets_temp=signalBJets;
         CMS::applyCSVv2MediumBtagEff(signalBJets_temp);
         if (signalBJets_temp.size()>0) {
           CMS::applyCSVv2LooseBtagEff(signalBJets_temp);
@@ -311,9 +311,9 @@ namespace Gambit {
 
     protected:
       void analysis_specific_reset() {
-        
+
         for (auto& pair : _counters) { pair.second.reset(); }
-        
+
         std::fill(cutFlowVector.begin(), cutFlowVector.end(), 0);
       }
 

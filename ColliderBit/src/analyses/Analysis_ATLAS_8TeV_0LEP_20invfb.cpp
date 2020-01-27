@@ -60,31 +60,31 @@ namespace Gambit {
         double met = event->met();
 
         // Now define vectors of baseline objects
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && fabs(electron->eta()) < 2.47) baselineElectrons.push_back(electron);
         }
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
 
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && fabs(muon->eta()) < 2.4) baselineMuons.push_back(muon);
         }
 
         // Apply muon efficiency
         ATLAS::applyMuonEff(baselineMuons);
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 4.5) baselineJets.push_back(jet);
         }
 
         // Overlap removal: only applied to jets with |eta|<2.8
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Jet*> signalJets;
 
         // Remove any jet within dR=0.2 of an electrons
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
@@ -394,7 +394,7 @@ namespace Gambit {
       ///////////////////
 
 
-      double SmallestdPhi(vector<HEPUtils::Jet*> jets,double phi_met) {
+      double SmallestdPhi(vector<const HEPUtils::Jet*> jets,double phi_met) {
         if (jets.size()<2) return 999;
         double dphi1 = acos(cos(jets.at(0)->phi()-phi_met));
         double dphi2 = acos(cos(jets.at(1)->phi()-phi_met));
@@ -405,7 +405,7 @@ namespace Gambit {
         return min(min1, dphi3);
       }
 
-      double SmallestRemainingdPhi(const vector<HEPUtils::Jet*> jets,double phi_met) {
+      double SmallestRemainingdPhi(const vector<const HEPUtils::Jet*> jets,double phi_met) {
         double remainingDPhi = 999;
         double dphiMin = 999;
         for (size_t i = 0; i < jets.size(); i++) {

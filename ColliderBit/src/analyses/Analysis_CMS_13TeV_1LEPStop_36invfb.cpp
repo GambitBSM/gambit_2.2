@@ -76,11 +76,11 @@ namespace Gambit {
         Cutflow _cutflow;
 
         // Jet overlap removal
-        void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+        void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
             //Routine to do jet-lepton check
             //Discards jets if they are within DeltaRMax of a lepton
 
-            vector<HEPUtils::Jet*> Survivors;
+            vector<const HEPUtils::Jet*> Survivors;
 
             for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
                 bool overlap = false;
@@ -136,60 +136,60 @@ namespace Gambit {
             if (met<120) return;
 
             // Electron objects
-            vector<HEPUtils::Particle*> baselineElectrons;
-            for (HEPUtils::Particle* electron : event->electrons())
+            vector<const HEPUtils::Particle*> baselineElectrons;
+            for (const HEPUtils::Particle* electron : event->electrons())
                 if (electron->pT() > 5. && electron->abseta() < 2.4 ) baselineElectrons.push_back(electron);
 
             // Apply electron efficiency
             CMS::applyElectronEff(baselineElectrons);
 
             // Muon objects
-            vector<HEPUtils::Particle*> baselineMuons;
-            for (HEPUtils::Particle* muon : event->muons())
+            vector<const HEPUtils::Particle*> baselineMuons;
+            for (const HEPUtils::Particle* muon : event->muons())
                 if (muon->pT() > 5. && muon->abseta() < 2.4 ) baselineMuons.push_back(muon);
 
             // Apply muon efficiency
             CMS::applyMuonEff(baselineMuons);
 
             // Jets
-            vector<HEPUtils::Jet*> baselineJets;
-            vector<HEPUtils::Jet*> fullJets;
-            for (HEPUtils::Jet* jet : event->jets()) {
+            vector<const HEPUtils::Jet*> baselineJets;
+            vector<const HEPUtils::Jet*> fullJets;
+            for (const HEPUtils::Jet* jet : event->jets()) {
                 if (jet->pT() > 30. && jet->abseta() < 2.4) baselineJets.push_back(jet);
                 if (jet->abseta() < 5.0) fullJets.push_back(jet);
             }
 
             // Electron isolation
-            vector<HEPUtils::Particle*> Electrons;
+            vector<const HEPUtils::Particle*> Electrons;
             double Rrel;
-            for (HEPUtils::Particle* e : baselineElectrons) {
+            for (const HEPUtils::Particle* e : baselineElectrons) {
                 if (e->pT() < 50.) Rrel=0.2;
                 else if (e->pT() < 200.) Rrel=10./e->pT();
                 else Rrel=0.05;
                 double sumpt = -e->pT();
-                for (HEPUtils::Jet* j : fullJets)
+                for (const HEPUtils::Jet* j : fullJets)
                     if (e->mom().deltaR_eta(j->mom()) < Rrel) sumpt += j->pT();
                 if (sumpt/e->pT() < 0.1) Electrons.push_back(e);
             }
 
             // Muon isolation
-            vector<HEPUtils::Particle*> Muons;
-            for (HEPUtils::Particle* mu : baselineMuons) {
+            vector<const HEPUtils::Particle*> Muons;
+            for (const HEPUtils::Particle* mu : baselineMuons) {
                 if (mu->pT() < 50.) Rrel=0.2;
                 else if (mu->pT() < 200.) Rrel=10./mu->pT();
                 else Rrel=0.05;
                 double sumpt = -mu->pT();
-                for (HEPUtils::Jet* j : fullJets)
+                for (const HEPUtils::Jet* j : fullJets)
                     if (mu->mom().deltaR_eta(j->mom()) < Rrel) sumpt += j->pT();
                 if (sumpt/mu->pT() < 0.2) Muons.push_back(mu);
             }
 
             // Selected lepton
-            vector<HEPUtils::Particle*> Leptons;
-            for (HEPUtils::Particle* e : Electrons) {
+            vector<const HEPUtils::Particle*> Leptons;
+            for (const HEPUtils::Particle* e : Electrons) {
                 if (e->pT() > 20. && e->abseta() < 1.442 ) Leptons.push_back(e);
             }
-            for (HEPUtils::Particle* mu : Muons) {
+            for (const HEPUtils::Particle* mu : Muons) {
                 if (mu->pT() > 20. && mu->abseta() < 2.4 ) Leptons.push_back(mu);
             }
 
@@ -199,13 +199,13 @@ namespace Gambit {
             if (baselineJets.size()<2) return;
             if (Leptons.size()!=1) return;
             HEPUtils::P4 HTmiss(0,0,0,0);
-            for (HEPUtils::Jet* j : baselineJets) HTmiss += j->mom();
+            for (const HEPUtils::Jet* j : baselineJets) HTmiss += j->mom();
             bool lep_trigger=false;
-            for (HEPUtils::Particle* e : Electrons) {
+            for (const HEPUtils::Particle* e : Electrons) {
                 if ((HTmiss + e->mom()).pT()>120 ) lep_trigger=true;
                 if (e->pT() > 25. && e->abseta() < 2.1 ) lep_trigger=true;
             }
-            for (HEPUtils::Particle* mu : Muons) {
+            for (const HEPUtils::Particle* mu : Muons) {
                 if ((HTmiss + mu->mom()).pT()>120 ) lep_trigger=true;
                 if (mu->pT() > 22. && mu->abseta() < 2.4 ) lep_trigger=true;
             }
@@ -218,9 +218,9 @@ namespace Gambit {
             _cutflow.fill(2); //"M_{T}>150"
 
             // b-tagged jets
-            vector<HEPUtils::Jet*> bJets;
-            vector<HEPUtils::Jet*> nobJets;
-            vector<HEPUtils::Jet*> mediumbJets;
+            vector<const HEPUtils::Jet*> bJets;
+            vector<const HEPUtils::Jet*> nobJets;
+            vector<const HEPUtils::Jet*> mediumbJets;
             int N_tight_bJets=0;
             bool leadjet_nob = true;
             const std::vector<double>  a = {0,10.};
@@ -273,14 +273,14 @@ namespace Gambit {
             // The experimental report consider all possible pairings of b jet candidates
             // with up to three jets with highest CSV discriminator values.
             int n_b=0;
-            for (HEPUtils::Jet* bj :bJets) {
+            for (const HEPUtils::Jet* bj :bJets) {
                 n_b++;
                 double pb1[]={bj->mom().px(), bj->mom().py(), bj->mom().pz(), bj->E()};
                 double tmod_tem=log(topnesscompute(pb1, pl, MET, sigmat, sigmaW));
                 if(tmod>tmod_tem) tmod=tmod_tem;
             }
             // up to three jets
-            for (HEPUtils::Jet* nobj :nobJets) {
+            for (const HEPUtils::Jet* nobj :nobJets) {
                 if(n_b>3) break;
                 n_b++;
                 double pb1[]={nobj->mom().px(), nobj->mom().py(), nobj->mom().pz(), nobj->E()};
@@ -295,7 +295,7 @@ namespace Gambit {
             // Mlb
             double deltaRlb=9999.;
             double Mlb;
-            for (HEPUtils::Jet* bj :mediumbJets) {
+            for (const HEPUtils::Jet* bj :mediumbJets) {
                 if (deltaRlb > bj->mom().deltaR_eta(Leptons.at(0)->mom())){
                     deltaRlb = bj->mom().deltaR_eta(Leptons.at(0)->mom());
                     Mlb= (bj->mom()+Leptons.at(0)->mom()).m();

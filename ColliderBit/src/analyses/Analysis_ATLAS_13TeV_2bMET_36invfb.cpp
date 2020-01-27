@@ -61,7 +61,7 @@ namespace Gambit {
       // Required detector sim
       static constexpr const char* detector = "ATLAS";
 
-      static bool sortByPT(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
+      static bool sortByPT(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
 
       Analysis_ATLAS_13TeV_2bMET_36invfb() {
 
@@ -78,11 +78,11 @@ namespace Gambit {
       }
 
       // The following section copied from Analysis_ATLAS_1LEPStop_20invfb.cpp
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -103,11 +103,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within dR of a jet as defined in analysis paper
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -128,11 +128,11 @@ namespace Gambit {
         return;
       }
 
-      void SpecialLeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec) {
+      void SpecialLeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within dR of a jet as defined in analysis paper
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -154,7 +154,7 @@ namespace Gambit {
       }
 
 
-      MT2 MT2helper(vector<HEPUtils::Jet*> jets, vector<HEPUtils::Particle*>  electrons,  vector<HEPUtils::Particle*> muons, HEPUtils::P4 metVec){
+      MT2 MT2helper(vector<const HEPUtils::Jet*> jets, vector<const HEPUtils::Particle*>  electrons,  vector<const HEPUtils::Particle*> muons, HEPUtils::P4 metVec){
 
         MT2 results;
 
@@ -173,11 +173,11 @@ namespace Gambit {
         //We have all b jets tagged (with 100% efficiency), so can use the two highest pT b jets
         //This corresponds to using the 2 b jets that are first in the collection
 
-        HEPUtils::Jet* trueBjet1 = NULL; //need to assign this
-        HEPUtils::Jet* trueBjet2 = NULL; //nee to assign this
+        const HEPUtils::Jet* trueBjet1 = NULL; //need to assign this
+        const HEPUtils::Jet* trueBjet2 = NULL; //nee to assign this
 
         int nTrueBJets=0;
-        for(HEPUtils::Jet* tmpJet: jets){
+        for(const HEPUtils::Jet* tmpJet: jets){
           if(tmpJet->btag()){
             trueBjet1=tmpJet;
             nTrueBJets++;
@@ -185,7 +185,7 @@ namespace Gambit {
           }
         }
 
-        for(HEPUtils::Jet* tmpJet: jets){
+        for(const HEPUtils::Jet* tmpJet: jets){
           if(tmpJet->btag() && tmpJet!=trueBjet1){
             trueBjet2=tmpJet;
             nTrueBJets++;
@@ -250,8 +250,8 @@ namespace Gambit {
         results.aMT2_BM=aMT2_BM;
 
         if (nJet > 3){
-          HEPUtils::Jet* jet3=0;
-          for(HEPUtils::Jet* current: jets){
+          const HEPUtils::Jet* jet3=0;
+          for(const HEPUtils::Jet* current: jets){
             if (current == trueBjet1)continue;
             if (current == trueBjet2)continue;
             jet3 = current;
@@ -290,8 +290,8 @@ namespace Gambit {
         // Now define vectors of baseline objects, including:
         // - retrieval of electron, muon and jets from the event
         // - application of basic pT and eta cuts
-        vector<HEPUtils::Particle*> electrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> electrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10.
               && fabs(electron->eta()) < 2.47)
             electrons.push_back(electron);
@@ -300,8 +300,8 @@ namespace Gambit {
         // Apply electron efficiency
         ATLAS::applyElectronEff(electrons);
 
-        vector<HEPUtils::Particle*> muons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> muons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10.
               && fabs(muon->eta()) < 2.7)
             muons.push_back(muon);
@@ -310,16 +310,16 @@ namespace Gambit {
         // Apply muon efficiency
         ATLAS::applyMuonEff(muons);
 
-        //vector<HEPUtils::Jet*> candJets;
-        //for (HEPUtils::Jet* jet : event->jets()) {
+        //vector<const HEPUtils::Jet*> candJets;
+        //for (const HEPUtils::Jet* jet : event->jets()) {
         //if (jet->pT() > 20.
         //    && fabs(jet->eta()) < 2.8)
         //  candJets.push_back(jet);
         //}
 
         // Jets
-        vector<HEPUtils::Jet*> bJets;
-        vector<HEPUtils::Jet*> nonBJets;
+        vector<const HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> nonBJets;
 
         // Get b jets
         /// @note We assume that b jets have previously been 100% tagged
@@ -328,7 +328,7 @@ namespace Gambit {
         const std::vector<double>  b = {0,10000.};
         const std::vector<double> c = {0.77}; // set b-tag efficiency to 77%
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           bool hasTag=has_tag(_eff2d, fabs(jet->eta()), jet->pT());
           if (jet->pT() > 20. && fabs(jet->eta()) < 4.8) {
             if(jet->btag() && hasTag && fabs(jet->eta()) < 2.5 && jet->pT() > 20.){
@@ -349,25 +349,25 @@ namespace Gambit {
 
         // Fill a jet-pointer-to-bool map to make it easy to check
         // if a given jet is treated as a b-jet in this analysis
-        map<HEPUtils::Jet*,bool> analysisBtags;
-        for (HEPUtils::Jet* jet : bJets) {
+        map<const HEPUtils::Jet*,bool> analysisBtags;
+        for (const HEPUtils::Jet* jet : bJets) {
           analysisBtags[jet] = true;
         }
-        for (HEPUtils::Jet* jet : nonBJets) {
+        for (const HEPUtils::Jet* jet : nonBJets) {
           analysisBtags[jet] = false;
         }
 
         // Signal object containers
-        vector<HEPUtils::Jet*> signalJets20;
-        vector<HEPUtils::Jet*> signalJets35;
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Jet*> signalBJets20;
-        vector<HEPUtils::Jet*> signalBJets35;
+        vector<const HEPUtils::Jet*> signalJets20;
+        vector<const HEPUtils::Jet*> signalJets35;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Jet*> signalBJets20;
+        vector<const HEPUtils::Jet*> signalBJets35;
 
         // Now apply signal jet cuts
-        for (HEPUtils::Jet* jet : bJets) {
+        for (const HEPUtils::Jet* jet : bJets) {
           if(jet->pT() > 20. && fabs(jet->eta())<2.8){
             signalJets20.push_back(jet);
             if(fabs(jet->eta())<2.5)signalBJets20.push_back(jet);
@@ -380,7 +380,7 @@ namespace Gambit {
 
         }
 
-        for (HEPUtils::Jet* jet : nonBJets) {
+        for (const HEPUtils::Jet* jet : nonBJets) {
           if(jet->pT() > 20. && fabs(jet->eta())<2.8){
             signalJets20.push_back(jet);
           }
@@ -399,14 +399,14 @@ namespace Gambit {
         std::sort(signalBJets20.begin(), signalBJets20.end(), sortByPT);
 
 
-        for (HEPUtils::Particle* electron : electrons) {
+        for (const HEPUtils::Particle* electron : electrons) {
           if(electron->pT() > 20. && fabs(electron->eta()) < 2.47){
             signalElectrons.push_back(electron);
             signalLeptons.push_back(electron);
           }
         }
 
-        for (HEPUtils::Particle* muon : muons) {
+        for (const HEPUtils::Particle* muon : muons) {
           if(muon->pT() > 20. && fabs(muon->eta()) < 2.5){
             signalMuons.push_back(muon);
             signalLeptons.push_back(muon);
@@ -415,7 +415,7 @@ namespace Gambit {
 
         HEPUtils::P4 metVecCorr = metVec;
 
-        for(HEPUtils::Particle* lep : signalLeptons){
+        for(const HEPUtils::Particle* lep : signalLeptons){
           metVecCorr+=lep->mom();
         }
 
@@ -609,13 +609,13 @@ namespace Gambit {
           meff4j += signalJets20[jet]->pT();
         }
 
-        bool bjetsSublead = (nJets20>=3 && !analysisBtags.at(signalJets20[0]) 
-                                        && analysisBtags.at(signalJets20[1]) 
-                                        && ( analysisBtags.at(signalJets20[2]) 
+        bool bjetsSublead = (nJets20>=3 && !analysisBtags.at(signalJets20[0])
+                                        && analysisBtags.at(signalJets20[1])
+                                        && ( analysisBtags.at(signalJets20[2])
                                              || (nJets20>=4 && analysisBtags.at(signalJets20[3]) ) ) );
-        // NOTE: 
-        //   Table 1 in the paper suggests that we should also allow for a b-tagged signalJets20[4] 
-        //   in the definition of bjetsSublead above, but the ATLAS code snippet at 
+        // NOTE:
+        //   Table 1 in the paper suggests that we should also allow for a b-tagged signalJets20[4]
+        //   in the definition of bjetsSublead above, but the ATLAS code snippet at
         //   https://www.hepdata.net/record/79317 only check the jets up to signalJets20[3].
         //   We follow the ATLAS code snippet here.
 
@@ -899,7 +899,7 @@ namespace Gambit {
         // cout << "-------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
 
 
-        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));        
+        // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
         add_result(SignalRegionData(_counters.at("0L_SRA350"), 81., { 70., 13.}));
         add_result(SignalRegionData(_counters.at("0L_SRA450"), 24., { 22., 5.}));

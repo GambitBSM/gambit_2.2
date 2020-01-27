@@ -96,21 +96,21 @@ namespace Gambit {
 
 
         // Get baseline photons
-        vector<Particle*> basephotons;
-        for (Particle* gamma : event->photons())
+        vector<const Particle*> basephotons;
+        for (const Particle* gamma : event->photons())
           if (gamma->pT() > 10. && gamma->abseta() < 2.4)
             basephotons.push_back(gamma);
 
         // Get baseline electrons and apply efficiency
-        vector<Particle*> baseelecs;
-        for (Particle* electron : event->electrons())
+        vector<const Particle*> baseelecs;
+        for (const Particle* electron : event->electrons())
           if (electron->pT() > 10. && electron->abseta() < 2.5)
             baseelecs.push_back(electron);
         CMS::applyElectronEff(baseelecs);
 
         // Get baseline muons and apply efficiency
-        vector<Particle*> basemuons;
-        for (Particle* muon : event->muons())
+        vector<const Particle*> basemuons;
+        for (const Particle* muon : event->muons())
           if (muon->pT() > 10. && muon->abseta() < 2.4)
             basemuons.push_back(muon);
         CMS::applyMuonEff(basemuons);

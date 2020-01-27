@@ -24,8 +24,8 @@ namespace Gambit {
   namespace ColliderBit {
 
 
-    bool sortByPT_j(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
-    bool sortByPT_l(HEPUtils::Particle* lep1, HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT()); }
+    bool sortByPT_j(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
+    bool sortByPT_l(const HEPUtils::Particle* lep1, const HEPUtils::Particle* lep2) { return (lep1->pT() > lep2->pT()); }
 
     class Analysis_ATLAS_13TeV_2LEPStop_36invfb : public Analysis {
     private:
@@ -59,11 +59,11 @@ namespace Gambit {
         // ofstream Savelep2;
 
         // Jet overlap removal
-        void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+        void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
             //Routine to do jet-lepton check
             //Discards jets if they are within DeltaRMax of a lepton
 
-            vector<HEPUtils::Jet*> Survivors;
+            vector<const HEPUtils::Jet*> Survivors;
 
             for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
                 bool overlap = false;
@@ -85,11 +85,11 @@ namespace Gambit {
         }
 
         // Lepton overlap removal
-        void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+        void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
             //Routine to do lepton-jet check
             //Discards leptons if they are within DeltaRMax of a jet
 
-            vector<HEPUtils::Particle*> Survivors;
+            vector<const HEPUtils::Particle*> Survivors;
 
             for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
                 bool overlap = false;
@@ -141,9 +141,9 @@ namespace Gambit {
             HEPUtils::P4 ptot = event->missingmom();
 
             // Baseline lepton objects
-            vector<HEPUtils::Particle*> blElectrons, blMuons;              // Used for SR-2body and SR-3body
-            vector<HEPUtils::Particle*> baselineElectrons, baselineMuons;  // Used for SR-4body
-            for (HEPUtils::Particle* electron : event->electrons()) {
+            vector<const HEPUtils::Particle*> blElectrons, blMuons;              // Used for SR-2body and SR-3body
+            vector<const HEPUtils::Particle*> baselineElectrons, baselineMuons;  // Used for SR-4body
+            for (const HEPUtils::Particle* electron : event->electrons()) {
             // Same with the code snippet, not the experimental report
                 if (electron->pT() > 10. && electron->abseta() < 2.47) blElectrons.push_back(electron);
                 if (electron->pT() > 7. && electron->abseta() < 2.47) baselineElectrons.push_back(electron);
@@ -161,7 +161,7 @@ namespace Gambit {
             const std::vector<double>  b = {0,10000.};
             const vector<double> cMu={0.89};
             HEPUtils::BinnedFn2D<double> _eff2dMu(a,b,cMu);
-            for (HEPUtils::Particle* muon : event->muons()) {
+            for (const HEPUtils::Particle* muon : event->muons()) {
                 bool hasTrig=has_tag(_eff2dMu, muon->abseta(), muon->pT());
             // Same with the code snippet, not the experimental report
                 if (muon->pT() > 10. && muon->abseta() < 2.5 && hasTrig) blMuons.push_back(muon);
@@ -173,9 +173,9 @@ namespace Gambit {
             ATLAS::applyMuonEff(baselineMuons);
 
             // Jets
-            vector<HEPUtils::Jet*> blJets;          // Used for SR-2body and SR-3body
-            vector<HEPUtils::Jet*> baselineJets;    // Used for SR-4body
-            for (HEPUtils::Jet* jet : event->jets()) {
+            vector<const HEPUtils::Jet*> blJets;          // Used for SR-2body and SR-3body
+            vector<const HEPUtils::Jet*> baselineJets;    // Used for SR-4body
+            for (const HEPUtils::Jet* jet : event->jets()) {
                 if (jet->pT() > 20. && fabs(jet->eta()) < 2.8) blJets.push_back(jet);
                 if (jet->pT() > 20. && fabs(jet->eta()) < 2.8) baselineJets.push_back(jet);
             }
@@ -189,14 +189,14 @@ namespace Gambit {
             LeptonJetOverlapRemoval(baselineMuons,baselineJets,0.4);
 
             //Signal Jet
-            vector<HEPUtils::Jet*> sgJets;                  // Used for SR-2body and SR-3body
-            vector<HEPUtils::Jet*> signalJets;              // Used for SR-4body
-            for (HEPUtils::Jet* jet : blJets) {
+            vector<const HEPUtils::Jet*> sgJets;                  // Used for SR-2body and SR-3body
+            vector<const HEPUtils::Jet*> signalJets;              // Used for SR-4body
+            for (const HEPUtils::Jet* jet : blJets) {
                 if (jet->pT() > 20. && fabs(jet->eta()) < 2.5) {
                     sgJets.push_back(jet);
                 }
             }
-            for (HEPUtils::Jet* jet : baselineJets) {
+            for (const HEPUtils::Jet* jet : baselineJets) {
                 if (jet->pT() > 25. && fabs(jet->eta()) < 2.5) {
                     signalJets.push_back(jet);
                 }
@@ -204,27 +204,27 @@ namespace Gambit {
 
 
             //Signal Leptons
-            vector<HEPUtils::Particle*> sgElectrons, sgLeptons;          // Used for SR-2body and SR-3body
-            vector<HEPUtils::Particle*> signalLeptons;  // Used for SR-4body
-            for (HEPUtils::Particle* electron : blElectrons) {
+            vector<const HEPUtils::Particle*> sgElectrons, sgLeptons;          // Used for SR-2body and SR-3body
+            vector<const HEPUtils::Particle*> signalLeptons;  // Used for SR-4body
+            for (const HEPUtils::Particle* electron : blElectrons) {
                 if (electron->pT() > 10. && fabs(electron->eta()) < 2.47){
                     sgElectrons.push_back(electron);
                 }
             }
             ATLAS::applyMediumIDElectronSelectionR2(sgElectrons);
-            for (HEPUtils::Particle* electron : sgElectrons) {
+            for (const HEPUtils::Particle* electron : sgElectrons) {
                 sgLeptons.push_back(electron);
             }
-            for (HEPUtils::Particle* muon : blMuons) {
+            for (const HEPUtils::Particle* muon : blMuons) {
                 if (muon->pT() > 10. && fabs(muon->eta()) < 2.4){
                     sgLeptons.push_back(muon);
                 }
             }
             ATLAS::applyMediumIDElectronSelectionR2(baselineElectrons);
-            for (HEPUtils::Particle* electron : baselineElectrons) {
+            for (const HEPUtils::Particle* electron : baselineElectrons) {
                 signalLeptons.push_back(electron);
             }
-            for (HEPUtils::Particle* muon : baselineMuons) {
+            for (const HEPUtils::Particle* muon : baselineMuons) {
                 signalLeptons.push_back(muon);
             }
 
@@ -236,13 +236,13 @@ namespace Gambit {
             std::sort(sgLeptons.begin(), sgLeptons.end(), sortByPT_l);
 
             // Function used to get b jets
-            vector<HEPUtils::Jet*> sgbJets;                  // Used for SR-2body and SR-3body
-            vector<HEPUtils::Jet*> sgJetsGt25;               // Used for SR-2body
+            vector<const HEPUtils::Jet*> sgbJets;                  // Used for SR-2body and SR-3body
+            vector<const HEPUtils::Jet*> sgJetsGt25;               // Used for SR-2body
             //const std::vector<double>  a = {0,10.};
             //const std::vector<double>  b = {0,10000.};
             const std::vector<double> c = {0.77};
             HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
-            for (HEPUtils::Jet* jet :sgJets) {
+            for (const HEPUtils::Jet* jet :sgJets) {
                 if (jet->pT() > 25.) {
                     sgJetsGt25.push_back(jet);
                     bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
@@ -603,7 +603,7 @@ namespace Gambit {
             // }
             // cout << "------------------------------------------------------------------------------------------------------------------------------ "<<endl;
 
-            
+
             // add_result(SignalRegionData("SR label", n_obs, {n_sig_MC, n_sig_MC_sys}, {n_bkg, n_bkg_err}));
 
             // signal regin 2-body A

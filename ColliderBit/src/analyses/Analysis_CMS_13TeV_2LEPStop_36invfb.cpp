@@ -53,7 +53,7 @@ namespace Gambit {
             {"DF-SR-11", EventCounter("DF-SR-11")},
             {"SF-SR-12", EventCounter("SF-SR-12")},
             {"DF-SR-12", EventCounter("DF-SR-12")},
-            // 
+            //
             {"ALL-SR-0", EventCounter("ALL-SR-0")},
             {"ALL-SR-1", EventCounter("ALL-SR-1")},
             {"ALL-SR-2", EventCounter("ALL-SR-2")},
@@ -67,7 +67,7 @@ namespace Gambit {
             {"ALL-SR-10", EventCounter("ALL-SR-10")},
             {"ALL-SR-11", EventCounter("ALL-SR-11")},
             {"ALL-SR-12", EventCounter("ALL-SR-12")},
-            // 
+            //
             {"A-SR-0", EventCounter("A-SR-0")},
             {"A-SR-1", EventCounter("A-SR-1")},
             {"A-SR-2", EventCounter("A-SR-2")},
@@ -83,11 +83,11 @@ namespace Gambit {
 
 
         // Jet overlap removal
-        void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+        void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
             //Routine to do jet-lepton check
             //Discards jets if they are within DeltaRMax of a lepton
 
-            vector<HEPUtils::Jet*> Survivors;
+            vector<const HEPUtils::Jet*> Survivors;
 
             for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
                 bool overlap = false;
@@ -109,11 +109,11 @@ namespace Gambit {
         }
 
         // Lepton overlap removal
-        void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+        void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
             //Routine to do lepton-jet check
             //Discards leptons if they are within DeltaRMax of a jet
 
-            vector<HEPUtils::Particle*> Survivors;
+            vector<const HEPUtils::Particle*> Survivors;
 
             for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
                 bool overlap = false;
@@ -166,19 +166,19 @@ namespace Gambit {
             HEPUtils::BinnedFn2D<double> _eff2dEl(a,b,cEl);
             const vector<double> cMu={0.89};
             HEPUtils::BinnedFn2D<double> _eff2dMu(a,b,cMu);
-            vector<HEPUtils::Particle*> baselineElectrons, baselineMuons;
-            for (HEPUtils::Particle* electron : event->electrons()) {
+            vector<const HEPUtils::Particle*> baselineElectrons, baselineMuons;
+            for (const HEPUtils::Particle* electron : event->electrons()) {
                 bool hasTrig=has_tag(_eff2dEl, electron->abseta(), electron->pT());
                 if (electron->pT() > 15. && electron->abseta() < 2.4 && hasTrig) baselineElectrons.push_back(electron);
             }
-            for (HEPUtils::Particle* muon : event->muons()) {
+            for (const HEPUtils::Particle* muon : event->muons()) {
                 bool hasTrig=has_tag(_eff2dMu, muon->abseta(), muon->pT());
                 if (muon->pT() > 15. && muon->abseta() < 2.4 && hasTrig) baselineMuons.push_back(muon);
             }
             ATLAS::applyLooseIDElectronSelectionR2(baselineElectrons);
             // Jets
-            vector<HEPUtils::Jet*> baselineJets;
-            for (HEPUtils::Jet* jet : event->jets()) {
+            vector<const HEPUtils::Jet*> baselineJets;
+            for (const HEPUtils::Jet* jet : event->jets()) {
                 if (jet->pT() > 30. && fabs(jet->eta()) < 2.4) baselineJets.push_back(jet);
             }
 
@@ -190,11 +190,11 @@ namespace Gambit {
             int LooseLepNum = baselineElectrons.size()+baselineMuons.size();
             //Signal Leptons
             ATLAS::applyMediumIDElectronSelectionR2(baselineElectrons);
-            vector<HEPUtils::Particle*> signalLeptons;
-            for (HEPUtils::Particle* electron : baselineElectrons) {
+            vector<const HEPUtils::Particle*> signalLeptons;
+            for (const HEPUtils::Particle* electron : baselineElectrons) {
                 signalLeptons.push_back(electron);
             }
-            for (HEPUtils::Particle* muon : baselineMuons) {
+            for (const HEPUtils::Particle* muon : baselineMuons) {
                 signalLeptons.push_back(muon);
             }
 
@@ -205,13 +205,13 @@ namespace Gambit {
             //std::sort(sgLeptons.begin(), sgLeptons.end(), sortByPT_l);
 
             // Function used to get b jets
-            vector<HEPUtils::Jet*> bJets;
-            vector<HEPUtils::Jet*> nobJets;
+            vector<const HEPUtils::Jet*> bJets;
+            vector<const HEPUtils::Jet*> nobJets;
             //const std::vector<double>  a = {0,10.};
             //const std::vector<double>  b = {0,10000.};
             const std::vector<double> c = {0.60};
             HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
-            for (HEPUtils::Jet* jet :baselineJets) {
+            for (const HEPUtils::Jet* jet :baselineJets) {
                 bool hasTag=has_tag(_eff2d, jet->abseta(), jet->pT());
                 if(jet->btag() && hasTag && jet->pT() > 25.) {
                         bJets.push_back(jet);
@@ -260,7 +260,7 @@ namespace Gambit {
                     double Mll= (lepton0+lepton1).m();
                     // S=MET/sqrt(HT)
                     double HT = 0.;
-                    for (HEPUtils::Jet* jet :baselineJets) {
+                    for (const HEPUtils::Jet* jet :baselineJets) {
                         HT += jet->pT();
                     }
                     double S=met/sqrt(HT);
@@ -393,7 +393,7 @@ namespace Gambit {
                    (j==10 && pre_cut && flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_80 )||
                    (j==11 && pre_cut && flg_SF && sig_MT2ll_140 && sig_MT2bl_200 && sig_MET_200)||
                    (j==12 && pre_cut && flg_SF && sig_MT2ll_240)
-                   ) 
+                   )
                 {
                     stringstream sr_key; sr_key << "SF-SR-" << j;
                     _counters.at(sr_key.str()).add_event(event);

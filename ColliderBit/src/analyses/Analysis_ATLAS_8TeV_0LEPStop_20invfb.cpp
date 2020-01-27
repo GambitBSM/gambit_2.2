@@ -27,7 +27,7 @@ using namespace std;
 namespace Gambit {
   namespace ColliderBit {
 
-    bool sortByPT(HEPUtils::Jet* jet1, HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
+    bool sortByPT(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2) { return (jet1->pT() > jet2->pT()); }
 
     class Analysis_ATLAS_8TeV_0LEPStop_20invfb : public Analysis {
     private:
@@ -42,11 +42,11 @@ namespace Gambit {
 
       // Debug histos
 
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
           bool overlap = false;
@@ -67,11 +67,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec, double DeltaRMax) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec, double DeltaRMax) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within DeltaRMax of a jet
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -124,32 +124,32 @@ namespace Gambit {
 
 
         // Baseline lepton objects
-        vector<HEPUtils::Particle*> baselineElectrons, baselineMuons, baselineTaus;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons, baselineMuons, baselineTaus;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && electron->abseta() < 2.47) baselineElectrons.push_back(electron);
         }
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
 
-        for (HEPUtils::Particle* muon : event->muons()) {
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && muon->abseta() < 2.4) baselineMuons.push_back(muon);
         }
 
         // Apply muon efficiency
         ATLAS::applyMuonEff(baselineMuons);
 
-        for (HEPUtils::Particle* tau : event->taus()) {
+        for (const HEPUtils::Particle* tau : event->taus()) {
           if (tau->pT() > 10. && tau->abseta() < 2.47) baselineTaus.push_back(tau);
         }
         ATLAS::applyTauEfficiencyR1(baselineTaus);
 
 
         // Jets
-        vector<HEPUtils::Jet*> baselineJets;
-        vector<HEPUtils::Jet*> bJets;
-        vector<HEPUtils::Jet*> nonBJets;
-        vector<HEPUtils::Jet*> trueBJets; //for debugging
+        vector<const HEPUtils::Jet*> baselineJets;
+        vector<const HEPUtils::Jet*> bJets;
+        vector<const HEPUtils::Jet*> nonBJets;
+        vector<const HEPUtils::Jet*> trueBJets; //for debugging
 
         // Get b jets
         /// @note We assume that b jets have previously been 100% tagged
@@ -157,7 +157,7 @@ namespace Gambit {
         const std::vector<double>  b = {0,10000.};
         const std::vector<double> c = {0.7};
         HEPUtils::BinnedFn2D<double> _eff2d(a,b,c);
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 20. && fabs(jet->eta()) < 4.5) baselineJets.push_back(jet);
           bool hasTag=has_tag(_eff2d, fabs(jet->eta()), jet->pT());
           if (jet->pT() > 20. && fabs(jet->eta()) < 4.5) {
@@ -171,14 +171,14 @@ namespace Gambit {
 
 
         // Overlap removal
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> electronsForVeto;
-        vector<HEPUtils::Particle*> muonsForVeto;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> electronsForVeto;
+        vector<const HEPUtils::Particle*> muonsForVeto;
 
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
-        vector<HEPUtils::Jet*> signalNonBJets;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Jet*> signalNonBJets;
 
         JetLeptonOverlapRemoval(nonBJets,baselineElectrons,0.2);
         LeptonJetOverlapRemoval(baselineElectrons,nonBJets,0.4);
@@ -186,14 +186,14 @@ namespace Gambit {
         LeptonJetOverlapRemoval(baselineMuons,nonBJets,0.4);
         LeptonJetOverlapRemoval(baselineMuons,bJets,0.4);
 
-        for (HEPUtils::Jet* jet : bJets) {
+        for (const HEPUtils::Jet* jet : bJets) {
           if (jet->pT() > 35. && fabs(jet->eta()) < 2.8) {
             signalJets.push_back(jet);
             signalBJets.push_back(jet);
           }
         }
 
-        for (HEPUtils::Jet* jet : nonBJets) {
+        for (const HEPUtils::Jet* jet : nonBJets) {
           if (jet->pT() > 35. && fabs(jet->eta()) < 2.8){
             signalJets.push_back(jet);
             signalNonBJets.push_back(jet);
@@ -205,11 +205,11 @@ namespace Gambit {
         std::sort(signalBJets.begin(), signalBJets.end(), sortByPT);
         std::sort(signalNonBJets.begin(), signalNonBJets.end(), sortByPT);
 
-        for (HEPUtils::Particle* electron : baselineElectrons) {
+        for (const HEPUtils::Particle* electron : baselineElectrons) {
           signalElectrons.push_back(electron);
         }
 
-        for (HEPUtils::Particle* muon : baselineMuons) {
+        for (const HEPUtils::Particle* muon : baselineMuons) {
           signalMuons.push_back(muon);
         }
 
@@ -317,11 +317,11 @@ namespace Gambit {
         //Need to form top quark four vectors from jets
         //Use the two leading b jets as the b jets (a slight departure from ATLAS which uses the two jets with the highest b weight)
 
-        vector<HEPUtils::Jet*> selectBJets;
-        vector<HEPUtils::Jet*> selectNonBJets;
+        vector<const HEPUtils::Jet*> selectBJets;
+        vector<const HEPUtils::Jet*> selectNonBJets;
         int bjetcount=0;
 
-        for (HEPUtils::Jet* jet : signalBJets) {
+        for (const HEPUtils::Jet* jet : signalBJets) {
           if(bjetcount<2){
             bjetcount++;
             selectBJets.push_back(jet);
@@ -330,12 +330,12 @@ namespace Gambit {
 
         //Now take any remaining jets in b jet collection plus the non b jets
         int i=0;
-        for (HEPUtils::Jet* jet : signalBJets) {
+        for (const HEPUtils::Jet* jet : signalBJets) {
           i++;
           if(i>2)selectNonBJets.push_back(jet);
         }
 
-        for (HEPUtils::Jet* jet : signalNonBJets){
+        for (const HEPUtils::Jet* jet : signalNonBJets){
           selectNonBJets.push_back(jet);
         }
 
@@ -444,7 +444,7 @@ namespace Gambit {
         //Calculate min transverse mass between signal jets and ptmiss
 
         double mtMin=9999;
-        for(HEPUtils::Jet* jet : signalJets){
+        for(const HEPUtils::Jet* jet : signalJets){
           double dphi_jetmet=std::acos(std::cos(jet->phi()-ptot.phi()));
           double mT=sqrt(2.*jet->pT()*met*(1. - cos(dphi_jetmet)));
           if(mT<mtMin)mtMin=mT;
@@ -503,7 +503,7 @@ namespace Gambit {
         bool passJetCutSRC=false;
 
         /*std::cout << "JET PT CHECK ";
-          for(HEPUtils::Jet* jet : signalJets){
+          for(const HEPUtils::Jet* jet : signalJets){
           std::cout << jet->pT() << " ";
           }
           std::cout << endl;*/

@@ -5,7 +5,7 @@
 
 // Based on http://cms-results.web.cern.ch/cms-results/public-results/publications/SUS-16-035/index.html
 //          https://arxiv.org/abs/1704.07323
-            
+
 // Search for physics beyond the standard model in events with two leptons of same sign, missing transverse momentum, and jets in proton-proton collisions at sqrt(s) = 13 TeV
 
 // Note:
@@ -173,13 +173,13 @@ namespace Gambit {
         };
 
         Cutflow _cutflow;
-        
+
       // The following section copied from Analysis_ATLAS_1LEPStop_20invfb.cpp
-      void JetLeptonOverlapRemoval(vector<HEPUtils::Jet*> &jetvec, vector<HEPUtils::Particle*> &lepvec, double DeltaRMax) {
+      void JetLeptonOverlapRemoval(vector<const HEPUtils::Jet*> &jetvec, vector<const HEPUtils::Particle*> &lepvec, double DeltaRMax) {
         //Routine to do jet-lepton check
         //Discards jets if they are within DeltaRMax of a lepton
 
-        vector<HEPUtils::Jet*> Survivors;
+        vector<const HEPUtils::Jet*> Survivors;
 
         for(unsigned int itjet = 0; itjet < jetvec.size(); itjet++) {
         bool overlap = false;
@@ -200,11 +200,11 @@ namespace Gambit {
         return;
       }
 
-      void LeptonJetOverlapRemoval(vector<HEPUtils::Particle*> &lepvec, vector<HEPUtils::Jet*> &jetvec) {
+      void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*> &lepvec, vector<const HEPUtils::Jet*> &jetvec) {
         //Routine to do lepton-jet check
         //Discards leptons if they are within dR of a jet as defined in analysis paper
 
-        vector<HEPUtils::Particle*> Survivors;
+        vector<const HEPUtils::Particle*> Survivors;
 
         for(unsigned int itlep = 0; itlep < lepvec.size(); itlep++) {
           bool overlap = false;
@@ -239,12 +239,12 @@ namespace Gambit {
         }
 
         struct ptComparison {
-            bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+            bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
         } comparePt;
-        
+
         void run(const HEPUtils::Event* event) {
             _cutflow.fillinit();
-            
+
             // Missing energy
             double met = event->met();
             HEPUtils::P4 ptot = event->missingmom();
@@ -263,13 +263,13 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,     0.0,     0.0,     0.0,     0.0// eta > 2.5
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-            vector<HEPUtils::Particle*> electrons;
-            for (HEPUtils::Particle* electron : event->electrons()) {
+            vector<const HEPUtils::Particle*> electrons;
+            for (const HEPUtils::Particle* electron : event->electrons()) {
                 bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
                 if (electron->pT() > 15. && fabs(electron->eta()) < 2.5 && isEl)
                     electrons.push_back(electron);
             }
-            
+
             // Muons
             //@note Numbers digitized from https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/2d_full_pteta_mu_035_ttbar.pdf
             const vector<double> aMu={0., 0.9, 1.2, 2.1, 2.4, DBL_MAX};   // Bin edges in eta
@@ -283,17 +283,17 @@ namespace Gambit {
                                    0.0,   0.0,     0.0,      0.0,    0.0,     0.0,     0.0,     0.0// eta > 2.4
                                   };
             HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-            vector<HEPUtils::Particle*> muons;
-            for (HEPUtils::Particle* muon : event->muons()) {
+            vector<const HEPUtils::Particle*> muons;
+            for (const HEPUtils::Particle* muon : event->muons()) {
                 bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
                 if (muon->pT() > 10.&& fabs(muon->eta()) < 2.4 && isMu)
                     muons.push_back(muon);
             }
-            
+
             double HT;
             // Jets
-            vector<HEPUtils::Jet*> candJets;
-            for (HEPUtils::Jet* jet : event->jets()) {
+            vector<const HEPUtils::Jet*> candJets;
+            for (const HEPUtils::Jet* jet : event->jets()) {
                 if (jet->pT() > 25. && fabs(jet->eta()) < 2.4){
                     HT += jet->pT();
                     candJets.push_back(jet);
@@ -307,14 +307,14 @@ namespace Gambit {
             LeptonJetOverlapRemoval(muons,candJets);
 
             // Jets
-            vector<HEPUtils::Jet*> bJets;
-            vector<HEPUtils::Jet*> nonbJets;
+            vector<const HEPUtils::Jet*> bJets;
+            vector<const HEPUtils::Jet*> nonbJets;
 
-            
+
             // Find b-jets
             // Copied from ATLAS_13TeV_3b_24invfb
             double btag = 0.85; double cmisstag = 1/12.; double misstag = 1./381.;
-            for (HEPUtils::Jet* jet : candJets) {
+            for (const HEPUtils::Jet* jet : candJets) {
                 // Tag
                 if( jet->btag() && random_bool(btag) ) bJets.push_back(jet);
                 // Misstag c-jet
@@ -326,19 +326,19 @@ namespace Gambit {
                     nonbJets.push_back(jet);
                 }
             }
-            
+
             size_t Nb=bJets.size();
             size_t Nj=nonbJets.size();
-            
+
             // Leptons = electrons + muons
-            vector<HEPUtils::Particle*> leptons;
+            vector<const HEPUtils::Particle*> leptons;
             leptons=electrons;
             leptons.insert(leptons.end(),muons.begin(),muons.end());
             sort(leptons.begin(),leptons.end(),comparePt);
 
             // At least two light leptons
             if (leptons.size()<2) return;
-            
+
             // Triggers
             bool pure_dilepton_trigger=false;
             // Leading electron (muon) PT > 23 (17) GeV
@@ -349,7 +349,7 @@ namespace Gambit {
             }
             if ( not pure_dilepton_trigger and HT<300 ) return;
             _cutflow.fill(1); // Trigger and >=2 leptons
-            
+
             // Find pair same sign (SS) leptons
             vector<size_t> SS_1,SS_2;
             for (size_t i=0; i<leptons.size(); ++i) {
@@ -364,9 +364,9 @@ namespace Gambit {
             // At least one SS lepton pair ( with an invari-ant mass above 8 GeV )
             if (SS_1.size()==0) return;
             _cutflow.fill(2); // At least one SS lepton pair
-            
+
             // An additional loose lepton forms an opposite-sign same-flavor pair
-            // withone of the two SS leptons, with an invariant mass less than 12 GeV 
+            // withone of the two SS leptons, with an invariant mass less than 12 GeV
             // or between 76 and 106 GeV
             if (leptons.size()>2){
                 for (size_t i=0; i<SS_1.size(); ++i) {
@@ -384,16 +384,16 @@ namespace Gambit {
                     }
                 }
             }
-            
-            
+
+
             // At least two jets and MET>50
             if ( nonbJets.size()<2 or  met<50) return;
             _cutflow.fill(3); // Baseline (two jets and MET>50 GeV)
-            
+
             // M_T^{miss}
             // The smallest of the transverse masses constructed between p^miss_T and each of the leptons.
             double MTmiss = 9999;
-            for (HEPUtils::Particle* lep : leptons) {
+            for (const HEPUtils::Particle* lep : leptons) {
                 double MTmiss_temp = sqrt(2.*lep->pT()*met*(1. - cos(lep->mom().deltaPhi(ptot))));
                 if (MTmiss_temp<MTmiss) {
                     MTmiss = MTmiss_temp;
@@ -467,23 +467,23 @@ namespace Gambit {
                     if (MTmiss_g_120 and met<300                and HT_300)              _counters.at("SRHH-39").add_event(event);
                     if (MTmiss_g_120 and met<300                and HT_300_1125)         _counters.at("SRHH-40").add_event(event);
                 }
-                
+
                 if (met_300_500 and HT>300       and pp)  _counters.at("SRHH-41").add_event(event);
                 if (met_300_500 and HT>300       and !pp) _counters.at("SRHH-42").add_event(event);
                 if (met_500     and HT>300       and pp)  _counters.at("SRHH-43").add_event(event);
                 if (met_500     and HT>300       and !pp) _counters.at("SRHH-44").add_event(event);
-                
+
                 if (met<300     and HT_1125_1300 and pp)  _counters.at("SRHH-45").add_event(event);
                 if (met<300     and HT_1125_1300 and !pp) _counters.at("SRHH-46").add_event(event);
                 if (met<300     and HT_1300_1600 and pp)  _counters.at("SRHH-47").add_event(event);
                 if (met<300     and HT_1300_1600 and !pp) _counters.at("SRHH-48").add_event(event);
                 if (met<300     and HT_1600 and pp)  _counters.at("SRHH-48").add_event(event);
                 if (met<300     and HT_1600 and !pp) _counters.at("SRHH-50").add_event(event);
-                
+
             }
-            
+
             bool SSHL_combine = MTmiss_l_120&&( (met_50_200&&Nj_5) or met_200_300 )&&HT_300 ;
-            
+
             // SR HL
             if ( leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() < 25.) {
                 if (Nb==0 and MTmiss_l_120) {
@@ -503,7 +503,7 @@ namespace Gambit {
                     if ( met_50_200  and Nj_5 and HT_300_1125 and !pp)   _counters.at("SRHL-12").add_event(event);
                     if ( met_200_300 and Nj_2_4 and HT_300_1125 and pp)  _counters.at("SRHL-13").add_event(event);
                     if ( met_200_300 and Nj_2_4 and HT_300_1125 and !pp) _counters.at("SRHL-14").add_event(event);
-                    
+
                     if ( met_200_300 and Nj_5 and HT_300_1125 and pp)    _counters.at("SRHL-15").add_event(event);
                     if ( met_200_300 and Nj_5 and HT_300_1125 and !pp)   _counters.at("SRHL-16").add_event(event);
                 } else if(Nb==2 and MTmiss_l_120) {
@@ -525,12 +525,12 @@ namespace Gambit {
                 }
                 if (MTmiss_g_120 and met<300 and HT_300)       _counters.at("SRHL-31").add_event(event);
                 if (MTmiss_g_120 and met<300 and HT_300_1125)  _counters.at("SRHL-32").add_event(event);
-                
+
                 if (met_300_500  and HT>300 and pp)  _counters.at("SRHL-33").add_event(event);
                 if (met_300_500  and HT>300 and !pp) _counters.at("SRHL-34").add_event(event);
                 if (met_500      and HT>300 and pp)  _counters.at("SRHL-35").add_event(event);
                 if (met_500      and HT>300 and !pp) _counters.at("SRHL-36").add_event(event);
-                
+
                 if (met<300      and HT_1125_1300 and pp)  _counters.at("SRHL-37").add_event(event);
                 if (met<300      and HT_1125_1300 and !pp) _counters.at("SRHL-38").add_event(event);
                 if (met<300      and HT_1300 and pp)       _counters.at("SRHL-39").add_event(event);
@@ -554,7 +554,7 @@ namespace Gambit {
                     } else                  _counters.at("SRLL-7").add_event(event);
                 }
             }
-            
+
             // Inclusive SR
             if (  leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() > 25. ) {
                 // Nj>=2 and met>50 have been applied
@@ -571,14 +571,14 @@ namespace Gambit {
                 if ( Nb>=3)                            _counters.at("SRinc-10").add_event(event);
                 if ( HT>700)                           _counters.at("SRinc-11").add_event(event);
             }
-            
+
             if (  leptons[SS_1[0]]->pT() < 25. and leptons[SS_2[0]]->pT() < 25. ) {
                 // Nj>=2 and met>50 have been applied
                 if (met>200) _counters.at("SRinc-12").add_event(event);
                 if (Nj>=5)   _counters.at("SRinc-13").add_event(event);
                 if (Nb>=3)   _counters.at("SRinc-14").add_event(event);
             }
-            
+
             // Exclusive SR
             if (  leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() > 25. ) {
                 // Nj>=2 and met>50 have been applied
@@ -593,7 +593,7 @@ namespace Gambit {
                 if (          met>300 and             HT>300)                 _counters.at("SRexc-8").add_event(event);
                 if (          met<300 and HT>1125)                            _counters.at("SRexc-9").add_event(event);
             }
-            
+
             if (  leptons[SS_1[0]]->pT() > 25. and leptons[SS_2[0]]->pT() < 25. ) {
                 // Nj>=2 and met>50 have been applied
                 if (met<300 and HT<1125 and MTmiss<120) _counters.at("SRexc-10").add_event(event);
@@ -605,7 +605,7 @@ namespace Gambit {
                 // Nj>=2 and met>50 have been applied
                 if (HT>300) _counters.at("SRexc-14").add_event(event);
             }
-            
+
             return;
         }
 
@@ -735,7 +735,7 @@ namespace Gambit {
 
     protected:
       void analysis_specific_reset() {
-        for (auto& pair : _counters) { pair.second.reset(); }        
+        for (auto& pair : _counters) { pair.second.reset(); }
       }
 
     };
@@ -754,7 +754,7 @@ namespace Gambit {
       }
 
         virtual void collect_results() {
-                  
+
             // inc
             add_result(SignalRegionData(_counters.at("SRinc-0"), 10, {4.0, 0.79}));
             add_result(SignalRegionData(_counters.at("SRinc-1"), 4, {3.63, 0.71}));
@@ -771,7 +771,7 @@ namespace Gambit {
             add_result(SignalRegionData(_counters.at("SRinc-12"), 10, {4.9, 2.9}));
             add_result(SignalRegionData(_counters.at("SRinc-13"), 6, {7.3, 5.5}));
             add_result(SignalRegionData(_counters.at("SRinc-14"), 0, {1.06, 0.99}));
-      
+
         }
 
     };
@@ -790,7 +790,7 @@ namespace Gambit {
       }
 
         virtual void collect_results() {
-                  
+
             // exc
             add_result(SignalRegionData(_counters.at("SRexc-0"), 685, {700, 130}));
             add_result(SignalRegionData(_counters.at("SRexc-1"), 11, {11.0, 2.2}));
@@ -827,7 +827,7 @@ namespace Gambit {
             };
 
             set_covariance(BKGCOV);
-      
+
         }
 
     };

@@ -209,7 +209,7 @@ namespace Gambit {
       }
 
       struct ptComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       void run(const HEPUtils::Event* event)
@@ -234,8 +234,8 @@ namespace Gambit {
                                     0.0,    0.0,     0.0,       0.0,      0.0,     0.0,      0.0,   // eta > 2.5
                                   };
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons())
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons())
         {
           bool isEl=has_tag(_eff2dEl, fabs(electron->eta()), electron->pT());
           if (isEl && electron->pT()>15. && fabs(electron->eta())<2.4) baselineElectrons.push_back(electron);
@@ -256,23 +256,23 @@ namespace Gambit {
                                      0.0,    0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.4
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons())
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons())
         {
           bool isMu=has_tag(_eff2dMu, fabs(muon->eta()), muon->pT());
           if (isMu && muon->pT()>15. && fabs(muon->eta())<2.4) baselineMuons.push_back(muon);
         }
 
         // Baseline jets
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets())
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets())
         {
           if (jet->pT()>20. &&fabs(jet->eta())<2.4) baselineJets.push_back(jet);
         }
 
 
         // Signal leptons = electrons + muons
-        vector<HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Particle*> signalLeptons;
         signalLeptons=baselineElectrons;
         signalLeptons.insert(signalLeptons.end(),baselineMuons.begin(),baselineMuons.end());
         sort(signalLeptons.begin(),signalLeptons.end(),comparePt);
@@ -282,7 +282,7 @@ namespace Gambit {
         const vector<double> bBJet={0,30., 40., 50., 70., 80., 90., 100.,150., 200., 10000.};
         const vector<double> cBJet={0.63, 0.705, 0.745, 0.76, 0.775, 0.79,0.795, 0.805, 0.795, 0.76};
         HEPUtils::BinnedFn2D<double> _eff2d(aBJet,bBJet,cBJet);
-        vector<HEPUtils::Jet*> signalJets,signalBJets;
+        vector<const HEPUtils::Jet*> signalJets,signalBJets;
         bool ISR_btag=false;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
           bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->abseta(), baselineJets.at(iJet)->pT());

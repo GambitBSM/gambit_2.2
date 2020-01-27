@@ -155,11 +155,11 @@ namespace Gambit {
       }
 
       struct ptComparison {
-        bool operator() (HEPUtils::Particle* i,HEPUtils::Particle* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Particle* i,const HEPUtils::Particle* j) {return (i->pT()>j->pT());}
       } comparePt;
 
       struct ptJetComparison {
-        bool operator() (HEPUtils::Jet* i,HEPUtils::Jet* j) {return (i->pT()>j->pT());}
+        bool operator() (const HEPUtils::Jet* i,const HEPUtils::Jet* j) {return (i->pT()>j->pT());}
       } compareJetPt;
 
       void run(const HEPUtils::Event* event) {
@@ -167,8 +167,8 @@ namespace Gambit {
         double met = event->met();
 
         // Baseline objects
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT()>10. && electron->abseta()<2.47)baselineElectrons.push_back(electron);
         }
 
@@ -178,34 +178,34 @@ namespace Gambit {
         // Apply loose electron selection
         ATLAS::applyLooseIDElectronSelectionR2(baselineElectrons);
 
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT()>10. && muon->abseta()<2.7)baselineMuons.push_back(muon);
         }
 
         // Apply muon efficiency
         ATLAS::applyMuonEff(baselineMuons);
 
-        vector<HEPUtils::Jet*> baselineJets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> baselineJets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT()>20. && jet->abseta()<4.5)baselineJets.push_back(jet);
         }
 
         //Overlap Removal + Signal Objects
-        vector<HEPUtils::Particle*> signalElectrons;
-        vector<HEPUtils::Particle*> signalMuons;
-        vector<HEPUtils::Particle*> signalLeptons;
-        vector<HEPUtils::Jet*> signalJets;
-        vector<HEPUtils::Jet*> signalBJets;
+        vector<const HEPUtils::Particle*> signalElectrons;
+        vector<const HEPUtils::Particle*> signalMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
+        vector<const HEPUtils::Jet*> signalJets;
+        vector<const HEPUtils::Jet*> signalBJets;
 
         const vector<double> aBJet={0,10.};
         const vector<double> bBJet={0,30., 40., 50., 70., 80., 90., 100.,150., 200., 10000.};
         const vector<double> cBJet={0.63, 0.705, 0.745, 0.76, 0.775, 0.79,0.795, 0.805, 0.795, 0.76};
         HEPUtils::BinnedFn2D<double> _eff2d(aBJet,bBJet,cBJet);
 
-        vector<HEPUtils::Jet*> overlapJet;
+        vector<const HEPUtils::Jet*> overlapJet;
         for (size_t iJet=0;iJet<baselineJets.size();iJet++) {
-          vector<HEPUtils::Particle*> overlapEl;
+          vector<const HEPUtils::Particle*> overlapEl;
           bool hasTag=has_tag(_eff2d, baselineJets.at(iJet)->abseta(), baselineJets.at(iJet)->pT());
           for (size_t iEl=0;iEl<baselineElectrons.size();iEl++) {
             if (baselineElectrons.at(iEl)->mom().deltaR_eta(baselineJets.at(iJet)->mom())<0.2)overlapEl.push_back(baselineElectrons.at(iEl));
@@ -259,8 +259,8 @@ namespace Gambit {
         size_t nSignalJets=signalJets.size();
         size_t nSignalBJets=signalBJets.size();
 
-        vector<vector<HEPUtils::Particle*>> SFOSpairs=getSFOSpairs(signalLeptons);
-        vector<vector<HEPUtils::Particle*>> OSpairs=getOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> SFOSpairs=getSFOSpairs(signalLeptons);
+        vector<vector<const HEPUtils::Particle*>> OSpairs=getOSpairs(signalLeptons);
 
         //Variables
         double pT_l0=0.;
@@ -827,7 +827,7 @@ namespace Gambit {
                 = dynamic_cast<const Analysis_ATLAS_13TeV_MultiLEP_36invfb*>(other);
 
         for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
-        
+
         if (NCUTS1 != specificOther->NCUTS1) NCUTS1 = specificOther->NCUTS1;
         for (size_t j = 0; j < NCUTS1; j++) {
           cutFlowVector1[j] += specificOther->cutFlowVector1[j];
@@ -866,7 +866,7 @@ namespace Gambit {
       }
 
 
-      vector<HEPUtils::P4> get_W_ISR(vector<HEPUtils::Jet*> jets, HEPUtils::P4 Z, HEPUtils::P4 met) {
+      vector<HEPUtils::P4> get_W_ISR(vector<const HEPUtils::Jet*> jets, HEPUtils::P4 Z, HEPUtils::P4 met) {
         HEPUtils::P4 Z_met_sys=Z+met;
         double deltaR_min=999;
         size_t Wjets_id1;

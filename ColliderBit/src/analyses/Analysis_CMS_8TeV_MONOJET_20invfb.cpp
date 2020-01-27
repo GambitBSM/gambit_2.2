@@ -77,8 +77,8 @@ namespace Gambit {
         // Now define vectors of baseline objects
 
         // Baseline electrons
-        vector<HEPUtils::Particle*> baselineElectrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> baselineElectrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           if (electron->pT() > 10. && fabs(electron->eta()) < 2.5) {
             baselineElectrons.push_back(electron);
           }
@@ -88,8 +88,8 @@ namespace Gambit {
         CMS::applyElectronEff(baselineElectrons);
 
         // Baseline muons
-        vector<HEPUtils::Particle*> baselineMuons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> baselineMuons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           if (muon->pT() > 10. && fabs(muon->eta()) < 2.5) {
             baselineMuons.push_back(muon);
           }
@@ -99,18 +99,18 @@ namespace Gambit {
         CMS::applyMuonEff(baselineMuons);
 
         // Baseline taus
-        vector<HEPUtils::Particle*> baselineTaus;
-        for (HEPUtils::Particle* tau : event->taus()) {
+        vector<const HEPUtils::Particle*> baselineTaus;
+        for (const HEPUtils::Particle* tau : event->taus()) {
           if (tau->pT() > 20. && fabs(tau->eta()) < 2.3) {
             baselineTaus.push_back(tau);
           }
         }
         CMS::applyTauEfficiency(baselineTaus);
 
-        vector<HEPUtils::Jet*> baselineJets;
+        vector<const HEPUtils::Jet*> baselineJets;
         vector<HEPUtils::P4> jets;
 
-        for (HEPUtils::Jet* jet : event->jets()) {
+        for (const HEPUtils::Jet* jet : event->jets()) {
           if (jet->pT() > 30. && fabs(jet->eta()) < 4.5) {
             baselineJets.push_back(jet);
           }

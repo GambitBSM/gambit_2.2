@@ -4,34 +4,34 @@
 ///
 ///  *********************************************
 
-/* 
-  Based on: 
-    "Search for supersymmetry in final states with photons and missing transverse momentum in proton-proton collisions at 13 TeV" 
+/*
+  Based on:
+    "Search for supersymmetry in final states with photons and missing transverse momentum in proton-proton collisions at 13 TeV"
 
     http://cms-results.web.cern.ch/cms-results/public-results/publications/SUS-17-011/index.html
     arxiv:1903.07070
 
   Notes:
-    
-    There are a lot of details missing in the paper, e.g. the exact numbers used for baseline 
-    object selection, isolation criteria, etc. So we have for now made some hopefully reasonable 
+
+    There are a lot of details missing in the paper, e.g. the exact numbers used for baseline
+    object selection, isolation criteria, etc. So we have for now made some hopefully reasonable
     assumptions, to be validated when we get more info from CMS.
 
   Event selection summary:
 
     Trigger:
     - Two photons
-    - Leading photon: pT > 30 
+    - Leading photon: pT > 30
     - Subleading photon: pT > 18
-    - Invariant mass m_gg > 95 
+    - Invariant mass m_gg > 95
     - Isolation and cluster shape requirements (not implemented)
 
     Photon selection:
     - pT > 40
     - |eta| < 1.44
-    - Isolated from other reconstructed particles by 
-      considering pT sum of other particles within 
-      DeltaR = 0.3. (Not implemented. No details given in the paper...) 
+    - Isolated from other reconstructed particles by
+      considering pT sum of other particles within
+      DeltaR = 0.3. (Not implemented. No details given in the paper...)
 
     Further requirements:
     - Identify the two highest pT EM objects (gg, ee, ge)
@@ -42,7 +42,7 @@
     - Any *additional* electron with pT > 25, |eta| < 2.5
     - Any muon with pT > 25, |eta| < 2.4
 
-    Six SRs based on MET value.    
+    Six SRs based on MET value.
 */
 
 #include <vector>
@@ -99,9 +99,9 @@ namespace Gambit {
         // _cutflow.fillinit();
 
         // Photons
-        // NOTE: 
+        // NOTE:
         //   No photon efficiency info available for this analysis.
-        //   We therefore assume the same efficiency map as used for 
+        //   We therefore assume the same efficiency map as used for
         //   other CMS 36 fb^-1 SUSY searches:
         //
         //   https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/PhotonEfficiencies_ForPublic_Moriond2017_LoosePixelVeto.pdf
@@ -119,13 +119,13 @@ namespace Gambit {
                                      0.0,    0.0,      0.0,      0.0,      0.0,     // eta > 2.5
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dPhoton(aPhoton,bPhoton,cPhoton);
-        vector<HEPUtils::Particle*> photons;
-        for (HEPUtils::Particle* photon : event->photons())
+        vector<const HEPUtils::Particle*> photons;
+        for (const HEPUtils::Particle* photon : event->photons())
         {
           bool isPhoton=has_tag(_eff2dPhoton, photon->abseta(), photon->pT());
           if (isPhoton && photon->pT()>15.) photons.push_back(photon);
         }
-        // Sort 
+        // Sort
         sortByPt(photons);
 
         // Photon trigger cut
@@ -162,14 +162,14 @@ namespace Gambit {
                                    0.0,    0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.5
                                   };
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
-        vector<HEPUtils::Particle*> electrons;
-        for (HEPUtils::Particle* electron : event->electrons()) {
+        vector<const HEPUtils::Particle*> electrons;
+        for (const HEPUtils::Particle* electron : event->electrons()) {
           bool isEl=has_tag(_eff2dEl, electron->abseta(), electron->pT());
-          // No info in the paper on pT or |eta| cuts for baseline electrons, 
+          // No info in the paper on pT or |eta| cuts for baseline electrons,
           // but the above efficieny map effectively requires pT > 10 and |eta| < 2.5
           if (isEl) electrons.push_back(electron);
         }
-        // Sort 
+        // Sort
         sortByPt(electrons);
 
 
@@ -194,31 +194,31 @@ namespace Gambit {
                                      0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.4
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
-        vector<HEPUtils::Particle*> muons;
-        for (HEPUtils::Particle* muon : event->muons()) {
+        vector<const HEPUtils::Particle*> muons;
+        for (const HEPUtils::Particle* muon : event->muons()) {
           bool isMu=has_tag(_eff2dMu, muon->abseta(), muon->pT());
-          // No info in the paper on pT or |eta| cuts for baseline muons, 
+          // No info in the paper on pT or |eta| cuts for baseline muons,
           // but the above efficieny map effectively requires pT > 10 and |eta| < 2.4
           if (isMu) muons.push_back(muon);
         }
-        // Sort 
+        // Sort
         sortByPt(muons);
 
 
         // Jets
-        vector<HEPUtils::Jet*> jets;
-        for (HEPUtils::Jet* jet : event->jets()) {
+        vector<const HEPUtils::Jet*> jets;
+        for (const HEPUtils::Jet* jet : event->jets()) {
           // No info on baseline jet cuts in the paper, so for now we'll
           // apply an|eta| cut for HCAL coverage and a loose jet pT cut
           if (jet->pT()>10. && jet->abseta()<3.0) jets.push_back(jet);
         }
-        // Sort 
+        // Sort
         sortByPt(jets);
 
 
         // Select signal photon candidates
-        vector<HEPUtils::Particle*> signalPhotons;
-        for (HEPUtils::Particle* photon : photons)
+        vector<const HEPUtils::Particle*> signalPhotons;
+        for (const HEPUtils::Particle* photon : photons)
         {
           if (photon->pT() > 15. && photon->abseta() < 1.44) signalPhotons.push_back(photon);
           // NOTE: there should also be an isolation cut based on pT sums of other objects
@@ -226,15 +226,15 @@ namespace Gambit {
         }
 
         // Requirements on the two highest-pT EM objects
-        vector<HEPUtils::Particle*> EMobjects;
+        vector<const HEPUtils::Particle*> EMobjects;
         EMobjects.insert(EMobjects.end(), signalPhotons.begin(), signalPhotons.end());
         EMobjects.insert(EMobjects.end(), electrons.begin(), electrons.end());
         sortByPt(EMobjects);
 
-        vector<HEPUtils::Particle*> signalEMobjects;
+        vector<const HEPUtils::Particle*> signalEMobjects;
         if (EMobjects.size() < 2) {
           signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.end());
-        } 
+        }
         else {
           signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.begin() + 2);
         }
@@ -244,8 +244,8 @@ namespace Gambit {
         bool mgg_gt_105 = false;
         if (signalEMobjects.size() >= 2) {
 
-          HEPUtils::Particle* obj1 = signalEMobjects.at(0);
-          HEPUtils::Particle* obj2 = signalEMobjects.at(1);
+          const HEPUtils::Particle* obj1 = signalEMobjects.at(0);
+          const HEPUtils::Particle* obj2 = signalEMobjects.at(1);
 
           if (obj1->pid() == 22 && obj2->pid() == 22) isDiphoton = true;
 
@@ -256,7 +256,7 @@ namespace Gambit {
 
         // Vetos on muons
         bool muVeto = false;
-        for (HEPUtils::Particle* muon : muons) {
+        for (const HEPUtils::Particle* muon : muons) {
           if (muon->pT() > 25. && muon->abseta() < 2.4) {
             muVeto = true;
             break;
@@ -265,7 +265,7 @@ namespace Gambit {
 
         // Veto on electrons not part of the two signalEMobjects
         bool elVeto = false;
-        for (HEPUtils::Particle* electron : electrons) {
+        for (const HEPUtils::Particle* electron : electrons) {
           if (electron->pT() > 25. && electron->abseta() < 2.5) {
             if (electron != signalEMobjects.at(0) && electron != signalEMobjects.at(1)) {
               elVeto = true;
