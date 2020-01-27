@@ -2389,7 +2389,7 @@ namespace Gambit
 
       Eigen::Matrix3cd m_nu = *Dep::m_nu;
       Eigen::Matrix3cd Theta = *Dep::SeesawI_Theta;
-      Eigen::Matrix3cd Vnu = *Dep::SeesawI_Vnu;
+4      Eigen::Matrix3cd Vnu = *Dep::SeesawI_Vnu;
 
       result = pow(sminputs.mMu,5)/(512*pow(pi,3));
 
