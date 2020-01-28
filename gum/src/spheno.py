@@ -655,11 +655,12 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
 
     return spheno_src, spheno_header, backend_types, linenum
 
-def write_spheno_function(name, function_signatures, no_star = []) :
+def write_spheno_function(name, function_signatures, no_star = [], replacements = {}) :
     """
     Write the function for spheno
     """
     args = function_signatures[name]
+    args = [arg if arg not in replacements else replacements[arg] for arg in args]
     function = name + "(" +  ''.join([("*" if arg not in no_star else "") + arg + "," for arg in args[:-1]])
     function += ("*" if args[-1] not in no_star else "") + args[-1] + ");"
 
@@ -1437,7 +1438,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "Fdecays::BRs_already_calculated = true;\n"
             "\n"
             "}}\n\n"
-    ).format( write_spheno_function("CalculateBR_2", function_signatures) )
+    ).format( write_spheno_function("CalculateBR_2", function_signatures, [], {"fac3":"ratioWoM"}) )
     # End of fill_spectrum_calculate_BRs function
 
     # run_SPheno_decays function
