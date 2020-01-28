@@ -1499,9 +1499,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-( int(index) if index != "" else 0 )+1) + " ,j)"
         if i == 0:
-            towrite += "if(i==1) return (*gT" + name + ")" + brace + ";\n"
+            towrite += "if(i==1) return (*BR" + name + ")" + brace + ";\n"
         else :
-            towrite += "else if(i==" + str(i+1) + ") return (*gT" + name + ")" + brace + ";\n"
+            towrite += "else if(i==" + str(i+1) + ") return (*BR" + name + ")" + brace + ";\n"
     towrite += "return 0.0;\n"\
                "};\n\n"
 

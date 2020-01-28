@@ -354,9 +354,10 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("sinW2", "Pole_Mixing", shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=True))
-    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=True))
-    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=True))
+    # TODO: TG: Yukawas do not seem to be real, at least for the test model
+    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=False))
+    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=False))
+    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=False))
     
     return params
 
