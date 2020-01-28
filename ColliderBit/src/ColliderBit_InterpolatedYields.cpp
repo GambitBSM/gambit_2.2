@@ -45,6 +45,7 @@ using namespace std;
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/file_lock.hpp"
+//#include DMEFT_grids.hpp
 
 // Needs GSL 2 
 #include <gsl/gsl_math.h>
@@ -77,9 +78,29 @@ namespace Gambit
       const char* met_CMS_14   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
 
 
+
+      // ----------------------------------//     
+      // Atlas/CMS analysis arrays 
       // ----------------------------------//
 
-     
+      static const double CMS_OBSNUM[cms_bin_size] = {
+                              136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
+                              926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29};
+      static const double CMS_BKGNUM[cms_bin_size] = {
+                                          134500, 73400, 42320, 25490, 15430, 10160, 8480, 4865, 2970, 1915, 1506,
+                                          844, 526, 325, 223, 169, 107, 88.1, 52.8, 25.0, 25.5, 26.9
+                                             };
+      static const double CMS_BKGERR[cms_bin_size] = { 
+                                            3700, 2000, 810, 490, 310, 170, 140, 95, 49, 33, 32, 18, 14, 12, 9, 8, 6, 5.3, 3.9, 2.5, 2.6, 2.8
+                                                };
+
+      static Eigen::MatrixXd m_BKGCOV(22,22);
+
+
+      static const double ATLAS_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
+      static const double ATLAS_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
+      static const double ATLAS_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
+
     double LinearInterpolation(double y2, double y1, double y, double q1,double q2)
     {
       return  ( 1.0 / (y2-y1) ) * ( (y2 - y)*q1 + (y-y1)*q2 );
@@ -136,8 +157,6 @@ namespace Gambit
       // cout << " MASS = " << m <<endl;
       Utils::FileLock mylock("Get_data_once");
 
-
-       // -----Define met_hist files
       static double MET_HIST_CMS_14[data_SIZE][cms_bin_size];
       static double MET_HIST_ATLAS_14[data_SIZE][atlas_bin_size];
       static double MET_HIST_CMS_23[data_SIZE][cms_bin_size];
@@ -161,12 +180,12 @@ namespace Gambit
       static double mass[data_INC]; 
 
       
-      
+  
       if (first)
       {
         mylock.get_lock();
 
-        cout << "RAN IFFFFFFFFF"<<endl;
+        cout << "Reading in grids. [Only happens on first itteration]."<<endl;
         float var1,var2;
         FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63.txt","r");   // The masses and thetas are the same for each! 
         for (int ll = 0; ll < data_INC; ++ll){
@@ -266,6 +285,8 @@ namespace Gambit
 
       }
 
+
+
       // Define temp. arrays for storing yields. 
       // cout << "Check things "<<mass[0]<<endl;  
       int met_bin_size;
@@ -355,10 +376,12 @@ namespace Gambit
 
       if (O1==0){
         Norm = pow(O2,2);
+        th   = 0;
         // cout << " O1 is zero"<< endl;
       }
       else if (O2==0){
         Norm = pow(O1,2);
+        th   = PI/2;
         // cout << " O2 is zero"<< endl;
       }
       else{
@@ -679,7 +702,6 @@ namespace Gambit
       // instead of using the Pipes
       */
 
-      // ***** What about DM mass?
       // double mDM = spec.get(Par::Pole_Mass, "chi");
 
       // Andre: will need too add interpolators for each bin (or some smarter way to do it for all bins and store the results)
@@ -729,18 +751,6 @@ namespace Gambit
       L_Acc_Eff_CS(_srnums_CMS, mchi,C61,C62,C63,C64,"CMS");
       
       // cout << "first _srnums call ..."<<endl;
-
-
-      static const double CMS_OBSNUM[cms_bin_size] = {
-                              136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
-                              926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29};
-      static const double CMS_BKGNUM[cms_bin_size] = {
-                                          134500, 73400, 42320, 25490, 15430, 10160, 8480, 4865, 2970, 1915, 1506,
-                                          844, 526, 325, 223, 169, 107, 88.1, 52.8, 25.0, 25.5, 26.9
-                                             };
-      static const double CMS_BKGERR[cms_bin_size] = { 
-                                            3700, 2000, 810, 490, 310, 170, 140, 95, 49, 33, 32, 18, 14, 12, 9, 8, 6, 5.3, 3.9, 2.5, 2.6, 2.8
-                                                };
 
       std::vector<SignalRegionData> cmsBinnedResults;
       
@@ -793,9 +803,15 @@ namespace Gambit
             { -4.14e+02, -1.68e+02,  2.27e+01, -2.74e+01, -8.68e+00,  4.76e+00,  3.14e+01,  7.98e+00,  5.49e+00,  4.62e+00, -8.96e-01,  7.06e+00,  1.57e+00,  3.02e+00,  2.52e+00, -6.72e-01,  1.51e+00, -4.45e-01,  1.64e+00,  6.30e-01,  5.82e-01,  7.84e+00 }
       };
 
-      Eigen::MatrixXd m_BKGCOV(22,22);
-      for (int i = 0; i < 22; i++)
-      m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size()); 
+      static bool first_c = true;
+      if (first_c){
+        cout << " Defining CMS covariance matrix..."<<endl;
+        for (int i = 0; i < 22; i++)
+            m_BKGCOV.row(i) = Eigen::VectorXd::Map(&BKGCOV[i][0],BKGCOV[i].size()); 
+        first_c = false;
+      }
+
+
 
       AnalysisData  * cmsData = new AnalysisData(cmsBinnedResults, m_BKGCOV);
       cmsData->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated";
@@ -817,9 +833,7 @@ namespace Gambit
 
       // cout << "Atlas srnums defined" <<endl;
 
-      static const double ATLAS_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
-      static const double ATLAS_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
-      static const double ATLAS_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
+
 
       // cout << "After static atlas" <<endl;
 
@@ -843,29 +857,13 @@ namespace Gambit
         atlasBinnedResults.push_back(sr);
       }
 
-      // cout << "after signal region data efinition ..."<<endl;
 
-      //  // --- ATLAS covarance matrix: Identity!
-      //  std::vector< std::vector<double> > aBKGCOV;
-
-      //   // Initialize the matrix as a n x n array of 0.
-      //   aBKGCOV = std::vector< std::vector<double> >(10, vector<double>(10,0));
-
-      //   // Set the diagonal to be 1s
-      //   for(unsigned int t = 0; t < 10; t++)
-      //       aBKGCOV[t][t] = 1;
-
-
-   
-      //   Eigen::MatrixXd A_BKGCOV(10,10);
-      //   for (int i = 0; i < 10; i++) 
-      //   A_BKGCOV.row(i) = Eigen::VectorXd::Map(&aBKGCOV[i][0],aBKGCOV[i].size()); 
 
       AnalysisData  * atlasData = new AnalysisData(atlasBinnedResults);    
 
       atlasData->analysis_name  = "ATLAS_13TeV_MONOJET_36invfb_interpolated"; 
 
-
+      // There might be routines to clear this already...
 
       // ******** Create total results ***********// 
       // //--------------------------------------//
@@ -874,6 +872,8 @@ namespace Gambit
       result.push_back(atlasData);
       result.push_back(cmsData);
 
+      // atlasData.clear();
+      // cmsData.clear();
       // // Debug output
       // for (size_t ibin = 0; ibin < atlas_bin_size; ++ibin) {
       //   cout << "DEBUG: sr-" << ibin << " n_signal = " << result[0]->srdata[ibin].n_signal << endl;
