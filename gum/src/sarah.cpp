@@ -1219,7 +1219,8 @@ namespace GUM
         flags = {
           {"SupersymmetricModel",false}, 
           {"OnlyLowEnergySPheno", false},
-          {"UseHiggs2LoopMSSM", false}
+          {"UseHiggs2LoopMSSM", false},
+          {"SA`AddOneLoopDecay", false}
         };
         model.get_flags(flags);
 

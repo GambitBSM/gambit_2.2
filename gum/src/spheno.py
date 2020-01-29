@@ -2608,7 +2608,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # Calc3BodyDecay_<particle_i>,  CalcLoopDecay_<particle_i>
     for name, var in variables.iteritems() :
-        if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") :
+        if ( name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") ) and not name == "CalcLoopDecay_LoopInducedOnly" :
             towrite += "// " + name + '\n'\
                 '*' + name + ' = inputs.options->getValueOrDef<bool>(true, "' + name + '");\n'\
                 '\n'
@@ -2617,9 +2617,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       towrite += '// Calculate 3 body decays with only SUSY particles\n'\
         '*CalcSUSY3BodyDecays = inputs.options->getValueOrDef<bool>(false, "CalcSUSY3BodyDecays");\n'\
         '\n'
-    towrite += '// 1000, Loop induced only\n'\
-      '*CalcLoopDecay_LoopInducedOnly = inputs.options->getValueOrDef<bool>(false, "CalcLoopDecay_LoopInducedOnly");\n'\
-      '\n'
+
+    if flags["SA`AddOneLoopDecay"] :
+      towrite += '// 1000, Loop induced only\n'\
+        '*CalcLoopDecay_LoopInducedOnly = inputs.options->getValueOrDef<bool>(false, "CalcLoopDecay_LoopInducedOnly");\n'\
+        '\n'
 
     towrite += '// 1101, divonly_save\n'\
       '*divonly_save = inputs.options->getValueOrDef<Finteger>(1,"divonly_save");\n'\
@@ -3210,7 +3212,6 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(SwitchToSCKM, Flogical, \"__settings_MOD_switchtosckm\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, \"__control_MOD_twoloophiggs_error\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(TwoLoopMethod, Finteger, \"__settings_MOD_twoloopmethod\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopMethod, Finteger, \"__settings_MOD_twoloopmethod\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(TwoLoopRegulatorMass, Freal8, \"__settings_MOD_twoloopregulatormass\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(TwoLoopRGE, Flogical, \"__settings_MOD_twolooprge\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(TwoLoopSafeMode, Flogical, \"__settings_MOD_twoloopsafemode\", \"SARAHSPheno_{0}_internal\")\n"
@@ -3297,8 +3298,15 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), \"{0}_spectrum\")\n"
             "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const Finputs&), \"{0}_decays\")\n"
             "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
-            "BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"{0}_HiggsCouplingsTable\")\n"
-            "BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
+    ).format(clean_model_name)
+
+    # Change with the Higgs couplings table is coded up
+    hboutput = False
+    if hboutput:
+      towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"{0}_HiggsCouplingsTable\")\n"
+        ).format(clean_model_name)
+
+    towrite += ("BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(ReadingData_decays, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(InitializeStandardModel, void, (const SMInputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(ErrorHandling, void, (const int&), \"SARAHSPheno_{0}_internal\")\n"
