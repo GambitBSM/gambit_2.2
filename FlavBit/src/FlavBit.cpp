@@ -2391,7 +2391,7 @@ namespace Gambit
 
       Eigen::Matrix3cd m_nu = *Dep::m_nu;
       Eigen::Matrix3cd Theta = *Dep::SeesawI_Theta;
-4      Eigen::Matrix3cd Vnu = *Dep::SeesawI_Vnu;
+      Eigen::Matrix3cd Vnu = *Dep::SeesawI_Vnu;
 
       result = pow(sminputs.mMu,5)/(512*pow(pi,3));
 
@@ -3095,9 +3095,9 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular
-    void HEPLike_B2KstarmumuAng_LogLikelihood(double &result)
+    void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb(double &result)
     {
-      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood;
+      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
 
       static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_0.1_0.98.yaml";
       static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
@@ -3328,6 +3328,85 @@ namespace Gambit
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
 
+    void HEPLike_RK_LogLikelihood(double &result)
+    {
+
+      using namespace Pipes::HEPLike_RK_LogLikelihood;
+
       
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/Rk/CERN-EP-2019-043.yaml";
+      static HepLike_default::HL_ProfLikelihood rk(inputfile_0);
+ 
+      
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        rk.Read();
+       
+        first = false;
+      }
+      static const std::array<std::string, 1> observables{
+              "R-1_BKll_1.1_6",
+      };
+      auto SI_theory = *Dep::SuperIso_obs_values;   
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      std::cout<<1.+SI_theory[observables[0]]<<  "  "<<sqrt(SI_theory_covariance[observables[0]][observables[0]]) << std::endl;
+      std::cout<<rk.GetLogLikelihood( 1.+SI_theory[observables[0]], -1.)<<std::endl;
+      result = rk.GetLogLikelihood(
+                                   1.+SI_theory[observables[0]], -1
+              //          sqrt(SI_theory_covariance[observables[0]][observables[0]])
+                                   );
+                                                                           
+      if (flav_debug) std::cout << "HEPLike_RK_LogLikelihood result: " << result << std::endl;
+    
+    }
+
+
+    
+    void HEPLike_RKstar_LogLikelihood_LHCb(double &result)
+    {
+
+      using namespace Pipes::HEPLike_RKstar_LogLikelihood_LHCb;
+
+      
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_0.045_1.1.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_1.1_6.yaml";
+      static HepLike_default::HL_ProfLikelihood rkstar1(inputfile_0);
+      static HepLike_default::HL_ProfLikelihood rkstar2(inputfile_1);
+      
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        rkstar1.Read();
+        rkstar2.Read();
+        first = false;
+      }
+      static const std::array<std::string, 2> observables{
+        "R-1_B0Kstar0ll_0.045_1.1",
+        "R-1_B0Kstar0ll_1.1_6",
+      };
+      auto SI_theory = *Dep::SuperIso_obs_values;   
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+
+       
+      result = rkstar1.GetLogLikelihood(
+                                        1.+SI_theory[observables[0]], -1
+              //              sqrt(SI_theory_covariance[observables[0]][observables[0]])
+                                        );
+      
+      result+= rkstar2.GetLogLikelihood(
+                                        1.+SI_theory[observables[1]], -1
+              //sqrt(SI_theory_covariance[observables[1]][observables[1]])/( SI_theory[observables[1]]*SI_theory[observables[1]])
+                                        );
+      if (flav_debug) std::cout << "HEPLike_RKstar_LogLikelihood_LHCb result: " << result << std::endl;
+
+    }
+
+
+    
   }
 }

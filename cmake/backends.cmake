@@ -160,7 +160,7 @@ set(HLver "1.0")
 
 set(dl "https://github.com/mchrzasz/HEPLikeData/archive/master.zip")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(md5 "f59f1301fc0c05d42373c654f9249c2a")
+set(md5 "f88072aec710664ea78892ddf74b76c4")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}

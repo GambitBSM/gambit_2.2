@@ -935,9 +935,9 @@ START_MODULE
   #undef CAPABILITY
 
   /// HEPLike LogLikelihood B -> K* mu mu Angular
-  #define CAPABILITY HEPLike_B2KstarmumuAng_LogLikelihood
+  #define CAPABILITY HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
   START_CAPABILITY
-    #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood
+    #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
@@ -966,6 +966,31 @@ START_MODULE
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
+
+  /// HEPLike LogLikelihood for RK
+  #define CAPABILITY HEPLike_RK_LogLikelihood
+  START_CAPABILITY
+    #define FUNCTION HEPLike_RK_LogLikelihood
+    START_FUNCTION(double)
+    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    NEEDS_CLASSES_FROM(HepLike)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+/// HEPLike LogLikelihood for RKstar
+  #define CAPABILITY HEPLike_RKstar_LogLikelihood_LHCb
+  START_CAPABILITY
+    #define FUNCTION HEPLike_RKstar_LogLikelihood_LHCb
+    START_FUNCTION(double)
+    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    NEEDS_CLASSES_FROM(HepLike)
+    #undef FUNCTION
+  #undef CAPABILITY
+                                                                 
+
+
 
 #undef MODULE
 
