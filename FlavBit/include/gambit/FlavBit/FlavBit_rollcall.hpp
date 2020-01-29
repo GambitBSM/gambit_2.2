@@ -946,9 +946,9 @@ START_MODULE
  #undef CAPABILITY
 
   /// HEPLike LogLikelihood B -> K* mu mu BR
-  #define CAPABILITY HEPLike_B2KstarmumuBr_LogLikelihood
+  #define CAPABILITY HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
   START_CAPABILITY
-    #define FUNCTION HEPLike_B2KstarmumuBr_LogLikelihood
+    #define FUNCTION HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)

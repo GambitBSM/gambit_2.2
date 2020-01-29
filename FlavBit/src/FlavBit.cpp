@@ -24,6 +24,7 @@
 ///  \date 2016 August
 ///  \date 2016 October
 ///  \date 2018 Jan
+///  \date 2020 Jan
 ///
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
@@ -46,6 +47,7 @@
 ///  \date 2019 July
 ///  \date 2019 Nov
 ///  \date 2019 Dec
+///  \date 2020 Jan
 ///
 ///  \author Markus Prim
 ///          (markus.prim@kit.edu)
@@ -3225,10 +3227,10 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Br
-    void HEPLike_B2KstarmumuBr_LogLikelihood(double &result)
+    void HEPLike_B2KstarmumuBr_LogLikelihood_LHCb(double &result)
     {
 
-      using namespace Pipes::HEPLike_B2KstarmumuBr_LogLikelihood;
+      using namespace Pipes::HEPLike_B2KstarmumuBr_LogLikelihood_LHCb;
 
       static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_0.1_0.98.yaml";
       static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_1.1_2.5.yaml";
@@ -3325,5 +3327,7 @@ namespace Gambit
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
+
+      
   }
 }

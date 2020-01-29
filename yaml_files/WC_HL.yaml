@@ -100,7 +100,7 @@ ObsLikes:
     capability: HEPLike_B2mumuLogLikelihood
 
   - purpose:    LogLike
-    capability: HEPLike_B2KstarmumuAng_LogLikelihood
+    capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
 
   - purpose:    LogLike
     capability: HEPLike_B2SGammaLogLikelihood
