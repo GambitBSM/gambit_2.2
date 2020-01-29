@@ -70,7 +70,7 @@ def patch_spheno(model_name, patch_dir, flags, particles):
     """
 
     patch_spheno_makefile(model_name, patch_dir)
-    patch_spheno_model_makefile(model_name, patch_dir)
+    patch_spheno_model_makefile(model_name, patch_dir, flags)
     patch_spheno_src_makefile(model_name, patch_dir)
     patch_control(model_name, patch_dir)
     patch_spheno_model(model_name, patch_dir)
@@ -124,7 +124,7 @@ def patch_spheno_makefile(model_name, patch_dir):
         f.write(content)
 
 
-def patch_spheno_model_makefile(model_name, patch_dir):
+def patch_spheno_model_makefile(model_name, patch_dir, flags):
     """
     Patches $SPheno/<MODEL>/Makefile
     """
@@ -179,18 +179,21 @@ def patch_spheno_model_makefile(model_name, patch_dir):
                 content = "${shared}:\n"\
                           "\tcd ../src ; ${MAKE} F90=${F90}\n"\
                           "\t${MAKE} F90=${F90} ${name}\n"\
-                          "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
-                          "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
-                          "\t${F90} -shared -fPIC -o ../${shared} ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
-                          "bin/SPheno" + model_name + ":\n"\
-                          "ifeq (${cVersion},1)\n"\
-                          "\tcd ../src ; ${MAKE} F90=${F90}\n"\
-                          "\t${MAKE} F90=${F90} ${name}\n"\
-                          "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
-                          "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
-                          "\t${F90} -o -fPIC SPheno" + model_name + " ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
-                          "\tmv SPheno" + model_name + "../bin\n"\
-                          "\trm SPheno" + model_name + ".o\n"
+                          "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"
+                if flags['UseHiggs2LoopMSSM']:
+                    content += "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
+                               "\t${F90} -shared -fPIC -o ../${shared} ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"
+                else:
+                    content += "\t${F90} -shared -fPIC -o ../${shared} ${LFlagsB} SPheno" + model_name + ".o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"
+                content += "bin/SPheno" + model_name + ":\n"\
+                           "ifeq (${cVersion},1)\n"\
+                           "\tcd ../src ; ${MAKE} F90=${F90}\n"\
+                           "\t${MAKE} F90=${F90} ${name}\n"\
+                           "\t${MAKE} F90=${F90} SPheno" + model_name + ".o\n"\
+                           "\t${F90} -c -fPIC TwoLoopMasses/effpotasat.f\n"\
+                           "\t${F90} -o -fPIC SPheno" + model_name + " ${LFlagsB} SPheno" + model_name + ".o effpotasat.o ../lib/libSPheno" + model_name + ".a ../lib/libSPheno.a\n"\
+                           "\tmv SPheno" + model_name + "../bin\n"\
+                           "\trm SPheno" + model_name + ".o\n"
                 g.write(content)
                 for i in range(7): next(f)
                 skip_next_lines = False
@@ -652,11 +655,12 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
 
     return spheno_src, spheno_header, backend_types, linenum
 
-def write_spheno_function(name, function_signatures, no_star = []) :
+def write_spheno_function(name, function_signatures, no_star = [], replacements = {}) :
     """
     Write the function for spheno
     """
     args = function_signatures[name]
+    args = [arg if arg not in replacements else replacements[arg] for arg in args]
     function = name + "(" +  ''.join([("*" if arg not in no_star else "") + arg + "," for arg in args[:-1]])
     function += ("*" if args[-1] not in no_star else "") + args[-1] + ");"
 
@@ -700,6 +704,11 @@ def get_fortran_shapes(parameters):
         if parameter.size:
             fortran_type += "_1_"
             fortran_type += parameter.size.replace(',','_1_')
+
+        # If any of the dimensions is 0, set to void
+        if parameter.size:
+            if any([x == '0' for x in parameter.size.split(',')]):
+                fortran_type = "void"
 
         # If we haven't been able to convert it, throw an error.
         if not fortran_type:
@@ -1174,9 +1183,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     Writes source for 
     Backends/src/frontends/SARAHSPheno_<MODEL>_<VERSION>.cpp
     """ 
-    intro_message = "Frontend for SARAH-SPheno "+SPHENO_VERSION+" backend, for the "\
-                    " "+model_name+" model."
 
+    intro_message = "Frontend header for SARAH-SPheno {0} backend,\n" \
+                    "/// for the {1} model.".format(SPHENO_VERSION, model_name)
     safe_version = SPHENO_VERSION.replace('.','_')
 
     towrite = blame_gum(intro_message)
@@ -1249,7 +1258,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "\n"
             "*kont = 0;\n"
             "*delta_mass = 1.0E-4;\n"
-            "*CalcTBD = false;\n"
+            "*CTBD = false;\n"
             "\n"
             "ReadingData(inputs);\n"
             "\n"
@@ -1268,7 +1277,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "if(*kont != 0)\n"
             "  ErrorHandling(*kont);\n"
             "\n"
-            "return *kont\n"
+            "return *kont;\n"
             "}\n"
     )
     # End of run_SPheno function
@@ -1283,7 +1292,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "\n"
             "// Initialize some variables\n"
             "*Iname = 1;\n"
-            "*CalcTBD = false;\n"
+            "*CTBD = false;\n"
             "*ratioWoM = 0.0;\n"
             "*epsI = 1.0E-5;\n"
             "*deltaM = 1.0e-6;\n"
@@ -1343,6 +1352,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # Mixings.
     towrite += "// Mixings\n"
+ 
     for par in parameters:
         # If there's no block, er... skip this.
         if not par.block: continue
@@ -1380,13 +1390,17 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
       
     # Fill model dependent other parameters
-    towrite += "// Other parameters\n"
+    towrite += "\n// Other parameters\n"
+
     for par in parameters:
 
         # Don't want output (mixing matrices, basically) or masses. Already done those.
-        if not par.is_output and par.block != "MASS":
+        # Also don't want MINPAR or EXTPAR parameters
+        if not par.is_output and par.block != "MASS" and par.block != "MINPAR" and par.block != "EXTPAR" :
 
-            entry = par.alt_name if par.alt_name else par.name
+            # TODO: TG: Looks like it needs the output names for this, can't remember why we thought to use the alt_name
+            entry = par.name
+            #entry = par.alt_name if par.alt_name else par.name
             
             # Matrix case
             if par.shape.startswith('m'):
@@ -1424,7 +1438,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "Fdecays::BRs_already_calculated = true;\n"
             "\n"
             "}}\n\n"
-    ).format( write_spheno_function("CalculateBR_2", function_signatures) )
+    ).format( write_spheno_function("CalculateBR_2", function_signatures, [], {"fac3":"ratioWoM"}) )
     # End of fill_spectrum_calculate_BRs function
 
     # run_SPheno_decays function
@@ -1485,9 +1499,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-( int(index) if index != "" else 0 )+1) + " ,j)"
         if i == 0:
-            towrite += "if(i==1) return (*gT" + name + ")" + brace + ";\n"
+            towrite += "if(i==1) return (*BR" + name + ")" + brace + ";\n"
         else :
-            towrite += "else if(i==" + str(i+1) + ") return (*gT" + name + ")" + brace + ";\n"
+            towrite += "else if(i==" + str(i+1) + ") return (*BR" + name + ")" + brace + ";\n"
     towrite += "return 0.0;\n"\
                "};\n\n"
 
@@ -1718,7 +1732,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             for index, param in entry.iteritems():
 
                 # Is it a real parameter?
-                real = reality_dict[param]                   
+                real = reality_dict[param]
 
                 # If it's a real parameter don't need to take the real part.
                 # Just add it.
@@ -1733,8 +1747,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                         towrite += "SLHAea_add_block(slha, \"IM{0}\", Q);\n".format(block)
                         addedblocks.append("IM"+block)
                     towrite += (
-                        "slha[\"{0}\"][\"\"] << {1} << *{2}.re << \"# Re({2})\";\n"
-                        "slha[\"IM{0}\"][\"\"] << {1} << *{2}.im << \"# Im({2})\";\n"
+                        "slha[\"{0}\"][\"\"] << {1} << {2}->re << \"# Re({2})\";\n"
+                        "slha[\"IM{0}\"][\"\"] << {1} << {2}->im << \"# Im({2})\";\n"
                     ).format(block, index, param)
 
 
@@ -1784,7 +1798,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     towrite += (
             "\n"
             "// Block MASS\n"
-            "SLHAea_add_block(slha, \"MASS\")\n"
+            "SLHAea_add_block(slha, \"MASS\");\n"
     )
 
     for particle in particles:
@@ -1873,8 +1887,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "slha[\"SPheno\"][\"\"] << 60 << *KineticMixing << \"# Include kinetic mixing\";\n"
             "slha[\"SPheno\"][\"\"] << 65 << *SolutionTadpoleNr << \"# Solution of tadpole equation\";\n"
             "\n"
-            "// Retrieve mass cuts\n"
-            "static const Spectrum::cuts_info mass_cuts = Spectrum::retrieve_mass_cuts(inputs.options);\n"
             "\n"
             "// Has the user chosen to override any pole mass values?\n"
             "// This will typically break consistency, but may be useful in some special cases\n"
@@ -1889,7 +1901,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "}\n"
             "\n"
             "//Create Spectrum object\n"
-            "Spectrum spectrum = spectrum_from_SLHAea<"+model_name+"SimpleSpec, SLHAstruct>(slha,slha,mass_cuts);\n"
+            "static const Spectrum::mc_info mass_cut;\n"
+            "static const Spectrum::mr_info mass_ratio_cut;\n"
+            "Spectrum spectrum = spectrum_from_SLHAea<Gambit::Models::"+fullmodelname+"SimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);\n"
             "\n"
             "return spectrum;\n"
             "\n"
@@ -2536,64 +2550,78 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # end of ReadingData
 
     # ReadingData_decays function
-    towrite += "// Function to read decay tables and options\n"\
-      '{\n'\
-      '// Read the file with info about decay channels\n'\
-      'static bool scan_level_decays = true;\n'\
-      'if (scan_level_decays)\n'\
-      '{\n'\
-      '// str decays_file = inputs.options->getValueOrDef<str>("", "decays_file");\n'\
-      'str decays_file = str(GAMBIT_DIR) + "/Backends/data/" + STRINGIFY(BACKENDNAME) + "_" + STRINGIFY(SAFE_VERSION) + "_decays_info.dat";\n'\
-      '\n'\
-      'Fdecays::fill_all_channel_info(decays_file);\n'\
-      '\n'\
-      'scan_level_decays = false;\n'\
-      '}\n'\
-      ' \n'\
-      '// Options for decays only\n'\
-      ' \n'\
-      '/********************/\n'\
-      '/* Block SPhenoInput */\n'\
-      '/********************/\n'\
-      ' \n'\
-      '// 11, whether to calculate branching ratios or not, L_BR\n'\
-      '*L_BR = true;\n'\
-      ' \n'\
-      '// 12, minimal value such that a branching ratio is written out, BRMin\n'\
-      '// This really only affects output so we don\'t care\n'\
-      ' \n'\
-      '// 13, 3 boday decays\n'\
-      '*Enable3BDecaysF = inputs.options->getValueOrDef<bool>(true, "Enable3BDecaysF");\n'\
-      '*Enable3BDecaysS = inputs.options->getValueOrDef<bool>(true, "Enable3BDecaysS");\n'\
-      ' \n'\
-      '// 14, run SUSY couplings to scale of decaying particle\n'\
-      '*RunningCouplingsDecays = inputs.options->getValueOrDef<bool>(true, "RunningCouplingsDecays");\n'\
-      '\n'\
-      '// 15, MinWidth\n'\
-      '*MinWidth = inputs.options->getValueOrDef<Freal8>(1.0E-30, "MinWidth");\n'\
-      ' \n'\
-      '// 16. OneLoopDecays\n'\
-      '*OneLoopDecays = inputs.options->getValueOrDef<bool>(true, "OneLoopDecays");\n'\
-      '\n'\
-      '/**********************/\n'\
-      '/* Block DECAYOPTIONS */\n'\
-      '/**********************/\n'\
-      '\n'
+    towrite += (
+                "// Function to read decay tables and options\n"
+                "void ReadingData_decays(const Finputs &inputs)\n"
+                "{\n"
+                "// Read the file with info about decay channels\n"
+                "static bool scan_level_decays = true;\n"
+                "if (scan_level_decays)\n"
+                "{\n"
+                "// str decays_file = inputs.options->getValueOrDef<str>(\"\", "
+                "\"decays_file\");\n"
+                "str decays_file = str(GAMBIT_DIR) + \"/Backends/data/\" + "
+                "STRINGIFY(BACKENDNAME) + \"_\" + STRINGIFY(SAFE_VERSION) + "
+                "\"_decays_info.dat\";\n"
+                "\n"
+                "Fdecays::fill_all_channel_info(decays_file);\n"
+                "\n"
+                "scan_level_decays = false;\n"
+                "}\n"
+                " \n"
+                "// Options for decays only\n"
+                " \n"
+                "/********************/\n"
+                "/* Block SPhenoInput */\n"
+                "/********************/\n"
+                " \n"
+                "// 11, whether to calculate branching ratios or not, L_BR\n"
+                "*L_BR = true;\n"
+                " \n"
+                "// 12, minimal value such that a branching ratio is written "
+                "out, BRMin\n"
+                "// This really only affects output so we don\'t care\n"
+                " \n"
+                "// 13, 3 boday decays\n"
+                "*Enable3BDecaysF = inputs.options->getValueOrDef<bool>(true, "
+                "\"Enable3BDecaysF\");\n"
+                "*Enable3BDecaysS = inputs.options->getValueOrDef<bool>(true, "
+                "\"Enable3BDecaysS\");\n"
+                " \n"
+                "// 14, run SUSY couplings to scale of decaying particle\n"
+                "*RunningCouplingsDecays = inputs.options->getValueOrDef<bool>"
+                "(true, \"RunningCouplingsDecays\");\n"
+                "\n"
+                "// 15, MinWidth\n"
+                "*MinWidth = inputs.options->getValueOrDef<Freal8>(1.0E-30, "
+                "\"MinWidth\");\n"
+                " \n"
+                "// 16. OneLoopDecays\n"
+                "*OneLoopDecays = inputs.options->getValueOrDef<bool>(true, "
+                "\"OneLoopDecays\");\n"
+                "\n"
+                "/**********************/\n"
+                "/* Block DECAYOPTIONS */\n"
+                "/**********************/\n"
+                "\n"
+    )
 
     # Calc3BodyDecay_<particle_i>,  CalcLoopDecay_<particle_i>
     for name, var in variables.iteritems() :
-        if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") :
+        if ( name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") ) and not name == "CalcLoopDecay_LoopInducedOnly" :
             towrite += "// " + name + '\n'\
-                '*' + name + ' = inputs.options->getValueOrdef<bool>(true, "' + name + '");\n'\
+                '*' + name + ' = inputs.options->getValueOrDef<bool>(true, "' + name + '");\n'\
                 '\n'
       
     if flags["SupersymmetricModel"] :
       towrite += '// Calculate 3 body decays with only SUSY particles\n'\
         '*CalcSUSY3BodyDecays = inputs.options->getValueOrDef<bool>(false, "CalcSUSY3BodyDecays");\n'\
         '\n'
-    towrite += '// 1000, Loop induced only\n'\
-      '*CalcLoopDecay_LoopInducedOnly = inputs.options->getValueOrDef<bool>(false, "CalcLoopDecay_LoopInducedOnly");\n'\
-      '\n'
+
+    if flags["SA`AddOneLoopDecay"] :
+      towrite += '// 1000, Loop induced only\n'\
+        '*CalcLoopDecay_LoopInducedOnly = inputs.options->getValueOrDef<bool>(false, "CalcLoopDecay_LoopInducedOnly");\n'\
+        '\n'
 
     towrite += '// 1101, divonly_save\n'\
       '*divonly_save = inputs.options->getValueOrDef<Finteger>(1,"divonly_save");\n'\
@@ -2773,7 +2801,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # end of InitializeStandardModel
 
     # ErrorHandling function
-    towrite += "/ Function that handles errors\n"\
+    towrite += "// Function that handles errors\n"\
       'void ErrorHandling(const int &kont)\n'\
       '{\n'\
       '\n'\
@@ -2975,6 +3003,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "\n"
             "\n"
             "// Functions\n"
+            "BE_FUNCTION(SPheno_Main, void, (), \"__spheno{4}_MOD_spheno_main\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(Set_All_Parameters_0, void, (), \"__model_data_{4}_MOD_set_all_parameters_0\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetRenormalizationScale, Freal8, (Freal8&), \"__loopfunctions_MOD_setrenormalizationscale\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(InitializeLoopFunctions, void, (), \"__loopfunctions_MOD_initializeloopfunctions\", \"SARAHSPheno_{0}_internal\")\n"
@@ -3019,7 +3048,10 @@ def write_spheno_frontend_header(model_name, function_signatures,
         # Now list all arguments, with a nice comment next to it, to make it 
         # lovely and readable.
         arguments = []
-        arguments.append(type_dictionary[sig[0]] + '&, // ' + sig[0])
+        if type_dictionary[sig[0]] == 'void' :
+            arguments.append(type_dictionary[sig[0]] + ', //' + sig[0])
+        else :
+            arguments.append(type_dictionary[sig[0]] + '&, // ' + sig[0])
         for argument in sig[1:-1]:
             arguments.append("   "+type_dictionary[argument]+"&, // "+argument)
         arguments.append("   "+type_dictionary[sig[-1]]+"& // "+sig[-1]+"\n")
@@ -3097,6 +3129,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(mf_l2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_l2\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(mf_u2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_u2\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(mf_d2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_d2\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(sinW2, Freal8, \"__spheno{1}_MOD_sinw2\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(MNuR, Freal8, \"__model_data_MOD_mnur\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(Q_light_quarks, Freal8, \"__standardmodel_MOD_q_light_quarks\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(Delta_Alpha_Lepton, Freal8, \"__standardmodel_MOD_delta_alpha_lepton\", \"SARAHSPheno_{0}_internal\")\n"
@@ -3113,33 +3146,88 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(A_wolf, Freal8, \"__standardmodel_MOD_a_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(rho_wolf, Freal8, \"__standardmodel_MOD_rho_wolf\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(eta_wolf, Freal8, \"__standardmodel_MOD_eta_wolf\", \"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name)
+    ).format(clean_model_name, clean_model_name.lower())
 
-    # CONTROL + "OTHER" VARIABLES
+    # CONTROL + SETTINGS + "OTHER" VARIABLES
     towrite += (
             "\n"
             "// Control Variables\n"
-            "BE_VARIABLE(Iname, Finteger, \"__control_MOD_iname\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(kont, Finteger, \"__spheno{1}_MOD_kont\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteOut, Flogical, \"__control_MOD_writeout\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CTBD, Flogical, \"__spheno{1}_MOD_calctbd\",\"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(epsI, Freal8, \"__spheno{1}_MOD_epsi\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(deltaM, Freal8, \"__spheno{1}_MOD_deltam\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mGUT, Freal8, \"__spheno{1}_MOD_mgut\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(kont, Finteger, \"__spheno{1}_MOD_kont\", \"SARAHSPheno_{0}_internal\")\n"
+            "\n"
+            "// Settings\n"
+            "BE_VARIABLE(Calculate_mh_within_SM, Flogical, \"__settings_MOD_calculate_mh_within_sm\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateLowEnergy, Flogical, \"__settings_MOD_calculatelowenergy\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateMSSM2Loop, Flogical, \"__settings_MOD_calculatemssm2loop\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateOneLoopMasses, Flogical, \"__settings_MOD_calculateoneloopmasses\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateTwoLoopHiggsMasses, Flogical, \"__settings_MOD_calculatetwoloophiggsmasses\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(DecoupleAtRenScale, Flogical, \"__settings_MOD_decoupleatrenscale\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(delta_mass, Freal8, \"__control_MOD_delta_mass\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(ErrCan, Finteger, \"__control_MOD_errcan\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ErrorLevel, Finteger, \"__control_MOD_errorlevel\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(External_Higgs, Flogical, \"__control_MOD_external_higgs\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(External_Spectrum, Flogical, \"__control_MOD_external_spectrum\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(FermionMassResummation, Flogical, \"__control_MOD_fermionmassresummation\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Force_mh_within_SM, Flogical, \"__settings_MOD_force_mh_within_sm\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ForceRealMatrices, Flogical, \"__settings_MOD_forcerealmatrices\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(FoundIterativeSolution, Flogical, \"__settings_MOD_founditerativesolution\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Math_Error, Farray_Fstring60_1_31, \"__control_MOD_math_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SM_Error, Farray_Fstring60_1_2, \"__control_MOD_sm_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SusyM_Error, Farray_Fstring60_1_33, \"__control_MOD_susym_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(GaugelessLimit, Finteger, \"__settings_MOD_gaugelesslimit\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(GenerationMixing, Flogical, \"__control_MOD_generationmixing\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(HigherOrderDiboson, Flogical, \"__settings_MOD_higherorderdiboson\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(hstep_pn, Freal8, \"__settings_MOD_hstep_pn\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(hstep_sa, Freal8, \"__settings_MOD_hstep_sa\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Iname, Finteger, \"__control_MOD_iname\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(include1l2lshift, Flogical, \"__settings_MOD_include1l2lshift\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(IncludeBSMdeltaVB, Flogical, \"__settings_MOD_includebsmdeltavb\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(IncludeDeltaVB, Flogical, \"__settings_MOD_includedeltavb\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(InOut_Error, Farray_Fstring60_1_15, \"__control_MOD_inout_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Sugra_Error, Farray_Fstring60_1_22, \"__control_MOD_sugra_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(L_CS, Flogical, \"__control_MOD_l_cs\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(LoopMass_Error, Farray_Fstring60_1_25, \"__control_MOD_loopmass_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, \"__control_MOD_twoloophiggs_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MatchingOrder, Finteger, \"__settings_MOD_matchingorder\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MatchZWpoleMasses, Flogical, \"__settings_MOD_matchzwpolemasses\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Math_Error, Farray_Fstring60_1_31, \"__control_MOD_math_error\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(MathQP_Error, Farray_Fstring60_1_10, \"__control_MOD_mathqp_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "\n"   
+            "BE_VARIABLE(MaxMassLoop, Freal8, \"__settings_MOD_maxmassloop\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MaxMassNumericalZero, Freal8, \"__settings_MOD_maxmassnumericalzero\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mGUT, Freal8, \"__spheno{1}_MOD_mgut\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MinimalNumberIterations, Finteger, \"__settings_MOD_minimalnumberiterations\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(n_run, Finteger, \"__control_MOD_n_run\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(NewGBC, Flogical, \"__settings_MOD_newgbc\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Non_Zero_Exit, Flogical, \"__control_MOD_non_zero_exit\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OutputForMG, Flogical, \"__settings_MOD_outputformg\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OutputForMO, Flogical, \"__settings_MOD_outputformo\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PoleMassesInLoops, Flogical, \"__settings_MOD_polemassesinloops\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PrintDebugInformation, Flogical, \"__settings_MOD_printdebuginformation\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PurelyNumericalEffPot, Flogical, \"__settings_MOD_purelynumericaleffpot\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningSMparametersLowEnergy, Flogical, \"__settings_MOD_runningsmparameterslowenergy\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningSUSYparametersLowEnergy, Flogical, \"__settings_MOD_runningsusyparameterslowenergy\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RXiNew, Freal8, \"__settings_MOD_rxinew\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SilenceOutput, Flogical, \"__control_MOD_silenceoutput\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SM_Error, Farray_Fstring60_1_2, \"__control_MOD_sm_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SPA_convention, Finteger, \"__settings_MOD_spa_convention\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Sugra_Error, Farray_Fstring60_1_22, \"__control_MOD_sugra_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SusyM_Error, Farray_Fstring60_1_33, \"__control_MOD_susym_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SwitchToSCKM, Flogical, \"__settings_MOD_switchtosckm\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, \"__control_MOD_twoloophiggs_error\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopMethod, Finteger, \"__settings_MOD_twoloopmethod\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopRegulatorMass, Freal8, \"__settings_MOD_twoloopregulatormass\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopRGE, Flogical, \"__settings_MOD_twolooprge\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopSafeMode, Flogical, \"__settings_MOD_twoloopsafemode\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WidthToBeInvisible, Freal8, \"__settings_MOD_widthtobeinvisible\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Write_HiggsBounds, Flogical, \"__inputoutput_{1}_MOD_write_higgsbounds\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Write_WCXF, Flogical, \"__settings_MOD_write_wcxf\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteGUTvalues, Flogical, \"__settings_MOD_writegutvalues\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteOut, Flogical, \"__control_MOD_writeout\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteOutputForNonConvergence, Flogical, \"__settings_MOD_writeoutputfornonconvergence\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteParametersAtQ, Flogical, \"__settings_MOD_writeparametersatq\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteSLHA1, Flogical, \"__settings_MOD_writeslha1\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteTreeLevelTadpoleParameters, Flogical, \"__settings_MOD_writetreeleveltadpoleparameters\", \"SARAHSPheno_{0}_internal\")\n"            "\n"   
+            "\n"
             "// Other variables\n"
             "BE_VARIABLE(Qin, Freal8, \"__spheno{1}_MOD_qin\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(ratioWoM, Freal8, \"__spheno{1}_MOD_ratiowom\",\"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CalcTBD, Flogical, \"__spheno{1}_MOD_calctbd\",\"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name, clean_model_name.lower())
 
     # BRANCHING RATIOS
@@ -3209,9 +3297,16 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "// Convenience functions (registration)\n"
             "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), \"{0}_spectrum\")\n"
             "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const Finputs&), \"{0}_decays\")\n"
-            "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const std::map<str, safe_ptr<double> >&), \"SARAHSPheno_{0}_internal\")\n"
-            "BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"{0}_HiggsCouplingsTable\")\n"
-            "BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
+            "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
+    ).format(clean_model_name)
+
+    # Change with the Higgs couplings table is coded up
+    hboutput = False
+    if hboutput:
+      towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"{0}_HiggsCouplingsTable\")\n"
+        ).format(clean_model_name)
+
+    towrite += ("BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(ReadingData_decays, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(InitializeStandardModel, void, (const SMInputs&), \"SARAHSPheno_{0}_internal\")\n"
             "BE_CONV_FUNCTION(ErrorHandling, void, (const int&), \"SARAHSPheno_{0}_internal\")\n"

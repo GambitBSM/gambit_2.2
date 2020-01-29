@@ -290,12 +290,14 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
     # Classes make life easier
     class SpecGetAndSet:
 
-        def __init__(self, shape, size, param, getter, setter):
+        def __init__(self, shape, size, param, getter, setter, block, index):
             self.shape = shape
             self.size = size
             self.param = param
             self.getter = getter
             self.setter = setter
+            self.block = block
+            self.index = index
 
     spectrumparameters = []
 
@@ -346,7 +348,11 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
         getter = getter.replace("-","pm").replace("+","pm")
         paramname = paramname.replace("-","pm").replace("+","pm")
 
-        x = SpecGetAndSet(shape, size, paramname, getter, setter)
+        # Get the block and index if relevant
+        block = model_parameters[i].block
+        index = model_parameters[i].index
+
+        x = SpecGetAndSet(shape, size, paramname, getter, setter, block, index)
         spectrumparameters.append(x)
 
     intro_message = (
@@ -369,24 +375,53 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             "namespace Models\n"
             "{{\n"
             "/// Simple {1} model object.\n"
-            "struct {2}\n"
+            "class {2} : public SLHAeaModel\n"
             "{{\n"
+            "\n"
+            "public:\n"
+            "  /// @{{ Constructors\n"
+            "{2}(const SLHAstruct &input)\n"
+            " : SLHAeaModel(input)\n"
+            "{{}}\n"
+            "  /// @}}\n"
+            "\n"
+            "  /// @{{ Getters for {1} information\n"
     ).format(modelSS, gambit_model_name, modelclass)
 
     # Now add each parameter to the model file.
+    # TODO: TG: In the MSSM-like SimpleSpec stuff, the getters go here, not the parameters, so delete if appropriate
 
-    for i in range(0, len(spectrumparameters)):
+    #for i in range(0, len(spectrumparameters)):
+
+    #    sp = spectrumparameters[i]
+
+    #    if sp.shape == "scalar":
+    #        size = ""
+    #    elif sp.shape == "vector":
+    #        size = "[{0}]".format(sp.size)
+    #    elif sp.shape == "matrix":
+    #        size = "[{0}][{0}]".format(sp.size)
+
+    #    towrite += "double {0}{1};\n".format(sp.param, size)
+
+    # Getter functions
+    for i in np.arange(len(spectrumparameters)):
 
         sp = spectrumparameters[i]
 
         if sp.shape == "scalar":
             size = ""
-        elif sp.shape == "vector":
-            size = "[{0}]".format(sp.size)
+            indices = sp.index
+        if sp.shape == "vector":
+            size = "int i"
+            indices = "i"
         elif sp.shape == "matrix":
-            size = "[{0}][{0}]".format(sp.size)
+            size = "int i, int j"
+            indices = "i,j"
 
-        towrite += "double {0}{1};\n".format(sp.param, size)
+        towrite += "double {0}({1}) const {{ return getdata(\"{2}\",{3}); }}\n".format(sp.getter, size, sp.block, indices)
+
+    towrite += "  /// @}}\n\n"
 
     towrite += (
             "}};\n"
@@ -404,20 +439,28 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             "{{\n"
             "static std::string name() {{ return \"{0}\"; }}\n"
             "typedef SpectrumContents::{1} Contents;\n"
+            "typedef Models::{2} Model;\n"
             "}};\n"
             "\n"
             "namespace Models\n"
             "{{\n"
-            "class {0} : public Spec<{0}>\n"
+            "class {0} : public SLHASimpleSpec<{0}>\n"
             "{{\n"
-            "private:\n {2}  params;\n"
-            "typedef {0} Self;\n"
             "\n"
             "public:\n"
-            "/// Constructors & destructors\n"
-            "{0}(const {2}& p)\n"
-            " : params(p)\n"
+            "  /// @{{\n"
+            "/// Constructor via SLHAea object\n"
+            "{0}(const SLHAea::Coll& input)\n"
+            " : SLHASimpleSpec(input)\n"
             "{{}}\n"
+            "\n"
+            "/// Copy constructor\n"
+            "{0}(const {0}& other)\n"
+            " : SLHASimpleSpec(other)\n"
+            "{{}}\n"
+            "\n"
+            "/// Destructor\n"
+            "virtual ~{0}() {{}};\n"
             "\n"
             "static int index_offset() {{return -1;}}\n"
             "\n"
@@ -439,42 +482,45 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
 
     # Would be neater (here) to write get_x and set_x at the same time,
     # but following current format...
+    # TODO: TG: In the MSSM-like SimpleSpec stuff, getters go on the model.
+    # Delete this if confirmed
 
     # Getter functions
-    for i in np.arange(len(spectrumparameters)):
+    #for i in np.arange(len(spectrumparameters)):
 
-        sp = spectrumparameters[i]
+    #    sp = spectrumparameters[i]
 
-        if sp.shape == "scalar":
-            size = ""
-            indices = ""
-        if sp.shape == "vector":
-            size = "int i"
-            indices = "[i]"
-        elif sp.shape == "matrix":
-            size = "int i, int j"
-            indices = "[i][j]"
+    #    if sp.shape == "scalar":
+    #        size = ""
+    #        indices = ""
+    #    if sp.shape == "vector":
+    #        size = "int i"
+    #        indices = "[i]"
+    #    elif sp.shape == "matrix":
+    #        size = "int i, int j"
+    #        indices = "[i][j]"
 
-        towrite += "double {0}({1}) const {{ return params.{2}{3}; }}\n".format(sp.getter, size, sp.param, indices)
+    #    towrite += "double {0}({1}) const {{ return params.{2}{3}; }}\n".format(sp.getter, size, sp.param, indices)
 
-    towrite += "\n"
+    #towrite += "\n"
 
+    # TODO: TG: I don't think setters are needed, but check. If so add them where the model definition is
     # Setter functions
-    for i in np.arange(len(spectrumparameters)):
+    #for i in np.arange(len(spectrumparameters)):
 
-        sp = spectrumparameters[i]
+    #    sp = spectrumparameters[i]
 
-        if sp.shape == "scalar":
-            size = ""
-            indices = ""
-        if sp.shape == "vector":
-            size = ", int i"
-            indices = "[i]"
-        elif sp.shape == "matrix":
-            size = ", int i, int j"
-            indices = "[i][j]"
+    #    if sp.shape == "scalar":
+    #        size = ""
+    #        indices = ""
+    #    if sp.shape == "vector":
+    #        size = ", int i"
+    #        indices = "[i]"
+    #    elif sp.shape == "matrix":
+    #        size = ", int i, int j"
+    #        indices = "[i][j]"
 
-        towrite += "void {0}(double in{1}) {{ params.{2}{3}=in; }}\n".format(sp.setter, size, sp.param, indices)
+    #    towrite += "void {0}(double in{1}) {{ params.{2}{3}=in; }}\n".format(sp.setter, size, sp.param, indices)
 
     towrite += (
             "\n"
@@ -500,9 +546,9 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             sizes.append(sp.size)
 
     if m:
-        towrite += "typedef typename MTget::FInfo2W FInfo2W;\n"
+        towrite += "typedef typename MTget::FInfo2 FInfo2;\n"
     if v:
-        towrite += "typedef typename MTget::FInfo1W FInfo1W;\n"
+        towrite += "typedef typename MTget::FInfo1 FInfo1;\n"
 
     # Remove all duplicates. These values tell us which indices we need to
     # include for the FInfo routines.
@@ -526,21 +572,21 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
 
         if sp.shape == "scalar":
             size = "0"
-            finf = " &Self::{}".format(sp.getter)
+            finf = " &Model::{}".format(sp.getter)
         elif sp.shape == "vector":
             size = "1"
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-            finf = "FInfo1W(&Self::{0}, {1})".format(sp.getter, index)
+            finf = "FInfo1(&Model::{0}, {1})".format(sp.getter, index)
         elif sp.shape == "matrix":
             size = "2"
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-            finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.getter, index)
+            finf = "FInfo2(&Model::{0}, {1}, {1})".format(sp.getter, index)
 
         e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
 
         towrite += (
                 "getters[{0}].map{1}"
-                "W[\"{2}\"] = {3};\n"
+                "[\"{2}\"] = {3};\n"
         ).format(mp.tag, size, e, finf)
 
     towrite += (
@@ -548,59 +594,62 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters):
             "return getters;\n"
             "}\n"
             "\n"
-            "static SetterMaps fill_setter_maps()\n"
-            "{\n"
-            "SetterMaps setters;\n"
-            "\n"
     )
+    # TODO: TG: I'm not sure setter maps are needed, uncomment if so
+    #        "static SetterMaps fill_setter_maps()\n"
+    #        "{\n"
+    #        "SetterMaps setters;\n"
+    #        "\n"
+    #)
 
-    if m:
-        towrite += "typedef typename MTset::FInfo2W FInfo2W;\n"
-    if v:
-        towrite += "typedef typename MTset::FInfo1W FInfo1W;\n"
+    #if m:
+    #    towrite += "typedef typename MTset::FInfo2W FInfo2W;\n"
+    #if v:
+    #    towrite += "typedef typename MTset::FInfo1W FInfo1W;\n"
 
     # Remove all duplicates. These values tell us which indices we need to
     # include for the FInfo routines.
-    sizes = list(set(sizes))
+    #sizes = list(set(sizes))
 
-    for i in np.arange(len(sizes)):
-        fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
+    #for i in np.arange(len(sizes)):
+    #    fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
 
-        towrite += (
-                "static const int {0}v[] = {{{1}}};\n"
-                "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
-                "\n"
-        ).format(fnname, ",".join(str(j) for j in np.arange(int(sizes[i]))))
+    #    towrite += (
+    #            "static const int {0}v[] = {{{1}}};\n"
+    #            "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
+    #            "\n"
+    #    ).format(fnname, ",".join(str(j) for j in np.arange(int(sizes[i]))))
 
-    towrite += "\nusing namespace Par;\n\n"
+    #towrite += "\nusing namespace Par;\n\n"
 
-    for i in range(0, len(model_parameters)):
-        sp = spectrumparameters[i]
-        mp = model_parameters[i]
+    #for i in range(0, len(model_parameters)):
+    #    sp = spectrumparameters[i]
+    #    mp = model_parameters[i]
 
-        if sp.shape == "scalar":
-            size = "0"
-            finf = " &Self::{}".format(sp.setter)
-        elif sp.shape == "vector":
-            size = "1"
-            index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-            finf = "FInfo1W(&Self::{0}, {1})".format(sp.setter, index)
-        elif sp.shape == "matrix":
-            size = "2"
-            index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-            finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index)
+    #    if sp.shape == "scalar":
+    #        size = "0"
+    #        finf = " &Self::{}".format(sp.setter)
+    #    elif sp.shape == "vector":
+    #        size = "1"
+    #        index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
+    #        finf = "FInfo1W(&Self::{0}, {1})".format(sp.setter, index)
+    #    elif sp.shape == "matrix":
+    #        size = "2"
+    #        index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
+    #        finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index)
 
-        e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
+    #    e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
 
-        towrite += (
-                "setters[{0}].map{1}"
-                "W[\"{2}\"] = {3};\n"
-        ).format(mp.tag, size, e, finf)
+    #    towrite += (
+    #            "setters[{0}].map{1}"
+    #            "W[\"{2}\"] = {3};\n"
+    #    ).format(mp.tag, size, e, finf)
 
+    #towrite += (
+    #        "\n"
+    #        "return setters;\n"
+    #        "}\n"
     towrite += (
-            "\n"
-            "return setters;\n"
-            "}\n"
             "};\n"
             "}\n"
             "} // namespace Gambit\n"

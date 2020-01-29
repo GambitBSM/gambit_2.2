@@ -973,7 +973,7 @@ def write_config_file(outputs, model_name, reset_contents):
         towrite += " micromegas_{0}".format(model_name)
 
     if outputs.spheno:
-        towrite += " spheno_{0}".format(model_name.lower())
+        towrite += " sarah-spheno_{0}".format(model_name)
 
     if outputs.vev:
         towrite += " vevacious"

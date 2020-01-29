@@ -235,9 +235,9 @@ def sarah_part_to_gum_part(sarah_bsm):
     for i in xrange(len(sarah_bsm)):
         part = sarah_bsm[i]            
         bsm_list.append(Particle(part.name(), part.antiname(),
-        			 part.spinX2(), part.pdg(), 
-                                 part.mass(), part.alt_name(),
-                                 part.alt_mass()))
+                        part.spinX2(), part.pdg(), 
+                        part.mass(), part.alt_name(),
+                        part.alt_mass()))
     
     return bsm_list, add_higgs
 
@@ -248,7 +248,7 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     to add to the GAMBIT model. This utilises the 'BlockName'
     tag (i.e. the SLHA Block the parameters will be placed in)
     to distinguish between Standard Model parameters, and 
-    parameters the user has implemented in their own FeynRules
+    parameters the user has implemented in their own SARAH
     model file.
 
     Behaviour mimics the default imported SARAH conventions, which
@@ -260,7 +260,9 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     - overwrite any parameter definitions that have the same
      *descriptions* in both files with that from the defaults.
     Anything that is given in the following blocks will be ignored:
-    'SMINPUTS', 'CKMBLOCK', 'SM'
+
+    'SMINPUTS', 'CKMBLOCK', 'SM', 'VCKM', 'GAUGE', 'YE', 'YU', 'YD'...
+    
     Everything else is fair game. 
 
     Default assumption is that everything is a dimensionless
@@ -282,9 +284,15 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     # Add all parameters from the parameter list from SARAH
     for i in xrange(len(paramlist)):
         p = paramlist[i]
-        if (    (p.block() != 'SM')
-            and (p.block() != 'SMINPUTS')
-            and (p.block() != 'VCKM')
+        # TODO: TG: I understand that we want to remove SM parameters here, 
+        # right? That means also the gauge and yukawa blocks
+        if (    (p.block().lower() != 'sm')
+            and (p.block().lower() != 'sminputs')
+            and (p.block().lower() != 'vckm')
+            and (p.block().lower() != 'gauge')
+            and (p.block().lower() != 'ye')
+            and (p.block().lower() != 'yu')
+            and (p.block().lower() != 'yd')
             ):
 
             # Mixing matrices
@@ -293,13 +301,16 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
 
             name = p.name()
 
+            # TODO: TG: This is causing problems, and I don't think is really neded, 
+            # store the parameter names as it is and get the particle name only when needed
+            '''
             if tag == "Pole_Mixing":
                 found = False
                 
                 # Throw an error if we don't know what the mixing matrix is.
                 if not name in mixingdict:
-                    raise GumError(("Could not find which particle "
-                                    "eigenstates the mixing matrix {0} "
+                    raise GumError(("Could not find which particle "\
+                                    "eigenstates the mixing matrix {0} "\
                                     "couples to!")).format(name)
 
                 entry = mixingdict[name]
@@ -320,7 +331,7 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
                 continue
             else:
                 addedpars.append(name)
-
+            '''
 
             # Create a new instance of SpectrumParameter
             # TODO: still need to find mass dimension for parameters that aren't
@@ -343,9 +354,10 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True, is_real=True))
     params.append(SpectrumParameter("sinW2", "Pole_Mixing", shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=True))
-    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=True))
-    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=True))
+    # TODO: TG: Yukawas do not seem to be real, at least for the test model
+    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=False))
+    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=False))
+    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=False))
     
     return params
 
@@ -383,8 +395,7 @@ def sort_params_by_block(parameters, mixings):
         if not par.block:
             continue
 
-        # If the parameter 
-
+        # If the parameter
         shape = par.shape
 
         matrix = False

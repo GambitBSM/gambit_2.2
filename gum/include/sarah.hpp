@@ -65,6 +65,9 @@ namespace GUM
       // Add SPheno masses
       void add_SPheno_mass_names(std::vector<Particle>&);
 
+      // Leave only the parameters that SPheno uses
+      void SPheno_parameters(std::vector<Parameter> &parameters);
+
       // Get tadpoles
       void get_tadpoles(std::vector<Parameter>&);
 
