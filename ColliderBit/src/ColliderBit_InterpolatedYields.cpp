@@ -77,8 +77,6 @@ namespace Gambit
       const char* met_CMS_23   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
       const char* met_CMS_14   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
 
-
-
       // ----------------------------------//     
       // Atlas/CMS analysis arrays 
       // ----------------------------------//
@@ -96,10 +94,13 @@ namespace Gambit
 
       static Eigen::MatrixXd m_BKGCOV(22,22);
 
-
       static const double ATLAS_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
       static const double ATLAS_BKGNUM[atlas_bin_size] = {111100,67100,33820,27640,8360,2825,1094,463,213,226};
       static const double ATLAS_BKGERR[atlas_bin_size] = {2300  ,1400 ,940  ,610  ,190 ,78  ,33  ,19 ,9  ,16 };
+
+      // Define ATLAS and CMS exclusive signal regions: These are arrays of the MIN met in the bin. 
+      static const double METMINS_ATLAS[atlas_bin_size]     = {250., 300., 350., 400., 500., 600., 700., 800., 900., 1000.};
+      static const double METMINS_CMS[cms_bin_size]       = {250., 280., 310., 340., 370., 400., 430.,470.,510.,550.,590.,640.,690.,740.,790.,840.,900.,960.,1020.,1090.,1160.,1250.};
 
     double LinearInterpolation(double y2, double y1, double y, double q1,double q2)
     {
@@ -151,7 +152,7 @@ namespace Gambit
     // Interpolation functions // 
     // ---------------------------------------------------- //  
     
-    void Acceptance_CS(double * accep, float m,float O1,float O2, const char* pair, const char* experiment)
+    void Acceptance_CS(double * accep, float m,float O1,float O2, float lambda ,const char* pair, const char* experiment)
     {
       static bool first = true;
       // cout << " MASS = " << m <<endl;
@@ -294,6 +295,7 @@ namespace Gambit
       double THETA[data_SIZE];
       double MASS[data_SIZE];
       double CS[data_SIZE];
+      
       // cout << "Check things 2 <<mass[0]"<<endl;  
 
       if (experiment=="ATLAS" && pair == "23")
@@ -319,6 +321,7 @@ namespace Gambit
         // std::cout << "BITE" << std::endl;
 
         met_bin_size = cms_bin_size;
+
         // double** MET_HIST = new double*[data_SIZE];
         for(int i = 0; i < data_SIZE; ++i){
           MET_HIST[i] = new double[met_bin_size];
@@ -330,12 +333,14 @@ namespace Gambit
         for (int kk = 0; kk<data_SIZE;++kk){
           for (int j = 0; j<met_bin_size;++j){
             MET_HIST[kk][j] = MET_HIST_CMS_23[kk][j];
+
           }
         }
       }
 
       else if (experiment=="ATLAS" && pair == "14"){
         met_bin_size = atlas_bin_size;
+
         // double** MET_HIST = new double*[data_SIZE];
         for(int i = 0; i < data_SIZE; ++i){
           MET_HIST[i] = new double[met_bin_size];
@@ -347,6 +352,7 @@ namespace Gambit
         for (int kk = 0; kk<data_SIZE;++kk){
           for (int j = 0; j<met_bin_size;++j){
             MET_HIST[kk][j] = MET_HIST_ATLAS_14[kk][j];
+
           }
         }
       }
@@ -354,6 +360,7 @@ namespace Gambit
 
       else if (experiment=="CMS" && pair == "14"){
         met_bin_size = cms_bin_size;
+
         // double** MET_HIST = new double*[data_SIZE];
         for(int i = 0; i < data_SIZE; ++i){
           MET_HIST[i] = new double[met_bin_size];
@@ -365,6 +372,7 @@ namespace Gambit
         for (int kk = 0; kk<data_SIZE;++kk){
           for (int j = 0; j<met_bin_size;++j){
             MET_HIST[kk][j] = MET_HIST_CMS_14[kk][j];
+
           }
         }
       }
@@ -600,7 +608,31 @@ namespace Gambit
           
           //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
           
-          accep[Emiss] = res;
+
+          // DO LAMBDA CHECK HERE!
+          
+          if(experiment=="ATLAS"){
+            if (lambda < METMINS_ATLAS[Emiss]){
+              accep[Emiss] = 0;
+          }
+            else{
+              accep[Emiss] = res;
+            }
+          } 
+
+          if(experiment=="CMS"){
+            if (lambda < METMINS_CMS[Emiss]){
+              accep[Emiss] = 0;
+          }
+            else{
+              accep[Emiss] = res;
+            }
+          } 
+          
+
+              // accep[Emiss] = res;
+
+
 
         } // Loop over Emiss
 
@@ -637,7 +669,7 @@ namespace Gambit
  
     } // Function Acceptance_CS
 
-    void L_Acc_Eff_CS(double * YIELDS, float m,float C61,float C62,float C63, float C64 , const char* exper_)
+    void L_Acc_Eff_CS(double * YIELDS, float m,float C61,float C62,float C63, float C64,float lambda , const char* exper_)
     {
         // cout << "Check things 11 "<<endl;  
 
@@ -657,10 +689,10 @@ namespace Gambit
 
       // cout << "Check things12 "<<endl;
 
-      Acceptance_CS(A23, m, C62, C63, tt, exper_);
+      Acceptance_CS(A23, m, C62, C63, lambda, tt, exper_);
         // cout << "Check things 14"<<endl;  
 
-      Acceptance_CS(A14, m, C61, C64, of, exper_);
+      Acceptance_CS(A14, m, C61, C64, lambda, of, exper_);
         // cout << "Check things 15 "<<endl;  
 
       for (int ii = 0; ii < met_bin_size; ++ii){
@@ -676,21 +708,23 @@ namespace Gambit
     {
       result.clear();
 
-      const size_t data_INC           = 15;
-      const size_t data_SIZE          = pow(data_INC,2);
-      const size_t cms_bin_size       = 22;
-      const size_t atlas_bin_size     = 10;
+      // const size_t data_INC           = 15;
+      // const size_t data_SIZE          = pow(data_INC,2);
+      // const size_t cms_bin_size       = 22;
+      // const size_t atlas_bin_size     = 10;
 
       // cout << "void is run"<< endl;
 
       // Do not get segfault when I do a get data here.....
     
-      float C61 = *Pipes::DMEFT_results::Param["C61"]; 
-      float C62 = *Pipes::DMEFT_results::Param["C62"];
-      float C63 = *Pipes::DMEFT_results::Param["C63"];
-      float C64 = *Pipes::DMEFT_results::Param["C64"];
-      float mchi= *Pipes::DMEFT_results::Param["mchi"]; 
-      
+      float C61   = *Pipes::DMEFT_results::Param["C61"]; 
+      float C62   = *Pipes::DMEFT_results::Param["C62"];
+      float C63   = *Pipes::DMEFT_results::Param["C63"];
+      float C64   = *Pipes::DMEFT_results::Param["C64"];
+      float mchi  = *Pipes::DMEFT_results::Param["mchi"]; 
+      float lambda= *Pipes::DMEFT_results::Param["Lambda"]; 
+
+
       /*
       // There is now a spectrum object carrying all this information, so we can do 
       // something like 
@@ -748,7 +782,7 @@ namespace Gambit
       const int CMS_SIZE = 22;
       double _srnums_CMS[CMS_SIZE];
 
-      L_Acc_Eff_CS(_srnums_CMS, mchi,C61,C62,C63,C64,"CMS");
+      L_Acc_Eff_CS(_srnums_CMS, mchi,C61,C62,C63,C64,lambda,"CMS");
       
       // cout << "first _srnums call ..."<<endl;
 
@@ -829,7 +863,7 @@ namespace Gambit
       // cout<<"Just b4 atlas srnums"<<endl;
 
       double _srnums_ATLAS[atlas_bin_size];
-      L_Acc_Eff_CS(_srnums_ATLAS,mchi,C61,C62,C63,C64,"ATLAS"); 
+      L_Acc_Eff_CS(_srnums_ATLAS,mchi,C61,C62,C63,C64,lambda,"ATLAS"); 
 
       // cout << "Atlas srnums defined" <<endl;
 
@@ -843,7 +877,6 @@ namespace Gambit
 
         // Generate an 'sr-N' label 
         std::stringstream ss; ss << "sr-" << ibin;
-
         // Construct a SignalRegionData instance and add it to atlasBinnedResults
         SignalRegionData sr;
         sr.sr_label = ss.str();
@@ -858,16 +891,17 @@ namespace Gambit
       }
 
 
-
+      // Define this statically?
       AnalysisData  * atlasData = new AnalysisData(atlasBinnedResults);    
 
       atlasData->analysis_name  = "ATLAS_13TeV_MONOJET_36invfb_interpolated"; 
 
-      // There might be routines to clear this already...
 
       // ******** Create total results ***********// 
       // //--------------------------------------//
       // cout << "Before pushback ..."<<endl;
+
+      // I think these are cleared?
 
       result.push_back(atlasData);
       result.push_back(cmsData);
