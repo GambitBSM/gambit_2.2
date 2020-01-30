@@ -540,7 +540,71 @@ namespace Gambit
         result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
         result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
       }
+      else if (ModelInUse("WC_LUV"))
+        {
+          result.SM = 1;
 
+          // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
+          result.Re_DeltaC7_mu  = *Param["Re_DeltaC7_mu"];
+          result.Im_DeltaC7_mu  = *Param["Im_DeltaC7_mu"];
+          result.Re_DeltaC9_mu  = *Param["Re_DeltaC9_mu"];
+          result.Im_DeltaC9_mu  = *Param["Im_DeltaC9_mu"];
+          result.Re_DeltaC10_mu = *Param["Re_DeltaC10_mu"];
+          result.Im_DeltaC10_mu = *Param["Im_DeltaC10_mu"];
+          result.Re_DeltaCQ1_mu = *Param["Re_DeltaCQ1_mu"];
+          result.Im_DeltaCQ1_mu = *Param["Im_DeltaCQ1_mu"];
+          result.Re_DeltaCQ2_mu = *Param["Re_DeltaCQ2_mu"];
+          result.Im_DeltaCQ2_mu = *Param["Im_DeltaCQ2_mu"];
+          
+          result.Re_DeltaC7_e  = *Param["Re_DeltaC7_e"];
+          result.Im_DeltaC7_e  = *Param["Im_DeltaC7_e"];
+          result.Re_DeltaC9_e  = *Param["Re_DeltaC9_e"];
+          result.Im_DeltaC9_e  = *Param["Im_DeltaC9_e"];
+          result.Re_DeltaC10_e = *Param["Re_DeltaC10_e"];
+          result.Im_DeltaC10_e = *Param["Im_DeltaC10_e"];
+          result.Re_DeltaCQ1_e = *Param["Re_DeltaCQ1_e"];
+          result.Im_DeltaCQ1_e = *Param["Im_DeltaCQ1_e"];
+          result.Re_DeltaCQ2_e = *Param["Re_DeltaCQ2_e"];
+          result.Im_DeltaCQ2_e = *Param["Im_DeltaCQ2_e"];
+ 
+          result.Re_DeltaC7_tau  = *Param["Re_DeltaC7_tau"];
+          result.Im_DeltaC7_tau  = *Param["Im_DeltaC7_tau"];
+          result.Re_DeltaC9_tau  = *Param["Re_DeltaC9_tau"];
+          result.Im_DeltaC9_tau  = *Param["Im_DeltaC9_tau"];
+          result.Re_DeltaC10_tau = *Param["Re_DeltaC10_tau"];
+          result.Im_DeltaC10_tau = *Param["Im_DeltaC10_tau"];
+          result.Re_DeltaCQ1_tau = *Param["Re_DeltaCQ1_tau"];
+          result.Im_DeltaCQ1_tau = *Param["Im_DeltaCQ1_tau"];
+          result.Re_DeltaCQ2_tau = *Param["Re_DeltaCQ2_tau"];
+          result.Im_DeltaCQ2_tau = *Param["Im_DeltaCQ2_tau"];
+
+          /* Lines below are valid in the flavour NON-universal case                                   
+             deltaC[1..10] = Cmu[1..10], deltaC[11..20] = Ce[1..10], deltaC[21..30] = Ctau[1..10]       
+             deltaCQ[1,2] = CQmu[1,2], deltaCQ[1,2] = CQe[1,2], deltaCQ[1,2] = CQtau[1,2] */
+
+          
+          
+          result.deltaC[7]=std::complex<double>(result.Re_DeltaC7_mu, result.Im_DeltaC7_mu);
+          result.deltaC[9]=std::complex<double>(result.Re_DeltaC9_mu, result.Im_DeltaC9_mu); 
+          result.deltaC[10]=std::complex<double>(result.Re_DeltaC10_mu, result.Im_DeltaC10_mu);
+          result.deltaCQ[1]=std::complex<double>(result.Re_DeltaCQ1_mu, result.Im_DeltaCQ1_mu);
+          result.deltaCQ[2]=std::complex<double>(result.Re_DeltaCQ2_mu, result.Im_DeltaCQ2_mu);
+                    
+          result.deltaC[17]=std::complex<double>(result.Re_DeltaC7_e, result.Im_DeltaC7_e);
+          result.deltaC[19]=std::complex<double>(result.Re_DeltaC9_e, result.Im_DeltaC9_e);  
+          result.deltaC[20]=std::complex<double>(result.Re_DeltaC10_e, result.Im_DeltaC10_e); 
+          result.deltaCQ[3]=std::complex<double>(result.Re_DeltaCQ1_e, result.Im_DeltaCQ1_e);
+          result.deltaCQ[4]=std::complex<double>(result.Re_DeltaCQ2_e, result.Im_DeltaCQ2_e);
+          
+          
+          result.deltaC[27]=std::complex<double>(result.Re_DeltaC7_tau, result.Im_DeltaC7_tau);
+          result.deltaC[29]=std::complex<double>(result.Re_DeltaC9_tau, result.Im_DeltaC9_tau);
+          result.deltaC[30]=std::complex<double>(result.Re_DeltaC10_tau, result.Im_DeltaC10_tau);
+          result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1_tau, result.Im_DeltaCQ1_tau);
+          result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2_tau, result.Im_DeltaCQ2_tau);
+          
+        }
+          
       if (flav_debug) cout<<"Finished SI_fill"<<endl;
     }
 
