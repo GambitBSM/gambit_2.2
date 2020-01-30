@@ -195,7 +195,7 @@ def add_new_pythia_to_backends_cmake(model, output_dir):
                            "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
                            "set(patch1 \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
                            "set(patch2 \"${PROJECT_SOURCE_DIR}/Backends/patches/pythia/${ver}/patch_pythia_${ver}.dif\")\n"\
-                           "check_ditch_status(${name} ${ver})\n"\
+                           "check_ditch_status(${name} ${ver} ${dir})\n"\
                            "if(NOT ditched_${name}_${ver})\n"\
                            "  ExternalProject_Add(${name}_${ver}\n"\
                            "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
@@ -230,7 +230,7 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
 
     for i in model_parameters:
 
-        if (i.sm) or (i.tag == "Pole_Mass" and i.block == "") or i.block in blocks:
+        if (i.sm) or (i.tag == "Pole_Mass" and i.block == "") or i.block in blocks or i.block.lower() == "mass":
             continue
 
         if i.shape == "scalar" or i.shape == None:
