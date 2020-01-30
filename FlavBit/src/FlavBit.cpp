@@ -3095,6 +3095,84 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular
+    void HEPLike_B2Kstarmumu_LogLikelihood_Belle(double &result)
+    {
+      using namespace Pipes::HEPLike_B2Kstarmumu_LogLikelihood_Belle;
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_0.1_4.0.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_4.0_8.0.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_10.09_12.9.yaml";
+      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_14.18_19.0.yaml";
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_0);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_3);
+  
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        nDimBifurGaussian_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
+        nDimBifurGaussian_1.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
+        nDimBifurGaussian_2.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
+        nDimBifurGaussian_3.Read();
+  
+        first = false;
+      }
+      
+      // Ordering of observables defined by HEPLike
+      static const std::array<std::string, 2> observables0p1_4{
+        "P4_B0Kstar0mumu_0.1_4",
+        "P5_B0Kstar0mumu_0.1_4",
+      };
+      static const std::array<std::string, 2> observables4_8{
+        "P4_B0Kstar0mumu_4_8",
+        "P5_B0Kstar0mumu_4_8",
+      };
+      static const std::array<std::string, 2> observables10p9_12p9{
+        "P4_B0Kstar0mumu_10.9_12.9",
+        "P5_B0Kstar0mumu_10.9_12.9",
+      };
+      static const std::array<std::string, 2> observables14p18_19{
+        "P4_B0Kstar0mumu_14.18_19",
+        "P5_B0Kstar0mumu_14.18_19",
+      };
+
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+     
+      // C++14 allows auto instead of decltype(observables0p1_4)
+      auto get_obs_theory = [SI_theory](decltype(observables0p1_4)& observables){
+        std::vector<double> obs_theory;
+        obs_theory.reserve(observables.size());
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          obs_theory.push_back(SI_theory.at(observables[i]));
+        }
+        return obs_theory;
+      };   
+
+      auto get_obs_covariance = [SI_theory_covariance](decltype(observables0p1_4)& observables){
+        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          for (unsigned int j = 0; j < observables.size(); ++j) {
+            obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+          }
+        }
+        return obs_covariance;
+      };
+      result = 0;
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables0p1_4), get_obs_covariance(observables0p1_4));
+      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(observables4_8), get_obs_covariance(observables4_8));
+      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(observables10p9_12p9), get_obs_covariance(observables10p9_12p9));
+      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(observables14p18_19), get_obs_covariance(observables14p18_19));
+
+      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+    }
+
+    /// HEPLike LogLikelihood B -> K* mu mu Angular
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
