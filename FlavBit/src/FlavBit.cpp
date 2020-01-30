@@ -51,7 +51,9 @@
 ///
 ///  \author Markus Prim
 ///          (markus.prim@kit.edu)
-///  \date 2019 August
+///  \date 2019 Aug
+///  \date 2019 Nov
+///  \date 2020 Jan
 ///
 ///  *********************************************
 
@@ -3157,6 +3159,88 @@ namespace Gambit
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
+
+    /// HEPLike LogLikelihood B -> K* mu mu Angluar
+    void HEPLike_B2KstarmumuAng_LogLikelihood_Atlas(double &result)
+    {
+      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Atlas;
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_0.1_2.0.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_2.0_4.0.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_4.0_8.0.yaml";
+      static HepLike_default::HL_nDimGaussian nDimGaussian_0(inputfile_0);
+      static HepLike_default::HL_nDimGaussian nDimGaussian_1(inputfile_1);
+      static HepLike_default::HL_nDimGaussian nDimGaussian_2(inputfile_2);
+  
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        nDimGaussian_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
+        nDimGaussian_1.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
+        nDimGaussian_2.Read();
+  
+        first = false;
+      }
+
+      // Ordering of observables defined by HEPLike
+      static const std::array<std::string, 6> observables0p1_2{
+        "FL_B0Kstar0mumu_0p1_2",
+        "S3_B0Kstar0mumu_0p1_2",
+        "S4_B0Kstar0mumu_0p1_2",
+        "S5_B0Kstar0mumu_0p1_2",
+        "S7_B0Kstar0mumu_0p1_2",
+        "S8_B0Kstar0mumu_0p1_2",
+      };
+      static const std::array<std::string, 6> observables2_4{
+        "FL_B0Kstar0mumu_2_4",
+        "S3_B0Kstar0mumu_2_4",
+        "S4_B0Kstar0mumu_2_4",
+        "S5_B0Kstar0mumu_2_4",
+        "S7_B0Kstar0mumu_2_4",
+        "S8_B0Kstar0mumu_2_4",
+      };
+      static const std::array<std::string, 6> observables4_8{
+        "FL_B0Kstar0mumu_4_8",
+        "S3_B0Kstar0mumu_4_8",
+        "S4_B0Kstar0mumu_4_8",
+        "S5_B0Kstar0mumu_4_8",
+        "S7_B0Kstar0mumu_4_8",
+        "S8_B0Kstar0mumu_4_8",
+      };
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      
+      // C++14 allows auto instead of decltype(observables0p1_0p98)
+      auto get_obs_theory = [SI_theory](decltype(observables0p1_2)& observables){
+        std::vector<double> obs_theory;
+        obs_theory.reserve(observables.size());
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          obs_theory.push_back(SI_theory.at(observables[i]));
+        }
+        return obs_theory;
+      };
+
+      auto get_obs_covariance = [SI_theory_covariance](decltype(observables0p1_2)& observables){
+        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          for (unsigned int j = 0; j < observables.size(); ++j) {
+            obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+          }
+        }
+        return obs_covariance;
+      };
+      result = 0;
+      result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables0p1_2), get_obs_covariance(observables0p1_2));
+      result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables2_4), get_obs_covariance(observables2_4));
+      result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables4_8), get_obs_covariance(observables4_8));
+
+      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+    }
+
+
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular
     void HEPLike_B2KstarmumuAng_LogLikelihood_CMS(double &result)
