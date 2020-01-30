@@ -935,9 +935,9 @@ START_MODULE
   #undef CAPABILITY
 
   /// HEPLike LogLikelihood B -> K* mu mu Angular
-  #define CAPABILITY HEPLike_B2Kstarmumu_LogLikelihood_Belle
+  #define CAPABILITY HEPLike_B2KstarmumuAng_LogLikelihood_Belle
   START_CAPABILITY
-    #define FUNCTION HEPLike_B2Kstarmumu_LogLikelihood_Belle
+    #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Belle
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)

@@ -3159,9 +3159,9 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular
-    void HEPLike_B2Kstarmumu_LogLikelihood_Belle(double &result)
+    void HEPLike_B2KstarmumuAng_LogLikelihood_Belle(double &result)
     {
-      using namespace Pipes::HEPLike_B2Kstarmumu_LogLikelihood_Belle;
+      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Belle;
       static const std::string inputfile_0 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_0.1_4.0.yaml";
       static const std::string inputfile_1 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_4.0_8.0.yaml";
       static const std::string inputfile_2 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_10.09_12.9.yaml";
