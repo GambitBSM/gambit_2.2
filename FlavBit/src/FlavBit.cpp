@@ -3159,6 +3159,105 @@ namespace Gambit
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular
+    void HEPLike_B2KstarmumuAng_LogLikelihood_CMS(double &result)
+    {
+      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_CMS;
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_1.0_2.0.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_2.0_4.3.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_4.3_6.0.yaml";
+      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_6.0_8.68.yaml";
+      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_10.09_12.86.yaml";
+      static const std::string inputfile_5 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_14.18_16.0.yaml";
+      static const std::string inputfile_6 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_16.0_19.0.yaml";
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_0);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_3);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_4);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_5);
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_6(inputfile_6);
+  
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        nDimBifurGaussian_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
+        nDimBifurGaussian_1.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
+        nDimBifurGaussian_2.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
+        nDimBifurGaussian_3.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_4 << endl;
+        nDimBifurGaussian_4.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_5 << endl;
+        nDimBifurGaussian_5.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_6 << endl;
+        nDimBifurGaussian_6.Read();
+  
+        first = false;
+      }
+
+      // Ordering of observables defined by HEPLike
+      static const std::array<std::string, 2> observables1_2{
+        "P1_B0Kstar0mumu_1_2",
+        "P5_B0Kstar0mumu_1_2",
+      };
+      static const std::array<std::string, 2> observables2_4p3{
+        "P1_B0Kstar0mumu_2_4p3",
+        "P5_B0Kstar0mumu_2_4p3",
+      };
+      static const std::array<std::string, 2> observables4p3_6{
+        "P1_B0Kstar0mumu_4p3_6",
+        "P5_B0Kstar0mumu_4p3_6",
+      };
+      static const std::array<std::string, 2> observables6_8p68{
+        "P1_B0Kstar0mumu_6_8p68",
+        "P5_B0Kstar0mumu_6_8p68",
+      };
+      static const std::array<std::string, 2> observables10p09_12p86{
+        "P1_B0Kstar0mumu_10p09_12p86",
+        "P5_B0Kstar0mumu_10p09_12p86",
+      };
+      static const std::array<std::string, 2> observables14p18_16{
+        "P1_B0Kstar0mumu_14p18_16",
+        "P5_B0Kstar0mumu_14p18_16",
+      };
+      static const std::array<std::string, 2> observables16_19{
+        "P1_B0Kstar0mumu_16_19",
+        "P5_B0Kstar0mumu_16_19",
+      };
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+     
+      // C++14 allows auto instead of decltype(observables1_2)
+      auto get_obs_theory = [SI_theory](decltype(observables1_2)& observables){
+        std::vector<double> obs_theory;
+        obs_theory.reserve(observables.size());
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          obs_theory.push_back(SI_theory.at(observables[i]));
+        }
+        return obs_theory;
+      };   
+
+      auto get_obs_covariance = [SI_theory_covariance](decltype(observables1_2)& observables){
+        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+        for (unsigned int i = 0; i < observables.size(); ++i) {
+          for (unsigned int j = 0; j < observables.size(); ++j) {
+            obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+          }
+        }
+        return obs_covariance;
+      };
+      result = 0;
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables1_2), get_obs_covariance(observables1_2));
+
+      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+    }
+
+
+    /// HEPLike LogLikelihood B -> K* mu mu Angular
     void HEPLike_B2KstarmumuAng_LogLikelihood_Belle(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Belle;
