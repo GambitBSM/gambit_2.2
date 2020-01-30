@@ -24,6 +24,8 @@
 #include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Elements/decay_table.hpp"
 
+#include "gambit/Utils/mpiwrapper.hpp"
+
 #include <unistd.h>
 
 BE_INI_FUNCTION
@@ -47,6 +49,14 @@ BE_INI_FUNCTION
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
     }
+    if (ModelInUse("MDMSM"))
+    {
+      BEpath = backendDir + "/../models/MDMSM";
+      path = BEpath.c_str();
+      modeltoset = (char*)malloc(strlen(path)+11);
+      sprintf(modeltoset, "%s", path);
+    }
+    
     
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
@@ -70,6 +80,20 @@ BE_INI_FUNCTION
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
 
+  if (ModelInUse("MDMSM"))
+  {
+    // Obtain spectrum information to pass to CalcHEP
+    const Spectrum& spec = *Dep::MDMSM_spectrum;
+    
+    // Obtain model contents
+    static const SpectrumContents::MDMSM MDMSM_contents;
+    
+    // Obtain list of all parameters within model
+    static const std::vector<SpectrumParameter> MDMSM_params = MDMSM_contents.all_parameters();
+    
+    Assign_All_Values(spec, MDMSM_params);
+  }
+  
 }
 END_BE_INI_FUNCTION
 
@@ -191,7 +215,7 @@ BE_NAMESPACE
     Assign_Value((char*)"Gf", (char*)"GF", sminputs.GF);                    // Fermi
     Assign_Value((char*)"aS", sminputs.alphaS);                             // Strong coupling (unspecified scale if SARAH)
     Assign_Value((char*)"alfSMZ", (char*)"aS", sminputs.alphaS);            // Strong coupling (mZ) for both.
-    Assign_Value((char*)"aEWM1", (char*)"aEWinv", sminputs.alphainv);       // Inverse EM coupling
+    Assign_Value((char*)"aEWM1", (char*)"aEWinv", 1./sminputs.alphainv);    // Inverse EM coupling
 
     // Then, SM particle masses (by PDG code)
     Assign_Value(pdg2mass(1), sminputs.mD);                        // Down
@@ -267,7 +291,7 @@ BE_NAMESPACE
     // Generate process from in and out states
     char *process = new char[(in + " -> " + out[0] + "," + out[1]).length() + 1];
     strcpy(process, (in + " -> " + out[0] + "," + out[1]).c_str());
-
+    
     std::string incpy = in;
     std::string out0cpy = out[0];
     std::string out1cpy = out[1];
@@ -281,7 +305,7 @@ BE_NAMESPACE
     incpy.resize(std::remove_if(incpy.begin(), incpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-incpy.begin());
     out0cpy.resize(std::remove_if(out0cpy.begin(), out0cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out0cpy.begin());
     out1cpy.resize(std::remove_if(out1cpy.begin(), out1cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out1cpy.begin());
-
+    
     // Generate libname from model and process name
     char *libname = new char[(model + "_" + incpy + "_to_" + out0cpy + out1cpy).length() + 1];
     strcpy(libname, (model + "_" + incpy + "_to_" + out0cpy + out1cpy).c_str());
@@ -293,7 +317,7 @@ BE_NAMESPACE
 
     // Generates shared object file based on libName - unless it already exists.
     numout *cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
-
+    
     // Export numerical values of parameters to link to dynamical code
     err=passParameters(cc);
 

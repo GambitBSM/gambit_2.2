@@ -42,6 +42,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 "\n"
                 "#include \"gambit/Elements/gambit_module_headers.hpp\"\n"
                 "#include \"gambit/Elements/spectrum.hpp\"\n"
+                "#include \"gambit/Elements/spectrum_factories.hpp\"\n"
                 "#include \"gambit/Utils/stream_overloads.hpp\"\n"
                 "#include \"gambit/Utils/util_macros.hpp\"\n"
                 "\n"
@@ -61,6 +62,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
             )
         
         towrite += (
+                "\n\n"
                 "namespace Gambit\n"
                 "{{\n"
                 "\n"
@@ -74,92 +76,205 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 "namespace myPipe = Pipes::get_{0};\n"
                 "const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;\n"
                 "\n"
-                "// Initialise model object \n"
-                "Models::{1} {2};\n\n"
-                "// BSM parameters\n"
+                # "// Initialise model object \n"
+                # "Models::{1} {2};\n\n"
+                # "// BSM parameters\n"
+                "// Initialise SLHAea object \n"
+                "SLHAstruct slha;\n"
         ).format(spec, modelclass, modelcont)
-        
-        
-        # Now add each BSM model parameter to spectrum
-        for i in range(0, len(model_parameters)):
-        
-            par = model_parameters[i] 
 
-            # Don't have anything that's an output of spectrum computation as 
-            # a scan parameter
-            if par.is_output: continue
-          
-            if not isinstance(par, SpectrumParameter):
-                raise GumError(("\n\nModel Parameters at position " + i + 
-                                "not passed as instance of class "
-                                "SpectrumParameter."))
-              
-            if not par.sm:
-                
-                # If it's a pole mass then append this information onto the parameter name
-                toadd = "_Pole_Mass" if par.tag == "Pole_Mass" else ""
-                shape = "scalar"
-                size = 1
+        # List of added blocks
+        addedblocks = []
 
-                if model_parameters[i].shape:
-                    if re.match("v[2-9]", par.shape):
-                        shape = "vector"
-                        size = par.shape[-1]
-                    elif re.match("m[2-9]x[2-9]", par.shape):
-                        # Assuming all matrices will be square...
-                        shape = "matrix"
-                        size = par.shape[-1]
+        for block, entry in blockdict.iteritems():
 
-                e = par.fullname[1:].strip('~') if par.tag == "Pole_Mass" else par.fullname
+            # Ignore the SM blocks, add them... en bloc (sorry) in a bit
+            # Same with masses.
+            if block in ["GAUGE", "SINTHETAW", "YU", "YE", "YD", 
+                         "MASS", "SMINPUTS", "VEVS"]:
+                continue
 
-                # If it's a scalar shape, just add it one by one
-                if shape == "scalar":
+            # Firstly create the block
+            towrite += (
+                    "\n"
+                    "// Block {0}\n"
+                    "SLHAea_add_block(slha, \"{0}\");\n"
+            ).format(block)
+
+            # Add it to the list
+            addedblocks.append(block)
+
+            matrix = False
+            size = ""
+
+            # If it's a matrix, flag it, and get the size. 
+            if 'matrix' in entry:
+                matrix = True
+                size = entry['matrix']
+
+            elif 'mixingmatrix' in entry:
+                matrix = True
+                size = entry['mixingmatrix']
+
+            # If we don't have a matrix, use the block indices
+            if not matrix:
+                for index, param in entry.iteritems():
+
+                    paramdef = ""
+
+                    # Try to find the corresponding model parameter
+                    for i in range(0, len(model_parameters)):
+                        par = model_parameters[i] 
+
+                        # Don't have anything that's an output of spectrum
+                        # computation as a scan parameter
+                        if par.is_output: continue
+                        
+                        if par.fullname == param:
+                            paramdef = "*myPipe::Param[\"{0}\"]".format(par.gb_in)
+
+                    if not paramdef:
+                        raise GumError("Parameter " + par.fullname + " not found.")
+
                     towrite += (
-                            "{0}.{1}_{2}{3} = *myPipe::Param[\"{4}\"];\n"
-                    ).format(modelcont, gambit_model_name, e, toadd, par.gb_in)
+                        "SLHAea_add(slha, \"{0}\", {1}, {2});\n"
+                    ).format(block, index, paramdef)
 
-                # If it's a matrix then do each element individually
-                elif shape == "matrix":
-                    for i in xrange(int(size)):
-                        for j in xrange(int(size)):
-                            towrite += (
-                                "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
-                            ).format(modelcont, gambit_model_name, e, toadd, i, j, par.gb_in, i+1, j+1)
+            # Matrix case TODO
+            else:
+                # The block is the name of the parameter
+                paramdef = ""
 
-                # Same deal for a vector
-                elif shape == "vector":
-                  for i in xrange(int(size)):
-                      towrite += (
-                              "{0}.{1}_{2}{3}[{4}] = *myPipe::Param[\"{5}{6}\"];\n"
-                          ).format(modelcont, gambit_model_name, e, toadd, i, par.gb_in, i+1)
+                # Try to find the corresponding model parameter
+                for i in range(0, len(model_parameters)):
+                    par = model_parameters[i] 
 
-                else:
-                    raise GumError("Parameter with shape " + shape + " is not currently supported.")
+                    # Don't have anything that's an output of spectrum
+                    # computation as a scan parameter
+                    if par.is_output: continue
+                    
+                    if par.fullname == param:
+                        paramdef = "*myPipe::Param[\"{0}\"]".format(par.gb_in)
+
+                if not paramdef:
+                    raise GumError("Parameter " + par.fullname + " not found.")
+
+                towrite += (
+                    "SLHAea_add(slha, \"{0}\", {1}, {2});\n"
+                ).format(block, index, paramdef)
+        #             for i in xrange(int(size)):
+        #                 for j in xrange(int(size)):
+        #                     towrite += (
+        #                         "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
+        #                     ).format(modelcont, gambit_model_name, e, toadd, i, j, par.gb_in, i+1, j+1)
+
+
+        # Now do the mass block
+        towrite += (
+                "\n"
+                "// Block MASS\n"
+                "SLHAea_add_block(slha, \"MASS\");\n"
+        )
+
+        # Masses should also be input parameters in this setup
+        for particle in particles:
+
+            print particle.name, particle.PDG_code, particle.mass
+
+            towrite += (
+                    "SLHAea_add(slha, \"MASS\", {0}, *myPipe::Param[\"{1}\"]);\n"
+            ).format(particle.PDG_code, particle.mass)
+
+
+        # TODO for matrices
+
+        # # Now add each BSM model parameter to spectrum
+        # for i in range(0, len(model_parameters)):
+        
+        #     par = model_parameters[i] 
+
+        #     # Don't have anything that's an output of spectrum computation as 
+        #     # a scan parameter
+        #     if par.is_output: continue
+          
+        #     if not isinstance(par, SpectrumParameter):
+        #         raise GumError(("\n\nModel Parameters at position " + i + 
+        #                         "not passed as instance of class "
+        #                         "SpectrumParameter."))
+              
+        #     if not par.sm:
+                
+        #         # If it's a pole mass then append this information onto the
+        #         # parameter name
+        #         toadd = "_Pole_Mass" if par.tag == "Pole_Mass" else ""
+        #         shape = "scalar"
+        #         size = 1
+
+        #         if model_parameters[i].shape:
+        #             if re.match("v[2-9]", par.shape):
+        #                 shape = "vector"
+        #                 size = par.shape[-1]
+        #             elif re.match("m[2-9]x[2-9]", par.shape):
+        #                 # Assuming all matrices will be square...
+        #                 shape = "matrix"
+        #                 size = par.shape[-1]
+
+        #         e = par.fullname[1:].strip('~') if par.tag == "Pole_Mass" else par.fullname
+
+        #         # If it's a scalar shape, just add it one by one
+        #         if shape == "scalar":
+        #             towrite += (
+        #                     "{0}.{1}_{2}{3} = *myPipe::Param[\"{4}\"];\n"
+        #             ).format(modelcont, gambit_model_name, e, toadd, par.gb_in)
+
+        #         # If it's a matrix then do each element individually
+        #         elif shape == "matrix":
+        #             for i in xrange(int(size)):
+        #                 for j in xrange(int(size)):
+        #                     towrite += (
+        #                         "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
+        #                     ).format(modelcont, gambit_model_name, e, toadd, i, j, par.gb_in, i+1, j+1)
+
+        #         # Same deal for a vector
+        #         elif shape == "vector":
+        #           for i in xrange(int(size)):
+        #               towrite += (
+        #                       "{0}.{1}_{2}{3}[{4}] = *myPipe::Param[\"{5}{6}\"];\n"
+        #                   ).format(modelcont, gambit_model_name, e, toadd, i, par.gb_in, i+1)
+
+        #         else:
+        #             raise GumError("Parameter with shape " + shape + " is not currently supported.")
 
         if add_higgs:
             towrite += add_simple_sminputs(modelcont)
 
         towrite += (
-                "// Create a SubSpectrum object wrapper\n"
-                "Models::{0} spec({1});\n\n" 
+                # "// Create a SubSpectrum object wrapper\n"
+                # "Models::{0} spec({1});\n\n" 
                 "// Retrieve any mass cuts\n"
                 "static const Spectrum::mc_info mass_cut = "
                 "myPipe::runOptions->getValueOrDef<Spectrum::mc_info>"
                 "(Spectrum::mc_info(), \"mass_cut\");\n"
                 "static const Spectrum::mr_info mass_ratio_cut = "
                 "myPipe::runOptions->getValueOrDef<Spectrum::mr_info>"
-                "(Spectrum::mr_info(), \"mass_ratio_cut\");\n\n"
-                "// We don't supply a LE subspectrum here; an "
-                "SMSimpleSpec will therefore be automatically created "
-                "from 'sminputs'\n"
-                "result = Spectrum(spec,sminputs,&myPipe::Param,"
-                "mass_cut,mass_ratio_cut);\n"
+                "(Spectrum::mr_info(), \"mass_ratio_cut\");\n"
+                "\n"
+                # "// We don't supply a LE subspectrum here; an "
+                # "SMSimpleSpec will therefore be automatically created "
+                # "from 'sminputs'\n"
+                # "result = Spectrum(spec,sminputs,&myPipe::Param,"
+                # "mass_cut,mass_ratio_cut);\n"
+                "// Construct the Spectrum object from the SLHAea inputs\n"
+                "result = spectrum_from_SLHAea<Gambit::Models::{0}SimpleSpec,"
+                " SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);\n"
                 "}}\n\n"
-        ).format(modelSS, modelcont)
+        #).format(modelSS, modelcont)
+        ).format(gambit_model_name)
 
     # If we have SPheno, make the spectrum use it.
     # TODO SpecBit/include/NEWMODELSpec.hpp does not get generated by GUM (yet)
-    # TODO: TG: I don't think we need NEWMODELSpec.hpp, models with just SimpleSpectra (c.f. VectorDM) do not need it
+    # TODO: TG: I don't think we need NEWMODELSpec.hpp, models with just 
+    # SimpleSpectra (c.f. VectorDM) do not need it
     else:
         towrite += (
                 "#include <cmath>\n"
@@ -431,25 +546,79 @@ def add_simple_sminputs(model):
             "double cosW2 = 0.5 + pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
             "double e = pow( 4*pi*( alpha_em ),0.5);\n"
             "double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
-            "\n"
-            "// Gauge couplings\n"
-            "{0}.vev = vev;\n"    
-            "{0}.g1 = sqrt(5/3) * e / sqrt(cosW2);\n"    
-            "{0}.g2 = e / sqrt(sinW2);\n"    
-            "{0}.g3 = pow( 4*pi*( sminputs.alphaS ),0.5);\n" 
-            "\n"
-            "// Yukawas\n"
             "double sqrt2v = pow(2.0,0.5)/vev;\n"
-            "{0}.Yu[0][0] = sqrt2v * sminputs.mU;\n"
-            "{0}.Yu[1][1] = sqrt2v * sminputs.mCmC;\n"
-            "{0}.Yu[2][2] = sqrt2v * sminputs.mT;\n"
-            "{0}.Ye[0][0] = sqrt2v * sminputs.mE;\n"
-            "{0}.Ye[1][1] = sqrt2v * sminputs.mMu;\n"
-            "{0}.Ye[2][2] = sqrt2v * sminputs.mTau;\n"
-            "{0}.Yd[0][0] = sqrt2v * sminputs.mD;\n"
-            "{0}.Yd[1][1] = sqrt2v * sminputs.mS;\n"
-            "{0}.Yd[2][2] = sqrt2v * sminputs.mBmB;\n"
-    ).format(model)
+            "\n"
+    )
+    # towrite = (
+    #         "// Gauge couplings\n"
+    #         "{0}.vev = vev;\n"
+    #         "{0}.g1 = sqrt(5/3) * e / sqrt(cosW2);\n"    
+    #         "{0}.g2 = e / sqrt(sinW2);\n"    
+    #         "{0}.g3 = pow( 4*pi*( sminputs.alphaS ),0.5);\n" 
+    #         "\n"
+    #         "// Yukawas\n"
+    #         "{0}.Yu[0][0] = sqrt2v * sminputs.mU;\n"
+    #         "{0}.Yu[1][1] = sqrt2v * sminputs.mCmC;\n"
+    #         "{0}.Yu[2][2] = sqrt2v * sminputs.mT;\n"
+    #         "{0}.Ye[0][0] = sqrt2v * sminputs.mE;\n"
+    #         "{0}.Ye[1][1] = sqrt2v * sminputs.mMu;\n"
+    #         "{0}.Ye[2][2] = sqrt2v * sminputs.mTau;\n"
+    #         "{0}.Yd[0][0] = sqrt2v * sminputs.mD;\n"
+    #         "{0}.Yd[1][1] = sqrt2v * sminputs.mS;\n"
+    #         "{0}.Yd[2][2] = sqrt2v * sminputs.mBmB;\n"
+    # ).format(model)
+
+    towrite += (
+            "\n"
+            "SLHAea_add_block(slha, \"GAUGE\");\n"
+            "SLHAea_add(slha, \"GAUGE\", 1, sqrt(5/3) * e / sqrt(cosW2) );\n"
+            "SLHAea_add(slha, \"GAUGE\", 2, e / sqrt(sinW2));\n"
+            "SLHAea_add(slha, \"GAUGE\", 3, pow( 4*pi*sminputs.alphaS,0.5) );\n"
+            "\n"
+            "SLHAea_add_block(slha, \"SINTHETAW\");\n"
+            "SLHAea_add(slha, \"SINTHETAW\", 1, sinW2);\n"
+            "\n"
+            "SLHAea_add_block(slha, \"YU\");\n"
+            "SLHAea_add(slha, \"YU\", 1, 1, sqrt2v*sminputs.mU, \"u\");\n"
+            "SLHAea_add(slha, \"YU\", 2, 2, sqrt2v*sminputs.mCmC, \"c\");\n"
+            "SLHAea_add(slha, \"YU\", 3, 3, sqrt2v*sminputs.mT, \"t\");\n"
+            "\n"
+            "SLHAea_add_block(slha, \"YE\");\n"
+            "SLHAea_add(slha, \"YE\", 1, 1, sqrt2v*sminputs.mE, \"e\");\n"
+            "SLHAea_add(slha, \"YE\", 2, 2, sqrt2v*sminputs.mMu, \"mu\");\n"
+            "SLHAea_add(slha, \"YE\", 3, 3, sqrt2v*sminputs.mTau, \"tau\");\n"
+            "\n"
+            "SLHAea_add_block(slha, \"YD\");\n"
+            "SLHAea_add(slha, \"YD\", 1, 1, sqrt2v*sminputs.mD, \"d\");\n"
+            "SLHAea_add(slha, \"YD\", 2, 2, sqrt2v*sminputs.mS, \"s\");\n"
+            "SLHAea_add(slha, \"YD\", 3, 3, sqrt2v*sminputs.mBmB, \"b\");\n"
+            "\n"
+            "SLHAea_add_block(slha, \"VEVS\");\n"
+            "SLHAea_add(slha, \"VEVS\", 1, vev);\n"
+            "\n"
+            "// Block SMINPUTS\n"
+            "SLHAea_add_block(slha, \"SMINPUTS\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 1, sminputs.alphainv, \"# alpha_em^-1(MZ)^MSbar\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 2, sminputs.GF, \"# G_mu [GeV^-2]\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 3, sminputs.alphaS, \"# alpha_s(MZ)^MSbar\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 4, sminputs.mZ, \"# m_Z(pole)\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 5, sminputs.mBmB, \"# m_b(m_b), MSbar\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 6, sminputs.mT, \"# m_t(pole)\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 7, sminputs.mTau, \"# m_tau(pole)\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 8, sminputs.mNu3, \"# m_nu_3\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 11, sminputs.mE, \"# m_e(pole)\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 12, sminputs.mNu1, \"# m_nu_1\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 13, sminputs.mMu, \"# m_muon(pole)\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 14, sminputs.mNu2, \"# m_nu_2\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 21, sminputs.mD, \"# m_d(2 GeV), MSbar\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 22, sminputs.mU, \"# m_u(2 GeV), MSbar\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 23, sminputs.mS, \"# m_s(2 GeV), MSbar\");\n"
+            "SLHAea_add(slha, \"SMINPUTS\", 24, sminputs.mCmC, \"# m_c(m_c), MSbar\");\n"
+            "\n"
+            "// And the W for good measure\n"
+            "SLHAea_add(slha, \"MASS\", 24, sminputs.mW);\n"
+            "\n"
+    )
       
     return towrite
     
