@@ -3105,6 +3105,36 @@ namespace Gambit
       if (flav_debug) std::cout << "hepLikeB2SGammaLogLikelihood result: " << result << std::endl;
     }
 
+    /// HEPLike LogLikelihood B -> K* gamma S
+    void HEPLike_B2KstargammaS_HFLAV(double &result)
+    {
+      using namespace Pipes::HEPLike_B2KstargammaS_HFLAV;
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/HFLAV_18/RD/B2Kstar_gamma_S.yaml";
+      static HepLike_default::HL_Gaussian gaussian_0(inputfile_0);
+  
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        gaussian_0.Read();
+  
+        first = false;
+      }
+      
+      static const std::string observable{"SKstarGamma"};
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      result = gaussian_0.GetLogLikelihood(
+              SI_theory[observable],
+              SI_theory_covariance[observable][observable]
+              );
+  
+      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+    }
+
+
     /// HEPLike LogLikelihood B -> ll
     void HEPLike_B2mumuLogLikelihood(double &result)
     {

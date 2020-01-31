@@ -923,6 +923,17 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// HEPLike LogLikelihood B -> K* gamma S
+  #define CAPABILITY HEPLike_B2KstargammaS_HFLAV
+  START_CAPABILITY
+    #define FUNCTION HEPLike_B2KstargammaS_HFLAV
+    START_FUNCTION(double);
+    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// HEPLike LogLikelihood B -> mumu
   #define CAPABILITY HEPLike_B2mumuLogLikelihood
   START_CAPABILITY
