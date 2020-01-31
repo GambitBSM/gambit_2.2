@@ -188,45 +188,59 @@ def check_all_particles_present(partlist, gambit_pdg_codes):
     return absent
         
 
-def add_new_particleDB_entry(particles, dm_pdg):
+def add_new_particleDB_entry(particles, dm_pdg, gambit_pdg_codes,
+                             decaybit_dict, reset_dict, modelname):
     """
     Adds a list of particles to the particle database.
     """
-    stream =    ("# YAML file containing all particles for the particle database.\n\n"
-                "# particle_database.cpp is constructed from this YAML file at compile time, via particle_harvester.py.\n\n"
-                "# New entries should look like:\n"
-                "#\n"
-                "#   - name: \"X+\"                           The name used within GAMBIT, in the particleDB.\n"
-                "#     PDG_context: [10, 4]                 The PDG-context pair used for a single particle.\n"
-                "#     conjugate: \"X-\"                      The name for the conjugate particle, also added to the particleDB.\n"
-                "#     description: \"New particle\"          Optional - adds a C++ comment to particle_database.cpp. For readability.\n"
-                "#     chargex3: 0                          Three times the electric charge.\n"
-                "#     spinx2: 1                            Twice the spin.\n"
-                "#     color:  3                            The color representation (1 = singlet; 3 = triplet; 6 = sextet; 8 = octet).\n"
-                "#     DecayBit:\n"
-                "#       Decays: True                       Flag to show whether or not to include a particle's Decays in DecayBit.\n"
-                "#       name: \"X_plus\"                     The name used as CAPABILITES in DecayBit_rollcall.hpp for the specific particle.\n"
-                "#       conjugate: \"X_minus\"                    And the name used for it's conjugate.\n"
-                "#\n"
-                "# The syntax for adding sets is identical - GAMBIT automatically numbers each particle in a set.\n"
-                "#\n"
-                "#   - name: \"h0\"\n"
-                "#     PDG_context:\n"
-                "#     - [25, 0]      (This line-by-line format is equivalent to a list of lists)\n"
-                "#     - [35, 0]      Creates entries for \"h0_1\" and \"h0_2\" in the particleDB.\n"
-                "#     DecayBit:\n"
-                "#       Decays: True\n"
-                "#       name: \"h0\"                         Creates rollcall entries for \"h0_1_decay_rates\" and \"h0_2_decay_rates\" CAPABILITIES.\n"
-                "#       name: [\"Higgs\", \"h0_2\"]            Alternative syntax - if particles within sets have different names - creating CAPABILITIES \"Higgs_decay_rates\" and \"h0_2_decay_rates\".\n"
-                "#\n"
-                "# Note: If there is no entry for the 'DecayBit' field, GAMBIT will use the 'name' and 'conjugate' fields by default.\n"
-                "# TODO: Decide if Decays belong here, or elsewhere (GUM)\n\n")
+    stream = (
+           "# YAML file containing all particles for the particle database.\n\n"
+           "# particle_database.cpp is constructed from this YAML file at compile time, via particle_harvester.py.\n\n"
+           "# New entries should look like:\n"
+           "#\n"
+           "#   - name: \"X+\"                         The name used within GAMBIT, in the particleDB.\n"
+           "#     PDG_context: [10, 4]                 The PDG-context pair used for a single particle.\n"
+           "#     conjugate: \"X-\"                    The name for the conjugate particle, also added to the particleDB.\n"
+           "#     description: \"New particle\"        Optional - adds a C++ comment to particle_database.cpp. For readability.\n"
+           "#     chargex3: 0                          Three times the electric charge.\n"
+           "#     spinx2: 1                            Twice the spin.\n"
+           "#     color:  3                            The color representation (1 = singlet; 3 = triplet; 6 = sextet; 8 = octet).\n"
+           "#     DecayBit:\n"
+           "#       Decays: True                       Flag to show whether or not to include a particle's Decays in DecayBit.\n"
+           "#       name: \"X_plus\"                   The name used as CAPABILITES in DecayBit_rollcall.hpp for the specific particle.\n"
+           "#       conjugate: \"X_minus\"             And the name used for it's conjugate.\n"
+           "#\n"
+           "# The syntax for adding sets is identical - GAMBIT automatically numbers each particle in a set.\n"
+           "#\n"
+           "#   - name: \"h0\"\n"
+           "#     PDG_context:\n"
+           "#     - [25, 0]      (This line-by-line format is equivalent to a list of lists)\n"
+           "#     - [35, 0]      Creates entries for \"h0_1\" and \"h0_2\" in the particleDB.\n"
+           "#     DecayBit:\n"
+           "#       Decays: True\n"
+           "#       name: \"h0\"                       Creates rollcall entries for \"h0_1_decay_rates\" and \"h0_2_decay_rates\" CAPABILITIES.\n"
+           "#       name: [\"Higgs\", \"h0_2\"]        Alternative syntax - if particles within sets have different names - creating CAPABILITIES \"Higgs_decay_rates\" and \"h0_2_decay_rates\".\n"
+           "#\n"
+           "# Note: If there is no entry for the 'DecayBit' field, GAMBIT will use the 'name' and 'conjugate' fields by default.\n"
+           "# TODO: Decide if Decays belong here, or elsewhere (GUM)\n\n"
+    )
 
     with open("./../config/particle_database.yaml", "r") as f:
         data = yaml.safe_load(f)
         
         for i in xrange(len(particles)):
             part = particles[i]
+
+            # Check there is no clash of names here, otherwise macros will fail
+            if part.name() in gambit_pdg_codes.keys():
+                raise GumError(("\n\nClash of particle names with the "
+                                "existing particle database in GAMBIT!\n"
+                                "Please rename the particle {} in your "
+                                "model file."
+                                ).format(part.name()))
+
+            # Add the new particle to the GAMBIT dicts
+            gambit_pdg_codes[part.name()] = part.pdg()
 
             entry = {}
 
@@ -237,14 +251,27 @@ def add_new_particleDB_entry(particles, dm_pdg):
             entry['spinx2'] = part.spinX2()
             entry['chargex3'] = part.chargeX3()
             entry['color'] = part.color()
+            entry['description'] = part.name() + " (" + modelname + ")"
 
             # Add conjugate field if it is distinct
             if not (part.name() == part.antiname()):
                 entry['conjugate'] = part.antiname()
+                # And add antiparticle to the PDG list
+                gambit_pdg_codes[part.antiname()] = -part.pdg()
+
+            # Add the entry to the reset dict so gum can remove them later
+            # if called in reset mode.
+            sig = part.name() + "|" + modelname # Signature to parse
+            reset_dict['particles']['particles'].append(sig)
 
             # Assume a new particle decays *unless* it is explicitly given as
             # a dark matter candidate
             if not (part.pdg() == dm_pdg):
+
+                # Add the new particle to the DecayBit dict too
+                decaybit_dict[part.name()] = part.pdg()
+                if (part.name() != part.antiname()):
+                    decaybit_dict[part.antiname()] = -part.pdg()
 
                 db = {'Decays': True}
 
@@ -255,7 +282,8 @@ def add_new_particleDB_entry(particles, dm_pdg):
 
                 # Trim off stuff that would be illegal in a C++ function
 
-                # Tildes: at the start, just strip the tilde -- this is a symmetry thing
+                # Tildes: at the start, just strip the tilde -- this is a 
+                # symmetry thing
                 if name.startswith('~'):
                     name = name[1:]
                 if antiname.startswith('~'):
@@ -268,7 +296,7 @@ def add_new_particleDB_entry(particles, dm_pdg):
                     elif (name.endswith('~') and '~' not in antiname):
                         name = name.strip('~') + 'bar'
 
-                # Plus / minus (let's assume nothing more than triply charged...)
+                # Plus / minus (let's assume nothing more than triply charged..)
                 for i in [name, antiname]:
                     if i.endswith('+++'):
                         i = i.strip('+++') + '_plusplusplus'                    
@@ -288,6 +316,7 @@ def add_new_particleDB_entry(particles, dm_pdg):
                 if (antiname != name):
                     db['conjugate'] = antiname
 
+
             # Add new entry to the data structure
             data['OtherModels']['Particles'].append(entry)
 
@@ -296,6 +325,8 @@ def add_new_particleDB_entry(particles, dm_pdg):
 
     with open("./../config/particle_database.yaml", "w") as f:
         f.write(stream)
+
+    return gambit_pdg_codes, decaybit_dict
 
 def get_antiparticles(partlist):
     """

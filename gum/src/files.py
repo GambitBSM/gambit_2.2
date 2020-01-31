@@ -765,6 +765,73 @@ def revert(reset_file):
                 os.remove(location)
                 os.rename(temp_file, location)
 
+        # Clean up the particle database
+        if 'particles' in data:
+            particles = data['particles']
+
+            # If there's anything, that is...
+            if len(particles) > 0:
+
+                # Fire it up!
+                with open("./../config/particle_database.yaml", "r") as f:
+                    particledata = yaml.safe_load(f)
+                    # particledata is a dict
+
+                # This is a list of dictionaries
+                parts = particledata['OtherModels']['Particles']
+
+                # List of particles to remove
+                toremove = particles.values()[0]
+                toremove_name = [x.split('|')[0] for x in toremove]
+                toremove_model = toremove[0].split('|')[1]
+
+                print("Removing the following particles from the particle DB:")
+                print(toremove_name)
+                
+                # Remove them - belt and bracers with the model name!
+                newparts = [x for x in parts if x['name'] not in toremove_name
+                            and x['description'].find(toremove_model)]
+                particledata['OtherModels']['Particles'] = newparts
+
+                stream = (
+                       "# YAML file containing all particles for the particle database.\n\n"
+                       "# particle_database.cpp is constructed from this YAML file at compile time, via particle_harvester.py.\n\n"
+                       "# New entries should look like:\n"
+                       "#\n"
+                       "#   - name: \"X+\"                         The name used within GAMBIT, in the particleDB.\n"
+                       "#     PDG_context: [10, 4]                 The PDG-context pair used for a single particle.\n"
+                       "#     conjugate: \"X-\"                    The name for the conjugate particle, also added to the particleDB.\n"
+                       "#     description: \"New particle\"        Optional - adds a C++ comment to particle_database.cpp. For readability.\n"
+                       "#     chargex3: 0                          Three times the electric charge.\n"
+                       "#     spinx2: 1                            Twice the spin.\n"
+                       "#     color:  3                            The color representation (1 = singlet; 3 = triplet; 6 = sextet; 8 = octet).\n"
+                       "#     DecayBit:\n"
+                       "#       Decays: True                       Flag to show whether or not to include a particle's Decays in DecayBit.\n"
+                       "#       name: \"X_plus\"                   The name used as CAPABILITES in DecayBit_rollcall.hpp for the specific particle.\n"
+                       "#       conjugate: \"X_minus\"             And the name used for it's conjugate.\n"
+                       "#\n"
+                       "# The syntax for adding sets is identical - GAMBIT automatically numbers each particle in a set.\n"
+                       "#\n"
+                       "#   - name: \"h0\"\n"
+                       "#     PDG_context:\n"
+                       "#     - [25, 0]      (This line-by-line format is equivalent to a list of lists)\n"
+                       "#     - [35, 0]      Creates entries for \"h0_1\" and \"h0_2\" in the particleDB.\n"
+                       "#     DecayBit:\n"
+                       "#       Decays: True\n"
+                       "#       name: \"h0\"                         Creates rollcall entries for \"h0_1_decay_rates\" and \"h0_2_decay_rates\" CAPABILITIES.\n"
+                       "#       name: [\"Higgs\", \"h0_2\"]            Alternative syntax - if particles within sets have different names - creating CAPABILITIES \"Higgs_decay_rates\" and \"h0_2_decay_rates\".\n"
+                       "#\n"
+                       "# Note: If there is no entry for the 'DecayBit' field, GAMBIT will use the 'name' and 'conjugate' fields by default.\n"
+                       "# TODO: Decide if Decays belong here, or elsewhere (GUM)\n\n"
+                )
+
+
+                # Overwrite the particle database YAML file
+                stream += yaml.dump(particledata).replace('\n  - ', '\n\n  - ')
+
+                with open("./../config/particle_database.yaml", "w") as f:
+                    f.write(stream)
+
     return
 
 def check_for_existing_entries(model_name, darkbit, colliderbit, output_opts):
@@ -828,9 +895,14 @@ def drop_mug_file(mug_file, contents):
         capabilities = dict(d['capabilities'])
     else:
         capabilities = {}
+    if 'particles' in d:
+        particles = dict(d['particles'])
+    else:
+        particles = {}
         
     new_contents = {'new_files': new_files, 'amended_files': amended_files, 
-                    'new_models' : new_models, 'capabilities' : capabilities}
+                    'new_models' : new_models, 'capabilities' : capabilities,
+                    'particles' : particles}
 
     with open(mug_file, 'w') as f:
         yaml.dump(new_contents, f, default_flow_style=False)
@@ -869,7 +941,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
     towrite += ("  {0}:\n").format(model_name)
 
     # Don't want the SM-like Higgs mass a fundamental parameter
-    bsm_params = [x for x in model_parameters if x.name != 'h0_1'
+    bsm_params = [x for x in model_parameters if x.name != 'mH'
                   and x.sm == False]
     params = []
 
@@ -893,6 +965,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
         towrite += ("    {0}: 0.1\n").format(i)
 
     towrite += (
+        "\n"
         "Priors:\n"
         "\n"
         "  # All the priors are simple for this scan, so they "
@@ -905,6 +978,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
         "\n"
         "  options:\n"
         "    output_file: \"{0}.hdf5\"\n"
+        "    delete_file_on_restart: true\n"
         "    group: \"/{0}\"\n"
         "\n"
         "\n"
@@ -931,10 +1005,19 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
         "Logger:\n"
         "\n"
         "  redirection:\n"
-        "    [Debug] : \"debug.log\"\n"
+        "    [Backends] : \"backends.log\"\n"
+        "    [ColliderBit] : \"colliderbit.log\"\n"
         "    [Default] : \"default.log\"\n"
+        "    [DecayBit] : \"DecayBit.log\"\n"
+        "    [DarkBit] : \"DarkBit.log\"\n"
+        "    [FlavBit] : \"FlavBit.log\"\n"
+        "    [PrecisionBit] : \"PrecisionBit.log\"\n"
+        "    [Scanner] : \"ScannerBit.log\"\n"
         "    [SpecBit] : \"SpecBit.log\"\n"
         "    [Dependency Resolver] : \"dep_resolver.log\"\n"
+        "    [Error] : \"errors.log\"\n"
+        "    [Warning] : \"warnings.log\"\n"
+        "    [Utilities] : \"utils.log\"\n"
         "\n"
         "KeyValues:\n"
         "\n"

@@ -195,9 +195,9 @@ if args.file:
             # does not begin with a tilde, then complain
             if not dm.name.startswith('~') and output_opts.mo:
                 raise GumError(("You have requested MicrOMEGAs output, but your"
-                                "DM candidate has to begin with a '~' for "
+                                " DM candidate has to begin with a '~' for "
                                 "MicrOMEGAs to recognise it as an odd particle"
-                                ". Please change the DM name in your {} file!"
+                                ".\n Please change the DM name in your {} file!"
                                 ).format(gum.math))
 
         """ 
@@ -228,12 +228,6 @@ if args.file:
         # from there to CalcHEP later.
         if output_opts.ch or output_opts.mo:
             clean_calchep_model_files(outputs.get_ch(), gum.name)
-
-        # Create defaultdict for reset file.
-        # There are 2 nodes: new_files and amended_files.
-        # todo: add backend patches (e.g. pythia stuff) to reset_contents
-        # so ordering is not important.
-        reset_contents = defaultdict(lambda: defaultdict(list))
 
         """
         MADGRAPH -- Pythia inside here (and MadDM in the future)
@@ -285,6 +279,12 @@ if args.file:
         print("Finished running external codes...")
         print("Now attempting to write proposed GAMBIT code.")
 
+        # Create defaultdict for reset file.
+        # There are 2 nodes: new_files and amended_files.
+        # todo: add backend patches (e.g. pythia stuff) to reset_contents
+        # so ordering is not important.
+        reset_contents = defaultdict(lambda: defaultdict(list))
+
         """
         REGISTRATION OF NEW PARTICLES
         """
@@ -301,10 +301,13 @@ if args.file:
                 print("GUM won't add to the particle database for a dryrun.")
                 print("GUM will fail shortly. That's a promise.")
             else:
-                # Add new particles to the database.
-                add_new_particleDB_entry(missing_parts, gum.dm_pdg)
-                # Mow reload the dictionaries
-                gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
+                # Add new particles to the database, refresh the dicts
+                gambit_pdgs, decaybit_dict = \
+                    add_new_particleDB_entry(missing_parts, gum.dm_pdg, 
+                                             gambit_pdgs, decaybit_dict,
+                                             reset_contents, gum.name)
+                # # Mow reload the dictionaries
+                # gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
         # Grab the antiparticles
         antiparticle_dict = get_antiparticles(partlist)

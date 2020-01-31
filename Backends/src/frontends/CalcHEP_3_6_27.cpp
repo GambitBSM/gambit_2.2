@@ -49,14 +49,6 @@ BE_INI_FUNCTION
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
     }
-    if (ModelInUse("MDMSM"))
-    {
-      BEpath = backendDir + "/../models/MDMSM";
-      path = BEpath.c_str();
-      modeltoset = (char*)malloc(strlen(path)+11);
-      sprintf(modeltoset, "%s", path);
-    }
-    
     
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
@@ -80,20 +72,6 @@ BE_INI_FUNCTION
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
 
-  if (ModelInUse("MDMSM"))
-  {
-    // Obtain spectrum information to pass to CalcHEP
-    const Spectrum& spec = *Dep::MDMSM_spectrum;
-    
-    // Obtain model contents
-    static const SpectrumContents::MDMSM MDMSM_contents;
-    
-    // Obtain list of all parameters within model
-    static const std::vector<SpectrumParameter> MDMSM_params = MDMSM_contents.all_parameters();
-    
-    Assign_All_Values(spec, MDMSM_params);
-  }
-  
 }
 END_BE_INI_FUNCTION
 
@@ -215,7 +193,7 @@ BE_NAMESPACE
     Assign_Value((char*)"Gf", (char*)"GF", sminputs.GF);                    // Fermi
     Assign_Value((char*)"aS", sminputs.alphaS);                             // Strong coupling (unspecified scale if SARAH)
     Assign_Value((char*)"alfSMZ", (char*)"aS", sminputs.alphaS);            // Strong coupling (mZ) for both.
-    Assign_Value((char*)"aEWM1", (char*)"aEWinv", 1./sminputs.alphainv);    // Inverse EM coupling
+    Assign_Value((char*)"aEWM1", (char*)"aEWinv", sminputs.alphainv);       // Inverse EM coupling
 
     // Then, SM particle masses (by PDG code)
     Assign_Value(pdg2mass(1), sminputs.mD);                        // Down

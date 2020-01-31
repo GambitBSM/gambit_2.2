@@ -125,6 +125,11 @@ def check_gum_file(inputfile):
             raise GumError(("\n\nNo model file specified. "
                             "Please check your .gum file."))
 
+        if not 'output' in data:
+        # Don't know what to generate!
+            raise GumError(("\n\nNo output specified! You need to tell GUM "
+                            "what it is you'd like it to do!\n"
+                            "Please change your .gum file!"))
 
     print("Parse successful.")
 
@@ -172,7 +177,6 @@ def fill_gum_object(data):
     else:
         wimp_candidate = None
 
-
     backends = ['calchep', 'pythia', 'spheno', 'ufo',
                 'micromegas', 'vevacious']
 
@@ -184,6 +188,10 @@ def fill_gum_object(data):
                 opts[i] = data['output'][i]
             else:
                 opts[i] = False
+        if all(value == False for value in opts.values()):
+            raise GumError(("\n\nAll backend output set to false in your .gum "
+                            "file.\nGive GUM something to do!\n"
+                            "Please change your .gum file."))
         if 'collider_processes' in data['output']:
             opts['collider_processes'] = data['output']['collider_processes']
         if 'multiparticles' in data['output']:
@@ -191,10 +199,15 @@ def fill_gum_object(data):
         if 'pythia_groups' in data['output']:
             opts['pythia_groups'] = data['output']['pythia_groups']
 
-    # Default: if unspecified, write everything.
-    else:
-        for i in backends:
-            opts[i] = True
+    # If we've got this far, we'll also force some decays to be written,
+    # either by SPheno or by CalcHEP.
+    # N.B. vevacious is conditional on SPheno
+    # This now means if any of: Pythia(ufo) or MicrOMEGAs are requested, 
+    # then we'll default to activating CalcHEP (unless SPheno requested)
+    set_calchep = True
+    if mathpackage == 'sarah' and opts['spheno'] == True:
+        set_calchep = False
+    if set_calchep: opts['calchep'] = True
     
     outputs = Outputs(mathpackage, **opts)
 
@@ -205,7 +218,6 @@ def fill_gum_object(data):
                         "candidate! Please add an entry to your .gum file "
                         "like:\n\nwimp_candidate: 9900001 # <--- insert the "
                         "desired PDG code here!!\n")) 
-
 
     # FeynRules restriction files
     restriction = None
