@@ -354,11 +354,13 @@ if args.file:
                                               gambit_pdgs, add_higgs)
         
         # Get the model parameters out of the parameter list
-        model_parameters = get_model_parameters(parameters, partlist);
+        model_parameters = get_model_parameters(parameters, partlist)
 
         model_header = add_to_model_hierarchy(gum.spec, gum.name, 
                                               model_parameters)
-        subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters)
+        subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters,
+                                                    bsm_particle_list, mixings,
+                                                    gambit_pdgs)
         spec_contents = write_spectrumcontents(gum.name, model_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 

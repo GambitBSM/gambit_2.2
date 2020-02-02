@@ -14,7 +14,8 @@ class Particle:
     Particle class for internal use in GUM.
     """
 
-    def __init__(self, name, antiname, spinx2, pdg_code, mass_name, alt_name = None, alt_mass_name = None):
+    def __init__(self, name, antiname, spinx2, pdg_code, mass_name, 
+                 alt_name = None, alt_mass_name = None):
 
         self.name = name
         self.antiname = antiname
