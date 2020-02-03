@@ -3296,9 +3296,9 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Atlas;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_0.1_2.0.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_2.0_4.0.yaml";
-      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_4.0_8.0.yaml";
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_0.1_2.0.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_2.0_4.0.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_4.0_8.0.yaml";
       static HepLike_default::HL_nDimGaussian nDimGaussian_0(inputfile_0);
       static HepLike_default::HL_nDimGaussian nDimGaussian_1(inputfile_1);
       static HepLike_default::HL_nDimGaussian nDimGaussian_2(inputfile_2);
@@ -3378,13 +3378,13 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_CMS(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_CMS;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_1.0_2.0.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_2.0_4.3.yaml";
-      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_4.3_6.0.yaml";
-      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_6.0_8.68.yaml";
-      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_10.09_12.86.yaml";
-      static const std::string inputfile_5 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_14.18_16.0.yaml";
-      static const std::string inputfile_6 = path_to_latest_heplike_data() + "/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_16.0_19.0.yaml";
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_1.0_2.0.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_2.0_4.3.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_4.3_6.0.yaml";
+      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_6.0_8.68.yaml";
+      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_10.09_12.86.yaml";
+      static const std::string inputfile_5 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_14.18_16.0.yaml";
+      static const std::string inputfile_6 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_16.0_19.0.yaml";
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_0);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);

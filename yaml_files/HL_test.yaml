@@ -104,6 +104,7 @@ ObsLikes:
   - purpose:    B2KStarMuMuAngularTest
     capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
 
+
   - purpose:    B2KStarMuMuBranchingRatioTest
     capability: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
 
