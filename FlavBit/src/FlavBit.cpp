@@ -3136,14 +3136,12 @@ namespace Gambit
 
 
     /// HEPLike LogLikelihood B -> ll
-    void HEPLike_B2mumuLogLikelihood(double &result)
+    void HEPLike_B2mumuLogLikelihood_LHCb(double &result)
     {
-      using namespace Pipes::HEPLike_B2mumuLogLikelihood;
+      using namespace Pipes::HEPLike_B2mumuLogLikelihood_LHCb;
       static const std::string inputfile_LHCb = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
-      static const std::string inputfile_CMS = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CERN-EP-2017-100.yaml"; // THIS NEEDS TO BE IMPLEMENTED
 
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile_LHCb);
-      //static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile_CMS);
 
       static bool first = true;
       if (first)
