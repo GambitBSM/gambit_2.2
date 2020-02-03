@@ -92,23 +92,34 @@ ObsLikes:
   - purpose:    B2SGammaTest
     capability: HEPLike_B2SGammaLogLikelihood
 
-  - purpose:    B2LLTest
-    capability: HEPLike_B2mumuLogLikelihood
+  - purpose:    B2LLTest_LHCb
+    capability: HEPLike_B2mumuLogLikelihood_LHCb
+    
+  - purpose:    B2LLTest_CMS
+    capability: HEPLike_B2mumuLogLikelihood_CMS
 
+  - purpose:    B2LLTest_Atlas
+    capability: HEPLike_B2mumuLogLikelihood_Atlas
+      
   - purpose:    B2KStarMuMuAngularTest
     capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
-
 
   - purpose:    B2KStarMuMuBranchingRatioTest
     capability: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
 
+  - purpose:    Bs2PhiMuMuBranchingRatioTest
+    capability: HEPLike_Bs2PhimumuBr_LogLikelihood
+
+
+
+    
   - purpose:    RKTest
     capability: HEPLike_RK_LogLikelihood
 
   - purpose:    RKstarTest
     capability: HEPLike_RKstar_LogLikelihood_LHCb
           
-
+          
 
 Rules:
   # Globally set the SuperIso observables to be considered

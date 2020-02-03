@@ -3149,15 +3149,14 @@ namespace Gambit
   
         first = false;
       }
-
       static const std::array<std::string, 2> observables{
-        "BR_Bs2mumu",
-        "BR_Bd2mumu"
+        "BRuntag_Bsmumu",
+             "BR_Bdmumu"
+          
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
       auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
-
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
           std::vector<double> obs_theory;
@@ -3191,7 +3190,7 @@ namespace Gambit
     void HEPLike_B2mumuLogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2mumuLogLikelihood_Atlas;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "data/ATLAS/RD/B2MuMu/CERN-EP-2018-291.yaml";
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/ATLAS/RD/B2MuMu/CERN-EP-2018-291.yaml";
       static HepLike_default::HL_nDimLikelihood nDimLikelihood_0(inputfile_0);
   
       static bool first = true;
@@ -3204,8 +3203,9 @@ namespace Gambit
       }
 
       static const std::array<std::string, 2> observables{
-        "BR_Bs2mumu",
-        "BR_Bd2mumu"
+        "BRuntag_Bsmumu",
+             "BR_Bdmumu"
+          
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
