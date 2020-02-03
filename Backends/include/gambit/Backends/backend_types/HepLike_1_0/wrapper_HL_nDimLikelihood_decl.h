@@ -24,6 +24,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
          static Abstract_HL_nDimLikelihood* (*__factory1)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >);
    
          // -- Other member variables: 
+      public:
+         double& loglikelihood_penalty;
    
          // Member functions: 
       public:

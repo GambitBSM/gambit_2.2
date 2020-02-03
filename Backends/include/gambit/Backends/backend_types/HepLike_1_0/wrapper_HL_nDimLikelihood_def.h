@@ -59,14 +59,16 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
    // Wrappers for original constructors: 
    inline HL_nDimLikelihood::HL_nDimLikelihood() :
-      HL_Data(__factory0())
+      HL_Data(__factory0()),
+      loglikelihood_penalty( get_BEptr()->loglikelihood_penalty_ref__BOSS())
    {
       get_BEptr()->set_wptr(this);
       get_BEptr()->set_delete_wrapper(false);
    }
    
    inline HL_nDimLikelihood::HL_nDimLikelihood(::std::basic_string<char, std::char_traits<char>, std::allocator<char> > s) :
-      HL_Data(__factory1(s))
+      HL_Data(__factory1(s)),
+      loglikelihood_penalty( get_BEptr()->loglikelihood_penalty_ref__BOSS())
    {
       get_BEptr()->set_wptr(this);
       get_BEptr()->set_delete_wrapper(false);
@@ -74,7 +76,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
    // Special pointer-based constructor: 
    inline HL_nDimLikelihood::HL_nDimLikelihood(Abstract_HL_nDimLikelihood* in) :
-      HL_Data(in)
+      HL_Data(in),
+      loglikelihood_penalty( get_BEptr()->loglikelihood_penalty_ref__BOSS())
    {
       get_BEptr()->set_wptr(this);
       get_BEptr()->set_delete_wrapper(false);
@@ -82,7 +85,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
    // Copy constructor: 
    inline HL_nDimLikelihood::HL_nDimLikelihood(const HL_nDimLikelihood& in) :
-      HL_Data(in.get_BEptr()->pointer_copy__BOSS())
+      HL_Data(in.get_BEptr()->pointer_copy__BOSS()),
+      loglikelihood_penalty( get_BEptr()->loglikelihood_penalty_ref__BOSS())
    {
       get_BEptr()->set_wptr(this);
       get_BEptr()->set_delete_wrapper(false);

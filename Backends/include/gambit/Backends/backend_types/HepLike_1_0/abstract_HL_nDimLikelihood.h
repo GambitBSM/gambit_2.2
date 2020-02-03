@@ -38,6 +38,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
          virtual double GetLogLikelihood_profile(double, ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >) =0;
    
+         virtual double& loglikelihood_penalty_ref__BOSS() =0;
+   
       public:
          using Abstract_HL_Data::pointer_assign__BOSS;
          virtual void pointer_assign__BOSS(Abstract_HL_nDimLikelihood*) =0;
