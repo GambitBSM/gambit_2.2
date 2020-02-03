@@ -397,7 +397,6 @@ def sort_params_by_block(parameters, mixings):
         if not par.block:
             continue
 
-        # If the parameter
         shape = par.shape
 
         matrix = False
@@ -413,11 +412,15 @@ def sort_params_by_block(parameters, mixings):
 
         # If it's a matrix then it will be a new block
         if matrix:
-            # if it's a mixing matrix
+            # if it's a mixing matrix, save the outputname (SPheno) and the
+            # particle eigenstates (as known by SARAH) to the entry.
             if par.is_output and is_mixing :
-                newentry = { "mixingmatrix": par.shape[1:], "outputname": par.name }
+                newentry = { "mixingmatrix": shape[1:], 
+                             "outputname": par.name,
+                             "particles" : mixings[par.name] }
             else:
-                newentry = { "matrix": par.shape[1:], "outputname": par.name }
+                newentry = { "matrix": shape[1:], 
+                             "outputname": par.name }
             params_by_block[par.block] = newentry
 
         # If it's not a matrix and is a new block, then create the entry

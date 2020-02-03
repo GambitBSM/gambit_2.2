@@ -282,7 +282,8 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
     return contents
 
 def write_subspectrum_wrapper(gambit_model_name, model_parameters,
-                              bsm_partlist, mixings, gambit_pdgs):
+                              bsm_partlist, params_by_block, gambit_pdgs, 
+                              partlist):
     """
     Writes spectrum object wrapper for new model:
     Models/include/gambit/Models/SimpleSpectra/<new_model_name>SimpleSpec.hpp.
@@ -390,15 +391,6 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
 
         x = SpecGetAndSet("scalar", 1, paramname, getter, setter, block, index)
         spectrumparameters.append(x)
-
-    # Convert the C++ dict to python properly
-    mixingdict = dict((m.key(),m.data()) for m in mixings)
-
-    # print mixingdict
-    # TODO mixing dict
-    # # Same for the mixings
-    # for mix in mixingdict:
-    #     ...
 
     intro_message = (
             "///  A simple SubSpectrum wrapper for\n"
@@ -629,7 +621,23 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2(&Model::{0}, {1}, {1})".format(sp.getter, index)
 
-        e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
+        e = ""
+        if mp.tag == "Pole_Mass":
+            e = mp.fullparticlename
+        elif mp.tag == "Pole_Mixing":
+            for v in params_by_block.values():
+                if not 'mixingmatrix' in v: continue
+                if mp.name == "sinW2": e = mp.name
+                elif v['outputname'] == mp.name: 
+                    for p in partlist:
+                        if p.alt_name().strip('0123456789') == v['particles']:  
+                            e = pdg_to_particle(p.pdg(), 
+                                                gambit_pdgs).split('_')[0]
+        else:
+            e = mp.name
+
+        if not e:
+            raise GumError(("Couldn't find an entry for " + mp.name + "."))
 
         towrite += (
                 "getters[{0}].map{1}"
@@ -643,7 +651,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
             continue
 
         towrite += (
-                "getters[\"Pole_Mass\"].map0[\"{0}\"] = "
+                "getters[Pole_Mass].map0[\"{0}\"] = "
                 "&Model::get_{1}PoleMass;\n"
         ).format(pdg_to_particle(particle.PDG_code, gambit_pdgs), 
                  particle.name.strip('~'))

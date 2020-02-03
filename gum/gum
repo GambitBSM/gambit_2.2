@@ -87,6 +87,7 @@ if args.file:
                    "be written.\n"))
 
         # Check whether we need to generate DecayBit output or not
+        # N.B. if we don't something is quiiiiite likely to go wrong
         if output_opts.ch or output_opts.spheno:
             decaybit = True
         else:
@@ -359,8 +360,9 @@ if args.file:
         model_header = add_to_model_hierarchy(gum.spec, gum.name, 
                                               model_parameters)
         subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters,
-                                                    bsm_particle_list, mixings,
-                                                    gambit_pdgs)
+                                                    bsm_particle_list, 
+                                                    blockparams, gambit_pdgs, 
+                                                    partlist)
         spec_contents = write_spectrumcontents(gum.name, model_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
@@ -443,9 +445,8 @@ if args.file:
         if output_opts.ch:
 
             # Obtain all 3-point vertices that are BSM.
-            three_pi_bsm = [interaction.particles for interaction in interactions
-                            if interaction.num_particles() == 3
-                            and interaction.is_sm() == False]
+            three_pi_bsm = [i.particles for i in interactions
+                            if i.num_particles() == 3 and i.is_sm() == False]
 
             three_body_decays = decay_sorter(three_pi_bsm, aux_particles, 
                                              antiparticle_dict)
@@ -520,12 +521,11 @@ if args.file:
                 pc = True
 
                 # Obtain all three-field vertices
-                three_f = [interaction.particles for interaction in interactions
-                             if interaction.num_particles() == 3]
+                three_f = [i.particles for i in interactions
+                           if i.num_particles() == 3]
                 # And all 4-point BSM vertices
-                four_f = [interaction.particles for interaction in interactions
-                            if interaction.num_particles() == 4
-                            and interaction.is_sm() == False]
+                four_f = [i.particles for i in interactions
+                         if i.num_particles() == 4 and i.is_sm() == False]
 
                 # Get all annihilation products and propagators involved in
                 # DM + DM -> X + Y at tree-level
