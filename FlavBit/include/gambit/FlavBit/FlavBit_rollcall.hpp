@@ -956,6 +956,17 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// HEPLike LogLikelihood B -> mu mu
+  #define CAPABILITY HEPLike_B2mumuLogLikelihood_Atlas
+  START_CAPABILITY
+    #define FUNCTION HEPLike_B2mumuLogLikelihood_Atlas
+    START_FUNCTION(double);
+    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    NEEDS_CLASSES_FROM(HepLike);
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// HEPLike LogLikelihood B -> K* mu mu Angular
   #define CAPABILITY HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
   START_CAPABILITY
