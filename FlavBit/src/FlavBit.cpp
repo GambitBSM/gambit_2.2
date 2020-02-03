@@ -3134,6 +3134,59 @@ namespace Gambit
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
 
+    /// HEPLike LogLikelihood B -> ll
+    void HEPLike_B2mumuLogLikelihood_CMS(double &result)
+    {
+      using namespace Pipes::HEPLike_B2mumuLogLikelihood_CMS;
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CMS-PAS-BPH-16-004.yaml";
+      static HepLike_default::HL_nDimLikelihood nDimLikelihood_0(inputfile_0);
+  
+      static bool first = true;
+      if (first)
+      {
+        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
+        nDimLikelihood_0.Read();
+  
+        first = false;
+      }
+
+      static const std::array<std::string, 2> observables{
+        "BR_Bs2mumu",
+        "BR_Bd2mumu"
+      };
+
+      auto SI_theory = *Dep::SuperIso_obs_values;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+
+      // C++14 allows auto instead of decltype(observables0p1_0p98)
+      auto get_obs_theory = [SI_theory](decltype(observables)& observables){
+          std::vector<double> obs_theory;
+          obs_theory.reserve(observables.size());
+          for (unsigned int i = 0; i < observables.size(); ++i) {
+            obs_theory.push_back(SI_theory.at(observables[i]));
+          }
+          return obs_theory;
+      };
+
+      auto get_obs_covariance = [SI_theory_covariance](decltype(observables)& observables){
+          boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+          for (unsigned int i = 0; i < observables.size(); ++i) {
+            for (unsigned int j = 0; j < observables.size(); ++j) {
+              obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+            }
+          }
+          return obs_covariance;
+      };
+
+      result = nDimLikelihood_0.GetLogLikelihood(
+              get_obs_theory(observables)
+              /* nDimLikelihood does not support theory errors */
+              );
+
+      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+    }
+
+
 
     /// HEPLike LogLikelihood B -> ll
     void HEPLike_B2mumuLogLikelihood_LHCb(double &result)
