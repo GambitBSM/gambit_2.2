@@ -23,7 +23,7 @@ import re
 from setup import *
 from files import *
 
-def get_model_parameters(parameters, partlist):
+def get_model_parameters(parameters):
     """
     Extracts the model (scan) parameters out of the full parameter list
     """
@@ -34,16 +34,142 @@ def get_model_parameters(parameters, partlist):
  
         # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a
         # model parameter
-        if param.block != "MINPAR" and param.block != "EXTPAR" :
-            if not (param.block != None and param.block.endswith("IN")) : 
-                model_parameters.append(param)
+        if param.block == "MINPAR" or param.block == "EXTPAR" :
+            continue
+        if param.block != None and param.block.endswith("IN") : 
+            continue
 
-
-    # Replace all trailing + and - with pm
-    for param in parameters:
+        # Replace all trailing + and - with pm
         param.name = re.sub(r'(.*)[-+]', r'\1pm', param.name)
 
+        # Don't want the SM-like Higgs mass a fundamental parameter, nor any
+        # of the SM Yukawas etc, nor any Pole_Mixings.
+        if param.gb_in == "mH" and param.tag == "Pole_Mass": continue
+        if param.tag == "Pole_Mixing": continue
+        if param.sm == True: continue
+
+
+        model_parameters.append(param)
+
     return model_parameters
+
+def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
+                            partlist, gambit_pdgs):
+    """
+    Extracts the spectrum parameters out of the full parameter list
+    """
+
+    # Classes make life easier
+    class SpecGetAndSet:
+
+        def __init__(self, shape, size, name, getter, setter, block, index, tag):
+            self.shape = shape
+            self.size = size
+            self.name = name
+            self.getter = getter
+            self.setter = setter
+            self.block = block
+            self.index = index
+            self.tag = tag
+
+    spectrum_parameters = []
+
+    # Keep track of which masses we've added
+    addedpdgs = []
+
+    for i in np.arange(len(parameters)):
+        
+        par = parameters[i]
+
+        # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a
+        # spectrum parameter
+        if par.block == "MINPAR" or par.block == "EXTPAR" :
+            continue
+        if par.block != None and par.block.endswith("IN") :                  
+            continue
+
+        if not isinstance(par, SpectrumParameter):
+            raise GumError(("\n\nModel Parameters at position " + str(i) +
+                            " not passed as instance of class "
+                            "SpectrumParameter."))
+
+        shape = "scalar"
+        size = 1
+
+        if par.shape:
+            if re.match("v[2-9]", par.shape):
+                shape = "vector"
+                size = par.shape[-1]
+            elif re.match("m[2-9]x[2-9]", par.shape):
+                # Assuming all matrices will be square...
+                shape = "matrix"
+                size = par.shape[-1]
+
+        if par.tag == "Pole_Mass":
+            setter = "set_" + par.fullname[1:].strip('~') + "PoleMass"
+            getter = "get_" + par.fullname[1:].strip('~') + "PoleMass"
+        else:
+            setter = "set_" + par.fullname
+            getter = "get_" + par.fullname
+
+        if par.tag == "Pole_Mass":
+            name = par.fullparticlename
+        elif par.tag == "Pole_Mixing":
+            for v in params_by_block.values():
+                if not 'mixingmatrix' in v: continue
+                if par.name == "sinW2": name = par.name
+                elif v['outputname'] == par.name:
+                    for p in partlist:
+                        if p.alt_name().strip('0123456789') == v['particles']:
+                            name = pdg_to_particle(p.pdg(),
+                                                   gambit_pdgs).split('_')[0]
+        else:
+            name = par.name
+
+
+        # Replace all plusses and minuses with 'pm'
+        setter = setter.replace("-","pm").replace("+","pm")
+        getter = getter.replace("-","pm").replace("+","pm")
+
+        # Get the block and index if relevant
+        block = par.block
+        index = par.index
+
+        # Save PDG codes so we don't double count
+        if par.tag == "Pole_Mass":
+            addedpdgs.append(par.index)
+
+        x = SpecGetAndSet(shape, size, name, getter, setter, block, index, par.tag)
+        spectrum_parameters.append(x)
+
+    # Go through BSM particle list and add the pole masses to the list of 
+    # params a spectrum object should interface to 
+    for particle in bsm_partlist:
+
+        # Don't double count particles!
+        if particle.PDG_code in addedpdgs: 
+            continue
+
+        pname = particle.name.strip('~')
+
+        setter = "set_" + pname + "PoleMass"
+        getter = "get_" + pname + "PoleMass"
+
+        # Replace all plusses and minuses with 'pm'
+        setter = setter.replace("-","pm").replace("+","pm")
+        getter = getter.replace("-","pm").replace("+","pm")
+
+        name = pdg_to_particle(particle.PDG_code, gambit_pdgs)
+ 
+        block = "MASS"
+        index = abs(particle.PDG_code)
+
+        x = SpecGetAndSet("scalar", 1, name, getter, setter, block, index, "Pole_Mass")
+        spectrum_parameters.append(x)
+
+
+    return spectrum_parameters
+
 
 def get_model_par_name(paramname, parameters):
     """
@@ -85,19 +211,9 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     			   "\n"
     ).format(model_name)
 
-    bsm_params = []
-
-    # Don't want the SM-like Higgs mass a fundamental parameter, nor any
-    # of the SM Yukawas etc, nor any Pole_Mixings.
-    for p in model_params:
-        if p.gb_in == "mH" and p.tag == "Pole_Mass": continue
-        if p.tag == "Pole_Mixing": continue
-        if p.sm == True: continue
-        bsm_params.append(p)
-
     params = []
 
-    for i in bsm_params:
+    for i in model_params:
         if i.shape == 'scalar' or i.shape == None: params.append(i.gb_in)
         elif re.match("m[2-9]x[2-9]", i.shape): 
             size = int(i.shape[-1])
@@ -180,7 +296,7 @@ def find_tree_root(parent):
 
     return newmodel
 
-def write_spectrumcontents(gambit_model_name, model_parameters):
+def write_spectrumcontents(gambit_model_name, spectrum_parameters):
     """
     Writes SpectrumContents for a new model:
     Models/src/SpectrumContents/<gambit_model>.cpp.
@@ -209,66 +325,71 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
             "\n"
     ).format(gambit_model_name)
 
-    # Extract all shapes from here
-    shapes = sorted(list(set([mp.shape for mp in model_parameters])), 
-                             reverse=True)
+    # Sort out shapes and sizes
+    s = False
+    v = False
+    m = False
+    vsizes = []
+    msizes = []
+    for sp in spectrum_parameters:
+        if sp.shape == "scalar":
+            s = True
+        if sp.shape == "vector":
+            v = True
+            vsizes.append(sp.size)
+        elif sp.shape == "matrix":
+            m = True
+            msizes.append(sp.size)
 
     # Scalars first...
-    if "scalar" in shapes:
+    if s:
         towrite += (
                 "std::vector<int> scalar = initVector(1);"
                 " // i.e. get(Par::Tag, \"name\")\n"
         )
 
-    for shape in shapes:
-        if re.search(r'v\d', shape):
+    if v:
+        for size in vsizes:
             towrite += (
-                    "std::vector<int> {0}     = initVector({1});"
+                    "std::vector<int> v{0}    = initVector({0});"
                     " // i.e. get(Par::Tag, \"name\", i)\n"
-            ).format(shape, shape[1:])
+            ).format(size)
             continue
-        elif re.search(r'm\dx\d', shape):
+    if m:
+        for size in msizes:
             towrite += (
-                    "std::vector<int> {0}  = initVector({1},{2});"
+                    "std::vector<int> m{0}x{0}  = initVector({0},{0});"
                     " // i.e. get(Par::Tag, \"name\", i, j)\n"
-            ).format(shape, shape[1], shape[3])
+            ).format(size)
             continue
-        elif shape == "scalar": continue
-        else:
-            raise GumError(("Shape {0} not recognised...").format(shape))
 
     towrite += "\n"
 
     # Now add each parameter to the model file.
-    for i in np.arange(len(model_parameters)):
+    for i in np.arange(len(spectrum_parameters)):
 
-        mp = model_parameters[i]
+        sp = spectrum_parameters[i]
         
-        if not isinstance(mp, SpectrumParameter):
-            raise GumError(("\n\nModel Parameters at position " + i +
-                            "not passed as instance of class "
-                            "SpectrumParameter."))
-
-        # Default shape to 'scalar'
-        if mp.shape:
-            shape = mp.shape
-        else:
-            shape = "scalar"
+        shape = sp.shape
+        if sp.shape == "vector":
+            shape = "v" + str(sp.size)
+        if sp.shape == "matrix":
+            shape = "m" + str(sp.size) + "x" + str(sp.size)
 
         # If we've extracted some information about the block, then
         # add the information to the addParameter macro
-        if mp.block:
-            extra = ", \"" + mp.block + "\", " + str(mp.index)
+        if sp.block:
+            extra = ", \"" + sp.block + "\", " + str(sp.index)
         else: extra = ""
 
         # Write the addParameter macro to initialise each SpectrumParameter
         # object within the SubSpectrum.
 
-        e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
+        #e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
         towrite += (
                 "addParameter(Par::{0}, \"{1}\", {2}{3});\n"
-                ).format(mp.tag.replace("\"",""), 
-                         e, shape, extra)
+                ).format(sp.tag.replace("\"",""), sp.name,
+                         shape, extra)
 
 
     towrite += (
@@ -281,116 +402,18 @@ def write_spectrumcontents(gambit_model_name, model_parameters):
     contents = indent(towrite)
     return contents
 
-def write_subspectrum_wrapper(gambit_model_name, model_parameters,
-                              bsm_partlist, params_by_block, gambit_pdgs, 
-                              partlist):
+def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
+
     """
     Writes spectrum object wrapper for new model:
     Models/include/gambit/Models/SimpleSpectra/<new_model_name>SimpleSpec.hpp.
     """
-
-    # Classes make life easier
-    class SpecGetAndSet:
-
-        def __init__(self, shape, size, param, getter, setter, block, index):
-            self.shape = shape
-            self.size = size
-            self.param = param
-            self.getter = getter
-            self.setter = setter
-            self.block = block
-            self.index = index
-
-    spectrumparameters = []
 
     modelSS = gambit_model_name + "SimpleSpec"
     modelclass = gambit_model_name + "Model"
 
     # Go through model, and create down all members of the model object,
     # all getter functions, all setter functions, all sizes...
-
-    # Keep track of which masses we've added
-    addedpdgs = []
-
-    for i in np.arange(len(model_parameters)):
-        
-        par = model_parameters[i]
-        
-        if not isinstance(par, SpectrumParameter):
-            raise GumError(("\n\nModel Parameters at position " + i +
-                            " not passed as instance of class "
-                            "SpectrumParameter."))
-
-        if par.sm:
-            e = ""
-        else:
-            e = gambit_model_name + "_"
-
-        # Remove the trailing 'm' for a Pole_Mass
-        if par.tag == "Pole_Mass":
-            paramname = e + par.fullname[1:].strip('~') + "_Pole_Mass"
-        else:
-            paramname = e + par.fullname
-
-        shape = "scalar"
-        size = 1
-
-        if par.shape:
-            if re.match("v[2-9]", par.shape):
-                shape = "vector"
-                size = par.shape[-1]
-            elif re.match("m[2-9]x[2-9]", par.shape):
-                # Assuming all matrices will be square...
-                shape = "matrix"
-                size = par.shape[-1]
-
-        if par.tag == "Pole_Mass":
-            setter = "set_" + par.fullname[1:].strip('~') + "PoleMass"
-            getter = "get_" + par.fullname[1:].strip('~') + "PoleMass"
-        else:
-            setter = "set_" + par.fullname
-            getter = "get_" + par.fullname
-
-        # Replace all plusses and minuses with 'pm'
-        setter = setter.replace("-","pm").replace("+","pm")
-        getter = getter.replace("-","pm").replace("+","pm")
-        paramname = paramname.replace("-","pm").replace("+","pm")
-
-        # Get the block and index if relevant
-        block = par.block
-        index = par.index
-
-        # Save PDG codes so we don't double count
-        if par.tag == "Pole_Mass":
-            addedpdgs.append(par.index)
-
-        x = SpecGetAndSet(shape, size, paramname, getter, setter, block, index)
-        spectrumparameters.append(x)
-
-    # Go through BSM particle list and add the pole masses to the list of 
-    # params a spectrum object should interface to 
-    for particle in bsm_partlist:
-
-        # Don't double count particles!
-        if particle.PDG_code in addedpdgs: 
-            continue
-
-        pname = particle.name.strip('~')
-
-        paramname = gambit_model_name + "_" + pname + "_Pole_Mass"
-        setter = "set_" + pname + "PoleMass"
-        getter = "get_" + pname + "PoleMass"
-
-        # Replace all plusses and minuses with 'pm'
-        setter = setter.replace("-","pm").replace("+","pm")
-        getter = getter.replace("-","pm").replace("+","pm")
-        paramname = paramname.replace("-","pm").replace("+","pm")
-
-        block = "MASS"
-        index = abs(particle.PDG_code)
-
-        x = SpecGetAndSet("scalar", 1, paramname, getter, setter, block, index)
-        spectrumparameters.append(x)
 
     intro_message = (
             "///  A simple SubSpectrum wrapper for\n"
@@ -425,26 +448,10 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
             "  /// @{{ Getters for {1} information\n"
     ).format(modelSS, gambit_model_name, modelclass)
 
-    # Now add each parameter to the model file.
-    # TODO: TG: In the MSSM-like SimpleSpec stuff, the getters go here, not the parameters, so delete if appropriate
-
-    #for i in range(0, len(spectrumparameters)):
-
-    #    sp = spectrumparameters[i]
-
-    #    if sp.shape == "scalar":
-    #        size = ""
-    #    elif sp.shape == "vector":
-    #        size = "[{0}]".format(sp.size)
-    #    elif sp.shape == "matrix":
-    #        size = "[{0}][{0}]".format(sp.size)
-
-    #    towrite += "double {0}{1};\n".format(sp.param, size)
-
     # Getter functions
-    for i in np.arange(len(spectrumparameters)):
+    for i in np.arange(len(spectrum_parameters)):
 
-        sp = spectrumparameters[i]
+        sp = spectrum_parameters[i]
 
         if sp.shape == "scalar":
             size = ""
@@ -519,48 +526,6 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
             "/// Wrapper functions to parameter object.\n"
     ).format(modelSS, gambit_model_name, modelclass)
 
-    # Would be neater (here) to write get_x and set_x at the same time,
-    # but following current format...
-    # TODO: TG: In the MSSM-like SimpleSpec stuff, getters go on the model.
-    # Delete this if confirmed
-
-    # Getter functions
-    #for i in np.arange(len(spectrumparameters)):
-
-    #    sp = spectrumparameters[i]
-
-    #    if sp.shape == "scalar":
-    #        size = ""
-    #        indices = ""
-    #    if sp.shape == "vector":
-    #        size = "int i"
-    #        indices = "[i]"
-    #    elif sp.shape == "matrix":
-    #        size = "int i, int j"
-    #        indices = "[i][j]"
-
-    #    towrite += "double {0}({1}) const {{ return params.{2}{3}; }}\n".format(sp.getter, size, sp.param, indices)
-
-    #towrite += "\n"
-
-    # TODO: TG: I don't think setters are needed, but check. If so add them where the model definition is
-    # Setter functions
-    #for i in np.arange(len(spectrumparameters)):
-
-    #    sp = spectrumparameters[i]
-
-    #    if sp.shape == "scalar":
-    #        size = ""
-    #        indices = ""
-    #    if sp.shape == "vector":
-    #        size = ", int i"
-    #        indices = "[i]"
-    #    elif sp.shape == "matrix":
-    #        size = ", int i, int j"
-    #        indices = "[i][j]"
-
-    #    towrite += "void {0}(double in{1}) {{ params.{2}{3}=in; }}\n".format(sp.setter, size, sp.param, indices)
-
     towrite += (
             "\n"
             "/// Map fillers\n"
@@ -574,9 +539,8 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
     v = False
     m = False
     sizes = []
-    sizes = []
-    for i in range(0, len(spectrumparameters)):
-        sp = spectrumparameters[i]
+    for i in range(0, len(spectrum_parameters)):
+        sp = spectrum_parameters[i]
         if sp.shape == "vector":
             v = True
             sizes.append(sp.size)
@@ -605,9 +569,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
     towrite += "\nusing namespace Par;\n\n"
 
     # Now add getter maps
-    for i in np.arange(len(model_parameters)):
-        sp = spectrumparameters[i]
-        mp = model_parameters[i]
+    for sp in spectrum_parameters:
 
         if sp.shape == "scalar":
             size = "0"
@@ -621,40 +583,10 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
             index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
             finf = "FInfo2(&Model::{0}, {1}, {1})".format(sp.getter, index)
 
-        e = ""
-        if mp.tag == "Pole_Mass":
-            e = mp.fullparticlename
-        elif mp.tag == "Pole_Mixing":
-            for v in params_by_block.values():
-                if not 'mixingmatrix' in v: continue
-                if mp.name == "sinW2": e = mp.name
-                elif v['outputname'] == mp.name: 
-                    for p in partlist:
-                        if p.alt_name().strip('0123456789') == v['particles']:  
-                            e = pdg_to_particle(p.pdg(), 
-                                                gambit_pdgs).split('_')[0]
-        else:
-            e = mp.name
-
-        if not e:
-            raise GumError(("Couldn't find an entry for " + mp.name + "."))
-
         towrite += (
                 "getters[{0}].map{1}"
                 "[\"{2}\"] = {3};\n"
-        ).format(mp.tag, size, e, finf)
-
-    for particle in bsm_partlist:
-
-        # Don't double count particles!
-        if particle.PDG_code in addedpdgs: 
-            continue
-
-        towrite += (
-                "getters[Pole_Mass].map0[\"{0}\"] = "
-                "&Model::get_{1}PoleMass;\n"
-        ).format(pdg_to_particle(particle.PDG_code, gambit_pdgs), 
-                 particle.name.strip('~'))
+        ).format(sp.tag, size, sp.name, finf)
 
 
     towrite += (
@@ -663,60 +595,7 @@ def write_subspectrum_wrapper(gambit_model_name, model_parameters,
             "}\n"
             "\n"
     )
-    # TODO: TG: I'm not sure setter maps are needed, uncomment if so
-    #        "static SetterMaps fill_setter_maps()\n"
-    #        "{\n"
-    #        "SetterMaps setters;\n"
-    #        "\n"
-    #)
 
-    #if m:
-    #    towrite += "typedef typename MTset::FInfo2W FInfo2W;\n"
-    #if v:
-    #    towrite += "typedef typename MTset::FInfo1W FInfo1W;\n"
-
-    # Remove all duplicates. These values tell us which indices we need to
-    # include for the FInfo routines.
-    #sizes = list(set(sizes))
-
-    #for i in np.arange(len(sizes)):
-    #    fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
-
-    #    towrite += (
-    #            "static const int {0}v[] = {{{1}}};\n"
-    #            "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
-    #            "\n"
-    #    ).format(fnname, ",".join(str(j) for j in np.arange(int(sizes[i]))))
-
-    #towrite += "\nusing namespace Par;\n\n"
-
-    #for i in range(0, len(model_parameters)):
-    #    sp = spectrumparameters[i]
-    #    mp = model_parameters[i]
-
-    #    if sp.shape == "scalar":
-    #        size = "0"
-    #        finf = " &Self::{}".format(sp.setter)
-    #    elif sp.shape == "vector":
-    #        size = "1"
-    #        index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-    #        finf = "FInfo1W(&Self::{0}, {1})".format(sp.setter, index)
-    #    elif sp.shape == "matrix":
-    #        size = "2"
-    #        index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
-    #        finf = "FInfo2W(&Self::{0}, {1}, {1})".format(sp.setter, index)
-
-    #    e = mp.fullparticlename if mp.tag == "Pole_Mass" else mp.name
-
-    #    towrite += (
-    #            "setters[{0}].map{1}"
-    #            "W[\"{2}\"] = {3};\n"
-    #    ).format(mp.tag, size, e, finf)
-
-    #towrite += (
-    #        "\n"
-    #        "return setters;\n"
-    #        "}\n"
     towrite += (
             "};\n"
             "}\n"

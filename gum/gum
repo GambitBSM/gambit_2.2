@@ -355,15 +355,18 @@ if args.file:
                                               gambit_pdgs, add_higgs)
         
         # Get the model parameters out of the parameter list
-        model_parameters = get_model_parameters(parameters, partlist)
+        model_parameters = get_model_parameters(parameters)
 
         model_header = add_to_model_hierarchy(gum.spec, gum.name, 
                                               model_parameters)
-        subspec_wrapper = write_subspectrum_wrapper(gum.name, model_parameters,
-                                                    bsm_particle_list, 
-                                                    blockparams, gambit_pdgs, 
-                                                    partlist)
-        spec_contents = write_spectrumcontents(gum.name, model_parameters)
+
+        # Get the spectrum parameters out of the parameter list
+        spectrum_parameters = get_spectrum_parameters(parameters, blockparams,
+                                                      bsm_particle_list, partlist,
+                                                      gambit_pdgs)
+
+        subspec_wrapper = write_subspectrum_wrapper(gum.name, spectrum_parameters)
+        spec_contents = write_spectrumcontents(gum.name, spectrum_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 
         """
@@ -809,7 +812,7 @@ if args.file:
             write_vevacious_rollcall(gum.name, gum.spec, reset_contents)        
 
         # Write a simple YAML file.
-        drop_yaml_file(gum.name, parameters, add_higgs, reset_contents,gum.spec)
+        drop_yaml_file(gum.name, model_parameters, add_higgs, reset_contents,gum.spec)
         print(("\nGUM has dropped a test YAML file at "
                "$GAMBIT/yaml_files/{0}_example.yaml!").format(gum.name))
 
