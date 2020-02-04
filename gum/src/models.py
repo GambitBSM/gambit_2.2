@@ -349,6 +349,7 @@ def write_spectrumcontents(gambit_model_name, spectrum_parameters):
         )
 
     if v:
+        vsizes = list(set(vsizes))
         for size in vsizes:
             towrite += (
                     "std::vector<int> v{0}    = initVector({0});"
@@ -356,6 +357,7 @@ def write_spectrumcontents(gambit_model_name, spectrum_parameters):
             ).format(size)
             continue
     if m:
+        msizes = list(set(msizes))
         for size in msizes:
             towrite += (
                     "std::vector<int> m{0}x{0}  = initVector({0},{0});"
