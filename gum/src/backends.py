@@ -54,7 +54,8 @@ def check_backends(outputs):
 
     if outputs.vev:
 
-        if os.path.exists("./../Backends/installed/vevacious/VevaciousPlusPlus/1.0/ModelFiles/"):
+        if os.path.exists("./../Backends/installed/vevacious/1.0/VevaciousPlusPlus/ModelFiles/"):
+        #if os.path.exists("./../Backends/installed/vevacious/VevaciousPlusPlus/1.0/ModelFiles/"):
             print("Found vevacious.")
         else:
             raise GumError(("\n\nNo vevacious installation found. Please go to "
