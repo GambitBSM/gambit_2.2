@@ -810,13 +810,17 @@ if args.file:
             amend_file("backend_types/SPheno.hpp", m, backend_types, btnum-2, 
                        reset_contents)
 
-
         # Vevacious
         if output_opts.vev:
+            num = find_string("SpecBit_VS.cpp", "SpecBit",
+                              "} // end namespace SpecBit")[1]
+            amend_file("SpecBit_VS.cpp", "SpecBit", vev_src, num-1, 
+                       reset_contents)
             write_vevacious_rollcall(gum.name, gum.spec, reset_contents)        
 
         # Write a simple YAML file.
-        drop_yaml_file(gum.name, model_parameters, add_higgs, reset_contents,gum.spec)
+        drop_yaml_file(gum.name, model_parameters, add_higgs, reset_contents,
+                       gum.spec)
         print(("\nGUM has dropped a test YAML file at "
                "$GAMBIT/yaml_files/{0}_example.yaml!").format(gum.name))
 
