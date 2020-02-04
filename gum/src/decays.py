@@ -374,13 +374,14 @@ def amend_all_decays_calchep(model_name, spectrum, new_decays):
 SPHENO
 """
 
-def write_spheno_decay_entry(model_name):
+def write_spheno_decay_entry(model_name, clean_model_name):
     """
     Writes a DecayBit entry for SPheno decays.
     """
 
     towrite_src = (
-        "/// Get all the decays from SPheno\n"
+        "\n"
+        "/// Get all the decays from SPheno (for the {0} model).\n"
         "void all_{0}_decays_from_SPheno(DecayTable& decays)\n"
         "{{\n"
         "namespace myPipe = Pipes::all_{0}_decays_from_SPheno;\n"
@@ -394,7 +395,7 @@ def write_spheno_decay_entry(model_name):
         "inputs.options = myPipe::runOptions;\n"
         "\n"
         "// Use SPheno to fill the decay table\n"
-        "myPipe::BEreq::{0}_decays(spectrum, decays, inputs);\n"
+        "myPipe::BEreq::SARAHSPheno_{0}_decays(spectrum, decays, inputs);\n"
         "\n"
         "// Add some SM decays\n"
         "decays(\"Z0\") = *myPipe::Dep::Z_decay_rates;           // Add the Z decays\n"
@@ -417,19 +418,18 @@ def write_spheno_decay_entry(model_name):
     ).format(model_name)
 
     towrite_header = (
-                   "\n"
                    "#define FUNCTION all_{0}_decays_from_SPheno\n"
                    "START_FUNCTION(DecayTable)\n"
                    "DEPENDENCY(W_minus_decay_rates, DecayTable::Entry)\n"
                    "DEPENDENCY(W_plus_decay_rates, DecayTable::Entry)\n"
                    "DEPENDENCY(Z_decay_rates, DecayTable::Entry)\n"
                    "DEPENDENCY({0}_spectrum, Spectrum)\n"
-                   "BACKEND_REQ({0}_decays, (libSPheno{0}), int, "
+                   "BACKEND_REQ(SARAHSPheno_{0}_decays, (libSPheno{2}), int, "
                    "(const Spectrum&, DecayTable&, const Finputs&) )\n"
-                   "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{0}))\n"
+                   "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{2}))\n"
                    "ALLOW_MODELS({0})\n"
                    "#undef FUNCTION\n"
                    "\n"
-    ).format(model_name, SPHENO_VERSION)
+    ).format(model_name, SPHENO_VERSION, clean_model_name)
 
-    return indent(towrite_src), dumb_indent(4, towrite_header)
+    return dumb_indent(4, indent(towrite_src)), dumb_indent(4, towrite_header)

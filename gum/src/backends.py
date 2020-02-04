@@ -57,8 +57,8 @@ def check_backends(outputs):
         if os.path.exists("./../Backends/installed/vevacious/VevaciousPlusPlus/1.0/ModelFiles/"):
             print("Found vevacious.")
         else:
-            raise GumError(("\n\nNo vevacious installation found. Please go to into"
-                            " the GAMBIT build directory and do"
+            raise GumError(("\n\nNo vevacious installation found. Please go to "
+                            "into the GAMBIT build directory and do"
                             ":\n   make vevacious"))
 
 
@@ -128,7 +128,8 @@ def write_new_default_bossed_version(backend, version, output_dir):
         f_new.write(signature+re.sub(r"\.", "_", version)+"\n")
 
 
-def add_to_backend_locations(backend_name, backend_location, version_number, reset_dict):
+def add_to_backend_locations(backend_name, backend_location, version_number, 
+                             reset_dict):
     """
     Adds an entry to backend_locations.yaml for a new backend.
     """
@@ -155,10 +156,10 @@ def add_to_backend_locations(backend_name, backend_location, version_number, res
 
     contents = ("# Added by GUM\n"
                 "{0}:\n"
-                "  {1}:         ./Backends/installed/{2}"
+                "  {1:13}./Backends/installed/{2}"
                 "\n"
                 "\n"
-                ).format(backend_name, version_number, backend_location)
+                ).format(backend_name, version_number+":", backend_location)
 
     # Write the changes
     amend_file(target, "config", contents, linenum-1, reset_dict)
@@ -171,8 +172,9 @@ def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
     """
 
     if ((linenum == 0) and (string_to_find == "")):
-        raise GumError(("\n\tYou need to pass either a line number, or a string for "
-                        "me to find, if you want to amend backends.cmake."))
+        raise GumError(("\n\tYou need to pass either a line number, or a "
+                        "string for me to find, if you want to amend "
+                        "backends.cmake."))
 
     # If the user specifies a line number
     if (linenum != 0):
@@ -180,5 +182,7 @@ def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
 
     # If the user specifies a string to match, then patch before
     else:
-        present, linenum = find_string("backends.cmake", "cmake", string_to_find)
-        if present: amend_file("backends.cmake", "cmake", contents, linenum-1, reset_dict)
+        present, linenum = find_string("backends.cmake", "cmake", 
+                                       string_to_find)
+        if present: amend_file("backends.cmake", "cmake", contents, 
+                               linenum-1, reset_dict)

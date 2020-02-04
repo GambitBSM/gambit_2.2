@@ -650,7 +650,8 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                                  locations, variables,
                                                  variable_dictionary,
                                                  hb_variables,
-                                                 hb_variable_dictionary, flags)
+                                                 hb_variable_dictionary, flags,
+                                                 fullmodelname)
 
 
     return spheno_src, spheno_header, backend_types, linenum
@@ -2929,7 +2930,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "/****************/\n"\
       "/* Block MODSEL */\n"\
       "/****************/\n"\
-      "if((*ModelInUse)(\"" + model_name + "\"))\n"\
+      "if((*ModelInUse)(\"" + fullmodelname + "\"))\n"\
       "{\n"\
       "  *HighScaleModel = \"LOW\";\n"\
       "  // BC where all parameters are taken at the low scale\n"\
@@ -2974,7 +2975,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
 def write_spheno_frontend_header(model_name, function_signatures, 
                                  type_dictionary, locations, 
-                                 variables, var_dict, hb_variables, hb_dict, flags):
+                                 variables, var_dict, hb_variables, hb_dict, 
+                                 flags, fullmodelname):
     """
     Writes code for 
     Backends/include/gambit/Backends/SARAHSPheno_<MODEL>_<VERSION>.hpp
@@ -2989,7 +2991,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
     # Some nice model-independent functions to begin
     towrite += (
-            "#define BACKENDNAME SARAHSPheno_{0}\n"
+            "#define BACKENDNAME SARAHSPheno_{5}\n"
             "#define BACKENDLANG FORTRAN\n"
             "#define VERSION {1}\n"
             "#define SARAH_VERSION {2}\n"
@@ -2998,9 +3000,8 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "// Begin\n"
             "LOAD_LIBRARY\n"
             "\n"
-            "// Allow for {0} only\n"
-            "BE_ALLOW_MODELS({0})\n"
-            "\n"
+            "// Allow for {5} only\n"
+            "BE_ALLOW_MODELS({5})\n"
             "\n"
             "// Functions\n"
             "BE_FUNCTION(SPheno_Main, void, (), \"__spheno{4}_MOD_spheno_main\", \"SARAHSPheno_{0}_internal\")\n"
@@ -3025,7 +3026,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_FUNCTION(SetStrictUnification, Flogical, (Flogical&), \"__model_data_{4}_MOD_setstrictunification\", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetYukawaScheme, Finteger, (Finteger&), \"__model_data_{4}_MOD_setyukawascheme\", \"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name, SPHENO_VERSION, SARAH_VERSION, SPHENO_VERSION.replace('.','_'),
-             clean_model_name.lower())
+             clean_model_name.lower(), fullmodelname)
 
     # Some model-dependent functions:
     """
@@ -3295,10 +3296,10 @@ def write_spheno_frontend_header(model_name, function_signatures,
     towrite += (
             "\n"
             "// Convenience functions (registration)\n"
-            "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), \"{0}_spectrum\")\n"
-            "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const Finputs&), \"{0}_decays\")\n"
-            "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name)
+            "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), \"SARAHSPheno_{0}_spectrum\")\n"
+            "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const Finputs&), \"SARAHSPheno_{0}_decays\")\n"
+            "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const Finputs&), \"SARAHSPheno_{1}_internal\")\n"
+    ).format(fullmodelname, clean_model_name)
 
     # Change with the Higgs couplings table is coded up
     hboutput = False

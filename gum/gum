@@ -425,7 +425,7 @@ if args.file:
             # DecayBit entry
             print("Writing SPheno module functions for DecayBit.")
             spheno_decay_src, spheno_decay_header = \
-                write_spheno_decay_entry(clean_model_name)
+                write_spheno_decay_entry(gum.name, clean_model_name)
 
             # HiggsCouplingsTable
             # TODO needs NMSSM merging into gum
@@ -646,10 +646,6 @@ if args.file:
                           "SpecBit_tests_rollcall.hpp")[1]
         amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num, 
                    reset_contents)
-        # amend_file("RegisteredSpectra.hpp", m, reg_spec, 
-        #             reg_spec_num, reset_contents)
-        # write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, 
-        #            reset_contents)
 
         # DecayBit
         if decaybit:
@@ -677,6 +673,14 @@ if args.file:
                     num = find_string("DecayBit.cpp", m, "decays(\"omega\")")[1]
                     amend_file("DecayBit.cpp", m, all_decays_src, num, 
                                reset_contents)
+            num = find_string("DecayBit.cpp", m, "void all_decays")[1]
+            if output_opts.spheno:
+                amend_file("DecayBit.cpp", m, spheno_decay_src, num-3, 
+                            reset_contents)
+                num = find_string("DecayBit_rollcall.hpp", m, 
+                                  "#define CAPABILITY decay_rates")[1]
+                amend_file("DecayBit_rollcall.hpp", m, spheno_decay_header,
+                           num+2, reset_contents)
 
         # DarkBit
         if darkbit:
@@ -777,8 +781,8 @@ if args.file:
             ver = SPHENO_VERSION
             be = "SARAHSPheno_"+gum.name
             be_loc = (
-                   "sarah-spheno/{0}/{1}/lib/libSPheno{1}.so"
-            ).format(ver, clean_model_name)
+                   "sarah-spheno/{0}/{1}/lib/libSPheno{2}.so"
+            ).format(ver, gum.name, clean_model_name)
             f = "frontends/SARAHSPheno_{0}_{1}".format(gum.name,
                                                        ver.replace('.','_'))
             write_file(f+".cpp", m, spheno_src, reset_contents)

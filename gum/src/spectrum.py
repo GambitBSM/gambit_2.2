@@ -390,6 +390,8 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
     Writes the header for spectrum object,
     SpecBit/include/gambit/SpecBit/SpecBit_<model>_rollcall.hpp
     """
+
+    clean_model_name = model_name.replace('-','').replace('_','')
     
     towrite = blame_gum(("///  Rollcall declarations for routines declared \n"
                          "///  in SpecBit_{0}.cpp.".format(model_name)))
@@ -413,11 +415,11 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
                 "START_FUNCTION(Spectrum)\n"
                 "ALLOW_MODELS({0})\n"
                 "DEPENDENCY(SMINPUTS, SMInputs)\n"
-                "BACKEND_REQ(SARAHSPheno_{0}_spectrum, (libSPheno{0}), int, (Spectrum&, const Finputs&) )\n"
-                "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{0}))\n"
+                "BACKEND_REQ(SARAHSPheno_{0}_spectrum, (libSPheno{2}), int, (Spectrum&, const Finputs&) )\n"
+                "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{2}))\n"
                 "#undef FUNCTION\n"
                 "\n"
-        ).format(model_name, SPHENO_VERSION))
+        ).format(model_name, SPHENO_VERSION, clean_model_name))
     # If we want to make a simple container spectrum only.
     else:
         towrite += (
