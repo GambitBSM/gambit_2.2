@@ -933,7 +933,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2SGammaLogLikelihood
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+//    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map) 
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
@@ -945,7 +945,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstargammaS_HFLAV
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    //    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
@@ -957,7 +957,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2mumuLogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
@@ -981,7 +981,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2mumuLogLikelihood_Atlas
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
@@ -993,7 +993,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
@@ -1005,7 +1005,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_CMS
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
@@ -1017,7 +1017,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Belle
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
@@ -1029,7 +1029,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
@@ -1041,7 +1041,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
@@ -1053,7 +1053,7 @@ START_MODULE
     #define FUNCTION HEPLike_Bs2PhimumuBr_LogLikelihood
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
@@ -1065,7 +1065,7 @@ START_MODULE
     #define FUNCTION HEPLike_RK_LogLikelihood
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
@@ -1077,7 +1077,7 @@ START_MODULE
     #define FUNCTION HEPLike_RKstar_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
