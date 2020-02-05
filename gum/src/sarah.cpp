@@ -853,7 +853,7 @@ namespace GUM
     }
   }
 
-  // Extract parameters used to solve tadpoles and remove them from the list
+  // Extract parameters used to solve tadpoles and mark them as output
   void SARAH::get_tadpoles(std::vector<Parameter> &parameters)
   {
     std::cout << "Extracting parameters to solve tadpoles" << std::endl;
@@ -877,8 +877,7 @@ namespace GUM
           for(auto tp : tadpoles)
             if (param->name() == tp or param->alt_name() == tp)
             {
-              param--;
-              parameters.erase(param+1);
+              param->set_output(true);
             }
       }
     }
@@ -932,7 +931,10 @@ namespace GUM
       bool is_list;
       std::vector<std::string> SPhenoparams;
       std::vector<std::string> SPhenomassparams;
+      std::vector<std::string> MCparams;
+      std::vector<std::string> MCvars;
 
+      // Get the list of parameters and vevs used by SPheno
       command = "Head[listAllParametersAndVEVs]===List";
       send_to_math(command);
       get_from_math(is_list);
@@ -944,6 +946,7 @@ namespace GUM
 
       }
 
+      // Get the mixing parameters
       command = "Head[NewMassParameters]===List";
       send_to_math(command);
       get_from_math(is_list);
@@ -954,16 +957,58 @@ namespace GUM
         get_from_math(SPhenomassparams);
       }
 
+      // Check if any of the parameters have a matching condition
+      command = "mcgum = DEFINITION[MatchingConditions]";
+      send_to_math(command);
+ 
+      int size = 0;
+      command = "Length[mcgum]";
+      send_to_math(command);
+      get_from_math(size);
+      for(int i=1; i<=size; i++)
+      {
+        std::string par;
+        command = "mcgum[[" + std::to_string(i) + ",1]]";
+        send_to_math(command);
+        get_from_math(par);
+        MCparams.push_back(par);
+
+        std::vector<std::string> vars;
+        command = "Variables[mcgum[[" + std::to_string(i) + ",2]]]";
+        send_to_math(command);
+        get_from_math(vars);
+        MCvars.insert(MCvars.end(),vars.begin(), vars.end());
+      }
+
       std::vector<Parameter> newParameters;
       for(auto param : parameters)
       {
+
+        for(auto mcv: MCvars)
+        {
+          if(param.name() == mcv or param.alt_name() == mcv)
+          {
+            if(std::find(SPhenoparams.begin(), SPhenoparams.end(), param.name()) == SPhenoparams.end() and
+               std::find(SPhenoparams.begin(), SPhenoparams.end(), param.alt_name()) == SPhenoparams.end())
+            {
+              // If the param is in the matching conditions, we always want the name in the matching conditions
+              SPhenoparams.push_back(mcv);
+            }
+          }
+        }
+
         for(auto SPhenoparam :  SPhenoparams)
         {
           if(param.name() == SPhenoparam or param.alt_name() == SPhenoparam)
           {
-            newParameters.push_back(Parameter(SPhenoparam, param.block(), param.index(), param.alt_name(), param.is_real(), param.shape(), param.is_output(), param.bcs()));
+            bool is_output = param.is_output();
+            if(std::find(MCparams.begin(), MCparams.end(), param.name()) != MCparams.end() or
+               std::find(MCparams.begin(), MCparams.end(), param.alt_name()) != MCparams.end())
+              is_output = true;
+            newParameters.push_back(Parameter(SPhenoparam, param.block(), param.index(), param.alt_name(), param.is_real(), param.shape(), is_output, param.bcs()));
           }
         }
+
         for(auto SPhenomassparam :  SPhenomassparams)
         {
           if(param.name() == SPhenomassparam or param.alt_name() == SPhenomassparam)
@@ -1208,10 +1253,9 @@ namespace GUM
       {
         model.write_spheno_output();
 
-
         // Leave only the parameters that SPheno uses
         model.SPheno_parameters(paramlist);
-
+ 
         // Get minpar and extpar parameters
         model.get_minpar_extpar(paramlist);
 

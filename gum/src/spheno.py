@@ -1351,15 +1351,13 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "\n\n"
     )
 
-    # Mixings.
-    towrite += "// Mixings\n"
- 
+    # Fill model dependent mixings and other parameters
+    towrite += "\n// Mixings and other parameters\n"
+
     for par in parameters:
-        # If there's no block, er... skip this.
-        if not par.block: continue
-        if not par.block in blockparams: continue
+
         # Is it a mixing matrix?
-        if 'mixingmatrix' in blockparams[par.block]:
+        if par.block and par.block in blockparams and 'mixingmatrix' in blockparams[par.block]:
             size = blockparams[par.block]['mixingmatrix']
             i,j = size.split('x')
 
@@ -1389,19 +1387,15 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                         "}}\n"
                 ).format(i, j, par.name, entry)
 
-      
-    # Fill model dependent other parameters
-    towrite += "\n// Other parameters\n"
+       
+        # Don't want MASS, MINPAR or EXTPAR parameters
+        elif par.block != "MASS" and par.block != "MINPAR" and par.block != "EXTPAR" :
 
-    for par in parameters:
+            # We also don't want any xxxIN block
+            if par.block and par.block.endswith("IN"):
+                continue
 
-        # Don't want output (mixing matrices, basically) or masses. Already done those.
-        # Also don't want MINPAR or EXTPAR parameters
-        if not par.is_output and par.block != "MASS" and par.block != "MINPAR" and par.block != "EXTPAR" :
-
-            # TODO: TG: Looks like it needs the output names for this, can't remember why we thought to use the alt_name
             entry = par.name
-            #entry = par.alt_name if par.alt_name else par.name
             
             # Matrix case
             if par.shape.startswith('m'):

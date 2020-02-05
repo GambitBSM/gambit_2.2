@@ -182,6 +182,7 @@ class Parameter
 
         void set_bcs(std::string bc) { boundary_conditions = bc; }
         void set_name(std::string name) { paramname = name; }
+        void set_output(bool is_output) {output = is_output; }
 
 };
 

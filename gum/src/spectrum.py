@@ -306,6 +306,8 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
         #                                                   neutral_higgses,
         #                                                   charged_higgses)
 
+    towrite += '\n'
+
     # Printing, fill_map_from_spectrum, and wrap it up. 
     towrite += (
             "// Declaration: print spectrum out\n"

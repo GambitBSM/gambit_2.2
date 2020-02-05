@@ -38,6 +38,8 @@ def get_model_parameters(parameters):
             continue
         if param.block != None and param.block.endswith("IN") : 
             continue
+        if param.is_output :
+            continue
 
         # Replace all trailing + and - with pm
         param.name = re.sub(r'(.*)[-+]', r'\1pm', param.name)
