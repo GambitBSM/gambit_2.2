@@ -25,6 +25,7 @@
 ///  \date 2016 October
 ///  \date 2018 Jan
 ///  \date 2020 Jan
+///  \date 2020 Feb
 ///
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
@@ -634,6 +635,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
 
       const parameters& param = *Dep::SuperIso_modelinfo;
+   
       const nuisance& nuislist = *Dep::SuperIso_nuisance;
       const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
@@ -668,7 +670,584 @@ namespace Gambit
           cout<<"Finished SI_compute_obs_list"<<endl;
       }
     }
+    // NEW! Compute covariance matrix for a list of observables in SM case
+    void SI_theory_covariance_SM(SI_covariance_map& result)
+    {
+      using namespace Pipes::SI_theory_covariance_SM;  
+      //      if (ModelInUse("WC") || (ModelInUse("WC_LUV") ) )   
+      //  {
+          if (flav_debug) cout<<"Starting SI_theory_covariance_SM"<<endl;
 
+          const parameters& param = *Dep::SuperIso_modelinfo;
+          const nuisance& nuislist = *Dep::SuperIso_nuisance;
+          const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
+
+          parameters params_copy=param;
+      // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
+      params_copy.Re_DeltaC7  = 0.;
+      params_copy.Im_DeltaC7  = 0.;  
+      params_copy.Re_DeltaC9  = 0.;  
+      params_copy.Im_DeltaC9  = 0.;  
+      params_copy.Re_DeltaC10 = 0.;  
+      params_copy.Im_DeltaC10 = 0.;  
+      params_copy.Re_DeltaCQ1 = 0.;  
+      params_copy.Im_DeltaCQ1 = 0.;  
+      params_copy.Re_DeltaCQ2 = 0.;  
+      params_copy.Im_DeltaCQ2 = 0.;  
+      
+      // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
+      params_copy.Re_DeltaC7_mu  = 0.;
+      params_copy.Im_DeltaC7_mu  = 0.;
+      params_copy.Re_DeltaC9_mu  = 0.;
+      params_copy.Im_DeltaC9_mu  = 0.;
+      params_copy.Re_DeltaC10_mu = 0.;
+      params_copy.Im_DeltaC10_mu = 0.;
+      params_copy.Re_DeltaCQ1_mu = 0.;
+      params_copy.Im_DeltaCQ1_mu = 0.;
+      params_copy.Re_DeltaCQ2_mu = 0.;
+      params_copy.Im_DeltaCQ2_mu = 0.;
+
+      params_copy.Re_DeltaC7_e  = 0.;
+      params_copy.Im_DeltaC7_e  = 0.;
+      params_copy.Re_DeltaC9_e  = 0.;
+      params_copy.Im_DeltaC9_e  = 0.;
+      params_copy.Re_DeltaC10_e = 0.;
+      params_copy.Im_DeltaC10_e = 0.;
+      params_copy.Re_DeltaCQ1_e = 0.;
+      params_copy.Im_DeltaCQ1_e = 0.;
+      params_copy.Re_DeltaCQ2_e = 0.;
+      params_copy.Im_DeltaCQ2_e = 0.;
+
+      params_copy.Re_DeltaC7_tau  = 0.;
+      params_copy.Im_DeltaC7_tau  = 0.;
+      params_copy.Re_DeltaC9_tau  = 0.;
+      params_copy.Im_DeltaC9_tau  = 0.;
+      params_copy.Re_DeltaC10_tau = 0.;
+      params_copy.Im_DeltaC10_tau = 0.;
+      params_copy.Re_DeltaCQ1_tau = 0.;
+      params_copy.Im_DeltaCQ1_tau = 0.;
+      params_copy.Re_DeltaCQ2_tau = 0.;
+      params_copy.Im_DeltaCQ2_tau = 0.;
+      
+          
+      // --- Needed for SuperIso backend
+      int nObservables = obslist.size();
+
+      char obsnames[nObservables][50];
+      for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
+        strcpy(obsnames[iObservable], obslist[iObservable].c_str());
+      }
+      int nNuisance=161;
+      char namenuisance[nNuisance+1][50];
+      BEreq::observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
+      const int ncorrnuis=463;
+      nuiscorr corrnuis[ncorrnuis]={ // List of nuisance correlations, below between the form factors
+      {"a00_BK","a10_BK",-0.39},
+      {"a00_BK","a20_BK",-0.71},
+      {"a00_BK","a30_BK",-0.63},
+      {"a00_BK","a0p_BK",0.49},
+      {"a00_BK","a1p_BK",-0.03},
+      {"a00_BK","a2p_BK",-0.22},
+      {"a00_BK","a0T_BK",0.16},
+      {"a00_BK","a1T_BK",-0.08},
+      {"a00_BK","a2T_BK",-0.09},
+      {"a10_BK","a20_BK",0.66},
+      {"a10_BK","a30_BK",0.26},
+      {"a10_BK","a0p_BK",0.05},
+      {"a10_BK","a1p_BK",0.72},
+      {"a10_BK","a2p_BK",0.48},
+      {"a10_BK","a0T_BK",-0.08},
+      {"a10_BK","a1T_BK",0.03},
+      {"a10_BK","a2T_BK",0.01},
+      {"a20_BK","a30_BK",0.54},
+      {"a20_BK","a0p_BK",-0.17},
+      {"a20_BK","a1p_BK",0.51},
+      {"a20_BK","a2p_BK",0.59},
+      {"a20_BK","a0T_BK",-0.16},
+      {"a20_BK","a1T_BK",0.05},
+      {"a20_BK","a2T_BK",0.09},
+      {"a30_BK","a0p_BK",0.05},
+      {"a30_BK","a1p_BK",0.14},
+      {"a30_BK","a2p_BK",0.05},
+      {"a30_BK","a1T_BK",0.03},
+      {"a30_BK","a2T_BK",-0.01},
+      {"a0p_BK","a1p_BK",0.09},
+      {"a0p_BK","a2p_BK",-0.47},
+      {"a0p_BK","a0T_BK",0.34},
+      {"a0p_BK","a1T_BK",-0.06},
+      {"a0p_BK","a2T_BK",-0.28},
+      {"a1p_BK","a2p_BK",0.43},
+      {"a1p_BK","a0T_BK",-0.06},
+      {"a1p_BK","a1T_BK",0.11},
+      {"a1p_BK","a2T_BK",-0.04},
+      {"a2p_BK","a0T_BK",-0.32},
+      {"a2p_BK","a1T_BK",-0.05},
+      {"a2p_BK","a2T_BK",0.29},
+      {"a0T_BK","a2T_BK",-0.35},
+      {"a1T_BK","a2T_BK",0.21},
+      {"a0A0_BKstar","a1A0_BKstar",0.633689},
+      {"a0A0_BKstar","a2A0_BKstar",0.0575305},
+      {"a0A0_BKstar","a0A1_BKstar",0.0615373},
+      {"a0A0_BKstar","a1A1_BKstar",0.169044},
+      {"a0A0_BKstar","a2A1_BKstar",0.240647},
+      {"a0A0_BKstar","a0A12_BKstar",0.999},
+      {"a0A0_BKstar","a1A12_BKstar",0.609495},
+      {"a0A0_BKstar","a2A12_BKstar",0.0355029},
+      {"a0A0_BKstar","a0V_BKstar",0.0393316},
+      {"a0A0_BKstar","a1V_BKstar",0.178168},
+      {"a0A0_BKstar","a2V_BKstar",0.195421},
+      {"a0A0_BKstar","a0T1_BKstar",0.0164883},
+      {"a0A0_BKstar","a1T1_BKstar",0.0452644},
+      {"a0A0_BKstar","a2T1_BKstar",-0.158457},
+      {"a0A0_BKstar","a0T2_BKstar",0.0217598},
+      {"a0A0_BKstar","a1T2_BKstar",0.150264},
+      {"a0A0_BKstar","a2T2_BKstar",0.0311554},
+      {"a0A0_BKstar","a0T23_BKstar",0.451075},
+      {"a0A0_BKstar","a1T23_BKstar",0.104911},
+      {"a0A0_BKstar","a2T23_BKstar",-0.347452},
+      {"a1A0_BKstar","a2A0_BKstar",0.486314},
+      {"a1A0_BKstar","a0A1_BKstar",0.300568},
+      {"a1A0_BKstar","a1A1_BKstar",0.472167},
+      {"a1A0_BKstar","a2A1_BKstar",0.321569},
+      {"a1A0_BKstar","a0A12_BKstar",0.621073},
+      {"a1A0_BKstar","a1A12_BKstar",0.756564},
+      {"a1A0_BKstar","a2A12_BKstar",0.46913},
+      {"a1A0_BKstar","a0V_BKstar",0.280475},
+      {"a1A0_BKstar","a1V_BKstar",0.553833},
+      {"a1A0_BKstar","a2V_BKstar",0.0752289},
+      {"a1A0_BKstar","a0T1_BKstar",0.241261},
+      {"a1A0_BKstar","a1T1_BKstar",0.448732},
+      {"a1A0_BKstar","a2T1_BKstar",-0.182566},
+      {"a1A0_BKstar","a0T2_BKstar",0.24405},
+      {"a1A0_BKstar","a1T2_BKstar",0.495428},
+      {"a1A0_BKstar","a2T2_BKstar",0.181197},
+      {"a1A0_BKstar","a0T23_BKstar",0.573536},
+      {"a1A0_BKstar","a1T23_BKstar",0.53356},
+      {"a1A0_BKstar","a2T23_BKstar",-0.19402},
+      {"a2A0_BKstar","a0A1_BKstar",0.515475},
+      {"a2A0_BKstar","a1A1_BKstar",0.743538},
+      {"a2A0_BKstar","a2A1_BKstar",0.661689},
+      {"a2A0_BKstar","a0A12_BKstar",0.05503},
+      {"a2A0_BKstar","a1A12_BKstar",0.326536},
+      {"a2A0_BKstar","a2A12_BKstar",0.665149},
+      {"a2A0_BKstar","a0V_BKstar",0.545574},
+      {"a2A0_BKstar","a1V_BKstar",0.731129},
+      {"a2A0_BKstar","a2V_BKstar",0.00860747},
+      {"a2A0_BKstar","a0T1_BKstar",0.475401},
+      {"a2A0_BKstar","a1T1_BKstar",0.674459},
+      {"a2A0_BKstar","a2T1_BKstar",-0.125613},
+      {"a2A0_BKstar","a0T2_BKstar",0.474921},
+      {"a2A0_BKstar","a1T2_BKstar",0.701034},
+      {"a2A0_BKstar","a2T2_BKstar",0.273928},
+      {"a2A0_BKstar","a0T23_BKstar",0.663092},
+      {"a2A0_BKstar","a1T23_BKstar",0.426721},
+      {"a2A0_BKstar","a2T23_BKstar",-0.318126},
+      {"a0A1_BKstar","a1A1_BKstar",0.702494},
+      {"a0A1_BKstar","a2A1_BKstar",0.153604},
+      {"a0A1_BKstar","a0A12_BKstar",0.0555181},
+      {"a0A1_BKstar","a1A12_BKstar",0.0105278},
+      {"a0A1_BKstar","a2A12_BKstar",0.205325},
+      {"a0A1_BKstar","a0V_BKstar",0.922982},
+      {"a0A1_BKstar","a1V_BKstar",0.731071},
+      {"a0A1_BKstar","a2V_BKstar",-0.35833},
+      {"a0A1_BKstar","a0T1_BKstar",0.899902},
+      {"a0A1_BKstar","a1T1_BKstar",0.68101},
+      {"a0A1_BKstar","a2T1_BKstar",-0.468536},
+      {"a0A1_BKstar","a0T2_BKstar",0.899616},
+      {"a0A1_BKstar","a1T2_BKstar",0.692637},
+      {"a0A1_BKstar","a2T2_BKstar",-0.202092},
+      {"a0A1_BKstar","a0T23_BKstar",0.564524},
+      {"a0A1_BKstar","a1T23_BKstar",0.30614},
+      {"a0A1_BKstar","a2T23_BKstar",-0.362387},
+      {"a1A1_BKstar","a2A1_BKstar",0.747682},
+      {"a1A1_BKstar","a0A12_BKstar",0.166407},
+      {"a1A1_BKstar","a1A12_BKstar",0.284455},
+      {"a1A1_BKstar","a2A12_BKstar",0.480939},
+      {"a1A1_BKstar","a0V_BKstar",0.678427},
+      {"a1A1_BKstar","a1V_BKstar",0.862475},
+      {"a1A1_BKstar","a2V_BKstar",-0.0633373},
+      {"a1A1_BKstar","a0T1_BKstar",0.630965},
+      {"a1A1_BKstar","a1T1_BKstar",0.760031},
+      {"a1A1_BKstar","a2T1_BKstar",-0.373063},
+      {"a1A1_BKstar","a0T2_BKstar",0.634299},
+      {"a1A1_BKstar","a1T2_BKstar",0.915195},
+      {"a1A1_BKstar","a2T2_BKstar",0.226359},
+      {"a1A1_BKstar","a0T23_BKstar",0.695868},
+      {"a1A1_BKstar","a1T23_BKstar",0.457217},
+      {"a1A1_BKstar","a2T23_BKstar",-0.440385},
+      {"a2A1_BKstar","a0A12_BKstar",0.245093},
+      {"a2A1_BKstar","a1A12_BKstar",0.316222},
+      {"a2A1_BKstar","a2A12_BKstar",0.535592},
+      {"a2A1_BKstar","a0V_BKstar",0.194572},
+      {"a2A1_BKstar","a1V_BKstar",0.517205},
+      {"a2A1_BKstar","a2V_BKstar",0.253395},
+      {"a2A1_BKstar","a0T1_BKstar",0.135433},
+      {"a2A1_BKstar","a1T1_BKstar",0.400555},
+      {"a2A1_BKstar","a2T1_BKstar",-0.127614},
+      {"a2A1_BKstar","a0T2_BKstar",0.140073},
+      {"a2A1_BKstar","a1T2_BKstar",0.59715},
+      {"a2A1_BKstar","a2T2_BKstar",0.402339},
+      {"a2A1_BKstar","a0T23_BKstar",0.553618},
+      {"a2A1_BKstar","a1T23_BKstar",0.252273},
+      {"a2A1_BKstar","a2T23_BKstar",-0.40495},
+      {"a0A12_BKstar","a1A12_BKstar",0.617726},
+      {"a0A12_BKstar","a2A12_BKstar",0.0443495},
+      {"a0A12_BKstar","a0V_BKstar",0.0335119},
+      {"a0A12_BKstar","a1V_BKstar",0.172545},
+      {"a0A12_BKstar","a2V_BKstar",0.202654},
+      {"a0A12_BKstar","a0T1_BKstar",0.010524},
+      {"a0A12_BKstar","a1T1_BKstar",0.0391092},
+      {"a0A12_BKstar","a2T1_BKstar",-0.154503},
+      {"a0A12_BKstar","a0T2_BKstar",0.0157345},
+      {"a0A12_BKstar","a1T2_BKstar",0.145566},
+      {"a0A12_BKstar","a2T2_BKstar",0.0343108},
+      {"a0A12_BKstar","a0T23_BKstar",0.448529},
+      {"a0A12_BKstar","a1T23_BKstar",0.100428},
+      {"a0A12_BKstar","a2T23_BKstar",-0.348189},
+      {"a1A12_BKstar","a2A12_BKstar",0.700096},
+      {"a1A12_BKstar","a0V_BKstar",-0.0140921},
+      {"a1A12_BKstar","a1V_BKstar",0.350603},
+      {"a1A12_BKstar","a2V_BKstar",0.234661},
+      {"a1A12_BKstar","a0T1_BKstar",-0.0243359},
+      {"a1A12_BKstar","a1T1_BKstar",0.234436},
+      {"a1A12_BKstar","a2T1_BKstar",-0.0609604},
+      {"a1A12_BKstar","a0T2_BKstar",-0.0214341},
+      {"a1A12_BKstar","a1T2_BKstar",0.28577},
+      {"a1A12_BKstar","a2T2_BKstar",0.248484},
+      {"a1A12_BKstar","a0T23_BKstar",0.386552},
+      {"a1A12_BKstar","a1T23_BKstar",0.537224},
+      {"a1A12_BKstar","a2T23_BKstar",-0.0377692},
+      {"a2A12_BKstar","a0V_BKstar",0.196602},
+      {"a2A12_BKstar","a1V_BKstar",0.485841},
+      {"a2A12_BKstar","a2V_BKstar",0.139392},
+      {"a2A12_BKstar","a0T1_BKstar",0.173373},
+      {"a2A12_BKstar","a1T1_BKstar",0.402833},
+      {"a2A12_BKstar","a2T1_BKstar",-0.0779755},
+      {"a2A12_BKstar","a0T2_BKstar",0.173504},
+      {"a2A12_BKstar","a1T2_BKstar",0.422339},
+      {"a2A12_BKstar","a2T2_BKstar",0.253397},
+      {"a2A12_BKstar","a0T23_BKstar",0.403006},
+      {"a2A12_BKstar","a1T23_BKstar",0.571118},
+      {"a2A12_BKstar","a2T23_BKstar",-0.0276853},
+      {"a0V_BKstar","a1V_BKstar",0.757379},
+      {"a0V_BKstar","a2V_BKstar",-0.397005},
+      {"a0V_BKstar","a0T1_BKstar",0.901557},
+      {"a0V_BKstar","a1T1_BKstar",0.716437},
+      {"a0V_BKstar","a2T1_BKstar",-0.400738},
+      {"a0V_BKstar","a0T2_BKstar",0.899723},
+      {"a0V_BKstar","a1T2_BKstar",0.702845},
+      {"a0V_BKstar","a2T2_BKstar",-0.147198},
+      {"a0V_BKstar","a0T23_BKstar",0.573778},
+      {"a0V_BKstar","a1T23_BKstar",0.277866},
+      {"a0V_BKstar","a2T23_BKstar",-0.360324},
+      {"a1V_BKstar","a2V_BKstar",0.0346143},
+      {"a1V_BKstar","a0T1_BKstar",0.709376},
+      {"a1V_BKstar","a1T1_BKstar",0.906137},
+      {"a1V_BKstar","a2T1_BKstar",-0.236675},
+      {"a1V_BKstar","a0T2_BKstar",0.709471},
+      {"a1V_BKstar","a1T2_BKstar",0.916209},
+      {"a1V_BKstar","a2T2_BKstar",0.261192},
+      {"a1V_BKstar","a0T23_BKstar",0.70266},
+      {"a1V_BKstar","a1T23_BKstar",0.480664},
+      {"a1V_BKstar","a2T23_BKstar",-0.355976},
+      {"a2V_BKstar","a0T1_BKstar",-0.354268},
+      {"a2V_BKstar","a1T1_BKstar",-0.0783557},
+      {"a2V_BKstar","a2T1_BKstar",0.338328},
+      {"a2V_BKstar","a0T2_BKstar",-0.352355},
+      {"a2V_BKstar","a1T2_BKstar",-0.0541063},
+      {"a2V_BKstar","a2T2_BKstar",0.38493},
+      {"a2V_BKstar","a0T23_BKstar",0.016202},
+      {"a2V_BKstar","a1T23_BKstar",6.71602e-05},
+      {"a2V_BKstar","a2T23_BKstar",0.0569126},
+      {"a0T1_BKstar","a1T1_BKstar",0.713877},
+      {"a0T1_BKstar","a2T1_BKstar",-0.473872},
+      {"a0T1_BKstar","a0T2_BKstar",0.999},
+      {"a0T1_BKstar","a1T2_BKstar",0.686349},
+      {"a0T1_BKstar","a2T2_BKstar",-0.229853},
+      {"a0T1_BKstar","a0T23_BKstar",0.515437},
+      {"a0T1_BKstar","a1T23_BKstar",0.236189},
+      {"a0T1_BKstar","a2T23_BKstar",-0.310316},
+      {"a1T1_BKstar","a2T1_BKstar",0.00093065},
+      {"a1T1_BKstar","a0T2_BKstar",0.706907},
+      {"a1T1_BKstar","a1T2_BKstar",0.881232},
+      {"a1T1_BKstar","a2T2_BKstar",0.365115},
+      {"a1T1_BKstar","a0T23_BKstar",0.601021},
+      {"a1T1_BKstar","a1T23_BKstar",0.427022},
+      {"a1T1_BKstar","a2T23_BKstar",-0.210129},
+      {"a2T1_BKstar","a0T2_BKstar",-0.48143},
+      {"a2T1_BKstar","a1T2_BKstar",-0.239308},
+      {"a2T1_BKstar","a2T2_BKstar",0.626511},
+      {"a2T1_BKstar","a0T23_BKstar",-0.27088},
+      {"a2T1_BKstar","a1T23_BKstar",-0.105814},
+      {"a2T1_BKstar","a2T23_BKstar",0.447129},
+      {"a0T2_BKstar","a1T2_BKstar",0.692809},
+      {"a0T2_BKstar","a2T2_BKstar",-0.227854},
+      {"a0T2_BKstar","a0T23_BKstar",0.517204},
+      {"a0T2_BKstar","a1T23_BKstar",0.237634},
+      {"a0T2_BKstar","a2T23_BKstar",-0.313381},
+      {"a1T2_BKstar","a2T2_BKstar",0.382807},
+      {"a1T2_BKstar","a0T23_BKstar",0.658722},
+      {"a1T2_BKstar","a1T23_BKstar",0.46875},
+      {"a1T2_BKstar","a2T23_BKstar",-0.326765},
+      {"a2T2_BKstar","a0T23_BKstar",0.0969361},
+      {"a2T2_BKstar","a1T23_BKstar",0.216438},
+      {"a2T2_BKstar","a2T23_BKstar",0.27039},
+      {"a0T23_BKstar","a1T23_BKstar",0.327243},
+      {"a0T23_BKstar","a2T23_BKstar",-0.711856},
+      {"a1T23_BKstar","a2T23_BKstar",0.287454},
+      {"a0A0_Bsphi","a1A0_Bsphi",0.687348},
+      {"a0A0_Bsphi","a2A0_Bsphi",-0.349657},
+      {"a0A0_Bsphi","a0A1_Bsphi",0.206736},
+      {"a0A0_Bsphi","a1A1_Bsphi",-0.554941},
+      {"a0A0_Bsphi","a2A1_Bsphi",-0.597622},
+      {"a0A0_Bsphi","a0A12_Bsphi",0.996},
+      {"a0A0_Bsphi","a1A12_Bsphi",0.772589},
+      {"a0A0_Bsphi","a2A12_Bsphi",0.42463},
+      {"a0A0_Bsphi","a0V_Bsphi",0.187815},
+      {"a0A0_Bsphi","a1V_Bsphi",-0.422447},
+      {"a0A0_Bsphi","a2V_Bsphi",-0.456553},
+      {"a0A0_Bsphi","a0T1_Bsphi",0.0865627},
+      {"a0A0_Bsphi","a1T1_Bsphi",-0.297008},
+      {"a0A0_Bsphi","a2T1_Bsphi",0.0671143},
+      {"a0A0_Bsphi","a0T2_Bsphi",0.0885951},
+      {"a0A0_Bsphi","a1T2_Bsphi",-0.457242},
+      {"a0A0_Bsphi","a2T2_Bsphi",-0.196984},
+      {"a0A0_Bsphi","a0T23_Bsphi",0.703702},
+      {"a0A0_Bsphi","a1T23_Bsphi",0.728003},
+      {"a0A0_Bsphi","a2T23_Bsphi",0.602114},
+      {"a1A0_Bsphi","a2A0_Bsphi",0.121069},
+      {"a1A0_Bsphi","a0A1_Bsphi",0.0064726},
+      {"a1A0_Bsphi","a1A1_Bsphi",-0.609677},
+      {"a1A0_Bsphi","a2A1_Bsphi",-0.668983},
+      {"a1A0_Bsphi","a0A12_Bsphi",0.668299},
+      {"a1A0_Bsphi","a1A12_Bsphi",0.791667},
+      {"a1A0_Bsphi","a2A12_Bsphi",0.646183},
+      {"a1A0_Bsphi","a0V_Bsphi",0.0174825},
+      {"a1A0_Bsphi","a1V_Bsphi",-0.52219},
+      {"a1A0_Bsphi","a2V_Bsphi",-0.662488},
+      {"a1A0_Bsphi","a0T1_Bsphi",0.0545029},
+      {"a1A0_Bsphi","a1T1_Bsphi",-0.247063},
+      {"a1A0_Bsphi","a2T1_Bsphi",-0.0128991},
+      {"a1A0_Bsphi","a0T2_Bsphi",0.0486156},
+      {"a1A0_Bsphi","a1T2_Bsphi",-0.525849},
+      {"a1A0_Bsphi","a2T2_Bsphi",-0.32988},
+      {"a1A0_Bsphi","a0T23_Bsphi",0.640094},
+      {"a1A0_Bsphi","a1T23_Bsphi",0.775898},
+      {"a1A0_Bsphi","a2T23_Bsphi",0.645661},
+      {"a2A0_Bsphi","a0A1_Bsphi",0.091877},
+      {"a2A0_Bsphi","a1A1_Bsphi",0.0390177},
+      {"a2A0_Bsphi","a2A1_Bsphi",0.272613},
+      {"a2A0_Bsphi","a0A12_Bsphi",-0.367399},
+      {"a2A0_Bsphi","a1A12_Bsphi",-0.290877},
+      {"a2A0_Bsphi","a2A12_Bsphi",0.166971},
+      {"a2A0_Bsphi","a0V_Bsphi",0.207248},
+      {"a2A0_Bsphi","a1V_Bsphi",-0.0243012},
+      {"a2A0_Bsphi","a2V_Bsphi",-0.0754036},
+      {"a2A0_Bsphi","a0T1_Bsphi",0.182472},
+      {"a2A0_Bsphi","a1T1_Bsphi",-0.00649649},
+      {"a2A0_Bsphi","a2T1_Bsphi",-0.220386},
+      {"a2A0_Bsphi","a0T2_Bsphi",0.174415},
+      {"a2A0_Bsphi","a1T2_Bsphi",-0.0908376},
+      {"a2A0_Bsphi","a2T2_Bsphi",-0.260704},
+      {"a2A0_Bsphi","a0T23_Bsphi",-0.255547},
+      {"a2A0_Bsphi","a1T23_Bsphi",-0.197701},
+      {"a2A0_Bsphi","a2T23_Bsphi",-0.0842799},
+      {"a0A1_Bsphi","a1A1_Bsphi",0.250919},
+      {"a0A1_Bsphi","a2A1_Bsphi",-0.105449},
+      {"a0A1_Bsphi","a0A12_Bsphi",0.200928},
+      {"a0A1_Bsphi","a1A12_Bsphi",-0.13586},
+      {"a0A1_Bsphi","a2A12_Bsphi",-0.146239},
+      {"a0A1_Bsphi","a0V_Bsphi",0.406354},
+      {"a0A1_Bsphi","a1V_Bsphi",0.180876},
+      {"a0A1_Bsphi","a2V_Bsphi",0.109717},
+      {"a0A1_Bsphi","a0T1_Bsphi",0.267591},
+      {"a0A1_Bsphi","a1T1_Bsphi",0.101937},
+      {"a0A1_Bsphi","a2T1_Bsphi",-0.164558},
+      {"a0A1_Bsphi","a0T2_Bsphi",0.275557},
+      {"a0A1_Bsphi","a1T2_Bsphi",0.190196},
+      {"a0A1_Bsphi","a2T2_Bsphi",-0.0562319},
+      {"a0A1_Bsphi","a0T23_Bsphi",0.0931432},
+      {"a0A1_Bsphi","a1T23_Bsphi",-0.0724199},
+      {"a0A1_Bsphi","a2T23_Bsphi",-0.155631},
+      {"a1A1_Bsphi","a2A1_Bsphi",0.78406},
+      {"a1A1_Bsphi","a0A12_Bsphi",-0.549042},
+      {"a1A1_Bsphi","a1A12_Bsphi",-0.662113},
+      {"a1A1_Bsphi","a2A12_Bsphi",-0.589264},
+      {"a1A1_Bsphi","a0V_Bsphi",-0.00746984},
+      {"a1A1_Bsphi","a1V_Bsphi",0.642019},
+      {"a1A1_Bsphi","a2V_Bsphi",0.552109},
+      {"a1A1_Bsphi","a0T1_Bsphi",0.142301},
+      {"a1A1_Bsphi","a1T1_Bsphi",0.571088},
+      {"a1A1_Bsphi","a2T1_Bsphi",-0.22105},
+      {"a1A1_Bsphi","a0T2_Bsphi",0.139241},
+      {"a1A1_Bsphi","a1T2_Bsphi",0.794425},
+      {"a1A1_Bsphi","a2T2_Bsphi",0.195856},
+      {"a1A1_Bsphi","a0T23_Bsphi",-0.601549},
+      {"a1A1_Bsphi","a1T23_Bsphi",-0.673956},
+      {"a1A1_Bsphi","a2T23_Bsphi",-0.681441},
+      {"a2A1_Bsphi","a0A12_Bsphi",-0.58909},
+      {"a2A1_Bsphi","a1A12_Bsphi",-0.716176},
+      {"a2A1_Bsphi","a2A12_Bsphi",-0.453332},
+      {"a2A1_Bsphi","a0V_Bsphi",0.0402144},
+      {"a2A1_Bsphi","a1V_Bsphi",0.47354},
+      {"a2A1_Bsphi","a2V_Bsphi",0.497547},
+      {"a2A1_Bsphi","a0T1_Bsphi",0.156373},
+      {"a2A1_Bsphi","a1T1_Bsphi",0.388671},
+      {"a2A1_Bsphi","a2T1_Bsphi",-0.169048},
+      {"a2A1_Bsphi","a0T2_Bsphi",0.148962},
+      {"a2A1_Bsphi","a1T2_Bsphi",0.548463},
+      {"a2A1_Bsphi","a2T2_Bsphi",0.124908},
+      {"a2A1_Bsphi","a0T23_Bsphi",-0.652782},
+      {"a2A1_Bsphi","a1T23_Bsphi",-0.693798},
+      {"a2A1_Bsphi","a2T23_Bsphi",-0.569813},
+      {"a0A12_Bsphi","a1A12_Bsphi",0.775667},
+      {"a0A12_Bsphi","a2A12_Bsphi",0.424398},
+      {"a0A12_Bsphi","a0V_Bsphi",0.184513},
+      {"a0A12_Bsphi","a1V_Bsphi",-0.420811},
+      {"a0A12_Bsphi","a2V_Bsphi",-0.447059},
+      {"a0A12_Bsphi","a0T1_Bsphi",0.0773811},
+      {"a0A12_Bsphi","a1T1_Bsphi",-0.304431},
+      {"a0A12_Bsphi","a2T1_Bsphi",0.0722582},
+      {"a0A12_Bsphi","a0T2_Bsphi",0.0795224},
+      {"a0A12_Bsphi","a1T2_Bsphi",-0.455068},
+      {"a0A12_Bsphi","a2T2_Bsphi",-0.187699},
+      {"a0A12_Bsphi","a0T23_Bsphi",0.698961},
+      {"a0A12_Bsphi","a1T23_Bsphi",0.723823},
+      {"a0A12_Bsphi","a2T23_Bsphi",0.599831},
+      {"a1A12_Bsphi","a2A12_Bsphi",0.803423},
+      {"a1A12_Bsphi","a0V_Bsphi",-0.0661659},
+      {"a1A12_Bsphi","a1V_Bsphi",-0.502237},
+      {"a1A12_Bsphi","a2V_Bsphi",-0.553914},
+      {"a1A12_Bsphi","a0T1_Bsphi",-0.148005},
+      {"a1A12_Bsphi","a1T1_Bsphi",-0.406181},
+      {"a1A12_Bsphi","a2T1_Bsphi",0.0686011},
+      {"a1A12_Bsphi","a0T2_Bsphi",-0.149814},
+      {"a1A12_Bsphi","a1T2_Bsphi",-0.597757},
+      {"a1A12_Bsphi","a2T2_Bsphi",-0.236414},
+      {"a1A12_Bsphi","a0T23_Bsphi",0.629096},
+      {"a1A12_Bsphi","a1T23_Bsphi",0.8456},
+      {"a1A12_Bsphi","a2T23_Bsphi",0.733289},
+      {"a2A12_Bsphi","a0V_Bsphi",0.0196031},
+      {"a2A12_Bsphi","a1V_Bsphi",-0.450477},
+      {"a2A12_Bsphi","a2V_Bsphi",-0.475719},
+      {"a2A12_Bsphi","a0T1_Bsphi",-0.124325},
+      {"a2A12_Bsphi","a1T1_Bsphi",-0.459704},
+      {"a2A12_Bsphi","a2T1_Bsphi",-0.0415268},
+      {"a2A12_Bsphi","a0T2_Bsphi",-0.129832},
+      {"a2A12_Bsphi","a1T2_Bsphi",-0.651114},
+      {"a2A12_Bsphi","a2T2_Bsphi",-0.338525},
+      {"a2A12_Bsphi","a0T23_Bsphi",0.369588},
+      {"a2A12_Bsphi","a1T23_Bsphi",0.656874},
+      {"a2A12_Bsphi","a2T23_Bsphi",0.656771},
+      {"a0V_Bsphi","a1V_Bsphi",0.247761},
+      {"a0V_Bsphi","a2V_Bsphi",-0.123124},
+      {"a0V_Bsphi","a0T1_Bsphi",0.526268},
+      {"a0V_Bsphi","a1T1_Bsphi",-0.0393931},
+      {"a0V_Bsphi","a2T1_Bsphi",-0.415068},
+      {"a0V_Bsphi","a0T2_Bsphi",0.535066},
+      {"a0V_Bsphi","a1T2_Bsphi",-0.0392003},
+      {"a0V_Bsphi","a2T2_Bsphi",-0.368212},
+      {"a0V_Bsphi","a0T23_Bsphi",0.160071},
+      {"a0V_Bsphi","a1T23_Bsphi",0.0458389},
+      {"a0V_Bsphi","a2T23_Bsphi",0.0186265},
+      {"a1V_Bsphi","a2V_Bsphi",0.739804},
+      {"a1V_Bsphi","a0T1_Bsphi",0.218671},
+      {"a1V_Bsphi","a1T1_Bsphi",0.571275},
+      {"a1V_Bsphi","a2T1_Bsphi",-0.444945},
+      {"a1V_Bsphi","a0T2_Bsphi",0.223869},
+      {"a1V_Bsphi","a1T2_Bsphi",0.633854},
+      {"a1V_Bsphi","a2T2_Bsphi",-0.0725463},
+      {"a1V_Bsphi","a0T23_Bsphi",-0.617296},
+      {"a1V_Bsphi","a1T23_Bsphi",-0.617176},
+      {"a1V_Bsphi","a2T23_Bsphi",-0.629361},
+      {"a2V_Bsphi","a0T1_Bsphi",-0.099119},
+      {"a2V_Bsphi","a1T1_Bsphi",0.323867},
+      {"a2V_Bsphi","a2T1_Bsphi",-0.0726924},
+      {"a2V_Bsphi","a0T2_Bsphi",-0.0931479},
+      {"a2V_Bsphi","a1T2_Bsphi",0.50992},
+      {"a2V_Bsphi","a2T2_Bsphi",0.213584},
+      {"a2V_Bsphi","a0T23_Bsphi",-0.677613},
+      {"a2V_Bsphi","a1T23_Bsphi",-0.651525},
+      {"a2V_Bsphi","a2T23_Bsphi",-0.547041},
+      {"a0T1_Bsphi","a1T1_Bsphi",0.448903},
+      {"a0T1_Bsphi","a2T1_Bsphi",-0.56142},
+      {"a0T1_Bsphi","a0T2_Bsphi",0.996},
+      {"a0T1_Bsphi","a1T2_Bsphi",0.189067},
+      {"a0T1_Bsphi","a2T2_Bsphi",-0.51613},
+      {"a0T1_Bsphi","a0T23_Bsphi",0.106616},
+      {"a0T1_Bsphi","a1T23_Bsphi",-0.176712},
+      {"a0T1_Bsphi","a2T23_Bsphi",-0.210211},
+      {"a1T1_Bsphi","a2T1_Bsphi",-0.169757},
+      {"a1T1_Bsphi","a0T2_Bsphi",0.423782},
+      {"a1T1_Bsphi","a1T2_Bsphi",0.660917},
+      {"a1T1_Bsphi","a2T2_Bsphi",-0.00861968},
+      {"a1T1_Bsphi","a0T23_Bsphi",-0.321698},
+      {"a1T1_Bsphi","a1T23_Bsphi",-0.487256},
+      {"a1T1_Bsphi","a2T23_Bsphi",-0.54514},
+      {"a2T1_Bsphi","a0T2_Bsphi",-0.561865},
+      {"a2T1_Bsphi","a1T2_Bsphi",-0.137407},
+      {"a2T1_Bsphi","a2T2_Bsphi",0.711765},
+      {"a2T1_Bsphi","a0T23_Bsphi",0.220799},
+      {"a2T1_Bsphi","a1T23_Bsphi",0.232593},
+      {"a2T1_Bsphi","a2T23_Bsphi",0.364997},
+      {"a0T2_Bsphi","a1T2_Bsphi",0.212618},
+      {"a0T2_Bsphi","a2T2_Bsphi",-0.495299},
+      {"a0T2_Bsphi","a0T23_Bsphi",0.109431},
+      {"a0T2_Bsphi","a1T23_Bsphi",-0.176517},
+      {"a0T2_Bsphi","a2T23_Bsphi",-0.208143},
+      {"a1T2_Bsphi","a2T2_Bsphi",0.410351},
+      {"a1T2_Bsphi","a0T23_Bsphi",-0.455203},
+      {"a1T2_Bsphi","a1T23_Bsphi",-0.62091},
+      {"a1T2_Bsphi","a2T23_Bsphi",-0.661853},
+      {"a2T2_Bsphi","a0T23_Bsphi",-0.0306923},
+      {"a2T2_Bsphi","a1T23_Bsphi",-0.114741},
+      {"a2T2_Bsphi","a2T23_Bsphi",0.00905559},
+      {"a0T23_Bsphi","a1T23_Bsphi",0.777787},
+      {"a0T23_Bsphi","a2T23_Bsphi",0.573289},
+      {"a1T23_Bsphi","a2T23_Bsphi",0.899178},
+      };
+
+      // Reserve memory
+      double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
+      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+          corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
+      }
+      // --- Needed for SuperIso backend
+
+      BEreq::convert_correlation((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
+
+      double **res;
+
+      BEreq::get_th_covariance_nuisance(&res, (char**)obsnames, &nObservables, &params_copy, &nuislist, (double **)corr);
+
+      for(int iObservable=0; iObservable < nObservables; ++iObservable) {
+          for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
+              result[obslist[iObservable]][obslist[jObservable]] = res[iObservable][jObservable];
+          }
+      }
+
+      // Free memory
+      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+          free(corr[iObservable]);
+      }
+      free(corr);
+
+      if (flav_debug) {
+          for(int iObservable=0; iObservable < nObservables; ++iObservable) {
+              for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
+                  printf("Covariance %s - %s: %.4e\n",
+                         obsnames[iObservable], obsnames[jObservable], result[obslist[iObservable]][obslist[jObservable]]);
+              }
+          }
+      }
+
+      if (flav_debug) {
+        cout<<"Finished SI_theory_covariance_SM"<<endl;
+      }
+
+      //        }
+    }
+    
     /// NEW! Compute covariance matrix for a list of observables
     void SI_theory_covariance(SI_covariance_map& result)  // TO BE MODIFIED
     {
@@ -3096,7 +3675,7 @@ namespace Gambit
       static const std::string observable{"BR_BXsgamma"};
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
       result = gaussian.GetLogLikelihood(
               SI_theory[observable],
@@ -3124,7 +3703,7 @@ namespace Gambit
       static const std::string observable{"SKstarGamma"};
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
       result = gaussian_0.GetLogLikelihood(
               SI_theory[observable],
@@ -3156,7 +3735,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
           std::vector<double> obs_theory;
@@ -3209,7 +3788,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3262,7 +3841,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3343,7 +3922,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
       
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_2)& observables){
@@ -3445,7 +4024,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
      
       // C++14 allows auto instead of decltype(observables1_2)
       auto get_obs_theory = [SI_theory](decltype(observables1_2)& observables){
@@ -3527,7 +4106,7 @@ namespace Gambit
 
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
      
       // C++14 allows auto instead of decltype(observables0p1_4)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_4)& observables){
@@ -3657,7 +4236,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
       
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_0p98)& observables){
@@ -3740,7 +4319,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
       result = 0;
       result += BifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
@@ -3782,7 +4361,7 @@ namespace Gambit
       };
 
       auto SI_theory = *Dep::SuperIso_obs_values;
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
       result = 0;
       result += bifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
@@ -3813,7 +4392,7 @@ namespace Gambit
               "R-1_BKll_1.1_6",
       };
       auto SI_theory = *Dep::SuperIso_obs_values;   
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
       std::cout<<1.+SI_theory[observables[0]]<<  "  "<<sqrt(SI_theory_covariance[observables[0]][observables[0]]) << std::endl;
       std::cout<<rk.GetLogLikelihood( 1.+SI_theory[observables[0]], -1.)<<std::endl;
@@ -3852,7 +4431,7 @@ namespace Gambit
         "R-1_B0Kstar0ll_1.1_6",
       };
       auto SI_theory = *Dep::SuperIso_obs_values;   
-      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance;
+      auto SI_theory_covariance = *Dep::SuperIso_theory_covariance_SM;
 
 
        

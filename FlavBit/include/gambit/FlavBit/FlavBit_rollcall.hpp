@@ -111,6 +111,21 @@ START_MODULE
    #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY SuperIso_theory_covariance_SM
+  START_CAPABILITY
+    #define FUNCTION SI_theory_covariance_SM
+    START_FUNCTION(SI_covariance_map)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
+
+
   // Observable: BR(B -> Xs gamma)
   #define CAPABILITY bsgamma
   START_CAPABILITY
@@ -919,6 +934,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map) 
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -930,6 +946,7 @@ START_MODULE
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -941,6 +958,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -952,6 +970,7 @@ START_MODULE
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -963,6 +982,7 @@ START_MODULE
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -974,6 +994,7 @@ START_MODULE
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -985,6 +1006,7 @@ START_MODULE
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -996,6 +1018,7 @@ START_MODULE
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1007,6 +1030,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
  #undef CAPABILITY
@@ -1018,6 +1042,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1029,6 +1054,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1040,6 +1066,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1051,6 +1078,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
     DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
