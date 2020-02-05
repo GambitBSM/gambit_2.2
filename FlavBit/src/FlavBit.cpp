@@ -1237,7 +1237,7 @@ namespace Gambit
       if (flav_debug) {
           for(int iObservable=0; iObservable < nObservables; ++iObservable) {
               for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
-                  printf("Covariance %s - %s: %.4e\n",
+                  printf("Covariance SM %s - %s: %.4e\n",
                          obsnames[iObservable], obsnames[jObservable], result[obslist[iObservable]][obslist[jObservable]]);
               }
           }
