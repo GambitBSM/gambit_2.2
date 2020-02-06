@@ -83,6 +83,11 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
         
         par = parameters[i]
 
+        # TODO: TG: Should we add parameters without block?
+        # Parameters without block break at runtime cause there's no way to access the spectrum info as internally it's a SLHA structure
+        if par.block == None:
+          continue
+
         # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a
         # spectrum parameter
         if par.block == "MINPAR" or par.block == "EXTPAR" :
@@ -512,7 +517,7 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
             "/// Destructor\n"
             "virtual ~{0}() {{}};\n"
             "\n"
-            "static int index_offset() {{return -1;}}\n"
+            "static int index_offset() {{return 0;}}\n"
             "\n"
             "/// Construct the SubSpectrumContents\n"
             "const SpectrumContents::{1} contents;\n"
