@@ -562,13 +562,13 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
     sizes = list(set(sizes))
 
     for i in np.arange(len(sizes)):
-        fnname = "i" + "".join(str(j) for j in np.arange(int(sizes[i])))
+        fnname = "i" + "".join(str(j+1) for j in np.arange(int(sizes[i])))
 
         towrite += (
                 "static const int {0}v[] = {{{1}}};\n"
                 "static const std::set<int> {0}({0}v, Utils::endA({0}v));"
                 "\n"
-        ).format(fnname, ",".join(str(j) for j in np.arange(int(sizes[i]))))
+        ).format(fnname, ",".join(str(j+1) for j in np.arange(int(sizes[i]))))
 
     towrite += "\nusing namespace Par;\n\n"
 
@@ -580,11 +580,11 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
             finf = " &Model::{}".format(sp.getter)
         elif sp.shape == "vector":
             size = "1"
-            index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
+            index = "i" + "".join(str(j+1) for j in np.arange(int(sp.size)))
             finf = "FInfo1(&Model::{0}, {1})".format(sp.getter, index)
         elif sp.shape == "matrix":
             size = "2"
-            index = "i" + "".join(str(j) for j in np.arange(int(sp.size)))
+            index = "i" + "".join(str(j+1) for j in np.arange(int(sp.size)))
             finf = "FInfo2(&Model::{0}, {1}, {1})".format(sp.getter, index)
 
         towrite += (
