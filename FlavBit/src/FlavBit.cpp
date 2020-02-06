@@ -684,54 +684,56 @@ namespace Gambit
           const nuisance& nuislist = *Dep::SuperIso_nuisance;
           const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
-          parameters params_copy=param;
+          parameters params_copy2=param;
       // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
-      params_copy.Re_DeltaC7  = 0.;
-      params_copy.Im_DeltaC7  = 0.;  
-      params_copy.Re_DeltaC9  = 0.;  
-      params_copy.Im_DeltaC9  = 0.;  
-      params_copy.Re_DeltaC10 = 0.;  
-      params_copy.Im_DeltaC10 = 0.;  
-      params_copy.Re_DeltaCQ1 = 0.;  
-      params_copy.Im_DeltaCQ1 = 0.;  
-      params_copy.Re_DeltaCQ2 = 0.;  
-      params_copy.Im_DeltaCQ2 = 0.;  
+      params_copy2.Re_DeltaC7  = 0.;
+      params_copy2.Im_DeltaC7  = 0.;  
+      params_copy2.Re_DeltaC9  = 0.;  
+      params_copy2.Im_DeltaC9  = 0.;  
+      params_copy2.Re_DeltaC10 = 0.;  
+      params_copy2.Im_DeltaC10 = 0.;  
+      params_copy2.Re_DeltaCQ1 = 0.;  
+      params_copy2.Im_DeltaCQ1 = 0.;  
+      params_copy2.Re_DeltaCQ2 = 0.;  
+      params_copy2.Im_DeltaCQ2 = 0.;  
       
       // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
-      params_copy.Re_DeltaC7_mu  = 0.;
-      params_copy.Im_DeltaC7_mu  = 0.;
-      params_copy.Re_DeltaC9_mu  = 0.;
-      params_copy.Im_DeltaC9_mu  = 0.;
-      params_copy.Re_DeltaC10_mu = 0.;
-      params_copy.Im_DeltaC10_mu = 0.;
-      params_copy.Re_DeltaCQ1_mu = 0.;
-      params_copy.Im_DeltaCQ1_mu = 0.;
-      params_copy.Re_DeltaCQ2_mu = 0.;
-      params_copy.Im_DeltaCQ2_mu = 0.;
+      params_copy2.Re_DeltaC7_mu  = 0.;
+      params_copy2.Im_DeltaC7_mu  = 0.;
+      params_copy2.Re_DeltaC9_mu  = 0.;
+      params_copy2.Im_DeltaC9_mu  = 0.;
+      params_copy2.Re_DeltaC10_mu = 0.;
+      params_copy2.Im_DeltaC10_mu = 0.;
+      params_copy2.Re_DeltaCQ1_mu = 0.;
+      params_copy2.Im_DeltaCQ1_mu = 0.;
+      params_copy2.Re_DeltaCQ2_mu = 0.;
+      params_copy2.Im_DeltaCQ2_mu = 0.;
 
-      params_copy.Re_DeltaC7_e  = 0.;
-      params_copy.Im_DeltaC7_e  = 0.;
-      params_copy.Re_DeltaC9_e  = 0.;
-      params_copy.Im_DeltaC9_e  = 0.;
-      params_copy.Re_DeltaC10_e = 0.;
-      params_copy.Im_DeltaC10_e = 0.;
-      params_copy.Re_DeltaCQ1_e = 0.;
-      params_copy.Im_DeltaCQ1_e = 0.;
-      params_copy.Re_DeltaCQ2_e = 0.;
-      params_copy.Im_DeltaCQ2_e = 0.;
+      params_copy2.Re_DeltaC7_e  = 0.;
+      params_copy2.Im_DeltaC7_e  = 0.;
+      params_copy2.Re_DeltaC9_e  = 0.;
+      params_copy2.Im_DeltaC9_e  = 0.;
+      params_copy2.Re_DeltaC10_e = 0.;
+      params_copy2.Im_DeltaC10_e = 0.;
+      params_copy2.Re_DeltaCQ1_e = 0.;
+      params_copy2.Im_DeltaCQ1_e = 0.;
+      params_copy2.Re_DeltaCQ2_e = 0.;
+      params_copy2.Im_DeltaCQ2_e = 0.;
 
-      params_copy.Re_DeltaC7_tau  = 0.;
-      params_copy.Im_DeltaC7_tau  = 0.;
-      params_copy.Re_DeltaC9_tau  = 0.;
-      params_copy.Im_DeltaC9_tau  = 0.;
-      params_copy.Re_DeltaC10_tau = 0.;
-      params_copy.Im_DeltaC10_tau = 0.;
-      params_copy.Re_DeltaCQ1_tau = 0.;
-      params_copy.Im_DeltaCQ1_tau = 0.;
-      params_copy.Re_DeltaCQ2_tau = 0.;
-      params_copy.Im_DeltaCQ2_tau = 0.;
+      params_copy2.Re_DeltaC7_tau  = 0.;
+      params_copy2.Im_DeltaC7_tau  = 0.;
+      params_copy2.Re_DeltaC9_tau  = 0.;
+      params_copy2.Im_DeltaC9_tau  = 0.;
+      params_copy2.Re_DeltaC10_tau = 0.;
+      params_copy2.Im_DeltaC10_tau = 0.;
+      params_copy2.Re_DeltaCQ1_tau = 0.;
+      params_copy2.Im_DeltaCQ1_tau = 0.;
+      params_copy2.Re_DeltaCQ2_tau = 0.;
+      params_copy2.Im_DeltaCQ2_tau = 0.;
       
-          
+      const parameters params_copy=params_copy2; 
+
+      
       // --- Needed for SuperIso backend
       int nObservables = obslist.size();
 
@@ -742,6 +744,8 @@ namespace Gambit
       int nNuisance=161;
       char namenuisance[nNuisance+1][50];
       BEreq::observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &params_copy); // Initialization of namenuisance
+
+
       const int ncorrnuis=463;
       nuiscorr corrnuis[ncorrnuis]={ // List of nuisance correlations, below between the form factors
       {"a00_BK","a10_BK",-0.39},
@@ -1222,6 +1226,8 @@ namespace Gambit
 
       BEreq::get_th_covariance_nuisance(&res, (char**)obsnames, &nObservables, &params_copy, &nuislist, (double **)corr);
 
+
+      
       for(int iObservable=0; iObservable < nObservables; ++iObservable) {
           for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
               result[obslist[iObservable]][obslist[jObservable]] = res[iObservable][jObservable];
