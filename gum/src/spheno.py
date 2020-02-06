@@ -1803,7 +1803,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
         towrite += (
                 "slha[\"MASS\"][\"\"] << {0} << (*{1}){2} << \"# {3}_{4}\";\n"
-        ).format(particle.PDG_code, mass, brace, particle.name, str(index))
+        ).format(abs(particle.PDG_code), mass, brace, particle.name, str(index))
 
     towrite +=  (
             "slha[\"MASS\"][\"\"] << 23 << *MVZ << \"# VZ\";\n"
