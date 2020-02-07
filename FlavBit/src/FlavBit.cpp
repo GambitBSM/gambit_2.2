@@ -674,20 +674,22 @@ namespace Gambit
     void SI_theory_covariance_SM(SI_covariance_map& result)
     {
       static bool first=false;
-      //if(first) return;
+      cout<<"First: "<<first<<endl;
+
+      if(first) return;
       using namespace Pipes::SI_theory_covariance_SM;  
       //      if (ModelInUse("WC") || (ModelInUse("WC_LUV") ) )   
       //  {
-          if (flav_debug) cout<<"Starting SI_theory_covariance_SM"<<endl;
+      if (flav_debug) cout<<"Starting SI_theory_covariance_SM"<<endl;
 
-          const parameters& param = *Dep::SuperIso_modelinfo;
-          const nuisance& nuislist = *Dep::SuperIso_nuisance;
-          const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
+      const parameters& param = *Dep::SuperIso_modelinfo;
+      const nuisance& nuislist = *Dep::SuperIso_nuisance;
+      const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
-          parameters params_copy=param;
-          
-          for(int ie=1;ie<=30;ie++) params_copy.deltaC[ie]=params_copy.deltaCp[ie]=0.;
-          for(int ie=1;ie<=6;ie++) params_copy.deltaCQ[ie]=params_copy.deltaCQp[ie]=0.;
+      parameters params_copy=param;
+      
+      for(int ie=1;ie<=30;ie++) params_copy.deltaC[ie]=params_copy.deltaCp[ie]=0.;
+      for(int ie=1;ie<=6;ie++) params_copy.deltaCQ[ie]=params_copy.deltaCQp[ie]=0.;
           
 
       
