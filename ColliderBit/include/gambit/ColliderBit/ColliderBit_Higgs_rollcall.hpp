@@ -8,11 +8,6 @@
 ///
 ///  Authors (add name and date if you modify):
 ///
-///  \author Abram Krislock
-///          (a.m.b.krislock@fys.uio.no)
-///
-///  \author Aldo Saavedra
-///
 ///  \author Christopher Rogan
 ///          (christophersrogan@gmail.com)
 ///  \date 2015 Apr
@@ -20,6 +15,10 @@
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2015 Jul
+///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2019 Feb
 ///
 ///  *********************************************
 
@@ -46,12 +45,11 @@
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
     #undef FUNCTION
 
-    // MSSM Higgs model parameters
-    #define FUNCTION MSSMHiggs_ModelParameters
+    // MSSM-like Higgs model parameters, for BSM models with MSSM-like sectors (MSSM, NMSSM, ...)
+    #define FUNCTION MSSMLikeHiggs_ModelParameters
     START_FUNCTION(hb_ModelParameters)
-    DEPENDENCY(MSSM_spectrum, Spectrum)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -65,12 +63,12 @@
     START_FUNCTION(double)
     DEPENDENCY(HB_ModelParameters, hb_ModelParameters)
     BACKEND_REQ(HiggsBounds_neutral_input_part, (libhiggsbounds), void,
-    (double*, double*, int*, double*, double*, double*, Farray<double, 1,3, 1,3>&,
+    (double*, double*, int*, double*, double*, double*, Farray<double, 1,5, 1,5>&,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
-    double*, double*, Farray<double, 1,3, 1,3>&))
+    double*, double*, Farray<double, 1,5, 1,5>&))
     BACKEND_REQ(HiggsBounds_charged_input, (libhiggsbounds), void,
     (double*, double*, double*, double*,
     double*, double*, double*, double*))
@@ -91,12 +89,12 @@
     START_FUNCTION(double)
     DEPENDENCY(HB_ModelParameters, hb_ModelParameters)
     BACKEND_REQ(HiggsBounds_neutral_input_part_HS, (libhiggssignals), void,
-    (double*, double*, int*, double*, double*, double*, Farray<double, 1,3, 1,3>&,
+    (double*, double*, int*, double*, double*, double*, Farray<double, 1,5, 1,5>&,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
-    double*, double*, Farray<double, 1,3, 1,3>&))
+    double*, double*, Farray<double, 1,5, 1,5>&))
     BACKEND_REQ(HiggsBounds_charged_input_HS, (libhiggssignals), void,
     (double*, double*, double*, double*,
      double*, double*, double*, double*))
