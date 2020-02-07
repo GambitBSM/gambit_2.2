@@ -10,7 +10,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019... forever
+#  \date 2017, 2018, 2019, 2020... forever
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
@@ -428,10 +428,9 @@ if args.file:
                 write_spheno_decay_entry(gum.name, clean_model_name)
 
             # HiggsCouplingsTable
-            # TODO needs NMSSM merging into gum
-            # if len(higgses) > 1:
-            #     hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
-            #                                        neutral_higgses, gambit_pdgs)
+            if len(higgses) > 1:
+                hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
+                                                   neutral_higgses, gambit_pdgs)
 
         """
         CALCHEP
@@ -709,15 +708,15 @@ if args.file:
                       existing = False)
 
         # HiggsBounds interface
-        # TODO need NMSSM merging into gum
-        # if output_opts.spheno and len(higgses) > 1:
-        #     num = find_string("ColliderBit_Higgs.cpp", m, 
-        #             "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
-        #     amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, reset_contents)
-        #     num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
-        #             "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
-        #     amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
-        #                reset_contents)
+        if output_opts.spheno and len(higgses) > 1:
+            num = find_string("ColliderBit_Higgs.cpp", m, 
+                    "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
+            amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, 
+                       reset_contents)
+            num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
+                    "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
+            amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
+                       reset_contents)
 
         # Backends
         m = "Backends"

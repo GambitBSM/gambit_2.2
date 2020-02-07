@@ -1929,11 +1929,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         numA0 = ( (int(hb_variables["rHB_P_VZ"].size)-1) 
                    if "rHB_S_VZ" in hb_variables else 0 )
 
-    # TODO don't write HiggsBounds output yet, until merges from NMSSM merged in
-    hboutput = False
-
     # Check there's more than 1 Higgs otherwise no need for this really. 
-    if hboutput and (numh0 + numA0 > 1):
+    if (numh0 + numA0 > 1):
         towrite += (
                 "// Convenience function to obtain a HiggsCouplingsTable "
                 "object for HiggsBounds\n"
@@ -1969,9 +1966,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                " // Coupling (h0_{1} mu+ mu-)\n"
                "hctbl.C_tautau2[{0}] = pow( (*rHB_S_S_Fe)({1},3), 2 );"
                " // Coupling (h0_{1} tau+ tau-)\n"
-               "hbtbl.C_WW2[{0}] = (*rHB_S_VWm)({1});"
+               "hctbl.C_WW2[{0}] = (*rHB_S_VWm)({1});"
                " // Coupling (h0_{1} W+ W-)\n"
-               "hbtbl.C_ZZ2[{0}] = (*rHB_S_VZ)({1});"
+               "hctbl.C_ZZ2[{0}] = (*rHB_S_VZ)({1});"
                " // Coupling (h0_{1} Z Z)\n"
                "hctbl.C_gaga2[{0}] = pow( (*ratioPP)({1}).re, 2 );"
                " // Coupling (h0_{1} gamma gamma)\n"
@@ -1992,9 +1989,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                " // Coupling (A0_{2} mu+ mu-)\n"
                "hctbl.C_tautau2[{0}] = pow( (*rHB_P_P_Fe)({1},3), 2 );"
                " // Coupling (A0_{2} tau+ tau-)\n"
-               "hbtbl.C_WW2[{0}] = (*rHB_P_VWm)({1});"
+               "hctbl.C_WW2[{0}] = (*rHB_P_VWm)({1});"
                " // Coupling (A0_{2} W+ W-)\n"
-               "hbtbl.C_ZZ2[{0}] = (*rHB_P_VZ)({1});"
+               "hctbl.C_ZZ2[{0}] = (*rHB_P_VZ)({1});"
                " // Coupling (A0_{2} Z Z)\n"
                "hctbl.C_gaga2[{0}] = pow( (*ratioPPP)({1}).re, 2 );"
                " // Coupling (A0_{2} gamma gamma)\n"

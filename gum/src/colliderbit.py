@@ -51,15 +51,15 @@ def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs):
     print listhiggses
 
     towrite_src = (
-                "if (ModelInUse(\"{0}\"))\n"
+                "else if (ModelInUse(\"{0}\"))\n"
                 "{{\n"
-                "spectrum_dependency = &Dep::{1};\n"
-                "Higgses = initvector<str>({2});\n"
+                "  spectrum_dependency = &Dep::{1};\n"
+                "  Higgses = initvector<str>({2});\n"
                 "}}\n"
     ).format(model_name, spectrum, listhiggses)
 
     towrite_head = (
-                 "    MODEL_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})"
+                 "    MODEL_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})\n"
     ).format(spectrum, model_name)
 
     return dumb_indent(6, towrite_src), towrite_head
