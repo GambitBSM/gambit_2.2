@@ -3669,13 +3669,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
-
-        }
+    
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
       result = gaussian_0.GetLogLikelihood(
               SI_theory[observable],
@@ -3709,13 +3705,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first=false;
-
-        }
+     
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3770,13 +3762,9 @@ namespace Gambit
      
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first=false;
-
-        }
+      
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3830,13 +3818,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first=false;
-
-        }
+      
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3918,13 +3902,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first=false;
-
-        }
+     
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
       
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_2)& observables){
@@ -4027,13 +4007,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
-
-        }
+  
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
       // C++14 allows auto instead of decltype(observables1_2)
       auto get_obs_theory = [SI_theory](decltype(observables1_2)& observables){
         std::vector<double> obs_theory;
@@ -4115,13 +4091,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
-
-        }
+    
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
      
       // C++14 allows auto instead of decltype(observables0p1_4)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_4)& observables){
@@ -4168,7 +4140,7 @@ namespace Gambit
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_q2_4_6);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_q2_6_8);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19);
-
+      cout<<"AAA"<<endl;
       static bool first = true;
       if (first)
       {
@@ -4250,21 +4222,23 @@ namespace Gambit
         "S9_B0Kstar0mumu_15_19",
       };
 
+      
+      
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
+  
+      
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+  
 
-        }
+      
       
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_0p98)& observables){
         std::vector<double> obs_theory;
         obs_theory.reserve(observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
+          std::cout<<observables[i]<<std::endl;
           obs_theory.push_back(SI_theory.at(observables[i]));
         }
         return obs_theory;
@@ -4287,7 +4261,7 @@ namespace Gambit
       result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(observables6_8), get_obs_covariance(observables6_8));
       result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(observables15_19), get_obs_covariance(observables15_19));
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Br
@@ -4342,13 +4316,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
-
-        }
+     
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
       result = 0;
       result += BifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
@@ -4391,14 +4361,11 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
+     
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
-        }
-
+      
       result = 0;
       result += bifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
       result += bifurGaussian_1.GetLogLikelihood(SI_theory[observables[1]], SI_theory_covariance[observables[1]][observables[1]]);
@@ -4429,15 +4396,11 @@ namespace Gambit
       };
 
 
-          SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
+      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
-
-        }
+      
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
       std::cout<<1.+SI_theory[observables[0]]<<  "  "<<sqrt(SI_theory_covariance[observables[0]][observables[0]]) << std::endl;
       std::cout<<rk.GetLogLikelihood( 1.+SI_theory[observables[0]], -1.)<<std::endl;
@@ -4478,13 +4441,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      static bool first_SI=true;
-      if(first_SI)
-        {
-          SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-          first_SI=false;
-
-        }
+      
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      
 
        
       result = rkstar1.GetLogLikelihood(
