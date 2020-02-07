@@ -771,7 +771,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
     if nEvenH == 2:
         towrite += (
                 "// Work out which SM values correspond to which Higgs\n"
-                "int higgs = (SMlike_higgs_PDG_code(spec) == 25 ? 0 : 1);\n"
+                "int higgs = (SMlike_higgs_PDG_code(he) == 25 ? 0 : 1);\n"
                 "int other_higgs = (higgs == 0 ? 1 : 0);\n"
                 "\n"
         )
