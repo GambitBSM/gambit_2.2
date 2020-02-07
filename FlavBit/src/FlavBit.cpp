@@ -684,54 +684,11 @@ namespace Gambit
           const nuisance& nuislist = *Dep::SuperIso_nuisance;
           const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
-          parameters params_copy2=param;
-      // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
-      params_copy2.Re_DeltaC7  = 0.;
-      params_copy2.Im_DeltaC7  = 0.;  
-      params_copy2.Re_DeltaC9  = 0.;  
-      params_copy2.Im_DeltaC9  = 0.;  
-      params_copy2.Re_DeltaC10 = 0.;  
-      params_copy2.Im_DeltaC10 = 0.;  
-      params_copy2.Re_DeltaCQ1 = 0.;  
-      params_copy2.Im_DeltaCQ1 = 0.;  
-      params_copy2.Re_DeltaCQ2 = 0.;  
-      params_copy2.Im_DeltaCQ2 = 0.;  
-      
-      // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
-      params_copy2.Re_DeltaC7_mu  = 0.;
-      params_copy2.Im_DeltaC7_mu  = 0.;
-      params_copy2.Re_DeltaC9_mu  = 0.;
-      params_copy2.Im_DeltaC9_mu  = 0.;
-      params_copy2.Re_DeltaC10_mu = 0.;
-      params_copy2.Im_DeltaC10_mu = 0.;
-      params_copy2.Re_DeltaCQ1_mu = 0.;
-      params_copy2.Im_DeltaCQ1_mu = 0.;
-      params_copy2.Re_DeltaCQ2_mu = 0.;
-      params_copy2.Im_DeltaCQ2_mu = 0.;
-
-      params_copy2.Re_DeltaC7_e  = 0.;
-      params_copy2.Im_DeltaC7_e  = 0.;
-      params_copy2.Re_DeltaC9_e  = 0.;
-      params_copy2.Im_DeltaC9_e  = 0.;
-      params_copy2.Re_DeltaC10_e = 0.;
-      params_copy2.Im_DeltaC10_e = 0.;
-      params_copy2.Re_DeltaCQ1_e = 0.;
-      params_copy2.Im_DeltaCQ1_e = 0.;
-      params_copy2.Re_DeltaCQ2_e = 0.;
-      params_copy2.Im_DeltaCQ2_e = 0.;
-
-      params_copy2.Re_DeltaC7_tau  = 0.;
-      params_copy2.Im_DeltaC7_tau  = 0.;
-      params_copy2.Re_DeltaC9_tau  = 0.;
-      params_copy2.Im_DeltaC9_tau  = 0.;
-      params_copy2.Re_DeltaC10_tau = 0.;
-      params_copy2.Im_DeltaC10_tau = 0.;
-      params_copy2.Re_DeltaCQ1_tau = 0.;
-      params_copy2.Im_DeltaCQ1_tau = 0.;
-      params_copy2.Re_DeltaCQ2_tau = 0.;
-      params_copy2.Im_DeltaCQ2_tau = 0.;
-      
-      const parameters params_copy=params_copy2; 
+          parameters params_copy=param;
+          
+          for(int ie=1;ie<=30;ie++) params_copy.deltaC[ie]=params_copy.deltaCp[ie]=0.;
+          for(int ie=1;ie<=6;ie++) params_copy.deltaCQ[ie]=params_copy.deltaCQp[ie]=0.;
+          
 
       
       // --- Needed for SuperIso backend
