@@ -2942,7 +2942,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       "\n"\
       "}\n"\
       "scan_level = false;\n"\
-      "\n"
+      "\n"\
+      "// Reset RGE scale\n"\
+      "*Qin = -1;\n"\
+      "try{ SetRGEScale(*Qin); }\n"\
+      "catch(std::runtime_error e) { invalid_point().raise(e.what()); }\n"
     if flags["SupersymmetricModel"] :
       towrite += "*Qin = 1.0E3;  // Default value if there's no input\n"
     else :
