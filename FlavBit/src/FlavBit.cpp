@@ -498,6 +498,12 @@ namespace Gambit
       result.width_Z = Dep::Z_decay_rates->width_in_GeV;
       result.width_W = Dep::W_plus_decay_rates->width_in_GeV;
 
+      for(int ie=1;ie<=30;ie++) result.deltaC[ie]=result.deltaCp[ie]=0.;
+      for(int ie=1;ie<=6;ie++) result.deltaCQ[ie]=result.deltaCQp[ie]=0.; 
+
+      
+
+      
       // If requested, override the SuperIso b pole mass with the SpecBit value and recompute the 1S b mass.
       if (runOptions->getValueOrDef<bool>(false, "take_b_pole_mass_from_spectrum"))
       {
@@ -3709,7 +3715,6 @@ namespace Gambit
       SI_covariance_map SI_theory_covariance;
      
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
