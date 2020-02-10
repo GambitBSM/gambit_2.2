@@ -48,7 +48,6 @@
     // MSSM-like Higgs model parameters, for BSM models with MSSM-like sectors (MSSM, NMSSM, ...)
     #define FUNCTION MSSMLikeHiggs_ModelParameters
     START_FUNCTION(hb_ModelParameters)
-    MODEL_CONDITIONAL_DEPENDENCY(THDM_II_spectrum, Spectrum, THDM_II)
     MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
     #undef FUNCTION
@@ -65,13 +64,11 @@
     DEPENDENCY(HB_ModelParameters, hb_ModelParameters)
     BACKEND_REQ(HiggsBounds_neutral_input_part, (libhiggsbounds), void,
     (double*, double*, int*, double*, double*, double*, double*,
-//    (double*, double*, int*, double*, double*, double*, Farray<double, 1,5, 1,5>&,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*))
-//    double*, double*, Farray<double, 1,5, 1,5>&))
     BACKEND_REQ(HiggsBounds_charged_input, (libhiggsbounds), void,
     (double*, double*, double*, double*,
     double*, double*, double*, double*))
@@ -92,14 +89,12 @@
     START_FUNCTION(double)
     DEPENDENCY(HB_ModelParameters, hb_ModelParameters)
     BACKEND_REQ(HiggsBounds_neutral_input_part_HS, (libhiggssignals), void,
-//    (double*, double*, int*, double*, double*, double*, Farray<double, 1,5, 1,5>&,
     (double*, double*, int*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*, double*, double*, double*, double*,
     double*, double*, double*))
-//    double*, double*, Farray<double, 1,5, 1,5>&))
     BACKEND_REQ(HiggsBounds_charged_input_HS, (libhiggssignals), void,
     (double*, double*, double*, double*,
      double*, double*, double*, double*))
