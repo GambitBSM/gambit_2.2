@@ -634,6 +634,91 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
     }
 
+    /// Compute SuperIso prediction (central value and covariance) for a set of obserables
+    void SuperIso_prediction(SI_prediction& result) 
+    {
+      using namespace Pipes::SuperIso_prediction;
+      if (flav_debug) std::cout << "Starting SuperIso_prediction" << std::endl;
+
+      const parameters& param = *Dep::SuperIso_modelinfo;
+      const nuisance& nuislist = *Dep::SuperIso_nuisance;
+      const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");  // TODO: Use SmallSuperIsoObsList instead
+
+
+      int nObservables = obslist.size();
+
+      char obsnames[nObservables][50];
+      for(int iObservable = 0; iObservable < nObservables; iObservable++) {
+          strcpy(obsnames[iObservable], obslist[iObservable].c_str());
+      }
+
+      // ---------- CENTRAL VALUES ----------
+      double *result_central;
+      // Reserve memory
+      result_central = (double *) calloc(nObservables, sizeof(double));
+      // --- Needed for SuperIso backend
+
+      BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &result_central, &param, &nuislist);
+
+      for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
+          result.central_values[obslist[iObservable]] = result_central[iObservable];
+      }
+
+      // Free memory
+      free(result_central);
+      result_central = NULL;
+      if (flav_debug) {
+          for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
+              printf("%s=%.4e\n", obsnames[iObservable], result.central_values[obslist[iObservable]]);
+          }
+      }
+
+      // ---------- COVARIANCE ----------
+      int nNuisance=161;
+      char namenuisance[nNuisance+1][50];
+      BEreq::observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
+
+      const int ncorrnuis=463;
+      nuiscorr corrnuis[ncorrnuis]={/*TODO: use Pat's global definition*/};// List of nuisance correlations, below between the form factors
+
+      // Reserve memory
+      double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
+      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+          corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
+      }
+      // --- Needed for SuperIso backend
+
+      BEreq::convert_correlation((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
+
+      double **result_covariance;
+
+      BEreq::get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
+
+      for(int iObservable=0; iObservable < nObservables; ++iObservable) {
+          for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
+              result.covariance[obslist[iObservable]][obslist[jObservable]] = result_covariance[iObservable][jObservable];
+          }
+      }
+
+      // Free memory
+      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+          free(corr[iObservable]);
+      }
+      free(corr);
+
+      if (flav_debug) {
+          for(int iObservable=0; iObservable < nObservables; ++iObservable) {
+              for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
+                  printf("Covariance %s - %s: %.4e\n",
+                          obsnames[iObservable], obsnames[jObservable], result.covariance[obslist[iObservable]][obslist[jObservable]]);
+              }
+          }
+      }
+
+      if (flav_debug) std::cout << "Finished SuperIso_prediction" << std::endl;
+
+    }
+
     /// NEW! Compute values of list of observables
     void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
     {
