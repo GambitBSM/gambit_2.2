@@ -3066,7 +3066,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
         towrite += (
             "BE_FUNCTION({0}, void,\n"
             "  ({1}),"
-            " \"{2}\", \"SARAHSPheno_{3}_internal\")\n"
+            " {2}, \"SARAHSPheno_{3}_internal\")\n"
         ).format(function, args, symbol, clean_model_name)
     
     # All scraped from Model_Data_<MODEL>.f90
@@ -3101,7 +3101,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
     # Add MODSEL variable if missing
     if "HighScaleModel" not in [name for name, param in variables.iteritems()] :
-        towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, "' + make_fortran_symbols("settings","highscalemodel") + ', "SARAHSPheno_' + clean_model_name + '_internal")\n'
+        towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, ' + make_fortran_symbols("settings","highscalemodel") + ', "SARAHSPheno_' + clean_model_name + '_internal")\n'
 
     # SMINPUTS
     towrite += (
