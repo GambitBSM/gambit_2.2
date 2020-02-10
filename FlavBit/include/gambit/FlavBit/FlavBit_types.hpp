@@ -25,6 +25,11 @@
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 July
 ///
+///  \author Markus Prim
+///          (markus.prim@kit.edu)
+///  \date 2019 Nov
+///        2020 Feb
+///
 ///  *********************************************
 
 #ifndef __FlavBit_types_hpp__
@@ -86,6 +91,13 @@ namespace Gambit
     /// Maps for holding SI observables and covariance matrix.
     typedef std::map<const std::string, double> SI_observable_map;
     typedef std::map<const std::string, std::map<const std::string, double>> SI_covariance_map;
+
+    /// Struct which allows simplified access to SuperIso (no need to calculate theory separately).
+    struct SI_prediction
+    {
+      SI_observable_map central_values;
+      SI_covariance_map covariance;
+    };
 
   }
 }
