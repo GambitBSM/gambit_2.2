@@ -1146,9 +1146,6 @@ namespace Gambit
       char namenuisance[nNuisance+1][50];
       BEreq::observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
 
-      const int ncorrnuis=463;
-      nuiscorr corrnuis[ncorrnuis]={/*TODO: use Pat's global definition*/};// List of nuisance correlations, below between the form factors
-
       // Reserve memory
       double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
       for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
