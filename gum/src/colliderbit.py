@@ -54,7 +54,7 @@ def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs):
                 "else if (ModelInUse(\"{0}\"))\n"
                 "{{\n"
                 "  spectrum_dependency = &Dep::{1};\n"
-                "  Higgses = initvector<str>({2});\n"
+                "  Higgses = initVector<str>({2});\n"
                 "}}\n"
     ).format(model_name, spectrum, listhiggses)
 
