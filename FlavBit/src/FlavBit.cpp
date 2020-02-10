@@ -634,16 +634,15 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
     }
 
-    /// Compute SuperIso prediction (central value and covariance) for a set of obserables
-    void SuperIso_prediction(SI_prediction& result) 
+    /// Helper function to avoid code duplication. However, there are some issues...
+    void SuperIso_prediction_helper(const std::vector<std::string>& obslist, SI_prediction& result)
     {
-      using namespace Pipes::SuperIso_prediction;
+      using namespace Pipes::SuperIso_prediction;  // FIXME: we use the wrong pipe here, but we do not want this as a capability, otherwise the function arguments are not flexibel
+                                                   //        the dependency is defined via the function SuperIso_prediction which does by itself nothing
       if (flav_debug) std::cout << "Starting SuperIso_prediction" << std::endl;
 
       const parameters& param = *Dep::SuperIso_modelinfo;
       const nuisance& nuislist = *Dep::SuperIso_nuisance;
-      const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");  // TODO: Use SmallSuperIsoObsList instead
-
 
       int nObservables = obslist.size();
 
@@ -718,6 +717,22 @@ namespace Gambit
       if (flav_debug) std::cout << "Finished SuperIso_prediction" << std::endl;
 
     }
+
+    /// This function is required to resolve the dependency for the helper function
+    void SuperIso_prediction(SI_prediction&) {} 
+
+    void SuperIso_prediction_B2mumu(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction;
+      // static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");  // TODO: Get this from rules
+      static const std::vector<std::string> obslist{
+        "BRuntag_Bsmumu",
+        "BR_Bdmumu"
+      };
+
+      SuperIso_prediction_helper(obslist, result);
+    }
+
 
     /// NEW! Compute values of list of observables
     void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
