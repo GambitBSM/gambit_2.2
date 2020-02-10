@@ -3686,7 +3686,7 @@ namespace Gambit
               SI_theory_covariance[observable][observable]
               );
   
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2KstargammaS_HFLAV result: " << result << std::endl;
     }
 
     /// HEPLike LogLikelihood B -> ll
@@ -3736,12 +3736,12 @@ namespace Gambit
           return obs_covariance;
       };
 
-      result = nDimLikelihood_0.GetLogLikelihood(
+      result = -nDimLikelihood_0.GetLogLikelihood(
               get_obs_theory(observables)
               /* nDimLikelihood does not support theory errors */
               );
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2mumuLogLikelihood_CMS result: " << result << std::endl;
     }
 
 
@@ -3793,12 +3793,12 @@ namespace Gambit
           return obs_covariance;
       };
 
-      result = nDimLikelihood_0.GetLogLikelihood(
+      result = -nDimLikelihood_0.GetLogLikelihood(
               get_obs_theory(observables)
               /* nDimLikelihood does not support theory errors */
               );
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2mumuLogLikelihood_Atlas result: " << result << std::endl;
     }
 
     /// HEPLike LogLikelihood B -> ll
@@ -3849,12 +3849,12 @@ namespace Gambit
           return obs_covariance;
       };
 
-      result = nDimLikelihood.GetLogLikelihood(
+      result = -nDimLikelihood.GetLogLikelihood(
               get_obs_theory(observables)
               /* nDimLikelihood does not support theory errors */
               );
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2mumuLogLikelihood_LHCb result: " << result << std::endl;
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angluar
@@ -3937,7 +3937,7 @@ namespace Gambit
       result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables2_4), get_obs_covariance(observables2_4));
       result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables4_8), get_obs_covariance(observables4_8));
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Atlas result: " << result << std::endl;
     }
 
 
@@ -4045,7 +4045,7 @@ namespace Gambit
       result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables14p18_16), get_obs_covariance(observables14p18_16));
       result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables16_19), get_obs_covariance(observables16_19));
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_CMS result: " << result << std::endl;
     }
 
 
@@ -4127,7 +4127,7 @@ namespace Gambit
       result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(observables10p9_12p9), get_obs_covariance(observables10p9_12p9));
       result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(observables14p18_19), get_obs_covariance(observables14p18_19));
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Belle result: " << result << std::endl;
     }
 
     /// HEPLike LogLikelihood B -> K* mu mu Angular
@@ -4335,7 +4335,7 @@ namespace Gambit
       result += BifurGaussian_4.GetLogLikelihood(SI_theory[observables[4]], SI_theory_covariance[observables[4]][observables[4]]);
       result += BifurGaussian_5.GetLogLikelihood(SI_theory[observables[5]], SI_theory_covariance[observables[5]][observables[5]]);
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
 
     void HEPLike_Bs2PhimumuBr_LogLikelihood(double &result)
@@ -4377,7 +4377,7 @@ namespace Gambit
       result += bifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
       result += bifurGaussian_1.GetLogLikelihood(SI_theory[observables[1]], SI_theory_covariance[observables[1]][observables[1]]);
 
-      if (flav_debug) std::cout << "%s result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_Bs2PhimumuBr_LogLikelihood result: " << result << std::endl;
     }
 
     void HEPLike_RK_LogLikelihood(double &result)
@@ -4411,7 +4411,7 @@ namespace Gambit
 
       std::cout<<1.+SI_theory[observables[0]]<<  "  "<<sqrt(SI_theory_covariance[observables[0]][observables[0]]) << std::endl;
       std::cout<<rk.GetLogLikelihood( 1.+SI_theory[observables[0]], -1.)<<std::endl;
-      result = rk.GetLogLikelihood(
+      result = -rk.GetLogLikelihood(
                                    1.+SI_theory[observables[0]], -1
               //          sqrt(SI_theory_covariance[observables[0]][observables[0]])
                                    );
@@ -4453,12 +4453,12 @@ namespace Gambit
       
 
        
-      result = rkstar1.GetLogLikelihood(
+      result = -rkstar1.GetLogLikelihood(
                                         1.+SI_theory[observables[0]], -1
               //              sqrt(SI_theory_covariance[observables[0]][observables[0]])
                                         );
       
-      result+= rkstar2.GetLogLikelihood(
+      result+= -rkstar2.GetLogLikelihood(
                                         1.+SI_theory[observables[1]], -1
               //sqrt(SI_theory_covariance[observables[1]][observables[1]])/( SI_theory[observables[1]]*SI_theory[observables[1]])
                                         );
