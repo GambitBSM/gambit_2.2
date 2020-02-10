@@ -2407,7 +2407,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '*PrintDebugInformation = false;\n'\
       '\n'\
       '// Silence screen output, added by GAMBIT to SPheno\n'\
-      '*SilenceOutput = inputs.options->getValueOrDef<bool>(false, "SilenceOutput");\n'\
+      '*SilenceOutput = inputs.options->getValueOrDef<bool>(true, "SilenceOutput");\n'\
       '\n'\
       '/**********************/\n'\
       '/* Block DECAYOPTIONS */\n'\
@@ -2968,6 +2968,17 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       
     return indent(towrite)
 
+def make_fortran_symbols(module, name):
+
+   """
+   Makes a list of symbols, gcc and intel, for each variable or function
+   """
+
+   gcc_symbol = "__"+module.lower() + "_MOD_" + name.lower()
+   intel_symbol = module.lower() + "_mp_" + name.lower() + "_"
+
+   return "(\"" + gcc_symbol + "\", \"" + intel_symbol + "\")"
+
 def write_spheno_frontend_header(model_name, function_signatures, 
                                  type_dictionary, locations, 
                                  variables, var_dict, hb_variables, hb_dict, 
@@ -2999,10 +3010,10 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_ALLOW_MODELS({5})\n"
             "\n"
             "// Functions\n"
-            "BE_FUNCTION(SPheno_Main, void, (), \"__spheno{4}_MOD_spheno_main\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(Set_All_Parameters_0, void, (), \"__model_data_{4}_MOD_set_all_parameters_0\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(SetRenormalizationScale, Freal8, (Freal8&), \"__loopfunctions_MOD_setrenormalizationscale\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(InitializeLoopFunctions, void, (), \"__loopfunctions_MOD_initializeloopfunctions\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(SPheno_Main, void, (), " + make_fortran_symbols("spheno{4}","spheno_main") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(Set_All_Parameters_0, void, (), " + make_fortran_symbols("model_data_{4}","set_all_parameters_0") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(SetRenormalizationScale, Freal8, (Freal8&), " + make_fortran_symbols("loopfunctions","setrenormalizationscale") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(InitializeLoopFunctions, void, (), " + make_fortran_symbols("loopfunctions","initializeloopfunctions") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(CalculateRunningMasses, void, (Farray_Freal8_1_3&, //mf_l_in\n"
             "                                           Farray_Freal8_1_3&, // mf_d_in\n"
             "                                           Farray_Freal8_1_3&, // mf_u_in\n"
@@ -3014,12 +3025,12 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "                                           Farray_Freal8_1_3&, // mf_d_out\n"
             "                                           Farray_Freal8_1_3&, // mf_u_out\n"
             "                                           Finteger&), //kont))\n"
-            "     \"__standardmodel_MOD_calculaterunningmasses\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(GetRenormalizationScale, Freal8, (), \"__loopfunctions_MOD_getrenormalizationscale\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(SetRGEScale, void, (Freal8&), \"__model_data_{4}_MOD_setrgescale\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(SetGUTScale, void, (Freal8&), \"__model_data_{4}_MOD_setgutscale\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(SetStrictUnification, Flogical, (Flogical&), \"__model_data_{4}_MOD_setstrictunification\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_FUNCTION(SetYukawaScheme, Finteger, (Finteger&), \"__model_data_{4}_MOD_setyukawascheme\", \"SARAHSPheno_{0}_internal\")\n"
+            "     " + make_fortran_symbols("standardmodel","calculaterunningmasses") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(GetRenormalizationScale, Freal8, (), " + make_fortran_symbols("loopfunctions","getrenormalizationscale") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(SetRGEScale, void, (Freal8&), " + make_fortran_symbols("model_data_{4}","setrgescale") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(SetGUTScale, void, (Freal8&), " + make_fortran_symbols("model_data_{4}","setgutscale") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(SetStrictUnification, Flogical, (Flogical&), " + make_fortran_symbols("model_data_{4}","setstrictunification") +", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_FUNCTION(SetYukawaScheme, Finteger, (Finteger&), " + make_fortran_symbols("model_data_{4}","setyukawascheme") + ", \"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name, SPHENO_VERSION, SARAH_VERSION, SPHENO_VERSION.replace('.','_'),
              clean_model_name.lower(), fullmodelname)
 
@@ -3039,8 +3050,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             # as this is going to be the name of the symbol in SPheno
             if function in v:
                 loc = k.lower().split('/')[-1]
-                symbol = "__{0}_MOD_{2}".format(loc, 
-                         clean_model_name.lower(), function.lower())
+                symbol = make_fortran_symbols(loc,function.lower())
         # Now list all arguments, with a nice comment next to it, to make it 
         # lovely and readable.
         arguments = []
@@ -3080,7 +3090,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
         if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") : continue
 
         string = (
-               "BE_VARIABLE({0}, {1}, \"__model_data_{2}_MOD_{3}\",\"SARAHSPheno_{4}_internal\")\n"
+               "BE_VARIABLE({0}, {1}, " + make_fortran_symbols("model_data_{2}","{3}") + ",\"SARAHSPheno_{4}_internal\")\n"
         ).format(name, var_dict[name], clean_model_name.lower(), name.lower(), clean_model_name)
 
         # Organise branching ratio stuff separately
@@ -3091,151 +3101,151 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
     # Add MODSEL variable if missing
     if "HighScaleModel" not in [name for name, param in variables.iteritems()] :
-        towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, "__settings_MOD_highscalemodel", "SARAHSPheno_' + clean_model_name + '_internal")\n'
+        towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, "' + make_fortran_symbols("settings","highscalemodel") + ', "SARAHSPheno_' + clean_model_name + '_internal")\n'
 
     # SMINPUTS
     towrite += (
             "\n"
             "// SMINPUT Variables\n"
-            "BE_VARIABLE(mZ, Freal8, \"__standardmodel_MOD_mz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mZ2, Freal8,  \"__standardmodel_MOD_mz2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gamZ, Freal8, \"__standardmodel_MOD_gamz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gamZ2, Freal8, \"__standardmodel_MOD_gamz2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gmZ, Freal8, \"__standardmodel_MOD_gmz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gmZ2, Freal8, \"__standardmodel_MOD_gmz2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(BrZqq, Farray_Freal8_1_5, \"__standardmodel_MOD_brzqq\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(BrZll, Farray_Freal8_1_3, \"__standardmodel_MOD_brzll\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(BrZinv, Freal8, \"__standardmodel_MOD_brzinv\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mW, Freal8, \"__standardmodel_MOD_mw\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mW_SM, Freal8, \"__model_data_{1}_MOD_mw_sm\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mW2, Freal8, \"__standardmodel_MOD_mw2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gamW, Freal8, \"__standardmodel_MOD_gamw\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gamW2, Freal8, \"__standardmodel_MOD_gamw2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gmW, Freal8, \"__standardmodel_MOD_gmw\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(gmW2, Freal8, \"__standardmodel_MOD_gmw2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(BrWqq, Farray_Freal8_1_2, \"__standardmodel_MOD_brwqq\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(BrWln, Farray_Freal8_1_3, \"__standardmodel_MOD_brwln\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_l, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_l\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_l_mZ, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_l_mz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_nu, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_nu\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_u, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_u\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_u_mZ, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_u_mz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_d, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_d\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_d_mZ, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_d_mz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_l2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_l2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_u2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_u2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mf_d2, Farray_Freal8_1_3, \"__standardmodel_MOD_mf_d2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(sinW2, Freal8, \"__spheno{1}_MOD_sinw2\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MNuR, Freal8, \"__model_data_MOD_mnur\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Q_light_quarks, Freal8, \"__standardmodel_MOD_q_light_quarks\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Delta_Alpha_Lepton, Freal8, \"__standardmodel_MOD_delta_alpha_lepton\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Delta_Alpha_Hadron, Freal8, \"__standardmodel_MOD_delta_alpha_hadron\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Alpha, Freal8, \"__standardmodel_MOD_alpha\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Alpha_mZ, Freal8, \"__standardmodel_MOD_alpha_mz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Alpha_mZ_MS, Freal8, \"__standardmodel_MOD_alpha_mz_ms\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MZ_input, Flogical, \"__model_data_{1}_MOD_mz_input\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(AlphaS_mZ, Freal8, \"__standardmodel_MOD_alphas_mz\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(G_F, Freal8, \"__standardmodel_MOD_g_f\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(KFactorLee, Freal8, \"__standardmodel_MOD_kfactorlee\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CKM, Farray_Fcomplex16_1_3_1_3, \"__standardmodel_MOD_ckm\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(lam_wolf, Freal8, \"__standardmodel_MOD_lam_wolf\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(A_wolf, Freal8, \"__standardmodel_MOD_a_wolf\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(rho_wolf, Freal8, \"__standardmodel_MOD_rho_wolf\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(eta_wolf, Freal8, \"__standardmodel_MOD_eta_wolf\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mZ, Freal8, " + make_fortran_symbols("standardmodel","mz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mZ2, Freal8,  " + make_fortran_symbols("standardmodel","mz2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gamZ, Freal8, " + make_fortran_symbols("standardmodel","gamz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gamZ2, Freal8, " + make_fortran_symbols("standardmodel","gamz2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gmZ, Freal8, " + make_fortran_symbols("standardmodel","gmz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gmZ2, Freal8, " + make_fortran_symbols("standardmodel","gmz2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(BrZqq, Farray_Freal8_1_5, " + make_fortran_symbols("standardmodel","brzqq") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(BrZll, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","brzll") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(BrZinv, Freal8, " + make_fortran_symbols("standardmodel","brzinv") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mW, Freal8, " + make_fortran_symbols("standardmodel","mw") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mW_SM, Freal8, " + make_fortran_symbols("model_data_{1}","mw_sm") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mW2, Freal8, " + make_fortran_symbols("standardmodel","mw2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gamW, Freal8, " + make_fortran_symbols("standardmodel","gamw") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gamW2, Freal8, " + make_fortran_symbols("standardmodel","gamw2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gmW, Freal8, " + make_fortran_symbols("standardmodel","gmw") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(gmW2, Freal8, " + make_fortran_symbols("standardmodel","gmw2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(BrWqq, Farray_Freal8_1_2, " + make_fortran_symbols("standardmodel","brwqq") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(BrWln, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","brwln") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_l, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_l") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_l_mZ, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_l_mz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_nu, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_nu") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_u, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_u") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_u_mZ, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_u_mz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_d, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_d") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_d_mZ, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_d_mz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_l2, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_l2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_u2, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_u2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mf_d2, Farray_Freal8_1_3, " + make_fortran_symbols("standardmodel","mf_d2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(sinW2, Freal8, " + make_fortran_symbols("spheno{1}","sinw2") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MNuR, Freal8, " + make_fortran_symbols("model_data","mnur") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Q_light_quarks, Freal8, " + make_fortran_symbols("standardmodel","q_light_quarks") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Delta_Alpha_Lepton, Freal8, " + make_fortran_symbols("standardmodel","delta_alpha_lepton") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Delta_Alpha_Hadron, Freal8, " + make_fortran_symbols("standardmodel","delta_alpha_hadron") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Alpha, Freal8, " + make_fortran_symbols("standardmodel","alpha") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Alpha_mZ, Freal8, " + make_fortran_symbols("standardmodel","alpha_mz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Alpha_mZ_MS, Freal8, " + make_fortran_symbols("standardmodel","alpha_mz_ms") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MZ_input, Flogical, " + make_fortran_symbols("model_data_{1}","mz_input") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(AlphaS_mZ, Freal8, " + make_fortran_symbols("standardmodel","alphas_mz") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(G_F, Freal8, " + make_fortran_symbols("standardmodel","g_f") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(KFactorLee, Freal8, " + make_fortran_symbols("standardmodel","kfactorlee") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CKM, Farray_Fcomplex16_1_3_1_3, " + make_fortran_symbols("standardmodel","ckm") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(lam_wolf, Freal8, " + make_fortran_symbols("standardmodel","lam_wolf") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(A_wolf, Freal8, " + make_fortran_symbols("standardmodel","a_wolf") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(rho_wolf, Freal8, " + make_fortran_symbols("standardmodel","rho_wolf") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(eta_wolf, Freal8, " + make_fortran_symbols("standardmodel","eta_wolf") + ", \"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name, clean_model_name.lower())
 
     # CONTROL + SETTINGS + "OTHER" VARIABLES
     towrite += (
             "\n"
             "// Control Variables\n"
-            "BE_VARIABLE(CTBD, Flogical, \"__spheno{1}_MOD_calctbd\",\"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(epsI, Freal8, \"__spheno{1}_MOD_epsi\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(deltaM, Freal8, \"__spheno{1}_MOD_deltam\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(kont, Finteger, \"__spheno{1}_MOD_kont\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CTBD, Flogical, " + make_fortran_symbols("spheno{1}","calctbd") + ",\"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(epsI, Freal8, " + make_fortran_symbols("spheno{1}","epsi") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(deltaM, Freal8, " + make_fortran_symbols("spheno{1}","deltam") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(kont, Finteger, " + make_fortran_symbols("spheno{1}","kont") + ", \"SARAHSPheno_{0}_internal\")\n"
             "\n"
             "// Settings\n"
-            "BE_VARIABLE(Calculate_mh_within_SM, Flogical, \"__settings_MOD_calculate_mh_within_sm\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CalculateLowEnergy, Flogical, \"__settings_MOD_calculatelowenergy\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CalculateMSSM2Loop, Flogical, \"__settings_MOD_calculatemssm2loop\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CalculateOneLoopMasses, Flogical, \"__settings_MOD_calculateoneloopmasses\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CalculateTwoLoopHiggsMasses, Flogical, \"__settings_MOD_calculatetwoloophiggsmasses\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(DecoupleAtRenScale, Flogical, \"__settings_MOD_decoupleatrenscale\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(delta_mass, Freal8, \"__control_MOD_delta_mass\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ErrCan, Finteger, \"__control_MOD_errcan\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ErrorLevel, Finteger, \"__control_MOD_errorlevel\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(External_Higgs, Flogical, \"__control_MOD_external_higgs\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(External_Spectrum, Flogical, \"__control_MOD_external_spectrum\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(FermionMassResummation, Flogical, \"__control_MOD_fermionmassresummation\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Force_mh_within_SM, Flogical, \"__settings_MOD_force_mh_within_sm\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ForceRealMatrices, Flogical, \"__settings_MOD_forcerealmatrices\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(FoundIterativeSolution, Flogical, \"__settings_MOD_founditerativesolution\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(GaugelessLimit, Finteger, \"__settings_MOD_gaugelesslimit\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(GenerationMixing, Flogical, \"__control_MOD_generationmixing\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(HigherOrderDiboson, Flogical, \"__settings_MOD_higherorderdiboson\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(hstep_pn, Freal8, \"__settings_MOD_hstep_pn\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(hstep_sa, Freal8, \"__settings_MOD_hstep_sa\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Iname, Finteger, \"__control_MOD_iname\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(include1l2lshift, Flogical, \"__settings_MOD_include1l2lshift\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(IncludeBSMdeltaVB, Flogical, \"__settings_MOD_includebsmdeltavb\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(IncludeDeltaVB, Flogical, \"__settings_MOD_includedeltavb\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(InOut_Error, Farray_Fstring60_1_15, \"__control_MOD_inout_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(L_CS, Flogical, \"__control_MOD_l_cs\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(LoopMass_Error, Farray_Fstring60_1_25, \"__control_MOD_loopmass_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MatchingOrder, Finteger, \"__settings_MOD_matchingorder\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MatchZWpoleMasses, Flogical, \"__settings_MOD_matchzwpolemasses\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Math_Error, Farray_Fstring60_1_31, \"__control_MOD_math_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MathQP_Error, Farray_Fstring60_1_10, \"__control_MOD_mathqp_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MaxMassLoop, Freal8, \"__settings_MOD_maxmassloop\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MaxMassNumericalZero, Freal8, \"__settings_MOD_maxmassnumericalzero\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(mGUT, Freal8, \"__spheno{1}_MOD_mgut\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MinimalNumberIterations, Finteger, \"__settings_MOD_minimalnumberiterations\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(n_run, Finteger, \"__control_MOD_n_run\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(NewGBC, Flogical, \"__settings_MOD_newgbc\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Non_Zero_Exit, Flogical, \"__control_MOD_non_zero_exit\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(OutputForMG, Flogical, \"__settings_MOD_outputformg\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(OutputForMO, Flogical, \"__settings_MOD_outputformo\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(PoleMassesInLoops, Flogical, \"__settings_MOD_polemassesinloops\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(PrintDebugInformation, Flogical, \"__settings_MOD_printdebuginformation\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(PurelyNumericalEffPot, Flogical, \"__settings_MOD_purelynumericaleffpot\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(RunningSMparametersLowEnergy, Flogical, \"__settings_MOD_runningsmparameterslowenergy\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(RunningSUSYparametersLowEnergy, Flogical, \"__settings_MOD_runningsusyparameterslowenergy\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(RXiNew, Freal8, \"__settings_MOD_rxinew\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SilenceOutput, Flogical, \"__control_MOD_silenceoutput\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SM_Error, Farray_Fstring60_1_2, \"__control_MOD_sm_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SPA_convention, Finteger, \"__settings_MOD_spa_convention\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Sugra_Error, Farray_Fstring60_1_22, \"__control_MOD_sugra_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SusyM_Error, Farray_Fstring60_1_33, \"__control_MOD_susym_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SwitchToSCKM, Flogical, \"__settings_MOD_switchtosckm\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, \"__control_MOD_twoloophiggs_error\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopMethod, Finteger, \"__settings_MOD_twoloopmethod\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopRegulatorMass, Freal8, \"__settings_MOD_twoloopregulatormass\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopRGE, Flogical, \"__settings_MOD_twolooprge\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(TwoLoopSafeMode, Flogical, \"__settings_MOD_twoloopsafemode\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WidthToBeInvisible, Freal8, \"__settings_MOD_widthtobeinvisible\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Write_HiggsBounds, Flogical, \"__inputoutput_{1}_MOD_write_higgsbounds\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Write_WCXF, Flogical, \"__settings_MOD_write_wcxf\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteGUTvalues, Flogical, \"__settings_MOD_writegutvalues\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteOut, Flogical, \"__control_MOD_writeout\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteOutputForNonConvergence, Flogical, \"__settings_MOD_writeoutputfornonconvergence\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteParametersAtQ, Flogical, \"__settings_MOD_writeparametersatq\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteSLHA1, Flogical, \"__settings_MOD_writeslha1\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(WriteTreeLevelTadpoleParameters, Flogical, \"__settings_MOD_writetreeleveltadpoleparameters\", \"SARAHSPheno_{0}_internal\")\n"            "\n"   
+            "BE_VARIABLE(Calculate_mh_within_SM, Flogical, " + make_fortran_symbols("settings","calculate_mh_within_sm") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateLowEnergy, Flogical, " + make_fortran_symbols("settings","calculatelowenergy") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateMSSM2Loop, Flogical, " + make_fortran_symbols("settings","calculatemssm2loop") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateOneLoopMasses, Flogical, " + make_fortran_symbols("settings","calculateoneloopmasses") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CalculateTwoLoopHiggsMasses, Flogical, " + make_fortran_symbols("settings","calculatetwoloophiggsmasses") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(DecoupleAtRenScale, Flogical, " + make_fortran_symbols("settings","decoupleatrenscale") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(delta_mass, Freal8, " + make_fortran_symbols("control","delta_mass") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ErrCan, Finteger, " + make_fortran_symbols("control","errcan") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ErrorLevel, Finteger, " + make_fortran_symbols("control","errorlevel") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(External_Higgs, Flogical, " + make_fortran_symbols("control","external_higgs") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(External_Spectrum, Flogical, " + make_fortran_symbols("control","external_spectrum") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(FermionMassResummation, Flogical, " + make_fortran_symbols("control","fermionmassresummation") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Force_mh_within_SM, Flogical, " + make_fortran_symbols("settings","force_mh_within_sm") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ForceRealMatrices, Flogical, " + make_fortran_symbols("settings","forcerealmatrices") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(FoundIterativeSolution, Flogical, " + make_fortran_symbols("settings","founditerativesolution") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(GaugelessLimit, Finteger, " + make_fortran_symbols("settings","gaugelesslimit") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(GenerationMixing, Flogical, " + make_fortran_symbols("control","generationmixing") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(HigherOrderDiboson, Flogical, " + make_fortran_symbols("settings","higherorderdiboson") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(hstep_pn, Freal8, " + make_fortran_symbols("settings","hstep_pn") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(hstep_sa, Freal8, " + make_fortran_symbols("settings","hstep_sa") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Iname, Finteger, " + make_fortran_symbols("control","iname") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(include1l2lshift, Flogical, " + make_fortran_symbols("settings","include1l2lshift") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(IncludeBSMdeltaVB, Flogical, " + make_fortran_symbols("settings","includebsmdeltavb") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(IncludeDeltaVB, Flogical, " + make_fortran_symbols("settings","includedeltavb") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(InOut_Error, Farray_Fstring60_1_15, " + make_fortran_symbols("control","inout_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(L_CS, Flogical, " + make_fortran_symbols("control","l_cs") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(LoopMass_Error, Farray_Fstring60_1_25, " + make_fortran_symbols("control","loopmass_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MatchingOrder, Finteger, " + make_fortran_symbols("settings","matchingorder") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MatchZWpoleMasses, Flogical, " + make_fortran_symbols("settings","matchzwpolemasses") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Math_Error, Farray_Fstring60_1_31, " + make_fortran_symbols("control","math_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MathQP_Error, Farray_Fstring60_1_10, " + make_fortran_symbols("control","mathqp_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MaxMassLoop, Freal8, " + make_fortran_symbols("settings","maxmassloop") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MaxMassNumericalZero, Freal8, " + make_fortran_symbols("settings","maxmassnumericalzero") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(mGUT, Freal8, " + make_fortran_symbols("spheno{1}","mgut") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MinimalNumberIterations, Finteger, " + make_fortran_symbols("settings","minimalnumberiterations") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(n_run, Finteger, " + make_fortran_symbols("control","n_run") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(NewGBC, Flogical, " + make_fortran_symbols("settings","newgbc") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Non_Zero_Exit, Flogical, " + make_fortran_symbols("control","non_zero_exit") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OutputForMG, Flogical, " + make_fortran_symbols("settings","outputformg") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OutputForMO, Flogical, " + make_fortran_symbols("settings","outputformo") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PoleMassesInLoops, Flogical, " + make_fortran_symbols("settings","polemassesinloops") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PrintDebugInformation, Flogical, " + make_fortran_symbols("settings","printdebuginformation") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(PurelyNumericalEffPot, Flogical, " + make_fortran_symbols("settings","purelynumericaleffpot") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningSMparametersLowEnergy, Flogical, " + make_fortran_symbols("settings","runningsmparameterslowenergy") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningSUSYparametersLowEnergy, Flogical, " + make_fortran_symbols("settings","runningsusyparameterslowenergy") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RXiNew, Freal8, " + make_fortran_symbols("settings","rxinew") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SilenceOutput, Flogical, " + make_fortran_symbols("control","silenceoutput") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SM_Error, Farray_Fstring60_1_2, " + make_fortran_symbols("control","sm_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SPA_convention, Finteger, " + make_fortran_symbols("settings","spa_convention") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Sugra_Error, Farray_Fstring60_1_22, " + make_fortran_symbols("control","sugra_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SusyM_Error, Farray_Fstring60_1_33, " + make_fortran_symbols("control","susym_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SwitchToSCKM, Flogical, " + make_fortran_symbols("settings","switchtosckm") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopHiggs_Error, Farray_Fstring60_1_9, " + make_fortran_symbols("control","twoloophiggs_error") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopMethod, Finteger, " + make_fortran_symbols("settings","twoloopmethod") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopRegulatorMass, Freal8, " + make_fortran_symbols("settings","twoloopregulatormass") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopRGE, Flogical, " + make_fortran_symbols("settings","twolooprge") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(TwoLoopSafeMode, Flogical, " + make_fortran_symbols("settings","twoloopsafemode") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WidthToBeInvisible, Freal8, " + make_fortran_symbols("settings","widthtobeinvisible") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Write_HiggsBounds, Flogical, " + make_fortran_symbols("inputoutput_{1}","write_higgsbounds") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Write_WCXF, Flogical, " + make_fortran_symbols("settings","write_wcxf") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteGUTvalues, Flogical, " + make_fortran_symbols("settings","writegutvalues") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteOut, Flogical, " + make_fortran_symbols("control","writeout") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteOutputForNonConvergence, Flogical, " + make_fortran_symbols("settings","writeoutputfornonconvergence") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteParametersAtQ, Flogical, " + make_fortran_symbols("settings","writeparametersatq") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteSLHA1, Flogical, " + make_fortran_symbols("settings","writeslha1") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(WriteTreeLevelTadpoleParameters, Flogical, " + make_fortran_symbols("settings","writetreeleveltadpoleparameters") + ", \"SARAHSPheno_{0}_internal\")\n"            "\n"   
             "\n"
             "// Other variables\n"
-            "BE_VARIABLE(Qin, Freal8, \"__spheno{1}_MOD_qin\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ratioWoM, Freal8, \"__spheno{1}_MOD_ratiowom\",\"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Qin, Freal8, " + make_fortran_symbols("spheno{1}","qin") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ratioWoM, Freal8, " + make_fortran_symbols("spheno{1}","ratiowom") + ",\"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name, clean_model_name.lower())
 
     # BRANCHING RATIOS
     towrite += (
             "\n"
             "// Branching Ratio variables\n"
-            "BE_VARIABLE(L_BR, Flogical, \"__control_MOD_l_br\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Enable3BDecaysF, Flogical, \"__settings_MOD_enable3bdecaysf\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Enable3BDecaysS, Flogical, \"__settings_MOD_enable3bdecayss\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(RunningCouplingsDecays, Flogical, \"__settings_MOD_runningcouplingsdecays\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(MinWidth, Freal8, \"__settings_MOD_minwidth\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(OneLoopDecays, Flogical, \"__settings_MOD_oneloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(L_BR, Flogical, " + make_fortran_symbols("control","l_br") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Enable3BDecaysF, Flogical, " + make_fortran_symbols("settings","enable3bdecaysf") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Enable3BDecaysS, Flogical, " + make_fortran_symbols("settings","enable3bdecayss") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(RunningCouplingsDecays, Flogical, " + make_fortran_symbols("settings","runningcouplingsdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(MinWidth, Freal8, " + make_fortran_symbols("settings","minwidth") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OneLoopDecays, Flogical, " + make_fortran_symbols("settings","oneloopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name)
 
     towrite += br_entry
@@ -3244,23 +3254,23 @@ def write_spheno_frontend_header(model_name, function_signatures,
     towrite += (
             "\n"
             "// Decay options\n"
-            "BE_VARIABLE(divonly_save, Finteger, \"__settings_MOD_divonly_save\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(divergence_save, Freal8, \"__settings_MOD_divergence_save\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(SimplisticLoopDecays, Flogical, \"__settings_MOD_simplisticloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ShiftIRdiv, Flogical, \"__settings_MOD_shiftirdiv\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(DebugLoopDecays, Flogical, \"__settings_MOD_debugloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(OnlyTreeLevelContributions, Flogical, \"__settings_MOD_onlytreelevelcontributions\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ExternalZfactors, Flogical, \"__settings_MOD_externalzfactors\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(UseZeroRotationMatrices, Flogical, \"__settings_MOD_usezerorotationmatrices\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(UseP2Matrices, Flogical, \"__settings_MOD_usep2matrices\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(OSkinematics, Flogical, \"__settings_MOD_oskinematics\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(ewOSinDecays, Flogical, \"__settings_MOD_ewosindecays\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(yukOSinDecays, Flogical, \"__settings_MOD_yukosindecays\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(CTinLoopDecays, Flogical, \"__settings_MOD_ctinloopdecays\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(LoopInducedDecaysOS, Flogical, \"__settings_MOD_loopinduceddecaysos\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Mass_Regulator_PhotonGluon, Freal8, \"__settings_MOD_mass_regulator_photongluon\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Extra_Scale_LoopDecays, Flogical, \"__settings_MOD_extra_scale_loopdecays\", \"SARAHSPheno_{0}_internal\")\n"
-            "BE_VARIABLE(Scale_LoopDecays, Freal8, \"__settings_MOD_scale_loopdecays\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(divonly_save, Finteger, " + make_fortran_symbols("settings","divonly_save") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(divergence_save, Freal8, " + make_fortran_symbols("settings","divergence_save") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(SimplisticLoopDecays, Flogical, " + make_fortran_symbols("settings","simplisticloopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ShiftIRdiv, Flogical, " + make_fortran_symbols("settings","shiftirdiv") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(DebugLoopDecays, Flogical, " + make_fortran_symbols("settings","debugloopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OnlyTreeLevelContributions, Flogical, " + make_fortran_symbols("settings","onlytreelevelcontributions") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ExternalZfactors, Flogical, " + make_fortran_symbols("settings","externalzfactors") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(UseZeroRotationMatrices, Flogical, " + make_fortran_symbols("settings","usezerorotationmatrices") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(UseP2Matrices, Flogical, " + make_fortran_symbols("settings","usep2matrices") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(OSkinematics, Flogical, " + make_fortran_symbols("settings","oskinematics") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ewOSinDecays, Flogical, " + make_fortran_symbols("settings","ewosindecays") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(yukOSinDecays, Flogical, " + make_fortran_symbols("settings","yukosindecays") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(CTinLoopDecays, Flogical, " + make_fortran_symbols("settings","ctinloopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(LoopInducedDecaysOS, Flogical, " + make_fortran_symbols("settings","loopinduceddecaysos") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Mass_Regulator_PhotonGluon, Freal8, " + make_fortran_symbols("settings","mass_regulator_photongluon") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Extra_Scale_LoopDecays, Flogical, " + make_fortran_symbols("settings","extra_scale_loopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(Scale_LoopDecays, Freal8, " + make_fortran_symbols("settings","scale_loopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
     ).format(clean_model_name)
 
     for name, param in sorted(variables.iteritems()):
@@ -3269,12 +3279,12 @@ def write_spheno_frontend_header(model_name, function_signatures,
         if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") :
 
             towrite += (
-                "BE_VARIABLE({0}, Flogical, \"__model_data_{1}_MOD_{2}\", \"SARAHSPheno_{3}_internal\")\n"
+                "BE_VARIABLE({0}, Flogical, " + make_fortran_symbols("model_data_{1}","{2}") + ", \"SARAHSPheno_{3}_internal\")\n"
             ).format(name, clean_model_name.lower(), name.lower(), clean_model_name)
  
     if flags["SupersymmetricModel"] : 
         towrite += (
-                "BE_VARIABLE(CalcSUSY3BodyDecays, Flogical, \"__model_data_{0}_MOD_calcsusy3bodydecays\", \"SARAHSPheno_{1}_internal\")\n"
+                "BE_VARIABLE(CalcSUSY3BodyDecays, Flogical, " + make_fortran_symbols("model_data_{0}","calcsusy3bodydecays") + ", \"SARAHSPheno_{1}_internal\")\n"
         ).format(clean_model_name.lower(), clean_model_name)
 
     # HIGGSBOUNDS OUTPUT
@@ -3284,7 +3294,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     for name, param in sorted(hb_variables.iteritems()):
 
         towrite += (
-               "BE_VARIABLE({0}, {1}, \"__model_data_{2}_MOD_{3}\",\"SARAHSPheno_{4}_internal\")\n"
+               "BE_VARIABLE({0}, {1}, " + make_fortran_symbols("model_data_{2}","{3}") + ",\"SARAHSPheno_{4}_internal\")\n"
         ).format(name, hb_dict[name], clean_model_name.lower(), name.lower(), clean_model_name)
 
     # Wrap it up.
@@ -3310,7 +3320,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "// Initialisation functions (dependencies)\n"
             "\n"
             "// Function pointer variable for error handling\n"
-            "BE_VARIABLE(ErrorHandler_cptr, type_fptr_SPhenoErrorHandler, \"__control_MOD_errorhandler_cptr\", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ErrorHandler_cptr, type_fptr_SPhenoErrorHandler, " + make_fortran_symbols("control","errorhandler_cptr") + ", \"SARAHSPheno_{0}_internal\")\n"
             "\n"
             "// End\n"
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
