@@ -499,11 +499,11 @@ namespace Gambit
       result.width_W = Dep::W_plus_decay_rates->width_in_GeV;
 
       for(int ie=1;ie<=30;ie++) result.deltaC[ie]=result.deltaCp[ie]=0.;
-      for(int ie=1;ie<=6;ie++) result.deltaCQ[ie]=result.deltaCQp[ie]=0.; 
+      for(int ie=1;ie<=6;ie++) result.deltaCQ[ie]=result.deltaCQp[ie]=0.;
 
-      
 
-      
+
+
       // If requested, override the SuperIso b pole mass with the SpecBit value and recompute the 1S b mass.
       if (runOptions->getValueOrDef<bool>(false, "take_b_pole_mass_from_spectrum"))
       {
@@ -564,7 +564,7 @@ namespace Gambit
           result.Im_DeltaCQ1_mu = *Param["Im_DeltaCQ1_mu"];
           result.Re_DeltaCQ2_mu = *Param["Re_DeltaCQ2_mu"];
           result.Im_DeltaCQ2_mu = *Param["Im_DeltaCQ2_mu"];
-          
+
           result.Re_DeltaC7_e  = *Param["Re_DeltaC7_e"];
           result.Im_DeltaC7_e  = *Param["Im_DeltaC7_e"];
           result.Re_DeltaC9_e  = *Param["Re_DeltaC9_e"];
@@ -575,7 +575,7 @@ namespace Gambit
           result.Im_DeltaCQ1_e = *Param["Im_DeltaCQ1_e"];
           result.Re_DeltaCQ2_e = *Param["Re_DeltaCQ2_e"];
           result.Im_DeltaCQ2_e = *Param["Im_DeltaCQ2_e"];
- 
+
           result.Re_DeltaC7_tau  = *Param["Re_DeltaC7_tau"];
           result.Im_DeltaC7_tau  = *Param["Im_DeltaC7_tau"];
           result.Re_DeltaC9_tau  = *Param["Re_DeltaC9_tau"];
@@ -587,33 +587,33 @@ namespace Gambit
           result.Re_DeltaCQ2_tau = *Param["Re_DeltaCQ2_tau"];
           result.Im_DeltaCQ2_tau = *Param["Im_DeltaCQ2_tau"];
 
-          /* Lines below are valid in the flavour NON-universal case                                   
-             deltaC[1..10] = Cmu[1..10], deltaC[11..20] = Ce[1..10], deltaC[21..30] = Ctau[1..10]       
+          /* Lines below are valid in the flavour NON-universal case
+             deltaC[1..10] = Cmu[1..10], deltaC[11..20] = Ce[1..10], deltaC[21..30] = Ctau[1..10]
              deltaCQ[1,2] = CQmu[1,2], deltaCQ[1,2] = CQe[1,2], deltaCQ[1,2] = CQtau[1,2] */
 
-          
-          
+
+
           result.deltaC[7]=std::complex<double>(result.Re_DeltaC7_mu, result.Im_DeltaC7_mu);
-          result.deltaC[9]=std::complex<double>(result.Re_DeltaC9_mu, result.Im_DeltaC9_mu); 
+          result.deltaC[9]=std::complex<double>(result.Re_DeltaC9_mu, result.Im_DeltaC9_mu);
           result.deltaC[10]=std::complex<double>(result.Re_DeltaC10_mu, result.Im_DeltaC10_mu);
           result.deltaCQ[1]=std::complex<double>(result.Re_DeltaCQ1_mu, result.Im_DeltaCQ1_mu);
           result.deltaCQ[2]=std::complex<double>(result.Re_DeltaCQ2_mu, result.Im_DeltaCQ2_mu);
-                    
+
           result.deltaC[17]=std::complex<double>(result.Re_DeltaC7_e, result.Im_DeltaC7_e);
-          result.deltaC[19]=std::complex<double>(result.Re_DeltaC9_e, result.Im_DeltaC9_e);  
-          result.deltaC[20]=std::complex<double>(result.Re_DeltaC10_e, result.Im_DeltaC10_e); 
+          result.deltaC[19]=std::complex<double>(result.Re_DeltaC9_e, result.Im_DeltaC9_e);
+          result.deltaC[20]=std::complex<double>(result.Re_DeltaC10_e, result.Im_DeltaC10_e);
           result.deltaCQ[3]=std::complex<double>(result.Re_DeltaCQ1_e, result.Im_DeltaCQ1_e);
           result.deltaCQ[4]=std::complex<double>(result.Re_DeltaCQ2_e, result.Im_DeltaCQ2_e);
-          
-          
+
+
           result.deltaC[27]=std::complex<double>(result.Re_DeltaC7_tau, result.Im_DeltaC7_tau);
           result.deltaC[29]=std::complex<double>(result.Re_DeltaC9_tau, result.Im_DeltaC9_tau);
           result.deltaC[30]=std::complex<double>(result.Re_DeltaC10_tau, result.Im_DeltaC10_tau);
           result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1_tau, result.Im_DeltaCQ1_tau);
           result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2_tau, result.Im_DeltaCQ2_tau);
-          
+
         }
-          
+
       if (flav_debug) cout<<"Finished SI_fill"<<endl;
     }
 
@@ -641,7 +641,7 @@ namespace Gambit
       if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
 
       const parameters& param = *Dep::SuperIso_modelinfo;
-   
+
       const nuisance& nuislist = *Dep::SuperIso_nuisance;
       const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
@@ -683,8 +683,8 @@ namespace Gambit
       cout<<"First: "<<first<<endl;
 
       if(first) return;
-      using namespace Pipes::SI_theory_covariance_SM;  
-      //      if (ModelInUse("WC") || (ModelInUse("WC_LUV") ) )   
+      using namespace Pipes::SI_theory_covariance_SM;
+      //      if (ModelInUse("WC") || (ModelInUse("WC_LUV") ) )
       //  {
       if (flav_debug) cout<<"Starting SI_theory_covariance_SM"<<endl;
 
@@ -693,12 +693,12 @@ namespace Gambit
       const std::vector<std::string>& obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");
 
       parameters params_copy=param;
-      
+
       for(int ie=1;ie<=30;ie++) params_copy.deltaC[ie]=params_copy.deltaCp[ie]=0.;
       for(int ie=1;ie<=6;ie++) params_copy.deltaCQ[ie]=params_copy.deltaCQp[ie]=0.;
-          
 
-      
+
+
       // --- Needed for SuperIso backend
       int nObservables = obslist.size();
 
@@ -1192,7 +1192,7 @@ namespace Gambit
       BEreq::get_th_covariance_nuisance(&res, (char**)obsnames, &nObservables, &params_copy, &nuislist, (double **)corr);
 
 
-      
+
       for(int iObservable=0; iObservable < nObservables; ++iObservable) {
           for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
               result[obslist[iObservable]][obslist[jObservable]] = res[iObservable][jObservable];
@@ -1220,7 +1220,7 @@ namespace Gambit
       first=true;
       //        }
     }
-    
+
     /// NEW! Compute covariance matrix for a list of observables
     void SI_theory_covariance(SI_covariance_map& result)  // TO BE MODIFIED
     {
@@ -3648,8 +3648,8 @@ namespace Gambit
       static const std::string observable{"BR_BXsgamma"};
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance  = *Dep::SuperIso_theory_covariance_SM; 
-      
+      SI_covariance_map SI_theory_covariance  = *Dep::SuperIso_theory_covariance_SM;
+
       result = gaussian.GetLogLikelihood(
               SI_theory[observable],
               SI_theory_covariance[observable][observable]
@@ -3663,29 +3663,29 @@ namespace Gambit
       using namespace Pipes::HEPLike_B2KstargammaS_HFLAV;
       static const std::string inputfile_0 = path_to_latest_heplike_data() + "/HFLAV_18/RD/B2Kstar_gamma_S.yaml";
       static HepLike_default::HL_Gaussian gaussian_0(inputfile_0);
-  
+
       static bool first = true;
       if (first)
       {
         std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
         gaussian_0.Read();
-  
+
         first = false;
       }
-      
+
       static const std::string observable{"SKstarGamma"};
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-    
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
+
 
       result = gaussian_0.GetLogLikelihood(
               SI_theory[observable],
               SI_theory_covariance[observable][observable]
               );
-  
+
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
 
@@ -3695,25 +3695,25 @@ namespace Gambit
       using namespace Pipes::HEPLike_B2mumuLogLikelihood_CMS;
       static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CMS-PAS-BPH-16-004.yaml";
       static HepLike_default::HL_nDimLikelihood nDimLikelihood_0(inputfile_0);
-  
+
       static bool first = true;
       if (first)
       {
         std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
         nDimLikelihood_0.Read();
-  
+
         first = false;
       }
       static const std::array<std::string, 2> observables{
         "BRuntag_Bsmumu",
              "BR_Bdmumu"
-          
+
       };
 
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-     
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
@@ -3751,27 +3751,27 @@ namespace Gambit
       using namespace Pipes::HEPLike_B2mumuLogLikelihood_Atlas;
       static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/ATLAS/RD/B2MuMu/CERN-EP-2018-291.yaml";
       static HepLike_default::HL_nDimLikelihood nDimLikelihood_0(inputfile_0);
-  
+
       static bool first = true;
       if (first)
       {
         std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
         nDimLikelihood_0.Read();
-  
+
         first = false;
       }
 
       static const std::array<std::string, 2> observables{
         "BRuntag_Bsmumu",
              "BR_Bdmumu"
-          
+
       };
-     
+
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
+
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3825,9 +3825,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
+
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3867,7 +3867,7 @@ namespace Gambit
       static HepLike_default::HL_nDimGaussian nDimGaussian_0(inputfile_0);
       static HepLike_default::HL_nDimGaussian nDimGaussian_1(inputfile_1);
       static HepLike_default::HL_nDimGaussian nDimGaussian_2(inputfile_2);
-  
+
       static bool first = true;
       if (first)
       {
@@ -3877,7 +3877,7 @@ namespace Gambit
         nDimGaussian_1.Read();
         std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
         nDimGaussian_2.Read();
-  
+
         first = false;
       }
 
@@ -3909,10 +3909,10 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-     
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
-      
+
+
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_2)& observables){
         std::vector<double> obs_theory;
@@ -3934,8 +3934,8 @@ namespace Gambit
       };
       result = 0;
       result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables0p1_2), get_obs_covariance(observables0p1_2));
-      result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables2_4), get_obs_covariance(observables2_4));
-      result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(observables4_8), get_obs_covariance(observables4_8));
+      result += nDimGaussian_1.GetLogLikelihood(get_obs_theory(observables2_4), get_obs_covariance(observables2_4));
+      result += nDimGaussian_2.GetLogLikelihood(get_obs_theory(observables4_8), get_obs_covariance(observables4_8));
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
@@ -3960,7 +3960,7 @@ namespace Gambit
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_4);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_5);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_6(inputfile_6);
-  
+
       static bool first = true;
       if (first)
       {
@@ -3978,7 +3978,7 @@ namespace Gambit
         nDimBifurGaussian_5.Read();
         std::cout << "Debug: Reading HepLike data file: " << inputfile_6 << endl;
         nDimBifurGaussian_6.Read();
-  
+
         first = false;
       }
 
@@ -4014,9 +4014,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-  
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
+
       // C++14 allows auto instead of decltype(observables1_2)
       auto get_obs_theory = [SI_theory](decltype(observables1_2)& observables){
         std::vector<double> obs_theory;
@@ -4025,7 +4025,7 @@ namespace Gambit
           obs_theory.push_back(SI_theory.at(observables[i]));
         }
         return obs_theory;
-      };   
+      };
 
       auto get_obs_covariance = [SI_theory_covariance](decltype(observables1_2)& observables){
         boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
@@ -4061,7 +4061,7 @@ namespace Gambit
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_3);
-  
+
       static bool first = true;
       if (first)
       {
@@ -4073,10 +4073,10 @@ namespace Gambit
         nDimBifurGaussian_2.Read();
         std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
         nDimBifurGaussian_3.Read();
-  
+
         first = false;
       }
-      
+
       // Ordering of observables defined by HEPLike
       static const std::array<std::string, 2> observables0p1_4{
         "P4_B0Kstar0mumu_0.1_4",
@@ -4098,10 +4098,10 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-    
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
-     
+
+
       // C++14 allows auto instead of decltype(observables0p1_4)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_4)& observables){
         std::vector<double> obs_theory;
@@ -4110,7 +4110,7 @@ namespace Gambit
           obs_theory.push_back(SI_theory.at(observables[i]));
         }
         return obs_theory;
-      };   
+      };
 
       auto get_obs_covariance = [SI_theory_covariance](decltype(observables0p1_4)& observables){
         boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
@@ -4229,17 +4229,17 @@ namespace Gambit
         "S9_B0Kstar0mumu_15_19",
       };
 
-      
-      
+
+
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-  
-      
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-  
 
-      
-      
+
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+
+
+
+
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables0p1_0p98)& observables){
         std::vector<double> obs_theory;
@@ -4323,9 +4323,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-     
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
+
 
       result = 0;
       result += BifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
@@ -4368,11 +4368,11 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-     
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
 
-      
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+
+
+
       result = 0;
       result += bifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
       result += bifurGaussian_1.GetLogLikelihood(SI_theory[observables[1]], SI_theory_covariance[observables[1]][observables[1]]);
@@ -4385,17 +4385,17 @@ namespace Gambit
 
       using namespace Pipes::HEPLike_RK_LogLikelihood;
 
-      
+
       static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/Rk/CERN-EP-2019-043.yaml";
       static HepLike_default::HL_ProfLikelihood rk(inputfile_0);
- 
-      
+
+
       static bool first = true;
       if (first)
       {
         std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
         rk.Read();
-       
+
         first = false;
       }
       static const std::array<std::string, 1> observables{
@@ -4405,9 +4405,9 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      
+
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
+
 
       std::cout<<1.+SI_theory[observables[0]]<<  "  "<<sqrt(SI_theory_covariance[observables[0]][observables[0]]) << std::endl;
       std::cout<<rk.GetLogLikelihood( 1.+SI_theory[observables[0]], -1.)<<std::endl;
@@ -4415,24 +4415,24 @@ namespace Gambit
                                    1.+SI_theory[observables[0]], -1
               //          sqrt(SI_theory_covariance[observables[0]][observables[0]])
                                    );
-                                                                           
+
       if (flav_debug) std::cout << "HEPLike_RK_LogLikelihood result: " << result << std::endl;
-    
+
     }
 
 
-    
+
     void HEPLike_RKstar_LogLikelihood_LHCb(double &result)
     {
 
       using namespace Pipes::HEPLike_RKstar_LogLikelihood_LHCb;
 
-      
+
       static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_0.045_1.1.yaml";
       static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_1.1_6.yaml";
       static HepLike_default::HL_ProfLikelihood rkstar1(inputfile_0);
       static HepLike_default::HL_ProfLikelihood rkstar2(inputfile_1);
-      
+
       static bool first = true;
       if (first)
       {
@@ -4448,16 +4448,16 @@ namespace Gambit
 
       SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
       SI_covariance_map SI_theory_covariance;
-      
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
-      
 
-       
+      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+
+
+
       result = rkstar1.GetLogLikelihood(
                                         1.+SI_theory[observables[0]], -1
               //              sqrt(SI_theory_covariance[observables[0]][observables[0]])
                                         );
-      
+
       result+= rkstar2.GetLogLikelihood(
                                         1.+SI_theory[observables[1]], -1
               //sqrt(SI_theory_covariance[observables[1]][observables[1]])/( SI_theory[observables[1]]*SI_theory[observables[1]])
@@ -4467,6 +4467,6 @@ namespace Gambit
     }
 
 
-    
+
   }
 }
