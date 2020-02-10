@@ -35,6 +35,7 @@
 #include <vector>
 
 #include "gambit/Elements/gambit_module_headers.hpp"
+#include "gambit/Utils/util_types.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 
 //#define COLLIDERBIT_DEBUG
@@ -238,6 +239,11 @@ namespace Gambit
         spectrum_dependency = &Dep::MSSM_spectrum;
         Higgses = initVector<str>("h0_1", "h0_2", "A0");
       }
+      else if (ModelInUse("THDM_II"))
+      {
+        spectrum_dependency = &Dep::THDM_II_spectrum;
+        Higgses = initVector<str>("h0_1","h0_2","A0");
+      }
       else ColliderBit_error().raise(LOCAL_INFO, "No valid model for MSSMLikeHiggs_ModelParameters.");  
 
           
@@ -304,7 +310,7 @@ namespace Gambit
       result.BR_tHpjb[0]   = t_widths.has_channel("H+", "b") ? t_widths.BF("H+", "b") : 0.0;
 
       // Retrieve cross-section ratios from the HiggsCouplingsTable
-      set_CS(result, *Dep::Higgs_Couplings);
+      set_CS(result, *Dep::Higgs_Couplings, n_neutral_higgses);
     }
 
     /// Get a LEP chisq from HiggsBounds
@@ -316,15 +322,22 @@ namespace Gambit
 
       Farray<double, 1,3, 1,3> CS_lep_hjhi_ratio;
       Farray<double, 1,3, 1,3> BR_hjhihi;
+      // Transpose to get around Fortran matrix types
       for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
       {
         CS_lep_hjhi_ratio(i+1,j+1) = ModelParam.CS_lep_hjhi_ratio[i][j];
         BR_hjhihi(i+1,j+1) = ModelParam.BR_hjhihi[i][j];
       }
+      for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
+      {
+        ModelParam.CS_lep_hjhi_ratio[j][i] = CS_lep_hjhi_ratio(i+1,j+1);
+        ModelParam.BR_hjhihi[j][i] = BR_hjhihi(i+1,j+1);
+      }
+
 
       BEreq::HiggsBounds_neutral_input_part(&ModelParam.Mh[0], &ModelParam.hGammaTot[0], &ModelParam.CP[0],
               &ModelParam.CS_lep_hjZ_ratio[0], &ModelParam.CS_lep_bbhj_ratio[0],
-              &ModelParam.CS_lep_tautauhj_ratio[0], CS_lep_hjhi_ratio,
+              &ModelParam.CS_lep_tautauhj_ratio[0], &ModelParam.CS_lep_hjhi_ratio[0][0],
               &ModelParam.CS_gg_hj_ratio[0], &ModelParam.CS_bb_hj_ratio[0],
               &ModelParam.CS_bg_hjb_ratio[0], &ModelParam.CS_ud_hjWp_ratio[0],
               &ModelParam.CS_cs_hjWp_ratio[0], &ModelParam.CS_ud_hjWm_ratio[0],
@@ -339,7 +352,20 @@ namespace Gambit
               &ModelParam.BR_hjmumu[0], &ModelParam.BR_hjtautau[0],
               &ModelParam.BR_hjWW[0], &ModelParam.BR_hjZZ[0],
               &ModelParam.BR_hjZga[0], &ModelParam.BR_hjgaga[0],
-              &ModelParam.BR_hjgg[0], &ModelParam.BR_hjinvisible[0], BR_hjhihi);
+              &ModelParam.BR_hjgg[0], &ModelParam.BR_hjinvisible[0], &ModelParam.BR_hjhihi[0][0]);
+
+      // Transpose it back
+      for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
+      {
+        CS_lep_hjhi_ratio(i+1,j+1) = ModelParam.CS_lep_hjhi_ratio[i][j];
+        BR_hjhihi(i+1,j+1) = ModelParam.BR_hjhihi[i][j];
+      }
+      for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
+      {
+        ModelParam.CS_lep_hjhi_ratio[j][i] = CS_lep_hjhi_ratio(i+1,j+1);
+        ModelParam.BR_hjhihi[j][i] = BR_hjhihi(i+1,j+1);
+      }
+
 
       BEreq::HiggsBounds_charged_input(&ModelParam.MHplus[0], &ModelParam.HpGammaTot[0], &ModelParam.CS_lep_HpjHmi_ratio[0],
                &ModelParam.BR_tWpb, &ModelParam.BR_tHpjb[0], &ModelParam.BR_Hpjcs[0],
@@ -377,15 +403,22 @@ namespace Gambit
 
       Farray<double, 1,3, 1,3> CS_lep_hjhi_ratio;
       Farray<double, 1,3, 1,3> BR_hjhihi;
+      // Transpose to get around Fortran matrix types
       for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
       {
         CS_lep_hjhi_ratio(i+1,j+1) = ModelParam.CS_lep_hjhi_ratio[i][j];
         BR_hjhihi(i+1,j+1) = ModelParam.BR_hjhihi[i][j];
       }
+      for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
+      {
+        ModelParam.CS_lep_hjhi_ratio[j][i] = CS_lep_hjhi_ratio(i+1,j+1);
+        ModelParam.BR_hjhihi[j][i] = BR_hjhihi(i+1,j+1);
+      }
+
 
       BEreq::HiggsBounds_neutral_input_part_HS(&ModelParam.Mh[0], &ModelParam.hGammaTot[0], &ModelParam.CP[0],
                  &ModelParam.CS_lep_hjZ_ratio[0], &ModelParam.CS_lep_bbhj_ratio[0],
-                 &ModelParam.CS_lep_tautauhj_ratio[0], CS_lep_hjhi_ratio,
+                 &ModelParam.CS_lep_tautauhj_ratio[0], &ModelParam.CS_lep_hjhi_ratio[0][0],
                  &ModelParam.CS_gg_hj_ratio[0], &ModelParam.CS_bb_hj_ratio[0],
                  &ModelParam.CS_bg_hjb_ratio[0], &ModelParam.CS_ud_hjWp_ratio[0],
                  &ModelParam.CS_cs_hjWp_ratio[0], &ModelParam.CS_ud_hjWm_ratio[0],
@@ -400,7 +433,20 @@ namespace Gambit
                  &ModelParam.BR_hjmumu[0], &ModelParam.BR_hjtautau[0],
                  &ModelParam.BR_hjWW[0], &ModelParam.BR_hjZZ[0],
                  &ModelParam.BR_hjZga[0], &ModelParam.BR_hjgaga[0],
-                 &ModelParam.BR_hjgg[0], &ModelParam.BR_hjinvisible[0], BR_hjhihi);
+                 &ModelParam.BR_hjgg[0], &ModelParam.BR_hjinvisible[0], &ModelParam.BR_hjhihi[0][0]);
+
+      // Transpose it back
+      for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
+      {
+        CS_lep_hjhi_ratio(i+1,j+1) = ModelParam.CS_lep_hjhi_ratio[i][j];
+        BR_hjhihi(i+1,j+1) = ModelParam.BR_hjhihi[i][j];
+      }
+      for(int i = 0; i < 3; i++) for(int j = 0; j < 3; j++)
+      {
+        ModelParam.CS_lep_hjhi_ratio[j][i] = CS_lep_hjhi_ratio(i+1,j+1);
+        ModelParam.BR_hjhihi[j][i] = BR_hjhihi(i+1,j+1);
+      }
+
 
       BEreq::HiggsBounds_charged_input_HS(&ModelParam.MHplus[0], &ModelParam.HpGammaTot[0], &ModelParam.CS_lep_HpjHmi_ratio[0],
             &ModelParam.BR_tWpb, &ModelParam.BR_tHpjb[0], &ModelParam.BR_Hpjcs[0],
