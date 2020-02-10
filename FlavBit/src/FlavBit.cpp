@@ -4038,12 +4038,12 @@ namespace Gambit
       };
       result = 0;
       result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables1_2), get_obs_covariance(observables1_2));
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables2_4p3), get_obs_covariance(observables2_4p3));
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables4p3_6), get_obs_covariance(observables4p3_6));
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables6_8p68), get_obs_covariance(observables6_8p68));
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables10p09_12p86), get_obs_covariance(observables6_8p68));
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables14p18_16), get_obs_covariance(observables14p18_16));
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables16_19), get_obs_covariance(observables16_19));
+      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(observables2_4p3), get_obs_covariance(observables2_4p3));
+      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(observables4p3_6), get_obs_covariance(observables4p3_6));
+      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(observables6_8p68), get_obs_covariance(observables6_8p68));
+      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(observables10p09_12p86), get_obs_covariance(observables6_8p68));
+      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(observables14p18_16), get_obs_covariance(observables14p18_16));
+      result += nDimBifurGaussian_6.GetLogLikelihood(get_obs_theory(observables16_19), get_obs_covariance(observables16_19));
 
       if (flav_debug) std::cout << "%s result: " << result << std::endl;
     }
