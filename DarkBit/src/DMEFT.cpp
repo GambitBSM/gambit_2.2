@@ -233,10 +233,10 @@ namespace Gambit
 
       // Gluon operators -- universal, do not depend on
       // quark flavour.
-      result["C71"]  = C71/pow(Lambda, 3);
-      result["C72"]  = C72/pow(Lambda, 3);
-      result["C73"]  = C73/pow(Lambda, 3);
-      result["C74"]  = C74/pow(Lambda, 3);
+      result["C71"]  = C71/pow(Lambda, 3.);
+      result["C72"]  = C72/pow(Lambda, 3.);
+      result["C73"]  = C73/pow(Lambda, 3.);
+      result["C74"]  = C74/pow(Lambda, 3.);
       
       // The following terms have a fermion bilinear so, in theory, can have a 
       // different WC for each. We take these to be universal i.e. 
@@ -244,65 +244,65 @@ namespace Gambit
       // Also only considering interactions with *quarks and gluons* -- 
       // not leptons, so C_{7}{tag}(tau, mu, e) = 0
 
-      result["C61d"]  = C61/pow(Lambda, 2);
-      result["C61u"]  = C61/pow(Lambda, 2);
-      result["C61s"]  = C61/pow(Lambda, 2);
-      result["C61c"]  = C61/pow(Lambda, 2);
-      result["C61b"]  = C61/pow(Lambda, 2);
+      result["C61d"]  = C61/pow(Lambda, 2.);
+      result["C61u"]  = C61/pow(Lambda, 2.);
+      result["C61s"]  = C61/pow(Lambda, 2.);
+      result["C61c"]  = C61/pow(Lambda, 2.);
+      result["C61b"]  = C61/pow(Lambda, 2.);
 
-      result["C62d"]  = C62/pow(Lambda, 2);
-      result["C62u"]  = C62/pow(Lambda, 2);
-      result["C62s"]  = C62/pow(Lambda, 2);
-      result["C62c"]  = C62/pow(Lambda, 2);
-      result["C62b"]  = C62/pow(Lambda, 2);
+      result["C62d"]  = C62/pow(Lambda, 2.);
+      result["C62u"]  = C62/pow(Lambda, 2.);
+      result["C62s"]  = C62/pow(Lambda, 2.);
+      result["C62c"]  = C62/pow(Lambda, 2.);
+      result["C62b"]  = C62/pow(Lambda, 2.);
 
-      result["C63d"]  = C63/pow(Lambda, 2);
-      result["C63u"]  = C63/pow(Lambda, 2);
-      result["C63s"]  = C63/pow(Lambda, 2);
-      result["C63c"]  = C63/pow(Lambda, 2);
-      result["C63b"]  = C63/pow(Lambda, 2);
+      result["C63d"]  = C63/pow(Lambda, 2.);
+      result["C63u"]  = C63/pow(Lambda, 2.);
+      result["C63s"]  = C63/pow(Lambda, 2.);
+      result["C63c"]  = C63/pow(Lambda, 2.);
+      result["C63b"]  = C63/pow(Lambda, 2.);
 
-      result["C64d"]  = C64/pow(Lambda, 2);
-      result["C64u"]  = C64/pow(Lambda, 2);
-      result["C64s"]  = C64/pow(Lambda, 2);
-      result["C64c"]  = C64/pow(Lambda, 2);
-      result["C64b"]  = C64/pow(Lambda, 2);
+      result["C64d"]  = C64/pow(Lambda, 2.);
+      result["C64u"]  = C64/pow(Lambda, 2.);
+      result["C64s"]  = C64/pow(Lambda, 2.);
+      result["C64c"]  = C64/pow(Lambda, 2.);
+      result["C64b"]  = C64/pow(Lambda, 2.);
 
-      result["C75d"]  = C75/pow(Lambda, 3);
-      result["C75u"]  = C75/pow(Lambda, 3);
-      result["C75s"]  = C75/pow(Lambda, 3);
-      result["C75c"]  = C75/pow(Lambda, 3);
-      result["C75b"]  = C75/pow(Lambda, 3);
+      result["C75d"]  = C75/pow(Lambda, 3.);
+      result["C75u"]  = C75/pow(Lambda, 3.);
+      result["C75s"]  = C75/pow(Lambda, 3.);
+      result["C75c"]  = C75/pow(Lambda, 3.);
+      result["C75b"]  = C75/pow(Lambda, 3.);
 
-      result["C76d"]  = C76/pow(Lambda, 3);
-      result["C76u"]  = C76/pow(Lambda, 3);
-      result["C76s"]  = C76/pow(Lambda, 3);
-      result["C76c"]  = C76/pow(Lambda, 3);
-      result["C76b"]  = C76/pow(Lambda, 3);
+      result["C76d"]  = C76/pow(Lambda, 3.);
+      result["C76u"]  = C76/pow(Lambda, 3.);
+      result["C76s"]  = C76/pow(Lambda, 3.);
+      result["C76c"]  = C76/pow(Lambda, 3.);
+      result["C76b"]  = C76/pow(Lambda, 3.);
 
-      result["C77d"]  = C77/pow(Lambda, 3);
-      result["C77u"]  = C77/pow(Lambda, 3);
-      result["C77s"]  = C77/pow(Lambda, 3);
-      result["C77c"]  = C77/pow(Lambda, 3);
-      result["C77b"]  = C77/pow(Lambda, 3);
+      result["C77d"]  = C77/pow(Lambda, 3.);
+      result["C77u"]  = C77/pow(Lambda, 3.);
+      result["C77s"]  = C77/pow(Lambda, 3.);
+      result["C77c"]  = C77/pow(Lambda, 3.);
+      result["C77b"]  = C77/pow(Lambda, 3.);
 
-      result["C78d"]  = C78/pow(Lambda, 3);
-      result["C78u"]  = C78/pow(Lambda, 3);
-      result["C78s"]  = C78/pow(Lambda, 3);
-      result["C78c"]  = C78/pow(Lambda, 3);
-      result["C78b"]  = C78/pow(Lambda, 3);
+      result["C78d"]  = C78/pow(Lambda, 3.);
+      result["C78u"]  = C78/pow(Lambda, 3.);
+      result["C78s"]  = C78/pow(Lambda, 3.);
+      result["C78c"]  = C78/pow(Lambda, 3.);
+      result["C78b"]  = C78/pow(Lambda, 3.);
 
-      result["C79d"]  = C79/pow(Lambda, 3);
-      result["C79u"]  = C79/pow(Lambda, 3);
-      result["C79s"]  = C79/pow(Lambda, 3);
-      result["C79c"]  = C79/pow(Lambda, 3);
-      result["C79b"]  = C79/pow(Lambda, 3);
+      result["C79d"]  = C79/pow(Lambda, 3.);
+      result["C79u"]  = C79/pow(Lambda, 3.);
+      result["C79s"]  = C79/pow(Lambda, 3.);
+      result["C79c"]  = C79/pow(Lambda, 3.);
+      result["C79b"]  = C79/pow(Lambda, 3.);
 
-      result["C710d"] = C710/pow(Lambda, 3);
-      result["C710u"] = C710/pow(Lambda, 3);
-      result["C710s"] = C710/pow(Lambda, 3);
-      result["C710c"] = C710/pow(Lambda, 3);
-      result["C710b"] = C710/pow(Lambda, 3);
+      result["C710d"] = C710/pow(Lambda, 3.);
+      result["C710u"] = C710/pow(Lambda, 3.);
+      result["C710s"] = C710/pow(Lambda, 3.);
+      result["C710c"] = C710/pow(Lambda, 3.);
+      result["C710b"] = C710/pow(Lambda, 3.);
 
       // If Lambda > m_t then we include corrections
       double mt = spec.get(Par::Pole_Mass, "t");
@@ -313,17 +313,17 @@ namespace Gambit
         // https://arxiv.org/pdf/1302.4454.pdf
         const SMInputs& sminputs = spec.get_SMInputs();
         double e = pow(4*pi/sminputs.alphainv, 0.5);
-        double lamovermt2 = pow(Lambda, 2)/pow(mt, 2);
+        double lamovermt2 = pow(Lambda, 2.)/pow(mt, 2.);
         double prefactor = (2*e)/(4*pow(pi,2.))/lamovermt2*log(lamovermt2);
-        result["C51"] += prefactor*C79;
-        result["C52"] += prefactor*C710;
+        result["C51"] += prefactor*C79/Lambda;
+        result["C52"] += prefactor*C710/Lambda;
 
         // 2. Threshold effects from
         //    integrating out the top quark
-        result["C71"] -= C75;
-        result["C72"] -= C76;
-        result["C73"] += C77;
-        result["C74"] += C78;
+        result["C71"] -= C75/pow(Lambda, 3.);
+        result["C72"] -= C76/pow(Lambda, 3.);
+        result["C73"] += C77/pow(Lambda, 3.);
+        result["C74"] += C78/pow(Lambda, 3.);
       }
 
     } // DD_rel_WCs_flavscheme_DMEFT
