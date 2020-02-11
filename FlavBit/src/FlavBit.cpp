@@ -2855,7 +2855,7 @@ namespace Gambit
         nDimGaussian.Read();
         first = false;
       }
-      static const std::array<std::string, 2> observables{
+      static const std::vector<std::string> observables{
         "RD",
         "RDstar"
       };
@@ -2962,7 +2962,7 @@ namespace Gambit
 
         first = false;
       }
-      static const std::array<std::string, 2> observables{
+      static const std::vector<std::string> observables{
         "BRuntag_Bsmumu",
              "BR_Bdmumu"
       };
@@ -3016,7 +3016,7 @@ namespace Gambit
         first = false;
       }
 
-      static const std::array<std::string, 2> observables{
+      static const std::vector<std::string> observables{
         "BRuntag_Bsmumu",
              "BR_Bdmumu"
 
@@ -3071,7 +3071,7 @@ namespace Gambit
         first = false;
       }
 
-      static const std::array<std::string, 2> observables{
+      static const std::vector<std::string> observables{
         "BRuntag_Bsmumu",
         "BR_Bdmumu"
       };
@@ -3133,7 +3133,7 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      static const std::array<std::string, 6> observables0p1_2{
+      static const std::vector<std::string> observables0p1_2{
         "FL_B0Kstar0mumu_0p1_2",
         "S3_B0Kstar0mumu_0p1_2",
         "S4_B0Kstar0mumu_0p1_2",
@@ -3141,7 +3141,7 @@ namespace Gambit
         "S7_B0Kstar0mumu_0p1_2",
         "S8_B0Kstar0mumu_0p1_2",
       };
-      static const std::array<std::string, 6> observables2_4{
+      static const std::vector<std::string> observables2_4{
         "FL_B0Kstar0mumu_2_4",
         "S3_B0Kstar0mumu_2_4",
         "S4_B0Kstar0mumu_2_4",
@@ -3149,7 +3149,7 @@ namespace Gambit
         "S7_B0Kstar0mumu_2_4",
         "S8_B0Kstar0mumu_2_4",
       };
-      static const std::array<std::string, 6> observables4_8{
+      static const std::vector<std::string> observables4_8{
         "FL_B0Kstar0mumu_4_8",
         "S3_B0Kstar0mumu_4_8",
         "S4_B0Kstar0mumu_4_8",
@@ -3234,31 +3234,31 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      static const std::array<std::string, 2> observables1_2{
+      static const std::vector<std::string> observables1_2{
         "P1_B0Kstar0mumu_1_2",
         "P5_B0Kstar0mumu_1_2",
       };
-      static const std::array<std::string, 2> observables2_4p3{
+      static const std::vector<std::string> observables2_4p3{
         "P1_B0Kstar0mumu_2_4p3",
         "P5_B0Kstar0mumu_2_4p3",
       };
-      static const std::array<std::string, 2> observables4p3_6{
+      static const std::vector<std::string> observables4p3_6{
         "P1_B0Kstar0mumu_4p3_6",
         "P5_B0Kstar0mumu_4p3_6",
       };
-      static const std::array<std::string, 2> observables6_8p68{
+      static const std::vector<std::string> observables6_8p68{
         "P1_B0Kstar0mumu_6_8p68",
         "P5_B0Kstar0mumu_6_8p68",
       };
-      static const std::array<std::string, 2> observables10p09_12p86{
+      static const std::vector<std::string> observables10p09_12p86{
         "P1_B0Kstar0mumu_10p09_12p86",
         "P5_B0Kstar0mumu_10p09_12p86",
       };
-      static const std::array<std::string, 2> observables14p18_16{
+      static const std::vector<std::string> observables14p18_16{
         "P1_B0Kstar0mumu_14p18_16",
         "P5_B0Kstar0mumu_14p18_16",
       };
-      static const std::array<std::string, 2> observables16_19{
+      static const std::vector<std::string> observables16_19{
         "P1_B0Kstar0mumu_16_19",
         "P5_B0Kstar0mumu_16_19",
       };
@@ -3329,19 +3329,19 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      static const std::array<std::string, 2> observables0p1_4{
+      static const std::vector<std::string> observables0p1_4{
         "P4_B0Kstar0mumu_0.1_4",
         "P5_B0Kstar0mumu_0.1_4",
       };
-      static const std::array<std::string, 2> observables4_8{
+      static const std::vector<std::string> observables4_8{
         "P4_B0Kstar0mumu_4_8",
         "P5_B0Kstar0mumu_4_8",
       };
-      static const std::array<std::string, 2> observables10p9_12p9{
+      static const std::vector<std::string> observables10p9_12p9{
         "P4_B0Kstar0mumu_10.9_12.9",
         "P5_B0Kstar0mumu_10.9_12.9",
       };
-      static const std::array<std::string, 2> observables14p18_19{
+      static const std::vector<std::string> observables14p18_19{
         "P4_B0Kstar0mumu_14.18_19",
         "P5_B0Kstar0mumu_14.18_19",
       };
@@ -3419,7 +3419,7 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      static const std::array<std::string, 8> observables0p1_0p98{
+      static const std::vector<std::string> observables0p1_0p98{
         "FL_B0Kstar0mumu_0.1_0.98",
         "S3_B0Kstar0mumu_0.1_0.98",
         "S4_B0Kstar0mumu_0.1_0.98",
@@ -3429,7 +3429,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_0.1_0.98",
         "S9_B0Kstar0mumu_0.1_0.98",
       };
-      static const std::array<std::string, 8> observables1p1_2p5{
+      static const std::vector<std::string> observables1p1_2p5{
         "FL_B0Kstar0mumu_1.1_2.5",
         "S3_B0Kstar0mumu_1.1_2.5",
         "S4_B0Kstar0mumu_1.1_2.5",
@@ -3439,7 +3439,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_1.1_2.5",
         "S9_B0Kstar0mumu_1.1_2.5",
       };
-      static const std::array<std::string, 8> observables2p5_4{
+      static const std::vector<std::string> observables2p5_4{
         "FL_B0Kstar0mumu_2.5_4",
         "S3_B0Kstar0mumu_2.5_4",
         "S4_B0Kstar0mumu_2.5_4",
@@ -3449,7 +3449,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_2.5_4",
         "S9_B0Kstar0mumu_2.5_4",
       };
-      static const std::array<std::string, 8> observables4_6{
+      static const std::vector<std::string> observables4_6{
         "FL_B0Kstar0mumu_4_6",
         "S3_B0Kstar0mumu_4_6",
         "S4_B0Kstar0mumu_4_6",
@@ -3459,7 +3459,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_4_6",
         "S9_B0Kstar0mumu_4_6",
       };
-      static const std::array<std::string, 8> observables6_8{
+      static const std::vector<std::string> observables6_8{
         "FL_B0Kstar0mumu_6_8",
         "S3_B0Kstar0mumu_6_8",
         "S4_B0Kstar0mumu_6_8",
@@ -3469,7 +3469,7 @@ namespace Gambit
         "S8_B0Kstar0mumu_6_8",
         "S9_B0Kstar0mumu_6_8",
       };
-      static const std::array<std::string, 8> observables15_19{
+      static const std::vector<std::string> observables15_19{
         "FL_B0Kstar0mumu_15_19",
         "S3_B0Kstar0mumu_15_19",
         "S4_B0Kstar0mumu_15_19",
@@ -3563,7 +3563,7 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
-      static const std::array<std::string, 6> observables{
+      static const std::vector<std::string> observables{
         "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
         "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
         "dGamma/dq2_B0Kstar0mumu_2.5_4",
@@ -3612,7 +3612,7 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
-      static const std::array<std::string, 2> observables{
+      static const std::vector<std::string> observables{
               "dGamma/dq2_Bsphimumu_1_6",
               "dGamma/dq2_Bsphimumu_15_19",
       };
@@ -3649,7 +3649,7 @@ namespace Gambit
 
         first = false;
       }
-      static const std::array<std::string, 1> observables{
+      static const std::vector<std::string> observables{
               "R-1_BKll_1.1_6",
       };
 
@@ -3692,7 +3692,7 @@ namespace Gambit
         rkstar2.Read();
         first = false;
       }
-      static const std::array<std::string, 2> observables{
+      static const std::vector<std::string> observables{
         "R-1_B0Kstar0ll_0.045_1.1",
         "R-1_B0Kstar0ll_1.1_6",
       };
