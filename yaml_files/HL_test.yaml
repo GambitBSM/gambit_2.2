@@ -148,6 +148,10 @@ Rules:
         dGamma/dq2_B0Kstar0mumu_6_8,
         dGamma/dq2_B0Kstar0mumu_15_19,
       ]
+      Bs2PhimumuBr_obs_list: [
+        dGamma/dq2_Bsphimumu_1_6,
+        dGamma/dq2_Bsphimumu_15_19,
+      ]
       SuperIso_obs_list: [
         AI_BKstargamma,
         BR_BXsgamma,
