@@ -1104,20 +1104,21 @@ namespace Gambit
     }
 
     /// Helper function to avoid code duplication. However, there are some issues...
-    void SuperIso_prediction_helper(const std::vector<std::string>& obslist, SI_prediction& result)
+    void SuperIso_prediction_helper(const std::vector<std::string>& obslist, SI_prediction& result, 
+                                    const parameters& param, const nuisance& nuislist,
+                                    void (*get_predictions_nuisance)(char**, int*, double**, const parameters*, const nuisance*),
+                                    void (*observables)(int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*),
+                                    void (*convert_correlation)(nuiscorr*, int, double**, char**, int),
+                                    void (*get_th_covariance_nuisance)(double***, char**, int*, const parameters*, const nuisance*, double**)
+                                    )
     {
-      using namespace Pipes::SuperIso_prediction;  // FIXME: we use the wrong pipe here, but we do not want this as a capability, otherwise the function arguments are not flexibel
-                                                   //        the dependency is defined via the function SuperIso_prediction which does by itself nothing
       if (flav_debug) std::cout << "Starting SuperIso_prediction" << std::endl;
-
-      const parameters& param = *Dep::SuperIso_modelinfo;
-      const nuisance& nuislist = *Dep::SuperIso_nuisance;
 
       int nObservables = obslist.size();
 
       char obsnames[nObservables][50];
       for(int iObservable = 0; iObservable < nObservables; iObservable++) {
-          strcpy(obsnames[iObservable], obslist[iObservable].c_str());
+        strcpy(obsnames[iObservable], obslist[iObservable].c_str());
       }
 
       // ---------- CENTRAL VALUES ----------
@@ -1126,77 +1127,83 @@ namespace Gambit
       result_central = (double *) calloc(nObservables, sizeof(double));
       // --- Needed for SuperIso backend
 
-      BEreq::get_predictions_nuisance((char**)obsnames, &nObservables, &result_central, &param, &nuislist);
+      (*get_predictions_nuisance)((char**)obsnames, &nObservables, &result_central, &param, &nuislist);
 
       for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-          result.central_values[obslist[iObservable]] = result_central[iObservable];
+        result.central_values[obslist[iObservable]] = result_central[iObservable];
       }
 
       // Free memory
       free(result_central);
       result_central = NULL;
       if (flav_debug) {
-          for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-              printf("%s=%.4e\n", obsnames[iObservable], result.central_values[obslist[iObservable]]);
-          }
+        for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
+          printf("%s=%.4e\n", obsnames[iObservable], result.central_values[obslist[iObservable]]);
+        }
       }
 
       // ---------- COVARIANCE ----------
       int nNuisance=161;
       char namenuisance[nNuisance+1][50];
-      BEreq::observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
+      (*observables)(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
 
       // Reserve memory
       double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
       for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
-          corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
+        corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
       }
       // --- Needed for SuperIso backend
 
-      BEreq::convert_correlation((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
+      (*convert_correlation)((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
 
       double **result_covariance;
 
-      BEreq::get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
+      (*get_th_covariance_nuisance)(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
 
       for(int iObservable=0; iObservable < nObservables; ++iObservable) {
-          for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
-              result.covariance[obslist[iObservable]][obslist[jObservable]] = result_covariance[iObservable][jObservable];
-          }
+        for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
+          result.covariance[obslist[iObservable]][obslist[jObservable]] = result_covariance[iObservable][jObservable];
+        }
       }
 
       // Free memory
       for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
-          free(corr[iObservable]);
+        free(corr[iObservable]);
       }
       free(corr);
 
       if (flav_debug) {
-          for(int iObservable=0; iObservable < nObservables; ++iObservable) {
-              for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
-                  printf("Covariance %s - %s: %.4e\n",
-                          obsnames[iObservable], obsnames[jObservable], result.covariance[obslist[iObservable]][obslist[jObservable]]);
-              }
-          }
+        for(int iObservable=0; iObservable < nObservables; ++iObservable) {
+          for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
+            printf("Covariance %s - %s: %.4e\n",
+              obsnames[iObservable], obsnames[jObservable], result.covariance[obslist[iObservable]][obslist[jObservable]]);
+           }
+        }
       }
 
       if (flav_debug) std::cout << "Finished SuperIso_prediction" << std::endl;
 
     }
 
-    /// This function is required to resolve the dependency for the helper function
-    void SuperIso_prediction(SI_prediction&) {} 
-
     void SuperIso_prediction_B2mumu(SI_prediction& result)
     {
-      using namespace Pipes::SuperIso_prediction;
+      using namespace Pipes::SuperIso_prediction_B2mumu;
       // static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");  // TODO: Get this from rules
       static const std::vector<std::string> obslist{
         "BRuntag_Bsmumu",
         "BR_Bdmumu"
       };
 
-      SuperIso_prediction_helper(obslist, result);
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
     }
 
 
@@ -3339,14 +3346,11 @@ namespace Gambit
       static const std::array<std::string, 2> observables{
         "BRuntag_Bsmumu",
              "BR_Bdmumu"
-
       };
 
-
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
-
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance_SM;
+      SI_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
+      SI_observable_map SI_theory = prediction.central_values;
+      SI_covariance_map SI_theory_covariance = prediction.covariance;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
