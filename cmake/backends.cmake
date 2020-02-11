@@ -76,7 +76,6 @@
 #************************************************
 
 
-
 # CaptnGeneral
 set(name "capgen")
 set(ver "1.0")
@@ -96,7 +95,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
-
 
 
 # DarkSUSY
@@ -124,6 +122,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
 
 # HepLikedata
 set(name "heplikedata")
@@ -195,6 +194,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
+
 # Flavio
 set(name "Flavio")
 set(ver "0.30.0")
@@ -216,6 +216,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 
 endif()
+
 
 # DDCalc
 set(name "ddcalc")
@@ -519,6 +520,7 @@ if(NOT ditched_${name}_${model}_${ver})
   set_as_default_version("backend model" ${name}_${model} ${ver})
 endif()
 
+
 # Pythia
 set(name "pythia")
 set(ver "8.212")
@@ -636,7 +638,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
 endif()
 
-# Nulike
 set(name "nulike")
 set(ver "1.0.5")
 set(lib "libnulike")
@@ -656,7 +657,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
 endif()
 
-# Nulike
 set(name "nulike")
 set(ver "1.0.6")
 set(lib "libnulike")
@@ -676,7 +676,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
 endif()
 
-# Nulike
 set(name "nulike")
 set(ver "1.0.7")
 set(lib "libnulike")
@@ -694,8 +693,28 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
+endif()
+
+set(name "nulike")
+set(ver "1.0.8")
+set(lib "libnulike")
+set(dl "https://${name}.hepforge.org/downloads/${name}-${ver}.tar.gz")
+set(md5 "2ab62018b255cc987263daa6999b1ad6")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${lib}.so FF=${CMAKE_Fortran_COMPILER} FOPT=${BACKEND_Fortran_FLAGS} MODULE=${FMODULE}
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
 
 # SUSY-HIT
 set(name "susyhit")
@@ -730,10 +749,10 @@ endif()
 
 # FeynHiggs
 set(name "feynhiggs")
-set(ver "2.12.0")
+set(ver "2.11.2")
 set(lib "libFH")
 set(dl "http://wwwth.mpp.mpg.de/members/heinemey/feynhiggs/newversion/FeynHiggs-${ver}.tar.gz")
-set(md5 "da2d0787311525213cd4721da9946b86")
+set(md5 "edb73eafa6dab291bd8827242c16ac0a")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(FH_Fortran_FLAGS "${BACKEND_Fortran_FLAGS_NO_BUILD_OPTIMISATIONS}") #For skipping -O2, which seems to cause issues
 set(FH_C_FLAGS "${BACKEND_C_FLAGS_NO_BUILD_OPTIMISATIONS}")             #For skipping -O2, which seems to cause issues
@@ -757,7 +776,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
-# FeynHiggs
 set(name "feynhiggs")
 set(ver "2.11.3")
 set(lib "libFH")
@@ -787,12 +805,11 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
-# FeynHiggs
 set(name "feynhiggs")
-set(ver "2.11.2")
+set(ver "2.12.0")
 set(lib "libFH")
 set(dl "http://wwwth.mpp.mpg.de/members/heinemey/feynhiggs/newversion/FeynHiggs-${ver}.tar.gz")
-set(md5 "edb73eafa6dab291bd8827242c16ac0a")
+set(md5 "da2d0787311525213cd4721da9946b86")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(FH_Fortran_FLAGS "${BACKEND_Fortran_FLAGS_NO_BUILD_OPTIMISATIONS}") #For skipping -O2, which seems to cause issues
 set(FH_C_FLAGS "${BACKEND_C_FLAGS_NO_BUILD_OPTIMISATIONS}")             #For skipping -O2, which seems to cause issues
@@ -837,8 +854,43 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
-
 # HiggsBounds
+set(name "higgsbounds")
+set(ver "4.2.1")
+set(lib "libhiggsbounds")
+set(dl "https://${name}.hepforge.org/downloads/HiggsBounds-${ver}.tar.gz")
+set(md5 "47b93330d4e0fddcc23b381548db355b")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(hb_tab_name "higgsbounds_tables")
+set(hb_tab_ver "0.0")
+set(hb_tab_dir "${PROJECT_SOURCE_DIR}/Backends/installed/${hb_tab_name}/${hb_tab_ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DEPENDS ${hb_tab_name}_${hb_tab_ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy configure-with-chisq my_configure
+              COMMAND sed ${dashi} -e "s|clsbtablesdir=.*|clsbtablesdir=\"${hb_tab_dir}/\"|" my_configure
+              COMMAND sed ${dashi} -e "s|F90C =.*|F90C = ${CMAKE_Fortran_COMPILER}|" my_configure
+              COMMAND sed ${dashi} -e "s|F77C =.*|F77C = ${CMAKE_Fortran_COMPILER}|" my_configure
+              COMMAND sed ${dashi} -e "s|F90FLAGS =.*|F90FLAGS = ${BACKEND_Fortran_FLAGS}|" my_configure
+              COMMAND sed ${dashi} -e "s|\\.SUFFIXES|.NOTPARALLEL:${nl}${nl}.SUFFIXES|" makefile.in
+              COMMAND ${CMAKE_COMMAND} -E copy makefile.in makefile.in.tmp
+              COMMAND awk "{gsub(/${nl}/,${true_nl})}{print}" makefile.in.tmp > makefile.in
+              COMMAND ${CMAKE_COMMAND} -E remove makefile.in.tmp
+              COMMAND ./my_configure
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+          COMMAND ${CMAKE_COMMAND} -E make_directory lib
+          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} -shared -o lib/${lib}.so *.o" > make_so.sh
+          COMMAND chmod u+x make_so.sh
+          COMMAND ./make_so.sh
+    INSTALL_COMMAND ""
+  )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
 set(name "higgsbounds")
 set(ver "4.3.1")
 set(lib "libhiggsbounds")
@@ -877,44 +929,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
-
-# HiggsBounds
-set(name "higgsbounds")
-set(ver "4.2.1")
-set(lib "libhiggsbounds")
-set(dl "https://${name}.hepforge.org/downloads/HiggsBounds-${ver}.tar.gz")
-set(md5 "47b93330d4e0fddcc23b381548db355b")
-set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(hb_tab_name "higgsbounds_tables")
-set(hb_tab_ver "0.0")
-set(hb_tab_dir "${PROJECT_SOURCE_DIR}/Backends/installed/${hb_tab_name}/${hb_tab_ver}")
-check_ditch_status(${name} ${ver} ${dir})
-if(NOT ditched_${name}_${ver})
-  ExternalProject_Add(${name}_${ver}
-    DEPENDS ${hb_tab_name}_${hb_tab_ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
-    SOURCE_DIR ${dir}
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy configure-with-chisq my_configure
-              COMMAND sed ${dashi} -e "s|clsbtablesdir=.*|clsbtablesdir=\"${hb_tab_dir}/\"|" my_configure
-              COMMAND sed ${dashi} -e "s|F90C =.*|F90C = ${CMAKE_Fortran_COMPILER}|" my_configure
-              COMMAND sed ${dashi} -e "s|F77C =.*|F77C = ${CMAKE_Fortran_COMPILER}|" my_configure
-              COMMAND sed ${dashi} -e "s|F90FLAGS =.*|F90FLAGS = ${BACKEND_Fortran_FLAGS}|" my_configure
-              COMMAND sed ${dashi} -e "s|\\.SUFFIXES|.NOTPARALLEL:${nl}${nl}.SUFFIXES|" makefile.in
-              COMMAND ${CMAKE_COMMAND} -E copy makefile.in makefile.in.tmp
-              COMMAND awk "{gsub(/${nl}/,${true_nl})}{print}" makefile.in.tmp > makefile.in
-              COMMAND ${CMAKE_COMMAND} -E remove makefile.in.tmp
-              COMMAND ./my_configure
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
-          COMMAND ${CMAKE_COMMAND} -E make_directory lib
-          COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_Fortran_COMPILER} -shared -o lib/${lib}.so *.o" > make_so.sh
-          COMMAND chmod u+x make_so.sh
-          COMMAND ./make_so.sh
-    INSTALL_COMMAND ""
-  )
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-endif()
-
 
 # HiggsSignals
 set(name "higgssignals")
@@ -984,36 +998,6 @@ endif()
 
 # gm2calc
 set(name "gm2calc")
-set(ver "1.3.0")
-set(dl "https://${name}.hepforge.org/downloads/${name}-${ver}.tar.gz")
-set(md5 "1bddab5a411a895edd382a1f8a991c15")
-set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}")
-# - Silence the deprecated-declarations warnings coming from Eigen3
-set(GM2CALC_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
-set_compiler_warning("no-deprecated-declarations" GM2CALC_CXX_FLAGS)
-# - gm2calc 1.3 depends on std::ptr_fun which is removed in c++17, so we need to fall back to c++14 (or c++11)
-if(COMPILER_SUPPORTS_CXX17)
-  string(REGEX REPLACE "-std=c\\+\\+17" "-std=c++14" GM2CALC_CXX_FLAGS "${GM2CALC_CXX_FLAGS}")
-endif()
-check_ditch_status(${name} ${ver} ${dir})
-if(NOT ditched_${name}_${ver})
-  ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
-    SOURCE_DIR ${dir}
-    BUILD_IN_SOURCE 1
-    PATCH_COMMAND patch -p1 < ${patch}_error.dif
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${GM2CALC_CXX_FLAGS} EIGENFLAGS=-I${EIGEN3_INCLUDE_DIR} BOOSTFLAGS=-I${Boost_INCLUDE_DIR} alllib
-    INSTALL_COMMAND ""
-  )
-  BOSS_backend(${name} ${ver})
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
-endif()
-
-# gm2calc
-set(name "gm2calc")
 set(ver "1.2.0")
 set(dl "https://${name}.hepforge.org/downloads/${name}-${ver}.tar.gz")
 set(md5 "07d55bbbd648b8ef9b2d69ad1dfd8326")
@@ -1043,6 +1027,36 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+set(name "gm2calc")
+set(ver "1.3.0")
+set(dl "https://${name}.hepforge.org/downloads/${name}-${ver}.tar.gz")
+set(md5 "1bddab5a411a895edd382a1f8a991c15")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}")
+# - Silence the deprecated-declarations warnings coming from Eigen3
+set(GM2CALC_CXX_FLAGS "${BACKEND_CXX_FLAGS}")
+set_compiler_warning("no-deprecated-declarations" GM2CALC_CXX_FLAGS)
+# - gm2calc 1.3 depends on std::ptr_fun which is removed in c++17, so we need to fall back to c++14 (or c++11)
+if(COMPILER_SUPPORTS_CXX17)
+  string(REGEX REPLACE "-std=c\\+\\+17" "-std=c++14" GM2CALC_CXX_FLAGS "${GM2CALC_CXX_FLAGS}")
+endif()
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND patch -p1 < ${patch}_error.dif
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${GM2CALC_CXX_FLAGS} EIGENFLAGS=-I${EIGEN3_INCLUDE_DIR} BOOSTFLAGS=-I${Boost_INCLUDE_DIR} alllib
+    INSTALL_COMMAND ""
+  )
+  BOSS_backend(${name} ${ver})
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+  set_as_default_version("backend" ${name} ${ver})
+endif()
+
+
 # SUSYHD
 set(name "susyhd")
 set(ver "1.0.2")
@@ -1064,9 +1078,3 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
-
-# Alternative download command for getting unreleased things from the gambit_internal repository.
-# If you don't know what that is, you don't need to tinker with these.
-#    DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow --bold ${private_code_warning1}
-#             COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --red --bold ${private_code_warning2}
-#             COMMAND ${CMAKE_COMMAND} -E copy_directory ${loc} ${dir}
