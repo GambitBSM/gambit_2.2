@@ -2956,11 +2956,9 @@ namespace Gambit
 
       };
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
-
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
-
+      SI_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
+      SI_observable_map SI_theory = prediction.central_values;
+      SI_covariance_map SI_theory_covariance = prediction.covariance;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3012,11 +3010,9 @@ namespace Gambit
         "BR_Bdmumu"
       };
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
-
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
-
+      SI_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
+      SI_observable_map SI_theory = prediction.central_values;
+      SI_covariance_map SI_theory_covariance = prediction.covariance;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){

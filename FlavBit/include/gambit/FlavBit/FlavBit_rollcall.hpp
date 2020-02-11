@@ -980,8 +980,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumuLogLikelihood_LHCb
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_prediction_B2mumu, SI_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1001,8 +1000,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumuLogLikelihood_Atlas
     START_FUNCTION(double);
-    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_prediction_B2mumu, SI_prediction)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
