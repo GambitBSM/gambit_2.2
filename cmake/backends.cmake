@@ -125,39 +125,9 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
-# HepLike
-set(name "heplike")
-set(ver "1.0")
-set(dl "null")
-set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
-check_ditch_status(${name} ${ver} ${dir})
-if(NOT ditched_${name}_${ver})
-  ExternalProject_Add(${name}_${ver}
-#    DEPENDS heplikedata yaml-cpp
-    GIT_REPOSITORY https://github.com/mchrzasz/HEPLike.git
-    SOURCE_DIR ${dir}
-    CMAKE_COMMAND ${CMAKE_COMMAND} ..
-    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${HL_CXXFLAGS} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
-    # getting heplikedata
-#          COMMAND cd "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}"
-#          COMMAND pwd
-#          COMMAND wget
-    INSTALL_COMMAND ""
-    )
-  BOSS_backend_with_ROOT(${name} ${ver})
-  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
-  set_as_default_version("backend" ${name} ${ver})
-endif()
-
 # HepLikedata
 set(name "heplikedata")
 set(ver "1.0")
-# this has to be dhe same as in the HepLike package
-set(HLname "heplikedata")
-set(HLver "1.0")
-
 set(dl "https://github.com/mchrzasz/HEPLikeData/archive/master.zip")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(md5 "22940817352533db6a1e14b8bd2cd04c")
@@ -170,17 +140,33 @@ if(NOT ditched_${name}_${ver})
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ${CMAKE_COMMAND} -E echo 'cp  ${dir}/HEPLikeData-master/data/ ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}' > make_hepliedata.sh
           COMMAND chmod u+x make_hepliedata.sh
-
-#    CONFIGURE_COMMAND ""
-#    BUILD_COMMAND  pwd
-#          COMMAND echo 'aaa'
-#    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
-#    CMAKE_COMMAND ""
     INSTALL_COMMAND ""
     )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
+endif()
 
+# HepLike
+set(name "heplike")
+set(ver "1.0")
+set(dl "https://github.com/mchrzasz/HEPLike/archive/V${ver}.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+set(md5 "09352ac921563e962842770604b60491")
+set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+    DEPENDS heplikedata
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+    SOURCE_DIR ${dir}
+    CMAKE_COMMAND ${CMAKE_COMMAND} ..
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${HL_CXXFLAGS} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake
+    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+    INSTALL_COMMAND ""
+    )
+  BOSS_backend_with_ROOT(${name} ${ver})
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
+  set_as_default_version("backend" ${name} ${ver})
 endif()
 
 
