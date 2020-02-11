@@ -59,6 +59,20 @@ namespace Gambit
       DMEFTmodel.DMEFT_C710 = *myPipe::Param.at("C710");
       DMEFTmodel.DMEFT_chi_Pole_Mass = *myPipe::Param.at("mchi");
       DMEFTmodel.DMEFT_h0_1_Pole_Mass = *myPipe::Param.at("mH");
+
+      // Invalidate point if the EFT is violated for DM annihilation i.e. 2*m_DM > Lambda
+      // Default: true
+      if (myPipe::runOptions->getValueOrDef<bool>(true,"impose_EFT_validity"))
+      {
+        if (DMEFTmodel.DMEFT_Lambda < (2*DMEFTmodel.DMEFT_chi_Pole_Mass))
+        {
+          std::ostringstream msg;
+          msg << "Parameter point [mchi, Lambda] = [" << DMEFTmodel.DMEFT_chi_Pole_Mass << " GeV, "
+              << DMEFTmodel.DMEFT_Lambda << " GeV] does not satisfy the EFT.";
+          invalid_point().raise(msg.str());
+        }
+      }
+      else {}
       
       // quantities needed to fill container spectrum
       double alpha_em = 1.0 / sminputs.alphainv;

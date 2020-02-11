@@ -181,6 +181,7 @@
 
     #define FUNCTION DMEFT_results
     START_FUNCTION(AnalysisDataPointers)
+    DEPENDENCY(DMEFT_spectrum, Spectrum)
     ALLOW_MODELS(DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
