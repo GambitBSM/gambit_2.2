@@ -243,10 +243,11 @@ namespace Gambit
       
     } // function DD_couplings_DiracSingletDM_Z2
     
-    /// Relativistic Wilson Coefficients for direct detection
-    void DD_rel_WCs_DiracSingletDM_Z2(map_str_dbl &result)
+    /// Relativistic Wilson Coefficients for direct detection, 
+    /// defined above the EW scale
+    void DD_rel_WCs_EW_DiracSingletDM_Z2(map_str_dbl &result)
     {
-      using namespace Pipes::DD_rel_WCs_DiracSingletDM_Z2;
+      using namespace Pipes::DD_rel_WCs_EW_DiracSingletDM_Z2;
 
       // Get values of non-relativistic operators from Spectrum
       Spectrum spec = *Dep::DiracSingletDM_Z2_spectrum;

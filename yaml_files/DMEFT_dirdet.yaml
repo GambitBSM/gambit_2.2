@@ -25,45 +25,45 @@ Parameters:
     # Dim 6 -- qq chi chi bilinears
     # vector vector
     C61:
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # axial-vector vector
     C62: 
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # vector axial-vector
     C63: 
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # axial-vector axial-vector
     C64: 
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # Dim 7 -- gluons
     C71:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     C72:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     C73:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     C74:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # Dim 7 -- Higgs induced bilinears
     # Scalar scalar
     C75:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # Pseudoscalar scalar
     C76:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # Scalar pseudoscalar
     C77:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # Pseudoscalar pseudoscalar
     C78:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # Dim 7 -- tensor currents
     # sigma sigma
     C79:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
     # sigma*ig5 sigma
     C710:  
-      range: [0, 1]
+      range: [-12.56637, 12.56637]
 
   Halo_gNFW_rho0:
     rho0: 0.4
@@ -109,8 +109,8 @@ ObsLikes:
   - capability: XENON1T_2018_LogLikelihood
     purpose:    LogLike
 
-  # - capability: DD_rel_WCs
-  #   purpose:    observable
+  - capability: DD_rel_WCs_flavscheme
+    purpose:    observable
 
 Rules:
 

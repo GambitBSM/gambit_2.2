@@ -78,7 +78,7 @@ BE_NAMESPACE
   /// Requires a dictionary of relatavistic WCs, , the DM mass, dchi is the dimension of the DM SU2 representation,
   /// Ychi is the DM hypercharge such that Q = I^3 + Y/2, scale is the scale the Lagrangian is defined at, and
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
-  NREO_DM_nucleon_couplings get_NR_WCs_EW(map_str_dbl& relativistic_WCs,  double& mDM, double& dchi, double& Ychi, double& scale, std::string& DM_type)
+  NREO_DM_nucleon_couplings get_NR_WCs_EW(map_str_dbl& relativistic_WCs, double& mDM, double& dchi, double& Ychi, double& scale, std::string& DM_type)
   {
     // S.B. 19/09/18: currently only Dirac supported
     if (DM_type != "D")
@@ -116,8 +116,6 @@ BE_NAMESPACE
     // quark not present in a given scheme.
     for (auto &WC : relativistic_WCs)
     {
-      // Always remove top quark specific couplings from these
-      if (boost::ends_with(WC.first, "t")) { relativistic_WCs.erase(WC.first); }
       // Remove b quarks for schemes that are 3 and 4..
       if (scheme < 5)
       { 
