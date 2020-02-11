@@ -94,13 +94,13 @@ ObsLikes:
 
   - purpose:    B2LLTest_LHCb
     capability: HEPLike_B2mumuLogLikelihood_LHCb
-    
+
   - purpose:    B2LLTest_CMS
     capability: HEPLike_B2mumuLogLikelihood_CMS
 
   - purpose:    B2LLTest_Atlas
     capability: HEPLike_B2mumuLogLikelihood_Atlas
-      
+
   - purpose:    B2KStarMuMuAngularTest
     capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
 
@@ -111,14 +111,14 @@ ObsLikes:
   - purpose:    Bs2PhiMuMuBranchingRatioTest
     capability: HEPLike_Bs2PhimumuBr_LogLikelihood
 
-    
+
   - purpose:    RKTest
     capability: HEPLike_RK_LogLikelihood
 
   - purpose:    RKstarTest
     capability: HEPLike_RKstar_LogLikelihood_LHCb
-          
-          
+
+
 
 Rules:
   # Globally set the SuperIso observables to be considered
@@ -205,6 +205,10 @@ Rules:
         dGamma/dq2_Bsphimumu_1_6,
         dGamma/dq2_Bsphimumu_15_19,
       ]
+
+  # Use SM theory covariance matrix for every point
+  - capability: SuperIso_theory_covariance
+    function: SI_theory_covariance_SM
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: bsgamma
