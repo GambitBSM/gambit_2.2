@@ -3058,7 +3058,7 @@ namespace Gambit
           return obs_covariance;
       };
 
-      result = -nDimLikelihood_0.GetLogLikelihood(
+      result = nDimLikelihood_0.GetLogLikelihood(
               get_obs_theory(observables)
               /* nDimLikelihood does not support theory errors */
               );
@@ -3113,7 +3113,7 @@ namespace Gambit
           return obs_covariance;
       };
 
-      result = -nDimLikelihood_0.GetLogLikelihood(
+      result = nDimLikelihood_0.GetLogLikelihood(
               get_obs_theory(observables)
               /* nDimLikelihood does not support theory errors */
               );
@@ -3167,7 +3167,7 @@ namespace Gambit
           return obs_covariance;
       };
 
-      result = -nDimLikelihood.GetLogLikelihood(
+      result = nDimLikelihood.GetLogLikelihood(
               get_obs_theory(observables)
               /* nDimLikelihood does not support theory errors */
               );
