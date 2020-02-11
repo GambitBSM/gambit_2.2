@@ -130,6 +130,10 @@ Rules:
       B2taunu_obs_list: [
         Btaunu,
       ]
+      RDRDstar_obs_list: [
+        RD,
+        RDstar,
+      ]
       SuperIso_obs_list: [
         AI_BKstargamma,
         BR_BXsgamma,

@@ -786,6 +786,23 @@ namespace Gambit
       );
     }
 
+    void SuperIso_prediction_RDRDstar(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_RDRDstar;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("RDRDstar_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
+
     /// NEW! Compute values of list of observables
     void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
     {
@@ -2838,8 +2855,36 @@ namespace Gambit
         nDimGaussian.Read();
         first = false;
       }
-      const std::vector<double> theory{*Dep::RD, *Dep::RDstar};
-      result = nDimGaussian.GetLogLikelihood(theory /* , theory_covariance */);
+      static const std::array<std::string, 2> observables{
+        "RD",
+        "RDstar"
+      };
+
+      SI_prediction prediction = *Dep::SuperIso_prediction_RDRDstar;
+      SI_observable_map SI_theory = prediction.central_values;
+      SI_covariance_map SI_theory_covariance = prediction.covariance;
+
+      // C++14 allows auto instead of decltype(observables0p1_0p98)
+      auto get_obs_theory = [SI_theory](decltype(observables)& observables){
+          std::vector<double> obs_theory;
+          obs_theory.reserve(observables.size());
+          for (unsigned int i = 0; i < observables.size(); ++i) {
+            obs_theory.push_back(SI_theory.at(observables[i]));
+          }
+          return obs_theory;
+      };
+
+      auto get_obs_covariance = [SI_theory_covariance](decltype(observables)& observables){
+          boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+          for (unsigned int i = 0; i < observables.size(); ++i) {
+            for (unsigned int j = 0; j < observables.size(); ++j) {
+              obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+            }
+          }
+          return obs_covariance;
+      };
+
+      result = nDimGaussian.GetLogLikelihood(get_obs_theory(observables), get_obs_covariance(observables));
       if (flav_debug) std::cout << "hepLikeRDRDstarLogLikelihood result: " << result << std::endl;
     }
 
