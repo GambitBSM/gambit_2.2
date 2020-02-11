@@ -63,7 +63,7 @@ namespace Gambit
   namespace ColliderBit
   {
     
-    // ---------------------------------- FUNCTION OF INTEREST ------------------------------------------------
+    // ---------------------------------- INTERPOLATION FUNCTIONS ------------------------------------------------
       const char* colliderbitdata_path = GAMBIT_DIR "/ColliderBit/data/"; 
       #define PI 3.14159265
       // Initialize all data
@@ -149,7 +149,7 @@ namespace Gambit
     }
 
     // ---------------------------------------------------- //
-    // Interpolation functions // 
+    //  Calculate Yields // 
     // ---------------------------------------------------- //  
     
     void Acceptance_CS(double * accep, float m,float O1,float O2, float lambda ,const char* pair, const char* experiment)
@@ -186,7 +186,7 @@ namespace Gambit
       {
         mylock.get_lock();
 
-        cout << "Reading in grids. [Only happens on first itteration]."<<endl;
+        cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
         float var1,var2;
         FILE * fp = fopen(GAMBIT_DIR "/ColliderBit/data/DMEFT/X_Y_ATLAS_C62_C63.txt","r");   // The masses and thetas are the same for each! 
         for (int ll = 0; ll < data_INC; ++ll){
@@ -694,10 +694,9 @@ namespace Gambit
 
       Acceptance_CS(A14, m, C61, C64, lambda, of, exper_);
         // cout << "Check things 15 "<<endl;  
-
+      
       for (int ii = 0; ii < met_bin_size; ++ii){
         YIELDS[ii] = A23[ii] + A14[ii];
-
       }
         // cout << "Check things 16"<<endl;  
 
