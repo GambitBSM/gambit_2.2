@@ -806,7 +806,7 @@ namespace Gambit
     void SuperIso_prediction_B2SGamma(SI_prediction& result)
     {
       using namespace Pipes::SuperIso_prediction_B2SGamma;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("BR_BXsgamma_obs_list");
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2SGamma_obs_list");
 
       SuperIso_prediction_helper(
         obslist,
