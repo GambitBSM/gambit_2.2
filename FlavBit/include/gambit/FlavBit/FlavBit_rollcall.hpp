@@ -92,7 +92,7 @@ START_MODULE
     START_FUNCTION(SI_observable_map)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
-	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
   #undef CAPABILITY
@@ -100,6 +100,7 @@ START_MODULE
   // Theory covariance matrix
   #define CAPABILITY SuperIso_theory_covariance
   START_CAPABILITY
+
     #define FUNCTION SI_theory_covariance
     START_FUNCTION(SI_covariance_map)
     DEPENDENCY(SuperIso_modelinfo, parameters)
@@ -108,16 +109,28 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
+
+    #define FUNCTION SI_theory_covariance_SM
+    START_FUNCTION(SI_covariance_map)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+    #undef FUNCTION
+
   #undef CAPABILITY
-  
+
+
   #define CAPABILITY SuperIso_prediction
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction
     START_FUNCTION(SI_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
-	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
     BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
@@ -131,27 +144,13 @@ START_MODULE
     START_FUNCTION(SI_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
-	BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
     BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
    #undef FUNCTION
   #undef CAPABILITY
-
-  #define CAPABILITY SuperIso_theory_covariance_SM
-  START_CAPABILITY
-    #define FUNCTION SI_theory_covariance_SM
-    START_FUNCTION(SI_covariance_map)
-    DEPENDENCY(SuperIso_modelinfo, parameters)
-    DEPENDENCY(SuperIso_nuisance, nuisance)
-    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
-    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
-    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
-    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
-  #undef CAPABILITY
-
 
 
   // Observable: BR(B -> Xs gamma)
@@ -961,8 +960,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2SGammaLogLikelihood
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-//    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map) 
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -973,8 +971,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstargammaS_HFLAV
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    //    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -985,8 +982,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2mumuLogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -997,8 +993,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2mumuLogLikelihood_CMS
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1009,8 +1004,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2mumuLogLikelihood_Atlas
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1021,8 +1015,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1033,8 +1026,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_CMS
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1045,8 +1037,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Belle
     START_FUNCTION(double);
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1057,8 +1048,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
  #undef CAPABILITY
@@ -1069,8 +1059,7 @@ START_MODULE
     #define FUNCTION HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1081,8 +1070,7 @@ START_MODULE
     #define FUNCTION HEPLike_Bs2PhimumuBr_LogLikelihood
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1093,8 +1081,7 @@ START_MODULE
     #define FUNCTION HEPLike_RK_LogLikelihood
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1105,12 +1092,11 @@ START_MODULE
     #define FUNCTION HEPLike_RKstar_LogLikelihood_LHCb
     START_FUNCTION(double)
     DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-  //DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
-    DEPENDENCY(SuperIso_theory_covariance_SM, SI_covariance_map)
+    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
-                                                                 
+
 
 
 
