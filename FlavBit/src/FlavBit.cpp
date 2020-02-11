@@ -820,6 +820,23 @@ namespace Gambit
       );
     }
 
+    void SuperIso_prediction_B2KstarGamma(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_B2KstarGamma;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarGamma_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
+
     /// NEW! Compute values of list of observables
     void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
     {
@@ -2950,11 +2967,9 @@ namespace Gambit
 
       static const std::string observable{"SKstarGamma"};
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
-
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
-
+      SI_prediction prediction = *Dep::SuperIso_prediction_B2KstarGamma;
+      SI_observable_map SI_theory = prediction.central_values;
+      SI_covariance_map SI_theory_covariance = prediction.covariance;
 
       result = gaussian_0.GetLogLikelihood(
               SI_theory[observable],

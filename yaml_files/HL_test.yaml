@@ -137,6 +137,9 @@ Rules:
       B2SGamma_obs_list: [
         BR_BXsgamma,
       ]
+      B2KstarGamma_obs_list: [
+        SKstarGamma,
+      ]
       SuperIso_obs_list: [
         AI_BKstargamma,
         BR_BXsgamma,
