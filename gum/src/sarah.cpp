@@ -23,6 +23,7 @@
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/suite/indexing/map_indexing_suite.hpp>
+#include <boost/python/raw_function.hpp>
 
 #include <boost/filesystem.hpp>
 
@@ -1157,22 +1158,29 @@ namespace GUM
   }
 
   // Write SPheno output.
-  void SARAH::write_spheno_output()
+  void SARAH::write_spheno_output(std::map<std::string,std::string> options)
   {
       std::cout << "Writing SPheno output." << std::endl;
       std::cout << "Strap in tight -- this might take a while..." << std::endl;
       
       // Options for SPheno output.
-      std::string options;
-      // TODO: options:
+      std::string SPhenoOptions = "";
       // - InputFile (default $MODEL/SPheno.m)
       // - StandardCompiler -> <COMPILER> (default gfortran) // TG: This should be handled by GM cmake system, so no need
-      // TODO: temp hack to make it faster
+      // - IncludeLoopDecays (default True)
+      // - ReadLists (default False) 
+      // - IncludeFlavourKit (default True but we set it to False cause FlavourKit will be a different backend)
       //options = "IncludeLoopDecays->False, IncludeFlavorKit->False, ReadLists->True";
-      options = "IncludeFlavorKit->False";
+      for(auto it = options.begin(); it != options.end(); it++)
+      {
+        SPhenoOptions += it->first + "->" + it->second + ", ";
+      }
+      SPhenoOptions += "IncludeFlavorKit->False";
+
+      std::cout << "Options: " << SPhenoOptions << std::endl;
 
       // Write output.
-      std::string command = "MakeSPheno[" + options + "];";
+      std::string command = "MakeSPheno[" + SPhenoOptions + "];";
       send_to_math(command);
 
       std::cout << "SPheno files written." << std::endl;
@@ -1251,7 +1259,7 @@ namespace GUM
       /// Write SPheno output
       if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
       {
-        model.write_spheno_output();
+        model.write_spheno_output(opts.options().at("spheno"));
 
         // Leave only the parameters that SPheno uses
         model.SPheno_parameters(paramlist);
@@ -1310,9 +1318,36 @@ namespace GUM
 } // namespace GUM
 
 // Now all the grizzly stuff, so Python can call C++ (which can call Mathematica...)
+using namespace boost::python;
+
+// Nasty function to translate python dictionaries to maps
+object setOptions(tuple args, dict kwargs)
+{
+    Options& self = extract<Options&>(args[0]);
+
+    list keys = kwargs.keys();
+
+    std::map<std::string,std::map<std::string,std::string> > outMap;
+    for(int i = 0; i < len(keys); ++i)
+    {
+        dict secondLayer = extract<dict>(kwargs[keys[i]]);
+        list keys2 = secondLayer.keys();
+
+        std::map<std::string,std::string> tempMap;
+        for(int j=0; j < len(keys2); ++j)
+        {
+          std::string value = extract<std::string>(str(secondLayer[keys2[j]]));
+          tempMap[extract<std::string>(keys2[j])] = value;
+        }
+        outMap[extract<std::string>(keys[i])] = tempMap;
+    }
+    self.setOptions(outMap);
+
+    return object();
+}
+
 BOOST_PYTHON_MODULE(libsarah)
 {
-  using namespace boost::python;
 
   class_<Particle>("SARAHParticle", init<int, std::string, int, int, int, bool, std::string, std::string, std::string, std::string>())
     .def("pdg",      &Particle::pdg)
@@ -1339,9 +1374,10 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("bcs",       &Parameter::bcs)
     ;
 
-  class_<Options>("SARAHOptions", init<std::string, std::string, std::string, std::string, std::string>())
+  class_<Options>("SARAHOptions", init<std::string, std::string>())
     .def("package",     &Options::package)
     .def("model",       &Options::model)
+    .def("setOptions",  raw_function(&setOptions,1))
     ;
 
   class_<Outputs>("SARAHOutputs", init<>())
@@ -1368,7 +1404,7 @@ BOOST_PYTHON_MODULE(libsarah)
     .def(vector_indexing_suite< std::vector<Parameter> >() )
     ;
 
-  class_< std::map<std::string,bool> >("SARAHMapOfFlags")
+  class_< std::map<std::string,bool> >("SARAHMapStrBool")
     .def(map_indexing_suite< std::map<std::string,bool> >() )
     ;
 

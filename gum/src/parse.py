@@ -1,7 +1,28 @@
-"""
-Contains all routines for parsing input .gum files and 
-the SARAH/FeynRules model files.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Contains all routines for parsing input .gum files and 
+#  the SARAH/FeynRules model files.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017, 2018, 2019, 2020
+#
+#  \author Pat Scott
+#          (pat.scott@uq.edu.au)
+#  \date 2018, 2019
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020 Jan
+#
+#  **************************************
+
 
 # TODO add mass dimension for new parameters in .gum file
 
@@ -52,8 +73,9 @@ class Outputs:
 
     def __init__(self, mathpackage, calchep = False, pythia = False,
                  micromegas = False, spheno = False,
-                 vevacious = False, ufo = False, collider_processes = None, 
-                 multiparticles = None, pythia_groups = None):
+                 vevacious = False, ufo = False, options = {}):
+#                  , collider_processes = None, 
+#                 multiparticles = None, pythia_groups = None):
 
         self.ch = calchep
         self.pythia = pythia
@@ -61,9 +83,10 @@ class Outputs:
         self.spheno = spheno
         self.vev = vevacious
         self.ufo = ufo
-        self.collider_processes = collider_processes
-        self.multiparticles = multiparticles
-        self.pythia_groups = pythia_groups
+#        self.collider_processes = collider_processes
+#        self.multiparticles = multiparticles
+#        self.pythia_groups = pythia_groups
+        self.options = options
 
         # Overwrite these, as the output does not exist.
         if mathpackage == 'feynrules':
@@ -192,12 +215,23 @@ def fill_gum_object(data):
             raise GumError(("\n\nAll backend output set to false in your .gum "
                             "file.\nGive GUM something to do!\n"
                             "Please change your .gum file."))
-        if 'collider_processes' in data['output']:
-            opts['collider_processes'] = data['output']['collider_processes']
-        if 'multiparticles' in data['output']:
-            opts['multiparticles'] = data['output']['multiparticles']
-        if 'pythia_groups' in data['output']:
-            opts['pythia_groups'] = data['output']['pythia_groups']
+
+    options = {}
+    # Options for the outputs declared
+    if 'output_options' in data:
+        for output in data['output_options']:
+            if output not in opts.keys():
+                raise GumError(("\n\nOptions given to output " + output + " "
+                                "which is not declared as gum output.\n"
+                                "Please change your .gum file."))
+            options[output] = data['output_options'][output]
+
+        #if 'collider_processes' in data['output']:
+        #    opts['collider_processes'] = data['output']['collider_processes']
+        #if 'multiparticles' in data['output']:
+        #    opts['multiparticles'] = data['output']['multiparticles']
+        #if 'pythia_groups' in data['output']:
+        #    opts['pythia_groups'] = data['output']['pythia_groups']
 
     # If we've got this far, we'll also force some decays to be written,
     # either by SPheno or by CalcHEP.
@@ -209,7 +243,7 @@ def fill_gum_object(data):
         set_calchep = False
     if set_calchep: opts['calchep'] = True
     
-    outputs = Outputs(mathpackage, **opts)
+    outputs = Outputs(mathpackage, options=options, **opts)
 
     # If the user wants MicrOMEGAs output but hasn't specified a DM candidate
     if not wimp_candidate and outputs.mo:

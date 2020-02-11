@@ -22,18 +22,22 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 class Options
 {
 
-    std::string optpackage;
-    std::string optmodel;
-    std::string optbasemodel;
-    std::string optrestriction;
-    std::string optLTot;
+    private:
+        std::string optpackage;
+        std::string optmodel;
+        std::string optbasemodel;
+        std::string optrestriction;
+        std::string optLTot;
+        std::map<std::string,std::map<std::string,std::string> > optoptions;
 
     public:
-        Options(std::string package, std::string model, std::string basemodel, std::string restriction, std::string lagrangian = "LTotal")
+
+        Options(std::string package, std::string model, std::string basemodel, std::string restriction, std::string lagrangian="LTotal")
         {
             optpackage = package;
             optmodel = model;
@@ -42,21 +46,36 @@ class Options
             optLTot = lagrangian;
         }
 
+        Options(std::string package, std::string model)
+        {
+            optpackage = package;
+            optmodel = model;
+        }
+
         std::string model() { return optmodel; }
         std::string base_model() { return optbasemodel; }
         std::string package() { return optpackage; }
         std::string restriction() { return optrestriction; }
         std::string lagrangian() { return optLTot; }
+        std::map<std::string,std::map<std::string,std::string> > options() { return optoptions; }
+
+        void setOptions(std::map<std::string,std::map<std::string,std::string> > options)
+        {
+          optoptions = options;
+        }
+
 
 };
 
 
 class Outputs
 {
-    std::string ch;
-    std::string mg;
-    std::string vev;
-    std::string sph;
+
+    private:
+        std::string ch;
+        std::string mg;
+        std::string vev;
+        std::string sph;
 
     public:
 
