@@ -94,8 +94,18 @@ if args.file:
             decaybit = False
 
         # Check whether we need to generate new ColliderBit code or not
+        # Also check whether the correct YAML entries are filled
         if output_opts.pythia:
             colliderbit = True
+            if not 'pythia' in output_opts.options:
+                raise GumError(("\n\nPythia output requested but no "
+                                "collider_processes specified.\n"
+                                "Please amend your .gum file!"))
+            collider_processes = output_opts.options['pythia'].get('collider_processes')
+            if collider_processes == None:
+                raise GumError(("\n\nPythia output requested but no "
+                                "collider_processes specified.\n"
+                                "Please amend your .gum file!"))
         else:
             colliderbit = False
 
