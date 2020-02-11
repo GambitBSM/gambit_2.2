@@ -134,6 +134,9 @@ Rules:
         RD,
         RDstar,
       ]
+      B2SGamma_obs_list: [
+        BR_BXsgamma,
+      ]
       SuperIso_obs_list: [
         AI_BKstargamma,
         BR_BXsgamma,
