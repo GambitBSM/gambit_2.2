@@ -37,6 +37,7 @@
 ///  \date 2016 Aug
 ///  \date 2017 March
 ///  \date 2019 Oct
+///  \date 2020 Feb
 ///
 ///  \author Tomas Gonzalo
 ///          (t.e.gonzalo@fys.uio.no)
