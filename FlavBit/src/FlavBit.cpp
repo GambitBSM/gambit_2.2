@@ -769,6 +769,22 @@ namespace Gambit
       );
     }
 
+    void SuperIso_prediction_B2taunu(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_B2taunu;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2taunu_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
 
     /// NEW! Compute values of list of observables
     void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
@@ -2795,8 +2811,17 @@ namespace Gambit
         gaussian.Read();
         first = false;
       }
-      const double theory = *Dep::Btaunu;
-      result = gaussian.GetLogLikelihood(theory /* , theory_error */);
+
+      static const std::string observable{"Btaunu"};
+
+      SI_prediction prediction = *Dep::SuperIso_prediction_B2taunu;
+      SI_observable_map SI_theory = prediction.central_values;
+      SI_covariance_map SI_theory_covariance = prediction.covariance;
+
+      result = gaussian.GetLogLikelihood(
+              SI_theory[observable],
+              SI_theory_covariance[observable][observable]
+              );
       if (flav_debug) std::cout << "hepLikeB2TauNuLogLikelihood result: " << result << std::endl;
     }
 
