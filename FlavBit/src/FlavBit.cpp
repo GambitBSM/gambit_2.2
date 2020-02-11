@@ -837,6 +837,23 @@ namespace Gambit
       );
     }
 
+    void SuperIso_prediction_B2KstarmumuBr(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_B2KstarmumuBr;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuBr_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
+
     /// NEW! Compute values of list of observables
     void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
     {
@@ -3605,11 +3622,9 @@ namespace Gambit
         "dGamma/dq2_B0Kstar0mumu_15_19",
       };
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
-
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
-
+      SI_prediction prediction = *Dep::SuperIso_prediction_B2KstarmumuBr;
+      SI_observable_map SI_theory = prediction.central_values;
+      SI_covariance_map SI_theory_covariance = prediction.covariance;
 
       result = 0;
       result += BifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);

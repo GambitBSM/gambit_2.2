@@ -140,6 +140,14 @@ Rules:
       B2KstarGamma_obs_list: [
         SKstarGamma,
       ]
+      B2KstarmumuBr_obs_list: [
+        dGamma/dq2_B0Kstar0mumu_0.1_0.98,
+        dGamma/dq2_B0Kstar0mumu_1.1_2.5,
+        dGamma/dq2_B0Kstar0mumu_2.5_4,
+        dGamma/dq2_B0Kstar0mumu_4_6,
+        dGamma/dq2_B0Kstar0mumu_6_8,
+        dGamma/dq2_B0Kstar0mumu_15_19,
+      ]
       SuperIso_obs_list: [
         AI_BKstargamma,
         BR_BXsgamma,
