@@ -123,6 +123,13 @@ ObsLikes:
 Rules:
   # Globally set the SuperIso observables to be considered
   - options:
+      B2mumu_obs_list: [
+        BRuntag_Bsmumu,
+        BR_Bdmumu,
+      ]
+      B2taunu_obs_list: [
+        Btaunu,
+      ]
       SuperIso_obs_list: [
         AI_BKstargamma,
         BR_BXsgamma,
