@@ -67,10 +67,14 @@ namespace Gambit
       const char* colliderbitdata_path = GAMBIT_DIR "/ColliderBit/data/"; 
       #define PI 3.14159265
       // Initialize all data
-      static const size_t data_INC           = 15;
-      static const size_t data_SIZE          = pow(data_INC,2);
-      static const size_t cms_bin_size       = 22;
-      static const size_t atlas_bin_size     = 10;
+      // static const size_t data_INC           = 15;
+      // static const size_t data_SIZE          = pow(data_INC,2);
+      // static const size_t cms_bin_size       = 22;
+      // static const size_t atlas_bin_size     = 10;
+      #define data_INC        15
+      #define data_SIZE       225
+      #define cms_bin_size    22
+      #define atlas_bin_size  10
 
       const char* met_ATLAS_23 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
       const char* met_ATLAS_14 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64.txt";
