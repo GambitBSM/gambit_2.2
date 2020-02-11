@@ -755,11 +755,7 @@ namespace Gambit
     void SuperIso_prediction_B2mumu(SI_prediction& result)
     {
       using namespace Pipes::SuperIso_prediction_B2mumu;
-      // static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("SuperIso_obs_list");  // TODO: Get this from rules
-      static const std::vector<std::string> obslist{
-        "BRuntag_Bsmumu",
-        "BR_Bdmumu"
-      };
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2mumu_obs_list");
 
       SuperIso_prediction_helper(
         obslist,
