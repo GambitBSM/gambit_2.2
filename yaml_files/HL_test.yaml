@@ -105,13 +105,11 @@ ObsLikes:
   - purpose:    B2KStarMuMuAngularTest_Atlas
     capability: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
 
-  # FIXME: How are the observables called inside superiso?
-  #- purpose:    B2KStarMuMuAngularTest_CMS
-  #  capability: HEPLike_B2KstarmumuAng_LogLikelihood_CMS
+  - purpose:    B2KStarMuMuAngularTest_CMS
+    capability: HEPLike_B2KstarmumuAng_LogLikelihood_CMS
 
-  # FIXME: How are the observables called inside superiso?
-  #- purpose:    B2KStarMuMuAngularTest_Belle
-  #  capability: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
+  - purpose:    B2KStarMuMuAngularTest_Belle
+    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
 
   #- purpose:    B2KStarMuMuAngularTest_LHCb
   #  capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb

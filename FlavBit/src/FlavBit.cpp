@@ -3549,31 +3549,31 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       static const std::vector<std::string> observables1_2{
         "P1_B0Kstar0mumu_1_2",
-        "P5_B0Kstar0mumu_1_2",
+        "P5prime_B0Kstar0mumu_1_2",
       };
       static const std::vector<std::string> observables2_4p3{
         "P1_B0Kstar0mumu_2_4.3",
-        "P5_B0Kstar0mumu_2_4.3",
+        "P5prime_B0Kstar0mumu_2_4.3",
       };
       static const std::vector<std::string> observables4p3_6{
         "P1_B0Kstar0mumu_4.3_6",
-        "P5_B0Kstar0mumu_4.3_6",
+        "P5prime_B0Kstar0mumu_4.3_6",
       };
       static const std::vector<std::string> observables6_8p68{
         "P1_B0Kstar0mumu_6_8.68",
-        "P5_B0Kstar0mumu_6_8.68",
+        "P5prime_B0Kstar0mumu_6_8.68",
       };
       static const std::vector<std::string> observables10p09_12p86{
         "P1_B0Kstar0mumu_10.09_12.86",
-        "P5_B0Kstar0mumu_10.09_12.86",
+        "P5prime_B0Kstar0mumu_10.09_12.86",
       };
       static const std::vector<std::string> observables14p18_16{
         "P1_B0Kstar0mumu_14.18_16",
-        "P5_B0Kstar0mumu_14.18_16",
+        "P5prime_B0Kstar0mumu_14.18_16",
       };
       static const std::vector<std::string> observables16_19{
         "P1_B0Kstar0mumu_16_19",
-        "P5_B0Kstar0mumu_16_19",
+        "P5prime_B0Kstar0mumu_16_19",
       };
 
       SI_prediction prediction_1_2         = *Dep::SuperIso_prediction_B2KstarmumuAng_1_2_CMS;
@@ -3647,20 +3647,20 @@ namespace Gambit
 
       // Ordering of observables defined by HEPLike
       static const std::vector<std::string> observables0p1_4{
-        "P4_B0Kstar0mumu_0.1_4",
-        "P5_B0Kstar0mumu_0.1_4",
+        "P4prime_B0Kstar0mumu_0.1_4",
+        "P5prime_B0Kstar0mumu_0.1_4",
       };
       static const std::vector<std::string> observables4_8{
-        "P4_B0Kstar0mumu_4_8",
-        "P5_B0Kstar0mumu_4_8",
+        "P4prime_B0Kstar0mumu_4_8",
+        "P5prime_B0Kstar0mumu_4_8",
       };
       static const std::vector<std::string> observables10p9_12p9{
-        "P4_B0Kstar0mumu_10.9_12.9",
-        "P5_B0Kstar0mumu_10.9_12.9",
+        "P4prime_B0Kstar0mumu_10.9_12.9",
+        "P5prime_B0Kstar0mumu_10.9_12.9",
       };
       static const std::vector<std::string> observables14p18_19{
-        "P4_B0Kstar0mumu_14.18_19",
-        "P5_B0Kstar0mumu_14.18_19",
+        "P4prime_B0Kstar0mumu_14.18_19",
+        "P5prime_B0Kstar0mumu_14.18_19",
       };
 
 
