@@ -139,10 +139,11 @@ Rules:
       B2taunu_obs_list: [
         Btaunu,
       ]
-      RDRDstar_obs_list: [
-        RD,
-        RDstar,
-      ]
+      # SuperIso is not ready for the "new" way.
+      # RDRDstar_obs_list: [
+      #   RD,
+      #   RDstar,
+      # ]
       B2SGamma_obs_list: [
         BR_BXsgamma,
       ]

@@ -1226,7 +1226,10 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_RDRDstarLogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_prediction_RDRDstar, SI_prediction)
+    DEPENDENCY(RD, double)
+    DEPENDENCY(RDstar, double)
+    // TODO: Switch dependency as soon as SuperIso is ready for the "new" way.
+    // DEPENDENCY(SuperIso_prediction_RDRDstar, SI_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
