@@ -68,11 +68,10 @@
 #include "gambit/FlavBit/FlavBit_rollcall.hpp"
 #include "gambit/FlavBit/FlavBit_types.hpp"
 #include "gambit/FlavBit/Flav_reader.hpp"
-#include "gambit/FlavBit/Flav_utils.hpp"
 #include "gambit/FlavBit/Kstarmumu_theory_err.hpp"
 #include "gambit/FlavBit/flav_utils.hpp"
 #include "gambit/FlavBit/flav_loop_functions.hpp"
-#include "gambit/Elements/spectrum.hpp"
+#include "gambit/Elements/translator.hpp"
 #include "gambit/Utils/statistics.hpp"
 #include "gambit/cmake/cmake_variables.hpp"
 
@@ -133,7 +132,7 @@ namespace Gambit
     #endif
 
     /// FlavBit observable name translator
-    name_translator flav_obs_translator(GAMBIT_DIR "/FlavBit/data/observables_key.yaml");
+    Utils::translator translate_flav_obs(GAMBIT_DIR "/FlavBit/data/observables_key.yaml");
 
     /// Some constants used in SuperIso likelihoods
     const int ncorrnuis = 463;
@@ -889,7 +888,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -906,7 +905,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -923,7 +922,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
