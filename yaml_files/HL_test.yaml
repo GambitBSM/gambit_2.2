@@ -101,8 +101,8 @@ ObsLikes:
   - purpose:    B2LLTest_Atlas
     capability: HEPLike_B2mumuLogLikelihood_Atlas
 
-  - purpose:    B2KStarMuMuAngularTest
-    capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
+  - purpose:    B2KStarMuMuAngularTest_Atlas
+    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
 
 
   - purpose:    B2KStarMuMuBranchingRatioTest
