@@ -97,7 +97,7 @@ ObsLikes:
 
   # Likelihoods
   - purpose:    LogLike
-    capability: HEPLike_B2mumuLogLikelihood
+    capability: HEPLike_B2mumuLogLikelihood_LHCb
 
   #- purpose:    LogLike
   #  capability: b2sll_LL
