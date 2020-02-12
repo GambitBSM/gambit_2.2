@@ -1048,6 +1048,73 @@ namespace Gambit
       );
     }
 
+    void SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_0p1_4_Belle_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
+
+    void SuperIso_prediction_B2KstarmumuAng_4_8_Belle(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_4_8_Belle;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_4_8_Belle_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
+
+    void SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_10p9_12p9_Belle_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
+
+    void SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle(SI_prediction& result)
+    {
+      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle;
+      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_14p18_19_Belle_obs_list");
+
+      SuperIso_prediction_helper(
+        obslist,
+        result, 
+        *Dep::SuperIso_modelinfo,
+        *Dep::SuperIso_nuisance,
+        BEreq::get_predictions_nuisance.pointer(),
+        BEreq::observables.pointer(),
+        BEreq::convert_correlation.pointer(),
+        BEreq::get_th_covariance_nuisance.pointer()
+      );
+    }
 
     /// NEW! Compute values of list of observables
     void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
@@ -3594,36 +3661,36 @@ namespace Gambit
       };
 
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
+      SI_prediction prediction_0p1_4     = *Dep::SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle;
+      SI_prediction prediction_4_8       = *Dep::SuperIso_prediction_B2KstarmumuAng_4_8_Belle;
+      SI_prediction prediction_10p9_12p9 = *Dep::SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle;
+      SI_prediction prediction_14p18_19  = *Dep::SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle;
 
-      SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
-
-
-      // C++14 allows auto instead of decltype(observables0p1_4)
-      auto get_obs_theory = [SI_theory](decltype(observables0p1_4)& observables){
+      // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
+      auto get_obs_theory = [](SI_observable_map& theory, const std::vector<std::string>& observables){
         std::vector<double> obs_theory;
         obs_theory.reserve(observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
-          obs_theory.push_back(SI_theory.at(observables[i]));
+          obs_theory.push_back(theory.at(observables[i]));
         }
         return obs_theory;
       };
 
-      auto get_obs_covariance = [SI_theory_covariance](decltype(observables0p1_4)& observables){
+      auto get_obs_covariance = [](SI_covariance_map& theory_covariance, const std::vector<std::string>& observables){
         boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
           for (unsigned int j = 0; j < observables.size(); ++j) {
-            obs_covariance(i, j) = SI_theory_covariance.at(observables[i]).at(observables[j]);
+            obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
           }
         }
         return obs_covariance;
       };
+
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables0p1_4), get_obs_covariance(observables0p1_4));
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(observables4_8), get_obs_covariance(observables4_8));
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(observables10p9_12p9), get_obs_covariance(observables10p9_12p9));
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(observables14p18_19), get_obs_covariance(observables14p18_19));
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_4.central_values, observables0p1_4),         get_obs_covariance(prediction_0p1_4.covariance, observables0p1_4));
+      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(prediction_4_8.central_values, observables4_8),             get_obs_covariance(prediction_4_8.covariance, observables4_8));
+      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(prediction_10p9_12p9.central_values, observables10p9_12p9), get_obs_covariance(prediction_10p9_12p9.covariance, observables10p9_12p9));
+      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(prediction_14p18_19.central_values, observables14p18_19),   get_obs_covariance(prediction_14p18_19.covariance, observables14p18_19));
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Belle result: " << result << std::endl;
     }
