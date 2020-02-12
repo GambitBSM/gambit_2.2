@@ -179,8 +179,6 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
         # Masses should also be input parameters in this setup
         for particle in particles:
 
-            print particle.name, particle.PDG_code, particle.mass
-
             towrite += (
                     "SLHAea_add(slha, \"MASS\", {0}, *myPipe::Param[\"{1}\"]);\n"
             ).format(particle.PDG_code, particle.mass)
