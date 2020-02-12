@@ -3618,10 +3618,10 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_Belle(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Belle;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_0.1_4.0.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_4.0_8.0.yaml";
-      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_10.09_12.9.yaml";
-      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_14.18_19.0.yaml";
+      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_0.1_4.0.yaml";
+      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_4.0_8.0.yaml";
+      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_10.09_12.9.yaml";
+      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_14.18_19.0.yaml";
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_0);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
       static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);
