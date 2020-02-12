@@ -50,6 +50,14 @@ BE_INI_FUNCTION
       sprintf(modeltoset, "%s", path);
     }
     
+    if (ModelInUse("DMEFT"))
+    {
+      BEpath = backendDir + "/../models/DMEFT";
+      path = BEpath.c_str();
+      modeltoset = (char*)malloc(strlen(path)+11);
+      sprintf(modeltoset, "%s", path);
+    }
+
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
@@ -70,6 +78,20 @@ BE_INI_FUNCTION
     const Spectrum& spec = *Dep::ScalarSingletDM_Z2_spectrum;
 
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
+  }
+
+  if (ModelInUse("DMEFT"))
+  {
+   // Obtain model contents
+   static const SpectrumContents::DMEFT DMEFT_contents;
+   
+   // Obtain list of all parameters within model
+   static const std::vector<SpectrumParameter> DMEFT_params = DMEFT_contents.all_parameters();
+   
+   // Obtain spectrum information to pass to CalcHEP
+   const Spectrum& spec = *Dep::DMEFT_spectrum;
+   
+   Assign_All_Values(spec, DMEFT_params);
   }
 
 }
