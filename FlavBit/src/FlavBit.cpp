@@ -710,18 +710,25 @@ namespace Gambit
       }
 
       // ---------- COVARIANCE ----------
-      int nNuisance=161;
-      char namenuisance[nNuisance+1][50];
-      (*observables)(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
+      static bool first = true;
 
-      // Reserve memory
-      double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
-      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
-        corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
+      static const int nNuisance=161;
+      static char namenuisance[nNuisance+1][50];
+      static double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
+      
+      if (first) {
+      (*observables)(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance 
+
+        // Reserve memory
+        for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+          corr[iObservable]=(double *) malloc((nNuisance+1)*sizeof(double));
+        }
+        // --- Needed for SuperIso backend
+
+        (*convert_correlation)((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
+
+        first = false;
       }
-      // --- Needed for SuperIso backend
-
-      (*convert_correlation)((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
 
       double **result_covariance;
 
@@ -733,11 +740,11 @@ namespace Gambit
         }
       }
 
-      // Free memory
-      for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
-        free(corr[iObservable]);
-      }
-      free(corr);
+      // Free memory  // We are not freeing the memory because we made the variable static. Just keeping this for reference on how to clean up the allocated memory in case of non-static caluclation of **corr.
+      // for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
+      //   free(corr[iObservable]);
+      // }
+      // free(corr);
 
       if (flav_debug) {
         for(int iObservable=0; iObservable < nObservables; ++iObservable) {
