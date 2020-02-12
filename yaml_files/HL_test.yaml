@@ -86,8 +86,9 @@ ObsLikes:
   - purpose:    B2TauNuTest
     capability: HEPLike_B2TauNuLogLikelihood
 
-  - purpose:    RDRDstarTest
-    capability: HEPLike_RDRDstarLogLikelihood
+  # FIXME: How are the observables called inside superiso?
+  #- purpose:    RDRDstarTest
+  #  capability: HEPLike_RDRDstarLogLikelihood
 
   - purpose:    B2SGammaTest
     capability: HEPLike_B2SGammaLogLikelihood
