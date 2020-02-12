@@ -175,7 +175,10 @@ def fill_gum_object(data):
                                 " the Lagrangian. Please check your .gum "
                                 "file."))
     else:
-        lagrangian = "LTotal"
+        raise GumError(("\n\nYou must specify the Lagrangian for your model!\n"
+                        "This can be either a single entry like 'LTotal', "
+                        "or a sum of strings, like 'LSM + LDM'. Please amend "
+                        "your .gum file."))
     mathpackage = math['package']
 
     gambit_model = math['model']
