@@ -3637,6 +3637,8 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
+      // TODO: This can be split up into individual SuperIso prediction calls. The covariance information is not used here, only the diagonal elements.
+      //       This would speed up this function call..
       static const std::vector<std::string> observables{
         "dGamma/dq2_B0Kstar0mumu_0.1_0.98",
         "dGamma/dq2_B0Kstar0mumu_1.1_2.5",
@@ -3684,6 +3686,8 @@ namespace Gambit
       // Ordering of observables defined by HEPLike
       // Nota bene: Although the variables are called dGamma, these functions actually return the differential BR.
       //            This holds true for SuperIso 4.1, could change in future versions though.
+      // TODO: This can be split up into individual SuperIso prediction calls. The covariance information is not used here, only the diagonal elements.
+      //       This would speed up this function call..
       static const std::vector<std::string> observables{
               "dGamma/dq2_Bsphimumu_1_6",
               "dGamma/dq2_Bsphimumu_15_19",
