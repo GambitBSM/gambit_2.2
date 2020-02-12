@@ -238,5 +238,5 @@ KeyValues:
 
   default_output_path: "runs/DMEFT_CP_even_WCs_varying_lambda_diver/"
 
-  debug: true
+  debug: false
   print_timing_data: true

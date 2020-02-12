@@ -229,5 +229,5 @@ KeyValues:
 
   default_output_path: "runs/DMEFT_C72_diver_100GeV/"
 
-  debug: true
+  debug: false
   print_timing_data: true

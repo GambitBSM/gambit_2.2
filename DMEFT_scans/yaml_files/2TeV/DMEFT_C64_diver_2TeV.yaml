@@ -229,5 +229,5 @@ KeyValues:
 
   default_output_path: "runs/DMEFT_C64_diver_2TeV/"
 
-  debug: true
+  debug: false
   print_timing_data: true

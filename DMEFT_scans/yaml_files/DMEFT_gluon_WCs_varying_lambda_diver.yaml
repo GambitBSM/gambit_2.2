@@ -236,5 +236,5 @@ KeyValues:
 
   default_output_path: "runs/DMEFT_gluon_WCs_varying_lambda/"
 
-  debug: true
+  debug: false
   print_timing_data: true
