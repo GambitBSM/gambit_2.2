@@ -694,7 +694,7 @@ namespace Gambit
       result_central = (double *) calloc(nObservables, sizeof(double));
       // --- Needed for SuperIso backend
 
-      (*get_predictions_nuisance)((char**)obsnames, &nObservables, &result_central, &param, &nuislist);
+      get_predictions_nuisance((char**)obsnames, &nObservables, &result_central, &param, &nuislist);
 
       for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
         result.central_values[obslist[iObservable]] = result_central[iObservable];
@@ -717,7 +717,7 @@ namespace Gambit
       static double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
       
       if (first) {
-      (*observables)(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance 
+        observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance 
 
         // Reserve memory
         for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
@@ -725,14 +725,14 @@ namespace Gambit
         }
         // --- Needed for SuperIso backend
 
-        (*convert_correlation)((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
+        convert_correlation((nuiscorr *)corrnuis, byVal(ncorrnuis), (double **)corr, (char **)namenuisance, byVal(nNuisance));
 
         first = false;
       }
 
       double **result_covariance;
 
-      (*get_th_covariance_nuisance)(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
+      get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
 
       for(int iObservable=0; iObservable < nObservables; ++iObservable) {
         for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
