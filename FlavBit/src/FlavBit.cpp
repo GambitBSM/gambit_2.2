@@ -68,6 +68,7 @@
 #include "gambit/FlavBit/FlavBit_rollcall.hpp"
 #include "gambit/FlavBit/FlavBit_types.hpp"
 #include "gambit/FlavBit/Flav_reader.hpp"
+#include "gambit/FlavBit/Flav_utils.hpp"
 #include "gambit/FlavBit/Kstarmumu_theory_err.hpp"
 #include "gambit/FlavBit/flav_utils.hpp"
 #include "gambit/FlavBit/flav_loop_functions.hpp"
@@ -130,6 +131,9 @@ namespace Gambit
     #else
       false;
     #endif
+
+    /// FlavBit observable name translator
+    name_translator flav_obs_translator(GAMBIT_DIR "/FlavBit/data/observables_key.yaml");
 
     /// Some constants used in SuperIso likelihoods
     const int ncorrnuis = 463;
@@ -671,7 +675,7 @@ namespace Gambit
     }
 
     /// Helper function to avoid code duplication. However, there are some issues...
-    void SuperIso_prediction_helper(const std::vector<std::string>& obslist, SI_prediction& result, 
+    void SuperIso_prediction_helper(const std::vector<std::string>& obslist, SI_prediction& result,
                                     const parameters& param, const nuisance& nuislist,
                                     void (*get_predictions_nuisance)(char**, int*, double**, const parameters*, const nuisance*),
                                     void (*observables)(int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*),
@@ -715,9 +719,9 @@ namespace Gambit
       static const int nNuisance=161;
       static char namenuisance[nNuisance+1][50];
       static double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
-      
+
       if (first) {
-        observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance 
+        observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
 
         // Reserve memory
         for(int iObservable = 0; iObservable <= nNuisance; ++iObservable) {
@@ -766,7 +770,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -783,7 +787,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -800,7 +804,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -817,7 +821,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -834,7 +838,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -851,7 +855,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
@@ -868,7 +872,7 @@ namespace Gambit
 
       SuperIso_prediction_helper(
         obslist,
-        result, 
+        result,
         *Dep::SuperIso_modelinfo,
         *Dep::SuperIso_nuisance,
         BEreq::get_predictions_nuisance.pointer(),
