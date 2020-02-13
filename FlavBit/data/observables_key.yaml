@@ -5,6 +5,7 @@
 [BR_BXsgamma,                                BR_BXsgamma,                         BR_b2sgamma         ]
 [BRuntag_Bsmumu,                             BRuntag_Bsmumu,                      BR_Bs2mumu          ]
 [BR_Bdmumu,                                  BR_Bdmumu,                           BR_Bd2mumu          ]
+[Btaunu,                                     Btaunu,                              BR_B2TauNu          ]
 [None,                                       BR_BXsmumu,                          None                ]
 [None,                                       BR_BXsee,                            None                ]
 [None,                                       BR_B0Kstar0gamma,                    None                ]

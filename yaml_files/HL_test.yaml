@@ -90,8 +90,8 @@ ObsLikes:
   #- purpose:    RDRDstarTest
   #  capability: HEPLike_RDRDstarLogLikelihood
 
-  - purpose:    B2SGammaTest
-    capability: HEPLike_B2SGammaLogLikelihood
+#  - purpose:    B2SGammaTest
+#    capability: HEPLike_B2SGammaLogLikelihood
 
   - purpose:    B2LLTest_LHCb
     capability: HEPLike_B2mumuLogLikelihood_LHCb
@@ -102,30 +102,29 @@ ObsLikes:
   - purpose:    B2LLTest_Atlas
     capability: HEPLike_B2mumuLogLikelihood_Atlas
 
-  - purpose:    B2KStarMuMuAngularTest_Atlas
-    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
+#  - purpose:    B2KStarMuMuAngularTest_Atlas
+#    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
 
-  - purpose:    B2KStarMuMuAngularTest_CMS
-    capability: HEPLike_B2KstarmumuAng_LogLikelihood_CMS
+#  - purpose:    B2KStarMuMuAngularTest_CMS
+#    capability: HEPLike_B2KstarmumuAng_LogLikelihood_CMS
 
-  - purpose:    B2KStarMuMuAngularTest_Belle
-    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
+#  - purpose:    B2KStarMuMuAngularTest_Belle
+#    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
 
   #- purpose:    B2KStarMuMuAngularTest_LHCb
   #  capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
 
-  - purpose:    B2KStarMuMuBranchingRatioTest
-    capability: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
+#  - purpose:    B2KStarMuMuBranchingRatioTest
+#    capability: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
 
-  - purpose:    Bs2PhiMuMuBranchingRatioTest
-    capability: HEPLike_Bs2PhimumuBr_LogLikelihood
+#  - purpose:    Bs2PhiMuMuBranchingRatioTest
+#    capability: HEPLike_Bs2PhimumuBr_LogLikelihood
 
+#  - purpose:    RKTest
+#    capability: HEPLike_RK_LogLikelihood
 
-  - purpose:    RKTest
-    capability: HEPLike_RK_LogLikelihood
-
-  - purpose:    RKstarTest
-    capability: HEPLike_RKstar_LogLikelihood_LHCb
+#  - purpose:    RKstarTest
+#    capability: HEPLike_RKstar_LogLikelihood_LHCb
 
 
 
@@ -141,7 +140,7 @@ Rules:
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
-  - capability: SuperIso_prediction_Btaunu
+  - capability: SuperIso_prediction_B2taunu
     options:
       obs_list: [Btaunu]
 
@@ -153,97 +152,36 @@ Rules:
     options:
       obs_list: [SKstarGamma]
 
-  - capability: SuperIso_prediction_B2KstarmumuBr
-    options:
-      obs_list: [
-        dGamma/dq2_B0Kstar0mumu_0.1_0.98,
-        dGamma/dq2_B0Kstar0mumu_1.1_2.5,
-        dGamma/dq2_B0Kstar0mumu_2.5_4,
-        dGamma/dq2_B0Kstar0mumu_4_6,
-        dGamma/dq2_B0Kstar0mumu_6_8,
-        dGamma/dq2_B0Kstar0mumu_15_19,
-      ]
+#  - capability: SuperIso_prediction_B2KstarmumuBr
+#    options:
+#      obs_list: [
+#        dGamma/dq2_B0Kstar0mumu_0.1_0.98,
+#        dGamma/dq2_B0Kstar0mumu_1.1_2.5,
+#        dGamma/dq2_B0Kstar0mumu_2.5_4,
+#        dGamma/dq2_B0Kstar0mumu_4_6,
+#        dGamma/dq2_B0Kstar0mumu_6_8,
+#        dGamma/dq2_B0Kstar0mumu_15_19,
+#      ]
 
-  - capability: SuperIso_prediction_Bs2PhimumuBr
-    options:
-      obs_list: [
-        dGamma/dq2_Bsphimumu_1_6,
-        dGamma/dq2_Bsphimumu_15_19,
-      ]
+#  - capability: SuperIso_prediction_Bs2PhimumuBr
+#    options:
+#      obs_list: [
+#        dGamma/dq2_Bsphimumu_1_6,
+#        dGamma/dq2_Bsphimumu_15_19,
+#      ]
 
-
-
-  # Can't be bothered converting these just now...
-
-  - options:
-      B2KstarmumuAng_0p1_2_Atlas_obs_list: [
-        FL_B0Kstar0mumu_0.1_2,
-        S3_B0Kstar0mumu_0.1_2,
-        S4_B0Kstar0mumu_0.1_2,
-        S5_B0Kstar0mumu_0.1_2,
-        S7_B0Kstar0mumu_0.1_2,
-        S8_B0Kstar0mumu_0.1_2,
-      ]
-      B2KstarmumuAng_2_4_Atlas_obs_list: [
-        FL_B0Kstar0mumu_2_4,
-        S3_B0Kstar0mumu_2_4,
-        S4_B0Kstar0mumu_2_4,
-        S5_B0Kstar0mumu_2_4,
-        S7_B0Kstar0mumu_2_4,
-        S8_B0Kstar0mumu_2_4,
-      ]
-      B2KstarmumuAng_4_8_Atlas_obs_list: [
-        FL_B0Kstar0mumu_4_8,
-        S3_B0Kstar0mumu_4_8,
-        S4_B0Kstar0mumu_4_8,
-        S5_B0Kstar0mumu_4_8,
-        S7_B0Kstar0mumu_4_8,
-        S8_B0Kstar0mumu_4_8,
-      ]
-      B2KstarmumuAng_1_2_CMS_obs_list: [
-        P1_B0Kstar0mumu_1_2,
-        P5_B0Kstar0mumu_1_2,
-      ]
-      B2KstarmumuAng_2_4p3_CMS_obs_list: [
-        P1_B0Kstar0mumu_2_4.3,
-        P5_B0Kstar0mumu_2_4.3,
-      ]
-      B2KstarmumuAng_4p3_6_CMS_obs_list: [
-        P1_B0Kstar0mumu_4.3_6,
-        P5_B0Kstar0mumu_4.3_6,
-      ]
-      B2KstarmumuAng_6_8p68_CMS_obs_list: [
-        P1_B0Kstar0mumu_6_8.68,
-        P5_B0Kstar0mumu_6_8.68,
-      ]
-      B2KstarmumuAng_10p09_12p86_CMS_obs_list: [
-        P1_B0Kstar0mumu_10.09_12.86,
-        P5_B0Kstar0mumu_10.09_12.86,
-      ]
-      B2KstarmumuAng_14p18_16_CMS_obs_list: [
-        P1_B0Kstar0mumu_14.18_16,
-        P5_B0Kstar0mumu_14.18_16,
-      ]
-      B2KstarmumuAng_16_19_CMS_obs_list: [
-        P1_B0Kstar0mumu_16_19,
-        P5_B0Kstar0mumu_16_19,
-      ]
-      B2KstarmumuAng_0p1_4_Belle_obs_list: [
-        P4_B0Kstar0mumu_0.1_4,
-        P5_B0Kstar0mumu_0.1_4,
-      ]
-      B2KstarmumuAng_4_8_Belle_obs_list: [
-        P4_B0Kstar0mumu_4_8,
-        P5_B0Kstar0mumu_4_8,
-      ]
-      B2KstarmumuAng_10p9_12p9_Belle_obs_list: [
-        P4_B0Kstar0mumu_10.9_12.9,
-        P5_B0Kstar0mumu_10.9_12.9,
-      ]
-      B2KstarmumuAng_14p18_19_Belle_obs_list: [
-        P4_B0Kstar0mumu_14.18_19,
-        P5_B0Kstar0mumu_14.18_19,
-      ]
+  # Can't be bothered directing these properly just now...
+#  - options:
+#      obs_list: [
+#        FL_B0Kstar0mumu,
+#        S3_B0Kstar0mumu,
+#        S4_B0Kstar0mumu,
+#        S5_B0Kstar0mumu,
+#        S7_B0Kstar0mumu,
+#        S8_B0Kstar0mumu,
+#        P1_B0Kstar0mumu,
+#        P5_B0Kstar0mumu,
+#      ]
 
   # Use SM theory covariance matrix for every point
   - capability: SuperIso_theory_covariance
