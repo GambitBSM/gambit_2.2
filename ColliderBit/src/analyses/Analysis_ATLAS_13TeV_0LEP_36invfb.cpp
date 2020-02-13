@@ -328,7 +328,7 @@ namespace Gambit {
 
           // 3 jet region
           if (nJets50 >= 3 && dphimin_123 > 0.4 && dphimin_more > 0.2) {
-            if (signalJets[0]->pT() > 600 && signalJets[2]->pT() > 50) { //< implicit pT[1] cut
+            if (signalJets[0]->pT() > 700 && signalJets[2]->pT() > 50) { //< implicit pT[1] cut
               if (met_sqrtHT > 16 && meff_incl > 1300) _counters.at("3j-1300").add_event(event);
             }
           }
