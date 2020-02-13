@@ -318,10 +318,10 @@ BE_NAMESPACE
 
     numout* cc;
     // Make it so only one MPI process can create a library at once
-    int rank = 0; int size = 0;
     #ifdef WITH_MPI
       if(GMPI::Is_initialized())
       {
+        int rank = 0; int size = 0;
         GMPI::Comm comm;
         rank = comm.Get_rank();
         size = comm.Get_size();
@@ -447,11 +447,11 @@ BE_NAMESPACE
 
     numout* cc;
     // Make it so only one MPI process can create a library at once
-    int rank = 0; int size = 0;
     #ifdef WITH_MPI
       if(GMPI::Is_initialized())
       {
         GMPI::Comm comm;
+        int rank = 0; int size = 0;
         rank = comm.Get_rank();
         size = comm.Get_size();
         for (int i = 0; i < size; ++i)
