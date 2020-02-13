@@ -84,47 +84,47 @@ ObsLikes:
 
   # Likelihoods
   - purpose:    B2TauNuTest
-    capability: HEPLike_B2TauNuLogLikelihood
+    capability: B2TauNuLogLikelihood
 
   # FIXME: How are the observables called inside superiso?
   #- purpose:    RDRDstarTest
-  #  capability: HEPLike_RDRDstarLogLikelihood
+  #  capability: RDRDstarLogLikelihood
 
 #  - purpose:    B2SGammaTest
-#    capability: HEPLike_B2SGammaLogLikelihood
+#    capability: B2SGammaLogLikelihood
 
   - purpose:    B2LLTest_LHCb
-    capability: HEPLike_B2mumuLogLikelihood_LHCb
+    capability: B2mumuLogLikelihood_LHCb
 
   - purpose:    B2LLTest_CMS
-    capability: HEPLike_B2mumuLogLikelihood_CMS
+    capability: B2mumuLogLikelihood_CMS
 
   - purpose:    B2LLTest_Atlas
-    capability: HEPLike_B2mumuLogLikelihood_Atlas
+    capability: B2mumuLogLikelihood_Atlas
 
 #  - purpose:    B2KStarMuMuAngularTest_Atlas
-#    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
+#    capability: B2KstarmumuAng_LogLikelihood_Atlas
 
 #  - purpose:    B2KStarMuMuAngularTest_CMS
-#    capability: HEPLike_B2KstarmumuAng_LogLikelihood_CMS
+#    capability: B2KstarmumuAng_LogLikelihood_CMS
 
 #  - purpose:    B2KStarMuMuAngularTest_Belle
-#    capability: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
+#    capability: B2KstarmumuAng_LogLikelihood_Belle
 
   #- purpose:    B2KStarMuMuAngularTest_LHCb
-  #  capability: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
+  #  capability: B2KstarmumuAng_LogLikelihood_LHCb
 
 #  - purpose:    B2KStarMuMuBranchingRatioTest
-#    capability: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
+#    capability: B2KstarmumuBr_LogLikelihood_LHCb
 
 #  - purpose:    Bs2PhiMuMuBranchingRatioTest
-#    capability: HEPLike_Bs2PhimumuBr_LogLikelihood
+#    capability: Bs2PhimumuBr_LogLikelihood
 
 #  - purpose:    RKTest
-#    capability: HEPLike_RK_LogLikelihood
+#    capability: RK_LogLikelihood
 
 #  - purpose:    RKstarTest
-#    capability: HEPLike_RKstar_LogLikelihood_LHCb
+#    capability: RKstar_LogLikelihood_LHCb
 
 
 
@@ -136,23 +136,11 @@ Rules:
       #   RDstar,
       # ]
 
-  - capability: SuperIso_prediction_B2mumu
+  - capability: prediction_B2mumu
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
-  - capability: SuperIso_prediction_B2taunu
-    options:
-      obs_list: [Btaunu]
-
-  - capability: SuperIso_prediction_B2SGamma
-    options:
-      obs_list: [BR_BXsgamma]
-
-  - capability: SuperIso_prediction_B2KstarGamma
-    options:
-      obs_list: [SKstarGamma]
-
-#  - capability: SuperIso_prediction_B2KstarmumuBr
+#  - capability: prediction_B2KstarmumuBr
 #    options:
 #      obs_list: [
 #        dGamma/dq2_B0Kstar0mumu_0.1_0.98,
@@ -163,7 +151,7 @@ Rules:
 #        dGamma/dq2_B0Kstar0mumu_15_19,
 #      ]
 
-#  - capability: SuperIso_prediction_Bs2PhimumuBr
+#  - capability: prediction_Bs2PhimumuBr
 #    options:
 #      obs_list: [
 #        dGamma/dq2_Bsphimumu_1_6,

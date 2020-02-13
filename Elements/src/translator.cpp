@@ -84,11 +84,17 @@ namespace Gambit
       return to_lang->second.at(it - from_lang->second.begin());
     }
 
+    /// Translate terms from one language to another and add a suffix
+    str translator::operator()(const str& from, const str& to, const str& obs, const str& suffix) { return operator()(from, to, obs) + suffix; }
+
     /// Translate terms from one language to another.
-    std::vector<str> translator::operator()(const str& from, const str& to, const std::vector<str>& obs)
+    std::vector<str> translator::operator()(const str& from, const str& to, const std::vector<str>& obs) { return operator()(from, to, obs, ""); }
+
+    /// Translate terms from one language to another and add a suffix
+    std::vector<str> translator::operator()(const str& from, const str& to, const std::vector<str>& obs, const str& suffix)
     {
       std::vector<str> result;
-      for (auto o : obs) result.push_back(operator()(from, to, o));
+      for (auto o : obs) result.push_back(operator()(from, to, o, suffix));
       return result;
     }
 

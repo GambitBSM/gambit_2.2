@@ -45,7 +45,9 @@ namespace Gambit
         /// Translate terms from one language to another.
         /// @{
         str operator()(const str& from, const str& to, const str& obs);
+        str operator()(const str& from, const str& to, const str& obs, const str& suffix);
         std::vector<str> operator()(const str& from, const str& to, const std::vector<str>& obs);
+        std::vector<str> operator()(const str& from, const str& to, const std::vector<str>& obs, const str& suffix);
         /// @}
 
     };
