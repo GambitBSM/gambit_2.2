@@ -84,23 +84,23 @@ ObsLikes:
 
   # Likelihoods
   - purpose:    B2TauNuTest
-    capability: B2TauNuLogLikelihood
+    capability: B2taunu_LogLikelihood
 
   # FIXME: How are the observables called inside superiso?
   #- purpose:    RDRDstarTest
-  #  capability: RDRDstarLogLikelihood
+  #  capability: RDRDstar_LogLikelihood
 
-#  - purpose:    B2SGammaTest
-#    capability: B2SGammaLogLikelihood
+  - purpose:    B2SGammaTest
+    capability: b2sgamma_LogLikelihood
 
   - purpose:    B2LLTest_LHCb
-    capability: B2mumuLogLikelihood_LHCb
+    capability: B2mumu_LogLikelihood_LHCb
 
   - purpose:    B2LLTest_CMS
-    capability: B2mumuLogLikelihood_CMS
+    capability: B2mumu_LogLikelihood_CMS
 
   - purpose:    B2LLTest_Atlas
-    capability: B2mumuLogLikelihood_Atlas
+    capability: B2mumu_LogLikelihood_Atlas
 
 #  - purpose:    B2KStarMuMuAngularTest_Atlas
 #    capability: B2KstarmumuAng_LogLikelihood_Atlas
@@ -111,14 +111,14 @@ ObsLikes:
 #  - purpose:    B2KStarMuMuAngularTest_Belle
 #    capability: B2KstarmumuAng_LogLikelihood_Belle
 
-  #- purpose:    B2KStarMuMuAngularTest_LHCb
-  #  capability: B2KstarmumuAng_LogLikelihood_LHCb
+#  - purpose:    B2KStarMuMuAngularTest_LHCb
+#    capability: B2KstarmumuAng_LogLikelihood_LHCb
 
-#  - purpose:    B2KStarMuMuBranchingRatioTest
-#    capability: B2KstarmumuBr_LogLikelihood_LHCb
+  - purpose:    B2KStarMuMuBranchingRatioTest
+    capability: B2KstarmumuBr_LogLikelihood_LHCb
 
-#  - purpose:    Bs2PhiMuMuBranchingRatioTest
-#    capability: Bs2PhimumuBr_LogLikelihood
+  - purpose:    Bs2phiMuMuBranchingRatioTest
+    capability: Bs2phimumuBr_LogLikelihood
 
 #  - purpose:    RKTest
 #    capability: RK_LogLikelihood
@@ -140,35 +140,19 @@ Rules:
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
-#  - capability: prediction_B2KstarmumuBr
-#    options:
-#      obs_list: [
-#        dGamma/dq2_B0Kstar0mumu_0.1_0.98,
-#        dGamma/dq2_B0Kstar0mumu_1.1_2.5,
-#        dGamma/dq2_B0Kstar0mumu_2.5_4,
-#        dGamma/dq2_B0Kstar0mumu_4_6,
-#        dGamma/dq2_B0Kstar0mumu_6_8,
-#        dGamma/dq2_B0Kstar0mumu_15_19,
-#      ]
-
-#  - capability: prediction_Bs2PhimumuBr
-#    options:
-#      obs_list: [
-#        dGamma/dq2_Bsphimumu_1_6,
-#        dGamma/dq2_Bsphimumu_15_19,
-#      ]
 
   # Can't be bothered directing these properly just now...
 #  - options:
 #      obs_list: [
-#        FL_B0Kstar0mumu,
-#        S3_B0Kstar0mumu,
-#        S4_B0Kstar0mumu,
-#        S5_B0Kstar0mumu,
-#        S7_B0Kstar0mumu,
-#        S8_B0Kstar0mumu,
-#        P1_B0Kstar0mumu,
-#        P5_B0Kstar0mumu,
+#        FL,
+#        AFB,
+#        S3,
+#        S4,
+#        S5,
+#        S7,
+#        S8,
+#        P1,
+#        P5,
 #      ]
 
   # Use SM theory covariance matrix for every point

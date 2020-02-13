@@ -277,9 +277,9 @@ START_MODULE
    #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY prediction_Bs2PhimumuBr_1_6
+  #define CAPABILITY prediction_Bs2phimumuBr_1_6
   START_CAPABILITY
-    #define FUNCTION SuperIso_prediction_Bs2PhimumuBr_1_6
+    #define FUNCTION SuperIso_prediction_Bs2phimumuBr_1_6
     START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
@@ -291,9 +291,9 @@ START_MODULE
    #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY prediction_Bs2PhimumuBr_15_19
+  #define CAPABILITY prediction_Bs2phimumuBr_15_19
   START_CAPABILITY
-    #define FUNCTION SuperIso_prediction_Bs2PhimumuBr_15_19
+    #define FUNCTION SuperIso_prediction_Bs2phimumuBr_15_19
     START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
@@ -1436,12 +1436,12 @@ START_MODULE
   #undef CAPABILITY
 
   /// HEPLike LogLikelihood Bs -> Phi mu mu Br
-  #define CAPABILITY Bs2PhimumuBr_LogLikelihood
+  #define CAPABILITY Bs2phimumuBr_LogLikelihood
   START_CAPABILITY
-    #define FUNCTION HEPLike_Bs2PhimumuBr_LogLikelihood
+    #define FUNCTION HEPLike_Bs2phimumuBr_LogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(prediction_Bs2PhimumuBr_1_6, flav_prediction)
-    DEPENDENCY(prediction_Bs2PhimumuBr_15_19, flav_prediction)
+    DEPENDENCY(prediction_Bs2phimumuBr_1_6, flav_prediction)
+    DEPENDENCY(prediction_Bs2phimumuBr_15_19, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY

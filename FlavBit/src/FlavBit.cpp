@@ -826,8 +826,8 @@ namespace Gambit
     SI_SINGLE_PREDICTION_FUNCTION(B2taunu)
     SI_SINGLE_PREDICTION_FUNCTION(b2sgamma)
     SI_SINGLE_PREDICTION_FUNCTION(B2Kstargamma)
-    SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2PhimumuBr,_1_6)
-    SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2PhimumuBr,_15_19)
+    SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2phimumuBr,_1_6)
+    SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2phimumuBr,_15_19)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_0p1_0p98)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_1p1_2p5)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_2p5_4)
@@ -3635,9 +3635,9 @@ namespace Gambit
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
 
-    void HEPLike_Bs2PhimumuBr_LogLikelihood(double &result)
+    void HEPLike_Bs2phimumuBr_LogLikelihood(double &result)
     {
-      using namespace Pipes::HEPLike_Bs2PhimumuBr_LogLikelihood;
+      using namespace Pipes::HEPLike_Bs2phimumuBr_LogLikelihood;
 
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_";
       static HepLike_default::HL_BifurGaussian BifurGaussian[2] = { HepLike_default::HL_BifurGaussian(inputfile + "1_6.yaml"),
@@ -3662,15 +3662,15 @@ namespace Gambit
               "dGamma/dq2_Bsphimumu_15_19",
       };
 
-      flav_prediction prediction[2] = { *Dep::prediction_Bs2PhimumuBr_1_6,
-                                        *Dep::prediction_Bs2PhimumuBr_15_19 };
+      flav_prediction prediction[2] = { *Dep::prediction_Bs2phimumuBr_1_6,
+                                        *Dep::prediction_Bs2phimumuBr_15_19 };
       result = 0;
       for (int i = 0; i < 2; i++)
       {
         result += BifurGaussian[i].GetLogLikelihood(prediction[i].central_values[observables[i]], prediction[i].covariance[observables[i]][observables[i]]);
       }
 
-      if (flav_debug) std::cout << "HEPLike_Bs2PhimumuBr_LogLikelihood result: " << result << std::endl;
+      if (flav_debug) std::cout << "HEPLike_Bs2phimumuBr_LogLikelihood result: " << result << std::endl;
     }
 
     void HEPLike_RK_LogLikelihood(double &result)
