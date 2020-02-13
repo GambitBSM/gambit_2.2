@@ -1,7 +1,24 @@
-"""
-Master module containing all routines for finding, creating,
-amending, and reading files.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module containing all routines for finding, creating,
+#  amending, and reading files.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2017, 2018, 2019, 2020
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020 Feb
+#
+#  **************************************
+
 
 import os
 import re
@@ -945,26 +962,28 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
     # Don't want the SM-like Higgs mass a fundamental parameter
     bsm_params = [x for x in model_parameters if x.name != 'mH'
                   and x.sm == False]
-    params = []
+    params = {}
 
     for i in bsm_params:
-        if i.shape == 'scalar' or i.shape == None: params.append(i.gb_in)
+        if i.shape == 'scalar' or i.shape == None: params[i.gb_in] = i.default
         elif re.match("m[2-9]x[2-9]", i.shape): 
             size = int(i.shape[-1])
             for j in xrange(size):
                 for k in xrange(size):
-                    params.append(i.gb_in + str(j+1) + 'x' + str(k+1))
+                    params[i.gb_in + str(j+1) + 'x' + str(k+1)] = i.default
         elif re.match("v[2-9]", i.shape): 
             size = int(i.shape[-1])
             for j in xrange(size):
-                params.append(i.gb_in + str(j+1))
+                params[i.gb_in + str(j+1)] = i.default
 
     # No double counting (also want to preserve the order)
-    norepeats = []
-    [norepeats.append(i) for i in params if not i in norepeats]
+    norepeats = {}
+    for i,val in params.items():
+      if i not in norepeats.keys():
+        norepeats[i] = val
 
-    for i in norepeats:
-        towrite += ("    {0}: 0.1\n").format(i)
+    for i,val in norepeats.items():
+        towrite += ("    {0}: {1}\n").format(i,str(val))
 
     towrite += (
         "\n"

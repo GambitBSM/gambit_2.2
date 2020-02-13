@@ -610,8 +610,9 @@ namespace GUM
 
     try
     {
+      
 
-      // Check if MINPAR is a list first
+      // Check if MINPAR is a list
       bool is_list;
       command = "Head[MINPAR]===List";
       send_to_math(command);
@@ -653,7 +654,19 @@ namespace GUM
               if(entry == "True") real = true;
             }
           }
-          parameters.push_back(Parameter(par[1], "MINPAR", std::stoi(par[0]), par[1], real));
+          
+          Parameter param(par[1], "MINPAR", std::stoi(par[0]), par[1], real);
+ 
+          //Get the default value
+          std::string value;
+          command = par[1] + "/.DefaultInputValues";
+          send_to_math(command);
+          get_from_math(value);
+
+          if(value != par[1])
+            param.set_default(std::stod(value));
+
+          parameters.push_back(param);
         }
       }
 
@@ -692,7 +705,18 @@ namespace GUM
               if(entry == "True") real = true;
             }
           }
-          parameters.push_back(Parameter(par[1], "EXTPAR", std::stoi(par[0]), par[1], real));
+          Parameter param(par[1], "EXTPAR", std::stoi(par[0]), par[1], real);
+
+          //Get the default value
+          std::string value;
+          command = par[1] + "/.DefaultInputValues";
+          send_to_math(command);
+          get_from_math(value);
+
+          if(value != par[1])
+            param.set_default(std::stod(value));
+
+          parameters.push_back(param);
         }
       }
 
@@ -1372,6 +1396,7 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("shape",     &Parameter::shape)
     .def("is_output", &Parameter::is_output)
     .def("bcs",       &Parameter::bcs)
+    .def("defvalue",  &Parameter::defvalue)
     ;
 
   class_<Options>("SARAHOptions", init<std::string, std::string>())

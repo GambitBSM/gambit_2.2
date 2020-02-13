@@ -108,7 +108,8 @@ class SpectrumParameter:
                  sm=False, gb_input=None,
                  alt_name=None, bcs=None,
                  is_output=False, is_real=False, 
-                 fullparticlename = None):
+                 fullparticlename = None, 
+                 default = 0.1):
 
         self.name = name
         self.tag = tag
@@ -119,6 +120,7 @@ class SpectrumParameter:
         self.is_output = is_output
         self.is_real = is_real
         self.fullparticlename = fullparticlename
+        self.default = default
 
         if not fullname:
             self.fullname = name

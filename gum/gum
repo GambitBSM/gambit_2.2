@@ -351,7 +351,7 @@ if args.file:
             parameters = fr_params(paramlist, add_higgs)
         else:
             parameters = sarah_params(paramlist, mixings, add_higgs, 
-                                      gambit_pdgs, partlist)
+                                      gambit_pdgs, partlist, bcs)
 
         # Get the parameters sorted by block
         blockparams = sort_params_by_block(parameters, mixings)

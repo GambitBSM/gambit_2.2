@@ -244,7 +244,7 @@ def sarah_part_to_gum_part(sarah_bsm):
     return bsm_list, add_higgs
 
 def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
-                 particles):
+                 particles, boundary_conditions):
     """
     Removes all Standard Model parameters from those we wish
     to add to the GAMBIT model. This utilises the 'BlockName'
@@ -278,6 +278,7 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
 
     # Convert the C++ dict to python properly
     mixingdict = dict((m.key(),m.data()) for m in mixings)
+    bcs = dict((bc.data(),bc.key()) for bc in boundary_conditions)
     
     # List of parameters which have been added. Dupes can arise
     # from the Pole_Mixings for multiple particles
@@ -334,6 +335,22 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
             else:
                 addedpars.append(name)
             '''
+            # If the parameter has a boundary condition, share the default value
+            default = p.defvalue()
+            if name in bcs.keys(): 
+              default = [param.defvalue() for param in paramlist if param.name() == bcs[name] or param.alt_name() == bcs[name]][0]
+            elif p.alt_name() in bcs.keys():
+              default = [param.defvalue() for param in paramlist if param.name() == bcs[alt_name] or param.alt_name() == bcs[alt_name]][0]
+
+            # If there are more than one parameter with the same name, take the not default one
+            if default == 0.1:
+                other_defaults = [param.defvalue() for param in paramlist if param.name() == name or param.alt_name() == name]
+                default = [d for d in other_defaults if d != 0.1]
+                if default:
+                    default = default[0]
+                else: 
+                    default = 0.1
+
 
             # Create a new instance of SpectrumParameter
             # TODO: still need to find mass dimension for parameters that aren't
@@ -341,7 +358,8 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
             x = SpectrumParameter(name, tag, block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
                                   bcs = p.bcs(), shape = p.shape(), 
-                                  is_output = p.is_output(), is_real = p.is_real())
+                                  is_output = p.is_output(), is_real = p.is_real(),
+                                  default = default)
             params.append(x)
 
     # Now all of the parameters have been extracted, look to see if any of them

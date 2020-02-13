@@ -167,6 +167,7 @@ class Parameter
     bool real;
     bool output;
     std::string boundary_conditions;
+    double default_value=0.1;
 
  
     public:
@@ -198,10 +199,12 @@ class Parameter
         std::string shape() { return paramshape; }
         bool is_output() { return output; }
         bool is_real() { return real; }
+        double defvalue() { return default_value; }
 
         void set_bcs(std::string bc) { boundary_conditions = bc; }
         void set_name(std::string name) { paramname = name; }
         void set_output(bool is_output) {output = is_output; }
+        void set_default(double def) { default_value = def; }
 
 };
 

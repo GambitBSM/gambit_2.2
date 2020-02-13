@@ -5,6 +5,7 @@ math:
   package: sarah
   # Name of Model within that package. This will also be the name of the GAMBIT model.
   model: THDM-II
+  lagrangian: LTotal
 
 # Outputs for GUM to hook up to GAMBIT
 output:
