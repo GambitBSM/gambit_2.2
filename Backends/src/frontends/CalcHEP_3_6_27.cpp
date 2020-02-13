@@ -284,6 +284,7 @@ BE_NAMESPACE
     out0cpy.resize(std::remove_if(out0cpy.begin(), out0cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out0cpy.begin());
     out1cpy.resize(std::remove_if(out1cpy.begin(), out1cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out1cpy.begin());
     
+
     // Generate libname from model and process name
     char *libname = new char[(model + "_" + incpy + "_to_" + out0cpy + out1cpy).length() + 1];
     strcpy(libname, (model + "_" + incpy + "_to_" + out0cpy + out1cpy).c_str());
@@ -293,9 +294,30 @@ BE_NAMESPACE
     int twidth = 0;              // T-channel propagator width
     int UG = 0;                  // Unitary gauge
 
-    // Generates shared object file based on libName - unless it already exists.
-    numout *cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
-    
+    numout* cc;
+    // Make it so only one MPI process can create a library at once
+    int rank = 0; int size = 0;
+    #ifdef WITH_MPI
+      if(GMPI::Is_initialized())
+      {
+        GMPI::Comm comm;
+        rank = comm.Get_rank();
+        size = comm.Get_size();
+        for (int i = 0; i < size; ++i)
+        {
+          if (rank == i)
+          {
+            // Generates shared object file based on libName - unless it already exists.
+            cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+          }
+          MPI_Barrier(MPI_COMM_WORLD); 
+        }
+      }
+    #else
+      // Generates shared object file based on libName - unless it already exists.
+      cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+    #endif
+
     // Export numerical values of parameters to link to dynamical code
     err=passParameters(cc);
 
@@ -401,8 +423,29 @@ BE_NAMESPACE
     int twidth = 0;              // T-channel propagator width
     int UG = 0;                  // Unitary gauge
 
-    // Generates shared object file based on libName - unless it already exists.
-    numout *cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+    numout* cc;
+    // Make it so only one MPI process can create a library at once
+    int rank = 0; int size = 0;
+    #ifdef WITH_MPI
+      if(GMPI::Is_initialized())
+      {
+        GMPI::Comm comm;
+        rank = comm.Get_rank();
+        size = comm.Get_size();
+        for (int i = 0; i < size; ++i)
+        {
+          if (rank == i)
+          {
+            // Generates shared object file based on libName - unless it already exists.
+            cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+          }
+          MPI_Barrier(MPI_COMM_WORLD); 
+        }
+      }
+    #else
+      // Generates shared object file based on libName - unless it already exists.
+      cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+    #endif
 
     // Export numerical values of parameters to link to dynamical code
     passParameters(cc);

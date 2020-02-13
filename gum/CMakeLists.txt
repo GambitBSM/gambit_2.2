@@ -56,7 +56,8 @@ EXTERNALPROJECT_ADD(
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/FeynRules
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
-    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Models ${CMAKE_SOURCE_DIR}/contrib/FeynRules/Models
+    INSTALL_COMMAND ""
+#    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Models ${CMAKE_SOURCE_DIR}/contrib/FeynRules/Models
 )
 
 # Download SARAH
