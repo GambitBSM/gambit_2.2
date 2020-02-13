@@ -130,27 +130,32 @@ ObsLikes:
 
 
 Rules:
-  # Globally set the SuperIso observables to be considered
-  - options:
-      B2mumu_obs_list: [
-        BRuntag_Bsmumu,
-        BR_Bdmumu,
-      ]
-      B2taunu_obs_list: [
-        Btaunu,
-      ]
+
       # SuperIso is not ready for the "new" way.
       # RDRDstar_obs_list: [
       #   RD,
       #   RDstar,
       # ]
-      B2SGamma_obs_list: [
-        BR_BXsgamma,
-      ]
-      B2KstarGamma_obs_list: [
-        SKstarGamma,
-      ]
-      B2KstarmumuBr_obs_list: [
+
+  - capability: SuperIso_prediction_B2mumu
+    options:
+      obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
+
+  - capability: SuperIso_prediction_Btaunu
+    options:
+      obs_list: [Btaunu]
+
+  - capability: SuperIso_prediction_B2SGamma
+    options:
+      obs_list: [BR_BXsgamma]
+
+  - capability: SuperIso_prediction_B2KstarGamma
+    options:
+      obs_list: [SKstarGamma]
+
+  - capability: SuperIso_prediction_B2KstarmumuBr
+    options:
+      obs_list: [
         dGamma/dq2_B0Kstar0mumu_0.1_0.98,
         dGamma/dq2_B0Kstar0mumu_1.1_2.5,
         dGamma/dq2_B0Kstar0mumu_2.5_4,
@@ -158,10 +163,19 @@ Rules:
         dGamma/dq2_B0Kstar0mumu_6_8,
         dGamma/dq2_B0Kstar0mumu_15_19,
       ]
-      Bs2PhimumuBr_obs_list: [
+
+  - capability: SuperIso_prediction_Bs2PhimumuBr
+    options:
+      obs_list: [
         dGamma/dq2_Bsphimumu_1_6,
         dGamma/dq2_Bsphimumu_15_19,
       ]
+
+
+
+  # Can't be bothered converting these just now...
+
+  - options:
       B2KstarmumuAng_0p1_2_Atlas_obs_list: [
         FL_B0Kstar0mumu_0.1_2,
         S3_B0Kstar0mumu_0.1_2,

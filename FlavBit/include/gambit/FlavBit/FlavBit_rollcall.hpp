@@ -89,7 +89,7 @@ START_MODULE
   #define CAPABILITY SuperIso_obs_values
   START_CAPABILITY
     #define FUNCTION SI_compute_obs_list
-    START_FUNCTION(SI_observable_map)
+    START_FUNCTION(flav_observable_map)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -102,7 +102,7 @@ START_MODULE
   START_CAPABILITY
 
     #define FUNCTION SI_theory_covariance
-    START_FUNCTION(SI_covariance_map)
+    START_FUNCTION(flav_covariance_map)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
@@ -112,7 +112,7 @@ START_MODULE
     #undef FUNCTION
 
     #define FUNCTION SI_theory_covariance_SM
-    START_FUNCTION(SI_covariance_map)
+    START_FUNCTION(flav_covariance_map)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
@@ -126,7 +126,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2mumu
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2mumu
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -140,7 +140,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2taunu
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2taunu
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -154,7 +154,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_RDRDstar
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_RDRDstar
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -168,7 +168,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2SGamma
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2SGamma
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -182,7 +182,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarGamma
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarGamma
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -196,7 +196,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuBr
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuBr
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -210,7 +210,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_Bs2PhimumuBr
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_Bs2PhimumuBr
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -224,7 +224,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -238,7 +238,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_2_4_Atlas
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_2_4_Atlas
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -252,7 +252,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_4_8_Atlas
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_4_8_Atlas
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -266,7 +266,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_1_2_CMS
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_1_2_CMS
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -280,7 +280,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -294,7 +294,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -308,7 +308,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -322,7 +322,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -336,7 +336,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -350,7 +350,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_16_19_CMS
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_16_19_CMS
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -364,7 +364,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -378,7 +378,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_4_8_Belle
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_4_8_Belle
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -392,7 +392,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -406,7 +406,7 @@ START_MODULE
   #define CAPABILITY SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle
-    START_FUNCTION(SI_prediction)
+    START_FUNCTION(flav_prediction)
     DEPENDENCY(SuperIso_modelinfo, parameters)
     DEPENDENCY(SuperIso_nuisance, nuisance)
     BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
@@ -1216,7 +1216,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2TauNuLogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_prediction_B2taunu, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2taunu, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1229,7 +1229,7 @@ START_MODULE
     DEPENDENCY(RD, double)
     DEPENDENCY(RDstar, double)
     // TODO: Switch dependency as soon as SuperIso is ready for the "new" way.
-    // DEPENDENCY(SuperIso_prediction_RDRDstar, SI_prediction)
+    // DEPENDENCY(SuperIso_prediction_RDRDstar, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1239,7 +1239,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2SGammaLogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_prediction_B2SGamma, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2SGamma, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1249,7 +1249,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstargammaS_HFLAV
     START_FUNCTION(double);
-    DEPENDENCY(SuperIso_prediction_B2KstarGamma, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarGamma, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1259,7 +1259,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumuLogLikelihood_LHCb
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_prediction_B2mumu, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2mumu, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1269,7 +1269,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumuLogLikelihood_CMS
     START_FUNCTION(double);
-    DEPENDENCY(SuperIso_prediction_B2mumu, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2mumu, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1279,7 +1279,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumuLogLikelihood_Atlas
     START_FUNCTION(double);
-    DEPENDENCY(SuperIso_prediction_B2mumu, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2mumu, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1289,9 +1289,9 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
     START_FUNCTION(double);
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_2_4_Atlas, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_4_8_Atlas, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_2_4_Atlas, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_4_8_Atlas, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1301,13 +1301,13 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_CMS
     START_FUNCTION(double);
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_1_2_CMS, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_16_19_CMS, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_1_2_CMS, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_16_19_CMS, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1317,10 +1317,10 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Belle
     START_FUNCTION(double);
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_4_8_Belle, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle, SI_prediction)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_4_8_Belle, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle, flav_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike);
     #undef FUNCTION
   #undef CAPABILITY
@@ -1330,8 +1330,8 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_obs_values, flav_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, flav_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
  #undef CAPABILITY
@@ -1341,7 +1341,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_prediction_B2KstarmumuBr, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_B2KstarmumuBr, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1351,7 +1351,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_Bs2PhimumuBr_LogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_prediction_Bs2PhimumuBr, SI_prediction)
+    DEPENDENCY(SuperIso_prediction_Bs2PhimumuBr, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1361,8 +1361,8 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_RK_LogLikelihood
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_obs_values, flav_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, flav_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1372,8 +1372,8 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_RKstar_LogLikelihood_LHCb
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_obs_values, SI_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, SI_covariance_map)
+    DEPENDENCY(SuperIso_obs_values, flav_observable_map)
+    DEPENDENCY(SuperIso_theory_covariance, flav_covariance_map)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY

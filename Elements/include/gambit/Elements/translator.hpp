@@ -43,7 +43,10 @@ namespace Gambit
         translator(const str& filename_);
 
         /// Translate terms from one language to another.
+        /// @{
         str operator()(const str& from, const str& to, const str& obs);
+        std::vector<str> operator()(const str& from, const str& to, const std::vector<str>& obs);
+        /// @}
 
     };
 

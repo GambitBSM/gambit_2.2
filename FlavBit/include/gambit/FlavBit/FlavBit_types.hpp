@@ -89,14 +89,14 @@ namespace Gambit
     };
 
     /// Maps for holding SI observables and covariance matrix.
-    typedef std::map<const std::string, double> SI_observable_map;
-    typedef std::map<const std::string, std::map<const std::string, double>> SI_covariance_map;
+    typedef std::map<const std::string, double> flav_observable_map;
+    typedef std::map<const std::string, std::map<const std::string, double>> flav_covariance_map;
 
-    /// Struct which allows simplified access to SuperIso (no need to calculate theory separately).
-    struct SI_prediction
+    /// Flavour observables structure holding central values and covariances.
+    struct flav_prediction
     {
-      SI_observable_map central_values;
-      SI_covariance_map covariance;
+      flav_observable_map central_values;
+      flav_covariance_map covariance;
     };
 
   }

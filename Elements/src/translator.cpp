@@ -84,6 +84,13 @@ namespace Gambit
       return to_lang->second.at(it - from_lang->second.begin());
     }
 
+    /// Translate terms from one language to another.
+    std::vector<str> translator::operator()(const str& from, const str& to, const std::vector<str>& obs)
+    {
+      std::vector<str> result;
+      for (auto o : obs) result.push_back(operator()(from, to, o));
+      return result;
+    }
 
   }
 }

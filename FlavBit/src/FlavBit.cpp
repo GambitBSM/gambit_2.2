@@ -674,7 +674,7 @@ namespace Gambit
     }
 
     /// Helper function to avoid code duplication. However, there are some issues...
-    void SuperIso_prediction_helper(const std::vector<std::string>& obslist, SI_prediction& result,
+    void SuperIso_prediction_helper(const std::vector<std::string>& FB_obslist, const std::vector<std::string>& SI_obslist, flav_prediction& result,
                                     const parameters& param, const nuisance& nuislist,
                                     void (*get_predictions_nuisance)(char**, int*, double**, const parameters*, const nuisance*),
                                     void (*observables)(int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*),
@@ -684,11 +684,12 @@ namespace Gambit
     {
       if (flav_debug) std::cout << "Starting SuperIso_prediction" << std::endl;
 
-      int nObservables = obslist.size();
+      int nObservables = SI_obslist.size();
 
       char obsnames[nObservables][50];
-      for(int iObservable = 0; iObservable < nObservables; iObservable++) {
-        strcpy(obsnames[iObservable], obslist[iObservable].c_str());
+      for(int iObservable = 0; iObservable < nObservables; iObservable++)
+      {
+        strcpy(obsnames[iObservable], SI_obslist[iObservable].c_str());
       }
 
       // ---------- CENTRAL VALUES ----------
@@ -699,16 +700,19 @@ namespace Gambit
 
       get_predictions_nuisance((char**)obsnames, &nObservables, &result_central, &param, &nuislist);
 
-      for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-        result.central_values[obslist[iObservable]] = result_central[iObservable];
+      for(int iObservable = 0; iObservable < nObservables; ++iObservable)
+      {
+        result.central_values[FB_obslist[iObservable]] = result_central[iObservable];
       }
 
       // Free memory
       free(result_central);
       result_central = NULL;
-      if (flav_debug) {
-        for(int iObservable = 0; iObservable < nObservables; ++iObservable) {
-          printf("%s=%.4e\n", obsnames[iObservable], result.central_values[obslist[iObservable]]);
+      if (flav_debug)
+      {
+        for(int iObservable = 0; iObservable < nObservables; ++iObservable)
+        {
+          printf("%s=%.4e\n", obsnames[iObservable], result.central_values[FB_obslist[iObservable]]);
         }
       }
 
@@ -719,7 +723,8 @@ namespace Gambit
       static char namenuisance[nNuisance+1][50];
       static double **corr=(double  **) malloc((nNuisance+1)*sizeof(double *));  // Nuisance parameter correlations
 
-      if (first) {
+      if (first)
+      {
         observables(0, NULL, 0, NULL, NULL, &nuislist, (char **)namenuisance, &param); // Initialization of namenuisance
 
         // Reserve memory
@@ -737,9 +742,11 @@ namespace Gambit
 
       get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
 
-      for(int iObservable=0; iObservable < nObservables; ++iObservable) {
-        for(int jObservable = 0; jObservable < nObservables; ++jObservable) {
-          result.covariance[obslist[iObservable]][obslist[jObservable]] = result_covariance[iObservable][jObservable];
+      for(int iObservable=0; iObservable < nObservables; ++iObservable)
+      {
+        for(int jObservable = 0; jObservable < nObservables; ++jObservable)
+        {
+          result.covariance[FB_obslist[iObservable]][FB_obslist[jObservable]] = result_covariance[iObservable][jObservable];
         }
       }
 
@@ -749,11 +756,14 @@ namespace Gambit
       // }
       // free(corr);
 
-      if (flav_debug) {
-        for(int iObservable=0; iObservable < nObservables; ++iObservable) {
-          for(int jObservable = iObservable; jObservable < nObservables; ++jObservable) {
+      if (flav_debug)
+      {
+        for(int iObservable=0; iObservable < nObservables; ++iObservable)
+        {
+          for(int jObservable = iObservable; jObservable < nObservables; ++jObservable)
+          {
             printf("Covariance %s - %s: %.4e\n",
-              obsnames[iObservable], obsnames[jObservable], result.covariance[obslist[iObservable]][obslist[jObservable]]);
+              obsnames[iObservable], obsnames[jObservable], result.covariance[FB_obslist[iObservable]][FB_obslist[jObservable]]);
            }
         }
       }
@@ -762,365 +772,52 @@ namespace Gambit
 
     }
 
-    void SuperIso_prediction_B2mumu(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2mumu;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2mumu_obs_list");
+    #define SI_PREDICTION_MODULE_FUNCTION(name)                  \
+    void CAT(SuperIso_prediction_,name)(flav_prediction& result) \
+    {                                                            \
+      using namespace CAT(Pipes::SuperIso_prediction_,name);     \
+      static const std::vector<str> FB_obslist = runOptions->    \
+       getValue<std::vector<str>>("obs_list");                   \
+      static const std::vector<str> SI_obslist =                 \
+       translate_flav_obs("FlavBit", "SuperIso", FB_obslist);    \
+      SuperIso_prediction_helper(                                \
+        FB_obslist,                                              \
+        SI_obslist,                                              \
+        result,                                                  \
+        *Dep::SuperIso_modelinfo,                                \
+        *Dep::SuperIso_nuisance,                                 \
+        BEreq::get_predictions_nuisance.pointer(),               \
+        BEreq::observables.pointer(),                            \
+        BEreq::convert_correlation.pointer(),                    \
+        BEreq::get_th_covariance_nuisance.pointer()              \
+      );                                                         \
+    }                                                            \
 
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
+    SI_PREDICTION_MODULE_FUNCTION(B2mumu)
+    SI_PREDICTION_MODULE_FUNCTION(B2taunu)
+    SI_PREDICTION_MODULE_FUNCTION(B2SGamma)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarGamma)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuBr)
+    SI_PREDICTION_MODULE_FUNCTION(Bs2PhimumuBr)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_0p1_2_Atlas)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_2_4_Atlas)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_4_8_Atlas)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_1_2_CMS)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_2_4p3_CMS)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_4p3_6_CMS)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_6_8p68_CMS)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_10p09_12p86_CMS)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_14p18_16_CMS)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_16_19_CMS)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_4_8_Belle)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_10p9_12p9_Belle)
+    SI_PREDICTION_MODULE_FUNCTION(B2KstarmumuAng_14p18_19_Belle)
 
-    void SuperIso_prediction_B2taunu(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2taunu;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2taunu_obs_list");
+    #undef SI_PREDICTION_MODULE_FUNCTION
 
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_RDRDstar(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_RDRDstar;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("RDRDstar_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2SGamma(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2SGamma;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2SGamma_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarGamma(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarGamma;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarGamma_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuBr(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuBr;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuBr_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_Bs2PhimumuBr(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_Bs2PhimumuBr;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("Bs2PhimumuBr_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_0p1_2_Atlas_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_2_4_Atlas(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_2_4_Atlas;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_2_4_Atlas_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_4_8_Atlas(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_4_8_Atlas;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_4_8_Atlas_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result,
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_1_2_CMS(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_1_2_CMS;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_1_2_CMS_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_2_4p3_CMS_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_4p3_6_CMS_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_6_8p68_CMS_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_10p09_12p86_CMS_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_14p18_16_CMS_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_16_19_CMS(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_16_19_CMS;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_16_19_CMS_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_0p1_4_Belle_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_4_8_Belle(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_4_8_Belle;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_4_8_Belle_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_10p9_12p9_Belle_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
-
-    void SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle(SI_prediction& result)
-    {
-      using namespace Pipes::SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle;
-      static const std::vector<std::string> obslist = runOptions->getValue<std::vector<std::string>>("B2KstarmumuAng_14p18_19_Belle_obs_list");
-
-      SuperIso_prediction_helper(
-        obslist,
-        result, 
-        *Dep::SuperIso_modelinfo,
-        *Dep::SuperIso_nuisance,
-        BEreq::get_predictions_nuisance.pointer(),
-        BEreq::observables.pointer(),
-        BEreq::convert_correlation.pointer(),
-        BEreq::get_th_covariance_nuisance.pointer()
-      );
-    }
 
     /// NEW! Compute values of list of observables
-    void SI_compute_obs_list(SI_observable_map& result)  // TO BE MODIFIED
+    void SI_compute_obs_list(flav_observable_map& result)  // TO BE MODIFIED
     {
       using namespace Pipes::SI_compute_obs_list;
       if (flav_debug) cout<<"Starting SI_compute_obs_list"<<endl;
@@ -1164,7 +861,7 @@ namespace Gambit
 
 
     // NEW! Compute covariance matrix for a list of observables in SM case
-    void SI_theory_covariance_SM(SI_covariance_map& result)
+    void SI_theory_covariance_SM(flav_covariance_map& result)
     {
       static bool first=false;
       cout<<"First: "<<first<<endl;
@@ -1239,7 +936,7 @@ namespace Gambit
     }
 
     /// NEW! Compute covariance matrix for a list of observables
-    void SI_theory_covariance(SI_covariance_map& result)  // TO BE MODIFIED
+    void SI_theory_covariance(flav_covariance_map& result)  // TO BE MODIFIED
     {
       using namespace Pipes::SI_theory_covariance;
       if (flav_debug) cout<<"Starting SI_theory_covariance"<<endl;
@@ -3147,9 +2844,9 @@ namespace Gambit
 
       static const std::string observable{"Btaunu"};
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_B2taunu;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_B2taunu;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       result = gaussian.GetLogLikelihood(
               SI_theory[observable],
@@ -3180,9 +2877,9 @@ namespace Gambit
       //   "RDstar"
       // };
 
-      // SI_prediction prediction = *Dep::SuperIso_prediction_RDRDstar;
-      // SI_observable_map SI_theory = prediction.central_values;
-      // SI_covariance_map SI_theory_covariance = prediction.covariance;
+      // flav_prediction prediction = *Dep::SuperIso_prediction_RDRDstar;
+      // flav_observable_map SI_theory = prediction.central_values;
+      // flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       // // C++14 allows auto instead of decltype(observables0p1_0p98)
       // auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3224,9 +2921,9 @@ namespace Gambit
 
       static const std::string observable{"BR_BXsgamma"};
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_B2SGamma;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_B2SGamma;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       result = gaussian.GetLogLikelihood(
               SI_theory[observable],
@@ -3253,9 +2950,9 @@ namespace Gambit
 
       static const std::string observable{"SKstarGamma"};
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_B2KstarGamma;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_B2KstarGamma;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       result = gaussian_0.GetLogLikelihood(
               SI_theory[observable],
@@ -3286,9 +2983,9 @@ namespace Gambit
              "BR_Bdmumu"
       };
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3341,9 +3038,9 @@ namespace Gambit
 
       };
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3395,9 +3092,9 @@ namespace Gambit
         "BR_Bdmumu"
       };
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_B2mumu;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
       auto get_obs_theory = [SI_theory](decltype(observables)& observables){
@@ -3477,12 +3174,12 @@ namespace Gambit
         "S8_B0Kstar0mumu_4_8",
       };
 
-      SI_prediction prediction_0p1_2 = *Dep::SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas;
-      SI_prediction prediction_2_4 = *Dep::SuperIso_prediction_B2KstarmumuAng_2_4_Atlas;
-      SI_prediction prediction_4_8 = *Dep::SuperIso_prediction_B2KstarmumuAng_4_8_Atlas;
+      flav_prediction prediction_0p1_2 = *Dep::SuperIso_prediction_B2KstarmumuAng_0p1_2_Atlas;
+      flav_prediction prediction_2_4 = *Dep::SuperIso_prediction_B2KstarmumuAng_2_4_Atlas;
+      flav_prediction prediction_4_8 = *Dep::SuperIso_prediction_B2KstarmumuAng_4_8_Atlas;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98)
-      auto get_obs_theory = [](SI_observable_map& theory, decltype(observables0p1_2)& observables){
+      auto get_obs_theory = [](flav_observable_map& theory, decltype(observables0p1_2)& observables){
         std::vector<double> obs_theory;
         obs_theory.reserve(observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
@@ -3491,7 +3188,7 @@ namespace Gambit
         return obs_theory;
       };
 
-      auto get_obs_covariance = [](SI_covariance_map& theory_covariance, decltype(observables0p1_2)& observables){
+      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, decltype(observables0p1_2)& observables){
         boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
           for (unsigned int j = 0; j < observables.size(); ++j) {
@@ -3580,16 +3277,16 @@ namespace Gambit
         "P5prime_B0Kstar0mumu_16_19",
       };
 
-      SI_prediction prediction_1_2         = *Dep::SuperIso_prediction_B2KstarmumuAng_1_2_CMS;
-      SI_prediction prediction_2_4p3       = *Dep::SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS;
-      SI_prediction prediction_4p3_6       = *Dep::SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS;
-      SI_prediction prediction_6_8p68      = *Dep::SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS;
-      SI_prediction prediction_10p09_12p86 = *Dep::SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS;
-      SI_prediction prediction_14p18_16    = *Dep::SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS;
-      SI_prediction prediction_16_19       = *Dep::SuperIso_prediction_B2KstarmumuAng_16_19_CMS;
+      flav_prediction prediction_1_2         = *Dep::SuperIso_prediction_B2KstarmumuAng_1_2_CMS;
+      flav_prediction prediction_2_4p3       = *Dep::SuperIso_prediction_B2KstarmumuAng_2_4p3_CMS;
+      flav_prediction prediction_4p3_6       = *Dep::SuperIso_prediction_B2KstarmumuAng_4p3_6_CMS;
+      flav_prediction prediction_6_8p68      = *Dep::SuperIso_prediction_B2KstarmumuAng_6_8p68_CMS;
+      flav_prediction prediction_10p09_12p86 = *Dep::SuperIso_prediction_B2KstarmumuAng_10p09_12p86_CMS;
+      flav_prediction prediction_14p18_16    = *Dep::SuperIso_prediction_B2KstarmumuAng_14p18_16_CMS;
+      flav_prediction prediction_16_19       = *Dep::SuperIso_prediction_B2KstarmumuAng_16_19_CMS;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
-      auto get_obs_theory = [](SI_observable_map& theory, const std::vector<std::string>& observables){
+      auto get_obs_theory = [](flav_observable_map& theory, const std::vector<std::string>& observables){
         std::vector<double> obs_theory;
         obs_theory.reserve(observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
@@ -3598,7 +3295,7 @@ namespace Gambit
         return obs_theory;
       };
 
-      auto get_obs_covariance = [](SI_covariance_map& theory_covariance, const std::vector<std::string>& observables){
+      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, const std::vector<std::string>& observables){
         boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
           for (unsigned int j = 0; j < observables.size(); ++j) {
@@ -3668,13 +3365,13 @@ namespace Gambit
       };
 
 
-      SI_prediction prediction_0p1_4     = *Dep::SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle;
-      SI_prediction prediction_4_8       = *Dep::SuperIso_prediction_B2KstarmumuAng_4_8_Belle;
-      SI_prediction prediction_10p9_12p9 = *Dep::SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle;
-      SI_prediction prediction_14p18_19  = *Dep::SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle;
+      flav_prediction prediction_0p1_4     = *Dep::SuperIso_prediction_B2KstarmumuAng_0p1_4_Belle;
+      flav_prediction prediction_4_8       = *Dep::SuperIso_prediction_B2KstarmumuAng_4_8_Belle;
+      flav_prediction prediction_10p9_12p9 = *Dep::SuperIso_prediction_B2KstarmumuAng_10p9_12p9_Belle;
+      flav_prediction prediction_14p18_19  = *Dep::SuperIso_prediction_B2KstarmumuAng_14p18_19_Belle;
 
       // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
-      auto get_obs_theory = [](SI_observable_map& theory, const std::vector<std::string>& observables){
+      auto get_obs_theory = [](flav_observable_map& theory, const std::vector<std::string>& observables){
         std::vector<double> obs_theory;
         obs_theory.reserve(observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
@@ -3683,7 +3380,7 @@ namespace Gambit
         return obs_theory;
       };
 
-      auto get_obs_covariance = [](SI_covariance_map& theory_covariance, const std::vector<std::string>& observables){
+      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, const std::vector<std::string>& observables){
         boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
           for (unsigned int j = 0; j < observables.size(); ++j) {
@@ -3803,8 +3500,8 @@ namespace Gambit
 
 
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
+      flav_observable_map SI_theory = *Dep::SuperIso_obs_values;
+      flav_covariance_map SI_theory_covariance;
 
 
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
@@ -3895,9 +3592,9 @@ namespace Gambit
         "dGamma/dq2_B0Kstar0mumu_15_19",
       };
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_B2KstarmumuBr;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_B2KstarmumuBr;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       result = 0;
       result += BifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
@@ -3940,9 +3637,9 @@ namespace Gambit
               "dGamma/dq2_Bsphimumu_15_19",
       };
 
-      SI_prediction prediction = *Dep::SuperIso_prediction_Bs2PhimumuBr;
-      SI_observable_map SI_theory = prediction.central_values;
-      SI_covariance_map SI_theory_covariance = prediction.covariance;
+      flav_prediction prediction = *Dep::SuperIso_prediction_Bs2PhimumuBr;
+      flav_observable_map SI_theory = prediction.central_values;
+      flav_covariance_map SI_theory_covariance = prediction.covariance;
 
       result = 0;
       result += bifurGaussian_0.GetLogLikelihood(SI_theory[observables[0]], SI_theory_covariance[observables[0]][observables[0]]);
@@ -3974,8 +3671,8 @@ namespace Gambit
       };
 
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
+      flav_observable_map SI_theory = *Dep::SuperIso_obs_values;
+      flav_covariance_map SI_theory_covariance;
 
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
 
@@ -4017,8 +3714,8 @@ namespace Gambit
         "R-1_B0Kstar0ll_1.1_6",
       };
 
-      SI_observable_map SI_theory = *Dep::SuperIso_obs_values;
-      SI_covariance_map SI_theory_covariance;
+      flav_observable_map SI_theory = *Dep::SuperIso_obs_values;
+      flav_covariance_map SI_theory_covariance;
 
       SI_theory_covariance     = *Dep::SuperIso_theory_covariance;
 
