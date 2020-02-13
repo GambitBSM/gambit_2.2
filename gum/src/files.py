@@ -9,6 +9,8 @@ import numpy as np
 import yaml
 from distutils.dir_util import remove_tree
 from collections import defaultdict
+import filecmp
+import glob
 
 from setup import *
 
@@ -1034,7 +1036,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
     write_file(model_name + '_example.yaml', 'yaml_files', 
                towrite, reset_contents)
 
-def write_config_file(outputs, model_name, reset_contents):
+def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
     """
     Drops a configuration file, which will build the correct backends, 
     and then GAMBIT, in the correct order.
@@ -1043,23 +1045,30 @@ def write_config_file(outputs, model_name, reset_contents):
     towrite = (
         "cd ../build\n"
         "cmake ..\n"
-        "make -j4"
     )
 
+    backends = []
     if outputs.pythia:
-        towrite += " pythia_{0}".format(model_name.lower())
+        backends.append("pythia_{0}".format(model_name.lower()))
 
     if outputs.mo:
-        towrite += " micromegas_{0}".format(model_name)
+        backends.append("micromegas_{0}".format(model_name))
 
     if outputs.spheno:
-        towrite += " sarah-spheno_{0}".format(model_name)
+        backends.append("sarah-spheno_{0}".format(model_name))
 
     if outputs.vev:
-        towrite += " vevacious"
+        backends.append("vevacious")
 
     if outputs.ch:
-        towrite += " calchep"
+        backends.append("calchep")
+
+    # If any backend needs rebuilding, nuke them first
+    for be in backends:
+      if be in rebuild_backends:
+        towrite += ("make nuke-{0}\n").format(be)
+      towrite += ("make -j4 {0}\n").format(be)
+
 
     towrite += (
         "\n"
@@ -1068,3 +1077,35 @@ def write_config_file(outputs, model_name, reset_contents):
     )
 
     write_file(model_name + '_config.sh', 'gum', towrite, reset_contents)
+
+def compare_patched_files(gambit_dir, gum_dir, file_endings = ()):
+    """
+    Check if there is already a patched version of the backend files
+    and if they are they same as the gum version.
+    Returns True if the directory is empty or all files match
+    Returns False if any files are different or missing
+    """
+
+    if not os.path.exists(gambit_dir) or len(os.listdir(gambit_dir)) == 0:
+        return True
+
+    # Get files from both directories
+    gambit_files =  [f for f in glob.glob(gambit_dir+'**/*') if f.endswith(file_endings)]
+    gum_files = [f for f in glob.glob(gum_dir+'**/*') if f.endswith(file_endings)]
+
+    # If the number of files is different it needs recompiling
+    if len(gambit_files) != len(gum_files):
+      return False
+
+    # Loop over files to and compare
+    for gbf in gambit_files:
+
+        gbfilename = gbf.replace(gambit_dir,'')
+
+        for gumf in gum_files:
+            gumfilename = gumf.replace(gum_dir,'')
+
+            if gbfilename == gumfilename and not filecmp.cmp(gbf, gumf, shallow=False):
+                  return False
+            
+    return True

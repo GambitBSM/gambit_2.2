@@ -36,7 +36,7 @@
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu
-#  \date 2019 Feb
+#  \date 2019 Feb, 2020 Feb
 #
 #************************************************
 
@@ -117,6 +117,8 @@ if [ "$4" != "none" ]; then
 fi
 # Do the extraction
 cd $5
+# Wipe out contents of target directory first
+rm -rf *
 $2 -E tar -xf $1/${filename}
 # Get rid of any internal 'container folder' from tarball, unless $8 has been set
 if [ "retain container folder" != "$8" ]; then

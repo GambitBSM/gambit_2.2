@@ -14,7 +14,7 @@
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
-#  \date 2019
+#  \date 2019, 2020
 #
 #  **************************************
 
@@ -728,6 +728,7 @@ if args.file:
 
         # Backends
         m = "Backends"
+        rebuild_backends = []
         # cmake
         if output_opts.pythia:
             copy_file("backends.cmake", "cmake", output_dir, reset_contents, 
@@ -816,6 +817,13 @@ if args.file:
             # SPheno backend_types 
             amend_file("backend_types/SPheno.hpp", m, backend_types, btnum-2, 
                        reset_contents)
+            # Check if backend needs rebuild
+            be_install_dir  = "../Backends/installed/sarah-spheno/" + ver + "/" + gum.name
+            gum_patched_dir = output_dir + '/SPheno_patched'
+            check_backend_rebuild('sarah-spheno_'+gum.name, ver, be_install_dir, 
+                                  gum_patched_dir, rebuild_backends, 
+                                  file_endings=('F90','f90','Makefile'), 
+                                  build_dir='../build')
 
         # Vevacious
         if output_opts.vev:
@@ -832,7 +840,14 @@ if args.file:
                "$GAMBIT/yaml_files/{0}_example.yaml!").format(gum.name))
 
         # Write a config file to make compilation easier
-        write_config_file(output_opts, gum.name, reset_contents)
+        write_config_file(output_opts, gum.name, reset_contents, rebuild_backends)
+        print(("\nGUM has dropped a config script {0}_config.sh").format(gum.name))
+
+        # Inform user to rebuild backends
+        if rebuild_backends:
+            print(("The following backends have been changed, if you are not using "
+                   "the config script provided make sure to rebuild them: "
+                   "{0}").format(rebuild_backends))
 
         # Save output to a .mug file for resetting purposes
         mug_file = "mug_files/{0}.mug".format(gum.name)

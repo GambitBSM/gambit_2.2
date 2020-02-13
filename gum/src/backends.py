@@ -187,3 +187,36 @@ def add_to_backends_cmake(contents, reset_dict, linenum=0, string_to_find=""):
                                        string_to_find)
         if present: amend_file("backends.cmake", "cmake", contents, 
                                linenum-1, reset_dict)
+
+def check_backend_rebuild(be_name, be_ver, be_install_dir, gum_patched_dir, rebuild_backends, file_endings=(), build_dir='../build'):
+    """
+    Checks if a backend needs rebuilding by comparing some patched files.
+    """
+
+    if not compare_patched_files(be_install_dir, gum_patched_dir, file_endings):
+      rebuild_backends.append(be_name)
+      force_backend_rebuild(be_name, be_ver, to_touch='mkdir', build_dir=build_dir)
+
+def force_backend_rebuild(be_name, be_ver, to_touch="mkdir", build_dir="../build"):
+    """
+    Forces the rebuild of a backend by touching the stamp files
+    at the step given by to_touch (defaults to download)
+    """
+
+    touchable = ['build','install','patch','verify','configure','download','mkdir','update']
+
+    if to_touch not in touchable:
+        raise GumError(("\n\tThe stamp target does not exist,"
+                        "it should be one of the followinig: "
+                        "build, configure, download, install, "
+                        "mkdir, patch, update or verify"))
+
+    be = be_name + '_' + be_ver
+    stamp_dir = os.path.join(build_dir, be + '-prefix/src', be + '-stamp')
+    stamp_file = os.path.join(stamp_dir, be + '-' + to_touch)
+
+    # If stamp file does not exist, no need to do anyting, it will rebuild on its own
+    if os.path.isdir(stamp_dir) and os.path.exists(stamp_file) :
+        os.utime(stamp_file, None)
+
+
