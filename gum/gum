@@ -626,27 +626,23 @@ if args.file:
             print(("Patching Pythia to inject new matrix elements into its "
                    "Process Container and shared library."))
             pythia_groups = output_opts.options['pythia'].get('pythia_groups')
-            if pythia_groups is not None:
-                fix_pythia_lib(gum.name, new_pythia_dir, output_opts.pythia_groups)
-                print("Creating a diff vs original version of Pythia.")
-                write_backend_patch(output_dir, pristine_pythia_dir, new_pythia_dir,
-                                    "pythia_"+gum.name.lower(), 
-                                    "8."+base_pythia_version)
-                print("Writing an additional patch for the new version of Pythia.")
-                patch_pythia_patch(parameters, gum.name, reset_contents)
-                print("Creating a BOSS config file for Pythia_"+gum.name+".")
-                write_boss_config_for_pythia(gum.name, output_dir)
-                print("Creating a cmake entry for Pythia"+gum.name+".")
-                add_new_pythia_to_backends_cmake(gum.name, output_dir)
-                print(("Setting the default version of Pythia_"+gum.name+" for "
-                       "BOSSed classes to 8."+base_pythia_version))
-                write_new_default_bossed_version("Pythia_"+gum.name, 
-                                                 "8."+base_pythia_version, 
-                                                 output_dir)
-            else:
-                raise GumError(("Could not find pythia groups. Please "
-                                "change your .gum file."))
-
+            fix_pythia_lib(gum.name, new_pythia_dir, pythia_groups)
+            print("Creating a diff vs original version of Pythia.")
+            write_backend_patch(output_dir, pristine_pythia_dir, new_pythia_dir,
+                                "pythia_"+gum.name.lower(), 
+                                "8."+base_pythia_version)
+            print("Writing an additional patch for the new version of Pythia.")
+            patch_pythia_patch(parameters, gum.name, reset_contents)
+            print("Creating a BOSS config file for Pythia_"+gum.name+".")
+            write_boss_config_for_pythia(gum.name, output_dir)
+            print("Creating a cmake entry for Pythia"+gum.name+".")
+            add_new_pythia_to_backends_cmake(gum.name, output_dir)
+            print(("Setting the default version of Pythia_"+gum.name+" for "
+                   "BOSSed classes to 8."+base_pythia_version))
+            write_new_default_bossed_version("Pythia_"+gum.name, 
+                                             "8."+base_pythia_version, 
+                                             output_dir)
+    
         print("")
         print("Now putting the new code into GAMBIT.")
 
@@ -823,6 +819,8 @@ if args.file:
             dst = (
                 "../Backends/patches/sarah-spheno/{0}/{1}/unpatched"
             ).format(ver, gum.name)
+            # Delete directory if it exists, then make it
+            remove_tree_quietly(dst)
             mkdir_if_absent(dst)
             copy_tree(src, dst)
             patchloc = (
