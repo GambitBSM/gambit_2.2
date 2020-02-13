@@ -83,8 +83,9 @@ Scanner:
 ObsLikes:
 
   # Likelihoods
-  - purpose:    B2TauNuTest
-    capability: B2taunu_LogLikelihood
+  #- purpose:    B2TauNuTest
+  #  capability: B2taunu_LogLikelihood
+  #This (Btaunu) is missing from SuperIso!
 
   # FIXME: How are the observables called inside superiso?
   #- purpose:    RDRDstarTest
@@ -102,8 +103,8 @@ ObsLikes:
   - purpose:    B2LLTest_Atlas
     capability: B2mumu_LogLikelihood_Atlas
 
-#  - purpose:    B2KStarMuMuAngularTest_Atlas
-#    capability: B2KstarmumuAng_LogLikelihood_Atlas
+  - purpose:    B2KStarMuMuAngularTest_Atlas
+    capability: B2KstarmumuAng_LogLikelihood_Atlas
 
 #  - purpose:    B2KStarMuMuAngularTest_CMS
 #    capability: B2KstarmumuAng_LogLikelihood_CMS
@@ -140,20 +141,21 @@ Rules:
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
+  - capability: prediction_B2KstarmumuAng_.*_Atlas
+    options:
+      obs_list: [FL, S3, S4, S5, S7, S8]
 
-  # Can't be bothered directing these properly just now...
-#  - options:
-#      obs_list: [
-#        FL,
-#        AFB,
-#        S3,
-#        S4,
-#        S5,
-#        S7,
-#        S8,
-#        P1,
-#        P5,
-#      ]
+  - capability: prediction_B2KstarmumuAng_.*_CMS
+    options:
+      obs_list: [P1, P5prime]
+
+  - capability: prediction_B2KstarmumuAng_.*_Belle
+    options:
+      obs_list: [P4prime, P5prime]
+
+  - capability: prediction_B2KstarmumuAng_.*_LHCb
+    options:
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 
   # Use SM theory covariance matrix for every point
   - capability: SuperIso_theory_covariance
