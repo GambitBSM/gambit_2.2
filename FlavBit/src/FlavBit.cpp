@@ -814,10 +814,11 @@ namespace Gambit
       THE_REST("")                                                       \
     }                                                                    \
 
-    #define SI_MULTI_PREDICTION_FUNCTION_BINS(name,bins)                 \
-    void CAT_3(SuperIso_prediction_,name,bins)(flav_prediction& result)  \
+    #define SI_MULTI_PREDICTION_FUNCTION_BINS(name,bins,exp)             \
+    void CAT_4(SuperIso_prediction_,name,bins,exp)(flav_prediction&      \
+     result)                                                             \
     {                                                                    \
-      using namespace CAT_3(Pipes::SuperIso_prediction_,name,bins);      \
+      using namespace CAT_4(Pipes::SuperIso_prediction_,name,bins,exp);  \
       static const std::vector<str> FB_obslist = runOptions->            \
        getValue<std::vector<str>>("obs_list");                           \
       THE_REST(#bins)                                                    \
@@ -837,26 +838,26 @@ namespace Gambit
 
     SI_MULTI_PREDICTION_FUNCTION(B2mumu)
     SI_MULTI_PREDICTION_FUNCTION(RDRDstar)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_2_Atlas)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4_Atlas)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8_Atlas)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1_2_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4p3_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4p3_6_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8p68_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p09_12p86_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_16_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_16_19_CMS)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_4_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p9_12p9_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_19_Belle)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_0p98_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1p1_2p5_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2p5_4_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_6_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8_LHCb)
-    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_2,_Atlas)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4,_Atlas)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8,_Atlas)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1_2,_CMS)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2_4p3,_CMS)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4p3_6,_CMS)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8p68,_CMS)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p09_12p86,_CMS)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_16,_CMS)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_16_19,_CMS)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_4,_Belle)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8,_Belle)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p9_12p9,_Belle)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_19,_Belle)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_0p98,_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1p1_2p5,_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2p5_4,_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_6,_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8,_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19,_LHCb)
 
     #undef SI_PRED_HELPER_CALL
     #undef SI_SINGLE_PREDICTION_FUNCTION
@@ -3244,79 +3245,40 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_CMS(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_CMS;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_1.0_2.0.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_2.0_4.3.yaml";
-      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_4.3_6.0.yaml";
-      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_6.0_8.68.yaml";
-      static const std::string inputfile_4 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_10.09_12.86.yaml";
-      static const std::string inputfile_5 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_14.18_16.0.yaml";
-      static const std::string inputfile_6 = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_16.0_19.0.yaml";
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_0);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_3);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_4);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_5);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_6(inputfile_6);
-
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_";
+      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian[7] = { HepLike_default::HL_nDimBifurGaussian(inputfile+"1.0_2.0.yaml"),
+                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"2.0_4.3.yaml"),
+                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"4.3_6.0.yaml"),
+                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"6.0_8.68.yaml"),
+                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"10.09_12.86.yaml"),
+                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"14.18_16.0.yaml"),
+                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"16.0_19.0.yaml")
+                                                                          };
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        nDimBifurGaussian_0.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
-        nDimBifurGaussian_1.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
-        nDimBifurGaussian_2.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
-        nDimBifurGaussian_3.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_4 << endl;
-        nDimBifurGaussian_4.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_5 << endl;
-        nDimBifurGaussian_5.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_6 << endl;
-        nDimBifurGaussian_6.Read();
-
+        for (int i = 0; i < 7; i++)
+        {
+          std::cout << "Debug: Reading HepLike data file " << i << endl;
+          nDimBifurGaussian[i].Read();
+        }
         first = false;
       }
 
       // Ordering of observables defined by HEPLike
-      static const std::vector<std::string> observables1_2{
-        "P1_B0Kstar0mumu_1_2",
-        "P5prime_B0Kstar0mumu_1_2",
-      };
-      static const std::vector<std::string> observables2_4p3{
-        "P1_B0Kstar0mumu_2_4.3",
-        "P5prime_B0Kstar0mumu_2_4.3",
-      };
-      static const std::vector<std::string> observables4p3_6{
-        "P1_B0Kstar0mumu_4.3_6",
-        "P5prime_B0Kstar0mumu_4.3_6",
-      };
-      static const std::vector<std::string> observables6_8p68{
-        "P1_B0Kstar0mumu_6_8.68",
-        "P5prime_B0Kstar0mumu_6_8.68",
-      };
-      static const std::vector<std::string> observables10p09_12p86{
-        "P1_B0Kstar0mumu_10.09_12.86",
-        "P5prime_B0Kstar0mumu_10.09_12.86",
-      };
-      static const std::vector<std::string> observables14p18_16{
-        "P1_B0Kstar0mumu_14.18_16",
-        "P5prime_B0Kstar0mumu_14.18_16",
-      };
-      static const std::vector<std::string> observables16_19{
-        "P1_B0Kstar0mumu_16_19",
-        "P5prime_B0Kstar0mumu_16_19",
+      static const std::vector<std::string> observables{
+        "P1",
+        "P5prime",
       };
 
-      flav_prediction prediction_1_2         = *Dep::prediction_B2KstarmumuAng_1_2_CMS;
-      flav_prediction prediction_2_4p3       = *Dep::prediction_B2KstarmumuAng_2_4p3_CMS;
-      flav_prediction prediction_4p3_6       = *Dep::prediction_B2KstarmumuAng_4p3_6_CMS;
-      flav_prediction prediction_6_8p68      = *Dep::prediction_B2KstarmumuAng_6_8p68_CMS;
-      flav_prediction prediction_10p09_12p86 = *Dep::prediction_B2KstarmumuAng_10p09_12p86_CMS;
-      flav_prediction prediction_14p18_16    = *Dep::prediction_B2KstarmumuAng_14p18_16_CMS;
-      flav_prediction prediction_16_19       = *Dep::prediction_B2KstarmumuAng_16_19_CMS;
+      flav_prediction prediction[7] = { *Dep::prediction_B2KstarmumuAng_1_2_CMS,
+                                        *Dep::prediction_B2KstarmumuAng_2_4p3_CMS,
+                                        *Dep::prediction_B2KstarmumuAng_4p3_6_CMS,
+                                        *Dep::prediction_B2KstarmumuAng_6_8p68_CMS,
+                                        *Dep::prediction_B2KstarmumuAng_10p09_12p86_CMS,
+                                        *Dep::prediction_B2KstarmumuAng_14p18_16_CMS,
+                                        *Dep::prediction_B2KstarmumuAng_16_19_CMS
+                                      };
 
       // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
       auto get_obs_theory = [](flav_observable_map& theory, const std::vector<std::string>& observables){
@@ -3339,13 +3301,10 @@ namespace Gambit
       };
 
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_1_2.central_values, observables1_2),                 get_obs_covariance(prediction_1_2.covariance, observables1_2));
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(prediction_2_4p3.central_values, observables2_4p3),             get_obs_covariance(prediction_2_4p3.covariance, observables2_4p3));
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(prediction_4p3_6.central_values, observables4p3_6),             get_obs_covariance(prediction_4p3_6.covariance, observables4p3_6));
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(prediction_6_8p68.central_values, observables6_8p68),           get_obs_covariance(prediction_6_8p68.covariance, observables6_8p68));
-      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(prediction_10p09_12p86.central_values, observables10p09_12p86), get_obs_covariance(prediction_10p09_12p86.covariance, observables10p09_12p86));
-      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(prediction_14p18_16.central_values, observables14p18_16),       get_obs_covariance(prediction_14p18_16.covariance, observables14p18_16));
-      result += nDimBifurGaussian_6.GetLogLikelihood(get_obs_theory(prediction_16_19.central_values, observables16_19),             get_obs_covariance(prediction_16_19.covariance, observables16_19));
+      for (int i = 0; i < 6; i++)
+      {
+        result += nDimBifurGaussian[0].GetLogLikelihood(get_obs_theory(prediction[i].central_values, observables), get_obs_covariance(prediction[i].covariance, observables));
+      }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_CMS result: " << result << std::endl;
     }
@@ -3381,20 +3340,20 @@ namespace Gambit
 
       // Ordering of observables defined by HEPLike
       static const std::vector<std::string> observables0p1_4{
-        "P4prime_B0Kstar0mumu_0.1_4",
-        "P5prime_B0Kstar0mumu_0.1_4",
+        "P4prime",
+        "P5prime",
       };
       static const std::vector<std::string> observables4_8{
-        "P4prime_B0Kstar0mumu_4_8",
-        "P5prime_B0Kstar0mumu_4_8",
+        "P4prime",
+        "P5prime",
       };
       static const std::vector<std::string> observables10p9_12p9{
-        "P4prime_B0Kstar0mumu_10.9_12.9",
-        "P5prime_B0Kstar0mumu_10.9_12.9",
+        "P4prime",
+        "P5prime",
       };
       static const std::vector<std::string> observables14p18_19{
-        "P4prime_B0Kstar0mumu_14.18_19",
-        "P5prime_B0Kstar0mumu_14.18_19",
+        "P4prime",
+        "P5prime",
       };
 
 
@@ -3470,65 +3429,15 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      static const std::vector<std::string> observables0p1_0p98{
-        "FL_B0Kstar0mumu_0.1_0.98",
-        "S3_B0Kstar0mumu_0.1_0.98",
-        "S4_B0Kstar0mumu_0.1_0.98",
-        "S5_B0Kstar0mumu_0.1_0.98",
-        "AFB_B0Kstar0mumu_0.1_0.98",
-        "S7_B0Kstar0mumu_0.1_0.98",
-        "S8_B0Kstar0mumu_0.1_0.98",
-        "S9_B0Kstar0mumu_0.1_0.98",
-      };
-      static const std::vector<std::string> observables1p1_2p5{
-        "FL_B0Kstar0mumu_1.1_2.5",
-        "S3_B0Kstar0mumu_1.1_2.5",
-        "S4_B0Kstar0mumu_1.1_2.5",
-        "S5_B0Kstar0mumu_1.1_2.5",
-        "AFB_B0Kstar0mumu_1.1_2.5",
-        "S7_B0Kstar0mumu_1.1_2.5",
-        "S8_B0Kstar0mumu_1.1_2.5",
-        "S9_B0Kstar0mumu_1.1_2.5",
-      };
-      static const std::vector<std::string> observables2p5_4{
-        "FL_B0Kstar0mumu_2.5_4",
-        "S3_B0Kstar0mumu_2.5_4",
-        "S4_B0Kstar0mumu_2.5_4",
-        "S5_B0Kstar0mumu_2.5_4",
-        "AFB_B0Kstar0mumu_2.5_4",
-        "S7_B0Kstar0mumu_2.5_4",
-        "S8_B0Kstar0mumu_2.5_4",
-        "S9_B0Kstar0mumu_2.5_4",
-      };
-      static const std::vector<std::string> observables4_6{
-        "FL_B0Kstar0mumu_4_6",
-        "S3_B0Kstar0mumu_4_6",
-        "S4_B0Kstar0mumu_4_6",
-        "S5_B0Kstar0mumu_4_6",
-        "AFB_B0Kstar0mumu_4_6",
-        "S7_B0Kstar0mumu_4_6",
-        "S8_B0Kstar0mumu_4_6",
-        "S9_B0Kstar0mumu_4_6",
-      };
-      static const std::vector<std::string> observables6_8{
-        "FL_B0Kstar0mumu_6_8",
-        "S3_B0Kstar0mumu_6_8",
-        "S4_B0Kstar0mumu_6_8",
-        "S5_B0Kstar0mumu_6_8",
-        "AFB_B0Kstar0mumu_6_8",
-        "S7_B0Kstar0mumu_6_8",
-        "S8_B0Kstar0mumu_6_8",
-        "S9_B0Kstar0mumu_6_8",
-      };
-      static const std::vector<std::string> observables15_19{
-        "FL_B0Kstar0mumu_15_19",
-        "S3_B0Kstar0mumu_15_19",
-        "S4_B0Kstar0mumu_15_19",
-        "S5_B0Kstar0mumu_15_19",
-        "AFB_B0Kstar0mumu_15_19",
-        "S7_B0Kstar0mumu_15_19",
-        "S8_B0Kstar0mumu_15_19",
-        "S9_B0Kstar0mumu_15_19",
+      static const std::vector<std::string> observables{
+        "FL",
+        "S3",
+        "S4",
+        "S5",
+        "AFB",
+        "S7",
+        "S8",
+        "S9",
       };
 
       flav_prediction prediction_0p1_0p98 = *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb;
@@ -3559,12 +3468,12 @@ namespace Gambit
       };
 
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_0p98.central_values, observables0p1_0p98), get_obs_covariance(prediction_0p1_0p98.covariance, observables0p1_0p98));
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(prediction_1p1_2p5.central_values, observables1p1_2p5),   get_obs_covariance(prediction_1p1_2p5.covariance, observables1p1_2p5));
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(prediction_2p5_4.central_values, observables2p5_4),       get_obs_covariance(prediction_2p5_4.covariance, observables2p5_4));
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(prediction_4_6.central_values, observables4_6),           get_obs_covariance(prediction_4_6.covariance, observables4_6));
-      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(prediction_6_8.central_values, observables6_8),            get_obs_covariance(prediction_6_8.covariance, observables6_8));
-      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(prediction_15_19.central_values, observables15_19),       get_obs_covariance(prediction_15_19.covariance, observables15_19));
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_0p98.central_values, observables), get_obs_covariance(prediction_0p1_0p98.covariance, observables));
+      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(prediction_1p1_2p5.central_values, observables),   get_obs_covariance(prediction_1p1_2p5.covariance, observables));
+      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(prediction_2p5_4.central_values, observables),       get_obs_covariance(prediction_2p5_4.covariance, observables));
+      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(prediction_4_6.central_values, observables),           get_obs_covariance(prediction_4_6.covariance, observables));
+      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(prediction_6_8.central_values, observables),            get_obs_covariance(prediction_6_8.covariance, observables));
+      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(prediction_15_19.central_values, observables),       get_obs_covariance(prediction_15_19.covariance, observables));
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
