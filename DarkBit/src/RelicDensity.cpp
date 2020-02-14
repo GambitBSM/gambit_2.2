@@ -159,8 +159,9 @@ namespace Gambit
 
       // retrieve annihilation processes and DM properties
       std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
       TH_Process annihilation =
-              (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
+              (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
       TH_ParticleProperty DMproperty =
               (*Dep::TH_ProcessCatalog).getParticleProperty(DMid);
 
@@ -336,7 +337,8 @@ namespace Gambit
         using namespace Pipes::RD_eff_annrate_from_ProcessCatalog;
 
         std::string DMid= *Dep::DarkMatter_ID;
-        TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
+        std::string DMbarid = *Dep::DarkMatterConj_ID;
+        TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
         double mDM = (*Dep::TH_ProcessCatalog).getParticleProperty(DMid).mass;
 
         // If process involves non-self-conjugate DM then we need to add a factor of 1/2 to the final weff. This must be explicitly set in the process catalogue.

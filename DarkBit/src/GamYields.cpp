@@ -61,11 +61,12 @@ namespace Gambit {
       using namespace Pipes::GA_missingFinalStates;
       std::set<std::string> missingFinalStates;
       std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
 
       /// Option ignore_all<bool>: Ignore all missing final states (default false)
       if ( runOptions->getValueOrDef(false, "ignore_all") ) return;
 
-      TH_Process process = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
+      TH_Process process = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
 
       // Add only gamma-ray spectra for two and three body final states
       for (std::vector<TH_Channel>::iterator it = process.channelList.begin();
@@ -193,12 +194,13 @@ namespace Gambit {
       using DarkBit_utils::gamma3bdy_limits;
 
       std::string DMid= *Dep::DarkMatter_ID;
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
 
       /// Option line_width<double>: Set relative line width used in gamma-ray spectra (default 0.03)
       double line_width = runOptions->getValueOrDef<double>(0.03,  "line_width");
 
       // Get annihilation process from process catalog
-      TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
+      TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
       
       // If process involves non-self-conjugate DM then we need to add a factor of 1/2 to the final spectrum. This must be explicitly set in the process catalogue.
       double k = (annProc.isSelfConj) ? 1. : 0.5;

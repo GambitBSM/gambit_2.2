@@ -137,6 +137,7 @@ START_MODULE
       START_FUNCTION(RD_spectrum_type)
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
       DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
       ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                    ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
                    DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2)
@@ -171,6 +172,7 @@ START_MODULE
       START_FUNCTION(fptr_dd)
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
       DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
       ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                    DiracSingletDM_Z2, MajoranaSingletDM_Z2, VectorSingletDM_Z2)
     #undef FUNCTION
@@ -422,6 +424,7 @@ START_MODULE
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
       DEPENDENCY(SimYieldTable, SimYieldTable)
       DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -433,6 +436,7 @@ START_MODULE
       DEPENDENCY(SimYieldTable, SimYieldTable)
       DEPENDENCY(cascadeMC_gammaSpectra, stringFunkMap)
       DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
     #undef FUNCTION
   /*
     #define FUNCTION GA_AnnYield_DarkSUSY
@@ -452,6 +456,7 @@ START_MODULE
       DEPENDENCY(DarkSUSY_PointInit, bool)
       DEPENDENCY(MSSM_spectrum, Spectrum)
       DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
       DEPENDENCY(decay_rates,DecayTable)
       //BACKEND_REQ(mspctm, (), DS_MSPCTM)
       BACKEND_REQ(dssigmav, (), double, (int&))
@@ -610,7 +615,7 @@ START_MODULE
 
   // Retrieve the total thermally-averaged annihilation cross-section for indirect detection (cm^3 / s)
   QUICK_FUNCTION(DarkBit, sigmav, NEW_CAPABILITY, sigmav_late_universe, double, (),
-      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string))
+      (TH_ProcessCatalog, TH_ProcessCatalog), (DarkMatter_ID, std::string), (DarkMatterConj_ID, std::string))
 
 
   // DIRECT DETECTION ==================================================
@@ -896,6 +901,7 @@ START_MODULE
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
       DEPENDENCY(mwimp, double)
       DEPENDENCY(DarkMatter_ID, std::string)
+      DEPENDENCY(DarkMatterConj_ID, std::string)
       DEPENDENCY(capture_rate_Sun, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -919,6 +925,7 @@ START_MODULE
     DEPENDENCY(mwimp, double)
     DEPENDENCY(sigmav, double)
     DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(DarkMatterConj_ID, std::string)
     BACKEND_REQ(nuyield_setup, (needs_DS), void, (const double(&)[29],
      const double(&)[29][3], const double(&)[15], const double(&)[3], const double&,
      const double&))
@@ -1221,6 +1228,7 @@ START_MODULE
     DEPENDENCY(GA_AnnYield, daFunk::Funk)
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(DarkMatterConj_ID, std::string)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1258,6 +1266,30 @@ START_MODULE
     ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
     #define FUNCTION DarkMatter_ID_MSSM
+    START_FUNCTION(std::string)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DarkMatterConj_ID
+  START_CAPABILITY
+    #define FUNCTION DarkMatterConj_ID_ScalarSingletDM
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_VectorSingletDM
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(VectorSingletDM_Z2)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_MajoranaSingletDM
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(MajoranaSingletDM_Z2)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_DiracSingletDM
+    START_FUNCTION(std::string)
+    ALLOW_MODELS(DiracSingletDM_Z2)
+    #undef FUNCTION
+    #define FUNCTION DarkMatterConj_ID_MSSM
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION

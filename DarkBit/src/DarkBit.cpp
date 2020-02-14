@@ -71,7 +71,8 @@ namespace Gambit
     {
       using namespace Pipes::sigmav_late_universe;
       std::string DMid = *Dep::DarkMatter_ID;
-      TH_Process annProc = Dep::TH_ProcessCatalog->getProcess(DMid, DMid);
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
+      TH_Process annProc = Dep::TH_ProcessCatalog->getProcess(DMid, DMbarid);
       result = 0.0;
       // Add all the regular channels
       for (std::vector<TH_Channel>::iterator it = annProc.channelList.begin();
@@ -174,7 +175,8 @@ namespace Gambit
       double oh2 = *Dep::RD_oh2;
 
       std::string DMid = *Dep::DarkMatter_ID;
-      TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
+      std::string DMbarid = *Dep::DarkMatterConj_ID;
+      TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
       daFunk::Funk spectrum = (*Dep::GA_AnnYield)->set("v", 0.);
 
       std::ostringstream filename;

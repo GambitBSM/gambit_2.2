@@ -383,17 +383,17 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     if sv:
         towrite += sv_src
 
+    # Add all propagators as resonances.
     if propagators:
-
         for i in np.arange(len(propagators)):
             if abs(propagators[i]) != abs(dm.PDG_code):
                 towrite += (
                         "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
                         "process_ann.resonances_thresholds.resonances.\n    "
-                        "push_back(TH_Resonance(spec.get(Par::Pole_Mass, \"{0}\"), "
-                        "tbl.at(\"{0}\").width_in_GeV));\n"
+                        "push_back(TH_Resonance(spec.get(Par::Pole_Mass, "
+                        "\"{0}\"), tbl.at(\"{0}\").width_in_GeV));\n"
                 ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
-                     dm_mass)
+                         dm_mass)
 
     towrite += (
             "\n"
@@ -447,7 +447,7 @@ def write_darkbit_src(dm, pc, sv, ann_products, propagators,
                             calchep_pdg_dict, model_specific_particles,
                             higgses)
 
-    towrite += write_dm_id(gambit_model_name, gb_id)
+    towrite += write_dm_id(gambit_model_name, gb_id, gb_conj)
 
     towrite += (
             "} //namespace DarkBit\n\n"
@@ -457,7 +457,7 @@ def write_darkbit_src(dm, pc, sv, ann_products, propagators,
 
     return indent(towrite)
 
-def write_dm_id(model_name, dm_id):
+def write_dm_id(model_name, dm_id, gb_conj):
     """
     Returns entry for DarkMatter_ID in DarkBit.
     """
@@ -468,6 +468,12 @@ def write_dm_id(model_name, dm_id):
             "{{ result = \"{1}\"; }}"
             "\n\n"
     ).format(model_name, dm_id)
+    towrite = (
+            "\n"
+            "void DarkMatterConj_ID_{0}(std::string& result)"
+            "{{ result = \"{1}\"; }}"
+            "\n\n"
+    ).format(model_name, dm_conj)
 
     return towrite;
 
@@ -556,8 +562,8 @@ def write_darkbit_rollcall(model_name, pc):
                 "  START_FUNCTION(TH_ProcessCatalog)\n"
                 "  DEPENDENCY(decay_rates, DecayTable)\n"
                 "  DEPENDENCY({0}_spectrum, Spectrum)\n"
-                "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&, "
-                "std::vector<str>&, double&, double&, const DecayTable&))\n"
+                "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&"
+                ",std::vector<str>&, double&, double&, const DecayTable&))\n"
                 "  ALLOW_MODELS({0})\n"
                 "#undef FUNCTION\n"
         ).format(model_name))
@@ -571,7 +577,14 @@ def write_darkbit_rollcall(model_name, pc):
             "#undef FUNCTION\n"
     ).format(model_name))
 
-    return pro_cat, dm_id
+    dm_conj = dumb_indent(4, (
+            "#define FUNCTION DarkMatterConj_ID_{0}\n"
+            "START_FUNCTION(std::string)\n"
+            "ALLOW_MODELS({0})\n"
+            "#undef FUNCTION\n"
+    ).format(model_name))
+
+    return pro_cat, dm_id, dm_conj
 
 
 
@@ -600,7 +613,8 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
 
     mo_src += (
             "#include \"gambit/Backends/frontend_macros.hpp\"\n"
-            "#include \"gambit/Backends/frontends/MicrOmegas_{0}_3_6_9_2.hpp\"\n"
+            "#include \"gambit/Backends/frontends/MicrOmegas_{0}_3_6_9_2.hpp\""
+            "\n"
             "#include <unistd.h>\n"
             "\n"
             "// Convenience functions (definitions)\n"
@@ -628,7 +642,8 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "error = assignVal(param, value);\n"
             "if (error != 0) backend_error().raise(LOCAL_INFO, \""
             "Unable to set \" + std::string(parameter) +\n"
-            "    \" in MicrOmegas. MicrOmegas error code: \" + std::to_string(error)"
+            "    \" in MicrOmegas. MicrOmegas error code: \" + "
+            "std::to_string(error)"
             "+ \". Please check your model files.\\n\");\n"
             "}}\n\n"
             "}}\n"
@@ -645,8 +660,10 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "\n"
             "// YAML options for 3-body final states\n"
             "int VZdecayOpt, VWdecayOpt; // 0=no 3 body final states\n"
-            "                            // 1=3 body final states in annihlations\n"
-            "                            // 2=3 body final states in co-annihilations\n"
+            "                            // 1=3 body final states in "
+            "annihlations\n"
+            "                            // 2=3 body final states in "
+            "co-annihilations\n"
             "VZdecayOpt = runOptions->getValueOrDef<int>(1, \"VZdecay\");\n"
             "VWdecayOpt = runOptions->getValueOrDef<int>(1, \"VWdecay\");\n"
             "*VZdecay = VZdecayOpt;\n"
@@ -654,9 +671,11 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "\n"
             "logger() << LogTags::debug << \""
             "Initializing MicrOmegas {0} with \";\n"
-            "logger() << \"VWdecay: \" << VWdecay << \" VZdecay: \" << VZdecay << EOM;\n"
+            "logger() << \"VWdecay: \" << VWdecay << \" VZdecay: \" << VZdecay"
+            " << EOM;\n"
             "\n"
-            "// Uncomment below to force MicrOmegas to do calculations in unitary gauge\n"
+            "// Uncomment below to force MicrOmegas to do calculations in "
+            "unitary gauge\n"
             "*ForceUG=1;\n"
             "\n"
             "// BSM parameters\n"
@@ -698,7 +717,8 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             mo_src += (
                 "for(int i=1; i<{0}; i++)\n{{\n"
                 "for(int j=1; j<{1}; j++)\n{{\n"
-                "std::string paramname = \"{2}\" + std::to_string(i) + std::to_string(j);\n"
+                "std::string paramname = \"{2}\" + std::to_string(i) + "
+                "std::to_string(j);\n"
                 "Assign_Value(paramname, spec.get(Par::{3}, \"{4}\"));\n"
                 "}}\n}}\n"
             ).format(i, j, param.name, param.tag, param.alt_name)
@@ -780,8 +800,10 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     mo_src += (
             "// Initialise micrOMEGAs mass spectrum\n"
             "error = sortOddParticles(byVal(cdmName));\n"
-            "if (error != 0) backend_error().raise(LOCAL_INFO, \"MicrOmegas function \"\n"
-            "        \"sortOddParticles returned error code: \" + std::to_string(error));\n"
+            "if (error != 0) backend_error().raise(LOCAL_INFO, "
+            "\"MicrOmegas function \"\n"
+            "        \"sortOddParticles returned error code: \" + "
+            "std::to_string(error));\n"
             "\n"
             "}\n"
             "END_BE_INI_FUNCTION\n"

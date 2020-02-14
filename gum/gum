@@ -576,7 +576,7 @@ if args.file:
                                             calchep_pdg_codes, 
                                             bsm_particle_list, higgses)
 
-            pc_cap, dmid_cap = write_darkbit_rollcall(gum.name, pc)
+            pc_cap, dmid_cap, dmconj_cap = write_darkbit_rollcall(gum.name, pc)
 
 
         """
@@ -710,6 +710,7 @@ if args.file:
         if darkbit:
             m = "DarkBit"
             amend_rollcall("DarkMatter_ID", m, dmid_cap, reset_contents)
+            amend_rollcall("DarkMatterConj_ID", m, dmconj_cap, reset_contents)
             write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
             if pc:
                 amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)

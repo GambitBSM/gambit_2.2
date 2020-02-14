@@ -582,5 +582,11 @@ namespace Gambit
       // TODO: need ask Dep::MSSM_spectrum in future; might have sneutralinos and gravitinos later.
       result = "~chi0_1";
     }
+    void DarkMatterConj_ID_MSSM(std::string & result)
+    {
+      using namespace Pipes::DarkMatterConj_ID_MSSM;
+      // TODO: need ask Dep::MSSM_spectrum in future; might have sneutralinos and gravitinos later.
+      result = "~chi0_1";
+    }
   }
 }
