@@ -119,8 +119,8 @@ ObsLikes:
 #  - purpose:    LogLike
 #    capability: B2KstarmumuAng_LogLikelihood_Belle
 
-#  - purpose:    LogLike
-#    capability: B2KstarmumuAng_LogLikelihood_LHCb
+  - purpose:    LogLike
+    capability: B2KstarmumuAng_LogLikelihood_LHCb
 
 #  - purpose:    LogLike
 #    capability: B2KstarmumuBr_LogLikelihood_LHCb
