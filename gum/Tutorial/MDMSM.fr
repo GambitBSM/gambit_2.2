@@ -33,7 +33,7 @@ M$ClassesDescription = {
     PropagatorLabel  -> "chi",
     PropagatorType   -> S,
     PropagatorArrow  -> Forward,
-    PDG              -> 99901,
+    PDG              -> 52,
     ParticleName     -> "~chi",
     FullName         -> "Majorana DM"
   },

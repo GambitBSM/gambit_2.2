@@ -320,13 +320,23 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             "addParticle(\"{2}\", {1}, {3});\n"
     ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
 
+    # Add the antiparticle to the catalog too
+    if not dm.is_sc:
+        towrite += (
+                "addParticle(\"{1}\", {0}, {2});\n"
+        ).format(dm_mass, gb_conj, dm.spinX2)
+
     for i in np.arange(len(model_specific_particles)):
         if model_specific_particles[i].PDG_code != dm.PDG_code:
-          towrite += (
-                  "addParticle(\"{0}\", spec.get(Par::Pole_Mass, \"{1}\"), {2});\n"
-          ).format(pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
-                   pdg_to_particle(model_specific_particles[i].PDG_code, gambit_pdg_dict),
-                   str(model_specific_particles[i].spinX2))
+            towrite += (
+                    "addParticle(\"{0}\", spec.get(Par::Pole_Mass,"
+                    " \"{1}\"), {2});\n"
+            ).format(pdg_to_particle(model_specific_particles[i].PDG_code, 
+                                     gambit_pdg_dict),
+                     pdg_to_particle(model_specific_particles[i].PDG_code, 
+                                     gambit_pdg_dict),
+                     str(model_specific_particles[i].spinX2)
+                     )
 
     towrite += (
             "\n"
