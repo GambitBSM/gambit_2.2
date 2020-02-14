@@ -851,6 +851,12 @@ namespace Gambit
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_8_Belle)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_10p9_12p9_Belle)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_14p18_19_Belle)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_0p98_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_1p1_2p5_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_2p5_4_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_4_6_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_6_8_LHCb)
+    SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_15_19_LHCb)
 
     #undef SI_PRED_HELPER_CALL
     #undef SI_SINGLE_PREDICTION_FUNCTION
@@ -3525,29 +3531,24 @@ namespace Gambit
         "S9_B0Kstar0mumu_15_19",
       };
 
+      flav_prediction prediction_0p1_0p98 = *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb;
+      flav_prediction prediction_1p1_2p5  = *Dep::prediction_B2KstarmumuAng_1p1_2p5_LHCb;
+      flav_prediction prediction_2p5_4    = *Dep::prediction_B2KstarmumuAng_2p5_4_LHCb;
+      flav_prediction prediction_4_6      = *Dep::prediction_B2KstarmumuAng_4_6_LHCb;
+      flav_prediction prediction_6_8      = *Dep::prediction_B2KstarmumuAng_6_8_LHCb;
+      flav_prediction prediction_15_19    = *Dep::prediction_B2KstarmumuAng_15_19_LHCb;
 
-
-      flav_observable_map theory = *Dep::SuperIso_obs_values;
-      flav_covariance_map theory_covariance;
-
-
-      theory_covariance     = *Dep::SuperIso_theory_covariance;
-
-
-
-
-      // C++14 allows auto instead of decltype(observables0p1_0p98)
-      auto get_obs_theory = [theory](decltype(observables0p1_0p98)& observables){
+      // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
+      auto get_obs_theory = [](flav_observable_map& theory, const std::vector<std::string>& observables){
         std::vector<double> obs_theory;
         obs_theory.reserve(observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
-          std::cout<<observables[i]<<std::endl;
           obs_theory.push_back(theory.at(observables[i]));
         }
         return obs_theory;
       };
 
-      auto get_obs_covariance = [theory_covariance](decltype(observables0p1_0p98)& observables){
+      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, const std::vector<std::string>& observables){
         boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
         for (unsigned int i = 0; i < observables.size(); ++i) {
           for (unsigned int j = 0; j < observables.size(); ++j) {
@@ -3556,13 +3557,14 @@ namespace Gambit
         }
         return obs_covariance;
       };
+
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(observables0p1_0p98), get_obs_covariance(observables0p1_0p98));
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(observables1p1_2p5), get_obs_covariance(observables1p1_2p5));
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(observables2p5_4), get_obs_covariance(observables2p5_4));
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(observables4_6), get_obs_covariance(observables4_6));
-      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(observables6_8), get_obs_covariance(observables6_8));
-      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(observables15_19), get_obs_covariance(observables15_19));
+      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_0p98.central_values, observables0p1_0p98), get_obs_covariance(prediction_0p1_0p98.covariance, observables0p1_0p98));
+      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(prediction_1p1_2p5.central_values, observables1p1_2p5),   get_obs_covariance(prediction_1p1_2p5.covariance, observables1p1_2p5));
+      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(prediction_2p5_4.central_values, observables2p5_4),       get_obs_covariance(prediction_2p5_4.covariance, observables2p5_4));
+      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(prediction_4_6.central_values, observables4_6),           get_obs_covariance(prediction_4_6.covariance, observables4_6));
+      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(prediction_6_8.central_values, observables6_8),            get_obs_covariance(prediction_6_8.covariance, observables6_8));
+      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(prediction_15_19.central_values, observables15_19),       get_obs_covariance(prediction_15_19.covariance, observables15_19));
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }

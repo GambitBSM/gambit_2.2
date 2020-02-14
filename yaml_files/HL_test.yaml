@@ -106,14 +106,14 @@ ObsLikes:
   - purpose:    B2KStarMuMuAngularTest_Atlas
     capability: B2KstarmumuAng_LogLikelihood_Atlas
 
-#  - purpose:    B2KStarMuMuAngularTest_CMS
-#    capability: B2KstarmumuAng_LogLikelihood_CMS
+  - purpose:    B2KStarMuMuAngularTest_CMS
+    capability: B2KstarmumuAng_LogLikelihood_CMS
 
-#  - purpose:    B2KStarMuMuAngularTest_Belle
-#    capability: B2KstarmumuAng_LogLikelihood_Belle
+  - purpose:    B2KStarMuMuAngularTest_Belle
+    capability: B2KstarmumuAng_LogLikelihood_Belle
 
-#  - purpose:    B2KStarMuMuAngularTest_LHCb
-#    capability: B2KstarmumuAng_LogLikelihood_LHCb
+  - purpose:    B2KStarMuMuAngularTest_LHCb
+    capability: B2KstarmumuAng_LogLikelihood_LHCb
 
   - purpose:    B2KStarMuMuBranchingRatioTest
     capability: B2KstarmumuBr_LogLikelihood_LHCb

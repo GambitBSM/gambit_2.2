@@ -501,6 +501,90 @@ START_MODULE
    #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY prediction_B2KstarmumuAng_0p1_0p98_LHCb
+  START_CAPABILITY
+    #define FUNCTION SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb
+    START_FUNCTION(flav_prediction)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY prediction_B2KstarmumuAng_1p1_2p5_LHCb
+  START_CAPABILITY
+    #define FUNCTION SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb
+    START_FUNCTION(flav_prediction)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY prediction_B2KstarmumuAng_2p5_4_LHCb
+  START_CAPABILITY
+    #define FUNCTION SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb
+    START_FUNCTION(flav_prediction)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY prediction_B2KstarmumuAng_4_6_LHCb
+  START_CAPABILITY
+    #define FUNCTION SuperIso_prediction_B2KstarmumuAng_4_6_LHCb
+    START_FUNCTION(flav_prediction)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY prediction_B2KstarmumuAng_6_8_LHCb
+  START_CAPABILITY
+    #define FUNCTION SuperIso_prediction_B2KstarmumuAng_6_8_LHCb
+    START_FUNCTION(flav_prediction)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY prediction_B2KstarmumuAng_15_19_LHCb
+  START_CAPABILITY
+    #define FUNCTION SuperIso_prediction_B2KstarmumuAng_15_19_LHCb
+    START_FUNCTION(flav_prediction)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
   // Observable: BR(B -> Xs gamma)
   #define CAPABILITY bsgamma
   START_CAPABILITY
@@ -1414,8 +1498,12 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_LHCb
     START_FUNCTION(double)
-    DEPENDENCY(SuperIso_obs_values, flav_observable_map)
-    DEPENDENCY(SuperIso_theory_covariance, flav_covariance_map)
+    DEPENDENCY(prediction_B2KstarmumuAng_0p1_0p98_LHCb, flav_prediction)
+    DEPENDENCY(prediction_B2KstarmumuAng_1p1_2p5_LHCb, flav_prediction)
+    DEPENDENCY(prediction_B2KstarmumuAng_2p5_4_LHCb, flav_prediction)
+    DEPENDENCY(prediction_B2KstarmumuAng_4_6_LHCb, flav_prediction)
+    DEPENDENCY(prediction_B2KstarmumuAng_6_8_LHCb, flav_prediction)
+    DEPENDENCY(prediction_B2KstarmumuAng_15_19_LHCb, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
  #undef CAPABILITY
