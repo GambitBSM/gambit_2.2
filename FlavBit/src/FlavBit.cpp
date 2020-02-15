@@ -3257,36 +3257,23 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_";
+      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_0.98.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "1.1_2.5.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "2.5_4.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "4.0_6.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "6.0_8.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "15.0_19.yaml"),
+      };
 
-      static const std::string inputfile_q2_0p1_1p1 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_0.1_0.98.yaml";
-      static const std::string inputfile_q2_1p1_2p5 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_1.1_2.5.yaml";
-      static const std::string inputfile_q2_2p5_4 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_2.5_4.0.yaml";
-      static const std::string inputfile_q2_4_6 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_4.0_6.0.yaml";
-      static const std::string inputfile_q2_6_8 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_6.0_8.0.yaml";
-      static const std::string inputfile_q2_15_19 = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_15.0_19.yaml";
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_q2_0p1_1p1);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_q2_1p1_2p5);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_q2_2p5_4);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_q2_4_6);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_4(inputfile_q2_6_8);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_5(inputfile_q2_15_19);
-      cout<<"AAA"<<endl;
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_0p1_1p1 << endl;
-        nDimBifurGaussian_0.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_1p1_2p5 << endl;
-        nDimBifurGaussian_1.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_2p5_4 << endl;
-        nDimBifurGaussian_2.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_4_6 << endl;
-        nDimBifurGaussian_3.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_6_8 << endl;
-        nDimBifurGaussian_4.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_q2_15_19 << endl;
-        nDimBifurGaussian_5.Read();
-
+        for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++) {
+          std::cout << "Debug: Reading HepLike data file: " << i << endl;
+          nDimBifurGaussian[i].Read();
+        }
         first = false;
       }
 
@@ -3302,20 +3289,20 @@ namespace Gambit
         "S9",
       };
 
-      flav_prediction prediction_0p1_0p98 = *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb;
-      flav_prediction prediction_1p1_2p5  = *Dep::prediction_B2KstarmumuAng_1p1_2p5_LHCb;
-      flav_prediction prediction_2p5_4    = *Dep::prediction_B2KstarmumuAng_2p5_4_LHCb;
-      flav_prediction prediction_4_6      = *Dep::prediction_B2KstarmumuAng_4_6_LHCb;
-      flav_prediction prediction_6_8      = *Dep::prediction_B2KstarmumuAng_6_8_LHCb;
-      flav_prediction prediction_15_19    = *Dep::prediction_B2KstarmumuAng_15_19_LHCb;
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb,
+        *Dep::prediction_B2KstarmumuAng_1p1_2p5_LHCb,
+        *Dep::prediction_B2KstarmumuAng_2p5_4_LHCb,
+        *Dep::prediction_B2KstarmumuAng_4_6_LHCb,
+        *Dep::prediction_B2KstarmumuAng_6_8_LHCb,
+        *Dep::prediction_B2KstarmumuAng_15_19_LHCb,
+      };
 
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_0p98, observables), get_obs_covariance(prediction_0p1_0p98, observables));
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(prediction_1p1_2p5, observables),   get_obs_covariance(prediction_1p1_2p5, observables));
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(prediction_2p5_4, observables),       get_obs_covariance(prediction_2p5_4, observables));
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(prediction_4_6, observables),           get_obs_covariance(prediction_4_6, observables));
-      result += nDimBifurGaussian_4.GetLogLikelihood(get_obs_theory(prediction_6_8, observables),            get_obs_covariance(prediction_6_8, observables));
-      result += nDimBifurGaussian_5.GetLogLikelihood(get_obs_theory(prediction_15_19, observables),       get_obs_covariance(prediction_15_19, observables));
+      for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++) 
+      {
+        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
+      }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
