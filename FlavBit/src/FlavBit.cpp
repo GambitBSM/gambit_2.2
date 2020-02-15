@@ -3113,23 +3113,20 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Atlas;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_0.1_2.0.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_2.0_4.0.yaml";
-      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_4.0_8.0.yaml";
-      static HepLike_default::HL_nDimGaussian nDimGaussian_0(inputfile_0);
-      static HepLike_default::HL_nDimGaussian nDimGaussian_1(inputfile_1);
-      static HepLike_default::HL_nDimGaussian nDimGaussian_2(inputfile_2);
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_";
+      static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
+        HepLike_default::HL_nDimGaussian(inputfile + "0.1_2.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "2.0_4.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "4.0_8.0.yaml"),
+      };
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        nDimGaussian_0.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
-        nDimGaussian_1.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
-        nDimGaussian_2.Read();
-
+        for (unsigned int i = 0; i < nDimGaussian.size(); ++i) {
+          std::cout << "Debug: Reading HepLike data file: " << i << endl;
+          nDimGaussian[i].Read();
+        }
         first = false;
       }
 
@@ -3143,15 +3140,17 @@ namespace Gambit
         "S8",
       };
 
-      flav_prediction prediction_0p1_2 = *Dep::prediction_B2KstarmumuAng_0p1_2_Atlas;
-      flav_prediction prediction_2_4 = *Dep::prediction_B2KstarmumuAng_2_4_Atlas;
-      flav_prediction prediction_4_8 = *Dep::prediction_B2KstarmumuAng_4_8_Atlas;
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuAng_0p1_2_Atlas,
+        *Dep::prediction_B2KstarmumuAng_2_4_Atlas,
+        *Dep::prediction_B2KstarmumuAng_4_8_Atlas,
+      };
 
       result = 0;
-      result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_2.central_values, observables), get_obs_covariance(prediction_0p1_2.covariance, observables));
-      result += nDimGaussian_1.GetLogLikelihood(get_obs_theory(prediction_2_4.central_values, observables), get_obs_covariance(prediction_2_4.covariance, observables));
-      result += nDimGaussian_2.GetLogLikelihood(get_obs_theory(prediction_4_8.central_values, observables), get_obs_covariance(prediction_4_8.covariance, observables));
-
+      for (unsigned int i = 0; i < nDimGaussian.size(); i++) 
+      {
+        result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i].central_values, observables), get_obs_covariance(prediction[i].covariance, observables));
+      }
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Atlas result: " << result << std::endl;
     }
 
