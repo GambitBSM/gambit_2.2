@@ -3212,59 +3212,43 @@ namespace Gambit
     void HEPLike_B2KstarmumuAng_LogLikelihood_Belle(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Belle;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_0.1_4.0.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_4.0_8.0.yaml";
-      static const std::string inputfile_2 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_10.09_12.9.yaml";
-      static const std::string inputfile_3 = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_14.18_19.0.yaml";
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_0(inputfile_0);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_1(inputfile_1);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_2(inputfile_2);
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian_3(inputfile_3);
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_";
+      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_4.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "4.0_8.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "10.09_12.9.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile + "14.18_19.0.yaml"),
+      };
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        nDimBifurGaussian_0.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_1 << endl;
-        nDimBifurGaussian_1.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_2 << endl;
-        nDimBifurGaussian_2.Read();
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_3 << endl;
-        nDimBifurGaussian_3.Read();
-
+        for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
+        {
+          std::cout << "Debug: Reading HepLike data file: " << i << endl;
+          nDimBifurGaussian[i].Read();
+        }
         first = false;
       }
 
       // Ordering of observables defined by HEPLike
-      static const std::vector<std::string> observables0p1_4{
-        "P4prime",
-        "P5prime",
-      };
-      static const std::vector<std::string> observables4_8{
-        "P4prime",
-        "P5prime",
-      };
-      static const std::vector<std::string> observables10p9_12p9{
-        "P4prime",
-        "P5prime",
-      };
-      static const std::vector<std::string> observables14p18_19{
+      static const std::vector<std::string> observables{
         "P4prime",
         "P5prime",
       };
 
-
-      flav_prediction prediction_0p1_4     = *Dep::prediction_B2KstarmumuAng_0p1_4_Belle;
-      flav_prediction prediction_4_8       = *Dep::prediction_B2KstarmumuAng_4_8_Belle;
-      flav_prediction prediction_10p9_12p9 = *Dep::prediction_B2KstarmumuAng_10p9_12p9_Belle;
-      flav_prediction prediction_14p18_19  = *Dep::prediction_B2KstarmumuAng_14p18_19_Belle;
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuAng_0p1_4_Belle,
+        *Dep::prediction_B2KstarmumuAng_4_8_Belle,
+        *Dep::prediction_B2KstarmumuAng_10p9_12p9_Belle,
+        *Dep::prediction_B2KstarmumuAng_14p18_19_Belle,
+      };
 
       result = 0;
-      result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_4, observables0p1_4),         get_obs_covariance(prediction_0p1_4, observables0p1_4));
-      result += nDimBifurGaussian_1.GetLogLikelihood(get_obs_theory(prediction_4_8, observables4_8),             get_obs_covariance(prediction_4_8, observables4_8));
-      result += nDimBifurGaussian_2.GetLogLikelihood(get_obs_theory(prediction_10p9_12p9, observables10p9_12p9), get_obs_covariance(prediction_10p9_12p9, observables10p9_12p9));
-      result += nDimBifurGaussian_3.GetLogLikelihood(get_obs_theory(prediction_14p18_19, observables14p18_19),   get_obs_covariance(prediction_14p18_19, observables14p18_19));
+      for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
+      {
+        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
+      }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Belle result: " << result << std::endl;
     }
