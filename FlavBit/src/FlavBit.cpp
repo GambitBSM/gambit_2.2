@@ -3018,14 +3018,14 @@ namespace Gambit
     void HEPLike_B2mumu_LogLikelihood_CMS(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_CMS;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CMS-PAS-BPH-16-004.yaml";
-      static HepLike_default::HL_nDimLikelihood nDimLikelihood_0(inputfile_0);
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CMS-PAS-BPH-16-004.yaml";
+      static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        nDimLikelihood_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        nDimLikelihood.Read();
 
         first = false;
       }
@@ -3036,7 +3036,7 @@ namespace Gambit
 
       flav_prediction prediction = *Dep::prediction_B2mumu;
 
-      result = nDimLikelihood_0.GetLogLikelihood(
+      result = nDimLikelihood.GetLogLikelihood(
               get_obs_theory(prediction, observables)
               /* nDimLikelihood does not support theory errors */
               );
@@ -3049,14 +3049,14 @@ namespace Gambit
     void HEPLike_B2mumu_LogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_Atlas;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/ATLAS/RD/B2MuMu/CERN-EP-2018-291.yaml";
-      static HepLike_default::HL_nDimLikelihood nDimLikelihood_0(inputfile_0);
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/ATLAS/RD/B2MuMu/CERN-EP-2018-291.yaml";
+      static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        nDimLikelihood_0.Read();
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        nDimLikelihood.Read();
 
         first = false;
       }
@@ -3069,7 +3069,7 @@ namespace Gambit
 
       flav_prediction prediction = *Dep::prediction_B2mumu;
 
-      result = nDimLikelihood_0.GetLogLikelihood(
+      result = nDimLikelihood.GetLogLikelihood(
               get_obs_theory(prediction, observables)
               /* nDimLikelihood does not support theory errors */
               );
@@ -3081,14 +3081,14 @@ namespace Gambit
     void HEPLike_B2mumu_LogLikelihood_LHCb(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_LHCb;
-      static const std::string inputfile_LHCb = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
 
-      static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile_LHCb);
+      static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_LHCb << endl;
+        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimLikelihood.Read();
 
         first = false;
