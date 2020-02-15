@@ -3162,18 +3162,20 @@ namespace Gambit
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_CMS;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_";
-      static HepLike_default::HL_nDimBifurGaussian nDimBifurGaussian[7] = { HepLike_default::HL_nDimBifurGaussian(inputfile+"1.0_2.0.yaml"),
-                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"2.0_4.3.yaml"),
-                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"4.3_6.0.yaml"),
-                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"6.0_8.68.yaml"),
-                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"10.09_12.86.yaml"),
-                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"14.18_16.0.yaml"),
-                                                                            HepLike_default::HL_nDimBifurGaussian(inputfile+"16.0_19.0.yaml")
-                                                                          };
+      static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
+        HepLike_default::HL_nDimBifurGaussian(inputfile+"1.0_2.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile+"2.0_4.3.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile+"4.3_6.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile+"6.0_8.68.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile+"10.09_12.86.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile+"14.18_16.0.yaml"),
+        HepLike_default::HL_nDimBifurGaussian(inputfile+"16.0_19.0.yaml")
+      };
+
       static bool first = true;
       if (first)
       {
-        for (int i = 0; i < 7; i++)
+        for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
         {
           std::cout << "Debug: Reading HepLike data file " << i << endl;
           nDimBifurGaussian[i].Read();
@@ -3187,18 +3189,18 @@ namespace Gambit
         "P5prime",
       };
 
-      flav_prediction prediction[7] = { *Dep::prediction_B2KstarmumuAng_1_2_CMS,
-                                        *Dep::prediction_B2KstarmumuAng_2_4p3_CMS,
-                                        *Dep::prediction_B2KstarmumuAng_4p3_6_CMS,
-                                        *Dep::prediction_B2KstarmumuAng_6_8p68_CMS,
-                                        *Dep::prediction_B2KstarmumuAng_10p09_12p86_CMS,
-                                        *Dep::prediction_B2KstarmumuAng_14p18_16_CMS,
-                                        *Dep::prediction_B2KstarmumuAng_16_19_CMS
-                                      };
-
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuAng_1_2_CMS,
+        *Dep::prediction_B2KstarmumuAng_2_4p3_CMS,
+        *Dep::prediction_B2KstarmumuAng_4p3_6_CMS,
+        *Dep::prediction_B2KstarmumuAng_6_8p68_CMS,
+        *Dep::prediction_B2KstarmumuAng_10p09_12p86_CMS,
+        *Dep::prediction_B2KstarmumuAng_14p18_16_CMS,
+        *Dep::prediction_B2KstarmumuAng_16_19_CMS
+      };
 
       result = 0;
-      for (int i = 0; i < 6; i++)
+      for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
       {
         result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i].central_values, observables), get_obs_covariance(prediction[i].covariance, observables));
       }
