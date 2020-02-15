@@ -673,6 +673,27 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
     }
 
+    // Extract central values of the given observables from the central value map.
+    std::vector<double>  get_obs_theory(flav_observable_map& theory, const std::vector<std::string>& observables){
+      std::vector<double> obs_theory;
+      obs_theory.reserve(observables.size());
+      for (unsigned int i = 0; i < observables.size(); ++i) {
+        obs_theory.push_back(theory.at(observables[i]));
+      }
+      return obs_theory;
+    };
+
+    // Extract covariance matrix of the given observables from the covariance map.
+    boost::numeric::ublas::matrix<double> get_obs_covariance(flav_covariance_map& theory_covariance, const std::vector<std::string>& observables){
+      boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
+      for (unsigned int i = 0; i < observables.size(); ++i) {
+        for (unsigned int j = 0; j < observables.size(); ++j) {
+          obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
+        }
+      }
+      return obs_covariance;
+    };
+
     /// Helper function to avoid code duplication. However, there are some issues...
     void SuperIso_prediction_helper(const std::vector<std::string>& FB_obslist, const std::vector<std::string>& SI_obslist, flav_prediction& result,
                                     const parameters& param, const nuisance& nuislist,
@@ -2931,26 +2952,6 @@ namespace Gambit
       // flav_observable_map theory = prediction.central_values;
       // flav_covariance_map theory_covariance = prediction.covariance;
 
-      // // C++14 allows auto instead of decltype(observables0p1_0p98)
-      // auto get_obs_theory = [theory](decltype(observables)& observables){
-      //     std::vector<double> obs_theory;
-      //     obs_theory.reserve(observables.size());
-      //     for (unsigned int i = 0; i < observables.size(); ++i) {
-      //       obs_theory.push_back(theory.at(observables[i]));
-      //     }
-      //     return obs_theory;
-      // };
-
-      // auto get_obs_covariance = [theory_covariance](decltype(observables)& observables){
-      //     boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-      //     for (unsigned int i = 0; i < observables.size(); ++i) {
-      //       for (unsigned int j = 0; j < observables.size(); ++j) {
-      //         obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-      //       }
-      //     }
-      //     return obs_covariance;
-      // };
-
       // result = nDimGaussian.GetLogLikelihood(get_obs_theory(observables), get_obs_covariance(observables));
       if (flav_debug) std::cout << "HEPLike_RDRDstar_LogLikelihood result: " << result << std::endl;
     }
@@ -3034,31 +3035,9 @@ namespace Gambit
       };
 
       flav_prediction prediction = *Dep::prediction_B2mumu;
-      flav_observable_map theory = prediction.central_values;
-      flav_covariance_map theory_covariance = prediction.covariance;
-
-      // C++14 allows auto instead of decltype(observables0p1_0p98)
-      auto get_obs_theory = [theory](decltype(observables)& observables){
-          std::vector<double> obs_theory;
-          obs_theory.reserve(observables.size());
-          for (unsigned int i = 0; i < observables.size(); ++i) {
-            obs_theory.push_back(theory.at(observables[i]));
-          }
-          return obs_theory;
-      };
-
-      auto get_obs_covariance = [theory_covariance](decltype(observables)& observables){
-          boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-          for (unsigned int i = 0; i < observables.size(); ++i) {
-            for (unsigned int j = 0; j < observables.size(); ++j) {
-              obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-            }
-          }
-          return obs_covariance;
-      };
 
       result = nDimLikelihood_0.GetLogLikelihood(
-              get_obs_theory(observables)
+              get_obs_theory(prediction.central_values, observables)
               /* nDimLikelihood does not support theory errors */
               );
 
@@ -3089,31 +3068,9 @@ namespace Gambit
       };
 
       flav_prediction prediction = *Dep::prediction_B2mumu;
-      flav_observable_map theory = prediction.central_values;
-      flav_covariance_map theory_covariance = prediction.covariance;
-
-      // C++14 allows auto instead of decltype(observables0p1_0p98)
-      auto get_obs_theory = [theory](decltype(observables)& observables){
-          std::vector<double> obs_theory;
-          obs_theory.reserve(observables.size());
-          for (unsigned int i = 0; i < observables.size(); ++i) {
-            obs_theory.push_back(theory.at(observables[i]));
-          }
-          return obs_theory;
-      };
-
-      auto get_obs_covariance = [theory_covariance](decltype(observables)& observables){
-          boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-          for (unsigned int i = 0; i < observables.size(); ++i) {
-            for (unsigned int j = 0; j < observables.size(); ++j) {
-              obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-            }
-          }
-          return obs_covariance;
-      };
 
       result = nDimLikelihood_0.GetLogLikelihood(
-              get_obs_theory(observables)
+              get_obs_theory(prediction.central_values, observables)
               /* nDimLikelihood does not support theory errors */
               );
 
@@ -3143,31 +3100,9 @@ namespace Gambit
       };
 
       flav_prediction prediction = *Dep::prediction_B2mumu;
-      flav_observable_map theory = prediction.central_values;
-      flav_covariance_map theory_covariance = prediction.covariance;
-
-      // C++14 allows auto instead of decltype(observables0p1_0p98)
-      auto get_obs_theory = [theory](decltype(observables)& observables){
-          std::vector<double> obs_theory;
-          obs_theory.reserve(observables.size());
-          for (unsigned int i = 0; i < observables.size(); ++i) {
-            obs_theory.push_back(theory.at(observables[i]));
-          }
-          return obs_theory;
-      };
-
-      auto get_obs_covariance = [theory_covariance](decltype(observables)& observables){
-          boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-          for (unsigned int i = 0; i < observables.size(); ++i) {
-            for (unsigned int j = 0; j < observables.size(); ++j) {
-              obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-            }
-          }
-          return obs_covariance;
-      };
 
       result = nDimLikelihood.GetLogLikelihood(
-              get_obs_theory(observables)
+              get_obs_theory(prediction.central_values, observables)
               /* nDimLikelihood does not support theory errors */
               );
 
@@ -3212,25 +3147,6 @@ namespace Gambit
       flav_prediction prediction_2_4 = *Dep::prediction_B2KstarmumuAng_2_4_Atlas;
       flav_prediction prediction_4_8 = *Dep::prediction_B2KstarmumuAng_4_8_Atlas;
 
-      // C++14 allows auto instead of decltype(observables0p1_0p98)
-      auto get_obs_theory = [](flav_observable_map& theory, decltype(observables)& observables){
-        std::vector<double> obs_theory;
-        obs_theory.reserve(observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          obs_theory.push_back(theory.at(observables[i]));
-        }
-        return obs_theory;
-      };
-
-      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, decltype(observables)& observables){
-        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          for (unsigned int j = 0; j < observables.size(); ++j) {
-            obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-          }
-        }
-        return obs_covariance;
-      };
       result = 0;
       result += nDimGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_2.central_values, observables), get_obs_covariance(prediction_0p1_2.covariance, observables));
       result += nDimGaussian_1.GetLogLikelihood(get_obs_theory(prediction_2_4.central_values, observables), get_obs_covariance(prediction_2_4.covariance, observables));
@@ -3280,25 +3196,6 @@ namespace Gambit
                                         *Dep::prediction_B2KstarmumuAng_16_19_CMS
                                       };
 
-      // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
-      auto get_obs_theory = [](flav_observable_map& theory, const std::vector<std::string>& observables){
-        std::vector<double> obs_theory;
-        obs_theory.reserve(observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          obs_theory.push_back(theory.at(observables[i]));
-        }
-        return obs_theory;
-      };
-
-      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, const std::vector<std::string>& observables){
-        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          for (unsigned int j = 0; j < observables.size(); ++j) {
-            obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-          }
-        }
-        return obs_covariance;
-      };
 
       result = 0;
       for (int i = 0; i < 6; i++)
@@ -3361,26 +3258,6 @@ namespace Gambit
       flav_prediction prediction_4_8       = *Dep::prediction_B2KstarmumuAng_4_8_Belle;
       flav_prediction prediction_10p9_12p9 = *Dep::prediction_B2KstarmumuAng_10p9_12p9_Belle;
       flav_prediction prediction_14p18_19  = *Dep::prediction_B2KstarmumuAng_14p18_19_Belle;
-
-      // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
-      auto get_obs_theory = [](flav_observable_map& theory, const std::vector<std::string>& observables){
-        std::vector<double> obs_theory;
-        obs_theory.reserve(observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          obs_theory.push_back(theory.at(observables[i]));
-        }
-        return obs_theory;
-      };
-
-      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, const std::vector<std::string>& observables){
-        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          for (unsigned int j = 0; j < observables.size(); ++j) {
-            obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-          }
-        }
-        return obs_covariance;
-      };
 
       result = 0;
       result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_4.central_values, observables0p1_4),         get_obs_covariance(prediction_0p1_4.covariance, observables0p1_4));
@@ -3446,26 +3323,6 @@ namespace Gambit
       flav_prediction prediction_4_6      = *Dep::prediction_B2KstarmumuAng_4_6_LHCb;
       flav_prediction prediction_6_8      = *Dep::prediction_B2KstarmumuAng_6_8_LHCb;
       flav_prediction prediction_15_19    = *Dep::prediction_B2KstarmumuAng_15_19_LHCb;
-
-      // C++14 allows auto instead of decltype(observables0p1_0p98) // TODO: move this helper function out to avoid code repetition
-      auto get_obs_theory = [](flav_observable_map& theory, const std::vector<std::string>& observables){
-        std::vector<double> obs_theory;
-        obs_theory.reserve(observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          obs_theory.push_back(theory.at(observables[i]));
-        }
-        return obs_theory;
-      };
-
-      auto get_obs_covariance = [](flav_covariance_map& theory_covariance, const std::vector<std::string>& observables){
-        boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-        for (unsigned int i = 0; i < observables.size(); ++i) {
-          for (unsigned int j = 0; j < observables.size(); ++j) {
-            obs_covariance(i, j) = theory_covariance.at(observables[i]).at(observables[j]);
-          }
-        }
-        return obs_covariance;
-      };
 
       result = 0;
       result += nDimBifurGaussian_0.GetLogLikelihood(get_obs_theory(prediction_0p1_0p98.central_values, observables), get_obs_covariance(prediction_0p1_0p98.covariance, observables));
