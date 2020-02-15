@@ -3314,17 +3314,19 @@ namespace Gambit
       using namespace Pipes::HEPLike_B2KstarmumuBr_LogLikelihood_LHCb;
 
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_";
-      static HepLike_default::HL_BifurGaussian BifurGaussian[6] = { HepLike_default::HL_BifurGaussian(inputfile + "0.1_0.98.yaml"),
-                                                                    HepLike_default::HL_BifurGaussian(inputfile + "1.1_2.5.yaml"),
-                                                                    HepLike_default::HL_BifurGaussian(inputfile + "2.5_4.yaml"),
-                                                                    HepLike_default::HL_BifurGaussian(inputfile + "4_6.yaml"),
-                                                                    HepLike_default::HL_BifurGaussian(inputfile + "6_8.yaml"),
-                                                                    HepLike_default::HL_BifurGaussian(inputfile + "15_19.yaml") };
+      static std::vector<HepLike_default::HL_BifurGaussian> BifurGaussian = {
+        HepLike_default::HL_BifurGaussian(inputfile + "0.1_0.98.yaml"),
+        HepLike_default::HL_BifurGaussian(inputfile + "1.1_2.5.yaml"),
+        HepLike_default::HL_BifurGaussian(inputfile + "2.5_4.yaml"),
+        HepLike_default::HL_BifurGaussian(inputfile + "4_6.yaml"),
+        HepLike_default::HL_BifurGaussian(inputfile + "6_8.yaml"),
+        HepLike_default::HL_BifurGaussian(inputfile + "15_19.yaml")
+      };
 
       static bool first = true;
       if (first)
       {
-        for (int i = 0; i < 6; i++)
+        for (unsigned int i = 0; i < BifurGaussian.size(); i++)
         {
           std::cout << "Debug: Reading HepLike data file " << i << endl;
           BifurGaussian[i].Read();
@@ -3333,14 +3335,17 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      flav_prediction prediction[6] = { *Dep::prediction_B2KstarmumuBr_0p1_0p98,
-                                        *Dep::prediction_B2KstarmumuBr_1p1_2p5,
-                                        *Dep::prediction_B2KstarmumuBr_2p5_4,
-                                        *Dep::prediction_B2KstarmumuBr_4_6,
-                                        *Dep::prediction_B2KstarmumuBr_6_8,
-                                        *Dep::prediction_B2KstarmumuBr_15_19 };
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuBr_0p1_0p98,
+        *Dep::prediction_B2KstarmumuBr_1p1_2p5,
+        *Dep::prediction_B2KstarmumuBr_2p5_4,
+        *Dep::prediction_B2KstarmumuBr_4_6,
+        *Dep::prediction_B2KstarmumuBr_6_8,
+        *Dep::prediction_B2KstarmumuBr_15_19
+      };
+
       result = 0;
-      for (int i = 0; i < 6; i++)
+      for (unsigned int i = 0; i < BifurGaussian.size(); i++)
       {
         result += BifurGaussian[i].GetLogLikelihood(prediction[i].central_values.at("B2KstarmumuBr"), prediction[i].covariance.at("B2KstarmumuBr").at("B2KstarmumuBr"));
       }
@@ -3353,13 +3358,15 @@ namespace Gambit
       using namespace Pipes::HEPLike_Bs2phimumuBr_LogLikelihood;
 
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bs2PhiMuMu_Br/CERN-PH-EP-2015-145_";
-      static HepLike_default::HL_BifurGaussian BifurGaussian[2] = { HepLike_default::HL_BifurGaussian(inputfile + "1_6.yaml"),
-                                                                    HepLike_default::HL_BifurGaussian(inputfile + "15_19.yaml") };
+      static std::vector<HepLike_default::HL_BifurGaussian> BifurGaussian = {
+        HepLike_default::HL_BifurGaussian(inputfile + "1_6.yaml"),
+        HepLike_default::HL_BifurGaussian(inputfile + "15_19.yaml")
+      };
 
       static bool first = true;
       if (first)
       {
-        for (int i = 0; i < 2; i++)
+        for (unsigned int i = 0; i < BifurGaussian.size(); i++)
         {
           std::cout << "Debug: Reading HepLike data file " << i << endl;
           BifurGaussian[i].Read();
@@ -3368,10 +3375,13 @@ namespace Gambit
       }
 
       // Ordering of observables defined by HEPLike
-      flav_prediction prediction[2] = { *Dep::prediction_Bs2phimumuBr_1_6,
-                                        *Dep::prediction_Bs2phimumuBr_15_19 };
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_Bs2phimumuBr_1_6,
+        *Dep::prediction_Bs2phimumuBr_15_19
+      };
+      
       result = 0;
-      for (int i = 0; i < 2; i++)
+      for (unsigned int i = 0; i < BifurGaussian.size(); i++)
       {
         result += BifurGaussian[i].GetLogLikelihood(prediction[i].central_values["Bs2phimumuBr"], prediction[i].covariance.at("Bs2phimumuBr").at("Bs2phimumuBr"));
       }
