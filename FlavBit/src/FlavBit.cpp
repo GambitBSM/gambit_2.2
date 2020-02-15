@@ -3303,7 +3303,7 @@ namespace Gambit
       result = 0;
       for (int i = 0; i < 6; i++)
       {
-        result += nDimBifurGaussian[0].GetLogLikelihood(get_obs_theory(prediction[i].central_values, observables), get_obs_covariance(prediction[i].covariance, observables));
+        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i].central_values, observables), get_obs_covariance(prediction[i].covariance, observables));
       }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_CMS result: " << result << std::endl;
