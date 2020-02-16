@@ -141,7 +141,15 @@ Rules:
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
+  - capability: B2mumu_LogLikelihood_.*
+    options:
+      obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
+
   - capability: prediction_B2KstarmumuAng_.*_Atlas
+    options:
+      obs_list: [FL, S3, S4, S5, S7, S8]
+
+  - capability: B2KstarmumuAng_LogLikelihood_Atlas
     options:
       obs_list: [FL, S3, S4, S5, S7, S8]
 
@@ -149,11 +157,23 @@ Rules:
     options:
       obs_list: [P1, P5prime]
 
+  - capability: B2KstarmumuAng_LogLikelihood_CMS
+    options:
+      obs_list: [P1, P5prime]
+
   - capability: prediction_B2KstarmumuAng_.*_Belle
     options:
       obs_list: [P4prime, P5prime]
 
+  - capability: B2KstarmumuAng_LogLikelihood_Belle
+    options:
+      obs_list: [P4prime, P5prime]
+
   - capability: prediction_B2KstarmumuAng_.*_LHCb
+    options:
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
+
+  - capability: B2KstarmumuAng_LogLikelihood_LHCb
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 

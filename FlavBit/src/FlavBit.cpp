@@ -668,28 +668,48 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
     }
 
-    // Extract central values of the given observables from the central value map.
-    std::vector<double>  get_obs_theory(flav_prediction& prediction, const std::vector<std::string>& observables){
+    /// Reorder a FlavBit observables list to match ordering expected by HEPLike
+    void update_obs_list(std::vector<str>& obs_list, const std::vector<str>& HL_obs_list)
+    {
+      std::vector<str> FB_obs_list = translate_flav_obs("HEPLike", "FlavBit", HL_obs_list);
+      std::vector<str> temp;
+      for (auto it = FB_obs_list.begin(); it != FB_obs_list.end(); ++it)
+      {
+        if (std::find(obs_list.begin(), obs_list.end(), *it) != obs_list.end())
+        {
+          temp.push_back(*it);
+        }
+      }
+      obs_list = temp;
+    }
+
+    /// Extract central values of the given observables from the central value map.
+    std::vector<double> get_obs_theory(const flav_prediction& prediction, const std::vector<std::string>& observables)
+    {
       std::vector<double> obs_theory;
       obs_theory.reserve(observables.size());
-      for (unsigned int i = 0; i < observables.size(); ++i) {
+      for (unsigned int i = 0; i < observables.size(); ++i)
+      {
         obs_theory.push_back(prediction.central_values.at(observables[i]));
       }
       return obs_theory;
     };
 
-    // Extract covariance matrix of the given observables from the covariance map.
-    boost::numeric::ublas::matrix<double> get_obs_covariance(flav_prediction& prediction, const std::vector<std::string>& observables){
+    /// Extract covariance matrix of the given observables from the covariance map.
+    boost::numeric::ublas::matrix<double> get_obs_covariance(const flav_prediction& prediction, const std::vector<std::string>& observables)
+    {
       boost::numeric::ublas::matrix<double> obs_covariance(observables.size(), observables.size());
-      for (unsigned int i = 0; i < observables.size(); ++i) {
-        for (unsigned int j = 0; j < observables.size(); ++j) {
+      for (unsigned int i = 0; i < observables.size(); ++i)
+      {
+        for (unsigned int j = 0; j < observables.size(); ++j)
+        {
           obs_covariance(i, j) = prediction.covariance.at(observables[i]).at(observables[j]);
         }
       }
       return obs_covariance;
     };
 
-    /// Helper function to avoid code duplication. However, there are some issues...
+    /// Helper function to avoid code duplication.
     void SuperIso_prediction_helper(const std::vector<std::string>& FB_obslist, const std::vector<std::string>& SI_obslist, flav_prediction& result,
                                     const parameters& param, const nuisance& nuislist,
                                     void (*get_predictions_nuisance)(char**, int*, double**, const parameters*, const nuisance*),
@@ -2952,106 +2972,85 @@ namespace Gambit
     HEPLIKE_GAUSSIAN_1D_LIKELIHOOD(B2Kstargamma, "/data/HFLAV_18/RD/B2Kstar_gamma_S.yaml")
     HEPLIKE_GAUSSIAN_1D_LIKELIHOOD(B2taunu, "/data/PDG/Semileptonic/B2TauNu.yaml")
 
-    /// HEPLike LogLikelihood B -> ll
+    /// HEPLike LogLikelihood B -> ll (CMS)
     void HEPLike_B2mumu_LogLikelihood_CMS(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_CMS;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/CMS/RD/B2MuMu/CMS-PAS-BPH-16-004.yaml";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
-
       static bool first = true;
+
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimLikelihood.Read();
-
+        update_obs_list(obs_list, {"BR_Bs2mumu","BR_Bd2mumu"});
+        //update_obs_list(obs_list, nDimLikelihood.getObservables());
         first = false;
       }
-      static const std::vector<std::string> observables{
-        "BRuntag_Bsmumu",
-             "BR_Bdmumu"
-      };
 
-      flav_prediction prediction = *Dep::prediction_B2mumu;
-
-      result = nDimLikelihood.GetLogLikelihood(
-              get_obs_theory(prediction, observables)
-              /* nDimLikelihood does not support theory errors */
-              );
+      /* nDimLikelihood does not support theory errors */
+      result = nDimLikelihood.GetLogLikelihood(get_obs_theory(*Dep::prediction_B2mumu, obs_list));
 
       if (flav_debug) std::cout << "HEPLike_B2mumu_LogLikelihood_CMS result: " << result << std::endl;
     }
 
 
-    /// HEPLike LogLikelihood B -> ll
+    /// HEPLike LogLikelihood B -> ll (ATLAS)
     void HEPLike_B2mumu_LogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_Atlas;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/ATLAS/RD/B2MuMu/CERN-EP-2018-291.yaml";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimLikelihood.Read();
-
+        update_obs_list(obs_list, {"BR_Bs2mumu","BR_Bd2mumu"});
+        //update_obs_list(obs_list, nDimLikelihood.getObservables());
         first = false;
       }
 
-      static const std::vector<std::string> observables{
-        "BRuntag_Bsmumu",
-             "BR_Bdmumu"
-
-      };
-
-      flav_prediction prediction = *Dep::prediction_B2mumu;
-
-      result = nDimLikelihood.GetLogLikelihood(
-              get_obs_theory(prediction, observables)
-              /* nDimLikelihood does not support theory errors */
-              );
+      /* nDimLikelihood does not support theory errors */
+      result = nDimLikelihood.GetLogLikelihood(get_obs_theory(*Dep::prediction_B2mumu, obs_list));
 
       if (flav_debug) std::cout << "HEPLike_B2mumu_LogLikelihood_Atlas result: " << result << std::endl;
     }
 
-    /// HEPLike LogLikelihood B -> ll
+    /// HEPLike LogLikelihood B -> ll (LHCb)
     void HEPLike_B2mumu_LogLikelihood_LHCb(double &result)
     {
       using namespace Pipes::HEPLike_B2mumu_LogLikelihood_LHCb;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/B2MuMu/CERN-EP-2017-100.yaml";
-
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static HepLike_default::HL_nDimLikelihood nDimLikelihood(inputfile);
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimLikelihood.Read();
-
+        update_obs_list(obs_list, {"BR_Bs2mumu","BR_Bd2mumu"});
+        //update_obs_list(obs_list, nDimLikelihood.getObservables());
         first = false;
       }
 
-      static const std::vector<std::string> observables{
-        "BRuntag_Bsmumu",
-        "BR_Bdmumu"
-      };
-
-      flav_prediction prediction = *Dep::prediction_B2mumu;
-
-      result = nDimLikelihood.GetLogLikelihood(
-              get_obs_theory(prediction, observables)
-              /* nDimLikelihood does not support theory errors */
-              );
+      /* nDimLikelihood does not support theory errors */
+      result = nDimLikelihood.GetLogLikelihood(get_obs_theory(*Dep::prediction_B2mumu, obs_list));
 
       if (flav_debug) std::cout << "HEPLike_B2mumu_LogLikelihood_LHCb result: " << result << std::endl;
     }
 
-    /// HEPLike LogLikelihood B -> K* mu mu Angluar
+    /// HEPLike LogLikelihood B -> K* mu mu Angluar (ATLAS)
     void HEPLike_B2KstarmumuAng_LogLikelihood_Atlas(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Atlas;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/ATLAS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-161_q2_";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
         HepLike_default::HL_nDimGaussian(inputfile + "0.1_2.0.yaml"),
         HepLike_default::HL_nDimGaussian(inputfile + "2.0_4.0.yaml"),
@@ -3061,22 +3060,15 @@ namespace Gambit
       static bool first = true;
       if (first)
       {
-        for (unsigned int i = 0; i < nDimGaussian.size(); ++i) {
-          std::cout << "Debug: Reading HepLike data file: " << i << endl;
+        for (unsigned int i = 0; i < nDimGaussian.size(); ++i)
+        {
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
           nDimGaussian[i].Read();
         }
+        update_obs_list(obs_list, {"F_L", "S_3", "S_4", "S_5", "S_7", "S_8"});
+        //update_obs_list(obs_list, nDimGaussian[0].getObservables());
         first = false;
       }
-
-      // Ordering of observables defined by HEPLike
-      static const std::vector<std::string> observables{
-        "FL",
-        "S3",
-        "S4",
-        "S5",
-        "S7",
-        "S8",
-      };
 
       std::vector<flav_prediction> prediction = {
         *Dep::prediction_B2KstarmumuAng_0p1_2_Atlas,
@@ -3087,18 +3079,17 @@ namespace Gambit
       result = 0;
       for (unsigned int i = 0; i < nDimGaussian.size(); i++)
       {
-        result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
+        result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
       }
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Atlas result: " << result << std::endl;
     }
 
-
-
-    /// HEPLike LogLikelihood B -> K* mu mu Angular
+    /// HEPLike LogLikelihood B -> K* mu mu Angular (CMS)
     void HEPLike_B2KstarmumuAng_LogLikelihood_CMS(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_CMS;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/CMS/RD/Bd2KstarMuMu_Angular/CERN-EP-2017-240_q2_";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
         HepLike_default::HL_nDimBifurGaussian(inputfile+"1.0_2.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile+"2.0_4.3.yaml"),
@@ -3114,17 +3105,13 @@ namespace Gambit
       {
         for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
         {
-          std::cout << "Debug: Reading HepLike data file " << i << endl;
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file " << i << endl;
           nDimBifurGaussian[i].Read();
         }
+        update_obs_list(obs_list, {"P_1", "P_5"});
+        //update_obs_list(obs_list, nDimBifurGaussian[0].getObservables());
         first = false;
       }
-
-      // Ordering of observables defined by HEPLike
-      static const std::vector<std::string> observables{
-        "P1",
-        "P5prime",
-      };
 
       std::vector<flav_prediction> prediction = {
         *Dep::prediction_B2KstarmumuAng_1_2_CMS,
@@ -3139,18 +3126,19 @@ namespace Gambit
       result = 0;
       for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
       {
-        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
+        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
       }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_CMS result: " << result << std::endl;
     }
 
 
-    /// HEPLike LogLikelihood B -> K* mu mu Angular
+    /// HEPLike LogLikelihood B -> K* mu mu Angular (Belle)
     void HEPLike_B2KstarmumuAng_LogLikelihood_Belle(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_Belle;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/Belle/RD/Bd2KstarMuMu_Angular/KEK-2016-54_q2_";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
         HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_4.0.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "4.0_8.0.yaml"),
@@ -3163,17 +3151,13 @@ namespace Gambit
       {
         for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
         {
-          std::cout << "Debug: Reading HepLike data file: " << i << endl;
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
           nDimBifurGaussian[i].Read();
         }
+        update_obs_list(obs_list, {"P_4", "P_5"});
+        //update_obs_list(obs_list, nDimBifurGaussian[0].getObservables());
         first = false;
       }
-
-      // Ordering of observables defined by HEPLike
-      static const std::vector<std::string> observables{
-        "P4prime",
-        "P5prime",
-      };
 
       std::vector<flav_prediction> prediction = {
         *Dep::prediction_B2KstarmumuAng_0p1_4_Belle,
@@ -3185,17 +3169,18 @@ namespace Gambit
       result = 0;
       for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
       {
-        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
+        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
       }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_Belle result: " << result << std::endl;
     }
 
-    /// HEPLike LogLikelihood B -> K* mu mu Angular
+    /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb(double &result)
     {
       using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/PH-EP-2015-314_q2_";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static std::vector<HepLike_default::HL_nDimBifurGaussian> nDimBifurGaussian = {
         HepLike_default::HL_nDimBifurGaussian(inputfile + "0.1_0.98.yaml"),
         HepLike_default::HL_nDimBifurGaussian(inputfile + "1.1_2.5.yaml"),
@@ -3208,24 +3193,15 @@ namespace Gambit
       static bool first = true;
       if (first)
       {
-        for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++) {
-          std::cout << "Debug: Reading HepLike data file: " << i << endl;
+        for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
+        {
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
           nDimBifurGaussian[i].Read();
         }
+        update_obs_list(obs_list, {"F_L", "S_3", "S_4", "S_5", "A_FB", "S_7", "S_8", "S_9"});
+        //update_obs_list(obs_list, nDimBifurGaussian[0].getObservables());
         first = false;
       }
-
-      // Ordering of observables defined by HEPLike
-      static const std::vector<std::string> observables{
-        "FL",
-        "S3",
-        "S4",
-        "S5",
-        "AFB",
-        "S7",
-        "S8",
-        "S9",
-      };
 
       std::vector<flav_prediction> prediction = {
         *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb,
@@ -3239,18 +3215,16 @@ namespace Gambit
       result = 0;
       for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
       {
-        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
+        result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
       }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
 
-    /// HEPLike LogLikelihood B -> K* mu mu Br
+    /// HEPLike LogLikelihood B -> K* mu mu Br (LHCb)
     void HEPLike_B2KstarmumuBr_LogLikelihood_LHCb(double &result)
     {
-
       using namespace Pipes::HEPLike_B2KstarmumuBr_LogLikelihood_LHCb;
-
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Br/CERN-EP-2016-141_q2_";
       static std::vector<HepLike_default::HL_BifurGaussian> BifurGaussian = {
         HepLike_default::HL_BifurGaussian(inputfile + "0.1_0.98.yaml"),
@@ -3266,13 +3240,12 @@ namespace Gambit
       {
         for (unsigned int i = 0; i < BifurGaussian.size(); i++)
         {
-          std::cout << "Debug: Reading HepLike data file " << i << endl;
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file " << i << endl;
           BifurGaussian[i].Read();
         }
         first = false;
       }
 
-      // Ordering of observables defined by HEPLike
       std::vector<flav_prediction> prediction = {
         *Dep::prediction_B2KstarmumuBr_0p1_0p98,
         *Dep::prediction_B2KstarmumuBr_1p1_2p5,
@@ -3283,9 +3256,12 @@ namespace Gambit
       };
 
       result = 0;
+
       for (unsigned int i = 0; i < BifurGaussian.size(); i++)
       {
-        result += BifurGaussian[i].GetLogLikelihood(prediction[i].central_values.at("B2KstarmumuBr"), prediction[i].covariance.at("B2KstarmumuBr").at("B2KstarmumuBr"));
+        double theory = prediction[i].central_values.begin()->second;
+        double theory_variance = prediction[i].covariance.begin()->second.begin()->second;
+        result += BifurGaussian[i].GetLogLikelihood(theory, theory_variance);
       }
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
@@ -3306,13 +3282,12 @@ namespace Gambit
       {
         for (unsigned int i = 0; i < BifurGaussian.size(); i++)
         {
-          std::cout << "Debug: Reading HepLike data file " << i << endl;
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file " << i << endl;
           BifurGaussian[i].Read();
         }
         first = false;
       }
 
-      // Ordering of observables defined by HEPLike
       std::vector<flav_prediction> prediction = {
         *Dep::prediction_Bs2phimumuBr_1_6,
         *Dep::prediction_Bs2phimumuBr_15_19
@@ -3321,7 +3296,9 @@ namespace Gambit
       result = 0;
       for (unsigned int i = 0; i < BifurGaussian.size(); i++)
       {
-        result += BifurGaussian[i].GetLogLikelihood(prediction[i].central_values["Bs2phimumuBr"], prediction[i].covariance.at("Bs2phimumuBr").at("Bs2phimumuBr"));
+        double theory = prediction[i].central_values.begin()->second;
+        double theory_variance = prediction[i].covariance.begin()->second.begin()->second;
+        result += BifurGaussian[i].GetLogLikelihood(theory, theory_variance);
       }
 
       if (flav_debug) std::cout << "HEPLike_Bs2phimumuBr_LogLikelihood result: " << result << std::endl;
