@@ -3333,11 +3333,10 @@ namespace Gambit
       theory_covariance     = *Dep::SuperIso_theory_covariance;
 
 
-      std::cout<<1.+theory[observables[0]]<<  "  "<<sqrt(theory_covariance[observables[0]][observables[0]]) << std::endl;
-      std::cout<<rk.GetLogLikelihood( 1.+theory[observables[0]], -1.)<<std::endl;
-      result = -rk.GetLogLikelihood(
-                                   1.+theory[observables[0]], -1
-              //          sqrt(theory_covariance[observables[0]][observables[0]])
+
+      result = rk.GetLogLikelihood(
+                                   1.+theory[observables[0]], 
+                                   theory_covariance[observables[0]][observables[0]]
                                    );
 
       if (flav_debug) std::cout << "HEPLike_RK_LogLikelihood result: " << result << std::endl;
@@ -3376,15 +3375,15 @@ namespace Gambit
       theory_covariance     = *Dep::SuperIso_theory_covariance;
 
 
-      result = -rkstar1.GetLogLikelihood(
-                                        1.+theory[observables[0]], -1
-              //              sqrt(theory_covariance[observables[0]][observables[0]])
+      result = rkstar1.GetLogLikelihood(
+                                         1.+theory[observables[0]], 
+                                         theory_covariance[observables[0]][observables[0]]
                                         );
 
-      result+= -rkstar2.GetLogLikelihood(
+      result+= rkstar2.GetLogLikelihood(
 
-                                        1.+theory[observables[1]], -1
-              //sqrt(theory_covariance[observables[1]][observables[1]])/( theory[observables[1]]*theory[observables[1]])
+                                        1.+theory[observables[1]],
+                                        theory_covariance[observables[1]][observables[1]]
                                         );
       if (flav_debug) std::cout << "HEPLike_RKstar_LogLikelihood_LHCb result: " << result << std::endl;
 
