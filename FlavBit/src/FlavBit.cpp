@@ -540,9 +540,6 @@ namespace Gambit
       for(int ie=1;ie<=30;ie++) result.deltaC[ie]=result.deltaCp[ie]=0.;
       for(int ie=1;ie<=6;ie++) result.deltaCQ[ie]=result.deltaCQp[ie]=0.;
 
-
-
-
       // If requested, override the SuperIso b pole mass with the SpecBit value and recompute the 1S b mass.
       if (runOptions->getValueOrDef<bool>(false, "take_b_pole_mass_from_spectrum"))
       {
@@ -589,86 +586,84 @@ namespace Gambit
         result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
       }
       else if (ModelInUse("WC_LUV"))
-        {
-          result.SM = 1;
+      {
+        result.SM = 1;
 
-          // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
-          result.Re_DeltaC7_mu  = *Param["Re_DeltaC7_mu"];
-          result.Im_DeltaC7_mu  = *Param["Im_DeltaC7_mu"];
-          result.Re_DeltaC9_mu  = *Param["Re_DeltaC9_mu"];
-          result.Im_DeltaC9_mu  = *Param["Im_DeltaC9_mu"];
-          result.Re_DeltaC10_mu = *Param["Re_DeltaC10_mu"];
-          result.Im_DeltaC10_mu = *Param["Im_DeltaC10_mu"];
-          result.Re_DeltaCQ1_mu = *Param["Re_DeltaCQ1_mu"];
-          result.Im_DeltaCQ1_mu = *Param["Im_DeltaCQ1_mu"];
-          result.Re_DeltaCQ2_mu = *Param["Re_DeltaCQ2_mu"];
-          result.Im_DeltaCQ2_mu = *Param["Im_DeltaCQ2_mu"];
+        // So far our model only deals with 5 operators: O_7, O_9, O_10, Q_1 and Q_2.
+        result.Re_DeltaC7_mu  = *Param["Re_DeltaC7_mu"];
+        result.Im_DeltaC7_mu  = *Param["Im_DeltaC7_mu"];
+        result.Re_DeltaC9_mu  = *Param["Re_DeltaC9_mu"];
+        result.Im_DeltaC9_mu  = *Param["Im_DeltaC9_mu"];
+        result.Re_DeltaC10_mu = *Param["Re_DeltaC10_mu"];
+        result.Im_DeltaC10_mu = *Param["Im_DeltaC10_mu"];
+        result.Re_DeltaCQ1_mu = *Param["Re_DeltaCQ1_mu"];
+        result.Im_DeltaCQ1_mu = *Param["Im_DeltaCQ1_mu"];
+        result.Re_DeltaCQ2_mu = *Param["Re_DeltaCQ2_mu"];
+        result.Im_DeltaCQ2_mu = *Param["Im_DeltaCQ2_mu"];
 
-          result.Re_DeltaC7_e  = *Param["Re_DeltaC7_e"];
-          result.Im_DeltaC7_e  = *Param["Im_DeltaC7_e"];
-          result.Re_DeltaC9_e  = *Param["Re_DeltaC9_e"];
-          result.Im_DeltaC9_e  = *Param["Im_DeltaC9_e"];
-          result.Re_DeltaC10_e = *Param["Re_DeltaC10_e"];
-          result.Im_DeltaC10_e = *Param["Im_DeltaC10_e"];
-          result.Re_DeltaCQ1_e = *Param["Re_DeltaCQ1_e"];
-          result.Im_DeltaCQ1_e = *Param["Im_DeltaCQ1_e"];
-          result.Re_DeltaCQ2_e = *Param["Re_DeltaCQ2_e"];
-          result.Im_DeltaCQ2_e = *Param["Im_DeltaCQ2_e"];
+        result.Re_DeltaC7_e  = *Param["Re_DeltaC7_e"];
+        result.Im_DeltaC7_e  = *Param["Im_DeltaC7_e"];
+        result.Re_DeltaC9_e  = *Param["Re_DeltaC9_e"];
+        result.Im_DeltaC9_e  = *Param["Im_DeltaC9_e"];
+        result.Re_DeltaC10_e = *Param["Re_DeltaC10_e"];
+        result.Im_DeltaC10_e = *Param["Im_DeltaC10_e"];
+        result.Re_DeltaCQ1_e = *Param["Re_DeltaCQ1_e"];
+        result.Im_DeltaCQ1_e = *Param["Im_DeltaCQ1_e"];
+        result.Re_DeltaCQ2_e = *Param["Re_DeltaCQ2_e"];
+        result.Im_DeltaCQ2_e = *Param["Im_DeltaCQ2_e"];
 
-          result.Re_DeltaC7_tau  = *Param["Re_DeltaC7_tau"];
-          result.Im_DeltaC7_tau  = *Param["Im_DeltaC7_tau"];
-          result.Re_DeltaC9_tau  = *Param["Re_DeltaC9_tau"];
-          result.Im_DeltaC9_tau  = *Param["Im_DeltaC9_tau"];
-          result.Re_DeltaC10_tau = *Param["Re_DeltaC10_tau"];
-          result.Im_DeltaC10_tau = *Param["Im_DeltaC10_tau"];
-          result.Re_DeltaCQ1_tau = *Param["Re_DeltaCQ1_tau"];
-          result.Im_DeltaCQ1_tau = *Param["Im_DeltaCQ1_tau"];
-          result.Re_DeltaCQ2_tau = *Param["Re_DeltaCQ2_tau"];
-          result.Im_DeltaCQ2_tau = *Param["Im_DeltaCQ2_tau"];
+        result.Re_DeltaC7_tau  = *Param["Re_DeltaC7_tau"];
+        result.Im_DeltaC7_tau  = *Param["Im_DeltaC7_tau"];
+        result.Re_DeltaC9_tau  = *Param["Re_DeltaC9_tau"];
+        result.Im_DeltaC9_tau  = *Param["Im_DeltaC9_tau"];
+        result.Re_DeltaC10_tau = *Param["Re_DeltaC10_tau"];
+        result.Im_DeltaC10_tau = *Param["Im_DeltaC10_tau"];
+        result.Re_DeltaCQ1_tau = *Param["Re_DeltaCQ1_tau"];
+        result.Im_DeltaCQ1_tau = *Param["Im_DeltaCQ1_tau"];
+        result.Re_DeltaCQ2_tau = *Param["Re_DeltaCQ2_tau"];
+        result.Im_DeltaCQ2_tau = *Param["Im_DeltaCQ2_tau"];
 
-          /* Lines below are valid in the flavour NON-universal case
-             deltaC[1..10] = Cmu[1..10], deltaC[11..20] = Ce[1..10], deltaC[21..30] = Ctau[1..10]
-             deltaCQ[1,2] = CQmu[1,2], deltaCQ[1,2] = CQe[1,2], deltaCQ[1,2] = CQtau[1,2] */
+        /* Lines below are valid in the flavour NON-universal case
+           deltaC[1..10] = Cmu[1..10], deltaC[11..20] = Ce[1..10], deltaC[21..30] = Ctau[1..10]
+           deltaCQ[1,2] = CQmu[1,2], deltaCQ[1,2] = CQe[1,2], deltaCQ[1,2] = CQtau[1,2] */
 
+        result.deltaC[7]=std::complex<double>(result.Re_DeltaC7_mu, result.Im_DeltaC7_mu);
+        result.deltaC[9]=std::complex<double>(result.Re_DeltaC9_mu, result.Im_DeltaC9_mu);
+        result.deltaC[10]=std::complex<double>(result.Re_DeltaC10_mu, result.Im_DeltaC10_mu);
+        result.deltaCQ[1]=std::complex<double>(result.Re_DeltaCQ1_mu, result.Im_DeltaCQ1_mu);
+        result.deltaCQ[2]=std::complex<double>(result.Re_DeltaCQ2_mu, result.Im_DeltaCQ2_mu);
 
-
-          result.deltaC[7]=std::complex<double>(result.Re_DeltaC7_mu, result.Im_DeltaC7_mu);
-          result.deltaC[9]=std::complex<double>(result.Re_DeltaC9_mu, result.Im_DeltaC9_mu);
-          result.deltaC[10]=std::complex<double>(result.Re_DeltaC10_mu, result.Im_DeltaC10_mu);
-          result.deltaCQ[1]=std::complex<double>(result.Re_DeltaCQ1_mu, result.Im_DeltaCQ1_mu);
-          result.deltaCQ[2]=std::complex<double>(result.Re_DeltaCQ2_mu, result.Im_DeltaCQ2_mu);
-
-          result.deltaC[17]=std::complex<double>(result.Re_DeltaC7_e, result.Im_DeltaC7_e);
-          result.deltaC[19]=std::complex<double>(result.Re_DeltaC9_e, result.Im_DeltaC9_e);
-          result.deltaC[20]=std::complex<double>(result.Re_DeltaC10_e, result.Im_DeltaC10_e);
-          result.deltaCQ[3]=std::complex<double>(result.Re_DeltaCQ1_e, result.Im_DeltaCQ1_e);
-          result.deltaCQ[4]=std::complex<double>(result.Re_DeltaCQ2_e, result.Im_DeltaCQ2_e);
+        result.deltaC[17]=std::complex<double>(result.Re_DeltaC7_e, result.Im_DeltaC7_e);
+        result.deltaC[19]=std::complex<double>(result.Re_DeltaC9_e, result.Im_DeltaC9_e);
+        result.deltaC[20]=std::complex<double>(result.Re_DeltaC10_e, result.Im_DeltaC10_e);
+        result.deltaCQ[3]=std::complex<double>(result.Re_DeltaCQ1_e, result.Im_DeltaCQ1_e);
+        result.deltaCQ[4]=std::complex<double>(result.Re_DeltaCQ2_e, result.Im_DeltaCQ2_e);
 
 
-          result.deltaC[27]=std::complex<double>(result.Re_DeltaC7_tau, result.Im_DeltaC7_tau);
-          result.deltaC[29]=std::complex<double>(result.Re_DeltaC9_tau, result.Im_DeltaC9_tau);
-          result.deltaC[30]=std::complex<double>(result.Re_DeltaC10_tau, result.Im_DeltaC10_tau);
-          result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1_tau, result.Im_DeltaCQ1_tau);
-          result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2_tau, result.Im_DeltaCQ2_tau);
+        result.deltaC[27]=std::complex<double>(result.Re_DeltaC7_tau, result.Im_DeltaC7_tau);
+        result.deltaC[29]=std::complex<double>(result.Re_DeltaC9_tau, result.Im_DeltaC9_tau);
+        result.deltaC[30]=std::complex<double>(result.Re_DeltaC10_tau, result.Im_DeltaC10_tau);
+        result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1_tau, result.Im_DeltaCQ1_tau);
+        result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2_tau, result.Im_DeltaCQ2_tau);
 
-        }
+      }
 
       if (flav_debug) cout<<"Finished SI_fill"<<endl;
     }
 
-    /// NEW! Fill SuperIso nuisance structure
+    /// Fill SuperIso nuisance structure
     void SI_nuisance_fill(nuisance &nuislist)
     {
       using namespace Pipes::SI_nuisance_fill;
-	  if (flav_debug) cout<<"Starting SI_nuisance_fill"<<endl;
+      if (flav_debug) cout<<"Starting SI_nuisance_fill"<<endl;
 
       parameters const& param = *Dep::SuperIso_modelinfo;
 
-	  BEreq::set_nuisance(&nuislist);
-	  BEreq::set_nuisance_value_from_param(&nuislist,&param);
+      BEreq::set_nuisance(&nuislist);
+      BEreq::set_nuisance_value_from_param(&nuislist,&param);
 
-	  /* Here the nuisance parameters which should not be used for the correlation calculation have to be given a zero standard deviation.
-	     E.g. nuislist.mass_b.dev=0.; */
+      /* Here the nuisance parameters which should not be used for the correlation calculation have to be given a zero standard deviation.
+         E.g. nuislist.mass_b.dev=0.; */
 
       if (flav_debug) cout<<"Finished SI_nuisance_fill"<<endl;
     }
@@ -1736,7 +1731,7 @@ namespace Gambit
         first = false;
       }
 
-	  printf("BKstarmumu_11_25->FL=%.3e\n",Dep::BKstarmumu_11_25->FL);
+      printf("BKstarmumu_11_25->FL=%.3e\n",Dep::BKstarmumu_11_25->FL);
 
       pmc.value_th(0,0)=Dep::BKstarmumu_11_25->FL;
       pmc.value_th(1,0)=Dep::BKstarmumu_11_25->AFB;
@@ -2897,35 +2892,6 @@ namespace Gambit
       std::cout<<"Flavio result: "<<result<<std::endl;
     }
 
-
-
-    /// HEPLike LogLikelihood B -> tau nu
-    void HEPLike_B2taunu_LogLikelihood(double &result)
-    {
-      using namespace Pipes::HEPLike_B2taunu_LogLikelihood;
-      static const std::string inputfile = path_to_latest_heplike_data() + "/data/PDG/Semileptonic/B2TauNu.yaml";
-      static HepLike_default::HL_Gaussian gaussian(inputfile);
-      static bool first = true;
-      if (first)
-      {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
-        gaussian.Read();
-        first = false;
-      }
-
-      static const std::string observable{"B2taunu"};
-
-      flav_prediction prediction = *Dep::prediction_B2taunu;
-      flav_observable_map theory = prediction.central_values;
-      flav_covariance_map theory_covariance = prediction.covariance;
-
-      result = gaussian.GetLogLikelihood(
-              theory.at(observable),
-              theory_covariance.at(observable).at(observable)
-              );
-      if (flav_debug) std::cout << "HEPLike_B2taunu_LogLikelihood result: " << result << std::endl;
-    }
-
     /// HEPLike LogLikelihood RD RDstar
     void HEPLike_RDRDstar_LogLikelihood(double& result)
     {
@@ -2956,63 +2922,35 @@ namespace Gambit
       if (flav_debug) std::cout << "HEPLike_RDRDstar_LogLikelihood result: " << result << std::endl;
     }
 
-    /// HEPLike LogLikelihood b -> s gamma
-    void HEPLike_b2sgamma_LogLikelihood(double &result)
-    {
-      using namespace Pipes::HEPLike_b2sgamma_LogLikelihood;
-      static const std::string inputfile = path_to_latest_heplike_data() + "/data/HFLAV_18/RD/b2sgamma.yaml";
-      static HepLike_default::HL_Gaussian gaussian(inputfile);
-      static bool first = true;
-      if (first)
-      {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
-        gaussian.Read();
-        first = false;
-      }
+    /// HEPLike single-observable likelihood
+    #define HEPLIKE_GAUSSIAN_1D_LIKELIHOOD(name, file)                            \
+    void CAT_3(HEPLike_,name,_LogLikelihood)(double &result)                      \
+    {                                                                             \
+      using namespace CAT_3(Pipes::HEPLike_,name,_LogLikelihood);                 \
+      static const std::string inputfile = path_to_latest_heplike_data() + file;  \
+      static HepLike_default::HL_Gaussian gaussian(inputfile);                    \
+      static bool first = true;                                                   \
+                                                                                  \
+      if (first)                                                                  \
+      {                                                                           \
+        if (flav_debug) std::cout << "Debug: Reading HepLike data file: " <<      \
+         inputfile << endl;                                                       \
+        gaussian.Read();                                                          \
+        first = false;                                                            \
+      }                                                                           \
+                                                                                  \
+      double theory = CAT(Dep::prediction_,name)->central_values.begin()->second; \
+      double theory_variance = CAT(Dep::prediction_,name)->covariance.begin()->   \
+       second.begin()->second;                                                    \
+      result = gaussian.GetLogLikelihood(theory, theory_variance);                \
+                                                                                  \
+      if (flav_debug) std::cout << "HEPLike_" << #name                            \
+       << "_LogLikelihood result: " << result << std::endl;                       \
+    }                                                                             \
 
-      static const std::string observable{"b2sgamma"};
-
-      flav_prediction prediction = *Dep::prediction_b2sgamma;
-      flav_observable_map theory = prediction.central_values;
-      flav_covariance_map theory_covariance = prediction.covariance;
-
-      result = gaussian.GetLogLikelihood(
-              theory.at(observable),
-              theory_covariance.at(observable).at(observable)
-              );
-      if (flav_debug) std::cout << "HEPLike_b2sgamma_LogLikelihood result: " << result << std::endl;
-    }
-
-    /// HEPLike LogLikelihood B -> K* gamma S
-    void HEPLike_B2KstargammaS_LogLikelihood(double &result)
-    {
-      using namespace Pipes::HEPLike_B2KstargammaS_LogLikelihood;
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/HFLAV_18/RD/B2Kstar_gamma_S.yaml";
-      static HepLike_default::HL_Gaussian gaussian_0(inputfile_0);
-
-      static bool first = true;
-      if (first)
-      {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        gaussian_0.Read();
-
-        first = false;
-      }
-
-      static const std::string observable{"B2Kstargamma"};
-
-      flav_prediction prediction = *Dep::prediction_B2Kstargamma;
-      flav_observable_map theory = prediction.central_values;
-      flav_covariance_map theory_covariance = prediction.covariance;
-
-      result = gaussian_0.GetLogLikelihood(
-              theory.at(observable),
-              theory_covariance.at(observable).at(observable)
-              );
-
-      if (flav_debug) std::cout << "HEPLike_B2Kstargamma_LogLikelihood result: " << result << std::endl;
-
-    }
+    HEPLIKE_GAUSSIAN_1D_LIKELIHOOD(b2sgamma, "/data/HFLAV_18/RD/b2sgamma.yaml")
+    HEPLIKE_GAUSSIAN_1D_LIKELIHOOD(B2Kstargamma, "/data/HFLAV_18/RD/B2Kstar_gamma_S.yaml")
+    HEPLIKE_GAUSSIAN_1D_LIKELIHOOD(B2taunu, "/data/PDG/Semileptonic/B2TauNu.yaml")
 
     /// HEPLike LogLikelihood B -> ll
     void HEPLike_B2mumu_LogLikelihood_CMS(double &result)
@@ -3147,7 +3085,7 @@ namespace Gambit
       };
 
       result = 0;
-      for (unsigned int i = 0; i < nDimGaussian.size(); i++) 
+      for (unsigned int i = 0; i < nDimGaussian.size(); i++)
       {
         result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
       }
@@ -3299,7 +3237,7 @@ namespace Gambit
       };
 
       result = 0;
-      for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++) 
+      for (unsigned int i = 0; i < nDimBifurGaussian.size(); i++)
       {
         result += nDimBifurGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], observables), get_obs_covariance(prediction[i], observables));
       }
@@ -3379,7 +3317,7 @@ namespace Gambit
         *Dep::prediction_Bs2phimumuBr_1_6,
         *Dep::prediction_Bs2phimumuBr_15_19
       };
-      
+
       result = 0;
       for (unsigned int i = 0; i < BifurGaussian.size(); i++)
       {

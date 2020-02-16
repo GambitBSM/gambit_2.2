@@ -1412,10 +1412,10 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  /// HEPLike LogLikelihood B -> K* gamma S
-  #define CAPABILITY B2KstargammaS_LogLikelihood
+  /// HEPLike LogLikelihood B -> K* gamma
+  #define CAPABILITY B2Kstargamma_LogLikelihood
   START_CAPABILITY
-    #define FUNCTION HEPLike_B2KstargammaS_LogLikelihood
+    #define FUNCTION HEPLike_B2Kstargamma_LogLikelihood
     START_FUNCTION(double);
     DEPENDENCY(prediction_B2Kstargamma, flav_prediction)
     NEEDS_CLASSES_FROM(HepLike);
