@@ -10,7 +10,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019, 2020... forever
+#  \date 2017, 2018, 2019, 2020... 
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
@@ -331,8 +331,6 @@ if args.file:
                     add_new_particleDB_entry(missing_parts, gum.dm_pdg, 
                                              gambit_pdgs, decaybit_dict,
                                              reset_contents, gum.name)
-                # # Mow reload the dictionaries
-                # gambit_pdgs, decaybit_dict = get_gambit_particle_pdg_dict()
 
         # Grab the antiparticles
         antiparticle_dict = get_antiparticles(partlist)

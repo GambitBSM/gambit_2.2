@@ -169,11 +169,18 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
         )
 
         # Masses should also be input parameters in this setup
+        # TODO not necessarily true..!
         for particle in particles:
+
+            mass = ""
+            if particle.PDG_code == 25 and add_higgs: 
+                mass = "mH"
+            else:
+                mass = particle.mass
 
             towrite += (
                     "SLHAea_add(slha, \"MASS\", {0}, *myPipe::Param[\"{1}\"]);\n"
-            ).format(particle.PDG_code, particle.mass)
+            ).format(particle.PDG_code, mass)
 
 
         # TODO for matrices
