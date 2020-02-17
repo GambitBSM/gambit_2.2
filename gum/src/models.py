@@ -56,7 +56,7 @@ def get_model_parameters(parameters):
     return model_parameters
 
 def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
-                            partlist, gambit_pdgs):
+                            partlist, gambit_pdgs, with_spheno):
     """
     Extracts the spectrum parameters out of the full parameter list
     """
@@ -122,6 +122,9 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
         if par.tag == "Pole_Mass":
             name = par.fullparticlename
         elif par.tag == "Pole_Mixing":
+            # If not using SPheno, don't have mixing matrices as output.
+            if not with_spheno:
+                continue
             for v in params_by_block.values():
                 if not 'mixingmatrix' in v: continue
                 if par.name == "sinW2": name = par.name
@@ -523,7 +526,8 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
             "const SpectrumContents::{1} contents;\n"
             "\n"
             "/// Add SLHAea object using the SimpleSpec_to_SLHAea routine\n"
-            "void add_to_SLHAea(int /*slha_version*/, SLHAea::Coll& slha) const\n"
+            "void add_to_SLHAea(int /*slha_version*/, SLHAea::Coll& slha) "
+            "const\n"
             "{{\n"
             "// Add SPINFO data if not already present\n"
             "SLHAea_add_GAMBIT_SPINFO(slha);\n"
@@ -631,6 +635,7 @@ def add_to_registered_spectra(gambit_model):
             if lookup in line:
                 linenum = num
             if newentry in line:
-                raise GumError(("\n\nModel {0} already exists in GAMBIT.").format(gambit_model))
+                raise GumError(("\n\nModel {0} already exists in GAMBIT."
+                               ).format(gambit_model))
 
     return newentry, linenum

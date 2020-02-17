@@ -386,10 +386,12 @@ if args.file:
 
         # Get the spectrum parameters out of the parameter list
         spectrum_parameters = get_spectrum_parameters(parameters, blockparams,
-                                                      bsm_particle_list, partlist,
-                                                      gambit_pdgs)
+                                                      bsm_particle_list, 
+                                                      partlist, gambit_pdgs,
+                                                      output_opts.spheno)
 
-        subspec_wrapper = write_subspectrum_wrapper(gum.name, spectrum_parameters)
+        subspec_wrapper = write_subspectrum_wrapper(gum.name, 
+                                                    spectrum_parameters)
         spec_contents = write_spectrumcontents(gum.name, spectrum_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
 

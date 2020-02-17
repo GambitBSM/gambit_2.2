@@ -76,9 +76,6 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 "namespace myPipe = Pipes::get_{0};\n"
                 "const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;\n"
                 "\n"
-                # "// Initialise model object \n"
-                # "Models::{1} {2};\n\n"
-                # "// BSM parameters\n"
                 "// Initialise SLHAea object \n"
                 "SLHAstruct slha;\n"
         ).format(spec, modelclass, modelcont)
@@ -94,15 +91,6 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                          "MASS", "SMINPUTS", "VEVS"]:
                 continue
 
-            # Firstly create the block
-            towrite += (
-                    "\n"
-                    "// Block {0}\n"
-                    "SLHAea_add_block(slha, \"{0}\");\n"
-            ).format(block)
-
-            # Add it to the list
-            addedblocks.append(block)
 
             matrix = False
             size = ""
@@ -115,6 +103,20 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
             elif 'mixingmatrix' in entry:
                 matrix = True
                 size = entry['mixingmatrix']
+
+            # TODO do we want mixing matrices in the SLHAea object here??
+            if 'mixingmatrix' in entry:
+                continue
+
+            # Firstly create the block
+            towrite += (
+                    "\n"
+                    "// Block {0}\n"
+                    "SLHAea_add_block(slha, \"{0}\");\n"
+            ).format(block)
+
+            # Add it to the list
+            addedblocks.append(block)
 
             # If we don't have a matrix, use the block indices
             if not matrix:
@@ -137,37 +139,27 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                         raise GumError("Parameter " + par.fullname + " not found.")
 
                     towrite += (
-                        "SLHAea_add(slha, \"{0}\", {1}, {2});\n"
+                            "SLHAea_add(slha, \"{0}\", {1}, {2});\n"
                     ).format(block, index, paramdef)
 
-            # Matrix case TODO
+            # Matrix case.
+            # The block is the name of the parameter. 
             else:
-                # The block is the name of the parameter
                 paramdef = ""
 
-                # Try to find the corresponding model parameter
-                for i in range(0, len(model_parameters)):
-                    par = model_parameters[i] 
+                # Get the size of the matrix
+                x,y = size.split('x')
 
-                    # Don't have anything that's an output of spectrum
-                    # computation as a scan parameter
-                    if par.is_output: continue
-                    
-                    if par.fullname == param:
-                        paramdef = "*myPipe::Param[\"{0}\"]".format(par.gb_in)
+                for i in xrange(int(x)):
+                    for j in xrange(int(y)):
 
-                if not paramdef:
-                    raise GumError("Parameter " + par.fullname + " not found.")
+                        #"SLHAea_add(slha, \"YE\", 1, 1, sqrt2v*sminputs.mE, \"e\");\n"
 
-                towrite += (
-                    "SLHAea_add(slha, \"{0}\", {1}, {2});\n"
-                ).format(block, index, paramdef)
-        #             for i in xrange(int(size)):
-        #                 for j in xrange(int(size)):
-        #                     towrite += (
-        #                         "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
-        #                     ).format(modelcont, gambit_model_name, e, toadd, i, j, par.gb_in, i+1, j+1)
-
+                        towrite += (
+                                "SLHAea_add(slha, \"{0}\", {1}, {2}, "
+                                "*myPipe::Param[\"{0}{1}x{2}\"], " 
+                                "\"{0}({1},{2})\");\n"
+                        ).format(block, i+1, j+1)
 
         # Now do the mass block
         towrite += (
