@@ -1244,6 +1244,9 @@ namespace GUM
       // // Compute the vertices here
       // model.calculate_vertices();
 
+      // Get the options to pass to backends (currently just SPheno)
+      std::map<std::string, std::map<std::string, std::string> > BEoptions = opts.options();
+
       // Get all of the particles
       model.get_partlist(partlist);
 
@@ -1283,7 +1286,16 @@ namespace GUM
       /// Write SPheno output
       if (std::find(backends.begin(), backends.end(), "spheno") != backends.end() )
       {
-        model.write_spheno_output(opts.options().at("spheno"));
+       
+        std::map<std::string, std::string> sphenoopts;
+
+        // If there's SPheno options in the map, pass them over...
+        if ( !BEoptions.find("spheno") == BEoptions.end() ) 
+        {
+          sphenoopts = BEoptions.at("spheno");
+        }
+
+        model.write_spheno_output(sphenoopts);
 
         // Leave only the parameters that SPheno uses
         model.SPheno_parameters(paramlist);
