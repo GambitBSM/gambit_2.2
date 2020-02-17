@@ -15,14 +15,29 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
       get_BEptr()->Read();
    }
    
+   inline double HL_ProfLikelihood::GetChi2(double theory)
+   {
+      return get_BEptr()->GetChi2(theory);
+   }
+   
    inline double HL_ProfLikelihood::GetChi2(double theory, double theory_err)
    {
       return get_BEptr()->GetChi2(theory, theory_err);
    }
    
+   inline double HL_ProfLikelihood::GetLogLikelihood(double theory)
+   {
+      return get_BEptr()->GetLogLikelihood(theory);
+   }
+   
    inline double HL_ProfLikelihood::GetLogLikelihood(double theory, double theory_err)
    {
       return get_BEptr()->GetLogLikelihood(theory, theory_err);
+   }
+   
+   inline double HL_ProfLikelihood::GetLikelihood(double theory)
+   {
+      return get_BEptr()->GetLikelihood(theory);
    }
    
    inline double HL_ProfLikelihood::GetLikelihood(double theory, double theory_err)

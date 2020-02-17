@@ -21,9 +21,15 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
          virtual void Read() =0;
    
+         virtual double GetChi2(double) =0;
+   
          virtual double GetChi2(double, double) =0;
    
+         virtual double GetLogLikelihood(double) =0;
+   
          virtual double GetLogLikelihood(double, double) =0;
+   
+         virtual double GetLikelihood(double) =0;
    
          virtual double GetLikelihood(double, double) =0;
    

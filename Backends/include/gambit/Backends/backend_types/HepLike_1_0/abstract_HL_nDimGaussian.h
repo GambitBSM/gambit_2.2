@@ -37,6 +37,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
          virtual bool Restrict(::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > >) =0;
    
+         virtual ::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > GetObservables() =0;
+   
       public:
          using Abstract_HL_Data::pointer_assign__BOSS;
          virtual void pointer_assign__BOSS(Abstract_HL_nDimGaussian*) =0;

@@ -56,7 +56,7 @@
 #  \date 2016 Aug
 #
 #  \author Ankit Beniwal
-#  	   (ankit.beniwal@adelaide.edu.au)
+#      (ankit.beniwal@adelaide.edu.au)
 #  \date 2016 Aug
 #  \date 2017 Jun
 #  \date 2018 Aug
@@ -148,9 +148,10 @@ endif()
 # HepLike
 set(name "heplike")
 set(ver "1.0")
-set(dl "https://github.com/mchrzasz/HEPLike/archive/V${ver}.tar.gz")
+#set(dl "https://github.com/mchrzasz/HEPLike/archive/V${ver}.tar.gz")
+set(dl "https://github.com/mchrzasz/HEPLike/archive/master.zip")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(md5 "09352ac921563e962842770604b60491")
+set(md5 "714b5d8c3e45f09813f2bc3c1302fa7c")
 set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})

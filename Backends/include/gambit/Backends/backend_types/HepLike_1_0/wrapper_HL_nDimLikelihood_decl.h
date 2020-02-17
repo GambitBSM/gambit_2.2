@@ -8,6 +8,7 @@
 #include "wrapper_HL_Data_decl.h"
 #include <string>
 #include <vector>
+#include <boost/numeric/ublas/matrix.hpp>
 
 #include "identification.hpp"
 
@@ -33,11 +34,15 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
          double GetChi2(::std::vector<double, std::allocator<double> > theory);
    
+         double GetChi2(::std::vector<double, std::allocator<double> > theory, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > theory_cov);
+   
          double GetLikelihood(::std::vector<double, std::allocator<double> > theory);
+   
+         double GetLikelihood(::std::vector<double, std::allocator<double> > theory, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > theory_cov);
    
          double GetLogLikelihood(::std::vector<double, std::allocator<double> > theory);
    
-         double GetLogLikelihood(::std::vector<double, std::allocator<double> > theory, ::std::vector<double, std::allocator<double> > theory_error);
+         double GetLogLikelihood(::std::vector<double, std::allocator<double> > theory, ::boost::numeric::ublas::matrix<double, boost::numeric::ublas::basic_row_major<unsigned long, long>, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > theory_cov);
    
          void Profile();
    
@@ -46,6 +51,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
          double GetLikelihood_profile(double theory, ::std::basic_string<char, std::char_traits<char>, std::allocator<char> > axis);
    
          double GetLogLikelihood_profile(double theory, ::std::basic_string<char, std::char_traits<char>, std::allocator<char> > X);
+   
+         ::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > GetObservables();
    
    
          // Wrappers for original constructors: 

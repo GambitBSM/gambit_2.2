@@ -28,9 +28,15 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
       public:
          void Read();
    
+         double GetChi2(double theory);
+   
          double GetChi2(double theory, double theory_err);
    
+         double GetLogLikelihood(double theory);
+   
          double GetLogLikelihood(double theory, double theory_err);
+   
+         double GetLikelihood(double theory);
    
          double GetLikelihood(double theory, double theory_err);
    

@@ -52,6 +52,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
       return get_BEptr()->Restrict(arg_1);
    }
    
+   inline ::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > HL_nDimGaussian::GetObservables()
+   {
+      return get_BEptr()->GetObservables();
+   }
+   
    
    // Wrappers for original constructors: 
    inline HL_nDimGaussian::HL_nDimGaussian() :

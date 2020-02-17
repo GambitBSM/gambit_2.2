@@ -2985,8 +2985,7 @@ namespace Gambit
       {
         if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimLikelihood.Read();
-        update_obs_list(obs_list, {"BR_Bs2mumu","BR_Bd2mumu"});
-        //update_obs_list(obs_list, nDimLikelihood.getObservables());
+        update_obs_list(obs_list, nDimLikelihood.GetObservables());
         first = false;
       }
 
@@ -3010,8 +3009,7 @@ namespace Gambit
       {
         if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimLikelihood.Read();
-        update_obs_list(obs_list, {"BR_Bs2mumu","BR_Bd2mumu"});
-        //update_obs_list(obs_list, nDimLikelihood.getObservables());
+        update_obs_list(obs_list, nDimLikelihood.GetObservables());
         first = false;
       }
 
@@ -3034,8 +3032,7 @@ namespace Gambit
       {
         if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
         nDimLikelihood.Read();
-        update_obs_list(obs_list, {"BR_Bs2mumu","BR_Bd2mumu"});
-        //update_obs_list(obs_list, nDimLikelihood.getObservables());
+        update_obs_list(obs_list, nDimLikelihood.GetObservables());
         first = false;
       }
 
@@ -3065,8 +3062,7 @@ namespace Gambit
           if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
           nDimGaussian[i].Read();
         }
-        update_obs_list(obs_list, {"F_L", "S_3", "S_4", "S_5", "S_7", "S_8"});
-        //update_obs_list(obs_list, nDimGaussian[0].getObservables());
+        update_obs_list(obs_list, nDimGaussian[0].GetObservables());
         first = false;
       }
 
@@ -3108,8 +3104,7 @@ namespace Gambit
           if (flav_debug) std::cout << "Debug: Reading HepLike data file " << i << endl;
           nDimBifurGaussian[i].Read();
         }
-        update_obs_list(obs_list, {"P_1", "P_5"});
-        //update_obs_list(obs_list, nDimBifurGaussian[0].getObservables());
+        update_obs_list(obs_list, nDimBifurGaussian[0].GetObservables());
         first = false;
       }
 
@@ -3154,8 +3149,7 @@ namespace Gambit
           if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
           nDimBifurGaussian[i].Read();
         }
-        update_obs_list(obs_list, {"P_4", "P_5"});
-        //update_obs_list(obs_list, nDimBifurGaussian[0].getObservables());
+        update_obs_list(obs_list, nDimBifurGaussian[0].GetObservables());
         first = false;
       }
 
@@ -3198,8 +3192,7 @@ namespace Gambit
           if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
           nDimBifurGaussian[i].Read();
         }
-        update_obs_list(obs_list, {"F_L", "S_3", "S_4", "S_5", "A_FB", "S_7", "S_8", "S_9"});
-        //update_obs_list(obs_list, nDimBifurGaussian[0].getObservables());
+        update_obs_list(obs_list, nDimBifurGaussian[0].GetObservables());
         first = false;
       }
 
@@ -3335,7 +3328,7 @@ namespace Gambit
 
 
       result = rk.GetLogLikelihood(
-                                   1.+theory[observables[0]], 
+                                   1.+theory[observables[0]],
                                    theory_covariance[observables[0]][observables[0]]
                                    );
 
@@ -3376,7 +3369,7 @@ namespace Gambit
 
 
       result = rkstar1.GetLogLikelihood(
-                                         1.+theory[observables[0]], 
+                                         1.+theory[observables[0]],
                                          theory_covariance[observables[0]][observables[0]]
                                         );
 

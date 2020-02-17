@@ -44,6 +44,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
    
          bool Restrict(::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > arg_1);
    
+         ::std::vector<std::basic_string<char>, std::allocator<std::basic_string<char> > > GetObservables();
+   
    
          // Wrappers for original constructors: 
       public:
