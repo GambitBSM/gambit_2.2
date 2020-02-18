@@ -17,8 +17,7 @@ Parameters:
   DMEFT:
     # DM mass
     mchi:
-      #range: [10.,10000.]
-      range: [5.,500.]
+      range: [5.,250.]
     # Scale of new physics
     Lambda: 500.
     # EM interactions (only turn on at loop-level -- not concerned with these)
