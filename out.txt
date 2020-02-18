@@ -1,0 +1,421 @@
+./gambit: Relink `/home/a1607156/anaconda3/envs/GAMBIT/lib/./libgfortran.so.4' with `/lib/x86_64-linux-gnu/librt.so.1' for IFUNC symbol `clock_gettime'
+
+[1;33mGAMBIT 1.4.0
+http://gambit.hepforge.org
+
+[0mDescriptions are missing for the following models:
+   NREO_scalarDM
+   NREO_MajoranaDM
+   CB_SLHA_file_model
+   CB_SLHA_simpmod_scan_model
+   DMEFT
+   demo_CAP
+   CB_SLHA_scan_model
+Please add descriptions of these to /home/a1607156/PROJECTS/GAMBIT/gambitgit/config/models.dat
+Descriptions are missing for the following capabilities:
+   Assign_All_Values
+   Assign_Value
+   Assign_Widths
+   CB_SLHA_file_model_parameters
+   CB_SLHA_scan_model_parameters
+   CB_SLHA_simpmod_scan_model_parameters
+   CH_Decay_Width
+   CH_Sigma_V
+   CalcHEP_3_6_27_init
+   DDCalc_2_1_0_init
+   DDCalc_Couplings
+   DD_nonrel_WCs
+   DD_rel_WCs
+   DMEFT_parameters
+   DMEFT_spectrum
+   DirectDM_2_0_1_init
+   L3_Gravitino_LLike
+   MicrOmegas_DMEFT_3_6_9_2_init
+   NREO_DiracDM_parameters
+   NREO_MajoranaDM_parameters
+   NREO_scalarDM_parameters
+   SLHAFileElements
+   SLHAFileNameAndContent
+   SetWIMP_NREFT_CPT
+   WIMP_properties
+   WIMP_sigmav_parameters
+   XsecInfo
+   a_cap
+   all_BFs
+   calcMainFunc
+   demo_CAP_parameters
+   findValW
+   generic_WIMP_sigmav
+   getMEcode
+   get_NR_WCs_EW
+   get_NR_WCs_flav
+   large_print
+   pMass
+   passParameters
+   pdg2mass
+   pdg2width
+   procInfo2
+   setModel
+   spinwimpx2
+   varNames
+   wimp_sc
+Please add descriptions of these to /home/a1607156/PROJECTS/GAMBIT/gambitgit/config/capabilities.dat
+
+Starting GAMBIT
+----------
+Running in MPI-parallel mode with 1 processes
+----------
+Running with 12 OpenMP threads per MPI process (set by the environment variable OMP_NUM_THREADS).
+YAML file: yaml_files/DMEFT_collidertest.yaml
+Initialising logger...  log_debug_messages = false; log messages tagged as 'Debug' will NOT be logged
+Resolving dependencies and backend requirements.  Hang tight...
+Resolving dependency LHC_Combined_LogLike (double), required by Core...
+   ...resolved by [calc_combined_LHC_LogLike, ColliderBit]
+Resolving dependency LHC_LogLike_per_analysis (map_str_dbl), required by LHC_Combined_LogLike (double) [calc_combined_LHC_LogLike, ColliderBit]...
+   ...resolved by [get_LHC_LogLike_per_analysis, ColliderBit]
+Resolving dependency RunMC (MCLoopInfo), required by LHC_Combined_LogLike (double) [calc_combined_LHC_LogLike, ColliderBit]...
+   ...resolved by [InterpolatedMCInfo, ColliderBit]
+Resolving dependency LHC_LogLikes (map_str_AnalysisLogLikes), required by LHC_LogLike_per_analysis (map_str_dbl) [get_LHC_LogLike_per_analysis, ColliderBit]...
+   ...resolved by [calc_LHC_LogLikes, ColliderBit]
+Resolving dependency AllAnalysisNumbers (AnalysisDataPointers), required by LHC_LogLikes (map_str_AnalysisLogLikes) [calc_LHC_LogLikes, ColliderBit]...
+   ...resolved by [DMEFT_results, ColliderBit]
+Resolving dependency RunMC (MCLoopInfo), required by LHC_LogLikes (map_str_AnalysisLogLikes) [calc_LHC_LogLikes, ColliderBit]...
+   ...resolved by [InterpolatedMCInfo, ColliderBit]
+Resolving dependency nulike_1_0_7_init (void), required by LHC_LogLikes (map_str_AnalysisLogLikes) [calc_LHC_LogLikes, ColliderBit]...
+   ...resolved by [nulike_1_0_7_init, BackendIniBit]
+Resolving dependency DMEFT_parameters (ModelParameters), required by AllAnalysisNumbers (AnalysisDataPointers) [DMEFT_results, ColliderBit]...
+   ...resolved by [primary_parameters, DMEFT]
+...done!
+Starting scan.
+ScannerBit is waiting for all MPI processes to join the scan...
+  All processes ready!
+Entering random sampler.
+	number of points to calculate:  10
+Reading in grids. [Only happens on first itteration].
+ Defining covariance matrix...
+0, 1: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 6.6e-07
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.039280382
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.98560751
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.015704255
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.77279194
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 1: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 455.71085
+0, 1: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 3.425e-06
+0, 1: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 0.004803115
+0, 1: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.019048214
+0, 1: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 8.137e-06
+0, 1: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -195.15181
+0, 1: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 3.919e-06
+0, 1: Runtime(ms) intraloop: 24
+0, 1: Runtime(ms) interloop: 1.580174e+12
+0, 1: Runtime(ms) totalloop: 1.580174e+12
+0, 1: LogLike: -195.15181
+0, 1: unitCubeParameters: [0.039280382, 0.98560751, 0.015704255, 0.77279194, 0.87345956 ]
+0, 1: pointID: 1
+0, 1: MPIrank: 0
+points:  0 / 10
+0, 2: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.5e-07
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.5624026
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.74271261
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.58521848
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.62850639
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 2: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 486.66283
+0, 2: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.76e-07
+0, 2: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.453e-05
+0, 2: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.018948054
+0, 2: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 6.944e-06
+0, 2: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -159.37791
+0, 2: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.877e-06
+0, 2: Runtime(ms) intraloop: 19
+0, 2: Runtime(ms) interloop: 0
+0, 2: Runtime(ms) totalloop: 19
+0, 2: LogLike: -159.37791
+0, 2: unitCubeParameters: [0.5624026, 0.74271261, 0.58521848, 0.62850639, 0.9618938 ]
+0, 2: pointID: 2
+0, 2: MPIrank: 0
+0, 3: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.21e-07
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.7675442
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.47839194
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.59607714
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.78534078
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 3: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 356.35922
+0, 3: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.14e-07
+0, 3: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 8.9983e-05
+0, 3: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.018853604
+0, 3: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 6.919e-06
+0, 3: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -331.82197
+0, 3: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.812e-06
+0, 3: Runtime(ms) intraloop: 19
+0, 3: Runtime(ms) interloop: 0
+0, 3: Runtime(ms) totalloop: 19
+0, 3: LogLike: -331.82197
+0, 3: unitCubeParameters: [0.7675442, 0.47839194, 0.59607714, 0.78534078, 0.58959776 ]
+0, 3: pointID: 3
+0, 3: MPIrank: 0
+0, 4: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.12e-07
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.066681248
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.59033139
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.35980151
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.25508843
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 4: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 456.23669
+0, 4: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.19e-07
+0, 4: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.4274e-05
+0, 4: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.018949162
+0, 4: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 6.349e-06
+0, 4: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -9.2180607
+0, 4: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.651e-06
+0, 4: Runtime(ms) intraloop: 19
+0, 4: Runtime(ms) interloop: 0
+0, 4: Runtime(ms) totalloop: 19
+0, 4: LogLike: -9.2180607
+0, 4: unitCubeParameters: [0.066681248, 0.59033139, 0.35980151, 0.25508843, 0.87496197 ]
+0, 4: pointID: 4
+0, 4: MPIrank: 0
+0, 5: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.12e-07
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.7096923
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.82807529
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.9634675
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.55656401
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 5: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 248.34316
+0, 5: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.21e-07
+0, 5: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.0898e-05
+0, 5: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.018963928
+0, 5: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 6.775e-06
+0, 5: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -946.0613
+0, 5: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.975e-06
+0, 5: Runtime(ms) intraloop: 19
+0, 5: Runtime(ms) interloop: 0
+0, 5: Runtime(ms) totalloop: 19
+0, 5: LogLike: -946.0613
+0, 5: unitCubeParameters: [0.7096923, 0.82807529, 0.9634675, 0.55656401, 0.28098046 ]
+0, 5: pointID: 5
+0, 5: MPIrank: 0
+0, 6: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.2e-07
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.66284966
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.01785931
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.27626372
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.67103075
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 6: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 282.54605
+0, 6: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.19e-07
+0, 6: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.1292e-05
+0, 6: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.019011615
+0, 6: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 6.898e-06
+0, 6: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -112.14204
+0, 6: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.887e-06
+0, 6: Runtime(ms) intraloop: 19
+0, 6: Runtime(ms) interloop: 0
+0, 6: Runtime(ms) totalloop: 19
+0, 6: LogLike: -112.14204
+0, 6: unitCubeParameters: [0.66284966, 0.01785931, 0.27626372, 0.67103075, 0.37870301 ]
+0, 6: pointID: 6
+0, 6: MPIrank: 0
+0, 7: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.18e-07
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.15710239
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.94061617
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.67313609
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.65828576
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 7: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 170.84741
+0, 7: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.2e-07
+0, 7: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.0326e-05
+0, 7: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.019121507
+0, 7: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 6.872e-06
+0, 7: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -525.81276
+0, 7: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.835e-06
+0, 7: Runtime(ms) intraloop: 19
+0, 7: Runtime(ms) interloop: 0
+0, 7: Runtime(ms) totalloop: 19
+0, 7: LogLike: -525.81276
+0, 7: unitCubeParameters: [0.15710239, 0.94061617, 0.67313609, 0.65828576, 0.059564042 ]
+0, 7: pointID: 7
+0, 7: MPIrank: 0
+0, 8: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.17e-07
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.82040013
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.28660546
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.94748429
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.16427984
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 8: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 428.31786
+0, 8: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.17e-07
+0, 8: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.2417e-05
+0, 8: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.018908882
+0, 8: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 7.1e-06
+0, 8: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -228.7815
+0, 8: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.981e-06
+0, 8: Runtime(ms) intraloop: 19
+0, 8: Runtime(ms) interloop: 0
+0, 8: Runtime(ms) totalloop: 19
+0, 8: LogLike: -228.7815
+0, 8: unitCubeParameters: [0.82040013, 0.28660546, 0.94748429, 0.16427984, 0.7951939 ]
+0, 8: pointID: 8
+0, 8: MPIrank: 0
+0, 9: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.18e-07
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.98631599
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.65030696
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.05033313
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.29062473
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 9: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 269.58038
+0, 9: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.13e-07
+0, 9: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.0009e-05
+0, 9: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.018862668
+0, 9: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 8.867e-06
+0, 9: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -238.0393
+0, 9: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 3.149e-06
+0, 9: Runtime(ms) intraloop: 19
+0, 9: Runtime(ms) interloop: 0
+0, 9: Runtime(ms) totalloop: 19
+0, 9: LogLike: -238.0393
+0, 9: unitCubeParameters: [0.98631599, 0.65030696, 0.05033313, 0.29062473, 0.34165822 ]
+0, 9: pointID: 9
+0, 9: MPIrank: 0
+0, 10: Runtime(ns) for #RunMC @ColliderBit::InterpolatedMCInfo: 4.2e-07
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C51: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C52: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C61: 0.44695144
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C62: 0.097498148
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C63: 0.85736711
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C64: 0.6154219
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C71: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C710: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C72: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C73: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C74: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C75: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C76: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C77: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C78: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::C79: 0
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::Lambda: 1000
+0, 10: #DMEFT_parameters @DMEFT::primary_parameters::mchi: 410.54546
+0, 10: Runtime(ns) for #DMEFT_parameters @DMEFT::primary_parameters: 4.16e-07
+0, 10: Runtime(ns) for #AllAnalysisNumbers @ColliderBit::DMEFT_results: 9.0454e-05
+0, 10: Runtime(ns) for #LHC_LogLikes @ColliderBit::calc_LHC_LogLikes: 0.018997792
+0, 10: Runtime(ns) for #LHC_LogLike_per_analysis @ColliderBit::get_LHC_LogLike_per_analysis: 6.992e-06
+0, 10: #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: -119.99391
+0, 10: Runtime(ns) for #LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike: 2.999e-06
+0, 10: Runtime(ms) intraloop: 19
+0, 10: Runtime(ms) interloop: 0
+0, 10: Runtime(ms) totalloop: 19
+0, 10: LogLike: -119.99391
+0, 10: unitCubeParameters: [0.44695144, 0.097498148, 0.85736711, 0.6154219, 0.74441561 ]
+0, 10: pointID: 10
+0, 10: MPIrank: 0
+ScannerBit is waiting for all MPI processes to report their shutdown condition...
+
+GAMBIT has finished successfully!
+
+Calling MPI_Finalize...

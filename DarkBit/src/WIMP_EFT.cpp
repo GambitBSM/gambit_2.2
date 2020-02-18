@@ -228,7 +228,7 @@ namespace Gambit
       else DarkBit_error().raise(LOCAL_INFO, "DD_nonrel_WCs_flavscheme only usable for spin-0 and spin-1/2 DM.");
 
       // Relativistic Wilson Coefficients
-      map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs;
+      map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs_flavscheme;
 
       // Get non-relativistic coefficients
       result = BEreq::get_NR_WCs_flav(relativistic_WCs, mDM, scheme, DM_type);
@@ -264,7 +264,7 @@ namespace Gambit
       else DarkBit_error().raise(LOCAL_INFO, "DD_nonrel_WCs_EW only usable for spin-0 and spin-1/2 DM.");
 
       // Relativistic Wilson Coefficients
-      map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs;
+      map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs_EW;
 
       // Get non-relativistic coefficients
       /// TODO - How to get hypercharge and SU(2) dimension for these fields!?

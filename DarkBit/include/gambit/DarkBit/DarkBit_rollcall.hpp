@@ -719,26 +719,32 @@ START_MODULE
   #undef CAPABILITY
 
 
-  // Relativistic Wilson coefficients
-  #define CAPABILITY DD_rel_WCs
+  // Relativistic Wilson coefficients defined in the 5(or 4 or 3) flavscheme
+  #define CAPABILITY DD_rel_WCs_flavscheme
   START_CAPABILITY
 
-      #define FUNCTION DD_rel_WCs_MajoranaSingletDM_Z2
+      #define FUNCTION DD_rel_WCs_flavscheme_DMEFT
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(DMEFT_spectrum, Spectrum)
+      ALLOW_MODEL(DMEFT)
+      #undef FUNCTION
+
+  #undef CAPABILITY 
+
+  // Relativistic Wilson coefficients defined above the EW scale      
+  #define CAPABILITY DD_rel_WCs_EW
+  START_CAPABILITY
+  
+      #define FUNCTION DD_rel_WCs_EW_MajoranaSingletDM_Z2
       START_FUNCTION(map_str_dbl)
       DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODEL(MajoranaSingletDM_Z2)
       #undef FUNCTION
 
-      #define FUNCTION DD_rel_WCs_DiracSingletDM_Z2
+      #define FUNCTION DD_rel_WCs_EW_DiracSingletDM_Z2
       START_FUNCTION(map_str_dbl)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODEL(DiracSingletDM_Z2)
-      #undef FUNCTION
-
-      #define FUNCTION DD_rel_WCs_DMEFT
-      START_FUNCTION(map_str_dbl)
-      DEPENDENCY(DMEFT_spectrum, Spectrum)
-      ALLOW_MODEL(DMEFT)
       #undef FUNCTION
 
   #undef CAPABILITY
@@ -763,8 +769,8 @@ START_MODULE
       // Using flavour matching scheme.
       #define FUNCTION DD_nonrel_WCs_flavscheme
       START_FUNCTION(NREO_DM_nucleon_couplings)
-      DEPENDENCY(DD_rel_WCs, map_str_dbl)
-      DEPENDENCY(WIMP_properties,WIMPprops)
+      DEPENDENCY(DD_rel_WCs_flavscheme, map_str_dbl)
+      DEPENDENCY(WIMP_properties, WIMPprops)
       BACKEND_REQ(get_NR_WCs_flav, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, int&, std::string&))
       #undef FUNCTION
 
@@ -772,8 +778,8 @@ START_MODULE
       // Using unbroken SM phase.
       #define FUNCTION DD_nonrel_WCs_EW
       START_FUNCTION(NREO_DM_nucleon_couplings)
-      DEPENDENCY(DD_rel_WCs, map_str_dbl)
-      DEPENDENCY(WIMP_properties,WIMPprops)
+      DEPENDENCY(DD_rel_WCs_EW, map_str_dbl)
+      DEPENDENCY(WIMP_properties, WIMPprops)
       BACKEND_REQ(get_NR_WCs_EW, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&))
       #undef FUNCTION
       

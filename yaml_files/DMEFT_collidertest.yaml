@@ -9,24 +9,32 @@
 Parameters:
   # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
 
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+
+  StandardModel_Higgs:
+    mH: 125.09
   DMEFT:
-    C61:
-      range: [0, 1]
-    C62:
-      range: [0, 1]
-    C63:
-      range: [0, 1]
-    C64:
-      range: [0, 1]
-    mchi:
-      range: [100,500]
-    Lambda: 1000.
+    C61: 
+      range : [-1,1]
+    C62: 
+      range : [-1,1]
+    C63: 
+      range : [-1,1]
+    C64: 
+      range : [-1,1]
+    mchi: 
+      range : [1,1000]
+    Lambda: 1000
     C51: 0.
     C52: 0.
-    C71: 0.
-    C72: 0.
-    C73: 0.
-    C74: 0.
+    C71: 
+      range : [-1,1]
+    C72: 
+      range : [-1,1]
+    C73: 
+      range : [-1,1]
+    C74: 
+      range : [-1,1]
     C75: 0.
     C76: 0.
     C77: 0.
@@ -36,27 +44,27 @@ Parameters:
 
 Priors:
 
-  # None needed: flat priors are automatically generated for mu and sigma
+  # None needed: flat priors are automatically generated
 
 
 Printer:
 
-  # printer: sqlite
-  # options:
-  #  output_file: "results.sql"
-  #  table_name: "spartan"
-  #  buffer_length: 1000
-  #  delete_file_on_restart: true
-
-  printer: cout
+  printer: hdf5
   options:
-    output_file: "results.txt"
-    # group: "/spartan"
-    delete_file_on_restart: true
-    buffer_length: 10000
+   output_file: "results.hdf5"
+   table_name: "spartan"
+   buffer_length: 1000
+   delete_file_on_restart: true
 
-  #printer: ascii
-  #options:
+  # printer: cout
+  # options:
+  #   output_file: "results.txt"
+  #   # group: "/spartan"
+  #   delete_file_on_restart: true
+  #   buffer_length: 10000
+
+  # printer: ascii
+  # options:
   #  output_file: "results.dat"
   #  buffer_length: 10
   #  delete_file_on_restart: true
@@ -65,25 +73,24 @@ Printer:
 Scanner:
 
   use_scanner: multinest
-
+  
   scanners:
 
     random:
       plugin: random
       like: LogLike
-      point_number: 100
+      point_number: 1
 
     de:
       plugin: diver
       like: LogLike
-      NP: 15
+      NP: 100
 
     multinest:
       plugin: multinest
       like:  LogLike
-      nlive: 800
+      nlive: 10000
       tol: 0.1
-
     mcmc:
       plugin: great
       like: LogLike
@@ -130,10 +137,19 @@ Rules:
     backends:
     - {capability: lnlike_marg_poisson_lognormal_error}
     options: 
-      covariance_marg_convthres_abs: 0.05
-      covariance_marg_convthres_rel: 0.05
-      covariance_nsamples_start: 100000
-      # covariance_nsamples_start: 100
+      # covariance_marg_convthres_abs: 0.05
+      # covariance_marg_convthres_rel: 0.05
+      # covariance_nsamples_start: 100000
+      use_covariances: true
+      combine_SRs_without_covariances: false
+      use_marginalising: false
+      nuisance_prof_initstep: 0.1
+      nuisance_prof_convtol: 0.01
+      nuisance_prof_maxsteps: 10000
+      nuisance_prof_convacc: 0.01
+      nuisance_prof_simplexsize: 1e-5
+      nuisance_prof_method: 6
+      nuisance_prof_verbosity: 0
 
 
   # Choose colliders to simulate and their convergence settings, and pick analyses to run with each collider.
@@ -147,7 +163,7 @@ Logger:
 
   redirection:
     [Default]      : "default.log"
-    #[ExampleBit_A] : "DMEFT.log"
+    [ExampleBit_A] : "DMEFT.log"
     [Scanner]      : "DMEFT_scan.log"
 
 

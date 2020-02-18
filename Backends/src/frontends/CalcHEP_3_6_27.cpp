@@ -24,6 +24,8 @@
 #include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 #include "gambit/Elements/decay_table.hpp"
 
+#include "gambit/Utils/mpiwrapper.hpp"
+
 #include <unistd.h>
 
 BE_INI_FUNCTION
@@ -47,6 +49,7 @@ BE_INI_FUNCTION
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
     }
+    
     if (ModelInUse("DMEFT"))
     {
       BEpath = backendDir + "/../models/DMEFT";
@@ -54,8 +57,7 @@ BE_INI_FUNCTION
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
     }
-    
-    
+
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
@@ -80,18 +82,18 @@ BE_INI_FUNCTION
 
   if (ModelInUse("DMEFT"))
   {
-    // Obtain model contents
-    static const SpectrumContents::DMEFT DMEFT_contents;
-    
-    // Obtain list of all parameters within model
-    static const std::vector<SpectrumParameter> DMEFT_params = DMEFT_contents.all_parameters();
-    
-    // Obtain spectrum information to pass to CalcHEP
-    const Spectrum& spec = *Dep::DMEFT_spectrum;
-    
-    Assign_All_Values(spec, DMEFT_params);
+   // Obtain model contents
+   static const SpectrumContents::DMEFT DMEFT_contents;
+   
+   // Obtain list of all parameters within model
+   static const std::vector<SpectrumParameter> DMEFT_params = DMEFT_contents.all_parameters();
+   
+   // Obtain spectrum information to pass to CalcHEP
+   const Spectrum& spec = *Dep::DMEFT_spectrum;
+   
+   Assign_All_Values(spec, DMEFT_params);
   }
-  
+
 }
 END_BE_INI_FUNCTION
 
@@ -289,7 +291,7 @@ BE_NAMESPACE
     // Generate process from in and out states
     char *process = new char[(in + " -> " + out[0] + "," + out[1]).length() + 1];
     strcpy(process, (in + " -> " + out[0] + "," + out[1]).c_str());
-
+    
     std::string incpy = in;
     std::string out0cpy = out[0];
     std::string out1cpy = out[1];
@@ -303,6 +305,7 @@ BE_NAMESPACE
     incpy.resize(std::remove_if(incpy.begin(), incpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-incpy.begin());
     out0cpy.resize(std::remove_if(out0cpy.begin(), out0cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out0cpy.begin());
     out1cpy.resize(std::remove_if(out1cpy.begin(), out1cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out1cpy.begin());
+    
 
     // Generate libname from model and process name
     char *libname = new char[(model + "_" + incpy + "_to_" + out0cpy + out1cpy).length() + 1];
@@ -313,8 +316,29 @@ BE_NAMESPACE
     int twidth = 0;              // T-channel propagator width
     int UG = 0;                  // Unitary gauge
 
-    // Generates shared object file based on libName - unless it already exists.
-    numout *cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+    numout* cc;
+    // Make it so only one MPI process can create a library at once
+    int rank = 0; int size = 0;
+    #ifdef WITH_MPI
+      if(GMPI::Is_initialized())
+      {
+        GMPI::Comm comm;
+        rank = comm.Get_rank();
+        size = comm.Get_size();
+        for (int i = 0; i < size; ++i)
+        {
+          if (rank == i)
+          {
+            // Generates shared object file based on libName - unless it already exists.
+            cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+          }
+          MPI_Barrier(MPI_COMM_WORLD); 
+        }
+      }
+    #else
+      // Generates shared object file based on libName - unless it already exists.
+      cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+    #endif
 
     // Export numerical values of parameters to link to dynamical code
     err=passParameters(cc);
@@ -421,8 +445,29 @@ BE_NAMESPACE
     int twidth = 0;              // T-channel propagator width
     int UG = 0;                  // Unitary gauge
 
-    // Generates shared object file based on libName - unless it already exists.
-    numout *cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+    numout* cc;
+    // Make it so only one MPI process can create a library at once
+    int rank = 0; int size = 0;
+    #ifdef WITH_MPI
+      if(GMPI::Is_initialized())
+      {
+        GMPI::Comm comm;
+        rank = comm.Get_rank();
+        size = comm.Get_size();
+        for (int i = 0; i < size; ++i)
+        {
+          if (rank == i)
+          {
+            // Generates shared object file based on libName - unless it already exists.
+            cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+          }
+          MPI_Barrier(MPI_COMM_WORLD); 
+        }
+      }
+    #else
+      // Generates shared object file based on libName - unless it already exists.
+      cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+    #endif
 
     // Export numerical values of parameters to link to dynamical code
     passParameters(cc);
