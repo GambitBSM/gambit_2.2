@@ -66,16 +66,25 @@ namespace Gambit
       const char* colliderbitdata_path = GAMBIT_DIR "/ColliderBit/data/"; 
       #define PI 3.14159265
       // Initialize all data
-      static const size_t data_INC           = 15;
-      static const size_t data_SIZE          = pow(data_INC,2);
-      static const size_t data_INC_low       = 4;
-      static const size_t data_SIZE_low      = pow(data_INC_low,2);
-      static const size_t data_INC_d7        = 19;
-      static const size_t data_SIZE_d7       = data_INC_d7;
+      // static const size_t data_INC           = 15;
+      // static const size_t data_SIZE          = pow(data_INC,2);
+      // static const size_t data_INC_low       = 4;
+      // static const size_t data_SIZE_low      = pow(data_INC_low,2);
+      // static const size_t data_INC_d7        = 19;
+      // static const size_t data_SIZE_d7       = data_INC_d7;
 
 
-      static const size_t cms_bin_size       = 22;
-      static const size_t atlas_bin_size     = 10;
+      // static const size_t cms_bin_size       = 22;
+      // static const size_t atlas_bin_size     = 10;
+
+      #define data_INC        15
+      #define data_SIZE       225
+      #define data_INC_low    4
+      #define data_SIZE_low   16
+      #define data_INC_d7     19
+      #define data_SIZE_d7     19
+      #define cms_bin_size    22
+      #define atlas_bin_size  10
 
 
       const char* met_ATLAS_23 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
@@ -817,8 +826,6 @@ namespace Gambit
 
         }
 
-
-
         // Define temp. arrays for storing yields. 
         // cout << "Check things "<<mass[0]<<endl;  
         int met_bin_size;
@@ -1556,7 +1563,7 @@ namespace Gambit
       double Q2[met_bin_size];
 
       // Debugging: 
-      int itt = 0;
+      //int itt = 0;
 
       for (int Emiss = 0; Emiss < met_bin_size; Emiss++ ) 
       {
@@ -1704,84 +1711,46 @@ namespace Gambit
 
     void DMEFT_results(AnalysisDataPointers &result)
     {
-      result.clear();
+      using namespace Pipes::DMEFT_results;
 
-      // const size_t data_INC           = 15;
-      // const size_t data_SIZE          = pow(data_INC,2);
-      // const size_t cms_bin_size       = 22;
-      // const size_t atlas_bin_size     = 10;
+      // Clear previous vectors, etc.
+      result.clear();
 
       // cout << "void is run"<< endl;
 
-      // Do not get segfault when I do a get data here.....
-    
-      float C61   = *Pipes::DMEFT_results::Param["C61"]; 
-      float C62   = *Pipes::DMEFT_results::Param["C62"];
-      float C63   = *Pipes::DMEFT_results::Param["C63"];
-      float C64   = *Pipes::DMEFT_results::Param["C64"];
-      float C71   = *Pipes::DMEFT_results::Param["C71"]; 
-      float C72   = *Pipes::DMEFT_results::Param["C72"];
-      float C73   = *Pipes::DMEFT_results::Param["C73"];
-      float C74   = *Pipes::DMEFT_results::Param["C74"];
-      float mchi  = *Pipes::DMEFT_results::Param["mchi"]; 
-      float lambda= *Pipes::DMEFT_results::Param["Lambda"]; 
-
-
-      /*
-      // There is now a spectrum object carrying all this information, so we can do 
-      // something like 
       const Spectrum& spec = *Dep::DMEFT_spectrum;
+
+      // TODO change floats -> doubles
       float C61 = spec.get(Par::dimensionless, "C61");
       float C62 = spec.get(Par::dimensionless, "C62");
       float C63 = spec.get(Par::dimensionless, "C63");
       float C64 = spec.get(Par::dimensionless, "C64");
-      // instead of using the Pipes
-      */
+      float C71 = spec.get(Par::dimensionless, "C71");
+      float C72 = spec.get(Par::dimensionless, "C72");
+      float C73 = spec.get(Par::dimensionless, "C73");
+      float C74 = spec.get(Par::dimensionless, "C74");
+      float lambda = spec.get(Par::mass1, "Lambda");      
+      float mchi = spec.get(Par::Pole_Mass, "chi");
 
-      // double mDM = spec.get(Par::Pole_Mass, "chi");
-
-      // Andre: will need too add interpolators for each bin (or some smarter way to do it for all bins and store the results)
-      // ColliderBitInterpolator2D cross_C61_C64(colliderbitdata_path+"DMEFT/test_crosssec.dat","bicubic");
-      // ColliderBitInterpolator2D eff_C61_C64_ATLAS(colliderbitdata_path+"DMEFT/test_eff.dat","bicubic");
-      //ColliderBitInterpolator2D eff_C61_C64_CMS(...)
-
-      // double *yield_C61_C64_ATLAS;
-
-      // Andre: for now am assuming that the yield is just 1000. * eff * crosssec
-      // This will need to be updated
-      // // Check that the interpolators are valid
-      // if((C61 < cross_C61_C64.lower_x()) ||
-      //   (C61 > cross_C61_C64.upper_x()) ||
-      //   (C64 < cross_C61_C64.lower_y()) ||
-      //   (C64 > cross_C61_C64.upper_y())){
-        
-      //   td::cerr << "Interpolator is out of bounds in ColliderBit DMEFT calculations. The results will be totally wrong." << std::endl;
-  
-      //    }
-
-      // else {
-      //   //Andre to replace this calculation
-      //   yield_C61_C64_ATLAS = 1000. * cross_C61_C64.interpolate(C61,C64) * eff_C61_C64_ATLAS.interpolate(C61,C64);
-      //   //yield_C61_C64_CMS = 1000. * cross_C61_C64.interpolate(C61,C64) * eff_C61_C64_CMS.interpolate(C61,C64);
-      // }
-    
-      // std::cout << "Yield: " << yield_C61_C64_ATLAS << std::endl;
-
-      // Put CMS signal region data into an AnalysisData object
-      // Note: includes covariance matrix
-      // static const size_t NUMSR = 22;
-
-      // Will need to set the vector _srnums to hold the interpolated yields in each bin
-
-      // Andre needs to put signal numbers for CMS bins here (output from interpolator)
-
+      // Do not get segfault when I do a get data here.....
+      // float C61   = *Pipes::DMEFT_results::Param["C61"]; 
+      // float C62   = *Pipes::DMEFT_results::Param["C62"];
+      // float C63   = *Pipes::DMEFT_results::Param["C63"];
+      // float C64   = *Pipes::DMEFT_results::Param["C64"];
+      // float C71   = *Pipes::DMEFT_results::Param["C71"]; 
+      // float C72   = *Pipes::DMEFT_results::Param["C72"];
+      // float C73   = *Pipes::DMEFT_results::Param["C73"];
+      // float C74   = *Pipes::DMEFT_results::Param["C74"];
+      // float mchi  = *Pipes::DMEFT_results::Param["mchi"]; 
+      // float lambda= *Pipes::DMEFT_results::Param["Lambda"];
 
       // **--------------------------------------------------------------------------------------------//
       //** --------------------------------CMS---------------------------------------------------------//
 
       // Test the function to see if it compiles. 
 
-      const int CMS_SIZE = 22;
+      // const int CMS_SIZE = 22;
+      #define CMS_SIZE 22
       double _srnums_CMS[CMS_SIZE];
 
       L_Acc_Eff_CS(_srnums_CMS, mchi,C61,C62,C63,C64,C71,C72,C73,C74,lambda,"CMS");
