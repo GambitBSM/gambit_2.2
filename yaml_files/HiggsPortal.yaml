@@ -1,24 +1,22 @@
-##########################################################################
-## GAMBIT configuration for an ultra-minimal MultiNest scan of a toy model.
+#############################################################################
+## GAMBIT configuration for the SuperRenormalizableHiggsPortalDM model scans.
 ##
-## Only needs ExampleBit_A and a scanner (either one of the built-ins like
-## the random sampler or TWalk, or an external like Diver, MultiNest,
-## GreAT or Polychord).
-##########################################################################
+## Only needs DarkBit and a scanner.
+#############################################################################
 
 
 Parameters:
-  # In this example we will simply be fitting the mean and standard deviation of a normal distribution.
   SuperRenormalizableHiggsPortalDM:
-    mS:
-      range: [1, 1e3]
-    theta:
-      range: [1e-10, 1e-8]
+    mS:  
+      prior_type: log
+      range: [1e0, 1e5]
+    theta: 
+      prior_type: log
+      range: [1e-9, 1e-4]
 
 
 Priors:
 
-  # None needed: flat priors are automatically generated for mu and sigma
 
 
 Printer:
@@ -40,17 +38,22 @@ Printer:
 
   printer: ascii
   options:
-    output_file: "results.dat"
-    buffer_length: 10
+    output_file: "results_.dat"
+    buffer_length: 1
     delete_file_on_restart: true
 
   #printer: cout
 
 Scanner:
 
-  use_scanner: random
+  use_scanner: grid
 
   scanners:
+
+    grid:
+      plugin: square_grid
+      like: Observable
+      grid_pts: 200
 
     random:
       plugin: random
@@ -88,19 +91,30 @@ Scanner:
 
 ObsLikes:
 
-  - purpose:      Observable
-    capability:   SuperRenormalizableHiggsPortalDM_decay_rate
-    module:       DarkBit
-    type:         double
+  # - purpose:      Observable
+  #  capability:   SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
+  #  module:       DarkBit
+  #  type:         double
 
+  #- purpose:      Observable
+  #  capability:   SuperRenormalizableHiggsPortalDM_lnLik_HEAO
+  #  module:       DarkBit
+  #  type:         double
+   - purpose:      Observable
+     capability:   SuperRenormalizableHiggsPortalDM_solar_luminosity
+     module:       DarkBit
+     type:         double
 
 Rules:
 
   # None required, since no module dependencies to be resolved.
-  - capability: SuperRenormalizableHiggsPortalDM_decay_rate
-    options:
-        probability_of_validity: 1.0
+  # - capability: SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
+  # options:
+  #     probability_of_validity: 1.0
 
+  # - capability: SuperRenormalizableHiggsPortalDM_lnLik_HEAO
+  # options:
+  #     probability_of_validity: 1.0
 Logger:
 
   redirection:

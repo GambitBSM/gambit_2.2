@@ -1494,17 +1494,63 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Super Renormalizable Higgs Portal DM relative observables and likelihoods
+  // Super Renormalizable Higgs Portal DM relative observables and likelihoods -----------------
 
-  #define CAPABILITY SuperRenormalizableHiggsPortalDM_decay_rate
+  #define CAPABILITY SuperRenormalizableHiggsPortalDM_decay_rate_2photons
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_decay_rate 
+    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_decay_rate_2photons
     START_FUNCTION(double)
     ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY SuperRenormalizableHiggsPortalDM_Lik_INTEGRAL
+  START_CAPABILITY
+    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_Lik_INTEGRAL
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    #undef FUNCTION
+  #undef CAPABILITY
 
+  #define CAPABILITY SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
+  START_CAPABILITY
+    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY SuperRenormalizableHiggsPortalDM_Lik_HEAO
+  START_CAPABILITY
+    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_Lik_HEAO
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY SuperRenormalizableHiggsPortalDM_lnLik_HEAO
+  START_CAPABILITY
+    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_lnLik_HEAO
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY Ls
+  START_CAPABILITY
+    #define FUNCTION calc_Ls
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY SuperRenormalizableHiggsPortalDM_solar_luminosity
+  START_CAPABILITY
+    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_solar_luminosity
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    #undef FUNCTION
+  #undef CAPABILITY
 
 #undef MODULE
 #endif /* defined(__DarkBit_rollcall_hpp__) */

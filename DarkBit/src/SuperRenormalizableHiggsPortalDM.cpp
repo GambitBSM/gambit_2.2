@@ -17,16 +17,22 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_monte_plain.h>
+#include <gsl/gsl_monte_vegas.h>
 #include <gsl/gsl_integration.h>
 #include <gsl/gsl_min.h>
+#include <gsl/gsl_interp.h>
+#include <gsl/gsl_spline.h>
+#include <gsl/gsl_sf_bessel.h>
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Utils/util_functions.hpp"
+#include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/numerical_constants.hpp"
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 
@@ -48,15 +54,19 @@ namespace Gambit
 
     const double pi=Gambit::pi;
     const double alpha=Gambit::alpha_EM; // fine structure constant
-    const double v(246e9); // eV electroweak vev
-    const double hbar=Gambit::hbar*1e9;  // eV.s
-    const double cs=Gambit::s2cm*1e-2.; // cm/s speed of light
-    const double s0(2891); // 1/cm³ current entropy density
-    const double rho0(0.3e9); // eV/cm³ local DM density (Milky Way)
-    const double rhoC(4.84e3); // ev/cm³ current critical density
-    const double r0(26.2225e21); // cm Sun's distance from galactic center
-    const double C(50./27.);
-    const double sigma_gaussian(1e3);
+    const double v(246e9); // electroweak vev [eV]
+    const double hbar=Gambit::hbar*1e9;  // reduced Planck constant [eV.s]
+    const double cs=Gambit::s2cm; // speed of light [cm/s]
+    const double s0(2891); // current entropy density [1/cm³]
+    const double rho0(0.3e9); // local DM density (Milky Way) [eV/cm³]
+    const double rhoC(4.84e3); // current critical density [eV/cm³]
+    const double r0(26.2225e21); // Sun's distance from the galactic center [cm]
+    const double C(50./27.); // loop function
+    const double int_factor(1.1); // integration width = n*energy dispersion instrument
+    const double s(0.5); // sigma of the gaussian for the galactic emission line = s*energy dispersion instrument
+    const double me(0.51099895e6); // electron mass [eV]
+    const double Rsun(5.9598e10); // Solar radius [cm]
+    const double kb(8.617333262145e-5); // Boltzmann constant [eV/K]
 
 
     ////////////////////////////////////////////////////////////////////
@@ -159,11 +169,11 @@ namespace Gambit
 
     //------------- Class declaration -------------//  
 
-    class GammaRay
+    class Xray
     {
       public:
 
-      GammaRay(std::string experiment);
+      Xray(std::string experiment);
       double solidAngle(std::vector<double> lRange, std::vector<double> bRange);
       void set_deltaOmega();
       double getDeltaOmega() const;
@@ -175,7 +185,8 @@ namespace Gambit
       double sigma(double const& E);
       double fluxIntegrated(double const& E);
       double sigmaIntegrated(double const& E);
-      ~GammaRay();
+      double deltaE(double const& E) const;
+      ~Xray();
 
       protected:
 
@@ -183,7 +194,7 @@ namespace Gambit
       double m_Emin;
       double m_Emax;
       double m_deltaOmega;
-      double m_deltaE; // energy resolution
+      double m_deltaE; // energy resolution in percentage of the energy 
       std::vector<std::vector<double> > m_lRange;
       std::vector<std::vector<double> > m_bRange;
       std::string m_experiment;
@@ -191,7 +202,7 @@ namespace Gambit
     };
 
     // constructor
-    GammaRay::GammaRay(std::string experiment) : m_experiment(experiment), m_experimentMap({{"INTEGRAL", 1}, {"HEAO", 2}})
+    Xray::Xray(std::string experiment) : m_experiment(experiment), m_experimentMap({{"INTEGRAL", 1}, {"HEAO", 2}})
     {
       switch(m_experimentMap[m_experiment])
       { 
@@ -201,7 +212,8 @@ namespace Gambit
           m_lRange = { {0., 60.} };
           m_bRange = { {75., 105.} };
           m_J = 3.65;
-          m_deltaE = 8e3;
+          m_deltaE = 0.1;
+          m_deltaOmega = 0.542068;
           break;
 
         case 2 :
@@ -210,17 +222,25 @@ namespace Gambit
           m_lRange = { {58., 109.}, {238., 289.} };
           m_bRange = { {0., 70.}, {110., 180.} }; 
           m_J = 3.88;
-          m_deltaE = 4e3;
+          m_deltaE = 0.1;
+          m_deltaOmega = 1.17135;
           break;
 
         default : 
-          throw std::runtime_error("Wrong experiment name in GammaRay object");
+          throw std::runtime_error("Wrong experiment name in Xray object");
           break;
       }
-      set_deltaOmega();
+      //set_deltaOmega();
     }
 
-    // ----------- Functions to compute the solid angle of observation -----------
+    //------------- Function returning the energy dispersion of the instrument -------------// 
+   
+    double Xray::deltaE (double const& E) const
+    {
+      return m_deltaE*E;
+    }
+
+    // ----------- Functions to compute the solid angle of observation -------------// 
     
     // auxiliary function for gsl integration
     double deltaOmega (double x[], size_t dim, void *p)
@@ -231,7 +251,7 @@ namespace Gambit
     }
 
     // computes the solide angle for a given galactic coordinates range (in degrees)
-    double GammaRay::solidAngle(std::vector<double> lRange, std::vector<double> bRange)
+    double Xray::solidAngle(std::vector<double> lRange, std::vector<double> bRange)
     {
       const size_t dim = 2, calls = 1e8;
       const double xl[dim] = {lRange[0]*pi/180., bRange[0]*pi/180.}, xu[dim] = {lRange[1]*pi/180., bRange[1]*pi/180.};
@@ -255,7 +275,7 @@ namespace Gambit
     }
 
     // sets the total solid angle of observation for the experiment
-    void GammaRay::set_deltaOmega()
+    void Xray::set_deltaOmega()
     {
       double result(0);
       for (size_t i=0; i<m_lRange.size(); ++i)
@@ -268,7 +288,7 @@ namespace Gambit
     //------------- Functions to compute the photon flux and its standard deviation -------------// 
 
     // differential photon flux [photons/keV/cm²/s]
-    double GammaRay::flux(double const& E)
+    double Xray::flux(double const& E)
     {
       switch(m_experimentMap[m_experiment])
       {
@@ -289,29 +309,30 @@ namespace Gambit
     // auxiliary function for gsl integration
     double flux_gsl(double x, void *p)
     {
-      GammaRay *experiment = static_cast<GammaRay*>(p);
+      Xray *experiment = static_cast<Xray*>(p);
       return experiment->flux(x);
     }
 
     // photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
-    double GammaRay::fluxIntegrated(double const& E)
+    double Xray::fluxIntegrated(double const& E)
     {
       size_t neval; 
       double epsabs = 0.;
       double epsrel = 1e-2;
       double result, abserr;
+      double delta = int_factor*deltaE(E);
 
       gsl_function F;
       F.function = &flux_gsl;
       F.params = this;
 
-      gsl_integration_qng(&F, E-m_deltaE/2., E+m_deltaE/2., epsabs, epsrel, &result, &abserr, &neval);
+      gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval);
 
       return result;
     }
 
     // standard deviation of the differential photon flux [photons/keV/cm²/s]
-    double GammaRay::sigma(double const& E)
+    double Xray::sigma(double const& E)
     {
 
       switch(m_experimentMap[m_experiment]) 
@@ -333,41 +354,42 @@ namespace Gambit
     // auxiliary function for gsl integration
     double sigma_gsl (double x, void *p)
     {
-      GammaRay *experiment = static_cast<GammaRay*>(p);
+      Xray *experiment = static_cast<Xray*>(p);
       return pow(experiment->sigma(x), 2.);
     }
 
     // standard deviation of the photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
-    double GammaRay::sigmaIntegrated(double const& E)
+    double Xray::sigmaIntegrated(double const& E)
     {
       size_t neval; 
       double epsabs = 0.;
       double epsrel = 1e-2;
       double result, abserr;
+      double delta = int_factor*deltaE(E);
 
       gsl_function F;
       F.function = &sigma_gsl;
       F.params = this;
 
-      gsl_integration_qng(&F, E-m_deltaE/2., E+m_deltaE/2., epsabs, epsrel, &result, &abserr, &neval);
+      gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval);
 
       return sqrt(result);
     }
 
     //------------- Elevator functions -------------// 
 
-    double GammaRay::getDeltaOmega() const { return m_deltaOmega; }
+    double Xray::getDeltaOmega() const { return m_deltaOmega; }
 
-    double GammaRay::getJ() const { return m_J; }
+    double Xray::getJ() const { return m_J; }
 
-    double GammaRay::getEmin() const { return m_Emin; }
+    double Xray::getEmin() const { return m_Emin; }
 
-    double GammaRay::getEmax() const { return m_Emax; }
+    double Xray::getEmax() const { return m_Emax; }
 
-    double GammaRay::getDeltaE() const { return m_deltaE; }
+    double Xray::getDeltaE() const { return m_deltaE; }
 
     // destructor
-    GammaRay::~GammaRay() { }
+    Xray::~Xray() { }
 
     ////////////////////////////////////////////////////////////////////
     //        Support class to handle the Higgs Portal model          //
@@ -384,10 +406,10 @@ namespace Gambit
       void setYs();
       void setParameters(double const& theta, double const& ms);
       double d2PhiEg(double const& E);
-      double dPhiG(double const& E, double const& J);
-      double gammaRayPrediction(double const& E, GammaRay const& experiment);
-      double gammaRayPredictionIntegrated(double const& E, GammaRay const& experiment);
-      double minimizeLikelihood(GammaRay& experiment);
+      double dPhiG(double const& E, double const& J, Xray const& experiment);
+      double XrayPrediction(double const& E, Xray const& experiment);
+      double XrayPredictionIntegrated(double const& E, Xray const& experiment);
+      double minimizeLikelihood(Xray& experiment);
       ~HiggsPortal();
 
       private:
@@ -400,6 +422,9 @@ namespace Gambit
 
     // constructor
     HiggsPortal::HiggsPortal(double const& theta, double const& ms, Cosmology const& cosmology) : m_theta(theta), m_ms(ms), m_gamma(0.), m_Ys(0.), m_cosmology(cosmology) { setGamma(); setYs(); } 
+
+    //destructor
+    HiggsPortal::~HiggsPortal() { }
 
     //------------- Functions to set the parameters of the model and related quantities -------------// 
 
@@ -427,7 +452,7 @@ namespace Gambit
     //------------- Functions to compute the predicted photon flux -------------// 
 
     // useful structure
-    struct gammaRayLikelihood_params {HiggsPortal *model; GammaRay experiment;};
+    struct XrayLikelihood_params {HiggsPortal *model; Xray experiment;};
 
     // cosmological contribution to the differential photon flux [photons/eV/cm²/s/sr]
     double HiggsPortal::d2PhiEg(double const& E) 
@@ -439,33 +464,34 @@ namespace Gambit
     }
 
     // galactic (Milky Way) contribution to the differential photon flux [photons/eV/cm²/s]
-    double HiggsPortal::dPhiG(double const& E, double const& J)
+    double HiggsPortal::dPhiG(double const& E, double const& J, Xray const& experiment)
     {
-      return 2.*(r0*rho0*m_gamma*J*m_Ys*s0*m_ms*exp(-m_cosmology.get_t0()*m_gamma))/(4.*pi*m_ms*m_cosmology.getOmegaDM()*rhoC)/sqrt(2*pi*sigma_gaussian*sigma_gaussian)*exp(-pow(E-m_ms/2.,2)/(2*sigma_gaussian*sigma_gaussian));
+      double sigma = s*experiment.deltaE(E); // standard deviation of the gaussian modelling the enery dispersion of the instrument
+      return 2.*(r0*rho0*m_gamma*J*m_Ys*s0*m_ms*exp(-m_cosmology.get_t0()*m_gamma))/(4.*pi*m_ms*m_cosmology.getOmegaDM()*rhoC)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-m_ms/2.,2)/(2*sigma*sigma));
     }
 
     // total predicted differential photon flux for a given x-ray experiment [photons/eV/cm²/s]
-    double HiggsPortal::gammaRayPrediction(double const& E, GammaRay const& experiment)
+    double HiggsPortal::XrayPrediction(double const& E, Xray const& experiment)
     {
       double J, deltaOmega;
 
       J = experiment.getJ();
       deltaOmega = experiment.getDeltaOmega();
-      return dPhiG(E, J) + (d2PhiEg(E) * deltaOmega);
+      return dPhiG(E, J, experiment) + (d2PhiEg(E) * deltaOmega);
     }
 
     // auxiliary function for gsl integration
-    double gammaRayPredictionIntegrated_gsl(double x, void *p)
+    double XrayPredictionIntegrated_gsl(double x, void *p)
     {
-      gammaRayLikelihood_params *params = static_cast<gammaRayLikelihood_params*>(p);
+      XrayLikelihood_params *params = static_cast<XrayLikelihood_params*>(p);
       HiggsPortal *model = params->model;
-      GammaRay experiment = params->experiment;
+      Xray experiment = params->experiment;
   
-      return model->gammaRayPrediction(x, experiment);
+      return model->XrayPrediction(x, experiment);
     }
 
     // total predicted photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
-    double HiggsPortal::gammaRayPredictionIntegrated(double const& E, GammaRay const& experiment)
+    double HiggsPortal::XrayPredictionIntegrated(double const& E, Xray const& experiment)
     {
       size_t n = 1e4; 
 
@@ -476,15 +502,15 @@ namespace Gambit
       size_t limit = 1e3;
       double result, abserr;
       int key = 6;
-      double deltaE = experiment.getDeltaE();
+      double delta = int_factor*experiment.deltaE(E);
 
-      gammaRayLikelihood_params params = {this, experiment};
+      XrayLikelihood_params params = {this, experiment};
 
       gsl_function F;
-      F.function = &gammaRayPredictionIntegrated_gsl;
+      F.function = &XrayPredictionIntegrated_gsl;
       F.params = &params;
 
-      gsl_integration_qag(&F, E-deltaE/2., E+deltaE/2., epsabs, epsrel, limit, key, w, &result, &abserr);
+      gsl_integration_qag(&F, E-delta/2., E+delta/2., epsabs, epsrel, limit, key, w, &result, &abserr);
 
       gsl_integration_workspace_free(w);
 
@@ -494,15 +520,15 @@ namespace Gambit
     //------------- Functions to compute x-ray likelihoods -------------// 
 
     // auxiliary function for gsl minimization
-    double gammaRayLikelihood(double E, void * p) 
+    double XrayLikelihood(double E, void * p)
     {
-      gammaRayLikelihood_params *params = static_cast<gammaRayLikelihood_params*>(p);
+      XrayLikelihood_params *params = static_cast<XrayLikelihood_params*>(p);
       HiggsPortal *model = params->model;
-      GammaRay experiment = params->experiment;
+      Xray experiment = params->experiment;
 
       double data = experiment.fluxIntegrated(E);
       double sigma = experiment.sigmaIntegrated(E);
-      double prediction = model->gammaRayPredictionIntegrated(E, experiment);
+      double prediction = model->XrayPredictionIntegrated(E, experiment);
 
       if (prediction>=data) 
       {  
@@ -515,20 +541,42 @@ namespace Gambit
       }
     }
 
+    double XrayLnLikelihood(double E, void * p)
+    {
+      XrayLikelihood_params *params = static_cast<XrayLikelihood_params*>(p);
+      HiggsPortal *model = params->model;
+      Xray experiment = params->experiment;
+
+      double data = experiment.fluxIntegrated(E);
+      double sigma = experiment.sigmaIntegrated(E);
+      double prediction = model->XrayPredictionIntegrated(E, experiment);
+
+      if (prediction>=data) 
+      {  
+        return -pow(data-prediction,2.)/(2.*sigma*sigma);
+      }
+
+      else 
+      {
+        return 1.;
+      }
+    }
+
     // computes the energy E which minimizes the likelihood
-    double HiggsPortal::minimizeLikelihood(GammaRay& experiment) {
+    double HiggsPortal::minimizeLikelihood(Xray& experiment) {
 
       int status;
       int iter = 0, max_iter = 100;
       const gsl_min_fminimizer_type *T;
       gsl_min_fminimizer *s;
-      double a = experiment.getEmin(), b = m_ms/2.;
+      double Emin = experiment.getEmin(), Emax = experiment.getEmax();
+      double a = Emin+experiment.deltaE(Emin), b = fmin(m_ms/2., Emax-experiment.deltaE(Emax));
       double m = (a+b)/2.;
       gsl_function F;
 
-      gammaRayLikelihood_params params = {this, experiment};
+      XrayLikelihood_params params = {this, experiment};
 
-      F.function = &gammaRayLikelihood;
+      F.function = &XrayLikelihood;
       F.params = &params;
       T = gsl_min_fminimizer_brent;
       s = gsl_min_fminimizer_alloc(T);
@@ -551,28 +599,521 @@ namespace Gambit
       return m;
     }
 
+    
+    ////////////////////////////////////////////////////////////////////
+    //            Support class to handle Solar models                //
+    ////////////////////////////////////////////////////////////////////
+
+    // gsl error handler
+    void handler_Ls (const char * reason, const char * file, int line, int gsl_errno)
+    {
+      if (gsl_errno == 15) 
+      {
+        throw gsl_errno;
+      }
+      else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << " and  gsl_errno = " << gsl_errno << std::endl; abort(); } 
+    }
+
+    const double da = 1.66053906660e-24; // dalton to g 
+
+
+    class StellarModel 
+    {
+      public :
+
+      StellarModel (std::string datafile);
+
+      double sigmaL (double const& w, double const& r);
+      double getQuantity (std::string const& quantity, double const& r);
+      double L_integrated (double const& mS);
+      void Ls_interpolate ();
+      double Ls (double const& mS, double const& theta);
+      double PhiB8 (double const& mS, double const& theta);
+
+      ~StellarModel();
+
+      private :
+
+      int m_nbins;
+      const std::vector<std::string> m_names = {"Mass", "Radius", "Temp", "Rho", "Pres", "Lumi", "H1", "He4", "He3", "C12", "C13", "N14", "N15", "O16", "O17", "O18", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni"};
+      const std::vector<std::string> m_elements = {"H1", "He4", "He3", "C12", "C13", "N14", "N15", "O16", "O17", "O18", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni"};
+      // Ionisation of species i assuming full ionisation.
+      const std::vector<double> m_Z = {1.0, 2.0, 2.0, 6.0, 6.0, 7.0, 7.0, 8.0, 8.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0};
+      // Atomic weight of species i (exact weight if isotope is known OR estimate from average solar abundance from data if available OR estimate from natural terrestrial abundance).
+      const std::vector<double> m_A = {1.007825, 4.002603, 3.016029, 12.000000, 13.003355, 14.003074, 15.000109, 15.994915, 16.999132, 17.999160, 20.1312812, 22.989769, 24.3055, 26.9815385, 28.085, 30.973762, 32.0675, 35.4515, 36.275403, 39.0983, 40.078, 44.955908, 47.867, 50.9415, 51.9961, 54.938044, 55.845, 58.933194, 58.6934};
+ 
+      ASCIItableReader m_model;
+      std::map<std::string, gsl_spline*> m_interp;
+      std::map<std::string, gsl_interp_accel*> m_acc;
+
+      gsl_spline * m_Ls_interp;
+      gsl_interp_accel * m_Ls_accel;
+
+      const std::vector<std::string> m_quantities = {"Temp", "wp", "ne", "SumNz"};
+    
+    };
+
+    StellarModel::StellarModel (std::string datafile)
+    {
+      m_model = ASCIItableReader(datafile);
+      m_model.setcolnames(m_names);
+
+      m_nbins = m_model["Mass"].size();
+      
+      std::vector<double> T, wp, ne, SumNz;
+
+      double sumz, temp, sumz2;
+
+      for (int i=0; i<m_nbins; ++i)
+      { 
+
+        sumz = 0;
+        sumz2 = 0;
+
+        for (size_t j=0; j<m_elements.size(); ++j)
+        {
+          sumz += m_Z[j]*m_model[m_elements[j]][i]/m_A[j]/da*m_model["Rho"][i];
+          sumz2 += m_Z[j]*m_Z[j]*m_model[m_elements[j]][i]/m_A[j]/da*m_model["Rho"][i];
+        }
+
+        temp = m_model["Temp"][i]*kb;
+
+        T.push_back(temp);
+        wp.push_back(sqrt(4*pi*alpha*sumz*cs*cs*cs*hbar*hbar*hbar/me));
+        ne.push_back(sumz);
+        SumNz.push_back(sumz2);
+
+      }
+
+      std::map<std::string, std::vector<double>> quantities;
+
+      quantities["Temp"] = T;
+      quantities["wp"] = wp;
+      quantities["ne"] = ne;
+      quantities["SumNz"] = SumNz;
+      
+      const double * rr = m_model["Radius"].data();
+
+      for (auto it=m_quantities.begin(); it!=m_quantities.end(); ++it)
+      {
+        m_interp[*it] = gsl_spline_alloc(gsl_interp_cspline, m_nbins);
+        m_acc[*it] = gsl_interp_accel_alloc();
+        gsl_spline_init(m_interp[*it], rr, quantities[*it].data(), m_nbins);
+
+      }
+
+      Ls_interpolate();
+    }
+
+    double StellarModel::getQuantity (std::string const& quantity, double const& r)
+    { 
+      return gsl_spline_eval(m_interp[quantity], r, m_acc[quantity]);
+    }
+
+    double StellarModel::sigmaL (double const& w, double const& r)
+    {
+      double temp = getQuantity("Temp", r);
+      double D = 64*pow(pi, 2)*pow(alpha, 3)*getQuantity("ne", r)*getQuantity("SumNz", r);
+      double N = 3*sqrt(2*pi*temp)*pow(me, 3./2.)*pow(w, 3);
+
+      double x = w/2./temp;
+     
+
+      try
+      {
+        double F = gsl_sf_bessel_K0(x)*sinh(x);
+        return D/N*F*pow(cs, 6)*pow(hbar, 6);
+      }
+
+      catch (int gsl_errno)
+      {
+        double F = sqrt(pi/2./x)*(1-(1/8./x));
+        return D/N*F*pow(cs, 6)*pow(hbar, 6);
+      }
+
+    }
+    
+
+    StellarModel::~StellarModel() 
+    {
+      for (auto it=m_quantities.begin(); it!=m_quantities.end(); ++it)
+      {
+        gsl_spline_free (m_interp[*it]);
+        gsl_interp_accel_free(m_acc[*it]);
+
+      }
+    }
+
+    struct my_f_params { double mS; StellarModel * model; };
+
+    double integrand (double x[], size_t dim, void * p)
+    {
+      struct my_f_params * fp = (struct my_f_params *)p;
+      (void)(dim);
+
+      StellarModel * model = fp->model;
+      double w = x[0], r = x[1], mS = fp->mS;
+      double N1, N2, D1, D2, D3;
+
+      N1 = pow((w*w-mS*mS), 3./2.)*w*w;
+      N2 = w*w*model->sigmaL(w, r);
+
+      D1 = pow(2*pi, 3)*alpha;
+      D2 = exp(w/model->getQuantity("Temp", r))-1;
+      D3 = pow(w*model->sigmaL(w, r), 2)+pow(w*w-pow(model->getQuantity("wp", r), 2), 2);
+
+      return N1*N2*pow(r, 2)/D1/D2/D3;
+
+    }
+
+    double const mSmax = 5e5;
+
+    /*double StellarModel::L_integrated (double const& mS)
+    {
+      const size_t dim = 2, calls = 1e7;
+      const double xl[dim] = {mS, 0.0006}, xu[dim] = {mSmax, 0.9995};
+      double result, abserr;
+
+      gsl_monte_plain_state *s = gsl_monte_plain_alloc(dim);
+      gsl_monte_plain_init(s);
+      gsl_rng *r = gsl_rng_alloc(gsl_rng_taus2);
+
+      gsl_monte_function F;
+
+      my_f_params params = {mS, this};
+
+      F.f = &integrand;
+      F.dim = dim;
+      F.params = &params;
+
+      gsl_monte_plain_integrate(&F, xl, xu, dim, calls, r, s, &result, &abserr);
+
+      gsl_monte_plain_free(s);  
+
+      std::cout << result << " " << abserr << std::endl;
+
+      return 4*pi*pow(Rsun, 3)*result/pow(cs, 3)/pow(hbar, 4);
+
+    }*/
+
+    double StellarModel::L_integrated (double const& mS)
+    {
+      const size_t dim = 2, calls = 1e6;
+      double xl[dim] = {mS, 0.0006}, xu[dim] = {mSmax, 0.9995};
+      double result, abserr;
+
+      gsl_monte_vegas_state *s = gsl_monte_vegas_alloc(dim);
+      gsl_monte_vegas_init(s);
+      gsl_rng *r = gsl_rng_alloc(gsl_rng_taus2);
+
+      gsl_monte_function F;
+
+      my_f_params params = {mS, this};
+
+      F.f = &integrand;
+      F.dim = dim;
+      F.params = &params;
+
+      gsl_monte_vegas_integrate(&F, xl, xu, dim, calls, r, s, &result, &abserr);
+
+      gsl_monte_vegas_free(s);  
+
+      return 4*pi*pow(Rsun, 3)*result/pow(cs, 3)/pow(hbar, 4);
+
+    }
+
+    void StellarModel::Ls_interpolate ()
+    {
+
+      const int nPoints = 150;
+      const double mMin = 5e-1, mMax = 5e4;
+      const double deltaM = log10(mMax/mMin)/nPoints;
+      const std::string filename = GAMBIT_DIR "/DarkBit/data/SuperRenormHP_Ls.dat";
+      std::vector<double> mS, Ls;
+      
+      if (Utils::file_exists(filename))
+      {
+        ASCIItableReader table = ASCIItableReader(filename);
+        table.setcolnames({"mS", "Ls"});
+        mS = table["mS"];
+        Ls = table["Ls"];
+
+      }
+
+      else
+      {
+        for (int i=0; i<=nPoints; ++i)
+        {
+          mS.push_back(mMin*pow(10, deltaM*i));
+        }
+
+        for (auto it=mS.begin(); it!=mS.end(); ++it)
+        {
+          Ls.push_back(L_integrated(*it));
+        }
+
+        std::ofstream fout (filename.c_str());
+
+        for (size_t i=0; i<mS.size(); ++i)
+        {
+          fout << mS[i] << "  " << Ls[i] << std::endl;
+        }
+
+        fout.clear(); fout.close();
+      }
+
+      m_Ls_interp = gsl_spline_alloc(gsl_interp_cspline, nPoints+1);
+      m_Ls_accel = gsl_interp_accel_alloc();
+      gsl_spline_init(m_Ls_interp, mS.data(), Ls.data(), nPoints+1);
+
+    }
+
+    double StellarModel::Ls (double const& mS, double const& theta)
+    {
+      return gsl_spline_eval(m_Ls_interp, mS, m_Ls_accel)*pow(me/v*theta, 2);
+    }
+
+    double StellarModel::PhiB8 (double const& mS, double const& theta)
+    {
+      const double PhiB8_0 = 1;
+      const double L0 = 1;
+      const double a = 1;
+
+      return PhiB8_0*pow((1+Ls(mS, theta)/L0), a);
+
+    }
+
+
+
     ////////////////////////////////////////////////////////////////////
     //                   Capability functions                         //
     ////////////////////////////////////////////////////////////////////
 
-    // instance of the cosmology class
-    auto cosmology = Cosmology();
-    const double t0 = cosmology.get_t0();
+    // instance of the Cosmology class
+    //auto cosmology = Cosmology();
+
+    // instance of the HiggsPortal class
+//    auto scalarDM = HiggsPortal(1., 1., cosmology);
+
+    // instances of the x-ray class
+    //auto INTEGRAL = Xray("INTEGRAL");
+    //auto HEAO = Xray("HEAO");
+
+
+
+    // temporary capability Ls
+    void calc_Ls (double &result)
+    {
+      using namespace Pipes::calc_Ls;
+      double mS = *Param["mS"], theta = *Param["theta"];
+
+      gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler_Ls);
+
+      static StellarModel model (GAMBIT_DIR "/DarkBit/data/SolarModel_AGSS09met.dat");
+
+      result = model.Ls(mS, theta);
+
+      gsl_set_error_handler (old_handler);
+    }
+
+    void calc_SuperRenormalizableHiggsPortalDM_solar_luminosity (double &result)
+    {
+      using namespace Pipes::calc_SuperRenormalizableHiggsPortalDM_solar_luminosity;
+      double mS = *Param["mS"], theta = *Param["theta"];
+
+      gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler_Ls);
+
+      static StellarModel model (GAMBIT_DIR "/DarkBit/data/SolarModel_AGSS09met.dat");
+
+      const double L0 = 2.388672e45;
+      const double limit = 0.1*L0;
+      double Ls = model.Ls(mS, theta);
+
+      if (Ls > limit) { result = 0; }
+
+      else { result = 1; }
+
+      gsl_set_error_handler (old_handler);
+    }
+
 
     // capability function to provide the decay rate to two photons    
-    void calc_SuperRenormalizableHiggsPortalDM_decay_rate(double &result)
+    void calc_SuperRenormalizableHiggsPortalDM_decay_rate_2photons(double &result)
     {
-      using namespace Pipes::calc_SuperRenormalizableHiggsPortalDM_decay_rate;
+      using namespace Pipes::calc_SuperRenormalizableHiggsPortalDM_decay_rate_2photons;
       double mS = *Param["mS"], theta = *Param["theta"];
       
       result = (theta*theta*alpha*alpha*mS*mS*mS*C*C)/(256.*pi*pi*pi*v*v)/hbar;
     }
+
     
-    void calc_SuperRenormalizableHiggsPortal
+    // gsl error handler
+    void handler (const char * reason, const char * file, int line, int gsl_errno)
+    {
+      if (gsl_errno == 4) 
+      {
+        throw gsl_errno;
+      }
+      else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << std::endl; abort(); } 
+    }
+
+
+    // capability function to compute the x-ray Likelihood from the INTEGRAL experiment
+    void calc_SuperRenormalizableHiggsPortalDM_Lik_INTEGRAL(double &result)
+    {
+      using namespace Pipes::calc_SuperRenormalizableHiggsPortalDM_Lik_INTEGRAL;
+      
+      double mS = *Param["mS"], theta = *Param["theta"];
+      auto cosmology = Cosmology();
+      auto scalarDM = HiggsPortal(theta, mS, cosmology);
+
+      auto experiment = Xray("INTEGRAL");
+      
+      double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
+      XrayLikelihood_params params = {&scalarDM, experiment};
+      
+      if (mS >= 1e6) { result = 1.; }
+
+      else if (mS >= 2.*Emin)
+      {
+        // modifies the gsl error handler and stores the default one
+        gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
+        try
+        {
+          E = scalarDM.minimizeLikelihood(experiment);
+          result = XrayLikelihood(E, &params);
+        }
+
+        catch (int gsl_errno)
+        {
+          lik1 = XrayLikelihood(Emin+experiment.deltaE(Emin), &params);
+          lik2 = XrayLikelihood(fmin(mS/2., Emax-experiment.deltaE(Emax)), &params);
+          result = fmin(lik1, lik2);
+        }
+        // restores the default gsl error handler
+        gsl_set_error_handler (old_handler);
+      }
+
+      else { result = 1.; }
+    }
+    
+    // capability function to compute the x-ray lnLikelihood from the INTEGRAL experiment
+    void calc_SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL(double &result)
+    {
+      using namespace Pipes::calc_SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL;
+      
+      double mS = *Param["mS"], theta = *Param["theta"];
+      auto cosmology = Cosmology();
+      auto scalarDM = HiggsPortal(theta, mS, cosmology);
+
+      auto experiment = Xray("INTEGRAL");
+      
+      double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
+      XrayLikelihood_params params = {&scalarDM, experiment};
+      
+      if (mS >= 1e6) { result = 1.; }
+
+      else if (mS >= 2.*Emin)
+      {
+        // modifies the gsl error handler and stores the default one
+        gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
+        try
+        {
+          E = scalarDM.minimizeLikelihood(experiment);
+          result = XrayLnLikelihood(E, &params);
+        }
+
+        catch (int gsl_errno)
+        {
+          lik1 = XrayLnLikelihood(Emin+experiment.deltaE(Emin), &params);
+          lik2 = XrayLnLikelihood(fmin(mS/2., Emax-experiment.deltaE(Emax)), &params);
+          result = fmin(lik1, lik2);
+        }
+        // restores the default gsl error handler
+        gsl_set_error_handler (old_handler);
+      }
+
+      else { result = 1.; }
+    }
+    
+    // capability function to compute the x-ray lnLikelihood from the HEAO-1 A2 experiment
+    void calc_SuperRenormalizableHiggsPortalDM_Lik_HEAO(double &result)
+    {
+      using namespace Pipes::calc_SuperRenormalizableHiggsPortalDM_Lik_HEAO;
+      
+      double mS = *Param["mS"], theta = *Param["theta"];
+      auto cosmology = Cosmology();
+      auto scalarDM = HiggsPortal(theta, mS, cosmology);
+
+      auto experiment = Xray("HEAO");
+      
+      double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
+      XrayLikelihood_params params = {&scalarDM, experiment};
+      
+      if (mS >= 1e6) { result = 1.; }
+
+      else if (mS >= 2.*Emin)
+      {
+        // modifies the gsl error handler and stores the default one
+        gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
+        try
+        {
+          E = scalarDM.minimizeLikelihood(experiment);
+          result = XrayLikelihood(E, &params);
+        }
+
+        catch (int gsl_errno)
+        {
+          lik1 = XrayLikelihood(Emin+experiment.deltaE(Emin), &params);
+          lik2 = XrayLikelihood(fmin(mS/2., Emax-experiment.deltaE(Emax)), &params);
+          result = fmin(lik1, lik2);
+        }
+        // restores the default gsl error handler
+        gsl_set_error_handler (old_handler);
+      }
+
+      else { result = 1.; }
+    }
+
+    // capability function to compute the x-ray lnLikelihood from the HEAO-1 A2 experiment
+    void calc_SuperRenormalizableHiggsPortalDM_lnLik_HEAO(double &result)
+    {
+      using namespace Pipes::calc_SuperRenormalizableHiggsPortalDM_lnLik_HEAO;
+      
+      double mS = *Param["mS"], theta = *Param["theta"];
+      auto cosmology = Cosmology();
+      auto scalarDM = HiggsPortal(theta, mS, cosmology);
+
+      auto experiment = Xray("HEAO");
+      
+      double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
+      XrayLikelihood_params params = {&scalarDM, experiment};
+      
+      if (mS >= 1e6) { result = 1.; }
+
+      else if (mS >= 2.*Emin)
+      {
+        // modifies the gsl error handler and stores the default one
+        gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
+        try
+        {
+          E = scalarDM.minimizeLikelihood(experiment);
+          result = XrayLnLikelihood(E, &params);
+        }
+
+        catch (int gsl_errno)
+        {
+          lik1 = XrayLnLikelihood(Emin+experiment.deltaE(Emin), &params);
+          lik2 = XrayLnLikelihood(fmin(mS/2., Emax-experiment.deltaE(Emax)), &params);
+          result = fmin(lik1, lik2);
+        }
+        // restores the default gsl error handler
+        gsl_set_error_handler (old_handler);
+      }
+
+      else { result = 1.; }
+    }
 
   }
 }
     
-      
-    
-
