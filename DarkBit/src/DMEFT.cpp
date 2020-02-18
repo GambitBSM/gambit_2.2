@@ -53,6 +53,7 @@ namespace Gambit
         if (channel == "ubar_2, u_2") out = {"c~", "c"};
         if (channel == "dbar_3, d_3") out = {"b~", "b"};
         if (channel == "ubar_3, u_3") out = {"t~", "t"};
+        if (channel == "g, g") out = {"g", "g"};
         
         // Check the channel has been filled
         if (out.size() > 1) return sigmav(model, in, out, QCD_coupling, v_rel, tbl)*GeV2tocm3s1;
@@ -164,11 +165,11 @@ namespace Gambit
       // Populate annihilation channel list and add thresholds to threshold list.
       process_ann.resonances_thresholds.threshold_energy.push_back(2*mchi);
       auto channels = 
-        daFunk::vec<string>("dbar_1, d_1", "ubar_1, u_1", "dbar_2, d_2", "ubar_2, u_2", "dbar_3, d_3", "ubar_3, u_3");
+        daFunk::vec<string>("dbar_1, d_1", "ubar_1, u_1", "dbar_2, d_2", "ubar_2, u_2", "dbar_3, d_3", "ubar_3, u_3", "g, g");
       auto p1 = 
-        daFunk::vec<string>("dbar_1", "ubar_1", "dbar_2", "ubar_2", "dbar_3", "ubar_3");
+        daFunk::vec<string>("dbar_1", "ubar_1", "dbar_2", "ubar_2", "dbar_3", "ubar_3", "g");
       auto p2 = 
-        daFunk::vec<string>("d_1", "u_1", "d_2", "u_2", "d_3", "u_3");
+        daFunk::vec<string>("d_1", "u_1", "d_2", "u_2", "d_3", "u_3", "g");
       
       for (unsigned int i = 0; i < channels.size(); ++i)
       {
