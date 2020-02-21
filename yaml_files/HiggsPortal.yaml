@@ -6,13 +6,13 @@
 
 
 Parameters:
-  SuperRenormalizableHiggsPortalDM:
+  SuperRenormHP:
     mS:  
       prior_type: log
-      range: [1e0, 1e5]
+      range: [1e3, 1e7]
     theta: 
       prior_type: log
-      range: [1e-9, 1e-4]
+      range: [1e-14, 1e-6]
 
 
 Priors:
@@ -38,7 +38,7 @@ Printer:
 
   printer: ascii
   options:
-    output_file: "results_.dat"
+    output_file: "results.dat"
     buffer_length: 1
     delete_file_on_restart: true
 
@@ -91,19 +91,19 @@ Scanner:
 
 ObsLikes:
 
-  # - purpose:      Observable
-  #  capability:   SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
-  #  module:       DarkBit
-  #  type:         double
-
-  #- purpose:      Observable
-  #  capability:   SuperRenormalizableHiggsPortalDM_lnLik_HEAO
-  #  module:       DarkBit
-  #  type:         double
    - purpose:      Observable
-     capability:   SuperRenormalizableHiggsPortalDM_solar_luminosity
+     capability:   SuperRenormHP_Lik_INTEGRAL
      module:       DarkBit
      type:         double
+
+   - purpose:      Observable
+     capability:   SuperRenormHP_Lik_HEAO
+     module:       DarkBit
+     type:         double
+     #- purpose:      Observable
+     #capability:   SuperRenormalizableHiggsPortalDM_solar_luminosity
+     #module:       DarkBit
+     #type:         double
 
 Rules:
 

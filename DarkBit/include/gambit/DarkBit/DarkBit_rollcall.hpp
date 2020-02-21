@@ -1496,43 +1496,49 @@ START_MODULE
 
   // Super Renormalizable Higgs Portal DM relative observables and likelihoods -----------------
 
-  #define CAPABILITY SuperRenormalizableHiggsPortalDM_decay_rate_2photons
+  #define CAPABILITY initial_density
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_decay_rate_2photons
+    #define FUNCTION SuperRenormHP_initial_density
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormalizableHiggsPortalDM_Lik_INTEGRAL
+  #define CAPABILITY decay_rate_2photons
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_Lik_INTEGRAL
+    #define FUNCTION SuperRenormHP_decay_rate_2photons
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
+  #define CAPABILITY DM_mass
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
+    #define FUNCTION SuperRenormHP_mass
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormalizableHiggsPortalDM_Lik_HEAO
+  #define CAPABILITY SuperRenormHP_Lik_INTEGRAL
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_Lik_HEAO
+    #define FUNCTION calc_SuperRenormHP_Lik_INTEGRAL
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    ALLOW_MODEL(SuperRenormHP)
+    DEPENDENCY(initial_density, double)
+    DEPENDENCY(decay_rate_2photons, double)
+    DEPENDENCY(DM_mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormalizableHiggsPortalDM_lnLik_HEAO
+  #define CAPABILITY SuperRenormHP_Lik_HEAO
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_lnLik_HEAO
+    #define FUNCTION calc_SuperRenormHP_Lik_HEAO
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    ALLOW_MODEL(SuperRenormHP)
+    DEPENDENCY(initial_density, double)
+    DEPENDENCY(decay_rate_2photons, double)
+    DEPENDENCY(DM_mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1540,15 +1546,15 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_Ls
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormalizableHiggsPortalDM_solar_luminosity
+  #define CAPABILITY SuperRenormHP_solar_luminosity
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormalizableHiggsPortalDM_solar_luminosity
+    #define FUNCTION calc_SuperRenormHP_solar_luminosity
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormalizableHiggsPortalDM)
+    ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
