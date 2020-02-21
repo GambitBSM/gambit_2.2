@@ -463,6 +463,7 @@ if args.file:
         # Obtain all model interactions from CalcHEP model files.
         # Also grab the PDG codes of each particle and the names of their 
         # masses -- we'll want to use this for writing the micromegas frontend
+        calchep_pdg_codes = {}
         if output_opts.ch or output_opts.mo:
             
             (interactions, calchep_pdg_codes, calchep_masses,

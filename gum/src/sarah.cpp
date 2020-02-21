@@ -1201,7 +1201,7 @@ namespace GUM
       }
       SPhenoOptions += "IncludeFlavorKit->False";
 
-      std::cout << "Options: " << SPhenoOptions << std::endl;
+      std::cout << "Options for SPheno given as: " << SPhenoOptions << std::endl;
 
       // Write output.
       std::string command = "MakeSPheno[" + SPhenoOptions + "];";
@@ -1290,7 +1290,7 @@ namespace GUM
         std::map<std::string, std::string> sphenoopts;
 
         // If there's SPheno options in the map, pass them over...
-        if ( !BEoptions.find("spheno") == BEoptions.end() ) 
+        if ( BEoptions.find("spheno") != BEoptions.end() ) 
         {
           sphenoopts = BEoptions.at("spheno");
         }

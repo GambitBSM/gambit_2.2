@@ -306,14 +306,13 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
 
             # If the parameter has a boundary condition, share the default value
             default = p.defvalue()
-            if name in bcs.keys(): 
-                default = [param.defvalue() for param in paramlist if 
-                           param.name() == bcs[name] or 
-                           param.alt_name() == bcs[name]][0]
-            elif p.alt_name() in bcs.keys():
-                default = [param.defvalue() for param in paramlist if 
-                           param.name() == bcs[alt_name] or 
-                           param.alt_name() == bcs[alt_name]][0]
+
+            # TODO does not seem to work for SARAH: SSDM (w/ just spheno):
+            # The list default = [ ... ] has zero length 
+            # if name in bcs.keys(): 
+            #     default = [param.defvalue() for param in paramlist if param.name() == bcs[name] or param.alt_name() == bcs[name]][0]
+            # elif p.alt_name() in bcs.keys():
+            #     default = [param.defvalue() for param in paramlist if param.name() == bcs[p.alt_name()] or param.alt_name() == bcs[p.alt_name()]][0]
 
             # If there are more than one parameter with the same name, take 
             # the not default one

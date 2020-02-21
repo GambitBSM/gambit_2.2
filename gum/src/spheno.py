@@ -631,7 +631,8 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
 
     # Add the new types to backend_types
     backend_types, linenum = add_to_spheno_backend_types(type_dictionary, 
-                                                         variable_dictionary)
+                                                         variable_dictionary,
+                                                         hb_variable_dictionary)
 
     # Get the indices for the mass_uncertainties
     mass_uncertainty_dict = get_mass_uncert(spheno_path, model_name)
@@ -722,7 +723,8 @@ def get_fortran_shapes(parameters):
 
     return type_dictionary
 
-def add_to_spheno_backend_types(type_dictionary, variable_dictionary):
+def add_to_spheno_backend_types(type_dictionary, variable_dictionary,
+                                hb_variable_dictionary):
     """
     Checks all new types are in the SPheno backend_types.
     """
@@ -733,9 +735,8 @@ def add_to_spheno_backend_types(type_dictionary, variable_dictionary):
         if t.startswith('Farray_'): types.append(t)   
     for t in variable_dictionary.values():
         if t.startswith('Farray_'): types.append(t)
-
-    # Remove dupes
-    types = list(set(types))
+    for t in hb_variable_dictionary.values():
+        if t.startswith('Farray_'): types.append(t)
 
     btypes = "../Backends/include/gambit/Backends/backend_types/SPheno.hpp"
 
@@ -1343,9 +1344,24 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 "(*{0}2){1} = pow((*{0}){1}, 2);\n"
         ).format(mass, brace, specmass)
 
+    print variables
+
+    # Check to see if "MVWm" or "MVWp" is used by the routines; this seems
+    # to change model-to-model. Let's see.
+    if "MVWm" in variables:
+      towrite += (
+              "*MVWm = spectrum.get(Par::Pole_Mass, \"W-\");\n"
+              "*MVWm2 = pow(*MVWm,2);\n"
+      )
+    elif "MVWp" in variables:
+      towrite += (
+              "*MVWp = spectrum.get(Par::Pole_Mass, \"W+\");\n"
+              "*MVWp2 = pow(*MVWp,2);\n"
+      )
+    else: 
+        raise GumError(("GUM can't find either W+ or W-, something is wrong."))
+    # Z should be fine.
     towrite += (
-            "*MVWm = spectrum.get(Par::Pole_Mass, \"W-\");\n"
-            "*MVWm2 = pow(*MVWm,2);\n"
             "*MVZ = spectrum.get(Par::Pole_Mass, \"Z0\");\n"
             "*MVZ2 = pow(*MVZ,2);\n"
             "\n\n"
@@ -1474,6 +1490,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     towrite += "};\n"\
                "int n_particles = pdg.size();\n"
 
+
+    # TODO this assumes all particles decay, but this is not true!
+    # e.g. for model 'SSDM' with SPheno -> particle 'Ss' does not decay,
+    # and there are no symbols for BRss and gTss.
     towrite += "auto gT = [&](int i)\n"\
                "{\n"
     for i, particle in enumerate(particles) :
@@ -1920,6 +1940,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     if not all(param in hb_variables for param in hb_targets):
         hboutput = False
 
+    # Assume SM-like at first
+    numh0 = 1
+    numA0 = 0
     if hboutput:
         # Get number of Higgses from the size of the vector 
         # interacting with gauge bosons
@@ -3306,7 +3329,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const Finputs&), \"SARAHSPheno_{1}_internal\")\n"
     ).format(fullmodelname, clean_model_name)
 
-    # Change with the Higgs couplings table is coded up
+    # Whether to code up the HiggsCouplingsTable:
     hboutput = False
     if hboutput:
       towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"{0}_HiggsCouplingsTable\")\n"
