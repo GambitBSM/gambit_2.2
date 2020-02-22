@@ -121,6 +121,9 @@ ObsLikes:
   - purpose:    Bs2phiMuMuBranchingRatioTest
     capability: Bs2phimumuBr_LogLikelihood
 
+  - purpose:    B2KMuMuBranchingRatioTest
+    capability: B2KmumuBr_LogLikelihood_LHCb
+
 #  - purpose:    RKTest
 #    capability: RK_LogLikelihood
 

@@ -50,6 +50,7 @@
 ///  \date 2019 Nov
 ///  \date 2019 Dec
 ///  \date 2020 Jan
+///  \date 2020 Feb
 ///
 ///  \author Markus Prim
 ///          (markus.prim@kit.edu)
@@ -3268,7 +3269,54 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
+    /// HEPLike LogLikelihood B -> K+ mu mu Br (LHCb)
+    void HEPLike_B2KmumuBr_LogLikelihood_LHCb(double &result)
+    {
+      using namespace Pipes::HEPLike_B2KmumuBr_LogLikelihood_LHCb;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/B2KMuMu_Br/CERN-PH-EP-2012-263_q2_";
+      static std::vector<HepLike_default::HL_Gaussian> Gaussian = {
+        HepLike_default::HL_Gaussian(inputfile + "0.05_2.yaml"),
+        HepLike_default::HL_Gaussian(inputfile + "2_4.3.yaml"),
+        HepLike_default::HL_Gaussian(inputfile + "4.3_8.68.yaml"),
+        HepLike_default::HL_Gaussian(inputfile + "14.18_16.yaml"),
+        HepLike_default::HL_Gaussian(inputfile + "16_18.yaml"),
+        HepLike_default::HL_Gaussian(inputfile + "18_22.yaml")
+      };
 
+      static bool first = true;
+      if (first)
+      {
+        for (unsigned int i = 0; i < Gaussian.size(); i++)
+        {
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file " << i << endl;
+          Gaussian[i].Read();
+        }
+        first = false;
+      }
+
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KmumuBr_0p05_2,
+        *Dep::prediction_B2KmumuBr_2_4p3,
+        *Dep::prediction_B2KmumuBr_4p3_8p68,
+        *Dep::prediction_B2KmumuBr_14p18_16,
+        *Dep::prediction_B2KmumuBr_16_18,
+        *Dep::prediction_B2KmumuBr_18_22
+      };
+
+      result = 0;
+
+      for (unsigned int i = 0; i < Gaussian.size(); i++)
+      {
+        double theory = prediction[i].central_values.begin()->second;
+        double theory_variance = prediction[i].covariance.begin()->second.begin()->second;
+        result += Gaussian[i].GetLogLikelihood(theory, theory_variance);
+      }
+
+      if (flav_debug) std::cout << "HEPLike_B2KmumuBR_LogLikelihood_LHCb result: " << result << std::endl;
+    }
+
+
+    
     void HEPLike_Bs2phimumuBr_LogLikelihood(double &result)
     {
       using namespace Pipes::HEPLike_Bs2phimumuBr_LogLikelihood;
