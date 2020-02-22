@@ -90,6 +90,8 @@ BE_FUNCTION(get_th_covariance_nuisance, void, (double***, char**, int*, const pa
 
 // Convenience functions:
 BE_CONV_FUNCTION(BKstarmumu_CONV, Flav_KstarMuMu_obs, (const parameters*, double, double), "BKstarmumu_CONV", (MSSM63atQ, MSSM63atMGUT, WC))
+BE_CONV_FUNCTION(BRBKmumu_CONV, double, (const parameters*, double, double), "BRBKmumu_CONV", (MSSM63atQ, MSSM63atMGUT, WC))
+
 BE_CONV_FUNCTION(RKstar_CONV, double, (const parameters*, double, double), "RKstar_CONV", (MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(RK_CONV, double, (const parameters*, double, double), "RK_CONV", (MSSM63atQ, MSSM63atMGUT, WC))
 BE_CONV_FUNCTION(bsgamma_CONV, double, (const parameters*, double), "bsgamma_CONV", (MSSM63atQ, MSSM63atMGUT, WC))
