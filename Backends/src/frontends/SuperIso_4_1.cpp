@@ -124,6 +124,8 @@ BE_NAMESPACE
     double mu_b=param->mass_b_pole;
 
     double BR=BRBKll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb), param, byVal(mu_b));        
+
+    return BR;
   }
 
   /// RK* observables

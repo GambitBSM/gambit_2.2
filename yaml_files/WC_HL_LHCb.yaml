@@ -218,6 +218,6 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/WC_lite"
+  default_output_path: "runs/WC_HL_LHCb"
 
   debug: true
