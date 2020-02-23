@@ -107,6 +107,7 @@ BE_NAMESPACE
 
     return results;
   }
+
   double BRBKmumu_CONV(const parameters *param, double Q2_min, double Q2_max)
   {
     check_model(param, LOCAL_INFO);
@@ -122,10 +123,9 @@ BE_NAMESPACE
     double mu_W=2.*param->mass_W;
     double mu_b=param->mass_b_pole;
 
-    double BR=BRBKll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb), param, byVal(mu_b));
-    
-    
+    double BR=BRBKll(2,0,byVal(Q2_min), byVal(Q2_max), byVal(obs),byVal(C0b),byVal(C1b),byVal(C2b),byVal(CQ0b),byVal(CQ1b),byVal(Cpb),byVal(CQpb), param, byVal(mu_b));        
   }
+
   /// RK* observables
   double RKstar_CONV(const parameters *param, double Q2_min, double Q2_max)
   {

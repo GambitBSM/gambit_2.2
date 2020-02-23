@@ -955,7 +955,6 @@ START_MODULE
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )                                                       \
     BACKEND_REQ(BKstarmumu_CONV, (libsuperiso), Flav_KstarMuMu_obs, (const parameters*, double, double))
 
-  
   // Observable: BR(B -> K* mu mu) in q^2 bin from 0.1 GeV^2 to 0.98 GeV^2
   #define CAPABILITY BKstarmumu_0p1_0p98
     START_CAPABILITY
@@ -963,7 +962,6 @@ START_MODULE
     KSTARMUMU_BINS
     #undef FUNCTION
   #undef CAPABILITY
-
 
   // Observable: BR(B -> K* mu mu) in q^2 bin from 1.1 GeV^2 to 2.5 GeV^2
   #define CAPABILITY BKstarmumu_11_25
@@ -1623,8 +1621,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
     
-
-    
   /// HEPLike LogLikelihood Bs -> Phi mu mu Br
   #define CAPABILITY Bs2phimumuBr_LogLikelihood
   START_CAPABILITY
@@ -1647,7 +1643,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-/// HEPLike LogLikelihood for RKstar
+  /// HEPLike LogLikelihood for RKstar
   #define CAPABILITY RKstar_LogLikelihood_LHCb
   START_CAPABILITY
     #define FUNCTION HEPLike_RKstar_LogLikelihood_LHCb
@@ -1657,8 +1653,6 @@ START_MODULE
     NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
-
-
 
 
 #undef MODULE

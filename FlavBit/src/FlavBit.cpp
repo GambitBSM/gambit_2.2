@@ -43,7 +43,6 @@
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 July
 ///
-///  \date 2017 July
 ///  \author Jihyun Bhom
 ///          (jihyun.bhom@ifj.edu.pl)
 ///  \date 2019 July
@@ -863,9 +862,7 @@ namespace Gambit
 
     SI_SINGLE_PREDICTION_FUNCTION(B2taunu)
     SI_SINGLE_PREDICTION_FUNCTION(b2sgamma)
-    
     SI_SINGLE_PREDICTION_FUNCTION(B2Kstargamma)
-
     SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2phimumuBr,_1_6)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(Bs2phimumuBr,_15_19)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_0p1_0p98)
@@ -874,14 +871,13 @@ namespace Gambit
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_4_6)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_6_8)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KstarmumuBr,_15_19)
-
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_0p05_2)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_2_4p3) 
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_4p3_8p68)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_14p18_16)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_16_18)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_18_22)
-    
+
     SI_MULTI_PREDICTION_FUNCTION(B2mumu)
     SI_MULTI_PREDICTION_FUNCTION(RDRDstar)
     SI_MULTI_PREDICTION_FUNCTION_BINS(B2KstarmumuAng,_0p1_2,_Atlas)
@@ -3269,6 +3265,7 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
+
     /// HEPLike LogLikelihood B -> K+ mu mu Br (LHCb)
     void HEPLike_B2KmumuBr_LogLikelihood_LHCb(double &result)
     {
@@ -3314,7 +3311,6 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2KmumuBR_LogLikelihood_LHCb result: " << result << std::endl;
     }
-
 
     
     void HEPLike_Bs2phimumuBr_LogLikelihood(double &result)
