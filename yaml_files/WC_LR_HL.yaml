@@ -99,7 +99,7 @@ Scanner:
     de:
       plugin: diver
       like: LogLike
-      NP: 1000
+      NP: 400
       convthresh: 1e-3
 
     square_grid:
