@@ -157,7 +157,7 @@ namespace Gambit
 
       SLHAstruct spectrum;
       // Obtain SLHAea object from spectrum
-      if (ModelInUse("WC"))
+      if (ModelInUse("WC")  || ModelInUse("WC_LR") || ModelInUse("WC_LUV") )
       {
         spectrum = Dep::SM_spectrum->getSLHAea(2);
       }
@@ -516,7 +516,7 @@ namespace Gambit
          if (spectrum["TE"][max(ie,je)].is_data_line()) result.TE[ie][je]=SLHAea::to<double>(spectrum["TE"].at(ie,je)[2]);
       }
 
-      else if (ModelInUse("WC"))
+      else if (ModelInUse("WC")  || ModelInUse("WC_LR") || ModelInUse("WC_LUV") )
       {
         // The Higgs mass doesn't come through in the SLHAea object, as that's only for SLHA2 SM inputs.
         result.mass_h0 = Dep::SM_spectrum->get(Par::Pole_Mass, "h0_1");
@@ -547,7 +547,7 @@ namespace Gambit
         {
           result.mass_h0 = Dep::MSSM_spectrum->get(Par::Pole_Mass, "h0_1");
         }
-        else if (ModelInUse("WC"))
+        else if (ModelInUse("WC") || ModelInUse("WC_LUV") || ModelInUse("WC_LR") )
         {
           result.mass_h0 = Dep::SM_spectrum->get(Par::Pole_Mass, "h0_1");
         }
@@ -585,6 +585,51 @@ namespace Gambit
         result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
         result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
       }
+      if (ModelInUse("WC_LR"))
+        {
+          result.SM = 1;
+          
+          result.Re_DeltaC7  = *Param["Re_DeltaC7"];
+          result.Im_DeltaC7  = *Param["Im_DeltaC7"];
+          result.Re_DeltaC9  = *Param["Re_DeltaC9"];
+          result.Im_DeltaC9  = *Param["Im_DeltaC9"];
+          result.Re_DeltaC10 = *Param["Re_DeltaC10"];
+          result.Im_DeltaC10 = *Param["Im_DeltaC10"];
+          result.Re_DeltaCQ1 = *Param["Re_DeltaCQ1"];
+          result.Im_DeltaCQ1 = *Param["Im_DeltaCQ1"];
+          result.Re_DeltaCQ2 = *Param["Re_DeltaCQ2"];
+          result.Im_DeltaCQ2 = *Param["Im_DeltaCQ2"];
+          
+          result.Re_DeltaC7_Prime  = *Param["Re_DeltaC7_Prime"];
+          result.Im_DeltaC7_Prime  = *Param["Im_DeltaC7_Prime"];
+          result.Re_DeltaC9_Prime  = *Param["Re_DeltaC9_Prime"];
+          result.Im_DeltaC9_Prime  = *Param["Im_DeltaC9_Prime"];
+          result.Re_DeltaC10_Prime = *Param["Re_DeltaC10_Prime"];
+          result.Im_DeltaC10_Prime = *Param["Im_DeltaC10_Prime"];
+          result.Re_DeltaCQ1_Prime = *Param["Re_DeltaCQ1_Prime"];
+          result.Im_DeltaCQ1_Prime = *Param["Im_DeltaCQ1_Prime"];
+          result.Re_DeltaCQ2_Prime = *Param["Re_DeltaCQ2_Prime"];
+          result.Im_DeltaCQ2_Prime = *Param["Im_DeltaCQ2_Prime"];
+          // left handed:
+          result.deltaC[7]=result.deltaC[17]=result.deltaC[27]=std::complex<double>(result.Re_DeltaC7, result.Im_DeltaC7);
+          result.deltaC[9]=result.deltaC[19]=result.deltaC[29]=std::complex<double>(result.Re_DeltaC9, result.Im_DeltaC9);
+          result.deltaC[10]=result.deltaC[20]=result.deltaC[30]=std::complex<double>(result.Re_DeltaC10, result.Im_DeltaC10);
+
+          result.deltaCQ[1]=result.deltaCQ[3]=result.deltaCQ[5]=std::complex<double>(result.Re_DeltaCQ1, result.Im_DeltaCQ1);
+          result.deltaCQ[2]=result.deltaCQ[4]=result.deltaCQ[6]=std::complex<double>(result.Re_DeltaCQ2, result.Im_DeltaCQ2);
+
+          // right handed: 
+          result.deltaCp[7]=result.deltaCp[17]=result.deltaCp[27]=std::complex<double>(result.Re_DeltaC7_Prime, result.Im_DeltaC7_Prime); 
+          result.deltaCp[9]=result.deltaCp[19]=result.deltaCp[29]=std::complex<double>(result.Re_DeltaC9_Prime, result.Im_DeltaC9_Prime);
+          result.deltaCp[10]=result.deltaCp[20]=result.deltaCp[30]=std::complex<double>(result.Re_DeltaC10_Prime, result.Im_DeltaC10_Prime);
+
+
+
+          result.deltaCQp[1]=result.deltaCQp[3]=result.deltaCQp[5]=std::complex<double>(result.Re_DeltaCQ1_Prime, result.Im_DeltaCQ1_Prime);
+          result.deltaCQp[2]=result.deltaCQp[4]=result.deltaCQp[6]=std::complex<double>(result.Re_DeltaCQ2_Prime, result.Im_DeltaCQ2_Prime);
+          
+        }
+
       else if (ModelInUse("WC_LUV"))
       {
         result.SM = 1;
