@@ -218,8 +218,11 @@ if args.file:
                                     " your DM candidate's antiparticle also has"
                                     " to begin with a '~' for MicrOMEGAs to "
                                     "recognise it as an odd particle.\n "
-                                    "Please change the DM antiparticle name in "
-                                    " your {} file!"
+                                    "Note that the default behaviour will be "
+                                    "to just add a tilde at the end, and strip "
+                                    "any leading tilde, so add a line like:\n"
+                                    "\t    AntiParticleName -> \"~Chi\"\n "
+                                    "to your {} file!"
                                     ).format(gum.math))           
 
 

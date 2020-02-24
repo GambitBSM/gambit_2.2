@@ -298,10 +298,10 @@ namespace GUM
             // Initialise all properties we wish to find out about a particle.
             std::string name;
             std::string antiname;
-            std::string  spin;
-            std::string  fullname;
-            std::string  eaten;
-            std::string  mass;
+            std::string spin;
+            std::string fullname;
+            std::string eaten;
+            std::stringmass;
             // Needs to initialise these to suppress compiler warnings.
             int color = 1;
             int chargeX3 = 0;

@@ -321,7 +321,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
 
     # Add the antiparticle to the catalog too
-    if not dm.is_sc:
+    if not dm.is_sc():
         towrite += (
                 "addParticle(\"{1}\", {0}, {2});\n"
         ).format(dm_mass, gb_conj, dm.spinX2)
@@ -457,7 +457,7 @@ def write_darkbit_src(dm, pc, sv, ann_products, propagators,
 
     return indent(towrite)
 
-def write_dm_id(model_name, dm_id, gb_conj):
+def write_dm_id(model_name, dm_id, dm_conj):
     """
     Returns entry for DarkMatter_ID in DarkBit.
     """
@@ -466,14 +466,12 @@ def write_dm_id(model_name, dm_id, gb_conj):
             "\n"
             "void DarkMatter_ID_{0}(std::string& result)"
             "{{ result = \"{1}\"; }}"
-            "\n\n"
-    ).format(model_name, dm_id)
-    towrite = (
+            "\n"
             "\n"
             "void DarkMatterConj_ID_{0}(std::string& result)"
-            "{{ result = \"{1}\"; }}"
+            "{{ result = \"{2}\"; }}"
             "\n\n"
-    ).format(model_name, dm_conj)
+    ).format(model_name, dm_id, dm_conj)
 
     return towrite;
 
