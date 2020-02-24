@@ -135,7 +135,6 @@ if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
-    BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ${CMAKE_COMMAND} -E echo 'cp  ${dir}/HEPLikeData-master/data/ ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}' > make_hepliedata.sh
           COMMAND chmod u+x make_hepliedata.sh
@@ -159,6 +158,7 @@ if(NOT ditched_${name}_${ver})
     DEPENDS heplikedata
     DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
     CMAKE_COMMAND ${CMAKE_COMMAND} ..
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${HL_CXXFLAGS} -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
