@@ -74,7 +74,8 @@ Printer:
   printer: hdf5
   options:
     output_file: "DMEFT_C61_diver_2TeV.hdf5"
-    delete_file_on_restart: true
+    buffer_length: 10
+    delete_file_on_restart: false
     group: "/DMEFT"
 
 Scanner:

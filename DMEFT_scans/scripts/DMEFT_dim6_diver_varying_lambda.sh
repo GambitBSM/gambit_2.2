@@ -14,4 +14,4 @@
 
 module load plgrid/tools/cmake/3.12.3 plgrid/tools/intel/18.0.0 plgrid/tools/impi/2018 plgrid/libs/gsl/2.4 plgrid/libs/hdf5/1.8.19-serial plgrid/libs/eigen/3.2.7 plgrid/libs/boost/1.66.0 plgrid/tools/python/2.7.14
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
-mpiexec -outfile-pattern=runs/DMEFT_dim6_diver_varying_lambda/DMEFT_dim6_diver_varying_lambda.out-%r -errfile-pattern=runs/DMEFT_dim6_diver_varying_lambda/DMEFT_dim6_diver_varying_lambda.err-%r ./gambit -rf DMEFT_scans/yaml_files/DMEFT_dim6_diver_varying_lambda.yaml
+mpiexec -outfile-pattern=runs/DMEFT_dim6_diver_varying_lambda/DMEFT_dim6_diver_varying_lambda.out-%r -errfile-pattern=runs/DMEFT_dim6_diver_varying_lambda/DMEFT_dim6_diver_varying_lambda.err-%r ./gambit -f DMEFT_scans/yaml_files/DMEFT_dim6_diver_varying_lambda.yaml

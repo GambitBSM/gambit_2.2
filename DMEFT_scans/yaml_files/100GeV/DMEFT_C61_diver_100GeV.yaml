@@ -70,10 +70,10 @@ Priors:
 
 Printer:
 
-  printer: hdf5
+  printer: cout
   options:
     output_file: "DMEFT_C61_diver_100GeV.hdf5"
-    delete_file_on_restart: true
+    delete_file_on_restart: false
     group: "/DMEFT"
 
 Scanner:

@@ -83,7 +83,7 @@ Printer:
   printer: hdf5
   options:
     output_file: "DMEFT_CP_even_WCs_varying_lambda_diver.hdf5"
-    delete_file_on_restart: true
+    delete_file_on_restart: false
     group: "/DMEFT"
 
 Scanner:
