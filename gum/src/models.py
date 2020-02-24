@@ -56,7 +56,7 @@ def get_model_parameters(parameters):
     return model_parameters
 
 def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
-                            partlist, gambit_pdgs):
+                            partlist, gambit_pdgs, with_spheno):
     """
     Extracts the spectrum parameters out of the full parameter list
     """
@@ -64,7 +64,8 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
     # Classes make life easier
     class SpecGetAndSet:
 
-        def __init__(self, shape, size, name, getter, setter, block, index, tag):
+        def __init__(self, shape, size, name, getter, setter, block, index, 
+                     tag):
             self.shape = shape
             self.size = size
             self.name = name
@@ -84,9 +85,10 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
         par = parameters[i]
 
         # TODO: TG: Should we add parameters without block?
-        # Parameters without block break at runtime cause there's no way to access the spectrum info as internally it's a SLHA structure
+        # Parameters without block break at runtime cause there's no way to 
+        # access the spectrum info as internally it's a SLHA structure
         if par.block == None:
-          continue
+            continue
 
         # if the parameter is in MINPAR or EXTPAR or in any BLOCKIN it's not a
         # spectrum parameter
@@ -122,6 +124,9 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
         if par.tag == "Pole_Mass":
             name = par.fullparticlename
         elif par.tag == "Pole_Mixing":
+            # If not using SPheno, don't have mixing matrices as output.
+            if not with_spheno:
+                continue
             for v in params_by_block.values():
                 if not 'mixingmatrix' in v: continue
                 if par.name == "sinW2": name = par.name
@@ -146,7 +151,8 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
         if par.tag == "Pole_Mass":
             addedpdgs.append(par.index)
 
-        x = SpecGetAndSet(shape, size, name, getter, setter, block, index, par.tag)
+        x = SpecGetAndSet(shape, size, name, getter, setter, block, index, 
+                          par.tag)
         spectrum_parameters.append(x)
 
     # Go through BSM particle list and add the pole masses to the list of 
@@ -171,7 +177,8 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
         block = "MASS"
         index = abs(particle.PDG_code)
 
-        x = SpecGetAndSet("scalar", 1, name, getter, setter, block, index, "Pole_Mass")
+        x = SpecGetAndSet("scalar", 1, name, getter, setter, block, index, 
+                          "Pole_Mass")
         spectrum_parameters.append(x)
 
 
@@ -237,7 +244,7 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
     [norepeats.append(i) for i in params if not i in norepeats]
 
 
-    # Chunk this up into groups of no more than 9, so the DEFINEPARS macro works.
+    # Chunk this up into groups of no more than 9, so the DEFINEPARS macro works
     definepars = [norepeats[i:i+9] for i in range(0,len(norepeats),9)]
 
     for i in range(len(definepars)):
@@ -523,7 +530,8 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
             "const SpectrumContents::{1} contents;\n"
             "\n"
             "/// Add SLHAea object using the SimpleSpec_to_SLHAea routine\n"
-            "void add_to_SLHAea(int /*slha_version*/, SLHAea::Coll& slha) const\n"
+            "void add_to_SLHAea(int /*slha_version*/, SLHAea::Coll& slha) "
+            "const\n"
             "{{\n"
             "// Add SPINFO data if not already present\n"
             "SLHAea_add_GAMBIT_SPINFO(slha);\n"
@@ -621,7 +629,9 @@ def add_to_registered_spectra(gambit_model):
     """
 
     lookup = "SubSpectrumContents"
-    newentry = "    struct {0:21}: SubSpectrumContents {{ {0}(); }};\n".format(gambit_model)
+    newentry = (
+             "    struct {0:21}: SubSpectrumContents {{ {0}(); }};\n"
+    ).format(gambit_model)
     filename = "SpectrumContents/RegisteredSpectra.hpp"
     module = "Models"
     location = full_filename(filename, module)
@@ -631,6 +641,7 @@ def add_to_registered_spectra(gambit_model):
             if lookup in line:
                 linenum = num
             if newentry in line:
-                raise GumError(("\n\nModel {0} already exists in GAMBIT.").format(gambit_model))
+                raise GumError(("\n\nModel {0} already exists in GAMBIT."
+                               ).format(gambit_model))
 
     return newentry, linenum

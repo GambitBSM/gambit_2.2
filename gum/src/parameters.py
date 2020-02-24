@@ -304,80 +304,59 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
 
             name = p.name()
 
-            # TODO: TG: This is causing problems, and I don't think is really neded, 
-            # store the parameter names as it is and get the particle name only when needed
-            '''
-            if tag == "Pole_Mixing":
-                found = False
-                
-                # Throw an error if we don't know what the mixing matrix is.
-                if not name in mixingdict:
-                    raise GumError(("Could not find which particle "\
-                                    "eigenstates the mixing matrix {0} "\
-                                    "couples to!")).format(name)
-
-                entry = mixingdict[name]
-
-                for particle in particles:
-
-                    # Strip numbers and try to align particles
-                    tomatch = ''.join([i for i in particle.alt_name()
-                                       if not i.isdigit()])
-                
-                    if tomatch in entry:
-                        name = pdg_to_particle(particle.pdg(), 
-                                               gambit_pdgs).split('_')[0]
-                        found = True
-                        continue
-
-            if name in addedpars: 
-                continue
-            else:
-                addedpars.append(name)
-            '''
             # If the parameter has a boundary condition, share the default value
             default = p.defvalue()
-            if name in bcs.keys(): 
-              default = [param.defvalue() for param in paramlist if param.name() == bcs[name] or param.alt_name() == bcs[name]][0]
-            elif p.alt_name() in bcs.keys():
-              default = [param.defvalue() for param in paramlist if param.name() == bcs[alt_name] or param.alt_name() == bcs[alt_name]][0]
 
-            # If there are more than one parameter with the same name, take the not default one
+            # TODO does not seem to work for SARAH: SSDM (w/ just spheno):
+            # The list default = [ ... ] has zero length 
+            # if name in bcs.keys(): 
+            #     default = [param.defvalue() for param in paramlist if param.name() == bcs[name] or param.alt_name() == bcs[name]][0]
+            # elif p.alt_name() in bcs.keys():
+            #     default = [param.defvalue() for param in paramlist if param.name() == bcs[p.alt_name()] or param.alt_name() == bcs[p.alt_name()]][0]
+
+            # If there are more than one parameter with the same name, take 
+            # the not default one
             if default == 0.1:
-                other_defaults = [param.defvalue() for param in paramlist if param.name() == name or param.alt_name() == name]
+                other_defaults = [param.defvalue() for param in paramlist if 
+                                  param.name() == name or 
+                                  param.alt_name() == name]
                 default = [d for d in other_defaults if d != 0.1]
                 if default:
                     default = default[0]
                 else: 
                     default = 0.1
 
-
             # Create a new instance of SpectrumParameter
-            # TODO: still need to find mass dimension for parameters that aren't
-            # pole masses and pole mixings. 
             x = SpectrumParameter(name, tag, block=p.block(),
                                   index=p.index(), alt_name = p.alt_name(),
                                   bcs = p.bcs(), shape = p.shape(), 
-                                  is_output = p.is_output(), is_real = p.is_real(),
-                                  default = default)
+                                  is_output = p.is_output(), 
+                                  is_real = p.is_real(), default = default)
             params.append(x)
-
-    # Now all of the parameters have been extracted, look to see if any of them
-    # are elements of a matrix.
     
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
-        params.append(SpectrumParameter("vev", "mass1", shape="scalar", sm=True, is_real=True))
+        params.append(SpectrumParameter("vev", "mass1", shape="scalar", 
+                                        sm=True, is_real=True))
 
-    # Add gauge couplings and Yukawas here? TODO: check! 
-    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", index=1, shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", index=2, shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", index=3, shape="scalar", sm=True, is_real=True))
-    params.append(SpectrumParameter("sinW2", "Pole_Mixing", shape="scalar", sm=True, is_real=True))
+    params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", 
+                                    index=1, shape="scalar", sm=True, 
+                                    is_real=True))
+    params.append(SpectrumParameter("g2", "dimensionless", block="GAUGE", 
+                                    index=2, shape="scalar", sm=True, 
+                                    is_real=True))
+    params.append(SpectrumParameter("g3", "dimensionless", block="GAUGE", 
+                                    index=3, shape="scalar", sm=True, 
+                                    is_real=True))
+    params.append(SpectrumParameter("sinW2", "Pole_Mixing", shape="scalar", 
+                                    sm=True, is_real=True))
     # TODO: TG: Yukawas do not seem to be real, at least for the test model
-    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", shape="m3x3", sm=True, is_real=False))
-    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", shape="m3x3", sm=True, is_real=False))
-    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", shape="m3x3", sm=True, is_real=False))
+    params.append(SpectrumParameter("Yd", "dimensionless", block="YD", 
+                                    shape="m3x3", sm=True, is_real=False))
+    params.append(SpectrumParameter("Yu", "dimensionless", block="YU", 
+                                    shape="m3x3", sm=True, is_real=False))
+    params.append(SpectrumParameter("Ye", "dimensionless", block="YE", 
+                                    shape="m3x3", sm=True, is_real=False))
     
     return params
 
@@ -476,8 +455,8 @@ def spheno_dependencies(sphenodeps):
     # each p is an instance of SARAHParameter
     for p in sphenodeps:
 
+        # Don't need the block. index etc, we're using internal SPheno params
         name = p.name() # As known to SPheno
-        # Don't need the block. index etc, we're using internal SPheno params here
 
         description = p.alt_name()
 

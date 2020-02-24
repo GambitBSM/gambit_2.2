@@ -74,8 +74,6 @@ class Outputs:
     def __init__(self, mathpackage, calchep = False, pythia = False,
                  micromegas = False, spheno = False,
                  vevacious = False, ufo = False, options = {}):
-#                  , collider_processes = None, 
-#                 multiparticles = None, pythia_groups = None):
 
         self.ch = calchep
         self.pythia = pythia
@@ -83,9 +81,6 @@ class Outputs:
         self.spheno = spheno
         self.vev = vevacious
         self.ufo = ufo
-#        self.collider_processes = collider_processes
-#        self.multiparticles = multiparticles
-#        self.pythia_groups = pythia_groups
         self.options = options
 
         # Overwrite these, as the output does not exist.
@@ -154,7 +149,7 @@ def check_gum_file(inputfile):
                             "what it is you'd like it to do!\n"
                             "Please change your .gum file!"))
 
-    print("Parse successful.")
+    print("All required YAML nodes present...")
 
     return data
 
@@ -165,21 +160,23 @@ def fill_gum_object(data):
     """
 
     math = data['math']
-    if 'lagrangian' in data['math']:
-        # Check the Lagrangian makes sense (i.e. is all alphanumeric)
-        lagrangian = data['math']['lagrangian']
-        L = lagrangian.split('+')
-        for l in L:
-            if not l.strip(' ').isalnum():
-                raise GumError(("Non-alphanumeric character detected in "
-                                " the Lagrangian. Please check your .gum "
-                                "file."))
-    else:
-        raise GumError(("\n\nYou must specify the Lagrangian for your model!\n"
-                        "This can be either a single entry like 'LTotal', "
-                        "or a sum of strings, like 'LSM + LDM'. Please amend "
-                        "your .gum file."))
     mathpackage = math['package']
+    lagrangian = ""
+    if mathpackage == "feynrules":
+        if 'lagrangian' in data['math']:
+            # Check the Lagrangian makes sense (i.e. is all alphanumeric)
+            lagrangian = data['math']['lagrangian']
+            L = lagrangian.split('+')
+            for l in L:
+                if not l.strip(' ').isalnum():
+                    raise GumError(("Non-alphanumeric character detected in "
+                                    " the Lagrangian. Please check your .gum "
+                                    "file."))
+        else:
+            raise GumError(("\n\nYou must specify the Lagrangian for your "
+                            "model!\n This can be either a single entry like "
+                            "'LTotal', or a sum of strings, like 'LSM + LDM'. "
+                            "Please amend your .gum file."))
 
     gambit_model = math['model']
 
@@ -229,13 +226,6 @@ def fill_gum_object(data):
                                 "Please change your .gum file."))
             options[output] = data['output_options'][output]
 
-        #if 'collider_processes' in data['output']:
-        #    opts['collider_processes'] = data['output']['collider_processes']
-        #if 'multiparticles' in data['output']:
-        #    opts['multiparticles'] = data['output']['multiparticles']
-        #if 'pythia_groups' in data['output']:
-        #    opts['pythia_groups'] = data['output']['pythia_groups']
-
     # If we've got this far, we'll also force some decays to be written,
     # either by SPheno or by CalcHEP.
     # N.B. vevacious is conditional on SPheno
@@ -244,7 +234,8 @@ def fill_gum_object(data):
     set_calchep = True
     if mathpackage == 'sarah' and opts['spheno'] == True:
         set_calchep = False
-    if set_calchep: opts['calchep'] = True
+    if set_calchep: 
+        opts['calchep'] = True
     
     outputs = Outputs(mathpackage, options=options, **opts)
 
@@ -264,6 +255,7 @@ def fill_gum_object(data):
     gum_info = Inputs(gambit_model, base_model, mathpackage, 
                       wimp_candidate, mathname, lagrangian, restriction)
 
+    print("Parse successful.")
 
     return gum_info, outputs
 
@@ -274,7 +266,7 @@ FEYNRULES PARSING
 def parse_feynrules_model_file(fr_file_path, outputs):
     """
     Parses a FeynRules model file. Checks for the following:
-        - Every parameter has an LH block and an
+        - Every parameter has an LH block and an index
         - No particles have an external name with underscores etc.
         - Every parameter has an interaction order specified *if* the user
           requests UFO output
@@ -424,3 +416,14 @@ def parse_feynrules_model_file(fr_file_path, outputs):
                             "please give it one in your .fr file, as "
                             "GUM and GAMBIT need this information."
                             ).format(particles[i]))
+
+
+def parse_sarah_model_file(fr_file_path, outputs):
+    """
+    Parses a SARAH model file. Checks for the following:
+        - ...
+    """
+
+    # Read the input in
+    with open(sarah_file_path, 'r') as f:
+        lines = f.readlines()
