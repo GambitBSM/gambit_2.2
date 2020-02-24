@@ -153,8 +153,6 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 for i in xrange(int(x)):
                     for j in xrange(int(y)):
 
-                        #"SLHAea_add(slha, \"YE\", 1, 1, sqrt2v*sminputs.mE, \"e\");\n"
-
                         towrite += (
                                 "SLHAea_add(slha, \"{0}\", {1}, {2}, "
                                 "*myPipe::Param[\"{0}{1}x{2}\"], " 
@@ -181,66 +179,6 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
             towrite += (
                     "SLHAea_add(slha, \"MASS\", {0}, *myPipe::Param[\"{1}\"]);\n"
             ).format(particle.PDG_code, mass)
-
-
-        # TODO for matrices
-
-        # # Now add each BSM model parameter to spectrum
-        # for i in range(0, len(model_parameters)):
-        
-        #     par = model_parameters[i] 
-
-        #     # Don't have anything that's an output of spectrum computation as 
-        #     # a scan parameter
-        #     if par.is_output: continue
-          
-        #     if not isinstance(par, SpectrumParameter):
-        #         raise GumError(("\n\nModel Parameters at position " + i + 
-        #                         "not passed as instance of class "
-        #                         "SpectrumParameter."))
-              
-        #     if not par.sm:
-                
-        #         # If it's a pole mass then append this information onto the
-        #         # parameter name
-        #         toadd = "_Pole_Mass" if par.tag == "Pole_Mass" else ""
-        #         shape = "scalar"
-        #         size = 1
-
-        #         if model_parameters[i].shape:
-        #             if re.match("v[2-9]", par.shape):
-        #                 shape = "vector"
-        #                 size = par.shape[-1]
-        #             elif re.match("m[2-9]x[2-9]", par.shape):
-        #                 # Assuming all matrices will be square...
-        #                 shape = "matrix"
-        #                 size = par.shape[-1]
-
-        #         e = par.fullname[1:].strip('~') if par.tag == "Pole_Mass" else par.fullname
-
-        #         # If it's a scalar shape, just add it one by one
-        #         if shape == "scalar":
-        #             towrite += (
-        #                     "{0}.{1}_{2}{3} = *myPipe::Param[\"{4}\"];\n"
-        #             ).format(modelcont, gambit_model_name, e, toadd, par.gb_in)
-
-        #         # If it's a matrix then do each element individually
-        #         elif shape == "matrix":
-        #             for i in xrange(int(size)):
-        #                 for j in xrange(int(size)):
-        #                     towrite += (
-        #                         "{0}.{1}_{2}{3}[{4}][{5}] = *myPipe::Param[\"{6}{7}x{8}\"];\n"
-        #                     ).format(modelcont, gambit_model_name, e, toadd, i, j, par.gb_in, i+1, j+1)
-
-        #         # Same deal for a vector
-        #         elif shape == "vector":
-        #           for i in xrange(int(size)):
-        #               towrite += (
-        #                       "{0}.{1}_{2}{3}[{4}] = *myPipe::Param[\"{5}{6}\"];\n"
-        #                   ).format(modelcont, gambit_model_name, e, toadd, i, par.gb_in, i+1)
-
-        #         else:
-        #             raise GumError("Parameter with shape " + shape + " is not currently supported.")
 
         if add_higgs:
             towrite += add_simple_sminputs(modelcont)
@@ -400,6 +338,17 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
             "\n"
     ).format(model_name)
 
+    # Add a conditional Higgs dependency if necessary
+    if add_higgs:
+       modelentry = (
+                "ALLOW_MODEL_DEPENDENCE(StandardModel_Higgs, {0})\n"
+                "MODEL_GROUP(higgs, (StandardModel_Higgs))\n"
+                "MODEL_GROUP({1}, ({0}))\n"
+                "ALLOW_MODEL_COMBINATION(higgs, {1})\n"
+        ).format(model_name, model_name + "_group")
+    else:
+        modelentry = "    ALLOW_MODELS({0})\n"
+
     if with_spheno:
         towrite += dumb_indent(4, (
                 "// =========================\n"
@@ -407,37 +356,25 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
                 "//\n"
                 "#define FUNCTION get_{0}_spectrum_SPheno\n"
                 "START_FUNCTION(Spectrum)\n"
-                "ALLOW_MODELS({0})\n"
+                "{3}"
                 "DEPENDENCY(SMINPUTS, SMInputs)\n"
-                "BACKEND_REQ(SARAHSPheno_{0}_spectrum, (libSPheno{2}), int, (Spectrum&, const Finputs&) )\n"
+                "BACKEND_REQ(SARAHSPheno_{0}_spectrum, (libSPheno{2}), int, "
+                "(Spectrum&, const Finputs&) )\n"
                 "BACKEND_OPTION((SARAHSPheno_{0}, {1}), (libSPheno{2}))\n"
                 "#undef FUNCTION\n"
                 "\n"
-        ).format(model_name, SPHENO_VERSION, clean_model_name))
+        ).format(model_name, SPHENO_VERSION, clean_model_name, modelentry))
     # If we want to make a simple container spectrum only.
     else:
-        towrite += (
-            "    // Create simple object from SMInputs & new params.\n"
-            "    #define FUNCTION get_{0}_spectrum\n"
-            "    START_FUNCTION(Spectrum)\n"
-            "    DEPENDENCY(SMINPUTS, SMInputs)\n"
-        ).format(model_name)
-
-        # Add a conditional Higgs dependency if necessary
-        if add_higgs:
-            towrite += (
-                    "    ALLOW_MODEL_DEPENDENCE(StandardModel_Higgs, {0})\n"
-                    "    MODEL_GROUP(higgs, (StandardModel_Higgs))\n"
-                    "    MODEL_GROUP({1}, ({0}))\n"
-                    "    ALLOW_MODEL_COMBINATION(higgs, {1})\n"
-            ).format(model_name, model_name + "_group")
-        else:
-            towrite += "    ALLOW_MODELS({0})\n"
-
-        towrite +=(
-                "    #undef FUNCTION\n"
-                "\n"
-        )
+        towrite += dumb_indent(4, (
+            "// Create simple object from SMInputs & new params.\n"
+            "#define FUNCTION get_{0}_spectrum\n"
+            "START_FUNCTION(Spectrum)\n"
+            "DEPENDENCY(SMINPUTS, SMInputs)\n"
+            "{1}"
+            "#undef FUNCTION\n"
+            "\n"
+        ).format(model_name, modelentry))
 
     towrite += (
         "    // Map for Spectrum, for printing.\n"
@@ -529,7 +466,7 @@ def add_simple_sminputs(model):
     """
     Adds simple SMInputs definitions to a spectrum object.
     """
-      
+    # TODO from SARAH, Higgs vev gets added automatically (?)
     towrite = (
             "\n"
             "// quantities needed to fill container spectrum\n"
@@ -541,27 +478,6 @@ def add_simple_sminputs(model):
             "double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
             "double sqrt2v = pow(2.0,0.5)/vev;\n"
             "\n"
-    )
-    # towrite = (
-    #         "// Gauge couplings\n"
-    #         "{0}.vev = vev;\n"
-    #         "{0}.g1 = sqrt(5/3) * e / sqrt(cosW2);\n"    
-    #         "{0}.g2 = e / sqrt(sinW2);\n"    
-    #         "{0}.g3 = pow( 4*pi*( sminputs.alphaS ),0.5);\n" 
-    #         "\n"
-    #         "// Yukawas\n"
-    #         "{0}.Yu[0][0] = sqrt2v * sminputs.mU;\n"
-    #         "{0}.Yu[1][1] = sqrt2v * sminputs.mCmC;\n"
-    #         "{0}.Yu[2][2] = sqrt2v * sminputs.mT;\n"
-    #         "{0}.Ye[0][0] = sqrt2v * sminputs.mE;\n"
-    #         "{0}.Ye[1][1] = sqrt2v * sminputs.mMu;\n"
-    #         "{0}.Ye[2][2] = sqrt2v * sminputs.mTau;\n"
-    #         "{0}.Yd[0][0] = sqrt2v * sminputs.mD;\n"
-    #         "{0}.Yd[1][1] = sqrt2v * sminputs.mS;\n"
-    #         "{0}.Yd[2][2] = sqrt2v * sminputs.mBmB;\n"
-    # ).format(model)
-
-    towrite += (
             "SLHAea_add_block(slha, \"GAUGE\");\n"
             "SLHAea_add(slha, \"GAUGE\", 1, sqrt(5/3) * e / sqrt(cosW2) );\n"
             "SLHAea_add(slha, \"GAUGE\", 2, e / sqrt(sinW2));\n"

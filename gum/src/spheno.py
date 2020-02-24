@@ -1344,8 +1344,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 "(*{0}2){1} = pow((*{0}){1}, 2);\n"
         ).format(mass, brace, specmass)
 
-    print variables
-
     # Check to see if "MVWm" or "MVWp" is used by the routines; this seems
     # to change model-to-model. Let's see.
     if "MVWm" in variables:
@@ -1825,9 +1823,20 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 "slha[\"MASS\"][\"\"] << {0} << (*{1}){2} << \"# {3}_{4}\";\n"
         ).format(abs(particle.PDG_code), mass, brace, particle.name, str(index))
 
+    # Add the W and Z mass
     towrite +=  (
             "slha[\"MASS\"][\"\"] << 23 << *MVZ << \"# VZ\";\n"
-            "slha[\"MASS\"][\"\"] << 24 << *MVWm << \"# VWm\";\n"
+    )
+    if "MVWm" in variables:
+      towrite += (
+              "slha[\"MASS\"][\"\"] << 24 << *MVWm << \"# VWm\";\n"
+      )
+    elif "MVWp" in variables:
+      towrite += (
+              "slha[\"MASS\"][\"\"] << 24 << *MVWp << \"# VWp\";\n"
+      )
+    
+    towrite += (
             "\n"
             "// Check whether any of the masses is NaN\n"
             "auto block = slha[\"MASS\"];\n"
