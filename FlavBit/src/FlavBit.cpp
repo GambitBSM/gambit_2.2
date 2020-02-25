@@ -76,7 +76,7 @@
 #include "gambit/cmake/cmake_variables.hpp"
 
 
-#define FLAVBIT_DEBUG
+//#define FLAVBIT_DEBUG
 //#define FLAVBIT_DEBUG_LL
 
 namespace YAML
@@ -1001,7 +1001,6 @@ namespace Gambit
     void SI_theory_covariance_SM(flav_covariance_map& result)
     {
       static bool first=false;
-      cout<<"First: "<<first<<endl;
 
       if(first) return;
       using namespace Pipes::SI_theory_covariance_SM;
