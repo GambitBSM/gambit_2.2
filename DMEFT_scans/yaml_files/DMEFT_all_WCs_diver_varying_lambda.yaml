@@ -89,6 +89,7 @@ Printer:
   printer: hdf5
   options:
     output_file: "DMEFT_all_WCs_varying_lambda_diver.hdf5"
+    buffer_length: 50
     delete_file_on_restart: false
     group: "/DMEFT"
 
@@ -245,4 +246,4 @@ KeyValues:
   default_output_path: "runs/DMEFT_all_WCs_varying_lambda_diver/"
 
   debug: false
-  print_timing_data: true
+  print_timing_data: false

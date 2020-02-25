@@ -73,6 +73,7 @@ Printer:
 
   printer: hdf5
   options:
+    buffer_length: 50
     output_file: "DMEFT_C71_diver_2TeV.hdf5"
     delete_file_on_restart: false
     group: "/DMEFT"
@@ -230,4 +231,4 @@ KeyValues:
   default_output_path: "runs/DMEFT_C71_diver_2TeV/"
 
   debug: false
-  print_timing_data: true
+  print_timing_data: false

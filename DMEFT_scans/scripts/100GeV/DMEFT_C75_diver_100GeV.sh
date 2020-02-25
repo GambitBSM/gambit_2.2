@@ -2,8 +2,8 @@
 #
 #SBATCH -N 20                              # Number of nodes
 #SBATCH --ntasks-per-node 8                # Number of MPI processes per node.
-#SBATCH -c 3                               # Number of cores per MPI process.
-#SBATCH -t 3-00:00                         # Runtime in D-HH:MM
+#SBATCH -c 1                               # Number of cores per MPI process.
+#SBATCH -t 0-05:00                         # Runtime in D-HH:MM
 #SBATCH -p plgrid                          # Partition to submit to
 #SBATCH -A gambitv5                        # Account to charge
 #SBATCH --signal=SIGUSR1@300                                           # Signal and time before walltime to send
