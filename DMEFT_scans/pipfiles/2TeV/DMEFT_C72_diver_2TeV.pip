@@ -75,7 +75,7 @@ quantity_labels = 0:'lnlike'      \
                   77:'$C_{7}^{(7)}$' \
                   78:'$C_{8}^{(7)}$' \
                   79:'$C_{9}^{(7)}$' \
-                  710:'$C_{10}^{(7)}$' \
+                  70:'$C_{10}^{(7)}$' \
                   100:'$\log_{10}\left(\sigma v / \mathrm{cm}^3s^{-1}\right)$'\
                   102:'$\log_{10}\left(\sigma v \cdot f^2 / \mathrm{cm}^3s^{-1}\right)$'\
                   119:'$\mathcal{L}_{\mathrm{DD}}$'\
