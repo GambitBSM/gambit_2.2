@@ -9,7 +9,7 @@ do_profile_like = T                         ;Parse, script or plot chain into pr
 oneD_contour_levels = 68.3 95.4             ;Contour levels to plot in 1D plots (EFN; script operation ignores actual values)
 twoD_contour_levels = 68.3 95.4             ;Contour levels to plot in 2D plots (EFN; script operation ignores actual values)
 oneD_plot_quantities = 3           ;Parameters/observables to construct 1D plots of (EFN)
-twoD_plot_quantities = {1,73}   ;Parameters/observable combinations to make 2D plots of (EFN)
+twoD_plot_quantities = {1,23}   ;Parameters/observable combinations to make 2D plots of (EFN)
 plot_observables =
 
 -------------------------------
@@ -37,48 +37,48 @@ preamble =                                  ;A one-line python preamble to run b
 assign_to_pippi_datastream = 'LogLike':0 \
                              '#DMEFT_parameters @DMEFT::primary_parameters::mchi':1 \
                              '#DMEFT_parameters @DMEFT::primary_parameters::Lambda':2 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C61':61 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C62':62 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C63':63 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C64':64 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C71':71 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C72':72 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C73':73 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C74':74 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C75':75 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C76':76 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C77':77 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C78':78 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C79':79 \
-                             '#DMEFT_parameters @DMEFT::primary_parameters::C710':70 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C61':11 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C62':12 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C63':13 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C64':14 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C71':21 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C72':22 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C73':23 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C74':24 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C75':25 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C76':26 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C77':27 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C78':28 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C79':29 \
+                             '#DMEFT_parameters @DMEFT::primary_parameters::C710':20 \
                              '#RD_oh2 @DarkBit::RD_oh2_general':3 \
                              '#lnL_oh2 @DarkBit::lnL_oh2_upperlimit':4 \
-                             '#sigmav @DarkBit::sigmav_late_universe':100 \
-                             '#lnL_FermiLATdwarfs @DarkBit::lnL_FermiLATdwarfs_gamLike':101 \
-                             '#LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike':99 \
+                             '#sigmav @DarkBit::sigmav_late_universe':50 \
+                             '#lnL_FermiLATdwarfs @DarkBit::lnL_FermiLATdwarfs_gamLike':51 \
+                             '#LHC_Combined_LogLike @ColliderBit::calc_combined_LHC_LogLike':52 \
 
                                             ;Assign a python function or named hdf5 data stream to a particular pippi datastream index (use pippi probe to test; EFN)
 quantity_labels = 0:'lnlike'      \
-                  1:'$\log_{10}\left(m_\chi/\mathrm{GeV}\right)$' \
+                  1:'$m_\chi/\mathrm{GeV}$' \
                   2:'$\log_{10}\left(Lambda/\mathrm{GeV}\right)$' \
                   3:'$\log_{10}\Omega h^2$' \
-                  61:'$C_{1}^{(6)}$' \
-                  62:'$C_{2}^{(6)}$' \
-                  63:'$C_{3}^{(6)}$' \
-                  64:'$C_{4}^{(6)}$' \
-                  71:'$C_{1}^{(7)}$' \
-                  72:'$C_{2}^{(7)}$' \
-                  73:'$C_{3}^{(7)}$' \
-                  74:'$C_{4}^{(7)}$' \
-                  75:'$C_{5}^{(7)}$' \
-                  76:'$C_{6}^{(7)}$' \
-                  77:'$C_{7}^{(7)}$' \
-                  78:'$C_{8}^{(7)}$' \
-                  79:'$C_{9}^{(7)}$' \
-                  70:'$C_{10}^{(7)}$' \
-                  100:'$\log_{10}\left(\sigma v / \mathrm{cm}^3s^{-1}\right)$'\
-                  102:'$\log_{10}\left(\sigma v \cdot f^2 / \mathrm{cm}^3s^{-1}\right)$'\
-                  119:'$\mathcal{L}_{\mathrm{DD}}$'\
+                  11:'$C_{1}^{(6)}$' \
+                  12:'$C_{2}^{(6)}$' \
+                  13:'$C_{3}^{(6)}$' \
+                  14:'$C_{4}^{(6)}$' \
+                  21:'$C_{1}^{(7)}$' \
+                  22:'$C_{2}^{(7)}$' \
+                  23:'$C_{3}^{(7)}$' \
+                  24:'$C_{4}^{(7)}$' \
+                  25:'$C_{5}^{(7)}$' \
+                  26:'$C_{6}^{(7)}$' \
+                  27:'$C_{7}^{(7)}$' \
+                  28:'$C_{8}^{(7)}$' \
+                  29:'$C_{9}^{(7)}$' \
+                  20:'$C_{10}^{(7)}$' \
+                  50:'$\log_{10}\left(\sigma v / \mathrm{cm}^3s^{-1}\right)$'\
+                  51:'$\log_{10}\left(\sigma v \cdot f^2 / \mathrm{cm}^3s^{-1}\right)$'\
+                  52:'$\mathcal{L}_{\mathrm{DD}}$'\
 
                                                                           ;labels to apply to different pippi datastream indices (LaTeX for all but multiplicity, prior and likelihood)
 -------------------------------
@@ -96,7 +96,7 @@ legend_on_2D =                      ;2D plots that should include legends
 legend_locations_2D =           ;Locations of legends for 2D plots (single location or partial list that will be filled in with 'bl')
 key_on_2D =                          ;2D plots that should include keys for best fit, posterior mean and/or reference pt
 key_locations_2D =              ;Locations of keys for 2D plots
-plot_colourbar_2D =  {1,73}                   ;2D plots that should include colourbars
+plot_colourbar_2D =  {1,23}                   ;2D plots that should include colourbars
 
 plot_comparison = F                         ;Overplot distributions from comparisonFilename in 1D plots and contours in 2D plots
 extra_legend_lines =                        ;Additional text lines to be included in any legends (EFN)
