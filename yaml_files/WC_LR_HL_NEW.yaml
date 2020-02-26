@@ -194,7 +194,7 @@ Rules:
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 
-  - capability: B2KstarmumuAng_LogLikelihood_LHCb
+  - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 

@@ -3266,7 +3266,7 @@ namespace Gambit
  /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
     void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020(double &result)
     {
-      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
+      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020;
       static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/NAME_q2_";
       static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
       static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
