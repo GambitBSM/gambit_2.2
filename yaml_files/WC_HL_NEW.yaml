@@ -39,7 +39,7 @@ Parameters:
   StandardModel_Higgs:
     mH: 125.09
 
-  WC_LR:
+  WC:
     Re_DeltaC7:
       range: [-0.5, 0.5]
     Im_DeltaC7:  0
@@ -53,21 +53,6 @@ Parameters:
     Im_DeltaCQ1: 0
     Re_DeltaCQ2: 0
     Im_DeltaCQ2: 0
-    Re_DeltaC7_Prime:
-      range: [-0.5, 0.5]
-    Im_DeltaC7_Prime:  0
-    Re_DeltaC9_Prime:
-      range: [-3, 3]
-    Im_DeltaC9_Prime:  0
-    Re_DeltaC10_Prime:
-      range: [-3, 3]
-    Im_DeltaC10_Prime: 0
-    Re_DeltaCQ1_Prime: 0
-    Im_DeltaCQ1_Prime: 0
-    Re_DeltaCQ2_Prime: 0
-    Im_DeltaCQ2_Prime: 0
-            
-
 
 
 Priors:
@@ -135,7 +120,7 @@ ObsLikes:
     capability: B2KstarmumuAng_LogLikelihood_Belle
 
   - purpose:    LogLike
-    capability: B2KstarmumuAng_LogLikelihood_LHCb
+    capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
 
   - purpose:    LogLike
     capability: B2KstarmumuBr_LogLikelihood_LHCb
@@ -232,6 +217,6 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/WC_LR_HL"
+  default_output_path: "runs/WC_HL"
 
   debug: true

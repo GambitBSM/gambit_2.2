@@ -3263,6 +3263,53 @@ namespace Gambit
 
       if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb result: " << result << std::endl;
     }
+ /// HEPLike LogLikelihood B -> K* mu mu Angular (LHCb)
+    void HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020(double &result)
+    {
+      using namespace Pipes::HEPLike_B2KstarmumuAng_LogLikelihood_LHCb;
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Bd2KstarMuMu_Angular/NAME_q2_";
+      static std::vector<str> obs_list = runOptions->getValue<std::vector<str>>("obs_list");
+      static std::vector<HepLike_default::HL_nDimGaussian> nDimGaussian = {
+        HepLike_default::HL_nDimGaussian(inputfile + "0.1_0.98.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "1.1_2.5.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "2.5_4.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "4.0_6.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "6.0_8.0.yaml"),
+        HepLike_default::HL_nDimGaussian(inputfile + "15.0_19.yaml"),
+      };
+
+      static bool first = true;
+      if (first)
+      {
+        for (unsigned int i = 0; i < nDimGaussian.size(); i++)
+        {
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << i << endl;
+          nDimGaussian[i].Read();
+        }
+        update_obs_list(obs_list, nDimGaussian[0].GetObservables());
+        first = false;
+      }
+
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_B2KstarmumuAng_0p1_0p98_LHCb,
+        *Dep::prediction_B2KstarmumuAng_1p1_2p5_LHCb,
+        *Dep::prediction_B2KstarmumuAng_2p5_4_LHCb,
+        *Dep::prediction_B2KstarmumuAng_4_6_LHCb,
+        *Dep::prediction_B2KstarmumuAng_6_8_LHCb,
+        *Dep::prediction_B2KstarmumuAng_15_19_LHCb,
+      };
+
+      result = 0;
+      for (unsigned int i = 0; i < nDimGaussian.size(); i++)
+      {
+        result += nDimGaussian[i].GetLogLikelihood(get_obs_theory(prediction[i], obs_list), get_obs_covariance(prediction[i], obs_list));
+      }
+
+      if (flav_debug) std::cout << "HEPLike_B2KstarmumuAng_LogLikelihood_LHCb 2020 result: " << result << std::endl;
+    }
+
+
+    
 
     /// HEPLike LogLikelihood B -> K* mu mu Br (LHCb)
     void HEPLike_B2KstarmumuBr_LogLikelihood_LHCb(double &result)
