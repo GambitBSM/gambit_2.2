@@ -59,7 +59,7 @@ assign_to_pippi_datastream = 'LogLike':0 \
 
                                             ;Assign a python function or named hdf5 data stream to a particular pippi datastream index (use pippi probe to test; EFN)
 quantity_labels = 0:'lnlike'      \
-                  1:'$m_\chi/\mathrm{GeV}$' \
+                  1:'$\log_{10}\left(m_\chi/\mathrm{GeV}\right)$' \
                   2:'$\log_{10}\left(Lambda/\mathrm{GeV}\right)$' \
                   3:'$\log_{10}\Omega h^2$' \
                   11:'$C_{1}^{(6)}$' \
