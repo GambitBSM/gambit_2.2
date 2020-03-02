@@ -104,6 +104,24 @@ ObsLikes:
   - purpose:    LogLike
     capability: B2mumu_LogLikelihood_LHCb
 
+  - purpose:    Observable
+  - capability: prediction_B2KstarmumuAng_0p1_0p98_LHCb
+
+  - purpose:    Observable
+  - capability: prediction_B2KstarmumuAng_1p1_2p5_LHCb
+
+  - purpose:    Observable
+  - capability: prediction_B2KstarmumuAng_2p5_4_LHCb
+
+  - purpose:    Observable
+  - capability: prediction_B2KstarmumuAng_4_6_LHCb
+
+  - purpose:    Observable
+  - capability: prediction_B2KstarmumuAng_6_8_LHCb
+
+  - purpose:    Observable
+  - capability: prediction_B2KstarmumuAng_15_19_LHCb
+
   - purpose:    LogLike
     capability: B2mumu_LogLikelihood_CMS
 
