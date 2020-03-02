@@ -347,7 +347,7 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
                 "ALLOW_MODEL_COMBINATION(higgs, {1})\n"
         ).format(model_name, model_name + "_group")
     else:
-        modelentry = "    ALLOW_MODELS({0})\n"
+        modelentry = "ALLOW_MODELS("+model_name+")\n"
 
     if with_spheno:
         towrite += dumb_indent(4, (
