@@ -72,7 +72,7 @@
 ///
 ///  \author Iñigo Saez Casares
 ///          (i.saezcasares@uq.edu.au)
-///  \date 2019 December
+///  \date 2019 Dec
 ///
 ///  *********************************************
 
@@ -1520,41 +1520,56 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormHP_Lik_INTEGRAL
+  #define CAPABILITY lnL_INTEGRAL
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormHP_Lik_INTEGRAL
+    #define FUNCTION calc_lnL_INTEGRAL
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormHP)
     DEPENDENCY(initial_density, double)
     DEPENDENCY(decay_rate_2photons, double)
     DEPENDENCY(DM_mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormHP_Lik_HEAO
+  #define CAPABILITY lnL_HEAO
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormHP_Lik_HEAO
+    #define FUNCTION calc_lnL_HEAO
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormHP)
     DEPENDENCY(initial_density, double)
     DEPENDENCY(decay_rate_2photons, double)
     DEPENDENCY(DM_mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY Ls
+  #define CAPABILITY solar_DM_luminosity
   START_CAPABILITY
-    #define FUNCTION calc_Ls
+    #define FUNCTION SuperRenormHP_solar_luminosity
     START_FUNCTION(double)
     ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY SuperRenormHP_solar_luminosity
+  #define CAPABILITY lnL_solar_luminosity
   START_CAPABILITY
-    #define FUNCTION calc_SuperRenormHP_solar_luminosity
+    #define FUNCTION calc_lnL_solar_luminosity
+    START_FUNCTION(double)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_neutrino_flux
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_neutrino_flux
     START_FUNCTION(double)
     ALLOW_MODEL(SuperRenormHP)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_neutrino_B8
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_neutrino_B8
+    START_FUNCTION(double)
+    DEPENDENCY(solar_neutrino_flux, double)
     #undef FUNCTION
   #undef CAPABILITY
 

@@ -35,6 +35,7 @@
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/numerical_constants.hpp"
+#include "gambit/Utils/statistics.hpp"
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 
 namespace Gambit
@@ -66,7 +67,10 @@ namespace Gambit
     const double me(0.51099895e6); // electron mass [eV]
     const double Rsun(5.9598e10); // Solar radius [cm]
     const double kb(8.617333262145e-5); // Boltzmann constant [eV/K]
+    const double L0 = 2.388672e45; // solar photon luminosity [eV/s]
 
+    /// Minimum finite result returnable from log(double x);
+    const double logmin = log(std::numeric_limits<double>::min());
 
     ////////////////////////////////////////////////////////////////////
     //      Support class to compute cosmological observables         //
@@ -492,40 +496,46 @@ namespace Gambit
         m_interp[*it] = gsl_spline_alloc(gsl_interp_cspline, m_nbins);
         m_acc[*it] = gsl_interp_accel_alloc();
         gsl_spline_init(m_interp[*it], rr, quantities[*it].data(), m_nbins);
-
       }
 
       Ls_interpolate();
     }
 
+    // function returning the interpolated quantities (Temp, wp, ne SumNz) at a given radius r inside the Sun
     double StellarModel::getQuantity (std::string const& quantity, double const& r)
     { 
       return gsl_spline_eval(m_interp[quantity], r, m_acc[quantity]);
     }
 
+    // function to compute the damping rate of longitudinal photons inside the Sun (inverse bremsstrahlung)
     double StellarModel::sigmaL (double const& w, double const& r)
     {
-      double temp = getQuantity("Temp", r);
-      double D = 64*pow(pi, 2)*pow(alpha, 3)*getQuantity("ne", r)*getQuantity("SumNz", r);
+      double result = 0;
+
+      double temp = getQuantity("Temp", r), ne = getQuantity("ne", r), wp = getQuantity("wp", r);
+      double D = 64*pow(pi, 2)*pow(alpha, 3)*ne*getQuantity("SumNz", r);
       double N = 3*sqrt(2*pi*temp)*pow(me, 3./2.)*pow(w, 3);
 
       double x = w/2./temp;
 
-
+      // tries to use the gsl_sf_bessel_K0 and sinh functions (fails if x is too big)
       try
       {
         double F = gsl_sf_bessel_K0(x)*sinh(x);
-        return D/N*F*pow(cs, 6)*pow(hbar, 6);
+        result += D/N*F*pow(cs, 6)*pow(hbar, 6);
       }
 
+      // uses a first order development at high x instead of the full functions
       catch (int gsl_errno)
       {
         double F = sqrt(pi/2./x)*(1-(1/8./x));
-        return D/N*F*pow(cs, 6)*pow(hbar, 6);
+        result += D/N*F*pow(cs, 6)*pow(hbar, 6);
       }
 
-    }
+      if (w > wp) { result += 8*pi*pow(alpha, 2)*ne*sqrt(1-pow(wp/w, 2))/pow(me, 3)/3.*pow(cs, 3)*pow(hbar, 3); }
 
+      return result;
+    }
 
     StellarModel::~StellarModel() 
     {
@@ -533,19 +543,16 @@ namespace Gambit
       {
         gsl_spline_free (m_interp[*it]);
         gsl_interp_accel_free(m_acc[*it]);
-
       }
     }
 
-    struct my_f_params { double mS; StellarModel * model; };
+    struct my_f_params { double mS; StellarModel *model; double mLim; };
 
-    double integrand (double x[], size_t dim, void * p)
+    // function to be integrated for mS < w < inf and 0 < r < R0
+    double myF (double const& w, double const& r, my_f_params *params)
     {
-      struct my_f_params * fp = (struct my_f_params *)p;
-      (void)(dim);
-
-      StellarModel * model = fp->model;
-      double w = x[0], r = x[1], mS = fp->mS;
+      StellarModel *model = params->model;
+      double mS = params->mS;
       double N1, N2, D1, D2, D3;
 
       N1 = pow((w*w-mS*mS), 3./2.)*w*w;
@@ -556,83 +563,88 @@ namespace Gambit
       D3 = pow(w*model->sigmaL(w, r), 2)+pow(w*w-pow(model->getQuantity("wp", r), 2), 2);
 
       return N1*N2*pow(r, 2)/D1/D2/D3;
-
     }
 
-    double const mSmax = 5e5;
+    // gsl integrand for mS < w < mLim
+    double integrand1 (double x[], size_t dim, void *p)
+    {
+      struct my_f_params *params = (struct my_f_params *)p;
+      (void)(dim);
 
-    /*double StellarModel::L_integrated (double const& mS)
-      {
-      const size_t dim = 2, calls = 1e7;
-      const double xl[dim] = {mS, 0.0006}, xu[dim] = {mSmax, 0.9995};
-      double result, abserr;
+      double w = x[0], r = x[1];
 
-      gsl_monte_plain_state *s = gsl_monte_plain_alloc(dim);
-      gsl_monte_plain_init(s);
-      gsl_rng *r = gsl_rng_alloc(gsl_rng_taus2);
+      return myF(w, r, params);
+    }
 
-      gsl_monte_function F;
+    // gsl integrand for mLim < w < inf, rescaled by a change of variables to 0 < t < 1
+    double integrand2 (double x[], size_t dim, void *p)
+    {
+      struct my_f_params *params = (struct my_f_params *)p;
+      (void)(dim);
 
-      my_f_params params = {mS, this};
+      double mLim = params->mLim;
 
-      F.f = &integrand;
-      F.dim = dim;
-      F.params = &params;
+      double t = x[0], r = x[1];
 
-      gsl_monte_plain_integrate(&F, xl, xu, dim, calls, r, s, &result, &abserr);
+      return myF(mLim + (1-t)/t, r, params)/pow(t, 2);
+    }
 
-      gsl_monte_plain_free(s);  
-
-      std::cout << result << " " << abserr << std::endl;
-
-      return 4*pi*pow(Rsun, 3)*result/pow(cs, 3)/pow(hbar, 4);
-
-      }*/
+    const double mSmax = 1e5; // maximum mass up to which Ls is computed, for higher masses Ls is set to zero manually in the capability function
 
     double StellarModel::L_integrated (double const& mS)
     {
       const size_t dim = 2, calls = 1e6;
-      double xl[dim] = {mS, 0.0006}, xu[dim] = {mSmax, 0.9995};
-      double result, abserr;
+      const double mLim = sqrt(mS*mSmax*1e1);
+      double xl1[dim] = {mS, 0.0006}, xu1[dim] = {mLim, 0.9995}, xl2[dim] = {0, 0.0006}, xu2[dim] = {1, 0.9995};
+      double result1, abserr1, result2, abserr2;
 
-      gsl_monte_vegas_state *s = gsl_monte_vegas_alloc(dim);
-      gsl_monte_vegas_init(s);
+      gsl_monte_vegas_state *s1 = gsl_monte_vegas_alloc(dim), *s2 = gsl_monte_vegas_alloc(dim);
+      gsl_monte_vegas_init(s1);
+      gsl_monte_vegas_init(s2);
+
       gsl_rng *r = gsl_rng_alloc(gsl_rng_taus2);
 
-      gsl_monte_function F;
+      gsl_monte_function F1, F2;
 
-      my_f_params params = {mS, this};
+      my_f_params params = {mS, this, mLim};
 
-      F.f = &integrand;
-      F.dim = dim;
-      F.params = &params;
+      F1.f = &integrand1;
+      F1.dim = dim;
+      F1.params = &params;
 
-      gsl_monte_vegas_integrate(&F, xl, xu, dim, calls, r, s, &result, &abserr);
+      F2.f = &integrand2;
+      F2.dim = dim;
+      F2.params = &params;
 
-      gsl_monte_vegas_free(s);  
+      gsl_monte_vegas_integrate(&F1, xl1, xu1, dim, calls, r, s1, &result1, &abserr1);
+      gsl_monte_vegas_integrate(&F2, xl2, xu2, dim, calls, r, s2, &result2, &abserr2);
 
-      return 4*pi*pow(Rsun, 3)*result/pow(cs, 3)/pow(hbar, 4);
+      std::cout << mS << " " << result1 << " " << abserr1/result1 << " " << result2 << " " << abserr2/result2 << std::endl;
 
+      gsl_monte_vegas_free(s1);
+      gsl_monte_vegas_free(s2);
+
+      return 4*pi*pow(Rsun, 3)*(result1+result2)/pow(cs, 3)/pow(hbar, 4);
     }
 
     void StellarModel::Ls_interpolate ()
     {
-
       const int nPoints = 150;
-      const double mMin = 5e-1, mMax = 5e4;
+      const double mMin = 5e-1, mMax = mSmax;
       const double deltaM = log10(mMax/mMin)/nPoints;
       const std::string filename = GAMBIT_DIR "/DarkBit/data/SuperRenormHP_Ls.dat";
       std::vector<double> mS, Ls;
 
+      // checks if an interpolation table file for Ls already exists and reads it if that is the case
       if (Utils::file_exists(filename))
       {
         ASCIItableReader table = ASCIItableReader(filename);
         table.setcolnames({"mS", "Ls"});
         mS = table["mS"];
         Ls = table["Ls"];
-
       }
 
+      // builds an interpolation table for Ls and writes it in a file
       else
       {
         for (int i=0; i<=nPoints; ++i)
@@ -655,25 +667,16 @@ namespace Gambit
         fout.clear(); fout.close();
       }
 
+      // interpolates Ls from the interpolation table
       m_Ls_interp = gsl_spline_alloc(gsl_interp_cspline, nPoints+1);
       m_Ls_accel = gsl_interp_accel_alloc();
       gsl_spline_init(m_Ls_interp, mS.data(), Ls.data(), nPoints+1);
-
     }
 
+    // returns the value of the interpolated Ls for a given set of parameters (mS, theta)
     double StellarModel::Ls (double const& mS, double const& theta)
     {
       return gsl_spline_eval(m_Ls_interp, mS, m_Ls_accel)*pow(me/v*theta, 2);
-    }
-
-    double StellarModel::PhiB8 (double const& mS, double const& theta)
-    {
-      const double PhiB8_0 = 1;
-      const double L0 = 1;
-      const double a = 1;
-
-      return PhiB8_0*pow((1+Ls(mS, theta)/L0), a);
-
     }
 
 
@@ -681,7 +684,7 @@ namespace Gambit
     //                   Capability functions                         //
     ////////////////////////////////////////////////////////////////////
 
-    
+
     //------------- Functions to compute X-ray likelihoods -------------// 
 
     // useful structure
@@ -703,7 +706,7 @@ namespace Gambit
 
     // galactic (Milky Way) contribution to the differential photon flux [photons/eV/cm²/s]
     const double s(0.5); // sigma of the gaussian for the galactic emission line = s*energy dispersion instrument
-    
+
     double dPhiG(double const& E, XrayLikelihood_params *params)
     {
       double mass = params->mass, gamma = params->gamma, density = params->density;
@@ -764,15 +767,7 @@ namespace Gambit
       double sigma = experiment.sigmaIntegrated(E);
       double prediction = XrayPredictionIntegrated(E, params);
 
-      if (prediction>=data) 
-      {  
-        return exp(-pow(data-prediction,2.)/(2.*sigma*sigma));
-      }
-
-      else 
-      {
-        return 1.;
-      }
+      return (prediction>=data) ? exp(-pow(data-prediction,2.)/(2.*sigma*sigma)) : 1.;
     }
 
     // computes the energy E which minimizes the likelihood
@@ -848,9 +843,9 @@ namespace Gambit
     }
 
     // capability function to compute the X-ray Likelihood from the INTEGRAL experiment
-    void calc_SuperRenormHP_Lik_INTEGRAL(double &result)
+    void calc_lnL_INTEGRAL(double &result)
     {
-      using namespace Pipes::calc_SuperRenormHP_Lik_INTEGRAL;
+      using namespace Pipes::calc_lnL_INTEGRAL;
       
       static Cosmology cosmology = Cosmology();
 
@@ -862,7 +857,7 @@ namespace Gambit
       
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
       
-      if (mass >= 1e6) { result = 1.; }
+      if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
       {
@@ -871,38 +866,39 @@ namespace Gambit
         try
         {
           E = minimizeLikelihood(&params);
-          result = XrayLikelihood(E, &params);
+          result = log(XrayLikelihood(E, &params));
         }
 
         catch (int gsl_errno)
         {
           lik1 = XrayLikelihood(Emin+experiment.deltaE(Emin), &params);
           lik2 = XrayLikelihood(fmin(mass/2., Emax-experiment.deltaE(Emax)), &params);
-          result = fmin(lik1, lik2);
+          result = log(fmin(lik1, lik2));
         }
         // restores the default gsl error handler
         gsl_set_error_handler (old_handler);
       }
 
-      else { result = 1.; }
+      else { result = 0; }
     }
     
-    // capability function to compute the X-ray lnLikelihood from the HEAO-1 A2 experiment
-    void calc_SuperRenormHP_Lik_HEAO(double &result)
+    // capability function to compute the X-ray Likelihood from the HEAO-1 A2 experiment
+    void calc_lnL_HEAO(double &result)
     {
-      using namespace Pipes::calc_SuperRenormHP_Lik_HEAO;
+      using namespace Pipes::calc_lnL_HEAO;
       
       static Cosmology cosmology = Cosmology();
 
       static Xray experiment = Xray("HEAO");
 
-      double mass = *Dep::DM_mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
+      const double mass = *Dep::DM_mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
 
       XrayLikelihood_params params = {mass, gamma, density, experiment, cosmology};
       
-      double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
+      const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
+      double E, lik1, lik2;
       
-      if (mass >= 1e6) { result = 1.; }
+      if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
       {
@@ -911,55 +907,75 @@ namespace Gambit
         try
         {
           E = minimizeLikelihood(&params);
-          result = XrayLikelihood(E, &params);
+          result = log(XrayLikelihood(E, &params));
         }
 
         catch (int gsl_errno)
         {
           lik1 = XrayLikelihood(Emin+experiment.deltaE(Emin), &params);
           lik2 = XrayLikelihood(fmin(mass/2., Emax-experiment.deltaE(Emax)), &params);
-          result = fmin(lik1, lik2);
+          result = log(fmin(lik1, lik2));
         }
         // restores the default gsl error handler
         gsl_set_error_handler (old_handler);
       }
 
-      else { result = 1.; }
+      else { result = 0; }
     }
 
-    // temporary capability Ls
-    void calc_Ls (double &result)
+    // capability function to compute the solar DM luminosity
+    void SuperRenormHP_solar_luminosity (double &result)
     {
-      using namespace Pipes::calc_Ls;
-      double mS = *Param["mS"], theta = *Param["theta"];
+      using namespace Pipes::SuperRenormHP_solar_luminosity;
+      const double mS = *Param["mS"], theta = *Param["theta"];
 
       gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler_Ls);
 
       static StellarModel model (GAMBIT_DIR "/DarkBit/data/SolarModel_AGSS09met.dat");
 
-      result = model.Ls(mS, theta);
+      if (mS < mSmax) { result = model.Ls(mS, theta); }
+
+      else { result = 0; }
 
       gsl_set_error_handler (old_handler);
     }
 
-    void calc_SuperRenormHP_solar_luminosity (double &result)
+    // capability function to compute the likelihood from the solar luminosity limit ( L_DM < 0.1*L0 ) (conservative limit)
+    void calc_lnL_solar_luminosity (double &result)
     {
-      using namespace Pipes::calc_SuperRenormHP_solar_luminosity;
-      double mS = *Param["mS"], theta = *Param["theta"];
+      using namespace Pipes::calc_lnL_solar_luminosity;
 
-      gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler_Ls);
-
-      static StellarModel model (GAMBIT_DIR "/DarkBit/data/SolarModel_AGSS09met.dat");
-
-      const double L0 = 2.388672e45;
       const double limit = 0.1*L0;
-      double Ls = model.Ls(mS, theta);
+      const double Ls = *Dep::solar_DM_luminosity;
 
-      if (Ls > limit) { result = 0; }
+      if (Ls > limit) { result = logmin; }
 
-      else { result = 1; }
+      else { result = 0; }
+    }
 
-      gsl_set_error_handler (old_handler);
+    // capability function to compute the predicted solar neutrino flux (B8)
+    void SuperRenormHP_solar_neutrino_flux (double &result)
+    {
+      using namespace Pipes::SuperRenormHP_solar_neutrino_flux;
+
+      const double Ls = *Dep::solar_DM_luminosity;
+      const double a = runOptions->getValueOrDef<double>(4., "alpha");
+
+      const double Phi0 = 4.60e6;
+
+      result = Phi0*pow(1+Ls/L0, a);
+    }
+
+    // capability function to compute the likelihood from solar B8 neutrino flux
+    void calc_lnL_solar_neutrino_B8 (double &result)
+    { 
+      using namespace Pipes::calc_lnL_solar_neutrino_B8;
+
+      const double Phi_predicted = *Dep::solar_neutrino_flux;
+      const double Phi_obs = 5e6, sigma_obs = 0.03e6, sigma_theo = 0.11e6;
+      const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
+
+      result = Stats::gaussian_upper_limit(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
     }
 
   }

@@ -1,5 +1,5 @@
 #############################################################################
-## GAMBIT configuration for the SuperRenormalizableHiggsPortalDM model scans.
+## GAMBIT configuration for the SuperRenormHP model scans.
 ##
 ## Only needs DarkBit and a scanner.
 #############################################################################
@@ -9,10 +9,10 @@ Parameters:
   SuperRenormHP:
     mS:  
       prior_type: log
-      range: [1e3, 1e7]
+      range: [1e0, 1e7]
     theta: 
       prior_type: log
-      range: [1e-14, 1e-6]
+      range: [1e-14, 1e-4]
 
 
 Priors:
@@ -52,7 +52,7 @@ Scanner:
 
     grid:
       plugin: square_grid
-      like: Observable
+      like: LogLike
       grid_pts: 200
 
     random:
@@ -91,30 +91,31 @@ Scanner:
 
 ObsLikes:
 
-   - purpose:      Observable
-     capability:   SuperRenormHP_Lik_INTEGRAL
+   - purpose:      LogLike
+     capability:   lnL_INTEGRAL
      module:       DarkBit
      type:         double
 
-   - purpose:      Observable
-     capability:   SuperRenormHP_Lik_HEAO
+   - purpose:      LogLike
+     capability:   lnL_HEAO
      module:       DarkBit
      type:         double
-     #- purpose:      Observable
-     #capability:   SuperRenormalizableHiggsPortalDM_solar_luminosity
-     #module:       DarkBit
-     #type:         double
+
+   - purpose:      LogLike
+     capability:   lnL_solar_neutrino_B8
+     module:       DarkBit
+     type:         double
 
 Rules:
 
-  # None required, since no module dependencies to be resolved.
-  # - capability: SuperRenormalizableHiggsPortalDM_lnLik_INTEGRAL
-  # options:
-  #     probability_of_validity: 1.0
+  - capability: solar_neutrino_flux
+    options:
+      alpha: 4
 
-  # - capability: SuperRenormalizableHiggsPortalDM_lnLik_HEAO
-  # options:
-  #     probability_of_validity: 1.0
+  - capability: lnL_solar_neutrino_B8
+    options:
+      profile_systematics: false
+
 Logger:
 
   redirection:
