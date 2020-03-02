@@ -301,7 +301,7 @@ namespace GUM
             std::string spin;
             std::string fullname;
             std::string eaten;
-            std::stringmass;
+            std::string mass;
             // Needs to initialise these to suppress compiler warnings.
             int color = 1;
             int chargeX3 = 0;
