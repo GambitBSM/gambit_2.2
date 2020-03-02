@@ -1489,15 +1489,16 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                "int n_particles = pdg.size();\n"
 
 
-    # TODO this assumes all particles decay, but this is not true!
-    # e.g. for model 'SSDM' with SPheno -> particle 'Ss' does not decay,
-    # and there are no symbols for BRss and gTss.
     towrite += "auto gT = [&](int i)\n"\
                "{\n"
     for i, particle in enumerate(particles) :
         name = re.sub(r"\d","",particle.alt_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-int(index)+1) + ")" if index else ""
+        # If there is no gTxx symbol in the signature of CalculateBR_2, 
+        # the particle does not decay
+        if "gT" + name not in function_signatures["CalculateBR_2"]:
+          continue
         if i == 0:
             towrite += "if(i==1) return (*gT" + name + ")" + brace + ";\n"
         else :
@@ -1511,6 +1512,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         name = re.sub(r"\d","",particle.alt_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-( int(index) if index != "" else 0 )+1) + " ,j)"
+        # If there is no BRxx symbol in the signature of CalculateBR_2, 
+        # the particle does not decay
+        if "BR" + name not in function_signatures["CalculateBR_2"]:
+          continue
         if i == 0:
             towrite += "if(i==1) return (*BR" + name + ")" + brace + ";\n"
         else :
