@@ -199,7 +199,8 @@ def get_model_par_name(paramname, parameters):
             return param.name
 
 
-def add_to_model_hierarchy(spectrum_name, model_name, model_params):
+def add_to_model_hierarchy(spectrum_name, model_name, model_params, 
+                           model_def = {}, cap_def = {}):
     """
     Adds a model to the model hierarchy. This means we create any
     new header files in the model directory, i.e.
@@ -256,6 +257,11 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params):
                    "\n"
                    "#endif\n"
     )
+
+    # Add to model and capability definitions
+    model_def[model_name] = model_name + " model, created by GUM, with parameters: "
+    model_def[model_name] += ", ".join(norepeats)
+    cap_def[model_name + '_parameters'] = 'Parameters for the model ' + model_name + ' (see ./gambit ' + model_name + ').'
 
     return towrite_header
 

@@ -317,7 +317,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
     return indent(towrite)
     
     
-def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
+def write_spectrum_header(model_name, add_higgs, with_spheno, higgses, cap_def={}):
     """
     Writes the header for spectrum object,
     SpecBit/include/gambit/SpecBit/SpecBit_<model>_rollcall.hpp
@@ -446,6 +446,10 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses):
         ).format(model_name, higgscontent))
 
     towrite += "#endif\n"
+
+    # Add capability definitions
+    cap_def[model_name + '_spectrum'] = 'Create spectrum object for ' + model_name + ' model.'
+
     return towrite
     
 def write_specbit_rollcall(model_name):

@@ -253,7 +253,8 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
     return indent(towrite, 4)
 
 def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays, 
-                                          decaybit_dict, gambit_dict):
+                                          decaybit_dict, gambit_dict,
+                                          cap_def = {}):
     """
     Returns amendments for the  new rollcall entries for DecayBit as a 
     numpy array. The format of the array is:
@@ -327,6 +328,8 @@ def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays,
             gb_name = pdg_to_particle(decayparticle, gambit_dict)
             new_decays.append([cap, gb_name])
 
+            # Add capability definition
+            cap_def[cap] = 'All decay rates for particle ' + gb_name + '.'
 
     return rollcall_entries, new_decays
 

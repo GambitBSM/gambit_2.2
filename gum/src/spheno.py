@@ -607,7 +607,8 @@ class SPhenoParameter:
 def write_spheno_frontends(model_name, parameters, particles, flags, 
                            spheno_path, output_dir, blockparams, gambit_pdgs, 
                            mixings, reality_dict, sphenodeps, bcs, 
-                           charged_higgses, neutral_higgses, fullmodelname):
+                           charged_higgses, neutral_higgses, fullmodelname,
+                           cap_def = {}):
     """
     Writes the frontend source and header files for SPheno.
     """
@@ -652,7 +653,8 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                                  variable_dictionary,
                                                  hb_variables,
                                                  hb_variable_dictionary, flags,
-                                                 fullmodelname)
+                                                 fullmodelname,
+                                                 cap_def)
 
 
     return spheno_src, spheno_header, backend_types, linenum
@@ -3019,7 +3021,8 @@ def make_fortran_symbols(module, name):
 def write_spheno_frontend_header(model_name, function_signatures, 
                                  type_dictionary, locations, 
                                  variables, var_dict, hb_variables, hb_dict, 
-                                 flags, fullmodelname):
+                                 flags, fullmodelname,
+                                 cap_def = {}):
     """
     Writes code for 
     Backends/include/gambit/Backends/SARAHSPheno_<MODEL>_<VERSION>.hpp
@@ -3378,6 +3381,12 @@ def write_spheno_frontend_header(model_name, function_signatures,
     for k, v in c.iteritems():
         if v == 2:
             print "Duplication of ", k, "- it appeared", v, "times."
+
+    # Add capability definitions
+    cap_def["SARAHSPheno_" + clean_model_name + "_internal"] = "Exclusively used for internal variables and functions for the SARAH-SPheno backend."
+    cap_def["SARAHSPheno_" + fullmodelname + "_spectrum"] = "Calculates and returns a " + fullmodelname + " spectrum object using SARAH-SPheno."
+    cap_def["SARAHSPheno_" + fullmodelname + "_decays"] = "Calculates and returns all decays for the " + fullmodelname + " model using SARAH-SPheno."
+    cap_def["SARAHSPheno_" + fullmodelname + "_" + SPHENO_VERSION.replace('.','_') + "_init"] = "Initialisation of backend SARAH-SPheno v" + SPHENO_VERSION + " for model " + fullmodelname + "."
 
     return indent(towrite)
 

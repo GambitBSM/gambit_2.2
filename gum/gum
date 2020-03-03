@@ -313,6 +313,10 @@ if args.file:
         # so ordering is not important.
         reset_contents = defaultdict(lambda: defaultdict(list))
 
+        # Dictionaries with capability and model definitions to add to the list
+        capability_definitions = {}
+        model_definitions = {}
+
         """
         REGISTRATION OF NEW PARTICLES
         """
@@ -383,7 +387,8 @@ if args.file:
         model_parameters = get_model_parameters(parameters)
 
         model_header = add_to_model_hierarchy(gum.spec, gum.name, 
-                                              model_parameters)
+                                              model_parameters, model_definitions,
+                                              capability_definitions)
 
         # Get the spectrum parameters out of the parameter list
         spectrum_parameters = get_spectrum_parameters(parameters, blockparams,
@@ -439,7 +444,7 @@ if args.file:
                                        blockparams, gambit_pdgs, mixings, 
                                        reality_dict, deps, bcs,
                                        charged_higgses, neutral_higgses, 
-                                       gum.name)
+                                       gum.name, capability_definitions)
 
             # cmake entry
             spheno_cmake = write_spheno_cmake_entry(gum.name, SPHENO_VERSION,
@@ -504,7 +509,8 @@ if args.file:
                 write_decaybit_rollcall_entry_calchep(gum.name, gum.spec,
                                                       three_body_decays,
                                                       decaybit_dict, 
-                                                      gambit_pdgs)
+                                                      gambit_pdgs,
+                                                      capability_definitions)
 
             all_decays_src, all_decays_header = \
                 amend_all_decays_calchep(gum.name, gum.spec, new_decays)
@@ -594,7 +600,8 @@ if args.file:
                                       blockparams, bsm_particle_list)
 
         spectrum_header = write_spectrum_header(gum.name, add_higgs, 
-                                                output_opts.spheno, higgses)
+                                                output_opts.spheno, higgses,
+                                                capability_definitions)
         spec_rollcall = write_specbit_rollcall(gum.name)
 
         """
@@ -856,6 +863,10 @@ if args.file:
             amend_file("SpecBit_VS.cpp", "SpecBit", vev_src, num-1, 
                        reset_contents)
             write_vevacious_rollcall(gum.name, gum.spec, reset_contents)        
+
+        # Write capability and model definitions
+        write_capability_definitions("capabilities.dat", gum.name, capability_definitions, reset_contents)
+        write_model_definitions("models.dat", gum.name, model_definitions, reset_contents)
 
         # Write a simple YAML file.
         drop_yaml_file(gum.name, model_parameters, add_higgs, reset_contents,

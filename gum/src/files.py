@@ -301,10 +301,19 @@ def amend_file(filename, module, contents, line_number, reset_dict,
     location = full_filename(filename, module)
 
     # Catch an error code
-    if line_number == -1:
+    if line_number < -1:
         raise GumError(("Error in amend_file routine. Received line_number"
                         " of " + line_number + " to write to the file "
                         "" + location + ". I think something is wrong."))
+
+    # Find end of file
+    if line_number == -1:
+       temp_line_number = 0
+       with open(location) as f:
+            for line in f:
+                temp_line_number += 1
+       line_number = temp_line_number
+      
 
     if not find_file(filename, module):
         raise GumError(("\n\nERROR: Tried to amend file " + location +
@@ -381,7 +390,7 @@ def add_capability(module, capability, function, reset_dict,
     # end of the file.
     else:
         contents = (
-            "  #define CAPBILITY {0}\n"
+            "  #define CAPABILITY {0}\n"
             "  START_CAPABILITY\n"
             "  \n"
             "{1}"
@@ -1122,3 +1131,30 @@ def compare_patched_files(gambit_dir, gum_dir, file_endings = ()):
                   return False
             
     return True
+
+def write_capability_definitions(filename, model_name, cap_def, reset_dict):
+    """
+    Writes entries in the capability definitions file
+    """
+
+    contents = "\n#####  " + model_name + " model #####\n\n"
+
+    for key, text in cap_def.items():
+        contents += key + ": |\n"\
+                         "    " + text + "\n\n"
+
+    amend_file(filename, "config", contents, -1, reset_dict)
+
+def write_model_definitions(filename, model_name, model_def, reset_dict):
+    """
+    Writes entries in the model definitions file
+    """
+
+    contents = '\n'
+    for key, text in model_def.items():
+        contents += key + ": |\n"\
+                         "    " + text + "\n\n"
+
+    amend_file(filename, "config", contents, -1, reset_dict)
+
+    
