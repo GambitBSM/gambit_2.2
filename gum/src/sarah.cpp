@@ -226,6 +226,8 @@ namespace GUM
       int lenpl;
       get_from_math(lenpl);
 
+      // Save all rotations
+      command = "rotationsgum = Join[DEFINITION[EWSB][MatterSector], DEFINITION[EWSB][GaugeSector]] //. diracSubBack[ALL]";
 
       std::cout << "Found " << lenpl << " particle sets." << std::endl;
 
@@ -270,6 +272,8 @@ namespace GUM
             // Get SARAH name of the particle
             send_to_math("plgum[[" + std::to_string(i+1) + ", 1]]");
             get_from_math(alt_name);
+
+            // Use this to get the spin of the particle
 
             // Get the PDG
             command = "Part[getPDG[plgum[[" + std::to_string(i+1) + ", 1]]], " + std::to_string(j+1) + "]";
@@ -357,6 +361,29 @@ namespace GUM
             else if(colorrep == "O") color = 8;
             else if(colorrep == "Six") color = 6;
             else throw std::runtime_error("Unrecognised color - " + colorrep + " - found.");
+
+            // Electric charge
+            command = "getElectricCharge[plgum[["+std::to_string(i+1)+",1]]] * 3";
+            send_to_math(command);
+            get_from_math(chargeX3);
+
+            // Spin
+            std::string spinentry;
+            command = "getType[plgum[["+std::to_string(i+1)+",1]]]";
+            send_to_math(command);
+            get_from_math(spinentry);
+
+            if (spinentry == "S") spinX2 = 0;
+            else if(spinentry == "F") spinX2 = 1;
+            else if(spinentry == "V") spinX2 = 2;
+            // TODO!!! get Spinformation for EWSB particles that come from mixings in either matter/gauge sectors or are from VEVs
+            else if(spinentry == "NoField") 
+            {
+              std::cout << "NoField entry for " << alt_name << std::endl;
+              spinX2 = 99; 
+              // command = "posgum = Position[rotationsgum,plgum[[" + std::to_string(i+1) + ", 1]]]";
+            }
+            else throw std::runtime_error("Unrecognised spin - " + spinentry + " - found.");
 
             std::set<int> SM_pdgs = {1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24};
             if (SM_pdgs.count(abs(pdg)))

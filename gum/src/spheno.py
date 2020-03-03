@@ -1021,6 +1021,9 @@ def make_spheno_decay_tables(spheno_path, model_name):
     All information harvested from InputOutput_<Model>.f90.
     """
 
+    # Keep a dictionary of all decays for ease
+    spheno_decays = defaultdict(list)
+
     clean_model_name = model_name.replace('-','')
     target = "{0}/{1}/InputOutput_{1}.f90".format(spheno_path, clean_model_name)
 
@@ -1044,7 +1047,10 @@ def make_spheno_decay_tables(spheno_path, model_name):
         decays = False
         indices = []
 
+        decaypdg = -1
+
         for line in f:
+
 
             # Get the PDGs
             if line.startswith("PDG") :
@@ -1077,12 +1083,14 @@ def make_spheno_decay_tables(spheno_path, model_name):
                 subline = line.split('.')[0]
                 part = subline[7::]
 
+                decaypdg = abs(int(pdgs[part]))
+
                 # print block entry
                 towrite += (
                     "DECAY        {0}     0.0000000E+00   # {1}\n"
                     "#    INDEX  NDA      ID1      ID2     CORRF\n"
                 ).format(str(abs(int(pdgs[part]))), names[part])
-
+            
             # Get indices
             if "Do gt" in line and decays:
 
@@ -1097,6 +1105,7 @@ def make_spheno_decay_tables(spheno_path, model_name):
 
                 ndaughters = int(line[10])
                 daughters = []
+                products = []
      
                 for i in range(ndaughters):
                     daughter = line.split("=")[1][:-2]
@@ -1143,9 +1152,14 @@ def make_spheno_decay_tables(spheno_path, model_name):
                                     for k in range(k1,int(indices[2][1])+1) :
                                         new_new_process = [proc.replace("gt3",str(k)) for proc in new_process]
                                         processes.append(new_new_process)
-     
+
                 # Print processes
                 for process in processes:
+
+                    probypdg = sorted([pdgs[x] for x in process])
+                    if not probypdg in spheno_decays[decaypdg]:
+                        spheno_decays[decaypdg].append(probypdg)
+
                     count += 1
                     proc_str = str(count).rjust(8) + str(ndaughters).rjust(5) + "  "
                     for daughter in process :
@@ -1164,7 +1178,6 @@ def make_spheno_decay_tables(spheno_path, model_name):
                             proc_str += names["-"+daughter] + " "
                         proc_str += ")\n"
                         towrite += proc_str
-                    
 
                 # Key to stop reading decays
                 if "! Information needed by MadGraph" in line :
@@ -1172,7 +1185,7 @@ def make_spheno_decay_tables(spheno_path, model_name):
 
     print(("Decay table for {0} done.").format(model_name))
 
-    return towrite 
+    return towrite, spheno_decays
 
 # /harvesting
 # writing
