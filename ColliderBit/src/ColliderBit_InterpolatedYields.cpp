@@ -422,7 +422,7 @@ namespace Gambit
         }
         else if (O2==0){
           Norm = pow(O1,2);
-          th   = PI/2;
+          th   = float(PI)/float(2);
           // cout << " O2 is zero"<< endl;
         }
         else{
@@ -628,9 +628,12 @@ namespace Gambit
             // Luminoscity scaling gets applied at the end...
             double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
             double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
-            double res =  36000.0*Norm*A*Norm*B; 
+            // double res =  36000.0*float(Norm)*A*float(Norm)*B; 
+            double res =  36000.0*A*float(Norm)*B; 
+            
             // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
-          
+
+
             if (std::isnan(res))
             {
               cout << " Test within function: Experiment =  "<< experiment << " res =  "<< res << " Pair  = " << pair <<" CS = "<<Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,0,true)<< " Yield = "<< Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,true) <<" Emiss = "<< Emiss << " Q's: "<< Q11[Emiss]<<" " << Q12[Emiss]<<" " << Q21[Emiss]<<" " <<Q22[Emiss]<<" "<< endl;
@@ -645,9 +648,10 @@ namespace Gambit
             // DO LAMBDA CHECK HERE!
             // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
             
-            double lambda_scaling = 1000.0/float(pow(lambda,4));
+            double lambda_scaling = float(1000.0)/float(pow(lambda,4));
+            cout << "Res check = " << res*lambda_scaling << " norm = " << Norm << " opperator = "<< pair <<endl;
 
-            cout << "lambda scale factor = " << lambda_scaling<<endl;            
+            // cout << "lambda scale factor = " << lambda_scaling<<endl;            
 
             if(experiment=="ATLAS"){
               if (lambda < METMINS_ATLAS[Emiss]){
@@ -934,7 +938,7 @@ namespace Gambit
         }
         else if (O2==0){
           Norm = pow(O1,2);
-          th   = PI/2;
+          th   = float(PI)/2;
           // cout << " O2 is zero"<< endl;
         }
         else{
@@ -1159,7 +1163,7 @@ namespace Gambit
             
             double lambda_scaling = 1000.0/float(pow(lambda,4));
 
-            cout << "lambda scale factor = " << lambda_scaling<<endl;        
+            // cout << "lambda scale factor = " << lambda_scaling<<endl;        
             
             if(experiment=="ATLAS"){
               if (lambda < METMINS_ATLAS[Emiss]){
@@ -1637,7 +1641,7 @@ namespace Gambit
           
           double lambda_scaling = 1000.0/float(pow(lambda,6));
 
-          cout << "lambda scale factor dim 7 = " << lambda_scaling<<endl;        
+          // cout << "lambda scale factor dim 7 = " << lambda_scaling<<endl;        
   
             // Lambda Cut
           if(experiment=="ATLAS"){
