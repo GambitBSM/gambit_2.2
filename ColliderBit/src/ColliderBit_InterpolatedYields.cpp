@@ -25,7 +25,8 @@
 ///     for other models
 ///
 ///  *********************************************
-
+#include <chrono>
+#include <thread>
 #include <cmath>
 #include <string>
 #include <iostream>
@@ -87,24 +88,24 @@ namespace Gambit
       #define atlas_bin_size  10
 
 
-      const char* met_ATLAS_23 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
-      const char* met_ATLAS_14 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64.txt";
-      const char* met_CMS_23   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
-      const char* met_CMS_14   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
-
-      const char* met_ATLAS_23_low = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63_low.txt";
-      const char* met_ATLAS_14_low = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64_low.txt";
-      const char* met_CMS_23_low   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63_low.txt";
-      const char* met_CMS_14_low   = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64_low.txt";
-
-      const char* met_ATLAS_71 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C71.txt";
-      const char* met_ATLAS_72 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C72.txt";
-      const char* met_ATLAS_73 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C73.txt";
-      const char* met_ATLAS_74 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C74.txt";
-      const char* met_CMS_71 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C71.txt";
-      const char* met_CMS_72 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C72.txt";
-      const char* met_CMS_73 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C73.txt";
-      const char* met_CMS_74 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C74.txt";
+      const char* met_ATLAS_23               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63.txt";
+      const char* met_ATLAS_14               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64.txt";
+      const char* met_CMS_23                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63.txt";
+      const char* met_CMS_14                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64.txt";
+          
+      const char* met_ATLAS_23_low           = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C62_C63_low.txt";
+      const char* met_ATLAS_14_low           = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C61_C64_low.txt";
+      const char* met_CMS_23_low             = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C62_C63_low.txt";
+      const char* met_CMS_14_low             = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C61_C64_low.txt";
+          
+      const char* met_ATLAS_71               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C71.txt";
+      const char* met_ATLAS_72               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C72.txt";
+      const char* met_ATLAS_73               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C73.txt";
+      const char* met_ATLAS_74               = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_ATLAS_C74.txt";
+      const char* met_CMS_71                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C71.txt";
+      const char* met_CMS_72                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C72.txt";
+      const char* met_CMS_73                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C73.txt";
+      const char* met_CMS_74                 = GAMBIT_DIR "/ColliderBit/data/DMEFT/met_hist_CMS_C74.txt";
       // ----------------------------------//     
       // Atlas/CMS analysis arrays 
       // ----------------------------------//
@@ -215,6 +216,7 @@ namespace Gambit
     
         if (first)
         {
+
           mylock.get_lock();
 
           cout << "Reading in grids. [Only happens on first itteration per MPI process]."<<endl;
@@ -641,13 +643,18 @@ namespace Gambit
             
 
             // DO LAMBDA CHECK HERE!
+            // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
             
+            double lambda_scaling = 1000.0/float(pow(lambda,4));
+
+            cout << "lambda scale factor = " << lambda_scaling<<endl;            
+
             if(experiment=="ATLAS"){
               if (lambda < METMINS_ATLAS[Emiss]){
                 accep[Emiss] = 0;
             }
               else{
-                accep[Emiss] = res;
+                accep[Emiss] = res*lambda_scaling;
               }
             } 
 
@@ -656,7 +663,7 @@ namespace Gambit
                 accep[Emiss] = 0;
             }
               else{
-                accep[Emiss] = res;
+                accep[Emiss] = res*lambda_scaling;
               }
             } 
             
@@ -1148,13 +1155,18 @@ namespace Gambit
             
 
             // DO LAMBDA CHECK HERE!
+            // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
+            
+            double lambda_scaling = 1000.0/float(pow(lambda,4));
+
+            cout << "lambda scale factor = " << lambda_scaling<<endl;        
             
             if(experiment=="ATLAS"){
               if (lambda < METMINS_ATLAS[Emiss]){
                 accep[Emiss] = 0;
             }
               else{
-                accep[Emiss] = res;
+                accep[Emiss] = res*lambda_scaling;
               }
             } 
 
@@ -1163,7 +1175,7 @@ namespace Gambit
                 accep[Emiss] = 0;
             }
               else{
-                accep[Emiss] = res;
+                accep[Emiss] = res*lambda_scaling;
               }
             } 
             
@@ -1618,13 +1630,22 @@ namespace Gambit
           double Norm= pow(Opp,2);
           double res =  36000.0*Norm*A*Norm*B; 
   
+
+
+          // DO LAMBDA CHECK HERE!
+          // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
+          
+          double lambda_scaling = 1000.0/float(pow(lambda,6));
+
+          cout << "lambda scale factor dim 7 = " << lambda_scaling<<endl;        
+  
             // Lambda Cut
           if(experiment=="ATLAS"){
             if (lambda < METMINS_ATLAS[Emiss]){
               accep[Emiss] = 0;
           }
             else{
-              accep[Emiss] = res;
+              accep[Emiss] = res*lambda_scaling;
             }
           } 
 
@@ -1633,7 +1654,7 @@ namespace Gambit
               accep[Emiss] = 0;
           }
             else{
-              accep[Emiss] = res;
+              accep[Emiss] = res*lambda_scaling;
             }
           } 
           
@@ -1710,11 +1731,17 @@ namespace Gambit
     }
 
     void DMEFT_results(AnalysisDataPointers &result)
-    {
+    { 
+
+      // auto start_wall_clock = std::chrono::steady_clock::now();
+
+
       using namespace Pipes::DMEFT_results;
 
       // Clear previous vectors, etc.
       result.clear();
+
+
 
       // cout << "void is run"<< endl;
 
@@ -1870,22 +1897,19 @@ namespace Gambit
 
       // ******** Create total results ***********// 
       // //--------------------------------------//
-      // cout << "Before pushback ..."<<endl;
 
       // I think these are cleared?
 
       result.push_back(atlasData);
       result.push_back(cmsData);
 
-      // atlasData.clear();
-      // cmsData.clear();
-      // // Debug output
-      // for (size_t ibin = 0; ibin < atlas_bin_size; ++ibin) {
-      //   cout << "DEBUG: sr-" << ibin << " n_signal = " << result[0]->srdata[ibin].n_signal << endl;
-      //   cout << "DEBUG: sr-" << ibin << " n_signal_at_lumi = " << result[0]->srdata[ibin].n_signal_at_lumi << endl;
-      // }
-      // cout << "End of likelihood calculator ..." <<endl;
+      //Sleep time
+      // std::this_thread::sleep_for(std::chrono::seconds(1));
 
+      // auto finish_wall_clock = std::chrono::steady_clock::now();
+
+      // Calculating total time taken by the program. 
+      // cout << fixed << setprecision(8) << "Excecution time for DMEFT_results: " << ((finish_wall_clock - start_wall_clock) / std::chrono::nanoseconds(1))/(1E9) << '\n';
     };
          
      
