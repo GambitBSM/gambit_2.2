@@ -1022,7 +1022,7 @@ namespace Gambit
 
       const double mS = *Param["mS"], theta = *Param["theta"];
 
-      const double f = 12*pi*v/theta; // modify for gluons
+      const double f = 12*v/theta; // modify for gluons
       result = {4*pi*pow(Mp/f, 2), hbar*cs/mS}; // lambda is given in cm
     }
 
