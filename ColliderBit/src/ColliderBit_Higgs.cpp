@@ -131,9 +131,9 @@ namespace Gambit
 
       // Add the invisibles
       result.BR_hjinvisible[0] = 0.;
-      for (auto it = couplings.invisibles.begin(); it != couplings.invisibles.end(); ++it)
+      for (std::vector<std::pair<str,str>>::const_iterator it = couplings.invisibles.begin(); it != couplings.invisibles.end(); ++it)
       {
-        result.BR_hjinvisible[0] += decays.BF(*it, *it);
+        result.BR_hjinvisible[0] += decays.BF(it->first, it->second);
       }
 
       // Retrieve cross-section ratios from the HiggsCouplingsTable
@@ -270,9 +270,9 @@ namespace Gambit
         result.BR_hjgg[i] = h0_widths[i]->BF("g", "g");
         // Do decays to invisibles
         result.BR_hjinvisible[i] = 0.;
-        for (auto it = Dep::Higgs_Couplings->invisibles.begin(); it != Dep::Higgs_Couplings->invisibles.end(); ++it)
+        for (std::vector<std::pair<str,str>>::const_iterator it = Dep::Higgs_Couplings->invisibles.begin(); it != Dep::Higgs_Couplings->invisibles.end(); ++it)
         {
-          result.BR_hjinvisible[i] += h0_widths[i]->BF(*it, *it);
+          result.BR_hjinvisible[i] += h0_widths[i]->BF(it->first, it->second);
         }
         // Do decays to other neutral higgses
         for (int j = 0; j < n_neutral_higgses; j++)

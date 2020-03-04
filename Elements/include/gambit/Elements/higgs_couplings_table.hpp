@@ -59,7 +59,7 @@ namespace Gambit
       std::vector<double> CP;
 
       /// Particles that higgses can decay invisibly to
-      std::vector<str> invisibles;
+      std::vector<std::pair<str,str>> invisibles;
 
       /// Effective couplings for neutral higgses
       /// @{

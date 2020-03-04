@@ -1512,7 +1512,7 @@ namespace Gambit
 
 
     /// Helper function to work out if the LSP is invisible, and if so, which particle it is.
-    std::vector<str> get_invisibles(const SubSpectrum& spec)
+    std::vector<std::pair<str,str>> get_invisibles(const SubSpectrum& spec)
     {
       // Get the lighter of the lightest neutralino and the lightest sneutrino
       std::pair<str,double> neutralino("~chi0_1", spec.get(Par::Pole_Mass,"~chi0",1));
@@ -1529,8 +1529,8 @@ namespace Gambit
                       spec.get(Par::Pole_Mass,"A0") > 2.*lnp.second);
 
       // Create a vector containing all invisible products of higgs decays.
-      if (inv_lsp) return initVector<str>(lnp.first);
-      return std::vector<str>();
+      if (inv_lsp) return initVector<std::pair<str,str>>(std::make_pair(lnp.first,lnp.first));
+      return std::vector<std::pair<str,str>>();
     }
 
     /// Put together the Higgs couplings for the MSSM, from partial widths only
@@ -1543,6 +1543,10 @@ namespace Gambit
 
       // Set up neutral Higgses
       static const std::vector<str> sHneut = initVector<str>("h0_1", "h0_2", "A0");
+      result.set_n_neutral_higgs(3);
+
+      // Set up charged Higgses
+      result.set_n_charged_higgs(1);
 
       // Set the CP of the Higgs states.  Note that this would need to be more sophisticated to deal with the complex MSSM!
       result.CP[0] = 1;  //h0_1
