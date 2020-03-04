@@ -80,10 +80,8 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
     # Keep track of which masses we've added
     addedpdgs = []
 
-    for i in np.arange(len(parameters)):
-        
-        par = parameters[i]
-
+    for par in parameters:
+                
         # TODO: TG: Should we add parameters without block?
         # Parameters without block break at runtime cause there's no way to 
         # access the spectrum info as internally it's a SLHA structure
@@ -121,6 +119,7 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
             setter = "set_" + par.fullname
             getter = "get_" + par.fullname
 
+        name = ""
         if par.tag == "Pole_Mass":
             name = par.fullparticlename
         elif par.tag == "Pole_Mixing":
@@ -137,7 +136,6 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
                                                    gambit_pdgs).split('_')[0]
         else:
             name = par.name
-
 
         # Replace all plusses and minuses with 'pm'
         setter = setter.replace("-","pm").replace("+","pm")

@@ -633,6 +633,7 @@ namespace GUM
     std::vector<std::vector<std::string> > minpar;
     std::vector<std::vector<std::string> > extpar;
 
+    std::string defaultlist;
     std::string command = "";
 
     try
@@ -650,6 +651,35 @@ namespace GUM
       send_to_math(command);
       int lenpl;
       get_from_math(lenpl);
+
+      // Get default parameters
+      bool default_is_list;
+      command = "Head[DefaultInputValues]===List";
+      send_to_math(command);
+      get_from_math(default_is_list);
+
+      // If there's no 'DefaultInputValues' list, try 
+      // DefaultInputValues[1] -- sometimes models have
+      // different benchmark points. 
+      if(default_is_list)
+      {
+        defaultlist = "DefaultInputValues";
+      }
+      else
+      {
+        bool please_be_list;
+        command = "Head[DefaultInputValues[1]]===List";
+        send_to_math(command);
+        get_from_math(please_be_list);
+        if(please_be_list)
+        {
+          defaultlist = "DefaultInputValues[1]";
+        }
+        else
+        {
+          defaultlist = "NONE";
+        }
+      }
 
       if(is_list)
       {
@@ -674,7 +704,6 @@ namespace GUM
             if(par[1] == paramname)
             {
               command = "Real /. pdgum[[" + std::to_string(i+1) + ", 2]] // ToString";
-              std::cout << command << std::endl;
               send_to_math(command);
               std::string entry;
               get_from_math(entry);
@@ -684,14 +713,16 @@ namespace GUM
           
           Parameter param(par[1], "MINPAR", std::stoi(par[0]), par[1], real);
  
-          //Get the default value
-          std::string value;
-          command = par[1] + "/.DefaultInputValues";
-          send_to_math(command);
-          get_from_math(value);
-
-          if(value != par[1])
-            param.set_default(std::stod(value));
+          // Get default values (if there are any)
+          if (defaultlist != "NONE")
+          {
+            std::string value;
+            command = par[1] + "/." + defaultlist;
+            send_to_math(command);
+            get_from_math(value);
+            if(value != par[1])
+              param.set_default(std::stod(value));
+          }
 
           parameters.push_back(param);
         }
@@ -734,14 +765,16 @@ namespace GUM
           }
           Parameter param(par[1], "EXTPAR", std::stoi(par[0]), par[1], real);
 
-          //Get the default value
-          std::string value;
-          command = par[1] + "/.DefaultInputValues";
-          send_to_math(command);
-          get_from_math(value);
-
-          if(value != par[1])
-            param.set_default(std::stod(value));
+          // Get default values (if there are any)
+          if (defaultlist != "NONE")
+          {
+            std::string value;
+            command = par[1] + "/." + defaultlist;
+            send_to_math(command);
+            get_from_math(value);
+            if(value != par[1])
+              param.set_default(std::stod(value));
+          }
 
           parameters.push_back(param);
         }
