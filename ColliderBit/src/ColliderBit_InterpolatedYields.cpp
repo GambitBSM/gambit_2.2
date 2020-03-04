@@ -647,13 +647,12 @@ namespace Gambit
 
             // DO LAMBDA CHECK HERE!
             // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
-            
+            // Grids calculated at Lambda = 1000 GeV, hence the factor here. 
+
             double lambda_scaling = 1000.0/float(pow(lambda,4));
 
-            
-            
-
-            // cout << "lambda scale factor = " << lambda_scaling<<endl;            
+        
+            // EFT validity checks:            
 
             if(experiment=="ATLAS"){
               if (lambda < METMINS_ATLAS[Emiss]){
