@@ -1556,9 +1556,18 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY solar_neutrino_flux
+  #define CAPABILITY solar_neutrino_flux_B8
   START_CAPABILITY
-    #define FUNCTION SuperRenormHP_solar_neutrino_flux
+    #define FUNCTION SuperRenormHP_solar_neutrino_flux_B8
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_neutrino_flux_Be7
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_neutrino_flux_Be7
     START_FUNCTION(double)
     ALLOW_MODEL(SuperRenormHP)
     DEPENDENCY(solar_DM_luminosity, double)
@@ -1569,7 +1578,31 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_solar_neutrino_B8
     START_FUNCTION(double)
-    DEPENDENCY(solar_neutrino_flux, double)
+    DEPENDENCY(solar_neutrino_flux_B8, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_neutrino_Be7
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_neutrino_Be7
+    START_FUNCTION(double)
+    DEPENDENCY(solar_neutrino_flux_Be7, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY ISL_Yukawa
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_ISL_Yukawa
+    START_FUNCTION(std::vector<double>)
+    ALLOW_MODEL(SuperRenormHP)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_ShortRangeForces_Sushkov2011
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_ShortRangeForces_Sushkov2011
+    START_FUNCTION(double)
+    DEPENDENCY(ISL_Yukawa, std::vector<double>)
     #undef FUNCTION
   #undef CAPABILITY
 

@@ -9,7 +9,7 @@ Parameters:
   SuperRenormHP:
     mS:  
       prior_type: log
-      range: [1e0, 1e7]
+      range: [5e-1, 1e7]
     theta: 
       prior_type: log
       range: [1e-14, 1e-4]
@@ -106,13 +106,31 @@ ObsLikes:
      module:       DarkBit
      type:         double
 
+   - purpose:      LogLike
+     capability:   lnL_solar_neutrino_Be7
+     module:       DarkBit
+     type:         double
+
+   - purpose:      LogLike
+     capability:   lnL_ShortRangeForces_Sushkov2011
+     module:       DarkBit
+     type:         double
+
 Rules:
 
-  - capability: solar_neutrino_flux
+  - capability: solar_neutrino_flux_B8
     options:
       alpha: 4
 
   - capability: lnL_solar_neutrino_B8
+    options:
+      profile_systematics: false
+
+  - capability: solar_neutrino_flux_Be7
+    options:
+      alpha: 4
+
+  - capability: lnL_solar_neutrino_Be7
     options:
       profile_systematics: false
 

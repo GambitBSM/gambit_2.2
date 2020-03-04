@@ -1,5 +1,3 @@
-///  GAMBIT: Global and Modular BSM Inference Tool
-///  *********************************************
 ///  \file
 ///
 ///  Super Renormalizable Higgs Portal DM specific module functions for DarkBit
@@ -55,7 +53,8 @@ namespace Gambit
     //------------- Physical constants and other useful things -------------// 
 
     const double pi=Gambit::pi;
-    const double alpha=Gambit::alpha_EM; // fine structure constant
+    const double alphaEM=Gambit::alpha_EM; // fine structure constant
+    const double Mp=Gambit::m_planck*1e9; // Planck mass [eV]
     const double v(246e9); // electroweak vev [eV]
     const double hbar=Gambit::hbar*1e9;  // reduced Planck constant [eV.s]
     const double cs=Gambit::s2cm; // speed of light [cm/s]
@@ -66,8 +65,9 @@ namespace Gambit
     const double C(50./27.); // loop function
     const double me(0.51099895e6); // electron mass [eV]
     const double Rsun(5.9598e10); // Solar radius [cm]
-    const double kb(8.617333262145e-5); // Boltzmann constant [eV/K]
+    const double kb=Gambit::K2eV; // Boltzmann constant [eV/K]
     const double L0 = 2.388672e45; // solar photon luminosity [eV/s]
+    const double G = 6.674e-8; // Gravitational constant [cm³/g/s²]
 
     /// Minimum finite result returnable from log(double x);
     const double logmin = log(std::numeric_limits<double>::min());
@@ -476,7 +476,7 @@ namespace Gambit
         temp = m_model["Temp"][i]*kb;
 
         T.push_back(temp);
-        wp.push_back(sqrt(4*pi*alpha*sumz*cs*cs*cs*hbar*hbar*hbar/me));
+        wp.push_back(sqrt(4*pi*alphaEM*sumz*cs*cs*cs*hbar*hbar*hbar/me));
         ne.push_back(sumz);
         SumNz.push_back(sumz2);
 
@@ -513,7 +513,7 @@ namespace Gambit
       double result = 0;
 
       double temp = getQuantity("Temp", r), ne = getQuantity("ne", r), wp = getQuantity("wp", r);
-      double D = 64*pow(pi, 2)*pow(alpha, 3)*ne*getQuantity("SumNz", r);
+      double D = 64*pow(pi, 2)*pow(alphaEM, 3)*ne*getQuantity("SumNz", r);
       double N = 3*sqrt(2*pi*temp)*pow(me, 3./2.)*pow(w, 3);
 
       double x = w/2./temp;
@@ -532,7 +532,7 @@ namespace Gambit
         result += D/N*F*pow(cs, 6)*pow(hbar, 6);
       }
 
-      if (w > wp) { result += 8*pi*pow(alpha, 2)*ne*sqrt(1-pow(wp/w, 2))/pow(me, 3)/3.*pow(cs, 3)*pow(hbar, 3); }
+      if (w > wp) { result += 8*pi*pow(alphaEM, 2)*ne*sqrt(1-pow(wp/w, 2))/pow(me, 3)/3.*pow(cs, 3)*pow(hbar, 3); }
 
       return result;
     }
@@ -558,7 +558,7 @@ namespace Gambit
       N1 = pow((w*w-mS*mS), 3./2.)*w*w;
       N2 = w*w*model->sigmaL(w, r);
 
-      D1 = pow(2*pi, 3)*alpha;
+      D1 = pow(2*pi, 3)*alphaEM;
       D2 = exp(w/model->getQuantity("Temp", r))-1;
       D3 = pow(w*model->sigmaL(w, r), 2)+pow(w*w-pow(model->getQuantity("wp", r), 2), 2);
 
@@ -821,17 +821,17 @@ namespace Gambit
       using namespace Pipes::SuperRenormHP_decay_rate_2photons;
       double mS = *Param["mS"], theta = *Param["theta"];
 
-      result = (theta*theta*alpha*alpha*mS*mS*mS*C*C)/(256.*pi*pi*pi*v*v)/hbar;
+      result = (theta*theta*alphaEM*alphaEM*mS*mS*mS*C*C)/(256.*pi*pi*pi*v*v)/hbar;
     }
 
-    // capability to provide the mass of the DM candidate
+    // capability function to provide the mass of the DM candidate
     void SuperRenormHP_mass (double &result)
     {
       using namespace Pipes::SuperRenormHP_mass;
-      
+
       result = *Param["mS"];
     }
-    
+
     // gsl error handler
     void handler (const char * reason, const char * file, int line, int gsl_errno)
     {
@@ -846,7 +846,7 @@ namespace Gambit
     void calc_lnL_INTEGRAL(double &result)
     {
       using namespace Pipes::calc_lnL_INTEGRAL;
-      
+
       static Cosmology cosmology = Cosmology();
 
       static Xray experiment = Xray("INTEGRAL");
@@ -854,9 +854,9 @@ namespace Gambit
       double mass = *Dep::DM_mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
 
       XrayLikelihood_params params = {mass, gamma, density, experiment, cosmology};
-      
+
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
-      
+
       if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
@@ -881,12 +881,12 @@ namespace Gambit
 
       else { result = 0; }
     }
-    
+
     // capability function to compute the X-ray Likelihood from the HEAO-1 A2 experiment
     void calc_lnL_HEAO(double &result)
     {
       using namespace Pipes::calc_lnL_HEAO;
-      
+
       static Cosmology cosmology = Cosmology();
 
       static Xray experiment = Xray("HEAO");
@@ -894,10 +894,10 @@ namespace Gambit
       const double mass = *Dep::DM_mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
 
       XrayLikelihood_params params = {mass, gamma, density, experiment, cosmology};
-      
+
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;
-      
+
       if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
@@ -922,6 +922,8 @@ namespace Gambit
 
       else { result = 0; }
     }
+
+    //------------- Functions to compute stellar coolling likelihoods -------------// 
 
     // capability function to compute the solar DM luminosity
     void SuperRenormHP_solar_luminosity (double &result)
@@ -954,16 +956,29 @@ namespace Gambit
     }
 
     // capability function to compute the predicted solar neutrino flux (B8)
-    void SuperRenormHP_solar_neutrino_flux (double &result)
+    void SuperRenormHP_solar_neutrino_flux_B8 (double &result)
     {
-      using namespace Pipes::SuperRenormHP_solar_neutrino_flux;
+      using namespace Pipes::SuperRenormHP_solar_neutrino_flux_B8;
 
       const double Ls = *Dep::solar_DM_luminosity;
-      const double a = runOptions->getValueOrDef<double>(4., "alpha");
+      const double alpha = runOptions->getValueOrDef<double>(4., "alpha");
 
-      const double Phi0 = 4.60e6;
+      const double Phi0 = 4.95e6;
 
-      result = Phi0*pow(1+Ls/L0, a);
+      result = Phi0*pow(1+Ls/L0, alpha);
+    }
+
+    // capability function to compute the predicted solar neutrino flux (Be7)
+    void SuperRenormHP_solar_neutrino_flux_Be7 (double &result)
+    {
+      using namespace Pipes::SuperRenormHP_solar_neutrino_flux_Be7;
+
+      const double Ls = *Dep::solar_DM_luminosity;
+      const double alpha = runOptions->getValueOrDef<double>(4., "alpha");
+
+      const double Phi0 = 4.71e9;
+
+      result = Phi0*pow(1+Ls/L0, alpha);
     }
 
     // capability function to compute the likelihood from solar B8 neutrino flux
@@ -971,11 +986,81 @@ namespace Gambit
     { 
       using namespace Pipes::calc_lnL_solar_neutrino_B8;
 
-      const double Phi_predicted = *Dep::solar_neutrino_flux;
-      const double Phi_obs = 5e6, sigma_obs = 0.03e6, sigma_theo = 0.11e6;
       const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
+      const double Phi_predicted = *Dep::solar_neutrino_flux_B8;
+
+      const double Phi_obs = 5e6;
+      const double sigma_obs = 0.03*Phi_obs, sigma_theo = 0.14*Phi_predicted;
 
       result = Stats::gaussian_upper_limit(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
+    }
+
+    // capability function to compute the likelihood from solar Be7 neutrino flux
+    void calc_lnL_solar_neutrino_Be7 (double &result)
+    { 
+      using namespace Pipes::calc_lnL_solar_neutrino_Be7;
+
+      const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
+      const double Phi_predicted = *Dep::solar_neutrino_flux_Be7;
+
+      const double Phi_obs = 4.82e9;
+      const double sigma_obs = 0.05*Phi_obs, sigma_theo = 0.07*Phi_predicted;
+
+      result = Stats::gaussian_upper_limit(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
+    }
+
+
+    //------------- Functions to compute short range forces likelihoods -------------// 
+
+    // Modified Inverse-Square Law (ISL) by adding a new Yukawa potential to the Newtonian gravitational potential: Vnew(r) = -(alpha*G*m1*m2)/r * exp(-r/lambda)
+    // where alpha is the strenght of the new force and lambda its range
+
+    // capability function returning the values of alpha and lambda for the SuperRenormHP model
+    void SuperRenormHP_ISL_Yukawa (std::vector<double> &result) 
+    {
+      using namespace Pipes::SuperRenormHP_ISL_Yukawa;
+
+      const double mS = *Param["mS"], theta = *Param["theta"];
+
+      const double f = 12*pi*v/theta; // modify for gluons
+      result = {4*pi*pow(Mp/f, 2), hbar*cs/mS}; // lambda is given in cm
+    }
+
+    // experimental parameters from Sushkov et al. 2011 arXiv:1108.2547
+    const double rhoAu = 19, rhoTi = 4.5, rhog = 2.6, dAu = 700e-8, dTi = 100e-8, R = 15.6; // in cgs units
+
+    // capability function to compute the likelihood from Sushkov et al. 2011
+    void calc_lnL_ShortRangeForces_Sushkov2011 (double &result)
+    {
+      using namespace Pipes::calc_lnL_ShortRangeForces_Sushkov2011;
+
+      const std::vector<double> parameters = *Dep::ISL_Yukawa;
+      const double alpha = parameters[0], lambda = parameters[1];
+
+      ASCIItableReader data = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/ShortRangeForces/Sushkov2011.dat");
+      data.setcolnames({"distance", "Fres", "sigma"});
+      std::vector<double> distance = data["distance"]; // [microns]
+      std::vector<double> Fres = data["Fres"]; // [pN]
+      std::vector<double> sigma = data["sigma"]; // [pN]
+
+      std::vector<double> Fnew;
+      const double factor = 4*pi*G*R*alpha*pow(lambda, 3);
+
+      for (auto it=distance.begin(); it!=distance.end(); ++it)
+      {
+        Fnew.push_back(factor*exp(-*it*1e-4/lambda)*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5*1e12); // new force in pN
+      }
+
+      std::vector<double> likelihood;
+      double norm;
+      
+      for (size_t i(0); i<distance.size(); ++i)
+      {
+        norm = 1./sqrt(2*pi)/sigma[i];
+        likelihood.push_back( (Fnew[i]<Fres[i]) ? norm : norm*exp(-pow(Fres[i]-Fnew[i], 2)/pow(sigma[i], 2)) );
+      }
+
+      result = log(*std::min_element(likelihood.begin(), likelihood.end()));
     }
 
   }
