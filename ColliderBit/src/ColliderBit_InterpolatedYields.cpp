@@ -648,8 +648,10 @@ namespace Gambit
             // DO LAMBDA CHECK HERE!
             // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
             
-            double lambda_scaling = float(1000.0)/float(pow(lambda,4));
-            cout << "Res check = " << res*lambda_scaling << " norm = " << Norm << " opperator = "<< pair <<endl;
+            double lambda_scaling = 1000.0/float(pow(lambda,4));
+
+            
+            
 
             // cout << "lambda scale factor = " << lambda_scaling<<endl;            
 
@@ -1144,7 +1146,9 @@ namespace Gambit
             // Luminoscity scaling gets applied at the end...
             double A   = BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th,yalpha);
             double B   = BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th,yalpha);
-            double res =  36000.0*Norm*A*Norm*B; 
+            // double res =  36000.0*Norm*A*Norm*B;
+            double res =  36000.0*A*float(Norm)*B; 
+
             // double res =  Norm*BilinearInterpolation(Q11[Emiss], Q12[Emiss], Q21[Emiss], Q22[Emiss], x1, x2, y1, y2, m, th)*Norm*BilinearInterpolation(C11, C12, C21, C22, x1, x2, y1, y2, m, th); 
           
             if (std::isnan(res))
@@ -1632,14 +1636,15 @@ namespace Gambit
           double A   = LinearInterpolation(x1,x2,m,Q1[Emiss],Q2[Emiss]);
           double B   = LinearInterpolation(x1,x2,m,C1,C2);
           double Norm= pow(Opp,2);
-          double res =  36000.0*Norm*A*Norm*B; 
+          // double res =  36000.0*Norm*A*Norm*B; 
+          double res =  36000.0*A*Norm*B; 
+          double lambda_scaling = 1000.0/float(pow(lambda,6));
   
-
+          // cout << "Res check = " << res*lambda_scaling << " norm = " << Norm << " opperator = "<< pair <<endl;
 
           // DO LAMBDA CHECK HERE!
           // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
           
-          double lambda_scaling = 1000.0/float(pow(lambda,6));
 
           // cout << "lambda scale factor dim 7 = " << lambda_scaling<<endl;        
   
