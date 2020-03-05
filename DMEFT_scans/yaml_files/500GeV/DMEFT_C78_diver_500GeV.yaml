@@ -45,7 +45,7 @@ Parameters:
     C77:  0
     # Pseudoscalar pseudoscalar
     C78: 
-      range: [-12.56637, 12.56637]
+      range: [0., 12.56637]
     # Dim 7 -- tensor currents
     # sigma sigma
     C79: 0
@@ -86,9 +86,9 @@ Scanner:
     diver:
       plugin: diver
       like: LogLike
-      NP: 50000
+      NP: 10000
       verbosity: 1
-      convthresh: 1E-5
+      convthresh: 1E-3
       lambdajDE: true
 
 ObsLikes:

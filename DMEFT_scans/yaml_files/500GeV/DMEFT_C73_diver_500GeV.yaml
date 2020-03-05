@@ -35,7 +35,7 @@ Parameters:
     C71:  0
     C72:  0
     C73: 
-      range: [-12.56637, 12.56637]
+      range: [0., 12.56637]
     C74: 0
     # Dim 7 -- Higgs induced bilinears
     # Scalar scalar
@@ -86,9 +86,9 @@ Scanner:
     diver:
       plugin: diver
       like: LogLike
-      NP: 50000
+      NP: 10000
       verbosity: 1
-      convthresh: 1E-5
+      convthresh: 1E-3
       lambdajDE: true
 
 ObsLikes:

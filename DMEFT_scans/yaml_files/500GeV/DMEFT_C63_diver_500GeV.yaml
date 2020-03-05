@@ -29,7 +29,7 @@ Parameters:
     C62: 0
     # vector axial-vector
     C63: 
-      range: [-12.56637, 12.56637]
+      range: [0., 12.56637]
     # axial-vector axial-vector
     C64: 0
     # Dim 7 -- gluons
@@ -86,9 +86,9 @@ Scanner:
     diver:
       plugin: diver
       like: LogLike
-      NP: 50000
+      NP: 10000
       verbosity: 1
-      convthresh: 1E-5
+      convthresh: 1E-3
       lambdajDE: true
 
 ObsLikes:

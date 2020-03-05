@@ -42,7 +42,7 @@ Parameters:
     C75:  0
     # Pseudoscalar scalar
     C76: 
-      range: [-12.56637, 12.56637]
+      range: [0., 12.56637]
     # Scalar pseudoscalar
     C77: 0
     # Pseudoscalar pseudoscalar
@@ -87,9 +87,9 @@ Scanner:
     diver:
       plugin: diver
       like: LogLike
-      NP: 50000
+      NP: 10000
       verbosity: 1
-      convthresh: 1E-5
+      convthresh: 1E-3
       lambdajDE: true
 
 ObsLikes:
