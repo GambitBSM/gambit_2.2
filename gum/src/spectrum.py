@@ -5,11 +5,12 @@ Master module for all SpecBit related routines.
 from setup import *
 from files import *
 from cmake_variables import *
+from colliderbit import *
 
 def write_spectrum(gambit_model_name, model_parameters, spec,
                    add_higgs, with_spheno, gambit_pdgs,
                    neutral_higgses, charged_higgses, blockdict, 
-                   particles):
+                   particles, spheno_decays, partlist):
     """
     Writes the spectrum object wrapper for new model:
     SpecBit/src/SpecBit_<new_model_name>.cpp.
@@ -234,7 +235,8 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
         towrite += write_spheno_higgsbounds_interface(gambit_model_name, 
                                                       gambit_pdgs,
                                                       neutral_higgses,
-                                                      charged_higgses)
+                                                      charged_higgses,
+                                                      spheno_decays, partlist)
 
     towrite += '\n'
 
@@ -604,13 +606,20 @@ def write_spheno_spectrum_src(model_name, is_susy):
 
 
 def write_spheno_higgsbounds_interface(model_name, gambit_pdgs, 
-                                       neutral_higgses, charged_higgses):
+                                       neutral_higgses, charged_higgses,
+                                       spheno_decays, partlist):
     """
     Writes the HiggsBounds (via SPheno) interface for 
     SpecBit/src/SpecBit_<NewModel>.cpp
     """
 
-    towrite = (
+    # Add a helper function to get the invisible decays of Higgses
+    towrite = get_higgs_invisibles(neutral_higgses, spheno_decays, partlist,
+                                   gambit_pdgs, charged_higgses)
+            
+
+    towrite += (
+            "\n"
             "\n"
             "/// Put together the Higgs couplings for the {0}, from SPheno\n"
             "void {0}_higgs_couplings_SPheno(HiggsCouplingsTable &result)\n"
@@ -815,8 +824,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
             "\n"
             "// The SPheno frontend provides the invisible width for each Higgs, however this requires\n"
             "// loads of additional function calls. Just use the helper function instead.\n"
-            # TODO add invisible particles somehow??
-            #"result.invisibles = get_invisibles(he);\n"
+            "result.invisibles = get_invisibles(he);\n"
             "}}\n\n"
     ).format(model_name)
 

@@ -24,8 +24,8 @@
 #     - [35, 0]      Creates entries for "h0_1" and "h0_2" in the particleDB.
 #     DecayBit:
 #       Decays: True
-#       name: "h0"                         Creates rollcall entries for "h0_1_decay_rates" and "h0_2_decay_rates" CAPABILITIES.
-#       name: ["Higgs", "h0_2"]            Alternative syntax - if particles within sets have different names - creating CAPABILITIES "Higgs_decay_rates" and "h0_2_decay_rates".
+#       name: "h0"                       Creates rollcall entries for "h0_1_decay_rates" and "h0_2_decay_rates" CAPABILITIES.
+#       name: ["Higgs", "h0_2"]        Alternative syntax - if particles within sets have different names - creating CAPABILITIES "Higgs_decay_rates" and "h0_2_decay_rates".
 #
 # Note: If there is no entry for the 'DecayBit' field, GAMBIT will use the 'name' and 'conjugate' fields by default.
 # TODO: Decide if Decays belong here, or elsewhere (GUM)
@@ -80,14 +80,6 @@ OtherModels:
     name: ~G
     spinx2: 3
 
-  - DecayBit: {Decays: true}
-    PDG_context: [36, 0]
-    chargex3: 0
-    color: 1
-    description: Pseudoscalar Higgs
-    name: A0
-    spinx2: 0
-
   - DecayBit: {Decays: true, conjugate: H_minus, name: H_plus}
     PDG_context: [37, 0]
     chargex3: 3
@@ -124,18 +116,30 @@ OtherModels:
     description: Vector Singlet
     name: V
     spinx2: 2
+
   Sets:
 
   - DecayBit:
       Decays: true
-      name: [Higgs, h0_2]
+      name: [Higgs, h0_2, h0_3]
     PDG_context:
     - [25, 0]
     - [35, 0]
+    - [45, 0]
     chargex3: 0
     color: 1
     description: Mass-ordered neutral Higgs
     name: h0
+    spinx2: 0
+
+  - DecayBit: {Decays: true}
+    PDG_context:
+    - [36, 0]
+    - [46, 0]
+    chargex3: 0
+    color: 1
+    description: Pseudoscalar Higgs
+    name: A0
     spinx2: 0
 
   - PDG_context:
@@ -200,6 +204,7 @@ OtherModels:
     - [1000023, 0]
     - [1000025, 0]
     - [1000035, 0]
+    - [1000045, 0]
     chargex3: 0
     color: 1
     description: Mass-ordered neutralinos
@@ -384,8 +389,8 @@ StandardModel:
     PDG_context: [211, 0]
     chargex3: 3
     color: 1
-    description: Charged pion
     conjugate: pi-
+    description: Charged pion
     name: pi+
     spinx2: 0
 
@@ -409,8 +414,8 @@ StandardModel:
     PDG_context: [213, 0]
     chargex3: 3
     color: 1
-    description: Charged rho meson
     conjugate: rho-
+    description: Charged rho meson
     name: rho+
     spinx2: 2
 

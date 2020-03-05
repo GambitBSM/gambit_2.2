@@ -405,6 +405,8 @@ if args.file:
         SPHENO
         """
 
+        # Forward declare some variables
+        spheno_decays = {}
         if output_opts.spheno:
 
             # Move SPheno files from SARAH to Outputs.
@@ -459,7 +461,6 @@ if args.file:
             spheno_decay_src, spheno_decay_header = \
                 write_spheno_decay_entry(gum.name, clean_model_name)
 
-            get_higgs_invisibles(higgses, spheno_decays, partlist)
             # HiggsCouplingsTable
             if len(higgses) > 1:
                 hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
@@ -599,7 +600,8 @@ if args.file:
         spectrum_src = write_spectrum(gum.name, parameters, gum.spec, add_higgs, 
                                       output_opts.spheno, gambit_pdgs,
                                       neutral_higgses, charged_higgses, 
-                                      blockparams, bsm_particle_list)
+                                      blockparams, bsm_particle_list,
+                                      spheno_decays, partlist)
 
         spectrum_header = write_spectrum_header(gum.name, add_higgs, 
                                                 output_opts.spheno, higgses,
