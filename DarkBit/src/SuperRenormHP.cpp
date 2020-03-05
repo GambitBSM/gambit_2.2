@@ -1038,17 +1038,22 @@ namespace Gambit
       const double alpha = parameters[0], lambda = parameters[1];
 
       ASCIItableReader data = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/ShortRangeForces/Sushkov2011.dat");
-      data.setcolnames({"distance", "Fres", "sigma"});
+      data.setcolnames({"distance", "Fres", "sigma", "binWidth"});
       std::vector<double> distance = data["distance"]; // [microns]
       std::vector<double> Fres = data["Fres"]; // [pN]
       std::vector<double> sigma = data["sigma"]; // [pN]
+      std::vector<double> width = data["binWidth"]; // [microns]
 
       std::vector<double> Fnew;
-      const double factor = 4*pi*G*R*alpha*pow(lambda, 3);
+      const double factor = 4*pi*G*R*alpha*pow(lambda, 3)*lambda*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5*1e12;
 
-      for (auto it=distance.begin(); it!=distance.end(); ++it)
+      double d, delta;
+
+      for (size_t i(0); i<distance.size(); ++i)
       {
-        Fnew.push_back(factor*exp(-*it*1e-4/lambda)*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5*1e12); // new force in pN
+        d = distance[i]*1e-4;
+        delta = width[i]*1e-4;
+        Fnew.push_back(factor/delta*(exp(-(d-delta/2.)/lambda)-exp(-(d+delta/2.)/lambda))); // new force in pN
       }
 
       std::vector<double> likelihood;
