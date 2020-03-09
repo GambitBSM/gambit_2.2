@@ -615,7 +615,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
 
     # Add a helper function to get the invisible decays of Higgses
     towrite = get_higgs_invisibles(neutral_higgses, spheno_decays, partlist,
-                                   gambit_pdgs, charged_higgses)
+                                   gambit_pdgs, charged_higgses, model_name)
             
 
     towrite += (
@@ -824,7 +824,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
             "\n"
             "// The SPheno frontend provides the invisible width for each Higgs, however this requires\n"
             "// loads of additional function calls. Just use the helper function instead.\n"
-            "result.invisibles = get_invisibles(he);\n"
+            "result.invisibles = get_invisibles_{0}(he);\n"
             "}}\n\n"
     ).format(model_name)
 

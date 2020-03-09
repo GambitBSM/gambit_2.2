@@ -58,7 +58,7 @@ def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs):
     return dumb_indent(6, towrite_src), towrite_head
 
 def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
-                         charged_higgses):
+                         charged_higgses, model_name):
     """
     Generate a helper function "get_invisibles" for a new model. 
     Firstly, create a dictionary with potentially invisible decay products of 
@@ -126,17 +126,33 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
     invisibles = list(set([tuple(sorted(x)) for y in invis.values() for x in y]))
     absinvs = [abs(int(i[0])) for i in invisibles]
 
-    # "Visible" particles are those who are not invisible or Higgses, here...
-    visibles = list( set(all_parts) - set(absinvs) - set(higgses) - 
-                     set([abs(int(x)) for x in charged_higgses] ) )
-    
     towrite = (
             "\n"
             "/// Helper function to work out if the LSP is invisible, "
             "and if so, which particle it is.\n"
-            "std::vector<std::pair<str,str>> get_invisibles(const "
+            "std::vector<std::pair<str,str>> get_invisibles_{0}(const "
             "SubSpectrum& spec)\n"
             "{{\n"
+    ).format(model_name)
+
+    # If not decay products are classified as "invisible", then return an empty 
+    # function. An example of this is in the 2HDM, where we only have Higgses 
+    # coupling to Higgses
+    if len(invisibles) == 0:
+        towrite += (
+                "/// GUM has computed that there are no invisible decays for\n"
+                "/// the Higgs sector of this model.\n"
+                "(void)spec; // Silence compiler warnings.\n"
+                "return std::vector<std::pair<str,str>>();\n"
+                "}\n"
+            )
+        return indent(towrite)
+
+    # "Visible" particles are those who are not invisible or Higgses, here...
+    visibles = list( set(all_parts) - set(absinvs) - set(higgses) - 
+                     set([abs(int(x)) for x in charged_higgses] ) )
+    
+    towrite += (
             "// Get the lightest invisible particle (and antiparticle).\n"
             "std::pair<str,str> lnp = std::make_pair(\"{0}\", \"{1}\");\n"
             "double lnpmass = spec.get(Par::Pole_Mass, \"{2}\");\n"
