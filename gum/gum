@@ -384,7 +384,7 @@ if args.file:
                                               gambit_pdgs, add_higgs)
         
         # Get the model parameters out of the parameter list
-        model_parameters = get_model_parameters(parameters)
+        model_parameters = get_model_parameters(parameters, add_higgs)
 
         model_header = add_to_model_hierarchy(gum.spec, gum.name, 
                                               model_parameters, model_definitions,

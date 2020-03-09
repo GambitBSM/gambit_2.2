@@ -23,7 +23,7 @@ import re
 from setup import *
 from files import *
 
-def get_model_parameters(parameters):
+def get_model_parameters(parameters, add_higgs):
     """
     Extracts the model (scan) parameters out of the full parameter list
     """
@@ -38,8 +38,15 @@ def get_model_parameters(parameters):
             continue
         if param.block != None and param.block.endswith("IN") : 
             continue
+
+        # Nor if it's an output
         if param.is_output :
             continue
+
+        # If there's just a single (SM) Higgs, don't add the vev 
+        if add_higgs:
+            if param.block == "HMIX" and param.index == 3:
+                continue
 
         # Replace all trailing + and - with pm
         param.name = re.sub(r'(.*)[-+]', r'\1pm', param.name)

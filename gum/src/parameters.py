@@ -282,13 +282,22 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     
     # List of parameters which have been added. Dupes can arise
     # from the Pole_Mixings for multiple particles
-    addedpars = [] 
+    addedpars = []
+
+    # Save the SM vev name, we might need it
+    smvevname = "vev"
 
     # Add all parameters from the parameter list from SARAH
     for i in xrange(len(paramlist)):
         p = paramlist[i]
-        # TODO: TG: I understand that we want to remove SM parameters here, 
-        # right? That means also the gauge and yukawa blocks
+
+        # If it's the Higgs vev, don't add it! We'll do it ourselves. 
+        # Save the name though.
+        if add_higgs and p.block() == "HMIX" and p.index() == 3:
+            smvevname = p.name()
+            continue
+
+        # Remove SM parameters here
         if (    (p.block().lower() != 'sm')
             and (p.block().lower() != 'sminputs')
             and (p.block().lower() != 'vckm')
@@ -336,8 +345,9 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     
     # Now add some Standard Model stuff that's in every SimpleSpectrum, for now.
     if add_higgs:
-        params.append(SpectrumParameter("vev", "mass1", shape="scalar", 
-                                        sm=True, is_real=True))
+        params.append(SpectrumParameter(smvevname, "mass1", shape="scalar", 
+                                        sm=True, is_real=True, block="HMIX",
+                                        index=3))
 
     params.append(SpectrumParameter("g1", "dimensionless", block="GAUGE", 
                                     index=1, shape="scalar", sm=True, 
@@ -359,6 +369,8 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
                                     shape="m3x3", sm=True, is_real=False))
     
     return params
+
+
 
 
 ##################

@@ -380,7 +380,7 @@ namespace GUM
             else if(spinentry == "NoField") 
             {
               std::cout << "NoField entry for " << alt_name << std::endl;
-              spinX2 = 99; 
+              spinX2 = 0; 
               // command = "posgum = Position[rotationsgum,plgum[[" + std::to_string(i+1) + ", 1]]]";
             }
             else throw std::runtime_error("Unrecognised spin - " + spinentry + " - found.");
