@@ -12,6 +12,8 @@
 ///  *********************************************
 
 #include <cmath>
+#include <math.h>
+#include <type_traits>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -29,6 +31,8 @@
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_sf_bessel.h>
 
+#include "fjcore.hh"
+#include "gambit/DecayBit/DecayBit_rollcall.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
@@ -60,7 +64,7 @@ namespace Gambit
 
     // mathematical constants
     const double pi=Gambit::pi;
-    
+
     // physical constants
     const double alphaEM = Gambit::alpha_EM; // fine structure constant
     const double alphaS = pi; // strong coupling constant
@@ -70,7 +74,7 @@ namespace Gambit
     const double kb = Gambit::K2eV; // Boltzmann constant [eV/K]
     const double G = 6.674e-8; // Gravitational constant [cm³/g/s²]
     const double C(50./27.); // loop function from the decay of the Higgs boson into two photons
-    
+
     // cosmological constants
     const double s0(2891); // current entropy density [1/cm³]
     const double rhoC(4.84e3); // current critical density [eV/cm³]
@@ -87,6 +91,7 @@ namespace Gambit
     ////////////////////////////////////////////////////////////////////
     //      Support class to compute cosmological observables         //
     ////////////////////////////////////////////////////////////////////
+
 
     //------------- Class declaration -------------// 
 
@@ -119,8 +124,8 @@ namespace Gambit
         double m_OmegaLambda;
         double m_OmegaR;
         double m_OmegaB;
-        double m_H0;
-        double m_t0;
+        double m_H0; // Hubble constant
+        double m_t0; // age of the universe at redshift zero
     };
 
     // constructor
@@ -746,7 +751,7 @@ namespace Gambit
     // total predicted photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
     double XrayPredictionIntegrated(double const& E, XrayLikelihood_params *params)
     {
-      size_t n = 1e4; 
+      size_t n = 1e4;
 
       gsl_integration_workspace *w =  gsl_integration_workspace_alloc(n);
 
@@ -827,7 +832,7 @@ namespace Gambit
       result = 4e11*theta*theta*s0*mS;
     }
 
-    // capability function to provide the decay rate to two photons    
+    // capability function to provide the decay rate to two photons
     void SuperRenormHP_decay_rate_2photons (double &result)
     {
       using namespace Pipes::SuperRenormHP_decay_rate_2photons;
@@ -851,7 +856,7 @@ namespace Gambit
       {
         throw gsl_errno;
       }
-      else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << std::endl; abort(); } 
+      else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << std::endl; abort(); }
     }
 
     // capability function to compute the X-ray Likelihood from the INTEGRAL experiment
@@ -935,7 +940,7 @@ namespace Gambit
       else { result = 0; }
     }
 
-    //------------- Functions to compute stellar coolling likelihoods -------------// 
+    //------------- Functions to compute stellar coolling likelihoods -------------//
 
     // capability function to compute the solar DM luminosity
     void SuperRenormHP_solar_luminosity (double &result)
@@ -979,7 +984,7 @@ namespace Gambit
 
       result = Phi0*pow(1+Ls/L0, alpha);
     }
-
+    //
     // capability function to compute the predicted solar neutrino flux (Be7)
     void SuperRenormHP_solar_neutrino_flux_Be7 (double &result)
     {
@@ -1072,7 +1077,7 @@ namespace Gambit
 
       std::vector<double> likelihood;
       double norm;
-      
+
       for (size_t i(0); i<distance.size(); ++i)
       {
         norm = 1./sqrt(2*pi)/sigma[i];
