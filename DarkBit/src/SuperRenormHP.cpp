@@ -11,6 +11,7 @@
 ///
 ///  *********************************************
 
+#include <algorithm>
 #include <cmath>
 #include <math.h>
 #include <type_traits>
@@ -32,7 +33,7 @@
 #include <gsl/gsl_sf_bessel.h>
 
 #include "fjcore.hh"
-#include "gambit/DecayBit/DecayBit_rollcall.hpp"
+/* #include "gambit/DecayBit/DecayBit_rollcall.hpp" */
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
@@ -124,8 +125,8 @@ namespace Gambit
         double m_OmegaLambda;
         double m_OmegaR;
         double m_OmegaB;
-        double m_H0; // Hubble constant
-        double m_t0; // age of the universe at redshift zero
+        double m_H0;
+        double m_t0;
     };
 
     // constructor
@@ -210,12 +211,12 @@ namespace Gambit
 
       protected:
 
-        double m_J;
-        double m_Emin;
-        double m_Emax;
-        double m_deltaOmega;
-        double m_deltaE; // energy resolution in percentage of the energy 
-        std::vector<std::vector<double> > m_lRange;
+        double m_J; // astrophysical factor for the predicted photon flux from decaying DM
+        double m_Emin; // minimum energy of the observations
+        double m_Emax; // maximum energy of the observations
+        double m_deltaOmega; // total solid angle of observation
+        double m_deltaE; // energy resolution in percentage of the energy scale
+        std::vector<std::vector<double> > m_lRange; // observation region in galactic coordinates (degrees)
         std::vector<std::vector<double> > m_bRange;
         std::string m_experiment;
         std::map<std::string, int> m_experimentMap;
@@ -333,7 +334,7 @@ namespace Gambit
       return experiment->flux(x);
     }
 
-    const double int_factor(1.1); // integration width = int_factor*energy dispersion instrument
+    const double int_factor(1.1); // integration range = int_factor*energy dispersion instrument
 
     // photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
     double Xray::fluxIntegrated(double const& E)
@@ -425,7 +426,7 @@ namespace Gambit
       {
         throw gsl_errno;
       }
-      else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << " and  gsl_errno = " << gsl_errno << std::endl; abort(); } 
+      else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << " and  gsl_errno = " << gsl_errno << std::endl; abort(); }
     }
 
     const double da = 1.66053906660e-24; // dalton to g 
@@ -722,7 +723,7 @@ namespace Gambit
 
 
     // galactic (Milky Way) contribution to the differential photon flux [photons/eV/cm²/s]
-    const double s(0.5); // sigma of the gaussian for the galactic emission line = s*energy dispersion instrument
+    const double s(0.5); // standard deviation of the gaussian for the galactic emission line = s*energy dispersion instrument
 
     double dPhiG(double const& E, XrayLikelihood_params *params)
     {
@@ -774,8 +775,8 @@ namespace Gambit
       return result;
     }
 
-    // auxiliary function for gsl minimization
-    double XrayLikelihood(double E, void * p)
+    // auxiliary function for gsl minimization returning the log-likelihood for a given X-ray experiment
+    double XrayLogLikelihood(double E, void *p)
     {
       XrayLikelihood_params *params = static_cast<XrayLikelihood_params*>(p);
       Xray experiment = params->experiment;
@@ -784,11 +785,11 @@ namespace Gambit
       double sigma = experiment.sigmaIntegrated(E);
       double prediction = XrayPredictionIntegrated(E, params);
 
-      return (prediction>=data) ? exp(-pow(data-prediction,2.)/(2.*sigma*sigma)) : 1.;
+      return (prediction>=data) ? -pow(data-prediction,2.)/(2.*sigma*sigma) : 0.;
     }
 
-    // computes the energy E which minimizes the likelihood
-    double minimizeLikelihood(XrayLikelihood_params *params)
+    // computes the energy E which minimizes the log-likelihood
+    double minimizeLogLikelihood(XrayLikelihood_params *params)
     {
       int status;
       int iter = 0, max_iter = 100;
@@ -801,7 +802,7 @@ namespace Gambit
       double m = (a+b)/2.;
       gsl_function F;
 
-      F.function = &XrayLikelihood;
+      F.function = &XrayLogLikelihood;
       F.params = params;
       T = gsl_min_fminimizer_brent;
       s = gsl_min_fminimizer_alloc(T);
@@ -824,7 +825,7 @@ namespace Gambit
       return m;
     }
 
-    // capability function to provide the initial energy density as produced by freeze-in
+    // capability function to provide the initial energy density as produced by the freeze-in mechanism
     void SuperRenormHP_initial_density (double &result)
     {
       using namespace Pipes::SuperRenormHP_initial_density;
@@ -859,7 +860,7 @@ namespace Gambit
       else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << std::endl; abort(); }
     }
 
-    // capability function to compute the X-ray Likelihood from the INTEGRAL experiment
+    // capability function to compute the X-ray log-likelihood from the INTEGRAL experiment
     void calc_lnL_INTEGRAL(double &result)
     {
       using namespace Pipes::calc_lnL_INTEGRAL;
@@ -874,6 +875,7 @@ namespace Gambit
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
 
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
       if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
@@ -882,15 +884,15 @@ namespace Gambit
         gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
         try
         {
-          E = minimizeLikelihood(&params);
-          result = log(XrayLikelihood(E, &params));
+          E = minimizeLogLikelihood(&params);
+          result = XrayLogLikelihood(E, &params);
         }
 
         catch (int gsl_errno)
         {
-          lik1 = XrayLikelihood(Emin+experiment.deltaE(Emin), &params);
-          lik2 = XrayLikelihood(fmin(mass/2., Emax-experiment.deltaE(Emax)), &params);
-          result = log(fmin(lik1, lik2));
+          lik1 = XrayLogLikelihood(Emin+experiment.deltaE(Emin), &params);
+          lik2 = XrayLogLikelihood(fmin(mass/2., Emax-experiment.deltaE(Emax)), &params);
+          result = fmin(lik1, lik2);
         }
         // restores the default gsl error handler
         gsl_set_error_handler (old_handler);
@@ -899,7 +901,7 @@ namespace Gambit
       else { result = 0; }
     }
 
-    // capability function to compute the X-ray Likelihood from the HEAO-1 A2 experiment
+    // capability function to compute the X-ray log-likelihood from the HEAO-1 A2 experiment
     void calc_lnL_HEAO(double &result)
     {
       using namespace Pipes::calc_lnL_HEAO;
@@ -915,6 +917,7 @@ namespace Gambit
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;
 
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
       if (mass >= 1e6) { result = 0; }
 
       else if (mass >= 2.*Emin)
@@ -923,15 +926,15 @@ namespace Gambit
         gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler);
         try
         {
-          E = minimizeLikelihood(&params);
-          result = log(XrayLikelihood(E, &params));
+          E = minimizeLogLikelihood(&params);
+          result = XrayLogLikelihood(E, &params);
         }
 
         catch (int gsl_errno)
         {
-          lik1 = XrayLikelihood(Emin+experiment.deltaE(Emin), &params);
-          lik2 = XrayLikelihood(fmin(mass/2., Emax-experiment.deltaE(Emax)), &params);
-          result = log(fmin(lik1, lik2));
+          lik1 = XrayLogLikelihood(Emin+experiment.deltaE(Emin), &params);
+          lik2 = XrayLogLikelihood(fmin(mass/2., Emax-experiment.deltaE(Emax)), &params);
+          result = fmin(lik1, lik2);
         }
         // restores the default gsl error handler
         gsl_set_error_handler (old_handler);
@@ -1014,7 +1017,7 @@ namespace Gambit
 
     // capability function to compute the likelihood from solar Be7 neutrino flux
     void calc_lnL_solar_neutrino_Be7 (double &result)
-    { 
+    {
       using namespace Pipes::calc_lnL_solar_neutrino_Be7;
 
       const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
