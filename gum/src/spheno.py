@@ -3360,9 +3360,8 @@ def write_spheno_frontend_header(model_name, function_signatures,
     ).format(fullmodelname, clean_model_name)
 
     # Whether to code up the HiggsCouplingsTable:
-    hboutput = False
     if hboutput:
-      towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"{0}_HiggsCouplingsTable\")\n"
+      towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"SARAHSPheno_{0}_HiggsCouplingsTable\")\n"
         ).format(clean_model_name)
 
     towrite += ("BE_CONV_FUNCTION(ReadingData, void, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
