@@ -649,7 +649,7 @@ namespace Gambit
             // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
             // Grids calculated at Lambda = 1000 GeV, hence the factor here. 
 
-            double lambda_scaling = 1000.0/float(pow(lambda,4));
+            double lambda_scaling = float(pow(1000.0,4))/float(pow(lambda,4));
 
         
             // EFT validity checks:            
@@ -1164,7 +1164,7 @@ namespace Gambit
             // DO LAMBDA CHECK HERE!
             // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
             
-            double lambda_scaling = 1000.0/float(pow(lambda,4));
+            double lambda_scaling = float(pow(1000.0,4))/float(pow(lambda,4));
 
             // cout << "lambda scale factor = " << lambda_scaling<<endl;        
             
@@ -1637,7 +1637,7 @@ namespace Gambit
           double Norm= pow(Opp,2);
           // double res =  36000.0*Norm*A*Norm*B; 
           double res =  36000.0*A*Norm*B; 
-          double lambda_scaling = 1000.0/float(pow(lambda,6));
+          double lambda_scaling = float(pow(1000.0,6))/float(pow(lambda,6));
   
           // cout << "Res check = " << res*lambda_scaling << " norm = " << Norm << " opperator = "<< pair <<endl;
 
