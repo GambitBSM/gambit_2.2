@@ -869,7 +869,7 @@ namespace Gambit
 
       static Xray experiment = Xray("INTEGRAL");
 
-      double mass = *Dep::DM_mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
+      double mass = *Dep::mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
 
       XrayLikelihood_params params = {mass, gamma, density, experiment, cosmology};
 
@@ -910,7 +910,7 @@ namespace Gambit
 
       static Xray experiment = Xray("HEAO");
 
-      const double mass = *Dep::DM_mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
+      const double mass = *Dep::mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
 
       XrayLikelihood_params params = {mass, gamma, density, experiment, cosmology};
 
