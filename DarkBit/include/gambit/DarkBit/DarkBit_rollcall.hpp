@@ -1520,7 +1520,7 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY DM_mass
+  #define CAPABILITY mass
   START_CAPABILITY
     #define FUNCTION SuperRenormHP_mass
     START_FUNCTION(double)
@@ -1534,7 +1534,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(initial_density, double)
     DEPENDENCY(decay_rate_2photons, double)
-    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1544,7 +1544,7 @@ START_MODULE
     START_FUNCTION(double)
     DEPENDENCY(initial_density, double)
     DEPENDENCY(decay_rate_2photons, double)
-    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 

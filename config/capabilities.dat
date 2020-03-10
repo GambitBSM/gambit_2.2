@@ -2210,7 +2210,7 @@ initial_density: |
 decay_rate_2photons: |
   Returns the decay rate in s of a given DM candidate into two photons.
 
-DM_mass: |
+mass: |
   Returns the mass in eV of a given DM candidate.
 
 lnL_INTEGRAL: |
