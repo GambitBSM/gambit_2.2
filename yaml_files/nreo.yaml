@@ -58,20 +58,20 @@ Parameters:
     gamma: 1
 
   WIMP_sigmav:
-    A_bb:     1e-38 
-    A_WW:     1e-38
-    A_cc:     1e-38
-    A_ZZ:     1e-38
-    A_tt:     1e-38
-    A_hh:     1e-38
-    A_tautau: 1e-38
-    B_bb:     1e-38
-    B_WW:     1e-38
-    B_cc:     1e-38
-    B_ZZ:     1e-38
-    B_tt:     1e-38
-    B_hh:     1e-38 
-    B_tautau: 1e-38
+    A_bb:     1.0e-26 
+    A_WW:     1.0e-26
+    A_cc:     1.0e-26
+    A_ZZ:     1.0e-26
+    A_tt:     1.0e-26
+    A_hh:     1.0e-26
+    A_tautau: 1.0e-26
+    B_bb:     1.0e-26
+    B_WW:     1.0e-26
+    B_cc:     1.0e-26
+    B_ZZ:     1.0e-26
+    B_tt:     1.0e-26
+    B_hh:     1.0e-26 
+    B_tautau: 1.0e-26
 
   # Halo_Einasto_rho0:
   #  rho0:
