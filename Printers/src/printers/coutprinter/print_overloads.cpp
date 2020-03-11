@@ -84,7 +84,7 @@ namespace Gambit
       m["upper"] = value.upper;
       _print(m, label, vID, mpirank, pointID);
     }
-    
+
     void coutPrinter::_print(map_intpair_dbl const& value, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
     {
       // For maps of int pairs, we split them up and print each named entry individually

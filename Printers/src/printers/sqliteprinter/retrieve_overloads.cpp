@@ -45,7 +45,7 @@ namespace Gambit
         out = buffer;\
         return valid;\
      }\
-      
+
      /// Templatable retrieve functions
      bool SQLiteReader::RETRIEVE_INT(bool     )
      bool SQLiteReader::RETRIEVE_INT(int      )
@@ -148,7 +148,7 @@ namespace Gambit
        { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED"); return false; }
        bool SQLiteReader::_retrieve(Flav_KstarMuMu_obs& /*out*/, const std::string& /*label*/, const uint /*rank*/, const ulong /*pointID*/)
        { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED"); return false; }
-
+      
      #endif
 
      /// @}
