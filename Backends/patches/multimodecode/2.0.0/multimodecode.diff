@@ -616,20 +616,18 @@ index 3ba54a2..d8e972e 100644
        if (out_opt%fields_horiz) then
 diff --git a/multimodecode_gambit.f90 b/multimodecode_gambit.f90
 new file mode 100644
-index 0000000..2b1e4c5
+index 0000000..3be33c9
 --- /dev/null
 +++ b/multimodecode_gambit.f90
-@@ -0,0 +1,994 @@
+@@ -0,0 +1,996 @@
 +MODULE multimodecode_gambit
-+!Module that includes the function that mimicks the driver in multimodecode 
-+!so that the inflationary solvers can be called from a gambit source file 
-+!in the cosmobit (gambit) module.
++! Module that contains the interface for MultiModeCode to CosmoBit in GAMBIT
 +  use modpkparams
 +  use potential
 +  use background_evolution
 +  use modpk_utils
 +  use camb_interface
-+  use access_modpk, only : evolve, potinit ! , reheat_evolve
++  use access_modpk, only : evolve, potinit
 +  use internals
 +  use modpk_icsampling
 +  use modpk_io, only : out_opt
@@ -660,6 +658,8 @@ index 0000000..2b1e4c5
 +    real(dp) :: n_iso
 +    real(dp) :: n_pnad
 +    real(dp) :: n_ent
++    !Number of e-folds at pivot scale
++    real(dp) :: N_pivot
 +    !Tensor-to-scalar
 +    real(dp) :: r
 +    !Running, etc
@@ -667,7 +667,7 @@ index 0000000..2b1e4c5
 +    real(dp) :: runofrun
 +    !Non-Gaussianity
 +    real(dp) :: f_NL
-+    real(dp) :: tau_NL  
++    real(dp) :: tau_NL
 +    real(dp) , dimension(1000) :: k_array
 +    real(dp) , dimension(1000) :: pks_array
 +    real(dp) , dimension(1000) :: pks_iso_array
@@ -771,8 +771,8 @@ index 0000000..2b1e4c5
 +    save_iso_N = .false.
 +    N_iso_ref = 55
 +    param_sampling = 1
-+    varying_N_pivot = .false. ! --
-+    use_first_priorval = .false. ! --
++    varying_N_pivot = .false.
++    use_first_priorval = .false.
 +
 +    ! Gambit interface giving the values
 +    ! to the MultiModeCode IC parameters
@@ -797,11 +797,11 @@ index 0000000..2b1e4c5
 +
 +    !---------------------------------------------------------------
 +    ! setting up the printer options at the code-level.
-+    ! TODO: make this from GAMBIT yaml file. 
++    ! TODO: make this from GAMBIT yaml file.
 +    ! NB: this may not be interesting or necessary.
 +    out_opt%modpkoutput = .false.
 +    out_opt%output_reduced = .true.
-+    out_opt%output_badic =.false.
++    out_opt%output_badic = .false.
 +
 +    out_opt%save_traj = .false.
 +    out_opt%fields_horiz = .false.
@@ -860,7 +860,7 @@ index 0000000..2b1e4c5
 +        RETURN
 +      else
 +        ! at the moment, smash potential is only calculated by solving the background dynamics
-+        ! and using slow roll approximation. going beyong would require solving first order 
++        ! and using slow roll approximation. going beyong would require solving first order
 +        ! mode equations in perturbation theory.
 +        gambit_obs%As = observs_SR%As
 +        gambit_obs%ns = observs_SR%ns
@@ -882,6 +882,7 @@ index 0000000..2b1e4c5
 +      gambit_obs%n_iso = observs%n_iso
 +      gambit_obs%n_pnad = observs%n_pnad
 +      gambit_obs%n_ent = observs%n_ent
++      gambit_obs%N_pivot = N_pivot
 +      gambit_obs%r = observs%r
 +      gambit_obs%alpha_s = observs%alpha_s
 +      gambit_obs%runofrun = observs%runofrun
@@ -1156,9 +1157,9 @@ index 0000000..2b1e4c5
 +        Npiv_renorm, phi_pivot, del_phi)
 +
 +      if (use_horiz_cross_approx) then
-+        HC_approx=.true.
++        HC_approx = .true.
 +      else
-+        HC_approx=.false.
++        HC_approx = .false.
 +      end if
 +
 +      call observs_SR%set_zero()
@@ -1297,7 +1298,7 @@ index 0000000..2b1e4c5
 +
 +    out_opt%modpkoutput = .false.
 +    out_opt%output_reduced = .true.
-+    out_opt%output_badic =.false.
++    out_opt%output_badic = .false.
 +    out_opt%save_traj = .false.
 +    out_opt%fields_horiz = .false.
 +    out_opt%fields_end_infl = .false.
@@ -1373,6 +1374,7 @@ index 0000000..2b1e4c5
 +      gambit_obs%n_iso = observs%n_iso
 +      gambit_obs%n_pnad = observs%n_pnad
 +      gambit_obs%n_ent = observs%n_ent
++      gambit_obs%N_pivot = N_pivot
 +      gambit_obs%r = observs%r
 +      gambit_obs%alpha_s = observs%alpha_s
 +      gambit_obs%runofrun = observs%runofrun
@@ -1576,9 +1578,9 @@ index 0000000..2b1e4c5
 +        Npiv_renorm, phi_pivot, del_phi)
 +
 +      if (use_horiz_cross_approx) then
-+        HC_approx=.true.
++        HC_approx = .true.
 +      else
-+        HC_approx=.false.
++        HC_approx = .false.
 +      end if
 +
 +      call observs_SR%set_zero()
