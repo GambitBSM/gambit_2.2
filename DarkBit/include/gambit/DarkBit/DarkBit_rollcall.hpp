@@ -1552,6 +1552,9 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL
     START_FUNCTION(double)
+    ALLOW_MODEL(LCDM)
+    /* DEPENDENCY(Omega0_r, double) */
+    /* DEPENDENCY(Omega0_m, double) */
     DEPENDENCY(initial_density, double)
     DEPENDENCY(decay_rate_2photons, double)
     DEPENDENCY(mass, double)

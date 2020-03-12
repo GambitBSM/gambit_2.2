@@ -644,7 +644,7 @@ START_MODULE
   #undef CAPABILITY
   
   // needed in addition to T_ncdm since T_ncdm of non-SM models 
-  // assume a fiducial value to base calculation on 
+  // assume a fiducial value to base calculation on
   #define CAPABILITY T_ncdm_SM 
     START_CAPABILITY
     #define FUNCTION T_ncdm_SM
@@ -709,17 +709,19 @@ START_MODULE
 
     #define FUNCTION compute_Omega0_b
       START_FUNCTION(double)
+      ALLOW_MODEL(LCDM)
       DEPENDENCY(H0, double)
     #undef FUNCTION
 
   #undef CAPABILITY
 
-  
+
   #define CAPABILITY Omega0_cdm
     START_CAPABILITY
 
     #define FUNCTION compute_Omega0_cdm
       START_FUNCTION(double)
+      ALLOW_MODEL(LCDM)
       DEPENDENCY(H0, double)
     #undef FUNCTION
 
@@ -751,7 +753,7 @@ START_MODULE
     #undef FUNCTION
 
   #undef CAPABILITY
-  
+
 
   #define CAPABILITY Omega0_ur
     START_CAPABILITY
@@ -761,7 +763,7 @@ START_MODULE
       DEPENDENCY(Omega0_g, double)
       DEPENDENCY(N_ur, double)
     #undef FUNCTION
-  
+
     #define FUNCTION get_Omega0_ur_classy  
       START_FUNCTION(double)
       BACKEND_REQ(class_get_Omega0_ur,(class_tag),double,())

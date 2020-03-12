@@ -6,6 +6,33 @@
 
 
 Parameters:
+
+  LCDM:
+    omega_b: 0.022
+      # prior_type: flat
+      # range: [0.020,0.024]
+    omega_cdm: 0.1
+      # prior_type: flat
+      # range: [0.10,0.13]
+    H0: 67.
+      # prior_type: flat
+      # range: [62,74]
+    ln10A_s: 3.
+      # prior_type: flat
+      # range: [2.9,3.2]
+    n_s: 1.
+      # prior_type: flat
+      # range: [0.9,1.10]
+    tau_reio: 0.1
+      # prior_type: flat
+      #range: [0.04,0.20]
+      # range: [0.004,0.20]
+    T_cmb: 2.72548
+      # measurement 2.72548 \pm 0.00057
+      # -> vary within error range
+      #prior_type: gaussian
+      #range: [2.72491,2.72605]
+
   SuperRenormHP:
     mS:  
       prior_type: log
@@ -14,27 +41,9 @@ Parameters:
       prior_type: log
       range: [1e-14, 1e-4]
 
-
 Priors:
 
-
-
 Printer:
-
-  #printer: sqlite
-  #options:
-  #  output_file: "results.sql"
-  #  table_name: "spartan"
-  #  buffer_length: 1000
-  #  delete_file_on_restart: true
-
-  #printer: hdf5
-  #options:
-    #output_file: "results.hdf5"
-    #group: "/spartan"
-    #delete_file_on_restart: true
-    #buffer_length: 1000
-    #disable_autorepair: true
 
   printer: ascii
   options:
@@ -42,23 +51,26 @@ Printer:
     buffer_length: 1
     delete_file_on_restart: true
 
-  #printer: cout
-
 Scanner:
 
-  use_scanner: grid
+  use_scanner: grid_sq
 
   scanners:
 
     grid:
+      plugin: grid
+      like: LogLike
+      grid_pts: [10, 10]
+
+    grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 200
+      grid_pts: 5
 
     random:
       plugin: random
       like: LogLike
-      point_number: 1000
+      point_number: 100
 
     de:
       plugin: diver
@@ -117,6 +129,18 @@ ObsLikes:
      type:         double
 
 Rules:
+
+  - capability: classy_final_input
+    function: set_classy_input
+    module: CosmoBit
+
+  - capability: Omega0_m
+    function: compute_Omega0_m
+    module: CosmoBit
+
+  - capability: Omega0_r
+    function: get_Omega0_r_classy
+    module: CosmoBit
 
   - capability: solar_neutrino_flux_B8
     options:

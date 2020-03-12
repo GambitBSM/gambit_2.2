@@ -89,100 +89,97 @@ namespace Gambit
     // Minimum finite result returnable from log(double x);
     const double logmin = log(std::numeric_limits<double>::min());
 
-    ////////////////////////////////////////////////////////////////////
-    //      Support class to compute cosmological observables         //
-    ////////////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////////// */
+    /* //      Support class to compute cosmological observables         // */
+    /* //////////////////////////////////////////////////////////////////// */
 
 
-    //------------- Class declaration -------------// 
+    /* //------------- Class declaration -------------// */ 
 
-    class Cosmology 
-    {
-      public :
+    /* class Cosmology */ 
+    /* { */
+    /*   public : */
 
-        Cosmology();
+    /*     Cosmology(); */
 
-        void set_t0();
+    /*     void set_t0(); */
 
-        double getOmegaK() const;
-        double getOmegaDM() const;
-        double getOmegaM() const;
-        double getOmegaLambda() const;
-        double getOmegaR() const;
-        double getOmegaB() const;
-        double getH0() const;
-        double get_t0() const;
+    /*     double getOmegaDM() const; */
+    /*     double getOmegaM() const; */
+    /*     double getOmegaLambda() const; */
+    /*     double getOmegaR() const; */
+    /*     double getOmegaB() const; */
+    /*     double getH0() const; */
+    /*     double get_t0() const; */
 
-        std::vector<double> age (double redshift);
+    /*     std::vector<double> age (double redshift); */
 
-        ~Cosmology();
+    /*     ~Cosmology(); */
 
-      protected :
+    /*   protected : */
 
-        double m_OmegaK;
-        double m_OmegaDM;
-        double m_OmegaM;
-        double m_OmegaLambda;
-        double m_OmegaR;
-        double m_OmegaB;
-        double m_H0;
-        double m_t0;
-    };
+    /*     double m_OmegaDM; */
+    /*     double m_OmegaM; */
+    /*     double m_OmegaLambda; */
+    /*     double m_OmegaR; */
+    /*     double m_OmegaB; */
+    /*     double m_H0; */
+    /*     double m_t0; */
+    /* }; */
 
-    // constructor
-    Cosmology::Cosmology() : m_OmegaK(-0.005), m_OmegaDM(0.285), m_OmegaM(0.308), m_OmegaLambda(0.692), m_OmegaR(0), m_OmegaB(0.308-0.285), m_H0(67.81e-19/3.085), m_t0(0) { set_t0(); }
+    /* // constructor */
+    /* Cosmology::Cosmology() : m_OmegaDM(0.285), m_OmegaM(0.308), m_OmegaLambda(0.692), m_OmegaR(0), m_OmegaB(0.308-0.285), m_H0(67.81e-19/3.085) { set_t0(); } */
 
-    //------------- Functions to compute the age of the Universe at a given redshift -------------// 
+    /* //------------- Functions to compute the age of the Universe at a given redshift -------------// */
 
-    // auxiliary function for gsl integration
-    double age_f (double x, void *p)
-    {
-      Cosmology *cosmology = static_cast<Cosmology*>(p);
-      double OmegaK = cosmology->getOmegaK();
-      double OmegaM = cosmology->getOmegaM();
-      double OmegaLambda = cosmology->getOmegaLambda();
-      double OmegaR = cosmology->getOmegaR();
+    /* // auxiliary function for gsl integration */
+    /* double age_f (double x, void *p) */
+    /* { */
+    /*   Cosmology *cosmology = static_cast<Cosmology*>(p); */
+    /*   double OmegaM = cosmology->getOmegaM(); */
+    /*   double OmegaLambda = cosmology->getOmegaLambda(); */
+    /*   double OmegaR = cosmology->getOmegaR(); */
+    /*   double OmegaK = 1. - OmegaM - OmegaR - OmegaLambda; */
 
-      return 1./sqrt( OmegaM*pow(1+x, 5.) + OmegaLambda*pow(1+x, 2.) + OmegaK*pow(1+x, 4.) + OmegaR*pow(1+x, 6.) );
-    }
+    /*   return 1./sqrt( OmegaM*pow(1+x, 5.) + OmegaLambda*pow(1+x, 2.) + OmegaK*pow(1+x, 4.) + OmegaR*pow(1+x, 6.) ); */
+    /* } */
 
-    // computes the age of the Universe at a given redshift ([0] age, [1] abserr)
-    std::vector<double> Cosmology::age (double redshift)
-    {
-      size_t n = 1e4; 
+    /* // computes the age of the Universe at a given redshift ([0] age, [1] abserr) */
+    /* std::vector<double> Cosmology::age (double redshift) */
+    /* { */
+    /*   size_t n = 1e4; */ 
 
-      gsl_integration_workspace *w =  gsl_integration_workspace_alloc(n);
+    /*   gsl_integration_workspace *w =  gsl_integration_workspace_alloc(n); */
 
-      double epsabs = 0.;
-      double epsrel = 1e-3;
-      size_t limit = 1e3;
-      double result, abserr;
+    /*   double epsabs = 0.; */
+    /*   double epsrel = 1e-3; */
+    /*   size_t limit = 1e3; */
+    /*   double result, abserr; */
 
-      gsl_function F;
-      F.function = &age_f;
-      F.params = this;
+    /*   gsl_function F; */
+    /*   F.function = &age_f; */
+    /*   F.params = this; */
 
-      gsl_integration_qagiu(&F, redshift, epsabs, epsrel, limit, w, &result, &abserr);
+    /*   gsl_integration_qagiu(&F, redshift, epsabs, epsrel, limit, w, &result, &abserr); */
 
-      gsl_integration_workspace_free(w);
+    /*   gsl_integration_workspace_free(w); */
 
-      return {result/m_H0, abserr/m_H0};
-    }
+    /*   return {result/m_H0, abserr/m_H0}; */
+    /* } */
 
-    //------------- Elevator functions -------------// 
+    /* //------------- Elevator functions -------------// */ 
 
-    void Cosmology::set_t0 () { m_t0 = age(0)[0]; }
-    double Cosmology::getOmegaK () const { return m_OmegaK; }
-    double Cosmology::getOmegaDM () const { return m_OmegaDM; }
-    double Cosmology::getOmegaM () const { return m_OmegaM; }
-    double Cosmology::getOmegaLambda () const { return m_OmegaLambda; }
-    double Cosmology::getOmegaR () const { return m_OmegaR; }
-    double Cosmology::getOmegaB () const { return m_OmegaB; }
-    double Cosmology::getH0 () const { return m_H0; }
-    double Cosmology::get_t0 () const { return m_t0; }
+    /* void Cosmology::set_t0 () { m_t0 = age(0)[0]; } */
+    /* double Cosmology::getOmegaDM () const { return m_OmegaDM; } */
+    /* double Cosmology::getOmegaM () const { return m_OmegaM; } */
+    /* double Cosmology::getOmegaLambda () const { return m_OmegaLambda; } */
+    /* double Cosmology::getOmegaR () const { return m_OmegaR; } */
+    /* double Cosmology::getOmegaB () const { return m_OmegaB; } */
+    /* double Cosmology::getH0 () const { return m_H0; } */
+    /* double Cosmology::get_t0 () const { return m_t0; } */
 
-    // destructor
-    Cosmology::~Cosmology() {}
+    /* // destructor */
+    /* Cosmology::~Cosmology() {} */
 
     ////////////////////////////////////////////////////////////////////
     //         Support class to handle X-ray experiments              //
@@ -313,7 +310,7 @@ namespace Gambit
     {
       switch(m_experimentMap[m_experiment])
       {
-        case 1 : 
+        case 1 :
           return 4.8e-8*pow(E/100e3,-1.55) + 6.6e-8*exp(-(E-50e3)/7.5e3);
           break;
 
@@ -702,25 +699,72 @@ namespace Gambit
     //                   Capability functions                         //
     ////////////////////////////////////////////////////////////////////
 
-
-    //------------- Functions to compute X-ray likelihoods -------------// 
+    //------------- Functions to compute the age of the Universe at a given redshift -------------//
 
     // useful structure
-    struct XrayLikelihood_params {double mass; double gamma; double density; Xray experiment; Cosmology cosmology;};
+    struct cosmology_params {double OmegaM; double OmegaR; double OmegaLambda; double H0;};
+
+    // auxiliary function for gsl integration
+    double age_f (double x, void *p)
+    {
+      cosmology_params *params = static_cast<cosmology_params*>(p);
+      double OmegaM = params->OmegaM;
+      double OmegaLambda = params->OmegaLambda;
+      double OmegaR = params->OmegaR;
+      double OmegaK = 1. - OmegaM - OmegaR - OmegaLambda;
+
+      return 1./sqrt( OmegaM*pow(1+x, 5.) + OmegaLambda*pow(1+x, 2.) + OmegaK*pow(1+x, 4.) + OmegaR*pow(1+x, 6.) );
+    }
+
+    // computes the age of the Universe at a given redshift ([0] age, [1] abserr)
+    std::vector<double> ageUniverse (double redshift, double OmegaM, double OmegaR, double OmegaLambda, double H0)
+    {
+      size_t n = 1e4; 
+
+      gsl_integration_workspace *w =  gsl_integration_workspace_alloc(n);
+
+      double epsabs = 0.;
+      double epsrel = 1e-3;
+      size_t limit = 1e3;
+      double result, abserr;
+
+      cosmology_params params = {OmegaM, OmegaR, OmegaLambda, H0};
+
+      gsl_function F;
+      F.function = &age_f;
+      F.params = &params;
+
+      gsl_integration_qagiu(&F, redshift, epsabs, epsrel, limit, w, &result, &abserr);
+
+      gsl_integration_workspace_free(w);
+
+      return {result/H0, abserr/H0};
+    }
+
+    //------------- Functions to compute X-ray likelihoods -------------//
+
+    // useful structure
+    struct XrayLikelihood_params {double mass; double gamma; double density; Xray experiment; double H0; double OmegaM; double OmegaR; double OmegaLambda; double OmegaDM;};
 
     // cosmological contribution to the differential photon flux [photons/eV/cm²/s/sr]
-    double dPhiEg(double const& E, XrayLikelihood_params *params) 
+    double dPhiEg(double const& E, XrayLikelihood_params *params)
     {
       double mass = params->mass, gamma = params->gamma, density = params->density;
       Xray experiment = params->experiment;
-      Cosmology cosmology = params->cosmology;
+
+      double H0 = params->H0;
+      double OmegaM = params->OmegaM;
+      double OmegaR = params->OmegaR;
+      double OmegaLambda = params->OmegaLambda;
+      double OmegaK = 1. - OmegaM - OmegaR - OmegaLambda;
 
       double x = mass/2./E;
       double z = x - 1.;
 
-      return experiment.getDeltaOmega()*2.*1./(4*pi)*(gamma*density*cs*exp(-gamma*cosmology.age(z)[0]))/(mass*cosmology.getH0()*E)/sqrt( cosmology.getOmegaM()*pow(x, 3.) + cosmology.getOmegaLambda() + cosmology.getOmegaK()*pow(x, 2.) + cosmology.getOmegaR()*pow(x, 4.) );
-    }
+      double t = ageUniverse(z, OmegaM, OmegaR, OmegaLambda, H0)[0];
 
+      return experiment.getDeltaOmega()*2.*1./(4*pi)*(gamma*density*cs*exp(-gamma*t))/(mass*H0*E)/sqrt( OmegaM*pow(x, 3.) + OmegaLambda + OmegaK*pow(x, 2.) + OmegaR*pow(x, 4.) );
+    }
 
     // galactic (Milky Way) contribution to the differential photon flux [photons/eV/cm²/s]
     const double s(0.5); // standard deviation of the gaussian for the galactic emission line = s*energy dispersion instrument
@@ -729,10 +773,20 @@ namespace Gambit
     {
       double mass = params->mass, gamma = params->gamma, density = params->density;
       Xray experiment = params->experiment;
-      Cosmology cosmology = params->cosmology;
+
+      double J = experiment.getJ();
+
+      double H0 = params->H0;
+      double OmegaM = params->OmegaM;
+      double OmegaR = params->OmegaR;
+      double OmegaLambda = params->OmegaLambda;
+
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0)[0];
+      double OmegaDM = params->OmegaDM;
 
       double sigma = s*experiment.deltaE(E); // standard deviation of the gaussian modelling the enery dispersion of the instrument
-      return 2.*(r0*rho0*gamma*experiment.getJ()*density*exp(-cosmology.get_t0()*gamma))/(4.*pi*mass*cosmology.getOmegaDM()*rhoC)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-mass/2.,2)/(2*sigma*sigma));
+
+      return 2.*(r0*rho0*gamma*J*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*rhoC)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-mass/2.,2)/(2*sigma*sigma));
     }
 
     // total predicted differential photon flux for a given X-ray experiment [photons/eV/cm²/s]
@@ -865,13 +919,17 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL;
 
-      static Cosmology cosmology = Cosmology();
-
       static Xray experiment = Xray("INTEGRAL");
 
       double mass = *Dep::mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
 
-      XrayLikelihood_params params = {mass, gamma, density, experiment, cosmology};
+      double H0 = *Param["H0"]; 
+      double h = H0/100.;
+      double OmegaDM = *Param["omega_cdm"]/h/h;
+
+      /* double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r; */
+
+      XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, 0.308, 0., 0.692, OmegaDM};
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
 
@@ -906,13 +964,13 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_HEAO;
 
-      static Cosmology cosmology = Cosmology();
-
       static Xray experiment = Xray("HEAO");
 
       const double mass = *Dep::mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
 
-      XrayLikelihood_params params = {mass, gamma, density, experiment, cosmology};
+      /* double H0 = *Param["H0"], OmegaDM = *Param["omega_cdm"]; */
+
+      XrayLikelihood_params params = {mass, gamma, density, experiment, 67.81e-19/3.085, 0.308, 0., 0.692, 0.285};
 
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;

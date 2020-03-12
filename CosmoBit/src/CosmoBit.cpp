@@ -988,7 +988,7 @@ namespace Gambit
         result.vparam_rows = 1;
       }
 
-      // (JR) TODO: MultiMode segFaults if this is empty have to do this properly though 
+      // (JR) TODO: MultiMode segFaults if this is empty have to do this properly though
       result.dphi_init0.push_back(1.);
 
       static bool first_run = true;
@@ -2583,7 +2583,7 @@ namespace Gambit
       using namespace Pipes::init_cosmo_args_from_MPLike;
 
       // CosmoBit::MPLike_data_container should only be created once when calculating the first point.
-      // After that is has to be kept alive since it contains a vector with the initialised MPLike 
+      // After that is has to be kept alive since it contains a vector with the initialised MPLike
       // Likelihood objects.
       static bool first_run = true;
       static pybind11::object data;
