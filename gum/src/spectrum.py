@@ -397,33 +397,33 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses, cap_def={
         # deps on these within DecayBit and the particle database manually
         higgscontent = ""
 
-        # h0_2
-        if 35 in higgses:
-        	higgscontent += ( "  DEPENDENCY(Reference_SM_other_Higgs_decay_rates, "
-        					  "DecayTable::Entry)\n"  )
+        # # h0_2
+        # if 35 in higgses:
+        #     higgscontent += ( "  DEPENDENCY(Reference_SM_other_Higgs_decay_rates, "
+        #                       "DecayTable::Entry)\n"  )
 
-        # h0_3 -- we need h0_2 as well
-        if 45 in higgses:
-        	if 35 not in higgses:
-        		raise GumError(("h0_3 in spectrum but not h0_2. Please change "
-        						"your PDG code from 45->35."))
-        	else:
-        		higgscontent += ( "  DEPENDENCY(Reference_SM_h0_3_decay_rates, "
-             					  "DecayTable::Entry)\n"  )
+        # # h0_3 -- we need h0_2 as well
+        # if 45 in higgses:
+        #     if 35 not in higgses:
+        #         raise GumError(("h0_3 in spectrum but not h0_2. Please change "
+        #                         "your PDG code from 45->35."))
+        #     else:
+        #         higgscontent += ( "  DEPENDENCY(Reference_SM_h0_3_decay_rates, "
+        #                           "DecayTable::Entry)\n"  )
 
-        # A0_1
-        if 36 in higgses: 
-        	higgscontent += ( "  DEPENDENCY(Reference_SM_A0_decay_rates, "
-        					  "DecayTable::Entry)\n"  )
+        # # A0_1
+        # if 36 in higgses: 
+        #     higgscontent += ( "  DEPENDENCY(Reference_SM_A0_decay_rates, "
+        #                       "DecayTable::Entry)\n"  )
 
-        # A0_2 -- we need A0_1 as well
-        if 46 in higgses:
-        	if 36 not in higgses:
-        		raise GumError(("A0_2 in spectrum but not A0_1. Please change "
-        						"your PDG code from 46->36."))
-        	else:
-        		higgscontent += ( "  DEPENDENCY(Reference_SM_A0_2_decay_rates, "
-             					  "DecayTable::Entry)\n"  )
+        # # A0_2 -- we need A0_1 as well
+        # if 46 in higgses:
+        #     if 36 not in higgses:
+        #         raise GumError(("A0_2 in spectrum but not A0_1. Please change "
+        #                         "your PDG code from 46->36."))
+        #     else:
+        #         higgscontent += ( "  DEPENDENCY(Reference_SM_A0_2_decay_rates, "
+        #                           "DecayTable::Entry)\n"  )
 
         # HiggsBounds output
         towrite += dumb_indent(2, (
@@ -435,8 +435,8 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses, cap_def={
                 "  START_FUNCTION(HiggsCouplingsTable)\n"
                 "  DEPENDENCY({0}_spectrum, Spectrum)\n"
                 "  // SM rates.\n"
-                "  DEPENDENCY(Reference_SM_Higgs_decay_rates, DecayTable::Entry)\n"
-                "{1}"
+                #"  DEPENDENCY(Reference_SM_Higgs_decay_rates, DecayTable::Entry)\n"
+                #"{1}"
                 "  // DecayTable to provide us with the rest of the decays\n"
                 "  DEPENDENCY(decay_rates, DecayTable)\n"
                 "  BACKEND_REQ(SARAHSPheno_{0}_HiggsCouplingsTable, (libSPheno{0}), int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&) )\n"
@@ -445,7 +445,7 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses, cap_def={
                 "\n"
                 "#undef CAPABILITY\n"
                 "\n"
-        ).format(model_name, higgscontent))
+        ).format(model_name))
 
     towrite += "#endif\n"
 
@@ -745,41 +745,37 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
                         "{}."
                         ).format(nEvenH))
 
-    # Set the SM decays for all Higgses, finally
-    towrite += ( 
-            "// Set the standard model decays\n"
-            "result.set_neutral_decays_SM(higgs, sHneut[higgs], "
-            "*myPipe::Dep::Reference_SM_Higgs_decay_rates);\n"
-    )
-    # h0_2
-    if nEvenH > 1:
-        towrite += (
-                "result.set_neutral_decays_SM(other_higgs, sHneut[other_higgs], "
-                "*myPipe::Dep::Reference_SM_other_Higgs_decay_rates);\n"
-        )
-    # h0_3
-    if nEvenH > 2:
-        towrite += (
-            "result.set_neutral_decays_SM(yet_another_higgs, sHneut[yet_another_higgs], *myPipe::Dep::Reference_SM_h0_3_decay_rates);\n"
-        )
-    # A0_1
-    if nOddH > 0:
-        towrite += (
-                "result.set_neutral_decays_SM({0}, sHneut[{0}], "
-                "*myPipe::Dep::Reference_SM_A0_decay_rates);\n"
-        ).format(nEvenH)
-    # A0_2
-    if nOddH > 1:
-        towrite += (
-                "result.set_neutral_decays_SM({0}, sHneut[{0}], "
-                "*myPipe::Dep::Reference_SM_A0_2_decay_rates);\n"
-        ).format(nEvenH+1)
+    # # Set the SM decays for all Higgses, finally
+    # towrite += ( 
+    #         "// Set the standard model decays\n"
+    #         "result.set_neutral_decays_SM(higgs, sHneut[higgs], "
+    #         "*myPipe::Dep::Reference_SM_Higgs_decay_rates);\n"
+    # )
+    # # h0_2
+    # if nEvenH > 1:
+    #     towrite += (
+    #             "result.set_neutral_decays_SM(other_higgs, sHneut[other_higgs], "
+    #             "*myPipe::Dep::Reference_SM_other_Higgs_decay_rates);\n"
+    #     )
+    # # h0_3
+    # if nEvenH > 2:
+    #     towrite += (
+    #         "result.set_neutral_decays_SM(yet_another_higgs, sHneut[yet_another_higgs], *myPipe::Dep::Reference_SM_h0_3_decay_rates);\n"
+    #     )
+    # # A0_1
+    # if nOddH > 0:
+    #     towrite += (
+    #             "result.set_neutral_decays_SM({0}, sHneut[{0}], "
+    #             "*myPipe::Dep::Reference_SM_A0_decay_rates);\n"
+    #     ).format(nEvenH)
+    # # A0_2
+    # if nOddH > 1:
+    #     towrite += (
+    #             "result.set_neutral_decays_SM({0}, sHneut[{0}], "
+    #             "*myPipe::Dep::Reference_SM_A0_2_decay_rates);\n"
+    #     ).format(nEvenH+1)
 
-    # Not yet supported
-    if nOddH > 2:
-        raise GumError(("GAMBIT (and by induction, GUM) does not currently support "
-                        "more than 2 CP odd Higgses; your model has {}."
-                        ).format(nOddH))
+    # TODO check can just put h0_1 here
     towrite += (
             "\n"
             "// Set the Higgs sector decays from the DecayTable\n"
@@ -803,6 +799,11 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
         towrite += (
                 "result.set_neutral_decays({0}, sHneut[{0}], tbl->at(\"A0_2\"));\n"
         ).format(nEvenH+1)
+    # Not yet supported
+    if nOddH > 2:
+        raise GumError(("GAMBIT (and by induction, GUM) does not currently support "
+                        "more than 2 CP odd Higgses; your model has {}."
+                        ).format(nOddH))
 
     towrite += "\n//Charged Higgses\n"
 
