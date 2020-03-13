@@ -15,9 +15,7 @@ Parameters:
 
   DMEFT:
     # DM mass
-    mchi: 200.0
-      #range: [10.,10000.]
-      # range: [5.,500.]
+    mchi: 451.7411951062778
     # Scale of new physics
     Lambda: 2000.
     # EM interactions (only turn on at loop-level -- not concerned with these)
@@ -29,14 +27,16 @@ Parameters:
     # axial-vector vector
     C62: 0
     # vector axial-vector
-    C63: 0
+    #C63: -0.3584000723798635
+    #C63: -0.14000002827
+    C63: 0.5591569543706703
+    #C63: -10
     # axial-vector axial-vector
     C64: 0
     # Dim 7 -- gluons
-    C71:  0
-    C72:  0
-    C73: 6.0
-      # range: [0., 12.56637]
+    C71: 0
+    C72: 0
+    C73: 0
     C74: 0
     # Dim 7 -- Higgs induced bilinears
     # Scalar scalar
