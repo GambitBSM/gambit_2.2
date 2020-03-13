@@ -742,11 +742,7 @@ START_MODULE
       DEPENDENCY(N_ur, double)
     #undef FUNCTION
 
-<<<<<<< HEAD
-    #define FUNCTION get_Omega0_ur_classy  
-=======
     #define FUNCTION get_Omega0_ur_classy
->>>>>>> CosmoBit_development
       START_FUNCTION(double)
       BACKEND_REQ(class_get_Omega0_ur,(class_tag),double,())
     #undef FUNCTION
