@@ -8,7 +8,7 @@
 Parameters:
 
   # SM parameters.
-  StandardModel_SLHA2: !import ../include/StandardModel_SLHA2_defaults.yaml
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
   StandardModel_Higgs:
      mH: 125.09
@@ -238,7 +238,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT_C73_diver_2TeV/"
+  default_output_path: "runs/DMEFT_collider_debug/"
 
   debug: true
   print_timing_data: false
