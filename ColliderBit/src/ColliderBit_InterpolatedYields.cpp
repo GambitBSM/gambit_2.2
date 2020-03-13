@@ -333,7 +333,7 @@ namespace Gambit
         
         // cout << "Check things 2 <<mass[0]"<<endl;  
 
-        if (experiment=="ATLAS" && pair == "23")
+        if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
 
@@ -352,7 +352,7 @@ namespace Gambit
           }
         }
 
-        else if (experiment=="CMS" && pair == "23"){
+        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"23") == 0){
           // std::cout << "BITE" << std::endl;
 
           met_bin_size = cms_bin_size;
@@ -373,7 +373,7 @@ namespace Gambit
           }
         }
 
-        else if (experiment=="ATLAS" && pair == "14"){
+        else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = atlas_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
@@ -393,7 +393,7 @@ namespace Gambit
         }
 
 
-        else if (experiment=="CMS" && pair == "14"){
+        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = cms_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
@@ -656,7 +656,7 @@ namespace Gambit
         
             // EFT validity checks:            
 
-            if(experiment=="ATLAS"){
+            if(strcmp(experiment,"ATLAS") == 0){
               if (lambda < METMINS_ATLAS[Emiss]){
                 accep[Emiss] = 0;
             }
@@ -665,7 +665,7 @@ namespace Gambit
               }
             } 
 
-            if(experiment=="CMS"){
+            if(strcmp(experiment,"CMS") == 0){
               if (lambda < METMINS_CMS[Emiss]){
                 accep[Emiss] = 0;
             }
@@ -850,7 +850,7 @@ namespace Gambit
         
         // cout << "Check things 2 <<mass[0]"<<endl;  
 
-        if (experiment=="ATLAS" && pair == "23")
+        if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"23") == 0)
         {
           met_bin_size = atlas_bin_size;
 
@@ -869,7 +869,7 @@ namespace Gambit
           }
         }
 
-        else if (experiment=="CMS" && pair == "23"){
+        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"23") == 0){
           // std::cout << "BITE" << std::endl;
 
           met_bin_size = cms_bin_size;
@@ -890,7 +890,7 @@ namespace Gambit
           }
         }
 
-        else if (experiment=="ATLAS" && pair == "14"){
+        else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = atlas_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
@@ -910,7 +910,7 @@ namespace Gambit
         }
 
 
-        else if (experiment=="CMS" && pair == "14"){
+        else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"14") == 0){
           met_bin_size = cms_bin_size;
 
           // double** MET_HIST = new double*[data_SIZE];
@@ -1170,7 +1170,7 @@ namespace Gambit
 
             // cout << "lambda scale factor = " << lambda_scaling<<endl;        
             
-            if(experiment=="ATLAS"){
+            if(strcmp(experiment,"ATLAS") == 0){
               if (lambda < METMINS_ATLAS[Emiss]){
                 accep[Emiss] = 0;
             }
@@ -1179,7 +1179,7 @@ namespace Gambit
               }
             } 
 
-            if(experiment=="CMS"){
+            if(strcmp(experiment,"CMS") == 0){
               if (lambda < METMINS_CMS[Emiss]){
                 accep[Emiss] = 0;
             }
@@ -1419,7 +1419,7 @@ namespace Gambit
 
 
 
-      if (experiment=="ATLAS" && pair == "71")
+      if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"71") == 0)
       {
         met_bin_size = atlas_bin_size;
 
@@ -1436,7 +1436,7 @@ namespace Gambit
         }
       }
 
-      else if (experiment=="CMS" && pair == "71"){
+      else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"71") == 0){
         // std::cout << "BITE" << std::endl;
 
         met_bin_size = cms_bin_size;
@@ -1455,7 +1455,7 @@ namespace Gambit
         }
       }
 
-      else if (experiment=="ATLAS" && pair == "72"){
+      else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"72") == 0){
         met_bin_size = atlas_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
@@ -1473,7 +1473,7 @@ namespace Gambit
       }
 
 
-      else if (experiment=="CMS" && pair == "72"){
+      else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"72") == 0){
         met_bin_size = cms_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
@@ -1490,7 +1490,7 @@ namespace Gambit
         }
       }
 
-      else if (experiment=="ATLAS" && pair == "73"){
+      else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"73") == 0){
         met_bin_size = atlas_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
@@ -1508,7 +1508,7 @@ namespace Gambit
       }
 
 
-      else if (experiment=="CMS" && pair == "73"){
+      else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"73") == 0){
         met_bin_size = cms_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
@@ -1526,7 +1526,7 @@ namespace Gambit
       }
 
 
-      else if (experiment=="ATLAS" && pair == "74"){
+      else if (strcmp(experiment,"ATLAS") == 0 && strcmp(pair,"74") == 0){
         met_bin_size = atlas_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
@@ -1544,7 +1544,7 @@ namespace Gambit
       }
 
 
-      else if (experiment=="CMS" && pair == "74"){
+      else if (strcmp(experiment,"CMS") == 0 && strcmp(pair,"74") == 0){
         met_bin_size = cms_bin_size;
 
         // double** MET_HIST = new double*[data_SIZE_d7];
@@ -1650,7 +1650,7 @@ namespace Gambit
           // cout << "lambda scale factor dim 7 = " << lambda_scaling<<endl;        
   
             // Lambda Cut
-          if(experiment=="ATLAS"){
+          if(strcmp(experiment,"ATLAS") == 0){
             if (lambda < METMINS_ATLAS[Emiss]){
               accep[Emiss] = 0;
           }
@@ -1659,7 +1659,7 @@ namespace Gambit
             }
           } 
 
-          if(experiment=="CMS"){
+          if(strcmp(experiment,"CMS") == 0){
             if (lambda < METMINS_CMS[Emiss]){
               accep[Emiss] = 0;
           }
@@ -1704,10 +1704,10 @@ namespace Gambit
 
       int met_bin_size;
 
-      if (exper_=="ATLAS"){
+      if (strcmp(exper_,"ATLAS") == 0){
         met_bin_size = atlas_bin_size;
       }
-      else if (exper_=="CMS"){
+      else if (strcmp(exper_,"CMS") == 0){
         met_bin_size = cms_bin_size;
       }
 
