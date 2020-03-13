@@ -1947,8 +1947,9 @@ namespace Gambit
 
       // I think these are cleared?
 
-      result.push_back(atlasData);
-      result.push_back(cmsData);
+      // _Anders
+      // result.push_back(atlasData);
+      // result.push_back(cmsData);
       result.push_back(cmsData_debug);
 
       //Sleep time
