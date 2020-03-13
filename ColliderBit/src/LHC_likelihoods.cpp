@@ -55,7 +55,7 @@ namespace Gambit
 
 
     /// Loop over all analyses and fill a map of predicted counts
-    void calc_LHC_signals(map_str_dbl& result) 
+    void calc_LHC_signals(map_str_dbl& result)
     {
       using namespace Pipes::calc_LHC_signals;
 
@@ -63,7 +63,7 @@ namespace Gambit
       result.clear();
 
       std::stringstream summary_line;
-      summary_line << "LHC signals per SR: "; 
+      summary_line << "LHC signals per SR: ";
 
       // Loop over analyses and collect the predicted events into the map
       for (size_t analysis = 0; analysis < Dep::AllAnalysisNumbers->size(); ++analysis)
@@ -115,10 +115,10 @@ namespace Gambit
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
-      double loglike_tot = 0;
-      for (int j = 0; j < unit_nuisances.size(); ++j) {
+      double loglike_tot = n * log(1/sqrt(2*M_PI));
+      for (int j = 0; j < n; ++j) {
         // First the multivariate Gaussian bit (j = nuisance)
-        const double pnorm_j = -pow(unit_nuisances(j), 2)/2. + log(1/sqrt(2*M_PI));
+        const double pnorm_j = -pow(unit_nuisances(j), 2)/2.;
         loglike_tot += pnorm_j;
         // Then the Poisson bit (j = SR)
         /// @note We've dropped the log(n_obs!) terms, since they're expensive and cancel in computing DLL
@@ -146,20 +146,31 @@ namespace Gambit
       Eigen::Map<const Eigen::ArrayXd> n_obss(&fixedparamspack_dbl[n], n);
       Eigen::Map<const Eigen::ArrayXd> sqrtevals(&fixedparamspack_dbl[2*n], n);
       Eigen::Map<const Eigen::MatrixXd> evecs(&fixedparamspack_dbl[3*n], n, n);
-      Eigen::Map<const Eigen::MatrixXd> invcorr(&fixedparamspack_dbl[3*n + n*n], n, n);
+      // Eigen::Map<const Eigen::MatrixXd> invcorr(&fixedparamspack_dbl[3*n + n*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
-      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
+      // const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
       // Compute gradient elements
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         double llgrad = 0;
-        llgrad += (n_obss(j)/n_preds(j) - 1) * err_n_preds(j); ///< @todo CHECK: SR basis vs eigenbasis
-        llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
+        for (int k = 0; k < unit_nuisances.size(); ++k) {
+          llgrad += (n_obss(j)/n_preds(j) - 1) * evecs(k,j);
+        }
+        llgrad = (llgrad*sqrtevals(j) - 1) * unit_nuisances(j);
         // Output via argument (invert to return -dLL for minimisation)
         fgrad[j] = -llgrad;
       }
+
+      // // Compute gradient elements
+      // for (int j = 0; j < unit_nuisances.size(); ++j) {
+      //   double llgrad = 0;
+      //   llgrad += (n_obss(j)/n_preds(j) - 1) * err_n_preds(j); ///< @todo CHECK: SR basis vs eigenbasis
+      //   llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
+      //   // Output via argument (invert to return -dLL for minimisation)
+      //   fgrad[j] = -llgrad;
+      // }
     }
 
 
@@ -462,7 +473,7 @@ namespace Gambit
         }
         cout.precision(stream_precision); // restore previous precision
         #endif
- 
+
 
         // Shortcut #1
         //
@@ -474,8 +485,8 @@ namespace Gambit
         // In DMEFT case event generation will not be called...dynamically set this ?
          // -------------------------------------------------------------------------------------------
          // Need to change for DMEFT. Just bypass this?
-         
-         // Introduce HACK: Gave MCLoopInfo object a new member event_gen_BYPASS set to false by default. 
+
+         // Introduce HACK: Gave MCLoopInfo object a new member event_gen_BYPASS set to false by default.
          // Bypass below shortcut if this flag manually set to true...
 
 
@@ -492,7 +503,7 @@ namespace Gambit
             // one for the combined LogLike
             else
             {
-              for (size_t SR = 0; SR < adata.size(); ++SR) 
+              for (size_t SR = 0; SR < adata.size(); ++SR)
               {
                 result[ananame].sr_indices[adata[SR].sr_label] = SR;
                 result[ananame].sr_loglikes[adata[SR].sr_label] = 0.0;
@@ -723,25 +734,25 @@ namespace Gambit
               std::stringstream msg;
               msg << "Computation of ll_b_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_b_obs))
             {
               std::stringstream msg;
               msg << "Computation of ll_b_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_sb_exp))
             {
               std::stringstream msg;
               msg << "Computation of ll_sb_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_sb_obs))
             {
               std::stringstream msg;
               msg << "Computation of ll_sb_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
 
             // Update the running best-expected-exclusion detail
             if (dll_exp < bestexp_dll_exp || SR == 0)
@@ -808,7 +819,7 @@ namespace Gambit
                   << endl;
             // }
             // invalid_point().raise(msg.str());
-          }          
+          }
         }
 
       } // end analysis loop
@@ -855,7 +866,7 @@ namespace Gambit
         {
           const str& sr_label = pair_j.first;
           const double& sr_loglike = pair_j.second;
-          const int sr_index = analysis_loglikes.sr_indices.at(sr_label); 
+          const int sr_index = analysis_loglikes.sr_indices.at(sr_label);
 
           const str key = analysis_name + "__" + sr_label + "__i" + std::to_string(sr_index) + "__LogLike";
           result[key] = sr_loglike;
