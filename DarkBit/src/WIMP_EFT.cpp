@@ -70,6 +70,7 @@ namespace Gambit
           // Note: Valid for mass > 45 GeV
 
           // Hardcoded minimum velocity avoids NaN results.
+          // Pat didn't like the hardcoded velocity
           v = std::max(v, 1e-6);
 
           double s = 4*mass*mass/(1-v*v/4);
