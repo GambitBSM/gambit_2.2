@@ -140,8 +140,7 @@ namespace Gambit
     nuiscorr arr[ncorrnuis];
     const nuiscorr (&corrnuis)[ncorrnuis] = nuiscorr_help(arr, YAML::LoadFile(GAMBIT_DIR "/FlavBit/data/SM_nuisance_correlations.yaml")["correlation_matrix"].as<std::vector<nuiscorr>>());
 
-    // function to be deleted:
-
+    // printing function
     void print(flav_prediction prediction , vector<std::string > names)
     {
       for(unsigned i=0; i<names.size(); i++)
@@ -157,11 +156,8 @@ namespace Gambit
               row<<(prediction.covariance)[names[i]]  [names[j]]<<" ";
             }
           cout<<row.str()<<endl;
-
         }
-
     }
-
     
     void Kstarmumu_Theory2Experiment_translation(flav_observable_map& prediction)
     {
@@ -172,8 +168,6 @@ namespace Gambit
           if (search != prediction.end()) {
             prediction[names[i]]=(-1.)*prediction[names[i]];
           }
-          
-                                         
         }
     }
      
@@ -201,7 +195,7 @@ namespace Gambit
               
             }
         }
-      // changing the columns
+      // changing the columns:
       for (flav_covariance_map::iterator it=prediction.begin(); it !=prediction.end(); it++) 
         {
           string name_columns=it->first;
@@ -212,13 +206,13 @@ namespace Gambit
 
             }
         }
-
     }
+
     void Kstarmumu_Theory2Experiment_translation(flav_prediction& pred)
     {
-      vector<string> vec={"S3", "S4", "S5", "S8"};
       if(flav_debug)
         {
+          vector<string> vec={"S3", "S4", "S5", "S8"};
           cout<<"Changing convetion Before:"<<endl;
           print(pred,vec);
         }
@@ -226,6 +220,7 @@ namespace Gambit
       Kstarmumu_Theory2Experiment_translation(pred.covariance);
       if(flav_debug)
         {
+          vector<string> vec={"S3", "S4", "S5", "S8"};
           cout<<"Changing convetion After:"<<endl;
           print(pred,vec);
         }
