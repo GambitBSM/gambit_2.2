@@ -131,7 +131,7 @@ namespace Gambit
         loglike_tot += loglike_j;
       }
 
-      // Output via argument (invert to return -LL for minimisation)
+      // Output via argument (times -1 to return -LL for minimisation)
       *fval = -loglike_tot;
     }
 
@@ -160,7 +160,7 @@ namespace Gambit
           llgrad += (n_obss(k)/n_preds(k) - 1) * evecs(k,j);
         }
         llgrad = llgrad * sqrtevals(j) - unit_nuisances(j);
-        // Output via argument (invert to return -dLL for minimisation)
+        // Output via argument (times -1 to return -dLL for minimisation)
         fgrad[j] = -llgrad;
       }
     }
