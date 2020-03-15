@@ -115,7 +115,7 @@ namespace Gambit
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
-      double loglike_tot = n * log(1/sqrt(2*M_PI));
+      double loglike_tot = n * log(1/sqrt(2*M_PI)); //< could also drop this, but it costs ~nothing
       for (int j = 0; j < n; ++j) {
 
         // First the multivariate Gaussian bit (j = nuisance)
@@ -152,21 +152,8 @@ namespace Gambit
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
-      // const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
-
-      // // Compute gradient elements
-      // for (int j = 0; j < unit_nuisances.size(); ++j) {
-      //   double llgrad = 0;
-      //   for (int k = 0; k < unit_nuisances.size(); ++k) {
-      //     llgrad += (n_obss(j)/n_preds(j) - 1) * evecs(k,j);
-      //   }
-      //   llgrad = (llgrad*sqrtevals(j) - 1) * unit_nuisances(j);
-      //   // Output via argument (invert to return -dLL for minimisation)
-      //   fgrad[j] = -llgrad;
-      // }
 
       // Compute gradient elements
-      // @todo Double-check this and delete the above version
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         double llgrad = 0;
         for (int k = 0; k < unit_nuisances.size(); ++k) {
@@ -241,7 +228,7 @@ namespace Gambit
       //     nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
       //   }
       // }
-      
+
 
       // Optimiser parameters
       // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
