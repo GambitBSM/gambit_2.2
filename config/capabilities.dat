@@ -373,7 +373,6 @@ SPheno_internal: |
 #  ColliderBit capabilities
 #-------------------------------------
 
-
 DummyColliderObservable: |
    Dummy observable that creates a dependency on TestModel1D, which is used
    to satisfy the normal GAMBIT model requrements in a minimal way. Used
@@ -382,6 +381,9 @@ DummyColliderObservable: |
 RunMC: |
    Controls the parallelization and execution of the entire
    event loop of the collider simulation.
+
+CrossSection: |
+   Total cross-section used to scale Pythia event numbers.
 
 LHCEventLoopInfo: |
    Info about the event loop.
@@ -2886,12 +2888,6 @@ lnL_gm2 : |
 
 lnL_deltarho : |
    Log-likelihood of ∆ρ, the departure from one of the ratio of the Fermi effective coupling (G_F) in W and Z-mediated processes.
-
-sinW2: |
-   Precision value of the weak mixing angle sin^2 θ_W (not the effective one)
-
-lnL_sinW2: |
-   Log-likelihood of the weak mixing angle sin^2 θ_W (not the effective one)
 
 
 

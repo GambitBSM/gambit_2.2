@@ -104,8 +104,11 @@ namespace Gambit {
         add_result(SignalRegionData("SR1", 100., {120, 0.}, {95., 9.5}));
         add_result(SignalRegionData("SR2", 10., {15, 0.}, {9., 4.}));
 
-        // Hard-code the a covariance matrix  between these (representing the bkg sys values above, rotated by 30 deg)
-        set_covariance({{71.6875, 32.1512},{32.1512, 34.5625}});
+        // Hard-code a covariance matrix  between these (representing the bkg sys values above, rotated by 30 deg)
+        Eigen::MatrixXd cov(2,2);
+        cov << 71.6875, 32.1512,
+               32.1512, 34.5625;
+        set_covariance(cov);
 
       }
 
