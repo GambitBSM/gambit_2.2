@@ -160,7 +160,7 @@ namespace Gambit
           llgrad += (n_obss(k)/n_preds(k) - 1) * evecs(k,j);
         }
         llgrad = llgrad * sqrtevals(j) - unit_nuisances(j);
-        // Output via argument (invert to return -dLL for minimisation)
+        // Output via argument (times -1 to return -dLL for minimisation)
         fgrad[j] = -llgrad;
       }
     }
@@ -252,36 +252,7 @@ namespace Gambit
       static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
-      std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs);
-
-      // Pass to the minimiser
-      double minusbestll = 999;
-      // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
-      multimin(nSR, &nuisances[0], &minusbestll,
-               nullptr, nullptr, nullptr,
-               _gsl_calc_Analysis_MinusLogLike,
-               _gsl_calc_Analysis_MinusLogLikeGrad,
-               _gsl_calc_Analysis_MinusLogLikeAndGrad,
-               &fixeds[0], oparams);
-
-      return -minusbestll;
-    }
-
-
-    double marg_loglike_nulike1sr(const Eigen::ArrayXd& n_preds,
-                                  const Eigen::ArrayXd& n_obss,
-                                  const Eigen::ArrayXd& sqrtevals) {
-      assert(n_preds.size() == 1);
-      assert(n_obss.size() == 1);
-      assert(sqrtevals.size() == 1);
-
-      using namespace Pipes::calc_LHC_LogLikes;
-      auto marginaliser = (*BEgroup::lnlike_marg_poisson == "lnlike_marg_poisson_lognormal_error")
-        ? BEreq::lnlike_marg_poisson_lognormal_error : BEreq::lnlike_marg_poisson_gaussian_error;
-
-      const double sr_margll = marginaliser((int) n_obss(0), 0.0, n_preds(0), sqrtevals(0)/n_preds(0));
-      return sr_margll;
-    }
+}
 
 
     double marg_loglike_cov(const Eigen::ArrayXd& n_preds,
