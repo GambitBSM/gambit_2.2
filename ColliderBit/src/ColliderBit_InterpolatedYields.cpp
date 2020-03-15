@@ -121,8 +121,6 @@ namespace Gambit
                                             3700, 2000, 810, 490, 310, 170, 140, 95, 49, 33, 32, 18, 14, 12, 9, 8, 6, 5.3, 3.9, 2.5, 2.6, 2.8
                                                 };
 
-      // Anders: temp hack for debugging: Only using the last three SRs
-      static Eigen::MatrixXd m_BKGCOV_debug(3,3);
       static Eigen::MatrixXd m_BKGCOV(22,22);
 
       static const double ATLAS_OBSNUM[atlas_bin_size] = {111203,67475,35285,27843,8583,2975,1142,512,223,245};
@@ -1795,33 +1793,12 @@ namespace Gambit
       // cout << "first _srnums call ..."<<endl;
 
       std::vector<SignalRegionData> cmsBinnedResults;
-      // Anders: temp hack for debugging: Only using the last three SRs
-      std::vector<SignalRegionData> cmsBinnedResults_debug;
       
       // for (size_t ibin = 0; ibin < cms_bin_size; ++ibin) {
       //     std::stringstream ss; ss << "sr-" << ibin;
       //     cmsBinnedResults.push_back(SignalRegionData(ss.str(), OBSNUM[ibin], {_srnums[ibin],  0.}, {BKGNUM[ibin], BKGERR[ibin]}, _srnums[ibin]));
       // }
       
-
-      // Anders: temp hack for debugging: Only using the last three SRs
-      for (size_t ibin = cms_bin_size - 3; ibin < cms_bin_size; ++ibin) {
-        // Generate an 'sr-N' label 
-        std::stringstream ss; ss << "sr-" << ibin;
-
-        // Construct a SignalRegionData instance and add it to cmsBinnedResults
-        SignalRegionData sr;
-        sr.sr_label = ss.str();
-        sr.n_observed = CMS_OBSNUM[ibin];
-        sr.n_signal = _srnums_CMS[ibin];
-        sr.n_signal_at_lumi = _srnums_CMS[ibin];  // We have already scaled the signals in _srnums_CMS to xsec * lumi
-        sr.signal_sys = 0.;
-        sr.n_background = CMS_BKGNUM[ibin];
-        sr.background_sys = CMS_BKGERR[ibin];
-        cmsBinnedResults_debug.push_back(sr);
-      }
-
-
       for (size_t ibin = 0; ibin < cms_bin_size; ++ibin) {
         // Generate an 'sr-N' label 
         std::stringstream ss; ss << "sr-" << ibin;
@@ -1863,13 +1840,6 @@ namespace Gambit
             { -4.14e+02, -1.68e+02,  2.27e+01, -2.74e+01, -8.68e+00,  4.76e+00,  3.14e+01,  7.98e+00,  5.49e+00,  4.62e+00, -8.96e-01,  7.06e+00,  1.57e+00,  3.02e+00,  2.52e+00, -6.72e-01,  1.51e+00, -4.45e-01,  1.64e+00,  6.30e-01,  5.82e-01,  7.84e+00 }
       };
 
-      // Anders: temp hack for debugging: Only using the last three SRs
-      static const std::vector< std::vector<double> > BKGCOV_debug = {
-            {  6.25e+00,  1.30e-01,  6.30e-01 },
-            {  1.30e-01,  6.76e+00,  5.82e-01 },
-            {  6.30e-01,  5.82e-01,  7.84e+00 }
-      };
-
       static bool first_c = true;
       if (first_c){
         cout << " Defining CMS covariance matrix..."<<endl;
@@ -1878,23 +1848,13 @@ namespace Gambit
         first_c = false;
       }
 
-      // Anders: temp hack for debugging: Only using the last three SRs
-      static bool first_c_debug = true;
-      if (first_c_debug){
-        cout << " Defining CMS covariance matrix..."<<endl;
-        for (int i = 0; i < 3; i++)
-            m_BKGCOV_debug.row(i) = Eigen::VectorXd::Map(&BKGCOV_debug[i][0],BKGCOV_debug[i].size()); 
-        first_c_debug = false;
-      }
-
-
       AnalysisData  * cmsData = new AnalysisData(cmsBinnedResults, m_BKGCOV);
       cmsData->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated";
       // cout << "after cms definition ..."<<endl;
 
-      // Anders: temp hack for debugging: Only using the last three SRs
-      AnalysisData  * cmsData_debug = new AnalysisData(cmsBinnedResults_debug, m_BKGCOV_debug);
-      cmsData_debug->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated_debug";
+      // Add a copy of the CMS analysis without the covariance matrix as well
+      AnalysisData  * cmsData_nocovar = new AnalysisData(cmsBinnedResults);
+      cmsData_nocovar->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated_nocovar";
 
       // **----------------------------------------------------------------------------------------------------//
       // **-------------------------------------ATLAS----------------------------------------------------------//
@@ -1947,10 +1907,9 @@ namespace Gambit
 
       // I think these are cleared?
 
-      // _Anders
-      // result.push_back(atlasData);
-      // result.push_back(cmsData);
-      result.push_back(cmsData_debug);
+      result.push_back(atlasData);
+      result.push_back(cmsData);
+      result.push_back(cmsData_nocovar);
 
       //Sleep time
       // std::this_thread::sleep_for(std::chrono::seconds(1));

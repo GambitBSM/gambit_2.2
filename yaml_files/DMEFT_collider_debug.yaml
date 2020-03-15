@@ -209,13 +209,21 @@ Rules:
       use_covariances: true
       combine_SRs_without_covariances: false
       use_marginalising: false
-      nuisance_prof_initstep: 0.1
-      nuisance_prof_convtol: 0.01
-      nuisance_prof_maxsteps: 50 # 10000
+      nuisance_prof_initstep: 0.1 #0.00000001 # 0.00001
+      nuisance_prof_convtol: 0.01 #0.01 # 0.00000001 # 0.00001
+      nuisance_prof_maxsteps: 100000 # 1000000
       nuisance_prof_convacc: 0.01
-      nuisance_prof_simplexsize: 1e-5
-      nuisance_prof_method: 6
-      nuisance_prof_verbosity: 0
+      nuisance_prof_simplexsize: 1e-5 # 1e-5
+      nuisance_prof_method: 5 # 6
+      nuisance_prof_verbosity: 3
+
+  - capability: LHC_Combined_LogLike
+    options:
+      cap_loglike: false
+      cap_loglike_individual_analyses: false
+      skip_analyses:
+          - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
+
 
   # Use the WIMP properties structure to get WIMP mass etc.
   - capability: mwimp

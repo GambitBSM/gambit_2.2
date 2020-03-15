@@ -117,14 +117,17 @@ namespace Gambit
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
       double loglike_tot = n * log(1/sqrt(2*M_PI));
       for (int j = 0; j < n; ++j) {
+
         // First the multivariate Gaussian bit (j = nuisance)
         const double pnorm_j = -pow(unit_nuisances(j), 2)/2.;
         loglike_tot += pnorm_j;
+
         // Then the Poisson bit (j = SR)
         /// @note We've dropped the log(n_obs!) terms, since they're expensive and cancel in computing DLL
         const double lambda_j = std::max(n_preds(j), 1e-3); //< manually avoid <= 0 rates
-        const double logfact_n_obs = 0; // gsl_sf_lngamma(n_obs(j) + 1); //< skipping log(n_obs!) computation
+        const double logfact_n_obs = 0; // gsl_sf_lngamma(n_obss(j) + 1); //< skipping log(n_obs!) computation
         const double loglike_j = n_obss(j)*log(lambda_j) - lambda_j - logfact_n_obs;
+
         loglike_tot += loglike_j;
       }
 
@@ -152,25 +155,28 @@ namespace Gambit
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
       // const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
-      // Compute gradient elements
-      for (int j = 0; j < unit_nuisances.size(); ++j) {
-        double llgrad = 0;
-        for (int k = 0; k < unit_nuisances.size(); ++k) {
-          llgrad += (n_obss(j)/n_preds(j) - 1) * evecs(k,j);
-        }
-        llgrad = (llgrad*sqrtevals(j) - 1) * unit_nuisances(j);
-        // Output via argument (invert to return -dLL for minimisation)
-        fgrad[j] = -llgrad;
-      }
-
       // // Compute gradient elements
       // for (int j = 0; j < unit_nuisances.size(); ++j) {
       //   double llgrad = 0;
-      //   llgrad += (n_obss(j)/n_preds(j) - 1) * err_n_preds(j); ///< @todo CHECK: SR basis vs eigenbasis
-      //   llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
+      //   for (int k = 0; k < unit_nuisances.size(); ++k) {
+      //     llgrad += (n_obss(j)/n_preds(j) - 1) * evecs(k,j);
+      //   }
+      //   llgrad = (llgrad*sqrtevals(j) - 1) * unit_nuisances(j);
       //   // Output via argument (invert to return -dLL for minimisation)
       //   fgrad[j] = -llgrad;
       // }
+
+      // Compute gradient elements
+      // @todo Double-check this and delete the above version
+      for (int j = 0; j < unit_nuisances.size(); ++j) {
+        double llgrad = 0;
+        for (int k = 0; k < unit_nuisances.size(); ++k) {
+          llgrad += (n_obss(k)/n_preds(k) - 1) * evecs(k,j);
+        }
+        llgrad = llgrad * sqrtevals(j) - unit_nuisances(j);
+        // Output via argument (invert to return -dLL for minimisation)
+        fgrad[j] = -llgrad;
+      }
     }
 
 
@@ -194,10 +200,11 @@ namespace Gambit
         fixeds[nSR+i] = n_obss(i);
         fixeds[2*nSR+i] = sqrtevals(i);
         for (size_t j = 0; j < nSR; ++j) {
-          fixeds[3*nSR+i*nSR+j] = evecs(i,j); ///< @todo Double-check ordering... not that it matters
+          fixeds[3*nSR+i*nSR+j] = evecs(j,i); ///< @todo Double-check ordering... not that it matters
           fixeds[3*nSR+nSR*nSR+i*nSR+j] = invcorr(i,j); ///< @todo Double-check ordering... not that it matters
         }
       }
+
       return fixeds;
     }
 
@@ -214,35 +221,31 @@ namespace Gambit
       // Number of signal regions
       const size_t nSR = n_obss.size();
 
-      // @todo Remove this when reinstating the block below
+      // Set initial guess for nuisances to zero
       std::vector<double> nuisances(nSR, 0.0);
 
-      // @todo Comment out this until we've figured out a memory issue...
-      /*
-      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
-
-      // Set nuisances to an informed starting position
-      std::vector<double> nuisances(nSR, 0.0);
-      for (size_t j = 0; j < nSR; ++j) {
-        // Calculate the max-L starting position, ignoring correlations
-        const double obs = n_obss(j);
-        const double rate = n_preds(j);
-        const double delta = err_n_preds(j);
-        const double a = delta;
-        const double b = rate + delta*delta;
-        const double c = delta * (rate - obs);
-        const double d = b*b - 4*a*c;
-        const double sqrtd = (d < 0) ? 0 : sqrt(d);
-        if (sqrtd == 0) {
-          nuisances[j] = -b / (2*a);
-        } else {
-          const double th0_a = (-b + sqrtd) / (2*a);
-          const double th0_b = (-b - sqrtd) / (2*a);
-          nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
-        }
-      }
-      */
-
+      // // Set nuisances to an informed starting position
+      // const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
+      // std::vector<double> nuisances(nSR, 0.0);
+      // for (size_t j = 0; j < nSR; ++j) {
+      //   // Calculate the max-L starting position, ignoring correlations
+      //   const double obs = n_obss(j);
+      //   const double rate = n_preds(j);
+      //   const double delta = err_n_preds(j);
+      //   const double a = delta;
+      //   const double b = rate + delta*delta;
+      //   const double c = delta * (rate - obs);
+      //   const double d = b*b - 4*a*c;
+      //   const double sqrtd = (d < 0) ? 0 : sqrt(d);
+      //   if (sqrtd == 0) {
+      //     nuisances[j] = -b / (2*a);
+      //   } else {
+      //     const double th0_a = (-b + sqrtd) / (2*a);
+      //     const double th0_b = (-b - sqrtd) / (2*a);
+      //     nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
+      //   }
+      // }
+      
 
       // Optimiser parameters
       // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
