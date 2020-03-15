@@ -140,6 +140,100 @@ namespace Gambit
     nuiscorr arr[ncorrnuis];
     const nuiscorr (&corrnuis)[ncorrnuis] = nuiscorr_help(arr, YAML::LoadFile(GAMBIT_DIR "/FlavBit/data/SM_nuisance_correlations.yaml")["correlation_matrix"].as<std::vector<nuiscorr>>());
 
+    // function to be deleted:
+
+    void print(flav_prediction prediction , vector<std::string > names)
+    {
+      for(unsigned i=0; i<names.size(); i++)
+        {
+          cout<<names[i]<<": "<<prediction.central_values[names[i]]<<endl;
+        }
+      cout<<"Covariance:"<<endl;
+      for( unsigned i=0; i<names.size(); i++)
+        {
+          stringstream row;
+          for( unsigned j=0; j<names.size(); j++)
+            {
+              row<<(prediction.covariance)[names[i]]  [names[j]]<<" ";
+            }
+          cout<<row.str()<<endl;
+
+        }
+
+    }
+
+    
+    void Kstarmumu_Theory2Experiment_translation(flav_observable_map& prediction)
+    {
+      vector<std::string > names={"S4", "S8"};
+      for (unsigned i=0; i < names.size(); i++)
+        {
+          auto search = prediction.find( names[i]);
+          if (search != prediction.end()) {
+            prediction[names[i]]=(-1.)*prediction[names[i]];
+          }
+          
+                                         
+        }
+    }
+     
+    
+    void Kstarmumu_Theory2Experiment_translation(flav_covariance_map& prediction)
+    {
+      vector<std::string > names={"S4", "S8"};
+      vector<std::string > names_exist;
+
+      for (unsigned i=0; i < names.size(); i++)
+        {
+          auto search_i = prediction.find( names[i]);
+          if (search_i != prediction.end()) {  
+            names_exist.push_back(names[i]);
+          }
+        }
+      //changing the rows:
+      for (unsigned i=0; i <  names_exist.size(); i++)
+        {
+          string name1=names_exist[i];
+          std::map<const std::string, double> row=prediction[name1];
+          for (std::map<const std::string, double>::iterator it=row.begin(); it !=row.end(); it++)
+            {
+              prediction[name1][it->first]=(-1.)*prediction[name1][it->first];              
+              
+            }
+        }
+      // changing the columns
+      for (flav_covariance_map::iterator it=prediction.begin(); it !=prediction.end(); it++) 
+        {
+          string name_columns=it->first;
+          for (unsigned i=0; i <  names_exist.size(); i++)
+            {
+              string name1=names_exist[i];
+              prediction[name_columns][name1]=(-1)*prediction[name_columns][name1];
+
+            }
+        }
+
+    }
+    void Kstarmumu_Theory2Experiment_translation(flav_prediction& pred)
+    {
+      vector<string> vec={"S3", "S4", "S5", "S8"};
+      if(flav_debug)
+        {
+          cout<<"Changing convetion Before:"<<endl;
+          print(pred,vec);
+        }
+      Kstarmumu_Theory2Experiment_translation(pred.central_values);
+      Kstarmumu_Theory2Experiment_translation(pred.covariance);
+      if(flav_debug)
+        {
+          cout<<"Changing convetion After:"<<endl;
+          print(pred,vec);
+        }
+      
+      
+    }
+
+    
     /// Find the path to the latest installed version of the HepLike data
     str path_to_latest_heplike_data()
     {
@@ -848,7 +942,7 @@ namespace Gambit
            }
         }
       }
-
+      Kstarmumu_Theory2Experiment_translation(result); // this switches the observables to LHCb convention
       if (flav_debug) std::cout << "Finished SuperIso_prediction" << std::endl;
 
     }
@@ -868,7 +962,7 @@ namespace Gambit
         BEreq::observables.pointer(),                            \
         BEreq::convert_correlation.pointer(),                    \
         BEreq::get_th_covariance_nuisance.pointer()              \
-      );                                                         \
+    );  
 
     #define SI_SINGLE_PREDICTION_FUNCTION(name)                          \
     void CAT(SuperIso_prediction_,name)(flav_prediction& result)         \
