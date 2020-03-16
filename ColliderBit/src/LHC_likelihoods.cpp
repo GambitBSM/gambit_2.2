@@ -113,20 +113,23 @@ namespace Gambit
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
-      double loglike_tot = 0;
-      for (int j = 0; j < unit_nuisances.size(); ++j) {
+      double loglike_tot = n * log(1/sqrt(2*M_PI)); //< could also drop this, but it costs ~nothing
+      for (size_t j = 0; j < n; ++j) {
+
         // First the multivariate Gaussian bit (j = nuisance)
-        const double pnorm_j = -pow(unit_nuisances(j), 2)/2. + log(1/sqrt(2*M_PI));
+        const double pnorm_j = -pow(unit_nuisances(j), 2)/2.;
         loglike_tot += pnorm_j;
+
         // Then the Poisson bit (j = SR)
         /// @note We've dropped the log(n_obs!) terms, since they're expensive and cancel in computing DLL
         const double lambda_j = std::max(n_preds(j), 1e-3); //< manually avoid <= 0 rates
-        const double logfact_n_obs = 0; // gsl_sf_lngamma(n_obs(j) + 1); //< skipping log(n_obs!) computation
+        const double logfact_n_obs = 0; // gsl_sf_lngamma(n_obss(j) + 1); //< skipping log(n_obs!) computation
         const double loglike_j = n_obss(j)*log(lambda_j) - lambda_j - logfact_n_obs;
+
         loglike_tot += loglike_j;
       }
 
-      // Output via argument (invert to return -LL for minimisation)
+      // Output via argument (times -1 to return -LL for minimisation)
       *fval = -loglike_tot;
     }
 
@@ -144,18 +147,18 @@ namespace Gambit
       Eigen::Map<const Eigen::ArrayXd> n_obss(&fixedparamspack_dbl[n], n);
       Eigen::Map<const Eigen::ArrayXd> sqrtevals(&fixedparamspack_dbl[2*n], n);
       Eigen::Map<const Eigen::MatrixXd> evecs(&fixedparamspack_dbl[3*n], n, n);
-      Eigen::Map<const Eigen::MatrixXd> invcorr(&fixedparamspack_dbl[3*n + n*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
-      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
       // Compute gradient elements
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         double llgrad = 0;
-        llgrad += (n_obss(j)/n_preds(j) - 1) * err_n_preds(j); ///< @todo CHECK: SR basis vs eigenbasis
-        llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
-        // Output via argument (invert to return -dLL for minimisation)
+        for (int k = 0; k < unit_nuisances.size(); ++k) {
+          llgrad += (n_obss(k)/n_preds(k) - 1) * evecs(k,j);
+        }
+        llgrad = llgrad * sqrtevals(j) - unit_nuisances(j);
+        // Output via argument (times -1 to return -dLL for minimisation)
         fgrad[j] = -llgrad;
       }
     }
@@ -172,8 +175,7 @@ namespace Gambit
     std::vector<double> _gsl_mkpackedarray(const Eigen::ArrayXd& n_preds,
                                            const Eigen::ArrayXd& n_obss,
                                            const Eigen::ArrayXd& sqrtevals,
-                                           const Eigen::MatrixXd& evecs,
-                                           const Eigen::MatrixXd& invcorr) {
+                                           const Eigen::MatrixXd& evecs) {
       const size_t nSR = n_obss.size();
       std::vector<double> fixeds(3*nSR + 2*nSR*nSR, 0.0);
       for (size_t i = 0; i < nSR; ++i) {
@@ -181,10 +183,10 @@ namespace Gambit
         fixeds[nSR+i] = n_obss(i);
         fixeds[2*nSR+i] = sqrtevals(i);
         for (size_t j = 0; j < nSR; ++j) {
-          fixeds[3*nSR+i*nSR+j] = evecs(i,j); ///< @todo Double-check ordering... not that it matters
-          fixeds[3*nSR+nSR*nSR+i*nSR+j] = invcorr(i,j); ///< @todo Double-check ordering... not that it matters
+          fixeds[3*nSR+i*nSR+j] = evecs(j,i);
         }
       }
+
       return fixeds;
     }
 
@@ -195,40 +197,35 @@ namespace Gambit
     double profile_loglike_cov(const Eigen::ArrayXd& n_preds,
                                const Eigen::ArrayXd& n_obss,
                                const Eigen::ArrayXd& sqrtevals,
-                               const Eigen::MatrixXd& evecs,
-                               const Eigen::MatrixXd& invcorr) {
+                               const Eigen::MatrixXd& evecs) {
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
 
-      // @todo Remove this when reinstating the block below
+      // Set initial guess for nuisances to zero
       std::vector<double> nuisances(nSR, 0.0);
 
-      // @todo Comment out this until we've figured out a memory issue...
-      /*
-      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
-
-      // Set nuisances to an informed starting position
-      std::vector<double> nuisances(nSR, 0.0);
-      for (size_t j = 0; j < nSR; ++j) {
-        // Calculate the max-L starting position, ignoring correlations
-        const double obs = n_obss(j);
-        const double rate = n_preds(j);
-        const double delta = err_n_preds(j);
-        const double a = delta;
-        const double b = rate + delta*delta;
-        const double c = delta * (rate - obs);
-        const double d = b*b - 4*a*c;
-        const double sqrtd = (d < 0) ? 0 : sqrt(d);
-        if (sqrtd == 0) {
-          nuisances[j] = -b / (2*a);
-        } else {
-          const double th0_a = (-b + sqrtd) / (2*a);
-          const double th0_b = (-b - sqrtd) / (2*a);
-          nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
-        }
-      }
-      */
+      // // Set nuisances to an informed starting position
+      // const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
+      // std::vector<double> nuisances(nSR, 0.0);
+      // for (size_t j = 0; j < nSR; ++j) {
+      //   // Calculate the max-L starting position, ignoring correlations
+      //   const double obs = n_obss(j);
+      //   const double rate = n_preds(j);
+      //   const double delta = err_n_preds(j);
+      //   const double a = delta;
+      //   const double b = rate + delta*delta;
+      //   const double c = delta * (rate - obs);
+      //   const double d = b*b - 4*a*c;
+      //   const double sqrtd = (d < 0) ? 0 : sqrt(d);
+      //   if (sqrtd == 0) {
+      //     nuisances[j] = -b / (2*a);
+      //   } else {
+      //     const double th0_a = (-b + sqrtd) / (2*a);
+      //     const double th0_b = (-b - sqrtd) / (2*a);
+      //     nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
+      //   }
+      // }
 
 
       // Optimiser parameters
@@ -253,7 +250,7 @@ namespace Gambit
       static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
-      std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs, invcorr);
+      std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs);
 
       // Pass to the minimiser
       double minusbestll = 999;
@@ -272,8 +269,6 @@ namespace Gambit
     double marg_loglike_nulike1sr(const Eigen::ArrayXd& n_preds,
                                   const Eigen::ArrayXd& n_obss,
                                   const Eigen::ArrayXd& sqrtevals) {
-      //const Eigen::MatrixXd& /* evecs */,
-      //                          const Eigen::MatrixXd& /* invcorr */) {
       assert(n_preds.size() == 1);
       assert(n_obss.size() == 1);
       assert(sqrtevals.size() == 1);
@@ -290,8 +285,7 @@ namespace Gambit
     double marg_loglike_cov(const Eigen::ArrayXd& n_preds,
                             const Eigen::ArrayXd& n_obss,
                             const Eigen::ArrayXd& sqrtevals,
-                            const Eigen::MatrixXd& evecs,
-                            const Eigen::MatrixXd& /* invcorr */) {
+                            const Eigen::MatrixXd& evecs) {
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
@@ -584,7 +578,6 @@ namespace Gambit
             srcorr_b.row(SR) /= diagsd;
             srcorr_b.col(SR) /= diagsd;
           }
-          const Eigen::MatrixXd srinvcorr_b = srcorr_b.inverse();
           const Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eig_b(adata.srcov);
           const Eigen::ArrayXd Eb = eig_b.eigenvalues();
           const Eigen::ArrayXd sqrtEb = Eb.sqrt();
@@ -600,7 +593,6 @@ namespace Gambit
             srcorr_sb.row(SR) /= diagsd;
             srcorr_sb.col(SR) /= diagsd;
           }
-          const Eigen::MatrixXd srinvcorr_sb = srcorr_sb.inverse();
           const Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eig_sb(srcov_sb);
           const Eigen::ArrayXd Esb = eig_sb.eigenvalues();
           const Eigen::ArrayXd sqrtEsb = Esb.sqrt();
@@ -611,8 +603,8 @@ namespace Gambit
 
           // Compute the single, correlated analysis-level DLL as the difference of s+b and b (partial) LLs
           /// @todo Only compute this once per run
-          const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb, srinvcorr_b);
-          const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb, srinvcorr_b);
+          const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb);
+          const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb);
           const double dll = ll_sb - ll_b;
 
           // Store result
@@ -692,11 +684,11 @@ namespace Gambit
             // Compute this SR's DLLs as the differences of s+b and b (partial) LLs
             /// @todo Or compute all the exp DLLs first, then only the best-expected SR's obs DLL?
             /// @todo Only compute this once per run
-            const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, dummy, dummy);
+            const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, dummy);
             /// @todo Only compute this once per run
-            const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, dummy, dummy);
-            const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, dummy, dummy);
-            const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, dummy, dummy);
+            const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, dummy);
+            const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, dummy);
+            const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, dummy);
             const double dll_exp = ll_sb_exp - ll_b_exp;
             const double dll_obs = ll_sb_obs - ll_b_obs;
 
