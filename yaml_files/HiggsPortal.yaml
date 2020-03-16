@@ -8,22 +8,22 @@
 Parameters:
 
   LCDM:
-    omega_b: 0.022
+    omega_b: 0.02242
       # prior_type: flat
       # range: [0.020,0.024]
-    omega_cdm: 0.1
+    omega_cdm: 0.11933
       # prior_type: flat
       # range: [0.10,0.13]
-    H0: 67.
+    H0: 67.66
       # prior_type: flat
       # range: [62,74]
-    ln10A_s: 3.
+    ln10A_s: 3.047
       # prior_type: flat
       # range: [2.9,3.2]
-    n_s: 1.
+    n_s: 0.9665
       # prior_type: flat
       # range: [0.9,1.10]
-    tau_reio: 0.1
+    tau_reio: 0.0561
       # prior_type: flat
       #range: [0.04,0.20]
       # range: [0.004,0.20]
@@ -60,17 +60,17 @@ Scanner:
     grid:
       plugin: grid
       like: LogLike
-      grid_pts: [10, 10]
+      grid_pts: [15, 15]
 
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 5
+      grid_pts: 200
 
     random:
       plugin: random
       like: LogLike
-      point_number: 100
+      point_number: 10
 
     de:
       plugin: diver
@@ -130,12 +130,30 @@ ObsLikes:
 
 Rules:
 
+  # error calculation precision settings for AltterBBN
+  # (use 1 and 0 to speed up Helium abundance calculation for testing)
+  # (For more precise calculations, use 3 or 7)
+  - capability: AlterBBN_Input
+    options:
+      failsafe: 0
+      err: 0
+  # correlation matrix for BBN error calculation todo explain what that is!
+  - capability: BBN_abundances
+    options:
+      elements: [Yp, D, He3, Be7, Li7]
+      correlation_matrix: [[+1.000e00, +1.524e-2, +2.667e-2, +2.303e-2, +2.429e-2],
+                           [+1.524e-2, +1.000e00, -8.160e-1, -3.775e-1, -3.653e-1],
+                           [+2.667e-2, -8.160e-1, +1.000e00, +3.897e-1, +3.780e-1],
+                           [+2.303e-2, -3.775e-1, +3.897e-1, +1.000e00, +9.974e-1],
+                           [+2.429e-2, -3.653e-1, +3.780e-1, +9.974e-1, +1.000e00]]
+      relative_errors: [1.348e-3, 1.596e-2, 1.618e-2, 6.788e-2, 6.579e-2]
+
   - capability: classy_final_input
     function: set_classy_input
     module: CosmoBit
 
   - capability: Omega0_m
-    function: compute_Omega0_m
+    function: get_Omega0_m_classy
     module: CosmoBit
 
   - capability: Omega0_r

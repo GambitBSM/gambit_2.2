@@ -33,7 +33,6 @@
 #include <gsl/gsl_sf_bessel.h>
 
 #include "fjcore.hh"
-/* #include "gambit/DecayBit/DecayBit_rollcall.hpp" */
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
@@ -55,7 +54,7 @@ namespace Gambit
     /*! \brief Supporting classes and functions for the Higgs Portal DM module.
     */
 
-    //------------- Numerical constants and other useful things -------------// 
+    //------------- Numerical constants and other useful things -------------//
 
     // masses
     const double Mp = Gambit::m_planck*1e9; // Planck mass [eV]
@@ -74,7 +73,6 @@ namespace Gambit
     const double cs = Gambit::s2cm; // speed of light [cm/s]
     const double kb = Gambit::K2eV; // Boltzmann constant [eV/K]
     const double G = 6.674e-8; // Gravitational constant [cm³/g/s²]
-    const double C(50./27.); // loop function from the decay of the Higgs boson into two photons
 
     // cosmological constants
     const double s0(2891); // current entropy density [1/cm³]
@@ -86,6 +84,9 @@ namespace Gambit
     const double L0 = 2.388672e45; // solar photon luminosity [eV/s]
     const double rho0(0.3e9); // local DM density (Milky Way) [eV/cm³]
 
+    // other constants
+    const double C(50./27.); // loop function from the decay of the Higgs boson into two photons
+
     // Minimum finite result returnable from log(double x);
     const double logmin = log(std::numeric_limits<double>::min());
 
@@ -94,9 +95,9 @@ namespace Gambit
     /* //////////////////////////////////////////////////////////////////// */
 
 
-    /* //------------- Class declaration -------------// */ 
+    /* //------------- Class declaration -------------// */
 
-    /* class Cosmology */ 
+    /* class Cosmology */
     /* { */
     /*   public : */
 
@@ -147,7 +148,7 @@ namespace Gambit
     /* // computes the age of the Universe at a given redshift ([0] age, [1] abserr) */
     /* std::vector<double> Cosmology::age (double redshift) */
     /* { */
-    /*   size_t n = 1e4; */ 
+    /*   size_t n = 1e4; */
 
     /*   gsl_integration_workspace *w =  gsl_integration_workspace_alloc(n); */
 
@@ -429,7 +430,7 @@ namespace Gambit
     const double da = 1.66053906660e-24; // dalton to g 
 
 
-    class StellarModel 
+    class StellarModel
     {
       public :
 
@@ -711,7 +712,7 @@ namespace Gambit
       double OmegaM = params->OmegaM;
       double OmegaLambda = params->OmegaLambda;
       double OmegaR = params->OmegaR;
-      double OmegaK = 1. - OmegaM - OmegaR - OmegaLambda;
+      double OmegaK = 0.;
 
       return 1./sqrt( OmegaM*pow(1+x, 5.) + OmegaLambda*pow(1+x, 2.) + OmegaK*pow(1+x, 4.) + OmegaR*pow(1+x, 6.) );
     }
@@ -756,7 +757,7 @@ namespace Gambit
       double OmegaM = params->OmegaM;
       double OmegaR = params->OmegaR;
       double OmegaLambda = params->OmegaLambda;
-      double OmegaK = 1. - OmegaM - OmegaR - OmegaLambda;
+      double OmegaK = 0.;
 
       double x = mass/2./E;
       double z = x - 1.;
@@ -887,27 +888,19 @@ namespace Gambit
       result = 4e11*theta*theta*s0*mS;
     }
 
-    // capability function to provide the decay rate to two photons
-    void SuperRenormHP_decay_rate_2photons (double &result)
+    // capability function to provide the decay rate to two photons [s]
+    void SuperRenormHP_decay_rate_2_photons (double &result)
     {
-      using namespace Pipes::SuperRenormHP_decay_rate_2photons;
+      using namespace Pipes::SuperRenormHP_decay_rate_2_photons;
       double mS = *Param["mS"], theta = *Param["theta"];
 
       result = (theta*theta*alphaEM*alphaEM*mS*mS*mS*C*C)/(256.*pi*pi*pi*v*v)/hbar;
     }
 
-    // capability function to provide the mass of the DM candidate
-    void SuperRenormHP_mass (double &result)
-    {
-      using namespace Pipes::SuperRenormHP_mass;
-
-      result = *Param["mS"];
-    }
-
     // gsl error handler
     void handler (const char * reason, const char * file, int line, int gsl_errno)
     {
-      if (gsl_errno == 4) 
+      if (gsl_errno == 4)
       {
         throw gsl_errno;
       }
@@ -921,15 +914,16 @@ namespace Gambit
 
       static Xray experiment = Xray("INTEGRAL");
 
-      double mass = *Dep::mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
+      double mass = *Dep::DM_mass, gamma = *Dep::DM_decay_rate_2_photons, density = *Dep::DM_initial_density;
 
-      double H0 = *Param["H0"]; 
-      double h = H0/100.;
-      double OmegaDM = *Param["omega_cdm"]/h/h;
+      double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
 
-      /* double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r; */
+      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
+     
+      double OmegaLambda = *Dep::Omega0_Lambda;
 
-      XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, 0.308, 0., 0.692, OmegaDM};
+      XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
+      /* XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, 0.308, 0., 0.692, OmegaDM}; */
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
 
@@ -966,11 +960,16 @@ namespace Gambit
 
       static Xray experiment = Xray("HEAO");
 
-      const double mass = *Dep::mass, gamma = *Dep::decay_rate_2photons, density = *Dep::initial_density;
+      double mass = *Dep::DM_mass, gamma = *Dep::DM_decay_rate_2_photons, density = *Dep::DM_initial_density;
 
-      /* double H0 = *Param["H0"], OmegaDM = *Param["omega_cdm"]; */
+      double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
 
-      XrayLikelihood_params params = {mass, gamma, density, experiment, 67.81e-19/3.085, 0.308, 0., 0.692, 0.285};
+      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
+     
+      double OmegaLambda = *Dep::Omega0_Lambda;
+
+      XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
+      /* XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, 0.308, 0., 0.692, OmegaDM}; */
 
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;
@@ -1045,7 +1044,7 @@ namespace Gambit
 
       result = Phi0*pow(1+Ls/L0, alpha);
     }
-    //
+
     // capability function to compute the predicted solar neutrino flux (Be7)
     void SuperRenormHP_solar_neutrino_flux_Be7 (double &result)
     {
@@ -1059,7 +1058,7 @@ namespace Gambit
       result = Phi0*pow(1+Ls/L0, alpha);
     }
 
-    // capability function to compute the likelihood from solar B8 neutrino flux
+    // capability function to compute the likelihood from the solar B8 neutrino flux
     void calc_lnL_solar_neutrino_B8 (double &result)
     { 
       using namespace Pipes::calc_lnL_solar_neutrino_B8;
@@ -1073,7 +1072,7 @@ namespace Gambit
       result = Stats::gaussian_upper_limit(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
     }
 
-    // capability function to compute the likelihood from solar Be7 neutrino flux
+    // capability function to compute the likelihood from the solar Be7 neutrino flux
     void calc_lnL_solar_neutrino_Be7 (double &result)
     {
       using namespace Pipes::calc_lnL_solar_neutrino_Be7;

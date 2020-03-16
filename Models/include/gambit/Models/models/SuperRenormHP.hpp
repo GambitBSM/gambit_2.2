@@ -23,6 +23,8 @@
 #define MODEL SuperRenormHP
   START_MODEL
   DEFINEPARS(mS, theta)
+
+  MAP_TO_CAPABILITY(mS, DM_mass)
 #undef MODEL
 
 #endif

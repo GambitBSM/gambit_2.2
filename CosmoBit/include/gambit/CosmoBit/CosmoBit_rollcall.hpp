@@ -665,6 +665,14 @@ START_MODULE
 
   #undef CAPABILITY
 
+  #define CAPABILITY Omega0_Lambda
+    START_CAPABILITY
+    #define FUNCTION get_Omega0_Lambda_classy
+      START_FUNCTION(double)
+      BACKEND_REQ(class_get_Omega0_Lambda,(class_tag),double,())
+    #undef FUNCTION
+  #undef CAPABILITY
+
   #define CAPABILITY Omega0_m
     START_CAPABILITY
 
@@ -687,7 +695,7 @@ START_MODULE
 
     #define FUNCTION compute_Omega0_b
       START_FUNCTION(double)
-      ALLOW_MODEL(LCDM)
+      ALLOW_MODELS(LCDM, LCDM_theta)
       DEPENDENCY(H0, double)
     #undef FUNCTION
 
@@ -699,7 +707,7 @@ START_MODULE
 
     #define FUNCTION compute_Omega0_cdm
       START_FUNCTION(double)
-      ALLOW_MODEL(LCDM)
+      ALLOW_MODELS(LCDM, LCDM_theta)
       DEPENDENCY(H0, double)
     #undef FUNCTION
 

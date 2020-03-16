@@ -50,7 +50,7 @@
 
 
 #======== 2) Input parameter declarations =======
-#  In this section the models to be scanned over are specified. You can 
+#  In this section the models to be scanned over are specified. You can
 #  set all model parameters here or import another yaml file containing them. 
 #  
 #  => for more details check out chapter 6.2 of the GAMBIT manual (https://arxiv.org/abs/1705.07908) 

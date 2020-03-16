@@ -16,7 +16,7 @@
 #         Note: 
 #         -----
 #           *) for this specific yaml file you only need CosmoBit, DarkBit and NeutrinoBit 
-#                 => there is no need to build all Bits of GAMBIT, you can ditch the others 
+#                 => there is no need to build all Bits of GAMBIT, you can ditch the others
 #                    with the cmake flag -Ditch="Collider;Decay;Spec;Flav;Precision"
 #           *) some of the backends needed for the scan are only available in python2 so far 
 #                 so if you have python 3 you have to set cmake flags to your python2 library and
@@ -70,13 +70,13 @@
 #
 #
 # ======================================
-# 
+#
 #
 
 #======== Input parameter declarations =======
 #  In this section the models to be scanned over are specified. You can 
 #  set all model parameters here or import another yaml file containing them. 
-#  
+#
 #  => for more details check out chapter 6.2 of the GAMBIT code paper (https://arxiv.org/abs/1705.07908) 
 #
 
@@ -172,7 +172,7 @@ Printer:
     buffer_length: 100
 
 #======== Scanner setup ========
-# different scanner settings, for details check chapter 6.7 of the GAMBIT code paper (https://arxiv.org/abs/1705.07908) 
+# different scanner settings, for details check chapter 6.7 of the GAMBIT code paper (https://arxiv.org/abs/1705.07908)
 #   comparison of different sampling algorithms in https://arxiv.org/abs/1705.07959
 
 Scanner:
@@ -204,7 +204,7 @@ Scanner:
 #
 
 ObsLikes:
-  
+
   # ---- CMB -----
   # if you do ./gambit Planck_lowl_loglike you will see that there are different functions that 
   # can satisfy this capability. The dependency resolver won't decide ambiguities for you so 

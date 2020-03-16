@@ -1524,7 +1524,7 @@ START_MODULE
 
   // Super Renormalizable Higgs Portal DM relative observables and likelihoods -----------------
 
-  #define CAPABILITY initial_density
+  #define CAPABILITY DM_initial_density
   START_CAPABILITY
     #define FUNCTION SuperRenormHP_initial_density
     START_FUNCTION(double)
@@ -1532,17 +1532,9 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY decay_rate_2photons
+  #define CAPABILITY DM_decay_rate_2_photons
   START_CAPABILITY
-    #define FUNCTION SuperRenormHP_decay_rate_2photons
-    START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormHP)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY mass
-  START_CAPABILITY
-    #define FUNCTION SuperRenormHP_mass
+    #define FUNCTION SuperRenormHP_decay_rate_2_photons
     START_FUNCTION(double)
     ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
@@ -1552,12 +1544,14 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_INTEGRAL
     START_FUNCTION(double)
-    ALLOW_MODEL(LCDM)
-    /* DEPENDENCY(Omega0_r, double) */
-    /* DEPENDENCY(Omega0_m, double) */
-    DEPENDENCY(initial_density, double)
-    DEPENDENCY(decay_rate_2photons, double)
-    DEPENDENCY(mass, double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(Omega0_cdm, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(DM_initial_density, double)
+    DEPENDENCY(DM_decay_rate_2_photons, double)
+    DEPENDENCY(DM_mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1565,9 +1559,14 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_HEAO
     START_FUNCTION(double)
-    DEPENDENCY(initial_density, double)
-    DEPENDENCY(decay_rate_2photons, double)
-    DEPENDENCY(mass, double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(Omega0_cdm, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(DM_initial_density, double)
+    DEPENDENCY(DM_decay_rate_2_photons, double)
+    DEPENDENCY(DM_mass, double)
     #undef FUNCTION
   #undef CAPABILITY
 
