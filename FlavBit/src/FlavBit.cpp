@@ -161,7 +161,7 @@ namespace Gambit
     
     void Kstarmumu_Theory2Experiment_translation(flav_observable_map& prediction)
     {
-      vector<std::string > names={"S4", "S8"};
+      vector<std::string > names={"S4", "S7", "S9"};
       for (unsigned i=0; i < names.size(); i++)
         {
           auto search = prediction.find( names[i]);
@@ -174,7 +174,7 @@ namespace Gambit
     
     void Kstarmumu_Theory2Experiment_translation(flav_covariance_map& prediction)
     {
-      vector<std::string > names={"S4", "S8"};
+      vector<std::string > names={"S4", "S7", "S9"}; 
       vector<std::string > names_exist;
 
       for (unsigned i=0; i < names.size(); i++)
@@ -212,7 +212,7 @@ namespace Gambit
     {
       if(flav_debug)
         {
-          vector<string> vec={"S3", "S4", "S5", "S8"};
+          vector<string> vec={"S3", "S4", "S5", "S8", "S9"};
           cout<<"Changing convetion Before:"<<endl;
           print(pred,vec);
         }
@@ -220,7 +220,7 @@ namespace Gambit
       Kstarmumu_Theory2Experiment_translation(pred.covariance);
       if(flav_debug)
         {
-          vector<string> vec={"S3", "S4", "S5", "S8"};
+          vector<string> vec={"S3", "S4", "S5", "S8", "S9"};
           cout<<"Changing convetion After:"<<endl;
           print(pred,vec);
         }
