@@ -1090,6 +1090,10 @@ def make_spheno_decay_tables(spheno_path, model_name):
                     "DECAY        {0}     0.0000000E+00   # {1}\n"
                     "#    INDEX  NDA      ID1      ID2     CORRF\n"
                 ).format(str(abs(int(pdgs[part]))), names[part])
+
+            # Ignore 1 loop decays
+            if line.startswith("If(gT1L") :
+                decays = False
             
             # Get indices
             if "Do gt" in line and decays:

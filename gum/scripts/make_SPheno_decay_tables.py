@@ -106,7 +106,7 @@ with open(IO_file, 'r') as f_in, open(decay_file, 'w') as f_out:
       # Start reading decays
       decays = True
       count = 0
- 
+
       # get particle
       subline = line.split('.')[0]
       part = subline[7::]
@@ -115,6 +115,10 @@ with open(IO_file, 'r') as f_in, open(decay_file, 'w') as f_out:
       f_out.write(
         'DECAY        ' +  str(abs(int(pdgs[part]))) + '     0.0000000E+00   # ' + names[part] + '\n'
         '#    INDEX  NDA      ID1      ID2     CORRF\n')
+
+    # Ignore 1 loop decays
+    if line.startswith("If(gT1L") :
+      decays = False
 
     # Get indices
     if "Do gt" in line and decays:
