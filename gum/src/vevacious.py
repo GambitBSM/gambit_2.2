@@ -11,6 +11,7 @@ import os
 def copy_vevacious_files(model_name, vevdir):
     """
     Moves vevacious files from the SARAH output to the backend folder.
+    TODO: make this go to patch dir.
     """
 
     # gb_target = "./../Backends/installed/vevacious/VevaciousPlusPlus/1.0/ModelFiles/" + model_name
@@ -60,8 +61,8 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
         "std::string rankstring = std::to_string(rank);\n"
         "\n"
         "// Getting the run folder for saving initialization files\n"
-        "std::string inputspath = runOptions.getValue<std::string>("
-        "\"where_to_save_input\");\n"
+        "std::string inputspath = runOptions.getValueOrDef<std::string>("
+        "\"output/Vevacious_iniFiles\", \"where_to_save_input\");\n"
         "result[\"inputspath\"] = inputspath;\n"
         "std::string modelfilesPath = inputspath + \"/ModelFiles/mpirank_\"+ "
         "rankstring + \"/\";\n"
@@ -104,8 +105,10 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
         "std::string inputFilename = inputspath + \"/InitializationFiles/"
         "VevaciousPlusPlusObjectInitialization_mpirank_\"+ rankstring "
         "+\".xml\";\n"
-        "vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus "
+        "//vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus "
         "vevaciousPlusPlus( inputFilename );\n"
+        "result.set_inputFilename(inputFilename);\n"
+        "result.set_inputPath(inputspath);\n"
         "\n"
         "// Get the spectrum object\n"
         "const Spectrum& fullspectrum = *myPipe::Dep::{2};\n"
@@ -169,6 +172,15 @@ def write_readlhablock(block, contents):
 
     towrite = "  std::vector<std::pair<int,double>> {0} = {{ ".format(block)
 
+    # Don't need MINPAR or EXTPAR, or any of the SM mixing matrices. 
+    # Vevacious gets mixing matrices from diagonlising masses.
+    if block in ["MINPAR", "EXTPAR", 
+                 "UULMIX", "UURMIX", "UDLMIX", "UDRMIX", "UELMIX", "UERMIX"]:
+        return ""
+    # And input blocks
+    elif block.endswith("IN"):
+        return ""
+
     # Matrix case
     if "matrix" in contents:
 
@@ -191,6 +203,9 @@ def write_readlhablock(block, contents):
         ).format(block)
     
     elif "mixingmatrix" in contents:
+
+        # S.B. don't need mixing matrices for vevacious
+        return ""
     
         size = int( contents["mixingmatrix"].split('x')[0] )
 
@@ -218,7 +233,8 @@ def write_readlhablock(block, contents):
             entry = (
                     "{{ {0}, SLHAea::to<double>(slhaea.at(\"{1}\")"
                     ".at({0}).at(1))}}"
-            ).format(index, name)
+            ).format(index, block)
+            # ).format(index, name)
             entries.append(entry)      
 
         # Wrap it up.
