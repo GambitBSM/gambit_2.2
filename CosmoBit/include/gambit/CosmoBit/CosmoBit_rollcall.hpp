@@ -701,7 +701,6 @@ START_MODULE
 
   #undef CAPABILITY
 
-
   #define CAPABILITY Omega0_cdm
     START_CAPABILITY
 
