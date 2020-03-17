@@ -1496,7 +1496,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     towrite += "std::vector<int> pdg = {\n"
     nparticles = len(particles);
     for i, particle in enumerate(particles):
-        towrite += str(particle.PDG_code)
+        towrite += str(abs(particle.PDG_code))
         if i < nparticles-1: towrite += ", // " + particle.name + '\n'
         else : towrite += " // " + particle.name + '\n'
 
@@ -2687,7 +2687,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '\n'\
       '// 1114, External Z factors\n'\
       '*ExternalZfactors = inputs.options->getValueOrDef<bool>(true, "ExternalZfactors");\n'\
-      '  if(*ExternalZfactors)\n'\
+      'if(*ExternalZfactors)\n'\
       '{\n'\
       '*UseZeroRotationMatrices = inputs.options->getValueOrDef<bool>(false, "UseZeroRotationMatrices");\n'\
       '*UseP2Matrices = inputs.options->getValueOrDef<bool>(true, "UseP2Matrices");\n'\
@@ -3360,6 +3360,18 @@ def write_spheno_frontend_header(model_name, function_signatures,
     ).format(fullmodelname, clean_model_name)
 
     # Whether to code up the HiggsCouplingsTable:
+    # The targets for HiggsBounds
+    hb_targets = ["rHB_S_S_Fd",  "rHB_P_P_Fd", "rHB_S_S_Fu",  "rHB_P_P_Fu", 
+                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VWm",   "rHB_P_VWm",  
+                  "rHB_S_VZ",  "rHB_P_VZ", "ratioPP",  "ratioPPP",  
+                  "ratioGG",  "ratioPGG", "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
+
+    hboutput = True
+    # If the targets aren't all there then don't write HiggsBounds output. 
+    # They should be!
+    if not all(param in hb_variables for param in hb_targets):
+        hboutput = False
+
     if hboutput:
       towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"SARAHSPheno_{0}_HiggsCouplingsTable\")\n"
         ).format(clean_model_name)
