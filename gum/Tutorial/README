@@ -22,7 +22,7 @@ To run GAMBIT you will also need:
 For this tutorial you will need:
 	- HDF5
 	- h5py
-	- Optionally MPI (...otherwise this tutorial will take longer to run)
+	- Optionally MPI (...otherwise this tutorial will take much, much longer to run)
 	- scipy
 	- ctioga v0.8 or above
 
@@ -49,14 +49,6 @@ Next let's install the scanning algorithm we want to use for this study, diver.
     cmake ..
 
 We perform another cmake step so GAMBIT finds the libraries for the scanners.
-The backends we are using in this tutorial are: CalcHEP, DarkSUSY, micrOMEGas,
-DDCalc, and gamlike. We'll build micrOMEGAs later once we've added the new model, 
-but we have to build CalcHEP first, and the rest before we scan -- but there's 
-no time like the present!
-From the GAMBIT build directory,
-
-	make -j4 calchep darksusy gamlike ddcalc
-
 
 1. Create a directory for the model file in GUM
 
@@ -66,9 +58,6 @@ From the GAMBIT build directory,
 
 	cp $GUM/Tutorial/MDMSM.fr $GUM/Models/MDMSM/MDMSM.fr
 
-	# (JR) does this mean that if I wanted to add another model with gum 
-	# later I would have to add the model file to models and then re-build gum again?
-
 3. You may need to build GUM, if this is your first encounter. Let's do that,
    starting from the GUM directory
 
@@ -77,7 +66,6 @@ From the GAMBIT build directory,
 	cd build
 	cmake ..
 	make -j4
-
 
 4. Copy the gum file to the gum_files directory
 
@@ -103,7 +91,11 @@ All details about the GUM file can be found in the GUM manual.
 	bash MDMSM_config.sh
 
 which will build GAMBIT and all backends we've just added. This 
-will take a bit longer. 
+will take a bit longer. Once this is done we also have to install the 
+remaining backends we wish to use for the scan. This is simple, 
+
+    cd $GAMBIT/build
+    make -j4 darksusy gamlike ddcalc
 
 8. Then we're ready to scan. The options included in the YAML file
    we ae using to scan are detailed in the GUM manual. For more 
