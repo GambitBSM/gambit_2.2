@@ -684,7 +684,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
 
     entry = []
     for higgs in charged_higgses:
-        entry.append("\""+pdg_to_particle(higgs, gambit_pdgs)+"\"")
+        entry.append("\""+pdg_to_particle(abs(higgs), gambit_pdgs)+"\"")
 
     # Sort the higgses in numerical order - with the neutral ones first
     entry = sorted(entry, key=str.swapcase)
@@ -811,7 +811,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
     for i in range(len(charged_higgses)):
         towrite += (
             "result.set_charged_decays({0}, \"{1}\", tbl->at(\"{1}\"));\n"
-        ).format(i, pdg_to_particle(charged_higgses[i], gambit_pdgs))
+        ).format(i, pdg_to_particle(abs(charged_higgses[i]), gambit_pdgs))
 
     # Add the top and wrap it up
     towrite += (
