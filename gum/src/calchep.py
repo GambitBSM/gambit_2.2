@@ -332,23 +332,12 @@ def get_vertices(foldername):
                     
 def copy_calchep_files(model_folder, model_name):
     """
-    Copies all CalcHEP files into the GAMBIT Backends directory.
+    Copies all CalcHEP files into the GAMBIT Backend patches directory.
     """
     
     model_name.strip('/')    
     model_folder.strip('/')    
 
-    gb_target = "./../Backends/installed/calchep/3.6.27/models/" + model_name
-    if not os.path.exists(gb_target):
-        os.makedirs(gb_target)
-        
-    shutil.copyfile(model_folder + "/func1.mdl", gb_target + "/func1.mdl")
-    shutil.copyfile(model_folder + "/vars1.mdl", gb_target + "/vars1.mdl")
-    shutil.copyfile(model_folder + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
-    shutil.copyfile(model_folder + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
-    shutil.copyfile(model_folder + "/extlib1.mdl", gb_target + "/extlib1.mdl")
-
-    # Also move them to patches, just in case the user does make nuke-calchep
     gb_target = "./../Backends/patches/calchep/3.6.27/Models/" + model_name
     if not os.path.exists(gb_target):
         os.makedirs(gb_target)

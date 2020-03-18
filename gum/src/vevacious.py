@@ -15,7 +15,8 @@ def copy_vevacious_files(model_name, vevdir):
     """
 
     # gb_target = "./../Backends/installed/vevacious/VevaciousPlusPlus/1.0/ModelFiles/" + model_name
-    gb_target = "./../Backends/installed/vevacious/1.0/VevaciousPlusPlus/ModelFiles/" + model_name
+    # gb_target = "./../Backends/installed/vevacious/1.0/VevaciousPlusPlus/ModelFiles/" + model_name
+    gb_target = "./../Backends/patches/vevacious/1.0/VevaciousPlusPlus/ModelFiles/" + model_name
     if not os.path.exists(gb_target):
         os.makedirs(gb_target)
 
@@ -25,6 +26,7 @@ def copy_vevacious_files(model_name, vevdir):
     if len(file) == 0:
         raise GumError(("No .vin files in vevacious output."))
 
+    # Move files to the Vevacious *patch* directory
     shutil.copyfile(vevdir + "/" + file[0], gb_target + "/" + model_name + ".vin")
     shutil.copyfile(vevdir + "/ScaleAndBlock.xml", gb_target + "/ScaleAndBlock.xml")
 

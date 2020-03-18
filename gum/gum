@@ -71,9 +71,6 @@ if args.file:
         # SARAH removes hyphens and underscores for .f90 files...
         clean_model_name = gum.name.replace('-','').replace('_','')
 
-        # First, check the required backends are installed
-        check_backends(output_opts)
-
         # Create the output directory for all generated files for this model
         output_dir = os.path.join(os.getcwd(),"Outputs", gum.name)
         mkdir_if_absent(output_dir)
