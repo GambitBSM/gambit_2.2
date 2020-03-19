@@ -55,7 +55,7 @@ Parameters:
 
   # NFW profile
   Halo_gNFW_rho0:
-    rho0: 0.3
+    rho0: 0.4
 #      range: [0.2, 0.8]
     v0: 240
 #      range: [216, 264]
