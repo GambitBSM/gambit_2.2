@@ -16,6 +16,10 @@
 ///          (sebastian.wild@ph.tum.de)
 ///  \date 2016 Aug
 ///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2020 Mar
+///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -235,8 +239,9 @@ namespace Gambit {
 
     /// \brief Likelihood for cosmological relic density constraints.
     /// Default data:
-    ///   Omega_c h^2 = 0.1188 +/- 0.0010 (1 sigma), Gaussian.  Planck TT,TE,EE+lowP+lensing+ext 2015, arxiv:1502.01589v2
+    ///   Omega_c h^2 = 0.11933 +/- 0.00091 (1 sigma), Gaussian.  Planck TT,TE,EE+lowP+lensing+BAO 2018, arxiv:1807.06209
     ///   theory error: 5%
+    /// S.B. 19/3/20 Updated with 2018 Planck results.
     void lnL_oh2_Simple(double &result)
     {
       using namespace Pipes::lnL_oh2_Simple;
@@ -244,10 +249,10 @@ namespace Gambit {
       /// option oh2_fractional_theory_err<double>: Relic density fractional 1 sigma theory
       /// error (default: 0.05)
       double oh2_theoryerr = oh2_theory*runOptions->getValueOrDef<double>(0.05, "oh2_fractional_theory_err");
-      /// option oh2_obs<double>: Observed value of Omega h^2 (default: 0.1188)
-      double oh2_obs = runOptions->getValueOrDef<double>(0.1188, "oh2_obs");
-      /// option oh2_obserr<double>: 1 sigma error on observed value of Omega h^2 (default: 0.001)
-      double oh2_obserr  = runOptions->getValueOrDef<double>(0.001, "oh2_obserr");
+      /// option oh2_obs<double>: Observed value of Omega h^2 (default: 0.11933)
+      double oh2_obs = runOptions->getValueOrDef<double>(0.11933, "oh2_obs");
+      /// option oh2_obserr<double>: 1 sigma error on observed value of Omega h^2 (default: 0.00091)
+      double oh2_obserr  = runOptions->getValueOrDef<double>(0.00091, "oh2_obserr");
       /// Option profile_systematics<bool>: Use likelihood version that has been profiled over systematic errors (default false)
       bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
       result = Stats::gaussian_loglikelihood(oh2_theory, oh2_obs, oh2_theoryerr, oh2_obserr, profile);
@@ -256,8 +261,9 @@ namespace Gambit {
 
     /// \brief Likelihood for cosmological relic density constraints, implemented as an upper limit only
     /// Default data:
-    ///   Omega_c h^2 = 0.1188 +/- 0.0010 (1 sigma), Gaussian.  Planck TT,TE,EE+lowP+lensing+ext 2015, arxiv:1502.01589v2
+    ///   Omega_c h^2 = 0.11933 +/- 0.00091 (1 sigma), Gaussian.  Planck TT,TE,EE+lowP+lensing+BAO 2018, arxiv:1807.06209
     ///   theory error: 5%
+    /// S.B. 19/3/20 Updated with 2018 Planck results.
     void lnL_oh2_upperlimit(double &result)
     {
       using namespace Pipes::lnL_oh2_upperlimit;
@@ -265,10 +271,10 @@ namespace Gambit {
       /// option oh2_fractional_theory_err<double>: Relic density fractional 1 sigma theory
       /// error (default: 0.05)
       double oh2_theoryerr = oh2_theory*runOptions->getValueOrDef<double>(0.05, "oh2_fractional_theory_err");
-      /// option oh2_obs<double>: Observed value of Omega h^2 (default: 0.1188)
-      double oh2_obs = runOptions->getValueOrDef<double>(0.1188, "oh2_obs");
-      /// option oh2_obserr<double>: 1 sigma error on observed value of Omega h^2 (default: 0.001)
-      double oh2_obserr  = runOptions->getValueOrDef<double>(0.001, "oh2_obserr");
+      /// option oh2_obs<double>: Observed value of Omega h^2 (default: 0.11933)
+      double oh2_obs = runOptions->getValueOrDef<double>(0.11933, "oh2_obs");
+      /// option oh2_obserr<double>: 1 sigma error on observed value of Omega h^2 (default: 0.00091)
+      double oh2_obserr  = runOptions->getValueOrDef<double>(0.00091, "oh2_obserr");
       /// Option profile_systematics<bool>: Use likelihood version that has been profiled over systematic errors (default false)
       bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
       result = Stats::gaussian_upper_limit(oh2_theory, oh2_obs, oh2_theoryerr, oh2_obserr, profile);
