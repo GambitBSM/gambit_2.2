@@ -423,7 +423,6 @@ pass_spectrum_to_vevacious: |
 #  ColliderBit capabilities
 #-------------------------------------
 
-
 DummyColliderObservable: |
    Dummy observable that creates a dependency on TestModel1D, which is used
    to satisfy the normal GAMBIT model requirements in a minimal way. Used
@@ -470,10 +469,12 @@ CrossSection: |
    Provides a total cross-section to be applied to collider analyses.
 
 ATLASDetectorSim: |
-   Provides a detector simulation of ATLAS.
+   Provides a set functions within a container ready to apply ATLAS
+   smearing and reconstruction efficiencies to an event.
 
 CMSDetectorSim: |
-   Provides a detector simulation of CMS.
+   Provides a set functions within a container ready to apply CMS
+   smearing and reconstruction efficiencies to an event.
 
 IdentityDetectorSim: |
    Provides a fake detector sim, which simply returns truth-level events.
@@ -488,21 +489,25 @@ CopiedEvent: |
    Uses an IdentityDetectorSim to do absolutely nothing to a HardScatteringEvent.
 
 ATLASAnalysisContainer: |
-   Provides a container of ATLAS analyses to be applied to an ATLASSmearedEvent.
+   Provides a container of ATLAS analyses to be used with the detector simulation
+   capability ATLASSmearedEvent. The container is ready to apply each analysis to
+   each event.
 
 CMSAnalysisContainer: |
-   Provides a container of CMS analyses to be applied to an ATLASSmearedEvent.
+   Provides a container of CMS analyses to be used with the detector simulation
+   capability CMSSmearedEvent. The container is ready to apply each analysis to
+   each event.
 
 IdentityAnalysisContainer: |
    Provides a container of 'truth-level analyses' to be applied to a CopiedEvent.
 
 ATLASAnalysisNumbers: |
-   Uses an ATLASAnalysisContainer to perform all its
-   analyses upon a given ATLASSmearedEvent.
+   Uses the given ATLASAnalysisContainer to perform all its
+   analyses upon the given ATLASSmearedEvent.
 
 CMSAnalysisNumbers: |
-   Uses a CMSAnalysisContainer to perform all its
-   analyses upon a given CMSSmearedEvent.
+   Uses the given CMSAnalysisContainer to perform all its analyses
+   upon the given CMSSmearedEvent.
 
 IdentityAnalysisNumbers: |
    Uses an IdentityAnalysisContainer to perform all its
@@ -2936,12 +2941,6 @@ lnL_gm2 : |
 
 lnL_deltarho : |
    Log-likelihood of ∆ρ, the departure from one of the ratio of the Fermi effective coupling (G_F) in W and Z-mediated processes.
-
-sinW2: |
-   Precision value of the weak mixing angle sin^2 θ_W (not the effective one)
-
-lnL_sinW2: |
-   Log-likelihood of the weak mixing angle sin^2 θ_W (not the effective one)
 
 
 
