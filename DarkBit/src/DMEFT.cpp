@@ -230,7 +230,6 @@ namespace Gambit
       // So we need to rescale them by the appropriate scale
       result["C51"]  = C51/Lambda;
       result["C52"]  = C52/Lambda;
-      // No C53 + C54 in the model -- Higgs portals terms
 
       // Gluon operators -- universal, do not depend on
       // quark flavour.

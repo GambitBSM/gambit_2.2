@@ -52,12 +52,16 @@ Parameters:
     # sigma*ig5 sigma
     C710: 0
 
-  # NFW with standard & central values for prelims
+  # NFW profile
   Halo_gNFW_rho0:
-    rho0: 0.4
+    rho0: 0.3
+#      range: [0.2, 0.8]
     v0: 240
+#      range: [216, 264]
     vesc: 533
+#      range: [437, 629]
     vrot: 240
+#      same_as: Halo_gNFW_rho0::v0
     rs: 20.0
     r_sun: 8.5
     alpha: 1
@@ -115,6 +119,12 @@ ObsLikes:
 
   - capability: PICO_60_2017_LogLikelihood
     purpose:    LogLike
+    
+  - capability: PICO_60_2019_LogLikelihood
+    purpose:    LogLike
+
+  - capability: CRESST_III_LogLikelihood
+    purpose:    LogLike
 
   - capability: CRESST_II_LogLikelihood
     purpose:    LogLike
@@ -137,7 +147,23 @@ ObsLikes:
     capability: LHC_Combined_LogLike
     module:     ColliderBit
     type: double
-
+#
+#  # Nuisance parameters
+#  
+#  # DM Local Halo likelihoods
+#  - capability: lnL_rho0
+#    purpose: LogLike
+#
+#  - capability: lnL_v0
+#    purpose: LogLike
+#
+#  - capability: lnL_vesc
+#    purpose: LogLike
+#
+#  # Top mass
+#  - capability: lnL_t_mass
+#    purpose:    LogLike
+#
 Rules:
 
   - capability: RD_oh2
@@ -179,10 +205,16 @@ Rules:
   # - capability: AllAnalysisNumbers
   #   function: DMEFT_results
     
+  - capability: LHC_Combined_LogLike
+    options:
+      cap_loglike: false
+      skip_analyses:
+        - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
+
   - capability: LHC_LogLikes
     backends:
     - {capability: lnlike_marg_poisson_lognormal_error}
-    options: 
+    options:
       # covariance_marg_convthres_abs: 0.05
       # covariance_marg_convthres_rel: 0.05
       # covariance_nsamples_start: 100000
@@ -194,7 +226,7 @@ Rules:
       nuisance_prof_maxsteps: 10000
       nuisance_prof_convacc: 0.01
       nuisance_prof_simplexsize: 1e-5
-      nuisance_prof_method: 6
+      nuisance_prof_method: 5
       nuisance_prof_verbosity: 0
 
   # Use the WIMP properties structure to get WIMP mass etc.
@@ -206,6 +238,22 @@ Rules:
 
   - capability: spinwimpx2
     function: jwimpx2_from_WIMPprops
+
+  # Halo nuisances settings
+
+  # Set v0 to 240 +/- 8 km/s based on Reid et al [arXiv:1401.5377]
+  - capability: lnL_v0
+    function: lnL_v0_gaussian
+    options:
+      v0_obs: 240
+      v0_obserr: 8
+
+  # Set vesc to 533 +/- 32 km/s based on RAVE survey [arXiv:1309.4293]
+  - capability: lnL_vesc
+    function: lnL_vesc_gaussian
+    options:
+      vesc_obs: 533
+      vesc_obserr: 31.9
 
 Logger:
 
