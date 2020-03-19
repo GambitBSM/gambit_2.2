@@ -54,14 +54,14 @@ START_MODULE
 
   #define CAPABILITY injection_spectrum
   START_CAPABILITY
-    #define FUNCTION injection_spectrum_annihilatingDM
+    #define FUNCTION injection_spectrum_AnnihilatingDM_mixture
     START_FUNCTION(DarkAges::injectionSpectrum)
-    ALLOW_MODELS(AnnihilatingDM_general)
+    ALLOW_MODELS(AnnihilatingDM_mixture)
     #undef FUNCTION
 
-    #define FUNCTION injection_spectrum_decayingDM
+    #define FUNCTION injection_spectrum_DecayingDM_mixture
     START_FUNCTION(DarkAges::injectionSpectrum)
-    ALLOW_MODELS(DecayingDM_general)
+    ALLOW_MODELS(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -336,7 +336,7 @@ START_MODULE
       ALLOW_MODEL_COMBINATION(cosmo,inflation)
       DEPENDENCY(multimode_input_parameters, Multimode_inputs)
       BACKEND_REQ(multimodecode_parametrised_ps, (), gambit_inflation_observables,
-                  (int&,int&,int&,int&,double*,double*,double*,double&,double&,double&,int&))
+                  (int&,int&,int&,int&,double*,double*,double*,double&,double&,double&,int&,int&,int&,int&,int&))
     #undef FUNCTION
 
     #define FUNCTION get_parametrised_ps_LCDM
@@ -363,7 +363,7 @@ START_MODULE
       ALLOW_MODELS(Inflation_InstReh_1mono23, Inflation_InstReh_1linear, Inflation_InstReh_1quadratic, Inflation_InstReh_1quartic, Inflation_InstReh_1natural, Inflation_InstReh_1Starobinsky)
       DEPENDENCY(multimode_input_parameters, Multimode_inputs)
       BACKEND_REQ(multimodecode_primordial_ps, (), gambit_inflation_observables,
-                  (int&,int&,int&,int&,double*,double*,double*,double&,double&,double&,int&,double&,double&,int&))
+                  (int&,int&,int&,int&,double*,double*,double*,double&,double&,double&,int&,double&,double&,int&,int&,int&,int&,int&))
     #undef FUNCTION
 
     /*

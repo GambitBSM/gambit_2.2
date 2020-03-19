@@ -116,9 +116,9 @@ namespace Gambit
   {
     using namespace LogTags;
 
-    void injection_spectrum_annihilatingDM(DarkAges::injectionSpectrum& spectrum)
+    void injection_spectrum_AnnihilatingDM_mixture(DarkAges::injectionSpectrum& spectrum)
     {
-      using namespace Pipes::injection_spectrum_annihilatingDM;
+      using namespace Pipes::injection_spectrum_AnnihilatingDM_mixture;
 
       double m = *Param["mass"];
       double BR_el = *Param["BR"];
@@ -143,9 +143,9 @@ namespace Gambit
       spectrum.spec_ph.resize(1,BR_ph*2e9);
     }
 
-    void injection_spectrum_decayingDM(DarkAges::injectionSpectrum& spectrum)
+    void injection_spectrum_DecayingDM_mixture(DarkAges::injectionSpectrum& spectrum)
     {
-      using namespace Pipes::injection_spectrum_decayingDM;
+      using namespace Pipes::injection_spectrum_DecayingDM_mixture;
 
       double m = *Param["mass"];
       double BR_el = *Param["BR"];
@@ -299,8 +299,6 @@ namespace Gambit
     {
       using namespace Pipes::f_effective_func;
 
-      bool silent = runOptions->getValueOrDef<bool>(false,"silent_mode");
-      int last_steps = runOptions->getValueOrDef<int>(4,"show_last_steps");
       double z_eff = 0.01;
       if(ModelInUse("DecayingDM_general"))
       {
@@ -323,54 +321,24 @@ namespace Gambit
       std::vector<double> feff = fzt.f_eff;
 
       int npts = z.size();
-      double ftot[npts];
-      double red[npts];
+      std::vector<double> ftot(npts);
       for (int i = 0; i < npts; i++)
       {
         if (f_eff_mode)
-          ftot[i] = feff.at(i);
+          ftot.at(i) = feff.at(i);
         else
-          ftot[i] = fh.at(i)+fly.at(i)+fhi.at(i)+fhei.at(i)+flo.at(i);
-        red[i] = z.at(i);
+          ftot.at(i) = fh.at(i) + fly.at(i) + fhi.at(i) + fhei.at(i) + flo.at(i);
       }
 
       gsl_interp_accel *gsl_accel_ptr = gsl_interp_accel_alloc();
       gsl_spline *spline_ptr = gsl_spline_alloc(gsl_interp_cspline, npts);
 
-      gsl_spline_init(spline_ptr, red, ftot, npts);
+      gsl_spline_init(spline_ptr, z.data(), ftot.data(), npts);
 
       result = gsl_spline_eval(spline_ptr, z_eff, gsl_accel_ptr);
 
       gsl_spline_free(spline_ptr);
       gsl_interp_accel_free(gsl_accel_ptr);
-
-      if (!silent)
-      {
-        std::cout << "################" << std::endl;
-        if (ModelInUse("DecayingDM_general"))
-        {
-          std::cout << "Scenario: Dark Matter Decay" << std::endl;
-          std::cout << "tau = " << *Param["lifetime"] << std::endl;
-        }
-        else if (ModelInUse("AnnihilatingDM_general"))
-          std::cout << "Scenario: Dark matter (s-wave) annihilation" << std::endl;
-        std::cout << "m = " << *Param["mass"] << std::endl;
-        std::cout << "BR (electron) = " << *Param["BR"] << std::endl;
-        std::cout << "---------------" << std::endl;
-        if (f_eff_mode)
-          std::cout << "z\tf_eff" << std::endl;
-        else
-          std::cout << "z\tf_heat\tf_lya\tf_hion\tf_heion\tf_lowe" << std::endl;
-        for (unsigned int i = z.size() - last_steps; i < z.size(); i++)
-        {
-          if (f_eff_mode)
-            std::cout << z.at(i) << "\t" << feff.at(i) << std::endl;
-          else
-            std::cout << z.at(i) << "\t" << fh.at(i) << "\t" << fly.at(i) << "\t" << fhi.at(i) << "\t" << fhei.at(i) << "\t" << flo.at(i)  << std::endl;
-        }
-        std::cout << "f_eff (sum of all channels at z = "<< z_eff << ") = " << result << std::endl;
-        std::cout << "################\n" << std::endl;
-      }
     }
 
 
@@ -953,7 +921,11 @@ namespace Gambit
                                                        steps,
                                                        kmin,
                                                        kmax,
-                                                       inputs.vparam_rows);
+                                                       inputs.vparam_rows,
+                                                       inputs.slowroll_infl_end,
+                                                       inputs.instreheat,
+                                                       inputs.use_deltaN_SR,
+                                                       inputs.use_horiz_cross_approx);
       }
       catch(std::runtime_error &e)
       {
@@ -1007,7 +979,11 @@ namespace Gambit
                                                          inputs.N_pivot,
                                                          inputs.k_pivot,
                                                          inputs.dlnk,
-                                                         inputs.vparam_rows);
+                                                         inputs.vparam_rows,
+                                                         inputs.slowroll_infl_end,
+                                                         inputs.instreheat,
+                                                         inputs.use_deltaN_SR,
+                                                         inputs.use_horiz_cross_approx);
       }
       catch(std::runtime_error &e)
       {
