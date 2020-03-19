@@ -1632,7 +1632,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_ShortRangeForces_Sushkov2011
     START_FUNCTION(double)
-    DEPENDENCY(ISL_Yukawa, std::vector<double>)
+    ALLOW_MODEL(ModifiedGravityYukawa)
     #undef FUNCTION
   #undef CAPABILITY
 

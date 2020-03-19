@@ -1,28 +1,31 @@
-//  GAMBIT: Global and Modular BSM Inference Tool
-//  *********************************************
+//   GAMBIT: Global and Modular BSM Inference Tool
+//   *********************************************
+///  \file
 ///
 ///  Super Renormalizable Higgs Portal DM
 ///
 ///  *********************************************
 ///
-///  Authors
-///  =======
-///
-///  (add name and date if you modify)
+///  Authors (add name and date if you modify)
 ///
 ///  \author Iñigo Saez Casares
 ///  \date 2019 December
-///
-///  
 ///
 ///  *********************************************
 
 #ifndef __SuperRenormHP_hpp__
 #define __SuperRenormHP_hpp__
 
+#include "gambit/Models/models/ModifiedGravityYukawa.hpp"
+
 #define MODEL SuperRenormHP
   START_MODEL
-  DEFINEPARS(mS, theta)
+  // Physical units : mass [eV], theta [diemnsionless]
+  DEFINEPARS(mS) // mass of the DM scalar particle
+  DEFINEPARS(theta) // mixing angle with the SM Higgs boson
+
+  // Friendship with ModifiedGravityYukawa
+  INTERPRET_AS_X_FUNCTION(ModifiedGravityYukawa,SuperRenormHP_to_ModifiedGravityYukawa)
 
   MAP_TO_CAPABILITY(mS, DM_mass)
 #undef MODEL

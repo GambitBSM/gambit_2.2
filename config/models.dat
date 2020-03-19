@@ -607,6 +607,12 @@ SuperRenormHP: |
    mS     - the physical mass of the S scalar
    theta  - the mixing angle with the Higgs boson
 
+ModifiedGravityYukawa: |
+   A model of modified gravity where a new Yukawa interaction is added to the Newtonian inverse-square law.
+
+   alpha  - the amplitude of the new Yukawa interaction
+   lambda - the range of the new Yukawa interaction
+
 ##
 # Cosmology related models
 ##

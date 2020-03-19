@@ -1093,7 +1093,7 @@ namespace Gambit
     // where alpha is the strenght of the new force and lambda its range
 
     // capability function returning the values of alpha and lambda for the SuperRenormHP model
-    void SuperRenormHP_ISL_Yukawa (std::vector<double> &result) 
+    void SuperRenormHP_ISL_Yukawa (std::vector<double> &result)
     {
       using namespace Pipes::SuperRenormHP_ISL_Yukawa;
 
@@ -1113,8 +1113,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_ShortRangeForces_Sushkov2011;
 
-      const std::vector<double> parameters = *Dep::ISL_Yukawa;
-      const double alpha = parameters[0], lambda = parameters[1];
+      const double alpha = *Param["alpha"], lambda = *Param["lambda"];
 
       ASCIItableReader data = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/ShortRangeForces/Sushkov2011.dat");
       data.setcolnames({"distance", "Fres", "sigma", "binWidth"});
