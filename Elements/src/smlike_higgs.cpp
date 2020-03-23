@@ -42,12 +42,20 @@ namespace Gambit
     int numhiggses = 2;
     if (spec.has(Par::Pole_Mass,"h0", 3)) { numhiggses = 3; }
 
+    // Check which spelling of tanbeta is in the spectrum
+    double tb;
+    if (spec.has(Par::dimensionless, "tanbeta"))
+      tb = spec.get(Par::dimensionless, "tanbeta");
+    else if (spec.has(Par::dimensionless, "TanBeta"))
+      tb = spec.get(Par::dimensionless, "TanBeta");
+    else
+      utils_error().raise(LOCAL_INFO, "TanBeta not present in spectrum.");
+
     // MSSM(2HDM)-like
     if (numhiggses == 2)
     {
       double sa =  - spec.get(Par::Pole_Mixing,"h0",1,1);
       double ca = spec.get(Par::Pole_Mixing,"h0",1,2);
-      double tb = spec.get(Par::dimensionless, "tanbeta" );
       double sb = sin(atan(tb));
       double cb = cos(atan(tb));
       //cos (beta - alpha) and sin(beta-alpha)
@@ -74,7 +82,6 @@ namespace Gambit
       double S32 = spec.get(Par::Pole_Mixing,"h0",3,2);
 
       // The mixing from the Higgs Basis to the SUSY basis is just a rotation by angle beta
-      double tb = spec.get(Par::dimensionless, "tanbeta");
       double sb = sin(atan(tb));
       double cb = cos(atan(tb));
 
