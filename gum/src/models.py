@@ -466,6 +466,10 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
             "{{\n"
             "\n"
             "public:\n"
+            "\n"
+            "/// Default uncertainty\n"
+            "double default_uncert = 0.3;\n"
+            "\n"
             "  /// @{{ Constructors\n"
             "{2}(const SLHAstruct &input)\n"
             " : SLHAeaModel(input)\n"
@@ -491,8 +495,26 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
             indices = "i,j"
 
         towrite += (
-            "double {0}({1}) const {{ return getdata(\"{2}\",{3}); }}\n"
+          "double {0}({1}) const {{ return getdata(\"{2}\",{3}); }}\n"
         ).format(sp.getter, size, sp.block, indices)
+
+        # For pole masses add uncertainty
+        if "PoleMass" in sp.getter:
+            getter_low = sp.getter + '_1srd_low'
+            getter_high = sp.getter + '_1srd_high'
+            dmassblock = 'DMASS'
+            towrite += (
+                "double {0}({2}) const\n"
+                "{{\n"
+                "if (checkdata(\"{3}\",{4})) return getdata(\"{3}\",{4});\n"
+                "else return default_uncert;\n"
+                "}}\n"
+                "double {1}({2}) const\n"
+                "{{\n"
+                "if (checkdata(\"{3}\",{4})) return getdata(\"{3}\",{4});\n"
+                "else return default_uncert;\n"
+                "}}\n"
+            ).format(getter_low, getter_high, size, dmassblock, indices)
 
     towrite += "  /// @}}\n\n"
 
@@ -616,6 +638,18 @@ def write_subspectrum_wrapper(gambit_model_name, spectrum_parameters):
                 "[\"{2}\"] = {3};\n"
         ).format(sp.tag, size, sp.name, finf)
 
+        # Add uncertainties for pole masses
+        if sp.tag == "Pole_Mass" and size == "0":
+            tag_low = sp.tag + '_1srd_low'
+            tag_high = sp.tag + '_1srd_high'
+            finf_low = finf + '_1srd_low'
+            finf_high = finf + '_1srd_high'
+            towrite += (
+                    "getters[{0}].map{2}"
+                    "[\"{3}\"] = {4};\n"
+                    "getters[{1}].map{2}"
+                    "[\"{3}\"] = {5};\n"
+            ).format(tag_low, tag_high, size, sp.name, finf_low, finf_high)
 
     towrite += (
             "\n"

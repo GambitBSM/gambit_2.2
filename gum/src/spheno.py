@@ -24,6 +24,7 @@ from models import *
 from cmake_variables import *
 from distutils.dir_util import copy_tree
 from collections import defaultdict
+import copy
 import re
 import os.path
 
@@ -1497,9 +1498,18 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "\n"
     )
 
+    # Add SM particle decays
+    SMpdgs = [1, 3, 5, 2, 4, 6, 11, 13, 15]
+    SMnames = ['Fd1', 'Fd2', 'Fd3', 'Fu1', 'Fu2', 'Fu3', 'Fe1', 'Fe2', 'Fe3']
+    SMspins = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+    decaying_particles = copy.deepcopy(particles)
+    for i in range(0, len(SMpdgs)):
+        decaying_particles.append(Particle(SMnames[i], SMnames[i]+'*', SMspins[i], SMpdgs[i], 
+              "M"+SMnames[i], alt_name = SMnames[i], alt_mass_name = "M"+SMnames[i]))
+
     towrite += "std::vector<int> pdg = {\n"
-    nparticles = len(particles);
-    for i, particle in enumerate(particles):
+    nparticles = len(decaying_particles);
+    for i, particle in enumerate(decaying_particles):
         towrite += str(abs(particle.PDG_code))
         if i < nparticles-1: towrite += ", // " + particle.name + '\n'
         else : towrite += " // " + particle.name + '\n'
@@ -1510,7 +1520,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     towrite += "auto gT = [&](int i)\n"\
                "{\n"
-    for i, particle in enumerate(particles) :
+    for i, particle in enumerate(decaying_particles) :
         name = re.sub(r"\d","",particle.alt_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-int(index)+1) + ")" if index else ""
@@ -1527,7 +1537,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                "\n"\
                "auto BR = [&](int i, int j)\n"\
                "{\n"
-    for i, particle in enumerate(particles) :
+    for i, particle in enumerate(decaying_particles) :
         name = re.sub(r"\d","",particle.alt_name)
         index = re.sub(r"[A-Za-z]","",particle.alt_name)
         brace = "(i-" + str(i-( int(index) if index != "" else 0 )+1) + " ,j)"
