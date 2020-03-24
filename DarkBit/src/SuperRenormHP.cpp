@@ -7,6 +7,7 @@
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Iñigo Saez Casares
+///          (inigo.saez_casares@ens-paris-saclay.fr)
 ///  \date 2019 December
 ///
 ///  *********************************************
@@ -39,6 +40,7 @@
 #include "gambit/Utils/numerical_constants.hpp"
 #include "gambit/Utils/statistics.hpp"
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
+#include "gambit/DarkBit/DarkBit_utils.hpp"
 
 namespace Gambit
 {
@@ -700,6 +702,131 @@ namespace Gambit
     //                   Capability functions                         //
     ////////////////////////////////////////////////////////////////////
 
+    //------------- Process catalogue -------------//
+
+    void TH_ProcessCatalog_SuperRenormHP(DarkBit::TH_ProcessCatalog &result)
+    {
+      using namespace Pipes::TH_ProcessCatalog_SuperRenormHP;
+      using std::vector;
+      using std::string;
+
+      // Initialize empty catalog and decay channel
+      TH_ProcessCatalog catalog;
+      TH_Process process_dec("S");
+
+      ///////////////////////////////////////
+      // Import particle masses and couplings
+      ///////////////////////////////////////
+
+      // Convenience macros
+      #define getSMmass(Name, spinX2)                                           \
+       catalog.particleProperties.insert(std::pair<string, TH_ParticleProperty> \
+       (Name , TH_ParticleProperty(SM.get(Par::Pole_Mass,Name), spinX2)));
+      #define addParticle(Name, Mass, spinX2)                                   \
+       catalog.particleProperties.insert(std::pair<string, TH_ParticleProperty> \
+       (Name , TH_ParticleProperty(Mass, spinX2)));
+
+      // Import Spectrum objects
+      const Spectrum& spec = *Dep::SuperRenormHP_spectrum;
+      const SubSpectrum& he = spec.get_HE();
+      const SubSpectrum& SM = spec.get_LE();
+      const SMInputs& SMI   = spec.get_SMInputs();
+
+      // Import couplings
+      double theta = he.get(Par::dimensionless, "theta");
+      double vev = he.get(Par::mass1,"vev");
+      double C = 50./27.; // loop factor for the decay into two photons
+      double alpha = 1./SMI.alphainv; // alpha_EM(mZ)^MSbar (5 active flavours)
+
+      // Get SM pole masses
+      getSMmass("e-_1",     1)
+      getSMmass("e+_1",     1)
+      getSMmass("e-_2",     1)
+      getSMmass("e+_2",     1)
+      getSMmass("e-_3",     1)
+      getSMmass("e+_3",     1)
+      getSMmass("Z0",     2)
+      getSMmass("W+",     2)
+      getSMmass("W-",     2)
+      getSMmass("g",      2)
+      getSMmass("gamma",  2)
+      getSMmass("u_3",      1)
+      getSMmass("ubar_3",   1)
+      getSMmass("d_3",      1)
+      getSMmass("dbar_3",   1)
+
+      // Pole masses not available for the light quarks.
+      addParticle("u_1"   , SMI.mU,  1) // mu(2 GeV)^MS-bar, not pole mass
+      addParticle("ubar_1", SMI.mU,  1) // mu(2 GeV)^MS-bar, not pole mass
+      addParticle("d_1"   , SMI.mD,  1) // md(2 GeV)^MS-bar, not pole mass
+      addParticle("dbar_1", SMI.mD,  1) // md(2 GeV)^MS-bar, not pole mass
+      addParticle("u_2"   , SMI.mCmC,1) // mc(mc)^MS-bar, not pole mass
+      addParticle("ubar_2", SMI.mCmC,1) // mc(mc)^MS-bar, not pole mass
+      addParticle("d_2"   , SMI.mS,  1) // ms(2 GeV)^MS-bar, not pole mass
+      addParticle("dbar_2", SMI.mS,  1) // ms(2 GeV)^MS-bar, not pole mass
+      /* double alpha_s = SMI.alphaS;      // alpha_s(mZ)^MSbar */
+
+      // Masses for neutrino flavour eigenstates. Set to zero.
+      // (presently not required)
+      addParticle("nu_e",     0.0, 1)
+      addParticle("nubar_e",  0.0, 1)
+      addParticle("nu_mu",    0.0, 1)
+      addParticle("nubar_mu", 0.0, 1)
+      addParticle("nu_tau",   0.0, 1)
+      addParticle("nubar_tau",0.0, 1)
+
+      // Higgs-sector masses
+      double mS = spec.get(Par::Pole_Mass,"S");
+      double mH = spec.get(Par::Pole_Mass,"h0_1");
+      addParticle("S",        mS, 0)  // Scalar DM
+      addParticle("h0_1",     mH, 0)  // SM-like Higgs
+      addParticle("pi0",   meson_masses.pi0,       0)
+      addParticle("pi+",   meson_masses.pi_plus,   0)
+      addParticle("pi-",   meson_masses.pi_minus,  0)
+      addParticle("eta",   meson_masses.eta,       0)
+      addParticle("rho0",  meson_masses.rho0,      1)
+      addParticle("rho+",  meson_masses.rho_plus,  1)
+      addParticle("rho-",  meson_masses.rho_minus, 1)
+      addParticle("omega", meson_masses.omega,     1)
+
+      // Get rid of convenience macros
+      #undef getSMmass
+      #undef addParticle
+
+
+      // decay into two photons (through a loop of heavy fermions)
+      double gamma = (theta*theta*alpha*alpha*mS*mS*mS*C*C)/(256.*pi*pi*pi*vev*vev)/hbar;
+
+      TH_Channel dec_channel(daFunk::vec<string>("gamma", "gamma"), daFunk::cnst(gamma));
+      process_dec.channelList.push_back(dec_channel);
+
+      //////////////////////////////
+      // Import Decay information //
+      //////////////////////////////
+
+      // Import decay table from DecayBit
+      const DecayTable* tbl = &(*Dep::decay_rates);
+
+      // Set of imported decays
+      std::set<string> importedDecays;
+
+      // Minimum branching ratio
+      double minBranching = 0.;
+
+      // Import relevant decays (only Higgs and subsequent decays)
+      using DarkBit_utils::ImportDecays;
+      // Notes: Virtual Higgs decays into offshell W+W- final states are not
+      // imported.  All other channels are correspondingly rescaled.  Decay
+      // into SS final states is accounted for, leading to zero photons.
+      ImportDecays("h0_1", catalog, importedDecays, tbl, minBranching);
+
+      // Validate
+      catalog.validate();
+
+      result = catalog;
+    } // function TH_ProcessCatalog_SuperRenormHP
+
+
     //------------- Functions to compute the age of the Universe at a given redshift -------------//
 
     // useful structure
@@ -922,7 +1049,12 @@ namespace Gambit
      
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+      auto f = catalog.getProcess("S").find({"gamma", "gamma"})->genRate;
+      auto fb = f->bind();
+      double gamma2 = fb->eval();
+
+      XrayLikelihood_params params = {mass, gamma2, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
       /* XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, 0.308, 0., 0.692, OmegaDM}; */
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;

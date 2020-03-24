@@ -83,8 +83,9 @@ namespace Gambit
             double get_HiggsPoleMass_1srd_low() const  { return params.HiggsPoleMass_1srd_low; }
             double get_HiggsPoleMass_1srd_high() const  { return params.HiggsPoleMass_1srd_high; }
 
-            double get_HiggsVEV()        const { return params.HiggsVEV;      }
-            double get_ScalarPoleMass() const { return params.ScalarPoleMass; }
+            double get_HiggsVEV()        const { return params.HiggsVEV;       }
+            double get_ScalarPoleMass()  const { return params.ScalarPoleMass; }
+            double get_ScalarTheta()     const { return params.ScalarTheta;    }
             /* double get_lambda_h()       const { return params.LambdaH; } */
             double get_g1()       const { return params.g1; }
             double get_g2()       const { return params.g2; }
@@ -99,8 +100,9 @@ namespace Gambit
             void set_HiggsPoleMass_1srd_low(double in)   { params.HiggsPoleMass_1srd_low=in; }
             void set_HiggsPoleMass_1srd_high(double in)   { params.HiggsPoleMass_1srd_high=in; }
 
-            void set_HiggsVEV(double in)        { params.HiggsVEV=in;      }
+            void set_HiggsVEV(double in)       { params.HiggsVEV=in;       }
             void set_ScalarPoleMass(double in) { params.ScalarPoleMass=in; }
+            void set_ScalarTheta(double in)    { params.ScalarTheta=in;    }
             /* void set_lambda_h(double in)       { params.LambdaH=in; } */
             void set_g1(double in)        { params.g1=in; }
             void set_g2(double in)        { params.g2=in; }
@@ -128,8 +130,7 @@ namespace Gambit
                getters[Pole_Mass_1srd_low].map0W["h0_1"]    = &Self::get_HiggsPoleMass_1srd_low;
 
                getters[Pole_Mass].map0W["S"]       = &Self::get_ScalarPoleMass;
-
-               /* getters[dimensionless].map0W["lambda_h"] = &Self::get_lambda_h; */
+               getters[dimensionless].map0W["theta"] = &Self::get_ScalarTheta;
 
                getters[dimensionless].map0W["g1"] = &Self::get_g1;
                getters[dimensionless].map0W["g2"] = &Self::get_g2;
@@ -162,10 +163,11 @@ namespace Gambit
 
                setters[Pole_Mass].map0W["h0_1"]    = &Self::set_HiggsPoleMass;
 
-               setters[Pole_Mass_1srd_high].map0W["h0_1"]    = &Self::set_HiggsPoleMass_1srd_high;
+               setters[Pole_Mass_1srd_high].map0W["h0_1"]   = &Self::set_HiggsPoleMass_1srd_high;
                setters[Pole_Mass_1srd_low].map0W["h0_1"]    = &Self::set_HiggsPoleMass_1srd_low;
 
-               setters[Pole_Mass].map0W["S"]       = &Self::set_ScalarPoleMass;
+               setters[Pole_Mass].map0W["S"]         = &Self::set_ScalarPoleMass;
+               setters[dimensionless].map0W["theta"] = &Self::set_ScalarTheta;
 
                setters[dimensionless].map2W["Yd"]= FInfo2W( &Self::set_Yd, i012, i012);
                setters[dimensionless].map2W["Yu"]= FInfo2W( &Self::set_Yu, i012, i012);

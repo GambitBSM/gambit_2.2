@@ -181,6 +181,12 @@ Rules:
     options:
       profile_systematics: false
 
+  - capability: TH_ProcessCatalog
+    function: TH_ProcessCatalog_SuperRenormHP
+    dependencies:
+      - capability: decay_rates
+        function: all_decays
+        module: DecayBit
 Logger:
 
   redirection:

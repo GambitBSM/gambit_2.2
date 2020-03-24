@@ -502,6 +502,12 @@ START_MODULE
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
+    #define FUNCTION TH_ProcessCatalog_SuperRenormHP
+      START_FUNCTION(TH_ProcessCatalog)
+      DEPENDENCY(decay_rates, DecayTable)
+      DEPENDENCY(SuperRenormHP_spectrum, Spectrum)
+      ALLOW_MODEL(SuperRenormHP)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY set_gamLike_GC_halo
@@ -1552,6 +1558,7 @@ START_MODULE
     DEPENDENCY(DM_initial_density, double)
     DEPENDENCY(DM_decay_rate_2_photons, double)
     DEPENDENCY(DM_mass, double)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     #undef FUNCTION
   #undef CAPABILITY
 

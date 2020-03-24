@@ -53,7 +53,7 @@ namespace Gambit
       const SMInputs& sminputs = *myPipe::Dep::SMINPUTS;
 
       // Initialise an object to carry the Singlet plus Higgs sector information
-      Models::SuperRenormHPModel singletmodel;
+      Models::SuperRenormHPModel scalarmodel;
 
       // quantities needed to fill container spectrum, intermediate calculations
       double alpha_em = 1.0 / sminputs.alphainv;
@@ -64,44 +64,44 @@ namespace Gambit
 
       // Higgs sector
       double mh = *myPipe::Param.at("mH");
-      singletmodel.HiggsPoleMass = mh;
+      scalarmodel.HiggsPoleMass = mh;
 
       double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);
-      singletmodel.HiggsVEV = vev;
+      scalarmodel.HiggsVEV = vev;
 
       // Scalar singlet sector
-      singletmodel.ScalarPoleMass = *myPipe::Param.at("mS");
-      singletmodel.ScalarTheta = *myPipe::Param.at("theta");
+      scalarmodel.ScalarPoleMass = *myPipe::Param.at("mS");
+      scalarmodel.ScalarTheta = *myPipe::Param.at("theta");
 
       // Standard model
-      singletmodel.sinW2 = sinW2;
+      scalarmodel.sinW2 = sinW2;
 
       // gauge couplings
-      singletmodel.g1 = sqrt(5/3) * e / sqrt(cosW2);
-      singletmodel.g2 = e / sqrt(sinW2);
-      singletmodel.g3   = pow( 4*pi*( sminputs.alphaS ),0.5) ;
+      scalarmodel.g1 = sqrt(5/3) * e / sqrt(cosW2);
+      scalarmodel.g2 = e / sqrt(sinW2);
+      scalarmodel.g3   = pow( 4*pi*( sminputs.alphaS ),0.5) ;
 
       // Yukawas
       double sqrt2v = pow(2.0,0.5)/vev;
-      singletmodel.Yu[0] = sqrt2v * sminputs.mU;
-      singletmodel.Yu[1] = sqrt2v * sminputs.mCmC;
-      singletmodel.Yu[2] = sqrt2v * sminputs.mT;
-      singletmodel.Ye[0] = sqrt2v * sminputs.mE;
-      singletmodel.Ye[1] = sqrt2v * sminputs.mMu;
-      singletmodel.Ye[2] = sqrt2v * sminputs.mTau;
-      singletmodel.Yd[0] = sqrt2v * sminputs.mD;
-      singletmodel.Yd[1] = sqrt2v * sminputs.mS;
-      singletmodel.Yd[2] = sqrt2v * sminputs.mBmB;
+      scalarmodel.Yu[0] = sqrt2v * sminputs.mU;
+      scalarmodel.Yu[1] = sqrt2v * sminputs.mCmC;
+      scalarmodel.Yu[2] = sqrt2v * sminputs.mT;
+      scalarmodel.Ye[0] = sqrt2v * sminputs.mE;
+      scalarmodel.Ye[1] = sqrt2v * sminputs.mMu;
+      scalarmodel.Ye[2] = sqrt2v * sminputs.mTau;
+      scalarmodel.Yd[0] = sqrt2v * sminputs.mD;
+      scalarmodel.Yd[1] = sqrt2v * sminputs.mS;
+      scalarmodel.Yd[2] = sqrt2v * sminputs.mBmB;
 
       // Create a SubSpectrum object to wrap the EW sector information
-      Models::SuperRenormHPSimpleSpec singletspec(singletmodel);
+      Models::SuperRenormHPSimpleSpec scalarspec(scalarmodel);
 
       // Retrieve any mass cuts
       static const Spectrum::mc_info mass_cut = myPipe::runOptions->getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), "mass_cut");
       static const Spectrum::mr_info mass_ratio_cut = myPipe::runOptions->getValueOrDef<Spectrum::mr_info>(Spectrum::mr_info(), "mass_ratio_cut");
 
       // We don't supply a LE subspectrum here; an SMSimpleSpec will therefore be automatically created from 'sminputs'
-      result = Spectrum(singletspec,sminputs,&myPipe::Param,mass_cut,mass_ratio_cut);
+      result = Spectrum(scalarspec,sminputs,&myPipe::Param,mass_cut,mass_ratio_cut);
 
     }
 
