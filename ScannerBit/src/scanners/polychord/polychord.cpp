@@ -103,6 +103,7 @@ scanner_plugin(polychord, version(1, 16))
       // Read list of fast parameters from file
       std::vector<std::string> fast_params = get_inifile_value<std::vector<std::string>>("fast_params", {});
       // Get list of parameters used from loglikelihood
+      std::vector<std::string> varied_params = LogLike->getShownParameters();
       std::vector<std::string> all_params = LogLike->getParameters();
 
       // Compute the set difference between fast_params and all_params to check if there are any fast_params not included in all_params
@@ -120,35 +121,32 @@ scanner_plugin(polychord, version(1, 16))
 
       // Compute the locations in PolyChord's unit hypercube, ordering from slow to fast
       // This defaults to nDims if there are no fast parameters, or if all parameters are fast.
-      int nslow = settings.nDims;
-      if (fast_params.size() != 0 and fast_params.size() != settings.nDims)
+      // grade_dims is a vector of integers that indicates the number of slow and fast parameters
+      settings.grade_dims.clear();
+      int i = 0;
+      // Run through all the parameters, and if they're slow parameters
+      // give them an index i, then increment i
+      for (auto param : varied_params) 
+          if (std::find(fast_params.begin(), fast_params.end(),param) == fast_params.end())
+              Gambit::PolyChord::global_loglike_object->index_map[param] = (i++);
+      int nslow = i;
+      if(nslow!=0) settings.grade_dims.push_back(nslow);
+
+      // Do the same for the fast parameters
+      for (auto param : varied_params) 
+          if (std::find(fast_params.begin(), fast_params.end(),param) != fast_params.end())
+              Gambit::PolyChord::global_loglike_object->index_map[param] = (i++);
+      int nfast = i-nslow;
+      if (nfast>0) settings.grade_dims.push_back(nfast);
+
+      if (nslow>0 and nfast>0)
       {
-
-          // grade_dims is a vector of integers that indicates the number of slow and fast parameters
-          settings.grade_dims.clear();
-          int i = 0;
-          // Run through all the parameters, and if they're slow parameters
-          // give them an index i, then increment i
-          for (auto param : all_params) 
-              if (std::find(fast_params.begin(), fast_params.end(),param) == fast_params.end())
-                  Gambit::PolyChord::global_loglike_object->index_map[param] = (i++);
-          settings.grade_dims.push_back(i);
-          nslow = i;
-
-          // Do the same for the fast parameters
-          for (auto param : all_params) 
-              if (std::find(fast_params.begin(), fast_params.end(),param) != fast_params.end())
-                  Gambit::PolyChord::global_loglike_object->index_map[param] = (i++);
-
-          // If there are any fast parameters...
-          if (i>settings.grade_dims[0]){ 
-              // ... tell this to PolyChord via an extra entry into the grade_dims vector
-              settings.grade_dims.push_back(i);
-              // Specify the fraction of time to spend in the slow parameters.
-              double frac_slow = get_inifile_value<double>("frac_slow",0.75); 
-              settings.grade_frac = std::vector<double>({frac_slow, 1-frac_slow});
-          }
+          // Specify the fraction of time to spend in the slow parameters.
+          double frac_slow = get_inifile_value<double>("frac_slow",0.75); 
+          settings.grade_frac = std::vector<double>({frac_slow, 1-frac_slow});
       }
+      else if (nslow==0) // In the unusual case of all fast parameters, there's only one grade.
+          nslow = nfast;
       // ---------- End computation of ordering for fast and slow parameters
 
       // PolyChord algorithm options.
@@ -276,7 +274,7 @@ namespace Gambit {
       double LogLikeWrapper::LogLike(double *Cube, int ndim, double* phi, int nderived)
       {
          //convert C style array to C++ vector class, reordering parameters slow->fast
-         std::vector<std::string> params = boundLogLike->getParameters();
+         std::vector<std::string> params = boundLogLike->getShownParameters();
          std::vector<double> unitpars(ndim);
          for (auto i=0; i<ndim; i++) 
              unitpars[i] = Cube[index_map[params[i]]];
