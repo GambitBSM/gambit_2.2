@@ -1592,10 +1592,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                    "if(daughter_pdgs.size() <= 2)\n"\
                    "  BR += gP1L(i+1,spheno_index)/gT(i+1);\n"
     towrite += (
+            "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"
+            "// If decay is zero and channel exists, do not overwrite.\n"
             "if(BR * corrf > BRMin)\n"
             "  entry.set_BF(BR * corrf, 0.0, Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"
-            "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"
-            "else\n"
+            "else if(!entry.has_channel(Fdecays::get_pdg_context_pairs(daughter_pdgs)))\n"
             "  entry.set_BF(0., 0., Fdecays::get_pdg_context_pairs(daughter_pdgs));\n"
             "}\n"
             "// SM fermions in flavour basis, everything else in mass basis\n"
