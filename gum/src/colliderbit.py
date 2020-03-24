@@ -28,34 +28,49 @@ def new_colliderbit_model(cb_output_dir, model):
                 f_new.write(newline)
 
 
-def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs):
+def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs, numH):
     """
     Adds a new ModelInUse switch to the HiggsCouplingsTable
     routines in ColliderBit/src/ColliderBit_Higgs.cpp.
     """
 
-    # Get the names of all neutral Higgses
-    entry = []
-    for higgs in neutral_higgses:
-        entry.append("\""+pdg_to_particle(higgs, gambit_pdgs)+"\"")
+    towrite_src = ""
+    hb_pattern = ""
+    
+    # If there's just one (SM) Higgs, add it t the SMLike Higgs function
+    if numH == 1:
 
-    # Sort the higgses in numerical order - with the neutral ones first
-    entry = sorted(entry, key=str.swapcase)
-    listhiggses = ','.join(entry)
+        towrite_src = (
+                    "else if (ModelInUse(\"{0}\")) "
+                    "spectrum_dependency = &Dep::{1};\n"
+        ).format(model_name, spectrum)
+        hb_pattern = "SMLikeHiggs_ModelParameters"
 
-    towrite_src = (
-                "else if (ModelInUse(\"{0}\"))\n"
-                "{{\n"
-                "  spectrum_dependency = &Dep::{1};\n"
-                "  Higgses = initVector<str>({2});\n"
-                "}}\n"
-    ).format(model_name, spectrum, listhiggses)
+    # Otherwise, we call it 'MSSMLike'
+    else:
+        # Get the names of all neutral Higgses
+        entry = []
+        for higgs in neutral_higgses:
+            entry.append("\""+pdg_to_particle(higgs, gambit_pdgs)+"\"")
+
+        # Sort the higgses in numerical order - with the neutral ones first
+        entry = sorted(entry, key=str.swapcase)
+        listhiggses = ','.join(entry)
+
+        towrite_src = (
+                    "else if (ModelInUse(\"{0}\"))\n"
+                    "{{\n"
+                    "  spectrum_dependency = &Dep::{1};\n"
+                    "  Higgses = initVector<str>({2});\n"
+                    "}}\n"
+        ).format(model_name, spectrum, listhiggses)
+        hb_pattern = "MSSMLikeHiggs_ModelParameters"
 
     towrite_head = (
                  "    MODEL_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})\n"
     ).format(spectrum, model_name)
 
-    return dumb_indent(6, towrite_src), towrite_head
+    return dumb_indent(6, towrite_src), towrite_head, hb_pattern
 
 def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
                          charged_higgses, model_name):
@@ -156,6 +171,7 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
             "// Get the lightest invisible particle (and antiparticle).\n"
             "std::pair<str,str> lnp = std::make_pair(\"{0}\", \"{1}\");\n"
             "double lnpmass = spec.get(Par::Pole_Mass, \"{2}\");\n"
+            "bool inv_lsp;\n"
     ).format(pdg_to_particle(abs(int(invisibles[0][0])), gambit_pdgs),
              pdg_to_particle(int(invisibles[0][0]), gambit_pdgs), 
              pdg_to_particle(int(invisibles[0][1]), gambit_pdgs))
@@ -172,21 +188,31 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
                  pdg_to_particle(int(pdg[0]), gambit_pdgs),
                  pdg_to_particle(int(pdg[1]), gambit_pdgs))
 
-    towrite += (
-            "// Work out if the lightest invisible particle is the LSP.\n"
-            "bool inv_lsp = spec.get(Par::Pole_Mass, \"{0}\") > lnpmass "
-    ).format(pdg_to_particle(visibles[0], gambit_pdgs))
-
-    # TODO does not assume any mass ordering in eigenstates, not sure how
-    # generic it is, so include them all atm.
-    for pdg in visibles[1:]:
+    if len(visibles) > 0:
         towrite += (
-                "and\n               spec.get(Par::Pole_Mass, \"{0}\") "
-                "> lnpmass "
-        ).format(pdg_to_particle(abs(pdg), gambit_pdgs))
+                "// Work out if the lightest invisible particle is the LSP.\n"
+                "inv_lsp = spec.get(Par::Pole_Mass, \"{0}\") > lnpmass "
+        ).format(pdg_to_particle(visibles[0], gambit_pdgs))
+
+        # TODO does not assume any mass ordering in eigenstates, not sure how
+        # generic it is, so include them all atm.
+        for pdg in visibles[1:]:
+            towrite += (
+                    "and\n               spec.get(Par::Pole_Mass, \"{0}\") "
+                    "> lnpmass "
+            ).format(pdg_to_particle(abs(pdg), gambit_pdgs))
+
+        towrite += ";\n"
+
+    # If there's no visibles to decay to, then we just have the invisibles.
+    else:
+        towrite += (
+                "// GUM has computed that there are no other BSM particles\n"
+                "// that the Higgses can decay into -- just one.\n"
+                "// Don't need to compare to any other masses...\n"                
+        )
 
     towrite += (
-            ";\n"
             "// Check decays of at least one neutral higgs to it are "
             "kinematically possible.\n"
             "inv_lsp = (spec.get(Par::Pole_Mass, \"{0}\") > 2.*lnpmass"

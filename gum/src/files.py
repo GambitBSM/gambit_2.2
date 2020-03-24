@@ -753,14 +753,21 @@ def revert(reset_file):
                 location, capability, function, pattern = \
                                                  loc_cap_func_pattern.split('|')
                 module = location.split('/')[1]
+                filename = location.split('/')[-1]
 
-                print(("Removing model from capability {0}; function {1};"
+                print(("Removing model {3} from capability {0}; function {1};"
                        " in {2}..."
-                       ).format(capability, function, module))
+                       ).format(capability, function, module, model[0]))
 
                 temp_file = location + "_temp"
                 
-                exists, num = find_function(function, capability, module)
+                exists, num = find_function(function, capability, module, 
+                                            filename)
+
+                if not exists:
+                    print(("Could not find capability {0} in location {1}! "
+                           "Continuing...").format(capability, location)) 
+                    continue
                 
                 counter = 0
                 done = False
@@ -1078,6 +1085,8 @@ def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
 
     if outputs.spheno:
         backends.append("sarah-spheno_{0}".format(model_name))
+        backends.append("higgsbounds")
+        backends.append("higgssignals")
 
     if outputs.vev:
         backends.append("vevacious")

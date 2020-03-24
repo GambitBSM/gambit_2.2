@@ -459,10 +459,10 @@ if args.file:
                 write_spheno_decay_entry(gum.name, clean_model_name)
 
             # HiggsCouplingsTable
-            if len(higgses) > 1:
-                hct_src, hct_head = new_hct_switch(gum.name, gum.spec, 
-                                                   neutral_higgses, gambit_pdgs)
-
+            hct_src, hct_head, hb_pattern = new_hct_switch(gum.name, gum.spec, 
+                                                           neutral_higgses,
+                                                           gambit_pdgs,
+                                                           len(higgses))
 
         """
         CALCHEP
@@ -746,15 +746,29 @@ if args.file:
                       existing = False)
 
         # HiggsBounds interface
-        if output_opts.spheno and len(higgses) > 1:
-            num = find_string("ColliderBit_Higgs.cpp", m, 
-                    "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
-            amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, 
-                       reset_contents)
-            num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
-                    "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
-            amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
-                       reset_contents)
+        if output_opts.spheno:
+            if len(higgses) == 1:
+                num = find_string("ColliderBit_Higgs.cpp", m, 
+                        "No valid model for SMLikeHiggs_ModelParameters.")[1]
+                amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, 
+                           reset_contents)
+                num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
+                        "MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2")[1]
+                amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1,
+                           reset_contents)
+            else:
+                num = find_string("ColliderBit_Higgs.cpp", m, 
+                        "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
+                amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, 
+                           reset_contents)
+                num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
+                        "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
+                amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
+                           reset_contents)
+            add_new_model_to_function("ColliderBit_Higgs_rollcall.hpp", 
+                                      m, "HB_ModelParameters",
+                                      hb_pattern, gum.name, reset_contents,
+                                      pattern="ALLOW_MODELS")
 
         # Backends
         m = "Backends"

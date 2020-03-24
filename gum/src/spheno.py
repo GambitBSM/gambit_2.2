@@ -2004,15 +2004,25 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # get_HiggsCouplingsTable function
     # The targets for HiggsBounds
     hb_targets = ["rHB_S_S_Fd",  "rHB_P_P_Fd", "rHB_S_S_Fu",  "rHB_P_P_Fu", 
-                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VWm",   "rHB_P_VWm",  
-                  "rHB_S_VZ",  "rHB_P_VZ", "ratioPP",  "ratioPPP",  
-                  "ratioGG",  "ratioPGG", "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
+                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VZ",  "rHB_P_VZ", 
+                  "ratioPP",  "ratioPPP", "ratioGG",  "ratioPGG", 
+                  "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
 
     hboutput = True
     # If the targets aren't all there then don't write HiggsBounds output. 
     # They should be!
     if not all(param in hb_variables for param in hb_targets):
         hboutput = False
+
+    Wsign = ""
+    # Check to see if we've got VWm or VWp...
+    if all(p in hb_variables for p in ["rHB_S_VWm",   "rHB_P_VWm"]):
+        Wsign = "VWm" 
+    elif all(p in hb_variables for p in ["rHB_S_VWp",   "rHB_P_VWp"]):
+        Wsign = "VWp"
+    else:
+        hboutput = False
+
 
     # Assume SM-like at first
     numh0 = 1
@@ -2026,8 +2036,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         numA0 = ( (int(hb_variables["rHB_P_VZ"].size)-1) 
                    if "rHB_S_VZ" in hb_variables else 0 )
 
-    # Check there's more than 1 Higgs otherwise no need for this really. 
-    if (numh0 + numA0 > 1):
         towrite += (
                 "// Convenience function to obtain a HiggsCouplingsTable "
                 "object for HiggsBounds\n"
@@ -2046,7 +2054,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         )
 
         # Go through each entry in what we've harvested to give to HiggsBounds.
-        # Quarks and leptons first:
+        # Quarks, leptons, gauge bosons first
         hb = "// Couplings to SM fermions and gauge bosons\n"
 
         for i in range(numh0):
@@ -2063,14 +2071,26 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                " // Coupling (h0_{1} mu+ mu-)\n"
                "hctbl.C_tautau2[{0}] = pow( (*rHB_S_S_Fe)({1},3), 2 );"
                " // Coupling (h0_{1} tau+ tau-)\n"
-               "hctbl.C_WW2[{0}] = (*rHB_S_VWm)({1});"
+               "hctbl.C_WW2[{0}] = (*rHB_S_{2})({1});"
                " // Coupling (h0_{1} W+ W-)\n"
                "hctbl.C_ZZ2[{0}] = (*rHB_S_VZ)({1});"
                " // Coupling (h0_{1} Z Z)\n"
-               "hctbl.C_gaga2[{0}] = pow( (*ratioPP)({1}).re, 2 );"
-               " // Coupling (h0_{1} gamma gamma)\n"
-               "hctbl.C_gg2[{0}] = pow( (*ratioGG)({1}).re, 2 );"
-               " // Coupling (h0_{1} glu glu)\n"
+            ).format(i, i+1, Wsign)
+
+            # The signature of 'ratio' couplings can change based on # Higgses
+            if hb_dict['ratioPP'] == 'Fcomplex16':
+              hb += (
+                 "hctbl.C_gaga2[{0}] = pow( (*ratioPP).re, 2 );"
+                 " // Coupling (h0_{1} gamma gamma)\n"
+                 "hctbl.C_gg2[{0}] = pow( (*ratioGG).re, 2 );"
+                 " // Coupling (h0_{1} glu glu)\n"
+              ).format(i, i+1)
+            else:
+              hb += (
+                 "hctbl.C_gaga2[{0}] = pow( (*ratioPP)({1}).re, 2 );"
+                 " // Coupling (h0_{1} gamma gamma)\n"
+                 "hctbl.C_gg2[{0}] = pow( (*ratioGG)({1}).re, 2 );"
+                 " // Coupling (h0_{1} glu glu)\n"
             ).format(i, i+1)
         for i in range(numA0):
             hb += (
@@ -2086,15 +2106,27 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                " // Coupling (A0_{2} mu+ mu-)\n"
                "hctbl.C_tautau2[{0}] = pow( (*rHB_P_P_Fe)({1},3), 2 );"
                " // Coupling (A0_{2} tau+ tau-)\n"
-               "hctbl.C_WW2[{0}] = (*rHB_P_VWm)({1});"
+               "hctbl.C_WW2[{0}] = (*rHB_P_{3})({1});"
                " // Coupling (A0_{2} W+ W-)\n"
                "hctbl.C_ZZ2[{0}] = (*rHB_P_VZ)({1});"
                " // Coupling (A0_{2} Z Z)\n"
+            ).format(numh0+i, i+2, i+1, Wsign)
+            
+            # Signature can change for ratioPPP too
+            if hb_dict['ratioPP'] == 'Fcomplex16':
+              hb += (
+               "hctbl.C_gaga2[{0}] = pow( (*ratioPPP).re, 2 );"
+               " // Coupling (A0_{1} gamma gamma)\n"
+               "hctbl.C_gg2[{0}] = pow( (*ratioPGG).re, 2 );"
+               " // Coupling (A0_{1} glu glu)\n"
+              ).format(numh0+i, i+1)
+            else:
+              hb += (
                "hctbl.C_gaga2[{0}] = pow( (*ratioPPP)({1}).re, 2 );"
                " // Coupling (A0_{2} gamma gamma)\n"
                "hctbl.C_gg2[{0}] = pow( (*ratioPGG)({1}).re, 2 );"
                " // Coupling (A0_{2} glu glu)\n"
-            ).format(numh0+i, i+2, i+1)
+              ).format(numh0+i, i+2, i+1)
 
         # Make this alphabetical, because it looks nice
         towrite += "\n".join(sorted(hb.split("\n")))
@@ -3419,14 +3451,23 @@ def write_spheno_frontend_header(model_name, function_signatures,
     # Whether to code up the HiggsCouplingsTable:
     # The targets for HiggsBounds
     hb_targets = ["rHB_S_S_Fd",  "rHB_P_P_Fd", "rHB_S_S_Fu",  "rHB_P_P_Fu", 
-                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VWm",   "rHB_P_VWm",  
-                  "rHB_S_VZ",  "rHB_P_VZ", "ratioPP",  "ratioPPP",  
-                  "ratioGG",  "ratioPGG", "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
+                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VZ",  "rHB_P_VZ", 
+                  "ratioPP",  "ratioPPP", "ratioGG",  "ratioPGG", 
+                  "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
 
     hboutput = True
     # If the targets aren't all there then don't write HiggsBounds output. 
     # They should be!
     if not all(param in hb_variables for param in hb_targets):
+        hboutput = False
+
+    Wsign = ""
+    # Check to see if we've got VWm or VWp...
+    if all(p in hb_variables for p in ["rHB_S_VWm",   "rHB_P_VWm"]):
+        Wsign = "VWm" 
+    elif all(p in hb_variables for p in ["rHB_S_VWp",   "rHB_P_VWp"]):
+        Wsign = "VWp"
+    else:
         hboutput = False
 
     if hboutput:

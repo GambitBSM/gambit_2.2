@@ -35,6 +35,7 @@
     START_FUNCTION(hb_ModelParameters)
     DEPENDENCY(SM_spectrum, Spectrum)
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
+    ALLOW_MODELS(StandardModel_Higgs)
     #undef FUNCTION
 
     // SM-like Higgs model parameters, for BSM models with only one Higgs.
@@ -42,6 +43,7 @@
     START_FUNCTION(hb_ModelParameters)
     MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2, ScalarSingletDM_Z2_running)
     MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
+    ALLOW_MODELS(ScalarSingletDM_Z3_running, ScalarSingletDM_Z2_running)
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
     #undef FUNCTION
 
@@ -49,6 +51,7 @@
     #define FUNCTION MSSMLikeHiggs_ModelParameters
     START_FUNCTION(hb_ModelParameters)
     MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atMGUT, MSSM63atQ)
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
     #undef FUNCTION
 
