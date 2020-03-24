@@ -263,9 +263,9 @@ namespace Gambit
         result.BR_hjbb[i] = h0_widths[i]->BF("b", "bbar");
         result.BR_hjmumu[i] = h0_widths[i]->BF("mu+", "mu-");
         result.BR_hjtautau[i] = h0_widths[i]->BF("tau+", "tau-");
-        result.BR_hjWW[i] = h0_widths[i]->BF("W+", "W-");
-        result.BR_hjZZ[i] = h0_widths[i]->BF("Z0", "Z0");
-        result.BR_hjZga[i] = h0_widths[i]->BF("gamma", "Z0");
+        result.BR_hjWW[i] = h0_widths[i]->has_channel("W+", "W-") ? h0_widths[i]->BF("W+", "W-") : 0.0;
+        result.BR_hjZZ[i] = h0_widths[i]->has_channel("Z0", "Z0") ? h0_widths[i]->BF("Z0", "Z0") : 0.0;
+        result.BR_hjZga[i] = h0_widths[i]->has_channel("gamma", "Z0") ? h0_widths[i]->BF("gamma", "Z0") : 0.0;
         result.BR_hjgaga[i] = h0_widths[i]->BF("gamma", "gamma");
         result.BR_hjgg[i] = h0_widths[i]->BF("g", "g");
         // Do decays to invisibles

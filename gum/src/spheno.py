@@ -1184,9 +1184,9 @@ def make_spheno_decay_tables(spheno_path, model_name):
                         proc_str += ")\n"
                         towrite += proc_str
 
-                # Key to stop reading decays
-                if "! Information needed by MadGraph" in line :
-                    decays = False
+            # Key to stop reading decays
+            if line.startswith('End Subroutine LesHouches_Out') :
+                decays = False
 
     print(("Decay table for {0} done.").format(model_name))
 
