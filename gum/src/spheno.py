@@ -3513,6 +3513,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     cap_def["SARAHSPheno_" + fullmodelname + "_internal"] = "Exclusively used for internal variables and functions for the SARAH-SPheno backend."
     cap_def["SARAHSPheno_" + fullmodelname + "_spectrum"] = "Calculates and returns a " + fullmodelname + " spectrum object using SARAH-SPheno."
     cap_def["SARAHSPheno_" + fullmodelname + "_decays"] = "Calculates and returns all decays for the " + fullmodelname + " model using SARAH-SPheno."
+    cap_def["SARAHSPheno_" + fullmodelname + "_HiggsCouplingsTable"] = "Fills the Higgs couplings table using SARAH-SPheno."
     cap_def["SARAHSPheno_" + fullmodelname + "_" + SPHENO_VERSION.replace('.','_') + "_init"] = "Initialisation of backend SARAH-SPheno v" + SPHENO_VERSION + " for model " + fullmodelname + "."
 
     return indent(towrite)
