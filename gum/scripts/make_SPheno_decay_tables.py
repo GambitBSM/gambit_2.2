@@ -117,9 +117,14 @@ with open(IO_file, 'r') as f_in, open(decay_file, 'w') as f_out:
       subline = line.split('.')[0]
       part = subline[7::]
 
+      decaypdg = int(pdgs[part])
+      if decaypdg < 0:
+          decaypdg = -decaypdg
+          part = "-"+part
+
       # print block entry
       f_out.write(
-        'DECAY        ' +  str(abs(int(pdgs[part]))) + '     0.0000000E+00   # ' + names[part] + '\n'
+        'DECAY        ' +  str(decaypdg) + '     0.0000000E+00   # ' + names[part] + '\n'
         '#    INDEX  NDA      ID1      ID2     CORRF\n')
 
     # Ignore 1 loop decays

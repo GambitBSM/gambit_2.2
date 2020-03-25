@@ -1085,13 +1085,16 @@ def make_spheno_decay_tables(spheno_path, model_name):
                 subline = line.split('.')[0]
                 part = subline[7::]
 
-                decaypdg = abs(int(pdgs[part]))
+                decaypdg = int(pdgs[part])
+                if decaypdg < 0:
+                    decaypdg = -decaypdg
+                    part = "-"+part
 
                 # print block entry
                 towrite += (
                     "DECAY        {0}     0.0000000E+00   # {1}\n"
                     "#    INDEX  NDA      ID1      ID2     CORRF\n"
-                ).format(str(abs(int(pdgs[part]))), names[part])
+                ).format(str(decaypdg), names[part])
 
             # Ignore 1 loop decays
             if line.startswith("If(gT1L") :

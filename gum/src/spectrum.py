@@ -742,7 +742,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
     # Not yet supported
     if nOddH > 2:
         raise GumError(("GAMBIT (and by induction, GUM) does not currently support "
-                        "more than 2 CP odd Higgses; your model has {}."
+                        "more than 2 CP odd Higgses; your model has {0}."
                         ).format(nOddH))
 
     towrite += "\n//Charged Higgses\n"
