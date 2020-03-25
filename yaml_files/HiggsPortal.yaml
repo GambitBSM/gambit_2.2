@@ -4,13 +4,7 @@
 ## Only needs DarkBit and a scanner.
 #############################################################################
 
-
 Parameters:
-  
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
-
-  StandardModel_Higgs:
-    mH: 125.18
 
   LCDM:
     omega_b: 0.02242
@@ -45,6 +39,11 @@ Parameters:
     theta: 
       prior_type: log
       range: [1e-14, 1e-4]
+
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+
+  StandardModel_Higgs:
+    mH: 125.18
 
 Priors:
 
@@ -107,6 +106,17 @@ Scanner:
 
 
 ObsLikes:
+
+   # - purpose:      ObsLikes
+   #   capability:   decay_rates
+   #   module:       DecayBit
+   #   type:         DecayTable
+   #   function:     all_decays
+
+   - purpose:      ObsLikes
+     capability:   TH_ProcessCatalog
+     module:       DarkBit
+     type:         TH_ProcessCatalog
 
    - purpose:      LogLike
      capability:   lnL_INTEGRAL

@@ -55,43 +55,16 @@ namespace Gambit
       // Initialise an object to carry the Singlet plus Higgs sector information
       Models::SuperRenormHPModel scalarmodel;
 
-      // quantities needed to fill container spectrum, intermediate calculations
-      double alpha_em = 1.0 / sminputs.alphainv;
-      double C = alpha_em * pi / (sminputs.GF * pow(2,0.5));
-      double sinW2 = 0.5 - pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);
-      double cosW2 = 0.5 + pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);
-      double e = pow( 4*pi*( alpha_em ),0.5) ;
-
       // Higgs sector
-      double mh = *myPipe::Param.at("mH");
+      double mh = *myPipe::Param["mH"];
       scalarmodel.HiggsPoleMass = mh;
 
       double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);
       scalarmodel.HiggsVEV = vev;
 
-      // Scalar singlet sector
-      scalarmodel.ScalarPoleMass = *myPipe::Param.at("mS");
-      scalarmodel.ScalarTheta = *myPipe::Param.at("theta");
-
-      // Standard model
-      scalarmodel.sinW2 = sinW2;
-
-      // gauge couplings
-      scalarmodel.g1 = sqrt(5/3) * e / sqrt(cosW2);
-      scalarmodel.g2 = e / sqrt(sinW2);
-      scalarmodel.g3   = pow( 4*pi*( sminputs.alphaS ),0.5) ;
-
-      // Yukawas
-      double sqrt2v = pow(2.0,0.5)/vev;
-      scalarmodel.Yu[0] = sqrt2v * sminputs.mU;
-      scalarmodel.Yu[1] = sqrt2v * sminputs.mCmC;
-      scalarmodel.Yu[2] = sqrt2v * sminputs.mT;
-      scalarmodel.Ye[0] = sqrt2v * sminputs.mE;
-      scalarmodel.Ye[1] = sqrt2v * sminputs.mMu;
-      scalarmodel.Ye[2] = sqrt2v * sminputs.mTau;
-      scalarmodel.Yd[0] = sqrt2v * sminputs.mD;
-      scalarmodel.Yd[1] = sqrt2v * sminputs.mS;
-      scalarmodel.Yd[2] = sqrt2v * sminputs.mBmB;
+      // Scalar DM sector
+      scalarmodel.ScalarPoleMass = *myPipe::Param["mS"];
+      scalarmodel.MixingAngle = *myPipe::Param["theta"];
 
       // Create a SubSpectrum object to wrap the EW sector information
       Models::SuperRenormHPSimpleSpec scalarspec(scalarmodel);
@@ -102,7 +75,6 @@ namespace Gambit
 
       // We don't supply a LE subspectrum here; an SMSimpleSpec will therefore be automatically created from 'sminputs'
       result = Spectrum(scalarspec,sminputs,&myPipe::Param,mass_cut,mass_ratio_cut);
-
     }
 
   } // end namespace SpecBit

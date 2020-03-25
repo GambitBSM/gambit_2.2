@@ -20,7 +20,7 @@
 
 #define MODEL SuperRenormHP
   START_MODEL
-  // Physical units : mass [eV], theta [diemnsionless]
+  // Physical units : mass [GeV], theta [dimensionless]
   DEFINEPARS(mS) // mass of the DM scalar particle
   DEFINEPARS(theta) // mixing angle with the SM Higgs boson
 

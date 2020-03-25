@@ -17,6 +17,7 @@
 ///
 ///  *********************************************
 
+#include "gambit/Elements/spectrum_helpers.hpp"
 #include "gambit/Models/SpectrumContents/RegisteredSpectra.hpp"
 
 namespace Gambit
@@ -25,25 +26,11 @@ namespace Gambit
   {
      setName("SuperRenormHP");
 
-     // shape prototypes
-     std::vector<int> m3x3 = initVector(3,3);
-
      addParameter(Par::mass1, "vev");
-     addParameter(Par::dimensionless, "Theta");
-     addParameter(Par::dimensionless, "lambda_h");
+     addParameter(Par::dimensionless, "theta");
 
-     addParameter(Par::Pole_Mass, "h0_1");
+     addParameter(Par::Pole_Mass, "h0");
      addParameter(Par::Pole_Mass, "S" );
-
-     addParameter(Par::dimensionless, "g1");
-     addParameter(Par::dimensionless, "g2");
-     addParameter(Par::dimensionless, "g3");
-
-     addParameter(Par::dimensionless, "sinW2");
-
-     addParameter(Par::dimensionless, "Yd", m3x3);
-     addParameter(Par::dimensionless, "Yu", m3x3);
-     addParameter(Par::dimensionless, "Ye", m3x3);
   }
 
 }

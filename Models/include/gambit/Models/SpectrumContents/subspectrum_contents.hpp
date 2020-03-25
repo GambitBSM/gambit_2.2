@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  Base class for definining the required 
+///  Base class for definining the required
 ///  contents of SubSpectrum wrapper objects
 ///
 ///  *********************************************

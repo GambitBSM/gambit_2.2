@@ -1558,7 +1558,7 @@ START_MODULE
     DEPENDENCY(DM_initial_density, double)
     DEPENDENCY(DM_decay_rate_2_photons, double)
     DEPENDENCY(DM_mass, double)
-    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    /* DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog) */
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1624,14 +1624,6 @@ START_MODULE
     #define FUNCTION calc_lnL_solar_neutrino_Be7
     START_FUNCTION(double)
     DEPENDENCY(solar_neutrino_flux_Be7, double)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY ISL_Yukawa
-  START_CAPABILITY
-    #define FUNCTION SuperRenormHP_ISL_Yukawa
-    START_FUNCTION(std::vector<double>)
-    ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
