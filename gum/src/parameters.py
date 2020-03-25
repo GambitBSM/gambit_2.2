@@ -318,10 +318,18 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
 
             # TODO does not seem to work for SARAH: SSDM (w/ just spheno):
             # The list default = [ ... ] has zero length 
-            # if name in bcs.keys(): 
-            #     default = [param.defvalue() for param in paramlist if param.name() == bcs[name] or param.alt_name() == bcs[name]][0]
-            # elif p.alt_name() in bcs.keys():
-            #     default = [param.defvalue() for param in paramlist if param.name() == bcs[p.alt_name()] or param.alt_name() == bcs[p.alt_name()]][0]
+            if name in bcs.keys(): 
+                 default = [param.defvalue() for param in paramlist if param.name() == bcs[name] or param.alt_name() == bcs[name]]
+                 if default:
+                    default = default[0]
+                 else:
+                    default = 0.1
+            elif p.alt_name() in bcs.keys():
+                 default = [param.defvalue() for param in paramlist if param.name() == bcs[p.alt_name()] or param.alt_name() == bcs[p.alt_name()]]
+                 if default:
+                    default = default[0]
+                 else:
+                    default = 0.1
 
             # If there are more than one parameter with the same name, take 
             # the not default one

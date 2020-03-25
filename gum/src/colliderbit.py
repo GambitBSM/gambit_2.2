@@ -237,3 +237,4 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
     )
 
     return indent(towrite)
+
