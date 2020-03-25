@@ -3178,7 +3178,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_FUNCTION(SetGUTScale, void, (Freal8&), " + make_fortran_symbols("model_data_{4}","setgutscale") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetStrictUnification, Flogical, (Flogical&), " + make_fortran_symbols("model_data_{4}","setstrictunification") +", \"SARAHSPheno_{0}_internal\")\n"
             "BE_FUNCTION(SetYukawaScheme, Finteger, (Finteger&), " + make_fortran_symbols("model_data_{4}","setyukawascheme") + ", \"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name, SPHENO_VERSION, SARAH_VERSION, SPHENO_VERSION.replace('.','_'),
+    ).format(fullmodelname, SPHENO_VERSION, SARAH_VERSION, SPHENO_VERSION.replace('.','_'),
              clean_model_name.lower(), fullmodelname)
 
     # Some model-dependent functions:
@@ -3214,7 +3214,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_FUNCTION({0}, void,\n"
             "  ({1}),"
             " {2}, \"SARAHSPheno_{3}_internal\")\n"
-        ).format(function, args, symbol, clean_model_name)
+        ).format(function, args, symbol, fullmodelname)
     
     # All scraped from Model_Data_<MODEL>.f90
     # todo: check these are all present. I think they are.
@@ -3238,7 +3238,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
         string = (
                "BE_VARIABLE({0}, {1}, " + make_fortran_symbols("model_data_{2}","{3}") + ",\"SARAHSPheno_{4}_internal\")\n"
-        ).format(name, var_dict[name], clean_model_name.lower(), name.lower(), clean_model_name)
+        ).format(name, var_dict[name], clean_model_name.lower(), name.lower(), fullmodelname)
 
         # Organise branching ratio stuff separately
         if name.startswith("gT") or name.startswith("BR"):
@@ -3248,7 +3248,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
     # Add MODSEL variable if missing
     if "HighScaleModel" not in [name for name, param in variables.iteritems()] :
-        towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, ' + make_fortran_symbols("settings","highscalemodel") + ', "SARAHSPheno_' + clean_model_name + '_internal")\n'
+        towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, ' + make_fortran_symbols("settings","highscalemodel") + ', "SARAHSPheno_' + fullmodelname + '_internal")\n'
 
     # SMINPUTS
     towrite += (
@@ -3299,7 +3299,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(A_wolf, Freal8, " + make_fortran_symbols("standardmodel","a_wolf") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(rho_wolf, Freal8, " + make_fortran_symbols("standardmodel","rho_wolf") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(eta_wolf, Freal8, " + make_fortran_symbols("standardmodel","eta_wolf") + ", \"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name, clean_model_name.lower())
+    ).format(fullmodelname, clean_model_name.lower())
 
     # CONTROL + SETTINGS + "OTHER" VARIABLES
     towrite += (
@@ -3381,7 +3381,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "// Other variables\n"
             "BE_VARIABLE(Qin, Freal8, " + make_fortran_symbols("spheno{1}","qin") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(ratioWoM, Freal8, " + make_fortran_symbols("spheno{1}","ratiowom") + ",\"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name, clean_model_name.lower())
+    ).format(fullmodelname, clean_model_name.lower())
 
     # BRANCHING RATIOS
     towrite += (
@@ -3393,7 +3393,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(RunningCouplingsDecays, Flogical, " + make_fortran_symbols("settings","runningcouplingsdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(MinWidth, Freal8, " + make_fortran_symbols("settings","minwidth") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(OneLoopDecays, Flogical, " + make_fortran_symbols("settings","oneloopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name)
+    ).format(fullmodelname)
 
     towrite += br_entry
 
@@ -3418,7 +3418,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(Mass_Regulator_PhotonGluon, Freal8, " + make_fortran_symbols("settings","mass_regulator_photongluon") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(Extra_Scale_LoopDecays, Flogical, " + make_fortran_symbols("settings","extra_scale_loopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
             "BE_VARIABLE(Scale_LoopDecays, Freal8, " + make_fortran_symbols("settings","scale_loopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
-    ).format(clean_model_name)
+    ).format(fullmodelname)
 
     for name, param in sorted(variables.iteritems()):
 
@@ -3427,12 +3427,12 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
             towrite += (
                 "BE_VARIABLE({0}, Flogical, " + make_fortran_symbols("model_data_{1}","{2}") + ", \"SARAHSPheno_{3}_internal\")\n"
-            ).format(name, clean_model_name.lower(), name.lower(), clean_model_name)
+            ).format(name, clean_model_name.lower(), name.lower(), fullmodelname)
  
     if flags["SupersymmetricModel"] : 
         towrite += (
                 "BE_VARIABLE(CalcSUSY3BodyDecays, Flogical, " + make_fortran_symbols("model_data_{0}","calcsusy3bodydecays") + ", \"SARAHSPheno_{1}_internal\")\n"
-        ).format(clean_model_name.lower(), clean_model_name)
+        ).format(clean_model_name.lower(), fullmodelname)
 
     # HIGGSBOUNDS OUTPUT
     towrite += "\n// HiggsBounds variables\n" 
@@ -3442,7 +3442,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
 
         towrite += (
                "BE_VARIABLE({0}, {1}, " + make_fortran_symbols("model_data_{2}","{3}") + ",\"SARAHSPheno_{4}_internal\")\n"
-        ).format(name, hb_dict[name], clean_model_name.lower(), name.lower(), clean_model_name)
+        ).format(name, hb_dict[name], clean_model_name.lower(), name.lower(), fullmodelname)
 
     # Wrap it up.
     towrite += (
@@ -3450,8 +3450,8 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "// Convenience functions (registration)\n"
             "BE_CONV_FUNCTION(run_SPheno, int, (Spectrum&, const Finputs&), \"SARAHSPheno_{0}_spectrum\")\n"
             "BE_CONV_FUNCTION(run_SPheno_decays, int, (const Spectrum &, DecayTable &, const Finputs&), \"SARAHSPheno_{0}_decays\")\n"
-            "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const Finputs&), \"SARAHSPheno_{1}_internal\")\n"
-    ).format(fullmodelname, clean_model_name)
+            "BE_CONV_FUNCTION(Spectrum_Out, Spectrum, (const Finputs&), \"SARAHSPheno_{0}_internal\")\n"
+    ).format(fullmodelname)
 
     # Whether to code up the HiggsCouplingsTable:
     # The targets for HiggsBounds
@@ -3491,7 +3491,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "\n"
             "// End\n"
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
-    ).format(clean_model_name)
+    ).format(fullmodelname)
 
     # DONE!
 
@@ -3510,7 +3510,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             print "Duplication of ", k, "- it appeared", v, "times."
 
     # Add capability definitions
-    cap_def["SARAHSPheno_" + clean_model_name + "_internal"] = "Exclusively used for internal variables and functions for the SARAH-SPheno backend."
+    cap_def["SARAHSPheno_" + fullmodelname + "_internal"] = "Exclusively used for internal variables and functions for the SARAH-SPheno backend."
     cap_def["SARAHSPheno_" + fullmodelname + "_spectrum"] = "Calculates and returns a " + fullmodelname + " spectrum object using SARAH-SPheno."
     cap_def["SARAHSPheno_" + fullmodelname + "_decays"] = "Calculates and returns all decays for the " + fullmodelname + " model using SARAH-SPheno."
     cap_def["SARAHSPheno_" + fullmodelname + "_" + SPHENO_VERSION.replace('.','_') + "_init"] = "Initialisation of backend SARAH-SPheno v" + SPHENO_VERSION + " for model " + fullmodelname + "."
