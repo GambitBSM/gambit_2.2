@@ -20,6 +20,10 @@
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date 2019 Feb
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Mar
+///
 ///  *********************************************
 
 #pragma once
@@ -30,20 +34,13 @@
   #define CAPABILITY HB_ModelParameters
   START_CAPABILITY
 
-    // SM Higgs model parameters
-    #define FUNCTION SMHiggs_ModelParameters
-    START_FUNCTION(hb_ModelParameters)
-    DEPENDENCY(SM_spectrum, Spectrum)
-    DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
-    ALLOW_MODELS(StandardModel_Higgs)
-    #undef FUNCTION
-
-    // SM-like Higgs model parameters, for BSM models with only one Higgs.
+    // SM-like Higgs model parameters, for SM and BSM models with only one Higgs.
     #define FUNCTION SMLikeHiggs_ModelParameters
     START_FUNCTION(hb_ModelParameters)
+    MODEL_CONDITIONAL_DEPENDENCY(SM_spectrum, Spectrum, StandardModel_Higgs, StandardModel_Higgs_running)
     MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2, ScalarSingletDM_Z2_running)
     MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
-    ALLOW_MODELS(ScalarSingletDM_Z3_running, ScalarSingletDM_Z2_running)
+    ALLOW_MODELS(StandardModel_Higgs_running, ScalarSingletDM_Z3_running, ScalarSingletDM_Z2_running)
     DEPENDENCY(Higgs_Couplings, HiggsCouplingsTable)
     #undef FUNCTION
 

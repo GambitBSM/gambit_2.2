@@ -749,7 +749,7 @@ if args.file:
         if output_opts.spheno:
             if len(higgses) == 1:
                 num = find_string("ColliderBit_Higgs.cpp", m, 
-                        "No valid model for SMLikeHiggs_ModelParameters.")[1]
+                        "ModelInUse(\"StandardModel_Higgs\")")[1]
                 amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, 
                            reset_contents)
                 num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 

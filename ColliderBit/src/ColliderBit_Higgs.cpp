@@ -23,6 +23,14 @@
 ///          (j.mckay14@imperial.ac.uk)
 ///  \date 2016 Sep
 ///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2020 Mar
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Mar
+///
 ///  *********************************************
 
 #include <cmath>
@@ -195,13 +203,6 @@ namespace Gambit
       result.CS_lep_HpjHmi_ratio[0] = 0.;
     }
 
-    /// SM Higgs model parameters for HiggsBounds/Signals
-    void SMHiggs_ModelParameters(hb_ModelParameters &result)
-    {
-      using namespace Pipes::SMHiggs_ModelParameters;
-      set_SMLikeHiggs_ModelParameters(Dep::SM_spectrum->get_HE(), *Dep::Higgs_Couplings, result);
-    }
-
     /// SM-like (SM + possible invisibles) Higgs model parameters for HiggsBounds/Signals
     void SMLikeHiggs_ModelParameters(hb_ModelParameters &result)
     {
@@ -209,6 +210,7 @@ namespace Gambit
       dep_bucket<Spectrum>* spectrum_dependency = nullptr;
       if (ModelInUse("ScalarSingletDM_Z2") or ModelInUse("ScalarSingletDM_Z2_running")) spectrum_dependency = &Dep::ScalarSingletDM_Z2_spectrum;
       else if (ModelInUse("ScalarSingletDM_Z3") or ModelInUse("ScalarSingletDM_Z3_running")) spectrum_dependency = &Dep::ScalarSingletDM_Z3_spectrum;
+      else if (ModelInUse("StandardModel_Higgs") or ModelInUse("StandardModel_Higgs_running")) spectrum_dependency = &Dep::SM_spectrum;
       else ColliderBit_error().raise(LOCAL_INFO, "No valid model for SMLikeHiggs_ModelParameters.");
       const SubSpectrum& spec = (*spectrum_dependency)->get_HE();
       set_SMLikeHiggs_ModelParameters(spec, *Dep::Higgs_Couplings, result);
