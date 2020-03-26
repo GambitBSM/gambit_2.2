@@ -242,7 +242,6 @@ START_MODULE
       BACKEND_OPTION((MicrOmegas_VectorSingletDM_Z2), (gimmemicro))
       BACKEND_OPTION((MicrOmegas_MajoranaSingletDM_Z2), (gimmemicro))
       BACKEND_OPTION((MicrOmegas_DiracSingletDM_Z2),(gimmemicro))
-      BACKEND_OPTION((MicrOmegas_DMEFT),(gimmemicro))
       ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT,
                    ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                    ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
@@ -690,7 +689,6 @@ START_MODULE
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z2),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z3),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_VectorSingletDM_Z2),(gimmemicro))
-      BACKEND_OPTION((MicrOmegas_DMEFT),(gimmemicro))
       FORCE_SAME_BACKEND(gimmemicro)
     #undef FUNCTION
 
@@ -773,7 +771,8 @@ START_MODULE
       START_FUNCTION(NREO_DM_nucleon_couplings)
       DEPENDENCY(DD_rel_WCs_flavscheme, map_str_dbl)
       DEPENDENCY(WIMP_properties, WIMPprops)
-      BACKEND_REQ(get_NR_WCs_flav, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, int&, std::string&))
+      DEPENDENCY(DirectDMNuisanceParameters, map_str_dbl)
+      BACKEND_REQ(get_NR_WCs_flav, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, int&, std::string&, map_str_dbl&))
       #undef FUNCTION
 
       // Get non-relativistic WCs from the relativistic ones, using DirectDM.
@@ -782,7 +781,8 @@ START_MODULE
       START_FUNCTION(NREO_DM_nucleon_couplings)
       DEPENDENCY(DD_rel_WCs_EW, map_str_dbl)
       DEPENDENCY(WIMP_properties, WIMPprops)
-      BACKEND_REQ(get_NR_WCs_EW, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&))
+      DEPENDENCY(DirectDMNuisanceParameters, map_str_dbl)
+      BACKEND_REQ(get_NR_WCs_EW, (), NREO_DM_nucleon_couplings, (map_str_dbl&, double&, double&, double&, double&, std::string&, map_str_dbl&))
       #undef FUNCTION
       
       // Non-relativistic WCs computed directly for fermionic Higgs portal models.
@@ -839,6 +839,15 @@ START_MODULE
     #define FUNCTION lnL_deltaq
       START_FUNCTION(double)
       ALLOW_MODELS(nuclear_params_fnq)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DirectDMNuisanceParameters 
+  START_CAPABILITY
+    #define FUNCTION ExtractDirectDMNuisanceParameters
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(SMINPUTS, SMInputs)      
+      ALLOW_MODELS(nuclear_params_ChPT)
     #undef FUNCTION
   #undef CAPABILITY
 

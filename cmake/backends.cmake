@@ -498,27 +498,6 @@ if(NOT ditched_${name}_${model}_${ver})
   set_as_default_version("backend model" ${name}_${model} ${ver})
 endif()
 
-
-# MicrOmegas DMEFT model
-set(model "DMEFT")
-set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/DMEFT/patch_${name}_${ver}_${model}.dif")
-set(patchdir "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/DMEFT")
-check_ditch_status(${name}_${model} ${ver} ${dir})
-if(NOT ditched_${name}_${model}_${ver})
-  ExternalProject_Add(${name}_${model}_${ver}
-    DOWNLOAD_COMMAND ""
-    SOURCE_DIR ${dir}
-    PATCH_COMMAND ./newProject ${model} && patch -p0 < ${patch}
-    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/mdlfiles ${dir}/${model}/work/models/
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_COMMAND} -E chdir ${model} ${CMAKE_MAKE_PROGRAM} sharedlib main=main.c
-    INSTALL_COMMAND ""
-  )
-  add_extra_targets("backend model" ${name} ${ver} ${dir}/${model} ${model} "yes | clean")
-  set_as_default_version("backend model" ${name}_${model} ${ver})
-endif()
-
 # Pythia
 set(name "pythia")
 set(ver "8.212")
@@ -1198,9 +1177,9 @@ endif()
 
 # DirectDM
 set(name "directdm")
-set(ver "2.0.1")
-set(dl "https://github.com/DirectDM/directdm-py/archive/v2.0.1.tar.gz")
-set(md5 "0cc0fc63a0e4c4e8a546360eeb690845")
+set(ver "2.1.0")
+set(dl "https://github.com/DirectDM/directdm-py/archive/v2.1.0.tar.gz")
+set(md5 "4e5eb17d463a83c7c42a119cc13db092")
 set(lib "libdirectdm")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 # bjf> Cmake error from the below: not enough arguments?

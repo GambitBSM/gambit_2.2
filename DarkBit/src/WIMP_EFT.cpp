@@ -221,6 +221,9 @@ namespace Gambit
       // Set DM_type based on the spin and & conjugacy of DM
       std::string DM_type;
 
+      // Nuisance params
+      map_str_dbl inputs = *Dep::DirectDMNuisanceParameters;
+
       // Fermion case
       if (sDM == 1) { is_SC ? DM_type = "M" : DM_type = "D"; }
       // Scalar
@@ -232,7 +235,7 @@ namespace Gambit
       map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs_flavscheme;
 
       // Get non-relativistic coefficients
-      result = BEreq::get_NR_WCs_flav(relativistic_WCs, mDM, scheme, DM_type);
+      result = BEreq::get_NR_WCs_flav(relativistic_WCs, mDM, scheme, DM_type, inputs);
     }
 
     /// Obtain the non-relativistic Wilson Coefficients from a set of model
@@ -267,10 +270,72 @@ namespace Gambit
       // Relativistic Wilson Coefficients
       map_str_dbl relativistic_WCs = *Dep::DD_rel_WCs_EW;
 
+      // Nuisance params
+      map_str_dbl inputs = *Dep::DirectDMNuisanceParameters;
+
       // Get non-relativistic coefficients
       /// TODO - How to get hypercharge and SU(2) dimension for these fields!?
       /// Currently just comes from the YAML file. GUM? Process Catalogue?
-      result = BEreq::get_NR_WCs_EW(relativistic_WCs, mDM, dchi, Ychi, scale, DM_type);
+      result = BEreq::get_NR_WCs_EW(relativistic_WCs, mDM, dchi, Ychi, scale, DM_type, inputs);
+    }
+
+    /// Module function providing nuisance parameters for
+    /// to be passed to DirectDM directly from the model parameters.
+    void ExtractDirectDMNuisanceParameters(map_str_dbl &result)
+    {
+      using namespace Pipes::ExtractDirectDMNuisanceParameters;
+
+
+      // Kick things off with SMInputs
+      SMInputs sminputs = *Dep::SMINPUTS; 
+
+      result["aMZinv"] = sminputs.alphainv;    // 1: Inverse electromagnetic coupling at the Z pole in the MSbar scheme (with 5 active flavours)
+      result["GF"] = sminputs.GF;              // 2: Fermi constant (in units of GeV^-2)
+      result["asMZ"] = sminputs.alphaS;        // 3: Strong coupling at the Z pole in the MSbar scheme (with 5 active flavours).
+      result["Mz"] = sminputs.mZ;              // 4: Z pole mass
+      result["mb_at_mb"] = sminputs.mBmB;      // 5: b quark running mass in the MSbar scheme (at mB)
+      result["mt_pole"] = sminputs.mT;         // 6: Top quark pole mass
+      result["mtau"] = sminputs.mTau;          // 7: Tau pole mass
+      result["me"] = sminputs.mE;              // 11: Electron pole mass
+      result["mmu"] = sminputs.mMu;            // 13: Muon pole mass
+      result["md_at_2GeV"] = sminputs.mD;      // 21: d quark running mass in the MSbar scheme at 2 GeV
+      result["mu_at_2GeV"] = sminputs.mU;      // 22: u quark running mass in the MSbar scheme at 2 GeV
+      result["ms_at_2GeV"] = sminputs.mS;      // 23: s quark running mass in the MSbar scheme at 2 GeV
+      result["mc_at_mc"] = sminputs.mCmC;      // 24: c quark running mass in the MSbar scheme at mC
+
+      // Then top it up with parameters from nuclear_params_ChPT.
+      result["gA"]      = *Param["gA"];
+      result["mG"]      = *Param["mG"];
+      result["sigmaup"] = *Param["sigmaup"];
+      result["sigmadp"] = *Param["sigmadp"];
+      result["sigmaun"] = *Param["sigmaun"];
+      result["sigmadn"] = *Param["sigmadn"];
+      result["sigmas"]  = *Param["sigmas"];
+      // Set p and n equal
+      result["Deltaup"] = *Param["Deltaup"];
+      result["Deltaun"] = *Param["Deltaup"];
+      // Set p and n equal
+      result["Deltadp"] = *Param["Deltadp"];
+      result["Deltadn"] = *Param["Deltadp"];
+      result["Deltas"]  = *Param["Deltas"];
+      result["B0mu"]    = *Param["B0mu"];
+      result["B0md"]    = *Param["B0md"];
+      result["B0ms"]    = *Param["B0ms"];
+      result["mup"]     = *Param["mup"];
+      result["mun"]     = *Param["mun"];
+      result["ap"]      = *Param["ap"];
+      result["an"]      = *Param["an"];
+      result["F2sp"]    = *Param["F2sp"];
+      result["gTu"]     = *Param["gTu"];
+      result["gTd"]     = *Param["gTd"];
+      result["gTs"]     = *Param["gTs"];
+      // Set p and n equal
+      result["BT10up"]  = *Param["BT10up"];
+      result["BT10un"]  = *Param["BT10up"];
+      // Set p and n equal
+      result["BT10dp"]  = *Param["BT10dp"];
+      result["BT10dn"]  = *Param["BT10dp"];
+      result["BT10s"]   = *Param["BT10s"];      
     }
 
     //////////////////////////////////////////////////////////////////////////

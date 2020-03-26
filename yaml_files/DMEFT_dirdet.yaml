@@ -13,6 +13,9 @@ Parameters:
   StandardModel_Higgs:
      mH: 125.09
 
+  # Direct detection
+  nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
+
   DMEFT:
     # DM mass
     mchi:
@@ -65,6 +68,7 @@ Parameters:
     C710:  
       range: [-12.56637, 12.56637]
 
+  # NFW with standard & central values for prelims
   Halo_gNFW_rho0:
     rho0: 0.4
     v0: 240
@@ -75,6 +79,7 @@ Parameters:
     alpha: 1
     beta: 3
     gamma: 1
+
 
 Priors:
 

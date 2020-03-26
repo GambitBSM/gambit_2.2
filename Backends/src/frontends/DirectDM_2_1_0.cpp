@@ -12,6 +12,7 @@
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date 2018 Sep, Oct
 ///        2019 Dec
+///        2020 Mar
 ///
 ///  \author Ben Farmer
 ///          (b.farmer@imperial.ac.uk)
@@ -20,7 +21,7 @@
 ///  *********************************************
 
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/DirectDM_2_0_1.hpp"
+#include "gambit/Backends/frontends/DirectDM_2_1_0.hpp"
 #include "gambit/Backends/backend_types/DDCalc.hpp" // Using DDCalc (frontend) container objects
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -32,9 +33,6 @@ BE_INI_FUNCTION
   // Empty ini function.
 }
 END_BE_INI_FUNCTION
-
-/// TODO -
-/// Set nuisance parameters for scans within directdm (BE_INI_FUNCTION)
 
 BE_NAMESPACE
 {
@@ -78,7 +76,9 @@ BE_NAMESPACE
   /// Requires a dictionary of relatavistic WCs, , the DM mass, dchi is the dimension of the DM SU2 representation,
   /// Ychi is the DM hypercharge such that Q = I^3 + Y/2, scale is the scale the Lagrangian is defined at, and
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
-  NREO_DM_nucleon_couplings get_NR_WCs_EW(map_str_dbl& relativistic_WCs, double& mDM, double& dchi, double& Ychi, double& scale, std::string& DM_type)
+  NREO_DM_nucleon_couplings get_NR_WCs_EW(map_str_dbl& relativistic_WCs, double& mDM, 
+                                          double& dchi, double& Ychi, double& scale, 
+                                          std::string& DM_type, map_str_dbl& input_dict)
   {
     // S.B. 19/09/18: currently only Dirac supported
     if (DM_type != "D")
@@ -86,8 +86,11 @@ BE_NAMESPACE
       backend_error().raise(LOCAL_INFO, "DirectDM at unbroken scale currenly only supports Dirac DM.");
     }
 
+    // Cast the input dict to a Python object
+    pybind11::dict inputs = pybind11::cast(input_dict);
+
     // Import Python class WC_EW from module DirectDM
-    pybind11::object WC_EW = DirectDM.attr("WC_EW")(relativistic_WCs, Ychi, dchi, DM_type);
+    pybind11::object WC_EW = DirectDM.attr("WC_EW")(relativistic_WCs, Ychi, dchi, DM_type, inputs);
     
     // Obtain a dictionary of non-relativistic WCs, given the DM mass and the scale the Lagrangian is specified at.
     pybind11::dict cNRs = WC_EW.attr("_my_cNR")(mDM, scale);
@@ -103,7 +106,9 @@ BE_NAMESPACE
   /// Requires a dictionary of relatavistic WCs, the DM mass, an integer specifying the number
   /// of quark flavours to match onto, i.e. the 3, 4 or 5 quark flavour scheme, and
   /// the DM type -- "D" for Dirac fermion; "M" for Majorana fermion; "C" for complex scalar; "R" for real scalar.
-  NREO_DM_nucleon_couplings get_NR_WCs_flav(map_str_dbl& relativistic_WCs, double& mDM, int& scheme, std::string& DM_type)
+  NREO_DM_nucleon_couplings get_NR_WCs_flav(map_str_dbl& relativistic_WCs, double& mDM, 
+                                            int& scheme, std::string& DM_type,
+                                            map_str_dbl& input_dict)
   {
     // We can only load up 3, 4, 5 flavour scheme.
     if (scheme != 3 && scheme != 4 && scheme != 5)
@@ -128,6 +133,9 @@ BE_NAMESPACE
       }
     }
 
+    // Cast the input dict to a Python object
+    pybind11::dict inputs = pybind11::cast(input_dict);
+
     // Python dictionary of non-relativistic Wilson Coefficients
     pybind11::dict cNRs;
 
@@ -135,17 +143,17 @@ BE_NAMESPACE
     // then obtain a dictionary of non-relativistic WCs, given the DM mass.
     if (scheme == 5)
     {
-      pybind11::object WC_5f = DirectDM.attr("WC_5f")(relativistic_WCs, DM_type);
+      pybind11::object WC_5f = DirectDM.attr("WC_5f")(relativistic_WCs, DM_type, inputs);
       cNRs = WC_5f.attr("_my_cNR")(mDM);
     }
     else if (scheme == 4)
     {
-      pybind11::object WC_4f = DirectDM.attr("WC_4f")(relativistic_WCs, DM_type);
+      pybind11::object WC_4f = DirectDM.attr("WC_4f")(relativistic_WCs, DM_type, inputs);
       cNRs = WC_4f.attr("_my_cNR")(mDM);
     }
     else if (scheme == 3)
     {
-      pybind11::object WC_3f = DirectDM.attr("WC_3f")(relativistic_WCs, DM_type);
+      pybind11::object WC_3f = DirectDM.attr("WC_3f")(relativistic_WCs, DM_type, inputs);
       cNRs = WC_3f.attr("_my_cNR")(mDM);
     }
 
