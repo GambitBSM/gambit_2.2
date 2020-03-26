@@ -35,6 +35,7 @@
 
 #include "fjcore.hh"
 #include "gambit/Elements/gambit_module_headers.hpp"
+#include "gambit/Elements/spectrum_helpers.hpp"
 #include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/numerical_constants.hpp"
@@ -1263,6 +1264,36 @@ namespace Gambit
       }
 
       result = log(*std::min_element(likelihood.begin(), likelihood.end()));
+    }
+    
+    // capability to provide the Higgs-Nucleon coupling constant fN, such as described in arXiv:1306.4710
+    void get_Higgs_Nucleon_coupling_fN (Higgs_Nucleon_coupling_fN &result)
+    {
+      using namespace Pipes::get_Higgs_Nucleon_coupling_fN;
+
+      const double sigmas = *Param["sigmas"], sigmal = *Param["sigmal"]; // nuclear parameters
+      const Spectrum SM = *Dep::SM_spectrum; // SM spectrum needed to get light quark masses
+
+      const double z = 1.49; // isospin breaking ratio
+      const double mu = SM.get(Par::mass1, "u_1"), md = SM.get(Par::mass1, "d_1"), ms = SM.get(Par::mass1, "d_2"); // light quark masses [GeV]
+      const double mn = Gambit::m_neutron, mp = Gambit::m_proton; // nucleon masses [GeV]
+
+      // intermediate quantities
+      const double ml = 0.5*(mu+md);
+      const double sigma0 = sigmal - sigmas*(2.*ml/ms);;
+      const double y = 1 - sigma0/sigmal;
+
+      std::vector<double> fu, fd, fs, mN = {mn, mp};
+
+      for (size_t i(0); i<mN.size(); ++i)
+      {
+        fu.push_back(mu/(mu+md)*sigmal/mN[i]*(2*z+y*(1-z))/(1+z));
+        fd.push_back(md/(mu+md)*sigmal/mN[i]*(2-y*(1-z))/(1+z));
+        fs.push_back(ms/(mu+md)*sigmal/mN[i]*y);
+      }
+
+      result.neutron =  2./9. + 7./9.*(fu[0]+fd[0]+fs[0]);
+      result.proton  =  2./9. + 7./9.*(fu[1]+fd[1]+fs[1]);
     }
 
   }

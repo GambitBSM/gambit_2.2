@@ -47,12 +47,18 @@
 ///  \author Sebastian Wild
 ///          (sebastian.wild@ph.tum.de)
 ///  \date 2016 Aug
+///
+///  \author Inigo Saez Casares
+///          (inigo.saez_casares@ens-paris-saclay.fr)
+///  \date 2020 March
+///
 ///  *********************************************
 
 
 #ifndef __DarkBit_types_hpp__
 #define __DarkBit_types_hpp__
 
+#include "gambit/Backends/backend_types/nulike.hpp"
 #include "gambit/DarkBit/decay_chain.hpp"
 #include "gambit/DarkBit/SimpleHist.hpp"
 #include "gambit/DarkBit/ProcessCatalog.hpp"
@@ -107,6 +113,13 @@ namespace Gambit
       std::vector<RD_coannihilating_particle> coannihilatingParticles;
       std::vector<TH_Resonance> resonances;
       std::vector<double> threshold_energy;
+    };
+
+    // Simple structure containing the fN parameters of the Higgs couplings to nucleons
+    struct Higgs_Nucleon_coupling_fN
+    {
+      double proton; // fN parameter for the Higgs-proton coupling
+      double neutron; // fN parameter for the Higgs-neutron couplings
     };
 
 

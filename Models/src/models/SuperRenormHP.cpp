@@ -20,6 +20,7 @@
 #include "gambit/Models/model_helpers.hpp"
 #include "gambit/Logs/logger.hpp"
 #include "gambit/Utils/numerical_constants.hpp"
+#include "gambit/DarkBit/DarkBit_types.hpp"
 
 #include "gambit/Models/models/SuperRenormHP.hpp"
 
@@ -45,5 +46,24 @@ void MODEL_NAMESPACE::SuperRenormHP_to_ModifiedGravityYukawa (const ModelParamet
     friendparams.setValue("alpha", 4*Gambit::pi*pow(Mp/f, 2));
     friendparams.setValue("lambda", hbar*cs/mS);
 }
+
+/* void MODEL_NAMESPACE::SuperRenormHP_to_ModifiedGravityYukawa (const ModelParameters &myparams, ModelParameters &friendparams) */
+/* { */
+/*     USE_MODEL_PIPE(FRIEND) // get pipe for "interpret as friend" function */
+/*     logger()<<"Running interpret_as_friend calculations for SuperRenormHP -> ModifiedGravityYukawa ..."<<EOM; */
+
+/*     const DarkBit::Higgs_Nucleon_coupling_fN couplings = *Dep::Higgs_Nucleon_coupling_fN; */
+/*     const double fN = couplings.proton; */
+
+/*     const double v = 246e9; // electroweak vev [eV] */
+/*     const double mS = myparams["mS"], theta = myparams["theta"]; */
+/*     const double f = v/theta/fN; */
+/*     const double Mp = Gambit::m_planck*1e9; // Planck mass [eV] */
+/*     const double hbar = Gambit::hbar*1e9;  // reduced Planck constant [eV.s] */
+/*     const double cs = Gambit::s2cm; // speed of light [cm/s] */
+
+/*     friendparams.setValue("alpha", 4*Gambit::pi*pow(Mp/f, 2)); */
+/*     friendparams.setValue("lambda", hbar*cs/mS); */
+/* } */
 #undef FRIEND
 #undef MODEL
