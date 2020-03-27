@@ -819,10 +819,13 @@ namespace Gambit
       // Notes: Virtual Higgs decays into offshell W+W- final states are not
       // imported.  All other channels are correspondingly rescaled.  Decay
       // into SS final states is accounted for, leading to zero photons.
-      ImportDecays("h0_1", catalog, importedDecays, tbl, minBranching);
+      ImportDecays("h0_1", catalog, importedDecays, tbl, minBranching, daFunk::vec<std::string>("Z0", "W+", "W-"));
+
+      // Add the decay process to the catalog
+      catalog.processList.push_back(process_dec);
 
       // Validate
-      catalog.validate();
+      /* catalog.validate(); */
 
       result = catalog;
     } // function TH_ProcessCatalog_SuperRenormHP

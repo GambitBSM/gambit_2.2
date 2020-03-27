@@ -29,7 +29,7 @@ namespace Gambit
      addParameter(Par::mass1, "vev");
      addParameter(Par::dimensionless, "theta");
 
-     addParameter(Par::Pole_Mass, "h0");
+     addParameter(Par::Pole_Mass, "h0_1");
      addParameter(Par::Pole_Mass, "S" );
   }
 

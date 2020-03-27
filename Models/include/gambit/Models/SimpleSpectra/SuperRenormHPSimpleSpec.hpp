@@ -101,7 +101,7 @@ namespace Gambit
                using namespace Par;
 
                getters[mass1].map0W["vev"]               = &Self::get_HiggsVEV;
-               getters[Pole_Mass].map0W["h0"]            = &Self::get_HiggsPoleMass;
+               getters[Pole_Mass].map0W["h0_1"]          = &Self::get_HiggsPoleMass;
                getters[Pole_Mass_1srd_high].map0W["h0"]  = &Self::get_HiggsPoleMass_1srd_high;
                getters[Pole_Mass_1srd_low].map0W["h0"]   = &Self::get_HiggsPoleMass_1srd_low;
 
@@ -118,7 +118,7 @@ namespace Gambit
                using namespace Par;
 
                setters[mass1].map0W["vev"]               = &Self::set_HiggsVEV;
-               setters[Pole_Mass].map0W["h0"]            = &Self::set_HiggsPoleMass;
+               setters[Pole_Mass].map0W["h0_1"]          = &Self::set_HiggsPoleMass;
                setters[Pole_Mass_1srd_high].map0W["h0"]  = &Self::set_HiggsPoleMass_1srd_high;
                setters[Pole_Mass_1srd_low].map0W["h0"]   = &Self::set_HiggsPoleMass_1srd_low;
 

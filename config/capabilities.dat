@@ -2240,6 +2240,9 @@ ISL_Yukawa: |
 lnL_ShortRangeForces_Sushkov2011: |
   Log-likelihood from the short range forces experiment from Sushkov et al. 2011 arXiv::1108.2547.
 
+Higgs_Nucleon_coupling_fN: |
+  fN parameter from the Higgs-Nucleon coupling. The complete coupling constant is given by fN*mN/vev. Returns a Higgs_Nucleon_coupling_fN object, which is a simple structure containing the value of fN for protons and neutrons.
+
 #-------------------------------------
 #  HiggsBounds capabilities
 #-------------------------------------
