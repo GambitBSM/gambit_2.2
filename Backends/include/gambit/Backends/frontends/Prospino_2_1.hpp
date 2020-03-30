@@ -35,12 +35,18 @@ BE_ALLOW_MODELS(MSSM63atQ_mA,MSSM63atMGUT_mA)
 BE_FUNCTION(prospino_gb_init, void, (Fstring<500>&), "C_prospino_gb_init", "prospino_gb_init")
 BE_FUNCTION(prospino_gb, void, (Farray<Fdouble,0,6>&, Finteger&, Finteger&, Finteger&, Fdouble&, Finteger&, Fstring<2>&, Finteger&, Finteger&, Finteger&, Finteger&, Farray<Fdouble,1,20>&, Farray<Fdouble,0,99>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,4,1,4>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&, Farray<Fdouble,1,2,1,2>&), "C_prospino_gb", "prospino_gb")
 
+// A function pointer we have added to Prospino to point back to our function for error handling
+BE_VARIABLE(ErrorHandler_cptr, fptr_void, "C_errorhandler_cptr", "prospino_errorhandler_cptr")
+
 // Convenience functions (registration)
 // BE_CONV_FUNCTION(run_prospino, map_str_dbl, (const SLHAstruct&, prospino_settings&), "prospino_LHC_xsec")
 // BE_CONV_FUNCTION(run_prospino, map_str_dbl, (const SLHAstruct&, const PID_pair&, const Options&), "prospino_LHC_xsec")
 BE_CONV_FUNCTION(prospino_run, map_str_dbl, (const PID_pair&, const Options&), "prospino_run")
 BE_CONV_FUNCTION(prospino_run_alloptions, map_str_dbl, (const PID_pair&, const int&, const int&, const int&, const double&, const int&, const bool&), "prospino_run_alloptions")
 BE_CONV_FUNCTION(prospino_read_slha1_input, void, (const SLHAstruct&), "prospino_read_slha1_input")
+
+
+
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"

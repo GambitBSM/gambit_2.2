@@ -183,6 +183,20 @@ BE_NAMESPACE
 END_BE_NAMESPACE
 
 
+// Callback function for error handling
+BE_NAMESPACE
+{
+  // This function will be called from Prospino. Needs C linkage, and thus also
+  // a backend-specific name to guard against name clashes.
+  extern "C"
+  void CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler)()
+  {
+    throw std::runtime_error("Prospino backend called HARD_STOP.");
+  }
+}
+END_BE_NAMESPACE
+
+
 // Backend init function
 BE_INI_FUNCTION
 {
@@ -190,10 +204,14 @@ BE_INI_FUNCTION
   static bool scan_level = true;
   if (scan_level)
   {
+    // Point the function pointer variable from Prospino to our ErrorHandler callback function
+    *ErrorHandler_cptr = & CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler);
+
     // Help Prospino find itself
     std::string prospino_dir = Backends::backendInfo().path_dir(STRINGIFY(BACKENDNAME), STRINGIFY(VERSION));
     Fstring<500> prospino_dir_in = prospino_dir.c_str();
-    prospino_gb_init(prospino_dir_in);
+    try{ prospino_gb_init(prospino_dir_in); }
+    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
   }
   scan_level = false;
 
@@ -414,9 +432,14 @@ BE_NAMESPACE
 
     // Call prospino
     Farray<Fdouble,0,6> prospino_result;
-    prospino_gb(prospino_result, ps.inlo, ps.isq_ng_in, ps.icoll_in, ps.energy_in, ps.i_error_in, 
-                ps.final_state_in, ps.ipart1_in, ps.ipart2_in, ps.isquark1_in, ps.isquark2_in,
-                unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
+
+    try
+    { 
+        prospino_gb(prospino_result, ps.inlo, ps.isq_ng_in, ps.icoll_in, ps.energy_in, ps.i_error_in, 
+                    ps.final_state_in, ps.ipart1_in, ps.ipart2_in, ps.isquark1_in, ps.isquark2_in,
+                    unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
+    }
+    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
 
     // Fill the result map with the content of prospino_result
     map_str_dbl result;

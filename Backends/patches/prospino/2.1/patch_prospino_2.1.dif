@@ -1,6 +1,6 @@
 diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
 --- prospino_2.1_original/Makefile	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Makefile	2019-12-08 21:39:48.912168692 +0100
++++ prospino_2.1_patched/Makefile	2020-03-30 19:21:30.945119939 +0200
 @@ -9,6 +9,11 @@
  #OPTION = -O0
  # these options needed for the NAG compiler
@@ -126,7 +126,7 @@ diff -rupN prospino_2.1_original/Makefile prospino_2.1_patched/Makefile
  
 diff -rupN prospino_2.1_original/Pro2_interface/Xget_pdf.f prospino_2.1_patched/Pro2_interface/Xget_pdf.f
 --- prospino_2.1_original/Pro2_interface/Xget_pdf.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_interface/Xget_pdf.f	2019-12-08 21:39:48.916168657 +0100
++++ prospino_2.1_patched/Pro2_interface/Xget_pdf.f	2020-03-30 19:21:30.949119948 +0200
 @@ -89,19 +89,23 @@ ctq5         lambda_qcd = 0.226D0
  
  c -----------------------------------------------
@@ -157,9 +157,38 @@ diff -rupN prospino_2.1_original/Pro2_interface/Xget_pdf.f prospino_2.1_patched/
        else
           print*, " INIT_PDF: inlo set wrongly ",inlo
        end if
+diff -rupN prospino_2.1_original/Pro2_interface/Xhard_stop.f prospino_2.1_patched/Pro2_interface/Xhard_stop.f
+--- prospino_2.1_original/Pro2_interface/Xhard_stop.f	2014-10-15 11:43:18.000000000 +0200
++++ prospino_2.1_patched/Pro2_interface/Xhard_stop.f	2020-03-30 19:21:30.949119948 +0200
+@@ -8,6 +8,25 @@ c
+ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+       subroutine HARD_STOP
+ 
++      ! Added by GAMBIT
++      Use, Intrinsic :: iso_c_binding
++      Use xx_GAMBIT_variables
++      Implicit None
++
++      Procedure(callback), Pointer :: errorhandler_fptr
++
++      ! Convert C to Fortran procedure pointer.
++      Call c_f_procpointer(errorhandler_cptr, errorhandler_fptr)
++
++      ! Call the errorhandler
++      Write(*,*) "DEBUG: HARD_STOP: Will call errorhandler_fptr()"
++      Call errorhandler_fptr()
++
++      ! This should never happen
++      Write(*,*) "DEBUG: Prospino has continued past the GAMBIT errorhandler call. This should never happen..."
++
++      ! GAMBIT addition end      
++
+       print*, " HARD_STOP: code stopped, fatal and serious error "
+       stop
+ 
 diff -rupN prospino_2.1_original/Pro2_subroutines/Cteq6Pdf-2008.f prospino_2.1_patched/Pro2_subroutines/Cteq6Pdf-2008.f
 --- prospino_2.1_original/Pro2_subroutines/Cteq6Pdf-2008.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_subroutines/Cteq6Pdf-2008.f	2019-12-08 21:39:48.944168407 +0100
++++ prospino_2.1_patched/Pro2_subroutines/Cteq6Pdf-2008.f	2020-03-30 19:21:30.977120007 +0200
 @@ -247,25 +247,29 @@ C        put a warning for calling extra
  C                             ********************
        End
@@ -302,7 +331,7 @@ diff -rupN prospino_2.1_original/Pro2_subroutines/Cteq6Pdf-2008.f prospino_2.1_p
            Stop
 diff -rupN prospino_2.1_original/Pro2_subroutines/XCteq61Pdf.f prospino_2.1_patched/Pro2_subroutines/XCteq61Pdf.f
 --- prospino_2.1_original/Pro2_subroutines/XCteq61Pdf.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_subroutines/XCteq61Pdf.f	2019-12-08 21:39:48.944168407 +0100
++++ prospino_2.1_patched/Pro2_subroutines/XCteq61Pdf.f	2020-03-30 19:21:30.977120007 +0200
 @@ -144,6 +144,7 @@ ctp     > / 'cteq6m', 'cteq6d', 'cteq6l'
        Data Isetmin2,Isetmax2 /200,240/
        save
@@ -313,7 +342,7 @@ diff -rupN prospino_2.1_original/Pro2_subroutines/XCteq61Pdf.f prospino_2.1_patc
           IU= NextUn()
 diff -rupN prospino_2.1_original/Pro2_subroutines/XCtq5Pdf.f prospino_2.1_patched/Pro2_subroutines/XCtq5Pdf.f
 --- prospino_2.1_original/Pro2_subroutines/XCtq5Pdf.f	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Pro2_subroutines/XCtq5Pdf.f	2019-12-08 21:39:48.948168372 +0100
++++ prospino_2.1_patched/Pro2_subroutines/XCtq5Pdf.f	2020-03-30 19:21:30.977120007 +0200
 @@ -197,10 +197,13 @@ C
  C                        ****************************
        END
@@ -350,7 +379,7 @@ diff -rupN prospino_2.1_original/Pro2_subroutines/XCtq5Pdf.f prospino_2.1_patche
           Call ReadTbl (IU)
 diff -rupN prospino_2.1_original/Xinitialize.f90 prospino_2.1_patched/Xinitialize.f90
 --- prospino_2.1_original/Xinitialize.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xinitialize.f90	2019-12-08 21:39:48.912168692 +0100
++++ prospino_2.1_patched/Xinitialize.f90	2020-03-30 19:21:30.945119939 +0200
 @@ -4,6 +4,8 @@ module xx_initialize
    use xx_public_variables
    use xx_pass_integ
@@ -380,7 +409,7 @@ diff -rupN prospino_2.1_original/Xinitialize.f90 prospino_2.1_patched/Xinitializ
      end if
  
      call TEST_SETTINGS_ITERATION(lvalid_iteration)                                         ! check everything set in main program, for now only ii
-@@ -733,6 +736,187 @@ contains
+@@ -733,6 +736,176 @@ contains
      
    end subroutine INIT_SUSY
  
@@ -402,21 +431,10 @@ diff -rupN prospino_2.1_original/Xinitialize.f90 prospino_2.1_patched/Xinitializ
 +    real(kind=double)                    :: sin2x
 +    complex(kind=double), dimension(1:4) :: sig
 +
-+    ! _Anders: Commented out this
++    ! AK: Commented out this
 +    ! unimass(1:20) = 0.0
 +    ! call GET_SPECTRUM(nin2,unimass,lowmass,bw_in,uu_in,vv_in,mst_in,msb_in,msl_in)
 +
-+    ! _Anders: Need to pass in: 
-+    ! - unimass
-+    ! - lowmass
-+    ! - uu
-+    ! - vv
-+    ! - bw
-+    ! - mst
-+    ! - msb
-+    ! - msl
-+
-+    ! _Anders: Commented out this
 +    uu(1:2,1:2)  = uu_in(1:2,1:2)      ! set the mixing matrices as defined globally in Xvital.f90
 +    vv(1:2,1:2)  = vv_in(1:2,1:2)
 +    bw(1:4,1:4)  = bw_in(1:4,1:4)
@@ -568,9 +586,23 @@ diff -rupN prospino_2.1_original/Xinitialize.f90 prospino_2.1_patched/Xinitializ
  ! ------------------------------
  ! routine to take care of critical mass choices 
  ! solve by overwriting in xx_pass_integ
+diff -rupN prospino_2.1_original/Xinteg_le.f90 prospino_2.1_patched/Xinteg_le.f90
+--- prospino_2.1_original/Xinteg_le.f90	2014-10-15 11:43:18.000000000 +0200
++++ prospino_2.1_patched/Xinteg_le.f90	2020-03-30 19:21:30.945119939 +0200
+@@ -181,7 +181,9 @@ contains
+        qf = scafac * m1
+     else
+        print*, " IFCT1: isca not set correctly ",isca
+-       stop
++       ! Added by GAMBIT:
++       call HARD_STOP
++       ! stop
+     end if
+ 
+     if (iscaling==0) then                                      ! nlo factor [always nlo alpha_s]
 diff -rupN prospino_2.1_original/Xinteg_nn.f90 prospino_2.1_patched/Xinteg_nn.f90
 --- prospino_2.1_original/Xinteg_nn.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xinteg_nn.f90	2019-12-08 21:39:48.912168692 +0100
++++ prospino_2.1_patched/Xinteg_nn.f90	2020-03-30 19:21:30.945119939 +0200
 @@ -48,10 +48,11 @@ contains
  
      m1 = mass_n(ipart1)                                        ! assign the final state masses 
@@ -587,9 +619,31 @@ diff -rupN prospino_2.1_original/Xinteg_nn.f90 prospino_2.1_patched/Xinteg_nn.f9
  
      if ( (abs(m1)+abs(m2))**2 > 0.98*sc ) then
  !tp       print*, " collider energy not large enough ",m1,m2,sqrt(sc)
+@@ -841,13 +842,14 @@ contains
+        print*, " COUPLING_NN: something wrong ",ipart1,ipart2
+     end if                                                                     ! end of NN,CC,Cn if construct
+ 
+-    if ( (abs(m1)+abs(m2)) < mz ) then
+-       print*, " COUPLINGS_NN: masses low, W/Z decays might be more suitable, decouple W/Z "
+-       v2   = 0.0
+-       a2   = 0.0
+-       v2w  = 0.0
+-       a2w  = 0.0
+-    end if
++    ! GAMBIT: Mass check disabled
++    ! if ( (abs(m1)+abs(m2)) < mz ) then
++    !    print*, " COUPLINGS_NN: masses low, W/Z decays might be more suitable, decouple W/Z "
++    !    v2   = 0.0
++    !    a2   = 0.0
++    !    v2w  = 0.0
++    !    a2w  = 0.0
++    ! end if
+ 
+     Cs(1) = (v1*v1w)**2 + s * 2.0 * real( v1*v1w*v2*v2w )/(s-mx**2)         &  ! wim's conventions 
+            + s**2*( v2**2+a2**2 )*( abs(v2w)**2+abs(a2w)**2 ) /(s-mx**2)**2    ! [v1,v2,v1w,a2 real]
 diff -rupN prospino_2.1_original/Xprospino_subroutine.f90 prospino_2.1_patched/Xprospino_subroutine.f90
 --- prospino_2.1_original/Xprospino_subroutine.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xprospino_subroutine.f90	2019-12-08 21:39:48.912168692 +0100
++++ prospino_2.1_patched/Xprospino_subroutine.f90	2020-03-30 19:21:30.945119939 +0200
 @@ -14,6 +14,8 @@ module xx_prospino_subroutine
    use xx_integral_ht
    use xx_initialize
@@ -1000,19 +1054,29 @@ diff -rupN prospino_2.1_original/Xprospino_subroutine.f90 prospino_2.1_patched/X
  
 diff -rupN prospino_2.1_original/Xvital.f90 prospino_2.1_patched/Xvital.f90
 --- prospino_2.1_original/Xvital.f90	2014-10-15 11:43:18.000000000 +0200
-+++ prospino_2.1_patched/Xvital.f90	2019-12-08 21:39:48.912168692 +0100
-@@ -69,4 +69,14 @@ module xx_public_variables   ! all kind
++++ prospino_2.1_patched/Xvital.f90	2020-03-30 19:21:30.945119939 +0200
+@@ -69,4 +69,24 @@ module xx_public_variables   ! all kind
  end module xx_public_variables
  
  
 +! ===========================================================================================================
 +module xx_GAMBIT_variables   ! Variables introduced by GAMBIT
++   use, intrinsic :: iso_c_binding
 +   use xx_kinds
 +   implicit none 
 +
-+   character(len=500) :: prospino_dir ! This is set by GAMBIT when the Prospino backend is initialized
++   Type(c_funptr) :: errorhandler_cptr  ! Set by GAMBIT when the Prospino backend is initialized
++   character(len=500) :: prospino_dir   ! Set by GAMBIT when the Prospino backend is initialized
++
++   ! Define the interface for the error handler call-back routine.
++   Abstract Interface
++     Subroutine callback ()
++       Use, Intrinsic :: iso_c_binding
++     End Subroutine callback
++   End Interface
++
++   ! Fix the symbol name for the errorhandler_cptr function pointer
++   BIND(C, NAME="C_errorhandler_cptr") :: errorhandler_cptr
 +
 +end module xx_GAMBIT_variables
-+
-+
  
