@@ -19,11 +19,10 @@ SLHA = None
 def import_slha_string(slha_string):
 
     global SLHA
-    print("Reading SLHA input...")
+    print(prefix, "Reading SLHA input...")
+    print(prefix, "DEBUG: SLHA content:\n", slha_string)
     import pyslha
-    print(slha_string)
     SLHA = pyslha.readSLHA(slha_string)
-    print("...done")
 
 
 #
@@ -38,9 +37,14 @@ def set_parameters(params):
 #
 # Return the cross-section for a given process, identified by a PID pair
 #
-def get_xsection(proc, xsec_lo):
+def get_xsection(proc, xsec_lo_fb):
+
+    print()
+    print(prefix, "DEBUG: ====== Beginning of get_xsection ======  ", flush=True)
+    print(prefix, "DEBUG: proc = ", proc)
+    print(prefix, "DEBUG: xsec_lo_fb = ", xsec_lo_fb)
+
     energy = 13000
-    xsec_lo = 1.0
 
     pids_to_prosids = {
         # nn
@@ -90,17 +94,17 @@ def get_xsection(proc, xsec_lo):
     proskey = pids_to_prosids[pidkey]
     key = "{}_{}".format(energy, proskey)
     try:
+        print(prefix, "DEBUG: proskey =", proskey)
         if proskey not in KPREDS:
-            print("Load process:", proc)
             KPREDS[key] = salami.KPred(energy, proskey)
     except:
-        print("Unknown process", proc, "-- using LO cross-section")
-        KPREDS[key] = salami.KPredDummy(1.0)
+        print(prefix, "Unknown process", proc, "-- using LO cross-section")
+        KPREDS[key] = salami.KPredConst(1.0)
 
-    # Evaluate cross-sections and errors (factor of 1000 for Prospino pb -> Gambit fb conversion)
+    # Get cross-sections and errors
     kpred = KPREDS[key]
     result_dict = {}
-    result_dict["central"] = 1000*kpred.predict_xsec(SLHA, xsec_lo)
+    result_dict["central"] = kpred.predict_xsec(SLHA, xsec_lo_fb)
     # result_dict["regdown_rel"] = 0.0
     # result_dict["regup_rel"] = 0.0
     # result_dict["scaledown_rel"] = 0.0
@@ -109,11 +113,12 @@ def get_xsection(proc, xsec_lo):
     # result_dict["pdfup_rel"] = 0.0
     # result_dict["alphasdown_rel"] = 0.0
     # result_dict["alphasup_rel"] = 0.0
-    result_dict["tot_err_down"] = 0.0
-    result_dict["tot_err_up"] = 0.0
+    result_dict["tot_err_down"] = 0.05 * result_dict["central"]  # <-- Fixed 5% error for now
+    result_dict["tot_err_up"] = 0.05 * result_dict["central"]  # <-- Fixed 5% error for now
+
+    print("DEBUG: result: ", result_dict, flush=True)
 
     return result_dict
-
 
 
 # # ================ TESTING ================
