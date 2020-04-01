@@ -39,12 +39,13 @@
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
+#include "gambit/Utils/statistics.hpp" 
 
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
 #include "gambit/ColliderBit/multimin.h"
 
-// #define COLLIDERBIT_DEBUG
+//#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -79,13 +80,11 @@ namespace Gambit
           // Save SR numbers and absolute uncertainties
           const SignalRegionData srData = adata[SR];
           const str key = adata.analysis_name + "__" + srData.sr_label + "__i" + std::to_string(SR) + "__signal";
-          result[key] = srData.n_signal_at_lumi;
-          const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-          const double abs_uncertainty_s_sys = srData.signal_sys;
-          const double combined_uncertainty = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
-          result[key + "_uncert"] = combined_uncertainty;
+          result[key] = srData.n_sig_scaled;
+          const double n_sig_scaled_err = srData.calc_n_sig_scaled_err();
+          result[key + "_uncert"] = n_sig_scaled_err;
 
-          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_signal_at_lumi << "+-" << combined_uncertainty << ", ";
+          summary_line << srData.sr_label + "__i" + std::to_string(SR) << ":" << srData.n_sig_scaled << "+-" << n_sig_scaled_err << ", ";
         }
       }
       logger() << LogTags::debug << summary_line.str() << EOM;
@@ -114,20 +113,23 @@ namespace Gambit
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
 
       // Calculate each SR's Poisson likelihood and add to composite likelihood calculation
-      double loglike_tot = 0;
-      for (int j = 0; j < unit_nuisances.size(); ++j) {
+      double loglike_tot = n * log(1/sqrt(2*M_PI)); //< could also drop this, but it costs ~nothing
+      for (size_t j = 0; j < n; ++j) {
+
         // First the multivariate Gaussian bit (j = nuisance)
-        const double pnorm_j = -pow(unit_nuisances(j), 2)/2. + log(1/sqrt(2*M_PI));
+        const double pnorm_j = -pow(unit_nuisances(j), 2)/2.;
         loglike_tot += pnorm_j;
+
         // Then the Poisson bit (j = SR)
         /// @note We've dropped the log(n_obs!) terms, since they're expensive and cancel in computing DLL
         const double lambda_j = std::max(n_preds(j), 1e-3); //< manually avoid <= 0 rates
-        const double logfact_n_obs = 0; // gsl_sf_lngamma(n_obs(j) + 1); //< skipping log(n_obs!) computation
+        const double logfact_n_obs = 0; // gsl_sf_lngamma(n_obss(j) + 1); //< skipping log(n_obs!) computation
         const double loglike_j = n_obss(j)*log(lambda_j) - lambda_j - logfact_n_obs;
+
         loglike_tot += loglike_j;
       }
 
-      // Output via argument (invert to return -LL for minimisation)
+      // Output via argument (times -1 to return -LL for minimisation)
       *fval = -loglike_tot;
     }
 
@@ -145,18 +147,18 @@ namespace Gambit
       Eigen::Map<const Eigen::ArrayXd> n_obss(&fixedparamspack_dbl[n], n);
       Eigen::Map<const Eigen::ArrayXd> sqrtevals(&fixedparamspack_dbl[2*n], n);
       Eigen::Map<const Eigen::MatrixXd> evecs(&fixedparamspack_dbl[3*n], n, n);
-      Eigen::Map<const Eigen::MatrixXd> invcorr(&fixedparamspack_dbl[3*n + n*n], n, n);
 
       // Rotate rate deltas into the SR basis and shift by SR mean rates
       const Eigen::VectorXd n_preds = n_preds_nominal + evecs*(sqrtevals*unit_nuisances).matrix();
-      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
 
       // Compute gradient elements
       for (int j = 0; j < unit_nuisances.size(); ++j) {
         double llgrad = 0;
-        llgrad += (n_obss(j)/n_preds(j) - 1) * err_n_preds(j); ///< @todo CHECK: SR basis vs eigenbasis
-        llgrad -= invcorr.col(j).dot(unit_nuisances.matrix());
-        // Output via argument (invert to return -dLL for minimisation)
+        for (int k = 0; k < unit_nuisances.size(); ++k) {
+          llgrad += (n_obss(k)/n_preds(k) - 1) * evecs(k,j);
+        }
+        llgrad = llgrad * sqrtevals(j) - unit_nuisances(j);
+        // Output via argument (times -1 to return -dLL for minimisation)
         fgrad[j] = -llgrad;
       }
     }
@@ -173,8 +175,7 @@ namespace Gambit
     std::vector<double> _gsl_mkpackedarray(const Eigen::ArrayXd& n_preds,
                                            const Eigen::ArrayXd& n_obss,
                                            const Eigen::ArrayXd& sqrtevals,
-                                           const Eigen::MatrixXd& evecs,
-                                           const Eigen::MatrixXd& invcorr) {
+                                           const Eigen::MatrixXd& evecs) {
       const size_t nSR = n_obss.size();
       std::vector<double> fixeds(3*nSR + 2*nSR*nSR, 0.0);
       for (size_t i = 0; i < nSR; ++i) {
@@ -182,10 +183,10 @@ namespace Gambit
         fixeds[nSR+i] = n_obss(i);
         fixeds[2*nSR+i] = sqrtevals(i);
         for (size_t j = 0; j < nSR; ++j) {
-          fixeds[3*nSR+i*nSR+j] = evecs(i,j); ///< @todo Double-check ordering... not that it matters
-          fixeds[3*nSR+nSR*nSR+i*nSR+j] = invcorr(i,j); ///< @todo Double-check ordering... not that it matters
+          fixeds[3*nSR+i*nSR+j] = evecs(j,i);
         }
       }
+
       return fixeds;
     }
 
@@ -196,40 +197,35 @@ namespace Gambit
     double profile_loglike_cov(const Eigen::ArrayXd& n_preds,
                                const Eigen::ArrayXd& n_obss,
                                const Eigen::ArrayXd& sqrtevals,
-                               const Eigen::MatrixXd& evecs,
-                               const Eigen::MatrixXd& invcorr) {
+                               const Eigen::MatrixXd& evecs) {
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
 
-      // @todo Remove this when reinstating the block below
+      // Set initial guess for nuisances to zero
       std::vector<double> nuisances(nSR, 0.0);
 
-      // @todo Comment out this until we've figured out a memory issue...
-      /*
-      const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
-
-      // Set nuisances to an informed starting position
-      std::vector<double> nuisances(nSR, 0.0);
-      for (size_t j = 0; j < nSR; ++j) {
-        // Calculate the max-L starting position, ignoring correlations
-        const double obs = n_obss(j);
-        const double rate = n_preds(j);
-        const double delta = err_n_preds(j);
-        const double a = delta;
-        const double b = rate + delta*delta;
-        const double c = delta * (rate - obs);
-        const double d = b*b - 4*a*c;
-        const double sqrtd = (d < 0) ? 0 : sqrt(d);
-        if (sqrtd == 0) {
-          nuisances[j] = -b / (2*a);
-        } else {
-          const double th0_a = (-b + sqrtd) / (2*a);
-          const double th0_b = (-b - sqrtd) / (2*a);
-          nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
-        }
-      }
-      */
+      // // Set nuisances to an informed starting position
+      // const Eigen::ArrayXd& err_n_preds = (evecs*sqrtevals.matrix()).array(); //< @todo CHECK
+      // std::vector<double> nuisances(nSR, 0.0);
+      // for (size_t j = 0; j < nSR; ++j) {
+      //   // Calculate the max-L starting position, ignoring correlations
+      //   const double obs = n_obss(j);
+      //   const double rate = n_preds(j);
+      //   const double delta = err_n_preds(j);
+      //   const double a = delta;
+      //   const double b = rate + delta*delta;
+      //   const double c = delta * (rate - obs);
+      //   const double d = b*b - 4*a*c;
+      //   const double sqrtd = (d < 0) ? 0 : sqrt(d);
+      //   if (sqrtd == 0) {
+      //     nuisances[j] = -b / (2*a);
+      //   } else {
+      //     const double th0_a = (-b + sqrtd) / (2*a);
+      //     const double th0_b = (-b - sqrtd) / (2*a);
+      //     nuisances[j] = (fabs(th0_a) < fabs(th0_b)) ? th0_a : th0_b;
+      //   }
+      // }
 
 
       // Optimiser parameters
@@ -254,7 +250,7 @@ namespace Gambit
       static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
-      std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs, invcorr);
+      std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs);
 
       // Pass to the minimiser
       double minusbestll = 999;
@@ -273,8 +269,6 @@ namespace Gambit
     double marg_loglike_nulike1sr(const Eigen::ArrayXd& n_preds,
                                   const Eigen::ArrayXd& n_obss,
                                   const Eigen::ArrayXd& sqrtevals) {
-      //const Eigen::MatrixXd& /* evecs */,
-      //                          const Eigen::MatrixXd& /* invcorr */) {
       assert(n_preds.size() == 1);
       assert(n_obss.size() == 1);
       assert(sqrtevals.size() == 1);
@@ -291,8 +285,7 @@ namespace Gambit
     double marg_loglike_cov(const Eigen::ArrayXd& n_preds,
                             const Eigen::ArrayXd& n_obss,
                             const Eigen::ArrayXd& sqrtevals,
-                            const Eigen::MatrixXd& evecs,
-                            const Eigen::MatrixXd& /* invcorr */) {
+                            const Eigen::MatrixXd& evecs) {
 
       // Number of signal regions
       const size_t nSR = n_obss.size();
@@ -442,24 +435,24 @@ namespace Gambit
         const bool has_covar = adata.srcov.rows() > 0;
 
         #ifdef COLLIDERBIT_DEBUG
-        std::streamsize stream_precision = cout.precision();  // get current precision
-        cout.precision(2);  // set precision
-        cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
-        for (size_t SR = 0; SR < adata.size(); ++SR)
-        {
-          const SignalRegionData& srData = adata[SR];
-          cout << std::fixed << DEBUG_PREFIX
-                                 << "calc_LHC_LogLikes: " << ananame
-                                 << ", " << srData.sr_label
-                                 << ",  n_b = " << srData.n_background << " +/- " << srData.background_sys
-                                 << ",  n_obs = " << srData.n_observed
-                                 << ",  excess = " << srData.n_observed - srData.n_background << " +/- " << srData.background_sys
-                                 << ",  n_s = " << srData.n_signal_at_lumi
-                                 << ",  (excess-n_s) = " << (srData.n_observed-srData.n_background) - srData.n_signal_at_lumi << " +/- " << srData.background_sys
-                                 << ",  n_s_MC = " << srData.n_signal
-                                 << endl;
-        }
-        cout.precision(stream_precision); // restore previous precision
+          std::streamsize stream_precision = cout.precision();  // get current precision
+          cout.precision(2);  // set precision
+          cout << DEBUG_PREFIX << "calc_LHC_LogLikes: " << "Will print content of " << ananame << " signal regions:" << endl;
+          for (size_t SR = 0; SR < adata.size(); ++SR)
+          {
+            const SignalRegionData& srData = adata[SR];
+            cout << std::fixed << DEBUG_PREFIX
+                                   << "calc_LHC_LogLikes: " << ananame
+                                   << ", " << srData.sr_label
+                                   << ",  n_b = " << srData.n_bkg << " +/- " << srData.n_bkg_err
+                                   << ",  n_obs = " << srData.n_obs
+                                   << ",  excess = " << srData.n_obs - srData.n_bkg << " +/- " << srData.n_bkg_err
+                                   << ",  n_s = " << srData.n_sig_scaled
+                                   << ",  (excess-n_s) = " << (srData.n_obs-srData.n_bkg) - srData.n_sig_scaled << " +/- " << srData.n_bkg_err
+                                   << ",  n_s_MC = " << srData.n_sig_MC
+                                   << endl;
+          }
+          cout.precision(stream_precision); // restore previous precision
         #endif
 
 
@@ -506,7 +499,7 @@ namespace Gambit
         bool all_zero_signal = true;
         for (size_t SR = 0; SR < nSR; ++SR)
         {
-          if (adata[SR].n_signal != 0)
+          if (adata[SR].n_sig_MC != 0)
           {
             all_zero_signal = false;
             break;
@@ -560,7 +553,7 @@ namespace Gambit
             const SignalRegionData& srData = adata[SR];
 
             // Actual observed number of events
-            n_obs(SR) = srData.n_observed;
+            n_obs(SR) = srData.n_obs;
 
             // Log factorial of observed number of events.
             // Currently use the ln(Gamma(x)) function gsl_sf_lngamma from GSL. (Need continuous function.)
@@ -568,13 +561,11 @@ namespace Gambit
             //logfact_n_obs(SR) = gsl_sf_lngamma(n_obs(SR) + 1.);
 
             // A contribution to the predicted number of events that is not known exactly
-            n_pred_b(SR) = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
-            n_pred_sb(SR) = srData.n_signal_at_lumi + srData.n_background;
+            n_pred_b(SR) = std::max(srData.n_bkg, 0.001); // <-- Avoid trouble with b==0
+            n_pred_sb(SR) = srData.n_sig_scaled + srData.n_bkg;
 
             // Absolute errors for n_predicted_uncertain_*
-            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-            const double abs_uncertainty_s_sys = srData.signal_sys;
-            abs_unc_s(SR) = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys);
+            abs_unc_s(SR) = srData.calc_n_sig_scaled_err();
           }
 
           // Diagonalise the background-only covariance matrix, extracting the correlation and rotation matrices
@@ -587,7 +578,6 @@ namespace Gambit
             srcorr_b.row(SR) /= diagsd;
             srcorr_b.col(SR) /= diagsd;
           }
-          const Eigen::MatrixXd srinvcorr_b = srcorr_b.inverse();
           const Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eig_b(adata.srcov);
           const Eigen::ArrayXd Eb = eig_b.eigenvalues();
           const Eigen::ArrayXd sqrtEb = Eb.sqrt();
@@ -603,7 +593,6 @@ namespace Gambit
             srcorr_sb.row(SR) /= diagsd;
             srcorr_sb.col(SR) /= diagsd;
           }
-          const Eigen::MatrixXd srinvcorr_sb = srcorr_sb.inverse();
           const Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eig_sb(srcov_sb);
           const Eigen::ArrayXd Esb = eig_sb.eigenvalues();
           const Eigen::ArrayXd sqrtEsb = Esb.sqrt();
@@ -614,8 +603,8 @@ namespace Gambit
 
           // Compute the single, correlated analysis-level DLL as the difference of s+b and b (partial) LLs
           /// @todo Only compute this once per run
-          const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb, srinvcorr_b);
-          const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb, srinvcorr_b);
+          const double ll_b = marg_prof_fn(n_pred_b, n_obs, sqrtEb, Vb);
+          const double ll_sb = marg_prof_fn(n_pred_sb, n_obs, sqrtEsb, Vsb);
           const double dll = ll_sb - ll_b;
 
           // Store result
@@ -648,8 +637,8 @@ namespace Gambit
           {
             const SignalRegionData& srData = adata[SR];
 
-            // Shortcut: If n_signal == 0, we know the delta log-likelihood is 0.
-            if(srData.n_signal == 0)
+            // Shortcut: If n_sig_MC == 0, we know the delta log-likelihood is 0.
+            if(srData.n_sig_MC == 0)
             {
               // Store (obs) result for this SR
               result[ananame].sr_indices[srData.sr_label] = SR;
@@ -669,18 +658,17 @@ namespace Gambit
             }
 
             // A contribution to the predicted number of events that is not known exactly
-            const double n_pred_b = std::max(srData.n_background, 0.001); // <-- Avoid trouble with b==0
-            const double n_pred_sb = n_pred_b + srData.n_signal_at_lumi;
+            const double n_pred_b = std::max(srData.n_bkg, 0.001); // <-- Avoid trouble with b==0
+            const double n_pred_sb = n_pred_b + srData.n_sig_scaled;
 
             // Actual observed number of events and predicted background, as integers cf. Poisson stats
-            const double n_obs = round(srData.n_observed);
+            const double n_obs = round(srData.n_obs);
             const double n_pred_b_int = round(n_pred_b);
 
             // Absolute errors for n_predicted_uncertain_*
-            const double abs_uncertainty_s_stat = (srData.n_signal == 0 ? 0 : sqrt(srData.n_signal) * (srData.n_signal_at_lumi/srData.n_signal));
-            const double abs_uncertainty_s_sys = srData.signal_sys;
-            const double abs_uncertainty_b = std::max(srData.background_sys, 0.001); // <-- Avoid trouble with b_err==0
-            const double abs_uncertainty_sb = HEPUtils::add_quad(abs_uncertainty_s_stat, abs_uncertainty_s_sys, abs_uncertainty_b);
+            const double abs_uncertainty_b = std::max(srData.n_bkg_err, 0.001); // <-- Avoid trouble with b_err==0
+            const double abs_uncertainty_sb = std::max(srData.calc_n_sigbkg_err(), 0.001); // <-- Avoid trouble with sb_err==0
+
 
             // Construct dummy 1-element Eigen objects for passing to the general likelihood calculator
             /// @todo Use newer (?) one-step Eigen constructors for (const) single-element arrays
@@ -696,11 +684,11 @@ namespace Gambit
             // Compute this SR's DLLs as the differences of s+b and b (partial) LLs
             /// @todo Or compute all the exp DLLs first, then only the best-expected SR's obs DLL?
             /// @todo Only compute this once per run
-            const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, dummy, dummy);
+            const double ll_b_exp = marg_prof_fn(n_preds_b, n_preds_b_int, sqrtevals_b, dummy);
             /// @todo Only compute this once per run
-            const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, dummy, dummy);
-            const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, dummy, dummy);
-            const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, dummy, dummy);
+            const double ll_b_obs = marg_prof_fn(n_preds_b, n_obss, sqrtevals_b, dummy);
+            const double ll_sb_exp = marg_prof_fn(n_preds_sb, n_preds_b_int, sqrtevals_sb, dummy);
+            const double ll_sb_obs = marg_prof_fn(n_preds_sb, n_obss, sqrtevals_sb, dummy);
             const double dll_exp = ll_sb_exp - ll_b_exp;
             const double dll_obs = ll_sb_obs - ll_b_obs;
 
@@ -710,25 +698,25 @@ namespace Gambit
               std::stringstream msg;
               msg << "Computation of ll_b_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_b_obs))
             {
               std::stringstream msg;
               msg << "Computation of ll_b_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_sb_exp))
             {
               std::stringstream msg;
               msg << "Computation of ll_sb_exp for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
             if (Utils::isnan(ll_sb_obs))
             {
               std::stringstream msg;
               msg << "Computation of ll_sb_obs for signal region " << srData.sr_label << " in analysis " << ananame << " returned NaN" << endl;
               invalid_point().raise(msg.str());
-            }          
+            }
 
             // Update the running best-expected-exclusion detail
             if (dll_exp < bestexp_dll_exp || SR == 0)
@@ -786,16 +774,16 @@ namespace Gambit
             {
               const SignalRegionData& srData = adata[SR];
               msg << srData.sr_label
-                  << ",  n_background = " << srData.n_background
-                  << ",  background_sys = " << srData.background_sys
-                  << ",  n_observed = " << srData.n_observed
-                  << ",  n_signal_at_lumi = " << srData.n_signal_at_lumi
-                  << ",  n_signal = " << srData.n_signal
-                  << ",  signal_sys = " << srData.signal_sys
+                  << ",  n_bkg = " << srData.n_bkg
+                  << ",  n_bkg_err = " << srData.n_bkg_err
+                  << ",  n_obs = " << srData.n_obs
+                  << ",  n_sig_scaled = " << srData.n_sig_scaled
+                  << ",  n_sig_MC = " << srData.n_sig_MC
+                  << ",  n_sig_MC_sys = " << srData.n_sig_MC_sys
                   << endl;
             }
             invalid_point().raise(msg.str());
-          }          
+          }
         }
 
       } // end analysis loop
@@ -901,6 +889,15 @@ namespace Gambit
       using namespace Pipes::calc_combined_LHC_LogLike;
       result = 0.0;
 
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+
+      std::stringstream summary_line_combined_loglike; 
+      summary_line_combined_loglike << "calc_combined_LHC_LogLike: combined LogLike: ";
+      std::stringstream summary_line_skipped_analyses;
+      summary_line_skipped_analyses << "calc_combined_LHC_LogLike: skipped analyses: ";
+      std::stringstream summary_line_included_analyses;
+      summary_line_included_analyses << "calc_combined_LHC_LogLike: included analyses: ";
+
       // Read analysis names from the yaml file
       std::vector<str> default_skip_analyses;  // The default is empty lists of analyses to skip
       static const std::vector<str> skip_analyses = runOptions->getValueOrDef<std::vector<str> >(default_skip_analyses, "skip_analyses");
@@ -927,6 +924,13 @@ namespace Gambit
             cout.precision(5);
             cout << DEBUG_PREFIX << "calc_combined_LHC_LogLike: Leaving out analysis " << analysis_name << " with LogL = " << analysis_loglike << endl;
           #endif
+
+          // Add to log summary
+          if(write_summary_to_log)
+          {
+            summary_line_skipped_analyses << analysis_name << "__LogLike:" << analysis_loglike << ", ";
+          }
+
           continue;
         }
 
@@ -940,6 +944,12 @@ namespace Gambit
         else
         {
           result += analysis_loglike;
+        }
+
+        // Add to log summary
+        if(write_summary_to_log)
+        {
+          summary_line_included_analyses << analysis_name << "__LogLike:" << analysis_loglike << ", ";
         }
 
         #ifdef COLLIDERBIT_DEBUG
@@ -959,11 +969,43 @@ namespace Gambit
         result = std::min(result, 0.0);
       }
 
-      std::stringstream summary_line;
-      summary_line << "LHC combined loglike:" << result;
-      logger() << LogTags::debug << summary_line.str() << EOM;
+      // Write log summary
+      if(write_summary_to_log)
+      {
+        summary_line_combined_loglike << result;
+
+        logger() << summary_line_combined_loglike.str() << EOM;
+        logger() << summary_line_included_analyses.str() << EOM;
+        logger() << summary_line_skipped_analyses.str() << EOM;
+      }  
+    }
+
+
+    /// A dummy log-likelihood that helps the scanner track a given 
+    /// range of collider log-likelihood values
+    void calc_LHC_LogLike_scan_guide(double& result)
+    {
+      using namespace Pipes::calc_LHC_LogLike_scan_guide;
+      result = 0.0;
+
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+      static const double target_LHC_loglike = runOptions->getValue<double>("target_LHC_loglike");
+      static const double target_width = runOptions->getValue<double>("width_LHC_loglike");
+
+      // Get the combined LHC loglike
+      double LHC_loglike = *Dep::LHC_Combined_LogLike;
+
+      // Calculate the dummy scan guide loglike using a gaussian centered on the target LHC loglike value
+      result = Stats::gaussian_loglikelihood(LHC_loglike, target_LHC_loglike, 0.0, target_width, false);
+
+      // Write log summary
+      if(write_summary_to_log)
+      {
+        std::stringstream summary_line; 
+        summary_line << "LHC_LogLike_scan_guide: " << result;
+        logger() << summary_line.str() << EOM;
+      }  
     }
 
   }
-
 }

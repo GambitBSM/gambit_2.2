@@ -67,7 +67,7 @@ namespace Gambit
     }
 
 
-    // Read a single SLHA file and update some entries for each scan point 
+    // Read a single SLHA file and update some entries for each scan point
     // (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
     void getAndReplaceSLHAContent(pair_str_SLHAstruct& result)
     {
@@ -79,9 +79,9 @@ namespace Gambit
       static SLHAstruct file_content;
 
       static YAML::Node keysNode;
-      static Options keysOptions; 
+      static Options keysOptions;
       static std::map<str,str> SLHAkey_to_parname;
-      
+
       // Do the variable initialization only once
       static bool first = true;
       if (first)
@@ -103,7 +103,7 @@ namespace Gambit
         for (const str& parname : keysOptions.getNames())
         {
           std::vector<str> slhakeys = keysOptions.getValue<std::vector<str> >(parname);
-          for (const str& slhakey : slhakeys) 
+          for (const str& slhakey : slhakeys)
           {
             SLHAkey_to_parname[slhakey] = parname;
           }
@@ -127,7 +127,7 @@ namespace Gambit
       // Save result as a pair_str_SLHAstruct
       result = std::make_pair(filename_mod_ss.str(), new_content);
 
-      /// @todo Add option to save the new SLHA content to file 
+      /// @todo Add option to save the new SLHA content to file
 
       counter++;
     }
@@ -182,7 +182,7 @@ namespace Gambit
           if (use_missing_element_value)
           {
             logger() << errmsg_ss.str() << EOM;
-            result[key_str] = missing_element_value;            
+            result[key_str] = missing_element_value;
           }
           else
           {
@@ -193,16 +193,16 @@ namespace Gambit
     }
 
 
-    // Extract an SLHAstruct with the specturm, either from the MSSM_spectrum 
+    // Extract an SLHAstruct with the specturm, either from the MSSM_spectrum
     // capability (for MSSM models), or simply from the SLHAFileNameAndContent
     // capability (for CB_SLHA_file_model, CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
 
-    // @todo Should we perform some kind of SLHA1 vs SLHA2 check when used with the 
-    //       CB_SLHA_* models below? For these models we currently just trust the user 
+    // @todo Should we perform some kind of SLHA1 vs SLHA2 check when used with the
+    //       CB_SLHA_* models below? For these models we currently just trust the user
     //       to supply SLHA info in the appropriate format.
 
     // @todo Should we unify these two functions into a single module function that just
-    //       provides a std::function instance that can be called with an 
+    //       provides a std::function instance that can be called with an
     //       int argument = 1 or 2 and returns the appropriate SLHA1 or SLHA2 struct?
 
     // SLHA1
@@ -210,24 +210,39 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA1Spectrum;
 
-      if(ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT"))
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+      
+      if(*Loop::iteration == BASE_INIT)
       {
-        result = Dep::MSSM_spectrum->getSLHAea(1);
-      }
-      else if (ModelInUse("CB_SLHA_file_model") || 
-               ModelInUse("CB_SLHA_simpmod_scan_model") || 
-               ModelInUse("CB_SLHA_scan_model"))
-      {
-        result = Dep::SLHAFileNameAndContent->second;
-      }
-      else
-      {
-        // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
-        // without also changing this function
-        std::stringstream errmsg_ss;
-        errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... " 
-                  << "Please expand the function getSLHA1Spectrum if you want to use it with for new models.!";
-        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        result.clear();
+
+        if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT")
+            || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
+        {
+          result = Dep::MSSM_spectrum->getSLHAea(1);
+        }
+        else if (ModelInUse("CB_SLHA_file_model") ||
+                 ModelInUse("CB_SLHA_simpmod_scan_model") ||
+                 ModelInUse("CB_SLHA_scan_model"))
+        {
+          result = Dep::SLHAFileNameAndContent->second;
+        }
+        else
+        {
+          // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
+          // without also changing this function
+          std::stringstream errmsg_ss;
+          errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
+                    << "Please expand the function getSLHA1Spectrum if you want to use it with for new models.!";
+          ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        }
+
+        if(write_summary_to_log)
+        {
+          std::stringstream SLHA_log_output;
+          SLHA_log_output << "getSLHA1Spectrum:\n" << result.str() << "\n";
+          logger() << SLHA_log_output.str() << EOM;
+        }
       }
     }
 
@@ -236,26 +251,71 @@ namespace Gambit
     {
       using namespace Pipes::getSLHA2Spectrum;
 
-      if(ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT"))
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
+
+      if(*Loop::iteration == BASE_INIT)
       {
-        result = Dep::MSSM_spectrum->getSLHAea(2);
-      }
-      else if (ModelInUse("CB_SLHA_file_model") || 
-               ModelInUse("CB_SLHA_simpmod_scan_model") || 
-               ModelInUse("CB_SLHA_scan_model"))
-      {
-        result = Dep::SLHAFileNameAndContent->second;
-      }
-      else
-      {
-        // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
-        // without also changing this function
-        std::stringstream errmsg_ss;
-        errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... " 
-                  << "Please expand the function getSLHA2Spectrum if you want to use it with for new models.!";
-        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        result.clear();
+
+        if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT") 
+            || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
+        {
+          result = Dep::MSSM_spectrum->getSLHAea(2);
+        }
+        else if (ModelInUse("CB_SLHA_file_model") ||
+                 ModelInUse("CB_SLHA_simpmod_scan_model") ||
+                 ModelInUse("CB_SLHA_scan_model"))
+        {
+          result = Dep::SLHAFileNameAndContent->second;
+        }
+        else
+        {
+          // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
+          // without also changing this function
+          std::stringstream errmsg_ss;
+          errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
+                    << "Please expand the function getSLHA2Spectrum if you want to use it with for new models.!";
+          ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        }
+
+        if(write_summary_to_log)
+        {
+          std::stringstream SLHA_log_output;
+          SLHA_log_output << "getSLHA2Spectrum:\n" << result.str() << "\n";
+          logger() << SLHA_log_output.str() << EOM;
+        }
       }
     }
+
+
+    // Advanced mass-cuts to aid SUSY scans
+    void calc_susy_spectrum_scan_guide(double& result)
+    {
+      using namespace Pipes::calc_susy_spectrum_scan_guide;
+      bool discard_point = false;
+
+      result = 0.0;
+
+      // Get masses
+      mass_es_pseudonyms psn = *(Dep::SLHA_pseudonyms);
+      const Spectrum& spec = *Dep::MSSM_spectrum;
+
+      const double m_N1_signed = spec.get(Par::Pole_Mass,"~chi0_1");
+      const double m_N1 = abs(m_N1_signed);
+      // const double m_C1_signed = spec.get(Par::Pole_Mass,"~chi+_1");
+      // const double m_C1 = abs(m_C1_signed);
+      const double m_st1 = spec.get(Par::Pole_Mass, psn.ist1);
+
+      // Define cuts
+      if (m_N1 < 250. && m_st1 < 750.)  discard_point = true;
+      if (m_N1 > 600.)  discard_point = true;
+      if (m_st1 > 1100.)  discard_point = true;
+
+      // Discard point?
+      if (discard_point) invalid_point().raise("Point discarded by susy_spectrum_scan_guide.");
+
+    }
+
 
   }
 }

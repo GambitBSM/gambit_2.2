@@ -21,7 +21,7 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "gambit/ColliderBit/PID_pair.hpp"
+#include "gambit/Utils/PID_pair.hpp"
 
 
 #pragma once

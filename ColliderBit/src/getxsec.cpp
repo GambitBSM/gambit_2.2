@@ -14,7 +14,7 @@
 ///
 ///  \author Anders Kvellestad
 ///          (a.kvellestad@imperial.ac.uk)
-///  \date 2019 Sep
+///  \date 2019 Sep, Oct, Nov
 ///
 ///  *********************************************
 
@@ -76,13 +76,10 @@ namespace Gambit
     // ======= Module functions =======
 
 
-    void getPIDPairCrossSectionsMap_xsecBE_example(map_PID_pair_PID_pair_xsec& result)
+    /// Get a cross-section from the xsecBE backend
+    void getPIDPairCrossSectionsMap_xsecBE(map_PID_pair_PID_pair_xsec& result)
     {
-      using namespace Pipes::getPIDPairCrossSectionsMap_xsecBE_example;
-
-      // Get type converter for the SLHAstruct
-      using SLHAea::to;
-
+      using namespace Pipes::getPIDPairCrossSectionsMap_xsecBE;
 
       if(*Loop::iteration == COLLIDER_INIT)
       {
@@ -93,66 +90,25 @@ namespace Gambit
       {
         // Create dicts to pass parameters and flags to the backend
         pybind11::dict xsecBE_pars;
-        pybind11::dict xsecBE_flags;
+        // pybind11::dict xsecBE_flags;
 
-        // First set the flags
-        xsecBE_flags["alphas_err"] = false;
-        xsecBE_flags["scale_err"] = true;
-        xsecBE_flags["pdf_err"] = true;
-        xsecBE_flags["regression_err"] = true;
-        BEreq::xsecBE_example_set_flags(xsecBE_flags);
+        // // First set the flags
+        // xsecBE_flags["alphas_err"] = true;
+        // xsecBE_flags["scale_err"] = true;
+        // xsecBE_flags["pdf_err"] = true;
+        // xsecBE_flags["regression_err"] = true;
+        // BEreq::xsecBE_set_flags(xsecBE_flags);
 
         // Then set the neceassary parameters and spectrum info:
+        // - Energy
+        // @todo This can't be hard-coded... Need to match it to collider energy!
+        xsecBE_pars["energy"] = 13000;
+        BEreq::xsecBE_set_parameters(xsecBE_pars);
 
-        // - Values from the GAMBIT model parameters
-        // xsecBE_pars["M1"] = *Param.at("M1");
-        // xsecBE_pars["M2"] = *Param.at("M2");
-        // xsecBE_pars["mu"] = *Param.at("mu");
-        // xsecBE_pars["TanBeta"] = *Param.at("TanBeta");
-
-        // - Values from the SLHA spectrum
+        // - Import the SLHA1 spectrum
         const SLHAstruct& slha_spec = *Dep::SLHA1Spectrum;
-
-        xsecBE_pars["MASS_1000021"] = to<double>(slha_spec.at("MASS").at(1000021).at(1));
-
-        // (Remember that the EWino masses can be signed!)
-        xsecBE_pars["MASS_1000022"] = fabs( to<double>(slha_spec.at("MASS").at(1000022).at(1)) );
-        xsecBE_pars["MASS_1000023"] = fabs( to<double>(slha_spec.at("MASS").at(1000023).at(1)) );
-        xsecBE_pars["MASS_1000025"] = fabs( to<double>(slha_spec.at("MASS").at(1000025).at(1)) );
-        xsecBE_pars["MASS_1000035"] = fabs( to<double>(slha_spec.at("MASS").at(1000035).at(1)) );
-
-        xsecBE_pars["MASS_1000001"] = to<double>(slha_spec.at("MASS").at(1000001).at(1));
-        xsecBE_pars["MASS_1000002"] = to<double>(slha_spec.at("MASS").at(1000002).at(1));
-        xsecBE_pars["MASS_1000003"] = to<double>(slha_spec.at("MASS").at(1000003).at(1));
-        xsecBE_pars["MASS_1000004"] = to<double>(slha_spec.at("MASS").at(1000004).at(1));
-        xsecBE_pars["MASS_1000005"] = to<double>(slha_spec.at("MASS").at(1000005).at(1));
-        xsecBE_pars["MASS_1000006"] = to<double>(slha_spec.at("MASS").at(1000006).at(1));
-        xsecBE_pars["MASS_2000001"] = to<double>(slha_spec.at("MASS").at(2000001).at(1));
-        xsecBE_pars["MASS_2000002"] = to<double>(slha_spec.at("MASS").at(2000002).at(1));
-        xsecBE_pars["MASS_2000003"] = to<double>(slha_spec.at("MASS").at(2000003).at(1));
-        xsecBE_pars["MASS_2000004"] = to<double>(slha_spec.at("MASS").at(2000004).at(1));
-        xsecBE_pars["MASS_2000005"] = to<double>(slha_spec.at("MASS").at(2000005).at(1));
-        xsecBE_pars["MASS_2000006"] = to<double>(slha_spec.at("MASS").at(2000006).at(1));
-
-        xsecBE_pars["NMIX_1_1"] = to<double>(slha_spec.at("NMIX").at(1,1).at(2));
-        xsecBE_pars["NMIX_1_2"] = to<double>(slha_spec.at("NMIX").at(1,2).at(2));
-        xsecBE_pars["NMIX_1_3"] = to<double>(slha_spec.at("NMIX").at(1,3).at(2));
-        xsecBE_pars["NMIX_1_4"] = to<double>(slha_spec.at("NMIX").at(1,4).at(2));
-        xsecBE_pars["NMIX_2_1"] = to<double>(slha_spec.at("NMIX").at(2,1).at(2));
-        xsecBE_pars["NMIX_2_2"] = to<double>(slha_spec.at("NMIX").at(2,2).at(2));
-        xsecBE_pars["NMIX_2_3"] = to<double>(slha_spec.at("NMIX").at(2,3).at(2));
-        xsecBE_pars["NMIX_2_4"] = to<double>(slha_spec.at("NMIX").at(2,4).at(2));
-        xsecBE_pars["NMIX_3_1"] = to<double>(slha_spec.at("NMIX").at(3,1).at(2));
-        xsecBE_pars["NMIX_3_2"] = to<double>(slha_spec.at("NMIX").at(3,2).at(2));
-        xsecBE_pars["NMIX_3_3"] = to<double>(slha_spec.at("NMIX").at(3,3).at(2));
-        xsecBE_pars["NMIX_3_4"] = to<double>(slha_spec.at("NMIX").at(3,4).at(2));
-        xsecBE_pars["NMIX_4_1"] = to<double>(slha_spec.at("NMIX").at(4,1).at(2));
-        xsecBE_pars["NMIX_4_2"] = to<double>(slha_spec.at("NMIX").at(4,2).at(2));
-        xsecBE_pars["NMIX_4_3"] = to<double>(slha_spec.at("NMIX").at(4,3).at(2));
-        xsecBE_pars["NMIX_4_4"] = to<double>(slha_spec.at("NMIX").at(4,4).at(2));
-
-        BEreq::xsecBE_example_set_parameters(xsecBE_pars);
-
+        str slha_string = slha_spec.str();
+        BEreq::xsecBE_import_slha_string(slha_string);
 
         // Now get the cross-sections for all the requested PID pairs. Save the results
         // in the result map (type map<PID_pair,PID_pair_xsec_container>)
@@ -164,28 +120,22 @@ namespace Gambit
           PID_pair_xsec_container pp_xs;
           pp_xs.set_pid_pair(pid_pair);
 
-          // Fill dictionaries with any process-specific
-          // parameters (e.g. LO cross-sections) and program flags
-          pybind11::dict proc_params;
-          proc_params["LO_xsec"] = 3.1415;
-
-          pybind11::dict proc_flags;
-          proc_flags["some_process_flag"] = true;
-
           // Get the PIDs as an iipair (= std::pair<int,int>)
           iipair proc = pid_pair.PIDs();
 
-          // Get cross-section value from backend
-          // Get cross-section and asymmetric errors from backend. (ddpair = pair<double,double>)
-          double xs_fb = BEreq::xsecBE_example_xsec_fb(proc, proc_params, proc_flags);
-          ddpair xs_err_fb = BEreq::xsecBE_example_xsec_err_fb(proc, proc_params, proc_flags);
+          // Get dictionary with cross-section results from backend
+          pybind11::dict xs_fb_dict = BEreq::xsecBE_get_xsection(proc);
 
           // The xsec_container classes don't have asymmetric errors yet,
           // so let's take the max error for now
-          double xs_symm_err_fb = std::max(xs_err_fb.first, xs_err_fb.second);
+          double xs_fb = xs_fb_dict["central"].cast<double>();
+          double xs_symm_err_fb = std::max(xs_fb_dict["tot_err_down"].cast<double>(), xs_fb_dict["tot_err_up"].cast<double>());
+          // double xs_fb = xs_fb_dict["central"];
+          // double xs_symm_err_fb = std::max(xs_fb_dict["tot_err_down"], xs_fb_dict["tot_err_up"]);
 
           // Update the PID_pair_xsec_container instance 
           pp_xs.set_xsec(xs_fb, xs_symm_err_fb);
+          pp_xs.set_info_string("xsecBE_NLO");
 
           // Add it to the result map
           result[pid_pair] = pp_xs;
@@ -194,6 +144,273 @@ namespace Gambit
       } // end iteration
 
     }
+
+
+    /// Get a cross-section from the salami backend (using Prospino for LO)
+    void getPIDPairCrossSectionsMap_salami(map_PID_pair_PID_pair_xsec& result)
+    {
+      using namespace Pipes::getPIDPairCrossSectionsMap_salami;
+
+      // Read options from yaml file
+      const static double fixed_xs_rel_err = runOptions->getValueOrDef<double>(-1.0, "fixed_relative_cross_section_uncertainty");
+
+
+      if(*Loop::iteration == COLLIDER_INIT)
+      {
+        result.clear();
+      }
+
+      if(*Loop::iteration == XSEC_CALCULATION)
+      {
+
+        // Get a copy of the SLHA1 spectrum that we can modify
+        SLHAstruct slha(*Dep::SLHA1Spectrum);
+
+        // Contstruct EXTPAR block from the GAMBIT model parameters
+        // @todo Put this in a separate utils function 'contruct_extpar_block'. 
+        SLHAea_add_block(slha, "EXTPAR");
+        slha["EXTPAR"][""] << 0 << *Param.at("Qin") << "# scale Q where the parameters below are defined";
+        slha["EXTPAR"][""] << 1 << *Param.at("M1") << "# M_1";
+        slha["EXTPAR"][""] << 2 << *Param.at("M2") << "# M_2";
+        slha["EXTPAR"][""] << 3 << *Param.at("M3") << "# M_3";
+        slha["EXTPAR"][""] << 11 << *Param.at("Au_33") << "# A_t";
+        slha["EXTPAR"][""] << 12 << *Param.at("Ad_33") << "# A_b";
+        slha["EXTPAR"][""] << 13 << *Param.at("Ae_33") << "# A_l";
+        if(Param.find("mu") != Param.end() && Param.find("mA") != Param.end())
+        {
+          slha["EXTPAR"][""] << 23 << *Param.at("mu") << "# mu";
+          slha["EXTPAR"][""] << 24 << pow(*Param.at("mA"),2) << "# m_A^2";
+        }
+        else if(Param.find("mHd2") != Param.end() && Param.find("mHd2") != Param.end())
+        {
+          slha["EXTPAR"][""] << 21 << *Param.at("mHd2") << "# m_Hd^2";
+          slha["EXTPAR"][""] << 22 << *Param.at("mHu2") << "# m_Hu^2";
+        }
+        else
+        {
+          ColliderBit_error().raise(LOCAL_INFO, "Got an unknown combination of Higgs sector parameters when trying to fill an SLHA EXTPAR block.");
+        }
+        slha["EXTPAR"][""] << 31 << sqrt(*Param.at("ml2_11")) << "# M_(L,11)";
+        slha["EXTPAR"][""] << 32 << sqrt(*Param.at("ml2_22")) << "# M_(L,22)";
+        slha["EXTPAR"][""] << 33 << sqrt(*Param.at("ml2_33")) << "# M_(L,33)";
+        slha["EXTPAR"][""] << 34 << sqrt(*Param.at("me2_11")) << "# M_(E,11)";
+        slha["EXTPAR"][""] << 35 << sqrt(*Param.at("me2_22")) << "# M_(E,22)";
+        slha["EXTPAR"][""] << 36 << sqrt(*Param.at("me2_33")) << "# M_(E,33)";
+        slha["EXTPAR"][""] << 41 << sqrt(*Param.at("mq2_11")) << "# M_(Q,11)";
+        slha["EXTPAR"][""] << 42 << sqrt(*Param.at("mq2_22")) << "# M_(Q,22)";
+        slha["EXTPAR"][""] << 43 << sqrt(*Param.at("mq2_33")) << "# M_(Q,33)";
+        slha["EXTPAR"][""] << 44 << sqrt(*Param.at("mu2_11")) << "# M_(U,11)";
+        slha["EXTPAR"][""] << 45 << sqrt(*Param.at("mu2_22")) << "# M_(U,22)";
+        slha["EXTPAR"][""] << 46 << sqrt(*Param.at("mu2_33")) << "# M_(U,33)";
+        slha["EXTPAR"][""] << 47 << sqrt(*Param.at("md2_11")) << "# M_(D,11)";
+        slha["EXTPAR"][""] << 48 << sqrt(*Param.at("md2_22")) << "# M_(D,22)";
+        slha["EXTPAR"][""] << 49 << sqrt(*Param.at("md2_33")) << "# M_(D,33)";
+
+        // Create a SLHA string
+        str slha_string = slha.str();
+
+        // 
+        // Init Prospino
+        // 
+
+        // We only want the LO cross-section from Prospino
+        const static int inlo = 0;
+        const static int isq_ng_in = 1;  // specify degenerate [0] or free [1] squark masses
+        const static int icoll_in = 1;   // collider : tevatron[0], lhc[1]
+        const static double energy_in = 13000.0;  // collider energy in GeV
+        const static int i_error_in = 0; // with central scale [0] or scale variation [1]
+        const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
+
+        // Pass SLHA1 input to prospino
+        BEreq::prospino_read_slha1_input(slha);        
+
+        // Loop over each PID_pair in ActivePIDPairs
+        // and calculate LO cross-sections
+        std::map<PID_pair, PID_pair_xsec_container> pp_LOxs_map; 
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+          // Create PID_pair_xsec_container instance and set the PIDs
+          PID_pair_xsec_container pp_LOxs;
+          pp_LOxs.set_pid_pair(pid_pair);
+
+          // Call Prospino and get the result in a map<string,double>
+          map_str_dbl prospino_output = BEreq::prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+
+          // Update the PID_pair_xsec_container instance with the Prospino result
+          double LOxs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
+          double LOxs_rel_err = prospino_output.at("LO_rel_error");
+          pp_LOxs.set_info_string("prospino_LO");
+
+          double LOxs_err_fb = LOxs_fb * LOxs_rel_err;
+          pp_LOxs.set_xsec(LOxs_fb, LOxs_err_fb);
+
+          // Put the LO cross-section in the map
+          pp_LOxs_map[pid_pair] = pp_LOxs;
+        }
+
+
+        // Create dicts to pass parameters and flags to the backend
+        pybind11::dict salami_pars;
+
+        // Then set the neceassary parameters and spectrum info:
+        // - Energy
+        // @todo This can't be hard-coded... Need to match it to collider energy!
+        // salami_pars["energy"] = 13000;
+        BEreq::salami_set_parameters(salami_pars);
+
+        // - Import the SLHA1 spectrum
+        BEreq::salami_import_slha_string(slha_string);
+
+        // Now get the cross-sections for all the requested PID pairs. Save the results
+        // in the result map (type map<PID_pair,PID_pair_xsec_container>)
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+          // Create PID_pair_xsec_container instance
+          // and set the PIDs
+          PID_pair_xsec_container pp_xs;
+          pp_xs.set_pid_pair(pid_pair);
+
+          // Get the PIDs as an iipair (= std::pair<int,int>)
+          iipair proc = pid_pair.PIDs();
+
+          // Get LO cross-section value from map
+          double LOxs_fb = pp_LOxs_map.at(pid_pair).xsec();
+
+          // Get dictionary with cross-section results from backend
+          pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, LOxs_fb);
+
+          // The xsec_container classes don't have asymmetric errors yet,
+          // so let's take the max error for now
+          double xs_fb = xs_fb_dict["central"].cast<double>();
+          double xs_err_fb = std::max(xs_fb_dict["tot_err_down"].cast<double>(), xs_fb_dict["tot_err_up"].cast<double>());
+          // double xs_fb = xs_fb_dict["central"];
+          // double xs_err_fb = std::max(xs_fb_dict["tot_err_down"], xs_fb_dict["tot_err_up"]);
+
+          // Should we rather use the fixed uncertainty from the YAML file?
+          if(fixed_xs_rel_err >= 0.0)
+          {
+            xs_err_fb = xs_fb * fixed_xs_rel_err;
+          }
+
+          // Update the PID_pair_xsec_container instance 
+          pp_xs.set_xsec(xs_fb, xs_err_fb);
+          pp_xs.set_info_string("salami_NLO");
+
+          // Add it to the result map
+          result[pid_pair] = pp_xs;
+        }
+
+      } // end iteration
+
+    }
+
+
+
+    /// Get a cross-section from Prospino
+    void getPIDPairCrossSectionsMap_prospino(map_PID_pair_PID_pair_xsec& result)
+    {
+      using namespace Pipes::getPIDPairCrossSectionsMap_prospino;
+
+      // Read options from yaml file
+      const static double fixed_xs_rel_err = runOptions->getValueOrDef<double>(-1.0, "fixed_relative_cross_section_uncertainty");
+      const static int inlo = runOptions->getValueOrDef<int>(1, "inlo");
+
+      if(*Loop::iteration == COLLIDER_INIT)
+      {
+        result.clear();
+      }
+
+      if(*Loop::iteration == XSEC_CALCULATION)
+      {
+
+        // Get a copy of the SLHA1 spectrum that we can modify
+        SLHAstruct slha(*Dep::SLHA1Spectrum);
+
+        // // Get the GAMBIT model parameters
+        // const param_map_type& model_params = Param;
+
+        // Contstruct EXTPAR block from the GAMBIT model parameters
+        SLHAea_add_block(slha, "EXTPAR");
+        slha["EXTPAR"][""] << 0 << *Param.at("Qin") << "# scale Q where the parameters below are defined";
+        slha["EXTPAR"][""] << 1 << *Param.at("M1") << "# M_1";
+        slha["EXTPAR"][""] << 2 << *Param.at("M2") << "# M_2";
+        slha["EXTPAR"][""] << 3 << *Param.at("M3") << "# M_3";
+        slha["EXTPAR"][""] << 11 << *Param.at("Au_33") << "# A_t";
+        slha["EXTPAR"][""] << 12 << *Param.at("Ad_33") << "# A_b";
+        slha["EXTPAR"][""] << 13 << *Param.at("Ae_33") << "# A_l";
+        if(Param.find("mu") != Param.end() && Param.find("mA") != Param.end())
+        {
+          slha["EXTPAR"][""] << 23 << *Param.at("mu") << "# mu";
+          slha["EXTPAR"][""] << 24 << pow(*Param.at("mA"),2) << "# m_A^2";
+        }
+        else if(Param.find("mHd2") != Param.end() && Param.find("mHd2") != Param.end())
+        {
+          slha["EXTPAR"][""] << 21 << *Param.at("mHd2") << "# m_Hd^2";
+          slha["EXTPAR"][""] << 22 << *Param.at("mHu2") << "# m_Hu^2";
+        }
+        else
+        {
+          ColliderBit_error().raise(LOCAL_INFO, "Got an unknown combination of Higgs sector parameters when trying to fill an SLHA EXTPAR block.");
+        }
+        slha["EXTPAR"][""] << 31 << sqrt(*Param.at("ml2_11")) << "# M_(L,11)";
+        slha["EXTPAR"][""] << 32 << sqrt(*Param.at("ml2_22")) << "# M_(L,22)";
+        slha["EXTPAR"][""] << 33 << sqrt(*Param.at("ml2_33")) << "# M_(L,33)";
+        slha["EXTPAR"][""] << 34 << sqrt(*Param.at("me2_11")) << "# M_(E,11)";
+        slha["EXTPAR"][""] << 35 << sqrt(*Param.at("me2_22")) << "# M_(E,22)";
+        slha["EXTPAR"][""] << 36 << sqrt(*Param.at("me2_33")) << "# M_(E,33)";
+        slha["EXTPAR"][""] << 41 << sqrt(*Param.at("mq2_11")) << "# M_(Q,11)";
+        slha["EXTPAR"][""] << 42 << sqrt(*Param.at("mq2_22")) << "# M_(Q,22)";
+        slha["EXTPAR"][""] << 43 << sqrt(*Param.at("mq2_33")) << "# M_(Q,33)";
+        slha["EXTPAR"][""] << 44 << sqrt(*Param.at("mu2_11")) << "# M_(U,11)";
+        slha["EXTPAR"][""] << 45 << sqrt(*Param.at("mu2_22")) << "# M_(U,22)";
+        slha["EXTPAR"][""] << 46 << sqrt(*Param.at("mu2_33")) << "# M_(U,33)";
+        slha["EXTPAR"][""] << 47 << sqrt(*Param.at("md2_11")) << "# M_(D,11)";
+        slha["EXTPAR"][""] << 48 << sqrt(*Param.at("md2_22")) << "# M_(D,22)";
+        slha["EXTPAR"][""] << 49 << sqrt(*Param.at("md2_33")) << "# M_(D,33)";
+
+        // Pass SLHA1 input to prospino
+        BEreq::prospino_read_slha1_input(slha);        
+
+        // Loop over each PID_pair in ActivePIDPairs
+        for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
+        {
+          // _Anders
+          cerr << DEBUG_PREFIX << "PID_pair: " << pid_pair.str() << endl;
+
+
+          // Create PID_pair_xsec_container instance and set the PIDs
+          PID_pair_xsec_container pp_xs;
+          pp_xs.set_pid_pair(pid_pair);
+
+          // Call Prospino and get the result in a map<string,double>
+          map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions);
+
+          // Update the PID_pair_xsec_container instance with the Prospino result
+          double xs_fb;
+          double xs_rel_err;
+          if(inlo == 0)
+          {
+            xs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
+            xs_rel_err = prospino_output.at("LO_rel_error");
+            pp_xs.set_info_string("prospino_LO");
+          }
+          else
+          {
+            xs_fb = prospino_output.at("NLO_ms[pb]") * 1000.;
+            xs_rel_err = prospino_output.at("NLO_rel_error");
+            pp_xs.set_info_string("prospino_NLO");
+          }
+          // Should we rather use the fixed uncertainty from the YAML file?
+          if(fixed_xs_rel_err >= 0.0) { xs_rel_err = fixed_xs_rel_err; }
+          double xs_err_fb = xs_fb * xs_rel_err;
+
+          pp_xs.set_xsec(xs_fb, xs_err_fb);
+
+          // Add the PID_pair_xsec_container instance to the result map
+          result[pid_pair] = pp_xs;
+        }
+      }
+    } // end getPIDPairCrossSectionsMap_prospino
 
 
 
@@ -684,7 +901,7 @@ namespace Gambit
       // iteration XSEC_CALCULATION to all threads during iteration START_SUBPROCESS
       static map_int_process_xsec shared_result;
 
-      const static bool set_missing_xsecs_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_xsecs_to_zero");
+      const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
       // Only thread 0
       if(*Loop::iteration == COLLIDER_INIT)
@@ -728,7 +945,7 @@ namespace Gambit
             }
             else
             {
-              if(set_missing_xsecs_to_zero)
+              if(set_missing_cross_sections_to_zero)
               {
                 pids_xs.set_xsec(0.0, 0.0);
               }
@@ -980,6 +1197,68 @@ namespace Gambit
     }
 
 
+    /// A helper function to check the YAML options for getYAMLCrossSection and getYAMLCrossSection_SLHA
+    bool checkOptions_getYAMLCrossSection(const Options& runOptions, const str calling_function, std::pair<str,str>& xsec_pnames, str& input_unit, bool& input_fractional_uncert, str& errmsg)
+    {
+
+      errmsg = "";
+
+      str valid_option_pairs_msg;
+      valid_option_pairs_msg  = "This function requires one of the following pairs of YAML options:\n";
+      valid_option_pairs_msg += "  cross_section_fb, cross_section_uncert_fb\n";
+      valid_option_pairs_msg += "  cross_section_fb, cross_section_fractional_uncert\n";
+      valid_option_pairs_msg += "  cross_section_pb, cross_section_uncert_pb\n";
+      valid_option_pairs_msg += "  cross_section_pb, cross_section_fractional_uncert\n";
+
+      // Check that enough options are provided
+      if (runOptions.getNames().size() < 2)
+      {
+        errmsg = "Not enough YAML options provided for function " + calling_function + ".\n";
+        errmsg += valid_option_pairs_msg;
+        return false;
+      }
+
+      // Check that a valid combination of options is provided, 
+      // and set variable references accordingly
+      if ((runOptions.hasKey("cross_section_fb")) && (runOptions.hasKey("cross_section_uncert_fb")))
+      {
+        xsec_pnames.first = "cross_section_fb";
+        xsec_pnames.second = "cross_section_uncert_fb";
+        input_unit = "fb";
+        input_fractional_uncert = false;
+      }
+      else if ((runOptions.hasKey("cross_section_fb")) && (runOptions.hasKey("cross_section_fractional_uncert")))
+      {
+        xsec_pnames.first = "cross_section_fb";
+        xsec_pnames.second = "cross_section_fractional_uncert";
+        input_unit = "fb";
+        input_fractional_uncert = true;
+      }
+      else if ((runOptions.hasKey("cross_section_pb")) && (runOptions.hasKey("cross_section_uncert_pb")))
+      {
+        xsec_pnames.first = "cross_section_pb";
+        xsec_pnames.second = "cross_section_uncert_pb";
+        input_unit = "pb";
+        input_fractional_uncert = false;
+      }
+      else if ((runOptions.hasKey("cross_section_pb")) && (runOptions.hasKey("cross_section_fractional_uncert")))
+      {
+        xsec_pnames.first = "cross_section_pb";
+        xsec_pnames.second = "cross_section_fractional_uncert";
+        input_unit = "pb";
+        input_fractional_uncert = true;
+      }
+      else
+      {
+        errmsg =  "Unknown combination of options provided for function " + calling_function + ".\n";
+        errmsg += valid_option_pairs_msg;
+        return false;
+      }
+
+      return true;
+    }
+
+
     /// A function that reads the total cross-section from the input file, but builds up the number of events from the event loop
     void getYAMLCrossSection(xsec_container& result)
     {
@@ -1000,49 +1279,15 @@ namespace Gambit
       if (*Loop::iteration == BASE_INIT)
       {
 
+        // Check that the required YAML options are provided
         if (first)
         {
-          // Determine the correct combination of parameters
-          if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_uncert_fb")))
+          str errmsg;
+          bool valid_options = checkOptions_getYAMLCrossSection(*runOptions, "getYAMLCrossSection", xsec_pnames, input_unit, input_fractional_uncert, errmsg);
+          if (!valid_options)
           {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_uncert_fb";
-            input_unit = "fb";
-            input_fractional_uncert = false;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg);
           }
-          else if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "fb";
-            input_fractional_uncert = true;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_uncert_pb")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_uncert_pb";
-            input_unit = "pb";
-            input_fractional_uncert = false;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "pb";
-            input_fractional_uncert = true;
-          }
-          else
-          {
-            std::stringstream errmsg_ss;
-            errmsg_ss << "Unknown combination of options for function getYAMLCrossSection." << endl;
-            errmsg_ss << "Needs one of the following sets of option names:" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_uncert_pb" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_fractional_uncert" << endl;
-            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-          }
-
           first = false;
         }
       }
@@ -1080,7 +1325,6 @@ namespace Gambit
     }
 
 
-
     /// A function that reads a list of (SLHA file, total cross-section) pairs from the input YAML file
     void getYAMLCrossSection_SLHA(xsec_container& result)
     {
@@ -1100,50 +1344,15 @@ namespace Gambit
       static bool first = true;
       if (*Loop::iteration == BASE_INIT)
       {
-
+        // Check that the required YAML options are provided
         if (first)
         {
-          // Determine the correct combination of parameters
-          if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_uncert_fb")))
+          str errmsg;
+          bool valid_options = checkOptions_getYAMLCrossSection(*runOptions, "getYAMLCrossSection_SLHA", xsec_pnames, input_unit, input_fractional_uncert, errmsg);
+          if (!valid_options)
           {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_uncert_fb";
-            input_unit = "fb";
-            input_fractional_uncert = false;
+            ColliderBit_error().raise(LOCAL_INFO, errmsg);
           }
-          else if ((runOptions->hasKey("cross_section_fb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_fb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "fb";
-            input_fractional_uncert = true;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_uncert_pb")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_uncert_pb";
-            input_unit = "pb";
-            input_fractional_uncert = false;
-          }
-          else if ((runOptions->hasKey("cross_section_pb")) && (runOptions->hasKey("cross_section_fractional_uncert")))
-          {
-            xsec_pnames.first = "cross_section_pb";
-            xsec_pnames.second = "cross_section_fractional_uncert";
-            input_unit = "pb";
-            input_fractional_uncert = true;
-          }
-          else
-          {
-            std::stringstream errmsg_ss;
-            errmsg_ss << "Unknown combination of options for function getYAMLCrossSection_SLHA." << endl;
-            errmsg_ss << "Needs one of the following sets of option names:" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_uncert_fb" << endl;
-            errmsg_ss << "  cross_section_fb, cross_section_fractional_uncert" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_uncert_pb" << endl;
-            errmsg_ss << "  cross_section_pb, cross_section_fractional_uncert" << endl;
-            ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-          }
-
           first = false;
         }
       }
@@ -1193,7 +1402,8 @@ namespace Gambit
         result = shared_result;
       }
 
-    }
+    }  // end getYAMLxsec_SLHA
+
 
 
     /// A function that assigns a total cross-sections directly from the scan parameters
@@ -1308,7 +1518,6 @@ namespace Gambit
 
     }
 
-
     /// Get cross-section info as map_str_dbl (for simple printing)
     void getTotalCrossSectionAsMap(map_str_dbl& result)
     {
@@ -1337,6 +1546,31 @@ namespace Gambit
           result[new_key] = s_d_pair.second;
         }
       }
+    }  // end getXsecInfoMap
+
+
+    /// Output PID pair cross-sections as a str-dbl map, for easy printing
+    void getPIDPairCrossSectionsInfo(map_str_dbl& result)
+    {
+      using namespace Pipes::getPIDPairCrossSectionsInfo;
+
+      if (*Loop::iteration == BASE_INIT)
+      {
+        result.clear();
+      }
+
+      // Add cross-sections for each collider
+      if (*Loop::iteration == XSEC_CALCULATION)
+      {
+        for(const auto& PID_pair_xsec_pair : *Dep::PIDPairCrossSectionsMap)
+        {
+          const PID_pair& pp = PID_pair_xsec_pair.first;
+          const PID_pair_xsec_container& xs = PID_pair_xsec_pair.second;
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_fb"] = xs.xsec();
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_err_fb"] = xs.xsec_err();
+        }
+      }
+
     }
 
   }

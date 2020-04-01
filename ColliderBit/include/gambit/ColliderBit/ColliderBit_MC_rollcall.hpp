@@ -179,8 +179,18 @@
     DEPENDENCY(ActivePIDPairs, vec_PID_pair)
     #undef FUNCTION
   #undef CAPABILITY
-  /// @}
 
+  /// Output PID pair cross-sections as a 
+  /// str-dbl map, for easy printing
+  #define CAPABILITY PIDPairCrossSectionsInfo
+  START_CAPABILITY
+    #define FUNCTION getPIDPairCrossSectionsInfo
+    START_FUNCTION(map_str_dbl)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(PIDPairCrossSectionsMap, map_PID_pair_PID_pair_xsec)
+    #undef FUNCTION
+  #undef CAPABILITY
+  /// @}
 
 
   /// Lists of analyses to run
@@ -325,6 +335,16 @@
     #undef FUNCTION
   #undef CAPABILITY
 
+  /// Calculate the total LHC log likelihood
+  #define CAPABILITY LHC_LogLike_scan_guide
+  START_CAPABILITY
+    #define FUNCTION calc_LHC_LogLike_scan_guide
+    START_FUNCTION(double)
+    DEPENDENCY(LHC_Combined_LogLike, double)
+    DEPENDENCY(RunMC, MCLoopInfo)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// Output some info about the event loop
   #define CAPABILITY LHCEventLoopInfo
   START_CAPABILITY
@@ -448,11 +468,24 @@
   /// Collider sim event capability.
   #define CAPABILITY HardScatteringEvent
   START_CAPABILITY
-    /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
-    #define FUNCTION getLHEvent
-    START_FUNCTION(HEPUtils::Event)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
-    #undef FUNCTION
+
+    /// Only activate these functions if HepMC is activated
+    #ifndef EXCLUDE_HEPMC
+
+      /// A nested function that reads in Les Houches Event files and converts them to HEPUtils::Event format
+      #define FUNCTION getLHEvent
+      START_FUNCTION(HEPUtils::Event)
+      NEEDS_MANAGER(RunMC, MCLoopInfo)
+      #undef FUNCTION
+
+      /// A nested function that reads in HepMC event files and converts them to HEPUtils::Event format
+      #define FUNCTION getHepMCEvent
+      START_FUNCTION(HEPUtils::Event)
+      NEEDS_MANAGER(RunMC, MCLoopInfo)
+      #undef FUNCTION
+
+    #endif
+
   #undef CAPABILITY
 
 #undef MODULE

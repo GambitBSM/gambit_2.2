@@ -78,6 +78,10 @@ namespace Gambit
   /// Shorthand for an int-int pair to double map
   typedef std::map< std::pair < int, int >, double> map_intpair_dbl;
 
+  /// Shorthand for a pointer to a void function with no arguments
+  typedef void (*fptr_void)();
+
+
   // Useful unqualified functions
   using std::cout;
   using std::cerr;
@@ -294,6 +298,10 @@ namespace Gambit
       }
 
   };
+
+  /// Shorthand for the type of the 'Param' map (string-to-double-safe_ptr map)
+  typedef std::map<std::string, safe_ptr<const double> > param_map_type;
+
 
 
   /// Array class that matches the memory structure and functionality of arrays in Fortran codes

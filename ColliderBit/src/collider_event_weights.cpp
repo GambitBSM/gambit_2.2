@@ -32,10 +32,11 @@ namespace Gambit
 
     extern std::map<std::string,bool> event_weight_flags;
 
-    /// A function that sets the event weight to unity
+    /// A function that sets the event weight to unity, with zero uncertainty
     void _setEventWeight_unity(HEPUtils::Event& event, const BaseCollider*)  // <-- Ignoring second argument
     {
       event.set_weight(1.0);
+      event.set_weight_err(0.0);
     }
 
     /// Module function providing an instance of EventWeighterFunctionType
@@ -53,19 +54,25 @@ namespace Gambit
     {
       // Initialize weight
       double weight = 1.0;
+      double weight_err = 0.0;
 
       // Get process code from the generator
       int process_code = HardScatteringSim_ptr->process_code();
+
+      #ifdef COLLIDERBIT_DEBUG
+        cout << DEBUG_PREFIX << "Current process_code: " << process_code << endl;
+      #endif
 
       // Get the process_xsec_container instance that holds the externally provided cross-section for this process
       process_xsec_container xs = ProcessCrossSectionsMap.at(process_code);
 
       // Get the generator cross-section for this process
       double process_xsec_generator = HardScatteringSim_ptr->xsec_fb(process_code);
+      double process_xsec_err_generator_sq = pow(HardScatteringSim_ptr->xsecErr_fb(process_code), 2);
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << endl;
-        cout << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code) << endl;
+          cout << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code)
+                                                                     << ", xsec_err_fb: " << HardScatteringSim_ptr->xsecErr_fb(process_code) << endl;
       #endif
 
       // Add the generator cross-sections for other process codes which also 
@@ -73,15 +80,20 @@ namespace Gambit
       for (int other_process_code : xs.processes_sharing_xsec())
       {
         process_xsec_generator += HardScatteringSim_ptr->xsec_fb(other_process_code);
+        process_xsec_err_generator_sq += pow(HardScatteringSim_ptr->xsecErr_fb(other_process_code), 2);
         #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "- process_code: " << other_process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(other_process_code) << endl;
+          cout << DEBUG_PREFIX << "- process_code: " << other_process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(other_process_code)
+                                                                           << ", xsec_err_fb: " << HardScatteringSim_ptr->xsecErr_fb(other_process_code) << endl;
         #endif
       }
+      double process_xsec_err_generator = sqrt(process_xsec_err_generator_sq);
 
       // Event weight = [external cross-section] / [sum of contributing generator cross-sections]
       if (process_xsec_generator > 0.0)
       {
         weight = xs.xsec() / process_xsec_generator;
+        weight_err = sqrt(  pow(xs.xsec_err() / process_xsec_generator, 2) 
+                          + pow(xs.xsec() * process_xsec_err_generator / pow(process_xsec_generator, 2), 2) );
       }
       else
       {
@@ -91,10 +103,11 @@ namespace Gambit
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "Total process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << endl;
+        cout << DEBUG_PREFIX << "Total process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << ",  weight_err: " << weight_err << endl;
       #endif
 
       event.set_weight(weight);
+      event.set_weight_err(weight_err);
     }
 
     /// Module function providing an instance of EventWeighterFunctionType

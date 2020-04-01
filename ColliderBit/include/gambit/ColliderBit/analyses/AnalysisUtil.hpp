@@ -13,20 +13,20 @@ class AnalysisUtil
 {
 
 public:
-  static bool sortParticlesByPt(HEPUtils::Particle *particle1, HEPUtils::Particle *particle2)
+  static bool sortParticlesByPt(const HEPUtils::Particle *particle1, const HEPUtils::Particle *particle2)
   {
     return (particle1->pT() > particle2->pT());
   }
 
-  static bool sortJetsByPt(HEPUtils::Jet *jet1, HEPUtils::Jet *jet2)
+  static bool sortJetsByPt(const HEPUtils::Jet* jet1, const HEPUtils::Jet* jet2)
   {
     return (jet1->pT() > jet2->pT());
   }
 
-  static std::vector<HEPUtils::Jet*> filterPtEta(std::vector<HEPUtils::Jet*> jets, double pT, double absEta)
+  static std::vector<const HEPUtils::Jet*> filterPtEta(std::vector<const HEPUtils::Jet*> jets, double pT, double absEta)
   {
-    std::vector<HEPUtils::Jet*> outJets;
-    for (HEPUtils::Jet* jet : jets)
+    std::vector<const HEPUtils::Jet*> outJets;
+    for (const HEPUtils::Jet* jet : jets)
     {
       if (jet->pT() > pT && jet->abseta() < absEta)
       {
@@ -36,10 +36,10 @@ public:
     return outJets;
   }
 
-  static std::vector<HEPUtils::Particle*> filterPtEta(std::vector<HEPUtils::Particle*> particles, double pT, double absEta)
+  static std::vector<const HEPUtils::Particle*> filterPtEta(std::vector<const HEPUtils::Particle*> particles, double pT, double absEta)
   {
-    std::vector<HEPUtils::Particle*> outParticles;
-    for (HEPUtils::Particle* particle : particles)
+    std::vector<const HEPUtils::Particle*> outParticles;
+    for (const HEPUtils::Particle* particle : particles)
     {
       if (particle->pT() > pT && particle->abseta() < absEta)
       {
@@ -49,13 +49,13 @@ public:
     return outParticles;
   }
 
-  static std::vector<HEPUtils::Jet*> jetLeptonOverlapRemoval(std::vector<HEPUtils::Jet*> jets, std::vector<HEPUtils::Particle*> leptons, double dR)
+  static std::vector<const HEPUtils::Jet*> jetLeptonOverlapRemoval(std::vector<const HEPUtils::Jet*> jets, std::vector<const HEPUtils::Particle*> leptons, double dR)
   {
-    std::vector<HEPUtils::Jet*> outJets;
-    for (HEPUtils::Jet* jet : jets)
+    std::vector<const HEPUtils::Jet*> outJets;
+    for (const HEPUtils::Jet* jet : jets)
     {
       bool overlap = false;
-      for (HEPUtils::Particle* lepton : leptons)
+      for (const HEPUtils::Particle* lepton : leptons)
       {
         double dRJetElectron = lepton->mom().deltaR_eta(jet->mom());
         if (fabs(dRJetElectron) < dR)
@@ -70,13 +70,13 @@ public:
   }
 
 
-  static std::vector<HEPUtils::Particle*> leptonJetOverlapRemoval(std::vector<HEPUtils::Particle*> leptons, std::vector<HEPUtils::Jet*> jets, double dR)
+  static std::vector<const HEPUtils::Particle*> leptonJetOverlapRemoval(std::vector<const HEPUtils::Particle*> leptons, std::vector<const HEPUtils::Jet*> jets, double dR)
   {
-    std::vector<HEPUtils::Particle*> outLeptons;
-    for (HEPUtils::Particle* lepton : leptons)
+    std::vector<const HEPUtils::Particle*> outLeptons;
+    for (const HEPUtils::Particle* lepton : leptons)
     {
       bool overlap = false;
-      for (HEPUtils::Jet* jet : jets)
+      for (const HEPUtils::Jet* jet : jets)
       {
         double dRLeptonJet = lepton->mom().deltaR_eta(jet->mom());
         if (fabs(dRLeptonJet) < dR)
@@ -90,9 +90,9 @@ public:
     return outLeptons;
   }
 
-  static bool isSingleParticleTriggered(std::vector<HEPUtils::Particle*> particles, double pTrequirement)
+  static bool isSingleParticleTriggered(std::vector<const HEPUtils::Particle*> particles, double pTrequirement)
   {
-    for (HEPUtils::Particle* particle : particles)
+    for (const HEPUtils::Particle* particle : particles)
     {
       if (particle->pT() > pTrequirement)
       {
@@ -102,10 +102,10 @@ public:
     return false;
   }
 
-  static bool isMultipleParticleTriggered(std::vector<HEPUtils::Particle*> particles, std::vector<double> pTrequirements)
+  static bool isMultipleParticleTriggered(std::vector<const HEPUtils::Particle*> particles, std::vector<double> pTrequirements)
   {
     size_t numTriggers = 0;
-    for (HEPUtils::Particle* particle : particles)
+    for (const HEPUtils::Particle* particle : particles)
     {
       for (double pTrequirement : pTrequirements)
       {
@@ -119,10 +119,10 @@ public:
     return numTriggers >= pTrequirements.size();
   }
 
-  static std::vector<HEPUtils::Particle*> getSortedLeptons(const std::vector<std::vector<HEPUtils::Particle*>> allLeptons)
+  static std::vector<const HEPUtils::Particle*> getSortedLeptons(const std::vector<std::vector<const HEPUtils::Particle*>> allLeptons)
   {
-    std::vector<HEPUtils::Particle*> leptons;
-    for (std::vector<HEPUtils::Particle*> setOfLeptons : allLeptons)
+    std::vector<const HEPUtils::Particle*> leptons;
+    for (std::vector<const HEPUtils::Particle*> setOfLeptons : allLeptons)
     {
       leptons.insert(leptons.end(), setOfLeptons.begin(), setOfLeptons.end());
     }
@@ -135,10 +135,10 @@ public:
     return mom1.px() * mom2.px() + mom1.py() * mom2.py();
   }
 
-  static std::vector<HEPUtils::Jet*> filterMaxEta(const std::vector<HEPUtils::Jet*>& jets, double maxAbsEta)
+  static std::vector<const HEPUtils::Jet*> filterMaxEta(const std::vector<const HEPUtils::Jet*>& jets, double maxAbsEta)
   {
-    std::vector<HEPUtils::Jet*> outJets;
-    for (HEPUtils::Jet* jet : jets)
+    std::vector<const HEPUtils::Jet*> outJets;
+    for (const HEPUtils::Jet* jet : jets)
     {
       if (jet->abseta() < maxAbsEta)
       {
@@ -149,10 +149,10 @@ public:
   }
 
 
-  static bool muonFilter7TeV(const std::vector<HEPUtils::Particle*>& muons)
+  static bool muonFilter7TeV(const std::vector<const HEPUtils::Particle*>& muons)
   {
     double effProduct = 1.0;
-    for (HEPUtils::Particle* muon : muons)
+    for (const HEPUtils::Particle* muon : muons)
     {
       if (muon->abseta() < 1.05)
       {
@@ -167,7 +167,7 @@ public:
     return random_bool(efficiency);
   }
 
-  static bool oppositeSign(HEPUtils::Particle* a, HEPUtils::Particle* b)
+  static bool oppositeSign(const HEPUtils::Particle* a, const HEPUtils::Particle* b)
   {
     return a->pid() * b->pid() < 0;
   }

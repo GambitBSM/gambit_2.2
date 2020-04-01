@@ -38,7 +38,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+//#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -74,13 +74,13 @@ namespace Gambit
         }
       }
 
-      // To make sure that the Pythia instance on each OMP thread gets all the 
+      // To make sure that the Pythia instance on each OMP thread gets all the
       // options it should, all the options parsing and initialisation happens in
       // COLLIDER_INIT_OMP (OMP parallel) rather than COLLIDER_INIT (only thread 0).
-      // We may want to split this up, so that all the yaml options are parsed in 
+      // We may want to split this up, so that all the yaml options are parsed in
       // COLLIDER_INIT (by thread 0), and used to initialize the 'result' instance
       // of each thread within COLLIDER_INIT_OMP.
-      // 
+      //
       // else if (iteration == COLLIDER_INIT)
       // {
       //   // Do the option parsing here?
@@ -248,6 +248,7 @@ namespace Gambit
       using namespace Pipes::NAME;                                                          \
       static SLHAstruct slha_spectrum;                                                      \
       static const int slha_version = runOptions->getValueOrDef<int>(2, "slha_version");    \
+      static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");  \
       if ((slha_version != 1) && (slha_version != 2))                                       \
       {                                                                                     \
         ColliderBit_error().raise(LOCAL_INFO,                                               \
@@ -272,6 +273,13 @@ namespace Gambit
           line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";                     \
           block.push_back(line);                                                            \
           result.push_front(block);                                                         \
+        }                                                                                   \
+                                                                                            \
+        if(write_summary_to_log)                                                            \
+        {                                                                                   \
+          std::stringstream SLHA_log_output;                                                \
+          SLHA_log_output << "SLHA" << slha_version << " input to Pythia:\n" << result.str() << "\n";  \
+          logger() << SLHA_log_output.str() << EOM;                                         \
         }                                                                                   \
       }                                                                                     \
     }
@@ -317,43 +325,6 @@ namespace Gambit
       getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \
         *Loop::iteration, Loop::wrapup, *runOptions);                                 \
     }
-
-
-    // {                                                                                 \
-    //   using namespace Pipes::NAME;                                                    \
-    //                                                                                   \
-    //   static SLHAstruct slha;                                                         \
-    //   static SLHAstruct slha_spectrum;                                                \
-    //   /* _Anders */                                                                   \
-    //   static const int slha_version = runOptions->getValueOrDef<int>(2, "slha_version");   \
-    //   /* _Anders: check that slha_version = 1 or 2 */                           \
-    //                                                                                   \
-    //   if (*Loop::iteration == BASE_INIT)                                              \
-    //   {                                                                               \
-    //     /* SLHAea object constructed from dependencies on the spectrum and decays. */ \
-    //     slha_spectrum.clear();                                                        \
-    //     slha = Dep::decay_rates->getSLHAea(slha_version, false, *Dep::SLHA_pseudonyms); \
-    //     /* SLHAea in SLHA2 format, please. */                                         \
-    //     slha_spectrum = Dep::SPECTRUM->getSLHAea(slha_version);                 \
-    //     slha.insert(slha.begin(), slha_spectrum.begin(), slha_spectrum.end());        \
-    //     if (SUSY_FLAG)                                                                \
-    //     {                                                                             \
-    //       if(slha.find("MODSEL") == slha.end())                                       \
-    //       {                                                                           \
-    //         SLHAea::Block block("MODSEL");                                            \
-    //         block.push_back("BLOCK MODSEL              # Model selection");           \
-    //         SLHAea::Line line;                                                        \
-    //         line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";             \
-    //         block.push_back(line);                                                    \
-    //         slha.push_front(block);                                                   \
-    //       }                                                                           \
-    //     }                                                                             \
-    //   }                                                                               \
-    //                                                                                   \
-    //   getPy8Collider(result, *Dep::RunMC, slha, #MODEL_EXTENSION,                     \
-    //     *Loop::iteration, Loop::wrapup, *runOptions);                                 \
-    // }
-
 
 
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation

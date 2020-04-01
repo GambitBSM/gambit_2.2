@@ -360,7 +360,7 @@ Rules:
   # - capabtility: ProcessCrossSectionsMap
   #   function: getProcessCrossSectionsMap
   #   options:
-  #     set_missing_xsecs_to_zero: true
+  #     set_missing_cross_sections_to_zero: true
 
   # # Choose to where to get cross-sections from
   # - capability: TotalCrossSection
