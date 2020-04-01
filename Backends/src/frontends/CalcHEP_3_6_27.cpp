@@ -294,29 +294,8 @@ BE_NAMESPACE
     int twidth = 0;              // T-channel propagator width
     int UG = 0;                  // Unitary gauge
 
-    numout* cc;
-    // Make it so only one MPI process can create a library at once
-    #ifdef WITH_MPI
-      if(GMPI::Is_initialized())
-      {
-        int rank = 0; int size = 0;
-        GMPI::Comm comm;
-        rank = comm.Get_rank();
-        size = comm.Get_size();
-        for (int i = 0; i < size; ++i)
-        {
-          if (rank == i)
-          {
-            // Generates shared object file based on libName - unless it already exists.
-            cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
-          }
-          MPI_Barrier(MPI_COMM_WORLD); 
-        }
-      }
-    #else
-      // Generates shared object file based on libName - unless it already exists.
-      cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
-    #endif
+    // Generates shared object file based on libName - unless it already exists.
+    numout* cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
 
     // Export numerical values of parameters to link to dynamical code
     err=passParameters(cc);
@@ -423,32 +402,11 @@ BE_NAMESPACE
     int twidth = 0;              // T-channel propagator width
     int UG = 0;                  // Unitary gauge
 
-    numout* cc;
-    // Make it so only one MPI process can create a library at once
-    #ifdef WITH_MPI
-      if(GMPI::Is_initialized())
-      {
-        int rank = 0; int size = 0;
-        GMPI::Comm comm;
-        rank = comm.Get_rank();
-        size = comm.Get_size();
-        for (int i = 0; i < size; ++i)
-        {
-          if (rank == i)
-          {
-            // Generates shared object file based on libName - unless it already exists.
-            cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
-          }
-          MPI_Barrier(MPI_COMM_WORLD); 
-        }
-      }
-    #else
-      // Generates shared object file based on libName - unless it already exists.
-      cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
-    #endif
+    // Generates shared object file based on libName - unless it already exists.
+    numout* cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
 
     // Export numerical values of parameters to link to dynamical code
-    passParameters(cc);
+    err=passParameters(cc);
 
     if(err != 0) backend_error().raise(LOCAL_INFO, "Unable to calculate parameter " + std::string(varNames[err]) +
           " in CalcHEP. Please check your model files.\n");

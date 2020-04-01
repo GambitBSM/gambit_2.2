@@ -1164,6 +1164,9 @@ sigma_SD_n: |
 DarkMatter_ID: |
    Contains string ID to identify dark matter particle.
 
+DarkMatterConj_ID: |
+   Contains string ID to identify the conjugate to the dark matter particle.
+
 RD_spectrum: |
    Contains degrees of freedom and masses of all (co)-annihilating
    particles, as well as location of thresholds and resonances.
@@ -2279,6 +2282,9 @@ nulike_1_0_6_init: |
 nulike_1_0_7_init: |
   Initializes nulike_1_0_7.
 
+nulike_1_0_8_init: |
+  Initialises nulike_1_0_8.
+
 nubounds:
   Counts, likelihoods and p-values from neutrino telescope searches for dark matter annihilation in the Sun.
 
@@ -2648,7 +2654,7 @@ momegas_print_channels: |
    Print the contributions to the relic density from all channels
 
 assignVal: |
-   Assigns a value to a model parameter in MicrOmegas.
+   Assigns a value to a model parameter in MicrOmegas and CalcHEP.
 
 vSigma: |
    The velocity averaged cross section calculated at a specified temperature.
@@ -2715,6 +2721,9 @@ vSigmaCh: |
 
 decay_rates: |
    Collect all the decay rates into a table.
+
+all_BFs: |
+  Returns branching fractions for the specified particles (as a map<str,double>) 
 
 Z_decay_rates : |
    All decays of the Z gauge boson.
@@ -4352,3 +4361,51 @@ cap_sun_saturation: |
 
 cap_Sun_vnqn_isoscalar: |
   Compute v^n or q^n solar capture rate.
+
+#-------------------------------------
+#  CalcHEP capabilities
+#-------------------------------------
+
+CalcHEP_3_6_27_init: |
+  Initialise CalcHEP backend.
+
+Assign_Value: |
+  Assigns a numerical value to a given CalcHEP parameter (with error-checking).
+
+Assign_Widths: |
+  Passes the width from each BSM particle (+ top quark) in the model, from the DecayTable to CalcHEP. 
+
+Assign_All_Values: |
+  Takes all parameters in a model as given by the vector of SpectrumParameters, and assigns them by value to the appropriate CalcHEP parameter names.
+
+CH_Decay_Width: |
+  Provides spin-averaged decay width for 2 body decay process in CM frame at tree-level.
+
+CH_Sigma_V: |
+  Computes annihilation cross-section for 2->2 process, DM+DMbar -> X + Y at tree level. Coannihilations not currently supported; we require the mass of both in states are equal.
+
+setModel: |
+  Set the model within CalcHEP.
+
+pdg2mass: |
+  Returns the name of the mass parameter within CalcHEP for a given PDG code.
+
+pdg2width: |
+  Returns the name of the width parameter within CalcHEP for a given PDG code.
+
+calcMainFunc: |
+  Calculates and updates all PUBLIC (model-dependent) parameters in CalcHEP.
+
+pMass: |
+  Obtains the value of the mass of a particle, for a given CalcHEP particle name.
+
+getMEcode: |
+  Generates shared object file computing matrix element - or points to if it already exists.
+
+passParameters: |
+  Exports numerical values of parameters to the dynamic CalcHEP matrix element code
+
+varNames: |
+  CalcHEP's internal list of variable names.
+
+
