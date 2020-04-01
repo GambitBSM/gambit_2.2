@@ -115,6 +115,11 @@ if args.file:
         """
         if gum.math == 'feynrules':
 
+            # Let GUM do a quick and dirty parse of the file first, before we
+            # fire up a Mathematica kernel
+            parse_feynrules_model_file(gum.mathname, gum.base_model, 
+                                       output_opts)
+
             from lib.libfr import *
 
             # Create the output directory for all generated FeynRules files
@@ -144,6 +149,10 @@ if args.file:
             bsm_particle_list, add_higgs = fr_part_to_gum_part(fr_bsm)
 
         elif gum.math == 'sarah':
+
+            # Let GUM do a quick and dirty parse of the file first, before we
+            # fire up a Mathematica kernel
+            parse_sarah_model_file(gum.mathname, output_opts)
 
             from lib.libsarah import *
 

@@ -28,8 +28,10 @@
 
 import yaml
 import re
+from distutils.dir_util import copy_tree
 
 from setup import *
+from cmake_variables import *
 
 """
 .GUM FILE PARSING
@@ -263,7 +265,7 @@ def fill_gum_object(data):
 FEYNRULES PARSING
 """
 
-def parse_feynrules_model_file(fr_file_path, outputs):
+def parse_feynrules_model_file(model_name, base_model, outputs):
     """
     Parses a FeynRules model file. Checks for the following:
         - Every parameter has an LH block and an index
@@ -271,7 +273,22 @@ def parse_feynrules_model_file(fr_file_path, outputs):
         - Every parameter has an interaction order specified *if* the user
           requests UFO output
         - ComplexParameters and CalcHEP output
+
+    TODO check base_model too
     """
+
+    # Figure out the path pointing to the FeynRules file
+    # First - check for it in the FeynRules directory 
+    fr_file_path = FEYNRULES_PATH + ("/Models/{0}/{0}.fr").format(model_name)
+
+    # If it doesn't exist, try the GUM models folder
+    if not os.path.isfile(fr_file_path):
+        fr_file_path = GUM_DIR + ("/Models/{0}/{0}.fr").format(model_name)
+        if not os.path.isfile(fr_file_path):
+            raise GumError(("GUM Error: Unable to find the model {0} in either "
+                            "the FeynRules model directory, or the GUM model "
+                            "directory!\nPlease move it to one of "
+                            "these locations.").format(model_name))
 
     payattn = False
 
@@ -331,6 +348,8 @@ def parse_feynrules_model_file(fr_file_path, outputs):
                                         ordermatch.group(1) }
             else:
                 blocks[ params[i] ] = blockmatch.group(1)
+        # TODO don't need blockname for everything -- figure it out -- if it's
+        # an internal parameter,  I think...
         # else:
         #     raise GumError(("No BlockName specified for the parameter "
         #                     "{0}. GUM and GAMBIT need this information "
@@ -417,13 +436,34 @@ def parse_feynrules_model_file(fr_file_path, outputs):
                             "GUM and GAMBIT need this information."
                             ).format(particles[i]))
 
+    print("FeynRules file seems ok; firing up a Mathematica kernel...")
 
-def parse_sarah_model_file(fr_file_path, outputs):
+
+def parse_sarah_model_file(model_name, outputs):
     """
     Parses a SARAH model file. Checks for the following:
         - ...
     """
 
+    # Figure out where the SARAH files live
+    # First - check for them in the SARAH directory 
+    sarah_file_path = SARAH_PATH + ("/Models/{0}/{0}.m").format(model_name)
+
+    # If it doesn't exist, try the GUM models folder
+    if not os.path.isfile(sarah_file_path):
+        sarah_file_path = GUM_DIR + ("/Models/{0}/{0}.m").format(model_name)
+        if not os.path.isfile(sarah_file_path):
+            raise GumError(("GUM Error: Unable to find the model {0} in either "
+                            "the SARAH model directory, or the GUM model "
+                            "directory!\nPlease move it to one of "
+                            "these locations.").format(model_name))
+        # Copy the files to the SARAH directory, then we should be good to go
+        gumdir = GUM_DIR + ("/Models/{0}/").format(model_name)
+        sarahdir = SARAH_PATH + ("/Models/{0}/").format(model_name)
+        copy_tree(gumdir, sarahdir)
+
     # Read the input in
     with open(sarah_file_path, 'r') as f:
         lines = f.readlines()
+
+    print("SARAH parser doesn't do much, yet")
