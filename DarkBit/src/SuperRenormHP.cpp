@@ -72,7 +72,8 @@ namespace Gambit
     const double alphaEM = Gambit::alpha_EM; // fine structure constant
     const double alphaS = pi; // strong coupling constant
     const double v = 246e9; // electroweak vev [eV]
-    const double hbar = Gambit::hbar*1e9;  // reduced Planck constant [eV.s]
+    const double hbar_GeV = Gambit::hbar;
+    const double hbar_eV = Gambit::hbar*1e9;  // reduced Planck constant [eV.s]
     const double cs = Gambit::s2cm; // speed of light [cm/s]
     const double kb = Gambit::K2eV; // Boltzmann constant [eV/K]
     const double G = 6.674e-8; // Gravitational constant [cm³/g/s²]
@@ -93,103 +94,12 @@ namespace Gambit
     // Minimum finite result returnable from log(double x);
     const double logmin = log(std::numeric_limits<double>::min());
 
-    /* //////////////////////////////////////////////////////////////////// */
-    /* //      Support class to compute cosmological observables         // */
-    /* //////////////////////////////////////////////////////////////////// */
-
-
-    /* //------------- Class declaration -------------// */
-
-    /* class Cosmology */
-    /* { */
-    /*   public : */
-
-    /*     Cosmology(); */
-
-    /*     void set_t0(); */
-
-    /*     double getOmegaDM() const; */
-    /*     double getOmegaM() const; */
-    /*     double getOmegaLambda() const; */
-    /*     double getOmegaR() const; */
-    /*     double getOmegaB() const; */
-    /*     double getH0() const; */
-    /*     double get_t0() const; */
-
-    /*     std::vector<double> age (double redshift); */
-
-    /*     ~Cosmology(); */
-
-    /*   protected : */
-
-    /*     double m_OmegaDM; */
-    /*     double m_OmegaM; */
-    /*     double m_OmegaLambda; */
-    /*     double m_OmegaR; */
-    /*     double m_OmegaB; */
-    /*     double m_H0; */
-    /*     double m_t0; */
-    /* }; */
-
-    /* // constructor */
-    /* Cosmology::Cosmology() : m_OmegaDM(0.285), m_OmegaM(0.308), m_OmegaLambda(0.692), m_OmegaR(0), m_OmegaB(0.308-0.285), m_H0(67.81e-19/3.085) { set_t0(); } */
-
-    /* //------------- Functions to compute the age of the Universe at a given redshift -------------// */
-
-    /* // auxiliary function for gsl integration */
-    /* double age_f (double x, void *p) */
-    /* { */
-    /*   Cosmology *cosmology = static_cast<Cosmology*>(p); */
-    /*   double OmegaM = cosmology->getOmegaM(); */
-    /*   double OmegaLambda = cosmology->getOmegaLambda(); */
-    /*   double OmegaR = cosmology->getOmegaR(); */
-    /*   double OmegaK = 1. - OmegaM - OmegaR - OmegaLambda; */
-
-    /*   return 1./sqrt( OmegaM*pow(1+x, 5.) + OmegaLambda*pow(1+x, 2.) + OmegaK*pow(1+x, 4.) + OmegaR*pow(1+x, 6.) ); */
-    /* } */
-
-    /* // computes the age of the Universe at a given redshift ([0] age, [1] abserr) */
-    /* std::vector<double> Cosmology::age (double redshift) */
-    /* { */
-    /*   size_t n = 1e4; */
-
-    /*   gsl_integration_workspace *w =  gsl_integration_workspace_alloc(n); */
-
-    /*   double epsabs = 0.; */
-    /*   double epsrel = 1e-3; */
-    /*   size_t limit = 1e3; */
-    /*   double result, abserr; */
-
-    /*   gsl_function F; */
-    /*   F.function = &age_f; */
-    /*   F.params = this; */
-
-    /*   gsl_integration_qagiu(&F, redshift, epsabs, epsrel, limit, w, &result, &abserr); */
-
-    /*   gsl_integration_workspace_free(w); */
-
-    /*   return {result/m_H0, abserr/m_H0}; */
-    /* } */
-
-    /* //------------- Elevator functions -------------// */ 
-
-    /* void Cosmology::set_t0 () { m_t0 = age(0)[0]; } */
-    /* double Cosmology::getOmegaDM () const { return m_OmegaDM; } */
-    /* double Cosmology::getOmegaM () const { return m_OmegaM; } */
-    /* double Cosmology::getOmegaLambda () const { return m_OmegaLambda; } */
-    /* double Cosmology::getOmegaR () const { return m_OmegaR; } */
-    /* double Cosmology::getOmegaB () const { return m_OmegaB; } */
-    /* double Cosmology::getH0 () const { return m_H0; } */
-    /* double Cosmology::get_t0 () const { return m_t0; } */
-
-    /* // destructor */
-    /* Cosmology::~Cosmology() {} */
 
     ////////////////////////////////////////////////////////////////////
     //         Support class to handle X-ray experiments              //
     ////////////////////////////////////////////////////////////////////
 
-    //------------- Class declaration -------------//  
+    //------------- Class declaration -------------//
 
     class Xray
     {
@@ -427,6 +337,13 @@ namespace Gambit
       {
         throw gsl_errno;
       }
+
+      if (gsl_errno == 1)
+      {
+        std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << " and  gsl_errno = " << gsl_errno << std::endl;
+        std::cerr << "it seems like you are trying to scan DM masses <= 0.5eV, solar neutrino likelihoods only work for DM masses > mMin = 0.5eV!" << std::endl;
+        std::cerr << "if you want to change the value of mMin, you can do it from DarkBit/src/SuperRenormHP.cpp and recompute the interpolation tables(delete the existing one and it will be done automatically), but be careful to check to convergence with the new values! you may have to increase the number of points in the interpolation routine" << std::endl;
+      }
       else { std::cerr << "gsl: " << file << ":" << line << ": ERROR: " << reason << " and  gsl_errno = " << gsl_errno << std::endl; abort(); }
     }
 
@@ -495,7 +412,7 @@ namespace Gambit
         temp = m_model["Temp"][i]*kb;
 
         T.push_back(temp);
-        wp.push_back(sqrt(4*pi*alphaEM*sumz*cs*cs*cs*hbar*hbar*hbar/me));
+        wp.push_back(sqrt(4*pi*alphaEM*sumz*cs*cs*cs*hbar_eV*hbar_eV*hbar_eV/me));
         ne.push_back(sumz);
         SumNz.push_back(sumz2);
 
@@ -541,17 +458,17 @@ namespace Gambit
       try
       {
         double F = gsl_sf_bessel_K0(x)*sinh(x);
-        result += D/N*F*pow(cs, 6)*pow(hbar, 6);
+        result += D/N*F*pow(cs, 6)*pow(hbar_eV, 6);
       }
 
       // uses a first order development at high x instead of the full functions
       catch (int gsl_errno)
       {
         double F = sqrt(pi/2./x)*(1-(1/8./x));
-        result += D/N*F*pow(cs, 6)*pow(hbar, 6);
+        result += D/N*F*pow(cs, 6)*pow(hbar_eV, 6);
       }
 
-      if (w > wp) { result += 8*pi*pow(alphaEM, 2)*ne*sqrt(1-pow(wp/w, 2))/pow(me, 3)/3.*pow(cs, 3)*pow(hbar, 3); }
+      if (w > wp) { result += 8*pi*pow(alphaEM, 2)*ne*sqrt(1-pow(wp/w, 2))/pow(me, 3)/3.*pow(cs, 3)*pow(hbar_eV, 3); }
 
       return result;
     }
@@ -643,7 +560,7 @@ namespace Gambit
       gsl_monte_vegas_free(s1);
       gsl_monte_vegas_free(s2);
 
-      return 4*pi*pow(Rsun, 3)*(result1+result2)/pow(cs, 3)/pow(hbar, 4);
+      return 4*pi*pow(Rsun, 3)*(result1+result2)/pow(cs, 3)/pow(hbar_eV, 4);
     }
 
     void StellarModel::Ls_interpolate ()
@@ -728,7 +645,7 @@ namespace Gambit
        (Name , TH_ParticleProperty(Mass, spinX2)));
 
       // Import Spectrum objects
-      const Spectrum& spec = *Dep::SuperRenormHP_spectrum;
+      const Spectrum& spec  = *Dep::SuperRenormHP_spectrum;
       const SubSpectrum& he = spec.get_HE();
       const SubSpectrum& SM = spec.get_LE();
       const SMInputs& SMI   = spec.get_SMInputs();
@@ -796,7 +713,7 @@ namespace Gambit
 
 
       // decay into two photons (through a loop of heavy fermions)
-      double gamma = (theta*theta*alpha*alpha*mS*mS*mS*C*C)/(256.*pi*pi*pi*vev*vev)/hbar;
+      double gamma = (theta*theta*alpha*alpha*mS*mS*mS*C*C)/(256.*pi*pi*pi*vev*vev);
 
       TH_Channel dec_channel(daFunk::vec<string>("gamma", "gamma"), daFunk::cnst(gamma));
       process_dec.channelList.push_back(dec_channel);
@@ -1012,9 +929,9 @@ namespace Gambit
     }
 
     // capability function to provide the initial energy density as produced by the freeze-in mechanism
-    void SuperRenormHP_initial_density (double &result)
+    void SuperRenormHP_relic_density (double &result)
     {
-      using namespace Pipes::SuperRenormHP_initial_density;
+      using namespace Pipes::SuperRenormHP_relic_density;
       double mS = *Param["mS"], theta = *Param["theta"];
       result = 4e11*theta*theta*s0*mS;
     }
@@ -1025,7 +942,7 @@ namespace Gambit
       using namespace Pipes::SuperRenormHP_decay_rate_2_photons;
       double mS = *Param["mS"], theta = *Param["theta"];
 
-      result = (theta*theta*alphaEM*alphaEM*mS*mS*mS*C*C)/(256.*pi*pi*pi*v*v)/hbar;
+      result = (theta*theta*alphaEM*alphaEM*mS*mS*mS*C*C)/(256.*pi*pi*pi*v*v)/hbar_eV;
     }
 
     // gsl error handler
@@ -1045,7 +962,7 @@ namespace Gambit
 
       static Xray experiment = Xray("INTEGRAL");
 
-      double mass = *Dep::DM_mass, gamma = *Dep::DM_decay_rate_2_photons, density = *Dep::DM_initial_density;
+      double density = *Dep::DM_relic_density*1e9;
 
       double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
 
@@ -1053,13 +970,16 @@ namespace Gambit
      
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      /* TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog; */
-      /* auto f = catalog.getProcess("S").find({"gamma", "gamma"})->genRate; */
-      /* auto fb = f->bind(); */
-      /* double gamma2 = fb->eval(); */
+      std::string DM_ID = *Dep::DarkMatter_ID;
 
-      XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
-      /* XrayLikelihood_params params = {mass, gamma2, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM}; */
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
+      auto fb = f->bind();
+      double gamma = fb->eval();
+
+      double mass = catalog.getParticleProperty(DM_ID).mass*1e9;
+
+      XrayLikelihood_params params = {mass, gamma/hbar_GeV, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
 
       double Emin = experiment.getEmin(), Emax = experiment.getEmax(), E, lik1, lik2;
 
@@ -1096,16 +1016,24 @@ namespace Gambit
 
       static Xray experiment = Xray("HEAO");
 
-      double mass = *Dep::DM_mass, gamma = *Dep::DM_decay_rate_2_photons, density = *Dep::DM_initial_density;
+      double density = *Dep::DM_relic_density*1e9;
 
       double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
 
       double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
-     
+
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
-      /* XrayLikelihood_params params = {mass, gamma, density, experiment, H0*1e-19/3.085, 0.308, 0., 0.692, OmegaDM}; */
+      std::string DM_ID = *Dep::DarkMatter_ID;
+
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
+      auto fb = f->bind();
+      double gamma = fb->eval();
+
+      double mass = catalog.getParticleProperty(DM_ID).mass*1e9;
+
+      XrayLikelihood_params params = {mass, gamma/hbar_GeV, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM};
 
       const double Emin = experiment.getEmin(), Emax = experiment.getEmax();
       double E, lik1, lik2;
@@ -1142,7 +1070,7 @@ namespace Gambit
     void SuperRenormHP_solar_luminosity (double &result)
     {
       using namespace Pipes::SuperRenormHP_solar_luminosity;
-      const double mS = *Param["mS"], theta = *Param["theta"];
+      const double mS = *Param["mS"]*1e9, theta = *Param["theta"];
 
       gsl_error_handler_t *old_handler = gsl_set_error_handler (&handler_Ls);
 
@@ -1196,7 +1124,7 @@ namespace Gambit
 
     // capability function to compute the likelihood from the solar B8 neutrino flux
     void calc_lnL_solar_neutrino_B8 (double &result)
-    { 
+    {
       using namespace Pipes::calc_lnL_solar_neutrino_B8;
 
       const bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");

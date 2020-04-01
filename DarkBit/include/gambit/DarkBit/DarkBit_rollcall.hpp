@@ -1263,7 +1263,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION DarkMatter_ID_ScalarSingletDM
     START_FUNCTION(std::string)
-    ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
+    ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running, SuperRenormHP)
     #undef FUNCTION
     #define FUNCTION DarkMatter_ID_VectorSingletDM
     START_FUNCTION(std::string)
@@ -1530,9 +1530,9 @@ START_MODULE
 
   // Super Renormalizable Higgs Portal DM relative observables and likelihoods -----------------
 
-  #define CAPABILITY DM_initial_density
+  #define CAPABILITY DM_relic_density
   START_CAPABILITY
-    #define FUNCTION SuperRenormHP_initial_density
+    #define FUNCTION SuperRenormHP_relic_density
     START_FUNCTION(double)
     ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
@@ -1555,10 +1555,9 @@ START_MODULE
     DEPENDENCY(Omega0_cdm, double)
     DEPENDENCY(H0, double)
     DEPENDENCY(Omega0_Lambda, double)
-    DEPENDENCY(DM_initial_density, double)
-    DEPENDENCY(DM_decay_rate_2_photons, double)
-    DEPENDENCY(DM_mass, double)
-    /* DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog) */
+    DEPENDENCY(DM_relic_density, double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1571,9 +1570,9 @@ START_MODULE
     DEPENDENCY(Omega0_cdm, double)
     DEPENDENCY(H0, double)
     DEPENDENCY(Omega0_Lambda, double)
-    DEPENDENCY(DM_initial_density, double)
-    DEPENDENCY(DM_decay_rate_2_photons, double)
-    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(DM_relic_density, double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     #undef FUNCTION
   #undef CAPABILITY
 

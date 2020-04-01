@@ -33,7 +33,7 @@ Parameters:
   SuperRenormHP:
     mS:
       prior_type: log
-      range: [5e-1, 1e7]
+      range: [6e-10, 1e-2]
     theta:
       prior_type: log
       range: [1e-14, 1e-4]
@@ -56,7 +56,7 @@ Printer:
 
 Scanner:
 
-  use_scanner: grid_sq
+  use_scanner: random
 
   scanners:
 
@@ -68,51 +68,55 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 10
+      grid_pts: 50
 
     random:
       plugin: random
       like: LogLike
-      point_number: 10
+      point_number: 2
 
 ObsLikes:
 
    # - purpose:      ObsLikes
-   #   capability:   decay_rates
-   #   module:       DecayBit
-   #   type:         DecayTable
-   #   function:     all_decays
-
-   - purpose:      ObsLikes
-     capability:   TH_ProcessCatalog
-     module:       DarkBit
-     type:         TH_ProcessCatalog
-     printme:      false
+   #   capability:   TH_ProcessCatalog
+   #   module:       DarkBit
+   #   type:         TH_ProcessCatalog
+   #   printme:      false
 
    - purpose:      LogLike
      capability:   lnL_INTEGRAL
      module:       DarkBit
      type:         double
 
-   - purpose:      LogLike
-     capability:   lnL_HEAO
-     module:       DarkBit
-     type:         double
+   # - purpose:      LogLike
+   #   capability:   lnL_HEAO
+   #   module:       DarkBit
+   #   type:         double
 
-   - purpose:      LogLike
-     capability:   lnL_solar_neutrino_B8
-     module:       DarkBit
-     type:         double
+   # - purpose:      LogLike
+   #   capability:   lnL_solar_neutrino_B8
+   #   module:       DarkBit
+   #   type:         double
 
-   - purpose:      LogLike
-     capability:   lnL_solar_neutrino_Be7
-     module:       DarkBit
-     type:         double
+   # - purpose:      LogLike
+   #   capability:   lnL_solar_neutrino_Be7
+   #   module:       DarkBit
+   #   type:         double
 
-   - purpose:      LogLike
-     capability:   lnL_ShortRangeForces_Sushkov2011
-     module:       DarkBit
-     type:         double
+   # - purpose:      LogLike
+   #   capability:   lnL_ShortRangeForces_Sushkov2011
+   #   module:       DarkBit
+   #   type:         double
+   #
+
+   - purpose:   ObsLikes
+     capability: Omega0_m
+   - purpose:   ObsLikes
+     capability: Omega0_r
+   - purpose:   ObsLikes
+     capability: Omega0_Lambda
+   - purpose:   ObsLikes
+     capability: Omega0_cdm
 
 Rules:
 
@@ -169,9 +173,9 @@ Rules:
         function: all_decays
         module: DecayBit
 
-  # - module: CosmoBit
-  #   options:
-  #     allow_massless_neutrinos: true
+  - module: CosmoBit
+    options:
+      allow_massless_neutrinos: true
 
 Logger:
 
@@ -183,7 +187,7 @@ Logger:
 
 KeyValues:
 
-  default_output_path: "runs/HiggsPortal"
+  default_output_path: "runs/SuperRenormHP"
 
   print_timing_data: true
 

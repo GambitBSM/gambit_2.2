@@ -33,15 +33,8 @@
 #include "gambit/Models/SimpleSpectra/SuperRenormHPSimpleSpec.hpp"
 #include "gambit/SpecBit/model_files_and_boxes.hpp"
 
-/* #include "gambit/SpecBit/ScalarSingletDM_Z2Spec.hpp" */
-/* #include "gambit/SpecBit/SuperRenormHPSpec.hpp" */
-
-// Switch for debug mode
-//#define SPECBIT_DEBUG
-
 namespace Gambit
 {
-
   namespace SpecBit
   {
     using namespace LogTags;
