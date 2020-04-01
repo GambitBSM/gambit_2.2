@@ -1507,15 +1507,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     SMnames = ['Fd1', 'Fd2', 'Fd3', 'Fu1', 'Fu2', 'Fu3', 'Fe1', 'Fe2', 'Fe3']
     SMspins = [1, 1, 1, 1, 1, 1, 1, 1, 1]
     decaying_particles = copy.deepcopy(particles)
-    print "dm pdg = ", dm.PDG_code
-    print "dm conj pdg = ", dm.Conjugate.PDG_code
 
     for i in range(0, len(SMpdgs)):
         decaying_particles.append(Particle(SMnames[i], SMnames[i]+'*', SMspins[i], SMpdgs[i], 
               "M"+SMnames[i], alt_name = SMnames[i], alt_mass_name = "M"+SMnames[i]))
-    print "dm pdg = ", dm.PDG_code
-    print "dm conj pdg = ", dm.Conjugate.PDG_code
-
 
     towrite += "std::vector<int> pdg = {\n"
     nparticles = len(decaying_particles);

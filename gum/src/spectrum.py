@@ -339,7 +339,7 @@ def write_spectrum_header(model_name, add_higgs, with_spheno, higgses, cap_def={
     ).format(model_name)
 
     # Add a conditional Higgs dependency if necessary
-    if add_higgs:
+    if add_higgs and not with_spheno:
        modelentry = (
                 "ALLOW_MODEL_DEPENDENCE(StandardModel_Higgs, {0})\n"
                 "MODEL_GROUP(higgs, (StandardModel_Higgs))\n"

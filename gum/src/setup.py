@@ -33,9 +33,9 @@ class Particle:
 
         # If a particle is self-conjugate -> the conjugate PDG code is same.
         if self.own_conjugate:
-            self.Conjugate.PDG_code = self.PDG_code
+            self.conjugate_PDG_code = self.PDG_code
         else:
-            self.Conjugate.PDG_code = -self.PDG_code
+            self.conjugate_PDG_code = -self.PDG_code
 
     def is_sc(self):
         """
@@ -43,17 +43,6 @@ class Particle:
         """
 
         return self.own_conjugate
-
-    class Conjugate:
-        """
-        Conjugate sub-class for Particle class, e.g. DM.Conjugate.PDG_code
-        for generalisation.
-        """
-
-        #PDG_code = None
-
-        def __init__(self):
-            self.PDG_code = self.PDG_code
 
 def pdg_to_particle(pdg_code, pdg_dict):
     """

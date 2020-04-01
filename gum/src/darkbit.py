@@ -36,7 +36,7 @@ class VertexMerger:
             else: return False
         else:   
             if (self.v6.count(dm.PDG_code) > 0 and 
-                self.v6.count(dm.Conjugate.PDG_code) > 0):
+                self.v6.count(dm.conjugate_PDG_code) > 0):
                 return True
             else: return False
 
@@ -52,7 +52,7 @@ class VertexMerger:
             # Create a copy of the six body mess, then remove an instance of DM and DMbar
             l = self.v6[:]
             l.remove(l[l.index(dm.PDG_code)])         
-            l.remove(l[l.index(dm.Conjugate.PDG_code)]) 
+            l.remove(l[l.index(dm.conjugate_PDG_code)]) 
 
             # Firstly check the type of the field
             # If it's an integer then it's a PDG code
@@ -60,7 +60,7 @@ class VertexMerger:
                 # If we have DM + DMbar only accept this if it's a t-channel 
                 # exchange, (chi + X ---> chi/chi~ <--- X~ chi~)
                 if (particle == dm.PDG_code or 
-                    particle == dm.Conjugate.PDG_code):
+                    particle == dm.conjugate_PDG_code):
                     if not dm.is_sc():
                         if not self.v6.count(dm.PDG_code) == 2: continue
                     elif dm.is_sc():
@@ -109,9 +109,9 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
             products.append(p)
 
         elif not dm.is_sc and four_fields[i].count(dm.PDG_code) == 1 and \
-                four_fields[i].count(dm.Conjugate.PDG_code) == 1:
+                four_fields[i].count(dm.conjugate_PDG_code) == 1:
             p = [f for f in four_fields[i] if
-                        f not in {dm.PDG_code, dm.Conjugate.PDG_code}]
+                        f not in {dm.PDG_code, dm.conjugate_PDG_code}]
             products.append(p)
 
     """
@@ -143,16 +143,16 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
     # Remove any DM-DM self-interactions
     # If these are important they should be dealt with by e.g. micrOMEGAs 5.0+
     # and the freeze-in routines, or Z3 models, etc.
-    if [dm.PDG_code, dm.Conjugate.PDG_code] in products:
-        products.remove([dm.PDG_code, dm.Conjugate.PDG_code])
-    if [dm.Conjugate.PDG_code, dm.PDG_code] in products:
-        products.remove([dm.Conjugate.PDG_code, dm.PDG_code])
+    if [dm.PDG_code, dm.conjugate_PDG_code] in products:
+        products.remove([dm.PDG_code, dm.conjugate_PDG_code])
+    if [dm.conjugate_PDG_code, dm.PDG_code] in products:
+        products.remove([dm.conjugate_PDG_code, dm.PDG_code])
 
     # Remove DM itself from the list of propagators
     if dm.PDG_code in propagators:
         propagators.remove(dm.PDG_code)
-    if dm.Conjugate.PDG_code in propagators:
-        propagators.remove(dm.Conjugate.PDG_code)
+    if dm.conjugate_PDG_code in propagators:
+        propagators.remove(dm.conjugate_PDG_code)
 
     return np.array(products), propagators
 
@@ -176,7 +176,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     
     # DM (and conjugate) as known to CalcHEP
     dm_chep = pdg_to_particle(dm.PDG_code, calchep_pdg_dict)
-    dm_chepc = pdg_to_particle(dm.Conjugate.PDG_code, calchep_pdg_dict)
+    dm_chepc = pdg_to_particle(dm.conjugate_PDG_code, calchep_pdg_dict)
 
     towrite_class = (
             "// Annihilation cross-section. sigmav is a pointer to a"
@@ -264,7 +264,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     """
 
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    gb_conj = pdg_to_particle(dm.Conjugate.PDG_code, gambit_pdg_dict)
+    gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
 
     towrite = (
             "class {0}\n"
@@ -415,7 +415,7 @@ def write_darkbit_src(dm, pc, sv, ann_products, propagators,
     """
 
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    gb_conj = pdg_to_particle(dm.Conjugate.PDG_code, gambit_pdg_dict)
+    gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
 
     if not isinstance(dm, Particle):
         print("DM not passed over as an instance of class Particle.")

@@ -944,7 +944,7 @@ def drop_mug_file(mug_file, contents):
 
 
 def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
-                   spectrum):
+                   spectrum, with_spheno):
     """
     Drops an example YAML file with all decays of a new model
     added.
@@ -966,7 +966,7 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
         "\n"
     ).format(model_name)
 
-    if add_higgs:
+    if add_higgs and not with_spheno:
         towrite+= (
             "  StandardModel_Higgs:\n"
             "    mH: 125.09\n"

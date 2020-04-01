@@ -404,9 +404,6 @@ if args.file:
 
         # Forward declare some variables
         spheno_decays = {}
-        print "dm pdg = ", dm.PDG_code
-        print "dm conj pdg = ", dm.Conjugate.PDG_code
-
 
         if output_opts.spheno:
 
@@ -441,11 +438,6 @@ if args.file:
             # Get the defs of any SPheno dependencies
             deps = spheno_dependencies(sphenodeps)
 
-            print "before"
-            print "dm pdg = ", dm.PDG_code
-            print "dm conj pdg = ", dm.Conjugate.PDG_code
-
-
             # Write frontends for SPheno. That's a lotta scrapin'.
             print("Writing SPheno frontends.")
             spheno_src, spheno_header, backend_types, btnum = \
@@ -456,10 +448,6 @@ if args.file:
                                        reality_dict, deps, bcs,
                                        charged_higgses, neutral_higgses, 
                                        gum.name, dm,capability_definitions)
-            print "after"
-            print "dm pdg = ", dm.PDG_code
-            print "dm conj pdg = ", dm.Conjugate.PDG_code
-
 
             # cmake entry
             spheno_cmake = write_spheno_cmake_entry(gum.name, SPHENO_VERSION,
@@ -479,9 +467,6 @@ if args.file:
                                                            neutral_higgses,
                                                            gambit_pdgs,
                                                            len(higgses))
-
-        print "dm pdg = ", dm.PDG_code
-        print "dm conj pdg = ", dm.Conjugate.PDG_code
 
 
         """
@@ -906,7 +891,7 @@ if args.file:
 
         # Write a simple YAML file.
         drop_yaml_file(gum.name, model_parameters, add_higgs, reset_contents,
-                       gum.spec)
+                       gum.spec, output_opts.spheno)
         print(("\nGUM has dropped a test YAML file at "
                "$GAMBIT/yaml_files/{0}_example.yaml!").format(gum.name))
 
