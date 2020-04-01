@@ -298,8 +298,11 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
             continue
 
         # Remove SM parameters here
-        if (    (p.block().lower() != 'sm')
-            and (p.block().lower() != 'sminputs')
+        # TODO: SM is not a SLHA block. SM parameters are in sminputs
+        # Parameters in this made-up SM block are not actually fixed
+        #if (    (p.block().lower() != 'sm')
+        #    and (p.block().lower() != 'sminputs')
+        if (    (p.block().lower() != 'sminputs')
             and (p.block().lower() != 'vckm')
             and (p.block().lower() != 'gauge')
             and (p.block().lower() != 'ye')

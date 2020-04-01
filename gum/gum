@@ -404,6 +404,10 @@ if args.file:
 
         # Forward declare some variables
         spheno_decays = {}
+        print "dm pdg = ", dm.PDG_code
+        print "dm conj pdg = ", dm.Conjugate.PDG_code
+
+
         if output_opts.spheno:
 
             # Move SPheno files from SARAH to Outputs.
@@ -416,6 +420,7 @@ if args.file:
 
             # Patch the files
             print("Patching SPheno...")
+
             patch_spheno(clean_model_name, patched_spheno_dir, flags, 
                          bsm_particle_list)
 
@@ -431,8 +436,15 @@ if args.file:
                                 fullpath = fullpath,
                                 fullfile = fullfile)
 
+
+
             # Get the defs of any SPheno dependencies
             deps = spheno_dependencies(sphenodeps)
+
+            print "before"
+            print "dm pdg = ", dm.PDG_code
+            print "dm conj pdg = ", dm.Conjugate.PDG_code
+
 
             # Write frontends for SPheno. That's a lotta scrapin'.
             print("Writing SPheno frontends.")
@@ -443,7 +455,11 @@ if args.file:
                                        blockparams, gambit_pdgs, mixings, 
                                        reality_dict, deps, bcs,
                                        charged_higgses, neutral_higgses, 
-                                       gum.name, capability_definitions)
+                                       gum.name, dm,capability_definitions)
+            print "after"
+            print "dm pdg = ", dm.PDG_code
+            print "dm conj pdg = ", dm.Conjugate.PDG_code
+
 
             # cmake entry
             spheno_cmake = write_spheno_cmake_entry(gum.name, SPHENO_VERSION,
@@ -463,6 +479,10 @@ if args.file:
                                                            neutral_higgses,
                                                            gambit_pdgs,
                                                            len(higgses))
+
+        print "dm pdg = ", dm.PDG_code
+        print "dm conj pdg = ", dm.Conjugate.PDG_code
+
 
         """
         CALCHEP
@@ -565,6 +585,7 @@ if args.file:
 
                 # Get all annihilation products and propagators involved in
                 # DM + DM -> X + Y at tree-level
+
                 ann_products, propagators = \
                     sort_annihilations(dm, three_f, four_f, aux_particles,
                                        antiparticle_dict)

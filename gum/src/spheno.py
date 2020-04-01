@@ -608,7 +608,7 @@ class SPhenoParameter:
 def write_spheno_frontends(model_name, parameters, particles, flags, 
                            spheno_path, output_dir, blockparams, gambit_pdgs, 
                            mixings, reality_dict, sphenodeps, bcs, 
-                           charged_higgses, neutral_higgses, fullmodelname,
+                           charged_higgses, neutral_higgses, fullmodelname,dm,
                            cap_def = {}):
     """
     Writes the frontend source and header files for SPheno.
@@ -647,7 +647,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                            sphenodeps, hb_variables, bcs,
                                            charged_higgses, neutral_higgses,
                                            mass_uncertainty_dict, fullmodelname,
-                                           hb_variable_dictionary)
+                                           hb_variable_dictionary,dm)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -1203,7 +1203,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                               particles, parameters, blockparams, gambit_pdgs, 
                               mixings, reality_dict, sphenodeps, hb_variables,
                               bcs, charged_higgses, neutral_higgses,
-                              mass_uncertainty_dict, fullmodelname, hb_dict):
+                              mass_uncertainty_dict, fullmodelname, hb_dict,dm):
 
     """
     Writes source for 
@@ -1507,9 +1507,15 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     SMnames = ['Fd1', 'Fd2', 'Fd3', 'Fu1', 'Fu2', 'Fu3', 'Fe1', 'Fe2', 'Fe3']
     SMspins = [1, 1, 1, 1, 1, 1, 1, 1, 1]
     decaying_particles = copy.deepcopy(particles)
+    print "dm pdg = ", dm.PDG_code
+    print "dm conj pdg = ", dm.Conjugate.PDG_code
+
     for i in range(0, len(SMpdgs)):
         decaying_particles.append(Particle(SMnames[i], SMnames[i]+'*', SMspins[i], SMpdgs[i], 
               "M"+SMnames[i], alt_name = SMnames[i], alt_mass_name = "M"+SMnames[i]))
+    print "dm pdg = ", dm.PDG_code
+    print "dm conj pdg = ", dm.Conjugate.PDG_code
+
 
     towrite += "std::vector<int> pdg = {\n"
     nparticles = len(decaying_particles);
@@ -1786,8 +1792,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     addedblocks = []
 
     # Go through each LH block we know about, and assign each entry to the SLHAea object.
-    # TG: This assumes these are all complex, but it's not always so
-    # SB: added param.is_real output, queried by SARAH, using this
     for block, entry in blockparams.iteritems():
 
         # Firstly create the block
