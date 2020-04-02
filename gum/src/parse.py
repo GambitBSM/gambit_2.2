@@ -29,6 +29,7 @@
 import yaml
 import re
 from distutils.dir_util import copy_tree
+from collections import defaultdict
 
 from setup import *
 from cmake_variables import *
@@ -305,8 +306,6 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
     blocks = {}
     interactionorders = {}
 
-    numbraces = 0
-
     # Remove all the stuff before parameters
     s1 = contents[contents.find('M$Parameters'):]
 
@@ -456,7 +455,6 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
                                 "manuals for details.").format(param))
 
     # 2. Particles
-    numbraces = 0
 
     # Remove all the stuff before parameters
     s3 = contents[contents.find('M$ClassesDescription'):]
@@ -564,15 +562,289 @@ def parse_sarah_model_file(model_name, outputs):
     with open(partfile, 'r') as f:
         partlines = f.readlines()
 
-    # Every new parameter needs the following:
-    # - LesHouches -> {BLOCK,INDEX}
+    # 1. Parameters
+
+    # Flatten the string
+    contents = "".join(partlines).replace("\n","")
+
+    # Remove all the stuff before the EWSB particle defs. All we need I think...
+    s1 = contents[contents.find('ParticleDefinitions[EWSB]'):]
+
+    # Search through the string and count the number of curly braces. 
+    # When we get to zero then we're done.
+    numbraces = 0
+    started = False
+    commenting = False
+    s2 = ""
+    for i in range(len(s1)):
+        char = s1[i]
+        chars = s1[i] + s1[i+1]
+        if numbraces > 0: started = True
+        if char == "{" and not commenting:   numbraces += 1
+        elif char == "}" and not commenting: numbraces -= 1
+        # Don't count braces if we're in a comment, just in case someone is 
+        # truly twisted
+        elif chars == "(*" or chars == "*)": commenting = not commenting
+        if started: s2 += char
+        if numbraces == 0 and started: break
+
+    # Get the particle names
+    # Pattern looks like:
+    # {particlename, {...} }
+    particles = {}
+    pat = r'{\s*(.*?)\s*,\s*{(.*?)}\s*}\s*(,|$)'
+
+    # The hard-coded/protected descriptions:
+    safeparticles = [
+                    "Left Down-Squarks", 
+                    "Right Down-Squarks", 
+                    "Left Up-Squarks", 
+                    "Right Up-Squarks", 
+                    "Left Selectron", 
+                    "Right Selectron", 
+                    "Left Sneutrino",  
+                    "Neutral Down-Higgs", 
+                    "Charged Down-Higgs",
+                    "Neutral Up-Higgs",
+                    "Charged Up-Higgs",
+                    "B-Boson",
+                    "Gluon",
+                    "W-Bosons",
+                    "B-Boson Ghost",
+                    "Gluon Ghost",
+                    "W-Boson Ghost",
+                    "Wino", 
+                    "Bino", 
+                    "Neutral Higgsinos",
+                    "Charged Higgsinos",
+                    "Down-Squarks",  
+                    "Up-Squarks",
+                    "Sleptons",   
+                    "Sneutrinos",  
+                    "Higgs",
+                    "Pseudo-Scalar Higgs",
+                    "Charged Higgs", 
+                    "Photon", 
+                    "Z-Boson",
+                    "Gluon",
+                    "W-Boson",
+                    "W+ - Boson",
+                    "Photon Ghost",
+                    "Negative W-Boson Ghost",
+                    "Positive W-Boson Ghost", 
+                    "Positive W+ - Boson Ghost",
+                    "Negative W+ - Boson Ghost", 
+                    "Z-Boson Ghost",
+                    "Gluino",
+                    "Neutralinos",
+                    "Charginos",
+                    "Down-Quarks",
+                    "Up-Quarks",
+                    "Leptons",
+                    "Neutrinos",
+                    "Neutral Down-Higgsino",
+                    "Neutral Up-Higgsino",
+                    "Charged Down-Higgsino",
+                    "Charged Up-Higgsino",
+                    "Neutralino Weyl-Spinor",
+                    "Negative Chargino Weyl-Spinor",
+                    "Positive Chargino Weyl-Spinor",
+                    "Gluino Weyl-Spinor",
+                    "Wino Weyl-Spinor",
+                    "Neutral Wino",
+                    "Negative Wino",
+                    "Positive Wino",
+                    "Bino Weyl-Spinor",
+                    "Left Electron", 
+                    "Left Neutrino", 
+                    "Right Electron", 
+                    "Left Down-Quark", 
+                    "Right Down-Quark", 
+                    "Left Up-Quark", 
+                    "Right Up-Quark", 
+                    "Left-Neutrino-Masseigenstate", 
+                    "Rotated Left Electron", 
+                    "Rotated Right Electron", 
+                    "Rotated Left Up-Quark", 
+                    "Rotated Right Up-Quark", 
+                    "Rotated Left Down-Quark", 
+                    "Rotated Right Down-Quark", 
+                    "Dirac Left Up-Quark",
+                    "Dirac Right Up-Quark",
+                    "Dirac Left Down-Quark",
+                    "Dirac Right Down-Quark",
+                    "Dirac Left Electron",
+                    "Dirac Right Electron",
+                    "Dirac Left Neutrino",
+                    "Dirac Right Neutrino",
+                    "Left Leptons", 
+                    "Left Quarks", 
+                    "Down-Higgsino", 
+                    "Up-Higgsino", 
+                    "Scalar Down", 
+                    "Scalar Up", 
+                    "Pseudo Scalar Down", 
+                    "Pseudo Scalar Up", 
+                    "Down-Higgs", 
+                    "Up-Higgs", 
+                    "Left Slepton", 
+                    "Left Squark", 
+                    "Right Electron Superfield", 
+                    "Right Down-Quark Superfield", 
+                    "Left Quark Superfield", 
+                    "Right Up-Quark Superfield", 
+                    "left Lepton Superfield", 
+                    "Down-Higgs Superfield", 
+                    "Up-Higgs Superfield", 
+                    "Gluon Superfield", 
+                    "B Superfield", 
+                    "W Superfield", 
+                    "Singlino", 
+                    "Singlet", 
+                    "Weyl Spinor of Singlino", 
+                    "Scalar Singlet", 
+                    "Pseudo Scalar Singlet", 
+                    "Singlet Superfield",
+                    "Scalar Sneutrino",
+                    "Pseudo Scalar Sneutrino",
+                    "Right Scalar Sneutrino",
+                    "Right Pseudo Scalar Sneutrino",
+                    "Right Neutrino",
+                    "Right Sneutrino",
+                    "Right Neutrino Superfield",
+                    "CP-even Sneutrino",
+                    "CP-odd Sneutrino",
+                    "Bino'",
+                    "B'-Boson",
+                    "B'-Boson Ghost",
+                    "Z'-Boson",
+                    "Z'-Ghost",  
+                    "Gravitino",
+                    "Goldstino",
+                    "Weyl Gravitino",
+                    "Weyl Goldstino",
+                    "W'-Boson",
+                    "Negative W'-Boson Ghost",
+                    "Positive W'-Boson Ghost"]
+
+    # Get all particle names + definitions 
+    for match in re.findall(pat, s2):
+        particles[match[0]] = match[1]
+
+    # Any numerical dependences should be given in the parameters list, save 'em
+    massdeps = defaultdict(list)
+
+    for particle, entry in particles.iteritems():
+
+        # The particle description
+        desc = re.search(r'Description\s*->\s*"(.*?)"', entry)
+
+        if not desc:
+            raise GumError(("No description for particle {0}.\n"
+                            "Please update your SARAH file.").format(particle))
+
+        # PDG codes
+        pdg = re.search(r'PDG\s*->\s*{(.*?)}', entry)
+
+        # Mass
+        # Try to get something between braces first
+        mass = re.search(r'Mass\s*->\s*{(.*?)}', entry)
+        if not mass:
+            mass = re.search(r'Mass\s*->\s*(.*?)(,|$)', entry)
+
+        # If there's no PDG code and no mass parameter, check to see if the
+        # particle properties are defined elsewhere in SARAH. These are done by
+        # the mutual "Description" field for some reason
+        if not pdg or not mass:
+
+            if desc:
+                # If it's there - all good
+                if desc.group(1) in safeparticles:
+                    continue
+
+            else:
+                raise GumError(("There is either no PDG code or mass given for "
+                                "particle {0}, and SARAH\n doesn't have it "
+                                "internally defined. Please update your SARAH "
+                                "file.").format(particle))
+
+        # Check PDG code entry.
+
+        # Get the PDG code(s)
+        pdgcodes = pdg.group(1).split(',')
+        pdgcodes = [int(x.strip(' ')) for x in pdgcodes]
+
+        # If all PDG codes are 0 then these are unphysical particles: 
+        # their entries don't matter...
+        if all(pdg == 0 for pdg in pdgcodes): continue
+
+        # Check the mass entry
+        massentry = mass.group(1).split(',')
+        massentry = [x.strip(' ') for x in massentry]
+
+        # Acceptable entries for Mass:
+        # ["Automatic", "LesHouches", numerical value (can be array), parameter name,
+        # "Dependence" (this then requires the MassDependence entry)]
+        for m in massentry:
+            if not m.strip(' ') in ["LesHouches", "Automatic", "Dependence"] and not m.isdigit():
+                massdeps[particle].append(m)
+
+        # Electric charge -- we need this
+        q = re.search(r'ElectricCharge\s*->\s*(.*?)', entry)
+
+        if not q:
+            raise GumError(("No electric charge defined for particle {0}.\n"
+                            "Please update your SARAH file.").format(particle))
+       
+        # Output name -- this one's optional
+        output = re.search(r'OutputName\s*->\s*"(.*?)"', entry)
+
+        if output:
+            # Check for no non-alphanumeric characters
+            oname = output.group(1)
+            alnums = ''.join(x for x in oname if not x.isalnum() 
+                             and not x == '_')
+            if alnums:
+                raise GumError(("Non-alphanumeric characters found in the "
+                                "OutputName entry for particle {0}.\n"
+                                "Please change this entry."
+                                ).format(particle))
 
 
-    # Every new particle needs the following:
-    # - PDG -> {value(s)},
-    # - Mass -> LesHouches/some value,              
-    # - ElectricCharge -> ...
-    # - OutputName -> ...
+    # 2. Parameters
+
+    # Flatten the string
+    contents = "".join(paramlines).replace("\n","")
+
+    # Remove all the stuff before the EWSB particle defs. All we need I think...
+    s1 = contents[contents.find('ParameterDefinitions'):]
+
+    # Search through the string and count the number of curly braces. 
+    # When we get to zero then we're done.
+    numbraces = 0
+    started = False
+    commenting = False
+    s2 = ""
+    for i in range(len(s1)):
+        char = s1[i]
+        chars = s1[i] + s1[i+1]
+        if numbraces > 0: started = True
+        if char == "{" and not commenting:   numbraces += 1
+        elif char == "}" and not commenting: numbraces -= 1
+        # Don't count braces if we're in a comment, just in case someone is 
+        # truly twisted
+        elif chars == "(*" or chars == "*)": commenting = not commenting
+        if started: s2 += char
+        if numbraces == 0 and started: break
+
+    # Get the parameter names
+    # Pattern looks like:
+    # {parametername, {...} }
+    parameters = {}
+    pat = r'{\s*(.*?)\s*,\s*{(.*?)}\s*}\s*(,|$)'
+    # Get all particle names + definitions 
+    for match in re.findall(pat, s2):
+        parameters[match[0]] = match[1]
 
 
-    print("SARAH parser doesn't do much, yet")
+    # TODO finish parameters

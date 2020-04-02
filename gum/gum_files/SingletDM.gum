@@ -15,7 +15,7 @@ wimp_candidate: 9900001
 # Outputs for GUM to hook up to GAMBIT
 output:
   calchep: true
-  #pythia: true
+  pythia: true
 
 # Options for the outputs.
 output_options:
