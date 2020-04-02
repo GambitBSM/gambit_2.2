@@ -22,6 +22,9 @@ NormalDist: |
 TestModel1D: |
    A one-dimensional test model, typically used for debugging simple prior transformations, or when a dummy model is required (as in the external model example in ColliderBit).
 
+demo_CAP: |
+   A test model for a demonstration of the use of ordinary module functions directly in a model namespace.
+
 MSSM63atQ: |
    The most general formulation of the CP-conserving MSSM, with C terms set to zero due to their usual irrelevance in (known) SUSY-breaking schemes. The parameters are:
 
@@ -553,3 +556,7 @@ RightHandedNeutrinos_diff: |
 
 StandardModel_mNudiff: |
    Daughter model of the StandardModel_SLHA2 where the masses of neutrinos have been substituted by mass differences and the absolute lightest neutrino mass.
+
+THDM_II: |
+    THDM_II model, created by GUM, with parameters: Lam1, Lam2, Lam3, Lam4, Lam5, M12, TanBeta
+

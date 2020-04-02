@@ -267,6 +267,9 @@ MathTest_Gammafunc: |
 MathTest_deltabar: |
    Test function for Mamthematica backends for tsting non-alphanumerical characters in variable names
 
+large_print: |
+   Scale test for various aspects of the printer buffer system. Creates 1000 items to be printed per point
+
 
 
 #-------------------------------------
@@ -3856,6 +3859,12 @@ RightHandedNeutrinos_parameters: |
 RightHandedNeutrinos_diff_parameters: |
    Parameters for the model RightHandedNeutrinos_diff (see ./gambit RightHandedNeutrinos_diff)
  
+demo_CAP_parameters: |
+   Parameters for the demo_CAP model (see ./gambit demo_CAP)
+
+a_cap: |
+  Capability for a model demonstration of the use of ordinary module functions directly in a model namespace
+
 
 #-------------------------------------
 #  FeynHiggs capabilities
@@ -4444,4 +4453,28 @@ SARAHSPheno_SSDM_HiggsCouplingsTable: |
 
 SARAHSPheno_SSDM_4_0_3_init: |
     Initialisation of backend SARAH-SPheno v4.0.3 for model SSDM.
+
+
+#####  THDM_II model #####
+
+THDM_II_spectrum: |
+    Create spectrum object for THDM_II model.
+
+SARAHSPheno_THDM_II_internal: |
+    Exclusively used for internal variables and functions for the SARAH-SPheno backend.
+
+SARAHSPheno_THDM_II_spectrum: |
+    Calculates and returns a THDM_II spectrum object using SARAH-SPheno.
+
+THDM_II_parameters: |
+    Parameters for the model THDM_II (see ./gambit THDM_II).
+
+SARAHSPheno_THDM_II_HiggsCouplingsTable: |
+    Fills the Higgs couplings table using SARAH-SPheno.
+
+SARAHSPheno_THDM_II_4_0_3_init: |
+    Initialisation of backend SARAH-SPheno v4.0.3 for model THDM_II.
+
+SARAHSPheno_THDM_II_decays: |
+    Calculates and returns all decays for the THDM_II model using SARAH-SPheno.
 
