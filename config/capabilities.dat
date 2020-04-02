@@ -433,6 +433,9 @@ RunMC: |
    Controls the parallelization and execution of the entire
    event loop of the collider simulation.
 
+CrossSection: |
+   Total cross-section used to scale Pythia event numbers.
+
 LHCEventLoopInfo: |
    Info about the event loop.
 
@@ -742,6 +745,10 @@ LEP205_xsec_chi00_34: |
 LEP205_xsec_chi00_44: |
    The LEP neutralino pair production cross-section for
    mass eigenstates 'chi04' and 'chi04' at centre of mass energy 205 GeV.
+
+LEP207_xsec_chi00_11: |
+   The LEP neutralino pair production cross-section for
+   mass eigenstates 'chi01' and 'chi01' at centre of mass energy 207 GeV.
 
 LEP208_xsec_chi00_11: |
    The LEP neutralino pair production cross-section for
@@ -4408,4 +4415,28 @@ passParameters: |
 varNames: |
   CalcHEP's internal list of variable names.
 
+
+
+#####  SSDM model #####
+
+SARAHSPheno_SSDM_internal: |
+    Exclusively used for internal variables and functions for the SARAH-SPheno backend.
+
+SARAHSPheno_SSDM_spectrum: |
+    Calculates and returns a SSDM spectrum object using SARAH-SPheno.
+
+SARAHSPheno_SSDM_decays: |
+    Calculates and returns all decays for the SSDM model using SARAH-SPheno.
+
+SSDM_spectrum: |
+    Create spectrum object for SSDM model.
+
+SSDM_parameters: |
+    Parameters for the model SSDM (see ./gambit SSDM).
+
+SARAHSPheno_SSDM_HiggsCouplingsTable: |
+    Fills the Higgs couplings table using SARAH-SPheno.
+
+SARAHSPheno_SSDM_4_0_3_init: |
+    Initialisation of backend SARAH-SPheno v4.0.3 for model SSDM.
 
