@@ -616,6 +616,11 @@ L3_Chargino_Leptonic_LLike: |
    model-independent limit according to the L3 collaboration.
    Returns a log likelihood value.
 
+L3_Gravitino_LLike: |
+    Compares the cross section times branching ratio for single-
+    and multi-photon events to the model-independent limit according
+    to the L3 collaboration. Returns a log likelihood value.
+
 OPAL_Neutralino_Hadronic_LLike: |
     Compares the cross section times branching ratio for neutralino
     pair production (with hadronically decaying Z bosons) to the
