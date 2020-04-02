@@ -562,39 +562,7 @@ def parse_sarah_model_file(model_name, outputs):
     with open(partfile, 'r') as f:
         partlines = f.readlines()
 
-    # 1. Parameters
-
-    # Flatten the string
-    contents = "".join(partlines).replace("\n","")
-
-    # Remove all the stuff before the EWSB particle defs. All we need I think...
-    s1 = contents[contents.find('ParticleDefinitions[EWSB]'):]
-
-    # Search through the string and count the number of curly braces. 
-    # When we get to zero then we're done.
-    numbraces = 0
-    started = False
-    commenting = False
-    s2 = ""
-    for i in range(len(s1)):
-        char = s1[i]
-        chars = s1[i] + s1[i+1]
-        if numbraces > 0: started = True
-        if char == "{" and not commenting:   numbraces += 1
-        elif char == "}" and not commenting: numbraces -= 1
-        # Don't count braces if we're in a comment, just in case someone is 
-        # truly twisted
-        elif chars == "(*" or chars == "*)": commenting = not commenting
-        if started: s2 += char
-        if numbraces == 0 and started: break
-
-    # Get the particle names
-    # Pattern looks like:
-    # {particlename, {...} }
-    particles = {}
-    pat = r'{\s*(.*?)\s*,\s*{(.*?)}\s*}\s*(,|$)'
-
-    # The hard-coded/protected descriptions:
+    # The hard-coded/protected descriptions for particles
     safeparticles = [
                     "Left Down-Squarks", 
                     "Right Down-Squarks", 
@@ -727,6 +695,158 @@ def parse_sarah_model_file(model_name, outputs):
                     "Negative W'-Boson Ghost",
                     "Positive W'-Boson Ghost"]
 
+    # And for parameters
+    safeparameters = [
+                    "Hypercharge-Coupling", 
+                    "Left-Coupling", 
+                    "inverse weak coupling constant at mZ",
+                    "Fermi's constant",
+                    "electric charge",
+                    "Weinberg-Angle",
+                    "Strong-Coupling", 
+                    "Alpha Strong", 
+                    "Up-Yukawa-Coupling",
+                    "Down-Yukawa-Coupling",
+                    "Lepton-Yukawa-Coupling",
+                    "Trilinear-Lepton-Coupling",
+                    "Trilinear-Down-Coupling",
+                    "Trilinear-Up-Coupling",
+                    "Mu-parameter",
+                    "Bmu-parameter",
+                    "Hypercharge FI-Term", 
+                    "Softbreaking left Squark Mass",
+                    "Softbreaking right Slepton Mass",
+                    "Softbreaking left Slepton Mass",
+                    "Softbreaking right Up-Squark Mass",
+                    "Softbreaking right Down-Squark Mass",
+                    "Softbreaking Down-Higgs Mass",
+                    "Softbreaking Up-Higgs Mass",
+                    "Bino Mass parameter",
+                    "Wino Mass parameter",
+                    "Gluino Mass parameter",
+                    "Down-VEV",
+                    "Up-VEV", 
+                    "EW-VEV",
+                    "Pseudo Scalar mixing angle",
+                    "Tan Beta" ,
+                    "Scalar mixing angle",
+                    "Photon-Z Mixing Matrix",
+                    "W Mixing Matrix",
+                    "Wino Mixing Matrix",
+                    "Down-Squark-Mixing-Matrix",
+                    "Up-Squark-Mixing-Matrix",
+                    "Slepton-Mixing-Matrix",
+                    "Neutralino Mixing-Matrix",
+                    "Sneutrino Mixing-Matrix",
+                    "Chargino-plus Mixing-Matrix",
+                    "Chargino-minus Mixing-Matrix",
+                    "Scalar-Mixing-Matrix", 
+                    "Pseudo-Scalar-Mixing-Matrix", 
+                    "Charged-Mixing-Matrix", 
+                    "Left-Lepton-Mixing-Matrix", 
+                    "Right-Lepton-Mixing-Matrix", 
+                    "Left-Down-Mixing-Matrix", 
+                    "Right-Down-Mixing-Matrix", 
+                    "Left-Up-Mixing-Matrix", 
+                    "Right-Up-Mixing-Matrix", 
+                    "Neutrino-Mixing-Matrix", 
+                    "PMNS Matrix", 
+                    "CKM Matrix", 
+                    "Complex CKM Matrix", 
+                    "Wolfenstein Parameter eta", 
+                    "Wolfenstein Parameter A", 
+                    "Wolfenstein Parameter lambda", 
+                    "Wolfenstein Parameter rho", 
+                    "SCKM Up-Yukawa-Coupling",
+                    "SCKM Down-Yukawa-Coupling",
+                    "SCKM Trilinear-Down-Coupling",
+                    "SCKM Trilinear-Up-Coupling",
+                    "SCKM Softbreaking left Squark Mass",
+                    "SCKM Softbreaking right Up-Squark Mass",
+                    "SCKM Softbreaking right Down-Squark Mass",
+                    "PMNS Electron-Yukawa-Coupling",
+                    "PMNS Trilinear-Lepton-Coupling",
+                    "PMNS Softbreaking right Slepton Mass",
+                    "PMNS Softbreaking left Slepton Mass",
+                    "Gluino-Phase",
+                    "Theta'",
+                    "U(1)' Gauge Coupling",
+                    "Photon-Z-Z' Mixing Matrix",
+                    "Photon-Z-Z' Mixing Matrix",
+                    "B-L-Coupling", 
+                    "Mixed Gauge Coupling 1",
+                    "Mixed Gauge Coupling 2",
+                    "Z' mass", 
+                    "Bino' Mass",
+                    "Mixed Gaugino Mass 1",
+                    "Mixed Gaugino Mass 2",
+                    "Mu' Parameter",
+                    "B' Parameter",
+                    "Bilepton 1 Soft-Breaking mass",
+                    "Bilepton 2 Soft-Breaking mass",
+                    "Bilepton 1 VEV",
+                    "Bilepton 2 VEV",
+                    "Bilepton VEV",
+                    "Bilepton Scalar Mixing Angle",
+                    "Bilepton Pseudo Scalar Mixing Angle",
+                    "Neutrino-X-Yukawa-Coupling",
+                    "Trilinear-Neutrino-X-Coupling",
+                    "Bilepton Scalar Mixing Matrix",
+                    "Bilepton Pseudo Scalar Mixing Matrix", 
+                    "Singlet Self-Interaction",
+                    "Softbreaking Singlet Self-Interaction",
+                    "Singlet-Higgs-Interaction",
+                    "Softbreaking Singlet-Higgs-Interaction",
+                    "Softbreaking Singlet Mass", 
+                    "Singlet-VEV", 
+                    "Sneutrino-VEV",
+                    "Right Sneutrino-VEV",
+                    "Bilinear RpV-Parameter",
+                    "Softbreaking Bilinear RpV-Parameter",
+                    "Soft-breaking Higgs Slepton Mixing Term",
+                    "Neutrino-Yukawa-Coupling",
+                    "Trilinear-Neutrino-Coupling",
+                    "Softbreaking right Sneutrino Mass",
+                    "Weinberg Operator",
+                    "Soft Breaking Weinberg Operator",
+                    "SM Mu Parameter",
+                    "SM Higgs Selfcouplings",
+                    "SM Higgs Mass Parameter",
+                    "Gravitino Mass",
+                    "Planck Mass"]
+
+    # 1. Parameters
+
+    # Flatten the string
+    contents = "".join(partlines).replace("\n","")
+
+    # Remove all the stuff before the EWSB particle defs. All we need I think...
+    s1 = contents[contents.find('ParticleDefinitions[EWSB]'):]
+
+    # Search through the string and count the number of curly braces. 
+    # When we get to zero then we're done.
+    numbraces = 0
+    started = False
+    commenting = False
+    s2 = ""
+    for i in range(len(s1)):
+        char = s1[i]
+        chars = s1[i] + s1[i+1]
+        if numbraces > 0: started = True
+        if char == "{" and not commenting:   numbraces += 1
+        elif char == "}" and not commenting: numbraces -= 1
+        # Don't count braces if we're in a comment, just in case someone is 
+        # truly twisted
+        elif chars == "(*" or chars == "*)": commenting = not commenting
+        if started: s2 += char
+        if numbraces == 0 and started: break
+
+    # Get the particle names
+    # Pattern looks like:
+    # {particlename, {...} }
+    particles = {}
+    pat = r'{\s*(.*?)\s*,\s*{(.*?)}\s*}\s*(,|$)'
+
     # Get all particle names + definitions 
     for match in re.findall(pat, s2):
         particles[match[0]] = match[1]
@@ -846,5 +966,30 @@ def parse_sarah_model_file(model_name, outputs):
     for match in re.findall(pat, s2):
         parameters[match[0]] = match[1]
 
+    for parameter, entry in parameters.iteritems():
 
-    # TODO finish parameters
+        # The parameter description
+        desc = re.search(r'Description\s*->\s*"(.*?)"', entry)
+
+        # The output name
+        output = re.search(r'OutputName\s*->\s*(.*?)\s*(,|})', entry)
+
+        # Any dependence on other parameters?
+        dep = re.search(r'DependenceNum\s*->\s*(.*?)\s*(,|})', entry)
+
+        # LH block
+        block = re.search(r'LesHouches\s*->\s*{(.*?)}', entry)
+    
+        if desc:
+            # If it's there - all good, it's known to SARAH
+            if desc.group(1) in safeparameters:
+                continue
+        # If not - check to see if there's an LH block (and entry) associated
+        # with the parameter. If there's not, then we can't do anything. 
+        else:
+            if not block:
+                raise GumError(("There is no LesHouches entry given for "
+                                "parameter {0}, and SARAH\n doesn't have it "
+                                "internally defined. Please update your SARAH "
+                                "file.").format(parameter))
+
