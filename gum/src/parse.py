@@ -316,13 +316,15 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
     started = False
     commenting = False
     s2 = ""
-    for char in s1:
+    for i in range(len(s1)):
+        char = s1[i]
+        chars = s1[i] + s1[i+1]
         if numbraces > 0: started = True
         if char == "{" and not commenting:   numbraces += 1
         elif char == "}" and not commenting: numbraces -= 1
         # Don't count braces if we're in a comment, just in case someone is 
         # truly twisted
-        elif char == "\"": commenting = not commenting
+        elif chars == "(*" or chars == "*)": commenting = not commenting
         if started: s2 += char
         if numbraces == 0 and started: break
 
@@ -330,42 +332,121 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
     params = []
     for i in s2.split('==')[:-1]:
         params.append( i.strip(' ').split(' ')[-1])
+
+    # Add two curly braces to the params, as we're done now, to extract
+    # information for the last parameter
+    params.append('\}\}')
     
     # Get the contents between each parameter
     matches = []
     for i in range(len(params)-1):
-        pat = r'{}(.*?){}'.format(params[i], params[i+1])
-        matches.append( re.search(pat, s2).group(1) )
-    matches.append( s2[s2.find(params[-1]):])
+        pat = r'{}\s*==\s*(.*?){}'.format(params[i], params[i+1])
+        if re.search(pat, s2):
+            matches.append( re.search(pat, s2).group(1) )
+        else:
+            raise GumError(("Can't get the parameter definition for "
+                            "the parameter {0}.\n"
+                            "I tried using the pattern: {1}."
+                            ).format(params[i], pat))
 
     for i in range(len(matches)):
         match = matches[i]
+        paramtype = re.search(r'ParameterType\s*->(.*?),', match)
+        p = paramtype.group(1).strip(' ')
         blockmatch = re.search(r'BlockName\s*->(.*?),', match)
         ordermatch = re.search(r'OrderBlock\s*->(.*?),', match)
         if blockmatch:
             if ordermatch: 
-                blocks[ params[i] ] = { blockmatch.group(1) : 
-                                        ordermatch.group(1) }
+                blocks[ params[i] ] = { blockmatch.group(1).strip(' ') : 
+                                        ordermatch.group(1).strip(' ') }
             else:
-                blocks[ params[i] ] = blockmatch.group(1)
-        # TODO don't need blockname for everything -- figure it out -- if it's
-        # an internal parameter,  I think...
-        # else:
-        #     raise GumError(("No BlockName specified for the parameter "
-        #                     "{0}. GUM and GAMBIT need this information "
-        #                     "so please change your .fr file!"
-        #                     ).format(params[i]))
+                blocks[ params[i] ] = blockmatch.group(1).strip(' ')
+        # Don't need a blockname if it's an internal parameter
+        elif not blockmatch and p == "Internal":
+            pass
+        # But if it's external and no block - gum can't use it
+        else:
+            raise GumError(("No BlockName specified for the parameter "
+                            "{0}. GUM and GAMBIT need this information "
+                            "so please change your .fr file!"
+                            ).format(params[i]))
         interactionmatch = re.search(r'InteractionOrder\s*->\s*\{(.*?),(.*?)\}',
                                      match)
         if interactionmatch:
-            interactionorders[ params[i] ] = interactionmatch.group(1)
+            interactionorders[ params[i] ] = interactionmatch.group(1).strip(' ')
+        elif not interactionmatch and p == "Internal":
+            interactionorders[ params[i] ] = p
+        elif blockmatch.group(1).strip(' ').lower() == "yukawa":
+            interactionorders[ params[i] ] = "yukawa"       
+        elif blockmatch.group(1).strip(' ').lower() == "ckmblock":
+            interactionorders[ params[i] ] = "ckm"
         else:
             interactionorders[ params[i] ] = "NULL"
 
+        # Does it have an external name?
+        # First try and match a set of parameter names
+        #print match
+        paramname = re.search(r'ParameterName\s*->\s*\{(.*?)\}', match)
+        alnums = ""
+        # This is the case where the ParameterName is a list, so parse like one
+        if paramname:
+            pn = paramname.group(1)
+            # Pattern looks like: parameter[i,j] -> ...
+            pattern = r'{}\[(\d),(\d)]\s*->\s*((.*?)+)(,|$)'.format(params[i])
+            if re.findall(pattern, pn):
+                defs = re.findall(pattern, pn)
+                for d in defs:
+                    alnums += ''.join(x for x in d[2] if not x.isalnum() 
+                                      and not x == '_')
+            else:
+                raise GumError(("Can't parse the ParameterName entry for "
+                                "the parameter {0}.").format(params[i]))
+
+        else:
+            paramname = re.search(r'ParameterName\s*->(.*?),', match)
+            if paramname:
+                # Does it have any non-alphanumeric characters?
+                pn = paramname.group(1).strip(' ')
+                alnums = ''.join(x for x in pn if not x.isalnum() 
+                                 and not x == '_')
+        if alnums:
+            raise GumError(("Non-alphanumeric characters found in the "
+                            "ParameterName entry for parameter {0}.\n"
+                            "Please change this entry."
+                            ).format(params[i]))
+
+
+    justblocks = []
+    paramsbyblock = {}
+    # Go through blocks and check for no double definitions
+    for param, blockentry in blocks.iteritems():
+        if isinstance(blockentry, dict): 
+            for block, index in blockentry.iteritems():
+                if block in paramsbyblock:
+                    l = paramsbyblock[block] # This is a list
+                    if index in l:
+                        raise GumError(("Index {0} defined twice for the "
+                                        "block {1}.\nPlease change your "
+                                        "FeynRules file.").format(index, block))
+                    else:
+                        l.append(index)
+                        paramsbyblock[block] = l
+                else:
+                    paramsbyblock[block] = [index]
+        else:
+            if blockentry in justblocks:
+                raise GumError(("The block {0} (with no entry) already exists."
+                                "\nPlease add some indices to all entries with "
+                                "this block in your FeynRules file."
+                                ).format(blockentry))
+            justblocks.append(blockentry)
+
     # Check for InteractionOrder
-    # TODO need to specify *which* parameters actually need these...
+    # If it's Yukawa or CKM then this will work fine. Demand it for the rest.
     if outputs.ufo:
         for param, orders in interactionorders.iteritems():
+            if orders in ["Internal", "yukawa", "ckm"]:
+                continue
             if orders == "NULL":
                 raise GumError(("No interaction order specified for the "
                                 "parameter {0}, and you have asked for UFO "
@@ -415,7 +496,7 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
         if re.match(r'U\[\d*\]', particles[i]):
             continue
         match = partmatches[i]
-        # Unphysical fieldsd don't matter either
+        # Unphysical fields don't matter either
         unphysmatch = re.search(r'Unphysical\s*->\s*True', match)
         if unphysmatch:
             continue
@@ -435,6 +516,8 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
                             "please give it one in your .fr file, as "
                             "GUM and GAMBIT need this information."
                             ).format(particles[i]))
+        
+
 
     print("FeynRules file seems ok; firing up a Mathematica kernel...")
 
@@ -447,23 +530,49 @@ def parse_sarah_model_file(model_name, outputs):
 
     # Figure out where the SARAH files live
     # First - check for them in the SARAH directory 
-    sarah_file_path = SARAH_PATH + ("/Models/{0}/{0}.m").format(model_name)
 
+    sarahdir = SARAH_PATH + ("/Models/{0}/").format(model_name)
+    gumdir = GUM_DIR + ("/Models/{0}/").format(model_name)
+    sarahfolder = sarahdir
+
+    sarah_file_path = sarahdir + ("{0}.m").format(model_name)
     # If it doesn't exist, try the GUM models folder
     if not os.path.isfile(sarah_file_path):
-        sarah_file_path = GUM_DIR + ("/Models/{0}/{0}.m").format(model_name)
+        sarah_file_path = gumdir + ("{0}.m").format(model_name)
         if not os.path.isfile(sarah_file_path):
             raise GumError(("GUM Error: Unable to find the model {0} in either "
                             "the SARAH model directory, or the GUM model "
                             "directory!\nPlease move it to one of "
                             "these locations.").format(model_name))
         # Copy the files to the SARAH directory, then we should be good to go
-        gumdir = GUM_DIR + ("/Models/{0}/").format(model_name)
-        sarahdir = SARAH_PATH + ("/Models/{0}/").format(model_name)
         copy_tree(gumdir, sarahdir)
 
-    # Read the input in
-    with open(sarah_file_path, 'r') as f:
-        lines = f.readlines()
+    # Read the inputs in
+    paramfile = sarahdir + "/parameters.m"
+    partfile = sarahdir + "/particles.m"
+    sphenofile = sarahdir + "/SPheno.m"
+
+    if outputs.spheno:
+        if not os.path.isfile(sphenofile):
+            raise GumError(("No SPheno.m file found within the SARAH model "
+                            "directory,\nbut SPheno output has been requested."
+                            "\nPlease fix this...!"))
+
+    with open(paramfile, 'r') as f:
+        paramlines = f.readlines()
+
+    with open(partfile, 'r') as f:
+        partlines = f.readlines()
+
+    # Every new parameter needs the following:
+    # - LesHouches -> {BLOCK,INDEX}
+
+
+    # Every new particle needs the following:
+    # - PDG -> {value(s)},
+    # - Mass -> LesHouches/some value,              
+    # - ElectricCharge -> ...
+    # - OutputName -> ...
+
 
     print("SARAH parser doesn't do much, yet")
