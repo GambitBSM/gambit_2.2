@@ -608,7 +608,7 @@ class SPhenoParameter:
 def write_spheno_frontends(model_name, parameters, particles, flags, 
                            spheno_path, output_dir, blockparams, gambit_pdgs, 
                            mixings, reality_dict, sphenodeps, bcs, 
-                           charged_higgses, neutral_higgses, fullmodelname,dm,
+                           charged_higgses, neutral_higgses, fullmodelname,
                            cap_def = {}):
     """
     Writes the frontend source and header files for SPheno.
@@ -647,7 +647,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                            sphenodeps, hb_variables, bcs,
                                            charged_higgses, neutral_higgses,
                                            mass_uncertainty_dict, fullmodelname,
-                                           hb_variable_dictionary,dm)
+                                           hb_variable_dictionary)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -1203,7 +1203,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                               particles, parameters, blockparams, gambit_pdgs, 
                               mixings, reality_dict, sphenodeps, hb_variables,
                               bcs, charged_higgses, neutral_higgses,
-                              mass_uncertainty_dict, fullmodelname, hb_dict,dm):
+                              mass_uncertainty_dict, fullmodelname, hb_dict):
 
     """
     Writes source for 

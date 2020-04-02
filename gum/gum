@@ -456,7 +456,7 @@ if args.file:
                                        blockparams, gambit_pdgs, mixings, 
                                        reality_dict, deps, bcs,
                                        charged_higgses, neutral_higgses, 
-                                       gum.name, dm,capability_definitions)
+                                       gum.name, capability_definitions)
 
             # cmake entry
             spheno_cmake = write_spheno_cmake_entry(gum.name, SPHENO_VERSION,
