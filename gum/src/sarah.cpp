@@ -95,6 +95,13 @@ namespace GUM
       if (modelname == "ModelName")
         throw std::runtime_error("SARAH Error: Could not load model " + model + ". Please check your SARAH file.");
 
+      // TODO do this properly.
+      // Need this to fill up the variables PART[S], PART[F], PART[V].
+      std::cout << "Checking your model... " << std::endl;
+      
+      command = "CheckModel";
+      send_to_math(command);
+
       // All good.
       std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
   
@@ -226,9 +233,27 @@ namespace GUM
       int lenpl;
       get_from_math(lenpl);
 
-      // Save all rotations
-      command = "rotationsgum = Join[DEFINITION[EWSB][MatterSector], DEFINITION[EWSB][GaugeSector]] //. diracSubBack[ALL]";
+      // Save some stuff for in a minute.
 
+      // Fermions
+      std::vector<std::string> dFs;
+      command = "PART[F][[All,1]]";
+      // command = "diracFermions[ALL]";
+      send_to_math(command);
+      get_from_math(dFs);
+
+      // Scalar
+      std::vector<std::string> scs;
+      command = "PART[S][[All,1]]";
+      send_to_math(command);
+      get_from_math(scs);
+      
+      // Vector
+      std::vector<std::string> vecs;
+      command = "PART[V][[All,1]]";
+      send_to_math(command);
+      get_from_math(scs);
+      
       std::cout << "Found " << lenpl << " particle sets." << std::endl;
 
       // Get to parsing this monster.
@@ -258,7 +283,7 @@ namespace GUM
             std::string antioutputname;
             std::string mass;
             std::string colorrep;
-            int spinX2 = 0; // Needs to be initialised to suppress compiler warnings.
+            int spinX2 = -1; // Set to -1 for error catching
             int chargeX3 = 0;
             int color = 0;
             int pdg;
@@ -380,10 +405,26 @@ namespace GUM
             else if(spinentry == "NoField") 
             {
               std::cout << "NoField entry for " << alt_name << std::endl;
-              spinX2 = 0; 
-              // command = "posgum = Position[rotationsgum,plgum[[" + std::to_string(i+1) + ", 1]]]";
+
+              // Strip any trailing digits first
+              size_t last_index = alt_name.find_last_not_of("0123456789");
+              std::string strippedname = alt_name.substr(0, last_index + 1);
+
+              // Check to see if it's in the list of fermions we have
+              if (std::find(dFs.begin(), dFs.end(), strippedname) != dFs.end())
+                spinX2 = 1;
+              // If not - how about a scalar?
+              else if (std::find(scs.begin(), scs.end(), strippedname) != scs.end())
+                spinX2 = 0;
+              // Or a vector?
+              else if (std::find(vecs.begin(), vecs.end(), strippedname) != vecs.end())
+                spinX2 = 2;
             }
             else throw std::runtime_error("Unrecognised spin - " + spinentry + " - found.");
+
+            // If we haven't found a spin...
+            if (spinX2 == -1)
+              throw std::runtime_error("Unable to extract spin for particle: " + alt_name + ".");
 
             std::set<int> SM_pdgs = {1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24};
             if (SM_pdgs.count(abs(pdg)))
