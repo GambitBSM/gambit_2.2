@@ -132,6 +132,26 @@ endif()
 FIND_PACKAGE(PythonLibs REQUIRED)
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
 
+# Simple function to find specific Python modules
+macro(find_python_module module)
+  execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import ${module}" RESULT_VARIABLE return_value ERROR_QUIET)
+  if (NOT return_value)
+    message(STATUS "Found Python module ${module}.")
+    set(PY_${module}_FOUND TRUE)
+  else()
+    if(${ARGC} GREATER 1 AND ${ARGV1} STREQUAL "REQUIRED")
+      message(FATAL_ERROR "-- FAILED to find Python module ${module}.")
+    else()
+      message(STATUS "FAILED to find Python module ${module}.")
+    endif()
+  endif()
+endmacro()
+
+# Check for required Python libraries
+foreach(module yaml os re datetime sys getopt shutil itertools collections copy numpy distutils filecmp glob six argparse)
+  find_python_module(${module} REQUIRED)
+endforeach()
+
 # Add -fPIC for 64 bit systems
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -182,7 +202,6 @@ include_directories(src include ${Mathematica_WSTP_INCLUDE_DIR})
 # set source and header files used in all executables
 set(HEADER_FILES include/cmake_variables.hpp include/options.hpp include/math_package.hpp include/feynrules.hpp include/sarah.hpp)
 set(SRC_FILES src/mathematica.cpp)
-#set(SRC_GUM src/mathematica.cpp src/options.cpp src/math_package.cpp src/feynrules.cpp src/sarah.cpp)
 set(SRC_GUM src/mathematica.cpp src/options.cpp)
 set(GUM_LIBS sarah fr)
 
@@ -191,7 +210,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_CXX_FLAGS -L.)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-#add_executable(mathematica ${SRC_GUM} ${SRC_FILES_GEN} ${HEADER_FILES_GEN} ${HEADER_MB} ${SRC_FILES} ${HEADER_FILES} ${GENERATED_SRC_FILES})
 add_executable(mathematica ${SRC_GUM} ${HEADER_FILES})
 
 TARGET_LINK_LIBRARIES(mathematica ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${GUM_LIBS})

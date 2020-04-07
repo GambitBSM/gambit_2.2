@@ -436,9 +436,19 @@ namespace GUM
                 SM = false;
             }
 
+            // If it's not SM, get the tree-level mass relation
+            std::string treelevelmass = "";
+            if (not SM)
+            {
+              // Use Mathematica's terrible CForm output, amend this in GUM -- string replacement is nicer in Python :-)
+              command = "TreeMass[" + alt_name + ",EWSB] // CForm // ToString";
+              send_to_math(command);
+              get_from_math(treelevelmass);
+            }
+
             // Add the particle to the list.
             Particle particle(pdg, outputname, spinX2, chargeX3, color, 
-                              SM, mass, antioutputname, alt_name);
+                              SM, mass, antioutputname, alt_name, "", treelevelmass);  // Blank space is for SPheno mass (alt_mass)
             partlist.push_back(particle);
 
         }
@@ -1033,7 +1043,7 @@ namespace GUM
         send_to_math(command);
         get_from_math(sarah_mass);
 
-        newParticles.push_back(Particle(part->pdg(), part->name(), part->spinX2(), part->chargeX3(), part->color(), part->SM(), part->mass(), part->antiname(), part->alt_name(), sarah_mass));
+        newParticles.push_back(Particle(part->pdg(), part->name(), part->spinX2(), part->chargeX3(), part->color(), part->SM(), part->mass(), part->antiname(), part->alt_name(), sarah_mass, part->tree_mass()));
       }
       particles = newParticles;
     }
@@ -1486,7 +1496,7 @@ object setOptions(tuple args, dict kwargs)
 BOOST_PYTHON_MODULE(libsarah)
 {
 
-  class_<Particle>("SARAHParticle", init<int, std::string, int, int, int, bool, std::string, std::string, std::string, std::string>())
+  class_<Particle>("SARAHParticle", init<int, std::string, int, int, int, bool, std::string, std::string, std::string, std::string, std::string>())
     .def("pdg",      &Particle::pdg)
     .def("name",     &Particle::name)
     .def("SM",       &Particle::SM)
@@ -1498,6 +1508,7 @@ BOOST_PYTHON_MODULE(libsarah)
     .def("antiname", &Particle::antiname)
     .def("alt_name", &Particle::alt_name)
     .def("alt_mass", &Particle::alt_mass)
+    .def("tree_mass", &Particle::tree_mass)
     ;
 
   class_<Parameter>("SARAHParameter", init<std::string, std::string, int, std::string, bool, std::string, bool, std::string>())

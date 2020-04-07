@@ -109,6 +109,7 @@ class Particle
     std::string alt_partmass;
     bool selfconj;
     std::string antipartname;
+    std::string treelevelmass;
 
     public:
 
@@ -118,7 +119,7 @@ class Particle
 
         Particle(int pdg, std::string name, int spinX2, int chargeX3, int color, 
                  bool SM, std::string mass, std::string antiname, std::string alt_name = "",
-                 std::string alt_mass= "")
+                 std::string alt_mass= "", std::string tree_mass = "")
         {
             pdgcode = pdg;
             partname = name;
@@ -130,6 +131,7 @@ class Particle
             partmass = mass;
             antipartname = antiname;
             alt_partmass = alt_mass;
+            treelevelmass = tree_mass;
 
             if (name == antiname)
             {
@@ -153,6 +155,7 @@ class Particle
         std::string antiname() { return antipartname; }
         std::string alt_name() { return alt_partname; }
         std::string alt_mass() { return alt_partmass; }
+        std::string tree_mass() { return treelevelmass; }
 
 };
 
