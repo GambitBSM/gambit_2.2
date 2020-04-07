@@ -127,17 +127,6 @@ namespace GUM
         send_to_math(command);
     }
 
-    // // First case: no base model
-    // if (base_model.empty()) 
-    // {
-
-    // }
-    // // Otherwise got to check for both
-    // else
-    // {
-        
-    // }
-
     // Check the model has been loaded by querying the model name. If it has changed from the default then we're set.
     // TODO: need to check for duplicate definitions of gauge groups, field contents etc - this makes gum freeze 
     std::string modelname = get_modelname();
@@ -173,19 +162,54 @@ namespace GUM
   void FeynRules::load_restriction(std::string model, std::string base_model, std::string rst)
   {
    
-    std::cout << "Attempting to load restriction " + rst + "... ";
+    std::cout << "Attempting to load restriction " + rst + "... " << std::endl;
 
-    std::string filename;
-    filename = model + "/" + rst + ".rst";
-    std::ifstream infile(filename.c_str());
-    // If it's not in the model directory, try the base_model...
-    if (!infile.good() and base_model != "") 
+    std::string respath;
+    respath = std::string(FEYNRULES_PATH) + "/Models/" + model + "/" + rst + ".rst";
+    std::cout << respath << std::endl;
+    std::ifstream path1(respath.c_str());
+
+    // If it's not in the FeynRules directory, try the gum Models dir...
+    if (!path1.good())
     {
-        filename = base_model + "/" + rst + ".rst";
+        respath = std::string(GUM_DIR) + "/Models/" + model + "/" + rst + ".rst";
+        std::cout << respath << std::endl;
+        std::ifstream path2(respath.c_str());
+
+        // If it's not in the model directory, try the base_model...
+        if (!path2.good())
+        {  
+            if (!base_model.empty())
+            {
+                respath = std::string(FEYNRULES_PATH) + "Models/" + base_model + "/" + rst + ".rst";
+                std::cout << respath << std::endl;
+        
+                std::ifstream path3(respath.c_str());
+                if (!path3.good())
+                {
+                    respath = std::string(GUM_DIR) + "/Models/" + base_model + "/" + rst + ".rst";
+                    std::cout << respath << std::endl;
+                    std::ifstream path4(respath.c_str());
+                    if (!path4.good())
+                    {
+                    throw std::runtime_error("GUM Error: Unable to find the restriction " + rst + " in either\n"
+                                             "the FeynRules model directory, or the GUM model directory,"
+                                             "for both the model *and* the base_model!");
+                    }
+                }
+            }
+            else
+            {
+                throw std::runtime_error("GUM Error: Unable to find the restriction " + rst + " in either\n"
+                                         "the FeynRules model directory, or the GUM model directory!");
+            }
+        }
     }
 
+    std::cout << "Found restriction file at " << respath << std::endl;
+
     // LoadRestriction command.
-    std::string command = "LoadRestriction[\"Models/" + filename + "\"]";
+    std::string command = "LoadRestriction[\"" + respath + "\"]";
     send_to_math(command);
 
     // Some sort of check here?
