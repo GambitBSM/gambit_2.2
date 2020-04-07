@@ -15,7 +15,7 @@ class Particle:
     """
 
     def __init__(self, name, antiname, spinx2, pdg_code, mass_name, 
-                 alt_name = None, alt_mass_name = None):
+                 alt_name = None, alt_mass_name = None, tree_mass = None):
 
         self.name = name
         self.antiname = antiname
@@ -24,6 +24,7 @@ class Particle:
         self.mass = mass_name
         self.alt_name = alt_name
         self.alt_mass_name = alt_mass_name
+        self.tree_mass = tree_mass
 
         self.own_conjugate = None
         if (name == antiname):

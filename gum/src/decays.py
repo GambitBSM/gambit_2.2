@@ -141,7 +141,7 @@ def decay_sorter(three_diagrams, aux_particles, antiparticle_dict):
 
 def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
                                    calchep_pdg_codes, gambit_pdg_codes,
-                                   decaybit_dict):
+                                   decaybit_dict, calchep_processes):
     """
     Writes a DecayBit DecayTable::Entry module function for a given set of
     of particle decays.
@@ -173,9 +173,9 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
     function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
     spectrum = gambit_model_name + "_spectrum"
 
-
-    # definitely a nicer way to do this, but, this will do for now. should make it
-    # a bit easier to add 3 body final states (should be overloaded as a backend func)
+    # Definitely a nicer way to do this, but, this will do for now. 
+    # Should make it a bit easier to add 3 body final states.
+    # (Overloaded as a backend function?)
     products = np.array(grouped_decays[1])
 
     c_name = []
@@ -186,9 +186,13 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
 
     c_strings = []
     g_strings = []
+    final_states = []
     for i in np.arange(len(c_name)):
         c_strings.append("{{{}}}".format(', '.join("\"{0}\"".format(x) for x in c_name[i])))
         g_strings.append("{{{}}}".format(', '.join("\"{0}\"".format(y) for y in g_name[i])))
+        final_states.append(c_name[i])
+
+    calchep_processes['decays'][chep_name].append(final_states)
 
     towrite = (
             "void {0}(DecayTable::Entry& result)\n"

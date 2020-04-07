@@ -493,6 +493,10 @@ if args.file:
 
         if output_opts.ch:
 
+            # Save a dictionary of all processes that GAMBIT may write matrix
+            # element code for in CalcHEP
+            calchep_processes = defaultdict(lambda: defaultdict(list))
+
             # Obtain all 3-point vertices that are BSM.
             three_pi_bsm = [i.particles for i in interactions
                             if i.num_particles() == 3 and i.is_sm() == False]
@@ -517,7 +521,8 @@ if args.file:
                                                           gum.name,
                                                           calchep_pdg_codes,
                                                           gambit_pdgs,
-                                                          decaybit_dict)
+                                                          decaybit_dict,
+                                                          calchep_processes)
 
             decay_roll, new_decays = \
                 write_decaybit_rollcall_entry_calchep(gum.name, gum.spec,
@@ -599,9 +604,15 @@ if args.file:
             darkbit_src = write_darkbit_src(dm, pc, sv, ann_products,
                                             propagators, gambit_pdgs, gum.name,
                                             calchep_pdg_codes, 
-                                            bsm_particle_list, higgses)
+                                            bsm_particle_list, higgses,
+                                            calchep_processes)
 
             pc_cap, dmid_cap, dmconj_cap = write_darkbit_rollcall(gum.name, pc)
+
+        # Save all CalcHEP processes that GAMBIT may write matrix
+        # element code for
+        if output_opts.ch:
+            save_CH_matrix_elements(calchep_processes) 
 
 
         """
@@ -609,11 +620,18 @@ if args.file:
         """
             
         print("Writing basic container SpecBit interface...")
-        spectrum_src = write_spectrum(gum.name, parameters, gum.spec, add_higgs, 
-                                      output_opts.spheno, gambit_pdgs,
-                                      neutral_higgses, charged_higgses, 
-                                      blockparams, bsm_particle_list,
-                                      spheno_decays, partlist)
+        spectrum_src, higgsdefined = write_spectrum(gum.name, parameters, 
+                                                    gum.spec, add_higgs, 
+                                                    output_opts.spheno, 
+                                                    gambit_pdgs,
+                                                    neutral_higgses, 
+                                                    charged_higgses, 
+                                                    blockparams, 
+                                                    bsm_particle_list,
+                                                    spheno_decays, partlist)
+        # If the Higgs has now been defined by some other parameters,
+        # don't need to have mH as a model param.
+        if higgsdefined: add_higgs = False
 
         spectrum_header = write_spectrum_header(gum.name, add_higgs, 
                                                 output_opts.spheno, higgses,

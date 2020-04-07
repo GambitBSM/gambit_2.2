@@ -157,7 +157,7 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
     return np.array(products), propagators
 
 def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
-          calchep_pdg_dict):
+          calchep_pdg_dict, calchep_processes):
     """
     Writes all entries for <sigma v> within the Process Catalogue,
     utilising CalcHEP.
@@ -177,6 +177,10 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     # DM (and conjugate) as known to CalcHEP
     dm_chep = pdg_to_particle(dm.PDG_code, calchep_pdg_dict)
     dm_chepc = pdg_to_particle(dm.conjugate_PDG_code, calchep_pdg_dict)
+
+    # Save entry to calchep_processes
+    calchep_processes['xsecs'][dm_chep, dm_chepc].append([list(i) for i in 
+                                                          zip(out1c, out2c)])
 
     towrite_class = (
             "// Annihilation cross-section. sigmav is a pointer to a"
@@ -258,7 +262,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
 
 def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
              gambit_model_name, calchep_pdg_dict, model_specific_particles,
-             higgses):
+             higgses, calchep_processes):
     """
     Writes all entries for the Process Catalogue for DarkBit.
     """
@@ -277,7 +281,8 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
 
     if sv:
         sv_class, sv_src = xsecs(dm, ann_products, gambit_pdg_dict,
-                                 gambit_model_name, calchep_pdg_dict)
+                                 gambit_model_name, calchep_pdg_dict,
+                                 calchep_processes)
         towrite += sv_class
 
     towrite += (
@@ -409,7 +414,7 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
 
 def write_darkbit_src(dm, pc, sv, ann_products, propagators,
                       gambit_pdg_dict, gambit_model_name, calchep_pdg_dict,
-                      model_specific_particles, higgses):
+                      model_specific_particles, higgses, calchep_processes):
     """
     Collects all source for DarkBit: process catalogue, direct detection...
     """
@@ -445,7 +450,7 @@ def write_darkbit_src(dm, pc, sv, ann_products, propagators,
         towrite += proc_cat(dm, sv, ann_products, propagators,
                             gambit_pdg_dict, gambit_model_name,
                             calchep_pdg_dict, model_specific_particles,
-                            higgses)
+                            higgses, calchep_processes)
 
     towrite += write_dm_id(gambit_model_name, gb_id, gb_conj)
 

@@ -34,6 +34,8 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
 
     towrite = blame_gum(intro_message)
 
+    higgsdefined = False
+
     # Simple spectrum wrapper for a new model with no SPheno interface.
     if not with_spheno:
 
@@ -92,6 +94,9 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                          "MASS", "SMINPUTS", "VEVS"]:
                 continue
 
+            # Don't add the SM Higgs vev if it's just a 1 Higgs SM extension
+            if block == "HMIX" and add_higgs:
+                continue
 
             matrix = False
             size = ""
@@ -160,33 +165,93 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                                 "\"{0}({1},{2})\");\n"
                         ).format(block, i+1, j+1)
 
-        # Now do the mass block
+        # Create a dict of the GB input params - SARAH names
+        d = {}
+        savedparams = []
+        for p in model_parameters:
+            d[p.alt_name] = p.gb_in
+
+        # Get the name of the SM Higgs vev
+        smvevname = "vev"
+        if add_higgs:
+            for p in model_parameters:
+                if p.block == "HMIX" and p.index == 3:
+                    smvevname = p.name
+            towrite += (
+                "double {0} = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
+                "double sqrt2v = pow(2.0,0.5)/{0};\n"
+                "\n"
+                "SLHAea_add_block(slha, \"VEVS\");\n"
+                "SLHAea_add(slha, \"VEVS\", 1, {0});\n"
+                "\n"
+                "SLHAea_add_block(slha, \"HMIX\");\n"
+                "SLHAea_add(slha, \"HMIX\", 3, {0});\n"
+                "\n"
+            ).format(smvevname)
+            savedparams.append(smvevname)
+
+        # Now do the mass block. 
         towrite += (
                 "\n"
                 "// Block MASS\n"
                 "SLHAea_add_block(slha, \"MASS\");\n"
-        )
+        ).format(smvevname)
 
-        # Masses should also be input parameters in this setup
-        # TODO not necessarily true..!
+        # Masses should also be input parameters in this setup, unless we have
+        # a definition for their tree-level mass, defined by the other params.
         for particle in particles:
 
             mass = ""
             if particle.PDG_code == 25 and add_higgs: 
-                mass = "mH"
+                mass = "*myPipe::Param[\"mH\"]"
             else:
-                mass = particle.mass
+                mass = "*myPipe::Param[\"{0}\"]".format(particle.mass)
+
+            # Check to see if there is a tree-level mass description. If so
+            # add it to the Spectrum src code.
+            if particle.tree_mass:
+                tree = particle.tree_mass
+                # Clean up the output of Mathematica's CForm...
+                # Common replacements to actual C(++) syntax
+                # Probably not complete, but the main culprits *should* be here
+                tree = re.sub('ArcSin', 'asin', tree)
+                tree = re.sub('ArcCos', 'acos', tree)
+                tree = re.sub('ArcTan', 'atan', tree)
+                tree = re.sub('Abs', 'abs', tree) 
+                tree = re.sub('Sin', 'sin', tree)
+                tree = re.sub('Cos', 'cos', tree)
+                tree = re.sub('Tan', 'tan', tree)
+                tree = re.sub('Sqrt', 'sqrt', tree)
+                # If there's Power(param, num) -> pow(param, num)
+                tree = re.sub(r'Power\(([a-zA-Z]+),([0-9])\)',r'pow(\1,\2)', tree)
+
+                # Mass string is the stuff between the quotes.
+                mass = re.findall(r'"(.*?)"', mass)[0] 
+
+                # Also save each param that appears in these definitions
+                strings = re.findall(r'\b\w+\b', tree)
+                for s in strings:
+                    if s in d:
+                        if not s in savedparams:
+                            savedparams.append(s)
+                            towrite += (
+                                "double {0} = *myPipe::Param[\"{1}\"];\n"
+                            ).format(s, d[s])
+                
+                towrite += "double {0} = sqrt({1});\n".format(mass, tree)
+
+                # Higgs is defined by other parameters, don't add it elsewhere.
+                if particle.PDG_code == 25 and add_higgs:
+                    higgsdefined = True
 
             towrite += (
-                    "SLHAea_add(slha, \"MASS\", {0}, *myPipe::Param[\"{1}\"]);\n"
+                    "SLHAea_add(slha, \"MASS\", {0}, {1});\n"
             ).format(particle.PDG_code, mass)
 
         if add_higgs:
-            towrite += add_simple_sminputs(modelcont)
+            towrite += add_simple_sminputs()
 
         towrite += (
-                # "// Create a SubSpectrum object wrapper\n"
-                # "Models::{0} spec({1});\n\n" 
                 "// Retrieve any mass cuts\n"
                 "static const Spectrum::mc_info mass_cut = "
                 "myPipe::runOptions->getValueOrDef<Spectrum::mc_info>"
@@ -195,16 +260,10 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 "myPipe::runOptions->getValueOrDef<Spectrum::mr_info>"
                 "(Spectrum::mr_info(), \"mass_ratio_cut\");\n"
                 "\n"
-                # "// We don't supply a LE subspectrum here; an "
-                # "SMSimpleSpec will therefore be automatically created "
-                # "from 'sminputs'\n"
-                # "result = Spectrum(spec,sminputs,&myPipe::Param,"
-                # "mass_cut,mass_ratio_cut);\n"
                 "// Construct the Spectrum object from the SLHAea inputs\n"
                 "result = spectrum_from_SLHAea<Gambit::Models::{0}SimpleSpec,"
                 " SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);\n"
                 "}}\n\n"
-        #).format(modelSS, modelcont)
         ).format(gambit_model_name)
 
     # If we have SPheno, make the spectrum use it.
@@ -314,7 +373,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
             "}}\n"
     ).format(modelSS, modelcont, gambit_model_name, spec)
             
-    return indent(towrite)
+    return indent(towrite), higgsdefined
     
     
 def write_spectrum_header(model_name, add_higgs, with_spheno, higgses, cap_def={}):
@@ -430,11 +489,11 @@ def write_specbit_rollcall(model_name):
     
     return dumb_indent(2, towrite)
     
-def add_simple_sminputs(model):
+def add_simple_sminputs():
     """
     Adds simple SMInputs definitions to a spectrum object.
     """
-    # TODO from SARAH, Higgs vev gets added automatically (?)
+
     towrite = (
             "\n"
             "// quantities needed to fill container spectrum\n"
@@ -443,8 +502,6 @@ def add_simple_sminputs(model):
             "double sinW2 = 0.5 - pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
             "double cosW2 = 0.5 + pow( 0.25 - C/pow(sminputs.mZ,2) , 0.5);\n"
             "double e = pow( 4*pi*( alpha_em ),0.5);\n"
-            "double vev = 1. / sqrt(sqrt(2.)*sminputs.GF);\n"
-            "double sqrt2v = pow(2.0,0.5)/vev;\n"
             "\n"
             "SLHAea_add_block(slha, \"GAUGE\");\n"
             "SLHAea_add(slha, \"GAUGE\", 1, sqrt(5/3) * e / sqrt(cosW2) );\n"
@@ -486,9 +543,6 @@ def add_simple_sminputs(model):
             "SLHAea_add(slha, \"YD\", 3, 1, 0., \"\");\n"
             "SLHAea_add(slha, \"YD\", 3, 2, 0., \"\");\n"
             "SLHAea_add(slha, \"YD\", 3, 3, sqrt2v*sminputs.mBmB, \"b\");\n"
-            "\n"
-            "SLHAea_add_block(slha, \"VEVS\");\n"
-            "SLHAea_add(slha, \"VEVS\", 1, vev);\n"
             "\n"
             "// Block SMINPUTS\n"
             "SLHAea_add_block(slha, \"SMINPUTS\");\n"
@@ -539,8 +593,6 @@ def write_spheno_spectrum_src(model_name, is_susy):
             "inputs.options = myPipe::runOptions;\n"
             "\n"
             "// Retrieve any mass cuts\n"
-            # "static Spectrum::cuts_info mass_cuts = Spectrum::"
-            # "retrieve_mass_cuts(myPipe::runOptions);\n"
             "static const Spectrum::mc_info mass_cuts = myPipe::runOptions->"
             "getValueOrDef<Spectrum::mc_info>(Spectrum::mc_info(), \"mass_cut\""
             ");\n"
