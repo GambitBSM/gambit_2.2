@@ -56,7 +56,7 @@ Printer:
 
 Scanner:
 
-  use_scanner: random
+  use_scanner: grid_sq
 
   scanners:
 
@@ -68,7 +68,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 50
+      grid_pts: 100
 
     random:
       plugin: random
@@ -88,35 +88,35 @@ ObsLikes:
      module:       DarkBit
      type:         double
 
-   # - purpose:      LogLike
-   #   capability:   lnL_HEAO
-   #   module:       DarkBit
-   #   type:         double
+   - purpose:      LogLike
+     capability:   lnL_HEAO
+     module:       DarkBit
+     type:         double
 
-   # - purpose:      LogLike
-   #   capability:   lnL_solar_neutrino_B8
-   #   module:       DarkBit
-   #   type:         double
+   - purpose:      LogLike
+     capability:   lnL_solar_neutrino_B8
+     module:       DarkBit
+     type:         double
 
-   # - purpose:      LogLike
-   #   capability:   lnL_solar_neutrino_Be7
-   #   module:       DarkBit
-   #   type:         double
+   - purpose:      LogLike
+     capability:   lnL_solar_neutrino_Be7
+     module:       DarkBit
+     type:         double
 
-   # - purpose:      LogLike
-   #   capability:   lnL_ShortRangeForces_Sushkov2011
-   #   module:       DarkBit
-   #   type:         double
-   #
+   - purpose:      LogLike
+     capability:   lnL_ShortRangeForces_Sushkov2011
+     module:       DarkBit
+     type:         double
+   
 
-   - purpose:   ObsLikes
-     capability: Omega0_m
-   - purpose:   ObsLikes
-     capability: Omega0_r
-   - purpose:   ObsLikes
-     capability: Omega0_Lambda
-   - purpose:   ObsLikes
-     capability: Omega0_cdm
+   # - purpose:   ObsLikes
+   #   capability: Omega0_m
+   # - purpose:   ObsLikes
+   #   capability: Omega0_r
+   # - purpose:   ObsLikes
+   #   capability: Omega0_Lambda
+   # - purpose:   ObsLikes
+   #   capability: Omega0_cdm
 
 Rules:
 

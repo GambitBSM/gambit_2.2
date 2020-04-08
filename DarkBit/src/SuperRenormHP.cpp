@@ -113,6 +113,8 @@ namespace Gambit
         double getEmin() const;
         double getEmax() const;
         double getDeltaE() const;
+        int getFluxOrigin() const;
+
         double flux(double const& E);
         double sigma(double const& E);
         double fluxIntegrated(double const& E);
@@ -127,6 +129,7 @@ namespace Gambit
         double m_Emax; // maximum energy of the observations
         double m_deltaOmega; // total solid angle of observation
         double m_deltaE; // energy resolution in percentage of the energy scale
+        int m_fluxOrigin; // origin of observed flux: galactic (1), extra-galactic (2) or both (3)
         std::vector<std::vector<double> > m_lRange; // observation region in galactic coordinates (degrees)
         std::vector<std::vector<double> > m_bRange;
         std::string m_experiment;
@@ -137,7 +140,7 @@ namespace Gambit
     Xray::Xray(std::string experiment) : m_experiment(experiment), m_experimentMap({{"INTEGRAL", 1}, {"HEAO", 2}})
     {
       switch(m_experimentMap[m_experiment])
-      { 
+      {
         case 1 : 
           m_Emin = 20e3;
           m_Emax = 2e6;
@@ -146,26 +149,28 @@ namespace Gambit
           m_J = 3.65;
           m_deltaE = 0.1;
           m_deltaOmega = 0.542068;
+          m_fluxOrigin = 1;
           break;
 
         case 2 :
-          m_Emin = 4e3;
-          m_Emax = 30e3;
+          m_Emin = 3e3;
+          m_Emax = 60e3;
           m_lRange = { {58., 109.}, {238., 289.} };
-          m_bRange = { {0., 70.}, {110., 180.} }; 
+          m_bRange = { {0., 70.}, {110., 180.} };
           m_J = 3.88;
-          m_deltaE = 0.1;
+          m_deltaE = 0.2;
           m_deltaOmega = 1.17135;
+          m_fluxOrigin = 3;
           break;
 
-        default : 
+        default :
           throw std::runtime_error("Wrong experiment name in Xray object");
           break;
       }
       //set_deltaOmega();
     }
 
-    //------------- Function returning the energy dispersion of the instrument -------------// 
+    //------------- Function returning the energy dispersion of the instrument -------------//
 
     double Xray::deltaE (double const& E) const
     {
@@ -269,9 +274,9 @@ namespace Gambit
     double Xray::sigma(double const& E)
     {
 
-      switch(m_experimentMap[m_experiment]) 
+      switch(m_experimentMap[m_experiment])
       {
-        case 1 : 
+        case 1 :
           return sqrt(pow(pow(E/100e3,-1.55),2)*pow(0.6e-5,2) + pow(4.8e-8*1.55*pow(E/100e3,-2.55),2)*pow(0.25,2) + exp(-2*(E-50e3)/7.5e3)*pow(0.5e-8, 2.) + pow(6.6e-8, 2.)*pow((E-50e3)/pow(7.5e3, 2.), 2.)*exp(-2*(E-50e3)/7.5e3)*pow(1e3, 2.)); 
           break;
 
@@ -321,6 +326,8 @@ namespace Gambit
     double Xray::getEmax() const { return m_Emax; }
 
     double Xray::getDeltaE() const { return m_deltaE; }
+
+    int Xray::getFluxOrigin() const { return m_fluxOrigin; }
 
     // destructor
     Xray::~Xray() { }
@@ -439,7 +446,7 @@ namespace Gambit
 
     // function returning the interpolated quantities (Temp, wp, ne SumNz) at a given radius r inside the Sun
     double StellarModel::getQuantity (std::string const& quantity, double const& r)
-    { 
+    {
       return gsl_spline_eval(m_interp[quantity], r, m_acc[quantity]);
     }
 
@@ -795,8 +802,8 @@ namespace Gambit
     // useful structure
     struct XrayLikelihood_params {double mass; double gamma; double density; Xray experiment; double H0; double OmegaM; double OmegaR; double OmegaLambda; double OmegaDM;};
 
-    // cosmological contribution to the differential photon flux [photons/eV/cm²/s/sr]
-    double dPhiEg(double const& E, XrayLikelihood_params *params)
+    // extra-galactic contribution to the differential photon flux [photons/eV/cm²/s]
+    double dPhiEG(double const& E, XrayLikelihood_params *params)
     {
       double mass = params->mass, gamma = params->gamma, density = params->density;
       Xray experiment = params->experiment;
@@ -815,9 +822,8 @@ namespace Gambit
       return experiment.getDeltaOmega()*2.*1./(4*pi)*(gamma*density*cs*exp(-gamma*t))/(mass*H0*E)/sqrt( OmegaM*pow(x, 3.) + OmegaLambda + OmegaK*pow(x, 2.) + OmegaR*pow(x, 4.) );
     }
 
+    const double s(1./3.); // standard deviation of the gaussian for the galactic emission line = s*energy dispersion instrument
     // galactic (Milky Way) contribution to the differential photon flux [photons/eV/cm²/s]
-    const double s(0.5); // standard deviation of the gaussian for the galactic emission line = s*energy dispersion instrument
-
     double dPhiG(double const& E, XrayLikelihood_params *params)
     {
       double mass = params->mass, gamma = params->gamma, density = params->density;
@@ -841,7 +847,23 @@ namespace Gambit
     // total predicted differential photon flux for a given X-ray experiment [photons/eV/cm²/s]
     double XrayPrediction(double const& E, XrayLikelihood_params *params)
     {
-      return dPhiG(E, params) + (dPhiEg(E, params));
+      Xray experiment = params->experiment;
+      switch(experiment.getFluxOrigin())
+      {
+        case 1 :
+          return dPhiG(E, params);
+
+        case 2 :
+          return dPhiEG(E, params);
+
+        case 3 :
+          return dPhiG(E, params) + dPhiEG(E, params);
+
+        default :
+          throw std::runtime_error("Wrong value for m_fluxOrigin in Xray class, allowed values are 1 (galactic flux), 2 (extra-galactic flux) and 3 (both)");
+          break;
+      }
+
     }
 
     // auxiliary function for gsl integration
