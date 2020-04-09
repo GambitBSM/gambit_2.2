@@ -40,12 +40,14 @@ Parameters:
     mH: 125.09
 
   WC:
-    Re_DeltaC7:  0
+    Re_DeltaC7:
+      range: [-0.2, 0.2]
     Im_DeltaC7:  0
     Re_DeltaC9:
-       range: [-3, 3]
+       range: [-2, 1]
     Im_DeltaC9:  0
-    Re_DeltaC10: 0
+    Re_DeltaC10:
+       range: [-1.5, 1.5]
     Im_DeltaC10: 0
     Re_DeltaCQ1: 0
     Im_DeltaCQ1: 0
@@ -69,21 +71,21 @@ Printer:
 
 Scanner:
 
-  use_scanner: de
+  use_scanner: multinest
 
   scanners:
 
     multinest:
       plugin: multinest
       like:  LogLike
-      nlive: 400
+      nlive: 20000
       tol: 0.1
 
     de:
       plugin: diver
       like: LogLike
-      NP: 2000
-      convthresh: 1e-3
+      NP: 20000
+      convthresh: 1e-5
 
     square_grid:
       plugin: square_grid
@@ -233,6 +235,6 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/WC_NEW_C9"
+  default_output_path: "runs/WC_HL_NEW_Bayesian"
 
   debug: true
