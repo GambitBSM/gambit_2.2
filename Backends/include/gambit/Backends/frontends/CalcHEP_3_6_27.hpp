@@ -37,6 +37,8 @@ BE_VARIABLE(varNames, char*, "varNames", "varNames")
 BE_VARIABLE(VZdecay, int, "VZdecay", "VZdecay")
 BE_VARIABLE(VWdecay, int, "VWdecay", "VWdecay")
 
+BE_CONV_FUNCTION(generate_decay_code, numout*, (str, str, std::vector<str>), "generate_decay_code")
+BE_CONV_FUNCTION(generate_xsec_code, numout*, (str, std::vector<str>, std::vector<str>), "generate_xsec_code")
 BE_CONV_FUNCTION(CH_Decay_Width, double, (str&, str&, std::vector<str>&, double&), "CH_Decay_Width")
 BE_CONV_FUNCTION(CH_Sigma_V, double, (str&, std::vector<str>&, std::vector<str>&, double&, double&, const DecayTable&), "CH_Sigma_V")
 BE_CONV_FUNCTION(Assign_All_Values, void, (const Spectrum&, std::vector<SpectrumParameter>), "Assign_All_Values")

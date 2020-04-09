@@ -495,7 +495,7 @@ if args.file:
 
             # Save a dictionary of all processes that GAMBIT may write matrix
             # element code for in CalcHEP
-            calchep_processes = defaultdict(lambda: defaultdict(list))
+            ch_processes = defaultdict(lambda: defaultdict(list))
 
             # Obtain all 3-point vertices that are BSM.
             three_pi_bsm = [i.particles for i in interactions
@@ -522,7 +522,7 @@ if args.file:
                                                           calchep_pdg_codes,
                                                           gambit_pdgs,
                                                           decaybit_dict,
-                                                          calchep_processes)
+                                                          ch_processes)
 
             decay_roll, new_decays = \
                 write_decaybit_rollcall_entry_calchep(gum.name, gum.spec,
@@ -533,10 +533,6 @@ if args.file:
 
             all_decays_src, all_decays_header = \
                 amend_all_decays_calchep(gum.name, gum.spec, new_decays)
-
-            # Entries for header file
-            ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, 
-                                                               gum.spec)
 
         """
         COLLIDERBIT
@@ -605,14 +601,20 @@ if args.file:
                                             propagators, gambit_pdgs, gum.name,
                                             calchep_pdg_codes, 
                                             bsm_particle_list, higgses,
-                                            calchep_processes)
+                                            ch_processes)
 
             pc_cap, dmid_cap, dmconj_cap = write_darkbit_rollcall(gum.name, pc)
 
-        # Save all CalcHEP processes that GAMBIT may write matrix
-        # element code for
+        """
+        CALCHEP SRC 
+        Must be done after DecayBit & DarkBit as we want the matrix elements.
+        """
+
         if output_opts.ch:
-            save_CH_matrix_elements(calchep_processes) 
+            # Entries for header file
+            ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, 
+                                                               gum.spec,
+                                                               ch_processes)
 
 
         """

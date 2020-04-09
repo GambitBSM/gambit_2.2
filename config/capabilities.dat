@@ -4390,6 +4390,12 @@ cap_Sun_vnqn_isoscalar: |
 CalcHEP_3_6_27_init: |
   Initialise CalcHEP backend.
 
+generate_decay_code: |
+  Generates the codelet for a 1->2 process in CalcHEP.
+
+generate_xsec_code: |
+  Generates the codelet for a 2->2 process in CalcHEP.
+
 Assign_Value: |
   Assigns a numerical value to a given CalcHEP parameter (with error-checking).
 

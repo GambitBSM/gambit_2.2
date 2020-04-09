@@ -40,6 +40,11 @@ BE_INI_FUNCTION
     str BEpath;
     const char *path;
     char *modeltoset;
+    std::string model;
+
+    // All decays and xsecs added to a new model
+    std::map< str, std::vector< std::vector<str> > > decays;
+    std::map< std::vector<str>, std::vector< std::vector<str> > > xsecs;
 
     if (ModelInUse("ScalarSingletDM_Z2"))
     {
@@ -48,11 +53,39 @@ BE_INI_FUNCTION
       path = BEpath.c_str();
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
+
+      decays["h"] = std::vector< std::vector<str> >{ {"~S","~S"} };
+      xsecs[std::vector<str>{"~S","~S"}] = std::vector< std::vector<str> >{ {"d'", "D'"}, {"u", "U"}, {"B", "b"}, {"h", "h"}, {"e", "E"}, {"Z", "Z"}, {"c", "C"}, {"s'", "S'"}, {"m", "M"}, {"t", "T"}, {"W+", "W-"}, {"ta+", "ta-"} };
+      model = "ScalarSingletDM_Z2";
     }
     
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
+
+    // Get the MPI rank, only let the first rank make the processes...
+    int rank = 0;
+    #ifdef WITH_MPI
+      rank = GMPI::Comm().Get_rank();
+    #endif
+
+    // rank 0 can create all the libraries
+    if (rank == 0)
+    {
+      // Decays first
+      for (d : decays)
+        for (fs : d.second)
+          numout* cc = generate_decay_code(model, d.first, fs);
+
+      // And two to twos
+      for (x : xsecs)
+        for (fs : x.second)
+          numout* cc = generate_xsec_code(model, x.first, fs);
+    }
+    #ifdef WITH_MPI
+      // Wait here until the first rank has generated all matrix elements.
+      MPI_Barrier(MPI_COMM_WORLD);
+    #endif
   }
 
   // Point-level.
@@ -77,6 +110,48 @@ END_BE_INI_FUNCTION
 
 BE_NAMESPACE
 {
+  /// Create matrix element code for a decay
+  numout* generate_decay_code(str model, str in, std::vector<str> out)
+  {
+    // Generate process from in and out states
+    char *process = new char[(in + " -> " + out[0] + "," + out[1]).length() + 1];
+    strcpy(process, (in + " -> " + out[0] + "," + out[1]).c_str());
+    
+    std::string incpy = in;
+    std::string out0cpy = out[0];
+    std::string out1cpy = out[1];
+
+    // Replace any instance of a tilde with "bar"
+    boost::replace_all(incpy, "~", "bar");
+    boost::replace_all(out0cpy, "~", "bar");
+    boost::replace_all(out1cpy, "~", "bar");
+
+    // Remove all non-alpha numeric characters from the library names
+    incpy.resize(std::remove_if(incpy.begin(), incpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-incpy.begin());
+    out0cpy.resize(std::remove_if(out0cpy.begin(), out0cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out0cpy.begin());
+    out1cpy.resize(std::remove_if(out1cpy.begin(), out1cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out1cpy.begin());
+
+    // Generate libname from model and process name
+    char *libname = new char[(model + "_" + incpy + "_to_" + out0cpy + out1cpy).length() + 1];
+    strcpy(libname, (model + "_" + incpy + "_to_" + out0cpy + out1cpy).c_str());
+
+    char *excludeVirtual = NULL; // Exclude any internal particles
+    char *excludeOut = NULL;     // Exclude any products
+    int twidth = 0;              // T-channel propagator width
+    int UG = 0;                  // Unitary gauge
+
+    // Generates shared object file based on libName - unless it already exists.
+    numout* cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+
+    return cc;
+  }
+
+  /// For cross-sections, just wrap the decay code
+  numout* generate_xsec_code(str model, std::vector<str> in, std::vector<str> out)
+  {
+    str newin = in[0] + "," + in[1];
+    return generate_decay_code(model, newin, out);
+  }
 
   /// Assigns gambit value to parameter, with error-checking.
   void Assign_Value(char *parameter, double value)

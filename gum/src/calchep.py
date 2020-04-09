@@ -350,10 +350,13 @@ def copy_calchep_files(model_folder, model_name):
     
     print("CalcHEP files moved to GAMBIT Backends directory.")
     
-def add_calchep_switch(model_name, spectrum):
+def add_calchep_switch(model_name, spectrum, calchep_processes):
     """
     Adds an 'if ModelInUse()' switch to the CalcHEP frontend to make GAMBIT
     point to the correct CalcHEP files.
+
+    Also adds the matrix elements to the ini step so we can generate codelets
+    only with rank 0; so that there are no clashes when running CalcHEP.
     """
 
     # Scan-level
@@ -364,8 +367,10 @@ def add_calchep_switch(model_name, spectrum):
         "path = BEpath.c_str();\n"
         "modeltoset = (char*)malloc(strlen(path)+11);\n"
         "sprintf(modeltoset, \"%s\", path);\n"
+        "{1}"
+        "model = \"{0}\";\n"
         "}}\n\n"
-    ).format(model_name))
+    ).format(model_name, save_CH_matrix_elements(calchep_processes)))
 
     # Point-level
     src_pl = dumb_indent(2, (
@@ -382,7 +387,6 @@ def add_calchep_switch(model_name, spectrum):
            "}}\n\n"
     ).format(model_name, spectrum))
 
-    # to do -- also ALLOW_MODEL()
     header = (
            "BE_INI_CONDITIONAL_DEPENDENCY({0}, Spectrum, {1})\n"
     ).format(spectrum, model_name)
@@ -414,7 +418,36 @@ def save_CH_matrix_elements(calchep_processes):
     *should* fix it...
     """
 
-    print calchep_processes
+    towrite = ""
 
+    decays = calchep_processes['decays']
+    xsecs = calchep_processes['xsecs']
+
+    # Initial state, final state
+    for IS, FS in decays.iteritems():
+
+        fs = []
+        for f in FS[0]:
+            fs.append("{{{0}}}".format(','.join('"{0}"'.format(x) for x in f)))
+
+        towrite += (
+                "decays[\"{0}\"] = std::vector< std::vector<str> >"
+                "{{ {1} }};\n"
+        ).format(IS, ', '.join(fs))
+
+ 
+    for IS, FS in xsecs.iteritems():
+
+        fs = []
+        for f in FS[0]:
+            fs.append("{{{0}}}".format(','.join('"{0}"'.format(x) for x in f)))
+
+        towrite += (
+                "xsecs[std::vector<str>{{\"{0}\", \"{1}\"}}] = "
+                "std::vector< std::vector<str> >"
+                "{{ {2} }};\n"
+        ).format(IS[0], IS[1], ', '.join(fs))
+
+    return towrite
 
    
