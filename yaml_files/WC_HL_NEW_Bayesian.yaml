@@ -203,7 +203,7 @@ Rules:
 
   # Use SM theory covariance matrix for every point
   - capability: SuperIso_theory_covariance
-    function: SI_theory_covariance_SM
+    function: SI_theory_covariance
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: bsgamma
