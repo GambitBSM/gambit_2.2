@@ -849,7 +849,8 @@ namespace Gambit
                                     void (*get_predictions_nuisance)(char**, int*, double**, const parameters*, const nuisance*),
                                     void (*observables)(int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*),
                                     void (*convert_correlation)(nuiscorr*, int, double**, char**, int),
-                                    void (*get_th_covariance_nuisance)(double***, char**, int*, const parameters*, const nuisance*, double**)
+                                    void (*get_th_covariance_nuisance)(double***, char**, int*, const parameters*, const nuisance*, double**),
+                                    bool useSMCovariance
                                     )
     {
       if (flav_debug) std::cout << "Starting SuperIso_prediction" << std::endl;
@@ -909,8 +910,27 @@ namespace Gambit
       }
 
       double **result_covariance;
+      
+      if (useSMCovariance) {
+        // Make sure that we calculate the observables with no new physics contribution, we do not know how this is called the first time.
+        // Copy the parameters and set all Wilson Coefficients to 0.
+        parameters param_SM = param;
+        for(int ie=1;ie<=30;ie++) {
+          param_SM.deltaC[ie]=0.;
+          param_SM.deltaCp[ie]=0.;
+        }
+        for(int ie=1;ie<=6;ie++) {
+          param_SM.deltaCQ[ie]=0.;
+          param_SM.deltaCQp[ie]=0.;
+        }
 
-      get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
+        // Use the SM observables to calculate the SM theory covariance.
+        get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param_SM, &nuislist, (double **)corr);
+      }
+      else {  
+        // Calculate covariance at the new physics point.
+        get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
+      }
 
       for(int iObservable=0; iObservable < nObservables; ++iObservable)
       {
@@ -943,20 +963,23 @@ namespace Gambit
     }
 
 
-    #define THE_REST(bins)                                       \
-      static const std::vector<str> SI_obslist =                 \
-       translate_flav_obs("FlavBit", "SuperIso", FB_obslist,     \
-       Utils::p2dot(bins));                                      \
-      SuperIso_prediction_helper(                                \
-        FB_obslist,                                              \
-        SI_obslist,                                              \
-        result,                                                  \
-        *Dep::SuperIso_modelinfo,                                \
-        *Dep::SuperIso_nuisance,                                 \
-        BEreq::get_predictions_nuisance.pointer(),               \
-        BEreq::observables.pointer(),                            \
-        BEreq::convert_correlation.pointer(),                    \
-        BEreq::get_th_covariance_nuisance.pointer()              \
+    #define THE_REST(bins)                                          \
+      static const std::vector<str> SI_obslist =                    \
+       translate_flav_obs("FlavBit", "SuperIso", FB_obslist,        \
+       Utils::p2dot(bins));                                         \
+      static bool use_SM =                                          \
+       runOptions->getValueOrDef<bool>(false, "use_SM_covariance"); \
+      SuperIso_prediction_helper(                                   \
+        FB_obslist,                                                 \
+        SI_obslist,                                                 \
+        result,                                                     \
+        *Dep::SuperIso_modelinfo,                                   \
+        *Dep::SuperIso_nuisance,                                    \
+        BEreq::get_predictions_nuisance.pointer(),                  \
+        BEreq::observables.pointer(),                               \
+        BEreq::convert_correlation.pointer(),                       \
+        BEreq::get_th_covariance_nuisance.pointer(),                \
+        use_SM                                                      \
     );  
 
     #define SI_SINGLE_PREDICTION_FUNCTION(name)                          \
