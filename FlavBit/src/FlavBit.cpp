@@ -967,7 +967,7 @@ namespace Gambit
       static const std::vector<str> SI_obslist =                    \
        translate_flav_obs("FlavBit", "SuperIso", FB_obslist,        \
        Utils::p2dot(bins));                                         \
-      static bool use_SM =                                          \
+      static bool use_SM_covariance =                               \
        runOptions->getValueOrDef<bool>(false, "use_SM_covariance"); \
       SuperIso_prediction_helper(                                   \
         FB_obslist,                                                 \
@@ -979,7 +979,7 @@ namespace Gambit
         BEreq::observables.pointer(),                               \
         BEreq::convert_correlation.pointer(),                       \
         BEreq::get_th_covariance_nuisance.pointer(),                \
-        use_SM                                                      \
+        use_SM_covariance                                           \
     );  
 
     #define SI_SINGLE_PREDICTION_FUNCTION(name)                          \
