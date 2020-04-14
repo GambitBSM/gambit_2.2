@@ -15,16 +15,8 @@
 ///  \date 2019 Aug
 ///
 ///  Analyses based on: arxiv:1711.03301 and https://journals.aps.org/prd/abstract/10.1103/PhysRevD.97.092005
-///
-///
-///  Notes:
-///
-///   - has been put together for the DMEFT project
-///   - could probably introduce a better capability
-///     structure if we decide to use the functionality
-///     for other models
-///
-///  *********************************************
+
+//////  *********************************************
 #include <chrono>
 #include <thread>
 #include <cmath>
@@ -176,6 +168,7 @@ namespace Gambit
         q22 * xx1 * yy1
       );
     }
+
 
     // ---------------------------------------------------- //
     //  Calculate Yields // 
@@ -1632,8 +1625,8 @@ namespace Gambit
 
           // Luminoscity scaling gets applied at the end...
 
-          double A   = LinearInterpolation(x1,x2,m,Q1[Emiss],Q2[Emiss]);
-          double B   = LinearInterpolation(x1,x2,m,C1,C2);
+          double A   = LinearInterpolation(x2,x1,m,Q1[Emiss],Q2[Emiss]);
+          double B   = LinearInterpolation(x2,x1,m,C1,C2);
           double Norm= pow(Opp,2);
           // double res =  36000.0*Norm*A*Norm*B; 
           double res =  36000.0*A*Norm*B; 
