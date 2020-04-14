@@ -850,7 +850,8 @@ namespace Gambit
                                     void (*observables)(int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*),
                                     void (*convert_correlation)(nuiscorr*, int, double**, char**, int),
                                     void (*get_th_covariance_nuisance)(double***, char**, int*, const parameters*, const nuisance*, double**),
-                                    bool useSMCovariance
+                                    bool useSMCovariance,
+                                    bool SMCovarianceCached
                                     )
     {
       if (flav_debug) std::cout << "Starting SuperIso_prediction" << std::endl;
@@ -911,7 +912,7 @@ namespace Gambit
 
       double **result_covariance;
       
-      if (useSMCovariance) {
+      if (useSMCovariance and not SMCovarianceCached) {
         // Make sure that we calculate the observables with no new physics contribution, we do not know how this is called the first time.
         // Copy the parameters and set all Wilson Coefficients to 0.
         parameters param_SM = param;
@@ -932,11 +933,13 @@ namespace Gambit
         get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
       }
 
-      for(int iObservable=0; iObservable < nObservables; ++iObservable)
-      {
-        for(int jObservable = 0; jObservable < nObservables; ++jObservable)
+      if (not (useSMCovariance and SMCovarianceCached)) {
+        for(int iObservable=0; iObservable < nObservables; ++iObservable)
         {
-          result.covariance[FB_obslist[iObservable]][FB_obslist[jObservable]] = result_covariance[iObservable][jObservable];
+          for(int jObservable = 0; jObservable < nObservables; ++jObservable)
+          {
+            result.covariance[FB_obslist[iObservable]][FB_obslist[jObservable]] = result_covariance[iObservable][jObservable];
+          }
         }
       }
 
@@ -969,6 +972,7 @@ namespace Gambit
        Utils::p2dot(bins));                                         \
       static bool use_SM_covariance =                               \
        runOptions->getValueOrDef<bool>(false, "use_SM_covariance"); \
+      static bool SM_covariance_cached = false;                     \
       SuperIso_prediction_helper(                                   \
         FB_obslist,                                                 \
         SI_obslist,                                                 \
@@ -979,8 +983,10 @@ namespace Gambit
         BEreq::observables.pointer(),                               \
         BEreq::convert_correlation.pointer(),                       \
         BEreq::get_th_covariance_nuisance.pointer(),                \
-        use_SM_covariance                                           \
-    );  
+        use_SM_covariance,                                          \
+        SM_covariance_cached                                        \
+    );                                                              \
+    SM_covariance_cached = true;
 
     #define SI_SINGLE_PREDICTION_FUNCTION(name)                          \
     void CAT(SuperIso_prediction_,name)(flav_prediction& result)         \
