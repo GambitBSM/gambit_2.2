@@ -59,42 +59,8 @@ namespace Gambit
     error& CosmoBit_error();
     warning& CosmoBit_warning();
 
-    typedef std::map< std::string,std::valarray < double > > map_str_valarray_dbl;
+    typedef std::map< str,std::valarray < double > > map_str_valarray_dbl;
     typedef std::tuple<pybind11::object, map_str_str, map_str_pyobj> MPLike_objects_container;
-
-    /// Class to store all results from an AlterBBN run
-    /// -> element abundances stored in BBN_nuc (length NNUC+1),
-    /// -> covariance matrix in BBN_covmat ( dim NNUC+1 x NNUC+1)
-    /// -> abund_map maps name of element to position in BBN_abundance vector
-    ///    see constructor of BBN_container
-    class BBN_container
-    {
-      public:
-        BBN_container();
-
-        // initialize sizes of vectors (get NNUC from AlterBBN, number of computed element abundances)
-        // and get a translation map from element name to position in abundance vector
-        void init_arr_size(int nnuc);
-        void set_abund_map(map_str_int map_in){abund_map = map_in;}
-
-        // setter functions for abundance vector and cov mat
-        void set_BBN_abund(int pos, double val) {BBN_abund[pos] = val;}
-        void set_BBN_covmat(int row, int col, double val) {BBN_covmat[row][col] = val;}
-
-        // global parameter in AlterBBN, holds number of computed element abundances
-        int get_NNUC(){return NNUC;};
-        std::map<std::string,int> get_abund_map(){return abund_map;};
-
-        // getter functions for abundance vector and cov mat
-        double get_BBN_abund(int pos) {return BBN_abund[pos];}
-        double get_BBN_covmat(int row, int col) {return BBN_covmat[row][col];}
-
-      private:
-        int NNUC;
-        std::vector<double> BBN_abund;
-        std::vector< std::vector<double> > BBN_covmat;
-        std::map<std::string, int> abund_map;
-    };
 
     class SM_time_evo
     {
@@ -235,12 +201,12 @@ namespace Gambit
 
             void set_N_pivot(double npiv) { N_pivot = npiv; }
             void set_n_s(double ns) { n_s = ns; }
-            void set_A_s(double As) { A_s = As; }
+            void set_ln10A_s(double ln10As) { ln10A_s = ln10As; }
             void set_r(double rr) { r = rr; }
 
             double get_N_pivot() { return N_pivot; }
             double get_n_s() { return n_s; }
-            double get_A_s() { return A_s; }
+            double get_ln10A_s() { return ln10A_s; }
             double get_r() { return r; }
 
             // return members as str to double map for printing
@@ -250,7 +216,7 @@ namespace Gambit
         private:
             double N_pivot;
             double n_s;
-            double A_s;
+            double ln10A_s;
             double r;
     };
   }

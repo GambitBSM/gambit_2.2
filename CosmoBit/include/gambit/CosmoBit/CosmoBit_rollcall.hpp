@@ -56,19 +56,6 @@
 #define MODULE CosmoBit
 START_MODULE
 
-  #define CAPABILITY energy_injection_spectrum
-  START_CAPABILITY
-    #define FUNCTION energy_injection_spectrum_AnnihilatingDM_mixture
-    START_FUNCTION(DarkAges::Energy_injection_spectrum)
-    ALLOW_MODELS(AnnihilatingDM_mixture)
-    #undef FUNCTION
-
-    #define FUNCTION energy_injection_spectrum_DecayingDM_mixture
-    START_FUNCTION(DarkAges::Energy_injection_spectrum)
-    ALLOW_MODELS(DecayingDM_mixture)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   #define CAPABILITY DM_fraction
   START_CAPABILITY
     #define FUNCTION DM_fraction_ALP
@@ -225,7 +212,7 @@ START_MODULE
     //ALLOW_MODELS(LCDM)
     MODEL_CONDITIONAL_DEPENDENCY(classy_parameters_EnergyInjection, pybind11::dict, AnnihilatingDM_general, DecayingDM_general)
     MODEL_CONDITIONAL_DEPENDENCY(classy_PlanckLike_input, pybind11::dict, cosmo_nuisance_Planck_lite,cosmo_nuisance_Planck_TTTEEE,cosmo_nuisance_Planck_TT,plik_dx11dr2_HM_v18_TT)
-    DEPENDENCY(Helium_abundance,      std::vector<double>)
+    DEPENDENCY(BBN_abundances, BBN_container)
     DEPENDENCY(classy_NuMasses_Nur_input, pybind11::dict)
     #undef FUNCTION
   #undef CAPABILITY
@@ -829,53 +816,33 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // AlterBBN related functions & capabilities
+  #define CAPABILITY sigma8_LogLike
+  START_CAPABILITY
+    #define FUNCTION compute_sigma8_LogLike
+    START_FUNCTION(double)
+    DEPENDENCY(Omega0_m, double)
+    BACKEND_REQ(class_get_sigma8,(class_tag),double,())
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY H0_LogLike
+  START_CAPABILITY
+    #define FUNCTION compute_H0_LogLike
+    START_FUNCTION(double)
+    DEPENDENCY(H0,double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // ----------------------
+
+  // AlterBBN
+
   #define CAPABILITY AlterBBN_Input
   START_CAPABILITY
     #define FUNCTION AlterBBN_Input
     START_FUNCTION(map_str_dbl)
     DEPENDENCY(etaBBN, double)
     MODEL_CONDITIONAL_DEPENDENCY(etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters,ModelParameters,etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY Helium_abundance
-  START_CAPABILITY
-    #define FUNCTION get_Helium_abundance
-    START_FUNCTION(std::vector<double>)
-    DEPENDENCY(BBN_abundances, BBN_container)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY Deuterium_abundance
-  START_CAPABILITY
-    #define FUNCTION get_Deuterium_abundance
-    START_FUNCTION(std::vector<double>)
-    DEPENDENCY(BBN_abundances, BBN_container)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY Helium3_abundance
-  START_CAPABILITY
-    #define FUNCTION get_Helium3_abundance
-    START_FUNCTION(std::vector<double>)
-    DEPENDENCY(BBN_abundances, BBN_container)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY Lithium7_abundance
-  START_CAPABILITY
-    #define FUNCTION get_Lithium7_abundance
-    START_FUNCTION(std::vector<double>)
-    DEPENDENCY(BBN_abundances, BBN_container)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY Beryllium7_abundance
-  START_CAPABILITY
-    #define FUNCTION get_Beryllium7_abundance
-    START_FUNCTION(std::vector<double>)
-    DEPENDENCY(BBN_abundances, BBN_container)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -896,23 +863,6 @@ START_MODULE
     #define FUNCTION compute_BBN_LogLike
     START_FUNCTION(double)
     DEPENDENCY(BBN_abundances, BBN_container)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY H0_LogLike
-  START_CAPABILITY
-    #define FUNCTION compute_H0_LogLike
-    START_FUNCTION(double)
-    DEPENDENCY(H0,double)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY sigma8_LogLike
-  START_CAPABILITY
-    #define FUNCTION compute_sigma8_LogLike
-    START_FUNCTION(double)
-    DEPENDENCY(Omega0_m, double)
-    BACKEND_REQ(class_get_sigma8,(class_tag),double,())
     #undef FUNCTION
   #undef CAPABILITY
 

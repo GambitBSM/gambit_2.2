@@ -44,29 +44,6 @@ namespace Gambit
   namespace CosmoBit
   {
 
-    BBN_container::BBN_container()
-    {
-      // maps elements to their position in 'ratioH' array in AlterBBN holding
-      // primordial element abundances relative to H abundance
-      abund_map["H2"] = 3;
-      abund_map["D"] = 3;
-      abund_map["H3"] = 4;
-      abund_map["He3"] = 5;
-      abund_map["He4"] = 6;
-      abund_map["Yp"] = 6;
-      abund_map["Li6"] = 7;
-      abund_map["Li7"] = 8;
-      abund_map["Be7"] = 9;
-      abund_map["Li8"] = 10;
-    }
-
-    void BBN_container::init_arr_size(int nnuc)
-    {
-      NNUC = nnuc;
-      BBN_abund.resize(NNUC+1, 0.);
-      BBN_covmat.resize(NNUC+1, std::vector<double>(NNUC+1,0.));
-    }
-
     SM_time_evo::SM_time_evo(double t0, double tf, double N_t) : grid_size(N_t), t_grid(N_t), T_evo(N_t), Tnu_evo(N_t), H_evo(N_t), H_int(N_t)
     {
 
@@ -97,7 +74,6 @@ namespace Gambit
       set_Tnu_evo();
       set_Ht_evo();
     }
-
 
     void SM_time_evo::calc_H_int()
     {
@@ -150,7 +126,7 @@ namespace Gambit
     map_str_dbl Parametrised_ps::get_parametrised_ps_map()
     {
       map_str_dbl result;
-      result["A_s"] = A_s;
+      result["ln10A_s"] = ln10A_s;
       result["n_s"] = n_s;
       result["r"] = r;
       result["N_pivot"] = N_pivot;
