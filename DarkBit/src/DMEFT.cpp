@@ -311,10 +311,8 @@ namespace Gambit
         // 1. Loop induced coupling to dim-5 
         //    operators to dim-7, see:
         // https://arxiv.org/pdf/1302.4454.pdf
-        const SMInputs& sminputs = spec.get_SMInputs();
-        double e = pow(4*pi/sminputs.alphainv, 0.5);
         double lamovermt2 = pow(Lambda, 2.)/pow(mt, 2.);
-        double prefactor = (2*e)/(4*pow(pi,2.))/lamovermt2*log(lamovermt2);
+        double prefactor = -4/lamovermt2*log(lamovermt2);
         result["C51"] += prefactor*C79/Lambda;
         result["C52"] += prefactor*C710/Lambda;
 
