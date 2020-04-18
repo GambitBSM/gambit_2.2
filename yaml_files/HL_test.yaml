@@ -124,6 +124,7 @@ ObsLikes:
   - purpose:    B2KMuMuBranchingRatioTest
     capability: B2KmumuBr_LogLikelihood_LHCb
 
+
 #  - purpose:    RKTest
 #    capability: RK_LogLikelihood
 
@@ -139,60 +140,61 @@ Rules:
       #   RD,
       #   RDstar,
       # ]
+  - options:
+      use_SM_covariance: false
 
   - capability: prediction_B2mumu
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
-      use_SM_covariance: false
-
+  
   - capability: B2mumu_LogLikelihood_.*
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
-      use_SM_covariance: false
-
+  
   - capability: prediction_B2KstarmumuAng_.*_Atlas
     options:
       obs_list: [FL, S3, S4, S5, S7, S8]
-      use_SM_covariance: false
-
+  
   - capability: B2KstarmumuAng_LogLikelihood_Atlas
     options:
       obs_list: [FL, S3, S4, S5, S7, S8]
-      use_SM_covariance: false
-
+  
   - capability: prediction_B2KstarmumuAng_.*_CMS
     options:
       obs_list: [P1, P5prime]
-      use_SM_covariance: false
-
+  
   - capability: B2KstarmumuAng_LogLikelihood_CMS
     options:
       obs_list: [P1, P5prime]
-      use_SM_covariance: false
-
+  
   - capability: prediction_B2KstarmumuAng_.*_Belle
     options:
       obs_list: [P4prime, P5prime]
-      use_SM_covariance: false
-
+  
   - capability: B2KstarmumuAng_LogLikelihood_Belle
     options:
       obs_list: [P4prime, P5prime]
-      use_SM_covariance: false
-
+  
   - capability: prediction_B2KstarmumuAng_.*_LHCb
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
-      use_SM_covariance: false
-
+  
   - capability: B2KstarmumuAng_LogLikelihood_LHCb
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
-      use_SM_covariance: false
+
+  - capability: prediction_b2sgamma
+    options:
+       obs_list: [b2sgamma]
+
+  - capability: b2sgamma_LogLikelihood
+    options:
+       obs_list: [b2sgamma]
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: bsgamma
     function: SI_bsgamma
+
 
   # Use SuperIso instead of FeynHiggs for B_s->mumu
   - capability: Bsmumu_untag
