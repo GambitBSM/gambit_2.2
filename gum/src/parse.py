@@ -557,10 +557,6 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
 
     print("FeynRules file seems ok; firing up a Mathematica kernel...")
 
-    import sys
-    sys.exit()
-
-
 def parse_sarah_model_file(model_name, outputs):
     """
     Parses a SARAH model file. Checks for the following:
