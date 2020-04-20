@@ -35,6 +35,7 @@ M$ClassesDescription = {
     PropagatorArrow  -> Forward,
     PDG              -> 52,
     ParticleName     -> "~chi",
+    QuantumNumbers   -> {Q -> 0},
     FullName         -> "Majorana DM"
   },
 
@@ -50,6 +51,7 @@ M$ClassesDescription = {
     PropagatorArrow  -> None,
     PDG              -> 99902,
     ParticleName     -> "Y",
+    QuantumNumbers   -> {Q -> 0},
     FullName         -> "Scalar mediator"
   }
 

@@ -328,6 +328,7 @@ M$ClassesDescription = {
     PDG              -> {62},
     ParticleName     -> "chi",
     AntiParticleName -> "chi~",
+    QuantumNumbers   -> {Q -> 0},
     FullName         -> "Dirac-DM"
   },
 
@@ -468,6 +469,7 @@ M$Parameters = {
     BlockName        -> WILSON,
     OrderBlock       -> 1,
     Value            -> 0.1,
+    InteractionOrder -> {NP,0},
     Description      -> "Scale of new physics"
   },
   C51    == {

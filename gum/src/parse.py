@@ -334,7 +334,7 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
 
     # Add two curly braces to the params, as we're done now, to extract
     # information for the last parameter
-    params.append('\}\}')
+    params.append('\}\s*\}')
     
     # Get the contents between each parameter
     matches = []
