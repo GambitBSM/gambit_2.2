@@ -191,7 +191,7 @@ def fill_gum_object(data):
             gambit_model = data['gambit_opts']['model_name']
 
     # FeynRules specific -- a "base" model to build a pheno model on top of.
-    # Tyically this is the SM, plus the BSM contribution defined in a 
+    # Typically this is the SM, plus the BSM contribution defined in a 
     # separate file.
     if 'base_model' in data['math']:
         base_model = data['math']['base_model']
@@ -455,6 +455,12 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
                                 "manuals for details.").format(param))
 
     # 2. Particles
+    smpdgs = [1, 2, 3, 4, 5, 6,        # Quarks
+              11, 12, 13, 14, 15, 16,  # Leptons
+              21, 22, 23, 24,          # Gauge bosons
+              25,                      # SM Higgs
+              82, 250, 251             # SM Ghosts
+              ]
 
     # Remove all the stuff before parameters
     s3 = contents[contents.find('M$ClassesDescription'):]
@@ -514,10 +520,45 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
                             "please give it one in your .fr file, as "
                             "GUM and GAMBIT need this information."
                             ).format(particles[i]))
-        
 
+        # Try to get the quantum numbers - but only if it's a BSM particle.
+        # First get those PDG codes.
+        pdgcodes = [int(s) for s in re.split(',| ', pdgmatch.groups()[0]) 
+                    if s.isdigit()]
+
+        # Secondly - are they all in the SM PDG code list?
+        if (set(map(abs, pdgcodes)) <= set(smpdgs)):
+            continue
+        else:
+            qnumsmatch = re.search(r'QuantumNumbers\s*->\s*{(.*?)}', match)
+            if qnumsmatch:
+                # Try to match the electric charge now.
+                # Go for a fraction first.
+                qmatch = re.search(r'Q\s*->\s*(\d+/\d+)', qnumsmatch.group(1))
+                if not qmatch:
+                    qmatch = re.search(r'Q\s*->\s*(\d+)', qnumsmatch.group(1))
+                if qmatch:
+                    continue
+                else:
+                    raise GumError(("Particle {0} does not have quantum numbers"
+                                    " defined; GUM and GAMBIT need this info!"
+                                    "\nPlease give it one in your .fr "
+                                    "file, via the entry:\n\t "
+                                    "QuantumNumbers -> {{Q -> ...}},\n"
+                                    "and don't forget to assign a value to Q!"
+                                    ).format(particles[i]))
+            else:
+                raise GumError(("Particle {0} does not have its electric "
+                                "charge defined; GUM and GAMBIT need this "
+                                "info!\nPlease give it one in your .fr "
+                                "file, via the entry:\n\t "
+                                "QuantumNumbers -> {{Q -> ...}}."
+                                ).format(particles[i]))                    
 
     print("FeynRules file seems ok; firing up a Mathematica kernel...")
+
+    import sys
+    sys.exit()
 
 
 def parse_sarah_model_file(model_name, outputs):
