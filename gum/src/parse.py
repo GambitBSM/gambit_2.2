@@ -521,13 +521,23 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
                             "GUM and GAMBIT need this information."
                             ).format(particles[i]))
 
+        # Is it self-conjugate?
+        sc = None
+        scmatch = re.search(r'SelfConjugate\s*->\s*(\w+)', match)
+        if scmatch:
+            sc = scmatch.group(1).strip(' ')
+
         # Try to get the quantum numbers - but only if it's a BSM particle.
         # First get those PDG codes.
         pdgcodes = [int(s) for s in re.split(',| ', pdgmatch.groups()[0]) 
                     if s.isdigit()]
 
-        # Secondly - are they all in the SM PDG code list?
+        # Then - are they all in the SM PDG code list?
         if (set(map(abs, pdgcodes)) <= set(smpdgs)):
+            continue
+        # Also check to see if the particle is self-conjugate: if it is, 
+        # it doesn't have electric charge, so doesn't matter
+        elif sc == 'True':
             continue
         else:
             qnumsmatch = re.search(r'QuantumNumbers\s*->\s*{(.*?)}', match)

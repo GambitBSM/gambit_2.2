@@ -1,6 +1,7 @@
 ## Input .gum file for the DMEFT project in GUM
 ## We just add the model + container spectra, 
-## plus CalcHEP/DM interfaces
+## plus CalcHEP/DM interfaces. The ufo files are 
+## produced but *do not* get used to generate Pythia code.
 
 math:
   # Name of Mathematica package, either 'feynrules' or 'sarah'
@@ -15,7 +16,7 @@ math:
 # SARAH - all of the above plus: 'spheno', 'vevacious', ...
 output:
   calchep: true
-  micromegas: true
+  micromegas: false
   ufo: true
 
 wimp_candidate: 62
