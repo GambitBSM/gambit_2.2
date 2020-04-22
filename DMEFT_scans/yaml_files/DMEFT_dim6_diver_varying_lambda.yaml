@@ -75,6 +75,10 @@ Parameters:
     alpha: 1
     beta: 3
     gamma: 1
+
+  # Chiral nuclear parameters for DirectDM
+  nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
+
 Priors:
 
   # All the priors are simple for this scan, so they are specified directly in the Parameters section.
@@ -85,7 +89,7 @@ Printer:
   options:
     output_file: "DMEFT_dim6_varying_lambda_diver.hdf5"
     delete_file_on_restart: false
-    buffer_length: 50
+    buffer_length: 1000
     group: "/DMEFT"
 
 Scanner:
