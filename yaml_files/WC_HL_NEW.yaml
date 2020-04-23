@@ -201,14 +201,6 @@ Rules:
     options:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 
-  - capability: prediction_b2sgamma
-      options:
-       obs_list: [b2sgamma]
-
-  - capability: b2sgamma_LogLikelihood
-      options:
-       obs_list: [b2sgamma]
-
   - options:
       use_SM_covariance: false
         
