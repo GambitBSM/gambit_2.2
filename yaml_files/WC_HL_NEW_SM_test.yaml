@@ -88,7 +88,7 @@ Scanner:
     square_grid:
       plugin: square_grid
       like: LogLike
-      grid_pts: 20
+      grid_pts: 4
 
 
 ObsLikes:

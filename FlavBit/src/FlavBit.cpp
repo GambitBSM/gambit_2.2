@@ -911,23 +911,30 @@ namespace Gambit
       }
 
       double **result_covariance;
-      
-      if (useSMCovariance and not SMCovarianceCached) {
-        // Make sure that we calculate the observables with no new physics contribution, we do not know how this is called the first time.
-        // Copy the parameters and set all Wilson Coefficients to 0.
-        parameters param_SM = param;
-        for(int ie=1;ie<=30;ie++) {
-          param_SM.deltaC[ie]=0.;
-          param_SM.deltaCp[ie]=0.;
-        }
-        for(int ie=1;ie<=6;ie++) {
-          param_SM.deltaCQ[ie]=0.;
-          param_SM.deltaCQp[ie]=0.;
-        }
 
-        // Use the SM observables to calculate the SM theory covariance.
-        get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param_SM, &nuislist, (double **)corr);
-      }
+      
+      if (useSMCovariance )
+        {
+          if(not SMCovarianceCached) { 
+          
+
+            // Make sure that we calculate the observables with no new physics contribution, we do not know how this is called the first time.
+            // Copy the parameters and set all Wilson Coefficients to 0.
+            parameters param_SM = param;
+            for(int ie=1;ie<=30;ie++) {
+              param_SM.deltaC[ie]=0.;
+              param_SM.deltaCp[ie]=0.;
+            }
+            for(int ie=1;ie<=6;ie++) {
+              param_SM.deltaCQ[ie]=0.;
+              param_SM.deltaCQp[ie]=0.;
+            }
+
+            // Use the SM observables to calculate the SM theory covariance.
+            get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param_SM, &nuislist, (double **)corr);
+          }
+        }
+      
       else {  
         // Calculate covariance at the new physics point.
         get_th_covariance_nuisance(&result_covariance, (char**)obsnames, &nObservables, &param, &nuislist, (double **)corr);
