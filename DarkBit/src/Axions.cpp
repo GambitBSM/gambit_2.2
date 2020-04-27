@@ -227,7 +227,7 @@ namespace Gambit
         };
       };
     }
- 
+
     // Destructor
     HESS_Interpolator::~HESS_Interpolator()
     {
@@ -438,7 +438,7 @@ namespace Gambit
 
     // Move assignment operator
     SolarModel& SolarModel::operator=(SolarModel &&model)
-    { 
+    {
       if (this != &model)
       {
         std::swap(data,model.data);
@@ -834,7 +834,7 @@ namespace Gambit
         gsl_spline_free (gaee_li);
       for(auto gaee_ac : gaee_acc)
         gsl_interp_accel_free (gaee_ac);
- 
+
     }
 
     // Returns reference value counts for the photon-axion contribution.
@@ -1741,10 +1741,10 @@ namespace Gambit
           acc = gsl_interp_accel_alloc();
           spline = gsl_spline_alloc(gsl_interp_cspline, npoints);
         }
-     
+
         // Destructor
         ~WDInterpolator()
-        { 
+        {
           gsl_spline_free (spline);
           gsl_interp_accel_free (acc);
         }
@@ -1771,31 +1771,23 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_WDVar_G117B15A;
       // Rescale coupling to be used in their model prediction.
-      double x = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      double x2 = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      x2 = x2*x2;
 
       // Values for the model prediction provided by the authors.
-      const std::vector<double> xvals   = {0.0, 1.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.1, 22.5, 25.0, 27.5, 30.0};
+      const std::vector<double> x2vals  = {0.0, 1.0, 6.25, 25.0, 56.25, 100.0, 156.25, 225.0, 306.25, 404.0, 506.25, 625.0, 756.25, 900.0};
       const std::vector<double> dPidts  = {1.235687, 1.244741, 1.299579, 1.470017, 1.796766, 2.260604, 2.795575, 3.484570, 4.232738, 5.056075, 6.113390, 7.342085, 8.344424, 9.775156};
       const double err = 0.09;
 
       // Use interpolation for the model predction, but only initialise once.
       static bool init_flag = false;
       static WDInterpolator interp(14);
-      if (not(init_flag))
-      {
-        interp.init (xvals, dPidts, 14);
-        init_flag = true;
-      };
+      if (not(init_flag)) { interp.init (x2vals, dPidts, 14); init_flag = true; };
 
-      // We only have predictions up to x = 30. Limits should get stronger for x > 30, so
-      // it is conservative to use the prediction for x = 30 for x > 30.
-      double pred;
-      if (x > 30.0)
-      {
-        pred = interp.eval (30.0);
-      } else {
-        pred = interp.eval (x);
-      };
+      // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
+      // it is conservative to use the prediction for x2 = 900 for x2 > 900.
+      x2 = std::min(x2,900.0);
+      double pred = interp.eval(x2);
 
       result = -0.5 * gsl_pow_2(4.19 - pred) / (0.73*0.73 + err*err);
     }
@@ -1805,31 +1797,23 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_WDVar_R548;
       // Rescale coupling to be used in their model prediction.
-      double x = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      double x2 = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      x2 = x2*x2;
 
       // Values for the model prediction provided by the authors.
-      const std::vector<double> xvals   = {0.0, 1.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0, 27.5, 30.0};
+      const std::vector<double> x2vals   = {0.0, 1.0, 6.25, 25.0, 56.25, 100.0, 156.25, 225.0, 306.25, 400.0, 506.25, 625.0, 756.25, 900.0};
       const std::vector<double> dPidts  = {1.075373, 1.095319, 1.123040, 1.289434, 1.497666, 1.869437, 2.300523, 2.844954, 3.379978, 4.086028, 4.847149, 5.754807, 6.714841, 7.649140};
       const double err = 0.09;
 
       // Use interpolation for the model predction, but only initialise once.
       static bool init_flag = false;
       static WDInterpolator interp(14);
-      if (not(init_flag))
-      {
-        interp.init (xvals, dPidts, 14);
-        init_flag = true;
-      };
+      if (not(init_flag)) { interp.init (x2vals, dPidts, 14); init_flag = true; };
 
-      // We only have predictions up to x = 30. Limits should get stronger for x > 30, so
-      // it is conservative to use the prodiction for x = 30 for x > 30.
-      double pred;
-      if (x > 30.0)
-      {
-        pred = interp.eval (30.0);
-      } else {
-        pred = interp.eval (x);
-      };
+      // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
+      // it is conservative to use the prodiction for x2 = 900 for x2 > 900.
+      x2 = std::min(x2,900.0);
+      double pred = interp.eval(x2);
 
       result = -0.5 * gsl_pow_2(3.3 - pred) / (1.1*1.1 + err*err);
     }
@@ -1839,31 +1823,23 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_WDVar_PG1351489;
       // Rescale coupling to be used in their model prediction.
-      double x = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      double x2 = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      x2 = x2*x2;
 
       // Values for the model prediction provided by the authors.
-      const std::vector<double> xvals = {0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0};
+      const std::vector<double> x2vals = {0.0, 4.0, 16.0, 36.0, 64.0, 100.0, 144.0, 196.0, 256.0, 324.0, 400.0};
       const std::vector<double> dPidts = {0.90878126, 0.96382008, 1.2022906, 1.5712931, 2.1220619, 2.8002354, 3.6172605, 4.5000560, 5.5256592, 6.5055283, 7.5341296};
       const double err = 0.5;
 
       // Use interpolation for the model predction, but only initialise once.
       static bool init_flag = false;
       static WDInterpolator interp(11);
-      if (not(init_flag))
-      {
-        interp.init (xvals, dPidts, 11);
-        init_flag = true;
-      };
+      if (not(init_flag)) { interp.init (x2vals, dPidts, 11); init_flag = true; };
 
-      // We only have predictions up to x = 20. Limits should get stronger for x > 20, so
-      // it is conservative to use the prodiction for x = 20 for x > 20.
-      double pred;
-      if (x > 20.0)
-      {
-        pred = interp.eval (20.0);
-      } else {
-        pred = interp.eval (x);
-      };
+      // We only have predictions up to x2 = 400. Limits should get stronger for x2 > 400, so
+      // it is conservative to use the prodiction for x2 = 400 for x2 > 400.
+      x2 = std::min(x2,400.0);
+      double pred = interp.eval(x2);
 
       result = -0.5 * gsl_pow_2(2.0 - pred) / (0.9*0.9 + err*err);
     }
@@ -1873,31 +1849,23 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_WDVar_L192;
       // Rescale coupling to be used in their model prediction.
-      double x = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      double x2 = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      x2 = x2*x2;
 
       // Values for the model prediction provided by the authors.
-      const std::vector<double> xvals = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0};
+      const std::vector<double> x2vals = {0.0, 1.0, 4.0, 9.0, 16.0, 25.0, 36.0, 49.0, 64.0, 81.0, 100.0, 121.0, 144.0, 169.0, 196.0, 225.0, 256.0, 289.0, 324.0, 361.0, 400.0, 441.0, 484.0, 529.0, 576.0, 625.0, 676.0, 729.0, 784.0, 841.0, 900.0};
       const std::vector<double> dPidts = {2.41, 2.40, 2.44, 2.42, 2.50, 2.57, 2.63, 2.74, 2.83, 2.99, 3.15, 3.32, 3.52, 3.70, 3.90, 4.08, 4.42, 4.69, 4.98, 5.34, 5.62, 6.02, 6.27, 6.62, 7.04, 7.38, 7.89, 8.09, 8.65, 9.16, 9.62};
       const double err = 0.85;
 
       // Use interpolation for the model predction, but only initialise once.
       static bool init_flag = false;
       static WDInterpolator interp(31);
-      if (not(init_flag))
-      {
-        interp.init (xvals, dPidts, 31);
-        init_flag = true;
-      };
+      if (not(init_flag)) { interp.init (x2vals, dPidts, 31); init_flag = true; };
 
-      // We only have predictions up to x = 30. Limits should get stronger for x > 30, so
-      // it is conservative to use the prediction for x = 30 for x > 30.
-      double pred;
-      if (x > 30.0)
-      {
-        pred = interp.eval (30.0);
-      } else {
-        pred = interp.eval (x);
-      };
+      // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
+      // it is conservative to use the prediction for x2 = 900 for x2 > 900.
+      x2 = std::min(x2,900.0);
+      double pred = interp.eval(x2);
 
       result = -0.5 * gsl_pow_2(3.0 - pred) / (0.6*0.6 + err*err);
     }
