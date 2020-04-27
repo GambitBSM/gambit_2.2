@@ -50,6 +50,7 @@ namespace GUM
   {
 
     std::cout << "Loading FeynRules... ";
+    std::cout.flush();
 
     std::string input = "$FeynRulesPath = SetDirectory[\"" + std::string(FEYNRULES_PATH) + "\"]";
 
@@ -79,6 +80,7 @@ namespace GUM
   {
 
     std::cout << "Loading model " + model + " in FeynRules";
+    std::cout.flush();
     if (not base_model.empty()) { std::cout << ", piggybacking off of " << base_model; }
     std::cout << "... " << std::endl;
 
@@ -166,14 +168,12 @@ namespace GUM
 
     std::string respath;
     respath = std::string(FEYNRULES_PATH) + "/Models/" + model + "/" + rst + ".rst";
-    std::cout << respath << std::endl;
     std::ifstream path1(respath.c_str());
 
     // If it's not in the FeynRules directory, try the gum Models dir...
     if (!path1.good())
     {
         respath = std::string(GUM_DIR) + "/Models/" + model + "/" + rst + ".rst";
-        std::cout << respath << std::endl;
         std::ifstream path2(respath.c_str());
 
         // If it's not in the model directory, try the base_model...
@@ -182,13 +182,11 @@ namespace GUM
             if (!base_model.empty())
             {
                 respath = std::string(FEYNRULES_PATH) + "Models/" + base_model + "/" + rst + ".rst";
-                std::cout << respath << std::endl;
         
                 std::ifstream path3(respath.c_str());
                 if (!path3.good())
                 {
                     respath = std::string(GUM_DIR) + "/Models/" + base_model + "/" + rst + ".rst";
-                    std::cout << respath << std::endl;
                     std::ifstream path4(respath.c_str());
                     if (!path4.good())
                     {
@@ -256,10 +254,12 @@ namespace GUM
   }
 
   // Check a model is Hermitian (it should be...)
+  // Also check for correct normalisation
   void FeynRules::check_herm(std::string LTot)
   {
 
     std::cout << "Checking the model is Hermitian... ";
+    std::cout.flush();
 
     std::string command = "ch = CheckHermiticity[" + LTot + "]";
     send_to_math(command);
@@ -282,6 +282,57 @@ namespace GUM
         ss << "Please check your FeynRules file." << std::endl;
         throw std::runtime_error(ss.str());
     }
+
+    std::cout << "Checking kinetic and mass terms are properly diagonalised..." << std::endl;
+
+    // Check for kinetic term diagonalisation...
+    std::string isnorm;
+    command = "CheckDiagonalKineticTerms[" + LTot + "]";
+    send_to_math(command);
+
+    get_from_math(isnorm);
+    if (isnorm != "True")
+    {
+        std::stringstream ss;
+        ss << "Your Lagrangian has kinetic terms that are not correctly diagonalised!" << std::endl;
+        ss << "Please check your FeynRules file and the FeynRules manual." << std::endl;
+        throw std::runtime_error(ss.str());
+    }
+
+    std::cout << "Kinetic terms are diagonal... ";
+    std::cout.flush();
+
+    // Check for mass term diagonalisation...
+    command = "CheckDiagonalMassTerms[" + LTot + "]";
+    send_to_math(command);
+
+    get_from_math(isnorm);
+    if (isnorm != "True")
+    {
+        std::stringstream ss;
+        ss << "Your Lagrangian has mass terms that are not correctly diagonalised!" << std::endl;
+        ss << "Please check your FeynRules file and the FeynRules manual." << std::endl;
+        throw std::runtime_error(ss.str());
+    }
+
+    std::cout << "Mass terms are diagonal... ";
+    std::cout.flush();
+
+    // Kinetic term normalisation. 
+    // We ignore the SM neutrinos because they don't have a kinetic term under the SM.
+    command = "CheckKineticTermNormalisation[" + LTot + ", Free -> {ve,vm,vt}] == Null // ToString";
+    send_to_math(command);
+
+    get_from_math(isnorm);
+    if (isnorm == "True")
+    {
+        std::stringstream ss;
+        ss << "Your Lagrangian is not correctly normalised!" << std::endl;
+        ss << "Please check your FeynRules file and the FeynRules manual." << std::endl;
+        throw std::runtime_error(ss.str());
+    }
+
+    std::cout << "All good." << std::endl;
 
   }
 

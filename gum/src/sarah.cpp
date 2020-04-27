@@ -54,6 +54,7 @@ namespace GUM
   {
 
     std::cout << "Loading SARAH... ";
+    std::cout.flush();
 
     std::string input;
     input+= "SetDirectory[\"" + std::string(SARAH_PATH) + "\"]";
@@ -401,11 +402,10 @@ namespace GUM
             if (spinentry == "S") spinX2 = 0;
             else if(spinentry == "F") spinX2 = 1;
             else if(spinentry == "V") spinX2 = 2;
-            // TODO!!! get Spinformation for EWSB particles that come from mixings in either matter/gauge sectors or are from VEVs
+            // Get Spinformation for EWSB particles that come from mixings in either
+            // matter/gauge sectors or are from VEVs
             else if(spinentry == "NoField") 
             {
-              std::cout << "NoField entry for " << alt_name << std::endl;
-
               // Strip any trailing digits first
               size_t last_index = alt_name.find_last_not_of("0123456789");
               std::string strippedname = alt_name.substr(0, last_index + 1);
