@@ -1742,6 +1742,16 @@ namespace Gambit
       // Clear previous vectors, etc.
       result.clear();
 
+      // Create the thread_local AnalysisData instances we need, 
+      // and make sure they are properly cleared for each new point
+      thread_local AnalysisData cmsData("CMS_13TeV_MONOJET_36invfb_interpolated");
+      cmsData.clear();
+
+      thread_local AnalysisData cmsData_nocovar("CMS_13TeV_MONOJET_36invfb_interpolated_nocovar");
+      cmsData_nocovar.clear();
+
+      thread_local AnalysisData atlasData("ATLAS_13TeV_MONOJET_36invfb_interpolated");
+      atlasData.clear();
 
 
       // cout << "void is run"<< endl;
@@ -1841,13 +1851,13 @@ namespace Gambit
         first_c = false;
       }
 
-      AnalysisData  * cmsData = new AnalysisData(cmsBinnedResults, m_BKGCOV);
-      cmsData->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated";
-      // cout << "after cms definition ..."<<endl;
+      // Save the results + covariance matrix in cmsData
+      cmsData.srdata = cmsBinnedResults;
+      cmsData.srcov = m_BKGCOV;
 
-      // Add a copy of the CMS analysis without the covariance matrix as well
-      AnalysisData  * cmsData_nocovar = new AnalysisData(cmsBinnedResults);
-      cmsData_nocovar->analysis_name = "CMS_13TeV_MONOJET_36invfb_interpolated_nocovar";
+      // Save a copy of the results *without* the covariance matrix in cmsData_nocovar
+      cmsData_nocovar.srdata = cmsBinnedResults;
+
 
       // **----------------------------------------------------------------------------------------------------//
       // **-------------------------------------ATLAS----------------------------------------------------------//
@@ -1888,21 +1898,17 @@ namespace Gambit
         atlasBinnedResults.push_back(sr);
       }
 
-
-      // Define this statically?
-      AnalysisData  * atlasData = new AnalysisData(atlasBinnedResults);    
-
-      atlasData->analysis_name  = "ATLAS_13TeV_MONOJET_36invfb_interpolated"; 
+      // Save the results in atlasData
+      atlasData.srdata = atlasBinnedResults;
 
 
       // ******** Create total results ***********// 
       // //--------------------------------------//
 
-      // I think these are cleared?
-
-      result.push_back(atlasData);
-      result.push_back(cmsData);
-      result.push_back(cmsData_nocovar);
+      // Saving the addresses to the thread_local AnalysisData instances.
+      result.push_back(&atlasData);
+      result.push_back(&cmsData);
+      result.push_back(&cmsData_nocovar);
 
       //Sleep time
       // std::this_thread::sleep_for(std::chrono::seconds(1));
