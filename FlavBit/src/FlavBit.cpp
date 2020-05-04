@@ -1482,29 +1482,6 @@ namespace Gambit
       if (flav_debug) cout<<"Finished SI_A_BXstautau_highq2"<<endl;
     }
 
-
-    /// B-> K* mu mu observables in different q^2 bins
-    /// @{
-    #define DEFINE_BKSTARMUMU(Q2MIN, Q2MAX, Q2MIN_TAG, Q2MAX_TAG)                         \
-    void CAT_4(SI_BKstarmumu_,Q2MIN_TAG,_,Q2MAX_TAG)(Flav_KstarMuMu_obs &result)          \
-    {                                                                                       \
-      using namespace Pipes::CAT_4(SI_BKstarmumu_,Q2MIN_TAG,_,Q2MAX_TAG);                 \
-      if (flav_debug) cout<<"Starting " STRINGIFY(CAT_4(SI_BKstarmumu_,Q2MIN_TAG,_,Q2MAX_TAG))<<endl; \
-      parameters const& param = *Dep::SuperIso_modelinfo;                                   \
-      result=BEreq::BKstarmumu_CONV(&param, Q2MIN, Q2MAX);                                \
-      if (flav_debug) cout<<"Finished " STRINGIFY(CAT_4(SI_BKstarmumu_,Q2MIN_TAG,_,Q2MAX_TAG))<<endl; \
-    }
-    DEFINE_BKSTARMUMU(0.1, 0.98, 0p1, 0p98)
-    DEFINE_BKSTARMUMU(1.1, 2.5, 11, 25)
-    DEFINE_BKSTARMUMU(2.5, 4.0, 25, 40)
-    DEFINE_BKSTARMUMU(4.0, 6.0, 40, 60)
-    DEFINE_BKSTARMUMU(6.0, 8.0, 60, 80)
-    DEFINE_BKSTARMUMU(15., 17., 15, 17)
-    DEFINE_BKSTARMUMU(17., 19., 17, 19)
-    DEFINE_BKSTARMUMU(15., 19., 15, 19)
-    /// @}
-    #undef DEFINE_BKSTARMUMU
-
     /// RK* in low q^2
     void SI_RKstar_0045_11(double &result)
     {
