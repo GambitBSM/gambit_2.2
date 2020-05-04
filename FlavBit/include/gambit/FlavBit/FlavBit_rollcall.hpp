@@ -1294,25 +1294,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Rare fully leptonic B decay measurements
-  #define CAPABILITY b2ll_M
-  START_CAPABILITY
-    #define FUNCTION b2ll_measurements
-    START_FUNCTION(FlavBit::predictions_measurements_covariances)
-    DEPENDENCY(Bsmumu_untag, double)
-    DEPENDENCY(Bmumu, double )
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  // Rare fully leptonic B decay likelihood
-  #define CAPABILITY b2ll_LL
-  START_CAPABILITY
-    #define FUNCTION b2ll_likelihood
-    START_FUNCTION(double)
-    DEPENDENCY(b2ll_M, FlavBit::predictions_measurements_covariances)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   // Tree-level leptonic and semi-leptonic B & D decay measurements
   #define CAPABILITY SL_M
   START_CAPABILITY
