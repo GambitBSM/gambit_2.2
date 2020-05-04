@@ -1765,45 +1765,6 @@ namespace Gambit
     }
 
 
-    /// Likelihood for b->s gamma
-    void b2sgamma_likelihood(double &result)
-    {
-      using namespace Pipes::b2sgamma_likelihood;
-
-      static bool th_err_absolute, first = true;
-      static double exp_meas, exp_b2sgamma_err, th_err;
-
-      if (flav_debug) cout << "Starting b2sgamma_measurements"<<endl;
-
-      // Read and calculate things based on the observed data only the first time through, as none of it depends on the model parameters.
-      if (first)
-      {
-        Flav_reader fread(GAMBIT_DIR  "/FlavBit/data");
-        fread.debug_mode(flav_debug);
-        if (flav_debug) cout<<"Initialised Flav reader in b2sgamma_measurements"<<endl;
-        fread.read_yaml_measurement("flav_data.yaml", "BR_b2sgamma");
-        fread.initialise_matrices(); // here we have a single measurement ;) so let's be sneaky:
-        exp_meas = fread.get_exp_value()(0,0);
-        exp_b2sgamma_err = sqrt(fread.get_exp_cov()(0,0));
-        th_err = fread.get_th_err()(0,0).first;
-        th_err_absolute = fread.get_th_err()(0,0).second;
-        first = false;
-      }
-
-      if (flav_debug) cout << "Experiment: " << exp_meas << " " << exp_b2sgamma_err << " " << th_err << endl;
-
-      // Now we do the stuff that actually depends on the parameters
-      double theory_prediction = *Dep::bsgamma;
-      double theory_b2sgamma_err = th_err * (th_err_absolute ? 1.0 : std::abs(theory_prediction));
-      if (flav_debug) cout<<"Theory prediction: "<<theory_prediction<<" +/- "<<theory_b2sgamma_err<<endl;
-
-      /// Option profile_systematics<bool>: Use likelihood version that has been profiled over systematic errors (default false)
-      bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
-
-      result = Stats::gaussian_loglikelihood(theory_prediction, exp_meas, theory_b2sgamma_err, exp_b2sgamma_err, profile);
-    }
-
-
     /// Measurements for rare purely leptonic B decays
     void b2ll_measurements(predictions_measurements_covariances &pmc)
     {

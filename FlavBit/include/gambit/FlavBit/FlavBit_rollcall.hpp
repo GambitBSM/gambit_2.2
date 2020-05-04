@@ -1294,15 +1294,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // b -> s gamma likelihood
-  #define CAPABILITY b2sgamma_LL
-  START_CAPABILITY
-    #define FUNCTION b2sgamma_likelihood
-    START_FUNCTION(double)
-    DEPENDENCY(bsgamma, double)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   // Rare fully leptonic B decay measurements
   #define CAPABILITY b2ll_M
   START_CAPABILITY
