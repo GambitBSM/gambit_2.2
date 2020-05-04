@@ -1110,22 +1110,6 @@ namespace Gambit
       }
     }
 
-
-    /// Br b-> s gamma decays
-    void SI_bsgamma(double &result)
-    {
-      using namespace Pipes::SI_bsgamma;
-      if (flav_debug) cout<<"Starting SI_bsgamma"<<endl;
-
-      parameters const& param = *Dep::SuperIso_modelinfo;
-      double E_cut=1.6;
-      result=BEreq::bsgamma_CONV(&param, byVal(E_cut));
-
-      if (flav_debug) printf("BR(b->s gamma)=%.3e\n",result);
-      if (flav_debug) cout<<"Finished SI_bsgamma"<<endl;
-    }
-
-
     /// Br Bs->mumu decays for the untagged case (CP-averaged)
     void SI_Bsmumu_untag(double &result)
     {

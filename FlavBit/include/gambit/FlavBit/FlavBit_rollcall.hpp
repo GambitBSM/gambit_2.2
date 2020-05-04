@@ -647,19 +647,10 @@ START_MODULE
   // Observable: BR(B -> Xs gamma)
   #define CAPABILITY bsgamma
   START_CAPABILITY
-
-    #define FUNCTION SI_bsgamma
-    START_FUNCTION(double)
-    DEPENDENCY(SuperIso_modelinfo, parameters)
-    BACKEND_REQ(bsgamma_CONV, (libsuperiso), double,(const parameters*, double))
-    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-    #undef FUNCTION
-
     #define FUNCTION FH_bsgamma
     START_FUNCTION(double)
     DEPENDENCY(FH_FlavourObs, fh_FlavourObs)
     #undef FUNCTION
-
   #undef CAPABILITY
 
   // Observable: BR(Bs -> mu+ mu-)_untag
