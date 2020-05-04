@@ -1248,25 +1248,6 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Tree-level leptonic and semi-leptonic B & D decay measurements
-  #define CAPABILITY LUV_M
-  START_CAPABILITY
-    #define FUNCTION LUV_measurements
-    START_FUNCTION(FlavBit::predictions_measurements_covariances)
-    DEPENDENCY(RK, double)
-    DEPENDENCY(RKstar_0045_11, double)
-    DEPENDENCY(RKstar_11_60, double)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY LUV_LL
-  START_CAPABILITY
-    #define FUNCTION LUV_likelihood
-    START_FUNCTION(double)
-    DEPENDENCY(LUV_M, FlavBit::predictions_measurements_covariances)
-    #undef FUNCTION
-  #undef CAPABILITY
-
   // l -> l gamma  likelihood
   #define CAPABILITY l2lgamma_lnL
   START_CAPABILITY
