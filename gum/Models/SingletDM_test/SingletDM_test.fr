@@ -435,7 +435,6 @@ M$ClassesDescription = {
     SelfConjugate -> True,
     Mass -> {mS, 1000.},
     Width -> {wS, 0.},
-    QuantumNumbers -> {Q -> 0},
     ParticleName -> "~S",
     PDG -> 9900001
   },

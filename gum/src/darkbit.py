@@ -30,7 +30,7 @@ class VertexMerger:
         if not isinstance(dm, Particle):
             raise GumError("DM not passed over as instance of class Particle...")
 
-        if dm.is_sc:
+        if dm.is_sc():
             if (self.v6.count(dm.PDG_code) > 1):
                 return True
             else: return False
@@ -104,14 +104,14 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
     # interaction - sort of defeats the point.
     for i in range(0, len(four_fields)):
 
-        if dm.is_sc and four_fields[i].count(dm.PDG_code) == 2:
+        if dm.is_sc() and four_fields[i].count(dm.PDG_code) == 2:
             p = [f for f in four_fields[i] if f not in {dm.PDG_code}]
             products.append(p)
 
-        elif not dm.is_sc and four_fields[i].count(dm.PDG_code) == 1 and \
+        elif not dm.is_sc() and four_fields[i].count(dm.PDG_code) == 1 and \
                 four_fields[i].count(dm.conjugate_PDG_code) == 1:
             p = [f for f in four_fields[i] if
-                        f not in {dm.PDG_code, dm.conjugate_PDG_code}]
+                 f not in {dm.PDG_code, dm.conjugate_PDG_code}]
             products.append(p)
 
     """
@@ -138,7 +138,9 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
                 
     # Remove duplicates
     propagators = list(set(propagators))
-    products = [list(x) for x in set(tuple(y) for y in products)]
+    products = [list(x) for x in set(tuple(y) 
+                for y in [sorted(z) for z in products])]
+
 
     # Remove any DM-DM self-interactions
     # If these are important they should be dealt with by e.g. micrOMEGAs 5.0+
