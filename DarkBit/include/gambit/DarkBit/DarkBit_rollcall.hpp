@@ -643,13 +643,13 @@ START_MODULE
   #define CAPABILITY DDCalc_Couplings
   START_CAPABILITY
 
-    // Initialise DDCalc couplings dependent on WIMP-nucleon couplings.
+    // Initialise DDCalc couplings for spin-independent/spin-dependent interactions only.
     #define FUNCTION DDCalc_Couplings_WIMP_nucleon
       START_FUNCTION(DD_coupling_container)
       DEPENDENCY(DD_couplings, DM_nucleon_couplings)
     #undef FUNCTION
 
-    // Initialise DDCalc couplings dependent on non-relativistic Wilson Coefficients.
+    // Initialise DDCalc couplings for non-relativistic Wilson Coefficient coupling structure.
     #define FUNCTION DDCalc_Couplings_NR_WCs
       START_FUNCTION(DD_coupling_container)
       DEPENDENCY(DD_nonrel_WCs, NREO_DM_nucleon_couplings)

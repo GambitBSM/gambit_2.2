@@ -292,7 +292,7 @@ namespace Gambit
 
     /// DDCalc initialisation.
 
-    // Using DM-nucleon couplings.
+    // Using spin-independent/spin-dependent interactions only
     void DDCalc_Couplings_WIMP_nucleon(DD_coupling_container &result)
     {
       using namespace Pipes::DDCalc_Couplings_WIMP_nucleon;
@@ -300,7 +300,7 @@ namespace Gambit
       result.DM_nucleon_coeffs = *Dep::DD_couplings;
     }
 
-    // Using non-relativistic Wilson Coefficients.
+    // Using non-relativistic Wilson Coefficient coupling structure
     void DDCalc_Couplings_NR_WCs(DD_coupling_container &result)
     {
       using namespace Pipes::DDCalc_Couplings_NR_WCs;

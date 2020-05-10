@@ -72,34 +72,5 @@ namespace Gambit
        }  
     }
 
-    /// Function to prettify retrieval of couplings (also helpful for looping over 1,0 isospin integers) 
-    double NREO_DM_nucleon_couplings::c(int iso, int o) const
-    {
-       if(iso!=0 and iso!=1)
-       {
-          std::stringstream msg;
-          msg<<"Invalid isospin index (first argument) received ("<<iso<<")! Isospin index must be either 0 or 1";
-          backend_error().raise(LOCAL_INFO, msg.str());
-       }
-
-       if(o<1 or o>15)
-       {
-          std::stringstream msg;
-          msg<<"Invalid NREO index (second argument) received ("<<o<<")! Operator index must be an integer in the range [1,15]";
-          backend_error().raise(LOCAL_INFO, msg.str()); 
-       }
-
-       double result;
-       if(iso==0)
-       {
-           result = c0.at(o);
-       }
-       else if(iso==1)
-       {
-           result = c1.at(o);
-       }
-
-       return result;
-    }
 
 }

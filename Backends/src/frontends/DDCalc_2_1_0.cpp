@@ -108,7 +108,7 @@ BE_INI_FUNCTION
   // Set WIMP parameters
   DD_coupling_container couplings = *Dep::DDCalc_Couplings;
 
-  // Initialise WIMP object with type DM_nucleon_couplings;
+  // Initialise WIMP object with spin-independent/spin-dependent interactions only
   if (couplings.coeff_structure == 1)
   {
     DM_nucleon_couplings DD_couplings = couplings.DM_nucleon_coeffs;
@@ -117,25 +117,72 @@ BE_INI_FUNCTION
     DDCalc_SetWIMP_mG(WIMP, *Dep::mwimp, DD_couplings.gps,DD_couplings.gns,
                                          DD_couplings.gpa,DD_couplings.gna);
   }
-  // Initialse WIMP object with type std::map<std::string,double>;
+  // Initialse WIMP object with non-relativistic effective operator coupling structure 
   else if (couplings.coeff_structure == 2)
   {
     NREO_DM_nucleon_couplings wilsonCoeffs = couplings.DD_nonrel_WCs;
+    int OpCoeff;
 
-    // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
-    DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
+    // Initialse WIMP object with NREFT_CPT coupling structure 
+    if( wilsonCoeffs.CPTbasis )
+    { 
+
+      // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
+      DDCalc_SetWIMP_NREFT_CPT(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
     
-    // Loop through non-relativistic WCs and assign the correct coefficients
-    // to DDCalc WIMP object.
-    for(int tau=0; tau<=1; tau++) {
-      for(int OpIndex=1; OpIndex<=15; OpIndex++) {
-        DDCalc_SetNRCoefficient(WIMP, OpIndex, tau, wilsonCoeffs.c(tau,OpIndex));
+      // Loop through non-relativistic WCs and assign the correct coefficients to DDCalc WIMP object.
+
+      for (map<int, double>::iterator it = wilsonCoeffs.c0.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      {
+        OpCoeff = it->first;
+        if( (OpCoeff >=1 && OpCoeff <= 23) || OpCoeff == 100 || OpCoeff == 104 )
+        { 
+          DDCalc_SetNRCoefficient(WIMP, OpCoeff, 0, it->second);
+        }
+        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }
       }
+      for (map<int, double>::iterator it = wilsonCoeffs.c1.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      {
+        OpCoeff = it->first;
+        if( (OpCoeff >=1 && OpCoeff <= 23) || OpCoeff == 100 || OpCoeff == 104 )
+        { 
+          DDCalc_SetNRCoefficient(WIMP, OpCoeff, 1, it->second);
+        }
+        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }    }
+      }
+    }
+    // Initialse WIMP object with NREffectiveTheory coupling structure 
+    else
+    {
+
+      // Set the WIMP object in DDCalc to expect non-relativistic EFT coeffs.
+      DDCalc_SetWIMP_NREffectiveTheory(WIMP, *Dep::mwimp, (double) *Dep::spinwimpx2/2.);
+    
+      // Loop through non-relativistic WCs and assign the correct coefficients to DDCalc WIMP object.
+
+      for (map<int, double>::iterator it = wilsonCoeffs.c0.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      {
+        OpCoeff = it->first;
+        if( (OpCoeff >=3 && OpCoeff <= 15) || OpCoeff == 1 || OpCoeff == 17 || OpCoeff == 18 || OpCoeff == -1 || OpCoeff == -4 )
+        { 
+          DDCalc_SetNRCoefficient(WIMP, OpCoeff, 0, it->second);
+        }
+        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }
+      }
+      for (map<int, double>::iterator it = wilsonCoeffs.c1.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      {
+        OpCoeff = it->first;
+        if( (OpCoeff >=3 && OpCoeff <= 15) || OpCoeff == 1 || OpCoeff == 17 || OpCoeff == 18 || OpCoeff == -1 || OpCoeff == -4 )
+        { 
+          DDCalc_SetNRCoefficient(WIMP, OpCoeff, 1, it->second);
+        }
+        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }    }
+      }
+
     }
   }
   // If DDCalc doesn't know what to do...
-  else { backend_error().raise(LOCAL_INFO, "Unknown direct detection couplings structure given to DDCalc."
-                                      "DDCalc does not know how to initialise the WIMP object."); }
+  else { backend_error().raise(LOCAL_INFO, "Unknown WIMP type given to DDCalc."); }
 
 
   // Change halo parameters.

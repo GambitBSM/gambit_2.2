@@ -39,33 +39,33 @@ BE_NAMESPACE
   /* Simple local helper function to copy map of coefficients into GAMBIT (DDCalc) container */
   NREO_DM_nucleon_couplings copy_couplings_to_NREO_container(const map_str_dbl& nonrel_WCs)
   {
-    // Copy coefficients into GAMBIT container object (converting to isoscalar/isovector basis in the process)
-    // Assuming conventions of 1203.3542, i.e.
-    // c0 = cp + cn
-    // c1 = cp - cn
+    // Copy coefficients into GAMBIT container object
+    // Note that c0 = cp and c1 = cn
     NREO_DM_nucleon_couplings NRWCs;
 
-    for(int OpCoeff=1; OpCoeff<=15; OpCoeff++)
+    int OpCoeffList[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,100,104};
+    int OpCoeff;
+
+    for(int i=0; i<25; i++)
     {
+      OpCoeff = OpCoeffList[i];
       std::stringstream sp;
       std::stringstream sn;
       sp<<"cNR"<<OpCoeff<<"p";
       sn<<"cNR"<<OpCoeff<<"n";
       auto icp = nonrel_WCs.find(sp.str());
       auto icn = nonrel_WCs.find(sn.str());
-      double cp=0;
-      double cn=0;
       if(icp!=nonrel_WCs.end())
-        cp=(icp->second);
+        NRWCs.c0[OpCoeff]=(icp->second);
       else
         backend_error().raise(LOCAL_INFO, "Operator " + sp.str() + " not found in nonrel_WCs!");
       if(icn!=nonrel_WCs.end()) 
-        cn=(icn->second);
+        NRWCs.c1[OpCoeff]=(icn->second);
       else
         backend_error().raise(LOCAL_INFO, "Operator " + sn.str() + " not found in nonrel_WCs!");
-      NRWCs.c0[OpCoeff] = cp + cn;
-      NRWCs.c1[OpCoeff] = cp - cn;
     }
+
+    NRWCs.CPTbasis = 1;
 
     return NRWCs;
   }
