@@ -232,6 +232,7 @@ namespace Gambit
       result.c0[11] = (app + apn)*m_proton/mass;
       result.c1[11] = (app - apn)*m_proton/mass;
       result.CPTbasis = 0;
+
       
     } // function DD_couplings_DiracSingletDM_Z2
     

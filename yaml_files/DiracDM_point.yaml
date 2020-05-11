@@ -1,33 +1,24 @@
 #################################################################################################
 #
-#      DiracSingletDM_Z2
+#      DiracSingletDM_Z2: single point (for testing between DirectDM and DDCalc)
 #
 #################################################################################################
 
 Parameters:
 
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_scan_HP.yaml
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
   StandardModel_Higgs:
-    mH:
-      range: [124.1, 127.3]    
+    mH: 125.09
 
   DiracSingletDM_Z2:
-    mF:
-      range: [45., 10000.]
-      prior_type: log
-    lF:
-      range: [1e-6, 1]
-      prior_type: log
-    xi:
-      range: [0, 3.141592653589793238462643383279502884197]
-      prior_type: flat
+    lF: 0.04528954276944112
+    mF: 138.4937664758143
+    xi: 1.9603579189094817
 
-  nuclear_params_sigmas_sigmal:
-    sigmas:
-      range: [19, 67]
-    sigmal:
-      range: [5, 95]    
+  nuclear_params_sigmas_sigmal:    
+    sigmas: 43
+    sigmal: 50
     deltau:  0.842
     deltad:  -0.427
     deltas:  -0.085
@@ -35,15 +26,11 @@ Parameters:
   # Needed when scanning with DirectDM
   #nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
 
-  Halo_gNFW_rho0:
-    rho0:
-      range: [0.2, 0.8]
-    v0:
-      range: [216, 264]
-    vesc:
-      range: [437, 629]    
-    vrot: 
-      same_as: Halo_gNFW_rho0::v0
+  Halo_gNFW_rho0:   
+    rho0: 0.4
+    v0: 240
+    vesc: 533
+    vrot: 240
     rs: 20.0
     r_sun: 8.5
     alpha: 1
@@ -62,17 +49,17 @@ ObsLikes:
     - capability: lnL_Higgs_invWidth
       purpose:    LogLike
 
-    # Precision physics likelihoods
-    - capability: lnL_h_mass
-      purpose:    LogLike
+    # # Precision physics likelihoods
+    # - capability: lnL_h_mass
+    #   purpose:    LogLike
 
     # Relic density
     - capability: lnL_oh2
       purpose:    LogLike
 
-    # Indirect detection
-    - capability: lnL_FermiLATdwarfs
-      purpose:    LogLike
+    # # Indirect detection
+    # - capability: lnL_FermiLATdwarfs
+    #   purpose:    LogLike
 
     # FIXME: does not work currently with dependency structure
     # - capability: IC79_loglike
@@ -103,23 +90,23 @@ ObsLikes:
     - capability: DarkSide_50_LogLikelihood
       purpose:    LogLike
 
-    # SI nuclear nuisance parameter likelihood
-    - capability: lnL_SI_nuclear_parameters
-      purpose:    LogLike
+    # # SI nuclear nuisance parameter likelihood
+    # - capability: lnL_SI_nuclear_parameters
+    #   purpose:    LogLike
 
-    # SM nuisance parameter likelihoods
-    - capability: lnL_alpha_s
-      purpose:    LogLike
+    # # SM nuisance parameter likelihoods
+    # - capability: lnL_alpha_s
+    #   purpose:    LogLike
 
     # DM Local Halo likelihoods
-    - capability: lnL_rho0
-      purpose: LogLike
+    # - capability: lnL_rho0
+    #   purpose: LogLike
 
-    - capability: lnL_v0
-      purpose: LogLike
+    # - capability: lnL_v0
+    #   purpose: LogLike
 
-    - capability: lnL_vesc
-      purpose: LogLike
+    # - capability: lnL_vesc
+    #   purpose: LogLike
 
     # Other observables
     - capability: RD_oh2
@@ -128,8 +115,8 @@ ObsLikes:
     - capability: mwimp
       purpose:    Observable
 
-    - capability: sigmav
-      purpose:    Observable
+    # - capability: sigmav
+    #   purpose:    Observable
 
     # FIXME: does not work currently with dependency structure
     # - capability: sigma_SI_p
@@ -192,9 +179,16 @@ Rules:
   - capability: DDCalc_Couplings
     function: DDCalc_Couplings_NR_WCs
 
-  # Choose to use the non-relativistic version of the WCs instead of using DirectDM
+  # CHANGEME
   - capability: DD_nonrel_WCs
+    # 1/ Use the non-relativistic version of the WCs instead of using DirectDM
     function: DD_nonrel_WCs_DiracSingletDM_Z2 
+    # 2/ Perform matching of relativistic WCs from above electroweak scale
+    #function: DD_nonrel_WCs_EW
+    options:
+      scale: 1000 # Scale Lagrangian is defined at [GeV]
+      Ychi: 0     # DM hypercharge
+      dchi: 1     # DM SU(2) dimension
 
   # Choose to obtain spectrum from the SpecBit module
   - capability: DiracSingletDM_Z2_spectrum
@@ -217,7 +211,7 @@ Rules:
 ##############################################################################################
 Printer:
 
-  printer: hdf5
+  printer: cout
 
   options:
     output_file: "DiracSingletDM_Z2.hdf5"
@@ -227,9 +221,14 @@ Printer:
 ##############################################################################################
 Scanner:
 
-  use_scanner: tw
+  use_scanner: random
 
   scanners:
+
+    random:
+      plugin: random
+      point_number: 1
+      like:  LogLike
 
     mn:
       plugin: multinest

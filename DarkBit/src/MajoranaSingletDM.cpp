@@ -17,6 +17,7 @@
 ///  \author Sanjay Bloor
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date Nov 2017, Aug 2018
+///        May 2020
 ///
 ///  \author Pat Scott
 ///          (p.scott@imperial.ac.uk)
@@ -239,8 +240,12 @@ namespace Gambit
 
     } // function DD_couplings_MajoranaSingletDM_Z2
     
+    // S.B. commented the following out since DirectDM
+    // only handles Dirac DM defined above the EW scale.
+
     /// Relativistic Wilson Coefficients for direct detection
     /// defined above the EW scale
+    /*    
     void DD_rel_WCs_EW_MajoranaSingletDM_Z2(map_str_dbl &result)
     {
       using namespace Pipes::DD_rel_WCs_EW_MajoranaSingletDM_Z2;
@@ -256,6 +261,7 @@ namespace Gambit
       // lambda*sin(xi) iXg5XHH
       result["C57"] = lambda*std::sin(xi);
     }
+    */
 
     /// Set up process catalog for the MajoranaSingletDM_Z2 model.
     void TH_ProcessCatalog_MajoranaSingletDM_Z2(DarkBit::TH_ProcessCatalog &result)

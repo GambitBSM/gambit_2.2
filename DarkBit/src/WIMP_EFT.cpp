@@ -232,6 +232,7 @@ namespace Gambit
       using namespace Pipes::DD_nonrel_WCs_EW;
 
       // Specify the scale that the Lagrangian is defined at
+      // TODO: roll Ychi & dchi into WIMP_properties?
       double scale = runOptions->getValue<double>("scale");
       // Hypercharge of DM
       double Ychi = runOptions->getValue<double>("Ychi");
@@ -297,16 +298,20 @@ namespace Gambit
       result["sigmaun"] = *Param["sigmaun"];
       result["sigmadn"] = *Param["sigmadn"];
       result["sigmas"]  = *Param["sigmas"];
-      // Set p and n equal
+
+      // Note! Setting Deltadn equal to Deltaup
       result["Deltaup"] = *Param["Deltaup"];
-      result["Deltaun"] = *Param["Deltaup"];
-      // Set p and n equal
+      result["Deltadn"] = *Param["Deltaup"];
+      // Note! Setting Deltaun equal to Deltadp
       result["Deltadp"] = *Param["Deltadp"];
-      result["Deltadn"] = *Param["Deltadp"];
+      result["Deltaun"] = *Param["Deltadp"];
+      
       result["Deltas"]  = *Param["Deltas"];
+
       result["B0mu"]    = *Param["B0mu"];
       result["B0md"]    = *Param["B0md"];
       result["B0ms"]    = *Param["B0ms"];
+
       result["mup"]     = *Param["mup"];
       result["mun"]     = *Param["mun"];
       result["ap"]      = *Param["ap"];
@@ -315,12 +320,14 @@ namespace Gambit
       result["gTu"]     = *Param["gTu"];
       result["gTd"]     = *Param["gTd"];
       result["gTs"]     = *Param["gTs"];
-      // Set p and n equal
+
+      // Note! Setting BT10dn equal to BT10up
       result["BT10up"]  = *Param["BT10up"];
-      result["BT10un"]  = *Param["BT10up"];
-      // Set p and n equal
+      result["BT10dn"]  = *Param["BT10up"];
+      // Note! Setting BT10un equal to BT10dp
       result["BT10dp"]  = *Param["BT10dp"];
-      result["BT10dn"]  = *Param["BT10dp"];
+      result["BT10un"]  = *Param["BT10dp"];
+
       result["BT10s"]   = *Param["BT10s"];      
     }
 

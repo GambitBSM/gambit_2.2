@@ -64,7 +64,7 @@
 ///         (sanjay.bloor12@imperial.ac.uk)
 /// \date 2017 Dec
 /// \date 2018 Aug, Sep, Oct
-/// \date 2020 Feb
+/// \date 2020 Feb, May
 ///
 ///  \author Sebastian Hoof
 ///          (s.hoof15@imperial.ac.uk)
@@ -735,11 +735,14 @@ START_MODULE
   #define CAPABILITY DD_rel_WCs_EW
   START_CAPABILITY
   
-      #define FUNCTION DD_rel_WCs_EW_MajoranaSingletDM_Z2
-      START_FUNCTION(map_str_dbl)
-      DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
-      ALLOW_MODEL(MajoranaSingletDM_Z2)
-      #undef FUNCTION
+      // S.B. commented the following out since DirectDM
+      // only handles Dirac DM defined above the EW scale.
+
+      // #define FUNCTION DD_rel_WCs_EW_MajoranaSingletDM_Z2
+      // START_FUNCTION(map_str_dbl)
+      // DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
+      // ALLOW_MODEL(MajoranaSingletDM_Z2)
+      // #undef FUNCTION
 
       #define FUNCTION DD_rel_WCs_EW_DiracSingletDM_Z2
       START_FUNCTION(map_str_dbl)
