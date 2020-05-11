@@ -183,16 +183,19 @@ namespace Gambit
       // cout << "The capability grabbed via Pipes, *Dep::c0_1_cap: " << *Dep::c0_1_cap << endl;
       // bjf> Modified to use a custom object to carry these couplings (makes for a better 
       // dependency structure)
-      cout << "DD_nonrel_WCs capabilitiy grabbed via Pipes, e.g. Dep::DD_nonrel_WCs->c(0,1) " << Dep::DD_nonrel_WCs->c(0,1) << endl;
+      cout << "DD_nonrel_WCs capabilitiy grabbed via Pipes, e.g. Dep::DD_nonrel_WCs->c0.at(1) " << Dep::DD_nonrel_WCs->c0.at(1) << endl;
       
+      // FK: IMPORTANT! I made a temporary fix below to ensure that GAMBIT compiles, but the result is maybe not what is desired
+      // There needs to be a check of which basis is being used for the DD_nonrel_WCs to ensure that they are interpreted correctly
+      // See DDCalc interface for details / examples
       int coupleNum;
-      for(int j=0; j<15; j++)
+      for(int j=0; j<12; j++)
       {
         coupleNum = j + 1; // this is the coupling number, ranges 1 to 15 (but not 2)
         if (coupleNum != 2) // 2 is not an allowed coupling constant
         {
-          BEreq::populate_array(Dep::DD_nonrel_WCs->c(0,coupleNum), coupleNum, 0);
-          BEreq::populate_array(Dep::DD_nonrel_WCs->c(1,coupleNum), coupleNum, 1);
+          BEreq::populate_array(Dep::DD_nonrel_WCs->c0.at(coupleNum), coupleNum, 0);
+          BEreq::populate_array(Dep::DD_nonrel_WCs->c1.at(coupleNum), coupleNum, 1);
         }
       }
       

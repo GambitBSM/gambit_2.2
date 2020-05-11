@@ -50,6 +50,7 @@ namespace Gambit
       public:
           // Various constructors
           NREO_DM_nucleon_couplings();
+          NREO_DM_nucleon_couplings(int CPT);
           NREO_DM_nucleon_couplings(const ModelParameters&);
           NREO_DM_nucleon_couplings(const Models::safe_param_map<safe_ptr<const double>>&);
           // Define operator basis

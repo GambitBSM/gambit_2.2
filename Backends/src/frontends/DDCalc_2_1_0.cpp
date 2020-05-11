@@ -133,7 +133,7 @@ BE_INI_FUNCTION
     
       // Loop through non-relativistic WCs and assign the correct coefficients to DDCalc WIMP object.
 
-      for (map<int, double>::iterator it = wilsonCoeffs.c0.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      for (std::map<int, double>::iterator it = wilsonCoeffs.c0.begin(); it != wilsonCoeffs.c0.end(); it++ )
       {
         OpCoeff = it->first;
         if( (OpCoeff >=1 && OpCoeff <= 23) || OpCoeff == 100 || OpCoeff == 104 )
@@ -142,14 +142,14 @@ BE_INI_FUNCTION
         }
         else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }
       }
-      for (map<int, double>::iterator it = wilsonCoeffs.c1.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      for (std::map<int, double>::iterator it = wilsonCoeffs.c1.begin(); it != wilsonCoeffs.c0.end(); it++ )
       {
         OpCoeff = it->first;
         if( (OpCoeff >=1 && OpCoeff <= 23) || OpCoeff == 100 || OpCoeff == 104 )
         { 
           DDCalc_SetNRCoefficient(WIMP, OpCoeff, 1, it->second);
         }
-        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }    }
+        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }
       }
     }
     // Initialse WIMP object with NREffectiveTheory coupling structure 
@@ -161,7 +161,7 @@ BE_INI_FUNCTION
     
       // Loop through non-relativistic WCs and assign the correct coefficients to DDCalc WIMP object.
 
-      for (map<int, double>::iterator it = wilsonCoeffs.c0.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      for (std::map<int, double>::iterator it = wilsonCoeffs.c0.begin(); it != wilsonCoeffs.c0.end(); it++ )
       {
         OpCoeff = it->first;
         if( (OpCoeff >=3 && OpCoeff <= 15) || OpCoeff == 1 || OpCoeff == 17 || OpCoeff == 18 || OpCoeff == -1 || OpCoeff == -4 )
@@ -170,14 +170,14 @@ BE_INI_FUNCTION
         }
         else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }
       }
-      for (map<int, double>::iterator it = wilsonCoeffs.c1.begin(); it != wilsonCoeffs.c0.end(); it++ )
+      for (std::map<int, double>::iterator it = wilsonCoeffs.c1.begin(); it != wilsonCoeffs.c0.end(); it++ )
       {
         OpCoeff = it->first;
         if( (OpCoeff >=3 && OpCoeff <= 15) || OpCoeff == 1 || OpCoeff == 17 || OpCoeff == 18 || OpCoeff == -1 || OpCoeff == -4 )
         { 
           DDCalc_SetNRCoefficient(WIMP, OpCoeff, 1, it->second);
         }
-        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }    }
+        else { backend_error().raise(LOCAL_INFO, "Unknown operator coefficient given to DDCalc."); }
       }
 
     }

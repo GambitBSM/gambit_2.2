@@ -177,7 +177,7 @@ namespace Gambit
        NREO_couplings.c1[1] = (ddc.gps - ddc.gns);
        NREO_couplings.c0[4] = (ddc.gpa + ddc.gna);
        NREO_couplings.c1[4] = (ddc.gpa - ddc.gna);
-       CPTbasis = 0;
+       NREO_couplings.CPTbasis = 0;
     }
 
     /* Non-relativistic Wilson Coefficients, model independent */
