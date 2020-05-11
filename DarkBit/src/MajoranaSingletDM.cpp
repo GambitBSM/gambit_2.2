@@ -22,6 +22,10 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date Sep 2018
 ///
+///  \author Felix Kahlhofer
+///          (kahlhoefer@physik.rwth-aachen.de)
+///  \date 2020 May
+///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -227,28 +231,11 @@ namespace Gambit
       double app = lambda*fp*m_proton*sinXI/pow(mh,2);
       double apn = lambda*fn*m_neutron*sinXI/pow(mh,2);
      
-      // TODO: bjf> Err, this looks weird to me? Isoscalar/isovector couplings
-      // assigned to proton/neutron couplings?
-      // Also cNR11p looks like sign wrong? (isoscalar should be plus?)
-      //result["cNR1p"] = (fsp+fsn);
-      //result["cNR1n"] = (fsp-fsn);
-      //result["cNR11p"] = (app-apn)*m_proton/mass;
-      //result["cNR11n"] = (app-apn)*m_proton/mass;
-
-      // Well anyway, I think the new version below is correct. But if the above is the way
-      // it is for a good reason then please correct the code below!
-      // We now use the isoscalar/isovector basis of couplings (because DDCalc and CaptnGeneral use it)
-      // TODO: Check conventions are consistent everywhere!
-      // I am assuming those of 1203.3542 are used, i.e.
-      // c0 = cp + cn
-      // c1 = cp - cn
-      // --->
-      // cp = 0.5*(c0 + c1)
-      // cn = 0.5*(c0 - c2)
       result.c0[1] = fsp + fsn;
       result.c1[1] = fsp - fsn;
       result.c0[11] = (app + apn)*m_proton/mass;
       result.c1[11] = (app - apn)*m_proton/mass;
+      result.CPTbasis = 0;
 
     } // function DD_couplings_MajoranaSingletDM_Z2
     

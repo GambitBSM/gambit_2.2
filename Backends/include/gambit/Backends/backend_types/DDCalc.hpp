@@ -16,6 +16,10 @@
 ///          (b.farmer@imperial.ac.uk)
 ///  \date 2019 Jul
 ///
+///  \author Felix Kahlhofer
+///          (kahlhoefer@physik.rwth-aachen.de)
+///  \date 2020 May
+///
 ///  *************************
 
 #ifndef __DDCalc_types_hpp__

@@ -28,6 +28,7 @@
 ///  \author Felix Kahlhoefer
 ///          (felix.kahlhoefer@desy.de)
 ///  \date 2016 August
+///  \date 2020 May
 ///
 ///  \author Sebastian Wild
 ///          (felix.kahlhoefer@desy.de)

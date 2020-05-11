@@ -22,6 +22,10 @@
 ///          (b.farmer@imperial.ac.uk)
 ///  \date 2019 Jul
 ///
+///  \author Felix Kahlhofer
+///          (kahlhoefer@physik.rwth-aachen.de)
+///  \date 2020 May
+///
 ///  *********************************************
 
 #include <boost/make_shared.hpp>
@@ -169,29 +173,11 @@ namespace Gambit
        using namespace Pipes::NREO_from_DD_couplings;
        DM_nucleon_couplings ddc = *Dep::DD_couplings;
 
-       // TODO! I have not been able to find the exact conventions
-       // used in DDcalc vs the NREO model. I think it is just this:
-       // c0 = 0.5*(cp+cn)
-       // c1 = 0.5*(cp-cn)
-       // so that 
-       // cp = c0 + c1
-       // cn = c0 - c1
-       // Change if needed!
-
-       // From Catena & Schwabe (2015) (arXiv 1501.03729, bottom of page 5):
-       // cp = (c0 + c1)/2
-       // cn = (c0 - c1)/2
-       // so
-       // c0 = cp + cn
-       // c1 = cp - cn
-       // I've implemented the change to the factor of 2
-    
-       // Compute non-zero isospin basis couplings from DM_nucleon_couplings entries
-       // TODO: I also did this from memory, should check I got the operator numbers right
        NREO_couplings.c0[1] = (ddc.gps + ddc.gns);
        NREO_couplings.c1[1] = (ddc.gps - ddc.gns);
        NREO_couplings.c0[4] = (ddc.gpa + ddc.gna);
        NREO_couplings.c1[4] = (ddc.gpa - ddc.gna);
+       CPTbasis = 0;
     }
 
     /* Non-relativistic Wilson Coefficients, model independent */
