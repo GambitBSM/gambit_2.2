@@ -238,31 +238,43 @@ namespace Gambit
       result.c1[11] = (app - apn)*m_proton/mass;
       result.CPTbasis = 0;
 
-    } // function DD_couplings_MajoranaSingletDM_Z2
-    
-    // S.B. commented the following out since DirectDM
-    // only handles Dirac DM defined above the EW scale.
+    }
 
-    /// Relativistic Wilson Coefficients for direct detection
-    /// defined above the EW scale
-    /*    
-    void DD_rel_WCs_EW_MajoranaSingletDM_Z2(map_str_dbl &result)
+    /// Relativistic Wilson Coefficients for direct detection, 
+    /// defined in the flavour scheme
+    void DD_rel_WCs_flavscheme_MajoranaSingletDM_Z2(map_str_dbl &result)
     {
-      using namespace Pipes::DD_rel_WCs_EW_MajoranaSingletDM_Z2;
+      using namespace Pipes::DD_rel_WCs_flavscheme_MajoranaSingletDM_Z2;
 
       // Get values of non-relativistic operators from Spectrum
       Spectrum spec = *Dep::MajoranaSingletDM_Z2_spectrum;
 
       double lambda = spec.get(Par::dimensionless, "lX");
       double xi = spec.get(Par::dimensionless, "xi");
+      double mh = spec.get(Par::Pole_Mass, "h0_1");
 
-      // lambda*cos(xi) XXHH
-      result["C53"] = lambda*std::cos(xi);
-      // lambda*sin(xi) iXg5XHH
-      result["C57"] = lambda*std::sin(xi);
+      // Contribution from integrating out top quark comes from
+      // Eqs. (92--94) of arXiv:1809.03506
+      double prefactor = lambda / pow(mh, 2);
+
+      // Gluon operators
+      result["C71"] = prefactor*std::cos(xi);
+      result["C72"] = prefactor*std::sin(xi);
+
+      // Quark operators (scalar mediator)
+      result["C75d"]  = -prefactor*std::cos(xi);
+      result["C75u"]  = -prefactor*std::cos(xi);
+      result["C75s"]  = -prefactor*std::cos(xi);
+      result["C75c"]  = -prefactor*std::cos(xi);
+      result["C75b"]  = -prefactor*std::cos(xi);
+
+      result["C76d"]  = -prefactor*std::sin(xi);
+      result["C76u"]  = -prefactor*std::sin(xi);
+      result["C76s"]  = -prefactor*std::sin(xi);
+      result["C76c"]  = -prefactor*std::sin(xi);
+      result["C76b"]  = -prefactor*std::sin(xi);
     }
-    */
-
+      
     /// Set up process catalog for the MajoranaSingletDM_Z2 model.
     void TH_ProcessCatalog_MajoranaSingletDM_Z2(DarkBit::TH_ProcessCatalog &result)
     {

@@ -729,26 +729,32 @@ START_MODULE
       ALLOW_MODEL(DMEFT)
       #undef FUNCTION
 
-  #undef CAPABILITY 
+      #define FUNCTION DD_rel_WCs_flavscheme_DiracSingletDM_Z2
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
+      ALLOW_MODEL(DiracSingletDM_Z2)
+      #undef FUNCTION
+
+      #define FUNCTION DD_rel_WCs_flavscheme_MajoranaSingletDM_Z2
+      START_FUNCTION(map_str_dbl)
+      DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
+      ALLOW_MODEL(MajoranaSingletDM_Z2)
+      #undef FUNCTION
+
+  #undef CAPABILITY
 
   // Relativistic Wilson coefficients defined above the EW scale      
   #define CAPABILITY DD_rel_WCs_EW
   START_CAPABILITY
   
-      // S.B. commented the following out since DirectDM
-      // only handles Dirac DM defined above the EW scale.
+      // S.B. removed DiracSingletDM_Z2 function as the Higgs portal 
+      // models are all defined *after* EWSB. 
 
-      // #define FUNCTION DD_rel_WCs_EW_MajoranaSingletDM_Z2
+      // #define FUNCTION DD_rel_WCs_EW_DiracSingletDM_Z2
       // START_FUNCTION(map_str_dbl)
-      // DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
-      // ALLOW_MODEL(MajoranaSingletDM_Z2)
+      // DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
+      // ALLOW_MODEL(DiracSingletDM_Z2)
       // #undef FUNCTION
-
-      #define FUNCTION DD_rel_WCs_EW_DiracSingletDM_Z2
-      START_FUNCTION(map_str_dbl)
-      DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
-      ALLOW_MODEL(DiracSingletDM_Z2)
-      #undef FUNCTION
 
   #undef CAPABILITY
 

@@ -16,15 +16,15 @@ Parameters:
     mF: 138.4937664758143
     xi: 1.9603579189094817
 
-  nuclear_params_sigmas_sigmal:    
-    sigmas: 43
-    sigmal: 50
-    deltau:  0.842
-    deltad:  -0.427
-    deltas:  -0.085
+  # nuclear_params_sigmas_sigmal:
+  #   sigmas: 43
+  #   sigmal: 50
+  #   deltau:  0.842
+  #   deltad:  -0.427
+  #   deltas:  -0.085
 
   # Needed when scanning with DirectDM
-  #nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
+  nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
 
   Halo_gNFW_rho0:   
     rho0: 0.4
@@ -182,13 +182,9 @@ Rules:
   # CHANGEME
   - capability: DD_nonrel_WCs
     # 1/ Use the non-relativistic version of the WCs instead of using DirectDM
-    function: DD_nonrel_WCs_DiracSingletDM_Z2 
+    #function: DD_nonrel_WCs_DiracSingletDM_Z2 
     # 2/ Perform matching of relativistic WCs from above electroweak scale
-    #function: DD_nonrel_WCs_EW
-    options:
-      scale: 1000 # Scale Lagrangian is defined at [GeV]
-      Ychi: 0     # DM hypercharge
-      dchi: 1     # DM SU(2) dimension
+    function: DD_nonrel_WCs_flavscheme
 
   # Choose to obtain spectrum from the SpecBit module
   - capability: DiracSingletDM_Z2_spectrum
