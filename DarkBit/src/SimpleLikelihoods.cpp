@@ -409,9 +409,9 @@ namespace Gambit {
     }
 
     /// \brief Helper function to dump gamma-ray spectra.
-    void dump_GammaSpectrum(double &result)
+    void dump_gammaSpectrum(double &result)
     {
-      using namespace Pipes::dump_GammaSpectrum;
+      using namespace Pipes::dump_gammaSpectrum;
       daFunk::Funk spectrum = (*Dep::GA_AnnYield)->set("v", 0.);
       // Option filename<string>: Filename for gamma-ray spectrum dump
       // (default: dNdE.dat)

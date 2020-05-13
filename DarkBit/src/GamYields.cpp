@@ -199,7 +199,7 @@ namespace Gambit {
 
       // Get annihilation process from process catalog
       TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMid);
-      
+
       // If process involves non-self-conjugate DM then we need to add a factor of 1/2 to the final spectrum. This must be explicitly set in the process catalogue.
       double k = (annProc.isSelfConj) ? 1. : 0.5;
 
@@ -309,8 +309,8 @@ namespace Gambit {
 #endif
           if (!added)
           {
-            DarkBit_warning().raise(LOCAL_INFO, 
-                "GA_AnnYield_General: cannot find spectra for " 
+            DarkBit_warning().raise(LOCAL_INFO,
+                "GA_AnnYield_General: cannot find spectra for "
                 + it->finalStateIDs[0] + " " + it->finalStateIDs[1]);
           }
 
@@ -405,8 +405,8 @@ namespace Gambit {
 
         if (!added)
         {
-          DarkBit_warning().raise(LOCAL_INFO, 
-              "GA_AnnYield_General: ignoring final state " 
+          DarkBit_warning().raise(LOCAL_INFO,
+              "GA_AnnYield_General: ignoring final state "
               + it->finalStateIDs[0] + " " + it->finalStateIDs[1] + " " + it->finalStateIDs[2]);
         }
       }
@@ -419,10 +419,10 @@ namespace Gambit {
     }
 
 
-    /// SimYieldTable based on DarkSUSY5 tabulated results. (DS6 below)
-    void SimYieldTable_DS5(SimYieldTable& result)
+    /// Gamma-ray SimYieldTable based on DarkSUSY5 tabulated results. (DS6 below)
+    void GA_SimYieldTable_DS5(SimYieldTable& result)
     {
-      using namespace Pipes::SimYieldTable_DS5;
+      using namespace Pipes::GA_SimYieldTable_DS5;
 
       static bool initialized = false;
       if ( not initialized )
@@ -438,13 +438,13 @@ namespace Gambit {
         double mDM_min, mDM_max;
         /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
         bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
-  if ( allow_yield_extrapolation ) 
+  if ( allow_yield_extrapolation )
         {
           mDM_min = 0.0; // in this case, the minimally allowed dark matter mass will later be set to be the mass of the final state particle,
                          // with an additional factor 0.99 for the case of Z, W or t final states (following DarkSUSY)
           mDM_max = 1.0e6;
         }
-        else 
+        else
         {
           mDM_min = 10.0; // minimal dark matter mass simulated in DarkSUSY.
           mDM_max = 5000.; // maximal dark matter mass simulated in DarkSUSY.
@@ -502,21 +502,21 @@ namespace Gambit {
         result.addChannel(dNdE/2, str_flav_to_mass("e-"), "gamma", std::max(mDM_min, 0.0), mDM_max);
         dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 17, yieldk, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("mu+"), "gamma", std::max(mDM_min, 0.0), mDM_max);
-        result.addChannel(dNdE/2, str_flav_to_mass("mu-"), "gamma", std::max(mDM_min, 0.0), mDM_max);        
+        result.addChannel(dNdE/2, str_flav_to_mass("mu-"), "gamma", std::max(mDM_min, 0.0), mDM_max);
         dNdE = daFunk::func_fromThreadsafe(BEreq::dshayield.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 19, yieldk, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("tau+"), "gamma", std::max(mDM_min, 1.7841), mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("tau-"), "gamma", std::max(mDM_min, 1.7841), mDM_max);
 
         double Ecm_ToScale_top = 173.3;
-        daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm")); 
+        daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm"));
         daFunk::Funk ScalingFactor_top = Ecm_ToUse_top/daFunk::var("Ecm");
         dNdE = ScalingFactor_top * daFunk::func_fromThreadsafe(                           \
             BEreq::dshayield.pointer(), Ecm_ToUse_top,         \
-            ScalingFactor_top * daFunk::var("E"), 24, yieldk, flag);  
+            ScalingFactor_top * daFunk::var("E"), 24, yieldk, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("t"), "gamma", 160.0, mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("tbar"), "gamma", 160.0, mDM_max);
 
-        // add channels with "mixed final states", i.e. final state particles with (potentially) different masses        
+        // add channels with "mixed final states", i.e. final state particles with (potentially) different masses
         daFunk::Funk Ecm = daFunk::var("Ecm");
 #define ADD_CHANNEL_MIXEDMASSES(ch1, ch2, P1, P2, FINAL, m1, m2, EcmMin, EcmMax)                \
         dNdE_1 = daFunk::func_fromThreadsafe(                           \
@@ -532,8 +532,8 @@ namespace Gambit {
         // - In the following: approximate spectra from u,d,s (20,21,23) by spectrum from c (22).
         // - The numerical values for EcmMin and EcmMax are obtained from applying the corresponding two-body kinematics
         //   to the minimally/maximally allowed center-of-mass energies. Hence, EcmMin depends on the flag allow_yield_extrapolation.
-        
-        if ( allow_yield_extrapolation ) 
+
+        if ( allow_yield_extrapolation )
         {
           ADD_CHANNEL_MIXEDMASSES(22, 22, "u", "dbar", "gamma", 0.0, 0.0, 2*1.35, 2*mDM_max)
           ADD_CHANNEL_MIXEDMASSES(22, 22, "d", "ubar", "gamma", 0.0, 0.0, 2*1.35, 2*mDM_max)
@@ -586,17 +586,17 @@ namespace Gambit {
       }
     }
 
-    /// SimYieldTable based on DarkSUSY6 tabulated results.
-    void SimYieldTable_DarkSUSY(SimYieldTable& result)
+    /// Gamma-ray SimYieldTable based on DarkSUSY6 tabulated results.
+    void GA_SimYieldTable_DarkSUSY(SimYieldTable& result)
     {
-      using namespace Pipes::SimYieldTable_DarkSUSY;
+      using namespace Pipes::GA_SimYieldTable_DarkSUSY;
 
       static bool initialized = false;
       if ( not initialized )
       {
         int flag = 0;      // some flag
         int yieldpdg = 22;  // gamma ray yield (pdg code)
-	int diff=1;         // differential yields (=1)
+  int diff=1;         // differential yields (=1)
         char*hel =  (char *)"0"; //helicity
         daFunk::Funk dNdE;
         daFunk::Funk dNdE_1;
@@ -607,13 +607,13 @@ namespace Gambit {
         double mDM_min, mDM_max;
         /// Option allow_yield_extrapolation<bool>: Spectra extrapolated for masses beyond Pythia results (default false)
         bool allow_yield_extrapolation = runOptions->getValueOrDef(false, "allow_yield_extrapolation");
-  if ( allow_yield_extrapolation ) 
+  if ( allow_yield_extrapolation )
         {
           mDM_min = 0.0; // in this case, the minimally allowed dark matter mass will later be set to be the mass of the final state particle,
                          // with an additional factor 0.99 for the case of Z, W or t final states (following DarkSUSY)
           mDM_max = 1.0e6;
         }
-        else 
+        else
         {
           mDM_min = 3.0; // minimal dark matter mass simulated in DarkSUSY6.
           mDM_max = 20000.; // maximal dark matter mass simulated in DarkSUSY6.
@@ -671,21 +671,21 @@ namespace Gambit {
         result.addChannel(dNdE/2, str_flav_to_mass("e-"), "gamma", std::max(mDM_min, 0.0), mDM_max);
         dNdE = daFunk::func_fromThreadsafe(BEreq::dsanyield_sim.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 13, hel, yieldpdg, diff, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("mu+"), "gamma", std::max(mDM_min, 0.0), mDM_max);
-        result.addChannel(dNdE/2, str_flav_to_mass("mu-"), "gamma", std::max(mDM_min, 0.0), mDM_max);        
+        result.addChannel(dNdE/2, str_flav_to_mass("mu-"), "gamma", std::max(mDM_min, 0.0), mDM_max);
         dNdE = daFunk::func_fromThreadsafe(BEreq::dsanyield_sim.pointer(), daFunk::var("Ecm"), daFunk::var("E"), 15, hel, yieldpdg, diff, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("tau+"), "gamma", std::max(mDM_min, 1.7841), mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("tau-"), "gamma", std::max(mDM_min, 1.7841), mDM_max);
 
         double Ecm_ToScale_top = 173.3;
-        daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm")); 
+        daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm"));
         daFunk::Funk ScalingFactor_top = Ecm_ToUse_top/daFunk::var("Ecm");
         dNdE = ScalingFactor_top * daFunk::func_fromThreadsafe(                           \
             BEreq::dsanyield_sim.pointer(), Ecm_ToUse_top,         \
-            ScalingFactor_top * daFunk::var("E"), 6, hel, yieldpdg, diff, flag);  
+            ScalingFactor_top * daFunk::var("E"), 6, hel, yieldpdg, diff, flag);
         result.addChannel(dNdE/2, str_flav_to_mass("t"), "gamma", 160.0, mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("tbar"), "gamma", 160.0, mDM_max);
 
-        // add channels with "mixed final states", i.e. final state particles with (potentially) different masses        
+        // add channels with "mixed final states", i.e. final state particles with (potentially) different masses
         daFunk::Funk Ecm = daFunk::var("Ecm");
 #define ADD_CHANNEL_MIXEDMASSES(pdg1, pdg2, P1, P2, FINAL, m1, m2, EcmMin, EcmMax)                \
         dNdE_1 = daFunk::func_fromThreadsafe(                           \
@@ -694,14 +694,14 @@ namespace Gambit {
             Ecm/2 + (m1*m1 - m2*m2)/(2*Ecm));        \
         dNdE_2 = daFunk::func_fromThreadsafe(                           \
             BEreq::dsanyield_sim.pointer(), daFunk::var("E2"),         \
-            daFunk::var("E"), pdg2, hel, yieldpdg, diff, flag)->set("E2",	\
+            daFunk::var("E"), pdg2, hel, yieldpdg, diff, flag)->set("E2", \
             Ecm/2 + (m2*m2 - m1*m1)/(2*Ecm));                                   \
         result.addChannel(0.5*(dNdE_1 + dNdE_2), str_flav_to_mass(P1), str_flav_to_mass(P2), FINAL, EcmMin, EcmMax);
 
         // - The numerical values for EcmMin and EcmMax are obtained from applying the corresponding two-body kinematics
         //   to the minimally/maximally allowed center-of-mass energies. Hence, EcmMin depends on the flag allow_yield_extrapolation.
-        
-        if ( allow_yield_extrapolation ) 
+
+        if ( allow_yield_extrapolation )
         {
           ADD_CHANNEL_MIXEDMASSES(2, -1, "u", "dbar", "gamma", 0.0, 0.0, 2*1.35, 2*mDM_max)
           ADD_CHANNEL_MIXEDMASSES(1, -2, "d", "ubar", "gamma", 0.0, 0.0, 2*1.35, 2*mDM_max)
@@ -754,10 +754,10 @@ namespace Gambit {
       }
     }
 
-    /// SimYieldTable based on MicrOmegas tabulated results.
-    void SimYieldTable_MicrOmegas(SimYieldTable& result)
+    /// Gamma-ray SimYieldTable based on MicrOmegas tabulated results.
+    void GA_SimYieldTable_MicrOmegas(SimYieldTable& result)
     {
-      using namespace Pipes::SimYieldTable_MicrOmegas;
+      using namespace Pipes::GA_SimYieldTable_MicrOmegas;
       using DarkBit_utils::str_flav_to_mass;
 
       static bool initialized = false;
@@ -770,9 +770,9 @@ namespace Gambit {
         daFunk::Funk dNdE_2;
 
         double mDM_max;
-  if ( runOptions->getValueOrDef(false, "allow_yield_extrapolation") ) 
+  if ( runOptions->getValueOrDef(false, "allow_yield_extrapolation") )
         {mDM_max = 1.0e6;}
-        else 
+        else
         {mDM_max = 5000.;} // maximal dark matter mass simulated in micromegas.
 
 #define ADD_CHANNEL(inP, P1, P2, FINAL, EcmMin, EcmMax)                                                   \
@@ -827,14 +827,14 @@ namespace Gambit {
 
         // Add single particle lookup for t tbar to prevent them from being tagged as missing final states for cascades.
   double Ecm_ToScale_top = 176.0;
-        daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm")); 
+        daFunk::Funk Ecm_ToUse_top = fmax(Ecm_ToScale_top, daFunk::var("Ecm"));
         daFunk::Funk ScalingFactor_top = Ecm_ToUse_top/daFunk::var("Ecm");
         dNdE =  ScalingFactor_top * (daFunk::func_fromThreadsafe(BEreq::dNdE.pointer(), daFunk::var("_Ecm"), ScalingFactor_top * daFunk::var("E"), 6, outN)
                /(ScalingFactor_top * daFunk::var("E")))->set("_Ecm", Ecm_ToUse_top*2.0);
         result.addChannel(dNdE/2, str_flav_to_mass("t"),    "gamma", 160.0, mDM_max);
         result.addChannel(dNdE/2, str_flav_to_mass("tbar"), "gamma", 160.0, mDM_max);
 
-        // add channels with "mixed final states", i.e. final state particles with (potentially) different masses        
+        // add channels with "mixed final states", i.e. final state particles with (potentially) different masses
         daFunk::Funk Ecm = daFunk::var("Ecm");
 #define ADD_CHANNEL_MIXEDMASSES(inP1, inP2, P1, P2, FINAL, m1, m2, EcmMin, EcmMax)                \
         dNdE_1 = (daFunk::func_fromThreadsafe(                           \
@@ -903,10 +903,10 @@ namespace Gambit {
         ASCIItableReader table;
     };
 
-    /// SimYieldTable based on PPPC4DMID Cirelli et al. 2010
-    void SimYieldTable_PPPC(SimYieldTable& /*result*/)
+    /// Gamma-ray SimYieldTable based on PPPC4DMID Cirelli et al. 2010
+    void GA_SimYieldTable_PPPC(SimYieldTable& /*result*/)
     {
-      using namespace Pipes::SimYieldTable_PPPC;
+      using namespace Pipes::GA_SimYieldTable_PPPC;
       static bool initialized = false;
       static PPPC_interpolation PPPC_gam_object;
 
