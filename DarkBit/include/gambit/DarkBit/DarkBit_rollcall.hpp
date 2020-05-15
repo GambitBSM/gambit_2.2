@@ -1635,11 +1635,20 @@ START_MODULE
   #undef CAPABILITY
 
   #define CAPABILITY Higgs_Nucleon_coupling_fN
-  START_CAPABILITY 
+  START_CAPABILITY
     #define FUNCTION get_Higgs_Nucleon_coupling_fN
     START_FUNCTION(Higgs_Nucleon_coupling_fN)
     ALLOW_MODEL(nuclear_params_sigmas_sigmal)
     DEPENDENCY(SM_spectrum, Spectrum)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY Jtest
+  START_CAPABILITY
+    #define FUNCTION test
+    START_FUNCTION(double)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
     #undef FUNCTION
   #undef CAPABILITY
 

@@ -4,45 +4,58 @@
 
 Parameters:
 
-  LCDM:
-    omega_b: 0.02242
-      # prior_type: flat
-      # range: [0.020,0.024]
-    omega_cdm: 0.11933
-      # prior_type: flat
-      # range: [0.10,0.13]
-    H0: 67.66
-      # prior_type: flat
-      # range: [62,74]
-    ln10A_s: 3.047
-      # prior_type: flat
-      # range: [2.9,3.2]
-    n_s: 0.9665
-      # prior_type: flat
-      # range: [0.9,1.10]
-    tau_reio: 0.0561
-      # prior_type: flat
-      #range: [0.04,0.20]
-      # range: [0.004,0.20]
-    T_cmb: 2.72548
-      # measurement 2.72548 \pm 0.00057
-      # -> vary within error range
-      #prior_type: gaussian
-      #range: [2.72491,2.72605]
+  # Dark matter halo parameters.
+  Halo_gNFW_rho0:
+    rho0:
+      range: [.2, .8]
+    v0: 235.0
+    vesc: 550.0
+    vrot: 235.0
+    rs: 20.0
+    r_sun: 8.5
+    alpha: 1
+    beta: 3
+    gamma: 1
 
-  SuperRenormHP:
-    mS:
-      prior_type: log
-      range: [6e-10, 1e-2]
-    theta:
-      prior_type: log
-      range: [1e-14, 1e-4]
+  #LCDM:
+  #  omega_b: 0.02242
+  #    # prior_type: flat
+  #    # range: [0.020,0.024]
+  #  omega_cdm: 0.11933
+  #    # prior_type: flat
+  #    # range: [0.10,0.13]
+  #  H0: 67.66
+  #    # prior_type: flat
+  #    # range: [62,74]
+  #  ln10A_s: 3.047
+  #    # prior_type: flat
+  #    # range: [2.9,3.2]
+  #  n_s: 0.9665
+  #    # prior_type: flat
+  #    # range: [0.9,1.10]
+  #  tau_reio: 0.0561
+  #    # prior_type: flat
+  #    #range: [0.04,0.20]
+  #    # range: [0.004,0.20]
+  #  T_cmb: 2.72548
+  #    # measurement 2.72548 \pm 0.00057
+  #    # -> vary within error range
+  #    #prior_type: gaussian
+  #    #range: [2.72491,2.72605]
 
-  # StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
+  #SuperRenormHP:
+  #  mS:
+  #    prior_type: log
+  #    range: [5e-6, 2e-3]
+  #  theta:
+  #    prior_type: log
+  #    range: [1e-13, 1e-5]
 
-  StandardModel_Higgs:
-    mH: 125.18
+  ## StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+  #StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
+
+  #StandardModel_Higgs:
+  #  mH: 125.18
 
 Priors:
 
@@ -56,7 +69,7 @@ Printer:
 
 Scanner:
 
-  use_scanner: grid_sq
+  use_scanner: random
 
   scanners:
 
@@ -68,7 +81,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 200
+      grid_pts: 100
 
     random:
       plugin: random
@@ -76,40 +89,51 @@ Scanner:
       point_number: 2
 
 ObsLikes:
+  
+  # DM Local Halo likelihoods
+  - capability: lnL_rho0
+    purpose: LogLike
 
-   # - purpose:      ObsLikes
+  - capability: Jtest
+    purpose: Observable
+
+   # - purpose:      Observable
    #   capability:   TH_ProcessCatalog
    #   module:       DarkBit
    #   type:         TH_ProcessCatalog
    #   printme:      false
 
-   - purpose:      LogLike
-     capability:   lnL_INTEGRAL
-     module:       DarkBit
-     type:         double
+   # - purpose:      Observable
+   #   capability:   BBN_abundances
+   #   sub_capabilities: [He4]
 
-   - purpose:      LogLike
-     capability:   lnL_HEAO
-     module:       DarkBit
-     type:         double
+   # - purpose:      LogLike
+   #   capability:   lnL_INTEGRAL
+   #   module:       DarkBit
+   #   type:         double
 
-   - purpose:      LogLike
-     capability:   lnL_solar_neutrino_B8
-     module:       DarkBit
-     type:         double
+   # - purpose:      LogLike
+   #   capability:   lnL_HEAO
+   #   module:       DarkBit
+   #   type:         double
 
-   - purpose:      LogLike
-     capability:   lnL_solar_neutrino_Be7
-     module:       DarkBit
-     type:         double
+   # - purpose:      LogLike
+   #   capability:   lnL_solar_neutrino_B8
+   #   module:       DarkBit
+   #   type:         double
 
-   - purpose:      LogLike
-     capability:   lnL_ShortRangeForces_Sushkov2011
-     module:       DarkBit
-     type:         double
-   
+   # - purpose:      LogLike
+   #   capability:   lnL_solar_neutrino_Be7
+   #   module:       DarkBit
+   #   type:         double
 
-   # - purpose:   ObsLikes
+   # - purpose:      LogLike
+   #   capability:   lnL_ShortRangeForces_Sushkov2011
+   #   module:       DarkBit
+   #   type:         double
+
+
+   # - purpose:   Observable
    #   capability: Omega0_m
    # - purpose:   ObsLikes
    #   capability: Omega0_r
@@ -127,6 +151,7 @@ Rules:
     options:
       failsafe: 0
       err: 0
+
   # correlation matrix for BBN error calculation todo explain what that is!
   - capability: BBN_abundances
     options:
@@ -173,9 +198,9 @@ Rules:
         function: all_decays
         module: DecayBit
 
-  - module: CosmoBit
-    options:
-      allow_massless_neutrinos: true
+  # - module: CosmoBit
+  #   options:
+  #     allow_massless_neutrinos: true
 
 Logger:
 

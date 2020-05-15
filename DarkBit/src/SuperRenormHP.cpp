@@ -33,7 +33,6 @@
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_sf_bessel.h>
 
-#include "fjcore.hh"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum_helpers.hpp"
 #include "gambit/Utils/util_functions.hpp"
@@ -42,6 +41,7 @@
 #include "gambit/Utils/statistics.hpp"
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 #include "gambit/DarkBit/DarkBit_utils.hpp"
+/* #include "../../Backends/installed/gamlike/1.0.1/include/gamLike/los_integral.hpp" */
 
 namespace Gambit
 {
@@ -119,7 +119,7 @@ namespace Gambit
         double sigma(double const& E);
         double fluxIntegrated(double const& E);
         double sigmaIntegrated(double const& E);
-        double deltaE(double const& E) const;
+        double deltaE(double const& E);
         ~Xray();
 
       protected:
@@ -141,13 +141,13 @@ namespace Gambit
     {
       switch(m_experimentMap[m_experiment])
       {
-        case 1 : 
+        case 1 :
           m_Emin = 20e3;
           m_Emax = 2e6;
-          m_lRange = { {0., 60.} };
-          m_bRange = { {75., 105.} };
+          m_lRange = { {-30., 30.} };
+          m_bRange = { {-15., 15.} };
           m_J = 3.65;
-          m_deltaE = 0.1;
+          m_deltaE = 8e3;
           m_deltaOmega = 0.542068;
           m_fluxOrigin = 1;
           break;
@@ -156,9 +156,9 @@ namespace Gambit
           m_Emin = 3e3;
           m_Emax = 60e3;
           m_lRange = { {58., 109.}, {238., 289.} };
-          m_bRange = { {0., 70.}, {110., 180.} };
+          m_bRange = { {-90., -20.}, {20., 90.} };
           m_J = 3.88;
-          m_deltaE = 0.2;
+          m_deltaE = 0.3;
           m_deltaOmega = 1.17135;
           m_fluxOrigin = 3;
           break;
@@ -172,19 +172,32 @@ namespace Gambit
 
     //------------- Function returning the energy dispersion of the instrument -------------//
 
-    double Xray::deltaE (double const& E) const
+    double Xray::deltaE (double const& E)
     {
-      return m_deltaE*E;
+      switch(m_experimentMap[m_experiment])
+      {
+        case 1 :
+          return m_deltaE;
+          break;
+
+        case 2 :
+          return m_deltaE*E;
+          break;
+
+        default :
+          return 1.;
+          break;
+      }
     }
 
-    // ----------- Functions to compute the solid angle of observation -------------// 
+    // ----------- Functions to compute the solid angle of observation -------------//
 
     // auxiliary function for gsl integration
     double deltaOmega (double x[], size_t dim, void *p)
     {
       (void)(p);
       (void)(dim);
-      return sin(x[1]);
+      return cos(x[1]);
     }
 
     // computes the solide angle for a given galactic coordinates range (in degrees)
@@ -222,7 +235,7 @@ namespace Gambit
       m_deltaOmega = result;
     }
 
-    //------------- Functions to compute the photon flux and its standard deviation -------------// 
+    //------------- Functions to compute the photon flux and its standard deviation -------------//
 
     // differential photon flux [photons/keV/cm²/s]
     double Xray::flux(double const& E)
@@ -235,7 +248,7 @@ namespace Gambit
           break;
 
         case 2 :
-          return 7.877*pow(10.,0.87)*pow(E,-0.29)*exp(-(E/41.13e3))/E*m_deltaOmega;
+          return 7.877*pow(10., 0.87)*pow(E, -0.29)*exp(-(E/41.13e3))/E*m_deltaOmega;
           break;
 
         default :
@@ -254,19 +267,42 @@ namespace Gambit
     const double int_factor(1.1); // integration range = int_factor*energy dispersion instrument
 
     // photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
+    /* double Xray::fluxIntegrated(double const& E) */
+    /* { */
+    /*   size_t neval; */ 
+    /*   double epsabs = 0.; */
+    /*   double epsrel = 1e-2; */
+    /*   double result, abserr; */
+    /*   double delta = int_factor*deltaE(E); */
+
+    /*   gsl_function F; */
+    /*   F.function = &flux_gsl; */
+    /*   F.params = this; */
+
+    /*   gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval); */
+
+    /*   return result; */
+    /* } */
     double Xray::fluxIntegrated(double const& E)
     {
-      size_t neval; 
+      size_t n = 1e4;
+
+      gsl_integration_workspace *w = gsl_integration_workspace_alloc(n);
+
       double epsabs = 0.;
       double epsrel = 1e-2;
+      size_t limit = 1e3;
       double result, abserr;
+      int key = 6;
       double delta = int_factor*deltaE(E);
 
       gsl_function F;
       F.function = &flux_gsl;
       F.params = this;
 
-      gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval);
+      gsl_integration_qag(&F, E-delta/2., E+delta/2., epsabs, epsrel, limit, key, w, &result, &abserr);
+
+      gsl_integration_workspace_free(w);
 
       return result;
     }
@@ -300,21 +336,45 @@ namespace Gambit
     }
 
     // standard deviation of the photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
+    /* double Xray::sigmaIntegrated(double const& E) */
+    /* { */
+    /*   size_t neval; */ 
+    /*   double epsabs = 0.; */
+    /*   double epsrel = 1e-2; */
+    /*   double result, abserr; */
+    /*   double delta = int_factor*deltaE(E); */
+
+    /*   gsl_function F; */
+    /*   F.function = &sigma_gsl; */
+    /*   F.params = this; */
+
+    /*   gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval); */
+
+    /*   return sqrt(result); */
+    /* } */
+
     double Xray::sigmaIntegrated(double const& E)
     {
-      size_t neval; 
+      size_t n = 1e4;
+
+      gsl_integration_workspace *w = gsl_integration_workspace_alloc(n);
+
       double epsabs = 0.;
       double epsrel = 1e-2;
+      size_t limit = 1e3;
       double result, abserr;
+      int key = 6;
       double delta = int_factor*deltaE(E);
 
       gsl_function F;
       F.function = &sigma_gsl;
       F.params = this;
 
-      gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval);
+      gsl_integration_qag(&F, E-delta/2., E+delta/2., epsabs, epsrel, limit, key, w, &result, &abserr);
 
-      return sqrt(result);
+      gsl_integration_workspace_free(w);
+
+      return result;
     }
 
     //------------- Elevator functions -------------// 
@@ -1220,7 +1280,7 @@ namespace Gambit
 
       result = log(*std::min_element(likelihood.begin(), likelihood.end()));
     }
-    
+
     // capability to provide the Higgs-Nucleon coupling constant fN, such as described in arXiv:1306.4710
     void get_Higgs_Nucleon_coupling_fN (Higgs_Nucleon_coupling_fN &result)
     {
@@ -1249,6 +1309,32 @@ namespace Gambit
 
       result.neutron =  2./9. + 7./9.*(fu[0]+fd[0]+fs[0]);
       result.proton  =  2./9. + 7./9.*(fu[1]+fd[1]+fs[1]);
+    }
+
+    void test (double &result)
+    {
+      using namespace Pipes::test;
+
+      GalacticHaloProperties halo = *Dep::GalacticHalo;
+      
+      double r0 = halo.r_sun;
+
+      daFunk::Funk profile = halo.DensityProfile;
+
+      auto r = daFunk::logspace(-3, 2, 100);
+      auto rho = daFunk::logspace(-3, 2, 100);
+      double dist = (Dep::GalacticHalo)->r_sun;
+      for ( size_t i = 0; i<r.size(); i++ )
+      {
+        rho[i] = profile->bind("r")->eval(r[i]);
+      }
+
+      std::vector<double> phi;
+      std::vector<double> J;
+
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(dist), phi, J);
+
+      result = J[0];
     }
 
   }
