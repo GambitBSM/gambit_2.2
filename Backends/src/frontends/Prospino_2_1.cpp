@@ -183,6 +183,109 @@ BE_NAMESPACE
 END_BE_NAMESPACE
 
 
+// Helper function to apply mass spectrum modifications required for specific processes.
+BE_NAMESPACE
+{
+  Farray<Fdouble,0,99> process_specific_lowmass_mods(Farray<Fdouble,0,99> lowmass_in, const PID_pair& pid_pair)
+  {
+    cerr << "DEBUG: process_specific_lowmass_mods: pid_pair = " << pid_pair.str() << endl;
+
+    // Copy input array to output array
+    Farray<Fdouble,0,99> lowmass_out = Farray<Fdouble,0,99>(lowmass_in);
+
+    // Read the absolute-value pids
+    int abs_pid1 = abs(pid_pair.pid1());
+    int abs_pid2 = abs(pid_pair.pid2());
+
+    double delta_m = 0;
+
+    // These mass values are on purpose set just below the true values
+    const static double mZ = 91.18;
+    const static double mW = 80.37;
+
+    // Useful maps and vectors
+    static const std::map<int,int> pid_lowmass_map = {{1000022,5},
+                                                      {1000023,6},
+                                                      {1000025,7},
+                                                      {1000035,8},
+                                                      {1000024,9}, 
+                                                      {1000037,10}};
+    
+    static const std::vector<int> neutralino_pids = {1000022, 1000023, 1000025, 1000035};
+    static const std::vector<int> chargino_pids = {1000024, 1000037};
+
+
+    // Neutralino and chargino processes
+    bool pid1_neutralino = false; 
+    bool pid2_neutralino = false; 
+    bool pid1_chargino = false; 
+    bool pid2_chargino = false; 
+
+    if(std::find(neutralino_pids.begin(), neutralino_pids.end(), abs_pid1) != neutralino_pids.end())
+    {
+      pid1_neutralino = true;
+    }
+    else if(std::find(chargino_pids.begin(), chargino_pids.end(), abs_pid1) != chargino_pids.end())
+    {
+      pid1_chargino = true;
+    }
+
+    if(std::find(neutralino_pids.begin(), neutralino_pids.end(), abs_pid2) != neutralino_pids.end())
+    {
+      pid2_neutralino = true;
+    }
+    else if(std::find(chargino_pids.begin(), chargino_pids.end(), abs_pid2) != chargino_pids.end())
+    {
+      pid2_chargino = true;
+    }
+
+    // neutralino--neutralino 
+    if(pid1_neutralino && pid2_neutralino)
+    {
+      int pid1_index = pid_lowmass_map.at(abs_pid1);
+      int pid2_index = pid_lowmass_map.at(abs_pid2);
+      delta_m = abs(lowmass_out(pid1_index)) + abs(lowmass_out(pid2_index)) - mZ;
+    }
+    // neutralino--chargino 
+    else if((pid1_neutralino && pid2_chargino) || (pid1_chargino && pid2_neutralino))
+    {
+      int pid1_index = pid_lowmass_map.at(abs_pid1);
+      int pid2_index = pid_lowmass_map.at(abs_pid2);
+      delta_m = abs(lowmass_out(pid1_index)) + abs(lowmass_out(pid2_index)) - mW;
+    }
+    // chargino--chargino 
+    else if((pid1_chargino && pid2_chargino) || (pid1_chargino && pid2_chargino))
+    {
+      int pid1_index = pid_lowmass_map.at(abs_pid1);
+      int pid2_index = pid_lowmass_map.at(abs_pid2);
+      delta_m = abs(lowmass_out(pid1_index)) + abs(lowmass_out(pid2_index)) - mZ;
+    }
+
+
+    // Now increase the masses if necessary
+    if(delta_m < 0)
+    {
+      int pid1_index = pid_lowmass_map.at(abs_pid1);
+      int pid2_index = pid_lowmass_map.at(abs_pid2);
+
+      int sign_mass_pid1 = lowmass_out(pid1_index) < 0 ? -1 : 1;
+      int sign_mass_pid2 = lowmass_out(pid2_index) < 0 ? -1 : 1;
+      
+      cerr << "DEBUG: Adjusting masses for " << abs_pid1 << " and " << abs_pid2 << endl;
+      cerr << "DEBUG: Masses before: " << lowmass_out(pid1_index) << " and " << lowmass_out(pid2_index) << endl;
+
+      lowmass_out(pid1_index) = sign_mass_pid1 * (abs(lowmass_out(pid1_index)) + 0.5 * abs(delta_m));
+      lowmass_out(pid2_index) = sign_mass_pid2 * (abs(lowmass_out(pid2_index)) + 0.5 * abs(delta_m));
+
+      cerr << "DEBUG: Masses after: " << lowmass_out(pid1_index) << " and " << lowmass_out(pid2_index) << endl;
+    }
+
+    return lowmass_out;
+  }
+}
+END_BE_NAMESPACE
+
+
 // Callback function for error handling
 BE_NAMESPACE
 {
@@ -430,6 +533,9 @@ BE_NAMESPACE
     ps.energy_in = energy_in;
     ps.i_error_in = i_error_in;
 
+    // Any process-specific modifications for this process?
+    Farray<Fdouble,0,99> lowmass_mod = process_specific_lowmass_mods(lowmass, pid_pair);
+
     // Call prospino
     Farray<Fdouble,0,6> prospino_result;
 
@@ -437,7 +543,8 @@ BE_NAMESPACE
     { 
         prospino_gb(prospino_result, ps.inlo, ps.isq_ng_in, ps.icoll_in, ps.energy_in, ps.i_error_in, 
                     ps.final_state_in, ps.ipart1_in, ps.ipart2_in, ps.isquark1_in, ps.isquark2_in,
-                    unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
+                    unimass, lowmass_mod, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
+                    // unimass, lowmass, uu_in, vv_in, bw_in, mst_in, msb_in, msl_in);
     }
     catch(std::runtime_error e) { invalid_point().raise(e.what()); }
 
@@ -453,5 +560,6 @@ BE_NAMESPACE
 
     return result;
   }
+
 }
 END_BE_NAMESPACE
