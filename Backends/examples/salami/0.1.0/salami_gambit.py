@@ -87,13 +87,20 @@ def get_xsection(proc, xsec_lo_fb):
     pidkey = tuple(sorted(proc, key=lambda x : [abs(x), x < 0]))
     proskey = pids_to_prosids[pidkey]
     key = "{}_{}".format(energy, proskey)
-    try:
-        print(prefix, "DEBUG: proskey =", proskey)
-        if proskey not in KPREDS:
-            KPREDS[key] = salami.KPred(energy, proskey)
-    except:
-        print(prefix, "Unknown process", proc, "-- using LO cross-section")
-        KPREDS[key] = salami.KPredConst(1.0)
+
+    # DEBUG: Taking this out of the try except block below, 
+    #        to make sure we see all errors
+    print(prefix, "DEBUG: proskey =", proskey)
+    if proskey not in KPREDS:
+        KPREDS[key] = salami.KPred(energy, proskey)
+
+    # try:
+    #     print(prefix, "DEBUG: proskey =", proskey)
+    #     if proskey not in KPREDS:
+    #         KPREDS[key] = salami.KPred(energy, proskey)
+    # except:
+    #     print(prefix, "Unknown process", proc, "-- using LO cross-section")
+    #     KPREDS[key] = salami.KPredConst(1.0)
 
     # Get cross-sections and errors
     kpred = KPREDS[key]
