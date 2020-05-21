@@ -30,21 +30,19 @@ def import_slha_string(slha_string):
 #
 def set_parameters(params):
 
-    for k,v in params.items():
-        xsec.set_parameter(k, v)
+    # We can use this function to set any scan-level 
+    pass
 
 
 #
 # Return the cross-section for a given process, identified by a PID pair
 #
-def get_xsection(proc, xsec_lo_fb):
+def get_xsection(proc, energy, xsec_lo_fb):
 
     print()
     print(prefix, "DEBUG: ====== Beginning of get_xsection ======  ", flush=True)
     print(prefix, "DEBUG: proc = ", proc)
     print(prefix, "DEBUG: xsec_lo_fb = ", xsec_lo_fb)
-
-    energy = 13000
 
     pids_to_prosids = {
         # nn
@@ -105,7 +103,10 @@ def get_xsection(proc, xsec_lo_fb):
     # Get cross-sections and errors
     kpred = KPREDS[key]
     result_dict = {}
-    result_dict["central"] = kpred.predict_xsec(SLHA, xsec_lo_fb)
+    result_dict["central"] = kpred.predict_xsec(SLHA, xsec_lo_fb, kmin=0.0, kmax=None, freeze_xpol=True)
+
+    # def predict_xsec(self, slhadoc, xsec_lo, kmin=0, kmax=None, freeze_xpol=True):
+
     # result_dict["regdown_rel"] = 0.0
     # result_dict["regup_rel"] = 0.0
     # result_dict["scaledown_rel"] = 0.0

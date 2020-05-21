@@ -154,6 +154,9 @@ namespace Gambit
       // Read options from yaml file
       const static double fixed_xs_rel_err = runOptions->getValueOrDef<double>(-1.0, "fixed_relative_cross_section_uncertainty");
 
+      // Collider energy 
+      // @todo Need to get this from the collider options
+      double energy = 13000.;
 
       if(*Loop::iteration == COLLIDER_INIT)
       {
@@ -217,7 +220,7 @@ namespace Gambit
         const static int inlo = 0;
         const static int isq_ng_in = 1;  // specify degenerate [0] or free [1] squark masses
         const static int icoll_in = 1;   // collider : tevatron[0], lhc[1]
-        const static double energy_in = 13000.0;  // collider energy in GeV
+        const static double energy_in = energy;  // collider energy in GeV
         const static int i_error_in = 0; // with central scale [0] or scale variation [1]
         const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
@@ -255,16 +258,12 @@ namespace Gambit
         }
 
 
-        // Create dicts to pass parameters and flags to the backend
+        // Pass a dictionary with parameters/settings (if any) to the backend
         pybind11::dict salami_pars;
-
-        // Then set the neceassary parameters and spectrum info:
-        // - Energy
-        // @todo This can't be hard-coded... Need to match it to collider energy!
-        // salami_pars["energy"] = 13000;
+        // (fill salami_pars here...)
         BEreq::salami_set_parameters(salami_pars);
 
-        // - Import the SLHA1 spectrum
+        // Import the SLHA1 spectrum
         BEreq::salami_import_slha_string(slha_string);
 
         // Now get the cross-sections for all the requested PID pairs. Save the results
@@ -286,7 +285,7 @@ namespace Gambit
           int LOxs_trust_level = pp_LOxs_map.at(pid_pair).trust_level();
 
           // Get dictionary with cross-section results from backend
-          pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, LOxs_fb);
+          pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, energy, LOxs_fb);
 
           // The xsec_container classes don't have asymmetric errors yet,
           // so let's take the max error for now
