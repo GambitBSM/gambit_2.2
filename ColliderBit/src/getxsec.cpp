@@ -234,12 +234,10 @@ namespace Gambit
           pp_LOxs.set_pid_pair(pid_pair);
 
           // Call Prospino and get the result in a map<string,double>.
-          // The function prospino_run_alloptions should set the int trus_level to
-          //   trust_level = 1, if the result is trustworthy;
-          //   trust_level = 0, if the result is questionable; 
-          //   trust_level = -1, if the result really shouldn't be used.
-          int trust_level = 1;
-          map_str_dbl prospino_output = BEreq::prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero, trust_level);
+          map_str_dbl prospino_output = BEreq::prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+
+          // Get the trust_level
+          int prospino_trust_level = static_cast<int>(prospino_output.at("trust_level"));
 
           // Update the PID_pair_xsec_container instance with the Prospino result
           double LOxs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
@@ -249,7 +247,8 @@ namespace Gambit
           double LOxs_err_fb = LOxs_fb * LOxs_rel_err;
           pp_LOxs.set_xsec(LOxs_fb, LOxs_err_fb);
 
-          pp_LOxs.set_trust_level(trust_level);
+          cerr << "DEBUG: got trust_level: " << prospino_trust_level << endl;
+          pp_LOxs.set_trust_level(prospino_trust_level);
 
           // Put the LO cross-section in the map
           pp_LOxs_map[pid_pair] = pp_LOxs;
@@ -283,6 +282,9 @@ namespace Gambit
           // Get LO cross-section value from map
           double LOxs_fb = pp_LOxs_map.at(pid_pair).xsec();
 
+          // Get the trust_level to the level of the pp_LOxs
+          int LOxs_trust_level = pp_LOxs_map.at(pid_pair).trust_level();
+
           // Get dictionary with cross-section results from backend
           pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, LOxs_fb);
 
@@ -290,8 +292,9 @@ namespace Gambit
           // so let's take the max error for now
           double xs_fb = xs_fb_dict["central"].cast<double>();
           double xs_err_fb = std::max(xs_fb_dict["tot_err_down"].cast<double>(), xs_fb_dict["tot_err_up"].cast<double>());
-          // double xs_fb = xs_fb_dict["central"];
-          // double xs_err_fb = std::max(xs_fb_dict["tot_err_down"], xs_fb_dict["tot_err_up"]);
+
+          // Get the trust_level reported by the salami backend
+          int xs_trust_level = xs_fb_dict["trust_level"].cast<int>();
 
           // Should we rather use the fixed uncertainty from the YAML file?
           if(fixed_xs_rel_err >= 0.0)
@@ -302,6 +305,9 @@ namespace Gambit
           // Update the PID_pair_xsec_container instance 
           pp_xs.set_xsec(xs_fb, xs_err_fb);
           pp_xs.set_info_string("salami_NLO");
+
+          // Set the trust_level
+          pp_xs.set_trust_level(std::min(LOxs_trust_level, xs_trust_level));
 
           // Add it to the result map
           result[pid_pair] = pp_xs;
@@ -381,17 +387,15 @@ namespace Gambit
         // Loop over each PID_pair in ActivePIDPairs
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
-          // _Anders
-          cerr << DEBUG_PREFIX << "PID_pair: " << pid_pair.str() << endl;
-
-
           // Create PID_pair_xsec_container instance and set the PIDs
           PID_pair_xsec_container pp_xs;
           pp_xs.set_pid_pair(pid_pair);
 
           // Call Prospino and get the result in a map<string,double>
-          int trust_level = 1;
-          map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions, trust_level);
+          map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions);
+
+          // Get the trust_level
+          int prospino_trust_level = static_cast<int>(prospino_output.at("trust_level"));
 
           // Update the PID_pair_xsec_container instance with the Prospino result
           double xs_fb;
@@ -414,7 +418,7 @@ namespace Gambit
 
           pp_xs.set_xsec(xs_fb, xs_err_fb);
 
-          pp_xs.set_trust_level(trust_level);
+          pp_xs.set_trust_level(prospino_trust_level);
 
           // Add the PID_pair_xsec_container instance to the result map
           result[pid_pair] = pp_xs;
@@ -966,6 +970,11 @@ namespace Gambit
                 ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
               }
             }
+
+            // Make sure the trust_level of the process_xsec_container proc_xs is set to 
+            // the lowest trust_level of the contributing PID_pair_xsec_containers
+            cerr << "DEBUG: pids_xs.trust_level() = " << pids_xs.trust_level() << ",  pids_xs.pid_pair().str() = " << pids_xs.pid_pair().str() << endl;
+            if (pids_xs.trust_level() < proc_xs.trust_level()) { proc_xs.set_trust_level(pids_xs.trust_level()); }
 
             // Accumulate result in the process_xsec_container proc_xs
             proc_xs.sum_xsecs(pids_xs.xsec(), pids_xs.xsec_err());
@@ -1578,6 +1587,7 @@ namespace Gambit
           const PID_pair_xsec_container& xs = PID_pair_xsec_pair.second;
           result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_fb"] = xs.xsec();
           result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_err_fb"] = xs.xsec_err();
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_trust_level"] = xs.trust_level();
         }
       }
 

@@ -117,6 +117,8 @@ def get_xsection(proc, xsec_lo_fb):
     result_dict["tot_err_down"] = 0.05 * result_dict["central"]  # <-- Fixed 5% error for now
     result_dict["tot_err_up"] = 0.05 * result_dict["central"]  # <-- Fixed 5% error for now
 
+    result_dict["trust_level"] = 1   # 1: all is well; 0: questionable; -1: don't trust this
+
     print("DEBUG: result: ", result_dict, flush=True)
 
     return result_dict
