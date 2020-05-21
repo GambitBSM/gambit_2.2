@@ -186,7 +186,7 @@ END_BE_NAMESPACE
 // Helper function to apply mass spectrum modifications required for specific processes.
 BE_NAMESPACE
 {
-  Farray<Fdouble,0,99> process_specific_lowmass_mods(Farray<Fdouble,0,99> lowmass_in, const PID_pair& pid_pair)
+  Farray<Fdouble,0,99> process_specific_lowmass_mods(Farray<Fdouble,0,99> lowmass_in, const PID_pair& pid_pair, int& trust_level)
   {
     cerr << "DEBUG: process_specific_lowmass_mods: pid_pair = " << pid_pair.str() << endl;
 
@@ -278,6 +278,9 @@ BE_NAMESPACE
       lowmass_out(pid2_index) = sign_mass_pid2 * (abs(lowmass_out(pid2_index)) + 0.5 * abs(delta_m));
 
       cerr << "DEBUG: Masses after: " << lowmass_out(pid1_index) << " and " << lowmass_out(pid2_index) << endl;
+
+      // Setting trust_level = 0, since we're in the region were we can't really trust the result
+      trust_level = 0;
     }
 
     return lowmass_out;
@@ -481,7 +484,7 @@ BE_NAMESPACE
 
   // Convenience function to run Prospino and get a vector of cross-sections,
   // with Prospino settings from YAML options
-  map_str_dbl prospino_run(const PID_pair& pid_pair, const Options& runOptions)
+  map_str_dbl prospino_run(const PID_pair& pid_pair, const Options& runOptions, int& trust_level)
   {
     // Get run options
     // @todo Should the collider settings (e.g. energy) be automatically matched to the Pythia instance?
@@ -492,13 +495,16 @@ BE_NAMESPACE
     int i_error_in = runOptions.getValueOrDef<int>(0, "i_error_in");     // with central scale [0] or scale variation [1]
     bool set_missing_cross_sections_to_zero = runOptions.getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
-    return prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+    return prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero, trust_level);
   }
 
   // Convenience function to run Prospino and get a vector of cross-sections,
   // with Prospino settings directly as function arguments
-  map_str_dbl prospino_run_alloptions(const PID_pair& pid_pair, const int& inlo, const int& isq_ng_in, const int& icoll_in, const double& energy_in, const int& i_error_in, const bool& set_missing_cross_sections_to_zero)
+  map_str_dbl prospino_run_alloptions(const PID_pair& pid_pair, const int& inlo, const int& isq_ng_in, const int& icoll_in, const double& energy_in, const int& i_error_in,
+                                      const bool& set_missing_cross_sections_to_zero, int& trust_level)
   {
+    // Initially set trust_level = 1
+    trust_level = 1;
 
     // Check that we have a set of prospino settings for the given PID_pair
     if(PID_pairs_to_prospino_settings.find(pid_pair) == PID_pairs_to_prospino_settings.end())
@@ -533,8 +539,10 @@ BE_NAMESPACE
     ps.energy_in = energy_in;
     ps.i_error_in = i_error_in;
 
-    // Any process-specific modifications for this process?
-    Farray<Fdouble,0,99> lowmass_mod = process_specific_lowmass_mods(lowmass, pid_pair);
+    // 
+
+    // Are any process-specific modifications required for this process?
+    Farray<Fdouble,0,99> lowmass_mod = process_specific_lowmass_mods(lowmass, pid_pair, trust_level);
 
     // Call prospino
     Farray<Fdouble,0,6> prospino_result;
@@ -557,6 +565,8 @@ BE_NAMESPACE
     result["K"] = prospino_result(4);
     result["LO_ms[pb]"] = prospino_result(5);
     result["NLO_ms[pb]"] = prospino_result(6);
+
+    cerr << "DEBUG: trust_level = " << trust_level << endl;
 
     return result;
   }

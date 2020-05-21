@@ -233,8 +233,13 @@ namespace Gambit
           PID_pair_xsec_container pp_LOxs;
           pp_LOxs.set_pid_pair(pid_pair);
 
-          // Call Prospino and get the result in a map<string,double>
-          map_str_dbl prospino_output = BEreq::prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+          // Call Prospino and get the result in a map<string,double>.
+          // The function prospino_run_alloptions should set the int trus_level to
+          //   trust_level = 1, if the result is trustworthy;
+          //   trust_level = 0, if the result is questionable; 
+          //   trust_level = -1, if the result really shouldn't be used.
+          int trust_level = 1;
+          map_str_dbl prospino_output = BEreq::prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero, trust_level);
 
           // Update the PID_pair_xsec_container instance with the Prospino result
           double LOxs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
@@ -243,6 +248,8 @@ namespace Gambit
 
           double LOxs_err_fb = LOxs_fb * LOxs_rel_err;
           pp_LOxs.set_xsec(LOxs_fb, LOxs_err_fb);
+
+          pp_LOxs.set_trust_level(trust_level);
 
           // Put the LO cross-section in the map
           pp_LOxs_map[pid_pair] = pp_LOxs;
@@ -383,7 +390,8 @@ namespace Gambit
           pp_xs.set_pid_pair(pid_pair);
 
           // Call Prospino and get the result in a map<string,double>
-          map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions);
+          int trust_level = 1;
+          map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions, trust_level);
 
           // Update the PID_pair_xsec_container instance with the Prospino result
           double xs_fb;
@@ -405,6 +413,8 @@ namespace Gambit
           double xs_err_fb = xs_fb * xs_rel_err;
 
           pp_xs.set_xsec(xs_fb, xs_err_fb);
+
+          pp_xs.set_trust_level(trust_level);
 
           // Add the PID_pair_xsec_container instance to the result map
           result[pid_pair] = pp_xs;

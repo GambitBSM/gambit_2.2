@@ -74,6 +74,12 @@ namespace Gambit
         /// Get the info string
         std::string info_string() const;
 
+        /// Set the trust level
+        void set_trust_level(int);
+
+        /// Get the trust level
+        int trust_level() const;
+
         /// String Let's make it clear that we work with fb as unit
         static const std::string unit;
 
@@ -82,6 +88,7 @@ namespace Gambit
         double _xsec;
         double _xsecerr;
         std::string _info_string;
+        int _trust_level;
     };
 
 
