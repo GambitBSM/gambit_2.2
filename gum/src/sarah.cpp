@@ -100,8 +100,33 @@ namespace GUM
       // Need this to fill up the variables PART[S], PART[F], PART[V].
       std::cout << "Checking your model... " << std::endl;
       
-      command = "CheckModel";
-      send_to_math(command);
+      //command = "CheckModel";
+      //send_to_math(command);
+
+      //CheckAnomalies, this is already done in Start[Model], so no need here
+
+      //CheckChargeConservation;
+
+      std::map<std::string,bool> flags = {"SupersymmetricModel", false};
+      get_flags(flags);
+      if(flags.at("SupersymmetricModel"))
+      {
+        //CheckPossibleTermsSuperPotential;
+      }
+      else
+      {
+        //CheckPossibleTermsPotential;,
+      }
+
+      //CheckParticleMixingAndVEVs;
+
+      //CheckMassMatrices;
+      //CheckMissingMixing;
+
+
+      //CheckDiracSpinors;
+      //CheckParameterDefinitionsFinal;
+      //CheckParticleDefinitionsFinal;
 
       // All good.
       std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;

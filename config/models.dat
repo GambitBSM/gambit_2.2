@@ -556,7 +556,3 @@ RightHandedNeutrinos_diff: |
 
 StandardModel_mNudiff: |
    Daughter model of the StandardModel_SLHA2 where the masses of neutrinos have been substituted by mass differences and the absolute lightest neutrino mass.
-
-THDM_II: |
-    THDM_II model, created by GUM, with parameters: Lam1, Lam2, Lam3, Lam4, Lam5, M12, TanBeta
-
