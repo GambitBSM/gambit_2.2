@@ -1474,9 +1474,9 @@ START_MODULE
   #define CAPABILITY B2Kstargamma_LogLikelihood
   START_CAPABILITY
     #define FUNCTION HEPLike_B2Kstargamma_LogLikelihood
-    START_FUNCTION(double);
+    START_FUNCTION(double)
     DEPENDENCY(prediction_B2Kstargamma, flav_prediction)
-    NEEDS_CLASSES_FROM(HepLike);
+    NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1494,9 +1494,9 @@ START_MODULE
   #define CAPABILITY B2mumu_LogLikelihood_CMS
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumu_LogLikelihood_CMS
-    START_FUNCTION(double);
+    START_FUNCTION(double)
     DEPENDENCY(prediction_B2mumu, flav_prediction)
-    NEEDS_CLASSES_FROM(HepLike);
+    NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1504,9 +1504,9 @@ START_MODULE
   #define CAPABILITY B2mumu_LogLikelihood_Atlas
   START_CAPABILITY
     #define FUNCTION HEPLike_B2mumu_LogLikelihood_Atlas
-    START_FUNCTION(double);
+    START_FUNCTION(double)
     DEPENDENCY(prediction_B2mumu, flav_prediction)
-    NEEDS_CLASSES_FROM(HepLike);
+    NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1514,11 +1514,11 @@ START_MODULE
   #define CAPABILITY B2KstarmumuAng_LogLikelihood_Atlas
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
-    START_FUNCTION(double);
+    START_FUNCTION(double)
     DEPENDENCY(prediction_B2KstarmumuAng_0p1_2_Atlas, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_2_4_Atlas, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_4_8_Atlas, flav_prediction)
-    NEEDS_CLASSES_FROM(HepLike);
+    NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1526,7 +1526,7 @@ START_MODULE
   #define CAPABILITY B2KstarmumuAng_LogLikelihood_CMS
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_CMS
-    START_FUNCTION(double);
+    START_FUNCTION(double)
     DEPENDENCY(prediction_B2KstarmumuAng_1_2_CMS, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_2_4p3_CMS, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_4p3_6_CMS, flav_prediction)
@@ -1534,7 +1534,7 @@ START_MODULE
     DEPENDENCY(prediction_B2KstarmumuAng_10p09_12p86_CMS, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_14p18_16_CMS, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_16_19_CMS, flav_prediction)
-    NEEDS_CLASSES_FROM(HepLike);
+    NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1542,12 +1542,12 @@ START_MODULE
   #define CAPABILITY B2KstarmumuAng_LogLikelihood_Belle
   START_CAPABILITY
     #define FUNCTION HEPLike_B2KstarmumuAng_LogLikelihood_Belle
-    START_FUNCTION(double);
+    START_FUNCTION(double)
     DEPENDENCY(prediction_B2KstarmumuAng_0p1_4_Belle, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_4_8_Belle, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_10p9_12p9_Belle, flav_prediction)
     DEPENDENCY(prediction_B2KstarmumuAng_14p18_19_Belle, flav_prediction)
-    NEEDS_CLASSES_FROM(HepLike);
+    NEEDS_CLASSES_FROM(HepLike)
     #undef FUNCTION
   #undef CAPABILITY
 
