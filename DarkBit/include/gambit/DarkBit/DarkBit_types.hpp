@@ -115,14 +115,6 @@ namespace Gambit
       std::vector<double> threshold_energy;
     };
 
-    // Simple structure containing the fN parameters of the Higgs couplings to nucleons
-    struct Higgs_Nucleon_coupling_fN
-    {
-      double proton; // fN parameter for the Higgs-proton coupling
-      double neutron; // fN parameter for the Higgs-neutron couplings
-    };
-
-
     //////////////////////////////////////////////
     // Neutrino telescope data structures
     //////////////////////////////////////////////

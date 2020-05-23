@@ -41,7 +41,6 @@
 #include "gambit/Utils/statistics.hpp"
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 #include "gambit/DarkBit/DarkBit_utils.hpp"
-/* #include "../../Backends/installed/gamlike/1.0.1/include/gamLike/los_integral.hpp" */
 
 namespace Gambit
 {
@@ -70,10 +69,11 @@ namespace Gambit
 
     // physical constants
     const double alphaEM = Gambit::alpha_EM; // fine structure constant
-    const double alphaS = pi; // strong coupling constant
+    const double alphaS = pi; // strong coupling constant, don't use this (take from spectrum)
     const double v = 246e9; // electroweak vev [eV]
-    const double hbar_GeV = Gambit::hbar;
-    const double hbar_eV = Gambit::hbar*1e9;  // reduced Planck constant [eV.s]
+    const double hbar_GeV = Gambit::hbar; // reduced Planck constant [GeV.s]
+    const double hbar_eV = Gambit::hbar*1e9; // reduced Planck constant [eV.s]
+    const double hbar_cgs = 1.054571818e-27; // reduced Planck constant [cgs]
     const double cs = Gambit::s2cm; // speed of light [cm/s]
     const double kb = Gambit::K2eV; // Boltzmann constant [eV/K]
     const double G = 6.674e-8; // Gravitational constant [cm³/g/s²]
@@ -634,8 +634,8 @@ namespace Gambit
 
     void StellarModel::Ls_interpolate ()
     {
-      const int nPoints = 150;
-      const double mMin = 5e-1, mMax = mSmax;
+      const int nPoints = 100;
+      const double mMin = 5e-4, mMax = mSmax;
       const double deltaM = log10(mMax/mMin)/nPoints;
       const std::string filename = GAMBIT_DIR "/DarkBit/data/SuperRenormHP_Ls.dat";
       std::vector<double> mS, Ls;
@@ -1234,59 +1234,14 @@ namespace Gambit
       result = Stats::gaussian_upper_limit(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
     }
 
-
     //------------- Functions to compute short range forces likelihoods -------------// 
-
-    // Modified Inverse-Square Law (ISL) by adding a new Yukawa potential to the Newtonian gravitational potential: Vnew(r) = -(alpha*G*m1*m2)/r * exp(-r/lambda)
-    // where alpha is the strenght of the new force and lambda its range
-
-    // experimental parameters from Sushkov et al. 2011 arXiv:1108.2547
-    const double rhoAu = 19, rhoTi = 4.5, rhog = 2.6, dAu = 700e-8, dTi = 100e-8, R = 15.6; // in cgs units
-
-    // capability function to compute the likelihood from Sushkov et al. 2011
-    void calc_lnL_ShortRangeForces_Sushkov2011 (double &result)
-    {
-      using namespace Pipes::calc_lnL_ShortRangeForces_Sushkov2011;
-
-      const double alpha = *Param["alpha"], lambda = *Param["lambda"];
-
-      ASCIItableReader data = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/ShortRangeForces/Sushkov2011.dat");
-      data.setcolnames({"distance", "Fres", "sigma", "binWidth"});
-      std::vector<double> distance = data["distance"]; // [microns]
-      std::vector<double> Fres = data["Fres"]; // [pN]
-      std::vector<double> sigma = data["sigma"]; // [pN]
-      std::vector<double> width = data["binWidth"]; // [microns]
-
-      std::vector<double> Fnew;
-      const double factor = 4*pi*G*R*alpha*pow(lambda, 3)*lambda*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5*1e12;
-
-      double d, delta;
-
-      for (size_t i(0); i<distance.size(); ++i)
-      {
-        d = distance[i]*1e-4;
-        delta = width[i]*1e-4;
-        Fnew.push_back(factor/delta*(exp(-(d-delta/2.)/lambda)-exp(-(d+delta/2.)/lambda))); // new force in pN
-      }
-
-      std::vector<double> likelihood;
-      double norm;
-
-      for (size_t i(0); i<distance.size(); ++i)
-      {
-        norm = 1./sqrt(2*pi)/sigma[i];
-        likelihood.push_back( (Fnew[i]<Fres[i]) ? norm : norm*exp(-pow(Fres[i]-Fnew[i], 2)/pow(sigma[i], 2)) );
-      }
-
-      result = log(*std::min_element(likelihood.begin(), likelihood.end()));
-    }
 
     // capability to provide the Higgs-Nucleon coupling constant fN, such as described in arXiv:1306.4710
     void get_Higgs_Nucleon_coupling_fN (Higgs_Nucleon_coupling_fN &result)
     {
       using namespace Pipes::get_Higgs_Nucleon_coupling_fN;
 
-      const double sigmas = *Param["sigmas"], sigmal = *Param["sigmal"]; // nuclear parameters
+      const double sigmas = *Param["sigmas"]*1e-3, sigmal = *Param["sigmal"]*1e-3; // nuclear parameters in GeV (model input in MeV)
       const Spectrum SM = *Dep::SM_spectrum; // SM spectrum needed to get light quark masses
 
       const double z = 1.49; // isospin breaking ratio
@@ -1311,30 +1266,138 @@ namespace Gambit
       result.proton  =  2./9. + 7./9.*(fu[1]+fd[1]+fs[1]);
     }
 
+    // Modified Inverse-Square Law (ISL) by adding a new Yukawa potential to the Newtonian gravitational potential: Vnew(r) = -(alpha*G*m1*m2)/r * exp(-r/lambda)
+    // where alpha is the strenght of the new force and lambda its range
+
+    // experimental parameters from Sushkov et al. 2011 arXiv:1108.2547
+    const double rhoAu = 19, rhoTi = 4.5, rhog = 2.6, dAu = 700e-8, dTi = 100e-8, R = 15.6; // in cgs units
+
+    // capability function returning the new force from the SuperRenormHP model for the experiment from Shuskov et al. 2011
+    void New_Force_Sushkov2011_SuperRenormHP (daFunk::Funk &result)
+    {
+      using namespace Pipes::New_Force_Sushkov2011_SuperRenormHP;
+
+      const double alpha = *Param["alpha"], lambda = *Param["lambda"];
+
+      daFunk::Funk d = daFunk::var("d");
+
+      daFunk::Funk force = 4*pow(pi, 2)*G*R*alpha*pow(lambda, 3)*exp(-d/lambda)*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5; // *1e-5 conversion from dyn(cgs) to N (SI)
+
+      result = force;
+    }
+
+    // capability function to compute the likelihood from Sushkov et al. 2011
+    void calc_lnL_ShortRangeForces_Sushkov2011 (double &result)
+    {
+      using namespace Pipes::calc_lnL_ShortRangeForces_Sushkov2011;
+
+      daFunk::Funk ForceNew = *Dep::New_Force_Sushkov2011*1e12; // new force in pN
+
+      ASCIItableReader data = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/ShortRangeForces/Sushkov2011.dat");
+      data.setcolnames({"distance", "Fres", "sigma", "binWidth"});
+      std::vector<double> distance = data["distance"]; // [microns]
+      std::vector<double> Fres = data["Fres"]; // [pN]
+      std::vector<double> sigma = data["sigma"]; // [pN]
+      std::vector<double> width = data["binWidth"]; // [microns]
+
+      std::vector<boost::shared_ptr<daFunk::FunkBase>> ForceNewBinned;
+      std::vector<boost::shared_ptr<daFunk::FunkBound>> FnewBound;
+
+      double d, delta;
+
+      for (size_t i(0); i<distance.size(); ++i)
+      {
+        d = distance[i]*1e-4;
+        delta = width[i]*1e-4;
+        ForceNewBinned.push_back(ForceNew->gsl_integration("d", d-delta/2, d+delta/2)/delta);
+        FnewBound.push_back(ForceNewBinned[i]->bind());
+      }
+
+      std::vector<double> likelihood;
+      double norm, Fnew;
+
+      for (size_t i(0); i<distance.size(); ++i)
+      {
+        norm = 1./sqrt(2*pi)/sigma[i];
+        Fnew = FnewBound[i]->eval();
+        likelihood.push_back( (Fnew<Fres[i]) ? norm : norm*exp(-pow(Fres[i]-Fnew, 2)/pow(sigma[i], 2)) );
+      }
+
+      result = log(*std::min_element(likelihood.begin(), likelihood.end()));
+    }
+
+    // Linear interpolation in lin-log space.
+    double interpolate(double x, const std::vector<double> & xlist,
+            const std::vector<double> & ylist, bool zerobound)
+    {
+        double x0, x1, y0, y1;
+        int i = 1;
+        if (zerobound)
+        {
+            if (x<xlist.front()) return 0;
+            if (x>xlist.back()) return 0;
+        }
+        else
+        {
+            if (x<xlist.front()) return ylist.front();
+            if (x>xlist.back()) return ylist.back();
+        }
+        // Find min i such that xlist[i]>=x.
+        for (; xlist[i] < x; i++) {};
+        x0 = xlist[i-1];
+        x1 = xlist[i];
+        y0 = ylist[i-1];
+        y1 = ylist[i];
+        // lin-vs-log interpolation for lnL vs flux
+        return y0 + (y1-y0) * log(x/x0) / log(x1/x0);
+    }
+
     void test (double &result)
     {
       using namespace Pipes::test;
 
       GalacticHaloProperties halo = *Dep::GalacticHalo;
-      
-      double r0 = halo.r_sun;
 
       daFunk::Funk profile = halo.DensityProfile;
 
+      std::vector<double> rho;
       auto r = daFunk::logspace(-3, 2, 100);
-      auto rho = daFunk::logspace(-3, 2, 100);
       double dist = (Dep::GalacticHalo)->r_sun;
+
+      double Omega = 0.54;
+
       for ( size_t i = 0; i<r.size(); i++ )
       {
-        rho[i] = profile->bind("r")->eval(r[i]);
+        /* rho[i] = profile->bind("r")->eval(r[i]); */
+        rho.push_back(profile->bind("r")->eval(r[i]));
+        /* rho[i] = pow(profile->bind("r")->eval(r[i]), 2); */
       }
 
-      std::vector<double> phi;
-      std::vector<double> J;
+      std::vector<double> phi_pre;
+      std::vector<double> intensity;
 
-      BEreq::los_integral(byVal(r), byVal(rho), byVal(dist), phi, J);
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(dist), phi_pre, intensity);
 
-      result = J[0];
+      /* for ( size_t i = 0; i < intensity.size(); i++) */
+      /*   intensity[i] *= 3.0856775814913684e21;  // kpc/cm (conversion from kpc to cm) */
+      auto emission =
+        std::pair< std::vector<double>, std::vector<double> >
+        (phi_pre, intensity);
+
+      ASCIItableReader ROI = ASCIItableReader(GAMBIT_DIR "/Backends/installed/gamlike/1.0.1/data/INTEGRAL/ROI.txt");
+      ROI.setcolnames({"phi", "weight"});
+      std::vector<double> phi = ROI["phi"], weight = ROI["weight"];
+
+      double J = 0;
+      for ( size_t i = 0; i < phi.size(); i++ )
+      {
+        J += interpolate(
+                  phi[i], emission.first,
+                  emission.second, true)
+              *weight[i]/Omega;
+      }
+
+      result = J;
     }
 
   }

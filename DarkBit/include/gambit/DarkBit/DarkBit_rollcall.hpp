@@ -1630,7 +1630,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_lnL_ShortRangeForces_Sushkov2011
     START_FUNCTION(double)
-    ALLOW_MODEL(ModifiedGravityYukawa)
+    DEPENDENCY(New_Force_Sushkov2011, daFunk::Funk)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1640,6 +1640,15 @@ START_MODULE
     START_FUNCTION(Higgs_Nucleon_coupling_fN)
     ALLOW_MODEL(nuclear_params_sigmas_sigmal)
     DEPENDENCY(SM_spectrum, Spectrum)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY New_Force_Sushkov2011
+  START_CAPABILITY
+    #define FUNCTION New_Force_Sushkov2011_SuperRenormHP
+    START_FUNCTION(daFunk::Funk)
+    /* DEPENDENCY(New_Yukawa_interaction, New_Yukawa_interaction) */
+    ALLOW_MODEL(ModifiedGravityYukawa)
     #undef FUNCTION
   #undef CAPABILITY
 

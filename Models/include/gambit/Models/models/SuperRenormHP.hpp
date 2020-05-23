@@ -26,7 +26,7 @@
 
   // Friendship with ModifiedGravityYukawa
   INTERPRET_AS_X_FUNCTION(ModifiedGravityYukawa,SuperRenormHP_to_ModifiedGravityYukawa)
-  /* INTERPRET_AS_X_DEPENDENCY(ModifiedGravityYukawa, Higgs_Nucleon_coupling_fN, Higgs_Nucleon_coupling_fN) */
+  INTERPRET_AS_X_DEPENDENCY(ModifiedGravityYukawa, Higgs_Nucleon_coupling_fN, Higgs_Nucleon_coupling_fN)
 
   MAP_TO_CAPABILITY(mS, DM_mass)
 #undef MODEL
