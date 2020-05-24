@@ -167,6 +167,21 @@ START_MODULE
    #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY prediction_BR_BXsmumu1_6
+  START_CAPABILITY
+    #define FUNCTION SuperIso_prediction_BR_BXsmumu_1_6
+    START_FUNCTION(flav_prediction)
+    DEPENDENCY(SuperIso_modelinfo, parameters)
+    DEPENDENCY(SuperIso_nuisance, nuisance)
+    BACKEND_REQ(get_predictions_nuisance, (libsuperiso), void, (char**, int*, double**, const parameters*, const nuisance*))
+    BACKEND_REQ(observables, (libsuperiso), void, (int, obsname*, int, double*, double*, const nuisance*, char**, const parameters*))
+    BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
+    BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
+    BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
+   #undef FUNCTION
+  #undef CAPABILITY
+
+
   #define CAPABILITY prediction_B2KstarmumuBr_0p1_0p98
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_B2KstarmumuBr_0p1_0p98
