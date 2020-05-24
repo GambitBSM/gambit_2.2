@@ -167,11 +167,11 @@ ObsLikes:
   - purpose:    Observable
     capability: prediction_BRBXsmumu_highq2
       
-  - purpose:    Observable
-    capability: prediction_AFBBXsmumu_lowq2
+#  - purpose:    Observable
+#    capability: prediction_AFBBXsmumu_lowq2
 
-  - purpose:    Observable
-    capability: prediction_AFBBXsmumu_highq2
+#  - purpose:    Observable
+#    capability: prediction_AFBBXsmumu_highq2
       
 
     # Likelihoods!
