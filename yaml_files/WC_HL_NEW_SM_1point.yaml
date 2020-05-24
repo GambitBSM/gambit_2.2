@@ -92,14 +92,10 @@ Scanner:
 
 ObsLikes:
   # FIXME: How are the observables called inside superiso?
-  #- purpose:    RDRDstarTest
-  #  capability: RDRDstar_LogLikelihood
+  # OBSERVABLES!!
 
-  - purpose:    LogLike
-    capability: b2sgamma_LogLikelihood
-
-  - purpose:    LogLike
-    capability: B2mumu_LogLikelihood_LHCb
+  - purpose:    Observable
+    capability: prediction_b2sgamma
 
   - purpose:    Observable
     capability: prediction_B2KstarmumuAng_0p1_0p98_LHCb
@@ -118,6 +114,63 @@ ObsLikes:
 
   - purpose:    Observable
     capability: prediction_B2KstarmumuAng_15_19_LHCb
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuBr_15_19
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuBr_0p1_0p98
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuBr_1p1_2p5
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuBr_2p5_4
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuBr_4_6
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuBr_6_8
+
+  - purpose:    Observable
+    capability: prediction_B2KmumuBr_0p05_2
+
+  - purpose:    Observable
+    capability: prediction_B2KmumuBr_2_4p3
+
+  - purpose:    Observable
+    capability: prediction_B2KmumuBr_4p3_8p68
+
+  - purpose:    Observable
+    capability: prediction_B2KmumuBr_14p18_16
+
+  - purpose:    Observable
+    capability: prediction_B2KmumuBr_16_18
+
+  - purpose:    Observable
+    capability: prediction_B2KmumuBr_18_22
+
+
+  - purpose:    Observable
+    capability: prediction_B2mumu
+
+  - purpose:    Observable
+    capability: prediction_Bs2phimumuBr_1_6
+
+  - purpose:    Observable
+    capability: prediction_Bs2phimumuBr_15_19
+
+
+    # Likelihoods!
+
+
+
+  - purpose:    LogLike
+    capability: b2sgamma_LogLikelihood
+
+  - purpose:    LogLike
+    capability: B2mumu_LogLikelihood_LHCb
 
   - purpose:    LogLike
     capability: B2mumu_LogLikelihood_CMS
@@ -162,9 +215,29 @@ Rules:
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
 
+
+  - capability: prediction_Bs2phimumuBr_*
+    options:
+      obs_list: [Bs2phimumuBr]
+
+  - capability: prediction_b2sgamma
+    options:
+      obs_list: [b2sgamma]
+
+  - capability: prediction_B2KstarmumuBr_*
+    options:
+      obs_list: [B2KstarmumuBr]
+
+
   - capability: B2mumu_LogLikelihood_.*
     options:
       obs_list: [BRuntag_Bsmumu, BR_Bdmumu]
+
+
+  - capability: prediction_B2KmumuBr_*
+    options:
+      obs_list: [B2KmumuBr]
+
 
   - capability: prediction_B2KstarmumuAng_.*_Atlas
     options:
@@ -192,7 +265,7 @@ Rules:
 
   - capability: prediction_B2KstarmumuAng_.*_LHCb
     options:
-      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9, P5prime]
 
   - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
@@ -200,7 +273,7 @@ Rules:
 
   - options:
         use_SM_covariance: true
-        
+
   # Use SuperIso instead of FeynHiggs for b->sgamma
   - capability: bsgamma
     function: SI_bsgamma
