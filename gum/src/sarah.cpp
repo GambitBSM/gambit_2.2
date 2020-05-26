@@ -100,14 +100,42 @@ namespace GUM
       // Need this to fill up the variables PART[S], PART[F], PART[V].
       std::cout << "Checking your model... " << std::endl;
       
-      //command = "CheckModel";
-      //send_to_math(command);
+      // Redirect messages to catch them after checking model
+      send_to_math("streams = AppendTo[$Messages, OpenWrite[]]");
+   
 
-      //CheckAnomalies, this is already done in Start[Model], so no need here
+      command = "CheckModel[]";
+      send_to_math(command);
+
+
+      // Close the messages stream and print messages
+      command = "Close@Last@streams;"\
+                "$Messages = Most@streams;"\
+                "messages = ReadList@First@Last@streams";
+      send_to_math(command);
+
+      int nmessages;
+      send_to_math("Length[messages]");
+      get_from_math(nmessages);
+      std::cout << nmessages << std::endl;
+      /*for(int i=1; i<=nmessages; i++)
+      {
+        std::string output;
+        send_to_math("ToString[messages[[" + std::to_string(i) + "]],TraditionalForm]");
+        get_from_math(output);
+        std::cout << output << std::endl;
+      }*/
+
+      //checkAnomalies, this is already done in Start[Model], so no need here
 
       //CheckChargeConservation;
+      // TODO: This gets the printouts, not the error messages, not sure it's needed
+      //std::string chargeconserv;
+      //send_to_math("DynamicCheckingCCSup");
+      //get_from_math(chargeconserv);
+      //std::cout << chargeconserv << std::endl;
 
-      std::map<std::string,bool> flags = {"SupersymmetricModel", false};
+      std::map<std::string,bool> flags = {{"SupersymmetricModel", false}};
       get_flags(flags);
       if(flags.at("SupersymmetricModel"))
       {
@@ -130,7 +158,6 @@ namespace GUM
 
       // All good.
       std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
-  
     } catch(...) { throw; }
   }
 
