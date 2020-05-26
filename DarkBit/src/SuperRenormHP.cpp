@@ -105,7 +105,7 @@ namespace Gambit
     {
       public:
 
-        Xray(std::string experiment);
+        Xray(std::string experiment, double J_factor);
         double solidAngle(std::vector<double> lRange, std::vector<double> bRange);
         void set_deltaOmega();
         double getDeltaOmega() const;
@@ -137,7 +137,7 @@ namespace Gambit
     };
 
     // constructor
-    Xray::Xray(std::string experiment) : m_experiment(experiment), m_experimentMap({{"INTEGRAL", 1}, {"HEAO", 2}})
+    Xray::Xray(std::string experiment, double J_factor) : m_experiment(experiment), m_experimentMap({{"INTEGRAL", 1}, {"HEAO", 2}}), m_J(J_factor)
     {
       switch(m_experimentMap[m_experiment])
       {
@@ -146,7 +146,6 @@ namespace Gambit
           m_Emax = 2e6;
           m_lRange = { {-30., 30.} };
           m_bRange = { {-15., 15.} };
-          m_J = 3.65;
           m_deltaE = 8e3;
           m_deltaOmega = 0.542068;
           m_fluxOrigin = 1;
@@ -157,7 +156,6 @@ namespace Gambit
           m_Emax = 60e3;
           m_lRange = { {58., 109.}, {238., 289.} };
           m_bRange = { {-90., -20.}, {20., 90.} };
-          m_J = 3.88;
           m_deltaE = 0.3;
           m_deltaOmega = 1.17135;
           m_fluxOrigin = 3;
@@ -1044,7 +1042,9 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL;
 
-      static Xray experiment = Xray("INTEGRAL");
+      double J_factor = *Dep::J_factor;
+
+      static Xray experiment = Xray("INTEGRAL", J_factor);
 
       double density = *Dep::DM_relic_density*1e9;
 
@@ -1098,7 +1098,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_HEAO;
 
-      static Xray experiment = Xray("HEAO");
+      static Xray experiment = Xray("HEAO", 3.88);
 
       double density = *Dep::DM_relic_density*1e9;
 
@@ -1352,9 +1352,9 @@ namespace Gambit
         return y0 + (y1-y0) * log(x/x0) / log(x1/x0);
     }
 
-    void test (double &result)
+    void get_J_factor_INTEGRAL (double &result)
     {
-      using namespace Pipes::test;
+      using namespace Pipes::get_J_factor_INTEGRAL;
 
       GalacticHaloProperties halo = *Dep::GalacticHalo;
 
@@ -1362,27 +1362,20 @@ namespace Gambit
 
       std::vector<double> rho;
       auto r = daFunk::logspace(-3, 2, 100);
-      double dist = (Dep::GalacticHalo)->r_sun;
-
-      double Omega = 0.54;
+      double r_sun = halo.r_sun;
 
       for ( size_t i = 0; i<r.size(); i++ )
       {
-        /* rho[i] = profile->bind("r")->eval(r[i]); */
         rho.push_back(profile->bind("r")->eval(r[i]));
-        /* rho[i] = pow(profile->bind("r")->eval(r[i]), 2); */
+        /* rho.push_back(pow(profile->bind("r")->eval(r[i]), 2)); */
       }
 
       std::vector<double> phi_pre;
       std::vector<double> intensity;
 
-      BEreq::los_integral(byVal(r), byVal(rho), byVal(dist), phi_pre, intensity);
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
 
-      /* for ( size_t i = 0; i < intensity.size(); i++) */
-      /*   intensity[i] *= 3.0856775814913684e21;  // kpc/cm (conversion from kpc to cm) */
-      auto emission =
-        std::pair< std::vector<double>, std::vector<double> >
-        (phi_pre, intensity);
+      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
 
       ASCIItableReader ROI = ASCIItableReader(GAMBIT_DIR "/Backends/installed/gamlike/1.0.1/data/INTEGRAL/ROI.txt");
       ROI.setcolnames({"phi", "weight"});
@@ -1391,13 +1384,56 @@ namespace Gambit
       double J = 0;
       for ( size_t i = 0; i < phi.size(); i++ )
       {
-        J += interpolate(
-                  phi[i], emission.first,
-                  emission.second, true)
-              *weight[i]/Omega;
+        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];// /Omega;
       }
 
-      result = J;
+      double rho_sun = profile->bind("r")->eval(r_sun);
+
+      result = J/r_sun/rho_sun;
+
+      std::cout << "J = " << result << std::endl;
+    }
+
+    void get_J_factor_HEAO (double &result)
+    {
+      using namespace Pipes::get_J_factor_HEAO;
+
+      GalacticHaloProperties halo = *Dep::GalacticHalo;
+
+      daFunk::Funk profile = halo.DensityProfile;
+
+      std::vector<double> rho;
+      auto r = daFunk::logspace(-3, 2, 100);
+      double r_sun = halo.r_sun;
+
+      for ( size_t i = 0; i<r.size(); i++ )
+      {
+        rho.push_back(profile->bind("r")->eval(r[i]));
+        /* rho.push_back(pow(profile->bind("r")->eval(r[i]), 2)); */
+      }
+
+      std::vector<double> phi_pre;
+      std::vector<double> intensity;
+
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
+
+      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
+
+      ASCIItableReader ROI = ASCIItableReader(GAMBIT_DIR "/Backends/installed/gamlike/1.0.1/data/HEAO/ROI.txt");
+      ROI.setcolnames({"phi", "weight"});
+      std::vector<double> phi = ROI["phi"], weight = ROI["weight"];
+
+      double J = 0;
+      for ( size_t i = 0; i < phi.size(); i++ )
+      {
+        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];// /Omega;
+      }
+
+      double rho_sun = profile->bind("r")->eval(r_sun);
+
+      result = J/r_sun/rho_sun;
+
+      std::cout << "J = " << result << std::endl;
     }
 
   }

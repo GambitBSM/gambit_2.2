@@ -1558,6 +1558,7 @@ START_MODULE
     DEPENDENCY(DM_relic_density, double)
     DEPENDENCY(DarkMatter_ID, std::string)
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    DEPENDENCY(J_factor, double)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1652,9 +1653,18 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY Jtest
+  #define CAPABILITY J_factor_INTEGRAL
   START_CAPABILITY
-    #define FUNCTION test
+    #define FUNCTION get_J_factor_INTEGRAL
+    START_FUNCTION(double)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_HEAO
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_HEAO
     START_FUNCTION(double)
     DEPENDENCY(GalacticHalo, GalacticHaloProperties)
     BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
