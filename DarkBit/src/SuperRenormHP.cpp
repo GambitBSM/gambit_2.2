@@ -635,7 +635,7 @@ namespace Gambit
     void StellarModel::Ls_interpolate ()
     {
       const int nPoints = 100;
-      const double mMin = 5e-4, mMax = mSmax;
+      const double mMin = 1e-9, mMax = mSmax;
       const double deltaM = log10(mMax/mMin)/nPoints;
       const std::string filename = GAMBIT_DIR "/DarkBit/data/SuperRenormHP_Ls.dat";
       std::vector<double> mS, Ls;
@@ -1318,12 +1318,12 @@ namespace Gambit
 
       for (size_t i(0); i<distance.size(); ++i)
       {
-        norm = 1./sqrt(2*pi)/sigma[i];
+        norm = 1.; // we take the likelihood ratio to avoid having different normalizations accross the parameter space;
         Fnew = FnewBound[i]->eval();
         likelihood.push_back( (Fnew<Fres[i]) ? norm : norm*exp(-pow(Fres[i]-Fnew, 2)/pow(sigma[i], 2)) );
       }
 
-      result = log(*std::min_element(likelihood.begin(), likelihood.end()));
+      result = log(*std::min_element(likelihood.begin(), likelihood.end())); // we take the minimum likelihood, since we don't have the correlations between data bins
     }
 
     // Linear interpolation in lin-log space.
