@@ -214,15 +214,15 @@ namespace GUM
           std::cout << "Warning! Some particle OutputNames are defined twice." << std::endl;
           //throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
         else if(error == "FeynArts::NN")
-          std::cout << "Warning! " << message << ". If using FeynArts plase add missing numbers." << std::endl;
+          std::cout << "Warning! " << message << ". If using FeynArts please add missing numbers." << std::endl;
         else if(error == "FeynArts::NumberDefinedTwiceF")
-          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+          std::cout << "Warning! " << message << ". If using FeynArts please change duplicated numbers." << std::endl;
         else if(error == "FeynArts::NumberDefinedTwiceS")
-          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+          std::cout << "Warning! " << message << ". If using FeynArts please change duplicated numbers." << std::endl;
         else if(error == "FeynArts::NumberDefinedTwiceV")
-          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+          std::cout << "Warning! " << message << ". If using FeynArts please change duplicated numbers." << std::endl;
         else if(error == "FeynArts::NumberDefinedTwiceG")
-          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+          std::cout << "Warning! " << message << ". If using FeynArts please change duplicated numbers." << std::endl;
         else if(error == "Model::NoEC")
           throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
 
