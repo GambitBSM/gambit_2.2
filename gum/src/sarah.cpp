@@ -101,50 +101,68 @@ namespace GUM
       std::cout << "Checking your model... " << std::endl;
       
       // Redirect messages to catch them after checking model
-      send_to_math("streams = AppendTo[$Messages, OpenWrite[]]");
+      //send_to_math("streams = AppendTo[$Messages, OpenWrite[]]");
    
+      /*send_to_math("First@Last@streams");
+      std::string bleh;
+      get_from_math(bleh);
+      std::cout << bleh << std::endl;
+*/
+      send_to_math("CheckModel[]; messages = $MessageList;");
 
-      command = "CheckModel[]";
-      send_to_math(command);
 
 
       // Close the messages stream and print messages
-      command = "Close@Last@streams;"\
+/*      command = "Close@Last@streams;"\
                 "$Messages = Most@streams;"\
-                "messages = ReadList@First@Last@streams";
+                "messages = ReadList@First@Last@streams;";
       send_to_math(command);
 
+      send_to_math("First@Last@streams");
+      get_from_math(bleh);
+      std::cout << bleh << std::endl;
+
+      send_to_math("First@First@$Messages");
+      get_from_math(bleh);
+      std::cout << bleh << std::endl;
+*/
       int nmessages;
       send_to_math("Length[messages]");
       get_from_math(nmessages);
       std::cout << nmessages << std::endl;
-      /*for(int i=1; i<=nmessages; i++)
+      for(int i=1; i<=nmessages; i++)
       {
-        std::string output;
-        send_to_math("ToString[messages[[" + std::to_string(i) + "]],TraditionalForm]");
-        get_from_math(output);
-        std::cout << output << std::endl;
-      }*/
+        std::string error, message;
+        send_to_math("ToString[messages[[" + std::to_string(i) + "]]]");
+        get_from_math(error);
+        send_to_math("ToString[ReleaseHold[messages[[" + std::to_string(i) + "]]]]");
+        get_from_math(message);
 
-      //checkAnomalies, this is already done in Start[Model], so no need here
+        //std::cout << error << " : " << message << std::endl;
 
-      //CheckChargeConservation;
-      // TODO: This gets the printouts, not the error messages, not sure it's needed
-      //std::string chargeconserv;
-      //send_to_math("DynamicCheckingCCSup");
-      //get_from_math(chargeconserv);
-      //std::cout << chargeconserv << std::endl;
+        //CheckAnomalies
+        // TODO: This does not produce error messages, but only prints to screen
 
-      std::map<std::string,bool> flags = {{"SupersymmetricModel", false}};
-      get_flags(flags);
-      if(flags.at("SupersymmetricModel"))
-      {
-        //CheckPossibleTermsSuperPotential;
-      }
-      else
-      {
-        //CheckPossibleTermsPotential;,
-      }
+        //CheckChargeConservation;
+        if(error == "ChargeConservation::NoSUN")
+          std::cout << "Warning! " << message << std::endl;
+        else if(error == "Superpotential::ChargeViolation")
+          throw std::runtime_error("SARAH Error: Model violates charge conservation, check your superpotential");
+        else if(error == "Superpotential::MaybeChargeViolation")
+          std::cout << "Warning! The superpotential may violate charge conservation." << std::endl;
+        else if(error == "Superpotential::ViolationGlobal")
+          throw std::runtime_error("SARAH Error: Model violates global symmetry, check your superpotential");
+
+        //CheckPossibleTermsSuperPotential, CheckPossibleTermsPotential
+        else if(error == "Lagrange:ChargeViolation")
+          throw std::runtime_error("SARAH Error: Model violates charge conservation, check your Lagrangian");
+        else if(error == "Lagrange::MaybeChargeViolation")
+          std::cout << "Warning! The Lagrangian may violate charge conservation." << std::endl;
+        else if(error == "PossibleTerms::IncludeGlobal")
+          std::cout << "Warning! The superpotential does not include all possible terms." << std::endl;
+        else if(error == "PossibleTerms::NonSUSY")
+          std::cout << "Warning! The Lagrangian does not include all possible terms. Note that this functionality does not work perfectly for non-susy models, so check your Lagrangian" << std::endl;
+
 
       //CheckParticleMixingAndVEVs;
 
@@ -155,6 +173,10 @@ namespace GUM
       //CheckDiracSpinors;
       //CheckParameterDefinitionsFinal;
       //CheckParticleDefinitionsFinal;
+
+        else
+          throw std::runtime_error("SARAH Error: " + error + " : " + message);
+      }
 
       // All good.
       std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
