@@ -100,36 +100,36 @@ namespace GUM
       // Need this to fill up the variables PART[S], PART[F], PART[V].
       std::cout << "Checking your model... " << std::endl;
       
-      // Redirect messages to catch them after checking model
-      //send_to_math("streams = AppendTo[$Messages, OpenWrite[]]");
+      // Redirect output to catch them after checking model
+      send_to_math("streams = AppendTo[$Output, OpenWrite[]];");
    
-      /*send_to_math("First@Last@streams");
-      std::string bleh;
-      get_from_math(bleh);
-      std::cout << bleh << std::endl;
-*/
       send_to_math("CheckModel[]; messages = $MessageList;");
 
-
-
-      // Close the messages stream and print messages
-/*      command = "Close@Last@streams;"\
-                "$Messages = Most@streams;"\
-                "messages = ReadList@First@Last@streams;";
+      // Close the output stream and restore to stdout
+      command = "Close@Last@streams;"\
+                "$Output = Most@streams;"\
+                "output = ReadList@First@Last@streams;";
       send_to_math(command);
 
-      send_to_math("First@Last@streams");
-      get_from_math(bleh);
-      std::cout << bleh << std::endl;
+      // Proccess the output to find anomaly warnings
+      int noutput;
+      send_to_math("Length[output]");
+      get_from_math(noutput);
+      for(int i=1; i<=noutput; i++)
+      {
+        std::string output;
+        send_to_math("ToString[output[[" + std::to_string(i) + "]]]");
+        get_from_math(output);
 
-      send_to_math("First@First@$Messages");
-      get_from_math(bleh);
-      std::cout << bleh << std::endl;
-*/
+        size_t pos = output.find("WARNING");
+        if(pos != std::string::npos)
+          std::cout << output.substr(pos) << std::endl;
+      }
+
+      // Get the messages and processes them
       int nmessages;
       send_to_math("Length[messages]");
       get_from_math(nmessages);
-      std::cout << nmessages << std::endl;
       for(int i=1; i<=nmessages; i++)
       {
         std::string error, message;
@@ -138,24 +138,22 @@ namespace GUM
         send_to_math("ToString[ReleaseHold[messages[[" + std::to_string(i) + "]]]]");
         get_from_math(message);
 
-        //std::cout << error << " : " << message << std::endl;
-
         //CheckAnomalies
-        // TODO: This does not produce error messages, but only prints to screen
+        // This is handled above as it does not produce error messages, only prints
 
         //CheckChargeConservation;
         if(error == "ChargeConservation::NoSUN")
           std::cout << "Warning! " << message << std::endl;
         else if(error == "Superpotential::ChargeViolation")
-          throw std::runtime_error("SARAH Error: Model violates charge conservation, check your superpotential");
+          throw std::runtime_error("SARAH Error: Model violates charge conservation. Please fix your superpotential");
         else if(error == "Superpotential::MaybeChargeViolation")
           std::cout << "Warning! The superpotential may violate charge conservation." << std::endl;
         else if(error == "Superpotential::ViolationGlobal")
-          throw std::runtime_error("SARAH Error: Model violates global symmetry, check your superpotential");
+          throw std::runtime_error("SARAH Error: Model violates global symmetry. Please fix your superpotential");
 
         //CheckPossibleTermsSuperPotential, CheckPossibleTermsPotential
         else if(error == "Lagrange:ChargeViolation")
-          throw std::runtime_error("SARAH Error: Model violates charge conservation, check your Lagrangian");
+          throw std::runtime_error("SARAH Error: Model violates charge conservation. Please fix your Lagrangian");
         else if(error == "Lagrange::MaybeChargeViolation")
           std::cout << "Warning! The Lagrangian may violate charge conservation." << std::endl;
         else if(error == "PossibleTerms::IncludeGlobal")
@@ -164,16 +162,83 @@ namespace GUM
           std::cout << "Warning! The Lagrangian does not include all possible terms. Note that this functionality does not work perfectly for non-susy models, so check your Lagrangian" << std::endl;
 
 
-      //CheckParticleMixingAndVEVs;
+        //CheckParticleMixingAndVEVs
+        else if(error == "Mixing::DifferentQN")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your model file.");
+        else if(error == "VEV::UnbrokenSymmetries")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your model file.");
 
-      //CheckMassMatrices;
-      //CheckMissingMixing;
+        //CheckMassMatrices
+        else if(error == "MassMatrix::OnlyZero")
+          std::cout << "Warning! " << message << "." << std::endl;
+        else if(error == "MassMatrix::Reducible")
+          std::cout << "Warning! " << message << "." << std::endl;
+
+        //CheckMissingMixing
+        else if(error == "Lagrangian::PossibleMixing")
+          std::cout << "Warning! Possible mixing between fields has been found." << std::endl;    
 
 
-      //CheckDiracSpinors;
-      //CheckParameterDefinitionsFinal;
-      //CheckParticleDefinitionsFinal;
+        //CheckDiracSpinors
+        else if(error == "DiracSpinor::missing")
+          std::cout << "Warning! Missing Dirac spinor definitions for some Weyl spinors." << std::endl;
 
+        //CheckParameterDefinitionsFinal
+        else if(error == "CheckModelFiles::MissingParameter")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your parameters file.");
+        else if(error == "CheckModelFiles::MissingLH")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your parameters file.");
+        else if(error == "CheckModelFiles::MissingOutputNameParameter")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your parameters file.");
+        else if(error == "ParameterNames::TooLong")
+          std::cout << "Warning! " << message << ". If using CalcHEP please reduce their length." << std::endl;
+        else if(error == "ParameterNames::DefinedTwice")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your parameters file.");
+
+        //CheckParticleDefinitionsFinal
+        else if(error == "CheckModelFiles::MissingParticle")
+          std::cout << "Warning! Some particle definitions are missing from the particles file." << std::endl;
+          //throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
+        else if(error == "CheckModelFiles::MissingOutputName")
+          std::cout << "Warning! Some particle are missing a definition of OutputName in the particles file." << std::endl;
+          //throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
+        else if(error == "CheckModelFiles::MissingRParity")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
+        else if(error == "CheckModelFiles::WrongPDG")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
+        else if(error == "CheckModelFiles::ElectricCharge")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
+        else if(error == "ParticleNames::TooLong")
+           std::cout << "Warning! " << message << ". If using CalcHEP please reduce their length." << std::endl;
+        else if(error == "ParticleNames::DefinedTwice")
+          std::cout << "Warning! Some particle OutputNames are defined twice." << std::endl;
+          //throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
+        else if(error == "FeynArts::NN")
+          std::cout << "Warning! " << message << ". If using FeynArts plase add missing numbers." << std::endl;
+        else if(error == "FeynArts::NumberDefinedTwiceF")
+          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+        else if(error == "FeynArts::NumberDefinedTwiceS")
+          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+        else if(error == "FeynArts::NumberDefinedTwiceV")
+          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+        else if(error == "FeynArts::NumberDefinedTwiceG")
+          std::cout << "Warning! " << message << ". If using FeynArts plase change duplicated numbers." << std::endl;
+        else if(error == "Model::NoEC")
+          throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
+
+        // This seems to be a recurring bug in SARAH, so ignore it
+        else if(error == "Transpose::nmtx")
+        {
+          // Do nothing
+        }
+
+        // Ignore messages about supression of messages
+        else if(error == "General::stop")
+        {
+          // Do nothing
+        }
+
+        // If error is unknown throw exception
         else
           throw std::runtime_error("SARAH Error: " + error + " : " + message);
       }
