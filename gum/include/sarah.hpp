@@ -37,8 +37,11 @@ namespace GUM
       // Load model
       void load_model(std::string name);
     
-      // Model checks
-      bool check_model(std::string name);
+      // Model exists
+      bool model_exists(std::string name);
+
+      // Check model
+      void check_model(std::string name, std::vector<std::string>&);
     
       // Get model name
       std::string get_modelname();

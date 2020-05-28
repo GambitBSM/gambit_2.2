@@ -80,7 +80,7 @@ namespace GUM
       std::cout << "Loading model " + model + " in SARAH... " << std::endl;
 
       // Check if model is in SARAH's or GUM's list of models
-      if(!check_model(model))
+      if(!model_exists(model))
       {
         throw std::runtime_error("SARAH Error: Could not load model " + model + ". Model is not recognised by SARAH or GUM.");
       }
@@ -96,9 +96,22 @@ namespace GUM
       if (modelname == "ModelName")
         throw std::runtime_error("SARAH Error: Could not load model " + model + ". Please check your SARAH file.");
 
-      // TODO do this properly.
-      // Need this to fill up the variables PART[S], PART[F], PART[V].
+      // All good.
+      std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
+    } catch(...) { throw; }
+  }
+
+  void SARAH::check_model(std::string model, std::vector<std::string> &backends)
+  {
+    try
+    {
       std::cout << "Checking your model... " << std::endl;
+
+      // Check whether CalcHEP or MicrOmegas have been requested as backend
+      bool need_ch = false;
+      if (std::find(backends.begin(), backends.end(), "calchep") != backends.end()   ||
+          std::find(backends.begin(), backends.end(), "micromegas") != backends.end() )
+        need_ch = true;
       
       // Redirect output to catch them after checking model
       send_to_math("streams = AppendTo[$Output, OpenWrite[]];");
@@ -106,7 +119,7 @@ namespace GUM
       send_to_math("CheckModel[]; messages = $MessageList;");
 
       // Close the output stream and restore to stdout
-      command = "Close@Last@streams;"\
+      std::string command = "Close@Last@streams;"\
                 "$Output = Most@streams;"\
                 "output = ReadList@First@Last@streams;";
       send_to_math(command);
@@ -191,7 +204,10 @@ namespace GUM
         else if(error == "CheckModelFiles::MissingOutputNameParameter")
           throw std::runtime_error("SARAH Error: " + message + ". Please fix your parameters file.");
         else if(error == "ParameterNames::TooLong")
-          std::cout << "Warning! " << message << ". If using CalcHEP please reduce their length." << std::endl;
+          if(need_ch)
+            throw std::runtime_error("SARAH Error: Some parameter OutputName is too long for a valid CalcHEP output.");
+          else
+            std::cout << "Warning! The OutputNames of some parameters are too long for CalcHEP output. If using CalcHEP please reduce their length." << std::endl;
         else if(error == "ParameterNames::DefinedTwice")
           throw std::runtime_error("SARAH Error: " + message + ". Please fix your parameters file.");
 
@@ -209,7 +225,10 @@ namespace GUM
         else if(error == "CheckModelFiles::ElectricCharge")
           throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
         else if(error == "ParticleNames::TooLong")
-           std::cout << "Warning! " << message << ". If using CalcHEP please reduce their length." << std::endl;
+          if(need_ch)
+            throw std::runtime_error("SARAH Error: Some particle OutputName is too long for a valid CalcHEP output.");
+          else
+            std::cout << "Warning! The OutputNames of some particles are too long for CalcHEP output. If using CalcHEP please reduce their length." << std::endl;
         else if(error == "ParticleNames::DefinedTwice")
           std::cout << "Warning! Some particle OutputNames are defined twice." << std::endl;
           //throw std::runtime_error("SARAH Error: " + message + ". Please fix your particles file.");
@@ -244,9 +263,11 @@ namespace GUM
       }
 
       // All good.
-      std::cout << "Model " + model + " loaded successfully, with model name " << modelname << "." << std::endl;
+      std::cout << "Model " + model + " successfully passed SARAH's checks. Please address any warnings issued." << std::endl;
     } catch(...) { throw; }
   }
+
+
 
   // The model may have a different "internal" name than what's on the package.
   // Need this info for output files, etc.
@@ -264,7 +285,7 @@ namespace GUM
   }
 
   // Check if model is SARAH's database or in GUM's
-  bool SARAH::check_model(std::string modelname)
+  bool SARAH::model_exists(std::string modelname)
   {
     try
     {
@@ -1496,6 +1517,9 @@ namespace GUM
 
       // Get the options to pass to backends (currently just SPheno)
       std::map<std::string, std::map<std::string, std::string> > BEoptions = opts.options();
+
+      // Check the model using SARAH's CheckModel function
+      model.check_model(opts.model(), backends);
 
       // Get all of the particles
       model.get_partlist(partlist);
