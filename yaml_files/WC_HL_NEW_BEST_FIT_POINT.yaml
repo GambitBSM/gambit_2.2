@@ -40,11 +40,11 @@ Parameters:
     mH: 125.09
 
   WC:
-    Re_DeltaC7: 1.46e-02
+    Re_DeltaC7: 0.013033019452321326
     Im_DeltaC7:  0
-    Re_DeltaC9: -1.07
+    Re_DeltaC9: -1.0284148734252867
     Im_DeltaC9:  0
-    Re_DeltaC10: 1.05e-01
+    Re_DeltaC10: 0.07714505127672266
     Im_DeltaC10: 0
     Re_DeltaCQ1: 0
     Im_DeltaCQ1: 0
