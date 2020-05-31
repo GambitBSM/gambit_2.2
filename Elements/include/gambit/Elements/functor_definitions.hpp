@@ -246,6 +246,8 @@ namespace Gambit
       myVersion = origin_version;
       mySafeVersion = origin_safe_version;
       myCitationKey = citation_key;
+      //std::cout << "citation_key va: " << citation_key << endl;
+
       // Determine LogTag number
       myLogTag = Logging::str2tag(myOrigin);
       // Or in the case where we prefer to include the version number in the LogTag too
