@@ -16,6 +16,10 @@
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 Jun
 ///
+///  \author Markus Prim
+///          (markus.prim@kit.edu)
+///  \date 2020 Jun
+///
 ///  *********************************************
 
 #include <map>
