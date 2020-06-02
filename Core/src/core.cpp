@@ -193,6 +193,11 @@ namespace Gambit
             found_inifile = true;
         }
       }
+      if (show_runorder and not resume) 
+      {
+          cout << "This is a dry-run, ignoring the restart flag (-r/--restart), i.e. not deleting any files." << endl;
+          resume = true;
+      }
       // Set flag telling core object that command line option processing is complete
       processed_options = true;
       return filename;
