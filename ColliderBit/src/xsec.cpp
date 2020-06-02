@@ -39,7 +39,8 @@ namespace Gambit
     xsec_container::xsec_container() : 
       _xsec(0),
       _xsecerr(0),
-      _info_string("")
+      _info_string(""),
+      _trust_level(1)
     { }
 
     /// Public method to reset this instance for reuse, avoiding the need for "new" or "delete".
@@ -48,6 +49,7 @@ namespace Gambit
       _xsec = 0;
       _xsecerr = 0;
       _info_string = "";
+      _trust_level = 1;
     }
 
     /// Return the cross-section (in fb).
@@ -128,6 +130,8 @@ namespace Gambit
       key = base_key + "xsec_relerr";
       content_map[key] = this->xsec_relerr();
 
+      content_map["trust_level"] = static_cast<double>(this->trust_level());  
+
       return content_map;
     }
 
@@ -136,6 +140,12 @@ namespace Gambit
 
     /// Get the info string
     std::string xsec_container::info_string() const { return _info_string; }
+
+    /// Set the trust level
+    void xsec_container::set_trust_level(int trust_level_in) { _trust_level = trust_level_in; }
+
+    /// Get the info string
+    int xsec_container::trust_level() const { return _trust_level; }
 
     /// Set the unit string
     const std::string xsec_container::unit = "fb";

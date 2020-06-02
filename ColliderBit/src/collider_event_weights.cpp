@@ -21,7 +21,7 @@
 
 #include "gambit/ColliderBit/ColliderBit_eventloop.hpp"
 
-// #define COLLIDERBIT_DEBUG
+#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
@@ -50,7 +50,7 @@ namespace Gambit
 
 
     /// A function that sets the event weight based on the process cross-sections
-    void _setEventWeight_fromCrossSection(HEPUtils::Event& event, const BaseCollider* HardScatteringSim_ptr, const map_int_process_xsec& ProcessCrossSectionsMap)
+    void _setEventWeight_fromCrossSection(HEPUtils::Event& event, const BaseCollider* HardScatteringSim_ptr, const map_int_process_xsec& ProcessCrossSectionsMap, const int use_trust_level)
     {
       // Initialize weight
       double weight = 1.0;
@@ -60,7 +60,7 @@ namespace Gambit
       int process_code = HardScatteringSim_ptr->process_code();
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "Current process_code: " << process_code << endl;
+        cerr << DEBUG_PREFIX << "Current process_code: " << process_code << endl;
       #endif
 
       // Get the process_xsec_container instance that holds the externally provided cross-section for this process
@@ -71,39 +71,52 @@ namespace Gambit
       double process_xsec_err_generator_sq = pow(HardScatteringSim_ptr->xsecErr_fb(process_code), 2);
 
       #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code)
+          cerr << DEBUG_PREFIX << "- process_code: " << process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(process_code)
                                                                      << ", xsec_err_fb: " << HardScatteringSim_ptr->xsecErr_fb(process_code) << endl;
       #endif
 
-      // Add the generator cross-sections for other process codes which also 
-      // contribute to the externaly provided cross-section
-      for (int other_process_code : xs.processes_sharing_xsec())
+      // Determine what to do based on the trust_level of the externally provided cross-section:
+      if (xs.trust_level() >= use_trust_level)
       {
-        process_xsec_generator += HardScatteringSim_ptr->xsec_fb(other_process_code);
-        process_xsec_err_generator_sq += pow(HardScatteringSim_ptr->xsecErr_fb(other_process_code), 2);
-        #ifdef COLLIDERBIT_DEBUG
-          cout << DEBUG_PREFIX << "- process_code: " << other_process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(other_process_code)
-                                                                           << ", xsec_err_fb: " << HardScatteringSim_ptr->xsecErr_fb(other_process_code) << endl;
-        #endif
-      }
-      double process_xsec_err_generator = sqrt(process_xsec_err_generator_sq);
+        // Add the generator cross-sections for other process codes which also 
+        // contribute to the externaly provided cross-section
+        for (int other_process_code : xs.processes_sharing_xsec())
+        {
+          process_xsec_generator += HardScatteringSim_ptr->xsec_fb(other_process_code);
+          process_xsec_err_generator_sq += pow(HardScatteringSim_ptr->xsecErr_fb(other_process_code), 2);
+          #ifdef COLLIDERBIT_DEBUG
+            cerr << DEBUG_PREFIX << "- process_code: " << other_process_code << ", xsec_fb: " << HardScatteringSim_ptr->xsec_fb(other_process_code)
+                                                                             << ", xsec_err_fb: " << HardScatteringSim_ptr->xsecErr_fb(other_process_code) << endl;
+          #endif
+        }
+        double process_xsec_err_generator = sqrt(process_xsec_err_generator_sq);
 
-      // Event weight = [external cross-section] / [sum of contributing generator cross-sections]
-      if (process_xsec_generator > 0.0)
-      {
-        weight = xs.xsec() / process_xsec_generator;
-        weight_err = sqrt(  pow(xs.xsec_err() / process_xsec_generator, 2) 
-                          + pow(xs.xsec() * process_xsec_err_generator / pow(process_xsec_generator, 2), 2) );
+        // Event weight = [external cross-section] / [sum of contributing generator cross-sections]
+        if (process_xsec_generator > 0.0)
+        {
+          weight = xs.xsec() / process_xsec_generator;
+          weight_err = sqrt(  pow(xs.xsec_err() / process_xsec_generator, 2) 
+                            + pow(xs.xsec() * process_xsec_err_generator / pow(process_xsec_generator, 2), 2) );
+        }
+        else
+        {
+          std::stringstream errmsg_ss;
+          errmsg_ss << "Generated an event of process " << process_code << " for which the generator itself predicts a cross-section <= 0. Not sure what to do with that...";
+          ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        }
       }
       else
       {
-        std::stringstream errmsg_ss;
-        errmsg_ss << "Generated an event of process " << process_code << " for which the generator itself predicts a cross-section <= 0. What am I supposed to do with that?";
-        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+        // Too low trust_level. Will fall back to use the generator cross-section
+        #ifdef COLLIDERBIT_DEBUG
+          cerr << DEBUG_PREFIX << "process_xsec trust_level too low (" << xs.trust_level() << "). Setting event weight to 1.0." << endl;
+        #endif
+        weight = 1.0;
+        weight_err = 0.0;
       }
 
       #ifdef COLLIDERBIT_DEBUG
-        cout << DEBUG_PREFIX << "Total process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << ",  weight_err: " << weight_err << endl;
+        cerr << DEBUG_PREFIX << "total process_xsec: " << xs.xsec() << ",  process_xsec_MC: " << process_xsec_generator << ",  weight: " << weight << ",  weight_err: " << weight_err << ",  trust_level: " << xs.trust_level() << endl;
       #endif
 
       event.set_weight(weight);
@@ -116,6 +129,8 @@ namespace Gambit
     {
       using namespace Pipes::setEventWeight_fromCrossSection;
 
+      const static int use_trust_level = runOptions->getValueOrDef<int>(1, "use_cross_section_trust_level");
+      
       static bool first = true;
       if (first)
       {
@@ -128,7 +143,8 @@ namespace Gambit
       result = std::bind(_setEventWeight_fromCrossSection,
                          std::placeholders::_1,
                          std::placeholders::_2,
-                         *Dep::ProcessCrossSectionsMap);
+                         *Dep::ProcessCrossSectionsMap, 
+                         use_trust_level);
     }
 
 

@@ -39,7 +39,7 @@ LOAD_LIBRARY
 
 BE_FUNCTION(import_slha_string, void, (std::string&), "import_slha_string", "salami_import_slha_string")
 BE_FUNCTION(set_parameters, void, (pybind11::dict&), "set_parameters", "salami_set_parameters")
-BE_FUNCTION(get_xsection, pybind11::dict, (iipair&, double&), "get_xsection", "salami_get_xsection")
+BE_FUNCTION(get_xsection, pybind11::dict, (iipair&, double&, double&), "get_xsection", "salami_get_xsection")
 // TODO: add double& first arg to get_xsection
 
 

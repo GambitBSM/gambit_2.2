@@ -154,6 +154,9 @@ namespace Gambit
       // Read options from yaml file
       const static double fixed_xs_rel_err = runOptions->getValueOrDef<double>(-1.0, "fixed_relative_cross_section_uncertainty");
 
+      // Collider energy 
+      // @todo Need to get this from the collider options
+      double energy = 13000.;
 
       if(*Loop::iteration == COLLIDER_INIT)
       {
@@ -217,7 +220,7 @@ namespace Gambit
         const static int inlo = 0;
         const static int isq_ng_in = 1;  // specify degenerate [0] or free [1] squark masses
         const static int icoll_in = 1;   // collider : tevatron[0], lhc[1]
-        const static double energy_in = 13000.0;  // collider energy in GeV
+        const static double energy_in = energy;  // collider energy in GeV
         const static int i_error_in = 0; // with central scale [0] or scale variation [1]
         const static bool set_missing_cross_sections_to_zero = runOptions->getValueOrDef<bool>(false, "set_missing_cross_sections_to_zero");
 
@@ -233,8 +236,11 @@ namespace Gambit
           PID_pair_xsec_container pp_LOxs;
           pp_LOxs.set_pid_pair(pid_pair);
 
-          // Call Prospino and get the result in a map<string,double>
+          // Call Prospino and get the result in a map<string,double>.
           map_str_dbl prospino_output = BEreq::prospino_run_alloptions(pid_pair, inlo, isq_ng_in, icoll_in, energy_in, i_error_in, set_missing_cross_sections_to_zero);
+
+          // Get the trust_level
+          int prospino_trust_level = static_cast<int>(prospino_output.at("trust_level"));
 
           // Update the PID_pair_xsec_container instance with the Prospino result
           double LOxs_fb = prospino_output.at("LO_ms[pb]") * 1000.;
@@ -244,21 +250,20 @@ namespace Gambit
           double LOxs_err_fb = LOxs_fb * LOxs_rel_err;
           pp_LOxs.set_xsec(LOxs_fb, LOxs_err_fb);
 
+          cerr << "DEBUG: got trust_level: " << prospino_trust_level << endl;
+          pp_LOxs.set_trust_level(prospino_trust_level);
+
           // Put the LO cross-section in the map
           pp_LOxs_map[pid_pair] = pp_LOxs;
         }
 
 
-        // Create dicts to pass parameters and flags to the backend
+        // Pass a dictionary with parameters/settings (if any) to the backend
         pybind11::dict salami_pars;
-
-        // Then set the neceassary parameters and spectrum info:
-        // - Energy
-        // @todo This can't be hard-coded... Need to match it to collider energy!
-        // salami_pars["energy"] = 13000;
+        // (fill salami_pars here...)
         BEreq::salami_set_parameters(salami_pars);
 
-        // - Import the SLHA1 spectrum
+        // Import the SLHA1 spectrum
         BEreq::salami_import_slha_string(slha_string);
 
         // Now get the cross-sections for all the requested PID pairs. Save the results
@@ -276,15 +281,19 @@ namespace Gambit
           // Get LO cross-section value from map
           double LOxs_fb = pp_LOxs_map.at(pid_pair).xsec();
 
+          // Get the trust_level to the level of the pp_LOxs
+          int LOxs_trust_level = pp_LOxs_map.at(pid_pair).trust_level();
+
           // Get dictionary with cross-section results from backend
-          pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, LOxs_fb);
+          pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, energy, LOxs_fb);
 
           // The xsec_container classes don't have asymmetric errors yet,
           // so let's take the max error for now
           double xs_fb = xs_fb_dict["central"].cast<double>();
           double xs_err_fb = std::max(xs_fb_dict["tot_err_down"].cast<double>(), xs_fb_dict["tot_err_up"].cast<double>());
-          // double xs_fb = xs_fb_dict["central"];
-          // double xs_err_fb = std::max(xs_fb_dict["tot_err_down"], xs_fb_dict["tot_err_up"]);
+
+          // Get the trust_level reported by the salami backend
+          int xs_trust_level = xs_fb_dict["trust_level"].cast<int>();
 
           // Should we rather use the fixed uncertainty from the YAML file?
           if(fixed_xs_rel_err >= 0.0)
@@ -295,6 +304,9 @@ namespace Gambit
           // Update the PID_pair_xsec_container instance 
           pp_xs.set_xsec(xs_fb, xs_err_fb);
           pp_xs.set_info_string("salami_NLO");
+
+          // Set the trust_level
+          pp_xs.set_trust_level(std::min(LOxs_trust_level, xs_trust_level));
 
           // Add it to the result map
           result[pid_pair] = pp_xs;
@@ -374,16 +386,15 @@ namespace Gambit
         // Loop over each PID_pair in ActivePIDPairs
         for (const PID_pair& pid_pair : *Dep::ActivePIDPairs)
         {
-          // _Anders
-          cerr << DEBUG_PREFIX << "PID_pair: " << pid_pair.str() << endl;
-
-
           // Create PID_pair_xsec_container instance and set the PIDs
           PID_pair_xsec_container pp_xs;
           pp_xs.set_pid_pair(pid_pair);
 
           // Call Prospino and get the result in a map<string,double>
           map_str_dbl prospino_output = BEreq::prospino_run(pid_pair, *runOptions);
+
+          // Get the trust_level
+          int prospino_trust_level = static_cast<int>(prospino_output.at("trust_level"));
 
           // Update the PID_pair_xsec_container instance with the Prospino result
           double xs_fb;
@@ -405,6 +416,8 @@ namespace Gambit
           double xs_err_fb = xs_fb * xs_rel_err;
 
           pp_xs.set_xsec(xs_fb, xs_err_fb);
+
+          pp_xs.set_trust_level(prospino_trust_level);
 
           // Add the PID_pair_xsec_container instance to the result map
           result[pid_pair] = pp_xs;
@@ -956,6 +969,11 @@ namespace Gambit
                 ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
               }
             }
+
+            // Make sure the trust_level of the process_xsec_container proc_xs is set to 
+            // the lowest trust_level of the contributing PID_pair_xsec_containers
+            cerr << "DEBUG: pids_xs.trust_level() = " << pids_xs.trust_level() << ",  pids_xs.pid_pair().str() = " << pids_xs.pid_pair().str() << endl;
+            if (pids_xs.trust_level() < proc_xs.trust_level()) { proc_xs.set_trust_level(pids_xs.trust_level()); }
 
             // Accumulate result in the process_xsec_container proc_xs
             proc_xs.sum_xsecs(pids_xs.xsec(), pids_xs.xsec_err());
@@ -1568,6 +1586,7 @@ namespace Gambit
           const PID_pair_xsec_container& xs = PID_pair_xsec_pair.second;
           result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_fb"] = xs.xsec();
           result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_cross_section_err_fb"] = xs.xsec_err();
+          result[Dep::RunMC->current_collider() + "_PID_pair_" + pp.str() + "_" + xs.info_string() + "_trust_level"] = xs.trust_level();
         }
       }
 
