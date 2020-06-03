@@ -132,7 +132,7 @@ ObsLikes:
     capability: prediction_B2KstarmumuAng_16_19_CMS
 
   - purpose:    Observable
-    capability: prediction_B2KstarmumuAng_0p1_4.0_Belle 
+    capability: prediction_B2KstarmumuAng_0p1_4_Belle 
 
   - purpose:    Observable
     capability: prediction_B2KstarmumuAng_4_8_Belle
