@@ -292,7 +292,7 @@ Rules:
 
   - capability: prediction_B2KstarmumuAng_.*_LHCb
     options:
-      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9, P5prime]
+      obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9, P5prime, P1, P4prime]
 
   - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
