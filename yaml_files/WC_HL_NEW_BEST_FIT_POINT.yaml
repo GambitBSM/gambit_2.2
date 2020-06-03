@@ -117,6 +117,30 @@ ObsLikes:
     capability: prediction_B2KstarmumuAng_15_19_LHCb
 
   - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_1_2_CMS
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_2_4p3_CMS
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_4p3_6_CMS
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_6_8p68_CMS
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_16_19_CMS
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_0p1_4.0_Belle 
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_4_8_Belle
+
+  - purpose:    Observable
+    capability: prediction_B2KstarmumuAng_14p18_19_Belle 
+
+  - purpose:    Observable
     capability: prediction_B2KstarmumuBr_15_19
 
   - purpose:    Observable

@@ -26,6 +26,7 @@
 ///  \date 2018 Jan
 ///  \date 2020 Jan
 ///  \date 2020 Feb
+///  \date 2020 May
 ///
 ///  \author Anders Kvellestad
 ///          (anders.kvellestad@fys.uio.no)
