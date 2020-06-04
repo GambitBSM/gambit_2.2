@@ -124,7 +124,7 @@ namespace GUM
                 "output = ReadList@First@Last@streams;";
       send_to_math(command);
 
-      // Proccess the output to find anomaly warnings
+      // Process the output to find anomaly warnings
       int noutput;
       send_to_math("Length[output]");
       get_from_math(noutput);
@@ -251,7 +251,7 @@ namespace GUM
           // Do nothing
         }
 
-        // Ignore messages about supression of messages
+        // Ignore messages about suppression of messages
         else if(error == "General::stop")
         {
           // Do nothing

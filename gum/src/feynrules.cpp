@@ -582,11 +582,52 @@ namespace GUM
     std::string gauge = "feynman";
     set_gauge(gauge);
 
+    // Check to see if FR catches any 4-fermion vertices.
+    bool fourF = false;
+    int nfourF = 0;
+
+    // Redirect output to catch them after writing CH files
+    send_to_math("streams = AppendTo[$Output, OpenWrite[]];");
+
     // Write output.
     std::string command = "WriteCHOutput[" + LTot + ", CHAutoWidths -> False];";
     send_to_math(command);
 
+    // Close the output stream and restore to stdout
+    command = "Close@Last@streams; $Output = Most@streams; output = ReadList@First@Last@streams;";
+    send_to_math(command);
+
+    // Process the output to find out if there are any 4-fermion interactions.
+    int noutput;
+    send_to_math("Length[output]");
+    get_from_math(noutput);
+
+    for(int i=1; i<=noutput; i++)
+    {
+      std::string output;
+      send_to_math("ToString[output[[" + std::to_string(i) + "]]]");
+      get_from_math(output);
+
+      // If we find a 4-fermion vertex, take a note of it
+      size_t pos = output.find("4 fermion");
+      if(pos != std::string::npos)
+      {
+        fourF = true;
+        nfourF++;
+      }
+    }
+
+    // 4-fermion vertices result in a fatal error in GUM v1.
+    if(fourF)
+    {
+      std::stringstream ss;
+      ss << "GUM caught " + std::to_string(nfourF) + " 4-fermion vertices in your Lagrangian." << std::endl;
+      ss << "This is a fatal error in the current release of GUM." << std::endl;
+      ss << "Dealing with 4-fermion vertices is planned for future releases." << std::endl;
+      throw std::runtime_error(ss.str());
+    }
     std::cout << "CalcHEP files written." << std::endl;
+
   }
 
   // Write MadGraph output.
