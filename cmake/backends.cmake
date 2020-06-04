@@ -1161,8 +1161,9 @@ ExternalProject_Add(${name}_${ver}
   SOURCE_DIR ${dir}
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy ${patchdir}/main.c ${dir}/c_source/dynamicME/main.c
-  COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
+            COMMAND ${CMAKE_COMMAND} -E copy ${dir}/c_source/strfun/pdf_dummy.c ${dir}/c_source/num/pdf_dummy.c
   PATCH_COMMAND patch -p0 < ${patchdir}/patch_${name}_${ver}.dif
+        COMMAND sed ${dashi} -e "s#GAMBITDIR#${PROJECT_SOURCE_DIR}#g" ${dir}/c_source/dynamicME/vp_dynam.c
   BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
   INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/Models/ ${dir}/models/
 )
