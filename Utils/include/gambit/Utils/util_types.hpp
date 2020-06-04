@@ -33,7 +33,6 @@
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2016 May, Dec
 ///  \date 2018 Oct
-///  \date 2020 June
 ///
 /// \author Aaron Vincent
 ///         (aaron.vincent@cparc.ca)
@@ -50,14 +49,9 @@
 #include <cstring>
 #include <complex>
 
-#include "gambit/cmake/cmake_variables.hpp"
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/variadic_functions.hpp"
 #include "gambit/Utils/local_info.hpp"
-
-#ifdef HAVE_PYBIND11
-  #include <pybind11/pybind11.h>
-#endif
 
 namespace Gambit
 {
@@ -662,14 +656,6 @@ namespace Gambit
   typedef char         MChar;
   typedef std::string  MString;
   template <typename T> using MList = std::vector<T>;
-
-  /// Types used for Python backends
-  // TODO: This might be temporary as the harvesting scripts should make this unneccesary
-  #ifdef HAVE_PYBIND11
-    typedef pybind11::dict PyDict;
-  #else
-    typedef char PyDict;
-  #endif
 
 }
 #endif //defined __util_types_hpp__
