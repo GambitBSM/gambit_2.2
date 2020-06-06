@@ -222,13 +222,86 @@ namespace Gambit {
         // Corresponding lines from ATLAS code snippet:
         //   baselineElectrons = overlapRemoval(baselineElectrons, baselineMuons,0.01);  
 
+        // Collect all baseline leptons
+        vector<const HEPUtils::Particle*> baselineLeptons = baselineElectrons;
+        baselineLeptons.insert(baselineLeptons.end(), baselineMuons.begin(), baselineMuons.end());
 
-        // Next: apply tighter ID criteria?
-        // From ATLAS code snippet:
-        //   auto signalElectrons = filterObjects(baselineElectrons, 10, 2.0, EMediumLH|EIsoFCTight);  /// missing ECIDS
-        //   auto signalMuons     = filterObjects(baselineMuons, 10, 2.5, MuD0Sigma3|MuIsoFCTightTrackOnly); 
+
+        // Signal object containers
+        vector<const HEPUtils::Jet*> signalJets = baselineJets;
+        // vector<const HEPUtils::Jet*> signalBJets = baselineBJets;
+        vector<const HEPUtils::Particle*> signalElectrons = baselineElectrons;
+        vector<const HEPUtils::Particle*> signalMuons = baselineMuons;
+        vector<const HEPUtils::Particle*> signalLeptons;
+
+        // Signal electrons must satisfy the “medium” identification requirement
+        ATLAS::applyElectronIDEfficiency2019(signalElectrons, "Medium");
+
+        // Collect all signal leptons
+        signalLeptons = signalElectrons;
+        signalLeptons.insert(signalLeptons.end(), signalMuons.begin(), signalMuons.end());
+
+        // Sort by pT
+        sortByPt(baselineLeptons);
+        sortByPt(signalLeptons);
+        sortByPt(signalElectrons);
+        sortByPt(signalMuons);
+        sortByPt(signalJets);
+
+        // Count signal objects
+        const size_t nBaseLeptons = baselineLeptons.size();
+        const size_t nLeptons = signalLeptons.size();
+        const size_t nElectrons = signalElectrons.size();
+        const size_t nMuons = signalMuons.size();
+
+        // Require at least two leptons
+        if (nLeptons < 2) return;
+
+        const Particle* lep0 = signalLeptons[0];
+        const Particle* lep1 = signalLeptons[1];
+
+        // Require pT > 20 GeV for the first two leptons
+        if (lep1->pT() < 20) return;
+
+        // If only two leptons, they must be same sign.
+        if (nLeptons == 2 && (lep0->pid() * lep1->pid() < 0.)) return;
+
+        // Next: implement 'countPt' function in utils (with optional is_sorted bool argument) 
+
+
 
         // _Anders: Got to this point...
+
+
+
+        // *** From Sec 4: Event selection ***
+        
+        // - At least two signal leptons with pT > 20 GeV
+
+        // - If only two leptons: must have same sign
+        // - Else if more than two leptons (pT > 10 GeV): no sign requirement
+        
+        // - [ETmiss-dependent trigger details in second paragraph of Sec 4 ignored for now]
+
+        // - Selection variables:
+
+        //   - nlept: number of signal leptons
+        //   - nb: number of signal b-jets
+        //   - nj: number of signal jets (with some pT requirement)
+        //   - ETmiss (aka met)
+        //   - meff: ETmiss + *scalar* sum of pTs for all jets and leptons (signal or baseline objects?)
+        //   - ETmiss / meff
+        //   - mee: ivariant mass of *same-sign* electron pairs
+
+        // - Five signal regions (units GeV):
+        //   - Rpv2L: nl >= 2; nb >= 0; nj >= 6 (pT > 40); meff > 2600 
+        //   - Rpc2L0b: nl >= 2; nb == 0; nj >= 6 (pT > 40); ETmiss > 200; meff > 2600; ETmiss/meff > 0.2 
+        //   - Rpc2L1b: nl >= 2; nb >= 1; nj >= 6 (pT > 40); ETmiss/meff > 0.25 
+        //   - Rpc2L2b: nl >= 2; nb >= 2; nj >= 6 (pT > 25); ETmiss > 300; meff > 1400; ETmiss/meff > 0.14 
+        //   - Rpc3LSS1b: nl >= 3; nb >= 1; mee in (81,101); ETmiss/meff > 0.14 
+
+
+
 
 
 
