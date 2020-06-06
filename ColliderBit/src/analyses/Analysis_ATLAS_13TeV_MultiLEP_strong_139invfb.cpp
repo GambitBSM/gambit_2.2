@@ -74,7 +74,7 @@ namespace Gambit {
         - nlept: number of signal leptons
         - nb: number of signal b-jets
         - nj: number of signal jets (with some pT requirement)
-        - ETmiss
+        - ETmiss (aka met)
         - meff: ETmiss + *scalar* sum of pTs for all jets and leptons (signal or baseline objects?)
         - ETmiss / meff
         - mee: ivariant mass of *same-sign* electron pairs
@@ -88,9 +88,6 @@ namespace Gambit {
 
     */
 
-    // _Anders: Got to this point...
-
-
 
     class Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb : public Analysis {
     public:
@@ -100,20 +97,14 @@ namespace Gambit {
 
       // Numbers passing cuts
       std::map<string, EventCounter> _counters = {
-        {"2j-1600", EventCounter("2j-1600")},
-        {"2j-2200", EventCounter("2j-2200")},
-        {"2j-2800", EventCounter("2j-2800")},
-        {"4j-1000", EventCounter("4j-1000")},
-        {"4j-2200", EventCounter("4j-2200")},
-        {"4j-3400", EventCounter("4j-3400")},
-        {"5j-1600", EventCounter("5j-1600")},
-        {"6j-1000", EventCounter("6j-1000")},
-        {"6j-2200", EventCounter("6j-2200")},
-        {"6j-3400", EventCounter("6j-3400")},
+        {"Rpv2L", EventCounter("Rpv2L")},
+        {"Rpc2L0b", EventCounter("Rpc2L0b")},
+        {"Rpc2L1b", EventCounter("Rpc2L1b")},
+        {"Rpc2L2b", EventCounter("Rpc2L2b")},
+        {"Rpc3LSS1b", EventCounter("Rpc3LSS1b")},
       };
 
       Cutflows _cutflows;
-
 
       // static const size_t NUMSR = 10;
       // double _srnums[NUMSR] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
@@ -127,62 +118,120 @@ namespace Gambit {
         set_analysis_name("ATLAS_13TeV_MultiLEP_strong_139invfb");
         set_luminosity(139.0);
 
-        // Book cut-flows
-        const vector<string> cutnames = {"Pre-sel + MET + pT1 + meff",
-                                         "Njet >= 2", "Cleaning",
-                                         "Njet > x + pT1",
-                                         "Dphi(j123,MET)min", "Dphi(j4+,MET)min",
-                                         "pTx", "|eta_x|",
-                                         "Aplanarity", "MET/sqrt(HT)", "m_eff(incl)",};
-        _cutflows.addCutflow("2j-1600", cutnames);
-        _cutflows.addCutflow("2j-2200", cutnames);
-        _cutflows.addCutflow("2j-2800", cutnames);
-        _cutflows.addCutflow("4j-1000", cutnames);
-        _cutflows.addCutflow("4j-2200", cutnames);
-        _cutflows.addCutflow("4j-3400", cutnames);
-        _cutflows.addCutflow("5j-1600", cutnames);
-        _cutflows.addCutflow("6j-1000", cutnames);
-        _cutflows.addCutflow("6j-2200", cutnames);
-        _cutflows.addCutflow("6j-3400", cutnames);
+        // // Book cut-flows
+        // const vector<string> cutnames = {"Pre-sel + MET + pT1 + meff",
+        //                                  "Njet >= 2", "Cleaning",
+        //                                  "Njet > x + pT1",
+        //                                  "Dphi(j123,MET)min", "Dphi(j4+,MET)min",
+        //                                  "pTx", "|eta_x|",
+        //                                  "Aplanarity", "MET/sqrt(HT)", "m_eff(incl)",};
+        // _cutflows.addCutflow("2j-1600", cutnames);
+        // _cutflows.addCutflow("2j-2200", cutnames);
+        // _cutflows.addCutflow("2j-2800", cutnames);
+        // _cutflows.addCutflow("4j-1000", cutnames);
+        // _cutflows.addCutflow("4j-2200", cutnames);
+        // _cutflows.addCutflow("4j-3400", cutnames);
+        // _cutflows.addCutflow("5j-1600", cutnames);
+        // _cutflows.addCutflow("6j-1000", cutnames);
+        // _cutflows.addCutflow("6j-2200", cutnames);
+        // _cutflows.addCutflow("6j-3400", cutnames);
 
       }
 
       void run(const Event* event) {
-        //cout << "PROCESSING EVENT!!!" << endl;
 
         // Missing energy
         /// @todo Compute from hard objects instead?
         const P4 pmiss = event->missingmom();
         const double met = event->met();
 
+        // Containers for baseline objects
+        vector<const Particle*> baselineElectrons;
+        vector<const Particle*> baselineMuons;
+        vector<const Jet*> baselineJets;
+
+
+        // Get baseline electrons and apply efficiency
+        for (const Particle* electron : event->electrons()) 
+        {
+          if (electron->pT() > 10. && electron->abseta() < 2.47)
+          {
+            if (electron->abseta() < 1.37 || electron->abseta() < 1.52)
+            {
+              baselineElectrons.push_back(electron);
+            }
+          }
+        }
+        ATLAS::applyElectronEff(baselineElectrons);
+        ATLAS::applyElectronIDEfficiency2019(baselineElectrons, "Loose");
+        /// @todo Use applyElectronIsolationEfficiency2019 or something similar?
+        /// @todo Use ATLAS::applyElectronIDEfficiency2019(baselineElectrons, "Medium") on *signal* electrons
+
+
+        // Get baseline muons and apply efficiency
+        for (const Particle* muon : event->muons()) 
+        {
+          if (muon->pT() > 10. && muon->abseta() < 2.5)
+          {
+            baselineMuons.push_back(muon);
+          }
+        }
+        ATLAS::applyMuonEff(baselineMuons);
+
 
         // Get baseline jets
-        /// @todo Drop b-tag if pT < 50 GeV or |eta| > 2.5?
-        vector<const Jet*> baselineJets;
+        /// @todo Drop b-tag if |eta| > 2.5?
         for (const Jet* jet : event->jets()) {
           if (jet->pT() > 20. && jet->abseta() < 2.8) {
             baselineJets.push_back(jet);
           }
         }
 
+        // Overlap removal
+        const bool use_rapidity = true;
 
-        /// @todo Apply a random 9% loss / 0.91 reweight for jet quality criteria?
+        // 1) Remove jets within DeltaR = 0.2 of electron
+        // If b-tagging efficiency > 85%, do not remove jet.
+        removeOverlap(baselineJets, baselineElectrons, 0.2, use_rapidity, DBL_MAX, 0.85);
+        // Corresponding line from ATLAS code snippet:
+        //   jets = overlapRemoval(jets, baselineElectrons, 0.2, NOT(BTag85MV2c10)); /// not entirely correct
 
-        // Get baseline electrons and apply efficiency
-        vector<const Particle*> baselineElectrons;
-        for (const Particle* electron : event->electrons()) {
-          if (electron->pT() > 7. && electron->abseta() < 2.47)
-            baselineElectrons.push_back(electron);
-        }
-        ATLAS::applyElectronEff(baselineElectrons);
+        // 2) Remove jets within DeltaR = 0.4 of muon
+        removeOverlap(baselineJets, baselineElectrons, 0.4, use_rapidity, DBL_MAX);
+        // Corresponding line from ATLAS code snippet:
+        //   jets = overlapRemoval(jets, baselineMuons, 0.4, LessThan3Tracks); 
 
-        // Get baseline muons and apply efficiency
-        vector<const Particle*> baselineMuons;
-        for (const Particle* muon : event->muons()) {
-          if (muon->pT() > 6. && muon->abseta() < 2.7)
-            baselineMuons.push_back(muon);
-        }
-        ATLAS::applyMuonEff(baselineMuons);
+        // 3) Remove electrons within DeltaR = min(0.4, 0.1 + 9.6 GeV / pT(e)) of a jet
+        // Use lambda function to calculate DeltaR limit as function of lepton pT
+        auto lambda = [](double pT_lepton) { return std::min(0.4, 0.1 + 9.6 / pT_lepton); };
+        removeOverlap(baselineElectrons, baselineJets, lambda, use_rapidity, DBL_MAX);
+        // Corresponding lines from ATLAS code snippet:
+        //   auto radiusCalcEl = [] (const AnalysisObject& electron, const AnalysisObject& ) { return 0.1 + 9.6/electron.Pt(); };
+        //   baselineElectrons = overlapRemoval(baselineElectrons, jets, radiusCalcEl); 
+
+        // 4) Remove muons within DeltaR = min(0.4, 0.1 + 9.6 GeV / pT(e)) of a jet
+        // Use lambda function to calculate DeltaR limit as function of lepton pT
+        auto lambda = [](double pT_lepton) { return std::min(0.4, 0.1 + 9.6 / pT_lepton); };
+        removeOverlap(baselineMuons, baselineJets, lambda, use_rapidity, DBL_MAX);
+        // Corresponding lines from ATLAS code snippet:
+        //   auto radiusCalcMuon = [] (const AnalysisObject& muon, const AnalysisObject& ) { return 0.1 + 9.6/muon.Pt(); };
+        //   baselineMuons = overlapRemoval(baselineMuons, jets, radiusCalcMuon); 
+
+        // 5) Remove electrons within DeltaR = 0.01 of muons
+        removeOverlap(baselineElectrons, baselineMuons, 0.01, use_rapidity, DBL_MAX);
+        // Corresponding lines from ATLAS code snippet:
+        //   baselineElectrons = overlapRemoval(baselineElectrons, baselineMuons,0.01);  
+
+
+        // Next: apply tighter ID criteria?
+        // From ATLAS code snippet:
+        //   auto signalElectrons = filterObjects(baselineElectrons, 10, 2.0, EMediumLH|EIsoFCTight);  /// missing ECIDS
+        //   auto signalMuons     = filterObjects(baselineMuons, 10, 2.5, MuD0Sigma3|MuIsoFCTightTrackOnly); 
+
+        // _Anders: Got to this point...
+
+
+
 
         // Remove any |eta| < 2.8 jet within dR = 0.2 of an electron
         vector<const Jet*> signalJets;
