@@ -192,6 +192,36 @@ namespace Gambit
       }
     }
 
+    /// Return a map<Jet*,bool> containing a generated b-tag for every jet in the input vector
+    inline std::map<const HEPUtils::Jet*,bool> generateBTagsMap(const std::vector<const HEPUtils::Jet*>& jets, 
+                                                                double bTagEff, double cMissTagEff, double otherMissTagEff,
+                                                                double pTmin = 0., double absEtaMax = DBL_MAX)
+    {
+      std::map<const HEPUtils::Jet*,bool> bTagsMap;
+      for (const HEPUtils::Jet* j : jets)
+      {
+        bool genBTag = false;
+        if((j->pT() > pTmin) && (j->abseta() < absEtaMax))
+        {
+          if(j->btag()) 
+          { 
+            if(random_bool(bTagEff)) { genBTag = true; }
+          }
+          else if(j->ctag()) 
+          { 
+            if(random_bool(cMissTagEff)) { genBTag = true; }
+          }
+          else
+          { 
+            if(random_bool(otherMissTagEff)) { genBTag = true; }
+          }
+        }
+        bTagsMap[j] = genBTag;
+      }
+      return bTagsMap;
+    }
+
+
     template <typename NUM1, typename NUM2>
     inline size_t binIndex(NUM1 val, const std::vector<NUM2>& binedges, bool allow_overflow=false) {
       if (val < binedges.front()) return -1; ///< Below/out of histo range
@@ -331,8 +361,64 @@ namespace Gambit
 
     // Sort a jets list by decreasing pT
     inline void sortByPt(JetPtrs& jets) { sortBy(jets, cmpJetsByPt); }
+    //@}
 
+
+    /// @name Counting
+    //@{
+
+    /// Count number of particles that have pT > pTlim
+    inline int countPt(const std::vector<const Particle*>& particles, double pTlim)
+    {
+        int sum = 0;
+        for (const Particle* p : particles)
+        {
+          if (p->pT() > pTlim) { sum++; }
+        }
+        return sum;
+    }
+
+    /// Count number of jets that have pT > pTlim
+    inline int countPt(const std::vector<const Jet*>& jets, double pTlim)
+    {
+        int sum = 0;
+        for (const Jet* j : jets)
+        {
+          if (j->pT() > pTlim) { sum++; }
+        }
+        return sum;
+    }
+    
+    //@}
+
+
+    /// @name Summing pT
+    //@{
+
+    /// Scalar sum pT of particles with pT > pTlim (default pTlim = 0)
+    inline double scalarSumPt(const std::vector<const Particle*>& particles, double pTlim=0.)
+    {
+        double sum = 0.;
+        for (const Particle* p : particles)
+        { 
+          if (p->pT() > pTlim) { sum += p->pT(); } 
+        }
+        return sum;
+    }
+
+    /// Scalar sum pT of jets
+    inline double scalarSumPt(const std::vector<const Jet*>& jets, double pTlim=0.)
+    {
+        double sum = 0.;
+        for (const Jet* j : jets)
+        { 
+          if (j->pT() > pTlim) { sum += j->pT(); } 
+        }
+        return sum;
+    }
+    
     //@}
 
   }
+
 }

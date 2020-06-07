@@ -71,25 +71,26 @@ namespace Gambit {
 
       - Selection variables:
 
-        - nlept: number of signal leptons
+        - nl: number of signal leptons
         - nb: number of signal b-jets
         - nj: number of signal jets (with some pT requirement)
         - ETmiss (aka met)
         - meff: ETmiss + *scalar* sum of pTs for all jets and leptons (signal or baseline objects?)
         - ETmiss / meff
-        - mee: ivariant mass of *same-sign* electron pairs
+        - mee_near_mZ: is there a same-sign(!) electron pair with an invariant mass near mZ, i.e. in (81,101) GeV?
 
       - Five signal regions (units GeV):
         - Rpv2L: nl >= 2; nb >= 0; nj >= 6 (pT > 40); meff > 2600 
-        - Rpc2L0b: nl >= 2; nb == 0; nj >= 6 (pT > 40); ETmiss > 200; meff > 2600; ETmiss/meff > 0.2 
+        - Rpc2L0b: nl >= 2; nb == 0; nj >= 6 (pT > 40); ETmiss > 200; meff > 1000; ETmiss/meff > 0.2 
         - Rpc2L1b: nl >= 2; nb >= 1; nj >= 6 (pT > 40); ETmiss/meff > 0.25 
         - Rpc2L2b: nl >= 2; nb >= 2; nj >= 6 (pT > 25); ETmiss > 300; meff > 1400; ETmiss/meff > 0.14 
-        - Rpc3LSS1b: nl >= 3; nb >= 1; mee in (81,101); ETmiss/meff > 0.14 
+        - Rpc3LSS1b: nl >= 3 (same sign); nb >= 1; not mee_near_mZmee; ETmiss/meff > 0.14 
 
     */
 
 
-    class Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb : public Analysis {
+    class Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb : public Analysis 
+    {
     public:
 
       // Required detector sim
@@ -104,42 +105,18 @@ namespace Gambit {
         {"Rpc3LSS1b", EventCounter("Rpc3LSS1b")},
       };
 
-      Cutflows _cutflows;
-
-      // static const size_t NUMSR = 10;
-      // double _srnums[NUMSR] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
-      // enum SRNames { SR2J_1600=0, "2j_2200", "2j_2800",
-      //                "4j_1000", "4j_2200", "4j_3400", "5j_1600",
-      //                "6j_1000", "6j_2200", "6j_3400" };
+      // Cutflows _cutflows;
 
 
-      Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb() {
-
+      Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb() 
+      {
         set_analysis_name("ATLAS_13TeV_MultiLEP_strong_139invfb");
         set_luminosity(139.0);
-
-        // // Book cut-flows
-        // const vector<string> cutnames = {"Pre-sel + MET + pT1 + meff",
-        //                                  "Njet >= 2", "Cleaning",
-        //                                  "Njet > x + pT1",
-        //                                  "Dphi(j123,MET)min", "Dphi(j4+,MET)min",
-        //                                  "pTx", "|eta_x|",
-        //                                  "Aplanarity", "MET/sqrt(HT)", "m_eff(incl)",};
-        // _cutflows.addCutflow("2j-1600", cutnames);
-        // _cutflows.addCutflow("2j-2200", cutnames);
-        // _cutflows.addCutflow("2j-2800", cutnames);
-        // _cutflows.addCutflow("4j-1000", cutnames);
-        // _cutflows.addCutflow("4j-2200", cutnames);
-        // _cutflows.addCutflow("4j-3400", cutnames);
-        // _cutflows.addCutflow("5j-1600", cutnames);
-        // _cutflows.addCutflow("6j-1000", cutnames);
-        // _cutflows.addCutflow("6j-2200", cutnames);
-        // _cutflows.addCutflow("6j-3400", cutnames);
-
       }
 
-      void run(const Event* event) {
 
+      void run(const Event* event) 
+      {
         // Missing energy
         /// @todo Compute from hard objects instead?
         const P4 pmiss = event->missingmom();
@@ -149,7 +126,6 @@ namespace Gambit {
         vector<const Particle*> baselineElectrons;
         vector<const Particle*> baselineMuons;
         vector<const Jet*> baselineJets;
-
 
         // Get baseline electrons and apply efficiency
         for (const Particle* electron : event->electrons()) 
@@ -165,8 +141,6 @@ namespace Gambit {
         ATLAS::applyElectronEff(baselineElectrons);
         ATLAS::applyElectronIDEfficiency2019(baselineElectrons, "Loose");
         /// @todo Use applyElectronIsolationEfficiency2019 or something similar?
-        /// @todo Use ATLAS::applyElectronIDEfficiency2019(baselineElectrons, "Medium") on *signal* electrons
-
 
         // Get baseline muons and apply efficiency
         for (const Particle* muon : event->muons()) 
@@ -181,13 +155,28 @@ namespace Gambit {
 
         // Get baseline jets
         /// @todo Drop b-tag if |eta| > 2.5?
-        for (const Jet* jet : event->jets()) {
-          if (jet->pT() > 20. && jet->abseta() < 2.8) {
+        for (const Jet* jet : event->jets()) 
+        {
+          if (jet->pT() > 20. && jet->abseta() < 2.8) 
+          {
             baselineJets.push_back(jet);
           }
         }
 
+        // Get map<Jet*,bool> with generated btags for this analysis.
+        // B-tag efficiencies:
+        // - for correctly tagging a b-jet: 70%
+        // - for misstagging a c-jet: 9%
+        // - for misstagging a gluon or light-quark jet: 0.3%
+        // Other inputs for tagging: 
+        // - pTmin = 0 GeV (baselineJets anyways only includes jets with pT > 20 GeV)
+        // - absEtaMax = 2.5
+        std::map<const Jet*,bool> analysisBtags = generateBTagsMap(baselineJets, 0.7, 0.09, 0.003, 0., 2.5);
+
+
+        // 
         // Overlap removal
+        // 
         const bool use_rapidity = true;
 
         // 1) Remove jets within DeltaR = 0.2 of electron
@@ -201,18 +190,17 @@ namespace Gambit {
         // Corresponding line from ATLAS code snippet:
         //   jets = overlapRemoval(jets, baselineMuons, 0.4, LessThan3Tracks); 
 
+        // Construct a lambda function to calculate the DeltaR limit as function of lepton pT
+        auto deltaRLimitFunc = [](double pT_lepton) { return std::min(0.4, 0.1 + 9.6 / pT_lepton); };
+
         // 3) Remove electrons within DeltaR = min(0.4, 0.1 + 9.6 GeV / pT(e)) of a jet
-        // Use lambda function to calculate DeltaR limit as function of lepton pT
-        auto lambda = [](double pT_lepton) { return std::min(0.4, 0.1 + 9.6 / pT_lepton); };
-        removeOverlap(baselineElectrons, baselineJets, lambda, use_rapidity, DBL_MAX);
+        removeOverlap(baselineElectrons, baselineJets, deltaRLimitFunc, use_rapidity, DBL_MAX);
         // Corresponding lines from ATLAS code snippet:
         //   auto radiusCalcEl = [] (const AnalysisObject& electron, const AnalysisObject& ) { return 0.1 + 9.6/electron.Pt(); };
         //   baselineElectrons = overlapRemoval(baselineElectrons, jets, radiusCalcEl); 
 
         // 4) Remove muons within DeltaR = min(0.4, 0.1 + 9.6 GeV / pT(e)) of a jet
-        // Use lambda function to calculate DeltaR limit as function of lepton pT
-        auto lambda = [](double pT_lepton) { return std::min(0.4, 0.1 + 9.6 / pT_lepton); };
-        removeOverlap(baselineMuons, baselineJets, lambda, use_rapidity, DBL_MAX);
+        removeOverlap(baselineMuons, baselineJets, deltaRLimitFunc, use_rapidity, DBL_MAX);
         // Corresponding lines from ATLAS code snippet:
         //   auto radiusCalcMuon = [] (const AnalysisObject& muon, const AnalysisObject& ) { return 0.1 + 9.6/muon.Pt(); };
         //   baselineMuons = overlapRemoval(baselineMuons, jets, radiusCalcMuon); 
@@ -254,6 +242,11 @@ namespace Gambit {
         const size_t nElectrons = signalElectrons.size();
         const size_t nMuons = signalMuons.size();
 
+
+        // 
+        // Preselection
+        // 
+
         // Require at least two leptons
         if (nLeptons < 2) return;
 
@@ -266,234 +259,72 @@ namespace Gambit {
         // If only two leptons, they must be same sign.
         if (nLeptons == 2 && (lep0->pid() * lep1->pid() < 0.)) return;
 
-        // Next: implement 'countPt' function in utils (with optional is_sorted bool argument) 
 
+        //
+        // Construct selection variables for the different SRs
+        //
 
+        int nJets25 = countPt(signalJets, 25.);
+        int nJets40 = countPt(signalJets, 40.);
 
-        // _Anders: Got to this point...
+        double meff = scalarSumPt(signalLeptons) + scalarSumPt(signalJets) + met;
+        double met_meff_ratio = met / meff; 
 
-
-
-        // *** From Sec 4: Event selection ***
-        
-        // - At least two signal leptons with pT > 20 GeV
-
-        // - If only two leptons: must have same sign
-        // - Else if more than two leptons (pT > 10 GeV): no sign requirement
-        
-        // - [ETmiss-dependent trigger details in second paragraph of Sec 4 ignored for now]
-
-        // - Selection variables:
-
-        //   - nlept: number of signal leptons
-        //   - nb: number of signal b-jets
-        //   - nj: number of signal jets (with some pT requirement)
-        //   - ETmiss (aka met)
-        //   - meff: ETmiss + *scalar* sum of pTs for all jets and leptons (signal or baseline objects?)
-        //   - ETmiss / meff
-        //   - mee: ivariant mass of *same-sign* electron pairs
-
-        // - Five signal regions (units GeV):
-        //   - Rpv2L: nl >= 2; nb >= 0; nj >= 6 (pT > 40); meff > 2600 
-        //   - Rpc2L0b: nl >= 2; nb == 0; nj >= 6 (pT > 40); ETmiss > 200; meff > 2600; ETmiss/meff > 0.2 
-        //   - Rpc2L1b: nl >= 2; nb >= 1; nj >= 6 (pT > 40); ETmiss/meff > 0.25 
-        //   - Rpc2L2b: nl >= 2; nb >= 2; nj >= 6 (pT > 25); ETmiss > 300; meff > 1400; ETmiss/meff > 0.14 
-        //   - Rpc3LSS1b: nl >= 3; nb >= 1; mee in (81,101); ETmiss/meff > 0.14 
-
-
-
-
-
-
-
-        // Remove any |eta| < 2.8 jet within dR = 0.2 of an electron
-        vector<const Jet*> signalJets;
-        for (const Jet* j : baselineJets)
-          if (all_of(baselineElectrons, [&](const Particle* e){ return deltaR_rap(*e, *j) > 0.2; }))
-            signalJets.push_back(j);
-
-        // Remove electrons with dR = shrinking cone of surviving |eta| < 2.8 jets
-        vector<const Particle*> signalElectrons;
-        for (const Particle* e : baselineElectrons)
-          if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*e, *j) > min(0.4, 0.04+10/e->pT()); }))
-            signalElectrons.push_back(e);
-        // Apply electron ID selection
-        ATLAS::applyLooseIDElectronSelectionR2(signalElectrons);
-        /// @todo And tight ID for high purity... used where?
-
-        // Remove muons with dR = 0.4 of surviving |eta| < 2.8 jets
-        /// @note Within 0.2, discard the *jet* based on jet track vs. muon criteria... can't be done yet
-        vector<const Particle*> signalMuons;
-        for (const Particle* m : baselineMuons)
-          if (all_of(signalJets, [&](const Jet* j){ return deltaR_rap(*m, *j) > min(0.4, 0.04+10/m->pT()); }))
-            signalMuons.push_back(m);
-        /// @todo And tight ID for high purity... used where?
-
-        // The subset of jets with pT > 50 GeV is used for several calculations
-        vector<const Jet*> signalJets50;
+        // Count number of b-tagged jets in signalJets
+        int nBJets20 = 0;
         for (const Jet* j : signalJets)
-          if (j->pT() > 50) signalJets50.push_back(j);
-
-
-        ////////////////////////////////
-        // Calculate common variables and cuts
-
-        // Multiplicities
-        const size_t nElectrons = signalElectrons.size();
-        const size_t nMuons = signalMuons.size();
-        const size_t nJets50 = signalJets50.size();
-        // const size_t nJets = signalJets.size();
-
-        // HT-related quantities (calculated over all >50 GeV jets)
-        double sumptj = 0;
-        for (const Jet* j : signalJets50) sumptj += j->pT();
-        const double HT = sumptj;
-        const double sqrtHT = sqrt(HT);
-        const double met_sqrtHT = met/sqrtHT;
-
-        // Meff-related quantities (calculated over >50 GeV jets only)
-        double sumptj50_incl = 0; // sumptj50_4 = 0, sumptj50_5 = 0, sumptj50_6 = 0;
-        for (size_t i = 0; i < signalJets50.size(); ++i) {
-          const Jet* j = signalJets50[i];
-          // if (i < 4) sumptj50_4 += j->pT();
-          // if (i < 5) sumptj50_5 += j->pT();
-          // if (i < 6) sumptj50_6 += j->pT();
-          sumptj50_incl += j->pT();
-        }
-        // const double meff_4 = met + sumptj50_4;
-        // const double meff_5 = met + sumptj50_5;
-        // const double meff_6 = met + sumptj50_6;
-        // const double meff_incl = met + sumptj50_incl;
-        const double meff = met + sumptj50_incl;
-        // const double met_meff_4 = met / meff_4;
-        // const double met_meff_5 = met / meff_5;
-        // const double met_meff_6 = met / meff_6;
-
-        // Jet |eta|s
-        double etamax_2 = 0, etamax_4 = 0, etamax_5 = 0, etamax_6 = 0;
-        for (size_t i = 0; i < signalJets50.size(); ++i) {
-          const Jet* j = signalJets50[i];
-          if (i < 2) etamax_2 = max(etamax_2, j->abseta());
-          if (i < 4) etamax_4 = max(etamax_4, j->abseta());
-          if (i < 5) etamax_5 = max(etamax_5, j->abseta());
-          if (i < 6) etamax_6 = max(etamax_6, j->abseta());
+        {
+          if (analysisBtags.at(j)) { nBJets20++; }
         }
 
-        // Jet--MET dphis
-        double dphimin_123 = DBL_MAX, dphimin_more = DBL_MAX;
-        for (size_t i = 0; i < min(3lu,signalJets50.size()); ++i)
-          dphimin_123 = min(dphimin_123, acos(cos(signalJets50[i]->phi() - pmiss.phi())));
-        for (size_t i = 3; i < signalJets50.size(); ++i)
-          dphimin_more = min(dphimin_more, acos(cos(signalJets50[i]->phi() - pmiss.phi())));
+        // If three or more leptons, the Rpc3LSS1b SR requires 3 same-sign leptons
+        bool is3LSS = false;
+        int nPosLep = 0;
+        int nNegLep = 0;
+        for (const Particle* p : signalLeptons)
+        {
+          int pid = p->pid();
+          if (pid == 11 || pid == 13) { nNegLep++; }  // electrons or muons
+          else if (pid == -11 || pid == -13) { nPosLep++; }  // antielectron or antimuon
+        }
+        if (nPosLep >= 3 || nNegLep >= 3) { is3LSS = true; }
 
-        // Jet aplanarity (on 50 GeV jets only, cf. paper)
-        Eigen::Matrix3d momtensor = Eigen::Matrix3d::Zero();
-        double norm = 0;
-        for (const Jet* jet : signalJets50) {
-          const P4& p4 = jet->mom();
-          norm += p4.p2();
-          for (size_t i = 0; i < 3; ++i) {
-            const double pi = (i == 0) ? p4.px() : (i == 1) ? p4.py() : p4.pz();
-            for (size_t j = 0; j < 3; ++j) {
-              const double pj = (j == 0) ? p4.px() : (j == 1) ? p4.py() : p4.pz();
-              momtensor(i,j) += pi*pj;
+        // The Rpc3LSS1b SR vetos events with an same-sign electron pair 
+        // with invariant mass close to the Z mass 
+        bool mee_near_mZ = false;
+        if (nElectrons >= 2)
+        {
+          vector<vector<const HEPUtils::Particle*>> elSSpairs = getSSpairs(signalElectrons);
+          for(vector<const HEPUtils::Particle*>& pair : elSSpairs)
+          {
+            double mee = (pair.at(0)->mom() + pair.at(1)->mom()).m();
+            if (mee > 81. && mee < 101.) 
+            { 
+              mee_near_mZ = true;
+              break;
             }
           }
         }
-        momtensor /= norm;
-        const double mineigenvalue = momtensor.eigenvalues().real().minCoeff();
-        const double aplanarity = 1.5 * mineigenvalue;
 
 
-        ////////////////////////////////
-        // Fill signal regions and cutflows
+        // 
+        // Fill SR counters
+        // 
 
-        const double w = event->weight();
-        _cutflows.fillinit(w);
+        // Rpv2L:
+        if (nLeptons >= 2 && nBJets20 >= 0 && nJets40 >= 6 && meff > 2600.) _counters.at("Rpv2L").add_event(event);
 
-        // Preselection
-        if (nElectrons + nMuons != 0) return;
-        if (nJets50 < 1 || signalJets50[0]->pT() < 200) return;
-        if (met < 300) return;
-        if (meff < 800) return;
-        if (dphimin_123 < 0.4) return;
-        _cutflows.fillnext(w);
+        // Rpc2L0b
+        if (nLeptons >= 2 && nBJets20 >= 0 && nJets40 >= 6 && met > 200. && meff > 1000. && met_meff_ratio > 0.2) _counters.at("Rpc2L0b").add_event(event);
 
-        // Njet >= 2
-        if (nJets50 < 2) return;
-        _cutflows.fillnext(w);
+        // Rpc2L1b
+        if (nLeptons >= 2 && nBJets20 >= 1 && nJets40 >= 6 && met_meff_ratio > 0.25) _counters.at("Rpc2L1b").add_event(event);
 
-        // Cleaning emulation
-        /// @todo Use weighting instead
-        if (random_bool(0.02)) return;
-        _cutflows.fillnext(w);
+        // Rpc2L2b
+        if (nLeptons >= 2 && nBJets20 >= 2 && nJets25 >= 6 && met > 300. && meff > 1400. && met_meff_ratio > 0.14) _counters.at("Rpc2L2b").add_event(event);
 
-        // 2 jet regions
-        if (nJets50 >= 2) {
-          if (_cutflows["2j-1600"].filltail({
-                signalJets[0]->pT() > 250,
-                dphimin_123 > 0.8, dphimin_more > 0.4,
-                signalJets[1]->pT() > 250, etamax_2 < 2.0,
-                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("2j-1600").add_event(event);
-
-          if (_cutflows["2j-2200"].fillnext({
-                signalJets[0]->pT() > 600,
-                dphimin_123 > 0.4, dphimin_more > 0.2,
-                signalJets[1]->pT() >  50, etamax_2 < 2.8,
-                true, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("2j-2200").add_event(event);
-          if (_cutflows["2j-2800"].fillnext({
-                signalJets[0]->pT() > 250,
-                dphimin_123 > 0.8, dphimin_more > 0.4,
-                signalJets[1]->pT() > 250, etamax_2 < 1.2,
-                true, met_sqrtHT > 16, meff > 2800}, w)) _counters.at("2j-2800").add_event(event);
-        }
-
-        // 4 jet regions
-        if (nJets50 >= 4) {
-          if (_cutflows["4j-1000"].fillnext({
-                signalJets.at(0)->pT() > 200,
-                dphimin_123 > 0.4, dphimin_more > 0.4,
-                signalJets.at(3)->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("4j-1000").add_event(event);
-          if (_cutflows["4j-2200"].fillnext({
-                signalJets[0]->pT() > 200,
-                dphimin_123 > 0.4, dphimin_more > 0.4,
-                signalJets[3]->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("4j-2200").add_event(event);
-          if (_cutflows["4j-3400"].fillnext({
-                signalJets[0]->pT() > 200,
-                dphimin_123 > 0.4, dphimin_more > 0.4,
-                signalJets[3]->pT() > 100, etamax_4 < 2.0,
-                aplanarity > 0.04, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("4j-3400").add_event(event);
-        }
-
-        // 5 jet region
-        if (nJets50 >= 5) {
-          if (_cutflows["5j-1600"].fillnext({
-                signalJets[0]->pT() > 600,
-                dphimin_123 > 0.4, dphimin_more > 0.2,
-                signalJets[4]->pT() > 50, etamax_5 < 2.8,
-                true, met_sqrtHT > 16, meff > 1600}, w)) _counters.at("5j-1600").add_event(event);
-        }
-
-        // 6 jet regions
-        if (nJets50 >= 6) {
-          if (_cutflows["6j-1000"].fillnext({
-                signalJets[0]->pT() > 200,
-                dphimin_123 > 0.4, dphimin_more > 0.2,
-                signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 16, meff > 1000}, w)) _counters.at("6j-1000").add_event(event);
-          if (_cutflows["6j-2200"].fillnext({
-                signalJets[0]->pT() > 200,
-                dphimin_123 > 0.4, dphimin_more > 0.2,
-                signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 16, meff > 2200}, w)) _counters.at("6j-2200").add_event(event);
-          if (_cutflows["6j-3400"].fillnext({
-                signalJets[0]->pT() > 200,
-                dphimin_123 > 0.4, dphimin_more > 0.2,
-                signalJets[5]->pT() > 75, etamax_6 < 2.0,
-                aplanarity > 0.08, met_sqrtHT > 10, meff > 3400}, w)) _counters.at("6j-3400").add_event(event);
-        }
+        // Rpc3LSS1b
+        if (nLeptons >= 3 && is3LSS && nBJets20 >= 1 && !mee_near_mZ && met_meff_ratio > 0.14) _counters.at("Rpc3LSS1b").add_event(event);
 
       }
 
@@ -506,51 +337,30 @@ namespace Gambit {
       }
 
 
-      /// Register results objects with the results for each SR; obs & bkg numbers from the CONF note
-      void collect_results() {
-        add_result(SignalRegionData(_counters.at("2j-1600"), 2111, {2190., 130.}));
-        add_result(SignalRegionData(_counters.at("2j-2200"),  971, { 980.,  50.}));
-        add_result(SignalRegionData(_counters.at("2j-2800"),   78, {  87.,   8.}));
-        add_result(SignalRegionData(_counters.at("4j-1000"),  535, { 536.,  31.}));
-        add_result(SignalRegionData(_counters.at("4j-2200"),   60, {  60.,   5.}));
-        add_result(SignalRegionData(_counters.at("4j-3400"),    4, {  5.7,  1.0}));
-        add_result(SignalRegionData(_counters.at("5j-1600"),  320, { 319.,  19.}));
-        add_result(SignalRegionData(_counters.at("6j-1000"),   25, {  21.,  2.9}));
-        add_result(SignalRegionData(_counters.at("6j-2200"),    5, {  4.6,  1.0}));
-        add_result(SignalRegionData(_counters.at("6j-3400"),    0, {  0.8,  0.4}));
+      /// Register results objects with the results for each SR; obs & bkg numbers from the paper
+      void collect_results() 
+      {
+        // Using average, symmetrized background errors 
+        add_result(SignalRegionData(_counters.at("Rpv2L"),      5., {5.6, 1.8}));
+        add_result(SignalRegionData(_counters.at("Rpc2L0b"),    6., {4.8, 1.45}));
+        add_result(SignalRegionData(_counters.at("Rpc2L1b"),   11., {6.5, 1.55}));
+        add_result(SignalRegionData(_counters.at("Rpc2L2b"),   12., {7.8, 2.2}));
+        add_result(SignalRegionData(_counters.at("Rpc3LSS1b"),  4., {3.5, 1.45}));
 
-        // Cutflow printout
-        // const double sf = 139*crossSection()/femtobarn/sumOfWeights();
-        _cutflows["2j-1600"].normalize(1763, 1);
-        _cutflows["2j-2200"].normalize(1763, 1);
-        _cutflows["2j-2800"].normalize(1763, 1);
-        _cutflows["4j-1000"].normalize(2562, 1);
-        _cutflows["4j-2200"].normalize(2562, 1);
-        _cutflows["4j-3400"].normalize(2562, 1);
-        _cutflows["5j-1600"].normalize(6101, 1);
-        _cutflows["6j-1000"].normalize(6101, 1);
-        _cutflows["6j-2200"].normalize(6101, 1);
-        _cutflows["6j-3400"].normalize(6101, 1);
-        cout << "\nCUTFLOWS:\n" << _cutflows << endl;
-        cout << "\nSRCOUNTS:\n";
-        // for (double x : _srnums) cout << x << "  ";
-        for (auto& pair : _counters) cout << pair.second.weight_sum() << "  ";
-        cout << "\n" << endl;
       }
 
 
     protected:
 
-      void analysis_specific_reset() {
+      void analysis_specific_reset() 
+      {
         for (auto& pair : _counters) { pair.second.reset(); }
       }
 
     };
 
-
     // Factory fn
     DEFINE_ANALYSIS_FACTORY(ATLAS_13TeV_MultiLEP_strong_139invfb)
-
 
   }
 }
