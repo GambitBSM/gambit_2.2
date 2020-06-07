@@ -28,6 +28,10 @@
 ///           (tsp116@ic.ac.uk)
 ///  \date 2019 October
 ///
+///  \author Yang Zhang
+///           (tsp116@ic.ac.uk)
+///  \date 2020 June
+///
 ///  *********************************************
 
 #include "gambit/cmake/cmake_variables.hpp"
@@ -90,8 +94,20 @@ namespace Gambit
             }
             else if (short_line == "HepMC::Version 3")
             {
-              HepMC_file_version = 3;
-              break;
+              // Check the text format
+              std::getline(infile, line);
+              std::string text_format = line.substr(0,14);
+              if (text_format == "HepMC::Asciiv3")
+              {
+                HepMC_file_version = 3;
+                break;
+              }else if (text_format == "HepMC::IO_GenE"){
+                HepMC_file_version = 2;
+                break;
+              } else
+              {
+                throw std::runtime_error("Could not determine HepMC version from the string '"+text_format+"' extracted from the line '"+line+"'. Quitting...");
+              }
             }
             else
             {
