@@ -176,13 +176,21 @@ namespace Gambit {
           }
         }
 
-        // Alternative met construction
-        P4 pmiss_sum;
-        for (const Particle* p : baselineElectrons) { pmiss_sum -= p->mom(); }
-        for (const Particle* p : baselineMuons) { pmiss_sum -= p->mom(); }
-        for (const Particle* p : event->photons()) { pmiss_sum -= p->mom(); }
-        for (const Jet* j : baselineJets) { pmiss_sum -= j->mom(); }
-        const double met = pmiss_sum.pT();
+        // Alternative met construction 1
+        // P4 pmiss_sum;
+        // for (const Particle* p : baselineElectrons) { pmiss_sum -= p->mom(); }
+        // for (const Particle* p : baselineMuons) { pmiss_sum -= p->mom(); }
+        // for (const Particle* p : event->photons()) { pmiss_sum -= p->mom(); }
+        // for (const Jet* j : baselineJets) { pmiss_sum -= j->mom(); }
+        // const double met = pmiss_sum.pT();
+
+        // Alternative met construction 2
+        double ht = 0;
+        for (const Particle* p : event->visible_particles()) ht += p->pT();
+        P4 pmiss = event->missingmom();
+        ATLAS::smearMET(pmiss, ht);
+        const double met = pmiss.pT();
+
 
         // DEBUG: Get number of true baseline b-jets
         int nBaseBjetsTrue = 0;
