@@ -307,6 +307,24 @@ namespace Gambit
       }, false);
     }
 
+    /// Overlap removal for checking against b-jets -- discard from first list if within deltaRMax of a b-jet in the second list
+    /// Optional arguments:
+    ///  - use_rapidity = use rapidity instead of psedurapidity to compute deltaR. Defaults to False
+    ///  - pTmax = only discard from first list with pT < pTmax. Defaults to DBL_MAX
+    template<typename MOMPTRS1>
+    void removeOverlapIfBjet(MOMPTRS1& momstofilter, std::vector<const HEPUtils::Jet*>& jets, double deltaRMax, bool use_rapidity=false, double pTmax = DBL_MAX)
+    {
+      ifilter_reject(momstofilter, [&](const typename MOMPTRS1::value_type& mom1)
+      {
+        for (const HEPUtils::Jet* jet : jets) {
+          const double dR = (use_rapidity) ? deltaR_rap(mom1->mom(), jet->mom()) : deltaR_eta(mom1->mom(), jet->mom());
+          if (dR < deltaRMax && mom1->pT() < pTmax && jet->btag() ) return true;
+        }
+        return false;
+      }, false);
+    }
+
+
     /// Non-iterator version of std::all_of
     template <typename CONTAINER, typename FN>
     inline bool all_of(const CONTAINER& c, const FN& f) {

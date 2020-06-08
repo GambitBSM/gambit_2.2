@@ -4,7 +4,7 @@
 ///  \date 2020 June
 ///  *********************************************
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
-// #include "gambit/ColliderBit/analyses/Cutflow.hpp"
+#include "gambit/ColliderBit/analyses/Cutflow.hpp"
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 // #include "Eigen/Eigen"
 
@@ -105,22 +105,35 @@ namespace Gambit {
         {"Rpc3LSS1b", EventCounter("Rpc3LSS1b")},
       };
 
-      // Cutflows _cutflows;
+      Cutflows _cutflows;
 
 
       Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb() 
       {
         set_analysis_name("ATLAS_13TeV_MultiLEP_strong_139invfb");
         set_luminosity(139.0);
+
+        // Book cutflows
+        _cutflows.addCutflow("Rpc2L1b", {"no cut",
+                                         "trigger",
+                                         ">= 2 SS leptons (pT > 20)",
+                                         ">= 1 b-jet",
+                                         ">= 6 jets (pT > 40)",
+                                         "met/meff >= 0.25"});
       }
 
 
       void run(const Event* event) 
       {
+        const double w = event->weight();
+        _cutflows.fillinit(w);
+        _cutflows.fillnext(w);  // no cut
+
         // Missing energy
         /// @todo Compute from hard objects instead?
-        const P4 pmiss = event->missingmom();
-        const double met = event->met();
+        // const P4 pmiss = event->missingmom();
+        // const double met = event->met();
+
 
         // Containers for baseline objects
         vector<const Particle*> baselineElectrons;
@@ -132,7 +145,7 @@ namespace Gambit {
         {
           if (electron->pT() > 10. && electron->abseta() < 2.47)
           {
-            if (electron->abseta() < 1.37 || electron->abseta() < 1.52)
+            if (electron->abseta() < 1.37 || electron->abseta() > 1.52)
             {
               baselineElectrons.push_back(electron);
             }
@@ -163,6 +176,22 @@ namespace Gambit {
           }
         }
 
+        // Alternative met construction
+        P4 pmiss_sum;
+        for (const Particle* p : baselineElectrons) { pmiss_sum -= p->mom(); }
+        for (const Particle* p : baselineMuons) { pmiss_sum -= p->mom(); }
+        for (const Particle* p : event->photons()) { pmiss_sum -= p->mom(); }
+        for (const Jet* j : baselineJets) { pmiss_sum -= j->mom(); }
+        const double met = pmiss_sum.pT();
+
+        // DEBUG: Get number of true baseline b-jets
+        int nBaseBjetsTrue = 0;
+        for (const Jet* j : baselineJets)
+        {
+          if (j->btag()) { nBaseBjetsTrue++; }
+        }
+
+
         // Get map<Jet*,bool> with generated btags for this analysis.
         // B-tag efficiencies:
         // - for correctly tagging a b-jet: 70%
@@ -182,11 +211,16 @@ namespace Gambit {
         // 1) Remove jets within DeltaR = 0.2 of electron
         // If b-tagging efficiency > 85%, do not remove jet.
         removeOverlap(baselineJets, baselineElectrons, 0.2, use_rapidity, DBL_MAX, 0.85);
+        // removeOverlap(baselineJets, baselineElectrons, 0.2, use_rapidity, DBL_MAX);
+        // This is a guess, based on 1706.03731
+        removeOverlapIfBjet(baselineElectrons, baselineJets, 0.2, use_rapidity, DBL_MAX);
         // Corresponding line from ATLAS code snippet:
         //   jets = overlapRemoval(jets, baselineElectrons, 0.2, NOT(BTag85MV2c10)); /// not entirely correct
 
         // 2) Remove jets within DeltaR = 0.4 of muon
-        removeOverlap(baselineJets, baselineElectrons, 0.4, use_rapidity, DBL_MAX);
+        removeOverlap(baselineJets, baselineMuons, 0.4, use_rapidity, DBL_MAX);
+        // This is a guess, based on 1706.03731
+        removeOverlapIfBjet(baselineMuons, baselineJets, 0.4, use_rapidity, DBL_MAX);
         // Corresponding line from ATLAS code snippet:
         //   jets = overlapRemoval(jets, baselineMuons, 0.4, LessThan3Tracks); 
 
@@ -217,12 +251,17 @@ namespace Gambit {
 
         // Signal object containers
         vector<const HEPUtils::Jet*> signalJets = baselineJets;
-        // vector<const HEPUtils::Jet*> signalBJets = baselineBJets;
-        vector<const HEPUtils::Particle*> signalElectrons = baselineElectrons;
+        vector<const HEPUtils::Particle*> signalElectrons;
         vector<const HEPUtils::Particle*> signalMuons = baselineMuons;
         vector<const HEPUtils::Particle*> signalLeptons;
 
-        // Signal electrons must satisfy the “medium” identification requirement
+        // Require signalElectrons within |eta| < 2.0 and apply "Medium" ID efficiency
+        // Corresponding lines from ATLAS code snippet:
+        //   auto signalElectrons = filterObjects(baselineElectrons, 10, 2.0, EMediumLH|EIsoFCTight);  /// missing ECIDS
+        for (const Particle* p : baselineElectrons)
+        {
+          if (p->abseta() < 2.0) { signalElectrons.push_back(p); }
+        }
         ATLAS::applyElectronIDEfficiency2019(signalElectrons, "Medium");
 
         // Collect all signal leptons
@@ -237,27 +276,40 @@ namespace Gambit {
         sortByPt(signalJets);
 
         // Count signal objects
-        const size_t nBaseLeptons = baselineLeptons.size();
+        // const size_t nBaseLeptons = baselineLeptons.size();
         const size_t nLeptons = signalLeptons.size();
         const size_t nElectrons = signalElectrons.size();
-        const size_t nMuons = signalMuons.size();
+        // const size_t nMuons = signalMuons.size();
 
 
         // 
         // Preselection
         // 
-
         // Require at least two leptons
         if (nLeptons < 2) return;
 
         const Particle* lep0 = signalLeptons[0];
         const Particle* lep1 = signalLeptons[1];
 
+        // Emulate lepton-based triggers
+        if (met < 250.)
+        {
+          if (lep0->abspid() == 11 && lep1->abspid() == 11 && lep0->pT() < 24.) { return; }  // 2e trigger
+          if (lep0->abspid() == 13 && lep1->abspid() == 13 && lep0->pT() < 21.) { return; }  // 2mu trigger
+          if (lep0->abspid() == 11 && lep1->abspid() == 13 && lep0->pT() < 17 ) { return; }  // 1e1mu trigger, leading e
+          if (lep0->abspid() == 13 && lep1->abspid() == 11 && lep0->pT() < 14 ) { return; }  // 1e1mu trigger, leading mu 
+        }
+
         // Require pT > 20 GeV for the first two leptons
         if (lep1->pT() < 20) return;
 
+        _cutflows["Rpc2L1b"].fillnext(w);  // "trigger"
+
+
         // If only two leptons, they must be same sign.
         if (nLeptons == 2 && (lep0->pid() * lep1->pid() < 0.)) return;
+
+        _cutflows["Rpc2L1b"].fillnext(w);  // >= 2 SS leptons (pT > 20)
 
 
         //
@@ -270,10 +322,13 @@ namespace Gambit {
         double meff = scalarSumPt(signalLeptons) + scalarSumPt(signalJets) + met;
         double met_meff_ratio = met / meff; 
 
+
         // Count number of b-tagged jets in signalJets
         int nBJets20 = 0;
+        int nBJets20true = 0;
         for (const Jet* j : signalJets)
         {
+          if (j->btag()) { nBJets20true++; }
           if (analysisBtags.at(j)) { nBJets20++; }
         }
 
@@ -311,6 +366,9 @@ namespace Gambit {
         // Fill SR counters
         // 
 
+        cerr << "DEBUG: lep0:" << lep0->pid() << ",  pT(l)=" << lep0->pT() << ",  nbjets="  << nBJets20 << ",  nbjets(true)="  << nBJets20true << ",  nbjets(true,base)=" << nBaseBjetsTrue << ",  met=" << met << ",  meff=" << meff << ",  ratio=" << met_meff_ratio << endl;
+
+
         // Rpv2L:
         if (nLeptons >= 2 && nBJets20 >= 0 && nJets40 >= 6 && meff > 2600.) _counters.at("Rpv2L").add_event(event);
 
@@ -318,6 +376,7 @@ namespace Gambit {
         if (nLeptons >= 2 && nBJets20 >= 0 && nJets40 >= 6 && met > 200. && meff > 1000. && met_meff_ratio > 0.2) _counters.at("Rpc2L0b").add_event(event);
 
         // Rpc2L1b
+        _cutflows["Rpc2L1b"].filltail({nBJets20 >= 1, nJets40 >= 6, met_meff_ratio > 0.25}, w);
         if (nLeptons >= 2 && nBJets20 >= 1 && nJets40 >= 6 && met_meff_ratio > 0.25) _counters.at("Rpc2L1b").add_event(event);
 
         // Rpc2L2b
@@ -347,6 +406,13 @@ namespace Gambit {
         add_result(SignalRegionData(_counters.at("Rpc2L2b"),   12., {7.8, 2.2}));
         add_result(SignalRegionData(_counters.at("Rpc3LSS1b"),  4., {3.5, 1.45}));
 
+        // Cutflow printout
+        _cutflows["Rpc2L1b"].normalize(3002.4, 0);
+        cout << "\nCUTFLOWS:\n" << _cutflows << endl;
+        cout << "\nSRCOUNTS:\n";
+        // for (double x : _srnums) cout << x << "  ";
+        for (auto& pair : _counters) cout << pair.second.weight_sum() << "  ";
+        cout << "\n" << endl;
       }
 
 
