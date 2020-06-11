@@ -41,41 +41,4 @@
 
   #undef CAPABILITY
 
-
-  /* // Generalised Higgs couplings */
-  /* #define CAPABILITY Higgs_Couplings */
-
-  /*   #define FUNCTION ScalarSingletDM_higgs_couplings_pwid */
-  /*   START_FUNCTION(HiggsCouplingsTable) */
-  /*   DEPENDENCY(Reference_SM_Higgs_decay_rates, DecayTable::Entry) */
-  /*   DEPENDENCY(Higgs_decay_rates, DecayTable::Entry) */
-  /*   MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2, ScalarSingletDM_Z2_running) */
-  /*   MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running) */
-  /*   ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running) */
-  /*   #undef FUNCTION */
-
-  /* #undef CAPABILITY */
-
-  /* // Find scale at which spectrum becomes non-perturbative */
-  /* #define CAPABILITY scale_of_nonperturbativity */
-  /* START_CAPABILITY */
-/* #if(FS_MODEL_ScalarSingletDM_Z3_IS_BUILT) */
-  /*   #define FUNCTION find_non_perturb_scale_ScalarSingletDM_Z3 */
-  /*   START_FUNCTION(double) */
-  /*   DEPENDENCY(ScalarSingletDM_Z3_spectrum, Spectrum) */
-  /*   ALLOW_MODELS(ScalarSingletDM_Z3_running) */
-  /*   #undef FUNCTION */
-/* #endif */
-
-/* #if(FS_MODEL_ScalarSingletDM_Z2_IS_BUILT) */
-  /*   #define FUNCTION find_non_perturb_scale_ScalarSingletDM_Z2 */
-  /*   START_FUNCTION(double) */
-  /*   DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum) */
-  /*   ALLOW_MODELS(ScalarSingletDM_Z2,ScalarSingletDM_Z2_running) */
-  /*   #undef FUNCTION */
-/* #endif */
-
-  /* #undef CAPABILITY */
-
-
 #endif

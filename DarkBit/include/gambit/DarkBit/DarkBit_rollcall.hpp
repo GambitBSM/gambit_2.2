@@ -1538,17 +1538,18 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY DM_decay_rate_2_photons
+  #define CAPABILITY J_factor_INTEGRAL_CO
   START_CAPABILITY
-    #define FUNCTION SuperRenormHP_decay_rate_2_photons
+    #define FUNCTION get_J_factor_INTEGRAL_CO
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormHP)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY lnL_INTEGRAL
+  #define CAPABILITY lnL_INTEGRAL_CO
   START_CAPABILITY
-    #define FUNCTION calc_lnL_INTEGRAL
+    #define FUNCTION calc_lnL_INTEGRAL_CO
     START_FUNCTION(double)
     DEPENDENCY(Omega0_r, double)
     DEPENDENCY(Omega0_m, double)
@@ -1558,7 +1559,69 @@ START_MODULE
     DEPENDENCY(DM_relic_density, double)
     DEPENDENCY(DarkMatter_ID, std::string)
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
-    DEPENDENCY(J_factor, double)
+    DEPENDENCY(J_factor_INTEGRAL_CO, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DM_DecayFluxG
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_DecayFluxG
+    START_FUNCTION(double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(Omega0_cdm, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(DM_relic_density, double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_INTEGRAL_ang_b
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_ang_b
+    START_FUNCTION(std::vector<double>)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_ang_b
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_ang_b
+    START_FUNCTION(double)
+    DEPENDENCY(DM_DecayFluxG, double)
+    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(J_factor_INTEGRAL_ang_b, std::vector<double>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_INTEGRAL_ang_l
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_ang_l
+    START_FUNCTION(std::vector<double>)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_ang_l
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_ang_l
+    START_FUNCTION(double)
+    DEPENDENCY(DM_DecayFluxG, double)
+    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(J_factor_INTEGRAL_ang_l, std::vector<double>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_HEAO
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_HEAO
+    START_FUNCTION(double)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1650,24 +1713,6 @@ START_MODULE
     START_FUNCTION(daFunk::Funk)
     /* DEPENDENCY(New_Yukawa_interaction, New_Yukawa_interaction) */
     ALLOW_MODEL(ModifiedGravityYukawa)
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY J_factor_INTEGRAL
-  START_CAPABILITY
-    #define FUNCTION get_J_factor_INTEGRAL
-    START_FUNCTION(double)
-    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
-    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
-    #undef FUNCTION
-  #undef CAPABILITY
-
-  #define CAPABILITY J_factor_HEAO
-  START_CAPABILITY
-    #define FUNCTION get_J_factor_HEAO
-    START_FUNCTION(double)
-    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
-    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
     #undef FUNCTION
   #undef CAPABILITY
 

@@ -76,7 +76,8 @@ namespace Gambit
     const double hbar_cgs = 1.054571818e-27; // reduced Planck constant [cgs]
     const double cs = Gambit::s2cm; // speed of light [cm/s]
     const double kb = Gambit::K2eV; // Boltzmann constant [eV/K]
-    const double G = 6.674e-8; // Gravitational constant [cm³/g/s²]
+    const double G_cgs = 6.674e-8; // Gravitational constant [cm³/g/s²]
+    const double G_SI = 6.674e-11; // Gravitational constant [m³/kg/s²]
 
     // cosmological constants
     const double s0(2891); // current entropy density [1/cm³]
@@ -264,23 +265,6 @@ namespace Gambit
 
     const double int_factor(1.1); // integration range = int_factor*energy dispersion instrument
 
-    // photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
-    /* double Xray::fluxIntegrated(double const& E) */
-    /* { */
-    /*   size_t neval; */ 
-    /*   double epsabs = 0.; */
-    /*   double epsrel = 1e-2; */
-    /*   double result, abserr; */
-    /*   double delta = int_factor*deltaE(E); */
-
-    /*   gsl_function F; */
-    /*   F.function = &flux_gsl; */
-    /*   F.params = this; */
-
-    /*   gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval); */
-
-    /*   return result; */
-    /* } */
     double Xray::fluxIntegrated(double const& E)
     {
       size_t n = 1e4;
@@ -333,23 +317,6 @@ namespace Gambit
       return pow(experiment->sigma(x), 2.);
     }
 
-    // standard deviation of the photon flux integrated over an interval deltaE, centered around E [photons/cm²/s]
-    /* double Xray::sigmaIntegrated(double const& E) */
-    /* { */
-    /*   size_t neval; */ 
-    /*   double epsabs = 0.; */
-    /*   double epsrel = 1e-2; */
-    /*   double result, abserr; */
-    /*   double delta = int_factor*deltaE(E); */
-
-    /*   gsl_function F; */
-    /*   F.function = &sigma_gsl; */
-    /*   F.params = this; */
-
-    /*   gsl_integration_qng(&F, E-delta/2., E+delta/2., epsabs, epsrel, &result, &abserr, &neval); */
-
-    /*   return sqrt(result); */
-    /* } */
 
     double Xray::sigmaIntegrated(double const& E)
     {
@@ -859,6 +826,7 @@ namespace Gambit
 
     //------------- Functions to compute X-ray likelihoods -------------//
 
+
     // useful structure
     struct XrayLikelihood_params {double mass; double gamma; double density; Xray experiment; double H0; double OmegaM; double OmegaR; double OmegaLambda; double OmegaDM;};
 
@@ -901,7 +869,7 @@ namespace Gambit
 
       double sigma = s*experiment.deltaE(E); // standard deviation of the gaussian modelling the enery dispersion of the instrument
 
-      return 2.*(r0*rho0*gamma*J*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*rhoC)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-mass/2.,2)/(2*sigma*sigma));
+      return 2.*(gamma*J*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*rhoC)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-mass/2.,2)/(2*sigma*sigma));
     }
 
     // total predicted differential photon flux for a given X-ray experiment [photons/eV/cm²/s]
@@ -958,6 +926,34 @@ namespace Gambit
       gsl_integration_workspace_free(w);
 
       return result;
+    }
+
+    void SuperRenormHP_DecayFluxG (double &result)
+    {
+      using namespace Pipes::SuperRenormHP_DecayFluxG;
+
+      double density = *Dep::DM_relic_density*1e9;
+
+      double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
+
+      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
+
+      double OmegaLambda = *Dep::Omega0_Lambda;
+
+      double RhoC = 3*pow(H0, 2)/(8*pi*G_SI);
+
+      std::string DM_ID = *Dep::DarkMatter_ID;
+
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
+      auto fb = f->bind();
+      double gamma = fb->eval();
+
+      double mass = catalog.getParticleProperty(DM_ID).mass*1e9;
+
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0)[0];
+
+      result = 2.*(gamma*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*RhoC);
     }
 
     // auxiliary function for gsl minimization returning the log-likelihood for a given X-ray experiment
@@ -1018,13 +1014,67 @@ namespace Gambit
       result = 4e11*theta*theta*s0*mS;
     }
 
-    // capability function to provide the decay rate to two photons [s]
-    void SuperRenormHP_decay_rate_2_photons (double &result)
+    // Linear interpolation in lin-log space.
+    double interpolate(double x, const std::vector<double> & xlist,
+            const std::vector<double> & ylist, bool zerobound)
     {
-      using namespace Pipes::SuperRenormHP_decay_rate_2_photons;
-      double mS = *Param["mS"], theta = *Param["theta"];
+        double x0, x1, y0, y1;
+        int i = 1;
+        if (zerobound)
+        {
+            if (x<xlist.front()) return 0;
+            if (x>xlist.back()) return 0;
+        }
+        else
+        {
+            if (x<xlist.front()) return ylist.front();
+            if (x>xlist.back()) return ylist.back();
+        }
+        // Find min i such that xlist[i]>=x.
+        for (; xlist[i] < x; i++) {};
+        x0 = xlist[i-1];
+        x1 = xlist[i];
+        y0 = ylist[i-1];
+        y1 = ylist[i];
+        // lin-vs-log interpolation for lnL vs flux
+        return y0 + (y1-y0) * log(x/x0) / log(x1/x0);
+    }
 
-      result = (theta*theta*alphaEM*alphaEM*mS*mS*mS*C*C)/(256.*pi*pi*pi*v*v)/hbar_eV;
+    void get_J_factor_INTEGRAL_CO (double &result)
+    {
+      using namespace Pipes::get_J_factor_INTEGRAL_CO;
+
+      GalacticHaloProperties halo = *Dep::GalacticHalo;
+
+      daFunk::Funk profile = halo.DensityProfile;
+
+      std::vector<double> rho;
+      auto r = daFunk::logspace(-3, 2, 100);
+      double r_sun = halo.r_sun;
+
+      for ( size_t i = 0; i<r.size(); i++ )
+      {
+        rho.push_back(profile->bind("r")->eval(r[i]));
+      }
+
+      std::vector<double> phi_pre;
+      std::vector<double> intensity;
+
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
+
+      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
+
+      ASCIItableReader ROI = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/ROI_CO.txt");
+      ROI.setcolnames({"phi", "weight"});
+      std::vector<double> phi = ROI["phi"], weight = ROI["weight"];
+
+      double J = 0;
+      for ( size_t i = 0; i < phi.size(); i++ )
+      {
+        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];
+      }
+
+      result = J;
     }
 
     // gsl error handler
@@ -1038,11 +1088,11 @@ namespace Gambit
     }
 
     // capability function to compute the X-ray log-likelihood from the INTEGRAL experiment
-    void calc_lnL_INTEGRAL(double &result)
+    void calc_lnL_INTEGRAL_CO(double &result)
     {
-      using namespace Pipes::calc_lnL_INTEGRAL;
+      using namespace Pipes::calc_lnL_INTEGRAL_CO;
 
-      double J_factor = *Dep::J_factor;
+      double J_factor = *Dep::J_factor_INTEGRAL_CO;
 
       static Xray experiment = Xray("INTEGRAL", J_factor);
 
@@ -1051,7 +1101,7 @@ namespace Gambit
       double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
 
       double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
-     
+
       double OmegaLambda = *Dep::Omega0_Lambda;
 
       std::string DM_ID = *Dep::DarkMatter_ID;
@@ -1093,12 +1143,244 @@ namespace Gambit
       else { result = 0; }
     }
 
+    void get_J_factor_INTEGRAL_ang_b (std::vector<double> &result)
+    {
+      using namespace Pipes::get_J_factor_INTEGRAL_ang_b;
+
+      GalacticHaloProperties halo = *Dep::GalacticHalo;
+
+      daFunk::Funk profile = halo.DensityProfile;
+
+      std::vector<double> rho;
+      auto r = daFunk::logspace(-3, 2, 100);
+      double r_sun = halo.r_sun;
+
+      for ( size_t i = 0; i<r.size(); i++ )
+      {
+        rho.push_back(profile->bind("r")->eval(r[i]));
+      }
+
+      std::vector<double> phi_pre;
+      std::vector<double> intensity;
+
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
+
+      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
+
+      ASCIItableReader ROI_1 = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/ROI_ang_b_1.txt");
+      ASCIItableReader ROI_2 = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/ROI_ang_b_2.txt");
+
+      ROI_1.setcolnames({"phi", "weight"});
+      ROI_2.setcolnames({"phi", "weight"});
+
+      std::vector<double> phi_1 = ROI_1["phi"], weight_1 = ROI_1["weight"];
+      std::vector<double> phi_2 = ROI_2["phi"], weight_2 = ROI_2["weight"];
+
+      double J_1 = 0, J_2 = 0;
+
+      for ( size_t i = 0; i < phi_1.size(); i++ )
+      {
+        J_1 += interpolate(phi_1[i], emission.first, emission.second, true)*weight_1[i];
+      }
+
+      for ( size_t i = 0; i < phi_2.size(); i++ )
+      {
+        J_2 += interpolate(phi_2[i], emission.first, emission.second, true)*weight_2[i];
+      }
+
+      result = {J_1, J_2};
+    }
+
+    void calc_lnL_INTEGRAL_ang_b (double &result)
+    {
+      using namespace Pipes::calc_lnL_INTEGRAL_ang_b;
+
+      std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_b;
+
+      double mass = *Dep::DM_mass;
+
+      double DecayFluxG = *Dep::DM_DecayFluxG;
+
+      static ASCIItableReader INTEGRAL = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/INTEGRAL_b.dat");
+
+      INTEGRAL.setcolnames({"Emin", "Emax", "Flux", "Sigma"});
+
+      static std::vector<double> Emin = INTEGRAL["Emin"], Emax = INTEGRAL["Emax"], Flux = INTEGRAL["Flux"], Sigma = INTEGRAL["Sigma"];
+
+      std::vector<double> Omega = {1.6119, 4.1858};
+
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
+      if (mass >= 1e6) { result = 0; }
+
+      else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
+
+      else
+      {
+        std::vector<double> likelihood;
+
+        double PredictedFlux, ObservedFlux, Error;
+
+        for (size_t i = 0; i < Emin.size()-1; ++i)
+        {
+          PredictedFlux = ( (mass >= 2*Emin[i]) && (mass < 2*Emax[i]) ) ? DecayFluxG*J_factor[0]/Omega[0] : 0;
+          ObservedFlux = Flux[i];
+          Error = Sigma[i];
+          likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
+        }
+
+        PredictedFlux = ( (mass >= 2*Emin.back()) && (mass < 2*Emax.back()) ) ? DecayFluxG*J_factor[1]/Omega[1] : 0;
+        ObservedFlux = Flux.back();
+        Error = Sigma.back();
+        likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
+
+        result = log(*std::min_element(likelihood.begin(), likelihood.end()));
+      }
+
+    }
+
+    void get_J_factor_INTEGRAL_ang_l (std::vector<double> &result)
+    {
+      using namespace Pipes::get_J_factor_INTEGRAL_ang_l;
+
+      GalacticHaloProperties halo = *Dep::GalacticHalo;
+
+      daFunk::Funk profile = halo.DensityProfile;
+
+      std::vector<double> rho;
+      auto r = daFunk::logspace(-3, 2, 100);
+      double r_sun = halo.r_sun;
+
+      for ( size_t i = 0; i<r.size(); i++ )
+      {
+        rho.push_back(profile->bind("r")->eval(r[i]));
+      }
+
+      std::vector<double> phi_pre;
+      std::vector<double> intensity;
+
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
+
+      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
+
+      ASCIItableReader ROI_1 = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/ROI_ang_l_1.txt");
+      ASCIItableReader ROI_2 = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/ROI_ang_l_2.txt");
+
+      ROI_1.setcolnames({"phi", "weight"});
+      ROI_2.setcolnames({"phi", "weight"});
+
+      std::vector<double> phi_1 = ROI_1["phi"], weight_1 = ROI_1["weight"];
+      std::vector<double> phi_2 = ROI_2["phi"], weight_2 = ROI_2["weight"];
+
+      double J_1 = 0, J_2 = 0;
+
+      for ( size_t i = 0; i < phi_1.size(); i++ )
+      {
+        J_1 += interpolate(phi_1[i], emission.first, emission.second, true)*weight_1[i];
+      }
+
+      for ( size_t i = 0; i < phi_2.size(); i++ )
+      {
+        J_2 += interpolate(phi_2[i], emission.first, emission.second, true)*weight_2[i];
+      }
+
+      result = {J_1, J_2};
+    }
+
+    void calc_lnL_INTEGRAL_ang_l (double &result)
+    {
+      using namespace Pipes::calc_lnL_INTEGRAL_ang_l;
+
+      std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_l;
+
+      double mass = *Dep::DM_mass;
+
+      double DecayFluxG = *Dep::DM_DecayFluxG;
+
+      static ASCIItableReader INTEGRAL = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/INTEGRAL/INTEGRAL_l.dat");
+
+      INTEGRAL.setcolnames({"Emin", "Emax", "Flux", "Sigma"});
+
+      static std::vector<double> Emin = INTEGRAL["Emin"], Emax = INTEGRAL["Emax"], Flux = INTEGRAL["Flux"], Sigma = INTEGRAL["Sigma"];
+
+      std::vector<double> Omega = {1.4224, 1.7919};
+
+      // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
+      if (mass >= 1e6) { result = 0; }
+
+      else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
+
+      else
+      {
+        std::vector<double> likelihood;
+
+        double PredictedFlux, ObservedFlux, Error;
+
+        for (size_t i = 0; i < Emin.size()-1; ++i)
+        {
+          PredictedFlux = ( (mass >= 2*Emin[i]) && (mass < 2*Emax[i]) ) ? DecayFluxG*J_factor[0]/Omega[0] : 0;
+          ObservedFlux = Flux[i];
+          Error = Sigma[i];
+          likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
+        }
+
+        PredictedFlux = ( (mass >= 2*Emin.back()) && (mass < 2*Emax.back()) ) ? DecayFluxG*J_factor[1]/Omega[1] : 0;
+        ObservedFlux = Flux.back();
+        Error = Sigma.back();
+        likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
+
+        result = log(*std::min_element(likelihood.begin(), likelihood.end()));
+      }
+
+    }
+
+    void get_J_factor_HEAO (double &result)
+    {
+      using namespace Pipes::get_J_factor_HEAO;
+
+      GalacticHaloProperties halo = *Dep::GalacticHalo;
+
+      daFunk::Funk profile = halo.DensityProfile;
+
+      std::vector<double> rho;
+      auto r = daFunk::logspace(-3, 2, 100);
+      double r_sun = halo.r_sun;
+
+      for ( size_t i = 0; i<r.size(); i++ )
+      {
+        rho.push_back(profile->bind("r")->eval(r[i]));
+        /* rho.push_back(pow(profile->bind("r")->eval(r[i]), 2)); */
+      }
+
+      std::vector<double> phi_pre;
+      std::vector<double> intensity;
+
+      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
+
+      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
+
+      ASCIItableReader ROI = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/HEAO/ROI.txt");
+      ROI.setcolnames({"phi", "weight"});
+      std::vector<double> phi = ROI["phi"], weight = ROI["weight"];
+
+      double J = 0;
+      for ( size_t i = 0; i < phi.size(); i++ )
+      {
+        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];// /Omega;
+      }
+
+      double rho_sun = profile->bind("r")->eval(r_sun);
+
+      result = J;
+
+      /* std::cout << "J = " << result/r_sun/rho_sun << std::endl; */
+    }
+
     // capability function to compute the X-ray log-likelihood from the HEAO-1 A2 experiment
     void calc_lnL_HEAO(double &result)
     {
       using namespace Pipes::calc_lnL_HEAO;
 
-      static Xray experiment = Xray("HEAO", 3.88);
+      static Xray experiment = Xray("HEAO", 9.894); // J in Gev kpc /cm^3
 
       double density = *Dep::DM_relic_density*1e9;
 
@@ -1281,7 +1563,7 @@ namespace Gambit
 
       daFunk::Funk d = daFunk::var("d");
 
-      daFunk::Funk force = 4*pow(pi, 2)*G*R*alpha*pow(lambda, 3)*exp(-d/lambda)*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5; // *1e-5 conversion from dyn(cgs) to N (SI)
+      daFunk::Funk force = 4*pow(pi, 2)*G_cgs*R*alpha*pow(lambda, 3)*exp(-d/lambda)*pow(rhoAu + (rhoTi-rhoAu)*exp(-dAu/lambda) + (rhog-rhoTi)*exp(-(dAu+dTi)/lambda), 2)*1e-5; // *1e-5 conversion from dyn(cgs) to N (SI)
 
       result = force;
     }
@@ -1293,12 +1575,12 @@ namespace Gambit
 
       daFunk::Funk ForceNew = *Dep::New_Force_Sushkov2011*1e12; // new force in pN
 
-      ASCIItableReader data = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/ShortRangeForces/Sushkov2011.dat");
+      static ASCIItableReader data = ASCIItableReader(GAMBIT_DIR "/DarkBit/data/ShortRangeForces/Sushkov2011.dat");
       data.setcolnames({"distance", "Fres", "sigma", "binWidth"});
-      std::vector<double> distance = data["distance"]; // [microns]
-      std::vector<double> Fres = data["Fres"]; // [pN]
-      std::vector<double> sigma = data["sigma"]; // [pN]
-      std::vector<double> width = data["binWidth"]; // [microns]
+      static std::vector<double> distance = data["distance"]; // [microns]
+      static std::vector<double> Fres = data["Fres"]; // [pN]
+      static std::vector<double> sigma = data["sigma"]; // [pN]
+      static std::vector<double> width = data["binWidth"]; // [microns]
 
       std::vector<boost::shared_ptr<daFunk::FunkBase>> ForceNewBinned;
       std::vector<boost::shared_ptr<daFunk::FunkBound>> FnewBound;
@@ -1324,116 +1606,6 @@ namespace Gambit
       }
 
       result = log(*std::min_element(likelihood.begin(), likelihood.end())); // we take the minimum likelihood, since we don't have the correlations between data bins
-    }
-
-    // Linear interpolation in lin-log space.
-    double interpolate(double x, const std::vector<double> & xlist,
-            const std::vector<double> & ylist, bool zerobound)
-    {
-        double x0, x1, y0, y1;
-        int i = 1;
-        if (zerobound)
-        {
-            if (x<xlist.front()) return 0;
-            if (x>xlist.back()) return 0;
-        }
-        else
-        {
-            if (x<xlist.front()) return ylist.front();
-            if (x>xlist.back()) return ylist.back();
-        }
-        // Find min i such that xlist[i]>=x.
-        for (; xlist[i] < x; i++) {};
-        x0 = xlist[i-1];
-        x1 = xlist[i];
-        y0 = ylist[i-1];
-        y1 = ylist[i];
-        // lin-vs-log interpolation for lnL vs flux
-        return y0 + (y1-y0) * log(x/x0) / log(x1/x0);
-    }
-
-    void get_J_factor_INTEGRAL (double &result)
-    {
-      using namespace Pipes::get_J_factor_INTEGRAL;
-
-      GalacticHaloProperties halo = *Dep::GalacticHalo;
-
-      daFunk::Funk profile = halo.DensityProfile;
-
-      std::vector<double> rho;
-      auto r = daFunk::logspace(-3, 2, 100);
-      double r_sun = halo.r_sun;
-
-      for ( size_t i = 0; i<r.size(); i++ )
-      {
-        rho.push_back(profile->bind("r")->eval(r[i]));
-        /* rho.push_back(pow(profile->bind("r")->eval(r[i]), 2)); */
-      }
-
-      std::vector<double> phi_pre;
-      std::vector<double> intensity;
-
-      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
-
-      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
-
-      ASCIItableReader ROI = ASCIItableReader(GAMBIT_DIR "/Backends/installed/gamlike/1.0.1/data/INTEGRAL/ROI.txt");
-      ROI.setcolnames({"phi", "weight"});
-      std::vector<double> phi = ROI["phi"], weight = ROI["weight"];
-
-      double J = 0;
-      for ( size_t i = 0; i < phi.size(); i++ )
-      {
-        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];// /Omega;
-      }
-
-      double rho_sun = profile->bind("r")->eval(r_sun);
-
-      result = J/r_sun/rho_sun;
-
-      std::cout << "J = " << result << std::endl;
-    }
-
-    void get_J_factor_HEAO (double &result)
-    {
-      using namespace Pipes::get_J_factor_HEAO;
-
-      GalacticHaloProperties halo = *Dep::GalacticHalo;
-
-      daFunk::Funk profile = halo.DensityProfile;
-
-      std::vector<double> rho;
-      auto r = daFunk::logspace(-3, 2, 100);
-      double r_sun = halo.r_sun;
-
-      for ( size_t i = 0; i<r.size(); i++ )
-      {
-        rho.push_back(profile->bind("r")->eval(r[i]));
-        /* rho.push_back(pow(profile->bind("r")->eval(r[i]), 2)); */
-      }
-
-      std::vector<double> phi_pre;
-      std::vector<double> intensity;
-
-      BEreq::los_integral(byVal(r), byVal(rho), byVal(r_sun), phi_pre, intensity);
-
-      auto emission = std::pair< std::vector<double>, std::vector<double> > (phi_pre, intensity);
-
-      ASCIItableReader ROI = ASCIItableReader(GAMBIT_DIR "/Backends/installed/gamlike/1.0.1/data/HEAO/ROI.txt");
-      ROI.setcolnames({"phi", "weight"});
-      std::vector<double> phi = ROI["phi"], weight = ROI["weight"];
-
-      double J = 0;
-      for ( size_t i = 0; i < phi.size(); i++ )
-      {
-        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];// /Omega;
-      }
-
-      double rho_sun = profile->bind("r")->eval(r_sun);
-
-      result = J/r_sun/rho_sun;
-
-      std::cout << "J = " << result << std::endl;
     }
 
   }
