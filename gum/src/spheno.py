@@ -343,6 +343,8 @@ def patch_control(model_name, patch_dir):
                           "   Close(i1)\n"\
                           "  End Do\n"\
                           " \n"\
+                          "  ! Reset Iname\n"\
+                          "  Iname = 0\n"\
                           "  ! Convert C to Fortran procedure pointer.\n"\
                           "  Call c_f_procpointer(ErrorHandler_cptr, ErrorHandler_fptr)\n"\
                           " \n"\
