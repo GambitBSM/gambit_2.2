@@ -1069,17 +1069,18 @@ if(NOT ditched_${name}_${ver})
           DEPENDS hom4ps_${hom4ps_ver}
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
-          GIT_TAG origin/Gambit_BOSSED_debug
+#GIT_TAG origin/Gambit_BOSSED_debug
           CONFIGURE_COMMAND ""
-          BINARY_DIR ${dir}/VevaciousPlusPlus
-          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} shared
+#BINARY_DIR ${dir}/VevaciousPlusPlus
+          BINARY_DIR ${dir}/Vevacious
+          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} #shared
           INSTALL_COMMAND ""
           #COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
           #COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
           )
   add_extra_targets("backend" ${name} ${ver} ${dir}/VevaciousPlusPlus ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
-  #  BOSS_backend(${name} ${ver})
+  BOSS_backend(${name} ${ver})
 endif()
 
 # SUSYHD

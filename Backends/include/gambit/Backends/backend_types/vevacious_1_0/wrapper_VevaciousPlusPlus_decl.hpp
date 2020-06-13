@@ -21,7 +21,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Abstract_VevaciousPlusPlus* (*__factory0)(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&);
+                static VevaciousPlusPlus::Abstract_VevaciousPlusPlus* (*__factory0)(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&);
         
                 // -- Other member variables: 
         
@@ -34,14 +34,14 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 void WriteResultsAsXmlFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& xmlFilename);
         
                 ::std::basic_string<char, std::char_traits<char>, std::allocator<char> > GetResultsAsString();
-
+        
                 double GetLifetimeInSeconds();
-
+        
                 double GetThermalProbability();
-
-                ::std::vector<double> GetThresholdAndActions();
-
-                ::std::vector<double> GetThermalThresholdAndActions();
+        
+                ::std::vector<double, std::allocator<double> > GetThresholdAndActions();
+        
+                ::std::vector<double, std::allocator<double> > GetThermalThresholdAndActions();
         
                 void AppendResultsToLhaFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& lhaFilename, const bool writeWarnings);
         
@@ -53,7 +53,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 VevaciousPlusPlus(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& initializationFileName);
         
                 // Special pointer-based constructor: 
-                VevaciousPlusPlus(Abstract_VevaciousPlusPlus* in);
+                VevaciousPlusPlus(VevaciousPlusPlus::Abstract_VevaciousPlusPlus* in);
         
                 // Assignment operator: 
                 VevaciousPlusPlus& operator=(const VevaciousPlusPlus& in);
@@ -62,7 +62,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~VevaciousPlusPlus();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Abstract_VevaciousPlusPlus* get_BEptr() const;
+                VevaciousPlusPlus::Abstract_VevaciousPlusPlus* get_BEptr() const;
         
         };
     }
