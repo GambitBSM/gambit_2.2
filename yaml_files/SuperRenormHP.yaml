@@ -5,57 +5,60 @@
 Parameters:
 
   #Dark matter halo parameters.
-  Halo_gNFW_rho0:
-    rho0: 0.3
-      # range: [.2, .8]
-    v0: 235.0
-    vesc: 550.0
-    vrot: 235.0
-    rs: 20.0
-    r_sun: 8.5
-    alpha: 1
-    beta: 3
-    gamma: 1
+  # Halo_gNFW_rho0:
+  #   rho0: 0.3
+  #     # range: [.2, .8]
+  #   v0: 235.0
+  #   vesc: 550.0
+  #   vrot: 235.0
+  #   rs: 20.0
+  #   r_sun: 8.5
+  #   alpha: 1
+  #   beta: 3
+  #   gamma: 1
 
-  LCDM:
-   omega_b: 0.02242
-    # prior_type: flat
-    # range: [0.020,0.024]
-   omega_cdm: 0.11933
-    # prior_type: flat
-    # range: [0.10,0.13]
-   H0: 67.66
-    # prior_type: flat
-    # range: [62,74]
-   ln10A_s: 3.047
-    # prior_type: flat
-    # range: [2.9,3.2]
-   n_s: 0.9665
-    # prior_type: flat
-    # range: [0.9,1.10]
-   tau_reio: 0.0561
-    # prior_type: flat
-    #range: [0.04,0.20]
-    # range: [0.004,0.20]
-   T_cmb: 2.72548
-    # measurement 2.72548 \pm 0.00057
-    # -> vary within error range
-    #prior_type: gaussian
-    #range: [2.72491,2.72605]
+  #LCDM:
+  # omega_b: 0.02242
+  #  # prior_type: flat
+  #  # range: [0.020,0.024]
+  # omega_cdm: 0.11933
+  #  # prior_type: flat
+  #  # range: [0.10,0.13]
+  # H0: 67.66
+  #  # prior_type: flat
+  #  # range: [62,74]
+  # ln10A_s: 3.047
+  #  # prior_type: flat
+  #  # range: [2.9,3.2]
+  # n_s: 0.9665
+  #  # prior_type: flat
+  #  # range: [0.9,1.10]
+  # tau_reio: 0.0561
+  #  # prior_type: flat
+  #  #range: [0.04,0.20]
+  #  # range: [0.004,0.20]
+  # T_cmb: 2.72548
+  #  # measurement 2.72548 \pm 0.00057
+  #  # -> vary within error range
+  #  #prior_type: gaussian
+  #  #range: [2.72491,2.72605]
 
   SuperRenormHP:
    mS:
      prior_type: log
-     range: [1e-6, 1e-2]
+     range: [1e-12, 5e-5]
    theta:
      prior_type: log
-     range: [1e-13, 1e-6]
+     range: [1e-10, 1e-4]
+
+  SuperRenormHP_solar_neutrino:
+    alpha: 1
 
   # StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
+  # StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
 
-  StandardModel_Higgs:
-   mH: 125.18
+  # StandardModel_Higgs:
+  #  mH: 125.18
 
   # # Nuclear matrix parameters.
   # nuclear_params_sigmas_sigmal:
@@ -94,7 +97,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 100
+      grid_pts: 350
 
     random:
       plugin: random
@@ -123,39 +126,39 @@ ObsLikes:
   #   type:         TH_ProcessCatalog
   #   printme:      false
 
-  - purpose:      Observable
-    capability:   BBN_abundances
-    sub_capabilities: [He4]
+  # - purpose:      Observable
+  #   capability:   BBN_abundances
+  #   sub_capabilities: [He4]
 
   # - purpose:      LogLike
   #   capability:   lnL_INTEGRAL_ang_b
   #   module:       DarkBit
   #   type:         double
 
-  - purpose:      LogLike
-    capability:   lnL_INTEGRAL_ang_l
-    module:       DarkBit
-    type:         double
+  # - purpose:      LogLike
+  #   capability:   lnL_INTEGRAL_ang_l
+  #   module:       DarkBit
+  #   type:         double
 
   # - purpose:      LogLike
   #   capability:   lnL_INTEGRAL_CO
   #   module:       DarkBit
   #   type:         double
 
+  # - purpose:      LogLike
+  #   capability:   lnL_HEAO
+  #   module:       DarkBit
+  #   type:         double
+
   - purpose:      LogLike
-    capability:   lnL_HEAO
+    capability:   lnL_solar_neutrino_B8
     module:       DarkBit
     type:         double
 
-  # - purpose:      LogLike
-  #   capability:   lnL_solar_neutrino_B8
-  #   module:       DarkBit
-  #   type:         double
-
-  # - purpose:      LogLike
-  #   capability:   lnL_solar_neutrino_Be7
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_solar_neutrino_Be7
+    module:       DarkBit
+    type:         double
 
   # - purpose:      Observable
   #   capability:   ModifiedGravityYukawa_parameters
@@ -208,17 +211,9 @@ Rules:
     function: get_Omega0_r_classy
     module: CosmoBit
 
-  - capability: solar_neutrino_flux_B8
-    options:
-      alpha: 4
-
   - capability: lnL_solar_neutrino_B8
     options:
       profile_systematics: false
-
-  - capability: solar_neutrino_flux_Be7
-    options:
-      alpha: 4
 
   - capability: lnL_solar_neutrino_Be7
     options:

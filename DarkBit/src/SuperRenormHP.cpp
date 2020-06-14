@@ -600,7 +600,7 @@ namespace Gambit
     void StellarModel::Ls_interpolate ()
     {
       const int nPoints = 100;
-      const double mMin = 1e-9, mMax = mSmax;
+      const double mMin = 5e-4, mMax = mSmax;
       const double deltaM = log10(mMax/mMin)/nPoints;
       const std::string filename = GAMBIT_DIR "/DarkBit/data/SuperRenormHP_Ls.dat";
       std::vector<double> mS, Ls;
@@ -1468,7 +1468,8 @@ namespace Gambit
       using namespace Pipes::SuperRenormHP_solar_neutrino_flux_B8;
 
       const double Ls = *Dep::solar_DM_luminosity;
-      const double alpha = runOptions->getValueOrDef<double>(4., "alpha");
+      /* const double alpha = runOptions->getValueOrDef<double>(4., "alpha"); */
+      const double alpha = *Param["alpha"];
 
       const double Phi0 = 4.95e6;
 
@@ -1481,7 +1482,8 @@ namespace Gambit
       using namespace Pipes::SuperRenormHP_solar_neutrino_flux_Be7;
 
       const double Ls = *Dep::solar_DM_luminosity;
-      const double alpha = runOptions->getValueOrDef<double>(4., "alpha");
+      /* const double alpha = runOptions->getValueOrDef<double>(4., "alpha"); */
+      const double alpha = *Param["alpha"];
 
       const double Phi0 = 4.71e9;
 

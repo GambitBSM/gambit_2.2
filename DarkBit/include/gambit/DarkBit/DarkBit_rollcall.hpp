@@ -1660,7 +1660,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION SuperRenormHP_solar_neutrino_flux_B8
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormHP)
+    ALLOW_MODEL(SuperRenormHP_solar_neutrino)
     DEPENDENCY(solar_DM_luminosity, double)
     #undef FUNCTION
   #undef CAPABILITY
@@ -1669,7 +1669,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION SuperRenormHP_solar_neutrino_flux_Be7
     START_FUNCTION(double)
-    ALLOW_MODEL(SuperRenormHP)
+    ALLOW_MODEL(SuperRenormHP_solar_neutrino)
     DEPENDENCY(solar_DM_luminosity, double)
     #undef FUNCTION
   #undef CAPABILITY
