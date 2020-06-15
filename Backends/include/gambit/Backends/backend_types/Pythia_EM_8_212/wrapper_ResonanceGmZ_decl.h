@@ -19,7 +19,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_ResonanceGmZ* (*__factory0)(int);
+                static Abstract_ResonanceGmZ* (*__factory0)(int);
         
                 // -- Other member variables: 
         
@@ -30,7 +30,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ResonanceGmZ(int idResIn);
         
                 // Special pointer-based constructor: 
-                ResonanceGmZ(Pythia8::Abstract_ResonanceGmZ* in);
+                ResonanceGmZ(Abstract_ResonanceGmZ* in);
         
                 // Copy constructor: 
                 ResonanceGmZ(const ResonanceGmZ& in);
@@ -42,7 +42,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~ResonanceGmZ();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_ResonanceGmZ* get_BEptr() const;
+                Abstract_ResonanceGmZ* get_BEptr() const;
         
         };
     }

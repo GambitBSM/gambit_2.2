@@ -21,7 +21,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             // Member variables: 
          public:
             // -- Static factory pointers: 
-            static gm2calc::Abstract_MSSMNoFV_onshell_physical* (*__factory0)();
+            static Abstract_MSSMNoFV_onshell_physical* (*__factory0)();
       
             // -- Other member variables: 
          public:
@@ -91,7 +91,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             MSSMNoFV_onshell_physical();
       
             // Special pointer-based constructor: 
-            MSSMNoFV_onshell_physical(gm2calc::Abstract_MSSMNoFV_onshell_physical* in);
+            MSSMNoFV_onshell_physical(Abstract_MSSMNoFV_onshell_physical* in);
       
             // Copy constructor: 
             MSSMNoFV_onshell_physical(const MSSMNoFV_onshell_physical& in);
@@ -103,7 +103,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             ~MSSMNoFV_onshell_physical();
       
             // Returns correctly casted pointer to Abstract class: 
-            gm2calc::Abstract_MSSMNoFV_onshell_physical* get_BEptr() const;
+            Abstract_MSSMNoFV_onshell_physical* get_BEptr() const;
       
       };
    }

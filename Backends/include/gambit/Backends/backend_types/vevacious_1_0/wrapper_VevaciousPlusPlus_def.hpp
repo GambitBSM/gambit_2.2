@@ -65,7 +65,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Wrappers for original constructors: 
-        inline VevaciousPlusPlus::VevaciousPlusPlus::VevaciousPlusPlus(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& initializationFileName) :
+        inline VevaciousPlusPlus::VevaciousPlusPlus(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& initializationFileName) :
             WrapperBase(__factory0(initializationFileName))
         {
             get_BEptr()->set_wptr(this);
@@ -73,7 +73,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Special pointer-based constructor: 
-        inline VevaciousPlusPlus::VevaciousPlusPlus::VevaciousPlusPlus(VevaciousPlusPlus::Abstract_VevaciousPlusPlus* in) :
+        inline VevaciousPlusPlus::VevaciousPlusPlus(Abstract_VevaciousPlusPlus* in) :
             WrapperBase(in)
         {
             get_BEptr()->set_wptr(this);
@@ -81,7 +81,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Assignment operator: 
-        inline VevaciousPlusPlus::VevaciousPlusPlus& VevaciousPlusPlus::operator=(const VevaciousPlusPlus& in)
+        inline VevaciousPlusPlus& VevaciousPlusPlus::operator=(const VevaciousPlusPlus& in)
         {
             if (this != &in)
             {
@@ -92,7 +92,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Destructor: 
-        inline VevaciousPlusPlus::VevaciousPlusPlus::~VevaciousPlusPlus()
+        inline VevaciousPlusPlus::~VevaciousPlusPlus()
         {
             if (get_BEptr() != 0)
             {
@@ -107,9 +107,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Returns correctly casted pointer to Abstract class: 
-        inline VevaciousPlusPlus::Abstract_VevaciousPlusPlus* VevaciousPlusPlus::VevaciousPlusPlus::get_BEptr() const
+        inline Abstract_VevaciousPlusPlus* VevaciousPlusPlus::VevaciousPlusPlus::get_BEptr() const
         {
-            return dynamic_cast<VevaciousPlusPlus::Abstract_VevaciousPlusPlus*>(BEptr);
+            return dynamic_cast<Abstract_VevaciousPlusPlus*>(BEptr);
         }
     }
     

@@ -35,11 +35,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_Pythia* (*__factory0)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool);
-                static Pythia8::Abstract_Pythia* (*__factory1)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >);
-                static Pythia8::Abstract_Pythia* (*__factory2)();
-                static Pythia8::Abstract_Pythia* (*__factory3)(Pythia8::ParticleData&, Pythia8::Settings&, bool);
-                static Pythia8::Abstract_Pythia* (*__factory4)(Pythia8::ParticleData&, Pythia8::Settings&);
+                static Abstract_Pythia* (*__factory0)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool);
+                static Abstract_Pythia* (*__factory1)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >);
+                static Abstract_Pythia* (*__factory2)();
+                static Abstract_Pythia* (*__factory3)(Pythia8::ParticleData&, Pythia8::Settings&, bool);
+                static Abstract_Pythia* (*__factory4)(Pythia8::ParticleData&, Pythia8::Settings&);
         
                 // -- Other member variables: 
             public:
@@ -120,7 +120,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 Pythia(Pythia8::ParticleData& particleDataIn, Pythia8::Settings& settingsIn);
         
                 // Special pointer-based constructor: 
-                Pythia(Pythia8::Abstract_Pythia* in);
+                Pythia(Abstract_Pythia* in);
         
                 // Copy constructor: 
                 Pythia(const Pythia& in);
@@ -132,7 +132,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~Pythia();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_Pythia* get_BEptr() const;
+                Abstract_Pythia* get_BEptr() const;
         
         };
     }

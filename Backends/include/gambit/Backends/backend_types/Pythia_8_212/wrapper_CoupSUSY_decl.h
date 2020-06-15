@@ -24,7 +24,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_CoupSUSY* (*__factory0)();
+                static Abstract_CoupSUSY* (*__factory0)();
         
                 // -- Other member variables: 
             public:
@@ -138,7 +138,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 CoupSUSY();
         
                 // Special pointer-based constructor: 
-                CoupSUSY(Pythia8::Abstract_CoupSUSY* in);
+                CoupSUSY(Abstract_CoupSUSY* in);
         
                 // Copy constructor: 
                 CoupSUSY(const CoupSUSY& in);
@@ -150,7 +150,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~CoupSUSY();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_CoupSUSY* get_BEptr() const;
+                Abstract_CoupSUSY* get_BEptr() const;
         
         };
     }

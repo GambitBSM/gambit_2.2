@@ -27,7 +27,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_ParticleData* (*__factory0)();
+                static Abstract_ParticleData* (*__factory0)();
         
                 // -- Other member variables: 
         
@@ -321,7 +321,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ParticleData();
         
                 // Special pointer-based constructor: 
-                ParticleData(Pythia8::Abstract_ParticleData* in);
+                ParticleData(Abstract_ParticleData* in);
         
                 // Copy constructor: 
                 ParticleData(const ParticleData& in);
@@ -333,7 +333,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~ParticleData();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_ParticleData* get_BEptr() const;
+                Abstract_ParticleData* get_BEptr() const;
         
         };
     }

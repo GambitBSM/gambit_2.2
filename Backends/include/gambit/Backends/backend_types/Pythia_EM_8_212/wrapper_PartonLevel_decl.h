@@ -29,7 +29,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_PartonLevel* (*__factory0)();
+                static Abstract_PartonLevel* (*__factory0)();
         
                 // -- Other member variables: 
         
@@ -67,7 +67,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 PartonLevel();
         
                 // Special pointer-based constructor: 
-                PartonLevel(Pythia8::Abstract_PartonLevel* in);
+                PartonLevel(Abstract_PartonLevel* in);
         
                 // Copy constructor: 
                 PartonLevel(const PartonLevel& in);
@@ -79,7 +79,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~PartonLevel();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_PartonLevel* get_BEptr() const;
+                Abstract_PartonLevel* get_BEptr() const;
         
         };
     }

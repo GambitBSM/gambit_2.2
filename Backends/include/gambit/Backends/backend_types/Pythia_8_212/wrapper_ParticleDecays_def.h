@@ -32,7 +32,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Wrappers for original constructors: 
-        inline Pythia8::ParticleDecays::ParticleDecays() :
+        inline ParticleDecays::ParticleDecays() :
             WrapperBase(__factory0())
         {
             get_BEptr()->set_wptr(this);
@@ -40,7 +40,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Special pointer-based constructor: 
-        inline Pythia8::ParticleDecays::ParticleDecays(Pythia8::Abstract_ParticleDecays* in) :
+        inline ParticleDecays::ParticleDecays(Abstract_ParticleDecays* in) :
             WrapperBase(in)
         {
             get_BEptr()->set_wptr(this);
@@ -48,7 +48,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Copy constructor: 
-        inline Pythia8::ParticleDecays::ParticleDecays(const ParticleDecays& in) :
+        inline ParticleDecays::ParticleDecays(const ParticleDecays& in) :
             WrapperBase(in.get_BEptr()->pointer_copy__BOSS())
         {
             get_BEptr()->set_wptr(this);
@@ -56,7 +56,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Assignment operator: 
-        inline Pythia8::ParticleDecays& ParticleDecays::operator=(const ParticleDecays& in)
+        inline ParticleDecays& ParticleDecays::operator=(const ParticleDecays& in)
         {
             if (this != &in)
             {
@@ -67,7 +67,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Destructor: 
-        inline Pythia8::ParticleDecays::~ParticleDecays()
+        inline ParticleDecays::~ParticleDecays()
         {
             if (get_BEptr() != 0)
             {
@@ -82,9 +82,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Returns correctly casted pointer to Abstract class: 
-        inline Pythia8::Abstract_ParticleDecays* Pythia8::ParticleDecays::get_BEptr() const
+        inline Abstract_ParticleDecays* Pythia8::ParticleDecays::get_BEptr() const
         {
-            return dynamic_cast<Pythia8::Abstract_ParticleDecays*>(BEptr);
+            return dynamic_cast<Abstract_ParticleDecays*>(BEptr);
         }
     }
     

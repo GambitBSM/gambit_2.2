@@ -21,7 +21,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             // Member variables: 
          public:
             // -- Static factory pointers: 
-            static gm2calc::Abstract_EInvalidInput* (*__factory0)(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&);
+            static Abstract_EInvalidInput* (*__factory0)(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&);
       
             // -- Other member variables: 
       
@@ -35,7 +35,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             EInvalidInput(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& message_);
       
             // Special pointer-based constructor: 
-            EInvalidInput(gm2calc::Abstract_EInvalidInput* in);
+            EInvalidInput(Abstract_EInvalidInput* in);
       
             // Copy constructor: 
             EInvalidInput(const EInvalidInput& in);
@@ -47,7 +47,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             ~EInvalidInput();
       
             // Returns correctly casted pointer to Abstract class: 
-            gm2calc::Abstract_EInvalidInput* get_BEptr() const;
+            Abstract_EInvalidInput* get_BEptr() const;
       
       };
    }

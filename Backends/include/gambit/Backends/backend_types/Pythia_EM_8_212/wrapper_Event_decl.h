@@ -25,8 +25,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_Event* (*__factory0)(int);
-                static Pythia8::Abstract_Event* (*__factory1)();
+                static Abstract_Event* (*__factory0)(int);
+                static Abstract_Event* (*__factory1)();
         
                 // -- Other member variables: 
         
@@ -201,7 +201,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 Event();
         
                 // Special pointer-based constructor: 
-                Event(Pythia8::Abstract_Event* in);
+                Event(Abstract_Event* in);
         
                 // Copy constructor: 
                 Event(const Event& in);
@@ -213,7 +213,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~Event();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_Event* get_BEptr() const;
+                Abstract_Event* get_BEptr() const;
         
         };
     }

@@ -23,7 +23,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_Settings* (*__factory0)();
+                static Abstract_Settings* (*__factory0)();
         
                 // -- Other member variables: 
         
@@ -183,7 +183,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 Settings();
         
                 // Special pointer-based constructor: 
-                Settings(Pythia8::Abstract_Settings* in);
+                Settings(Abstract_Settings* in);
         
                 // Copy constructor: 
                 Settings(const Settings& in);
@@ -195,7 +195,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~Settings();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_Settings* get_BEptr() const;
+                Abstract_Settings* get_BEptr() const;
         
         };
     }

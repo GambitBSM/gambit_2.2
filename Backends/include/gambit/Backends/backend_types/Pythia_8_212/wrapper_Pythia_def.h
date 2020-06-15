@@ -169,7 +169,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Wrappers for original constructors: 
-        inline Pythia8::Pythia::Pythia(::std::basic_string<char, std::char_traits<char>, std::allocator<char> > xmlDir, bool printBanner) :
+        inline Pythia::Pythia(::std::basic_string<char, std::char_traits<char>, std::allocator<char> > xmlDir, bool printBanner) :
             WrapperBase(__factory0(xmlDir, printBanner)),
             process( get_BEptr()->process_ref__BOSS().get_init_wref()),
             event( get_BEptr()->event_ref__BOSS().get_init_wref()),
@@ -184,7 +184,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
-        inline Pythia8::Pythia::Pythia(::std::basic_string<char, std::char_traits<char>, std::allocator<char> > xmlDir) :
+        inline Pythia::Pythia(::std::basic_string<char, std::char_traits<char>, std::allocator<char> > xmlDir) :
             WrapperBase(__factory1(xmlDir)),
             process( get_BEptr()->process_ref__BOSS().get_init_wref()),
             event( get_BEptr()->event_ref__BOSS().get_init_wref()),
@@ -199,7 +199,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
-        inline Pythia8::Pythia::Pythia() :
+        inline Pythia::Pythia() :
             WrapperBase(__factory2()),
             process( get_BEptr()->process_ref__BOSS().get_init_wref()),
             event( get_BEptr()->event_ref__BOSS().get_init_wref()),
@@ -214,7 +214,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
-        inline Pythia8::Pythia::Pythia(Pythia8::ParticleData& particleDataIn, Pythia8::Settings& settingsIn, bool printBanner) :
+        inline Pythia::Pythia(Pythia8::ParticleData& particleDataIn, Pythia8::Settings& settingsIn, bool printBanner) :
             WrapperBase(__factory3(particleDataIn, settingsIn, printBanner)),
             process( get_BEptr()->process_ref__BOSS().get_init_wref()),
             event( get_BEptr()->event_ref__BOSS().get_init_wref()),
@@ -229,7 +229,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
-        inline Pythia8::Pythia::Pythia(Pythia8::ParticleData& particleDataIn, Pythia8::Settings& settingsIn) :
+        inline Pythia::Pythia(Pythia8::ParticleData& particleDataIn, Pythia8::Settings& settingsIn) :
             WrapperBase(__factory4(particleDataIn, settingsIn)),
             process( get_BEptr()->process_ref__BOSS().get_init_wref()),
             event( get_BEptr()->event_ref__BOSS().get_init_wref()),
@@ -245,7 +245,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Special pointer-based constructor: 
-        inline Pythia8::Pythia::Pythia(Pythia8::Abstract_Pythia* in) :
+        inline Pythia::Pythia(Abstract_Pythia* in) :
             WrapperBase(in),
             process( get_BEptr()->process_ref__BOSS().get_init_wref()),
             event( get_BEptr()->event_ref__BOSS().get_init_wref()),
@@ -261,7 +261,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Copy constructor: 
-        inline Pythia8::Pythia::Pythia(const Pythia& in) :
+        inline Pythia::Pythia(const Pythia& in) :
             WrapperBase(in.get_BEptr()->pointer_copy__BOSS()),
             process( get_BEptr()->process_ref__BOSS().get_init_wref()),
             event( get_BEptr()->event_ref__BOSS().get_init_wref()),
@@ -277,7 +277,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Assignment operator: 
-        inline Pythia8::Pythia& Pythia::operator=(const Pythia& in)
+        inline Pythia& Pythia::operator=(const Pythia& in)
         {
             if (this != &in)
             {
@@ -288,7 +288,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Destructor: 
-        inline Pythia8::Pythia::~Pythia()
+        inline Pythia::~Pythia()
         {
             if (get_BEptr() != 0)
             {
@@ -303,9 +303,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Returns correctly casted pointer to Abstract class: 
-        inline Pythia8::Abstract_Pythia* Pythia8::Pythia::get_BEptr() const
+        inline Abstract_Pythia* Pythia8::Pythia::get_BEptr() const
         {
-            return dynamic_cast<Pythia8::Abstract_Pythia*>(BEptr);
+            return dynamic_cast<Abstract_Pythia*>(BEptr);
         }
     }
     

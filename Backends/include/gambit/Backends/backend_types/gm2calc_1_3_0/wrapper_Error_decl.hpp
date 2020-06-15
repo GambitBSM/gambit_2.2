@@ -20,7 +20,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             // Member variables: 
          public:
             // -- Static factory pointers: 
-            static gm2calc::Abstract_Error* (*__factory0)();
+            static Abstract_Error* (*__factory0)();
       
             // -- Other member variables: 
       
@@ -34,7 +34,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             Error();
       
             // Special pointer-based constructor: 
-            Error(gm2calc::Abstract_Error* in);
+            Error(Abstract_Error* in);
       
             // Copy constructor: 
             Error(const Error& in);
@@ -46,7 +46,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             ~Error();
       
             // Returns correctly casted pointer to Abstract class: 
-            gm2calc::Abstract_Error* get_BEptr() const;
+            Abstract_Error* get_BEptr() const;
       
       };
    }

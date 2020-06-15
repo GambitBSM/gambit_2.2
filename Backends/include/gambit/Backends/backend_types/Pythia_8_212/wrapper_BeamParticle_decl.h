@@ -28,7 +28,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_BeamParticle* (*__factory0)();
+                static Abstract_BeamParticle* (*__factory0)();
         
                 // -- Other member variables: 
         
@@ -150,7 +150,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 BeamParticle();
         
                 // Special pointer-based constructor: 
-                BeamParticle(Pythia8::Abstract_BeamParticle* in);
+                BeamParticle(Abstract_BeamParticle* in);
         
                 // Copy constructor: 
                 BeamParticle(const BeamParticle& in);
@@ -162,7 +162,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~BeamParticle();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_BeamParticle* get_BEptr() const;
+                Abstract_BeamParticle* get_BEptr() const;
         
         };
     }

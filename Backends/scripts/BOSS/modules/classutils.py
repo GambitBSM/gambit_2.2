@@ -1199,7 +1199,7 @@ def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class
             factory_ptr_name = '__factory' + str(factory_counter)
 
             # Construct factory pointer code
-            decl_code += 2*indent + 'static ' + abstr_class_name['long'] + '* (*' + factory_ptr_name + ')' + args_bracket + ';\n'
+            decl_code += 2*indent + 'static ' + abstr_class_name['short'] + '* (*' + factory_ptr_name + ')' + args_bracket + ';\n'
 
             # Increment factory counter
             factory_counter += 1
@@ -1423,7 +1423,7 @@ def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class
 
     # Add special constructor based on abstract pointer
     decl_code += 2*indent + '// Special pointer-based constructor: \n'
-    decl_code += 2*indent + class_name['short'] + '(' + abstr_class_name['long'] +'* in);\n'
+    decl_code += 2*indent + class_name['short'] + '(' + abstr_class_name['short'] +'* in);\n'
     # decl_code += 2*indent + class_name['short'] + '(const ' + abstr_class_name['long'] +'* in);\n'
 
 
@@ -1456,7 +1456,7 @@ def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class
     decl_code += '\n'
     # decl_code += indent + 'private:\n'
     decl_code += 2*indent + '// Returns correctly casted pointer to Abstract class: \n'
-    decl_code += 2*indent + abstr_class_name['long'] +'* get_BEptr() const;\n'
+    decl_code += 2*indent + abstr_class_name['short'] +'* get_BEptr() const;\n'
 
 
     # Close class body
@@ -1730,7 +1730,7 @@ def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_
             # Factory pointer name
             factory_ptr_name = '__factory' + str(factory_counter)
 
-            temp_code += 'inline ' + class_name['long'] + '::' + class_name['short'] + args_bracket + ' :\n'
+            temp_code += 'inline ' + class_name['short'] + '::' + class_name['short'] + args_bracket + ' :\n'
 
             parent_class_init_list = ''
             # parent_class_init_list += indent + 'WrapperBase(' + factory_ptr_name + args_bracket_notypes + '),\n'
@@ -1760,7 +1760,7 @@ def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_
 
     # Add special constructor based on abstract class pointer.
     def_code += '// Special pointer-based constructor: \n'
-    def_code += do_inline*'inline ' + class_name['long'] + '::' + class_name['short'] + '(' + abstr_class_name['long'] +'* in) :\n'
+    def_code += do_inline*'inline ' + class_name['short'] + '::' + class_name['short'] + '(' + abstr_class_name['short'] +'* in) :\n'
 
     parent_class_init_list = ''
     # parent_class_init_list += indent + 'WrapperBase(in),\n'
@@ -1800,7 +1800,7 @@ def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_
     if has_copy_constructor:
         def_code += '\n'
         def_code += '// Copy constructor: \n'
-        def_code += do_inline*'inline ' + class_name['long'] + '::' + class_name['short'] + '(const ' + class_name['short'] +'& in) :\n'
+        def_code += do_inline*'inline ' + class_name['short'] + '::' + class_name['short'] + '(const ' + class_name['short'] +'& in) :\n'
 
         parent_class_init_list = ''
         # parent_class_init_list += indent + 'WrapperBase(in.get_BEptr()->pointer_copy' + gb.code_suffix + '()),\n'
@@ -1823,7 +1823,7 @@ def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_
     #
     def_code += '\n'
     def_code += '// Assignment operator: \n'
-    def_code += do_inline*'inline ' + class_name['long'] + '& ' + class_name['short'] + '::operator=(const ' + class_name['short'] +'& in)\n'
+    def_code += do_inline*'inline ' + class_name['short'] + '& ' + class_name['short'] + '::operator=(const ' + class_name['short'] +'& in)\n'
     def_code += '{\n'
     def_code +=   indent + 'if (this != &in)\n'
     def_code +=   indent + '{\n'
@@ -1838,7 +1838,7 @@ def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_
     #
     def_code += '\n'
     def_code += '// Destructor: \n'
-    def_code += do_inline*'inline ' + class_name['long'] + '::~' + class_name['short'] + '()\n'
+    def_code += do_inline*'inline ' + class_name['short'] + '::~' + class_name['short'] + '()\n'
     def_code += '{\n'
     if gb.debug_mode:
         def_code += indent + 'std::cerr << "DEBUG: " << this << " ' + short_wrapper_class_name + ' dtor (BEGIN)" << std::endl;\n'
@@ -1862,9 +1862,9 @@ def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_
     #
     def_code += '\n'
     def_code += '// Returns correctly casted pointer to Abstract class: \n'
-    def_code += do_inline*'inline ' + abstr_class_name['long'] +'* ' + class_name['long'] + '::get_BEptr() const\n'
+    def_code += do_inline*'inline ' + abstr_class_name['short'] +'* ' + class_name['long'] + '::get_BEptr() const\n'
     def_code += '{\n'
-    def_code += indent + 'return dynamic_cast<' + abstr_class_name['long'] + '*>(BEptr);\n'
+    def_code += indent + 'return dynamic_cast<' + abstr_class_name['short'] + '*>(BEptr);\n'
     def_code += '}\n'
 
     
