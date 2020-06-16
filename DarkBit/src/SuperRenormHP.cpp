@@ -1462,13 +1462,13 @@ namespace Gambit
       else { result = 0; }
     }
 
+    // values for the observed and SSM predicted neutrni fluxes as well as the corresponding errors taken from: arXiv:1605.06502v2
     // capability function to compute the predicted solar neutrino flux (B8)
     void SuperRenormHP_solar_neutrino_flux_B8 (double &result)
     {
       using namespace Pipes::SuperRenormHP_solar_neutrino_flux_B8;
 
       const double Ls = *Dep::solar_DM_luminosity;
-      /* const double alpha = runOptions->getValueOrDef<double>(4., "alpha"); */
       const double alpha = *Param["alpha"];
 
       const double Phi0 = 4.95e6;
@@ -1482,7 +1482,6 @@ namespace Gambit
       using namespace Pipes::SuperRenormHP_solar_neutrino_flux_Be7;
 
       const double Ls = *Dep::solar_DM_luminosity;
-      /* const double alpha = runOptions->getValueOrDef<double>(4., "alpha"); */
       const double alpha = *Param["alpha"];
 
       const double Phi0 = 4.71e9;
@@ -1501,7 +1500,7 @@ namespace Gambit
       const double Phi_obs = 5e6;
       const double sigma_obs = 0.03*Phi_obs, sigma_theo = 0.14*Phi_predicted;
 
-      result = Stats::gaussian_upper_limit(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
+      result = Stats::gaussian_loglikelihood(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
     }
 
     // capability function to compute the likelihood from the solar Be7 neutrino flux
@@ -1515,7 +1514,7 @@ namespace Gambit
       const double Phi_obs = 4.82e9;
       const double sigma_obs = 0.05*Phi_obs, sigma_theo = 0.07*Phi_predicted;
 
-      result = Stats::gaussian_upper_limit(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
+      result = Stats::gaussian_loglikelihood(Phi_predicted, Phi_obs, sigma_theo, sigma_obs, profile);
     }
 
     //------------- Functions to compute short range forces likelihoods -------------// 

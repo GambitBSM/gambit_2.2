@@ -52,10 +52,10 @@ Parameters:
      range: [1e-10, 1e-4]
 
   SuperRenormHP_solar_neutrino:
-    alpha: 1
+    alpha: 10
 
   # StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
-  # StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
+  # # StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
 
   # StandardModel_Higgs:
   #  mH: 125.18
@@ -167,7 +167,6 @@ ObsLikes:
   #   capability:   lnL_ShortRangeForces_Sushkov2011
   #   module:       DarkBit
   #   type:         double
-
 
   # - purpose:   Observable
   #   capability: Omega0_m
