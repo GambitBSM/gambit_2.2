@@ -125,9 +125,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Copy constructor: 
                 Pythia(const Pythia& in);
         
-                // Assignment operator: 
-                Pythia& operator=(const Pythia& in);
-        
                 // Destructor: 
                 ~Pythia();
         

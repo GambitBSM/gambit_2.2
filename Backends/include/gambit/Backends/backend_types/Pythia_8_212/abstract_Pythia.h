@@ -108,7 +108,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual Pythia8::Abstract_SLHAinterface& slhaInterface_ref__BOSS() =0;
     
             public:
-                virtual void pointer_assign__BOSS(Abstract_Pythia*) =0;
                 virtual Abstract_Pythia* pointer_copy__BOSS() =0;
     
             private:

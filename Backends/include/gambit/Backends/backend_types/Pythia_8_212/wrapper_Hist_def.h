@@ -229,17 +229,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
-        // Assignment operator: 
-        inline Hist& Hist::operator=(const Hist& in)
-        {
-            if (this != &in)
-            {
-                get_BEptr()->pointer_assign__BOSS(in.get_BEptr());
-            }
-            return *this;
-        }
-        
-        
         // Destructor: 
         inline Hist::~Hist()
         {

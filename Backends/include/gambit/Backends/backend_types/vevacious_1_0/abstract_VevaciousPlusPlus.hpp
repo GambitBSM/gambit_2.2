@@ -41,9 +41,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     
                 virtual void AppendResultsToLhaFile__BOSS(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&) =0;
     
-            public:
-                virtual void pointer_assign__BOSS(Abstract_VevaciousPlusPlus*) =0;
-                virtual Abstract_VevaciousPlusPlus* pointer_copy__BOSS() =0;
     
             private:
                 VevaciousPlusPlus* wptr;

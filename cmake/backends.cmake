@@ -1061,6 +1061,7 @@ set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
 set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
+set(BOSSregex "s#cpp)#cpp\\n        source/BOSS_factory_VevaciousPlusPlus.cpp\\n        source/BOSS_wrapperutils.cpp\\n        source/BOSS_VevaciousPlusPlus.cpp)#g")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1072,7 +1073,8 @@ if(NOT ditched_${name}_${ver})
 #GIT_TAG origin/Gambit_BOSSED_debug
 #CONFIGURE_COMMAND ""
 #BINARY_DIR ${dir}/VevaciousPlusPlus
-          CONFIGURE_COMMAND ${CMAKE_COMMAND} ${dir}/Vevacious
+          CONFIGURE_COMMAND sed ${dashi} -e "${BOSSregex}" ${dir}/Vevacious/CMakeLists.txt 
+                    COMMAND ${CMAKE_COMMAND} ${dir}/Vevacious
           BINARY_DIR "${dir}/Vevacious"
           #CMAKE_COMMAND ${CMAKE_COMMAND} -E make_directory ${dir}/Vevacious/build && cd ${dir}/build
           #      COMMAND ${CMAKE_COMMAND} ..

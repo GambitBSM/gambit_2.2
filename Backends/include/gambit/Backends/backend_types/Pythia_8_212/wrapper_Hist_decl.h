@@ -111,9 +111,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Copy constructor: 
                 Hist(const Hist& in);
         
-                // Assignment operator: 
-                Hist& operator=(const Hist& in);
-        
                 // Destructor: 
                 ~Hist();
         

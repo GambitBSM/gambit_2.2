@@ -55,9 +55,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Special pointer-based constructor: 
                 VevaciousPlusPlus(Abstract_VevaciousPlusPlus* in);
         
-                // Assignment operator: 
-                VevaciousPlusPlus& operator=(const VevaciousPlusPlus& in);
-        
                 // Destructor: 
                 ~VevaciousPlusPlus();
         

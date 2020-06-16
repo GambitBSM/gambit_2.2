@@ -80,17 +80,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
-        // Assignment operator: 
-        inline VevaciousPlusPlus& VevaciousPlusPlus::operator=(const VevaciousPlusPlus& in)
-        {
-            if (this != &in)
-            {
-                get_BEptr()->pointer_assign__BOSS(in.get_BEptr());
-            }
-            return *this;
-        }
-        
-        
         // Destructor: 
         inline VevaciousPlusPlus::~VevaciousPlusPlus()
         {

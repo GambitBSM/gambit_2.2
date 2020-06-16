@@ -83,7 +83,7 @@ def constrTemplForwDecl(class_name_short, namespaces, template_bracket, indent=4
 
 # ====== constrAbstractClassDecl ========
 
-def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, indent=4, file_for_gambit=False, template_types=[], construct_assignment_operator=True):
+def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, indent=4, file_for_gambit=False, template_types=[], has_copy_constructor=True, construct_assignment_operator=True):
 
     n_indents = len(namespaces)
 
@@ -318,12 +318,15 @@ def constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
         infomsg.NoPointerCopyAndAssignmentFunctions(class_name['long_templ'], reason).printMessage()
     else:
         class_decl += '\n'
-        class_decl += ' '*(n_indents+1)*indent + 'public:\n'
-        for parent_dict in parent_classes:
-            if (parent_dict['loaded']) and (parent_dict['class_name']['long_templ'] not in gb.contains_pure_virtual_members):
-                class_decl += ' '*(n_indents+2)*indent + 'using ' + parent_dict['abstr_class_name']['long_templ'] + '::pointer_assign' + gb.code_suffix + ';\n'
-        class_decl += constrPtrAssignFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=True, indent=indent, n_indents=n_indents+2)
-        class_decl += constrPtrCopyFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=True, indent=indent, n_indents=n_indents+2)
+        if has_copy_constructor or construct_assignment_operator:
+            class_decl += ' '*(n_indents+1)*indent + 'public:\n'
+        if construct_assignment_operator:
+            for parent_dict in parent_classes:
+                if (parent_dict['loaded']) and (parent_dict['class_name']['long_templ'] not in gb.contains_pure_virtual_members):
+                    class_decl += ' '*(n_indents+2)*indent + 'using ' + parent_dict['abstr_class_name']['long_templ'] + '::pointer_assign' + gb.code_suffix + ';\n'
+            class_decl += constrPtrAssignFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=True, indent=indent, n_indents=n_indents+2)
+        if has_copy_constructor:
+            class_decl += constrPtrCopyFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=True, indent=indent, n_indents=n_indents+2)
 
     # - Construct code needed for 'destructor pattern' (abstract class and wrapper class must can delete each other)
     class_decl += '\n'
@@ -897,7 +900,7 @@ def constrPtrCopyFunc(class_el, abstr_class_name_short, class_name_short, virtua
         else:
             ptr_code += '\n'
             ptr_code += ' '*cfg.indent*n_indents + '{\n'
-            ptr_code += ' '*cfg.indent*(n_indents+1) + abstr_class_name + '* new_ptr = new ' + class_name + '(*this);\n'
+            ptr_code += ' '*cfg.indent*(n_indents+1) + abstr_class_name + '* new_ptr = new ' + class_name_short + '(*this);\n'
             ptr_code += ' '*cfg.indent*(n_indents+1) + 'return new_ptr;\n'
             ptr_code += ' '*cfg.indent*n_indents + '}\n'
 
@@ -935,7 +938,7 @@ def constrPtrAssignFunc(class_el, abstr_class_name_short, class_name_short, virt
         else:
             ptr_code += '\n'
             ptr_code += ' '*cfg.indent*n_indents + '{\n'
-            ptr_code += ' '*cfg.indent*(n_indents+1) + gb.gambit_backend_namespace + '::' + class_name + '* wptr_temp = ' + abstr_class_name_short + '::get_wptr();\n'
+            ptr_code += ' '*cfg.indent*(n_indents+1) + gb.gambit_backend_namespace + '::' + class_name + '* wptr_temp = ' + abstr_class_name + '::get_wptr();\n'
             ptr_code += ' '*cfg.indent*(n_indents+1) + '*this = *dynamic_cast<' + class_name_short + '*>(in);\n'
             ptr_code += ' '*cfg.indent*(n_indents+1) + abstr_class_name_short + '::set_wptr(wptr_temp);\n'
             ptr_code += ' '*cfg.indent*n_indents + '}\n'
@@ -1135,7 +1138,7 @@ def getClassNameDict(class_el, abstract=False):
 
 # ====== constrWrapperDecl ========
 
-def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, has_copy_constructor, indent=' '*cfg.indent):
+def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, construct_assignment_operator, has_copy_constructor, indent=' '*cfg.indent):
 
     decl_code = ''
 
@@ -1436,9 +1439,10 @@ def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class
     # 
     # Add assignment operator
     #
-    decl_code += '\n'
-    decl_code += 2*indent + '// Assignment operator: \n'
-    decl_code += 2*indent + class_name['short'] + '& ' + 'operator=(const ' + class_name['short'] +'& in);\n'
+    if construct_assignment_operator:
+        decl_code += '\n'
+        decl_code += 2*indent + '// Assignment operator: \n'
+        decl_code += 2*indent + class_name['short'] + '& ' + 'operator=(const ' + class_name['short'] +'& in);\n'
 
 
     #
@@ -1489,7 +1493,7 @@ def constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class
 
 # ====== constrWrapperDef ========
 
-def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, has_copy_constructor, indent=' '*cfg.indent, do_inline=False):
+def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, construct_assignment_operator, has_copy_constructor, indent=' '*cfg.indent, do_inline=False):
 
     def_code = ''
 
@@ -1821,16 +1825,17 @@ def constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_
     # 
     # Add assignment operator
     #
-    def_code += '\n'
-    def_code += '// Assignment operator: \n'
-    def_code += do_inline*'inline ' + class_name['short'] + '& ' + class_name['short'] + '::operator=(const ' + class_name['short'] +'& in)\n'
-    def_code += '{\n'
-    def_code +=   indent + 'if (this != &in)\n'
-    def_code +=   indent + '{\n'
-    def_code += 2*indent + 'get_BEptr()->pointer_assign' + gb.code_suffix + '(in.get_BEptr());\n'
-    def_code +=   indent + '}\n'
-    def_code +=   indent + 'return *this;\n'
-    def_code += '}\n\n'
+    if construct_assignment_operator:
+        def_code += '\n'
+        def_code += '// Assignment operator: \n'
+        def_code += do_inline*'inline ' + class_name['short'] + '& ' + class_name['short'] + '::operator=(const ' + class_name['short'] +'& in)\n'
+        def_code += '{\n'
+        def_code +=   indent + 'if (this != &in)\n'
+        def_code +=   indent + '{\n'
+        def_code += 2*indent + 'get_BEptr()->pointer_assign' + gb.code_suffix + '(in.get_BEptr());\n'
+        def_code +=   indent + '}\n'
+        def_code +=   indent + 'return *this;\n'
+        def_code += '}\n\n'
     
 
     # 
@@ -1956,8 +1961,8 @@ def generateWrapperHeaderCode(class_el, class_name, abstr_class_name, namespaces
     # Start code generation
     #
 
-    decl_code = constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, has_copy_constructor, indent=indent)
-    def_code  = constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, has_copy_constructor, indent=indent, do_inline=True)
+    decl_code = constrWrapperDecl(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, construct_assignment_operator, has_copy_constructor, indent=indent)
+    def_code  = constrWrapperDef(class_name, abstr_class_name, loaded_parent_classes, class_variables, class_functions, class_constructors, construct_assignment_operator, has_copy_constructor, indent=indent, do_inline=True)
 
     # Insert tags for the GAMBIT namespace
     decl_code = '\n__START_GAMBIT_NAMESPACE__\n' + decl_code + '\n__END_GAMBIT_NAMESPACE__\n'

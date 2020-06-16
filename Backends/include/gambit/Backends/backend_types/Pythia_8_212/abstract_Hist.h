@@ -87,7 +87,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual Pythia8::Abstract_Hist& operator_slash_equal__BOSS(double) =0;
     
             public:
-                virtual void pointer_assign__BOSS(Abstract_Hist*) =0;
                 virtual Abstract_Hist* pointer_copy__BOSS() =0;
     
             private:
