@@ -1071,8 +1071,8 @@ if(NOT ditched_${name}_${ver})
           DEPENDS hom4ps_${hom4ps_ver}
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
-          CONFIGURE_COMMAND sed ${dashi} -e "${BOSSregex}" ${dir}/Vevacious/CMakeLists.txt 
-                    COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}/Vevacious 
+          UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/Vevacious/CMakeLists.txt 
+          CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}/Vevacious 
           BINARY_DIR "${dir}/Vevacious"
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
           INSTALL_COMMAND ""
