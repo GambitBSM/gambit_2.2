@@ -1060,6 +1060,7 @@ set(hom4ps_ver "2.0")
 set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
+set(VPP_CMAKE_FLAGS -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DMinuit_name=${Minuit_name} -DMinuit_lib_name=${Minuit_lib_name} -DMinuit_ver=${Minuit_ver} -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
 set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
 set(BOSSregex "s#cpp)#cpp\\n        source/BOSS_factory_VevaciousPlusPlus.cpp\\n        source/BOSS_wrapperutils.cpp\\n        source/BOSS_VevaciousPlusPlus.cpp)#g")
 check_ditch_status(${name} ${ver} ${dir})
@@ -1070,14 +1071,9 @@ if(NOT ditched_${name}_${ver})
           DEPENDS hom4ps_${hom4ps_ver}
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
-#GIT_TAG origin/Gambit_BOSSED_debug
-#CONFIGURE_COMMAND ""
-#BINARY_DIR ${dir}/VevaciousPlusPlus
           CONFIGURE_COMMAND sed ${dashi} -e "${BOSSregex}" ${dir}/Vevacious/CMakeLists.txt 
-                    COMMAND ${CMAKE_COMMAND} ${dir}/Vevacious
+                    COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}/Vevacious 
           BINARY_DIR "${dir}/Vevacious"
-          #CMAKE_COMMAND ${CMAKE_COMMAND} -E make_directory ${dir}/Vevacious/build && cd ${dir}/build
-          #      COMMAND ${CMAKE_COMMAND} ..
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
           INSTALL_COMMAND ""
           #COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
