@@ -516,7 +516,7 @@ namespace Gambit
       }
     }
 
-    struct my_f_params { double mS; StellarModel *model; double mLim; };
+    struct my_f_params { double mS; StellarModel *model; };
 
     // function to be integrated for mS < w < inf and 0 < r < R0
     double myF (double const& w, double const& r, my_f_params *params)
@@ -535,66 +535,54 @@ namespace Gambit
       return N1*N2*pow(r, 2)/D1/D2/D3;
     }
 
-    // gsl integrand for mS < w < mLim
-    double integrand1 (double x[], size_t dim, void *p)
+    // gsl integrand remapped from (ms, +infinity) to (0, 1)
+    double integrand (double x[], size_t dim, void *p)
     {
       struct my_f_params *params = (struct my_f_params *)p;
       (void)(dim);
 
-      double w = x[0], r = x[1];
-
-      return myF(w, r, params);
-    }
-
-    // gsl integrand for mLim < w < inf, rescaled by a change of variables to 0 < t < 1
-    double integrand2 (double x[], size_t dim, void *p)
-    {
-      struct my_f_params *params = (struct my_f_params *)p;
-      (void)(dim);
-
-      double mLim = params->mLim;
+      double mS = params->mS;
 
       double t = x[0], r = x[1];
 
-      return myF(mLim + (1-t)/t, r, params)/pow(t, 2);
+      return myF(mS + (1-t)/t, r, params)/pow(t, 2);
     }
 
     const double mSmax = 1e5; // maximum mass up to which Ls is computed, for higher masses Ls is set to zero manually in the capability function
 
     double StellarModel::L_integrated (double const& mS)
     {
-      const size_t dim = 2, calls = 1e6;
-      const double mLim = sqrt(mS*mSmax*1e1);
-      double xl1[dim] = {mS, 0.0006}, xu1[dim] = {mLim, 0.9995}, xl2[dim] = {0, 0.0006}, xu2[dim] = {1, 0.9995};
-      double result1, abserr1, result2, abserr2;
+      const size_t dim = 2, calls = 1e5;
+      double  xl[dim] = {0, 0.0006}, xu[dim] = {1, 0.9995};
+      double result, abserr;
 
-      gsl_monte_vegas_state *s1 = gsl_monte_vegas_alloc(dim), *s2 = gsl_monte_vegas_alloc(dim);
-      gsl_monte_vegas_init(s1);
-      gsl_monte_vegas_init(s2);
+      gsl_monte_vegas_state *s = gsl_monte_vegas_alloc(dim);
+      gsl_monte_vegas_init(s);
 
       gsl_rng *r = gsl_rng_alloc(gsl_rng_taus2);
 
-      gsl_monte_function F1, F2;
+      gsl_monte_function F;
 
-      my_f_params params = {mS, this, mLim};
+      my_f_params params = {mS, this};
 
-      F1.f = &integrand1;
-      F1.dim = dim;
-      F1.params = &params;
+      F.f = &integrand;
+      F.dim = dim;
+      F.params = &params;
 
-      F2.f = &integrand2;
-      F2.dim = dim;
-      F2.params = &params;
+      gsl_monte_vegas_integrate(&F, xl, xu, dim, 1e4, r, s, &result, &abserr);
+      do
+      {
+        gsl_monte_vegas_integrate (&F, xl, xu, dim, calls, r, s,
+                                   &result, &abserr);
+        std::cout << mS << " " << result << " " << abserr/result << " " << gsl_monte_vegas_chisq (s) << std::endl;
+      }
+    while ( (fabs (gsl_monte_vegas_chisq (s) - 1.0) > 0.2) or (abserr/result > 1e-3));
 
-      gsl_monte_vegas_integrate(&F1, xl1, xu1, dim, calls, r, s1, &result1, &abserr1);
-      gsl_monte_vegas_integrate(&F2, xl2, xu2, dim, calls, r, s2, &result2, &abserr2);
+      std::cout << "Final: " << mS << " " << result << " " << abserr/result << " " << gsl_monte_vegas_chisq (s) << std::endl;
 
-      std::cout << mS << " " << result1 << " " << abserr1/result1 << " " << result2 << " " << abserr2/result2 << std::endl;
+      gsl_monte_vegas_free(s);
 
-      gsl_monte_vegas_free(s1);
-      gsl_monte_vegas_free(s2);
-
-      return 4*pi*pow(Rsun, 3)*(result1+result2)/pow(cs, 3)/pow(hbar_eV, 4);
+      return 4*pi*pow(Rsun, 3)*result/pow(cs, 3)/pow(hbar_eV, 4);
     }
 
     void StellarModel::Ls_interpolate ()
@@ -648,7 +636,6 @@ namespace Gambit
     {
       return gsl_spline_eval(m_Ls_interp, mS, m_Ls_accel)*pow(me/v*theta, 2);
     }
-
 
     ////////////////////////////////////////////////////////////////////
     //                   Capability functions                         //
@@ -1011,7 +998,22 @@ namespace Gambit
     {
       using namespace Pipes::SuperRenormHP_relic_density;
       double mS = *Param["mS"], theta = *Param["theta"];
-      result = 4e11*theta*theta*s0*mS;
+      double lambda = *Param["lambda"];
+
+      result = lambda*theta*theta*s0*mS;
+    }
+
+    void RD_oh2_SuperRenormHP (double &result)
+    {
+      using namespace Pipes::RD_oh2_SuperRenormHP;
+
+      double RD = *Dep::DM_relic_density;
+
+      double H0 = *Dep::H0;
+      double h = H0/100;
+      double RhoC = 3*pow(H0, 2)/(8*pi*G_SI);
+
+      result = RD/RhoC*h*h;
     }
 
     // Linear interpolation in lin-log space.

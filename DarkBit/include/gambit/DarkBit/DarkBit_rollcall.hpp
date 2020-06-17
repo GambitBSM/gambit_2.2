@@ -233,6 +233,13 @@ START_MODULE
         DEPENDENCY(AxionOscillationTemperature, double)
         DEPENDENCY(T_cmb, double)
     #undef FUNCTION
+
+    #define FUNCTION RD_oh2_SuperRenormHP
+      START_FUNCTION(double)
+        DEPENDENCY(H0, double)
+        DEPENDENCY(DM_relic_density, double)
+    #undef FUNCTION
+
   #undef CAPABILITY
 
 
@@ -1535,6 +1542,7 @@ START_MODULE
     #define FUNCTION SuperRenormHP_relic_density
     START_FUNCTION(double)
     ALLOW_MODEL(SuperRenormHP)
+    ALLOW_MODEL(SuperRenormHP_relic_density_param)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1711,7 +1719,6 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION New_Force_Sushkov2011_SuperRenormHP
     START_FUNCTION(daFunk::Funk)
-    /* DEPENDENCY(New_Yukawa_interaction, New_Yukawa_interaction) */
     ALLOW_MODEL(ModifiedGravityYukawa)
     #undef FUNCTION
   #undef CAPABILITY
