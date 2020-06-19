@@ -197,7 +197,7 @@ if args.file:
                 if part.pdg() == gum.dm_pdg:
                     dm = Particle(part.name(), part.antiname(),
                                   part.spinX2(), part.pdg(),
-                                  part.mass())
+                                  part.mass(), part.chargeX3(), part.color())
                     dm_set = True
 
             # If we haven't found the DM candidate in the particle list, 
@@ -412,6 +412,7 @@ if args.file:
         """
 
         # Forward declare some variables
+        decays = {}
         spheno_decays = {}
 
         if output_opts.spheno:
@@ -477,6 +478,8 @@ if args.file:
                                                            gambit_pdgs,
                                                            len(higgses))
 
+            # Save this dictionary as the global 'decays' for other backends
+            decays = spheno_decays
 
         """
         CALCHEP
@@ -503,6 +506,12 @@ if args.file:
 
             three_body_decays = decay_sorter(three_pi_bsm, aux_particles, 
                                              antiparticle_dict)
+
+            # If SPheno hasn't been run then save the tree-level decays from CH
+            # to the global 'decays' variable
+            if not bool(decays):
+                decays = ch_decays_to_dict(three_body_decays)
+
 
             print("Writing CalcHEP module functions for DecayBit")
             # CalcHEP specific decays
@@ -673,7 +682,8 @@ if args.file:
             print(("Patching Pythia to inject new matrix elements into its "
                    "Process Container and shared library."))
             pythia_groups = output_opts.options['pythia'].get('pythia_groups')
-            fix_pythia_lib(gum.name, new_pythia_dir, pythia_groups)
+            fix_pythia_lib(gum.name, new_pythia_dir, pythia_groups, 
+                           bsm_particle_list, decays)
             print("Creating a diff vs original version of Pythia.")
             write_backend_patch(output_dir, pristine_pythia_dir, new_pythia_dir,
                                 "pythia_"+gum.name.lower(), 
@@ -977,5 +987,6 @@ elif args.reset:
         traceback.print_exc()
 
 else:
-    raise GumError(("\n\n\tHi! You must be new here. Usage: gum -f inifile.gum"
-                    "\n\tOr try gum -h for help."))
+    raise GumError(("\n\n\tHi! You must be new here (or you're just excited)!"
+                    "\n\n\tUsage: gum -f inifile.gum"
+                    "\n\n\tOr try gum -h for help.\n"))

@@ -8,7 +8,21 @@ from files import *
 from parse import *
 from cmake_variables import *
 
-def fix_pythia_lib(model, patched_dir, pythia_groups):
+class PythiaMatch:
+    """
+    Class used for saving details about particles from ParticleData.xml
+    """
+
+    def __init__(self, pdg, name, antiname, spintype, chargetype, coltype):
+
+        self.pdg = pdg
+        self.name = name
+        self.antiname = antiname
+        self.spintype = spintype
+        self.chargetype = chargetype
+        self.coltype = coltype
+
+def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
     """
     Routine to patch the new Pythia - adding new matrix elements to the
     Process Container -- and the shared library too.
@@ -57,7 +71,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups):
                     f.write("Common switch for production of "+model+" processes, involving the group of particles ["+', '.join(v)+"] as external legs ONLY. Added by GAMBIT.\n")
                     f.write("</flag>\n")
 
-        # Invidiual processes
+        # Individual processes
         for x in processes:
             f.write("\n")
             f.write("<flag name=\""+model+":"+x[0]+"2"+x[1]+"\" default=\"off\">\n")
@@ -125,8 +139,189 @@ def fix_pythia_lib(model, patched_dir, pythia_groups):
                     f_new.write("    sigmaPtr = new Sigma_"+model+"_"+x[0]+"_"+x[1]+"();\n")
                     f_new.write("    containerPtrs.push_back( new ProcessContainer(sigmaPtr) );\n")
                     f_new.write("  }\n")
+
     os.remove(old)
     os.rename(tmp, old)
+
+    # Add new particles to the ParticeData xml file, and their decay products
+    # Firstly scrape the initial list of particles and check everything 
+    # is consistent
+    xmold = patched_dir + "/share/Pythia8/xmldoc/ParticleData.xml"
+    xmnew = patched_dir + "/share/Pythia8/xmldoc/ParticleData.xml_new"
+    with open(xmold) as f:
+        txt = f.read()
+
+    pat = re.compile(r'<particle\s+(.*?)\n(.*?)>', re.MULTILINE)
+    matches = re.findall(pat, txt)
+
+    # Save a dict of PDG code : match object
+    # Check consistency between the newly added particles and any definitions
+    defined_particles = {}
+
+    for match in matches:
+
+        m = ''.join(match)
+        
+        pdg = re.search(r'id="(.*?)"', m).group(1)
+        name = re.search(r'name="(.*?)"', m).group(1)
+        spintype = re.search(r'spinType="(.*?)"', m).group(1)
+        chargetype = re.search(r'chargeType="(.*?)"', m).group(1)
+        coltype = re.search(r'colType="(.*?)"', m).group(1)
+        a = re.search(r'antiName="(.*?)"', m)
+        antiname = a.group(1) if a else ""
+
+        pm = PythiaMatch(pdg, name, antiname, spintype, chargetype, coltype)
+
+        defined_particles[int(pdg)] = pm
+
+    # Iterate through the particle list and check to see if any are 
+    # already defined in Pythia.
+    dp = []
+    for p in particles:
+        if p.PDG_code in defined_particles:
+
+            dp.append(p.PDG_code)
+
+            # Check the particle definition applies to the user's file...
+            ppy = defined_particles[p.PDG_code]
+
+            # Spin
+            if p.spinX2+1 != int(ppy.spintype):
+                raise GumError(("Particle with PDG code {0} is "
+                                "already defined in Pythia's particle database."
+                                "\nThe spin provided for this particle does "
+                                "not match up with the definition in Pythia.\n"
+                                "Pythia: {1}, you: {2}. (spin = 2s+1)\n"
+                                "Please use a different PDG code."
+                              ).format(str(p.PDG_code), ppy.spintype, 
+                                       str(p.spinX2+1)))
+
+            # Charge
+            if int(p.chargeX3) != int(ppy.chargetype):
+                raise GumError(("Particle with PDG code {0} is "
+                                "already defined in Pythia's particle database."
+                                "\nThe charge provided for this particle does "
+                                "not match up with the definition in Pythia.\n"
+                                "Pythia: {1}, you: {2}. (charge x 3)\n"                                
+                                "Please use a different PDG code."
+                              ).format(str(p.PDG_code), ppy.chargetype,
+                                       p.chargeX3))
+
+            # Color
+            pycolor = 0
+            if p.color == 3: pycolor = 1
+            elif p.color == -3: pycolor = -1
+            elif p.color == 8: pycolor = 2
+            elif p.color == 6: pycolor = 3
+            elif p.color == -6: pycolor = -3
+            if int(pycolor) != int(ppy.coltype):
+                raise GumError(("Particle with PDG code {0} is "
+                                "already defined in Pythia's particle database."
+                                "\nThe color provided for this particle does "
+                                "not match up with the definition in Pythia.\n"
+                                "Pythia: {1}, you: {2}.\n"
+                                "Please use a different PDG code."
+                              ).format(str(p.PDG_code), ppy.coltype,
+                                       pycolor))
+
+            # Antiparticle
+            if not p.is_sc():
+                if not ppy.antiname:
+                    raise GumError(("Particle with PDG code {0} is "
+                                    "already defined in Pythia's particle "
+                                    "database.\n"
+                                    "It has no distinct antiparticle, "
+                                    "whereas your model definition says it "
+                                    "does.\nThis particle does not match up "
+                                    "with the definition in Pythia.\n"
+                                    "Please use a different PDG code."
+                                  ).format(str(p.PDG_code)))
+            else:
+                if ppy.antiname:
+                    raise GumError(("Particle with PDG code {0} is "
+                                    "already defined in Pythia's particle "
+                                    "database.\nIt has an antiparticle, "
+                                    "whereas your model definition says it "
+                                    "does not.\nThis particle does not match up "
+                                    "with the definition in Pythia.\n"
+                                    "Please use a different PDG code."
+                                  ).format(str(p.PDG_code)))
+    
+    # Once we're satisfied there's no incorrect duplicates, we can 
+    # add new entries to the XML file.
+    p_towrite = ""
+    append_decays = {}
+    for p in particles:
+
+        # Don't need to add the particle if it already exists...
+        if not p.PDG_code in dp:
+
+            # If antiparticle is distinct, we want to save this information too.
+            name = p.name
+            if not p.is_sc(): 
+                name += " antiname = {}".format(p.antiname)
+
+            # Convert to Pythia's color basis:
+            # 0 = uncolored, (-)1 = (anti)triplet, 2 = octet, (-)3 = (anti)sextet
+            color = 0
+            if p.color == 3: color = 1
+            elif p.color == -3: color = -1
+            elif p.color == 8: color = 2
+            elif p.color == 6: color = 3
+            elif p.color == -6: color = -3
+            # All gucci. Save the particle
+            p_towrite += (
+                      "<particle id=\"{0}\" name=\"{1}\" spinType=\"{2}\" "
+                      "chargeType=\"{3}\" colType=\"{4}\"\n"
+                      "          m0=\"100.00000\">\n"
+            ).format(p.PDG_code, name, p.spinX2+1, p.chargeX3, color)
+
+            # Now for the decays...
+            if p.PDG_code in decays:
+                for d in decays[p.PDG_code]:
+                    p_towrite += (
+                              " <channel onMode=\"1\" bRatio=\"0.0000000\" "
+                              "meMode=\"0\" products=\"{0}\"/>\n"
+                    ).format(' '.join(str(x) for x in d))
+
+            p_towrite += "</particle>\n\n"
+
+        # If it already exists, just need to append the decays to the entry
+        else:
+
+            if p.PDG_code in decays:
+                d_entry = ""
+                for d in decays[p.PDG_code]:
+                    d_entry += (
+                              " <channel onMode=\"1\" bRatio=\"0.0000000\" "
+                              "meMode=\"0\" products=\"{0}\"/>\n"
+                    ).format(' '.join(str(x) for x in d))
+
+                append_decays[p.PDG_code] = d_entry
+
+    # Save the new .xml file
+    waiting_for_braces = False
+    with open(xmnew, 'w+') as f, open(xmold) as g:
+        for line in g:
+            # This is the end...
+            if "</chapter>" in line:
+                f.write(p_towrite)
+
+            # If the particle definition is there, see if we need to add decays
+            r = re.search(r'id="(.*?)"', line)
+            if r:
+                pdg = int(r.group(1))
+                if pdg in append_decays:
+                    waiting_for_braces = True
+
+            if waiting_for_braces and "</particle>" in line:
+                f.write(append_decays[pdg])
+                waiting_for_braces = False
+
+            f.write(line)
+
+    os.remove(xmold)
+    os.rename(xmnew, xmold)
 
 def write_boss_config_for_pythia(model, output_dir):
     """

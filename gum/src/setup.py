@@ -15,11 +15,14 @@ class Particle:
     """
 
     def __init__(self, name, antiname, spinx2, pdg_code, mass_name, 
+                 chargex3, color, 
                  alt_name = None, alt_mass_name = None, tree_mass = None):
 
         self.name = name
         self.antiname = antiname
         self.spinX2 = spinx2
+        self.chargeX3 = chargex3
+        self.color = color
         self.PDG_code = pdg_code
         self.mass = mass_name
         self.alt_name = alt_name
@@ -48,20 +51,13 @@ class Particle:
 def pdg_to_particle(pdg_code, pdg_dict):
     """
     Returns the particle name from the PDG code, from either
-    a GAMBIT or CalcHEP dict, wrapped in quoatation marks.
+    a GAMBIT or CalcHEP dict, wrapped in quotation marks.
     """
     
     for name, pdg_val in pdg_dict.iteritems():
         if pdg_code == pdg_val:
             return name
         
-    """ 
-    # If not found -> throw error; gum doesn't know what to do.
-    raise GumError(("\n\nNo entry for PDG code " + str(pdg_code) + 
-                    " in dictionary. Please check "
-                    "gambit/config/particle_database.yaml "
-                    "or your Mathematica file."))
-    """
     # If not found -> return None & deal with this on case-by-case
     return None
 

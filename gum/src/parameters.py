@@ -46,7 +46,7 @@ def fr_part_to_gum_part(fr_bsm):
         part = fr_bsm[i]
         bsm_list.append(Particle(part.name(), part.antiname(),
                                  part.spinX2(), part.pdg(), 
-                                 part.mass()))
+                                 part.mass(), part.chargeX3(), part.color()))
     
     return bsm_list, add_higgs
 
@@ -238,8 +238,8 @@ def sarah_part_to_gum_part(sarah_bsm):
         part = sarah_bsm[i]            
         bsm_list.append(Particle(part.name(), part.antiname(),
                         part.spinX2(), part.pdg(), 
-                        part.mass(), part.alt_name(),
-                        part.alt_mass(), part.tree_mass()))
+                        part.mass(), part.chargeX3(), part.color(), 
+                        part.alt_name(), part.alt_mass(), part.tree_mass()))
     
     return bsm_list, add_higgs
 

@@ -5,6 +5,7 @@ Master module for all DecayBit related routines.
 import numpy as np
 import re
 from collections import Counter
+from collections import defaultdict
 
 from setup import *
 from files import *
@@ -139,6 +140,30 @@ def decay_sorter(three_diagrams, aux_particles, antiparticle_dict):
 
     return decay_grouper(decays, antiparticle_dict)
 
+def ch_decays_to_dict(three_decays):
+    """
+    Recast the CalcHEP decays to the same dictionary format as those from
+    SPheno, so they can be used by other backends (e.g. Pythia)
+
+    This is just a dictionary:
+
+    decays = {
+               pdg_code : [products_1], [products_2], [products_3]
+             }
+    """
+
+    decays = defaultdict(list)
+
+    for entry in three_decays:
+        key = entry[0]
+        products = entry[1]
+
+    for product in products:
+        decays[key].append(product)
+
+    return decays
+
+
 def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
                                    calchep_pdg_codes, gambit_pdg_codes,
                                    decaybit_dict, calchep_processes):
@@ -148,7 +173,7 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
     Here, grouped_decays is a list, where:
       1. The first element is the decaying particle.
       2. The remaining entries are pairs of decay products.
-      e.g. grouped_decays = [h, [tau+, tau-], [b, bbar], [t, tbar]]
+      e.g. grouped_decays = [h, [  [tau+, tau-], [b, bbar], [t, tbar] ]]
     """
 
     # Find the name of the particle as in DecayBit_rollcall.hpp
