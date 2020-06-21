@@ -1490,6 +1490,14 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY lnL_XENON1T_Anomaly
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_XENON1T_Anomaly
+    START_FUNCTION(double)
+    ALLOW_MODEL(GeneralALP)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   #define CAPABILITY AxionOscillationTemperature
   START_CAPABILITY
     #define FUNCTION calc_AxionOscillationTemperature

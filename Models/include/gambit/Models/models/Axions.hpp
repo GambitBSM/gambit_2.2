@@ -22,9 +22,10 @@
 // General axion model with parametric temperature-dependent mass.
 #define MODEL GeneralALP
   START_MODEL
-  // Physical units: gagg [GeV^-1], gaee [dimensionless], fa [GeV], ma0 [eV]
-  //                 Tchi [MeV], beta [dimensionless], thetai [dimensionless]
-  DEFINEPARS(gagg,gaee,fa,ma0,Tchi,beta,thetai)
+  // Physical units: gagg [GeV^-1], gaee [dimensionless], gan [dimensionless]
+  //                 gap [dimensionless], fa [GeV], ma0 [eV], Tchi [MeV],
+  //                 beta [dimensionless], thetai [dimensionless]
+  DEFINEPARS(gagg,gaee,gan,gap,fa,ma0,Tchi,beta,thetai)
 #undef MODEL
 
 // QCD axion model
@@ -34,8 +35,8 @@
   // Units for these parameters are the same as for the GeneralALP.
   DEFINEPARS(fa,Tchi,beta,thetai)
   // Physical units: LambdaChi [MeV], EoverN [dimensionless], CaggQCD [dimensionless]
-  //                 Caee [dimensionless]
-  DEFINEPARS(LambdaChi,EoverN,CaggQCD,Caee)
+  //                 Caee [dimensionless], Caee [dimensionless], Cap [dimensionless]
+  DEFINEPARS(LambdaChi,EoverN,CaggQCD,Caee,Can,Cap)
   // Translation to parent, all defined in Axions.cpp:
   INTERPRET_AS_PARENT_FUNCTION(QCDAxion_to_GeneralALP)
 #undef PARENT
@@ -47,6 +48,8 @@
   START_MODEL
   // Units for these parameters are the same as for the QCDAxion.
   DEFINEPARS(fa,Tchi,beta,thetai,LambdaChi,EoverN,CaggQCD)
+  // Physical units: Can0 [dimensionless], Cap0 [dimensionless], CaNTilde [dimensionless]
+  DEFINEPARS(Can0,Cap0,CaNTilde)
   INTERPRET_AS_PARENT_FUNCTION(KSVZAxion_to_QCDAxion)
 #undef PARENT
 #undef MODEL
@@ -57,8 +60,9 @@
   START_MODEL
   // Units for these parameters are the same as for the QCDAxion.
   DEFINEPARS(fa,Tchi,beta,thetai,LambdaChi,EoverN,CaggQCD)
-  // Physical units: tanbeta [dimensionless]
-  DEFINEPARS(tanbeta)
+  // Physical units: tanbeta [dimensionless], Can0 [dimensionless], Cap0 [dimensionless]
+  //                 CaNTilde_uct [dimensionless], CaNTilde_dsb [dimensionless]
+  DEFINEPARS(tanbeta,Can0,Cap0,CaNTilde_uct,CaNTilde_dsb)
   INTERPRET_AS_PARENT_FUNCTION(DFSZAxion_I_to_QCDAxion)
 #undef PARENT
 #undef MODEL
@@ -69,8 +73,9 @@
   START_MODEL
   // Units for these parameters are the same as for the QCDAxion.
   DEFINEPARS(fa,Tchi,beta,thetai,LambdaChi,EoverN,CaggQCD)
-  // Physical units: tanbeta [dimensionless]
-  DEFINEPARS(tanbeta)
+  // Physical units: tanbeta [dimensionless], Can0 [dimensionless], Cap0 [dimensionless]
+  //                 CaNTilde_uct [dimensionless], CaNTilde_dsb [dimensionless]
+  DEFINEPARS(tanbeta,Can0,Cap0,CaNTilde_uct,CaNTilde_dsb)
   INTERPRET_AS_PARENT_FUNCTION(DFSZAxion_II_to_QCDAxion)
 #undef PARENT
 #undef MODEL
@@ -81,8 +86,8 @@
   START_MODEL
   // Units for these parameters are the same as for the GeneralALP.
   DEFINEPARS(fa,thetai)
-  // Physical units: Cagg [dimensionless], Caee [dimensionless], Lambda [MeV]
-  DEFINEPARS(Cagg,Caee,Lambda)
+  // Physical units: Cagg [dimensionless], Caee [dimensionless], Can [dimensionless], Cap [dimensionless], Lambda [MeV]
+  DEFINEPARS(Cagg,Caee,Can,Cap,Lambda)
   INTERPRET_AS_PARENT_FUNCTION(ConstantMassALP_to_GeneralALP)
 #undef PARENT
 #undef MODEL
