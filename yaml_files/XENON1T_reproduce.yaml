@@ -1,0 +1,77 @@
+Parameters:
+  GeneralALP:
+    gaee:
+      range: [0.0,6.0e-12]
+      prior_type: flat
+    gan:
+      range: [1.0e-10,1.0e-3]
+      prior_type: log
+    gap:
+      range: [1.0e-10,1.0e-3]
+      prior_type: log
+    gagg:
+      range: [1.0e-12,1.0e-7]
+      prior_type: log
+    fa: 1.0e11
+    ma0: 1.0e3
+    Tchi: 147.0
+    beta: 7.94
+    thetai: 1.0
+
+  XENON1T_NuisanceParameters:
+    delta_bkg:
+      range: [-0.13,0.13]
+      prior_type: flat
+    delta_eff:
+      range: [-0.15,0.15]
+      prior_type: flat
+    x_3H:
+      range: [0.0,30.0e-25]
+      prior_type: flat
+
+Priors:
+
+
+Scanner:
+  use_scanner: de
+
+  scanners:
+    random:
+      plugin: random
+      point_number: 1
+      like:  LogLike
+    de:
+      plugin: diver
+      like: LogLike
+      NP: 20000
+      convthresh: 1.0e-4
+      jDE: true
+      lambdajDE: false
+
+
+ObsLikes:
+  # likelihoods
+  - capability: lnL_XENON1T_Anomaly
+    purpose: LogLike
+  - capability: lnL_XENON1T_Anomaly_NuisanceParameters
+    purpose: LogLike
+
+
+Printer:
+  printer: ascii
+  options:
+    output_file: "results.txt"
+
+
+Logger:
+  redirection:
+    [Default] : "default.log"
+
+
+KeyValues:
+  dependency_resolution:
+    prefer_model_specific_functions: true
+  likelihood:
+    model_invalid_for_lnlike_below: -1e6
+  default_output_path: "./data_gambit/Axions/XENON1T_reproduce"
+  debug: true
