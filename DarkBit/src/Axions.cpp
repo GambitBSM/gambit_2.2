@@ -24,6 +24,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <Eigen/Core>
+
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf.h>
 #include <gsl/gsl_sf_trig.h>
@@ -1914,54 +1916,88 @@ namespace Gambit
       result = interp.lnL(epsilon, gamma);
     }
 
-    ////////////////////////////////////
-    //      XENON1T Anomaly 2020      //
-    ////////////////////////////////////
-
-    // Capability to provide the XENON1T likelihood for 2006.10035 .
+    /**
+     * @brief Capability for the XENON1T likelihood from 2006.10035
+     *
+     * The signal model consists of 3 components: Primakoff, ABC, and Fe57.
+     *
+     * We do not include the tritium background by default.
+     */
     void calc_lnL_XENON1T_Anomaly(double &result)
     {
-      result = 0.0;
       using namespace Pipes::calc_lnL_XENON1T_Anomaly;
-      double gae = std::fabs(*Param["gaee"])/5.0e-12;
-      double gagamma = std::fabs(*Param["gagg"])/2.0e-10;
-      double gaN = std::fabs( (1.095*(*Param["gan"]) + 0.095*(*Param["gap"])) / 1.0e-6 );
 
-      // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years).
+      const double gae = std::fabs(*Param["gaee"]) / 5.0e-12;
+      const double gagamma = std::fabs(*Param["gagg"]) / 2.0e-10;
+      const double gaN = std::fabs((1.095*(*Param["gan"]) + 0.095*(*Param["gap"])) / 1.0e-6);
 
-      const std::vector<double> obs {25.8973 , 61.1494 , 55.094  , 46.96965, 49.03795, 46.96965, 44.0648 , 40.963  , 40.02765, 36.8277 , 50.90865, 41.0124 , 42.04655, 51.00745, 46.96965, 48.0532 , 23.9278 , 43.0313 ,
-                                     41.94775, 33.82405, 42.04655, 39.9295 , 37.96   , 52.92755, 41.0618 , 57.06285, 38.94475, 45.9849 , 34.90695};
-      const int n_bins = obs.size();
-      //const std::vector<double> bkg_3H {4.56433040e+00, 8.64086363e+00, 8.97973381e+00, 8.65266285e+00, 8.05799840e+00, 7.32199207e+00, 6.50761649e+00, 5.67386038e+00, 4.83439837e+00, 3.99489406e+00, 3.19148231e+00, 2.45001400e+00,
-      //                                  1.78762838e+00, 1.21931340e+00, 7.57573124e-01, 4.14994470e-01, 1.96065363e-01, 7.61428135e-02, 2.38729647e-02, 1.17749631e-02, 4.78833295e-03, 1.66122310e-04, 5.45008523e-05, 5.25120826e-05, 5.05233129e-05,
-      //                                  4.85345431e-05, 4.65457734e-05, 4.45570036e-05, 4.25682339e-05};
-      const std::vector<double> bkg_other {22.16579261, 39.6158453 , 42.00805343, 42.64620158, 42.96545997, 43.14390744, 43.31777707, 43.74613017, 44.29959539, 44.22636861, 43.78719113, 43.5828809 , 43.63091523, 43.67341257, 43.75194373,
-                                           43.84418989, 43.94178904, 44.0368095 , 44.13427175, 44.23090153, 44.32858738, 44.42840092, 44.52498041, 44.62108326, 44.71829719, 44.81415475, 44.91244891, 45.01013443, 45.1051268};
-      const std::vector<double> signal_ref_ABC {7.49385547e+01, 9.15088244e+01, 4.93918631e+01, 3.54903000e+01, 3.98847262e+01, 3.58612509e+01, 2.28486490e+01, 1.20033293e+01, 6.31894290e+00, 3.32323970e+00, 1.62166305e+00, 6.24062296e-01,
-                                                1.56080190e-01, 2.13931692e-02, 1.64041974e-03, 5.97103413e-05, 6.24933386e-07, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-      const std::vector<double> signal_ref_P {8.55812382e+00, 2.01373524e+01, 1.93233376e+01, 2.23036418e+01, 2.90690439e+01, 2.49652169e+01, 1.57204790e+01, 8.79652098e+00, 4.79071768e+00, 2.61047322e+00, 1.43649368e+00, 7.87450561e-01,
-                                              4.16887907e-01, 2.10902343e-01, 1.03274720e-01, 5.29525382e-02, 2.94219817e-02, 1.71469020e-02, 1.09233185e-02, 7.79972258e-03, 6.27513431e-03, 5.54130855e-03, 5.17836960e-03, 5.00038278e-03,
-                                              4.90749181e-03, 4.86254953e-03, 4.84041621e-03, 2.39433845e-03, 0};
-      const std::vector<double> signal_ref_Fe {4.66629133e-22, 1.14892801e-18, 1.49038352e-15, 1.01977301e-12, 3.68587659e-10, 7.04985540e-08, 7.15076848e-06, 3.85624183e-04, 1.10890165e-02, 1.70591153e-01, 1.40875371e+00, 6.26535590e+00,
-                                               1.50478985e+01, 1.95528101e+01, 1.37528900e+01, 5.23236726e+00, 1.07465519e+00, 1.18815894e-01, 7.04820331e-03, 2.23564532e-04, 3.77961278e-06, 3.39592050e-08, 1.61753468e-10, 4.07595451e-13,
-                                               5.42420577e-16, 3.80680740e-19, 1.40735174e-22, 2.73811491e-26, 2.80137635e-30};
+      const double bkg_scale = 1.;  // TODO get from model
+      const double eff = 1.; // TODO get from model
 
-      double norm = 0.0;
-      static bool norm_calculated = false;
-      if(not(norm_calculated))
-      {
-        // Define the likelihood via Poisson(n|s+b)/Poisson(n|n).
-        for(int i=0; i<n_bins; i++) { norm += obs[i]*gsl_sf_log(obs[i]) - obs[i];}
-      };
+      static const bool include_bkg_tritium = runOptions->getValueOrDef<bool>
+        (false, "include_bkg_tritium");
 
-      for (int i = 0; i < n_bins; i++)
-      {
-        double mu = signal_ref_ABC[i]*gsl_pow_2(gae) + signal_ref_P[i]*gsl_pow_2(gagamma) + signal_ref_P[i]*gsl_pow_2(gaN);
-        mu = mu*gsl_pow_2(gae) + bkg_other[i];
-        result += obs[i]*gsl_sf_log(mu) - mu;
-      };
+      // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years)
 
-      result = result - norm;
+      static const Eigen::ArrayXd observed = (Eigen::ArrayXd() <<
+        25.8973, 61.1494, 55.094, 46.96965, 49.03795,
+        46.96965, 44.0648, 40.963, 40.02765, 36.8277,
+        50.90865, 41.0124, 42.04655, 51.00745, 46.96965,
+        48.0532, 23.9278, 43.0313, 41.94775, 33.82405,
+        42.04655, 39.9295, 37.96, 52.92755, 41.0618,
+        57.06285, 38.94475, 45.9849, 34.90695).finished();
+
+      static const Eigen::ArrayXd bkg_tritium = (Eigen::ArrayXd() <<
+        4.56433040e+00, 8.64086363e+00, 8.97973381e+00, 8.65266285e+00, 8.05799840e+00,
+        7.32199207e+00, 6.50761649e+00, 5.67386038e+00, 4.83439837e+00, 3.99489406e+00,
+        3.19148231e+00, 2.45001400e+00, 1.78762838e+00, 1.21931340e+00, 7.57573124e-01,
+        4.14994470e-01, 1.96065363e-01, 7.61428135e-02, 2.38729647e-02, 1.17749631e-02,
+        4.78833295e-03, 1.66122310e-04, 5.45008523e-05, 5.25120826e-05, 5.05233129e-05,
+        4.85345431e-05, 4.65457734e-05, 4.45570036e-05, 4.25682339e-05).finished();
+
+      static const Eigen::ArrayXd bkg_other = (Eigen::ArrayXd() <<
+        22.16579261, 39.6158453, 42.00805343, 42.64620158, 42.96545997,
+        43.14390744, 43.31777707, 43.74613017, 44.29959539, 44.22636861,
+        43.78719113, 43.5828809, 43.63091523, 43.67341257, 43.75194373,
+        43.84418989, 43.94178904, 44.0368095, 44.13427175, 44.23090153,
+        44.32858738, 44.42840092, 44.52498041, 44.62108326, 44.71829719,
+        44.81415475, 44.91244891, 45.01013443, 45.1051268).finished();
+
+      static const Eigen::ArrayXd signal_ref_ABC = (Eigen::ArrayXd() <<
+        7.49385547e+01, 9.15088244e+01, 4.93918631e+01, 3.54903000e+01, 3.98847262e+01,
+        3.58612509e+01, 2.28486490e+01, 1.20033293e+01, 6.31894290e+00, 3.32323970e+00,
+        1.62166305e+00, 6.24062296e-01, 1.56080190e-01, 2.13931692e-02, 1.64041974e-03,
+        5.97103413e-05, 6.24933386e-07, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0).finished();
+
+      static const Eigen::ArrayXd signal_ref_primakoff = (Eigen::ArrayXd() <<
+        8.55812382e+00, 2.01373524e+01, 1.93233376e+01, 2.23036418e+01, 2.90690439e+01,
+        2.49652169e+01, 1.57204790e+01, 8.79652098e+00, 4.79071768e+00, 2.61047322e+00,
+        1.43649368e+00, 7.87450561e-01, 4.16887907e-01, 2.10902343e-01, 1.03274720e-01,
+        5.29525382e-02, 2.94219817e-02, 1.71469020e-02, 1.09233185e-02, 7.79972258e-03,
+        6.27513431e-03, 5.54130855e-03, 5.17836960e-03, 5.00038278e-03, 4.90749181e-03,
+        4.86254953e-03, 4.84041621e-03, 2.39433845e-03, 0).finished();
+
+      static const Eigen::ArrayXd signal_ref_fe57 = (Eigen::ArrayXd() <<
+        4.66629133e-22, 1.14892801e-18, 1.49038352e-15, 1.01977301e-12, 3.68587659e-10,
+        7.04985540e-08, 7.15076848e-06, 3.85624183e-04, 1.10890165e-02, 1.70591153e-01,
+        1.40875371e+00, 6.26535590e+00, 1.50478985e+01, 1.95528101e+01, 1.37528900e+01,
+        5.23236726e+00, 1.07465519e+00, 1.18815894e-01, 7.04820331e-03, 2.23564532e-04,
+        3.77961278e-06, 3.39592050e-08, 1.61753468e-10, 4.07595451e-13, 5.42420577e-16,
+        3.80680740e-19, 1.40735174e-22, 2.73811491e-26, 2.80137635e-30).finished();
+
+      static const double asimov = (observed * observed.log() - observed).sum();
+
+      const Eigen::ArrayXd bkg = include_bkg_tritium ? bkg_tritium + bkg_other : bkg_other;
+      const Eigen::ArrayXd signal = gae * gae * (
+                                    signal_ref_ABC * gae * gae +
+                                    signal_ref_primakoff * gagamma * gagamma +
+                                    signal_ref_fe57 * gaN * gaN);
+      const Eigen::ArrayXd expected = eff * (bkg_scale * bkg + signal);
+
+      result = (observed * expected.log() - expected).sum() - asimov;
     }
-  }
-}
+
+  }  // namespace DarkBit
+}  // namespace Gambit
