@@ -1916,22 +1916,6 @@ namespace Gambit
       result = interp.lnL(epsilon, gamma);
     }
 
-    /** @brief Constraint on XENON1T efficiency */
-    void calc_lnL_XENON1T_efficiency(double &result)
-    {
-      // TODO is mu = 1 correct? check sigma too
-      const double eff = 1.;  // TODO
-      result = Stats::gaussian_loglikelihood(eff, 1., 0., 0.03, false);
-    }
-
-    /** @brief Constraint on XENON1T background scale */
-    void calc_lnL_XENON1T_bkg_scale(double &result)
-    {
-      // TODO is mu = 1 correct? check sigma too
-      const double bkg_scale = 1.;  // TODO
-      result = Stats::gaussian_loglikelihood(bkg_scale, 1., 0., 0.026, false);
-    }
-
     /**
      * @brief Capability for the XENON1T likelihood from 2006.10035
      *

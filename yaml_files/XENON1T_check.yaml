@@ -1,6 +1,6 @@
 Parameters:
   GeneralALP:
-    gaee: 3.0706268679889577e-12 
+    gaee: 3.0706268679889577e-12
     gan: 9.027312362436873e-07
     gap: 9.027312362436873e-07
     gagg: 1.0256304414863502e-10
@@ -9,6 +9,11 @@ Parameters:
     Tchi: 1.
     beta: 1.
     thetai: 1.
+
+  XENON1T_NuisanceParameters:
+    delta_bkg: 0.
+    delta_eff: 0.
+    x_3H: 0.
 
 
 Priors:
@@ -27,6 +32,8 @@ Scanner:
 ObsLikes:
   # likelihoods
   - capability: lnL_XENON1T_Anomaly
+    purpose: LogLike
+  - capability: lnL_XENON1T_Anomaly_NuisanceParameters
     purpose: LogLike
 
 
@@ -48,4 +55,3 @@ KeyValues:
     model_invalid_for_lnlike_below: -1e6
   default_output_path: "./data_gambit/Axions"
   debug: true
-
