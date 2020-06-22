@@ -1920,22 +1920,19 @@ namespace Gambit
      * @brief Capability for the XENON1T likelihood from 2006.10035
      *
      * The signal model consists of 3 components: Primakoff, ABC, and Fe57.
-     *
-     * We do not include the tritium background by default.
      */
     void calc_lnL_XENON1T_Anomaly(double &result)
     {
       using namespace Pipes::calc_lnL_XENON1T_Anomaly;
 
-      const double gae = std::fabs(*Param["gaee"]) / 5.0e-12;
-      const double gagamma = std::fabs(*Param["gagg"]) / 2.0e-10;
-      const double gaN = std::fabs((1.095*(*Param["gan"]) + 0.095*(*Param["gap"])) / 1.0e-6);
+      double gae = std::fabs(*Param["gaee"]) / 5.0e-12;
+      double gagamma = std::fabs(*Param["gagg"]) / 2.0e-10;
+      double gaN = std::fabs((1.095*(*Param["gan"]) + 0.095*(*Param["gap"])) / 1.0e-6);
+      double x_3H = *Param["x_3H"] / 6.2e-25;
+      double bkg_scale = 1.0 + *Param["delta_bkg"];
+      double eff = 1.0 + *Param["delta_eff"];
 
-      const double bkg_scale = 1.;  // TODO get from model
-      const double eff = 1.; // TODO get from model
-
-      static const bool include_bkg_tritium = runOptions->getValueOrDef<bool>
-        (false, "include_bkg_tritium");
+      // static const bool include_bkg_tritium = runOptions->getValueOrDef<bool> (false, "include_bkg_tritium");
 
       // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years)
 
@@ -1989,7 +1986,8 @@ namespace Gambit
 
       static const double asimov = (observed * observed.log() - observed).sum();
 
-      const Eigen::ArrayXd bkg = include_bkg_tritium ? bkg_tritium + bkg_other : bkg_other;
+      //const Eigen::ArrayXd bkg = include_bkg_tritium ? bkg_tritium + bkg_other : bkg_other;
+      const Eigen::ArrayXd bkg = x_3H * bkg_tritium + bkg_other;
       const Eigen::ArrayXd signal = gae * gae * (
                                     signal_ref_ABC * gae * gae +
                                     signal_ref_primakoff * gagamma * gagamma +
@@ -1997,6 +1995,13 @@ namespace Gambit
       const Eigen::ArrayXd expected = eff * (bkg_scale * bkg + signal);
 
       result = (observed * expected.log() - expected).sum() - asimov;
+    }
+
+    void calc_lnL_XENON1T_Anomaly_NuisanceParameters(double &result)
+    {
+      using namespace Pipes::calc_lnL_XENON1T_Anomaly_NuisanceParameters;
+
+      result = -0.5 * ( gsl_pow_2(*Param["delta_bkg"]/0.026) + gsl_pow_2(*Param["delta_eff"]/0.030) );
     }
 
   }  // namespace DarkBit

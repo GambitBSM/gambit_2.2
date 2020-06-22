@@ -92,4 +92,11 @@
 #undef PARENT
 #undef MODEL
 
+// Nuisance parameters for the XENON1T Anomaly experiment 2020
+#define MODEL XENON1T_NuisanceParameters
+  START_MODEL
+  // Physical units: delta_eff [dimensionless], delta_bkg [dimensionless], x_3H [mol/mol]
+  DEFINEPARS(delta_eff,delta_bkg,x_3H)
+#undef MODEL
+
 #endif
