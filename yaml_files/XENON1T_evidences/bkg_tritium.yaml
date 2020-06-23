@@ -40,3 +40,9 @@ Scanner:
 ObsLikes:
   - capability: lnL_XENON1T_Anomaly
     purpose: LogLike
+
+KeyValues:
+
+  default_output_path: "runs/XENON1T_bkg_tritium"
+
+  debug: false
