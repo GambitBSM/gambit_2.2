@@ -1,0 +1,40 @@
+Parameters:
+  GeneralALP:
+    gaee: 0.
+    gan: 0.
+    gap: 0.
+    gagg: 0.
+    fa: 1.0e11
+    ma0: 1.0e3
+    Tchi: 147.0
+    beta: 7.94
+    thetai: 1.0
+
+  XENON1T_NuisanceParameters:
+    delta_bkg:
+      mu: 0.
+      sigma: 0.026
+      prior_type: gaussian
+    delta_eff:
+      mu: 0.
+      sigma: 0.03
+      prior_type: gaussian
+    x_3H: 0.
+
+Printer:
+  printer: ascii
+  options:
+    output_file: "background.txt"
+
+Scanner:
+  use_scanner: multinest
+  scanners:
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 20000
+      tol: 0.001
+
+ObsLikes:
+  - capability: lnL_XENON1T_Anomaly
+    purpose: LogLike
