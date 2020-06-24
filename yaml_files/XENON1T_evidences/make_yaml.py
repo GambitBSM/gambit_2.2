@@ -1,9 +1,9 @@
 """
 Change prior ranges in yaml.
 
-    python3 make_yaml.py signal.yaml 1e-10 1e-5
+    python3 make_yaml.py
 
-gives yaml with prior ranges for the axion couplings between 1e-10 and 1e-5
+gives you lots of yamls I want to run.
 """
 
 import yaml
