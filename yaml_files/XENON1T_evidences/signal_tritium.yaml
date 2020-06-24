@@ -27,7 +27,7 @@ Parameters:
       sigma: 0.03
       prior_type: gaussian
     x_3H:
-      range: [1e-5, 1.]
+      range: [1e-27, 1e-23]
       prior_type: log
 
 Printer:
