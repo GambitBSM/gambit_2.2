@@ -20,8 +20,9 @@ Parameters:
       sigs: [0.03]
       prior_type: gaussian
     x_3H:
-      range: [1e-27, 1e-23]
-      prior_type: log
+      mu: [-27.]
+      sigs: [3.]
+      prior_type: log10normal
 
 Printer:
   printer: ascii
