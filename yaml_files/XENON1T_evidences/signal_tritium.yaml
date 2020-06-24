@@ -19,12 +19,12 @@ Parameters:
 
   XENON1T_NuisanceParameters:
     delta_bkg:
-      mu: 0.
-      sigma: 0.026
+      mu: [0.]
+      sigs: [0.026]
       prior_type: gaussian
     delta_eff:
-      mu: 0.
-      sigma: 0.03
+      mu: [0.]
+      sigs: [0.03]
       prior_type: gaussian
     x_3H:
       range: [1e-27, 1e-23]
@@ -47,3 +47,10 @@ Scanner:
 ObsLikes:
   - capability: lnL_XENON1T_Anomaly
     purpose: LogLike
+
+KeyValues:
+
+  default_output_path: "runs/XENON1T_signal_tritium"
+ 
+  debug: false
+
