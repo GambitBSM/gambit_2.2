@@ -14,6 +14,12 @@ def read_log_z(file_name):
 
 if __name__ == "__main__":
     
-    file_names = ["../../log"]
+    # Vary couplings
+    file_names = ["signal_{}.log".format(i) for i in range(10)]
+    log_z = [read_log_z(f) for f in file_names]
+    print(log_z)
+
+    # Vary tritium
+    file_names = ["bkg_tritium_{}.log".format(i) for i in range(10)]
     log_z = [read_log_z(f) for f in file_names]
     print(log_z)
