@@ -5,15 +5,19 @@ from scipy.stats import norm
 from style import make_style
 
 
-data_arr = np.loadtxt("vary_tritium.dat")
-
+data_arr_bkg = np.loadtxt("vary_tritium_bkg.dat")
 width = data_arr[:, 0]
 order = width.argsort()
 width = width[order]
-log_z = data_arr[order, 1]
-log_z_bkg = -22.745
+log_z_bkg = data_arr[order, 1]
 
-bayes_factor = np.exp(log_z - log_z_bkg)
+data_arr_signal = np.loadtxt("vary_tritium_signal.dat")
+width = data_arr[:, 0]
+order = width.argsort()
+width = width[order]
+log_z_signal = data_arr[order, 1]
+
+bayes_factor = np.exp(log_z_signal - log_z_bkg)
 
 make_style()
 fig, ax = plt.subplots()
