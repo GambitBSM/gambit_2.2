@@ -1324,6 +1324,22 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY DFSZAxion_AxionNucleonConstants_NuisanceLikelihood
+  START_CAPABILITY
+    #define FUNCTION calc_DFSZAxion_AxionNucleonConstants_NuisanceLikelihood
+    START_FUNCTION(double)
+    ALLOW_MODEL(DFSZAxion_I,DFSZAxion_II)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY KSVZAxion_AxionNucleonConstants_NuisanceLikelihood
+  START_CAPABILITY
+    #define FUNCTION calc_KSVZAxion_AxionNucleonConstants_NuisanceLikelihood
+    START_FUNCTION(double)
+    ALLOW_MODEL(KSVZAxion)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   #define CAPABILITY ALPS1_signal_vac
   START_CAPABILITY
     #define FUNCTION calc_ALPS1_signal_vac

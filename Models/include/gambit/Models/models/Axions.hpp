@@ -48,8 +48,8 @@
   START_MODEL
   // Units for these parameters are the same as for the QCDAxion.
   DEFINEPARS(fa,Tchi,beta,thetai,LambdaChi,EoverN,CaggQCD)
-  // Physical units: Can0 [dimensionless], Cap0 [dimensionless], CaNTilde [dimensionless]
-  DEFINEPARS(Can0,Cap0,CaNTilde)
+  // Physical units: Can0 [dimensionless], Cap0 [dimensionless]
+  DEFINEPARS(Can0,Cap0)
   INTERPRET_AS_PARENT_FUNCTION(KSVZAxion_to_QCDAxion)
 #undef PARENT
 #undef MODEL
@@ -61,8 +61,8 @@
   // Units for these parameters are the same as for the QCDAxion.
   DEFINEPARS(fa,Tchi,beta,thetai,LambdaChi,EoverN,CaggQCD)
   // Physical units: tanbeta [dimensionless], Can0 [dimensionless], Cap0 [dimensionless]
-  //                 CaNTilde_uct [dimensionless], CaNTilde_dsb [dimensionless]
-  DEFINEPARS(tanbeta,Can0,Cap0,CaNTilde_uct,CaNTilde_dsb)
+  //                 CaNTilde1 [dimensionless], CaNTilde2 [dimensionless]
+  DEFINEPARS(tanbeta,Can0,Cap0,CaNTilde1,CaNTilde2)
   INTERPRET_AS_PARENT_FUNCTION(DFSZAxion_I_to_QCDAxion)
 #undef PARENT
 #undef MODEL
@@ -74,8 +74,8 @@
   // Units for these parameters are the same as for the QCDAxion.
   DEFINEPARS(fa,Tchi,beta,thetai,LambdaChi,EoverN,CaggQCD)
   // Physical units: tanbeta [dimensionless], Can0 [dimensionless], Cap0 [dimensionless]
-  //                 CaNTilde_uct [dimensionless], CaNTilde_dsb [dimensionless]
-  DEFINEPARS(tanbeta,Can0,Cap0,CaNTilde_uct,CaNTilde_dsb)
+  //                 CaNTilde1 [dimensionless], CaNTilde2 [dimensionless]
+  DEFINEPARS(tanbeta,Can0,Cap0,CaNTilde1,CaNTilde2)
   INTERPRET_AS_PARENT_FUNCTION(DFSZAxion_II_to_QCDAxion)
 #undef PARENT
 #undef MODEL

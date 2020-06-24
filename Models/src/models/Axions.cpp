@@ -37,8 +37,8 @@ void MODEL_NAMESPACE::QCDAxion_to_GeneralALP (const ModelParameters &myparams, M
 
     parentparams.setValue("gagg", alpha_red*std::fabs(EoN-CG)/fa);
     parentparams.setValue("gaee", m_electron*myparams["Caee"]/fa);
-    parentparams.setValue("gan", myparams["Can"]/fa);
-    parentparams.setValue("gap", myparams["Cap"]/fa);
+    parentparams.setValue("gan", m_neutron*myparams["Can"]/fa);
+    parentparams.setValue("gap", m_proton*myparams["Cap"]/fa);
     parentparams.setValue("fa", fa);
     parentparams.setValue("ma0", 1E+3*L2/fa);
     parentparams.setValue("Tchi", myparams["Tchi"]);
@@ -62,8 +62,8 @@ void MODEL_NAMESPACE::KSVZAxion_to_QCDAxion (const ModelParameters &myparams, Mo
     parentparams.setValue("EoverN", EoN);
     parentparams.setValue("CaggQCD", CaggQCD);
     parentparams.setValue("Caee", prefactor*(EoN*std::log(fa/m_electron) - CaggQCD*std::log(scale/m_electron)));
-    parentparams.setValue("Can", myparams["Can0"] + myparams["CaNTilde"]);
-    parentparams.setValue("Cap", myparams["Cap0"] + myparams["CaNTilde"]);
+    parentparams.setValue("Can", myparams["Can0"]);
+    parentparams.setValue("Cap", myparams["Cap0"]);
     parentparams.setValue("fa", fa);
     parentparams.setValue("LambdaChi", myparams["LambdaChi"]);
     parentparams.setValue("Tchi", myparams["Tchi"]);
@@ -84,8 +84,8 @@ void MODEL_NAMESPACE::DFSZAxion_I_to_QCDAxion (const ModelParameters &myparams, 
     parentparams.setValue("EoverN", myparams["EoverN"]);
     parentparams.setValue("CaggQCD", myparams["CaggQCD"]);
     parentparams.setValue("Caee", s2/3.0);
-    parentparams.setValue("Can", myparams["Can0"] + myparams["CaNTilde_uct"]*s2/3.0 + myparams["CaNTilde_dsb"]*(1.0 - s2)/3.0);
-    parentparams.setValue("Cap", myparams["Cap0"] + myparams["CaNTilde_uct"]*s2/3.0 + myparams["CaNTilde_dsb"]*(1.0 - s2)/3.0);
+    parentparams.setValue("Cap", myparams["Cap0"] + (myparams["CaNTilde1"] - 0.0155)*s2/3.0 + (myparams["CaNTilde2"] - 0.047)*(1.0 - s2)/3.0);
+    parentparams.setValue("Can", myparams["Can0"] + (myparams["CaNTilde2"] - 0.0155)*s2/3.0 + (myparams["CaNTilde1"] - 0.047)*(1.0 - s2)/3.0);
     parentparams.setValue("fa", myparams["fa"]);
     parentparams.setValue("LambdaChi", myparams["LambdaChi"]);
     parentparams.setValue("Tchi", myparams["Tchi"]);
@@ -106,8 +106,8 @@ void MODEL_NAMESPACE::DFSZAxion_II_to_QCDAxion (const ModelParameters &myparams,
     parentparams.setValue("EoverN", myparams["EoverN"]);
     parentparams.setValue("CaggQCD", myparams["CaggQCD"]);
     parentparams.setValue("Caee", (1.0-s2)/3.0);
-    parentparams.setValue("Can", myparams["Can0"] + myparams["CaNTilde_uct"]*s2/3.0 + myparams["CaNTilde_dsb"]*(1.0 - s2)/3.0);
-    parentparams.setValue("Cap", myparams["Cap0"] + myparams["CaNTilde_uct"]*s2/3.0 + myparams["CaNTilde_dsb"]*(1.0 - s2)/3.0);
+    parentparams.setValue("Cap", myparams["Cap0"] + (myparams["CaNTilde1"] - 0.0155)*s2/3.0 + (myparams["CaNTilde2"] - 0.047)*(1.0 - s2)/3.0);
+    parentparams.setValue("Can", myparams["Can0"] + (myparams["CaNTilde2"] - 0.0155)*s2/3.0 + (myparams["CaNTilde1"] - 0.047)*(1.0 - s2)/3.0);
     parentparams.setValue("fa", myparams["fa"]);
     parentparams.setValue("LambdaChi", myparams["LambdaChi"]);
     parentparams.setValue("Tchi", myparams["Tchi"]);

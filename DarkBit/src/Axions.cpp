@@ -964,6 +964,45 @@ namespace Gambit
       result = gaussian_nuisance_lnL(CaggQCDmu, CaggQCD, CaggQCDsigma);
     }
 
+    // Capability function to provide a simple Gaussian nuisance likelihood for
+    // the model-independent parameters of the nucleon couplings
+    void calc_KSVZAxion_AxionNucleonConstants_NuisanceLikelihood(double &result)
+    {
+      using namespace Pipes::calc_KSVZAxion_AxionNucleonConstants_NuisanceLikelihood;
+      double Can0 = *Param["Can0"];
+      double Cap0 = *Param["Cap0"];
+
+      // Results from NLO calculations (1511.02867).
+      const double Can0mu = -0.02;
+      const double Can0sigma = 0.03;
+      const double Cap0mu = -0.47;
+      const double Cap0sigma = 0.03;
+
+      result = gaussian_nuisance_lnL(Can0mu, Can0, Can0sigma) + gaussian_nuisance_lnL(Cap0mu, Cap0, Cap0sigma);
+    }
+
+    // Capability function to provide a simple Gaussian nuisance likelihood for
+    // the model-independent contribution to the axion-photon coupling for QCD axions.
+    void calc_DFSZAxion_AxionNucleonConstants_NuisanceLikelihood(double &result)
+    {
+      using namespace Pipes::calc_DFSZAxion_AxionNucleonConstants_NuisanceLikelihood;
+      double Can0 = *Param["Can0"];
+      double Cap0 = *Param["Cap0"];
+      double CaNTilde1 = *Param["CaNTilde1"];
+      double CaNTilde2 = *Param["CaNTilde2"];
+
+      // Based on results from NLO calculations (1511.02867).
+      const double Can0mu = -0.02;
+      const double Can0sigma = 0.03;
+      const double Cap0mu = -0.47;
+      const double Cap0sigma = 0.03;
+      const double CaNTilde1mu = 0.88;
+      const double CaNTilde1sigma = 0.03;
+      const double CaNTilde2mu = -0.39;
+      const double CaNTilde2sigma = 0.02;
+
+      result = gaussian_nuisance_lnL(Can0mu, Can0, Can0sigma) + gaussian_nuisance_lnL(Cap0mu, Cap0, Cap0sigma) + gaussian_nuisance_lnL(CaNTilde1mu, CaNTilde1, CaNTilde1sigma) + gaussian_nuisance_lnL(CaNTilde2mu, CaNTilde2, CaNTilde2sigma);
+    }
 
     // Auxillary function for QCD nuisance likelihood below.
     double log_chi (double T, double beta, double Tchi)
