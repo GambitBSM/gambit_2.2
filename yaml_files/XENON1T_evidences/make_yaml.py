@@ -67,7 +67,7 @@ if __name__ == "__main__":
     for i, w in enumerate(width):
         a = center - w
         b = center + w
-        d = alter_couplings("signal.yaml", a, b, "_{}".format(i))
+        d = alter_couplings("signal.yaml", 10.**a, 10.**b, "_{}".format(i))
         name = "signal_{}.yaml".format(i)
         with open(name, "w") as f:
             yaml.dump(d, f, default_flow_style=False)
