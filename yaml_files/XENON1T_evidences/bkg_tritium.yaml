@@ -12,15 +12,15 @@ Parameters:
 
   XENON1T_NuisanceParameters:
     delta_bkg:
-      mu: [0.]
+      mean: [0.]
       sigs: [0.026]
       prior_type: gaussian
     delta_eff:
-      mu: [0.]
+      mean: [0.]
       sigs: [0.03]
       prior_type: gaussian
     x_3H:
-      mu: [-27.]
+      mean: [-27.]
       sigs: [3.]
       prior_type: log10normal
 
