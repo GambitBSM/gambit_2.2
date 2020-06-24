@@ -1,0 +1,32 @@
+Parameters:
+  KSVZAxion:
+    fa:
+      range: [1.0e6,1.0e16]
+      prior_type: log
+    LambdaChi:
+      range: [73.0,78.0]
+      prior_type: flat
+    Tchi: 147.0
+    beta: 7.94
+    CaggQCD:
+      range: [1.72,2.12]
+      prior_type: flat
+    Can0:
+      range: [-0.32,0.28]
+      prior_type: flat
+    Cap0:
+      range: [-0.77,-0.17]
+      prior_type: flat
+    EoverN:
+      range: [0.16666,56.66667]
+      prior_type: flat
+    thetai: 1.0
+
+
+ObsLikes:
+  - capability: QCDAxion_ZeroTemperatureMass
+    purpose: LogLike
+  - capability: QCDAxion_AxionPhotonConstant
+    purpose: LogLike
+  - capability: KSVZAxion_AxionNucleonConstants_NuisanceLikelihood
+    purpose: LogLike
