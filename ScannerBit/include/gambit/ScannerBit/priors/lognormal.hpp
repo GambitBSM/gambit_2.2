@@ -24,6 +24,7 @@
 
 #include <vector>
 #include <cmath>
+#include <numeric>
 
 #include "gambit/ScannerBit/cholesky.hpp"
 #include "gambit/ScannerBit/priors.hpp"
