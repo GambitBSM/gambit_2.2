@@ -23,6 +23,8 @@ def alter_couplings(template_name, a, b, suffix=None):
     if suffix is not None:
         original["KeyValues"]["default_output_path"] += suffix
 
+    original["Scanner"]["scanners"]["multinest"]["nlive"] = 1000  # fast repeats
+
     return original
 
 
@@ -32,6 +34,8 @@ def alter_tritium(template_name, a, suffix=None):
         original = yaml.load(f)
 
     original["Parameters"]["XENON1T_NuisanceParameters"]["x_3H"]["sigs"] = [float(a)]
+    original["Scanner"]["scanners"]["multinest"]["nlive"] = 1000  # fast repeats
+
     if suffix is not None:
         original["KeyValues"]["default_output_path"] += suffix
 
