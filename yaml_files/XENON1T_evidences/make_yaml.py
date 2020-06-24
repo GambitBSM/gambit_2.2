@@ -43,10 +43,10 @@ def alter_tritium(template_name, a, suffix=None):
 
 
 if __name__ == "__main__":
-    
+
     # Tritium yamls
 
-    sigma = np.linspace(0., 5, 10)
+    sigma = np.linspace(0.5, 5, 10)
 
     for i, s in enumerate(sigma):
         d = alter_tritium("bkg_tritium.yaml", s, "_{}".format(i))
