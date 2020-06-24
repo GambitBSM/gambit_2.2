@@ -99,4 +99,11 @@
   DEFINEPARS(delta_eff,delta_bkg,x_3H)
 #undef MODEL
 
+// Nuisance parameters for the XENON1T Anomaly experiment 2020 (DM signal)
+#define MODEL XENON1T_DM_NuisanceParameters
+  START_MODEL
+  // Physical units: eta [dimensionless]
+  DEFINEPARS(eta)
+#undef MODEL
+
 #endif

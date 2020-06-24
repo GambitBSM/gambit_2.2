@@ -29,6 +29,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf.h>
 #include <gsl/gsl_sf_trig.h>
+#include <gsl/gsl_sf_erf.h>
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_histogram.h>
 #include <gsl/gsl_roots.h>
@@ -2034,6 +2035,82 @@ namespace Gambit
       const Eigen::ArrayXd expected = eff * (bkg_scale * bkg + signal);
 
       result = (observed * expected.log() - expected).sum() - asimov;
+    }
+
+
+    void calc_lnL_XENON1T_DM_Anomaly(double &result)
+    {
+      using namespace Pipes::calc_lnL_XENON1T_DM_Anomaly;
+
+      double gae = std::fabs(*Param["gaee"]) / 5.0e-12;
+      double ma = *Param["ma0"] / 1.0e3;
+      double x_3H = *Param["x_3H"] / 6.2e-25;
+      double bkg_scale = 1.0 + *Param["delta_bkg"];
+      double rel_eff = 1.0 + *Param["delta_eff"];
+      double dm_fraction = *Param["eta"];
+      LocalMaxwellianHalo LocalHaloParameters = *Dep::LocalHalo;
+      double rho0 = LocalHaloParameters.rho0;
+
+      // static const bool include_bkg_tritium = runOptions->getValueOrDef<bool> (false, "include_bkg_tritium");
+
+      // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years)
+
+      static const Eigen::ArrayXd observed = (Eigen::ArrayXd(29) <<
+        25.8973, 61.1494, 55.094, 46.96965, 49.03795,
+        46.96965, 44.0648, 40.963, 40.02765, 36.8277,
+        50.90865, 41.0124, 42.04655, 51.00745, 46.96965,
+        48.0532, 23.9278, 43.0313, 41.94775, 33.82405,
+        42.04655, 39.9295, 37.96, 52.92755, 41.0618,
+        57.06285, 38.94475, 45.9849, 34.90695).finished();
+
+      static const Eigen::ArrayXd bkg_tritium = (Eigen::ArrayXd(29) <<
+        4.56433040e+00, 8.64086363e+00, 8.97973381e+00, 8.65266285e+00, 8.05799840e+00,
+        7.32199207e+00, 6.50761649e+00, 5.67386038e+00, 4.83439837e+00, 3.99489406e+00,
+        3.19148231e+00, 2.45001400e+00, 1.78762838e+00, 1.21931340e+00, 7.57573124e-01,
+        4.14994470e-01, 1.96065363e-01, 7.61428135e-02, 2.38729647e-02, 1.17749631e-02,
+        4.78833295e-03, 1.66122310e-04, 5.45008523e-05, 5.25120826e-05, 5.05233129e-05,
+        4.85345431e-05, 4.65457734e-05, 4.45570036e-05, 4.25682339e-05).finished();
+
+      static const Eigen::ArrayXd bkg_other = (Eigen::ArrayXd(29) <<
+        22.16579261, 39.6158453, 42.00805343, 42.64620158, 42.96545997,
+        43.14390744, 43.31777707, 43.74613017, 44.29959539, 44.22636861,
+        43.78719113, 43.5828809, 43.63091523, 43.67341257, 43.75194373,
+        43.84418989, 43.94178904, 44.0368095, 44.13427175, 44.23090153,
+        44.32858738, 44.42840092, 44.52498041, 44.62108326, 44.71829719,
+        44.81415475, 44.91244891, 45.01013443, 45.1051268).finished();
+
+      // Efficiency from 2006.09721
+      static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt");
+      //double eff = efficiency.interpolate(ma);
+      //static AxionInterpolator energy_resolution (GAMBIT_DIR "/DarkBit/data/XENON1T/enery_resolution.txt");
+      // Photo-electric cross section from https://dx.doi.org/10.18434/T48G6X
+      static AxionInterpolator sigma_pe (GAMBIT_DIR "/DarkBit/data/XENON1T/photoelectric.txt");
+
+
+      result = 0;
+      if ( (ma >= 1.0) && (ma <= 30.0))
+      {
+        double energy_resolution = 0.13297719 + 34.41479688/sqrt(ma);
+        double sigma = ma * energy_resolution / 100.0;
+        double sqrt2sigma = sqrt(2.0)*sigma;
+        double amplitude = dm_fraction * (rho0/0.3) * (0.65*1000.0*365.0) * efficiency.interpolate(ma) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
+        std::vector<double> signal_vec;
+        for(int i=0; i<29; i++)
+        {
+          double delta1 = 1.0*(1.0 + i) - ma;
+          double delta2 = delta1 + 1.0;
+          double s = 0.5 * amplitude * (gsl_sf_erf(delta2/sqrt2sigma) - gsl_sf_erf(delta1/sqrt2sigma));
+          signal_vec.push_back(s);
+        };
+
+        static const double asimov = (observed * observed.log() - observed).sum();
+
+        const Eigen::ArrayXd bkg = x_3H * bkg_tritium + bkg_other;
+        const Eigen::ArrayXd signal = Eigen::ArrayXd::Map(signal_vec.data(), signal_vec.size());
+        const Eigen::ArrayXd expected = rel_eff * (bkg_scale * bkg + signal);
+
+        result = (observed * expected.log() - expected).sum() - asimov;
+      };
     }
 
     void calc_lnL_XENON1T_Anomaly_NuisanceParameters(double &result)
