@@ -2042,7 +2042,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_XENON1T_DM_Anomaly;
 
-      double gae = std::fabs(*Param["gaee"]) / 5.0e-12;
+      double gae = std::fabs(*Param["gaee"]);
       double ma = *Param["ma0"] / 1.0e3;
       double x_3H = *Param["x_3H"] / 6.2e-25;
       double bkg_scale = 1.0 + *Param["delta_bkg"];
