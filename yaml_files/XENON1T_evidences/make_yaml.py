@@ -24,6 +24,7 @@ def alter_couplings(template_name, a, b, suffix=None):
         original["KeyValues"]["default_output_path"] += suffix
 
     original["Scanner"]["scanners"]["multinest"]["nlive"] = 1000  # fast repeats
+    original["Scanner"]["scanners"]["multinest"]["efr"] = 0.8  # fast repeats
 
     return original
 
@@ -35,6 +36,7 @@ def alter_tritium(template_name, a, suffix=None):
 
     original["Parameters"]["XENON1T_NuisanceParameters"]["x_3H"]["sigs"] = [float(a)]
     original["Scanner"]["scanners"]["multinest"]["nlive"] = 1000  # fast repeats
+    original["Scanner"]["scanners"]["multinest"]["efr"] = 0.8  # fast repeats
 
     if suffix is not None:
         original["KeyValues"]["default_output_path"] += suffix
