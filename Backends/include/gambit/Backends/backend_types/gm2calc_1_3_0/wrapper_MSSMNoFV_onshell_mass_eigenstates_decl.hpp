@@ -26,7 +26,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             // Member variables: 
          public:
             // -- Static factory pointers: 
-            static gm2calc::Abstract_MSSMNoFV_onshell_mass_eigenstates* (*__factory0)();
+            static Abstract_MSSMNoFV_onshell_mass_eigenstates* (*__factory0)();
       
             // -- Other member variables: 
       
@@ -380,7 +380,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             MSSMNoFV_onshell_mass_eigenstates();
       
             // Special pointer-based constructor: 
-            MSSMNoFV_onshell_mass_eigenstates(gm2calc::Abstract_MSSMNoFV_onshell_mass_eigenstates* in);
+            MSSMNoFV_onshell_mass_eigenstates(Abstract_MSSMNoFV_onshell_mass_eigenstates* in);
       
             // Copy constructor: 
             MSSMNoFV_onshell_mass_eigenstates(const MSSMNoFV_onshell_mass_eigenstates& in);
@@ -392,7 +392,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             ~MSSMNoFV_onshell_mass_eigenstates();
       
             // Returns correctly casted pointer to Abstract class: 
-            gm2calc::Abstract_MSSMNoFV_onshell_mass_eigenstates* get_BEptr() const;
+            Abstract_MSSMNoFV_onshell_mass_eigenstates* get_BEptr() const;
       
       };
    }

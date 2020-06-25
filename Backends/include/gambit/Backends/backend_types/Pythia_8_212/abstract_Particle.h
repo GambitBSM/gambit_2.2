@@ -317,7 +317,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual void offsetCol(int) =0;
     
             public:
-                virtual void pointer_assign__BOSS(Abstract_Particle*) =0;
                 virtual Abstract_Particle* pointer_copy__BOSS() =0;
     
             private:

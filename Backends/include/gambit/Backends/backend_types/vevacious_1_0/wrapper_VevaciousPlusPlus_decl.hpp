@@ -34,14 +34,14 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 void WriteResultsAsXmlFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& xmlFilename);
         
                 ::std::basic_string<char, std::char_traits<char>, std::allocator<char> > GetResultsAsString();
-
+        
                 double GetLifetimeInSeconds();
-
+        
                 double GetThermalProbability();
-
-                ::std::vector<double> GetThresholdAndActions();
-
-                ::std::vector<double> GetThermalThresholdAndActions();
+        
+                ::std::vector<double, std::allocator<double> > GetThresholdAndActions();
+        
+                ::std::vector<double, std::allocator<double> > GetThermalThresholdAndActions();
         
                 void AppendResultsToLhaFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& lhaFilename, const bool writeWarnings);
         
@@ -54,9 +54,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
                 // Special pointer-based constructor: 
                 VevaciousPlusPlus(Abstract_VevaciousPlusPlus* in);
-        
-                // Assignment operator: 
-                VevaciousPlusPlus& operator=(const VevaciousPlusPlus& in);
         
                 // Destructor: 
                 ~VevaciousPlusPlus();

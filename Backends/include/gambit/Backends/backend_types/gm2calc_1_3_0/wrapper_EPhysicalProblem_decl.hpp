@@ -21,7 +21,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             // Member variables: 
          public:
             // -- Static factory pointers: 
-            static gm2calc::Abstract_EPhysicalProblem* (*__factory0)(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&);
+            static Abstract_EPhysicalProblem* (*__factory0)(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&);
       
             // -- Other member variables: 
       
@@ -35,7 +35,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             EPhysicalProblem(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& message_);
       
             // Special pointer-based constructor: 
-            EPhysicalProblem(gm2calc::Abstract_EPhysicalProblem* in);
+            EPhysicalProblem(Abstract_EPhysicalProblem* in);
       
             // Copy constructor: 
             EPhysicalProblem(const EPhysicalProblem& in);
@@ -47,7 +47,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             ~EPhysicalProblem();
       
             // Returns correctly casted pointer to Abstract class: 
-            gm2calc::Abstract_EPhysicalProblem* get_BEptr() const;
+            Abstract_EPhysicalProblem* get_BEptr() const;
       
       };
    }

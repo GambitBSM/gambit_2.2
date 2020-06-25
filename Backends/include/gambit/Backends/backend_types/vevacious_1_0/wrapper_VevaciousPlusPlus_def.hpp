@@ -32,26 +32,27 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         {
             return get_BEptr()->GetResultsAsString();
         }
-        inline double VevaciousPlusPlus::GetLifetimeInSeconds() 
+        
+        inline double VevaciousPlusPlus::GetLifetimeInSeconds()
         {
             return get_BEptr()->GetLifetimeInSeconds();
         }
-
+        
         inline double VevaciousPlusPlus::GetThermalProbability()
         {
             return get_BEptr()->GetThermalProbability();
         }
-
-         inline ::std::vector<double> VevaciousPlusPlus::GetThresholdAndActions()
+        
+        inline ::std::vector<double, std::allocator<double> > VevaciousPlusPlus::GetThresholdAndActions()
         {
             return get_BEptr()->GetThresholdAndActions();
         }
-
-         inline ::std::vector<double> VevaciousPlusPlus::GetThermalThresholdAndActions()
+        
+        inline ::std::vector<double, std::allocator<double> > VevaciousPlusPlus::GetThermalThresholdAndActions()
         {
             return get_BEptr()->GetThermalThresholdAndActions();
         }
-               
+        
         inline void VevaciousPlusPlus::AppendResultsToLhaFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& lhaFilename, const bool writeWarnings)
         {
             get_BEptr()->AppendResultsToLhaFile(lhaFilename, writeWarnings);
@@ -78,17 +79,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_wptr(this);
             get_BEptr()->set_delete_wrapper(false);
         }
-        
-        // Assignment operator: 
-        inline VevaciousPlusPlus& VevaciousPlusPlus::operator=(const VevaciousPlusPlus& in)
-        {
-            if (this != &in)
-            {
-                get_BEptr()->pointer_assign__BOSS(in.get_BEptr());
-            }
-            return *this;
-        }
-        
         
         // Destructor: 
         inline VevaciousPlusPlus::~VevaciousPlusPlus()

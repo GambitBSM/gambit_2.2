@@ -726,7 +726,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Wrappers for original constructors: 
-        inline Pythia8::ParticleData::ParticleData() :
+        inline ParticleData::ParticleData() :
             WrapperBase(__factory0())
         {
             get_BEptr()->set_wptr(this);
@@ -734,7 +734,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Special pointer-based constructor: 
-        inline Pythia8::ParticleData::ParticleData(Pythia8::Abstract_ParticleData* in) :
+        inline ParticleData::ParticleData(Abstract_ParticleData* in) :
             WrapperBase(in)
         {
             get_BEptr()->set_wptr(this);
@@ -742,7 +742,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Copy constructor: 
-        inline Pythia8::ParticleData::ParticleData(const ParticleData& in) :
+        inline ParticleData::ParticleData(const ParticleData& in) :
             WrapperBase(in.get_BEptr()->pointer_copy__BOSS())
         {
             get_BEptr()->set_wptr(this);
@@ -750,7 +750,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Assignment operator: 
-        inline Pythia8::ParticleData& ParticleData::operator=(const ParticleData& in)
+        inline ParticleData& ParticleData::operator=(const ParticleData& in)
         {
             if (this != &in)
             {
@@ -761,7 +761,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         
         // Destructor: 
-        inline Pythia8::ParticleData::~ParticleData()
+        inline ParticleData::~ParticleData()
         {
             if (get_BEptr() != 0)
             {
@@ -776,9 +776,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         }
         
         // Returns correctly casted pointer to Abstract class: 
-        inline Pythia8::Abstract_ParticleData* Pythia8::ParticleData::get_BEptr() const
+        inline Abstract_ParticleData* Pythia8::ParticleData::get_BEptr() const
         {
-            return dynamic_cast<Pythia8::Abstract_ParticleData*>(BEptr);
+            return dynamic_cast<Abstract_ParticleData*>(BEptr);
         }
     }
     

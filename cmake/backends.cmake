@@ -1085,7 +1085,9 @@ set(hom4ps_ver "2.0")
 set(dl "null")
 set(Minuit_include "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/include/")
 set(Minuit_lib "${PROJECT_SOURCE_DIR}/Backends/installed/${Minuit_name}/${Minuit_ver}/lib/")
+set(VPP_CMAKE_FLAGS -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DEIGEN3_INCLUDE_DIR=${EIGEN3_INCLUDE_DIR} -DBoost_INCLUDE_DIR=${Boost_INCLUDE_DIR} -DWITHIN_GAMBIT=True -DMinuit_name=${Minuit_name} -DMinuit_lib_name=${Minuit_lib_name} -DMinuit_ver=${Minuit_ver} -DMinuit_include=${Minuit_include} -DMinuit_lib=${Minuit_lib})
 set(VPP_FLAGS "${BACKEND_CXX_FLAGS} -Wno-unused-local-typedefs -I./include/ -I./include/LHPC/ -I${Boost_INCLUDE_DIR} -I${EIGEN3_INCLUDE_DIR} -I${Minuit_include}")
+set(BOSSregex "s#cpp)#cpp\\n        source/BOSS_factory_VevaciousPlusPlus.cpp\\n        source/BOSS_wrapperutils.cpp\\n        source/BOSS_VevaciousPlusPlus.cpp)#g")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -1094,18 +1096,19 @@ if(NOT ditched_${name}_${ver})
           DEPENDS hom4ps_${hom4ps_ver}
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
-          GIT_TAG origin/Gambit_BOSSED_debug
-          CONFIGURE_COMMAND ""
-          BINARY_DIR ${dir}/VevaciousPlusPlus
-          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} shared
-          COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/VevaciousPlusPlus/ModelFiles/
+          UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/Vevacious/CMakeLists.txt 
+          CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}/Vevacious 
+          BINARY_DIR "${dir}/Vevacious"
+          BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
+               # COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/VevaciousPlusPlus/ModelFiles/
           INSTALL_COMMAND ""
           #COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
           #COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
           )
-  add_extra_targets("backend" ${name} ${ver} ${dir}/VevaciousPlusPlus ${dl} clean)
+  #add_extra_targets("backend" ${name} ${ver} ${dir}/VevaciousPlusPlus ${dl} clean)
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
-  #  BOSS_backend(${name} ${ver})
+  BOSS_backend(${name} ${ver})
 endif()
 
 # SUSYHD

@@ -170,7 +170,8 @@ def run():
 
         generateClassMemberInterface(class_el, class_name, abstr_class_name, namespaces,
                                      original_file_name, original_file_content_nocomments, 
-                                     original_class_file_el, extras_src_file_name)
+                                     original_class_file_el, extras_src_file_name,
+                                     has_copy_constructor, construct_assignment_operator)
         
 
         #
@@ -279,11 +280,14 @@ def constrAbstractClassHeaderCode(class_el, class_name, abstr_class_name, namesp
     elif (is_template == True) and (class_name['long'] not in templ_spec_done):
         class_decl += classutils.constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
                                                          indent=cfg.indent, file_for_gambit=file_for_gambit, 
-                                                         template_types=spec_template_types, construct_assignment_operator=construct_assignment_operator)
+                                                         template_types=spec_template_types, 
+                                                         has_copy_constructor=has_copy_constructor,
+                                                         construct_assignment_operator=construct_assignment_operator)
         class_decl += '\n'
     else:
         class_decl += classutils.constrAbstractClassDecl(class_el, class_name, abstr_class_name, namespaces, 
                                                          indent=cfg.indent, file_for_gambit=file_for_gambit,
+                                                         has_copy_constructor=has_copy_constructor,
                                                          construct_assignment_operator=construct_assignment_operator)
         class_decl += '\n'
 
@@ -449,7 +453,8 @@ def addIncludesToOriginalClassFile(class_el, namespaces, is_template, original_f
     
 def generateClassMemberInterface(class_el, class_name, abstr_class_name, namespaces,
                                  original_file_name, original_file_content_nocomments,
-                                 original_class_file_el, extras_src_file_name):
+                                 original_class_file_el, extras_src_file_name,
+                                 has_copy_constructor, construct_assignment_operator):
 
     # Find class name position in the original file
     class_name_pos = classutils.findClassNamePosition(class_el, original_file_content_nocomments)
@@ -596,19 +601,25 @@ def generateClassMemberInterface(class_el, class_name, abstr_class_name, namespa
         ptr_declaration_code = '\n'
         ptr_implementation_code = '\n'
 
-        ptr_declaration_code += ' '*cfg.indent*(n_indents+1) + 'public:\n'
-        ptr_declaration_code += classutils.constrPtrCopyFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=n_indents+2, only_declaration=True)
-        ptr_declaration_code += '\n'
+        if has_copy_constructor or construct_assignment_operator:
+            ptr_declaration_code += ' '*cfg.indent*(n_indents+1) + 'public:\n'
 
-        ptr_declaration_code += ' '*cfg.indent*(n_indents+2) + 'using ' + abstr_class_name['short'] + '::pointer_assign' + gb.code_suffix + ';\n'
-        ptr_declaration_code += classutils.constrPtrAssignFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=n_indents+2, only_declaration=True)
+        if has_copy_constructor:
+            ptr_declaration_code += classutils.constrPtrCopyFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=n_indents+2, only_declaration=True)
+            ptr_declaration_code += '\n'
+
+        if construct_assignment_operator:
+            ptr_declaration_code += ' '*cfg.indent*(n_indents+2) + 'using ' + abstr_class_name['short'] + '::pointer_assign' + gb.code_suffix + ';\n'
+            ptr_declaration_code += classutils.constrPtrAssignFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=n_indents+2, only_declaration=True)
         
         ptr_implementation_code += '#include "' + os.path.join(gb.backend_types_basedir, gb.gambit_backend_name_full,'identification.hpp') + '"\n'
         ptr_implementation_code += '\n'
-        ptr_implementation_code += classutils.constrPtrCopyFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=0, include_full_namespace=True)
-        ptr_implementation_code += '\n'
-        ptr_implementation_code += classutils.constrPtrAssignFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=0, include_full_namespace=True)
-        ptr_implementation_code += '\n'
+        if has_copy_constructor:
+          ptr_implementation_code += classutils.constrPtrCopyFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=0, include_full_namespace=True)
+          ptr_implementation_code += '\n'
+        if construct_assignment_operator:
+          ptr_implementation_code += classutils.constrPtrAssignFunc(class_el, abstr_class_name['short'], class_name['short'], virtual=False, indent=cfg.indent, n_indents=0, include_full_namespace=True)
+          ptr_implementation_code += '\n'
         ptr_implementation_code += '#include "' + os.path.join(gb.gambit_backend_incl_dir, 'backend_undefs.hpp') + '"\n'
 
         # - Generate include statements for the new source file

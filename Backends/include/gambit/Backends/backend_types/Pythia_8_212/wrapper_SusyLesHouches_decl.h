@@ -24,10 +24,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_SusyLesHouches* (*__factory0)(int);
-                static Pythia8::Abstract_SusyLesHouches* (*__factory1)();
-                static Pythia8::Abstract_SusyLesHouches* (*__factory2)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >, int);
-                static Pythia8::Abstract_SusyLesHouches* (*__factory3)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >);
+                static Abstract_SusyLesHouches* (*__factory0)(int);
+                static Abstract_SusyLesHouches* (*__factory1)();
+                static Abstract_SusyLesHouches* (*__factory2)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >, int);
+                static Abstract_SusyLesHouches* (*__factory3)(::std::basic_string<char, std::char_traits<char>, std::allocator<char> >);
         
                 // -- Other member variables: 
             public:
@@ -89,7 +89,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 SusyLesHouches(::std::basic_string<char, std::char_traits<char>, std::allocator<char> > filename);
         
                 // Special pointer-based constructor: 
-                SusyLesHouches(Pythia8::Abstract_SusyLesHouches* in);
+                SusyLesHouches(Abstract_SusyLesHouches* in);
         
                 // Copy constructor: 
                 SusyLesHouches(const SusyLesHouches& in);
@@ -101,7 +101,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~SusyLesHouches();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_SusyLesHouches* get_BEptr() const;
+                Abstract_SusyLesHouches* get_BEptr() const;
         
         };
     }

@@ -190,7 +190,6 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual Pythia8::Abstract_Event& operator_plus_equal__BOSS(const Pythia8::Abstract_Event&) =0;
     
             public:
-                virtual void pointer_assign__BOSS(Abstract_Event*) =0;
                 virtual Abstract_Event* pointer_copy__BOSS() =0;
     
             private:

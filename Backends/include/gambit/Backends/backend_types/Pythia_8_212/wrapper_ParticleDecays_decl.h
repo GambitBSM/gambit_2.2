@@ -28,7 +28,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_ParticleDecays* (*__factory0)();
+                static Abstract_ParticleDecays* (*__factory0)();
         
                 // -- Other member variables: 
         
@@ -44,7 +44,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ParticleDecays();
         
                 // Special pointer-based constructor: 
-                ParticleDecays(Pythia8::Abstract_ParticleDecays* in);
+                ParticleDecays(Abstract_ParticleDecays* in);
         
                 // Copy constructor: 
                 ParticleDecays(const ParticleDecays& in);
@@ -56,7 +56,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~ParticleDecays();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_ParticleDecays* get_BEptr() const;
+                Abstract_ParticleDecays* get_BEptr() const;
         
         };
     }

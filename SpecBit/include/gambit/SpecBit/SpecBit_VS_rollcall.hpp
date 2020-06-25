@@ -219,7 +219,7 @@
     DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
     DEPENDENCY(init_vevacious, std::string)
     // (JR) I don't know which models should or should not be allowed here, best to check with Eliel # todo
-    ALLOW_MODELS(MSSM, CMSSM, NUHM2) 
+    ALLOW_MODELS(CMSSM, MSSM63atMGUT, MSSM63atQ) 
   #undef FUNCTION
   #undef CAPABILITY
 

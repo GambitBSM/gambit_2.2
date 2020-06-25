@@ -93,6 +93,15 @@ libMathematicaTest:
 SUSYHD:
   1.0.2:       ./Backends/installed/susyhd/1.0.2/SUSYHD.m
 
+vevacious:
+  1.0:         ./Backends/installed/vevacious/1.0/Vevacious/lib/libVevaciousPlusPlus.so
+
+hom4ps:
+  2.0:         ./Backends/installed/hom4ps/2.0/
+
+phc:
+  2.4.58:      ./Backends/installed/phc/2.4.58/
+
 # Example/debug backends
 
 LibFirst:
@@ -118,11 +127,4 @@ LibFarrayTest:
 libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
 
-vevacious:
-  1.0:         ./Backends/installed/vevacious/1.0/VevaciousPlusPlus/lib/libVevaciousPlusPlus.so
 
-hom4ps:
-  2.0:         ./Backends/installed/hom4ps/2.0/
-
-phc:
-  2.4.58:      ./Backends/installed/phc/2.4.58/
