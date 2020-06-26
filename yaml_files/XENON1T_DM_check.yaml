@@ -3,8 +3,7 @@ Parameters:
     gaee:
       range: [1.0e-15,1.0e-11]
       prior_type: log
-    gan: 0.0
-    gap: 0.0
+    gaN: 0.0
     gagg: 0.0
     fa: 1.0e11
     ma0:
