@@ -22,10 +22,10 @@
 // General axion model with parametric temperature-dependent mass.
 #define MODEL GeneralALP
   START_MODEL
-  // Physical units: gagg [GeV^-1], gaee [dimensionless], gan [dimensionless]
-  //                 gap [dimensionless], fa [GeV], ma0 [eV], Tchi [MeV],
+  // Physical units: gagg [GeV^-1], gaee [dimensionless], gaN [dimensionless]
+  //                 fa [GeV], ma0 [eV], Tchi [MeV],
   //                 beta [dimensionless], thetai [dimensionless]
-  DEFINEPARS(gagg,gaee,gan,gap,fa,ma0,Tchi,beta,thetai)
+  DEFINEPARS(gagg,gaee,gaN,fa,ma0,Tchi,beta,thetai)
 #undef MODEL
 
 // QCD axion model

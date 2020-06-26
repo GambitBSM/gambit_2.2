@@ -37,8 +37,9 @@ void MODEL_NAMESPACE::QCDAxion_to_GeneralALP (const ModelParameters &myparams, M
 
     parentparams.setValue("gagg", alpha_red*std::fabs(EoN-CG)/fa);
     parentparams.setValue("gaee", m_electron*myparams["Caee"]/fa);
-    parentparams.setValue("gan", m_neutron*myparams["Can"]/fa);
-    parentparams.setValue("gap", m_proton*myparams["Cap"]/fa);
+    //parentparams.setValue("gan", m_neutron*myparams["Can"]/fa);
+    //parentparams.setValue("gap", m_proton*myparams["Cap"]/fa);
+    parentparams.setValue("gaN", (0.095*m_proton*myparams["Cap"] + 1.095*m_neutron*myparams["Can"]) / fa);
     parentparams.setValue("fa", fa);
     parentparams.setValue("ma0", 1E+3*L2/fa);
     parentparams.setValue("Tchi", myparams["Tchi"]);

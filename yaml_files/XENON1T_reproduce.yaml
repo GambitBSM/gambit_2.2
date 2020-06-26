@@ -3,10 +3,7 @@ Parameters:
     gaee:
       range: [0.0,6.0e-12]
       prior_type: flat
-    gan:
-      range: [1.0e-10,1.0e-3]
-      prior_type: log
-    gap:
+    gaN:
       range: [1.0e-10,1.0e-3]
       prior_type: log
     gagg:
@@ -25,9 +22,7 @@ Parameters:
     delta_eff:
       range: [-0.15,0.15]
       prior_type: flat
-    x_3H:
-      range: [0.0,30.0e-25]
-      prior_type: flat
+    x_3H: 0.0
 
 Priors:
 

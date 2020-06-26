@@ -1967,7 +1967,8 @@ namespace Gambit
 
       double gae = std::fabs(*Param["gaee"]) / 5.0e-12;
       double gagamma = std::fabs(*Param["gagg"]) / 2.0e-10;
-      double gaN = std::fabs((1.095*(*Param["gan"]) + 0.095*(*Param["gap"])) / 1.0e-6);
+      //double gaN = std::fabs((1.095*(*Param["gan"]) + 0.095*(*Param["gap"])) / 1.0e-6);
+      double gaN = std::fabs(*Param["gaN"]) / 1.0e-6;
       double x_3H = *Param["x_3H"] / 6.2e-25;
       double bkg_scale = 1.0 + *Param["delta_bkg"];
       double eff = 1.0 + *Param["delta_eff"];
