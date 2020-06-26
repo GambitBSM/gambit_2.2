@@ -23,7 +23,7 @@ def alter_couplings(template_name, a, b, suffix=None):
     if suffix is not None:
         original["KeyValues"]["default_output_path"] += suffix
 
-    original["Scanner"]["scanners"]["multinest"]["nlive"] = 1000  # fast repeats
+    # don't adjust nlive - otherwise get noisy result
     original["Scanner"]["scanners"]["multinest"]["efr"] = 0.8  # fast repeats
 
     return original
@@ -64,11 +64,11 @@ if __name__ == "__main__":
     # Signal coupling yamls
 
     center = -12.5
-    width = np.linspace(0., 7.5, 10)
+    width = np.linspace(0., 15., 10).tolist() + np.linspace(2., 6., 10).tolist()
 
     for i, w in enumerate(width):
-        a = center - w
-        b = center + w
+        a = center - 0.5 * w
+        b = center + 0.5 * w
         d = alter_couplings("signal.yaml", 10.**a, 10.**b, "_{}".format(i))
         name = "signal_{}.yaml".format(i)
         with open(name, "w") as f:
