@@ -22,7 +22,7 @@
 
 #define MODEL ModifiedGravityYukawa
   START_MODEL
-  // Physical units : alpha [dimensionless], lambda [cm]
+  // Physical units : alpha [dimensionless], lambda [m]
   DEFINEPARS(alpha) // amplitude of the Yukawa interaction
   DEFINEPARS(lambda) // range of the Yukawa interaction
 #undef MODEL

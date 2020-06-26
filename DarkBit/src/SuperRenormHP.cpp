@@ -59,7 +59,7 @@ namespace Gambit
     //------------- Numerical constants and other useful things -------------//
 
     // masses
-    const double Mp = Gambit::m_planck*1e9; // Planck mass [eV]
+    const double Mp = Gambit::m_planck; // Planck mass [GeV]
     const double me = Gambit::m_electron*1e9; // electron mass [eV]
     const double mH = 125.1*1e9; // Higgs boson mass [eV] (PDG 2019)
     const double mT = 172.9*1e9; // top quark mass [eV] (PDG 2019)
@@ -78,10 +78,12 @@ namespace Gambit
     const double kb = Gambit::K2eV; // Boltzmann constant [eV/K]
     const double G_cgs = 6.674e-8; // Gravitational constant [cm³/g/s²]
     const double G_SI = 6.674e-11; // Gravitational constant [m³/kg/s²]
+    const double Mpc_2_km = 3.0857e19; // Mpc to km
+    const double kg_2_GeV = 1.7827e27; // kg to GeV
 
     // cosmological constants
     const double s0(2891); // current entropy density [1/cm³]
-    const double rhoC(4.84e3); // current critical density [eV/cm³]
+    /* const double rhoC(4.84e3); // current critical density [eV/cm³] */
 
     // astrophysical constants
     const double r0(26.2225e21); // Sun's distance from the galactic center [cm]
@@ -854,6 +856,8 @@ namespace Gambit
       double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0)[0];
       double OmegaDM = params->OmegaDM;
 
+      double rhoC = 3*pow(H0, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3)*1e9; // critical density un ev/cm^3
+
       double sigma = s*experiment.deltaE(E); // standard deviation of the gaussian modelling the enery dispersion of the instrument
 
       return 2.*(gamma*J*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*rhoC)/sqrt(2*pi*sigma*sigma)*exp(-pow(E-mass/2.,2)/(2*sigma*sigma));
@@ -919,28 +923,33 @@ namespace Gambit
     {
       using namespace Pipes::SuperRenormHP_DecayFluxG;
 
-      double density = *Dep::DM_relic_density*1e9;
+      double density = *Dep::DM_relic_density;
 
-      double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0;
+      double H0 = *Dep::H0;
+      /* double h = H0/100; */
+
+      double OmegaDM = *Dep::Omega0_cdm;
+
+      double H0_s = H0/Mpc_2_km; // H0 in 1/s
 
       double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
 
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      double RhoC = 3*pow(H0, 2)/(8*pi*G_SI);
+      double rhoC = 3*pow(H0_s, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3); // critical density un Gev/cm^3
 
       std::string DM_ID = *Dep::DarkMatter_ID;
 
       TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
       auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
       auto fb = f->bind();
-      double gamma = fb->eval();
+      double gamma = fb->eval()/hbar_GeV;
 
-      double mass = catalog.getParticleProperty(DM_ID).mass*1e9;
+      double mass = catalog.getParticleProperty(DM_ID).mass;
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0)[0];
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0_s)[0];
 
-      result = 2.*(gamma*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*RhoC);
+      result = 2.*(gamma*density*exp(-t0*gamma))/(4.*pi*mass*OmegaDM*rhoC);
     }
 
     // auxiliary function for gsl minimization returning the log-likelihood for a given X-ray experiment
@@ -1000,7 +1009,7 @@ namespace Gambit
       double mS = *Param["mS"], theta = *Param["theta"];
       double lambda = *Param["lambda"];
 
-      result = lambda*theta*theta*s0*mS;
+      result = lambda*theta*theta*s0*mS*1e11;
     }
 
     void RD_oh2_SuperRenormHP (double &result)
@@ -1011,9 +1020,10 @@ namespace Gambit
 
       double H0 = *Dep::H0;
       double h = H0/100;
-      double RhoC = 3*pow(H0, 2)/(8*pi*G_SI);
+      double H0_s = H0/Mpc_2_km; // H0 in 1/s
+      double rhoC = 3*pow(H0_s, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3); // critical density un Gev/cm^3
 
-      result = RD/RhoC*h*h;
+      result = RD/rhoC*h*h;
     }
 
     // Linear interpolation in lin-log space.
@@ -1073,7 +1083,7 @@ namespace Gambit
       double J = 0;
       for ( size_t i = 0; i < phi.size(); i++ )
       {
-        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];
+        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i]*3.0856775814913684e21;// J in Gev/cm^2
       }
 
       result = J;
@@ -1094,7 +1104,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_INTEGRAL_CO;
 
-      double J_factor = *Dep::J_factor_INTEGRAL_CO;
+      double J_factor = *Dep::J_factor_INTEGRAL_CO*1e9; //J in eV/cm^2
 
       static Xray experiment = Xray("INTEGRAL", J_factor);
 
@@ -1182,12 +1192,12 @@ namespace Gambit
 
       for ( size_t i = 0; i < phi_1.size(); i++ )
       {
-        J_1 += interpolate(phi_1[i], emission.first, emission.second, true)*weight_1[i];
+        J_1 += interpolate(phi_1[i], emission.first, emission.second, true)*weight_1[i]*3.0856775814913684e21; // J in Gev/cm^2
       }
 
       for ( size_t i = 0; i < phi_2.size(); i++ )
       {
-        J_2 += interpolate(phi_2[i], emission.first, emission.second, true)*weight_2[i];
+        J_2 += interpolate(phi_2[i], emission.first, emission.second, true)*weight_2[i]*3.0856775814913684e21; // J in Gev/cm^2
       }
 
       result = {J_1, J_2};
@@ -1199,7 +1209,7 @@ namespace Gambit
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_b;
 
-      double mass = *Dep::DM_mass;
+      double mass = *Dep::DM_mass*1e6; // mass in keV
 
       double DecayFluxG = *Dep::DM_DecayFluxG;
 
@@ -1212,13 +1222,13 @@ namespace Gambit
       std::vector<double> Omega = {1.6119, 4.1858};
 
       // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
-      if (mass >= 1e6) { result = 0; }
+      if (mass >= 1e3) { result = 0; }
 
       else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
 
       else
       {
-        std::vector<double> likelihood;
+        double likelihood = 1;
 
         double PredictedFlux, ObservedFlux, Error;
 
@@ -1227,17 +1237,11 @@ namespace Gambit
           PredictedFlux = ( (mass >= 2*Emin[i]) && (mass < 2*Emax[i]) ) ? DecayFluxG*J_factor[0]/Omega[0] : 0;
           ObservedFlux = Flux[i];
           Error = Sigma[i];
-          likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
+          likelihood *= (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2));
         }
 
-        PredictedFlux = ( (mass >= 2*Emin.back()) && (mass < 2*Emax.back()) ) ? DecayFluxG*J_factor[1]/Omega[1] : 0;
-        ObservedFlux = Flux.back();
-        Error = Sigma.back();
-        likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
-
-        result = log(*std::min_element(likelihood.begin(), likelihood.end()));
+        result = log(likelihood);
       }
-
     }
 
     void get_J_factor_INTEGRAL_ang_l (std::vector<double> &result)
@@ -1277,12 +1281,12 @@ namespace Gambit
 
       for ( size_t i = 0; i < phi_1.size(); i++ )
       {
-        J_1 += interpolate(phi_1[i], emission.first, emission.second, true)*weight_1[i];
+        J_1 += interpolate(phi_1[i], emission.first, emission.second, true)*weight_1[i]*3.0856775814913684e21; // J in Gev/cm^2
       }
 
       for ( size_t i = 0; i < phi_2.size(); i++ )
       {
-        J_2 += interpolate(phi_2[i], emission.first, emission.second, true)*weight_2[i];
+        J_2 += interpolate(phi_2[i], emission.first, emission.second, true)*weight_2[i]*3.0856775814913684e21; // J in Gev/cm^2
       }
 
       result = {J_1, J_2};
@@ -1294,7 +1298,7 @@ namespace Gambit
 
       std::vector<double> J_factor = *Dep::J_factor_INTEGRAL_ang_l;
 
-      double mass = *Dep::DM_mass;
+      double mass = *Dep::DM_mass*1e6; // mass in keV
 
       double DecayFluxG = *Dep::DM_DecayFluxG;
 
@@ -1307,13 +1311,13 @@ namespace Gambit
       std::vector<double> Omega = {1.4224, 1.7919};
 
       // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR
-      if (mass >= 1e6) { result = 0; }
+      if (mass >= 1e3) { result = 0; }
 
       else if (mass < 2.**std::min_element(Emin.begin(), Emin.end())) { result = 0; }
 
       else
       {
-        std::vector<double> likelihood;
+        double likelihood = 1;
 
         double PredictedFlux, ObservedFlux, Error;
 
@@ -1322,17 +1326,11 @@ namespace Gambit
           PredictedFlux = ( (mass >= 2*Emin[i]) && (mass < 2*Emax[i]) ) ? DecayFluxG*J_factor[0]/Omega[0] : 0;
           ObservedFlux = Flux[i];
           Error = Sigma[i];
-          likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
+          likelihood *= (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2));
         }
 
-        PredictedFlux = ( (mass >= 2*Emin.back()) && (mass < 2*Emax.back()) ) ? DecayFluxG*J_factor[1]/Omega[1] : 0;
-        ObservedFlux = Flux.back();
-        Error = Sigma.back();
-        likelihood.push_back( (PredictedFlux < ObservedFlux) ? 1 : exp(-pow(ObservedFlux - PredictedFlux, 2)/pow(Error, 2)) );
-
-        result = log(*std::min_element(likelihood.begin(), likelihood.end()));
+        result = log(likelihood);
       }
-
     }
 
     void get_J_factor_HEAO (double &result)
@@ -1367,10 +1365,8 @@ namespace Gambit
       double J = 0;
       for ( size_t i = 0; i < phi.size(); i++ )
       {
-        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i];// /Omega;
+        J += interpolate(phi[i], emission.first, emission.second, true)*weight[i]*3.0856775814913684e21;// J in Gev/cm^2
       }
-
-      double rho_sun = profile->bind("r")->eval(r_sun);
 
       result = J;
 
@@ -1382,7 +1378,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_HEAO;
 
-      static Xray experiment = Xray("HEAO", 9.894); // J in Gev kpc /cm^3
+      static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2
 
       double density = *Dep::DM_relic_density*1e9;
 
@@ -1562,7 +1558,7 @@ namespace Gambit
     {
       using namespace Pipes::New_Force_Sushkov2011_SuperRenormHP;
 
-      const double alpha = *Param["alpha"], lambda = *Param["lambda"];
+      const double alpha = *Param["alpha"], lambda = *Param["lambda"]*1e2; // lambda in cm
 
       daFunk::Funk d = daFunk::var("d");
 

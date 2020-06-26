@@ -40,7 +40,7 @@ void MODEL_NAMESPACE::SuperRenormHP_to_ModifiedGravityYukawa (const ModelParamet
   const double f = v/theta/fN;
   const double Mp = Gambit::m_planck; // Planck mass [GeV]
   const double hbar = Gambit::hbar;  // reduced Planck constant [GeV.s]
-  const double cs = Gambit::s2cm; // speed of light [cm/s]
+  const double cs = Gambit::s2cm*1e-2; // speed of light [m/s]
 
   friendparams.setValue("alpha", pow(Mp/f, 2)/4./Gambit::pi);
   friendparams.setValue("lambda", hbar*cs/mS);
