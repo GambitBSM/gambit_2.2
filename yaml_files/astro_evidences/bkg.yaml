@@ -1,0 +1,45 @@
+Parameters:
+  GeneralALP:
+    gaee: 0.
+    gaN: 0.
+    gagg: 0.
+    fa: 1.0e11
+    ma0: 1.0e3
+    Tchi: 147.0
+    beta: 7.94
+    thetai: 1.0
+
+Printer:
+  printer: ascii
+  options:
+    output_file: "background.txt"
+
+Scanner:
+  use_scanner: multinest
+  scanners:
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 5000
+      tol: 0.001
+      efr: 0.3
+
+ObsLikes:
+  - capability: lnL_CAST2017
+    purpose: LogLike
+  - capability: lnL_WDVar_R548
+    purpose: LogLike
+  - capability: lnL_WDVar_L192
+    purpose: LogLike
+  - capability: lnL_WDVar_PG1351489
+    purpose: LogLike
+  - capability: lnL_WDVar_G117B15A
+    purpose: LogLike
+  - capability: lnL_RParameter
+    purpose: LogLike
+
+KeyValues:
+
+  default_output_path: "runs/astro_bkg"
+ 
+  debug: false

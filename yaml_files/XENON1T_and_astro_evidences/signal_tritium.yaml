@@ -1,0 +1,68 @@
+Parameters:
+  GeneralALP:
+    gaee:
+      range: [1e-20, 1e-5]
+      prior_type: log
+    gaN:
+      range: [1e-20, 1e-5]
+      prior_type: log
+    gagg:
+      range: [1e-20, 1e-5]
+      prior_type: log
+    fa: 1.0e11
+    ma0: 1.0e3
+    Tchi: 147.0
+    beta: 7.94
+    thetai: 1.0
+
+  XENON1T_NuisanceParameters:
+    delta_bkg:
+      mean: [0.]
+      sigs: [0.026]
+      prior_type: gaussian
+    delta_eff:
+      mean: [0.]
+      sigs: [0.03]
+      prior_type: gaussian
+    x_3H:
+      mean: [-27.]
+      sigs: [3.]
+      prior_type: log10normal
+
+Printer:
+  printer: ascii
+  options:
+    output_file: "signal_tritium.txt"
+
+Scanner:
+  use_scanner: multinest
+  scanners:
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 5000
+      tol: 0.001
+      efr: 0.05
+
+ObsLikes:
+  - capability: lnL_XENON1T_Anomaly
+    purpose: LogLike
+  - capability: lnL_CAST2017
+    purpose: LogLike
+  - capability: lnL_WDVar_R548
+    purpose: LogLike
+  - capability: lnL_WDVar_L192
+    purpose: LogLike
+  - capability: lnL_WDVar_PG1351489
+    purpose: LogLike
+  - capability: lnL_WDVar_G117B15A
+    purpose: LogLike
+  - capability: lnL_RParameter
+    purpose: LogLike
+
+KeyValues:
+
+  default_output_path: "runs/XENON1T_and_astro_signal_tritium"
+ 
+  debug: false
+
