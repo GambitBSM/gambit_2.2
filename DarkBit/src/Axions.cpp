@@ -1975,6 +1975,8 @@ namespace Gambit
 
       // static const bool include_bkg_tritium = runOptions->getValueOrDef<bool> (false, "include_bkg_tritium");
 
+      static bool include_inverse_Primakoff = runOptions->getValueOrDef<bool> (false, "include_inverse_Primakoff");
+
       // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years)
 
       static const Eigen::ArrayXd observed = (Eigen::ArrayXd(29) <<
@@ -2025,14 +2027,46 @@ namespace Gambit
         3.77961278e-06, 3.39592050e-08, 1.61753468e-10, 4.07595451e-13, 5.42420577e-16,
         3.80680740e-19, 1.40735174e-22, 2.73811491e-26, 2.80137635e-30).finished();
 
+      static const Eigen::ArrayXd signal_ref_ABC_inv_p = (Eigen::ArrayXd(29) <<
+        6.84645570e+00, 1.38276638e+01, 1.15423531e+01, 8.05084179e+00, 5.60306928e+00,
+        4.16875181e+00, 2.87412991e+00, 1.80904115e+00, 1.10130259e+00, 6.44435527e-01,
+        3.38187765e-01, 1.43594663e-01, 4.60044476e-02, 1.09433546e-02, 1.96741535e-03,
+        2.75632215e-04, 3.10435107e-05, 2.89384748e-06, 2.29089704e-07, 1.57709380e-08,
+        1.23683801e-09, 6.74760911e-11, 3.35137557e-12, 1.53361073e-13, 6.53125837e-15,
+        2.61093683e-16, 9.86957296e-18, 3.55008892e-19, 1.22183150e-20).finished();
+
+      static const Eigen::ArrayXd signal_ref_primakoff_inv_p = (Eigen::ArrayXd(29) <<
+        8.84775636e-01, 3.28828012e+00, 4.54610266e+00, 4.55046943e+00, 3.82324340e+00,
+        2.87393570e+00, 2.00118822e+00, 1.31693020e+00, 8.30038693e-01, 5.05475309e-01,
+        2.99397418e-01, 1.73322851e-01, 9.83938470e-02, 5.49341848e-02, 3.02407449e-02,
+        1.64463143e-02, 8.84722450e-03, 4.71283694e-03, 2.48912752e-03, 1.30493182e-03,
+        6.79481114e-04, 3.51490349e-04, 1.80781139e-04, 9.24971754e-05, 4.70979438e-05,
+        2.38651496e-05, 1.20147371e-05, 5.97455848e-06, 2.89539356e-06).finished();
+
+      static const Eigen::ArrayXd signal_ref_fe57_inv_p = (Eigen::ArrayXd(29) <<
+        4.93757338e-20, 6.03392155e-17, 3.36778192e-14, 1.05289585e-11, 1.86540746e-09,
+        1.88677159e-07, 1.09300600e-05, 3.63259145e-04, 6.94676950e-03, 7.65731335e-02,
+        4.87874295e-01, 1.80020810e+00, 3.85261285e+00, 4.78751557e+00, 3.45656809e+00,
+        1.44942168e+00, 3.52478516e-01, 4.96120582e-02, 4.03387143e-03, 1.89060187e-04,
+        5.09618833e-06, 7.87947591e-08, 6.97588972e-10, 3.53066626e-12, 1.02008617e-14,
+        1.68037302e-17, 1.57655378e-20, 8.41682518e-24, 2.55526526e-27).finished();
+
       static const double asimov = (observed * observed.log() - observed).sum();
 
       //const Eigen::ArrayXd bkg = include_bkg_tritium ? bkg_tritium + bkg_other : bkg_other;
       const Eigen::ArrayXd bkg = x_3H * bkg_tritium + bkg_other;
-      const Eigen::ArrayXd signal = gae * gae * (
-                                    signal_ref_ABC * gae * gae +
-                                    signal_ref_primakoff * gagamma * gagamma +
-                                    signal_ref_fe57 * gaN * gaN);
+      Eigen::ArrayXd signal = gae * gae * (
+                              signal_ref_ABC * gae * gae +
+                              signal_ref_primakoff * gagamma * gagamma +
+                              signal_ref_fe57 * gaN * gaN);
+
+      if (include_inverse_Primakoff) {
+        signal = signal + gagamma * gagamma * (
+          signal_ref_ABC_inv_p * gae * gae +
+          signal_ref_primakoff_inv_p * gagamma * gagamma +
+          signal_ref_fe57_inv_p * gaN * gaN);
+      };
+
       const Eigen::ArrayXd expected = eff * (bkg_scale * bkg + signal);
 
       result = (observed * expected.log() - expected).sum() - asimov;
@@ -2040,7 +2074,7 @@ namespace Gambit
 
     struct dRdE_params { double m; double sigma; };
     double dRdE (double E, void * params) {
-      struct dRdE_params * par = (struct dRdE_params *)params; 
+      struct dRdE_params * par = (struct dRdE_params *)params;
       // Efficiency from 2006.09721
       static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt", "cspline");
       return std::exp(-0.5*pow((E - par->m)/par->sigma,2))*efficiency.interpolate(E);
@@ -2111,7 +2145,7 @@ namespace Gambit
 //          double delta1 = 1.0*(1.0 + i) - ma;
 //          double delta2 = delta1 + 1.0;
 //          double s = 0.5 * amplitude * (gsl_sf_erf(delta2/sqrt2sigma) - gsl_sf_erf(delta1/sqrt2sigma));
-          gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);      
+          gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
           params = {ma, sigma};
           F.function = &dRdE;
           F.params = &params;
