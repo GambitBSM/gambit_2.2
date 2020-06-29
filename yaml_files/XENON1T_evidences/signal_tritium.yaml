@@ -44,7 +44,7 @@ Scanner:
       like:  LogLike
       nlive: 5000
       tol: 0.001
-      efr: 0.3
+      efr: 0.05
 
 ObsLikes:
   - capability: lnL_XENON1T_Anomaly
