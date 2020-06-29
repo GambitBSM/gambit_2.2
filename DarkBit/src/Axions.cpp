@@ -2038,6 +2038,13 @@ namespace Gambit
       result = (observed * expected.log() - expected).sum() - asimov;
     }
 
+    struct dRdE_params { double m; double sigma; };
+    double dRdE (double E, void * params) {
+      struct dRdE_params * par = (struct dRdE_params *)params; 
+      // Efficiency from 2006.09721
+      static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt", "cspline");
+      return std::exp(-0.5*pow((E - par->m)/par->sigma,2))*efficiency.interpolate(E);
+    }
 
     void calc_lnL_XENON1T_DM_Anomaly(double &result)
     {
@@ -2057,12 +2064,12 @@ namespace Gambit
       // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years)
 
       static const Eigen::ArrayXd observed = (Eigen::ArrayXd(29) <<
-        25.8973, 61.1494, 55.094, 46.96965, 49.03795,
-        46.96965, 44.0648, 40.963, 40.02765, 36.8277,
-        50.90865, 41.0124, 42.04655, 51.00745, 46.96965,
-        48.0532, 23.9278, 43.0313, 41.94775, 33.82405,
-        42.04655, 39.9295, 37.96, 52.92755, 41.0618,
-        57.06285, 38.94475, 45.9849, 34.90695).finished();
+        26., 61., 55., 47., 49.,
+        47., 44., 41., 40., 37.,
+        51., 41., 42., 51., 47.,
+        48., 24., 43., 42., 34.,
+        42., 40., 38., 53., 41.,
+        57., 39., 46., 35.).finished();
 
       static const Eigen::ArrayXd bkg_tritium = (Eigen::ArrayXd(29) <<
         4.56433040e+00, 8.64086363e+00, 8.97973381e+00, 8.65266285e+00, 8.05799840e+00,
@@ -2081,26 +2088,36 @@ namespace Gambit
         44.81415475, 44.91244891, 45.01013443, 45.1051268).finished();
 
       // Efficiency from 2006.09721
-      static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt");
+//      static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt");
       //double eff = efficiency.interpolate(ma);
       //static AxionInterpolator energy_resolution (GAMBIT_DIR "/DarkBit/data/XENON1T/enery_resolution.txt");
       // Photo-electric cross section from https://dx.doi.org/10.18434/T48G6X
       static AxionInterpolator sigma_pe (GAMBIT_DIR "/DarkBit/data/XENON1T/photoelectric.txt");
 
-
+      gsl_function F;
+      struct dRdE_params params;
+      double dRdE_result;
+      double error;
       result = 0;
       if ( (ma >= 1.0) && (ma <= 30.0))
       {
         double energy_resolution = 0.13297719 + 34.41479688/sqrt(ma);
         double sigma = ma * energy_resolution / 100.0;
-        double sqrt2sigma = sqrt(2.0)*sigma;
-        double amplitude = dm_fraction * (rho0/0.3) * (0.65*1000.0*365.0) * efficiency.interpolate(ma) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
+//        double sqrt2sigma = sqrt(2.0)*sigma;
+        double amplitude = dm_fraction * (rho0/0.3) * (0.65*1000.0*365.0) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
         std::vector<double> signal_vec;
         for(int i=0; i<29; i++)
         {
-          double delta1 = 1.0*(1.0 + i) - ma;
-          double delta2 = delta1 + 1.0;
-          double s = 0.5 * amplitude * (gsl_sf_erf(delta2/sqrt2sigma) - gsl_sf_erf(delta1/sqrt2sigma));
+//          double delta1 = 1.0*(1.0 + i) - ma;
+//          double delta2 = delta1 + 1.0;
+//          double s = 0.5 * amplitude * (gsl_sf_erf(delta2/sqrt2sigma) - gsl_sf_erf(delta1/sqrt2sigma));
+          gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);      
+          params = {ma, sigma};
+          F.function = &dRdE;
+          F.params = &params;
+          gsl_integration_qags (&F, 1.+i, 2.+i, 0, 1e-7, 1000, w, &dRdE_result, &error);
+          double s = amplitude * 1/sqrt(2*pi)/sigma * dRdE_result;
+          gsl_integration_workspace_free (w);
           signal_vec.push_back(s);
         };
 
