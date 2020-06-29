@@ -31,8 +31,6 @@ Scanner:
       efr: 0.05
 
 ObsLikes:
-  - capability: lnL_CAST2017
-    purpose: LogLike
   - capability: lnL_WDVar_R548
     purpose: LogLike
   - capability: lnL_WDVar_L192

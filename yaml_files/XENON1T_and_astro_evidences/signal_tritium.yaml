@@ -47,8 +47,6 @@ Scanner:
 ObsLikes:
   - capability: lnL_XENON1T_Anomaly
     purpose: LogLike
-  - capability: lnL_CAST2017
-    purpose: LogLike
   - capability: lnL_WDVar_R548
     purpose: LogLike
   - capability: lnL_WDVar_L192
