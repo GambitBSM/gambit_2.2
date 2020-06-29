@@ -1,8 +1,7 @@
 Parameters:
   GeneralALP:
     gaee: 0.
-    gan: 0.
-    gap: 0.
+    gaN: 0.
     gagg: 0.
     fa: 1.0e11
     ma0: 1.0e3

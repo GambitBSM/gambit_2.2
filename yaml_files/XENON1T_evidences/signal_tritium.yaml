@@ -3,11 +3,9 @@ Parameters:
     gaee:
       range: [1e-20, 1e-5]
       prior_type: log
-    gan:
+    gaN:
       range: [1e-20, 1e-5]
       prior_type: log
-    gap:
-      same_as: GeneralALP::gan
     gagg:
       range: [1e-20, 1e-5]
       prior_type: log
