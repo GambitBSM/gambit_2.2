@@ -2084,6 +2084,8 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_XENON1T_DM_Anomaly;
 
+      result = 0;
+
       double gae = std::fabs(*Param["gaee"]);
       double ma = *Param["ma0"] / 1.0e3;
       double x_3H = *Param["x_3H"] / 6.2e-25;
@@ -2128,32 +2130,29 @@ namespace Gambit
       // Photo-electric cross section from https://dx.doi.org/10.18434/T48G6X
       static AxionInterpolator sigma_pe (GAMBIT_DIR "/DarkBit/data/XENON1T/photoelectric.txt");
 
-      gsl_function F;
-      struct dRdE_params params;
-      double dRdE_result;
-      double error;
-      result = 0;
-      if ( (ma >= 1.0) && (ma <= 30.0))
+      gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
+      if ( (ma >= 1.0) && (ma <= 30.0) )
       {
         double energy_resolution = 0.13297719 + 34.41479688/sqrt(ma);
         double sigma = ma * energy_resolution / 100.0;
 //        double sqrt2sigma = sqrt(2.0)*sigma;
         double amplitude = dm_fraction * (rho0/0.3) * (0.65*1000.0*365.0) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
+        gsl_function f;
+        struct dRdE_params params = {ma, sigma};
+        f.function = &dRdE;
+        f.params = &params;
+        double dRdE_result, error;
         std::vector<double> signal_vec;
-        for(int i=0; i<29; i++)
+        for (int i = 0; i < 29; i++)
         {
 //          double delta1 = 1.0*(1.0 + i) - ma;
 //          double delta2 = delta1 + 1.0;
 //          double s = 0.5 * amplitude * (gsl_sf_erf(delta2/sqrt2sigma) - gsl_sf_erf(delta1/sqrt2sigma));
-          gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
-          params = {ma, sigma};
-          F.function = &dRdE;
-          F.params = &params;
-          gsl_integration_qags (&F, 1.+i, 2.+i, 0, 1e-7, 1000, w, &dRdE_result, &error);
+          gsl_integration_qags (&f, 1.+i, 2.+i, 0, 1e-7, 1000, w, &dRdE_result, &error);
           double s = amplitude * 1/sqrt(2*pi)/sigma * dRdE_result;
-          gsl_integration_workspace_free (w);
           signal_vec.push_back(s);
         };
+        gsl_integration_workspace_free (w);
 
         static const double asimov = (observed * observed.log() - observed).sum();
 
