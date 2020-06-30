@@ -1,0 +1,3 @@
+    eta:
+      range: [0.0,1.0]
+      prior_type: flat

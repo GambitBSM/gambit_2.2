@@ -1,0 +1,13 @@
+    rho0:
+    x_3H:
+      mean: [-0.397940008672038]
+      sigs: [-0.823908740944319]
+      prior_type: log10normal
+    v0: 235.0
+    vesc: 550.0
+    vrot: 235.0
+    rs: 20.0
+    r_sun: 8.5
+    alpha: 1
+    beta: 3
+    gamma: 1
