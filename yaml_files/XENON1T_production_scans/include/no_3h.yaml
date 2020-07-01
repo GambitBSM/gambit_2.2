@@ -1,0 +1,9 @@
+    delta_bkg:
+      mean: [0.]
+      sigs: [0.026]
+      prior_type: gaussian
+    delta_eff:
+      mean: [0.]
+      sigs: [0.03]
+      prior_type: gaussian
+    x_3H: 0.0
