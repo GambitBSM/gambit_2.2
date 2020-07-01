@@ -2137,7 +2137,7 @@ namespace Gambit
         double energy_resolution = 0.15 + 31.71/sqrt(ma);
         double sigma = ma * energy_resolution / 100.0;
 //        double sqrt2sigma = sqrt(2.0)*sigma;
-        double amplitude = dm_fraction * (rho0/0.3) * (0.65*1000.0*365.0) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
+        double amplitude = dm_fraction * (rho0/0.3) * (0.647309514*1000.0*365.0) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
         gsl_function f;
         struct dRdE_params params = {ma, sigma};
         f.function = &dRdE;
