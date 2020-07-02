@@ -20,6 +20,8 @@ Scanner:
 ObsLikes:
   - capability: lnL_XENON1T_Anomaly
     purpose: LogLike
+  - capability: lnL_XENON1T_Anomaly_NuisanceParameters
+    purpose: Observable
 
 KeyValues:
 

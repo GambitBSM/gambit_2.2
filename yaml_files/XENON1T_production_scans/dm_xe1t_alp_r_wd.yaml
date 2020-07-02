@@ -32,6 +32,10 @@ ObsLikes:
     purpose: LogLike
   - capability: lnL_WDVar_L192
     purpose: LogLike
+  - capability: lnL_XENON1T_Anomaly_NuisanceParameters
+    purpose: Observable
+  - capability: lnL_rho0
+    purpose: Observable
 
 KeyValues:
 
