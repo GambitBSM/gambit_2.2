@@ -22,6 +22,8 @@ ObsLikes:
     purpose: LogLike
   - capability: lnL_RParameter
     purpose: LogLike
+  - capability: lnL_XENON1T_Anomaly_NuisanceParameters
+    purpose: Observable
 
 KeyValues:
 

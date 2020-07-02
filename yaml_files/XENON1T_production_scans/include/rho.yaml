@@ -1,5 +1,4 @@
     rho0:
-    x_3H:
       mean: [-0.397940008672038]
       sigs: [-0.823908740944319]
       prior_type: log10normal

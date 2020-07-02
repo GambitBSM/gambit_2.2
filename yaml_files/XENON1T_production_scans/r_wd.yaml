@@ -1,5 +1,5 @@
 Parameters:
-  GeneralALP: !import include/solar_alp.yaml
+  GeneralALP: !import include/no_alp.yaml
 
 Printer:
   printer: ascii
@@ -7,14 +7,12 @@ Printer:
     output_file: "r_wd.txt"
 
 Scanner:
-  use_scanner: multinest
+  use_scanner: random
   scanners:
-    multinest:
-      plugin: multinest
+    random:
+      plugin: random
+      point_number: 1
       like:  LogLike
-      nlive: 5000
-      tol: 0.001
-      efr: 0.05
 
 ObsLikes:
   - capability: lnL_RParameter
