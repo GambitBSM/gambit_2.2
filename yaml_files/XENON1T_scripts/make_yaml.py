@@ -37,7 +37,7 @@ def alter_tritium(template_name, a, suffix=None):
         original = yaml.load(f)
 
     original["Parameters"]["XENON1T_NuisanceParameters"]["x_3H"]["sigs"] = [float(a)]
-    original["Scanner"]["scanners"]["multinest"]["nlive"] = 1000  # fast repeats
+    #original["Scanner"]["scanners"]["multinest"]["nlive"] = 1000  # fast repeats
     original["Scanner"]["scanners"]["multinest"]["efr"] = 0.8  # fast repeats
 
     if suffix is not None:
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     elif alp:
 
         center = -12.5
-        width = np.linspace(0., 15., 10).tolist() + np.linspace(2., 6., 10).tolist()
+        width = np.linspace(0., 15., 20).tolist() + np.linspace(2., 4., 20).tolist()
 
         for i, w in enumerate(width):
             a = center - 0.5 * w

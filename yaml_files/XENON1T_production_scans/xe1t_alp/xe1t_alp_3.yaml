@@ -14,18 +14,18 @@ Parameters:
     gaN:
       prior_type: log
       range:
-      - 1.0e-15
-      - 1.0e-10
+      - 2.06913808111479e-14
+      - 4.832930238571752e-12
     gaee:
       prior_type: log
       range:
-      - 1.0e-15
-      - 1.0e-10
+      - 2.06913808111479e-14
+      - 4.832930238571752e-12
     gagg:
       prior_type: log
       range:
-      - 1.0e-15
-      - 1.0e-10
+      - 2.06913808111479e-14
+      - 4.832930238571752e-12
     ma0: 1.0
     thetai: 1.0
   XENON1T_NuisanceParameters:

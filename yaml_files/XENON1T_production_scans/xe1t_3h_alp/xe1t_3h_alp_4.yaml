@@ -56,7 +56,7 @@ Scanner:
     multinest:
       efr: 0.8
       like: LogLike
-      nlive: 1000
+      nlive: 5000
       plugin: multinest
       tol: 0.001
   use_scanner: multinest
