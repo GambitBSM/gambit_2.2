@@ -1,0 +1,48 @@
+KeyValues:
+  debug: false
+  default_output_path: ./runs/xe1t_3h_14
+ObsLikes:
+- capability: lnL_XENON1T_Anomaly
+  purpose: LogLike
+Parameters:
+  GeneralALP:
+    Tchi: 147.0
+    beta: 7.94
+    fa: 1.0e11
+    gaN: 0.0
+    gaee: 0.0
+    gagg: 0.0
+    ma0: 1.0
+    thetai: 1.0
+  XENON1T_NuisanceParameters:
+    delta_bkg:
+      mean:
+      - 0.0
+      prior_type: gaussian
+      sigs:
+      - 0.026
+    delta_eff:
+      mean:
+      - 0.0
+      prior_type: gaussian
+      sigs:
+      - 0.03
+    x_3H:
+      mean:
+      - -27.0
+      prior_type: log10normal
+      sigs:
+      - 3.81578947368421
+Printer:
+  options:
+    output_file: xe1t_3h.txt
+  printer: ascii
+Scanner:
+  scanners:
+    multinest:
+      efr: 0.8
+      like: LogLike
+      nlive: 1000
+      plugin: multinest
+      tol: 0.001
+  use_scanner: multinest
