@@ -19,8 +19,8 @@ alp_r_wd = np.array([-10.971688775591119, 2.6138961933836878E-002])
 # DM ALP
 
 dm_xe1t_alp = np.array([-22.825411868459700, 2.5694833418009769E-002])
-dm_xe1t_alp_r = np.array([np.nan, np.nan])
-dm_xe1t_3h_alp_r = np.array([np.nan, np.nan])
+dm_xe1t_alp_r = np.array([-23.876929302207930, 2.7201848433570080E-002])
+dm_xe1t_3h_alp_r = np.array([-22.624137278696601, 2.8187148458826420E-002])
 dm_xe1t_alp_r_wd = np.array([-32.706501022154001, 4.0278351498150289E-002])
 dm_xe1t_3h_alp = np.array([-21.663686916310322, 2.5982589183559394E-002])
 
