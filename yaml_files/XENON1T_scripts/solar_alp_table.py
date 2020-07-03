@@ -50,3 +50,4 @@ def tex_solar_alp(solar_alp):
 
 if __name__ == "__main__":
     print(tex_solar_alp(solar_alp))
+    print("z_score_for_text", z_score(xe1t_alp, xe1t))

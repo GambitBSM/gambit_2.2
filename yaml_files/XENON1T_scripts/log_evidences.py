@@ -3,6 +3,7 @@ Log evidences and their errors for solar and DM ALPs
 """
 
 import numpy as np
+from scipy.stats import norm
 
 # Solar ALP
 
@@ -39,8 +40,16 @@ r_wd = np.array([-1.1300194552e+01, 0])
 # Combine evidences trivially
 xe1t_r = np.array([xe1t[0] + r[0], (xe1t[1]**2 + r[1]**2)**0.5])
 xe1t_3h_r = np.array([xe1t_3h[0] + r[0], (xe1t_3h[1]**2 + r[1]**2)**0.5])
+xe1t_r_wd = np.array([xe1t[0] + r_wd[0], (xe1t[1]**2 + r_wd[1]**2)**0.5])
+xe1t_3h_r_wd = np.array([xe1t_3h[0] + r_wd[0], (xe1t_3h[1]**2 + r_wd[1]**2)**0.5])
 
 # Bayes factors
 
 def bayes_factor(r1, r2):
     return np.exp(r1[0] - r2[0])
+
+def z_score(r1, r2):
+    return norm.isf(1. / (1. + bayes_factor(r1, r2)))
+
+def evidence(r):
+    return np.exp(r[0])
