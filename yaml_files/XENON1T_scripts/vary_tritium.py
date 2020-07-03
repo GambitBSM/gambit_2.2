@@ -57,4 +57,4 @@ ax_rhs.set_yticklabels(label)
 ax_rhs.set_ylim(0, ymax)
 
 plt.tight_layout()
-plt.savefig("vary_tritium.pdf")
+plt.savefig("xe1t_3h_alp.pdf")
