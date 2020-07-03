@@ -1,4 +1,5 @@
 """
+Log evidences and their errors for solar and DM ALPs
 """
 
 import numpy as np
@@ -16,7 +17,9 @@ alp_r_wd = np.array([-10.971688775591119, 2.6138961933836878E-002])
 
 # DM ALP
 
-dm_xe1t_alp = np.array([None, None])
+dm_xe1t_alp = np.array([np.nan, np.nan])
+dm_xe1t_alp_r = np.array([np.nan, np.nan])
+dm_xe1t_3h_alp_r = np.array([np.nan, np.nan])
 dm_xe1t_alp_r_wd = np.array([-32.706501022154001, 4.0278351498150289E-002])
 dm_xe1t_3h_alp = np.array([-21.663686916310322, 2.5982589183559394E-002])
 
@@ -41,52 +44,3 @@ xe1t_3h_r = np.array([xe1t_3h[0] + r[0], (xe1t_3h[1]**2 + r[1]**2)**0.5])
 
 def bayes_factor(r1, r2):
     return np.exp(r1[0] - r2[0])
-
-# Table 3.
-
-t3 = {}
-
-# Table 3. Xe column
-
-t3["Xe"] = {"no_3h": bayes_factor(xe1t_alp, xe1t),
-            "3h": bayes_factor(xe1t_3h_alp, xe1t_3h),
-            "bkg_only_3h": bayes_factor(xe1t_alp, xe1t_3h)}
-
-# Table 3. R-parameter column
-
-no_3h = bayes_factor(alp_r, r)
-t3["R"] = {"no_3h": no_3h,
-           "3h": no_3h,
-           "bkg_only_3h": no_3h}
-
-# Table 3. Xe + R column
-
-t3["Xe + R"] = {"no_3h": bayes_factor(xe1t_alp_r, xe1t_r),
-                "3h": bayes_factor(xe1t_3h_alp_r, xe1t_3h_r),
-                "bkg_only_3h": bayes_factor(xe1t_alp_r, xe1t_3h_r)}
-
-# Table 3. Xe | R column
-
-t3["Xe | R"] = {k: t3["Xe + R"][k] / t3["R"][k] for k in t3["R"].keys()}
-
-
-def tex_t3(t3):
-    """
-    @returns Bayes factors for table. 3 in tex format
-    """
-    row_names = {"no_3h": "No tritium", "3h": "Tritium", "bkg_only_3h": "Tritium background only"}
-    order = ["Xe", "R", "Xe + R", "Xe | R"]
-    lines = []
-
-    for k, v in row_names.items():
-        line = [v]
-        for o in order:
-            line.append(r"\num{{{}}}".format(t3[o][k]))
-
-        lines.append(" & ".join(line))
-
-    return "\\\\\n".join(lines)
-
-
-if __name__ == "__main__":
-    print(tex_t3(t3))
