@@ -10,7 +10,7 @@ def make_style():
     """
     rc('text', usetex=True)
     rc('text.latex', preamble=r'\usepackage{amsmath}')
-    rc('font', **{'family': 'serif', 'size': 12})
-    rc('axes', **{'grid': False, 'titlesize': 12})
-    rc('figure', **{'titlesize': 12})
-    rc('legend', **{'fontsize': 12, 'title_fontsize': 12, 'handlelength': 1.})
+    rc('font', **{'family': 'serif', 'size': 14})
+    rc('axes', **{'grid': False, 'titlesize': 14})
+    rc('figure', **{'titlesize': 14})
+    rc('legend', **{'fontsize': 14, 'title_fontsize': 14, 'handlelength': 1.})
