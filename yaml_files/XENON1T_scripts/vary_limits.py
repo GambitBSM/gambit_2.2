@@ -5,15 +5,15 @@ from scipy.stats import norm
 from style import make_style
 
 
-data_arr = np.loadtxt("vary_limits.dat")
+data_arr = np.loadtxt("xe1t_alp.dat")
 
 width = data_arr[:, 0]
 order = width.argsort()
 width = width[order]
-log_z_signal = data_arr[order, 1]
-log_z_bkg = -22.761451395014724
+ln_z_xe1t_alp = data_arr[order, 1]
+ln_z_xe1t = -22.557779416855389
 
-bayes_factor = np.exp(log_z_signal - log_z_bkg)
+bayes_factor = np.exp(ln_z_xe1t_alp - ln_z_xe1t)
 
 make_style()
 fig, ax = plt.subplots()
@@ -21,9 +21,9 @@ ax_rhs = ax.twinx()
 col_rhs = "red"
 
 ax.plot(width, bayes_factor, ls="-", marker="o")
-plt.title("Prior from $10^{-12.5 - 0.5 w}$ to $10^{-12.5 + 0.5 w}$")
 ax.set_ylabel("Bayes factor, $B_{10}$")
 ax.set_xlabel("Prior width, $w$")
+ax.set_title("Effective axion couplings from $10^{-12.5 - 0.5 w}$ to $10^{-12.5 + 0.5 w}$")
 
 # Limits
 
@@ -34,15 +34,17 @@ ax.set_ylim(0, ymax)
 # Twin axis showing sigmas
 
 z = [0., 0.5, 1., 1.5, 1.75]
+label = [r"${}\sigma$".format(n) for n in z]
 p = norm.sf(z)
 y = 1. / p - 1.
 
-ax_rhs.set_ylabel("Bayesian significance, $Z$", color=col_rhs)
+ax_rhs.set_ylabel("$Z$-score", color=col_rhs)
 ax_rhs.spines['right'].set_color(col_rhs)
 ax_rhs.tick_params(axis='x', colors=col_rhs)
 ax_rhs.tick_params(axis='y', colors=col_rhs)
-ax_rhs.set_yticklabels(z)
 ax_rhs.set_yticks(y)
+ax_rhs.set_yticklabels(label)
 ax_rhs.set_ylim(0, ymax)
 
-plt.savefig("vary_limits.pdf")
+plt.tight_layout()
+plt.savefig("xe1t_alp.pdf")
