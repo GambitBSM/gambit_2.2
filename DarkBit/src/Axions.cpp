@@ -1813,7 +1813,7 @@ namespace Gambit
     {
       using namespace Pipes::calc_lnL_WDVar_G117B15A;
       // Rescale coupling to be used in their model prediction.
-      double x2 = (1.0E+14 * std::fabs(*Param["gaee"]))/2.8;
+      double x2 = (1.0e+14 * std::fabs(*Param["gaee"]))/2.8;
       x2 = x2*x2;
 
       // Values for the model prediction provided by the authors.
@@ -1825,6 +1825,18 @@ namespace Gambit
       static bool init_flag = false;
       static WDInterpolator interp(14);
       if (not(init_flag)) { interp.init (x2vals, dPidts, 14); init_flag = true; };
+
+      // Use interpolation for the finite-mass correction.
+      const double internal_temperature_keV = 1.19698;
+      double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
+      static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_G117B15A.dat", "linear");
+      // For higher masses, reduce the effective coupling accordingly:
+      if (mrel > 100.0)
+      {
+        x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
+      } else if (mrel > 0.01) {
+        x2 *= pow(10,correction.interpolate(log10(mrel)));
+      };
 
       // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
       // it is conservative to use the prediction for x2 = 900 for x2 > 900.
@@ -1852,6 +1864,18 @@ namespace Gambit
       static WDInterpolator interp(14);
       if (not(init_flag)) { interp.init (x2vals, dPidts, 14); init_flag = true; };
 
+      // Use interpolation for the finite-mass correction.
+      const double internal_temperature_keV = 1.11447;
+      double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
+      static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_R548.dat", "linear");
+      // For higher masses, reduce the effective coupling accordingly:
+      if (mrel > 100.0)
+      {
+        x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
+      } else if (mrel > 0.01) {
+        x2 *= pow(10,correction.interpolate(log10(mrel)));
+      };
+
       // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
       // it is conservative to use the prodiction for x2 = 900 for x2 > 900.
       x2 = std::min(x2,900.0);
@@ -1878,6 +1902,18 @@ namespace Gambit
       static WDInterpolator interp(11);
       if (not(init_flag)) { interp.init (x2vals, dPidts, 11); init_flag = true; };
 
+      // Use interpolation for the finite-mass correction.
+      const double internal_temperature_keV = 2.64273;
+      double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
+      static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_PG1351489.dat", "linear");
+      // For higher masses, reduce the effective coupling accordingly:
+      if (mrel > 100.0)
+      {
+        x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
+      } else if (mrel > 0.01) {
+        x2 *= pow(10,correction.interpolate(log10(mrel)));
+      };
+
       // We only have predictions up to x2 = 400. Limits should get stronger for x2 > 400, so
       // it is conservative to use the prodiction for x2 = 400 for x2 > 400.
       x2 = std::min(x2,400.0);
@@ -1903,6 +1939,18 @@ namespace Gambit
       static bool init_flag = false;
       static WDInterpolator interp(31);
       if (not(init_flag)) { interp.init (x2vals, dPidts, 31); init_flag = true; };
+
+      // Use interpolation for the finite-mass correction.
+      const double internal_temperature_keV = 1.04931;
+      double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
+      static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_L192.dat", "linear");
+      // For higher masses, reduce the effective coupling accordingly:
+      if (mrel > 100.0)
+      {
+        x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
+      } else if (mrel > 0.01) {
+        x2 *= pow(10,correction.interpolate(log10(mrel)));
+      };
 
       // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
       // it is conservative to use the prediction for x2 = 900 for x2 > 900.
