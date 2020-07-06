@@ -18,17 +18,28 @@ alp_r_wd = np.array([-10.971688775591119, 2.6138961933836878E-002])
 
 # DM ALP
 
-dm_xe1t_alp = np.array([-22.825411868459700, 2.5694833418009769E-002])
-dm_xe1t_alp_r = np.array([-23.876929302207930, 2.7201848433570080E-002])
-dm_xe1t_3h_alp_r = np.array([-22.624137278696601, 2.8187148458826420E-002])
-dm_xe1t_alp_r_wd = np.array([-32.706501022154001, 4.0278351498150289E-002])
-dm_xe1t_3h_alp = np.array([-21.663686916310322, 2.5982589183559394E-002])
-
 # Combine two runs
-dm_xe1t_3h_alp_r_wd_1 = np.array([-32.317710884900158, 3.6813797616004028E-002])
-dm_xe1t_3h_alp_r_wd_2 = np.array([-32.305534738325065, 3.6688827942681475E-002])
-dm_xe1t_3h_alp_r_wd = np.array([0.5 * (dm_xe1t_3h_alp_r_wd_1[0] + dm_xe1t_3h_alp_r_wd_1[0]),
-                                (dm_xe1t_3h_alp_r_wd_1[1]**-2 + dm_xe1t_3h_alp_r_wd_1[1]**-2)**-0.5])
+def combine_two_runs(x,y):
+  return np.array([0.5 * (x[0] + y[0]), (x[1]**-2 + y[1]**-2)**-0.5])
+
+dm_xe1t_alp = np.array([-22.825411868459700, 2.5694833418009769E-002])
+dm_alp_r_wd = np.array([-12.490727140791936, 1.8117843570924309E-002])
+
+dm_xe1t_alp_r_1 = np.array([-23.876929302207930, 2.7201848433570080E-002])
+dm_xe1t_alp_r_2 = np.array([-23.890639427142432, 2.6941502017563342E-002])
+dm_xe1t_alp_r = combine_two_runs(dm_xe1t_alp_r_1, dm_xe1t_alp_r_2)
+
+dm_xe1t_3h_alp_r_1 = np.array([-22.624137278696601, 2.8187148458826420E-002])
+dm_xe1t_3h_alp_r_2 = np.array([-22.608437638087608, 2.8106086087190559E-002])
+dm_xe1t_3h_alp_r  = combine_two_runs(dm_xe1t_3h_alp_r_1, dm_xe1t_3h_alp_r_2) 
+
+dm_xe1t_alp_r_wd = np.array([-33.944544369856203, 3.5237017736609484E-002])
+
+dm_xe1t_3h_alp_1 = np.array([-21.663686916310322,2.5982589183559394E-002])
+dm_xe1t_3h_alp_2 = np.array([-21.639798779173070, 2.5910675497805190E-002])
+dm_xe1t_3h_alp = combine_two_runs(dm_xe1t_3h_alp_1, dm_xe1t_3h_alp_2)
+
+dm_xe1t_3h_alp_r_wd = np.array([-33.160967001605101, 3.1275503779969779E-002])
 
 # Background only
 
