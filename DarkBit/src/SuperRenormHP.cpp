@@ -1012,11 +1012,43 @@ namespace Gambit
       result = lambda*theta*theta*s0*mS*1e11;
     }
 
+    void SuperRenormHP_lifetime (double &result)
+    {
+      using namespace Pipes::SuperRenormHP_lifetime;
+
+      std::string DM_ID = *Dep::DarkMatter_ID;
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
+      auto fb = f->bind();
+      double gamma = fb->eval()/hbar_GeV;
+
+      result = 1/gamma;
+    }
+
+    void SuperRenormHP_current_density (double &result)
+    {
+      using namespace Pipes::SuperRenormHP_current_density;
+
+      double RD = *Dep::DM_relic_density;
+
+      double tau = *Dep::DM_lifetime;
+
+      double H0 = *Dep::H0/Mpc_2_km;
+
+      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
+
+      double OmegaLambda = *Dep::Omega0_Lambda;
+
+      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0)[0];
+
+      result = RD*exp(-t0/tau);
+    }
+
     void RD_oh2_SuperRenormHP (double &result)
     {
       using namespace Pipes::RD_oh2_SuperRenormHP;
 
-      double RD = *Dep::DM_relic_density;
+      double RD = *Dep::DM_current_density;
 
       double H0 = *Dep::H0;
       double h = H0/100;
@@ -1374,6 +1406,47 @@ namespace Gambit
     }
 
     // capability function to compute the X-ray log-likelihood from the HEAO-1 A2 experiment
+    /* void calc_lnL_HEAO(double &result) */
+    /* { */
+    /*   using namespace Pipes::calc_lnL_HEAO; */
+
+    /*   static Xray experiment = Xray("HEAO", 9.894*1e9*3.0856775814913684e21); // J in ev / cm^2 */
+
+    /*   double density = *Dep::DM_relic_density*1e9; */
+
+    /*   double OmegaDM = *Dep::Omega0_cdm, H0 = *Dep::H0; */
+
+    /*   double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r; */
+
+    /*   double OmegaLambda = *Dep::Omega0_Lambda; */
+
+    /*   std::string DM_ID = *Dep::DarkMatter_ID; */
+
+    /*   TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog; */
+    /*   auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate; */
+    /*   auto fb = f->bind(); */
+    /*   double gamma = fb->eval(); */
+
+    /*   double mass = catalog.getParticleProperty(DM_ID).mass*1e9; */
+
+    /*   XrayLikelihood_params params = {mass, gamma/hbar_GeV, density, experiment, H0*1e-19/3.085, OmegaM, OmegaR, OmegaLambda, OmegaDM}; */
+
+    /*   const double Emin = experiment.getEmin(), Emax = experiment.getEmax(); */
+    /*   double E, lik1, lik2; */
+
+    /*   // no constraints available above the electron threshold, we need to take into account the decay into charged particles and their subsequent FSR */
+    /*   if (mass >= 1e6) { result = 0; } */
+
+    /*   else if (mass >= 2.*Emin) */
+    /*   { */
+    /*     lik1 = XrayLogLikelihood(Emin+experiment.deltaE(Emin), &params); */
+    /*     lik2 = XrayLogLikelihood(fmin(mass/2., Emax-experiment.deltaE(Emax)), &params); */
+    /*     result = fmin(lik1, lik2); */
+    /*   } */
+
+    /*   else { result = 0; } */
+    /* } */
+
     void calc_lnL_HEAO(double &result)
     {
       using namespace Pipes::calc_lnL_HEAO;
