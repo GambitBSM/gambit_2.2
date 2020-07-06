@@ -13,13 +13,6 @@ dm_alp["Xe"] = {"no_3h": bayes_factor(dm_xe1t_alp, xe1t),
                 "3h": bayes_factor(dm_xe1t_3h_alp, xe1t_3h),
                 "bkg_only_3h": bayes_factor(dm_xe1t_alp, xe1t_3h)}
 
-# R-parameter column
-
-no_3h = bayes_factor(alp_r, r)
-dm_alp["R"] = {"no_3h": no_3h,
-               "3h": no_3h,
-               "bkg_only_3h": no_3h}
-
 # Xe + R column
 
 dm_alp["Xe + R"] = {"no_3h": bayes_factor(dm_xe1t_alp_r, xe1t_r),
@@ -31,17 +24,12 @@ dm_alp["Xe + R + WD"] = {"no_3h": bayes_factor(dm_xe1t_alp_r_wd, xe1t_r_wd),
                          "3h": bayes_factor(dm_xe1t_3h_alp_r_wd, xe1t_3h_r_wd),
                          "bkg_only_3h": bayes_factor(dm_xe1t_alp_r_wd, xe1t_3h_r_wd)}
 
-# Xe | R column
-
-dm_alp["Xe | R"] = {k: dm_alp["Xe + R"][k] / dm_alp["R"][k] for k in dm_alp["R"].keys()}
-
-
 def tex_dm_alp(dm_alp):
     """
     @returns Bayes factors for DM ALP in tex format
     """
     row_names = {"no_3h": "No tritium", "3h": "Tritium", "bkg_only_3h": "Tritium background only"}
-    order = ["Xe", "Xe + R", "Xe + R + WD", "Xe | R"]
+    order = ["Xe", "Xe + R", "Xe + R + WD"]
     lines = []
 
     for k, v in row_names.items():
