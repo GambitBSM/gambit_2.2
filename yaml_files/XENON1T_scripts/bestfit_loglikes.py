@@ -15,13 +15,16 @@ for j in range(1,len(sys.argv)):
 
     path = sys.argv[j]
 
-
-    # Find number of output files
-    n =  ( len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]) - 4)/2
-    print "Number of files = ", n
-
     # Base file name
     base = '.'.join(os.listdir(path)[0].strip().split('.')[:-1])
+
+    # Find number of output files
+    n =  len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name)) 
+         and len(name.split('.')[-1].split('_')) <= 2
+         and "live" not in name
+         and "info" not in name
+         and "txt_txt" not in name])
+    print "Number of files = ", n
 
     # Worst loglike is -5e10
     bestfit = -5e10
