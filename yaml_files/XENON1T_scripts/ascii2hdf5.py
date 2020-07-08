@@ -95,7 +95,7 @@ with h5py.File(hdf5file, 'w') as fhdf5:
     group = fhdf5.create_group(base)
 
     for key in data.keys():
-        group.create_dataset(key, data=np.array(data[key]))
+        group.create_dataset(key, data=np.array(map(float,data[key])))
         group.create_dataset(key+"_isvalid", data=np.full(len(data[key]), True, dtype=bool))
 
 
