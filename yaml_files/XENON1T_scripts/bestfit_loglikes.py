@@ -41,17 +41,27 @@ for j in range(1,len(sys.argv)):
             infofile = path + '/' + base + '.txt_info'
 
         # Get LogLike column for file i
+        xe1t_col = 0
+        rho_col = 0
         with open(infofile) as finfo:
             for line in finfo:
                 if "LogLike" in line:
                     loglike_col = int(line.strip().split()[1][:-1])
+                if "#lnL_XENON1T_Anomaly_NuisanceParameters" in line:
+                    xe1t_col = int(line.strip().split()[1][:-1])
+                if "#lnL_rho0" in line:
+                    rho_col = int(line.strip().split()[1][:-1])
 
         # Read loglike for file and compare to bestfit
         with open(datafile) as fdata:
             for line in fdata:
                 loglike = float(line.strip().split()[loglike_col-1])
+                if xe1t_col > 0:
+                    loglike += float(line.strip().split()[xe1t_col-1])
+                if rho_col > 0:
+                    loglike += float(line.strip().split()[rho_col-1])
                 if loglike > bestfit:
-                  bestfit = loglike
+                    bestfit = loglike
 
     # Chi square
     chisq = -2 * bestfit
