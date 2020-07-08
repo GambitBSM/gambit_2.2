@@ -516,10 +516,12 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
         "os.rename(temp_location, location)\n"
     ).format(model_name.lower(), base_pythia_version, pp_source, pp_header)
 
-    filename = "pythia_{0}/8.{1}/patch_pythia_{0}.dif".format(model_name.lower(), base_pythia_version)
-    write_file(filename, "Backends", patch_contents, reset_dict)
-    loc = full_filename(filename, "Backends")
-    new_loc = "../Backends/patches/pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
-    print loc
-    print new_loc
-    os.rename(loc, new_loc)
+    # filename = "pythia_{0}/8.{1}/patch_pythia_{0}.dif".format(model_name.lower(), base_pythia_version)
+    # write_file(filename, "Backends", patch_contents, reset_dict)
+    # loc = full_filename(filename, "Backends")
+    # new_loc = "../Backends/patches/pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
+    # os.rename(loc, new_loc)
+
+    filename = "pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
+    write_file(filename, "Backends", patch_contents, reset_dict, overwrite_path = "patches/")
+

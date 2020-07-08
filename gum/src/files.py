@@ -48,7 +48,7 @@ def mkdir_if_absent(path):
         if not os.path.isdir(path):
             raise
 
-def full_filename(filename, module):
+def full_filename(filename, module, overwrite_path = None):
     """
     Formats a gambit file correctly based on the filename, the
     module, and whether it is a header file.
@@ -71,6 +71,12 @@ def full_filename(filename, module):
         path = ""
 
     location = "../{0}/{1}{2}".format(module, path, filename)
+
+    # If the user specifies that the "path" should be overwritten based
+    # on the filetype, then do so...
+    if overwrite_path: 
+        location = "../{0}/{1}{2}".format(module, overwrite_path, filename)
+
     return location
 
 def find_file(filename, module):
@@ -229,12 +235,12 @@ def find_string(filename, module, string, filename_overwrite = ""):
 
     return False, 0
 
-def write_file(filename, module, contents, reset_dict):
+def write_file(filename, module, contents, reset_dict, overwrite_path = None):
     """
     Writes a file in a specified location.
     """
 
-    location = full_filename(filename, module)
+    location = full_filename(filename, module, overwrite_path)
     location_parts = os.path.split(location)
 
     if find_file(filename, module):
