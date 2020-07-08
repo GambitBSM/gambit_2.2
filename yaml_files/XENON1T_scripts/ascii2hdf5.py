@@ -48,7 +48,7 @@ for path in asciipaths:
             for line in finfo:
                 if "Column" in line:
                     col = int(line.strip().split()[1][:-1])-1
-                    name = line.strip().split()[2]
+                    name = " ".join(line.strip().split()[2::])  
                     datasets.append(name)
 
         # Read data
@@ -76,7 +76,7 @@ for path in asciipaths:
         for line in finfo:
             if "Column" in line:
                 col = int(line.strip().split()[1][:-1])-1
-                name = line.strip().split()[2]
+                name = " ".join(line.strip().split()[2::])
                 datasets.append(name)
 
     # Read data
