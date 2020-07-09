@@ -31,7 +31,7 @@ for path in asciipaths:
     print "Number of files = ", n
 
     # Read all files
-    for i in range(0,1):
+    for i in range(0,n):
 
         # Filename
         datafile = path + '/' + base + '.txt_' + str(i)
