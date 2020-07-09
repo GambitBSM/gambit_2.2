@@ -1039,9 +1039,11 @@ namespace Gambit
 
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      double t0 = ageUniverse(0., OmegaM, OmegaR, OmegaLambda, H0)[0];
+      double z = 1090;
 
-      result = RD*exp(-t0/tau);
+      double t_CMB = ageUniverse(z, OmegaM, OmegaR, OmegaLambda, H0)[0];
+
+      result = RD*exp(-t_CMB/tau)*pow((1+z), 3);
     }
 
     void RD_oh2_SuperRenormHP (double &result)
