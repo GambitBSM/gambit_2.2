@@ -39,6 +39,9 @@ dm_xe1t_3h_alp_r  = combine_two_runs(dm_xe1t_3h_alp_r_1, dm_xe1t_3h_alp_r_2)
 
 dm_xe1t_alp_r_wd = np.array([-33.944544369856203, 3.5237017736609484E-002])
 
+# same as above but log prior on eta
+dm_xe1t_alp_r_wd_logeta = np.array([-33.657722431533024, 3.6599876459608022E-002])
+
 dm_xe1t_3h_alp_1 = np.array([-21.663686916310322, 2.5982589183559394E-002])
 dm_xe1t_3h_alp_2 = np.array([-21.639798779173070, 2.5910675497805190E-002])
 dm_xe1t_3h_alp_3 = np.array([-21.620496816279534, 2.5898632063533277E-002])

@@ -64,3 +64,7 @@ def tex_dm_alp(dm_alp):
 
 if __name__ == "__main__":
     print(tex_dm_alp(dm_alp))
+
+    bfflat = bayes_factor(dm_xe1t_alp_r_wd,xe1t_r_wd)
+    bflog = bayes_factor(dm_xe1t_alp_r_wd_logeta, xe1t_r_wd)
+    print "Changing prior in eta to log enhances the bayes factor to ", bflog, ", corresponding to an increase of of ", bflog/bfflat
