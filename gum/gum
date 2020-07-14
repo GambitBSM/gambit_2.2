@@ -71,6 +71,12 @@ if args.file:
         # SARAH removes hyphens and underscores for .f90 files...
         clean_model_name = gum.name.replace('-','').replace('_','')
 
+        # Check if either the model name or the clean model name exist in the Gambit hiearchy
+        if check_model_name(gum.name, clean_model_name):
+            raise GumError(("The model name already exists on the Gambit hierarchy. "
+                            "Change your model name if it's a Gambit native model or "
+                            "run gum in reset model if it's a gum-generated model."))
+
         # Create the output directory for all generated files for this model
         output_dir = os.path.join(os.getcwd(),"Outputs", gum.name)
         mkdir_if_absent(output_dir)
