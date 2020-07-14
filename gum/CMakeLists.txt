@@ -16,13 +16,14 @@ else()
   set(dashi "-i")
 endif()
 
+# @FIXME do we really need filesystem?  That's a pain in the ass.
 # Check for Boost.  Not that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
 set(Boost_NO_BOOST_CMAKE ON)
 find_package(Boost 1.41 COMPONENTS "python" "filesystem")
 if(Boost_FOUND)
   include_directories("${Boost_INCLUDE_DIR}")
 else()
-  message(FATAL_ERROR "\nGUM requires Boost v1.41 or greater, including the compiled Boost::Python library (for FeynRules).\nPlease suitable Boost components and rerun cmake.")
+  message(FATAL_ERROR "\nGUM requires Boost v1.41 or greater, including the compiled libraries Boost.Python (for FeynRules) and Boost.Filesystem.\nPlease install suitable Boost components and rerun cmake.")
 endif()
 
 # Check for Mathematica
