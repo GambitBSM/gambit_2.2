@@ -56,6 +56,7 @@ set(scanner_download "${PROJECT_SOURCE_DIR}/ScannerBit/downloaded")
 # Safer download function than what is in cmake (avoid buggy libcurl vs https issue)
 set(DL_BACKEND "${PROJECT_SOURCE_DIR}/cmake/scripts/safe_dl.sh" "${backend_download}" "${CMAKE_COMMAND}")
 set(DL_SCANNER "${PROJECT_SOURCE_DIR}/cmake/scripts/safe_dl.sh" "${scanner_download}" "${CMAKE_COMMAND}")
+set(DL_CONTRIB "${PROJECT_SOURCE_DIR}/cmake/scripts/safe_dl.sh" "${CMAKE_BUILD_DIR}" "${CMAKE_COMMAND}")
 
 # Define the module location switch differently depending on compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
@@ -145,6 +146,8 @@ endmacro()
 function(check_ditch_status name version dir)
   # Check first for optional argument for Mathematica backends
   if ((ARGN STREQUAL "Mathematica" OR ARGN STREQUAL "mathematica") AND NOT HAVE_MATHEMATICA)
+    set (itch "${itch}" "${name}_${version}")
+  elseif ((ARGN STREQUAL "HEPMC" OR ARGN STREQUAL "HepMC" OR ARG STREQUAL "hepmc") AND EXCLUDE_HEPMC)
     set (itch "${itch}" "${name}_${version}")
   endif()
   foreach(ditch_command ${itch})

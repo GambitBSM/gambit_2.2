@@ -22,14 +22,38 @@ namespace Gambit {
       // Required detector sim
       static constexpr const char* detector = "CMS";
 
+      std::map<string, EventCounter> _counters = {
+        {"SR-0", EventCounter("SR-0")},
+        {"SR-1", EventCounter("SR-1")},
+        {"SR-2", EventCounter("SR-2")},
+        {"SR-3", EventCounter("SR-3")},
+        {"SR-4", EventCounter("SR-4")},
+        {"SR-5", EventCounter("SR-5")},
+        {"SR-6", EventCounter("SR-6")},
+        {"SR-7", EventCounter("SR-7")},
+        {"SR-8", EventCounter("SR-8")},
+        {"SR-9", EventCounter("SR-9")},
+        {"SR-10", EventCounter("SR-10")},
+        {"SR-11", EventCounter("SR-11")},
+        {"SR-12", EventCounter("SR-12")},
+        {"SR-13", EventCounter("SR-13")},
+        {"SR-14", EventCounter("SR-14")},
+        {"SR-15", EventCounter("SR-15")},
+        {"SR-16", EventCounter("SR-16")},
+        {"SR-17", EventCounter("SR-17")},
+        {"SR-18", EventCounter("SR-18")},
+        {"SR-19", EventCounter("SR-19")},
+        {"SR-20", EventCounter("SR-20")},
+        {"SR-21", EventCounter("SR-21")},
+      };
+
       static const size_t NUMSR = 22;
-      double _srnums[NUMSR];
+
       Cutflow _cutflow;
 
       Analysis_CMS_13TeV_MONOJET_36invfb()
       // : _cutflow("CMS monojet 13 TeV", {"Njet >= 3", "HT > 300", "HTmiss > 300", "Nmuon = 0", "Nelectron = 0", "Nhadron = 0 (no-op)", "Dphi_htmiss_j1", "Dphi_htmiss_j2", "Dphi_htmiss_j3", "Dphi_htmiss_j4"})
       {
-        //for (double& n : _srnums) n = 0;
         analysis_specific_reset();
         set_analysis_name("CMS_13TeV_MONOJET_36invfb");
         set_luminosity(35.9);
@@ -48,21 +72,21 @@ namespace Gambit {
         const double trigweight = (met < 350) ? 0.97 : 1.0;
 
         // Electron objects
-        vector<HEPUtils::Particle*> baselineElectrons = event->electrons();
+        vector<const HEPUtils::Particle*> baselineElectrons = event->electrons();
 
         // Apply electron efficiency
         CMS::applyElectronEff(baselineElectrons);
 
         // Muon objects
-        vector<HEPUtils::Particle*> baselineMuons = event->muons();
+        vector<const HEPUtils::Particle*> baselineMuons = event->muons();
 
         // Apply muon efficiency
         CMS::applyMuonEff(baselineMuons);
 
         // Veto on isolated leptons and photons
-        for (const Particle* e : baselineElectrons) if (e->pT() > 10) return; //< VETO
-        for (const Particle* m : baselineMuons) if (m->pT() > 10) return; //< VETO
-        for (const Particle* t : event->taus()) if (t->pT() > 18) return; //< VETO
+        for (const Particle* e : baselineElectrons) if (e->pT() > 10 && e->abseta() < 2.5) return; //< VETO
+        for (const Particle* m : baselineMuons) if (m->pT() > 10 && m->abseta() < 2.4) return; //< VETO
+        for (const Particle* t : event->taus()) if (t->pT() > 18 && t->abseta() < 2.3) return; //< VETO
         for (const Particle* y : event->photons()) if (y->pT() > 15 && y->abseta() < 2.5) return; //< VETO
 
         // Get jets
@@ -81,7 +105,7 @@ namespace Gambit {
         for (size_t i = 0; i < 4; ++i) {
           if (i >= jets4.size()) break;
           if (jets4[i]->pT() < 30) break;
-          if (deltaPhi(jets4[i]->mom(), pmiss)) return; //< VETO
+          if (fabs(deltaPhi(jets4[i]->mom(), pmiss))<0.5) return; //< VETO
         }
 
         // Now the signal regions, but we'll just look at the monojet one
@@ -92,16 +116,18 @@ namespace Gambit {
         const static vector<double> metedges = {250, 280, 310, 340, 370, 400, 430, 470, 510, 550, 590,
                                                 640, 690, 740, 790, 840, 900, 960, 1020, 1090, 1160, 1250};
         const int i_sr = binIndex(met, metedges, true);
-        if (i_sr >= 0) _srnums[i_sr] += trigweight;
-
+        if (i_sr >= 0)
+        {
+          std::stringstream sr_key; sr_key << "SR-" << i_sr;
+          _counters.at(sr_key.str()).add_event(event->weight() * trigweight, event->weight_err() * trigweight);
+        }
       }
 
       /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
       void combine(const Analysis* other)
       {
         const Analysis_CMS_13TeV_MONOJET_36invfb* specificOther = dynamic_cast<const Analysis_CMS_13TeV_MONOJET_36invfb*>(other);
-        for (size_t i = 0; i < NUMSR; ++i)
-          _srnums[i] += specificOther->_srnums[i];
+        for (auto& pair : _counters) { pair.second += specificOther->_counters.at(pair.first); }
       }
 
 
@@ -109,26 +135,28 @@ namespace Gambit {
       void collect_results() {
         //cout << _cutflow << endl;
 
-        // Register signal region data
-        static const double OBSNUM[NUMSR] = {
-          136865, 74340, 42540, 25316, 15653, 10092, 8298, 4906, 2987, 2032, 1514,
-          926, 557, 316, 233, 172, 101, 65, 46, 26, 31, 29
-        };
-        static const double BKGNUM[NUMSR] = {
-          134500, 73400, 42320, 25490, 15430, 10160, 8480, 4865, 2970, 1915, 1506,
-          844, 526, 325, 223, 169, 107, 88.1, 52.8, 25.0, 25.5, 26.9
-        };
-        static const double BKGERR[NUMSR] = {
-          3700, 2000, 810, 490, 310, 170, 140, 95, 49, 33, 32, 18, 14, 12, 9, 8, 6, 5.3, 3.9, 2.5, 2.6, 2.8
-        };
-        for (size_t ibin = 0; ibin < NUMSR; ++ibin) {
-          stringstream ss; ss << "sr-" << ibin;
-          add_result(SignalRegionData(ss.str(), OBSNUM[ibin], {_srnums[ibin],  0.}, {BKGNUM[ibin], BKGERR[ibin]}));
-        }
-
-        // Commented out covariance matrix for now, as it currently is a bit
-        // too time consuming to calculate an accurate 'simplified likelihood'
-        // for this analysis.
+        add_result(SignalRegionData(_counters.at("SR-0"), 136865, {134500, 3700}));
+        add_result(SignalRegionData(_counters.at("SR-1"), 74340, {73400, 2000}));
+        add_result(SignalRegionData(_counters.at("SR-2"), 42540, {42320, 810}));
+        add_result(SignalRegionData(_counters.at("SR-3"), 25316, {25490, 490}));
+        add_result(SignalRegionData(_counters.at("SR-4"), 15653, {15430, 310}));
+        add_result(SignalRegionData(_counters.at("SR-5"), 10092, {10160, 170}));
+        add_result(SignalRegionData(_counters.at("SR-6"), 8298, {8480, 140}));
+        add_result(SignalRegionData(_counters.at("SR-7"), 4906, {4865, 95}));
+        add_result(SignalRegionData(_counters.at("SR-8"), 2987, {2970, 49}));
+        add_result(SignalRegionData(_counters.at("SR-9"), 2032, {1915, 33}));
+        add_result(SignalRegionData(_counters.at("SR-10"), 1514, {1506, 32}));
+        add_result(SignalRegionData(_counters.at("SR-11"), 926, {844, 18}));
+        add_result(SignalRegionData(_counters.at("SR-12"), 557, {526, 14}));
+        add_result(SignalRegionData(_counters.at("SR-13"), 316, {325, 12}));
+        add_result(SignalRegionData(_counters.at("SR-14"), 233, {223, 9}));
+        add_result(SignalRegionData(_counters.at("SR-15"), 172, {169, 8}));
+        add_result(SignalRegionData(_counters.at("SR-16"), 101, {107, 6}));
+        add_result(SignalRegionData(_counters.at("SR-17"), 65, {88.1, 5.3}));
+        add_result(SignalRegionData(_counters.at("SR-18"), 46, {52.8, 3.9}));
+        add_result(SignalRegionData(_counters.at("SR-19"), 26, {25.0, 2.5}));
+        add_result(SignalRegionData(_counters.at("SR-20"), 31, {25.5, 2.6}));
+        add_result(SignalRegionData(_counters.at("SR-21"), 29, {26.9, 2.8}));
 
         // Covariance
         static const vector< vector<double> > BKGCOV = {
@@ -155,13 +183,12 @@ namespace Gambit {
           {  3.85e+02,  3.64e+02,  1.47e+02,  7.64e+01,  1.05e+02,  3.98e+01,  1.82e+01,  3.21e+01,  2.55e+01,  7.72e+00,  3.33e+00,  5.15e+00,  1.46e+00,  2.18e+00,  1.40e+00,  2.70e+00,  1.40e+00,  5.51e-01,  3.04e-01,  1.30e-01,  6.76e+00,  5.82e-01 },
           { -4.14e+02, -1.68e+02,  2.27e+01, -2.74e+01, -8.68e+00,  4.76e+00,  3.14e+01,  7.98e+00,  5.49e+00,  4.62e+00, -8.96e-01,  7.06e+00,  1.57e+00,  3.02e+00,  2.52e+00, -6.72e-01,  1.51e+00, -4.45e-01,  1.64e+00,  6.30e-01,  5.82e-01,  7.84e+00 }
         };
-        set_covariance(BKGCOV);
 
       }
 
     protected:
       void analysis_specific_reset() {
-        for (double& n : _srnums) n = 0;
+        for (auto& pair : _counters) { pair.second.reset(); }
         /// @todo Need to also clear/reset cutflow, but it currently has no method for that
       }
 
