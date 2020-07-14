@@ -40,7 +40,6 @@
     START_FUNCTION(SLHAstruct)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)      // @todo Why is this needed?
     DEPENDENCY(decay_rates, DecayTable)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
@@ -98,7 +97,7 @@
 
   /// A map between PID pairs and cross-sections
   #define CAPABILITY PIDPairCrossSectionsMap
-  
+
     #ifdef HAVE_PYBIND11
       /// Get the PIDPairCrossSectionsMap using the 'xsec' backend
       /// @todo 1. Replace SLHA1Spectrum dependency with SpectrumAndDecaysForPythia (to ensure same spectrum)
@@ -196,7 +195,6 @@
   START_CAPABILITY
     #define FUNCTION getSLHA1Spectrum
     START_FUNCTION(SLHAstruct)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)      // @todo Why is this needed?
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
@@ -209,7 +207,6 @@
   START_CAPABILITY
     #define FUNCTION getSLHA2Spectrum
     START_FUNCTION(SLHAstruct)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)      // @todo Why is this needed?
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
     ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)

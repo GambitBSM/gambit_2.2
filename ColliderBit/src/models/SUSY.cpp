@@ -211,38 +211,35 @@ namespace Gambit
       using namespace Pipes::getSLHA1Spectrum;
 
       static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
-      
-      if(*Loop::iteration == BASE_INIT)
+
+      result.clear();
+
+      if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT")
+          || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
       {
-        result.clear();
+        result = Dep::MSSM_spectrum->getSLHAea(1);
+      }
+      else if (ModelInUse("CB_SLHA_file_model") ||
+               ModelInUse("CB_SLHA_simpmod_scan_model") ||
+               ModelInUse("CB_SLHA_scan_model"))
+      {
+        result = Dep::SLHAFileNameAndContent->second;
+      }
+      else
+      {
+        // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
+        // without also changing this function
+        std::stringstream errmsg_ss;
+        errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
+                  << "Please expand the function getSLHA1Spectrum if you want to use it with for new models.!";
+        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+      }
 
-        if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT")
-            || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
-        {
-          result = Dep::MSSM_spectrum->getSLHAea(1);
-        }
-        else if (ModelInUse("CB_SLHA_file_model") ||
-                 ModelInUse("CB_SLHA_simpmod_scan_model") ||
-                 ModelInUse("CB_SLHA_scan_model"))
-        {
-          result = Dep::SLHAFileNameAndContent->second;
-        }
-        else
-        {
-          // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
-          // without also changing this function
-          std::stringstream errmsg_ss;
-          errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
-                    << "Please expand the function getSLHA1Spectrum if you want to use it with for new models.!";
-          ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-        }
-
-        if(write_summary_to_log)
-        {
-          std::stringstream SLHA_log_output;
-          SLHA_log_output << "getSLHA1Spectrum:\n" << result.str() << "\n";
-          logger() << SLHA_log_output.str() << EOM;
-        }
+      if(write_summary_to_log)
+      {
+        std::stringstream SLHA_log_output;
+        SLHA_log_output << "getSLHA1Spectrum:\n" << result.str() << "\n";
+        logger() << SLHA_log_output.str() << EOM;
       }
     }
 
@@ -253,37 +250,34 @@ namespace Gambit
 
       static const bool write_summary_to_log = runOptions->getValueOrDef<bool>(false, "write_summary_to_log");
 
-      if(*Loop::iteration == BASE_INIT)
+      result.clear();
+
+      if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT")
+          || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
       {
-        result.clear();
+        result = Dep::MSSM_spectrum->getSLHAea(2);
+      }
+      else if (ModelInUse("CB_SLHA_file_model") ||
+               ModelInUse("CB_SLHA_simpmod_scan_model") ||
+               ModelInUse("CB_SLHA_scan_model"))
+      {
+        result = Dep::SLHAFileNameAndContent->second;
+      }
+      else
+      {
+        // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
+        // without also changing this function
+        std::stringstream errmsg_ss;
+        errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
+                  << "Please expand the function getSLHA2Spectrum if you want to use it with for new models.!";
+        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+      }
 
-        if( ModelInUse("MSSM63atQ") || ModelInUse("MSSM63atMGUT") 
-            || ModelInUse("MSSM63atQ_mA") || ModelInUse("MSSM63atMGUT_mA") )
-        {
-          result = Dep::MSSM_spectrum->getSLHAea(2);
-        }
-        else if (ModelInUse("CB_SLHA_file_model") ||
-                 ModelInUse("CB_SLHA_simpmod_scan_model") ||
-                 ModelInUse("CB_SLHA_scan_model"))
-        {
-          result = Dep::SLHAFileNameAndContent->second;
-        }
-        else
-        {
-          // This can only happen if the ALLOW_MODELS list in SUSY.hpp has been changed
-          // without also changing this function
-          std::stringstream errmsg_ss;
-          errmsg_ss << "Unknown model! And that makes it a bit hard to return an SLHA1 spectrum... "
-                    << "Please expand the function getSLHA2Spectrum if you want to use it with for new models.!";
-          ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
-        }
-
-        if(write_summary_to_log)
-        {
-          std::stringstream SLHA_log_output;
-          SLHA_log_output << "getSLHA2Spectrum:\n" << result.str() << "\n";
-          logger() << SLHA_log_output.str() << EOM;
-        }
+      if(write_summary_to_log)
+      {
+        std::stringstream SLHA_log_output;
+        SLHA_log_output << "getSLHA2Spectrum:\n" << result.str() << "\n";
+        logger() << SLHA_log_output.str() << EOM;
       }
     }
 
