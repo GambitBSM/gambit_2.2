@@ -144,7 +144,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
     os.rename(tmp, old)
 
     # Add new particles to the ParticeData xml file, and their decay products
-    # Firstly scrape the initial list of particles and check everything 
+    # Firstly scrape the initial list of particles and check everything
     # is consistent
     xmold = patched_dir + "/share/Pythia8/xmldoc/ParticleData.xml"
     xmnew = patched_dir + "/share/Pythia8/xmldoc/ParticleData.xml_new"
@@ -161,7 +161,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
     for match in matches:
 
         m = ''.join(match)
-        
+
         pdg = re.search(r'id="(.*?)"', m).group(1)
         name = re.search(r'name="(.*?)"', m).group(1)
         spintype = re.search(r'spinType="(.*?)"', m).group(1)
@@ -174,7 +174,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
 
         defined_particles[int(pdg)] = pm
 
-    # Iterate through the particle list and check to see if any are 
+    # Iterate through the particle list and check to see if any are
     # already defined in Pythia.
     dp = []
     for p in particles:
@@ -193,7 +193,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
                                 "not match up with the definition in Pythia.\n"
                                 "Pythia: {1}, you: {2}. (spin = 2s+1)\n"
                                 "Please use a different PDG code."
-                              ).format(str(p.PDG_code), ppy.spintype, 
+                              ).format(str(p.PDG_code), ppy.spintype,
                                        str(p.spinX2+1)))
 
             # Charge
@@ -202,7 +202,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
                                 "already defined in Pythia's particle database."
                                 "\nThe charge provided for this particle does "
                                 "not match up with the definition in Pythia.\n"
-                                "Pythia: {1}, you: {2}. (charge x 3)\n"                                
+                                "Pythia: {1}, you: {2}. (charge x 3)\n"
                                 "Please use a different PDG code."
                               ).format(str(p.PDG_code), ppy.chargetype,
                                        p.chargeX3))
@@ -246,8 +246,8 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
                                     "with the definition in Pythia.\n"
                                     "Please use a different PDG code."
                                   ).format(str(p.PDG_code)))
-    
-    # Once we're satisfied there's no incorrect duplicates, we can 
+
+    # Once we're satisfied there's no incorrect duplicates, we can
     # add new entries to the XML file.
     p_towrite = ""
     append_decays = {}
@@ -258,7 +258,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
 
             # If antiparticle is distinct, we want to save this information too.
             name = p.name
-            if not p.is_sc(): 
+            if not p.is_sc():
                 name += " antiname = {}".format(p.antiname)
 
             # Convert to Pythia's color basis:
@@ -331,14 +331,16 @@ def write_boss_config_for_pythia(model, output_dir):
 
     # Sort out the paths
     path = "/Backends/scripts/BOSS/configs"
-    filename = "/pythia_"+model.lower()+"_8_"+base_pythia_version+".py"
     full_output_dir = output_dir+path
     mkdir_if_absent(full_output_dir)
-    template = ".."+path+"/pythia_8_"+base_pythia_version+".py"
-    outfile = full_output_dir+filename
+    filenames = ["/pythia_"+model.lower()+"_8_"+base_pythia_version+part+".py" for part in ["","_nohepmc"]]
+    templates = [".."+path+"/pythia_8_"+base_pythia_version+part+".py" for part in ["","_nohepmc"]]
+    outfiles = [full_output_dir+f for f in filenames]
 
     # Write the actual BOSS config file
-    with open(outfile, 'w') as f_new, open(template) as f_old:
+    for outfile, template in zip(outfiles, templates):
+      print outfile, template
+      with open(outfile, 'w') as f_new, open(template) as f_old:
         for line in f_old:
           if "gambit_backend_name    = 'Pythia'" in line:
               f_new.write("gambit_backend_name    = 'Pythia_"+model+"'\n")
@@ -388,22 +390,22 @@ def add_new_pythia_to_backends_cmake(model, output_dir):
                            "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
                            "set(md5 \""+pythia_md5+"\")\n"\
                            "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
-                           "set(patch1 \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
-                           "set(patch2 \"${PROJECT_SOURCE_DIR}/Backends/patches/pythia/${ver}/patch_pythia_${ver}.dif\")\n"\
+                           "set(model_specific_patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
                            "check_ditch_status(${name} ${ver} ${dir})\n"\
                            "if(NOT ditched_${name}_${ver})\n"\
                            "  ExternalProject_Add(${name}_${ver}\n"\
+                           "    DEPENDS ${pythia_depends_on}\n"\
                            "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
                            "    SOURCE_DIR ${dir}\n"\
                            "    BUILD_IN_SOURCE 1\n"\
-                           "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
-                           "          COMMAND patch -p1 < ${patch2}\n"\
+                           "    PATCH_COMMAND patch -p1 < ${model_specific_patch}\n"\
+                           "          COMMAND patch -p1 < ${patch}\n"\
                            "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
-                           "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
+                           "    CONFIGURE_COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
                            "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
                            "    INSTALL_COMMAND \"\"\n"\
                            "  )\n"\
-                           "  BOSS_backend(${name} ${ver})\n"\
+                           "  BOSS_backend(${name} ${ver} ${BOSS_suffix})\n"\
                            "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
                            "  set_as_default_version(\"backend\" ${name} ${ver})\n"
                 f_new.write(to_write)
@@ -435,7 +437,7 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
                     "        \"        FILL_LHBLOCK({0}, double)\\n\"\n"
                     "        \"      }}\\n\"\n"
             ).format(i.block.lower())
-          
+
             pp_header += "        \"  LHblock<double> {0};\\n\"\n".format(i.block.lower())
 
         # Matrix cases
@@ -446,7 +448,7 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
                     "        \"        FILL_LHMATRIXBLOCK({0})\\n\"\n"
                     "        \"      }}\\n\"\n"
             ).format(i.block.lower())
-          
+
             pp_header += "        \"  LHmatrixBlock<{0}> {1};\\n\"\n".format(i.shape[-1], i.block.lower())
 
 
