@@ -81,7 +81,7 @@ namespace Gambit {
         for (size_t i = 0; i < 4; ++i) {
           if (i >= jets4.size()) break;
           if (jets4[i]->pT() < 30) break;
-          if (deltaPhi(jets4[i]->mom(), pmiss)) return; //< VETO
+          if (deltaPhi(jets4[i]->mom(), pmiss) < 0.5) return; //< VETO
         }
 
         // Now the signal regions, but we'll just look at the monojet one
