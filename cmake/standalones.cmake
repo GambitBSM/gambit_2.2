@@ -13,6 +13,10 @@
 #          (p.scott@imperial.ac.uk)
 #  \date 2016
 #
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020
+#
 #************************************************
 
 # Add some programs that use the GAMBIT physics libraries but not GAMBIT itself.
