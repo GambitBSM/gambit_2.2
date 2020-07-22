@@ -1,6 +1,25 @@
-"""
-Master module for all ColliderBit-related routines.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module for all 
+#  ColliderBit-related routines.
+#
+#  *************************************
+#
+#  \author Pat Scott
+#          (pat.scott@uq.edu.au)
+#  \date 2018 Dec
+#        2019 Jan
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2019 Nov
+#        2020 Feb, Mar
+#
+#  **************************************
 
 import datetime
 

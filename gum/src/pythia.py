@@ -1,6 +1,25 @@
-"""
-Contains all routines for Pythia output, via the MadGraph interface.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Contains all routines for Pythia output,
+#  via the MadGraph interface.
+#
+#  *************************************
+#
+#  \author Pat Scott
+#          (pat.scott@uq.edu.au)
+#  \date 2018 Dec
+#        2019 Jan
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2019 July
+#        2020 June, July
+#
+#  **************************************
 
 from backends import *
 from setup import *
@@ -142,6 +161,12 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
 
     os.remove(old)
     os.rename(tmp, old)
+
+    """
+    S.B. 22/07/2020: commented the below out, as it looks like we actually
+    _don't_ need to make changes to ParticleData.xml. Leaving it here just 
+    in case we change our minds again...
+
 
     # Add new particles to the ParticeData xml file, and their decay products
     # Firstly scrape the initial list of particles and check everything 
@@ -322,6 +347,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
 
     os.remove(xmold)
     os.rename(xmnew, xmold)
+    """
 
 def write_boss_config_for_pythia(model, output_dir):
     """
@@ -515,12 +541,6 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
         "os.remove(location)\n"
         "os.rename(temp_location, location)\n"
     ).format(model_name.lower(), base_pythia_version, pp_source, pp_header)
-
-    # filename = "pythia_{0}/8.{1}/patch_pythia_{0}.dif".format(model_name.lower(), base_pythia_version)
-    # write_file(filename, "Backends", patch_contents, reset_dict)
-    # loc = full_filename(filename, "Backends")
-    # new_loc = "../Backends/patches/pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
-    # os.rename(loc, new_loc)
 
     filename = "pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
     write_file(filename, "Backends", patch_contents, reset_dict, overwrite_path = "patches/")
