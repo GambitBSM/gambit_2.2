@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 
-from style import make_style
+from style import make_style, add_logo
 
 
 data_arr = np.loadtxt("xe1t_3h.dat")
@@ -25,14 +25,13 @@ bkg_3h_vs_bkg = np.exp(ln_z_xe1t_3h - ln_z_xe1t)
 make_style()
 fig, ax = plt.subplots()
 ax_rhs = ax.twinx()
-col_rhs = "red"
 
-ax.plot(width, alp_3h_vs_bkg_3h, ls="-", marker="o", label="Signal + tritium versus background + tritium")
-ax.plot(width, bkg_3h_vs_bkg, ls="-", c="tab:green", marker="o", label="Background + tritium versus background")
-ax.legend()
-ax.set_title(r"Tritium component $\log_{10}\frac{\alpha_t}{\text{mol/mol}} = -27 \pm \sigma$")
+ax.plot(width, alp_3h_vs_bkg_3h, ls="-", marker="o", label=r"Solar ALP + \tritium~vs.~background + \tritium")
+ax.plot(width, bkg_3h_vs_bkg, ls="-", c="tab:green", marker="o", label=r"Background + \tritium~vs.~background")
+ax.legend(loc="upper left")
+ax.set_title(r"\tritium~component $\log_{10}\frac{\alpha_t}{\text{mol/mol}} = -27 \pm \sigma$")
 ax.set_ylabel(r"Bayes factor, $B$")
-ax.set_xlabel(r"Uncertainty in tritium component, $\sigma$")
+ax.set_xlabel(r"Uncertainty in \tritium~component, $\sigma$")
 
 # Limits
 
@@ -48,13 +47,12 @@ label = [r"${}\sigma$".format(n) for n in z]
 p = norm.sf(z)
 y = 1. / p - 1.
 
-ax_rhs.set_ylabel("$Z$-score", color=col_rhs)
-ax_rhs.spines['right'].set_color(col_rhs)
-ax_rhs.tick_params(axis='x', colors=col_rhs)
-ax_rhs.tick_params(axis='y', colors=col_rhs)
+ax_rhs.set_ylabel("$Z$-score")
 ax_rhs.set_yticks(y)
 ax_rhs.set_yticklabels(label)
 ax_rhs.set_ylim(0, ymax)
+ax_rhs.tick_params(axis='y', which='minor', right=False)
 
 plt.tight_layout()
+add_logo(fig, 0.695, 0.727)
 plt.savefig("xe1t_3h_alp.pdf")

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 
-from style import make_style
+from style import make_style, add_logo
 
 
 data_arr = np.loadtxt("xe1t_alp.dat")
@@ -18,12 +18,11 @@ bayes_factor = np.exp(ln_z_xe1t_alp - ln_z_xe1t)
 make_style()
 fig, ax = plt.subplots()
 ax_rhs = ax.twinx()
-col_rhs = "red"
 
 ax.plot(width, bayes_factor, ls="-", marker="o")
 ax.set_ylabel("Bayes factor, $B_{10}$")
 ax.set_xlabel("Prior width, $w$")
-ax.set_title("Effective axion couplings from $10^{-12.5 - 0.5 w}$ to $10^{-12.5 + 0.5 w}$")
+ax.set_title("Solar ALP couplings from $10^{-12.5 - 0.5 w}$ to $10^{-12.5 + 0.5 w}$")
 
 # Limits
 
@@ -38,13 +37,12 @@ label = [r"${}\sigma$".format(n) for n in z]
 p = norm.sf(z)
 y = 1. / p - 1.
 
-ax_rhs.set_ylabel("$Z$-score", color=col_rhs)
-ax_rhs.spines['right'].set_color(col_rhs)
-ax_rhs.tick_params(axis='x', colors=col_rhs)
-ax_rhs.tick_params(axis='y', colors=col_rhs)
+ax_rhs.set_ylabel("$Z$-score")
 ax_rhs.set_yticks(y)
 ax_rhs.set_yticklabels(label)
 ax_rhs.set_ylim(0, ymax)
+ax_rhs.tick_params(axis='y', which='minor', right=False)
 
 plt.tight_layout()
+add_logo(fig, 0.678, 0.742)
 plt.savefig("xe1t_alp.pdf")
