@@ -44,5 +44,5 @@ ax_rhs.set_ylim(0, ymax)
 ax_rhs.tick_params(axis='y', which='minor', right=False)
 
 plt.tight_layout()
-add_logo(fig, 0.65, 0.725)
+# add_logo(fig, 0.65, 0.725)
 plt.savefig("xe1t_alp.pdf")
