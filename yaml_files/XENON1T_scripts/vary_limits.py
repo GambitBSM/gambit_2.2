@@ -22,7 +22,7 @@ ax_rhs = ax.twinx()
 ax.plot(width, bayes_factor, ls="-", marker="o")
 ax.set_ylabel("Bayes factor, $B_{10}$")
 ax.set_xlabel("Prior width, $w$")
-ax.set_title("Solar ALP couplings from $10^{-12.5 - 0.5 w}$ to $10^{-12.5 + 0.5 w}$")
+ax.set_title("ALP couplings from $10^{-12.5 - 0.5 w}$ to $10^{-12.5 + 0.5 w}$")
 
 # Limits
 
@@ -32,7 +32,7 @@ ax.set_ylim(0, ymax)
 
 # Twin axis showing sigmas
 
-z = [0., 0.5, 1., 1.5, 1.75]
+z = [0., 1., 1.5, 1.75]
 label = [r"${}\sigma$".format(n) for n in z]
 p = norm.sf(z)
 y = 1. / p - 1.
@@ -44,5 +44,5 @@ ax_rhs.set_ylim(0, ymax)
 ax_rhs.tick_params(axis='y', which='minor', right=False)
 
 plt.tight_layout()
-add_logo(fig, 0.678, 0.742)
+add_logo(fig, 0.65, 0.725)
 plt.savefig("xe1t_alp.pdf")
