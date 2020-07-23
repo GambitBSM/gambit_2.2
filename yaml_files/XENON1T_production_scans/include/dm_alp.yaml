@@ -2,9 +2,7 @@
       range: [1e-20, 1e-3]
       prior_type: log
     gaN: 0.0
-    gagg:
-      range: [1e-20, 1e-3]
-      prior_type: log
+    gagg: 0.0
     fa: 1.0e11
     ma0:
       range: [1.0e3,30.0e3]
