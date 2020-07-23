@@ -58,6 +58,17 @@ BE_INI_FUNCTION
       xsecs[std::vector<str>{"~S","~S"}] = std::vector< std::vector<str> >{ {"d'", "D'"}, {"u", "U"}, {"B", "b"}, {"h", "h"}, {"e", "E"}, {"Z", "Z"}, {"c", "C"}, {"s'", "S'"}, {"m", "M"}, {"t", "T"}, {"W+", "W-"}, {"ta+", "ta-"} };
       model = "ScalarSingletDM_Z2";
     }
+    if (ModelInUse("SSDM"))
+    {
+      BEpath = backendDir + "/../models/SSDM";
+      path = BEpath.c_str();
+      modeltoset = (char*)malloc(strlen(path)+11);
+      sprintf(modeltoset, "%s", path);
+      decays["h"] = std::vector< std::vector<str> >{ {"~Ss","~Ss"} };
+      xsecs[std::vector<str>{"~Ss", "~Ss"}] = std::vector< std::vector<str> >{ {"U1","u1"}, {"Wm","Wp"}, {"E3","e1"}, {"U2","u1"}, {"D1","d3"}, {"D3","d3"}, {"U3","u1"}, {"U2","u3"}, {"g","g"}, {"D1","d1"}, {"D3","d1"}, {"D2","d3"}, {"U3","u2"}, {"E1","e1"}, {"E3","e2"}, {"U1","u3"}, {"E1","e3"}, {"E2","e2"}, {"h","h"}, {"D2","d1"}, {"D3","d2"}, {"D2","d2"}, {"U2","u2"}, {"A","A"}, {"D1","d2"}, {"Z","Z"}, {"E1","e2"}, {"E2","e3"}, {"U1","u2"}, {"U3","u3"}, {"E2","e1"}, {"E3","e3"} };
+      model = "SSDM";
+    }
+    
     
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
@@ -73,13 +84,13 @@ BE_INI_FUNCTION
     if (rank == 0)
     {
       // Decays first
-      for (d : decays)
-        for (fs : d.second)
+      for (auto d : decays)
+        for (auto fs : d.second)
           numout* cc = generate_decay_code(model, d.first, fs);
 
       // And two to twos
-      for (x : xsecs)
-        for (fs : x.second)
+      for (auto x : xsecs)
+        for (auto fs : x.second)
           numout* cc = generate_xsec_code(model, x.first, fs);
     }
     #ifdef WITH_MPI
@@ -105,6 +116,20 @@ BE_INI_FUNCTION
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
 
+  if (ModelInUse("SSDM"))
+  {
+    // Obtain spectrum information to pass to CalcHEP
+    const Spectrum& spec = *Dep::SSDM_spectrum;
+    
+    // Obtain model contents
+    static const SpectrumContents::SSDM SSDM_contents;
+    
+    // Obtain list of all parameters within model
+    static const std::vector<SpectrumParameter> SSDM_params = SSDM_contents.all_parameters();
+    
+    Assign_All_Values(spec, SSDM_params);
+  }
+  
 }
 END_BE_INI_FUNCTION
 
