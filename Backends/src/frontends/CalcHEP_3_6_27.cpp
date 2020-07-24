@@ -57,7 +57,7 @@ BE_INI_FUNCTION
       decays["h"] = std::vector< std::vector<str> >{ {"~S","~S"} };
       xsecs[std::vector<str>{"~S","~S"}] = std::vector< std::vector<str> >{ {"d'", "D'"}, {"u", "U"}, {"B", "b"}, {"h", "h"}, {"e", "E"}, {"Z", "Z"}, {"c", "C"}, {"s'", "S'"}, {"m", "M"}, {"t", "T"}, {"W+", "W-"}, {"ta+", "ta-"} };
       model = "ScalarSingletDM_Z2";
-    }    
+    }
     
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
