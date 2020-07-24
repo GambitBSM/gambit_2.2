@@ -10,7 +10,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019, 2020... 
+#  \date 2018, 2019, 2020... 
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
@@ -569,36 +569,46 @@ if args.file:
 
         if darkbit:
 
-            pc = None
-            sv = None
-            mo = None
-            mdm = None
-            ann_products = None
-            propagators = None
+            # Set the following variables to None for now - if they're not None,
+            # they need to be computed and passed to the writing routines.
+            pc = None            # Do we write the Process Catalogue?
+            sv = None            # Do we figure out cross-sections?
+            products = None      # What are the products of DM ann./decay?
+            propagators = None   # Any propagators involved?
+
+            # If we have decaying DM, we can write the PC with any DecayTable.
+            if gum.dm_decays == True:
+                pc = True
 
             print("Writing new module functions for DarkBit")
-
 
             # Conditional on CalcHEP files being made.
             if output_opts.ch:
 
-                sv = True
-                # Write process catalogue output
+                # Definitely write process catalogue output
                 pc = True
 
-                # Obtain all three-field vertices
-                three_f = [i.particles for i in interactions
-                           if i.num_particles() == 3]
-                # And all 4-point BSM vertices
-                four_f = [i.particles for i in interactions
-                         if i.num_particles() == 4 and i.is_sm() == False]
+                # If DM doesn't decay (i.e. it annihilates), then 
+                # we want to use the sv (= 'sigma*v') routines.
+                if gum.dm_decays == False:
+                    sv = True
+                
+                    # Obtain all three-field vertices
+                    three_f = [i.particles for i in interactions
+                               if i.num_particles() == 3]
+                    # And all 4-point BSM vertices
+                    four_f = [i.particles for i in interactions
+                             if i.num_particles() == 4 and i.is_sm() == False]
 
-                # Get all annihilation products and propagators involved in
-                # DM + DM -> X + Y at tree-level
+                    # Get all annihilation products and propagators involved in
+                    # DM + DM -> X + Y at tree-level
+                    products, propagators = \
+                        sort_annihilations(dm, three_f, four_f, aux_particles,
+                                           antiparticle_dict)
 
-                ann_products, propagators = \
-                    sort_annihilations(dm, three_f, four_f, aux_particles,
-                                       antiparticle_dict)
+                # Otherwise - products are the decays of the DM particle.
+                else:
+                    products = decays[gum.dm_pdg]
 
             # If micrOMEGAs requested
             if output_opts.mo:
@@ -612,13 +622,15 @@ if args.file:
                 mo_head = write_micromegas_header(gum.name, gum.math, 
                                                   parameters)
 
-            darkbit_src = write_darkbit_src(dm, pc, sv, ann_products,
-                                            propagators, gambit_pdgs, gum.name,
+            darkbit_src = write_darkbit_src(dm, pc, sv, products,
+                                            propagators, gum.dm_decays,
+                                            gambit_pdgs, gum.name,
                                             calchep_pdg_codes, 
                                             bsm_particle_list, higgses,
                                             ch_processes)
 
-            pc_cap, dmid_cap, dmconj_cap = write_darkbit_rollcall(gum.name, pc)
+            pc_cap, dmid_cap, dmconj_cap = write_darkbit_rollcall(gum.name, pc,
+                                                                  gum.dm_decays)
 
         """
         CALCHEP SRC 
@@ -777,6 +789,9 @@ if args.file:
             write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
             if pc:
                 amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)
+            # If DM isn't decaying, we can use the built-in 
+            # relic density routines. If not: no, they won't work.
+            if pc and not gum.dm_decays:
                 add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", 
                                           "RD_spectrum", 
                                           "RD_spectrum_from_ProcessCatalog",

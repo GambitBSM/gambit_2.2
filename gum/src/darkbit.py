@@ -1,10 +1,26 @@
-"""
-Master module for all DarkBit related routines.
-"""
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module for all DarkBit-related 
+#  routines.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018 Apr, Aug, Sep, Oct, Dec
+#        2019 Feb, Oct, Nov, 
+#        2020 Feb, Apr, Jul
+#
+#  **************************************
 
 import numpy as np
 import shutil
 from distutils.dir_util import copy_tree
+from collections import defaultdict
 
 from setup import *
 from files import *
@@ -122,7 +138,6 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
        three-body vertices
     """
 
-
     for i in three_fields:
         for j in three_fields:
             v = VertexMerger(i,j) 
@@ -158,7 +173,7 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
 
     return np.array(products), propagators
 
-def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
+def xsecs(dm, products, gambit_pdg_dict, gambit_model_name,
           calchep_pdg_dict, calchep_processes):
     """
     Writes all entries for <sigma v> within the Process Catalogue,
@@ -170,11 +185,11 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     dm_mass = "m" + gb_id.strip('~').replace("\"", "")
 
     # Arrays of final states (GAMBIT names)
-    out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,0]])
-    out2g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in ann_products[:,1]])
+    out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in products[:,0]])
+    out2g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in products[:,1]])
     # Arrays of final states (CalcHEP names names)
-    out1c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in ann_products[:,0]])
-    out2c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in ann_products[:,1]])
+    out1c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in products[:,0]])
+    out2c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in products[:,1]])
     
     # DM (and conjugate) as known to CalcHEP
     dm_chep = pdg_to_particle(dm.PDG_code, calchep_pdg_dict)
@@ -202,7 +217,7 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
     ).format(gambit_model_name, dm_chep, dm_chepc)
 
     # Add each channel individually for annihilation cross sections
-    for i in np.arange(len(ann_products)):
+    for i in np.arange(len(products)):
         towrite_class += (
                 "if (channel == \"{0}, {1}\") "
                 "out = {{\"{2}\", \"{3}\"}};\n"
@@ -262,34 +277,87 @@ def xsecs(dm, ann_products, gambit_pdg_dict, gambit_model_name,
 
     return towrite_class, towrite_pc
 
-def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
+def decays(dm, products, gambit_pdg_dict):
+    """
+    Writes all entries for decays within the Process Catalogue,
+    just using what's already been filled in the DecayTable.
+    The DecayTable can come from either CalcHEP (tree-level) 
+    or SPheno (so can include loop decays).
+    """
+
+    decay_src = ""
+    gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
+
+    # Add each channel
+    for product in products:
+
+        # Join the products
+        channel = ', '.join('"{0}"'.format(pdg_to_particle(x, gambit_pdg_dict)) 
+                            for x in product)
+
+        # Need to know what the 'genRate' value has to be.
+        genrate = ""
+        # 2-body decay - genRate = partial decay width. 
+        # Get it from the DecayTable total width * BF
+        if len(product) == 2:
+            genrate = (
+                    "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
+                    "tbl.at(\"{0}\").BF(\"{1}\"))"
+            ).format(gb_id, channel)
+        # 3-body decay - genRate = partial decay width, with two variables, 
+        # 'E' and 'E1' (final state energy of first & second particles)
+        # Is this what comes out of SPheno??
+        elif len(product) == 3:
+            genrate = (
+                    "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
+                    "tbl.at(\"{0}\").BF(\"{1}\"))"
+            ).format(gb_id, channel)
+        else:
+            raise GumError(("\n\nTrying to add entries for decaying DM, "
+                            "however you have passed over\na decay that is not"
+                            "a 2- or 3-body decay!"))  
+
+        decay_src += (
+                  "      TH_Channel dec_channel(daFunk::vec<string>({0}), "
+                  "{1});\n"
+        ).format(channel, genrate)
+
+    return decay_src
+
+def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
              gambit_model_name, calchep_pdg_dict, model_specific_particles,
-             higgses, calchep_processes):
+             higgses, calchep_processes, does_DM_decay = False):
     """
     Writes all entries for the Process Catalogue for DarkBit.
     """
 
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
+    if not does_DM_decay:
+        gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
 
-    towrite = (
-            "class {0}\n"
-            "{{\n"
-            "public:\n"
-            "/// Initialize {0} object (branching ratios etc)\n"
-            "{0}() {{}};\n"
-            "~{0}() {{}};\n\n"
-    ).format(gambit_model_name)
+        towrite = (
+                "class {0}\n"
+                "{{\n"
+                "public:\n"
+                "/// Initialize {0} object (branching ratios etc)\n"
+                "{0}() {{}};\n"
+                "~{0}() {{}};\n\n"
+        ).format(gambit_model_name)
 
+    # If we need to write the annihilations, call the xsecs routine
     if sv:
-        sv_class, sv_src = xsecs(dm, ann_products, gambit_pdg_dict,
+        sv_class, sv_src = xsecs(dm, products, gambit_pdg_dict,
                                  gambit_model_name, calchep_pdg_dict,
                                  calchep_processes)
+        # Add the Class definitions here. Only needed if we have annihilating DM
         towrite += sv_class
+        towrite += "\n};\n\n"
+
+    # Decaying DM doesn't need the Class stuff etc., waaaay easier.
+    else:
+        decay_src = decays(dm, products, gambit_pdg_dict)
 
     towrite += (
-            "\n"
-            "}};\n\n"
             "void TH_ProcessCatalog_{0}(TH_ProcessCatalog &result)\n"
             "{{\n"
             "using namespace Pipes::TH_ProcessCatalog_{0};\n"
@@ -297,24 +365,30 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
             "using std::string;\n\n"
             "// Initialize empty catalog, main annihilation process\n"
             "TH_ProcessCatalog catalog;\n"
-            "TH_Process process_ann(\"{1}\", \"{2}\");"
-            "\n"
-    ).format(gambit_model_name, gb_id, gb_conj)
+    ).format(gambit_model_name)
 
-    # Add flag for (non-)self-conjugate DM to rescale spectra properly
-    if not dm.is_sc():
-        towrite += (
-                "\n"
-                "// Explicitly state that Dirac DM is not self-conjugate to add"
-                " extra \n// factors of 1/2 where necessary\n"
-                "process_ann.isSelfConj = false;\n\n"
-        )
+    # Add the correct process - either annihilation or decay.
+    if does_DM_decay:
+        towrite += "TH_Process process_dec(\"{0}\");\n".format(gb_id)
     else:
-        towrite += (
-                "\n"
-                "// Explicitly state that DM is self-conjugate\n"
-                "process_ann.isSelfConj = true;\n\n"
-        )
+        towrite += "TH_Process process_ann(\"{0}\", \"{1}\");\n".format(gb_id, 
+                                                                        gb_conj)
+        # Add flag for (non-)self-conjugate DM to rescale spectra properly
+        if not dm.is_sc():
+            towrite += (
+                    "\n"
+                    "// Explicitly state that Dirac DM is not self-conjugate "
+                    "to add extra \n// factors of 1/2 where necessary\n"
+                    "process_ann.isSelfConj = false;\n\n"
+            )
+        else:
+            towrite += (
+                    "\n"
+                    "// Explicitly state that DM is self-conjugate\n"
+                    "process_ann.isSelfConj = true;\n\n"
+            )
+
+    #@TODO: should rescale decaying DM too... right?
 
     towrite += add_SM_macros(gambit_model_name)
 
@@ -328,22 +402,23 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     ).format(gambit_model_name, dm_mass, gb_id, dm.spinX2)
 
     # Add the antiparticle to the catalog too
-    if not dm.is_sc():
-        towrite += (
-                "addParticle(\"{1}\", {0}, {2});\n"
-        ).format(dm_mass, gb_conj, dm.spinX2)
-
-    for i in np.arange(len(model_specific_particles)):
-        if model_specific_particles[i].PDG_code != dm.PDG_code:
+    if not does_DM_decay:
+        if not dm.is_sc():
             towrite += (
-                    "addParticle(\"{0}\", spec.get(Par::Pole_Mass,"
-                    " \"{1}\"), {2});\n"
-            ).format(pdg_to_particle(model_specific_particles[i].PDG_code, 
-                                     gambit_pdg_dict),
-                     pdg_to_particle(model_specific_particles[i].PDG_code, 
-                                     gambit_pdg_dict),
-                     str(model_specific_particles[i].spinX2)
-                     )
+                    "addParticle(\"{1}\", {0}, {2});\n"
+            ).format(dm_mass, gb_conj, dm.spinX2)
+
+        for i in np.arange(len(model_specific_particles)):
+            if model_specific_particles[i].PDG_code != dm.PDG_code:
+                towrite += (
+                        "addParticle(\"{0}\", spec.get(Par::Pole_Mass,"
+                        " \"{1}\"), {2});\n"
+                ).format(pdg_to_particle(model_specific_particles[i].PDG_code, 
+                                         gambit_pdg_dict),
+                         pdg_to_particle(model_specific_particles[i].PDG_code, 
+                                         gambit_pdg_dict),
+                         str(model_specific_particles[i].spinX2)
+                         )
 
     towrite += (
             "\n"
@@ -387,24 +462,33 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
                 "minBranching, excludeDecays);\n"
             ).format(pdg_to_particle(particle, gambit_pdg_dict))
 
+    # Add the calls to the cross-sections if we're not decaying
     if sv:
         towrite += sv_src
 
-    # Add all propagators as resonances.
-    if propagators:
-        for i in np.arange(len(propagators)):
-            if abs(propagators[i]) != abs(dm.PDG_code):
-                towrite += (
-                        "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
-                        "process_ann.resonances_thresholds.resonances.\n    "
-                        "push_back(TH_Resonance(spec.get(Par::Pole_Mass, "
-                        "\"{0}\"), tbl.at(\"{0}\").width_in_GeV));\n"
-                ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
-                         dm_mass)
+        # Add all propagators as resonances.
+        if propagators:
+            for i in np.arange(len(propagators)):
+                if abs(propagators[i]) != abs(dm.PDG_code):
+                    towrite += (
+                            "if (spec.get(Par::Pole_Mass, \"{0}\") >= 2*{1}) "
+                            "process_ann.resonances_thresholds.resonances.\n    "
+                            "push_back(TH_Resonance(spec.get(Par::Pole_Mass, "
+                            "\"{0}\"), tbl.at(\"{0}\").width_in_GeV));\n"
+                    ).format(pdg_to_particle(propagators[i], gambit_pdg_dict),
+                             dm_mass)
+    # Add the products of DM -> ...
+    if does_DM_decay:
+        towrite += decay_src
 
-    towrite += (
-            "\n"
-            "catalog.processList.push_back(process_ann);\n\n"
+    towrite += "\n"
+    if does_DM_decay:
+        towrite += "catalog.processList.push_back(process_dec);\n\n"
+    else:
+        towrite += "catalog.processList.push_back(process_ann);\n\n"
+
+    # Wrap it up.
+    towrite +=( 
             "// Validate\n"
             "catalog.validate();\n\n"
             "result = catalog;\n"
@@ -414,15 +498,20 @@ def proc_cat(dm, sv, ann_products, propagators, gambit_pdg_dict,
     return towrite
 
 
-def write_darkbit_src(dm, pc, sv, ann_products, propagators,
+def write_darkbit_src(dm, pc, sv, products, propagators, does_DM_decay,
                       gambit_pdg_dict, gambit_model_name, calchep_pdg_dict,
                       model_specific_particles, higgses, calchep_processes):
     """
-    Collects all source for DarkBit: process catalogue, direct detection...
+    Collects all source for DarkBit: 
+        - process catalogue
+        - DM ID
+        - ...
     """
 
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
+    gb_conj = None
+    if not does_DM_decay:
+        gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
 
     if not isinstance(dm, Particle):
         print("DM not passed over as an instance of class Particle.")
@@ -448,12 +537,14 @@ def write_darkbit_src(dm, pc, sv, ann_products, propagators,
             "{\n"
     )
 
+    # Process Catalogue
     if pc:
-        towrite += proc_cat(dm, sv, ann_products, propagators,
+        towrite += proc_cat(dm, sv, products, propagators,
                             gambit_pdg_dict, gambit_model_name,
                             calchep_pdg_dict, model_specific_particles,
-                            higgses, calchep_processes)
+                            higgses, calchep_processes, does_DM_decay)
 
+    # Add the DM ID (plus its conjugate, if not decaying)
     towrite += write_dm_id(gambit_model_name, gb_id, gb_conj)
 
     towrite += (
@@ -464,7 +555,7 @@ def write_darkbit_src(dm, pc, sv, ann_products, propagators,
 
     return indent(towrite)
 
-def write_dm_id(model_name, dm_id, dm_conj):
+def write_dm_id(model_name, dm_id, dm_conj = None):
     """
     Returns entry for DarkMatter_ID in DarkBit.
     """
@@ -474,11 +565,14 @@ def write_dm_id(model_name, dm_id, dm_conj):
             "void DarkMatter_ID_{0}(std::string& result)"
             "{{ result = \"{1}\"; }}"
             "\n"
-            "\n"
-            "void DarkMatterConj_ID_{0}(std::string& result)"
-            "{{ result = \"{2}\"; }}"
-            "\n\n"
-    ).format(model_name, dm_id, dm_conj)
+    ).format(model_name, dm_id)
+    if dm_conj:
+        towrite += (
+                "\n"
+                "void DarkMatterConj_ID_{0}(std::string& result)"
+                "{{ result = \"{1}\"; }}"
+                "\n\n"
+        ).format(model_name, dm_conj)
 
     return towrite;
 
@@ -556,22 +650,30 @@ def add_SM_macros(gambit_model_name):
 
     return towrite
 
-def write_darkbit_rollcall(model_name, pc):
+def write_darkbit_rollcall(model_name, pc, does_DM_decay):
     """
     Writes the rollcall header entries for new DarkBit entry.
     """
 
     if pc:
+        # Do we need to add a BACKEND_REQ to the rollcall header? Only when
+        # DM is annihilating; else it comes from the DecayTable already.
+        bereq = ""
+        if not does_DM_decay:
+            bereq = (
+                  "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, "
+                  "std::vector<str>&, std::vector<str>&, double&, double&, "
+                  "const DecayTable&))\n"
+            )
         pro_cat = dumb_indent(4, (
                 "#define FUNCTION TH_ProcessCatalog_{0}\n"
                 "  START_FUNCTION(TH_ProcessCatalog)\n"
                 "  DEPENDENCY(decay_rates, DecayTable)\n"
                 "  DEPENDENCY({0}_spectrum, Spectrum)\n"
-                "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, std::vector<str>&"
-                ",std::vector<str>&, double&, double&, const DecayTable&))\n"
+                "{1}"
                 "  ALLOW_MODELS({0})\n"
                 "#undef FUNCTION\n"
-        ).format(model_name))
+        ).format(model_name, bereq))
     else:
         pro_cat = None
 

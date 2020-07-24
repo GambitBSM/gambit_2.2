@@ -1,7 +1,25 @@
-"""
-Master module for all DecayBit related routines.
-"""
-
+#!/usr/bin/env python
+#
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module for all DecayBit-related 
+#  routines.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018 Apr, Nov
+#        2019 Mar, Jul, Oct, Nov
+#        2020 Feb, Apr, Jul
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020 Mar
+#
+#  **************************************
 import numpy as np
 import re
 from collections import Counter
@@ -143,7 +161,8 @@ def decay_sorter(three_diagrams, aux_particles, antiparticle_dict):
 def ch_decays_to_dict(three_decays):
     """
     Recast the CalcHEP decays to the same dictionary format as those from
-    SPheno, so they can be used by other backends (e.g. Pythia)
+    SPheno, so they can be used by other backends (e.g. Pythia) and other
+    writing routines (such as for decaying DM).
 
     This is just a dictionary:
 
@@ -158,8 +177,8 @@ def ch_decays_to_dict(three_decays):
         key = entry[0]
         products = entry[1]
 
-    for product in products:
-        decays[key].append(product)
+        for product in products:
+            decays[key].append(product)
 
     return decays
 
@@ -195,7 +214,7 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
     elif decayparticle == "W_minus":
         return ""
 
-    function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle)
+    function_name = "CH_{0}_{1}_decays".format(gambit_model_name, decayparticle).replace('~','bar')
     spectrum = gambit_model_name + "_spectrum"
 
     # Definitely a nicer way to do this, but, this will do for now. 
@@ -308,10 +327,10 @@ def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays,
             pass
         else:
             continue
-        cap = "{0}_decay_rates".format(gb_name)
+        cap = "{0}_decay_rates".format(gb_name).replace('~','bar')
         func = "CH_{0}_{1}_decays".format(model_name, 
                                           pdg_to_particle(decayparticle, 
-                                                          decaybit_dict)
+                                                          decaybit_dict).replace('~','bar')
                                           )
         # If the capability already exists, see if the function already exists, 
         # only need to write the function

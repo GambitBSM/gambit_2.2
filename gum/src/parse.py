@@ -11,7 +11,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019, 2020
+#  \date 2018, 2019, 2020
 #
 #  \author Pat Scott
 #          (pat.scott@uq.edu.au)
@@ -45,12 +45,13 @@ class Inputs:
     """
 
     def __init__(self, model_name, base_model, mathpackage,
-                 wimp_candidate, mathname = None,
-                 lagrangian = None, restriction = None):
+                 wimp_candidate, decaying_dm = False, 
+                 mathname = None, lagrangian = None, restriction = None):
 
         self.name = model_name.replace('-','_')
         self.base_model = base_model
         self.dm_pdg = wimp_candidate
+        self.dm_decays = decaying_dm
         self.math = mathpackage
         self.restriction = None
         self.LTot = lagrangian
@@ -248,7 +249,16 @@ def fill_gum_object(data):
                         "specified which particle is meant to be the DM "
                         "candidate! Please add an entry to your .gum file "
                         "like:\n\nwimp_candidate: 9900001 # <--- insert the "
-                        "desired PDG code here!!\n")) 
+                        "desired PDG code here!!\n"))   
+
+    # See if we're told DM is a decaying particle or not...
+    if 'decaying_dm' in data:
+        if data['decaying_dm'] == True:
+            decaying_dm = True
+        else:
+            decaying_dm = False
+    else:
+        decaying_dm = False
 
     # FeynRules restriction files
     restriction = None
@@ -256,7 +266,8 @@ def fill_gum_object(data):
         restriction = math['restriction']
 
     gum_info = Inputs(gambit_model, base_model, mathpackage, 
-                      wimp_candidate, mathname, lagrangian, restriction)
+                      wimp_candidate, decaying_dm, 
+                      mathname, lagrangian, restriction)
 
     print("Parse successful.")
 

@@ -11,7 +11,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019 
+#  \date 2018, 2019 
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)

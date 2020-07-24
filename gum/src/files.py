@@ -11,7 +11,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2017, 2018, 2019, 2020
+#  \date 2018, 2019, 2020
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
@@ -587,9 +587,8 @@ def indent(text, numspaces=0):
 
     for line in lines:
 
-
         if numspaces < 0:
-            raise GumError(("\n\nTried to indent a negative number of spaces."
+            raise GumError(("\n\nTried to indent a negative number of spaces. "
                             "Please check for rogue braces."))
 
         num_open = line.count("{")
