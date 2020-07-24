@@ -991,11 +991,11 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
             size = int(i.shape[-1])
             for j in xrange(size):
                 for k in xrange(size):
-                    params[i.gb_in + str(j+1) + 'x' + str(k+1)] = i.default
+                    params[i.gb_in + '_' + str(j+1) + 'x' + str(k+1)] = i.default
         elif re.match("v[2-9]", i.shape): 
             size = int(i.shape[-1])
             for j in xrange(size):
-                params[i.gb_in + str(j+1)] = i.default
+                params[i.gb_in + '_' + str(j+1)] = i.default
 
     # No double counting (also want to preserve the order)
     norepeats = {}
@@ -1003,7 +1003,8 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
       if i not in norepeats.keys():
         norepeats[i] = val
 
-    for i,val in norepeats.items():
+    # Do this in alphabetical order, so it looks nice.
+    for i,val in sorted(norepeats.items()):
         towrite += ("    {0}: {1}\n").format(i,str(val))
 
     towrite += (

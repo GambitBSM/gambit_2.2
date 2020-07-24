@@ -260,11 +260,11 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params,
             size = int(i.shape[-1])
             for j in xrange(size):
                 for k in xrange(size):
-                    params.append(i.gb_in + str(j+1) + 'x' + str(k+1))
+                    params.append(i.gb_in + '_' + str(j+1) + 'x' + str(k+1))
         elif re.match("v[2-9]", i.shape): 
             size = int(i.shape[-1])
             for j in xrange(size):
-                params.append(i.gb_in + str(j+1))
+                params.append(i.gb_in + '_' + str(j+1))
 
     # No double counting (also want to preserve the order)
     norepeats = []

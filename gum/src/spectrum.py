@@ -88,6 +88,8 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
 
         for block, entry in blockdict.iteritems():
 
+            print block, entry
+
             # Ignore the SM blocks, add them... en bloc (sorry) in a bit
             # Same with masses.
             if block in ["GAUGE", "SINTHETAW", "YU", "YE", "YD", 
@@ -149,7 +151,6 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                     ).format(block, index, paramdef)
 
             # Matrix case.
-            # The block is the name of the parameter. 
             else:
                 paramdef = ""
 
@@ -161,9 +162,9 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
 
                         towrite += (
                                 "SLHAea_add(slha, \"{0}\", {1}, {2}, "
-                                "*myPipe::Param[\"{0}{1}x{2}\"], " 
-                                "\"{0}({1},{2})\");\n"
-                        ).format(block, i+1, j+1)
+                                "*myPipe::Param[\"{3}_{1}x{2}\"], " 
+                                "\"{3}({1},{2})\");\n"
+                        ).format(block, i+1, j+1, entry['outputname'])
 
         # Create a dict of the GB input params - SARAH names
         d = {}
