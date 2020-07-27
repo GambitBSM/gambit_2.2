@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 from style import make_style, add_logo
+import log_evidences_arxiv_v2 as ln_z
 
 
 data_arr = np.loadtxt("xe1t_3h.dat")
@@ -17,10 +18,8 @@ order = width.argsort()
 width = width[order]
 ln_z_xe1t_3h_alp = data_arr[order, 1]
 
-ln_z_xe1t = -22.557779416855389
-
-alp_3h_vs_bkg_3h = np.exp(ln_z_xe1t_3h_alp - ln_z_xe1t_3h)
-bkg_3h_vs_bkg = np.exp(ln_z_xe1t_3h - ln_z_xe1t)
+alp_3h_vs_bkg_3h = np.exp(ln_z_xe1t_3h_alp - ln_z.xe1t_3h)
+bkg_3h_vs_bkg = np.exp(ln_z_xe1t_3h - ln_z.xe1t)
 
 make_style()
 fig, ax = plt.subplots()
