@@ -105,8 +105,8 @@ if __name__ == "__main__":
 
     elif alp:
 
-        center = -12.5
-        width = np.linspace(0., 15., 20).tolist() + np.linspace(2., 4., 20).tolist()
+        center = -11.5
+        width = sorted(np.linspace(2., 17., 16).tolist() + np.linspace(1., 4., 20).tolist())
 
         for i, w in enumerate(width):
             a = center - 0.5 * w
