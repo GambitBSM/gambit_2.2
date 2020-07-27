@@ -2,7 +2,7 @@
 Chi-squared table for solar and DM ALPs
 """
 
-import best_fit_loglike_v1 as lnl
+import best_fit_loglike_arxiv_v2 as lnl
 
 def chisq(l):
     return -2. * l
