@@ -22,6 +22,6 @@ dm_xe1t_alp_r = -13.6271472324
 dm_xe1t_alp_r_wd = -21.7292624563
 
 # DM ALP with tritium
-dm_xe1t_3h_alp = 0. # PETER
+dm_xe1t_3h_alp = -12.9739359185
 dm_xe1t_3h_alp_r = -13.0127377906
 dm_xe1t_3h_alp_r_wd = -21.0908853881
