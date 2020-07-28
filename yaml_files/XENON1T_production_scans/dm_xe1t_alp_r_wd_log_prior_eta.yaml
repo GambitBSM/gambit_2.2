@@ -1,0 +1,47 @@
+Parameters:
+  GeneralALP: !import include/dm_alp.yaml
+  XENON1T_NuisanceParameters: !import include/no_3h.yaml
+  XENON1T_DM_NuisanceParameters:
+    eta:
+      range: [0.01, 1.0]
+      prior_type: log
+  Halo_gNFW_rho0: !import include/rho.yaml
+
+Printer:
+  printer: ascii
+  options:
+    output_file: "dm_xe1t_alp_r_wd.txt"
+
+Scanner:
+  use_scanner: multinest
+  scanners:
+    multinest:
+      plugin: multinest
+      like:  LogLike
+      nlive: 5000
+      tol: 0.001
+      efr: 0.05
+
+ObsLikes:
+  - capability: lnL_XENON1T_DM_Anomaly
+    purpose: LogLike
+  - capability: lnL_RParameter
+    purpose: LogLike
+  - capability: lnL_WDVar_G117B15A
+    purpose: LogLike
+  - capability: lnL_WDVar_R548
+    purpose: LogLike
+  - capability: lnL_WDVar_PG1351489
+    purpose: LogLike
+  - capability: lnL_WDVar_L192
+    purpose: LogLike
+  - capability: lnL_XENON1T_Anomaly_NuisanceParameters
+    purpose: Observable
+  - capability: lnL_rho0
+    purpose: Observable
+
+KeyValues:
+
+  default_output_path: "./runs/dm_xe1t_alp_r_wd"
+
+  debug: false
