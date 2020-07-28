@@ -10,7 +10,7 @@ Parameters:
 Printer:
   printer: ascii
   options:
-    output_file: "dm_xe1t_alp_r_wd.txt"
+    output_file: "dm_xe1t_alp_r_wd_log_prior_eta.txt"
 
 Scanner:
   use_scanner: multinest
@@ -42,6 +42,6 @@ ObsLikes:
 
 KeyValues:
 
-  default_output_path: "./runs/dm_xe1t_alp_r_wd"
+  default_output_path: "./runs/dm_xe1t_alp_r_wd_log_prior_eta"
 
   debug: false
