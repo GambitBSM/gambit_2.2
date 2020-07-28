@@ -13,7 +13,7 @@ order = width.argsort()
 width = width[order]
 ln_z_xe1t_alp = data_arr[order, 1]
 
-bayes_factor = np.exp(ln_z_xe1t_alp - ln_z.xe1t)
+bayes_factor = np.exp(ln_z_xe1t_alp - ln_z.xe1t[0])
 
 make_style()
 fig, ax = plt.subplots()
@@ -22,12 +22,12 @@ ax_rhs = ax.twinx()
 ax.plot(width, bayes_factor, ls="-", marker="o")
 ax.set_ylabel("Bayes factor, $B_{10}$")
 ax.set_xlabel("Prior width, $w$")
-ax.set_title("ALP couplings from $10^{-11.5 - 0.5 w}$ to $10^{-11.5 + 0.5 w}$")
+ax.set_title("ALP couplings from $10^{-12.5 - 0.5 w}$ to $10^{-12.5 + 0.5 w}$")
 
 # Limits
 
 ymax = 30.
-ax.set_xlim(0, 17)
+ax.set_xlim(0, 15)
 ax.set_ylim(0, ymax)
 
 # Twin axis showing sigmas

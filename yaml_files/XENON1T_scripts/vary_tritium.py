@@ -18,8 +18,8 @@ order = width.argsort()
 width = width[order]
 ln_z_xe1t_3h_alp = data_arr[order, 1]
 
-alp_3h_vs_bkg_3h = np.exp(ln_z_xe1t_3h_alp - ln_z.xe1t_3h)
-bkg_3h_vs_bkg = np.exp(ln_z_xe1t_3h - ln_z.xe1t)
+alp_3h_vs_bkg_3h = np.exp(ln_z_xe1t_3h_alp - ln_z_xe1t_3h)
+bkg_3h_vs_bkg = np.exp(ln_z_xe1t_3h - ln_z.xe1t[0])
 
 make_style()
 fig, ax = plt.subplots()
@@ -31,6 +31,7 @@ ax.legend(loc="upper left")
 ax.set_title(r"\tritium~component $\log_{10}\frac{\alpha_t}{\text{mol/mol}} = -27 \pm \sigma$")
 ax.set_ylabel(r"Bayes factor, $B$")
 ax.set_xlabel(r"Uncertainty in \tritium~component, $\sigma$")
+ax.set_xticks(np.arange(0., 6., 1.))
 
 # Limits
 
