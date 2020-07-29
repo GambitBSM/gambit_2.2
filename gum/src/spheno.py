@@ -649,7 +649,7 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
                                            sphenodeps, hb_variables, bcs,
                                            charged_higgses, neutral_higgses,
                                            mass_uncertainty_dict, fullmodelname,
-                                           hb_variable_dictionary)
+                                           variable_dictionary, hb_variable_dictionary)
 
     spheno_header = write_spheno_frontend_header(model_name, functions, 
                                                  type_dictionary, 
@@ -1205,7 +1205,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                               particles, parameters, blockparams, gambit_pdgs, 
                               mixings, reality_dict, sphenodeps, hb_variables,
                               bcs, charged_higgses, neutral_higgses,
-                              mass_uncertainty_dict, fullmodelname, hb_dict):
+                              mass_uncertainty_dict, fullmodelname, var_dict, hb_dict):
 
     """
     Writes source for 
@@ -1458,7 +1458,9 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # Go through the SPhenodeps and add these
     for par, definition in sphenodeps.iteritems():
-        towrite += "*{0} = {1};\n".format(par, definition)
+        # Make sure first that it is a SPheno variable
+        if par in variables:
+          towrite += "*{0} = {1};\n".format(par, definition)
 
     towrite += (
             "\n"
@@ -1647,7 +1649,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 "// Make sure to rotate back the sign on MChi\n"
                 "if(not *RotateNegativeFermionMasses)\n"
                 "{\n"
-                "for(int i=1; i<={" + str(i) + "}; i++)\n"
+                "for(int i=1; i<=" + str(i) + "; i++)\n"
                 "{\n"
                 "double remax = 0, immax = 0;\n"
                 "for(int j=1; j<=" + str(j) +"; j++)\n"
@@ -1679,7 +1681,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       'SLHAea_add_block(slha, "MODSEL");\n'
     if not flags["OnlyLowEnergySPheno"] :
       towrite += 'if(*HighScaleModel == "LOW")\n'\
-        '  slha["MODSEL"][""] << 1 << 0 << "# ' + 'SUSY' if flags["SupersymmetricModel"] else 'Renormalization' + ' scale input";\n'\
+        '  slha["MODSEL"][""] << 1 << 0 << "# ' + ('SUSY' if flags["SupersymmetricModel"] else 'Renormalization') + ' scale input";\n'\
         "else\n"\
         "  "
     towrite += 'slha["MODSEL"][""] << 1 << 1 << "# GUT scale input";\n'\
@@ -1822,6 +1824,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
                 # Is it a real parameter?
                 real = reality_dict[param]
+
+                # Make sure complex parameters are also complex in SPheno
+                if not real:
+                    if not var_dict[param] == "Fcomplex16":
+                        real = True
 
                 # If it's a real parameter don't need to take the real part.
                 # Just add it.
