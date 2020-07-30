@@ -619,7 +619,6 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
     # Firstly, scrape the function signatures from the spheno source
     functions, arguments, locations = scrape_functions_from_spheno(spheno_path,
                                                                    model_name)
-
     # Convert the arguments to GAMBIT types
     type_dictionary = get_fortran_shapes(arguments)
 
@@ -632,6 +631,9 @@ def write_spheno_frontends(model_name, parameters, particles, flags,
     # Convert these to GAMBIT types too
     variable_dictionary = get_fortran_shapes(variables)
     hb_variable_dictionary = get_fortran_shapes(hb_variables)
+
+    # Fix reality dictionary
+    reality_dict = fix_reality_dict(reality_dict, variable_dictionary)
 
     # Add the new types to backend_types
     backend_types, linenum = add_to_spheno_backend_types(type_dictionary, 
@@ -728,6 +730,24 @@ def get_fortran_shapes(parameters):
         type_dictionary[name] = fortran_type  
 
     return type_dictionary
+
+def fix_reality_dict(reality_dict, variable_types):
+
+    """
+    Fixes the reality dict as sometimes there is mismatch between SARAH and SPheno
+    """
+
+    new_reality_dict = {}
+   
+    for key, val in reality_dict.iteritems():
+
+        new_reality_dict[key] = val
+
+        # Make sure complex parameters are also complex in SPheno
+        if not val and not "Fcomplex16" in variable_types[key]:
+            new_reality_dict[key] = True
+
+    return new_reality_dict
 
 def add_to_spheno_backend_types(type_dictionary, variable_dictionary,
                                 hb_variable_dictionary):
@@ -995,11 +1015,13 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
                             else:
                                 for j in possible_types:
                                     if j in defs[i]:
-                                        if arg in defs[i+1]:
+                                        # Need a simplified string starting with ',' and no whitespaces
+                                        vars = ',' + ''.join(defs[i+1].split()).replace('&','')
+                                        if ','+arg in vars:
                                             # Also check the size here by looking
                                             # at the size of the matrix
-                                            pat = r'{}\((.*?)\)'.format(arg)
-                                            r = re.search(pat, defs[i+1])
+                                            pat = r',{}\((.*?)\)'.format(arg)
+                                            r = re.search(pat, vars)
                                             if r:
                                                 size = r.group(1)
                                             else: 
@@ -1825,11 +1847,6 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 # Is it a real parameter?
                 real = reality_dict[param]
 
-                # Make sure complex parameters are also complex in SPheno
-                if not real:
-                    if not var_dict[param] == "Fcomplex16":
-                        real = True
-
                 # If it's a real parameter don't need to take the real part.
                 # Just add it.
                 if real == True:
@@ -2569,7 +2586,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     for par in parameters:
         if par.block == "MINPAR":
-            c = "*"+par.name if par.is_real else par.name+"->re"
+            c = "*"+par.name if reality_dict[par.name] else par.name+"->re"
 
             # If there's no BC then assume it's the parameter name?
             e = par.name
@@ -2593,7 +2610,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     for par in parameters:
         if par.block == "EXTPAR":
-            c = "*"+par.name if par.is_real else par.name+"->re"
+            c = "*"+par.name if reality_dict[par.name] else par.name+"->re"
 
             # If there's no BC then assume it's the parameter name?
             e = par.name
@@ -2631,9 +2648,10 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # Input parameters
     # TODO:  The name of model parameters might be wrong
     # TODO: this does not work for matrices
+    # TODO: Skipping Phases block manually, probably not best way
     for name, var in variables.iteritems():
 
-        if var.block != None and var.block.endswith("IN") :
+        if var.block != None and var.block.endswith("IN") and not var.block.startswith("PHASES"):
             
 
             model_par = get_model_par_name(name, variables)

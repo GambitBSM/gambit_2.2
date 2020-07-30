@@ -745,6 +745,10 @@ namespace GUM
             // index
             index = std::stoi(leshouches[1]);
             LHblock = true;
+
+            // If blockname is PHASES then it's effectively a mixing
+            if (block == "phases" or block == "Phases")
+              ismixing = true;
         }
         // If not a list, but a symbol, then we've got a mixing block
         else if(entry == "Symbol") 
@@ -803,7 +807,12 @@ namespace GUM
             command = "Extract[pgum, pos[[1,1]]][[3]]";
             send_to_math(command);
             get_from_math(shapesize);
-            shape = "m" + shapesize[0] + "x" + shapesize[1];
+
+            // If it's a phase, then it's a scalar
+            if(shapesize.size())
+              shape = "m" + shapesize[0] + "x" + shapesize[1];
+            else
+              shape = "scalar";
             
             // Add to the paramlist -- but only as an *output* parameter, 
             // and with the shape of the matrix
