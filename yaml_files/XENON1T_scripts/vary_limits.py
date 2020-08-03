@@ -35,7 +35,7 @@ ax.set_xlabel("Prior width, $w$")
 ax.set_ylabel("Prior center, $c$")
 ax.set_title("Solar ALP couplings from $10^{c - 0.5 w}$ to $10^{c + 0.5 w}$")
 
-p = ax.scatter(17., -11.5, color="seagreen", marker="H", zorder=5, label="Priors used in analysis")
+p = ax.scatter(17., -11.5, color="royalblue", s=50, marker="H", zorder=5, label="Priors used in analysis")
 p.set_clip_on(False)
 
 ax.legend()
