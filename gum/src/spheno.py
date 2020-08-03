@@ -3518,7 +3518,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "// Initialisation functions (dependencies)\n"
             "\n"
             "// Function pointer variable for error handling\n"
-            "BE_VARIABLE(ErrorHandler_cptr, type_fptr_SPhenoErrorHandler, " + make_fortran_symbols("control","errorhandler_cptr") + ", \"SARAHSPheno_{0}_internal\")\n"
+            "BE_VARIABLE(ErrorHandler_cptr, fptr_void, " + make_fortran_symbols("control","errorhandler_cptr") + ", \"SARAHSPheno_{0}_internal\")\n"
             "\n"
             "// End\n"
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
