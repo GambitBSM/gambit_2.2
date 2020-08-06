@@ -752,7 +752,7 @@ if args.file:
             # Append to the end of DecayBit -- just before all_decays
             num = find_string("DecayBit.cpp", m, "void all_decays")[1]
             if output_opts.ch:
-                amend_file("DecayBit.cpp", m, decaybit_src_ch, num-4, 
+                amend_file("DecayBit.cpp", m, decaybit_src_ch, num-3, 
                            reset_contents)
                 for i in xrange(len(decay_roll)):
                     if find_capability(decay_roll[i][0], m)[0]:

@@ -465,7 +465,7 @@ def write_spheno_decay_entry(model_name, clean_model_name):
         "decays.writeSLHAfile(2,prefix+filename+\".slha2\",false);\n"
         "}}\n"
         "\n"
-        "}}\n"
+        "}}\n\n"
     ).format(model_name)
 
     towrite_header = (
