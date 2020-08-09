@@ -1082,7 +1082,7 @@ def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
     towrite = (
         "\n"
         "The commands needed to build GAMBIT successfully (replacing '<n>' "
-        "with\n the number of logical cores available on your machine) are:\n"
+        "with\nthe number of logical cores available on your machine) are:\n"
         "\n"
         "cd ../build\n"
         "cmake ..\n"
