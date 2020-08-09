@@ -95,6 +95,12 @@ class Outputs:
         # If Pythia is set then we also have UFO files, of course
         if pythia == True: self.ufo = True
 
+        # If vevacious is needed, we have to have SPheno too...
+        if vevacious == True and spheno == False:
+            raise GumError(("\n\nCurrently, gum needs SPheno output to be able "
+                            "to produce Vevacious output.\nPlease change "
+                            "your .gum file (and SARAH files, if necessary)."))
+
     def bes(self):
         backends = []
         if self.ch: backends.append('calchep')
@@ -240,7 +246,7 @@ def fill_gum_object(data):
         set_calchep = False
     if set_calchep: 
         opts['calchep'] = True
-    
+
     outputs = Outputs(mathpackage, options=options, **opts)
 
     # If the user wants MicrOMEGAs output but hasn't specified a DM candidate
