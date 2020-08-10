@@ -1,7 +1,7 @@
 -------------------------------
 ---Common fields---------------             ;EFN = empty for none
 
-main_chain = 'MDMSM.hdf5:/MDMSM'          ;Filename of chain to operate on.  For a group in an hdf5 file, something like 'myfile.hdf5:/group'
+main_chain = '../../runs/MDMSM/samples/MDMSM.hdf5:/MDMSM'          ;Filename of chain to operate on.  For a group in an hdf5 file, something like 'myfile.hdf5:/group'
 comparison_chain =                          ;Filename of secondary chain to operate on, for comparison (EFN)
 
 do_posterior_pdf = F                        ;Parse, script or plot posterior pdfs
