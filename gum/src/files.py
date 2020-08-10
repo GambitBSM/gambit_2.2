@@ -1075,9 +1075,15 @@ def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
     """
     Drops a configuration file, which will build the correct backends, 
     and then GAMBIT, in the correct order.
+
+    9/8/20: updated to just print these contents, not add to file.
     """
 
     towrite = (
+        "\n"
+        "The commands needed to build GAMBIT successfully (replacing '<n>' "
+        "with\nthe number of logical cores available on your machine) are:\n"
+        "\n"
         "cd ../build\n"
         "cmake ..\n"
     )
@@ -1104,16 +1110,17 @@ def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
     for be in backends:
       if be in rebuild_backends:
         towrite += ("make nuke-{0}\n").format(be)
-      towrite += ("make -j4 {0}\n").format(be)
+      towrite += ("make -j<n> {0}\n").format(be)
 
+    # Have to cmake here because of Pythia headers.
+    if outputs.pythia: towrite += "cmake ..\n"
 
+    # Just GAMBIT to go.
     towrite += (
-        "\n"
-        "cmake ..\n"      # Have to cmake here because of Pythia headers.
-        "make -j4 gambit\n"
+        "make -j<n> gambit\n"
     )
 
-    write_file(model_name + '_config.sh', 'gum', towrite, reset_contents)
+    print towrite
 
 def compare_patched_files(gambit_dir, gum_dir, file_endings = ()):
     """

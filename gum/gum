@@ -672,13 +672,6 @@ if args.file:
         """
 
         if output_opts.vev:
-
-            # Currently require SPheno output for vevacious since we need MINPAR
-            # etc. 
-            if not output_opts.spheno:
-                raise GumError(("Currently gum needs SPheno output to be able "
-                                "to produce Vevacious output. Please change "
-                                "your .gum file."))
             vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, 
                                           blockparams)
 
@@ -955,10 +948,6 @@ if args.file:
         print(("\nGUM has dropped a test YAML file at "
                "$GAMBIT/yaml_files/{0}_example.yaml!").format(gum.name))
 
-        # Write a config file to make compilation easier
-        write_config_file(output_opts, gum.name, reset_contents, rebuild_backends)
-        print(("\nGUM has dropped a config script {0}_config.sh").format(gum.name))
-
         # Inform user to rebuild backends
         if rebuild_backends:
             print(("The following backends have been changed, if you are not using "
@@ -980,9 +969,8 @@ if args.file:
         # All done!
         print("")
         print("GUM has finished successfully!")
-        print("Please (re)compile GAMBIT, by running:")
-        print("\t bash {}_config.sh".format(gum.name))
-        print("")
+        # Prints the recommended build commands to stdout.
+        write_config_file(output_opts, gum.name, reset_contents, rebuild_backends)
 
     except Exception as exc:
         print("\n\nGUM has failed!")
