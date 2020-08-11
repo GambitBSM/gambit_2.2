@@ -91,8 +91,8 @@ All details about the GUM file can be found in the GUM manual.
 
         cd ../build
         cmake ..
-        make -j<n> micromegas_MDMSM
-        make -j<n> calchep
+        make micromegas_MDMSM
+        make calchep
         make -j<n> gambit
 
 where you should replace <n> with the number of logical cores you 

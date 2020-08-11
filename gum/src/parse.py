@@ -561,9 +561,9 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
             if qnumsmatch:
                 # Try to match the electric charge now.
                 # Go for a fraction first.
-                qmatch = re.search(r'Q\s*->\s*(\d+/\d+)', qnumsmatch.group(1))
+                qmatch = re.search(r'Q\s*->\s*-?(\d+/\d+)', qnumsmatch.group(1))
                 if not qmatch:
-                    qmatch = re.search(r'Q\s*->\s*(\d+)', qnumsmatch.group(1))
+                    qmatch = re.search(r'Q\s*->-?\s*(\d+)', qnumsmatch.group(1))
                 if qmatch:
                     continue
                 else:

@@ -1107,10 +1107,11 @@ def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
         backends.append("calchep")
 
     # If any backend needs rebuilding, nuke them first
+    bes = ""
     for be in backends:
       if be in rebuild_backends:
         towrite += ("make nuke-{0}\n").format(be)
-      towrite += ("make -j<n> {0}\n").format(be)
+      towrite += ("make {0}\n").format(be)
 
     # Have to cmake here because of Pythia headers.
     if outputs.pythia: towrite += "cmake ..\n"
