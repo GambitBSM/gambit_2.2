@@ -88,8 +88,6 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
 
         for block, entry in blockdict.iteritems():
 
-            print block, entry
-
             # Ignore the SM blocks, add them... en bloc (sorry) in a bit
             # Same with masses.
             if block in ["GAUGE", "SINTHETAW", "YU", "YE", "YD", 

@@ -3265,7 +3265,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
         if name == "MZ_input": continue
  
         # These go with decay info
-        if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") : continue
+        if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") or name.startswith("CalcSUSY3BodyDecays") : continue
 
         string = (
                "BE_VARIABLE({0}, {1}, " + make_fortran_symbols("model_data_{2}","{3}") + ",\"SARAHSPheno_{4}_internal\")\n"
