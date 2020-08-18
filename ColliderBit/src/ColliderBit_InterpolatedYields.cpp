@@ -170,6 +170,41 @@ namespace Gambit
     }
 
 
+    void SignalModifierFunction(double * signalmodifier, float lambda , float a, const char* experiment)
+    {
+        int met_bin_size;
+
+        if (strcmp(experiment,"ATLAS") == 0)
+        {
+          met_bin_size = atlas_bin_size;
+        }
+        else if (strcmp(experiment,"CMS") == 0){
+          met_bin_size = cms_bin_size;
+        }
+
+        for (int Emiss = 0; Emiss < met_bin_size; Emiss++ ) 
+        {
+            if(strcmp(experiment,"ATLAS") == 0){
+              if (lambda < METMINS_ATLAS[Emiss]){
+                signalmodifier[Emiss] = pow(METMINS_ATLAS[Emiss]/lambda,-a);
+            }
+              else{
+                signalmodifier[Emiss] = 1;
+              }
+            } 
+
+            if(strcmp(experiment,"CMS") == 0){
+              if (lambda < METMINS_CMS[Emiss]){
+                signalmodifier[Emiss] = pow(METMINS_ATLAS[Emiss]/lambda,-a);
+            }
+              else{
+                signalmodifier[Emiss] = 1;
+              }
+            }
+         }
+    }
+
+
     // ---------------------------------------------------- //
     //  Calculate Yields // 
     // ---------------------------------------------------- //  
@@ -637,38 +672,9 @@ namespace Gambit
             
             //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
             
-
-            // DO LAMBDA CHECK HERE!
-            // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
-            // Grids calculated at Lambda = 1000 GeV, hence the factor here. 
-
             double lambda_scaling = float(pow(1000.0,4))/float(pow(lambda,4));
 
-        
-            // EFT validity checks:            
-
-            if(strcmp(experiment,"ATLAS") == 0){
-              if (lambda < METMINS_ATLAS[Emiss]){
-                accep[Emiss] = 0;
-            }
-              else{
-                accep[Emiss] = res*lambda_scaling;
-              }
-            } 
-
-            if(strcmp(experiment,"CMS") == 0){
-              if (lambda < METMINS_CMS[Emiss]){
-                accep[Emiss] = 0;
-            }
-              else{
-                accep[Emiss] = res*lambda_scaling;
-              }
-            } 
-            
-
-                // accep[Emiss] = res;
-
-
+            accep[Emiss] = res*lambda_scaling;
 
           } // Loop over Emiss
 
@@ -1153,36 +1159,10 @@ namespace Gambit
             
             //  cout << "Res = "<< res << " Mass, theta = "<< m <<" , "<<th<<" A = "<<A<<" B = "<<B<<endl;
             
-
-            // DO LAMBDA CHECK HERE!
-            // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
-            
             double lambda_scaling = float(pow(1000.0,4))/float(pow(lambda,4));
 
-            // cout << "lambda scale factor = " << lambda_scaling<<endl;        
-            
-            if(strcmp(experiment,"ATLAS") == 0){
-              if (lambda < METMINS_ATLAS[Emiss]){
-                accep[Emiss] = 0;
-            }
-              else{
-                accep[Emiss] = res*lambda_scaling;
-              }
-            } 
-
-            if(strcmp(experiment,"CMS") == 0){
-              if (lambda < METMINS_CMS[Emiss]){
-                accep[Emiss] = 0;
-            }
-              else{
-                accep[Emiss] = res*lambda_scaling;
-              }
-            } 
-            
-
-                // accep[Emiss] = res;
-
-
+            accep[Emiss] = res*lambda_scaling;
+ 
 
           } // Loop over Emiss
 
@@ -1632,33 +1612,7 @@ namespace Gambit
           double res =  36000.0*A*Norm*B; 
           double lambda_scaling = float(pow(1000.0,6))/float(pow(lambda,6));
   
-          // cout << "Res check = " << res*lambda_scaling << " norm = " << Norm << " opperator = "<< pair <<endl;
-
-          // DO LAMBDA CHECK HERE!
-          // Also perform lambda scaling!! Put this back in March 4. (Sorry Sanjay)
-          
-
-          // cout << "lambda scale factor dim 7 = " << lambda_scaling<<endl;        
-  
-            // Lambda Cut
-          if(strcmp(experiment,"ATLAS") == 0){
-            if (lambda < METMINS_ATLAS[Emiss]){
-              accep[Emiss] = 0;
-          }
-            else{
-              accep[Emiss] = res*lambda_scaling;
-            }
-          } 
-
-          if(strcmp(experiment,"CMS") == 0){
-            if (lambda < METMINS_CMS[Emiss]){
-              accep[Emiss] = 0;
-          }
-            else{
-              accep[Emiss] = res*lambda_scaling;
-            }
-          } 
-          
+          accep[Emiss] = res*lambda_scaling;
 
         } // Loop over Emiss
 
@@ -1674,8 +1628,6 @@ namespace Gambit
 
       }
 
-
-  
   
    // Function Acceptance_CS <---- End of function
 
