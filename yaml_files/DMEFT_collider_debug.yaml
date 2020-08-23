@@ -225,7 +225,7 @@ Rules:
       cap_loglike: false
       cap_loglike_individual_analyses: false
       skip_analyses:
-          - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
+        - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
 
 
   # Use the WIMP properties structure to get WIMP mass etc.

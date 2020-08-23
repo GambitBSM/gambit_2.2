@@ -49,6 +49,7 @@ using namespace std;
 #include "Eigen/Eigenvalues"
 #include "Eigen/Eigen"
 
+#include "gambit/ColliderBit/multimin.h"
 
 namespace Gambit
 {
@@ -1881,6 +1882,52 @@ namespace Gambit
     };
          
 
+
+    // A struct to contain parameters for GSL minimizer target function
+    struct _gsl_target_func_params
+    {
+      float lambda;
+      AnalysisDataPointers adata_ptrs_original;
+      std::vector<str> skip_analyses;
+    };
+
+    void _gsl_target_func(const size_t n, const double* a, void* fparams, double* fval)
+    {
+      double total_loglike = 0.0;
+
+      // Cast fparams to correct type
+      _gsl_target_func_params* fpars = static_cast<_gsl_target_func_params*>(fparams);
+
+      AnalysisLogLikes analoglikes;
+
+      // Create a vector with temp AnalysisData instances by copying the original ones
+      vector<AnalysisData> temp_adata_vec;
+      for (AnalysisData* adata_ptr : fpars->adata_ptrs_original)
+      {
+        const string& analysis_name = adata_ptr->analysis_name;
+        // If the analysis name is in skip_analyses, don't take it into account in this profiling
+        if (std::find(fpars->skip_analyses.begin(), fpars->skip_analyses.end(), analysis_name) != fpars->skip_analyses.end())
+        {
+          continue;
+        }
+        // Make a copy of the AnalysisData instance that adata_ptr points to
+        temp_adata_vec.push_back( AnalysisData(*adata_ptr) );
+      }
+
+      // Now loop over all the temp AnalysisData instances and calculate the total loglike for the current a-value
+      for (AnalysisData& adata : temp_adata_vec)
+      {
+        signal_modifier_function(adata, fpars->lambda, *a);
+        analoglikes = calc_loglikes_for_analysis(adata, true, false, false);
+        total_loglike += analoglikes.combination_loglike;
+      }
+
+      *fval = -total_loglike;
+    }
+
+
+
+
     void calc_DMEFT_profiled_LHC_nuisance_params(map_str_dbl& result)
     {
       using namespace Pipes::calc_DMEFT_profiled_LHC_nuisance_params;
@@ -1900,64 +1947,53 @@ namespace Gambit
       // Do profiling
       // 
 
-      // Currently this is just a silly grid scan in 'a'. Will replace by a GLS minimizer
-      float a = 1.0;
-      float delta_a = 0.1;
-      float a_bestfit = a;
-      double total_loglike_bestfit = -50000;
+      // Optimiser parameters
+      // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
+      // Methods:
+      //  0: Fletcher-Reeves conjugate gradient
+      //  1: Polak-Ribiere conjugate gradient
+      //  2: Vector Broyden-Fletcher-Goldfarb-Shanno method
+      //  3: Steepest descent algorithm
+      //  4: Nelder-Mead simplex
+      //  5: Vector Broyden-Fletcher-Goldfarb-Shanno method ver. 2
+      //  6: Simplex algorithm of Nelder and Mead ver. 2
+      //  7: Simplex algorithm of Nelder and Mead: random initialization
 
-      AnalysisLogLikes analoglikes;
+      static const double INITIAL_STEP = 0.1;
+      static const double CONV_TOL = 0.01;
+      static const unsigned MAXSTEPS = 10000;
+      static const double CONV_ACC = 0.01;
+      static const double SIMPLEX_SIZE = 1e-5;
+      static const unsigned METHOD = 6;
+      static const unsigned VERBOSITY = 0;
+      static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
-      while (a < 100.0)
-      {
-        double total_loglike = 0.0;
+      // Set function parameters
+      _gsl_target_func_params fpars;
+      fpars.lambda = lambda;
+      fpars.adata_ptrs_original = *Dep::AllAnalysisNumbersUnmodified;
+      fpars.skip_analyses = skip_analyses;
 
-        // Create a vector with temp AnalysisData instances by copying the original ones
-        vector<AnalysisData> temp_adata_vec;
-        for (AnalysisData* adata_ptr : *Dep::AllAnalysisNumbersUnmodified)
-        {
+      // Create a variable to get the best-fit loglike
+      double minus_bestfit_fval = 50000.0;
 
-          const string& analysis_name = adata_ptr->analysis_name;
+      // Nuisance parameters to be profiled
+      const size_t n_profile_pars = 1;
+      double init_vals = 1.0;
+      std::vector<double> nuisances(n_profile_pars, init_vals);  // set initial guess to 1.0 for all nuisance pars
 
-          // If the analysis name is in skip_analyses, don't take it into account in this profiling
-          if (std::find(skip_analyses.begin(), skip_analyses.end(), analysis_name) != skip_analyses.end())
-          {
-            cout << "DEBUG: Leaving out analysis " << analysis_name << " from profiling" << endl;
-            continue;
-          }
+      // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
+      multimin(n_profile_pars, &nuisances[0], &minus_bestfit_fval,
+               nullptr, nullptr, nullptr,
+               &_gsl_target_func, 
+               nullptr,  // 
+               nullptr,
+               &fpars, oparams);
 
-          // Make a copy of the AnalysisData instance that adata_ptr points to
-          temp_adata_vec.push_back( AnalysisData(*adata_ptr) );
-        }
-
-        // Now loop over all the temp AnalysisData instances and calculate the total loglike for the current a-value
-        for (AnalysisData& adata : temp_adata_vec)
-        {
-          const string& analysis_name = adata.analysis_name;
-
-          signal_modifier_function(adata, lambda, a);
-          analoglikes = calc_loglikes_for_analysis(adata, true, false, false);
-          cout << "DEBUG: " << analysis_name << ": a, analoglikes.combination_loglike : " << a << ", " << analoglikes.combination_loglike << endl;
-
-          total_loglike += analoglikes.combination_loglike;
-        }
-
-        // Save values if this is the current best-fit a-value
-        if (total_loglike > total_loglike_bestfit)
-        {
-          total_loglike_bestfit = total_loglike;
-          a_bestfit = a;
-        }
-
-        cout << "DEBUG: a, total_loglike: " << a << ", " << total_loglike << endl;
-
-        // Next step
-        a += delta_a;
-      }
-
-      cout << "DEBUG: " << endl;
-      cout << "DEBUG: a_bestfit: " << a_bestfit << endl;
-      cout << "DEBUG: total_loglike_bestfit: " << total_loglike_bestfit << endl;
+      double a_bestfit = nuisances[0];
+      double total_loglike_bestfit = -minus_bestfit_fval;
+      
+      cout << "DEBUG: a_bestfit, total_loglike_bestfit: " << a_bestfit << ", " << total_loglike_bestfit << endl;
 
       // Save the best-fit parameter value
       result["a"] = a_bestfit;
