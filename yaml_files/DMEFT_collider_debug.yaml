@@ -15,9 +15,10 @@ Parameters:
 
   DMEFT:
     # DM mass
-    mchi: 250.0  # 451.7411951062778
+    mchi: 350.0  # 451.7411951062778
     # Scale of new physics
-    Lambda: 1100. # 801.
+    Lambda: 787.11
+      # range: [780, 1100] # 801.
     # EM interactions (only turn on at loop-level -- not concerned with these)
     C51: 0.
     C52: 0.
@@ -214,7 +215,7 @@ Rules:
       use_marginalising: false
       nuisance_prof_initstep: 0.1
       nuisance_prof_convtol: 0.01
-      nuisance_prof_maxsteps: 1000
+      nuisance_prof_maxsteps: 5000
       nuisance_prof_convacc: 0.01
       nuisance_prof_simplexsize: 1e-5
       nuisance_prof_method: 5  # See list of GSL optimiser methods below
@@ -230,11 +231,11 @@ Rules:
   - capability: DMEFT_profiled_LHC_nuisance_params
     function: calc_DMEFT_profiled_LHC_nuisance_params
     options:
-      init_value_a: 0.5
+      init_value_a: 5.0
       range_a: [0.0, 1000.0]
       nuisance_prof_initstep: 0.1
       nuisance_prof_convtol: 0.1
-      nuisance_prof_maxsteps: 30
+      nuisance_prof_maxsteps: 20
       nuisance_prof_convacc: 0.1
       nuisance_prof_simplexsize: 1e-5
       nuisance_prof_method: 6  # See list of GSL optimiser methods below. NOTE: Here we can't use a gradient-based method!
