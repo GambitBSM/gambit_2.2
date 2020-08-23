@@ -411,10 +411,10 @@ namespace Gambit
     /// For a given analysis, calculate per-SR loglikes and the overall analysis loglike.
     /// Return the results as an AnalysLogLikes object.
     AnalysisLogLikes calc_loglikes_for_analysis(const AnalysisData& adata, bool USE_COVAR, bool USE_MARG,
-                                                bool set_zero_loglike=false)
+                                                bool combine_nocovar_SRs, bool set_zero_loglike=false)
     {
-      // Read options
-      using namespace Pipes::calc_LHC_LogLikes;
+      // // Read options
+      // using namespace Pipes::calc_LHC_LogLikes;
 
       AnalysisLogLikes result;
 
@@ -714,7 +714,6 @@ namespace Gambit
         result.combination_loglike = ana_dll;
 
         // Or should we use the naive sum of SR loglikes (without correlations) instead?
-        static const bool combine_nocovar_SRs = runOptions->getValueOrDef<bool>(false, "combine_SRs_without_covariances");
         if (combine_nocovar_SRs)
         {
           result.combination_loglike = nocovar_srsum_dll_obs;
@@ -764,6 +763,8 @@ namespace Gambit
       static const bool USE_COVAR = runOptions->getValueOrDef<bool>(true, "use_covariances");
       // Use marginalisation rather than profiling (probably less stable)?
       static const bool USE_MARG = runOptions->getValueOrDef<bool>(false, "use_marginalising");
+      // Use the naive sum of SR loglikes for analyses without known correlations?
+      static const bool combine_nocovar_SRs = runOptions->getValueOrDef<bool>(false, "combine_SRs_without_covariances");
 
       // Fix the profiling/marginalising function according to the option
       auto marg_prof_fn = USE_MARG ? marg_loglike_cov : profile_loglike_cov;
@@ -809,7 +810,7 @@ namespace Gambit
         }
 
         // Get loglike(s) for the current analysis
-        AnalysisLogLikes aloglikes = calc_loglikes_for_analysis(adata, USE_COVAR, USE_MARG, set_zero_loglike);
+        AnalysisLogLikes aloglikes = calc_loglikes_for_analysis(adata, USE_COVAR, USE_MARG, combine_nocovar_SRs, set_zero_loglike);
         
         // Save to results map
         result[ananame] = aloglikes;

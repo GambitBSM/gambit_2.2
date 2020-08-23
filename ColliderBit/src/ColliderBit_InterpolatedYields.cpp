@@ -57,7 +57,7 @@ namespace Gambit
   namespace ColliderBit
   {  
     // Forward declaration of funtion in LHC_likelihoods
-    AnalysisLogLikes calc_loglikes_for_analysis(const AnalysisData&, bool, bool, bool);
+    AnalysisLogLikes calc_loglikes_for_analysis(const AnalysisData&, bool, bool, bool, bool);
 
 
     // ---------------------------------- INTERPOLATION FUNCTIONS ------------------------------------------------
@@ -1883,12 +1883,15 @@ namespace Gambit
          
 
 
-    // A struct to contain parameters for GSL minimizer target function
+    // A struct to contain parameters for the GSL optimiser target function
     struct _gsl_target_func_params
     {
       float lambda;
       AnalysisDataPointers adata_ptrs_original;
       std::vector<str> skip_analyses;
+      bool use_covar;
+      bool use_marg;
+      bool combine_nocovar_SRs;
     };
 
     void _gsl_target_func(const size_t n, const double* a, void* fparams, double* fval)
@@ -1918,16 +1921,15 @@ namespace Gambit
       for (AnalysisData& adata : temp_adata_vec)
       {
         signal_modifier_function(adata, fpars->lambda, *a);
-        analoglikes = calc_loglikes_for_analysis(adata, true, false, false);
+        analoglikes = calc_loglikes_for_analysis(adata, fpars->use_covar, fpars->use_marg, fpars->combine_nocovar_SRs, false);
         total_loglike += analoglikes.combination_loglike;
       }
 
       *fval = -total_loglike;
     }
 
-
-
-
+    // DMEFT: Profile the 'a' nuisance parameter, which is used to smoothly 
+    // suppress signal predictions for MET bins with MET > Lambda
     void calc_DMEFT_profiled_LHC_nuisance_params(map_str_dbl& result)
     {
       using namespace Pipes::calc_DMEFT_profiled_LHC_nuisance_params;
@@ -1936,16 +1938,15 @@ namespace Gambit
       std::vector<str> default_skip_analyses;  // The default is empty lists of analyses to skip
       static const std::vector<str> skip_analyses = Pipes::calc_combined_LHC_LogLike::runOptions->getValueOrDef<std::vector<str> >(default_skip_analyses, "skip_analyses");
       
+      // Steal some settings from the "calc_LHC_LogLikes" function
+      static const bool use_covar = Pipes::calc_LHC_LogLikes::runOptions->getValueOrDef<bool>(true, "use_covariances");
+      // Use marginalisation rather than profiling (probably less stable)?
+      static const bool use_marg = Pipes::calc_LHC_LogLikes::runOptions->getValueOrDef<bool>(false, "use_marginalising");
+      // Use the naive sum of SR loglikes for analyses without known correlations?
+      static const bool combine_nocovar_SRs = Pipes::calc_LHC_LogLikes::runOptions->getValueOrDef<bool>(false, "combine_SRs_without_covariances");
+
       // Clear previous result map
       result.clear();
-
-      // Get Lambda
-      const Spectrum& spec = *Dep::DMEFT_spectrum;
-      float lambda = spec.get(Par::mass1, "Lambda");
-
-      // 
-      // Do profiling
-      // 
 
       // Optimiser parameters
       // Params: step1size, tol, maxiter, epsabs, simplex maxsize, method, verbosity
@@ -1959,41 +1960,65 @@ namespace Gambit
       //  6: Simplex algorithm of Nelder and Mead ver. 2
       //  7: Simplex algorithm of Nelder and Mead: random initialization
 
-      static const double INITIAL_STEP = 0.1;
-      static const double CONV_TOL = 0.01;
-      static const unsigned MAXSTEPS = 10000;
-      static const double CONV_ACC = 0.01;
-      static const double SIMPLEX_SIZE = 1e-5;
-      static const unsigned METHOD = 6;
-      static const unsigned VERBOSITY = 0;
+      static const double INITIAL_STEP = runOptions->getValueOrDef<double>(0.1, "nuisance_prof_initstep");
+      static const double CONV_TOL = runOptions->getValueOrDef<double>(0.01, "nuisance_prof_convtol");
+      static const unsigned MAXSTEPS = runOptions->getValueOrDef<unsigned>(10000, "nuisance_prof_maxsteps");
+      static const double CONV_ACC = runOptions->getValueOrDef<double>(0.01, "nuisance_prof_convacc");
+      static const double SIMPLEX_SIZE = runOptions->getValueOrDef<double>(1e-5, "nuisance_prof_simplexsize");
+      static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(6, "nuisance_prof_method");
+      static const unsigned VERBOSITY = runOptions->getValueOrDef<unsigned>(0, "nuisance_prof_verbosity");
+
       static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
-      // Set function parameters
+      // Set fixed function parameters
       _gsl_target_func_params fpars;
-      fpars.lambda = lambda;
+      fpars.lambda = Dep::DMEFT_spectrum->get(Par::mass1, "Lambda");
       fpars.adata_ptrs_original = *Dep::AllAnalysisNumbersUnmodified;
       fpars.skip_analyses = skip_analyses;
+      fpars.use_covar = use_covar;
+      fpars.use_marg = use_marg;
+      fpars.combine_nocovar_SRs = combine_nocovar_SRs;
 
-      // Create a variable to get the best-fit loglike
-      double minus_bestfit_fval = 50000.0;
+      // Create a variable to store the best-fit loglike
+      double minus_loglike_bestfit = 50000.;
 
-      // Nuisance parameters to be profiled
-      const size_t n_profile_pars = 1;
-      double init_vals = 1.0;
-      std::vector<double> nuisances(n_profile_pars, init_vals);  // set initial guess to 1.0 for all nuisance pars
+      // Nuisance parameter(s) to be profiled 
+      // NOTE: Currently we only profile one parameter ('a'), but the 
+      //       below setup can  easily be extended to more parameters
+      static const double init_value_a = runOptions->getValueOrDef<double>(2.0, "init_value_a");
+      
+      std::vector<double> nuisances = {init_value_a};  // set initial guess for each nuisance parameter
+      std::vector<double> nuisances_min = {0.0};   // min value for each nuisance parameter
+      std::vector<double> nuisances_max = {1.0e6}; // max value for each nuisance parameter
+      const size_t n_profile_pars = nuisances.size();
+      // Choose boundary type for each nuisance param (see comment below)
+      std::vector<unsigned int> boundary_types = {1};
+      /*
+      From multimin.cpp:
+        Interval:                                       Transformation:
+        0 unconstrained                                 x=y
+        1 semi-closed right half line [ xmin,+infty )   x=xmin+y^2
+        2 semi-closed left  half line ( -infty,xmax ]   x=xmax-y^2
+        3 closed interval              [ xmin,xmax ]    x=SS+SD*sin(y)
+        4 open right half line        ( xmin,+infty )   x=xmin+exp(y)
+        5 open left  half line        ( -infty,xmax )   x=xmax-exp(y)
+        6 open interval                ( xmin,xmax )    x=SS+SD*tanh(y)
 
-      // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
-      multimin(n_profile_pars, &nuisances[0], &minus_bestfit_fval,
-               nullptr, nullptr, nullptr,
-               &_gsl_target_func, 
-               nullptr,  // 
-               nullptr,
+        where SS=.5(xmin+xmax) SD=.5(xmax-xmin)
+      */
+
+      // Call the optimiser
+      multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
+               &boundary_types[0], &nuisances_min[0], &nuisances_max[0],
+               &_gsl_target_func,
+               nullptr,  // If available: function returning the gradient of the target function
+               nullptr,  // If available: function returning the value *and* the gradient of the target function
                &fpars, oparams);
 
       double a_bestfit = nuisances[0];
-      double total_loglike_bestfit = -minus_bestfit_fval;
+      double loglike_bestfit = -minus_loglike_bestfit;
       
-      cout << "DEBUG: a_bestfit, total_loglike_bestfit: " << a_bestfit << ", " << total_loglike_bestfit << endl;
+      // cout << "DEBUG: a_bestfit, loglike_bestfit: " << a_bestfit << ", " << loglike_bestfit << endl;
 
       // Save the best-fit parameter value
       result["a"] = a_bestfit;

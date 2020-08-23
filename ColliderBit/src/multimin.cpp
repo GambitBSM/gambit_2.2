@@ -769,7 +769,10 @@ multimin(size_t n,double *x,double *fun,
 
 
 	if(status == GSL_ENOPROG){
-	  fprintf(stderr,"#    status: %s\n",gsl_strerror (status));
+    // AK: Switched off this output for verbosity == 0
+    if(oparams.verbosity>0){
+  	  fprintf(stderr,"#    status: %s\n",gsl_strerror (status));
+    }
 	  break;
 	}
 
