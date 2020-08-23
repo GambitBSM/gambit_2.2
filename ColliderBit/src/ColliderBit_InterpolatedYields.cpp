@@ -176,8 +176,12 @@ namespace Gambit
 
 
     // A function to modify the DMEFT LHC signal prediction for ETmiss bins where ETmiss > Lambda
+    // ALT: 1
     void signal_modifier_function(AnalysisData& adata, float lambda, float a)
     {
+      static int n_calls = 0;
+      n_calls++;
+
       int met_bin_size;
       const double* METMINS;
 
@@ -199,18 +203,28 @@ namespace Gambit
         ColliderBit_error().raise(LOCAL_INFO, "Unknown analysis encountered in signal_modifier_function!");
       }
 
+      // // DEBUG:
+      // cout << "DEBUG: met_bin_size = " << met_bin_size << endl;
+
       // Modify signals
       for (int bin_index = 0; bin_index < met_bin_size; bin_index++ ) 
       {
-        double MET_min = METMINS_ATLAS[bin_index];
-        double weight = pow(MET_min / lambda, -a);
+        double MET_min = METMINS[bin_index];
+        double weight = 1.0;
 
         if (lambda < MET_min)
         {
-          SignalRegionData& srdata = adata[bin_index];
-          srdata.n_signal *= weight;
-          srdata.n_signal_at_lumi *= weight;
+          weight = pow(MET_min / lambda, -a);
+
+          if (weight < 1.0e-8) { weight = 0.0; }
         }
+
+        SignalRegionData& srdata = adata[bin_index];
+        srdata.n_signal *= weight;
+        srdata.n_signal_at_lumi *= weight;
+
+        // cout.precision(4);
+        // cout << "DEBUG: n_calls, bin_index, MET_min, a, weight : " << n_calls << ", " << bin_index << ", " << MET_min << ", " << a << ", " << weight << endl;
       } 
     }
 
@@ -1986,13 +2000,15 @@ namespace Gambit
       // NOTE: Currently we only profile one parameter ('a'), but the 
       //       below setup can  easily be extended to more parameters
       static const double init_value_a = runOptions->getValueOrDef<double>(2.0, "init_value_a");
+      static const pair<double,double> range_a_default(0.0, 1000.0);
+      static const pair<double,double> range_a = runOptions->getValueOrDef<pair<double,double>>(range_a_default, "range_a");
       
       std::vector<double> nuisances = {init_value_a};  // set initial guess for each nuisance parameter
-      std::vector<double> nuisances_min = {0.0};   // min value for each nuisance parameter
-      std::vector<double> nuisances_max = {1.0e6}; // max value for each nuisance parameter
+      std::vector<double> nuisances_min = {range_a.first};   // min value for each nuisance parameter
+      std::vector<double> nuisances_max = {range_a.second}; // max value for each nuisance parameter
       const size_t n_profile_pars = nuisances.size();
       // Choose boundary type for each nuisance param (see comment below)
-      std::vector<unsigned int> boundary_types = {1};
+      std::vector<unsigned int> boundary_types = {6};
       /*
       From multimin.cpp:
         Interval:                                       Transformation:
