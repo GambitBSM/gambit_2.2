@@ -755,7 +755,6 @@ namespace Gambit
     }
 
 
-    // _Anders
     /// Loop over all analyses and fill a map of AnalysisLogLikes objects
     void calc_LHC_LogLikes(map_str_AnalysisLogLikes& result)
     {

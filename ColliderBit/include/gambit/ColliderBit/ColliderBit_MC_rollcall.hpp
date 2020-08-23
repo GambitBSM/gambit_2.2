@@ -179,12 +179,32 @@
     DEPENDENCY(IdentityAnalysisNumbers, AnalysisDataPointers)
     #undef FUNCTION
 
+    #define FUNCTION DMEFT_results_profiled
+    START_FUNCTION(AnalysisDataPointers)
+    DEPENDENCY(AllAnalysisNumbersUnmodified, AnalysisDataPointers)
+    DEPENDENCY(DMEFT_profiled_LHC_nuisance_params, map_str_dbl)
+    DEPENDENCY(DMEFT_spectrum, Spectrum)
+    ALLOW_MODELS(DMEFT)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY AllAnalysisNumbersUnmodified
     #define FUNCTION DMEFT_results
     START_FUNCTION(AnalysisDataPointers)
     DEPENDENCY(DMEFT_spectrum, Spectrum)
     ALLOW_MODELS(DMEFT)
     #undef FUNCTION
   #undef CAPABILITY
+
+  #define CAPABILITY DMEFT_profiled_LHC_nuisance_params
+    #define FUNCTION calc_DMEFT_profiled_LHC_nuisance_params
+    START_FUNCTION(map_str_dbl)
+    DEPENDENCY(AllAnalysisNumbersUnmodified, AnalysisDataPointers)
+    DEPENDENCY(DMEFT_spectrum, Spectrum)
+    ALLOW_MODELS(DMEFT)
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
   /// Extract the signal predictions and uncertainties for all analyses
   #define CAPABILITY LHC_signals

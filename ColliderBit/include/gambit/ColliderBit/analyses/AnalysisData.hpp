@@ -127,16 +127,16 @@ namespace Gambit {
       }
 
       // A copy constructor only used for debugging
-      #ifdef ANALYSISDATA_DEBUG
+      // #ifdef ANALYSISDATA_DEBUG
       AnalysisData(const AnalysisData& copy) :
         analysis_name(copy.analysis_name),
         srdata(copy.srdata),
         srdata_identifiers(copy.srdata_identifiers),
         srcov(copy.srcov)
       {
-          std::cerr << "DEBUG: AnalysisData: " << this << " - Copy-constructed from " << &copy << std::endl;
+          // std::cerr << "DEBUG: AnalysisData: " << this << " - Copy-constructed from " << &copy << std::endl;
       }
-      #endif
+      // #endif
 
       // A destructor only used for debugging
       #ifdef ANALYSISDATA_DEBUG

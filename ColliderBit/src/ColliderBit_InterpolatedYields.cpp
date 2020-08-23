@@ -55,6 +55,10 @@ namespace Gambit
 
   namespace ColliderBit
   {  
+    // Forward declaration of funtion in LHC_likelihoods
+    AnalysisLogLikes calc_loglikes_for_analysis(const AnalysisData&, bool, bool, bool);
+
+
     // ---------------------------------- INTERPOLATION FUNCTIONS ------------------------------------------------
       const char* colliderbitdata_path = GAMBIT_DIR "/ColliderBit/data/"; 
       #define PI 3.14159265
@@ -170,38 +174,43 @@ namespace Gambit
     }
 
 
-    void SignalModifierFunction(double * signalmodifier, float lambda , float a, const char* experiment)
+    // A function to modify the DMEFT LHC signal prediction for ETmiss bins where ETmiss > Lambda
+    void signal_modifier_function(AnalysisData& adata, float lambda, float a)
     {
-        int met_bin_size;
+      int met_bin_size;
+      const double* METMINS;
 
-        if (strcmp(experiment,"ATLAS") == 0)
+      // Choose experiment
+      if (adata.analysis_name.find("ATLAS") != string::npos)
+      {
+        bool is_ATLAS = true;
+        METMINS = METMINS_ATLAS;
+        met_bin_size = atlas_bin_size;
+      }
+      else if (adata.analysis_name.find("CMS") != string::npos)
+      {
+        bool is_CMS = false;
+        METMINS = METMINS_CMS;
+        met_bin_size = cms_bin_size;
+      }
+      else
+      {
+        ColliderBit_error().raise(LOCAL_INFO, "Unknown analysis encountered in signal_modifier_function!");
+      }
+
+      // Modify signals
+      for (int bin_index = 0; bin_index < met_bin_size; bin_index++ ) 
+      {
+        double MET_min = METMINS_ATLAS[bin_index];
+        double weight = pow(MET_min / lambda, -a);
+
+        if (lambda < MET_min)
         {
-          met_bin_size = atlas_bin_size;
+          SignalRegionData& srdata = adata[bin_index];
+          srdata.n_signal *= weight;
+          srdata.n_signal_at_lumi *= weight;
         }
-        else if (strcmp(experiment,"CMS") == 0){
-          met_bin_size = cms_bin_size;
-        }
-
-        for (int Emiss = 0; Emiss < met_bin_size; Emiss++ ) 
-        {
-            if(strcmp(experiment,"ATLAS") == 0){
-              if (lambda < METMINS_ATLAS[Emiss]){
-                signalmodifier[Emiss] = pow(METMINS_ATLAS[Emiss]/lambda,-a);
-            }
-              else{
-                signalmodifier[Emiss] = 1;
-              }
-            } 
-
-            if(strcmp(experiment,"CMS") == 0){
-              if (lambda < METMINS_CMS[Emiss]){
-                signalmodifier[Emiss] = pow(METMINS_ATLAS[Emiss]/lambda,-a);
-            }
-              else{
-                signalmodifier[Emiss] = 1;
-              }
-            }
-         }
+      } 
     }
 
 
@@ -1683,7 +1692,7 @@ namespace Gambit
 
     }
 
-    void DMEFT_results(AnalysisDataPointers &result)
+    void DMEFT_results(AnalysisDataPointers& result)
     { 
 
       // auto start_wall_clock = std::chrono::steady_clock::now();
@@ -1871,7 +1880,116 @@ namespace Gambit
       // cout << fixed << setprecision(8) << "Excecution time for DMEFT_results: " << ((finish_wall_clock - start_wall_clock) / std::chrono::nanoseconds(1))/(1E9) << '\n';
     };
          
-     
+
+    void calc_DMEFT_profiled_LHC_nuisance_params(map_str_dbl& result)
+    {
+      using namespace Pipes::calc_DMEFT_profiled_LHC_nuisance_params;
+
+      // Steal the list of skipped analyses from the options from the "calc_combined_LHC_LogLike" function
+      std::vector<str> default_skip_analyses;  // The default is empty lists of analyses to skip
+      static const std::vector<str> skip_analyses = Pipes::calc_combined_LHC_LogLike::runOptions->getValueOrDef<std::vector<str> >(default_skip_analyses, "skip_analyses");
+      
+      // Clear previous result map
+      result.clear();
+
+      // Get Lambda
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      float lambda = spec.get(Par::mass1, "Lambda");
+
+      // 
+      // Do profiling
+      // 
+
+      // Currently this is just a silly grid scan in 'a'. Will replace by a GLS minimizer
+      float a = 1.0;
+      float delta_a = 0.1;
+      float a_bestfit = a;
+      double total_loglike_bestfit = -50000;
+
+      AnalysisLogLikes analoglikes;
+
+      while (a < 100.0)
+      {
+        double total_loglike = 0.0;
+
+        // Create a vector with temp AnalysisData instances by copying the original ones
+        vector<AnalysisData> temp_adata_vec;
+        for (AnalysisData* adata_ptr : *Dep::AllAnalysisNumbersUnmodified)
+        {
+
+          const string& analysis_name = adata_ptr->analysis_name;
+
+          // If the analysis name is in skip_analyses, don't take it into account in this profiling
+          if (std::find(skip_analyses.begin(), skip_analyses.end(), analysis_name) != skip_analyses.end())
+          {
+            cout << "DEBUG: Leaving out analysis " << analysis_name << " from profiling" << endl;
+            continue;
+          }
+
+          // Make a copy of the AnalysisData instance that adata_ptr points to
+          temp_adata_vec.push_back( AnalysisData(*adata_ptr) );
+        }
+
+        // Now loop over all the temp AnalysisData instances and calculate the total loglike for the current a-value
+        for (AnalysisData& adata : temp_adata_vec)
+        {
+          const string& analysis_name = adata.analysis_name;
+
+          signal_modifier_function(adata, lambda, a);
+          analoglikes = calc_loglikes_for_analysis(adata, true, false, false);
+          cout << "DEBUG: " << analysis_name << ": a, analoglikes.combination_loglike : " << a << ", " << analoglikes.combination_loglike << endl;
+
+          total_loglike += analoglikes.combination_loglike;
+        }
+
+        // Save values if this is the current best-fit a-value
+        if (total_loglike > total_loglike_bestfit)
+        {
+          total_loglike_bestfit = total_loglike;
+          a_bestfit = a;
+        }
+
+        cout << "DEBUG: a, total_loglike: " << a << ", " << total_loglike << endl;
+
+        // Next step
+        a += delta_a;
+      }
+
+      cout << "DEBUG: " << endl;
+      cout << "DEBUG: a_bestfit: " << a_bestfit << endl;
+      cout << "DEBUG: total_loglike_bestfit: " << total_loglike_bestfit << endl;
+
+      // Save the best-fit parameter value
+      result["a"] = a_bestfit;
+    }
+
+
+    void DMEFT_results_profiled(AnalysisDataPointers& result)
+    {
+      using namespace Pipes::DMEFT_results_profiled;
+
+      // Clear previous vectors, etc.
+      result.clear();
+
+      // Get the original AnalysisDataPointers that we will adjust
+      result = *Dep::AllAnalysisNumbersUnmodified;
+
+      // Get the best-fit nuisance parameter(s)
+      map_str_dbl bestfit_nuisance_pars = *Dep::DMEFT_profiled_LHC_nuisance_params;
+      float a_bestfit = bestfit_nuisance_pars.at("a");
+
+      // Get Lambda
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      float lambda = spec.get(Par::mass1, "Lambda");
+
+      // Recalculate AnalysisData instances in "result", using the best-fit a-value
+      for (AnalysisData* adata_ptr : result)
+      {
+        signal_modifier_function(*adata_ptr, lambda, a_bestfit);
+      }
+    }
+
+   
     void InterpolatedMCInfo(MCLoopInfo& result)
     {
       // cout << "Have run the void..."<<endl;

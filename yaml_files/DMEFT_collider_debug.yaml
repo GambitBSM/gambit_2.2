@@ -15,9 +15,9 @@ Parameters:
 
   DMEFT:
     # DM mass
-    mchi: 451.7411951062778
+    mchi: 200.0  # 451.7411951062778
     # Scale of new physics
-    Lambda: 2000.
+    Lambda: 900.
     # EM interactions (only turn on at loop-level -- not concerned with these)
     C51: 0.
     C52: 0.
@@ -157,6 +157,9 @@ ObsLikes:
 
   - purpose:    likelihood_details
     capability: LHC_LogLike_SR_indices
+
+  - purpose:    Observable
+    capability: DMEFT_profiled_LHC_nuisance_params
 
 Rules:
 
