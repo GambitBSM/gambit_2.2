@@ -6,65 +6,90 @@
 
 
 Parameters:
+    DMEFT:
+      mchi: 332.1128381358704
+      Lambda: 700.0 #[670, 672.5, 675, 677.5, 680, 682.5, 685, 687.5, 690, 692.5, 695, 697.5, 700, 702.5, 705, 710, 720, 730, 739, 741, 750, 760, 770, 780, 789, 791, 799, 801, 810, 820, 830, 839, 841, 850, 860, 870, 880, 890, 899, 901, 910, 920, 930, 940, 950, 959, 961, 970, 980, 990, 999, 1001, 1010, 1020]
+      C51: 0.0
+      C61: -0.00010258182600253463
+      C62: 0.22364830114644185
+      C63: 0.17836385329472115
+      C64: -0.0021231804192201054
+      C52: 0.0
+      C710: 0.0
+      C71: 0.0
+      C72: 0.0
+      C73: 0.0
+      C74: 0.0
+      C75: 0.0
+      C76: 0.0
+      C77: 0.0
+      C78: 0.0
+      C79: 0.0
+    # Halo_gNFW_rho0:
+    #   alpha: 1.0
+    #   beta: 3.0
+    #   gamma: 1.0
+    #   r_sun: 8.5
+    #   rho0: 0.4006256826700886
+    #   rs: 20.0
+    #   v0: 240.00417916108398
+    #   vesc: 533.0396709933165
+    #   vrot: 240.00417916108398
+    StandardModel_Higgs:
+      mH: 125.09
+    StandardModel_SLHA2:
+      CKM_A: 0.814
+      CKM_etabar: 0.353
+      CKM_lambda: 0.22537
+      CKM_rhobar: 0.117
+      GF: 1.1663787e-05
+      alpha1: 0.0
+      alpha2: 0.0
+      alphaS: 0.1181
+      alphainv: 127.95
+      delta13: 0.0
+      mBmB: 4.18
+      mCmC: 1.28
+      mD: 0.0047
+      mE: 0.000510998946
+      mMu: 0.105658375
+      mNu1: 0.0
+      mNu2: 0.0
+      mNu3: 0.0
+      mS: 0.096
+      mT: 173.3403202496713
+      mTau: 1.77686
+      mU: 0.0022
+      mZ: 91.1876
+      theta12: 0.58376
+      theta13: 0.15495
+      theta23: 0.76958
+    # nuclear_params_ChPT:
+    #   B0md: 0.00133
+    #   B0ms: 0.268
+    #   B0mu: 0.0061
+    #   BT10dp: 0.24
+    #   BT10s: 0.0
+    #   BT10up: 3.0
+    #   Deltadp: -0.376
+    #   Deltas: -0.031
+    #   Deltaup: 0.897
+    #   F2sp: -0.064
+    #   an: -1.913
+    #   ap: 1.793
+    #   gA: 1.2723
+    #   gTd: -0.204
+    #   gTs: 0.00032
+    #   gTu: 0.794
+    #   mG: 0.848
+    #   mun: -1.913
+    #   mup: 2.793
+    #   sigmadn: 0.036
+    #   sigmadp: 0.032
+    #   sigmas: 0.0413
+    #   sigmaun: 0.015
+    #   sigmaup: 0.017
 
-  # SM parameters.
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
-
-  StandardModel_Higgs:
-     mH: 125.09
-
-  DMEFT:
-    # DM mass
-    mchi: 350.0  # 451.7411951062778
-    # Scale of new physics
-    Lambda: 780 # 787.11
-      # range: [780, 1100] # 801.
-    # EM interactions (only turn on at loop-level -- not concerned with these)
-    C51: 0.
-    C52: 0.
-    # Dim 6 -- qq chi chi bilinears
-    # vector vector
-    C61: 0
-    # axial-vector vector
-    C62: 0
-    # vector axial-vector
-    #C63: -0.3584000723798635
-    #C63: -0.14000002827
-    C63: 0.5591569543706703
-    #C63: -10
-    # axial-vector axial-vector
-    C64: 0
-    # Dim 7 -- gluons
-    C71: 0
-    C72: 0
-    C73: 0
-    C74: 0
-    # Dim 7 -- Higgs induced bilinears
-    # Scalar scalar
-    C75: 0
-    # Pseudoscalar scalar
-    C76: 0
-    # Scalar pseudoscalar
-    C77: 0
-    # Pseudoscalar pseudoscalar
-    C78: 0
-    # Dim 7 -- tensor currents
-    # sigma sigma
-    C79: 0
-    # sigma*ig5 sigma
-    C710: 0
-
-  # # NFW with standard & central values for prelims
-  # Halo_gNFW_rho0:
-  #   rho0: 0.4
-  #   v0: 240
-  #   vesc: 533
-  #   vrot: 240
-  #   rs: 20.0
-  #   r_sun: 8.5
-  #   alpha: 1
-  #   beta: 3
-  #   gamma: 1
 
 Priors:
 
@@ -87,9 +112,16 @@ Scanner:
 
   scanners:
 
+    # grid:
+    #   plugin: grid
+    #   version: ">=1.0"
+    #   like: LogLike
+    #   grid_pts: [5, 3]
+    #   parameters: ["EggBox::param_1", "EggBox::param_0"]
+
     random:
       plugin: random
-      point_number: 1
+      point_number: 1 #54
       output_file:  output
       like:  LogLike
       files:
@@ -231,6 +263,7 @@ Rules:
   - capability: DMEFT_profiled_LHC_nuisance_params
     function: calc_DMEFT_profiled_LHC_nuisance_params
     options:
+      # use_fixed_value_a: 100.0  # This will switch off the profling 
       init_value_a: 10.0
       range_a: [0.0, 1000.0]
       nuisance_prof_initstep: 0.1

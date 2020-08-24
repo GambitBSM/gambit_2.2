@@ -51,6 +51,10 @@ using namespace std;
 
 #include "gambit/ColliderBit/multimin.h"
 
+// #define COLLIDERBIT_DEBUG_PROFILING
+// #define COLLIDERBIT_DEBUG
+#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
+
 namespace Gambit
 {
 
@@ -1948,6 +1952,27 @@ namespace Gambit
     {
       using namespace Pipes::calc_DMEFT_profiled_LHC_nuisance_params;
 
+      static bool first = true;
+
+      // Check if user has requested a fixed value for the a parameter
+      static bool use_fixed_value_a = false;
+      static double fixed_a = -1e99;
+      if (first)
+      {
+        if (runOptions->hasKey("use_fixed_value_a"))
+        {
+          use_fixed_value_a = true;
+          fixed_a = runOptions->getValue<double>("use_fixed_value_a");
+        }
+        first = false;
+      }
+
+      if (use_fixed_value_a)
+      {
+        result["a"] = fixed_a;
+        return;
+      }
+
       // Steal the list of skipped analyses from the options from the "calc_combined_LHC_LogLike" function
       std::vector<str> default_skip_analyses;  // The default is empty lists of analyses to skip
       static const std::vector<str> skip_analyses = Pipes::calc_combined_LHC_LogLike::runOptions->getValueOrDef<std::vector<str> >(default_skip_analyses, "skip_analyses");
@@ -2038,6 +2063,48 @@ namespace Gambit
 
       // Save the best-fit parameter value
       result["a"] = a_bestfit;
+
+
+      // DEBUG: Do a grid scan of a and Lambda parameter to investigate the profiled likelihood function
+      #ifdef COLLIDERBIT_DEBUG_PROFILING
+        double log10_a_min = -1.0;
+        double log10_a_max = 3.0;
+        double step_log10_a = 0.02;
+
+        double log10_a = log10_a_min;
+        vector<double> a = { pow(10., log10_a) };
+        double ll_val = 0.0;
+
+        double lambda_min = 670.0;
+        double lambda_max = 1070.0;
+        double step_lambda = 2.0;
+        double lambda = lambda_min;
+
+        ofstream f;
+        f.open("lambda_a_loglike.dat");
+        
+        while (lambda <= lambda_max)
+        {
+          log10_a = log10_a_min;
+
+          while (log10_a <= log10_a_max)
+          {
+            cout << "DEBUG: lambda, log10_a : " << lambda << ", " << log10_a << endl;
+            a[0] = pow(10., log10_a);
+
+            fpars.lambda = lambda;
+
+            _gsl_target_func(n_profile_pars, &a[0], &fpars, &ll_val);
+
+            f << fixed << setprecision(8) << fpars.lambda << "  " << a[0] << "  " << ll_val << "\n";
+
+            log10_a += step_log10_a;
+          }
+          lambda += step_lambda;
+        }
+        f.close();
+      #endif
+
     }
 
 
