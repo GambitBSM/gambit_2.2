@@ -53,7 +53,7 @@ using namespace std;
 
 // #define COLLIDERBIT_DEBUG_PROFILING
 // #define COLLIDERBIT_DEBUG
-#define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
+// #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
 
 namespace Gambit
 {
@@ -2024,45 +2024,67 @@ namespace Gambit
       // Nuisance parameter(s) to be profiled 
       // NOTE: Currently we only profile one parameter ('a'), but the 
       //       below setup can  easily be extended to more parameters
-      static const double init_value_a = runOptions->getValueOrDef<double>(2.0, "init_value_a");
-      static const pair<double,double> range_a_default(0.0, 1000.0);
-      static const pair<double,double> range_a = runOptions->getValueOrDef<pair<double,double>>(range_a_default, "range_a");
+      static const vector<double> init_values_a = runOptions->getValue<vector<double>>("init_values_a");
+      static const pair<double,double> range_a = runOptions->getValue<pair<double,double>>("range_a");
       
-      std::vector<double> nuisances = {init_value_a};  // set initial guess for each nuisance parameter
-      std::vector<double> nuisances_min = {range_a.first};   // min value for each nuisance parameter
-      std::vector<double> nuisances_max = {range_a.second}; // max value for each nuisance parameter
-      const size_t n_profile_pars = nuisances.size();
-      // Choose boundary type for each nuisance param (see comment below)
-      std::vector<unsigned int> boundary_types = {6};
-      /*
-      From multimin.cpp:
-        Interval:                                       Transformation:
-        0 unconstrained                                 x=y
-        1 semi-closed right half line [ xmin,+infty )   x=xmin+y^2
-        2 semi-closed left  half line ( -infty,xmax ]   x=xmax-y^2
-        3 closed interval              [ xmin,xmax ]    x=SS+SD*sin(y)
-        4 open right half line        ( xmin,+infty )   x=xmin+exp(y)
-        5 open left  half line        ( -infty,xmax )   x=xmax-exp(y)
-        6 open interval                ( xmin,xmax )    x=SS+SD*tanh(y)
+      // How many times should we run the optimiser?
+      static const size_t n_runs = init_values_a.size();
+      size_t run_i = 0;
+      double current_bestfit_a = init_values_a.at(0);
+      double current_bestfit_loglike = -minus_loglike_bestfit;
 
-        where SS=.5(xmin+xmax) SD=.5(xmax-xmin)
-      */
+      // Do profiling n_runs times
+      while (run_i < n_runs)
+      {
+        std::vector<double> nuisances = {init_values_a[run_i]};  // set initial guess for each nuisance parameter
+        std::vector<double> nuisances_min = {range_a.first};   // min value for each nuisance parameter
+        std::vector<double> nuisances_max = {range_a.second}; // max value for each nuisance parameter
+        const size_t n_profile_pars = nuisances.size();
+        // Choose boundary type for each nuisance param (see comment below)
+        std::vector<unsigned int> boundary_types = {6};
+        /*
+        From multimin.cpp:
+          Interval:                                       Transformation:
+          0 unconstrained                                 x=y
+          1 semi-closed right half line [ xmin,+infty )   x=xmin+y^2
+          2 semi-closed left  half line ( -infty,xmax ]   x=xmax-y^2
+          3 closed interval              [ xmin,xmax ]    x=SS+SD*sin(y)
+          4 open right half line        ( xmin,+infty )   x=xmin+exp(y)
+          5 open left  half line        ( -infty,xmax )   x=xmax-exp(y)
+          6 open interval                ( xmin,xmax )    x=SS+SD*tanh(y)
 
-      // Call the optimiser
-      multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
-               &boundary_types[0], &nuisances_min[0], &nuisances_max[0],
-               &_gsl_target_func,
-               nullptr,  // If available: function returning the gradient of the target function
-               nullptr,  // If available: function returning the value *and* the gradient of the target function
-               &fpars, oparams);
+          where SS=.5(xmin+xmax) SD=.5(xmax-xmin)
+        */
 
-      double a_bestfit = nuisances[0];
-      double loglike_bestfit = -minus_loglike_bestfit;
-      
-      // cout << "DEBUG: a_bestfit, loglike_bestfit: " << a_bestfit << ", " << loglike_bestfit << endl;
+        // Call the optimiser
+        multimin(n_profile_pars, &nuisances[0], &minus_loglike_bestfit,
+                 &boundary_types[0], &nuisances_min[0], &nuisances_max[0],
+                 &_gsl_target_func,
+                 nullptr,  // If available: function returning the gradient of the target function
+                 nullptr,  // If available: function returning the value *and* the gradient of the target function
+                 &fpars, oparams);
 
-      // Save the best-fit parameter value
-      result["a"] = a_bestfit;
+        double run_i_bestfit_a = nuisances[0];
+        double run_i_bestfit_loglike = -minus_loglike_bestfit;
+        
+        // Save info for this run
+        result["a_run" + std::to_string(run_i)] = run_i_bestfit_a;
+        result["loglike_run" + std::to_string(run_i)] = run_i_bestfit_loglike;
+
+        // Update the global result?
+        if (run_i_bestfit_loglike > current_bestfit_loglike)
+        {
+          current_bestfit_loglike = run_i_bestfit_loglike;
+          current_bestfit_a = run_i_bestfit_a;
+        }
+
+        run_i++;
+
+      } // end optimisation loop
+
+      // Save the overall best-fit results
+      result["a"] = current_bestfit_a;
+      result["loglike"] = current_bestfit_loglike;
 
 
       // DEBUG: Do a grid scan of a and Lambda parameter to investigate the profiled likelihood function

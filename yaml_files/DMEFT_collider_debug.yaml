@@ -8,7 +8,7 @@
 Parameters:
     DMEFT:
       mchi: 332.1128381358704
-      Lambda: 700.0 #[670, 672.5, 675, 677.5, 680, 682.5, 685, 687.5, 690, 692.5, 695, 697.5, 700, 702.5, 705, 710, 720, 730, 739, 741, 750, 760, 770, 780, 789, 791, 799, 801, 810, 820, 830, 839, 841, 850, 860, 870, 880, 890, 899, 901, 910, 920, 930, 940, 950, 959, 961, 970, 980, 990, 999, 1001, 1010, 1020]
+      Lambda: 930. #1100. #870.
       C51: 0.0
       C61: -0.00010258182600253463
       C62: 0.22364830114644185
@@ -264,11 +264,11 @@ Rules:
     function: calc_DMEFT_profiled_LHC_nuisance_params
     options:
       # use_fixed_value_a: 100.0  # This will switch off the profling 
-      init_value_a: 10.0
+      init_values_a: [1.0, 10.0, 500.]
       range_a: [0.0, 1000.0]
       nuisance_prof_initstep: 0.1
       nuisance_prof_convtol: 0.1
-      nuisance_prof_maxsteps: 20
+      nuisance_prof_maxsteps: 15
       nuisance_prof_convacc: 0.1
       nuisance_prof_simplexsize: 1e-5
       nuisance_prof_method: 6  # See list of GSL optimiser methods below. NOTE: Here we can't use a gradient-based method!
