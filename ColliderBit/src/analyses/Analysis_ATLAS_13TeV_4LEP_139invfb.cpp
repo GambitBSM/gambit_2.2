@@ -152,7 +152,7 @@ namespace Gambit
       {
 
         set_analysis_name("ATLAS_13TeV_4LEP_139invfb");
-        set_luminosity(36.1);
+        set_luminosity(139.);
 
         #ifdef CHECK_CUTFLOW
           NCUTS = 11;
