@@ -277,8 +277,18 @@ START_MODULE
     #define FUNCTION get_semi_ann_MicrOmegas
       START_FUNCTION(double)
       DEPENDENCY(Xf, double)
-      BACKEND_REQ(get_oneChannel, (gimmemicro) , double,  (double,double,char*,char*,char*,char*))
+      BACKEND_REQ(get_oneChannel, (gimmemicro), double, (double,double,char*,char*,char*,char*))
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z3),(gimmemicro))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY vSigma_freezeout
+  START_CAPABILITY
+    #define FUNCTION vSigma_freezeout_MicrOmegas
+      START_FUNCTION(double)
+      DEPENDENCY(Xf, double)
+      DEPENDENCY(mwimp, double)
+      BACKEND_REQ(vSigma, (), double, (double, double, int))
     #undef FUNCTION
   #undef CAPABILITY
 
