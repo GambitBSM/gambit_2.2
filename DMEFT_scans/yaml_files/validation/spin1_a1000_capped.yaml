@@ -1,16 +1,17 @@
 ##########################################################################
-## GAMBIT configuration for diver scan of the DMEFT model (preliminary)
+## GAMBIT configuration for diver scan of the DMEFT model
 ##
 ## Contains relic density, gamma rays, direct detection, monojets
 ##
-## Only dim6 operators
+## Only spin-1 operators C61-64
+## No nuisance parameters.
 ##########################################################################
 
 
 Parameters:
 
   # SM parameters.
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_mtop.yaml
+  StandardModel_SLHA2: !import ../include/StandardModel_SLHA2_defaults.yaml
 
   StandardModel_Higgs:
      mH: 125.09
@@ -30,7 +31,7 @@ Parameters:
     # Dim 6 -- qq chi chi bilinears
     # vector vector
     C61:
-      range: [-12.56637, 12.56637]
+      range: [-1, 1]
     # axial-vector vector
     C62: 
       range: [-12.56637, 12.56637]
@@ -62,14 +63,13 @@ Parameters:
 
   # NFW profile
   Halo_gNFW_rho0:
-    rho0:
-      range: [0.2, 0.8]
-    v0:
-      range: [216, 264]
-    vesc:
-      range: [437, 629]
-    vrot:
-      same_as: Halo_gNFW_rho0::v0
+    rho0: 0.3
+      # range: [0.2, 0.8]
+    v0: 240
+      # range: [216, 264]
+    vesc: 533
+      # range: [437, 629]
+    vrot: 240
     rs: 20.0
     r_sun: 8.5
     alpha: 1
@@ -77,7 +77,7 @@ Parameters:
     gamma: 1
 
   # Chiral nuclear parameters for DirectDM
-  nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
+  nuclear_params_ChPT: !import ../include/nuclear_params_ChPT_defaults.yaml
 
 Priors:
 
@@ -87,7 +87,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim6_varying_lambda_diver.hdf5"
+    output_file: "spin1_a1000_capped.hdf5"
     delete_file_on_restart: false
     buffer_length: 1000
     group: "/DMEFT"
@@ -159,21 +159,25 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
-  # Nuisance parameters
+  # Get details about the nuisance parameter 'a'
+  - purpose:    Observable
+    capability: DMEFT_profiled_LHC_nuisance_params
+
+  # # Nuisance parameters
   
-  # DM Local Halo likelihoods
-  - capability: lnL_rho0
-    purpose: LogLike
+  # # DM Local Halo likelihoods
+  # - capability: lnL_rho0
+  #   purpose: LogLike
 
-  - capability: lnL_v0
-    purpose: LogLike
+  # - capability: lnL_v0
+  #   purpose: LogLike
 
-  - capability: lnL_vesc
-    purpose: LogLike
+  # - capability: lnL_vesc
+  #   purpose: LogLike
 
-  # Top mass
-  - capability: lnL_t_mass
-    purpose:    LogLike
+  # # Top mass
+  # - capability: lnL_t_mass
+  #   purpose:    LogLike
 
 Rules:
 
@@ -211,14 +215,10 @@ Rules:
   - capability: RunMC
     function: InterpolatedMCInfo 
     module: ColliderBit
-
-  # # Get analysis numbers from the DMEFT interpolated yields calculator
-  # - capability: AllAnalysisNumbers
-  #   function: DMEFT_results
     
   - capability: LHC_Combined_LogLike
     options:
-      cap_loglike: false
+      cap_loglike: true
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
 
@@ -240,6 +240,20 @@ Rules:
       nuisance_prof_method: 5
       nuisance_prof_verbosity: 0
 
+  - capability: DMEFT_profiled_LHC_nuisance_params
+    function: calc_DMEFT_profiled_LHC_nuisance_params
+    options:
+      use_fixed_value_a: 1000.0  # This will switch off the profiling
+      # init_values_a: [1.0, 2.0, 3.0]
+      range_a: [0.0, 4.0]
+      nuisance_prof_initstep: 0.1
+      nuisance_prof_convtol: 0.1
+      nuisance_prof_maxsteps: 15
+      nuisance_prof_convacc: 0.1
+      nuisance_prof_simplexsize: 1e-5
+      nuisance_prof_method: 6
+      nuisance_prof_verbosity: 0
+
   # Use the WIMP properties structure to get WIMP mass etc.
   - capability: mwimp
     function: mwimp_from_WIMPprops
@@ -252,19 +266,19 @@ Rules:
 
   # Halo nuisances settings
 
-  # Set v0 to 240 +/- 8 km/s based on Reid et al [arXiv:1401.5377]
-  - capability: lnL_v0
-    function: lnL_v0_gaussian
-    options:
-      v0_obs: 240
-      v0_obserr: 8
+  # # Set v0 to 240 +/- 8 km/s based on Reid et al [arXiv:1401.5377]
+  # - capability: lnL_v0
+  #   function: lnL_v0_gaussian
+  #   options:
+  #     v0_obs: 240
+  #     v0_obserr: 8
 
-  # Set vesc to 533 +/- 32 km/s based on RAVE survey [arXiv:1309.4293]
-  - capability: lnL_vesc
-    function: lnL_vesc_gaussian
-    options:
-      vesc_obs: 533
-      vesc_obserr: 31.9
+  # # Set vesc to 533 +/- 32 km/s based on RAVE survey [arXiv:1309.4293]
+  # - capability: lnL_vesc
+  #   function: lnL_vesc_gaussian
+  #   options:
+  #     vesc_obs: 533
+  #     vesc_obserr: 31.9
 
 Logger:
 
@@ -286,7 +300,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT_dim6_varying_lambda_diver/"
+  default_output_path: "runs/DMEFT/spin1/a1000_capped/"
 
   debug: false
   print_timing_data: false
