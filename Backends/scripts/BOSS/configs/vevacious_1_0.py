@@ -37,18 +37,18 @@ gambit_base_namespace  = ''
 # Use either absolute paths or paths relative to the main BOSS directory.
 
 input_files = [
-    '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/Vevacious/include/VevaciousPlusPlus.hpp',
+    '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/include/VevaciousPlusPlus.hpp',
 ]
 include_paths = [
-    '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/Vevacious/include',
-    '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/Vevacious/include/LHPC',
+    '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/include',
+    '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/include/LHPC',
     '../../../Backends/installed/minuit2/5.34.14/include',
 #    '../../../contrib/eigen3.2.8' # This should be learned from GAMBIT somehow to future-protect against version changes (and if user uses own library!)
 ]
 base_paths = ['../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version]
 
-header_files_to = '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/Vevacious/include'
-src_files_to    = '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/Vevacious/source'
+header_files_to = '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/include'
+src_files_to    = '../../../Backends/installed/'+gambit_backend_name+'/'+gambit_backend_version+'/source'
 
 load_classes = [
   'VevaciousPlusPlus::VevaciousPlusPlus'
