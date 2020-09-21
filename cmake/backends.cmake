@@ -1168,8 +1168,7 @@ if(NOT ditched_${name}_${ver})
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
                # COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/ModelFiles/
           INSTALL_COMMAND ""
-          #COMMAND cp -R ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0/ ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/vevacious_1_0/
-          #COMMAND cp  ${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}/VevaciousPlusPlus/GAMBIT/vevacious_1_0.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/
+          COMMAND mv ${dir}/lib/libVevaciousPlusPlus.dylib ${dir}/lib/libVevaciousPlusPlus.so
           )
   #add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
