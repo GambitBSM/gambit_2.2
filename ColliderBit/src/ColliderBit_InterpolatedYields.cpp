@@ -179,8 +179,12 @@ namespace Gambit
     }
 
 
-    // A function to modify the DMEFT LHC signal prediction for ETmiss bins where ETmiss > Lambda
-    // ALT: 1
+    // 
+    // Functions to modify the DMEFT LHC signal prediction for ETmiss bins where ETmiss > Lambda
+    // 
+
+    // Alt 1: Gradually turn off the ETmiss spectrum above Lambda by multiplying 
+    // the spectrum with (ETmiss/Lambda)^-a
     void signal_modifier_function(AnalysisData& adata, float lambda, float a)
     {
       static int n_calls = 0;
@@ -207,9 +211,6 @@ namespace Gambit
         ColliderBit_error().raise(LOCAL_INFO, "Unknown analysis encountered in signal_modifier_function!");
       }
 
-      // // DEBUG:
-      // cout << "DEBUG: met_bin_size = " << met_bin_size << endl;
-
       // Modify signals
       for (int bin_index = 0; bin_index < met_bin_size; bin_index++ ) 
       {
@@ -226,10 +227,51 @@ namespace Gambit
         SignalRegionData& srdata = adata[bin_index];
         srdata.n_signal *= weight;
         srdata.n_signal_at_lumi *= weight;
-
-        // cout.precision(4);
-        // cout << "DEBUG: n_calls, bin_index, MET_min, a, weight : " << n_calls << ", " << bin_index << ", " << MET_min << ", " << a << ", " << weight << endl;
       } 
+
+    }
+
+
+    // Alt 2: Simply put a hard cut-off in the ETmiss spectrum for ETmiss > Lambda
+    void signal_cutoff_function(AnalysisData& adata, float lambda)
+    {
+      static int n_calls = 0;
+      n_calls++;
+
+      int met_bin_size;
+      const double* METMINS;
+
+      // Choose experiment
+      if (adata.analysis_name.find("ATLAS") != string::npos)
+      {
+        bool is_ATLAS = true;
+        METMINS = METMINS_ATLAS;
+        met_bin_size = atlas_bin_size;
+      }
+      else if (adata.analysis_name.find("CMS") != string::npos)
+      {
+        bool is_CMS = false;
+        METMINS = METMINS_CMS;
+        met_bin_size = cms_bin_size;
+      }
+      else
+      {
+        ColliderBit_error().raise(LOCAL_INFO, "Unknown analysis encountered in signal_cutoff_function!");
+      }
+
+      // Modify signals with a hard cutoff
+      for (int bin_index = 0; bin_index < met_bin_size; bin_index++ ) 
+      {
+        double MET_min = METMINS[bin_index];
+
+        if (lambda < MET_min)
+        {
+          SignalRegionData& srdata = adata[bin_index];
+          srdata.n_signal = 0.0;
+          srdata.n_signal_at_lumi = 0.0;
+        }
+      } 
+
     }
 
 
@@ -2154,6 +2196,30 @@ namespace Gambit
         signal_modifier_function(*adata_ptr, lambda, a_bestfit);
       }
     }
+
+
+    void DMEFT_results_cutoff(AnalysisDataPointers& result)
+    {
+      using namespace Pipes::DMEFT_results_cutoff;
+
+      // Clear previous vectors, etc.
+      result.clear();
+
+      // Get the original AnalysisDataPointers that we will adjust
+      result = *Dep::AllAnalysisNumbersUnmodified;
+
+      // Get Lambda
+      const Spectrum& spec = *Dep::DMEFT_spectrum;
+      float lambda = spec.get(Par::mass1, "Lambda");
+
+      // Apply the function signal_cutoff_function to each of the 
+      // AnalysisData instances in "result"
+      for (AnalysisData* adata_ptr : result)
+      {
+        signal_cutoff_function(*adata_ptr, lambda);
+      }
+    }
+
 
    
     void InterpolatedMCInfo(MCLoopInfo& result)

@@ -186,6 +186,13 @@
     DEPENDENCY(DMEFT_spectrum, Spectrum)
     ALLOW_MODELS(DMEFT)
     #undef FUNCTION
+
+    #define FUNCTION DMEFT_results_cutoff
+    START_FUNCTION(AnalysisDataPointers)
+    DEPENDENCY(AllAnalysisNumbersUnmodified, AnalysisDataPointers)
+    DEPENDENCY(DMEFT_spectrum, Spectrum)
+    ALLOW_MODELS(DMEFT)
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY AllAnalysisNumbersUnmodified
