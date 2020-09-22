@@ -517,8 +517,7 @@ def getAcceptableConstructors(class_el, skip_copy_constructors=False):
     if 'members' in class_el.keys():
         for mem_id in class_el.get('members').split():
             el = gb.id_dict[mem_id]
-            if (el.tag == 'Constructor'): #and ('artificial' not in el.keys()):  #(el.get('explicit') == "1"): [TODO: Chris Chang]
-            #if (el.tag == 'Constructor') and (el.get('access') == 'public'): #and ('artificial' not in el.keys()):  #(el.get('explicit') == "1"):
+            if (el.tag == 'Constructor'): #and ('artificial' not in el.keys()):  #(el.get('explicit') == "1"):
                 if skip_copy_constructors and (el.get('id') == copy_constr_id):
                     pass
                 else:
@@ -555,7 +554,7 @@ def constrFactoryFunctionCode(class_el, class_name, indent=4, template_types=[],
 
     counter = 0
     for el in constructor_elements:
-        if (el.tag == 'Constructor') and ((el.get('access') == 'protected') or (el.get('access') == 'private')): #[TODO: Chris Chang]
+        if (el.tag == 'Constructor') and ((el.get('access') == 'protected') or (el.get('access') == 'private')):
             continue
 
         if add_include_statements:
