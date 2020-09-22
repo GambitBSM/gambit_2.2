@@ -16,9 +16,92 @@ else()
   set(dashi "-i")
 endif()
 
-# Check for Boost.  Not that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
+
+# Check for Python interpreter
+# We also need to search for PythonLibs before letting pybind11 look for them,
+# otherwise it seems to get it wrong.  Also, we need to add versions of python
+# greater than 3.3 manually, for compatibility with CMake 2.8.12.
+# If pybind11 is ditched, do not worry about PythonLibs
+set(Python_ADDITIONAL_VERSIONS 3.4 3.5 3.6 3.7)
+# If both FORCE_PYTHON2 and FORCE_PYTHON3 are set, throw error
+if (FORCE_PYTHON2 AND FORCE_PYTHON3)
+  message(FATAL_ERROR "Two different versions of python requested. Switch either FORCE_PYTHON2 or FORCE_PYTHON3 off.")
+endif()
+if (FORCE_PYTHON2)
+  message("${BoldYellow}   Python 2 requested; searching for Python 2.7${ColourReset}")
+  find_package(PythonInterp 2.7 REQUIRED)
+  if(NOT DITCH_PYBIND)
+    find_package(PythonLibs ${PYTHON_VERSION_STRING} EXACT)
+  endif()
+elseif (FORCE_PYTHON3)
+  message("${BoldYellow}   Python 3 requested; searching for Python 3.x${ColourReset}")
+  find_package(PythonInterp 3 REQUIRED)
+  if(NOT DITCH_PYBIND)
+    find_package(PythonLibs ${PYTHON_VERSION_STRING} EXACT)
+  endif()
+else()
+  find_package(PythonInterp 3)
+  if(PYTHONINTERP_FOUND AND NOT DITCH_PYBIND)
+    find_package(PythonLibs 3)
+  else()
+    message("${BoldYellow}   Python 3 not found, searching for Python 2.7${ColourReset}")
+    find_package(PythonInterp 2 REQUIRED)
+    if (PYTHON_VERSION_MINOR LESS 7)
+      message(FATAL_ERROR "\nGAMBIT requires Python 2.7.  \nIf you need to set the path to the Python interpreter manually, "
+                          "please use -DPYTHON_EXECUTABLE:FILEPATH=path/to/preferred/python.")
+    endif()
+    if(NOT DITCH_PYBIND)
+      find_package(PythonLibs 2)
+    endif()
+  endif()
+endif()
+message("${BoldYellow}   Using Python interpreter version ${PYTHON_VERSION_STRING} for build.${ColourReset}")
+
+# (JR) commented previous python search and replaced it by the one from gambit
+# CMakeLits.txt --> trying to make gum work with python 3 to avoid the stress of
+# having to force boost to make the python2 library if 3 is the default version
+# Python
+#FIND_PACKAGE(PythonInterp 2 REQUIRED)
+#if (PYTHON_VERSION_MAJOR GREATER 2)
+#  message(FATAL_ERROR "\n  GUM only supports Python 2.  \nIf you need to set the path to the Python interpreter manually, "
+#                      "please use -DPYTHON_EXECUTABLE:FILEPATH=path/to/preferred/python.")
+#endif()
+
+FIND_PACKAGE(PythonLibs REQUIRED)
+INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
+
+# Simple function to find specific Python modules
+macro(find_python_module module)
+  execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import ${module}" RESULT_VARIABLE return_value ERROR_QUIET)
+  if (NOT return_value)
+    message(STATUS "Found Python module ${module}.")
+    set(PY_${module}_FOUND TRUE)
+  else()
+    if(${ARGC} GREATER 1 AND ${ARGV1} STREQUAL "REQUIRED")
+      message(FATAL_ERROR "-- FAILED to find Python module ${module}.")
+    else()
+      message(STATUS "FAILED to find Python module ${module}.")
+    endif()
+  endif()
+endmacro()
+
+# Check for required Python libraries
+foreach(module yaml os re datetime sys getopt shutil itertools collections copy numpy distutils filecmp glob six argparse)
+  find_python_module(${module} REQUIRED)
+endforeach()
+
+
+
+# Search for Boost
+# Check for Boost.  Note that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
+FIND_PACKAGE(Boost 1.41)
+if(Boost_VERSION VERSION_LESS 1.67.0)
+  set(python_component python)
+else()
+  set(python_component python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} )
+endif()
 set(Boost_NO_BOOST_CMAKE ON)
-find_package(Boost 1.41 COMPONENTS "python" "filesystem")
+find_package(Boost 1.41 REQUIRED COMPONENTS python_component filesystem)
 if(Boost_FOUND)
   include_directories("${Boost_INCLUDE_DIR}")
 else()
@@ -123,35 +206,6 @@ set(HAVE_FEYNRULES 1)
 set(SARAH_PATH "${CMAKE_SOURCE_DIR}/contrib/SARAH/")
 set(HAVE_SARAH 1)
 
-# Python
-FIND_PACKAGE(PythonInterp 2 REQUIRED)
-if (PYTHON_VERSION_MAJOR GREATER 2)
-  message(FATAL_ERROR "\n  GUM only supports Python 2.  \nIf you need to set the path to the Python interpreter manually, "
-                      "please use -DPYTHON_EXECUTABLE:FILEPATH=path/to/preferred/python.")
-endif()
-FIND_PACKAGE(PythonLibs REQUIRED)
-INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
-
-# Simple function to find specific Python modules
-macro(find_python_module module)
-  execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import ${module}" RESULT_VARIABLE return_value ERROR_QUIET)
-  if (NOT return_value)
-    message(STATUS "Found Python module ${module}.")
-    set(PY_${module}_FOUND TRUE)
-  else()
-    if(${ARGC} GREATER 1 AND ${ARGV1} STREQUAL "REQUIRED")
-      message(FATAL_ERROR "-- FAILED to find Python module ${module}.")
-    else()
-      message(STATUS "FAILED to find Python module ${module}.")
-    endif()
-  endif()
-endmacro()
-
-# Check for required Python libraries
-foreach(module yaml os re datetime sys getopt shutil itertools collections copy numpy distutils filecmp glob six argparse)
-  find_python_module(${module} REQUIRED)
-endforeach()
-
 # Add -fPIC for 64 bit systems
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -182,7 +236,8 @@ FIND_PACKAGE(Boost 1.41)
 if(Boost_FOUND)
   set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined" )
   include_directories("${Boost_INCLUDE_DIR}")
-  FIND_PACKAGE(Boost 1.41.0 COMPONENTS python filesystem)
+  FIND_PACKAGE(Boost 1.41.0 REQUIRED COMPONENTS python_component)
+  FIND_PACKAGE(Boost 1.41.0 REQUIRED COMPONENTS filesystem)
   ADD_LIBRARY(fr SHARED src/feynrules.cpp src/math_package.cpp)
   TARGET_LINK_LIBRARIES(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
   ADD_LIBRARY(sarah SHARED src/sarah.cpp src/math_package.cpp)
