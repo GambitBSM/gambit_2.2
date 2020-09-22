@@ -2,10 +2,10 @@
 //   *********************************************
 ///  \file
 ///
-///  Central module file of CosmoBit.  
+///  Central module file of CosmoBit.
 ///  Calculates cosmology-related observables.
 ///
-///  Additionally, contains main routines for 
+///  Additionally, contains main routines for
 ///  interfacing to CLASS and MontePython.
 ///
 ///  Most of the model- or observable-specific code is
@@ -46,17 +46,19 @@
 ///  \date 2019 Jul
 ///  \date 2020 Apr
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Sep
+///
 ///  *********************************************
 
 #include <stdint.h> // save memory addresses as int
 #include <boost/algorithm/string/trim.hpp>
 
-#include "gambit/Utils/ascii_table_reader.hpp"
-#include "gambit/Utils/ascii_dict_reader.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/CosmoBit/CosmoBit_rollcall.hpp"
 #include "gambit/CosmoBit/CosmoBit_types.hpp"
-#include "gambit/CosmoBit/CosmoBit_utils.hpp"
+#include "gambit/Utils/numerical_constants.hpp"
 
 namespace Gambit
 {
@@ -76,19 +78,15 @@ namespace Gambit
       result = Pipes::set_k_pivot::runOptions->getValueOrDef<double>(0.05, "k_pivot");
     }
 
-    // return Neff for 3 SM neutrinos in the early Universe 
-    // see arXiv 1606.06986
+    // return Neff for 3 SM neutrinos (and no additional dark radiation or BSM physics) 
+    // in the early Universe, see arXiv 1606.06986
     void get_Neff_SM(double& result)
     {
       using namespace Pipes::get_Neff_SM;
 
-      // call a non-rollcalled function fixing Neff to 3.045
-      // -> the reason why it's not fixed here, is that 
-      // the SM value is also needed in the CosmoBit type 'SM_time_evo'
-      // where we don't have access to the result of a capability
-      result = CosmoBit_utils::set_Neff_SM_value();
+      result = Neff_SM;
     }
-    
+
     // returning the total mass sum of SM neutrino
     void get_mNu_tot(double& result)
     {
@@ -112,7 +110,7 @@ namespace Gambit
       auto isNonZero = [](double i) {return i > 0.;};
       int N_ncdm = std::count_if(nuMasses.begin(), nuMasses.end(), isNonZero);
 
-      // Assing the result to the standard value of N_ur depending on the number of massive neutrinos.
+      // Value of N_ur depends on the number of massive neutrinos
       switch (N_ncdm)
       {
         case 1:
@@ -142,16 +140,15 @@ namespace Gambit
       // be scaled and gets extra contributions
       if (ModelInUse("etaBBN_rBBN_rCMB_dNurBBN_dNurCMB"))
       {
-        // Check if the input for dNeff is negative (unphysical)
-        // NOTE: CosmoBit performs no sanity checks if you allow negative dNEff; you're on your own.
+        // Check if the input for Delta N_ur is negative (unphysical)
+        // NOTE: CosmoBit performs no sanity checks if you allow negative Delta N_ur; you're on your own.
         static bool allow_negative_delta_N_ur = runOptions->getValueOrDef<bool>(false,"allow_negative_delta_N_ur");
 
         // Get values of the temperature ratio and any ultrarelativistic contribution.
-        const ModelParameters& NP_params = *Dep::etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters;
-        double dNurCMB =  NP_params.at("dNur_CMB");
-        double rCMB =  NP_params.at("r_CMB");
+        double dNurCMB = *Param["dNur_CMB"];
+        double rCMB = *Param["r_CMB"];
 
-        // Only let the user have negative contributions to dNEff if they've signed off on it.
+        // Only let the user have negative contributions to NEff from Delta N_ur if they've signed off on it.
         if ( (!allow_negative_delta_N_ur) && (dNurCMB < 0.0) )
         {
           std::ostringstream err;
@@ -189,39 +186,28 @@ namespace Gambit
     {
       using namespace Pipes::T_ncdm;
 
-      double rCMB = 1.0; // Default value if no energy injection is assumed.
+      // Set to 0.71611 in units of photon temperature, above the instantaneous decoupling value (4/11)^(1/3)
+      // to recover Sum_i mNu_i/omega = 93.14 eV resulting from studies of active neutrino decoupling (arXiv:hep-ph/0506164)
+      double T_ncdm_SM = 0.71611;
 
-      // If the "etaBBN_rBBN_rCMB_dNurBBN_dNurCMB" model is included in the scan,
-      // we use rCMB of this model.
-      if (ModelInUse("etaBBN_rBBN_rCMB_dNurBBN_dNurCMB"))
-      {
-        const ModelParameters& NP_params = *Dep::etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters;
-        rCMB = NP_params.at("r_CMB");
-      }
+      // Take rCMB from the model "etaBBN_rBBN_rCMB_dNurBBN_dNurCMB"
+      double rCMB = *Param.at("r_CMB");
 
       // Take the SM value of T_ncdm (T_nu) and multiply it with the value of rCMB
-      result = rCMB*(*Dep::T_ncdm_SM);
+      result = rCMB*T_ncdm_SM;
     }
 
-    /// Baryon-to-photon ratio in LCDM
+    /// Baryon-to-photon ratio (today) in LCDM
     void eta0_LCDM(double &result)
     {
       using namespace Pipes::eta0_LCDM;
 
       double ngamma, nb;
-      ngamma = 16*pi*zeta3*pow(*Param["T_cmb"]*_kB_eV_over_K_/_hc_eVcm_,3); // photon number density today
-      nb = *Param["omega_b"]*3*100*1e3*100*1e3/_Mpc_SI_/_Mpc_SI_/(8*pi*_GN_cgs_* m_proton*1e9*eV2g); // baryon number density today
+      ngamma = 16*pi*zeta3*pow(*Param["T_cmb"]*kB_eV_over_K/hc_eVcm,3); // photon number density today
+      nb = *Param["omega_b"]*3*100*1e3*100*1e3/Mpc_SI/Mpc_SI/(8*pi*GN_cgs* m_proton*1e9*eV2g); // baryon number density today
 
       result =  nb/ngamma;
       logger() << "Baryon to photon ratio (eta) today computed to be " << result << EOM;
-    }
-
-    /// Baryon-to-photon ratio
-    void etaBBN_SM(double& result)
-    {
-      using namespace Pipes::etaBBN_SM;
-
-      result = *Dep::eta0;
     }
 
     /// The total baryon content today.
@@ -248,7 +234,7 @@ namespace Gambit
       using namespace Pipes::compute_Omega0_g;
 
       double h = *Dep::H0/100.;
-      result = (4.*_sigmaB_SI_/_c_SI_*pow(*Param["T_cmb"],4.)) / (3.*_c_SI_*_c_SI_*1.e10*h*h/_Mpc_SI_/_Mpc_SI_/8./pi/_GN_SI_);
+      result = (4.*sigmaB_SI/c_SI*pow(*Param["T_cmb"],4.)) / (3.*c_SI*c_SI*1.e10*h*h/Mpc_SI/Mpc_SI/8./pi/GN_SI);
     }
 
     /// Number density of photons today
@@ -256,7 +242,7 @@ namespace Gambit
     {
       using namespace Pipes::compute_n0_g;
 
-      result = 2./pi/pi*zeta3 *pow(*Param["T_cmb"]*_kB_eV_over_K_,3.)/pow(_hP_eVs_*_c_SI_/2./pi,3)/100/100/100; // result per cm^3
+      result = 2./pi/pi*zeta3 *pow(*Param["T_cmb"]*kB_eV_over_K,3.)/pow(hP_eVs*c_SI/2./pi,3)/100/100/100; // result per cm^3
     }
 
     /// The total ultrarelativistic content today.
@@ -277,7 +263,7 @@ namespace Gambit
       using namespace Pipes::get_H0_classy;
 
       // Rescale by c [km/s]
-      result = _c_SI_*BEreq::class_get_H0()/1000;
+      result = c_SI*BEreq::class_get_H0()/1000;
     }
 
     /// Energy densities *today* (Omega0)
@@ -314,10 +300,12 @@ namespace Gambit
       result = BEreq::class_get_Omega0_ncdm_tot();
     }
 
-    /// Sigma8
-    void get_Sigma8_classy(double& result)
+    /// returns S8 = sigma8 (Omega0_m/0.3)^0.5
+    /// (sigma8:root mean square fluctuations density fluctuations within
+    /// spheres of radius 8/h Mpc)
+    void get_S8_classy(double& result)
     {
-      using namespace Pipes::get_Sigma8_classy;
+      using namespace Pipes::get_S8_classy;
 
       double sigma8 = BEreq::class_get_sigma8();
       double Omega0_m = *Dep::Omega0_m;

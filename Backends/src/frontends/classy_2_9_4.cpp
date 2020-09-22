@@ -31,8 +31,6 @@
   #include <pybind11/stl.h>
   #include <pybind11/stl_bind.h>
   #include <pybind11/functional.h>
-  //#include <pybind11/eval.h>
-
 
   BE_NAMESPACE
   {
@@ -60,10 +58,9 @@
       for (auto it : classy_input)
       {
          // test if any pointer is being passed to CLASS -- if so you'd need to compare the contents
-         // of the vectors, so just recompute by default in that case (atm the options that pass pointser
+         // of the vectors, so just recompute by default in that case (atm the options that pass pointers
          // can be identified by searching for 'array' or 'pointer_to' in the CLASS input dict. If more of
          // these cases are implemented the checks have to be added here.)
-         // (as soon there is a real fast-slow scanner implemented this sould probably be changed)
          if(it.first.cast<std::string>().find("array") != std::string::npos){return false;}
          if(it.first.cast<std::string>().find("pointer_to") != std::string::npos){return false;}
 
@@ -82,16 +79,18 @@
 
       std::ostringstream errMssg;
       // one thing that can go wrong is that the primordial power spectrum is requested but
-      // not output of requiring the perturbations to be solved is asked for =>
+      // no observable depending on perturbations is asked for. In that case, CLASS will only
+      // derive background quantities and an error occurs when trying to access quantities
+      // depending on perturbations  =>
       // check if "modes" input is set while "output" is not set
       if(classy_input.contains("modes") and not classy_input.contains("output"))
       {
-         errMssg << "You are calling class asking for the following modes to be computed : "<< pybind11::repr(classy_input["modes"]);
-         errMssg << "\nHowever, you did not request any output that requires solving the perturbations.\nHence CLASS";
-         errMssg << " will not read the input 'modes' and won't run. Add the CLASS input parameter 'output' requesting";
-         errMssg << " a spectrum to be computed to the yaml file as run option, e.g. \n  - capability: classy_baseline_params\n";
-         errMssg << "    options:\n      classy_dict:\n        output: tCl";
-         backend_error().raise(LOCAL_INFO,errMssg.str());
+        errMssg << "You are calling CLASS asking for the following modes to be computed : "<< pybind11::repr(classy_input["modes"]);
+        errMssg << "\nHowever, you did not request any output that requires computing any perturbation spectra.\nHence CLASS";
+        errMssg << " will not read the input 'modes' and won't run. Add the CLASS input parameter 'output' requesting";
+        errMssg << " a spectrum to be computed to the yaml file as run option, e.g. \n  - capability: classy_baseline_params\n";
+        errMssg << "    options:\n      classy_dict:\n        output: tCl";
+        backend_error().raise(LOCAL_INFO,errMssg.str());
       }
     }
 
@@ -147,7 +146,6 @@
     double class_get_Da(double z)
     {
       double Da = cosmo.attr("angular_distance")(z).cast<double>();
-      // check if units are the same as from class??
       return Da;
     }
 
@@ -158,7 +156,7 @@
       return Dl;
     }
 
-    // returns scale_independent_growth_factor D(z) for CDM perturbations for a given 
+    // returns scale_independent_growth_factor D(z) for CDM perturbations for a given
     // redshift (quantity defined by CLASS as index_bg_D in the background module)
     double class_get_scale_independent_growth_factor(double z)
     {
@@ -216,7 +214,7 @@
       return Omega0_Lambda;
     }
 
-    // returns sound horizon at drag
+    // returns sound horizon at drag epoch
     double class_get_rs()
     {
       double rs_d = cosmo.attr("rs_drag")().cast<double>();
@@ -224,9 +222,10 @@
     }
 
     // returns sigma8 at z = 0
+    // (root mean square fluctuations density fluctuations within
+    // spheres of radius 8/h Mpc)
     double class_get_sigma8()
     {
-      // in CosmoBit.cpp test if ClassInput contains mPk -> otherwise SegFault when trying to compute sigma8
       double sigma8 = cosmo.attr("sigma8")().cast<double>();
       return sigma8;
     }
@@ -234,7 +233,6 @@
     // returns Neff
     double class_get_Neff()
     {
-      // in CosmoBit.cpp test if ClassInput contains mPk -> otherwise SegFault when trying to compute sigma8
       double Neff = cosmo.attr("Neff")().cast<double>();
       return Neff;
     }
@@ -269,17 +267,17 @@ BE_INI_FUNCTION
     Classy_input input_container = *Dep::classy_input_params;
     pybind11::dict cosmo_input_dict = input_container.get_input_dict();
 
-    // check if any energy injection-related parameters are contained in the 
+    // check if any energy injection-related parameters are contained in the
     // CLASS input dictionary. If so, throw a fatal error as these models
     // requires features only available in exoCLASS
-    // Note: checking for presence of input key 'f_eff_type' as this 
-    // input has to be added for all models making use of the energy 
+    // Note: checking for presence of input key 'f_eff_type' as this
+    // input has to be added for all models making use of the energy
     // injection features (regardless of whether they are annihilating
     // or decaying DM models).
     if (cosmo_input_dict.attr("__contains__")("f_eff_type").cast<bool>())
     {
       std::ostringstream error;
-      error << "\nYou are scanning over a model, e.g. decayin or annihilating DM, ";
+      error << "\nYou are scanning over a model, e.g. decaying or annihilating DM, ";
       error << "\nwith exotic energy injection in the early Universe. However, you ";
       error << "\nare using a CLASS version that does not support these calculations. ";
       error << "\nGAMBIT will exit now. To fix this simply run";
@@ -296,7 +294,7 @@ BE_INI_FUNCTION
       // check input for consistency
       class_input_consistency_checks(cosmo_input_dict);
 
-      // create deep copy of cosmo_input_dict to cache results from 
+      // create copy of cosmo_input_dict to cache results from
       // previous run
       prev_input_dict = cosmo_input_dict.attr("copy")();
     }
@@ -319,8 +317,8 @@ BE_INI_FUNCTION
       logger() << pybind11::repr(cosmo_input_dict) << EOM;
       cosmo.attr("set")(cosmo_input_dict);
 
-      // CLASS re-computed -> safe this information in cosmo container, so MontePython
-      // (and potentially other backends) have access to this information 
+      // CLASS re-computed -> save this information in cosmo container, so MontePython
+      // (and potentially other backends) has access to this information
       cosmo.attr("set_cosmo_update")(true);
       // -> access value
       //int recomputed = cosmo.attr("recomputed").cast<int>();
@@ -387,17 +385,17 @@ BE_INI_FUNCTION
     else
     {
       logger() << LogTags::info << "[classy_"<< STRINGIFY(VERSION) <<"] \"cosmo.compute\" was skipped, input was identical to previously computed point" << EOM;
-      // CLASS did not recompute -> safe this information in cosmo container, so MontePython
-      // (and potentially other backends) have access to this information and can skip
-      // their computations as well 
+      // CLASS did not recompute -> save this information in cosmo container, so MontePython
+      // (and potentially other backends) has access to this information and can skip
+      // their computations as well
       cosmo.attr("set_cosmo_update")(false);
-      // -> access the information with 
+      // -> access the information with
       //int recomputed = cosmo.attr("recomputed").cast<int>();
     }
 
     first_run = false;
     // save input arguments from this run to dictionary prev_input_dict
-    // (clear entries before copying, hope there are non memory leaks?)
+    // (clear entries before copying)
     prev_input_dict.attr("clear")();
     prev_input_dict = cosmo_input_dict.attr("copy")();
 

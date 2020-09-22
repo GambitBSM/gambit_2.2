@@ -51,6 +51,7 @@
 #include "gambit/CosmoBit/CosmoBit_rollcall.hpp"
 #include "gambit/CosmoBit/CosmoBit_types.hpp"
 #include "gambit/CosmoBit/CosmoBit_utils.hpp"
+#include "gambit/Utils/numerical_constants.hpp"
 
 namespace Gambit
 {
@@ -108,7 +109,7 @@ namespace Gambit
     {
       using namespace Pipes::minimum_fraction_ALP;
 
-      const double rho0_crit_by_h2 = 3.*pow(m_planck_red*1e9,2) * pow((1e5*1e9*hbar/_Mpc_SI_),2); // rho0_crit/(h^2)
+      const double rho0_crit_by_h2 = 3.*pow(m_planck_red*1e9,2) * pow((1e5*1e9*hbar/Mpc_SI),2); // rho0_crit/(h^2)
 
       double ma0 = *Param["ma0"];                    // non-thermal ALP mass in eV
       double T = *Param["T_cmb"];                        // CMB temperature in K
@@ -167,7 +168,7 @@ namespace Gambit
     {
       using namespace Pipes::total_DM_abundance_ALP;
 
-      const double rho0_crit_by_h2 = 3.*pow(m_planck_red*1e9,2) * pow((1e5*1e9*hbar/_Mpc_SI_),2); // rho0_crit/(h^2)
+      const double rho0_crit_by_h2 = 3.*pow(m_planck_red*1e9,2) * pow((1e5*1e9*hbar/Mpc_SI),2); // rho0_crit/(h^2)
       double omega_cdm = *Param["omega_cdm"];  // omega_cdm = Omega_cdm * h^2
       double fraction = *Dep::DM_fraction;
       double rho0_ALP = omega_cdm * fraction* rho0_crit_by_h2; // rho0_cdm = Omega_cdm * rho0_crit
@@ -282,7 +283,6 @@ namespace Gambit
       logger() << "GeneralCosmoALP model: calculated Neff @BBN to be " << result["dNeff"] <<", and etaBB(ALP)/etaBBN(SM) = " << result["eta_ratio"] << ". Calculation converged after "<< ii <<" iterations." << EOM;
 
     }
-
 
   } // namespace CosmoBit
 

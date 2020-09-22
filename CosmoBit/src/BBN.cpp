@@ -39,6 +39,10 @@
 ///  \date 2019 Jul
 ///  \date 2020 Apr
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Sep
+///
 ///  *********************************************
 
 #include <memory>  // make_unique pointers
@@ -47,12 +51,10 @@
 #include <gsl/gsl_linalg.h>
 
 #include "gambit/Utils/yaml_options.hpp"
-#include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/ascii_dict_reader.hpp"
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/CosmoBit/CosmoBit_rollcall.hpp"
 #include "gambit/CosmoBit/CosmoBit_types.hpp"
-#include "gambit/CosmoBit/CosmoBit_utils.hpp"
 
 namespace Gambit
 {
@@ -76,15 +78,13 @@ namespace Gambit
       // (i.e. eta inferred from LCDM, Nnu = Neff_SM (3.045) and dNnu = 0)
       if (ModelInUse("etaBBN_rBBN_rCMB_dNurBBN_dNurCMB"))
       {
-        const ModelParameters& NP_params = *Dep::etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters;
+        double dNurBBN = *Param.at("dNur_BBN");
 
-        double dNurBBN =  NP_params.at("dNur_BBN");
-
-        // Check if the input for dNeff is negative (unphysical)
-        // NOTE: CosmoBit performs no sanity checks if you allow negative dNEff; you're on your own.
+        // Check if the input for Delta N_ur is negative (unphysical)
+        // NOTE: CosmoBit performs no sanity checks if you allow negative Delta N_ur; you're on your own.
         static bool allow_negative_delta_N_ur = runOptions->getValueOrDef<bool>(false,"allow_negative_delta_N_ur");
 
-        // Only let the user have negative contributions to dNEff if they've signed off on it.
+        // Only let the user have negative contributions to NEff from Delta N_ur if they've signed off on it.
         if ( (!allow_negative_delta_N_ur) && (dNurBBN < 0.0) )
         {
           std::ostringstream err;
@@ -98,26 +98,29 @@ namespace Gambit
         }
 
         //If check is passed, set inputs.
-        result["Nnu"]=*Dep::Neff_SM*pow(NP_params.at("r_BBN"),4); // contribution from SM neutrinos
-        result["dNnu"]=dNurBBN;    // dNnu: within AlterBBN scenarios in which the sum Nnu+dNnu is the same are identical
+        result["Nnu"] = *Dep::Neff_SM*pow(*Param.at("r_BBN"),4); // contribution from SM neutrinos
+        result["dNnu"] = dNurBBN;                                // dNnu: within AlterBBN scenarios in which the sum Nnu+dNnu is the same are identical
+        result["eta0"] = *Param.at("eta_BBN");                // eta at the end of BBN
       }
-      else
+      else // at this point either LCDM or LCDM_theta are in use so we assume standard values for Nnu and dNnu
       {
-        result["Nnu"]=*Dep::Neff_SM; // contribution from SM neutrinos
-        result["dNnu"]=0.;   // no extra ur species in standard LCDM model
+        result["Nnu"] = *Dep::Neff_SM; // contribution from SM neutrinos
+        result["dNnu"] = 0.;           // no extra ur species in standard LCDM model
+        result["eta0"] = *Dep::eta0;  // assume etaBBN = eta0
       }
-      result["eta0"] = *Dep::etaBBN;
 
       // Adopt the default value for the neutron lifetime in seconds if is not passed as a model parameter
       if (ModelInUse("nuclear_params_neutron_lifetime"))
       {
-        result["neutron_lifetime"] = Dep::nuclear_params_neutron_lifetime_parameters->at("neutron_lifetime");
+        result["neutron_lifetime"] = *Param.at("neutron_lifetime");
       }
       else
       {
         result["neutron_lifetime"] = 879.4; // (PDG 2019 recommendation http://pdg.lbl.gov/2019/listings/rpp2019-list-n.pdf);
       }
 
+      // Tell AlterBBN how to the method and precision to solve the differential equations (->failsafe)
+      // and also tell it how thorough it should estimate the the theoretical uncertainties.
       result["failsafe"] = runOptions->getValueOrDef<double>(7,"failsafe");
       result["err"] = runOptions->getValueOrDef<double>(1,"err");
 
@@ -253,11 +256,11 @@ namespace Gambit
       using namespace Pipes::compute_BBN_abundances;
 
       // Global variable of AlterBBN (# computed element abundances)
-      const static int NNUC = BEreq::get_NNUC();
+      const static size_t NNUC = BEreq::get_NNUC();
 
       // In AlterBBN ratioH and cov_ratioH are arrays of fixed length.
       // With certain compiler versions (gcc 5.4.0) we have seen memory corruption problems
-      // if we initialise these as double ratioH[NNUC+1], since the memory was not allocated properly. 
+      // if we initialise these as double ratioH[NNUC+1], since the memory was not allocated properly.
       // Fixed size arrays do not seem to be properly supported even though there are no errors at compile time.
       // Using a unique pointer for ratioH and a 2D vector for cov_ratioH avoids these problems.
       auto deleter = [&](double* ptr){delete [] ptr;};
@@ -332,7 +335,7 @@ namespace Gambit
         // Process user-defined correlations (if provided)
         if (use_custom_covariances)
         {
-          for (int ie = 1; ie < NNUC; ie++) corr.at(ie).at(ie) = 1.;
+          for (size_t ie = 1; ie < NNUC; ie++) corr.at(ie).at(ie) = 1.;
           std::map<std::string, int> abund_map = result.get_abund_map();
 
           // Check whether any of the entries in isotope_basis is not recognised
@@ -351,7 +354,7 @@ namespace Gambit
 
           // If either has_relative_errors or has_absolute_errors is and the "err" option for AlterBBN is nonzero,
           // we need to carefully check, whether we are about to override all error estimates for the relevant abundances.
-          // To this end, perform a set differnce between the elements in the subcaps (i.e. isotopes we are interested in)
+          // To this end, perform a set difference between the elements in the subcaps (i.e. isotopes we are interested in)
           // and the isotopes in isotope basis (the ones we want to override).
           // When all elements in v are included in isotope_basis, throw an error
           if (has_errors && int(AlterBBN_input["err"]) != 0)

@@ -59,15 +59,15 @@ namespace Gambit
       double Delta_logt = (log(tf) - log(t0))/(grid_size-1);
       for (int jj = 0; jj<grid_size; ++jj)
       {
-           t_grid[jj] = exp(log(t0) + jj*Delta_logt);
+        t_grid[jj] = exp(log(t0) + jj*Delta_logt);
       }
       double Neff_SM = CosmoBit_utils::set_Neff_SM_value();
       double g_star_SM = 2.+2.*7./8.*Neff_SM*pow(4./11.,4./3.); // contribution from photons & neutrinos with Neff = 3.046
 
       // factor needed to calculate temperature evolution. For details see definition of functions set_T_evo(),.. in CosmoBit_types.hpp header
-      factor_T_evo = 1./sqrt(2.*sqrt(8.*pi*pi*pi*_GN_SI_ *pow(_kB_SI_,4.)*g_star_SM/90./_c_SI_/_c_SI_/pow(_hP_SI_/2./pi*_c_SI_,3.)))*_kB_eV_over_K_/1e3;
+      factor_T_evo = 1./sqrt(2.*sqrt(8.*pi*pi*pi*GN_SI *pow(kB_SI,4.)*g_star_SM/90./c_SI/c_SI/pow(hP_SI/2./pi*c_SI,3.)))*kB_eV_over_K/1e3;
       factor_Tnu_evo = pow(Neff_SM/3.,1./4.)* pow(4./11.,1./3.)*factor_T_evo; // = T_nu/T_gamma * factor_T_evo
-      factor_HT_evo = sqrt(8.*pi*_GN_SI_/3.*pi*pi/30.*g_star_SM/pow(_hP_SI_/2./pi*_c_SI_,3.))*(1e6*_eV_to_J_*_eV_to_J_)/_c_SI_;
+      factor_HT_evo = sqrt(8.*pi*GN_SI/3.*pi*pi/30.*g_star_SM/pow(hP_SI/2./pi*c_SI,3.))*(1e6*eV_to_J*eV_to_J)/c_SI;
 
       // set time evolution of photon T, neutrino T, and Hubble
       // rate based on above calculated evolution factors 
@@ -101,29 +101,6 @@ namespace Gambit
       }
     }
 
-    // Default constructor for multimode inputs
-    // N.B. The constructor is set up to support single field inflation models with instant reheating but allow the inclusion
-    //      of more complex models. Some default MultiModeCode (MMC) inputs below might have to be adjusted to facilitate this.
-    Multimode_inputs::Multimode_inputs()
-    {
-      num_inflaton = 1; // Assume single field inflation
-      instreheat = 1; // Use the instant reheating approximation
-      // Using the instant reheating approximation makes N_pivot a derived parameter and the input N_pivot has no effect
-      // We fix it to the dummy value below
-      N_pivot = 50;
-      // CAVE Changing the default value of 'slowroll_infl_end' requires defining a custom condition for the end of inflation in MMC!
-      slowroll_infl_end = 1; // = true, i.e. stop inflation when slow roll parameters = 1
-      // Control the output of analytic approximations for comparison. We do not use these.
-      use_deltaN_SR = 0; // = false, i.e. MMC will not calculate deltaN observables (assumes slow roll & sum-separable potentials) at the pivot scale
-      use_horiz_cross_approx = 0; // = false, i.e. do not ignore the horizon-crossing-approximation for the above
-      evaluate_modes = 1; // = true, i.e. evalute modes and do not just rely on background evolution
-      get_runningofrunning = 0; // = false, i.e. do not compute the dervative of the spectral index w.r.t. ln(k)
-      // Set the initial conditions for the inflation field(s).
-      // N.B. For single field inflation, MMC determines the parameters below self-consistenly; choose sensible entries as starting point
-      phi_init0 = {10.0};
-      dphi_init0 = {1.0};
-    };
-
     // return Parametrised_ps members A_s, n_s, r, and N_pivot as str to double map for printing
     map_str_dbl Parametrised_ps::get_parametrised_ps_map()
     {
@@ -134,7 +111,6 @@ namespace Gambit
       result["N_pivot"] = N_pivot;
 
       return result;
-
     };
 
     void Primordial_ps::fill_k(double *k_array, int len)
@@ -142,8 +118,6 @@ namespace Gambit
       std::vector<double> K(k_array, k_array+len);
       k = std::move(K);
       vec_size = len;
-      //let's leave the debug print a while longer though, you never know ..
-      //for( int i =0; i<len;i++) {std::cout << k[i] << std::endl;};
     }
 
     void Primordial_ps::fill_P_s(double *P_s_array, int len)
@@ -151,16 +125,17 @@ namespace Gambit
       std::vector<double> ps(P_s_array, P_s_array+len);
       P_s = std::move(ps);
     }
+
     void Primordial_ps::fill_P_s_iso(double *P_s_iso_array, int len)
     {
       std::vector<double> psi(P_s_iso_array, P_s_iso_array+len);
       P_s_iso = std::move(psi);
     }
+
     void Primordial_ps::fill_P_t(double *P_t_array, int len)
     {
       std::vector<double> pt(P_t_array, P_t_array+len);
       P_t = std::move(pt);
     }
-
   }
 }

@@ -1,22 +1,26 @@
-//  GAMBIT: Global and Modular BSM Inference Tool
-//  *********************************************
-//
-//  Nuclear parameters model definitions
-//
-//  *********************************************
-//
-//  Authors
-//  =======
-//
-//  (add name and date if you modify)
-//
-//  Jonathan Cornell
-//  2015 March
-//
-//  Janina Renk
-//  2020 May
-//
-//  *********************************************
+///  GAMBIT: Global and Modular BSM Inference Tool
+///  *********************************************
+///
+///  Nuclear parameters model definitions
+///
+///  *********************************************
+///
+///  Authors
+///  =======
+///
+///  (add name and date if you modify)
+///
+///  \author Jonathan Cornell
+///  \date 2015 March
+///
+///  \author Janina Renk
+///  \date 2020 May
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Sep
+///
+///  *********************************************
 
 #ifndef __nuclear_params_hpp__
 #define __nuclear_params_hpp__

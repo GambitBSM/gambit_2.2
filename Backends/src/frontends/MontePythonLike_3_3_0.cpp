@@ -33,7 +33,7 @@
 
   BE_NAMESPACE
   {
-    using namespace pybind11::literals; // to bring in the `_a` literal to initialise python dictionarys with pybind11
+    using namespace pybind11::literals; // to bring in the `_a` literal to initialise python dictionaries with pybind11
 
     static map_str_dbl chached_likelihoods; // string double map to save likelihood calculation from previous param point
 
@@ -51,12 +51,12 @@
     {
 
       // add all combinations that are not compatible here.
-      // example for such a incompatibility: an update in CLASS 2.7 enable the separation 
-      // of the matter power spectrum into the baryonic and CDM components separated from 
-      // other non-CDM species (e.g. massive neutrinos). Likelihoods that rely on the 
+      // example for such an incompatibility: an update in CLASS 2.7 enables the separation
+      // of the matter power spectrum into the baryonic and CDM components separated from
+      // other non-CDM species (e.g. massive neutrinos). Likelihoods that rely on the
       // baryon+CDM matter power spectrum can't be used with a CLASS version below 2.7
-      map_str_str incompatible_combi = {{"bao_correlations", "2.6.3"},{"euclid_pk", "2.6.3"}, 
-          {"ska1_IM_band1", "2.6.3"},{"ska1_IM_band2", "2.6.3"},{"ska2_pk", "2.6.3"}};
+      map_str_str incompatible_combi = {{"bao_correlations", "2.6.3"},{"euclid_pk", "2.6.3"},
+          {"ska1_IM_band1", "2.6.3"},{"ska1_IM_band2", "2.6.3"},{"ska2_pk", "2.6.3"},{"Lya_abg", "2.6.3"}};
 
       // check if incompatible CLASS version exists for given likelihood
       if (incompatible_combi.count(likelihood))
@@ -64,7 +64,7 @@
         // if incompatible version in use throw a fatal error
         if (classy_backendDir.find(incompatible_combi[likelihood]) != std::string::npos)
         {
-          std::string classy_version = classy_backendDir.substr(classy_backendDir.find("classy/"),classy_backendDir.find("/lib")); 
+          std::string classy_version = classy_backendDir.substr(classy_backendDir.find("classy/"),classy_backendDir.find("/lib"));
           classy_version = classy_version.substr(7, classy_version.size() - 11);
 
           std::ostringstream ss;
@@ -79,6 +79,58 @@
       }
     }
 
+    /// convenience function to check if the chosen likelihood is supported
+    /// add further rules for incompatibilities here.
+    void check_likelihood_support(std::string& likelihood)
+    {
+      // There are two different reasons why the support for a likelihood is
+      // switched off:
+      // 1) python version that GAMBIT is configured with is not compatible with the likelihood
+      // 2) likelihood implementation does not follow MontePython guidelines
+
+      // case 1): python version that GAMBIT is configured with is not compatible with the
+      // python version the likelihood works with.
+      // Currently the likelihoods 'euclid_lensing' and 'euclid_pk' will not work with Python 3, nor will many SKA likelihoods.
+      // Throw a fatal error when any of these likelihoods is in use and GAMBIT is configured with Python 3.
+
+      // Get the python major version in use
+      pybind11::module sys = pybind11::module::import("sys");
+      int pyMajorVersion = sys.attr("version_info").attr("major").cast<int>();
+      std::set<std::string> python3_incomp { "euclid_lensing", "euclid_pk", "ska1_pk", "ska2_pk",
+          "ska1_lensing", "ska2_lensing", "ska1_IM_band2"};
+
+      // check for incompatible combinations
+      if ( (pyMajorVersion == 3) && python3_incomp.count(likelihood))
+      {
+        std::ostringstream err;
+        err << "You requested the MontePython likelihood '" << likelihood << "', ";
+        err << "but you are using Python 3. In MontePython" << STRINGIFY(VERSION);
+        err << "this likelihood only works with Python 2.\n";
+        err << "Please reconfigure GAMBIT with Python 2, if you want to use this likelihood.";
+        backend_error().raise(LOCAL_INFO, err.str());
+      }
+
+      // case 2) likelihood implementation does not follow MontePython guidelines,
+      // examples could be
+      //  * quantities derived by CLASS are not called directly through the CLASS python
+      //    object but through MontePython data.get_mcmc_parameters(['derived'])
+      //  * parameters setting the obsevables that CLASS has to compute are not specified
+      //    correctly with 'need_cosmo_arguments' function
+      // If you fix these issues, you can use the likelihood; in that case, remove it from the list
+      // 'unsupported_likes'
+      std::set<std::string> unsupported_likes { "Lya_abg", "gunn_peterson" };
+
+      if(unsupported_likes.count(likelihood))
+      {
+        std::ostringstream err;
+        err << "You requested the MontePython likelihood '" << likelihood << "'' ";
+        err << "which is currently not supported by MontePython" << STRINGIFY(VERSION);
+        err << ". For information on why this could be the case, type \n";
+        err << "./gambit check_likelihood_support";
+        backend_error().raise(LOCAL_INFO, err.str());
+      }
+    }
+
     /// convenience function to compute the loglike from a given experiment, given a MontePython likelihood-data container
     /// mplike, using the CLASS Python object cosmo.
     double get_MP_loglike(const MPLike_data_container& mplike, pybind11::object& cosmo, std::string& experiment)
@@ -86,7 +138,7 @@
 
       double result;
 
-      //static const bool first_run 
+      //static const bool first_run
       // check if likelihood needs to be re-evaluated:
       // => if CLASS re-ran likelihood needs updating in any case
       bool needs_update = cosmo.attr("recomputed").cast<bool>();
@@ -104,8 +156,8 @@
         }
         catch(const std::exception&)
         {
-          // if for some reason the MP likelihood object does not have the attribute "use_nusicane" (even though all of them
-          //  should, but let's not count on it...) there are no nuisance parameters. So calculation can be skipped. 
+          // if for some reason the MP likelihood object does not have the attribute "use_nuisance" (even though all of them
+          //  should, but let's not count on it...) there are no nuisance parameters. So calculation can be skipped.
           needs_update = false;
         }
       }
@@ -142,26 +194,36 @@
     pybind11::object create_MP_data_object(map_str_str& experiments)
     {
 
+      static bool first_run = true;
+
       pybind11::dict path_dict = pybind11::dict("MontePython"_a=backendDir,
           "data"_a=backendDir+"/../data/",
           "cosmo"_a=backendDir+"",  // we never want to class CLASS from MP so there is no need to pass anything here
           "root"_a=backendDir+"/../../../");
 
       // Cast the list of experiments to a tuple, for MP to fire up...
-      // not experiments is a str to str map where the key is the likelihood name.
+      // note that experiments is a str to str map where the key is the likelihood name.
       // This is the only thing we need here when creating the data object
       // The value of the keys (data files to use) will be needed when initialising the likelihood objects
-      // in the funciton 'create_MP_likelihood_objects'
+      // in the function 'create_MP_likelihood_objects'
       pybind11::list MP_experiments;
-      for (auto const& it : experiments)
+      for (auto const & it : experiments)
       {
-        MP_experiments.attr("append")( it.first.c_str() );
+        std::string exp_name = it.first;
+
+        // run test if likelihoods are supported
+        if(first_run) check_likelihood_support(exp_name);
+
+        // If everything is fine, add the experiment to the list.
+        MP_experiments.attr("append")( exp_name.c_str() );
       }
 
       // Import Data object from MontePython
       // (pass empty string as "command_line" since we do not need this information as sampling is taken care
       // of by GAMBIT)
       pybind11::object data = MontePythonLike.attr("Data")("", path_dict, MP_experiments);
+
+      first_run = false;
 
       return data;
     }
@@ -188,7 +250,6 @@
 
       // Now go through each experiment one by one, and initialise the Likelihood containers in
       // MontePython, then add them to a dictionary to pass back to CosmoBit.
-      //for (std::vector<std::string>::const_iterator it = experiments.begin(); it != experiments.end(); ++it)
       for (auto const& it : experiments)
       {
 
@@ -213,7 +274,7 @@
         // by calling data.check_nuisance_params()
         data.attr("add_experiment")(exp_name,EXP_MODULE);
       }
-      
+
 
       // Remove "like_path" from sys.path (The likelihoods are now loaded)
       sys.attr("path").attr("remove")(like_path);

@@ -259,15 +259,22 @@ MathTest_VarEqualVar2: |
    Test function for Mathematica backends checks the equality of two variables.
 
 MathTest_VoidTest: |
-   Test function for Mathematica backends for testing void functions
+   Test function for Mathematica backends for testing void functions.
 
 MathTest_Gammafunc: |
-   Test function for Mathematica backends for testing non-alphanumerical characters in function names
+   Test function for Mathematica backends for testing non-alphanumerical characters in function names.
 
 MathTest_deltabar: |
-   Test function for Mamthematica backends for tsting non-alphanumerical characters in variable names
+   Test function for Mamthematica backends for tsting non-alphanumerical characters in variable names.
 
+a_cap: |
+   Example function demonstrating the usage of capabilities within a model namespace.
 
+demo_CAP_parameters: |
+   Model parameters to demonstre the usage of module functions within a model namespace.
+
+large_print: |
+  Scale test for various aspects of the printer buffer system.
 
 #-------------------------------------
 #  SpecBit
@@ -360,6 +367,9 @@ Higgs_Couplings: |
     Higgs couplings, as computed by FeynHiggs
 
 SPheno_3_3_8_init: |
+    Initalises SPheno 3.3.8 and sets the internal model type according to the one being scanned.
+
+SPheno_4_0_3_init: |
     Initalises SPheno 3.3.8 and sets the internal model type according to the one being scanned.
 
 SPheno_MSSMspectrum: |
@@ -526,6 +536,11 @@ L3_Chargino_Leptonic_LLike: |
    model-independent limit according to the L3 collaboration.
    Returns a log likelihood value.
 
+L3_Gravitino_LLike: |
+   Compares the cross section times branching ratio for neutralino
+   production and decay to gravitinos to the model-independent limit 
+   according to the L3 collaboration. Returns a log likelihood value.
+
 OPAL_Neutralino_Hadronic_LLike: |
     Compares the cross section times branching ratio for neutralino
     pair production (with hadronically decaying Z bosons) to the
@@ -655,6 +670,10 @@ LEP205_xsec_chi00_34: |
 LEP205_xsec_chi00_44: |
    The LEP neutralino pair production cross-section for
    mass eigenstates 'chi04' and 'chi04' at centre of mass energy 205 GeV.
+
+LEP207_xsec_chi00_11: |
+   The LEP neutralino pair production cross-section for
+   mass eigenstates 'chi01' and 'chi01' at centre of mass energy 207 GeV.
 
 LEP208_xsec_chi00_11: |
    The LEP neutralino pair production cross-section for
@@ -1055,6 +1074,9 @@ TH_ProcessCatalog: |
 
 DD_couplings: |
    Provides WIMP mass and couplings to nucleons.
+
+DD_couplings_fermionic_HP: |
+   Provides WIMP mass and couplings to nucleons for Higgs-Portal models with fermionic DM.
 
 mwimp: |
    DM mass in GeV.
@@ -1637,6 +1659,39 @@ PICO_60_2017_BinSignal: |
 PICO_60_2017_Bins: |
    The number of bins used in the PICO-60 2017 direct detection analysis.
 
+PICO_60_2019_Calculate: |
+   Perform rate and likelihood calculations for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_Events: |
+   The number of observed events for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_Background: |
+   The number of background events for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_Signal: |
+   The number of signal events for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_SignalSI: |
+   The number of spin-independent signal events for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_SignalSD: |
+   The number of spin-dependent signal events for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_LogLikelihood: |
+   Calculate the log-likelihood for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_BinBackground: |
+   The number of expected background events in each bin for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_BinEvents: |
+   The number of expected events in each bin for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_BinSignal: |
+   The number of expected signal events in each bin for the PICO-60 2019 direct detection analysis.
+
+PICO_60_2019_Bins: |
+   The number of bins used in the PICO-60 2019 direct detection analysis.
+
 PICO_60_Calculate: |
    Perform rate and likelihood calculations for the PICO-60 direct detection analysis.
 
@@ -1802,6 +1857,39 @@ CRESST_II_SignalSI: |
 CRESST_II_SignalSD: |
    The number of spin-dependent signal events for the CRESST-II direct detection analysis.
 
+CRESST_III_Background: |
+   The number of background events for the CRESST-III direct detection analysis.
+
+CRESST_III_BinBackground: |
+   The number of expected background events in each bin for the CRESST-III direct detection analysis.
+
+CRESST_III_BinEvents: |
+   The number of expected events in each bin for the CRESST-III direct detection analysis.
+
+CRESST_III_BinSignal: |
+   The number of expected signal events in each bin for the CRESST-III direct detection analysis.
+
+CRESST_III_Bins: |
+   The number of bins used in the CRESST-III direct detection analysis.
+
+CRESST_III_Calculate: |
+   Perform rate and likelihood calculations for the CRESST-III direct detection analysis.
+
+CRESST_III_Events: |
+   The number of observed events for the CRESST-III direct detection analysis.
+
+CRESST_III_LogLikelihood: |
+   Calculate the log-likelihood for the CRESST-III direct detection analysis.
+
+CRESST_III_Signal: |
+   The number of signal events for the CRESST-III direct detection analysis.
+
+CRESST_III_SignalSI: |
+   The number of spin-idependent signal events for the CRESST-III direct detection analysis.
+
+CRESST_III_SignalSD: |
+   The number of spin-dependent signal events for the CRESST-III direct detection analysis.
+
 DarkSide_50_Background: |
    The number of background events for the DarkSide 50 direct detection analysis.
 
@@ -1834,6 +1922,39 @@ DarkSide_50_SignalSI: |
 
 DarkSide_50_SignalSD: |
    The number of spin-dependent signal events for the DarkSide 50 direct detection analysis.
+
+DarkSide_50_S2_Background: |
+   The number of background events for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_BinBackground: |
+   The number of expected background events in each bin for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_BinEvents: |
+   The number of expected events in each bin for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_BinSignal: |
+   The number of expected signal events in each bin for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_Bins: |
+   The number of bins used in the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_Calculate: |
+   Perform rate and likelihood calculations for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_Events: |
+   The number of observed events for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_LogLikelihood: |
+   Calculate the log-likelihood for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_Signal: |
+   The number of signal events for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_SignalSI: |
+   The number of spin-idependent signal events for the DarkSide 50 (S2-only) direct detection analysis.
+
+DarkSide_50_S2_SignalSD: |
+   The number of spin-dependent signal events for the DarkSide 50 (S2-only) direct detection analysis.
 
 lnL_SI_nuclear_parameters: |
    The log-likehood for the spin-independent nuclear parameters.
@@ -2018,6 +2139,12 @@ DDCalc_1_2_0_init: |
 DDCalc_2_0_0_init: |
    Initialises DDCalc 2.0.0.
 
+DDCalc_2_1_0_init: |
+   Initialises DDCalc 2.1.0.
+
+DDCalc_2_2_0_init: |
+   Initialises DDCalc 2.2.0.
+
 DD_Experiment: |
    The name of the DDcalc experiment corresponding to a specific experiment index.
 
@@ -2081,6 +2208,9 @@ PICO_60_I_Init: |
 PICO_60_2017_Init: |
    Initialises a direct detection experiment with the properties of the 2017 analysis of PICO-60.
 
+PICO_60_2019_Init: |
+   Initialises a direct detection experiment with the properties of the 2019 analysis of PICO-60.
+
 PICO_60_Init: |
    Initialises a direct detection experiment with the properties of the analysis of PICO-60.
 
@@ -2111,8 +2241,14 @@ CDMSlite_Init: |
 CRESST_II_Init: |
    Initialises a direct detection experiment with the properties of the analysis of CRESST-II.
 
+CRESST_III_Init: |
+   Initialises a direct detection experiment with the properties of the analysis of CRESST-III.
+
 DarkSide_50_Init: |
    Initialises a direct detection experiment with the properties of the analysis of DarkSide-50.
+
+DarkSide_50_S2_Init: |
+   Initialises a direct detection experiment with the properties of the S2-only analysis of DarkSide-50.
 
 DARWIN_Init: |
    Initialises a direct detection experiment with the properties of the analysis of DARWIN.
@@ -2191,6 +2327,9 @@ nulike_1_0_6_init: |
 
 nulike_1_0_7_init: |
   Initializes nulike_1_0_7.
+
+nulike_1_0_8_init: |
+  Initializes nulike_1_0_8.
 
 nubounds:
   Counts, likelihoods and p-values from neutrino telescope searches for dark matter annihilation in the Sun.
@@ -3743,7 +3882,7 @@ nuclear_params_sigmas_sigmal_parameters: |
    Parameters for the model nuclear_params_sigmas_sigmal (see ./gambit nuclear_params_sigmas_sigmal)
 
 nuclear_params_neutron_lifetime_parameters: |
-   Model for the neutron lifetime. 
+   Model for the neutron lifetime.
    See ./gambit nuclear_params_neutron_lifetime for details.
 
 RightHandedNeutrinos_parameters: |
@@ -4158,7 +4297,7 @@ class_get_scale_independent_growth_factor_f: |
     computed by CLASS.
 
 class_get_sigma8: |
-    Returns sigma8 computed at z = 0 by CLASS.
+    Returns sigma8, root mean square density fluctuations within spheres of radius 8/h Mpc, computed at z = 0 by CLASS.
 
 class_get_Omega0_m: |
     Returns Omega0_m (matter energy density today) computed by CLASS. (Mainly for test purposes, you can use gambit internal capability Omega0_m, Omega0_g..).
@@ -4189,6 +4328,16 @@ get_MP_available_likelihoods: |
 
 check_likelihood_classy_combi: |
     Checks if a given likelihood can be computed with the CLASS version in use. For older CLASS versions, some necessary features might not be available. The list of incompatible likelihood and CLASS version combinations is defined in the MontePython frontend source file.
+
+check_likelihood_support: |
+    Checks if a given MontePython likelihood is currently supported. The reason why some likelihoods are not supported are:
+
+    - likelihood is only compatible with either python 2 or 3 and GAMBIT is configured with unsupported python version
+    - likelihood implementation does not follow MontePython guidelines. Examples could be
+        * quantities derived by CLASS are not called directly through the CLASS python object but through MontePython data.get_mcmc_parameters(['derived'])
+        * parameters setting the observables that CLASS has to compute are not specified
+        correctly with 'need_cosmo_arguments' function
+      If you fix these issues, you can use the likelihood and remove it from the 'unsupported_likes' list in the MontePython frontend source file.
 
 get_MP_loglike: |
     Returns LogLike value of MontePython likelihood specified by passing the name of the likelihood as a string.
@@ -4224,7 +4373,7 @@ create_MP_likelihood_objects: |
    Returns a map of string to Python objects: the Python objects from MontePython are the initialised "Likelihood" objects used internally.
 
 bao_like_correlation: |
-   Adds the correlation coefficients of the bao_correlations likelihood to the output file. Optional to use in combination with the bao_correlations montethon likelihoods. 
+   Adds the correlation coefficients of the bao_correlations likelihood to the output file. Optional to use in combination with the bao_correlations montethon likelihoods.
 
 #----------------------------
 #  DarkAges
@@ -4275,7 +4424,7 @@ DecayingDM_electron_parameters: |
    See ./gambit DecayingDM_electron and ./gambit DecayingDM_general for more details.
 
 LCDM_parameters: |
-   Standard (4+1)-parameter LCDM model (no neutrinos, no inflation), using H0 instead of 100*theta_s. 
+   Standard (4+1)-parameter LCDM model (no neutrinos, no inflation), using H0 instead of 100*theta_s.
    See ./gambit LCDM for more details.
 
 LCDM_theta_parameters: |
@@ -4283,30 +4432,24 @@ LCDM_theta_parameters: |
    See ./gambit LCDM_theta for more details.
 
 etaBBN_rBBN_rCMB_dNurBBN_dNurCMB_parameters: |
-
    Model to be scanned in addition to LCDM as an extension: allowing for non-standard values of the baryon-to-photon ratio at BBN, non-standard values of the temperature ratio between photon and neutrinos at BBN and CMB release, as well as additional ultra-relativistic species present during BBN or at CMB release. See ./gambit etaBBN_rBBN_rCMB_dNurBBN_dNurCMB for more details.
 
 etaBBN_parameters: |
    Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB with only etaBBN as free parameter. See ./gambit etaBBN for more details.
 
 rBBN_rCMB_dNurBBN_dNurCMB_parameters: |
-
    Child model of etaBBN_rBBN_rCMB_dNurBBN_dNurCMB. See ./gambit rBBN_rCMB_dNurBBN_dNurCMB for more details.
 
 dNurBBN_dNurCMB_parameters: |
-
    Child model of rBBN_rCMB_dNurBBN_dNurCMB model. See ./gambit dNurBBN_dNurCMB for more details.
 
 dNurCMB_parameters: |
-
    Child model of dNurBBN_dNurCMB model. See ./gambit dNurCMB for more details.
 
 rBBN_rCMB_parameters: |
-
    Child model of rBBN_rCMB_dNurBBN_dNurCMB model. See ./gambit rBBN_rCMB for more details.
 
 rCMB_parameters: |
-
    Child model of rBBN_rCMB model. See ./gambit rCMB for more details.
 
 PowerLaw_ps_parameters: |
@@ -4322,23 +4465,18 @@ Inflation_InstReh_1Starobinsky_parameters: |
    See ./gambit Inflation_InstReh_1Starobinsky for more details.
 
 Inflation_InstReh_1mono23_parameters: |
-
    Inflation model with potential V(phi) = 1.5 lambda phi^(2/3), assuming instant reheating. See ./gambit Inflation_InstReh_1mono23 for more details.
 
 Inflation_InstReh_1linear_parameters: |
-
    Inflation model with potential V(phi) = lambda phi, assuming instant reheating. See ./gambit Inflation_InstReh_1linear for more details.
 
 Inflation_InstReh_1quadratic_parameters: |
-
    Inflation model with potential V(phi) = lambda phi, assuming instant reheating. See ./gambit Inflation_InstReh_1quadratic for more details.
 
 Inflation_InstReh_1quartic_parameters: |
-
    Inflation model with potential V(phi) = 0.25 lambda phi^4, assuming instant reheating. See ./gambit Inflation_InstReh_1quartic for more details.
 
 Inflation_InstReh_1natural_parameters: |
-
    Natural inflation model (axion-like particles) with potential V(phi) = Lambda^4 [1 + cos(phi/f)], assuming instant reheating. See ./gambit Inflation_InstReh_1natural for more details.
 
 cosmo_nuisance_JLA_parameters: |
@@ -4365,14 +4503,32 @@ cosmo_nuisance_euclid_lensing_parameters: |
 cosmo_nuisance_euclid_pk_parameters: |
    Cosmological nuisance parameters for Euclid cosmic shear likelihood. See ./gambit cosmo_nuisance_euclid_pk for more details.
 
+cosmo_nuisance_euclid_pk_noShot_parameters: |
+   Cosmological nuisance parameters for Euclid cosmic shear likelihood. See ./gambit cosmo_nuisance_euclid_pk_noShot for more details.
+
 cosmo_nuisance_ISW_parameters: |
    Cosmological nuisance parameters for tomographic ISW likelihood. See ./gambit cosmo_nuisance_ISW for more details.
 
 cosmo_nuisance_kids450_qe_likelihood_public_parameters: |
    Cosmological nuisance parameters for KiDS-450 shear power spectrum likelihood. See ./gambit cosmo_nuisance_kids450_qe_likelihood_public for more details.
 
-cosmo_nuisance_ska_parameters: |
-   Cosmological nuisance parameters for SKA1 21cm intensity mapping, SKA1 & SKA2 cosmic shear, SKA1 & SKA2 galaxy clustering. See ./gambit cosmo_nuisance_ska for more details.
+cosmo_nuisance_ska1_parameters: |
+   Cosmological nuisance parameters for SKA1 21cm intensity mapping and galaxy clustering likelihoods. See ./gambit cosmo_nuisance_ska1 for more details.
+
+cosmo_nuisance_ska1_IM_band_parameters: |
+   Cosmological nuisance parameters for SKA1 21cm intensity mapping likelihoods. See ./gambit cosmo_nuisance_ska1_IM_band for more details.
+
+cosmo_nuisance_ska1_IM_band_noHI_parameters: |
+   Cosmological nuisance parameters for SKA1 21cm intensity mapping likelihoods. See ./gambit cosmo_nuisance_ska1_IM_band_noHI for more details.
+
+cosmo_nuisance_ska1_pk_parameters: |
+   Cosmological nuisance parameters for SKA1 galaxy clustering likelihood. See ./gambit cosmo_nuisance_ska1_pk for more details.
+
+cosmo_nuisance_ska2_pk_parameters: |
+   Cosmological nuisance parameters for SKA2 galaxy clustering likelihood. See ./gambit cosmo_nuisance_ska2_pk for more details.
+
+cosmo_nuisance_ska_lensing_parameters: |
+   Cosmological nuisance parameters for SKA 1&2 cosmic shear likelihoods. See ./gambit cosmo_nuisance_ska_lensing for more details.
 
 cosmo_nuisance_spt_parameters: |
       Cosmological nuisance parameters for acbar. See ./gambit cosmo_nuisance_spt for more details.
@@ -4397,9 +4553,6 @@ cosmo_nuisance_dummy_parameters: |
 T_cmb: |
   Sets CMB temperature (to 2.7255 if not specified in the YAML file).
 
-T_ncdm_SM: |
-   Returns the SM neutrino temperature in units of Tcmb.
-
 T_ncdm: |
    Returns the neutrino temperature in units of Tcmb.
 
@@ -4409,56 +4562,50 @@ n0_g: |
 eta0: |
    Returns the baryon-to-photon ratio today, eta_0.
 
-etaCMB:  |
-  Calculate baryon to photon ratio etaCMB at CMB release.
-
-etaBBN: |
-   Returns the baryon-to-photon ratio at the emphend of BBN, eta_BBN. 
-
 Omega0_g: |
-   Returns the total photon content today, Omega_gamma. 
+   Returns the total photon content today, Omega_gamma.
 
 Omega0_ur: |
-   Returns the total content in ultrarelativistic species today. 
+   Returns the total content in ultrarelativistic species today.
 
 Omega0_r: |
    Returns the total radiation content today, Omega_r.
 
 Omega0_m: |
-   Returns the total matter content today, Omega_m. 
+   Returns the total matter content today, Omega_m.
 
 Omega0_cdm: |
-   Returns the total cold DM content today, Omega_cdm. 
+   Returns the total cold DM content today, Omega_cdm.
 
 Omega0_ncdm: |
-   Returns the total neutrino content today, Omega_ncdm. 
+   Returns the total neutrino content today, Omega_ncdm.
 
 Omega0_b: |
-   Returns the total baryon content today, Omega_b.  
+   Returns the total baryon content today, Omega_b.
 
-H0:
+H0: |
    The Hubble rate today [km/s/Mpc].
 
-helium_abundance:
+helium_abundance: |
    The He4 abundance.
 
 primordial_power_spectrum: |
    Creates object containing the primordial power spectra of scalar, tensor, and isocurvature perturbations, for a given array of [k] values.
 
 k_pivot: |
-   Returns the comoving pivot scale, k_star in Mpc^-1. 
+   Returns the comoving pivot scale, k_star in Mpc^-1.
 
 mNu_tot: |
    Returns the total mass of neutrinos in eV.
 
 Neff_SM: |
-   Returns the effective number of neutrino species in the SM. 
+   Returns the effective number of neutrino species in the SM.
 
 N_ur: |
-   Returns the total number of ultra-relativistic species today. 
+   Returns the total number of ultra-relativistic species today.
 
-Sigma8: |
-   Returns sigma_8, the RMS perturbation over a sphere of radius 8h^-1 Mpc. 
+S8_cosmo: |
+   Returns S8 = sigma_8 (Omega0_m/0.3)^0.5, a measure for the amplitude of the matter power spectrum on scale 8/h Mpc.
 
 rs_drag: |
    Returns the comoving sound horizon at baryon drag.
@@ -4509,7 +4656,7 @@ total_DM_abundance: |
     Compute the total abundance of axion-like particles, produced either by misalignment or freeze-in.
 
 Neff: |
-   Returns the effective number of neutrino species. 
+   Returns the effective number of neutrino species.
 
 NuMasses_SM: |
   Create a map containing neutrino masses, the corresponding number of non-cold DM components (N_ncdm) today as well as the sum of the neutrino masses. Needed to pass correct parameters to CLASS.
@@ -4530,7 +4677,7 @@ classy_parameters_EnergyInjection: |
    Sets all input parameters for exoclass relevant for energy injection in the early Universe. These parameters are for example the DM mass and cross section (for annihilating DM models) or the DM lifetime and fraction (decaying DM models). Further, the energy injection coefficients and the injection efficiency functions are passed.
 
 classy_input_params: |
-  Creates an object of type Classy_input, containing a Python dictionary with all relevant input parameters for the classy run. 
+  Creates an object of type Classy_input, containing a Python dictionary with all relevant input parameters for the classy run.
   Additional input options for CLASS (precision parameters, more output...) can be set by setting a runOption 'classy_dict' for the function 'set_classy_input_params' and specifying these parameters.
 
 class_get_Neff: |
@@ -4552,10 +4699,10 @@ classy_exo_2_7_2_init: |
   Initialise ExoCLASS 2.7.2 run through the classy python wrapper.
 
 get_classy_backendDir: |
-  Return the path to the CLASS version that is used in the current run. 
+  Return the path to the CLASS version that is used in the current run.
 
 get_classy_cosmo_object: |
-  Return an instance of the CLASS python object, usually initialised as 'cosmo'. In GAMBIT, this object will be passed to MontePython for the computation of external likelihoods. 
+  Return an instance of the CLASS python object, usually initialised as 'cosmo'. In GAMBIT, this object will be passed to MontePython for the computation of external likelihoods.
 
 compute_Planck_lowp_TT_loglike: |
    function computes the Planck log-likelihood for a  given
@@ -4581,7 +4728,7 @@ Planck_lowl_loglike: |
    Computes the Planck CMB likelihood for the multipole range 2 leq ell leq 29.
 
 Planck_lensing_loglike: |
-   Computes the Planck lensing log-likelihood for a given set of C_ells. All module functions described here have the prefix function_Planck_lensing_. 
+   Computes the Planck lensing log-likelihood for a given set of C_ells. All module functions described here have the prefix function_Planck_lensing_.
 
 Planck_nuisance_prior_loglike: |
    Provides Gaussian priors on the nuisance parameters of the Planck likelihoods, as suggested by the Planck collaboration.
@@ -4847,7 +4994,7 @@ Gamma_RHN2rhoplusl: |
 
 Gamma_RHN2Dstarplusl: |
   Decay rate of right-handed neutrinos to a positively-charged D* meson and a lepton
- 
+
 Gamma_RHN2Dstarsl: |
   Decay rate of right-handed neutrinos to a positively-charged Ds* and a lepton
 
@@ -4859,7 +5006,7 @@ Gamma_RHN2etacnu: |
 
 Gamma_RHN2omeganu: |
   Decay rate of right-handed neutrinos to a omega meson and a left-handed neutrino
- 
+
 Gamma_RHN2phinu: |
   Decay rate of right-handed neutrinos to a phi meson and a left-handed neutrino
 

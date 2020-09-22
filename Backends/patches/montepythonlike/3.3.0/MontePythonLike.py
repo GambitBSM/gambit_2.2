@@ -24,6 +24,13 @@ import scipy.misc
 import sys
 import io_mp
 
+# (JR) to get a way of testing if a variable is 
+# a string working with python2 and 3
+# -> isinstance(some_variable, basestring)
+try:
+  basestring
+except NameError:
+  basestring = str
 
 class Likelihood(object):
     """
@@ -91,12 +98,12 @@ class Likelihood(object):
             self.nuisance = []
         for nuisance in self.use_nuisance:
             if nuisance not in data.mcmc_parameters:
-                print("Trying to raise error")
                 raise io_mp.LikelihoodError("The nuisance parameter %s must be defined, either fixed or varying, "
                     "for the %s likelihood. It seems you are using MontePython with GAMBIT. "
                     "Try adding the model cosmo_nuisance_%s to the 'Parameters' section "
-                    "in your yaml file." % (nuisance, self.name, self.name) )
-        
+                    "in your yaml file. \nTo get a list of the model parmeteters type "
+                    "./gambit cosmo_nuisance_%s" % (nuisance, self.name, self.name, self.name) )
+    
     def loglkl(self, cosmo, data):
         """
         Placeholder to remind that this function needs to be defined for a
@@ -109,6 +116,23 @@ class Likelihood(object):
         """
         raise NotImplementedError(
             'Must implement method loglkl() in your likelihood')
+
+    def raise_fiducial_model_err(self):
+        """ (JR) for use with GAMBIT: GAMBIT does not have an initial best-fit guess 
+        and the practice of erasing the cosmo container and refilling it does not 
+        work in the GAMBIT interface. Hence, potential fiducial model parameters
+        that likelihoods may need have to be provided. 
+        """
+        raise io_mp.LikelihoodError(
+                "You are using the likelihood '%s'. For this likelihood, spectra for a fiducial "
+                "have to be computed before the likelihood can be used. In MontePython "
+                "this happens automatically before the computation of the first parameter point. "
+                "However, the implementation of these computations is problematic for the "
+                "current interface with GAMBIT. If you want to use this likelihood, unfortunately "
+                "at the moment you have to produce the fiducial file yourself by running the likelihood "
+                "'%s' with MontePython standalone. Copy the fiducial file that is created "
+                "into the MontePython folder in <gambit_dir>/Backends/installed/montepythonlike/"
+                "<version>/data/<fiducial_file_name>."%(self.__class__.__name__,self.__class__.__name__))
 
     def read_from_file(self, path, data, command_line):
         """
@@ -1465,7 +1489,9 @@ class Likelihood_mock_cmb(Likelihood):
         # Write fiducial model spectra if needed (return an imaginary number in
         # that case)
         if self.fid_values_exist is False:
-            # Store the values now.
+            # ( (JR) throw error as creation of fiducial file does not work with GAMBIT
+            self.raise_fiducial_model_err()
+            '''# Store the values now.
             fid_file = open(os.path.join(
                 self.data_directory, self.fiducial_file), 'w')
             fid_file.write('# Fiducial parameters')
@@ -1495,8 +1521,7 @@ class Likelihood_mock_cmb(Likelihood):
             print( '\n')
             warnings.warn(
                 "Writing fiducial model in %s, for %s likelihood\n" % (
-                    self.data_directory+'/'+self.fiducial_file, self.name))
-            return 1j
+                    self.data_directory+'/'+self.fiducial_file, self.name))'''  
 
         # compute likelihood
 
@@ -1895,6 +1920,7 @@ class Likelihood_mpk(Likelihood):
 
         return
 
+
     # functions added for nuisance parameter space checks.
     def a2maxpos(self,a1val):
         a2max = -1.0
@@ -1993,12 +2019,12 @@ class Likelihood_mpk(Likelihood):
                 # (JR) had to adopt these check to work properly with ascii & unicode strings
                 #   original line was -> 'if type(value) != type('foo')' 
                 #   which crashed if one of the strings was unicode formated
-                if ((not isinstance(value, str)) and (not isinstance(value,unicode))):
+                if(not isinstance(value, basestring)):
                     #print("                     In non string type")
                     exec("self.%s = %s" % (key, value))
                 else:
                     #print("                     In string type")
-                    exec("self.%s = '%s'" % (key, value))
+                    exec("self.%s = '%s'" % (key, value.replace('\n','')))
 
     # compute likelihood
     def loglkl(self, cosmo, data):
@@ -2954,10 +2980,10 @@ class Data(object):
         # waste 
         for nuisance in self.mcmc_parameters:
             if nuisance not in nuisance_list:
-                raise io_mp.LikelihoodError("The nuisance parameter %s is included in the scan but not required by any"
+                raise io_mp.LikelihoodError("The nuisance parameter %s is included in the scan but not required by any "
                                     "likelihood in use. It seems you are using MontePython with GAMBIT. "
-                                    "Remove the 'cosmo_nuisance_..' model in the 'Parameters' section of the yaml file"
-                                    "that contains the parameter '%s'" % (nuisance, nuisance))
+                                    "Remove the 'cosmo_nuisance_..' model in the 'Parameters' section of the yaml file "
+                                    "that contains the parameter '%s'." % (nuisance, nuisance))
         
 
 def get_available_likelihoods(backendDir):

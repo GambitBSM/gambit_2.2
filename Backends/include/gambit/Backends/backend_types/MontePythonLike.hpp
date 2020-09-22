@@ -19,7 +19,8 @@
 ///
 ///  *********************************************
 
-#pragma once
+#ifndef __MontePythonLike_types_hpp__
+#define __MontePythonLike_types_hpp__
 
 #include "gambit/cmake/cmake_variables.hpp"
 
@@ -27,12 +28,13 @@
 
   #include <pybind11/pybind11.h>
   #include <pybind11/stl_bind.h>
+  #include "gambit/Backends/python_helpers.hpp"
 
   namespace Gambit
   {
 
-    /// Shorthand for a string to pybind object map map to avoid commas in macros
-    typedef std::map<std::string,pybind11::object> map_str_pyobj;
+    /// Shorthand for a string to pybind object map
+    //typedef std::map<std::string,pybind11::object> map_str_pyobj;
 
     /// Class holding MPLike data structure & map with initialised Likelihoods objects; this is
     /// separated form the Classy_cosmo_container since it needs to be initialised as 'static const'
@@ -55,4 +57,6 @@
 
   }
 
-#endif
+#endif // end of HAVE_PYBIND11 bracket
+
+#endif // defined __MontePythonLike_types_hpp__

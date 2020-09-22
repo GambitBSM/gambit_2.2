@@ -42,12 +42,13 @@
 #define __CosmoBit_types_hpp__
 
 #include "gambit/Utils/util_types.hpp"
-#include "gambit/CosmoBit/CosmoBit_utils.hpp"
 #include "gambit/Backends/backend_types/MontePythonLike.hpp"
 #include <valarray>
 #include <tuple>
 
-#include <pybind11/stl.h>
+#ifdef HAVE_PYBIND11
+  #include <pybind11/stl.h>
+#endif
 
 namespace Gambit
 {
@@ -60,7 +61,9 @@ namespace Gambit
     warning& CosmoBit_warning();
 
     typedef std::map< str,std::valarray < double > > map_str_valarray_dbl;
-    typedef std::tuple<pybind11::object, map_str_str, map_str_pyobj> MPLike_objects_container;
+    #ifdef HAVE_PYBIND11
+      typedef std::tuple<pybind11::object, map_str_str, map_str_pyobj> MPLike_objects_container;
+    #endif
 
     class SM_time_evo
     {
@@ -119,52 +122,19 @@ namespace Gambit
         double factor_HT_evo;
     };
 
-    /// Class containing the inputs used for inputs to MultiModeCode
-    class Multimode_inputs
-    {
-        public:
-            // Constructor
-            Multimode_inputs();
-            // Debugging options
-            int silence_output;
-            // k values where to evaluate the power spectrum
-            double k_min;
-            double k_max;
-            int numsteps;
-            // Parameters realted to the pivot scale
-            double k_pivot;
-            double N_pivot;
-            double dlnk;
-            // Parameters related to the potential and initial condidtions
-            int num_inflaton = -1;
-            int potential_choice = -1;
-            int vparam_rows = -1;
-            std::vector<double> vparams;
-            std::vector<double> phi_init0;
-            std::vector<double> dphi_init0;
-            // Parameters realted to the scenario for initial conditions
-            int slowroll_infl_end;
-            int instreheat;
-            // Parameters related to approximations and observables
-            int use_deltaN_SR;
-            int evaluate_modes;
-            int use_horiz_cross_approx;
-            int get_runningofrunning;
-    };
-
-
     /// Class containing the primordial power spectrum.
     /// Members:
     /// - vector of modes k (1/Mpc)
     /// - scalar power spectrum of these modes P_s(k) (dimensionless)
     /// - tensor power spectrum of these modes P_t(k) (dimensionless)
+    /// - scalar power spectrum of isocurvature modes P_s_iso(k) (dimensionless)
     class Primordial_ps
     {
         public:
             Primordial_ps() {};
             ~Primordial_ps() {};
 
-            // Fill k from an array of doubles
+            /// Fill k from an array of doubles
             void set_N_pivot(double npiv) { N_pivot = npiv; }
             void fill_k(double*, int);
             void fill_P_s(double*, int);
@@ -175,6 +145,7 @@ namespace Gambit
             std::vector<double>& get_k() { return k; }
             std::vector<double>& get_P_s() { return P_s; }
             std::vector<double>& get_P_t() { return P_t; }
+            std::vector<double>& get_P_s_iso() { return P_s_iso; }
             int get_vec_size() { return vec_size; }
 
         private:
@@ -183,15 +154,14 @@ namespace Gambit
             std::vector<double> P_s;
             std::vector<double> P_s_iso;
             std::vector<double> P_t;
-            // needed to pass vector length to CLASS,
-            // set in 'fill_k' method
+            /// needed to pass vector length to CLASS; set in 'fill_k' method
             int vec_size;
     };
 
     /// Class containing the *parametrised* primordial power spectrum.
     /// Members:
     /// - spectral tilt n_s
-    /// - amplitude of scalar perturbations A_s
+    /// - amplitude of scalar perturbations A_s [as ln(10^{10}A_s)]
     /// - scalar to tensor ratio r
     class Parametrised_ps
     {
@@ -209,9 +179,8 @@ namespace Gambit
             double get_ln10A_s() { return ln10A_s; }
             double get_r() { return r; }
 
-            // return members as str to double map for printing
+            /// return members as str to double map for printing
             map_str_dbl get_parametrised_ps_map();
-
 
         private:
             double N_pivot;
