@@ -196,7 +196,7 @@ namespace Gambit
 
         for (const HEPUtils::Particle* electron : event->electrons())
         {
-          if (electron->pT()>7. && electron->abseta()<2.47) baselineElectrons.push_back(electron);
+          if (electron->pT()>4.5 && electron->abseta()<2.47) baselineElectrons.push_back(electron);
         }
 
         // Apply electron efficiency
