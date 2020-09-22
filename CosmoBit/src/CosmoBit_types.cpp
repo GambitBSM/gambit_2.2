@@ -33,7 +33,6 @@
 
 #include <string>
 #include <iostream>
-#include <valarray>
 
 #include "gambit/CosmoBit/CosmoBit_types.hpp"
 #include "gambit/CosmoBit/CosmoBit_utils.hpp"

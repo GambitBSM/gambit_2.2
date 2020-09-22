@@ -42,9 +42,6 @@
 ///
 ///  *********************************************
 
-#include <valarray>
-#include <stdint.h> // save memory addresses as int
-
 #include <gsl/gsl_odeiv2.h>
 
 #include "gambit/Elements/gambit_module_headers.hpp"
