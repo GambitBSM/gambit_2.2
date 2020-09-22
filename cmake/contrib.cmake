@@ -184,16 +184,17 @@ endif()
 
 if(NOT EXCLUDE_HEPMC)
   set(lib "HepMC3-static")
+  set(lib_dir "lib")
   set(md5 "57a7cd2497f404ceff9bc97bfe808115")
   set(dl "https://hepmc.web.cern.ch/hepmc/releases/HepMC3-${ver}.tar.gz")
   set(build_dir "${PROJECT_BINARY_DIR}/${name}-prefix/src/${name}-build")
   include_directories("${dir}/include")
-  set(HEPMC_LDFLAGS "-L${build_dir}/outputs/lib -l${lib}")
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${dir}/lib")
+  set(HEPMC_LDFLAGS "-L${build_dir}/outputs/${lib_dir} -l${lib}")
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${build_dir}/outputs/${lib_dir}")
   ExternalProject_Add(${name}
     DOWNLOAD_COMMAND ${DL_CONTRIB} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
-    CMAKE_COMMAND ${CMAKE_COMMAND} ..
+    CMAKE_COMMAND ${CMAKE_COMMAND} -DCMAKE_INSTALL_LIBDIR=${lib_dir} ..
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_CXX_FLAGS=${BACKEND_CXX_FLAGS} -DHEPMC3_ENABLE_ROOTIO=${HEPMC3_ROOTIO}
     BUILD_COMMAND ${MAKE_PARALLEL} HepMC3_static
     INSTALL_COMMAND ""
