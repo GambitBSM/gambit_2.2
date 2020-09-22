@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include "gambit/Elements/shared_types.hpp"
 #include "gambit/ColliderBit/colliders/BaseCollider.hpp"
+#include "gambit/ColliderBit/colliders/SetHooksClass.hpp"
 #include "SLHAea/slhaea.h"
 
 namespace Gambit
@@ -47,6 +48,13 @@ namespace Gambit
         /// Get the Pythia instance.
         const PythiaT* pythia() const { return _pythiaInstance; }
 
+        // Me trying to test the specialised class
+        bool SetupMatchingUserHook() 
+        {
+            SetHooks<PythiaT, EventT> Hook;
+            Hook.SetupHook(_pythiaInstance);
+            return true;
+        }
 
         /// @name Custom exceptions:
         ///@{
