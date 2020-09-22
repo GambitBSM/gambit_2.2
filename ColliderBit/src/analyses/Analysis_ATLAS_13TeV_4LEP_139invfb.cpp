@@ -207,7 +207,7 @@ namespace Gambit
 
         for (const HEPUtils::Particle* muon : event->muons())
         {
-          if (muon->pT()>5. && muon->abseta()<2.7) baselineMuons.push_back(muon);
+          if (muon->pT()>3. && muon->abseta()<2.7) baselineMuons.push_back(muon);
         }
 
         // Apply muon efficiency
