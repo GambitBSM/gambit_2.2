@@ -248,7 +248,7 @@ namespace Gambit
         return model.get_MAh_pole_slha(1);
       }
 
-      template <class Model>\
+      template <class Model>
       double get_MHpm1_pole_slha(const Model& model)
       {
         return model.get_MHpm_pole_slha(1);
@@ -589,6 +589,7 @@ namespace Gambit
             tmp_map["~e-"] = FInfo1( &Model::get_MSe_pole_slha, i012345 );
             tmp_map["~nu"]=  FInfo1( &Model::get_MSv_pole_slha, i012 );
             tmp_map["h0"] =  FInfo1( &Model::get_Mhh_pole_slha, i01 );
+            tmp_map["A0"] =  FInfo1( &Model::get_MAh_pole_slha, i01 );
             tmp_map["~chi+"] = FInfo1( &Model::get_MCha_pole_slha, i01 );
             tmp_map["~chi0"] = FInfo1( &Model::get_MChi_pole_slha, i0123 );
 
