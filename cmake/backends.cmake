@@ -1091,7 +1091,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 else()
   set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
 #  set(md5 "7b589002b78037c40a8c52269bf39c0e")
-set(md5 "none")
+set(md5 "0e8b2c5b5a4f7d5a2e5283ab1f9b1798")
 endif()
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 check_ditch_status(${name} ${ver} ${dir})
@@ -1163,7 +1163,7 @@ if(NOT ditched_${name}_${ver})
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
           UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt 
           CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}
-          BINARY_DIR "${dir}/Vevacious"
+          BINARY_DIR "${dir}/"
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
                # COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/VevaciousPlusPlus/ModelFiles/
           INSTALL_COMMAND ""

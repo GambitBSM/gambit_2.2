@@ -97,7 +97,7 @@ SUSYHD:
   1.0.2:       ./Backends/installed/susyhd/1.0.2/SUSYHD.m
 
 vevacious:
-  1.0:         ./Backends/installed/vevacious/1.0/Vevacious/lib/libVevaciousPlusPlus.so
+  1.0:         ./Backends/installed/vevacious/1.0/lib/libVevaciousPlusPlus.so
 
 hom4ps:
   2.0:         ./Backends/installed/hom4ps/2.0/
