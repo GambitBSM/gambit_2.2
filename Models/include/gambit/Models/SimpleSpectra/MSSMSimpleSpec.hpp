@@ -80,6 +80,7 @@ namespace Gambit
            double get_MGlu_pole() const;
 
            double get_Mhh_pole_slha(int i) const;
+           double get_MAh_pole_slha(int i) const;
            double get_MAh_pole () const;
            double get_MHpm_pole() const;
            double get_MW_pole()   const;
