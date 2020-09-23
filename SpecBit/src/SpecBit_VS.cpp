@@ -444,6 +444,9 @@ namespace Gambit
     {
         using namespace Pipes::get_likelihood_VS;
         
+        // (JR) what is here is just copied and pasted from the global one.. once the 
+        // other stuff with choosing minima works, this has to add up the results correctly
+        // #todo
         VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         double lifetime =  vevacious_results.get_lifetime("nearest");
 
@@ -622,6 +625,12 @@ namespace Gambit
             opts["PotentialFunctionClassType"] =    runOptions.getValueOrDef<std::string>("FixedScaleOneLoopPotential", "potential_type");
             opts["homotopybackend"] =               runOptions.getValueOrDef<std::string>("hom4ps", "homotopy_backend");
             opts["globalIsPanic"] =                 runOptions.getValueOrDef<std::string>("false", "global_minimum_is_panic");
+            // (JR) this is fixed here for all vevacious runs 
+            // if we want to be able to set this differently for global and nearest, we have 
+            // to think about how to pass it to vev
+            // -> probably best like "global" and "nearest" when calling 
+            // vevaciousPlusPlus.RunPoint(panic_vacuum, tunnelingStrategy)
+            // # todo
             opts["TunnelingStrategy"] =             runOptions.getValueOrDef<std::string>("JustQuantum", "tunneling_strategy");
             opts["pathFindingTimeout"] =            runOptions.getValueOrDef<std::string>("3600", "path_finding_timeout");
             opts["SurvivalProbabilityThreshold"] =  runOptions.getValueOrDef<std::string>("0.01", "survival_probability_threshold");
