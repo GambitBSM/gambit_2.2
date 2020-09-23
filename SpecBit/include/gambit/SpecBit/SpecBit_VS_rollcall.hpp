@@ -119,6 +119,25 @@
   /* Vacuum stability likelihoods & results */
   /******************************************/
 
+  /// Create a string set containing a list with all tunneling calculations for the 
+  /// vacuum stability likelihood VS_likelihood
+  #define CAPABILITY panic_vacua
+  START_CAPABILITY
+    #define FUNCTION set_panic_vacua
+    START_FUNCTION(std::set<std::string>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Tunnelling likelihood (including contributions set by panic_vacua)
+  #define CAPABILITY VS_likelihood
+  START_CAPABILITY
+    #define FUNCTION get_likelihood_VS
+      START_FUNCTION(double)
+      DEPENDENCY(check_vacuum_stability, SpecBit::VevaciousResultContainer)
+      DEPENDENCY(compare_panic_vacua, map_str_str)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   /// Tunnelling likelihood using global minimum as panic vacuum
   #define CAPABILITY VS_likelihood_global
   START_CAPABILITY
@@ -168,7 +187,7 @@
     #undef FUNCTION
   #undef CAPABILITY
 
-  // Initialize vevacious with a set of YAML runOptions.
+  /// Initialize vevacious with a set of YAML runOptions.
   #define CAPABILITY init_vevacious
   START_CAPABILITY
     #define FUNCTION initialize_vevacious
@@ -176,7 +195,36 @@
     DEPENDENCY(vevacious_file_location, map_str_str)
     #undef FUNCTION
   #undef CAPABILITY
-   
+
+  /// If tunnelling to global and nearest vacuum are requested, this
+  /// capability compares if the two vacua are the same. 
+  /// Return true if they coincide, false if not.
+  #define CAPABILITY compare_panic_vacua
+  START_CAPABILITY
+    #define FUNCTION compare_panic_vacua
+    START_FUNCTION(map_str_str)
+    DEPENDENCY(panic_vacua,std::set<std::string>)
+    DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
+    NEEDS_CLASSES_FROM(vevacious, default)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Function for computing the stability of the scalar potential w.r.t. global minimum. Model independent. 
+  /// Just works with a filled instance of SpectrumEntriesForVevacious for the respective Model.
+  /// calls two non-rollcalled helper functions: helper_run_vevacious & helper_catch_vevacious
+  #define CAPABILITY check_vacuum_stability
+  START_CAPABILITY
+    #define FUNCTION check_vacuum_stability_vevacious
+    START_FUNCTION(SpecBit::VevaciousResultContainer)
+    // should eventually get the number of implemented pathFinders in vevacious in a non-hard coded way # todo
+    //BACKEND_REQ(get_pathFinder_number,(vevtag), int, ())
+    DEPENDENCY(compare_panic_vacua,map_str_str)
+    DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
+    DEPENDENCY(init_vevacious, std::string)
+    NEEDS_CLASSES_FROM(vevacious, default)
+  #undef FUNCTION
+  #undef CAPABILITY
+
   /// Function for computing the stability of the scalar potential w.r.t. global minimum. Model independent. 
   /// Just works with a filled instance of SpectrumEntriesForVevacious for the respective Model.
   /// calls two non-rollcalled helper functions: helper_run_vevacious & helper_catch_vevacious
