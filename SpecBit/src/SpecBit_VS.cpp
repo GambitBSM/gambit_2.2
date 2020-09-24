@@ -878,7 +878,7 @@ namespace Gambit
       if( panic_vacua.find("global") != panic_vacua.end() and panic_vacua.find("nearest") != panic_vacua.end() )
       {
         // get vector pair with VEVs of global and nearest vacua
-        std::pair<std::vector<double>,std::vector<double>> vevs = vevaciousPlusPlus.RunVacua("Internal");
+        std::pair<std::vector<double>,std::vector<double>> vevs = vevaciousPlusPlus.RunVacua("internal");
         std::vector<double> global = vevs.first;
         std::vector<double> nearest = vevs.second;
 
@@ -1117,8 +1117,8 @@ namespace Gambit
         std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious", "1.0");
         std::string vevaciouspath = vevaciouslibpath + "/../";
 
-        result["ScaleAndBlockFileSource"] = vevaciouspath + "ModelFiles/LagrangianParameters/MssmCompatibleWithSlhaOneAndSlhaTwo.xml";
-        result["ModelFileSource"] = vevaciouspath + "ModelFiles/PotentialFunctions/RealMssmWithStauAndStopVevs.vin";
+        result["ScaleAndBlockFileSource"] = vevaciouspath + "ModelFiles/LagrangianParameters/MSSM.xml";
+        result["ModelFileSource"] = vevaciouspath + "ModelFiles/PotentialFunctions/MSSM_StauAndStop_RealVevs.vin";
         result["ScaleAndBlockFile"] = modelfilesPath + "ScaleAndBlockFile.xml";
         result["ModelFile"] = modelfilesPath + "ModelFile.vin";
     }
