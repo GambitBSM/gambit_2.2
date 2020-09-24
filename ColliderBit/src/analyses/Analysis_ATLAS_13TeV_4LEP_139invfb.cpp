@@ -80,7 +80,7 @@ namespace Gambit
         return;
       }
 
-     void bTagger(vector<const HEPUtils::Jet*> candJets) {
+     void bTagger(vector<const HEPUtils::Jet*>& candJets) {
         vector<const HEPUtils::Jet*> bJets;
 
         // Find b-jets
@@ -94,7 +94,7 @@ namespace Gambit
           // Misstag light jet
           else if( random_bool(misstag) ) bJets.push_back(jet);
         }
-        return bJets;
+        candJets = bJets;
     }
 
       // Lepton jet overlap removal
@@ -143,18 +143,20 @@ namespace Gambit
             return;
         vector<const HEPUtils::Particle*> survivors;
         vector<const HEPUtils::Particle*> todrop;
-        for(const HEPUtils::Particle* p1 = particles.begin(); p1 != particles.end()-1; ++p1)
+        for(auto p1_it = particles.begin(); p1_it != particles.end()-1; ++p1_it)
         {
+          auto p1 = *p1_it;
           bool overlap = false;
           bool lowpt = false;
-          for(const HEPUtils::Particle* p2 = p1+1; p2 != particles.end(); ++p2)
+          for(auto p2_it = p1_it+1; p2_it != particles.end(); ++p2_it)
           {
+            auto p2 = *p2_it;
             double dR = p1->mom().deltaR_eta(p2->mom());
             if(fabs(dR) <= DeltaRMax) {
                 overlap = true;
                 lowpt = true;
-                if (p1->pT < pTMAX || p2->pT() < pTMax) {
-                    todrop.push_back(p2)
+                if (p1->pT() < pTMax || p2->pT() < pTMax) {
+                    todrop.push_back(p2);
                     lowpt = true;
                     break;
                 }
@@ -164,8 +166,8 @@ namespace Gambit
             survivors.push_back(p1);
           }
         }
-        std::sort(survivors.begin(), survivors().end());
-        std::sort(todrop.begin(), todrop().end());
+        std::sort(survivors.begin(), survivors.end());
+        std::sort(todrop.begin(), todrop.end());
         vector<const HEPUtils::Particle*> result;
         std::set_difference(survivors.begin(), survivors.end(), todrop.begin(), todrop.end(), std::back_inserter(result));
         particles = result;
@@ -325,7 +327,8 @@ namespace Gambit
 
 
         // Signal objects
-        vector<const HEPUtils::Jet*> signalBJets = bTagger(baselineJets);
+        vector<const HEPUtils::Jet*> signalBJets = baselineJets;
+        bTagger(signalBJets);  // Keep only B-tagged jets
         vector<const HEPUtils::Particle*> signalElectrons = baselineElectrons;
         vector<const HEPUtils::Particle*> signalMuons = baselineMuons;
         vector<const HEPUtils::Particle*> signalTaus = baselineTaus;
@@ -336,7 +339,6 @@ namespace Gambit
         // Missing: pT-dependent isolation criteria for signal leptons (see paper)
 
         // Sort by pT
-        sort(signalJets.begin(), signalJets.end(), compareJetPt);
         sort(signalLeptons.begin(), signalLeptons.end(), comparePt);
 
         // Count signal leptons and jets
@@ -382,8 +384,8 @@ namespace Gambit
         // --- 4L0T ---
 
         // SR0-ZZ-loose-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 100.) _counters.at("SR0-ZZ-loose-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 100.)
+        if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 100.) _counters.at("SR0-ZZ-loose-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-loose-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -397,8 +399,8 @@ namespace Gambit
         // }
 
         // SR0-ZZ-tight-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 200.) _counters.at("SR0-ZZ-tight-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 200.)
+        if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 200.) _counters.at("SR0-ZZ-tight-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 200.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -412,8 +414,8 @@ namespace Gambit
         // }
 
         // SR0-ZZ-loose
-        if (nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _counters.at("SR0-ZZ-loose").add_event(event);
-        //if (nSignalLeptons >= 4 && Z1 && Z2 && met > 50.)
+        if (nSignalLeptons >= 4 && Zlike && met > 50.) _counters.at("SR0-ZZ-loose").add_event(event);
+        //if (nSignalLeptons >= 4 && Zlike && met > 50.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-loose ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -427,8 +429,8 @@ namespace Gambit
         // }
 
         // SR0-ZZ-tight
-        if (nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _counters.at("SR0-ZZ-tight").add_event(event);
-        //if (nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
+        if (nSignalLeptons >= 4 && Zlike && met > 100.) _counters.at("SR0-ZZ-tight").add_event(event);
+        //if (nSignalLeptons >= 4 && Zlike && met > 100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -442,8 +444,8 @@ namespace Gambit
         // }
 
         // SR0-loose-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 600.) _counters.at("SR0-loose-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 600.)
+        if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 600.) _counters.at("SR0-loose-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 600.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-loose-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -457,8 +459,8 @@ namespace Gambit
         // }
 
         // SR0-tight-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 1000.) _counters.at("SR0-tight-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 1000.)
+        if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 1000.) _counters.at("SR0-tight-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 1000.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -472,8 +474,8 @@ namespace Gambit
         // }
 
         // SR0-breq
-        if (nSignalLeptons >= 4 && NbJets >= 1 && !Z1 && met > 1300.) _counters.at("SR0-breq").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets >= 1 && !Z1 && met > 1300.)
+        if (nSignalLeptons >= 4 && NbJets >= 1 && !Zlike && met > 1300.) _counters.at("SR0-breq").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets >= 1 && !Zlike && met > 1300.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
