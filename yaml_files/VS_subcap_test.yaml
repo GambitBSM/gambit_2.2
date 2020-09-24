@@ -86,11 +86,9 @@ ObsLikes:
   # Vacuum Stability Likelihood
   - capability:   VS_likelihood
     purpose:      LogLike
-    sub_capabilities: 
-      - global
-      - global_thermal
-      - nearest
-      - nearest_thermal
+    sub_capabilities:   
+      global: [quantum]
+      nearest: [quantum]
 
 #  - capability: lnL_W_mass
 #    purpose:    LogLike

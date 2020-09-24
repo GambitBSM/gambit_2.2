@@ -119,11 +119,20 @@
   /* Vacuum stability likelihoods & results */
   /******************************************/
 
-  /// Create a string set containing a list with all tunneling calculations for the 
+  /// Create a string set containing a list with all panic vacua for the 
   /// vacuum stability likelihood VS_likelihood
   #define CAPABILITY panic_vacua
   START_CAPABILITY
     #define FUNCTION set_panic_vacua
+    START_FUNCTION(std::set<std::string>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /// Create a string set containing a list of all tunnelling strategies for the
+  /// vacuum stability likelihood VS_likelihood
+  #define CAPABILITY tunnelling_strategy
+  START_CAPABILITY
+    #define FUNCTION set_tunnelling_strategy
     START_FUNCTION(std::set<std::string>)
     #undef FUNCTION
   #undef CAPABILITY
@@ -193,6 +202,7 @@
     #define FUNCTION initialize_vevacious
     START_FUNCTION(std::string)
     DEPENDENCY(vevacious_file_location, map_str_str)
+    DEPENDENCY(tunnelling_strategy,std::set<std::string>)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -204,6 +214,7 @@
     #define FUNCTION compare_panic_vacua
     START_FUNCTION(map_str_str)
     DEPENDENCY(panic_vacua,std::set<std::string>)
+    DEPENDENCY(tunnelling_strategy,std::set<std::string>)
     DEPENDENCY(pass_spectrum_to_vevacious, SpecBit::SpectrumEntriesForVevacious)
     NEEDS_CLASSES_FROM(vevacious, default)
     #undef FUNCTION

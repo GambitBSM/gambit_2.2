@@ -444,11 +444,21 @@ namespace Gambit
     {
         using namespace Pipes::get_likelihood_VS;
         
-        // (JR) what is here is just copied and pasted from the global one.. once the 
-        // other stuff with choosing minima works, this has to add up the results correctly
-        // #todo
+        // Compute all vacuum stability results
         VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
-        double lifetime =  vevacious_results.get_lifetime("nearest");
+ 
+        // Add the decay width for all reque
+        double width = 0.0;
+        for(auto vacua : *Dep::compare_panic_vacua)
+        {
+          std::cout << vacua.first << " -> " << vacua.second << std::endl;
+          if (vacua.second != "JustThermal")
+            width += vevacious_results.get_width(vacua.first);
+          if (vacua.second != "JustQuantum")
+            width += vevacious_results.get_thermalWidth(vacua.first);
+        }
+
+        double lifetime = hbar/width;
 
         // This is based on the estimation of the past lightcone from 1806.11281
         double conversion = (6.5821195e-25)/(31536000);
@@ -514,11 +524,9 @@ namespace Gambit
 
     /// Create a string set containing a list with all likelihoods that vevacious
     /// should calculate. The options are tunneling to
-    /// - the global minimum -> "global" (quantum tunneling)
-    /// - the global minimum -> "global_thermal" (thermal tunneling)
-    /// - the nearest minimum -> "nearest" (quantum tunneling)
-    /// - the global minimum -> "nearest_thermal" (thermal tunneling)
-    /// Default behaviour (if no sub-capabilities are set): calculate all of them
+    /// - the global minimum -> "global"
+    /// - the nearest minimum -> "nearest"
+    /// Default behaviour (if no sub-capabilities are set): calculate both
     void set_panic_vacua(std::set<std::string> & result)
     {
       using namespace Pipes::set_panic_vacua;
@@ -531,8 +539,8 @@ namespace Gambit
         std::vector<str> subcaps = Downstream::subcaps->getNames();
         
         // if no sub-capabilities are set, fix default behaviour: calculate tunneling to global and 
-        // nearest minimum for zero and non-zero temperature
-        std::set<std::string> default_choice = {"global","nearest","global_thermal","nearest_thermal"};
+        // nearest minimum
+        std::set<std::string> default_choice = {"global","nearest"};
         
         // read in yaml options or ..
         if(not subcaps.empty()) for (const auto& x : subcaps) {result.insert(x);}
@@ -547,8 +555,7 @@ namespace Gambit
            << "You can change this in the ObsLikes section of your YAML file," << endl
            << "by setting sub_capabilities 'VS_likelihood', e.g." << endl
            << "    sub_capabilities:" << endl
-           << "      - nearest" << endl
-           << "      - nearest_thermal" << endl
+           << "       - nearest" << endl
            << "to only calculate the tunneling probabilities to the nearest minimum." << endl;
         logger() << ss.str() << EOM;
       
@@ -557,49 +564,98 @@ namespace Gambit
       }
     }
 
+    /// Create a string set containing a list of the tunnelling strategies
+    /// that vevacious should use. This could be
+    /// - quantum (zero-T) tunnelling to new minimum -> "quantum"
+    /// - thermal (finiite-T) tunnelling to new minimum -> "thermal"
+    /// Default behaviour is both
+    void set_tunnelling_strategy(std::set<std::string> &result)
+    {
+      using namespace Pipes::set_tunnelling_strategy;
+
+      static bool firstrun = true;
+
+      if(firstrun)
+      {
+        result.clear();
+
+        // Get the tunnelling strategies given in the YAML file from the sub-capabilities.
+        YAML::Node subcaps = Downstream::subcaps->getNode();
+
+        // Default behavious is to do both 
+        std::set<std::string> default_choice = {"quantum","thermal"};
+
+        // Iterate over sub-capabilites to extract the strategies
+        // If list is a sequence it will just take the default
+        if(subcaps.IsSequence())
+          result = default_choice;
+        // If list is a map then it probably has options
+        if(subcaps.IsMap())
+        {
+          for(const auto& subcap : subcaps)
+          {
+            std::set<str> temp;
+            if (subcap.second.IsNull())
+              temp = default_choice;
+            else if(subcap.second.IsScalar())
+              temp.insert(subcap.second.as<str>());
+            else if(subcap.second.IsSequence())
+              for (size_t i=0; i<subcap.second.size();i++) temp.insert(subcap.second[i].as<str>());
+
+            if (not result.empty() and temp != result)
+            {
+              std::ostringstream errmsg;
+              errmsg << "Different tunnelling processes selected for different vacua, please select the same for both ";
+              SpecBit_error().raise(LOCAL_INFO,errmsg.str());
+            }
+            result = temp;
+          }
+        }
+        firstrun = false;
+      }
+    }
+
     /// Set tunnelling strategy for the different minima, either
     /// - JustQuantum -> only quantum
     /// - JustThermal -> only thermal or
     /// - QuantumThenThermal -> both
-    /// depending on what needs to be calculated 
-    map_str_str helper_set_tunnelingStragey(std::set<std::string> panic_vacua)
+    /// depending on the strategy provided from the sub-capabilities
+    str helper_set_tunnelingStrategy(std::set<std::string> tunnelling_strategy)
     {
 
-      map_str_str result;
-
-      // quantum and thermal tunnelling for global
-      if(panic_vacua.find("global") != panic_vacua.end() and panic_vacua.find("global_thermal") != panic_vacua.end())
+      // quantum and thermal tunnelling
+      if(tunnelling_strategy.size() == 2 and 
+         tunnelling_strategy.find("quantum") != tunnelling_strategy.end() and
+         tunnelling_strategy.find("thermal") != tunnelling_strategy.end())
       {
-        result["global"] = "QuantumThenThermal";
+        return "QuantumThenThermal";
       }
       // only thermal requested 
-      else if(panic_vacua.find("global_thermal") != panic_vacua.end())
+      else if(tunnelling_strategy.size() == 1 and 
+              tunnelling_strategy.find("thermal") != tunnelling_strategy.end())
       {
-        result["global"] = "JustThermal";
+        return "JustThermal";
       }
       // only quantum requested 
-      else if(panic_vacua.find("global") != panic_vacua.end())
+      else if(tunnelling_strategy.size() == 1 and 
+              tunnelling_strategy.find("quantum") != tunnelling_strategy.end())
       {
-        result["global"] = "JustQuantum";
+        return "JustQuantum";
+      }
+      else
+      {
+        std::ostringstream errmsg;
+        errmsg << "No valid tunnelling stragety selected. You must select a valid option via";
+        errmsg << "the sub-capabilities of capability VS_likelihood in the following way";
+        errmsg << "  - capability:   VS_likelihood\n";
+        errmsg << "    purpose:      LogLike\n";
+        errmsg << "    sub_capabilities:\n";
+        errmsg << "      - global:  [quantum, thermal]\n";
+        errmsg << "      - nearest: [quantum, thermal]" << std::endl;
+        SpecBit_error().raise(LOCAL_INFO,errmsg.str());
       }
       
-      // quantum and thermal tunnelling for nearest
-      if(panic_vacua.find("nearest") != panic_vacua.end() and panic_vacua.find("nearest_thermal") != panic_vacua.end())
-      {
-        result["nearest"] = "QuantumThenThermal";
-      }
-      // only thermal requested 
-      else if(panic_vacua.find("nearest_thermal") != panic_vacua.end())
-      {
-        result["nearest"] = "JustThermal";
-      }
-      // only quantum requested 
-      else if(panic_vacua.find("nearest") != panic_vacua.end())
-      {
-        result["nearest"] = "JustQuantum";
-      }
-
-      return result;
+      return "";
     }
 
     
@@ -607,8 +663,7 @@ namespace Gambit
     /// .xml files for vevacious to run with.
     void initialize_vevacious(std::string &inputspath)
     {
-        namespace myPipe = Pipes::initialize_vevacious;
-        const Options& runOptions = *myPipe::runOptions;
+        using namespace Pipes::initialize_vevacious;
 
         static bool firstrun = true;
 
@@ -620,25 +675,21 @@ namespace Gambit
             // Generating a Random seed from Gambit random generator
             std::string randomseed_gen = std::to_string(int(Random::draw() * 2 * 1987.));
             
-            opts["phc_random_seed"] =               runOptions.getValueOrDef<std::string>(randomseed_gen, "phc_random_seed");
-            opts["MinuitStrategy"] =                runOptions.getValueOrDef<std::string>("0", "minuit_strategy");
-            opts["PotentialFunctionClassType"] =    runOptions.getValueOrDef<std::string>("FixedScaleOneLoopPotential", "potential_type");
-            opts["homotopybackend"] =               runOptions.getValueOrDef<std::string>("hom4ps", "homotopy_backend");
-            opts["globalIsPanic"] =                 runOptions.getValueOrDef<std::string>("false", "global_minimum_is_panic");
-            // (JR) this is fixed here for all vevacious runs 
-            // if we want to be able to set this differently for global and nearest, we have 
-            // to think about how to pass it to vev
-            // -> probably best like "global" and "nearest" when calling 
-            // vevaciousPlusPlus.RunPoint(panic_vacuum, tunnelingStrategy)
-            // # todo
-            opts["TunnelingStrategy"] =             runOptions.getValueOrDef<std::string>("JustQuantum", "tunneling_strategy");
-            opts["pathFindingTimeout"] =            runOptions.getValueOrDef<std::string>("3600", "path_finding_timeout");
-            opts["SurvivalProbabilityThreshold"] =  runOptions.getValueOrDef<std::string>("0.01", "survival_probability_threshold");
-            opts["radialResolution"] =              runOptions.getValueOrDef<std::string>("0.1", "radial_resolution_undershoot_overshoot");
-            opts["PathResolution"] =                runOptions.getValueOrDef<std::string>("1000", "PathResolution");
+            opts["phc_random_seed"] =               runOptions->getValueOrDef<std::string>(randomseed_gen, "phc_random_seed");
+            opts["MinuitStrategy"] =                runOptions->getValueOrDef<std::string>("0", "minuit_strategy");
+            opts["PotentialFunctionClassType"] =    runOptions->getValueOrDef<std::string>("FixedScaleOneLoopPotential", "potential_type");
+            opts["homotopybackend"] =               runOptions->getValueOrDef<std::string>("hom4ps", "homotopy_backend");
+            opts["globalIsPanic"] =                 runOptions->getValueOrDef<std::string>("false", "global_minimum_is_panic");
+            opts["pathFindingTimeout"] =            runOptions->getValueOrDef<std::string>("3600", "path_finding_timeout");
+            opts["SurvivalProbabilityThreshold"] =  runOptions->getValueOrDef<std::string>("0.01", "survival_probability_threshold");
+            opts["radialResolution"] =              runOptions->getValueOrDef<std::string>("0.1", "radial_resolution_undershoot_overshoot");
+            opts["PathResolution"] =                runOptions->getValueOrDef<std::string>("1000", "PathResolution");
+
+            // Tunnelling strategy is given by the capability tunnelling_strategy that extracts the info from the subcaps
+            opts["TunnelingStrategy"] = helper_set_tunnelingStrategy(*Dep::tunnelling_strategy);
             
             // Insert the file location info to the options map 
-            map_str_str file_locations = *myPipe::Dep::vevacious_file_location;
+            map_str_str file_locations = *Dep::vevacious_file_location;
             opts.insert(file_locations.begin(), file_locations.end());
 
             // Pass to the helper function and make some vevacious input.
@@ -683,7 +734,7 @@ namespace Gambit
     void helper_run_vevacious(vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus &vevaciousPlusPlus,VevaciousResultContainer& result, std::string panic_vacuum, std::string inputPath)
     {
        
-        double lifetime, thermalProbability;
+        double lifetime, thermalProbability, thermalWidth;
 
         //Checking if file exists, fastest method.
         struct stat buffer; 
@@ -714,6 +765,7 @@ namespace Gambit
         // get vevacious results
         lifetime = vevaciousPlusPlus.GetLifetimeInSeconds();
         thermalProbability = vevaciousPlusPlus.GetThermalProbability();
+        thermalWidth = vevaciousPlusPlus.GetThermalDecayWidth();
 
         // decide how to deal with different vevacious outcomes
         // here -1 from Vevacious means that the point is stable. 
@@ -777,6 +829,8 @@ namespace Gambit
 
         // set lifetime & thermal probability
         result.set_results(panic_vacuum,"lifetime", lifetime);
+        result.set_results(panic_vacuum,"width", hbar/lifetime);
+        result.set_results(panic_vacuum,"thermalwidth", thermalWidth);
         result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
     }
 
@@ -788,6 +842,7 @@ namespace Gambit
 
       //Vevacious has crashed -- set results to fixed values
       double lifetime = 2.0E+100; 
+      double thermalWidth = 0.;
       double thermalProbability= 1;
 
       cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
@@ -796,6 +851,8 @@ namespace Gambit
       logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
       
       result.set_results(panic_vacuum,"lifetime", lifetime);
+      result.set_results(panic_vacuum,"width", hbar/lifetime);
+      result.set_results(panic_vacuum,"thermalwidth", thermalWidth);
       result.set_results(panic_vacuum,"thermalProbability", thermalProbability);
 
     }
@@ -818,8 +875,7 @@ namespace Gambit
       // Check if global and nearest are requested, if so test if the happen to be 
       // the same minimum for this point in parameters space.
       // If that is the case, remove the global points from the 
-      if( (panic_vacua.find("global") != panic_vacua.end() or panic_vacua.find("global_thermal") != panic_vacua.end())
-        and (panic_vacua.find("nearest") != panic_vacua.end() or panic_vacua.find("nearest_thermal") != panic_vacua.end()) )
+      if( panic_vacua.find("global") != panic_vacua.end() and panic_vacua.find("nearest") != panic_vacua.end() )
       {
         // get vector pair with VEVs of global and nearest vacua
         std::pair<std::vector<double>,std::vector<double>> vevs = vevaciousPlusPlus.RunVacua("Internal");
@@ -837,10 +893,6 @@ namespace Gambit
           {
             panic_vacua.erase("global");
           }
-          if (panic_vacua.find("global_thermal") != panic_vacua.end() and panic_vacua.find("nearest_thermal") != panic_vacua.end())
-          {
-            panic_vacua.erase("global_thermal");
-          }
           // add info to logger
           std::ostringstream ss;
           ss << "Global and nearest minimum are the same. Will only calculate tunnelling" << endl;
@@ -857,11 +909,10 @@ namespace Gambit
         }
 
       }
-      // set tunnelling strategy for the minima: either 
-      // - JustQuantum -> only quantum
-      // - JustThermal -> only thermal
-      // - QuantumThenThermal -> both
-      result = helper_set_tunnelingStragey(panic_vacua);            
+
+      // Fill result map and set tunnelling strategy for the minima
+      for (auto &panic_vacuum: panic_vacua)
+        result[panic_vacuum] = helper_set_tunnelingStrategy(*Dep::tunnelling_strategy);            
 
     }
 
