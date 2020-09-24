@@ -33,10 +33,13 @@ namespace Gambit
 
       // Counters for the number of accepted events for each signal region
       std::map<string, EventCounter> _counters = {
-        {"SR0A", EventCounter("SR0A")},
-        {"SR0B", EventCounter("SR0B")},
-        {"SR0C", EventCounter("SR0C")},
-        {"SR0D", EventCounter("SR0D")},
+        {"SR0ZZ-loose-bveto", EventCounter("SR0ZZ-loose-bveto")},
+        {"SR0ZZ-tight-bveto", EventCounter("SR0ZZ-tight-bveto")},
+        {"SR0ZZ-loose", EventCounter("SR0ZZ-loose")},
+        {"SR0ZZ-tight", EventCounter("SR0ZZ-tight")},
+        {"SR0-loose-bveto", EventCounter("SR0-loose-bveto")},
+        {"SR0-tight-bveto", EventCounter("SR0-tight-bveto")},
+        {"SR0-breq", EventCounter("SR0-breq")}
       };
 
     private:
@@ -77,6 +80,23 @@ namespace Gambit
         return;
       }
 
+     void bTagger(vector<const HEPUtils::Jet*> candJets) {
+        vector<const HEPUtils::Jet*> bJets;
+
+        // Find b-jets
+        double btag = 0.85; double cmisstag = 1/6.; double misstag = 1./134.;
+        for (const HEPUtils::Jet* jet : candJets) {
+          if (jet->abseta() > 2.5) continue;
+          // Tag
+          if( jet->btag() && random_bool(btag) ) bJets.push_back(jet);
+          // Misstag c-jet
+          else if( jet->ctag() && random_bool(cmisstag) ) bJets.push_back(jet);
+          // Misstag light jet
+          else if( random_bool(misstag) ) bJets.push_back(jet);
+        }
+        return bJets;
+    }
+
       // Lepton jet overlap removal
       // Discards leptons if they are within DeltaRMax of a jet
       void LeptonJetOverlapRemoval(vector<const HEPUtils::Particle*>& leptons, vector<const HEPUtils::Jet*>& jets, double DeltaRMax)
@@ -112,6 +132,43 @@ namespace Gambit
           if(!overlap) survivors.push_back(p1);
         }
         particles1 = survivors;
+        return;
+      }
+
+      // Particle overlap removal
+      // Discard particles within DeltaRMax of one another, IF pT of any < pTMax
+      void ParticlePTOverlapPairsRemoval(vector<const HEPUtils::Particle*>& particles, double DeltaRMax, double pTMax)
+      {
+        if (particles.size() == 0)
+            return;
+        vector<const HEPUtils::Particle*> survivors;
+        vector<const HEPUtils::Particle*> todrop;
+        for(const HEPUtils::Particle* p1 = particles.begin(); p1 != particles.end()-1; ++p1)
+        {
+          bool overlap = false;
+          bool lowpt = false;
+          for(const HEPUtils::Particle* p2 = p1+1; p2 != particles.end(); ++p2)
+          {
+            double dR = p1->mom().deltaR_eta(p2->mom());
+            if(fabs(dR) <= DeltaRMax) {
+                overlap = true;
+                lowpt = true;
+                if (p1->pT < pTMAX || p2->pT() < pTMax) {
+                    todrop.push_back(p2)
+                    lowpt = true;
+                    break;
+                }
+            }
+          }
+          if (!(overlap && lowpt)) {
+            survivors.push_back(p1);
+          }
+        }
+        std::sort(survivors.begin(), survivors().end());
+        std::sort(todrop.begin(), todrop().end());
+        vector<const HEPUtils::Particle*> result;
+        std::set_difference(survivors.begin(), survivors.end(), todrop.begin(), todrop.end(), std::back_inserter(result));
+        particles = result;
         return;
       }
 
@@ -184,11 +241,11 @@ namespace Gambit
           vector<const HEPUtils::Particle*> baselineLeptons_cutflow;
           for (const HEPUtils::Particle* electron : event->electrons())
           {
-            if (electron->pT()>4. && electron->abseta()<2.8) baselineLeptons_cutflow.push_back(electron);
+            if (electron->pT()>4.5 && electron->abseta()<2.47) baselineLeptons_cutflow.push_back(electron);
           }
           for (const HEPUtils::Particle* muons : event->muons())
           {
-            if (muons->pT()>4. && muons->abseta()<2.8) baselineLeptons_cutflow.push_back(muons);
+            if (muons->pT()>3. && muons->abseta()<2.7) baselineLeptons_cutflow.push_back(muons);
           }
           if (baselineLeptons_cutflow.size() >= 4) generator_filter = true;
         #endif
@@ -217,7 +274,7 @@ namespace Gambit
 
         for (const HEPUtils::Particle* tau : event->taus())
         {
-          if (tau->pT()>20. && tau->abseta()<2.47) baselineTaus.push_back(tau);
+          if (tau->pT()>20. && (tau->abseta()>1.52 ? tau->abseta()<2.47 : tau->abseta()<1.37)) baselineTaus.push_back(tau);
         }
         // Since tau efficiencies are not applied as part of the BuckFast ATLAS sim we apply it here
         ATLAS::applyTauEfficiencyR2(baselineTaus);
@@ -226,7 +283,8 @@ namespace Gambit
         {
           if (jet->pT()>20. && jet->abseta()<2.8) baselineJets.push_back(jet);
         }
-        // Missing: Some additional requirements for jets with pT < 60 and abseta < 2.4 (see paper)
+        // Missing: Some additional requirements for jets with abseta < 2.5, originating from b-quarks (see paper)
+        // Missing: some jets are originating from hadronically decayed taus pT > 10, abseta < 2.47 and more. (see paper)
 
 
 
@@ -263,10 +321,11 @@ namespace Gambit
         // - Remove SFOS pairs in the mass range (8.4, 10.4) GeV
         removeOSPairsInMassRange(baselineElectrons, baselineElectrons, 8.4, 10.4);
         removeOSPairsInMassRange(baselineMuons, baselineMuons, 8.4, 10.4);
+        ParticlePTOverlapPairsRemoval(baselineLeptons, 0.6, 30.);
 
 
         // Signal objects
-        vector<const HEPUtils::Jet*> signalJets = baselineJets;
+        vector<const HEPUtils::Jet*> signalBJets = bTagger(baselineJets);
         vector<const HEPUtils::Particle*> signalElectrons = baselineElectrons;
         vector<const HEPUtils::Particle*> signalMuons = baselineMuons;
         vector<const HEPUtils::Particle*> signalTaus = baselineTaus;
@@ -281,11 +340,8 @@ namespace Gambit
         sort(signalLeptons.begin(), signalLeptons.end(), comparePt);
 
         // Count signal leptons and jets
-        // size_t nSignalElectrons = signalElectrons.size();
-        // size_t nSignalMuons = signalMuons.size();
-        size_t nSignalTaus = signalTaus.size();
         size_t nSignalLeptons = signalLeptons.size();
-        // size_t nSignalJets = signalJets.size();
+        size_t NbJets = signalBJets.size();
 
         // Get OS and SFOS pairs
         vector<vector<const HEPUtils::Particle*>> SFOSpairs = getSFOSpairs(signalLeptons);
@@ -317,61 +373,19 @@ namespace Gambit
         // Missing: Also check Z-like combinations of SFOS+L and SFOS+SFOS (see paper)
 
 
-        // Effective mass (met + pT of all signal leptons + pT of all jets with pT>40 GeV)
-        double meff = met;
-        for (const HEPUtils::Particle* l : signalLeptons)
-        {
-          meff += l->pT();
-        }
-        for (const HEPUtils::Jet* jet : signalJets)
-        {
-          if(jet->pT()>40.) meff += jet->pT();
-        }
+        // Missing soft term correction for Et_miss. Constructed from tracks matched to the primary vertex
+        // but not associated with identified physics objects (see paper)
 
 
         // Signal Regions
 
         // --- 4L0T ---
 
-        // SR0A
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.) _counters.at("SR0A").add_event(event);
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 600.)
+        // SR0-ZZ-loose-bveto
+        if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 100.) _counters.at("SR0-ZZ-loose-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 100.)
         // {
-        //   cout << "DEBUG: " << "--- Got event for SR0A ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  meff = " << meff << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
-
-        //   _counters.at("SR0A").add_event(event);
-        // }
-
-        // SR0B
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.) _counters.at("SR0B").add_event(event);
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && !Zlike && meff > 1100.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0B ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  meff = " << meff << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
-
-        //   _counters.at("SR0B").add_event(event);
-        // }
-
-        // SR0C
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _counters.at("SR0C").add_event(event);
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0C ---" << endl;
+        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-loose-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
         //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
         //   cout << "DEBUG: " << "  met = " << met << endl;
@@ -380,15 +394,13 @@ namespace Gambit
         //   {
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
-
-        //   _counters.at("SR0C").add_event(event);
         // }
 
-        // SR0D
-        if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _counters.at("SR0D").add_event(event);
-        // if (nSignalTaus == 0 && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
+        // SR0-ZZ-tight-bveto
+        if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 200.) _counters.at("SR0-ZZ-tight-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 200.)
         // {
-        //   cout << "DEBUG: " << "--- Got event for SR0D ---" << endl;
+        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
         //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
         //   cout << "DEBUG: " << "  met = " << met << endl;
@@ -397,11 +409,83 @@ namespace Gambit
         //   {
         //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
         //   }
-
-        //   _counters.at("SR0D").add_event(event);
         // }
 
-        // Missing: signal regions SR1 (3L1T) and SR2 (2L2T)
+        // SR0-ZZ-loose
+        if (nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _counters.at("SR0-ZZ-loose").add_event(event);
+        //if (nSignalLeptons >= 4 && Z1 && Z2 && met > 50.)
+        // {
+        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-loose ---" << endl;
+        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
+        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
+        //   cout << "DEBUG: " << "  met = " << met << endl;
+        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
+        //   for (double mass : SFOSpair_masses)
+        //   {
+        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
+        //   }
+        // }
+
+        // SR0-ZZ-tight
+        if (nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _counters.at("SR0-ZZ-tight").add_event(event);
+        //if (nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
+        // {
+        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
+        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
+        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
+        //   cout << "DEBUG: " << "  met = " << met << endl;
+        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
+        //   for (double mass : SFOSpair_masses)
+        //   {
+        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
+        //   }
+        // }
+
+        // SR0-loose-bveto
+        if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 600.) _counters.at("SR0-loose-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 600.)
+        // {
+        //   cout << "DEBUG: " << "--- Got event for SR0-loose-bveto ---" << endl;
+        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
+        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
+        //   cout << "DEBUG: " << "  met = " << met << endl;
+        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
+        //   for (double mass : SFOSpair_masses)
+        //   {
+        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
+        //   }
+        // }
+
+        // SR0-tight-bveto
+        if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 1000.) _counters.at("SR0-tight-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && !Z1 && met > 1000.)
+        // {
+        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
+        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
+        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
+        //   cout << "DEBUG: " << "  met = " << met << endl;
+        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
+        //   for (double mass : SFOSpair_masses)
+        //   {
+        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
+        //   }
+        // }
+
+        // SR0-breq
+        if (nSignalLeptons >= 4 && NbJets >= 1 && !Z1 && met > 1300.) _counters.at("SR0-breq").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets >= 1 && !Z1 && met > 1300.)
+        // {
+        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
+        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
+        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
+        //   cout << "DEBUG: " << "  met = " << met << endl;
+        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
+        //   for (double mass : SFOSpair_masses)
+        //   {
+        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
+        //   }
+        // }
+
 
         #ifdef CHECK_CUTFLOW
           cutFlowVector_str[0] = "Initial";
@@ -479,11 +563,13 @@ namespace Gambit
 
       // This function can be overridden by the derived SR-specific classes
       virtual void collect_results() {
-
-        add_result(SignalRegionData(_counters.at("SR0A"), 13., {10.2, 2.1}));
-        add_result(SignalRegionData(_counters.at("SR0B"),  2., {1.31, 0.24}));
-        add_result(SignalRegionData(_counters.at("SR0C"), 47., {37., 9.}));
-        add_result(SignalRegionData(_counters.at("SR0D"), 10., {4.1, 0.7}));
+        add_result(SignalRegionData(_counters.at("SR0ZZ-loose"), 157., {159., 42.}));
+        add_result(SignalRegionData(_counters.at("SR0ZZ-tight"), 17., {17.4, 3.3}));
+        add_result(SignalRegionData(_counters.at("SR0ZZ-loose-bveto"), 5., {7.2, 2.0}));
+        add_result(SignalRegionData(_counters.at("SR0ZZ-tight-bveto"), 1., {1.1, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR0-loose-bveto"), 11., {11.4, 2.4}));
+        add_result(SignalRegionData(_counters.at("SR0-tight-bveto"), 1., {3.5, 2.0}));
+        add_result(SignalRegionData(_counters.at("SR0-breq"), 3., {1.16, 0.26}));
 
 
         #ifdef CHECK_CUTFLOW
