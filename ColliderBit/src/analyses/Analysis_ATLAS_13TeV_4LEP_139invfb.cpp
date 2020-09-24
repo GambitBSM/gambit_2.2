@@ -33,10 +33,10 @@ namespace Gambit
 
       // Counters for the number of accepted events for each signal region
       std::map<string, EventCounter> _counters = {
-        {"SR0ZZ-loose-bveto", EventCounter("SR0ZZ-loose-bveto")},
-        {"SR0ZZ-tight-bveto", EventCounter("SR0ZZ-tight-bveto")},
-        {"SR0ZZ-loose", EventCounter("SR0ZZ-loose")},
-        {"SR0ZZ-tight", EventCounter("SR0ZZ-tight")},
+        {"SR0-ZZ-loose-bveto", EventCounter("SR0-ZZ-loose-bveto")},
+        {"SR0-ZZ-tight-bveto", EventCounter("SR0-ZZ-tight-bveto")},
+        {"SR0-ZZ-loose", EventCounter("SR0-ZZ-loose")},
+        {"SR0-ZZ-tight", EventCounter("SR0-ZZ-tight")},
         {"SR0-loose-bveto", EventCounter("SR0-loose-bveto")},
         {"SR0-tight-bveto", EventCounter("SR0-tight-bveto")},
         {"SR0-breq", EventCounter("SR0-breq")}
@@ -139,7 +139,7 @@ namespace Gambit
       // Discard particles within DeltaRMax of one another, IF pT of any < pTMax
       void ParticlePTOverlapPairsRemoval(vector<const HEPUtils::Particle*>& particles, double DeltaRMax, double pTMax)
       {
-        if (particles.size() == 0)
+        if (particles.size() < 2)
             return;
         vector<const HEPUtils::Particle*> survivors;
         vector<const HEPUtils::Particle*> todrop;
@@ -565,10 +565,10 @@ namespace Gambit
 
       // This function can be overridden by the derived SR-specific classes
       virtual void collect_results() {
-        add_result(SignalRegionData(_counters.at("SR0ZZ-loose"), 157., {159., 42.}));
-        add_result(SignalRegionData(_counters.at("SR0ZZ-tight"), 17., {17.4, 3.3}));
-        add_result(SignalRegionData(_counters.at("SR0ZZ-loose-bveto"), 5., {7.2, 2.0}));
-        add_result(SignalRegionData(_counters.at("SR0ZZ-tight-bveto"), 1., {1.1, 0.4}));
+        add_result(SignalRegionData(_counters.at("SR0-ZZ-loose"), 157., {159., 42.}));
+        add_result(SignalRegionData(_counters.at("SR0-ZZ-tight"), 17., {17.4, 3.3}));
+        add_result(SignalRegionData(_counters.at("SR0-ZZ-loose-bveto"), 5., {7.2, 2.0}));
+        add_result(SignalRegionData(_counters.at("SR0-ZZ-tight-bveto"), 1., {1.1, 0.4}));
         add_result(SignalRegionData(_counters.at("SR0-loose-bveto"), 11., {11.4, 2.4}));
         add_result(SignalRegionData(_counters.at("SR0-tight-bveto"), 1., {3.5, 2.0}));
         add_result(SignalRegionData(_counters.at("SR0-breq"), 3., {1.16, 0.26}));
