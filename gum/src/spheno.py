@@ -1563,14 +1563,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
         # If there is no gTxx symbol in the signature of CalculateBR_2, 
         # the particle does not decay
         if "gT" + name not in function_signatures["CalculateBR_2"]:
-          continue
+            continue
         if i == 0:
             towrite += "if(i==1) return (*gT" + name + ")" + brace
         else :
             towrite += "else if(i==" + str(i+1) + ") return (*gT" + name + ")" + brace
-        # If 1 loop decays are active add the 1 loop contribution
-        if flags["SA`AddOneLoopDecay"] :
-            towrite += " + (*gT1L" + name + ")" + brace
         towrite += ";\n" 
     towrite += "return 0.0;\n"\
                "};\n"\
@@ -1594,7 +1591,25 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # If 1 loop decays are active add lambda function
     if flags["SA`AddOneLoopDecay"]:
-        towrite += "auto gP1L = [&](int i, int j)\n"\
+        towrite += "\nauto gT1L = [&](int i)\n"\
+                   "{\n"
+        for i, particle in enumerate(decaying_particles) :
+            name = re.sub(r"\d","",particle.alt_name)
+            index = re.sub(r"[A-Za-z]","",particle.alt_name)
+            brace = "(i-" + str(i-int(index)+1) + ")" if index else ""
+            # If there is no gTxx symbol in the signature of CalculateBR_2, 
+            # the particle does not decay
+            if "gT" + name not in function_signatures["CalculateBR_2"]:
+                continue
+            if i == 0:
+                towrite += "if(i==1) return (*gT1L" + name + ")" + brace
+            else :
+                towrite += "else if(i==" + str(i+1) + ") return (*gT1L" + name + ")" + brace
+            towrite += ";\n" 
+        towrite += "return 0.0;\n"\
+                   "};\n"\
+                   "\n"\
+                   "auto gP1L = [&](int i, int j)\n"\
                    "{\n"
         for i, particle in enumerate(decaying_particles) :
             name = re.sub(r"\d","",particle.alt_name)
@@ -1620,13 +1635,21 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "for(channel_info_triplet ci : civ)\n"
             "{\n"
             "std::tie(daughter_pdgs, spheno_index, corrf) = ci;\n"
-            "double BR = gP(i+1,spheno_index)/gT(i+1);\n"
+            "double BR;\n"
     )
-    # If 1 loop decays are active add the 1 loop contribution to 2 body decays
-    if flags["SA`AddOneLoopDecay"]:
+    # Tree and one loop decays are mutually exclusive, so use one or the other
+    if not flags["SA`AddOneLoopDecay"]:
+        towrite += "BR = gP(i+1,spheno_index)/gT(i+1);\n"
+    else:
+        towrite += "if(!*OneLoopDecays)\n"\
+                   "  BR = gP(i+1,spheno_index)/gT(i+1);\n"\
+                   "else\n"\
+                   "{\n"
+        # If 1 loop decays are active return the 1 loop decay to 2 body decays
         towrite += "// One loop decays are only available for 2 body decays\n"\
                    "if(daughter_pdgs.size() <= 2)\n"\
-                   "  BR += gP1L(i+1,spheno_index)/gT(i+1);\n"
+                   "  BR = gP1L(i+1,spheno_index)/gT1L(i+1);\n"\
+                   "}\n"
     towrite += (
             "// If below the minimum BR, add the decay to the DecayTable as a zero entry.\n"
             "// If decay is zero and channel exists, do not overwrite.\n"
@@ -2759,7 +2782,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # Do not allow this to be an option if there are no loop decays
     if flags["SA`AddOneLoopDecay"]:
         towrite += (
-                    "*OneLoopDecays = inputs.options->getValueOrDef<bool>(true, "
+                    "*OneLoopDecays = inputs.options->getValueOrDef<bool>(false, "
                     "\"OneLoopDecays\");\n"
         )
     else:

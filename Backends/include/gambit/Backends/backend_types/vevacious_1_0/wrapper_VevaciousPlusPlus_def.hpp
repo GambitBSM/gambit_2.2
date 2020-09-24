@@ -2,6 +2,7 @@
 #define __wrapper_VevaciousPlusPlus_def_vevacious_1_0_hpp__
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "identification.hpp"
@@ -16,6 +17,16 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         inline void VevaciousPlusPlus::RunPoint(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& newInput)
         {
             get_BEptr()->RunPoint(newInput);
+        }
+        
+        inline ::std::pair<std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> > > VevaciousPlusPlus::GetPanicVacua()
+        {
+            return get_BEptr()->GetPanicVacua();
+        }
+        
+        inline ::std::pair<std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> > > VevaciousPlusPlus::RunVacua(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& newInput)
+        {
+            return get_BEptr()->RunVacua(newInput);
         }
         
         inline void VevaciousPlusPlus::ReadLhaBlock(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& uppercaseBlockName, const double scale, const ::std::vector<std::pair<int, double>, std::allocator<std::pair<int, double> > >& parameters, const int dimension)
@@ -41,6 +52,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         inline double VevaciousPlusPlus::GetThermalProbability()
         {
             return get_BEptr()->GetThermalProbability();
+        }
+        
+        inline double VevaciousPlusPlus::GetThermalDecayWidth()
+        {
+            return get_BEptr()->GetThermalDecayWidth();
         }
         
         inline ::std::vector<double, std::allocator<double> > VevaciousPlusPlus::GetThresholdAndActions()

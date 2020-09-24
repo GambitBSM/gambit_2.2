@@ -6,6 +6,7 @@
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_VevaciousPlusPlus.hpp"
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "identification.hpp"
@@ -29,6 +30,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             public:
                 void RunPoint(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& newInput);
         
+                ::std::pair<std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> > > GetPanicVacua();
+        
+                ::std::pair<std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> > > RunVacua(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& newInput);
+        
                 void ReadLhaBlock(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& uppercaseBlockName, const double scale, const ::std::vector<std::pair<int, double>, std::allocator<std::pair<int, double> > >& parameters, const int dimension);
         
                 void WriteResultsAsXmlFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& xmlFilename);
@@ -38,6 +43,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 double GetLifetimeInSeconds();
         
                 double GetThermalProbability();
+        
+                double GetThermalDecayWidth();
         
                 ::std::vector<double, std::allocator<double> > GetThresholdAndActions();
         

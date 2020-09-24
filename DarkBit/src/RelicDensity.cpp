@@ -736,8 +736,23 @@ namespace Gambit
 
     }
 
+    /// Return the thermally averaged cross-section at T_freezeout
+    void vSigma_freezeout_MicrOmegas(double &result)
+    {
+      using namespace Pipes::vSigma_freezeout_MicrOmegas;
 
+      // Beps=1e-5 recommended, Beps=1 switches coannihilation off
+      double Beps = runOptions->getValueOrDef<double>(1e-5, "Beps");
 
+      // Xf = m_WIMP/T_freezeout
+      double Xf = *Dep::Xf;
+      double mwimp = *Dep::mwimp;
+
+      // Get sigma*v at T_freezeout [pb]
+      double sigmav = BEreq::vSigma(byVal(Xf/mwimp), byVal(Beps), byVal(1));
+      
+      result = sigmav*1e-36*s2cm;
+    }
 
 
 

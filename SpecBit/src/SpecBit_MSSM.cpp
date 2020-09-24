@@ -820,7 +820,7 @@ namespace Gambit
       result = run_FS_spectrum_generator<CMSSM_interface<ALGORITHM1>>(input,sminputs,*myPipe::runOptions,myPipe::Param);
 
       // Only allow neutralino LSPs.
-      //if (not has_neutralino_LSP(result)) invalid_point().raise("Neutralino is not LSP.");
+      if (not has_neutralino_LSP(result)) invalid_point().raise("Neutralino is not LSP.");
 
       // Drop SLHA files if requested
       result.drop_SLHAs_if_requested(myPipe::runOptions, "GAMBIT_unimproved_spectrum");

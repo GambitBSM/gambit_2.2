@@ -81,11 +81,13 @@ namespace Gambit
         if ( it->nFinalStates == 2 )
         {
           // (sv)(v=0) for two-body final state
-          result += it->genRate->bind("v")->eval(0.);
+          double yield = it->genRate->bind("v")->eval(0.);
+          if (yield >= 0.) result += yield;
         }
       }
       // Add invisible contributions
-      result += annProc.genRateMisc->bind("v")->eval(0.);
+      double yield = annProc.genRateMisc->bind("v")->eval(0.);
+      if (yield >= 0.) result += yield;
     }
 
 

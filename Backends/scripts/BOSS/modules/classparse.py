@@ -77,7 +77,7 @@ def run():
         has_copy_constructor, copy_constructor_id         = classutils.checkCopyConstructor(class_el, return_id=True)
         has_assignment_operator, assignment_is_artificial = classutils.checkAssignmentOperator(class_el)
         
-        if has_assignment_operator and assignment_is_artificial:
+        if has_assignment_operator or assignment_is_artificial:
             construct_assignment_operator = True
         else:
             construct_assignment_operator = False

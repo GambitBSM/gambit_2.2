@@ -438,6 +438,24 @@ namespace Gambit
     /******************************************/
 
     /// Vacuum stability likelihood from a Vevacious run
+    /// calculating the lifetime of & tunneling probability to the
+    /// vacuua
+    void get_likelihood_VS(double &result)
+    {
+        using namespace Pipes::get_likelihood_VS;
+        
+        // (JR) what is here is just copied and pasted from the global one.. once the 
+        // other stuff with choosing minima works, this has to add up the results correctly
+        // #todo
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
+        double lifetime =  vevacious_results.get_lifetime("nearest");
+
+        // This is based on the estimation of the past lightcone from 1806.11281
+        double conversion = (6.5821195e-25)/(31536000);
+        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
+    }
+
+    /// Vacuum stability likelihood from a Vevacious run
     /// calculating the lifetime of & tunneling probability to the global minimum
     void get_likelihood_VS_global(double &result)
     {
@@ -490,10 +508,101 @@ namespace Gambit
     /* VEVACIOUS ROUTINES */
     /**********************/
     
-    // Declaration of helper function for making vevaciousPlusPlus
-    // inputs.
+    /// Declaration of helper function for making vevaciousPlusPlus
+    /// inputs.
     void make_vpp_inputs(map_str_str&);
 
+    /// Create a string set containing a list with all likelihoods that vevacious
+    /// should calculate. The options are tunneling to
+    /// - the global minimum -> "global" (quantum tunneling)
+    /// - the global minimum -> "global_thermal" (thermal tunneling)
+    /// - the nearest minimum -> "nearest" (quantum tunneling)
+    /// - the global minimum -> "nearest_thermal" (thermal tunneling)
+    /// Default behaviour (if no sub-capabilities are set): calculate all of them
+    void set_panic_vacua(std::set<std::string> & result)
+    {
+      using namespace Pipes::set_panic_vacua;
+
+      static bool firstrun = true;
+
+      if(firstrun)
+      {
+        // Get the list of likelihoods given in the YAML file as sub-capabilities.
+        std::vector<str> subcaps = Downstream::subcaps->getNames();
+        
+        // if no sub-capabilities are set, fix default behaviour: calculate tunneling to global and 
+        // nearest minimum for zero and non-zero temperature
+        std::set<std::string> default_choice = {"global","nearest","global_thermal","nearest_thermal"};
+        
+        // read in yaml options or ..
+        if(not subcaps.empty()) for (const auto& x : subcaps) {result.insert(x);}
+        // .. use default behaviour
+        else {result = default_choice;}
+
+        // add info which contributions will be added up to logger
+        std::ostringstream ss;
+        ss << "The LogLike calculation 'VS_likelihood' will add up the contributions" << endl;
+        for (const auto& x : result) ss << "- "<< x << endl;
+        ss << "from the tunneling calculations. " << endl
+           << "You can change this in the ObsLikes section of your YAML file," << endl
+           << "by setting sub_capabilities 'VS_likelihood', e.g." << endl
+           << "    sub_capabilities:" << endl
+           << "      - nearest" << endl
+           << "      - nearest_thermal" << endl
+           << "to only calculate the tunneling probabilities to the nearest minimum." << endl;
+        logger() << ss.str() << EOM;
+      
+        // just need to set this once
+        firstrun = false;   
+      }
+    }
+
+    /// Set tunnelling strategy for the different minima, either
+    /// - JustQuantum -> only quantum
+    /// - JustThermal -> only thermal or
+    /// - QuantumThenThermal -> both
+    /// depending on what needs to be calculated 
+    map_str_str helper_set_tunnelingStragey(std::set<std::string> panic_vacua)
+    {
+
+      map_str_str result;
+
+      // quantum and thermal tunnelling for global
+      if(panic_vacua.find("global") != panic_vacua.end() and panic_vacua.find("global_thermal") != panic_vacua.end())
+      {
+        result["global"] = "QuantumThenThermal";
+      }
+      // only thermal requested 
+      else if(panic_vacua.find("global_thermal") != panic_vacua.end())
+      {
+        result["global"] = "JustThermal";
+      }
+      // only quantum requested 
+      else if(panic_vacua.find("global") != panic_vacua.end())
+      {
+        result["global"] = "JustQuantum";
+      }
+      
+      // quantum and thermal tunnelling for nearest
+      if(panic_vacua.find("nearest") != panic_vacua.end() and panic_vacua.find("nearest_thermal") != panic_vacua.end())
+      {
+        result["nearest"] = "QuantumThenThermal";
+      }
+      // only thermal requested 
+      else if(panic_vacua.find("nearest_thermal") != panic_vacua.end())
+      {
+        result["nearest"] = "JustThermal";
+      }
+      // only quantum requested 
+      else if(panic_vacua.find("nearest") != panic_vacua.end())
+      {
+        result["nearest"] = "JustQuantum";
+      }
+
+      return result;
+    }
+
+    
     /// Parses the YAML file for any settings, then passes to make_vpp_inputs to create
     /// .xml files for vevacious to run with.
     void initialize_vevacious(std::string &inputspath)
@@ -516,6 +625,12 @@ namespace Gambit
             opts["PotentialFunctionClassType"] =    runOptions.getValueOrDef<std::string>("FixedScaleOneLoopPotential", "potential_type");
             opts["homotopybackend"] =               runOptions.getValueOrDef<std::string>("hom4ps", "homotopy_backend");
             opts["globalIsPanic"] =                 runOptions.getValueOrDef<std::string>("false", "global_minimum_is_panic");
+            // (JR) this is fixed here for all vevacious runs 
+            // if we want to be able to set this differently for global and nearest, we have 
+            // to think about how to pass it to vev
+            // -> probably best like "global" and "nearest" when calling 
+            // vevaciousPlusPlus.RunPoint(panic_vacuum, tunnelingStrategy)
+            // # todo
             opts["TunnelingStrategy"] =             runOptions.getValueOrDef<std::string>("JustQuantum", "tunneling_strategy");
             opts["pathFindingTimeout"] =            runOptions.getValueOrDef<std::string>("3600", "path_finding_timeout");
             opts["SurvivalProbabilityThreshold"] =  runOptions.getValueOrDef<std::string>("0.01", "survival_probability_threshold");
@@ -685,6 +800,123 @@ namespace Gambit
 
     }
 
+    /// If tunnelling to global and nearest vacuum are requested, this
+    /// capability compares if the two vacua are the same. 
+    /// Return true if they coincide, false if not.
+    void compare_panic_vacua(map_str_str &result)
+    {
+      using namespace Pipes::compare_panic_vacua;
+
+      // get the object that holds all inputs that needs to be passed to vevacious
+      SpectrumEntriesForVevacious pass_spectrum = (*Dep::pass_spectrum_to_vevacious);
+      // create vev object to check if global and near panic vacuum are the same
+      vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
+      
+      // get set with contributions to likelihood that should be calculated
+      std::set<std::string> panic_vacua = *Dep::panic_vacua;
+
+      // Check if global and nearest are requested, if so test if the happen to be 
+      // the same minimum for this point in parameters space.
+      // If that is the case, remove the global points from the 
+      if( (panic_vacua.find("global") != panic_vacua.end() or panic_vacua.find("global_thermal") != panic_vacua.end())
+        and (panic_vacua.find("nearest") != panic_vacua.end() or panic_vacua.find("nearest_thermal") != panic_vacua.end()) )
+      {
+        // get vector pair with VEVs of global and nearest vacua
+        std::pair<std::vector<double>,std::vector<double>> vevs = vevaciousPlusPlus.RunVacua("Internal");
+        std::vector<double> global = vevs.first;
+        std::vector<double> nearest = vevs.second;
+
+        // check if vectors are equal
+        bool compare = std::equal(global.begin(), global.end(), nearest.begin());
+
+        // if the minima are the same, remove global entries if the corresponding nearest
+        // entry is contained
+        if(compare)
+        {
+          if (panic_vacua.find("global") != panic_vacua.end() and panic_vacua.find("nearest") != panic_vacua.end())
+          {
+            panic_vacua.erase("global");
+          }
+          if (panic_vacua.find("global_thermal") != panic_vacua.end() and panic_vacua.find("nearest_thermal") != panic_vacua.end())
+          {
+            panic_vacua.erase("global_thermal");
+          }
+          // add info to logger
+          std::ostringstream ss;
+          ss << "Global and nearest minimum are the same. Will only calculate tunnelling" << endl;
+          ss << "probability once." << endl;
+          logger() << ss.str() << EOM;
+        }
+        else
+        {
+          // add info to debug logger
+          std::ostringstream ss;
+          ss << "Global and nearest minimum are not the same. Will calculate tunnelling" << endl;
+          ss << "probability to both." << endl;
+          logger() << LogTags::debug << ss.str() << EOM;
+        }
+
+      }
+      // set tunnelling strategy for the minima: either 
+      // - JustQuantum -> only quantum
+      // - JustThermal -> only thermal
+      // - QuantumThenThermal -> both
+      result = helper_set_tunnelingStragey(panic_vacua);            
+
+    }
+
+
+    /// Check stability of global vacuum of the potential with vevacious
+    void check_vacuum_stability_vevacious(VevaciousResultContainer &result)
+    {
+        using namespace Pipes::check_vacuum_stability_vevacious;
+
+        // get a str-str map with valculations vevacious has to execute for this parameter point
+        // note: this has to be executed for each point as it can happen that the nearest and the 
+        // global panic vaccum are the same. 
+        map_str_str panic_vacua = *Dep::compare_panic_vacua;
+
+        // This is the number of different pathFinders implemented in vevacious. It should be 
+        // returned by a BE convenience function, I tried to do it but didn't manage to 
+        // with the BOSS stuff -- that should probably be fixed  # todo 
+        static int pathFinder_number = 2;
+              
+        // get the object that holds all inputs that needs to be passed to vevacious
+        SpectrumEntriesForVevacious pass_spectrum = (*Dep::pass_spectrum_to_vevacious);
+        
+        // run vevacious for different panic vacua, respecting the choices for thermal 
+        // or only quantum tunnelling calculations
+        for(auto x : panic_vacua)
+        { 
+          // set panic vacuum and tunnelling strategy for vevacious run  
+          std::string panic_vacuum = x.first;
+          std::string tunnellingStrategy = x.second;
+
+          // reset all entries of the of VevaciousResultContainer map holding the results
+          // to avoid that any value could be carried over from a previous calculated point
+          result.clear_results(panic_vacuum, pathFinder_number);
+          try 
+          {    
+              // create vevaciousPlusPlus object new for every try since spectrum 
+              // vevacious deletes spectrum after each run => to be able to do this 
+              // we need the non-rollcalled helper function that gets executed every time 
+              // we get to this line (unlike a dependency)
+              vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
+              
+              // helper function to set lifetime & thermal probability accordingly 
+              // (this is a separate function s.t. we don't have to reproduce code 
+              // for different panic vacua)
+              helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
+          }
+          catch(const std::exception& e)
+          {
+              // call function that sets the lifetime & thermal probability if vevacious
+              // has crashed for some reason
+              helper_catch_vevacious(result, panic_vacuum);
+              logger() << "Error occurred: " << e.what() << EOM;
+          }
+        }
+    }
 
     /// Check stability of global vacuum of the potential with vevacious
     void check_vacuum_stability_vevacious_global(VevaciousResultContainer &result)

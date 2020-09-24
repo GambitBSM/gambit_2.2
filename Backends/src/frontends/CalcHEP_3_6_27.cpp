@@ -480,6 +480,13 @@ BE_NAMESPACE
     // Generates shared object file based on libName - unless it already exists.
     numout* cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
 
+    // Release all memory allocated by "new" before returning
+    delete libname;
+    delete inbound_1;
+    delete inbound_2;
+    delete outbound_1;
+    delete outbound_2;
+
     // Export numerical values of parameters to link to dynamical code
     err=passParameters(cc);
 
@@ -516,21 +523,70 @@ BE_NAMESPACE
       M_squared += dcos*(cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err)); // dcos * dM_squared/dcos
     }
 
-    if (M_squared < 0)
+    // If we get a negative ME (or a NaN), and the relative velocity is zero, then try 
+    // putting in an arbitrarily small value for the velocity.
+    if ((M_squared < 0 or std::isnan(M_squared)) and v_rel == 0.)
     { 
+      // Choose velocity to be non-zero (but effectively zero) to avoid 
+      // potential unphysical values for p-wave suppressed xsecs.
+      double newvel = 1e-6;
 
-      logger() << "Squared matrix element has returned a negative value from CalcHEP." << std::endl;
-      logger() << "Final states are " << out[0] << " " << out[1] << " for relative velocity " << v_rel << std::endl;
-      logger() << "Returning 0 instead, probably a divide by 0 due to 0 velocity, but check." << EOM;
-      return 0;
+      logger() << "Square matrix element returned a negative value, but velocity is zero." << std::endl;
+      logger() << "Trying with v = 1e-6 for final states " << out[0] << " " << out[1] << std::endl;
+
+      // Compute new values for the kinematics
+      s = 16*m_DM*m_DM/(4-newvel*newvel);
+      E_cm = sqrt(s);
+      E_1 = E_cm/2;
+      E_2 = E_1;
+      p_in = m_DM*newvel/(sqrt(4-newvel*newvel));
+      E_3 = (s - (m4*m4) + (m3*m3))/(2*E_cm);
+      E_4 = E_cm - E_3;
+      p_out = sqrt((s - m_out_plus*m_out_plus)*(s - m_out_minus*m_out_minus))/(2*E_cm);
+      pvect[0] = E_1;
+      pvect[3] = p_in;
+      pvect[4] = E_2;
+      pvect[7] = -p_in;
+      pvect[8] = E_3;
+      pvect[9] = p_out;
+      pvect[12] = E_4; 
+      pvect[15] = -p_out;
+      prefactor = p_out/(32*pi*m_DM*s/sqrt(4-newvel*newvel));
+
+      M_squared = 0.0;
+
+      // Integrate again.
+      for (int i=0; i < numsteps; i++)
+      {
+        double dcos = 2. / numsteps;
+        double cosT = -1 + dcos*i;
+        double sinT = sqrt(1-cosT*cosT);
+        pvect[9] = p_out*sinT;
+        pvect[11] = p_out*cosT;
+        pvect[13] = -pvect[9];
+        pvect[15] = -pvect[11];
+        M_squared += dcos*(cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err)); // dcos * dM_squared/dcos
+
+      }
+    }
+    // If it's a NaN, throw an error
+    else if (std::isnan(M_squared))
+    {
+      std::ostringstream err;
+      err << "ERROR: CalcHEP returned a NaN matrix element for the process " 
+          << in[0]  << " " << in[1]  << " to "
+          << out[0] << " " << out[1] << " for relative velocity " << v_rel << ".";
+      backend_error().raise(LOCAL_INFO, err.str());
     }
 
-    // Release all memory allocated by "new" before returning
-    delete libname;
-    delete inbound_1;
-    delete inbound_2;
-    delete outbound_1;
-    delete outbound_2;
+    // If it's negative, just return 0. We'll conservatively assume it's just numerical noise.
+    else if (M_squared < 0)
+    {
+      logger() << "Squared matrix element has returned a negative value from CalcHEP." << std::endl;
+      logger() << "Final states are " << out[0] << " " << out[1] << " for relative velocity " << v_rel << std::endl;
+      logger() << "Returning 0 instead, assuming it's numerical noise from the crude integration." << EOM;
+      return 0.;
+    }
 
     // Total sigma_v
     return prefactor*M_squared;
