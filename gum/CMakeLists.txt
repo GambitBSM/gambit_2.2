@@ -171,7 +171,7 @@ endif()
 # Check for Boost & drop FeynRules/SARAH shared object files.
 # Note that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
 set(Boost_NO_BOOST_CMAKE ON)
-find_package(Boost 1.41.0 COMPONENTS python filesystem)
+find_package(Boost 1.41.0 COMPONENTS python filesystem system)
 if(Boost_FOUND)
   set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined" )
   include_directories("${Boost_INCLUDE_DIR}")
