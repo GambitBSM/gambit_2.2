@@ -442,7 +442,7 @@ namespace Gambit {
 
         // const double sf = 13.3*crossSection()/femtobarn/sumOfWeights();
         _flows.scale(1);
-         cout << "CUTFLOWS:\n\n" << _flows << endl;
+         // cout << "CUTFLOWS:\n\n" << _flows << endl;
 
         // plots_beginning->createFile(luminosity(),(36.1/100000));
         // plots_firstcut->createFile(luminosity(),(36.1/100000));

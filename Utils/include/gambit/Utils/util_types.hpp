@@ -54,6 +54,7 @@
 #include "gambit/Utils/variadic_functions.hpp"
 #include "gambit/Utils/local_info.hpp"
 
+
 namespace Gambit
 {
 
@@ -67,15 +68,18 @@ namespace Gambit
   typedef std::pair<int, int> iipair;
   /// Shorthand for a string-to-double map
   typedef std::map<std::string,double> map_str_dbl;
+  /// Shorthand for a string-to-int map
+  typedef std::map<std::string,int> map_str_int;
   /// Shorthand for a string-to-string-to-double map
   typedef std::map<std::string,std::map<std::string,double> > map_str_map_str_dbl;
   /// Shorthand for a string-to-string map
   typedef std::map<std::string,std::string> map_str_str;
   /// Shorthand for a string-to-bool map
   typedef std::map<std::string,bool> map_str_bool;
-
   /// Shorthand for an int to double map
   typedef std::map<int,double> map_int_dbl;
+  /// Shorthand for a string-to-string-to-string map
+  typedef std::map<std::string,std::map<std::string,std::string> > map_str_map_str_str;
   /// Shorthand for an int-int pair to double map
   typedef std::map< std::pair < int, int >, double> map_intpair_dbl;
 
@@ -646,7 +650,6 @@ namespace Gambit
   typedef float             Freal4;
   typedef double            Freal8;
   typedef long double       Freal16;
-
 
   /// Types used for Mathematica backends
   typedef void         MVoid;

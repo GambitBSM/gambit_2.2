@@ -41,6 +41,7 @@
     START_FUNCTION(SLHAstruct)
     DEPENDENCY(decay_rates, DecayTable)
     DEPENDENCY(EM_spectrum, Spectrum)
+    NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
   #undef CAPABILITY

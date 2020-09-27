@@ -507,6 +507,12 @@ Rules:
   - capability: HardScatteringEvent
     function: generateEventPythia
 
+  - capability: SpectrumAndDecaysForPythia
+    function: getSpectrumAndDecaysForPythia
+    options:
+      slha_version: 2
+      write_summary_to_log: false
+
   # Choose to where to get cross-sections from
   - capability: TotalCrossSection
     function: getEvGenCrossSection_as_base
@@ -597,6 +603,7 @@ KeyValues:
     prefer_model_specific_functions: true
 
   likelihood:
+    # Choose a lower cutoff for the likelihood
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
