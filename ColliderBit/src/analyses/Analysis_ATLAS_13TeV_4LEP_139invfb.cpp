@@ -249,15 +249,12 @@ namespace Gambit
         for (const HEPUtils::Particle* electron : event->electrons())
         {
           if (electron->pT()>4.5 && electron->abseta()<2.47) baselineElectrons.push_back(electron);
-            #ifdef  CHECK_CUTFLOW
-                if (electron->pT() > 4 && electron->abseta()<2.8)
-                    ++e_gen_filter_cnt;
-            #endif
+          #ifdef  CHECK_CUTFLOW
+              if (!generator_filter && electron->pT() > 4 && electron->abseta()<2.8) {
+                  ++e_gen_filter_cnt;
+              }
+          #endif
         }
-        #ifdef  CHECK_CUTFLOW
-            if (!generator_filter && e_gen_filter_cnt >= 4)
-                generator_filter = true;
-        #endif
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
@@ -269,8 +266,10 @@ namespace Gambit
         {
           if (muon->pT()>3. && muon->abseta()<2.7) baselineMuons.push_back(muon);
           #ifdef  CHECK_CUTFLOW
-            if (!generator_filter && muon->pT() > 4 && muon->abseta()<2.8)
+            if (!generator_filter && muon->pT() > 4 && muon->abseta()<2.8) {
+                //++e_gen_filter_cnt;
                 generator_filter = true;
+            }
           #endif
         }
 
@@ -283,10 +282,18 @@ namespace Gambit
         {
           if (tau->pT()>20. && (tau->abseta()>1.52 ? tau->abseta()<2.47 : tau->abseta()<1.37)) baselineTaus.push_back(tau);
           #ifdef  CHECK_CUTFLOW
-            if (!generator_filter && tau->pT() > 15 && tau->abseta()<2.8)
+            if (!generator_filter && tau->pT() > 15 && tau->abseta()<2.8) {
+                //++e_gen_filter_cnt;
                 generator_filter = true;
+            }
           #endif
         }
+        #ifdef  CHECK_CUTFLOW
+            if (!generator_filter && e_gen_filter_cnt >= 4) {
+                generator_filter = true;
+            }
+        #endif
+
         // Since tau efficiencies are not applied as part of the BuckFast ATLAS sim we apply it here
         ATLAS::applyTauEfficiencyR2(baselineTaus);
 
@@ -596,39 +603,45 @@ namespace Gambit
 
 
         #ifdef CHECK_CUTFLOW
+          size_t scale_to_row = 4;
           vector<double> cutFlowVector_scaled;
-          double scale_factor = cutFlowVectorATLAS_200_50[1]/cutFlowVector[1];
+          double scale_factor = cutFlowVectorATLAS_200_50[scale_to_row]/cutFlowVector[scale_to_row];
           for (size_t i=0 ; i < cutFlowVector.size() ; i++)
           {
             cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
           }
+          cout << "DEBUG CUTFLOW:   Working point 200, 50%" << endl;
           cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled) " << endl;
           cout << "DEBUG CUTFLOW:   -------------------------------------" << endl;
 
           for (size_t j = 0; j < NCUTS; j++) {
+            string scaled_prefix = j == scale_to_row ? "*" : "";
             cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_200_50[j] << "\t\t"
-                                        << cutFlowVector[j] << "\t\t"
+                                        << scaled_prefix << cutFlowVector[j] << "\t\t"
                                         << cutFlowVector_scaled[j] << "\t\t"
-                                        << cutFlowVector_str[j]
+                                        << scaled_prefix << cutFlowVector_str[j]
                                         << endl;
           }
         #endif
 
         #ifdef CHECK_CUTFLOW
+          scale_to_row = 4;
           cutFlowVector_scaled = vector<double>();
-          scale_factor = cutFlowVectorATLAS_300_100[1]/cutFlowVector[1];
+          scale_factor = cutFlowVectorATLAS_300_100[scale_to_row]/cutFlowVector[scale_to_row];
           for (size_t i=0 ; i < cutFlowVector.size() ; i++)
           {
             cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
           }
+          cout << "DEBUG CUTFLOW:   Working point 300, 100%" << endl;
           cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled) " << endl;
           cout << "DEBUG CUTFLOW:   -------------------------------------" << endl;
 
           for (size_t j = 0; j < NCUTS; j++) {
+            string scaled_prefix = j == scale_to_row ? "*" : "";
             cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_300_100[j] << "\t\t"
-                                        << cutFlowVector[j] << "\t\t"
+                                        << scaled_prefix << cutFlowVector[j] << "\t\t"
                                         << cutFlowVector_scaled[j] << "\t\t"
-                                        << cutFlowVector_str[j]
+                                        << scaled_prefix << cutFlowVector_str[j]
                                         << endl;
           }
         #endif
