@@ -1668,7 +1668,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "// Add W and Z decays manually\n"
             "entry.width_in_GeV = *gamW;\n"
             "entry.channels.clear();\n"
-            "entry.set_BF((*BrWqq)(1), 0.0, {iipair(1,0),iipari(-2,0)});\n"
+            "entry.set_BF((*BrWqq)(1), 0.0, {iipair(1,0),iipair(-2,0)});\n"
             "entry.set_BF((*BrWqq)(2), 0.0, {iipair(3,0),iipair(-4,0)});\n"
             "for(int i=1; i<=3; i++) entry.set_BF((*BrWln)(i), 0.0, {iipair(9+2*i,0),iipair(-9-2*i-1,0)});\n"
             "decays(Models::ParticleDB().long_name(24,0)) = entry;\n"
