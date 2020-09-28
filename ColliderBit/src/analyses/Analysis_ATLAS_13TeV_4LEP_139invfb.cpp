@@ -48,7 +48,8 @@ namespace Gambit
         vector<int> cutFlowVector;
         vector<string> cutFlowVector_str;
         size_t NCUTS;
-        vector<double> cutFlowVectorATLAS_400_0;
+        vector<double> cutFlowVectorATLAS_200_50;
+        vector<double> cutFlowVectorATLAS_300_100;
       #endif
 
       struct ptComparison
@@ -218,7 +219,8 @@ namespace Gambit
           for (size_t i=0;i<NCUTS;i++)
           {
             cutFlowVector.push_back(0);
-            cutFlowVectorATLAS_400_0.push_back(0);
+            cutFlowVectorATLAS_200_50.push_back(0);
+            cutFlowVectorATLAS_300_100.push_back(0);
             cutFlowVector_str.push_back("");
           }
         #endif
@@ -239,24 +241,24 @@ namespace Gambit
           bool generator_filter = false;
           bool trigger = true;
           bool event_cleaning = true;
-
-          vector<const HEPUtils::Particle*> baselineLeptons_cutflow;
-          for (const HEPUtils::Particle* electron : event->electrons())
-          {
-            if (electron->pT()>4.5 && electron->abseta()<2.47) baselineLeptons_cutflow.push_back(electron);
-          }
-          for (const HEPUtils::Particle* muons : event->muons())
-          {
-            if (muons->pT()>3. && muons->abseta()<2.7) baselineLeptons_cutflow.push_back(muons);
-          }
-          if (baselineLeptons_cutflow.size() >= 4) generator_filter = true;
         #endif
 
 
+        #ifdef  CHECK_CUTFLOW
+            int e_gen_filter_cnt = 0;
+        #endif
         for (const HEPUtils::Particle* electron : event->electrons())
         {
           if (electron->pT()>4.5 && electron->abseta()<2.47) baselineElectrons.push_back(electron);
+            #ifdef  CHECK_CUTFLOW
+                if (electron->pT() > 4 && electron->abseta()<2.8)
+                    ++e_gen_filter_cnt;
+            #endif
         }
+        #ifdef  CHECK_CUTFLOW
+            if (!generator_filter && e_gen_filter_cnt >= 4)
+                generator_filter = true;
+        #endif
 
         // Apply electron efficiency
         ATLAS::applyElectronEff(baselineElectrons);
@@ -267,6 +269,10 @@ namespace Gambit
         for (const HEPUtils::Particle* muon : event->muons())
         {
           if (muon->pT()>3. && muon->abseta()<2.7) baselineMuons.push_back(muon);
+          #ifdef  CHECK_CUTFLOW
+            if (!generator_filter && muon->pT() > 4 && muon->abseta()<2.8)
+                generator_filter = true;
+          #endif
         }
 
         // Apply muon efficiency
@@ -277,6 +283,10 @@ namespace Gambit
         for (const HEPUtils::Particle* tau : event->taus())
         {
           if (tau->pT()>20. && (tau->abseta()>1.52 ? tau->abseta()<2.47 : tau->abseta()<1.37)) baselineTaus.push_back(tau);
+          #ifdef  CHECK_CUTFLOW
+            if (!generator_filter && tau->pT() > 15 && tau->abseta()<2.8)
+                generator_filter = true;
+          #endif
         }
         // Since tau efficiencies are not applied as part of the BuckFast ATLAS sim we apply it here
         ATLAS::applyTauEfficiencyR2(baselineTaus);
@@ -384,8 +394,8 @@ namespace Gambit
         // --- 4L0T ---
 
         // SR0-ZZ-loose-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 100.) _counters.at("SR0-ZZ-loose-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 100.)
+        if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 100.) _counters.at("SR0-ZZ-loose-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-loose-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -399,8 +409,8 @@ namespace Gambit
         // }
 
         // SR0-ZZ-tight-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 200.) _counters.at("SR0-ZZ-tight-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && Zlike && met > 200.)
+        if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 200.) _counters.at("SR0-ZZ-tight-bveto").add_event(event);
+        //if (nSignalLeptons >= 4 && NbJets == 0 && Z1 && Z2 && met > 200.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -414,8 +424,8 @@ namespace Gambit
         // }
 
         // SR0-ZZ-loose
-        if (nSignalLeptons >= 4 && Zlike && met > 50.) _counters.at("SR0-ZZ-loose").add_event(event);
-        //if (nSignalLeptons >= 4 && Zlike && met > 50.)
+        if (nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) _counters.at("SR0-ZZ-loose").add_event(event);
+        //if (nSignalLeptons >= 4 && Z1 && Z2 && met > 50.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-loose ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -429,8 +439,8 @@ namespace Gambit
         // }
 
         // SR0-ZZ-tight
-        if (nSignalLeptons >= 4 && Zlike && met > 100.) _counters.at("SR0-ZZ-tight").add_event(event);
-        //if (nSignalLeptons >= 4 && Zlike && met > 100.)
+        if (nSignalLeptons >= 4 && Z1 && Z2 && met > 100.) _counters.at("SR0-ZZ-tight").add_event(event);
+        //if (nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
         // {
         //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
         //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
@@ -491,28 +501,40 @@ namespace Gambit
 
         #ifdef CHECK_CUTFLOW
           cutFlowVector_str[0] = "Initial";
-          cutFlowVector_str[1] = "Generator filter";
-          cutFlowVector_str[2] = "Trigger";
-          cutFlowVector_str[3] = "Event cleaning";
-          cutFlowVector_str[4] = "N_e_mu >= 1";
-          cutFlowVector_str[5] = "N_e_mu >= 2";
-          cutFlowVector_str[6] = "N_e_mu >= 3";
-          cutFlowVector_str[7] = "N_e_mu >= 4";
-          cutFlowVector_str[8] = "ZZ selection";
-          cutFlowVector_str[9] = "ETmiss > 50 (SRC)";
-          cutFlowVector_str[10] = "ETmiss > 100 (SRD)";
+          cutFlowVector_str[1] = "Good Event";
+          cutFlowVector_str[2] = "N_e_mu >= 2";
+          cutFlowVector_str[3] = "Trigger";
+          cutFlowVector_str[4] = "N_e_mu >= 4";
+          cutFlowVector_str[5] = "ZZ";
+          cutFlowVector_str[6] = "met > 50 (SR0-ZZ-loose)";
+          cutFlowVector_str[7] = "met > 100 (SR0-ZZ-tight)";
+          cutFlowVector_str[8] = "b-veto";
+          cutFlowVector_str[9] = "met > 100 (SR0-ZZ-loose-bveto)";
+          cutFlowVector_str[10] = "met > 200 (SR0-ZZ-tight-bveto)";
 
-          cutFlowVectorATLAS_400_0[0] = 3203.45;
-          cutFlowVectorATLAS_400_0[1] = 36.34;
-          cutFlowVectorATLAS_400_0[2] = 28.77;
-          cutFlowVectorATLAS_400_0[3] = 27.64;
-          cutFlowVectorATLAS_400_0[4] = 26.14;
-          cutFlowVectorATLAS_400_0[5] = 23.34;
-          cutFlowVectorATLAS_400_0[6] = 14.19;
-          cutFlowVectorATLAS_400_0[7] = 7.59;
-          cutFlowVectorATLAS_400_0[8] = 5.71;
-          cutFlowVectorATLAS_400_0[9] = 5.44;
-          cutFlowVectorATLAS_400_0[10] = 4.84;
+          cutFlowVectorATLAS_200_50[0] = -1;
+          cutFlowVectorATLAS_200_50[1] = 2716.37;
+          cutFlowVectorATLAS_200_50[2] = 1041.64;
+          cutFlowVectorATLAS_200_50[3] = 951.78;
+          cutFlowVectorATLAS_200_50[4] = 116.87;
+          cutFlowVectorATLAS_200_50[5] = 71.53;
+          cutFlowVectorATLAS_200_50[6] = 55.88;
+          cutFlowVectorATLAS_200_50[7] = 28.47;
+          cutFlowVectorATLAS_200_50[8] = 66.21;
+          cutFlowVectorATLAS_200_50[9] = 26.41;
+          cutFlowVectorATLAS_200_50[10] = 2.96;
+
+          cutFlowVectorATLAS_300_100[0] = -1;
+          cutFlowVectorATLAS_300_100[1] = 493.16;
+          cutFlowVectorATLAS_300_100[2] = 319.87;
+          cutFlowVectorATLAS_300_100[3] = 308.22;
+          cutFlowVectorATLAS_300_100[4] = 74.92;
+          cutFlowVectorATLAS_300_100[5] = 61.14;
+          cutFlowVectorATLAS_300_100[6] = 56.74;
+          cutFlowVectorATLAS_300_100[7] = 46.76;
+          cutFlowVectorATLAS_300_100[8] = 55.42;
+          cutFlowVectorATLAS_300_100[9] = 42.77;
+          cutFlowVectorATLAS_300_100[10] = 19.46;
 
           for (size_t j=0;j<NCUTS;j++)
           {
@@ -521,23 +543,23 @@ namespace Gambit
 
               (j==1 && generator_filter) ||
 
-              (j==2 && generator_filter && trigger) ||
+              (j==2 && generator_filter && nSignalLeptons >= 2) ||
 
-              (j==3 && generator_filter && trigger && event_cleaning) ||
+              (j==3 && generator_filter && nSignalLeptons >= 2 && trigger) ||
 
-              (j==4 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 1) ||
+              (j==4 && generator_filter && nSignalLeptons >= 4 && trigger) ||
 
-              (j==5 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 2) ||
+              (j==5 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2) ||
 
-              (j==6 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 3) ||
+              (j==6 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && met > 50) ||
 
-              (j==7 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4) ||
+              (j==7 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && met > 100) ||
 
-              (j==8 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4 && Z1 && Z2) ||
+              (j==8 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0) ||
 
-              (j==9 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4 && Z1 && Z2 && met > 50.) ||
+              (j==9 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 100) ||
 
-              (j==10 && generator_filter && trigger && event_cleaning && nSignalLeptons >= 4 && Z1 && Z2 && met > 100.)
+              (j==10 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 200) ||
 
               )
 
@@ -576,16 +598,35 @@ namespace Gambit
 
         #ifdef CHECK_CUTFLOW
           vector<double> cutFlowVector_scaled;
+          double scale_factor = cutFlowVectorATLAS_200_50[1]/cutFlowVector[1];
           for (size_t i=0 ; i < cutFlowVector.size() ; i++)
           {
-            double scale_factor = cutFlowVectorATLAS_400_0[0]/cutFlowVector[0];
             cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
           }
           cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled) " << endl;
           cout << "DEBUG CUTFLOW:   -------------------------------------" << endl;
 
           for (size_t j = 0; j < NCUTS; j++) {
-            cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_400_0[j] << "\t\t"
+            cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_200_50[j] << "\t\t"
+                                        << cutFlowVector[j] << "\t\t"
+                                        << cutFlowVector_scaled[j] << "\t\t"
+                                        << cutFlowVector_str[j]
+                                        << endl;
+          }
+        #endif
+
+        #ifdef CHECK_CUTFLOW
+          vector<double> cutFlowVector_scaled;
+          double scale_factor = cutFlowVectorATLAS_300_100[1]/cutFlowVector[1];
+          for (size_t i=0 ; i < cutFlowVector.size() ; i++)
+          {
+            cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
+          }
+          cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled) " << endl;
+          cout << "DEBUG CUTFLOW:   -------------------------------------" << endl;
+
+          for (size_t j = 0; j < NCUTS; j++) {
+            cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_300_100[j] << "\t\t"
                                         << cutFlowVector[j] << "\t\t"
                                         << cutFlowVector_scaled[j] << "\t\t"
                                         << cutFlowVector_str[j]
