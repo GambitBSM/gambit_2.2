@@ -240,7 +240,6 @@ namespace Gambit
         #ifdef  CHECK_CUTFLOW
           bool generator_filter = false;
           bool trigger = true;
-          bool event_cleaning = true;
         #endif
 
 
@@ -559,7 +558,7 @@ namespace Gambit
 
               (j==9 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 100) ||
 
-              (j==10 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 200) ||
+              (j==10 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 200)
 
               )
 
@@ -616,8 +615,8 @@ namespace Gambit
         #endif
 
         #ifdef CHECK_CUTFLOW
-          vector<double> cutFlowVector_scaled;
-          double scale_factor = cutFlowVectorATLAS_300_100[1]/cutFlowVector[1];
+          cutFlowVector_scaled = vector<double>();
+          scale_factor = cutFlowVectorATLAS_300_100[1]/cutFlowVector[1];
           for (size_t i=0 ; i < cutFlowVector.size() ; i++)
           {
             cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
