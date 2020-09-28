@@ -587,7 +587,7 @@ namespace Gambit
 
         // Iterate over sub-capabilites to extract the strategies
         // If list is a sequence it will just take the default
-        if(subcaps.IsSequence())
+        if(subcaps.IsNull() or subcaps.IsSequence())
           result = default_choice;
         // If list is a map then it probably has options
         if(subcaps.IsMap())

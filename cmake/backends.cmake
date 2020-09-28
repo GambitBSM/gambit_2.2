@@ -1168,7 +1168,6 @@ if(NOT ditched_${name}_${ver})
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
                # COMMAND ${CMAKE_COMMAND} -E copy_directory ${patchdir}/VevaciousPlusPlus/ModelFiles/ ${dir}/ModelFiles/
           INSTALL_COMMAND ""
-          COMMAND mv ${dir}/lib/libVevaciousPlusPlus.dylib ${dir}/lib/libVevaciousPlusPlus.so
           )
   #add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)

@@ -23,27 +23,6 @@ import re
 from setup import *
 from files import *
 
-def check_model_name(model_name, clean_model_name):
-    """
-    Checks if the model already exists on the gambit hierarchy.
-    Return True if it exists, False if not
-    """
-
-    print "Checking if model is in Gambit"
-
-    filename = "models/" + model_name + ".hpp"
-    module = "Models"
-
-    if find_file(filename, module):
-        return True
-
-    filename = "models/" + clean_model_name + ".hpp"
-
-    if find_file(filename, module):
-        return True
-    
-    return False
-
 def get_model_parameters(parameters, add_higgs):
     """
     Extracts the model (scan) parameters out of the full parameter list

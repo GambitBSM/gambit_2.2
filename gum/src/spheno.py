@@ -1665,6 +1665,20 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "  decays(Models::ParticleDB().long_name(pdg[i],0)) = entry;\n"
             "}\n"
             "\n"
+            "// Add W and Z decays manually\n"
+            "entry.width_in_GeV = *gamW;\n"
+            "entry.channels.clear();\n"
+            "entry.set_BF((*BrWqq)(1), 0.0, {iipair(1,0),iipari(-2,0)});\n"
+            "entry.set_BF((*BrWqq)(2), 0.0, {iipair(3,0),iipair(-4,0)});\n"
+            "for(int i=1; i<=3; i++) entry.set_BF((*BrWln)(i), 0.0, {iipair(9+2*i,0),iipair(-9-2*i-1,0)});\n"
+            "decays(Models::ParticleDB().long_name(24,0)) = entry;\n"
+            "entry.width_in_GeV = *gamZ;\n"
+            "entry.channels.clear();\n"
+            "for(int i=1; i<=5; i++) entry.set_BF((*BrZqq)(i), 0.0, {iipair(i,0),iipair(-i,0)});\n"
+            "for(int i=1; i<=3; i++) entry.set_BF((*BrZll)(i), 0.0, {iipair(9+2*i,0),iipair(-9-2*i,0)});\n"
+            "for(int i=1; i<=3; i++) entry.set_BF(*BrZinv/3, 0.0, {iipair(10+2*i,0),iipair(-10-2*i,0)});\n"
+            "decays(Models::ParticleDB().long_name(23,0)) = entry;\n"
+            "\n"
             "return *kont;\n"
             "}\n\n"
     )
@@ -2879,11 +2893,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Z-boson\n'\
       '*mZ = sminputs.mZ;          // mass\n'\
       '*gamZ = 2.4952;             // width, values henceforth from StandardModel.f90\n'\
-      '(*BrZqq)(1) = 0.156;        // branching ratio in d \bar{d}\n'\
-      '(*BrZqq)(2) = 0.156;        // branching ratio in s \bar{s}\n'\
-      '(*BrZqq)(3) = 0.151;        // branching ratio in b \bar{b}\n'\
-      '(*BrZqq)(4) = 0.116;        // branching ratio in u \bar{u}\n'\
-      '(*BrZqq)(5) = 0.12;         // branching ratio in c \bar{c}\n'\
+      '(*BrZqq)(1) = 0.156;        // branching ratio in d dbar\n'\
+      '(*BrZqq)(2) = 0.156;        // branching ratio in s sbar\n'\
+      '(*BrZqq)(3) = 0.151;        // branching ratio in b bbar\n'\
+      '(*BrZqq)(4) = 0.116;        // branching ratio in u ubar\n'\
+      '(*BrZqq)(5) = 0.12;         // branching ratio in c cbar\n'\
       '(*BrZll)(1) = 0.0336;       // branching ratio in e+ e-\n'\
       '(*BrZll)(2) = 0.0336;       // branching ratio in mu+ mu-\n'\
       '(*BrZll)(3) = 0.0338;       // branching ratio in tau+ tau-\n'\
