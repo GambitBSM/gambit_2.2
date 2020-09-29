@@ -220,7 +220,7 @@
 
   #define FUNCTION prepare_pass_MSSM_spectrum_to_vevacious
     START_FUNCTION(SpecBit::SpectrumEntriesForVevacious)
-    DEPENDENCY(unimproved_MSSM_spectrum, Spectrum)
+    DEPENDENCY(MSSM_spectrum, Spectrum)
     DEPENDENCY(init_vevacious, std::string)
     ALLOW_MODELS(CMSSM, MSSM63atMGUT, MSSM63atQ) 
   #undef FUNCTION
