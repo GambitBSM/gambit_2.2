@@ -951,14 +951,15 @@ namespace Gambit
         //Creating string with rank number
         std::string rankstring = std::to_string(rank);
 
-        // Getting the run folder for saving initialization files
-        std::string inputspath = runOptions.getValue<std::string>("where_to_save_input");
-        result["inputspath"] = inputspath;
-        std::string modelfilesPath = inputspath + "/ModelFiles/mpirank_"+ rankstring + "/";
-
-        // Get the path to the library
+        // Get the path to the library and results dir
         std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious", "1.0");
         std::string vevaciouspath = vevaciouslibpath + "/../";
+        std::string vevaciousresultspath = vevaciouspath + "/results";
+
+        // Getting the run folder for saving initialization files
+        std::string inputspath = runOptions.getValueOrDef<std::string>(vevaciousresultspath,"where_to_save_input");
+        result["inputspath"] = inputspath;
+        std::string modelfilesPath = inputspath + "/ModelFiles/mpirank_"+ rankstring + "/";
 
         result["ScaleAndBlockFileSource"] = vevaciouspath + "ModelFiles/LagrangianParameters/MSSM.xml";
         result["ModelFileSource"] = vevaciouspath + "ModelFiles/PotentialFunctions/MSSM_StauAndStop_RealVevs.vin";

@@ -97,12 +97,8 @@ ObsLikes:
 
 Rules:
   # Tell all functions that are able to dump SLHA files to do so.
-  - options:
-     drop_SLHA_file: true
-
-  - capability: vevacious_file_location
-    options: 
-      where_to_save_input: runs/Vevacious_iniFiles/
+  #- options:
+  #   drop_SLHA_file: true
 
   - capability: initialize_vevacious
     options:
@@ -111,29 +107,10 @@ Rules:
       global_minimum_is_panic: false
       path_finding_timeout: 3600
 
-  # - capability: make_vevaciousPlusPlus_inputs
-  #   options:
-  #     tunneling_strategy: QuantumThenThermal
-  #     homotopy_backend: hom4ps
-  #     where_to_save_input: output/Vevacious_iniFiles/
-  #     minuit_strategy: 1
-  #     global_minimum_is_panic: false
-  #     path_finding_timeout: 3600
-
   # Globally permit maximal mixing between gauge and family eigenstates
   - options:
       gauge_mixing_tolerance: 0.5
       family_mixing_tolerance: 0.5
-
-  
-
-  # Choose to use gm2calc for g-2
- # - capability: muon_gm2
- #   function: GM2C_SUSY
-
-  # Choose to base the SM prediction for g-2 on e+e- data
- # - capability: muon_gm2_SM
- #   function: gm2_SM_ee
 
   # Choose to get the spectrum from SpecBit proper, not an SLHA file.
   # Options set to match benchmark point specified in SpecBit/MSSM_benchmark_points/LesHouches.in.MSSM_1
@@ -154,9 +131,9 @@ Rules:
       invalid_point_fatal: false
 
   # Choose where to get the precision spectrum from
-  #- capability: MSSM_spectrum
-  #  type: Spectrum
-  #  function: make_MSSM_precision_spectrum_none
+  - capability: MSSM_spectrum
+    type: Spectrum
+    function: make_MSSM_precision_spectrum_none
     #function: make_MSSM_precision_spectrum_W
     #function: make_MSSM_precision_spectrum_H_W
     # The following options only have an impact when using make_MSSM_precision_spectrum_H_W.
@@ -167,19 +144,6 @@ Rules:
     #  Higgs_predictions_source: 1
     #  Higgs_predictions_error_method: 4
 
-
-  # Values to be used in PrecisionBit likelihood function for light quark masses
-#  - capability: lnL_light_quark_masses
-#    options:
-      # m_u/m_d
-#      mud_central: 0.48
-#      mud_error: 0.10
-      # m_s / ((m_u + m_d)/2)
-#      msud_central: 27.5
-#      msud_error: 1.0
-      # m_s
-#      ms_central: 95.E-03
-#      ms_error: 5.E-03
 
 Logger:
 
