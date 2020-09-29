@@ -28,6 +28,10 @@
 ///          (janina.renk@fysik.su.se)
 ///  \date 2019 July, Dec
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Sep
+///
 ///  *********************************************
 
 #ifdef WITH_MPI
@@ -451,7 +455,6 @@ namespace Gambit
         double width = 0.0;
         for(auto vacua : *Dep::compare_panic_vacua)
         {
-          std::cout << vacua.first << " -> " << vacua.second << std::endl;
           if (vacua.second != "JustThermal")
             width += vevacious_results.get_width(vacua.first);
           if (vacua.second != "JustQuantum")
@@ -465,54 +468,23 @@ namespace Gambit
         result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
     }
 
-    /// Vacuum stability likelihood from a Vevacious run
-    /// calculating the lifetime of & tunneling probability to the global minimum
-    void get_likelihood_VS_global(double &result)
-    {
-        using namespace Pipes::get_likelihood_VS_global;
-        
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_global;
-        double lifetime =  vevacious_results.get_lifetime("global");
-
-        // This is based on the estimation of the past lightcone from 1806.11281
-        double conversion = (6.5821195e-25)/(31536000);
-        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
-    }
-
-    /// Vacuum stability likelihood from a Vevacious run
-    /// calculating the lifetime of & tunneling probability to the nearest minimum
-    void get_likelihood_VS_nearest(double &result)
-    {
-        using namespace Pipes::get_likelihood_VS_nearest;
-        
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_nearest;
-        double lifetime =  vevacious_results.get_lifetime("nearest");
-
-        // This is based on the estimation of the past lightcone from 1806.11281
-        double conversion = (6.5821195e-25)/(31536000);
-        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
-    }
-
     /// get all results from VS as str to dbl map to easily print them
-    /// (global vacuum is panic)
-    void get_VS_results_global(map_str_dbl &result)
+    void get_VS_results(map_str_dbl &result)
     {
-        using namespace Pipes::get_VS_results_global;
+        using namespace Pipes::get_VS_results;
         
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_global;
-        result =  vevacious_results.get_global_results();
+        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
+        for(auto vacua : *Dep::compare_panic_vacua)
+        {
+          map_str_dbl tempmap;
+          if (vacua.first == "global")
+            tempmap = vevacious_results.get_global_results();
+          else if(vacua.first == "nearest")
+            tempmap = vevacious_results.get_nearest_results();
+          for(auto it = tempmap.begin(); it != tempmap.end(); ++it)
+            result[it->first + "::" + vacua.first] = it->second;
+        }
     }
-
-    /// get all results from VS as str to dbl map to easily print them
-    /// (nearest vacuum is panic)
-    void get_VS_results_nearest(map_str_dbl &result)
-    {
-        using namespace Pipes::get_VS_results_nearest;
-        
-        VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability_nearest;
-        result =  vevacious_results.get_nearest_results();
-    }
-    
 
     /**********************/
     /* VEVACIOUS ROUTINES */
@@ -557,7 +529,7 @@ namespace Gambit
            << "    sub_capabilities:" << endl
            << "       - nearest" << endl
            << "to only calculate the tunneling probabilities to the nearest minimum." << endl;
-        logger() << ss.str() << EOM;
+        logger() << LogTags::debug << ss.str() << EOM;
       
         // just need to set this once
         firstrun = false;   
@@ -783,11 +755,6 @@ namespace Gambit
             thermalProbability = 1;
         }
 
-        cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-        cout << "VEVACIOUS Prob. non zero temp:  "<< thermalProbability << endl;
-        std::string vevacious_result = vevaciousPlusPlus.GetResultsAsString();
-        cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
-    
         // return a vector containing the results from vevacious, these are filled
         // in any successfully run case with the entries
         //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
@@ -799,9 +766,8 @@ namespace Gambit
         std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
         std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
             
-        logger() << LogTags::debug  << "VEVACIOUS result size "<< BounceActions_vec.size();
-        logger() << LogTags::debug  << "\nVEVACIOUS thermal result size "<< BounceActionsThermal_vec.size();
-        std::cout  << "VEVACIOUS thermal result size "<< BounceActionsThermal_vec.size() << std::endl;
+        logger() << LogTags::debug  << "Vevacious result size "<< BounceActions_vec.size();
+        logger() << LogTags::debug  << "\nVevacious thermal result size "<< BounceActionsThermal_vec.size();
 
         // set bounce actions values & the threshold if they were calculated
         for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii) 
@@ -814,11 +780,8 @@ namespace Gambit
         for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii) 
         {
           logger() << LogTags::debug << "\nSetting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii); 
-          std::cout << "Setting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii) << std::endl; 
           result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
         }
-
-        logger() << LogTags::debug << EOM;
 
         // add entry 'straightPathGoodEnough' to result map
         // -> -1 if no bounce actions calculated
@@ -845,10 +808,7 @@ namespace Gambit
       double thermalWidth = 0.;
       double thermalProbability= 1;
 
-      cout << "VEVACIOUS LIFETIME:  "<< lifetime << endl;
-      std::string vevacious_result = "Inconclusive";
-      cout << "VEVACIOUS RESULT:  "<< vevacious_result << endl;
-      logger() << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<endl;
+      logger() << LogTags::debug << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<EOM;
       
       result.set_results(panic_vacuum,"lifetime", lifetime);
       result.set_results(panic_vacuum,"width", hbar/lifetime);
@@ -897,7 +857,7 @@ namespace Gambit
           std::ostringstream ss;
           ss << "Global and nearest minimum are the same. Will only calculate tunnelling" << endl;
           ss << "probability once." << endl;
-          logger() << ss.str() << EOM;
+          logger() << LogTags::debug << ss.str() << EOM;
         }
         else
         {
@@ -964,128 +924,11 @@ namespace Gambit
               // call function that sets the lifetime & thermal probability if vevacious
               // has crashed for some reason
               helper_catch_vevacious(result, panic_vacuum);
-              logger() << "Error occurred: " << e.what() << EOM;
+              logger() << LogTags::debug << "Error occurred: " << e.what() << EOM;
           }
         }
     }
 
-    /// Check stability of global vacuum of the potential with vevacious
-    void check_vacuum_stability_vevacious_global(VevaciousResultContainer &result)
-    {
-        namespace myPipe = Pipes::check_vacuum_stability_vevacious_global;
-
-        // global vacuum is panic in this capability
-        static const std::string panic_vacuum = "global";
-        // This is the number of different pathFinders implemented in vevacious. It should be 
-        // returned by a BE convenience function, I tried to do it but didn't manage to 
-        // with the BOSS stuff -- that should probably be fixed  # todo 
-        static int pathFinder_number = 2;
-        // reset all entries of the of VevaciousResultContainer map holding the results
-        // to avoid that any value could be carried over from a previous calculated point
-        result.clear_results(panic_vacuum, pathFinder_number);
-        
-        // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
-        static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
-        static bool firstrun = true;
-        if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;firstrun=false;}
-
-        int trial = 0;
-        bool successful_run = false;
-        
-        // get the object that holds all inputs that needs to be passed to vevacious
-        SpectrumEntriesForVevacious pass_spectrum = (*myPipe::Dep::pass_spectrum_to_vevacious);
-        
-        // run vevacious until it runs successfully or the maximum number of trials is reached
-        while(trial < maxTrials and not successful_run)
-        { 
-          try 
-          {    
-              // create vevaciousPlusPlus object new for every try since spectrum 
-              // vevacious deletes spectrum after each run => to be able to do this 
-              // we need the non-rollcalled helper function that gets executed every time 
-              // we get to this line (unlike a dependency)
-              vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
-              
-              // helper function to set lifetime & thermal probability accordingly 
-              // (this is a separate function s.t. we don't have to reproduce code 
-              // for different panic vacua)
-              helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
-
-              // congrats -- if you got up to this point vevacious did not crash!
-              successful_run = true;
-          }
-
-          catch(const std::exception& e)
-          {
-              // call function that sets the lifetime & thermal probability if vevacious
-              // has crashed for some reason
-              helper_catch_vevacious(result, panic_vacuum);
-              logger() << "Error occurred: " << e.what() << EOM;
-          }
-          // and here we go for the next try -- fingers crossed!
-          trial += 1;
-        }
-    }
-
-    /// Check stability of global vacuum of the potential with vevacious
-    void check_vacuum_stability_vevacious_nearest(VevaciousResultContainer &result)
-    {
-        namespace myPipe = Pipes::check_vacuum_stability_vevacious_nearest;
-
-        // nearest vacuum is panic in this capability
-        static const std::string panic_vacuum = "nearest";
-        // This is the number of different pathFinders implemented in vevacious. It should be 
-        // returned by a BE convenience function, I tried to do it but didn't manage to 
-        // with the BOSS stuff -- that should probably be fixed  # todo 
-        static int pathFinder_number = 2;
-        // reset all entries of the of VevaciousResultContainer map holding the results
-        // to avoid that any value could be carried over from a previous calculated point
-        result.clear_results(panic_vacuum, pathFinder_number);
-
-        // read in option how often to re-run vevacious in case of an INCONCLUSIVE RESULT
-        static int maxTrials = myPipe::runOptions->getValueOrDef<int>(2,"max_run_trials");
-        static bool firstrun = true;
-        if(firstrun){std::cout << " ... running vevacious at max. " << maxTrials << " times if results are inconclusive." << std::endl;firstrun=false;}
-
-        int trial = 0;
-        bool successful_run = false;
-        
-        // get the object that holds all inputs that needs to be passed to vevacious
-        SpectrumEntriesForVevacious pass_spectrum = (*myPipe::Dep::pass_spectrum_to_vevacious);
-        
-        // run vevacious until it runs successfully or the maximum number of trials is reached
-        while(trial < maxTrials and not successful_run)
-        { 
-          try 
-          {    
-              // create vevaciousPlusPlus object new for every try since spectrum 
-              // vevacious deletes spectrum after each run => to be able to do this 
-              // we need the non-rollcalled helper function that gets executed every time 
-              // we get to this line (unlike a dependency)
-              vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
-              
-              // helper function to set lifetime & thermal probability accordingly 
-              // (this is a separate function s.t. we don't have to reproduce code 
-              // for different panic vacua)
-              helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
-
-              // congrats -- if you got up to this point vevacious did not crash!
-              successful_run = true;
-          }
-
-          catch(const std::exception& e)
-          {
-              // call function that sets the lifetime & thermal probability if vevacious
-              // has crashed for some reason
-              helper_catch_vevacious(result, panic_vacuum);
-              logger() << "Error occurred: " << e.what() << EOM;
-          }
-          // and here we go for the next try -- fingers crossed!
-          trial += 1;
-        }
-    }
-   
-    
     /********/
     /* MSSM */
     /********/
@@ -1330,12 +1173,12 @@ namespace Gambit
                 std::ifstream in(filename.c_str(), std::ios::binary);
                 if(in.good())
                 {
-                    std::cout << "Symlink for phc already exists, skipping creating it." << std::endl;
+                    logger() << LogTags::debug << "Symlink for phc already exists, skipping creating it." << EOM;
                 }
                 else
                 {
 
-                    std::cout << "Creating PHC symlink" << std::endl;
+                    logger() << LogTags::debug << "Creating PHC symlink" << EOM;
                     std::string systemCommand( "ln -s " + PathToPHC + "/phc" + " " + PHCSymlink );
 
                     int systemReturn = system( systemCommand.c_str() ) ;
@@ -1571,10 +1414,9 @@ namespace Gambit
             std::string name = it->first;
             double value = *myPipe::Param[name];
             InputsForLog << "\n  " << name << ": " << value;
-            //std::cout << " " << name << " = " << value << std::endl;
         }
         std::string InputsForLogString = InputsForLog.str();
-        logger() << InputsForLogString << EOM;
+        logger() << LogTags::debug << InputsForLogString << EOM;
 
         // Getting mpi rank
         int rank;
@@ -1599,7 +1441,6 @@ namespace Gambit
         SLHAea::Coll slhaea = spectrumHE.getSLHAea(2);
         double scale = spectrumHE.GetScale();
 
-        cout << "VEVACIOUS SCALE:  "<< scale << endl;
         result.set_scale(scale);
 
         // safe parameters form the SLHAea::Coll object in SpectrumEntriesForVevacious 
@@ -1635,7 +1476,7 @@ namespace Gambit
                                                              {22, SLHAea::to<double>(slhaea.at("TREEMSOFT").at(22).at(1))} };
             result.add_entry("TREEMSOFT", treemsoft, 1);
         }
-        catch (const std::exception& e){ cout << "No TREEMSOFT, skipping" << endl;}
+        catch (const std::exception& e){ logger() << LogTags::debug << "No TREEMSOFT, skipping" << EOM;}
         
         // Check if the block "LOOPMSOFT" is present
         try 
@@ -1644,7 +1485,7 @@ namespace Gambit
                                                              {22, SLHAea::to<double>(slhaea.at("LOOPMSOFT").at(22).at(1))}};
             result.add_entry("LOOPMSOFT", loopmsoft, 1);
         }
-        catch (const std::exception& e) {cout << "No LOOPMSOFT, skipping" << endl;}
+        catch (const std::exception& e) {logger() << LogTags::debug <<"No LOOPMSOFT, skipping" << EOM;}
 
         bool diagonalYukawas = false;
         // Here we check if the Yukawas are diagonal or not, i.e if the "YX" blocks have off-diagonal entries.
@@ -1652,7 +1493,7 @@ namespace Gambit
         {
           SLHAea::to<double>(slhaea.at("YU").at(1,2));
         }
-        catch (const std::exception& e) {diagonalYukawas = true; cout << "Diagonal Yukawas detected"<< endl;}
+        catch (const std::exception& e) {diagonalYukawas = true; logger() << LogTags::debug << "Diagonal Yukawas detected"<< EOM;}
 
         // If diagonal pass the diagonal values to Vevacious
         if (diagonalYukawas) 

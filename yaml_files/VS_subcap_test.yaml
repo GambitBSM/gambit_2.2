@@ -90,26 +90,9 @@ ObsLikes:
       global: [quantum]
       nearest: [quantum]
 
-#  - capability: lnL_W_mass
-#    purpose:    LogLike
-
-#  - capability:  lnL_gm2
-#    purpose:     LogLike
-
-
-  #- capability:   VS_StraightPathGoodEnough
-  #  purpose:      Obs
-  #  #type:         int
-  #
-  #- capability:   VS_ThresholdAndBounceActions
-  #  purpose:      Obs
-#
-#  #- capability:   VS_StraightPathGoodEnough_Thermal
-#  #  purpose:      Obs
-#  # # type:         int
-#
-#  #- capability:   VS_ThresholdAndBounceActions_Thermal
-  #  purpose:      Obs
+  # Vacuum Stability observable
+  - capability:   VS_results
+    purpose:      Observable
 
 
 Rules:
@@ -123,7 +106,6 @@ Rules:
 
   - capability: initialize_vevacious
     options:
-      tunneling_strategy: QuantumThenThermal
       homotopy_backend: hom4ps
       minuit_strategy: 1
       global_minimum_is_panic: false

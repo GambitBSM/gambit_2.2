@@ -118,8 +118,6 @@ namespace Gambit
         // return map containing results for nearest/global run
         map_str_dbl get_nearest_results() {return result_map["nearest"];}
         map_str_dbl get_global_results() {return result_map["global"];}
-        map_str_dbl get_nearest_thermal_results() {return result_map["nearest_thermal"];}
-        map_str_dbl get_global_thermal_results() {return result_map["global_thermal"];}
 
         // return width, lifetime for nearest/global minimum
         double get_width(str panic_vacuum) { return result_map[panic_vacuum]["width"]; }
