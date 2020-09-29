@@ -85,7 +85,7 @@ namespace Gambit
         vector<const HEPUtils::Jet*> bJets;
 
         // Find b-jets
-        double btag = 0.85; double cmisstag = 1/6.; double misstag = 1./134.;
+        double btag = 0.85; double cmisstag = 1/2.7; double misstag = 1./25.;
         for (const HEPUtils::Jet* jet : candJets) {
           if (jet->abseta() > 2.5) continue;
           // Tag
@@ -244,14 +244,14 @@ namespace Gambit
 
 
         #ifdef  CHECK_CUTFLOW
-            int e_gen_filter_cnt = 0;
+            int gen_filter_cnt = 0;
         #endif
         for (const HEPUtils::Particle* electron : event->electrons())
         {
           if (electron->pT()>4.5 && electron->abseta()<2.47) baselineElectrons.push_back(electron);
           #ifdef  CHECK_CUTFLOW
               if (!generator_filter && electron->pT() > 4 && electron->abseta()<2.8) {
-                  ++e_gen_filter_cnt;
+                  ++gen_filter_cnt;
               }
           #endif
         }
@@ -267,8 +267,7 @@ namespace Gambit
           if (muon->pT()>3. && muon->abseta()<2.7) baselineMuons.push_back(muon);
           #ifdef  CHECK_CUTFLOW
             if (!generator_filter && muon->pT() > 4 && muon->abseta()<2.8) {
-                //++e_gen_filter_cnt;
-                generator_filter = true;
+                ++gen_filter_cnt;
             }
           #endif
         }
@@ -283,13 +282,12 @@ namespace Gambit
           if (tau->pT()>20. && (tau->abseta()>1.52 ? tau->abseta()<2.47 : tau->abseta()<1.37)) baselineTaus.push_back(tau);
           #ifdef  CHECK_CUTFLOW
             if (!generator_filter && tau->pT() > 15 && tau->abseta()<2.8) {
-                //++e_gen_filter_cnt;
-                generator_filter = true;
+                ++gen_filter_cnt;
             }
           #endif
         }
         #ifdef  CHECK_CUTFLOW
-            if (!generator_filter && e_gen_filter_cnt >= 4) {
+            if (!generator_filter && gen_filter_cnt >= 4) {
                 generator_filter = true;
             }
         #endif
@@ -616,10 +614,10 @@ namespace Gambit
 
           for (size_t j = 0; j < NCUTS; j++) {
             string scaled_prefix = j == scale_to_row ? "*" : "";
-            cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_200_50[j] << "\t\t"
-                                        << scaled_prefix << cutFlowVector[j] << "\t\t"
-                                        << cutFlowVector_scaled[j] << "\t\t"
-                                        << scaled_prefix << cutFlowVector_str[j]
+            cout << setprecision(4) << "DEBUG CUTFLOW:   " << scaled_prefix << cutFlowVectorATLAS_200_50[j] << "\t\t"
+                                        << cutFlowVector[j] << "\t\t"
+                                        << scaled_prefix << cutFlowVector_scaled[j] << "\t\t"
+                                        << cutFlowVector_str[j]
                                         << endl;
           }
         #endif
@@ -638,10 +636,10 @@ namespace Gambit
 
           for (size_t j = 0; j < NCUTS; j++) {
             string scaled_prefix = j == scale_to_row ? "*" : "";
-            cout << setprecision(4) << "DEBUG CUTFLOW:   " << cutFlowVectorATLAS_300_100[j] << "\t\t"
-                                        << scaled_prefix << cutFlowVector[j] << "\t\t"
-                                        << cutFlowVector_scaled[j] << "\t\t"
-                                        << scaled_prefix << cutFlowVector_str[j]
+            cout << setprecision(4) << "DEBUG CUTFLOW:   " << scaled_prefix << cutFlowVectorATLAS_300_100[j] << "\t\t"
+                                        << cutFlowVector[j] << "\t\t"
+                                        << scaled_prefix << cutFlowVector_scaled[j] << "\t\t"
+                                        << cutFlowVector_str[j]
                                         << endl;
           }
         #endif
