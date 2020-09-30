@@ -663,9 +663,6 @@ namespace Gambit
                         "      <NonDsbRollingToDsbScalingFactor>\n"
                         "        4.0\n"
                         "      </NonDsbRollingToDsbScalingFactor>\n"
-                        "      <GlobalIsPanic>\n"
-                        "        " + opts.at("globalIsPanic") + "\n"
-                        "      </GlobalIsPanic>\n"
                         "    </ConstructorArguments>\n"
                         "  </PotentialMinimizerClass>\n"
                         "</VevaciousPlusPlusObjectInitialization>\n";
@@ -775,9 +772,6 @@ namespace Gambit
                         "      <NonDsbRollingToDsbScalingFactor>\n"
                         "        4.0\n"
                         "      </NonDsbRollingToDsbScalingFactor>\n"
-                        "      <GlobalIsPanic>\n"
-                        "        " + opts.at("globalIsPanic") + "\n"
-                        "      </GlobalIsPanic>\n"
                         "    </ConstructorArguments>\n"
                         "  </PotentialMinimizerClass>\n"
                         "</VevaciousPlusPlusObjectInitialization>\n";
@@ -1081,7 +1075,7 @@ namespace Gambit
 
             // Tunnelling strategy is given by the capability tunnelling_strategy that extracts the info from the subcaps
             opts["TunnelingStrategy"] = helper_set_tunnelingStrategy(*Dep::tunnelling_strategy);
-            
+
             // Insert the file location info to the options map 
             map_str_str file_locations = *Dep::vevacious_file_location;
             opts.insert(file_locations.begin(), file_locations.end());
