@@ -104,7 +104,6 @@ Rules:
     options:
       homotopy_backend: hom4ps
       minuit_strategy: 1
-      global_minimum_is_panic: false
       path_finding_timeout: 3600
 
   # Globally permit maximal mixing between gauge and family eigenstates

@@ -1074,7 +1074,6 @@ namespace Gambit
             opts["MinuitStrategy"] =                runOptions->getValueOrDef<std::string>("0", "minuit_strategy");
             opts["PotentialFunctionClassType"] =    runOptions->getValueOrDef<std::string>("FixedScaleOneLoopPotential", "potential_type");
             opts["homotopybackend"] =               runOptions->getValueOrDef<std::string>("hom4ps", "homotopy_backend");
-            opts["globalIsPanic"] =                 runOptions->getValueOrDef<std::string>("false", "global_minimum_is_panic");
             opts["pathFindingTimeout"] =            runOptions->getValueOrDef<std::string>("3600", "path_finding_timeout");
             opts["SurvivalProbabilityThreshold"] =  runOptions->getValueOrDef<std::string>("0.01", "survival_probability_threshold");
             opts["radialResolution"] =              runOptions->getValueOrDef<std::string>("0.1", "radial_resolution_undershoot_overshoot");

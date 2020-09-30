@@ -85,51 +85,25 @@ Scanner:
 ObsLikes:
 
 
-  # Vacuum Stability Likelihood using global minimum for tunneling calculation 
-  - capability:   VS_likelihood_global
+  # Vacuum Stability Likelihood 
+  - capability:   VS_likelihood
     purpose:      LogLike
 
-  # Vacuum Stability Likelihood using nearest minimum for tunneling calculation 
-  - capability:   VS_likelihood_nearest
-    purpose:      LogLike
-
-  # print all vevacious results from the 'global' run
-  - capability:   VS_results_global
+  # Print all vevacious results
+  - capability:   VS_results
     purpose:      Obs
-
-  # print all vevacious results from the 'nearest' run
-  - capability:   VS_results_nearest
-    purpose:      Obs
-
 
 Rules:
   # Tell all functions that are able to dump SLHA files to do so.
   - options:
     drop_SLHA_file: true
 
-  # indicate how often vevacious should be re-run in case of 
-  # an inconclusive result
-  - capability: check_vacuum_stability_global
-    options:
-      max_run_trials: 1
-  
-  - capability: check_vacuum_stability_nearest
-    options:
-      max_run_trials: 1
-
-  # path to folder were vevacious input files will be saved
-  - capability: vevacious_file_location
-    options: 
-      where_to_save_input: output/Vevacious_iniFiles/
-
   # pass settings to vevacious
   - capability: init_vevacious
     options:
-     tunneling_strategy: QuantumThenThermal
      homotopy_backend: phc
      where_to_save_input: output/Vevacious_iniFiles/
      minuit_strategy: 0
-     global_minimum_is_panic: false
      path_finding_timeout: 3600
      radial_resolution_undershoot_overshoot: 0.005
      PathResolution: 500
@@ -161,7 +135,7 @@ Rules:
   # Choose where to get the precision spectrum from
   - capability: MSSM_spectrum
     type: Spectrum
-    function: make_MSSM_precision_spectrum_4H_W
+    function: make_MSSM_precision_spectrum_none
     
 Logger:
 
