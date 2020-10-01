@@ -89,11 +89,17 @@ namespace Gambit
         for (const HEPUtils::Jet* jet : candJets) {
           if (jet->abseta() > 2.5) continue;
           // Tag
-          if( jet->btag() && random_bool(btag) ) bJets.push_back(jet);
+          if( jet->btag() && random_bool(btag) ) {
+              if (random_bool(btag)) bJets.push_back(jet);
+          }
           // Misstag c-jet
-          else if( jet->ctag() && random_bool(cmisstag) ) bJets.push_back(jet);
+          else if( jet->ctag()) {
+              if (random_bool(cmisstag)) bJets.push_back(jet);
+          }
           // Misstag light jet
-          else if( random_bool(misstag) ) bJets.push_back(jet);
+          else {
+              if (random_bool(misstag)) bJets.push_back(jet);
+          }
         }
         candJets = bJets;
     }
