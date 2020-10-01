@@ -31,8 +31,8 @@ import re
 from distutils.dir_util import copy_tree
 from collections import defaultdict
 
-from setup import *
-from cmake_variables import *
+from .setup import *
+from .cmake_variables import *
 
 """
 .GUM FILE PARSING

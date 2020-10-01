@@ -240,7 +240,7 @@ endif()
 # Check for Boost & drop FeynRules/SARAH shared object files.
 # Note that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
 set(Boost_NO_BOOST_CMAKE ON)
-find_package(Boost 1.41.0)
+find_package(Boost 1.41.0 QUIET)
 if(Boost_FOUND)
   if(Boost_VERSION LESS 106700)
     if(PYTHON_VERSION_MAJOR EQUAL 2)

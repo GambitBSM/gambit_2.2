@@ -29,7 +29,7 @@ from collections import defaultdict
 import filecmp
 import glob
 
-from setup import *
+from .setup import *
 
 def remove_tree_quietly(path):
     """
@@ -645,7 +645,6 @@ def revert(reset_file):
 
                 for entry in entries:
                     capability, function = entry.split('|')
-                    print entry
                     print((
                            "Removing FUNCTION: {0}, in CAPABILITY: {1}, in "
                            "file {2}..."
@@ -1121,7 +1120,7 @@ def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
         "make -j<n> gambit\n"
     )
 
-    print towrite
+    print(towrite)
 
 def compare_patched_files(gambit_dir, gum_dir, file_endings = ()):
     """
