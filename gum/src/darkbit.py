@@ -1094,7 +1094,7 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
         with open(rollcall, 'r') as f:
             # Start from the beginning of the FUNCTION
             for i in range(line):
-                f.next()
+                next(f)
             for num, line in enumerate(f, line):
                 if pattern in line: 
                     linenum = num

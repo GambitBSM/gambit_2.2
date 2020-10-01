@@ -162,7 +162,7 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
     if found == True:
         with open(location) as f:
             for i in range(num):
-                f.next()
+                next(f)
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
@@ -200,7 +200,7 @@ def find_function(function, capability, module, filename=None):
 
     with open(location) as f:
         for i in range(num):
-            f.next()
+            next(f)
         for no, line in enumerate(f, 1+num):
             r = re.search(pat, line)
             if r:

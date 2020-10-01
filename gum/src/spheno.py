@@ -879,7 +879,7 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
     for line in src:
         # Each "split" is either an empty list, or a list with type first,
         # and parameter definition second.
-        split = filter(None, line.split('::'))
+        split = list(filter(None, line.split('::')))
         if not split: continue # Empty list -- skip it
         if "HiggsBounds" in line: continue # Just a comment
         # Get the type.
