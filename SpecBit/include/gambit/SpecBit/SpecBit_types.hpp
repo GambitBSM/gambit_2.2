@@ -119,10 +119,14 @@ namespace Gambit
         map_str_dbl get_nearest_results() {return result_map["nearest"];}
         map_str_dbl get_global_results() {return result_map["global"];}
 
-        // return lifetime for nearest/global minimum
-        double get_lifetime(str panic_vaccum) {return result_map[panic_vaccum]["lifetime"];};
-        double get_thermalProbability(str panic_vaccum) {return result_map[panic_vaccum]["thermalProbability"];};
-        
+        // return width, lifetime for nearest/global minimum
+        double get_width(str panic_vacuum) { return result_map[panic_vacuum]["width"]; }
+        double get_lifetime(str panic_vaccum) {return result_map[panic_vaccum]["lifetime"]; }
+
+        // return thermal probability and width for nearest/global minimum
+        double get_thermalProbability(str panic_vaccum) { return result_map[panic_vaccum]["thermalProbability"]; }
+        double get_thermalWidth(str panic_vacuum) { return result_map[panic_vacuum]["thermalWidth"]; }
+
       private:
         map_str_map_str_dbl result_map;   
     };

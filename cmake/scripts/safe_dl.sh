@@ -104,7 +104,7 @@ if [ "${axel_worked}" = "0" ]; then
   fi
 fi
 # Check the MD5 sum
-if [ "$4" != "none" ]; then
+if [ "$5" != "none" ]; then
   $2 -E md5sum $1/${filename} |
   {
     read md5 name;
