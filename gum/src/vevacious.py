@@ -119,7 +119,6 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
         "std::string inputFilename = inputspath + \"/InitializationFiles/"
         "VevaciousPlusPlusObjectInitialization_mpirank_\"+ rankstring "
         "+\".xml\";\n"
-        "vevaciousPlusPlus( inputFilename );\n"
         "result.set_inputFilename(inputFilename);\n"
         "result.set_inputPath(inputspath);\n"
         "\n"
