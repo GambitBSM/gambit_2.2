@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 #  GUM: GAMBIT Universal Models
 #  ****************************
 #  \file
@@ -21,11 +19,11 @@
 #
 #  **************************************
 
-from backends import *
-from setup import *
-from files import *
-from parse import *
-from cmake_variables import *
+from .backends import *
+from .setup import *
+from .files import *
+from .parse import *
+from .cmake_variables import *
 
 class PythiaMatch:
     """

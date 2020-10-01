@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 #  GUM: GAMBIT Universal Models
 #  ****************************
 #  \file
@@ -20,8 +18,8 @@
 import numpy as np
 import re
 
-from setup import *
-from files import *
+from .setup import *
+from .files import *
 
 def get_model_parameters(parameters, add_higgs):
     """
@@ -196,10 +194,10 @@ def get_model_par_name(paramname, parameters):
     name or alt_name equal to paramname
     """
     
-    for name, param in parameters.iteritems():
+    for name, param in iteritems(parameters):
         if paramname == param.bcs :
             return name
-    for name, param in parameters.iteritems():
+    for name, param in iteritems(parameters):
         if paramname == param.name or paramname == param.alt_name :
             return param.name
 
@@ -237,12 +235,12 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params,
         if i.shape == 'scalar' or i.shape == None: params.append(i.gb_in)
         elif re.match("m[2-9]x[2-9]", i.shape): 
             size = int(i.shape[-1])
-            for j in xrange(size):
-                for k in xrange(size):
+            for j in range(size):
+                for k in range(size):
                     params.append(i.gb_in + '_' + str(j+1) + 'x' + str(k+1))
         elif re.match("v[2-9]", i.shape): 
             size = int(i.shape[-1])
-            for j in xrange(size):
+            for j in range(size):
                 params.append(i.gb_in + '_' + str(j+1))
 
     # No double counting (also want to preserve the order)

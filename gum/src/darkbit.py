@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 #  GUM: GAMBIT Universal Models
 #  ****************************
 #  \file
@@ -22,9 +20,9 @@ import shutil
 from distutils.dir_util import copy_tree
 from collections import defaultdict
 
-from setup import *
-from files import *
-from backends import *
+from .setup import *
+from .files import *
+from .backends import *
 
 class VertexMerger:
 
@@ -848,7 +846,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     SMinputs = {1 : 'mD', 2 : 'mU', 3 : 'mS', 4 : 'mCmC', 5:'mBmB', 6:'mT',
                 11: 'mE', 13: 'mMu', 15: 'mTau', 23: 'mZ'}
 
-    for pdg, chmass in calchep_masses.iteritems():
+    for pdg, chmass in iteritems(calchep_masses):
         if pdg in SMinputs:
             mo_src += (
                 "Assign_Value(\"{0}\", sminputs.{1});\n"
@@ -891,7 +889,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "\n"
     )
 
-    for pdg, chwidth in calchep_widths.iteritems():
+    for pdg, chwidth in iteritems(calchep_widths):
         # If a particle has zero width don't try and assign it
         if chwidth == "0": continue
         mo_src += (
@@ -1095,7 +1093,7 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
         linenum = 0
         with open(rollcall, 'r') as f:
             # Start from the beginning of the FUNCTION
-            for i in xrange(line):
+            for i in range(line):
                 f.next()
             for num, line in enumerate(f, line):
                 if pattern in line: 

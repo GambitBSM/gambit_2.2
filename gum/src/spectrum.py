@@ -1,11 +1,25 @@
-"""
-Master module for all SpecBit related routines.
-"""
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module for all SpecBit related routines.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019, 2020
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2019, 2020
+#
+#  **************************************
 
-from setup import *
-from files import *
-from cmake_variables import *
-from colliderbit import *
+from .setup import *
+from .files import *
+from .cmake_variables import *
+from .colliderbit import *
 
 def write_spectrum(gambit_model_name, model_parameters, spec,
                    add_higgs, with_spheno, gambit_pdgs,
@@ -86,7 +100,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
         # List of added blocks
         addedblocks = []
 
-        for block, entry in blockdict.iteritems():
+        for block, entry in iteritems(blockdict):
 
             # Ignore the SM blocks, add them... en bloc (sorry) in a bit
             # Same with masses.
@@ -126,7 +140,7 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
 
             # If we don't have a matrix, use the block indices
             if not matrix:
-                for index, param in entry.iteritems():
+                for index, param in iteritems(entry):
 
                     paramdef = ""
 
@@ -155,8 +169,8 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
                 # Get the size of the matrix
                 x,y = size.split('x')
 
-                for i in xrange(int(x)):
-                    for j in xrange(int(y)):
+                for i in range(int(x)):
+                    for j in range(int(y)):
 
                         towrite += (
                                 "SLHAea_add(slha, \"{0}\", {1}, {2}, "

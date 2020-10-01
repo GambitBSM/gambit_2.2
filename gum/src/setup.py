@@ -1,6 +1,19 @@
-"""
-Master module containing class information, auto-writing codes, etc.
-"""
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master module containing class information, auto-writing codes, etc.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019
+#
+#  **************************************
+
+from __future__ import print_function
+from future.utils import iteritems
 
 import datetime
 import os
@@ -54,7 +67,7 @@ def pdg_to_particle(pdg_code, pdg_dict):
     a GAMBIT or CalcHEP dict, wrapped in quotation marks.
     """
     
-    for name, pdg_val in pdg_dict.iteritems():
+    for name, pdg_val in iteritems(pdg_dict) :
         if pdg_code == pdg_val:
             return name
         

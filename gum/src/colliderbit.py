@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 #  GUM: GAMBIT Universal Models
 #  ****************************
 #  \file
@@ -23,8 +21,8 @@
 
 import datetime
 
-from files import *
-from setup import *
+from .files import *
+from .setup import *
 
 
 def new_colliderbit_model(cb_output_dir, model):

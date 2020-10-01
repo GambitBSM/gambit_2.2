@@ -1,6 +1,18 @@
-"""
-Routines for writing CalcHEP (.mdl) files from MadGraph (.ufo) files.
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Routines for writing CalcHEP (.mdl) files from MadGraph (.ufo) files.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019
+#
+#  **************************************
 
+"""
 The user can either compare between .ufo and .mdl files to check everything
 is consistent between all files:
     
@@ -9,10 +21,9 @@ is consistent between all files:
 Or just run on a set of .ufo files and generate .mdl files from scratch:
 
     python ufo_to_mdl <madgraph_folder>
-    
-Author: Sanjay Bloor (sanjay.bloor12@imperial.ac.uk)
+   
 If you use this script as a standalone please cite the GUM manual:
-      arXiv:19XX.YYYYY
+      arXiv:20XX.YYYYY
 
 """
 
@@ -21,6 +32,7 @@ import os
 import re
 import shutil
 from collections import Counter
+from future.utils import iteritems
 
 counter = 0
 opt = 0
@@ -1232,7 +1244,7 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
             # with the correct coupling.
 
             lc_dict = {}
-            for k, v in coups_dict.iteritems():
+            for k, v in iteritems(coups_dict):
                 for j in mg_couplings:
                     if v == j.mgname:
                         lc_dict[ lor[int(k)] ] = j.value
@@ -1243,12 +1255,12 @@ def write_ch_vertex(vertex, param_dict, lorentz_dict, part_dict, mg_parts,
 
             lc_dict_updated = {}
             
-            for k, v in lc_dict.iteritems():
+            for k, v in iteritems(lc_dict):
                 lc_dict_updated.update({k: c_dict[v]})
 
             # Put all the couplings in the Lorentz bit as one big horrible string
             horrible_string = []
-            for k,v in lc_dict_updated.iteritems():
+            for k,v in iteritems(lc_dict_updated):
                 horrible_string.append( v+"*"+k[0] ) # Coupling * Lorentz factor
 
             # CalcHEP doesn't understand +-, so we
@@ -1327,7 +1339,7 @@ def c_ify_couplings(mg_couplings, param_dict):
 
         # Finally go through the param_dict and change any parameters
         # that are named differently between MadGraph and CalcHEP
-        for k, v in param_dict.iteritems():
+        for k, v in iteritems(param_dict):
             t = re.sub(k, v, t)
         
         # Look, another dictionary!
@@ -1470,12 +1482,12 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict,
         coupling_dict[i.mgname] = c_dict[i.value]
 
     # Save each coupling as a global optimised function
-    for k2, v2 in lorentz_couplings.iteritems():
+    for k2, v2 in iteritems(lorentz_couplings):
         newstring = "GUM{:0>3}".format(str(opt))
         opt = opt+1
         optimisations[ newstring ] = coupling_dict[v2]
 
-    # for k1, v1 in coupling_dict.iteritems():
+    # for k1, v1 in iteritems(coupling_dict):
     #     #print k1, v1
 
     #     newstring = "GUM{:0>3}".format(str(opt))
@@ -1500,7 +1512,7 @@ def write_four_fermion_vertex(vertex, param_dict, lorentz_dict, part_dict,
 
         # Get the optimised name for the coupling
         optimisedout = ""
-        for k, v in optimisations.iteritems():
+        for k, v in iteritems(optimisations):
             if v == coupling: 
                 optimisedout = v + "*Maux"
         # todo error
@@ -1670,7 +1682,7 @@ def add_vertices_to_calchep_files(ch_location, new_vertices, param_dict, lorentz
     ## Go through the optimisations and add the new definitions
     #global optimisations
     # with open(new_ch_loc+"/func1.mdl", 'a') as f:
-    #     for k, v in sorted(optimisations.iteritems()):
+    #     for k, v in sorted(iteritems(optimisations)):
     #         towrite = "{0: <15}".format(k) + "|" + v + "  % Optimisation by GUM\n"
     #         f.write(towrite)
 
@@ -1767,7 +1779,7 @@ def compare_mg_and_ch(mg_location, ch_location):
     if len(mg_full) > 0:
         print("The following external parameters are defined in MadGraph but not CalcHEP:")
         for x in mg_full:
-            print x.name
+            print(x.name)
         print([x.name() for x in mg_full])
         if len(ch_full) == 0: sys.exit()
     # If anything is found in CalcHEP, tell the user, and kill.

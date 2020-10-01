@@ -1,11 +1,22 @@
-"""
-Master routines for all MadGraph related routines.
-"""
+#  GUM: GAMBIT Universal Models
+#  ****************************
+#  \file
+#
+#  Master routines for all MadGraph related routines.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019, 2020
+#
+#  **************************************
 
 import os
 import sys
 from distutils.dir_util import copy_tree
-from files import mkdir_if_absent, remove_tree_quietly
+
+from .files import mkdir_if_absent, remove_tree_quietly
 
 script_name = "generate_matrix_elements.mg5"
 
