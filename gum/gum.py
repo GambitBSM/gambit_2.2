@@ -32,7 +32,7 @@ from distutils.dir_util import copy_tree
 
 print()
 print(banner())
-print("-- Running GUM with python version", platform.python_version())
+print("-- Running GUM with python version", platform.python_version(), "--")
 print()
 
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
