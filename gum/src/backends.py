@@ -1,5 +1,5 @@
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master file containing all routines for modifying Backend interfaces.

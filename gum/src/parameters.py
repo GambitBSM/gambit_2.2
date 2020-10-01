@@ -1,5 +1,5 @@
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Models Machine
+#  ************************************
 #  \file
 #
 #  Master module for all routines relating 

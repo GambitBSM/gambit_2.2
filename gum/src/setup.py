@@ -1,5 +1,5 @@
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master module containing class information, auto-writing codes, etc.
@@ -21,6 +21,35 @@ import sys
 
 class GumError(Exception):
   pass
+
+# Banner
+def banner() :
+  return " ***********************************\n"\
+         " GUM: GAMBIT Universal Model Machine\n"\
+         " ***********************************\n"\
+         "\n"\
+         " Created by:\n"\
+         "\n"\
+         " Sanjay Bloor\n"\
+         "   (sanjay.bloor12@imperial.ac.uk)\n"\
+         " Tomas Gonzalo\n"\
+         "   (tomas.gonzalo@monash.edu)\n"\
+         " Pat Scott\n"\
+         "   (pat.scott@uq.edu.au)\n"\
+         "\n"\
+         " ***********************************\n"\
+         "\n"\
+         " GUM 1.0 is open source and under\n"\
+         " the terms of the standard 3-clause\n"\
+         " BSD license.\n"\
+         "\n"\
+         " Documentation and details for GUM\n"\
+         " can be found at\n"\
+         "   S. Bloor et al, arXiv:20xx.xxxx\n"\
+         "\n"\
+         " *********************************\n"\
+         "\n"
+
 
 class Particle:
     """

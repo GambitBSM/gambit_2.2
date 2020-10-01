@@ -1,5 +1,5 @@
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ************************************
 #  \file
 #
 #  Main GUM script
@@ -16,6 +16,7 @@
 #
 #  **************************************
 
+from __future__ import print_function
 
 import sys
 import platform
@@ -29,8 +30,10 @@ from src import *
 from collections import defaultdict
 from distutils.dir_util import copy_tree
 
-print("Running gum with python version", platform.python_version())
-
+print()
+print(banner())
+print("-- Running GUM with python version", platform.python_version())
+print()
 
 parser = argparse.ArgumentParser(description="From Lagrangian to scans: GUM "
                                              "(GAMBIT Universal Models)")
