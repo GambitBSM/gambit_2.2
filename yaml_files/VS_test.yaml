@@ -87,56 +87,16 @@ ObsLikes:
   - capability:   VS_likelihood
     purpose:      LogLike
 
-  - capability:   VS_likelihood_thermal
-    purpose:      LogLike
-
-#  - capability: lnL_W_mass
-#    purpose:    LogLike
-
-#  - capability:  lnL_gm2
-#    purpose:     LogLike
-
-
-  - capability:   VS_StraightPathGoodEnough
-    purpose:      Obs
-    #type:         int
-  
-  - capability:   VS_ThresholdAndBounceActions
-    purpose:      Obs
-
-  - capability:   VS_StraightPathGoodEnough_Thermal
-    purpose:      Obs
-   # type:         int
-
-  - capability:   VS_ThresholdAndBounceActions_Thermal
-    purpose:      Obs
-
-
 Rules:
   # Tell all functions that are able to dump SLHA files to do so.
   - options:
      drop_SLHA_file: true
 
-  - capability: vevacious_file_location
-    options: 
-      where_to_save_input: output/Vevacious_iniFiles/
-
   - capability: initialize_vevacious
     options:
-      tunneling_strategy: QuantumThenThermal
       homotopy_backend: hom4ps
       minuit_strategy: 1
-      global_minimum_is_panic: false
       path_finding_timeout: 3600
-
-  # - capability: make_vevaciousPlusPlus_inputs
-  #   options:
-  #     tunneling_strategy: QuantumThenThermal
-  #     homotopy_backend: hom4ps
-  #     where_to_save_input: output/Vevacious_iniFiles/
-  #     minuit_strategy: 1
-  #     global_minimum_is_panic: false
-  #     path_finding_timeout: 3600
 
   # Globally permit maximal mixing between gauge and family eigenstates
   - options:

@@ -3,19 +3,7 @@
 ## Vevacious interface for the MSSM  (CMSSM by default)
 ##
 ##
-##   Example file to calculate the vacuum stability of one point using 
-##   vevacious. 
-##
-##   To run this you need to make SpecBit, PrecisionBit as well as the 
-##   flexibleSUSY model MSSMatMGUT
-##    -> use cmake flag -DBUILD_FS_MODELS="CMSSM;MSSMatMGUT" (can't harm to make
-##       the CMSSM)as well.. 
-##
-##
 ##########################################################################
-
-
-
 
 
 Parameters:
@@ -23,35 +11,45 @@ Parameters:
   # SM parameters
   StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
 
+  # SUSY parameters
+  # Choose here the model and parameters to be tested, as well as the equivalent function below
 
-  NUHM1:
-    # stable point (quick)
-    A0: 5476.75
-    M0: 402.183
-    M12: 4961.51
-    SignMu: -1
-    TanBeta: 30.49
-    mH: 4856.53
+  # SUSY parameters.
+  CMSSM:
+    M0: 343.892130517788
+      #range: [243.731, 243.733]
+      #prior_type: flat
+     # soft susy breaking mass
+    M12: 927.395382468553
+      #range: [836.993, 836.995]
+      #prior_type: flat
+     # mass term for gauginos
+    A0: -3204.969986352231   # trilinear couplings
+      #range: [-1818.63, -1818.65]
+      #prior_type: flat
+      # ratio of vews of two higgses
+    SignMu: -1.0000000 # units of energy in super potential  
+    TanBeta: 10.626449029809
+      #range: [10.2067, 10.2069]
+      #prior_type: flat
 
-    # inconclusive point (takes quite some time..)
-    #A0: -8771.05
-    #M0: 1703.59
-    #M12: 2766.86
-    #SignMu: -1
-    #TanBeta: 11.9408
-    #mH: 4995.75
+
+Priors:
+
+  # None: all parameters are fixed
 
 
 Printer:
 
-  printer: hdf5
+  printer: ascii
   options:
-    output_file: "VS_ouput_test.hdf5"
+    output_file: "VS_MSSM_test.txt"
 
 
 Scanner:
 
-  
+  # Use trivial scanner toy_mcmc with the minumum number of points
+
   use_scanner: random
 
   scanners:
@@ -85,39 +83,38 @@ Scanner:
 ObsLikes:
 
 
-  # Vacuum Stability Likelihood 
+  # Vacuum Stability Likelihood
   - capability:   VS_likelihood
     purpose:      LogLike
+    sub_capabilities:   
+      global: [quantum]
+      nearest: [quantum]
 
-  # Print all vevacious results
+  # Vacuum Stability observable
   - capability:   VS_results
-    purpose:      Obs
+    purpose:      Observable
+
 
 Rules:
   # Tell all functions that are able to dump SLHA files to do so.
-  - options:
-    drop_SLHA_file: true
+  #- options:
+  #   drop_SLHA_file: true
 
-  # pass settings to vevacious
-  - capability: init_vevacious
+  - capability: initialize_vevacious
     options:
-     homotopy_backend: phc
-     where_to_save_input: output/Vevacious_iniFiles/
-     minuit_strategy: 0
-     path_finding_timeout: 3600
-     radial_resolution_undershoot_overshoot: 0.005
-     PathResolution: 500
-
+      homotopy_backend: hom4ps
+      minuit_strategy: 1
+      path_finding_timeout: 3600
 
   # Globally permit maximal mixing between gauge and family eigenstates
   - options:
       gauge_mixing_tolerance: 0.5
       family_mixing_tolerance: 0.5
 
-  
   # Choose to get the spectrum from SpecBit proper, not an SLHA file.
+  # Options set to match benchmark point specified in SpecBit/MSSM_benchmark_points/LesHouches.in.MSSM_1
   - capability: unimproved_MSSM_spectrum
-    function: get_MSSMatMGUT_spectrum_FS
+    function: get_CMSSM_spectrum_FS
     options:
       precision_goal:        1.0e-4
       max_iterations:        0
@@ -136,7 +133,17 @@ Rules:
   - capability: MSSM_spectrum
     type: Spectrum
     function: make_MSSM_precision_spectrum_none
-    
+    #function: make_MSSM_precision_spectrum_W
+    #function: make_MSSM_precision_spectrum_H_W
+    # The following options only have an impact when using make_MSSM_precision_spectrum_H_W.
+    # Choose to take FeynHiggs' prediction for the Higgs mass (rather then FlexibleSUSY's).
+    # Choose to use the difference between the FeynHiggs and spectrum generator predictions, along
+    # with the FH error estimate, to estimate the theoretical error on the prediction.
+    #options:
+    #  Higgs_predictions_source: 1
+    #  Higgs_predictions_error_method: 4
+
+
 Logger:
 
   # Select the log files
