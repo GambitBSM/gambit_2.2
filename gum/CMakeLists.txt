@@ -31,13 +31,19 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 # Define the main GUM directory
 set(GUM_DIR ${PROJECT_SOURCE_DIR})
 
-# Define the sed command to use differently for OSX and linux.  Delete this when properly integrated into GAMBIT cmake system, as it exists there already.
+# Define the sed command to use differently for OSX and linux.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(dashi "-i ''")
 else()
   set(dashi "-i")
 endif()
 
+# Set a consistent MACOSX_RPATH default across all CMake versions.
+# When CMake 2.8.12 is required, change this default to 1.
+# When CMake 3.0.0 is required, remove this block (see CMP0042).
+if(NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH 0)
+endif()
 
 # Check for Mathematica
 include(cmake/FindMathematica.cmake)
@@ -251,13 +257,20 @@ if(Boost_FOUND)
   else()
     set(python_component python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} )
   endif()
-  set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined" )
+
+  if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,dynamic_lookup")
+  else()
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
+  endif()
+
   find_package(Boost 1.41.0 REQUIRED COMPONENTS ${python_component} filesystem system)
   include_directories("${Boost_INCLUDE_DIR}")
   add_library(fr SHARED src/feynrules.cpp src/math_package.cpp)
   target_link_libraries(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
   add_library(sarah SHARED src/sarah.cpp src/math_package.cpp)
   target_link_libraries(sarah ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
+
 else()
   message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and re-run cmake.")
 endif()
