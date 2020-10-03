@@ -1,10 +1,16 @@
 ///
 ///  \author Anders Kvellestad
 ///  \date 2020 Aug
+///
+///  \author Victor Ananyev
+///  \date 2020 Sep
 ///  *********************************************
 
 // Based on https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/CONFNOTES/ATLAS-CONF-2020-040/
 
+// Adding SR5L
+// A general signal region with at least five light leptons is also defined, SR5L, with no further selection
+// applied.
 
 #include <vector>
 #include <cmath>
@@ -39,7 +45,8 @@ namespace Gambit
         {"SR0-ZZ-tight", EventCounter("SR0-ZZ-tight")},
         {"SR0-loose-bveto", EventCounter("SR0-loose-bveto")},
         {"SR0-tight-bveto", EventCounter("SR0-tight-bveto")},
-        {"SR0-breq", EventCounter("SR0-breq")}
+        {"SR0-breq", EventCounter("SR0-breq")},
+        {"SR5L", EventCounter("SR5L")}
       };
 
     private:
@@ -81,28 +88,45 @@ namespace Gambit
         return;
       }
 
-     void bTagger(vector<const HEPUtils::Jet*>& candJets) {
-        vector<const HEPUtils::Jet*> bJets;
+      size_t bTagger(vector<const HEPUtils::Jet*>& signalJets, vector<const HEPUtils::Particle*> signalTaus) 
+      {
+        size_t n_btags = 0;
+        // Numbers taken from Table 4 in https://arxiv.org/pdf/1907.05120.pdf
+        const double btag = 0.85; 
+        const double cmisstag = 1/2.7; 
+        const double misstag = 1./25.;
+        const double taumisstag = 1/6.1;
 
-        // Find b-jets
-        double btag = 0.85; double cmisstag = 1/2.7; double misstag = 1./25.;
-        for (const HEPUtils::Jet* jet : candJets) {
+        // Loop over signal jets and count b-tags
+        for (const HEPUtils::Jet* jet : signalJets) 
+        {
           if (jet->abseta() > 2.5) continue;
-          // Tag
-          if( jet->btag() && random_bool(btag) ) {
-              if (random_bool(btag)) bJets.push_back(jet);
+          // Count number of true b-jets that are tagged
+          if( jet->btag() ) 
+          {
+              if (random_bool(btag)) n_btags++;
           }
-          // Misstag c-jet
-          else if( jet->ctag()) {
-              if (random_bool(cmisstag)) bJets.push_back(jet);
+          // Count number of true c-jets that are misstagged as b-jets
+          else if( jet->ctag()) 
+          {
+              if (random_bool(cmisstag)) n_btags++;
           }
-          // Misstag light jet
-          else {
-              if (random_bool(misstag)) bJets.push_back(jet);
+          // Count number of light-flavour jets that are misstagged as b-jets
+          else 
+          {
+              if (random_bool(misstag)) n_btags++;
           }
         }
-        candJets = bJets;
-    }
+
+        // Count number of taus misstagged as b-jets 6.1
+        for (const HEPUtils::Particle* p : signalTaus) 
+        {
+          if (p->abseta() > 2.5) continue;
+          if (random_bool(taumisstag)) n_btags++;
+        }
+
+        return n_btags;
+      }
 
       // Lepton jet overlap removal
       // Discards leptons if they are within DeltaRMax of a jet
@@ -221,7 +245,7 @@ namespace Gambit
         set_luminosity(139.);
 
         #ifdef CHECK_CUTFLOW
-          NCUTS = 11;
+          NCUTS = 12;
           for (size_t i=0;i<NCUTS;i++)
           {
             cutFlowVector.push_back(0);
@@ -347,8 +371,9 @@ namespace Gambit
 
 
         // Signal objects
-        vector<const HEPUtils::Jet*> signalBJets = baselineJets;
-        bTagger(signalBJets);  // Keep only B-tagged jets
+        vector<const HEPUtils::Jet*> signalJets = baselineJets;
+        // vector<const HEPUtils::Jet*> signalBJets = baselineJets;
+        // bTagger(signalBJets);  // Keep only B-tagged jets
         vector<const HEPUtils::Particle*> signalElectrons = baselineElectrons;
         vector<const HEPUtils::Particle*> signalMuons = baselineMuons;
         vector<const HEPUtils::Particle*> signalTaus = baselineTaus;
@@ -359,11 +384,14 @@ namespace Gambit
         // Missing: pT-dependent isolation criteria for signal leptons (see paper)
 
         // Sort by pT
+        sort(signalJets.begin(), signalJets.end(), compareJetPt);
         sort(signalLeptons.begin(), signalLeptons.end(), comparePt);
 
-        // Count signal leptons and jets
+        // Count signal leptons
         size_t nSignalLeptons = signalLeptons.size();
-        size_t NbJets = signalBJets.size();
+
+        // Count number of b-tagged jets
+        size_t NbJets = bTagger(signalJets, signalTaus);
 
         // Get OS and SFOS pairs
         vector<vector<const HEPUtils::Particle*>> SFOSpairs = getSFOSpairs(signalLeptons);
@@ -394,9 +422,19 @@ namespace Gambit
         if (Z1) Zlike = true;
         // Missing: Also check Z-like combinations of SFOS+L and SFOS+SFOS (see paper)
 
-
         // Missing soft term correction for Et_miss. Constructed from tracks matched to the primary vertex
         // but not associated with identified physics objects (see paper)
+
+        // Effective mass (met + pT of all signal leptons + pT of all jets with pT>40 GeV)
+        double meff = met;
+        for (const HEPUtils::Particle* l : signalLeptons)
+        {
+          meff += l->pT();
+        }
+        for (const HEPUtils::Jet* jet : signalJets)
+        {
+          if(jet->pT()>40.) meff += jet->pT();
+        }
 
 
         // Signal Regions
@@ -464,49 +502,16 @@ namespace Gambit
         // }
 
         // SR0-loose-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 600.) _counters.at("SR0-loose-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 600.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0-loose-bveto ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  met = " << met << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
-        // }
+        if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && meff > 600.) _counters.at("SR0-loose-bveto").add_event(event);
 
         // SR0-tight-bveto
-        if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 1000.) _counters.at("SR0-tight-bveto").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && met > 1000.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  met = " << met << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
-        // }
+        if (nSignalLeptons >= 4 && NbJets == 0 && !Zlike && meff > 1250.) _counters.at("SR0-tight-bveto").add_event(event);
 
         // SR0-breq
-        if (nSignalLeptons >= 4 && NbJets >= 1 && !Zlike && met > 1300.) _counters.at("SR0-breq").add_event(event);
-        //if (nSignalLeptons >= 4 && NbJets >= 1 && !Zlike && met > 1300.)
-        // {
-        //   cout << "DEBUG: " << "--- Got event for SR0-ZZ-tight-bveto ---" << endl;
-        //   cout << "DEBUG: " << "  leptons: " << nSignalLeptons << ", electrons: " << nSignalElectrons << ", muons: " << nSignalMuons << endl;
-        //   cout << "DEBUG: " << "  jets: " << nSignalJets << endl;
-        //   cout << "DEBUG: " << "  met = " << met << endl;
-        //   cout << "DEBUG: " << "  nSFOSpairs = " << SFOSpairs.size() << endl;
-        //   for (double mass : SFOSpair_masses)
-        //   {
-        //     cout << "DEBUG: " << "  pair mass: " << mass << endl;
-        //   }
-        // }
+        if (nSignalLeptons >= 4 && NbJets >= 1 && !Zlike && meff > 1300.) _counters.at("SR0-breq").add_event(event);
+
+        // SR5L
+        if (nSignalLeptons >= 5) _counters.at("SR5L").add_event(event);
 
 
         #ifdef CHECK_CUTFLOW
@@ -521,6 +526,7 @@ namespace Gambit
           cutFlowVector_str[8] = "b-veto";
           cutFlowVector_str[9] = "met > 100 (SR0-ZZ-loose-bveto)";
           cutFlowVector_str[10] = "met > 200 (SR0-ZZ-tight-bveto)";
+          cutFlowVector_str[11] = "SR5L";
 
           cutFlowVectorATLAS_200_50[0] = -1;
           cutFlowVectorATLAS_200_50[1] = 2716.37;
@@ -533,6 +539,7 @@ namespace Gambit
           cutFlowVectorATLAS_200_50[8] = 66.21;
           cutFlowVectorATLAS_200_50[9] = 26.41;
           cutFlowVectorATLAS_200_50[10] = 2.96;
+          cutFlowVectorATLAS_200_50[11] = 0.79;
 
           cutFlowVectorATLAS_300_100[0] = -1;
           cutFlowVectorATLAS_300_100[1] = 493.16;
@@ -545,6 +552,7 @@ namespace Gambit
           cutFlowVectorATLAS_300_100[8] = 55.42;
           cutFlowVectorATLAS_300_100[9] = 42.77;
           cutFlowVectorATLAS_300_100[10] = 19.46;
+          cutFlowVectorATLAS_300_100[11] = 0.06;
 
           for (size_t j=0;j<NCUTS;j++)
           {
@@ -569,7 +577,9 @@ namespace Gambit
 
               (j==9 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 100) ||
 
-              (j==10 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 200)
+              (j==10 && generator_filter && nSignalLeptons >= 4 && trigger && Z1 && Z2 && NbJets == 0 && met > 200) ||
+
+              (j==11 && generator_filter && nSignalLeptons >= 5 && trigger)
 
               )
 
@@ -604,50 +614,92 @@ namespace Gambit
         add_result(SignalRegionData(_counters.at("SR0-loose-bveto"), 11., {11.4, 2.4}));
         add_result(SignalRegionData(_counters.at("SR0-tight-bveto"), 1., {3.5, 2.0}));
         add_result(SignalRegionData(_counters.at("SR0-breq"), 3., {1.16, 0.26}));
+        add_result(SignalRegionData(_counters.at("SR5L"), 21., {12.6, 2.6}));
 
 
         #ifdef CHECK_CUTFLOW
           size_t scale_to_row = 4;
-          vector<double> cutFlowVector_scaled;
-          double scale_factor = cutFlowVectorATLAS_200_50[scale_to_row]/cutFlowVector[scale_to_row];
+          vector<double> cutFlowVector_scaled_row;
+          vector<double> cutFlowVector_scaled_xs;
+          string scaled_prefix;
+          double scale_factor_row;
+          double scale_factor_xs;
+
+          // Working point: (200, 50%)
+          scale_factor_row = cutFlowVectorATLAS_200_50[scale_to_row]/cutFlowVector[scale_to_row];
+          scale_factor_xs = 1335.62 * 139. / cutFlowVector[0];  // https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVhino
+          // scale_factor_xs = 284.855 * 139. / cutFlowVector[0];  // https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVhino
           for (size_t i=0 ; i < cutFlowVector.size() ; i++)
           {
-            cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
+            cutFlowVector_scaled_row.push_back(cutFlowVector[i] * scale_factor_row);
+            cutFlowVector_scaled_xs.push_back(cutFlowVector[i] * scale_factor_xs);
           }
           cout << "DEBUG CUTFLOW:   Working point 200, 50%" << endl;
-          cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled) " << endl;
-          cout << "DEBUG CUTFLOW:   -------------------------------------" << endl;
+          cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled row)    GAMBIT(scaled xs*L) " << endl;
+          cout << "DEBUG CUTFLOW:   ----------------------------------------------------------------- " << endl;
 
-          for (size_t j = 0; j < NCUTS; j++) {
-            string scaled_prefix = j == scale_to_row ? "*" : "";
-            cout << setprecision(4) << "DEBUG CUTFLOW:   " << scaled_prefix << cutFlowVectorATLAS_200_50[j] << "\t\t"
+          for (size_t j = 0; j < NCUTS; j++) 
+          {
+            scaled_prefix = j == scale_to_row ? "*" : "";
+            cout << setprecision(4) << "DEBUG CUTFLOW:   " << scaled_prefix << cutFlowVectorATLAS_200_50[j] << "\t"
                                         << cutFlowVector[j] << "\t\t"
-                                        << scaled_prefix << cutFlowVector_scaled[j] << "\t\t"
+                                        << scaled_prefix << cutFlowVector_scaled_row[j] << "\t\t"
+                                        << cutFlowVector_scaled_xs[j] << "\t\t"
                                         << cutFlowVector_str[j]
                                         << endl;
           }
-        #endif
 
-        #ifdef CHECK_CUTFLOW
-          scale_to_row = 4;
-          cutFlowVector_scaled = vector<double>();
-          scale_factor = cutFlowVectorATLAS_300_100[scale_to_row]/cutFlowVector[scale_to_row];
+          // Working point: (300, 100%)
+          cutFlowVector_scaled_row.clear();
+          cutFlowVector_scaled_xs.clear();
+          scale_factor_row = cutFlowVectorATLAS_300_100[scale_to_row]/cutFlowVector[scale_to_row];
+          scale_factor_xs = 284.855 * 139. / cutFlowVector[0];  // https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVhino
           for (size_t i=0 ; i < cutFlowVector.size() ; i++)
           {
-            cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
+            cutFlowVector_scaled_row.push_back(cutFlowVector[i] * scale_factor_row);
+            cutFlowVector_scaled_xs.push_back(cutFlowVector[i] * scale_factor_xs);
           }
-          cout << "DEBUG CUTFLOW:   Working point 300, 100%" << endl;
-          cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled) " << endl;
-          cout << "DEBUG CUTFLOW:   -------------------------------------" << endl;
+          cout << "DEBUG CUTFLOW:   Working point 200, 50%" << endl;
+          cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled row)    GAMBIT(scaled xs*L) " << endl;
+          cout << "DEBUG CUTFLOW:   ----------------------------------------------------------------- " << endl;
 
-          for (size_t j = 0; j < NCUTS; j++) {
-            string scaled_prefix = j == scale_to_row ? "*" : "";
-            cout << setprecision(4) << "DEBUG CUTFLOW:   " << scaled_prefix << cutFlowVectorATLAS_300_100[j] << "\t\t"
+          for (size_t j = 0; j < NCUTS; j++) 
+          {
+            scaled_prefix = j == scale_to_row ? "*" : "";
+            cout << setprecision(4) << "DEBUG CUTFLOW:   " << scaled_prefix << cutFlowVectorATLAS_300_100[j] << "\t"
                                         << cutFlowVector[j] << "\t\t"
-                                        << scaled_prefix << cutFlowVector_scaled[j] << "\t\t"
+                                        << scaled_prefix << cutFlowVector_scaled_row[j] << "\t\t"
+                                        << cutFlowVector_scaled_xs[j] << "\t\t"
                                         << cutFlowVector_str[j]
                                         << endl;
           }
+
+
+          // // Working point: (300, 100%)
+          // cutFlowVector_scaled.clear();
+          // cutFlowVector_scaled_2.clear();
+          // scale_factor = cutFlowVectorATLAS_300_100[scale_to_row]/cutFlowVector[scale_to_row];
+          // scale_factor_xs = cutFlowVectorATLAS_300_100[scale_to_row_2]/cutFlowVector[scale_to_row_2];
+          // for (size_t i=0 ; i < cutFlowVector.size() ; i++)
+          // {
+          //   cutFlowVector_scaled.push_back(cutFlowVector[i] * scale_factor);
+          //   cutFlowVector_scaled_2.push_back(cutFlowVector[i] * scale_factor_xs);
+          // }
+          // cout << "DEBUG CUTFLOW:   Working point 300, 100%" << endl;
+          // cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled)    GAMBIT(scaled) " << endl;
+          // cout << "DEBUG CUTFLOW:   -------------------------------------------------------- " << endl;
+
+          // for (size_t j = 0; j < NCUTS; j++) 
+          // {
+          //   scaled_prefix = j == scale_to_row ? "*" : "";
+          //   scaled_prefix = j == scale_to_row_2 ? "**" : "";
+          //   cout << setprecision(4) << "DEBUG CUTFLOW:   " << scaled_prefix << cutFlowVectorATLAS_300_100[j] << "\t\t"
+          //                               << cutFlowVector[j] << "\t\t"
+          //                               << scaled_prefix << cutFlowVector_scaled[j] << "\t\t"
+          //                               << scaled_prefix << cutFlowVector_scaled_2[j] << "\t\t"
+          //                               << cutFlowVector_str[j]
+          //                               << endl;
+          // }
         #endif
       }
 
