@@ -8,6 +8,8 @@
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 // #include "Eigen/Eigen"
 
+// #define CHECK_CUTFLOW
+
 namespace Gambit {
   namespace ColliderBit {
 
@@ -21,6 +23,9 @@ namespace Gambit {
     ///   - https://arxiv.org/pdf/1909.08457
     ///   - https://www.hepdata.net/record/ins1754675
     ///   - C++ code example and SLHA benchmark files available on HEPData (link above)
+    /// 
+    /// Cross-sections for cutflows taken from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections#Cross_sections_for_various_subpr
+    /// 
 
     /* 
       Notes on analysis logic:
@@ -105,7 +110,9 @@ namespace Gambit {
         {"Rpc3LSS1b", EventCounter("Rpc3LSS1b")},
       };
 
-      Cutflows _cutflows;
+      #ifdef CHECK_CUTFLOW
+        Cutflows _cutflows;
+      #endif
 
 
       Analysis_ATLAS_13TeV_MultiLEP_strong_139invfb() 
@@ -113,21 +120,26 @@ namespace Gambit {
         set_analysis_name("ATLAS_13TeV_MultiLEP_strong_139invfb");
         set_luminosity(139.0);
 
-        // Book cutflows
-        _cutflows.addCutflow("Rpc2L1b", {"no cut",
-                                         "trigger",
-                                         ">= 2 SS leptons (pT > 20)",
-                                         ">= 1 b-jet",
-                                         ">= 6 jets (pT > 40)",
-                                         "met/meff >= 0.25"});
+
+        #ifdef CHECK_CUTFLOW
+          // Book cutflows
+          _cutflows.addCutflow("Rpc2L1b", {"no cut",
+                                           "trigger",
+                                           ">= 2 SS leptons (pT > 20)",
+                                           ">= 1 b-jet",
+                                           ">= 6 jets (pT > 40)",
+                                           "met/meff >= 0.25"});
+        #endif
       }
 
 
       void run(const Event* event) 
       {
-        const double w = event->weight();
-        _cutflows.fillinit(w);
-        _cutflows.fillnext(w);  // no cut
+        #ifdef CHECK_CUTFLOW
+          const double w = event->weight();
+          _cutflows.fillinit(w);
+          _cutflows.fillnext(w);  // no cut
+        #endif
 
         // Missing energy
         /// @todo Compute from hard objects instead?
@@ -311,13 +323,17 @@ namespace Gambit {
         // Require pT > 20 GeV for the first two leptons
         if (lep1->pT() < 20) return;
 
-        _cutflows["Rpc2L1b"].fillnext(w);  // "trigger"
+        #ifdef CHECK_CUTFLOW
+          _cutflows["Rpc2L1b"].fillnext(w);  // "trigger"
+        #endif
 
 
         // If only two leptons, they must be same sign.
         if (nLeptons == 2 && (lep0->pid() * lep1->pid() < 0.)) return;
 
-        _cutflows["Rpc2L1b"].fillnext(w);  // >= 2 SS leptons (pT > 20)
+        #ifdef CHECK_CUTFLOW
+          _cutflows["Rpc2L1b"].fillnext(w);  // >= 2 SS leptons (pT > 20)
+        #endif
 
 
         //
@@ -374,17 +390,16 @@ namespace Gambit {
         // Fill SR counters
         // 
 
-        cerr << "DEBUG: lep0:" << lep0->pid() << ",  pT(l)=" << lep0->pT() << ",  nbjets="  << nBJets20 << ",  nbjets(true)="  << nBJets20true << ",  nbjets(true,base)=" << nBaseBjetsTrue << ",  met=" << met << ",  meff=" << meff << ",  ratio=" << met_meff_ratio << endl;
-
-
         // Rpv2L:
         if (nLeptons >= 2 && nBJets20 >= 0 && nJets40 >= 6 && meff > 2600.) _counters.at("Rpv2L").add_event(event);
 
         // Rpc2L0b
-        if (nLeptons >= 2 && nBJets20 >= 0 && nJets40 >= 6 && met > 200. && meff > 1000. && met_meff_ratio > 0.2) _counters.at("Rpc2L0b").add_event(event);
+        if (nLeptons >= 2 && nBJets20 == 0 && nJets40 >= 6 && met > 200. && meff > 1000. && met_meff_ratio > 0.2) _counters.at("Rpc2L0b").add_event(event);
 
         // Rpc2L1b
-        _cutflows["Rpc2L1b"].filltail({nBJets20 >= 1, nJets40 >= 6, met_meff_ratio > 0.25}, w);
+        #ifdef CHECK_CUTFLOW
+          _cutflows["Rpc2L1b"].filltail({nBJets20 >= 1, nJets40 >= 6, met_meff_ratio > 0.25}, w);
+        #endif
         if (nLeptons >= 2 && nBJets20 >= 1 && nJets40 >= 6 && met_meff_ratio > 0.25) _counters.at("Rpc2L1b").add_event(event);
 
         // Rpc2L2b
@@ -408,19 +423,21 @@ namespace Gambit {
       void collect_results() 
       {
         // Using average, symmetrized background errors 
-        add_result(SignalRegionData(_counters.at("Rpv2L"),      5., {5.6, 1.8}));
-        add_result(SignalRegionData(_counters.at("Rpc2L0b"),    6., {4.8, 1.45}));
+        add_result(SignalRegionData(_counters.at("Rpv2L"),      5., {5.5, 1.8}));
+        add_result(SignalRegionData(_counters.at("Rpc2L0b"),    6., {4.7, 1.4}));
         add_result(SignalRegionData(_counters.at("Rpc2L1b"),   11., {6.5, 1.55}));
         add_result(SignalRegionData(_counters.at("Rpc2L2b"),   12., {7.8, 2.2}));
         add_result(SignalRegionData(_counters.at("Rpc3LSS1b"),  4., {3.5, 1.45}));
 
-        // Cutflow printout
-        _cutflows["Rpc2L1b"].normalize(3002.4, 0);
-        cout << "\nCUTFLOWS:\n" << _cutflows << endl;
-        cout << "\nSRCOUNTS:\n";
-        // for (double x : _srnums) cout << x << "  ";
-        for (auto& pair : _counters) cout << pair.second.weight_sum() << "  ";
-        cout << "\n" << endl;
+        #ifdef CHECK_CUTFLOW
+          // Cutflow printout
+          _cutflows["Rpc2L1b"].normalize(21.6 * 139., 0);
+          cout << "\nCUTFLOWS:\n" << _cutflows << endl;
+          cout << "\nSRCOUNTS:\n";
+          // for (double x : _srnums) cout << x << "  ";
+          for (auto& pair : _counters) cout << pair.second.weight_sum() << "  ";
+          cout << "\n" << endl;
+        #endif
       }
 
 
