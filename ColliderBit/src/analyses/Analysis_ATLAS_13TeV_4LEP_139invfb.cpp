@@ -23,7 +23,7 @@
 #include "gambit/ColliderBit/ATLASEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
 
-#define CHECK_CUTFLOW
+// #define CHECK_CUTFLOW
 
 using namespace std;
 
