@@ -659,7 +659,7 @@ namespace Gambit
             cutFlowVector_scaled_row.push_back(cutFlowVector[i] * scale_factor_row);
             cutFlowVector_scaled_xs.push_back(cutFlowVector[i] * scale_factor_xs);
           }
-          cout << "DEBUG CUTFLOW:   Working point 200, 50%" << endl;
+          cout << "DEBUG CUTFLOW:   Working point 300, 100%" << endl;
           cout << "DEBUG CUTFLOW:   ATLAS    GAMBIT(raw)    GAMBIT(scaled row)    GAMBIT(scaled xs*L) " << endl;
           cout << "DEBUG CUTFLOW:   ----------------------------------------------------------------- " << endl;
 
