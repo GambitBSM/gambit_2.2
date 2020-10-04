@@ -73,6 +73,7 @@ namespace Gambit
       F(ATLAS_13TeV_2OSLEP_chargino_inclusive_139invfb) \
       F(ATLAS_13TeV_2OSLEP_chargino_binned_139invfb) \
       F(ATLAS_13TeV_4LEP_36invfb)                    \
+      F(ATLAS_13TeV_4LEP_139invfb)                   \
       F(ATLAS_13TeV_2bMET_36invfb)                   \
       F(ATLAS_13TeV_3b_24invfb)                      \
       F(ATLAS_13TeV_3b_discoverySR_24invfb)          \
