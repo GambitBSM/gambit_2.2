@@ -172,7 +172,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_BRBXsmumu_lowq2
@@ -186,8 +186,9 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
+
   #define CAPABILITY prediction_BRBXsmumu_highq2
   START_CAPABILITY
     #define FUNCTION SuperIso_prediction_BRBXsmumu_highq2
@@ -199,10 +200,8 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
-
-
 
   #define CAPABILITY prediction_AFBBXsmumu_lowq2
   START_CAPABILITY
@@ -215,10 +214,8 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
-
-
 
   #define CAPABILITY prediction_AFBBXsmumu_highq2
   START_CAPABILITY
@@ -231,11 +228,8 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
-
-
-
 
   #define CAPABILITY prediction_B2KstarmumuBr_0p1_0p98
   START_CAPABILITY
@@ -248,7 +242,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuBr_1p1_2p5
@@ -262,7 +256,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuBr_2p5_4
@@ -276,7 +270,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuBr_4_6
@@ -290,7 +284,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuBr_6_8
@@ -304,7 +298,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuBr_15_19
@@ -318,7 +312,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KmumuBr_0p05_2
@@ -332,7 +326,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KmumuBr_2_4p3
@@ -346,7 +340,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KmumuBr_4p3_8p68
@@ -360,7 +354,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KmumuBr_14p18_16
@@ -374,7 +368,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KmumuBr_16_18
@@ -388,7 +382,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KmumuBr_18_22
@@ -402,9 +396,8 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
-
 
   #define CAPABILITY prediction_Bs2phimumuBr_1_6
   START_CAPABILITY
@@ -417,7 +410,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_Bs2phimumuBr_15_19
@@ -431,7 +424,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_0p1_2_Atlas
@@ -445,7 +438,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_2_4_Atlas
@@ -459,7 +452,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_4_8_Atlas
@@ -473,7 +466,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_1_2_CMS
@@ -487,7 +480,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_2_4p3_CMS
@@ -501,7 +494,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_4p3_6_CMS
@@ -515,7 +508,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_6_8p68_CMS
@@ -529,7 +522,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_10p09_12p86_CMS
@@ -543,7 +536,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_14p18_16_CMS
@@ -557,7 +550,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_16_19_CMS
@@ -571,7 +564,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_0p1_4_Belle
@@ -585,7 +578,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_4_8_Belle
@@ -599,7 +592,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_10p9_12p9_Belle
@@ -613,7 +606,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_14p18_19_Belle
@@ -627,7 +620,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_0p1_0p98_LHCb
@@ -641,7 +634,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_1p1_2p5_LHCb
@@ -655,7 +648,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_2p5_4_LHCb
@@ -669,7 +662,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_4_6_LHCb
@@ -683,7 +676,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_6_8_LHCb
@@ -697,7 +690,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY prediction_B2KstarmumuAng_15_19_LHCb
@@ -711,7 +704,7 @@ START_MODULE
     BACKEND_REQ(convert_correlation, (libsuperiso), void, (nuiscorr*, int, double**, char**, int))
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   // Observable: BR(B -> tau nu)
@@ -1254,7 +1247,7 @@ START_MODULE
     DEPENDENCY(taueemu, double)
     DEPENDENCY(tauemumu, double)
     DEPENDENCY(taumumue, double)
-   #undef FUNCTION
+    #undef FUNCTION
   #undef CAPABILITY
 
   // mu - e conversion likelihood
