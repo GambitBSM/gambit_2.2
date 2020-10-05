@@ -163,7 +163,16 @@ ObsLikes:
       capability: SL_LL
 
     - purpose:    LogLike
-      capability: b2sll_LL
+      capability: B2KstarmumuAng_LogLikelihood_Atlas
+
+    - purpose:    LogLike
+      capability: B2KstarmumuAng_LogLikelihood_CMS
+
+    - purpose:    LogLike
+      capability: B2KstarmumuAng_LogLikelihood_Belle
+
+    - purpose:    LogLike
+      capability: B2KstarmumuAng_LogLikelihood_LHCb
 
     - purpose:    LogLike
       capability: b2sgamma_LogLikelihood
