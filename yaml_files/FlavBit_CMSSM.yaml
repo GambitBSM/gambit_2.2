@@ -235,8 +235,8 @@ Rules:
     function: SuperIso_prediction_b2sgamma
 
   # Use SuperIso instead of FeynHiggs for B_s->mumu
-  - capability: Bsmumu_untag
-    function: SI_Bsmumu_untag
+  - capability: SuperIso_prediction_B2mumu
+    function: SuperIso_prediction_B2mumu
 
   # Choose to get decays from DecayBit proper, not from an SLHA file.
   - capability: decay_rates
