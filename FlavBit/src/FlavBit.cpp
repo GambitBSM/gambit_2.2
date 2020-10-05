@@ -1600,15 +1600,15 @@ namespace Gambit
     ///@{
     void FeynHiggs_prediction_bsgamma(double &result)
     {
-      result = Pipes::FH_bsgamma::Dep::FH_FlavourObs->Bsg_MSSM;
+      result = Pipes::FeynHiggs_prediction_bsgamma::Dep::FH_FlavourObs->Bsg_MSSM;
     }
     void FeynHiggs_prediction_Bsmumu (double &result)
     {
-      result = Pipes::FH_Bsmumu::Dep::FH_FlavourObs->Bsmumu_MSSM;
+      result = Pipes::FeynHiggs_prediction_Bsmumu::Dep::FH_FlavourObs->Bsmumu_MSSM;
     }
     void FeynHiggs_prediction_DeltaMs(double &result)
     {
-      result = Pipes::FH_DeltaMs::Dep::FH_FlavourObs->deltaMs_MSSM;
+      result = Pipes::FeynHiggs_prediction_DeltaMs::Dep::FH_FlavourObs->deltaMs_MSSM;
     }
     ///@}
 
