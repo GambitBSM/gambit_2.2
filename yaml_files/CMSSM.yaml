@@ -168,7 +168,10 @@ ObsLikes:
       capability: b2sgamma_LogLikelihood
 
     - purpose:    LogLike
-      capability: LUV_LL
+      capability: RK_LogLikelihood
+
+    - purpose:    LogLike
+      capability: RKstar_LogLikelihood_LHCb
 
     # Precision physics likelihoods
     - capability: lnL_W_mass
