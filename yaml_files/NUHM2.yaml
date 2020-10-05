@@ -151,7 +151,13 @@ ObsLikes:
 
     # Flavour physics likelihoods
     - purpose:    LogLike
-      capability: b2ll_LL
+      capability: B2mumu_LogLikelihood_LHCb
+
+    - purpose:    LogLike
+      capability: B2mumu_LogLikelihood_CMS
+
+    - purpose:    LogLike
+      capability: B2mumu_LogLikelihood_Atlas
 
     - purpose:    LogLike
       capability: SL_LL
@@ -160,7 +166,7 @@ ObsLikes:
       capability: b2sll_LL
 
     - purpose:    LogLike
-      capability: b2sgamma_LL
+      capability: b2sgamma_LogLikelihood
 
     - purpose:    LogLike
       capability: LUV_LL
