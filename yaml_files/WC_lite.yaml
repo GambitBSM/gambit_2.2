@@ -166,8 +166,8 @@ Rules:
     function: SI_theory_covariance_SM
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
-  - capability: bsgamma
-    function: SI_bsgamma
+  - capability: prediction_b2sgamma
+    function: SuperIso_prediction_b2sgamma
 
   # Use SuperIso instead of FeynHiggs for B_s->mumu
   - capability: Bsmumu_untag

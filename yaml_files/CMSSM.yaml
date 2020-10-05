@@ -282,7 +282,7 @@ ObsLikes:
       capability: sigma_SD_n
 
     - purpose:    Observable
-      capability: bsgamma
+      capability: prediction_b2sgamma
 
     - purpose:    Observable
       capability: muon_gm2
@@ -319,8 +319,8 @@ Rules:
     function: gm2_SM_ee
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
-  - capability: bsgamma
-    function: SI_bsgamma
+  - capability: prediction_b2sgamma
+    function: SuperIso_prediction_b2sgamma
 
   # Use SuperIso instead of FeynHiggs for B_s->mumu
   - capability: Bsmumu_untag

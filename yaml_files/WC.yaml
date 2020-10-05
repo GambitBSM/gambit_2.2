@@ -184,8 +184,8 @@ Rules:
       obs_list: [FL, AFB, S3, S4, S5, S7, S8, S9]
 
   # Use SuperIso instead of FeynHiggs for b->sgamma
-  - capability: bsgamma
-    function: SI_bsgamma
+  - capability: prediction_b2sgamma
+    function: SuperIso_prediction_b2sgamma
 
   # Use SuperIso instead of FeynHiggs for B_s->mumu
   - capability: Bsmumu_untag
