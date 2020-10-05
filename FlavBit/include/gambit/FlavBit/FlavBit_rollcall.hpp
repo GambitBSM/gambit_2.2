@@ -109,7 +109,7 @@ START_MODULE
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
-    #define FUNCTION FH_Bsmumu
+    #define FUNCTION FeynHiggs_prediction_Bsmumu
     START_FUNCTION(double)
     DEPENDENCY(FH_FlavourObs, fh_FlavourObs)
     #undef FUNCTION
@@ -155,7 +155,7 @@ START_MODULE
     BACKEND_REQ(get_th_covariance_nuisance, (libsuperiso), void, (double***, char**, int*, const parameters*, const nuisance*, double**))
     BACKEND_OPTION( (SuperIso, 4.1), (libsuperiso) )
     #undef FUNCTION
-    #define FUNCTION FH_bsgamma
+    #define FUNCTION FeynHiggs_prediction_bsgamma
     START_FUNCTION(double)
     DEPENDENCY(FH_FlavourObs, fh_FlavourObs)
     #undef FUNCTION
@@ -995,9 +995,9 @@ START_MODULE
   #undef CAPABILITY
 
   // Observable: B_s mass difference
-  #define CAPABILITY DeltaMs
+  #define CAPABILITY prediction_DeltaMs
   START_CAPABILITY
-    #define FUNCTION FH_DeltaMs
+    #define FUNCTION FeynHiggs_prediction_DeltaMs
     START_FUNCTION(double)
     DEPENDENCY(FH_FlavourObs, fh_FlavourObs)
     #undef FUNCTION

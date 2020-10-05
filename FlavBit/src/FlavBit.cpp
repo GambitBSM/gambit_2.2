@@ -1598,15 +1598,15 @@ namespace Gambit
 
     ///These functions extract observables from a FeynHiggs flavour result
     ///@{
-    void FH_bsgamma(double &result)
+    void FeynHiggs_prediction_bsgamma(double &result)
     {
       result = Pipes::FH_bsgamma::Dep::FH_FlavourObs->Bsg_MSSM;
     }
-    void FH_Bsmumu (double &result)
+    void FeynHiggs_prediction_Bsmumu (double &result)
     {
       result = Pipes::FH_Bsmumu::Dep::FH_FlavourObs->Bsmumu_MSSM;
     }
-    void FH_DeltaMs(double &result)
+    void FeynHiggs_prediction_DeltaMs(double &result)
     {
       result = Pipes::FH_DeltaMs::Dep::FH_FlavourObs->deltaMs_MSSM;
     }
