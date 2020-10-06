@@ -22,7 +22,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 project(GUM)
-message("Building GUM in ${CMAKE_CURRENT_SOURCE_DIR}")
+message("   Building GUM in ${CMAKE_CURRENT_SOURCE_DIR}")
 include(ExternalProject)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
@@ -174,7 +174,7 @@ else()
   endif()
 endif()
 include_directories(${PYTHON_INCLUDE_DIRS})
-message("  Using Python interpreter version ${PYTHON_VERSION_STRING} for build.")
+message("   Using Python interpreter version ${PYTHON_VERSION_STRING} for build.")
 
 if(PYTHONLIBS_FOUND)
   string(FIND "${PYTHONLIBS_VERSION_STRING}" "2.7" PY2_POSITION)
@@ -183,9 +183,11 @@ if(PYTHONLIBS_FOUND)
   else()
     set(UNSUPPORTED_PYTHON_VERSION "2.7")
   endif()
-  message("Using Python libraries version ${PYTHONLIBS_VERSION_STRING}.")
-  if (NOT "${PYTHON_VERSION_STRING}" STREQUAL "${PYTHONLIBS_VERSION_STRING}")
-    message(FATAL_ERROR "  You are using different Python versions for the interpreter and the libraries! GUM won't work, please make sure to have matching versions installed.")
+  message("   Using Python libraries version ${PYTHONLIBS_VERSION_STRING}.")
+  # Remove trailing non-numeric characters from version
+  string(REGEX REPLACE "[a-zA-Z]" "" PYTHONLIBS_VERSION_STRING_CLEAN ${PYTHONLIBS_VERSION_STRING})
+  if (NOT "${PYTHON_VERSION_STRING}" STREQUAL "${PYTHONLIBS_VERSION_STRING_CLEAN}")
+    message("  You are using different Python versions for the interpreter and the libraries! GUM might not work, please make sure to have matching versions installed.")
   endif()
 else()
  message(FATAL_ERROR "  PythonLibs for Python version ${PYTHON_VERSION_STRING} NOT found! Plase make sure to install them to work with GUM.\n"
