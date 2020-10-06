@@ -120,8 +120,8 @@ scanner_plugin(polychord, version(1, 16))
 
       // Compute the locations in PolyChord's unit hypercube, ordering from slow to fast
       // This defaults to nDims if there are no fast parameters, or if all parameters are fast.
-      int nslow = settings.nDims;
-      if (fast_params.size() != 0 and fast_params.size() != settings.nDims)
+      unsigned int nslow = settings.nDims;  // nDims should always be positive.
+      if (fast_params.size() != 0 and fast_params.size() != nslow)
       {
 
           // grade_dims is a vector of integers that indicates the number of slow and fast parameters
