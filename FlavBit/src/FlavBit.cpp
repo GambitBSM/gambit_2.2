@@ -2891,45 +2891,33 @@ namespace Gambit
       if (flav_debug) std::cout << "HEPLike_Bs2phimumuBr_LogLikelihood result: " << result << std::endl;
     }
 
+
     void HEPLike_RK_LogLikelihood(double &result)
     {
-
       using namespace Pipes::HEPLike_RK_LogLikelihood;
 
-
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/Rk/CERN-EP-2019-043.yaml";
-      static HepLike_default::HL_ProfLikelihood rk(inputfile_0);
-
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/Rk/CERN-EP-2019-043.yaml";
+      static HepLike_default::HL_ProfLikelihood ProfLikelihood(inputfile);
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        rk.Read();
+        if (flav_debug) std::cout << "Debug: Reading HepLike data file: " << inputfile << endl;
+        ProfLikelihood.Read();
 
         first = false;
       }
       static const std::vector<std::string> observables{
-              "R-1_BKll_1.1_6",
+        "R-1_BKll_1.1_6",
       };
 
-
       flav_observable_map theory = *Dep::SuperIso_obs_values;
-      flav_covariance_map theory_covariance;
+      flav_covariance_map theory_covariance = *Dep::SuperIso_theory_covariance;
 
-      theory_covariance     = *Dep::SuperIso_theory_covariance;
-
-
-
-      result = rk.GetLogLikelihood(
-                                   1.+theory[observables[0]],
-                                   theory_covariance[observables[0]][observables[0]]
-                                   );
+      result = ProfLikelihood.GetLogLikelihood(1.+theory[observables[0]], theory_covariance[observables[0]][observables[0]]);
 
       if (flav_debug) std::cout << "HEPLike_RK_LogLikelihood result: " << result << std::endl;
-
     }
-
 
 
     void HEPLike_RKstar_LogLikelihood_LHCb(double &result)
@@ -2937,46 +2925,44 @@ namespace Gambit
 
       using namespace Pipes::HEPLike_RKstar_LogLikelihood_LHCb;
 
-
-      static const std::string inputfile_0 = path_to_latest_heplike_data() + "/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_0.045_1.1.yaml";
-      static const std::string inputfile_1 = path_to_latest_heplike_data() + "/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_1.1_6.yaml";
-      static HepLike_default::HL_ProfLikelihood rkstar1(inputfile_0);
-      static HepLike_default::HL_ProfLikelihood rkstar2(inputfile_1);
+      static const std::string inputfile = path_to_latest_heplike_data() + "/data/LHCb/RD/RKstar/CERN-EP-2017-100_q2_";
+      static std::vector<HepLike_default::HL_ProfLikelihood> ProfLikelihood = {
+        HepLike_default::HL_ProfLikelihood(inputfile + "0.045_1.1.yaml"),
+        HepLike_default::HL_ProfLikelihood(inputfile + "1.1_6.yaml")
+      };
 
       static bool first = true;
       if (first)
       {
-        std::cout << "Debug: Reading HepLike data file: " << inputfile_0 << endl;
-        rkstar1.Read();
-        rkstar2.Read();
+        for (unsigned int i = 0; i < ProfLikelihood.size(); i++)
+        {
+          if (flav_debug) std::cout << "Debug: Reading HepLike data file " << i << endl;
+          ProfLikelihood[i].Read();
+        }
         first = false;
       }
+
       static const std::vector<std::string> observables{
         "R-1_B0Kstar0ll_0.045_1.1",
         "R-1_B0Kstar0ll_1.1_6",
       };
 
       flav_observable_map theory = *Dep::SuperIso_obs_values;
-      flav_covariance_map theory_covariance;
+      flav_covariance_map theory_covariance = *Dep::SuperIso_theory_covariance;
 
-      theory_covariance     = *Dep::SuperIso_theory_covariance;
+      result = 0;
+      for (unsigned int i = 0; i < ProfLikelihood.size(); i++)
+      {
+        // double theory = prediction[i].central_values.begin()->second;
+        // double theory_variance = prediction[i].covariance.begin()->second.begin()->second;
+        double _theory = theory[observables[i]];
+        double _theory_variance = theory_covariance[observables[i]][observables[i]];
+        result += ProfLikelihood[i].GetLogLikelihood(1 + _theory, _theory_variance);
+      }
 
-
-      result = rkstar1.GetLogLikelihood(
-                                         1.+theory[observables[0]],
-                                         theory_covariance[observables[0]][observables[0]]
-                                        );
-
-      result+= rkstar2.GetLogLikelihood(
-
-                                        1.+theory[observables[1]],
-                                        theory_covariance[observables[1]][observables[1]]
-                                        );
       if (flav_debug) std::cout << "HEPLike_RKstar_LogLikelihood_LHCb result: " << result << std::endl;
 
     }
-
-
 
   }
 }
