@@ -165,7 +165,8 @@ int main(int argc, char** argv)
     SI_fill.resolveBackendReq(&Backends::SuperIso_4_1::Functown::mb_1S);
 
     // Now resolve dependencies of the BKstar mu mu measurements
-    SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.setOption<std::vector<std::string>>("obs_list", {"FL", "AFB", "S3", "S4", "S5", "S7", "S8", "S9"});
+    SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.setOption<std::vector<std::string>>("obs_list", {
+      "FL_B0Kstar0mumu", "AFB_B0Kstar0mumu", "S3_B0Kstar0mumu", "S4_B0Kstar0mumu", "S5_B0Kstar0mumu", "S7_B0Kstar0mumu", "S8_B0Kstar0mumu", "S9_B0Kstar0mumu"});
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveDependency(&SI_fill);
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveDependency(&SI_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
@@ -173,7 +174,8 @@ int main(int argc, char** argv)
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_0p1_0p98_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
     
-    SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.setOption<std::vector<std::string>>("obs_list", {"FL", "AFB", "S3", "S4", "S5", "S7", "S8", "S9"});
+    SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.setOption<std::vector<std::string>>("obs_list", {
+      "FL_B0Kstar0mumu", "AFB_B0Kstar0mumu", "S3_B0Kstar0mumu", "S4_B0Kstar0mumu", "S5_B0Kstar0mumu", "S7_B0Kstar0mumu", "S8_B0Kstar0mumu", "S9_B0Kstar0mumu"});
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveDependency(&SI_fill);
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveDependency(&SI_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
@@ -181,7 +183,8 @@ int main(int argc, char** argv)
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_1p1_2p5_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
     
-    SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.setOption<std::vector<std::string>>("obs_list", {"FL", "AFB", "S3", "S4", "S5", "S7", "S8", "S9"});
+    SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.setOption<std::vector<std::string>>("obs_list", {
+      "FL_B0Kstar0mumu", "AFB_B0Kstar0mumu", "S3_B0Kstar0mumu", "S4_B0Kstar0mumu", "S5_B0Kstar0mumu", "S7_B0Kstar0mumu", "S8_B0Kstar0mumu", "S9_B0Kstar0mumu"});
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveDependency(&SI_fill);
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveDependency(&SI_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
@@ -189,7 +192,8 @@ int main(int argc, char** argv)
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_2p5_4_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
     
-    SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.setOption<std::vector<std::string>>("obs_list", {"FL", "AFB", "S3", "S4", "S5", "S7", "S8", "S9"});
+    SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.setOption<std::vector<std::string>>("obs_list", {
+      "FL_B0Kstar0mumu", "AFB_B0Kstar0mumu", "S3_B0Kstar0mumu", "S4_B0Kstar0mumu", "S5_B0Kstar0mumu", "S7_B0Kstar0mumu", "S8_B0Kstar0mumu", "S9_B0Kstar0mumu"});
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveDependency(&SI_fill);
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveDependency(&SI_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
@@ -197,7 +201,8 @@ int main(int argc, char** argv)
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_4_6_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
     
-    SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.setOption<std::vector<std::string>>("obs_list", {"FL", "AFB", "S3", "S4", "S5", "S7", "S8", "S9"});
+    SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.setOption<std::vector<std::string>>("obs_list", {
+      "FL_B0Kstar0mumu", "AFB_B0Kstar0mumu", "S3_B0Kstar0mumu", "S4_B0Kstar0mumu", "S5_B0Kstar0mumu", "S7_B0Kstar0mumu", "S8_B0Kstar0mumu", "S9_B0Kstar0mumu"});
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveDependency(&SI_fill);
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveDependency(&SI_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
@@ -205,7 +210,8 @@ int main(int argc, char** argv)
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::convert_correlation);
     SuperIso_prediction_B2KstarmumuAng_6_8_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_th_covariance_nuisance);
     
-    SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.setOption<std::vector<std::string>>("obs_list", {"FL", "AFB", "S3", "S4", "S5", "S7", "S8", "S9"});
+    SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.setOption<std::vector<std::string>>("obs_list", {
+      "FL_B0Kstar0mumu", "AFB_B0Kstar0mumu", "S3_B0Kstar0mumu", "S4_B0Kstar0mumu", "S5_B0Kstar0mumu", "S7_B0Kstar0mumu", "S8_B0Kstar0mumu", "S9_B0Kstar0mumu"});
     SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveDependency(&SI_fill);
     SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveDependency(&SI_nuisance_fill);
     SuperIso_prediction_B2KstarmumuAng_15_19_LHCb.resolveBackendReq(&Backends::SuperIso_4_1::Functown::get_predictions_nuisance);
