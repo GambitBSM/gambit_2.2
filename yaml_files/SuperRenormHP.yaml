@@ -103,7 +103,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 150
+      grid_pts: 10
 
     random:
       plugin: random

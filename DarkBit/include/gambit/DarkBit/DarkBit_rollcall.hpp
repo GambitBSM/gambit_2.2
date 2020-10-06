@@ -237,7 +237,7 @@ START_MODULE
     #define FUNCTION RD_oh2_SuperRenormHP
       START_FUNCTION(double)
         DEPENDENCY(H0, double)
-        DEPENDENCY(DM_current_density, double)
+        DEPENDENCY(DM_relic_density, double)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -1546,12 +1546,20 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  #define CAPABILITY DM_width
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_width
+    START_FUNCTION(double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   #define CAPABILITY DM_lifetime
   START_CAPABILITY
     #define FUNCTION SuperRenormHP_lifetime
     START_FUNCTION(double)
-    DEPENDENCY(DarkMatter_ID, std::string)
-    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    DEPENDENCY(DM_width, double)
     #undef FUNCTION
   #undef CAPABILITY
 

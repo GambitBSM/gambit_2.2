@@ -736,10 +736,24 @@ namespace Gambit
 
 
       // decay into two photons (through a loop of heavy fermions)
-      double gamma = (theta*theta*alpha*alpha*mS*mS*mS*C*C)/(256.*pi*pi*pi*vev*vev);
+      double gamma_ph = (theta*theta*alpha*alpha*mS*mS*mS*C*C)/(256.*pi*pi*pi*vev*vev);
 
-      TH_Channel dec_channel(daFunk::vec<string>("gamma", "gamma"), daFunk::cnst(gamma));
-      process_dec.channelList.push_back(dec_channel);
+      TH_Channel dec_channel_ph(daFunk::vec<string>("gamma", "gamma"), daFunk::cnst(gamma_ph));
+      process_dec.channelList.push_back(dec_channel_ph);
+
+      // decay into e+/e- pair
+      double me1 = SM.get(Par::Pole_Mass,"e-_1");
+      double gamma_e1 = ( mS >= 2*me1 ) ? pow(theta,2)*pow(me1,2)*mS/(8*pi*pow(vev,2))*pow(1 - 4*pow(me1,2)/pow(mS,2), 3./2.) : 0;
+
+      TH_Channel dec_channel_e1(daFunk::vec<string>("e-_1", "e+_1"), daFunk::cnst(gamma_e1));
+      process_dec.channelList.push_back(dec_channel_e1);
+
+      // decay into mu+/mu- pair
+      double me2 = SM.get(Par::Pole_Mass,"e-_2");
+      double gamma_e2 = ( mS >= 2*me2 ) ? pow(theta,2)*pow(me2,2)*mS/(8*pi*pow(vev,2))*pow(1 - 4*pow(me2,2)/pow(mS,2), 3./2.) : 0;
+
+      TH_Channel dec_channel_e2(daFunk::vec<string>("e-_2", "e+_2"), daFunk::cnst(gamma_e2));
+      process_dec.channelList.push_back(dec_channel_e2);
 
       //////////////////////////////
       // Import Decay information //
@@ -1012,17 +1026,39 @@ namespace Gambit
       result = lambda*theta*theta*s0*mS*1e11;
     }
 
+    // capability function to provide the total width of the S scalar (in GeV)
+    void SuperRenormHP_width (double &result)
+    {
+      using namespace Pipes::SuperRenormHP_width;
+
+      std::string DM_ID = *Dep::DarkMatter_ID;
+      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
+
+      auto f_ph = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
+      auto fb_ph = f_ph->bind();
+      double gamma_ph = fb_ph->eval();
+
+      auto f_e1 = catalog.getProcess(DM_ID).find({"e-_1", "e+_1"})->genRate;
+      auto fb_e1 = f_e1->bind();
+      double gamma_e1 = fb_ph->eval();
+
+      auto f_e2 = catalog.getProcess(DM_ID).find({"e-_2", "e+_2"})->genRate;
+      auto fb_e2 = f_e2->bind();
+      double gamma_e2 = fb_ph->eval();
+
+      double gamma_tot = gamma_ph + gamma_e1 + gamma_e2;
+
+      result = gamma_tot;
+    }
+
+    // capability function to provide the lifetime of the S scalar (in s)
     void SuperRenormHP_lifetime (double &result)
     {
       using namespace Pipes::SuperRenormHP_lifetime;
 
-      std::string DM_ID = *Dep::DarkMatter_ID;
-      TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
-      auto f = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
-      auto fb = f->bind();
-      double gamma = fb->eval()/hbar_GeV;
+      double width = *Dep::DM_width;
 
-      result = 1/gamma;
+      result = 1/width/hbar_GeV;
     }
 
     void SuperRenormHP_current_density (double &result)
@@ -1033,24 +1069,24 @@ namespace Gambit
 
       double tau = *Dep::DM_lifetime;
 
-      double H0 = *Dep::H0/Mpc_2_km;
+      double H0_s = *Dep::H0/Mpc_2_km; // H0 in 1/s
 
       double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
 
       double OmegaLambda = *Dep::Omega0_Lambda;
 
-      double z = 1090;
+      double zCMB = 1090;
 
-      double t_CMB = ageUniverse(z, OmegaM, OmegaR, OmegaLambda, H0)[0];
+      double t_CMB = ageUniverse(zCMB, OmegaM, OmegaR, OmegaLambda, H0)[0];
 
-      result = RD*exp(-t_CMB/tau)*pow((1+z), 3);
+      result = RD*exp(-t_CMB/tau)*pow((1+zCMB), 3);
     }
 
     void RD_oh2_SuperRenormHP (double &result)
     {
       using namespace Pipes::RD_oh2_SuperRenormHP;
 
-      double RD = *Dep::DM_current_density;
+      double RD = *Dep::DM_relic_density;
 
       double H0 = *Dep::H0;
       double h = H0/100;
