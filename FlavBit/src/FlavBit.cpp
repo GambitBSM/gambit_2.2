@@ -1043,6 +1043,9 @@ namespace Gambit
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_14p18_16)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_16_18)
     SI_SINGLE_PREDICTION_FUNCTION_BINS(B2KmumuBr,_18_22)
+    SI_SINGLE_PREDICTION_FUNCTION_BINS(RK_LHCb,_1p1_6)
+    SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_0p045_1p1)
+    SI_SINGLE_PREDICTION_FUNCTION_BINS(RKstar_LHCb,_1p1_6)
 
     SI_MULTI_PREDICTION_FUNCTION(B2mumu)
     SI_MULTI_PREDICTION_FUNCTION(RDRDstar)
@@ -2907,14 +2910,12 @@ namespace Gambit
 
         first = false;
       }
-      static const std::vector<std::string> observables{
-        "R-1_BKll_1.1_6",
-      };
 
-      flav_observable_map theory = *Dep::SuperIso_obs_values;
-      flav_covariance_map theory_covariance = *Dep::SuperIso_theory_covariance;
+      flav_prediction prediction = *Dep::prediction_RK_LHCb_1p1_6;
 
-      result = ProfLikelihood.GetLogLikelihood(1.+theory[observables[0]], theory_covariance[observables[0]][observables[0]]);
+      const double theory = prediction.central_values.begin()->second;
+      const double theory_variance = prediction.covariance.begin()->second.begin()->second;
+      result = ProfLikelihood.GetLogLikelihood(1. + theory, theory_variance);
 
       if (flav_debug) std::cout << "HEPLike_RK_LogLikelihood result: " << result << std::endl;
     }
@@ -2942,22 +2943,17 @@ namespace Gambit
         first = false;
       }
 
-      static const std::vector<std::string> observables{
-        "R-1_B0Kstar0ll_0.045_1.1",
-        "R-1_B0Kstar0ll_1.1_6",
+      std::vector<flav_prediction> prediction = {
+        *Dep::prediction_RKstar_LHCb_0p045_1p1,
+        *Dep::prediction_RKstar_LHCb_1p1_6
       };
-
-      flav_observable_map theory = *Dep::SuperIso_obs_values;
-      flav_covariance_map theory_covariance = *Dep::SuperIso_theory_covariance;
 
       result = 0;
       for (unsigned int i = 0; i < ProfLikelihood.size(); i++)
       {
-        // double theory = prediction[i].central_values.begin()->second;
-        // double theory_variance = prediction[i].covariance.begin()->second.begin()->second;
-        double _theory = theory[observables[i]];
-        double _theory_variance = theory_covariance[observables[i]][observables[i]];
-        result += ProfLikelihood[i].GetLogLikelihood(1 + _theory, _theory_variance);
+        const double theory = prediction[i].central_values.begin()->second;
+        const double theory_variance = prediction[i].covariance.begin()->second.begin()->second;
+        result += ProfLikelihood[i].GetLogLikelihood(1. + theory, theory_variance);
       }
 
       if (flav_debug) std::cout << "HEPLike_RKstar_LogLikelihood_LHCb result: " << result << std::endl;
