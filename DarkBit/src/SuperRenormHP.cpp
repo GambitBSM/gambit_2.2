@@ -1077,7 +1077,7 @@ namespace Gambit
 
       double zCMB = 1090;
 
-      double t_CMB = ageUniverse(zCMB, OmegaM, OmegaR, OmegaLambda, H0)[0];
+      double t_CMB = ageUniverse(zCMB, OmegaM, OmegaR, OmegaLambda, H0_s)[0];
 
       result = RD*exp(-t_CMB/tau)*pow((1+zCMB), 3);
     }
