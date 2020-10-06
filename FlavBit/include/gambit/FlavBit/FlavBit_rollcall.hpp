@@ -1237,7 +1237,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION deltaMB_likelihood
     START_FUNCTION(double)
-    DEPENDENCY(DeltaMs, double)
+    DEPENDENCY(prediction_DeltaMs, double)
     #undef FUNCTION
   #undef CAPABILITY
 

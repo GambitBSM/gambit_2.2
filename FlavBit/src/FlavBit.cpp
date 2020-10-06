@@ -1641,7 +1641,7 @@ namespace Gambit
       if (flav_debug) cout << "Experiment: " << exp_meas << " " << exp_DeltaMs_err << " " << th_err << endl;
 
       // Now we do the stuff that actually depends on the parameters
-      double theory_prediction = *Dep::DeltaMs;
+      double theory_prediction = *Dep::prediction_DeltaMs;
       double theory_DeltaMs_err = th_err * (th_err_absolute ? 1.0 : std::abs(theory_prediction));
       if (flav_debug) cout<<"Theory prediction: "<<theory_prediction<<" +/- "<<theory_DeltaMs_err<<endl;
 
