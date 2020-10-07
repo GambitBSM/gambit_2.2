@@ -39,19 +39,6 @@ extern "C"
   #include "mkpath/mkpath.h"
 }
 
-# if GAMBIT_CONFIG_FLAG_use_std_regex
-  #include <regex>
-  #define GAMBIT_CONFIG_FLAG_use_regex 1
-  namespace Gambit { using std::regex; using std::regex_replace; }
-#elif GAMBIT_CONFIG_FLAG_use_boost_regex
-  #include <boost/regex.hpp>
-  #define GAMBIT_CONFIG_FLAG_use_regex 1
-  namespace Gambit { using boost::regex; using boost::regex_replace; }
-#else
-  #include <boost/algorithm/string/replace.hpp>
-  #define GAMBIT_CONFIG_FLAG_use_regex 0
-#endif
-
 namespace Gambit
 {
 
@@ -66,6 +53,15 @@ namespace Gambit
 
   /// Make sure there are no nasty surprises from regular C abs()
   using std::abs;
+
+  /// Convert the memory address a pointer points to to an unsigned integer
+  /// (The size of uintptr_t  depends on system & ensures it is big
+  /// enough to store memory addresses of the underlying setup)
+  template<typename T>
+  uintptr_t memaddress_to_uint(T* ptr)
+  {
+    return reinterpret_cast<uintptr_t>(ptr);
+  }
 
   namespace Utils
   {
@@ -230,6 +226,9 @@ namespace Gambit
     /// Check if a string represents an integer
     /// From: http://stackoverflow.com/a/2845275/1447953
     EXPORT_SYMBOLS bool isInteger(const std::string&);
+
+    /// Get the sign of a (hopefully numeric type)
+    template <typename T> int sgn(T val) {  return (T(0) < val) - (val < T(0)); }
 
     // Dummy functions for variadic variables to avoid compiler warnings
     template<typename... T> void dummy_function() {}

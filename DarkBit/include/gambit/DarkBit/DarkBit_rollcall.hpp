@@ -71,6 +71,7 @@
 ///  \date 2016 Oct
 ///  \date 2017 Feb, Sep, Dec
 ///  \date 2018 Jan, Mar, Apr
+///  \date 2019 Mar, Apr, Jun
 ///
 ///  *********************************************
 
@@ -221,11 +222,12 @@ START_MODULE
       DEPENDENCY(RD_oh2_Xf, ddpair)
     #undef FUNCTION
 
-    // Routine for axion energy density today
+    // Routine for computing axion energy density today from vacuum misalignment, assuming no axion decays.
     #define FUNCTION RD_oh2_Axions
       START_FUNCTION(double)
         ALLOW_MODEL(GeneralALP)
         DEPENDENCY(AxionOscillationTemperature, double)
+        DEPENDENCY(T_cmb, double)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -676,14 +678,19 @@ START_MODULE
       ALLOW_JOINT_MODEL(nuclear_params_fnq, VectorSingletDM_Z2)
      #undef FUNCTION
 
+  #undef CAPABILITY
+
+  #define CAPABILITY DD_couplings_fermionic_HP
+  START_CAPABILITY
+
      #define FUNCTION DD_couplings_MajoranaSingletDM_Z2
-      START_FUNCTION(DM_nucleon_couplings)
+      START_FUNCTION(DM_nucleon_couplings_fermionic_HP)
       DEPENDENCY(MajoranaSingletDM_Z2_spectrum, Spectrum)
       ALLOW_JOINT_MODEL(nuclear_params_fnq, MajoranaSingletDM_Z2)
      #undef FUNCTION
 
      #define FUNCTION DD_couplings_DiracSingletDM_Z2
-      START_FUNCTION(DM_nucleon_couplings)
+      START_FUNCTION(DM_nucleon_couplings_fermionic_HP)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_JOINT_MODEL(nuclear_params_fnq, DiracSingletDM_Z2)
      #undef FUNCTION
@@ -701,7 +708,7 @@ START_MODULE
       #define FUNCTION sigma_SI_vnqn
       START_FUNCTION(map_intpair_dbl)
       DEPENDENCY(mwimp,double)
-      DEPENDENCY(DD_couplings,DM_nucleon_couplings)
+      DEPENDENCY(DD_couplings_fermionic_HP,DM_nucleon_couplings_fermionic_HP)
       ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
     #undef FUNCTION
   #undef CAPABILITY
@@ -711,7 +718,7 @@ START_MODULE
       #define FUNCTION sigma_SD_vnqn
       START_FUNCTION(map_intpair_dbl)
       DEPENDENCY(mwimp,double)
-      DEPENDENCY(DD_couplings,DM_nucleon_couplings)
+      DEPENDENCY(DD_couplings_fermionic_HP,DM_nucleon_couplings_fermionic_HP)
       ALLOW_MODELS(DiracSingletDM_Z2, MajoranaSingletDM_Z2)
     #undef FUNCTION
   #undef CAPABILITY
@@ -892,7 +899,7 @@ START_MODULE
     BACKEND_REQ(cap_sun_saturation,(CaptnGeneral),void,(const double&,double&))
     DEPENDENCY(mwimp,double)
     DEPENDENCY(sigma_SD_p, map_intpair_dbl)
-    DEPENDENCY(sigma_SI_p,map_intpair_dbl)
+    DEPENDENCY(sigma_SI_p, map_intpair_dbl)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1429,7 +1436,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION calc_RParameter
     START_FUNCTION(double)
-    DEPENDENCY(GeneralALP_parameters, ModelParameters)
+    ALLOW_MODEL(GeneralALP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1477,6 +1484,15 @@ START_MODULE
   #define CAPABILITY lnL_SN1987A
   START_CAPABILITY
     #define FUNCTION calc_lnL_SN1987A
+    START_FUNCTION(double)
+    ALLOW_MODEL(GeneralALP)
+    DEPENDENCY(PhotonFluence_SN1987A_Conversion, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY PhotonFluence_SN1987A_Conversion
+  START_CAPABILITY
+    #define FUNCTION calc_PhotonFluence_SN1987A_Conversion
     START_FUNCTION(double)
     ALLOW_MODEL(GeneralALP)
     #undef FUNCTION

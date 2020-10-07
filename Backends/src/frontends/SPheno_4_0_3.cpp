@@ -2,7 +2,7 @@
 //   *********************************************
 ///  \file
 ///
-///  Frontend for SPheno 4.3.0 backend 
+///  Frontend for SPheno 4.3.0 backend
 ///  (out of the box version)
 ///
 ///  *********************************************
@@ -20,6 +20,7 @@
 #include "gambit/Elements/spectrum_factories.hpp"
 #include "gambit/Models/SimpleSpectra/MSSMSimpleSpec.hpp"
 #include "gambit/Utils/version.hpp"
+#include "gambit/Utils/util_functions.hpp"
 
 // Callback function for error handling
 BE_NAMESPACE
@@ -41,7 +42,8 @@ BE_NAMESPACE
   int run_SPheno(Spectrum &spectrum, const Finputs &inputs)
   {
 
-    Set_All_Parameters_0();
+    try{ Set_All_Parameters_0(); }
+    catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     ReadingData(inputs);
 
@@ -51,31 +53,13 @@ BE_NAMESPACE
     *ratioWoM = 0.0;
 
     try{ SPheno_Main(); }
-    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+    catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     if(*kont != 0)
        ErrorHandling(*kont);
-      
+
     spectrum = Spectrum_Out(inputs);
 
-    // In debug mode, output a summary line with masses and parameters to the logger,
-    // to aid quick tests/debugging of ongoing scans
-    std::stringstream summary_line;
-    summary_line << "Spectrum summary:"
-                 << " mN1=" << (*Chi0)(1).m
-                 << " mN2=" << (*Chi0)(2).m
-                 << " mN3=" << (*Chi0)(3).m
-                 << " mN4=" << (*Chi0)(4).m
-                 << " mC1=" << (*ChiPm)(1).m
-                 << " mC2=" << (*ChiPm)(2).m
-                 << " mh1=" << (*S0)(1).m
-                 << " mh2=" << (*S0)(2).m
-                 << " ma1=" << (*P0)(2).m
-                 << " M1=" << *inputs.param.at("M1")
-                 << " M2=" << *inputs.param.at("M2")
-                 << " TanBeta=" << *inputs.param.at("TanBeta");
-    logger() << LogTags::debug << summary_line.str() << EOM;
-    
     return *kont;
 
   }
@@ -88,7 +72,7 @@ BE_NAMESPACE
 
     Freal8 Q;
     try{ Q = sqrt(GetRenormalizationScale()); }
-    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+    catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     // TODO: Chi masses are not rotated, I think. Check
 
@@ -116,7 +100,7 @@ BE_NAMESPACE
     if(inputs.param.find("M12") != inputs.param.end())
       slha["MINPAR"][""] << 2 << *inputs.param.at("M12") << "# m12";
     if(inputs.param.find("TanBeta") != inputs.param.end())
-      slha["MINPAR"][""] << 3 << *inputs.param.at("TanBeta") << "# tanb at m_Z";
+      slha["MINPAR"][""] << 3 << *inputs.param.at("TanBeta") << "# tanb at MZ";
     if(inputs.param.find("SignMu") != inputs.param.end())
       slha["MINPAR"][""] << 4 << *inputs.param.at("SignMu") << "# sign(mu)";
     if(inputs.param.find("A0") != inputs.param.end())
@@ -146,7 +130,6 @@ BE_NAMESPACE
       slha["EXTPAR"][""] << 23 << *inputs.param.at("mu") << "# mu";
     if(inputs.param.find("mA") != inputs.param.end())
       slha["EXTPAR"][""] << 24 << pow(*inputs.param.at("mA"),2) << "# mA";
-    if(inputs.param.find("ml2_11") != inputs.param.end())
     if(inputs.param.find("ml2_11") != inputs.param.end())
       slha["EXTPAR"][""] << 31 << sqrt(*inputs.param.at("ml2_11")) << "# M_(L,11)";
     if(inputs.param.find("ml2_22") != inputs.param.end())
@@ -197,32 +180,33 @@ BE_NAMESPACE
     slha["SMINPUTS"][""] << 23 << (*mf_d)(2) << "# m_s(2 GeV), MSbar";
     slha["SMINPUTS"][""] << 24 << (*mf_u)(2) << "# m_c(m_c), MSbar";
 
+    // SUSY-HIT requires these blocks to be present, so add them
+    SLHAea_add_block(slha, "VCKMIN");
+    slha["VCKMIN"][""] << 1 << *lam_wolf << "# lambda";
+    slha["VCKMIN"][""] << 2 << *A_wolf << "# A";
+    slha["VCKMIN"][""] << 3 << *rho_wolf << "# rho bar";
+    slha["VCKMIN"][""] << 4 << *eta_wolf << "# eta bar";
+
+    SLHAea_add_block(slha, "UPMNSIN");
+    slha["UPMNSIN"][""] << 1 << *theta_12 << "# theta_12, solar";
+    slha["UPMNSIN"][""] << 2 << *theta_23<< "# theta_23, atmospheric";
+    slha["UPMNSIN"][""] << 3 << *theta_13 << "# theta_13";
+    slha["UPMNSIN"][""] << 4 << *delta_nu << "# delta_nu";
+    slha["UPMNSIN"][""] << 5 << *alpha_nu1 << "# alpha_1";
+    slha["UPMNSIN"][""] << 6 << *alpha_nu2 << "# alpha_2";
+
     Farray<Fcomplex16,1,6,1,6> RDsq_ckm, RUsq_ckm, RSl_pmns;
     Farray<Fcomplex16,1,3,1,3> RSn_pmns, id3C;
     Farray<Fcomplex16,1,3,1,3> CKM_Q, PMNS_Q;
     Farray<Freal8,1,3> Yu, Yd, Yl;
     if(*GenerationMixing)
     {
-      SLHAea_add_block(slha, "VCKMIN");
-      slha["VCKMIN"][""] << 1 << *lam_wolf << "# lambda";
-      slha["VCKMIN"][""] << 2 << *A_wolf << "# A";
-      slha["VCKMIN"][""] << 3 << *rho_wolf << "# rho bar";
-      slha["VCKMIN"][""] << 4 << *eta_wolf << "# eta bar";
-
       Flogical False = false;
       try{ Switch_to_superCKM(*Y_d,*Y_u,*A_d,*A_u,*M2_D,*M2_Q,*M2_U,*Ad_sckm,*Au_sckm,*M2D_sckm,*M2Q_sckm,*M2U_sckm,False,*RSdown,*RSup,RDsq_ckm,RUsq_ckm,CKM_Q,Yd,Yu); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
-
-      SLHAea_add_block(slha, "UPMNSIN");
-      slha["UPMNSIN"][""] << 1 << *theta_12 << "# theta_12, solar";
-      slha["UPMNSIN"][""] << 2 << *theta_23<< "# theta_23, atmospheric";
-      slha["UPMNSIN"][""] << 3 << *theta_13 << "# theta_13";
-      slha["UPMNSIN"][""] << 4 << *delta_nu << "# delta_nu";
-      slha["UPMNSIN"][""] << 5 << *alpha_nu1 << "# alpha_1";
-      slha["UPMNSIN"][""] << 6 << *alpha_nu2 << "# alpha_2";
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
       try{ Switch_to_superPMNS(*Y_l,id3C,*A_l,*M2_E,*M2_L,*Al_pmns,*M2E_pmns,*M2L_pmns,False,*RSlepton,*RSneut,RSl_pmns,RSn_pmns,PMNS_Q,Yl); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     }
     else
@@ -236,6 +220,12 @@ BE_NAMESPACE
       *Al_pmns = *A_l;
       *Ad_sckm = *A_d;
       *Au_sckm = *A_u;
+
+      *M2D_sckm = *M2_D;
+      *M2U_sckm = *M2_U;
+      *M2Q_sckm = *M2_Q;
+      *M2E_pmns = *M2_E;
+      *M2L_pmns = *M2_L;
 
       RUsq_ckm = *RSup;
       RDsq_ckm = *RSdown;
@@ -257,9 +247,15 @@ BE_NAMESPACE
     SLHAea_add_block(slha, "Ye", Q);
     for(int i=1; i<=3; i++)
     {
-      slha["Yu"][""] << i << Yu(i) << "# Yu(" << i << ")(Q)^DRbar";
-      slha["Yd"][""] << i << Yd(i) << "# Yd(" << i << ")(Q)^DRbar";
-      slha["Ye"][""] << i << Yl(i) << "# Ye(" << i << ")(Q)^DRbar";
+      slha["Yu"][""] << i << i << Yu(i) << "# Yu(" << i << "," << i << ")(Q)^DRbar";
+      slha["Yd"][""] << i << i << Yd(i) << "# Yd(" << i << "," << i << ")(Q)^DRbar";
+      slha["Ye"][""] << i << i << Yl(i) << "# Ye(" << i << "," << i << ")(Q)^DRbar";
+      for(int j=1; j<=3; j++)
+      {
+        slha["Yu"][""] << i << j << 0.0 << "# Yu(" << i << "," << j << ")(Q)^DRbar";
+        slha["Yd"][""] << i << j << 0.0 << "# Yd(" << i << "," << j << ")(Q)^DRbar";
+        slha["Ye"][""] << i << j << 0.0 << "# Ye(" << i << "," << j << ")(Q)^DRbar";
+      }
     }
 
     if(*GenerationMixing)
@@ -277,7 +273,7 @@ BE_NAMESPACE
           slha["UPMNS"][""] << i << j << PMNS_Q(i,j).re << "# UPMNS_" << i << j;
           slha["IMUPMNS"][""] << i << j << PMNS_Q(i,j).im << "# Im(UPMNS_" << i << j << ")";
         }
-     
+
       // Blocks Te, Tu, Td
       SLHAea_add_block(slha, "Te", Q);
       SLHAea_add_block(slha, "Tu", Q);
@@ -297,32 +293,47 @@ BE_NAMESPACE
         }
 
     }
-    else
-    {
 
-      // Blocks Au, Ad, Ae
-      SLHAea_add_block(slha, "Ae", Q);
-      SLHAea_add_block(slha, "Au", Q);
-      SLHAea_add_block(slha, "Ad", Q);
-      SLHAea_add_block(slha, "IMAe", Q);
-      SLHAea_add_block(slha, "IMAu", Q);
-      SLHAea_add_block(slha, "IMAd", Q);
-      for(int i=1; i<=3; i++)
+    // Blocks Au, Ad, Ae
+    SLHAea_add_block(slha, "Ae", Q);
+    SLHAea_add_block(slha, "Au", Q);
+    SLHAea_add_block(slha, "Ad", Q);
+    SLHAea_add_block(slha, "IMAe", Q);
+    SLHAea_add_block(slha, "IMAu", Q);
+    SLHAea_add_block(slha, "IMAd", Q);
+    for(int i=1; i<=3; i++)
+    {
+      for(int j=1; j<=3; j++)
       {
-        if(std::fabs(Yl(i)) > 0.0)
+        if((*Y_l)(i,j).abs() > 0.0)
         {
-          slha["Ae"][""] << i << i << (*Al_pmns)(i,i).re/Yl(i) << "# Ae(" << i << ")";
-          slha["IMAe"][""] << i << i << (*Al_pmns)(i,i).im/Yl(i) << "# Im(Ae(" << i << "))";
+          slha["Ae"][""] << i << j << ((*Al_pmns)(i,j)/(*Y_l)(i,j)).re << "# Ae(" << i << "," << j << ")";
+          slha["IMAe"][""] << i << j << ((*Al_pmns)(i,j)/(*Y_l)(i,j)).im << "# Im(Ae(" << i << "," << j << "))";
+        }
+        else
+        {
+          slha["Ae"][""] << i << j << 0.0 << "# Ae(" << i << "," << j << ")";
+          slha["IMAe"][""] << i << j << 0.0 << "# Im(Ae(" << i << "," << j << "))";
         }
         if((*Y_u)(i,i).abs() > 0.0)
         {
-          slha["Au"][""] << i << i << ((*Au_sckm)(i,i)/(*Y_u)(i,i)).re << "# Au(" << i  << ")";
-          slha["IMAu"][""] << i << i << ((*Au_sckm)(i,i)/(*Y_u)(i,i)).im << "# Im(Au(" << i << "))";
+          slha["Au"][""] << i << j << ((*Au_sckm)(i,j)/(*Y_u)(i,j)).re << "# Au(" << i << "," << j << ")";
+          slha["IMAu"][""] << i << j << ((*Au_sckm)(i,j)/(*Y_u)(i,j)).im << "# Im(Au(" << i << "," << j << "))";
+        }
+        else
+        {
+          slha["Au"][""] << i << j << 0.0 << "# Au(" << i << "," << j << ")";
+          slha["IMAu"][""] << i << j << 0.0 << "# Im(Au(" << i << "," << j << "))";
         }
         if((*Y_d)(i,i).abs() > 0.0)
         {
-          slha["Ad"][""] << i << i << ((*Ad_sckm)(i,i)/(*Y_d)(i,i)).re << "# Ad(" << i  << ")";
-          slha["IMAd"][""] << i << i << ((*Ad_sckm)(i,i)/(*Y_d)(i,i)).im << "# Im(Ad(" << i << "))";
+          slha["Ad"][""] << i << j << ((*Ad_sckm)(i,i)/(*Y_d)(i,j)).re << "# Ad(" << i << "," << j << ")";
+          slha["IMAd"][""] << i << j << ((*Ad_sckm)(i,i)/(*Y_d)(i,j)).im << "# Im(Ad(" << i << "," << j << "))";
+        }
+        else
+        {
+          slha["Ad"][""] << i << j << 0.0 << "# Ad(" << i << "," << j << ")";
+          slha["IMAd"][""] << i << j << 0.0 << "# Im(Ad(" << i << "," << j << "))";
         }
       }
 
@@ -336,21 +347,21 @@ BE_NAMESPACE
     slha["MSOFT"][""] << 21 << (*M2_H)(1) << "# M^2_(H,d)";
     slha["MSOFT"][""] << 22 << (*M2_H)(2) << "# M^2_(H,u)";
 
-    slha["MSOFT"][""] << 31 << sqrt((*M2L_pmns)(1,1).re) << "# M_(L,11)";
-    slha["MSOFT"][""] << 32 << sqrt((*M2L_pmns)(2,2).re) << "# M_(L,22)";
-    slha["MSOFT"][""] << 33 << sqrt((*M2L_pmns)(3,3).re) << "# M_(L,33)";
-    slha["MSOFT"][""] << 34 << sqrt((*M2E_pmns)(1,1).re) << "# M_(E,11)";
-    slha["MSOFT"][""] << 35 << sqrt((*M2E_pmns)(2,2).re) << "# M_(E,22)";
-    slha["MSOFT"][""] << 36 << sqrt((*M2E_pmns)(3,3).re) << "# M_(E,33)";
-    slha["MSOFT"][""] << 41 << sqrt((*M2Q_sckm)(1,1).re) << "# M_(Q,11)";
-    slha["MSOFT"][""] << 42 << sqrt((*M2Q_sckm)(2,2).re) << "# M_(Q,22)";
-    slha["MSOFT"][""] << 43 << sqrt((*M2Q_sckm)(3,3).re) << "# M_(Q,33)";
-    slha["MSOFT"][""] << 44 << sqrt((*M2U_sckm)(1,1).re) << "# M_(U,11)";
-    slha["MSOFT"][""] << 45 << sqrt((*M2U_sckm)(2,2).re) << "# M_(U,22)";
-    slha["MSOFT"][""] << 46 << sqrt((*M2U_sckm)(3,3).re) << "# M_(U,33)";
-    slha["MSOFT"][""] << 47 << sqrt((*M2D_sckm)(1,1).re) << "# M_(D,11)";
-    slha["MSOFT"][""] << 48 << sqrt((*M2D_sckm)(2,2).re) << "# M_(D,22)";
-    slha["MSOFT"][""] << 49 << sqrt((*M2D_sckm)(3,3).re) << "# M_(D,33)";
+    slha["MSOFT"][""] << 31 << Utils::sgn((*M2L_pmns)(1,1).re) * sqrt(abs((*M2L_pmns)(1,1).re)) << "# M_(L,11)";
+    slha["MSOFT"][""] << 32 << Utils::sgn((*M2L_pmns)(2,2).re) * sqrt(abs((*M2L_pmns)(2,2).re)) << "# M_(L,22)";
+    slha["MSOFT"][""] << 33 << Utils::sgn((*M2L_pmns)(3,3).re) * sqrt(abs((*M2L_pmns)(3,3).re)) << "# M_(L,33)";
+    slha["MSOFT"][""] << 34 << Utils::sgn((*M2E_pmns)(1,1).re) * sqrt(abs((*M2E_pmns)(1,1).re)) << "# M_(E,11)";
+    slha["MSOFT"][""] << 35 << Utils::sgn((*M2E_pmns)(2,2).re) * sqrt(abs((*M2E_pmns)(2,2).re)) << "# M_(E,22)";
+    slha["MSOFT"][""] << 36 << Utils::sgn((*M2E_pmns)(3,3).re) * sqrt(abs((*M2E_pmns)(3,3).re)) << "# M_(E,33)";
+    slha["MSOFT"][""] << 41 << Utils::sgn((*M2Q_sckm)(1,1).re) * sqrt(abs((*M2Q_sckm)(1,1).re)) << "# M_(Q,11)";
+    slha["MSOFT"][""] << 42 << Utils::sgn((*M2Q_sckm)(2,2).re) * sqrt(abs((*M2Q_sckm)(2,2).re)) << "# M_(Q,22)";
+    slha["MSOFT"][""] << 43 << Utils::sgn((*M2Q_sckm)(3,3).re) * sqrt(abs((*M2Q_sckm)(3,3).re)) << "# M_(Q,33)";
+    slha["MSOFT"][""] << 44 << Utils::sgn((*M2U_sckm)(1,1).re) * sqrt(abs((*M2U_sckm)(1,1).re)) << "# M_(U,11)";
+    slha["MSOFT"][""] << 45 << Utils::sgn((*M2U_sckm)(2,2).re) * sqrt(abs((*M2U_sckm)(2,2).re)) << "# M_(U,22)";
+    slha["MSOFT"][""] << 46 << Utils::sgn((*M2U_sckm)(3,3).re) * sqrt(abs((*M2U_sckm)(3,3).re)) << "# M_(U,33)";
+    slha["MSOFT"][""] << 47 << Utils::sgn((*M2D_sckm)(1,1).re) * sqrt(abs((*M2D_sckm)(1,1).re)) << "# M_(D,11)";
+    slha["MSOFT"][""] << 48 << Utils::sgn((*M2D_sckm)(2,2).re) * sqrt(abs((*M2D_sckm)(2,2).re)) << "# M_(D,22)";
+    slha["MSOFT"][""] << 49 << Utils::sgn((*M2D_sckm)(3,3).re) * sqrt(abs((*M2D_sckm)(3,3).re)) << "# M_(D,33)";
 
     if((*Mi)(1).im != 0 or (*Mi)(2).im != 0 or (*Mi)(3).im != 0)
     {
@@ -360,37 +371,36 @@ BE_NAMESPACE
       slha["IMMSOFT"][""] << 3 << (*Mi)(3).im << "# M_3";
     }
 
-    if(*GenerationMixing)
-    {
-      // Blocks MSL2, MSE2, MSQ2, MSU2, MSD2
-      SLHAea_add_block(slha, "MSL2", Q);
-      SLHAea_add_block(slha, "MSE2", Q);
-      SLHAea_add_block(slha, "MSQ2", Q);
-      SLHAea_add_block(slha, "MSU2", Q);
-      SLHAea_add_block(slha, "MSD2", Q);
-      SLHAea_add_block(slha, "IMMSL2", Q);
-      SLHAea_add_block(slha, "IMMSE2", Q);
-      SLHAea_add_block(slha, "IMMSQ2", Q);
-      SLHAea_add_block(slha, "IMMSU2", Q);
-      SLHAea_add_block(slha, "IMMSD2", Q);
-      for(int i=1; i<=3; i++)
-        for(int j=1; j<=3; j++)
-        {
-          slha["MSL2"][""] << i << j << (*M2L_pmns)(i,j).re << "# ml2(" << i << "," << j << ")";
-          slha["MSE2"][""] << i << j << (*M2E_pmns)(i,j).re << "# me2(" << i << "," << j << ")";
-          slha["MSQ2"][""] << i << j << (*M2Q_sckm)(i,j).re << "# mq2(" << i << "," << j << ")";
-          slha["MSU2"][""] << i << j << (*M2U_sckm)(i,j).re << "# mu2(" << i << "," << j << ")";
-          slha["MSD2"][""] << i << j << (*M2D_sckm)(i,j).re << "# md2(" << i << "," << j << ")";
-          slha["IMMSL2"][""] << i << j << (*M2L_pmns)(i,j).im << "# Im(ml2(" << i << "," << j << "))";
-          slha["IMMSE2"][""] << i << j << (*M2E_pmns)(i,j).im << "# Im(me2(" << i << "," << j << "))";
-          slha["IMMSQ2"][""] << i << j << (*M2Q_sckm)(i,j).im << "# Im(mq2(" << i << "," << j << "))";
-          slha["IMMSU2"][""] << i << j << (*M2U_sckm)(i,j).im << "# Im(mu2(" << i << "," << j << "))";
-          slha["IMMSD2"][""] << i << j << (*M2D_sckm)(i,j).im << "# Im(md2(" << i << "," << j << "))";
-        }
-    }
+    // Blocks MSL2, MSE2, MSQ2, MSU2, MSD2
+    SLHAea_add_block(slha, "MSL2", Q);
+    SLHAea_add_block(slha, "MSE2", Q);
+    SLHAea_add_block(slha, "MSQ2", Q);
+    SLHAea_add_block(slha, "MSU2", Q);
+    SLHAea_add_block(slha, "MSD2", Q);
+    SLHAea_add_block(slha, "IMMSL2", Q);
+    SLHAea_add_block(slha, "IMMSE2", Q);
+    SLHAea_add_block(slha, "IMMSQ2", Q);
+    SLHAea_add_block(slha, "IMMSU2", Q);
+    SLHAea_add_block(slha, "IMMSD2", Q);
+    for(int i=1; i<=3; i++)
+      for(int j=1; j<=3; j++)
+      {
+        slha["MSL2"][""] << i << j << (*M2L_pmns)(i,j).re << "# ml2(" << i << "," << j << ")";
+        slha["MSE2"][""] << i << j << (*M2E_pmns)(i,j).re << "# me2(" << i << "," << j << ")";
+        slha["MSQ2"][""] << i << j << (*M2Q_sckm)(i,j).re << "# mq2(" << i << "," << j << ")";
+        slha["MSU2"][""] << i << j << (*M2U_sckm)(i,j).re << "# mu2(" << i << "," << j << ")";
+        slha["MSD2"][""] << i << j << (*M2D_sckm)(i,j).re << "# md2(" << i << "," << j << ")";
+        slha["IMMSL2"][""] << i << j << (*M2L_pmns)(i,j).im << "# Im(ml2(" << i << "," << j << "))";
+        slha["IMMSE2"][""] << i << j << (*M2E_pmns)(i,j).im << "# Im(me2(" << i << "," << j << "))";
+        slha["IMMSQ2"][""] << i << j << (*M2Q_sckm)(i,j).im << "# Im(mq2(" << i << "," << j << "))";
+        slha["IMMSU2"][""] << i << j << (*M2U_sckm)(i,j).im << "# Im(mu2(" << i << "," << j << "))";
+        slha["IMMSD2"][""] << i << j << (*M2D_sckm)(i,j).im << "# Im(md2(" << i << "," << j << "))";
+      }
+
 
     // Block MASS
     SLHAea_add_block(slha, "MASS");
+    slha["MASS"][""] << 5 << (*mf_d)(3) << "# m_b(pole)";
     slha["MASS"][""] << 6 << (*mf_u)(3) << "# m_t(pole)";
     slha["MASS"][""] << 23 << *mZ << "# m_Z(pole)";
     slha["MASS"][""] << 24 << *mW << "# m_W(pole)";
@@ -403,30 +413,30 @@ BE_NAMESPACE
 
     if(*GenerationMixing)
     {
-      std::vector<int> id_sd = {1000001, 1000003, 1000005, 
+      std::vector<int> id_sd = {1000001, 1000003, 1000005,
                                 2000001, 2000003, 2000005};
       for(int i=1; i<=6; i++)
-        slha["MASS"][""] << id_sd[i] << (*Sdown)(i).m << "# ~d_" << i;
+        slha["MASS"][""] << id_sd[i-1] << (*Sdown)(i).m << "# ~d_" << i;
 
-      std::vector<int> id_su = {1000002, 1000004, 1000006, 
+      std::vector<int> id_su = {1000002, 1000004, 1000006,
                                 2000002, 2000004, 2000006};
       for(int i=1; i<=6; i++)
-        slha["MASS"][""] << id_su[i] << (*Sup)(i).m << "# ~u_" << i;
+        slha["MASS"][""] << id_su[i-1] << (*Sup)(i).m << "# ~u_" << i;
 
       std::vector<int> id_snu = {1000012, 1000014, 1000016};
       for(int i=1; i<=3; i++)
-        slha["MASS"][""] << id_snu[i] << (*Sneut)(i).m << "# ~nu_" << i;
+        slha["MASS"][""] << id_snu[i-1] << (*Sneut)(i).m << "# ~nu_" << i;
 
       std::vector<int> id_sle = {1000011, 1000013, 1000015,
                                  2000011, 2000013, 2000015};
       for(int i=1; i<=6; i++)
-        slha["MASS"][""] << id_sle[i] << (*Slepton)(i).m << "# ~l_" << i;
+        slha["MASS"][""] << id_sle[i-1] << (*Slepton)(i).m << "# ~l_" << i;
 
     }
     else
     {
       if((*RSdown)(1,1).abs() > 0.5)
-      { 
+      {
         slha["MASS"][""] << 1000001 << (*Sdown)(1).m << "# ~d_L";
         slha["MASS"][""] << 2000001 << (*Sdown)(2).m << "# ~d_R";
       }
@@ -623,7 +633,7 @@ BE_NAMESPACE
             slha["IMSNUMIX"][""] << i << j << RSn_pmns(i,j).im << "# Im(R_Sn)(" << i << "," << j << ")";
           }
         }
- 
+
     }
     else
     {
@@ -672,7 +682,7 @@ BE_NAMESPACE
       {
         slha["NMIX"][""] << i << j << Nr(i,j).re << "# N(" << i << j << ")";
         if(Nr(i,j).im != 0)
-        { 
+        {
           SLHAea_check_block(slha, "IMNMIX", i, true);
           slha["IMNMIX"][""] << i << j << Nr(i,j).im << "# Im(N)(" << i << j << ")";
         }
@@ -703,18 +713,20 @@ BE_NAMESPACE
         }
       }
 
-
-    // Block GAMBIT
-    //SLHAea_add_block(slha, "GAMBIT");
-    //slha["GAMBIT"][""] << 1 << *m_GUT << "# Input scale of (upper) boundary contidions, e.g. GUT scale";
-
     //Create Spectrum object
     static const Spectrum::mc_info mass_cut;
     static const Spectrum::mr_info mass_ratio_cut;
     Spectrum spectrum = spectrum_from_SLHAea<MSSMSimpleSpec, SLHAstruct>(slha,slha,mass_cut,mass_ratio_cut);
 
-    // Add the high scale variable by hand
-    //spectrum.get_HE().set_override(Par::mass1, SLHAea::to<double>(slha.at("GAMBIT").at(1).at(1)), "high_scale", true);
+    // Add the high scale and susy scale variables by hand
+    double high_scale;
+    if(inputs.param.find("Qin") != inputs.param.end())
+      high_scale = *inputs.param.at("Qin");
+    else
+      high_scale = *m_GUT;
+    double susy_scale = Q;
+    spectrum.get_HE().set_override(Par::mass1, high_scale, "high_scale", true);
+    spectrum.get_HE().set_override(Par::mass1, susy_scale, "susy_scale", true);
 
     return spectrum;
 
@@ -726,7 +738,7 @@ BE_NAMESPACE
 
     InitializeStandardModel(inputs.sminputs);
     try{ InitializeLoopFunctions(); }
-    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+    catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     *ErrorLevel = -1;
     *GenerationMixing = false;
@@ -734,7 +746,7 @@ BE_NAMESPACE
     *L_CS = false;
 
     try{ Set_All_Parameters_0(); }
-    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+    catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     *TwoLoopRGE = true;
 
@@ -743,7 +755,8 @@ BE_NAMESPACE
     /****************/
     /* Block MODSEL */
     /****************/
-    // Already in Backend initialization function
+
+    *GenerationMixing = inputs.options->getValueOrDef<bool>(false, "GenerationMixing");
 
     /******************/
     /* Block SMINPUTS */
@@ -773,6 +786,7 @@ BE_NAMESPACE
     /*******************************/
     /* Block SPHENOINPUT (options) */
     /*******************************/
+
     // 1, Error_Level
     *ErrorLevel = inputs.options->getValueOrDef<Finteger>(-1, "ErrorLevel");
 
@@ -782,7 +796,7 @@ BE_NAMESPACE
     {
       Freal8 scale = 1.0E6;  // SPA convention is 1 TeV
       try {SetRGEScale(scale); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
     }
 
     // 3, External_Spectrum
@@ -823,7 +837,7 @@ BE_NAMESPACE
     if(GUTScale > 0.0)
     {
       try{ SetGUTScale(GUTScale); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
     }
 
     // 32, requires strict unification, StrictUnification
@@ -831,7 +845,7 @@ BE_NAMESPACE
     if(StrictUnification)
     {
       try{ SetStrictUnification(StrictUnification); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
     }
 
     // 34, precision of mass calculation, delta_mass
@@ -848,7 +862,7 @@ BE_NAMESPACE
     if(YukawaScheme == 1 or YukawaScheme == 2)
     {
       try{ SetYukawaScheme(YukawaScheme); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
     }
 
     // 38, set looplevel of RGEs, TwoLoopRGE
@@ -873,7 +887,7 @@ BE_NAMESPACE
     // 45, in case of large logs for m_h switch to 1-loop calculation
     *Switch_to_1_loop_mh = inputs.options->getValueOrDef<bool>(false, "Switch_to_1_loop_mh");
 
-    // 48, switch on NNNL fit formula for m_t and alpha_s values at Q=m_t 
+    // 48, switch on NNNL fit formula for m_t and alpha_s values at Q=m_t
     *l_mt_3loop = inputs.options->getValueOrDef<bool>(false,"l_mt_3loop");
 
     // 49, switch on SM decoupling
@@ -892,23 +906,23 @@ BE_NAMESPACE
     *l_fit_RP_parameters = false;
 
     // 92, for Pythia input
-    *l_RP_Pythia = false;
+    // GAMBIT: private variable, cannot import
 
     // 93, calculates cross section in case of RP, only partially implemented
     *l_CSrp = false;
 
     // 94, calculates cross section in case of RP, only partially implemented
-    *io_RP = false;
+    // GAMBIT: private variable, cannot import
 
     // 99, MADGraph output style, some additional information
-    *MADGraph_style = false;
+    // GAMBIT: private variable, cannot import
 
     // 100, use bsstep instead of rkqs
     Flogical Use_bsstep_instead_of_rkqs = inputs.options->getValueOrDef<bool>(false, "Use_bsstep_instead_of_rkqs");
     if(Use_bsstep_instead_of_rkqs)
     {
       try{ Set_Use_bsstep_instead_of_rkqs(Use_bsstep_instead_of_rkqs); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
     }
 
     // 101, use rzextr instead of pzextr
@@ -916,11 +930,11 @@ BE_NAMESPACE
     if(Use_rzextr_instead_of_pzextr)
     {
       try{ Set_Use_rzextr_instead_of_pzextr(Use_rzextr_instead_of_pzextr); }
-      catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+      catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
     }
 
     // 110, write output for LHC observables
-    *LWrite_LHC_Observables = false;
+    // GAMBIT: private variable, cannot import
 
     // Silence screen output, added by GAMBIT to SPheno
     *SilenceOutput = inputs.options->getValueOrDef<bool>(false, "SilenceOutput");
@@ -947,7 +961,7 @@ BE_NAMESPACE
       for(int i=1; i<=3; i++)
         (*Mi_0)(i).re = *inputs.param.at("M12");
     }
-    // TanBeta
+    // TanBeta (at MZ)
     if(inputs.param.find("TanBeta") != inputs.param.end())
     {
       *tanb = *inputs.param.at("TanBeta");
@@ -1037,7 +1051,7 @@ BE_NAMESPACE
     if(inputs.param.find("mA") != inputs.param.end())
     {
       (*mP0)(2) = *inputs.param.at("mA");
-      (*mP02)(2) = pow((*mP0)(2),2); 
+      (*mP02)(2) = pow((*mP0)(2),2);
     }
 
     for(int i=1; i<=3; i++)
@@ -1218,8 +1232,9 @@ BE_NAMESPACE
     }
 
    // couplings: Alpha(Q=0), Alpha(mZ), Alpha_S(mZ), Fermi constant G_F
-    *Alpha =  1.0/137.035999074;
     *Alpha_mZ = 1.0/sminputs.alphainv;
+    *Alpha_mZ_MS = *Alpha_mZ; // from SMINPUTS
+    *MZ_input = true;
     *AlphaS_mZ = sminputs.alphaS;
     *G_F = sminputs.GF;
 
@@ -1262,7 +1277,7 @@ BE_NAMESPACE
       (*mf_u_mZ)(i) = 0.0;
     }
     try{ CalculateRunningMasses(*mf_l, *mf_d, *mf_u, *Q_light_quarks, *Alpha_mZ, *AlphaS_mZ, *mZ, *mf_l_mZ, *mf_d_mZ, *mf_u_mZ, *kont); }
-    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+    catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     // PMNS matrix
     *theta_12 = sminputs.PMNS.theta12;
@@ -1344,12 +1359,17 @@ BE_INI_FUNCTION
     *ErrorHandler_cptr = & CAT_4(BACKENDNAME,_,SAFE_VERSION,_ErrorHandler);
 
     try{ Set_All_Parameters_0(); }
-    catch(std::runtime_error e) { invalid_point().raise(e.what()); }
+    catch(std::runtime_error& e) { invalid_point().raise(e.what()); }
 
     /****************/
     /* Block MODSEL */
     /****************/
-    if((*ModelInUse)("MSSM63atQ"))
+    if((*ModelInUse)("CMSSM") or (*ModelInUse)("MSSM63atMGUT"))
+    {
+      *HighScaleModel = "mSUGRA";
+      SetHighScaleModel("SUGRA");
+    }
+    else if((*ModelInUse)("MSSM63atQ"))
     {
       *HighScaleModel = "MSSM";
     }
