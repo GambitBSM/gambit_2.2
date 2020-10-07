@@ -23,6 +23,7 @@
 #include "gambit/ScannerBit/printable_types.hpp"
 
 // Types that Gambit printers can output (if printer plugin is properly equipped)
+<<<<<<< HEAD
 #define PRINTABLE_TYPES             \
   SCANNER_PRINTABLE_TYPES           \
   (map_const_str_dbl)               \
@@ -33,6 +34,16 @@
   (Flav_KstarMuMu_obs)              \
   (FlavBit::flav_prediction)        \
   (map_intpair_dbl)
+=======
+#define PRINTABLE_TYPES    \
+  SCANNER_PRINTABLE_TYPES  \
+  (map_intpair_dbl)        \
+  (triplet<double>)        \
+  (DM_nucleon_couplings)   \
+  (DM_nucleon_couplings_fermionic_HP) \
+  (Flav_KstarMuMu_obs)     \
+  (BBN_container)          \
+>>>>>>> master
 
 // Types that can be retrieved from Gambit printer output (if printer plugin is properly equipped)
 // Generally needs to be the same as the printable types, i.e. should be able to retrieve everything.

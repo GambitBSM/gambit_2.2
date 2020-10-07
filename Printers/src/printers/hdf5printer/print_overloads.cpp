@@ -23,6 +23,7 @@
 
 
 #include "gambit/Printers/printers/hdf5printer.hpp"
+#include "gambit/Printers/printers/common_print_overloads.hpp"
 
 
 namespace Gambit
@@ -40,8 +41,6 @@ namespace Gambit
     void HDF5Printer::PRINT(uint     )
     void HDF5Printer::PRINT(long     )
     void HDF5Printer::PRINT(ulong    )
-    //void HDF5Printer::PRINT(longlong )
-    //void HDF5Printer::PRINT(ulonglong)
     void HDF5Printer::PRINT(float    )
     void HDF5Printer::PRINT(double   )
     #undef PRINT
@@ -132,6 +131,7 @@ namespace Gambit
       }
     }
 
+<<<<<<< HEAD
     void HDF5Printer::_print(const map_const_str_dbl&, const std::string&, const int, const unsigned int, const unsigned long)
     { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED");}
 
@@ -156,6 +156,8 @@ namespace Gambit
       _print(m, label, vID, mpirank, pointID);
     }
 
+=======
+>>>>>>> master
     void HDF5Printer::_print(map_intpair_dbl const& map, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
     {
       // Retrieve the buffer manager for buffers with this type
@@ -187,6 +189,7 @@ namespace Gambit
       }
     }
 
+<<<<<<< HEAD
     #ifndef SCANNER_STANDALONE // All the types inside HDF5_MODULE_BACKEND_TYPES need to go inside this def guard.
 
       void HDF5Printer::_print(DM_nucleon_couplings const& value, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
@@ -222,6 +225,16 @@ namespace Gambit
         _print(value.central_values, label, vID, mpirank, pointID);
       }
 
+=======
+    // Piggyback off existing print functions to build standard overloads
+    USE_COMMON_PRINT_OVERLOAD(HDF5Printer, ModelParameters)
+    USE_COMMON_PRINT_OVERLOAD(HDF5Printer, triplet<double>)
+    #ifndef SCANNER_STANDALONE
+      USE_COMMON_PRINT_OVERLOAD(HDF5Printer, DM_nucleon_couplings)
+      USE_COMMON_PRINT_OVERLOAD(HDF5Printer, DM_nucleon_couplings_fermionic_HP)
+      USE_COMMON_PRINT_OVERLOAD(HDF5Printer, Flav_KstarMuMu_obs)
+      USE_COMMON_PRINT_OVERLOAD(HDF5Printer, BBN_container)
+>>>>>>> master
     #endif
 
     /// @}
