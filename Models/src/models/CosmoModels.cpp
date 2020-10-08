@@ -16,7 +16,15 @@
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
-///   \date 2019 Feb, Jun
+///  \date 2019 Feb, Jun
+///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///  \date 2019 Nov
+///
+///  \author Pat Scott
+///          (pat.scott@uq.edu.au)
+///  \date 2020 Apr
 ///
 ///  *********************************************
 
@@ -34,9 +42,9 @@
 /////////////// translation functions for Cosmology models ///////////////////////////
 
 #define MODEL etaBBN
-void MODEL_NAMESPACE::etaBBN_to_etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB (const ModelParameters &myP, ModelParameters &targetP)
+void MODEL_NAMESPACE::etaBBN_to_etaBBN_rBBN_rCMB_dNurBBN_dNurCMB (const ModelParameters &myP, ModelParameters &targetP)
 {
-  logger()<<"Running interpret_as_parent calculations for etaBBN --> etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB ..."<<LogTags::info<<EOM;
+  logger()<<"Running interpret_as_parent calculations for etaBBN --> etaBBN_rBBN_rCMB_dNurBBN_dNurCMB ..."<<LogTags::info<<EOM;
 
   // Set eta_BBN
   targetP.setValue("eta_BBN", myP.getValue("eta_BBN"));
@@ -46,17 +54,17 @@ void MODEL_NAMESPACE::etaBBN_to_etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB (const ModelP
   targetP.setValue("r_CMB", 1.);
 
   // No dNeff due to additional radiation
-  targetP.setValue("dNeff_BBN", 0.);
-  targetP.setValue("dNeff_CMB", 0.);
+  targetP.setValue("dNur_BBN", 0.);
+  targetP.setValue("dNur_CMB", 0.);
 }
 #undef MODEL
 
-#define MODEL rBBN_rCMB_dNeffBBN_dNeffCMB
-#define PARENT etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB
-void MODEL_NAMESPACE::rBBN_rCMB_dNeffBBN_dNeffCMB_to_etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB (const ModelParameters &myP, ModelParameters &targetP)
+#define MODEL rBBN_rCMB_dNurBBN_dNurCMB
+#define PARENT etaBBN_rBBN_rCMB_dNurBBN_dNurCMB
+void MODEL_NAMESPACE::rBBN_rCMB_dNurBBN_dNurCMB_to_etaBBN_rBBN_rCMB_dNurBBN_dNurCMB (const ModelParameters &myP, ModelParameters &targetP)
 {
   USE_MODEL_PIPE(PARENT) // get pipe for "INTERPRET_AS_PARENT_DEPENDENCY"
-  logger()<<"Running interpret_as_parent calculations for rBBN_rCMB_dNeffBBN_dNeffCMB --> etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB ..."<<LogTags::info<<EOM;
+  logger()<<"Running interpret_as_parent calculations for rBBN_rCMB_dNurBBN_dNurCMB --> etaBBN_rBBN_rCMB_dNurBBN_dNurCMB ..."<<LogTags::info<<EOM;
 
   // Set eta_BBN (This requires that eta0 / omega_b is known, i.e. LCDM is in use)
   // -- The dependency_resolver will figure that out --
@@ -67,24 +75,24 @@ void MODEL_NAMESPACE::rBBN_rCMB_dNeffBBN_dNeffCMB_to_etaBBN_rBBN_rCMB_dNeffBBN_d
   targetP.setValue("r_CMB", myP.getValue("r_CMB"));
 
   // Set the respective values of dNeff
-  targetP.setValue("dNeff_BBN", myP.getValue("dNeff_BBN"));
-  targetP.setValue("dNeff_CMB", myP.getValue("dNeff_CMB"));
+  targetP.setValue("dNur_BBN", myP.getValue("dNur_BBN"));
+  targetP.setValue("dNur_CMB", myP.getValue("dNur_CMB"));
 }
 #undef PARENT
 #undef MODEL
 
 #define MODEL rBBN_rCMB
-void MODEL_NAMESPACE::rBBN_rCMB_to_rBBN_rCMB_dNeffBBN_dNeffCMB (const ModelParameters &myP, ModelParameters &targetP)
+void MODEL_NAMESPACE::rBBN_rCMB_to_rBBN_rCMB_dNurBBN_dNurCMB (const ModelParameters &myP, ModelParameters &targetP)
 {
-  logger()<<"Running interpret_as_parent calculations for rBBN_rCMB --> rBBN_rCMB_dNeffBBN_dNeffCMB ..."<<LogTags::info<<EOM;
+  logger()<<"Running interpret_as_parent calculations for rBBN_rCMB --> rBBN_rCMB_dNurBBN_dNurCMB ..."<<LogTags::info<<EOM;
 
   // Set the respective values of r
   targetP.setValue("r_BBN", myP.getValue("r_BBN"));
   targetP.setValue("r_CMB", myP.getValue("r_CMB"));
 
   // No dNeff due to additional radiation
-  targetP.setValue("dNeff_BBN", 0.);
-  targetP.setValue("dNeff_CMB", 0.);
+  targetP.setValue("dNur_BBN", 0.);
+  targetP.setValue("dNur_CMB", 0.);
 }
 #undef MODEL
 
@@ -99,28 +107,60 @@ void MODEL_NAMESPACE::rCMB_to_rBBN_rCMB (const ModelParameters &myP, ModelParame
 }
 #undef MODEL
 
-#define MODEL dNeffBBN_dNeffCMB
-void MODEL_NAMESPACE::dNeffBBN_dNeffCMB_to_rBBN_rCMB_dNeffBBN_dNeffCMB (const ModelParameters &myP, ModelParameters &targetP)
+#define MODEL dNurBBN_dNurCMB
+void MODEL_NAMESPACE::dNurBBN_dNurCMB_to_rBBN_rCMB_dNurBBN_dNurCMB (const ModelParameters &myP, ModelParameters &targetP)
 {
-  logger()<<"Running interpret_as_parent calculations for dNeffBBN_dNeffCMB --> rBBN_rCMB_dNeffBBN_dNeffCMB ..."<<LogTags::info<<EOM;
+  logger()<<"Running interpret_as_parent calculations for dNurBBN_dNurCMB --> rBBN_rCMB_dNurBBN_dNurCMB ..."<<LogTags::info<<EOM;
 
   // No dNeff due to an altered neutrino temperature
   targetP.setValue("r_BBN", 1.);
   targetP.setValue("r_CMB", 1.);
 
   // Set the respective values of dNeff
-  targetP.setValue("dNeff_BBN", myP.getValue("dNeff_BBN"));
-  targetP.setValue("dNeff_CMB", myP.getValue("dNeff_CMB"));
+  targetP.setValue("dNur_BBN", myP.getValue("dNur_BBN"));
+  targetP.setValue("dNur_CMB", myP.getValue("dNur_CMB"));
 }
 #undef MODEL
 
-#define MODEL dNeffCMB
-void MODEL_NAMESPACE::dNeffCMB_to_dNeffBBN_dNeffCMB (const ModelParameters &myP, ModelParameters &targetP)
+#define MODEL dNurCMB
+void MODEL_NAMESPACE::dNurCMB_to_dNurBBN_dNurCMB (const ModelParameters &myP, ModelParameters &targetP)
 {
-  logger()<<"Running interpret_as_parent calculations for dNeffCMB --> dNeffBBN_dNeffCMB ..."<<LogTags::info<<EOM;
+  logger()<<"Running interpret_as_parent calculations for dNurCMB --> dNurBBN_dNurCMB ..."<<LogTags::info<<EOM;
 
   // Set the respective values of dNeff
-  targetP.setValue("dNeff_BBN", myP.getValue("dNeff_CMB"));
-  targetP.setValue("dNeff_CMB", myP.getValue("dNeff_CMB"));
+  targetP.setValue("dNur_BBN", myP.getValue("dNur_CMB"));
+  targetP.setValue("dNur_CMB", myP.getValue("dNur_CMB"));
 }
 #undef MODEL
+
+#define MODEL Minimal_PowerLaw_ps
+void MODEL_NAMESPACE::Minimal_PowerLaw_ps_to_PowerLaw_ps (const ModelParameters &myP, ModelParameters &targetP)
+{
+  logger()<<"Running interpret_as_parent calculations for Minimal_PowerLaw_ps --> PowerLaw_ps ..."<<LogTags::info<<EOM;
+  targetP.setValues(myP);
+  targetP.setValue("N_pivot", 55);
+  targetP.setValue("r", 0);
+}
+#undef MODEL
+
+// Define a bunch of translation functions that just take power-law spectra from CosmoBit.
+// This is an example of "the most extreme case" discussed in the final paragraph of Sec 5.1
+// of the original GAMBIT paper.
+#define INFLATION_MODEL_TO_POWER_LAW(MODEL)                                               \
+void Gambit::Models::MODEL::as_PowerLaw(const ModelParameters&, ModelParameters &targetP) \
+{                                                                                         \
+  using namespace Gambit::Models::MODEL::Pipes::PowerLaw_ps_parameters;                   \
+  logger()<<"Running interpret_as_X calculations for "                                    \
+            STRINGIFY(MODEL) " --> PowerLaw_ps ..."<<LogTags::info<<EOM;                  \
+  /* Copy the parameters */                                                               \
+  targetP.setValues(*Dep::PowerLaw_ps_parameters);                                        \
+}
+
+INFLATION_MODEL_TO_POWER_LAW(Inflation_InstReh_1mono23)
+INFLATION_MODEL_TO_POWER_LAW(Inflation_InstReh_1linear)
+INFLATION_MODEL_TO_POWER_LAW(Inflation_InstReh_1quadratic)
+INFLATION_MODEL_TO_POWER_LAW(Inflation_InstReh_1quartic)
+INFLATION_MODEL_TO_POWER_LAW(Inflation_InstReh_1natural)
+INFLATION_MODEL_TO_POWER_LAW(Inflation_InstReh_1Starobinsky)
+
+#undef INFLATION_MODEL_TO_POWER_LAW

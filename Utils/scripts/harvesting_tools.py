@@ -400,7 +400,7 @@ def addifbefunctormacro(line,be_typeset,type_pack_set,equiv_classes,equiv_ns,ver
                     args = re.sub("\)\s*,[^\)]*?\)\s*$", "", args)
                 for arg in re.findall("[^,]*?\(.*?\)[^,]*?\(.*?\).*?,|[^,]*?<.*?>.*?,|[^,]*?\(.*?\).*?,|[^>\)]*?,", args+","):
                     arg = arg[:-1].strip()
-                    if arg != "":
+                    if arg != "" and not arg.startswith("\"") and not arg.startswith("("):
                         if arg == "etc": arg = "..."
                         arg_list = neatsplit('\s',arg)
                         if arg_list[0] in ("class", "struct", "typename"): arg = arg_list[1]
@@ -544,6 +544,7 @@ def get_all_files_with_ext(verbose,starting_dir,ext_set,kind):
 def retrieve_generic_headers(verbose,starting_dir,kind,excludes,exclude_list=[]):
     headers=[]
     for root,dirs,files in os.walk(starting_dir):
+        if root.endswith("shared_includes"): continue
         for name in files:
             exclude = False
             for x in excludes:

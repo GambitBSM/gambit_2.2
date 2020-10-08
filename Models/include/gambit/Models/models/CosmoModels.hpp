@@ -21,50 +21,91 @@
 ///          (janina.renk@fysik.su.se)
 ///  \date 2018 Oct
 ///  \date 2019 June
+///
+///  \author Sanjay Bloor
+///          (sanjay.bloor12@imperial.ac.uk)
+///   \date 2019 Nov
+///
+///  \author Sebastian Hoof
+///          (hoof@uni-goettingen.de)
+///   \date 2020 Mar
+///
+///  \author Pat Scott
+///          (pat.scott@uq.edu.au)
+///  \date 2020 Apr
+///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Sep
+///
 ///  *********************************************
 
-#ifndef __CosmoModels_hpp__
-#define __CosmoModels_hpp__
+#pragma once
 
+// Vanilla ΛCDM.
+// This model would usually be scanned alongside an inflationary model and a neutrino model
 #define MODEL LCDM
   START_MODEL
-  DEFINEPARS(omega_b,omega_cdm,H0,ln10A_s,n_s,tau_reio)
+  DEFINEPARS(T_cmb,omega_b,omega_cdm,H0,tau_reio)
+  MAP_TO_CAPABILITY(T_cmb,T_cmb)
+  MAP_TO_CAPABILITY(H0, H0)
 #undef MODEL
 
-#define MODEL etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB
+// Vanilla ΛCDM.
+// This model would usually be scanned alongside an inflationary model and a neutrino model
+// As LCDM but with 100theta_s, acoustic angular scale of first CMB peak x 100, as
+// model parameter instead of H0.
+#define MODEL LCDM_theta
+  START_MODEL
+  DEFINEPARS(T_cmb,omega_b,omega_cdm,100theta_s,tau_reio)
+  MAP_TO_CAPABILITY(T_cmb,T_cmb)
+#undef MODEL
+
+/* CMB + BBN */
+
+// η (baryon-to-photon ratio) defined at BBN.
+// r_CMB(BBN): Ratio of temperatures in non-cold DM compared to the SM with 3 massive neutrinos:
+// r_CMB = T_v(BSM)/T_v(SM) at CMB (BBN)
+// dNurCMB(_BBN): ΔN_effective defined at CMB(BBN) from additional radiation.
+#define MODEL etaBBN_rBBN_rCMB_dNurBBN_dNurCMB
   START_MODEL
   DEFINEPARS(eta_BBN)
-  MAP_TO_CAPABILITY(eta_BBN, etaBBN)
   DEFINEPARS(r_BBN,r_CMB)
-  DEFINEPARS(dNeff_BBN,dNeff_CMB)
+  DEFINEPARS(dNur_BBN,dNur_CMB)
 #undef MODEL
 
+// No additional radiation or changes to the neutrino temperature.
+// Just the baryon-to-photon ratio η at BBN.
 #define MODEL etaBBN
- #define PARENT etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB
+ #define PARENT etaBBN_rBBN_rCMB_dNurBBN_dNurCMB
   START_MODEL
   DEFINEPARS(eta_BBN)
-  INTERPRET_AS_PARENT_FUNCTION(etaBBN_to_etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB)
+  INTERPRET_AS_PARENT_FUNCTION(etaBBN_to_etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
  #undef PARENT
 #undef MODEL
 
-#define MODEL rBBN_rCMB_dNeffBBN_dNeffCMB
- #define PARENT etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB
+// As etaBBN_rBBN_rCMB_dNurBBN_dNurCMB, but with the
+// baryon-to-photon ratio η at BBN set equal to η today.
+#define MODEL rBBN_rCMB_dNurBBN_dNurCMB
+ #define PARENT etaBBN_rBBN_rCMB_dNurBBN_dNurCMB
   START_MODEL
   DEFINEPARS(r_BBN,r_CMB)
-  DEFINEPARS(dNeff_BBN,dNeff_CMB)
-  INTERPRET_AS_PARENT_FUNCTION(rBBN_rCMB_dNeffBBN_dNeffCMB_to_etaBBN_rBBN_rCMB_dNeffBBN_dNeffCMB)
+  DEFINEPARS(dNur_BBN,dNur_CMB)
+  INTERPRET_AS_PARENT_FUNCTION(rBBN_rCMB_dNurBBN_dNurCMB_to_etaBBN_rBBN_rCMB_dNurBBN_dNurCMB)
   INTERPRET_AS_PARENT_DEPENDENCY(eta0, double)
  #undef PARENT
 #undef MODEL
 
+// As above, but with no additional radiation.
 #define MODEL rBBN_rCMB
- #define PARENT rBBN_rCMB_dNeffBBN_dNeffCMB
+ #define PARENT rBBN_rCMB_dNurBBN_dNurCMB
   START_MODEL
   DEFINEPARS(r_BBN,r_CMB)
-  INTERPRET_AS_PARENT_FUNCTION(rBBN_rCMB_to_rBBN_rCMB_dNeffBBN_dNeffCMB)
+  INTERPRET_AS_PARENT_FUNCTION(rBBN_rCMB_to_rBBN_rCMB_dNurBBN_dNurCMB)
  #undef PARENT
 #undef MODEL
 
+// As above, but with neutrino temperature at BBN the same as at recombination.
 #define MODEL rCMB
  #define PARENT rBBN_rCMB
   START_MODEL
@@ -73,187 +114,97 @@
  #undef PARENT
 #undef MODEL
 
-#define MODEL dNeffBBN_dNeffCMB
- #define PARENT rBBN_rCMB_dNeffBBN_dNeffCMB
+// As rBBN_rCMB_dNurBBN_dNurCMB, but with no changes to the neutrino temperature.
+#define MODEL dNurBBN_dNurCMB
+ #define PARENT rBBN_rCMB_dNurBBN_dNurCMB
   START_MODEL
-  DEFINEPARS(dNeff_BBN,dNeff_CMB)
-  INTERPRET_AS_PARENT_FUNCTION(dNeffBBN_dNeffCMB_to_rBBN_rCMB_dNeffBBN_dNeffCMB)
+  DEFINEPARS(dNur_BBN,dNur_CMB)
+  INTERPRET_AS_PARENT_FUNCTION(dNurBBN_dNurCMB_to_rBBN_rCMB_dNurBBN_dNurCMB)
  #undef PARENT
 #undef MODEL
 
-#define MODEL dNeffCMB
- #define PARENT dNeffBBN_dNeffCMB
+// As above, but with additional radiation the same at BBN as at recombination.
+#define MODEL dNurCMB
+ #define PARENT dNurBBN_dNurCMB
   START_MODEL
-  DEFINEPARS(dNeff_CMB)
-  INTERPRET_AS_PARENT_FUNCTION(dNeffCMB_to_dNeffBBN_dNeffCMB)
+  DEFINEPARS(dNur_CMB)
+  INTERPRET_AS_PARENT_FUNCTION(dNurCMB_to_dNurBBN_dNurCMB)
  #undef PARENT
 #undef MODEL
-  
-/*
-#define MODEL rLCDM
-START_MODEL
-DEFINEPARS(omega_b,omega_cdm,H0,tau_reio)
-#undef MODEL
 
-#define MODEL rLCDMtensor
+
+/* INFLATION */
+
+// Inflationary models -- if one of these is in use, you would usually need to use a cosmological model
+// to scan over the four standard cosmological parameters (H0 or theta, omega_b, omega_cdm, tau_reio).
+// The shape of the (either parameterised or full) primordial power spectrum will be determined by
+// the inflation model in use.
+
+// Simple, parameterised, purely phenomenological, scale-free power spectrum
+#define MODEL PowerLaw_ps
   START_MODEL
-  DEFINEPARS(omega_b,omega_cdm,H0,tau_reio,r_tensor)
-#undef MODEL
-*/
-
-#define MODEL LCDMtensor
-START_MODEL
-DEFINEPARS(omega_b,omega_cdm,H0,ln10A_s,n_s,tau_reio,r_tensor)
+  DEFINEPARS(ln10A_s,n_s,r,N_pivot)
 #undef MODEL
 
-/*
-#define MODEL inflation // a minimally defined general inflationary model with 3 sets of parameters.
+// Even simpler, parameterised, purely phenomenological, scale-free power spectrum
+#define MODEL Minimal_PowerLaw_ps
+ #define PARENT PowerLaw_ps
   START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
+  DEFINEPARS(ln10A_s,n_s)
+  INTERPRET_AS_PARENT_FUNCTION(Minimal_PowerLaw_ps_to_PowerLaw_ps)
+ #undef PARENT
 #undef MODEL
-*/
-// simplest 6 parameter cosmology+inflation model: 0.5 m^2 phi^2 --- quadratic inflation
-// A_s, n_s and r are given by inflationary model
-// parameters: N_piv, m^2.
-#define MODEL inf_SR1quad_LCDMt
+
+// Single field, monomial inflation with exponent 2/3 (assuming instant reheating)
+// Potential: V(phi) = 1.5 lambda M_P^(10/3) phi^(2/3)
+#define MODEL Inflation_InstReh_1mono23
   START_MODEL
-  DEFINEPARS(m2_inflaton,N_pivot,omega_b,omega_cdm,H0,tau_reio)
+  DEFINEPARS(lambda)
+  INTERPRET_AS_X_FUNCTION(PowerLaw_ps, as_PowerLaw)
+  INTERPRET_AS_X_DEPENDENCY(PowerLaw_ps, PowerLaw_ps_parameters, ModelParameters)
 #undef MODEL
 
-//  6 parameter cosmology+inflation model: 0.25 \lambda phi^4  --- quartic inflation
-// A_s, n_s and r are given by inflationary model
-// parameters: N_piv, lambda.
-#define MODEL inf_1quarInf_LCDMt
-START_MODEL
-DEFINEPARS(lambda,N_pivot,omega_b,omega_cdm,H0,tau_reio)
-#undef MODEL
-
-//  6 parameter cosmology+inflation model: 2/3 \lambda phi^2/3 --- inflation
-// A_s, n_s and r are given by inflationary model
-// parameters: N_piv, lambda.
-#define MODEL inf_1mono32Inf_LCDMt
-START_MODEL
-DEFINEPARS(lambda,N_pivot,omega_b,omega_cdm,H0,tau_reio)
-#undef MODEL
-
-//  6 parameter cosmology+inflation model: m phi --- linear inflation
-// A_s, n_s and r are given by inflationary model
-// parameters: N_piv, m^2.
-#define MODEL inf_1linearInf_LCDMt
-START_MODEL
-DEFINEPARS(lambda,N_pivot,omega_b,omega_cdm,H0,tau_reio)
-#undef MODEL
-
-// simplest 8 parameter cosmology smash inflation model --- smash inflation
-// A_s, n_s and r are given by inflationary model
-// parameters: xi, m^2.
-#define MODEL inf_smashInf_LCDMt
-START_MODEL
-DEFINEPARS(log10_xi,log10_beta,log10_lambda,N_pivot,omega_b,omega_cdm,H0,tau_reio)
-#undef MODEL
-
-#define MODEL inf_1naturalInf_LCDMt // N-flation (axions)
-START_MODEL
-DEFINEPARS(lambda,faxion,N_pivot,omega_b,omega_cdm,H0,tau_reio)
-#undef MODEL
-
-#define MODEL inf_1hilltopInf_LCDMt // Hilltop
-START_MODEL
-DEFINEPARS(lambda,mu,N_pivot,omega_b,omega_cdm,H0,tau_reio)
-#undef MODEL
-
-
-/*
-
-#define MODEL inf_diff1 // Lambda^4 - mu*phi^4
+// Single field, linear inflation (assuming instant reheating)
+// Potential: V(phi) = lambda M_P^3 phi
+#define MODEL Inflation_InstReh_1linear
   START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
+  DEFINEPARS(lambda)
+  INTERPRET_AS_X_FUNCTION(PowerLaw_ps, as_PowerLaw)
+  INTERPRET_AS_X_DEPENDENCY(PowerLaw_ps, PowerLaw_ps_parameters, ModelParameters)
 #undef MODEL
 
-#define MODEL inf_exp // Product of exponentials
+// Single field, quadratic inflation (assuming instant reheating)
+// Potential: V(phi) = 0.5 m^2 phi^2 = 0.5 m_phi^2 M_P^2 phi^2
+#define MODEL Inflation_InstReh_1quadratic
   START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
+  DEFINEPARS(m_phi)
+  INTERPRET_AS_X_FUNCTION(PowerLaw_ps, as_PowerLaw)
+  INTERPRET_AS_X_DEPENDENCY(PowerLaw_ps, PowerLaw_ps_parameters, ModelParameters)
 #undef MODEL
 
-#define MODEL inf_hybrid // Canonical two-field hybrid
+// Single field, quartic inflation (assuming instant reheating)
+// Potential: V(phi) = 0.25 lambda phi^4
+#define MODEL Inflation_InstReh_1quartic
   START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
+  DEFINEPARS(lambda)
+  INTERPRET_AS_X_FUNCTION(PowerLaw_ps, as_PowerLaw)
+  INTERPRET_AS_X_DEPENDENCY(PowerLaw_ps, PowerLaw_ps_parameters, ModelParameters)
 #undef MODEL
 
-#define MODEL inf_offset // V0 + m_i^2 phi_i^2
+// Single field, natural inflation (assuming instant reheating)
+// Potential: V(phi) = Lambda^4 [ 1 + cos(phi/f) ] = (lambda M_P)^4 [ 1 + cos(phi/[f_phi M_P]) ]
+#define MODEL Inflation_InstReh_1natural
   START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
+  DEFINEPARS(lambda, f_phi)
+  INTERPRET_AS_X_FUNCTION(PowerLaw_ps, as_PowerLaw)
+  INTERPRET_AS_X_DEPENDENCY(PowerLaw_ps, PowerLaw_ps_parameters, ModelParameters)
 #undef MODEL
 
-// N-quadratic w/one quartic interaction
-// term phi_i^2 + phi_{lightest}^2*phi_i^2
-#define MODEL inf_intrx
+// Single field, Starobinsky - aka R^2 - inflation (assuming instant reheating)
+// Potential: V(phi) = Lambda^4 [1-exp(-sqrt(2/3)phi/M_P)]^2 = (lambda M_P)^4 [1-exp(-sqrt(2/3)phi/M_P)]^2
+#define MODEL Inflation_InstReh_1Starobinsky
   START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
+  DEFINEPARS(lambda)
+  INTERPRET_AS_X_FUNCTION(PowerLaw_ps, as_PowerLaw)
+  INTERPRET_AS_X_DEPENDENCY(PowerLaw_ps, PowerLaw_ps_parameters, ModelParameters)
 #undef MODEL
-
-// Mass matrix with diagonal terms = m_i^2
-// Off-diagonal terms = \eps
-#define MODEL inf_offdiag
-  START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
-#undef MODEL
-
-#define MODEL inf_step // Multifield step potential
-  START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
-#undef MODEL
-
-#define MODEL inf_monomial // (1/p) lambda_i |phi_i|^p --- N-monomial
-  START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
-#undef MODEL
-
-#define MODEL inf_gaxion // Generalized axions
-  START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
-#undef MODEL
-
-#define MODEL inf_smash // SMASH potential
-  START_MODEL
-  DEFINEPARS(phi0,dphi0,vparams1,vparams2,vparams3)
-#undef MODEL
- */
-
-#define MODEL plik_dx11dr2_HM_v18_TT
-  START_MODEL
-  DEFINEPARS(A_cib_217,cib_index,xi_sz_cib,A_sz,ps_A_100_100,ps_A_143_143,ps_A_143_217,ps_A_217_217,ksz_norm,gal545_A_100,gal545_A_143,gal545_A_143_217,gal545_A_217,calib_100T,calib_217T,A_planck)
-#undef MODEL
-
-#define MODEL lowl_SMW_70_dx11d_2014_10_03_v5c_Ap
-  #define PARENT plik_dx11dr2_HM_v18_TT
-    START_MODEL
-    DEFINEPARS(A_planck)
-  #undef PARENT
-#undef MODEL
-
-#define MODEL Planck_TTTEEE
-  START_MODEL
-    DEFINEPARS(A_cib_217,cib_index,xi_sz_cib,A_sz,ps_A_100_100,ps_A_143_143,ps_A_143_217,ps_A_217_217,ksz_norm,gal545_A_100,gal545_A_143,gal545_A_143_217,gal545_A_217,galf_EE_A_100,galf_EE_A_100_143,galf_EE_A_100_217,galf_EE_A_143,galf_EE_A_143_217,galf_EE_A_217,galf_EE_index,galf_TE_A_100,galf_TE_A_100_143,galf_TE_A_100_217,galf_TE_A_143,galf_TE_A_143_217,galf_TE_A_217,galf_TE_index,calib_100T,calib_217T,calib_100P,calib_143P,calib_217P,A_pol,A_planck)
-#undef MODEL
-
-#define MODEL Planck_TT
-  //#define PARENT Planck_TTTEEE
-    START_MODEL
-    DEFINEPARS(A_cib_217,cib_index,xi_sz_cib,A_sz,ps_A_100_100,ps_A_143_143,ps_A_143_217,ps_A_217_217,ksz_norm,gal545_A_100,gal545_A_143,gal545_A_143_217,gal545_A_217,calib_100T,calib_217T,A_planck)
-  //#undef PARENT
-#undef MODEL
-
-#define MODEL Planck_lite
-  //#define PARENT Planck_TT
-    START_MODEL
-    DEFINEPARS(A_planck)
-  //#undef PARENT
-#undef MODEL
-
-//#define MODEL inflation
-//START_MODEL
-//DEFINEPARS(num_inflaton, potential_choice, slowroll_infl_end, instreheat, vparam_rows, use_deltaN_SR, evaluate_modes, use_horiz_cross_approx, get_runningofrunning, ic_sampling, energy_scale, numb_samples, save_iso_N, N_iso_ref, param_sampling, vp_prior_min, vp_prior_max, varying_N_pivot, use_first_priorval, phi_init0, dphi_init0, vparams, N_pivot, k_pivot, dlnk, turning_choice  calc_full_pk,  steps,  kmin,  kmax,  phi0_priors_min,  phi0_priors_max,  dphi0_priors_min,  dphi0_priors_max,  N_pivot_prior_min,  N_pivot_prior_max)
-//#undef MODEL
-
-#endif

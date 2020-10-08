@@ -38,11 +38,20 @@ namespace Gambit
      bool HDF5Reader::RETRIEVE(uint     )
      bool HDF5Reader::RETRIEVE(long     )
      bool HDF5Reader::RETRIEVE(ulong    )
-     bool HDF5Reader::RETRIEVE(longlong )
-     bool HDF5Reader::RETRIEVE(ulonglong)
      bool HDF5Reader::RETRIEVE(float    )
      bool HDF5Reader::RETRIEVE(double   )
      #undef RETRIEVE
+
+     #define RETRIEVEFROM(INTYPE,OUTTYPE) _retrieve(INTYPE& out, const std::string& l, const uint r, const ulong p) \
+        { \
+           OUTTYPE outtmp; \
+           bool valid = _retrieve_template(outtmp,l,0,r,p); \
+           out = (INTYPE)outtmp; \
+           return valid; \
+        }
+     bool HDF5Reader::RETRIEVEFROM(longlong, long)
+     bool HDF5Reader::RETRIEVEFROM(ulonglong, ulong)
+     #undef RETRIEVEFROM
 
      // Bools can't quite use the template function directly, since there
      // are some issues with bools and MPI/HDF5 types. Easier to just convert
@@ -138,11 +147,15 @@ namespace Gambit
      bool HDF5Reader::_retrieve(map_intpair_dbl& /*out*/,      const std::string& /*label*/, const uint /*rank*/, const ulong /*pointID*/)
      { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED"); return false; }
 
-    #ifndef SCANNER_STANDALONE // All the types inside HDF5_MODULE_BACKEND_TYPES need to go inside this def guard.
+     #ifndef SCANNER_STANDALONE // All the types inside HDF5_BACKEND_TYPES need to go inside this def guard.
 
        bool HDF5Reader::_retrieve(DM_nucleon_couplings& /*out*/, const std::string& /*label*/, const uint /*rank*/, const ulong /*pointID*/)
        { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED"); return false; }
+       bool HDF5Reader::_retrieve(DM_nucleon_couplings_fermionic_HP& /*out*/, const std::string& /*label*/, const uint /*rank*/, const ulong /*pointID*/)
+       { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED"); return false; }
        bool HDF5Reader::_retrieve(Flav_KstarMuMu_obs& /*out*/, const std::string& /*label*/, const uint /*rank*/, const ulong /*pointID*/)
+       { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED"); return false; }
+       bool HDF5Reader::_retrieve(BBN_container& /*out*/, const std::string& /*label*/, const uint /*rank*/, const ulong /*pointID*/)
        { printer_error().raise(LOCAL_INFO,"NOT YET IMPLEMENTED"); return false; }
 
      #endif

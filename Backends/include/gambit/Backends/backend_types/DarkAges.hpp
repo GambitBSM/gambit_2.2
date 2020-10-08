@@ -20,31 +20,79 @@
 
 namespace Gambit
 {
-  // Shorthand for map from string to pointer to double (here atm, should probably move into classy or DarkAges types) TODO
-  typedef std::map<std::string,double*> map_str_dblptr;
-  
   namespace DarkAges
   {
-    struct injectionSpectrum
+    struct Energy_injection_spectrum
     {
-      std::vector<double> E;
+      // kinetic energy of electron-positron plasma
+      std::vector<double> E_el;
+      // kinetic energy of photons
+      std::vector<double> E_ph;
+      // normalised electron-positron spectrum (dN/dE in GeV^-1) as function of energy E_el
       std::vector<double> spec_el;
+      // normalised photon spectrum (dN/dE in GeV^-1) as function of energy E_ph
       std::vector<double> spec_ph;
     };
 
-    struct fz_table
+    // "==" and "!=" operators for Energy_injection_spectrum
+    inline bool operator==(const Energy_injection_spectrum& lhs,
+                           const Energy_injection_spectrum& rhs)
     {
+      return lhs.E_el == rhs.E_el
+          && lhs.E_ph == rhs.E_ph
+          && lhs.spec_el == rhs.spec_el
+          && lhs.spec_ph == rhs.spec_ph;
+    }
+
+    inline bool operator!=(const Energy_injection_spectrum& lhs,
+                           const Energy_injection_spectrum& rhs)
+    {
+      return !(lhs == rhs);
+    }
+
+    struct Energy_injection_efficiency_table
+    {
+      // Flag whether DarkAges calculates f_c(z) per injection channel or an
+      // effective f(z) which is multiplied with repartition fucntions
+      // chi_c(x_e,z) later on (in classy)
+      bool f_eff_mode = false;
+
+      // Redshift vector (filled in both modes)
       std::vector<double> redshift;
+
+      // f_c(z) seperated by injection channels
+      // (filled only if f_eff_mode is false)
       std::vector<double> f_heat;
       std::vector<double> f_lya;
       std::vector<double> f_hion;
       std::vector<double> f_heion;
       std::vector<double> f_lowe;
-      // Added for classy interface to exoclass
-      int num_lines;
-      map_str_dblptr ptrs_to_member_vecs; 
-      
+
+      // f_eff(z)
+      // (filled only if f_eff_mode is true)
+      std::vector<double> f_eff;
     };
+
+    // "==" and "!=" operators for Energy_injection_efficiency_table
+    inline bool operator==(const Energy_injection_efficiency_table& lhs,
+                           const Energy_injection_efficiency_table& rhs)
+    {
+      return lhs.f_eff_mode == rhs.f_eff_mode
+          && lhs.redshift == rhs.redshift
+          && lhs.f_heat == rhs.f_heat
+          && lhs.f_lya == rhs.f_lya
+          && lhs.f_hion == rhs.f_hion
+          && lhs.f_heion == rhs.f_heion
+          && lhs.f_lowe == rhs.f_lowe
+          && lhs.f_eff == rhs.f_eff;
+    }
+
+    inline bool operator!=(const Energy_injection_efficiency_table& lhs,
+                           const Energy_injection_efficiency_table& rhs)
+    {
+      return !(lhs == rhs);
+    }
+
   }
 }
 

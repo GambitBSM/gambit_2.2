@@ -15,6 +15,10 @@
 ///          (selim.hotinli14@pimperial.ac.uk)
 ///  \date 2017 Jul
 ///
+///  \author Tomas Gonzalo
+///          (tomas.gonzalo@monash.edu)
+///  \date 2020 Feb
+///
 ///  *********************************************
 
 #define BACKENDNAME MultiModeCode
@@ -25,29 +29,20 @@
 // Load it
 LOAD_LIBRARY
 
-BE_FUNCTION(multimodecode_gambit_driver, void, (gambit_inflation_observables*,int& ,int& ,  int& ,  int& ,int& ,  int& ,  int& ,  int& ,  int& ,int& ,double& ,int& ,  int& ,double& ,int& ,double*,double*,  int& ,  int& ,double*,double*,double*,double& ,double& ,double& ,  int& ,int& ,double& ,double*,double*,double*,double*,double& ,double&),"__multimodecode_gambit_MOD_multimodecode_gambit_driver","multimodecode_gambit_driver")
+BE_FUNCTION(multimodecode_primordial_ps, gambit_inflation_observables,
+            (int&,int&,int&,int&,double*,double*,double*,double&,double&,double&,int&,double&,double&,int&,int&,int&,int&,int&),
+            ("__multimodecode_gambit_MOD_multimodecode_gambit_driver","multimodecode_gambit_mp_multimodecode_gambit_driver_"), "multimodecode_primordial_ps")
 
-BE_FUNCTION(multimodecode_gambit_driver_test, void,(gambit_inflation_observables*, int& , int& ,   int& ,  int& ,int& ,  int& ,  int& ,  int& ,   int& ,int& ,double& ,int& ,  int& ,double& ,int& ,  int& ,  int& ,double& ,double& ,double& ,  int& ,int& ,double& ,double& ,double&),"__multimodecode_gambit_MOD_multimodecode_gambit_driver","multimodecode_gambit_driver_test")
+BE_FUNCTION(multimodecode_parametrised_ps, gambit_inflation_observables,
+            (int&,int&,int&,int&,double*,double*,double*,double&,double&,double&,int&,int&,int&,int&,int&),
+            ("__multimodecode_gambit_MOD_multimodecode_parametrised_ps","multimodecode_gambit_mp_multimodecode_parametrised_ps_"), "multimodecode_parametrised_ps")
 
+// Fortran error handling issue
+BE_VARIABLE(ErrorHandler_cptr, fptr_void,
+            ("__modpk_errorhandling_MOD_errorhandler_cptr","modpk_errorhandling_mp_errorhandler_cptr_"), "multimode_internal")
 
-namespace Gambit
-{
-	namespace Backends
-	{
-		namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
-		{
-			
-			/* Convenience functions go here */
-			
-		} /* end namespace BACKENDNAME_SAFE_VERSION */
-	} /* end namespace Backends */
-} /* end namespace Gambit */
-
-
-//BE_CONV_FUNCTION(awesomenessByAnders, double, "awesomeness")
-
-BE_INI_FUNCTION{}
-END_BE_INI_FUNCTION
+// Variable to silence MultiModeCode output
+BE_VARIABLE(SilenceOutput, Flogical, ("__multimodecode_gambit_MOD_silenceoutput", "multimodecode_gambit_mp_silenceoutput_"), "multimode_internal")
 
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"
