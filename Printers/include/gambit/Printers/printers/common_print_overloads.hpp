@@ -53,9 +53,44 @@ namespace Gambit
 
     /// String-to-double map print overload
     template<typename P>
+    void _common_print(P& printer, const map_const_str_dbl& map, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
+    {
+      for (map_const_str_dbl::const_iterator
+           it = map.begin(); it != map.end(); it++)
+      {
+        std::stringstream ss;
+        ss<<label<<"::"<<it->first;
+        printer._print(it->second,ss.str(),vID,mpirank,pointID);
+      }
+    }
+    template<typename P>
     void _common_print(P& printer, const map_str_dbl& map, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
     {
-      for (std::map<std::string, double>::const_iterator
+      for (map_str_dbl::const_iterator
+           it = map.begin(); it != map.end(); it++)
+      {
+        std::stringstream ss;
+        ss<<label<<"::"<<it->first;
+        printer._print(it->second,ss.str(),vID,mpirank,pointID);
+      }
+    }
+
+    /// String-to-map print overload (where map is string-to-double)
+    template<typename P>
+    void _common_print(P& printer, const map_const_str_map_const_str_dbl& map, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
+    {
+      for (map_const_str_map_const_str_dbl::const_iterator
+           it = map.begin(); it != map.end(); it++)
+      {
+        std::stringstream ss;
+        ss<<label<<"::"<<it->first;
+        printer._print(it->second,ss.str(),vID,mpirank,pointID);
+      }
+    }
+    template<typename P>
+    void _common_print(P& printer, const map_str_map_str_dbl& map, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
+    {
+      for (map_str_map_str_dbl::const_iterator
            it = map.begin(); it != map.end(); it++)
       {
         std::stringstream ss;
@@ -68,7 +103,7 @@ namespace Gambit
     template<typename P>
     void _common_print(P& printer, map_intpair_dbl const& map, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
     {
-      for (std::map<std::pair<int,int>, double>::const_iterator it = map.begin(); it != map.end(); it++)
+      for (map_intpair_dbl::const_iterator it = map.begin(); it != map.end(); it++)
       {
         std::stringstream ss;
         ss<<label<<"::"<<it->first;
@@ -138,6 +173,14 @@ namespace Gambit
         m["S8_"+bins.str()] = value.S8;
         m["S9_"+bins.str()] = value.S9;
         printer._print(m, label, vID, mpirank, pointID);
+      }
+
+      /// FlavBit generic prediction print overload
+      template<typename P>
+      void _common_print(P& printer, FlavBit::flav_prediction const& value, const std::string& label, const int vID, const unsigned int mpirank, const unsigned long pointID)
+      {
+        printer._print(value.central_values, label, vID, mpirank, pointID);
+        printer._print(value.covariance, label, vID, mpirank, pointID);
       }
 
       /// BBN observables print overload

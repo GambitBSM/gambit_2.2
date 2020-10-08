@@ -32,51 +32,6 @@
 
 namespace Gambit
 {
-<<<<<<< HEAD
-  //  Types that scanner plugins are allowed to print.
-  //  Covers just basic types, vectors of those types, and
-  //  a couple of extras needed by scanners.
-  #define SCANNER_SIMPLE_TYPES           \
-    (bool)                               \
-    (int)(unsigned int)                  \
-    (short int)(unsigned short int)      \
-    (long)(unsigned long)                \
-    (long long)(unsigned long long)      \
-    (float)(double)
-
-  // Bool has weird behaviour in vectors, so need a version without bool.
-  #define SCANNER_SIMPLE_TYPES_NOBOOL    \
-    (int)(unsigned int)                  \
-    (short int)(unsigned short int)      \
-    (long)(unsigned long)                \
-    (long long)(unsigned long long)      \
-    (float)(double)
-
-  #define SCANNER_VECTOR_TYPES           \
-    (std::vector<bool>)                  \
-    (std::vector<int>)                   \
-    (std::vector<unsigned int>)          \
-    (std::vector<short int>)             \
-    (std::vector<unsigned short int>)    \
-    (std::vector<long>)                  \
-    (std::vector<unsigned long>)         \
-    (std::vector<long long>)             \
-    (std::vector<unsigned long long>)    \
-    (std::vector<float>)                 \
-    (std::vector<double>)
-
-  #define SCANNER_PRINTABLE_TYPES     \
-    SCANNER_SIMPLE_TYPES              \
-    SCANNER_VECTOR_TYPES              \
-    (map_str_dbl)                     \
-    (Gambit::ModelParameters)
-
-  #define SCANNER_RETRIEVABLE_TYPES   \
-    SCANNER_SIMPLE_TYPES              \
-    (std::string)                     \
-    (std::vector<double>)             \
-    (map_str_dbl)                     \
-=======
   // Types that scanner plugins are allowed to print.
   // Covers just basic types, vectors of those types, and
   // a couple of extras needed by scanners.
@@ -111,18 +66,16 @@ namespace Gambit
     (std::vector<float>)              \
     (std::vector<double>)
 
-  #define SCANNER_PRINTABLE_TYPES \
-    SCANNER_SIMPLE_TYPES          \
-    SCANNER_VECTOR_TYPES          \
-    (map_str_dbl)                 \
+  #define SCANNER_PRINTABLE_TYPES     \
+    SCANNER_SIMPLE_TYPES              \
+    SCANNER_VECTOR_TYPES              \
+    (map_str_dbl)                     \
     (Gambit::ModelParameters)
 
-  #define SCANNER_RETRIEVABLE_TYPES  \
-    SCANNER_SIMPLE_TYPES             \
-    (std::string)                    \
-    (std::vector<double>)            \
-    (map_str_dbl)                    \
->>>>>>> master
+  #define SCANNER_RETRIEVABLE_TYPES   \
+    SCANNER_SIMPLE_TYPES              \
+    (std::string)                     \
+    (std::vector<double>)             \
+    (map_str_dbl)                     \
     (Gambit::ModelParameters)
-
 }
