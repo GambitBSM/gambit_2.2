@@ -14,30 +14,14 @@
 ///
 ///  *********************************************
 
-#include <algorithm>
-#include <cmath>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <sstream>
-
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_sf.h>
-#include <gsl/gsl_sf_trig.h>
 #include <gsl/gsl_spline.h>
-#include <gsl/gsl_interp2d.h>
-#include <gsl/gsl_spline2d.h>
-#include <gsl/gsl_histogram.h>
-#include <gsl/gsl_roots.h>
-#include <gsl/gsl_matrix.h>
 #include <gsl/gsl_errno.h>
-#include <gsl/gsl_odeiv2.h>
 
 #include "gambit/Elements/gambit_module_headers.hpp"
-#include "gambit/Utils/util_functions.hpp"
 #include "gambit/Utils/ascii_table_reader.hpp"
 #include "gambit/Utils/statistics.hpp"
-#include "gambit/Utils/numerical_constants.hpp"
+
 #include "gambit/DarkBit/DarkBit_rollcall.hpp"
 #include "gambit/DarkBit/DarkBit_utils.hpp"
 
