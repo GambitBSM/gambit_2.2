@@ -553,25 +553,25 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY lnL_Xray_Integral
+  #define CAPABILITY lnL_Xray_Integral_SPI_sterile_nu
   START_CAPABILITY
-    #define FUNCTION compute_lnL_Xray_Integral
+    #define FUNCTION compute_lnL_Xray_Integral_SPI_sterile_nu
     START_FUNCTION(double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY lnL_Xray_M31
+  #define CAPABILITY lnL_Xray_M31_sterile_nu
   START_CAPABILITY
-    #define FUNCTION compute_lnL_Xray_M31
+    #define FUNCTION compute_lnL_Xray_M31_sterile_nu
     START_FUNCTION(double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY lnL_Xray_NuSTAR
+  #define CAPABILITY lnL_Xray_NuSTAR_sterile_nu
   START_CAPABILITY
-    #define FUNCTION compute_lnL_Xray_NuSTAR
+    #define FUNCTION compute_lnL_Xray_NuSTAR_sterile_nu
     START_FUNCTION(double)
     ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION

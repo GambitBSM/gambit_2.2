@@ -213,9 +213,9 @@ namespace Gambit
       }
     }
 
-    void compute_lnL_Xray_Integral(double& result)
+    void compute_lnL_Xray_Integral_SPI_sterile_nu(double& result)
     {
-      using namespace Pipes::compute_lnL_Xray_Integral;
+      using namespace Pipes::compute_lnL_Xray_Integral_SPI_sterile_nu;
 
       static XrayInterpolator sin2_2t_bound;
       static bool first = true;
@@ -250,9 +250,9 @@ namespace Gambit
       }
     }
 
-    void compute_lnL_Xray_M31(double& result)
+    void compute_lnL_Xray_M31_sterile_nu(double& result)
     {
-      using namespace Pipes::compute_lnL_Xray_M31;
+      using namespace Pipes::compute_lnL_Xray_M31_sterile_nu;
 
       static XrayInterpolator sin2_2t_bound;
       static bool first = true;
@@ -287,9 +287,9 @@ namespace Gambit
       }
     }
 
-    void compute_lnL_Xray_NuSTAR(double& result)
+    void compute_lnL_Xray_NuSTAR_sterile_nu(double& result)
     {
-      using namespace Pipes::compute_lnL_Xray_NuSTAR;
+      using namespace Pipes::compute_lnL_Xray_NuSTAR_sterile_nu;
 
       static XrayInterpolator sin2_2t_bound;
       static bool first = true;

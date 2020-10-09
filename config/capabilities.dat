@@ -2366,6 +2366,21 @@ nulike_1_0_9_init: |
 nubounds:
   Counts, likelihoods and p-values from neutrino telescope searches for dark matter annihilation in the Sun.
 
+lnL_Xray_Integral_SPI_sterile_nu: |
+  Bound on decaying dark matter subcomponent into \gamma\gamma based on Integral SPI data.
+  Recasted from bound on sterile neutrinos (c.f. https://arxiv.org/abs/0706.4084)
+
+lnL_Xray_M31_sterile_nu: |
+  Bound on decaying dark matter subcomponent into \gamma\gamma based on M31 data.
+  Recasted from bound on sterile neutrinos (c.f. https://arxiv.org/abs/1311.0282)
+
+lnL_Xray_NuSTAR_sterile_nu: |
+  Bound on decaying dark matter subcomponent into \gamma\gamma based on NuSTAR data.
+  Recasted from bound on sterile neutrinos (c.f. https://arxiv.org/abs/1609.00667)
+
+lnL_Xray_WISPy: |
+  Bound on decaying dark matter as presented in fig. 3 of https://arxiv.org/abs/1201.5902
+
 Example_lnL_B: |
   Example log likelihood in ExampleBit B.
 
