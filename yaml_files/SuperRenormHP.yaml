@@ -5,17 +5,17 @@
 Parameters:
 
   #Dark matter halo parameters.
-  # Halo_gNFW_rho0:
-  #   rho0: #0.3
-  #     range: [.2, .6]
-  #   v0: 235.0
-  #   vesc: 550.0
-  #   vrot: 235.0
-  #   rs: 20.0
-  #   r_sun: 8.5
-  #   alpha: 1
-  #   beta: 3
-  #   gamma: 1
+  Halo_gNFW_rho0:
+    rho0: 0.3
+      # range: [.2, .6]
+    v0: 235.0
+    vesc: 550.0
+    vrot: 235.0
+    rs: 20.0
+    r_sun: 8.5
+    alpha: 1
+    beta: 3
+    gamma: 1
 
   LCDM:
    omega_b: 0.02242
@@ -46,10 +46,10 @@ Parameters:
   SuperRenormHP:
    mS:
      prior_type: log
-     range: [1e-12, 5e-3]
+     range: [1e-6, 5e-3]
    theta:
      prior_type: log
-     range: [1e-4, 1e-14]
+     range: [1e-6, 1e-14]
 
   # SuperRenormHP_solar_neutrino:
   #   alpha: 5
@@ -83,11 +83,16 @@ Priors:
 
 Printer:
 
-  printer: ascii
+  # printer: ascii
+  # options:
+  #   output_file: "results.dat"
+  #   buffer_length: 10
+  #   delete_file_on_restart: true
+
+  printer: hdf5
   options:
-    output_file: "results.dat"
-    buffer_length: 10
-    delete_file_on_restart: true
+    output_file: "SuperRenormHP.hdf5"
+    group: "/"
 
 Scanner:
 
@@ -103,7 +108,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 10
+      grid_pts: 250
 
     random:
       plugin: random
@@ -122,16 +127,15 @@ ObsLikes:
   # DM Local Halo likelihoods
   # - purpose:    LogLike
   #   capability: lnL_rho0
-  #   purpose:    LogLike
 
   - purpose:      Observable
     capability:   BBN_abundances
     sub_capabilities: [He4]
 
-  # - purpose:      LogLike
-  #   capability:   lnL_INTEGRAL_ang_b
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_INTEGRAL_ang_b
+    module:       DarkBit
+    type:         double
 
   # - purpose:      LogLike
   #   capability:   lnL_INTEGRAL_ang_l
@@ -143,10 +147,10 @@ ObsLikes:
   #   module:       DarkBit
   #   type:         double
 
-  # - purpose:      LogLike
-  #   capability:   lnL_HEAO
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_HEAO
+    module:       DarkBit
+    type:         double
 
   # - purpose:      LogLike
   #   capability:   lnL_solar_neutrino_B8

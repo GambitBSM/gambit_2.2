@@ -1061,26 +1061,26 @@ namespace Gambit
       result = 1/width/hbar_GeV;
     }
 
-    void SuperRenormHP_current_density (double &result)
-    {
-      using namespace Pipes::SuperRenormHP_current_density;
+    /* void SuperRenormHP_current_density (double &result) */
+    /* { */
+    /*   using namespace Pipes::SuperRenormHP_current_density; */
 
-      double RD = *Dep::DM_relic_density;
+    /*   double RD = *Dep::DM_relic_density; */
 
-      double tau = *Dep::DM_lifetime;
+    /*   double tau = *Dep::DM_lifetime; */
 
-      double H0_s = *Dep::H0/Mpc_2_km; // H0 in 1/s
+    /*   double H0_s = *Dep::H0/Mpc_2_km; // H0 in 1/s */
 
-      double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r;
+    /*   double OmegaM = *Dep::Omega0_m, OmegaR = *Dep::Omega0_r; */
 
-      double OmegaLambda = *Dep::Omega0_Lambda;
+    /*   double OmegaLambda = *Dep::Omega0_Lambda; */
 
-      double zCMB = 1090;
+    /*   double zCMB = 1090; */
 
-      double t_CMB = ageUniverse(zCMB, OmegaM, OmegaR, OmegaLambda, H0_s)[0];
+    /*   double t_CMB = ageUniverse(zCMB, OmegaM, OmegaR, OmegaLambda, H0_s)[0]; */
 
-      result = RD*exp(-t_CMB/tau)*pow((1+zCMB), 3);
-    }
+    /*   result = RD*exp(-t_CMB/tau)*pow((1+zCMB), 3); */
+    /* } */
 
     void RD_oh2_SuperRenormHP (double &result)
     {

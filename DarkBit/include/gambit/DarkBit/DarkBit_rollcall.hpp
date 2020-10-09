@@ -1563,19 +1563,19 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY DM_current_density
-  START_CAPABILITY
-    #define FUNCTION SuperRenormHP_current_density
-    START_FUNCTION(double)
-    DEPENDENCY(DM_relic_density, double)
-    DEPENDENCY(Omega0_r, double)
-    DEPENDENCY(Omega0_m, double)
-    DEPENDENCY(Omega0_cdm, double)
-    DEPENDENCY(H0, double)
-    DEPENDENCY(Omega0_Lambda, double)
-    DEPENDENCY(DM_lifetime, double)
-    #undef FUNCTION
-  #undef CAPABILITY
+  /* #define CAPABILITY DM_current_density */
+  /* START_CAPABILITY */
+  /*   #define FUNCTION SuperRenormHP_current_density */
+  /*   START_FUNCTION(double) */
+  /*   DEPENDENCY(DM_relic_density, double) */
+  /*   DEPENDENCY(Omega0_r, double) */
+  /*   DEPENDENCY(Omega0_m, double) */
+  /*   DEPENDENCY(Omega0_cdm, double) */
+  /*   DEPENDENCY(H0, double) */
+  /*   DEPENDENCY(Omega0_Lambda, double) */
+  /*   DEPENDENCY(DM_lifetime, double) */
+  /*   #undef FUNCTION */
+  /* #undef CAPABILITY */
 
   #define CAPABILITY J_factor_INTEGRAL_CO
   START_CAPABILITY
