@@ -549,7 +549,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_WISPy
     START_FUNCTION(double)
-    ALLOW_MODEL(DecayingDM_general)
+    ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -557,7 +557,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_Integral
     START_FUNCTION(double)
-    ALLOW_MODEL(DecayingDM_general)
+    ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -565,7 +565,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_M31
     START_FUNCTION(double)
-    ALLOW_MODEL(DecayingDM_general)
+    ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -573,7 +573,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION compute_lnL_Xray_NuSTAR
     START_FUNCTION(double)
-    ALLOW_MODEL(DecayingDM_general)
+    ALLOW_MODEL(DecayingDM_mixture)
     #undef FUNCTION
   #undef CAPABILITY
 

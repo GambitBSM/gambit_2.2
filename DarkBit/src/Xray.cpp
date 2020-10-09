@@ -195,10 +195,10 @@ namespace Gambit
 
       const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
-      double logm = log10(*Param["mass"]) + 9; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into eV
+      double logm = log10(*Param["mass"]) + 9; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into eV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
       double frac = *Param["fraction"];
-      double BR = *Param["BR"];
+      double BR_ph = *Param["BR_ph"];
 
       if (logm <= xlim.first || logm >= xlim.second)
       {
@@ -208,7 +208,7 @@ namespace Gambit
       else
       {
         double tau_bound = pow(10.,WISPy_bound.interpolate(logm));
-        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR_ph*tau < tau_bound);
         result = (excluded ? -9.0 : 0.0);
       }
     }
@@ -231,10 +231,10 @@ namespace Gambit
 
       const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
-      double mass = *Param["mass"] * 1e6; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into keV
+      double mass = *Param["mass"] * 1e6; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into keV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
       double frac = *Param["fraction"];
-      double BR = *Param["BR"];
+      double BR_ph = *Param["BR_ph"];
 
       if (mass <= xlim.first || mass >= xlim.second)
       {
@@ -245,7 +245,7 @@ namespace Gambit
       {
         double sin2_2t = sin2_2t_bound.interpolate(mass);
         double tau_bound = 2./1.36038e-32 * pow(1e10*sin2_2t,-1.)*pow(mass,-5.);
-        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR_ph*tau < tau_bound);
         result = (excluded ? -9.0 : 0.0);
       }
     }
@@ -268,10 +268,10 @@ namespace Gambit
 
       const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
-      double mass = *Param["mass"] * 1e6; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into keV
+      double mass = *Param["mass"] * 1e6; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into keV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
       double frac = *Param["fraction"];
-      double BR = *Param["BR"];
+      double BR_ph = *Param["BR_ph"];
 
       if (mass <= xlim.first || mass >= xlim.second)
       {
@@ -282,7 +282,7 @@ namespace Gambit
       {
         double sin2_2t = sin2_2t_bound.interpolate(mass);
         double tau_bound = 2./1.36038e-32 * pow(1e10*sin2_2t,-1.)*pow(mass,-5.);
-        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR_ph*tau < tau_bound);
         result = (excluded ? -9.0 : 0.0);
       }
     }
@@ -305,10 +305,10 @@ namespace Gambit
 
       const double t_universe = 4.32e17; // Age of the universe in seconds (https://www.physicsoftheuniverse.com/numbers.html)
 
-      double mass = *Param["mass"] * 1e6; // In "DecayingDM_general", the mass is given in GeV. Need to convert it into keV
+      double mass = *Param["mass"] * 1e6; // In "DecayingDM_mixture", the mass is given in GeV. Need to convert it into keV
       double tau = *Param["lifetime"];   // lifetime is already in untis of s. No tranformation needed.
       double frac = *Param["fraction"];
-      double BR = *Param["BR"];
+      double BR_ph = *Param["BR_ph"];
 
       if (mass <= xlim.first || mass >= xlim.second)
       {
@@ -319,7 +319,7 @@ namespace Gambit
       {
         double sin2_2t = sin2_2t_bound.interpolate(mass);
         double tau_bound = 2./1.36038e-32 * pow(1e10*sin2_2t,-1.)*pow(mass,-5.);
-        bool excluded = ((1./frac)*exp(t_universe/tau)*BR*tau < tau_bound);
+        bool excluded = ((1./frac)*exp(t_universe/tau)*BR_ph*tau < tau_bound);
         result = (excluded ? -9.0 : 0.0);
       }
     }
