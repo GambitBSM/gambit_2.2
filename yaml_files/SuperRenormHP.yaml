@@ -46,13 +46,13 @@ Parameters:
   SuperRenormHP:
    mS:
      prior_type: log
-     range: [1e-6, 5e-3]
+     range: [1e-10, 5e-3]
    theta:
      prior_type: log
-     range: [1e-6, 1e-14]
+     range: [1e-6, 1e-12]
 
-  # SuperRenormHP_solar_neutrino:
-  #   alpha: 5
+  SuperRenormHP_solar_neutrino:
+    alpha: 5
   #     # range: [1, 10]
 
   SuperRenormHP_relic_density_param:
@@ -67,17 +67,17 @@ Parameters:
    mH: 125.18
 
   # Nuclear matrix parameters.
-  # nuclear_params_sigmas_sigmal:
-  #   sigmas: #43
-  #     range:  [19, 67]
-  #   sigmal: #58
-  #     range:  [31, 85]
-  #   deltau:
-  #     fixed_value: 0.842
-  #   deltad:
-  #     fixed_value: -0.427
-  #   deltas:
-  #     fixed_value: -0.085
+  nuclear_params_sigmas_sigmal:
+    sigmas: 43
+      # range:  [19, 67]
+    sigmal: 58
+      # range:  [31, 85]
+    deltau:
+      fixed_value: 0.842
+    deltad:
+      fixed_value: -0.427
+    deltas:
+      fixed_value: -0.085
 
 Priors:
 
@@ -108,7 +108,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 250
+      grid_pts: 150
 
     random:
       plugin: random
@@ -152,15 +152,15 @@ ObsLikes:
     module:       DarkBit
     type:         double
 
-  # - purpose:      LogLike
-  #   capability:   lnL_solar_neutrino_B8
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_solar_neutrino_B8
+    module:       DarkBit
+    type:         double
 
-  # - purpose:      LogLike
-  #   capability:   lnL_solar_neutrino_Be7
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_solar_neutrino_Be7
+    module:       DarkBit
+    type:         double
 
   - purpose:      LogLike
     capability:   lnL_oh2
@@ -170,10 +170,10 @@ ObsLikes:
   # - purpose:      Observable
   #   capability:   ModifiedGravityYukawa_parameters
 
-  # - purpose:      LogLike
-  #   capability:   lnL_ShortRangeForces_Sushkov2011
-  #   module:       DarkBit
-  #   type:         double
+  - purpose:      LogLike
+    capability:   lnL_ShortRangeForces_Sushkov2011
+    module:       DarkBit
+    type:         double
 
   # - purpose:      LogLike
   #   capability:   lnL_SI_nuclear_parameters
