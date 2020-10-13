@@ -268,6 +268,14 @@ namespace Gambit
 
     /// Energy densities *today* (Omega0)
 
+    /// Dark Energy
+    void get_Omega0_Lambda_classy(double& result)
+    {
+      using namespace Pipes::get_Omega0_Lambda_classy;
+
+      result = BEreq::class_get_Omega0_Lambda();
+    }
+
     /// Matter
     void get_Omega0_m_classy(double& result)
     {

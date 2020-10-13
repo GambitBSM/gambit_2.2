@@ -2390,6 +2390,45 @@ lnlike_marg_poisson_gaussian_error: |
 lnlike_marg_poisson_lognormal_error: |
   log of the convolution of a poisson and log-normal distributions.
 
+DM_initial_density: |
+  Energy density of a given DM candidate in the infinite past [eV/cm^3].
+
+DM_decay_rate_2_photons: |
+  Decay rate of a given DM candidate into two photons [s].
+
+lnL_INTEGRAL: |
+  Computes the log-likelihood for the INTEGRAL X-ray experiment. Returns the value of the log-likelihood at the most constraining energy bin (i.e. the energy bin minimizing the log-likelihood). This choice is made because we don't have the correlations between different energy bins.
+
+lnL_HEAO: |
+  Computes the log-likelihood for the HEAO-1 A2 X-ray experiment. Returns the value of the log-likelihood at the most constraining energy bin (i.e. the energy bin minimizing the log-likelihood). This choice is made because we don't have the correlations between different energy bins.
+
+solar_DM_luminosity: |
+  Computes the luminosity in eV/s of DM particles produced inside the Sun (for a given DM model).
+
+lnL_solar_luminosity: |
+  Log-likelihood from the photon solar luminosity. L_DM < L_ph where L_DM is the DM luminosity produced by the Sun and L_ph is the photon luminosity (conservative bound).
+
+solar_neutrino_flux_Be7: |
+  Computes the predicted solar Be7 neutrino flux in the presence of DM production.
+
+solar_neutrino_flux_B8: |
+  Computes the predicted solar B8 neutrino flux in the presence of DM production.
+
+lnL_solar_neutrino_Be7: |
+  Log-likelihood from the measurement of the Be7 neutrino flux from the Sun.
+
+lnL_solar_neutrino_B8: |
+  Log-likelihood from the measurement of the B8 neutrino flux from the Sun.
+
+ISL_Yukawa: |
+  Returns the two parameters describing a modification of the gravitational Inverse-Square Law (ISL) by the addition of an extra Yukawa potential. V(r) = -G*m/r^2*alpha*exp(-r/lambda), where lambda is the range of the new interaction and alpha its amplitude.
+
+lnL_ShortRangeForces_Sushkov2011: |
+  Log-likelihood from the short range forces experiment from Sushkov et al. 2011 arXiv::1108.2547.
+
+Higgs_Nucleon_coupling_fN: |
+  fN parameter from the Higgs-Nucleon coupling. The complete coupling constant is given by fN*mN/vev. Returns a Higgs_Nucleon_coupling_fN object, which is a simple structure containing the value of fN for protons and neutrons.
+
 #-------------------------------------
 #  HiggsBounds capabilities
 #-------------------------------------
@@ -3973,6 +4012,9 @@ StandardModel_SLHA2_parameters: |
 
 StandardModel_mNudiff_parameters: |
    Parameters for the model StandardModel_mNudiff (see ./gambit StandardModel_mNudiff)
+
+SuperRenormHP_parameters: |
+   Parameters for the model SuperRenormHP (see ./gambit SuperRenormHP)
 
 TestModel1D_parameters: |
    Parameters for the model TestModel1D (see ./gambit TestModel1D)

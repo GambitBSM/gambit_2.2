@@ -47,12 +47,18 @@
 ///  \author Sebastian Wild
 ///          (sebastian.wild@ph.tum.de)
 ///  \date 2016 Aug
+///
+///  \author Inigo Saez Casares
+///          (inigo.saez_casares@ens-paris-saclay.fr)
+///  \date 2020 March
+///
 ///  *********************************************
 
 
 #ifndef __DarkBit_types_hpp__
 #define __DarkBit_types_hpp__
 
+#include "gambit/Backends/backend_types/nulike.hpp"
 #include "gambit/DarkBit/decay_chain.hpp"
 #include "gambit/DarkBit/SimpleHist.hpp"
 #include "gambit/DarkBit/ProcessCatalog.hpp"
@@ -110,7 +116,6 @@ namespace Gambit
       std::string particle_index_type;
       bool isSelfConj;
     };
-
 
     //////////////////////////////////////////////
     // Neutrino telescope data structures

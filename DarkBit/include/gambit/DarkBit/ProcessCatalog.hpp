@@ -145,7 +145,7 @@ namespace Gambit
         str particle1ID;
         str particle2ID;
         /// @}
-        
+
         /// Does the process contain self-conjugate DM? (accounting for correct factors of 1/2 in annihilation spectra)
         bool isSelfConj;
 

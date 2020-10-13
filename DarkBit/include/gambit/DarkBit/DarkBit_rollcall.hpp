@@ -86,6 +86,10 @@
 ///         (jonathancornell@weber.edu)
 /// \date 2013 - 2020
 ///
+/// \author Iñigo Saez Casares
+///          (inigo.saez_casares@ens-paris-saclay.fr)
+/// \date 2019 - 2020
+///
 ///  *********************************************
 
 #ifndef __DarkBit_rollcall_hpp__
@@ -271,6 +275,13 @@ START_MODULE
         DEPENDENCY(AxionOscillationTemperature, double)
         DEPENDENCY(T_cmb, double)
     #undef FUNCTION
+
+    #define FUNCTION RD_oh2_SuperRenormHP
+      START_FUNCTION(double)
+        DEPENDENCY(H0, double)
+        DEPENDENCY(DM_relic_density, double)
+    #undef FUNCTION
+
   #undef CAPABILITY
 
 
@@ -533,6 +544,12 @@ START_MODULE
       DEPENDENCY(decay_rates, DecayTable)
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
+    #undef FUNCTION
+    #define FUNCTION TH_ProcessCatalog_SuperRenormHP
+      START_FUNCTION(TH_ProcessCatalog)
+      DEPENDENCY(decay_rates, DecayTable)
+      DEPENDENCY(SuperRenormHP_spectrum, Spectrum)
+      ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1375,7 +1392,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION DarkMatter_ID_ScalarSingletDM
     START_FUNCTION(std::string)
-    ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running)
+    ALLOW_MODELS(ScalarSingletDM_Z2, ScalarSingletDM_Z2_running, ScalarSingletDM_Z3, ScalarSingletDM_Z3_running, SuperRenormHP)
     #undef FUNCTION
     #define FUNCTION DarkMatter_ID_VectorSingletDM
     START_FUNCTION(std::string)
@@ -1637,6 +1654,225 @@ START_MODULE
     #define FUNCTION calc_AxionOscillationTemperature
     START_FUNCTION(double)
     ALLOW_MODEL(GeneralCosmoALP)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  // Super Renormalizable Higgs Portal DM relative observables and likelihoods -----------------
+
+  #define CAPABILITY DM_relic_density
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_relic_density
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP)
+    ALLOW_MODEL(SuperRenormHP_relic_density_param)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DM_width
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_width
+    START_FUNCTION(double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DM_lifetime
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_lifetime
+    START_FUNCTION(double)
+    DEPENDENCY(DM_width, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  /* #define CAPABILITY DM_current_density */
+  /* START_CAPABILITY */
+  /*   #define FUNCTION SuperRenormHP_current_density */
+  /*   START_FUNCTION(double) */
+  /*   DEPENDENCY(DM_relic_density, double) */
+  /*   DEPENDENCY(Omega0_r, double) */
+  /*   DEPENDENCY(Omega0_m, double) */
+  /*   DEPENDENCY(Omega0_cdm, double) */
+  /*   DEPENDENCY(H0, double) */
+  /*   DEPENDENCY(Omega0_Lambda, double) */
+  /*   DEPENDENCY(DM_lifetime, double) */
+  /*   #undef FUNCTION */
+  /* #undef CAPABILITY */
+
+  #define CAPABILITY J_factor_INTEGRAL_CO
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_CO
+    START_FUNCTION(double)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_CO
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_CO
+    START_FUNCTION(double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(Omega0_cdm, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(DM_relic_density, double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    DEPENDENCY(J_factor_INTEGRAL_CO, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DM_DecayFluxG
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_DecayFluxG
+    START_FUNCTION(double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(Omega0_cdm, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(DM_relic_density, double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_INTEGRAL_ang_b
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_ang_b
+    START_FUNCTION(std::vector<double>)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_ang_b
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_ang_b
+    START_FUNCTION(double)
+    DEPENDENCY(DM_DecayFluxG, double)
+    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(J_factor_INTEGRAL_ang_b, std::vector<double>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_INTEGRAL_ang_l
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_INTEGRAL_ang_l
+    START_FUNCTION(std::vector<double>)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_INTEGRAL_ang_l
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_INTEGRAL_ang_l
+    START_FUNCTION(double)
+    DEPENDENCY(DM_DecayFluxG, double)
+    DEPENDENCY(DM_mass, double)
+    DEPENDENCY(J_factor_INTEGRAL_ang_l, std::vector<double>)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY J_factor_HEAO
+  START_CAPABILITY
+    #define FUNCTION get_J_factor_HEAO
+    START_FUNCTION(double)
+    DEPENDENCY(GalacticHalo, GalacticHaloProperties)
+    BACKEND_REQ(los_integral, (), void, (std::vector<double>, std::vector<double>, double, std::vector<double> &, std::vector<double> &))
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_HEAO
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_HEAO
+    START_FUNCTION(double)
+    DEPENDENCY(Omega0_r, double)
+    DEPENDENCY(Omega0_m, double)
+    DEPENDENCY(Omega0_cdm, double)
+    DEPENDENCY(H0, double)
+    DEPENDENCY(Omega0_Lambda, double)
+    DEPENDENCY(DM_relic_density, double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_DM_luminosity
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_luminosity
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_luminosity
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_luminosity
+    START_FUNCTION(double)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_neutrino_flux_B8
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_neutrino_flux_B8
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP_solar_neutrino)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY solar_neutrino_flux_Be7
+  START_CAPABILITY
+    #define FUNCTION SuperRenormHP_solar_neutrino_flux_Be7
+    START_FUNCTION(double)
+    ALLOW_MODEL(SuperRenormHP_solar_neutrino)
+    DEPENDENCY(solar_DM_luminosity, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_neutrino_B8
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_neutrino_B8
+    START_FUNCTION(double)
+    DEPENDENCY(solar_neutrino_flux_B8, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_solar_neutrino_Be7
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_solar_neutrino_Be7
+    START_FUNCTION(double)
+    DEPENDENCY(solar_neutrino_flux_Be7, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY lnL_ShortRangeForces_Sushkov2011
+  START_CAPABILITY
+    #define FUNCTION calc_lnL_ShortRangeForces_Sushkov2011
+    START_FUNCTION(double)
+    DEPENDENCY(New_Force_Sushkov2011, daFunk::Funk)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY Higgs_Nucleon_coupling_fN
+  START_CAPABILITY
+    #define FUNCTION get_Higgs_Nucleon_coupling_fN
+    START_FUNCTION(Higgs_Nucleon_coupling_fN)
+    ALLOW_MODEL(nuclear_params_sigmas_sigmal)
+    DEPENDENCY(SM_spectrum, Spectrum)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY New_Force_Sushkov2011
+  START_CAPABILITY
+    #define FUNCTION New_Force_Sushkov2011_SuperRenormHP
+    START_FUNCTION(daFunk::Funk)
+    ALLOW_MODEL(ModifiedGravityYukawa)
     #undef FUNCTION
   #undef CAPABILITY
 
