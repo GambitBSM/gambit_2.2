@@ -27,21 +27,29 @@ Parameters:
    H0: 67.66
     # prior_type: flat
     # range: [62,74]
-   ln10A_s: 3.047
-    # prior_type: flat
-    # range: [2.9,3.2]
-   n_s: 0.9665
-    # prior_type: flat
-    # range: [0.9,1.10]
    tau_reio: 0.0561
     # prior_type: flat
-    #range: [0.04,0.20]
     # range: [0.004,0.20]
    T_cmb: 2.72548
-    # measurement 2.72548 \pm 0.00057
-    # -> vary within error range
-    #prior_type: gaussian
-    #range: [2.72491,2.72605]
+      # FIRAS measurement 2.72548 \pm 0.00057
+      #
+      # -> Fix to central vsalue
+      # fixed_value: 2.72548
+      #
+      # -> vary within error range
+      #prior_type: gaussian
+      #mean: [2.75248]
+      #sigs: [0.00057]
+
+  PowerLaw_ps:
+    ln10A_s: 3
+      # prior_type: flat
+      # range: [2.9,3.2]
+    n_s: 1
+      # prior_type: flat
+      # range: [0.9,1.10]
+    r: 0
+    N_pivot: 55
 
   SuperRenormHP:
    mS:
@@ -61,7 +69,8 @@ Parameters:
       # range: [2.8,5.2]
 
   # StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
+  # StandardModel_SLHA2: !import include/StandardModel_SLHA2_cosmo.yaml
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_Planckbaseline.yaml
 
   StandardModel_Higgs:
    mH: 125.18
@@ -108,7 +117,7 @@ Scanner:
     grid_sq:
       plugin: square_grid
       like: LogLike
-      grid_pts: 150
+      grid_pts: 100
 
     random:
       plugin: random
@@ -203,7 +212,7 @@ Rules:
   # correlation matrix for BBN error calculation todo explain what that is!
   - capability: BBN_abundances
     options:
-      elements: [Yp, D, He3, Be7, Li7]
+      isotope_basis: [Yp, D, He3, Be7, Li7]
       correlation_matrix: [[+1.000e00, +1.524e-2, +2.667e-2, +2.303e-2, +2.429e-2],
                            [+1.524e-2, +1.000e00, -8.160e-1, -3.775e-1, -3.653e-1],
                            [+2.667e-2, -8.160e-1, +1.000e00, +3.897e-1, +3.780e-1],
@@ -252,6 +261,10 @@ Rules:
       - capability: RD_oh2
         function: RD_oh2_SuperRenormHP
         module: DarkBit
+
+  - capability: classy_MPLike_input
+    function: set_classy_input_with_MPLike
+    module: CosmoBit
 
   # - module: CosmoBit
   #   options:
