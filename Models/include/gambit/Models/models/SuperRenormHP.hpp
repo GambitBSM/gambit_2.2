@@ -6,9 +6,10 @@
 ///
 ///  *********************************************
 ///
-///  Authors (add name and date if you modify)
+///  Authors (add name and date if you modify):
 ///
 ///  \author Iñigo Saez Casares
+///          (inigo.saez_casares@ens-paris-saclay.fr)
 ///  \date 2019 December
 ///
 ///  *********************************************
@@ -17,6 +18,7 @@
 #define __SuperRenormHP_hpp__
 
 #include "gambit/Models/models/ModifiedGravityYukawa.hpp"
+#include "gambit/Models/models/CosmoEnergyInjection.hpp"
 
 #define MODEL SuperRenormHP
   START_MODEL
@@ -25,8 +27,13 @@
   DEFINEPARS(theta) // mixing angle with the SM Higgs boson
 
   // Friendship with ModifiedGravityYukawa
-  INTERPRET_AS_X_FUNCTION(ModifiedGravityYukawa,SuperRenormHP_to_ModifiedGravityYukawa)
-  INTERPRET_AS_X_DEPENDENCY(ModifiedGravityYukawa, Higgs_Nucleon_coupling_fN, Higgs_Nucleon_coupling_fN)
+  INTERPRET_AS_X_FUNCTION(ModifiedGravityYukawa, SuperRenormHP_to_ModifiedGravityYukawa)
+  INTERPRET_AS_X_DEPENDENCY(ModifiedGravityYukawa, get_Higgs_Nucleon_coupling_fN, Higgs_Nucleon_coupling_fN)
+
+  INTERPRET_AS_X_FUNCTION(DecayingDM_mixture, SuperRenormHP_to_DecayingDM_mixture)
+  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, DM_relic_density, double)
+  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, H0, double)
+  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, Omega0_cdm, double)
 
   MAP_TO_CAPABILITY(mS, DM_mass)
 #undef MODEL

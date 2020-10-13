@@ -1016,7 +1016,7 @@ namespace Gambit
       return m;
     }
 
-    // capability function to provide the initial energy density as produced by the freeze-in mechanism
+    // capability function to provide the initial energy density as produced by the freeze-in mechanism (in GeV/cm^3)
     void SuperRenormHP_relic_density (double &result)
     {
       using namespace Pipes::SuperRenormHP_relic_density;
@@ -1629,9 +1629,9 @@ namespace Gambit
     //------------- Functions to compute short range forces likelihoods -------------// 
 
     // capability to provide the Higgs-Nucleon coupling constant fN, such as described in arXiv:1306.4710
-    void get_Higgs_Nucleon_coupling_fN (Higgs_Nucleon_coupling_fN &result)
+    void func_Higgs_Nucleon_coupling_fN (Higgs_Nucleon_coupling_fN &result)
     {
-      using namespace Pipes::get_Higgs_Nucleon_coupling_fN;
+      using namespace Pipes::func_Higgs_Nucleon_coupling_fN;
 
       const double sigmas = *Param["sigmas"]*1e-3, sigmal = *Param["sigmal"]*1e-3; // nuclear parameters in GeV (model input in MeV)
       const Spectrum SM = *Dep::SM_spectrum; // SM spectrum needed to get light quark masses

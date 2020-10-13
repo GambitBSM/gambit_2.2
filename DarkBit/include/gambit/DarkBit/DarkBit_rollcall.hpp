@@ -1859,9 +1859,9 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY Higgs_Nucleon_coupling_fN
+  #define CAPABILITY get_Higgs_Nucleon_coupling_fN
   START_CAPABILITY
-    #define FUNCTION get_Higgs_Nucleon_coupling_fN
+    #define FUNCTION func_Higgs_Nucleon_coupling_fN
     START_FUNCTION(Higgs_Nucleon_coupling_fN)
     ALLOW_MODEL(nuclear_params_sigmas_sigmal)
     DEPENDENCY(SM_spectrum, Spectrum)
