@@ -100,8 +100,6 @@
 
 */
 
-// _Anders: Got this far...
-
 #include <vector>
 #include <cmath>
 #include <memory>
@@ -111,7 +109,7 @@
 #include "gambit/ColliderBit/analyses/Analysis.hpp"
 #include "gambit/ColliderBit/CMSEfficiencies.hpp"
 #include "gambit/ColliderBit/mt2_bisect.h"
-#include "gambit/ColliderBit/analyses/Cutflow.hpp"
+// #include "gambit/ColliderBit/analyses/Cutflow.hpp"
 
 // #define CHECK_CUTFLOW
 
@@ -128,18 +126,45 @@ namespace Gambit {
 
       // Counters for the number of accepted events for each signal region
       std::map<string, EventCounter> _counters = {
-        {"SR_MET_100-115", EventCounter("SR_MET_100-115")},
-        {"SR_MET_115-130", EventCounter("SR_MET_115-130")},
-        {"SR_MET_130-150", EventCounter("SR_MET_130-150")},
-        {"SR_MET_150-185", EventCounter("SR_MET_150-185")},
-        {"SR_MET_185-250", EventCounter("SR_MET_185-250")},
-        {"SR_MET_>250", EventCounter("SR_MET_>250")},
+        {"SR1", EventCounter("SR1")},
+        {"SR2", EventCounter("SR2")},
+        {"SR3", EventCounter("SR3")},
+        {"SR4", EventCounter("SR4")},
+        {"SR5", EventCounter("SR5")},
+        {"SR6", EventCounter("SR6")},
+        {"SR7", EventCounter("SR7")},
+        {"SR8", EventCounter("SR8")},
+        {"SR9", EventCounter("SR9")},
+        {"SR10", EventCounter("SR10")},
+        {"SR11", EventCounter("SR11")},
+        {"SR12", EventCounter("SR12")},
+        {"SR13", EventCounter("SR13")},
+        {"SR14", EventCounter("SR14")},
+        {"SR15", EventCounter("SR15")},
+        {"SR16", EventCounter("SR16")},
+        {"SR17", EventCounter("SR17")},
+        {"SR18", EventCounter("SR18")},
+        {"SR19", EventCounter("SR19")},
+        {"SR20", EventCounter("SR20")},
+        {"SR21", EventCounter("SR21")},
+        {"SR22", EventCounter("SR22")},
+        {"SR23", EventCounter("SR23")},
+        {"SR24", EventCounter("SR24")},
+        {"SR25", EventCounter("SR25")},
+        {"SR26", EventCounter("SR26")},
+        {"SR27", EventCounter("SR27")},
+        {"SR28", EventCounter("SR28")},
+        {"SR29", EventCounter("SR29")},
+        {"SR30", EventCounter("SR30")},
+        {"SR31", EventCounter("SR31")},
+        {"SR32", EventCounter("SR32")},
+        {"SR33", EventCounter("SR33")},
+        {"SR34", EventCounter("SR34")},
+        {"SR35", EventCounter("SR35")},
+        {"SR36", EventCounter("SR36")},
       };
 
-      // Cutflow _cutflow;
-
       // Analysis_CMS_13TeV_1Photon1Lepton_36invfb():
-      // _cutflow("CMS 2-photon GMSB 13 TeV", {"preselection", "MET>300GeV", "MT(g,MET)>300GeV", "S_T^g>600GeV"})
       Analysis_CMS_13TeV_1Photon1Lepton_36invfb()
       {
         set_analysis_name("CMS_13TeV_1Photon1Lepton_36invfb");
@@ -150,22 +175,15 @@ namespace Gambit {
       void run(const HEPUtils::Event* event)
       {
         // Baseline objects
-        // HEPUtils::P4 pTmissVector = event->missingmom();
-        double met = event->met();
-
-        // _cutflow.fillinit();
+        HEPUtils::P4 pTmissVector = event->missingmom();
+        double pTmiss = event->met();
 
         // Photons
-        // NOTE:
-        //   No photon efficiency info available for this analysis.
-        //   We therefore assume the same efficiency map as used for
-        //   other CMS 36 fb^-1 SUSY searches:
-        //
-        //   https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/PhotonEfficiencies_ForPublic_Moriond2017_LoosePixelVeto.pdf
-        //
-        //   The efficiency map has been extended to cover the low-pT region (pT < 20)
-        const vector<double> aPhoton={0., 0.8, 1.4442, 1.566, 2.0, 2.5, DBL_MAX};  // Bin edges in eta
-        const vector<double> bPhoton={0., 20., 35., 50., 90., DBL_MAX};  // Bin edges in pT. Assume flat efficiency above 500, where the CMS map stops.
+        // Apply photon efficiency and collect baseline photons
+        //@note Numbers digitized from https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/PhotonEfficiencies_ForPublic_Moriond2017_LoosePixelVeto.pdf
+        //@note The efficiency map has been extended to cover the low-pT region, using the efficiencies from BuckFast (CMSEfficiencies.hpp)
+        const vector<double> aPhoton={0., 0.8, 1.4442, 1.566, 2.0, 2.5, DBL_MAX};   // Bin edges in eta
+        const vector<double> bPhoton={0., 20., 35., 50., 90., DBL_MAX};  // Bin edges in pT. Assume flat efficiency above 200, where the CMS map stops.
         const vector<double> cPhoton={
                            // pT:   (0,20),  (20,35),  (35,50),  (50,90),  (90,inf)
                                      0.0,    0.735,    0.779,    0.805,    0.848,   // eta: (0, 0.8)
@@ -180,168 +198,205 @@ namespace Gambit {
         for (const HEPUtils::Particle* photon : event->photons())
         {
           bool isPhoton=has_tag(_eff2dPhoton, photon->abseta(), photon->pT());
-          if (isPhoton && photon->pT()>15.) photons.push_back(photon);
-        }
-        // Sort
-        sortByPt(photons);
-
-        // Photon trigger cut
-        bool trigger = false;
-        if (photons.size() >= 2) {
-          double mggTrigger = (photons.at(0)->mom() + photons.at(1)->mom()).m();
-          if (mggTrigger > 95.) {
-            trigger = true;
+          if (isPhoton && photon->pT() > 35. && photon->abseta() < 1.44)
+          {
+            photons.push_back(photon);
           }
         }
-        // // Return immediately if event didn't pass trigger
-        // if (!trigger) return;
 
 
         // Electrons
-        // NOTE:
-        //   No electron efficiency info available for this analysis.
-        //   We therefore assume the efficiency map used for the 36 fb^-1 CMS multilepton search:
-        //   https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/2d_full_pteta_el_039_multi_ttbar.pdf
-        //
-        //   See this page for more info:
-        //   https://twiki.cern.ch/twiki/bin/view/CMSPublic/SUSMoriond2017ObjectsEfficiency
-        //
-        //   The efficiency map has been extended to cover the low-pT region, using the efficiencies from BuckFast (CMSEfficiencies.hpp)
+        // Apply electron efficiency and collect baseline electrons
+        //@note Numbers digitized from https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/eff_el_17012.pdf
+        //@note The efficiency map has been extended to cover the low-pT region (simply set to 0 for pT < 25 GeV)
         const vector<double> aEl={0., 0.8, 1.442, 1.556, 2., 2.5, DBL_MAX};   // Bin edges in eta
-        const vector<double> bEl={0., 10., 15., 20., 25., 30., 40., 50., DBL_MAX}; // Bin edges in pT. Assume flat efficiency above 200, where the CMS map stops.
+        const vector<double> bEl={0., 25., 30., 40., 50., 100., DBL_MAX}; // Bin edges in pT
         const vector<double> cEl={
-                          // pT: (0,10),  (10,15),  (15,20),  (20,25),  (25,30),  (30,40),  (40,50),  (50,inf)
-                                   0.0,    0.95,    0.507,    0.619,    0.682,    0.742,    0.798,    0.863,  // eta: (0, 0.8)
-                                   0.0,    0.95,    0.429,    0.546,    0.619,    0.710,    0.734,    0.833,  // eta: (0.8, 1.4429
-                                   0.0,    0.95,    0.256,    0.221,    0.315,    0.351,    0.373,    0.437,  // eta: (1.442, 1.556)
-                                   0.0,    0.85,    0.249,    0.404,    0.423,    0.561,    0.642,    0.749,  // eta: (1.556, 2)
-                                   0.0,    0.85,    0.195,    0.245,    0.380,    0.441,    0.533,    0.644,  // eta: (2, 2.5)
-                                   0.0,    0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.5
+                          // pT: (0,25),  (25,30),  (30,40),  (40,50),  (50,100), (100,inf)
+                                   0.0,    0.659,    0.724,    0.769,    0.824,    0.865,  // eta: (0, 0.8)
+                                   0.0,    0.470,    0.561,    0.650,    0.765,    0.847,  // eta: (0.8, 1.442)
+                                   0.0,    0.276,    0.341,    0.401,    0.437,    0.498,  // eta: (1.442, 1.556)
+                                   0.0,    0.332,    0.439,    0.538,    0.664,    0.794,  // eta: (1.556, 2)
+                                   0.0,    0.468,    0.575,    0.656,    0.727,    0.805,  // eta: (2, 2.5)
+                                   0.0,    0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.5
                                   };
         HEPUtils::BinnedFn2D<double> _eff2dEl(aEl,bEl,cEl);
         vector<const HEPUtils::Particle*> electrons;
-        for (const HEPUtils::Particle* electron : event->electrons()) {
+        for (const HEPUtils::Particle* electron : event->electrons()) 
+        {
           bool isEl=has_tag(_eff2dEl, electron->abseta(), electron->pT());
-          // No info in the paper on pT or |eta| cuts for baseline electrons,
-          // but the above efficieny map effectively requires pT > 10 and |eta| < 2.5
-          if (isEl) electrons.push_back(electron);
+          if (isEl && electron->pT() > 25. && electron->abseta() < 2.5)
+          {
+            if (electron->abseta() < 1.442 || electron->abseta() > 1.556)
+            {
+              electrons.push_back(electron);
+            }
+          }
         }
-        // Sort
-        sortByPt(electrons);
+        // // Sort
+        // sortByPt(electrons);
 
 
         // Muons
-        // NOTE:
-        //   No muon efficiency info available for this analysis.
-        //   We therefore assume the efficiency map used for the 36 fb^-1 CMS multilepton search:
-        //   https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/2d_full_pteta_mu_039_multi_ttbar.pdf
-        //
-        //   See this page for more info:
-        //   https://twiki.cern.ch/twiki/bin/view/CMSPublic/SUSMoriond2017ObjectsEfficiency
-        //
-        //   The efficiency map has been extended to cover the low-pT region, using the efficiencies from BuckFast (CMSEfficiencies.hpp)
+        // Apply electron efficiency and collect baseline electrons
+        //@note Numbers digitized from https://twiki.cern.ch/twiki/pub/CMSPublic/SUSMoriond2017ObjectsEfficiency/eff_mu_17012.pdf
+        //@note The efficiency map has been extended to cover the low-pT region (simply set to 0 for pT < 25 GeV)
         const vector<double> aMu={0., 0.9, 1.2, 2.1, 2.4, DBL_MAX};   // Bin edges in eta
-        const vector<double> bMu={0., 10., 15., 20., 25., 30., 40., 50., DBL_MAX};  // Bin edges in pT. Assume flat efficiency above 200, where the CMS map stops.
+        const vector<double> bMu={0., 25., 30., 40., 50., 100., DBL_MAX};  // Bin edges in pT
         const vector<double> cMu={
-                           // pT:   (0,10),  (10,15),  (15,20),  (20,25),  (25,30),  (30,40),  (40,50),  (50,inf)
-                                     0.0,     0.704,    0.797,    0.855,    0.880,    0.906,    0.927,    0.931,  // eta: (0, 0.9)
-                                     0.0,     0.639,    0.776,    0.836,    0.875,    0.898,    0.940,    0.930,  // eta: (0.9, 1.2)
-                                     0.0,     0.596,    0.715,    0.840,    0.862,    0.891,    0.906,    0.925,  // eta: (1.2, 2.1)
-                                     0.0,     0.522,    0.720,    0.764,    0.803,    0.807,    0.885,    0.877,  // eta: (2.1, 2.4)
-                                     0.0,     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,    // eta > 2.4
+                           // pT:  (0,25),   (25,30),  (30,40),  (40,50),  (50,100),  (100,inf)
+                                     0.0,     0.882,    0.924,    0.937,    0.956,     0.969,  // eta: (0, 0.9)
+                                     0.0,     0.869,    0.922,    0.937,    0.959,     0.971,  // eta: (0.9, 1.2)
+                                     0.0,     0.881,    0.936,    0.948,    0.970,     0.982,  // eta: (1.2, 2.1)
+                                     0.0,     0.808,    0.883,    0.894,    0.910,     0.920,  // eta: (2.1, 2.4)
+                                     0.0,     0.0,      0.0,      0.0,      0.0,       0.0,    // eta > 2.4
                                  };
         HEPUtils::BinnedFn2D<double> _eff2dMu(aMu,bMu,cMu);
         vector<const HEPUtils::Particle*> muons;
-        for (const HEPUtils::Particle* muon : event->muons()) {
+        for (const HEPUtils::Particle* muon : event->muons())
+        {
           bool isMu=has_tag(_eff2dMu, muon->abseta(), muon->pT());
-          // No info in the paper on pT or |eta| cuts for baseline muons,
-          // but the above efficieny map effectively requires pT > 10 and |eta| < 2.4
-          if (isMu) muons.push_back(muon);
+          if (isMu && muon->pT() > 25. && muon->abseta() < 2.4)
+          {
+            muons.push_back(muon);
+          }
         }
-        // Sort
-        sortByPt(muons);
+        // // Sort
+        // sortByPt(muons);
 
 
         // Jets
         vector<const HEPUtils::Jet*> jets;
-        for (const HEPUtils::Jet* jet : event->jets()) {
-          // No info on baseline jet cuts in the paper, so for now we'll
-          // apply an|eta| cut for HCAL coverage and a loose jet pT cut
-          if (jet->pT()>10. && jet->abseta()<3.0) jets.push_back(jet);
-        }
-        // Sort
-        sortByPt(jets);
-
-
-        // Select signal photon candidates
-        vector<const HEPUtils::Particle*> signalPhotons;
-        for (const HEPUtils::Particle* photon : photons)
+        for (const HEPUtils::Jet* jet : event->jets())
         {
-          if (photon->pT() > 15. && photon->abseta() < 1.44) signalPhotons.push_back(photon);
-          // NOTE: there should also be an isolation cut based on pT sums of other objects
-          // within DeltaR = 0.3 of the photon, but no details are given in the paper...
+          if (jet->pT()>30. && jet->abseta()<2.5) jets.push_back(jet);
+        }
+        // // Sort
+        // sortByPt(jets);
+
+
+        // Remove any photon within DeltaR < 0.3 of any reconstructed e/mu
+        removeOverlap(photons, electrons, 0.3);
+        removeOverlap(photons, muons, 0.3);
+
+
+        // Signal leptons, sorted by pT
+        vector<const HEPUtils::Particle*> signalLeptons;
+        signalLeptons = electrons;
+        signalLeptons.insert(signalLeptons.end(), muons.begin(), muons.end());
+        sortByPt(signalLeptons);
+        size_t n_leptons = signalLeptons.size();
+
+        // Signal photons, sorted by pT
+        vector<const HEPUtils::Particle*> signalPhotons;
+        signalPhotons = photons;
+        sortByPt(signalPhotons);
+        size_t n_photons = signalLeptons.size();
+
+
+        // Require at least one signal photon and one signal lepton
+        if (n_photons < 1 || n_leptons < 0) return;
+
+        // Get leadning lepton and leading photon
+        const HEPUtils::Particle* lepton1 = signalLeptons.at(0);
+        const HEPUtils::Particle* photon1 = signalPhotons.at(0);
+
+        // Is this an e+gamma or mu+gamma event?
+        bool is_egamma = true;
+        if (lepton1->abspid() == 13) is_egamma = false;
+
+        // If e+gamma event, require m(e,gamma) > 101.2 
+        if (is_egamma)
+        {
+          double m_egamma = (lepton1->mom() + photon1->mom()).m();
+          if (m_egamma < 101.2) return;
         }
 
-        // Requirements on the two highest-pT EM objects
-        vector<const HEPUtils::Particle*> EMobjects;
-        EMobjects.insert(EMobjects.end(), signalPhotons.begin(), signalPhotons.end());
-        EMobjects.insert(EMobjects.end(), electrons.begin(), electrons.end());
-        sortByPt(EMobjects);
+        // Require DeltaR(lepton1,photon1) > 0.8
+        double dR = deltaR_eta(lepton1->mom(), photon1->mom())
+        if (dR < 0.8) return;
 
-        vector<const HEPUtils::Particle*> signalEMobjects;
-        if (EMobjects.size() < 2) {
-          signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.end());
-        }
-        else {
-          signalEMobjects.insert(signalEMobjects.begin(), EMobjects.begin(), EMobjects.begin() + 2);
-        }
+        // Require mT > 100 and pTmiss > 120
+        double mT = sqrt(2. * lepton1->pT() * pTmiss * ( 1. - std::cos( deltaPhi(lepton1->mom(), pTmissVector) ) ) );
+        if (!(mT > 100. && pTmiss > 120.)) return;
 
-        bool isDiphoton = false;
-        bool DeltaR_gt_06 = false;
-        bool mgg_gt_105 = false;
-        if (signalEMobjects.size() >= 2) {
-
-          const HEPUtils::Particle* obj1 = signalEMobjects.at(0);
-          const HEPUtils::Particle* obj2 = signalEMobjects.at(1);
-
-          if (obj1->pid() == 22 && obj2->pid() == 22) isDiphoton = true;
-
-          if (obj1->mom().deltaR_eta(obj2->mom()) > 0.6) DeltaR_gt_06 = true;
-
-          if ((obj1->mom() + obj2->mom()).m() > 105.) mgg_gt_105 = true;
-        }
-
-        // Vetos on muons
-        bool muVeto = false;
-        for (const HEPUtils::Particle* muon : muons) {
-          if (muon->pT() > 25. && muon->abseta() < 2.4) {
-            muVeto = true;
-            break;
-          }
-        }
-
-        // Veto on electrons not part of the two signalEMobjects
-        bool elVeto = false;
-        for (const HEPUtils::Particle* electron : electrons) {
-          if (electron->pT() > 25. && electron->abseta() < 2.5) {
-            if (electron != signalEMobjects.at(0) && electron != signalEMobjects.at(1)) {
-              elVeto = true;
-              break;
+        // SR selection variable: HT
+        double HT = 0;
+        for (const HEPUtils::Jet* jet : jets)
+        {
+          if (deltaR_eta(jet->mom(), photon1->mom()) > 0.4)
+          {
+            if (deltaR_eta(jet->mom(), lepton1->mom()) > 0.4)
+            {
+              HT += jet->pT();
             }
           }
         }
 
-        // Fill signal region
-        if (trigger && isDiphoton && DeltaR_gt_06 && mgg_gt_105 && !muVeto && !elVeto) {
-          if      (met > 100. && met < 115) _counters.at("SR_MET_100-115").add_event(event);
-          else if (met > 115. && met < 130) _counters.at("SR_MET_115-130").add_event(event);
-          else if (met > 130. && met < 150) _counters.at("SR_MET_130-150").add_event(event);
-          else if (met > 150. && met < 185) _counters.at("SR_MET_150-185").add_event(event);
-          else if (met > 185. && met < 250) _counters.at("SR_MET_185-250").add_event(event);
-          else if (met > 250.) _counters.at("SR_MET_>250").add_event(event);
+        // SR selection variable: pTgamma
+        double pTgamma = photon1->pT();
+
+
+        // 
+        // Fill signal regions
+        // 
+
+        // e+gamma SRs
+        if (is_egamma)
+        {
+          if      ( 35 < pTgamma && pTgamma < 200  &&  120 < pTmiss && pTmiss < 200  &&    0 < HT && HT < 100) _counters.at("SR1").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  120 < pTmiss && pTmiss < 200  &&  100 < HT && HT < 400) _counters.at("SR2").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  120 < pTmiss && pTmiss < 200  &&  400 < HT            ) _counters.at("SR3").add_event(event);
+
+          else if ( 35 < pTgamma && pTgamma < 200  &&  200 < pTmiss && pTmiss < 400  &&    0 < HT && HT < 100) _counters.at("SR4").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  200 < pTmiss && pTmiss < 400  &&  100 < HT && HT < 400) _counters.at("SR5").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  200 < pTmiss && pTmiss < 400  &&  400 < HT            ) _counters.at("SR6").add_event(event);
+
+          else if ( 35 < pTgamma && pTgamma < 200  &&  400 < pTmiss                  &&    0 < HT && HT < 100) _counters.at("SR7").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  400 < pTmiss                  &&  100 < HT && HT < 400) _counters.at("SR8").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  400 < pTmiss                  &&  400 < HT            ) _counters.at("SR9").add_event(event);
+
+          else if (200 < pTgamma                   &&  120 < pTmiss && pTmiss < 200  &&    0 < HT && HT < 100) _counters.at("SR10").add_event(event);
+          else if (200 < pTgamma                   &&  120 < pTmiss && pTmiss < 200  &&  100 < HT && HT < 400) _counters.at("SR11").add_event(event);
+          else if (200 < pTgamma                   &&  120 < pTmiss && pTmiss < 200  &&  400 < HT            ) _counters.at("SR12").add_event(event);
+
+          else if (200 < pTgamma                   &&  200 < pTmiss && pTmiss < 400  &&    0 < HT && HT < 100) _counters.at("SR13").add_event(event);
+          else if (200 < pTgamma                   &&  200 < pTmiss && pTmiss < 400  &&  100 < HT && HT < 400) _counters.at("SR14").add_event(event);
+          else if (200 < pTgamma                   &&  200 < pTmiss && pTmiss < 400  &&  400 < HT            ) _counters.at("SR15").add_event(event);
+
+          else if (200 < pTgamma                   &&  400 < pTmiss                  &&    0 < HT && HT < 100) _counters.at("SR16").add_event(event);
+          else if (200 < pTgamma                   &&  400 < pTmiss                  &&  100 < HT && HT < 400) _counters.at("SR17").add_event(event);
+          else if (200 < pTgamma                   &&  400 < pTmiss                  &&  400 < HT            ) _counters.at("SR18").add_event(event);
+        }
+        // mu+gamma SRs
+        else
+        {
+          if      ( 35 < pTgamma && pTgamma < 200  &&  120 < pTmiss && pTmiss < 200  &&    0 < HT && HT < 100) _counters.at("SR19").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  120 < pTmiss && pTmiss < 200  &&  100 < HT && HT < 400) _counters.at("SR20").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  120 < pTmiss && pTmiss < 200  &&  400 < HT            ) _counters.at("SR21").add_event(event);
+
+          else if ( 35 < pTgamma && pTgamma < 200  &&  200 < pTmiss && pTmiss < 400  &&    0 < HT && HT < 100) _counters.at("SR22").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  200 < pTmiss && pTmiss < 400  &&  100 < HT && HT < 400) _counters.at("SR23").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  200 < pTmiss && pTmiss < 400  &&  400 < HT            ) _counters.at("SR24").add_event(event);
+
+          else if ( 35 < pTgamma && pTgamma < 200  &&  400 < pTmiss                  &&    0 < HT && HT < 100) _counters.at("SR25").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  400 < pTmiss                  &&  100 < HT && HT < 400) _counters.at("SR26").add_event(event);
+          else if ( 35 < pTgamma && pTgamma < 200  &&  400 < pTmiss                  &&  400 < HT            ) _counters.at("SR27").add_event(event);
+
+          else if (200 < pTgamma                   &&  120 < pTmiss && pTmiss < 200  &&    0 < HT && HT < 100) _counters.at("SR28").add_event(event);
+          else if (200 < pTgamma                   &&  120 < pTmiss && pTmiss < 200  &&  100 < HT && HT < 400) _counters.at("SR29").add_event(event);
+          else if (200 < pTgamma                   &&  120 < pTmiss && pTmiss < 200  &&  400 < HT            ) _counters.at("SR30").add_event(event);
+
+          else if (200 < pTgamma                   &&  200 < pTmiss && pTmiss < 400  &&    0 < HT && HT < 100) _counters.at("SR31").add_event(event);
+          else if (200 < pTgamma                   &&  200 < pTmiss && pTmiss < 400  &&  100 < HT && HT < 400) _counters.at("SR32").add_event(event);
+          else if (200 < pTgamma                   &&  200 < pTmiss && pTmiss < 400  &&  400 < HT            ) _counters.at("SR33").add_event(event);
+
+          else if (200 < pTgamma                   &&  400 < pTmiss                  &&    0 < HT && HT < 100) _counters.at("SR34").add_event(event);
+          else if (200 < pTgamma                   &&  400 < pTmiss                  &&  100 < HT && HT < 400) _counters.at("SR35").add_event(event);
+          else if (200 < pTgamma                   &&  400 < pTmiss                  &&  400 < HT            ) _counters.at("SR36").add_event(event);
         }
 
-      }
+      } // END: run function
 
 
       /// Combine the variables of another copy of this analysis (typically on another thread) into this one.
@@ -356,12 +411,42 @@ namespace Gambit {
 
       virtual void collect_results()
       {
-        add_result(SignalRegionData(_counters.at("SR_MET_100-115"), 105, {114., 13.}));
-        add_result(SignalRegionData(_counters.at("SR_MET_115-130"), 39, {42.9, 7.5}));
-        add_result(SignalRegionData(_counters.at("SR_MET_130-150"), 21, {27.3, 5.6}));
-        add_result(SignalRegionData(_counters.at("SR_MET_150-185"), 21, {17.4, 4.1}));
-        add_result(SignalRegionData(_counters.at("SR_MET_185-250"), 11, {10.2, 2.7}));
-        add_result(SignalRegionData(_counters.at("SR_MET_>250"), 12, {5.4, 1.6}));
+        add_result(SignalRegionData( _counters.at("SR1"),  153, { 175.0, 14.9 } ));
+        add_result(SignalRegionData( _counters.at("SR2"),  275, { 275.4, 49.8 } ));
+        add_result(SignalRegionData( _counters.at("SR3"),   67, { 84.75, 19.95 } ));
+        add_result(SignalRegionData( _counters.at("SR4"),   32, { 18.36, 2.59 } ));
+        add_result(SignalRegionData( _counters.at("SR5"),   46, { 53.26, 10.77 } ));
+        add_result(SignalRegionData( _counters.at("SR6"),   32, { 30.57, 8.31 } ));
+        add_result(SignalRegionData( _counters.at("SR7"),    1, { 1.370, 0.26 } ));
+        add_result(SignalRegionData( _counters.at("SR8"),    1, { 1.223, 0.46 } ));
+        add_result(SignalRegionData( _counters.at("SR9"),    4, { 2.961, 0.76 } ));
+        add_result(SignalRegionData( _counters.at("SR10"),  10, { 6.620, 1.92 } ));
+        add_result(SignalRegionData( _counters.at("SR11"),  21, { 23.03, 6.74 } ));
+        add_result(SignalRegionData( _counters.at("SR12"),  14, { 12.35, 3.61 } ));
+        add_result(SignalRegionData( _counters.at("SR13"),   6, { 4.712, 1.39 } ));
+        add_result(SignalRegionData( _counters.at("SR14"),   9, { 9.406, 3.14 } ));
+        add_result(SignalRegionData( _counters.at("SR15"),   4, { 5.399, 1.80 } ));
+        add_result(SignalRegionData( _counters.at("SR16"),   0, { 0.4169, 0.19 } ));
+        add_result(SignalRegionData( _counters.at("SR17"),   1, { 0.5598, 0.21 } ));
+        add_result(SignalRegionData( _counters.at("SR18"),   3, { 0.9010, 0.49 } ));
+        add_result(SignalRegionData( _counters.at("SR19"), 308, { 333.9, 37.20 } ));
+        add_result(SignalRegionData( _counters.at("SR20"), 491, { 496.4, 89.45 } ));
+        add_result(SignalRegionData( _counters.at("SR21"),  85, { 105.1, 25.73 } ));
+        add_result(SignalRegionData( _counters.at("SR22"),  32, { 27.92, 3.96 } ));
+        add_result(SignalRegionData( _counters.at("SR23"),  64, { 63.84, 12.30 } ));
+        add_result(SignalRegionData( _counters.at("SR24"),  45, { 47.55, 13.08 } ));
+        add_result(SignalRegionData( _counters.at("SR25"),   1, { 1.252, 0.20 } ));
+        add_result(SignalRegionData( _counters.at("SR26"),   1, { 2.556, 1.34 } ));
+        add_result(SignalRegionData( _counters.at("SR27"),   5, { 5.522, 2.00 } ));
+        add_result(SignalRegionData( _counters.at("SR28"),  12, { 6.620, 2.27 } ));
+        add_result(SignalRegionData( _counters.at("SR29"),  23, { 22.26, 7.09 } ));
+        add_result(SignalRegionData( _counters.at("SR30"),  20, { 16.02, 4.71 } ));
+        add_result(SignalRegionData( _counters.at("SR31"),   4, { 5.101, 1.77 } ));
+        add_result(SignalRegionData( _counters.at("SR32"),  12, { 8.689, 3.14 } ));
+        add_result(SignalRegionData( _counters.at("SR33"),   7, { 5.713, 1.94 } ));
+        add_result(SignalRegionData( _counters.at("SR34"),   1, { 0.7688, 0.39 } ));
+        add_result(SignalRegionData( _counters.at("SR35"),   1, { 0.6560, 0.23 } ));
+        add_result(SignalRegionData( _counters.at("SR36"),   0, { 0.5598, 0.21 } ));
       }
 
 
