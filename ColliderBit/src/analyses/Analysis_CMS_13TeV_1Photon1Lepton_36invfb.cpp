@@ -118,7 +118,9 @@ using namespace std;
 namespace Gambit {
   namespace ColliderBit {
 
-
+    // This analysis class is also a base class for the analysis 
+    // class Analysis_CMS_13TeV_1Photon1Lepton_emu_combined_36invfb 
+    // defined further down
     class Analysis_CMS_13TeV_1Photon1Lepton_36invfb : public Analysis {
     public:
 
@@ -265,6 +267,7 @@ namespace Gambit {
         // sortByPt(muons);
 
 
+
         // Jets
         vector<const HEPUtils::Jet*> jets;
         for (const HEPUtils::Jet* jet : event->jets())
@@ -274,11 +277,9 @@ namespace Gambit {
         // // Sort
         // sortByPt(jets);
 
-
         // Remove any photon within DeltaR < 0.3 of any reconstructed e/mu
         removeOverlap(photons, electrons, 0.3);
         removeOverlap(photons, muons, 0.3);
-
 
         // Signal leptons, sorted by pT
         vector<const HEPUtils::Particle*> signalLeptons;
@@ -291,11 +292,10 @@ namespace Gambit {
         vector<const HEPUtils::Particle*> signalPhotons;
         signalPhotons = photons;
         sortByPt(signalPhotons);
-        size_t n_photons = signalLeptons.size();
-
+        size_t n_photons = signalPhotons.size();
 
         // Require at least one signal photon and one signal lepton
-        if (n_photons < 1 || n_leptons < 0) return;
+        if (n_photons < 1 || n_leptons < 1) return;
 
         // Get leadning lepton and leading photon
         const HEPUtils::Particle* lepton1 = signalLeptons.at(0);
@@ -312,8 +312,9 @@ namespace Gambit {
           if (m_egamma < 101.2) return;
         }
 
+
         // Require DeltaR(lepton1,photon1) > 0.8
-        double dR = deltaR_eta(lepton1->mom(), photon1->mom())
+        double dR = deltaR_eta(lepton1->mom(), photon1->mom());
         if (dR < 0.8) return;
 
         // Require mT > 100 and pTmiss > 120
@@ -335,7 +336,6 @@ namespace Gambit {
 
         // SR selection variable: pTgamma
         double pTgamma = photon1->pT();
-
 
         // 
         // Fill signal regions
@@ -459,6 +459,50 @@ namespace Gambit {
 
     // Factory fn
     DEFINE_ANALYSIS_FACTORY(CMS_13TeV_1Photon1Lepton_36invfb)
+
+
+
+    //
+    // Derived analysis class, where we combine the e+gamma and 
+    // mu+gamma SRs, to reduce the SR flip-flopping issue
+    //
+    class Analysis_CMS_13TeV_1Photon1Lepton_emu_combined_36invfb : public Analysis_CMS_13TeV_1Photon1Lepton_36invfb {
+
+    public:
+      Analysis_CMS_13TeV_1Photon1Lepton_emu_combined_36invfb() {
+        set_analysis_name("CMS_13TeV_1Photon1Lepton_emu_combined_36invfb");
+      }
+
+      virtual void collect_results() {
+
+        // We could of course combine the e+gamma and mu+gamma data once and just 
+        // hardcode those numbers here, but doing it explicitly here in the code
+        // makes it clear what is going on.
+        add_result(SignalRegionData( _counters.at("SR1").combine(_counters.at("SR19")),  153 + 308, { 175.0 + 333.9   , sqrt(pow(14.9,2) + pow(37.20,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR2").combine(_counters.at("SR20")),  275 + 491, { 275.4 + 496.4   , sqrt(pow(49.8,2) + pow(89.45,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR3").combine(_counters.at("SR21")),  67 + 85,   { 84.75 + 105.1   , sqrt(pow(19.95,2) + pow(25.73,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR4").combine(_counters.at("SR22")),  32 + 32,   { 18.36 + 27.92   , sqrt(pow(2.59,2) + pow(3.96,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR5").combine(_counters.at("SR23")),  46 + 64,   { 53.26 + 63.84   , sqrt(pow(10.77,2) + pow(12.30,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR6").combine(_counters.at("SR24")),  32 + 45,   { 30.57 + 47.55   , sqrt(pow(8.31,2) + pow(13.08,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR7").combine(_counters.at("SR25")),  1 + 1,     { 1.370 + 1.252   , sqrt(pow(0.26,2) + pow(0.20,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR8").combine(_counters.at("SR26")),  1 + 1,     { 1.223 + 2.556   , sqrt(pow(0.46,2) + pow(1.34,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR9").combine(_counters.at("SR27")),  4 + 5,     { 2.961 + 5.522   , sqrt(pow(0.76,2) + pow(2.00,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR10").combine(_counters.at("SR28")), 10 + 12,   { 6.620 + 6.620   , sqrt(pow(1.92,2) + pow(2.27,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR11").combine(_counters.at("SR29")), 21 + 23,   { 23.03 + 22.26   , sqrt(pow(6.74,2) + pow(7.09,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR12").combine(_counters.at("SR30")), 14 + 20,   { 12.35 + 16.02   , sqrt(pow(3.61,2) + pow(4.71,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR13").combine(_counters.at("SR31")), 6 + 4,     { 4.712 + 5.101   , sqrt(pow(1.39,2) + pow(1.77,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR14").combine(_counters.at("SR32")), 9 + 12,    { 9.406 + 8.689   , sqrt(pow(3.14,2) + pow(3.14,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR15").combine(_counters.at("SR33")), 4 + 7,     { 5.399 + 5.713   , sqrt(pow(1.80,2) + pow(1.94,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR16").combine(_counters.at("SR34")), 0 + 1,     { 0.4169 + 0.7688 , sqrt(pow(0.19,2) + pow(0.39,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR17").combine(_counters.at("SR35")), 1 + 1,     { 0.5598 + 0.6560 , sqrt(pow(0.21,2) + pow(0.23,2)) } ));
+        add_result(SignalRegionData( _counters.at("SR18").combine(_counters.at("SR36")), 3 + 0,     { 0.9010 + 0.5598 , sqrt(pow(0.49,2) + pow(0.21,2)) } ));
+
+      }
+
+    };
+
+    // Factory fn
+    DEFINE_ANALYSIS_FACTORY(CMS_13TeV_1Photon1Lepton_emu_combined_36invfb)
 
 
   }

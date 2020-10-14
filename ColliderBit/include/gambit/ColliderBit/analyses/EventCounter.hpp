@@ -123,6 +123,18 @@ namespace Gambit {
         return *this;
       }
 
+      // Add the content of another EventCounter to this one
+      EventCounter& combine(const EventCounter& other)
+      {
+        _sum += other.sum();
+        _weight_sum += other.weight_sum();
+
+        double other_weight_sum_err = other.weight_sum_err();
+        _weight_sum_err = sqrt((_weight_sum_err * _weight_sum_err) + (other_weight_sum_err * other_weight_sum_err));
+
+        return *this;
+      }
+
     };
 
   }
