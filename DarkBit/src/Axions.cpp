@@ -1730,7 +1730,7 @@ namespace Gambit
        const ModelParameters& params = *Dep::GeneralALP_parameters;
        double gaee2 = gsl_pow_2(1.0E+13 * std::fabs(params.at("gaee")));
        double gagg = 1.0E+10*std::fabs(params.at("gagg")); // gagg needs to be in 10^-10 GeV^-1.
-       double lgma0 = log10(params.at("ma0"));
+       double ma0 = params.at("ma0");
        // Value for He-abundance Y from 1503.08146: <Y> = 0.2515(17).
        const double Y = 0.2515;
        // Use interpolation for the finite-mass correction.
@@ -1738,12 +1738,14 @@ namespace Gambit
        // Initialise an effective axion-photon coupling, valid for low masses.
        double geff = gagg;
        // Apply correction for higher mass values...
-       if ((lgma0 > correction.lower()) && (lgma0 < correction.upper())) { geff *= pow(10, 0.5*correction.interpolate(lgma0)); };
+       static double m_min = pow(10,correction.lower());
+       static double m_max = pow(10,correction.upper());
+       if ((ma0 > m_min) && (ma0 < m_max)) { geff *= pow(10, 0.5*correction.interpolate(log10(ma0))); }
        // ... or set to zero if mass is too high.
-       if (lgma0 >= correction.upper()) { geff = 0.0; };
+       if (ma0 >= m_max) { geff = 0.0; }
        // Expressions only valid for gaee2 < 35.18 but limits should become stronger for gaee2 > 35.18 (but perhaps not gaee2 >> 35.18).
        // Conservative approach: Constrain gaee2 > 35.18 at the level of gaee2 = 35.18.
-       if (gaee2 > 35.18) { gaee2 = 35.18; };
+       if (gaee2 > 35.18) { gaee2 = 35.18; }
 
        result = -0.421824 - 0.0948659*(-4.675 + sqrt(21.8556 + 21.0824*geff)) - 0.00533169*gaee2 - 0.0386834*(-1.23 - 0.137991*pow(gaee2,0.75) + sqrt(1.5129 + gaee2)) + 7.3306*Y;
      }
