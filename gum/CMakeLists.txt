@@ -247,10 +247,11 @@ endif()
 
 # Check for Boost & drop FeynRules/SARAH shared object files.
 # Note that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
+# In OSX, for Boost versions at least 1.62 the component name also needs changing
 set(Boost_NO_BOOST_CMAKE ON)
 find_package(Boost 1.41.0 QUIET)
 if(Boost_FOUND)
-  if(Boost_VERSION LESS 106700)
+  if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND Boost_VERSION LESS 106700)
     if(PYTHON_VERSION_MAJOR EQUAL 2)
       set(python_component python)
     else()
@@ -262,6 +263,7 @@ if(Boost_FOUND)
 
   if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,dynamic_lookup")
+    set(python_component "${python_component}-mt")
   else()
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
   endif()
