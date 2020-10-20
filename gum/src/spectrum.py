@@ -210,6 +210,17 @@ def write_spectrum(gambit_model_name, model_parameters, spec,
             # add it to the Spectrum src code.
             if particle.tree_mass:
                 tree = particle.tree_mass
+
+                # If the tree mass is NotValid is because the particle belongs
+                # to a multiplet and SARAH's tree level mass will not give the 
+                # correct mixings. In this case one should use a spectrum generator
+                # We thus throw an error
+                if tree == "NotValid":
+                  raise GumError(("Particle {} is in a multiplet. "
+                                  "Tree level masses do not work. "
+                                  "Please select a spectrum generator (e.g. SPheno) as output."
+                            ).format(particle.name))
+
                 # Clean up the output of Mathematica's CForm...
                 # Common replacements to actual C(++) syntax
                 # Probably not complete, but the main culprits *should* be here

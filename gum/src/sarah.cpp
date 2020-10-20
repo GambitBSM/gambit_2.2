@@ -598,12 +598,23 @@ namespace GUM
 
             // If it's not SM, get the tree-level mass relation
             std::string treelevelmass = "";
+
             if (not SM)
             {
-              // Use Mathematica's terrible CForm output, amend this in GUM -- string replacement is nicer in Python :-)
-              command = "TreeMass[" + alt_name + ",EWSB] // CForm // ToString";
-              send_to_math(command);
-              get_from_math(treelevelmass);
+              // If there are multiplets, the tree-level masses cannot give the mixings or the EWSB conditions
+              // In these cases one should use a spectrum generator
+              // Hence, flag the tree level mass as not valid so an error can be thrown later if there's no spec gen
+              if (numelements > 1)
+              {
+                treelevelmass = "NotValid";
+              }
+              else
+              {
+                // Use Mathematica's terrible CForm output, amend this in GUM -- string replacement is nicer in Python :-)
+                command = "TreeMass[" + alt_name + ",EWSB] // CForm // ToString";
+                send_to_math(command);
+                get_from_math(treelevelmass);
+              }
             }
 
             // Add the particle to the list.
@@ -1524,7 +1535,7 @@ namespace GUM
       // // Compute the vertices here
       // model.calculate_vertices();
 
-      // Get the options to pass to backends (currently just SPheno)
+      // Get the options to pass to backends
       std::map<std::string, std::map<std::string, std::string> > BEoptions = opts.options();
 
       // Check the model using SARAH's CheckModel function
