@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master module containing all routines for finding, creating,
@@ -19,7 +17,6 @@
 #
 #  **************************************
 
-
 import os
 import re
 import numpy as np
@@ -29,7 +26,7 @@ from collections import defaultdict
 import filecmp
 import glob
 
-from setup import *
+from .setup import *
 
 def remove_tree_quietly(path):
     """
@@ -164,8 +161,8 @@ def amend_rollcall(capability, module, contents, reset_dict, filename=None):
     # Found the capability -> find the #undef
     if found == True:
         with open(location) as f:
-            for i in xrange(num):
-                f.next()
+            for i in range(num):
+                next(f)
             for no, line in enumerate(f, 1+num):
                 if lookup in line:
                     break
@@ -202,8 +199,8 @@ def find_function(function, capability, module, filename=None):
     terminate = "#undef CAPABILITY"
 
     with open(location) as f:
-        for i in xrange(num):
-            f.next()
+        for i in range(num):
+            next(f)
         for no, line in enumerate(f, 1+num):
             r = re.search(pat, line)
             if r:
@@ -347,10 +344,10 @@ def amend_file(filename, module, contents, line_number, reset_dict,
     lines = open(location, 'r').readlines()
 
     with open(temp_location, 'w') as f:
-        for i in xrange(line_number):
+        for i in range(line_number):
             f.write(lines[i])
         f.write(contents)
-        for i in xrange(len(lines)-line_number):
+        for i in range(len(lines)-line_number):
             f.write(lines[i+line_number])
 
     os.remove(location)
@@ -636,7 +633,7 @@ def revert(reset_file):
         # Go through the new capabilities and functions
         if 'capabilities' in data:
             capabilities = data['capabilities']
-            for filename, entries in capabilities.iteritems():
+            for filename, entries in iteritems(capabilities):
 
                 temp_file = filename + "_temp"
                 with open(filename, 'r') as original_file:
@@ -645,7 +642,6 @@ def revert(reset_file):
 
                 for entry in entries:
                     capability, function = entry.split('|')
-                    print entry
                     print((
                            "Removing FUNCTION: {0}, in CAPABILITY: {1}, in "
                            "file {2}..."
@@ -720,7 +716,7 @@ def revert(reset_file):
 
         # We want to match strings and not line numbers or anything like that.
         # This way, there is no order needed to perform resets in.
-        for filename, v in amended_files.iteritems():
+        for filename, v in iteritems(amended_files):
 
             print("Amending {0}...".format(filename))
 
@@ -753,7 +749,7 @@ def revert(reset_file):
         if 'new_models' in data:
             amended_capabilities = data['new_models']
 
-            for loc_cap_func_pattern, model in amended_capabilities.iteritems():
+            for loc_cap_func_pattern, model in iteritems(amended_capabilities):
                 
                 location, capability, function, pattern = \
                                                  loc_cap_func_pattern.split('|')
@@ -989,12 +985,12 @@ def drop_yaml_file(model_name, model_parameters, add_higgs, reset_contents,
         if i.shape == 'scalar' or i.shape == None: params[i.gb_in] = i.default
         elif re.match("m[2-9]x[2-9]", i.shape): 
             size = int(i.shape[-1])
-            for j in xrange(size):
-                for k in xrange(size):
+            for j in range(size):
+                for k in range(size):
                     params[i.gb_in + '_' + str(j+1) + 'x' + str(k+1)] = i.default
         elif re.match("v[2-9]", i.shape): 
             size = int(i.shape[-1])
-            for j in xrange(size):
+            for j in range(size):
                 params[i.gb_in + '_' + str(j+1)] = i.default
 
     # No double counting (also want to preserve the order)
@@ -1121,7 +1117,7 @@ def write_config_file(outputs, model_name, reset_contents, rebuild_backends=[]):
         "make -j<n> gambit\n"
     )
 
-    print towrite
+    print(towrite)
 
 def compare_patched_files(gambit_dir, gum_dir, file_endings = ()):
     """

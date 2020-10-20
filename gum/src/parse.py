@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Contains all routines for parsing input .gum files and 
@@ -31,8 +29,8 @@ import re
 from distutils.dir_util import copy_tree
 from collections import defaultdict
 
-from setup import *
-from cmake_variables import *
+from .setup import *
+from .cmake_variables import *
 
 """
 .GUM FILE PARSING
@@ -117,7 +115,7 @@ def check_gum_file(inputfile):
     Checks the input .GUM file for all necessary inputs.
     """
 
-    print("Attempting to parse {0}...").format(inputfile)
+    print("Attempting to parse {0}...".format(inputfile))
 
     if inputfile.endswith(".gum"):
         pass
@@ -435,9 +433,9 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
     justblocks = []
     paramsbyblock = {}
     # Go through blocks and check for no double definitions
-    for param, blockentry in blocks.iteritems():
+    for param, blockentry in iteritems(blocks):
         if isinstance(blockentry, dict): 
-            for block, index in blockentry.iteritems():
+            for block, index in iteritems(blockentry):
                 if block in paramsbyblock:
                     l = paramsbyblock[block] # This is a list
                     if index in l:
@@ -460,7 +458,7 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
     # Check for InteractionOrder
     # If it's Yukawa or CKM then this will work fine. Demand it for the rest.
     if outputs.ufo:
-        for param, orders in interactionorders.iteritems():
+        for param, orders in iteritems(interactionorders):
             if orders in ["Internal", "yukawa", "ckm"]:
                 continue
             if orders == "NULL":
@@ -918,7 +916,7 @@ def parse_sarah_model_file(model_name, outputs):
     # Any numerical dependences should be given in the parameters list, save 'em
     massdeps = defaultdict(list)
 
-    for particle, entry in particles.iteritems():
+    for particle, entry in iteritems(particles):
 
         # The particle description
         desc = re.search(r'Description\s*->\s*"(.*?)"', entry)
@@ -1030,7 +1028,7 @@ def parse_sarah_model_file(model_name, outputs):
     for match in re.findall(pat, s2):
         parameters[match[0]] = match[1]
 
-    for parameter, entry in parameters.iteritems():
+    for parameter, entry in iteritems(parameters):
 
         # The parameter description
         desc = re.search(r'Description\s*->\s*"(.*?)"', entry)

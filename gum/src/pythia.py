@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Contains all routines for Pythia output,
@@ -21,11 +19,11 @@
 #
 #  **************************************
 
-from backends import *
-from setup import *
-from files import *
-from parse import *
-from cmake_variables import *
+from .backends import *
+from .setup import *
+from .files import *
+from .parse import *
+from .cmake_variables import *
 
 class PythiaMatch:
     """

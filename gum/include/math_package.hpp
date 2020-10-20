@@ -1,5 +1,5 @@
-//   GUM: GAMBIT Universal Models
-//   **********************************
+//   GUM: GAMBIT Universal Model Machine
+//   ***********************************
 ///  \file
 ///
 ///  Declarations of mother class for

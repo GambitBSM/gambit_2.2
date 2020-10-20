@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master module for all DecayBit-related 
@@ -20,15 +18,15 @@
 #  \date 2020 Mar
 #
 #  **************************************
+
 import numpy as np
 import re
 from collections import Counter
 from collections import defaultdict
 
-from setup import *
-from files import *
-from cmake_variables import *
-
+from .setup import *
+from .files import *
+from .cmake_variables import *
 
 """
 CALCHEP-ONLY ROUTINES
@@ -315,7 +313,7 @@ def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays,
     rollcall_entries = []
     new_decays = []
      
-    for i in xrange(len(newdecays)):
+    for i in range(len(newdecays)):
         decayparticle = newdecays[i][0]
         # TODO: support for BSM contribution to Z/W decays
         if decayparticle in [24, -24, 23]:
@@ -391,7 +389,7 @@ def amend_all_decays_calchep(model_name, spectrum, new_decays):
     header = ""
     src_extra = ""
     
-    for i in xrange(len(new_decays)):
+    for i in range(len(new_decays)):
         src_extra += (
                   "decays(\"{0}\") = *Dep::{1};\n"
         ).format(new_decays[i][1], new_decays[i][0])
@@ -410,7 +408,7 @@ def amend_all_decays_calchep(model_name, spectrum, new_decays):
             "}}\n"
         ).format(model_name, src_extra), 6)
     
-    for i in xrange(len(new_decays)):
+    for i in range(len(new_decays)):
         header += (
                "\n    MODEL_CONDITIONAL_DEPENDENCY({0}, DecayTable::Entry, {1})"
         ).format(new_decays[i][0], model_name)

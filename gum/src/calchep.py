@@ -1,6 +1,16 @@
-"""
-Master module for all CalcHEP related routines.
-"""
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
+#  \file
+#
+#  Master module for all CalcHEP related routines.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019, 2020
+#
+#  **************************************
 
 import argparse
 import os
@@ -9,8 +19,8 @@ import re
 import datetime
 import numpy as np
 
-from setup import *
-from files import *
+from .setup import *
+from .files import *
 
 def clean(line):
     """
@@ -209,7 +219,7 @@ def convert(vertex, PDG_conversion):
     Swaps field names for PDG codes for a vertex (list object).
     """
 
-    for particleName, PDGcode in PDG_conversion.iteritems():
+    for particleName, PDGcode in iteritems(PDG_conversion):
         for i in range(0, len(vertex)):
             if vertex[i] == particleName:
                 vertex[i] = PDGcode
@@ -239,7 +249,7 @@ def get_vertices(foldername):
         with open(foldername + "/prtcls1.mdl") as prtcls:
 
             # Trim the unuseful information such as model name etc. from the beginning
-            for i in xrange(3):
+            for i in range(3):
                 next(prtcls)
 
             for line in prtcls:
@@ -285,7 +295,7 @@ def get_vertices(foldername):
         with open(foldername + "/lgrng1.mdl") as lgrng:
 
             # Trim the model etc. from the beginning
-            for i in xrange(3):
+            for i in range(3):
                 next(lgrng)
 
             # Read in line-by-line.
@@ -424,7 +434,7 @@ def save_CH_matrix_elements(calchep_processes):
     xsecs = calchep_processes['xsecs']
 
     # Initial state, final state
-    for IS, FS in decays.iteritems():
+    for IS, FS in iteritems(decays):
 
         fs = []
         for f in FS[0]:
@@ -436,7 +446,7 @@ def save_CH_matrix_elements(calchep_processes):
         ).format(IS, ', '.join(fs))
 
  
-    for IS, FS in xsecs.iteritems():
+    for IS, FS in iteritems(xsecs):
 
         fs = []
         for f in FS[0]:

@@ -1,9 +1,26 @@
-"""
-Global variables for GUM, passed down from cmake.
-"""
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
+#  \file
+#
+#  Global variables for GUM, passed down from cmake.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019, 2020
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020
+#
+#  **************************************
 
 # GUM directory
 GUM_DIR = "@GUM_DIR@"
+
+# Python executable
+PYTHON_EXECUTABLE = "@PYTHON_EXECUTABLE@"
 
 # Pythia version
 base_pythia_version = "@BASE_PYTHIA_VERSION@"

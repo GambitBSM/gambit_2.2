@@ -1,12 +1,26 @@
-"""
-Contains all routines for Vevacious output from SARAH.
-"""
-
-from setup import *
-from files import *
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
+#  \file
+#
+#  Contains all routines for Vevacious output from SARAH.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019, 2020
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020
+#
+#  **************************************
 
 import shutil
 import os
+
+from .setup import *
+from .files import *
 
 def copy_vevacious_files(model_name, vevdir):
     """
@@ -105,7 +119,6 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
         "std::string inputFilename = inputspath + \"/InitializationFiles/"
         "VevaciousPlusPlusObjectInitialization_mpirank_\"+ rankstring "
         "+\".xml\";\n"
-        "vevaciousPlusPlus( inputFilename );\n"
         "result.set_inputFilename(inputFilename);\n"
         "result.set_inputPath(inputspath);\n"
         "\n"
@@ -130,7 +143,7 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
     )
 
     # Dict of blocks - add the LHA reading routines to each
-    for block, contents in params_by_block.iteritems():
+    for block, contents in iteritems(params_by_block):
 
         towrite += write_readlhablock(block, contents)
 
@@ -228,7 +241,7 @@ def write_readlhablock(block, contents):
     # Otherwise, piecewise
     else:
 
-        for index, name in contents.iteritems():
+        for index, name in iteritems(contents):
             entry = (
                     "{{ {0}, SLHAea::to<double>(slhaea.at(\"{1}\")"
                     ".at({0}).at(1))}}"
