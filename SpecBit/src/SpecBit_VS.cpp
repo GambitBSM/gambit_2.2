@@ -456,9 +456,15 @@ namespace Gambit
         for(auto vacua : *Dep::compare_panic_vacua)
         {
           if (vacua.second != "JustThermal")
+          {
+            logger() << LogTags::debug << "Adding " << vevacious_results.get_width(vacua.first) << " to decay withd for " << vacua.second << " contribution" << EOM;
             width += vevacious_results.get_width(vacua.first);
+          }
           if (vacua.second != "JustQuantum")
+          {
+            logger() << LogTags::debug << "Adding " << vevacious_results.get_thermalWidth(vacua.first) << " to decay withd for " << vacua.second << " contribution" << EOM;
             width += vevacious_results.get_thermalWidth(vacua.first);
+          }
         }
 
         double lifetime = hbar/width;
