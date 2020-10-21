@@ -4109,6 +4109,14 @@ ConstantMassALP_parameters: |
    Parameters of the ConstantMassALP model (Cagg, Caee, CaN, fa, Lambda, thetai).
    See also ./gambit ConstantMassALP
 
+XENON1T_DM_NuisanceParameters_parameters: |
+   Parameters of the XENON1T_DM_NuisanceParameters model (delta_eff,delta_bkg,x_3H).
+   See also ./gambit XENON1T_DM_NuisanceParameters
+
+XENON1T_NuisanceParameters_parameters: |
+   Parameters of the XENON1T_NuisanceParameters model (eta).
+   See also ./gambit XENON1T_NuisanceParameters
+
 QCDAxion_ZeroTemperatureMass: |
    Nuisance likelihood for the QCD-related energy scale LambdaChi, which defines the low-energy QCD axion mass.
 
