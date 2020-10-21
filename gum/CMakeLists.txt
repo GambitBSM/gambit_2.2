@@ -270,9 +270,15 @@ if(Boost_FOUND)
 
   find_package(Boost 1.41.0 REQUIRED COMPONENTS ${python_component} filesystem system)
   include_directories("${Boost_INCLUDE_DIR}")
-  add_library(fr SHARED src/feynrules.cpp src/math_package.cpp)
+
+  if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    add_library(fr MODULE src/feynrules.cpp src/math_package.cpp)
+    add_library(sarah MODULE src/sarah.cpp src/math_parckage.cpp)
+  else()
+    add_library(fr SHARED src/feynrules.cpp src/math_package.cpp)
+    add_library(sarah SHARED src/sarah.cpp src/math_package.cpp)
+  endif()
   target_link_libraries(fr ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
-  add_library(sarah SHARED src/sarah.cpp src/math_package.cpp)
   target_link_libraries(sarah ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 
 else()
