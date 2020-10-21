@@ -30,6 +30,13 @@ from src import *
 from collections import defaultdict
 from distutils.dir_util import copy_tree
 
+try:
+    # Python 2
+    xrange
+except NameError:
+    # Python 3, xrange is now named range
+    xrange = range
+
 print()
 print(banner())
 print("-- Running GUM with python version", platform.python_version(), "--")
