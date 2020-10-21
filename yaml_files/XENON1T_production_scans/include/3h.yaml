@@ -9,4 +9,4 @@
     x_3H:
       mean: [-27.]
       sigs: [3.]
-      prior_type: log10normal
+      prior_type: lognormal

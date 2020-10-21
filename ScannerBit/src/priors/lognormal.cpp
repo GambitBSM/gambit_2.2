@@ -2,102 +2,156 @@
 //  *********************************************
 ///  \file
 ///
-///  Prior object construction routines
-///  
+///  Multivariate Log-Normal prior
 ///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
-///   
+///
 ///  \author Ben Farmer
-///          (benjamin.farmer@monash.edu.au)
+///    (benjamin.farmer@monash.edu.au)
 ///  \date 2013 Dec
 ///
 ///  \author Gregory Martinez
-///          (gregory.david.martinez@gmail.com)
+///    (gregory.david.martinez@gmail.com)
 ///  \date Feb 2014
+///
+///  \author Andrew Fowlie
+///    (andrew.j.fowlie@qq.com)
+///  \date August 2020
 ///
 ///  *********************************************
 
+#include <cmath>
 #include "gambit/ScannerBit/priors/lognormal.hpp"
 
 namespace Gambit
 {
-        namespace Priors
+  namespace Priors
+  {
+    LogNormal::LogNormal(const std::vector<std::string>& param, const Options& options) :
+      BasePrior(param, param.size()), col(param.size())
+    {
+      std::vector<std::vector<double>> cov_matrix(param.size(), std::vector<double>(param.size(), 0.));
+
+      if (options.hasKey("sigma") && options.hasKey("cov_matrix")) {
+          std::stringstream err;
+          err << "LogNormal prior: "
+              << "define covariance matrix by either 'cov_matrix' or 'sigma'"
+              << std::endl;
+          Scanner::scan_error().raise(LOCAL_INFO, err.str());
+      }
+      else if (options.hasKey("cov_matrix"))
+      {
+        cov_matrix = options.getValue<std::vector<std::vector<double>>>("cov_matrix");
+
+        if (cov_matrix.size() != param.size())
         {
-                Log10Normal::Log10Normal(const std::vector<std::string>& param, const Options& options) : BasePrior(param, param.size()), mean(param.size(), 0.0), col(param.size())
-                { 
-                        std::vector<std::vector<double>> cov(param.size(), std::vector<double>(param.size(), 0.0));
-                        
-                        bool good = true;
-                        std::stringstream err;
-                        if (options.hasKey("cov"))
-                        {
-                                cov = options.getValue< std::vector<std::vector<double>> >("cov");
-                                
-                                if (cov.size() != param.size())
-                                {
-                                        good = false;
-                                        err << "Log10Normal (prior):  Covariance matrix is not the same dimension has the parameters." << std::endl;
-                                }
-                                
-                                for (std::vector<std::vector<double>>::iterator it = cov.begin(); it != cov.end(); it++)
-                                {
-                                        if (it->size() != cov.size())
-                                        {
-                                                good = false;
-                                                err << "Log10Normal (prior):  Covariance matrix is not square." << std::endl;
-                                        }
-                                }
-                        }
-                        else if (options.hasKey("sigs"))
-                        {
-                                std::vector <double> sigs = options.getValue <std::vector <double>> ("sigs");
-                                if (sigs.size() != param.size())
-                                {
-                                        good = false;
-                                        err << "Log10Normal (prior):  Sigma vector is not the same dimension has the parameters." << std::endl;
-                                }
-                                else
-                                {
-                                        for (int i = 0, end = sigs.size(); i < end; i++)
-                                        {
-                                                cov[i][i] = sigs[i]*sigs[i];
-                                        }
-                                }
-                        }
-                        else
-                        {
-                                good = false;
-                                err << "Log10Normal (prior):  Covariance matrix is not defined in inifile." << std::endl;
-                        }
-                        
-                        if (options.hasKey("mean"))
-                        {
-                                std::vector <double> temp = options.getValue <std::vector <double>> ("mean");
-                                if (temp.size() == mean.size())
-                                {
-                                        mean = temp;
-                                }
-                                else
-                                {
-                                        good = false;
-                                        err << "Log10Normal (prior):  Mean vector is not the same dimension has the parameters." << std::endl;
-                                }
-                        }
-                        
-                        if (good)
-                        {
-                                if (!col.EnterMat(cov))
-                                {
-                                        err << "Log10Normal (prior):  Covariance matrix is not postive definite." << std::endl;
-                                        Scanner::scan_error().raise(LOCAL_INFO, err.str());
-                                }
-                        }
-                        else
-                        {
-                                Scanner::scan_error().raise(LOCAL_INFO, err.str());
-                        }
-                }
+          std::stringstream err;
+          err << "LogNormal prior: "
+              << "'cov_matrix' is not the same dimension as the parameters"
+              << std::endl;
+          Scanner::scan_error().raise(LOCAL_INFO, err.str());
         }
-}
+
+        for (const auto& row : cov_matrix)
+        {
+          if (row.size() != cov_matrix.size())
+          {
+            std::stringstream err;
+            err << "LogNormal prior: "
+                << "'cov_matrix' is not square"
+                << std::endl;
+            Scanner::scan_error().raise(LOCAL_INFO, err.str());
+          }
+        }
+      }
+      else if (options.hasKey("sigma"))
+      {
+        std::vector<double> sigma = options.getVector<double>("sigma");
+        if (sigma.size() != param.size())
+        {
+            std::stringstream err;
+            err << "LogNormal prior: "
+                << "'sigma' is not the same dimension as the parameters"
+                << std::endl;
+            Scanner::scan_error().raise(LOCAL_INFO, err.str());
+        }
+        else
+        {
+          for (int i = 0, end = sigma.size(); i < end; i++)
+          {
+            cov_matrix[i][i] = sigma[i] * sigma[i];
+          }
+        }
+      }
+      else
+      {
+        std::stringstream err;
+        err << "LogNormal prior: "
+            << "the covariance matrix is not defined by either 'cov_matrix' or 'sigma'"
+            << std::endl;
+        Scanner::scan_error().raise(LOCAL_INFO, err.str());
+      }
+
+      if (options.hasKey("mu"))
+      {
+        mu = options.getVector<double>("mu");
+        if (mu.size() != param.size())
+        {
+          std::stringstream err;
+          err << "LogNormal prior: "
+              << "'mu' vector is not the same dimension as the parameters"
+              << std::endl;
+          Scanner::scan_error().raise(LOCAL_INFO, err.str());
+        }
+      }
+      else
+      {
+        std::stringstream err;
+        err << "LogNormal prior: "
+            << "'mu' vector is required"
+            << std::endl;
+        Scanner::scan_error().raise(LOCAL_INFO, err.str());
+      }
+
+      if (!col.EnterMat(cov_matrix))
+      {
+        std::stringstream err;
+        err << "LogNormal prior: "
+            << "covariance matrix is not positive-definite"
+            << std::endl;
+        Scanner::scan_error().raise(LOCAL_INFO, err.str());
+      }
+
+      if (options.hasKey("base"))
+      {
+        if (options.getValue<std::string>("base") == "e")
+        {
+          base = M_E;
+        }
+        else
+        {
+          base = options.getValue<double>("base");
+        }
+      }
+      else
+      {
+        std::stringstream err;
+        err << "LogNormal prior: "
+            << "'base' is required"
+            << std::endl;
+        Scanner::scan_error().raise(LOCAL_INFO, err.str());
+      }
+
+      if (base <= 0.)
+      {
+        std::stringstream err;
+        err << "LogNormal prior: "
+            << "'base' must be positive"
+            << std::endl;
+        Scanner::scan_error().raise(LOCAL_INFO, err.str());
+      }
+    }
+  }  // namespace Priors
+}  // namespace Gambit
