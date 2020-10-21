@@ -714,7 +714,7 @@ namespace Gambit
       //std::cout << "Energy: " << erg << ", expoure = " << exposure << "." << std::endl;
       SolarModel_params2 p2 = {erg, rs, sol};
 
-      gsl_integration_workspace * w = gsl_integration_workspace_alloc (1E6);
+      gsl_integration_workspace * w = gsl_integration_workspace_alloc(1E6);
       double result, error;
 
       gsl_function F;
@@ -806,7 +806,7 @@ namespace Gambit
         double bin_lo = 2.0, bin_delta = 0.5, rs = 1.0;
         // Number of bins
         int n_bins = 10;
-        if (data_set=="CAST2007") { bin_lo = 0.8; bin_delta = 0.3; rs = 0.231738; n_bins = 20; };
+        if (data_set=="CAST2007") { bin_lo = 0.8; bin_delta = 0.3; rs = 0.231738; n_bins = 20; }
 
         // Arrays to store the results in.
         double gagg_counts [n_bins*n_mass_bins];
@@ -1133,46 +1133,6 @@ namespace Gambit
       const double CaggQCDsigma = 0.04;
 
       result = gaussian_nuisance_lnL(CaggQCDmu, CaggQCD, CaggQCDsigma);
-    }
-
-    // Capability function to provide a simple Gaussian nuisance likelihood for
-    // the model-independent parameters of the nucleon couplings
-    void calc_KSVZAxion_AxionNucleonConstants_NuisanceLikelihood(double &result)
-    {
-      using namespace Pipes::calc_KSVZAxion_AxionNucleonConstants_NuisanceLikelihood;
-      double Can0 = *Param["Can0"];
-      double Cap0 = *Param["Cap0"];
-
-      // Results from NLO calculations (1511.02867).
-      const double Can0mu = -0.02;
-      const double Can0sigma = 0.03;
-      const double Cap0mu = -0.47;
-      const double Cap0sigma = 0.03;
-
-      result = gaussian_nuisance_lnL(Can0mu, Can0, Can0sigma) + gaussian_nuisance_lnL(Cap0mu, Cap0, Cap0sigma);
-    }
-
-    // Capability function to provide a simple Gaussian nuisance likelihood for
-    // the model-independent contribution to the axion-photon coupling for QCD axions.
-    void calc_DFSZAxion_AxionNucleonConstants_NuisanceLikelihood(double &result)
-    {
-      using namespace Pipes::calc_DFSZAxion_AxionNucleonConstants_NuisanceLikelihood;
-      double Can0 = *Param["Can0"];
-      double Cap0 = *Param["Cap0"];
-      double CaNTilde1 = *Param["CaNTilde1"];
-      double CaNTilde2 = *Param["CaNTilde2"];
-
-      // Based on results from NLO calculations (1511.02867).
-      const double Can0mu = -0.02;
-      const double Can0sigma = 0.03;
-      const double Cap0mu = -0.47;
-      const double Cap0sigma = 0.03;
-      const double CaNTilde1mu = 0.88;
-      const double CaNTilde1sigma = 0.03;
-      const double CaNTilde2mu = -0.39;
-      const double CaNTilde2sigma = 0.02;
-
-      result = gaussian_nuisance_lnL(Can0mu, Can0, Can0sigma) + gaussian_nuisance_lnL(Cap0mu, Cap0, Cap0sigma) + gaussian_nuisance_lnL(CaNTilde1mu, CaNTilde1, CaNTilde1sigma) + gaussian_nuisance_lnL(CaNTilde2mu, CaNTilde2, CaNTilde2sigma);
     }
 
     // Auxillary function for QCD nuisance likelihood below.
@@ -2219,12 +2179,9 @@ namespace Gambit
       double bkg_scale = 1.0 + *Param["delta_bkg"];
       double eff = 1.0 + *Param["delta_eff"];
 
-      // static const bool include_bkg_tritium = runOptions->getValueOrDef<bool> (false, "include_bkg_tritium");
-
       static bool include_inverse_Primakoff = runOptions->getValueOrDef<bool> (true, "include_inverse_Primakoff");
 
       // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years)
-
       static const Eigen::ArrayXd observed = (Eigen::ArrayXd(29) <<
         26., 61., 55., 47., 49.,
         47., 44., 41., 40., 37.,
@@ -2305,12 +2262,13 @@ namespace Gambit
                               signal_ref_primakoff * gagamma * gagamma +
                               signal_ref_fe57 * gaN * gaN);
 
-      if (include_inverse_Primakoff) {
+      if (include_inverse_Primakoff)
+      {
         signal = signal + gagamma * gagamma * (
-          signal_ref_ABC_inv_p * gae * gae +
-          signal_ref_primakoff_inv_p * gagamma * gagamma +
-          signal_ref_fe57_inv_p * gaN * gaN);
-      };
+                 signal_ref_ABC_inv_p * gae * gae +
+                 signal_ref_primakoff_inv_p * gagamma * gagamma +
+                 signal_ref_fe57_inv_p * gaN * gaN);
+      }
 
       const Eigen::ArrayXd expected = eff * (bkg_scale * bkg + signal);
 
@@ -2397,7 +2355,7 @@ namespace Gambit
           gsl_integration_qags (&f, 1.+i, 2.+i, 0, 1e-7, 1000, w, &dRdE_result, &error);
           double s = amplitude * 1/sqrt(2*pi)/sigma * dRdE_result;
           signal_vec.push_back(s);
-        };
+        }
         gsl_integration_workspace_free (w);
 
         static const double asimov = (observed * observed.log() - observed).sum();
@@ -2407,7 +2365,7 @@ namespace Gambit
         const Eigen::ArrayXd expected = rel_eff * (bkg_scale * bkg + signal);
 
         result = (observed * expected.log() - expected).sum() - asimov;
-      };
+      }
     }
 
     void calc_lnL_XENON1T_Anomaly_NuisanceParameters(double &result)
