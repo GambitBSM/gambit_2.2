@@ -217,7 +217,7 @@ macro(find_python_module module)
 endmacro()
 
 # Check for required Python libraries
-foreach(module yaml os re datetime sys getopt shutil itertools collections copy numpy distutils filecmp glob six argparse)
+foreach(module yaml os re datetime sys getopt shutil itertools collections copy numpy distutils filecmp glob six argparse future)
   find_python_module(${module} REQUIRED)
 endforeach()
 
