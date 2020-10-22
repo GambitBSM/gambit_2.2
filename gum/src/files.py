@@ -817,7 +817,7 @@ def revert(reset_file):
                 parts = particledata['OtherModels']['Particles']
 
                 # List of particles to remove
-                toremove = particles.values()[0]
+                toremove = list(particles.values())[0]
                 toremove_name = [x.split('|')[0] for x in toremove]
                 toremove_model = toremove[0].split('|')[1]
 

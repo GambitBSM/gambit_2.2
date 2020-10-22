@@ -155,7 +155,7 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
 
     # We now have a dictionary of all the possible states. Create a list of all
     # possible final states -- for *all* neutral Higgses, CP even and odd
-    invisibles = list(set([tuple(sorted(x)) for y in invis.values() for x in y]))
+    invisibles = list(set([tuple(sorted(x)) for y in list(invis.values()) for x in y]))
     absinvs = [abs(int(i[0])) for i in invisibles]
 
     towrite = (

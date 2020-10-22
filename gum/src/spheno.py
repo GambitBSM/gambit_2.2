@@ -756,11 +756,11 @@ def add_to_spheno_backend_types(type_dictionary, variable_dictionary,
 
     # New types from the harvesting
     types = []
-    for t in type_dictionary.values():
+    for t in list(type_dictionary.values()):
         if t.startswith('Farray_'): types.append(t)   
-    for t in variable_dictionary.values():
+    for t in list(variable_dictionary.values()):
         if t.startswith('Farray_'): types.append(t)
-    for t in hb_variable_dictionary.values():
+    for t in list(hb_variable_dictionary.values()):
         if t.startswith('Farray_'): types.append(t)
 
     btypes = "../Backends/include/gambit/Backends/backend_types/SPheno.hpp"
@@ -998,7 +998,7 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
             defs = func.split('::')
 
             # Firstly, find out which arguments we need to obtain types for
-            for v in function_dictionary.values():
+            for v in list(function_dictionary.values()):
                 for arg in v:
                     # If we've got it already
                     if arg in argument_dictionary: 

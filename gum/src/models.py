@@ -131,7 +131,7 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
             # If not using SPheno, don't have mixing matrices as output.
             if not with_spheno:
                 continue
-            for v in params_by_block.values():
+            for v in list(params_by_block.values()):
                 if not 'mixingmatrix' in v: continue
                 if par.name == "sinW2": name = par.name
                 elif v['outputname'] == par.name:
