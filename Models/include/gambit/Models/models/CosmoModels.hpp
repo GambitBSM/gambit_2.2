@@ -49,6 +49,7 @@
   DEFINEPARS(T_cmb,omega_b,omega_cdm,H0,tau_reio)
   MAP_TO_CAPABILITY(T_cmb,T_cmb)
   MAP_TO_CAPABILITY(H0, H0)
+  MAP_TO_CAPABILITY(omega_cdm, omega_cdm)
 #undef MODEL
 
 // Vanilla ΛCDM.

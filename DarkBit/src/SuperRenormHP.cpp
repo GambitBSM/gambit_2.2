@@ -1088,12 +1088,9 @@ namespace Gambit
 
       double RD = *Dep::DM_relic_density;
 
-      double H0 = *Dep::H0;
-      double h = H0/100;
-      double H0_s = H0/Mpc_2_km; // H0 in 1/s
-      double rhoC = 3*pow(H0_s, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3); // critical density un Gev/cm^3
+      double rhoC_over_h2 = 3*pow(100/Mpc_2_km, 2)*pow(Mp, 2)/(8*pi)/hbar_GeV/pow(cs, 3); // critical density un Gev/cm^3
 
-      result = RD/rhoC*h*h;
+      result = RD/rhoC_over_h2;
     }
 
     // Linear interpolation in lin-log space.

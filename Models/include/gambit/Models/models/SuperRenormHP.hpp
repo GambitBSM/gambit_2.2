@@ -31,9 +31,8 @@
   INTERPRET_AS_X_DEPENDENCY(ModifiedGravityYukawa, get_Higgs_Nucleon_coupling_fN, Higgs_Nucleon_coupling_fN)
 
   INTERPRET_AS_X_FUNCTION(DecayingDM_mixture, SuperRenormHP_to_DecayingDM_mixture)
-  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, DM_relic_density, double)
-  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, H0, double)
-  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, Omega0_cdm, double)
+  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, RD_oh2, double)
+  INTERPRET_AS_X_DEPENDENCY(DecayingDM_mixture, omega_cdm, double)
 
   MAP_TO_CAPABILITY(mS, DM_mass)
 #undef MODEL

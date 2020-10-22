@@ -67,18 +67,12 @@ void MODEL_NAMESPACE::SuperRenormHP_to_DecayingDM_mixture (const ModelParameters
   double gamma_e = ( mS >= 2*me ) ? pow(theta,2)*pow(me,2)*mS/(8*pi*pow(vev,2))*pow(1 - 4*pow(me,2)/pow(mS,2), 3./2.) : 0;
   double gamma_tot = gamma_ph + gamma_e;
 
-  double RD = *Dep::DM_relic_density;
-  double H0 = *Dep::H0;
-  double Omega0_cdm = *Dep::Omega0_cdm;
-
-  const double Mpc_2_km = 3.0857e19; // Mpc to km
-
-  double H0_s = H0/Mpc_2_km; // H0 in 1/s
-  double rhoC = 3*pow(H0_s, 2)*pow(Gambit::m_planck, 2)/(8*pi)/Gambit::hbar/pow(Gambit::s2cm, 3); // critical density un Gev/cm^3
+  double RD_oh2 = *Dep::RD_oh2;
+  double omega_cdm = *Dep::omega_cdm;
 
   friendparams.setValue("mass", mS);
   friendparams.setValue("lifetime", 1/gamma_tot/Gambit::hbar);
-  friendparams.setValue("fraction", RD/Omega0_cdm/rhoC);
+  friendparams.setValue("fraction", RD_oh2/omega_cdm);
   friendparams.setValue("BR_ph", gamma_ph/gamma_tot);
   friendparams.setValue("BR_el", gamma_e/gamma_tot);
 
