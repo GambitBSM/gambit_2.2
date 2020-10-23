@@ -777,7 +777,9 @@ if args.file:
         if darkbit:
             m = "DarkBit"
             amend_rollcall("DarkMatter_ID", m, dmid_cap, reset_contents)
-            amend_rollcall("DarkMatterConj_ID", m, dmconj_cap, reset_contents)
+            if not gum.dm_decays:
+                amend_rollcall("DarkMatterConj_ID", m, dmconj_cap, 
+                               reset_contents)
             write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
             if pc:
                 amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)
@@ -869,7 +871,8 @@ if args.file:
             write_file(f+".hpp", m, mo_head, reset_contents)
             add_to_backend_locations(be, be_loc, ver, reset_contents)
             add_micromegas_to_cmake(gum.name, reset_contents)
-            add_micromegas_to_darkbit_rollcall(gum.name, reset_contents)
+            add_micromegas_to_darkbit_rollcall(gum.name, reset_contents, 
+                                               gum.dm_decays)
 
         # Pythia
         if output_opts.pythia:

@@ -48,8 +48,15 @@ class Inputs:
 
         self.name = model_name.replace('-','_')
         self.base_model = base_model
-        self.dm_pdg = wimp_candidate
-        self.dm_decays = decaying_dm
+
+        # Set the DM PDG code from either the decaying DM or WIMP candidate
+        if decaying_dm:
+            self.dm_pdg = decaying_dm
+            self.dm_decays = True
+        else:
+            self.dm_pdg = wimp_candidate
+            self.dm_decays = False
+
         self.math = mathpackage
         self.restriction = None
         self.LTot = lagrangian
@@ -247,22 +254,25 @@ def fill_gum_object(data):
 
     outputs = Outputs(mathpackage, options=options, **opts)
 
+    # See if we're told DM is a decaying particle or not...
+    if 'decaying_dm_candidate' in data:
+        decaying_dm = data['decaying_dm_candidate']
+    else:
+        decaying_dm = None
+
+    # If decaying DM + WIMP candidate -> throw error
+    if decaying_dm and wimp_candidate:
+        raise GumError(("\n\nYou have specified both a WIMP candidate and "
+                        "a decaying DM candidate.\nGUM can only handle one "
+                        "of these at present. Please amend your .gum file.\n"))
+
     # If the user wants MicrOMEGAs output but hasn't specified a DM candidate
-    if not wimp_candidate and outputs.mo:
+    if not (wimp_candidate or decaying_dm) and outputs.mo:
         raise GumError(("\n\nYou have asked for MicrOMEGAs output but have not "
                         "specified which particle is meant to be the DM "
                         "candidate! Please add an entry to your .gum file "
-                        "like:\n\nwimp_candidate: 9900001 # <--- insert the "
-                        "desired PDG code here!!\n"))   
-
-    # See if we're told DM is a decaying particle or not...
-    if 'decaying_dm' in data:
-        if data['decaying_dm'] == True:
-            decaying_dm = True
-        else:
-            decaying_dm = False
-    else:
-        decaying_dm = False
+                        "like:\n\nwimp_candidate: 9900001 "
+                        "# <--- Desired PDG code here.\n"))
 
     # FeynRules restriction files
     restriction = None
