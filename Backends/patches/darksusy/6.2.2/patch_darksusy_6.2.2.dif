@@ -1,6 +1,6 @@
-diff -rupN darksusy-6.2.2/makefile.in ../installed/darksusy/6.2.2/makefile.in
---- darksusy-6.2.2/makefile.in	2020-02-12 18:28:53.008236862 +0100
-+++ ../installed/darksusy/6.2.2/makefile.in	2020-02-12 19:10:27.244309971 +0100
+diff -rupN darksusy-6.2.2_original/makefile.in darksusy-6.2.2_patched/makefile.in
+--- darksusy-6.2.2_original/makefile.in	2020-02-12 18:28:53.008236862 +0100
++++ darksusy-6.2.2_patched/makefile.in	2020-02-12 19:10:27.244309971 +0100
 @@ -395,19 +395,19 @@ coffee :
  # Below are instructions for shared libraries, currently used by GAMBIT
  
@@ -27,9 +27,9 @@ diff -rupN darksusy-6.2.2/makefile.in ../installed/darksusy/6.2.2/makefile.in
  .PHONY: all config_paths darksusy_lib dslib private install_tables \
  	clean clobber uninstall rmmore libisajet pdf-manual \
 
-diff -rupN darksusy-6.2.2/src_models/mssm/an_ib/dsIBffdxdy.f ../installed/darksusy/6.2.2/src_models/mssm/an_ib/dsIBffdxdy.f
---- darksusy-6.2.2/src_models/mssm/an_ib/dsIBffdxdy.f	2020-10-23 19:46:26.000000000 +0200
-+++ ../installed/darksusy/6.2.2/src_models/mssm/an_ib/dsIBffdxdy.f	2020-01-15 09:08:13.000000000 +0100
+diff -rupN darksusy-6.2.2_original/src_models/mssm/an_ib/dsIBffdxdy.f darksusy-6.2.2_patched/src_models/mssm/an_ib/dsIBffdxdy.f
+--- darksusy-6.2.2_original/src_models/mssm/an_ib/dsIBffdxdy.f	2020-10-23 19:46:26.000000000 +0200
++++ darksusy-6.2.2_patched/src_models/mssm/an_ib/dsIBffdxdy.f	2020-01-15 09:08:13.000000000 +0100
 @@ -15,7 +15,6 @@
  *** date: 2007-07-05
  *** update: 2016-04-04 (switched to analytic tree-level expressions to avoid
@@ -130,3 +130,45 @@ diff -rupN darksusy-6.2.2/src_models/mssm/an_ib/dsIBffdxdy.f ../installed/darksu
  
        dsIBffdxdy=tmpresult
 
+diff -rupN darksusy-6.2.2_original/src/include/dsdmdcom.h darksusy-6.2.2_patched/src/include/dsdmdcom.h
+--- darksusy-6.2.2_original/src/include/dsdmdcom.h
++++ darksusy-6.2.2_patched/src/include/dsdmdcom.h
+@@ -25,7 +25,7 @@ ccc
+       common/dmdintericom/dmdihalotag,dmdihalotagtmp
+       common/dmdinterrcom/dmdobjdist,dmdradintr,dmdradouttr,dmdrho0
+       common/dmdinterccom/dmdlabel    
+-      save /dmdinterlcom/,/dmdintericom/,/dmdinterlcom/,/dmdinterccom/
++      save /dmdinterlcom/,/dmdintericom/,/dmdinterccom/
+       
+ ccc
+ ccc entries to link instructions/functions to the driver:      
+diff -rupN darksusy-6.2.2_original/src_models/mssm/an_ib2/dsib2ffHPsFSRZ.f darksusy-6.2.2_patched/src_models/mssm/an_ib2/dsib2ffHPsFSRZ.f
+--- darksusy-6.2.2_original/src_models/mssm/an_ib2/dsib2ffHPsFSRZ.f
++++ darksusy-6.2.2_patched/src_models/mssm/an_ib2/dsib2ffHPsFSRZ.f
+@@ -74,10 +74,10 @@ c... Z FSR1
+ c... Z FSR2
+       else if (leg.eq.2) then
+ 
+-         CZ1 =gl(khc,f,ff)*gl(kz,f,f)*RealPart(gl(kz,kn(1),kn(1)))
+-         CZ2 =gl(khc,f,ff)*gr(kz,f,f)*RealPart(gl(kz,kn(1),kn(1)))
+-         CZ3 =gl(kz,f,f)*gr(khc,f,ff)*RealPart(gl(kz,kn(1),kn(1)))
+-         CZ4 =gr(khc,f,ff)*gr(kz,f,f)*RealPart(gl(kz,kn(1),kn(1)))
++         CZ1 =gl(khc,f,ff)*gl(kz,f,f)*REAL(gl(kz,kn(1),kn(1)))
++         CZ2 =gl(khc,f,ff)*gr(kz,f,f)*REAL(gl(kz,kn(1),kn(1)))
++         CZ3 =gl(kz,f,f)*gr(khc,f,ff)*REAL(gl(kz,kn(1),kn(1)))
++         CZ4 =gr(khc,f,ff)*gr(kz,f,f)*REAL(gl(kz,kn(1),kn(1)))
+          
+          deltaZ =dcmplx(2*E2J*EvJ + 2*CW*kJ*kv 
+      -    + MB**2 - Mf**2 + Mff**2,Mf*width(f)/mx)*
+diff -rupN darksusy-6.2.2_original/src_models/src_models/mssm/ge_slha/dsgive_model_SLHA.F darksusy-6.2.2_patched/src_models/mssm/ge_slha/dsgive_model_SLHA.F
+--- darksusy-6.2.2_original/src_models/mssm/ge_slha/dsgive_model_SLHA.F
++++ darksusy-6.2.2_patched/src_models/mssm/ge_slha/dsgive_model_SLHA.F
+@@ -76,7 +76,7 @@ c...Read it in
+  
+  ! We want to get the model ID from the file eventually
+  ! For now, just use the filename, trimming away the path 
+-      idtag=file(index(file,'/',BACK=.true.)+1:lnblnk(file)) 
++      idtag=file(index(file,'/',BACK=.true.)+1:LEN_TRIM(file))
+ 
+ c...Transfer stuff from the SLHA data structure to DarkSUSY
+       call dsfromslha
