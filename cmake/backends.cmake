@@ -297,10 +297,10 @@ endif()
 
 # HepLikedata
 set(name "heplikedata")
-set(ver "1.0")
-set(dl "https://github.com/mchrzasz/HEPLikeData/archive/master.zip")
+set(ver "1.1")
+set(dl "https://github.com/KrakowHEPSoft/HEPLikeData/archive/V1.1.zip")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(md5 "b45f6f6f0ff08775f85054cf6946141a")
+set(md5 "7f8f58c7425f822735776bbf3fe4a601")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
@@ -317,11 +317,10 @@ endif()
 
 # HepLike
 set(name "heplike")
-set(ver "1.0")
-#set(dl "https://github.com/mchrzasz/HEPLike/archive/V${ver}.tar.gz")
-set(dl "https://github.com/mchrzasz/HEPLike/archive/master.zip")
+set(ver "1.1")
+set(dl "https://github.com/KrakowHEPSoft/HEPLike/archive/V1.1.zip")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-set(md5 "be29776b4596d981bfd61b3c16e27b89")
+set(md5 "2e503a6da38ab440f38efd6e8a3a7c70")
 set(HL_CXXFLAGS "${BACKEND_CXX_FLAGS} -I${yaml_INCLUDE_DIR}")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
