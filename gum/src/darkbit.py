@@ -291,9 +291,10 @@ def decays(dm, products, gambit_pdg_dict):
     twobody = [x for x in products if len(x) == 2]
     threebody = [x for x in products if len(x) == 3]
 
-    print products
-    print twobody
-    print threebody
+    #TODO: Remove if this is debuggin
+    print(products)
+    print(twobody)
+    print(threebody)
 
     # 2-body decay - genRate = partial decay width. 
     # Get it from the DecayTable total width * BF
