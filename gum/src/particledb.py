@@ -58,7 +58,7 @@ def get_gambit_particle_pdg_dict():
             PDG_code = part['PDG_context'][0]
         
             # If the particle is already in the dictionary, don't add it again
-            if PDG_code in gambit_pdg_codes.values():
+            if PDG_code in list(gambit_pdg_codes.values()):
                 continue
                 
             # Add to GAMBIT dict.
@@ -106,7 +106,7 @@ def get_gambit_particle_pdg_dict():
             for PDG_code in PDG_codes:
                         
                 # Don't add duplicates. Shouldn't be any, anyway...
-                if PDG_code in gambit_pdg_codes.values():
+                if PDG_code in list(gambit_pdg_codes.values()):
                     continue
                     
                 name = cset['name']
@@ -183,7 +183,7 @@ def check_all_particles_present(partlist, gambit_pdg_codes):
     absent = []
     
     for i in range(len(partlist)):
-        if not partlist[i].pdg() in gambit_pdg_codes.values():
+        if not partlist[i].pdg() in list(gambit_pdg_codes.values()):
             absent.append(partlist[i])
 
     absent_by_pdg = [x.pdg() for x in absent]

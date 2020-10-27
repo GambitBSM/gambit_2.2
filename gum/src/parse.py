@@ -226,7 +226,7 @@ def fill_gum_object(data):
                 opts[i] = data['output'][i]
             else:
                 opts[i] = False
-        if all(value == False for value in opts.values()):
+        if all(value == False for value in list(opts.values())):
             raise GumError(("\n\nAll backend output set to false in your .gum "
                             "file.\nGive GUM something to do!\n"
                             "Please change your .gum file."))

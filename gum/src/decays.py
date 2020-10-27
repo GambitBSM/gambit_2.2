@@ -44,9 +44,9 @@ def find_decay_type(vertex):
 
     # Case 2. A-> B, B process. Return the array in the order for 1->2 process.
     elif len(Counter(vertex).values()) == 2:
-        if Counter(vertex).values()[0] == 1:
+        if list(Counter(vertex).values())[0] == 1:
             return vertex, "ABB"
-        elif Counter(vertex).values()[0] == 2:
+        elif list(Counter(vertex).values())[0] == 2:
             return [Counter(vertex).keys()[1],
                     Counter(vertex).keys()[0],
                     Counter(vertex).keys()[0]], "ABB"

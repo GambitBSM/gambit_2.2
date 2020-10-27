@@ -932,7 +932,7 @@ def run_through_parameter_dict(parameters, param_dict):
 
         # If it's a CalcHEP one, look to see if the value is in the dictionary
         elif isinstance(p, CHParameter):
-            if p.name in param_dict.values():
+            if p.name in list(param_dict.values()):
                 continue
             else:
                 chparams.append(p)
