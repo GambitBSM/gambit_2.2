@@ -31,6 +31,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 # Define the main GUM directory
 set(GUM_DIR ${PROJECT_SOURCE_DIR})
 
+# Cleaning steps
+add_custom_target(distclean COMMAND ${CMAKE_MAKE_PROGRAM} clean)
+add_custom_target(nuke-all DEPENDS distclean nuke-contrib)
+
 # Define the sed command to use differently for OSX and linux.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(dashi "-i ''")
@@ -67,81 +71,8 @@ if(Mathematica_FOUND AND Mathematica_WSTP_FOUND)
   set(LIBRARIES ${LIBRARIES} ${Mathematica_WSTP_LIBRARIES} ${Mathematica_MathLink_LIBRARY})
 endif()
 
-# Download FeynRules
-EXTERNALPROJECT_ADD(
-    FeynRules
-    URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
-    UPDATE_COMMAND ""
-    PATCH_COMMAND ""
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/FeynRules
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-#    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Models ${CMAKE_SOURCE_DIR}/contrib/FeynRules/Models
-)
-
-# Download SARAH
-set(SARAH_VERSION 4.14.0)
-EXTERNALPROJECT_ADD(
-    SARAH
-    URL https://sarah.hepforge.org/downloads/?f=SARAH-${SARAH_VERSION}.tar.gz
-    URL_MD5 850b74625e531b93fd43a32c181c825b
-    UPDATE_COMMAND ""
-    PATCH_COMMAND ""
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/SARAH
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-)
-
-# Download MadGraph
-EXTERNALPROJECT_ADD(
-    MadGraph
-    URL https://launchpad.net/mg5amcnlo/2.0/2.6.x/+download/MG5_aMC_v2.6.7.tar.gz
-    UPDATE_COMMAND ""
-    PATCH_COMMAND sed ${dashi} -e "s/# eps_viewer = None/eps_viewer = true/g" input/mg5_configuration.txt
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/MadGraph
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-)
-
-# Download Pythia
-set(BASE_PYTHIA_VERSION 212)
-set(PYTHIA_MD5 0886d1b2827d8f0cd2ae69b925045f40)
-EXTERNALPROJECT_ADD(
-    Pythia
-    URL http://home.thep.lu.se/~torbjorn/pythia8/pythia8${BASE_PYTHIA_VERSION}.tgz
-    URL_MD5 ${PYTHIA_MD5}
-    UPDATE_COMMAND ""
-    PATCH_COMMAND  ""
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/pythia
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-)
-
-# Download SPheno
-set(SPHENO_VERSION 4.0.3)
-set(dl http://www.hepforge.org/archive/spheno/SPheno-${SPHENO_VERSION}.tar.gz)
-set(md5 "64787d6c8ce03cac38aec53d34ac46ad")
-set(SPHENO_DIR "${CMAKE_SOURCE_DIR}/contrib/SPheno")
-ExternalProject_Add(
-  SPheno
-  URL ${dl}
-  URL_MD5 ${md5}
-  SOURCE_DIR ${SPHENO_DIR}
-  PATCH_COMMAND ""
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-)
-
-# Set paths
-set(FEYNRULES_PATH "${CMAKE_SOURCE_DIR}/contrib/FeynRules/")
-set(HAVE_FEYNRULES 1)
-set(SARAH_PATH "${CMAKE_SOURCE_DIR}/contrib/SARAH/")
-set(HAVE_SARAH 1)
+# Contrib packages
+include(cmake/contrib.cmake)
 
 # Check for Python interpreter
 # Also, we need to add versions of python  greater than 3.3 manually, 
