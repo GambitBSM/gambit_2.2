@@ -373,67 +373,41 @@ def write_boss_config_for_pythia(model, output_dir):
 
 
 
-def add_new_pythia_to_backends_cmake(model, output_dir):
+def write_pythia_cmake_entry(model, output_dir):
     """
-    TODO: amend this to use the backends.cmake routine in backends.py
-    Adds a new Pythia entry to cmake/backends.cmake
+    Writes Pythia entry for cmake/backends.cmake
     """
 
     # The string that will commence the block to be added by GUM
-    signature = "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M)."
+    to_write = "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M).\n"\
+              "set(model \""+model.lower()+"\")\n"\
+              "set(name \"pythia_${model}\")\n"\
+              "set(ver \"8."+base_pythia_version+"\")\n"\
+              "set(lib \"libpythia8\")\n"\
+              "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
+              "set(md5 \""+pythia_md5+"\")\n"\
+              "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
+              "set(patch1 \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
+              "set(patch2 \"${PROJECT_SOURCE_DIR}/Backends/patches/pythia/${ver}/patch_pythia_${ver}.dif\")\n"\
+              "check_ditch_status(${name} ${ver} ${dir})\n"\
+              "if(NOT ditched_${name}_${ver})\n"\
+              "  ExternalProject_Add(${name}_${ver}\n"\
+              "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
+              "    SOURCE_DIR ${dir}\n"\
+              "    BUILD_IN_SOURCE 1\n"\
+              "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
+              "          COMMAND patch -p1 < ${patch2}\n"\
+              "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
+              "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
+              "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
+              "    INSTALL_COMMAND \"\"\n"\
+              "  )\n"\
+              "  BOSS_backend(${name} ${ver})\n"\
+              "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
+              "  set_as_default_version(\"backend\" ${name} ${ver})\n"\
+              "endif()\n\n"
 
-    # The path to the original file in GAMBIT
-    old = "../cmake/backends.cmake"
-    # Sort out the path to the candidate replacement
-    newdir = output_dir+"/cmake"
-    mkdir_if_absent(newdir)
-    new = newdir+"/backends.cmake"
-
-    # Initialise flags to indicate place in the original file
-    in_duplicate = False
-    passed_pythia = False
-    wrote_entry = False
-
-    # Open old and new files and iterate through the old one, writing to the new as we go.
-    with open(old) as f_old, open(new, 'w') as f_new:
-        for line in f_old:
-            # Have we spotted a previous modification by GUM?  If so, overwrite it.
-            if signature in line: in_duplicate = True
-            # Have we spotted the vanilla pythia entry yet?
-            if "set(name \"pythia\")" in line: passed_pythia = True
-            if not in_duplicate: f_new.write(line)
-            if not wrote_entry and passed_pythia and "set_as_default_version(\"backend\" ${name} ${ver})" in line:
-                to_write = "endif()\n"\
-                           "\n"+signature+"\n"\
-                           "set(model \""+model.lower()+"\")\n"\
-                           "set(name \"pythia_${model}\")\n"\
-                           "set(ver \"8."+base_pythia_version+"\")\n"\
-                           "set(lib \"libpythia8\")\n"\
-                           "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
-                           "set(md5 \""+pythia_md5+"\")\n"\
-                           "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
-                           "set(patch1 \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
-                           "set(patch2 \"${PROJECT_SOURCE_DIR}/Backends/patches/pythia/${ver}/patch_pythia_${ver}.dif\")\n"\
-                           "check_ditch_status(${name} ${ver} ${dir})\n"\
-                           "if(NOT ditched_${name}_${ver})\n"\
-                           "  ExternalProject_Add(${name}_${ver}\n"\
-                           "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
-                           "    SOURCE_DIR ${dir}\n"\
-                           "    BUILD_IN_SOURCE 1\n"\
-                           "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
-                           "          COMMAND patch -p1 < ${patch2}\n"\
-                           "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
-                           "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
-                           "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
-                           "    INSTALL_COMMAND \"\"\n"\
-                           "  )\n"\
-                           "  BOSS_backend(${name} ${ver})\n"\
-                           "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
-                           "  set_as_default_version(\"backend\" ${name} ${ver})\n"
-                f_new.write(to_write)
-                wrote_entry = True
-            # We've reached the end of the previous modification by GUM, so remove the hold on repeating lines from the old file.
-            if in_duplicate and "endif()" in line: in_duplicate = False
+    return to_write
 
 
 def patch_pythia_patch(model_parameters, model_name, reset_dict):
