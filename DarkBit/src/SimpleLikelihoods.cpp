@@ -157,13 +157,11 @@ namespace Gambit {
       std::string proc = *Dep::DM_process;
       if (proc == "annihilation")
       {
-        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
       }
       else if (proc == "decay")
       {
-        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else
       {
@@ -201,13 +199,11 @@ namespace Gambit {
       std::string proc = *Dep::DM_process;
       if (proc == "annihilation")
       {
-        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
       }
       else if (proc == "decay")
       {
-        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else
       {
@@ -236,13 +232,11 @@ namespace Gambit {
       std::string proc = *Dep::DM_process;
       if (proc == "annihilation")
       {
-        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
       }
       else if (proc == "decay")
       {
-        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else
       {
@@ -282,13 +276,11 @@ namespace Gambit {
       std::string proc = *Dep::DM_process;
       if (proc == "annihilation")
       {
-        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/8./M_PI*fraction*fraction)->set("v", 0)->bind("E")->vect(x);
       }
       else if (proc == "decay")
       {
-        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->
-          set("v", 0)->bind("E")->vect(x);
+        y = ((*Dep::GA_Yield)/4./M_PI*fraction)->bind("E")->vect(x);
       }
       else
       {

@@ -1979,8 +1979,11 @@ SimYieldTable: |
 GA_missingFinalStates: |
    Final states that are not avaialable with tabulated spectra.
 
-GA_AnnYield: |
+GA_Yield: |
    Calculate the gamma-ray yield from the process catalogue.
+
+DM_process: |
+   Returns a string based on the nature of the DM process used for indirect detection (either annihilation or decay).
 
 dsanyield_sim: |
    Provides tabulated yields from DarkSUSY 6.

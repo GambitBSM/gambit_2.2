@@ -198,8 +198,9 @@ namespace Gambit
         // Ignore channels that are kinematically closed for v=0
         if ( m0 + m1 > Ecm ) continue;
 
-        // Ignore channels with 0 BR in v=0 limit
-        if (it->genRate->bind("v")->eval(0.) <= 0.) continue;
+        // Ignore channels with 0 BR in v=0 limit (if "v" is a variable of genRate, i.e. not a decay).
+        if (it->genRate->hasArg("v") && it->genRate->bind("v")->eval(0.) <= 0.0) continue;
+        else if ( !(it->genRate->hasArgs()) && it->genRate->bind()->eval() <=0.0) continue; 
 
         double E0 = 0.5*(Ecm*Ecm+m0*m0-m1*m1)/Ecm;
         double E1 = Ecm-E0;
@@ -484,8 +485,8 @@ namespace Gambit
       daFunk::Funk Yield = getYield(decayProc, Ecm, mass, *Dep::TH_ProcessCatalog, *Dep::SimYieldTable, 
                                     line_width, *Dep::cascadeMC_gammaSpectra);
 
-      result = daFunk::ifelse(1e-6 - daFunk::var("v"), Yield/(mass),  
-        daFunk::throwError("Spectrum currently only defined for v=0."));
+      // Rescale the yield by the correct kinematic factor
+      result = Yield/(mass);
     }
 
     /// SimYieldTable based on DarkSUSY5 tabulated results. (DS6 below)
