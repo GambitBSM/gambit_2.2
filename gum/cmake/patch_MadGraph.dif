@@ -1,6 +1,6 @@
 diff -rupN MadGraph_pristine/aloha/aloha_fct.py ../contrib/MadGraph/aloha/aloha_fct.py
 --- MadGraph_pristine/aloha/aloha_fct.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_fct.py	2020-10-29 23:48:54.788704178 +1100
++++ ../contrib/MadGraph/aloha/aloha_fct.py	2020-10-30 00:01:28.067690840 +1100
 @@ -29,7 +29,7 @@ def get_fermion_flow(expression, nb_ferm
      try:
          expr = eval(expression)
@@ -78,7 +78,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_fct.py ../contrib/MadGraph/aloha/aloha_
     
 diff -rupN MadGraph_pristine/aloha/aloha_lib.py ../contrib/MadGraph/aloha/aloha_lib.py
 --- MadGraph_pristine/aloha/aloha_lib.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_lib.py	2020-10-29 23:48:54.788704178 +1100
++++ ../contrib/MadGraph/aloha/aloha_lib.py	2020-10-30 00:01:28.067690840 +1100
 @@ -143,13 +143,13 @@ class Computation(dict):
              if isinstance(expression, (MultLorentz, AddVariable, LorentzObject)):
                  try:
@@ -122,7 +122,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_lib.py ../contrib/MadGraph/aloha/aloha_
      def get_all_var_names(self):
 diff -rupN MadGraph_pristine/aloha/aloha_parsers.py ../contrib/MadGraph/aloha/aloha_parsers.py
 --- MadGraph_pristine/aloha/aloha_parsers.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_parsers.py	2020-10-29 23:48:54.788704178 +1100
++++ ../contrib/MadGraph/aloha/aloha_parsers.py	2020-10-30 00:01:28.067690840 +1100
 @@ -29,17 +29,14 @@ import sys
  root_path = os.path.split(os.path.dirname(os.path.realpath( __file__ )))[0]
  sys.path.append(os.path.join(root_path))
@@ -155,7 +155,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_parsers.py ../contrib/MadGraph/aloha/al
              logger.error("Syntax error at EOF")
 diff -rupN MadGraph_pristine/aloha/aloha_writers.py ../contrib/MadGraph/aloha/aloha_writers.py
 --- MadGraph_pristine/aloha/aloha_writers.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_writers.py	2020-10-29 23:48:54.792704130 +1100
++++ ../contrib/MadGraph/aloha/aloha_writers.py	2020-10-30 00:01:28.071690827 +1100
 @@ -1,11 +1,11 @@
 -try:
 -    import madgraph.iolibs.file_writers as writers 
@@ -262,7 +262,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_writers.py ../contrib/MadGraph/aloha/al
      
 diff -rupN MadGraph_pristine/aloha/create_aloha.py ../contrib/MadGraph/aloha/create_aloha.py
 --- MadGraph_pristine/aloha/create_aloha.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/create_aloha.py	2020-10-29 23:48:54.792704130 +1100
++++ ../contrib/MadGraph/aloha/create_aloha.py	2020-10-30 00:01:28.071690827 +1100
 @@ -15,7 +15,12 @@
  from __future__ import division
  import cmath
@@ -326,7 +326,7 @@ diff -rupN MadGraph_pristine/aloha/create_aloha.py ../contrib/MadGraph/aloha/cre
              for filepath in ext_files:
 diff -rupN MadGraph_pristine/input/mg5_configuration.txt ../contrib/MadGraph/input/mg5_configuration.txt
 --- MadGraph_pristine/input/mg5_configuration.txt	2020-10-27 21:41:37.769088298 +1100
-+++ ../contrib/MadGraph/input/mg5_configuration.txt	2020-10-29 23:48:54.792704130 +1100
++++ ../contrib/MadGraph/input/mg5_configuration.txt	2020-10-30 00:01:28.071690827 +1100
 @@ -49,7 +49,7 @@
  
  #! Prefered PS viewer
@@ -338,7 +338,7 @@ diff -rupN MadGraph_pristine/input/mg5_configuration.txt ../contrib/MadGraph/inp
  #!  0: No time limit
 diff -rupN MadGraph_pristine/madgraph/core/base_objects.py ../contrib/MadGraph/madgraph/core/base_objects.py
 --- MadGraph_pristine/madgraph/core/base_objects.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/base_objects.py	2020-10-29 23:55:54.793137991 +1100
++++ ../contrib/MadGraph/madgraph/core/base_objects.py	2020-10-30 00:01:28.071690827 +1100
 @@ -22,7 +22,12 @@ import math
  import numbers
  import os
@@ -1125,7 +1125,7 @@ diff -rupN MadGraph_pristine/madgraph/core/base_objects.py ../contrib/MadGraph/m
              return super(ProcessDefinition, self).filter(name, value)
 diff -rupN MadGraph_pristine/madgraph/core/color_algebra.py ../contrib/MadGraph/madgraph/core/color_algebra.py
 --- MadGraph_pristine/madgraph/core/color_algebra.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/color_algebra.py	2020-10-29 23:48:54.792704130 +1100
++++ ../contrib/MadGraph/madgraph/core/color_algebra.py	2020-10-30 00:01:28.071690827 +1100
 @@ -833,8 +833,8 @@ class ColorString(list):
          are still non trivial color objects."""
  
@@ -1139,7 +1139,7 @@ diff -rupN MadGraph_pristine/madgraph/core/color_algebra.py ../contrib/MadGraph/
              return (self.coeff * fractions.Fraction(\
 diff -rupN MadGraph_pristine/madgraph/core/color_amp.py ../contrib/MadGraph/madgraph/core/color_amp.py
 --- MadGraph_pristine/madgraph/core/color_amp.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/color_amp.py	2020-10-29 23:48:54.796704081 +1100
++++ ../contrib/MadGraph/madgraph/core/color_amp.py	2020-10-30 00:01:28.071690827 +1100
 @@ -413,8 +413,8 @@ class ColorBasis(dict):
          # If more than one string at leading N...
          if len(res_cs) > 1 and any([not cs.near_equivalent(res_cs[0]) \
@@ -1182,7 +1182,7 @@ diff -rupN MadGraph_pristine/madgraph/core/color_amp.py ../contrib/MadGraph/madg
                  if abs(leg_repr) == 8:
 diff -rupN MadGraph_pristine/madgraph/core/diagram_generation.py ../contrib/MadGraph/madgraph/core/diagram_generation.py
 --- MadGraph_pristine/madgraph/core/diagram_generation.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/diagram_generation.py	2020-10-29 23:48:54.796704081 +1100
++++ ../contrib/MadGraph/madgraph/core/diagram_generation.py	2020-10-30 00:01:28.071690827 +1100
 @@ -439,16 +439,13 @@ class Amplitude(base_objects.PhysicsObje
  
          if name == 'process':
@@ -1327,7 +1327,7 @@ diff -rupN MadGraph_pristine/madgraph/core/diagram_generation.py ../contrib/MadG
                          if amplitude.get('diagrams'):
 diff -rupN MadGraph_pristine/madgraph/core/drawing.py ../contrib/MadGraph/madgraph/core/drawing.py
 --- MadGraph_pristine/madgraph/core/drawing.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/drawing.py	2020-10-29 23:48:54.796704081 +1100
++++ ../contrib/MadGraph/madgraph/core/drawing.py	2020-10-30 00:01:28.071690827 +1100
 @@ -412,8 +412,8 @@ class FeynmanLine(object):
              self.begin.pos_x
              self.end.pos_y
@@ -1389,7 +1389,7 @@ diff -rupN MadGraph_pristine/madgraph/core/drawing.py ../contrib/MadGraph/madgra
  
 diff -rupN MadGraph_pristine/madgraph/core/helas_objects.py ../contrib/MadGraph/madgraph/core/helas_objects.py
 --- MadGraph_pristine/madgraph/core/helas_objects.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/helas_objects.py	2020-10-29 23:48:54.796704081 +1100
++++ ../contrib/MadGraph/madgraph/core/helas_objects.py	2020-10-30 00:01:28.075690814 +1100
 @@ -300,8 +300,8 @@ class CanonicalConfigTag(diagram_generat
                          right_num = num
              if right_num == -1:
@@ -2045,7 +2045,7 @@ diff -rupN MadGraph_pristine/madgraph/core/helas_objects.py ../contrib/MadGraph/
  
 diff -rupN MadGraph_pristine/madgraph/__init__.py ../contrib/MadGraph/madgraph/__init__.py
 --- MadGraph_pristine/madgraph/__init__.py	2020-10-27 21:41:37.889090214 +1100
-+++ ../contrib/MadGraph/madgraph/__init__.py	2020-10-29 23:48:54.800704032 +1100
++++ ../contrib/MadGraph/madgraph/__init__.py	2020-10-30 00:01:28.075690814 +1100
 @@ -46,5 +46,5 @@ if ReadWrite:
              os.remove(tmp_path)
              shutil.copy(pjoin(MG5DIR, 'Template','LO','Source','.make_opts'),
@@ -2055,7 +2055,7 @@ diff -rupN MadGraph_pristine/madgraph/__init__.py ../contrib/MadGraph/madgraph/_
          pass
 diff -rupN MadGraph_pristine/madgraph/interface/common_run_interface.py ../contrib/MadGraph/madgraph/interface/common_run_interface.py
 --- MadGraph_pristine/madgraph/interface/common_run_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/common_run_interface.py	2020-10-29 23:56:46.740855322 +1100
++++ ../contrib/MadGraph/madgraph/interface/common_run_interface.py	2020-10-30 00:01:28.075690814 +1100
 @@ -33,7 +33,11 @@ import time
  import traceback
  import urllib
@@ -2886,7 +2886,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/common_run_interface.py ../contr
                              param_card_iterator.store_entry(next_name, store_for_scan(obj)(), param_card_path=card_path)
 diff -rupN MadGraph_pristine/madgraph/interface/extended_cmd.py ../contrib/MadGraph/madgraph/interface/extended_cmd.py
 --- MadGraph_pristine/madgraph/interface/extended_cmd.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/extended_cmd.py	2020-10-29 23:48:54.804703984 +1100
++++ ../contrib/MadGraph/madgraph/interface/extended_cmd.py	2020-10-30 00:01:28.075690814 +1100
 @@ -15,6 +15,7 @@
  """  A file containing different extension of the cmd basic python library"""
  
@@ -3200,7 +3200,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/extended_cmd.py ../contrib/MadGr
      
 diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib/MadGraph/madgraph/interface/madgraph_interface.py
 --- MadGraph_pristine/madgraph/interface/madgraph_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/madgraph_interface.py	2020-10-29 23:54:46.985547804 +1100
++++ ../contrib/MadGraph/madgraph/interface/madgraph_interface.py	2020-10-30 00:01:28.079690801 +1100
 @@ -24,6 +24,7 @@ import glob
  import logging
  import optparse
@@ -3996,7 +3996,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
          cmd.SmartQuestion.cmdloop(self, intro)
 diff -rupN MadGraph_pristine/madgraph/interface/master_interface.py ../contrib/MadGraph/madgraph/interface/master_interface.py
 --- MadGraph_pristine/madgraph/interface/master_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/master_interface.py	2020-10-29 23:48:54.812703886 +1100
++++ ../contrib/MadGraph/madgraph/interface/master_interface.py	2020-10-30 00:01:28.079690801 +1100
 @@ -153,7 +153,7 @@ class Switcher(object):
                      correct = False                    
                      
@@ -4043,7 +4043,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/master_interface.py ../contrib/M
              self.debug_link_to_command() 
 diff -rupN MadGraph_pristine/madgraph/iolibs/export_cpp.py ../contrib/MadGraph/madgraph/iolibs/export_cpp.py
 --- MadGraph_pristine/madgraph/iolibs/export_cpp.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/export_cpp.py	2020-10-29 23:48:54.812703886 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_cpp.py	2020-10-30 00:01:28.079690801 +1100
 @@ -92,8 +92,8 @@ class OneProcessExporterCPP(object):
          elif isinstance(matrix_elements, helas_objects.HelasMatrixElementList):
              self.matrix_elements = matrix_elements
@@ -4124,7 +4124,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/export_cpp.py ../contrib/MadGraph/m
                  res_lines.append("int flavors[%d][%d] = {%s};" % \
 diff -rupN MadGraph_pristine/madgraph/iolibs/export_v4.py ../contrib/MadGraph/madgraph/iolibs/export_v4.py
 --- MadGraph_pristine/madgraph/iolibs/export_v4.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/export_v4.py	2020-10-29 23:48:54.812703886 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_v4.py	2020-10-30 00:01:28.083690788 +1100
 @@ -16,7 +16,12 @@ from madgraph.iolibs.helas_call_writers
  """Methods and classes to export matrix elements to v4 format."""
  
@@ -4370,7 +4370,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/export_v4.py ../contrib/MadGraph/ma
              self.model = subproc_group.get('matrix_elements')[0].\
 diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgraph/iolibs/files.py
 --- MadGraph_pristine/madgraph/iolibs/files.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/files.py	2020-10-29 23:48:54.812703886 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/files.py	2020-10-30 00:01:28.083690788 +1100
 @@ -36,11 +36,11 @@ def read_from_file(filename, myfunct, *a
              ret_value = myfunct(sock, *args)
          finally:
@@ -4435,35 +4435,37 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgra
              logger.warning('Could not link %s at position: %s' % (file_pos, \
 diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph/madgraph/iolibs/file_writers.py
 --- MadGraph_pristine/madgraph/iolibs/file_writers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/file_writers.py	2020-10-29 23:48:54.812703886 +1100
-@@ -19,6 +19,8 @@ Fortran, C++, etc."""
- 
++++ ../contrib/MadGraph/madgraph/iolibs/file_writers.py	2020-10-30 00:05:57.049471248 +1100
+@@ -20,13 +20,18 @@ Fortran, C++, etc."""
  import re
  import collections
-+from io import IOBase
-+
  try:
++  import file as iobase
++except:
++  from io import IOBase as iobase
++
++try:
      import madgraph
  except ImportError:
-@@ -26,7 +28,7 @@ except ImportError:
+         import internal.misc
  else:
      import madgraph.various.misc as misc
  
 -class FileWriter(file):
-+class FileWriter(IOBase):
++class FileWriter(iobase):
      """Generic Writer class. All writers should inherit from this class."""
  
      supported_preprocessor_commands = ['if']
-@@ -50,7 +52,7 @@ class FileWriter(file):
+@@ -50,7 +55,7 @@ class FileWriter(file):
      def __init__(self, name, opt = 'w'):
          """Initialize file to write to"""
  
 -        return file.__init__(self, name, opt)
-+        return IOBase.__init__(self, name, opt)
++        return iobase.__init__(self, name, opt)
  
      def write_line(self, line):
          """Write a line with proper indent and splitting of long lines
-@@ -148,8 +150,8 @@ class FileWriter(file):
+@@ -148,8 +153,8 @@ class FileWriter(file):
              if preproc_command is None:
                  preproc_endif = self.preprocessor_endif_re.match(line[2:])
                  if len(if_stack)==0 or preproc_endif is None:
@@ -4474,7 +4476,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
                  if preproc_endif.group('new_block') is None:
                      if_stack.pop()
                  elif preproc_endif.group('endif')=='else':
-@@ -158,15 +160,15 @@ class FileWriter(file):
+@@ -158,15 +163,15 @@ class FileWriter(file):
              elif preproc_command.group('command')=='if':
                  try:
                      if_stack.append(eval(preproc_command.group('body'))==True)
@@ -4495,34 +4497,34 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
          return res
  
  #===============================================================================
-@@ -441,7 +443,7 @@ class FortranWriter(FileWriter):
+@@ -441,7 +446,7 @@ class FortranWriter(FileWriter):
                  else:
                      if not line.endswith('\n'):
                          line = '%s\n' % line
 -                    file.writelines(self, line)
-+                    IOBase.writelines(self, line)
++                    iobase.writelines(self, line)
              else:
                  removed.append(line)
                  
-@@ -967,13 +969,13 @@ class PythonWriter(FileWriter):
+@@ -967,13 +972,13 @@ class PythonWriter(FileWriter):
      
      def write_comments(self, text):
          text = '#%s\n' % text.replace('\n','\n#')
 -        file.write(self, text)
-+        IOBase.write(self, text)
++        iobase.write(self, text)
          
  class MakefileWriter(FileWriter):
      
      def write_comments(self, text):
          text = '#%s\n' % text.replace('\n','\n#')
 -        file.write(self, text)
-+        IOBase.write(self, text)
++        iobase.write(self, text)
          
      def writelines(self, lines):
          """Extends the regular file.writeline() function to write out
 diff -rupN MadGraph_pristine/madgraph/iolibs/group_subprocs.py ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py
 --- MadGraph_pristine/madgraph/iolibs/group_subprocs.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py	2020-10-29 23:48:54.816703838 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py	2020-10-30 00:01:28.083690788 +1100
 @@ -93,8 +93,8 @@ class IdentifyConfigTag(diagram_generati
              # We go from next-to-last link to last link - remove propagator info
              return (old_vertex[0],)
@@ -4625,7 +4627,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/group_subprocs.py ../contrib/MadGra
      def get_sorted_keys(self):
 diff -rupN MadGraph_pristine/madgraph/iolibs/helas_call_writers.py ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py
 --- MadGraph_pristine/madgraph/iolibs/helas_call_writers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py	2020-10-29 23:48:54.816703838 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py	2020-10-30 00:01:28.083690788 +1100
 @@ -68,16 +68,16 @@ class HelasCallWriter(base_objects.Physi
  
          if name == 'model':
@@ -4771,14 +4773,14 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/helas_call_writers.py ../contrib/Ma
  
 diff -rupN MadGraph_pristine/madgraph/iolibs/template_files/__init__.py ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py
 --- MadGraph_pristine/madgraph/iolibs/template_files/__init__.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py	2020-10-29 23:48:54.816703838 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py	2020-10-30 00:01:28.083690788 +1100
 @@ -1,2 +1,2 @@
 -import mg4_proc_card
 +from .mg4_proc_card import *
  
 diff -rupN MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py
 --- MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py	2020-10-29 23:48:54.816703838 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py	2020-10-30 00:01:28.083690788 +1100
 @@ -924,17 +924,17 @@ class UFOExpressionParserPythonIF(UFOExp
                  try:
                      self.defined_variables = eval(args[0])
@@ -4835,7 +4837,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py ../contri
      
 diff -rupN MadGraph_pristine/madgraph/loop/loop_base_objects.py ../contrib/MadGraph/madgraph/loop/loop_base_objects.py
 --- MadGraph_pristine/madgraph/loop/loop_base_objects.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_base_objects.py	2020-10-29 23:48:54.820703789 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_base_objects.py	2020-10-30 00:01:28.083690788 +1100
 @@ -88,48 +88,48 @@ class LoopDiagram(base_objects.Diagram):
  
          if name == 'tag':
@@ -5171,7 +5173,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_base_objects.py ../contrib/MadGr
          """Returns a nicely formatted string"""
 diff -rupN MadGraph_pristine/madgraph/loop/loop_color_amp.py ../contrib/MadGraph/madgraph/loop/loop_color_amp.py
 --- MadGraph_pristine/madgraph/loop/loop_color_amp.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_color_amp.py	2020-10-29 23:48:54.820703789 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_color_amp.py	2020-10-30 00:01:28.083690788 +1100
 @@ -67,8 +67,8 @@ class LoopColorBasis(color_amp.ColorBasi
                [color_algebra.Tr(lcut_numbers[1],lcut_numbers[0])],
                fractions.Fraction(2, 1))
@@ -5207,7 +5209,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_color_amp.py ../contrib/MadGraph
              colorize_dict = self.colorize(diagram,
 diff -rupN MadGraph_pristine/madgraph/loop/loop_diagram_generation.py ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py
 --- MadGraph_pristine/madgraph/loop/loop_diagram_generation.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py	2020-10-29 23:48:54.820703789 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py	2020-10-30 00:01:28.083690788 +1100
 @@ -104,37 +104,37 @@ class LoopAmplitude(diagram_generation.A
  
          if name == 'diagrams':
@@ -5286,7 +5288,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_diagram_generation.py ../contrib
      
 diff -rupN MadGraph_pristine/madgraph/loop/loop_helas_objects.py ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py
 --- MadGraph_pristine/madgraph/loop/loop_helas_objects.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py	2020-10-29 23:48:54.820703789 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py	2020-10-30 00:01:28.087690775 +1100
 @@ -79,22 +79,22 @@ class LoopHelasUVCTAmplitude(helas_objec
  
          if name=='UVCT_couplings':
@@ -5457,7 +5459,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_helas_objects.py ../contrib/MadG
                      col_amp.append(((res_amp.get('fermionfactor'),
 diff -rupN MadGraph_pristine/madgraph/various/banner.py ../contrib/MadGraph/madgraph/various/banner.py
 --- MadGraph_pristine/madgraph/various/banner.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/banner.py	2020-10-29 23:53:55.605892768 +1100
++++ ../contrib/MadGraph/madgraph/various/banner.py	2020-10-30 00:01:28.087690775 +1100
 @@ -22,7 +22,11 @@ import os
  import sys
  import re
@@ -5908,7 +5910,7 @@ diff -rupN MadGraph_pristine/madgraph/various/banner.py ../contrib/MadGraph/madg
          done = set()
 diff -rupN MadGraph_pristine/madgraph/various/cluster.py ../contrib/MadGraph/madgraph/various/cluster.py
 --- MadGraph_pristine/madgraph/various/cluster.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/cluster.py	2020-10-29 23:48:54.824703740 +1100
++++ ../contrib/MadGraph/madgraph/various/cluster.py	2020-10-30 00:01:28.087690775 +1100
 @@ -25,9 +25,9 @@ logger = logging.getLogger('madgraph.clu
  try:
      from madgraph import MadGraph5Error
@@ -6242,7 +6244,16 @@ diff -rupN MadGraph_pristine/madgraph/various/cluster.py ../contrib/MadGraph/mad
              logger.debug("[["+str(id)+"]]"+status_out)
 diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/madgraph/various/lhe_parser.py
 --- MadGraph_pristine/madgraph/various/lhe_parser.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/lhe_parser.py	2020-10-29 23:53:31.710064299 +1100
++++ ../contrib/MadGraph/madgraph/various/lhe_parser.py	2020-10-30 00:02:00.587587644 +1100
+@@ -15,7 +15,7 @@ pjoin = os.path.join
+ if '__main__' == __name__:
+     import sys
+     sys.path.append('../../')
+-import misc
++from .misc import *
+ import logging
+ import gzip
+ import banner as banner_mod
 @@ -187,9 +187,9 @@ class EventFile(object):
          else:
              try:
@@ -6476,7 +6487,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
          plt.show()
 diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgraph/various/misc.py
 --- MadGraph_pristine/madgraph/various/misc.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/misc.py	2020-10-29 23:56:23.852976726 +1100
++++ ../contrib/MadGraph/madgraph/various/misc.py	2020-10-30 00:01:28.087690775 +1100
 @@ -22,7 +22,13 @@ import re
  import signal
  import subprocess
@@ -6771,7 +6782,7 @@ diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgra
                                     "adding its location to the PYTHONPATH environment variable and the"\
 diff -rupN MadGraph_pristine/madgraph/various/q_polynomial.py ../contrib/MadGraph/madgraph/various/q_polynomial.py
 --- MadGraph_pristine/madgraph/various/q_polynomial.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/q_polynomial.py	2020-10-29 23:48:54.824703740 +1100
++++ ../contrib/MadGraph/madgraph/various/q_polynomial.py	2020-10-30 00:01:28.087690775 +1100
 @@ -107,8 +107,8 @@ class Polynomial_naive_ordering(object):
          try:
              return self.coef_list.index(array.array('i',new_indices_list))
@@ -6849,7 +6860,7 @@ diff -rupN MadGraph_pristine/madgraph/various/q_polynomial.py ../contrib/MadGrap
      import sys
 diff -rupN MadGraph_pristine/madgraph/various/shower_card.py ../contrib/MadGraph/madgraph/various/shower_card.py
 --- MadGraph_pristine/madgraph/various/shower_card.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/shower_card.py	2020-10-29 23:48:54.824703740 +1100
++++ ../contrib/MadGraph/madgraph/various/shower_card.py	2020-10-30 00:01:28.091690761 +1100
 @@ -130,7 +130,7 @@ class ShowerCard(dict):
          if key in self.logical_vars:
              try:
@@ -6876,7 +6887,7 @@ diff -rupN MadGraph_pristine/madgraph/various/shower_card.py ../contrib/MadGraph
              raise ShowerCardError('Unknown entry: %s = %s' % (key, value))
 diff -rupN MadGraph_pristine/models/check_param_card.py ../contrib/MadGraph/models/check_param_card.py
 --- MadGraph_pristine/models/check_param_card.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/check_param_card.py	2020-10-29 23:55:27.753295581 +1100
++++ ../contrib/MadGraph/models/check_param_card.py	2020-10-30 00:01:28.091690761 +1100
 @@ -3,7 +3,12 @@ from __future__ import division
  import itertools
  import xml.etree.ElementTree as ET
@@ -7115,7 +7126,7 @@ diff -rupN MadGraph_pristine/models/check_param_card.py ../contrib/MadGraph/mode
      yd = card['yd'].get([3, 3]).value
 diff -rupN MadGraph_pristine/models/__init__.py ../contrib/MadGraph/models/__init__.py
 --- MadGraph_pristine/models/__init__.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/__init__.py	2020-10-29 23:48:54.828703692 +1100
++++ ../contrib/MadGraph/models/__init__.py	2020-10-30 00:01:28.091690761 +1100
 @@ -44,8 +44,8 @@ def load_model(name, decay=False):
          model_path = os.path.realpath(os.sep.join(path_split))
          sys_path = os.path.realpath(os.path.dirname(sys.modules[path_split[-1]].__file__))
@@ -7129,7 +7140,7 @@ diff -rupN MadGraph_pristine/models/__init__.py ../contrib/MadGraph/models/__ini
          __import__(path_split[-1])
 diff -rupN MadGraph_pristine/models/model_reader.py ../contrib/MadGraph/models/model_reader.py
 --- MadGraph_pristine/models/model_reader.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/model_reader.py	2020-10-29 23:48:54.828703692 +1100
++++ ../contrib/MadGraph/models/model_reader.py	2020-10-30 00:01:28.091690761 +1100
 @@ -79,7 +79,7 @@ class ModelReader(loop_base_objects.Loop
              if isinstance(param_card, basestring):
                  # Check that param_card exists
@@ -7182,7 +7193,7 @@ diff -rupN MadGraph_pristine/models/model_reader.py ../contrib/MadGraph/models/m
                  logger.warning("%s has no expression: %s" % (param.name,
 diff -rupN MadGraph_pristine/models/write_param_card.py ../contrib/MadGraph/models/write_param_card.py
 --- MadGraph_pristine/models/write_param_card.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/write_param_card.py	2020-10-29 23:48:54.828703692 +1100
++++ ../contrib/MadGraph/models/write_param_card.py	2020-10-30 00:01:28.091690761 +1100
 @@ -219,7 +219,7 @@ class ParamCardWriter(object):
              info = info[4:]
      
@@ -7219,7 +7230,7 @@ diff -rupN MadGraph_pristine/models/write_param_card.py ../contrib/MadGraph/mode
      
 diff -rupN MadGraph_pristine/vendor/ply/yacc.py ../contrib/MadGraph/vendor/ply/yacc.py
 --- MadGraph_pristine/vendor/ply/yacc.py	2020-10-27 21:41:37.909090533 +1100
-+++ ../contrib/MadGraph/vendor/ply/yacc.py	2020-10-29 23:48:54.828703692 +1100
++++ ../contrib/MadGraph/vendor/ply/yacc.py	2020-10-30 00:01:28.091690761 +1100
 @@ -89,7 +89,12 @@ resultlimit = 40               # Size li
  pickle_protocol = 0            # Protocol to use when writing pickle files
  
