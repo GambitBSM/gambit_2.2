@@ -14,7 +14,7 @@
 #  \date 2020
 #
 
-# Make sure the cmake_variables.py file exists, 
+# Make sure the cmake_variables.py file exists,
 # where we can find the location of python executable
 cmake_variables_file="${PWD}/src/cmake_variables.py"
 if [ -f ${cmake_variables_file} ]
@@ -27,7 +27,7 @@ then
   if [ -z ${python_exec} ]
   then
     echo "ERROR"
-    echo "  Could not find locaiton of python executable on ${cmake_variables_file}."
+    echo "  Could not find location of python executable in ${cmake_variables_file}."
     echo "  Please check that gum has finished compiling."
     exit 1
   fi
@@ -36,14 +36,14 @@ then
   if [ ! -f ${python_exec} ]
   then
     echo "ERROR"
-    echo "  Could not find python executable on ${python_exec}."
+    echo "  Could not find python executable in ${python_exec}."
     echo "  Please make sure that it exists."
     exit 1
   fi
 
  # Everything seems fine, run gum
  ${python_exec} "${PWD}/gum.py" "$@"
-    
+
 else
   echo "ERROR"
   echo "  Required file cmake_variables.py not found."
