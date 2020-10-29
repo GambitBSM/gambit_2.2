@@ -290,6 +290,17 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
+        // Assignment operator: 
+        inline Vec4& Vec4::operator=(const Vec4& in)
+        {
+            if (this != &in)
+            {
+                get_BEptr()->pointer_assign__BOSS(in.get_BEptr());
+            }
+            return *this;
+        }
+        
+        
         // Destructor: 
         inline Vec4::~Vec4()
         {

@@ -368,6 +368,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Copy constructor: 
                 Particle(const Particle& in);
         
+                // Assignment operator: 
+                Particle& operator=(const Particle& in);
+        
                 // Destructor: 
                 ~Particle();
         

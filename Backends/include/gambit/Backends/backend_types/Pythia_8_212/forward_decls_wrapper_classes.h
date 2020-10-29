@@ -18,6 +18,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     }
     namespace Pythia8
     {
+        class UserHooks;
+    }
+    namespace Pythia8
+    {
         class PartonLevel;
     }
     namespace Pythia8
@@ -27,6 +31,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace Pythia8
     {
         class ParticleDecays;
+    }
+    namespace Pythia8
+    {
+        class SigmaProcess;
     }
     namespace Pythia8
     {
@@ -67,6 +75,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace Pythia8
     {
         class Couplings;
+    }
+    namespace Pythia8
+    {
+        class ResonanceWidths;
     }
     namespace Pythia8
     {

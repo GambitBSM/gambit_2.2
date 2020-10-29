@@ -21,7 +21,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Member variables: 
             public:
                 // -- Static factory pointers: 
-                static Pythia8::Abstract_GAMBIT_hepmc_writer* (*__factory0)();
+                static Abstract_GAMBIT_hepmc_writer* (*__factory0)();
         
                 // -- Other member variables: 
         
@@ -39,7 +39,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 GAMBIT_hepmc_writer();
         
                 // Special pointer-based constructor: 
-                GAMBIT_hepmc_writer(Pythia8::Abstract_GAMBIT_hepmc_writer* in);
+                GAMBIT_hepmc_writer(Abstract_GAMBIT_hepmc_writer* in);
         
                 // Copy constructor: 
                 GAMBIT_hepmc_writer(const GAMBIT_hepmc_writer& in);
@@ -51,7 +51,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 ~GAMBIT_hepmc_writer();
         
                 // Returns correctly casted pointer to Abstract class: 
-                Pythia8::Abstract_GAMBIT_hepmc_writer* get_BEptr() const;
+                Abstract_GAMBIT_hepmc_writer* get_BEptr() const;
         
         };
     }

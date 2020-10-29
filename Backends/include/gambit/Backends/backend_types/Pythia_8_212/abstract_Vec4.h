@@ -114,6 +114,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual Pythia8::Abstract_Vec4& operator_slash_equal__BOSS(double) =0;
     
             public:
+                virtual void pointer_assign__BOSS(Abstract_Vec4*) =0;
                 virtual Abstract_Vec4* pointer_copy__BOSS() =0;
     
             private:

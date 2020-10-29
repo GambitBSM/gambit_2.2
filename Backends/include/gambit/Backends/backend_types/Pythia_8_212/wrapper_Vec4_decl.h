@@ -134,6 +134,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Copy constructor: 
                 Vec4(const Vec4& in);
         
+                // Assignment operator: 
+                Vec4& operator=(const Vec4& in);
+        
                 // Destructor: 
                 ~Vec4();
         

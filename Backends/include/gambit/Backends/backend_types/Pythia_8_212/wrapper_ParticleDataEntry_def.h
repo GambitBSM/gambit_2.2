@@ -4,6 +4,7 @@
 #include <string>
 #include "wrapper_ParticleData_decl.h"
 #include "wrapper_DecayChannel_decl.h"
+#include "wrapper_ResonanceWidths_decl.h"
 #include "wrapper_Info_decl.h"
 #include "wrapper_Settings_decl.h"
 #include "wrapper_Couplings_decl.h"
@@ -500,6 +501,16 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         inline Pythia8::DecayChannel& ParticleDataEntry::pickChannel()
         {
             return get_BEptr()->pickChannel__BOSS().get_init_wref();
+        }
+        
+        inline void ParticleDataEntry::setResonancePtr(Pythia8::ResonanceWidths* resonancePtrIn)
+        {
+            get_BEptr()->setResonancePtr__BOSS((*resonancePtrIn).get_BEptr());
+        }
+        
+        inline Pythia8::ResonanceWidths* ParticleDataEntry::getResonancePtr()
+        {
+            return get_BEptr()->getResonancePtr__BOSS()->get_init_wptr();
         }
         
         inline void ParticleDataEntry::resInit(Pythia8::Info* infoPtrIn, Pythia8::Settings* settingsPtrIn, Pythia8::ParticleData* particleDataPtrIn, Pythia8::Couplings* couplingsPtrIn)

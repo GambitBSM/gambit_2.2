@@ -5,6 +5,7 @@
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_ResonanceGmZ.h"
+#include "wrapper_ResonanceWidths_decl.h"
 
 #include "identification.hpp"
 
@@ -14,7 +15,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     namespace Pythia8
     {
         
-        class ResonanceGmZ : public WrapperBase
+        class ResonanceGmZ : public ResonanceWidths
         {
                 // Member variables: 
             public:

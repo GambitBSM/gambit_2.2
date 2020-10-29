@@ -15,7 +15,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         // Wrappers for original constructors: 
         inline ResonanceGmZ::ResonanceGmZ(int idResIn) :
-            WrapperBase(__factory0(idResIn))
+            ResonanceWidths(__factory0(idResIn))
         {
             get_BEptr()->set_wptr(this);
             get_BEptr()->set_delete_wrapper(false);
@@ -23,7 +23,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         // Special pointer-based constructor: 
         inline ResonanceGmZ::ResonanceGmZ(Abstract_ResonanceGmZ* in) :
-            WrapperBase(in)
+            ResonanceWidths(in)
         {
             get_BEptr()->set_wptr(this);
             get_BEptr()->set_delete_wrapper(false);
@@ -31,7 +31,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
         // Copy constructor: 
         inline ResonanceGmZ::ResonanceGmZ(const ResonanceGmZ& in) :
-            WrapperBase(in.get_BEptr()->pointer_copy__BOSS())
+            ResonanceWidths(in.get_BEptr()->pointer_copy__BOSS())
         {
             get_BEptr()->set_wptr(this);
             get_BEptr()->set_delete_wrapper(false);

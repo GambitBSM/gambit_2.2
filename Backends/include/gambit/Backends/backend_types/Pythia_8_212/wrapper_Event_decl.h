@@ -206,6 +206,9 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Copy constructor: 
                 Event(const Event& in);
         
+                // Assignment operator: 
+                Event& operator=(const Event& in);
+        
                 // Destructor: 
                 ~Event();
         

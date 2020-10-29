@@ -9,6 +9,9 @@
 #include "wrapper_Settings_decl.h"
 #include <istream>
 #include <vector>
+#include "wrapper_UserHooks_decl.h"
+#include "wrapper_SigmaProcess_decl.h"
+#include "wrapper_ResonanceWidths_decl.h"
 #include <ostream>
 #include "wrapper_Event_decl.h"
 #include "wrapper_Info_decl.h"
@@ -56,6 +59,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual bool readFile__BOSS() =0;
     
                 virtual bool readFile(::std::basic_istream<char, std::char_traits<char> >&, int) =0;
+    
+                virtual bool setUserHooksPtr__BOSS(Pythia8::Abstract_UserHooks*) =0;
+    
+                virtual bool setResonancePtr__BOSS(Pythia8::Abstract_ResonanceWidths*) =0;
     
                 virtual bool init(::std::basic_ostream<char, std::char_traits<char> >&) =0;
     
@@ -108,7 +115,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual Pythia8::Abstract_SLHAinterface& slhaInterface_ref__BOSS() =0;
     
             public:
-                virtual Abstract_Pythia* pointer_copy__BOSS() =0;
+                virtual void pointer_assign__BOSS(Abstract_Pythia*) =0;
     
             private:
                 Pythia* wptr;

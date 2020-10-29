@@ -279,6 +279,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
                 void rescaleBR(int idIn);
         
+                void setResonancePtr(int idIn, Pythia8::ResonanceWidths* resonancePtrIn);
+        
                 void resInit(int idIn);
         
                 double resWidth(int idIn, double mHat, int idInFlav, bool openOnly, bool setBR);

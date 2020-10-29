@@ -10,6 +10,9 @@
 #include "wrapper_Settings_decl.h"
 #include <istream>
 #include <vector>
+#include "wrapper_UserHooks_decl.h"
+#include "wrapper_SigmaProcess_decl.h"
+#include "wrapper_ResonanceWidths_decl.h"
 #include <ostream>
 #include "wrapper_Event_decl.h"
 #include "wrapper_Info_decl.h"
@@ -76,6 +79,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
                 bool readFile(::std::basic_istream<char, std::char_traits<char> >& is, int subrun);
         
+                bool setUserHooksPtr(Pythia8::UserHooks* userHooksPtrIn);
+        
+                bool setResonancePtr(Pythia8::ResonanceWidths* resonancePtrIn);
+        
                 bool init(::std::basic_ostream<char, std::char_traits<char> >& os);
         
                 bool init();
@@ -122,8 +129,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 // Special pointer-based constructor: 
                 Pythia(Abstract_Pythia* in);
         
-                // Copy constructor: 
-                Pythia(const Pythia& in);
+                // Assignment operator: 
+                Pythia& operator=(const Pythia& in);
         
                 // Destructor: 
                 ~Pythia();

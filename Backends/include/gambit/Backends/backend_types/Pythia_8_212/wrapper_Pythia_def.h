@@ -6,6 +6,9 @@
 #include "wrapper_Settings_decl.h"
 #include <istream>
 #include <vector>
+#include "wrapper_UserHooks_decl.h"
+#include "wrapper_SigmaProcess_decl.h"
+#include "wrapper_ResonanceWidths_decl.h"
 #include <ostream>
 #include "wrapper_Event_decl.h"
 #include "wrapper_Info_decl.h"
@@ -80,6 +83,16 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         inline bool Pythia::readFile(::std::basic_istream<char, std::char_traits<char> >& is, int subrun)
         {
             return get_BEptr()->readFile(is, subrun);
+        }
+        
+        inline bool Pythia::setUserHooksPtr(Pythia8::UserHooks* userHooksPtrIn)
+        {
+            return get_BEptr()->setUserHooksPtr__BOSS((*userHooksPtrIn).get_BEptr());
+        }
+        
+        inline bool Pythia::setResonancePtr(Pythia8::ResonanceWidths* resonancePtrIn)
+        {
+            return get_BEptr()->setResonancePtr__BOSS((*resonancePtrIn).get_BEptr());
         }
         
         inline bool Pythia::init(::std::basic_ostream<char, std::char_traits<char> >& os)
@@ -260,21 +273,16 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             get_BEptr()->set_delete_wrapper(false);
         }
         
-        // Copy constructor: 
-        inline Pythia::Pythia(const Pythia& in) :
-            WrapperBase(in.get_BEptr()->pointer_copy__BOSS()),
-            process( get_BEptr()->process_ref__BOSS().get_init_wref()),
-            event( get_BEptr()->event_ref__BOSS().get_init_wref()),
-            info( get_BEptr()->info_ref__BOSS().get_init_wref()),
-            settings( get_BEptr()->settings_ref__BOSS().get_init_wref()),
-            particleData( get_BEptr()->particleData_ref__BOSS().get_init_wref()),
-            rndm( get_BEptr()->rndm_ref__BOSS().get_init_wref()),
-            couplings( get_BEptr()->couplings_ref__BOSS().get_init_wref()),
-            slhaInterface( get_BEptr()->slhaInterface_ref__BOSS().get_init_wref())
+        // Assignment operator: 
+        inline Pythia& Pythia::operator=(const Pythia& in)
         {
-            get_BEptr()->set_wptr(this);
-            get_BEptr()->set_delete_wrapper(false);
+            if (this != &in)
+            {
+                get_BEptr()->pointer_assign__BOSS(in.get_BEptr());
+            }
+            return *this;
         }
+        
         
         // Destructor: 
         inline Pythia::~Pythia()

@@ -243,6 +243,10 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         
                 Pythia8::DecayChannel& pickChannel();
         
+                void setResonancePtr(Pythia8::ResonanceWidths* resonancePtrIn);
+        
+                Pythia8::ResonanceWidths* getResonancePtr();
+        
                 void resInit(Pythia8::Info* infoPtrIn, Pythia8::Settings* settingsPtrIn, Pythia8::ParticleData* particleDataPtrIn, Pythia8::Couplings* couplingsPtrIn);
         
                 double resWidth(int idSgn, double mHat, int idIn, bool openOnly, bool setBR);

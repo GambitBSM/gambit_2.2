@@ -11,6 +11,7 @@
 #include <string>
 #include <ostream>
 #include <vector>
+#include "wrapper_ResonanceWidths_decl.h"
 #include "wrapper_ParticleDataEntry_decl.h"
 #include <cstddef>
 #include <iostream>
@@ -272,6 +273,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual void rescaleBR(int, double) =0;
     
                 virtual void rescaleBR__BOSS(int) =0;
+    
+                virtual void setResonancePtr__BOSS(int, Pythia8::Abstract_ResonanceWidths*) =0;
     
                 virtual void resInit(int) =0;
     

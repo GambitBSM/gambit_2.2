@@ -12,9 +12,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
     {
         class Abstract_GAMBIT_hepmc_writer;
         class Abstract_Pythia;
+        class Abstract_UserHooks;
         class Abstract_PartonLevel;
         class Abstract_ResonanceDecays;
         class Abstract_ParticleDecays;
+        class Abstract_SigmaProcess;
         class Abstract_SLHAinterface;
         class Abstract_ParticleData;
         class Abstract_CoupSUSY;
@@ -25,6 +27,7 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         class Abstract_DecayChannel;
         class Abstract_ParticleDataEntry;
         class Abstract_Couplings;
+        class Abstract_ResonanceWidths;
         class Abstract_ResonanceGmZ;
         class Abstract_BeamParticle;
         class Abstract_SlowJet;
