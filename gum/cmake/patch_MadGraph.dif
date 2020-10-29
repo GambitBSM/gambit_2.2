@@ -1,6 +1,6 @@
 diff -rupN MadGraph_pristine/aloha/aloha_fct.py ../contrib/MadGraph/aloha/aloha_fct.py
 --- MadGraph_pristine/aloha/aloha_fct.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_fct.py	2020-10-30 00:11:51.922157188 +1100
++++ ../contrib/MadGraph/aloha/aloha_fct.py	2020-10-30 01:26:23.629372841 +1100
 @@ -29,7 +29,7 @@ def get_fermion_flow(expression, nb_ferm
      try:
          expr = eval(expression)
@@ -78,7 +78,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_fct.py ../contrib/MadGraph/aloha/aloha_
     
 diff -rupN MadGraph_pristine/aloha/aloha_lib.py ../contrib/MadGraph/aloha/aloha_lib.py
 --- MadGraph_pristine/aloha/aloha_lib.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_lib.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/aloha/aloha_lib.py	2020-10-30 01:26:23.629372841 +1100
 @@ -143,13 +143,13 @@ class Computation(dict):
              if isinstance(expression, (MultLorentz, AddVariable, LorentzObject)):
                  try:
@@ -122,7 +122,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_lib.py ../contrib/MadGraph/aloha/aloha_
      def get_all_var_names(self):
 diff -rupN MadGraph_pristine/aloha/aloha_parsers.py ../contrib/MadGraph/aloha/aloha_parsers.py
 --- MadGraph_pristine/aloha/aloha_parsers.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_parsers.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/aloha/aloha_parsers.py	2020-10-30 01:26:23.629372841 +1100
 @@ -29,17 +29,14 @@ import sys
  root_path = os.path.split(os.path.dirname(os.path.realpath( __file__ )))[0]
  sys.path.append(os.path.join(root_path))
@@ -155,7 +155,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_parsers.py ../contrib/MadGraph/aloha/al
              logger.error("Syntax error at EOF")
 diff -rupN MadGraph_pristine/aloha/aloha_writers.py ../contrib/MadGraph/aloha/aloha_writers.py
 --- MadGraph_pristine/aloha/aloha_writers.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_writers.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/aloha/aloha_writers.py	2020-10-30 01:26:23.629372841 +1100
 @@ -1,11 +1,11 @@
 -try:
 -    import madgraph.iolibs.file_writers as writers 
@@ -262,7 +262,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_writers.py ../contrib/MadGraph/aloha/al
      
 diff -rupN MadGraph_pristine/aloha/create_aloha.py ../contrib/MadGraph/aloha/create_aloha.py
 --- MadGraph_pristine/aloha/create_aloha.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/create_aloha.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/aloha/create_aloha.py	2020-10-30 01:26:23.629372841 +1100
 @@ -15,7 +15,12 @@
  from __future__ import division
  import cmath
@@ -326,7 +326,7 @@ diff -rupN MadGraph_pristine/aloha/create_aloha.py ../contrib/MadGraph/aloha/cre
              for filepath in ext_files:
 diff -rupN MadGraph_pristine/input/mg5_configuration.txt ../contrib/MadGraph/input/mg5_configuration.txt
 --- MadGraph_pristine/input/mg5_configuration.txt	2020-10-27 21:41:37.769088298 +1100
-+++ ../contrib/MadGraph/input/mg5_configuration.txt	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/input/mg5_configuration.txt	2020-10-30 01:26:23.629372841 +1100
 @@ -49,7 +49,7 @@
  
  #! Prefered PS viewer
@@ -338,7 +338,7 @@ diff -rupN MadGraph_pristine/input/mg5_configuration.txt ../contrib/MadGraph/inp
  #!  0: No time limit
 diff -rupN MadGraph_pristine/madgraph/core/base_objects.py ../contrib/MadGraph/madgraph/core/base_objects.py
 --- MadGraph_pristine/madgraph/core/base_objects.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/base_objects.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/madgraph/core/base_objects.py	2020-10-30 01:26:23.629372841 +1100
 @@ -22,7 +22,12 @@ import math
  import numbers
  import os
@@ -1125,7 +1125,7 @@ diff -rupN MadGraph_pristine/madgraph/core/base_objects.py ../contrib/MadGraph/m
              return super(ProcessDefinition, self).filter(name, value)
 diff -rupN MadGraph_pristine/madgraph/core/color_algebra.py ../contrib/MadGraph/madgraph/core/color_algebra.py
 --- MadGraph_pristine/madgraph/core/color_algebra.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/color_algebra.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/madgraph/core/color_algebra.py	2020-10-30 01:26:23.629372841 +1100
 @@ -833,8 +833,8 @@ class ColorString(list):
          are still non trivial color objects."""
  
@@ -1139,7 +1139,7 @@ diff -rupN MadGraph_pristine/madgraph/core/color_algebra.py ../contrib/MadGraph/
              return (self.coeff * fractions.Fraction(\
 diff -rupN MadGraph_pristine/madgraph/core/color_amp.py ../contrib/MadGraph/madgraph/core/color_amp.py
 --- MadGraph_pristine/madgraph/core/color_amp.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/color_amp.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/madgraph/core/color_amp.py	2020-10-30 01:26:23.633372717 +1100
 @@ -413,8 +413,8 @@ class ColorBasis(dict):
          # If more than one string at leading N...
          if len(res_cs) > 1 and any([not cs.near_equivalent(res_cs[0]) \
@@ -1182,7 +1182,7 @@ diff -rupN MadGraph_pristine/madgraph/core/color_amp.py ../contrib/MadGraph/madg
                  if abs(leg_repr) == 8:
 diff -rupN MadGraph_pristine/madgraph/core/diagram_generation.py ../contrib/MadGraph/madgraph/core/diagram_generation.py
 --- MadGraph_pristine/madgraph/core/diagram_generation.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/diagram_generation.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/madgraph/core/diagram_generation.py	2020-10-30 01:26:23.633372717 +1100
 @@ -439,16 +439,13 @@ class Amplitude(base_objects.PhysicsObje
  
          if name == 'process':
@@ -1327,7 +1327,7 @@ diff -rupN MadGraph_pristine/madgraph/core/diagram_generation.py ../contrib/MadG
                          if amplitude.get('diagrams'):
 diff -rupN MadGraph_pristine/madgraph/core/drawing.py ../contrib/MadGraph/madgraph/core/drawing.py
 --- MadGraph_pristine/madgraph/core/drawing.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/drawing.py	2020-10-30 00:11:51.926157263 +1100
++++ ../contrib/MadGraph/madgraph/core/drawing.py	2020-10-30 01:26:23.633372717 +1100
 @@ -412,8 +412,8 @@ class FeynmanLine(object):
              self.begin.pos_x
              self.end.pos_y
@@ -1389,7 +1389,7 @@ diff -rupN MadGraph_pristine/madgraph/core/drawing.py ../contrib/MadGraph/madgra
  
 diff -rupN MadGraph_pristine/madgraph/core/helas_objects.py ../contrib/MadGraph/madgraph/core/helas_objects.py
 --- MadGraph_pristine/madgraph/core/helas_objects.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/helas_objects.py	2020-10-30 00:11:51.930157337 +1100
++++ ../contrib/MadGraph/madgraph/core/helas_objects.py	2020-10-30 01:26:23.633372717 +1100
 @@ -300,8 +300,8 @@ class CanonicalConfigTag(diagram_generat
                          right_num = num
              if right_num == -1:
@@ -2045,7 +2045,7 @@ diff -rupN MadGraph_pristine/madgraph/core/helas_objects.py ../contrib/MadGraph/
  
 diff -rupN MadGraph_pristine/madgraph/__init__.py ../contrib/MadGraph/madgraph/__init__.py
 --- MadGraph_pristine/madgraph/__init__.py	2020-10-27 21:41:37.889090214 +1100
-+++ ../contrib/MadGraph/madgraph/__init__.py	2020-10-30 00:11:51.930157337 +1100
++++ ../contrib/MadGraph/madgraph/__init__.py	2020-10-30 01:26:23.633372717 +1100
 @@ -46,5 +46,5 @@ if ReadWrite:
              os.remove(tmp_path)
              shutil.copy(pjoin(MG5DIR, 'Template','LO','Source','.make_opts'),
@@ -2055,7 +2055,7 @@ diff -rupN MadGraph_pristine/madgraph/__init__.py ../contrib/MadGraph/madgraph/_
          pass
 diff -rupN MadGraph_pristine/madgraph/interface/common_run_interface.py ../contrib/MadGraph/madgraph/interface/common_run_interface.py
 --- MadGraph_pristine/madgraph/interface/common_run_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/common_run_interface.py	2020-10-30 00:11:51.930157337 +1100
++++ ../contrib/MadGraph/madgraph/interface/common_run_interface.py	2020-10-30 01:26:23.633372717 +1100
 @@ -33,7 +33,11 @@ import time
  import traceback
  import urllib
@@ -2886,7 +2886,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/common_run_interface.py ../contr
                              param_card_iterator.store_entry(next_name, store_for_scan(obj)(), param_card_path=card_path)
 diff -rupN MadGraph_pristine/madgraph/interface/extended_cmd.py ../contrib/MadGraph/madgraph/interface/extended_cmd.py
 --- MadGraph_pristine/madgraph/interface/extended_cmd.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/extended_cmd.py	2020-10-30 00:15:21.233534737 +1100
++++ ../contrib/MadGraph/madgraph/interface/extended_cmd.py	2020-10-30 01:26:23.633372717 +1100
 @@ -15,6 +15,7 @@
  """  A file containing different extension of the cmd basic python library"""
  
@@ -3200,7 +3200,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/extended_cmd.py ../contrib/MadGr
      
 diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib/MadGraph/madgraph/interface/madgraph_interface.py
 --- MadGraph_pristine/madgraph/interface/madgraph_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/madgraph_interface.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/interface/madgraph_interface.py	2020-10-30 01:26:23.637372592 +1100
 @@ -24,6 +24,7 @@ import glob
  import logging
  import optparse
@@ -3996,7 +3996,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
          cmd.SmartQuestion.cmdloop(self, intro)
 diff -rupN MadGraph_pristine/madgraph/interface/master_interface.py ../contrib/MadGraph/madgraph/interface/master_interface.py
 --- MadGraph_pristine/madgraph/interface/master_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/master_interface.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/interface/master_interface.py	2020-10-30 01:26:23.637372592 +1100
 @@ -153,7 +153,7 @@ class Switcher(object):
                      correct = False                    
                      
@@ -4043,7 +4043,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/master_interface.py ../contrib/M
              self.debug_link_to_command() 
 diff -rupN MadGraph_pristine/madgraph/iolibs/export_cpp.py ../contrib/MadGraph/madgraph/iolibs/export_cpp.py
 --- MadGraph_pristine/madgraph/iolibs/export_cpp.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/export_cpp.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_cpp.py	2020-10-30 01:26:23.637372592 +1100
 @@ -92,8 +92,8 @@ class OneProcessExporterCPP(object):
          elif isinstance(matrix_elements, helas_objects.HelasMatrixElementList):
              self.matrix_elements = matrix_elements
@@ -4122,9 +4122,23 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/export_cpp.py ../contrib/MadGraph/m
  
              if final_id_list:
                  res_lines.append("int flavors[%d][%d] = {%s};" % \
+diff -rupN MadGraph_pristine/madgraph/iolibs/export_python.py ../contrib/MadGraph/madgraph/iolibs/export_python.py
+--- MadGraph_pristine/madgraph/iolibs/export_python.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_python.py	2020-10-30 01:26:23.637372592 +1100
+@@ -81,8 +81,8 @@ class ProcessExporterPython(object):
+         self.helas_call_writer = python_helas_call_writer
+ 
+         if not isinstance(self.helas_call_writer, helas_call_writers.PythonUFOHelasCallWriter):
+-            raise Exception, \
+-                "helas_call_writer not PythonUFOHelasCallWriter"
++            raise Exception( \
++                "helas_call_writer not PythonUFOHelasCallWriter")
+ 
+         self.matrix_methods = {}
+ 
 diff -rupN MadGraph_pristine/madgraph/iolibs/export_v4.py ../contrib/MadGraph/madgraph/iolibs/export_v4.py
 --- MadGraph_pristine/madgraph/iolibs/export_v4.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/export_v4.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_v4.py	2020-10-30 01:26:23.637372592 +1100
 @@ -16,7 +16,12 @@ from madgraph.iolibs.helas_call_writers
  """Methods and classes to export matrix elements to v4 format."""
  
@@ -4370,7 +4384,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/export_v4.py ../contrib/MadGraph/ma
              self.model = subproc_group.get('matrix_elements')[0].\
 diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgraph/iolibs/files.py
 --- MadGraph_pristine/madgraph/iolibs/files.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/files.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/files.py	2020-10-30 01:26:23.637372592 +1100
 @@ -36,11 +36,11 @@ def read_from_file(filename, myfunct, *a
              ret_value = myfunct(sock, *args)
          finally:
@@ -4435,7 +4449,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgra
              logger.warning('Could not link %s at position: %s' % (file_pos, \
 diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph/madgraph/iolibs/file_writers.py
 --- MadGraph_pristine/madgraph/iolibs/file_writers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/file_writers.py	2020-10-30 00:16:13.050239661 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/file_writers.py	2020-10-30 01:26:23.637372592 +1100
 @@ -19,6 +19,8 @@ Fortran, C++, etc."""
  
  import re
@@ -4522,7 +4536,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
          """Extends the regular file.writeline() function to write out
 diff -rupN MadGraph_pristine/madgraph/iolibs/group_subprocs.py ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py
 --- MadGraph_pristine/madgraph/iolibs/group_subprocs.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py	2020-10-30 01:26:23.641372468 +1100
 @@ -93,8 +93,8 @@ class IdentifyConfigTag(diagram_generati
              # We go from next-to-last link to last link - remove propagator info
              return (old_vertex[0],)
@@ -4625,7 +4639,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/group_subprocs.py ../contrib/MadGra
      def get_sorted_keys(self):
 diff -rupN MadGraph_pristine/madgraph/iolibs/helas_call_writers.py ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py
 --- MadGraph_pristine/madgraph/iolibs/helas_call_writers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py	2020-10-30 01:26:23.641372468 +1100
 @@ -68,16 +68,16 @@ class HelasCallWriter(base_objects.Physi
  
          if name == 'model':
@@ -4769,16 +4783,120 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/helas_call_writers.py ../contrib/Ma
          
          call_function = None
  
+diff -rupN MadGraph_pristine/madgraph/iolibs/save_load_object.py ../contrib/MadGraph/madgraph/iolibs/save_load_object.py
+--- MadGraph_pristine/madgraph/iolibs/save_load_object.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/save_load_object.py	2020-10-30 01:26:23.641372468 +1100
+@@ -16,7 +16,10 @@
+ """Function to save any Python object to file."""
+ 
+ import pickle
+-import cPickle
++try:
++    import cPickle
++except:
++    import _pickle as cPickle
+ 
+ from . import files as files
+ 
+@@ -29,7 +32,7 @@ def save_to_file(filename, object, log=T
+     """Save any Python object to file filename"""
+ 
+     if not isinstance(filename, basestring):
+-        raise SaveObjectError, "filename must be a string"
++        raise SaveObjectError("filename must be a string")
+ 
+     files.write_to_file(filename, pickle_object, object, log=log)
+ 
+@@ -39,7 +42,7 @@ def load_from_file(filename):
+     """Save any Python object to file filename"""
+ 
+     if not isinstance(filename, str):
+-        raise SaveObjectError, "filename must be a string"
++        raise SaveObjectError("filename must be a string")
+     return files.read_from_file(filename, unpickle_object)
+     
+ def pickle_object(fsock, object):
+diff -rupN MadGraph_pristine/madgraph/iolibs/save_model.py ../contrib/MadGraph/madgraph/iolibs/save_model.py
+--- MadGraph_pristine/madgraph/iolibs/save_model.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/save_model.py	2020-10-30 01:26:23.641372468 +1100
+@@ -27,8 +27,8 @@ def save_particles(fsock, part_list):
+     """Save particle objects contained in part_list in the stream fsock"""
+ 
+     if not isinstance(part_list, base_objects.ParticleList):
+-        raise ValueError, \
+-            "Object %s is not a valid ParticleList" % repr(part_list)
++        raise ValueError( \
++            "Object %s is not a valid ParticleList" % repr(part_list))
+ 
+     fsock.write("particles = [\n")
+ 
+@@ -44,8 +44,8 @@ def save_interactions(fsock, inter_list)
+     """Save interaction objects contained in inter_list in the stream fsock"""
+ 
+     if not isinstance(inter_list, base_objects.InteractionList):
+-        raise ValueError, \
+-            "Object %s is not a valid InteractionList" % repr(inter_list)
++        raise ValueError( \
++            "Object %s is not a valid InteractionList" % repr(inter_list))
+ 
+     fsock.write("interactions = [\n")
+ 
+@@ -61,31 +61,31 @@ def save_model(path, model):
+     """Save a full model in directory path (try to create if necessary)."""
+ 
+     if not isinstance(model, base_objects.Model):
+-        raise ValueError, \
+-            "Object %s is not a valid Model" % repr(model)
++        raise ValueError( \
++            "Object %s is not a valid Model" % repr(model))
+ 
+     if not isinstance(path, str):
+-        raise ValueError, \
+-            "Object %s is not a path string" % repr(path)
++        raise ValueError( \
++            "Object %s is not a path string" % repr(path))
+ 
+     if not os.path.isdir(path):
+         logger.warning("Path %s does not exist, try to make it..." % str(path))
+         try:
+             os.mkdir(path)
+-        except IOError, (errno, strerror):
+-            logger.error("I/O error (%s): %s" % (errno, strerror))
++        except IOError as e :
++            logger.error("I/O error (%s): %s" % (e.errno, e.strerror))
+             return None
+ 
+-    print "Saving particles...",
++    print("Saving particles...",
+     files.write_to_file(os.path.join(path, 'particles.py'),
+                         save_particles,
+-                        model['particles'])
+-    print "%i particles saved to %s" % (len(model['particles']),
+-                                      os.path.join(path, 'particles.py'))
++                        model['particles']))
++    print("%i particles saved to %s" % (len(model['particles']),
++                                      os.path.join(path, 'particles.py')))
+ 
+-    print "Saving interactions...",
++    print("Saving interactions...",
+     files.write_to_file(os.path.join(path, 'interactions.py'),
+                         save_interactions,
+-                        model['interactions'])
+-    print "%i interactions saved to %s" % (len(model['interactions']),
+-                                      os.path.join(path, 'interactions.py'))
++                        model['interactions']))
++    print("%i interactions saved to %s" % (len(model['interactions']),
++                                      os.path.join(path, 'interactions.py')))
 diff -rupN MadGraph_pristine/madgraph/iolibs/template_files/__init__.py ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py
 --- MadGraph_pristine/madgraph/iolibs/template_files/__init__.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py	2020-10-30 01:26:23.641372468 +1100
 @@ -1,2 +1,2 @@
 -import mg4_proc_card
 +from .mg4_proc_card import *
  
 diff -rupN MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py
 --- MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py	2020-10-30 00:11:51.934157411 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py	2020-10-30 01:26:23.641372468 +1100
 @@ -924,17 +924,17 @@ class UFOExpressionParserPythonIF(UFOExp
                  try:
                      self.defined_variables = eval(args[0])
@@ -4835,7 +4953,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py ../contri
      
 diff -rupN MadGraph_pristine/madgraph/loop/loop_base_objects.py ../contrib/MadGraph/madgraph/loop/loop_base_objects.py
 --- MadGraph_pristine/madgraph/loop/loop_base_objects.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_base_objects.py	2020-10-30 00:11:51.938157486 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_base_objects.py	2020-10-30 01:26:23.645372343 +1100
 @@ -88,48 +88,48 @@ class LoopDiagram(base_objects.Diagram):
  
          if name == 'tag':
@@ -5171,7 +5289,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_base_objects.py ../contrib/MadGr
          """Returns a nicely formatted string"""
 diff -rupN MadGraph_pristine/madgraph/loop/loop_color_amp.py ../contrib/MadGraph/madgraph/loop/loop_color_amp.py
 --- MadGraph_pristine/madgraph/loop/loop_color_amp.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_color_amp.py	2020-10-30 00:11:51.938157486 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_color_amp.py	2020-10-30 01:26:23.645372343 +1100
 @@ -67,8 +67,8 @@ class LoopColorBasis(color_amp.ColorBasi
                [color_algebra.Tr(lcut_numbers[1],lcut_numbers[0])],
                fractions.Fraction(2, 1))
@@ -5207,7 +5325,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_color_amp.py ../contrib/MadGraph
              colorize_dict = self.colorize(diagram,
 diff -rupN MadGraph_pristine/madgraph/loop/loop_diagram_generation.py ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py
 --- MadGraph_pristine/madgraph/loop/loop_diagram_generation.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py	2020-10-30 00:11:51.938157486 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py	2020-10-30 01:26:23.645372343 +1100
 @@ -104,37 +104,37 @@ class LoopAmplitude(diagram_generation.A
  
          if name == 'diagrams':
@@ -5286,7 +5404,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_diagram_generation.py ../contrib
      
 diff -rupN MadGraph_pristine/madgraph/loop/loop_helas_objects.py ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py
 --- MadGraph_pristine/madgraph/loop/loop_helas_objects.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py	2020-10-30 00:11:51.938157486 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py	2020-10-30 01:26:23.645372343 +1100
 @@ -79,22 +79,22 @@ class LoopHelasUVCTAmplitude(helas_objec
  
          if name=='UVCT_couplings':
@@ -5455,9 +5573,71 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_helas_objects.py ../contrib/MadG
  
                  for res_amp in res_amps:
                      col_amp.append(((res_amp.get('fermionfactor'),
+diff -rupN MadGraph_pristine/madgraph/madevent/gen_crossxhtml.py ../contrib/MadGraph/madgraph/madevent/gen_crossxhtml.py
+--- MadGraph_pristine/madgraph/madevent/gen_crossxhtml.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/madevent/gen_crossxhtml.py	2020-10-30 01:26:23.645372343 +1100
+@@ -600,7 +600,7 @@ class RunResults(list):
+             # return last entry
+             return self[-1]
+         
+-        raise Exception, '%s is not a valid tag' % name
++        raise Exception('%s is not a valid tag' % name)
+     
+     def recreate(self, banner):
+         """Fully recreate the information due to a hard removal of the db
+diff -rupN MadGraph_pristine/madgraph/madevent/sum_html.py ../contrib/MadGraph/madgraph/madevent/sum_html.py
+--- MadGraph_pristine/madgraph/madevent/sum_html.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/madevent/sum_html.py	2020-10-30 01:26:23.645372343 +1100
+@@ -79,9 +79,9 @@ class RunStatistics(dict):
+             new_stats = [new_stats, ]
+         elif isinstance(new_stats,list):
+             if any(not isinstance(_,RunStatistics) for _ in new_stats):
+-                raise MadGraph5Error, "The 'new_stats' argument of the function "+\
++                raise MadGraph5Error("The 'new_stats' argument of the function "+\
+                         "'updtate_statistics' must be a (possibly list of) "+\
+-                                                       "RunStatistics instance."
++                                                       "RunStatistics instance.")
+  
+         keys = set([])
+         for stat in [self,]+new_stats:
+@@ -280,7 +280,7 @@ class OneResult(object):
+         elif isinstance(filepath, file):
+             finput = filepath
+         else:
+-            raise Exception, "filepath should be a path or a file descriptor"
++            raise Exception("filepath should be a path or a file descriptor")
+         
+         i=0
+         found_xsec_line = False
+@@ -311,12 +311,12 @@ class OneResult(object):
+                         if 'end code not correct' in line:
+                             error_code = data[4]
+                             log = pjoin(os.path.dirname(filepath), 'log.txt')
+-                            raise Exception, "Reported error: End code %s \n Full associated log: \n%s"\
+-                                  % (error_code, open(log).read())
++                            raise Exception("Reported error: End code %s \n Full associated log: \n%s"\
++                                  % (error_code, open(log).read()))
+                         else:
+                             log = pjoin(os.path.dirname(filepath), 'log.txt')
+-                            raise Exception, "Wrong formatting in results.dat: %s \n Full associated log: \n%s"\
+-                                %  (line, open(log).read())                        
++                            raise Exception("Wrong formatting in results.dat: %s \n Full associated log: \n%s"\
++                                %  (line, open(log).read()))                        
+                 if len(data) > 10:
+                     self.maxwgt = data[10]
+                 if len(data) >12:
+@@ -364,7 +364,7 @@ class OneResult(object):
+         if statistics_node:
+             try:
+                 self.run_statistics.load_statistics(statistics_node[0])
+-            except ValueError, IndexError:
++            except (ValueError, IndexError):
+                 logger.warning('Fail to read run statistics from results.dat')
+ 
+     def set_mfactor(self, value):
 diff -rupN MadGraph_pristine/madgraph/various/banner.py ../contrib/MadGraph/madgraph/various/banner.py
 --- MadGraph_pristine/madgraph/various/banner.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/banner.py	2020-10-30 00:11:51.938157486 +1100
++++ ../contrib/MadGraph/madgraph/various/banner.py	2020-10-30 01:26:23.645372343 +1100
 @@ -22,7 +22,11 @@ import os
  import sys
  import re
@@ -5908,7 +6088,7 @@ diff -rupN MadGraph_pristine/madgraph/various/banner.py ../contrib/MadGraph/madg
          done = set()
 diff -rupN MadGraph_pristine/madgraph/various/cluster.py ../contrib/MadGraph/madgraph/various/cluster.py
 --- MadGraph_pristine/madgraph/various/cluster.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/cluster.py	2020-10-30 00:11:51.938157486 +1100
++++ ../contrib/MadGraph/madgraph/various/cluster.py	2020-10-30 01:26:23.645372343 +1100
 @@ -25,9 +25,9 @@ logger = logging.getLogger('madgraph.clu
  try:
      from madgraph import MadGraph5Error
@@ -6240,10 +6420,29 @@ diff -rupN MadGraph_pristine/madgraph/various/cluster.py ../contrib/MadGraph/mad
              status_out= status.stdout.read().strip()
              status_out= status_out.split(":",1)[1]
              logger.debug("[["+str(id)+"]]"+status_out)
+diff -rupN MadGraph_pristine/madgraph/various/diagram_symmetry.py ../contrib/MadGraph/madgraph/various/diagram_symmetry.py
+--- MadGraph_pristine/madgraph/various/diagram_symmetry.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/various/diagram_symmetry.py	2020-10-30 01:26:23.649372220 +1100
+@@ -355,7 +355,7 @@ class IdentifySGConfigTag(diagram_genera
+             part = model.get_particle(vertex.get('legs')[-1].get('id'))
+             try:
+                 QCD = inter.get('orders')['QCD']
+-            except Exception, error:
++            except Exception as error:
+                 QCD = 0
+ 
+             return ((part.get('color'),
 diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/madgraph/various/lhe_parser.py
 --- MadGraph_pristine/madgraph/various/lhe_parser.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/lhe_parser.py	2020-10-30 00:17:57.179532661 +1100
-@@ -15,10 +15,10 @@ pjoin = os.path.join
++++ ../contrib/MadGraph/madgraph/various/lhe_parser.py	2020-10-30 01:26:23.649372220 +1100
+@@ -9,16 +9,17 @@ import time
+ import os
+ import shutil
+ import sys
++from io import FileIO
+ 
+ pjoin = os.path.join
+ 
  if '__main__' == __name__:
      import sys
      sys.path.append('../../')
@@ -6256,7 +6455,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
  logger = logging.getLogger("madgraph.lhe_parser")
  
  class Particle(object):
-@@ -187,9 +187,9 @@ class EventFile(object):
+@@ -187,9 +188,9 @@ class EventFile(object):
          else:
              try:
                  return gzip.GzipFile.__new__(EventFileGzip, path, mode, *args, **opt)
@@ -6268,7 +6467,25 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                  if mode == 'r':
                      misc.gunzip(path)
                  return file.__new__(EventFileNoGzip, path[:-3], mode, *args, **opt)
-@@ -1393,8 +1393,8 @@ class Event(list):
+@@ -624,7 +625,7 @@ class EventFile(object):
+              
+         return nb_file +1
+ 
+-    def update_HwU(self, hwu, fct, name='lhe', keep_wgt=False, maxevents=sys.maxint):
++    def update_HwU(self, hwu, fct, name='lhe', keep_wgt=False, maxevents=sys.maxsize):
+         """take a HwU and add this event file for the function fct"""
+                 
+         if not isinstance(hwu, list):
+@@ -817,7 +818,7 @@ class EventFileGzip(EventFile, gzip.Gzip
+             currpos = self.size
+         return currpos
+         
+-class EventFileNoGzip(EventFile, file):
++class EventFileNoGzip(EventFile, FileIO):
+     """A way to read a standard event file"""
+     
+     def close(self,*args, **opts):
+@@ -1393,8 +1394,8 @@ class Event(list):
                  self.reweight_data = dict([(pid, float(value)) for (pid, value) in data
                                             if not self.reweight_order.append(pid)])
                                        # the if is to create the order file on the flight
@@ -6279,7 +6496,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
              self.tag = self.tag[:start] + self.tag[stop+7:]
          return self.reweight_data
      
-@@ -1461,7 +1461,7 @@ class Event(list):
+@@ -1461,7 +1462,7 @@ class Event(list):
              
              info = Event.loweight_pattern.search(text)
              if not info:
@@ -6288,7 +6505,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
              self.loweight={}
              self.loweight['n_qcd'] = int(info.group('nqcd'))
              self.loweight['ren_scale'] = float(info.group('ren_scale'))
-@@ -1588,8 +1588,8 @@ class Event(list):
+@@ -1588,8 +1589,8 @@ class Event(list):
                      else:
                          try:
                              setattr(new_particle, tag, self[nb_part + mother_id -1])
@@ -6299,7 +6516,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                              misc.sprint( self)
                              misc.sprint(nb_part + mother_id -1)
                              misc.sprint(tag)
-@@ -1600,7 +1600,7 @@ class Event(list):
+@@ -1600,7 +1601,7 @@ class Event(list):
                  elif tag == "mother2" and isinstance(particle.mother1, Particle):
                      new_particle.mother2 = this_particle
                  else:
@@ -6308,7 +6525,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
          # Need to correct the color information of the particle
          # first find the first available color index
          max_color=501
-@@ -1777,22 +1777,22 @@ class Event(list):
+@@ -1777,22 +1778,22 @@ class Event(list):
              fourmass = FourMomentum(particle).mass
              
              if particle.mass and (abs(particle.mass) - fourmass)/ abs(particle.mass) > threshold:
@@ -6336,7 +6553,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
              
          #2. check the color of the event
          self.check_color_structure() 
-@@ -1995,7 +1995,7 @@ class Event(list):
+@@ -1995,7 +1996,7 @@ class Event(list):
              if part.status == 1: #final
                  try:
                      ind = order[1].index(part.pid)
@@ -6345,7 +6562,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                      if not allow_reversed:
                          raise error
                      else:
-@@ -2009,7 +2009,7 @@ class Event(list):
+@@ -2009,7 +2010,7 @@ class Event(list):
              elif part.status == -1:
                  try:
                      ind = order[0].index(part.pid)
@@ -6354,7 +6571,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                      if not allow_reversed:
                          raise error
                      else:
-@@ -2037,18 +2037,18 @@ class Event(list):
+@@ -2037,18 +2038,18 @@ class Event(list):
                  if particle.color1:
                      color_index[particle.color1] +=1
                      if -7 < particle.pdg < 0:
@@ -6378,7 +6595,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
          
          
          #2. check that each parent present have coherent color-structure
-@@ -2109,21 +2109,21 @@ class Event(list):
+@@ -2109,21 +2110,21 @@ class Event(list):
                  #only case is a epsilon_ijk structure.
                  if len(canticolors) + len(mcolors) != 3:
                      logger.critical(str(self))
@@ -6403,7 +6620,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                 
      def __eq__(self, other):
          """two event are the same if they have the same momentum. other info are ignored"""
-@@ -2229,7 +2229,7 @@ class Event(list):
+@@ -2229,7 +2230,7 @@ class Event(list):
              if part.status == 1: #final
                  try:
                      ind = order[1].index(part.pid)
@@ -6412,7 +6629,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                      if not allow_reversed:
                          raise error
                      else:
-@@ -2243,7 +2243,7 @@ class Event(list):
+@@ -2243,7 +2244,7 @@ class Event(list):
              elif part.status == -1:
                  try:
                      ind = order[0].index(part.pid)
@@ -6421,7 +6638,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                      if not allow_reversed:
                          raise error
                      else:
-@@ -2340,9 +2340,9 @@ class WeightFile(EventFile):
+@@ -2340,9 +2341,9 @@ class WeightFile(EventFile):
          if  path.endswith(".gz"):
              try:
                  return gzip.GzipFile.__new__(WeightFileGzip, path, mode, *args, **opt)
@@ -6433,7 +6650,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                  if mode == 'r':
                      misc.gunzip(path)
                  return file.__new__(WeightFileNoGzip, path[:-3], mode, *args, **opt)
-@@ -2881,7 +2881,7 @@ class NLO_PARTIALWEIGHT(object):
+@@ -2881,7 +2882,7 @@ class NLO_PARTIALWEIGHT(object):
                  if pos < len(get_order[0]): #initial
                      try:
                          ind = order[0].index(pdgs[pos])
@@ -6442,7 +6659,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                          if not allow_reversed:
                              raise error
                          else:
-@@ -2897,7 +2897,7 @@ class NLO_PARTIALWEIGHT(object):
+@@ -2897,7 +2898,7 @@ class NLO_PARTIALWEIGHT(object):
                  else: #final   
                      try:
                          ind = order[1].index(pdgs[pos])
@@ -6451,7 +6668,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
                          if not allow_reversed:
                              raise error
                          else:
-@@ -3098,13 +3098,13 @@ if '__main__' == __name__:
+@@ -3098,13 +3099,13 @@ if '__main__' == __name__:
          start = time.time()
          for event in lhe:
              event.parse_lo_weight()
@@ -6467,7 +6684,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
      
  
      # Example 1: adding some missing information to the event (here distance travelled)
-@@ -3149,7 +3149,7 @@ if '__main__' == __name__:
+@@ -3149,7 +3150,7 @@ if '__main__' == __name__:
                  nb_pass +=1     
  
                          
@@ -6476,7 +6693,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
          gs1 = gridspec.GridSpec(2, 1, height_ratios=[5,1])
          gs1.update(wspace=0, hspace=0) # set the spacing between axes. 
          ax = plt.subplot(gs1[0])
-@@ -3161,8 +3161,8 @@ if '__main__' == __name__:
+@@ -3161,8 +3162,8 @@ if '__main__' == __name__:
          ax_c.set_yticks(ax.get_yticks())
          ax_c.set_yticklabels([])
          ax.set_xlim([-4,4])
@@ -6489,7 +6706,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
          plt.show()
 diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgraph/various/misc.py
 --- MadGraph_pristine/madgraph/various/misc.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/misc.py	2020-10-30 00:14:53.673141060 +1100
++++ ../contrib/MadGraph/madgraph/various/misc.py	2020-10-30 01:26:23.649372220 +1100
 @@ -22,7 +22,13 @@ import re
  import signal
  import subprocess
@@ -6784,7 +7001,7 @@ diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgra
                                     "adding its location to the PYTHONPATH environment variable and the"\
 diff -rupN MadGraph_pristine/madgraph/various/q_polynomial.py ../contrib/MadGraph/madgraph/various/q_polynomial.py
 --- MadGraph_pristine/madgraph/various/q_polynomial.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/q_polynomial.py	2020-10-30 00:11:51.938157486 +1100
++++ ../contrib/MadGraph/madgraph/various/q_polynomial.py	2020-10-30 01:26:23.649372220 +1100
 @@ -107,8 +107,8 @@ class Polynomial_naive_ordering(object):
          try:
              return self.coef_list.index(array.array('i',new_indices_list))
@@ -6862,7 +7079,7 @@ diff -rupN MadGraph_pristine/madgraph/various/q_polynomial.py ../contrib/MadGrap
      import sys
 diff -rupN MadGraph_pristine/madgraph/various/shower_card.py ../contrib/MadGraph/madgraph/various/shower_card.py
 --- MadGraph_pristine/madgraph/various/shower_card.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/shower_card.py	2020-10-30 00:11:51.942157559 +1100
++++ ../contrib/MadGraph/madgraph/various/shower_card.py	2020-10-30 01:26:23.649372220 +1100
 @@ -130,7 +130,7 @@ class ShowerCard(dict):
          if key in self.logical_vars:
              try:
@@ -6889,7 +7106,7 @@ diff -rupN MadGraph_pristine/madgraph/various/shower_card.py ../contrib/MadGraph
              raise ShowerCardError('Unknown entry: %s = %s' % (key, value))
 diff -rupN MadGraph_pristine/models/check_param_card.py ../contrib/MadGraph/models/check_param_card.py
 --- MadGraph_pristine/models/check_param_card.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/check_param_card.py	2020-10-30 00:11:51.942157559 +1100
++++ ../contrib/MadGraph/models/check_param_card.py	2020-10-30 01:26:23.649372220 +1100
 @@ -3,7 +3,12 @@ from __future__ import division
  import itertools
  import xml.etree.ElementTree as ET
@@ -7126,9 +7343,291 @@ diff -rupN MadGraph_pristine/models/check_param_card.py ../contrib/MadGraph/mode
      card.remove_param('ad', [2,2])
      #3
      yd = card['yd'].get([3, 3]).value
+diff -rupN MadGraph_pristine/models/import_ufo.py ../contrib/MadGraph/models/import_ufo.py
+--- MadGraph_pristine/models/import_ufo.py	2020-10-27 21:41:37.885090150 +1100
++++ ../contrib/MadGraph/models/import_ufo.py	2020-10-30 01:30:30.002831748 +1100
+@@ -121,8 +121,8 @@ def get_model_db():
+             continue
+         break
+     else:
+-        raise MadGraph5Error, '''Model not found locally and Impossible to connect any of us servers.
+-        Please check your internet connection or retry later'''
++        raise MadGraph5Error('''Model not found locally and Impossible to connect any of us servers.
++        Please check your internet connection or retry later''')
+     return data
+ 
+ def import_model_from_db(model_name, local_dir=False):
+@@ -153,7 +153,7 @@ def import_model_from_db(model_name, loc
+         try:
+             import pwd
+             username =pwd.getpwuid( os.getuid() )[ 0 ]  
+-        except Exception, error:
++        except Exception as error:
+             misc.sprint(str(error))
+             username = ''
+     if username in ['omatt', 'mattelaer', 'olivier'] and target is None and \
+@@ -189,7 +189,7 @@ def import_model_from_db(model_name, loc
+         except:
+             proc = misc.call('tar -xzpvf tmp.tgz', shell=True, cwd=target)#, stdout=devnull, stderr=devnull)
+     if proc:
+-        raise Exception, "Impossible to unpack the model. Please install it manually"
++        raise Exception("Impossible to unpack the model. Please install it manually")
+     return True
+ 
+ def import_model(model_name, decay=False, restrict=True, prefix='mdl_',
+@@ -233,7 +233,7 @@ def import_model(model_name, decay=False
+             elif os.path.exists(restrict):
+                 restrict_file = restrict
+             else:
+-                raise Exception, "%s is not a valid path for restrict file" % restrict
++                raise Exception("%s is not a valid path for restrict file" % restrict)
+     
+     #import the FULL model
+     model = import_full_model(model_path, decay, prefix)
+@@ -326,8 +326,8 @@ def import_full_model(model_path, decay=
+         filepath = os.path.join(model_path, filename)
+         if not os.path.isfile(filepath):
+             if filename not in ['propagators.py', 'decays.py', 'coupling_orders.py']:
+-                raise UFOImportError,  "%s directory is not a valid UFO model: \n %s is missing" % \
+-                                                         (model_path, filename)
++                raise UFOImportError("%s directory is not a valid UFO model: \n %s is missing" % \
++                                                         (model_path, filename))
+         files_list.append(filepath)
+     # use pickle files if defined and up-to-date
+     if aloha.unitary_gauge: 
+@@ -343,7 +343,7 @@ def import_full_model(model_path, decay=
+         try:
+             model = save_load_object.load_from_file( \
+                                           os.path.join(model_path, pickle_name))
+-        except Exception, error:
++        except Exception as error:
+             logger.info('failed to load model from pickle file. Try importing UFO from File')
+         else:
+             # We don't care about the restrict_card for this comparison
+@@ -377,7 +377,7 @@ def import_full_model(model_path, decay=
+                 logger.info('reload from .py file')
+ 
+     if (model_path, aloha.unitary_gauge, prefix, decay) in _import_once and not allow_reload:
+-        raise MadGraph5Error, 'This model %s is modified on disk. To reload it you need to quit/relaunch MG5_aMC ' % model_path
++        raise MadGraph5Error('This model %s is modified on disk. To reload it you need to quit/relaunch MG5_aMC ' % model_path)
+      
+     # Load basic information
+     ufo_model = ufomodels.load_model(model_path, decay)
+@@ -456,7 +456,7 @@ class UFOMG5Converter(object):
+             for order in model.all_orders:
+                 if(order.perturbative_expansion>0):
+                     self.perturbation_couplings[order.name]=order.perturbative_expansion
+-        except AttributeError,error:
++        except AttributeError as error:
+             pass
+ 
+         if self.perturbation_couplings!={}:
+@@ -483,11 +483,11 @@ class UFOMG5Converter(object):
+         for param in self.ufomodel.all_parameters:
+             if param.nature == "external":
+                 if len(param.lhablock.split())>1:
+-                    raise InvalidModel, '''LHABlock should be single word which is not the case for
+-    \'%s\' parameter with lhablock \'%s\' ''' % (param.name, param.lhablock)
++                    raise InvalidModel('''LHABlock should be single word which is not the case for
++    \'%s\' parameter with lhablock \'%s\' ''' % (param.name, param.lhablock))
+             if param.name in def_name:
+-                raise InvalidModel, "name %s define multiple time. Please correct the UFO model!" \
+-                                                                  % (param.name)
++                raise InvalidModel("name %s define multiple time. Please correct the UFO model!" \
++                                                                  % (param.name))
+             else:
+                 def_name.append(param.name)
+                                                                   
+@@ -499,8 +499,8 @@ class UFOMG5Converter(object):
+                     if CTparam.pole(pole)!='ZERO':
+                         new_param_name = '%s_%s_'%(CTparam.name,pole_dict[pole])
+                         if new_param_name in def_name:
+-                            raise InvalidModel, "CT name %s"% (new_param_name)+\
+-                                           " the model. Please change its name."
++                            raise InvalidModel("CT name %s"% (new_param_name)+\
++                                           " the model. Please change its name.")
+ 
+         if hasattr(self.ufomodel, 'gauge'):    
+             self.model.set('gauge', self.ufomodel.gauge)
+@@ -558,7 +558,7 @@ class UFOMG5Converter(object):
+         if self.perturbation_couplings:
+             try:
+                 self.ufomodel.add_NLO()
+-            except Exception, error:
++            except Exception as error:
+                 pass 
+ 
+             for interaction_info in self.ufomodel.all_CTvertices:
+@@ -581,7 +581,7 @@ class UFOMG5Converter(object):
+             all_orders = self.ufomodel.all_orders
+         except AttributeError:
+             if self.perturbation_couplings:
+-                raise MadGraph5Error, "The loop model MG5 attemps to import does not specify the attribute 'all_order'." 
++                raise MadGraph5Error("The loop model MG5 attemps to import does not specify the attribute 'all_order'." )
+             else:
+                 pass            
+ 
+@@ -591,7 +591,7 @@ class UFOMG5Converter(object):
+                 hierarchy[order.name]=order.hierarchy
+         except AttributeError:
+             if self.perturbation_couplings:
+-                raise MadGraph5Error, 'The loop model MG5 attemps to import does not specify an order hierarchy.' 
++                raise MadGraph5Error('The loop model MG5 attemps to import does not specify an order hierarchy.' )
+             else:
+                 pass
+         else:
+@@ -607,7 +607,7 @@ class UFOMG5Converter(object):
+                 coupling_order_counterterms[order.name]=order.expansion_order                
+         except AttributeError:
+             if self.perturbation_couplings:
+-                raise MadGraph5Error, 'The loop model MG5 attemps to import does not specify an expansion_order for all coupling orders.' 
++                raise MadGraph5Error('The loop model MG5 attemps to import does not specify an expansion_order for all coupling orders.' )
+             else:
+                 pass
+         else:
+@@ -945,8 +945,8 @@ class UFOMG5Converter(object):
+                 return None
+             start = expr.rfind('(',0,end+1)
+             if start ==-1:
+-                raise InvalidModel,\
+-                               'Parenthesis of expression %s are malformed'%expr
++                raise InvalidModel(\
++                               'Parenthesis of expression %s are malformed'%expr)
+             return [expr[:start],expr[start+1:end],expr[end+1:]]
+         
+         start_parenthesis = re.compile(r".*\s*[\+\-\*\/\)\(]\s*$")
+@@ -1067,8 +1067,8 @@ class UFOMG5Converter(object):
+         
+         intType=''
+         if interaction_info.type not in ['UV','UVloop','UVtree','UVmass','R2']:
+-            raise MadGraph5Error, 'MG5 only supports the following types of'+\
+-              ' vertices, R2, UV and UVmass. %s is not in this list.'%interaction_info.type
++            raise MadGraph5Error('MG5 only supports the following types of'+\
++              ' vertices, R2, UV and UVmass. %s is not in this list.'%interaction_info.type)
+         else:
+             intType=interaction_info.type
+             # If not specified and simply set to UV, guess the appropriate type
+@@ -1113,12 +1113,12 @@ class UFOMG5Converter(object):
+                     expression = coupling.pole(poleOrder)
+                     if expression!='ZERO':
+                         if poleOrder==2:
+-                            raise InvalidModel, """
++                            raise InvalidModel("""
+     The CT coupling %s was found with a contribution to the double pole. 
+     This is either an error in the model or a parsing error in the function 'is_value_zero'.
+     The expression of the non-zero double pole coupling is:
+     %s
+-    """%(coupling.name,str(coupling.value))
++    """%(coupling.name,str(coupling.value)))
+                         # It is actually safer that the new coupling associated to
+                         # the interaction added is not a reference to an original 
+                         # coupling in the ufo model. So copy.copy is right here.   
+@@ -1235,16 +1235,16 @@ class UFOMG5Converter(object):
+             # Check/assign for the color particle
+             if color.pdg_code in output: 
+                 if output[color.pdg_code] == -3:
+-                    raise InvalidModel, 'Particles %s is sometimes in the 3 and sometimes in the 3bar representations' \
+-                                    % color.name
++                    raise InvalidModel('Particles %s is sometimes in the 3 and sometimes in the 3bar representations' \
++                                    % color.name)
+             else:
+                 output[color.pdg_code] = 3
+             
+             # Check/assign for the anticolor particle
+             if anticolor.pdg_code in output: 
+                 if output[anticolor.pdg_code] == 3:
+-                    raise InvalidModel, 'Particles %s is sometimes set as in the 3 and sometimes in the 3bar representations' \
+-                                    % anticolor.name
++                    raise InvalidModel('Particles %s is sometimes set as in the 3 and sometimes in the 3bar representations' \
++                                    % anticolor.name)
+             else:
+                 output[anticolor.pdg_code] = -3
+         
+@@ -1260,12 +1260,12 @@ class UFOMG5Converter(object):
+             # check if the interaction meet requirements:
+             pdg = [p.pdg_code for p in interaction_info.particles if p.spin in [2,4]]
+             if len(pdg) % 2:
+-                raise InvalidModel, 'Odd number of fermion in vertex: %s' % [p.pdg_code for p in interaction_info.particles]
++                raise InvalidModel('Odd number of fermion in vertex: %s' % [p.pdg_code for p in interaction_info.particles])
+             for i in range(0, len(pdg),2):
+                 if pdg[i] == - pdg[i+1]:
+                     if pdg[i] in self.outcoming:
+-                        raise InvalidModel, '%s has not coherent incoming/outcoming status between interactions' %\
+-                            [p for p in interaction_info.particles if p.spin in [2,4]][i].name
++                        raise InvalidModel('%s has not coherent incoming/outcoming status between interactions' %\
++                            [p for p in interaction_info.particles if p.spin in [2,4]][i].name)
+                             
+                     elif not pdg[i] in self.incoming:
+                         self.incoming.append(pdg[i])
+@@ -1297,12 +1297,12 @@ class UFOMG5Converter(object):
+             elif nb_fermion:
+                 if any(p.selfconjugate for p in interaction_info.particles if p.spin % 2 == 0):
+                     text = "Majorana can not be dealt in 4/6/... fermion interactions"
+-                    raise InvalidModel, text
+-        except aloha_fct.WrongFermionFlow, error:
++                    raise InvalidModel(text)
++        except aloha_fct.WrongFermionFlow as error:
+             text = 'Fermion Flow error for interactions %s: %s: %s\n %s' % \
+              (', '.join([p.name for p in interaction_info.particles]), 
+                                              helas.name, helas.structure, error)
+-            raise InvalidModel, text
++            raise InvalidModel(text)
+         
+      
+         
+@@ -1332,9 +1332,9 @@ class UFOMG5Converter(object):
+                 order = tuple(coupling.order.items())
+ 
+                 if '1' in coupling.order:
+-                    raise InvalidModel, '''Some couplings have \'1\' order. 
++                    raise InvalidModel('''Some couplings have \'1\' order. 
+                     This is not allowed in MG. 
+-                    Please defines an additional coupling to your model''' 
++                    Please defines an additional coupling to your model''' )
+                 # check that gluon emission from quark are QCD tagged
+                 if 21 in [particle.pdg_code for particle in interaction_info.particles] and\
+                     'QCD' not in  coupling.order:
+@@ -1458,14 +1458,14 @@ class UFOMG5Converter(object):
+                     error_msg = 'UFO model have inconsistency in the format:\n'
+                     error_msg += 'interactions for  particles %s has color information %s\n'
+                     error_msg += ' but both fermion are in the same representation %s'
+-                    raise InvalidModel, error_msg % (', '.join([p.name for p in interaction_info.particles]),data_string, particle.color)
++                    raise InvalidModel(error_msg % (', '.join([p.name for p in interaction_info.particles]),data_string, particle.color))
+                 if particle.color == particle2.color and particle.color in [-3, 3]:
+                     if particle.pdg_code in color_info and particle2.pdg_code in color_info:
+                       if color_info[particle.pdg_code] == color_info[particle2.pdg_code]:
+                         error_msg = 'UFO model have inconsistency in the format:\n'
+                         error_msg += 'interactions for  particles %s has color information %s\n'
+                         error_msg += ' but both fermion are in the same representation %s'
+-                        raise InvalidModel, error_msg % (', '.join([p.name for p in interaction_info.particles]),data_string, particle.color)
++                        raise InvalidModel(error_msg % (', '.join([p.name for p in interaction_info.particles]),data_string, particle.color))
+                     elif particle.pdg_code in color_info:
+                         color_info[particle2.pdg_code] = -particle.pdg_code
+                     elif particle2.pdg_code in color_info:
+@@ -1474,7 +1474,7 @@ class UFOMG5Converter(object):
+                         error_msg = 'UFO model have inconsistency in the format:\n'
+                         error_msg += 'interactions for  particles %s has color information %s\n'
+                         error_msg += ' but both fermion are in the same representation %s'
+-                        raise InvalidModel, error_msg % (', '.join([p.name for p in interaction_info.particles]),data_string, particle.color)
++                        raise InvalidModel(error_msg % (', '.join([p.name for p in interaction_info.particles]),data_string, particle.color))
+                 
+                 
+                 if particle.color == 6:
+@@ -1509,9 +1509,9 @@ class UFOMG5Converter(object):
+                     elif color_info[particle.pdg_code] == -3:
+                         output.append(self._pat_id.sub('color.T(\g<first>,\g<second>)', term))
+                 else:
+-                    raise MadGraph5Error, \
++                    raise MadGraph5Error( \
+                           "Unknown use of Identity for particle with color %d" \
+-                          % particle.color
++                          % particle.color)
+             else:
+                 output.append(term)
+         data_string = '*'.join(output)
 diff -rupN MadGraph_pristine/models/__init__.py ../contrib/MadGraph/models/__init__.py
 --- MadGraph_pristine/models/__init__.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/__init__.py	2020-10-30 00:11:51.942157559 +1100
++++ ../contrib/MadGraph/models/__init__.py	2020-10-30 01:26:23.649372220 +1100
 @@ -44,8 +44,8 @@ def load_model(name, decay=False):
          model_path = os.path.realpath(os.sep.join(path_split))
          sys_path = os.path.realpath(os.path.dirname(sys.modules[path_split[-1]].__file__))
@@ -7142,7 +7641,7 @@ diff -rupN MadGraph_pristine/models/__init__.py ../contrib/MadGraph/models/__ini
          __import__(path_split[-1])
 diff -rupN MadGraph_pristine/models/model_reader.py ../contrib/MadGraph/models/model_reader.py
 --- MadGraph_pristine/models/model_reader.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/model_reader.py	2020-10-30 00:11:51.942157559 +1100
++++ ../contrib/MadGraph/models/model_reader.py	2020-10-30 01:26:23.649372220 +1100
 @@ -79,7 +79,7 @@ class ModelReader(loop_base_objects.Loop
              if isinstance(param_card, basestring):
                  # Check that param_card exists
@@ -7195,7 +7694,7 @@ diff -rupN MadGraph_pristine/models/model_reader.py ../contrib/MadGraph/models/m
                  logger.warning("%s has no expression: %s" % (param.name,
 diff -rupN MadGraph_pristine/models/write_param_card.py ../contrib/MadGraph/models/write_param_card.py
 --- MadGraph_pristine/models/write_param_card.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/write_param_card.py	2020-10-30 00:11:51.942157559 +1100
++++ ../contrib/MadGraph/models/write_param_card.py	2020-10-30 01:26:23.649372220 +1100
 @@ -219,7 +219,7 @@ class ParamCardWriter(object):
              info = info[4:]
      
@@ -7232,7 +7731,7 @@ diff -rupN MadGraph_pristine/models/write_param_card.py ../contrib/MadGraph/mode
      
 diff -rupN MadGraph_pristine/vendor/ply/yacc.py ../contrib/MadGraph/vendor/ply/yacc.py
 --- MadGraph_pristine/vendor/ply/yacc.py	2020-10-27 21:41:37.909090533 +1100
-+++ ../contrib/MadGraph/vendor/ply/yacc.py	2020-10-30 00:11:51.942157559 +1100
++++ ../contrib/MadGraph/vendor/ply/yacc.py	2020-10-30 01:26:23.653372095 +1100
 @@ -89,7 +89,12 @@ resultlimit = 40               # Size li
  pickle_protocol = 0            # Protocol to use when writing pickle files
  
