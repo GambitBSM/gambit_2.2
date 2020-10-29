@@ -90,6 +90,24 @@ namespace Gambit
       if (yield >= 0.) result += yield;
     }
 
+    void sigmav_late_universe_MicrOmegas(double &result)
+    {
+      using namespace Pipes::sigmav_late_universe_MicrOmegas;
+
+      // set requested spectra to NULL since we don't need them
+      double * SpNe=NULL,*SpNm=NULL,*SpNl=NULL;
+      double * SpA=NULL,*SpE=NULL,*SpP=NULL;
+      int err;
+
+      // TODO: Add option to choose options for calculation from MicrOmegas (right now all effects are turned on)
+      result = BEreq::calcSpectrum(byVal(3),byVal(SpA),byVal(SpE),byVal(SpP),byVal(SpNe),byVal(SpNm),byVal(SpNl) ,byVal(&err));
+
+      if (err != 0 )
+      {
+         DarkBit_error().raise(LOCAL_INFO, "MicrOmegas spectrum calculation returned error code = " + std::to_string(err));
+      }
+
+    }
 
 
     //////////////////////////////////////////////////////////////////////////
