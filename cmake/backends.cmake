@@ -50,11 +50,8 @@
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
 #  \date 2016 Apr, Dec
-<<<<<<< HEAD
 #  \date 2017 Nov
-=======
 #  \date 2019 June
->>>>>>> ColliderBit_development
 #  \date 2020 Apr
 #
 #  \author James McKay
@@ -668,11 +665,7 @@ if(NOT ditched_${name}_${ver})
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
-<<<<<<< HEAD
-    CONFIGURE_COMMAND ./configure --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --cxx-soname="${pythia_CXX_SONAME_FLAGS}" --lib-suffix=".so"
-=======
     CONFIGURE_COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx="${CMAKE_CXX_COMPILER}" --cxx-common="${pythia_CXXFLAGS}" --cxx-shared="${pythia_CXX_SHARED_FLAGS}" --cxx-soname="${pythia_CXX_SONAME_FLAGS}" --lib-suffix=".so"
->>>>>>> ColliderBit_development
     BUILD_COMMAND ${MAKE_PARALLEL} CXX="${CMAKE_CXX_COMPILER}" lib/${lib}.so
     INSTALL_COMMAND ""
   )
@@ -1317,7 +1310,7 @@ if(NOT ditched_${name}_${ver})
           DEPENDS hom4ps_${hom4ps_ver}
           SOURCE_DIR ${dir}
           GIT_REPOSITORY https://github.com/JoseEliel/VevaciousPlusPlus_Development.git
-          UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt 
+          UPDATE_COMMAND  sed ${dashi} -e "${BOSSregex}" ${dir}/CMakeLists.txt
           CONFIGURE_COMMAND ${CMAKE_COMMAND} ${VPP_CMAKE_FLAGS} ${dir}
           BINARY_DIR "${dir}"
           BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_CXX_COMPILER} CCFLAGS=${VPP_FLAGS} MINUITLIBDIR=${Minuit_lib} MINUITLIBNAME=${Minuit_lib_name} VevaciousPlusPlus-lib
@@ -1352,7 +1345,7 @@ if(NOT ditched_${name}_${ver})
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
-<<<<<<< HEAD
+
 # SARAH
 set(name "sarah")
 set(ver "4.11.0")
@@ -1370,6 +1363,7 @@ ExternalProject_Add(${name}_${ver}
 )
 add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 set_as_default_version("backend" ${name} ${ver})
+
 
 # CalcHEP
 set(name "calchep")
@@ -1392,7 +1386,7 @@ ExternalProject_Add(${name}_${ver}
 )
 add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} "yes | clean")
 set_as_default_version("backend" ${name} ${ver})
-=======
+
 
 # Yoda
 set(name "yoda")
@@ -1778,6 +1772,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
 endif()
 
+
 # DarkAges
 # Add correct symlink flags for OSX
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -1811,6 +1806,7 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
+
 
 #MultiModeCode
 set(name "multimodecode")
@@ -1874,8 +1870,6 @@ if(NOT ditched_${name}_${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} distclean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
-
->>>>>>> ColliderBit_development
 
 # Alternative download command for getting unreleased things from the gambit_internal repository.
 # If you don't know what that is, you don't need to tinker with these.
