@@ -1,21 +1,32 @@
-"""
-Contains all routines for Vevacious output from SARAH.
-"""
-
-from setup import *
-from files import *
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
+#  \file
+#
+#  Contains all routines for Vevacious output from SARAH.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019, 2020
+#
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020
+#
+#  **************************************
 
 import shutil
 import os
 
+from .setup import *
+from .files import *
+
 def copy_vevacious_files(model_name, vevdir):
     """
     Moves vevacious files from the SARAH output to the backend folder.
-    TODO: make this go to patch dir.
     """
 
-    # gb_target = "./../Backends/installed/vevacious/VevaciousPlusPlus/1.0/ModelFiles/" + model_name
-    # gb_target = "./../Backends/installed/vevacious/1.0/VevaciousPlusPlus/ModelFiles/" + model_name
     gb_target = "./../Backends/patches/vevacious/1.0/VevaciousPlusPlus/ModelFiles/" + model_name
     if not os.path.exists(gb_target):
         os.makedirs(gb_target)
@@ -62,17 +73,18 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
         "// Creating string with rank number\n"
         "std::string rankstring = std::to_string(rank);\n"
         "\n"
-        "// Getting the run folder for saving initialization files\n"
-        "std::string inputspath = runOptions.getValueOrDef<std::string>("
-        "\"output/Vevacious_iniFiles\", \"where_to_save_input\");\n"
-        "result[\"inputspath\"] = inputspath;\n"
-        "std::string modelfilesPath = inputspath + \"/ModelFiles/mpirank_\"+ "
-        "rankstring + \"/\";\n"
-        "\n"
-        "// Get the path to the library\n"
+        "// Get the path to the library and results dir\n"
         "std::string vevaciouslibpath = Backends::backendInfo().path_dir("
         "\"vevacious\", \"1.0\");\n"
         "std::string vevaciouspath = vevaciouslibpath + \"/../\";\n"
+        "std::string vevaciousresultspath = vevaciouspath + \"/results\";\n"
+        "\n"
+        "// Getting the run folder for saving initialization files\n"
+        "std::string inputspath = runOptions.getValueOrDef<std::string>("
+        "vevaciousresultspath, \"where_to_save_input\");\n"
+        "result[\"inputspath\"] = inputspath;\n"
+        "std::string modelfilesPath = inputspath + \"/ModelFiles/mpirank_\"+ "
+        "rankstring + \"/\";\n"
         "\n"
         "result[\"ScaleAndBlockFileSource\"] = vevaciouspath + "
         "\"ModelFiles/{0}/ScaleAndBlock.xml\";\n"
@@ -107,8 +119,6 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
         "std::string inputFilename = inputspath + \"/InitializationFiles/"
         "VevaciousPlusPlusObjectInitialization_mpirank_\"+ rankstring "
         "+\".xml\";\n"
-        "//vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus "
-        "vevaciousPlusPlus( inputFilename );\n"
         "result.set_inputFilename(inputFilename);\n"
         "result.set_inputPath(inputspath);\n"
         "\n"
@@ -133,7 +143,7 @@ def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
     )
 
     # Dict of blocks - add the LHA reading routines to each
-    for block, contents in params_by_block.iteritems():
+    for block, contents in iteritems(params_by_block):
 
         towrite += write_readlhablock(block, contents)
 
@@ -231,7 +241,7 @@ def write_readlhablock(block, contents):
     # Otherwise, piecewise
     else:
 
-        for index, name in contents.iteritems():
+        for index, name in iteritems(contents):
             entry = (
                     "{{ {0}, SLHAea::to<double>(slhaea.at(\"{1}\")"
                     ".at({0}).at(1))}}"

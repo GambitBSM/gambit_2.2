@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master module for all DarkBit-related 
@@ -22,9 +20,9 @@ import shutil
 from distutils.dir_util import copy_tree
 from collections import defaultdict
 
-from setup import *
-from files import *
-from backends import *
+from .setup import *
+from .files import *
+from .backends import *
 
 class VertexMerger:
 
@@ -285,42 +283,103 @@ def decays(dm, products, gambit_pdg_dict):
     or SPheno (so can include loop decays).
     """
 
-    decay_src = ""
+    decay_src = "\n"
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
 
-    # Add each channel
-    for product in products:
+    # Split products into 2-body and 3-body
 
-        # Join the products
-        channel = ', '.join('"{0}"'.format(pdg_to_particle(x, gambit_pdg_dict)) 
-                            for x in product)
+    twobody = [x for x in products if len(x) == 2]
+    threebody = [x for x in products if len(x) == 3]
 
-        # Need to know what the 'genRate' value has to be.
-        genrate = ""
-        # 2-body decay - genRate = partial decay width. 
-        # Get it from the DecayTable total width * BF
-        if len(product) == 2:
-            genrate = (
-                    "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
-                    "tbl.at(\"{0}\").BF(\"{1}\"))"
-            ).format(gb_id, channel)
-        # 3-body decay - genRate = partial decay width, with two variables, 
-        # 'E' and 'E1' (final state energy of first & second particles)
-        # Is this what comes out of SPheno??
-        elif len(product) == 3:
-            genrate = (
-                    "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
-                    "tbl.at(\"{0}\").BF(\"{1}\"))"
-            ).format(gb_id, channel)
-        else:
-            raise GumError(("\n\nTrying to add entries for decaying DM, "
-                            "however you have passed over\na decay that is not"
-                            "a 2- or 3-body decay!"))  
+    #TODO: Remove if this is debuggin
+    print(products)
+    print(twobody)
+    print(threebody)
+
+    # 2-body decay - genRate = partial decay width. 
+    # Get it from the DecayTable total width * BF
+    if twobody:
+        out1g = np.array([pdg_to_particle(x[0], gambit_pdg_dict) for x in twobody])
+        out2g = np.array([pdg_to_particle(x[1], gambit_pdg_dict) for x in twobody])
+        p1 = ', '.join("\"{}\"".format(*t) for t in zip(out1g))
+        p2 = ', '.join("\"{}\"".format(*t) for t in zip(out2g))
 
         decay_src += (
-                  "      TH_Channel dec_channel(daFunk::vec<string>({0}), "
-                  "{1});\n"
-        ).format(channel, genrate)
+                  "// 2-body decays\n"
+                  "auto p1 =  daFunk::vec<string>({0});\n"
+                  "auto p2 =  daFunk::vec<string>({1});\n"
+                  "\n"
+                  "for (unsigned int i = 0; i < p1.size(); ++i)\n"
+                  "{{\n"
+                  "TH_Channel dec_channel(daFunk::vec<string>(p1[i], p2[i]), "
+                  "daFunk::cnst(tbl.at(\"{2}\").width_in_GeV*tbl.at(\"{2}\")"
+                  ".BF(p1[i], p2[i])));\n"
+                  "process_dec.channelList.push_back(dec_channel);\n"
+                  "}}\n"
+                  "\n" 
+        ).format(p1, p2, gb_id)
+
+    # 3-body decay - genRate = partial decay width, with two variables, 
+    # 'E' and 'E1' (final state energy of first & second particles)
+    # @TODO: is this *exactly* what comes out of SPheno? Probably not, right?
+    if threebody:
+        out1g = np.array([pdg_to_particle(x[0], gambit_pdg_dict) for x in threebody])
+        out2g = np.array([pdg_to_particle(x[1], gambit_pdg_dict) for x in threebody])
+        out3g = np.array([pdg_to_particle(x[2], gambit_pdg_dict) for x in threebody])
+        p1 = ', '.join("\"{}\"".format(*t) for t in zip(out1g))
+        p2 = ', '.join("\"{}\"".format(*t) for t in zip(out2g))
+        p3 = ', '.join("\"{}\"".format(*t) for t in zip(out3g))
+
+        decay_src += (
+                  "// 3-body decays\n"
+                  "auto p1_3b =  daFunk::vec<string>({0});\n"
+                  "auto p2_3b =  daFunk::vec<string>({1});\n"
+                  "auto p3_3b =  daFunk::vec<string>({2});\n"
+                  "\n"
+                  "for (unsigned int i = 0; i < p1.size(); ++i)\n"
+                  "{{\n"
+                  "TH_Channel dec_channel(daFunk::vec<string>(p1_3b[i], "
+                  "p2_3b[i], p3_3b[i]), daFunk::cnst("
+                  "tbl.at(\"{3}\").width_in_GeV*tbl.at(\"{3}\")"
+                  ".BF(p1[i], p2[i], p3[i])));\n"
+                  "process_dec.channelList.push_back(dec_channel);\n"
+                  "}}\n"
+                  "\n"
+        ).format(p1, p2, p3, gb_id)
+    
+    # # Add each channel
+    # for product in products:
+
+    #     # Join the products
+    #     channel = ', '.join('"{0}"'.format(pdg_to_particle(x, gambit_pdg_dict)) 
+    #                         for x in product)
+
+    #     # Need to know what the 'genRate' value has to be.
+    #     genrate = ""
+    #     # 2-body decay - genRate = partial decay width. 
+    #     # Get it from the DecayTable total width * BF
+    #     if len(product) == 2:
+    #         genrate = (
+    #                 "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
+    #                 "tbl.at(\"{0}\").BF({1}))"
+    #         ).format(gb_id, channel)
+    #     # 3-body decay - genRate = partial decay width, with two variables, 
+    #     # 'E' and 'E1' (final state energy of first & second particles)
+    #     # Is this what comes out of SPheno??
+    #     elif len(product) == 3:
+    #         genrate = (
+    #                 "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
+    #                 "tbl.at(\"{0}\").BF(\"{1}\"))"
+    #         ).format(gb_id, channel)
+    #     else:
+    #         raise GumError(("\n\nTrying to add entries for decaying DM, "
+    #                         "however you have passed over\na decay that is not"
+    #                         "a 2- or 3-body decay!"))  
+
+    #     decay_src += (
+    #               "TH_Channel dec_channel(daFunk::vec<string>({0}), "
+    #               "{1});\n"
+    #     ).format(channel, genrate)
 
     return decay_src
 
@@ -331,11 +390,12 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
     Writes all entries for the Process Catalogue for DarkBit.
     """
 
+    towrite = ""
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
     if not does_DM_decay:
         gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
 
-        towrite = (
+        towrite += (
                 "class {0}\n"
                 "{{\n"
                 "public:\n"
@@ -454,7 +514,9 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
                 "\n"
         )
 
-    # TODO add any final state, non-SM particles (external legs) 
+        if does_DM_decay: propagators = []
+
+        # TODO add any final state, non-SM particles (external legs) 
         for particle in list(set(higgses+propagators)):
 
             towrite += (
@@ -481,11 +543,10 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
     if does_DM_decay:
         towrite += decay_src
 
-    towrite += "\n"
     if does_DM_decay:
         towrite += "catalog.processList.push_back(process_dec);\n\n"
     else:
-        towrite += "catalog.processList.push_back(process_ann);\n\n"
+        towrite += "\ncatalog.processList.push_back(process_ann);\n\n"
 
     # Wrap it up.
     towrite +=( 
@@ -574,7 +635,7 @@ def write_dm_id(model_name, dm_id, dm_conj = None):
                 "\n\n"
         ).format(model_name, dm_conj)
 
-    return towrite;
+    return towrite
 
 def add_SM_macros(gambit_model_name):
     """
@@ -684,12 +745,14 @@ def write_darkbit_rollcall(model_name, pc, does_DM_decay):
             "#undef FUNCTION\n"
     ).format(model_name))
 
-    dm_conj = dumb_indent(4, (
-            "#define FUNCTION DarkMatterConj_ID_{0}\n"
-            "START_FUNCTION(std::string)\n"
-            "ALLOW_MODELS({0})\n"
-            "#undef FUNCTION\n"
-    ).format(model_name))
+    dm_conj = ""
+    if not does_DM_decay:
+        dm_conj = dumb_indent(4, (
+                "#define FUNCTION DarkMatterConj_ID_{0}\n"
+                "START_FUNCTION(std::string)\n"
+                "ALLOW_MODELS({0})\n"
+                "#undef FUNCTION\n"
+        ).format(model_name))
 
     return pro_cat, dm_id, dm_conj
 
@@ -848,7 +911,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     SMinputs = {1 : 'mD', 2 : 'mU', 3 : 'mS', 4 : 'mCmC', 5:'mBmB', 6:'mT',
                 11: 'mE', 13: 'mMu', 15: 'mTau', 23: 'mZ'}
 
-    for pdg, chmass in calchep_masses.iteritems():
+    for pdg, chmass in iteritems(calchep_masses):
         if pdg in SMinputs:
             mo_src += (
                 "Assign_Value(\"{0}\", sminputs.{1});\n"
@@ -891,7 +954,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "\n"
     )
 
-    for pdg, chwidth in calchep_widths.iteritems():
+    for pdg, chwidth in iteritems(calchep_widths):
         # If a particle has zero width don't try and assign it
         if chwidth == "0": continue
         mo_src += (
@@ -1058,10 +1121,10 @@ def add_micromegas_to_cmake(model_name, reset_dict):
 
     add_to_backends_cmake(towrite, reset_dict, string_to_find="# Pythia")
 
-def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
+def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
     """
     Adds entries to the DarkBit rollcall for micrOMEGAs routines.
-    - RD_oh2_Xf_MicrOmegas
+    - RD_oh2_Xf_MicrOmegas (for non-decaying DM)
         - new BACKEND_OPTION
         - adds to ALLOW_MODELS
     - DD_couplings_MicrOmegas
@@ -1073,12 +1136,14 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
     rollcall = full_filename("DarkBit_rollcall.hpp", "DarkBit")
 
     
-
                 # Function                  # Capability    # String to write above
-    entries = [ ["RD_oh2_Xf_MicrOmegas",    "RD_oh2_Xf",    "ALLOW_MODELS"],
-                ["DD_couplings_MicrOmegas", "DD_couplings", "FORCE_SAME_BACKEND"] ]
+    entries = [ ["DD_couplings_MicrOmegas", "DD_couplings", "FORCE_SAME_BACKEND"] ]
 
-    # Add the backend options to each entry - relic density and direct detection
+    # Only add relic density calculation if DM isn't decaying
+    if not does_DM_decay:
+        entries.append(["RD_oh2_Xf_MicrOmegas", "RD_oh2_Xf", "ALLOW_MODELS"])
+
+    # Add the backend options to each entry
     for entry in entries:
         function = entry[0]
         capability = entry[1]
@@ -1095,8 +1160,8 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
         linenum = 0
         with open(rollcall, 'r') as f:
             # Start from the beginning of the FUNCTION
-            for i in xrange(line):
-                f.next()
+            for i in range(line):
+                next(f)
             for num, line in enumerate(f, line):
                 if pattern in line: 
                     linenum = num
@@ -1117,9 +1182,10 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict):
     # Add the model to the function arguments
     file = "DarkBit_rollcall.hpp"
     module = "DarkBit"
-    add_new_model_to_function(file, module, "RD_oh2_Xf", 
-                              "RD_oh2_Xf_MicrOmegas", model_name, reset_dict, 
-                              pattern="ALLOW_MODELS")    
+    if not does_DM_decay:
+        add_new_model_to_function(file, module, "RD_oh2_Xf", 
+                                  "RD_oh2_Xf_MicrOmegas", model_name, 
+                                  reset_dict, pattern="ALLOW_MODELS")    
     add_new_model_to_function(file, module, "DD_couplings", 
                               "DD_couplings_MicrOmegas", model_name, 
                               reset_dict, pattern="ALLOW_MODEL_DEPENDENCE")   

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master file containing all routines for modifying Backend interfaces.
@@ -26,10 +24,10 @@
 import os
 import re
 
-from setup import *
-from files import *
-from parse import *
-from cmake_variables import *
+from .setup import *
+from .files import *
+from .parse import *
+from .cmake_variables import *
 
 def check_backends(outputs):
     """
@@ -75,8 +73,6 @@ def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version,
     else:
         outfile = full_output_dir+"/patch_"+backend+"_"+version+".dif"
 
-    print "outfile", outfile
-    
     pristine_parts = os.path.split(pristine_dir)
     cwd = os.getcwd()
     os.chdir(pristine_parts[0])

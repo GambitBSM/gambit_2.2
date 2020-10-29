@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Models Machine
+#  ************************************
 #  \file
 #
 #  Master module for all routines relating 
@@ -19,8 +17,9 @@
 #
 #  **************************************
 
-from setup import *
 import re
+
+from .setup import *
 
 ###############
 ## FEYNRULES ##
@@ -42,7 +41,7 @@ def fr_part_to_gum_part(fr_bsm):
     if 25 in all_pdgs and 35 not in all_pdgs: 
         add_higgs = True
 
-    for i in xrange(len(fr_bsm)):
+    for i in range(len(fr_bsm)):
         part = fr_bsm[i]
         bsm_list.append(Particle(part.name(), part.antiname(),
                                  part.spinX2(), part.pdg(), 
@@ -74,7 +73,7 @@ def fr_params(paramlist, add_higgs):
     params = []
 
     # Add all parameters from the parameter list from FeynRules
-    for i in xrange(len(paramlist)):
+    for i in range(len(paramlist)):
         p = paramlist[i]
         if (    (p.block() != 'YUKAWA')
             and (p.block() != 'SMINPUTS')
@@ -106,7 +105,7 @@ def fr_params(paramlist, add_higgs):
     matrices = {}
 
     # Go through each entry in the dictionary, and try and group them
-    for k, v in blockdict.iteritems():
+    for k, v in iteritems(blockdict):
 
         # FeynRules splits a matrix M into M1x1, M1x2, ..., Mdxd.
         # Find any matches to M1x1 to start with.
@@ -177,7 +176,7 @@ def add_masses_to_params(parameters, bsm_particle_list, gambit_pdgs, add_higgs):
 
     parameters_by_name = [x.name for x in parameters]
 
-    for i in xrange(len(bsm_particle_list)):
+    for i in range(len(bsm_particle_list)):
         p = bsm_particle_list[i]
         
         # Mass block convention is the index of a *pole mass* is the PDG code
@@ -234,7 +233,7 @@ def sarah_part_to_gum_part(sarah_bsm):
     if 25 in all_pdgs and 35 not in all_pdgs: 
         add_higgs = True
     
-    for i in xrange(len(sarah_bsm)):
+    for i in range(len(sarah_bsm)):
         part = sarah_bsm[i]            
         bsm_list.append(Particle(part.name(), part.antiname(),
                         part.spinX2(), part.pdg(), 
@@ -288,7 +287,7 @@ def sarah_params(paramlist, mixings, add_higgs, gambit_pdgs,
     smvevname = "vev"
 
     # Add all parameters from the parameter list from SARAH
-    for i in xrange(len(paramlist)):
+    for i in range(len(paramlist)):
         p = paramlist[i]
 
         # If it's the Higgs vev, don't add it! We'll do it ourselves. 

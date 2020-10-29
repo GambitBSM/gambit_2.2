@@ -246,6 +246,7 @@ if args.file:
 
         """ 
         UFO2MDL
+
         If we have both UFO and MDL files, run the files through ufo2mdl to 
         compare outputs. This will, e.g., add 4-fermion interactions to CalcHEP
         where FeynRules fails to do so.
@@ -818,7 +819,6 @@ if args.file:
                                   "          catch (typename ColliderPythia<PythiaT,EventT>::InitializationError& e)")[1]
             amend_file("getColliderPythia.hpp", m, apply_userhook,
                            num+10, reset_contents)
-
 
 
         # HiggsBounds interface

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master module for all Models related routines.
@@ -20,29 +18,8 @@
 import numpy as np
 import re
 
-from setup import *
-from files import *
-
-def check_model_name(model_name, clean_model_name):
-    """
-    Checks if the model already exists on the gambit hierarchy.
-    Return True if it exists, False if not
-    """
-
-    print "Checking if model is in Gambit"
-
-    filename = "models/" + model_name + ".hpp"
-    module = "Models"
-
-    if find_file(filename, module):
-        return True
-
-    filename = "models/" + clean_model_name + ".hpp"
-
-    if find_file(filename, module):
-        return True
-    
-    return False
+from .setup import *
+from .files import *
 
 def get_model_parameters(parameters, add_higgs):
     """
@@ -154,7 +131,7 @@ def get_spectrum_parameters(parameters, params_by_block, bsm_partlist,
             # If not using SPheno, don't have mixing matrices as output.
             if not with_spheno:
                 continue
-            for v in params_by_block.values():
+            for v in list(params_by_block.values()):
                 if not 'mixingmatrix' in v: continue
                 if par.name == "sinW2": name = par.name
                 elif v['outputname'] == par.name:
@@ -217,10 +194,10 @@ def get_model_par_name(paramname, parameters):
     name or alt_name equal to paramname
     """
     
-    for name, param in parameters.iteritems():
+    for name, param in iteritems(parameters):
         if paramname == param.bcs :
             return name
-    for name, param in parameters.iteritems():
+    for name, param in iteritems(parameters):
         if paramname == param.name or paramname == param.alt_name :
             return param.name
 
@@ -258,12 +235,12 @@ def add_to_model_hierarchy(spectrum_name, model_name, model_params,
         if i.shape == 'scalar' or i.shape == None: params.append(i.gb_in)
         elif re.match("m[2-9]x[2-9]", i.shape): 
             size = int(i.shape[-1])
-            for j in xrange(size):
-                for k in xrange(size):
+            for j in range(size):
+                for k in range(size):
                     params.append(i.gb_in + '_' + str(j+1) + 'x' + str(k+1))
         elif re.match("v[2-9]", i.shape): 
             size = int(i.shape[-1])
-            for j in xrange(size):
+            for j in range(size):
                 params.append(i.gb_in + '_' + str(j+1))
 
     # No double counting (also want to preserve the order)

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Routines for SPheno output from SARAH
@@ -18,15 +16,16 @@
 #
 #  **************************************
 
-from files import *
-from setup import *
-from models import *
-from cmake_variables import *
 from distutils.dir_util import copy_tree
 from collections import defaultdict
 import copy
 import re
 import os.path
+
+from .files import *
+from .setup import *
+from .models import *
+from .cmake_variables import *
 
 # An empty defaultdict in scope, so we don't save to the 
 # mug file, but can still use the writing routines in 
@@ -685,7 +684,7 @@ def get_fortran_shapes(parameters):
 
     type_dictionary = {}
 
-    for name, parameter in parameters.iteritems():
+    for name, parameter in iteritems(parameters):
 
         if not isinstance(parameter, SPhenoParameter):
             raise GumError(("Parameter not passed as instance of "
@@ -739,7 +738,7 @@ def fix_reality_dict(reality_dict, variable_types):
 
     new_reality_dict = {}
    
-    for key, val in reality_dict.iteritems():
+    for key, val in iteritems(reality_dict):
 
         new_reality_dict[key] = val
 
@@ -757,11 +756,11 @@ def add_to_spheno_backend_types(type_dictionary, variable_dictionary,
 
     # New types from the harvesting
     types = []
-    for t in type_dictionary.values():
+    for t in list(type_dictionary.values()):
         if t.startswith('Farray_'): types.append(t)   
-    for t in variable_dictionary.values():
+    for t in list(variable_dictionary.values()):
         if t.startswith('Farray_'): types.append(t)
-    for t in hb_variable_dictionary.values():
+    for t in list(hb_variable_dictionary.values()):
         if t.startswith('Farray_'): types.append(t)
 
     btypes = "../Backends/include/gambit/Backends/backend_types/SPheno.hpp"
@@ -817,7 +816,7 @@ def scrape_functions_from_spheno(spheno_path, model_name):
                                                                   "Switch_to_superPMNS"],
     }
 
-    for location, functions in locations_dictionary.iteritems():
+    for location, functions in iteritems(locations_dictionary):
         filename = spheno_path+"/"+location+".f90"
         get_arguments_from_file(functions, filename, function_dictionary, args_dictionary)
 
@@ -880,7 +879,7 @@ def harvest_spheno_model_variables(spheno_path, model_name, model_parameters):
     for line in src:
         # Each "split" is either an empty list, or a list with type first,
         # and parameter definition second.
-        split = filter(None, line.split('::'))
+        split = list(filter(None, line.split('::')))
         if not split: continue # Empty list -- skip it
         if "HiggsBounds" in line: continue # Just a comment
         # Get the type.
@@ -999,7 +998,7 @@ def get_arguments_from_file(functions, file_path, function_dictionary,
             defs = func.split('::')
 
             # Firstly, find out which arguments we need to obtain types for
-            for v in function_dictionary.values():
+            for v in list(function_dictionary.values()):
                 for arg in v:
                     # If we've got it already
                     if arg in argument_dictionary: 
@@ -1479,7 +1478,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 ).format(entry, par.tag, par.name)
 
     # Go through the SPhenodeps and add these
-    for par, definition in sphenodeps.iteritems():
+    for par, definition in iteritems(sphenodeps):
         # Make sure first that it is a SPheno variable
         if par in variables:
           towrite += "*{0} = {1};\n".format(par, definition)
@@ -1665,6 +1664,20 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
             "  decays(Models::ParticleDB().long_name(pdg[i],0)) = entry;\n"
             "}\n"
             "\n"
+            "// Add W and Z decays manually\n"
+            "entry.width_in_GeV = *gamW;\n"
+            "entry.channels.clear();\n"
+            "entry.set_BF((*BrWqq)(1), 0.0, {iipair(1,0),iipair(-2,0)});\n"
+            "entry.set_BF((*BrWqq)(2), 0.0, {iipair(3,0),iipair(-4,0)});\n"
+            "for(int i=1; i<=3; i++) entry.set_BF((*BrWln)(i), 0.0, {iipair(9+2*i,0),iipair(-9-2*i-1,0)});\n"
+            "decays(Models::ParticleDB().long_name(24,0)) = entry;\n"
+            "entry.width_in_GeV = *gamZ;\n"
+            "entry.channels.clear();\n"
+            "for(int i=1; i<=5; i++) entry.set_BF((*BrZqq)(i), 0.0, {iipair(i,0),iipair(-i,0)});\n"
+            "for(int i=1; i<=3; i++) entry.set_BF((*BrZll)(i), 0.0, {iipair(9+2*i,0),iipair(-9-2*i,0)});\n"
+            "for(int i=1; i<=3; i++) entry.set_BF(*BrZinv/3, 0.0, {iipair(10+2*i,0),iipair(-10-2*i,0)});\n"
+            "decays(Models::ParticleDB().long_name(23,0)) = entry;\n"
+            "\n"
             "return *kont;\n"
             "}\n\n"
     )
@@ -1841,7 +1854,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     addedblocks = []
 
     # Go through each LH block we know about, and assign each entry to the SLHAea object.
-    for block, entry in blockparams.iteritems():
+    for block, entry in iteritems(blockparams):
 
         # Firstly create the block
         towrite += (
@@ -1865,7 +1878,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
         # If we don't have a matrix, use the block indices
         if not matrix:
-            for index, param in entry.iteritems():
+            for index, param in iteritems(entry):
 
                 # Is it a real parameter?
                 real = reality_dict[param]
@@ -2652,7 +2665,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
 
     # List all the blocks:
     blocks = []
-    for name, var in variables.iteritems():
+    for name, var in iteritems(variables):
         if var.block != None and var.block.endswith("IN"):
             blocks.append(var.block)
     blocks = list(set(blocks))
@@ -2672,7 +2685,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # TODO:  The name of model parameters might be wrong
     # TODO: this does not work for matrices
     # TODO: Skipping Phases block manually, probably not best way
-    for name, var in variables.iteritems():
+    for name, var in iteritems(variables):
 
         if var.block != None and var.block.endswith("IN") and not var.block.startswith("PHASES"):
             
@@ -2799,7 +2812,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     )
 
     # Calc3BodyDecay_<particle_i>,  CalcLoopDecay_<particle_i>
-    for name, var in variables.iteritems() :
+    for name, var in iteritems(variables) :
         if ( name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") ) and not name == "CalcLoopDecay_LoopInducedOnly" :
             towrite += "// " + name + '\n'\
                 '*' + name + ' = inputs.options->getValueOrDef<bool>(true, "' + name + '");\n'\
@@ -2879,11 +2892,11 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
       '// Z-boson\n'\
       '*mZ = sminputs.mZ;          // mass\n'\
       '*gamZ = 2.4952;             // width, values henceforth from StandardModel.f90\n'\
-      '(*BrZqq)(1) = 0.156;        // branching ratio in d \bar{d}\n'\
-      '(*BrZqq)(2) = 0.156;        // branching ratio in s \bar{s}\n'\
-      '(*BrZqq)(3) = 0.151;        // branching ratio in b \bar{b}\n'\
-      '(*BrZqq)(4) = 0.116;        // branching ratio in u \bar{u}\n'\
-      '(*BrZqq)(5) = 0.12;         // branching ratio in c \bar{c}\n'\
+      '(*BrZqq)(1) = 0.156;        // branching ratio in d dbar\n'\
+      '(*BrZqq)(2) = 0.156;        // branching ratio in s sbar\n'\
+      '(*BrZqq)(3) = 0.151;        // branching ratio in b bbar\n'\
+      '(*BrZqq)(4) = 0.116;        // branching ratio in u ubar\n'\
+      '(*BrZqq)(5) = 0.12;         // branching ratio in c cbar\n'\
       '(*BrZll)(1) = 0.0336;       // branching ratio in e+ e-\n'\
       '(*BrZll)(2) = 0.0336;       // branching ratio in mu+ mu-\n'\
       '(*BrZll)(3) = 0.0338;       // branching ratio in tau+ tau-\n'\
@@ -3244,9 +3257,9 @@ def write_spheno_frontend_header(model_name, function_signatures,
     towrite += "\n// Model-dependent arguments auto-scraped by GUM\n"
     
     # The functions that we have scraped from SPheno directly.
-    for function, sig in function_signatures.iteritems():
+    for function, sig in iteritems(function_signatures):
         # And the locations where each function lives
-        for k, v in locations.iteritems():
+        for k, v in iteritems(locations):
             # If they match, store the module name (usually the filename)
             # as this is going to be the name of the symbol in SPheno
             if function in v:
@@ -3282,7 +3295,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     br_entry = "" # Branching ratio parameters can go later, with the rest.
 
     # Let's do this alphabetically so it looks nicer.
-    for name, param in sorted(variables.iteritems()):
+    for name, param in sorted(iteritems(variables)):
 
         # We'll put this in with SMINPUTS, otherwise it'll be a duplicate.
         if name == "MZ_input": continue
@@ -3301,7 +3314,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             towrite += string
 
     # Add MODSEL variable if missing
-    if "HighScaleModel" not in [name for name, param in variables.iteritems()] :
+    if "HighScaleModel" not in [name for name, param in iteritems(variables)] :
         towrite += 'BE_VARIABLE(HighScaleModel, Fstring<15>, ' + make_fortran_symbols("settings","highscalemodel") + ', "SARAHSPheno_' + fullmodelname + '_internal")\n'
 
     # SMINPUTS
@@ -3474,7 +3487,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
             "BE_VARIABLE(Scale_LoopDecays, Freal8, " + make_fortran_symbols("settings","scale_loopdecays") + ", \"SARAHSPheno_{0}_internal\")\n"
     ).format(fullmodelname)
 
-    for name, param in sorted(variables.iteritems()):
+    for name, param in sorted(iteritems(variables)):
 
         # Add Calc3BodyDecay_<particle> and CalcLoopDecay_<particle>
         if name.startswith("Calc3BodyDecay_") or name.startswith("CalcLoopDecay_") :
@@ -3492,7 +3505,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     towrite += "\n// HiggsBounds variables\n" 
 
     # Let's do this alphabetically so it looks nicer.
-    for name, param in sorted(hb_variables.iteritems()):
+    for name, param in sorted(iteritems(hb_variables)):
 
         towrite += (
                "BE_VARIABLE({0}, {1}, " + make_fortran_symbols("model_data_{2}","{3}") + ",\"SARAHSPheno_{4}_internal\")\n"
@@ -3559,9 +3572,9 @@ def write_spheno_frontend_header(model_name, function_signatures,
     from collections import Counter
     c = Counter(counts)
 
-    for k, v in c.iteritems():
+    for k, v in iteritems(c):
         if v == 2:
-            print "Duplication of ", k, "- it appeared", v, "times."
+            print("Duplication of ", k, "- it appeared", v, "times.")
 
     # Add capability definitions
     cap_def["SARAHSPheno_" + fullmodelname + "_internal"] = "Exclusively used for internal variables and functions for the SARAH-SPheno backend."

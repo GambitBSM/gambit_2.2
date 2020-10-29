@@ -10,7 +10,7 @@ math:
 # Outputs for GUM to hook up to GAMBIT
 output:
   spheno: true
-  #vevacious: true
+  vevacious: true
 
 # Options for outputs
 output_options:

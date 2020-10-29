@@ -1,15 +1,25 @@
-"""
-Contains scripts for manipulating the particle database. This includes
-scraping the information about existing particles as well as adding
-new particles to the database.
-"""
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
+#  \file
+#
+#  Contains scripts for manipulating the particle database. This includes
+#  scraping the information about existing particles as well as adding
+#  new particles to the database.
+#
+#  *************************************
+#
+#  \author Sanjay Bloor
+#          (sanjay.bloor12@imperial.ac.uk)
+#  \date 2018, 2019, 2020
+#
+#  **************************************
 
 import yaml
 import os
 import itertools
 import sys
 
-from setup import *
+from .setup import *
 
 def get_gambit_particle_pdg_dict():
     """
@@ -48,7 +58,7 @@ def get_gambit_particle_pdg_dict():
             PDG_code = part['PDG_context'][0]
         
             # If the particle is already in the dictionary, don't add it again
-            if PDG_code in gambit_pdg_codes.values():
+            if PDG_code in list(gambit_pdg_codes.values()):
                 continue
                 
             # Add to GAMBIT dict.
@@ -96,7 +106,7 @@ def get_gambit_particle_pdg_dict():
             for PDG_code in PDG_codes:
                         
                 # Don't add duplicates. Shouldn't be any, anyway...
-                if PDG_code in gambit_pdg_codes.values():
+                if PDG_code in list(gambit_pdg_codes.values()):
                     continue
                     
                 name = cset['name']
@@ -172,8 +182,8 @@ def check_all_particles_present(partlist, gambit_pdg_codes):
     
     absent = []
     
-    for i in xrange(len(partlist)):
-        if not partlist[i].pdg() in gambit_pdg_codes.values():
+    for i in range(len(partlist)):
+        if not partlist[i].pdg() in list(gambit_pdg_codes.values()):
             absent.append(partlist[i])
 
     absent_by_pdg = [x.pdg() for x in absent]
@@ -228,7 +238,7 @@ def add_new_particleDB_entry(particles, dm_pdg, gambit_pdg_codes,
     with open("./../config/particle_database.yaml", "r") as f:
         data = yaml.safe_load(f)
         
-        for i in xrange(len(particles)):
+        for i in range(len(particles)):
             part = particles[i]
 
             # Check there is no clash of names here, otherwise macros will fail

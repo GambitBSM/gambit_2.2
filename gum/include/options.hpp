@@ -1,10 +1,12 @@
-//   GUM: GAMBIT Universal Models
-//   **********************************
+//   GUM: GAMBIT Universal Model Machine
+//   ****************************************
 ///  \file
 ///
-///  Declarations of SARAH class
+///  Declarations of various utility classes:
+///    Options, Output, Particle, Parameter,
+///    Error
 ///
-///  **********************************
+///  ****************************************
 ///
 ///  \author Sanjay Bloor
 ///          (sanjay.bloor12@imperial.ac.uk)
@@ -14,7 +16,7 @@
 ///          (tomas.gonzalo@monash.edu)
 ///  \date 2019 Sep
 ///
-///  ***********************************
+///  ****************************************
 
 
 #ifndef OPTIONS

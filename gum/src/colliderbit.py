@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Master module for all 
@@ -23,8 +21,8 @@
 
 import datetime
 
-from files import *
-from setup import *
+from .files import *
+from .setup import *
 
 
 def new_colliderbit_model(cb_output_dir, model):
@@ -157,7 +155,7 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
 
     # We now have a dictionary of all the possible states. Create a list of all
     # possible final states -- for *all* neutral Higgses, CP even and odd
-    invisibles = list(set([tuple(sorted(x)) for y in invis.values() for x in y]))
+    invisibles = list(set([tuple(sorted(x)) for y in list(invis.values()) for x in y]))
     absinvs = [abs(int(i[0])) for i in invisibles]
 
     towrite = (

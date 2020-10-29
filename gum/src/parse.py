@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-#
-#  GUM: GAMBIT Universal Models
-#  ****************************
+#  GUM: GAMBIT Universal Model Machine
+#  ***********************************
 #  \file
 #
 #  Contains all routines for parsing input .gum files and 
@@ -31,8 +29,8 @@ import re
 from distutils.dir_util import copy_tree
 from collections import defaultdict
 
-from setup import *
-from cmake_variables import *
+from .setup import *
+from .cmake_variables import *
 
 """
 .GUM FILE PARSING
@@ -50,8 +48,15 @@ class Inputs:
 
         self.name = model_name.replace('-','_')
         self.base_model = base_model
-        self.dm_pdg = wimp_candidate
-        self.dm_decays = decaying_dm
+
+        # Set the DM PDG code from either the decaying DM or WIMP candidate
+        if decaying_dm:
+            self.dm_pdg = decaying_dm
+            self.dm_decays = True
+        else:
+            self.dm_pdg = wimp_candidate
+            self.dm_decays = False
+
         self.math = mathpackage
         self.restriction = None
         self.LTot = lagrangian
@@ -117,7 +122,7 @@ def check_gum_file(inputfile):
     Checks the input .GUM file for all necessary inputs.
     """
 
-    print("Attempting to parse {0}...").format(inputfile)
+    print("Attempting to parse {0}...".format(inputfile))
 
     if inputfile.endswith(".gum"):
         pass
@@ -221,7 +226,7 @@ def fill_gum_object(data):
                 opts[i] = data['output'][i]
             else:
                 opts[i] = False
-        if all(value == False for value in opts.values()):
+        if all(value == False for value in list(opts.values())):
             raise GumError(("\n\nAll backend output set to false in your .gum "
                             "file.\nGive GUM something to do!\n"
                             "Please change your .gum file."))
@@ -249,22 +254,25 @@ def fill_gum_object(data):
 
     outputs = Outputs(mathpackage, options=options, **opts)
 
+    # See if we're told DM is a decaying particle or not...
+    if 'decaying_dm_candidate' in data:
+        decaying_dm = data['decaying_dm_candidate']
+    else:
+        decaying_dm = None
+
+    # If decaying DM + WIMP candidate -> throw error
+    if decaying_dm and wimp_candidate:
+        raise GumError(("\n\nYou have specified both a WIMP candidate and "
+                        "a decaying DM candidate.\nGUM can only handle one "
+                        "of these at present. Please amend your .gum file.\n"))
+
     # If the user wants MicrOMEGAs output but hasn't specified a DM candidate
-    if not wimp_candidate and outputs.mo:
+    if not (wimp_candidate or decaying_dm) and outputs.mo:
         raise GumError(("\n\nYou have asked for MicrOMEGAs output but have not "
                         "specified which particle is meant to be the DM "
                         "candidate! Please add an entry to your .gum file "
-                        "like:\n\nwimp_candidate: 9900001 # <--- insert the "
-                        "desired PDG code here!!\n"))   
-
-    # See if we're told DM is a decaying particle or not...
-    if 'decaying_dm' in data:
-        if data['decaying_dm'] == True:
-            decaying_dm = True
-        else:
-            decaying_dm = False
-    else:
-        decaying_dm = False
+                        "like:\n\nwimp_candidate: 9900001 "
+                        "# <--- Desired PDG code here.\n"))
 
     # FeynRules restriction files
     restriction = None
@@ -435,9 +443,9 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
     justblocks = []
     paramsbyblock = {}
     # Go through blocks and check for no double definitions
-    for param, blockentry in blocks.iteritems():
+    for param, blockentry in iteritems(blocks):
         if isinstance(blockentry, dict): 
-            for block, index in blockentry.iteritems():
+            for block, index in iteritems(blockentry):
                 if block in paramsbyblock:
                     l = paramsbyblock[block] # This is a list
                     if index in l:
@@ -460,7 +468,7 @@ def parse_feynrules_model_file(model_name, base_model, outputs):
     # Check for InteractionOrder
     # If it's Yukawa or CKM then this will work fine. Demand it for the rest.
     if outputs.ufo:
-        for param, orders in interactionorders.iteritems():
+        for param, orders in iteritems(interactionorders):
             if orders in ["Internal", "yukawa", "ckm"]:
                 continue
             if orders == "NULL":
@@ -918,7 +926,7 @@ def parse_sarah_model_file(model_name, outputs):
     # Any numerical dependences should be given in the parameters list, save 'em
     massdeps = defaultdict(list)
 
-    for particle, entry in particles.iteritems():
+    for particle, entry in iteritems(particles):
 
         # The particle description
         desc = re.search(r'Description\s*->\s*"(.*?)"', entry)
@@ -1030,7 +1038,7 @@ def parse_sarah_model_file(model_name, outputs):
     for match in re.findall(pat, s2):
         parameters[match[0]] = match[1]
 
-    for parameter, entry in parameters.iteritems():
+    for parameter, entry in iteritems(parameters):
 
         # The parameter description
         desc = re.search(r'Description\s*->\s*"(.*?)"', entry)

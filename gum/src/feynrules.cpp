@@ -1,5 +1,5 @@
-//   GUM: GAMBIT Universal Models
-//   **********************************
+//   GUM: GAMBIT Universal Model Machine
+//   ************************************
 ///  \file
 ///
 ///  Definitions of Feynrules class
@@ -105,7 +105,7 @@ namespace GUM
     // Same process for the base_model
     if (!base_model.empty())
     {
-        std::string basepath = std::string(FEYNRULES_PATH) + "Models/" + base_model + "/" + base_model + ".fr";
+        std::string basepath = std::string(FEYNRULES_PATH) + "/Models/" + base_model + "/" + base_model + ".fr";
 
         std::ifstream basepath1(basepath.c_str());
         if (!basepath1.good())
@@ -181,7 +181,7 @@ namespace GUM
         {  
             if (!base_model.empty())
             {
-                respath = std::string(FEYNRULES_PATH) + "Models/" + base_model + "/" + rst + ".rst";
+                respath = std::string(FEYNRULES_PATH) + "/Models/" + base_model + "/" + rst + ".rst";
         
                 std::ifstream path3(respath.c_str());
                 if (!path3.good())
