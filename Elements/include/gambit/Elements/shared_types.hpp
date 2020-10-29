@@ -23,10 +23,6 @@
 ///          (c.weniger@uva.nl)
 ///  \date 2014 Mar
 ///
-///  \author Anders Kvellestad
-///          (anderkve@fys.uio.no)
-///  \date 2014 Oct
-///
 ///  \author Ben Farmer
 ///          (benjamin.farmer@fysik.su.su)
 ///  \date 2015 Apr
@@ -77,5 +73,3 @@ namespace Gambit
 
 
 #endif //__shared_types_hpp__
-
-

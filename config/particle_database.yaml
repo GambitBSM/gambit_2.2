@@ -425,6 +425,7 @@ StandardModel:
     description: Omega meson
     name: omega
     spinx2: 3
+
   Sets:
 
   - PDG_context:

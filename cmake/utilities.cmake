@@ -265,7 +265,9 @@ macro(use_contributed_pybind11)
   set(pybind11_FOUND TRUE)
   set(pybind11_DIR "${pybind11_CONTRIB_DIR}")
   set(pybind11_VERSION "${PREFERRED_pybind11_VERSION}")
+  message("${BoldYellow}   Found pybind11 ${pybind11_VERSION} at ${pybind11_DIR}.${ColourReset}")
   add_subdirectory("${pybind11_DIR}")
+  include_directories("${PYBIND11_INCLUDE_DIR}")
   add_custom_target(nuke-pybind11 COMMAND ${CMAKE_COMMAND} -E remove_directory "${pybind11_DIR}")
   add_dependencies(nuke-contrib nuke-pybind11)
 endmacro()
@@ -329,8 +331,8 @@ function(add_gambit_executable executablename LIBRARIES)
   if(pybind11_FOUND)
     set(LIBRARIES ${LIBRARIES} ${PYTHON_LIBRARIES})
   endif()
-  if(SQLITE3_FOUND)
-      set(LIBRARIES ${LIBRARIES} ${SQLITE3_LIBRARIES})
+  if(SQLite3_FOUND)
+      set(LIBRARIES ${LIBRARIES} ${SQLite3_LIBRARIES})
   endif()
 
   if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -353,10 +355,17 @@ set(STANDALONE_FACILITATOR ${PROJECT_SOURCE_DIR}/Elements/scripts/standalone_fac
 
 # Function to add a standalone executable
 function(add_standalone executablename)
-  cmake_parse_arguments(ARG "" "" "SOURCES;HEADERS;LIBRARIES;MODULES" ${ARGN})
+  cmake_parse_arguments(ARG "" "" "SOURCES;HEADERS;LIBRARIES;MODULES;DEPENDENCIES" ${ARGN})
+
+  # Assume that the standlone is to be include unless we discover otherwise.
+  set(standalone_permitted 1)
+
+  # Exclude standalones that need HepMC if it has been excluded.
+  if (EXCLUDE_HEPMC AND (";${ARG_DEPENDENCIES};" MATCHES ";hepmc;"))
+    set(standalone_permitted 0)
+  endif()
 
   # Iterate over modules, checking if the neccessary ones are present, and adding them to the target objects if so.
-  set(standalone_permitted 1)
   foreach(module ${ARG_MODULES})
     if(standalone_permitted AND EXISTS "${PROJECT_SOURCE_DIR}/${module}/" AND (";${GAMBIT_BITS};" MATCHES ";${module};"))
       if(COMMA_SEPARATED_MODULES)
@@ -421,6 +430,11 @@ function(add_standalone executablename)
                                   ${STANDALONE_OBJECTS}
                                   ${GAMBIT_ALL_COMMON_OBJECTS}
                           HEADERS ${ARG_HEADERS})
+
+    # Add each of the declared dependencies
+    foreach(dep ${ARG_DEPENDENCIES})
+      add_dependencies(${executablename} ${dep})
+    endforeach()
 
     # Add each of the declared dependencies
     foreach(dep ${ARG_DEPENDENCIES})
@@ -583,13 +597,22 @@ set(BOSS_dir "${PROJECT_SOURCE_DIR}/Backends/scripts/BOSS")
 set(needs_BOSSing "")
 set(needs_BOSSing_failed "")
 
-macro(BOSS_backend name backend_version)
+macro(BOSS_backend name backend_version ${ARGN})
 
   # Replace "." by "_" in the backend version number
   string(REPLACE "." "_" backend_version_safe ${backend_version})
 
+  # Check if there is a suffix
+  set(extra_args ${ARGN})
+  list(LENGTH extra_args n_extra_args)
+  if (${n_extra_args} GREATER 0)
+    set(suffix "_${ARGN}")
+  else()
+    set(suffix "")
+  endif()
+
   # Construct path to the config file expected by BOSS
-  set(config_file_path "${BOSS_dir}/configs/${name}_${backend_version_safe}.py")
+  set(config_file_path "${BOSS_dir}/configs/${name}_${backend_version_safe}${suffix}.py")
 
   # Only add BOSS step to the build process if the config file exists
   if(NOT EXISTS ${config_file_path})
@@ -631,7 +654,7 @@ macro(BOSS_backend name backend_version)
       # Check for castxml binaries and download if they do not exist
       COMMAND ${PROJECT_SOURCE_DIR}/cmake/scripts/download_castxml_binaries.sh ${BOSS_dir} ${CMAKE_COMMAND} ${CMAKE_DOWNLOAD_FLAGS} ${dl} ${dl_filename}
       # Run BOSS
-      COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py ${BOSS_castxml_cc} ${BOSS_includes_Boost} ${BOSS_includes_Eigen3} ${BOSS_includes_GSL} ${name}_${backend_version_safe}
+      COMMAND ${PYTHON_EXECUTABLE} ${BOSS_dir}/boss.py ${BOSS_castxml_cc} ${BOSS_includes_Boost} ${BOSS_includes_Eigen3} ${BOSS_includes_GSL} ${name}_${backend_version_safe}${suffix}
       # Copy BOSS-generated files to correct folders within Backends/include
       COMMAND cp -r BOSS_output/${name_in_frontend}_${backend_version_safe}/for_gambit/backend_types/${name_in_frontend}_${backend_version_safe} ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/backend_types/
       COMMAND cp BOSS_output/${name_in_frontend}_${backend_version_safe}/frontends/${name_in_frontend}_${backend_version_safe}.hpp ${PROJECT_SOURCE_DIR}/Backends/include/gambit/Backends/frontends/${name_in_frontend}_${backend_version_safe}.hpp
