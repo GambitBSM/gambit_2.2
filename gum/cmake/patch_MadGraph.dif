@@ -1,6 +1,6 @@
 diff -rupN MadGraph_pristine/aloha/aloha_fct.py ../contrib/MadGraph/aloha/aloha_fct.py
 --- MadGraph_pristine/aloha/aloha_fct.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_fct.py	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/aloha/aloha_fct.py	2020-10-30 20:49:24.490461031 +1100
 @@ -29,7 +29,7 @@ def get_fermion_flow(expression, nb_ferm
      try:
          expr = eval(expression)
@@ -78,7 +78,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_fct.py ../contrib/MadGraph/aloha/aloha_
     
 diff -rupN MadGraph_pristine/aloha/aloha_lib.py ../contrib/MadGraph/aloha/aloha_lib.py
 --- MadGraph_pristine/aloha/aloha_lib.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_lib.py	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/aloha/aloha_lib.py	2020-10-30 20:49:24.494461018 +1100
 @@ -143,13 +143,13 @@ class Computation(dict):
              if isinstance(expression, (MultLorentz, AddVariable, LorentzObject)):
                  try:
@@ -122,7 +122,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_lib.py ../contrib/MadGraph/aloha/aloha_
      def get_all_var_names(self):
 diff -rupN MadGraph_pristine/aloha/aloha_parsers.py ../contrib/MadGraph/aloha/aloha_parsers.py
 --- MadGraph_pristine/aloha/aloha_parsers.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_parsers.py	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/aloha/aloha_parsers.py	2020-10-30 20:49:24.494461018 +1100
 @@ -29,17 +29,14 @@ import sys
  root_path = os.path.split(os.path.dirname(os.path.realpath( __file__ )))[0]
  sys.path.append(os.path.join(root_path))
@@ -155,7 +155,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_parsers.py ../contrib/MadGraph/aloha/al
              logger.error("Syntax error at EOF")
 diff -rupN MadGraph_pristine/aloha/aloha_writers.py ../contrib/MadGraph/aloha/aloha_writers.py
 --- MadGraph_pristine/aloha/aloha_writers.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/aloha_writers.py	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/aloha/aloha_writers.py	2020-10-30 20:49:24.494461018 +1100
 @@ -1,11 +1,11 @@
 -try:
 -    import madgraph.iolibs.file_writers as writers 
@@ -262,7 +262,7 @@ diff -rupN MadGraph_pristine/aloha/aloha_writers.py ../contrib/MadGraph/aloha/al
      
 diff -rupN MadGraph_pristine/aloha/create_aloha.py ../contrib/MadGraph/aloha/create_aloha.py
 --- MadGraph_pristine/aloha/create_aloha.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/aloha/create_aloha.py	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/aloha/create_aloha.py	2020-10-30 20:49:24.494461018 +1100
 @@ -15,7 +15,12 @@
  from __future__ import division
  import cmath
@@ -324,9 +324,21 @@ diff -rupN MadGraph_pristine/aloha/create_aloha.py ../contrib/MadGraph/aloha/cre
         
          if output_dir:
              for filepath in ext_files:
+diff -rupN MadGraph_pristine/aloha/template_files/wavefunctions.py ../contrib/MadGraph/aloha/template_files/wavefunctions.py
+--- MadGraph_pristine/aloha/template_files/wavefunctions.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/aloha/template_files/wavefunctions.py	2020-10-30 20:49:24.494461018 +1100
+@@ -335,7 +335,7 @@ def txxxxx(p, tmass, nhel, nst):
+                 ft[(i,j)] = sqh*( em[i]*e0[j] + e0[i]*em[j] )
+ 
+     else:
+-        raise Exception, 'invalid helicity TXXXXXX' 
++        raise Exception('invalid helicity TXXXXXX') 
+ 
+ 
+ 
 diff -rupN MadGraph_pristine/input/mg5_configuration.txt ../contrib/MadGraph/input/mg5_configuration.txt
 --- MadGraph_pristine/input/mg5_configuration.txt	2020-10-27 21:41:37.769088298 +1100
-+++ ../contrib/MadGraph/input/mg5_configuration.txt	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/input/mg5_configuration.txt	2020-10-30 20:49:24.494461018 +1100
 @@ -49,7 +49,7 @@
  
  #! Prefered PS viewer
@@ -338,7 +350,7 @@ diff -rupN MadGraph_pristine/input/mg5_configuration.txt ../contrib/MadGraph/inp
  #!  0: No time limit
 diff -rupN MadGraph_pristine/madgraph/core/base_objects.py ../contrib/MadGraph/madgraph/core/base_objects.py
 --- MadGraph_pristine/madgraph/core/base_objects.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/base_objects.py	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/madgraph/core/base_objects.py	2020-10-30 20:49:24.498461004 +1100
 @@ -22,7 +22,12 @@ import math
  import numbers
  import os
@@ -1125,7 +1137,7 @@ diff -rupN MadGraph_pristine/madgraph/core/base_objects.py ../contrib/MadGraph/m
              return super(ProcessDefinition, self).filter(name, value)
 diff -rupN MadGraph_pristine/madgraph/core/color_algebra.py ../contrib/MadGraph/madgraph/core/color_algebra.py
 --- MadGraph_pristine/madgraph/core/color_algebra.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/color_algebra.py	2020-10-30 01:26:23.629372841 +1100
++++ ../contrib/MadGraph/madgraph/core/color_algebra.py	2020-10-30 20:49:24.498461004 +1100
 @@ -833,8 +833,8 @@ class ColorString(list):
          are still non trivial color objects."""
  
@@ -1139,7 +1151,7 @@ diff -rupN MadGraph_pristine/madgraph/core/color_algebra.py ../contrib/MadGraph/
              return (self.coeff * fractions.Fraction(\
 diff -rupN MadGraph_pristine/madgraph/core/color_amp.py ../contrib/MadGraph/madgraph/core/color_amp.py
 --- MadGraph_pristine/madgraph/core/color_amp.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/color_amp.py	2020-10-30 01:26:23.633372717 +1100
++++ ../contrib/MadGraph/madgraph/core/color_amp.py	2020-10-30 20:49:24.498461004 +1100
 @@ -413,8 +413,8 @@ class ColorBasis(dict):
          # If more than one string at leading N...
          if len(res_cs) > 1 and any([not cs.near_equivalent(res_cs[0]) \
@@ -1182,7 +1194,7 @@ diff -rupN MadGraph_pristine/madgraph/core/color_amp.py ../contrib/MadGraph/madg
                  if abs(leg_repr) == 8:
 diff -rupN MadGraph_pristine/madgraph/core/diagram_generation.py ../contrib/MadGraph/madgraph/core/diagram_generation.py
 --- MadGraph_pristine/madgraph/core/diagram_generation.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/diagram_generation.py	2020-10-30 01:26:23.633372717 +1100
++++ ../contrib/MadGraph/madgraph/core/diagram_generation.py	2020-10-30 20:49:24.498461004 +1100
 @@ -439,16 +439,13 @@ class Amplitude(base_objects.PhysicsObje
  
          if name == 'process':
@@ -1327,7 +1339,7 @@ diff -rupN MadGraph_pristine/madgraph/core/diagram_generation.py ../contrib/MadG
                          if amplitude.get('diagrams'):
 diff -rupN MadGraph_pristine/madgraph/core/drawing.py ../contrib/MadGraph/madgraph/core/drawing.py
 --- MadGraph_pristine/madgraph/core/drawing.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/drawing.py	2020-10-30 01:26:23.633372717 +1100
++++ ../contrib/MadGraph/madgraph/core/drawing.py	2020-10-30 20:49:24.502460991 +1100
 @@ -412,8 +412,8 @@ class FeynmanLine(object):
              self.begin.pos_x
              self.end.pos_y
@@ -1389,7 +1401,7 @@ diff -rupN MadGraph_pristine/madgraph/core/drawing.py ../contrib/MadGraph/madgra
  
 diff -rupN MadGraph_pristine/madgraph/core/helas_objects.py ../contrib/MadGraph/madgraph/core/helas_objects.py
 --- MadGraph_pristine/madgraph/core/helas_objects.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/core/helas_objects.py	2020-10-30 01:26:23.633372717 +1100
++++ ../contrib/MadGraph/madgraph/core/helas_objects.py	2020-10-30 20:49:24.502460991 +1100
 @@ -300,8 +300,8 @@ class CanonicalConfigTag(diagram_generat
                          right_num = num
              if right_num == -1:
@@ -2043,9 +2055,201 @@ diff -rupN MadGraph_pristine/madgraph/core/helas_objects.py ../contrib/MadGraph/
  
          return matrix_elements
  
+diff -rupN MadGraph_pristine/madgraph/fks/fks_base.py ../contrib/MadGraph/madgraph/fks/fks_base.py
+--- MadGraph_pristine/madgraph/fks/fks_base.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/fks/fks_base.py	2020-10-30 20:49:24.502460991 +1100
+@@ -63,28 +63,28 @@ class FKSMultiProcess(diagram_generation
+ 
+         if name == 'born_processes':
+             if not isinstance(value, FKSProcessList):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a valid list for born_processes " % str(value)                             
++                raise self.PhysicsObjectError( \
++                        "%s is not a valid list for born_processes " % str(value))                             
+ 
+         if name == 'real_amplitudes':
+             if not isinstance(value, diagram_generation.AmplitudeList):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a valid list for real_amplitudes " % str(value)
++                raise self.PhysicsObjectError( \
++                        "%s is not a valid list for real_amplitudes " % str(value))
+                                                   
+         if name == 'real_pdgs':
+             if not isinstance(value, list):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a valid list for real_amplitudes " % str(value)
++                raise self.PhysicsObjectError( \
++                        "%s is not a valid list for real_amplitudes " % str(value))
+         
+         if name == 'OLP':
+             if not isinstance(value,str):
+-                raise self.PhysicsObjectError, \
+-                    "%s is not a valid string for OLP " % str(value)
++                raise self.PhysicsObjectError( \
++                    "%s is not a valid string for OLP " % str(value))
+ 
+         if name == 'ncores_for_proc_gen':
+             if not isinstance(value,int):
+-                raise self.PhysicsObjectError, \
+-                    "%s is not a valid value for ncores_for_proc_gen " % str(value)
++                raise self.PhysicsObjectError( \
++                    "%s is not a valid value for ncores_for_proc_gen " % str(value))
+                                                      
+         return super(FKSMultiProcess,self).filter(name, value)
+     
+@@ -123,12 +123,12 @@ class FKSMultiProcess(diagram_generation
+ 
+         except diagram_generation.NoDiagramException as error:
+             # If no born, then this process most likely does not have any.
+-            raise NoBornException, "Born diagrams could not be generated for the "+\
++            raise NoBornException("Born diagrams could not be generated for the "+\
+                self['process_definitions'][0].nice_string().replace('Process',\
+                'process')+". Notice that aMC@NLO does not handle loop-induced"+\
+                " processes yet, but you can still use MadLoop if you want to "+\
+                "only generate them."+\
+-               " For this, use the 'virt=' mode, without multiparticle labels."
++               " For this, use the 'virt=' mode, without multiparticle labels.")
+ 
+         self['OLP'] = olp
+         self['ncores_for_proc_gen'] = ncores_for_proc_gen
+@@ -621,13 +621,13 @@ class FKSProcess(object):
+                         and \
+                         real_m.get_leg_j()['id'] == real_n.get_leg_i()['id']):
+                         if i_m > i_n:
+-                            print real_m.get_leg_i()['id'], real_m.get_leg_j()['id']
++                            print(real_m.get_leg_i()['id'], real_m.get_leg_j()['id'])
+                             if real_m.get_leg_i()['id'] == -real_m.get_leg_j()['id']:
+                                 self.real_amps[m].is_to_integrate = False
+                             else:
+                                 self.real_amps[n].is_to_integrate = False
+                         elif i_m == i_n and j_m > j_n:
+-                            print real_m.get_leg_i()['id'], real_m.get_leg_j()['id']
++                            print(real_m.get_leg_i()['id'], real_m.get_leg_j()['id'])
+                             if real_m.get_leg_i()['id'] == -real_m.get_leg_j()['id']:
+                                 self.real_amps[m].is_to_integrate = False
+                             else:
+diff -rupN MadGraph_pristine/madgraph/fks/fks_common.py ../contrib/MadGraph/madgraph/fks/fks_common.py
+--- MadGraph_pristine/madgraph/fks/fks_common.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/fks/fks_common.py	2020-10-30 20:49:24.502460991 +1100
+@@ -191,7 +191,7 @@ def link_rb_configs(born_amp, real_amp,
+ 
+     # and compare them
+     if len(born_tags) != len(real_tags):
+-        print '\n'.join([str(r) for r in real_tags]) + '\n'
++        print('\n'.join([str(r) for r in real_tags]) + '\n')
+         raise FKSProcessError('Cannot map born/real configurations between \
+                 %s and %s (i,j=%d,%d): not same number of configurations: %d %d' % \
+                 (born_amp.get('process').nice_string().replace('Process:',''), 
+@@ -209,8 +209,8 @@ def link_rb_configs(born_amp, real_amp,
+             real_tags.remove(btag)
+             good_diags.pop(ir)
+         except ValueError:
+-            print real_tags, i, j, ij
+-            print '\n'.join( d['diagram'].nice_string() for d in good_diags)
++            print(real_tags, i, j, ij)
++            print('\n'.join( d['diagram'].nice_string() for d in good_diags))
+             raise FKSProcessError('Linking %s to %s: could not link born diagram %s' % \
+                  (born_amp.get('process').nice_string().replace('Process:',''), 
+                   real_amp.get('process').nice_string().replace('Process:',''),
+@@ -329,7 +329,7 @@ def insert_legs(leglist_orig, leg, split
+     elif pert == 'QED':
+         color = 'charge'
+     else:
+-        raise FKSProcessError, "Only QCD or QED is allowed not  %s" % pert
++        raise FKSProcessError("Only QCD or QED is allowed not  %s" % pert)
+     # the deepcopy statement is crucial
+     leglist = FKSLegList(copy.deepcopy(leglist_orig))         
+     #find the position of the first final state leg
+@@ -555,7 +555,7 @@ def find_color_links(leglist, symm = Fal
+         color = 'charge'
+         zero = 0.
+     else:
+-        raise FKSProcessError,"Only QCD or QED is allowed not %s" % pert
++        raise FKSProcessError("Only QCD or QED is allowed not %s" % pert)
+     color_links = []
+     for leg1 in leglist:
+         for leg2 in leglist:
+@@ -637,7 +637,7 @@ def legs_to_color_link_string(leg1, leg2
+             string.coeff = string.coeff * fractions.Fraction(leg['charge']*3.)*\
+             fractions.Fraction(1,3)            
+     else:
+-        raise FKSProcessError,"Only QCD or QED is allowed not %s"% pert
++        raise FKSProcessError("Only QCD or QED is allowed not %s"% pert)
+     
+     dict['replacements'] = replacements
+     dict['string'] = string  
+@@ -734,7 +734,7 @@ class FKSLegList(MG.LegList):
+             color = 'charge'
+             zero = 0.
+         else:
+-            raise FKSProcessError,"Only QCD and QED is allowed not %s"% pert
++            raise FKSProcessError("Only QCD and QED is allowed not %s"% pert)
+         colors = sorted(set([abs(l[color]) for l in final_legs]))
+         # first put massless particles, without any rearrangment
+         if zero in colors:
+@@ -824,25 +824,25 @@ class FKSLeg(MG.Leg):
+ 
+         if name == 'fks':
+             if not isinstance(value, str):
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                         "%s is not a valid string for leg fks flag" \
+-                                                        % str(value)
++                                                        % str(value))
+         if name in ['color', 'spin']:
+             if not isinstance(value, int):
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                         "%s is not a valid leg %s flag" % \
+-                                                 str(value),name
++                                                 str(value),name)
+                                                  
+         if name in ['massless','self_antipart','is_part']:
+             if not isinstance(value, bool):
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                         "%s is not a valid boolean for leg flag %s" % \
+-                                                                    str(value),name
++                                                                    str(value),name)
+         if name is 'charge':
+             if not isinstance(value, float):
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                     "%s is not a valid float for leg flag charge" \
+-                    % str(value)                                                           
++                    % str(value))                                                           
+         return super(FKSLeg,self).filter(name, value)
+     
+      
+diff -rupN MadGraph_pristine/madgraph/fks/fks_helas_objects.py ../contrib/MadGraph/madgraph/fks/fks_helas_objects.py
+--- MadGraph_pristine/madgraph/fks/fks_helas_objects.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/fks/fks_helas_objects.py	2020-10-30 20:49:24.502460991 +1100
+@@ -32,7 +32,10 @@ import array
+ import multiprocessing
+ import signal
+ import tempfile
+-import cPickle
++try:
++    import cPickle
++except:
++    import _pickle as cPickle
+ import itertools
+ import os
+ 
+@@ -211,8 +214,8 @@ class FKSHelasMultiProcess(helas_objects
+ 
+         if name == 'real_matrix_elements':
+             if not isinstance(value, helas_objects.HelasMultiProcess):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a valid list for real_matrix_element " % str(value)                             
++                raise self.PhysicsObjectError( \
++                        "%s is not a valid list for real_matrix_element " % str(value))                             
+     
+     def __init__(self, fksmulti, loop_optimized = False, gen_color =True, decay_ids =[]):
+         """Initialization from a FKSMultiProcess"""
 diff -rupN MadGraph_pristine/madgraph/__init__.py ../contrib/MadGraph/madgraph/__init__.py
 --- MadGraph_pristine/madgraph/__init__.py	2020-10-27 21:41:37.889090214 +1100
-+++ ../contrib/MadGraph/madgraph/__init__.py	2020-10-30 01:26:23.633372717 +1100
++++ ../contrib/MadGraph/madgraph/__init__.py	2020-10-30 20:49:24.502460991 +1100
 @@ -46,5 +46,5 @@ if ReadWrite:
              os.remove(tmp_path)
              shutil.copy(pjoin(MG5DIR, 'Template','LO','Source','.make_opts'),
@@ -2053,9 +2257,424 @@ diff -rupN MadGraph_pristine/madgraph/__init__.py ../contrib/MadGraph/madgraph/_
 -    except Exception,error:
 +    except Exception as error:
          pass
+diff -rupN MadGraph_pristine/madgraph/interface/amcatnlo_interface.py ../contrib/MadGraph/madgraph/interface/amcatnlo_interface.py
+--- MadGraph_pristine/madgraph/interface/amcatnlo_interface.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/interface/amcatnlo_interface.py	2020-10-30 20:49:24.502460991 +1100
+@@ -29,7 +29,10 @@ import signal
+ import tempfile
+ import itertools
+ import os
+-import cPickle
++try:
++    import cPickle
++except:
++    import _pickle as cPickle
+ 
+ 
+ import madgraph
+@@ -172,16 +175,16 @@ class CheckFKS(mg_interface.CheckValidFo
+                 return
+             else:
+                 self.help_launch()
+-                raise self.InvalidCmd, \
+-                       'No default location available, please specify location.'
++                raise self.InvalidCmd( \
++                       'No default location available, please specify location.')
+         
+         if len(args) > 2:
+             self.help_launch()
+-            return self.InvalidCmd, 'Invalid Syntax: Too many argument'
++            return self.InvalidCmd('Invalid Syntax: Too many argument')
+ 
+         elif len(args) == 2:
+             if not args[1] in ['LO', 'NLO', 'aMC@NLO', 'aMC@LO', 'auto']:
+-                raise self.InvalidCmd, '%s is not a valid mode, please use "LO", "NLO", "aMC@NLO" or "aMC@LO"' % args[1]
++                raise self.InvalidCmd('%s is not a valid mode, please use "LO", "NLO", "aMC@NLO" or "aMC@LO"' % args[1])
+         else:
+             #check if args[0] is path or mode
+             if args[0] in ['LO', 'NLO', 'aMC@NLO', 'aMC@LO', 'auto'] and self._done_export:
+@@ -191,7 +194,7 @@ class CheckFKS(mg_interface.CheckValidFo
+                 args.append('auto')
+             else:
+                 self.help_launch()
+-                raise self.InvalidCmd, '%s is not a valid process directory nor run mode' % args[0]
++                raise self.InvalidCmd('%s is not a valid process directory nor run mode' % args[0])
+ 
+         mode = args[1]
+         
+@@ -203,7 +206,7 @@ class CheckFKS(mg_interface.CheckValidFo
+         elif  MG4DIR and os.path.isdir(pjoin(MG4DIR,args[0])):
+             path = pjoin(MG4DIR,args[0])
+         else:    
+-            raise self.InvalidCmd, '%s is not a valid directory' % args[0]
++            raise self.InvalidCmd('%s is not a valid directory' % args[0])
+         args[0] = path
+                 
+         # inform where we are for future command
+@@ -211,10 +214,10 @@ class CheckFKS(mg_interface.CheckValidFo
+ 
+         # check for incompatible options/modes
+         if options['multicore'] and options['cluster']:
+-            raise self.InvalidCmd, 'options -m (--multicore) and -c (--cluster)' + \
+-                    ' are not compatible. Please choose one.'
++            raise self.InvalidCmd('options -m (--multicore) and -c (--cluster)' + \
++                    ' are not compatible. Please choose one.')
+         if mode == 'NLO' and options['reweightonly']:
+-            raise self.InvalidCmd, 'option -r (--reweightonly) needs mode "aMC@NLO" or "aMC@LO"'
++            raise self.InvalidCmd('option -r (--reweightonly) needs mode "aMC@NLO" or "aMC@LO"')
+ 
+ 
+ class CheckFKSWeb(mg_interface.CheckValidForCmdWeb, CheckFKS):
+@@ -249,8 +252,8 @@ class CompleteFKS(mg_interface.CompleteF
+             if len(args) > 1 and args[1] == 'aloha':
+                 try:
+                     return self.aloha_complete_output(text, line, begidx, endidx)
+-                except Exception, error:
+-                    print error
++                except Exception as error:
++                    print(error)
+             # Directory continuation
+             if args[-1].endswith(os.path.sep):
+                 return [name for name in self.path_completion(text,
+@@ -415,14 +418,14 @@ class aMCatNLOInterface(CheckFKS, Comple
+                     #check that if one requests the virt diagrams, there are virt_amplitudes
+                     if args[1] in ['virt', 'loop'] and len(self._curr_amps) == 0:
+                         raise self.InvalidCmd('No virtuals have been generated')
+-                    print '\n'.join(amp.nice_string_processes() for amp in self._curr_amps)
++                    print('\n'.join(amp.nice_string_processes() for amp in self._curr_amps))
+                 else:
+-                    print 'Born processes:'
+-                    print '\n'.join(amp.nice_string_processes() for amp in get_amps_dict['born']())
+-                    print 'Real processes:'
+-                    print '\n'.join(amp.nice_string_processes() for amp in get_amps_dict['real']())
+-                    print 'Loop processes:'
+-                    print '\n'.join(amp.nice_string_processes() for amp in get_amps_dict['loop']())
++                    print('Born processes:')
++                    print('\n'.join(amp.nice_string_processes() for amp in get_amps_dict['born']()))
++                    print('Real processes:')
++                    print('\n'.join(amp.nice_string_processes() for amp in get_amps_dict['real']()))
++                    print('Loop processes:')
++                    print('\n'.join(amp.nice_string_processes() for amp in get_amps_dict['loop']()))
+                 # set _curr_amps back to empty
+                 self._curr_amps = diagram_generation.AmplitudeList()
+ 
+@@ -587,8 +590,8 @@ class aMCatNLOInterface(CheckFKS, Comple
+             ndiags = 0
+             if not self._curr_matrix_elements.get_matrix_elements():
+                 if group:
+-                    raise MadGraph5Error, "Cannot group subprocesses when "+\
+-                                                              "exporting to NLO"
++                    raise MadGraph5Error("Cannot group subprocesses when "+\
++                                                              "exporting to NLO")
+                 else:
+                     self._curr_matrix_elements = \
+                              fks_helas.FKSHelasMultiProcess(\
+@@ -716,7 +719,7 @@ class aMCatNLOInterface(CheckFKS, Comple
+                 proc_charac['nexternal'] = max([diroutput[4] for diroutput in diroutputmap])
+                 ninitial_set = set([diroutput[3] for diroutput in diroutputmap])
+                 if len(ninitial_set) != 1:
+-                    raise MadGraph5Error, ("Invalid ninitial values: %s" % ' ,'.join(list(ninitial_set)))    
++                    raise MadGraph5Error("Invalid ninitial values: %s" % ' ,'.join(list(ninitial_set)))    
+                 proc_charac['ninitial'] = list(ninitial_set)[0]
+ 
+                 self.born_processes = []
+diff -rupN MadGraph_pristine/madgraph/interface/amcatnlo_run_interface.py ../contrib/MadGraph/madgraph/interface/amcatnlo_run_interface.py
+--- MadGraph_pristine/madgraph/interface/amcatnlo_run_interface.py	2020-10-27 21:41:37.889090214 +1100
++++ ../contrib/MadGraph/madgraph/interface/amcatnlo_run_interface.py	2020-10-30 20:49:24.506460977 +1100
+@@ -37,7 +37,12 @@ import copy
+ import datetime
+ import tarfile
+ import traceback
+-import StringIO
++
++try:
++    import StringIO ## for Python 2
++except ImportError:
++    from io import StringIO ## for Python 3
++
+ try:
+     import cpickle as pickle
+ except:
+@@ -108,7 +113,7 @@ def compile_dir(*arguments):
+     elif len(arguments)==7:
+         (me_dir, p_dir, mode, options, tests, exe, run_mode) = arguments
+     else:
+-        raise aMCatNLOError, 'not correct number of argument'
++        raise aMCatNLOError('not correct number of argument')
+     logger.info(' Compiling %s...' % p_dir)
+ 
+     this_dir = pjoin(me_dir, 'SubProcesses', p_dir) 
+@@ -148,7 +153,7 @@ def compile_dir(*arguments):
+ 
+         logger.info('    %s done.' % p_dir) 
+         return 0
+-    except MadGraph5Error, msg:
++    except MadGraph5Error as msg:
+         return msg
+ 
+ 
+@@ -418,10 +423,10 @@ class CheckValidForCmd(object):
+         
+         if len(args) == 0:
+             self.help_shower()
+-            raise self.InvalidCmd, 'Invalid syntax, please specify the run name'
++            raise self.InvalidCmd('Invalid syntax, please specify the run name')
+         if not os.path.isdir(pjoin(self.me_dir, 'Events', args[0])):
+-            raise self.InvalidCmd, 'Directory %s does not exists' % \
+-                            pjoin(os.getcwd(), 'Events',  args[0])
++            raise self.InvalidCmd('Directory %s does not exists' % \
++                            pjoin(os.getcwd(), 'Events',  args[0]))
+ 
+         self.set_run_name(args[0], level= 'shower')
+         args[0] = pjoin(self.me_dir, 'Events', args[0])
+@@ -607,17 +612,17 @@ class CheckValidForCmd(object):
+         
+         if len(args) > 1:
+             self.help_calculate_xsect()
+-            raise self.InvalidCmd, 'Invalid Syntax: Too many argument'
++            raise self.InvalidCmd('Invalid Syntax: Too many argument')
+ 
+         elif len(args) == 1:
+             if not args[0] in ['NLO', 'LO']:
+-                raise self.InvalidCmd, '%s is not a valid mode, please use "LO" or "NLO"' % args[1]
++                raise self.InvalidCmd('%s is not a valid mode, please use "LO" or "NLO"' % args[1])
+         mode = args[0]
+         
+         # check for incompatible options/modes
+         if options['multicore'] and options['cluster']:
+-            raise self.InvalidCmd, 'options -m (--multicore) and -c (--cluster)' + \
+-                    ' are not compatible. Please choose one.'
++            raise self.InvalidCmd('options -m (--multicore) and -c (--cluster)' + \
++                    ' are not compatible. Please choose one.')
+ 
+ 
+     def check_generate_events(self, args, options):
+@@ -632,17 +637,17 @@ class CheckValidForCmd(object):
+         
+         if len(args) > 1:
+             self.help_generate_events()
+-            raise self.InvalidCmd, 'Invalid Syntax: Too many argument'
++            raise self.InvalidCmd('Invalid Syntax: Too many argument')
+ 
+         elif len(args) == 1:
+             if not args[0] in ['NLO', 'LO']:
+-                raise self.InvalidCmd, '%s is not a valid mode, please use "LO" or "NLO"' % args[1]
++                raise self.InvalidCmd('%s is not a valid mode, please use "LO" or "NLO"' % args[1])
+         mode = args[0]
+         
+         # check for incompatible options/modes
+         if options['multicore'] and options['cluster']:
+-            raise self.InvalidCmd, 'options -m (--multicore) and -c (--cluster)' + \
+-                    ' are not compatible. Please choose one.'
++            raise self.InvalidCmd('options -m (--multicore) and -c (--cluster)' + \
++                    ' are not compatible. Please choose one.')
+ 
+     def check_banner_run(self, args):
+         """check the validity of line"""
+@@ -719,19 +724,19 @@ class CheckValidForCmd(object):
+         
+         if len(args) > 1:
+             self.help_launch()
+-            raise self.InvalidCmd, 'Invalid Syntax: Too many argument'
++            raise self.InvalidCmd('Invalid Syntax: Too many argument')
+ 
+         elif len(args) == 1:
+             if not args[0] in ['LO', 'NLO', 'aMC@NLO', 'aMC@LO','auto']:
+-                raise self.InvalidCmd, '%s is not a valid mode, please use "LO", "NLO", "aMC@NLO" or "aMC@LO"' % args[0]
++                raise self.InvalidCmd('%s is not a valid mode, please use "LO", "NLO", "aMC@NLO" or "aMC@LO"' % args[0])
+         mode = args[0]
+         
+         # check for incompatible options/modes
+         if options['multicore'] and options['cluster']:
+-            raise self.InvalidCmd, 'options -m (--multicore) and -c (--cluster)' + \
+-                    ' are not compatible. Please choose one.'
++            raise self.InvalidCmd('options -m (--multicore) and -c (--cluster)' + \
++                    ' are not compatible. Please choose one.')
+         if mode == 'NLO' and options['reweightonly']:
+-            raise self.InvalidCmd, 'option -r (--reweightonly) needs mode "aMC@NLO" or "aMC@LO"'
++            raise self.InvalidCmd('option -r (--reweightonly) needs mode "aMC@NLO" or "aMC@LO"')
+ 
+ 
+     def check_compile(self, args, options):
+@@ -749,11 +754,11 @@ class CheckValidForCmd(object):
+         
+         if len(args) > 1:
+             self.help_compile()
+-            raise self.InvalidCmd, 'Invalid Syntax: Too many argument'
++            raise self.InvalidCmd('Invalid Syntax: Too many argument')
+ 
+         elif len(args) == 1:
+             if not args[0] in ['MC', 'FO']:
+-                raise self.InvalidCmd, '%s is not a valid mode, please use "FO" or "MC"' % args[0]
++                raise self.InvalidCmd('%s is not a valid mode, please use "FO" or "MC"' % args[0])
+         mode = args[0]
+         
+         # check for incompatible options/modes
+@@ -821,8 +826,8 @@ class CompleteForCmd(CheckValidForCmd):
+         return self.deal_multiple_categories(possibilites, formatting)
+     
+         
+-       except Exception, error:
+-           print error
++       except Exception as error:
++           print(error)
+ 
+  
+     def complete_compile(self, text, line, begidx, endidx):
+@@ -2806,7 +2811,7 @@ RESTART = %(mint_mode)s
+         while p.poll() is None:
+             line = p.stdout.readline()
+             if any(t in line for t in ['INFO:','WARNING:','CRITICAL:','ERROR:','KEEP:']):
+-                print line[:-1]
++                print(line[:-1])
+             elif __debug__ and line:
+                 logger.debug(line[:-1])
+ 
+@@ -3137,7 +3142,7 @@ RESTART = %(mint_mode)s
+             all_log_files = misc.glob(pjoin('P*','born_G*','log_MINT*.txt'), 
+                                       pjoin(self.me_dir, 'SubProcesses')) 
+         else:
+-            raise aMCatNLOError, 'Running mode %s not supported.'%mode
++            raise aMCatNLOError('Running mode %s not supported.'%mode)
+ 
+         try:
+             message, debug_msg = \
+@@ -3548,7 +3553,7 @@ RESTART = %(mint_mode)s
+             try:
+                 TimeList = [((100.0*time/stats['timings']['Total'][chan]), 
+                      chan) for chan, time in stats['timings'][name].items()]
+-            except KeyError, ZeroDivisionError:
++            except (KeyError, ZeroDivisionError):
+                 debug_msg += '\n\n  Timing profile for %s unavailable.'%name
+                 continue
+             TimeList.sort()
+@@ -3557,7 +3562,7 @@ RESTART = %(mint_mode)s
+                 debug_msg += '\n    Overall fraction of time         %.3f %%'%\
+                        safe_float((100.0*(sum(stats['timings'][name].values())/
+                                       sum(stats['timings']['Total'].values()))))
+-            except KeyError, ZeroDivisionError:
++            except (KeyError, ZeroDivisionError):
+                 debug_msg += '\n    Overall fraction of time unavailable.'
+             debug_msg += '\n    Largest fraction of time         %.3f %% (%s)'%\
+                                              (TimeList[-1][0],TimeList[-1][1])
+@@ -3794,7 +3799,7 @@ RESTART = %(mint_mode)s
+         exe = 'MCATNLO_%s_EXE' % shower
+         if not os.path.exists(pjoin(self.me_dir, 'MCatNLO', exe)) and \
+             not os.path.exists(pjoin(self.me_dir, 'MCatNLO', 'Pythia8.exe')):
+-            print open(mcatnlo_log).read()
++            print(open(mcatnlo_log).read())
+             raise aMCatNLOError('Compilation failed, check %s for details' % mcatnlo_log)
+         logger.info('                     ... done')
+ 
+@@ -3932,7 +3937,7 @@ RESTART = %(mint_mode)s
+                      ' showering the (split) parton-level event file %s.gz with %s') % \
+                      ('\n  '.join(hep_list), hep_format, evt_file, shower)
+ 
+-            except OSError, IOError:
++            except (OSError, IOError):
+                 raise aMCatNLOError('No file has been generated, an error occurred.'+\
+              ' More information in %s' % pjoin(os.getcwd(), 'amcatnlo_run.log'))
+ 
+@@ -3940,7 +3945,7 @@ RESTART = %(mint_mode)s
+             if hep_format == 'StdHEP':
+                 try:
+                     self.do_plot('%s -f' % self.run_name)
+-                except Exception, error:
++                except Exception as error:
+                     logger.info("Fail to make the plot. Continue...")
+                     pass
+ 
+@@ -4848,8 +4853,8 @@ RESTART = %(mint_mode)s
+                 elif os.path.exists(pjoin(self.me_dir, 'Events', self.run_name, 'events.lhe')):
+                     input_files.append(pjoin(self.me_dir, 'Events', self.run_name, 'events.lhe'))
+                 else:
+-                    raise aMCatNLOError, 'Event file not present in %s' % \
+-                            pjoin(self.me_dir, 'Events', self.run_name)
++                    raise aMCatNLOError('Event file not present in %s' % \
++                            pjoin(self.me_dir, 'Events', self.run_name))
+             else: 
+                 input_files.append(pjoin(cwd, 'events_%s.lhe' % args[3]))
+             # the output files
+@@ -4873,7 +4878,7 @@ RESTART = %(mint_mode)s
+                     fname = 'histfile_%s' % args[3]
+                 output_files.append(fname + '.tar')
+             else:
+-                raise aMCatNLOError, 'Not a valid output argument for shower job :  %d' % args[1]
++                raise aMCatNLOError('Not a valid output argument for shower job :  %d' % args[1])
+             #submitting
+             self.cluster.submit2(exe, args, cwd=cwd, 
+                     input_files=input_files, output_files=output_files)
+@@ -4960,7 +4965,7 @@ RESTART = %(mint_mode)s
+                 output_files.append('%s/results.dat' % current)
+ 
+         else:
+-            raise aMCatNLOError, 'not valid arguments: %s' %(', '.join(args))
++            raise aMCatNLOError('not valid arguments: %s' %(', '.join(args)))
+ 
+         #Find the correct PDF input file
+         pdfinput = self.get_pdf_input_filename()
+@@ -5216,7 +5221,7 @@ RESTART = %(mint_mode)s
+                     tests, exe, self.options['run_mode']])
+         try:
+             compile_cluster.wait(self.me_dir, update_status)
+-        except Exception, error:
++        except Exception as error:
+             logger.warning("Fail to compile the Subprocesses")
+             if __debug__:
+                 raise
+@@ -5612,7 +5617,7 @@ if '__main__' == __name__:
+         try:
+             (options, args) = parser.parse_args(sys.argv[1:len(sys.argv)-i])
+             done = True
+-        except MyOptParser.InvalidOption, error:
++        except MyOptParser.InvalidOption as error:
+             pass
+         else:
+             args += sys.argv[len(sys.argv)-i:]
+@@ -5620,8 +5625,8 @@ if '__main__' == __name__:
+         # raise correct error:                                                                                                                                                                                  
+         try:
+             (options, args) = parser.parse_args()
+-        except MyOptParser.InvalidOption, error:
+-            print error
++        except MyOptParser.InvalidOption as error:
++            print(error)
+             sys.exit(2)
+ 
+     if len(args) == 0:
+@@ -5640,7 +5645,7 @@ if '__main__' == __name__:
+             level = int(options.logging)
+         else:
+             level = eval('logging.' + options.logging)
+-        print os.path.join(root_path, 'internal', 'me5_logging.conf')
++        print(os.path.join(root_path, 'internal', 'me5_logging.conf'))
+         logging.config.fileConfig(os.path.join(root_path, 'internal', 'me5_logging.conf'))
+         logging.root.setLevel(level)
+         logging.getLogger('madgraph').setLevel(level)
+@@ -5661,16 +5666,16 @@ if '__main__' == __name__:
+ 
+             if not hasattr(cmd_line, 'do_%s' % args[0]):
+                 if parser_error:
+-                    print parser_error
+-                    print 'and %s  can not be interpreted as a valid command.' % args[0]
++                    print(parser_error)
++                    print('and %s  can not be interpreted as a valid command.' % args[0])
+                 else:
+-                    print 'ERROR: %s  not a valid command. Please retry' % args[0]
++                    print('ERROR: %s  not a valid command. Please retry' % args[0])
+             else:
+                 cmd_line.use_rawinput = False
+                 cmd_line.run_cmd(' '.join(args))
+                 cmd_line.run_cmd('quit')
+ 
+     except KeyboardInterrupt:
+-        print 'quit on KeyboardInterrupt'
++        print('quit on KeyboardInterrupt')
+         pass
+ 
 diff -rupN MadGraph_pristine/madgraph/interface/common_run_interface.py ../contrib/MadGraph/madgraph/interface/common_run_interface.py
 --- MadGraph_pristine/madgraph/interface/common_run_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/common_run_interface.py	2020-10-30 01:26:23.633372717 +1100
++++ ../contrib/MadGraph/madgraph/interface/common_run_interface.py	2020-10-30 20:49:24.510460964 +1100
 @@ -33,7 +33,11 @@ import time
  import traceback
  import urllib
@@ -2886,7 +3505,7 @@ diff -rupN MadGraph_pristine/madgraph/interface/common_run_interface.py ../contr
                              param_card_iterator.store_entry(next_name, store_for_scan(obj)(), param_card_path=card_path)
 diff -rupN MadGraph_pristine/madgraph/interface/extended_cmd.py ../contrib/MadGraph/madgraph/interface/extended_cmd.py
 --- MadGraph_pristine/madgraph/interface/extended_cmd.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/extended_cmd.py	2020-10-30 01:26:23.633372717 +1100
++++ ../contrib/MadGraph/madgraph/interface/extended_cmd.py	2020-10-30 20:49:24.510460964 +1100
 @@ -15,6 +15,7 @@
  """  A file containing different extension of the cmd basic python library"""
  
@@ -3198,9 +3817,558 @@ diff -rupN MadGraph_pristine/madgraph/interface/extended_cmd.py ../contrib/MadGr
          self.close()
          self.lines = self.text.split('\n')
      
+diff -rupN MadGraph_pristine/madgraph/interface/launch_ext_program.py ../contrib/MadGraph/madgraph/interface/launch_ext_program.py
+--- MadGraph_pristine/madgraph/interface/launch_ext_program.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/interface/launch_ext_program.py	2020-10-30 20:49:24.510460964 +1100
+@@ -118,7 +118,7 @@ class ExtLauncher(object):
+             "particles."
+                                          
+         if not self.force:
+-            if msg:  print msg
++            if msg:  print(msg)
+             question = 'Do you want to edit file: %(card)s?' % {'card':filename}
+             choices = ['y', 'n']
+             path_info = 'path of the new %(card)s' % {'card':os.path.basename(filename)}
+@@ -153,7 +153,7 @@ class MadLoopLauncher(ExtLauncher):
+ 
+         if filename == 'PS.input':
+             if not self.force:
+-                if msg!='':  print msg
++                if msg!='':  print(msg)
+                 question = 'Do you want to specify the Phase-Space point: %(card)s?' % {'card':filename}
+                 choices = ['y', 'n']
+                 path_info = 'path of the PS.input file'
+@@ -204,8 +204,8 @@ class MadLoopLauncher(ExtLauncher):
+                                 curr_path, sub_path, infos,
+                                 req_files = ['HelFilter.dat','LoopFilter.dat'])
+                 if nps == None:
+-                    raise MadGraph5Error,"MadLoop could not initialize the process %s"\
+-                      %shell_name
++                    raise MadGraph5Error("MadLoop could not initialize the process %s"\
++                      %shell_name)
+                 logger.debug(("MadLoop initialization performed for %s"+\
+                         " using %d PS points (%s)")\
+                         %(shell_name,abs(nps),\
+@@ -222,13 +222,13 @@ class MadLoopLauncher(ExtLauncher):
+                 # check
+                 t1, t2, ram_usage = me_cmd.MadLoopInitializer.make_and_run(curr_path)
+                 if t1==None or t2==None:
+-                    raise MadGraph5Error,"Error while running process %s."\
+-                                                                     %shell_name
++                    raise MadGraph5Error("Error while running process %s."\
++                                                                     %shell_name)
+                 try:
+                     rFile=open(os.path.join(curr_path,'result.dat'), 'r')
+                 except IOError:
+-                    raise MadGraph5Error,"Could not find result file %s."%\
+-                                       str(os.path.join(curr_path,'result.dat'))
++                    raise MadGraph5Error("Could not find result file %s."%\
++                                       str(os.path.join(curr_path,'result.dat')))
+                 # The result are returned as a dictionary.
+                 result = evaluator.parse_check_output(rFile,format='dict')
+                 for line in self.format_res_string(result, shell_name):
+@@ -543,7 +543,7 @@ class aMCatNLOLauncher(ExtLauncher):
+                 continue
+             try:
+                 usecmd.exec_cmd(line)
+-            except Exception, error:
++            except Exception as error:
+                 misc.sprint('Command %s fails with msg: %s'%(str(line), \
+                                                                     str(error)))
+                 pass
+@@ -726,7 +726,7 @@ class Pythia8Launcher(ExtLauncher):
+             date_file_list.append((lastmod_date, os.path.split(file)[-1]))
+ 
+         if not date_file_list:
+-            raise MadGraph5Error, 'No Pythia output found'
++            raise MadGraph5Error('No Pythia output found')
+         # Sort files according to date with newest first
+         date_file_list.sort()
+         date_file_list.reverse()
+@@ -749,7 +749,7 @@ class Pythia8Launcher(ExtLauncher):
+                     break
+         
+         if self.name == '':
+-            raise MadGraph5Error, 'too many runs in this directory'
++            raise MadGraph5Error('too many runs in this directory')
+ 
+         # Find all exported models
+         models = misc.glob("Processes_*", pjoin(self.running_dir,os.path.pardir))
+@@ -774,16 +774,16 @@ class Pythia8Launcher(ExtLauncher):
+         """launch the main program"""
+ 
+         # Make pythia8
+-        print "Running make for pythia8 directory"
++        print("Running make for pythia8 directory")
+         if self.model_dir:
+-            print "Running make in %s" % self.model_dir
++            print("Running make in %s" % self.model_dir)
+             misc.compile(cwd=self.model_dir, mode='cpp')
+         # Finally run make for executable
+         makefile = self.executable.replace("main_","Makefile_")
+-        print "Running make with %s" % makefile
++        print("Running make with %s" % makefile)
+         misc.compile(arg=['-f', makefile], cwd=self.running_dir, mode='cpp')
+         
+-        print "Running " + self.executable
++        print("Running " + self.executable)
+         
+         output = open(os.path.join(self.running_dir, self.name), 'w')
+         if not self.executable.startswith('./'):
+@@ -795,8 +795,8 @@ class Pythia8Launcher(ExtLauncher):
+         path = os.path.join(self.running_dir, self.name) 
+         pydoc.pager(open(path).read())
+ 
+-        print "Output of the run is found at " + \
+-              os.path.realpath(os.path.join(self.running_dir, self.name))
++        print("Output of the run is found at " + \
++              os.path.realpath(os.path.join(self.running_dir, self.name)))
+ 
+ # old compatibility shortcut
+ open_file = misc.open_file
+diff -rupN MadGraph_pristine/madgraph/interface/loop_interface.py ../contrib/MadGraph/madgraph/interface/loop_interface.py
+--- MadGraph_pristine/madgraph/interface/loop_interface.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/interface/loop_interface.py	2020-10-30 20:49:24.514460951 +1100
+@@ -95,7 +95,7 @@ class CheckLoop(mg_interface.CheckValidF
+         mg_interface.MadGraphCmd.check_output(self,args, default=default)
+ 
+         if self._export_format not in self.supported_ML_format:
+-            raise self.InvalidCmd, "not supported format %s" % self._export_format
++            raise self.InvalidCmd("not supported format %s" % self._export_format)
+ 
+         
+     def check_launch(self, args, options):
+@@ -291,7 +291,7 @@ class CommonLoopInterface(mg_interface.M
+ 
+         if coupling_type!= ['QCD'] and loop_type not in ['virtual','noborn']:
+             c = ' '.join(coupling_type)
+-            raise self.InvalidCmd, 'MG5aMC can only handle QCD at NLO accuracy.\n We can however compute loop with [virt=%s].\n We can also compute cross-section for loop-induced processes with [noborn=%s]' % (c,c)
++            raise self.InvalidCmd('MG5aMC can only handle QCD at NLO accuracy.\n We can however compute loop with [virt=%s].\n We can also compute cross-section for loop-induced processes with [noborn=%s]' % (c,c))
+         
+ 
+         if not isinstance(self._curr_model,loop_base_objects.LoopModel) or \
+@@ -824,7 +824,7 @@ own and set the path to its library in t
+                 if arg.startswith('--loop_filter='):
+                     loop_filter = arg[14:]
+                 if not isinstance(self, extended_cmd.CmdShell):
+-                    raise self.InvalidCmd, "loop_filter is not allowed in web mode"
++                    raise self.InvalidCmd("loop_filter is not allowed in web mode")
+             args = [a for a in args if not a.startswith('--loop_filter=')]
+ 
+             # Rejoin line
+diff -rupN MadGraph_pristine/madgraph/interface/madevent_interface.py ../contrib/MadGraph/madgraph/interface/madevent_interface.py
+--- MadGraph_pristine/madgraph/interface/madevent_interface.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/interface/madevent_interface.py	2020-10-30 20:49:24.514460951 +1100
+@@ -31,7 +31,12 @@ import subprocess
+ import sys
+ import time
+ import tarfile
+-import StringIO
++
++try:
++    import StringIO ## for Python 2
++except ImportError:
++    from io import StringIO ## for Python 3
++
+ import shutil
+ import copy
+ 
+@@ -54,7 +59,7 @@ logger_stderr = logging.getLogger('madev
+  
+ try:
+     import madgraph
+-except ImportError,error: 
++except ImportError as error: 
+     # import from madevent directory
+     MADEVENT = True
+     import internal.extended_cmd as cmd
+@@ -1732,8 +1737,8 @@ class CompleteForCmd(CheckValidForCmd):
+         return self.deal_multiple_categories(possibilites, formatting)
+     
+         
+-       except Exception, error:
+-           print error
++       except Exception as error:
++           print(error)
+ 
+ 
+     def complete_history(self, text, line, begidx, endidx):
+@@ -2299,13 +2304,13 @@ class MadEventCmd(CompleteForCmd, CmdExt
+                         out[name].append(tag)
+                     else:
+                         out[name] = [tag]
+-                print 'the runs available are:'
++                print('the runs available are:')
+                 for run_name, tags in out.items():
+-                    print '  run: %s' % run_name
+-                    print '       tags: ', 
+-                    print ', '.join(tags)
++                    print('  run: %s' % run_name)
++                    print('       tags: ',) 
++                    print(', '.join(tags))
+             else:
+-                print 'No run detected.'
++                print('No run detected.')
+                 
+         elif  args[0] == 'options':
+             outstr = "                              Run Options    \n"
+@@ -2591,7 +2596,7 @@ Beware that MG5aMC now changes your runt
+         
+         if self.run_card['boost_event'].startswith('lambda'):
+             if not isinstance(self, cmd.CmdShell):
+-                raise Exception, "boost not allowed online"
++                raise Exception("boost not allowed online")
+             filter = eval(self.run_card['boost_event'])
+         else:
+             raise Exception
+@@ -2606,7 +2611,7 @@ Beware that MG5aMC now changes your runt
+                 event_path = p
+                 break
+         else:
+-            raise Exception, "fail to find event file for the boost"
++            raise Exception("fail to find event file for the boost")
+             
+             
+         lhe = lhe_parser.EventFile(event_path)
+@@ -3359,8 +3364,8 @@ Beware that this can be dangerous for lo
+         if P_zero_result:
+             if len(P_zero_result) == len(subproc):
+                 Pdir = pjoin(self.me_dir, 'SubProcesses',subproc[0].strip())
+-                raise ZeroResult, '%s' % \
+-                    open(pjoin(Pdir,'ajob.no_ps.log')).read()
++                raise ZeroResult( '%s' % \
++                    open(pjoin(Pdir,'ajob.no_ps.log')).read())
+             else:
+                 logger.warning(''' %s SubProcesses doesn\'t have available phase-space.
+             Please check mass spectrum.''' % ','.join(P_zero_result))
+@@ -4349,9 +4354,9 @@ You can follow PY8 run with the followin
+                 else:
+                     n_events = PY8_Card['Main:numberOfEvents']
+                     if n_events > n_available_events:
+-                        raise self.InvalidCmd, 'You specified more events (%d) in the PY8 parameter'%n_events+\
++                        raise self.InvalidCmd( 'You specified more events (%d) in the PY8 parameter'%n_events+\
+                             "'Main:numberOfEvents' than the total number of events available (%d)"%n_available_events+\
+-                            ' in the event file:\n %s'%pjoin(self.me_dir,'Events',self.run_name,PY8_Card.subruns[0]['Beams:LHEF'])
++                            ' in the event file:\n %s'%pjoin(self.me_dir,'Events',self.run_name,PY8_Card.subruns[0]['Beams:LHEF']))
+ 
+                 # Implement a security to insure a minimum numbe of events per job
+                 if self.options['run_mode']==2:
+@@ -4377,9 +4382,9 @@ You can follow PY8 run with the followin
+                                       cwd=pjoin(self.me_dir,'Events',self.run_name))
+                     stdout.close()
+                 if ret_code != 0:
+-                    raise self.InvalidCmd, 'Pythia8 shower interrupted with return'+\
++                    raise self.InvalidCmd( 'Pythia8 shower interrupted with return'+\
+                         ' code %d.\n'%ret_code+\
+-                        'You can find more information in this log file:\n%s'%pythia_log
++                        'You can find more information in this log file:\n%s'%pythia_log)
+             else:
+                 if self.run_card['event_norm']=='sum':
+                     logger.error("")
+@@ -4648,7 +4653,7 @@ tar -czf split_$1.tar.gz split_$1
+                                 break
+                         tail.close()
+                         if n_tail>1:
+-                            raise MadGraph5Error,'HEPMC files should only have one trailing command.'
++                            raise MadGraph5Error('HEPMC files should only have one trailing command.')
+                         ###################################################################### 
+                         # This is the most efficient way of putting together HEPMC's, *BUT*  #
+                         #    WARNING: NEED TO RENDER THE CODE BELOW SAFE TOWARDS INJECTION   #
+@@ -4820,14 +4825,14 @@ tar -czf split_$1.tar.gz split_$1
+                     if Ntry is None:
+                         Ntry = int(info.group('tried'))
+                     if Nacc==0:
+-                        raise self.InvalidCmd, 'Pythia8 shower failed since it'+\
+-                          ' did not accept any event from the MG5aMC event file.'
++                        raise self.InvalidCmd( 'Pythia8 shower failed since it'+\
++                          ' did not accept any event from the MG5aMC event file.')
+                     return sigma_m, Nacc, Ntry
+                 except ValueError:
+                     return None,None,None
+ 
+-        raise self.InvalidCmd, "Could not find cross-section and event number information "+\
+-                         "in Pythia8 log\n  '%s'."%log_file_path
++        raise self.InvalidCmd( "Could not find cross-section and event number information "+\
++                         "in Pythia8 log\n  '%s'."%log_file_path)
+     
+     def extract_cross_sections_from_DJR(self,djr_output):
+         """Extract cross-sections from a djr XML output."""
+@@ -4995,7 +5000,7 @@ tar -czf split_$1.tar.gz split_$1
+             # Calculate syscalc info based on syst.dat
+             try:
+                 self.run_syscalc('Pythia')
+-            except SysCalcError, error:
++            except SysCalcError as error:
+                 logger.error(str(error))
+             else:
+                 if os.path.exists(pjoin(self.me_dir,'Events', 'syst.dat')):
+@@ -5045,7 +5050,7 @@ tar -czf split_$1.tar.gz split_$1
+                         args.append('-f')
+                     try:
+                         self.exec_cmd('remove %s %s' % (run, ' '.join(args[1:]) ) )
+-                    except self.InvalidCmd, error:
++                    except self.InvalidCmd as error:
+                         logger.info(error)
+                         pass # run already clear
+                 return
+@@ -5073,7 +5078,7 @@ tar -czf split_$1.tar.gz split_$1
+             if 'parton' in mode or 'all' in mode:
+                 try:
+                     if self.results[run][0]['tag'] != tag:
+-                        raise Exception, 'dummy'
++                        raise Exception( 'dummy')
+                 except Exception:
+                     pass
+                 else:
+@@ -5125,7 +5130,7 @@ tar -czf split_$1.tar.gz split_$1
+         if 'all' in mode or 'channel' in mode:
+             try:
+                 if tag and self.results[run][0]['tag'] != tag:
+-                    raise Exception, 'dummy'
++                    raise Exception('dummy')
+             except Exception:
+                 pass
+             else:
+@@ -5158,10 +5163,10 @@ tar -czf split_$1.tar.gz split_$1
+                     return
+             elif any(['banner' not in os.path.basename(p) for p in to_delete]):
+                 if to_delete:
+-                    raise MadGraph5Error, '''Some output still exists for this run. 
++                    raise MadGraph5Error('''Some output still exists for this run. 
+                 Please remove those output first. Do for example: 
+                 remove %s all banner
+-                ''' % run
++                ''' % run)
+             else:
+                 shutil.rmtree(pjoin(self.me_dir, 'Events',run))
+                 if run in self.results:
+@@ -5283,7 +5288,7 @@ tar -czf split_$1.tar.gz split_$1
+                 shutil.move(filename, pjoin(self.me_dir, 'Events','syst.dat'))
+                 try:
+                     self.run_syscalc('Pythia')
+-                except SysCalcError, error:
++                except SysCalcError as error:
+                     logger.warning(str(error))
+                     return
+                 misc.gzip(pjoin(self.me_dir, 'Events','syst.dat'), "%s.gz" % filename)
+@@ -5365,7 +5370,7 @@ tar -czf split_$1.tar.gz split_$1
+             status = misc.call([exe] + argument, cwd=cwd, stdout=stdout, **opt)
+             logger.info('%s run in %f s' % (exe, time.time() -start))
+             if status:
+-                raise MadGraph5Error, '%s didn\'t stop properly. Stop all computation' % exe
++                raise MadGraph5Error('%s didn\'t stop properly. Stop all computation' % exe)
+ 
+ 
+         elif mode in [1,2]:
+@@ -5532,7 +5537,7 @@ tar -czf split_$1.tar.gz split_$1
+                 update_first = None
+             try:   
+                 self.cluster.wait(self.me_dir, update_status, update_first=update_first)            
+-            except Exception, error:
++            except Exception as error:
+                 logger.info(error)
+                 if not self.force:
+                     ans = self.ask('Cluster Error detected. Do you want to clean the queue? ("c"=continue the run anyway)',
+@@ -5544,7 +5549,7 @@ tar -czf split_$1.tar.gz split_$1
+                 elif ans == 'c':
+                     return self.monitor(run_type=run_type, mode=mode, html=html)
+                 raise
+-            except KeyboardInterrupt, error:
++            except KeyboardInterrupt as error:
+                 self.cluster.remove()
+                 raise                            
+         
+@@ -5867,8 +5872,8 @@ tar -czf split_$1.tar.gz split_$1
+         
+         self.random += 3
+         if self.random > 30081*30081: # can't use too big random number
+-            raise MadGraph5Error,\
+-                  'Random seed too large ' + str(self.random) + ' > 30081*30081'
++            raise MadGraph5Error(\
++                  'Random seed too large ' + str(self.random) + ' > 30081*30081')
+         if self.run_card['python_seed'] == -2: 
+             import random
+             random.seed(self.random)
+@@ -6000,7 +6005,7 @@ tar -czf split_$1.tar.gz split_$1
+             lhaid += [l for l in self.run_card['sys_pdf'].split() if not l.isdigit() or int(l) > 500]
+         try:
+             pdfsets_dir = self.get_lhapdf_pdfsetsdir()
+-        except Exception, error:
++        except Exception as error:
+             logger.debug(str(error))
+             logger.warning('Systematic computation requires lhapdf to run. Bypass SysCalc')
+             return
+@@ -6069,21 +6074,21 @@ tar -czf split_$1.tar.gz split_$1
+                         xqcut = abs(self.run_card['xqcut'])
+                         for value in self.run_card['sys_matchscale'].split():
+                             if float(value) < qcut:
+-                                raise SysCalcError, 'qcut value for sys_matchscale lower than qcut in pythia_card. Bypass syscalc'
++                                raise SysCalcError('qcut value for sys_matchscale lower than qcut in pythia_card. Bypass syscalc')
+                             if float(value) < xqcut:
+-                                raise SysCalcError, 'qcut value for sys_matchscale lower than xqcut in run_card. Bypass syscalc'
++                                raise SysCalcError('qcut value for sys_matchscale lower than xqcut in run_card. Bypass syscalc')
+                         
+                         
+                 event_path = pjoin(event_dir,'syst.dat')
+                 output = pjoin(event_dir, 'syscalc.dat')
+             else:
+-                raise self.InvalidCmd, 'Invalid mode %s' % mode
++                raise self.InvalidCmd('Invalid mode %s' % mode)
+             
+         if not os.path.exists(event_path):
+             if os.path.exists(event_path+'.gz'):
+                 misc.gunzip(event_path+'.gz')
+             else:
+-                raise SysCalcError, 'Events file %s does not exits' % event_path
++                raise SysCalcError('Events file %s does not exits' % event_path)
+         
+         self.update_status('Calculating systematics for %s level' % mode, level = mode.lower())
+         try:
+@@ -6094,7 +6099,7 @@ tar -czf split_$1.tar.gz split_$1
+                             cwd=event_dir)
+             # Wait 5 s to make sure file is finished writing
+             time.sleep(5)            
+-        except OSError, error:
++        except OSError as error:
+             logger.error('fail to run syscalc: %s. Please check that SysCalc is correctly installed.' % error)
+         else:
+             if not os.path.exists(output):
+@@ -6366,9 +6371,9 @@ class GridPackCmd(MadEventCmd):
+         if me_dir and nb_event and seed:
+             self.launch(nb_event, seed)
+         else:
+-            raise MadGraph5Error,\
++            raise MadGraph5Error(\
+                   'Gridpack run failed: ' + str(me_dir) + str(nb_event) + \
+-                  str(seed)
++                  str(seed))
+ 
+ 
+     def update_status(self, *args, **opts):
+@@ -6400,7 +6405,7 @@ class GridPackCmd(MadEventCmd):
+         """write the grid_card.dat file at appropriate location"""
+         
+         # first try to write grid_card within the gridpack.
+-        print "WRITE GRIDCARD", self.me_dir
++        print("WRITE GRIDCARD", self.me_dir)
+         if self.readonly:
+             if not os.path.exists('Cards'):
+                 os.mkdir('Cards')
+@@ -6553,9 +6558,9 @@ class GridPackCmd(MadEventCmd):
+                              (self.nb_refine, subdir, nb_proc+1, len(subproc)))
+                     if os.path.exists(pjoin(self.me_dir,'error')):
+                         self.monitor(html=True)
+-                        raise MadEventError, \
++                        raise MadEventError( \
+                             'Error detected in dir %s: %s' % \
+-                            (Pdir, open(pjoin(self.me_dir,'error')).read())
++                            (Pdir, open(pjoin(self.me_dir,'error')).read()))
+         self.monitor(run_type='All job submitted for refine number %s' % 
+                                                                  self.nb_refine)
+         
+@@ -6797,8 +6802,8 @@ class MadLoopInitializer(object):
+             infos={}
+         
+         if SubProc_dir is None and run_dir is None:
+-            raise MadGraph5Error, 'At least one of [SubProc_dir,run_dir] must'+\
+-                                           ' be provided in run_initialization.'
++            raise MadGraph5Error('At least one of [SubProc_dir,run_dir] must'+\
++                                           ' be provided in run_initialization.')
+         
+         # If the user does not specify where is check_sa.f, then it is assumed
+         # to be one levels above run_dir
+@@ -6811,8 +6816,8 @@ class MadLoopInitializer(object):
+             if directories:
+                 run_dir = directories[0]
+             else:
+-                raise MadGraph5Error, 'Could not find a valid running directory'+\
+-                                                      ' in %s.'%str(SubProc_dir)
++                raise MadGraph5Error('Could not find a valid running directory'+\
++                                                      ' in %s.'%str(SubProc_dir))
+ 
+         # Use the presence of the file born_matrix.f to decide if it is a 
+         # loop-induced process or not. It's not crucial, but just that because
+@@ -6830,8 +6835,8 @@ class MadLoopInitializer(object):
+ 
+         MLCardPath = pjoin(SubProc_dir,'MadLoopParams.dat')
+         if not os.path.isfile(MLCardPath):
+-            raise MadGraph5Error, 'Could not find MadLoopParams.dat at %s.'\
+-                                                                     %MLCardPath
++            raise MadGraph5Error('Could not find MadLoopParams.dat at %s.'\
++                                                                     %MLCardPath)
+         else:
+             MLCard      = banner_mod.MadLoopParam(MLCardPath) 
+             MLCard_orig = banner_mod.MadLoopParam(MLCard)
+@@ -6923,8 +6928,8 @@ class MadLoopInitializer(object):
+ 
+         MLCardPath = pjoin(proc_dir,'SubProcesses','MadLoopParams.dat')
+         if not os.path.isfile(MLCardPath):
+-            raise MadGraph5Error, 'Could not find MadLoopParams.dat at %s.'\
+-                                                                     %MLCardPath        
++            raise MadGraph5Error('Could not find MadLoopParams.dat at %s.'\
++                                                                     %MLCardPath)        
+         MLCard      = banner_mod.MadLoopParam(MLCardPath) 
+ 
+         req_files = ['HelFilter.dat','LoopFilter.dat']
+@@ -7035,11 +7040,11 @@ class MadLoopInitializer(object):
+         for v_folder in VirtualFolders:
+             init = init_info[v_folder]
+             if init['nPS'] is None:
+-                raise MadGraph5Error, 'Failed the initialization of'+\
++                raise MadGraph5Error('Failed the initialization of'+\
+                   " loop-induced matrix element '%s'%s."%\
+                   (os.path.basename(v_folder),' (using default n_PS points)' if\
+                     n_PS is None else ' (trying with a maximum of %d PS points)'\
+-                                                               %(max_mult*n_PS))
++                                                               %(max_mult*n_PS)))
+             if init['nPS']==0:
+                 logger.debug("Nothing to be done in '%s', all filters already "%\
+                              os.path.basename(v_folder)+\
+@@ -7090,7 +7095,7 @@ if '__main__' == __name__:
+         try:
+             (options, args) = parser.parse_args(sys.argv[1:len(sys.argv)-i])
+             done = True
+-        except MyOptParser.InvalidOption, error:
++        except MyOptParser.InvalidOption as error:
+             pass
+         else:
+             args += sys.argv[len(sys.argv)-i:]
+@@ -7098,8 +7103,8 @@ if '__main__' == __name__:
+         # raise correct error:                                                                                                                                                                                  
+         try:
+             (options, args) = parser.parse_args()
+-        except MyOptParser.InvalidOption, error:
+-            print error
++        except MyOptParser.InvalidOption as error:
++            print(error)
+             sys.exit(2)
+ 
+     if len(args) == 0:
+@@ -7137,17 +7142,17 @@ if '__main__' == __name__:
+                 cmd_line = MadEventCmdShell(os.path.dirname(root_path),force_run=True)
+             if not hasattr(cmd_line, 'do_%s' % args[0]):
+                 if parser_error:
+-                    print parser_error
+-                    print 'and %s  can not be interpreted as a valid command.' % args[0]
++                    print(parser_error)
++                    print('and %s  can not be interpreted as a valid command.' % args[0])
+                 else:
+-                    print 'ERROR: %s  not a valid command. Please retry' % args[0]
++                    print('ERROR: %s  not a valid command. Please retry' % args[0])
+             else:
+                 cmd_line.use_rawinput = False
+                 cmd_line.run_cmd(' '.join(args))
+                 cmd_line.run_cmd('quit')
+ 
+     except KeyboardInterrupt:
+-        print 'quit on KeyboardInterrupt'
++        print('quit on KeyboardInterrupt')
+         pass
+ 
+ 
 diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib/MadGraph/madgraph/interface/madgraph_interface.py
 --- MadGraph_pristine/madgraph/interface/madgraph_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/madgraph_interface.py	2020-10-30 01:26:23.637372592 +1100
++++ ../contrib/MadGraph/madgraph/interface/madgraph_interface.py	2020-10-30 20:50:36.586234836 +1100
 @@ -24,6 +24,7 @@ import glob
  import logging
  import optparse
@@ -3223,6 +4391,15 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
  import traceback
  import time
  import inspect
+@@ -185,7 +191,7 @@ class CmdExtended(cmd.Cmd):
+         info = misc.get_pkg_info()
+         info_line = ""
+ 
+-        if info.has_key('version') and  info.has_key('date'):
++        if 'version' in info and 'date' in info:
+             len_version = len(info['version'])
+             len_date = len(info['date'])
+             if len_version + len_date < 30:
 @@ -844,10 +850,10 @@ class CheckValidForCmd(cmd.CheckCmd):
  
          if len(args) < 1:
@@ -3283,6 +4460,15 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
  
      def check_load(self, args):
          """ check the validity of the line"""
+@@ -1373,7 +1379,7 @@ This will take effect only in a NEW term
+                 elif arg.startswith('--'):
+                     raise self.InvalidCmd('unknow command for \'save options\'')
+                 elif arg == 'global':
+-                    if os.environ.has_key('HOME'):
++                    if 'HOME' in os.environ:
+                         args.remove('global')
+                         args.insert(1,pjoin(os.environ['HOME'],'.mg5','mg5_configuration.txt'))
+                         has_path = True
 @@ -1579,7 +1585,7 @@ This will take effect only in a NEW term
              elif path != 'auto':
                  if path in ['HELAS', 'tests', 'MadSpin', 'madgraph', 'mg5decay', 'vendor']:
@@ -3706,6 +4892,17 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
  
              if not self._done_export:
                  self.exec_cmd('output . -f')
+@@ -5385,8 +5391,8 @@ This implies that with decay chains:
+                  [p.get('antiname') for p in self._curr_model.get('particles') \
+                                                     if p.get('propagating')]
+ 
+-        self._couplings = list(set(sum([i.get('orders').keys() for i in \
+-                                        self._curr_model.get('interactions')], [])))
++        self._couplings = list(set(sum(list([i.get('orders').keys() for i in \
++                                        self._curr_model.get('interactions')]), [])))
+ 
+         self.add_default_multiparticles()
+ 
 @@ -5451,7 +5457,7 @@ This implies that with decay chains:
                  if multipart_name not in self._multiparticles:
                      #self.do_define(line)
@@ -3884,6 +5081,15 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
              try:
                  os.remove(pjoin(MG5DIR, 'Template','LO','Source','make_opts'))
                  shutil.copy(pjoin(MG5DIR, 'Template','LO','Source','.make_opts'),
+@@ -6669,7 +6675,7 @@ os.system('%s  -O -W ignore::Deprecation
+             self.options.update(self.options_madevent)
+ 
+         if not config_path:
+-            if os.environ.has_key('MADGRAPH_BASE'):
++            if 'MADGRAPH_BASE' in os.environ:
+                 config_path = pjoin(os.environ['MADGRAPH_BASE'],'mg5_configuration.txt')
+                 self.set_configuration(config_path, final=False)
+             if 'HOME' in os.environ:
 @@ -6811,8 +6817,8 @@ in the MG5aMC option 'samurai' (instead
                  # Default: try to set parameter
                  try:
@@ -3904,6 +5110,15 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
  
  
          ext_program.run()
+@@ -7367,7 +7373,7 @@ in the MG5aMC option 'samurai' (instead
+                  'variable to the full (absolute) /PATH/TO/fastjet-config (including fastjet-config).' +
+                         '\n MG5_aMC> set fastjet /PATH/TO/fastjet-config\n')
+                 self.options[args[0]] = None
+-                self.history.pop()
++                #self.history.pop()
+             elif int(output.split('.')[0]) < 3:
+                 logger.warning('%s is not ' % args[1] + \
+                         'v3 or greater. Please install FastJet v3+.')
 @@ -7601,7 +7607,7 @@ in the MG5aMC option 'samurai' (instead
                  self._export_dir = pjoin(self._export_dir, 'Pythia8_proc_%i' %i)
                  logger.info('Create output in %s' % self._export_dir)
@@ -3994,9 +5209,10 @@ diff -rupN MadGraph_pristine/madgraph/interface/madgraph_interface.py ../contrib
  
      def cmdloop(self, intro=None):
          cmd.SmartQuestion.cmdloop(self, intro)
+Binary files MadGraph_pristine/madgraph/interface/.madgraph_interface.py.swp and ../contrib/MadGraph/madgraph/interface/.madgraph_interface.py.swp differ
 diff -rupN MadGraph_pristine/madgraph/interface/master_interface.py ../contrib/MadGraph/madgraph/interface/master_interface.py
 --- MadGraph_pristine/madgraph/interface/master_interface.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/interface/master_interface.py	2020-10-30 01:26:23.637372592 +1100
++++ ../contrib/MadGraph/madgraph/interface/master_interface.py	2020-10-30 20:49:24.518460937 +1100
 @@ -153,7 +153,7 @@ class Switcher(object):
                      correct = False                    
                      
@@ -4041,9 +5257,159 @@ diff -rupN MadGraph_pristine/madgraph/interface/master_interface.py ../contrib/M
          
          if __debug__:
              self.debug_link_to_command() 
+diff -rupN MadGraph_pristine/madgraph/interface/reweight_interface.py ../contrib/MadGraph/madgraph/interface/reweight_interface.py
+--- MadGraph_pristine/madgraph/interface/reweight_interface.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/interface/reweight_interface.py	2020-10-30 20:49:24.518460937 +1100
+@@ -203,7 +203,7 @@ class ReweightInterface(extended_cmd.Cmd
+ 
+         if not process:
+             msg = 'Invalid proc_card information in the file (no generate line):\n %s' % self.banner['mg5proccard']
+-            raise Exception, msg
++            raise Exception(msg)
+         process, option = mg_interface.MadGraphCmd.split_process_line(process)
+         self.proc_option = option
+         self.is_decay = len(process.split('>',1)[0].split()) == 1 
+@@ -294,8 +294,8 @@ class ReweightInterface(extended_cmd.Cmd
+ 
+             try:
+                 event.check() #check 4 momenta/...
+-            except Exception, error:
+-                print event
++            except Exception as error:
++                print(event)
+                 raise error
+             sum_of_weight += event.wgt
+             sum_of_abs_weight += abs(event.wgt)
+@@ -335,11 +335,11 @@ class ReweightInterface(extended_cmd.Cmd
+     def help_change(self):
+         """help for change command"""
+     
+-        print "change model X :use model X for the reweighting"
+-        print "change process p p > e+ e-: use a new process for the reweighting"
+-        print "change process p p > mu+ mu- --add : add one new process to existing ones"
+-        print "change output [default|2.0|unweight]:"
+-        print "               default: add weight(s) to the current file"    
++        print("change model X :use model X for the reweighting")
++        print("change process p p > e+ e-: use a new process for the reweighting")
++        print("change process p p > mu+ mu- --add : add one new process to existing ones")
++        print("change output [default|2.0|unweight]:")
++        print("               default: add weight(s) to the current file"    )
+     
+     def do_change(self, line):
+         """allow to define a second model/processes"""
+@@ -402,7 +402,7 @@ class ReweightInterface(extended_cmd.Cmd
+             if len(args) == 2:
+                 try:
+                     self.systematics = banner.ConfigFile.format_variable(args[1], bool)
+-                except Exception, error:
++                except Exception as error:
+                     self.systematics = args[1:]
+             else:
+                 self.systematics = args[1:]
+@@ -484,8 +484,8 @@ class ReweightInterface(extended_cmd.Cmd
+                 while not os.path.exists(pjoin(self.me_dir,'rw_me','rwgt.pkl')):
+                     time.sleep(10+i)
+                     i+=5
+-                    print 'wait for pickle'                  
+-                print "loading from pickle"
++                    print('wait for pickle')                  
++                print("loading from pickle")
+                 if not self.rwgt_dir:
+                     self.rwgt_dir = self.me_dir
+                 self.load_from_pickle(keep_name=True)
+@@ -732,7 +732,7 @@ class ReweightInterface(extended_cmd.Cmd
+                 Shell_internal = None
+             import madgraph.interface.extended_cmd as extended_cmd
+             if not isinstance(self.mother, (extended_cmd.CmdShell, Shell_internal)): 
+-                raise Exception, "scan are not allowed on the Web"
++                raise Exception( "scan are not allowed on the Web")
+             # at least one scan parameter found. create an iterator to go trough the cards
+             main_card = check_param_card.ParamCardIterator(new_card)
+             if self.options['rwgt_name']:
+@@ -814,7 +814,7 @@ class ReweightInterface(extended_cmd.Cmd
+             try:
+                 if old_param['sminputs'].get(3)- new_param['sminputs'].get(3) > 1e-3 * new_param['sminputs'].get(3):
+                     logger.warning("We found different value of alpha_s. Note that the value of alpha_s used is the one associate with the event and not the one from the cards.")
+-            except Exception, error:
++            except Exception as error:
+                 logger.debug("error in check of alphas: %s" % str(error))
+                 pass #this is a security                
+             if not self.second_process:
+@@ -993,7 +993,7 @@ class ReweightInterface(extended_cmd.Cmd
+             else:
+                 nhel = 0
+             misc.sprint(nhel, Pdir, hel_dict)                        
+-            raise Exception, "Invalid matrix element for original computation (weight=0)"
++            raise Exception("Invalid matrix element for original computation (weight=0)")
+ 
+         return {'orig': orig_wgt, '': w_new/w_orig*orig_wgt*jac}
+      
+@@ -1327,7 +1327,7 @@ class ReweightInterface(extended_cmd.Cmd
+             logger.info("RETRY with %s", commandline)
+             mgcmd.exec_cmd(commandline, precmd=True)
+             has_nlo = False
+-        except Exception, error:
++        except Exception as error:
+             raise
+         
+         commandline = 'output standalone_rw %s --prefix=int' % pjoin(path_me,data['paths'][0])
+@@ -1364,7 +1364,7 @@ class ReweightInterface(extended_cmd.Cmd
+                     if tag in data['id2path']:
+                         if not Pdir == data['id2path'][tag][1]:
+                             misc.sprint(tag, Pdir, data['id2path'][tag][1])
+-                            raise self.InvalidCmd, '2 different process have the same final states. This module can not handle such situation'
++                            raise self.InvalidCmd('2 different process have the same final states. This module can not handle such situation')
+                         else:
+                             continue
+                     # build the helicity dictionary
+@@ -1399,7 +1399,7 @@ class ReweightInterface(extended_cmd.Cmd
+         
+         if os.path.exists(pjoin(path_me, data['paths'][1], 'Cards', 'MadLoopParams.dat')):
+             if self.multicore == 'create':
+-                print "compile OLP", data['paths'][1]
++                print("compile OLP", data['paths'][1])
+                 # It is potentially unsafe to use several cores, We limit ourself to one for now
+                 # n_cores = self.mother.options['nb_core']
+                 n_cores = 1
+@@ -1450,7 +1450,7 @@ class ReweightInterface(extended_cmd.Cmd
+             m_opts['lhapdfversion'] = 5 # 6 always fail on my computer since 5 is compatible but slower always use 5
+             m_opts['llhapdf'] = self.mother.get_lhapdf_libdir()                       
+         else:
+-            raise Exception, "NLO reweighting requires LHAPDF to work correctly"
++            raise Exception("NLO reweighting requires LHAPDF to work correctly")
+ 
+         path = pjoin(path_me,data['paths'][1], 'Source', 'make_opts')             
+         common_run_interface.CommonRunCmd.update_make_opts_full(path, m_opts)      
+@@ -1484,7 +1484,7 @@ class ReweightInterface(extended_cmd.Cmd
+                     if (tag,'V') in data['id2path']:
+                         if not Pdir == data['id2path'][(tag,'V')][1]:
+                             misc.sprint(tag, Pdir, self.id_to_path[(tag,'V')][1])
+-                            raise self.InvalidCmd, '2 different process have the same final states. This module can not handle such situation'
++                            raise self.InvalidCmd('2 different process have the same final states. This module can not handle such situation')
+                         else:
+                             continue
+                     # build the helicity dictionary
+@@ -1628,7 +1628,7 @@ class ReweightInterface(extended_cmd.Cmd
+                     self.combine_wgt = mymod.get_wgt
+ 
+             if self.multicore == 'create':
+-                print "compile OLP", data['paths'][1]
++                print("compile OLP", data['paths'][1])
+                 try:
+                     misc.compile(['OLP_static'], cwd=pjoin(path_me, data['paths'][1],'SubProcesses'),
+                              nb_core=self.mother.options['nb_core'])
+@@ -1663,7 +1663,7 @@ class ReweightInterface(extended_cmd.Cmd
+                 m_opts['lhapdfversion'] = 5 # 6 always fail on my computer since 5 is compatible but slower always use 5
+                 m_opts['llhapdf'] = self.mother.get_lhapdf_libdir()                        
+             else:
+-                raise Exception, "NLO_tree reweighting requires LHAPDF to work correctly"
++                raise Exception("NLO_tree reweighting requires LHAPDF to work correctly")
+  
+             path = pjoin(path_me,data['paths'][1], 'Source', 'make_opts')             
+             common_run_interface.CommonRunCmd.update_make_opts_full(path, m_opts)      
 diff -rupN MadGraph_pristine/madgraph/iolibs/export_cpp.py ../contrib/MadGraph/madgraph/iolibs/export_cpp.py
 --- MadGraph_pristine/madgraph/iolibs/export_cpp.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/export_cpp.py	2020-10-30 01:26:23.637372592 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_cpp.py	2020-10-30 20:49:24.518460937 +1100
 @@ -92,8 +92,8 @@ class OneProcessExporterCPP(object):
          elif isinstance(matrix_elements, helas_objects.HelasMatrixElementList):
              self.matrix_elements = matrix_elements
@@ -4122,9 +5488,133 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/export_cpp.py ../contrib/MadGraph/m
  
              if final_id_list:
                  res_lines.append("int flavors[%d][%d] = {%s};" % \
+diff -rupN MadGraph_pristine/madgraph/iolibs/export_fks.py ../contrib/MadGraph/madgraph/iolibs/export_fks.py
+--- MadGraph_pristine/madgraph/iolibs/export_fks.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_fks.py	2020-10-30 20:49:24.518460937 +1100
+@@ -92,8 +92,8 @@ class ProcessExporterFortranFKS(loop_exp
+         #First copy the full template tree if dir_path doesn't exit
+         if not os.path.isdir(dir_path):
+             if not mgme_dir:
+-                raise MadGraph5Error, \
+-                      "No valid MG_ME path given for MG4 run directory creation."
++                raise MadGraph5Error( \
++                      "No valid MG_ME path given for MG4 run directory creation.")
+             logger.info('initialize a new directory: %s' % \
+                         os.path.basename(dir_path))
+             shutil.copytree(os.path.join(mgme_dir, 'Template', 'NLO'), dir_path, True)
+@@ -110,8 +110,8 @@ class ProcessExporterFortranFKS(loop_exp
+             
+         elif not os.path.isfile(os.path.join(dir_path, 'TemplateVersion.txt')):
+             if not mgme_dir:
+-                raise MadGraph5Error, \
+-                      "No valid MG_ME path given for MG4 run directory creation."
++                raise MadGraph5Error( \
++                      "No valid MG_ME path given for MG4 run directory creation.")
+         try:
+             shutil.copy(os.path.join(mgme_dir, 'MGMEVersion.txt'), dir_path)
+         except IOError:
+@@ -129,7 +129,7 @@ class ProcessExporterFortranFKS(loop_exp
+                 try:
+                     subprocess.call([os.path.join('bin', 'internal', 'clean_template')], \
+                                                                        cwd=dir_path)
+-                except Exception, why:
++                except Exception as why:
+                     raise MadGraph5Error('Failed to clean correctly %s: \n %s' \
+                                                 % (os.path.basename(dir_path),why))
+             #Write version info
+@@ -432,8 +432,8 @@ class ProcessExporterFortranFKS(loop_exp
+     def write_coef_specs_file(self, virt_me_list):
+         """writes the coef_specs.inc in the DHELAS folder. Should not be called in the 
+         non-optimized mode"""
+-        raise fks_common.FKSProcessError(), \
+-                "write_coef_specs should be called only in the loop-optimized mode"
++        raise fks_common.FKSProcessError()( \
++                "write_coef_specs should be called only in the loop-optimized mode")
+         
+         
+     #===============================================================================
+@@ -451,12 +451,12 @@ class ProcessExporterFortranFKS(loop_exp
+         cwd = os.getcwd()
+         try:
+             os.chdir(path)
+-        except OSError, error:
++        except OSError as error:
+             error_msg = "The directory %s should exist in order to be able " % path + \
+                         "to \"export\" in it. If you see this error message by " + \
+                         "typing the command \"export\" please consider to use " + \
+                         "instead the command \"output\". "
+-            raise MadGraph5Error, error_msg 
++            raise MadGraph5Error(error_msg)
+         
+         calls = 0
+         
+@@ -908,8 +908,8 @@ class ProcessExporterFortranFKS(loop_exp
+                     " libstdhep.a and libFmcfio.a in you environment paths.")
+             
+         else:
+-            raise MadGraph5Error, 'output_dependencies option %s not recognized'\
+-                                                            %output_dependencies
++            raise MadGraph5Error('output_dependencies option %s not recognized'\
++                                                            %output_dependencies)
+            
+         # Create the default MadAnalysis5 cards
+         if 'madanalysis5_path' in self.opt and not \
+@@ -951,8 +951,8 @@ This typically happens when using the 'l
+             max_links=max(max_links,len(links))
+             for i,diags in enumerate(links):
+                 if not i == diags['born_conf']:
+-                    print links
+-                    raise MadGraph5Error, "born_conf should be canonically ordered"
++                    print(links)
++                    raise MadGraph5Error("born_conf should be canonically ordered")
+             real_configs=', '.join(['%d' % int(diags['real_conf']+1) for diags in links])
+             lines.append("data (real_from_born_conf(irfbc,%d),irfbc=1,%d) /%s/" \
+                              % (iFKS,len(links),real_configs))
+@@ -2536,8 +2536,8 @@ C     charge is set 0. with QCD correcti
+         nexternal, ninitial = matrix_element.get_nexternal_ninitial()
+     
+         if ninitial < 1 or ninitial > 2:
+-            raise writers.FortranWriter.FortranWriterError, \
+-                  """Need ninitial = 1 or 2 to write auto_dsig file"""
++            raise writers.FortranWriter.FortranWriterError( \
++                  """Need ninitial = 1 or 2 to write auto_dsig file""")
+     
+         replace_dict = {}
+ 
+@@ -3391,8 +3391,8 @@ class ProcessOptimizedExporterFortranFKS
+         #First copy the full template tree if dir_path doesn't exit
+         if not os.path.isdir(dir_path):
+             if not mgme_dir:
+-                raise MadGraph5Error, \
+-                      "No valid MG_ME path given for MG4 run directory creation."
++                raise MadGraph5Error( \
++                      "No valid MG_ME path given for MG4 run directory creation.")
+             logger.info('initialize a new directory: %s' % \
+                         os.path.basename(dir_path))
+             shutil.copytree(os.path.join(mgme_dir, 'Template', 'NLO'), dir_path, True)
+@@ -3410,8 +3410,8 @@ class ProcessOptimizedExporterFortranFKS
+ 
+         elif not os.path.isfile(os.path.join(dir_path, 'TemplateVersion.txt')):
+             if not mgme_dir:
+-                raise MadGraph5Error, \
+-                      "No valid MG_ME path given for MG4 run directory creation."
++                raise MadGraph5Error( \
++                      "No valid MG_ME path given for MG4 run directory creation.")
+         try:
+             shutil.copy(os.path.join(mgme_dir, 'MGMEVersion.txt'), dir_path)
+         except IOError:
+@@ -3429,7 +3429,7 @@ class ProcessOptimizedExporterFortranFKS
+                 try:
+                     subprocess.call([os.path.join('bin', 'internal', 'clean_template')], \
+                                                                        cwd=dir_path)
+-                except Exception, why:
++                except Exception as why:
+                     raise MadGraph5Error('Failed to clean correctly %s: \n %s' \
+                                                 % (os.path.basename(dir_path),why))
+             #Write version info
 diff -rupN MadGraph_pristine/madgraph/iolibs/export_python.py ../contrib/MadGraph/madgraph/iolibs/export_python.py
 --- MadGraph_pristine/madgraph/iolibs/export_python.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/export_python.py	2020-10-30 01:26:23.637372592 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_python.py	2020-10-30 20:49:24.518460937 +1100
 @@ -81,8 +81,8 @@ class ProcessExporterPython(object):
          self.helas_call_writer = python_helas_call_writer
  
@@ -4138,7 +5628,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/export_python.py ../contrib/MadGrap
  
 diff -rupN MadGraph_pristine/madgraph/iolibs/export_v4.py ../contrib/MadGraph/madgraph/iolibs/export_v4.py
 --- MadGraph_pristine/madgraph/iolibs/export_v4.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/export_v4.py	2020-10-30 01:26:23.637372592 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/export_v4.py	2020-10-30 20:49:24.518460937 +1100
 @@ -16,7 +16,12 @@ from madgraph.iolibs.helas_call_writers
  """Methods and classes to export matrix elements to v4 format."""
  
@@ -4384,8 +5874,14 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/export_v4.py ../contrib/MadGraph/ma
              self.model = subproc_group.get('matrix_elements')[0].\
 diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgraph/iolibs/files.py
 --- MadGraph_pristine/madgraph/iolibs/files.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/files.py	2020-10-30 01:26:23.637372592 +1100
-@@ -36,11 +36,11 @@ def read_from_file(filename, myfunct, *a
++++ ../contrib/MadGraph/madgraph/iolibs/files.py	2020-10-30 20:49:24.522460924 +1100
+@@ -31,16 +31,16 @@ def read_from_file(filename, myfunct, *a
+     returns None if something goes wrong. 
+     """
+     try:
+-        sock = open(filename, 'r')
++        sock = open(filename, 'rb')
+         try:
              ret_value = myfunct(sock, *args)
          finally:
              sock.close()
@@ -4399,7 +5895,13 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgra
          return None
  
      return ret_value
-@@ -60,9 +60,9 @@ def write_to_file(filename, myfunct, *ar
+@@ -55,14 +55,14 @@ def write_to_file(filename, myfunct, *ar
+     """
+ 
+     try:
+-        sock = open(filename, 'w')
++        sock = open(filename, 'wb')
+         try:
              ret_value = myfunct(sock, *args)
          finally:
              sock.close()
@@ -4449,7 +5951,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgra
              logger.warning('Could not link %s at position: %s' % (file_pos, \
 diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph/madgraph/iolibs/file_writers.py
 --- MadGraph_pristine/madgraph/iolibs/file_writers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/file_writers.py	2020-10-30 01:26:23.637372592 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/file_writers.py	2020-10-30 20:49:24.522460924 +1100
 @@ -19,6 +19,8 @@ Fortran, C++, etc."""
  
  import re
@@ -4536,7 +6038,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
          """Extends the regular file.writeline() function to write out
 diff -rupN MadGraph_pristine/madgraph/iolibs/group_subprocs.py ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py
 --- MadGraph_pristine/madgraph/iolibs/group_subprocs.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py	2020-10-30 01:26:23.641372468 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/group_subprocs.py	2020-10-30 20:49:24.522460924 +1100
 @@ -93,8 +93,8 @@ class IdentifyConfigTag(diagram_generati
              # We go from next-to-last link to last link - remove propagator info
              return (old_vertex[0],)
@@ -4639,7 +6141,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/group_subprocs.py ../contrib/MadGra
      def get_sorted_keys(self):
 diff -rupN MadGraph_pristine/madgraph/iolibs/helas_call_writers.py ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py
 --- MadGraph_pristine/madgraph/iolibs/helas_call_writers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py	2020-10-30 01:26:23.641372468 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/helas_call_writers.py	2020-10-30 20:49:24.522460924 +1100
 @@ -68,16 +68,16 @@ class HelasCallWriter(base_objects.Physi
  
          if name == 'model':
@@ -4783,9 +6285,114 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/helas_call_writers.py ../contrib/Ma
          
          call_function = None
  
+diff -rupN MadGraph_pristine/madgraph/iolibs/import_v4.py ../contrib/MadGraph/madgraph/iolibs/import_v4.py
+--- MadGraph_pristine/madgraph/iolibs/import_v4.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/import_v4.py	2020-10-30 20:49:24.522460924 +1100
+@@ -43,7 +43,7 @@ def import_model(model_path, mgme_dir =
+     model_path_old = model_path
+     try:
+         model_path = find_model_path(model_path, mgme_dir, absolute)
+-    except Exception, error:
++    except Exception as error:
+         if not web:
+             raise
+         import models.import_ufo as import_ufo
+@@ -64,8 +64,8 @@ def import_model(model_path, mgme_dir =
+     for filepath in files_list:
+         if not os.path.isfile(filepath):
+             if not absolute:
+-                raise InvalidCmd,  "%s directory is not a valid v4 model" % \
+-                                                                    (model_path)
++                raise InvalidCmd("%s directory is not a valid v4 model" % \
++                                                                    (model_path))
+             else:
+                 return import_model(model_path_old, mgme_dir, False)
+                                                                 
+@@ -166,8 +166,8 @@ def read_particles_v4(fsock):
+             values = line.split()
+             if len(values) != 9:
+                 # Not the right number tags on the line
+-                raise ValueError, \
+-                    "Unvalid initialization string:" + line
++                raise ValueError( \
++                    "Unvalid initialization string:" + line)
+             else:
+                 try:
+                     mypart.set('name', values[0].lower())
+@@ -180,15 +180,15 @@ def read_particles_v4(fsock):
+                         mypart.set('spin',
+                                    spin_equiv[values[2].lower()])
+                     else:
+-                        raise ValueError, "Invalid spin %s" % \
+-                                values[2]
++                        raise ValueError( "Invalid spin %s" % \
++                                values[2])
+ 
+                     if values[3].lower() in line_equiv.keys():
+                         mypart.set('line',
+                                    line_equiv[values[3].lower()])
+                     else:
+-                        raise ValueError, \
+-                                "Invalid line type %s" % values[3]
++                        raise ValueError( \
++                                "Invalid line type %s" % values[3])
+ 
+                     mypart.set("mass", values[4])
+                     mypart.set("width", values[5])
+@@ -197,8 +197,8 @@ def read_particles_v4(fsock):
+                         mypart.set('color',
+                                    color_equiv[values[6].lower()])
+                     else:
+-                        raise ValueError, \
+-                            "Invalid color rep %s" % values[6]
++                        raise ValueError( \
++                            "Invalid color rep %s" % values[6])
+ 
+                     #mypart.set("texname", values[7])
+                     mypart.set("pdg_code", int(values[8]))
+@@ -206,7 +206,7 @@ def read_particles_v4(fsock):
+                     mypart.set('charge', 0.)
+                     #mypart.set('antitexname', mypart.get('texname'))
+ 
+-                except (Particle.PhysicsObjectError, ValueError), why:
++                except (Particle.PhysicsObjectError, ValueError) as why:
+                     logger.warning("Warning: %s, particle ignored" % why)
+                 else:
+                     mypartlist.append(mypart)
+@@ -225,8 +225,8 @@ def read_interactions_v4(fsock, ref_part
+     myinterlist = InteractionList()
+ 
+     if not isinstance(ref_part_list, ParticleList):
+-        raise ValueError, \
+-            "Object %s is not a valid ParticleList" % repr(ref_part_list)
++        raise ValueError( \
++            "Object %s is not a valid ParticleList" % repr(ref_part_list))
+ 
+     for line in fsock:
+         myinter = Interaction()
+@@ -253,8 +253,8 @@ def read_interactions_v4(fsock, ref_part
+                     else: break
+ 
+                 if len(part_list) < 3:
+-                    raise Interaction.PhysicsObjectError, \
+-                        "Vertex with less than 3 known particles found."
++                    raise Interaction.PhysicsObjectError( \
++                        "Vertex with less than 3 known particles found.")
+ 
+                 # Flip part/antipart of first part for FFV, FFS, FFT vertices
+                 # according to v4 convention
+@@ -432,7 +432,7 @@ def read_interactions_v4(fsock, ref_part
+ 
+                 myinterlist.append(myinter)
+ 
+-            except Interaction.PhysicsObjectError, why:
++            except Interaction.PhysicsObjectError as why:
+                 logger.error("Interaction ignored: %s" % why)
+ 
+     return myinterlist
 diff -rupN MadGraph_pristine/madgraph/iolibs/save_load_object.py ../contrib/MadGraph/madgraph/iolibs/save_load_object.py
 --- MadGraph_pristine/madgraph/iolibs/save_load_object.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/save_load_object.py	2020-10-30 01:26:23.641372468 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/save_load_object.py	2020-10-30 20:49:24.522460924 +1100
 @@ -16,7 +16,10 @@
  """Function to save any Python object to file."""
  
@@ -4798,11 +6405,13 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/save_load_object.py ../contrib/MadG
  
  from . import files as files
  
-@@ -29,7 +32,7 @@ def save_to_file(filename, object, log=T
+@@ -28,8 +31,8 @@ class SaveObjectError(Exception):
+ def save_to_file(filename, object, log=True):
      """Save any Python object to file filename"""
  
-     if not isinstance(filename, basestring):
+-    if not isinstance(filename, basestring):
 -        raise SaveObjectError, "filename must be a string"
++    if not isinstance(filename, str):
 +        raise SaveObjectError("filename must be a string")
  
      files.write_to_file(filename, pickle_object, object, log=log)
@@ -4818,7 +6427,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/save_load_object.py ../contrib/MadG
  def pickle_object(fsock, object):
 diff -rupN MadGraph_pristine/madgraph/iolibs/save_model.py ../contrib/MadGraph/madgraph/iolibs/save_model.py
 --- MadGraph_pristine/madgraph/iolibs/save_model.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/save_model.py	2020-10-30 01:26:23.641372468 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/save_model.py	2020-10-30 20:49:24.522460924 +1100
 @@ -27,8 +27,8 @@ def save_particles(fsock, part_list):
      """Save particle objects contained in part_list in the stream fsock"""
  
@@ -4889,14 +6498,14 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/save_model.py ../contrib/MadGraph/m
 +                                      os.path.join(path, 'interactions.py')))
 diff -rupN MadGraph_pristine/madgraph/iolibs/template_files/__init__.py ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py
 --- MadGraph_pristine/madgraph/iolibs/template_files/__init__.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py	2020-10-30 01:26:23.641372468 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/template_files/__init__.py	2020-10-30 20:49:24.522460924 +1100
 @@ -1,2 +1,2 @@
 -import mg4_proc_card
 +from .mg4_proc_card import *
  
 diff -rupN MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py
 --- MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py	2020-10-30 01:26:23.641372468 +1100
++++ ../contrib/MadGraph/madgraph/iolibs/ufo_expression_parsers.py	2020-10-30 20:49:24.522460924 +1100
 @@ -924,17 +924,17 @@ class UFOExpressionParserPythonIF(UFOExp
                  try:
                      self.defined_variables = eval(args[0])
@@ -4953,7 +6562,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/ufo_expression_parsers.py ../contri
      
 diff -rupN MadGraph_pristine/madgraph/loop/loop_base_objects.py ../contrib/MadGraph/madgraph/loop/loop_base_objects.py
 --- MadGraph_pristine/madgraph/loop/loop_base_objects.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_base_objects.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_base_objects.py	2020-10-30 20:49:24.522460924 +1100
 @@ -88,48 +88,48 @@ class LoopDiagram(base_objects.Diagram):
  
          if name == 'tag':
@@ -5289,7 +6898,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_base_objects.py ../contrib/MadGr
          """Returns a nicely formatted string"""
 diff -rupN MadGraph_pristine/madgraph/loop/loop_color_amp.py ../contrib/MadGraph/madgraph/loop/loop_color_amp.py
 --- MadGraph_pristine/madgraph/loop/loop_color_amp.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_color_amp.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_color_amp.py	2020-10-30 20:49:24.522460924 +1100
 @@ -67,8 +67,8 @@ class LoopColorBasis(color_amp.ColorBasi
                [color_algebra.Tr(lcut_numbers[1],lcut_numbers[0])],
                fractions.Fraction(2, 1))
@@ -5325,7 +6934,7 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_color_amp.py ../contrib/MadGraph
              colorize_dict = self.colorize(diagram,
 diff -rupN MadGraph_pristine/madgraph/loop/loop_diagram_generation.py ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py
 --- MadGraph_pristine/madgraph/loop/loop_diagram_generation.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_diagram_generation.py	2020-10-30 20:49:24.522460924 +1100
 @@ -104,37 +104,37 @@ class LoopAmplitude(diagram_generation.A
  
          if name == 'diagrams':
@@ -5402,9 +7011,129 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_diagram_generation.py ../contrib
              valid_diag = True
              i=i+1
      
+diff -rupN MadGraph_pristine/madgraph/loop/loop_exporters.py ../contrib/MadGraph/madgraph/loop/loop_exporters.py
+--- MadGraph_pristine/madgraph/loop/loop_exporters.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_exporters.py	2020-10-30 20:49:24.522460924 +1100
+@@ -167,7 +167,7 @@ class LoopExporterFortran(object):
+                 
+                 if not os.path.exists(os.path.join(self.cuttools_dir,
+                                                       'includects','libcts.a')):            
+-                    raise MadGraph5Error,"CutTools could not be correctly compiled."
++                    raise MadGraph5Error("CutTools could not be correctly compiled.")
+     
+             # Create the links to the lib folder
+             linkfiles = ['libcts.a', 'mpmodule.mod']
+@@ -665,9 +665,9 @@ CF2PY CHARACTER*20, intent(out) :: PREFI
+             if(col_amps and isinstance(col_amps[0],list)):
+                 color_amplitudes=col_amps
+             else:
+-                raise MadGraph5Error, "Incorrect col_amps argument passed to get_amp_to_jamp_map"
++                raise MadGraph5Error( "Incorrect col_amps argument passed to get_amp_to_jamp_map")
+         else:
+-            raise MadGraph5Error, "Incorrect col_amps argument passed to get_amp_to_jamp_map"
++            raise MadGraph5Error("Incorrect col_amps argument passed to get_amp_to_jamp_map")
+         
+         # To store the result
+         res_list = [[] for i in range(n_amps)]
+@@ -874,8 +874,8 @@ CF2PY CHARACTER*20, intent(out) :: PREFI
+         logger.info('Creating files in directory %s' % dirpath)
+ 
+         if unique_id is None:
+-            raise MadGraph5Error, 'A unique id must be provided to the function'+\
+-                     'generate_loop_subprocess of LoopProcessExporterFortranSA.'
++            raise MadGraph5Error('A unique id must be provided to the function'+\
++                     'generate_loop_subprocess of LoopProcessExporterFortranSA.')
+         # Create an include with the unique consecutive ID assigned
+         open('unique_id.inc','w').write(
+ """      integer UNIQUE_ID
+@@ -1080,13 +1080,13 @@ CF2PY CHARACTER*20, intent(out) :: PREFI
+         # Create the necessary files for the loop matrix element subroutine
+         
+         if config_map:
+-            raise MadGraph5Error, 'The default loop output cannot be used with'+\
+-              'MadEvent and cannot compute the AMP2 for multi-channeling.'
++            raise MadGraph5Error('The default loop output cannot be used with'+\
++              'MadEvent and cannot compute the AMP2 for multi-channeling.')
+ 
+         if not isinstance(fortran_model,\
+           helas_call_writers.FortranUFOHelasCallWriter):
+-            raise MadGraph5Error, 'The loop fortran output can only'+\
+-              ' work with a UFO Fortran model'
++            raise MadGraph5Error('The loop fortran output can only'+\
++              ' work with a UFO Fortran model')
+         
+         LoopFortranModel = helas_call_writers.FortranUFOHelasCallWriter(
+                      argument=fortran_model.get('model'),
+@@ -1123,7 +1123,7 @@ CF2PY CHARACTER*20, intent(out) :: PREFI
+                    '\n'.join(['DO I=1,NBORNAMPS','DPAMP(I,H)=AMP(I,H)','ENDDO'])
+         
+         if writer:
+-            raise MadGraph5Error, 'Matrix output mode no longer supported.'
++            raise MadGraph5Error('Matrix output mode no longer supported.')
+         
+         filename = 'loop_matrix.f'
+         calls = self.write_loopmatrix(writers.FortranWriter(filename),
+@@ -1818,7 +1818,7 @@ class LoopProcessOptimizedExporterFortra
+             context['%s_available'%tir]=self.tir_available_dict[tir]
+             # safety check
+             if tir not in ['golem','pjfry','iregi','samurai','ninja','collier']:
+-                raise MadGraph5Error,"%s was not a TIR currently interfaced."%tir_name
++                raise MadGraph5Error("%s was not a TIR currently interfaced."%tir_name)
+ 
+         return context
+ 
+@@ -2075,12 +2075,12 @@ class LoopProcessOptimizedExporterFortra
+         # Warn the user that the 'matrix' output where all relevant code is
+         # put together in a single file is not supported in this loop output.
+         if writer:
+-            raise MadGraph5Error, 'Matrix output mode no longer supported.'
++            raise MadGraph5Error('Matrix output mode no longer supported.')
+         
+         if not isinstance(fortran_model,\
+           helas_call_writers.FortranUFOHelasCallWriter):
+-            raise MadGraph5Error, 'The optimized loop fortran output can only'+\
+-              ' work with a UFO Fortran model'
++            raise MadGraph5Error('The optimized loop fortran output can only'+\
++              ' work with a UFO Fortran model')
+         OptimizedFortranModel=\
+           helas_call_writers.FortranUFOHelasCallWriterOptimized(\
+           fortran_model.get('model'),False)
+@@ -3209,8 +3209,8 @@ class LoopInducedExporterME(LoopProcessO
+     def get_amp2_lines(self, *args, **opts):
+         """Make sure the function is implemented in the daughters"""
+ 
+-        raise NotImplemented, 'The function get_amp2_lines must be called in '+\
+-                                       ' the daugthers of LoopInducedExporterME'
++        raise NotImplemented('The function get_amp2_lines must be called in '+\
++                                       ' the daugthers of LoopInducedExporterME')
+ 
+ #===============================================================================
+ # LoopInducedExporterMEGroup
+@@ -3290,8 +3290,8 @@ class LoopInducedExporterMEGroup(LoopInd
+         """
+ 
+         if not config_map:
+-            raise MadGraph5Error, 'A multi-channeling configuration map is '+\
+-              ' necessary for the MadEvent Loop-induced output with grouping.'
++            raise MadGraph5Error('A multi-channeling configuration map is '+\
++              ' necessary for the MadEvent Loop-induced output with grouping.')
+ 
+         nexternal, ninitial = matrix_element.get_nexternal_ninitial()
+ 
+@@ -3450,8 +3450,8 @@ class LoopInducedExporterMENoGroup(LoopI
+         """Return the amp2(i) = sum(amp for diag(i))^2 lines"""
+ 
+         if config_map:
+-            raise MadGraph5Error, 'A configuration map should not be specified'+\
+-                              ' for the Loop induced exporter without grouping.'
++            raise MadGraph5Error('A configuration map should not be specified'+\
++                              ' for the Loop induced exporter without grouping.')
+ 
+         nexternal, ninitial = matrix_element.get_nexternal_ninitial()
+         # Get minimum legs in a vertex
 diff -rupN MadGraph_pristine/madgraph/loop/loop_helas_objects.py ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py
 --- MadGraph_pristine/madgraph/loop/loop_helas_objects.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/loop/loop_helas_objects.py	2020-10-30 20:49:24.526460910 +1100
 @@ -79,22 +79,22 @@ class LoopHelasUVCTAmplitude(helas_objec
  
          if name=='UVCT_couplings':
@@ -5573,9 +7302,51 @@ diff -rupN MadGraph_pristine/madgraph/loop/loop_helas_objects.py ../contrib/MadG
  
                  for res_amp in res_amps:
                      col_amp.append(((res_amp.get('fermionfactor'),
+diff -rupN MadGraph_pristine/madgraph/madevent/combine_grid.py ../contrib/MadGraph/madgraph/madevent/combine_grid.py
+--- MadGraph_pristine/madgraph/madevent/combine_grid.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/madevent/combine_grid.py	2020-10-30 20:49:24.526460910 +1100
+@@ -60,7 +60,7 @@ class grid_information(object):
+         elif isinstance(path, file):
+             finput=path
+         else:
+-            raise Exception, "path should be a path or a file descriptor"
++            raise Exception("path should be a path or a file descriptor")
+         
+         line = finput.readline()
+         if self.nonzero == 0:
+@@ -79,7 +79,7 @@ class grid_information(object):
+                 self.oneFail = True
+                 return
+             elif len(info) !=3:
+-                raise Exception, "wrong formatting of %s"% finput.name
++                raise Exception("wrong formatting of %s"% finput.name)
+             
+             nonzero, ng, maxinvar = info
+             self.nonzero+=nonzero
+@@ -153,7 +153,7 @@ class grid_information(object):
+             finput=path
+             fname = finput.name
+         else:
+-            raise Exception, "path should be a path or a file descriptor"
++            raise Exception("path should be a path or a file descriptor")
+          
+         
+         return self.results.add_results(fname,finput)
+diff -rupN MadGraph_pristine/madgraph/madevent/combine_runs.py ../contrib/MadGraph/madgraph/madevent/combine_runs.py
+--- MadGraph_pristine/madgraph/madevent/combine_runs.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/madevent/combine_runs.py	2020-10-30 20:49:24.526460910 +1100
+@@ -150,7 +150,7 @@ class CombineRuns(object):
+                 nb_evt+=1
+                 data = line.split()
+                 if not len(data) == 6:
+-                    raise MadGraph5Error, "Line after <event> should have 6 entries"
++                    raise MadGraph5Error("Line after <event> should have 6 entries")
+                 if float(data[2]) > 0:
+                     sign = ''
+                 else:
 diff -rupN MadGraph_pristine/madgraph/madevent/gen_crossxhtml.py ../contrib/MadGraph/madgraph/madevent/gen_crossxhtml.py
 --- MadGraph_pristine/madgraph/madevent/gen_crossxhtml.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/madevent/gen_crossxhtml.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/madevent/gen_crossxhtml.py	2020-10-30 20:49:24.526460910 +1100
 @@ -600,7 +600,7 @@ class RunResults(list):
              # return last entry
              return self[-1]
@@ -5585,9 +7356,89 @@ diff -rupN MadGraph_pristine/madgraph/madevent/gen_crossxhtml.py ../contrib/MadG
      
      def recreate(self, banner):
          """Fully recreate the information due to a hard removal of the db
+diff -rupN MadGraph_pristine/madgraph/madevent/gen_ximprove.py ../contrib/MadGraph/madgraph/madevent/gen_ximprove.py
+--- MadGraph_pristine/madgraph/madevent/gen_ximprove.py	2020-10-27 21:41:37.897090342 +1100
++++ ../contrib/MadGraph/madgraph/madevent/gen_ximprove.py	2020-10-30 20:49:24.526460910 +1100
+@@ -147,7 +147,7 @@ class gensym(object):
+             #compile gensym
+             self.cmd.compile(['gensym'], cwd=Pdir)
+             if not os.path.exists(pjoin(Pdir, 'gensym')):
+-                raise Exception, 'Error make gensym not successful'  
++                raise Exception('Error make gensym not successful')  
+             
+             # Launch gensym
+             p = misc.Popen(['./gensym'], stdout=subprocess.PIPE, 
+@@ -177,11 +177,11 @@ class gensym(object):
+                         continue
+                     else:
+                         if done:
+-                            raise Exception, 'Parsing error in gensym: %s' % stdout 
++                            raise Exception('Parsing error in gensym: %s' % stdout) 
+                         job_list[Pdir] = l.split()        
+                         done = True
+                 if not done:
+-                    raise Exception, 'Parsing error in gensym: %s' % stdout
++                    raise Exception('Parsing error in gensym: %s' % stdout)
+                      
+             self.cmd.compile(['madevent'], cwd=Pdir)
+             if to_submit:
+@@ -218,7 +218,7 @@ class gensym(object):
+                 for G in to_resub:
+                     try:
+                         shutil.rmtree(pjoin(P, 'G%s' % G))
+-                    except Exception, error:
++                    except Exception as error:
+                         misc.sprint(error)
+                         pass
+             misc.sprint(to_resub) 
+@@ -411,7 +411,7 @@ class gensym(object):
+             need_submit = False
+         elif self.cmd.opts['accuracy'] < 0:
+             #check for luminosity
+-            raise Exception, "Not Implemented"
++            raise Exception("Not Implemented")
+         elif self.abscross[(Pdir,G)] == 0:
+             need_submit = False 
+         else:   
+@@ -617,7 +617,7 @@ For offline investigation, the problemat
+             path = pjoin(Pdir, "G%s_%s" % (G, i+1))
+             try: 
+                 os.remove(pjoin(path, 'grid_information'))
+-            except OSError, oneerror:
++            except OSError as oneerror:
+                 if oneerror.errno != 2:
+                     raise
+         return grid_calculator, cross, error
+@@ -639,7 +639,7 @@ For offline investigation, the problemat
+              logger.warning(msg%(G,EPS_fraction))
+         elif EPS_fraction > 0.01:
+              logger.critical((msg%(G,EPS_fraction)).replace('might', 'can'))
+-             raise Exception, (msg%(G,EPS_fraction)).replace('might', 'can')
++             raise Exception((msg%(G,EPS_fraction)).replace('might', 'can'))
+     
+     def get_current_axsec(self):
+         
+@@ -874,7 +874,7 @@ class gen_ximprove(object):
+                 targettype = type(getattr(self, key))
+                 setattr(self, key, self.format_variable(value, targettype, key))
+             else:
+-                raise Exception, '%s not define' % key
++                raise Exception('%s not define' % key)
+                         
+             
+         # special treatment always do outside the loop to avoid side effect
+@@ -1601,7 +1601,7 @@ class gen_ximprove_gridpack(gen_ximprove
+     max_request_event = 1e12         # split jobs if a channel if it needs more than that 
+     max_event_in_iter = 4000
+     min_event_in_iter = 500
+-    combining_job = sys.maxint
++    combining_job = sys.maxsize
+     gen_events_security = 1.00
+ 
+     def __new__(cls, *args, **opts):
 diff -rupN MadGraph_pristine/madgraph/madevent/sum_html.py ../contrib/MadGraph/madgraph/madevent/sum_html.py
 --- MadGraph_pristine/madgraph/madevent/sum_html.py	2020-10-27 21:41:37.897090342 +1100
-+++ ../contrib/MadGraph/madgraph/madevent/sum_html.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/madevent/sum_html.py	2020-10-30 20:49:24.526460910 +1100
 @@ -79,9 +79,9 @@ class RunStatistics(dict):
              new_stats = [new_stats, ]
          elif isinstance(new_stats,list):
@@ -5637,7 +7488,7 @@ diff -rupN MadGraph_pristine/madgraph/madevent/sum_html.py ../contrib/MadGraph/m
      def set_mfactor(self, value):
 diff -rupN MadGraph_pristine/madgraph/various/banner.py ../contrib/MadGraph/madgraph/various/banner.py
 --- MadGraph_pristine/madgraph/various/banner.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/banner.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/various/banner.py	2020-10-30 20:49:24.526460910 +1100
 @@ -22,7 +22,11 @@ import os
  import sys
  import re
@@ -6088,7 +7939,7 @@ diff -rupN MadGraph_pristine/madgraph/various/banner.py ../contrib/MadGraph/madg
          done = set()
 diff -rupN MadGraph_pristine/madgraph/various/cluster.py ../contrib/MadGraph/madgraph/various/cluster.py
 --- MadGraph_pristine/madgraph/various/cluster.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/cluster.py	2020-10-30 01:26:23.645372343 +1100
++++ ../contrib/MadGraph/madgraph/various/cluster.py	2020-10-30 20:49:24.526460910 +1100
 @@ -25,9 +25,9 @@ logger = logging.getLogger('madgraph.clu
  try:
      from madgraph import MadGraph5Error
@@ -6422,7 +8273,7 @@ diff -rupN MadGraph_pristine/madgraph/various/cluster.py ../contrib/MadGraph/mad
              logger.debug("[["+str(id)+"]]"+status_out)
 diff -rupN MadGraph_pristine/madgraph/various/diagram_symmetry.py ../contrib/MadGraph/madgraph/various/diagram_symmetry.py
 --- MadGraph_pristine/madgraph/various/diagram_symmetry.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/diagram_symmetry.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/madgraph/various/diagram_symmetry.py	2020-10-30 20:49:24.530460897 +1100
 @@ -355,7 +355,7 @@ class IdentifySGConfigTag(diagram_genera
              part = model.get_particle(vertex.get('legs')[-1].get('id'))
              try:
@@ -6434,7 +8285,7 @@ diff -rupN MadGraph_pristine/madgraph/various/diagram_symmetry.py ../contrib/Mad
              return ((part.get('color'),
 diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/madgraph/various/lhe_parser.py
 --- MadGraph_pristine/madgraph/various/lhe_parser.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/lhe_parser.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/madgraph/various/lhe_parser.py	2020-10-30 20:49:24.530460897 +1100
 @@ -9,16 +9,17 @@ import time
  import os
  import shutil
@@ -6706,7 +8557,7 @@ diff -rupN MadGraph_pristine/madgraph/various/lhe_parser.py ../contrib/MadGraph/
          plt.show()
 diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgraph/various/misc.py
 --- MadGraph_pristine/madgraph/various/misc.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/misc.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/madgraph/various/misc.py	2020-10-30 20:49:24.530460897 +1100
 @@ -22,7 +22,13 @@ import re
  import signal
  import subprocess
@@ -6731,7 +8582,12 @@ diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgra
      # Use in MadEvent
      import internal
      from internal import MadGraph5Error, InvalidCmd
-@@ -67,7 +73,7 @@ def parse_info_str(fsock):
+@@ -63,11 +69,11 @@ def parse_info_str(fsock):
+     for entry in fsock:
+         entry = entry.strip()
+         if len(entry) == 0: continue
+-        m = pattern.match(entry)
++        m = pattern.match(entry.decode('utf-8'))
          if m is not None:
              info_dict[m.group('name')] = m.group('value')
          else:
@@ -6932,6 +8788,15 @@ diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgra
  
      
      #for large file (>1G) it is faster and safer to use a separate thread
+@@ -1263,7 +1269,7 @@ class open_file(object):
+                         cls.text_editor = configuration[key]
+                         continue
+                 #Need to find a valid default
+-                if os.environ.has_key('EDITOR'):
++                if 'EDITOR' in os.environ:
+                     cls.text_editor = os.environ['EDITOR']
+                 else:
+                     cls.text_editor = cls.find_valid(
 @@ -1376,7 +1382,7 @@ class OptionParser(optparse.OptionParser
      
      def exit(self, status=0, msg=None):
@@ -6999,9 +8864,278 @@ diff -rupN MadGraph_pristine/madgraph/various/misc.py ../contrib/MadGraph/madgra
                  logger.warning("Failed to access python version of LHAPDF: "\
                                     "If the python interface to LHAPDF is available on your system, try "\
                                     "adding its location to the PYTHONPATH environment variable and the"\
+diff -rupN MadGraph_pristine/madgraph/various/process_checks.py ../contrib/MadGraph/madgraph/various/process_checks.py
+--- MadGraph_pristine/madgraph/various/process_checks.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/various/process_checks.py	2020-10-30 20:49:24.530460897 +1100
+@@ -73,7 +73,11 @@ from madgraph import MG5DIR, InvalidCmd,
+ 
+ from madgraph.iolibs.files import cp
+ 
+-import StringIO
++try:
++    import StringIO ## for Python 2
++except ImportError:
++    from io import StringIO ## for Python 3
++
+ import models.model_reader as model_reader
+ import aloha.template_files.wavefunctions as wavefunctions
+ from aloha.template_files.wavefunctions import \
+@@ -298,7 +302,7 @@ class MatrixElementEvaluator(object):
+             matrix_methods = exporter.get_python_matrix_methods(\
+                 gauge_check=gauge_check)
+ #            print "I got matrix_methods=",str(matrix_methods.items()[0][1])
+-        except helas_call_writers.HelasWriterError, error:
++        except helas_call_writers.HelasWriterError as error:
+             logger.info(error)
+             return None
+         # If one wants to output the python code generated for the computation
+@@ -379,7 +383,7 @@ class MatrixElementEvaluator(object):
+             
+         if not (isinstance(process, base_objects.Process) and \
+                 isinstance(energy, (float,int))):
+-            raise rambo.RAMBOError, "Not correct type for arguments to get_momenta"
++            raise rambo.RAMBOError("Not correct type for arguments to get_momenta")
+ 
+ 
+         sorted_legs = sorted(process.get('legs'), lambda l1, l2:\
+@@ -403,7 +407,7 @@ class MatrixElementEvaluator(object):
+                     if skip > to_skip:
+                         break
+             else:
+-                raise MadGraph5Error, 'No compatible events for %s' % ids
++                raise MadGraph5Error('No compatible events for %s' % ids)
+             p = []
+             for part in event.values():
+                 m = part['momentum']
+@@ -423,8 +427,8 @@ class MatrixElementEvaluator(object):
+                 if isinstance(special_mass, float):
+                     mass.append(special_mass)
+                 else:
+-                    raise Exception, "A 'special_mass' option must be specified"+\
+-                 " in get_momenta when a leg with id=-10 is present (for CMS check)"
++                    raise Exception("A 'special_mass' option must be specified"+\
++                 " in get_momenta when a leg with id=-10 is present (for CMS check)")
+         #mass = [math.sqrt(m.real) for m in mass]
+ 
+ 
+@@ -694,9 +698,9 @@ class LoopMatrixElementEvaluator(MatrixE
+                 elif isinstance(value, int):
+                     ml_reds = str(value)
+                 else:
+-                    raise MadGraph5Error, 'The argument %s '%str(value)+\
++                    raise MadGraph5Error('The argument %s '%str(value)+\
+                       ' in fix_MadLoopParamCard must be a string, integer'+\
+-                      ' or a list.'
++                      ' or a list.')
+                 MLCard.set("MLReductionLib",ml_reds)      
+             elif key == 'ImprovePS':
+                 MLCard.set('ImprovePSPoint',2 if value else -1)
+@@ -705,9 +709,9 @@ class LoopMatrixElementEvaluator(MatrixE
+             elif key in MLCard:
+                 MLCard.set(key,value)
+             else:
+-                raise Exception, 'The MadLoop options %s specified in function'%key+\
++                raise Exception('The MadLoop options %s specified in function'%key+\
+                   ' fix_MadLoopParamCard does not correspond to an option defined'+\
+-                  ' MadLoop nor is it specially handled in this function.'
++                  ' MadLoop nor is it specially handled in this function.')
+         if not mode is None:
+             MLCard.set('CTModeRun',mode)
+             MLCard.set('CTModeInit',mode)
+@@ -816,8 +820,8 @@ class LoopMatrixElementEvaluator(MatrixE
+         elif isinstance(output,str):
+             text=output.split('\n')
+         else:
+-            raise MadGraph5Error, 'Type for argument output not supported in'+\
+-                                                          ' parse_check_output.'
++            raise MadGraph5Error('Type for argument output not supported in'+\
++                                                          ' parse_check_output.')
+         for line in text:
+             splitline=line.split()
+             if len(splitline)==0:
+@@ -884,14 +888,14 @@ class LoopMatrixElementEvaluator(MatrixE
+         if directories and os.path.isdir(directories[0]):
+             exe_path = directories[0]
+         else:
+-            raise MadGraph5Error, 'Could not find a process executable '+\
+-                                                      'directory in %s'%proc_dir
++            raise MadGraph5Error('Could not find a process executable '+\
++                                                      'directory in %s'%proc_dir)
+         bu_path = pjoin(model_path, 'model_functions.f__backUp__')
+         
+         if mode=='default':
+             # Restore the default source file model_function.f
+             if not os.path.isfile(bu_path):
+-                raise MadGraph5Error, 'Back up file %s could not be found.'%bu_path
++                raise MadGraph5Error('Back up file %s could not be found.'%bu_path)
+             shutil.move(bu_path, pjoin(model_path, 'model_functions.f'))
+             return
+ 
+@@ -1002,7 +1006,7 @@ class LoopMatrixElementEvaluator(MatrixE
+                                                               file_names[ind])):
+             ind += 1
+         if ind==len(file_names):
+-            raise Exception, "No helas calls output file found."
++            raise Exception("No helas calls output file found.")
+         
+         helas_file_name=pjoin(dir_name,file_names[ind])
+         file = open(pjoin(dir_name,helas_file_name), 'r')
+@@ -1746,7 +1750,7 @@ class LoopMatrixElementTimer(LoopMatrixE
+                 except KeyboardInterrupt:
+                     interrupted = True
+                     break
+-                except IOError, e:
++                except IOError as e:
+                     if e.errno == errno.EINTR:
+                         if retry==100:
+                             logger.error("Failed hundred times consecutively because"+
+@@ -1843,9 +1847,9 @@ class LoopMatrixElementTimer(LoopMatrixE
+                     if output != '':
+                         last_non_empty = output
+                     error = StabChecker.stderr.readline()
+-                    raise MadGraph5Error, \
++                    raise MadGraph5Error( \
+  "The MadLoop stability checker crashed with return code = %d, and last output:\n\nstdout: %s\nstderr: %s\n"%\
+-                                               (ret_code, last_non_empty, error)
++                                               (ret_code, last_non_empty, error))
+                     
+             res = ""
+             while True:
+@@ -1862,9 +1866,9 @@ class LoopMatrixElementTimer(LoopMatrixE
+                     if output != '':
+                         last_non_empty = output
+                     error = StabChecker.stderr.readline()
+-                    raise MadGraph5Error, \
++                    raise MadGraph5Error( \
+  "The MadLoop stability checker crashed with return code = %d, and last output:\n\nstdout: %s\nstderr: %s\n"%\
+-                                               (ret_code, last_non_empty, error)
++                                               (ret_code, last_non_empty, error))
+ 
+             return cls.parse_check_output(res,format='tuple')[0][0]
+         except IOError as e:
+@@ -3709,7 +3713,7 @@ def check_complex_mass_scheme(process_li
+     # Add useful entries
+     run_options['param_card'] = param_card
+     if isinstance(cmd, FakeInterface):
+-        raise MadGraph5Error, "Check CMS cannot be run with a FakeInterface."
++        raise MadGraph5Error("Check CMS cannot be run with a FakeInterface.")
+     run_options['cmd']        = cmd
+     run_options['MLOptions']  = MLOptions
+     if output_path:
+@@ -3921,8 +3925,8 @@ def check_complex_mass_scheme_process(pr
+                                 new_resonance['FSMothersNumbers'].extend(
+                                             replacement_dict[leg.get('number')])
+                             except KeyError:
+-                                raise Exception, 'The following diagram '+\
+-                                              'is malformed:'+diag.nice_string()
++                                raise Exception('The following diagram '+\
++                                              'is malformed:'+diag.nice_string())
+                                                
+                     replacement_dict[s_channel.get('legs')[-1].get('number')] = \
+                                                new_resonance['FSMothersNumbers']
+@@ -4181,7 +4185,7 @@ def check_complex_mass_scheme_process(pr
+             if options['offshellness']<0.0:
+                 err_msg +='Try with a positive offshellness instead (or a '+\
+                                        'negative one of smaller absolute value)'
+-            raise InvalidCmd, err_msg
++            raise InvalidCmd(err_msg)
+         else:
+ #            misc.sprint('PS point found in %s trials.'%N_trials)
+ #            misc.sprint(PS_point_found)
+@@ -4285,9 +4289,9 @@ def check_complex_mass_scheme_process(pr
+         else:
+             # Crash if we are doing CMS and the width was not found and recycled above
+             if aloha.complex_mass:
+-                raise MadGraph5Error, "The width for particle with PDG %d and"%PDG+\
++                raise MadGraph5Error("The width for particle with PDG %d and"%PDG+\
+                   " lambdaCMS=%f should have already been "%lambdaCMS+\
+-                  "computed during the NWA run."
++                  "computed during the NWA run.")
+ 
+         # Use MadWith
+         if options['recompute_width'] in ['always','first_time']:
+@@ -4318,8 +4322,8 @@ def check_complex_mass_scheme_process(pr
+                 try:
+                     tmp_param_card = check_param_card.ParamCard(pjoin(path,'tmp.dat'))
+                 except:
+-                    raise MadGraph5Error, 'Error occured during width '+\
+-                       'computation with command:\n   compute_widths %s'%command                   
++                    raise MadGraph5Error('Error occured during width '+\
++                       'computation with command:\n   compute_widths %s'%command)                   
+                 width = tmp_param_card['decay'].get(PDG).value
+ #                misc.sprint('lambdaCMS checked is', lambdaCMS,
+ #                                                   'for particle',particle_name)
+@@ -4363,7 +4367,7 @@ def check_complex_mass_scheme_process(pr
+             try:
+                 new_seed = int(tweak[4:])
+             except ValueError:
+-                raise MadGraph5Error, "Seed '%s' is not of the right format 'seed<int>'."%tweak
++                raise MadGraph5Error("Seed '%s' is not of the right format 'seed<int>'."%tweak)
+             random.seed(new_seed)
+                 
+     mode = 'CMS' if aloha.complex_mass else 'NWA'
+@@ -4455,8 +4459,8 @@ def check_complex_mass_scheme_process(pr
+                 retcode = subprocess.call(['make','check'],
+                                    cwd=dir, stdout=devnull, stderr=devnull)                     
+             if retcode != 0:
+-                raise MadGraph5Error, "Compilation error with "+\
+-                                                        "'make check' in %s"%dir
++                raise MadGraph5Error("Compilation error with "+\
++                                                        "'make check' in %s"%dir)
+ 
+         # Now find all the resonances of the ME, if not saved from a previous run
+         pkl_path = pjoin(proc_dir,'resonance_specs.pkl')
+@@ -4550,8 +4554,8 @@ def check_complex_mass_scheme_process(pr
+ 
+     # Already add the coupling order for this sqaured ME.
+     if loop_order != -1 and (loop_order+born_order)%2 != 0:
+-        raise MadGraph5Error, 'The summed squared matrix element '+\
+-                              " order '%d' is not even."%(loop_order+born_order)
++        raise MadGraph5Error('The summed squared matrix element '+\
++                              " order '%d' is not even."%(loop_order+born_order))
+     result = {'born_order':born_order, 
+               'loop_order': (-1 if loop_order==-1 else (loop_order+born_order)/2),
+               'resonances_result':[]}
+@@ -4573,14 +4577,14 @@ def check_complex_mass_scheme_process(pr
+             try:
+                 logstart, logend = tweak.split('->')
+             except:
+-                raise Madgraph5Error, "Tweak '%s' not reckognized."%tweak
++                raise Madgraph5Error("Tweak '%s' not reckognized."%tweak)
+             if logstart in ['logp','logm', 'log'] and \
+                logend in ['logp','logm', 'log']:
+                 if NLO:
+                     evaluator.apply_log_tweak(proc_dir, [logstart, logend])
+                     had_log_tweaks = True
+             else:
+-                raise Madgraph5Error, "Tweak '%s' not reckognized."%tweak
++                raise Madgraph5Error("Tweak '%s' not reckognized."%tweak)
+         if had_log_tweaks:
+             evaluator.apply_log_tweak(proc_dir, 'recompile')
+ 
+@@ -5708,15 +5712,15 @@ minimum value of lambda to be considered
+             nwa_born=nwa_res['born']
+             if len(cms_born) != len(lambdaCMS_list) or\
+                  len(nwa_born) != len(lambdaCMS_list):
+-                raise MadGraph5Error, 'Inconsistent list of results w.r.t. the'+\
+-                                ' lambdaCMS values specified for process %s'%process
++                raise MadGraph5Error('Inconsistent list of results w.r.t. the'+\
++                                ' lambdaCMS values specified for process %s'%process)
+             if pert_orders:
+                 cms_finite=cms_res['finite'] 
+                 nwa_finite=nwa_res['finite']
+                 if len(cms_finite) != len(lambdaCMS_list) or\
+                     len(nwa_finite) != len(lambdaCMS_list):
+-                    raise MadGraph5Error, 'Inconsistent list of results w.r.t. the'+\
+-                                ' lambdaCMS values specified for process %s'%process
++                    raise MadGraph5Error('Inconsistent list of results w.r.t. the'+\
++                                ' lambdaCMS values specified for process %s'%process)
+         
+             bpower = guess_lambdaorder(nwa_born,lambdaCMS_list,
+                     expected=proc_res['born_order'], proc=process, res=resonance)
 diff -rupN MadGraph_pristine/madgraph/various/q_polynomial.py ../contrib/MadGraph/madgraph/various/q_polynomial.py
 --- MadGraph_pristine/madgraph/various/q_polynomial.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/q_polynomial.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/madgraph/various/q_polynomial.py	2020-10-30 20:49:24.530460897 +1100
 @@ -107,8 +107,8 @@ class Polynomial_naive_ordering(object):
          try:
              return self.coef_list.index(array.array('i',new_indices_list))
@@ -7077,9 +9211,58 @@ diff -rupN MadGraph_pristine/madgraph/various/q_polynomial.py ../contrib/MadGrap
  
      import os
      import sys
+diff -rupN MadGraph_pristine/madgraph/various/rambo.py ../contrib/MadGraph/madgraph/various/rambo.py
+--- MadGraph_pristine/madgraph/various/rambo.py	2020-10-27 21:41:37.893090278 +1100
++++ ../contrib/MadGraph/madgraph/various/rambo.py	2020-10-30 20:49:24.530460897 +1100
+@@ -116,7 +116,7 @@ def RAMBO(N,ET,XM):
+         xmt += abs(XM[i])
+         
+     if xmt > ET:
+-        raise RAMBOError, ' Not enough energy in this case'
++        raise RAMBOError(' Not enough energy in this case')
+ 
+ #                                                                                                                                          
+ # THE PARAMETER VALUES ARE NOW ACCEPTED                                                                                                    
+@@ -159,10 +159,10 @@ def RAMBO(N,ET,XM):
+     if N != 2:
+         wt = (2 * N-4) * math.log(ET) + Z[N]
+     if wt < -180 and iwarn[1] < 5:
+-        print "RAMBO WARNS: WEIGHT = EXP(%f20.9) MAY UNDERFLOW" % wt
++        print("RAMBO WARNS: WEIGHT = EXP(%f20.9) MAY UNDERFLOW" % wt)
+         iwarn[1] += 1
+     if wt > 174 and iwarn[2] < 5:      
+-        print " RAMBO WARNS: WEIGHT = EXP(%f20.9) MAY  OVERFLOW" % wt
++        print(" RAMBO WARNS: WEIGHT = EXP(%f20.9) MAY  OVERFLOW" % wt)
+         iwarn[2] += 1
+ 
+                                                                                                                                           
+@@ -192,8 +192,8 @@ def RAMBO(N,ET,XM):
+             break
+         n_iter  += 1
+         if n_iter  > itmax:
+-            print "RAMBO WARNS: %s ITERATIONS DID NOT GIVE THE DESIRED ACCURACY = %s" \
+-                    %(n_iter , f0)
++            print("RAMBO WARNS: %s ITERATIONS DID NOT GIVE THE DESIRED ACCURACY = %s" \
++                    %(n_iter , f0))
+             break
+         x=x-f0/(x*g0)
+     for i in range(1, N+1):
+@@ -213,10 +213,10 @@ def RAMBO(N,ET,XM):
+ # RETURN FOR  WEIGHTED MASSIVE MOMENTA                                                                                                     
+     wt += wtm
+     if(wt < -180 and iwarn[3] < 5):
+-        print " RAMBO WARNS: WEIGHT = EXP(%s) MAY UNDERFLOW" % wt
++        print(" RAMBO WARNS: WEIGHT = EXP(%s) MAY UNDERFLOW" % wt)
+         iwarn[3] += 1
+     if(wt > 174  and iwarn[4] > 5):
+-        print " RAMBO WARNS: WEIGHT = EXP(%s) MAY OVERFLOW" % wt
++        print(" RAMBO WARNS: WEIGHT = EXP(%s) MAY OVERFLOW" % wt)
+         iwarn[4] += 1
+ 
+ # RETURN
 diff -rupN MadGraph_pristine/madgraph/various/shower_card.py ../contrib/MadGraph/madgraph/various/shower_card.py
 --- MadGraph_pristine/madgraph/various/shower_card.py	2020-10-27 21:41:37.893090278 +1100
-+++ ../contrib/MadGraph/madgraph/various/shower_card.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/madgraph/various/shower_card.py	2020-10-30 20:49:24.530460897 +1100
 @@ -130,7 +130,7 @@ class ShowerCard(dict):
          if key in self.logical_vars:
              try:
@@ -7104,9 +9287,813 @@ diff -rupN MadGraph_pristine/madgraph/various/shower_card.py ../contrib/MadGraph
                  raise ShowerCardError(str(error))
          else:
              raise ShowerCardError('Unknown entry: %s = %s' % (key, value))
+diff -rupN MadGraph_pristine/mg5decay/decay_objects.py ../contrib/MadGraph/mg5decay/decay_objects.py
+--- MadGraph_pristine/mg5decay/decay_objects.py	2020-10-27 21:41:37.773088362 +1100
++++ ../contrib/MadGraph/mg5decay/decay_objects.py	2020-10-30 20:49:24.534460884 +1100
+@@ -177,29 +177,29 @@ class DecayParticle(base_objects.Particl
+ 
+         #Check if partnum is an integer.
+         if not isinstance(partnum, int):
+-            raise self.PhysicsObjectError, \
+-                "Final particle number %s must be an integer." % str(partnum)
++            raise self.PhysicsObjectError( \
++                "Final particle number %s must be an integer." % str(partnum))
+ 
+         #Check if onshell condition is Boolean number.
+         if not isinstance(onshell, bool):
+-            raise self.PhysicsObjectError, \
+-                "%s must be a Boolean number" % str(onshell)
++            raise self.PhysicsObjectError( \
++                "%s must be a Boolean number" % str(onshell))
+                 
+         #Check if the value is a Vertexlist(in base_objects) or a list of vertex
+         if not isinstance(value, base_objects.VertexList):
+-            raise self.PhysicsObjectError, \
+-                "%s must be VertexList type." % str(value)
++            raise self.PhysicsObjectError( \
++                "%s must be VertexList type." % str(value))
+                     
+         #Check if the model is a valid object.
+         if not (isinstance(model, base_objects.Model) or model == {}):
+-            raise self.PhysicsObjectError, \
+-                "%s must be a Model" % str(model)
++            raise self.PhysicsObjectError( \
++                "%s must be a Model" % str(model))
+         elif model:
+             #Check if the mother particle is in the 'model'
+             if not (self.get_pdg_code() in model.get('particle_dict').keys()):
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                     "The model, %s, does not contain particle %s." \
+-                    %(model.get('name'), self.get_name())
++                    %(model.get('name'), self.get_name()))
+ 
+                             
+     def check_vertexlist(self, partnum, onshell, value, model = {}):
+@@ -219,8 +219,8 @@ class DecayParticle(base_objects.Particl
+         #Check onshell condition if the model is given.
+         if model:
+             if (abs(eval(self.get('mass')) == 0.)) and (len(value) != 0):
+-                raise self.PhysicsObjectError, \
+-                    "Massless particle %s cannot decay." % self['name']
++                raise self.PhysicsObjectError( \
++                    "Massless particle %s cannot decay." % self['name'])
+ 
+         for vert in value:
+             # Reset the number of initial/final particles,
+@@ -236,14 +236,14 @@ class DecayParticle(base_objects.Particl
+                 
+                 # Check the onshell condition
+                 if (ini_mass.real > (total_mass.real - ini_mass.real))!=onshell:
+-                    raise self.PhysicsObjectError, \
+-                        "The on-shell condition is not satisfied."
++                    raise self.PhysicsObjectError( \
++                        "The on-shell condition is not satisfied.")
+ 
+             for leg in vert.get('legs'):
+                 # Check if all legs are label by true
+                 if not leg.get('state'):
+-                    raise self.PhysicsObjectError, \
+-                        "The state of leg should all be true"
++                    raise self.PhysicsObjectError( \
++                        "The state of leg should all be true")
+ 
+                 # Identify the initial particle
+                 if leg.get('id') == self.get_pdg_code():
+@@ -260,21 +260,21 @@ class DecayParticle(base_objects.Particl
+ 
+             # Check the number of final particles is the same as partnum
+             if num_final != partnum:
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                     "The vertex is a %s -body decay, not a %s -body one."\
+-                    % (str(num_final), str(partnum))
++                    % (str(num_final), str(partnum)))
+ 
+             # Check if there is any appropriate leg as initial particle.
+             if num_ini == 0:
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                     "There is no leg satisfied the mother particle %s"\
+-                    % str(self.get_pdg_code())
++                    % str(self.get_pdg_code()))
+ 
+             # Check if the vertex is radiation
+             if radiation:
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                     "The vertex is radiactive for mother particle %s"\
+-                    % str(self.get_pdg_code())
++                    % str(self.get_pdg_code()))
+ 
+         return True
+ 
+@@ -288,47 +288,47 @@ class DecayParticle(base_objects.Particl
+ 
+         # Check if partnum is an integer.
+         if not isinstance(partnum, int):
+-            raise self.PhysicsObjectError, \
+-                "Final particle number %s must be an integer." % str(partnum)
++            raise self.PhysicsObjectError( \
++                "Final particle number %s must be an integer." % str(partnum))
+         
+         # Check if onshell condition is Boolean number.
+         if not isinstance(onshell, bool):
+-            raise self.PhysicsObjectError, \
+-                "%s must be a Boolean number" % str(onshell)
++            raise self.PhysicsObjectError( \
++                "%s must be a Boolean number" % str(onshell))
+                 
+         # Check if the value is a ChannelList
+         if (not isinstance(value, ChannelList) and value):
+-            raise self.PhysicsObjectError, \
+-                "%s must be ChannelList type." % str(value)
++            raise self.PhysicsObjectError( \
++                "%s must be ChannelList type." % str(value))
+                 
+ 
+         # Check if the partnum is correct for all channels in value
+         if any(ch for ch in value if \
+                    len(ch.get_final_legs()) != partnum):
+-            raise self.PhysicsObjectError, \
++            raise self.PhysicsObjectError( \
+                 "The final particle number of channel should be %d."\
+-                % partnum
++                % partnum)
+         
+         # Check if the initial particle in all channels are as self.
+         if any(ch for ch in value if \
+                    abs(ch.get_anti_initial_id()) != abs(self.get('pdg_code'))):
+-            raise self.PhysicsObjectError, \
++            raise self.PhysicsObjectError( \
+                 "The initial particle is not %d or its antipart." \
+-                % self.get('pdg_code')
++                % self.get('pdg_code'))
+ 
+         # Check if the onshell condition is right
+         if not (isinstance(model, base_objects.Model) or model == {}):
+-            raise self.PhysicsObjectError, \
+-                "%s must be a Model" % str(model)
++            raise self.PhysicsObjectError( \
++                "%s must be a Model" % str(model))
+         elif model:
+             # Check if the mother particle is in the 'model'
+             if not (self.get_pdg_code() in model.get('particle_dict').keys()):
+-                raise self.PhysicsObjectError, \
++                raise self.PhysicsObjectError( \
+                     "The model, %s, does not contain particle %s." \
+-                    %(model.get('name'), self.get_name())
++                    %(model.get('name'), self.get_name()))
+             if any([ch for ch in value if onshell != ch.get_onshell(model)]):
+-                raise self.PhysicsObjectError, \
+-                    "The onshell condition is not consistent with the model."
++                raise self.PhysicsObjectError( \
++                    "The onshell condition is not consistent with the model.")
+         return True
+ 
+ 
+@@ -340,13 +340,13 @@ class DecayParticle(base_objects.Particl
+         """
+         # Check if partnum is an integer.
+         if not isinstance(partnum, int):
+-            raise self.PhysicsObjectError, \
+-                "Final particle number %s must be an integer." % str(partnum)
++            raise self.PhysicsObjectError( \
++                "Final particle number %s must be an integer." % str(partnum))
+         
+         # Check if the value is a DecayAmplitudeList
+         if (not isinstance(value, DecayAmplitudeList) and value):
+-            raise self.PhysicsObjectError, \
+-                "%s must be DecayAmplitudeList type." % str(value)
++            raise self.PhysicsObjectError( \
++                "%s must be DecayAmplitudeList type." % str(value))
+                 
+         return True
+ 
+@@ -356,18 +356,18 @@ class DecayParticle(base_objects.Particl
+         if name == 'decay_vertexlist' or name == 'decay_channels':
+             #Value must be a dictionary.
+             if not isinstance(value, dict):
+-                raise self.PhysicsObjectError, \
+-                    "Decay_vertexlist or decay_channels %s must be a dictionary." % str(value)
++                raise self.PhysicsObjectError( \
++                    "Decay_vertexlist or decay_channels %s must be a dictionary." % str(value))
+ 
+             # key must be two element tuple
+             for key, item in value.items():
+                 if not isinstance(key, tuple):
+-                    raise self.PhysicsObjectError,\
+-                        "Key %s must be a tuple." % str(key)
++                    raise self.PhysicsObjectError(\
++                        "Key %s must be a tuple." % str(key))
+                 
+                 if len(key) != 2:
+-                    raise self.PhysicsObjectError,\
+-                        "Key %s must have two elements." % str(key)
++                    raise self.PhysicsObjectError(\
++                        "Key %s must have two elements." % str(key))
+                 
+                 if name == 'decay_vertexlist':
+                     self.check_vertexlist(key[0], key[1], item)
+@@ -378,8 +378,8 @@ class DecayParticle(base_objects.Particl
+ 
+             #Value must be a dictionary.
+             if not isinstance(value, dict):
+-                raise self.PhysicsObjectError, \
+-                    "Decay_amplitudes %s must be a dictionary." % str(value)
++                raise self.PhysicsObjectError( \
++                    "Decay_amplitudes %s must be a dictionary." % str(value))
+ 
+             # For each key and item, check them with check_amplitudes
+             for key, item in value.items():                
+@@ -387,20 +387,20 @@ class DecayParticle(base_objects.Particl
+                     
+         if name == 'vertexlist_found' or name == 'is_stable':
+             if not isinstance(value, bool):
+-                raise self.PhysicsObjectError, \
+-                    "Propery %s should be Boolean type." % name
++                raise self.PhysicsObjectError( \
++                    "Propery %s should be Boolean type." % name)
+ 
+         if name == 'max_vertexorder':
+             if not isinstance(value, int):
+-                raise self.PhysicsObjectError, \
+-                    "Property %s should be int type." % name
++                raise self.PhysicsObjectError( \
++                    "Property %s should be int type." % name)
+ 
+         # Check apx_decaywidth and apx_decaywidth_err
+         if name == 'apx_decaywidth' or name == 'apx_decaywidth_err' \
+                 or name == '2body_massdiff':
+             if not isinstance(value, float) and not isinstance(value, int):
+-                raise self.PhysicsObjectError, \
+-                    "Property %s must be float type." % str(value)
++                raise self.PhysicsObjectError( \
++                    "Property %s must be float type." % str(value))
+ 
+         super(DecayParticle, self).filter(name, value)
+ 
+@@ -576,14 +576,14 @@ class DecayParticle(base_objects.Particl
+         
+         #Raise error if self is not in model.
+         if not (self.get_pdg_code() in model.get('particle_dict').keys()):
+-            raise self.PhysicsObjectError, \
++            raise self.PhysicsObjectError( \
+                     "The parent particle %s is not in the model %s." \
+-                        % (self.get('name'), model.get('name'))
++                        % (self.get('name'), model.get('name')))
+ 
+         #Raise error if option is not Boolean value
+         if not isinstance(option, bool):
+-            raise self.PhysicsObjectError, \
+-                    "The option %s must be True or False." % str(option)
++            raise self.PhysicsObjectError( \
++                    "The option %s must be True or False." % str(option))
+         
+         #If 'vertexlist_found' is true and option is false,
+         #no action is proceed.
+@@ -692,8 +692,8 @@ class DecayParticle(base_objects.Particl
+             if self.check_channels(partnum, onshell, value_transform, model):
+                 self['decay_channels'][(partnum, onshell)] = value_transform
+         else:
+-            raise self.PhysicsObjectError, \
+-                "The input must be a list of diagrams."
++            raise self.PhysicsObjectError( \
++                "The input must be a list of diagrams.")
+ 
+     def get_max_level(self):
+         """ Get the max channel level that the particle have so far. """
+@@ -713,14 +713,14 @@ class DecayParticle(base_objects.Particl
+            If no suitable amplitude is found, retun None.
+         """
+         if not isinstance(final_ids, list):
+-            raise self.PhysicsObjectError,\
++            raise self.PhysicsObjectError(\
+                 "The final particle ids %s must be a list of integer." \
+-                %str(final_ids)
++                %str(final_ids))
+ 
+         if any([not isinstance(i, int) for i in final_ids]):
+-            raise self.PhysicsObjectError,\
++            raise self.PhysicsObjectError(\
+                 "The final particle ids %s must be a list of integer." \
+-                %str(final_ids)
++                %str(final_ids))
+ 
+         # Sort the given id list first
+         final_ids.sort()
+@@ -742,8 +742,8 @@ class DecayParticle(base_objects.Particl
+         """
+         #check the validity of arguments
+         if not isinstance(partnum, int):
+-            raise self.PhysicsObjectError, \
+-                "The particle number %s must be an integer."  %str(partnum)
++            raise self.PhysicsObjectError( \
++                "The particle number %s must be an integer."  %str(partnum))
+ 
+         try:
+             return self.get('decay_amplitudes')[partnum]
+@@ -767,8 +767,8 @@ class DecayParticle(base_objects.Particl
+             if self.check_amplitudes(partnum, new_value):
+                 self.decay_amplitudes[partnum] = new_value
+         else:
+-            raise self.PhysicsObjectError, \
+-                "The input must be a list of decay amplitudes."
++            raise self.PhysicsObjectError( \
++                "The input must be a list of decay amplitudes.")
+         
+               
+     def find_channels(self, partnum, model, min_br=0):
+@@ -796,16 +796,16 @@ class DecayParticle(base_objects.Particl
+ 
+         # Check validity of argument
+         if not isinstance(partnum, int):
+-            raise self.PhysicsObjectError, \
+-                "Max final particle number %s should be integer." % str(partnum)
++            raise self.PhysicsObjectError( \
++                "Max final particle number %s should be integer." % str(partnum))
+         if not isinstance(model, DecayModel):
+-            raise self.PhysicsObjectError, \
++            raise self.PhysicsObjectError( \
+                 "The second argument %s should be a DecayModel object." \
+-                % str(model)            
++                % str(model))            
+         if not self in model['particles']:
+-            raise self.PhysicsObjectError, \
++            raise self.PhysicsObjectError( \
+                 "The model %s does not contain particle %s" \
+-                % (model.get('name'), self.get('name'))
++                % (model.get('name'), self.get('name')))
+ 
+         # If vertexlist has not been found before, run model.find_vertexlist
+         if not model['vertexlist_found']:
+@@ -1180,12 +1180,12 @@ class DecayParticle(base_objects.Particl
+         """
+ 
+         if not isinstance(clevel, int):
+-            raise self.PhysicsObjectError, \
+-                "The channel level %s must be an integer." % str(clevel)
++            raise self.PhysicsObjectError( \
++                "The channel level %s must be an integer." % str(clevel))
+ 
+         if not isinstance(model, DecayModel):
+-            raise self.PhysicsObjectError, \
+-                "The model must be an DecayModel object."
++            raise self.PhysicsObjectError( \
++                "The model must be an DecayModel object.")
+ 
+         # Reset the value of decay_amplitudes
+         self.set_amplitudes(clevel, DecayAmplitudeList())
+@@ -1414,24 +1414,24 @@ class DecayModel(model_reader.ModelReade
+     def filter(self, name, value):
+         if name == 'vertexlist_found':
+             if not isinstance(value, bool):
+-                raise self.PhysicsObjectError, \
+-                    "Property %s should be bool type." % name
++                raise self.PhysicsObjectError( \
++                    "Property %s should be bool type." % name)
+         if name == 'max_vertexorder':
+             if not isinstance(value, int):
+-                raise self.PhysicsObjectError,\
+-                    "Property %s should be int type." % name
++                raise self.PhysicsObjectError(\
++                    "Property %s should be int type." % name)
+         if name == 'stable_particles' or name == 'decay_groups':
+             if not isinstance(value, list):
+-                raise self.PhysicsObjectError,\
+-                    "Property %s should be a list contains several particle list." % name
++                raise self.PhysicsObjectError(\
++                    "Property %s should be a list contains several particle list." % name)
+             for plist in value:                
+                 if not isinstance(plist, list):
+-                    raise self.PhysicsObjectError,\
+-                    "Property %s should be a list contains several particle list." % name
++                    raise self.PhysicsObjectError(\
++                    "Property %s should be a list contains several particle list." % name)
+                 for p in plist:
+                     if not isinstance(p, DecayParticle):
+-                        raise self.PhysicsObjectError,\
+-                            "Property %s should be a list contains several particle list." % name
++                        raise self.PhysicsObjectError(\
++                            "Property %s should be a list contains several particle list." % name)
+ 
+         super(DecayModel, self).filter(name, value)
+         
+@@ -1532,8 +1532,8 @@ class DecayModel(model_reader.ModelReade
+             
+         
+         if not isinstance(number, int) or not isinstance(part, DecayParticle):
+-            raise self.PhysicsObjectError, \
+-                "Wrong argument types."
++            raise self.PhysicsObjectError( \
++                "Wrong argument types.")
+ 
+         amps = part.get_amplitudes(number)
+         diagrams = sum([[d for d in amp['diagrams']] for amp in amps],[])
+@@ -1545,8 +1545,8 @@ class DecayModel(model_reader.ModelReade
+             found = False
+             for num, call in enumerate(calls):
+                 if not call['helastag']:
+-                    raise self.PhysicsObjectError, \
+-                        "The helastag of helascalls should exist."
++                    raise self.PhysicsObjectError( \
++                        "The helastag of helascalls should exist.")
+                 if call['helastag'] == helastag:
+                     found = True
+                     d['helas_number'] = num
+@@ -1736,9 +1736,9 @@ class DecayModel(model_reader.ModelReade
+                     # (indication of mother appears in final state)
+                     if temp_vertex in self.get_particle(pid)['decay_vertexlist'][(partnum, onshell)] and not force:
+ 
+-                        raise self.PhysicsObjectError,\
++                        raise self.PhysicsObjectError(\
+                             "found duplicated %d-point vertices in %s" \
+-                            % (partnum+1, self.get_particle(pid)['name'])
++                            % (partnum+1, self.get_particle(pid)['name']))
+ 
+                     self.get_particle(pid)['decay_vertexlist'][(\
+                             partnum, onshell)].append(temp_vertex)
+@@ -1928,12 +1928,12 @@ class DecayModel(model_reader.ModelReade
+         
+         # Raise error if the colorlist is not the right format.
+         if not isinstance(colorlist, list):
+-            raise self.PhysicsObjectError,\
+-                "The argument must be a list."
++            raise self.PhysicsObjectError(\
++                "The argument must be a list.")
+ 
+         if any([not isinstance(i, int) for i in colorlist]):
+-            raise self.PhysicsObjectError,\
+-                "The argument must be a list of integer elements."
++            raise self.PhysicsObjectError(\
++                "The argument must be a list of integer elements.")
+ 
+         # Sort the colorlist and 
+         colorlist.sort()
+@@ -1998,8 +1998,8 @@ class DecayModel(model_reader.ModelReade
+         # Raise error for wrong type of q
+         if not isinstance(q, int) and not isinstance(q, long) and \
+                 not isinstance(q, float):
+-            raise self.PhysicsObjectError, \
+-                "The argument %s should be numerical type." %str(q)
++            raise self.PhysicsObjectError( \
++                "The argument %s should be numerical type." %str(q))
+ 
+         # Declare global value. amZ0 is the alpha_s at Z pole
+         global aS, amZ0, mdl_amZ0
+@@ -2892,8 +2892,8 @@ class DecayModel(model_reader.ModelReade
+ 
+         # Raise error if precision is not a float
+         if not isinstance(precision, float):
+-            raise self.PhysicsObjectError, \
+-                "The precision %s should be float type." % str(precision)
++            raise self.PhysicsObjectError( \
++                "The precision %s should be float type." % str(precision))
+ 
+         # If vertexlist has not been found before, run model.find_vertexlist
+         if not self['vertexlist_found']:
+@@ -2990,8 +2990,8 @@ class DecayModel(model_reader.ModelReade
+                             % str(os.path.join(path, name)))
+ 
+         else:
+-            raise PhysicsObjectError,\
+-                "The file name of the decay table must be str." % str(name)
++            raise PhysicsObjectError(\
++                "The file name of the decay table must be str." % str(name))
+ 
+         summary_chart = ''
+         summary_chart = (str('# DECAY WIDTH COMPARISON \n') +\
+@@ -3100,8 +3100,8 @@ class DecayModel(model_reader.ModelReade
+                                                name))))
+ 
+         else:
+-            raise PhysicsObjectError,\
+-                "The file name of the decay table must be str." % str(name)
++            raise PhysicsObjectError(\
++                "The file name of the decay table must be str." % str(name))
+ 
+         # Write the param_card used first
+         fdata0 = open(mother_card_path, 'r')
+@@ -3235,8 +3235,8 @@ class DecayModel(model_reader.ModelReade
+                                                name))))
+ 
+         else:
+-            raise PhysicsObjectError,\
+-                "The file name of the decay table must be str." % str(name)
++            raise PhysicsObjectError(\
++                "The file name of the decay table must be str." % str(name))
+ 
+ 
+         collection = ''
+@@ -3269,8 +3269,8 @@ class DecayModel(model_reader.ModelReade
+            compare the width with our estimation."""
+ 
+         if not os.path.isfile(param_card):
+-            raise MadGraph5Error, \
+-                "No such file %s" % param_card
++            raise MadGraph5Error( \
++                "No such file %s" % param_card)
+     
+         # Read in param_card
+         logger.info("\nRead MG4 param_card: %s \n" % str(param_card))
+@@ -3430,14 +3430,14 @@ class Channel(base_objects.Diagram):
+                     'apx_decaywidth', 'apx_br',
+                     'apx_decaywidth_nextlevel']:
+             if not isinstance(value, float):
+-                raise self.PhysicsObjectError, \
+-                    "Value %s is not a float" % str(value)
++                raise self.PhysicsObjectError( \
++                    "Value %s is not a float" % str(value))
+         
+         if name == 'onshell' or name == 'has_idpart' or \
+                 name == 'apx_width_calculated':
+             if not isinstance(value, bool):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a valid onshell condition." % str(value)
++                raise self.PhysicsObjectError( \
++                        "%s is not a valid onshell condition." % str(value))
+ 
+         return super(Channel, self).filter(name, value)
+     
+@@ -3523,7 +3523,7 @@ class Channel(base_objects.Diagram):
+             self['ini_pid'] = model.get_particle(self.get_anti_initial_id()).get_anti_pdg_code()
+             return self['ini_pid']
+         else:
+-            raise self.PhysicsObjectError, "No model is provided to get initial id."
++            raise self.PhysicsObjectError("No model is provided to get initial id.")
+ 
+     def check_gauge_dependence(self, model):
+         """ compare the vertex ids to see if anyone of them may be illed."""
+@@ -3569,8 +3569,8 @@ class Channel(base_objects.Diagram):
+         if not isinstance(self['onshell'], bool):
+             # Check if model is valid
+             if not isinstance(model, base_objects.Model):
+-                raise self.PhysicsObjectError, \
+-                    "The argument %s must be a model." % str(model)
++                raise self.PhysicsObjectError( \
++                    "The argument %s must be a model." % str(model))
+ 
+             self['final_mass_list'] =sorted([abs(eval(model.get_particle(l.get('id')).get('mass'))) \
+                                                 for l in self.get_final_legs()])
+@@ -3647,8 +3647,8 @@ class Channel(base_objects.Diagram):
+ 
+                 # Check if this vertex has the right order
+                 if fermion_mother['id'] != mother_code:
+-                    raise PhysicsObjectError, \
+-                        "The order of particle in interaction is not standard."
++                    raise PhysicsObjectError( \
++                        "The order of particle in interaction is not standard.")
+ 
+             # Refind the fermion_order except for initial vertex
+             if i != len(self['vertices'])-2:
+@@ -3999,7 +3999,7 @@ class Channel(base_objects.Diagram):
+         
+     @classmethod
+     def init_regular_expression(cls):
+-        dico = dict((`i`, '%s' % ','.join(["\s*-?'?[\w\s]*'?\s*"]*i)) for i in range(1,6))
++        dico = dict((repr(i), '%s' % ','.join(["\s*-?'?[\w\s]*'?\s*"]*i)) for i in range(1,6))
+         cls.lor_pattern = re.compile("""(?<![a-zA-Z])(?P<var>PSlash\(%(3)s\)|
+                                         Gamma\(%(3)s\)|
+                                         Sigma\(%(4)s\)|
+@@ -4170,7 +4170,7 @@ class Channel(base_objects.Diagram):
+ 
+                     try:                    
+                         lor_value = eval(new_structure % q_dict_lor)
+-                    except NameError , error:
++                    except NameError as error:
+                         ufo_struct = model.lorentz_dict[vertex['lorentz'][key[1]]]
+ 
+                         for obj in ufo_struct.formfactors:
+@@ -4179,7 +4179,7 @@ class Channel(base_objects.Diagram):
+                             while True:
+                                 try:
+                                     exec('%s=%s' % (obj.name, val % q_dict_lor))
+-                                except NameError, error:
++                                except NameError as error:
+                                     failname = str(error).split("'")[1]
+                                     exec('%s=mdl_%s' % (failname, failname))
+                                 else:
+@@ -4594,27 +4594,27 @@ class DecayAmplitude(diagram_generation.
+ 
+         if name == 'process':
+             if not isinstance(value, base_objects.Process):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a valid Process object." % str(value)
++                raise self.PhysicsObjectError( \
++                        "%s is not a valid Process object." % str(value))
+             # Reset the width and br
+             self.reset_width_br()
+ 
+         if name == 'diagrams':
+             if not isinstance(value, ChannelList):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a valid ChannelList object." % str(value)
++                raise self.PhysicsObjectError( \
++                        "%s is not a valid ChannelList object." % str(value))
+             # Reset the width and br
+             self.reset_width_br()
+ 
+         if name == 'apx_decaywidth' and name == 'apx_br':
+             if not isinstance(value, float):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a float." % str(value)
++                raise self.PhysicsObjectError( \
++                        "%s is not a float." % str(value))
+ 
+         if name == 'exa_decaywidth':
+             if not isinstance(value, float) and not isinstance(value,bool):
+-                raise self.PhysicsObjectError, \
+-                        "%s is not a float." % str(value)
++                raise self.PhysicsObjectError( \
++                        "%s is not a float." % str(value))
+ 
+         return True
+ 
+@@ -4653,8 +4653,8 @@ class DecayAmplitude(diagram_generation.
+ 
+         # Check the number of initial leg is 1
+         if dia['vertices'][-1]['legs'][-1]['number'] != 1:
+-            raise self.PhysicsObjectError, \
+-                "The number of initial leg should be setted as 1."
++            raise self.PhysicsObjectError( \
++                "The number of initial leg should be setted as 1.")
+ 
+         # Append the initial leg.
+         leglist = base_objects.LegList([base_objects.Leg({'id': dia.get_initial_id(model),
+@@ -4675,14 +4675,14 @@ class DecayAmplitude(diagram_generation.
+             of outgoing legs are consistent with the process."""
+ 
+         if not isinstance(new_dia, Channel):
+-            raise self.PhysicsObjectError,\
+-                "The argument should be Channel object."
++            raise self.PhysicsObjectError(\
++                "The argument should be Channel object.")
+ 
+         # Model must be provided in argument or in self['process']
+         if not model:
+             if not self['process']['model']:
+-                raise self.PhysicsObjectError,\
+-                    "No model is given either in argument or in process."
++                raise self.PhysicsObjectError(\
++                    "No model is given either in argument or in process.")
+             else:
+                 model = self['process']['model']
+ 
+@@ -4819,8 +4819,8 @@ class DecayAmplitude(diagram_generation.
+ 
+         # Raise error if format is wrong
+         else:
+-            raise self.PhysicsObjectError,\
+-                "Format %s must be \'normal\' or \'full\'." % str(format)
++            raise self.PhysicsObjectError(\
++                "Format %s must be \'normal\' or \'full\'." % str(format))
+ 
+         # Return output for full format case.
+         return output
+@@ -5003,8 +5003,8 @@ class AbstractModel(base_objects.Model):
+             else:
+                 return self['particle_type_dict'][abs(part)][1]
+         else:
+-            raise self.PhysicsObjectError, \
+-                "Input should be Particle type or pdg_code(int)."
++            raise self.PhysicsObjectError( \
++                "Input should be Particle type or pdg_code(int).")
+ 
+ 
+     def get_particle_type_code(self, part):
+@@ -5032,8 +5032,8 @@ class AbstractModel(base_objects.Model):
+ 
+         # Check argument type
+         if not force and not isinstance(pdg_code, int):
+-            raise self.PhysicsObjectError,\
+-                "Argument must be a pdg_code."
++            raise self.PhysicsObjectError(\
++                "Argument must be a pdg_code.")
+ 
+         # To ensure pdg_code is positive
+         pdg_code = abs(pdg_code)
+@@ -5113,8 +5113,8 @@ class AbstractModel(base_objects.Model):
+ 
+         # Check argument type
+         if not force and not isinstance(part, base_objects.Particle):
+-            raise self.PhysicsObjectError,\
+-                "Argument must be a Particle object."
++            raise self.PhysicsObjectError(\
++                "Argument must be a Particle object.")
+ 
+         # Setup the particle_type_dict for all particle
+         self['particle_type_dict'][part['pdg_code']] = \
+@@ -5133,8 +5133,8 @@ class AbstractModel(base_objects.Model):
+ 
+         # Check argument type
+         if not force and not isinstance(part_list, base_objects.ParticleList):
+-            raise self.PhysicsObjectError,\
+-                "Argument must be a ParticleList."
++            raise self.PhysicsObjectError(\
++                "Argument must be a ParticleList.")
+ 
+         # Call add_particle for each particle
+         for part in part_list:
+@@ -5179,7 +5179,7 @@ class AbstractModel(base_objects.Model):
+             try:
+                 input_pdgcode_list, original_order = zip(*temp)
+             except:
+-                print original_order, pdgcode_list
++                print(original_order, pdgcode_list)
+ 
+         # Construct the abstract pid list
+         for i, pdg_code in enumerate(input_pdgcode_list):
+@@ -5276,9 +5276,9 @@ class AbstractModel(base_objects.Model):
+         try:
+             return self['interaction_type_dict'][inter_id]
+         except KeyError:
+-            raise self.PhysicsObjectError, \
++            raise self.PhysicsObjectError( \
+                 "Interaction #%d has not been imported into AbstractModel." \
+-                % inter_id
++                % inter_id)
+ 
+ 
+     def add_ab_interaction(self, inter_id, force=False, color = None):
+@@ -5289,8 +5289,8 @@ class AbstractModel(base_objects.Model):
+ 
+         # Check argument type
+         if not force and not isinstance(inter_id, int):
+-            raise self.PhysicsObjectError,\
+-                "Argument must be an Interaction id."
++            raise self.PhysicsObjectError(\
++                "Argument must be an Interaction id.")
+         
+         # Setup new interaction
+         ab_inter = base_objects.Interaction()
+@@ -5335,8 +5335,8 @@ class AbstractModel(base_objects.Model):
+             ab_inter['color'] = \
+                 self['abstract_interactions_dict'][inter_type][0]['color']
+         else:
+-            raise self.PhysicsObjectError,\
+-                "Error to add interaction. No color information available."
++            raise self.PhysicsObjectError(\
++                "Error to add interaction. No color information available.")
+ 
+         # couplings = G###cl##
+         #              |  || |-> the serial number
+@@ -5372,8 +5372,8 @@ class AbstractModel(base_objects.Model):
+         # Check argument type
+         if not force and not isinstance(inter_list, 
+                                         base_objects.InteractionList):
+-            raise self.PhysicsObjectError,\
+-                "Argument must be an InteractionList."
++            raise self.PhysicsObjectError(\
++                "Argument must be an InteractionList.")
+ 
+         # Add all interactions except for
+         # 1. radiation interaction, 2. interaction with all stable particles
+@@ -5643,11 +5643,11 @@ class AbstractModel(base_objects.Model):
+         """
+ 
+         if not isinstance(ab_dia, Channel) or not isinstance(real_dia, Channel):
+-            raise self.PhysicsObjectError,\
+-                "The first two argument are not Channel objects."
++            raise self.PhysicsObjectError(\
++                "The first two argument are not Channel objects.")
+         if ab2realdict != None and not isinstance(ab2realdict, Ab2RealDict):
+-            raise self.PhysicsObjectError,\
+-                "The final argument should be Ab2RealDict, otherwise should be omitted."
++            raise self.PhysicsObjectError(\
++                "The final argument should be Ab2RealDict, otherwise should be omitted.")
+             
+ 
+         # Interaction id list
+@@ -5718,11 +5718,11 @@ class AbstractModel(base_objects.Model):
+         The abstract_type of abstract diagram is constructed. """
+ 
+         if not isinstance(ab_amp, DecayAmplitude):
+-            raise self.PhysicsObjectError,\
+-                "The first argument  is not DecayAmplitude object."
++            raise self.PhysicsObjectError(\
++                "The first argument  is not DecayAmplitude object.")
+         if not isinstance(real_dia, Channel):
+-            raise self.PhysicsObjectError,\
+-                "The second argument is not Channel object."
++            raise self.PhysicsObjectError(\
++                "The second argument is not Channel object.")
+ 
+         ab_dia = Channel({'onshell': True})
+         ab_dia['vertices'] = copy.deepcopy(real_dia['vertices'])
+@@ -5949,8 +5949,8 @@ class Ab2RealDict(base_objects.PhysicsOb
+         elif isinstance(ab_object, AbstractModel):
+             ab_pids = ab_object.get_particlelist_type(real_pids, sn_dict = {ab_object.get_particle_type(ini_pid): 1})[0]
+         else:
+-            raise self.PhysicsObjectError, \
+-                "The first argument is not necessary, otherwise it should be AbstractModel."
++            raise self.PhysicsObjectError( \
++                "The first argument is not necessary, otherwise it should be AbstractModel.")
+ 
+         # Reset final_legs_dict
+         self['final_legs_dict'] = {}
 diff -rupN MadGraph_pristine/models/check_param_card.py ../contrib/MadGraph/models/check_param_card.py
 --- MadGraph_pristine/models/check_param_card.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/check_param_card.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/models/check_param_card.py	2020-10-30 20:49:24.534460884 +1100
 @@ -3,7 +3,12 @@ from __future__ import division
  import itertools
  import xml.etree.ElementTree as ET
@@ -7345,7 +10332,7 @@ diff -rupN MadGraph_pristine/models/check_param_card.py ../contrib/MadGraph/mode
      yd = card['yd'].get([3, 3]).value
 diff -rupN MadGraph_pristine/models/import_ufo.py ../contrib/MadGraph/models/import_ufo.py
 --- MadGraph_pristine/models/import_ufo.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/import_ufo.py	2020-10-30 01:30:30.002831748 +1100
++++ ../contrib/MadGraph/models/import_ufo.py	2020-10-30 20:49:24.534460884 +1100
 @@ -121,8 +121,8 @@ def get_model_db():
              continue
          break
@@ -7627,8 +10614,8 @@ diff -rupN MadGraph_pristine/models/import_ufo.py ../contrib/MadGraph/models/imp
          data_string = '*'.join(output)
 diff -rupN MadGraph_pristine/models/__init__.py ../contrib/MadGraph/models/__init__.py
 --- MadGraph_pristine/models/__init__.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/__init__.py	2020-10-30 01:26:23.649372220 +1100
-@@ -44,8 +44,8 @@ def load_model(name, decay=False):
++++ ../contrib/MadGraph/models/__init__.py	2020-10-30 20:49:24.534460884 +1100
+@@ -44,10 +44,18 @@ def load_model(name, decay=False):
          model_path = os.path.realpath(os.sep.join(path_split))
          sys_path = os.path.realpath(os.path.dirname(sys.modules[path_split[-1]].__file__))
          if sys_path != model_path:
@@ -7638,10 +10625,20 @@ diff -rupN MadGraph_pristine/models/__init__.py ../contrib/MadGraph/models/__ini
 +                (path_split[-1], model_path, sys_path) )
  
      with misc.TMP_variable(sys, 'path', [os.sep.join(path_split[:-1])]):
++        import subprocess
++        if os.path.isfile(name + '/__init__.py') : subprocess.call(["sed -i -re 's/import (.*)/from .\\1 import */g' " + name + "/__init__.py"], shell=True)
++        files = ['particles', 'parameters', 'propagators', 'couplings', 'lorentz', 'coupling_orders', 'decays', 'vertices', 'function_library', 'CT_couplings', 'object_library']
++        for f in files:
++            for f2 in files:
++                if os.path.isfile(name + '/' + f + '.py') : subprocess.call(["sed -i -e 's/from " + f2 + "/from ." + f2 + "/g' " + name + "/" + f + ".py"], shell=True)
++                if os.path.isfile(name + '/' + f + '.py') : subprocess.call(["sed -i -e 's/import " + f2 + "/from . import " + f2 + "/g' " + name + "/" + f + ".py"], shell=True)
++        if os.path.isfile(name + '/object_library.py') : subprocess.call(["sed -i -ri 's/raise ([^,]*),(.*)/raise \\1(\\2)/g' " + name + "/object_library.py"], shell=True)
          __import__(path_split[-1])
+     output = sys.modules[path_split[-1]]
+     if decay:
 diff -rupN MadGraph_pristine/models/model_reader.py ../contrib/MadGraph/models/model_reader.py
 --- MadGraph_pristine/models/model_reader.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/model_reader.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/models/model_reader.py	2020-10-30 20:49:24.534460884 +1100
 @@ -79,7 +79,7 @@ class ModelReader(loop_base_objects.Loop
              if isinstance(param_card, basestring):
                  # Check that param_card exists
@@ -7694,7 +10691,7 @@ diff -rupN MadGraph_pristine/models/model_reader.py ../contrib/MadGraph/models/m
                  logger.warning("%s has no expression: %s" % (param.name,
 diff -rupN MadGraph_pristine/models/write_param_card.py ../contrib/MadGraph/models/write_param_card.py
 --- MadGraph_pristine/models/write_param_card.py	2020-10-27 21:41:37.885090150 +1100
-+++ ../contrib/MadGraph/models/write_param_card.py	2020-10-30 01:26:23.649372220 +1100
++++ ../contrib/MadGraph/models/write_param_card.py	2020-10-30 20:49:24.534460884 +1100
 @@ -219,7 +219,7 @@ class ParamCardWriter(object):
              info = info[4:]
      
@@ -7731,7 +10728,7 @@ diff -rupN MadGraph_pristine/models/write_param_card.py ../contrib/MadGraph/mode
      
 diff -rupN MadGraph_pristine/vendor/ply/yacc.py ../contrib/MadGraph/vendor/ply/yacc.py
 --- MadGraph_pristine/vendor/ply/yacc.py	2020-10-27 21:41:37.909090533 +1100
-+++ ../contrib/MadGraph/vendor/ply/yacc.py	2020-10-30 01:26:23.653372095 +1100
++++ ../contrib/MadGraph/vendor/ply/yacc.py	2020-10-30 20:49:24.534460884 +1100
 @@ -89,7 +89,12 @@ resultlimit = 40               # Size li
  pickle_protocol = 0            # Protocol to use when writing pickle files
  
