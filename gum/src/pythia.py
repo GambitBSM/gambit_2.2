@@ -162,12 +162,12 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
 
     """
     S.B. 22/07/2020: commented the below out, as it looks like we actually
-    _don't_ need to make changes to ParticleData.xml. Leaving it here just 
+    _don't_ need to make changes to ParticleData.xml. Leaving it here just
     in case we change our minds again...
 
 
     # Add new particles to the ParticeData xml file, and their decay products
-    # Firstly scrape the initial list of particles and check everything 
+    # Firstly scrape the initial list of particles and check everything
     # is consistent
     xmold = patched_dir + "/share/Pythia8/xmldoc/ParticleData.xml"
     xmnew = patched_dir + "/share/Pythia8/xmldoc/ParticleData.xml_new"
@@ -184,7 +184,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
     for match in matches:
 
         m = ''.join(match)
-        
+
         pdg = re.search(r'id="(.*?)"', m).group(1)
         name = re.search(r'name="(.*?)"', m).group(1)
         spintype = re.search(r'spinType="(.*?)"', m).group(1)
@@ -197,7 +197,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
 
         defined_particles[int(pdg)] = pm
 
-    # Iterate through the particle list and check to see if any are 
+    # Iterate through the particle list and check to see if any are
     # already defined in Pythia.
     dp = []
     for p in particles:
@@ -216,7 +216,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
                                 "not match up with the definition in Pythia.\n"
                                 "Pythia: {1}, you: {2}. (spin = 2s+1)\n"
                                 "Please use a different PDG code."
-                              ).format(str(p.PDG_code), ppy.spintype, 
+                              ).format(str(p.PDG_code), ppy.spintype,
                                        str(p.spinX2+1)))
 
             # Charge
@@ -225,7 +225,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
                                 "already defined in Pythia's particle database."
                                 "\nThe charge provided for this particle does "
                                 "not match up with the definition in Pythia.\n"
-                                "Pythia: {1}, you: {2}. (charge x 3)\n"                                
+                                "Pythia: {1}, you: {2}. (charge x 3)\n"
                                 "Please use a different PDG code."
                               ).format(str(p.PDG_code), ppy.chargetype,
                                        p.chargeX3))
@@ -269,8 +269,8 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
                                     "with the definition in Pythia.\n"
                                     "Please use a different PDG code."
                                   ).format(str(p.PDG_code)))
-    
-    # Once we're satisfied there's no incorrect duplicates, we can 
+
+    # Once we're satisfied there's no incorrect duplicates, we can
     # add new entries to the XML file.
     p_towrite = ""
     append_decays = {}
@@ -281,7 +281,7 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
 
             # If antiparticle is distinct, we want to save this information too.
             name = p.name
-            if not p.is_sc(): 
+            if not p.is_sc():
                 name += " antiname = {}".format(p.antiname)
 
             # Convert to Pythia's color basis:
@@ -405,7 +405,7 @@ def write_pythia_cmake_entry(model, output_dir):
               "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
               "          COMMAND patch -p1 < ${patch2}\n"\
               "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
-              "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --cxx-soname=\"${pythia_CXX_SONAME_FLAGS}\"--lib-suffix=\".so\"\n"\
+              "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --cxx-soname=\"${pythia_CXX_SONAME_FLAGS}\" --lib-suffix=\".so\"\n"\
               "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
               "    INSTALL_COMMAND \"\"\n"\
               "  )\n"\
@@ -433,27 +433,19 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
         if (i.sm) or (i.tag == "Pole_Mass" and i.block == "") or i.block in blocks or i.block.lower() == "mass":
             continue
 
+        pp_source += (
+                "        \"      if (blockName == \\\"{0}\\\") ifail={0}.set(linestream);\\n\"\n"
+        ).format(i.block.lower())
+
+        # Scalars
         if i.shape == "scalar" or i.shape == None:
-
-            pp_source += (
-                    "        \"      else if (blockName == \\\"{0}\\\") {{\\n\"\n"
-                    "        \"        FILL_LHBLOCK({0}, double)\\n\"\n"
-                    "        \"      }}\\n\"\n"
-            ).format(i.block.lower())
-          
             pp_header += "        \"  LHblock<double> {0};\\n\"\n".format(i.block.lower())
-
-        # Matrix cases
+        # Matrices
         elif re.match("m[2-9]x[2-9]", i.shape):
-
-            pp_source += (
-                    "        \"      else if (blockName == \\\"{0}\\\") {{\\n\"\n"
-                    "        \"        FILL_LHMATRIXBLOCK({0})\\n\"\n"
-                    "        \"      }}\\n\"\n"
-            ).format(i.block.lower())
-          
             pp_header += "        \"  LHmatrixBlock<{0}> {1};\\n\"\n".format(i.shape[-1], i.block.lower())
-
+        # Wtfs
+        else:
+            raise GumError("Unknown shape for block " + i.block.lower() + ".")
 
         blocks.append(i.block)
 
@@ -471,7 +463,7 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
         "linenum = 0\n"
         "with open(location) as f:\n"
         "    for num, line in enumerate(f, 1):\n"
-        "        if \"FILL_LHBLOCK(nmssmrun, double)\" in line:\n"
+        "        if \"(blockName == \\\"nmssmrun\\\") ifail=nmssmrun.set(linestream)\" in line:\n"
         "            linenum = num+1\n"
         "            break\n"
         "\n"
