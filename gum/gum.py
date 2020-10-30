@@ -815,9 +815,9 @@ if args.file:
             amend_file("colliders/SetHooksClass.hpp", m, set_userhook,
                            num+14, reset_contents)
 
-            num = find_string("getColliderPythia.hpp", m, 
-                                  "          catch (typename ColliderPythia<PythiaT,EventT>::InitializationError& e)")[1]
-            amend_file("getColliderPythia.hpp", m, apply_userhook,
+            num = find_string("getPy8Collider.hpp", m, 
+                                  "          catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)")[1]
+            amend_file("getPy8Collider.hpp", m, apply_userhook,
                            num+10, reset_contents)
 
 
