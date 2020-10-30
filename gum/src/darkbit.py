@@ -2,7 +2,7 @@
 #  ***********************************
 #  \file
 #
-#  Master module for all DarkBit-related 
+#  Master module for all DarkBit-related
 #  routines.
 #
 #  *************************************
@@ -10,7 +10,7 @@
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
 #  \date 2018 Apr, Aug, Sep, Oct, Dec
-#        2019 Feb, Oct, Nov, 
+#        2019 Feb, Oct, Nov,
 #        2020 Feb, Apr, Jul
 #
 #  **************************************
@@ -48,15 +48,15 @@ class VertexMerger:
             if (self.v6.count(dm.PDG_code) > 1):
                 return True
             else: return False
-        else:   
-            if (self.v6.count(dm.PDG_code) > 0 and 
+        else:
+            if (self.v6.count(dm.PDG_code) > 0 and
                 self.v6.count(dm.conjugate_PDG_code) > 0):
                 return True
             else: return False
 
     def find_ann(self, dm, antiparticles, aux_particles, propagators, products):
         """
-        For each particle in vertexA, check to see if its antiparticle 
+        For each particle in vertexA, check to see if its antiparticle
         is in vertexB. If so, we can consider this a propagator particle.
         Add this to the list of propagators and add the products to a list too
         """
@@ -65,27 +65,27 @@ class VertexMerger:
 
             # Create a copy of the six body mess, then remove an instance of DM and DMbar
             l = self.v6[:]
-            l.remove(l[l.index(dm.PDG_code)])         
-            l.remove(l[l.index(dm.conjugate_PDG_code)]) 
+            l.remove(l[l.index(dm.PDG_code)])
+            l.remove(l[l.index(dm.conjugate_PDG_code)])
 
             # Firstly check the type of the field
             # If it's an integer then it's a PDG code
             if isinstance(particle, int):
-                # If we have DM + DMbar only accept this if it's a t-channel 
+                # If we have DM + DMbar only accept this if it's a t-channel
                 # exchange, (chi + X ---> chi/chi~ <--- X~ chi~)
-                if (particle == dm.PDG_code or 
+                if (particle == dm.PDG_code or
                     particle == dm.conjugate_PDG_code):
                     if not dm.is_sc():
                         if not self.v6.count(dm.PDG_code) == 2: continue
                     elif dm.is_sc():
                         if not self.v6.count(dm.PDG_code) == 4: continue
-                
+
                 if antiparticles[particle] in self.vB:
                     propagators.append(particle)
                     propagators.append(antiparticles[particle])
                     # Get the products
-                    l.remove(l[l.index(particle)])         
-                    l.remove(l[l.index(antiparticles[particle])]) 
+                    l.remove(l[l.index(particle)])
+                    l.remove(l[l.index(antiparticles[particle])])
                     products.append(l)
 
             # If it's a string it'll be an aux field
@@ -94,19 +94,19 @@ class VertexMerger:
                     # Just add the products, don't want to earmark auxiliary
                     # particles for resonances
                     # Get the products
-                    l.remove(l[l.index(particle)])         
-                    l.remove(l[l.index(aux_particles[particle])]) 
-                    products.append(l)   
-        
+                    l.remove(l[l.index(particle)])
+                    l.remove(l[l.index(aux_particles[particle])])
+                    products.append(l)
 
-def sort_annihilations(dm, three_fields, four_fields, aux_particles, 
+
+def sort_annihilations(dm, three_fields, four_fields, aux_particles,
                        antiparticles):
     """
     Sorts BSM vertices, returns DM+DM -> X + Y and a list of propagator
-    particles (not auxiliaries though -- the propagators are used for 
+    particles (not auxiliaries though -- the propagators are used for
     resonances)
     """
-    
+
     if not isinstance(dm, Particle):
         GumError("\n\nDM not passed over as an instance of class Particle.")
 
@@ -114,7 +114,7 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
     products = []
 
     # Add all 4-pt vertices that are DM + DM -> X + Y
-    # Shouldn't have to worry about auxiliary particles in a contact 
+    # Shouldn't have to worry about auxiliary particles in a contact
     # interaction - sort of defeats the point.
     for i in range(0, len(four_fields)):
 
@@ -138,20 +138,20 @@ def sort_annihilations(dm, three_fields, four_fields, aux_particles,
 
     for i in three_fields:
         for j in three_fields:
-            v = VertexMerger(i,j) 
-            
+            v = VertexMerger(i,j)
+
             # If there's at least one dm, and one dmbar,
             # then let's have a closer look
             if not v.has_dm_dmbar(dm):
                 continue
 
-            # Check to see if there is a DM+DMbar-> X + Y process in the 
+            # Check to see if there is a DM+DMbar-> X + Y process in the
             # merged vertex, and record any (physical) propagators and products
             v.find_ann(dm, antiparticles, aux_particles, propagators, products)
-                
+
     # Remove duplicates
     propagators = list(set(propagators))
-    products = [list(x) for x in set(tuple(y) 
+    products = [list(x) for x in set(tuple(y)
                 for y in [sorted(z) for z in products])]
 
 
@@ -188,13 +188,13 @@ def xsecs(dm, products, gambit_pdg_dict, gambit_model_name,
     # Arrays of final states (CalcHEP names names)
     out1c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in products[:,0]])
     out2c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in products[:,1]])
-    
+
     # DM (and conjugate) as known to CalcHEP
     dm_chep = pdg_to_particle(dm.PDG_code, calchep_pdg_dict)
     dm_chepc = pdg_to_particle(dm.conjugate_PDG_code, calchep_pdg_dict)
 
     # Save entry to calchep_processes
-    calchep_processes['xsecs'][dm_chep, dm_chepc].append([list(i) for i in 
+    calchep_processes['xsecs'][dm_chep, dm_chepc].append([list(i) for i in
                                                           zip(out1c, out2c)])
 
     towrite_class = (
@@ -279,7 +279,7 @@ def decays(dm, products, gambit_pdg_dict):
     """
     Writes all entries for decays within the Process Catalogue,
     just using what's already been filled in the DecayTable.
-    The DecayTable can come from either CalcHEP (tree-level) 
+    The DecayTable can come from either CalcHEP (tree-level)
     or SPheno (so can include loop decays).
     """
 
@@ -296,7 +296,7 @@ def decays(dm, products, gambit_pdg_dict):
     print(twobody)
     print(threebody)
 
-    # 2-body decay - genRate = partial decay width. 
+    # 2-body decay - genRate = partial decay width.
     # Get it from the DecayTable total width * BF
     if twobody:
         out1g = np.array([pdg_to_particle(x[0], gambit_pdg_dict) for x in twobody])
@@ -316,10 +316,10 @@ def decays(dm, products, gambit_pdg_dict):
                   ".BF(p1[i], p2[i])));\n"
                   "process_dec.channelList.push_back(dec_channel);\n"
                   "}}\n"
-                  "\n" 
+                  "\n"
         ).format(p1, p2, gb_id)
 
-    # 3-body decay - genRate = partial decay width, with two variables, 
+    # 3-body decay - genRate = partial decay width, with two variables,
     # 'E' and 'E1' (final state energy of first & second particles)
     # @TODO: is this *exactly* what comes out of SPheno? Probably not, right?
     if threebody:
@@ -346,24 +346,24 @@ def decays(dm, products, gambit_pdg_dict):
                   "}}\n"
                   "\n"
         ).format(p1, p2, p3, gb_id)
-    
+
     # # Add each channel
     # for product in products:
 
     #     # Join the products
-    #     channel = ', '.join('"{0}"'.format(pdg_to_particle(x, gambit_pdg_dict)) 
+    #     channel = ', '.join('"{0}"'.format(pdg_to_particle(x, gambit_pdg_dict))
     #                         for x in product)
 
     #     # Need to know what the 'genRate' value has to be.
     #     genrate = ""
-    #     # 2-body decay - genRate = partial decay width. 
+    #     # 2-body decay - genRate = partial decay width.
     #     # Get it from the DecayTable total width * BF
     #     if len(product) == 2:
     #         genrate = (
     #                 "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
     #                 "tbl.at(\"{0}\").BF({1}))"
     #         ).format(gb_id, channel)
-    #     # 3-body decay - genRate = partial decay width, with two variables, 
+    #     # 3-body decay - genRate = partial decay width, with two variables,
     #     # 'E' and 'E1' (final state energy of first & second particles)
     #     # Is this what comes out of SPheno??
     #     elif len(product) == 3:
@@ -374,7 +374,7 @@ def decays(dm, products, gambit_pdg_dict):
     #     else:
     #         raise GumError(("\n\nTrying to add entries for decaying DM, "
     #                         "however you have passed over\na decay that is not"
-    #                         "a 2- or 3-body decay!"))  
+    #                         "a 2- or 3-body decay!"))
 
     #     decay_src += (
     #               "TH_Channel dec_channel(daFunk::vec<string>({0}), "
@@ -431,7 +431,7 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
     if does_DM_decay:
         towrite += "TH_Process process_dec(\"{0}\");\n".format(gb_id)
     else:
-        towrite += "TH_Process process_ann(\"{0}\", \"{1}\");\n".format(gb_id, 
+        towrite += "TH_Process process_ann(\"{0}\", \"{1}\");\n".format(gb_id,
                                                                         gb_conj)
         # Add flag for (non-)self-conjugate DM to rescale spectra properly
         if not dm.is_sc():
@@ -473,9 +473,9 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
                 towrite += (
                         "addParticle(\"{0}\", spec.get(Par::Pole_Mass,"
                         " \"{1}\"), {2});\n"
-                ).format(pdg_to_particle(model_specific_particles[i].PDG_code, 
+                ).format(pdg_to_particle(model_specific_particles[i].PDG_code,
                                          gambit_pdg_dict),
-                         pdg_to_particle(model_specific_particles[i].PDG_code, 
+                         pdg_to_particle(model_specific_particles[i].PDG_code,
                                          gambit_pdg_dict),
                          str(model_specific_particles[i].spinX2)
                          )
@@ -490,9 +490,9 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
             "DecayTable tbl = *Dep::decay_rates;\n"
     )
 
-    # Use DarkBit_utils::ImportDecays to recursively import decays for final 
+    # Use DarkBit_utils::ImportDecays to recursively import decays for final
     # state particles
-    # TODO confirm final state particles to exclude. 
+    # TODO confirm final state particles to exclude.
     # TODO add SM fermion final states (excludedecays)
     if higgses or propagators:
 
@@ -516,7 +516,7 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
 
         if does_DM_decay: propagators = []
 
-        # TODO add any final state, non-SM particles (external legs) 
+        # TODO add any final state, non-SM particles (external legs)
         for particle in list(set(higgses+propagators)):
 
             towrite += (
@@ -549,7 +549,7 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
         towrite += "\ncatalog.processList.push_back(process_ann);\n\n"
 
     # Wrap it up.
-    towrite +=( 
+    towrite +=(
             "// Validate\n"
             "catalog.validate();\n\n"
             "result = catalog;\n"
@@ -563,7 +563,7 @@ def write_darkbit_src(dm, pc, sv, products, propagators, does_DM_decay,
                       gambit_pdg_dict, gambit_model_name, calchep_pdg_dict,
                       model_specific_particles, higgses, calchep_processes):
     """
-    Collects all source for DarkBit: 
+    Collects all source for DarkBit:
         - process catalogue
         - DM ID
         - ...
@@ -759,12 +759,12 @@ def write_darkbit_rollcall(model_name, pc, does_DM_decay):
 
 
 """
-MICROMEGAS 
+MICROMEGAS
 """
 
 
 def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
-                         particles, gambit_pdg_codes, calchep_masses, 
+                         particles, gambit_pdg_codes, calchep_masses,
                          calchep_widths):
     """
     Writes frontend source and header files for a new MicrOmegas model.
@@ -1087,7 +1087,7 @@ def patch_micromegas(model_name, reset_dict):
     filename = "micromegas/3.6.9.2/"+model_name+"/patch_micromegas_3.6.9.2_"+model_name+".dif"
 
     write_file(filename, "Backends", towrite, reset_dict)
-    
+
     print("micrOMEGAs files patched.")
 
 def add_micromegas_to_cmake(model_name, reset_dict):
@@ -1119,7 +1119,7 @@ def add_micromegas_to_cmake(model_name, reset_dict):
             "\n"
     )
 
-    add_to_backends_cmake(towrite, reset_dict, string_to_find="# Pythia")
+    add_to_backends_cmake(towrite, reset_dict, string_to_find="# MontePythonLike")
 
 def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
     """
@@ -1135,7 +1135,7 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
 
     rollcall = full_filename("DarkBit_rollcall.hpp", "DarkBit")
 
-    
+
                 # Function                  # Capability    # String to write above
     entries = [ ["DD_couplings_MicrOmegas", "DD_couplings", "FORCE_SAME_BACKEND"] ]
 
@@ -1155,7 +1155,7 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
         if not exists:
             raise GumError(("Function {0} not found in DarkBit_rollcall.hpp. "
                             "It should be there!").format(function))
-    
+
         # Now find the ALLOW_MODELS for the CAPABILITY
         linenum = 0
         with open(rollcall, 'r') as f:
@@ -1163,17 +1163,17 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
             for i in range(line):
                 next(f)
             for num, line in enumerate(f, line):
-                if pattern in line: 
+                if pattern in line:
                     linenum = num
                     break
 
-        # What we want to write    
+        # What we want to write
         towrite = (
             "      BACKEND_OPTION((MicrOmegas_{}),(gimmemicro))\n"
             ).format(model_name)
 
         if linenum != 0:
-            amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum, 
+            amend_file("DarkBit_rollcall.hpp", "DarkBit", towrite, linenum,
                        reset_dict)
         else:
             raise GumError(("Could not find the string ALLOW_MODELS in "
@@ -1183,12 +1183,12 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
     file = "DarkBit_rollcall.hpp"
     module = "DarkBit"
     if not does_DM_decay:
-        add_new_model_to_function(file, module, "RD_oh2_Xf", 
-                                  "RD_oh2_Xf_MicrOmegas", model_name, 
-                                  reset_dict, pattern="ALLOW_MODELS")    
-    add_new_model_to_function(file, module, "DD_couplings", 
-                              "DD_couplings_MicrOmegas", model_name, 
-                              reset_dict, pattern="ALLOW_MODEL_DEPENDENCE")   
-    add_new_model_to_function(file, module, "DD_couplings", 
-                              "DD_couplings_MicrOmegas", model_name, 
+        add_new_model_to_function(file, module, "RD_oh2_Xf",
+                                  "RD_oh2_Xf_MicrOmegas", model_name,
+                                  reset_dict, pattern="ALLOW_MODELS")
+    add_new_model_to_function(file, module, "DD_couplings",
+                              "DD_couplings_MicrOmegas", model_name,
+                              reset_dict, pattern="ALLOW_MODEL_DEPENDENCE")
+    add_new_model_to_function(file, module, "DD_couplings",
+                              "DD_couplings_MicrOmegas", model_name,
                               reset_dict, pattern="MODEL_GROUP(group2")
