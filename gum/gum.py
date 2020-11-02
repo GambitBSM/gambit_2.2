@@ -704,8 +704,8 @@ if args.file:
     
             # Adding in a UserHook
             print("Writing a Pythia UserHooks class for ColliderBit")
-            set_userhook = write_set_userhook(clean_model_name,base_pythia_version)
-            apply_userhook = write_apply_userhook(clean_model_name)
+            set_userhook = write_set_userhook(gum.name,base_pythia_version)
+            apply_userhook = write_apply_userhook(gum.name)
 
         # Stop now if we're just doing a dry run
         if args.dryrun:
