@@ -257,8 +257,8 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
 
 def write_set_userhook(model_name,base_pythia_version):
     """
-    Adds a specialised SetHooks class to the ColliderPythia routines
-    in SetHooks.hpp and getColliderPythia.hpp.
+    Adds a specialised SetHooks class to the PyCollider routines
+    in SetHooks.hpp and getPy8Collider.hpp.
     """
     # Forming the code to write into the getColliserPythia.hpp class
     towrite = (
@@ -276,10 +276,10 @@ def write_set_userhook(model_name,base_pythia_version):
             '        ~SetHooks() {{ }}\n'
             '\n'
             '        //Function to set the UserHook\n'
-            '        bool SetupHook(Pythia_{0}_default::Pythia8::Pythia* ColliderPythia)\n'
+            '        bool SetupHook(Pythia_{0}_default::Pythia8::Pythia* Py8Collider)\n'
             '        {{\n'
-            '          matching = combined.getHook(*ColliderPythia);\n'
-            '          ColliderPythia->setUserHooksPtr(matching);\n'
+            '          matching = combined.getHook(*Py8Collider);\n'
+            '          Py8Collider->setUserHooksPtr(matching);\n'
             '          return true;\n'
             '        }}\n'
             '    }};\n').format(model_name,base_pythia_version)
@@ -288,7 +288,7 @@ def write_set_userhook(model_name,base_pythia_version):
 
 def write_apply_userhook(model_name):
 
-    # Forming the code to write into the getColliderPythia.hpp class
+    # Forming the code to write into the getPy8Collider.hpp class
     towrite = (
             '        //Setting the User Hook.\n'
             '        if (model_suffix == "_{0}") {{\n'
