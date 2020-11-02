@@ -21,7 +21,7 @@
   #define CAPABILITY HardScatteringSim
 
     #define FUNCTION getPythia_@MODEL@
-    START_FUNCTION(ColliderPythia_@MODEL@_defaultversion)
+    START_FUNCTION(Py8Collider_@MODEL@_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
     ALLOW_MODEL(@MODEL@)
@@ -33,7 +33,7 @@
     START_FUNCTION(const BaseCollider*)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    DEPENDENCY(HardScatteringSim, ColliderPythia_@MODEL@_defaultversion)
+    DEPENDENCY(HardScatteringSim, Py8Collider_@MODEL@_defaultversion)
     ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
 
@@ -46,7 +46,7 @@
     START_FUNCTION(Pythia_@MODEL@_default::Pythia8::Event)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia_@MODEL@, default)
-    DEPENDENCY(HardScatteringSim, ColliderPythia_@MODEL@_defaultversion)
+    DEPENDENCY(HardScatteringSim, Py8Collider_@MODEL@_defaultversion)
     ALLOW_MODEL(@MODEL@)
     #undef FUNCTION
   #undef CAPABILITY

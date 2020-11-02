@@ -12,8 +12,8 @@
 ///
 ///  *********************************************
 
-#include "gambit/ColliderBit/getColliderPythia.hpp"
-#include "gambit/ColliderBit/generateEventColliderPythia.hpp"
+#include "gambit/ColliderBit/getPy8Collider.hpp"
+#include "gambit/ColliderBit/generateEventPy8Collider.hpp"
 #include "gambit/ColliderBit/getBuckFast.hpp"
 #include "gambit/ColliderBit/smearEvent.hpp"
 
