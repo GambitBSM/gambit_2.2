@@ -296,9 +296,11 @@ if args.file:
                     # Clear and remake the copy of Pythia that will receive the
                     #  matrix element code produced by MadGraph
                     pristine_pythia_dir = os.path.join(os.getcwd(),
-                                                       'contrib','pythia')
+                                                       'contrib','Pythia') 
                     new_pythia_dir = mg5_output_dir + "/Pythia_patched"
                     remove_tree_quietly(new_pythia_dir)
+                    print(pristine_pythia_dir, new_pythia_dir)
+
                     copy_tree(pristine_pythia_dir, new_pythia_dir)
 
                     # Create the MadGraph script
