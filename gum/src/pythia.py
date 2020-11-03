@@ -347,10 +347,10 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
     os.rename(xmnew, xmold)
     """
 
-def write_boss_config_for_pythia(model, output_dir):
+def write_boss_configs_for_pythia(model, output_dir):
     """
     TODO: use writing routines in files.py & reset dict.
-    Writes the BOSS config for Pythia.
+    Writes the BOSS configs for Pythia.
     """
 
     # Sort out the paths
