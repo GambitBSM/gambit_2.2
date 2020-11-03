@@ -406,26 +406,6 @@ def add_calchep_switch(model_name, spectrum, calchep_processes):
 def save_CH_matrix_elements(calchep_processes):
     """
     Saves the CalcHEP matrix elements. 
-    
-    TODO these are currently saved as adding them to the backend initialisation 
-    might be the best way to deal with the MPI errors, i.e.,
-
-    if (scan_level)
-    {
-        int rank = 0;
-        #ifdef WITH_MPI
-            rank = GMPI::Comm().Get_rank();
-        #endif
-        if (rank == 0)
-        {
-            for (p : processes)
-            {
-                char* libname = model + "_" + instates + "_to_" + outstates;
-                numout* cc = getMEcode(0, 0, p, NULL, NULL, libname);
-            }
-        }
-    }
-    *should* fix it...
     """
 
     towrite = ""

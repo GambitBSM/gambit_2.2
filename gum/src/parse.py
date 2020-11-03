@@ -136,7 +136,7 @@ def check_gum_file(inputfile):
 
     with open(inputfile, "r") as f:
         try:
-            data = yaml.load(f)
+            data = yaml.safe_load(f)
         except yaml.YAMLError as exc:
             print(exc)
 

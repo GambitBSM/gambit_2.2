@@ -185,7 +185,7 @@ def xsecs(dm, products, gambit_pdg_dict, gambit_model_name,
     # Arrays of final states (GAMBIT names)
     out1g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in products[:,0]])
     out2g = np.array([pdg_to_particle(x, gambit_pdg_dict) for x in products[:,1]])
-    # Arrays of final states (CalcHEP names names)
+    # Arrays of final states (CalcHEP names)
     out1c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in products[:,0]])
     out2c = np.array([pdg_to_particle(x, calchep_pdg_dict) for x in products[:,1]])
 
@@ -1131,6 +1131,8 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
         - new BACKEND_OPTION
         - adds to ALLOW_MODEL_DEPENDENCE
         - adds to MODEL_GROUP(group2 (...))
+    - sigmav_late_universe_MicrOmegas (for non-decaying DM)
+        - new BACKEND
     """
 
     rollcall = full_filename("DarkBit_rollcall.hpp", "DarkBit")
@@ -1142,6 +1144,8 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
     # Only add relic density calculation if DM isn't decaying
     if not does_DM_decay:
         entries.append(["RD_oh2_Xf_MicrOmegas", "RD_oh2_Xf", "ALLOW_MODELS"])
+        entries.append(["sigmav_late_universe_MicrOmegas", "sigmav",
+                        "FORCE_SAME_BACKEND"])
 
     # Add the backend options to each entry
     for entry in entries:
@@ -1185,7 +1189,7 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
     if not does_DM_decay:
         add_new_model_to_function(file, module, "RD_oh2_Xf",
                                   "RD_oh2_Xf_MicrOmegas", model_name,
-                                  reset_dict, pattern="ALLOW_MODELS")
+                                  reset_dict, pattern="ALLOW_MODELS")        
     add_new_model_to_function(file, module, "DD_couplings",
                               "DD_couplings_MicrOmegas", model_name,
                               reset_dict, pattern="ALLOW_MODEL_DEPENDENCE")

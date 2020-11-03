@@ -103,7 +103,7 @@ will take a bit longer. Once this is done we also have to install the
 remaining backends we wish to use for the scan. This is simple,
 
         cd $GAMBIT/build
-        make -j3 darksusy gamlike ddcalc
+        make -j3 darksusy_generic_wimp gamlike ddcalc
 
 8. Then we're ready to scan. The options included in the YAML file
    we are using to scan are detailed in the GUM manual. For more

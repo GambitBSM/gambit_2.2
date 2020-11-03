@@ -47,9 +47,10 @@ def find_decay_type(vertex):
         if list(Counter(vertex).values())[0] == 1:
             return vertex, "ABB"
         elif list(Counter(vertex).values())[0] == 2:
-            return [Counter(vertex).keys()[1],
-                    Counter(vertex).keys()[0],
-                    Counter(vertex).keys()[0]], "ABB"
+            return [list(Counter(vertex).keys())[1],
+                    list(Counter(vertex).keys())[0],
+                    list(Counter(vertex).keys())[0]], "ABB"
+
 
     # Case 3. A -> B, C process.
     elif len(Counter(vertex).values()) == 3:
@@ -151,7 +152,6 @@ def decay_sorter(three_diagrams, aux_particles, antiparticle_dict):
         if decaytype == "AAA":
             pass
         else:
-
             decays.append([vertex, decaytype])
 
     return decay_grouper(decays, antiparticle_dict)
@@ -226,15 +226,16 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
         c_name.append(map(lambda x:pdg_to_particle(x, calchep_pdg_codes),products[i]))
         g_name.append(map(lambda x:pdg_to_particle(x, gambit_pdg_codes), products[i]))
 
+    out1c = np.array([pdg_to_particle(x, calchep_pdg_codes) for x in products[:,0]])
+    out2c = np.array([pdg_to_particle(x, calchep_pdg_codes) for x in products[:,1]])
+
     c_strings = []
     g_strings = []
-    final_states = []
     for i in np.arange(len(c_name)):
         c_strings.append("{{{}}}".format(', '.join("\"{0}\"".format(x) for x in c_name[i])))
         g_strings.append("{{{}}}".format(', '.join("\"{0}\"".format(y) for y in g_name[i])))
-        final_states.append(c_name[i])
 
-    calchep_processes['decays'][chep_name].append(final_states)
+    calchep_processes['decays'][chep_name].append([list(i) for i in zip(out1c, out2c)])
 
     towrite = (
             "void {0}(DecayTable::Entry& result)\n"
