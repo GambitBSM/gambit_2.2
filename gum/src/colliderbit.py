@@ -291,7 +291,8 @@ def write_apply_userhook(model_name):
     # Forming the code to write into the getPy8Collider.hpp class
     towrite = (
             '        //Setting the User Hook.\n'
-            '        if (model_suffix == "_{0}") {{\n'
+            '        if (model_suffix == "_{0}")\n'
+            '        {{\n'
             '          result.SetupMatchingUserHook();\n'
             '        }}\n'
             '\n').format(model_name)

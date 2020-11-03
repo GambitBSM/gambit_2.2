@@ -363,7 +363,6 @@ def write_boss_configs_for_pythia(model, output_dir):
 
     # Write the actual BOSS config file
     for outfile, template in zip(outfiles, templates):
-      print(outfile, template)
       with open(outfile, 'w') as f_new, open(template) as f_old:
         for line in f_old:
           if "gambit_backend_name    = 'Pythia'" in line:
