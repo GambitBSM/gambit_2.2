@@ -177,27 +177,25 @@ else()
 endif()
 
 # Check for Boost & drop FeynRules/SARAH shared object files.
-# Note that for Boost 1.67 or later, we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
+# Note that for some Boost versions (1.67 or later, but also 1.58 sometimes), we'll need to match the Python version with the component, as e.g. COMPONENTS "python36".
+# To avoid differences, we just look for the main library name, e.g. libboost_python3-py36.so
 # In OSX, for Boost versions at least 1.62 the component name also needs changing
+if(PYTHON_VERSION_MAJOR EQUAL 2)
+  set(python_component python)
+else()
+  set(python_component python3-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} )
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,dynamic_lookup")
+  set(python_component "${python_component}-mt")
+else()
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
+endif()
+
 set(Boost_NO_BOOST_CMAKE ON)
-find_package(Boost 1.41.0 QUIET)
+find_package(Boost 1.41.0 REQUIRED COMPONENTS ${python_component} filesystem system)
 if(Boost_FOUND)
-  if(PYTHON_VERSION_MAJOR EQUAL 2)
-    set(python_component python)
-  elseif(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND Boost_VERSION LESS 105800)
-    set(python_component python3)
-  else()
-    set(python_component python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} )
-  endif()
-
-  if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,dynamic_lookup")
-    set(python_component "${python_component}-mt")
-  else()
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
-  endif()
-
-  find_package(Boost 1.41.0 REQUIRED COMPONENTS ${python_component} filesystem system)
   include_directories("${Boost_INCLUDE_DIR}")
 
   add_library(fr SHARED src/feynrules.cpp src/math_package.cpp)
@@ -206,7 +204,7 @@ if(Boost_FOUND)
   target_link_libraries(sarah ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 
 else()
-  message(FATAL_ERROR "\nGUM requires Boost v1.41 or greater, including the compiled libraries Boost.Python (for FeynRules) and Boost.Filesystem.\nPlease install suitable Boost components and rerun cmake.")
+  message(FATAL_ERROR "\nGUM requires Boost v1.41 or greater, including the compiled libraries Boost.Python, Boost.System and Boost.Filesystem.\nPlease install suitable Boost components and rerun cmake.")
 endif()
 
 # Configure cmake variables files

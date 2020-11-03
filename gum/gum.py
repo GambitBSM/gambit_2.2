@@ -305,12 +305,12 @@ if args.file:
                     # Create the MadGraph script
                     # TODO determine all possible BSM processes automatically
                     # when collider_processes is missing from the .gum file
-                    make_madgraph_script(mg5_output_dir, gum.name,
-                                         collider_processes,
+                    mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
+                    make_madgraph_script(mg5_dir, mg5_output_dir, gum.name, 
+                                         collider_processes, 
                                          multiparticles)
 
                     # Add MadGraph to path and import the python interface
-                    mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
                     sys.path.append(mg5_dir)
                     import madgraph.interface.master_interface as mi
 
