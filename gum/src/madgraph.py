@@ -20,18 +20,22 @@ from .files import mkdir_if_absent, remove_tree_quietly
 
 script_name = "generate_matrix_elements.mg5"
 
-def make_madgraph_script(mg5_output_dir, model_name, processes, multiparticles):
+def make_madgraph_script(mg5_dir, mg5_output_dir, model_name, processes, multiparticles):
     """
     Writes a script to be used when calling MadGraph.
     """
 
+    model_path = mg5_dir + "/models/" + model_name
     filename = mg5_output_dir + "/" + script_name
 
     print("Generating {}.".format(filename))
 
-    # Import the model 
-    towrite = "import model " + model_name + "\n"
-    
+    # First convert the model to python3 if needed
+    towrite = "convert model " + model_path + "\n"
+
+    # Then, import the model 
+    towrite += "import model " + model_name + "\n"
+
     # Import any multiparticles
     if multiparticles:
         for multi in multiparticles:
