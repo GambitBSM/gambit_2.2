@@ -699,9 +699,6 @@ if args.file:
             pythia_cmake = write_pythia_cmake_entry(gum.name, output_dir)
             print(("Setting the default version of Pythia_"+gum.name+" for "
                    "BOSSed classes to 8."+base_pythia_version))
-            write_new_default_bossed_version("Pythia_"+gum.name,
-                                             "8."+base_pythia_version,
-                                             output_dir)
 
             # Adding in a UserHook
             print("Writing a Pythia UserHooks class for ColliderBit")
@@ -906,8 +903,8 @@ if args.file:
                                      reset_contents)
             add_to_backends_cmake(pythia_cmake, reset_contents,
                                   string_to_find="# Nulike")
-            #copy_file("backends.cmake", "cmake", output_dir, reset_contents,
-            #          existing = True)
+            add_to_default_bossed_version("Pythia_"+gum.name,
+                                          safe_ver, reset_contents)
 
         # SPheno
         if output_opts.spheno:

@@ -81,37 +81,23 @@ def write_backend_patch(output_dir, pristine_dir, patched_dir, backend, version,
     os.chdir(cwd)
 
 
-def write_new_default_bossed_version(backend, version, output_dir):
+def add_to_default_bossed_version(backend, version, reset_dict):
 
     import re
 
-    # The path to the original file in GAMBIT
-    path = "/Backends/include/gambit/Backends/"
     filename = "default_bossed_versions.hpp"
-    old = ".."+path+filename
+    module = "Backends"
 
-    # Sort out the path to the candidate replacement
-    newdir = output_dir+path
-    mkdir_if_absent(newdir)
-    new = newdir+filename
+    # The contents to add
+    contents = "#define  Default_" + backend+" " + re.sub(r"\.", "_", version)+"\n"
 
-    # The signature of the line we want to add/replace
-    signature = "#define  Default_"+backend+" "
+    string_to_find = "// Defaults added by GUM (do not remove this comment)."
 
-    # Flag indicating that GUM section exists already
-    comment_exists = False
+    present, linenum = find_string(filename, module, string_to_find)
+    if not present: 
+      linenum = -1
 
-    # Work through the old version of the file and add/replace this entry
-    with open(old) as f_old, open(new, 'w') as f_new:
-        for line in f_old:
-            if not signature in line: f_new.write(line)
-            if "// Defaults added by GUM" in line:
-                if not line.endswith("\n"): f_new.write("\n")
-                comment_exists = True
-        if not comment_exists:
-            f_new.write("\n// Defaults added by GUM (do not remove this comment).\n")
-        f_new.write(signature+re.sub(r"\.", "_", version)+"\n")
-
+    amend_file(filename, module, contents, linenum, reset_dict)
 
 def add_to_backend_locations(backend_name, backend_location, version_number, 
                              reset_dict):
