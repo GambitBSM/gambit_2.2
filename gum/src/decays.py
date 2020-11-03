@@ -342,7 +342,6 @@ def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays,
             else:
                 extra = ""
             towrite = (
-                    "\n"
                     "    #define FUNCTION {0}\n"
                     "    START_FUNCTION(DecayTable::Entry)\n"
                     "    DEPENDENCY({1}, Spectrum)\n{2}"
@@ -356,7 +355,6 @@ def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays,
         # well as the function
         elif not find_capability(cap, "DecayBit")[0]:
             towrite = (
-                    "\n"
                     "  #define CAPABILITY {0}\n"
                     "  START_CAPABILITY\n"
                     "\n"
