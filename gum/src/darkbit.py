@@ -285,16 +285,11 @@ def decays(dm, products, gambit_pdg_dict):
 
     decay_src = "\n"
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
+    dm_mass = "m" + gb_id.strip('~').replace("\"", "")
 
     # Split products into 2-body and 3-body
-
     twobody = [x for x in products if len(x) == 2]
     threebody = [x for x in products if len(x) == 3]
-
-    #TODO: Remove if this is debuggin
-    print(products)
-    print(twobody)
-    print(threebody)
 
     # 2-body decay - genRate = partial decay width.
     # Get it from the DecayTable total width * BF
@@ -311,13 +306,21 @@ def decays(dm, products, gambit_pdg_dict):
                   "\n"
                   "for (unsigned int i = 0; i < p1.size(); ++i)\n"
                   "{{\n"
-                  "TH_Channel dec_channel(daFunk::vec<string>(p1[i], p2[i]), "
-                  "daFunk::cnst(tbl.at(\"{2}\").width_in_GeV*tbl.at(\"{2}\")"
+                  "double mtot_final = "
+                  "catalog.getParticleProperty(p1[i]).mass\n"
+                  "                  + "
+                  "catalog.getParticleProperty(p2[i]).mass;  \n"
+                  "// Is the channel kinematically allowed?\n"
+                  "if ({2} > mtot_final)\n"
+                  "{{\n"
+                  "TH_Channel dec_channel(daFunk::vec<string>(p1[i], p2[i]),\n"
+                  "  daFunk::cnst(tbl.at(\"{3}\").width_in_GeV*tbl.at(\"{3}\")"
                   ".BF(p1[i], p2[i])));\n"
                   "process_dec.channelList.push_back(dec_channel);\n"
                   "}}\n"
+                  "}}\n"
                   "\n"
-        ).format(p1, p2, gb_id)
+        ).format(p1, p2, dm_mass, gb_id)
 
     # 3-body decay - genRate = partial decay width, with two variables,
     # 'E' and 'E1' (final state energy of first & second particles)
@@ -338,48 +341,21 @@ def decays(dm, products, gambit_pdg_dict):
                   "\n"
                   "for (unsigned int i = 0; i < p1.size(); ++i)\n"
                   "{{\n"
+                  "double mtot_final = \n"
+                  "catalog.getParticleProperty(p1_3b[i]).mass + \n"
+                  "catalog.getParticleProperty(p2_3b[i]).mass +  \n"
+                  "catalog.getParticleProperty(p3_3b[i]).mass;  \n"
+                  "if ({3} > mtot_final)\n"
+                  "{{\n"
                   "TH_Channel dec_channel(daFunk::vec<string>(p1_3b[i], "
                   "p2_3b[i], p3_3b[i]), daFunk::cnst("
-                  "tbl.at(\"{3}\").width_in_GeV*tbl.at(\"{3}\")"
+                  "tbl.at(\"{4}\").width_in_GeV*tbl.at(\"{4}\")"
                   ".BF(p1[i], p2[i], p3[i])));\n"
                   "process_dec.channelList.push_back(dec_channel);\n"
                   "}}\n"
+                  "}}\n"
                   "\n"
-        ).format(p1, p2, p3, gb_id)
-
-    # # Add each channel
-    # for product in products:
-
-    #     # Join the products
-    #     channel = ', '.join('"{0}"'.format(pdg_to_particle(x, gambit_pdg_dict))
-    #                         for x in product)
-
-    #     # Need to know what the 'genRate' value has to be.
-    #     genrate = ""
-    #     # 2-body decay - genRate = partial decay width.
-    #     # Get it from the DecayTable total width * BF
-    #     if len(product) == 2:
-    #         genrate = (
-    #                 "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
-    #                 "tbl.at(\"{0}\").BF({1}))"
-    #         ).format(gb_id, channel)
-    #     # 3-body decay - genRate = partial decay width, with two variables,
-    #     # 'E' and 'E1' (final state energy of first & second particles)
-    #     # Is this what comes out of SPheno??
-    #     elif len(product) == 3:
-    #         genrate = (
-    #                 "daFunk::cnst(tbl.at(\"{0}\").width_in_GeV*"
-    #                 "tbl.at(\"{0}\").BF(\"{1}\"))"
-    #         ).format(gb_id, channel)
-    #     else:
-    #         raise GumError(("\n\nTrying to add entries for decaying DM, "
-    #                         "however you have passed over\na decay that is not"
-    #                         "a 2- or 3-body decay!"))
-
-    #     decay_src += (
-    #               "TH_Channel dec_channel(daFunk::vec<string>({0}), "
-    #               "{1});\n"
-    #     ).format(channel, genrate)
+        ).format(p1, p2, p3, dm_mass, gb_id)
 
     return decay_src
 
@@ -392,9 +368,9 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
 
     towrite = ""
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    if not does_DM_decay:
-        gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
+    gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
 
+    if not does_DM_decay:
         towrite += (
                 "class {0}\n"
                 "{{\n"
@@ -468,17 +444,17 @@ def proc_cat(dm, sv, products, propagators, gambit_pdg_dict,
                     "addParticle(\"{1}\", {0}, {2});\n"
             ).format(dm_mass, gb_conj, dm.spinX2)
 
-        for i in np.arange(len(model_specific_particles)):
-            if model_specific_particles[i].PDG_code != dm.PDG_code:
-                towrite += (
-                        "addParticle(\"{0}\", spec.get(Par::Pole_Mass,"
-                        " \"{1}\"), {2});\n"
-                ).format(pdg_to_particle(model_specific_particles[i].PDG_code,
-                                         gambit_pdg_dict),
-                         pdg_to_particle(model_specific_particles[i].PDG_code,
-                                         gambit_pdg_dict),
-                         str(model_specific_particles[i].spinX2)
-                         )
+    for i in np.arange(len(model_specific_particles)):
+        if model_specific_particles[i].PDG_code != dm.PDG_code:
+            towrite += (
+                    "addParticle(\"{0}\", spec.get(Par::Pole_Mass,"
+                    " \"{1}\"), {2});\n"
+            ).format(pdg_to_particle(model_specific_particles[i].PDG_code,
+                                     gambit_pdg_dict),
+                     pdg_to_particle(model_specific_particles[i].PDG_code,
+                                     gambit_pdg_dict),
+                     str(model_specific_particles[i].spinX2)
+                     )
 
     towrite += (
             "\n"
@@ -570,9 +546,7 @@ def write_darkbit_src(dm, pc, sv, products, propagators, does_DM_decay,
     """
 
     gb_id = pdg_to_particle(dm.PDG_code, gambit_pdg_dict)
-    gb_conj = None
-    if not does_DM_decay:
-        gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
+    gb_conj = pdg_to_particle(dm.conjugate_PDG_code, gambit_pdg_dict)
 
     if not isinstance(dm, Particle):
         print("DM not passed over as an instance of class Particle.")
@@ -745,14 +719,12 @@ def write_darkbit_rollcall(model_name, pc, does_DM_decay):
             "#undef FUNCTION\n"
     ).format(model_name))
 
-    dm_conj = ""
-    if not does_DM_decay:
-        dm_conj = dumb_indent(4, (
-                "#define FUNCTION DarkMatterConj_ID_{0}\n"
-                "START_FUNCTION(std::string)\n"
-                "ALLOW_MODELS({0})\n"
-                "#undef FUNCTION\n"
-        ).format(model_name))
+    dm_conj = dumb_indent(4, (
+              "#define FUNCTION DarkMatterConj_ID_{0}\n"
+              "START_FUNCTION(std::string)\n"
+              "ALLOW_MODELS({0})\n"
+              "#undef FUNCTION\n"
+    ).format(model_name))
 
     return pro_cat, dm_id, dm_conj
 

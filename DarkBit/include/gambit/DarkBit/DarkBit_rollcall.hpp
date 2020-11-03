@@ -457,11 +457,13 @@ START_MODULE
       DEPENDENCY(SimYieldTable, SimYieldTable)
       DEPENDENCY(DarkMatter_ID, std::string)
       DEPENDENCY(DarkMatterConj_ID, std::string)
+      DEPENDENCY(DM_process, std::string)
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY GA_AnnYield
+  #define CAPABILITY GA_Yield
   START_CAPABILITY
+
     #define FUNCTION GA_AnnYield_General
       START_FUNCTION(daFunk::Funk)
       DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
@@ -469,6 +471,14 @@ START_MODULE
       DEPENDENCY(cascadeMC_gammaSpectra, stringFunkMap)
       DEPENDENCY(DarkMatter_ID, std::string)
       DEPENDENCY(DarkMatterConj_ID, std::string)
+    #undef FUNCTION
+
+    #define FUNCTION GA_DecayYield_General
+      START_FUNCTION(daFunk::Funk)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(SimYieldTable, SimYieldTable)
+      DEPENDENCY(cascadeMC_gammaSpectra, stringFunkMap)
+      DEPENDENCY(DarkMatter_ID, std::string)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -547,6 +557,18 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
+  // Information about the nature of the DM process in question
+  // (i.e. decay or annihilation) to use the correct scaling in 
+  // terms of the DM density, phase space, etc.
+  #define CAPABILITY DM_process
+  START_CAPABILITY
+    #define FUNCTION DM_process_from_ProcessCatalog
+      START_FUNCTION(std::string)
+      DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+      DEPENDENCY(DarkMatter_ID, std::string)
+    #undef FUNCTION
+  #undef CAPABILITY
+
   #define CAPABILITY set_gamLike_GC_halo
   START_CAPABILITY
     #define FUNCTION set_gamLike_GC_halo
@@ -560,8 +582,9 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION lnL_FermiLATdwarfs_gamLike
       START_FUNCTION(double)
-      DEPENDENCY(GA_AnnYield, daFunk::Funk)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
       DEPENDENCY(RD_fraction, double)
+      DEPENDENCY(DM_process, std::string)
       BACKEND_REQ(lnL, (gamLike), double, (int, const std::vector<double> &, const std::vector<double> &))
     #undef FUNCTION
   #undef CAPABILITY
@@ -570,9 +593,10 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION lnL_FermiGC_gamLike
       START_FUNCTION(double)
-      DEPENDENCY(GA_AnnYield, daFunk::Funk)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
       DEPENDENCY(RD_fraction, double)
       DEPENDENCY(set_gamLike_GC_halo, bool)
+      DEPENDENCY(DM_process, std::string)
       BACKEND_REQ(lnL, (gamLike), double, (int, const std::vector<double> &, const std::vector<double> &))
     #undef FUNCTION
   #undef CAPABILITY
@@ -581,8 +605,9 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION lnL_CTAGC_gamLike
       START_FUNCTION(double)
-      DEPENDENCY(GA_AnnYield, daFunk::Funk)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
       DEPENDENCY(RD_fraction, double)
+      DEPENDENCY(DM_process, std::string)
       //DEPENDENCY(set_gamLike_GC_halo, bool)
       BACKEND_REQ(lnL, (gamLike), double, (int, const std::vector<double> &, const std::vector<double> &))
     #undef FUNCTION
@@ -592,9 +617,10 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION lnL_HESSGC_gamLike
       START_FUNCTION(double)
-      DEPENDENCY(GA_AnnYield, daFunk::Funk)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
       DEPENDENCY(RD_fraction, double)
       DEPENDENCY(set_gamLike_GC_halo, bool)
+      DEPENDENCY(DM_process, std::string)
       BACKEND_REQ(lnL, (gamLike), double, (int, const std::vector<double> &, const std::vector<double> &))
     #undef FUNCTION
   #undef CAPABILITY
@@ -603,7 +629,7 @@ START_MODULE
   START_CAPABILITY
     #define FUNCTION dump_GammaSpectrum
       START_FUNCTION(double)
-      DEPENDENCY(GA_AnnYield, daFunk::Funk)
+      DEPENDENCY(GA_Yield, daFunk::Funk)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -1327,7 +1353,7 @@ START_MODULE
     START_FUNCTION(int)
     DEPENDENCY(DD_couplings, DM_nucleon_couplings)
     DEPENDENCY(RD_oh2, double)
-    DEPENDENCY(GA_AnnYield, daFunk::Funk)
+    DEPENDENCY(GA_Yield, daFunk::Funk)
     DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     DEPENDENCY(DarkMatter_ID, std::string)
     DEPENDENCY(DarkMatterConj_ID, std::string)

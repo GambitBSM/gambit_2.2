@@ -109,6 +109,28 @@ namespace Gambit
 
     }
 
+    /// Information about the nature of the DM process in question (i.e. decay or annihilation) 
+    /// to use the correct scaling for ID in terms of the DM density, phase space, etc.
+    void DM_process_from_ProcessCatalog(std::string &result)
+    {
+      using namespace Pipes::DM_process_from_ProcessCatalog;
+      
+      // Only need to check this once.
+      static bool first = true;
+      if (first)
+      {
+        // Can we find a process that is a decay?
+        // (This logic used so that this capability does not depend on DarkMatterConj_ID)
+        const TH_Process* p = (*Dep::TH_ProcessCatalog).find(*Dep::DarkMatter_ID);
+
+        // If not, it's an annihilation.
+        if (p == NULL) result = "annihilation";
+        else result = "decay";
+        first = false;
+      }
+      
+    }
+
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -197,7 +219,7 @@ namespace Gambit
       std::string DMid = *Dep::DarkMatter_ID;
       std::string DMbarid = *Dep::DarkMatterConj_ID;
       TH_Process annProc = (*Dep::TH_ProcessCatalog).getProcess(DMid, DMbarid);
-      daFunk::Funk spectrum = (*Dep::GA_AnnYield)->set("v", 0.);
+      daFunk::Funk spectrum = (*Dep::GA_Yield)->set("v", 0.);
 
       std::ostringstream filename;
       /*

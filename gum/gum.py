@@ -356,7 +356,8 @@ if args.file:
                 gambit_pdgs, decaybit_dict = \
                     add_new_particleDB_entry(missing_parts, gum.dm_pdg,
                                              gambit_pdgs, decaybit_dict,
-                                             reset_contents, gum.name)
+                                             reset_contents, gum.name, 
+                                             gum.dm_decays)
 
         # Grab the antiparticles
         antiparticle_dict = get_antiparticles(partlist)
@@ -779,9 +780,8 @@ if args.file:
         if darkbit:
             m = "DarkBit"
             amend_rollcall("DarkMatter_ID", m, dmid_cap, reset_contents)
-            if not gum.dm_decays:
-                amend_rollcall("DarkMatterConj_ID", m, dmconj_cap,
-                               reset_contents)
+            amend_rollcall("DarkMatterConj_ID", m, dmconj_cap,
+                           reset_contents)
             write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
             if pc:
                 amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)

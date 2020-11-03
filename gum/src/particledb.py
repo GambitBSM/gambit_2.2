@@ -199,7 +199,8 @@ def check_all_particles_present(partlist, gambit_pdg_codes):
         
 
 def add_new_particleDB_entry(particles, dm_pdg, gambit_pdg_codes,
-                             decaybit_dict, reset_dict, modelname):
+                             decaybit_dict, reset_dict, modelname,
+                             dm_decays):
     """
     Adds a list of particles to the particle database.
     """
@@ -275,8 +276,8 @@ def add_new_particleDB_entry(particles, dm_pdg, gambit_pdg_codes,
             reset_dict['particles']['particles'].append(sig)
 
             # Assume a new particle decays *unless* it is explicitly given as
-            # a dark matter candidate
-            if not (part.pdg() == dm_pdg):
+            # a dark matter candidate, or unless it's decaying DM.
+            if dm_decays or (part.pdg() != dm_pdg and not dm_decays):
 
                 # Add the new particle to the DecayBit dict too
                 decaybit_dict[part.name()] = part.pdg()
