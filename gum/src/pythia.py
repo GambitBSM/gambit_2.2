@@ -369,7 +369,7 @@ def write_boss_configs_for_pythia(model, output_dir):
           if "gambit_backend_name    = 'Pythia'" in line:
               f_new.write("gambit_backend_name    = 'Pythia_"+model+"'\n")
           # Add the CombineMatchingInput class to the input files.
-          elif "                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h'," in line:
+          elif "                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h'" in line:
               f_new.write("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h',\n")
               f_new.write("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8Plugins/CombineMatchingInput.h',\n")
           else:
