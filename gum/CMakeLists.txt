@@ -183,7 +183,7 @@ endif()
 if(PYTHON_VERSION_MAJOR EQUAL 2)
   set(python_component python)
 else()
-  set(python_component python3-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} )
+  set(python_component python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} )
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
