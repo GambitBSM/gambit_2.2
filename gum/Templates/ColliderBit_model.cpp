@@ -25,7 +25,7 @@ namespace Gambit
     GET_SPECTRUM_AND_DECAYS_FOR_PYTHIA_NONSUSY(getSpectrumAndDecaysForPythia_@MODEL@, @MODEL@_spectrum)
 
     // Get Monte Carlo event generator
-    GET_SPECIFIC_PYTHIA(getPythia_@MODEL@, Pythia_@MODEL@_default, @MODEL@_spectrum, _@MODEL@, NOT_SUSY)
+    GET_SPECIFIC_PYTHIA(getPythia_@MODEL@, Pythia_@MODEL@_default, _@MODEL@)
     GET_PYTHIA_AS_BASE_COLLIDER(getPythia_@MODEL@AsBase)
 
     // Run event generator

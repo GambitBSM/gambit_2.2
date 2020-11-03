@@ -390,31 +390,32 @@ def write_pythia_cmake_entry(model, output_dir):
 
     # The string that will commence the block to be added by GUM
     to_write = "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M).\n"\
-              "set(model \""+model.lower()+"\")\n"\
-              "set(name \"pythia_${model}\")\n"\
-              "set(ver \"8."+base_pythia_version+"\")\n"\
-              "set(lib \"libpythia8\")\n"\
-              "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
-              "set(md5 \""+pythia_md5+"\")\n"\
-              "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
-              "set(model_specific_patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\"check_ditch_status(${name} ${ver} ${dir})\n"\
-              "if(NOT ditched_${name}_${ver})\n"\
-              "  ExternalProject_Add(${name}_${ver}\n"\
-              "    DEPENDS ${pythia_depends_on}\n"\
-              "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
-              "    SOURCE_DIR ${dir}\n"\
-              "    BUILD_IN_SOURCE 1\n"\
-              "    PATCH_COMMAND patch -p1 < ${model_specific_patch}\n"\
-              "          COMMAND patch -p1 < ${patch}\n"\
-              "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
-              "    CONFIGURE_COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
-              "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
-              "    INSTALL_COMMAND \"\"\n"\
-              "  )\n"\
-              "  BOSS_backend(${name} ${ver} ${BOSS_suffix})\n"\
-              "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
-              "  set_as_default_version(\"backend\" ${name} ${ver})\n"\
-              "endif()\n\n"
+               "set(model \""+model.lower()+"\")\n"\
+               "set(name \"pythia_${model}\")\n"\
+               "set(ver \"8."+base_pythia_version+"\")\n"\
+               "set(lib \"libpythia8\")\n"\
+               "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
+               "set(md5 \""+pythia_md5+"\")\n"\
+               "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
+               "set(model_specific_patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
+               "check_ditch_status(${name} ${ver} ${dir})\n"\
+               "if(NOT ditched_${name}_${ver})\n"\
+               "  ExternalProject_Add(${name}_${ver}\n"\
+               "    DEPENDS ${pythia_depends_on}\n"\
+               "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
+               "    SOURCE_DIR ${dir}\n"\
+               "    BUILD_IN_SOURCE 1\n"\
+               "    PATCH_COMMAND patch -p1 < ${model_specific_patch}\n"\
+               "          COMMAND patch -p1 < ${patch}\n"\
+               "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
+               "    CONFIGURE_COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
+               "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
+               "    INSTALL_COMMAND \"\"\n"\
+               "  )\n"\
+               "  BOSS_backend(${name} ${ver} ${BOSS_suffix})\n"\
+               "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
+               "  set_as_default_version(\"backend\" ${name} ${ver})\n"\
+               "endif()\n\n"
 
     return to_write
 

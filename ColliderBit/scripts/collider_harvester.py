@@ -110,13 +110,24 @@ namespace Gambit                                  \n\
                                                   \n\
     /// Typedefs for each Pythia collider         \n\
     /// @{                                        \n\
-    typedef Py8Collider<Pythia_default::Pythia8::Pythia, Pythia_default::Pythia8::Event> Py8Collider_defaultversion;\n"
+    #ifdef EXCLUDE_HEPMC                          \n\
+      typedef Py8Collider<Pythia_default::Pythia8::Pythia, Pythia_default::Pythia8::Event, void> Py8Collider_defaultversion;\n"
 
     for h in model_headers:
         if h != "SUSY.hpp":
             m = re.sub(".hpp", "", h)
-            towrite+='    typedef Py8Collider<Pythia_{0}_default::Pythia8::Pythia, Pythia_{0}_default::Pythia8::Event> Py8Collider_{0}_defaultversion;\n'.format(m)
-    towrite+="    /// @}\n\n  }\n}\n"
+            towrite+='      typedef Py8Collider<Pythia_{0}_default::Pythia8::Pythia, Pythia_{0}_default::Pythia8::Event, void> Py8Collider_{0}_defaultversion;\n'.format(m)
+
+    towrite+= "\
+    #else                                         \n\
+      typedef Py8Collider<Pythia_default::Pythia8::Pythia, Pythia_default::Pythia8::Event, Pythia_default::Pythia8::GAMBIT_hepmc_writer> Py8Collider_defaultversion;\n"
+
+    for h in model_headers:
+        if h != "SUSY.hpp":
+            m = re.sub(".hpp", "", h)
+            towrite+='      typedef Py8Collider<Pythia_{0}_default::Pythia8::Pythia, Pythia_{0}_default::Pythia8::Event, Pythia_{0}_default::Pythia8::GAMBIT_hepmc_writer> Py8Collider_{0}_defaultversion;\n'.format(m)
+
+    towrite+="    #endif\n    /// @}\n\n  }\n}\n"
 
     with open("./ColliderBit/include/gambit/ColliderBit/colliders/Pythia8/Py8Collider_typedefs.hpp","w") as f:
         f.write(towrite)
