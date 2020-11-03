@@ -5952,7 +5952,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/files.py ../contrib/MadGraph/madgra
 diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph/madgraph/iolibs/file_writers.py
 --- MadGraph_pristine/madgraph/iolibs/file_writers.py	2020-10-27 21:41:37.893090278 +1100
 +++ ../contrib/MadGraph/madgraph/iolibs/file_writers.py	2020-10-30 20:49:24.522460924 +1100
-@@ -19,6 +19,8 @@
+@@ -19,6 +19,8 @@ Fortran, C++, etc."""
  
  import re
  import collections
@@ -5961,7 +5961,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
  try:
      import madgraph
  except ImportError:
-@@ -26,7 +28,7 @@
+@@ -26,7 +28,7 @@ except ImportError:
  else:
      import madgraph.various.misc as misc
  
@@ -5970,7 +5970,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
      """Generic Writer class. All writers should inherit from this class."""
  
      supported_preprocessor_commands = ['if']
-@@ -50,7 +52,7 @@
+@@ -50,7 +52,7 @@ class FileWriter(file):
      def __init__(self, name, opt = 'w'):
          """Initialize file to write to"""
  
@@ -5988,7 +5988,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
          else:
              raise self.FileWriterError("%s not string" % repr(lines))
  
-@@ -148,8 +152,8 @@
+@@ -148,8 +152,8 @@ class FileWriter(file):
              if preproc_command is None:
                  preproc_endif = self.preprocessor_endif_re.match(line[2:])
                  if len(if_stack)==0 or preproc_endif is None:
@@ -5999,7 +5999,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
                  if preproc_endif.group('new_block') is None:
                      if_stack.pop()
                  elif preproc_endif.group('endif')=='else':
-@@ -158,15 +162,15 @@
+@@ -158,15 +162,15 @@ class FileWriter(file):
              elif preproc_command.group('command')=='if':
                  try:
                      if_stack.append(eval(preproc_command.group('body'))==True)
@@ -6020,7 +6020,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
          return res
  
  #===============================================================================
-@@ -441,7 +445,7 @@
+@@ -441,7 +445,7 @@ class FortranWriter(FileWriter):
                  else:
                      if not line.endswith('\n'):
                          line = '%s\n' % line
@@ -6029,7 +6029,7 @@ diff -rupN MadGraph_pristine/madgraph/iolibs/file_writers.py ../contrib/MadGraph
              else:
                  removed.append(line)
                  
-@@ -967,13 +971,13 @@
+@@ -967,13 +971,13 @@ class PythonWriter(FileWriter):
      
      def write_comments(self, text):
          text = '#%s\n' % text.replace('\n','\n#')
