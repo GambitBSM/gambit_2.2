@@ -817,7 +817,7 @@ if args.file:
                            num+14, reset_contents)
 
             num = find_string("getPy8Collider.hpp", m,
-                                  "          catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)")[1]
+                                  "          catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::InitializationError& e)")[1]
             amend_file("getPy8Collider.hpp", m, apply_userhook,
                            num+10, reset_contents)
 
