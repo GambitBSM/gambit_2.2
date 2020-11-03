@@ -38,8 +38,8 @@ namespace Gambit
         SetHooks() {}
         ~SetHooks() {}
 
-        //Function to set the UserHook. TODO: This causes warnings for unused parameter
-        bool SetupHook(PythiaT* ColliderPythia)
+        //Function to set the UserHook.
+        bool SetupHook(PythiaT*)
         {
           return false;
         }
