@@ -890,8 +890,6 @@ if args.file:
             be = "pythia_"+gum.name.lower()
             safe_ver = "8_"+base_pythia_version
             ver = "8."+base_pythia_version
-            copy_file("default_bossed_versions.hpp", m, output_dir,
-                      reset_contents, existing = True)
             copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir,
                       reset_contents, existing = False)
             copy_file("BOSS/configs/"+be+"_"+safe_ver+"_nohepmc.py", m, output_dir,
