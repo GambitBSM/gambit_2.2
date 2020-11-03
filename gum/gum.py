@@ -8,7 +8,7 @@
 #
 #  \author Sanjay Bloor
 #          (sanjay.bloor12@imperial.ac.uk)
-#  \date 2018, 2019, 2020... 
+#  \date 2018, 2019, 2020...
 #
 #  \author Tomas Gonzalo
 #          (tomas.gonzalo@monash.edu)
@@ -129,7 +129,7 @@ if args.file:
 
             # Let GUM do a quick and dirty parse of the file first, before we
             # fire up a Mathematica kernel
-            parse_feynrules_model_file(gum.mathname, gum.base_model, 
+            parse_feynrules_model_file(gum.mathname, gum.base_model,
                                        output_opts)
 
             from lib.libfr import *
@@ -185,7 +185,7 @@ if args.file:
             err = SARAHError()
 
             # Hit it
-            all_sarah(options, partlist, paramlist, outputs, backends, flags, 
+            all_sarah(options, partlist, paramlist, outputs, backends, flags,
                       mixings, bcs, sphenodeps, err)
 
             if err.is_error():
@@ -212,7 +212,7 @@ if args.file:
                                   part.mass(), part.chargeX3(), part.color())
                     dm_set = True
 
-            # If we haven't found the DM candidate in the particle list, 
+            # If we haven't found the DM candidate in the particle list,
             # throw an error
             if not dm_set:
                 raise GumError(("\n\nThe WIMP candidate specified has not been "
@@ -224,13 +224,13 @@ if args.file:
             # If the user has requested MicrOMEGAs output and the DM candidate
             # does not begin with a tilde, then complain (and its anti-p.)
             if output_opts.mo:
-                if not dm.name.startswith('~'): 
+                if not dm.name.startswith('~'):
                     raise GumError(("You have requested MicrOMEGAs output, but "
                                     " your DM candidate has to begin with a '~'"
                                     " for MicrOMEGAs to recognise it as an odd "
                                     "particle.\n Please change the DM name in "
                                     "your {} file!"
-                                    ).format(gum.math))                        
+                                    ).format(gum.math))
                 if not dm.antiname.startswith('~'):
                     raise GumError(("You have requested MicrOMEGAs output, but "
                                     " your DM candidate's antiparticle also has"
@@ -241,13 +241,13 @@ if args.file:
                                     "any leading tilde, so add a line like:\n"
                                     "\t    AntiParticleName -> \"~Chi\"\n "
                                     "to your {} file!"
-                                    ).format(gum.math))           
+                                    ).format(gum.math))
 
 
-        """ 
+        """
         UFO2MDL
 
-        If we have both UFO and MDL files, run the files through ufo2mdl to 
+        If we have both UFO and MDL files, run the files through ufo2mdl to
         compare outputs. This will, e.g., add 4-fermion interactions to CalcHEP
         where FeynRules fails to do so.
         """
@@ -256,19 +256,19 @@ if args.file:
         #     blockPrint()  # Stop the UFO2MDL output - there's lots of it
         #     ch_location = compare_mg_and_ch(outputs.get_mg(), outputs.get_ch())
         #     enablePrint() # Bring it back.
-        #     if ch_location != outputs.get_ch(): 
+        #     if ch_location != outputs.get_ch():
         #         print("Updating location of CalcHEP files in GUM...")
         #         outputs.set_ch(ch_location)
 
         # Move MadGraph files from SARAH/FeynRules to contrib/MadGraph/models
-        # TODO make this go to the Outputs dir instead, then ln -s from there 
+        # TODO make this go to the Outputs dir instead, then ln -s from there
         # to MadGraph later.
         if output_opts.ufo:
             copy_madgraph_files(outputs.get_mg(), gum.name)
 
-        # Clean up calchep files from SARAH/FeynRules, then copy them to the 
+        # Clean up calchep files from SARAH/FeynRules, then copy them to the
         # GAMBIT backendDir
-        # TODO make this go to the Outputs dir instead, then copy (or ln -s?) 
+        # TODO make this go to the Outputs dir instead, then copy (or ln -s?)
         # from there to CalcHEP later.
         if output_opts.ch or output_opts.mo:
             clean_calchep_model_files(outputs.get_ch(), gum.name)
@@ -276,19 +276,19 @@ if args.file:
         """
         MADGRAPH -- Pythia inside here (and MadDM in the future)
         """
-        if output_opts.ufo:  
-            
+        if output_opts.ufo:
+
             # Pythia
-            if output_opts.pythia:  
+            if output_opts.pythia:
 
                 collider_processes = output_opts.options['pythia'].get('collider_processes')
                 multiparticles = output_opts.options['pythia'].get('multiparticles')
                 if collider_processes is not None:
-                    # Link MadGraph files output by SARAH/FeynRules to 
+                    # Link MadGraph files output by SARAH/FeynRules to
                     # MadGraph's contrib/MadGraph/models
                     # still TODO
 
-                    # Create the output directory for all generated MadGraph 
+                    # Create the output directory for all generated MadGraph
                     # files
                     mg5_output_dir = output_dir + "/MadGraph5_aMC"
                     mkdir_if_absent(mg5_output_dir)
@@ -296,14 +296,14 @@ if args.file:
                     # Clear and remake the copy of Pythia that will receive the
                     #  matrix element code produced by MadGraph
                     pristine_pythia_dir = os.path.join(os.getcwd(),
-                                                       'contrib','Pythia') 
+                                                       'contrib','Pythia')
                     new_pythia_dir = mg5_output_dir + "/Pythia_patched"
                     remove_tree_quietly(new_pythia_dir)
 
                     copy_tree(pristine_pythia_dir, new_pythia_dir)
 
                     # Create the MadGraph script
-                    # TODO determine all possible BSM processes automatically 
+                    # TODO determine all possible BSM processes automatically
                     # when collider_processes is missing from the .gum file
                     mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
                     make_madgraph_script(mg5_dir, mg5_output_dir, gum.name, 
@@ -354,7 +354,7 @@ if args.file:
             else:
                 # Add new particles to the database, refresh the dicts
                 gambit_pdgs, decaybit_dict = \
-                    add_new_particleDB_entry(missing_parts, gum.dm_pdg, 
+                    add_new_particleDB_entry(missing_parts, gum.dm_pdg,
                                              gambit_pdgs, decaybit_dict,
                                              reset_contents, gum.name)
 
@@ -374,7 +374,7 @@ if args.file:
         if gum.math == "feynrules":
             parameters = fr_params(paramlist, add_higgs)
         else:
-            parameters = sarah_params(paramlist, mixings, add_higgs, 
+            parameters = sarah_params(paramlist, mixings, add_higgs,
                                       gambit_pdgs, partlist, bcs)
 
         # Get the parameters sorted by block
@@ -385,31 +385,31 @@ if args.file:
         """
         MODELS
         """
-        
+
         print("Adding new model {0} to GAMBIT.".format(gum.name))
-        
+
         # For FeynRules, use masses of particles as input parameters
         if gum.math == 'feynrules':
-            # Add all of the masses of BSM particles as pole masses. 
+            # Add all of the masses of BSM particles as pole masses.
             # Also removes all duplicate entries that can arise
             # for e.g. multiplets with same tree-level masses
-            parameters = add_masses_to_params(parameters, bsm_particle_list, 
+            parameters = add_masses_to_params(parameters, bsm_particle_list,
                                               gambit_pdgs, add_higgs)
-        
+
         # Get the model parameters out of the parameter list
         model_parameters = get_model_parameters(parameters, add_higgs)
 
-        model_header = add_to_model_hierarchy(gum.spec, gum.name, 
+        model_header = add_to_model_hierarchy(gum.spec, gum.name,
                                               model_parameters, model_definitions,
                                               capability_definitions)
 
         # Get the spectrum parameters out of the parameter list
         spectrum_parameters = get_spectrum_parameters(parameters, blockparams,
-                                                      bsm_particle_list, 
+                                                      bsm_particle_list,
                                                       partlist, gambit_pdgs,
                                                       output_opts.spheno)
 
-        subspec_wrapper = write_subspectrum_wrapper(gum.name, 
+        subspec_wrapper = write_subspectrum_wrapper(gum.name,
                                                     spectrum_parameters)
         spec_contents = write_spectrumcontents(gum.name, spectrum_parameters)
         reg_spec, reg_spec_num = add_to_registered_spectra(gum.name)
@@ -425,7 +425,7 @@ if args.file:
         if output_opts.spheno:
 
             # Move SPheno files from SARAH to Outputs.
-            copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR, 
+            copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR,
                               outputs.get_sph())
 
             # Pristine and patched SPhenos
@@ -435,7 +435,7 @@ if args.file:
             # Patch the files
             print("Patching SPheno...")
 
-            patch_spheno(clean_model_name, patched_spheno_dir, flags, 
+            patch_spheno(clean_model_name, patched_spheno_dir, flags,
                          bsm_particle_list)
 
             fullpath = "Backends/patches/sarah-spheno/{0}/{1}".format(
@@ -443,10 +443,10 @@ if args.file:
                                                                gum.name)
             fullfile = "patch_sarah-spheno_"+SPHENO_VERSION+"_"+gum.name
             # Create a diff vs. the out of the [SARAH]box
-            write_backend_patch(output_dir, pristine_spheno_dir, 
-                                patched_spheno_dir, 
+            write_backend_patch(output_dir, pristine_spheno_dir,
+                                patched_spheno_dir,
                                 "sarah-spheno",
-                                SPHENO_VERSION, 
+                                SPHENO_VERSION,
                                 fullpath = fullpath,
                                 fullfile = fullfile)
 
@@ -458,12 +458,12 @@ if args.file:
             # Write frontends for SPheno. That's a lotta scrapin'.
             print("Writing SPheno frontends.")
             spheno_src, spheno_header, backend_types, btnum = \
-                write_spheno_frontends(clean_model_name, parameters, 
-                                       bsm_particle_list, flags, 
-                                       patched_spheno_dir, output_dir, 
-                                       blockparams, gambit_pdgs, mixings, 
+                write_spheno_frontends(clean_model_name, parameters,
+                                       bsm_particle_list, flags,
+                                       patched_spheno_dir, output_dir,
+                                       blockparams, gambit_pdgs, mixings,
                                        reality_dict, deps, bcs,
-                                       charged_higgses, neutral_higgses, 
+                                       charged_higgses, neutral_higgses,
                                        gum.name, capability_definitions)
 
             # cmake entry
@@ -480,7 +480,7 @@ if args.file:
                 write_spheno_decay_entry(gum.name, clean_model_name)
 
             # HiggsCouplingsTable
-            hct_src, hct_head, hb_pattern = new_hct_switch(gum.name, gum.spec, 
+            hct_src, hct_head, hb_pattern = new_hct_switch(gum.name, gum.spec,
                                                            neutral_higgses,
                                                            gambit_pdgs,
                                                            len(higgses))
@@ -493,11 +493,11 @@ if args.file:
         """
 
         # Obtain all model interactions from CalcHEP model files.
-        # Also grab the PDG codes of each particle and the names of their 
+        # Also grab the PDG codes of each particle and the names of their
         # masses -- we'll want to use this for writing the micromegas frontend
         calchep_pdg_codes = {}
         if output_opts.ch or output_opts.mo:
-            
+
             (interactions, calchep_pdg_codes, calchep_masses,
             calchep_widths, aux_particles) = get_vertices(outputs.get_ch())
 
@@ -511,7 +511,7 @@ if args.file:
             three_pi_bsm = [i.particles for i in interactions
                             if i.num_particles() == 3 and i.is_sm() == False]
 
-            three_body_decays = decay_sorter(three_pi_bsm, aux_particles, 
+            three_body_decays = decay_sorter(three_pi_bsm, aux_particles,
                                              antiparticle_dict)
 
             # If SPheno hasn't been run then save the tree-level decays from CH
@@ -527,8 +527,8 @@ if args.file:
             """
             DECAYBIT
             """
-            # TODO: if we have SPheno output, do we /really/ want 
-            # to provide CalcHEP DecayBit entries too? 
+            # TODO: if we have SPheno output, do we /really/ want
+            # to provide CalcHEP DecayBit entries too?
 
             # Pass all interactions by first PDG code needed.
             for i in xrange(len(three_body_decays)):
@@ -543,7 +543,7 @@ if args.file:
             decay_roll, new_decays = \
                 write_decaybit_rollcall_entry_calchep(gum.name, gum.spec,
                                                       three_body_decays,
-                                                      decaybit_dict, 
+                                                      decaybit_dict,
                                                       gambit_pdgs,
                                                       capability_definitions)
 
@@ -589,11 +589,11 @@ if args.file:
                 # Definitely write process catalogue output
                 pc = True
 
-                # If DM doesn't decay (i.e. it annihilates), then 
+                # If DM doesn't decay (i.e. it annihilates), then
                 # we want to use the sv (= 'sigma*v') routines.
                 if gum.dm_decays == False:
                     sv = True
-                
+
                     # Obtain all three-field vertices
                     three_f = [i.particles for i in interactions
                                if i.num_particles() == 3]
@@ -616,17 +616,17 @@ if args.file:
 
                 print("Writing micrOMEGAs interface for DarkBit.")
 
-                mo_src = write_micromegas_src(gum.name, gum.spec, gum.math, 
-                                              parameters, bsm_particle_list, 
-                                              gambit_pdgs, calchep_masses, 
+                mo_src = write_micromegas_src(gum.name, gum.spec, gum.math,
+                                              parameters, bsm_particle_list,
+                                              gambit_pdgs, calchep_masses,
                                               calchep_widths)
-                mo_head = write_micromegas_header(gum.name, gum.math, 
+                mo_head = write_micromegas_header(gum.name, gum.math,
                                                   parameters)
 
             darkbit_src = write_darkbit_src(dm, pc, sv, products,
                                             propagators, gum.dm_decays,
                                             gambit_pdgs, gum.name,
-                                            calchep_pdg_codes, 
+                                            calchep_pdg_codes,
                                             bsm_particle_list, higgses,
                                             ch_processes)
 
@@ -634,13 +634,13 @@ if args.file:
                                                                   gum.dm_decays)
 
         """
-        CALCHEP SRC 
+        CALCHEP SRC
         Must be done after DecayBit & DarkBit as we want the matrix elements.
         """
 
         if output_opts.ch:
             # Entries for header file
-            ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name, 
+            ch_src_sl, ch_src_pl, ch_head = add_calchep_switch(gum.name,
                                                                gum.spec,
                                                                ch_processes)
 
@@ -648,22 +648,22 @@ if args.file:
         """
         SPECBIT
         """
-            
+
         print("Writing basic container SpecBit interface...")
-        spectrum_src, higgsdefined = write_spectrum(gum.name, parameters, 
-                                                    gum.spec, add_higgs, 
-                                                    output_opts.spheno, 
+        spectrum_src, higgsdefined = write_spectrum(gum.name, parameters,
+                                                    gum.spec, add_higgs,
+                                                    output_opts.spheno,
                                                     gambit_pdgs,
-                                                    neutral_higgses, 
-                                                    charged_higgses, 
-                                                    blockparams, 
+                                                    neutral_higgses,
+                                                    charged_higgses,
+                                                    blockparams,
                                                     bsm_particle_list,
                                                     spheno_decays, partlist)
         # If the Higgs has now been defined by some other parameters,
         # don't need to have mH as a model param.
         if higgsdefined: add_higgs = False
 
-        spectrum_header = write_spectrum_header(gum.name, add_higgs, 
+        spectrum_header = write_spectrum_header(gum.name, add_higgs,
                                                 output_opts.spheno, higgses,
                                                 capability_definitions)
         spec_rollcall = write_specbit_rollcall(gum.name)
@@ -673,36 +673,36 @@ if args.file:
         """
 
         if output_opts.vev:
-            vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec, 
+            vev_src = write_vevacious_src(gum.name, outputs.get_vev(), gum.spec,
                                           blockparams)
 
         """
         PYTHIA
         """
-           
+
         # Have we created a new Pythia backend?
         if output_opts.pythia:
             print(("Patching Pythia to inject new matrix elements into its "
                    "Process Container and shared library."))
             pythia_groups = output_opts.options['pythia'].get('pythia_groups')
-            fix_pythia_lib(gum.name, new_pythia_dir, pythia_groups, 
+            fix_pythia_lib(gum.name, new_pythia_dir, pythia_groups,
                            bsm_particle_list, decays)
             print("Creating a diff vs original version of Pythia.")
             write_backend_patch(output_dir, pristine_pythia_dir, new_pythia_dir,
-                                "pythia_"+gum.name.lower(), 
+                                "pythia_"+gum.name.lower(),
                                 "8."+base_pythia_version)
             print("Writing an additional patch for the new version of Pythia.")
             patch_pythia_patch(parameters, gum.name, reset_contents)
-            print("Creating a BOSS config file for Pythia_"+gum.name+".")
-            write_boss_config_for_pythia(gum.name, output_dir)
+            print("Creating BOSS config files for Pythia_"+gum.name+".")
+            write_boss_configs_for_pythia(gum.name, output_dir)
             print("Creating a cmake entry for Pythia"+gum.name+".")
             pythia_cmake = write_pythia_cmake_entry(gum.name, output_dir)
             print(("Setting the default version of Pythia_"+gum.name+" for "
                    "BOSSed classes to 8."+base_pythia_version))
-            write_new_default_bossed_version("Pythia_"+gum.name, 
-                                             "8."+base_pythia_version, 
+            write_new_default_bossed_version("Pythia_"+gum.name,
+                                             "8."+base_pythia_version,
                                              output_dir)
-    
+
             # Adding in a UserHook
             print("Writing a Pythia UserHooks class for ColliderBit")
             set_userhook = write_set_userhook(gum.name,base_pythia_version)
@@ -714,7 +714,7 @@ if args.file:
             print("Dry run finished.")
             print("")
             exit()
- 
+
         print("")
         print("Now putting the new code into GAMBIT.")
 
@@ -722,25 +722,25 @@ if args.file:
 
         # Models
         m = "Models"
-        write_file("models/" + gum.name + ".hpp", m, model_header, 
+        write_file("models/" + gum.name + ".hpp", m, model_header,
                    reset_contents)
-        write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents, 
+        write_file("SpectrumContents/" + gum.name + ".cpp", m, spec_contents,
                    reset_contents)
-        write_file("SimpleSpectra/" + gum.name + "SimpleSpec" + ".hpp", m, 
+        write_file("SimpleSpectra/" + gum.name + "SimpleSpec" + ".hpp", m,
                     subspec_wrapper, reset_contents)
-        amend_file("SpectrumContents/RegisteredSpectra.hpp", m, reg_spec, 
+        amend_file("SpectrumContents/RegisteredSpectra.hpp", m, reg_spec,
                     reg_spec_num, reset_contents)
 
 
         # SpecBit
         m = "SpecBit"
-        write_file("SpecBit_" + gum.name + ".cpp", m, spectrum_src, 
+        write_file("SpecBit_" + gum.name + ".cpp", m, spectrum_src,
                    reset_contents)
-        write_file("SpecBit_" + gum.name + "_rollcall.hpp", m, spectrum_header, 
+        write_file("SpecBit_" + gum.name + "_rollcall.hpp", m, spectrum_header,
                     reset_contents)
-        num = find_string("SpecBit_rollcall.hpp", m, 
+        num = find_string("SpecBit_rollcall.hpp", m,
                           "SpecBit_tests_rollcall.hpp")[1]
-        amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num, 
+        amend_file("SpecBit_rollcall.hpp", m, spec_rollcall, num,
                    reset_contents)
 
         # DecayBit
@@ -749,31 +749,31 @@ if args.file:
             # Append to the end of DecayBit -- just before all_decays
             num = find_string("DecayBit.cpp", m, "void all_decays")[1]
             if output_opts.ch:
-                amend_file("DecayBit.cpp", m, decaybit_src_ch, num-3, 
+                amend_file("DecayBit.cpp", m, decaybit_src_ch, num-3,
                            reset_contents)
                 for i in xrange(len(decay_roll)):
                     if find_capability(decay_roll[i][0], m)[0]:
-                        amend_rollcall(decay_roll[i][0], m, decay_roll[i][1], 
+                        amend_rollcall(decay_roll[i][0], m, decay_roll[i][1],
                                        reset_contents)
                     else:
-                        num = find_string("DecayBit_rollcall.hpp", m, 
+                        num = find_string("DecayBit_rollcall.hpp", m,
                                           "#define CAPABILITY decay_rates")[1]
                         amend_file("DecayBit_rollcall.hpp", m, decay_roll[i][1],
                                    num-2, reset_contents)
                 if len(new_decays) > 0:
-                    num = find_string("DecayBit_rollcall.hpp", m, 
+                    num = find_string("DecayBit_rollcall.hpp", m,
                                       "MODEL_CONDITIONAL_DEPENDENCY"\
                                       "(MSSM_spectrum")[1]
-                    amend_file("DecayBit_rollcall.hpp", m, all_decays_header, 
+                    amend_file("DecayBit_rollcall.hpp", m, all_decays_header,
                                num-1, reset_contents)
                     num = find_string("DecayBit.cpp", m, "decays(\"omega\")")[1]
-                    amend_file("DecayBit.cpp", m, all_decays_src, num, 
+                    amend_file("DecayBit.cpp", m, all_decays_src, num,
                                reset_contents)
             num = find_string("DecayBit.cpp", m, "void all_decays")[1]
             if output_opts.spheno:
-                amend_file("DecayBit.cpp", m, spheno_decay_src, num-3, 
+                amend_file("DecayBit.cpp", m, spheno_decay_src, num-3,
                             reset_contents)
-                num = find_string("DecayBit_rollcall.hpp", m, 
+                num = find_string("DecayBit_rollcall.hpp", m,
                                   "#define CAPABILITY decay_rates")[1]
                 amend_file("DecayBit_rollcall.hpp", m, spheno_decay_header,
                            num+2, reset_contents)
@@ -783,23 +783,23 @@ if args.file:
             m = "DarkBit"
             amend_rollcall("DarkMatter_ID", m, dmid_cap, reset_contents)
             if not gum.dm_decays:
-                amend_rollcall("DarkMatterConj_ID", m, dmconj_cap, 
+                amend_rollcall("DarkMatterConj_ID", m, dmconj_cap,
                                reset_contents)
             write_file(gum.name + ".cpp", m, darkbit_src, reset_contents)
             if pc:
                 amend_rollcall("TH_ProcessCatalog", m, pc_cap, reset_contents)
-            # If DM isn't decaying, we can use the built-in 
+            # If DM isn't decaying, we can use the built-in
             # relic density routines. If not: no, they won't work.
             if pc and not gum.dm_decays:
-                add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", 
-                                          "RD_spectrum", 
+                add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit",
+                                          "RD_spectrum",
                                           "RD_spectrum_from_ProcessCatalog",
-                                          gum.name, reset_contents, 
+                                          gum.name, reset_contents,
                                           pattern="ALLOW_MODELS")
-                add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit", 
-                                          "RD_eff_annrate", 
+                add_new_model_to_function("DarkBit_rollcall.hpp", "DarkBit",
+                                          "RD_eff_annrate",
                                           "RD_eff_annrate_from_ProcessCatalog",
-                                          gum.name, reset_contents, 
+                                          gum.name, reset_contents,
                                           pattern="ALLOW_MODELS")
 
         # ColliderBit
@@ -807,17 +807,17 @@ if args.file:
         if output_opts.pythia:
             copy_file("models/"+gum.name+".hpp", m, output_dir, reset_contents,
                       existing = False)
-            copy_file("models/"+gum.name+".cpp", m, output_dir, reset_contents, 
+            copy_file("models/"+gum.name+".cpp", m, output_dir, reset_contents,
                       existing = False)
 
             #Adding in the Set UserHooks Changes.
-            num = find_string("colliders/SetHooksClass.hpp", m, 
+            num = find_string("colliders/SetHooksClass.hpp", m,
                                   "    class SetHooks")[1]
             amend_file("colliders/SetHooksClass.hpp", m, set_userhook,
                            num+14, reset_contents)
 
-            num = find_string("getPy8Collider.hpp", m, 
-                                  "          catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)")[1]
+            num = find_string("getPy8Collider.hpp", m,
+                                  "          catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::InitializationError& e)")[1]
             amend_file("getPy8Collider.hpp", m, apply_userhook,
                            num+10, reset_contents)
 
@@ -825,24 +825,24 @@ if args.file:
         # HiggsBounds interface
         if output_opts.spheno:
             if len(higgses) == 1:
-                num = find_string("ColliderBit_Higgs.cpp", m, 
+                num = find_string("ColliderBit_Higgs.cpp", m,
                         "ModelInUse(\"StandardModel_Higgs\")")[1]
-                amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, 
+                amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1,
                            reset_contents)
-                num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
+                num = find_string("ColliderBit_Higgs_rollcall.hpp", m,
                         "MODEL_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2")[1]
                 amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1,
                            reset_contents)
             else:
-                num = find_string("ColliderBit_Higgs.cpp", m, 
+                num = find_string("ColliderBit_Higgs.cpp", m,
                         "No valid model for MSSMLikeHiggs_ModelParameters.")[1]
-                amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1, 
+                amend_file("ColliderBit_Higgs.cpp", m, hct_src, num-1,
                            reset_contents)
-                num = find_string("ColliderBit_Higgs_rollcall.hpp", m, 
+                num = find_string("ColliderBit_Higgs_rollcall.hpp", m,
                         "MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum")[1]
-                amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1, 
+                amend_file("ColliderBit_Higgs_rollcall.hpp", m, hct_head, num-1,
                            reset_contents)
-            add_new_model_to_function("ColliderBit_Higgs_rollcall.hpp", 
+            add_new_model_to_function("ColliderBit_Higgs_rollcall.hpp",
                                       m, "HB_ModelParameters",
                                       hb_pattern, gum.name, reset_contents,
                                       pattern="ALLOW_MODELS")
@@ -862,7 +862,7 @@ if args.file:
             num = find_string(f, m, "backend_undefs.hpp")[1]
             amend_file(f, m, ch_head, num-2, reset_contents)
             num = find_string(f, m, "BE_FUNCTION")[1]
-            amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2, 
+            amend_file(f, m, "BE_ALLOW_MODELS({0})".format(gum.name), num-2,
                        reset_contents)
         # micrOMEGAs
         if output_opts.mo:
@@ -879,13 +879,13 @@ if args.file:
             ver = "3.6.9.2"
             be = "MicrOmegas_" + gum.name
             be_loc = "micromegas/{0}/{1}/libmicromegas.so".format(ver, gum.name)
-            f = "frontends/MicrOmegas_{0}_{1}".format(gum.name, 
+            f = "frontends/MicrOmegas_{0}_{1}".format(gum.name,
                                                       ver.replace('.','_'))
             write_file(f+".cpp", m, mo_src, reset_contents)
             write_file(f+".hpp", m, mo_head, reset_contents)
             add_to_backend_locations(be, be_loc, ver, reset_contents)
             add_micromegas_to_cmake(gum.name, reset_contents)
-            add_micromegas_to_darkbit_rollcall(gum.name, reset_contents, 
+            add_micromegas_to_darkbit_rollcall(gum.name, reset_contents,
                                                gum.dm_decays)
 
         # Pythia
@@ -893,18 +893,20 @@ if args.file:
             be = "pythia_"+gum.name.lower()
             safe_ver = "8_"+base_pythia_version
             ver = "8."+base_pythia_version
-            copy_file("default_bossed_versions.hpp", m, output_dir, 
+            copy_file("default_bossed_versions.hpp", m, output_dir,
                       reset_contents, existing = True)
-            copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir, 
+            copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir,
                       reset_contents, existing = False)
-            copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir, 
+            copy_file("BOSS/configs/"+be+"_"+safe_ver+"_nohepmc.py", m, output_dir,
                       reset_contents, existing = False)
-            add_to_backend_locations("Pythia_"+gum.name, 
-                                     be+"/"+ver+"/lib/libpythia8.so", ver, 
+            copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir,
+                      reset_contents, existing = False)
+            add_to_backend_locations("Pythia_"+gum.name,
+                                     be+"/"+ver+"/lib/libpythia8.so", ver,
                                      reset_contents)
             add_to_backends_cmake(pythia_cmake, reset_contents,
                                   string_to_find="# Nulike")
-            #copy_file("backends.cmake", "cmake", output_dir, reset_contents, 
+            #copy_file("backends.cmake", "cmake", output_dir, reset_contents,
             #          existing = True)
 
         # SPheno
@@ -919,7 +921,7 @@ if args.file:
             write_file(f+".cpp", m, spheno_src, reset_contents)
             write_file(f+".hpp", m, spheno_header, reset_contents)
             add_to_backend_locations(be, be_loc, ver, reset_contents)
-            add_to_backends_cmake(spheno_cmake, reset_contents, 
+            add_to_backends_cmake(spheno_cmake, reset_contents,
                                   string_to_find="# gm2calc")
             # Move SPheno files to Backend/patches/...
             src = output_dir + "/SPheno/" + clean_model_name
@@ -939,24 +941,24 @@ if args.file:
                 "data/SARAHSPheno_{0}_{1}_decays_info.dat"
             ).format(gum.name, SPHENO_VERSION.replace('.','_'))
             write_file(filename, m, spheno_decay_tables, reset_contents)
-            # SPheno backend_types 
-            amend_file("backend_types/SPheno.hpp", m, backend_types, btnum-2, 
+            # SPheno backend_types
+            amend_file("backend_types/SPheno.hpp", m, backend_types, btnum-2,
                        reset_contents)
             # Check if backend needs rebuild
             be_install_dir  = "../Backends/installed/sarah-spheno/" + ver + "/" + gum.name
             gum_patched_dir = output_dir + '/SPheno_patched'
-            check_backend_rebuild('sarah-spheno_'+gum.name, ver, be_install_dir, 
-                                  gum_patched_dir, rebuild_backends, 
-                                  file_endings=('F90','f90','Makefile'), 
+            check_backend_rebuild('sarah-spheno_'+gum.name, ver, be_install_dir,
+                                  gum_patched_dir, rebuild_backends,
+                                  file_endings=('F90','f90','Makefile'),
                                   build_dir='../build')
 
         # Vevacious
         if output_opts.vev:
             num = find_string("SpecBit_VS.cpp", "SpecBit",
                               "} // end namespace SpecBit")[1]
-            amend_file("SpecBit_VS.cpp", "SpecBit", vev_src, num-1, 
+            amend_file("SpecBit_VS.cpp", "SpecBit", vev_src, num-1,
                        reset_contents)
-            write_vevacious_rollcall(gum.name, gum.spec, reset_contents)        
+            write_vevacious_rollcall(gum.name, gum.spec, reset_contents)
 
         # Write capability and model definitions
         write_capability_definitions("capabilities.dat", gum.name, capability_definitions, reset_contents)

@@ -347,27 +347,29 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
     os.rename(xmnew, xmold)
     """
 
-def write_boss_config_for_pythia(model, output_dir):
+def write_boss_configs_for_pythia(model, output_dir):
     """
     TODO: use writing routines in files.py & reset dict.
-    Writes the BOSS config for Pythia.
+    Writes the BOSS configs for Pythia.
     """
 
     # Sort out the paths
     path = "/Backends/scripts/BOSS/configs"
-    filename = "/pythia_"+model.lower()+"_8_"+base_pythia_version+".py"
     full_output_dir = output_dir+path
     mkdir_if_absent(full_output_dir)
-    template = ".."+path+"/pythia_8_"+base_pythia_version+".py"
-    outfile = full_output_dir+filename
+    filenames = ["/pythia_"+model.lower()+"_8_"+base_pythia_version+part+".py" for part in ["","_nohepmc"]]
+    templates = [".."+path+"/pythia_8_"+base_pythia_version+part+".py" for part in ["","_nohepmc"]]
+    outfiles = [full_output_dir+f for f in filenames]
 
     # Write the actual BOSS config file
-    with open(outfile, 'w') as f_new, open(template) as f_old:
+    for outfile, template in zip(outfiles, templates):
+      print outfile, template
+      with open(outfile, 'w') as f_new, open(template) as f_old:
         for line in f_old:
           if "gambit_backend_name    = 'Pythia'" in line:
               f_new.write("gambit_backend_name    = 'Pythia_"+model+"'\n")
           # Add the CombineMatchingInput class to the input files.
-          elif "                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h'," in line:
+          elif "                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h'" in line:
               f_new.write("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h',\n")
               f_new.write("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8Plugins/CombineMatchingInput.h',\n")
           else:
@@ -388,32 +390,32 @@ def write_pythia_cmake_entry(model, output_dir):
 
     # The string that will commence the block to be added by GUM
     to_write = "# Pythia with matrix elements for "+model+" (brought to you today by the letters G, U and M).\n"\
-              "set(model \""+model.lower()+"\")\n"\
-              "set(name \"pythia_${model}\")\n"\
-              "set(ver \"8."+base_pythia_version+"\")\n"\
-              "set(lib \"libpythia8\")\n"\
-              "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
-              "set(md5 \""+pythia_md5+"\")\n"\
-              "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
-              "set(patch1 \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
-              "set(patch2 \"${PROJECT_SOURCE_DIR}/Backends/patches/pythia/${ver}/patch_pythia_${ver}.dif\")\n"\
-              "check_ditch_status(${name} ${ver} ${dir})\n"\
-              "if(NOT ditched_${name}_${ver})\n"\
-              "  ExternalProject_Add(${name}_${ver}\n"\
-              "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
-              "    SOURCE_DIR ${dir}\n"\
-              "    BUILD_IN_SOURCE 1\n"\
-              "    PATCH_COMMAND patch -p1 < ${patch1}\n"\
-              "          COMMAND patch -p1 < ${patch2}\n"\
-              "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
-              "    CONFIGURE_COMMAND ./configure --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --cxx-soname=\"${pythia_CXX_SONAME_FLAGS}\" --lib-suffix=\".so\"\n"\
-              "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
-              "    INSTALL_COMMAND \"\"\n"\
-              "  )\n"\
-              "  BOSS_backend(${name} ${ver})\n"\
-              "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
-              "  set_as_default_version(\"backend\" ${name} ${ver})\n"\
-              "endif()\n\n"
+               "set(model \""+model.lower()+"\")\n"\
+               "set(name \"pythia_${model}\")\n"\
+               "set(ver \"8."+base_pythia_version+"\")\n"\
+               "set(lib \"libpythia8\")\n"\
+               "set(dl \"http://home.thep.lu.se/~torbjorn/pythia8/pythia8"+base_pythia_version+".tgz\")\n"\
+               "set(md5 \""+pythia_md5+"\")\n"\
+               "set(dir \"${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}\")\n"\
+               "set(model_specific_patch \"${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_${ver}.dif\")\n"\
+               "check_ditch_status(${name} ${ver} ${dir})\n"\
+               "if(NOT ditched_${name}_${ver})\n"\
+               "  ExternalProject_Add(${name}_${ver}\n"\
+               "    DEPENDS ${pythia_depends_on}\n"\
+               "    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}\n"\
+               "    SOURCE_DIR ${dir}\n"\
+               "    BUILD_IN_SOURCE 1\n"\
+               "    PATCH_COMMAND patch -p1 < ${model_specific_patch}\n"\
+               "          COMMAND patch -p1 < ${patch}\n"\
+               "          COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}.py\n"\
+               "    CONFIGURE_COMMAND ./configure ${EXTRA_CONFIG} --enable-shared --cxx=\"${CMAKE_CXX_COMPILER}\" --cxx-common=\"${pythia_CXXFLAGS}\" --cxx-shared=\"${pythia_CXX_SHARED_FLAGS}\" --lib-suffix=\".so\"\n"\
+               "    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CXX=\"${CMAKE_CXX_COMPILER}\" lib/${lib}.so\n"\
+               "    INSTALL_COMMAND \"\"\n"\
+               "  )\n"\
+               "  BOSS_backend(${name} ${ver} ${BOSS_suffix})\n"\
+               "  add_extra_targets(\"backend\" ${name} ${ver} ${dir} ${dl} distclean)\n"\
+               "  set_as_default_version(\"backend\" ${name} ${ver})\n"\
+               "endif()\n\n"
 
     return to_write
 

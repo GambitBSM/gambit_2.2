@@ -32,7 +32,7 @@ namespace Gambit
   {
 
     /// A specializable, recyclable class interfacing ColliderBit and Pythia.
-    template <typename PythiaT, typename EventT>
+    template <typename PythiaT, typename EventT, typename hepmc_writerT>
     class Py8Collider : public BaseCollider
     {
 
@@ -49,7 +49,7 @@ namespace Gambit
         const PythiaT* pythia() const { return _pythiaInstance; }
 
         // Me trying to test the specialised class
-        bool SetupMatchingUserHook() 
+        bool SetupMatchingUserHook()
         {
             SetHooks<PythiaT, EventT> Hook;
             Hook.SetupHook(_pythiaInstance);

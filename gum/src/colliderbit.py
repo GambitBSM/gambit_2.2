@@ -2,7 +2,7 @@
 #  ***********************************
 #  \file
 #
-#  Master module for all 
+#  Master module for all
 #  ColliderBit-related routines.
 #
 #  *************************************
@@ -53,7 +53,7 @@ def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs, numH):
 
     towrite_src = ""
     hb_pattern = ""
-    
+
     # If there's just one (SM) Higgs, add it t the SMLike Higgs function
     if numH == 1:
 
@@ -92,8 +92,8 @@ def new_hct_switch(model_name, spectrum, neutral_higgses, gambit_pdgs, numH):
 def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
                          charged_higgses, model_name):
     """
-    Generate a helper function "get_invisibles" for a new model. 
-    Firstly, create a dictionary with potentially invisible decay products of 
+    Generate a helper function "get_invisibles" for a new model.
+    Firstly, create a dictionary with potentially invisible decay products of
     all Higgses, by PDG:
 
     { 25 : [ [12, -12], [14, -14], [16, -16], [darkmatter, darkmatter.conj] ] ,
@@ -138,13 +138,13 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
 
             # Save the products if they don't exist already
             for a in abspdgs:
-                if not a in all_parts and sm[a] == False: 
+                if not a in all_parts and sm[a] == False:
                     all_parts.append(a)
 
             # Which of these are invisible? (And not BR to other Higgses)
             # Only want to save h -> LSP conj(LSP) too
-            if (all([x == 1 for x in col]) and 
-                all([x == 0 for x in cha]) and 
+            if (all([x == 1 for x in col]) and
+                all([x == 0 for x in cha]) and
                 all([x == 0 for x in stm]) and
                 all([int(x) not in higgses for x in decay]) and
                 abspdgs.count(abspdgs[0]) == len(decay)):
@@ -167,8 +167,8 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
             "{{\n"
     ).format(model_name)
 
-    # If not decay products are classified as "invisible", then return an empty 
-    # function. An example of this is in the 2HDM, where we only have Higgses 
+    # If not decay products are classified as "invisible", then return an empty
+    # function. An example of this is in the 2HDM, where we only have Higgses
     # coupling to Higgses
     if len(invisibles) == 0:
         towrite += (
@@ -181,16 +181,16 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
         return indent(towrite)
 
     # "Visible" particles are those who are not invisible or Higgses, here...
-    visibles = list( set(all_parts) - set(absinvs) - set(higgses) - 
+    visibles = list( set(all_parts) - set(absinvs) - set(higgses) -
                      set([abs(int(x)) for x in charged_higgses] ) )
-    
+
     towrite += (
             "// Get the lightest invisible particle (and antiparticle).\n"
             "std::pair<str,str> lnp = std::make_pair(\"{0}\", \"{1}\");\n"
             "double lnpmass = spec.get(Par::Pole_Mass, \"{2}\");\n"
             "bool inv_lsp;\n"
     ).format(pdg_to_particle(abs(int(invisibles[0][0])), gambit_pdgs),
-             pdg_to_particle(int(invisibles[0][0]), gambit_pdgs), 
+             pdg_to_particle(int(invisibles[0][0]), gambit_pdgs),
              pdg_to_particle(int(invisibles[0][1]), gambit_pdgs))
 
     # Go through invisible particles -- find the lightest
@@ -226,7 +226,7 @@ def get_higgs_invisibles(higgses, spheno_decays, particles, gambit_pdgs,
         towrite += (
                 "// GUM has computed that there are no other BSM particles\n"
                 "// that the Higgses can decay into -- just one.\n"
-                "// Don't need to compare to any other masses...\n"                
+                "// Don't need to compare to any other masses...\n"
         )
 
     towrite += (
@@ -260,7 +260,7 @@ def write_set_userhook(model_name,base_pythia_version):
     Adds a specialised SetHooks class to the PyCollider routines
     in SetHooks.hpp and getPy8Collider.hpp.
     """
-    # Forming the code to write into the getColliserPythia.hpp class
+    # Forming the code to write into the getPy8Collider.hpp class
     towrite = (
             '\n'
             '    /// In the case that the {0} model is being run.\n'

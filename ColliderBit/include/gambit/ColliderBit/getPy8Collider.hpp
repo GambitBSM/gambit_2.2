@@ -48,8 +48,8 @@ namespace Gambit
   {
 
     /// Retrieve a Pythia hard-scattering Monte Carlo simulation
-    template<typename PythiaT, typename EventT>
-    void getPy8Collider(Py8Collider<PythiaT, EventT>& result,
+    template<typename PythiaT, typename EventT, typename hepmc_writerT>
+    void getPy8Collider(Py8Collider<PythiaT, EventT, hepmc_writerT>& result,
                         const MCLoopInfo& RunMC,
                         const SLHAstruct& slha,
                         const str model_suffix,
@@ -150,7 +150,7 @@ namespace Gambit
         {
             result.init(pythia_doc_path, pythiaOptions, &slha, processLevelOutput);
         }
-        catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
+        catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::InitializationError& e)
         {
           // Append new seed to override the previous one
           int newSeedBase = int(Random::draw() * 899990000.);
@@ -159,7 +159,7 @@ namespace Gambit
           {
             result.init(pythia_doc_path, pythiaOptions, &slha, processLevelOutput);
           }
-          catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
+          catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::InitializationError& e)
           {
             #ifdef COLLIDERBIT_DEBUG
               cout << DEBUG_PREFIX << "Py8Collider::InitializationError caught in getPy8Collider. Will discard this point." << endl;
@@ -168,6 +168,11 @@ namespace Gambit
             wrapup();
             return;
           }
+        }
+
+        //Setting the User Hook.
+        if (model_suffix == "_SingletDM_test") {
+          result.SetupMatchingUserHook();
         }
 
         // Should we apply the xsec veto and skip event generation?
@@ -221,7 +226,7 @@ namespace Gambit
         {
           result.nextEvent(dummy_pythia_event);
         }
-        catch (typename Py8Collider<PythiaT,EventT>::EventGenerationError& e)
+        catch (typename Py8Collider<PythiaT,EventT,hepmc_writerT>::EventGenerationError& e)
         {
           piped_invalid_point.request("Failed to generate dummy test event. Will invalidate point.");
 
@@ -286,29 +291,31 @@ namespace Gambit
 
 
     // Get SLHAea object with spectrum and decays for Pythia -- non-SUSY version
-    #define GET_SPECTRUM_AND_DECAYS_FOR_PYTHIA_NONSUSY(NAME, SPECTRUM)                    \
-    void NAME(SLHAstruct& result)                                                         \
-    {                                                                                     \
-      using namespace Pipes::NAME;                                                        \
-      if (*Loop::iteration == BASE_INIT)                                                  \
-      {                                                                                   \
-        result.clear();                                                                   \
-        /* Get decays */                                                                  \
-        result = Dep::decay_rates->getSLHAea(2);                                          \
-        /* Get spectrum */                                                                \
-        SLHAstruct slha_spectrum = Dep::SPECTRUM->getSLHAea(2);                           \
-        result.insert(result.begin(), slha_spectrum.begin(), slha_spectrum.end());        \
-      }                                                                                   \
+    #define GET_SPECTRUM_AND_DECAYS_FOR_PYTHIA_NONSUSY(NAME, SPECTRUM)                \
+    void NAME(SLHAstruct& result)                                                     \
+    {                                                                                 \
+      using namespace Pipes::NAME;                                                    \
+      result.clear();                                                                 \
+      /* Get decays */                                                                \
+      result = Dep::decay_rates->getSLHAea(2);                                        \
+      /* Get spectrum */                                                              \
+      SLHAstruct slha_spectrum = Dep::SPECTRUM->getSLHAea(2);                         \
+      result.insert(result.begin(), slha_spectrum.begin(), slha_spectrum.end());      \
     }
 
 
+    /// Work out last template arg of Py8Collider depending on whether we are using HepMC
+    #ifdef EXCLUDE_HEPMC
+      #define HEPMC_TYPE(PYTHIA_NS) void
+    #else
+      #define HEPMC_TYPE(PYTHIA_NS) PYTHIA_NS::Pythia8::GAMBIT_hepmc_writer
+    #endif
 
     /// Retrieve a specific Pythia hard-scattering Monte Carlo simulation
-    #define IS_SUSY true
-    #define NOT_SUSY false
     #define GET_SPECIFIC_PYTHIA(NAME, PYTHIA_NS, MODEL_EXTENSION)                     \
     void NAME(Py8Collider<PYTHIA_NS::Pythia8::Pythia,                                 \
-                          PYTHIA_NS::Pythia8::Event> &result)                         \
+                          PYTHIA_NS::Pythia8::Event,                                  \
+                          HEPMC_TYPE(PYTHIA_NS)> &result)                             \
     {                                                                                 \
       using namespace Pipes::NAME;                                                    \
       static SLHAstruct slha;                                                         \
@@ -329,7 +336,8 @@ namespace Gambit
     /// from reading a SLHA file rather than getting a Spectrum + DecayTable
     #define GET_SPECIFIC_PYTHIA_SLHA(NAME, PYTHIA_NS, MODEL_EXTENSION)                \
     void NAME(Py8Collider<PYTHIA_NS::Pythia8::Pythia,                                 \
-                          PYTHIA_NS::Pythia8::Event> &result)                         \
+                          PYTHIA_NS::Pythia8::Event,                                  \
+                          HEPMC_TYPE(PYTHIA_NS)> &result)                             \
     {                                                                                 \
       using namespace Pipes::NAME;                                                    \
       static SLHAstruct slha;                                                         \

@@ -75,7 +75,7 @@ endif()
 include(cmake/contrib.cmake)
 
 # Check for Python interpreter
-# Also, we need to add versions of python  greater than 3.3 manually, 
+# Also, we need to add versions of python  greater than 3.3 manually,
 # for compatibility with CMake 2.8.12.
 set(Python_ADDITIONAL_VERSIONS 3.4 3.5 3.6 3.7)
 # If both FORCE_PYTHON2 and FORCE_PYTHON3 are set, throw error
@@ -182,12 +182,10 @@ endif()
 set(Boost_NO_BOOST_CMAKE ON)
 find_package(Boost 1.41.0 QUIET)
 if(Boost_FOUND)
-  if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND Boost_VERSION LESS 106700)
-    if(PYTHON_VERSION_MAJOR EQUAL 2)
-      set(python_component python)
-    else()
-      set(python_component python3)
-    endif()
+  if(PYTHON_VERSION_MAJOR EQUAL 2)
+    set(python_component python)
+  elseif(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND Boost_VERSION LESS 105800)
+    set(python_component python3)
   else()
     set(python_component python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} )
   endif()
@@ -208,7 +206,7 @@ if(Boost_FOUND)
   target_link_libraries(sarah ${LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 
 else()
-  message(FATAL_ERROR "GUM requires Boost v1.41 or greater.\nPlease install a suitable version of Boost and re-run cmake.")
+  message(FATAL_ERROR "\nGUM requires Boost v1.41 or greater, including the compiled libraries Boost.Python (for FeynRules) and Boost.Filesystem.\nPlease install suitable Boost components and rerun cmake.")
 endif()
 
 # Configure cmake variables files
