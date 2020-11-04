@@ -1620,11 +1620,11 @@ namespace Gambit
               // fromVertex as an edge of the manager.
               str name = (*masterGraph[toVertex]).loopManagerName();
               str origin = (*masterGraph[toVertex]).loopManagerOrigin();
-              if (name != (*masterGraph[fromVertex]).name() and
-                  origin != (*masterGraph[fromVertex]).origin() and
-                  (to_lmcap != from_lmcap or
-                   (to_lmtype != "any" and from_lmtype != "any" and to_lmtype != from_lmtype)
-                  )
+              bool is_itself = (name == (*masterGraph[fromVertex]).name() and origin == (*masterGraph[fromVertex]).origin());
+              if (!is_itself and 
+                   (to_lmcap != from_lmcap or 
+                     (to_lmtype != "any" and from_lmtype != "any" and to_lmtype != from_lmtype)
+                   )
                  )
               {
                 // Hunt through the edges of toVertex and find the one that corresponds to its loop manager.

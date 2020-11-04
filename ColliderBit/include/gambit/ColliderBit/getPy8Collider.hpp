@@ -148,7 +148,7 @@ namespace Gambit
 
         try
         {
-            result.init(pythia_doc_path, pythiaOptions, &slha, processLevelOutput);
+          result.init(pythia_doc_path, pythiaOptions, &slha, processLevelOutput);
         }
         catch (typename Py8Collider<PythiaT,EventT>::InitializationError& e)
         {
@@ -250,38 +250,35 @@ namespace Gambit
       static const bool write_summary_to_log =                                                \
        runOptions->getValueOrDef<bool>(false, "write_summary_to_log");                        \
                                                                                               \
-      if (*Loop::iteration == BASE_INIT)                                                      \
-      {                                                                                       \
-        if ((slha_version != 1) && (slha_version != 2))                                       \
-        {                                                                                     \
-          ColliderBit_error().raise(LOCAL_INFO,                                               \
-            "The option 'slha_version' must be set to 1 or 2 (default).");                    \
-        }                                                                                     \
-        result.clear();                                                                       \
-        /* Get decays */                                                                      \
-        result = Dep::decay_rates->getSLHAea(slha_version, false, *Dep::SLHA_pseudonyms);     \
-        /* Get spectrum */                                                                    \
-        SLHAstruct slha_spectrum = Dep::SPECTRUM->getSLHAea(slha_version);                    \
-        result.insert(result.begin(), slha_spectrum.begin(), slha_spectrum.end());            \
-        /* Add MODSEL block if not found */                                                   \
-        if(result.find("MODSEL") == result.end())                                             \
-        {                                                                                     \
-          SLHAea::Block block("MODSEL");                                                      \
-          block.push_back("BLOCK MODSEL              # Model selection");                     \
-          SLHAea::Line line;                                                                  \
-          line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";                       \
-          block.push_back(line);                                                              \
-          result.push_front(block);                                                           \
-        }                                                                                     \
-                                                                                              \
-        if (write_summary_to_log)                                                             \
-        {                                                                                     \
-          std::stringstream SLHA_log_output;                                                  \
-          SLHA_log_output << "SLHA" << slha_version << " input to Pythia:\n" << result.str()  \
-           << "\n";                                                                           \
-          logger() << SLHA_log_output.str() << EOM;                                           \
-        }                                                                                     \
-      }                                                                                       \
+      if ((slha_version != 1) && (slha_version != 2))                                       \
+      {                                                                                     \
+        ColliderBit_error().raise(LOCAL_INFO,                                               \
+          "The option 'slha_version' must be set to 1 or 2 (default).");                    \
+      }                                                                                     \
+      result.clear();                                                                       \
+      /* Get decays */                                                                      \
+      result = Dep::decay_rates->getSLHAea(slha_version, false, *Dep::SLHA_pseudonyms);     \
+      /* Get spectrum */                                                                    \
+      SLHAstruct slha_spectrum = Dep::SPECTRUM->getSLHAea(slha_version);                    \
+      result.insert(result.begin(), slha_spectrum.begin(), slha_spectrum.end());            \
+      /* Add MODSEL block if not found */                                                   \
+      if(result.find("MODSEL") == result.end())                                             \
+      {                                                                                     \
+        SLHAea::Block block("MODSEL");                                                      \
+        block.push_back("BLOCK MODSEL              # Model selection");                     \
+        SLHAea::Line line;                                                                  \
+        line << 1 << 0 << "# Tell Pythia that this is a SUSY model.";                       \
+        block.push_back(line);                                                              \
+        result.push_front(block);                                                           \
+      }                                                                                     \
+                                                                                            \
+      if (write_summary_to_log)                                                             \
+      {                                                                                     \
+        std::stringstream SLHA_log_output;                                                  \
+        SLHA_log_output << "SLHA" << slha_version << " input to Pythia:\n" << result.str()  \
+         << "\n";                                                                           \
+        logger() << SLHA_log_output.str() << EOM;                                           \
+      }                                                                                     \
     }
 
 
