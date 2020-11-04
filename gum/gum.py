@@ -702,6 +702,11 @@ if args.file:
                                              "8."+base_pythia_version, 
                                              output_dir)
     
+            # Adding in a UserHook
+            print("Writing a Pythia UserHooks class for ColliderBit")
+            set_userhook = write_set_userhook(clean_model_name,base_pythia_version)
+            apply_userhook = write_apply_userhook(clean_model_name)
+
         # Stop now if we're just doing a dry run
         if args.dryrun:
             print("")
@@ -803,6 +808,18 @@ if args.file:
                       existing = False)
             copy_file("models/"+gum.name+".cpp", m, output_dir, reset_contents, 
                       existing = False)
+
+            #Adding in the Set UserHooks Changes.
+            num = find_string("colliders/SetHooksClass.hpp", m, 
+                                  "    class SetHooks")[1]
+            amend_file("colliders/SetHooksClass.hpp", m, set_userhook,
+                           num+14, reset_contents)
+
+            num = find_string("getColliderPythia.hpp", m, 
+                                  "          catch (typename ColliderPythia<PythiaT,EventT>::InitializationError& e)")[1]
+            amend_file("getColliderPythia.hpp", m, apply_userhook,
+                           num+10, reset_contents)
+
 
         # HiggsBounds interface
         if output_opts.spheno:
