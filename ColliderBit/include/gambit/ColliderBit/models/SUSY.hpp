@@ -43,7 +43,6 @@
     DEPENDENCY(decay_rates, DecayTable)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
-    NEEDS_MANAGER(RunMC, MCLoopInfo)
     #undef FUNCTION
 
   #undef CAPABILITY
