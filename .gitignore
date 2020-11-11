@@ -38,6 +38,8 @@ a.out
 # Output data
 runs/*
 results/*
+*.log
+*.hdf5
 
 # Executables and build files
 /gambit
@@ -79,6 +81,7 @@ ScannerBit/installed/**
 ScannerBit/lib/plugin_libraries.list
 
 # GUM files
+*.mug
 gum/build/*
 gum/contrib/**
 gum/Output/**

@@ -143,6 +143,10 @@ plc:
 MultiModeCode:
   2.0.0:       ./Backends/installed/multimodecode/2.0.0/lib/libmodecode.so
 
+# Added by GUM
+MicrOmegas_DecayingDM:
+  3.6.9.2:     ./Backends/installed/micromegas/3.6.9.2/DecayingDM/libmicromegas.so
+
 # Example/debug backends
 
 LibFirst:
