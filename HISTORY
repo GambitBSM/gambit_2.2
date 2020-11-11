@@ -7,7 +7,7 @@ v1.5.1
 Bugfix release
 - Fixed faulty patch files for versions 2.9.3 and 2.9.4 of the classy backend
 - Fixed bug in Planck 2018 lowl TTEE (Does not affect results of CosmoBit papers)
-- Support for DarkSUSY 6.1.1, and 6.2.2
+- Support for DarkSUSY 6.1.1 and 6.2.2
 
 v1.5.0
 Feature release

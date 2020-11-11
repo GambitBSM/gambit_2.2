@@ -168,6 +168,9 @@ namespace Gambit
         /// Max number of threads that could potentially be running
         int globlMaxThreads;
 
+        /// Path to the default log file in the scratch dir
+        const std::string scratch_path;
+
         /// @{ Variables that need to be threadsafe
 
         /// int current_function; Can generalise to this if we discover that we really want to...

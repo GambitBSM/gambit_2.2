@@ -55,6 +55,7 @@ namespace Gambit
     const char* whitespaces[] = {" ", "\t", "\n", "\f", "\r"};
 
     /// Return the path to the run-specific scratch directory
+    /// Don't call this from a destructor, as the internal static str may have already been destroyed.
     const str& runtime_scratch()
     {
       #ifdef WITH_MPI
