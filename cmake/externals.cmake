@@ -30,6 +30,10 @@
 #          (b.farmer@imperial.ac.uk)
 #  \date 2018 Oct
 #
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020 Nov
+#
 #************************************************
 
 
@@ -127,7 +131,8 @@ macro(add_extra_targets type package ver dir dl target)
     add_dependencies(clean-backends clean-${pname})
   else()
     set(pname "${package}_${ver}")
-    string(REGEX REPLACE ".*/" "${${type}_download}/" short_dl "${dl}")
+    string(REGEX MATCH "zip|tar.gz|tgz" suffix "${dl}")
+    set(short_dl "${type}_download/${package}_${ver}.${suffix}")
     add_external_clean(${package}_${ver} ${dir} ${short_dl} "${updated_target}")
     add_dependencies(clean-${type}s clean-${pname})
     add_dependencies(nuke-${type}s nuke-${pname})
