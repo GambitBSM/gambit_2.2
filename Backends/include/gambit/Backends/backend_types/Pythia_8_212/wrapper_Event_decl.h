@@ -2,15 +2,15 @@
 #define __wrapper_Event_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <string>
+#include <ostream>
+#include <vector>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_Event.h"
-#include <string>
 #include "wrapper_ParticleData_decl.h"
 #include "wrapper_Particle_decl.h"
 #include "wrapper_Vec4_decl.h"
-#include <ostream>
-#include <vector>
 
 #include "identification.hpp"
 

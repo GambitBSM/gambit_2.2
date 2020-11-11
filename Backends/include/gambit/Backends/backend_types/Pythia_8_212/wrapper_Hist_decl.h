@@ -2,12 +2,12 @@
 #define __wrapper_Hist_decl_Pythia_8_212_h__
 
 #include <cstddef>
-#include "forward_decls_wrapper_classes.h"
-#include "gambit/Backends/wrapperbase.hpp"
-#include "abstract_Hist.h"
 #include <string>
 #include <ostream>
 #include <vector>
+#include "forward_decls_wrapper_classes.h"
+#include "gambit/Backends/wrapperbase.hpp"
+#include "abstract_Hist.h"
 
 #include "identification.hpp"
 

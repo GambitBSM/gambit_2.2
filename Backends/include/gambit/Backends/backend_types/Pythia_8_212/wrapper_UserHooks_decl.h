@@ -2,6 +2,8 @@
 #define __wrapper_UserHooks_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <string>
+#include <vector>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_UserHooks.h"
@@ -14,8 +16,6 @@
 #include "wrapper_SigmaTotal_decl.h"
 #include "wrapper_SigmaProcess_decl.h"
 #include "wrapper_Event_decl.h"
-#include <string>
-#include <vector>
 #include "wrapper_Particle_decl.h"
 
 #include "identification.hpp"

@@ -2,6 +2,9 @@
 #define __wrapper_ParticleData_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <string>
+#include <ostream>
+#include <vector>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_ParticleData.h"
@@ -9,9 +12,6 @@
 #include "wrapper_Settings_decl.h"
 #include "wrapper_Rndm_decl.h"
 #include "wrapper_Couplings_decl.h"
-#include <string>
-#include <ostream>
-#include <vector>
 #include "wrapper_ParticleDataEntry_decl.h"
 
 #include "identification.hpp"

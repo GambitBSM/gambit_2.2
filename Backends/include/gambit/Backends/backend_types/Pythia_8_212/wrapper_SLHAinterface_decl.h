@@ -2,6 +2,7 @@
 #define __wrapper_SLHAinterface_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <sstream>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_SLHAinterface.h"
@@ -10,7 +11,6 @@
 #include "wrapper_Rndm_decl.h"
 #include "wrapper_Couplings_decl.h"
 #include "wrapper_ParticleData_decl.h"
-#include <sstream>
 #include "wrapper_SusyLesHouches_decl.h"
 #include "wrapper_CoupSUSY_decl.h"
 

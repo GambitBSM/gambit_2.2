@@ -2,13 +2,13 @@
 #define __wrapper_Settings_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <string>
+#include <ostream>
+#include <vector>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_Settings.h"
 #include "wrapper_Info_decl.h"
-#include <string>
-#include <ostream>
-#include <vector>
 
 #include "identification.hpp"
 

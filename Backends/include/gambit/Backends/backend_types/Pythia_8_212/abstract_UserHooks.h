@@ -1,6 +1,10 @@
 #ifndef __abstract_UserHooks_Pythia_8_212_h__
 #define __abstract_UserHooks_Pythia_8_212_h__
 
+#include <cstddef>
+#include <iostream>
+#include <string>
+#include <vector>
 #include "gambit/Backends/abstractbase.hpp"
 #include "forward_decls_abstract_classes.h"
 #include "forward_decls_wrapper_classes.h"
@@ -13,11 +17,7 @@
 #include "wrapper_SigmaTotal_decl.h"
 #include "wrapper_SigmaProcess_decl.h"
 #include "wrapper_Event_decl.h"
-#include <string>
-#include <vector>
 #include "wrapper_Particle_decl.h"
-#include <cstddef>
-#include <iostream>
 
 #include "identification.hpp"
 

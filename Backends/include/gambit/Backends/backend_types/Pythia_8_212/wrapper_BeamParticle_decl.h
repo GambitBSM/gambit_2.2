@@ -2,6 +2,9 @@
 #define __wrapper_BeamParticle_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <ostream>
+#include <vector>
+#include <utility>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_BeamParticle.h"
@@ -10,10 +13,7 @@
 #include "wrapper_ParticleData_decl.h"
 #include "wrapper_Rndm_decl.h"
 #include "wrapper_Vec4_decl.h"
-#include <ostream>
 #include "wrapper_Event_decl.h"
-#include <vector>
-#include <utility>
 
 #include "identification.hpp"
 

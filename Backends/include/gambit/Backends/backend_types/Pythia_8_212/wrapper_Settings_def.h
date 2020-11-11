@@ -1,10 +1,10 @@
 #ifndef __wrapper_Settings_def_Pythia_8_212_h__
 #define __wrapper_Settings_def_Pythia_8_212_h__
 
-#include "wrapper_Info_decl.h"
 #include <string>
 #include <ostream>
 #include <vector>
+#include "wrapper_Info_decl.h"
 
 #include "identification.hpp"
 

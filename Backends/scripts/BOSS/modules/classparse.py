@@ -253,13 +253,15 @@ def constrAbstractClassHeaderCode(class_el, class_name, abstr_class_name, namesp
 
     # Add include statements
     include_statements  = []
+    include_statements += ['#include <cstddef>']
+    if gb.debug_mode or file_for_gambit: 
+        include_statements += ['#include <iostream>']
     include_statements += ['#include "' + os.path.join(gb.gambit_backend_incl_dir, 'abstractbase.hpp') + '"']
     include_statements += ['#include "' + gb.frwd_decls_abs_fname + cfg.header_extension + '"']
     include_statements += ['#include "' + gb.frwd_decls_wrp_fname + cfg.header_extension + '"']
     include_statements += utils.getIncludeStatements(class_el, convert_loaded_to='wrapper_decl', exclude_types=[class_name], include_parents=True, use_full_path=False, forward_declared='include')
-    include_statements += ['#include <cstddef>']
-    if gb.debug_mode or file_for_gambit: 
-        include_statements += ['#include <iostream>']
+
+    include_statements = utils.orderIncludeStatements(include_statements)
     include_statements_code = '\n'.join(include_statements) + 2*'\n'
     class_decl += include_statements_code
 
@@ -634,6 +636,7 @@ def generateClassMemberInterface(class_el, class_name, abstr_class_name, namespa
             include_statements.append( '#include "' + use_path + '"')
 
         include_statements = list( OrderedDict.fromkeys(include_statements) )
+        include_statements = utils.orderIncludeStatements(include_statements)
         include_statements_code = '\n'.join(include_statements) + '\n'
 
         # - Register the code

@@ -1849,8 +1849,9 @@ def getIncludeStatements(input_el, convert_loaded_to='none', exclude_types=[],
         else:
             infomsg.NoIncludeStatementGenerated( type_name['long_templ'] ).printMessage()
 
-    # Remove duplicates and return list
+    # Remove duplicates and return list (ordered)
     include_statements = list( OrderedDict.fromkeys(include_statements) )
+    include_statements = orderIncludeStatements(include_statements)
 
     return include_statements
 
@@ -2942,3 +2943,36 @@ def modifyText(msg, mod):
 
 # ====== END: modifyText ========
 
+
+# ====== orderIncludeStatements ========
+
+def orderIncludeStatements(include_statements):
+
+    ordered_include_statements = []
+
+    # This is not the fastest solution, but an easy way to 
+    # to keep the existing order within each group of headers
+
+    # Add standard headers (not Boost headers)
+    for s in include_statements:
+        if "<" in s:
+            if "<boost/" not in s:
+                ordered_include_statements.append(s)
+
+    # Add BOSS-generated and/or backend-specific headers
+    for s in include_statements:
+        if "<" not in s:
+            ordered_include_statements.append(s)
+
+    # Add Boost headers
+    for s in include_statements:
+        if "<boost/" in s:
+            ordered_include_statements.append(s)
+
+    # Check that we haven't missed any include statements
+    assert len(ordered_include_statements) == len(include_statements)
+
+    # Return ordered list of include statements
+    return ordered_include_statements
+
+# ====== END: orderIncludeStatements ========
