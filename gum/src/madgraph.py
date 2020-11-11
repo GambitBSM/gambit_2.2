@@ -31,7 +31,10 @@ def make_madgraph_script(mg5_dir, mg5_output_dir, model_name, processes, multipa
     print("Generating {}.".format(filename))
 
     # First convert the model to python3 if needed
-    towrite = "convert model " + model_path + "\n"
+    if sys.version_info[0] < 3:
+        towrite = ""
+    else:
+        towrite = "convert model " + model_path + "\n"
 
     # Then, import the model 
     towrite += "import model " + model_name + "\n"
