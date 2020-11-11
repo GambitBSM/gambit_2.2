@@ -140,7 +140,7 @@ namespace Gambit
     };
 
     // constructor
-    Xray::Xray(std::string experiment, double J_factor) : m_experiment(experiment), m_experimentMap({{"INTEGRAL", 1}, {"HEAO", 2}}), m_J(J_factor)
+    Xray::Xray(std::string experiment, double J_factor) : m_J(J_factor), m_experiment(experiment), m_experimentMap({{"INTEGRAL", 1}, {"HEAO", 2}})
     {
       switch(m_experimentMap[m_experiment])
       {
