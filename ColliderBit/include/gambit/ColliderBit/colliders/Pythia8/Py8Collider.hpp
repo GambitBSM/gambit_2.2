@@ -48,7 +48,7 @@ namespace Gambit
         /// Get the Pythia instance.
         const PythiaT* pythia() const { return _pythiaInstance; }
 
-        // Me trying to test the specialised class
+        // Setting up the CombineMatchingInput UserHook
         bool SetupMatchingUserHook()
         {
             SetHooks<PythiaT, EventT> Hook;
