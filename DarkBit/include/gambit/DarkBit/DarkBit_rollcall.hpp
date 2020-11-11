@@ -348,6 +348,11 @@ START_MODULE
       START_FUNCTION(double)
       DEPENDENCY(RD_oh2, double)
     #undef FUNCTION
+    #define FUNCTION RD_fraction_rescaled_LCDM
+      START_FUNCTION(double)
+      ALLOW_MODELS(LCDM, LCDM_theta)
+      DEPENDENCY(RD_oh2, double)
+    #undef FUNCTION
   #undef CAPABILITY
 
 
@@ -1681,6 +1686,26 @@ START_MODULE
     #define FUNCTION SuperRenormHP_lifetime
     START_FUNCTION(double)
     DEPENDENCY(DM_width, double)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DecDM_branching_el
+  START_CAPABILITY
+    #define FUNCTION DecDM_branching_el
+    START_FUNCTION(double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(DM_width, double)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+  #define CAPABILITY DecDM_branching_ph
+  START_CAPABILITY
+    #define FUNCTION DecDM_branching_ph
+    START_FUNCTION(double)
+    DEPENDENCY(DarkMatter_ID, std::string)
+    DEPENDENCY(DM_width, double)
+    DEPENDENCY(TH_ProcessCatalog, TH_ProcessCatalog)
     #undef FUNCTION
   #undef CAPABILITY
 

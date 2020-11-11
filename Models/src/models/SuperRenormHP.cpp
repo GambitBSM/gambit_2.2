@@ -54,28 +54,11 @@ void MODEL_NAMESPACE::SuperRenormHP_to_DecayingDM_mixture (const ModelParameters
   USE_MODEL_PIPE(FRIEND) // get pipe for "interpret as friend" function
   logger()<<"Running interpret_as_friend calculations for SuperRenormHP -> DecayingDM_mixture ..."<<EOM;
 
-  double mS = myparams["mS"];
-  double theta = myparams["theta"];
-
-  double me = Gambit::m_electron;
-  double alphaEM = Gambit::alpha_EM;
-  double C = 50./27.;
-  double pi = Gambit::pi;
-  double vev = 256;
-
-  double gamma_ph = (theta*theta*alphaEM*alphaEM*mS*mS*mS*C*C)/(256.*pi*pi*pi*vev*vev);
-  double gamma_e = ( mS >= 2*me ) ? pow(theta,2)*pow(me,2)*mS/(8*pi*pow(vev,2))*pow(1 - 4*pow(me,2)/pow(mS,2), 3./2.) : 0;
-  double gamma_tot = gamma_ph + gamma_e;
-
-  double RD_oh2 = *Dep::RD_oh2;
-  double omega_cdm = *Dep::omega_cdm;
-
-  friendparams.setValue("mass", mS);
-  friendparams.setValue("lifetime", 1/gamma_tot/Gambit::hbar);
-  friendparams.setValue("fraction", RD_oh2/omega_cdm);
-  friendparams.setValue("BR_ph", gamma_ph/gamma_tot);
-  friendparams.setValue("BR_el", gamma_e/gamma_tot);
-
+  friendparams.setValue("mass", myparams["mS"]);
+  friendparams.setValue("lifetime", *Dep::DM_lifetime);
+  friendparams.setValue("fraction", *Dep::RD_fraction);
+  friendparams.setValue("BR_ph", *Dep::DecDM_branching_ph);
+  friendparams.setValue("BR_el", *Dep::DecDM_branching_el);
 }
 #undef FRIEND
 #undef MODEL
