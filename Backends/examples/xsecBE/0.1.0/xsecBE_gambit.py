@@ -1,3 +1,8 @@
+#
+# Work in progress: Backend interface for xsec
+#   github.com/jeriek/xsec
+#   arxiv:2006.16273
+#
 from __future__ import print_function
 import numpy as np
 import xsec
@@ -9,19 +14,14 @@ from math import sqrt
 prefix = "xsecBE_gambit:"
 print(prefix, "Starting up...")
 
-# This needs to be run from within GAMBIT to avoid the hardcoded absolute path
-xsec.init(data_dir="/home/anders/physics/GAMBIT/gambit_rj/Backends/installed/xsecBE/0.1.0/gprocs_tb_08112019/")
+# TODO: xsec.init should be run from within GAMBIT, to avoid the hardcoded path here
+xsec.init(data_dir="Backends/installed/xsecBE/1.0.2/gprocs/")
 
 
 #
 # Import SLHA content as string
 #
 def import_slha_string(slha_string):
-
-    # # Fix to ensure that the pyslha parsing of slha_string 
-    # # works with both Python 2 and 3
-    # if sys.version_info < (3,0):
-    #     slha_string = slha_string.encode('ascii', 'xmlcharrefreplace')        
 
     print("Reading SLHA input...")
     xsec.import_slha_string(slha_string)
@@ -84,21 +84,4 @@ def get_xsection(proc):
                                                                 + result_dict["alphasup_rel"]**2)
 
     return result_dict
-
-
-
-# # ================ TESTING ================
-
-# params_in = {'par1': 1.0, 'par2': 2.0}
-# set_parameters(params_in)
-
-# flags_in = {'flag1': True, 'flag2': False}
-# set_flags(flags_in)
-
-# xsec_fb((1000021,1000021), {'LO_xsec_fb': 78.9}, {})
-
-# xsec_err_fb((1000021,1000021), {}, {'alphas_error': True})
-
-
-
 
