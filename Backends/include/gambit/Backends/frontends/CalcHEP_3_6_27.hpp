@@ -23,7 +23,7 @@
 LOAD_LIBRARY
 
 BE_ALLOW_MODELS(ScalarSingletDM_Z2)
-
+BE_ALLOW_MODELS(DecayingDM)
 BE_FUNCTION(setModel, int, (char*, int), "setModel", "setModel")
 BE_FUNCTION(calcMainFunc, int, (), "calcMainFunc", "calcMainFunc")
 BE_FUNCTION(getMEcode, numout*, (int ,int, char*, char*, char*, char*), "getMEcode", "getMEcode")
@@ -47,5 +47,6 @@ BE_CONV_FUNCTION(Assign_Value, void, (char*, double), "Assign_Value")
 
 BE_INI_CONDITIONAL_DEPENDENCY(ScalarSingletDM_Z2_spectrum, Spectrum, ScalarSingletDM_Z2)
 
+BE_INI_CONDITIONAL_DEPENDENCY(DecayingDM_spectrum, Spectrum, DecayingDM)
 // Undefine macros to avoid conflict with other backends
 #include "gambit/Backends/backend_undefs.hpp"
