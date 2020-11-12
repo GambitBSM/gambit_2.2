@@ -64,7 +64,11 @@ namespace Gambit
 
     /// Construct the path to the run-specific scratch directory
     /// This version is safe to call from a destructor.
-    str construct_runtime_scratch(bool fail_on_mpi_uninitialised)
+    str construct_runtime_scratch(bool
+    #ifdef WITH_MPI
+      fail_on_mpi_uninitialised
+    #endif
+    )
     {
       str master_procID;
       #ifdef WITH_MPI
@@ -75,8 +79,8 @@ namespace Gambit
         else
         {
           if (fail_on_mpi_uninitialised)
-           utils_error().raise(LOCAL_INFO, "Tried to call construct_runtime_scratch without MPI initialised!");
-           master_procID = "/unattached_MPI_process_" + std::to_string(getpid());
+            utils_error().raise(LOCAL_INFO, "Tried to call construct_runtime_scratch without MPI initialised!");
+          master_procID = "/unattached_MPI_process_" + std::to_string(getpid());
         }
       #else
         master_procID = "/master_process_" + std::to_string(getpid());
