@@ -68,14 +68,14 @@ namespace Gambit
     {
       str master_procID;
       #ifdef WITH_MPI
-        if (GMPI::Is_initialized())
+        if (GMPI::Is_initialized() and not GMPI::Is_finalized())
         {
           master_procID = "/master_process_" + std::to_string(GMPI::Comm().MasterPID());
         }
         else
         {
           if (fail_on_mpi_uninitialised)
-           utils_error().raise(LOCAL_INFO, "Tried to call construct_runtime_scratch before MPI was initialised!");
+           utils_error().raise(LOCAL_INFO, "Tried to call construct_runtime_scratch without MPI initialised!");
            master_procID = "/unattached_MPI_process_" + std::to_string(getpid());
         }
       #else
