@@ -2,10 +2,10 @@
 #define __wrapper_ParticleDataEntry_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <string>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_ParticleDataEntry.h"
-#include <string>
 #include "wrapper_DecayChannel_decl.h"
 #include "wrapper_Info_decl.h"
 #include "wrapper_Settings_decl.h"

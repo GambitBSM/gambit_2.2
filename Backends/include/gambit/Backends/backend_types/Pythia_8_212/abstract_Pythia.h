@@ -1,18 +1,21 @@
 #ifndef __abstract_Pythia_Pythia_8_212_h__
 #define __abstract_Pythia_Pythia_8_212_h__
 
+#include <cstddef>
+#include <iostream>
+#include <string>
+#include <istream>
+#include <vector>
+#include <ostream>
+#include <sstream>
 #include "gambit/Backends/abstractbase.hpp"
 #include "forward_decls_abstract_classes.h"
 #include "forward_decls_wrapper_classes.h"
-#include <string>
 #include "wrapper_ParticleData_decl.h"
 #include "wrapper_Settings_decl.h"
-#include <istream>
-#include <vector>
 #include "wrapper_UserHooks_decl.h"
 #include "wrapper_SigmaProcess_decl.h"
 #include "wrapper_ResonanceWidths_decl.h"
-#include <ostream>
 #include "wrapper_Event_decl.h"
 #include "wrapper_Info_decl.h"
 #include "wrapper_Rndm_decl.h"
@@ -22,9 +25,6 @@
 #include "wrapper_BeamParticle_decl.h"
 #include "wrapper_PartonLevel_decl.h"
 #include "wrapper_SigmaTotal_decl.h"
-#include <sstream>
-#include <cstddef>
-#include <iostream>
 
 #include "identification.hpp"
 

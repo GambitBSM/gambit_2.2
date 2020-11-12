@@ -1,11 +1,11 @@
 #ifndef __wrapper_Particle_def_Pythia_8_212_h__
 #define __wrapper_Particle_def_Pythia_8_212_h__
 
+#include <vector>
+#include <string>
 #include "wrapper_Vec4_decl.h"
 #include "wrapper_Event_decl.h"
 #include "wrapper_ParticleDataEntry_decl.h"
-#include <vector>
-#include <string>
 
 #include "identification.hpp"
 

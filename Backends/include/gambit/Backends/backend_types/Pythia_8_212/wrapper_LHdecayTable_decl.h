@@ -2,12 +2,12 @@
 #define __wrapper_LHdecayTable_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <vector>
+#include <string>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_LHdecayTable.h"
 #include "wrapper_LHdecayChannel_decl.h"
-#include <vector>
-#include <string>
 
 #include "identification.hpp"
 

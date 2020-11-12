@@ -677,6 +677,7 @@ def constrFactoryFunctionCode(class_el, class_name, indent=4, template_types=[],
         
 
         include_statements = list( OrderedDict.fromkeys(include_statements) )
+        include_statements = utils.orderIncludeStatements(include_statements)
         include_statements_code = '\n'.join(include_statements) + 2*'\n'
         return_code = include_statements_code + return_code
 
@@ -2013,6 +2014,7 @@ def generateWrapperHeaderCode(class_el, class_name, abstr_class_name, namespaces
 
     # Remove duplicates and construct code
     decl_code_include_statements = list( OrderedDict.fromkeys(decl_code_include_statements) )
+    decl_code_include_statements = utils.orderIncludeStatements(decl_code_include_statements)
     decl_include_statements_code = '\n'.join(decl_code_include_statements) + 2*'\n'
     decl_code = decl_include_statements_code + decl_code
 
@@ -2028,6 +2030,7 @@ def generateWrapperHeaderCode(class_el, class_name, abstr_class_name, namespaces
 
     # Remove duplicates and construct code
     def_code_include_statements = list( OrderedDict.fromkeys(def_code_include_statements) )
+    def_code_include_statements = utils.orderIncludeStatements(def_code_include_statements)
     def_include_statements_code = '\n'.join(def_code_include_statements) + 2*'\n'
     def_code = def_include_statements_code + def_code
 

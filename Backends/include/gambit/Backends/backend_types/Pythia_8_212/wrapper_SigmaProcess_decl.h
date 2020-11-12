@@ -2,6 +2,7 @@
 #define __wrapper_SigmaProcess_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <string>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_SigmaProcess.h"
@@ -15,7 +16,6 @@
 #include "wrapper_SLHAinterface_decl.h"
 #include "wrapper_Vec4_decl.h"
 #include "wrapper_Event_decl.h"
-#include <string>
 #include "wrapper_Particle_decl.h"
 #include "wrapper_SusyLesHouches_decl.h"
 

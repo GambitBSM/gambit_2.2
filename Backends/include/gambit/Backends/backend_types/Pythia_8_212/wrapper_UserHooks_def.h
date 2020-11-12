@@ -1,6 +1,8 @@
 #ifndef __wrapper_UserHooks_def_Pythia_8_212_h__
 #define __wrapper_UserHooks_def_Pythia_8_212_h__
 
+#include <string>
+#include <vector>
 #include "wrapper_Info_decl.h"
 #include "wrapper_Settings_decl.h"
 #include "wrapper_ParticleData_decl.h"
@@ -10,8 +12,6 @@
 #include "wrapper_SigmaTotal_decl.h"
 #include "wrapper_SigmaProcess_decl.h"
 #include "wrapper_Event_decl.h"
-#include <string>
-#include <vector>
 #include "wrapper_Particle_decl.h"
 
 #include "identification.hpp"

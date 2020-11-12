@@ -60,8 +60,9 @@ FeynHiggs:
   2.11.3:      ./Backends/installed/feynhiggs/2.11.3/lib/libFH.so
   2.12.0:      ./Backends/installed/feynhiggs/2.12.0/lib/libFH.so
 
-Prospino:
-  2.1:         ./Backends/installed/prospino/2.1/libprospino.so
+# Work in progress:
+# Prospino:
+#   2.1:         ./Backends/installed/prospino/2.1/libprospino.so
 
 Pythia:
   8.212:       ./Backends/installed/pythia/8.212/lib/libpythia8.so
@@ -106,8 +107,9 @@ nulike:
   1.0.8:       ./Backends/installed/nulike/1.0.8/lib/libnulike.so
   1.0.9:       ./Backends/installed/nulike/1.0.9/lib/libnulike.so
 
-Rivet:
-  3.0.0:       ./Backends/installed/Rivet/3.0.0/local/lib/libRivet.so
+# Work in progress:
+# Rivet:
+#   3.0.0:       ./Backends/installed/Rivet/3.0.0/local/lib/libRivet.so
 
 SUSY_HIT:
   1.5:         ./Backends/installed/susyhit/1.5/libsusyhit.so
@@ -172,8 +174,10 @@ LibFarrayTest:
 libMathematicaTest:
   1.0:         ./Backends/examples/libMathematicaTest.m
 
-xsecBE:
-  0.1.0:       ./Backends/installed/xsecBE/0.1.0/xsecBE_gambit.py
+# Work in progress:
+# xsecBE:
+#   1.0.2:       ./Backends/installed/xsecBE/1.0.2/xsecBE_gambit.py
 
-salami:
-  0.1.0:       ./Backends/examples/salami/0.1.0/salami_gambit.py
+# Work in progress:
+# salami:
+#   0.1.0:       ./Backends/examples/salami/0.1.0/salami_gambit.py

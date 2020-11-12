@@ -1,6 +1,7 @@
 #ifndef __wrapper_SigmaProcess_def_Pythia_8_212_h__
 #define __wrapper_SigmaProcess_def_Pythia_8_212_h__
 
+#include <string>
 #include "wrapper_Info_decl.h"
 #include "wrapper_Settings_decl.h"
 #include "wrapper_ParticleData_decl.h"
@@ -11,7 +12,6 @@
 #include "wrapper_SLHAinterface_decl.h"
 #include "wrapper_Vec4_decl.h"
 #include "wrapper_Event_decl.h"
-#include <string>
 #include "wrapper_Particle_decl.h"
 #include "wrapper_SusyLesHouches_decl.h"
 

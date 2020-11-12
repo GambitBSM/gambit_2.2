@@ -1,6 +1,11 @@
 #ifndef __abstract_ParticleData_Pythia_8_212_h__
 #define __abstract_ParticleData_Pythia_8_212_h__
 
+#include <cstddef>
+#include <iostream>
+#include <string>
+#include <ostream>
+#include <vector>
 #include "gambit/Backends/abstractbase.hpp"
 #include "forward_decls_abstract_classes.h"
 #include "forward_decls_wrapper_classes.h"
@@ -8,13 +13,8 @@
 #include "wrapper_Settings_decl.h"
 #include "wrapper_Rndm_decl.h"
 #include "wrapper_Couplings_decl.h"
-#include <string>
-#include <ostream>
-#include <vector>
 #include "wrapper_ResonanceWidths_decl.h"
 #include "wrapper_ParticleDataEntry_decl.h"
-#include <cstddef>
-#include <iostream>
 
 #include "identification.hpp"
 

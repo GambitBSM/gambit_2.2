@@ -3,9 +3,9 @@
 
 #include <string>
 #include <istream>
-#include "SLHAea/slhaea.h"
 #include <map>
 #include <vector>
+#include "SLHAea/slhaea.h"
 
 #include "identification.hpp"
 

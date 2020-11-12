@@ -1,12 +1,12 @@
 #ifndef __wrapper_SLHAinterface_def_Pythia_8_212_h__
 #define __wrapper_SLHAinterface_def_Pythia_8_212_h__
 
+#include <sstream>
 #include "wrapper_Info_decl.h"
 #include "wrapper_Settings_decl.h"
 #include "wrapper_Rndm_decl.h"
 #include "wrapper_Couplings_decl.h"
 #include "wrapper_ParticleData_decl.h"
-#include <sstream>
 #include "wrapper_SusyLesHouches_decl.h"
 #include "wrapper_CoupSUSY_decl.h"
 

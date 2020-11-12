@@ -1,11 +1,11 @@
 #ifndef __wrapper_ResonanceDecays_def_Pythia_8_212_h__
 #define __wrapper_ResonanceDecays_def_Pythia_8_212_h__
 
+#include <vector>
 #include "wrapper_Info_decl.h"
 #include "wrapper_ParticleData_decl.h"
 #include "wrapper_Rndm_decl.h"
 #include "wrapper_Event_decl.h"
-#include <vector>
 
 #include "identification.hpp"
 

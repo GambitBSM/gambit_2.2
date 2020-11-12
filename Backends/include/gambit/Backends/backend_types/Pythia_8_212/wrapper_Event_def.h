@@ -2,11 +2,11 @@
 #define __wrapper_Event_def_Pythia_8_212_h__
 
 #include <string>
+#include <ostream>
+#include <vector>
 #include "wrapper_ParticleData_decl.h"
 #include "wrapper_Particle_decl.h"
 #include "wrapper_Vec4_decl.h"
-#include <ostream>
-#include <vector>
 
 #include "identification.hpp"
 

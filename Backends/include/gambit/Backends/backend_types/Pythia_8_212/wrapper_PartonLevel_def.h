@@ -1,6 +1,7 @@
 #ifndef __wrapper_PartonLevel_def_Pythia_8_212_h__
 #define __wrapper_PartonLevel_def_Pythia_8_212_h__
 
+#include <vector>
 #include "wrapper_Info_decl.h"
 #include "wrapper_Settings_decl.h"
 #include "wrapper_ParticleData_decl.h"
@@ -10,7 +11,6 @@
 #include "wrapper_SigmaTotal_decl.h"
 #include "wrapper_UserHooks_decl.h"
 #include "wrapper_Event_decl.h"
-#include <vector>
 #include "wrapper_ResonanceDecays_decl.h"
 
 #include "identification.hpp"

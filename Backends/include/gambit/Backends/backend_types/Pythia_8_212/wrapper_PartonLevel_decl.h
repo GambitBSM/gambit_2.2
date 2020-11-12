@@ -2,6 +2,7 @@
 #define __wrapper_PartonLevel_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <vector>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_PartonLevel.h"
@@ -14,7 +15,6 @@
 #include "wrapper_SigmaTotal_decl.h"
 #include "wrapper_UserHooks_decl.h"
 #include "wrapper_Event_decl.h"
-#include <vector>
 #include "wrapper_ResonanceDecays_decl.h"
 
 #include "identification.hpp"

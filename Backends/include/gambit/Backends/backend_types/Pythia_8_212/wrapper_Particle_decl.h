@@ -2,13 +2,13 @@
 #define __wrapper_Particle_decl_Pythia_8_212_h__
 
 #include <cstddef>
+#include <vector>
+#include <string>
 #include "forward_decls_wrapper_classes.h"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_Particle.h"
 #include "wrapper_Vec4_decl.h"
 #include "wrapper_ParticleDataEntry_decl.h"
-#include <vector>
-#include <string>
 
 #include "identification.hpp"
 

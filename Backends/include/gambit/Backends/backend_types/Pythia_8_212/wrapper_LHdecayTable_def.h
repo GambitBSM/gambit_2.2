@@ -1,9 +1,9 @@
 #ifndef __wrapper_LHdecayTable_def_Pythia_8_212_h__
 #define __wrapper_LHdecayTable_def_Pythia_8_212_h__
 
-#include "wrapper_LHdecayChannel_decl.h"
 #include <vector>
 #include <string>
+#include "wrapper_LHdecayChannel_decl.h"
 
 #include "identification.hpp"
 

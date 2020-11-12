@@ -1,5 +1,7 @@
+#
+# Work in progress: Backend interface for salami
+#
 from __future__ import print_function
-#import numpy as np
 
 #
 # This will run when this backend is first loaded, i.e. during GAMBIT startup
@@ -105,8 +107,6 @@ def get_xsection(proc, energy, xsec_lo_fb):
     result_dict = {}
     result_dict["central"] = kpred.predict_xsec(SLHA, xsec_lo_fb, kmin=0.0, kmax=None, freeze_xpol=True)
 
-    # def predict_xsec(self, slhadoc, xsec_lo, kmin=0, kmax=None, freeze_xpol=True):
-
     # result_dict["regdown_rel"] = 0.0
     # result_dict["regup_rel"] = 0.0
     # result_dict["scaledown_rel"] = 0.0
@@ -123,16 +123,3 @@ def get_xsection(proc, energy, xsec_lo_fb):
     print("DEBUG: result: ", result_dict, flush=True)
 
     return result_dict
-
-
-# # ================ TESTING ================
-
-# params_in = {'par1': 1.0, 'par2': 2.0}
-# set_parameters(params_in)
-
-# flags_in = {'flag1': True, 'flag2': False}
-# set_flags(flags_in)
-
-# xsec_fb((1000021,1000021), {'LO_xsec_fb': 78.9}, {})
-
-# xsec_err_fb((1000021,1000021), {}, {'alphas_error': True})

@@ -2,14 +2,15 @@
 #define __wrapper_Pythia_def_Pythia_8_212_h__
 
 #include <string>
-#include "wrapper_ParticleData_decl.h"
-#include "wrapper_Settings_decl.h"
 #include <istream>
 #include <vector>
+#include <ostream>
+#include <sstream>
+#include "wrapper_ParticleData_decl.h"
+#include "wrapper_Settings_decl.h"
 #include "wrapper_UserHooks_decl.h"
 #include "wrapper_SigmaProcess_decl.h"
 #include "wrapper_ResonanceWidths_decl.h"
-#include <ostream>
 #include "wrapper_Event_decl.h"
 #include "wrapper_Info_decl.h"
 #include "wrapper_Rndm_decl.h"
@@ -19,7 +20,6 @@
 #include "wrapper_BeamParticle_decl.h"
 #include "wrapper_PartonLevel_decl.h"
 #include "wrapper_SigmaTotal_decl.h"
-#include <sstream>
 
 #include "identification.hpp"
 

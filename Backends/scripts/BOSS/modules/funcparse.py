@@ -105,6 +105,7 @@ def run():
         include_statements.append( '#include "' + os.path.join(gb.gambit_backend_incl_dir,'function_return_utils.hpp') + '"')
 
         include_statements = list( OrderedDict.fromkeys(include_statements) )
+        include_statements = utils.orderIncludeStatements(include_statements)
         include_statements_code = '\n'.join(include_statements) + 2*'\n'
 
 
