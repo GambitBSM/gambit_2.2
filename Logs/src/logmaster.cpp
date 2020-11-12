@@ -60,7 +60,6 @@ namespace Gambit
       , MPIrank        (0)
       , MPIsize        (1)
       , globlMaxThreads(omp_get_max_threads())
-      , scratch_path   (Utils::runtime_scratch() + "default.log")
       , current_module (NULL)
       , current_backend(NULL)
       , stream         (NULL)
@@ -150,8 +149,13 @@ namespace Gambit
            // If LogMaster was never initialised, create a default log file to which the messages can be dumped.
            if (not loggers_readyQ)
            {
-             if (verbose) std::cout<<std::endl<<"GAMBIT logger was never initialised. Outputting default log to "<<scratch_path<<std::endl;
-             StdLogger* deflogger = new StdLogger(scratch_path);
+             str log_path = Utils::construct_runtime_scratch(false) + "default.log";
+             #ifdef WITH_MPI
+               if (GMPI::Is_initialized() and not GMPI::Is_finalized())
+                 log_path += ("_" + std::to_string(GMPI::Comm().Get_rank()));
+             #endif
+             if (verbose) std::cout<<std::endl<<"GAMBIT logger was never initialised. Outputting default log to "<<log_path<<std::endl;
+             StdLogger* deflogger = new StdLogger(log_path);
              std::set<int> deftag;
              deftag.insert(def);
              loggers[deftag] = deflogger;
