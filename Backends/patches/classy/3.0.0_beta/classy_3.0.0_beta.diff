@@ -1,0 +1,629 @@
+diff --git a/external/heating/injection.c b/external/heating/injection.c
+index 3e2075ff..2aff674a 100644
+--- a/external/heating/injection.c
++++ b/external/heating/injection.c
+@@ -25,6 +25,7 @@ int injection_init(struct precision * ppr,
+ 
+   /** - Define local variable */
+   struct injection* pin = &(pth->in);
++  struct gambit_darkages_results * pgr = &(pin->gambit_res);
+   int index_inj, index_dep;
+ 
+   /** - Initialize flags, indices and parameters */
+@@ -106,6 +107,36 @@ int injection_init(struct precision * ppr,
+                pin->error_message);
+   }
+ 
++  /* If we pass the f_eff(z) table externally, do the memory allocation here and copy the data */
++  if(pin->f_eff_type == pointer_to_fz_eff)
++  {
++    pin->feff_z_size = pgr->num_lines;
++
++    /* (z, f, ddf)*/
++    class_alloc(pin->feff_table,
++                3*pin->feff_z_size*sizeof(double),
++                pin->error_message);
++
++    int index_z;
++    for(index_z=0;index_z<pin->feff_z_size;++index_z)
++    {
++      pin->feff_table[index_z*3+0] = pgr->ptr_to_z[index_z];
++      pin->feff_table[index_z*3+1] = pgr->ptr_to_f_tot[index_z];
++    }
++
++    /* Spline in one dimension */
++    class_call(array_spline(pin->feff_table,
++                            3,
++                            pin->feff_z_size,
++                            0,
++                            1,
++                            2,
++                            _SPLINE_NATURAL_,
++                            pin->error_message),
++              pin->error_message,
++              pin->error_message);
++  }
++
+   /** - Initialize deposition function */
+   /* Allocate space */
+   class_alloc(pin->chi,
+@@ -132,6 +163,46 @@ int injection_init(struct precision * ppr,
+                pin->error_message);
+   }
+ 
++  /* If we pass the f_c(z) table externally, do the memory allocation here and copy the data */
++  /* - > Note that we will use the trick to set f_eff = 1 such that this is equivalent */
++  /*     to pass a table of chi_c(z) as done in heating_read_chi_z_from_file */
++  if(pin->f_eff_type == pointer_to_fz_channel)
++  {
++    pin->chiz_size = pgr->num_lines;
++
++    /* (z, chi_i)*/
++    class_alloc(pin->chiz_table,
++                (2*pin->dep_size+1)*pin->chiz_size*sizeof(double),
++                pin->error_message);
++
++    int index_z;
++    for(index_z=0;index_z<pin->chiz_size;++index_z)
++    {
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+0] = pgr->ptr_to_z[index_z]; //z
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_heat] = pgr->ptr_to_f_heat[index_z]; //heat
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_lya] = pgr->ptr_to_f_lya[index_z]; //lya
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_ionH] = pgr->ptr_to_f_hion[index_z]; //ionH
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_ionHe] = pgr->ptr_to_f_heion[index_z]; //ionHe
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_lowE] = pgr->ptr_to_f_lowe[index_z];  //lowE
++    }
++
++    /* Spline in one dimension */
++    int index_dep;
++    for(index_dep=0;index_dep<pin->dep_size;++index_dep)
++    {
++      class_call(array_spline(pin->chiz_table,
++                              2*pin->dep_size+1,
++                              pin->chiz_size,
++                              0,
++                              1+index_dep,
++                              1+index_dep+pin->dep_size,
++                              _SPLINE_NATURAL_,
++                              pin->error_message),
++                 pin->error_message,
++                 pin->error_message);
++    }
++  }
++
+   /** - Initialize energy deposition table */
+   /* Allocate space */
+   class_alloc(pin->deposition_table,
+@@ -229,10 +300,10 @@ int injection_free(struct thermo* pth){
+   }
+ 
+   /* Injection efficiency */
+-  if(pin->f_eff_type == f_eff_from_file){
++  if(pin->f_eff_type == f_eff_from_file || pin->f_eff_type == pointer_to_fz_eff){
+     free(pin->feff_table);
+   }
+-  if(pin->chi_type == chi_from_z_file){
++  if(pin->chi_type == chi_from_z_file || pin->f_eff_type == pointer_to_fz_channel){
+     free(pin->chiz_table);
+   }
+   if(pin->chi_type == chi_from_x_file || pin->chi_type == chi_Galli_file){
+@@ -613,11 +684,11 @@ int injection_deposition_function_at_z(struct injection* pin,
+ 
+   /** - Read the correction factor f_eff */
+   /* For the on the spot, we take the user input */
+-  if(pin->f_eff_type == f_eff_on_the_spot){
++  if(pin->f_eff_type == f_eff_on_the_spot || pin->f_eff_type == pointer_to_fz_channel){
+     pin->f_eff = 1.;
+   }
+   /* For the file, read in f_eff from file and multiply */
+-  else if(pin->f_eff_type == f_eff_from_file){
++  else if(pin->f_eff_type == f_eff_from_file || pin->f_eff_type == pointer_to_fz_eff){
+     class_call(array_interpolate_spline_transposed(pin->feff_table,
+                                                    pin->feff_z_size,
+                                                    3,
+@@ -745,8 +816,14 @@ int injection_rate_DM_decay(struct injection * pin,
+                             double * energy_rate){
+ 
+   /** - Calculate injection rates */
+-  *energy_rate = pin->rho_cdm*pin->DM_decay_fraction*pin->DM_decay_Gamma*
+-                 exp(-pin->DM_decay_Gamma*pin->t);                                                  // [J/(m^3 s)]
++  *energy_rate = pin->rho_cdm*pin->DM_decay_fraction*pin->DM_decay_Gamma;                                                  // [J/(m^3 s)]
++
++  /** If the f(z) tables are calculated with DarkAges,
++   *  the exponential factor is already included */
++  if ( !(pin->f_eff_type == pointer_to_fz_eff || pin->f_eff_type == pointer_to_fz_channel) )
++  {
++    *energy_rate *= exp(-pin->DM_decay_Gamma*pin->t);
++  }
+ 
+   return _SUCCESS_;
+ }
+diff --git a/external/heating/injection.h b/external/heating/injection.h
+index 51fa53ec..fbc36a48 100644
+--- a/external/heating/injection.h
++++ b/external/heating/injection.h
+@@ -7,9 +7,20 @@
+  * All injection parameters and evolution that other modules need to know.
+  */
+ enum PBH_accretion_approx {spherical_accretion, disk_accretion};
+-enum f_eff_approx {f_eff_on_the_spot, f_eff_from_file};
++enum f_eff_approx {f_eff_on_the_spot, f_eff_from_file, pointer_to_fz_eff, pointer_to_fz_channel};
+ enum chi_approx {chi_CK, chi_PF, chi_Galli_file, chi_Galli_analytic, chi_full_heating, chi_from_x_file, chi_from_z_file};
+ 
++struct gambit_darkages_results{
++  int num_lines;
++  double * ptr_to_z;
++  double * ptr_to_f_tot;
++  double * ptr_to_f_heat;
++  double * ptr_to_f_lya;
++  double * ptr_to_f_hion;
++  double * ptr_to_f_heion;
++  double * ptr_to_f_lowe;
++};
++
+ struct injection{
+ 
+   /** @name - input parameters initialized by user in input module (all other quantities are computed in this module,
+@@ -174,6 +185,9 @@ struct injection{
+ 
+   /* Book-keeping */
+ 
++  /* Struct to hold pointers to external energy injection tables */
++  struct gambit_darkages_results gambit_res;
++
+   ErrorMsg error_message;
+ 
+   //@}
+diff --git a/include/primordial.h b/include/primordial.h
+index 1b8af605..ead45282 100755
+--- a/include/primordial.h
++++ b/include/primordial.h
+@@ -13,7 +13,8 @@ enum primordial_spectrum_type {
+   inflation_V,
+   inflation_H,
+   inflation_V_end,
+-  external_Pk
++  external_Pk,
++  pointer_to_Pk
+ };
+ 
+ /** enum defining whether the spectrum routine works with linear or logarithmic input/output */
+@@ -212,6 +213,9 @@ struct primordial {
+ 
+   int lnk_size;    /**< number of ln(k) values */
+ 
++  double * ptr_pks_array;    /**< poiner to external array holding the scalar modes of the primordial Pk */
++  double * ptr_pkt_array;    /**< poiner to external array holding the tensor modes of the primordial Pk */
++
+   double * lnk;    /**< list of ln(k) values lnk[index_k] */
+ 
+   double ** lnpk;  /**< depends on indices index_md, index_ic1, index_ic2, index_k as:
+diff --git a/python/classy.pyx b/python/classy.pyx
+index 50a3d7b6..98aba9b0 100644
+--- a/python/classy.pyx
++++ b/python/classy.pyx
+@@ -126,8 +126,21 @@ cdef class Class:
+             "output":"tCl mPk",}
+         self.set(**_pars)
+ 
++    # (JR) added to get information from cosmo object
++    # whether class re-computed or not
++    #recomputed = True
++    cpdef int recomputed
++    property recomputed:
++        def __get__(self):
++            return self.recomputed
++
++    def set_cosmo_update(self,update):
++        self.recomputed = update
++    # ------------------
++
+     def __cinit__(self, default=False):
+         cpdef char* dumc
++        self.recomputed = True
+         self.allocated = False
+         self.computed = False
+         self._pars = {}
+@@ -1191,6 +1204,21 @@ cdef class Class:
+     def omega_b(self):
+         return self.ba.Omega0_b * self.ba.h * self.ba.h
+ 
++    def Omega_dcdm(self):                   # (JR) added 
++        return self.ba.Omega0_dcdm
++
++    def Omega_dr(self):                     # (JR) added 
++        return self.ba.Omega0_dr
++
++    def Omega_dcdmdr(self):                     # (JR) added 
++        return self.ba.Omega0_dcdmdr
++
++    def Omega_ncdm_tot(self):                     # (JR) added 
++        return self.ba.Omega0_ncdm_tot
++
++    def Omega_ur(self):                     # (JR) added 
++        return self.ba.Omega0_ur
++
+     def Neff(self):
+         return self.ba.Neff
+ 
+diff --git a/source/input.c b/source/input.c
+index 42d50dc6..ec876285 100644
+--- a/source/input.c
++++ b/source/input.c
+@@ -25,6 +25,8 @@
+ #include "distortions.h"
+ #include "output.h"
+ 
++#include <stdint.h> // to get uintptr_t type to convert int to pointer
++
+ /**
+  * Initialize input parameters from external file.
+  *
+@@ -2949,7 +2951,9 @@ int input_read_parameters_injection(struct file_content * pfc,
+ 
+   /** - Define local variables */
+   struct injection* pin = &(pth->in);
+-  int flag1;
++  struct gambit_darkages_results * pgr = &(pin->gambit_res);
++  int flag1, flag2;
++  double param1, param2;
+   char string1[_ARGUMENT_LENGTH_MAX_];
+ 
+   /** 1) DM annihilation */
+@@ -3029,10 +3033,27 @@ int input_read_parameters_injection(struct file_content * pfc,
+              errmsg,
+              "You need to enter a positive fraction of decaying DM. Please adjust your param file.");
+ 
+-  /** 2.b) Decay width */
+-  /* Read */
+-  class_read_double("DM_decay_Gamma",pin->DM_decay_Gamma);
++  /** 2.b) Decay width / lifetime */
++  /* Read decay width*/
++  class_call(parser_read_double(pfc,"DM_decay_Gamma",&param1,&flag1,errmsg),
++             errmsg,
++             errmsg);
++
++  /* Read the lifetime */
++  class_call(parser_read_double(pfc,"DM_decay_tau",&param2,&flag2,errmsg),
++            errmsg,
++            errmsg);
+ 
++  /* Make sure that only one of the two parameters was given */
++  class_test((flag1 == _TRUE_) && (flag2 == _TRUE_),
++             errmsg,
++             "You can only enter one of 'DM_decay_Gamma' or 'DM_decay_tau'.");
++
++  /* Set DM_decay_Gamma accordingly */
++  if (flag1 == _TRUE_)
++    pin->DM_decay_Gamma = param1;
++  if (flag2 == _TRUE_)
++    pin->DM_decay_Gamma = 1/(param2);
+ 
+   /** 3) PBH evaporation */
+   /** 3.a) Fraction */
+@@ -3137,9 +3158,15 @@ int input_read_parameters_injection(struct file_content * pfc,
+     else if (strcmp(string1,"from_file") == 0){
+       pin->f_eff_type = f_eff_from_file;
+     }
++    else if (strcmp(string1,"pointer_to_fz_eff") == 0){
++      pin->f_eff_type = pointer_to_fz_eff;
++    }
++    else if (strcmp(string1,"pointer_to_fz_channel") == 0){
++      pin->f_eff_type = pointer_to_fz_channel;
++    }
+     else{
+       class_stop(errmsg,
+-                 "You specified 'f_eff_type' as '%s'. It has to be one of {'on_the_spot','from_file'}.",string1);
++                 "You specified 'f_eff_type' as '%s'. It has to be one of {'on_the_spot','from_file','pointer_to_fz_eff','pointer_to_fz_channel'}.",string1);
+     }
+   }
+ 
+@@ -3157,6 +3184,103 @@ int input_read_parameters_injection(struct file_content * pfc,
+     strcpy(pin->f_eff_file, string1);
+   }
+ 
++  if(pin->f_eff_type == pointer_to_fz_eff)
++  {
++    int f0,f1,f2 = _FALSE_;
++    char addr [_ARGUMENT_LENGTH_MAX_];
++    uintptr_t ul;
++
++    // read in number of entries each vector has
++    class_call(parser_read_int(pfc,
++                               "energyinj_coef_num_lines",
++                               &pgr->num_lines,
++                               &f0,
++                               errmsg),
++               errmsg,
++               errmsg);
++
++    // 1) Read in pointers to vector as string
++    class_call(parser_read_string(pfc,"energyinj_coef_z",&addr,&f1,errmsg),
++               errmsg,
++               errmsg);
++
++    // 2) Convert string to uintptr_t and then back to memory address;
++    //    initialise a double pointer pointing to it
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_z = (double*) ul;
++
++    class_call(parser_read_string(pfc,"energyinj_coef_tot",&addr,&f2,errmsg),
++               errmsg,
++               errmsg);
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_f_tot = (double*) ul;
++
++    // Check that all values needed for the calculation have been passed. If not throw error
++    class_test(((f0 == _FALSE_) || (f1 == _FALSE_) || (f2 == _FALSE_)),
++               errmsg,
++               "You set the parameter 'f_eff_type' to 'pointer_to_fz_eff',\nthis means you also have to specify the input values for \n- energyinj_coef_num_lines \n- energyinj_coef_z \n- energyinj_coef_tot\n Check that all of them are passed.");
++  }
++
++  if(pin->f_eff_type == pointer_to_fz_channel)
++  {
++    int f0,f1,f2,f3,f4,f5,f6 = _FALSE_;
++    char addr [_ARGUMENT_LENGTH_MAX_];
++    uintptr_t ul;
++
++    // read in number of entries each vector has
++    class_call(parser_read_int(pfc,
++                               "energyinj_coef_num_lines",
++                               &pgr->num_lines,
++                               &f0,
++                               errmsg),
++               errmsg,
++               errmsg);
++
++    // 1) Read in pointers to vector as string
++    class_call(parser_read_string(pfc,"energyinj_coef_z",&addr,&f1,errmsg),
++               errmsg,
++               errmsg);
++
++    // 2) Convert string to uintptr_t and then back to memory address;
++    //    initialise a double pointer pointing to it
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_z = (double*) ul;
++
++    class_call(parser_read_string(pfc,"energyinj_coef_heat",&addr,&f2,errmsg),
++               errmsg,
++               errmsg);
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_f_heat = (double*) ul;
++
++    class_call(parser_read_string(pfc,"energyinj_coef_lya",&addr,&f3,errmsg),
++               errmsg,
++               errmsg);
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_f_lya = (double*) ul;
++
++    class_call(parser_read_string(pfc,"energyinj_coef_ionH",&addr,&f4,errmsg),
++               errmsg,
++               errmsg);
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_f_hion = (double*) ul;
++
++    class_call(parser_read_string(pfc,"energyinj_coef_ionHe",&addr,&f5,errmsg),
++               errmsg,
++               errmsg);
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_f_heion = (double*) ul;
++
++    class_call(parser_read_string(pfc,"energyinj_coef_lowE",&addr,&f6,errmsg),
++               errmsg,
++               errmsg);
++    sscanf(addr, "%lu", &ul);
++    pgr->ptr_to_f_lowe = (double*) ul;
++
++    // Check that all values needed for the calculation have been passed. If not throw error
++    class_test(((f0 == _FALSE_) || (f1 == _FALSE_) || (f2 == _FALSE_) || (f3 == _FALSE_) || (f4 == _FALSE_) || (f5 == _FALSE_) || (f6 == _FALSE_)),
++               errmsg,
++               "You set the parameter 'f_eff_type' to 'from_GAMBIT_channel',\nthis means you also have to specify the input values for \n- energyinj_coef_num_lines \n- energyinj_coef_z \n- energyinj_coef_heat \n- energyinj_coef_lya \n- energyinj_coef_ionH \n- energyinj_coef_ionHe \n- energyinj_coef_lowE\n Check that all of them are passed.");
++  }
+ 
+   /** 6) deposition function */
+   /* Read */
+@@ -3632,9 +3756,12 @@ int input_read_parameters_primordial(struct file_content * pfc,
+     else if (strcmp(string1,"external_Pk") == 0){
+       ppm->primordial_spec_type = external_Pk;
+     }
++    else if (strcmp(string1,"pointer_to_Pk") == 0) {
++      ppm->primordial_spec_type = pointer_to_Pk;
++    }
+     else{
+       class_stop(errmsg,
+-                 "You specified 'P_k_ini_type' as '%s'. It has to be one of {'analytic_Pk','inflation_V','inflation_V_end','two_scales','external_Pk'}.",string1);
++                 "You specified 'P_k_ini_type' as '%s'. It has to be one of {'analytic_Pk','inflation_V','inflation_V_end','two_scales','external_Pk','pointer_to_Pk'}.",string1);
+     }
+   }
+ 
+@@ -4142,6 +4269,66 @@ int input_read_parameters_primordial(struct file_content * pfc,
+     class_read_double("custom10",ppm->custom10);
+   }
+ 
++  else if (ppm->primordial_spec_type == pointer_to_Pk) {
++    int f0,f1,f2,f3;
++    char addr [_ARGUMENT_LENGTH_MAX_];
++    uintptr_t ul;
++
++    // 1) read in number of entries the vector holding the k values has
++    class_call(parser_read_int(pfc,"lnk_size",&ppm->lnk_size,&f0,errmsg),
++             errmsg,
++             errmsg);
++
++    // 2) read pointers of other arrays that need to be passed. allocation and filling will
++    // be done later in primordial.c in function =>
++    class_call(parser_read_string(pfc,"k_array",&addr,&f1,errmsg),
++             errmsg,
++             errmsg);
++
++    // 3) Convert string to uintptr_t and then back to memory address;
++    //    initialise a double pointer pointing to it
++    sscanf(addr, "%lu", &ul);
++    double* ptr_k_array = (double*) ul;
++
++    // 4) allocate memory for lnk_array managed by CLASS, routine that does that (and step 5)) in
++    // a normal class run () is by passed in primordial.c
++    class_alloc(ppm->lnk   , ppm->lnk_size*sizeof(double),ppm->error_message);
++
++    // 5) fill lnk_array with values of array that the pointer ptr_k_array is pointing to
++    for (int index_k=0; index_k<ppm->lnk_size; index_k++){
++      ppm->lnk[index_k] = log(ptr_k_array[index_k]);
++    }
++
++    // read pointers of other arrays that need to be passed. allocation and filling will
++    // be done later in primordial.c in function =>
++    // added pointers ppm->ptr_pks_array and ppm->ptr_pkt_array to primordial structure so we can
++    // re-use the primordial_indices function to allocate memory for the arrays
++    // and don't have to change & by-pass too many parts of the code.
++    // However, these pointers may NOT be deleted by CLASS's internal memory management
++    // since the deletion is taken care of in gambit => there won't be a free() statement for these
++    // this is on purpose!
++    class_call(parser_read_string(pfc,"pks_array",&addr,&f2,errmsg),
++             errmsg,
++             errmsg);
++    sscanf(addr, "%lu", &ul);
++    ppm->ptr_pks_array = (double*) ul;
++
++    class_call(parser_read_string(pfc,"pkt_array",&addr,&f3,errmsg),
++             errmsg,
++             errmsg);
++    sscanf(addr, "%lu", &ul);
++    ppm->ptr_pkt_array = (double*) ul;
++
++    // Note: the memory allocation for these arrays is done in primordial.c in the function
++    // primordial_indices. To not reproduce code unnecessarily we use this as well
++    // and fill the arrays after that in primordial.c in the function
++
++    // Check that all values needed for the calculation have been passed. If not throw error
++    class_test(((f0 == _FALSE_) || (f1 == _FALSE_) || (f2 == _FALSE_) || (f3 == _FALSE_)),
++               errmsg,
++               "You set the parameter 'P_k_ini type' to pointer_to_Pk, this means you also have to specify the input values for \n- k_array_size (int) \n- k_array (string w. mem address to dbl*)\n- pks_array (string w. mem address to dbl*)\n- pkt_array (string w. mem address to dbl*)\n Check that all of them are passed.");
++  }
++
+   /* Final tests */
+   if ((ppm->primordial_spec_type == inflation_V) || (ppm->primordial_spec_type == inflation_H) || (ppm->primordial_spec_type == inflation_V_end)) {
+     class_test(ppt->has_scalars == _FALSE_,
+@@ -5344,6 +5531,17 @@ int input_default_params(struct background *pba,
+    */
+   pth->has_exotic_injection = _FALSE_;
+ 
++  /** 0) default values for the gambit_darkages_results struct */
++  struct gambit_darkages_results * pgr = &(pin->gambit_res);
++  pgr->num_lines = 0;
++  pgr->ptr_to_z = NULL;
++  pgr->ptr_to_f_tot = NULL;
++  pgr->ptr_to_f_heat = NULL;
++  pgr->ptr_to_f_lya = NULL;
++  pgr->ptr_to_f_hion = NULL;
++  pgr->ptr_to_f_heion = NULL;
++  pgr->ptr_to_f_lowe = NULL;
++
+   /** 1) DM annihilation */
+   /** 1.a) Energy fraction absorbed by the gas */
+   pin->DM_annihilation_efficiency = 0.;
+diff --git a/source/primordial.c b/source/primordial.c
+index 8c5030da..82dad350 100755
+--- a/source/primordial.c
++++ b/source/primordial.c
+@@ -246,21 +246,52 @@ int primordial_init(
+              ppr->k_per_decade_primordial);
+ 
+   /** - allocate and fill values of \f$ \ln{k}\f$'s */
++  /// (JR): The array with the values of lnk is already passed in input.c if the 'pointer_to_Pk' 
++  /// input type is selected
++  if ( ppm->primordial_spec_type != pointer_to_Pk) {
++
++    // This routine allocates the space for ppm->lnk, fills it and sets the size through 
++    // ppm->lnk_size. In the first patch I will do this when reading in the pointer to the 
++    // array ppm->lnk. Not great but good enough for the first version of the implementation
++    // -- can (& should) probably be improved
++    // you could ad the if statement in this funciton and fill ppm->lnk with what the read in pointer
++    // is pointing to. but that would make it neccesary to patch another part of the code.. 
++    class_call(primordial_get_lnk_list(ppm,
++                                       k_min,
++                                       k_max,
++                                       ppr->k_per_decade_primordial),
++               ppm->error_message,
++               ppm->error_message);
++  }
++  /// test if the kmin and kmax passed through the pointer_to_Pk method 
++  /// make sense and are compatible with the CLASS internal ppt->kmin ppt->kmax
++  else {
++
++    double passed_kmin = exp(ppm->lnk[0]);
++    double passed_kmax = exp(ppm->lnk[ppm->lnk_size-1]);
+ 
+-  class_call(primordial_get_lnk_list(ppm,
+-                                     k_min,
+-                                     k_max,
+-                                     ppr->k_per_decade_primordial
+-                                     ),
++    class_test((passed_kmin <= 0.) || (passed_kmax <= passed_kmin),
+              ppm->error_message,
+-             ppm->error_message);
++             "inconsistent values of kmin=%e, kmax=%e",passed_kmin,passed_kmax);
+ 
+-  /** - define indices and allocate tables in primordial structure */
++    class_test(k_min < passed_kmin,
++             ppm->error_message,
++             "k_min = %e passed through 'pointer_to_Pk' is too large. The CLASS internal minimum is %e. Adopt the ranges of the array you are passing accordingly. ",passed_kmin,k_min);
++
++    class_test(passed_kmax < k_max,
++             ppm->error_message,
++             "k_max = %e passed through 'pointer_to_Pk' is too small. The CLASS internal maximum is %e. Adopt the ranges of the array you are passing accordingly. ",passed_kmax,k_max);
++
++  }
+ 
++
++  /** - define indices and allocate tables in primordial structure */
++  // JR: can use this for the pointer_to_Pk as long as ppm->lnk_size and ppt->md_size are set correctly! 
++  // ppm->lnk_size is done in input.c atm, ppt->md_size is taken care of my perturbations
+   class_call(primordial_indices(ppt,
+                                 ppm),
+-             ppm->error_message,
+-             ppm->error_message);
++               ppm->error_message,
++               ppm->error_message);
+ 
+   /** - deal with case of analytic primordial spectra (with amplitudes, tilts, runnings, etc.) */
+ 
+@@ -399,6 +430,30 @@ int primordial_init(
+                       primordial_free(ppm));
+   }
+ 
++  /** - fill arrays with values of the arrays the external pointers ptr_pks_array point to*/
++  else if (ppm->primordial_spec_type == pointer_to_Pk) {
++
++    // fill ppm->lnpk array with values stored in the external arrays the
++    // pointers ppm->ptr_pks_array & ppm->ptr_pks_array (if tensor modes are asked for)
++    // point to.
++    // Heads-up: these two pointers are not integrated into the memory management of CLASS
++    // and won't be deleted after a CLASS run. The deletion has to be taken care of by
++    // the external program that passes the pointer to CLASS (i.e. GAMBIT in the use case this
++    // was impelmented for)
++    for (int index_k=0; index_k<ppm->lnk_size; index_k++)
++    {
++       ppm->lnpk[ppt->index_md_scalars][index_k] = log(ppm->ptr_pks_array[index_k]);
++       if (ppt->has_tensors == _TRUE_)
++         ppm->lnpk[ppt->index_md_tensors][index_k] = log(ppm->ptr_pkt_array[index_k]);
++    }
++
++    /** - Tell CLASS that there are scalar (and tensor) modes */
++    ppm->is_non_zero[ppt->index_md_scalars][ppt->index_ic_ad] = _TRUE_;
++    if (ppt->has_tensors == _TRUE_)
++      ppm->is_non_zero[ppt->index_md_tensors][ppt->index_ic_ten] = _TRUE_;
++
++  }
++
+   else {
+ 
+     class_test(0==0,
+@@ -426,7 +481,7 @@ int primordial_init(
+   /** - derive spectral parameters from numerically computed spectra
+       (not used by the rest of the code, but useful to keep in memory for several types of investigation) */
+ 
+-  if (ppm->primordial_spec_type != analytic_Pk) {
++  if (ppm->primordial_spec_type != analytic_Pk && ppm->primordial_spec_type != pointer_to_Pk) {
+ 
+     dlnk = log(10.)/ppr->k_per_decade_primordial;
+ 
