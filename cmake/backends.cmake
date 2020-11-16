@@ -1186,7 +1186,7 @@ set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_$
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
@@ -1210,7 +1210,7 @@ set(patch "${PROJECT_SOURCE_DIR}/Backends/patches/${name}/${ver}/patch_${name}_$
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}
@@ -1406,7 +1406,7 @@ set(ditch_if_absent "Mathematica")
 check_ditch_status(${name} ${ver} ${dir} ${ditch_if_absent})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND ""
@@ -1494,7 +1494,7 @@ set(CFITSIO_SO ".so")
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ./configure --includedir=${dir}/include --libdir=${dir}/lib FC=${CMAKE_Fortran_COMPILER} FCFLAGS=${BACKEND_Fortran_FLAGS} FFLAGS=${BACKEND_Fortran_FLAGS} CC=${CMAKE_C_COMPILER} CFLAGS=${BACKEND_C_FLAGS} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=${BACKEND_CXX_FLAGS} SHLIB_SUFFIX=${CFITSIO_SO}
@@ -1710,7 +1710,7 @@ if(NOT ditched_${name}_${ver})
     inform_of_missing_modules(${name} ${ver} ${modules_missing_${name}_${ver}})
   else()
     ExternalProject_Add(${name}_${ver}
-      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
@@ -1748,7 +1748,7 @@ if(NOT ditched_${name}_${ver})
     inform_of_missing_modules(${name} ${ver} ${modules_missing_${name}_${ver}})
   else()
     ExternalProject_Add(${name}_${ver}
-      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
@@ -1786,7 +1786,7 @@ if(NOT ditched_${name}_${ver})
     inform_of_missing_modules(${name} ${ver} ${modules_missing_${name}_${ver}})
   else()
     ExternalProject_Add(${name}_${ver}
-      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
@@ -1825,7 +1825,7 @@ if(NOT ditched_${name}_${ver})
     inform_of_missing_modules(${name} ${ver} ${modules_missing_${name}_${ver}})
   else()
     ExternalProject_Add(${name}_${ver}
-      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+      DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
       SOURCE_DIR ${dir}
       BUILD_IN_SOURCE 1
       PATCH_COMMAND patch -p1 < ${patch}/${name}_${ver}.diff
@@ -1899,7 +1899,7 @@ endif()
 check_ditch_status(${name} ${ver} ${dir})
 if(NOT ditched_${name}_${ver})
   ExternalProject_Add(${name}_${ver}
-    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
+    DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
     SOURCE_DIR ${dir}
     BUILD_IN_SOURCE 1
     PATCH_COMMAND patch -p1 < ${patch}/multimodecode_${ver}.diff
