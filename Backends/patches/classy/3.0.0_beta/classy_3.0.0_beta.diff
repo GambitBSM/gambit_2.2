@@ -643,3 +643,16 @@ index 8c5030da..82dad350 100755
  
      dlnk = log(10.)/ppr->k_per_decade_primordial;
  
+diff --git a/source/thermodynamics.c b/source/thermodynamics.c
+index 23670183..db9a73a2 100755
+--- a/source/thermodynamics.c
++++ b/source/thermodynamics.c
+@@ -2955,7 +2955,7 @@ int thermodynamics_reionization_get_tau(
+              pth->error_message,
+              "reionization start = %e > largest redshift in thermodynamics table",pth->z_table[index_reio_start]);
+ 
+-  if (index_reio_start == 0) {
++  if (index_reio_start < 3) {
+     /* the global minimum of xe(z) is at z=0. This is possible in
+        models no reionization and no exotic energy
+        injection. According to our definition of the reionization
