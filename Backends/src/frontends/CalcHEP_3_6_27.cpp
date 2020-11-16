@@ -58,16 +58,6 @@ BE_INI_FUNCTION
       xsecs[std::vector<str>{"~S","~S"}] = std::vector< std::vector<str> >{ {"d'", "D'"}, {"u", "U"}, {"B", "b"}, {"h", "h"}, {"e", "E"}, {"Z", "Z"}, {"c", "C"}, {"s'", "S'"}, {"m", "M"}, {"t", "T"}, {"W+", "W-"}, {"ta+", "ta-"} };
       model = "ScalarSingletDM_Z2";
     }
-    if (ModelInUse("DecayingDM"))
-    {
-      BEpath = backendDir + "/../models/DecayingDM";
-      path = BEpath.c_str();
-      modeltoset = (char*)malloc(strlen(path)+11);
-      sprintf(modeltoset, "%s", path);
-      decays["~S0"] = std::vector< std::vector<str> >{ {"b~","b"}, {"c~","c"}, {"d~","d"}, {"e+","e-"}, {"mu+","mu-"}, {"s~","s"}, {"ta+","ta-"}, {"t~","t"}, {"u~","u"} };
-      model = "DecayingDM";
-    }
-    
     
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
@@ -115,20 +105,6 @@ BE_INI_FUNCTION
     Assign_All_Values(spec, ScalarSingletDM_Z2_params);
   }
 
-  if (ModelInUse("DecayingDM"))
-  {
-    // Obtain spectrum information to pass to CalcHEP
-    const Spectrum& spec = *Dep::DecayingDM_spectrum;
-    
-    // Obtain model contents
-    static const SpectrumContents::DecayingDM DecayingDM_contents;
-    
-    // Obtain list of all parameters within model
-    static const std::vector<SpectrumParameter> DecayingDM_params = DecayingDM_contents.all_parameters();
-    
-    Assign_All_Values(spec, DecayingDM_params);
-  }
-  
 }
 END_BE_INI_FUNCTION
 

@@ -151,18 +151,6 @@ OtherModels:
     description: Vector Singlet
     name: V
     spinx2: 2
-
-  - DecayBit:
-      Decays: true
-      name: S0
-    PDG_context:
-    - 51
-    - 0
-    chargex3: 0
-    color: 1
-    description: ~S0 (DecayingDM)
-    name: ~S0
-    spinx2: 0
   Sets:
 
   - DecayBit:

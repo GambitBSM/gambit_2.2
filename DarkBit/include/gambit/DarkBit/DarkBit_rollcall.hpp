@@ -555,12 +555,6 @@ START_MODULE
       DEPENDENCY(DiracSingletDM_Z2_spectrum, Spectrum)
       ALLOW_MODELS(DiracSingletDM_Z2)
     #undef FUNCTION
-    #define FUNCTION TH_ProcessCatalog_DecayingDM
-      START_FUNCTION(TH_ProcessCatalog)
-      DEPENDENCY(decay_rates, DecayTable)
-      DEPENDENCY(DecayingDM_spectrum, Spectrum)
-      ALLOW_MODELS(DecayingDM)
-    #undef FUNCTION
   #undef CAPABILITY
 
   // Information about the nature of the DM process in question
@@ -747,18 +741,17 @@ START_MODULE
       ALLOW_MODEL_DEPENDENCE(nuclear_params_fnq, MSSM63atQ,
                              ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                              ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
-                             VectorSingletDM_Z2, DecayingDM)
+                             VectorSingletDM_Z2)
       MODEL_GROUP(group1, (nuclear_params_fnq))
       MODEL_GROUP(group2, (MSSM63atQ,
                            ScalarSingletDM_Z2, ScalarSingletDM_Z2_running,
                            ScalarSingletDM_Z3, ScalarSingletDM_Z3_running,
-                           VectorSingletDM_Z2, DecayingDM))
+                           VectorSingletDM_Z2))
       ALLOW_MODEL_COMBINATION(group1, group2)
       BACKEND_OPTION((MicrOmegas_MSSM),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z2),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_ScalarSingletDM_Z3),(gimmemicro))
       BACKEND_OPTION((MicrOmegas_VectorSingletDM_Z2),(gimmemicro))
-      BACKEND_OPTION((MicrOmegas_DecayingDM),(gimmemicro))
       FORCE_SAME_BACKEND(gimmemicro)
     #undef FUNCTION
 
@@ -1409,10 +1402,6 @@ START_MODULE
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     #undef FUNCTION
-    #define FUNCTION DarkMatter_ID_DecayingDM
-    START_FUNCTION(std::string)
-    ALLOW_MODELS(DecayingDM)
-    #undef FUNCTION
   #undef CAPABILITY
 
   #define CAPABILITY DarkMatterConj_ID
@@ -1436,10 +1425,6 @@ START_MODULE
     #define FUNCTION DarkMatterConj_ID_MSSM
     START_FUNCTION(std::string)
     DEPENDENCY(MSSM_spectrum, Spectrum)
-    #undef FUNCTION
-    #define FUNCTION DarkMatterConj_ID_DecayingDM
-    START_FUNCTION(std::string)
-    ALLOW_MODELS(DecayingDM)
     #undef FUNCTION
   #undef CAPABILITY
 
