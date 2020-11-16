@@ -22,7 +22,7 @@ void Gambit::terminator()
 {
   std::cout << std::endl << "Gambit has encountered an uncaught error during initialisation." << std::endl;
   std::cout << std::endl << "Check the output logs for details.";
-  std::cout << std::endl << "(Unless you see an uninitialised logger message above, these will be in the location specified in your yaml file.)" << std::endl << std::endl;
+  std::cout << std::endl << "(Unless you see one or more uninitialised logger messages above, these will be in the location specified in your yaml file.)" << std::endl << std::endl;
 
   std::exception_ptr eptr = std::current_exception();
   try

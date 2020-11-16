@@ -24,8 +24,8 @@
 #     - [35, 0]      Creates entries for "h0_1" and "h0_2" in the particleDB.
 #     DecayBit:
 #       Decays: True
-#       name: "h0"                       Creates rollcall entries for "h0_1_decay_rates" and "h0_2_decay_rates" CAPABILITIES.
-#       name: ["Higgs", "h0_2"]        Alternative syntax - if particles within sets have different names - creating CAPABILITIES "Higgs_decay_rates" and "h0_2_decay_rates".
+#       name: "h0"                         Creates rollcall entries for "h0_1_decay_rates" and "h0_2_decay_rates" CAPABILITIES.
+#       name: ["Higgs", "h0_2"]            Alternative syntax - if particles within sets have different names - creating CAPABILITIES "Higgs_decay_rates" and "h0_2_decay_rates".
 #
 # Note: If there is no entry for the 'DecayBit' field, GAMBIT will use the 'name' and 'conjugate' fields by default.
 # TODO: Decide if Decays belong here, or elsewhere (GUM)
@@ -151,18 +151,6 @@ OtherModels:
     description: Vector Singlet
     name: V
     spinx2: 2
-
-  - DecayBit:
-      Decays: true
-      name: S0
-    PDG_context:
-    - 51
-    - 0
-    chargex3: 0
-    color: 1
-    description: ~S0 (DecayingDM)
-    name: ~S0
-    spinx2: 0
   Sets:
 
   - DecayBit:
