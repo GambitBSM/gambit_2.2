@@ -71,8 +71,13 @@ namespace GUM
         std::cout << "FeynRules loaded from " << out << "." << std::endl;
     }
 
+    // Need to run FR serially, as it bugs out in parallel
+    input = "FR$Parallel=False;";
+    send_to_math(input);
+
     input = "<<FeynRules`";
     send_to_math(input);
+
 
   }
 
