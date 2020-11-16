@@ -5314,15 +5314,3 @@ varNames: |
   CalcHEP's internal list of variable names.
 
 
-
-#####  DecayingDM model #####
-
-DecayingDM_parameters: |
-    Parameters for the model DecayingDM (see ./gambit DecayingDM).
-
-barS0_decay_rates: |
-    All decay rates for particle ~S0.
-
-DecayingDM_spectrum: |
-    Create spectrum object for DecayingDM model.
-
