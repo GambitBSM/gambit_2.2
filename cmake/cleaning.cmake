@@ -121,6 +121,8 @@ add_custom_target(clean-backend-install COMMAND ${CMAKE_COMMAND} -E remove_direc
 add_custom_target(clean-scanner-download COMMAND ${CMAKE_COMMAND} -E remove_directory ScannerBit/downloaded WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 add_custom_target(clean-scanner-install COMMAND ${CMAKE_COMMAND} -E remove_directory ScannerBit/installed WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 add_custom_target(nuke-contrib)
+add_custom_target(nuke-BOSS COMMAND ${CMAKE_COMMAND} -E remove_directory Backends/scripts/BOSS/castxml WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                            COMMAND ${CMAKE_COMMAND} -E remove Backends/scripts/BOSS/castxml*.tar.gz)
 add_custom_target(nuke-backends DEPENDS clean-backend-download clean-backend-install)
 add_custom_target(nuke-scanners DEPENDS clean-scanner-download clean-scanner-install)
-add_custom_target(nuke-all DEPENDS distclean nuke-contrib nuke-backends nuke-scanners)
+add_custom_target(nuke-all DEPENDS distclean nuke-contrib nuke-backends nuke-scanners nuke-BOSS)
