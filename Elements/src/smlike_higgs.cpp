@@ -54,13 +54,13 @@ namespace Gambit
     // MSSM(2HDM)-like
     if (numhiggses == 2)
     {
-      double sa =  - spec.get(Par::Pole_Mixing,"h0",1,1);
-      double ca = spec.get(Par::Pole_Mixing,"h0",1,2);
-      double sb = sin(atan(tb));
-      double cb = cos(atan(tb));
+      const double sa =  - spec.get(Par::Pole_Mixing,"h0",1,1);
+      const double ca = spec.get(Par::Pole_Mixing,"h0",1,2);
+      const double sb = sin(atan(tb));
+      const double cb = cos(atan(tb));
       //cos (beta - alpha) and sin(beta-alpha)
-      double cbma = cb * ca + sb * sa;
-      double sbma = sb * ca - cb * ca;
+      const double cbma = cb * ca + sb * sa;
+      const double sbma = sb * ca - cb * ca;
       if(sbma > cbma) return 25;
       return 35;
     }
@@ -74,16 +74,16 @@ namespace Gambit
 
       // Rotation matrix to Higgs mass basis. This is just the pole mixings 
       // from the spectrum object.
-      double S11 = spec.get(Par::Pole_Mixing,"h0",1,1);
-      double S12 = spec.get(Par::Pole_Mixing,"h0",1,2);
-      double S21 = spec.get(Par::Pole_Mixing,"h0",2,1);
-      double S22 = spec.get(Par::Pole_Mixing,"h0",2,2);
-      double S31 = spec.get(Par::Pole_Mixing,"h0",3,1);
-      double S32 = spec.get(Par::Pole_Mixing,"h0",3,2);
+      const double S11 = spec.get(Par::Pole_Mixing,"h0",1,1);
+      const double S12 = spec.get(Par::Pole_Mixing,"h0",1,2);
+      const double S21 = spec.get(Par::Pole_Mixing,"h0",2,1);
+      const double S22 = spec.get(Par::Pole_Mixing,"h0",2,2);
+      const double S31 = spec.get(Par::Pole_Mixing,"h0",3,1);
+      const double S32 = spec.get(Par::Pole_Mixing,"h0",3,2);
 
       // The mixing from the Higgs Basis to the SUSY basis is just a rotation by angle beta
-      double sb = sin(atan(tb));
-      double cb = cos(atan(tb));
+      const double sb = sin(atan(tb));
+      const double cb = cos(atan(tb));
 
       // beta_matrix << cb, -sb,  0,
       //                sb,  cb,  0,
@@ -92,9 +92,9 @@ namespace Gambit
       // Now the rotation from the Higgs basis to the mass basis is the matrix
       // product of Higgs -> SUSY, SUSY -> Mass
 
-      double H11 = S11*cb + S12*sb;
-      double H12 = S21*cb + S22*sb;
-      double H13 = S31*cb + S32*sb;
+      const double H11 = S11*cb + S12*sb;
+      const double H12 = S21*cb + S22*sb;
+      const double H13 = S31*cb + S32*sb;
 
       // The [absolute] value closest to 1 to be given 'most SM-like' status
       if (1-abs(H11) < 1-abs(H12))
