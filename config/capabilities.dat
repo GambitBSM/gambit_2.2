@@ -1095,9 +1095,6 @@ LEP208_xsec_staurstaurbar: |
    The LEP pair production cross-section for sfermion
    eigenstates 'staur' and 'staurbar' at centre of mass energy 208 GeV.
 
-Pythia_EM_8_212_init: |
-   Initializes Pythia_EM 8.212.
-
 Pythia_8_212_init: |
    Initializes Pythia 8.212.
 
