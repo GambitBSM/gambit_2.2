@@ -632,8 +632,45 @@ def revert(reset_file):
 
         for i in new_files:
             if os.path.isfile(i):
+
+                # If deleted file is a BOSS config file, BOSS might have been run
+                if "BOSS/config" in i:
+
+                    from backends import *
+
+                    be_name, be_ver = get_boss_backend_name_and_version(i)
+                    be_name_ver_safe = be_name + "_" + be_ver.replace('.','_')
+
+                    boss_reset_file = 'reset_info.' + be_name_ver_safe + ".boss"
+
+                    boss_dir = '/'.join(i.split('/')[:-2]) + '/'
+                    gambit_build_dir = "../build/"
+
+                    # If there is a reset file on GAMBIT's build directory, BOSS was run
+                    if os.path.exists(gambit_build_dir + boss_reset_file) :
+
+                        # TODO: This only removes changes to the backend, not the main gambit tree, so I don't think it's needed
+                        #call_boss_reset(gambit_build_dir, boss_dir, reset_file_name)
+
+                        # Remove BOSS-generated files in the main GAMBIT tree
+                        backend_types_dir = "../Backends/include/gambit/Backends/backend_types/" + be_name_ver_safe
+                        if os.path.isdir(backend_types_dir):
+                            shutil.rmtree(backend_types_dir, ignore_errors=True)
+                            print("Deleting backend types for " + be_name_ver_safe + "...")
+                        frontend_header_file = "../Backends/include/gambit/Backends/frontends/" + be_name_ver_safe + ".hpp"
+                        if os.path.isfile(frontend_header_file):
+                            os.remove(frontend_header_file)
+                            print("Deleting " + frontend_header_file + "...")
+
+                        # Remove reset file
+                        os.remove(gambit_build_dir + boss_reset_file)
+
+                    # In case it was built but not nuked, force it to rebuild from scratch
+                    force_backend_rebuild(be_name.lower(), be_ver)
+
                 print("Deleting {0}...".format(i))
                 os.remove(i)
+
             else:
                 print(("Tried deleting {0}, but it seems to have already been "
                       "removed.".format(i)))

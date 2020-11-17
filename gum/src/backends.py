@@ -190,3 +190,33 @@ def force_backend_rebuild(be_name, be_ver, to_touch="mkdir", build_dir="../build
         os.utime(stamp_file, None)
 
 
+def get_boss_backend_name_and_version(configfile):
+    """
+    Gets the name and version of a backend from its BOSS config file
+    """
+
+    with open(configfile, 'r') as config:
+        for line in config:
+            if len(line.split("=")) > 1 and "gambit_backend_name" in line.split("=")[0]:
+                be_name = line.split('=')[1].strip().strip("'").strip('"')
+            if len(line.split("=")) > 1 and "gambit_backend_version" in line.split("=")[0]:
+                be_ver = line.split('=')[1].strip().strip("'").strip('"')
+
+    return be_name, be_ver
+
+def call_boss_reset(gambit_build_dir, boss_path, reset_file):
+    """
+    Calls BOSS in reset mode
+    """
+
+    import subprocess
+
+    print("BOSS has been run on main GAMBIT tree, resetting BOSS files...")
+
+    cwd = os.getcwd()
+    os.chdir(gambit_build_dir)
+    command = "python " + boss_path + "/boss.py -r " + reset_file
+    subprocess.call(command, shell=True)
+    os.chdir(cwd)
+
+    print("Finished running BOSS in reset mode")
