@@ -13,6 +13,10 @@
 #        2019 Feb, Oct, Nov,
 #        2020 Feb, Apr, Jul
 #
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020
+#
 #  **************************************
 
 import numpy as np
@@ -1010,7 +1014,7 @@ def write_micromegas_header(gambit_model_name, mathpackage, params):
     return indent(mo_head)
 
 
-def copy_micromegas_files(model_name):
+def copy_micromegas_files(model_name, reset_dict):
     """
     Creates a copy of micrOMEGAs files in $BACKENDS/patches
     """
@@ -1020,14 +1024,19 @@ def copy_micromegas_files(model_name):
 
     # Move the CH files to patches to copy across
     gb_target = "./../Backends/patches/micromegas/3.6.9.2/" + model_name + "/mdlfiles"
-    if not os.path.exists(gb_target):
-        os.makedirs(gb_target)
+    mkdir_if_absent(gb_target, reset_dict)
 
     shutil.copyfile(ch_location + "/func1.mdl", gb_target + "/func1.mdl")
     shutil.copyfile(ch_location + "/vars1.mdl", gb_target + "/vars1.mdl")
     shutil.copyfile(ch_location + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
     shutil.copyfile(ch_location + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
     shutil.copyfile(ch_location + "/extlib1.mdl", gb_target + "/extlib1.mdl")
+
+    reset_dict['new_files']['files'].append(gb_target + "/func1.mdl")
+    reset_dict['new_files']['files'].append(gb_target + "/vars1.mdl")
+    reset_dict['new_files']['files'].append(gb_target + "/lgrng1.mdl")
+    reset_dict['new_files']['files'].append(gb_target + "/prtcls1.mdl")
+    reset_dict['new_files']['files'].append(gb_target + "/extlib1.mdl")
 
     print("micrOMEGAs files moved to backend dir.")
 

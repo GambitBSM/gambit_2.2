@@ -32,7 +32,7 @@ from .cmake_variables import *
 # the 'files' module.
 d = defaultdict(list)
 
-def copy_spheno_files(model_name, output_dir, spheno_oob_path, sarah_spheno_path):
+def copy_spheno_files_output(model_name, output_dir, spheno_oob_path, sarah_spheno_path):
     """
     Creates a copy of SPheno output in the 
     Outputs/... folder.
@@ -57,6 +57,21 @@ def copy_spheno_files(model_name, output_dir, spheno_oob_path, sarah_spheno_path
 
     print("SPheno files moved to output directory, and a copy made.")
 
+
+def copy_spheno_files_gambit(model_name, clean_model_name, spheno_version, output_dir, reset_dict):
+    """
+    Copies unpatched SPheno files to the gambit pathches directory"
+    """
+
+    src = output_dir + "/SPheno/" + clean_model_name
+    dst = ("../Backends/patches/sarah-spheno/{0}/{1}/unpatched"
+          ).format(spheno_version, model_name)
+    # Delete directory if it exists, then make it
+    remove_tree_quietly(dst)
+    mkdir_if_absent(dst, reset_dict, hard_reset=True)
+    copy_tree(src, dst)
+
+    print("Moving SPheno files to GAMBIT directory")
 
 
 """

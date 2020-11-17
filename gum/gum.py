@@ -266,12 +266,9 @@ if args.file:
         if output_opts.ufo:
             copy_madgraph_files(outputs.get_mg(), gum.name)
 
-        # Clean up calchep files from SARAH/FeynRules, then copy them to the
-        # GAMBIT backendDir
-        # TODO make this go to the Outputs dir instead, then copy (or ln -s?)
-        # from there to CalcHEP later.
+        # Clean up calchep files from SARAH/FeynRules, then copy them to the output dir
         if output_opts.ch or output_opts.mo:
-            clean_calchep_model_files(outputs.get_ch(), gum.name)
+            clean_calchep_model_files(outputs.get_ch(), gum.name, output_dir)
 
         """
         MADGRAPH -- Pythia inside here (and MadDM in the future)
@@ -327,8 +324,7 @@ if args.file:
         print("Now attempting to write proposed GAMBIT code.")
 
         # Create defaultdict for reset file.
-        # There are 2 nodes: new_files and amended_files.
-        # todo: add backend patches (e.g. pythia stuff) to reset_contents
+        # TODO: add backend patches (e.g. pythia stuff) to reset_contents
         # so ordering is not important.
         reset_contents = defaultdict(lambda: defaultdict(list))
 
@@ -426,7 +422,7 @@ if args.file:
         if output_opts.spheno:
 
             # Move SPheno files from SARAH to Outputs.
-            copy_spheno_files(clean_model_name, output_dir, SPHENO_DIR,
+            copy_spheno_files_output(clean_model_name, output_dir, SPHENO_DIR,
                               outputs.get_sph())
 
             # Pristine and patched SPhenos
@@ -450,7 +446,6 @@ if args.file:
                                 SPHENO_VERSION,
                                 fullpath = fullpath,
                                 fullfile = fullfile)
-
 
 
             # Get the defs of any SPheno dependencies
@@ -713,10 +708,13 @@ if args.file:
             print("")
             exit()
 
+        #################################################################
+        ################### DRY RUN STOPS HERE ##########################
+        # All file writing routines HERE, once everything has gone okay.#
+        #################################################################
+
         print("")
         print("Now putting the new code into GAMBIT.")
-
-        # All file writing routines HERE, once everything has gone okay.
 
         # Models
         m = "Models"
@@ -850,6 +848,15 @@ if args.file:
 
         # CalcHEP
         if output_opts.ch:
+            # Move files from output to Gambit dir
+            ch_patch_dir = "patches/calchep/3.6.27/Models/" + gum.name + '/'
+            ch_dest_dir = "../Backends/" + ch_patch_dir
+            ch_src_dir = output_dir + "/" + m + "/" + ch_patch_dir
+            remove_tree_quietly(ch_dest_dir)
+            mkdir_if_absent(ch_dest_dir, reset_contents)
+            for ch_file in os.listdir(ch_src_dir):
+                copy_file(ch_file, m, output_dir, reset_contents,
+                          existing = False, overwrite_path = ch_patch_dir)
             f = "frontends/CalcHEP_3_6_27.cpp"
             num = find_string(f, m, "setModel(modeltoset, 1)")[1]
             amend_file(f, m, ch_src_sl, num-2, reset_contents)
@@ -869,7 +876,7 @@ if args.file:
             patched_mo_dir = output_dir + "/micrOMEGAs_patched"
             # Copy micromegas files to Backend patches from the cleaned
             # CalcHEP directory
-            copy_micromegas_files(gum.name)
+            copy_micromegas_files(gum.name, reset_contents)
             # Add the patch file to the directory too
             patch_micromegas(gum.name, reset_contents)
             # Now write the headers
@@ -919,17 +926,11 @@ if args.file:
             add_to_backends_cmake(spheno_cmake, reset_contents,
                                   string_to_find="# gm2calc")
             # Move SPheno files to Backend/patches/...
-            src = output_dir + "/SPheno/" + clean_model_name
-            dst = (
-                "../Backends/patches/sarah-spheno/{0}/{1}/unpatched"
-            ).format(ver, gum.name)
-            # Delete directory if it exists, then make it
-            remove_tree_quietly(dst)
-            mkdir_if_absent(dst)
-            copy_tree(src, dst)
+            copy_spheno_files_gambit(gum.name, clean_model_name, ver, output_dir, reset_contents)
             patchloc = (
                      "sarah-spheno/{0}/{1}/patch_sarah-spheno_{0}_{1}.dif"
             ).format(ver, gum.name)
+            mkdir_if_absent(os.path.dirname(full_filename(patchloc,m)),reset_contents)
             copy_file(patchloc, m, output_dir, reset_contents, existing = False)
             # SPheno DecayTable
             filename = (
@@ -949,6 +950,7 @@ if args.file:
 
         # Vevacious
         if output_opts.vev:
+            copy_vevacious_files(gum.name, outputs.get_vev(), reset_contents)
             num = find_string("SpecBit_VS.cpp", "SpecBit",
                               "} // end namespace SpecBit")[1]
             amend_file("SpecBit_VS.cpp", "SpecBit", vev_src, num-1,
