@@ -636,7 +636,7 @@ def revert(reset_file):
                 # If deleted file is a BOSS config file, BOSS might have been run
                 if "BOSS/config" in i:
 
-                    from backends import *
+                    from .backends import get_boss_backend_name_and_version, force_backend_rebuild
 
                     be_name, be_ver = get_boss_backend_name_and_version(i)
                     be_name_ver_safe = be_name + "_" + be_ver.replace('.','_')
