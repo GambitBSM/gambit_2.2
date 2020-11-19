@@ -40,10 +40,10 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/statistics.hpp" 
+#include "gambit/ColliderBit/multimin.h"
 
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
-#include "gambit/ColliderBit/multimin.h"
 
 //#define COLLIDERBIT_DEBUG
 #define DEBUG_PREFIX "DEBUG: OMP thread " << omp_get_thread_num() << ":  "
