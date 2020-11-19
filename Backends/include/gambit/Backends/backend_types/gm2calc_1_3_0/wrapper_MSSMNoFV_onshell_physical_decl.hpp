@@ -2,11 +2,11 @@
 #define __wrapper_MSSMNoFV_onshell_physical_decl_gm2calc_1_3_0_hpp__
 
 #include <cstddef>
+#include <ostream>
+#include <Eigen/Core>
 #include "forward_decls_wrapper_classes.hpp"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_MSSMNoFV_onshell_physical.hpp"
-#include <ostream>
-#include <Eigen/Core>
 
 #include "identification.hpp"
 

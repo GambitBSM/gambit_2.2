@@ -2,12 +2,12 @@
 #define __wrapper_VevaciousPlusPlus_decl_vevacious_1_0_hpp__
 
 #include <cstddef>
-#include "forward_decls_wrapper_classes.hpp"
-#include "gambit/Backends/wrapperbase.hpp"
-#include "abstract_VevaciousPlusPlus.hpp"
 #include <string>
 #include <utility>
 #include <vector>
+#include "forward_decls_wrapper_classes.hpp"
+#include "gambit/Backends/wrapperbase.hpp"
+#include "abstract_VevaciousPlusPlus.hpp"
 
 #include "identification.hpp"
 

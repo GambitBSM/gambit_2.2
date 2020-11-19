@@ -2,11 +2,11 @@
 #define __wrapper_MSSMNoFV_onshell_decl_gm2calc_1_3_0_hpp__
 
 #include <cstddef>
+#include <Eigen/Core>
 #include "forward_decls_wrapper_classes.hpp"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_MSSMNoFV_onshell.hpp"
 #include "wrapper_MSSMNoFV_onshell_mass_eigenstates_decl.hpp"
-#include <Eigen/Core>
 
 #include "identification.hpp"
 

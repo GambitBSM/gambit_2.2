@@ -2,11 +2,11 @@
 #define __wrapper_EPhysicalProblem_decl_gm2calc_1_3_0_hpp__
 
 #include <cstddef>
+#include <string>
 #include "forward_decls_wrapper_classes.hpp"
 #include "gambit/Backends/wrapperbase.hpp"
 #include "abstract_EPhysicalProblem.hpp"
 #include "wrapper_Error_decl.hpp"
-#include <string>
 
 #include "identification.hpp"
 

@@ -28,7 +28,8 @@
 BE_NAMESPACE
 {
   // One giant map initializer:
-  static const std::map<PID_pair, prospino_settings> PID_pairs_to_prospino_settings {
+  static const std::map<PID_pair, prospino_settings> PID_pairs_to_prospino_settings
+  {
     //
     // Prospino settings: inlo, isq_ng_in, icoll_in, energy_in, i_error_in, finalState, ipart1, ipart2, isquark1_in, isquark2_in
     // gg
