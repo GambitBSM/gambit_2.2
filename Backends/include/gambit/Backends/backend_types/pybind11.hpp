@@ -28,7 +28,6 @@ namespace Gambit
 {
 
   /// Types used for Python backends
-  // TODO: This might be temporary as the harvesting scripts should make this unneccesary
   #ifdef HAVE_PYBIND11
     typedef pybind11::dict PyDict;
   #else
