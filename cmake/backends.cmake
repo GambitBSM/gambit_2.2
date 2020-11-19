@@ -1419,25 +1419,6 @@ if(NOT ditched_${name}_${ver})
 endif()
 
 
-# SARAH
-set(name "sarah")
-set(ver "4.11.0")
-set(dl "http://www.hepforge.org/archive/${name}/SARAH-${ver}.tar.gz")
-set(md5  "e8cef704101f7e1c2e400ca49da26c36")
-set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
-ExternalProject_Add(${name}_${ver}
-  DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir}
-  SOURCE_DIR ${dir}
-  BUILD_IN_SOURCE 1
-  PATCH_COMMAND ""
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-)
-add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-set_as_default_version("backend" ${name} ${ver})
-
-
 # CalcHEP
 set(name "calchep")
 set(ver "3.6.27")
