@@ -1,14 +1,14 @@
 #ifndef __abstract_VevaciousPlusPlus_vevacious_1_0_hpp__
 #define __abstract_VevaciousPlusPlus_vevacious_1_0_hpp__
 
-#include "gambit/Backends/abstractbase.hpp"
-#include "forward_decls_abstract_classes.hpp"
-#include "forward_decls_wrapper_classes.hpp"
+#include <cstddef>
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
-#include <cstddef>
-#include <iostream>
+#include "gambit/Backends/abstractbase.hpp"
+#include "forward_decls_abstract_classes.hpp"
+#include "forward_decls_wrapper_classes.hpp"
 
 #include "identification.hpp"
 
