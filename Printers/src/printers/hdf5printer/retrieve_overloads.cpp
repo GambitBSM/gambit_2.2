@@ -353,12 +353,8 @@ namespace Gambit
         LABELNXN(3,"~nu","Pole_Mixing","SNUMIX")
 
         // SCALARMIX, PSEUDOSCALARMIX, CHARGEMIX
-        // TODO: These are not SLHA! However we seem to
-        // require them at the moment in our
-        // MSSMSimpleSpec constructor. This is not
-        // good, but things will change in
-        // the SpecBit redesign so I am not going
-        // fix it until then.
+        // TODO: These are not SLHA! Will be
+        // changed after SpecBit redesign
         LABELNXN(2,"h0","Pole_Mixing","SCALARMIX")
         LABELNXN(2,"A0","Pole_Mixing","PSEUDOSCALARMIX")
         LABELNXN(2,"H+","Pole_Mixing","CHARGEMIX")
@@ -377,7 +373,6 @@ namespace Gambit
         #undef LABEL3X3DIAG
 
         // GAUGE
-        //labels_to_SLHA["g1"] = SLHAcombo("dimensionless", "TEMP", 3); // Convert to g'
         labels_to_SLHA["g2"] = SLHAcombo("dimensionless", "GAUGE", 2);
         labels_to_SLHA["g3"] = SLHAcombo("dimensionless", "GAUGE", 3);
 
@@ -398,21 +393,18 @@ namespace Gambit
            OUT = SLHAea_get(out,"TEMP",TEMP_INDEX); \
         }
 
-        // Another manual intervention is required for mA2. Seems we didn't used to save this.
-        // But again, we can compute it from other stuff: m^2_A=[m3^2/cosBsinB],
-        // where m3^2 is what we call BMu (or small b).
-        // Need tanb for this too.
+        // Manually compute tanb and mA2
         double vd,vu,BMu;
         GETPAR(vd,"vd","mass1",1)
         GETPAR(vu,"vu","mass1",2)
         GETPAR(BMu,"BMu","mass2",4)
 
-        double tb = vu/vd;
-        double cb = cos(atan(tb));
-        double c2b = cos(2*atan(tb));
-        double sb = sin(atan(tb));
-        double vev = sqrt(vu*vu + vd*vd);
-        double mA2 = BMu / (cb*sb);
+        const double tb = vu/vd;
+        const double cb = cos(atan(tb));
+        const double c2b = cos(2*atan(tb));
+        const double sb = sin(atan(tb));
+        const double vev = sqrt(vu*vu + vd*vd);
+        const double mA2 = BMu / (cb*sb);
 
         double g1,g2,gprime;
         GETPAR(g1,"g1","dimensionless",31)
