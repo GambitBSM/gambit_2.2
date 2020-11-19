@@ -1,11 +1,31 @@
+//   GAMBIT: Global and Modular BSM Inference Tool
+//  *********************************************
+///
+///  \file
+///  Util variables and functions for ColliderBit
+///
+///  *********************************************
+///
+///  Authors (add name and date if you modify):
+///
+///  \author Andy Buckley
+///  \author Abram Krislock
+///  \author Anders Kvellestad
+///  \author Pat Scott
+///  \author Tomas Gonzalo
+///
+///  *********************************************
+
 #pragma once
+
+#include <functional>
+#include <memory>
+#include <cfloat>
+
 #include "HEPUtils/MathUtils.h"
 #include "HEPUtils/BinnedFn.h"
 #include "HEPUtils/Event.h"
 #include "HEPUtils/FastJet.h"
-#include <functional>
-#include <memory>
-#include <cfloat>
 
 namespace Gambit
 {
