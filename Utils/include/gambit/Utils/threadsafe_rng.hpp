@@ -110,9 +110,10 @@ namespace Gambit
         /// Selected uniformly from range (min,max).
         /// To be used as an entropy source for stdlib distributions.
         /// If you want (0,1) random doubles then please use Random::draw(), NOT this function!
-        virtual result_type operator()() { 
+        virtual result_type operator()()
+        { 
           return rngs[omp_get_thread_num()](); 
-          }
+        }
 
       private:
 
