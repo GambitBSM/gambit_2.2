@@ -49,7 +49,7 @@ BE_INI_FUNCTION
     if (ModelInUse("ScalarSingletDM_Z2"))
     {
       // Set model within CalcHEP
-      BEpath = backendDir + "/../models/ScalarSingletDM_Z2"; // This may, in the future, change to the GAMBIT model directory.
+      BEpath = backendDir + "/../models/ScalarSingletDM_Z2";
       path = BEpath.c_str();
       modeltoset = (char*)malloc(strlen(path)+11);
       sprintf(modeltoset, "%s", path);
@@ -86,6 +86,8 @@ BE_INI_FUNCTION
       // Wait here until the first rank has generated all matrix elements.
       MPI_Barrier(MPI_COMM_WORLD);
     #endif
+
+    free(modeltoset);
   }
 
   // Point-level.
@@ -142,6 +144,10 @@ BE_NAMESPACE
 
     // Generates shared object file based on libName - unless it already exists.
     numout* cc = getMEcode(twidth, UG, process, excludeVirtual, excludeOut, libname);
+
+    // Release all memory allocated by "new" before returning
+    delete process;
+    delete libname; 
 
     return cc;
   }

@@ -132,6 +132,10 @@ Rules:
   - capability: sigmav
     function: sigmav_late_universe
 
+  # This model has annihilating dark matter
+  - capability: GA_Yield
+    function: GA_AnnYield_General
+
 Scanner:
 
   use_scanner: de
