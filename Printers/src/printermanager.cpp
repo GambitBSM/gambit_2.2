@@ -38,7 +38,6 @@
 namespace Gambit
 {
   
-  // TODO: Decide if this is the method we want to use.
   // Set/Get global reader object retrieval
   Printers::PrinterManager* global_printer_manager = NULL;
   

@@ -304,8 +304,8 @@ namespace Gambit
       }
       double MSSMea::get_MAh_pole_slha(int i) const
       {
-         if      (i==1) { return getdata("MASS",36); } // Neutral CP-odd Higgs
-         else if (i==2) { return getdata("MASS",46); } // Goldstone boson
+         if      (i==1) { return getdata("MASS",46); } // Goldstone boson
+         else if (i==2) { return getdata("MASS",36); } // Neutral CP-odd Higgs
          else { utils_error().raise(LOCAL_INFO,"Invalid index input to get_Ahh_pole_slha! Please check index range limits in wrapper SubSpectrum class!"); return -1; } // Should not return.
       }
       double MSSMea::get_MAh_pole () const { return getdata("MASS",36); }
