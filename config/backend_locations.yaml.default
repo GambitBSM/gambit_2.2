@@ -115,9 +115,6 @@ SPheno:
   3.3.8:       ./Backends/installed/spheno/3.3.8/lib/libSPheno.so
   4.0.3:       ./Backends/installed/spheno/4.0.3/lib/libSPheno.so
 
-SPhenoMSSM:
-  3.3.8:       ./Backends/installed/sphenomssm/3.3.8/lib/libSPhenoMSSM.so
-
 CalcHEP:
   3.6.27:      ./Backends/installed/calchep/3.6.27/lib/libcalchep.so
 
