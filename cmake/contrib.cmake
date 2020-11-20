@@ -17,7 +17,7 @@
 #          (p.scott@imperial.ac.uk)
 #  \date 2014 Nov, Dec
 #
-# \author Tomas GOnzalo
+# \author Tomas Gonzalo
 #         (tomas.gonzalo@monash.edu)
 # \dae 2019 June
 #
