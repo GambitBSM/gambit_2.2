@@ -104,7 +104,7 @@ ObsLikes:
     capability:   BBN_abundances
     sub_capabilities: [Li7]
 
-  # ---- Nuetron lifetime -----
+  # ---- Neutron lifetime -----
   - purpose:      LogLike
     capability:   lnL_neutron_lifetime_bottle
 

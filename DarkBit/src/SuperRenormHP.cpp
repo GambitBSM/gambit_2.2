@@ -1031,24 +1031,36 @@ namespace Gambit
     {
       using namespace Pipes::SuperRenormHP_width;
 
+      result = 0.;
+
       std::string DM_ID = *Dep::DarkMatter_ID;
       TH_ProcessCatalog catalog = *Dep::TH_ProcessCatalog;
 
-      auto f_ph = catalog.getProcess(DM_ID).find({"gamma", "gamma"})->genRate;
-      auto fb_ph = f_ph->bind();
-      double gamma_ph = fb_ph->eval();
+      // Check whether the process catalog has the decay prosses
+      if (Dep::TH_ProcessCatalog->find(DM_ID) != NULL)
+      {
+        // decay S -> gamma gamma
+        const TH_Channel* dec_channel_ph = catalog.getProcess(DM_ID).find({"gamma", "gamma"});
+        if (dec_channel_ph != NULL)
+        {
+          result += dec_channel_ph->genRate->bind()->eval();
+        }
 
-      auto f_e1 = catalog.getProcess(DM_ID).find({"e-_1", "e+_1"})->genRate;
-      auto fb_e1 = f_e1->bind();
-      double gamma_e1 = fb_ph->eval();
+        // decay S -> e-_1 e+_1
+        const TH_Channel* dec_channel_e1 = catalog.getProcess(DM_ID).find({"e-_1", "e+_1"});
+        if (dec_channel_e1 != NULL)
+        {
+          result += dec_channel_e1->genRate->bind()->eval();
+        }
 
-      auto f_e2 = catalog.getProcess(DM_ID).find({"e-_2", "e+_2"})->genRate;
-      auto fb_e2 = f_e2->bind();
-      double gamma_e2 = fb_ph->eval();
+        // decay S -> e-_2 e+_2
+        const TH_Channel* dec_channel_e2 = catalog.getProcess(DM_ID).find({"e-_2", "e+2"});
+        if (dec_channel_e2 !=NULL)
+        {
+          result += dec_channel_e2->genRate->bind()->eval();
+        }
+      }
 
-      double gamma_tot = gamma_ph + gamma_e1 + gamma_e2;
-
-      result = gamma_tot;
     }
 
     // capability function to provide the lifetime of the S scalar (in s)
