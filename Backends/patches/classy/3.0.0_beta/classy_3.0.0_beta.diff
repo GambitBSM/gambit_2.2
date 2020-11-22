@@ -1,7 +1,33 @@
 diff --git a/external/heating/injection.c b/external/heating/injection.c
-index 3e2075ff..7ae54982 100644
+index 3e2075ff..7f149505 100644
 --- a/external/heating/injection.c
 +++ b/external/heating/injection.c
+@@ -54,6 +54,12 @@ int injection_init(struct precision * ppr,
+   pin->fHe = pth->fHe;                                                                              // [-]
+   pin->N_e0 = pth->n_e;                                                                             // [1/m^3]
+ 
++  /** - Define indices of tables */
++  pin->to_store = _FALSE_;
++  class_call(injection_indices(pth),
++             pin->error_message,
++             pin->error_message);
++
+   /** - Define redshift tables */
+   pin->z_size = pth->tt_size;
+   class_alloc(pin->z_table,
+@@ -73,12 +79,6 @@ int injection_init(struct precision * ppr,
+   pin->last_index_z = 0;
+   pin->index_z_store = 0;
+ 
+-  /** - Define indices of tables */
+-  pin->to_store = _FALSE_;
+-  class_call(injection_indices(pth),
+-             pin->error_message,
+-             pin->error_message);
+-
+   /** - Initialize energy injection table */
+   /* Allocate space */
+   class_alloc(pin->injection_table,
 @@ -106,6 +106,36 @@ int injection_init(struct precision * ppr,
                 pin->error_message);
    }
@@ -19,8 +45,8 @@ index 3e2075ff..7ae54982 100644
 +    int index_z;
 +    for(index_z=0;index_z<pin->feff_z_size;++index_z)
 +    {
-+      pin->feff_table[index_z*3+0] = pin->external_fz_table[pin->external_fz_z_index][index_z];
-+      pin->feff_table[index_z*3+1] = pin->external_fz_table[pin->external_fz_ftot_index][index_z];
++      pin->feff_table[index_z*3+0] = pin->external_fz_z[index_z];
++      pin->feff_table[index_z*3+1] = pin->external_fz_ftot[index_z];
 +    }
 +
 +    /* Spline in one dimension */
@@ -58,12 +84,12 @@ index 3e2075ff..7ae54982 100644
 +    int index_z;
 +    for(index_z=0;index_z<pin->chiz_size;++index_z)
 +    {
-+      pin->chiz_table[index_z*(2*pin->dep_size+1)+0] = pin->external_fz_table[pin->external_fz_z_index][index_z];; //z
-+      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_heat] = pin->external_fz_table[pin->external_fz_fheat_index][index_z]; //heat
-+      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_lya] = pin->external_fz_table[pin->external_fz_flya_index][index_z]; //lya
-+      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_ionH] = pin->external_fz_table[pin->external_fz_fhion_index][index_z]; //ionH
-+      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_ionHe] = pin->external_fz_table[pin->external_fz_fheion_index][index_z]; //ionHe
-+      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_lowE] = pin->external_fz_table[pin->external_fz_flowe_index][index_z]; //lowE
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+0] = pin->external_fz_z[index_z];; //z
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_heat] = pin->external_fz_fheat[index_z]; //heat
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_lya] = pin->external_fz_flya[index_z]; //lya
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_ionH] = pin->external_fz_fhion[index_z]; //ionH
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_ionHe] = pin->external_fz_fheion[index_z]; //ionHe
++      pin->chiz_table[index_z*(2*pin->dep_size+1)+1+pin->index_dep_lowE] = pin->external_fz_flowe[index_z]; //lowE
 +    }
 +
 +    /* Spline in one dimension */
@@ -86,7 +112,27 @@ index 3e2075ff..7ae54982 100644
    /** - Initialize energy deposition table */
    /* Allocate space */
    class_alloc(pin->deposition_table,
-@@ -229,16 +299,22 @@ int injection_free(struct thermo* pth){
+@@ -166,9 +236,19 @@ int injection_indices(struct thermo* pth){
+   /* Check energy injection */
+   if(pin->DM_annihilation_efficiency!=0){
+     pin->has_DM_ann = _TRUE_;
++
++   //class_test(pin->DM_annihilation_efficiency>1.e-4,
++   //           pin->error_message,
++   //           "annihilation parameter suspiciously large (%e, while typical bounds are in the range of 1e-7 to 1e-6)",pin->DM_annihilation_efficiency);
+   }
+   if(pin->DM_decay_fraction!=0){
+     pin->has_DM_dec = _TRUE_;
++
++    //double tau_dec = 1/(pin->DM_decay_Gamma);
++    //double ln_bound_on_fraction = log(tau_dec/2e25) + 3.5e13/tau_dec;
++    //class_test(log(1e3*pin->DM_decay_fraction) > ln_bound_on_fraction,
++    //           pin->error_message,
++    //           "Suspiciously large energy injection through DM decay");
+   }
+   if(pin->PBH_evaporation_fraction!=0){
+     pin->has_PBH_eva = _TRUE_;
+@@ -229,10 +309,10 @@ int injection_free(struct thermo* pth){
    }
  
    /* Injection efficiency */
@@ -99,19 +145,7 @@ index 3e2075ff..7ae54982 100644
      free(pin->chiz_table);
    }
    if(pin->chi_type == chi_from_x_file || pin->chi_type == chi_Galli_file){
-     free(pin->chix_table);
-   }
- 
-+  // Clear the external fz tables, if in use.
-+  // Note that the pointers in this table are owned by the external program and not by class!!
-+  if(pin->f_eff_type == pointer_to_fz_channel || pin->f_eff_type == pointer_to_fz_eff){
-+    free(pin->external_fz_table);
-+  }
-+
-   /* Deposition function */
-   free(pin->chi);
- 
-@@ -613,11 +689,11 @@ int injection_deposition_function_at_z(struct injection* pin,
+@@ -613,11 +693,11 @@ int injection_deposition_function_at_z(struct injection* pin,
  
    /** - Read the correction factor f_eff */
    /* For the on the spot, we take the user input */
@@ -125,7 +159,7 @@ index 3e2075ff..7ae54982 100644
      class_call(array_interpolate_spline_transposed(pin->feff_table,
                                                     pin->feff_z_size,
                                                     3,
-@@ -745,8 +821,14 @@ int injection_rate_DM_decay(struct injection * pin,
+@@ -745,8 +825,14 @@ int injection_rate_DM_decay(struct injection * pin,
                              double * energy_rate){
  
    /** - Calculate injection rates */
@@ -143,7 +177,7 @@ index 3e2075ff..7ae54982 100644
    return _SUCCESS_;
  }
 diff --git a/external/heating/injection.h b/external/heating/injection.h
-index 51fa53ec..8302ed8a 100644
+index 51fa53ec..aed6ac55 100644
 --- a/external/heating/injection.h
 +++ b/external/heating/injection.h
 @@ -7,7 +7,7 @@
@@ -155,26 +189,25 @@ index 51fa53ec..8302ed8a 100644
  enum chi_approx {chi_CK, chi_PF, chi_Galli_file, chi_Galli_analytic, chi_full_heating, chi_from_x_file, chi_from_z_file};
  
  struct injection{
-@@ -46,6 +46,17 @@ struct injection{
+@@ -46,6 +46,16 @@ struct injection{
    int f_eff_type;
    FileName f_eff_file;
  
 +  /* External f(z) table */
-+  double ** external_fz_table;
 +  int external_fz_size;
-+  int external_fz_z_index;
-+  int external_fz_ftot_index;
-+  int external_fz_fheat_index;
-+  int external_fz_flya_index;
-+  int external_fz_fhion_index;
-+  int external_fz_fheion_index;
-+  int external_fz_flowe_index;
++  double * external_fz_z;
++  double * external_fz_ftot;
++  double * external_fz_fheat;
++  double * external_fz_flya;
++  double * external_fz_fhion;
++  double * external_fz_fheion;
++  double * external_fz_flowe;
 +
    /* Deposition function and injection efficiency */
    int chi_type;
    FileName chi_z_file;
 diff --git a/include/primordial.h b/include/primordial.h
-index 1b8af605..ead45282 100755
+index 1b8af605..85bed600 100755
 --- a/include/primordial.h
 +++ b/include/primordial.h
 @@ -13,7 +13,8 @@ enum primordial_spectrum_type {
@@ -187,10 +220,11 @@ index 1b8af605..ead45282 100755
  };
  
  /** enum defining whether the spectrum routine works with linear or logarithmic input/output */
-@@ -212,6 +213,9 @@ struct primordial {
+@@ -212,6 +213,10 @@ struct primordial {
  
    int lnk_size;    /**< number of ln(k) values */
  
++  double * ptr_k_array;      /**< poiner to external array holding the k values of the primordial Pk */
 +  double * ptr_pks_array;    /**< poiner to external array holding the scalar modes of the primordial Pk */
 +  double * ptr_pkt_array;    /**< poiner to external array holding the tensor modes of the primordial Pk */
 +
@@ -246,7 +280,7 @@ index 50a3d7b6..98aba9b0 100644
          return self.ba.Neff
  
 diff --git a/source/input.c b/source/input.c
-index 42d50dc6..4b70fe97 100644
+index 42d50dc6..a905b764 100644
 --- a/source/input.c
 +++ b/source/input.c
 @@ -25,6 +25,8 @@
@@ -268,7 +302,31 @@ index 42d50dc6..4b70fe97 100644
    char string1[_ARGUMENT_LENGTH_MAX_];
  
    /** 1) DM annihilation */
-@@ -3029,10 +3032,27 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -2959,9 +2962,7 @@ int input_read_parameters_injection(struct file_content * pfc,
+   class_read_double("DM_annihilation_cross_section",pin->DM_annihilation_cross_section);
+   class_read_double("DM_annihilation_mass",pin->DM_annihilation_mass);
+   class_read_double("DM_annihilation_fraction",pin->DM_annihilation_fraction);
+-  if(pin->DM_annihilation_efficiency!=0){
+-    pth->has_exotic_injection = _TRUE_;
+-  }
++
+   /* Test */
+   class_test(pin->DM_annihilation_efficiency<0,
+              errmsg,
+@@ -2983,7 +2984,11 @@ int input_read_parameters_injection(struct file_content * pfc,
+   } //TODO :: check if still occurs !!!
+   /* Complete set of parameters */
+   if(pin->DM_annihilation_mass > 0 && pin->DM_annihilation_cross_section > 0.){
+-    pin->DM_annihilation_efficiency = pin->DM_annihilation_cross_section*1.e-6/(pin->DM_annihilation_mass*_eV_*1.e9);
++    pin->DM_annihilation_efficiency = pin->DM_annihilation_cross_section*1.e-6/(pin->DM_annihilation_mass*_eV_*1.e9/_c_/_c_);
++  }
++
++  if(pin->DM_annihilation_efficiency!=0){
++    pth->has_exotic_injection = _TRUE_;
+   }
+ 
+   if (pin->DM_annihilation_efficiency > 0.) {
+@@ -3029,10 +3034,27 @@ int input_read_parameters_injection(struct file_content * pfc,
               errmsg,
               "You need to enter a positive fraction of decaying DM. Please adjust your param file.");
  
@@ -280,12 +338,12 @@ index 42d50dc6..4b70fe97 100644
 +  class_call(parser_read_double(pfc,"DM_decay_Gamma",&param1,&flag1,errmsg),
 +             errmsg,
 +             errmsg);
-+
+ 
 +  /* Read the lifetime */
 +  class_call(parser_read_double(pfc,"DM_decay_tau",&param2,&flag2,errmsg),
 +            errmsg,
 +            errmsg);
- 
++
 +  /* Make sure that only one of the two parameters was given */
 +  class_test((flag1 == _TRUE_) && (flag2 == _TRUE_),
 +             errmsg,
@@ -299,7 +357,7 @@ index 42d50dc6..4b70fe97 100644
  
    /** 3) PBH evaporation */
    /** 3.a) Fraction */
-@@ -3137,9 +3157,15 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3137,9 +3159,15 @@ int input_read_parameters_injection(struct file_content * pfc,
      else if (strcmp(string1,"from_file") == 0){
        pin->f_eff_type = f_eff_from_file;
      }
@@ -316,7 +374,7 @@ index 42d50dc6..4b70fe97 100644
      }
    }
  
-@@ -3157,6 +3183,128 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -3157,6 +3185,108 @@ int input_read_parameters_injection(struct file_content * pfc,
      strcpy(pin->f_eff_file, string1);
    }
  
@@ -328,15 +386,7 @@ index 42d50dc6..4b70fe97 100644
 +    char addr [_ARGUMENT_LENGTH_MAX_];
 +    uintptr_t ul;
 +
-+    // 1) Define the indices for external_fz_table and the number of columns
-+    col = 0;
-+    class_define_index(pin->external_fz_z_index , _TRUE_, col, 1);
-+    class_define_index(pin->external_fz_ftot_index , _TRUE_, col, 1);
-+
-+    // 2) Allocate external_fz_table  with the right number of collumns
-+    class_alloc(pin->external_fz_table, col*sizeof(double*), pin->error_message);
-+
-+    // 3) Read the number of rows
++    // 1) Read the number of rows
 +    class_call(parser_read_int(pfc,
 +                               "energyinj_coef_num_lines",
 +                               &pin->external_fz_size,
@@ -345,24 +395,24 @@ index 42d50dc6..4b70fe97 100644
 +               errmsg,
 +               errmsg);
 +
-+    // 4) Read in pointers to vector as string
++    // 2) Read in pointers to vector as string
 +    class_call(parser_read_string(pfc,"energyinj_coef_z",&addr,&f1,errmsg),
 +               errmsg,
 +               errmsg);
 +
-+    // 5) Convert string to uintptr_t and then back to memory address;
++    // 3) Convert string to uintptr_t and then back to memory address;
 +    //    initialise a double pointer pointing to it
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_z_index] = (double*) ul;
++    pin->external_fz_z = (double*) ul;
 +
-+    // Repeat 4) and 5) for the rest of the table
++    // Repeat 2) and 3) for the rest of the table
 +    class_call(parser_read_string(pfc,"energyinj_coef_tot",&addr,&f2,errmsg),
 +               errmsg,
 +               errmsg);
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_ftot_index] = (double*) ul;
++    pin->external_fz_ftot = (double*) ul;
 +
-+    // 6) Check that all values needed for the calculation have been passed. If not throw error
++    // 4) Check that all values needed for the calculation have been passed. If not throw error
 +    class_test(((f0 == _FALSE_) || (f1 == _FALSE_) || (f2 == _FALSE_)),
 +               errmsg,
 +               "You set the parameter 'f_eff_type' to 'pointer_to_fz_eff',\nthis means you also have to specify the input values for \n- energyinj_coef_num_lines \n- energyinj_coef_z \n- energyinj_coef_tot\n Check that all of them are passed.");
@@ -375,19 +425,7 @@ index 42d50dc6..4b70fe97 100644
 +    char addr [_ARGUMENT_LENGTH_MAX_];
 +    uintptr_t ul;
 +
-+    // 1) Define the indices for external_fz_table and the number of columns
-+    col = 0;
-+    class_define_index(pin->external_fz_z_index , _TRUE_, col, 1);
-+    class_define_index(pin->external_fz_fheat_index , _TRUE_, col, 1);
-+    class_define_index(pin->external_fz_flya_index , _TRUE_, col, 1);
-+    class_define_index(pin->external_fz_fhion_index , _TRUE_, col, 1);
-+    class_define_index(pin->external_fz_fheion_index , _TRUE_, col, 1);
-+    class_define_index(pin->external_fz_flowe_index , _TRUE_, col, 1);
-+
-+    // 2) Allocate external_fz_table  with the right number of collumns
-+    class_alloc(pin->external_fz_table, col*sizeof(double*), pin->error_message);
-+
-+    // 3) Read the number of rows
++    // 1) Read the number of rows
 +    class_call(parser_read_int(pfc,
 +                               "energyinj_coef_num_lines",
 +                               &pin->external_fz_size,
@@ -396,48 +434,48 @@ index 42d50dc6..4b70fe97 100644
 +               errmsg,
 +               errmsg);
 +
-+    // 4) Read in pointers to vector as string
++    // 2) Read in pointers to vector as string
 +    class_call(parser_read_string(pfc,"energyinj_coef_z",&addr,&f1,errmsg),
 +               errmsg,
 +               errmsg);
 +
-+    // 5) Convert string to uintptr_t and then back to memory address;
++    // 3) Convert string to uintptr_t and then back to memory address;
 +    //    initialise a double pointer pointing to it
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_z_index] = (double*) ul;
++    pin->external_fz_z = (double*) ul;
 +
-+    // Repeat 4) and 5) for the rest of the table
++    // Repeat 2) and 3) for the rest of the table
 +    class_call(parser_read_string(pfc,"energyinj_coef_heat",&addr,&f2,errmsg),
 +               errmsg,
 +               errmsg);
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_fheat_index] = (double*) ul;
++    pin->external_fz_fheat = (double*) ul;
 +
 +    class_call(parser_read_string(pfc,"energyinj_coef_lya",&addr,&f3,errmsg),
 +               errmsg,
 +               errmsg);
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_flya_index] = (double*) ul;
++    pin->external_fz_flya = (double*) ul;
 +
 +    class_call(parser_read_string(pfc,"energyinj_coef_ionH",&addr,&f4,errmsg),
 +               errmsg,
 +               errmsg);
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_fhion_index] = (double*) ul;
++    pin->external_fz_fhion = (double*) ul;
 +
 +    class_call(parser_read_string(pfc,"energyinj_coef_ionHe",&addr,&f5,errmsg),
 +               errmsg,
 +               errmsg);
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_fheion_index] = (double*) ul;
++    pin->external_fz_fheion = (double*) ul;
 +
 +    class_call(parser_read_string(pfc,"energyinj_coef_lowE",&addr,&f6,errmsg),
 +               errmsg,
 +               errmsg);
 +    sscanf(addr, "%lu", &ul);
-+    pin->external_fz_table[pin->external_fz_flowe_index] = (double*) ul;
++    pin->external_fz_flowe = (double*) ul;
 +
-+    // 6) Check that all values needed for the calculation have been passed. If not throw error
++    // 4) Check that all values needed for the calculation have been passed. If not throw error
 +    class_test(((f0 == _FALSE_) || (f1 == _FALSE_) || (f2 == _FALSE_) || (f3 == _FALSE_) || (f4 == _FALSE_) || (f5 == _FALSE_) || (f6 == _FALSE_)),
 +               errmsg,
 +               "You set the parameter 'f_eff_type' to 'pointer_to_fz_channel',\nthis means you also have to specify the input values for \n- energyinj_coef_num_lines \n- energyinj_coef_z \n- energyinj_coef_heat \n- energyinj_coef_lya \n- energyinj_coef_ionH \n- energyinj_coef_ionHe \n- energyinj_coef_lowE\n Check that all of them are passed.");
@@ -445,7 +483,7 @@ index 42d50dc6..4b70fe97 100644
  
    /** 6) deposition function */
    /* Read */
-@@ -3632,9 +3780,12 @@ int input_read_parameters_primordial(struct file_content * pfc,
+@@ -3632,9 +3762,12 @@ int input_read_parameters_primordial(struct file_content * pfc,
      else if (strcmp(string1,"external_Pk") == 0){
        ppm->primordial_spec_type = external_Pk;
      }
@@ -459,7 +497,7 @@ index 42d50dc6..4b70fe97 100644
      }
    }
  
-@@ -4142,6 +4293,66 @@ int input_read_parameters_primordial(struct file_content * pfc,
+@@ -4142,6 +4275,57 @@ int input_read_parameters_primordial(struct file_content * pfc,
      class_read_double("custom10",ppm->custom10);
    }
  
@@ -482,16 +520,7 @@ index 42d50dc6..4b70fe97 100644
 +    // 3) Convert string to uintptr_t and then back to memory address;
 +    //    initialise a double pointer pointing to it
 +    sscanf(addr, "%lu", &ul);
-+    double* ptr_k_array = (double*) ul;
-+
-+    // 4) allocate memory for lnk_array managed by CLASS, routine that does that (and step 5)) in
-+    // a normal class run () is by passed in primordial.c
-+    class_alloc(ppm->lnk   , ppm->lnk_size*sizeof(double),ppm->error_message);
-+
-+    // 5) fill lnk_array with values of array that the pointer ptr_k_array is pointing to
-+    for (int index_k=0; index_k<ppm->lnk_size; index_k++){
-+      ppm->lnk[index_k] = log(ptr_k_array[index_k]);
-+    }
++    ppm->ptr_k_array = (double*) ul;
 +
 +    // read pointers of other arrays that need to be passed. allocation and filling will
 +    // be done later in primordial.c in function =>
@@ -526,22 +555,40 @@ index 42d50dc6..4b70fe97 100644
    /* Final tests */
    if ((ppm->primordial_spec_type == inflation_V) || (ppm->primordial_spec_type == inflation_H) || (ppm->primordial_spec_type == inflation_V_end)) {
      class_test(ppt->has_scalars == _FALSE_,
-@@ -5388,6 +5599,10 @@ int input_default_params(struct background *pba,
+@@ -5388,6 +5572,16 @@ int input_default_params(struct background *pba,
    /** 5.1) External file */
    sprintf(pin->f_eff_file,"/external/heating/example_f_eff_file.dat");
  
 +  /** 5.2) External fz table (living in GAMBIT) */
-+  pin->external_fz_table = NULL;
 +  pin->external_fz_size = 0;
++  pin->external_fz_z = NULL;
++  pin->external_fz_ftot = NULL;
++  pin->external_fz_fheat = NULL;
++  pin->external_fz_flya = NULL;
++  pin->external_fz_fhion = NULL;
++  pin->external_fz_fheion = NULL;
++  pin->external_fz_flowe = NULL;
 +
    /** 6) Deposition function */
    pin->chi_type = chi_CK;
    /** 6.1) External file */
+@@ -5509,6 +5703,11 @@ int input_default_params(struct background *pba,
+   ppm->custom9=0.;
+   ppm->custom10=0.;
+ 
++  /** 1.h) For type 'pointer_to_Pk' */
++  ppm->ptr_k_array = NULL;
++  ppm->ptr_pks_array = NULL;
++  ppm->ptr_pkt_array = NULL;
++
+   /**
+    * Default to input_read_parameters_spectra
+    */
 diff --git a/source/primordial.c b/source/primordial.c
-index 8c5030da..82dad350 100755
+index 8c5030da..331a1a4a 100755
 --- a/source/primordial.c
 +++ b/source/primordial.c
-@@ -246,21 +246,52 @@ int primordial_init(
+@@ -246,21 +246,60 @@ int primordial_init(
               ppr->k_per_decade_primordial);
  
    /** - allocate and fill values of \f$ \ln{k}\f$'s */
@@ -565,15 +612,15 @@ index 8c5030da..82dad350 100755
 +  /// test if the kmin and kmax passed through the pointer_to_Pk method 
 +  /// make sense and are compatible with the CLASS internal ppt->kmin ppt->kmax
 +  else {
-+
-+    double passed_kmin = exp(ppm->lnk[0]);
-+    double passed_kmax = exp(ppm->lnk[ppm->lnk_size-1]);
  
 -  class_call(primordial_get_lnk_list(ppm,
 -                                     k_min,
 -                                     k_max,
 -                                     ppr->k_per_decade_primordial
 -                                     ),
++    double passed_kmin = ppm->ptr_k_array[0];
++    double passed_kmax = ppm->ptr_k_array[ppm->lnk_size-1];
++
 +    class_test((passed_kmin <= 0.) || (passed_kmax <= passed_kmin),
               ppm->error_message,
 -             ppm->error_message);
@@ -588,8 +635,16 @@ index 8c5030da..82dad350 100755
 +             ppm->error_message,
 +             "k_max = %e passed through 'pointer_to_Pk' is too small. The CLASS internal maximum is %e. Adopt the ranges of the array you are passing accordingly. ",passed_kmax,k_max);
 +
-+  }
++    // Allocate memory for lnk_array managed by CLASS
++    class_alloc(ppm->lnk   , ppm->lnk_size*sizeof(double),ppm->error_message);
  
++    // Fill lnk_array with values of array that the pointer ptr_k_array is pointing to
++    for (int index_k=0; index_k<ppm->lnk_size; index_k++){
++      ppm->lnk[index_k] = log(ppm->ptr_k_array[index_k]);
++    }
++
++  }
++
 +
 +  /** - define indices and allocate tables in primordial structure */
 +  // JR: can use this for the pointer_to_Pk as long as ppm->lnk_size and ppt->md_size are set correctly! 
@@ -603,7 +658,7 @@ index 8c5030da..82dad350 100755
  
    /** - deal with case of analytic primordial spectra (with amplitudes, tilts, runnings, etc.) */
  
-@@ -399,6 +430,30 @@ int primordial_init(
+@@ -399,6 +438,30 @@ int primordial_init(
                        primordial_free(ppm));
    }
  
@@ -634,7 +689,7 @@ index 8c5030da..82dad350 100755
    else {
  
      class_test(0==0,
-@@ -426,7 +481,7 @@ int primordial_init(
+@@ -426,7 +489,7 @@ int primordial_init(
    /** - derive spectral parameters from numerically computed spectra
        (not used by the rest of the code, but useful to keep in memory for several types of investigation) */
  
