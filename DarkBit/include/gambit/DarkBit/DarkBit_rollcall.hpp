@@ -279,6 +279,7 @@ START_MODULE
     #define FUNCTION RD_oh2_SuperRenormHP
       START_FUNCTION(double)
         DEPENDENCY(DM_relic_density, double)
+        ALLOW_MODEL(SuperRenormHP)
     #undef FUNCTION
 
   #undef CAPABILITY
