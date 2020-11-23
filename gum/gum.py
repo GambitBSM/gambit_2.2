@@ -689,8 +689,6 @@ if args.file:
                                 "8."+base_pythia_version)
             print("Writing an additional patch for the new version of Pythia.")
             patch_pythia_patch(parameters, gum.name, reset_contents)
-            print("Creating BOSS config files for Pythia_"+gum.name+".")
-            write_boss_configs_for_pythia(gum.name, output_dir)
             print("Creating a cmake entry for Pythia"+gum.name+".")
             pythia_cmake = write_pythia_cmake_entry(gum.name, output_dir)
             print(("Setting the default version of Pythia_"+gum.name+" for "
@@ -897,10 +895,8 @@ if args.file:
             be = "pythia_"+gum.name.lower()
             safe_ver = "8_"+base_pythia_version
             ver = "8."+base_pythia_version
-            copy_file("BOSS/configs/"+be+"_"+safe_ver+".py", m, output_dir,
-                      reset_contents, existing = False)
-            copy_file("BOSS/configs/"+be+"_"+safe_ver+"_nohepmc.py", m, output_dir,
-                      reset_contents, existing = False)
+            print("Creating BOSS config files for Pythia_"+gum.name+".")
+            write_boss_configs_for_pythia(gum.name, output_dir,reset_contents)
             copy_file(be+"/"+ver+"/patch_"+be+"_"+ver+".dif", m, output_dir,
                       reset_contents, existing = False)
             add_to_backend_locations("Pythia_"+gum.name,

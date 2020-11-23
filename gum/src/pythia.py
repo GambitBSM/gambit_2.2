@@ -347,9 +347,8 @@ def fix_pythia_lib(model, patched_dir, pythia_groups, particles, decays):
     os.rename(xmnew, xmold)
     """
 
-def write_boss_configs_for_pythia(model, output_dir):
+def write_boss_configs_for_pythia(model, output_dir, reset_dict):
     """
-    TODO: use writing routines in files.py & reset dict.
     Writes the BOSS configs for Pythia.
     """
 
@@ -359,27 +358,30 @@ def write_boss_configs_for_pythia(model, output_dir):
     mkdir_if_absent(full_output_dir)
     filenames = ["/pythia_"+model.lower()+"_8_"+base_pythia_version+part+".py" for part in ["","_nohepmc"]]
     templates = [".."+path+"/pythia_8_"+base_pythia_version+part+".py" for part in ["","_nohepmc"]]
-    outfiles = [full_output_dir+f for f in filenames]
+    outfiles = ["BOSS/configs"+f for f in filenames]
 
     # Write the actual BOSS config file
     for outfile, template in zip(outfiles, templates):
-      with open(outfile, 'w') as f_new, open(template) as f_old:
+
+      to_write = ("")
+      with open(template) as f_old:
         for line in f_old:
           if "gambit_backend_name    = 'Pythia'" in line:
-              f_new.write("gambit_backend_name    = 'Pythia_"+model+"'\n")
+              to_write += ("gambit_backend_name    = 'Pythia_"+model+"'\n")
           # Add the CombineMatchingInput class to the input files.
           elif "                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h'" in line:
-              f_new.write("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h',\n")
-              f_new.write("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8Plugins/CombineMatchingInput.h',\n")
+              to_write += ("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8/Pythia.h',\n")
+              to_write += ("                  '../../../Backends/installed/'+gambit_backend_name.lower()+'/'+gambit_backend_version+'/include/Pythia8Plugins/CombineMatchingInput.h',\n")
           else:
-              f_new.write(line)
+              to_write += (line)
           if "#  Configuration module for BOSS  #" in line:
-              f_new.write("#  ----brought to you by GUM----  #\n")
+              to_write += ("#  ----brought to you by GUM----  #\n")
 
           # Add in the Combine Matching Input Class
           if "    'Pythia8::BeamParticle'," in line:
-              f_new.write("    'Pythia8::CombineMatchingInput',\n")
+              to_write += ("    'Pythia8::CombineMatchingInput',\n")
 
+      write_file(outfile, "Backends", to_write, reset_dict)
 
 
 def write_pythia_cmake_entry(model, output_dir):
