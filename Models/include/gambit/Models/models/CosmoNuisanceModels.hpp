@@ -15,6 +15,11 @@
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
 ///  \date 2019 June
+///
+///  \author Patrick Stoecker
+///          (stoecker@physik.rwth-aachen.de)
+///  \date 2020 Nov
+///
 ///  *********************************************
 
 #ifndef __CosmoNuisanceModels_hpp__
@@ -205,6 +210,18 @@
 #define MODEL cosmo_nuisance_spt
   START_MODEL
   DEFINEPARS(SPT_SZ,SPT_PS,SPT_CL)
+#undef MODEL
+
+// Spectral distortions -- FIRAS, PIXIE, advanced PIXIE (aka. PRISM)
+#define MODEL cosmo_nuisance_SpectralDistortions
+  START_MODEL
+  DEFINEPARS(sd_delta_T,         sd_T_D)
+  DEFINEPARS(sd_beta_D,          sd_A_D)
+  DEFINEPARS(sd_T_CIB,           sd_beta_CIB,   sd_A_CIB)
+  DEFINEPARS(sd_alpha_sync,      sd_omega_sync, sd_A_sync)
+  DEFINEPARS(sd_T_e,             sd_EM)
+  DEFINEPARS(sd_nu_p_spin,       sd_A_spin,     sd_A_CO)
+  DEFINEPARS(sd_y_reio_nuisance, sd_mu_nuisance)
 #undef MODEL
 
 /// add new model holding cosmological nuisance parameters

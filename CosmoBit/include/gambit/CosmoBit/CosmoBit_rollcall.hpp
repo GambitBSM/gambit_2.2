@@ -21,6 +21,7 @@
 ///  \date 2017 Nov
 ///  \date 2018 Jan,Feb, Mar
 ///  \date 2019 Jan, Feb, June
+///  \date 2020 Nov
 ///
 ///  \author Janina Renk
 ///          (janina.renk@fysik.su.se)
@@ -853,6 +854,7 @@ START_MODULE
       ALLOW_MODELS(cosmo_nuisance_kids450_qe_likelihood_public,cosmo_nuisance_wmap,cosmo_nuisance_ISW)
       ALLOW_MODELS(cosmo_nuisance_ska1,cosmo_nuisance_ska1_IM_band,cosmo_nuisance_ska1_IM_band_noHI,cosmo_nuisance_ska_lensing)
       ALLOW_MODELS(cosmo_nuisance_ska1_pk,cosmo_nuisance_ska2_pk)
+      ALLOW_MODELS(cosmo_nuisance_SpectralDistortions)
       // if you implement new MontePython likelihoods with new nuisance parameters add the name of your new
       // nuisance parameter model (to be defined in Models/include/gambit/Models/models/CosmoNuisanceModels.hpp)
       ALLOW_MODELS(cosmo_nuisance_dummy)
