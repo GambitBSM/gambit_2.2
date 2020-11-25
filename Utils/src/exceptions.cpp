@@ -418,8 +418,8 @@ namespace Gambit
       return temp;
     }
 
-    /// Raise the exception, i.e. throw it with a message.
-    void invalid_point_exception::raise(const std::string& msg)
+    /// Raise the invalid point exception, i.e. throw it with a message and a code.
+    void invalid_point_exception::raise(const std::string& msg,int mycode)
     {
       if (omp_get_level()==0) // If not in an OpenMP parallel block, throw onwards
       {
@@ -427,6 +427,7 @@ namespace Gambit
         {
           myMessage = msg;
         }
+        invalidcode = mycode;
         throw(*this);
       }
       else

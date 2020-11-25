@@ -29,6 +29,7 @@ set(source_files src/decay_table.cpp
                  src/terminator.cpp
                  src/type_equivalency.cpp
                  src/virtual_higgs.cpp
+                 src/suspicious_points.cpp
 )
 
 set(header_files include/gambit/Elements/decay_table.hpp
@@ -60,6 +61,7 @@ set(header_files include/gambit/Elements/decay_table.hpp
                  include/gambit/Elements/type_equivalency.hpp
                  include/gambit/Elements/types_rollcall.hpp
                  include/gambit/Elements/virtual_higgs.hpp
+                 include/gambit/Elements/suspicious_points.hpp
 )
 
 add_gambit_library(Elements OPTION OBJECT SOURCES ${source_files} HEADERS ${header_files})
