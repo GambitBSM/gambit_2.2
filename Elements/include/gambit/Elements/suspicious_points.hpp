@@ -15,7 +15,7 @@
 ///  *********************************************
 
 #ifndef __suspicious_points_hpp__
-#define __suspicious_points__
+#define __suspicious_points_hpp__
 
 #include <map>
 #include <set>

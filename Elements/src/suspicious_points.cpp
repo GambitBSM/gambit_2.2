@@ -30,10 +30,6 @@
 
 namespace Gambit
 {
-    using namespace std;
-    using namespace LogTags;
-    typedef std::string str;
-
     /// Suspicious point exception class methods.
 
     /// Constructor
@@ -48,7 +44,7 @@ namespace Gambit
 
       int ranksus = printer.getRank();
       printer.print(mycode,   "Suspicious Point Code", SuspiciousPtID, ranksus, Printers::get_point_id());
-      if (debug) cout << "Point Suspicious: " << msg << endl;
+      if (debug) std::cout << "Point Suspicious: " << msg << endl;
 
     }
 
