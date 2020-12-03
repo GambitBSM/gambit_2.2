@@ -12,7 +12,7 @@ index 63d83dd8..4511c898 100755
  #      mass in GeV. The code will then evaluate 'annihilation_efficiency'.
  #     (default: all set to zero)
 diff --git a/external/heating/injection.c b/external/heating/injection.c
-index 3e2075ff..23642340 100644
+index 3e2075ff..4d77601f 100644
 --- a/external/heating/injection.c
 +++ b/external/heating/injection.c
 @@ -54,6 +54,12 @@ int injection_init(struct precision * ppr,
@@ -138,7 +138,7 @@ index 3e2075ff..23642340 100644
      pin->has_DM_dec = _TRUE_;
 +
 +    //double tau_dec = 1/(pin->DM_decay_Gamma);
-+    //double ln_bound_on_fraction = log(tau_dec/2e25) + pow(3.5e13/tau_dec, 1/sqrt(2.));;
++    //double ln_bound_on_fraction = log(tau_dec/2e25) + pow(4.6e13/tau_dec, 1/sqrt(2.));;
 +    //class_test(log(1e3*pin->DM_decay_fraction) > ln_bound_on_fraction,
 +    //           pin->error_message,
 +    //           "Suspiciously large energy injection through DM decay");
