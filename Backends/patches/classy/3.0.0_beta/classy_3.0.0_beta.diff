@@ -1,5 +1,18 @@
+diff --git a/explanatory.ini b/explanatory.ini
+index 63d83dd8..4511c898 100755
+--- a/explanatory.ini
++++ b/explanatory.ini
+@@ -573,7 +573,7 @@ scf_shooting_parameter =
+ 
+ # 1.a) In order to model energy injection from DM annihilation, specify a
+ #      parameter 'annihilation_efficiency' corresponding to
+-#      <sigma*v> / m_cdm expressed here in units of m^3/s/J. Alternatively,
++#      <sigma*v> / m_cdm expressed here in units of m^3/s/kg. Alternatively,
+ #      you can specify the annihilation cross section in cm^3/s and the DM
+ #      mass in GeV. The code will then evaluate 'annihilation_efficiency'.
+ #     (default: all set to zero)
 diff --git a/external/heating/injection.c b/external/heating/injection.c
-index 3e2075ff..7f149505 100644
+index 3e2075ff..23642340 100644
 --- a/external/heating/injection.c
 +++ b/external/heating/injection.c
 @@ -54,6 +54,12 @@ int injection_init(struct precision * ppr,
@@ -119,13 +132,13 @@ index 3e2075ff..7f149505 100644
 +
 +   //class_test(pin->DM_annihilation_efficiency>1.e-4,
 +   //           pin->error_message,
-+   //           "annihilation parameter suspiciously large (%e, while typical bounds are in the range of 1e-7 to 1e-6)",pin->DM_annihilation_efficiency);
++   //           "annihilation efficiency [m^3/s/kg] suspiciously large (%e, while typical bounds are in the range of 1e-7 to 1e-6)",pin->DM_annihilation_efficiency);
    }
    if(pin->DM_decay_fraction!=0){
      pin->has_DM_dec = _TRUE_;
 +
 +    //double tau_dec = 1/(pin->DM_decay_Gamma);
-+    //double ln_bound_on_fraction = log(tau_dec/2e25) + 3.5e13/tau_dec;
++    //double ln_bound_on_fraction = log(tau_dec/2e25) + pow(3.5e13/tau_dec, 1/sqrt(2.));;
 +    //class_test(log(1e3*pin->DM_decay_fraction) > ln_bound_on_fraction,
 +    //           pin->error_message,
 +    //           "Suspiciously large energy injection through DM decay");
@@ -145,6 +158,15 @@ index 3e2075ff..7f149505 100644
      free(pin->chiz_table);
    }
    if(pin->chi_type == chi_from_x_file || pin->chi_type == chi_Galli_file){
+@@ -590,7 +670,7 @@ int injection_deposition_function_at_z(struct injection* pin,
+       }
+     }
+     /* Read file in redshift */
+-    else if(pin->chi_type == chi_from_z_file){
++    else if(pin->chi_type == chi_from_z_file || pin->f_eff_type == pointer_to_fz_channel){
+       for(index_dep=0;index_dep<pin->dep_size;++index_dep){
+         class_call(array_interpolate_spline_transposed(pin->chiz_table,
+                                                        pin->chiz_size,
 @@ -613,11 +693,11 @@ int injection_deposition_function_at_z(struct injection* pin,
  
    /** - Read the correction factor f_eff */
@@ -159,7 +181,35 @@ index 3e2075ff..7f149505 100644
      class_call(array_interpolate_spline_transposed(pin->feff_table,
                                                     pin->feff_z_size,
                                                     3,
-@@ -745,8 +825,14 @@ int injection_rate_DM_decay(struct injection * pin,
+@@ -699,20 +779,23 @@ int injection_rate_DM_annihilation(struct injection * pin,
+                                    double * energy_rate){
+ 
+   /** - Define local variables */
+-  double annihilation_at_z, boost_factor;
++  double annihilation_at_z, annihilation_efficiency, boost_factor;
++
++  /** - Convert the annihilation efficiency from [m^3/s/kg] to [m^3/s/J] */
++  annihilation_efficiency = pin->DM_annihilation_efficiency/_c_/_c_;
+ 
+   /** - Calculate change in the annihilation efficiency */
+   if (z>pin->DM_annihilation_zmax) {
+-    annihilation_at_z = pin->DM_annihilation_efficiency*
++    annihilation_at_z = annihilation_efficiency*
+                         exp(-pin->DM_annihilation_variation*pow(log((pin->DM_annihilation_z+1.)/(pin->DM_annihilation_zmax+1.)),2));
+   }
+   else if (z>pin->DM_annihilation_zmin) {
+-    annihilation_at_z = pin->DM_annihilation_efficiency*
++    annihilation_at_z = annihilation_efficiency*
+                         exp(pin->DM_annihilation_variation*(-pow(log((pin->DM_annihilation_z+1.)/(pin->DM_annihilation_zmax+1.)),2)
+                                          +pow(log((z+1.)/(pin->DM_annihilation_zmax+1.)),2)));
+   }
+   else {
+-    annihilation_at_z = pin->DM_annihilation_efficiency*
++    annihilation_at_z = annihilation_efficiency*
+                         exp(pin->DM_annihilation_variation*(-pow(log((pin->DM_annihilation_z+1.)/(pin->DM_annihilation_zmax+1.)),2)
+                                          +pow(log((pin->DM_annihilation_zmin+1.)/(pin->DM_annihilation_zmax+1.)),2)));
+   }
+@@ -745,8 +828,35 @@ int injection_rate_DM_decay(struct injection * pin,
                              double * energy_rate){
  
    /** - Calculate injection rates */
@@ -167,12 +217,33 @@ index 3e2075ff..7f149505 100644
 -                 exp(-pin->DM_decay_Gamma*pin->t);                                                  // [J/(m^3 s)]
 +  *energy_rate = pin->rho_cdm*pin->DM_decay_fraction*pin->DM_decay_Gamma;                                                  // [J/(m^3 s)]
 +
++  double t_ref = 0;
 +  /** If the f(z) tables are calculated with DarkAges,
-+   *  the exponential factor is already included */
-+  if ( !(pin->f_eff_type == pointer_to_fz_eff || pin->f_eff_type == pointer_to_fz_channel) )
++   *  the exponential factor is already included by
++   *  assuming reference values for Omega_m, Omega_r and H0.
++   *  We need to correct for this for all z if pin->f_eff_type == pointer_to_fz_eff
++   * and only for z < z_start_chi_approx if pin->f_eff_type == pointer_to_fz_channel **/
++  if ( pin->f_eff_type == pointer_to_fz_eff || (pin->f_eff_type == pointer_to_fz_channel && z <= pin->z_start_chi_approx) )
 +  {
-+    *energy_rate *= exp(-pin->DM_decay_Gamma*pin->t);
++    double Omega_m_ref = 0.3156;
++    double Omega_r_ref = 8e-5;
++    double H0_ref = 67.27 * 3.241e-20;
++
++    double z_ref = z;
++    if (z < pin->external_fz_z[1])
++    {
++      z_ref = pin->external_fz_z[1];
++    }
++    else if (z > pin->external_fz_z[pin->external_fz_size-2])
++    {
++      z_ref = pin->external_fz_z[pin->external_fz_size-2];
++    }
++
++    t_ref = 2./(3. * pow(Omega_m_ref,2.0) * z * H0_ref);
++    t_ref = t_ref * ( Omega_m_ref * pow(Omega_r_ref + (Omega_m_ref / z),0.5) + 2. * pow(Omega_r_ref,1.5) * z - 2. * Omega_r_ref * pow(z*(Omega_m_ref + z*Omega_r_ref),0.5) );
 +  }
++
++  *energy_rate *= exp(-pin->DM_decay_Gamma*(pin->t-t_ref));
  
    return _SUCCESS_;
  }
@@ -280,7 +351,7 @@ index 50a3d7b6..98aba9b0 100644
          return self.ba.Neff
  
 diff --git a/source/input.c b/source/input.c
-index 42d50dc6..a905b764 100644
+index 42d50dc6..81365d5b 100644
 --- a/source/input.c
 +++ b/source/input.c
 @@ -25,6 +25,8 @@
@@ -302,7 +373,7 @@ index 42d50dc6..a905b764 100644
    char string1[_ARGUMENT_LENGTH_MAX_];
  
    /** 1) DM annihilation */
-@@ -2959,9 +2962,7 @@ int input_read_parameters_injection(struct file_content * pfc,
+@@ -2959,16 +2962,14 @@ int input_read_parameters_injection(struct file_content * pfc,
    class_read_double("DM_annihilation_cross_section",pin->DM_annihilation_cross_section);
    class_read_double("DM_annihilation_mass",pin->DM_annihilation_mass);
    class_read_double("DM_annihilation_fraction",pin->DM_annihilation_fraction);
@@ -313,6 +384,14 @@ index 42d50dc6..a905b764 100644
    /* Test */
    class_test(pin->DM_annihilation_efficiency<0,
               errmsg,
+              "annihilation efficiency cannot be negative");
+   class_test(pin->DM_annihilation_efficiency>1.e-4,
+              errmsg,
+-             "annihilation parameter suspiciously large (%e, while typical bounds are in the range of 1e-7 to 1e-6)",pin->DM_annihilation_efficiency);
++             "annihilation efficiency [m^3/s/kg] suspiciously large (%e , while typical bounds are in the range of 1e-7 to 1e-6)",pin->DM_annihilation_efficiency);
+   class_test(pin->DM_annihilation_mass<0. || pin->DM_annihilation_cross_section <0,
+              errmsg,
+              "Both mass and cross section for your dark matter particle must be positive.");
 @@ -2983,7 +2984,11 @@ int input_read_parameters_injection(struct file_content * pfc,
    } //TODO :: check if still occurs !!!
    /* Complete set of parameters */
