@@ -239,8 +239,8 @@ index 3e2075ff..4d77601f 100644
 +      z_ref = pin->external_fz_z[pin->external_fz_size-2];
 +    }
 +
-+    t_ref = 2./(3. * pow(Omega_m_ref,2.0) * z * H0_ref);
-+    t_ref = t_ref * ( Omega_m_ref * pow(Omega_r_ref + (Omega_m_ref / z),0.5) + 2. * pow(Omega_r_ref,1.5) * z - 2. * Omega_r_ref * pow(z*(Omega_m_ref + z*Omega_r_ref),0.5) );
++    t_ref = 2./(3. * pow(Omega_m_ref,2.0) * z_ref * H0_ref);
++    t_ref = t_ref * ( Omega_m_ref * pow(Omega_r_ref + (Omega_m_ref / z_ref),0.5) + 2. * pow(Omega_r_ref,1.5) * z_ref - 2. * Omega_r_ref * pow(z_ref*(Omega_m_ref + z_ref*Omega_r_ref),0.5) );
 +  }
 +
 +  *energy_rate *= exp(-pin->DM_decay_Gamma*(pin->t-t_ref));
