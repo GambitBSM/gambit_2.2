@@ -13,7 +13,6 @@
 ///
 ///  \author James McKay
 ///           (j.mckay14@imperial.ac.uk)
-///
 ///  \date 2015 Nov - 2016 Mar
 ///
 ///  \author José Eliel Camargo-Molina
@@ -55,14 +54,6 @@
 #include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/SpecBit_types.hpp"
 #include "gambit/SpecBit/QedQcdWrapper.hpp"
-
-#include "gambit/SpecBit/model_files_and_boxes.hpp" // #includes lots of flexiblesusy headers and defines interface classes
-
-// Flexible SUSY stuff (should not be needed by the rest of gambit)
-#include "flexiblesusy/src/ew_input.hpp"
-#include "flexiblesusy/src/lowe.h" // From softsusy; used by flexiblesusy
-#include "flexiblesusy/src/numerics2.hpp"
-
 
 // Switch for debug mode
 //#define SPECBIT_DEBUG

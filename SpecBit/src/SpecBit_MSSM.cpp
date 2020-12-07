@@ -1191,7 +1191,6 @@ namespace Gambit
        if(not (mssm_is_valid and sm_is_valid)) invalid_point().raise("Postprocessor: precomputed spectrum was set 'invalid' for this point");
        
        // Dump spectrum to output for testing
-       //std::cerr<<"Dumping retrieved spectrum!"<<std::endl;
        SLHAstruct mssm = mssm_in; // Only this type has stream overloads etc. defined
        SLHAstruct sm = sm_in; 
 
@@ -1200,9 +1199,6 @@ namespace Gambit
        double tbmZ = *myPipe::Param.at("TanBeta");
        SLHAea_add(mssm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
        SLHAea_add(sm, "MINPAR", 3, tbmZ, "tan beta (mZ)_DRbar");        
-
-       //std::cerr<<mssm<<std::endl;
-       //std::cerr<<"Dump complete!"<<std::endl;
 
        // Retrieve any mass cuts (could just cut with postprocessor, but I
        // guess can leave this feature in for compatibility with usage
