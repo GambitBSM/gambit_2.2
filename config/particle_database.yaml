@@ -155,10 +155,6 @@ OtherModels:
   - DecayBit:
       Decays: true
     PDG_context:
-#    - - 46
-#      - 0
-#    - - 36
-#      - 0
     - 36
     - 0
     chargex3: 0
@@ -174,13 +170,10 @@ OtherModels:
       name:
       - Higgs
       - h0_2
-      - h0_3
     PDG_context:
     - - 25
       - 0
     - - 35
-      - 0
-    - - 45
       - 0
     chargex3: 0
     color: 1
