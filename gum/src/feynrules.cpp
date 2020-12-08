@@ -215,8 +215,7 @@ namespace GUM
     std::string command = "LoadRestriction[\"" + respath + "\"]";
     send_to_math(command);
 
-    // Some sort of check here?
-    // TODO: TG: This checks are really clanky
+    // Check restrictions are ok
     command = "Length[M$Restrictions]";
     send_to_math(command);
 
