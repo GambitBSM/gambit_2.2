@@ -14,7 +14,7 @@
 ///  \date 2017 Jan, Feb, June, July, Sept - Dec
 ///  \date 2018 Jan, Mar - May, Sept
 ///  \date 2019 Feb, May - July
-///  \date 2020 Sept
+///  \date 2020 Sept, Dec
 ///
 ///  *********************************************
 
@@ -1952,30 +1952,12 @@ namespace Gambit
       const std::vector<double> dPidts  = {1.235687, 1.244741, 1.299579, 1.470017, 1.796766, 2.260604, 2.795575, 3.484570, 4.232738, 5.056075, 6.113390, 7.342085, 8.344424, 9.775156};
       const double err = 0.09;
 
-      // Use interpolation for the model predction, but only initialise once.
-      //static bool init_flag = false;
-      //static WDInterpolator interp(14);
-      //if (not(init_flag)) { interp.init (x2vals, dPidts, 14); init_flag = true; }
-
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_G117B15A.dat");
 
       // Use interpolation for the finite-mass correction.
       const double internal_temperature_keV = 1.19698;
       double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
-      //static AxionInterpolator period_change ();
-      //static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_G117B15A.dat", "linear");
-      // For higher masses, reduce the effective coupling accordingly:
-      //if (mrel > 100.0)
-      //{
-      //  x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
-      //} else if (mrel > 0.01) {
-      //  x2 *= pow(10,correction.interpolate(log10(mrel)));
-      //}
 
-      // We only have predictions up to x2 = max value. Limits should get stronger for x2 > max value, so
-      // it is conservative to use the prediction for x2 = max value for x2 > max value.
-      //x2 = std::min(x2,900.0);
-      //double pred = interp.eval(x2);
       double pred = dPidt.evaluate(mrel, x2);
 
       result = -0.5 * gsl_pow_2(4.19 - pred) / (0.73*0.73 + err*err);
@@ -1994,29 +1976,12 @@ namespace Gambit
       const std::vector<double> dPidts  = {1.075373, 1.095319, 1.123040, 1.289434, 1.497666, 1.869437, 2.300523, 2.844954, 3.379978, 4.086028, 4.847149, 5.754807, 6.714841, 7.649140};
       const double err = 0.09;
 
-      // Use interpolation for the model predction, but only initialise once.
-      //static bool init_flag = false;
-      //static WDInterpolator interp(14);
-      //if (not(init_flag)) { interp.init (x2vals, dPidts, 14); init_flag = true; };
-
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_R548.dat");
 
       // Use interpolation for the finite-mass correction.
       const double internal_temperature_keV = 1.11447;
       double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
-      //static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_R548.dat", "linear");
-      // For higher masses, reduce the effective coupling accordingly:
-      //if (mrel > 100.0)
-      //{
-      //  x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
-      //} else if (mrel > 0.01) {
-      //  x2 *= pow(10,correction.interpolate(log10(mrel)));
-      //};
 
-      // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
-      // it is conservative to use the prodiction for x2 = 900 for x2 > 900.
-      //x2 = std::min(x2,900.0);
-      //double pred = interp.eval(x2);
       double pred = dPidt.evaluate(mrel, x2);
 
       result = -0.5 * gsl_pow_2(3.3 - pred) / (1.1*1.1 + err*err);
@@ -2035,29 +2000,12 @@ namespace Gambit
       const std::vector<double> dPidts = {0.90878126, 0.96382008, 1.2022906, 1.5712931, 2.1220619, 2.8002354, 3.6172605, 4.5000560, 5.5256592, 6.5055283, 7.5341296};
       const double err = 0.5;
 
-      // Use interpolation for the model predction, but only initialise once.
-      //static bool init_flag = false;
-      //static WDInterpolator interp(11);
-      //if (not(init_flag)) { interp.init (x2vals, dPidts, 11); init_flag = true; };
-
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_PG1351489.dat");
 
       // Use interpolation for the finite-mass correction.
       const double internal_temperature_keV = 2.64273;
       double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
-      //static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_PG1351489.dat", "linear");
-      // For higher masses, reduce the effective coupling accordingly:
-      //if (mrel > 100.0)
-      //{
-      //  x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
-      //} else if (mrel > 0.01) {
-      //  x2 *= pow(10,correction.interpolate(log10(mrel)));
-      //};
 
-      // We only have predictions up to x2 = 400. Limits should get stronger for x2 > 400, so
-      // it is conservative to use the prodiction for x2 = 400 for x2 > 400.
-      //x2 = std::min(x2,400.0);
-      //double pred = interp.eval(x2);
       double pred = dPidt.evaluate(mrel, x2);
 
       result = -0.5 * gsl_pow_2(2.0 - pred) / (0.9*0.9 + err*err);
@@ -2076,29 +2024,12 @@ namespace Gambit
       const std::vector<double> dPidts = {2.41, 2.40, 2.44, 2.42, 2.50, 2.57, 2.63, 2.74, 2.83, 2.99, 3.15, 3.32, 3.52, 3.70, 3.90, 4.08, 4.42, 4.69, 4.98, 5.34, 5.62, 6.02, 6.27, 6.62, 7.04, 7.38, 7.89, 8.09, 8.65, 9.16, 9.62};
       const double err = 0.85;
 
-      // Use interpolation for the model predction, but only initialise once.
-      //static bool init_flag = false;
-      //static WDInterpolator interp(31);
-      //if (not(init_flag)) { interp.init (x2vals, dPidts, 31); init_flag = true; };
-
       static WDInterpolator dPidt (x2vals, dPidts, GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_L192.dat");
 
       // Use interpolation for the finite-mass correction.
       const double internal_temperature_keV = 1.04931;
       double mrel = 0.001 * (*Param["ma0"]) / internal_temperature_keV;
-      //static AxionInterpolator correction (GAMBIT_DIR "/DarkBit/data/Axions_WDCorrection_L192.dat", "linear");
-      // For higher masses, reduce the effective coupling accordingly:
-      //if (mrel > 100.0)
-      //{
-      //  x2 *= 15.0 * exp(-mrel) * pow(mrel,2.5)/(M_SQRT2 * pow(pi,3.5));
-      //} else if (mrel > 0.01) {
-      //  x2 *= pow(10,correction.interpolate(log10(mrel)));
-      //};
 
-      // We only have predictions up to x2 = 900. Limits should get stronger for x2 > 900, so
-      // it is conservative to use the prediction for x2 = 900 for x2 > 900.
-      //x2 = std::min(x2,900.0);
-      //double pred = interp.eval(x2);
       double pred = dPidt.evaluate(mrel, x2);
 
       result = -0.5 * gsl_pow_2(3.0 - pred) / (0.6*0.6 + err*err);
@@ -2255,7 +2186,6 @@ namespace Gambit
 
       static const double asimov = (observed * observed.log() - observed).sum();
 
-      //const Eigen::ArrayXd bkg = include_bkg_tritium ? bkg_tritium + bkg_other : bkg_other;
       const Eigen::ArrayXd bkg = x_3H * bkg_tritium + bkg_other;
       Eigen::ArrayXd signal = gae * gae * (
                               signal_ref_ABC * gae * gae +
@@ -2298,10 +2228,7 @@ namespace Gambit
       LocalMaxwellianHalo LocalHaloParameters = *Dep::LocalHalo;
       double rho0 = LocalHaloParameters.rho0;
 
-      // static const bool include_bkg_tritium = runOptions->getValueOrDef<bool> (false, "include_bkg_tritium");
-
       // XENON1T 2020 data (based on 2006.10035 and using an exposure of 0.65 tonne-years)
-
       static const Eigen::ArrayXd observed = (Eigen::ArrayXd(29) <<
         26., 61., 55., 47., 49.,
         47., 44., 41., 40., 37.,
@@ -2326,10 +2253,6 @@ namespace Gambit
         44.14510208, 44.24450247, 44.3406822 , 44.43638726, 44.5331988 ,
         44.62865958, 44.72654689, 44.82382807, 44.91842725).finished();
 
-      // Efficiency from 2006.09721
-//      static AxionInterpolator efficiency (GAMBIT_DIR "/DarkBit/data/XENON1T/efficiency.txt");
-      //double eff = efficiency.interpolate(ma);
-      //static AxionInterpolator energy_resolution (GAMBIT_DIR "/DarkBit/data/XENON1T/enery_resolution.txt");
       // Photo-electric cross section from https://dx.doi.org/10.18434/T48G6X
       static AxionInterpolator sigma_pe (GAMBIT_DIR "/DarkBit/data/XENON1T/photoelectric.txt");
 
@@ -2339,7 +2262,6 @@ namespace Gambit
         // Energy resolution from 2003.03825
         double energy_resolution = 0.15 + 31.71/sqrt(ma);
         double sigma = ma * energy_resolution / 100.0;
-//        double sqrt2sigma = sqrt(2.0)*sigma;
         double amplitude = dm_fraction * (rho0/0.3) * (0.647309514*1000.0*365.0) * gae*gae * ma * (1.5e19/131.0)*sigma_pe.interpolate(ma/1000.0);
         gsl_function f;
         struct dRdE_params params = {ma, sigma};
@@ -2349,9 +2271,6 @@ namespace Gambit
         std::vector<double> signal_vec;
         for (int i = 0; i < 29; i++)
         {
-//          double delta1 = 1.0*(1.0 + i) - ma;
-//          double delta2 = delta1 + 1.0;
-//          double s = 0.5 * amplitude * (gsl_sf_erf(delta2/sqrt2sigma) - gsl_sf_erf(delta1/sqrt2sigma));
           gsl_integration_qags (&f, 1.+i, 2.+i, 0, 1e-7, 1000, w, &dRdE_result, &error);
           double s = amplitude * 1/sqrt(2*pi)/sigma * dRdE_result;
           signal_vec.push_back(s);
