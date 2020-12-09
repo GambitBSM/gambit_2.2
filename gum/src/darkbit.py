@@ -1095,7 +1095,7 @@ def add_micromegas_to_cmake(model_name, reset_dict):
             "    INSTALL_COMMAND \"\"\n"
             "  )\n"
             "  add_extra_targets(\"backend model\" ${name} ${ver} ${dir}/${model} ${model} \"yes | clean\")\n"
-            "  set_as_default_version(\"backend model\" ${name}_${model} ${ver})\n"
+            "  set_as_default_version(\"backend model\" ${name} ${ver} ${model})\n"
             "endif()\n"
             "\n"
     )
@@ -1170,7 +1170,7 @@ def add_micromegas_to_darkbit_rollcall(model_name, reset_dict, does_DM_decay):
     if not does_DM_decay:
         add_new_model_to_function(file, module, "RD_oh2_Xf",
                                   "RD_oh2_Xf_MicrOmegas", model_name,
-                                  reset_dict, pattern="ALLOW_MODELS")        
+                                  reset_dict, pattern="ALLOW_MODELS")
     add_new_model_to_function(file, module, "DD_couplings",
                               "DD_couplings_MicrOmegas", model_name,
                               reset_dict, pattern="ALLOW_MODEL_DEPENDENCE")
