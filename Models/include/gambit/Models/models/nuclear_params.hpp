@@ -42,6 +42,23 @@ namespace Gambit
   DEFINEPARS(BT10up,BT10dp,BT10s)
 #undef MODEL
 
+// Slightly simplified version of the model above with the sigma(u,d)(p,n) calculated in terms of sigmapiN
+#define MODEL nuclear_params_ChPT_sigmapiN
+#define PARENT nuclear_params_ChPT
+  START_MODEL
+  DEFINEPARS(sigmapiN,Bc5m)
+  DEFINEPARS(gA, mG)
+  DEFINEPARS(sigmas)
+  DEFINEPARS(Deltaup,Deltadp,Deltas)
+  DEFINEPARS(B0mu,B0md,B0ms)
+  DEFINEPARS(mup,mun,ap,an,F2sp)
+  DEFINEPARS(gTu,gTd,gTs)
+  DEFINEPARS(BT10up,BT10dp,BT10s)
+  INTERPRET_AS_PARENT_FUNCTION(sigmapiN_to_sigma_udN)
+  INTERPRET_AS_PARENT_DEPENDENCY(SMINPUTS, SMInputs)
+#undef PARENT
+#undef MODEL
+
 // Explicitly defined hadronic matrix elements. deltaq are the
 // spin content of the proton.
 #define MODEL nuclear_params_fnq
