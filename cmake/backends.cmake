@@ -1177,9 +1177,9 @@ endif()
 
 # DirectDM
 set(name "directdm")
-set(ver "2.1.0")
-set(dl "https://github.com/DirectDM/directdm-py/archive/v2.1.0.tar.gz")
-set(md5 "4e5eb17d463a83c7c42a119cc13db092")
+set(ver "2.2.0")
+set(dl "https://github.com/DirectDM/directdm-py/archive/v2.2.0.tar.gz")
+set(md5 "c22d26ae7bec44bbfe1eb5f4306a23e0")
 set(lib "libdirectdm")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 # bjf> Cmake error from the below: not enough arguments?

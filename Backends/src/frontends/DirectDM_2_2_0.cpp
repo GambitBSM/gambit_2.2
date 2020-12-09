@@ -22,10 +22,14 @@
 ///          (kahlhoefer@physik.rwth-aachen.de)
 ///  \date 2020 May
 ///
+///  \author Markus Prim
+///          (markus.prim@cern.ch)
+///  \date 2020 Dec
+///
 ///  *********************************************
 
 #include "gambit/Backends/frontend_macros.hpp"
-#include "gambit/Backends/frontends/DirectDM_2_1_0.hpp"
+#include "gambit/Backends/frontends/DirectDM_2_2_0.hpp"
 #include "gambit/Backends/backend_types/DDCalc.hpp" // Using DDCalc (frontend) container objects
 
 #include <boost/algorithm/string/predicate.hpp>

@@ -13,12 +13,16 @@
 ///  \date 2018 Sep, Oct
 ///  \date 2020 Mar
 ///
+///  \author Markus Prim
+///          (markus.prim@cern.ch)
+///  \date 2020 Dec
+///
 ///  *********************************************
 
 #define BACKENDNAME DirectDM
 #define BACKENDLANG Python
-#define VERSION 2.1.0
-#define SAFE_VERSION 2_1_0
+#define VERSION 2.2.0
+#define SAFE_VERSION 2_2_0
 
 LOAD_LIBRARY
 
