@@ -710,7 +710,7 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
         else:
             raise GumError(("Neutral Higgs with name {} "
                             "found -- gum expects neutral Higgses "
-                            "to be named h0_[n] or A0_[n]."
+                            "to be named h0_[n] or A0[_n]."
                             ).format(entry[i]))
 
     # Same deal with the charged Higgses -- if we have any
@@ -808,9 +808,14 @@ def write_spheno_higgsbounds_interface(model_name, gambit_pdgs,
                 "sHneut[yet_another_higgs], tbl->at(\"h0_3\"));\n"
         )
     if nOddH > 0:
-        towrite += (
-                "result.set_neutral_decays({0}, sHneut[{0}], tbl->at(\"A0_1\"));\n"
-        ).format(nEvenH)
+        if nOddH == 1:
+            towrite += (
+                    "result.set_neutral_decays({0}, sHneut[{0}], tbl->at(\"A0\"));\n"
+            ).format(nEvenH)
+        else:
+            towrite += (
+                    "result.set_neutral_decays({0}, sHneut[{0}], tbl->at(\"A0_1\"));\n"
+            ).format(nEvenH)
     if nOddH > 1:
         towrite += (
                 "result.set_neutral_decays({0}, sHneut[{0}], tbl->at(\"A0_2\"));\n"

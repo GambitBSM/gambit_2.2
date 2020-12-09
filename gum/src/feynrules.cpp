@@ -71,8 +71,13 @@ namespace GUM
         std::cout << "FeynRules loaded from " << out << "." << std::endl;
     }
 
+    // Need to run FR serially, as it bugs out in parallel
+    input = "FR$Parallel=False;";
+    send_to_math(input);
+
     input = "<<FeynRules`";
     send_to_math(input);
+
 
   }
 
@@ -210,8 +215,7 @@ namespace GUM
     std::string command = "LoadRestriction[\"" + respath + "\"]";
     send_to_math(command);
 
-    // Some sort of check here?
-    // TODO: TG: This checks are really clanky
+    // Check restrictions are ok
     command = "Length[M$Restrictions]";
     send_to_math(command);
 

@@ -22,14 +22,13 @@ import os
 from .setup import *
 from .files import *
 
-def copy_vevacious_files(model_name, vevdir):
+def copy_vevacious_files(model_name, vevdir, reset_dict):
     """
     Moves vevacious files from the SARAH output to the backend folder.
     """
 
     gb_target = "./../Backends/patches/vevacious/1.0/VevaciousPlusPlus/ModelFiles/" + model_name
-    if not os.path.exists(gb_target):
-        os.makedirs(gb_target)
+    mkdir_if_absent(gb_target, reset_dict)
 
     file = [f for f in os.listdir(vevdir) if f.endswith(".vin")]
     if len(file) > 1:
@@ -41,13 +40,15 @@ def copy_vevacious_files(model_name, vevdir):
     shutil.copyfile(vevdir + "/" + file[0], gb_target + "/" + model_name + ".vin")
     shutil.copyfile(vevdir + "/ScaleAndBlock.xml", gb_target + "/ScaleAndBlock.xml")
 
+    # Add files to reset dictionary
+    reset_dict["new_files"]["files"].append(gb_target + "/" + model_name + ".vin")
+    reset_dict["new_files"]["files"].append(gb_target + "/ScaleAndBlock.xml")
+
 def write_vevacious_src(model_name, vevdir, spectrum, params_by_block):
     """
     Writes source code for a new vevacious model.
     To go in SpecBit/src/SpecBit_VS.cpp.
     """
-
-    copy_vevacious_files(model_name, vevdir)
 
     towrite = (
         "\n"

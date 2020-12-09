@@ -1,29 +1,40 @@
-#pragma once
 //   GAMBIT: Global and Modular BSM Inference Tool
 //   *********************************************
 ///  \file
 ///
 ///  The Cutflow and Cutflows classes
+///
+///  *********************************************
+///
+///  Authors (add name and date if you modify):
+///
+///  \author Andy Buckley
+///          (andy.buckley@cern.ch)
+///
+///  *********************************************
 
-#include "gambit/ColliderBit/Utils.hpp"
+#pragma once
+
 #include <string>
 #include <vector>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-// #include <cmath>
-// #include <cfloat>
-// #include <limits>
-// #include <algorithm>
 
-namespace Gambit {
-  namespace ColliderBit {
+#include "gambit/ColliderBit/Utils.hpp"
+
+
+namespace Gambit
+{
+  namespace ColliderBit
+  {
 
     using namespace std;
 
 
     /// A tracker of numbers & fractions of events passing sequential cuts
-    struct Cutflow {
+    struct Cutflow
+    {
 
       /// @brief Default constructor
       ///
@@ -36,7 +47,8 @@ namespace Gambit {
       {  }
 
       /// @brief Fill the pre-cut counter
-      void fillinit(double weight=1.) {
+      void fillinit(double weight=1.)
+      {
         counts[0] += weight;
         icurr = 1;
       }
@@ -44,7 +56,8 @@ namespace Gambit {
       /// @brief Fill the @a {icut}'th post-cut counter, starting at icut=1 for first cut
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fill(size_t icut, bool cutresult=true, double weight=1.) {
+      bool fill(size_t icut, bool cutresult=true, double weight=1.)
+      {
         // if (icut == 0)
         //   throw RangeError("Cut number must be greater than 0");
         if (cutresult) counts.at(icut) += weight;
@@ -58,14 +71,16 @@ namespace Gambit {
       /// getting cast to a bool, or having to explicitly add a 'true' middle arg.
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fill(size_t icut, double weight) {
+      bool fill(size_t icut, double weight)
+      {
         return fill(icut, true, weight);
       }
 
       /// @brief Fill cut-state counters from an n-element results vector, starting at icut
       ///
       /// @note Returns the overall cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fill(size_t icut, const vector<bool>& cutresults, double weight=1.) {
+      bool fill(size_t icut, const vector<bool>& cutresults, double weight=1.)
+      {
         //   throw RangeError("Cut number must be greater than 0");
         // if (cutresults.size() > ncuts-icut)
         //   throw RangeError("Number of filled cut results needs to match the Cutflow construction");
@@ -78,7 +93,8 @@ namespace Gambit {
 
 
       /// @brief Fill all cut-state counters from an Ncut-element results vector, starting at icut=1
-      bool fillall(const vector<bool>& cutresults, double weight=1.) {
+      bool fillall(const vector<bool>& cutresults, double weight=1.)
+      {
         // if (cutresults.size() != ncuts)
         //   throw RangeError("Number of filled cut results needs to match the Cutflow construction");
         // if (icut == 0) { fillinit(weight); icut = 1; }
@@ -88,21 +104,24 @@ namespace Gambit {
       /// @brief Fill the next post-cut counter
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fillnext(bool cutresult, double weight=1.) {
+      bool fillnext(bool cutresult, double weight=1.)
+      {
         return fill(icurr, cutresult, weight);
       }
 
       /// @brief Fill the next post-cut counter, assuming a true result
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fillnext(double weight=1.) {
+      bool fillnext(double weight=1.)
+      {
         return fill(icurr, true, weight);
       }
 
       /// @brief Fill the next cut-state counters from an n-element results vector
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fillnext(const vector<bool>& cutresults, double weight=1.) {
+      bool fillnext(const vector<bool>& cutresults, double weight=1.)
+      {
         return fill(icurr, cutresults, weight);
       }
 
@@ -116,22 +135,26 @@ namespace Gambit {
       /// @deprecated Now prefer to use vector fillnext()
       ///
       /// @note Returns the overall cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool filltail(const vector<bool>& cutresults, double weight=1.) {
+      bool filltail(const vector<bool>& cutresults, double weight=1.)
+      {
         return fill(ncuts+1-cutresults.size(), cutresults, weight);
       }
 
       /// Scale the cutflow weights by the given factor
-      void scale(double factor) {
+      void scale(double factor)
+      {
         for (double& x : counts) x *= factor;
       }
 
       /// Scale the cutflow weights so that the weight count after cut @a icut is @a norm
-      void normalize(double norm, size_t icut=0) {
+      void normalize(double norm, size_t icut=0)
+      {
         scale(norm/counts.at(icut));
       }
 
       /// Create a string representation
-      string str() const {
+      string str() const
+      {
         using namespace std;
         stringstream ss;
         ss << fixed << std::setprecision(1) << counts.front();
@@ -145,7 +168,8 @@ namespace Gambit {
            << setw(count0len) << right << "Count" << "    "
            << setw(6) << right << "A_cumu" << "    "
            << setw(6) << right << "A_incr";
-        for (size_t i = 0; i <= ncuts; ++i) {
+        for (size_t i = 0; i <= ncuts; ++i)
+        {
           const int pcttot = (counts.front() == 0) ? -1 : round(100*counts.at(i)/double(counts.front()));
           const int pctinc = (i == 0 || counts.at(i-1) == 0) ? -1 : round(100*counts.at(i)/double(counts.at(i-1)));
           stringstream ss2;
@@ -165,7 +189,8 @@ namespace Gambit {
       }
 
       /// Print string representation to a stream
-      void print(std::ostream& os) const {
+      void print(std::ostream& os) const
+      {
         os << str() << std::flush;
       }
 
@@ -179,14 +204,16 @@ namespace Gambit {
 
 
     /// Print a Cutflow to a stream
-    inline std::ostream& operator << (std::ostream& os, const Cutflow& cf) {
+    inline std::ostream& operator << (std::ostream& os, const Cutflow& cf)
+    {
       return os << cf.str();
     }
 
 
 
     /// A container for several Cutflow objects, with some convenient batch access
-    struct Cutflows {
+    struct Cutflows
+    {
 
       /// Do-nothing default constructor
       Cutflows() {  }
@@ -195,12 +222,14 @@ namespace Gambit {
       Cutflows(const vector<Cutflow>& cutflows) : cfs(cutflows) {  }
 
       /// Append a provided Cutflow to the list
-      void addCutflow(const Cutflow& cf) {
+      void addCutflow(const Cutflow& cf)
+      {
         cfs.push_back(cf);
       }
 
       /// Append a newly constructed Cutflow to the list
-      void addCutflow(const string& cfname, const vector<string>& cutnames) {
+      void addCutflow(const string& cfname, const vector<string>& cutnames)
+      {
         cfs.push_back(Cutflow(cfname, cutnames));
       }
 
@@ -210,14 +239,16 @@ namespace Gambit {
       const Cutflow& operator [] (size_t i) const { return cfs[i]; }
 
       /// Access the Cutflow whose name is @a name
-      Cutflow& operator [] (const string& name) {
+      Cutflow& operator [] (const string& name)
+      {
         for (Cutflow& cf : cfs)
           if (cf.name == name) return cf;
         // throw UserError("Requested cut-flow name '" + name + "' does not exist");
         throw 0;
       }
       /// Access the @a i'th Cutflow (const)
-      const Cutflow& operator [] (const string& name) const {
+      const Cutflow& operator [] (const string& name) const
+      {
         for (const Cutflow& cf : cfs)
           if (cf.name == name) return cf;
         // throw UserError("Requested cut-flow name '" + name + "' does not exist");
@@ -225,12 +256,14 @@ namespace Gambit {
       }
 
       /// Fill the pre-cuts state counter for all contained {Cutflow}s
-      void fillinit(double weight=1.) {
+      void fillinit(double weight=1.)
+      {
         for (Cutflow& cf : cfs) cf.fillinit(weight);
       }
 
       /// @brief Fill the @a {icut}'th post-cut counter, starting at icut=1 for first cut, with the same result for all {Cutflow}s
-      bool fill(size_t icut, bool cutresult=true, double weight=1.) {
+      bool fill(size_t icut, bool cutresult=true, double weight=1.)
+      {
         for (Cutflow& cf : cfs) cf.fill(icut, cutresult, weight);
         return cutresult;
       }
@@ -241,14 +274,16 @@ namespace Gambit {
       /// getting cast to a bool, or having to explicitly add a 'true' middle arg.
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fill(size_t icut, double weight) {
+      bool fill(size_t icut, double weight)
+      {
         return fill(icut, true, weight);
       }
 
       /// @brief Fill cut-state counters from an n-element results vector, starting at icut
       ///
       /// @note Returns the overall cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fill(size_t icut, const vector<bool>& cutresults, double weight=1.) {
+      bool fill(size_t icut, const vector<bool>& cutresults, double weight=1.)
+      {
         bool rtn = true;
         for (Cutflow& cf : cfs) rtn = cf.fill(icut, cutresults, weight);
         return rtn;
@@ -256,7 +291,8 @@ namespace Gambit {
 
 
       /// @brief Fill all cut-state counters from an Ncut-element results vector, starting at icut=1
-      bool fillall(const vector<bool>& cutresults, double weight=1.) {
+      bool fillall(const vector<bool>& cutresults, double weight=1.)
+      {
         bool rtn = true;
         for (Cutflow& cf : cfs) rtn = cf.fillall(cutresults, weight);
         return rtn;
@@ -273,7 +309,8 @@ namespace Gambit {
       /// @brief Fill the next post-cut counter, assuming a true result
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fillnext(double weight=1.) {
+      bool fillnext(double weight=1.)
+      {
         for (Cutflow& cf : cfs) cf.fillnext(weight);
         return true;
       }
@@ -281,7 +318,8 @@ namespace Gambit {
       /// @brief Fill the next cut-state counters from an n-element results vector
       ///
       /// @note Returns the cut result to allow 'side-effect' cut-flow filling in an if-statement
-      bool fillnext(const vector<bool>& cutresults, double weight=1.) {
+      bool fillnext(const vector<bool>& cutresults, double weight=1.)
+      {
         bool rtn = true;
         for (Cutflow& cf : cfs) rtn = cf.fillnext(cutresults, weight);
         return rtn;
@@ -289,18 +327,21 @@ namespace Gambit {
 
 
       /// Scale the contained {Cutflow}s by the given factor
-      void scale(double factor) {
+      void scale(double factor)
+      {
         for (Cutflow& cf : cfs) cf.scale(factor);
       }
 
       /// Scale the cutflow weights so that all the weight counts after cut @a icut are @a norm
       /// @todo Provide a version that takes a vector of norms?
-      void normalize(double norm, size_t icut=0) {
+      void normalize(double norm, size_t icut=0)
+      {
         for (Cutflow& cf : cfs) cf.normalize(norm, icut);
       }
 
       /// Create a string representation
-      string str() const {
+      string str() const
+      {
         stringstream ss;
         for (const Cutflow& cf : cfs)
           ss << cf << "\n\n";
@@ -308,7 +349,8 @@ namespace Gambit {
       }
 
       /// Print string representation to a stream
-      void print(std::ostream& os) const {
+      void print(std::ostream& os) const
+      {
         os << str() << std::flush;
       }
 
@@ -319,7 +361,8 @@ namespace Gambit {
 
 
     /// Print a Cutflows to a stream
-    inline std::ostream& operator << (std::ostream& os, const Cutflows& cfs) {
+    inline std::ostream& operator << (std::ostream& os, const Cutflows& cfs)
+    {
       return os << cfs.str();
     }
 

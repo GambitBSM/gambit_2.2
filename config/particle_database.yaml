@@ -151,6 +151,18 @@ OtherModels:
     description: Vector Singlet
     name: V
     spinx2: 2
+
+  - DecayBit:
+      Decays: true
+    PDG_context:
+    - 36
+    - 0
+    chargex3: 0
+    color: 1
+    description: Pseudoscalar Higgs
+    name: A0
+    spinx2: 0
+
   Sets:
 
   - DecayBit:
@@ -158,31 +170,15 @@ OtherModels:
       name:
       - Higgs
       - h0_2
-      - h0_3
     PDG_context:
     - - 25
       - 0
     - - 35
       - 0
-    - - 45
-      - 0
     chargex3: 0
     color: 1
     description: Mass-ordered neutral Higgs
     name: h0
-    spinx2: 0
-
-  - DecayBit:
-      Decays: true
-    PDG_context:
-    - - 36
-      - 0
-    - - 46
-      - 0
-    chargex3: 0
-    color: 1
-    description: Pseudoscalar Higgs
-    name: A0
     spinx2: 0
 
   - PDG_context:

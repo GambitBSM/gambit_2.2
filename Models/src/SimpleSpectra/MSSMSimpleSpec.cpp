@@ -302,12 +302,6 @@ namespace Gambit
          else if (i==2){ return getdata("MASS",35); } // Neutral Higgs(2)
          else { utils_error().raise(LOCAL_INFO,"Invalid index input to get_Mhh_pole_slha! Please check index range limits in wrapper SubSpectrum class!"); return -1; } // Should not return.
       }
-      double MSSMea::get_MAh_pole_slha(int i) const
-      {
-         if      (i==1) { return getdata("MASS",36); } // Neutral CP-odd Higgs
-         else if (i==2) { return getdata("MASS",46); } // Goldstone boson
-         else { utils_error().raise(LOCAL_INFO,"Invalid index input to get_Ahh_pole_slha! Please check index range limits in wrapper SubSpectrum class!"); return -1; } // Should not return.
-      }
       double MSSMea::get_MAh_pole () const { return getdata("MASS",36); }
       double MSSMea::get_MHpm_pole() const { return getdata("MASS",37); }
       double MSSMea::get_MW_pole()    const { return getdata("MASS",24); } // REQUIRED output of MSSM-compatible subspectrum
@@ -552,7 +546,6 @@ namespace Gambit
             tmp_map["~e-"] =   FInfo1( &Model::get_MSe_pole_slha, i123456 );
             tmp_map["~nu"] =   FInfo1( &Model::get_MSv_pole_slha, i123 );
             tmp_map["h0"] =    FInfo1( &Model::get_Mhh_pole_slha, i12 );
-            tmp_map["A0"] =    FInfo1( &Model::get_MAh_pole_slha, i12 );
             tmp_map["~chi+"] = FInfo1( &Model::get_MCha_pole_slha, i12 );
             tmp_map["~chi0"] = FInfo1( &Model::get_MChi_pole_slha, i1234 );
 

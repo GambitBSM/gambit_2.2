@@ -675,10 +675,6 @@ namespace GUM
         int index = 1;
         bool sphenodeps = false; // Do we want to save this as a SPheno dep?
 
-        // Whether or not the parameter is defined by other parameters
-        // of the model. If so, don't want it in GAMBIT
-        //bool externalparam = true;
-
         // Whether we've found an LH block
         bool LHblock = false;
 
@@ -1531,9 +1527,6 @@ namespace GUM
 
       // Create SARAH object, open link to Mathematica, load SARAH and the model
       SARAH model(opts.model());
-
-      // // Compute the vertices here
-      // model.calculate_vertices();
 
       // Get the options to pass to backends
       std::map<std::string, std::map<std::string, std::string> > BEoptions = opts.options();

@@ -10,6 +10,10 @@
 #          (sanjay.bloor12@imperial.ac.uk)
 #  \date 2018, 2019, 2020
 #
+#  \author Tomas Gonzalo
+#          (tomas.gonzalo@monash.edu)
+#  \date 2020
+#
 #  **************************************
 
 import argparse
@@ -31,7 +35,7 @@ def clean(line):
     return line.replace(line.split('|')[1], "1\n")
 
 
-def clean_calchep_model_files(model_folder, model_name):
+def clean_calchep_model_files(model_folder, model_name, output_dir):
     """
     Makes CalcHEP .mdl files GAMBIT-friendly, and moves them to the
     CalcHEP backend folder.
@@ -193,7 +197,7 @@ def clean_calchep_model_files(model_folder, model_name):
             f.close()
 
         # Copy CalcHEP files to the correct directories
-        copy_calchep_files(model_folder, model_name)
+        copy_calchep_files(model_folder, model_name, output_dir)
 
         print("CalcHEP model files cleaned!")
         
@@ -340,7 +344,7 @@ def get_vertices(foldername):
         raise GumError(("\n\nERROR: CalcHEP Model folder " 
                                         + foldername + " not found."))
                     
-def copy_calchep_files(model_folder, model_name):
+def copy_calchep_files(model_folder, model_name, output_dir):
     """
     Copies all CalcHEP files into the GAMBIT Backend patches directory.
     """
@@ -348,17 +352,16 @@ def copy_calchep_files(model_folder, model_name):
     model_name.strip('/')    
     model_folder.strip('/')    
 
-    gb_target = "./../Backends/patches/calchep/3.6.27/Models/" + model_name
-    if not os.path.exists(gb_target):
-        os.makedirs(gb_target)
+    out_target = output_dir + "/Backends/patches/calchep/3.6.27/Models/" + model_name
+    mkdir_if_absent(out_target)
 
-    shutil.copyfile(model_folder + "/func1.mdl", gb_target + "/func1.mdl")
-    shutil.copyfile(model_folder + "/vars1.mdl", gb_target + "/vars1.mdl")
-    shutil.copyfile(model_folder + "/lgrng1.mdl", gb_target + "/lgrng1.mdl")
-    shutil.copyfile(model_folder + "/prtcls1.mdl", gb_target + "/prtcls1.mdl")
-    shutil.copyfile(model_folder + "/extlib1.mdl", gb_target + "/extlib1.mdl")
+    shutil.copyfile(model_folder + "/func1.mdl", out_target + "/func1.mdl")
+    shutil.copyfile(model_folder + "/vars1.mdl", out_target + "/vars1.mdl")
+    shutil.copyfile(model_folder + "/lgrng1.mdl", out_target + "/lgrng1.mdl")
+    shutil.copyfile(model_folder + "/prtcls1.mdl", out_target + "/prtcls1.mdl")
+    shutil.copyfile(model_folder + "/extlib1.mdl", out_target + "/extlib1.mdl")
     
-    print("CalcHEP files moved to GAMBIT Backends directory.")
+    print("CalcHEP files moved to Backends directory.")
     
 def add_calchep_switch(model_name, spectrum, calchep_processes):
     """

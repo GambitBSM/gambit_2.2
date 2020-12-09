@@ -366,7 +366,7 @@ set(STANDALONE_FACILITATOR ${PROJECT_SOURCE_DIR}/Elements/scripts/standalone_fac
 function(add_standalone executablename)
   cmake_parse_arguments(ARG "" "" "SOURCES;HEADERS;LIBRARIES;MODULES;DEPENDENCIES" ${ARGN})
 
-  # Assume that the standlone is to be include unless we discover otherwise.
+  # Assume that the standalone is to be included, unless we discover otherwise.
   set(standalone_permitted 1)
 
   # Exclude standalones that need HepMC if it has been excluded.

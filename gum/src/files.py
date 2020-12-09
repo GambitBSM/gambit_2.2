@@ -35,7 +35,7 @@ def remove_tree_quietly(path):
     if os.path.exists(path):
         remove_tree(path)
 
-def mkdir_if_absent(path):
+def mkdir_if_absent(path, reset_dict={}, hard_reset=False):
     """
     Makes a new directory if the proposed path doesn't yet exist
     """
@@ -44,6 +44,12 @@ def mkdir_if_absent(path):
     except OSError:
         if not os.path.isdir(path):
             raise
+
+    if reset_dict != {}:
+        if not hard_reset:
+            reset_dict['new_dirs']['soft'].append(path)
+        else:
+            reset_dict['new_dirs']['hard'].append(path)
 
 def full_filename(filename, module, overwrite_path = None):
     """
@@ -257,13 +263,13 @@ def write_file(filename, module, contents, reset_dict, overwrite_path = None):
     print("File {} successfully created.".format(location))
 
 def copy_file(filename, module, output_dir, reset_dict, 
-              existing=True):
+              existing=True, overwrite_path=None):
     """
     Copies an output file in a specified location.
     """
     import shutil
 
-    location = full_filename(filename, module)
+    location = full_filename(filename, module, overwrite_path=overwrite_path)
     location_parts = os.path.split(location)
     GUM_version = output_dir + '/' + location[3:]
 
@@ -605,6 +611,8 @@ def revert(reset_file):
     Go back to the previous save point.
     """
 
+    import shutil
+
     print("GUM called in reset mode.")
 
     if not reset_file.endswith('.mug'):
@@ -624,8 +632,45 @@ def revert(reset_file):
 
         for i in new_files:
             if os.path.isfile(i):
+
+                # If deleted file is a BOSS config file, BOSS might have been run
+                if "BOSS/config" in i:
+
+                    from .backends import get_boss_backend_name_and_version, force_backend_rebuild
+
+                    be_name, be_ver = get_boss_backend_name_and_version(i)
+                    be_name_ver_safe = be_name + "_" + be_ver.replace('.','_')
+
+                    boss_reset_file = 'reset_info.' + be_name_ver_safe + ".boss"
+
+                    boss_dir = '/'.join(i.split('/')[:-2]) + '/'
+                    gambit_build_dir = "../build/"
+
+                    # If there is a reset file on GAMBIT's build directory, BOSS was run
+                    if os.path.exists(gambit_build_dir + boss_reset_file) :
+
+                        # TODO: This only removes changes to the backend, not the main gambit tree, so I don't think it's needed
+                        #call_boss_reset(gambit_build_dir, boss_dir, reset_file_name)
+
+                        # Remove BOSS-generated files in the main GAMBIT tree
+                        backend_types_dir = "../Backends/include/gambit/Backends/backend_types/" + be_name_ver_safe
+                        if os.path.isdir(backend_types_dir):
+                            shutil.rmtree(backend_types_dir, ignore_errors=True)
+                            print("Deleting backend types for " + be_name_ver_safe + "...")
+                        frontend_header_file = "../Backends/include/gambit/Backends/frontends/" + be_name_ver_safe + ".hpp"
+                        if os.path.isfile(frontend_header_file):
+                            os.remove(frontend_header_file)
+                            print("Deleting " + frontend_header_file + "...")
+
+                        # Remove reset file
+                        os.remove(gambit_build_dir + boss_reset_file)
+
+                    # In case it was built but not nuked, force it to rebuild from scratch
+                    force_backend_rebuild(be_name.lower(), be_ver)
+
                 print("Deleting {0}...".format(i))
                 os.remove(i)
+
             else:
                 print(("Tried deleting {0}, but it seems to have already been "
                       "removed.".format(i)))
@@ -868,6 +913,30 @@ def revert(reset_file):
                 with open("./../config/particle_database.yaml", "w") as f:
                     f.write(stream)
 
+        # If there are any new dirs remove them if empty, as well as any empty directories on the same tree
+        # Hard reset wipes out directory with contents
+        if 'hard' in data['new_dirs']:
+            for new_dir in data['new_dirs']['hard']:
+                if os.path.isdir(new_dir):
+                    shutil.rmtree(new_dir, ignore_errors=True)
+                    print("Deleting full directory tree {0}...".format(new_dir))
+
+        # Soft reset only deletes empty directories
+        if 'soft' in data['new_dirs']:
+
+            for new_dir in data['new_dirs']['soft']:
+                empty = True
+                while(empty):
+                    if os.path.isdir(new_dir):
+                        try:
+                            os.rmdir(new_dir)
+                            print("Deleting directory {0}...".format(new_dir))
+                        except OSError:
+                            empty = False;
+                        new_dir = os.path.dirname(new_dir)
+                    else:
+                        empty = False
+
     return
 
 def check_for_existing_entries(model_name, darkbit, colliderbit, output_opts):
@@ -935,10 +1004,14 @@ def drop_mug_file(mug_file, contents):
         particles = dict(d['particles'])
     else:
         particles = {}
+    if 'new_dirs' in d:
+        new_dirs = dict(d['new_dirs'])
+    else:
+        new_dirs = {}
         
     new_contents = {'new_files': new_files, 'amended_files': amended_files, 
                     'new_models' : new_models, 'capabilities' : capabilities,
-                    'particles' : particles}
+                    'particles' : particles, 'new_dirs' : new_dirs}
 
     with open(mug_file, 'w') as f:
         yaml.dump(new_contents, f, default_flow_style=False)
