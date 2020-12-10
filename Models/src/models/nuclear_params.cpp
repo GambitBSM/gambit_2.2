@@ -16,6 +16,9 @@
 //  Felix Kahlhoefer
 //  2020 December
 //
+//  Ankit Beniwal
+//  2020 December
+//
 //  *********************************************
 
 #include "gambit/Models/model_macros.hpp"
@@ -25,7 +28,7 @@
 #include "gambit/Elements/sminputs.hpp"
 
 #define MODEL nuclear_params_ChPT_sigmapiN
-#define PARENT nuclear_params_sigma0_sigmal
+#define PARENT nuclear_params_ChPT
     void MODEL_NAMESPACE::sigmapiN_to_sigma_udN (const ModelParameters &myP, ModelParameters &targetP)
     {
         USE_MODEL_PIPE(PARENT)
@@ -68,7 +71,7 @@
         targetP.setValue("BT10dp", myP["BT10dp"]);
         targetP.setValue("BT10s", myP["BT10s"]);
 
-        logger() << LogTags::debug << "sigma_0 = "<< sigma0 << EOM;
+        logger() << LogTags::debug << "sigmauN = "<< sigmauN << " sigmadN = "<< sigmadN << EOM;
     }
 #undef PARENT
 #undef MODEL
