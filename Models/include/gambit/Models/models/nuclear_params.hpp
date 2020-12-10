@@ -16,6 +16,9 @@
 //  Sebastian Wild
 //  October 2018
 //
+//  Felix Kahlhoefer
+//  2020 December
+//
 //  *********************************************
 
 #ifndef __nuclear_params_hpp__

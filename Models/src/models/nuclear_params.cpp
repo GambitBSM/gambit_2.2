@@ -13,6 +13,9 @@
 //  Jonathan Cornell
 //  2015 March
 //
+//  Felix Kahlhoefer
+//  2020 December
+//
 //  *********************************************
 
 #include "gambit/Models/model_macros.hpp"
@@ -27,7 +30,7 @@
     {
         USE_MODEL_PIPE(PARENT)
 
-        logger()<<"Converting sigma_piN to sigma_udN ..."<<LogTags::debug<<EOM;
+        logger() << "Converting sigma_piN to sigma_udN ..." << LogTags::debug << EOM;
 
         double sigmapiN = myP["sigmapiN"];
         double Bc5m = myP["Bc5m"];
