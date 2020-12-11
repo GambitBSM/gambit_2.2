@@ -2019,7 +2019,7 @@ SimYieldTable: |
 GA_missingFinalStates: |
    Final states that are not avaialable with tabulated spectra.
 
-GA_Yield: |
+GA_AnnYield: |
    Calculate the gamma-ray yield from the process catalogue.
 
 DM_process: |
@@ -2401,7 +2401,7 @@ nulike_1_0_7_init: |
   Initializes nulike_1_0_7.
 
 nulike_1_0_8_init: |
-  Initialises nulike_1_0_8.
+  Initializes nulike_1_0_8.
 
 nulike_1_0_9_init: |
   Initializes nulike_1_0_9.
@@ -5309,5 +5309,3 @@ passParameters: |
 
 varNames: |
   CalcHEP's internal list of variable names.
-
-
