@@ -33,18 +33,10 @@
 ///
 ///  *********************************************
 
-#ifdef WITH_MPI
-#include "mpi.h"
-#endif
-
 #include <string>
 #include <sstream>
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_min.h>
-#include "SLHAea/slhaea.h"
 
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/Elements/spectrum.hpp"
@@ -54,6 +46,13 @@
 #include "gambit/SpecBit/SpecBit_helpers.hpp"
 #include "gambit/SpecBit/SpecBit_types.hpp"
 #include "gambit/SpecBit/QedQcdWrapper.hpp"
+
+#include "SLHAea/slhaea.h"
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_min.h>
+#ifdef WITH_MPI
+  #include "mpi.h"
+#endif
 
 // Switch for debug mode
 //#define SPECBIT_DEBUG
@@ -438,10 +437,10 @@ namespace Gambit
     void get_likelihood_VS(double &result)
     {
         using namespace Pipes::get_likelihood_VS;
-        
+
         // Compute all vacuum stability results
         VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
- 
+
         // Add the decay width for all reque
         double width = 0.0;
         for(auto vacua : *Dep::compare_panic_vacua)
@@ -469,7 +468,7 @@ namespace Gambit
     void get_VS_results(map_str_dbl &result)
     {
         using namespace Pipes::get_VS_results;
-        
+
         VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
         for(auto vacua : *Dep::compare_panic_vacua)
         {
@@ -486,7 +485,7 @@ namespace Gambit
     /**********************/
     /* VEVACIOUS ROUTINES */
     /**********************/
-    
+
     /// Helper function that takes any YAML options and makes the vevacious input,
     /// in the form of .xml files.
     void make_vpp_inputs(map_str_str &opts)
@@ -495,7 +494,7 @@ namespace Gambit
         int rank;
 
         // Here we make sure files are only written the first time this is run
-        if(firstrun) 
+        if(firstrun)
         {
             std::string vevaciouslibpath = Backends::backendInfo().path_dir("vevacious", "1.0");
 
@@ -520,7 +519,7 @@ namespace Gambit
             std::string potentialfunctioninitpath = initfilesPath + "/PotentialFunctionInitialization.xml";
             std::string potentialminimizerinitpath = initfilesPath +"/PotentialMinimizerInitialization.xml";
             std::string tunnelingcalculatorinitpath = initfilesPath +"/TunnelingCalculatorInitialization.xml";
-            
+
 
             // Creating folders for initialization files
             try
@@ -588,13 +587,13 @@ namespace Gambit
             std::ofstream potentialfunctioninitwrite(potentialfunctioninitpath);
             potentialfunctioninitwrite << potentialfunctioninit;
             potentialfunctioninitwrite.close();
-    
+
             std::string potentialminimizerinit;
 
             // Writing potential minimizer initialization file
             // Check whether user wants hom4ps2 or PHC as homotopy continuation backend
 
-            if(opts.at("homotopybackend") == "hom4ps") 
+            if(opts.at("homotopybackend") == "hom4ps")
             {
 
                 // Getting Path to hom4ps2
@@ -663,8 +662,8 @@ namespace Gambit
                         "    </ConstructorArguments>\n"
                         "  </PotentialMinimizerClass>\n"
                         "</VevaciousPlusPlusObjectInitialization>\n";
-            } 
-            else if(opts.at("homotopybackend") == "phc") 
+            }
+            else if(opts.at("homotopybackend") == "phc")
             {
                 // Getting path to PHC
                 std::string PathToPHC = Backends::backendInfo().path_dir("phc", "2.4.58");
@@ -673,7 +672,7 @@ namespace Gambit
 
                 // random seed for phc (can be fixed as input option)
                 std::string randomseed = opts["phc_random_seed"];
-                
+
                 try
                 {
                     Utils::ensure_path_exists(PHCSymlink);
@@ -685,7 +684,7 @@ namespace Gambit
                     SpecBit_error().forced_throw(LOCAL_INFO,errmsg.str());
                 }
 
-                // Here we check whether the symlink to phc already exists. 
+                // Here we check whether the symlink to phc already exists.
                 std::string filename(PHCSymlink + "/phc");
                 std::ifstream in(filename.c_str(), std::ios::binary);
                 if(in.good())
@@ -924,11 +923,11 @@ namespace Gambit
       {
         // Get the list of likelihoods given in the YAML file as sub-capabilities.
         std::vector<str> subcaps = Downstream::subcaps->getNames();
-        
-        // if no sub-capabilities are set, fix default behaviour: calculate tunneling to global and 
+
+        // if no sub-capabilities are set, fix default behaviour: calculate tunneling to global and
         // nearest minimum
         std::set<std::string> default_choice = {"global","nearest"};
-        
+
         // read in yaml options or ..
         if(not subcaps.empty()) for (const auto& x : subcaps) {result.insert(x);}
         // .. use default behaviour
@@ -945,9 +944,9 @@ namespace Gambit
            << "       - nearest" << endl
            << "to only calculate the tunneling probabilities to the nearest minimum." << endl;
         logger() << LogTags::debug << ss.str() << EOM;
-      
+
         // just need to set this once
-        firstrun = false;   
+        firstrun = false;
       }
     }
 
@@ -969,7 +968,7 @@ namespace Gambit
         // Get the tunnelling strategies given in the YAML file from the sub-capabilities.
         YAML::Node subcaps = Downstream::subcaps->getNode();
 
-        // Default behavious is to do both 
+        // Default behavious is to do both
         std::set<std::string> default_choice = {"quantum","thermal"};
 
         // Iterate over sub-capabilites to extract the strategies
@@ -1011,20 +1010,20 @@ namespace Gambit
     {
 
       // quantum and thermal tunnelling
-      if(tunnelling_strategy.size() == 2 and 
+      if(tunnelling_strategy.size() == 2 and
          tunnelling_strategy.find("quantum") != tunnelling_strategy.end() and
          tunnelling_strategy.find("thermal") != tunnelling_strategy.end())
       {
         return "QuantumThenThermal";
       }
-      // only thermal requested 
-      else if(tunnelling_strategy.size() == 1 and 
+      // only thermal requested
+      else if(tunnelling_strategy.size() == 1 and
               tunnelling_strategy.find("thermal") != tunnelling_strategy.end())
       {
         return "JustThermal";
       }
-      // only quantum requested 
-      else if(tunnelling_strategy.size() == 1 and 
+      // only quantum requested
+      else if(tunnelling_strategy.size() == 1 and
               tunnelling_strategy.find("quantum") != tunnelling_strategy.end())
       {
         return "JustQuantum";
@@ -1041,7 +1040,7 @@ namespace Gambit
         errmsg << "      - nearest: [quantum, thermal]" << std::endl;
         SpecBit_error().raise(LOCAL_INFO,errmsg.str());
       }
-      
+
       return "";
     }
 
@@ -1060,7 +1059,7 @@ namespace Gambit
 
             // Generating a Random seed from Gambit random generator
             std::string randomseed_gen = std::to_string(int(Random::draw() * 2 * 1987.));
-            
+
             opts["phc_random_seed"] =               runOptions->getValueOrDef<std::string>(randomseed_gen, "phc_random_seed");
             opts["MinuitStrategy"] =                runOptions->getValueOrDef<std::string>("0", "minuit_strategy");
             opts["PotentialFunctionClassType"] =    runOptions->getValueOrDef<std::string>("FixedScaleOneLoopPotential", "potential_type");
@@ -1073,7 +1072,7 @@ namespace Gambit
             // Tunnelling strategy is given by the capability tunnelling_strategy that extracts the info from the subcaps
             opts["TunnelingStrategy"] = helper_set_tunnelingStrategy(*Dep::tunnelling_strategy);
 
-            // Insert the file location info to the options map 
+            // Insert the file location info to the options map
             map_str_str file_locations = *Dep::vevacious_file_location;
             opts.insert(file_locations.begin(), file_locations.end());
 
@@ -1087,14 +1086,14 @@ namespace Gambit
         // Done.
     }
 
-    /// Execute the passing of the spectrum object (as SLHAea) to vevacious. It is a helper function and not a 
-    /// capability since this has to be executed before every single vevacious run. vevacious can run multiple times for 
-    /// a single point in parameter space depending on settings: 
-    ///   -> global and/or nearest minimum for tunneling requested? 
+    /// Execute the passing of the spectrum object (as SLHAea) to vevacious. It is a helper function and not a
+    /// capability since this has to be executed before every single vevacious run. vevacious can run multiple times for
+    /// a single point in parameter space depending on settings:
+    ///   -> global and/or nearest minimum for tunneling requested?
     ///   -> multiple attempts for one vevacious run allowed?
     vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus exec_pass_spectrum_to_vevacious(SpectrumEntriesForVevacious &pass_spectrum )
     {
-        
+
         // get inputFilename and initialise vevaciousPlusPlus object with it
         static std::string inputFilename = pass_spectrum.get_inputFilename();
         vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus(inputFilename);
@@ -1104,12 +1103,12 @@ namespace Gambit
         map_str_SpectrumEntry spec_entry_map = pass_spectrum.get_spec_entry_map();
 
         // iterate through map and call vevacious' 'ReadLhaBlock' to read spectrum entries
-        for (auto it=spec_entry_map.begin(); it!=spec_entry_map.end(); ++it) 
+        for (auto it=spec_entry_map.begin(); it!=spec_entry_map.end(); ++it)
         {
           SpectrumEntry entry = it->second;
           logger() << LogTags::debug << "Passing ReadLhaBlock option  "<< entry.name  << " scale " << scale << " parameters" << entry.parameters <<" and dimension " << entry.dimension << " to vevacious" << EOM;
           vevaciousPlusPlus.ReadLhaBlock(entry.name, scale , entry.parameters, entry.dimension );
-        }  
+        }
 
         return vevaciousPlusPlus;
       }
@@ -1118,11 +1117,11 @@ namespace Gambit
     /// a vevacious run failed for some reason
     void helper_run_vevacious(vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus &vevaciousPlusPlus,VevaciousResultContainer& result, std::string panic_vacuum, std::string inputPath)
     {
-       
+
         double lifetime, thermalProbability, thermalWidth;
 
         //Checking if file exists, fastest method.
-        struct stat buffer; 
+        struct stat buffer;
         std::string HomotopyLockfile = inputPath + "/Homotopy/busy.lock";
         // Check if homotopy binary is being used
         //Here I check it the busy.lock file exists and if it does I go into a
@@ -1131,7 +1130,7 @@ namespace Gambit
         // This deals with the problem of MARCONI not liking a binary accessed by too many
         // processes at the same time
         std::chrono::system_clock::time_point tStart = Utils::get_clock_now();
-              
+
         while(stat(HomotopyLockfile.c_str(), &buffer)==0)
         {
           std::chrono::system_clock::time_point tNow = Utils::get_clock_now();
@@ -1139,7 +1138,7 @@ namespace Gambit
           if(tSofar >= std::chrono::seconds(30) )
           {
             remove( HomotopyLockfile.c_str());
-            break; 
+            break;
           }
         }
 
@@ -1153,9 +1152,9 @@ namespace Gambit
         thermalWidth = vevaciousPlusPlus.GetThermalDecayWidth();
 
         // decide how to deal with different vevacious outcomes
-        // here -1 from Vevacious means that the point is stable. 
+        // here -1 from Vevacious means that the point is stable.
         if(lifetime == -1 && thermalProbability == -1 )
-        { 
+        {
             lifetime = 3.0E+100;
             thermalProbability = 1;
         }
@@ -1170,7 +1169,7 @@ namespace Gambit
 
         // return a vector containing the results from vevacious, these are filled
         // in any successfully run case with the entries
-        //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action", 
+        //   BounceActionsThermal = ["Bounce Action Threshold", "straight path bounce action",
         //              "best result from path_finder 1", "best result from path_finder 2",...]
         //   Note that the entries "best result from path_finder x" are only filled if the
         //               "straight path bounce action" (entry 1) is higher than the "bounce Action Threshold"
@@ -1178,21 +1177,21 @@ namespace Gambit
         //                vevacious
         std::vector<double> BounceActionsThermal_vec = vevaciousPlusPlus.GetThermalThresholdAndActions();
         std::vector<double> BounceActions_vec = vevaciousPlusPlus.GetThresholdAndActions();
-            
+
         logger() << LogTags::debug  << "Vevacious result size "<< BounceActions_vec.size();
         logger() << LogTags::debug  << "\nVevacious thermal result size "<< BounceActionsThermal_vec.size();
 
         // set bounce actions values & the threshold if they were calculated
-        for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii) 
+        for(std::size_t ii=0; ii<BounceActions_vec.size(); ++ii)
         {
-          logger() << LogTags::debug << "\nSetting bounceActionThreshold_[" << ii << "]"<< BounceActions_vec.at(ii); 
+          logger() << LogTags::debug << "\nSetting bounceActionThreshold_[" << ii << "]"<< BounceActions_vec.at(ii);
           result.set_results(panic_vacuum, "bounceActionThreshold_[" + std::to_string(ii) + "]", BounceActions_vec.at(ii));
         }
 
         // set thermal bounce actions values & the threshold if they were calculated
-        for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii) 
+        for(std::size_t ii=0; ii<BounceActionsThermal_vec.size(); ++ii)
         {
-          logger() << LogTags::debug << "\nSetting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii); 
+          logger() << LogTags::debug << "\nSetting bounceActionThresholdThermal_[" << ii << "]"<< BounceActionsThermal_vec.at(ii);
           result.set_results(panic_vacuum, "bounceActionThresholdThermal_[" + std::to_string(ii) + "]", BounceActionsThermal_vec.at(ii));
         }
 
@@ -1217,12 +1216,12 @@ namespace Gambit
     {
 
       //Vevacious has crashed -- set results to fixed values
-      double lifetime = 2.0E+100; 
+      double lifetime = 2.0E+100;
       double thermalWidth = 0.;
       double thermalProbability= 1;
 
       logger() << LogTags::debug << "Vevacious could not calculate lifetime. Conservatively setting it to large value."<<EOM;
-      
+
       result.set_results(panic_vacuum,"lifetime", lifetime);
       result.set_results(panic_vacuum,"width", hbar/lifetime);
       result.set_results(panic_vacuum,"thermalwidth", thermalWidth);
@@ -1231,7 +1230,7 @@ namespace Gambit
     }
 
     /// If tunnelling to global and nearest vacuum are requested, this
-    /// capability compares if the two vacua are the same. 
+    /// capability compares if the two vacua are the same.
     /// Return true if they coincide, false if not.
     void compare_panic_vacua(map_str_str &result)
     {
@@ -1241,13 +1240,13 @@ namespace Gambit
       SpectrumEntriesForVevacious pass_spectrum = (*Dep::pass_spectrum_to_vevacious);
       // create vev object to check if global and near panic vacuum are the same
       vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
-      
+
       // get set with contributions to likelihood that should be calculated
       std::set<std::string> panic_vacua = *Dep::panic_vacua;
 
-      // Check if global and nearest are requested, if so test if the happen to be 
+      // Check if global and nearest are requested, if so test if the happen to be
       // the same minimum for this point in parameters space.
-      // If that is the case, remove the global points from the 
+      // If that is the case, remove the global points from the
       if( panic_vacua.find("global") != panic_vacua.end() and panic_vacua.find("nearest") != panic_vacua.end() )
       {
         // get vector pair with VEVs of global and nearest vacua
@@ -1285,7 +1284,7 @@ namespace Gambit
 
       // Fill result map and set tunnelling strategy for the minima
       for (auto &panic_vacuum: panic_vacua)
-        result[panic_vacuum] = helper_set_tunnelingStrategy(*Dep::tunnelling_strategy);            
+        result[panic_vacuum] = helper_set_tunnelingStrategy(*Dep::tunnelling_strategy);
 
     }
 
@@ -1296,39 +1295,39 @@ namespace Gambit
         using namespace Pipes::check_vacuum_stability_vevacious;
 
         // get a str-str map with valculations vevacious has to execute for this parameter point
-        // note: this has to be executed for each point as it can happen that the nearest and the 
-        // global panic vaccum are the same. 
+        // note: this has to be executed for each point as it can happen that the nearest and the
+        // global panic vaccum are the same.
         map_str_str panic_vacua = *Dep::compare_panic_vacua;
 
-        // This is the number of different pathFinders implemented in vevacious. It should be 
-        // returned by a BE convenience function, I tried to do it but didn't manage to 
-        // with the BOSS stuff -- that should probably be fixed  # todo 
+        // This is the number of different pathFinders implemented in vevacious. It should be
+        // returned by a BE convenience function, I tried to do it but didn't manage to
+        // with the BOSS stuff -- that should probably be fixed  # todo
         static int pathFinder_number = 2;
-              
+
         // get the object that holds all inputs that needs to be passed to vevacious
         SpectrumEntriesForVevacious pass_spectrum = (*Dep::pass_spectrum_to_vevacious);
-        
-        // run vevacious for different panic vacua, respecting the choices for thermal 
+
+        // run vevacious for different panic vacua, respecting the choices for thermal
         // or only quantum tunnelling calculations
         for(auto x : panic_vacua)
-        { 
-          // set panic vacuum and tunnelling strategy for vevacious run  
+        {
+          // set panic vacuum and tunnelling strategy for vevacious run
           std::string panic_vacuum = x.first;
           std::string tunnellingStrategy = x.second;
 
           // reset all entries of the of VevaciousResultContainer map holding the results
           // to avoid that any value could be carried over from a previous calculated point
           result.clear_results(panic_vacuum, pathFinder_number);
-          try 
-          {    
-              // create vevaciousPlusPlus object new for every try since spectrum 
-              // vevacious deletes spectrum after each run => to be able to do this 
-              // we need the non-rollcalled helper function that gets executed every time 
+          try
+          {
+              // create vevaciousPlusPlus object new for every try since spectrum
+              // vevacious deletes spectrum after each run => to be able to do this
+              // we need the non-rollcalled helper function that gets executed every time
               // we get to this line (unlike a dependency)
               vevacious_1_0::VevaciousPlusPlus::VevaciousPlusPlus vevaciousPlusPlus = exec_pass_spectrum_to_vevacious(pass_spectrum);
-              
-              // helper function to set lifetime & thermal probability accordingly 
-              // (this is a separate function s.t. we don't have to reproduce code 
+
+              // helper function to set lifetime & thermal probability accordingly
+              // (this is a separate function s.t. we don't have to reproduce code
               // for different panic vacua)
               helper_run_vevacious(vevaciousPlusPlus, result, panic_vacuum, pass_spectrum.get_inputPath());
           }
@@ -1381,20 +1380,20 @@ namespace Gambit
     }
 
     /// This function adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious
-    /// to an instance of type SpectrumEntriesForVevacious. The actual passing happens in the helper function 
-    /// exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. 
-    /// Model dependent. 
+    /// to an instance of type SpectrumEntriesForVevacious. The actual passing happens in the helper function
+    /// exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call.
+    /// Model dependent.
     void prepare_pass_MSSM_spectrum_to_vevacious(SpectrumEntriesForVevacious &result)
     {
         namespace myPipe = Pipes::prepare_pass_MSSM_spectrum_to_vevacious;
 
         static std::string inputspath =  *myPipe::Dep::init_vevacious;
 
-        // print input parameters for vevaciouswith full precision to be able to reproduce 
+        // print input parameters for vevaciouswith full precision to be able to reproduce
         // vevacious run with the exact same parameters
         std::ostringstream InputsForLog;
         InputsForLog << std::fixed << std::setprecision(12) << "Passing parameters to Vevacious with values: ";
-        
+
         for (auto it=myPipe::Param.begin(); it != myPipe::Param.end(); it++)
         {
             std::string name = it->first;
@@ -1415,7 +1414,7 @@ namespace Gambit
         std::string rankstring = std::to_string(rank);
 
         std::string inputFilename = inputspath + "/InitializationFiles/VevaciousPlusPlusObjectInitialization_mpirank_"+ rankstring +".xml";
-        
+
         result.set_inputFilename(inputFilename);
         result.set_inputPath(inputspath);
 
@@ -1429,11 +1428,11 @@ namespace Gambit
 
         result.set_scale(scale);
 
-        // safe parameters form the SLHAea::Coll object in SpectrumEntriesForVevacious 
+        // safe parameters form the SLHAea::Coll object in SpectrumEntriesForVevacious
         // by calling the method .add_entry => pass name, vector with <int,double> pairs
-        // and the third setting (some int, don't know what it does @Sanjay? ) 
-        std::vector<std::pair<int,double>> gaugecouplings = { { 1 , SLHAea::to<double>(slhaea.at("GAUGE").at(1).at(1))  }, 
-                      { 2, SLHAea::to<double>(slhaea.at("GAUGE").at(2).at(1)) }, 
+        // and the third setting (some int, don't know what it does @Sanjay? )
+        std::vector<std::pair<int,double>> gaugecouplings = { { 1 , SLHAea::to<double>(slhaea.at("GAUGE").at(1).at(1))  },
+                      { 2, SLHAea::to<double>(slhaea.at("GAUGE").at(2).at(1)) },
                       { 3, SLHAea::to<double>(slhaea.at("GAUGE").at(3).at(1)) }};
         result.add_entry("GAUGE", gaugecouplings, 1);
 
@@ -1443,29 +1442,29 @@ namespace Gambit
                       { 103, SLHAea::to<double>(slhaea.at("HMIX").at(103).at(1))},
                       { 3, SLHAea::to<double>(slhaea.at("HMIX").at(3).at(1))}};
         result.add_entry("HMIX", Hmix, 1);
-      
-       
+
+
         std::vector<std::pair<int,double>> minpar = {{ 3, SLHAea::to<double>(slhaea.at("MINPAR").at(3).at(1))}};
         result.add_entry("MINPAR", minpar, 1);
-      
+
         std::vector<std::pair<int,double>> msoft = { { 21 , SLHAea::to<double>(slhaea.at("MSOFT").at(21).at(1))},
                               { 22  , SLHAea::to<double>(slhaea.at("MSOFT").at(22).at(1))},
                               { 1  ,  SLHAea::to<double>(slhaea.at("MSOFT").at(1).at(1))},
                               { 2  ,  SLHAea::to<double>(slhaea.at("MSOFT").at(2).at(1))},
-                              { 3   , SLHAea::to<double>(slhaea.at("MSOFT").at(3).at(1))}};       
+                              { 3   , SLHAea::to<double>(slhaea.at("MSOFT").at(3).at(1))}};
         result.add_entry("MSOFT", msoft, 1);
-        
+
         // Check if the block "TREEMSOFT" is present
-        try 
+        try
         {
             std::vector<std::pair<int, double>> treemsoft = {{21, SLHAea::to<double>(slhaea.at("TREEMSOFT").at(21).at(1))},
                                                              {22, SLHAea::to<double>(slhaea.at("TREEMSOFT").at(22).at(1))} };
             result.add_entry("TREEMSOFT", treemsoft, 1);
         }
         catch (const std::exception& e){ logger() << LogTags::debug << "No TREEMSOFT, skipping" << EOM;}
-        
+
         // Check if the block "LOOPMSOFT" is present
-        try 
+        try
         {
             std::vector<std::pair<int, double>> loopmsoft = {{21, SLHAea::to<double>(slhaea.at("LOOPMSOFT").at(21).at(1))},
                                                              {22, SLHAea::to<double>(slhaea.at("LOOPMSOFT").at(22).at(1))}};
@@ -1475,14 +1474,14 @@ namespace Gambit
 
         bool diagonalYukawas = false;
         // Here we check if the Yukawas are diagonal or not, i.e if the "YX" blocks have off-diagonal entries.
-        try 
+        try
         {
           SLHAea::to<double>(slhaea.at("YU").at(1,2));
         }
         catch (const std::exception& e) {diagonalYukawas = true; logger() << LogTags::debug << "Diagonal Yukawas detected"<< EOM;}
 
         // If diagonal pass the diagonal values to Vevacious
-        if (diagonalYukawas) 
+        if (diagonalYukawas)
         {
             std::vector<std::pair<int,double>> Yu = { { 11 , SLHAea::to<double>(slhaea.at("YU").at(1,1).at(2))},
                                                       { 12, 0},
@@ -1516,10 +1515,10 @@ namespace Gambit
                                                       { 32, 0},
                                                       { 33, SLHAea::to<double>(slhaea.at("YE").at(3,3).at(2))}};
             result.add_entry("YE", Ye, 2);
-        } 
+        }
         // If NOT diagonal pass values to Vevacious
-        else 
-        { 
+        else
+        {
             std::vector<std::pair<int, double>> Yu = {{11, SLHAea::to<double>(slhaea.at("YU").at(1, 1).at(2))},
                                                       {12, SLHAea::to<double>(slhaea.at("YU").at(1, 2).at(2))},
                                                       {13, SLHAea::to<double>(slhaea.at("YU").at(1, 3).at(2))},
@@ -1572,7 +1571,7 @@ namespace Gambit
                                                   { 23, SLHAea::to<double>(slhaea.at("TD").at(2,3).at(2))},
                                                   { 31, SLHAea::to<double>(slhaea.at("TD").at(3,1).at(2))},
                                                   { 32, SLHAea::to<double>(slhaea.at("TD").at(3,2).at(2))},
-                                                  { 33, SLHAea::to<double>(slhaea.at("TD").at(3,3).at(2))}};                      
+                                                  { 33, SLHAea::to<double>(slhaea.at("TD").at(3,3).at(2))}};
         result.add_entry("TD", Td, 2);
 
         std::vector<std::pair<int,double>> Te = { { 11 , SLHAea::to<double>(slhaea.at("TE").at(1,1).at(2))},
@@ -1583,7 +1582,7 @@ namespace Gambit
                                                   { 23, SLHAea::to<double>(slhaea.at("TE").at(2,3).at(2))},
                                                   { 31, SLHAea::to<double>(slhaea.at("TE").at(3,1).at(2))},
                                                   { 32, SLHAea::to<double>(slhaea.at("TE").at(3,2).at(2))},
-                                                  { 33, SLHAea::to<double>(slhaea.at("TE").at(3,3).at(2))}};              
+                                                  { 33, SLHAea::to<double>(slhaea.at("TE").at(3,3).at(2))}};
         result.add_entry("TE", Te, 2);
 
 
@@ -1595,7 +1594,7 @@ namespace Gambit
                                                   { 23, SLHAea::to<double>(slhaea.at("MSQ2").at(2,3).at(2))},
                                                   { 31, SLHAea::to<double>(slhaea.at("MSQ2").at(3,1).at(2))},
                                                   { 32, SLHAea::to<double>(slhaea.at("MSQ2").at(3,2).at(2))},
-                                                  { 33, SLHAea::to<double>(slhaea.at("MSQ2").at(3,3).at(2))}};               
+                                                  { 33, SLHAea::to<double>(slhaea.at("MSQ2").at(3,3).at(2))}};
         result.add_entry("MSQ2", msq2, 2);
 
         std::vector<std::pair<int,double>> msl2 = { { 11 , SLHAea::to<double>(slhaea.at("MSL2").at(1,1).at(2))},
@@ -1606,7 +1605,7 @@ namespace Gambit
                                                     { 23, SLHAea::to<double>(slhaea.at("MSL2").at(2,3).at(2))},
                                                     { 31, SLHAea::to<double>(slhaea.at("MSL2").at(3,1).at(2))},
                                                     { 32, SLHAea::to<double>(slhaea.at("MSL2").at(3,2).at(2))},
-                                                    { 33, SLHAea::to<double>(slhaea.at("MSL2").at(3,3).at(2))}};               
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSL2").at(3,3).at(2))}};
         result.add_entry("MSL2", msl2, 2);
 
         std::vector<std::pair<int,double>> msd2 = { { 11 , SLHAea::to<double>(slhaea.at("MSD2").at(1,1).at(2))},
@@ -1617,7 +1616,7 @@ namespace Gambit
                                                     { 23, SLHAea::to<double>(slhaea.at("MSD2").at(2,3).at(2))},
                                                     { 31, SLHAea::to<double>(slhaea.at("MSD2").at(3,1).at(2))},
                                                     { 32, SLHAea::to<double>(slhaea.at("MSD2").at(3,2).at(2))},
-                                                    { 33, SLHAea::to<double>(slhaea.at("MSD2").at(3,3).at(2))}};               
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSD2").at(3,3).at(2))}};
         result.add_entry("MSD2", msd2, 2);
 
         std::vector<std::pair<int,double>> mse2 = { { 11 , SLHAea::to<double>(slhaea.at("MSE2").at(1,1).at(2))},
@@ -1628,7 +1627,7 @@ namespace Gambit
                                                     { 23, SLHAea::to<double>(slhaea.at("MSE2").at(2,3).at(2))},
                                                     { 31, SLHAea::to<double>(slhaea.at("MSE2").at(3,1).at(2))},
                                                     { 32, SLHAea::to<double>(slhaea.at("MSE2").at(3,2).at(2))},
-                                                    { 33, SLHAea::to<double>(slhaea.at("MSE2").at(3,3).at(2))}};                
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSE2").at(3,3).at(2))}};
         result.add_entry("MSE2", mse2, 2);
 
         std::vector<std::pair<int,double>> msu2 = { { 11 , SLHAea::to<double>(slhaea.at("MSU2").at(1,1).at(2))},
@@ -1639,7 +1638,7 @@ namespace Gambit
                                                     { 23, SLHAea::to<double>(slhaea.at("MSU2").at(2,3).at(2))},
                                                     { 31, SLHAea::to<double>(slhaea.at("MSU2").at(3,1).at(2))},
                                                     { 32, SLHAea::to<double>(slhaea.at("MSU2").at(3,2).at(2))},
-                                                    { 33, SLHAea::to<double>(slhaea.at("MSU2").at(3,3).at(2))}};            
+                                                    { 33, SLHAea::to<double>(slhaea.at("MSU2").at(3,3).at(2))}};
         result.add_entry("MSU2", msu2, 2);
     }
   } // end namespace SpecBit
