@@ -54,19 +54,22 @@ endmacro()
 
 # Download FeynRules
 set(name "FeynRules")
+set(ver "2.3.41")
+set(dl "https://gambit.hepforge.org/downloads/archived_backends/feynrules-${ver}.tar.gz")
+set(md5 "d0a075dc8fa12d4a7ebcc966350e4365")
 set(dir "${CMAKE_SOURCE_DIR}/contrib/${name}")
 set(FEYNRULES_PATH "${dir}")
 set(HAVE_FEYNRULES 1)
 EXTERNALPROJECT_ADD(
     FeynRules
-    URL http://feynrules.irmp.ucl.ac.be/downloads/feynrules-current.tar.gz
+    URL ${dl}
+    URL_MD5 ${md5}
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
     SOURCE_DIR ${dir}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
-#    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Models ${CMAKE_SOURCE_DIR}/contrib/FeynRules/Models
 )
 add_extra_targets(${name} ${dir})
 
@@ -81,12 +84,12 @@ set(SARAH_PATH "${dir}")
 set(HAVE_SARAH 1)
 EXTERNALPROJECT_ADD(
     SARAH
-    URL https://sarah.hepforge.org/downloads/?f=SARAH-${ver}.tar.gz
+    URL ${dl}
     URL_MD5 ${md5}
-    SOURCE_DIR ${dir}
-    BUILD_IN_SOURCE 1
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
+    SOURCE_DIR ${dir}
+    BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
