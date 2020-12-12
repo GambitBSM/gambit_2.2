@@ -58,7 +58,7 @@ BE_INI_FUNCTION
       xsecs[std::vector<str>{"~S","~S"}] = std::vector< std::vector<str> >{ {"d'", "D'"}, {"u", "U"}, {"B", "b"}, {"h", "h"}, {"e", "E"}, {"Z", "Z"}, {"c", "C"}, {"s'", "S'"}, {"m", "M"}, {"t", "T"}, {"W+", "W-"}, {"ta+", "ta-"} };
       model = "ScalarSingletDM_Z2";
     }
-    
+
     int error = setModel(modeltoset, 1);
     if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set model" + std::string(modeltoset) +
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
@@ -75,12 +75,12 @@ BE_INI_FUNCTION
       // Decays first
       for (auto d : decays)
         for (auto fs : d.second)
-          numout* cc = generate_decay_code(model, d.first, fs);
+          generate_decay_code(model, d.first, fs);
 
       // And two to twos
       for (auto x : xsecs)
         for (auto fs : x.second)
-          numout* cc = generate_xsec_code(model, x.first, fs);
+          generate_xsec_code(model, x.first, fs);
     }
     #ifdef WITH_MPI
       // Wait here until the first rank has generated all matrix elements.
@@ -118,7 +118,7 @@ BE_NAMESPACE
     // Generate process from in and out states
     char *process = new char[(in + " -> " + out[0] + "," + out[1]).length() + 1];
     strcpy(process, (in + " -> " + out[0] + "," + out[1]).c_str());
-    
+
     std::string incpy = in;
     std::string out0cpy = out[0];
     std::string out1cpy = out[1];
@@ -147,7 +147,7 @@ BE_NAMESPACE
 
     // Release all memory allocated by "new" before returning
     delete process;
-    delete libname; 
+    delete libname;
 
     return cc;
   }
@@ -168,7 +168,7 @@ BE_NAMESPACE
           " in CalcHEP. CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
   }
 
-  /// Assigns gambit value to parameter, with error-checking, for parameters that may 
+  /// Assigns gambit value to parameter, with error-checking, for parameters that may
   /// have two different names in CalcHEP, such as alphainv : aEWM1 (FeynRules) / aEWinv (SARAH)
   void Assign_Value(char *parameter1, char *parameter2, double value)
   {
@@ -179,12 +179,12 @@ BE_NAMESPACE
     // If not, then try the second one
     error = assignVal(parameter2, value);
     // If that doesn't work, we can throw an error, eh.
-    if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set " + std::string(parameter1) + 
+    if (error != 0) backend_error().raise(LOCAL_INFO, "Unable to set " + std::string(parameter1) +
           " or " + std::string(parameter2) + " in CalcHEP. " +
           " CalcHEP error code: " + std::to_string(error) + ". Please check your model files.\n");
   }
 
-  /// Takes all parameters in a model, and assigns them by 
+  /// Takes all parameters in a model, and assigns them by
   /// value to the appropriate CalcHEP parameter names.
   void Assign_All_Values(const Spectrum& spec, std::vector<SpectrumParameter> params)
   {
@@ -199,10 +199,10 @@ BE_NAMESPACE
       // Fetch the iterator of element with the parameter name
       std::list<std::string>::iterator it2 = std::find(doNotAssign.begin(), doNotAssign.end(), it->name());
 
-      // If we find the parameter in the "do not assign" list, then don't try and assign it, 
+      // If we find the parameter in the "do not assign" list, then don't try and assign it,
       // or this will throw an error.
       if (it2 != doNotAssign.end())
-      { 
+      {
         continue;
       }
 
@@ -228,8 +228,8 @@ BE_NAMESPACE
         // Ignore any matrix cases, as Par::Pole_Mass should only be scalars or vectors
       }
       // Otherwise, should all have the right names
-      else 
-      { 
+      else
+      {
         const SubSpectrum& HE = spec.get_HE();
 
         // Scalar case
@@ -289,25 +289,25 @@ BE_NAMESPACE
     Assign_Value(pdg2mass(6), spec.get(Par::Pole_Mass, "u_3"));    // mT(mT) MSbar
   }
 
-  /// Passes the width of each BSM particle in the model, from DecayTable to CalcHEP. 
+  /// Passes the width of each BSM particle in the model, from DecayTable to CalcHEP.
   /// Don't set the widths of anything SM, except the top, which can get BSM contributions.
   void Assign_Widths(const DecayTable& tbl)
   {
     // Obtain all generic pdg codes. We can't set these widths..
     const std::vector<std::pair<int, int>> generic_particles = Models::ParticleDB().partmap::get_generic_particles();
     const std::vector<std::pair<int, int>> SM_particles = Models::ParticleDB().partmap::get_SM_particles();
-    
+
     // Iterate through DecayTable. If it is not in the generic particles, or the SM, then go for it.
-    for (std::map<std::pair<int, int>, Gambit::DecayTable::Entry>::const_iterator it = tbl.particles.begin(); 
+    for (std::map<std::pair<int, int>, Gambit::DecayTable::Entry>::const_iterator it = tbl.particles.begin();
           it != tbl.particles.end(); ++it)
     {
       if (std::find(generic_particles.begin(), generic_particles.end(), it->first) != generic_particles.end())
       {
-        continue; 
+        continue;
       }
       if (std::find(SM_particles.begin(), SM_particles.end(), it->first) != SM_particles.end())
       {
-        continue; 
+        continue;
       }
       Assign_Value(pdg2width(it->first.first), tbl.at(it->first).width_in_GeV);
     }
@@ -350,7 +350,7 @@ BE_NAMESPACE
     // Generate process from in and out states
     char *process = new char[(in + " -> " + out[0] + "," + out[1]).length() + 1];
     strcpy(process, (in + " -> " + out[0] + "," + out[1]).c_str());
-    
+
     std::string incpy = in;
     std::string out0cpy = out[0];
     std::string out1cpy = out[1];
@@ -364,7 +364,7 @@ BE_NAMESPACE
     incpy.resize(std::remove_if(incpy.begin(), incpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-incpy.begin());
     out0cpy.resize(std::remove_if(out0cpy.begin(), out0cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out0cpy.begin());
     out1cpy.resize(std::remove_if(out1cpy.begin(), out1cpy.end(), [](char x) {return !isalnum(x) && !isspace(x);})-out1cpy.begin());
-    
+
 
     // Generate libname from model and process name
     char *libname = new char[(model + "_" + incpy + "_to_" + out0cpy + out1cpy).length() + 1];
@@ -404,10 +404,10 @@ BE_NAMESPACE
     double prefactor = p/(8*pi*Msquared);
 
     // Release all memory allocated by "new" before returning
-    delete libname; 
-    delete inbound; 
-    delete outbound_1; 
-    delete outbound_2; 
+    delete libname;
+    delete inbound;
+    delete outbound_1;
+    delete outbound_2;
 
     // Return partial width
     return prefactor*matElement;
@@ -529,11 +529,11 @@ BE_NAMESPACE
       M_squared += dcos*(cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err)); // dcos * dM_squared/dcos
     }
 
-    // If we get a negative ME (or a NaN), and the relative velocity is zero, then try 
+    // If we get a negative ME (or a NaN), and the relative velocity is zero, then try
     // putting in an arbitrarily small value for the velocity.
     if ((M_squared < 0 or std::isnan(M_squared)) and v_rel == 0.)
-    { 
-      // Choose velocity to be non-zero (but effectively zero) to avoid 
+    {
+      // Choose velocity to be non-zero (but effectively zero) to avoid
       // potential unphysical values for p-wave suppressed xsecs.
       double newvel = 1e-6;
 
@@ -555,7 +555,7 @@ BE_NAMESPACE
       pvect[7] = -p_in;
       pvect[8] = E_3;
       pvect[9] = p_out;
-      pvect[12] = E_4; 
+      pvect[12] = E_4;
       pvect[15] = -p_out;
       prefactor = p_out/(32*pi*m_DM*s/sqrt(4-newvel*newvel));
 
@@ -579,7 +579,7 @@ BE_NAMESPACE
     else if (std::isnan(M_squared))
     {
       std::ostringstream err;
-      err << "ERROR: CalcHEP returned a NaN matrix element for the process " 
+      err << "ERROR: CalcHEP returned a NaN matrix element for the process "
           << in[0]  << " " << in[1]  << " to "
           << out[0] << " " << out[1] << " for relative velocity " << v_rel << ".";
       backend_error().raise(LOCAL_INFO, err.str());
