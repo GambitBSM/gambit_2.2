@@ -22,7 +22,7 @@
 #include <stdexcept>
 #include "gambit/Elements/shared_types.hpp"
 #include "gambit/ColliderBit/colliders/BaseCollider.hpp"
-#include "gambit/ColliderBit/colliders/SetHooksClass.hpp"
+#include "gambit/ColliderBit/colliders/Pythia8/SetHooksClass.hpp"
 #include "SLHAea/slhaea.h"
 
 namespace Gambit
