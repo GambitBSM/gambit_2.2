@@ -303,8 +303,8 @@ if args.file:
                     # TODO determine all possible BSM processes automatically
                     # when collider_processes is missing from the .gum file
                     mg5_dir = os.path.join(os.getcwd(),'contrib','MadGraph')
-                    make_madgraph_script(mg5_dir, mg5_output_dir, gum.name, 
-                                         collider_processes, 
+                    make_madgraph_script(mg5_dir, mg5_output_dir, gum.name,
+                                         collider_processes,
                                          multiparticles)
 
                     # Add MadGraph to path and import the python interface
@@ -352,7 +352,7 @@ if args.file:
                 gambit_pdgs, decaybit_dict = \
                     add_new_particleDB_entry(missing_parts, gum.dm_pdg,
                                              gambit_pdgs, decaybit_dict,
-                                             reset_contents, gum.name, 
+                                             reset_contents, gum.name,
                                              gum.dm_decays)
 
         # Grab the antiparticles
@@ -804,9 +804,9 @@ if args.file:
                       existing = False)
 
             #Adding in the Set UserHooks Changes.
-            num = find_string("colliders/SetHooksClass.hpp", m,
+            num = find_string("colliders/Pythia8/SetHooksClass.hpp", m,
                                   "    class SetHooks")[1]
-            amend_file("colliders/SetHooksClass.hpp", m, set_userhook,
+            amend_file("colliders/Pythia8/SetHooksClass.hpp", m, set_userhook,
                            num+14, reset_contents)
 
             num = find_string("getPy8Collider.hpp", m,
