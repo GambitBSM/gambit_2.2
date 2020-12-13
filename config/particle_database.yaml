@@ -162,7 +162,6 @@ OtherModels:
     description: Pseudoscalar Higgs
     name: A0
     spinx2: 0
-
   Sets:
 
   - DecayBit:
