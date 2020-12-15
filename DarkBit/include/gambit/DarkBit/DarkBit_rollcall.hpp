@@ -52,9 +52,10 @@
 ///  \date 2016 August
 ///
 ///  \author Ankit Beniwal
-///          (ankit.beniwal@adelaide.edu.au)
+///          (ankit.beniwal@uclouvain.be)
 ///  \date 2016 Oct
 ///  \date 2018 Jan, Aug
+///  \date 2020 Dec
 ///
 /// \author Aaron Vincent
 ///         (aaron.vincent@cparc.ca)
@@ -851,12 +852,21 @@ START_MODULE
     #undef FUNCTION
   #undef CAPABILITY
 
-  #define CAPABILITY DirectDMNuisanceParameters 
+  #define CAPABILITY DirectDMNuisanceParameters
   START_CAPABILITY
     #define FUNCTION ExtractDirectDMNuisanceParameters
       START_FUNCTION(map_str_dbl)
       DEPENDENCY(SMINPUTS, SMInputs)      
       ALLOW_MODELS(nuclear_params_ChPT)
+    #undef FUNCTION
+  #undef CAPABILITY
+
+   // Likelihoods for nuisance parameters ChPT in DirectDM 2.2.0
+  #define CAPABILITY lnL_nuclear_parameters_ChPT
+  START_CAPABILITY
+    #define FUNCTION lnL_sigmapiN_Deltas_gTs_rs2
+      START_FUNCTION(double)
+      ALLOW_MODELS(nuclear_params_ChPT_sigmapiN)
     #undef FUNCTION
   #undef CAPABILITY
 

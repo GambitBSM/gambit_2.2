@@ -70,6 +70,7 @@
         targetP.setValue("BT10up", myP["BT10up"]);
         targetP.setValue("BT10dp", myP["BT10dp"]);
         targetP.setValue("BT10s", myP["BT10s"]);
+        targetP.setValue("rs2", myP["rs2"]);
 
         logger() << LogTags::debug << "sigmauN = "<< sigmauN << " sigmadN = "<< sigmadN << EOM;
     }

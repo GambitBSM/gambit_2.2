@@ -20,6 +20,10 @@
 ///          (sanjay.bloor12@imperial.ac.uk)
 ///  \date 2020 Mar
 ///
+///  \author Ankit Beniwal
+///          (ankit.beniwal@uclouvain.be)
+///  \date 2020 Dec
+///
 ///  *********************************************
 
 #include "gambit/Elements/gambit_module_headers.hpp"
@@ -346,6 +350,47 @@ namespace Gambit {
                  Stats::gaussian_loglikelihood(a8, a8_obs, 0, a8_obserr, profile) +
                  Stats::gaussian_loglikelihood(deltas, deltas_obs, 0, deltas_obserr, profile);
     }
+
+
+    /// \brief Likelihoods for nuclear parameters (ChPT) in DirectDM 2.2.0
+    /// Default data:
+    ///  sigmapiN = 50 +/- 15 MeV
+    ///  Deltas   = -0.035 +/- 0.009
+    ///  gTs      = -0.027 +/- 0.016
+    ///  rs2      = -0.115 +/- 0.035 GeV^-2
+
+    void lnL_sigmapiN_Deltas_gTs_rs2(double &result)
+    {
+        using namespace Pipes::lnL_sigmapiN_Deltas_gTs_rs2;
+
+        double sigmapiN = *Param["sigmapiN"];
+        double Deltas   = *Param["Deltas"];
+        double gTs      = *Param["gTs"];
+        double rs2      = *Param["rs2"];
+
+        double sigmapiN_obs    = runOptions->getValueOrDef<double>(50., "sigmapiN_obs");
+        double sigmapiN_obserr = runOptions->getValueOrDef<double>(15., "sigmapiN_obserr");
+
+        double Deltas_obs    = runOptions->getValueOrDef<double>(-0.035, "Deltas_obs");
+        double Deltas_obserr = runOptions->getValueOrDef<double>(0.009, "Deltas_obserr");
+
+        double gTs_obs       = runOptions->getValueOrDef<double>(-0.027, "gTs_obs");
+        double gTs_obserr    = runOptions->getValueOrDef<double>(0.016, "gTs_obserr");
+
+        double rs2_obs    = runOptions->getValueOrDef<double>(-0.115, "rs2_obs");
+        double rs2_obserr = runOptions->getValueOrDef<double>(0.035, "rs2_obserr");
+
+        /// Use likelihood version that has been profiled over systematic errors (default false)
+        bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
+
+        result = Stats::gaussian_loglikelihood(sigmapiN, sigmapiN_obs, 0, sigmapiN_obserr, profile)
+            + Stats::gaussian_loglikelihood(Deltas, Deltas_obs, 0, Deltas_obserr, profile)
+            + Stats::gaussian_loglikelihood(gTs, gTs_obs, 0, gTs_obserr, profile)
+            + Stats::gaussian_loglikelihood(rs2, rs2_obs, 0, rs2_obserr, profile);
+
+        logger() << LogTags::debug << "lnL for nuclear parameters (ChPT) is " << result << EOM;
+    }
+
 
     /// \brief Likelihoods for halo parameters. The likelihood for the local DM density follows a
     /// log normal distribution while for the velocities the distribution is Gaussian.

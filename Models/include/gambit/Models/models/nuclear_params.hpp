@@ -19,6 +19,9 @@
 //  Felix Kahlhoefer
 //  2020 December
 //
+//  Ankit Beniwal
+//  2020 December
+//
 //  *********************************************
 
 #ifndef __nuclear_params_hpp__
@@ -57,6 +60,7 @@ namespace Gambit
   DEFINEPARS(mup,mun,ap,an,F2sp)
   DEFINEPARS(gTu,gTd,gTs)
   DEFINEPARS(BT10up,BT10dp,BT10s)
+  DEFINEPARS(rs2)
   INTERPRET_AS_PARENT_FUNCTION(sigmapiN_to_sigma_udN)
   INTERPRET_AS_PARENT_DEPENDENCY(SMINPUTS, SMInputs)
 #undef PARENT
