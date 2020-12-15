@@ -206,12 +206,10 @@ def xsecs(dm, products, gambit_pdg_dict, gambit_model_name,
             " CalcHEP backend function.\n"
             "double sv(str channel, DecayTable& tbl, "
             "double (*sigmav)(str&, std::vector<str>&, std::vector<str>&, "
-            "double&, double&, const DecayTable&), double v_rel)\n"
+            "double&, const DecayTable&), double v_rel)\n"
             "{{\n"
             "/// Returns sigma*v for a given channel.\n"
             "double GeV2tocm3s1 = gev2cm2*s2cm;\n\n"
-            "/// Hard-coded for now -- CalcHEP frontend needs this removing anyway, it doesn't use it.\n"
-            "double QCD_coupling = 1.0;\n\n"
             "// CalcHEP args\n"
             "str model = \"{0}\"; // CalcHEP model name\n"
             "std::vector<str> in = {{\"{1}\", \"{2}\"}}; // In states: DM+DMbar\n"
@@ -229,7 +227,7 @@ def xsecs(dm, products, gambit_pdg_dict, gambit_model_name,
             "\n"
             "// Check the channel has been filled\n"
             "if (out.size() > 1) return "
-            "sigmav(model, in, out, QCD_coupling, v_rel, tbl)*GeV2tocm3s1;\n"
+            "sigmav(model, in, out, v_rel, tbl)*GeV2tocm3s1;\n"
             "else return 0;\n"
             "}\n\n"
     )
@@ -701,7 +699,7 @@ def write_darkbit_rollcall(model_name, pc, does_DM_decay):
         if not does_DM_decay:
             bereq = (
                   "  BACKEND_REQ(CH_Sigma_V, (), double, (str&, "
-                  "std::vector<str>&, std::vector<str>&, double&, double&, "
+                  "std::vector<str>&, std::vector<str>&, double&, "
                   "const DecayTable&))\n"
             )
         pro_cat = dumb_indent(4, (

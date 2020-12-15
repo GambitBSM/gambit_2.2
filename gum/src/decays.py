@@ -245,7 +245,6 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
             "result = DecayTable::Entry();\n"
             "\n"
             "const Spectrum& spec = *Dep::{1};\n"
-            "double QCD_coupling = spec.get(Par::dimensionless, \"g3\");\n"
             "\n"
     ).format(function_name, spectrum)
 
@@ -264,7 +263,7 @@ def write_decaytable_entry_calchep(grouped_decays, gambit_model_name,
             "{{\n"
             "\n"
             "double gamma = BEreq::CH_Decay_Width(model, in, "
-            "out_calchep[i], QCD_coupling); // Partial width\n"
+            "out_calchep[i]); // Partial width\n"
             "double newwidth = result.width_in_GeV + gamma;  "
             "// Adjust total width\n"
             "double wscaling = ( gamma == 0. ) ? 1 : result.width_in_GeV"
@@ -347,7 +346,7 @@ def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays,
                     "    START_FUNCTION(DecayTable::Entry)\n"
                     "    DEPENDENCY({1}, Spectrum)\n{2}"
                     "    BACKEND_REQ(CH_Decay_Width, (), double, (str&, str&, "
-                    "std::vector<str>&, double&))\n"
+                    "std::vector<str>&))\n"
                     "    ALLOW_MODELS({3})\n"
                     "    #undef FUNCTION\n"
             ).format(func, spectrum, extra, model_name)
@@ -363,7 +362,7 @@ def write_decaybit_rollcall_entry_calchep(model_name, spectrum, newdecays,
                     "    START_FUNCTION(DecayTable::Entry)\n"
                     "    DEPENDENCY({2}, Spectrum)\n"
                     "    BACKEND_REQ(CH_Decay_Width, (), double, (str&, str&, "
-                    "std::vector<str>&, double&))\n"
+                    "std::vector<str>&))\n"
                     "    ALLOW_MODELS({3})\n"
                     "    #undef FUNCTION\n"
                     "\n"

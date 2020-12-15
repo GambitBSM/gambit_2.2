@@ -317,7 +317,7 @@ BE_NAMESPACE
 
   /// Provides spin-averaged decay width for 2 body decay process in CM frame at tree-level.
   // TODO: remove dependence on g3 (for alphaS(mZ)).
-  double CH_Decay_Width(str& model, str& in, std::vector<str>& out, double& QCD_coupling)
+  double CH_Decay_Width(str& model, str& in, std::vector<str>& out)
   {
     // Check size of in and out states;
     if (out.size() != 2) backend_error().raise(LOCAL_INFO, "Output vector"
@@ -395,7 +395,7 @@ BE_NAMESPACE
     double pvect[12] = {M, 0, 0, 0, E_1, 0, 0, p, (M-E_1), 0, 0, -p};
 
     // Compute squared matrix element
-    double matElement = cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err);
+    double matElement = cc -> interface -> sqme(1, 0, pvect, NULL, &err);
 
     if(err != 0) backend_error().raise(LOCAL_INFO, "Unable to calculate matrix element associated with " + std::string(process) +
           " in CalcHEP. Please check your model files.\n");
@@ -415,7 +415,7 @@ BE_NAMESPACE
 
   /// Computes annihilation cross-section for 2->2 process, DM+DMbar -> X + Y at tree level.
   /// Coannihilations not currently supported; we require the mass of both in states are equal.
-  double CH_Sigma_V(str& model, std::vector<str>& in, std::vector<str>& out, double& QCD_coupling, double& v_rel, const DecayTable& decays)
+  double CH_Sigma_V(str& model, std::vector<str>& in, std::vector<str>& out, double& v_rel, const DecayTable& decays)
   {
     // Check size of in and out states;
     if (in.size() != 2 or out.size() != 2) backend_error().raise(LOCAL_INFO, "Input and output vectors"
@@ -526,7 +526,7 @@ BE_NAMESPACE
       pvect[11] = p_out*cosT;
       pvect[13] = -pvect[9];
       pvect[15] = -pvect[11];
-      M_squared += dcos*(cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err)); // dcos * dM_squared/dcos
+      M_squared += dcos*(cc -> interface -> sqme(1, 0, pvect, NULL, &err)); // dcos * dM_squared/dcos
     }
 
     // If we get a negative ME (or a NaN), and the relative velocity is zero, then try
@@ -571,7 +571,7 @@ BE_NAMESPACE
         pvect[11] = p_out*cosT;
         pvect[13] = -pvect[9];
         pvect[15] = -pvect[11];
-        M_squared += dcos*(cc -> interface -> sqme(1, QCD_coupling, pvect, NULL, &err)); // dcos * dM_squared/dcos
+        M_squared += dcos*(cc -> interface -> sqme(1, 0, pvect, NULL, &err)); // dcos * dM_squared/dcos
 
       }
     }
