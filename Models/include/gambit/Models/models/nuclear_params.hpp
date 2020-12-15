@@ -46,6 +46,7 @@ namespace Gambit
   DEFINEPARS(mup,mun,ap,an,F2sp)
   DEFINEPARS(gTu,gTd,gTs)
   DEFINEPARS(BT10up,BT10dp,BT10s)
+  DEFINEPARS(rs2)
 #undef MODEL
 
 // Slightly simplified version of the model above with the sigma(u,d)(p,n) calculated in terms of sigmapiN

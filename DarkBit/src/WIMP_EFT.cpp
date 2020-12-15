@@ -26,6 +26,10 @@
 ///          (kahlhoefer@physik.rwth-aachen.de)
 ///  \date 2020 May
 ///
+///  \author Ankit Beniwal
+///          (ankit.beniwal@uclouvain.be)
+///  \date 2020 Dec
+///
 ///  *********************************************
 
 #include <boost/make_shared.hpp>
@@ -302,6 +306,7 @@ namespace Gambit
       // Note! Setting Deltadn equal to Deltaup
       result["Deltaup"] = *Param["Deltaup"];
       result["Deltadn"] = *Param["Deltaup"];
+
       // Note! Setting Deltaun equal to Deltadp
       result["Deltadp"] = *Param["Deltadp"];
       result["Deltaun"] = *Param["Deltadp"];
@@ -324,11 +329,13 @@ namespace Gambit
       // Note! Setting BT10dn equal to BT10up
       result["BT10up"]  = *Param["BT10up"];
       result["BT10dn"]  = *Param["BT10up"];
+
       // Note! Setting BT10un equal to BT10dp
       result["BT10dp"]  = *Param["BT10dp"];
       result["BT10un"]  = *Param["BT10dp"];
 
-      result["BT10s"]   = *Param["BT10s"];      
+      result["BT10s"]   = *Param["BT10s"];
+      result["rs2"]     = *Param["rs2"];
     }
 
     //////////////////////////////////////////////////////////////////////////
