@@ -32,6 +32,7 @@
 #include "gambit/cmake/cmake_variables.hpp"
 
 #include <memory>
+#include <string>
 
 namespace Gambit
 {
@@ -99,16 +100,13 @@ namespace Gambit
         }
 
         // Print the info
-        std::ostringstream ss1, ss2;
         const str firstentry = (&version == std::addressof(*backend.second.begin()) ? backend.first : "");
-        ss1 << nfuncs;
-        ss2 << ntypes;
         table << firstentry << version << path;
         if (status == "OK")
             table.green() << status;
         else
             table.red() << status;
-        table << " " + ss1.str() << ss2.str() << nctors;
+        table << " " + std::to_string(ss1) << std::to_string(ss2) << std::to_string(nctors);
       }
     }
 
