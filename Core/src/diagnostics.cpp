@@ -160,38 +160,39 @@ namespace Gambit
     table.padding(1);
     table.capitalize_title();
     table.default_widths(35, 25);
-    for (std::set<str>::const_iterator it = capabilities.begin(); it != capabilities.end(); ++it)
+    for (const auto& capability : capabilities)
     {
-      std::set<str> modset, beset;
-      str mods, bes, description;
-
       // Make sets of matching modules and backends
-      for (fVec::const_iterator jt = functorList.begin(); jt != functorList.end(); ++jt)
+      std::set<str> modset;
+      for (const auto& functor : functorList)
       {
-        if ((*jt)->capability() == *it) modset.insert((*jt)->origin());
+        if (functor->capability() == capability) modset.insert(functor->origin());
       }
-      for (fVec::const_iterator jt = backendFunctorList.begin(); jt != backendFunctorList.end(); ++jt)
+      std::set<str> beset;
+      for (const auto& functor : backendFunctorList)
       {
-        if ((*jt)->capability() == *it) beset.insert((*jt)->origin());
+        if (functor->capability() == capability) beset.insert(functor->origin());
       }
 
       // Make strings out of the sets
-      for (std::set<str>::const_iterator jt = modset.begin(); jt != modset.end(); ++jt)
+      std::string mods("");
+      for (const auto& mod : modset)
       {
-        if (jt != modset.begin()) mods += ", ";
-        mods += *jt;
+        if (&mod != std::addressof(*modset.begin())) mods += ", ";
+        mods += mod;
       }
-      for (std::set<str>::const_iterator jt = beset.begin(); jt != beset.end(); ++jt)
+      std::string bes("");
+      for (const auto& be : beset)
       {
-        if (jt != beset.begin()) bes += ", ";
-        bes += *jt;
+        if (&be != std::addressof(*beset.begin())) bes += ", ";
+        bes += be;
       }
 
       // Identify the primary model parameters with their models.
-      if (mods.length() == 0 and bes.length() == 0) mods = it->substr(0,it->length()-11);
+      if (mods.length() == 0 and bes.length() == 0) mods = capability.substr(0, capability.length()-11);
 
       // Print the entry in the table (list format)
-      table << *it << mods << bes;
+      table << capability << mods << bes;
     }
     std::stringstream out;
     out << table.str();
