@@ -1,17 +1,17 @@
 ##########################################################################################################
 ## GAMBIT configuration file for a Diver scan of the DMEFT model
 ##
-## Constrains : relic density, gamma rays, direct detection, full LHC likelihood (hard cut-off). 
+## Constrains : relic density, gamma rays, direct detection, capped LHC likelihood (hard cut-off). 
 ## 
-## Only dim-6 (C61-64) and dim-7 (C71-C710) operators.
-## Nuisance parameters: rho0, v0, vesc, mtop.
+## Only dim-6 operators C61-64.
+## Nuisance parameters: rho0, v0, vesc, mtop, sigmapiN, Deltas, gTs, rs2
 ##########################################################################################################
 
 
 Parameters:
 
   # SM parameters.
-  StandardModel_SLHA2: !import include/StandardModel_SLHA2_mtop_2020.yaml
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_scan_DMEFT.yaml
 
   StandardModel_Higgs:
      mH: 125.09
@@ -41,34 +41,24 @@ Parameters:
     C64: 
       range: [-12.56637, 12.56637]
     # Dim 7 -- gluons
-    C71: 
-      range: [-12.56637, 12.56637]
-    C72: 
-      range: [-12.56637, 12.56637]
-    C73:
-      range: [-12.56637, 12.56637]
-    C74: 
-      range: [-12.56637, 12.56637]
+    C71: 0
+    C72: 0
+    C73: 0
+    C74: 0
     # Dim 7 -- Higgs induced bilinears
     # Scalar scalar
-    C75: 
-      range: [-12.56637, 12.56637]
+    C75: 0
     # Pseudoscalar scalar
-    C76: 
-      range: [-12.56637, 12.56637]
+    C76: 0
     # Scalar pseudoscalar
-    C77: 
-      range: [-12.56637, 12.56637]
+    C77: 0
     # Pseudoscalar pseudoscalar
-    C78: 
-      range: [-12.56637, 12.56637]
+    C78: 0
     # Dim 7 -- tensor currents
     # sigma sigma
-    C79: 
-      range: [-12.56637, 12.56637]
+    C79: 0
     # sigma*ig5 sigma
-    C710: 
-      range: [-12.56637, 12.56637]
+    C710: 0
 
   # NFW profile
   Halo_gNFW_rho0:
@@ -86,7 +76,7 @@ Parameters:
     gamma: 1
 
   # Chiral nuclear parameters for DirectDM
-  nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults_2020.yaml
+  nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_DMEFT.yaml
 
 Priors:
 
@@ -160,6 +150,10 @@ ObsLikes:
   - capability: lnL_t_mass
     purpose:    LogLike
 
+  # DirectDM nuisance parameters 
+  - capability: lnL_nuclear_parameters_ChPT
+    purpose: LogLike
+    
 Rules:
 
   - capability: RD_oh2
@@ -198,7 +192,7 @@ Rules:
     
   - capability: LHC_Combined_LogLike
     options:
-      cap_loglike: false
+      cap_loglike: true
       skip_analyses:
         - CMS_13TeV_MONOJET_36invfb_interpolated_nocovar
 
@@ -264,7 +258,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "dim-6+7_full_hard.hdf5"
+    output_file: "DMEFT_dim_6_capped_hard.hdf5"
     delete_file_on_restart: false
     buffer_length: 1000
     group: "/DMEFT"
@@ -292,7 +286,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT/Dim_6+7/full_hard/"
+  default_output_path: "runs/DMEFT_dim_6_capped_hard/"
 
   debug: false
   print_timing_data: false
