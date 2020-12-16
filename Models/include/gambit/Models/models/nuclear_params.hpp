@@ -39,11 +39,11 @@ namespace Gambit
 // and follows the naming conventions given in 1708.02678.
 #define MODEL nuclear_params_ChPT
   START_MODEL
-  DEFINEPARS(gA, mG)
+  DEFINEPARS(gA,mG)
   DEFINEPARS(sigmaup,sigmadp,sigmaun,sigmadn,sigmas)
-  DEFINEPARS(Deltaup,Deltadp,Deltas)
+  DEFINEPARS(DeltauDeltad,Deltas)
   DEFINEPARS(B0mu,B0md,B0ms)
-  DEFINEPARS(mup,mun,ap,an,F2sp)
+  DEFINEPARS(mup,mun,mus)
   DEFINEPARS(gTu,gTd,gTs)
   DEFINEPARS(BT10up,BT10dp,BT10s)
   DEFINEPARS(rs2)
@@ -54,11 +54,11 @@ namespace Gambit
 #define PARENT nuclear_params_ChPT
   START_MODEL
   DEFINEPARS(sigmapiN,Bc5m)
-  DEFINEPARS(gA, mG)
+  DEFINEPARS(gA,mG)
   DEFINEPARS(sigmas)
-  DEFINEPARS(Deltaup,Deltadp,Deltas)
+  DEFINEPARS(DeltauDeltad,Deltas)
   DEFINEPARS(B0mu,B0md,B0ms)
-  DEFINEPARS(mup,mun,ap,an,F2sp)
+  DEFINEPARS(mup,mun,mus)
   DEFINEPARS(gTu,gTd,gTs)
   DEFINEPARS(BT10up,BT10dp,BT10s)
   DEFINEPARS(rs2)

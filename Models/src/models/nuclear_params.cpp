@@ -50,27 +50,7 @@
         targetP.setValue("sigmadp", sigmadN);
         targetP.setValue("sigmadn", sigmadN);
 
-        targetP.setValue("gA", myP["gA"]);
-        targetP.setValue("mG", myP["mG"]);
-        targetP.setValue("sigmas", myP["sigmas"]);
-        targetP.setValue("Deltaup", myP["Deltaup"]);
-        targetP.setValue("Deltadp", myP["Deltadp"]);
-        targetP.setValue("Deltas", myP["Deltas"]);
-        targetP.setValue("B0mu", myP["B0mu"]);
-        targetP.setValue("B0md", myP["B0md"]);
-        targetP.setValue("B0ms", myP["B0ms"]);
-        targetP.setValue("mup", myP["mup"]);
-        targetP.setValue("mun", myP["mun"]);
-        targetP.setValue("ap", myP["ap"]);
-        targetP.setValue("an", myP["an"]);
-        targetP.setValue("F2sp", myP["F2sp"]);
-        targetP.setValue("gTu", myP["gTu"]);
-        targetP.setValue("gTd", myP["gTd"]);
-        targetP.setValue("gTs", myP["gTs"]);
-        targetP.setValue("BT10up", myP["BT10up"]);
-        targetP.setValue("BT10dp", myP["BT10dp"]);
-        targetP.setValue("BT10s", myP["BT10s"]);
-        targetP.setValue("rs2", myP["rs2"]);
+        targetP.setValues(myP, false);
 
         logger() << LogTags::debug << "sigmauN = "<< sigmauN << " sigmadN = "<< sigmadN << EOM;
     }

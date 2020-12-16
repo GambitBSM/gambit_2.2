@@ -297,20 +297,14 @@ namespace Gambit
       // Then top it up with parameters from nuclear_params_ChPT.
       result["gA"]      = *Param["gA"];
       result["mG"]      = *Param["mG"];
+      
       result["sigmaup"] = *Param["sigmaup"];
       result["sigmadp"] = *Param["sigmadp"];
       result["sigmaun"] = *Param["sigmaun"];
       result["sigmadn"] = *Param["sigmadn"];
       result["sigmas"]  = *Param["sigmas"];
 
-      // Note! Setting Deltadn equal to Deltaup
-      result["Deltaup"] = *Param["Deltaup"];
-      result["Deltadn"] = *Param["Deltaup"];
-
-      // Note! Setting Deltaun equal to Deltadp
-      result["Deltadp"] = *Param["Deltadp"];
-      result["Deltaun"] = *Param["Deltadp"];
-      
+      result["DeltauDeltad"] = *Param["DeltauDeltad"];
       result["Deltas"]  = *Param["Deltas"];
 
       result["B0mu"]    = *Param["B0mu"];
@@ -319,9 +313,8 @@ namespace Gambit
 
       result["mup"]     = *Param["mup"];
       result["mun"]     = *Param["mun"];
-      result["ap"]      = *Param["ap"];
-      result["an"]      = *Param["an"];
-      result["F2sp"]    = *Param["F2sp"];
+      result["mus"]     = *Param["mus"];
+
       result["gTu"]     = *Param["gTu"];
       result["gTd"]     = *Param["gTd"];
       result["gTs"]     = *Param["gTs"];
