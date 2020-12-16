@@ -245,6 +245,9 @@ else()
   message("${BoldCyan} X Axel is disabled. Please use -DWITH_AXEL=ON to enable fast downloads with Axel.${ColourReset}")
 endif()
 
+# Check for X11
+find_package(X11)
+
 # Do OSX checks
 include(cmake/MacOSX.cmake)
 
