@@ -41,7 +41,7 @@ namespace Gambit
   START_MODEL
   DEFINEPARS(gA, mG)
   DEFINEPARS(sigmaup,sigmadp,sigmaun,sigmadn,sigmas)
-  DEFINEPARS(Deltaup,Deltadp,Deltas)
+  DEFINEPARS(DeltauDeltad,Deltas)
   DEFINEPARS(B0mu,B0md,B0ms)
   DEFINEPARS(mup,mun,ap,an,F2sp)
   DEFINEPARS(gTu,gTd,gTs)
@@ -56,7 +56,7 @@ namespace Gambit
   DEFINEPARS(sigmapiN,Bc5m)
   DEFINEPARS(gA, mG)
   DEFINEPARS(sigmas)
-  DEFINEPARS(Deltaup,Deltadp,Deltas)
+  DEFINEPARS(DeltauDeltad,Deltas)
   DEFINEPARS(B0mu,B0md,B0ms)
   DEFINEPARS(mup,mun,ap,an,F2sp)
   DEFINEPARS(gTu,gTd,gTs)

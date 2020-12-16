@@ -303,13 +303,7 @@ namespace Gambit
       result["sigmadn"] = *Param["sigmadn"];
       result["sigmas"]  = *Param["sigmas"];
 
-      // Note! Setting Deltadn equal to Deltaup
-      result["Deltaup"] = *Param["Deltaup"];
-      result["Deltadn"] = *Param["Deltaup"];
-
-      // Note! Setting Deltaun equal to Deltadp
-      result["Deltadp"] = *Param["Deltadp"];
-      result["Deltaun"] = *Param["Deltadp"];
+      result["DeltauDeltad"] = *Param["DeltauDeltad"];
       
       result["Deltas"]  = *Param["Deltas"];
 

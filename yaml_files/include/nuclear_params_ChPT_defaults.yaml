@@ -21,8 +21,7 @@ sigmadp : 0.032
 sigmaun : 0.015
 sigmadn : 0.036
 sigmas  : 0.0413
-Deltaup : 0.897
-Deltadp : -0.376
+DeltauDeltad : 0.440
 Deltas  : -0.031
 B0mu    : 0.0061
 B0md    : 0.00133
