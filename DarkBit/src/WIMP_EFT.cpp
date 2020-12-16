@@ -305,7 +305,7 @@ namespace Gambit
       result["sigmas"]  = *Param["sigmas"];
 
       result["DeltauDeltad"] = *Param["DeltauDeltad"];
-      result["Deltas"]  = *Param["Deltas"];
+      result["Deltas"]       = *Param["Deltas"];
 
       result["B0mu"]    = *Param["B0mu"];
       result["B0md"]    = *Param["B0md"];
