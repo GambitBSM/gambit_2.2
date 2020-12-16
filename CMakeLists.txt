@@ -247,6 +247,9 @@ endif()
 
 # Check for X11
 find_package(X11)
+if(NOT X11_FOUND)
+  message("${BoldRed}   X11 not found. Backends such as CalcHEP that require X11 will be disabled.${ColourReset}")
+endif()
 
 # Do OSX checks
 include(cmake/MacOSX.cmake)
