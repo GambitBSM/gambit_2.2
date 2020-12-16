@@ -54,7 +54,7 @@ namespace Gambit
     }
     std::stringstream out;
     out << table.str();
-    if (out.str().size() > 0)
+    if (not out.str().empty())
         print_to_screen(out.str(), "module");
   }
 
@@ -117,7 +117,7 @@ namespace Gambit
     if (all_good) out << endl << endl << "\033[032m" << "All your backend are belong to us." << "\033[0m" << endl;
     out << endl;
     out << table.str();
-    if (out.str().size() > 0)
+    if (not out.str().empty())
         print_to_screen(out.str(), "backend");
   }
 
@@ -147,7 +147,7 @@ namespace Gambit
         out << endl << "To get postscript plot of model hierarchy, please install graphviz, rerun cmake and remake GAMBIT." << endl;
     #endif
       out << table.str();
-    if (out.str().size() > 0)
+    if (not out.str().empty())
     print_to_screen(out.str(), "model");
   }
 
@@ -196,7 +196,7 @@ namespace Gambit
     }
     std::stringstream out;
     out << table.str();
-    if (out.str().size() > 0)
+    if (not out.str().empty())
         print_to_screen(out.str(), "capability");
   }
 
@@ -205,7 +205,7 @@ namespace Gambit
   {
     // Import scanner plugin info from ScannerBit
     std::string output = Scanner::Plugins::plugin_info().print_all("scanner");
-    if (output.length() > 0)
+    if (not output.empty())
         print_to_screen(output, "scanners");
   }
 
@@ -213,14 +213,14 @@ namespace Gambit
   void gambit_core::test_function_diagnostic()
   {
     std::string output = Scanner::Plugins::plugin_info().print_all("objective");
-    if (output.length() > 0)
+    if (not output.empty())
         print_to_screen(output, "objectives");
   }
 
   void gambit_core::prior_diagnostic()
   {
     std::string output = Scanner::Plugins::plugin_info().print_priors("priors");
-    if (output.length() > 0)
+    if (not output.empty())
         print_to_screen(output, "priors");
   }
 
