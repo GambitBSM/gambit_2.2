@@ -14,7 +14,7 @@ Parameters:
      mH: 125.09
 
   # Direct detection
-  nuclear_params_ChPT: !import include/nuclear_params_ChPT_defaults.yaml
+  nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_defaults.yaml
 
   DMEFT:
     # DM mass

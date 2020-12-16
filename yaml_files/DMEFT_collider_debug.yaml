@@ -231,10 +231,6 @@ Rules:
     function: InterpolatedMCInfo 
     module: ColliderBit
 
-  # # Get analysis numbers from the DMEFT interpolated yields calculator
-  # - capability: AllAnalysisNumbers
-  #   function: DMEFT_results
-    
   - capability: LHC_LogLikes
     backends:
     - {capability: lnlike_marg_poisson_lognormal_error}
@@ -284,7 +280,8 @@ Rules:
     #  6: Simplex algorithm of Nelder and Mead ver. 2
     #  7: Simplex algorithm of Nelder and Mead: random initialization
 
-
+  - capability: AllAnalysisNumbers
+    function: DMEFT_results_profiled
 
   # Use the WIMP properties structure to get WIMP mass etc.
   - capability: mwimp

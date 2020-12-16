@@ -72,7 +72,7 @@ Printer:
 
 Scanner:
 
-  use_scanner: multinest
+  use_scanner: de
   
   scanners:
 
@@ -86,11 +86,12 @@ Scanner:
       like: LogLike
       NP: 100
 
-    multinest:
+    mn:
       plugin: multinest
       like:  LogLike
       nlive: 10000
       tol: 0.1
+
     mcmc:
       plugin: great
       like: LogLike
@@ -131,7 +132,7 @@ Rules:
 
   # Get analysis numbers from the DMEFT interpolated yields calculator
   - capability: AllAnalysisNumbers
-    function: DMEFT_results
+    function: DMEFT_results_cutoff
     
   - capability: LHC_LogLikes
     backends:
