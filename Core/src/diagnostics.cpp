@@ -31,6 +31,8 @@
 #include "gambit/ScannerBit/plugin_loader.hpp"
 #include "gambit/cmake/cmake_variables.hpp"
 
+#include <memory>
+
 namespace Gambit
 {
 
@@ -66,43 +68,42 @@ namespace Gambit
     table.default_widths(18, 7, 70, 13, 3, 3);
 
     // Loop over all registered backends
-    for (std::map<str, std::set<str> >::const_iterator it = backend_versions.begin(); it != backend_versions.end(); ++it)
+    for (const auto& backend : backend_versions)
     {
       // Loop over all registered versions of this backend
-      for (std::set<str>::const_iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+      for (const auto& version : backend.second)
       {
         int nfuncs = 0;
         int ntypes = 0;
         int nctors = 0;
 
         // Retrieve the status and path info.
-        const str path = backendData->path(it->first,*jt);                              // Get the path of this backend
-        const str status = backend_status(it->first, *jt, all_good);                    // Save the status of this backend
+        const str path = backendData->path(backend.first, version);           // Get the path of this backend
+        const str status = backend_status(backend.first, version, all_good);  // Save the status of this backend
 
         // Count up the number of functions in this version of the backend, using the registered functors.
-        for (fVec::const_iterator kt = backendFunctorList.begin(); kt != backendFunctorList.end(); ++kt)
+        for (const auto& functor : backendFunctorList)
         {
-          if ((*kt)->origin() == it->first and (*kt)->version() == *jt) nfuncs++; // If backend matches, increment the count of the functions in this version
+          if (functor->origin() == backend.first and functor->version() == version) nfuncs++; // If backend matches, increment the count of the functions in this version
         }
 
         // Do things specific to versions that provide classes
-        if (backendData->classloader.at(it->first+*jt))
+        if (backendData->classloader.at(backend.first + version))
         {
-          std::set<str> classes = backendData->classes.at(it->first+*jt);     // Retrieve classes loaded by this version
-          ntypes = classes.size();                                            // Get the number of classes loaded by this backend
-          for (std::set<str>::const_iterator kt = classes.begin(); kt != classes.end(); ++kt)
+          std::set<str> classes = backendData->classes.at(backend.first + version);  // Retrieve classes loaded by this version
+          ntypes = classes.size();                                                   // Get the number of classes loaded by this backend
+          for (const auto& class_ : classes)  // class is a C++ keyword, so use class_ here which allows the same readability.
           {
-            nctors += backendData->factory_args.at(it->first+*jt+*kt).size(); // Add the number of factories for this class to the total
+            nctors += backendData->factory_args.at(backend.first + version + class_).size(); // Add the number of factories for this class to the total
           }
         }
 
         // Print the info
         std::ostringstream ss1, ss2;
-        str ss1a, ss2a;
-        const str firstentry = (jt == it->second.begin() ? it->first : "");
+        const str firstentry = (&version == std::addressof(*backend.second.begin()) ? backend.first : "");
         ss1 << nfuncs;
         ss2 << ntypes;
-        table << firstentry << *jt << path;
+        table << firstentry << version << path;
         if (status == "OK")
             table.green() << status;
         else
