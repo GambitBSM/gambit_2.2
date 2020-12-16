@@ -16,6 +16,10 @@
 ///          (t.e.gonzalo@fys.uio.no)
 ///  \date 2017 Jun
 ///
+///  \author Markus Prim
+///          (markus.prim@cern.ch)
+///  \date 2020 Dec
+///
 ///  *********************************************
 
 #include "gambit/Core/core.hpp"
@@ -37,14 +41,14 @@ namespace Gambit
     table.padding(1);
     table.capitalize_title();
     table.default_widths(25);
-    for (std::set<str>::const_iterator it = modules.begin(); it != modules.end(); ++it)
+    for (const auto& module : modules)
     {
       int nf = 0;
-      for (fVec::const_iterator jt = functorList.begin(); jt != functorList.end(); ++jt)
+      for (const auto& functor : functorList)
       {
-        if ((*jt)->origin() == *it) nf++;
+        if (functor->origin() == module) nf++;
       }
-      table << *it << nf;
+      table << module << nf;
     }
     std::stringstream out;
     out << table.str();
