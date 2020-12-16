@@ -187,7 +187,7 @@ namespace Gambit
       }
 
       // Identify the primary model parameters with their models.
-      if (mods.length() == 0 and bes.length() == 0) mods = capability.substr(0, capability.length()-11);
+      if (mods.empty() and bes.empty()) mods = capability.substr(0, capability.length()-11);
 
       // Print the entry in the table (list format)
       table << capability << mods << bes;
