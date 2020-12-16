@@ -106,7 +106,7 @@ namespace Gambit
             table.green() << status;
         else
             table.red() << status;
-        table << " " + std::to_string(ss1) << std::to_string(ss2) << std::to_string(nctors);
+        table << " " + std::to_string(nfuncs) << std::to_string(ntypes) << std::to_string(nctors);
       }
     }
 
