@@ -129,11 +129,11 @@ namespace Gambit
     table.default_widths(35);
     table.padding(1);
     table.capitalize_title();
-    for (pmfVec::const_iterator it = primaryModelFunctorList.begin(); it != primaryModelFunctorList.end(); ++it)
+    for (const auto& functor : primaryModelFunctorList)
     {
-      str model = (*it)->origin();
+      str model = functor->origin();
       str parentof = modelInfo->get_parent(model);
-      int nparams = (*it)->valuePtr()->getNumberOfPars();
+      int nparams = functor->valuePtr()->getNumberOfPars();
       table << model << parentof << nparams;
     }
     #ifdef HAVE_GRAPHVIZ
