@@ -1460,7 +1460,7 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
+  #set_as_default_version("backend" ${name} ${ver})
 endif()
 
 
@@ -1505,13 +1505,13 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
+  #set_as_default_version("backend" ${name} ${ver})
 endif()
 
 # Fjcontrib
 set(name "fjcontrib")
 set(ver "1.041")
-set(dl "http://fastjet.hepforge.org/contrib/downloads/fjcontrib-1.041.tar.gz")
+set(dl "http://fastjet.hepforge.org/contrib/downloads/${name}-${ver}.tar.gz")
 set(md5 "b37674a8701af52b58ebced94a270877")
 set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
 set(fastjet_name "fastjet")
@@ -1530,7 +1530,7 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
+  #set_as_default_version("backend" ${name} ${ver})
 endif()
 
 
@@ -1643,7 +1643,7 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ${CMAKE_INSTALL_PROGRAM}
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
+  #set_as_default_version("backend" ${name} ${ver})
 endif()
 
 
@@ -1669,7 +1669,7 @@ if(NOT ditched_${name}_${ver})
     INSTALL_COMMAND ""
   )
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
-  set_as_default_version("backend" ${name} ${ver})
+  #set_as_default_version("backend" ${name} ${ver})
 endif()
 
 
