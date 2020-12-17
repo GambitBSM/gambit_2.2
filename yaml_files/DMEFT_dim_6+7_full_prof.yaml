@@ -314,7 +314,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT_dim_6+7_full_prof/"
+  default_output_path: "runs/DMEFT/dim_6+7_full_prof/"
 
   debug: false
   print_timing_data: false
