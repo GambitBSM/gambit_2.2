@@ -222,7 +222,7 @@ namespace Gambit
         print_to_screen(output, "priors");
   }
 
-  void gambit_core::ff_prior_diagnostic(str& command)
+  void gambit_core::ff_prior_diagnostic(const str& command)
   {
     if (command != "priors")
     {
@@ -233,7 +233,7 @@ namespace Gambit
   }
 
   /// Free-form module diagnostic function
-  void gambit_core::ff_module_diagnostic(str& command)
+  void gambit_core::ff_module_diagnostic(const str& command)
   {
     std::stringstream out; //added this!  not 'cout' but 'out'
     for (std::set<str>::const_iterator it = modules.begin(); it != modules.end(); ++it)
@@ -293,7 +293,7 @@ namespace Gambit
   }
 
   /// Free-form backend diagnostic function
-  void gambit_core::ff_backend_diagnostic(str& command)
+  void gambit_core::ff_backend_diagnostic(const str& command)
   {
     std::stringstream out;
     //Iterate over all backends to see if command matches one of them
@@ -390,7 +390,7 @@ namespace Gambit
   }
 
   /// Free-form model diagnostic function
-  void gambit_core::ff_model_diagnostic(str& command)
+  void gambit_core::ff_model_diagnostic(const str& command)
   {
     std::stringstream out;
     //Iterate over all models to see if command matches one of them
@@ -427,7 +427,7 @@ namespace Gambit
   }
 
   /// Free-form capability diagnostic function
-  void gambit_core::ff_capability_diagnostic(str& command)
+  void gambit_core::ff_capability_diagnostic(const str& command)
   {
     std::stringstream out;
     //Iterate over all capabilities to see if command matches one of them
@@ -471,7 +471,7 @@ namespace Gambit
   }
 
   /// Free-form scanner diagnostic function
-  void gambit_core::ff_scanner_diagnostic(str& command)
+  void gambit_core::ff_scanner_diagnostic(const str& command)
   {
     std::string output = Scanner::Plugins::plugin_info().print_plugin("scanner", command);
     if (output.length() > 0)
@@ -479,7 +479,7 @@ namespace Gambit
   }
 
   /// Free-form test function diagnostic function
-  void gambit_core::ff_test_function_diagnostic(str& command)
+  void gambit_core::ff_test_function_diagnostic(const str& command)
   {
     std::string output = Scanner::Plugins::plugin_info().print_plugin("objective", command);
     if (output.length() > 0)
