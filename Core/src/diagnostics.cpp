@@ -237,49 +237,49 @@ namespace Gambit
   /// Free-form module diagnostic function
   void gambit_core::ff_module_diagnostic(const str& command)
   {
-    std::stringstream out; //added this!  not 'cout' but 'out'
-    for (std::set<str>::const_iterator it = modules.begin(); it != modules.end(); ++it)
+    std::stringstream out; // added this!  not 'cout' but 'out'
+    for (const auto& module : modules)
     {
-      if (command == *it)
+      if (command == module)
       {
-        out << "Information for module " << *it << "." << std::endl << std::endl;
+        out << "Information for module " << module << "." << std::endl << std::endl;
         table_formatter table("", "", "", "LOOP MANAGER:", "DEPENDENCIES / BACKEND REQUIREMENTS");
         table.new_titles("Function", "Capability", "Result Type", " IS  NEEDS", "[type]         {type}");
         table.padding(1);
         table.capitalize_title();
         table.default_widths(30, 35, 35, 19, 27);
 
-        for (fVec::const_iterator jt = functorList.begin(); jt != functorList.end(); ++jt)
+        for (const auto& functor : functorList)
         {
-          if ((*jt)->origin() == *it)              // Module matches
+          if (functor->origin() == module)  // Module matches
           {
-            str f = (*jt)->name();
-            str c = (*jt)->capability();
-            str t = (*jt)->type();
-            str islm = (*jt)->canBeLoopManager() ? "Yes" : "No ";
-            str nlm  = (*jt)->loopManagerCapability();
-            std::set<sspair> deps = (*jt)->dependencies();
-            std::set<sspair> reqs = (*jt)->backendreqs();
+            const str f = functor->name();
+            const str c = functor->capability();
+            const str t = functor->type();
+            const str islm = functor->canBeLoopManager() ? "Yes" : "No ";
+            const str nlm  = functor->loopManagerCapability();
+            const std::set<sspair> deps = functor->dependencies();
+            const std::set<sspair> reqs = functor->backendreqs();
             table.no_newline() << f << c << t << (" " + islm + " " + nlm);
 
             if (not deps.empty())
             {
-              for (std::set<sspair>::const_iterator kt = deps.begin(); kt != deps.end(); ++kt)
+              for (const auto& dep : deps)
               {
-                if (kt != deps.begin())
-                    table.no_newline() << "" << "" << "" << "" << kt->first + " [" + kt->second + "]";
+                if (&dep != std::addressof(*deps.begin()))
+                    table.no_newline() << "" << "" << "" << "" << dep.first + " [" + dep.second + "]";
                 else
-                    table << kt->first + " [" + kt->second + "]";
+                    table << dep.first + " [" + dep.second + "]";
               }
             }
             if (not reqs.empty())
             {
-              for (std::set<sspair>::const_iterator kt = reqs.begin(); kt != reqs.end(); ++kt)
+              for (const auto& req : reqs)
               {
-                if (kt != reqs.begin() or not deps.empty())
-                    table.no_newline() << "" << "" << "" << "" << kt->first + " {" + kt->second + "}";
+                if (&req != std::addressof(*reqs.begin()) or not deps.empty())
+                    table.no_newline() << "" << "" << "" << "" << req.first + " {" + req.second + "}";
                 else
-                    table << kt->first + " {" + kt->second + "}";
+                    table << req.first + " {" + req.second + "}";
               }
             }
             if (reqs.empty() and deps.empty()) table << "";
@@ -290,7 +290,7 @@ namespace Gambit
         break;
       }
     }
-    if (out.str().size() > 0)
+    if (not out.str().empty())
         print_to_screen(out.str(), command);
   }
 
