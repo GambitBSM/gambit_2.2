@@ -354,7 +354,7 @@ namespace Gambit {
 
     /// \brief Likelihoods for nuclear parameters (ChPT) in DirectDM 2.2.0
     /// Default data:
-    ///  sigmapiN = 50 +/- 15 MeV
+    ///  sigmapiN = 0.050 +/- 0.015 GeV
     ///  Deltas   = -0.035 +/- 0.009
     ///  gTs      = -0.027 +/- 0.016
     ///  rs2      = -0.115 +/- 0.035 GeV^-2
@@ -368,8 +368,8 @@ namespace Gambit {
         double gTs      = *Param["gTs"];
         double rs2      = *Param["rs2"];
 
-        double sigmapiN_obs    = runOptions->getValueOrDef<double>(50., "sigmapiN_obs");
-        double sigmapiN_obserr = runOptions->getValueOrDef<double>(15., "sigmapiN_obserr");
+        double sigmapiN_obs    = runOptions->getValueOrDef<double>(0.050, "sigmapiN_obs");
+        double sigmapiN_obserr = runOptions->getValueOrDef<double>(0.015, "sigmapiN_obserr");
 
         double Deltas_obs    = runOptions->getValueOrDef<double>(-0.035, "Deltas_obs");
         double Deltas_obserr = runOptions->getValueOrDef<double>(0.009, "Deltas_obserr");
@@ -387,7 +387,7 @@ namespace Gambit {
             + Stats::gaussian_loglikelihood(Deltas, Deltas_obs, 0, Deltas_obserr, profile)
             + Stats::gaussian_loglikelihood(gTs, gTs_obs, 0, gTs_obserr, profile)
             + Stats::gaussian_loglikelihood(rs2, rs2_obs, 0, rs2_obserr, profile);
-
+        
         logger() << LogTags::debug << "lnL for nuclear parameters (ChPT) is " << result << EOM;
     }
 

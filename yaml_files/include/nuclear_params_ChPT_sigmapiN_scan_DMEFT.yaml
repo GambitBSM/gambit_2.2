@@ -10,11 +10,11 @@
 ##
 ## Values from Direct v2.2.0: https://github.com/DirectDM/directdm-py/blob/master/directdm/num/num_input.py
 ##
-## Fixed values in GeV where units apply.
+## All values in GeV where units apply.
 ############################################################################################################
 
 sigmapiN     :
-               range: [5, 95]
+               range: [0.005, 0.095]
 Bc5m         : -0.51e-3
 gA           : 1.2756
 mG           : 0.836

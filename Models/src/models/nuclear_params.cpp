@@ -52,7 +52,8 @@
 
         targetP.setValues(myP, false);
 
-        logger() << LogTags::debug << "sigmauN = "<< sigmauN << " sigmadN = "<< sigmadN << EOM;
+        logger() << LogTags::debug << "sigmapiN = "<< sigmapiN << " Bc5m = "<< Bc5m << " xi = "<< xi << EOM;
+        logger() << LogTags::debug << "sigmauN = " << sigmauN  << " sigmadN = "<< sigmadN << EOM;
     }
 #undef PARENT
 #undef MODEL
