@@ -7,7 +7,7 @@
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
-///   
+///
 ///  \author Anders Kvellestad
 ///  \date 2019 Jul
 ///
@@ -23,17 +23,3 @@
 #undef MODEL
 
 #endif /* defined(__cb_slha_file_model_hpp__) */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
