@@ -473,8 +473,8 @@ namespace Gambit
   /// Free-form scanner diagnostic function
   void gambit_core::ff_scanner_diagnostic(const str& command)
   {
-    std::string output = Scanner::Plugins::plugin_info().print_plugin("scanner", command);
-    if (output.length() > 0)
+    const std::string output = Scanner::Plugins::plugin_info().print_plugin("scanner", command);
+    if (not output.empty())
         print_to_screen(output, command);
   }
 
