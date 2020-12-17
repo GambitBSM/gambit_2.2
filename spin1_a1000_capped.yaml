@@ -1,7 +1,8 @@
 ########################################################################################
-## GAMBIT configuration for diver scan of the DMEFT model (Figs 5.4-5.6 in SB thesis)
+## GAMBIT configuration for diver scan of the DMEFT model
+## Resulting chain should reproduce Figs 5.4-5.6 in Sanjay's thesis
 ##
-## Contains relic density, gamma rays, direct detection, monojets
+## Contains relic density, gamma rays, direct detection, monojet
 ##
 ## Only spin-1 operators C61-64
 ## No nuisance parameters.
@@ -76,7 +77,7 @@ Parameters:
     gamma: 1
 
   # Chiral nuclear parameters for DirectDM
-  nuclear_params_ChPT_sigmapiN: !import yaml_files/include/nuclear_params_ChPT_sigmapiN_scan_DMEFT.yaml
+  nuclear_params_ChPT_sigmapiN: !import yaml_files/include/nuclear_params_ChPT_sigmapiN_def_DMEFT.yaml
 
 Priors:
 
@@ -158,10 +159,6 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
-  # Get details about the nuisance parameter 'a'
-  - purpose:    Observable
-    capability: DMEFT_profiled_LHC_nuisance_params
-
   # # Nuisance parameters
   
   # # DM Local Halo likelihoods
@@ -182,7 +179,6 @@ Rules:
 
   - capability: RD_oh2
     function: RD_oh2_general # Use the DarkBit native calculator for the relic density
-    #function: RD_oh2_MicrOmegas # NOT YET WORKING Use MicrOMEGAs for the relic density
 
   # Choose to implement the relic density likelihood as an upper bound, not a detection
   - capability: lnL_oh2
@@ -240,22 +236,8 @@ Rules:
       nuisance_prof_verbosity: 0
 
   # Hard cut-off of the pT/ETmiss spectrum for pT/ETmiss > Lambda
-    - capability: AllAnalysisNumbers
-      function: DMEFT_results_cutoff
-
-  - capability: DMEFT_profiled_LHC_nuisance_params
-    function: calc_DMEFT_profiled_LHC_nuisance_params
-    options:
-      use_fixed_value_a: 1000.0  # This will switch off the profiling
-      # init_values_a: [1.0, 2.0, 3.0]
-      range_a: [0.0, 4.0]
-      nuisance_prof_initstep: 0.1
-      nuisance_prof_convtol: 0.1
-      nuisance_prof_maxsteps: 15
-      nuisance_prof_convacc: 0.1
-      nuisance_prof_simplexsize: 1e-5
-      nuisance_prof_method: 6
-      nuisance_prof_verbosity: 0
+  - capability: AllAnalysisNumbers
+    function: DMEFT_results_cutoff
 
   # Use the WIMP properties structure to get WIMP mass etc.
   - capability: mwimp
@@ -302,9 +284,8 @@ KeyValues:
   likelihood:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
-    debug: true
     
   default_output_path: "runs/DMEFT/spin1_a1000_capped/"
 
-  debug: true
-  print_timing_data: true
+  debug: false
+  print_timing_data: false
