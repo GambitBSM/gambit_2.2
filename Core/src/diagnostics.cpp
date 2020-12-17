@@ -91,7 +91,7 @@ namespace Gambit
         // Do things specific to versions that provide classes
         if (backendData->classloader.at(backend.first + version))
         {
-          std::set<str> classes = backendData->classes.at(backend.first + version);  // Retrieve classes loaded by this version
+          const std::set<str> classes = backendData->classes.at(backend.first + version);  // Retrieve classes loaded by this version
           ntypes = classes.size();                                                   // Get the number of classes loaded by this backend
           for (const auto& class_ : classes)  // class is a C++ keyword, so use class_ here which allows the same readability.
           {
@@ -122,21 +122,23 @@ namespace Gambit
   /// Basic model diagnostic function
   void gambit_core::model_diagnostic()
   {
-    std::stringstream out;
     table_formatter table("Model", "Parent", "Parameters");
     table.default_widths(35);
     table.padding(1);
     table.capitalize_title();
+
     for (const auto& functor : primaryModelFunctorList)
     {
-      str model = functor->origin();
-      str parentof = modelInfo->get_parent(model);
-      int nparams = functor->valuePtr()->getNumberOfPars();
+      const str model = functor->origin();
+      const str parentof = modelInfo->get_parent(model);
+      const int nparams = functor->valuePtr()->getNumberOfPars();
       table << model << parentof << nparams;
     }
+
+    std::stringstream out;
     #ifdef HAVE_GRAPHVIZ
         // Create and spit out graph of the model hierarchy.
-        str graphfile = Utils::runtime_scratch() + "GAMBIT_model_hierarchy.gv";
+        const str graphfile = Utils::runtime_scratch() + "GAMBIT_model_hierarchy.gv";
         ModelHierarchy modelGraph(*modelInfo,primaryModelFunctorList,graphfile,false);
         out << endl << "Created graphviz model hierarchy graph in "+graphfile+"." << endl;
         out << endl << "To get postscript plot of model hierarchy, please run: " << endl;
@@ -202,7 +204,7 @@ namespace Gambit
   void gambit_core::scanner_diagnostic()
   {
     // Import scanner plugin info from ScannerBit
-    std::string output = Scanner::Plugins::plugin_info().print_all("scanner");
+    const std::string output = Scanner::Plugins::plugin_info().print_all("scanner");
     if (not output.empty())
         print_to_screen(output, "scanners");
   }
@@ -210,14 +212,14 @@ namespace Gambit
   /// Basic test function diagnostic function
   void gambit_core::test_function_diagnostic()
   {
-    std::string output = Scanner::Plugins::plugin_info().print_all("objective");
+    const std::string output = Scanner::Plugins::plugin_info().print_all("objective");
     if (not output.empty())
         print_to_screen(output, "objectives");
   }
 
   void gambit_core::prior_diagnostic()
   {
-    std::string output = Scanner::Plugins::plugin_info().print_priors("priors");
+    const std::string output = Scanner::Plugins::plugin_info().print_priors("priors");
     if (not output.empty())
         print_to_screen(output, "priors");
   }
