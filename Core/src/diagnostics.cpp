@@ -431,32 +431,32 @@ namespace Gambit
   {
     std::stringstream out;
     //Iterate over all capabilities to see if command matches one of them
-    for (std::set<str>::const_iterator it = capabilities.begin(); it != capabilities.end(); ++it)
+    for (const auto& capability : capabilities)
     {
-      if (command == *it)
+      if (command == capability)
       {
-        out << "Information for capability " << *it << "." << std::endl << std::endl;
+        out << "Information for capability " << capability << "." << std::endl << std::endl;
 
         // Retrieve info on this capability from the database file
-        const capability_info cap = get_capability_info(*it);
+        const capability_info cap = get_capability_info(capability);
         std::vector< std::pair<str, std::map<str, std::set<std::pair<str,str> > > > > origins;
         origins.push_back(std::pair<str, std::map<str, std::set<std::pair<str,str> > > >("modules", cap.modset));
         origins.push_back(std::pair<str, std::map<str, std::set<std::pair<str,str> > > >("backends", cap.beset));
         // Loop over {modules, backends}
-        for (std::vector< std::pair<str, std::map<str, std::set<std::pair<str,str> > > > >::const_iterator it = origins.begin(); it != origins.end(); ++it)
+        for (const auto& origin : origins)
         {
-          if (not it->second.empty())
+          if (not origin.second.empty())
           {
-            out << "  Available in " << it->first << ": " << std::endl;
+            out << "  Available in " << origin.first << ": " << std::endl;
             // Loop over modules or backends
-            for (std::map<str, std::set<std::pair<str,str> > >::const_iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+            for (const auto& module_or_backend : origin.second)
             {
-              out << "    " << jt->first << ": " << std::endl;
+              out << "    " << module_or_backend.first << ": " << std::endl;
               // Loop over matching module/backend functions
-              for (std::set<std::pair<str,str> >::const_iterator kt = jt->second.begin(); kt != jt->second.end(); ++kt)
+              for (const auto& function : module_or_backend.second)
               {
                 // Spit out: function name [function type]
-                out << "      function " << kt->first << " [type " << kt->second << "]" << std::endl;
+                out << "      function " << function.first << " [type " << function.second << "]" << std::endl;
               }
             }
             out << std::endl;
@@ -466,7 +466,7 @@ namespace Gambit
         break;
       }
     }
-    if (out.str().size() > 0)
+    if (not out.str().empty())
         print_to_screen(out.str(), command);
   }
 
