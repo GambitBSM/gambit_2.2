@@ -135,6 +135,10 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
+  # Get details about the nuisance parameter 'a'
+  - purpose:    Observable
+    capability: DMEFT_profiled_LHC_nuisance_params
+    
   ## Nuisance parameters
   # DM Local Halo likelihoods
   - capability: lnL_rho0

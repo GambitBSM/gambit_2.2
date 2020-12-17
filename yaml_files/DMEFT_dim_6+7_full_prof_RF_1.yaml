@@ -145,6 +145,10 @@ ObsLikes:
     module:     ColliderBit
     type: double
 
+    # Get details about the nuisance parameter 'a'
+  - purpose:    Observable
+    capability: DMEFT_profiled_LHC_nuisance_params
+
   ## Nuisance parameters
   # DM Local Halo likelihoods
   - capability: lnL_rho0
@@ -282,7 +286,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_7_full_prof_RF_1.hdf5"
+    output_file: "DMEFT_dim_6+7_full_prof_RF_1.hdf5"
     delete_file_on_restart: false
     buffer_length: 1000
     group: "/DMEFT"
@@ -310,7 +314,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT_dim_6_7_full_prof_RF_1/"
+  default_output_path: "runs/DMEFT_dim_6+7_full_prof_RF_1/"
 
   debug: false
   print_timing_data: false

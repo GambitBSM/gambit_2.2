@@ -76,8 +76,29 @@ Parameters:
     beta: 3
     gamma: 1
 
-  # Chiral nuclear parameters for DirectDM
-  nuclear_params_ChPT_sigmapiN: !import yaml_files/include/nuclear_params_ChPT_sigmapiN_def_DMEFT.yaml
+  # Chiral nuclear parameters for DirectDM (matches default values used in Sanjay's thesis)
+  nuclear_params_ChPT_sigmapiN:
+    sigmapiN     : 0.050
+    Bc5m         : -0.51e-3
+    gA           : 1.2723
+    mG           : 0.848
+    sigmas       : 0.0413
+    DeltauDeltad : 0.521
+    Deltas       : -0.031
+    B0mu         : 0.0061
+    B0md         : 0.00133
+    B0ms         : 0.268
+    # Nuclear dipole moments
+    mup          : 2.793
+    mun          : -1.913
+    mus          : -0.064
+    gTu          : 0.794
+    gTd          : -0.204
+    gTs          : 3.2e-4
+    BT10up       : 3.0
+    BT10dp       : 0.24
+    BT10s        : 0.0
+    rs2          : -0.115
 
 Priors:
 

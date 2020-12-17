@@ -268,7 +268,7 @@ Printer:
 
   printer: hdf5
   options:
-    output_file: "DMEFT_dim_6_7_capped_hard.hdf5"
+    output_file: "DMEFT_dim_6+7_capped_hard.hdf5"
     delete_file_on_restart: false
     buffer_length: 1000
     group: "/DMEFT"
@@ -296,7 +296,7 @@ KeyValues:
     model_invalid_for_lnlike_below: -5e5
     model_invalid_for_lnlike_below_alt: -1e5
 
-  default_output_path: "runs/DMEFT_dim_6_7_capped_hard/"
+  default_output_path: "runs/DMEFT_dim_6+7_capped_hard/"
 
   debug: false
   print_timing_data: false
