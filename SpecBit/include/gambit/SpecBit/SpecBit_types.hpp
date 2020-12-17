@@ -28,7 +28,6 @@
 #define __SpecBit_types_hpp__
 
 #include <string>
-#include <iostream>
 #include <vector>
 #include "gambit/Utils/util_types.hpp"
 
