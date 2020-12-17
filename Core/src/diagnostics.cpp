@@ -228,8 +228,8 @@ namespace Gambit
   {
     if (command != "priors")
     {
-        std::string output = Scanner::Plugins::plugin_info().print_priors(command);
-        if (output.length() > 0)
+        const std::string output = Scanner::Plugins::plugin_info().print_priors(command);
+        if (not output.empty())
             print_to_screen(output, command);
     }
   }
