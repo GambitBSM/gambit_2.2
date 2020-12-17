@@ -481,8 +481,8 @@ namespace Gambit
   /// Free-form test function diagnostic function
   void gambit_core::ff_test_function_diagnostic(const str& command)
   {
-    std::string output = Scanner::Plugins::plugin_info().print_plugin("objective", command);
-    if (output.length() > 0)
+    const std::string output = Scanner::Plugins::plugin_info().print_plugin("objective", command);
+    if (not output.empty())
         print_to_screen(output, command);
   }
 
