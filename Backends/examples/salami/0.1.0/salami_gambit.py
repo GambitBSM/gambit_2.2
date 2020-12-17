@@ -3,11 +3,11 @@
 #
 from __future__ import print_function
 
-#
-# This will run when this backend is first loaded, i.e. during GAMBIT startup
-#
+# Prefix for screen output
 prefix = "salami_gambit:"
-print(prefix, "Starting up...")
+
+# # This will run when this backend is first loaded, i.e. during GAMBIT startup
+# print(prefix, "Starting up...")
 
 import salami
 KPREDS = {}
