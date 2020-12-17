@@ -394,15 +394,15 @@ namespace Gambit
   {
     std::stringstream out;
     //Iterate over all models to see if command matches one of them
-    for (pmfVec::const_iterator it = primaryModelFunctorList.begin(); it != primaryModelFunctorList.end(); ++it)
+    for (const auto& functor : primaryModelFunctorList)
     {
-      str model = (*it)->origin();
+      const str model = functor->origin();
       if (command == model)
       {
         out << "Information for model " << model << "." << endl << endl;;
 
         // Retrieve info on this capability from the database file
-        model_info mod = get_model_info(model);
+        const model_info mod = get_model_info(model);
 
         // Need copies of lineage and descendant vectors with self-reference removed
         std::vector<str> lin_X = mod.lineage;
@@ -422,7 +422,7 @@ namespace Gambit
         break;
       }
     }
-    if (out.str().size() > 0)
+    if (not out.str().empty())
         print_to_screen(out.str(), command);
   }
 
