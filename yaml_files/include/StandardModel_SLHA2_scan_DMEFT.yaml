@@ -5,7 +5,7 @@
 ## Parameters:
 ##   StandardModel_SLHA2: !import include/StandardModel_SLHA2_scan_DMEFT.yaml
 ##
-## These values are same as in default SM params file, but with 3-sigma uncertainty
+## These values are as for the default SM params file, but with 3-sigma uncertainty
 ## range on m_top value.
 ##
 ## Values from PDG 2017

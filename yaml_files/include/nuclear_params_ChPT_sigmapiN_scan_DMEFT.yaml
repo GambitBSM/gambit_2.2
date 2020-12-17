@@ -21,7 +21,7 @@ mG           : 0.836
 sigmas       : 0.0529
 DeltauDeltad : 0.440
 Deltas       :
-               range: [-0.008, -0.062]
+               range: [-0.062, -0.008]
 B0mu         : 0.0058
 B0md         : 0.0124
 B0ms         : 0.249
@@ -37,4 +37,4 @@ BT10up       : 3.0
 BT10dp       : 0.24
 BT10s        : 0.0
 rs2          :
-               range: [-0.01, -0.22]
+               range: [-0.22, -0.01]
