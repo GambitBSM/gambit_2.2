@@ -9,7 +9,6 @@ from __future__ import print_function
 prefix = "salami_gambit:"
 print(prefix, "Starting up...")
 
-# This needs to be run from within GAMBIT to avoid the hardcoded absolute path
 import salami
 KPREDS = {}
 SLHA = None
