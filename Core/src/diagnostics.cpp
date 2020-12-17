@@ -299,24 +299,22 @@ namespace Gambit
   {
     std::stringstream out;
     //Iterate over all backends to see if command matches one of them
-    for (std::map<str, std::set<str> >::const_iterator it = backend_versions.begin(); it != backend_versions.end(); ++it)
+    for (const auto& backend : backend_versions)
     {
-      if (command == it->first)
+      if (command == backend.first)
       {
-        const std::set<str> versions = it->second;
         bool has_classloader = false;
-        out << "Information for backend " << it->first << "." << std::endl << std::endl;
+        out << "Information for backend " << backend.first << "." << std::endl << std::endl;
 
         // Loop over all registered versions of this backend
-        for (std::set<str>::const_iterator jt = versions.begin(); jt != versions.end(); ++jt)
+        for (const auto& version : backend.second)
         {
           bool who_cares;
-          const str path = backendData->corrected_path(it->first,*jt);  // Save the path of this backend
-          const str status = backend_status(it->first, *jt, who_cares); // Save the status of this backend
-          out << "Version: " << *jt << std::endl;
+          const str path = backendData->corrected_path(backend.first, version);  // Save the path of this backend
+          const str status = backend_status(backend.first, version, who_cares);  // Save the status of this backend
+          out << "Version: " << version << std::endl;
           out << "Path to library: " << path << std::endl;
           out << "Library status: " << status << std::endl;
-          //bool first = true;
 
           table_formatter back_table("  Function/Variable", "Capability", "Type", "Status");
           back_table.capitalize_title();
@@ -325,19 +323,19 @@ namespace Gambit
           back_table.top_line(true);
           back_table.bottom_line(true);
           // Loop over all the backend functions and variables
-          for (fVec::const_iterator kt = backendFunctorList.begin(); kt != backendFunctorList.end(); ++kt)
+          for (const auto& functor : backendFunctorList)
           {
-            if (((*kt)->origin() == it->first) and ((*kt)->version() == (*jt)))
+            if ((functor->origin() == backend.first) and (functor->version() == version))
             {
-              const str f = (*kt)->name();
-              const str c = (*kt)->capability();
-              const str t = (*kt)->type();
-              const int s = (*kt)->status();
+              const str f = functor->name();
+              const str c = functor->capability();
+              const str t = functor->type();
+              const int s = functor->status();
               back_table << ("  " + f) << c << t;
               if(s == -5) back_table.red() << "Mathematica absent";
-              else if (s == -2) back_table.red() << "Function absent";//ss = "Function absent";
-              else if (s == -1) back_table.red() << "Backend absent";//ss = "Backend absent";
-              else if (s >= 0)  back_table.green() << "Available";//ss = "Available";
+              else if (s == -2) back_table.red() << "Function absent";
+              else if (s == -1) back_table.red() << "Backend absent";
+              else if (s >= 0)  back_table.green() << "Available";
               else back_table << "";
             }
           }
@@ -350,22 +348,22 @@ namespace Gambit
           class_table.top_line(true);
           class_table.bottom_line(true);
           // If this version has classes to offer, print out info on them too
-          if (backendData->classloader.at(it->first+*jt))
+          if (backendData->classloader.at(backend.first + version))
           {
             std::set<str> classes;
-            if (backendData->classes.find(it->first+*jt) != backendData->classes.end()) classes = backendData->classes.at(it->first+*jt);
+            if (backendData->classes.find(backend.first + version) != backendData->classes.end()) classes = backendData->classes.at(backend.first + version);
             has_classloader = true;
             // Loop over the classes
-            for (std::set<str>::const_iterator kt = classes.begin(); kt != classes.end(); ++kt)
+            for (const auto& class_ : classes)  // class is a C++ keyword, so use class_ here which allows the same readability.
             {
-              const std::set<str> ctors = backendData->factory_args.at(it->first+*jt+*kt);
+              const std::set<str> ctors = backendData->factory_args.at(backend.first + version + class_);
               // Loop over the constructors in each class
-              for (std::set<str>::const_iterator lt = ctors.begin(); lt != ctors.end(); ++lt)
+              for (const auto& ctor : ctors)
               {
-                str args = *lt;
+                str args = ctor;
                 boost::replace_all(args, "my_ns::", "");
-                const str ss = backendData->constructor_status.at(it->first+*jt+*kt+args);
-                const str firstentry = (lt == ctors.begin() ? *kt : "");
+                const str ss = backendData->constructor_status.at(backend.first + version + class_ + args);
+                const str firstentry = (&ctor == std::addressof(*ctors.begin()) ? class_ : "");
                 class_table << ("  " + firstentry) << args;
                 if (ss == "OK")
                     class_table.green() << status;
@@ -381,13 +379,13 @@ namespace Gambit
         if (has_classloader)
         {
           const std::map<str, str> defs = backendData->default_safe_versions;
-          const str my_def = (defs.find(it->first) != defs.end() ? backendData->version_from_safe_version(it->first,defs.at(it->first)) : "none");
+          const str my_def = (defs.find(backend.first) != defs.end() ? backendData->version_from_safe_version(backend.first, defs.at(backend.first)) : "none");
           out << std::endl << "Default version for loaded classes: "  << my_def << std::endl << std::endl;
         }
         break;
       }
     }
-    if (out.str().size() > 0)
+    if (not out.str().empty())
         print_to_screen(out.str(), command);
   }
 
