@@ -52,8 +52,7 @@ void gambit_core::module_diagnostic() {
   }
   std::stringstream out;
   out << table.str();
-  if (not out.str().empty())
-    print_to_screen(out.str(), "module");
+  print_to_screen(out.str(), "module");
 }
 
 /// Basic backend diagnostic function
@@ -129,8 +128,7 @@ void gambit_core::backend_diagnostic() {
         << "\033[0m" << endl;
   out << endl;
   out << table.str();
-  if (not out.str().empty())
-    print_to_screen(out.str(), "backend");
+  print_to_screen(out.str(), "backend");
 }
 
 /// Basic model diagnostic function
@@ -165,8 +163,7 @@ void gambit_core::model_diagnostic() {
       << endl;
 #endif
   out << table.str();
-  if (not out.str().empty())
-    print_to_screen(out.str(), "model");
+  print_to_screen(out.str(), "model");
 }
 
 /// Basic capability diagnostic function
@@ -214,8 +211,7 @@ void gambit_core::capability_diagnostic() {
   }
   std::stringstream out;
   out << table.str();
-  if (not out.str().empty())
-    print_to_screen(out.str(), "capability");
+  print_to_screen(out.str(), "capability");
 }
 
 /// Basic scanner diagnostic function
@@ -223,31 +219,27 @@ void gambit_core::scanner_diagnostic() {
   // Import scanner plugin info from ScannerBit
   const std::string output =
       Scanner::Plugins::plugin_info().print_all("scanner");
-  if (not output.empty())
-    print_to_screen(output, "scanners");
+  print_to_screen(output, "scanners");
 }
 
 /// Basic test function diagnostic function
 void gambit_core::test_function_diagnostic() {
   const std::string output =
       Scanner::Plugins::plugin_info().print_all("objective");
-  if (not output.empty())
-    print_to_screen(output, "objectives");
+  print_to_screen(output, "objectives");
 }
 
 void gambit_core::prior_diagnostic() {
   const std::string output =
       Scanner::Plugins::plugin_info().print_priors("priors");
-  if (not output.empty())
-    print_to_screen(output, "priors");
+  print_to_screen(output, "priors");
 }
 
 void gambit_core::ff_prior_diagnostic(const str &command) {
   if (command != "priors") {
     const std::string output =
         Scanner::Plugins::plugin_info().print_priors(command);
-    if (not output.empty())
-      print_to_screen(output, command);
+    print_to_screen(output, command);
   }
 }
 
@@ -309,8 +301,7 @@ void gambit_core::ff_module_diagnostic(const str &command) {
       break;
     }
   }
-  if (not out.str().empty())
-    print_to_screen(out.str(), command);
+  print_to_screen(out.str(), command);
 }
 
 /// Free-form backend diagnostic function
@@ -420,8 +411,7 @@ void gambit_core::ff_backend_diagnostic(const str &command) {
       break;
     }
   }
-  if (not out.str().empty())
-    print_to_screen(out.str(), command);
+  print_to_screen(out.str(), command);
 }
 
 /// Free-form model diagnostic function
@@ -458,8 +448,7 @@ void gambit_core::ff_model_diagnostic(const str &command) {
       break;
     }
   }
-  if (not out.str().empty())
-    print_to_screen(out.str(), command);
+  print_to_screen(out.str(), command);
 }
 
 /// Free-form capability diagnostic function
@@ -502,24 +491,21 @@ void gambit_core::ff_capability_diagnostic(const str &command) {
       break;
     }
   }
-  if (not out.str().empty())
-    print_to_screen(out.str(), command);
+  print_to_screen(out.str(), command);
 }
 
 /// Free-form scanner diagnostic function
 void gambit_core::ff_scanner_diagnostic(const str &command) {
   const std::string output =
       Scanner::Plugins::plugin_info().print_plugin("scanner", command);
-  if (not output.empty())
-    print_to_screen(output, command);
+  print_to_screen(output, command);
 }
 
 /// Free-form test function diagnostic function
 void gambit_core::ff_test_function_diagnostic(const str &command) {
   const std::string output =
       Scanner::Plugins::plugin_info().print_plugin("objective", command);
-  if (not output.empty())
-    print_to_screen(output, command);
+  print_to_screen(output, command);
 }
 
 } // namespace Gambit
