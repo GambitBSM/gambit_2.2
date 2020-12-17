@@ -605,6 +605,10 @@ Rules:
   - capability: EventWeighterFunction
     function: setEventWeight_unity
 
+  # Choose to generate events with Pythia on the fly (rather than reading them in)
+  - capability: HardScatteringEvent
+    function: generateEventPythia
+
   # Choose ATLAS detector simulation and options.
   - capability: ATLASDetectorSim
     options:

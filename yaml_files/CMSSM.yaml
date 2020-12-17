@@ -568,6 +568,10 @@ Rules:
   - capability: EventWeighterFunction
     function: setEventWeight_unity
 
+  # Choose to generate events with Pythia on the fly (rather than reading them in)
+  - capability: HardScatteringEvent
+    function: generateEventPythia
+
   # Choose Monte Carlo event simulator and options.
   - capability: HardScatteringSim
     type: Py8Collider_defaultversion
