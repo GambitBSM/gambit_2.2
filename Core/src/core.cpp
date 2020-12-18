@@ -518,7 +518,7 @@ namespace Gambit
     }
 
     /// Get the description of the named capability from the description database
-    const capability_info gambit_core::get_capability_info(const str& name) const
+    capability_info gambit_core::get_capability_info(const str& name) const
     {
       for (const auto& capability : capability_dbase)
       {
@@ -536,7 +536,7 @@ namespace Gambit
       return capability_info();
     }
 
-    const model_info gambit_core::get_model_info(const str& name) const
+    model_info gambit_core::get_model_info(const str& name) const
     {
       for (const auto& model : model_dbase)
       {

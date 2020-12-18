@@ -196,10 +196,10 @@ namespace Gambit
       void accountForMissingClasses() const ;
 
       /// Get the description (and other info) of the named item from the capability database
-      const capability_info get_capability_info(const str&) const;
+      capability_info get_capability_info(const str&) const;
 
       /// Get the description (and other info) of the named item from the model database
-      const model_info get_model_info(const str&) const;
+      model_info get_model_info(const str&) const;
 
       /// Getter for precision to use for cout
       int get_outprec() const;
