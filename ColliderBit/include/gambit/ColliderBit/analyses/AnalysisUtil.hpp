@@ -12,10 +12,6 @@
 ///  *********************************************
 
 
-//
-// Created by .
-//
-
 #include "gambit/ColliderBit/Utils.hpp"
 #include "HEPUtils/Event.h"
 
