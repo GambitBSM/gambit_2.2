@@ -507,11 +507,11 @@ namespace Gambit
       if (missing_capability_description)
       {
         cout << "Descriptions are missing for the following capabilities:" << endl;
-        for (std::vector<capability_info>::const_iterator it = capability_dbase.begin(); it != capability_dbase.end(); ++it)
+        for (const auto& capability : capability_dbase)
         {
-          if(not it->has_description)
+          if(not capability.has_description)
           {
-            cout << "   " << it->name << endl;
+            cout << "   " << capability.name << endl;
           }
         }
         cout << "Please add descriptions of these to "<< input_capability_descriptions << endl;
