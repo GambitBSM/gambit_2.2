@@ -541,13 +541,12 @@ namespace Gambit
 
     const model_info gambit_core::get_model_info(const str& name) const
     {
-      for(std::vector<model_info>::const_iterator it=model_dbase.begin();
-           it!=model_dbase.end();++it)
+      for (const auto& model : model_dbase)
       {
-         if(it->name==name)
-         {
-           return *it; //Should only be one match possible after database check
-         }
+        if(model.name == name)
+        {
+          return model; //Should only be one match possible after database check
+        }
       }
       // if no match...
       std::ostringstream errmsg;
