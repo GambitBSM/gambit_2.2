@@ -269,29 +269,29 @@ namespace Gambit
       // Create a map of all the registered backends that are connected and fully functional (including factories for classloading)
       std::map<str, std::set<str> > working_bes;
       // Start by looping over all registered backends
-      for (std::map<str, std::set<str> >::const_iterator it = backend_versions.begin(); it != backend_versions.end(); ++it)
+      for (const auto& backend : backend_versions)
       {
         // Then loop over all registered versions of this backend
-        for (std::set<str>::const_iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+        for (const auto& version : backend.second)
         {
-          const str be_ver = it->first+*jt;
+          const str be_ver = backend.first + version;
           if (backendData->works.at(be_ver))
           {
             if (backendData->classloader.at(be_ver))
             {
-              if (backendData->classes_OK.at(be_ver)) working_bes[it->first].insert(*jt);
+              if (backendData->classes_OK.at(be_ver)) working_bes[backend.first].insert(version);
             }
             else
             {
-              working_bes[it->first].insert(*jt);
+              working_bes[backend.first].insert(version);
             }
           }
         }
       }
       // Feed the new map to each of the module functors.
-      for (fVec::const_iterator it = functorList.begin(); it != functorList.end(); ++it)
+      for (const auto& functor : functorList)
       {
-        (*it)->notifyOfBackends(working_bes);
+        functor->notifyOfBackends(working_bes);
       }
     }
 
