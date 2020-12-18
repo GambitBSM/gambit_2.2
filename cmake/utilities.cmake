@@ -523,7 +523,8 @@ function(add_standalone_tarballs modules version)
                                       COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/cmake ${dirname}/cmake
                                       COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/config ${dirname}/config
                                       COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/contrib ${dirname}/contrib
-                                      COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/yaml_files ${dirname}/yaml_files
+                                      COMMAND ${CMAKE_COMMAND} -E make_directory ${dirname}/yaml_files/
+                                      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/yaml_files/ScannerBit.yaml ${dirname}/yaml_files/
                                       COMMAND ${CMAKE_COMMAND} -E remove -f ${module}-${version}.tar.gz
                                       COMMAND ${CMAKE_COMMAND} -E tar cz ${module}-${version}.tar.gz ${dirname})
     else()
@@ -539,7 +540,6 @@ function(add_standalone_tarballs modules version)
                                       COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/cmake ${dirname}/cmake
                                       COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/config ${dirname}/config
                                       COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/contrib ${dirname}/contrib
-                                      COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/yaml_files ${dirname}/yaml_files
                                       COMMAND ${CMAKE_COMMAND} -E remove -f ${module}-${version}.tar.gz
                                       COMMAND ${CMAKE_COMMAND} -E tar cz ${module}-${version}.tar.gz ${dirname})
     endif()
