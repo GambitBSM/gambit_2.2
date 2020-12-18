@@ -152,8 +152,7 @@ Rules:
     #function:     get_CMSSM_spectrum_FS
     #function:     get_MSSMatMGUT_spectrum_FS
     #function:     get_MSSMatQ_spectrum_FS
-    #function:     get_MSSM_spectrum_SPheno
-    function:     get_MSSM_spectrum_SPhenoMSSM
+    function:     get_MSSM_spectrum_SPheno
     options:
     # FlexibleSUSY options
       precision_goal:        1.0e-4
