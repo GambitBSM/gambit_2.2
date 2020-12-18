@@ -8,11 +8,11 @@ import numpy as np
 import xsec
 from math import sqrt
 
-#
-# This will run when this backend is first loaded, i.e. during GAMBIT startup
-#
+# Prefix for screen output
 prefix = "xsecBE_gambit:"
-print(prefix, "Starting up...")
+
+# # This will run when this backend is first loaded, i.e. during GAMBIT startup
+# print(prefix, "Starting up...")
 
 # TODO: xsec.init should be run from within GAMBIT, to avoid the hardcoded path here
 xsec.init(data_dir="Backends/installed/xsecBE/1.0.2/gprocs/")

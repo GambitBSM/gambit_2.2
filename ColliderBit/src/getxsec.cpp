@@ -90,8 +90,8 @@ namespace Gambit
         if(*Loop::iteration == XSEC_CALCULATION)
         {
           // Create dicts to pass parameters and flags to the backend
-          pybind11::dict xsecBE_pars;
-          // pybind11::dict xsecBE_flags;
+          PyDict xsecBE_pars;
+          // PyDict xsecBE_flags;
 
           // // First set the flags
           // xsecBE_flags["alphas_err"] = true;
@@ -125,7 +125,7 @@ namespace Gambit
             iipair proc = pid_pair.PIDs();
 
             // Get dictionary with cross-section results from backend
-            pybind11::dict xs_fb_dict = BEreq::xsecBE_get_xsection(proc);
+            PyDict xs_fb_dict = BEreq::xsecBE_get_xsection(proc);
 
             // The xsec_container classes don't have asymmetric errors yet,
             // so let's take the max error for now
@@ -261,7 +261,7 @@ namespace Gambit
 
 
           // Pass a dictionary with parameters/settings (if any) to the backend
-          pybind11::dict salami_pars;
+          PyDict salami_pars;
           // (fill salami_pars here...)
           BEreq::salami_set_parameters(salami_pars);
 
@@ -287,7 +287,7 @@ namespace Gambit
             int LOxs_trust_level = pp_LOxs_map.at(pid_pair).trust_level();
 
             // Get dictionary with cross-section results from backend
-            pybind11::dict xs_fb_dict = BEreq::salami_get_xsection(proc, energy, LOxs_fb);
+            PyDict xs_fb_dict = BEreq::salami_get_xsection(proc, energy, LOxs_fb);
 
             // The xsec_container classes don't have asymmetric errors yet,
             // so let's take the max error for now

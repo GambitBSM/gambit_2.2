@@ -1,3 +1,26 @@
+//   GAMBIT: Global and Modular BSM Inference Tool
+//   *********************************************
+///  \file
+///
+///  Source file for the multimin interface to gsl 
+///  by Giulio Bottazzi:
+///  
+///  http://cafim.sssup.it/~giulio/software/multimin/multimin.html
+///
+///  *********************************************
+///
+///  Authors (add name and date if you modify):
+///
+///  \author Andy Buckley
+///          (andy.buckley@cern.ch)
+///  \date 2019 June
+///
+///  \author Anders Kvellestad
+///          (anders.kvellestad@fys.uio.no)
+///  \date 2020 December
+///
+///  *********************************************
+
 /*
   multimin.c (ver. 1.2) -- Interface to GSL multidim. minimization
   Copyright (C) 2002-2014 Giulio Bottazzi

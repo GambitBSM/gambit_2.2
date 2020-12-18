@@ -1,3 +1,27 @@
+//   GAMBIT: Global and Modular BSM Inference Tool
+//   *********************************************
+///  \file
+///
+///  Header for the multimin interface to gsl
+///  by Giulio Bottazzi:
+///  
+///  http://cafim.sssup.it/~giulio/software/multimin/multimin.html
+///
+///  *********************************************
+///
+///  Authors (add name and date if you modify):
+///
+///  \author Andy Buckley
+///          (andy.buckley@cern.ch)
+///  \date 2019 June
+///
+///  \author Anders Kvellestad
+///          (anders.kvellestad@fys.uio.no)
+///  \date 2020 December
+///
+///  *********************************************
+
+
 /*insert GNU extensions*/
 //#define _GNU_SOURCE
 /*in particular, use of NAN extension*/
@@ -17,7 +41,8 @@ extern int errno;
 #define GET(x,i) gsl_vector_get(x,i)
 #define SET(x,i,y) gsl_vector_set(x,i,y)
 
-struct multimin_params {
+struct multimin_params 
+{
   double step_size;
   double tol;
   unsigned maxiter;
@@ -27,11 +52,10 @@ struct multimin_params {
   unsigned verbosity;
 };
 
-void
-multimin(size_t,double *,double *,
-	 const unsigned *,const double *,const double *,
-	 void (*) (const size_t,const double *,void *,double *),
-	 void (*) (const size_t,const double *, void *,double *),
-	 void (*) (const size_t,const double *, void *,double *,double *),
-	 void *,
-	 const struct multimin_params);
+void multimin(size_t, double *, double *, 
+  const unsigned *,const double *,const double *,
+  void (*) (const size_t,const double *,void *,double *),
+  void (*) (const size_t,const double *, void *,double *),
+  void (*) (const size_t,const double *, void *,double *,double *),
+  void *,
+  const struct multimin_params);
