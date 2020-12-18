@@ -174,9 +174,6 @@ namespace Gambit
       /// Add entries to the map of activated primary model functors
       void registerActiveModelFunctors(const pmfVec&);
 
-      /// Get a reference to the map of all registered backends
-      const std::map<str, std::set<str> > getBackends() const ;
-
       /// Get a reference to the list of module functors
       const fVec& getModuleFunctors() const ;
 
