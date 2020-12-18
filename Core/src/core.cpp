@@ -18,7 +18,7 @@
 ///
 ///  \author Markus Prim
 ///          (markus.prim@kit.edu)
-///  \date 2020 Jun
+///  \date 2020 Jun, Dec
 ///
 ///  *********************************************
 
@@ -596,7 +596,7 @@ namespace Gambit
     /// Launch non-interactive command-line diagnostic mode, for printing info about current GAMBIT configuration.
     str gambit_core::run_diagnostic(int argc, char **argv)
     {
-
+      constexpr int mpirank = GET_RANK;  // Get MPI rank (assume MPI already initialised)
       str filename;
       str command = "none";
       std::vector<std::string> didyoumean;
@@ -606,11 +606,11 @@ namespace Gambit
       {
         for (int i = 0; i < argc-1; i++)
         {
-          str arg = argv[i];
-          str x(GAMBIT_EXECUTABLE);
-          int len = arg.length();
-          int xlen = x.length();
-          if (len >= xlen and arg.substr(len-xlen,xlen) == x)
+          const str arg = argv[i];
+          const str x(GAMBIT_EXECUTABLE);
+          const int len = arg.length();
+          const int xlen = x.length();
+          if (len >= xlen and arg.substr(len - xlen, xlen) == x)
           {
             command = argv[i+1];
             break;
@@ -639,15 +639,14 @@ namespace Gambit
         // Add other valid diagnostic commands
         valid_commands.insert(valid_commands.end(), modules.begin(), modules.end());
         valid_commands.insert(valid_commands.end(), capabilities.begin(), capabilities.end());
-        for (auto it = backend_versions.begin(); it != backend_versions.end(); ++it) valid_commands.push_back(it->first);
-        for (auto it = primaryModelFunctorList.begin(); it != primaryModelFunctorList.end(); ++it) valid_commands.push_back((*it)->origin());
-        std::vector<std::string> scanner_names = Scanner::Plugins::plugin_info().print_plugin_names("scanner");
-        std::vector<std::string> objective_names = Scanner::Plugins::plugin_info().print_plugin_names("objective");
-        std::vector<std::string> prior_groups = Scanner::Plugins::plugin_info().list_prior_groups();
+        for (const auto& backend_version : backend_versions) valid_commands.push_back(backend_version.first);
+        for (const auto& primaryModelFunctor : primaryModelFunctorList) valid_commands.push_back(primaryModelFunctor->origin());
+        const std::vector<std::string> scanner_names = Scanner::Plugins::plugin_info().print_plugin_names("scanner");
+        const std::vector<std::string> objective_names = Scanner::Plugins::plugin_info().print_plugin_names("objective");
+        const std::vector<std::string> prior_groups = Scanner::Plugins::plugin_info().list_prior_groups();
         valid_commands.insert(valid_commands.end(), scanner_names.begin(), scanner_names.end());
         valid_commands.insert(valid_commands.end(), objective_names.begin(), objective_names.end());
         valid_commands.insert(valid_commands.end(), prior_groups.begin(), prior_groups.end());
-        //valid_commands.push_back("priors");
 
         // If the user hasn't asked for a diagnostic at all, process the command line options for the standard run mode and get out.
         if (std::find(valid_commands.begin(), valid_commands.end(), command) == valid_commands.end())
@@ -659,21 +658,23 @@ namespace Gambit
             // Check if we indeed received a valid filename (needs the -f option)
             if (found_inifile) return filename;
             // Ok then, report an unrecognised command and bail
-            int mpirank = GET_RANK;
             if (mpirank == 0) cout << "Unrecognised command received!" << endl;
             // Give a list of valid commands that user might have mistyped
-            for (std::vector<str>::iterator it = valid_commands.begin(); it != valid_commands.end(); ++it)
+            for (const auto& valid_command : valid_commands)
             {
-              if (Utils::are_similar(command,*it)){ didyoumean.push_back(*it); }
+              if (Utils::are_similar(command, valid_command)) didyoumean.push_back(valid_command);
             }
             if (didyoumean.size() > 0)
             {
               if (mpirank == 0)
               {
                 cout<<"Did you mean one of the following?"<<endl;
-                for (std::vector<str>::iterator it = didyoumean.begin(); it != didyoumean.end(); ++it)
+                for (const auto& proposedCommand : didyoumean) 
                 {
-                  if(Utils::are_similar(command,*it)){ cout<<"  "<<*it<<endl; }
+                  if(Utils::are_similar(command, proposedCommand)) 
+                  { 
+                    cout << "  " << proposedCommand << endl; 
+                  }
                 }
                 cout<<endl;
                 cout<<"Run \"gambit --help\" for a full list of options and usage instructions"<<endl;
@@ -689,7 +690,6 @@ namespace Gambit
           }
           else
           {
-            int mpirank = GET_RANK;
             if (mpirank == 0) cout << "Command line options have already been "
              "processed in a special run mode... GAMBIT should not reach this "
              "point. Quitting..." << endl;
@@ -702,9 +702,6 @@ namespace Gambit
 
 
       // Guaranteed from this point that no scans (nor scanners) will be invoked.
-
-      // Get MPI rank (assume MPI already initialised)
-      int mpirank = GET_RANK;
 
       // Disable all but the master MPI node
       if (mpirank == 0)
