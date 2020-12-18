@@ -309,51 +309,51 @@ namespace Gambit
       std::map<str,int> duplicates = description_file.check_for_duplicates();
 
       // Search through GAMBIT for information about registered capabilities to match to the descriptions
-      for (std::set<str>::const_iterator it = capabilities.begin(); it != capabilities.end(); ++it)
+      for (const auto& capability : capabilities)
       {
         capability_info capinfo;
-        capinfo.name = *it;
+        capinfo.name = capability;
 
         // Make sets of matching module and backend functions
-        for (fVec::const_iterator jt = functorList.begin(); jt != functorList.end(); ++jt)
+        for (const auto& functor : functorList)
         {
-          if ((*jt)->capability() == *it)
+          if (functor->capability() == capability)
           {
-            str origin((*jt)->origin());
-            std::pair<str,str> name_type((*jt)->name(), (*jt)->type());
+            const str origin(functor->origin());
+            const std::pair<str,str> name_type(functor->name(), functor->type());
             if (capinfo.modset.find(origin) == capinfo.modset.end()) capinfo.modset[origin] = std::set<std::pair<str,str> >();
             capinfo.modset[origin].insert(name_type);
           }
         }
-        for (fVec::const_iterator jt = backendFunctorList.begin(); jt != backendFunctorList.end(); ++jt)
+        for (const auto& functor : backendFunctorList)
         {
-          if ((*jt)->capability() == *it)
+          if (functor->capability() == capability)
           {
-            str origin((*jt)->origin() + " v" + (*jt)->version());
-            std::pair<str,str> name_type((*jt)->name(), (*jt)->type());
+            const str origin(functor->origin() + " v" + functor->version());
+            const std::pair<str,str> name_type(functor->name(), functor->type());
             if (capinfo.beset.find(origin) == capinfo.beset.end()) capinfo.beset[origin] = std::set<std::pair<str,str> >();
             capinfo.beset[origin].insert(name_type);
           }
         }
 
         // Check original description files for descriptions matching this capability
-        if( description_file.hasKey(*it) )
+        if( description_file.hasKey(capability) )
         {
           // Check whether there are duplicates of this key
-          if ( duplicates[*it] > 0 )
+          if ( duplicates[capability] > 0 )
           {
-            std::vector<str> dups = description_file.get_all_values(*it);
+            const std::vector<str> dups = description_file.get_all_values(capability);
             std::ostringstream errmsg;
-            errmsg << "Error! Duplicate capability descriptions found for capability \""<<*it<<
+            errmsg << "Error! Duplicate capability descriptions found for capability \""<<capability<<
              "\"! Only one description is permitted, since all capabilities going by the same name "
              "must provide the same information. Please rename a capability or delete one of the descriptions."<<endl;
             errmsg << "The duplicate descriptions are:" <<endl;
             errmsg << "---------------------" <<endl;
             int dup_num = 0;
-            for(std::vector<str>::iterator kt = dups.begin(); kt != dups.end(); ++kt)
+            for (const auto& dup : dups)
             {
               errmsg << dup_num << ":" <<endl;
-              errmsg << *kt;
+              errmsg << dup;
               errmsg << "----------------------" <<endl;
               dup_num++;
             }
@@ -361,7 +361,7 @@ namespace Gambit
           }
           else
           {
-            capinfo.description = description_file.getValue<str>(*it);
+            capinfo.description = description_file.getValue<str>(capability);
             capinfo.has_description = true;
           }
         }
@@ -390,10 +390,9 @@ namespace Gambit
       // Could have built this directly in the other loop, but for now it is separate.
       YAML::Emitter out;
       out << YAML::BeginSeq;
-      for (std::vector<capability_info>::iterator it = capability_dbase.begin(); it != capability_dbase.end(); ++it)
+      for (const auto& capability : capability_dbase)
       {
-        //capability_info tmp = *it;
-        out << *it; //custom emitter to do this is in yaml_description_database.hpp
+        out << capability; //custom emitter to do this is in yaml_description_database.hpp
       }
       out << YAML::EndSeq;
       // Create file and write YAML output there
@@ -414,10 +413,10 @@ namespace Gambit
       duplicates = description_file.check_for_duplicates();
 
       // Search through GAMBIT for information about registered models to match to the descriptions
-      for (pmfVec::const_iterator it = primaryModelFunctorList.begin(); it != primaryModelFunctorList.end(); ++it)
+      for (const auto& functor : primaryModelFunctorList)
       {
         model_info model;
-        model.name = (*it)->origin();
+        model.name = functor->origin();
 
         // Check original description files for descriptions matching this capability
         if( model_description_file.hasKey(model.name) )
@@ -425,7 +424,7 @@ namespace Gambit
           // Check whether there are duplicates of this key
           if (duplicates[model.name] > 0)
           {
-            std::vector<str> dups = model_description_file.get_all_values(model.name);
+            const std::vector<str> dups = model_description_file.get_all_values(model.name);
             std::ostringstream errmsg;
             errmsg << "Error! Duplicate model descriptions found for model \""<<model.name<<
              "\"! Only one description is permitted, since model names must be unique. "
@@ -433,10 +432,10 @@ namespace Gambit
             errmsg << "The duplicate descriptions are:" <<endl;
             errmsg << "---------------------" <<endl;
             int dup_num = 0;
-            for(std::vector<str>::iterator kt = dups.begin(); kt != dups.end(); ++kt)
+            for (const auto& dup : dups)
             {
               errmsg << dup_num << ":" <<endl;
-              errmsg << *kt;
+              errmsg << dup;
               errmsg << "----------------------" <<endl;
               dup_num++;
             }
@@ -457,8 +456,8 @@ namespace Gambit
         }
 
         // Get the rest of the info
-        model.nparams = (*it)->valuePtr()->getNumberOfPars();
-        model.parameters = (*it)->valuePtr()->getKeys();
+        model.nparams = functor->valuePtr()->getNumberOfPars();
+        model.parameters = functor->valuePtr()->getKeys();
         model.parent = modelInfo->get_parent(model.name);
         model.lineage = modelInfo->get_lineage(model.name);
         model.descendants = modelInfo->get_descendants(model.name);
@@ -470,11 +469,11 @@ namespace Gambit
       {
         // Warn user of missing descriptions
         cout << "Descriptions are missing for the following models:" << endl;
-        for (std::vector<model_info>::const_iterator it = model_dbase.begin(); it != model_dbase.end(); ++it)
+        for (const auto& model : model_dbase)
         {
-          if(not it->has_description)
+          if(not model.has_description)
           {
-            cout << "   " << it->name << endl;
+            cout << "   " << model.name << endl;
           }
         }
         cout << "Please add descriptions of these to "<< input_model_descriptions << endl;
@@ -487,9 +486,9 @@ namespace Gambit
       // Could have built this directly in the other loop, but for now it is separate.
       YAML::Emitter out2;
       out2 << YAML::BeginSeq;
-      for (std::vector<model_info>::const_iterator it = model_dbase.begin(); it != model_dbase.end(); ++it)
+      for (const auto& model : model_dbase)
       {
-        out2 << *it; //custom emitter to do this is in yaml_description_database.hpp
+        out2 << model; //custom emitter to do this is in yaml_description_database.hpp
       }
       out2 << YAML::EndSeq;
       // Create file and write YAML output there
