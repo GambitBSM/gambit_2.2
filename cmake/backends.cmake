@@ -1308,7 +1308,8 @@ set(ver "2.4.58")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(dl "http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz")
-  set(md5 "2e347b1794201d7ca462d2e4b5630147")
+#  set(md5 "2e347b1794201d7ca462d2e4b5630147")
+  set(md5 "none")
 
 else()
   set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")

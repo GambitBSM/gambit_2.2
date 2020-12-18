@@ -31,7 +31,7 @@ def getArgs(func_el):
 
     args = []
     argc = 1
-    for sub_el in func_el.getchildren():
+    for sub_el in list(func_el):
         if sub_el.tag == 'Argument':
 
             arg_dict = OrderedDict()
