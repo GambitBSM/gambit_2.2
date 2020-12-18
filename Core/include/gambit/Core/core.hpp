@@ -110,7 +110,7 @@ namespace Gambit
       /// @}
 
       /// Compute the status of a given backend
-      str backend_status(str, str, bool&);
+      str backend_status(const str&, const str&, bool&);
 
       /// Launch MPI and return the rank, for limiting diagnostic output to master node.
       int launch_diagnostic_MPI();

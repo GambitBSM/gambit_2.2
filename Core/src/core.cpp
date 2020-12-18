@@ -559,7 +559,7 @@ namespace Gambit
     }
 
     /// Compute the status of a given backend
-    str gambit_core::backend_status(str be, str version, bool& no_failures)
+    str gambit_core::backend_status(const str& be, const str& version, bool& no_failures)
     {
       const str OK = "OK";
       const str bad = "absent/broken";
