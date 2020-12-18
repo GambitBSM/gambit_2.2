@@ -240,9 +240,9 @@ namespace Gambit
     /// Add entries to the map of activated primary model functors
     void gambit_core::registerActiveModelFunctors(const gambit_core::pmfVec& fvec)
     {
-      for (gambit_core::pmfVec::const_iterator it = fvec.begin(); it != fvec.end(); ++it)
+      for (const auto& f : fvec)
       {
-        activeModelFunctorList[(*it)->origin()] = *it;
+        activeModelFunctorList[f->origin()] = f;
       }
     }
 
