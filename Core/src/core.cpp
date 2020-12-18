@@ -521,13 +521,11 @@ namespace Gambit
     /// Get the description of the named capability from the description database
     const capability_info gambit_core::get_capability_info(const str& name) const
     {
-
-      for(std::vector<capability_info>::const_iterator it=capability_dbase.begin();
-           it!=capability_dbase.end();++it)
+      for (const auto& capability : capability_dbase)
       {
-         if(it->name==name)
+         if(capability.name == name)
          {
-           return *it; //Should only be one match possible after database check
+           return capability; //Should only be one match possible after database check
          }
       }
       // if no match...
