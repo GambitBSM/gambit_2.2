@@ -2138,7 +2138,7 @@ def constrEnumDeclHeader(enum_el_list, file_output_path):
 
         # Get enum names and values
         enum_members_list = []
-        for sub_el in enum_el.getchildren():
+        for sub_el in list(enum_el):
             if sub_el.tag == 'EnumValue':
                 member_string = sub_el.get('name') + '=' + sub_el.get('init')
                 enum_members_list.append(member_string)
@@ -2606,12 +2606,12 @@ def xmlFilesToDicts(xml_files):
         tree = ET.parse(xml_file)
         root = tree.getroot()
 
-        for el in root.getchildren():
+        for el in list(root):
 
             # Fill id-based dict
             gb.all_id_dict[xml_file][el.get('id')] = el
 
-        for el in root.getchildren():
+        for el in list(root):
 
             # Determine name
             if 'name' in el.keys():

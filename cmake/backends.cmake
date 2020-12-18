@@ -1384,6 +1384,53 @@ if(NOT ditched_${name}_${ver})
   )
   BOSS_backend(${name} ${ver})
   add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
+# Minuit2
+set(name "minuit2")
+set(ver "5.34.14")
+set(md5 "7fc00378a2ed1f731b719d4837d62d6a")
+set(dl "https://www.cern.ch/mathlibs/sw/5_34_14/Minuit2/Minuit2-5.34.14.tar.gz")
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+    ExternalProject_Add(${name}_${ver}
+            DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+            SOURCE_DIR ${dir}
+            BUILD_IN_SOURCE 1
+            CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CXXFLAGS=-fPIC ./configure --prefix=${dir} --disable-openmp --with-pic
+            BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
+            INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
+            )
+    add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
+endif()
+
+# phc
+set(name "phc")
+set(ver "2.4.58")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(dl "http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz")
+#  set(md5 "2e347b1794201d7ca462d2e4b5630147")
+  set(md5 "none")
+
+else()
+  set(dl "http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz")
+#  set(md5 "7b589002b78037c40a8c52269bf39c0e")
+  set(md5 "none")
+endif()
+set(dir "${PROJECT_SOURCE_DIR}/Backends/installed/${name}/${ver}")
+check_ditch_status(${name} ${ver} ${dir})
+if(NOT ditched_${name}_${ver})
+  ExternalProject_Add(${name}_${ver}
+          DOWNLOAD_COMMAND ${DL_BACKEND} ${dl} ${md5} ${dir} ${name} ${ver}
+          SOURCE_DIR ${dir}
+          BUILD_IN_SOURCE 1
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+  add_extra_targets("backend" ${name} ${ver} ${dir} ${dl} clean)
   set_as_default_version("backend" ${name} ${ver})
 endif()
 
