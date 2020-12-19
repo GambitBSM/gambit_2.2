@@ -715,15 +715,11 @@ namespace Gambit
                   unsigned int       MPIrank = current_point.rank;
                   unsigned long long pointID = current_point.pointID;
 
-                  //if(verbose) logger() << LogTags::debug << LogTags::scanner
-                  //   << "Current point: "<<MPIrank<<", "<<pointID<<std::endl;
-                  //   << "Current index: "<<getReader().get_current_index()<<std::endl;
-                  //   << "Current loopi: "<<loopi<<EOM;
+                  if(verbose) logger() << LogTags::debug << LogTags::scanner
+                     << "Current point: "<<MPIrank<<", "<<pointID<<std::endl;
+                     << "Current index: "<<getReader().get_current_index()<<std::endl;
+                     << "Current loopi: "<<loopi<<EOM;
 
-
-                  // std::cout << "Current point: "<<MPIrank<<", "<<pointID<<std::endl;
-                  // std::cout << "Current index: "<<getReader().get_current_index()<<std::endl;
-                  // std::cout << "Current loopi: "<<loopi<<std::endl;
 
 
                   // Make sure we didn't somehow get desynchronised from the reader's internal index
