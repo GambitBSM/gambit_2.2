@@ -98,7 +98,6 @@ namespace Gambit
       thread_local EventT pythia_event;
       static const double jet_pt_min = runOptions->getValueOrDef<double>(10.0, "jet_pt_min");
 
-
       // If the event loop has not been entered yet, reset the counter for the number of failed events
       if (iteration == BASE_INIT)
       {

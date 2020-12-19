@@ -192,6 +192,19 @@
   #undef CAPABILITY
   /// @}
 
+  /// A consistency check that ensures that if each event is weighted
+  /// by a process-level cross-section from an external calculator, then
+  /// the total cross-section is taken from the event generator
+  #define CAPABILITY CrossSectionConsistencyCheck
+  START_CAPABILITY
+    #define FUNCTION doCrossSectionConsistencyCheck
+    START_FUNCTION(bool)
+    // NEEDS_MANAGER(RunMC, MCLoopInfo)
+    DEPENDENCY(TotalCrossSection, xsec_container)
+    DEPENDENCY(EventWeighterFunction, EventWeighterFunctionType)
+    #undef FUNCTION
+  #undef CAPABILITY
+
 
   /// Lists of analyses to run
   /// @{
@@ -261,6 +274,7 @@
   START_CAPABILITY
     #define FUNCTION CollectAnalyses
     START_FUNCTION(AnalysisDataPointers)
+    DEPENDENCY(CrossSectionConsistencyCheck, bool)
     DEPENDENCY(ATLASAnalysisNumbers, AnalysisDataPointers)
     DEPENDENCY(CMSAnalysisNumbers, AnalysisDataPointers)
     DEPENDENCY(IdentityAnalysisNumbers, AnalysisDataPointers)

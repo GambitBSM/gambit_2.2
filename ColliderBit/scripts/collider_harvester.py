@@ -30,6 +30,7 @@ exec(compile(open(toolsfile, "rb").read(), toolsfile, 'exec')) # Python 2/3 comp
 def main(argv):
 
     model_headers=set([])
+    ignore_model_headers=["SUSY.hpp", "SUSY_extras.hpp"]
 
     # Handle command line options
     verbose = False
@@ -114,7 +115,7 @@ namespace Gambit                                  \n\
       typedef Py8Collider<Pythia_default::Pythia8::Pythia, Pythia_default::Pythia8::Event, void> Py8Collider_defaultversion;\n"
 
     for h in model_headers:
-        if h != "SUSY.hpp":
+        if h not in ignore_model_headers:
             m = re.sub(".hpp", "", h)
             towrite+='      typedef Py8Collider<Pythia_{0}_default::Pythia8::Pythia, Pythia_{0}_default::Pythia8::Event, void> Py8Collider_{0}_defaultversion;\n'.format(m)
 
@@ -123,7 +124,7 @@ namespace Gambit                                  \n\
       typedef Py8Collider<Pythia_default::Pythia8::Pythia, Pythia_default::Pythia8::Event, Pythia_default::Pythia8::GAMBIT_hepmc_writer> Py8Collider_defaultversion;\n"
 
     for h in model_headers:
-        if h != "SUSY.hpp":
+        if h not in ignore_model_headers:
             m = re.sub(".hpp", "", h)
             towrite+='      typedef Py8Collider<Pythia_{0}_default::Pythia8::Pythia, Pythia_{0}_default::Pythia8::Event, Pythia_{0}_default::Pythia8::GAMBIT_hepmc_writer> Py8Collider_{0}_defaultversion;\n'.format(m)
 

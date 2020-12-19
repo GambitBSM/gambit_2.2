@@ -30,8 +30,6 @@ namespace Gambit
   namespace ColliderBit
   {
 
-    extern std::map<std::string,bool> event_weight_flags;
-
     /// A function that sets the event weight to unity, with zero uncertainty
     void _setEventWeight_unity(HEPUtils::Event& event, const BaseCollider*)  // <-- Ignoring second argument
     {
@@ -131,13 +129,6 @@ namespace Gambit
 
       const static int use_trust_level = runOptions->getValueOrDef<int>(1, "use_cross_section_trust_level");
       
-      static bool first = true;
-      if (first)
-      {
-        event_weight_flags["weight_by_cross_section"] = true;
-        first = false;
-      }
-
       if(*Loop::iteration < 0) return;
 
       result = std::bind(_setEventWeight_fromCrossSection,

@@ -30,8 +30,6 @@ namespace Gambit
   namespace ColliderBit
   {
 
-    extern std::map<std::string,bool> event_weight_flags;
-
     // ======= Utility functions =======
 
 
@@ -1045,13 +1043,6 @@ namespace Gambit
     {
       using namespace Pipes::getEvGenCrossSection;
 
-      static bool first = true;
-      if (first)
-      {
-        event_weight_flags["total_cross_section_from_MC"] = true;
-        first = false;
-      }
-
       // Don't bother if there are no analyses that will use this.
       if (Dep::RunMC->analyses.empty()) return;
 
@@ -1593,6 +1584,30 @@ namespace Gambit
       }
 
     }
+
+    /// A consistency check that ensures that if each event is weighted
+    /// by a process-level cross-section from an external calculator, then
+    /// the total cross-section is taken from the event generator
+    void doCrossSectionConsistencyCheck(bool& result)
+    {
+      using namespace Pipes::doCrossSectionConsistencyCheck;
+
+      if (Dep::EventWeighterFunction.name() == "setEventWeight_fromCrossSection" 
+          && Dep::TotalCrossSection.name() != "getEvGenCrossSection_as_base")
+      {
+        std::stringstream errmsg_ss;
+        errmsg_ss << "Inconsistent choice for how to scale the generated events. "
+                  << "If each event is weighted by a process-specific cross-section that is not from " 
+                  << "the event generator (function 'setEventWeight_fromCrossSection' for capability "
+                  << "'EventWeighterFunction'), you need to scale by the total cross-section "
+                  << "calculated by the event generator. (Choose the function "
+                  << "'getEvGenCrossSection_as_base' for capability 'TotalCrossSection'.)";
+        ColliderBit_error().raise(LOCAL_INFO, errmsg_ss.str());
+      }
+
+      result = true;
+    }
+
 
   }
 }

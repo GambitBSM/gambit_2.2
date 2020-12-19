@@ -11,14 +11,15 @@
 ///  \author Anders Kvellestad
 ///          (a.kvellestad@imperial.ac.uk)
 ///  \date 2019 Sep
+///  \date 2020 Dec
 ///
 ///  *********************************************
 
 
 #define BACKENDNAME xsecBE
 #define BACKENDLANG Python
-#define VERSION 0.1.0
-#define SAFE_VERSION 0_1_0
+#define VERSION 1.0.2
+#define SAFE_VERSION 1_0_2
 
 /* The following macro imports the modude in the Python interpreter
  * when this header file is included somewhere. */
