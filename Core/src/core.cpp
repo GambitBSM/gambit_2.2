@@ -398,7 +398,7 @@ namespace Gambit
       // Create file and write YAML output there
       std::ofstream outfile;
       outfile.open(Utils::runtime_scratch()+"central_capabilities.dat");
-      outfile << "# Auto-generated capability description library. Edits will be erased." << endl;;
+      outfile << "# Auto-generated capability description library. Edits will be erased." << endl;
       outfile << "# Edit \"" << input_capability_descriptions << "\" instead." << endl << endl << out.c_str();
 
 
@@ -494,7 +494,7 @@ namespace Gambit
       // Create file and write YAML output there
       std::ofstream outfile2;
       outfile2.open(Utils::runtime_scratch()+"central_models.dat");
-      outfile2 << "# Auto-generated model description library. Edits will be erased." << endl;;
+      outfile2 << "# Auto-generated model description library. Edits will be erased." << endl;
       outfile2 << "# Edit \"" << input_model_descriptions << "\" instead." << endl << endl << out2.c_str();
 
     }
