@@ -716,8 +716,8 @@ namespace Gambit
                   unsigned long long pointID = current_point.pointID;
 
                   if(verbose) logger() << LogTags::debug << LogTags::scanner
-                     << "Current point: "<<MPIrank<<", "<<pointID<<std::endl;
-                     << "Current index: "<<getReader().get_current_index()<<std::endl;
+                     << "Current point: "<<MPIrank<<", "<<pointID<<std::endl
+                     << "Current index: "<<getReader().get_current_index()<<std::endl
                      << "Current loopi: "<<loopi<<EOM;
 
 
