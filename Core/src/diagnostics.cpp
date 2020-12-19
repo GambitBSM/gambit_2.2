@@ -229,7 +229,7 @@ namespace Gambit
   /// Free-form module diagnostic function
   void gambit_core::ff_module_diagnostic(const str& command)
   {
-    std::stringstream out; // added this!  not 'cout' but 'out'
+    std::stringstream out;
     for (const auto& module : modules)
     {
       if (command == module)
