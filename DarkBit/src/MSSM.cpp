@@ -756,7 +756,14 @@ namespace Gambit
 
       auto min = [&](sdpair a, sdpair b) { return a.second < b.second ? a : b; };
 
-      result = min(min(min(min(msqd, msqu), min(msl, msneu)), min(mchi0, mchip)),mglui).first;
+      sdpair lsp = min(min(min(min(msqd, msqu), min(msl, msneu)), min(mchi0, mchip)),mglui);
+
+      if (lsp == msqd or lsp == msqu or lsp == msl or lsp == mglui or lsp == mchip)
+      {
+        invalid_point().raise("Point invalidated for having charged LSP.");
+      }
+      
+      result = lsp.first;
     }
 
     void DarkMatterConj_ID_MSSM(std::string & result)
@@ -776,7 +783,14 @@ namespace Gambit
 
       auto min = [&](sdpair a, sdpair b) { return a.second < b.second ? a : b; };
 
-      result = min(min(min(min(msqd, msqu), min(msl, msneu)), min(mchi0, mchip)),mglui).first;
+      sdpair lsp = min(min(min(min(msqd, msqu), min(msl, msneu)), min(mchi0, mchip)),mglui);
+
+      if (lsp == msqd or lsp == msqu or lsp == msl or lsp == mglui or lsp == mchip)
+      {
+        invalid_point().raise("Point invalidated for having charged LSP.");
+      }
+      
+      result = lsp.first;
     }
   }
 }
