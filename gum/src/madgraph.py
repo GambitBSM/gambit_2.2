@@ -10,6 +10,10 @@
 #          (sanjay.bloor12@imperial.ac.uk)
 #  \date 2018, 2019, 2020
 #
+#  \author Pat Scott
+#          (pat.scott@uq.edu.au)
+#  \date 2019 Jan
+#
 #  **************************************
 
 import os
@@ -36,7 +40,7 @@ def make_madgraph_script(mg5_dir, mg5_output_dir, model_name, processes, multipa
     else:
         towrite = "convert model " + model_path + "\n"
 
-    # Then, import the model 
+    # Then, import the model
     towrite += "import model " + model_name + "\n"
 
     # Import any multiparticles
