@@ -24,11 +24,11 @@
 
 #include "gambit/Core/core.hpp"
 #include "gambit/Core/modelgraph.hpp"
-#include "gambit/Utils/stream_overloads.hpp"
+#include "gambit/ScannerBit/plugin_loader.hpp"
 #include "gambit/Utils/screen_print_utils.hpp"
+#include "gambit/Utils/stream_overloads.hpp"
 #include "gambit/Utils/table_formatter.hpp"
 #include "gambit/Utils/util_functions.hpp"
-#include "gambit/ScannerBit/plugin_loader.hpp"
 #include "gambit/cmake/cmake_variables.hpp"
 
 #include <memory>
@@ -44,10 +44,10 @@ namespace Gambit
     table.padding(1);
     table.capitalize_title();
     table.default_widths(25);
-    for (const auto& module : modules)
+    for (const auto &module : modules)
     {
       int nf = 0;
-      for (const auto& functor : functorList)
+      for (const auto &functor : functorList)
       {
         if (functor->origin() == module) nf++;
       }
@@ -68,21 +68,21 @@ namespace Gambit
     table.default_widths(18, 7, 70, 13, 3, 3);
 
     // Loop over all registered backends
-    for (const auto& backend : backend_versions)
+    for (const auto &backend : backend_versions)
     {
       // Loop over all registered versions of this backend
-      for (const auto& version : backend.second)
+      for (const auto &version : backend.second)
       {
         int nfuncs = 0;
         int ntypes = 0;
         int nctors = 0;
 
         // Retrieve the status and path info.
-        const str path = backendData->path(backend.first, version);           // Get the path of this backend
-        const str status = backend_status(backend.first, version, all_good);  // Save the status of this backend
+        const str path = backendData->path(backend.first, version);          // Get the path of this backend
+        const str status = backend_status(backend.first, version, all_good); // Save the status of this backend
 
         // Count up the number of functions in this version of the backend, using the registered functors.
-        for (const auto& functor : backendFunctorList)
+        for (const auto &functor : backendFunctorList)
         {
           if (functor->origin() == backend.first and functor->version() == version) nfuncs++; // If backend matches, increment the count of the functions in this version
         }
@@ -90,9 +90,9 @@ namespace Gambit
         // Do things specific to versions that provide classes
         if (backendData->classloader.at(backend.first + version))
         {
-          const std::set<str> classes = backendData->classes.at(backend.first + version);  // Retrieve classes loaded by this version
-          ntypes = classes.size();                                                   // Get the number of classes loaded by this backend
-          for (const auto& class_ : classes)  // class is a C++ keyword, so use class_ here which allows the same readability.
+          const std::set<str> classes = backendData->classes.at(backend.first + version); // Retrieve classes loaded by this version
+          ntypes = classes.size();                                                        // Get the number of classes loaded by this backend
+          for (const auto &class_ : classes)                                              // class is a C++ keyword, so use class_ here which allows the same readability.
           {
             nctors += backendData->factory_args.at(backend.first + version + class_).size(); // Add the number of factories for this class to the total
           }
@@ -102,16 +102,21 @@ namespace Gambit
         const str firstentry = (&version == std::addressof(*backend.second.begin()) ? backend.first : "");
         table << firstentry << version << path;
         if (status == "OK")
-            table.green() << status;
+          table.green() << status;
         else
-            table.red() << status;
+          table.red() << status;
         table << " " + std::to_string(nfuncs) << std::to_string(ntypes) << std::to_string(nctors);
       }
     }
 
     std::stringstream out;
     out << "All relative paths are given with reference to " << GAMBIT_DIR << ".";
-    if (all_good) out << endl << endl << "\033[032m" << "All your backend are belong to us." << "\033[0m" << endl;
+    if (all_good)
+      out << endl
+          << endl
+          << "\033[032m"
+          << "All your backend are belong to us."
+          << "\033[0m" << endl;
     out << endl;
     out << table.str();
     print_to_screen(out.str(), "backend");
@@ -125,7 +130,7 @@ namespace Gambit
     table.padding(1);
     table.capitalize_title();
 
-    for (const auto& functor : primaryModelFunctorList)
+    for (const auto &functor : primaryModelFunctorList)
     {
       const str model = functor->origin();
       const str parentof = modelInfo->get_parent(model);
@@ -134,17 +139,17 @@ namespace Gambit
     }
 
     std::stringstream out;
-    #ifdef HAVE_GRAPHVIZ
-        // Create and spit out graph of the model hierarchy.
-        const str graphfile = Utils::runtime_scratch() + "GAMBIT_model_hierarchy.gv";
-        ModelHierarchy modelGraph(*modelInfo,primaryModelFunctorList,graphfile,false);
-        out << endl << "Created graphviz model hierarchy graph in "+graphfile+"." << endl;
-        out << endl << "To get postscript plot of model hierarchy, please run: " << endl;
-        out << GAMBIT_DIR << "/Core/scripts/./graphviz.sh "+graphfile << endl;
-    #else
-        out << endl << "To get postscript plot of model hierarchy, please install graphviz, rerun cmake and remake GAMBIT." << endl;
-    #endif
-      out << table.str();
+#ifdef HAVE_GRAPHVIZ
+    // Create and spit out graph of the model hierarchy.
+    const str graphfile = Utils::runtime_scratch() + "GAMBIT_model_hierarchy.gv";
+    ModelHierarchy modelGraph(*modelInfo, primaryModelFunctorList, graphfile, false);
+    out << endl << "Created graphviz model hierarchy graph in " + graphfile + "." << endl;
+    out << endl << "To get postscript plot of model hierarchy, please run: " << endl;
+    out << GAMBIT_DIR << "/Core/scripts/./graphviz.sh " + graphfile << endl;
+#else
+    out << endl << "To get postscript plot of model hierarchy, please install graphviz, rerun cmake and remake GAMBIT." << endl;
+#endif
+    out << table.str();
     print_to_screen(out.str(), "model");
   }
 
@@ -157,36 +162,36 @@ namespace Gambit
     table.padding(1);
     table.capitalize_title();
     table.default_widths(35, 25);
-    for (const auto& capability : capabilities)
+    for (const auto &capability : capabilities)
     {
       // Make sets of matching modules and backends
       std::set<str> modset;
-      for (const auto& functor : functorList)
+      for (const auto &functor : functorList)
       {
         if (functor->capability() == capability) modset.insert(functor->origin());
       }
       std::set<str> beset;
-      for (const auto& functor : backendFunctorList)
+      for (const auto &functor : backendFunctorList)
       {
         if (functor->capability() == capability) beset.insert(functor->origin());
       }
 
       // Make strings out of the sets
       std::string mods("");
-      for (const auto& mod : modset)
+      for (const auto &mod : modset)
       {
         if (&mod != std::addressof(*modset.begin())) mods += ", ";
         mods += mod;
       }
       std::string bes("");
-      for (const auto& be : beset)
+      for (const auto &be : beset)
       {
         if (&be != std::addressof(*beset.begin())) bes += ", ";
         bes += be;
       }
 
       // Identify the primary model parameters with their models.
-      if (mods.empty() and bes.empty()) mods = capability.substr(0, capability.length()-11);
+      if (mods.empty() and bes.empty()) mods = capability.substr(0, capability.length() - 11);
 
       // Print the entry in the table (list format)
       table << capability << mods << bes;
@@ -217,20 +222,20 @@ namespace Gambit
     print_to_screen(output, "priors");
   }
 
-  void gambit_core::ff_prior_diagnostic(const str& command)
+  void gambit_core::ff_prior_diagnostic(const str &command)
   {
     if (command != "priors")
     {
-        const std::string output = Scanner::Plugins::plugin_info().print_priors(command);
-        print_to_screen(output, command);
+      const std::string output = Scanner::Plugins::plugin_info().print_priors(command);
+      print_to_screen(output, command);
     }
   }
 
   /// Free-form module diagnostic function
-  void gambit_core::ff_module_diagnostic(const str& command)
+  void gambit_core::ff_module_diagnostic(const str &command)
   {
     std::stringstream out;
-    for (const auto& module : modules)
+    for (const auto &module : modules)
     {
       if (command == module)
       {
@@ -241,41 +246,47 @@ namespace Gambit
         table.capitalize_title();
         table.default_widths(30, 35, 35, 19, 27);
 
-        for (const auto& functor : functorList)
+        for (const auto &functor : functorList)
         {
-          if (functor->origin() == module)  // Module matches
+          if (functor->origin() == module) // Module matches
           {
             const str f = functor->name();
             const str c = functor->capability();
             const str t = functor->type();
             const str islm = functor->canBeLoopManager() ? "Yes" : "No ";
-            const str nlm  = functor->loopManagerCapability();
+            const str nlm = functor->loopManagerCapability();
             const std::set<sspair> deps = functor->dependencies();
             const std::set<sspair> reqs = functor->backendreqs();
             table.no_newline() << f << c << t << (" " + islm + " " + nlm);
 
             if (not deps.empty())
             {
-              for (const auto& dep : deps)
+              for (const auto &dep : deps)
               {
                 if (&dep != std::addressof(*deps.begin()))
-                    table.no_newline() << "" << "" << "" << "" << dep.first + " [" + dep.second + "]";
+                  table.no_newline() << ""
+                                     << ""
+                                     << ""
+                                     << "" << dep.first + " [" + dep.second + "]";
                 else
-                    table << dep.first + " [" + dep.second + "]";
+                  table << dep.first + " [" + dep.second + "]";
               }
             }
             if (not reqs.empty())
             {
-              for (const auto& req : reqs)
+              for (const auto &req : reqs)
               {
                 if (&req != std::addressof(*reqs.begin()) or not deps.empty())
-                    table.no_newline() << "" << "" << "" << "" << req.first + " {" + req.second + "}";
+                  table.no_newline() << ""
+                                     << ""
+                                     << ""
+                                     << "" << req.first + " {" + req.second + "}";
                 else
-                    table << req.first + " {" + req.second + "}";
+                  table << req.first + " {" + req.second + "}";
               }
             }
             if (reqs.empty() and deps.empty()) table << "";
-            table.newline(table.row_pos()-1);
+            table.newline(table.row_pos() - 1);
           }
         }
         out << table.str();
@@ -286,11 +297,11 @@ namespace Gambit
   }
 
   /// Free-form backend diagnostic function
-  void gambit_core::ff_backend_diagnostic(const str& command)
+  void gambit_core::ff_backend_diagnostic(const str &command)
   {
     std::stringstream out;
-    //Iterate over all backends to see if command matches one of them
-    for (const auto& backend : backend_versions)
+    // Iterate over all backends to see if command matches one of them
+    for (const auto &backend : backend_versions)
     {
       if (command == backend.first)
       {
@@ -298,11 +309,11 @@ namespace Gambit
         out << "Information for backend " << backend.first << "." << std::endl << std::endl;
 
         // Loop over all registered versions of this backend
-        for (const auto& version : backend.second)
+        for (const auto &version : backend.second)
         {
           bool who_cares;
-          const str path = backendData->corrected_path(backend.first, version);  // Save the path of this backend
-          const str status = backend_status(backend.first, version, who_cares);  // Save the status of this backend
+          const str path = backendData->corrected_path(backend.first, version); // Save the path of this backend
+          const str status = backend_status(backend.first, version, who_cares); // Save the status of this backend
           out << "Version: " << version << std::endl;
           out << "Path to library: " << path << std::endl;
           out << "Library status: " << status << std::endl;
@@ -314,7 +325,7 @@ namespace Gambit
           back_table.top_line(true);
           back_table.bottom_line(true);
           // Loop over all the backend functions and variables
-          for (const auto& functor : backendFunctorList)
+          for (const auto &functor : backendFunctorList)
           {
             if ((functor->origin() == backend.first) and (functor->version() == version))
             {
@@ -323,15 +334,19 @@ namespace Gambit
               const str t = functor->type();
               const int s = functor->status();
               back_table << ("  " + f) << c << t;
-              if(s == -5) back_table.red() << "Mathematica absent";
-              else if (s == -2) back_table.red() << "Function absent";
-              else if (s == -1) back_table.red() << "Backend absent";
-              else if (s >= 0)  back_table.green() << "Available";
-              else back_table << "";
+              if (s == -5)
+                back_table.red() << "Mathematica absent";
+              else if (s == -2)
+                back_table.red() << "Function absent";
+              else if (s == -1)
+                back_table.red() << "Backend absent";
+              else if (s >= 0)
+                back_table.green() << "Available";
+              else
+                back_table << "";
             }
           }
-          if (back_table.rows() > 0)
-            out << back_table.str();
+          if (back_table.rows() > 0) out << back_table.str();
           table_formatter class_table("  Class", "Constructor overload", "Status");
           class_table.capitalize_title();
           class_table.default_widths(46, 60, 60);
@@ -345,11 +360,11 @@ namespace Gambit
             if (backendData->classes.find(backend.first + version) != backendData->classes.end()) classes = backendData->classes.at(backend.first + version);
             has_classloader = true;
             // Loop over the classes
-            for (const auto& class_ : classes)  // class is a C++ keyword, so use class_ here which allows the same readability.
+            for (const auto &class_ : classes) // class is a C++ keyword, so use class_ here which allows the same readability.
             {
               const std::set<str> ctors = backendData->factory_args.at(backend.first + version + class_);
               // Loop over the constructors in each class
-              for (const auto& ctor : ctors)
+              for (const auto &ctor : ctors)
               {
                 str args = ctor;
                 boost::replace_all(args, "my_ns::", "");
@@ -357,21 +372,20 @@ namespace Gambit
                 const str firstentry = (&ctor == std::addressof(*ctors.begin()) ? class_ : "");
                 class_table << ("  " + firstentry) << args;
                 if (ss == "OK")
-                    class_table.green() << status;
+                  class_table.green() << status;
                 else
-                    class_table.red() << status;
+                  class_table.red() << status;
               }
             }
           }
-          if (class_table.rows() > 0)
-              out << class_table.str();
+          if (class_table.rows() > 0) out << class_table.str();
         }
         // Tell the user what the default version is for classes of this backend (if there are any).
         if (has_classloader)
         {
           const std::map<str, str> defs = backendData->default_safe_versions;
           const str my_def = (defs.find(backend.first) != defs.end() ? backendData->version_from_safe_version(backend.first, defs.at(backend.first)) : "none");
-          out << std::endl << "Default version for loaded classes: "  << my_def << std::endl << std::endl;
+          out << std::endl << "Default version for loaded classes: " << my_def << std::endl << std::endl;
         }
         break;
       }
@@ -380,11 +394,11 @@ namespace Gambit
   }
 
   /// Free-form model diagnostic function
-  void gambit_core::ff_model_diagnostic(const str& command)
+  void gambit_core::ff_model_diagnostic(const str &command)
   {
     std::stringstream out;
-    //Iterate over all models to see if command matches one of them
-    for (const auto& functor : primaryModelFunctorList)
+    // Iterate over all models to see if command matches one of them
+    for (const auto &functor : primaryModelFunctorList)
     {
       const str model = functor->origin();
       if (command == model)
@@ -416,11 +430,11 @@ namespace Gambit
   }
 
   /// Free-form capability diagnostic function
-  void gambit_core::ff_capability_diagnostic(const str& command)
+  void gambit_core::ff_capability_diagnostic(const str &command)
   {
     std::stringstream out;
-    //Iterate over all capabilities to see if command matches one of them
-    for (const auto& capability : capabilities)
+    // Iterate over all capabilities to see if command matches one of them
+    for (const auto &capability : capabilities)
     {
       if (command == capability)
       {
@@ -428,21 +442,21 @@ namespace Gambit
 
         // Retrieve info on this capability from the database file
         const capability_info cap = get_capability_info(capability);
-        std::vector< std::pair<str, std::map<str, std::set<std::pair<str,str> > > > > origins;
-        origins.push_back(std::pair<str, std::map<str, std::set<std::pair<str,str> > > >("modules", cap.modset));
-        origins.push_back(std::pair<str, std::map<str, std::set<std::pair<str,str> > > >("backends", cap.beset));
+        std::vector<std::pair<str, std::map<str, std::set<std::pair<str, str>>>>> origins;
+        origins.push_back(std::pair<str, std::map<str, std::set<std::pair<str, str>>>>("modules", cap.modset));
+        origins.push_back(std::pair<str, std::map<str, std::set<std::pair<str, str>>>>("backends", cap.beset));
         // Loop over {modules, backends}
-        for (const auto& origin : origins)
+        for (const auto &origin : origins)
         {
           if (not origin.second.empty())
           {
             out << "  Available in " << origin.first << ": " << std::endl;
             // Loop over modules or backends
-            for (const auto& module_or_backend : origin.second)
+            for (const auto &module_or_backend : origin.second)
             {
               out << "    " << module_or_backend.first << ": " << std::endl;
               // Loop over matching module/backend functions
-              for (const auto& function : module_or_backend.second)
+              for (const auto &function : module_or_backend.second)
               {
                 // Spit out: function name [function type]
                 out << "      function " << function.first << " [type " << function.second << "]" << std::endl;
@@ -459,17 +473,17 @@ namespace Gambit
   }
 
   /// Free-form scanner diagnostic function
-  void gambit_core::ff_scanner_diagnostic(const str& command)
+  void gambit_core::ff_scanner_diagnostic(const str &command)
   {
     const std::string output = Scanner::Plugins::plugin_info().print_plugin("scanner", command);
     print_to_screen(output, command);
   }
 
   /// Free-form test function diagnostic function
-  void gambit_core::ff_test_function_diagnostic(const str& command)
+  void gambit_core::ff_test_function_diagnostic(const str &command)
   {
     const std::string output = Scanner::Plugins::plugin_info().print_plugin("objective", command);
     print_to_screen(output, command);
   }
 
-}
+} // namespace Gambit
