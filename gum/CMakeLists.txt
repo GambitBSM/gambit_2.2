@@ -50,7 +50,7 @@ if(NOT DEFINED CMAKE_MACOSX_RPATH)
 endif()
 
 # Check for Mathematica
-include(cmake/FindMathematica.cmake)
+include(../cmake/FindMathematica.cmake)
 if(Mathematica_FOUND)
   message("   Found Mathematica")
   if(Mathematica_WSTP_FOUND)
