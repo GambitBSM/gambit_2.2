@@ -389,7 +389,7 @@ namespace Gambit
       const str model = functor->origin();
       if (command == model)
       {
-        out << "Information for model " << model << "." << endl << endl;;
+        out << "Information for model " << model << "." << endl << endl;
 
         // Retrieve info on this capability from the database file
         const model_info mod = get_model_info(model);
