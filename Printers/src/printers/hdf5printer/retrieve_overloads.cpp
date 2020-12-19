@@ -448,12 +448,11 @@ namespace Gambit
         bool found(true);
         retrieve_and_add_to_SLHAea(out, found, spec_type, "scale(Q)", SLHAcombo("", "TEMP", 0), all_dataset_labels, rank, pointID);
         if(not found)
-        //if(true) // Testing
         {
            // In some older datasets we forgot to add the scale to the output.
            // For now we will assume the spectrum was output by FlexibleSUSY, in which case
            // the running parameters will be defined at the SUSY scale (geometric mean of
-           // DRbar stop masses). TODO: Set this behvaiour with an option, maybe? Not sure how though.
+           // DRbar stop masses). TODO: Set this behaviour with an option, maybe? Not sure how though.
            
            // Proper calculation of DRbar stop masses, from https://arxiv.org/pdf/0904.2169.pdf Eq. 29 (with non-MSSM bits removed)
            // We assume that there is no flavour/family mixing, which is true for all our scans so far.
@@ -465,7 +464,6 @@ namespace Gambit
         { 
            scale = SLHAea_get(out,"TEMP",0);
         } 
-        //std::cout<<"scale(Q)="<<SLHAea_get(out,"TEMP",0)<<std::endl;
 
         // Add blocks that require scale info
         SLHAea_add_block(out, "GAUGE", scale);
