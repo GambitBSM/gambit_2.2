@@ -565,7 +565,6 @@ function(add_standalone_tarballs modules version)
                              COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/cmake ${dirname}/cmake
                              COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/config ${dirname}/config
                              COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/contrib ${dirname}/contrib
-                             COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/yaml_files ${dirname}/yaml_files
                              COMMAND ${CMAKE_COMMAND} -E remove -f 3Bit-${version}.tar.gz
                              COMMAND ${CMAKE_COMMAND} -E tar cz 3Bit-${version}.tar.gz ${dirname})
   add_dependencies(3Bit-${version}.tar.gz nuke-all)
