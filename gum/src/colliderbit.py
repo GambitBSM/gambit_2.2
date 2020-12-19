@@ -17,6 +17,10 @@
 #  \date 2019 Nov
 #        2020 Feb, Mar
 #
+#  \author Chris Chang
+#          (christopher.chang@uq.net.au)
+#  \date 2020
+#
 #  **************************************
 
 import datetime
