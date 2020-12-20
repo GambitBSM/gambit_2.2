@@ -8,6 +8,9 @@
 # NB: If MSSMspectrum_test is chosen this example yaml file will use
 # flexiblesusy, so then make sure you have
 # built gambit with -DBUILD_FS_MODELS="CMSSM;MSSMatMGUT;MSSM"
+# If VS_likelihood and VS_result is chosen then make sure 
+# you have also installed the vevacious backend, i.e.
+# within the build directory run 'make vevacious'
 
 
 Parameters:
@@ -142,6 +145,16 @@ ObsLikes:
     #function:     MSSMspectrum_test
     function:     SPheno_MSSM_test
 
+  # Vacuum Stability Likelihood 
+  - capability:   VS_likelihood
+    purpose:      LogLike
+    sub_capabilities:   
+      global: [quantum]
+      nearest: [quantum]
+
+  # Print all vevacious results
+  - capability:   VS_results
+    purpose:      Obs
 
 Rules:
 
@@ -149,10 +162,10 @@ Rules:
   # i.e. the function specific to the model and spectrum calculator
   - capabilty:    unimproved_MSSM_spectrum
     type:         Spectrum
-    #function:     get_CMSSM_spectrum_FS
+    function:     get_CMSSM_spectrum_FS
     #function:     get_MSSMatMGUT_spectrum_FS
     #function:     get_MSSMatQ_spectrum_FS
-    function:     get_MSSM_spectrum_SPheno
+    #function:     get_MSSM_spectrum_SPheno
     options:
     # FlexibleSUSY options
       precision_goal:        1.0e-4
@@ -171,6 +184,22 @@ Rules:
       n_run:                 30
       delta_mass:            1.0e-4
 
+  # pass settings to vevacious
+  - capability: initialize_vevacious
+    options:
+     # phc or hom4ps2 for homotopy continuation 
+     homotopy_backend: phc
+     where_to_save_input: output/Vevacious_iniFiles/
+     # Whether minuit focuses on speed or number of function calls
+     # possible values (fastest to slowest): 0, 1, 2  
+     minuit_strategy: 0
+     # If the path deformation takes longer than this number in seconds
+     # stop the calculation.
+     path_finding_timeout: 3600
+     # Resolutions for integration of equations of motion in overshoot
+     # undershoot procedure
+     radial_resolution_undershoot_overshoot: 0.005
+     PathResolution: 500
 
 Logger:
 
