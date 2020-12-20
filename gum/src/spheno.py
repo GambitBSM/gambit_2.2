@@ -1260,7 +1260,7 @@ def write_hb_output(hb_variables):
     else:
         hboutput = False
 
-    return hboutput
+    return hboutput, Wsign
 
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
                               particles, parameters, blockparams, gambit_pdgs, 
@@ -2113,7 +2113,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # End of Spectrum_Out
 
     # get_HiggsCouplingsTable function
-    hboutput = write_hb_output(hb_variables)
+    hboutput, Wsign = write_hb_output(hb_variables)
 
     # Assume SM-like at first
     numh0 = 1
@@ -3541,7 +3541,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     ).format(fullmodelname)
 
     # Whether to code up the HiggsCouplingsTable:
-    hboutput = write_hb_output(hb_variables)
+    hboutput, Wsign = write_hb_output(hb_variables)
 
     if hboutput:
       towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"SARAHSPheno_{0}_HiggsCouplingsTable\")\n"
