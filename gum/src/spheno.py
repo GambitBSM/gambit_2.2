@@ -2743,7 +2743,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 ).format(str(i), str(j), model_par, name, e)
 
      
-    # So we don't need Block GAUGEIN generically?
+    # We don't need Block GAUGEIN, the gauge couplings are
+    # fixed at the SM scale by the InitializeStandardModel function
     towrite += (
             "\n"
             "/*****************/\n"
