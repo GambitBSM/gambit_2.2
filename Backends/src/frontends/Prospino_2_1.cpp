@@ -189,8 +189,6 @@ BE_NAMESPACE
 {
   Farray<Fdouble,0,99> process_specific_lowmass_mods(Farray<Fdouble,0,99> lowmass_in, const PID_pair& pid_pair, int& trust_level)
   {
-    cerr << "DEBUG: process_specific_lowmass_mods: pid_pair = " << pid_pair.str() << endl;
-
     // Copy input array to output array
     Farray<Fdouble,0,99> lowmass_out(lowmass_in);
 
@@ -272,13 +270,8 @@ BE_NAMESPACE
       int sign_mass_pid1 = lowmass_out(pid1_index) < 0 ? -1 : 1;
       int sign_mass_pid2 = lowmass_out(pid2_index) < 0 ? -1 : 1;
       
-      cerr << "DEBUG: Adjusting masses for " << abs_pid1 << " and " << abs_pid2 << endl;
-      cerr << "DEBUG: Masses before: " << lowmass_out(pid1_index) << " and " << lowmass_out(pid2_index) << endl;
-
       lowmass_out(pid1_index) = sign_mass_pid1 * (abs(lowmass_out(pid1_index)) + 0.5 * abs(delta_m));
       lowmass_out(pid2_index) = sign_mass_pid2 * (abs(lowmass_out(pid2_index)) + 0.5 * abs(delta_m));
-
-      cerr << "DEBUG: Masses after: " << lowmass_out(pid1_index) << " and " << lowmass_out(pid2_index) << endl;
 
       // Setting trust_level = 0, since we're in the region were we can't really trust the result
       trust_level = 0;
@@ -567,8 +560,6 @@ BE_NAMESPACE
     result["NLO_ms[pb]"] = prospino_result(6);
 
     result["trust_level"] = static_cast<double>(trust_level);
-
-    cerr << "DEBUG: trust_level = " << trust_level << endl;
 
     return result;
   }
