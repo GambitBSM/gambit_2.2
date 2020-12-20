@@ -3300,7 +3300,6 @@ def write_spheno_frontend_header(model_name, function_signatures,
         ).format(function, args, symbol, fullmodelname)
     
     # All scraped from Model_Data_<MODEL>.f90
-    # todo: check these are all present. I think they are.
     # MODEL VARIABLES
     # MASS + OUTPUT VARIABLES
     # MODEL VARIABLES
