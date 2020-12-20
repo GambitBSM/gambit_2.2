@@ -302,7 +302,6 @@ namespace GUM
       }
 
       // If not check if it's in the GUM model database
-      // TODO: check if it's in the models dir and if it is move it to the SARAH dir
       std::string modelpath = std::string(GUM_DIR) + "/Models/" + modelname + "/" + modelname + ".m";
 
       // If it exists, then copy the folder to the SARAH model dir
@@ -720,13 +719,9 @@ namespace GUM
 
         // Otherwise -- if we don't want to save it: 
         // If it has a dependence -- not interested. Bin it.
-        // TODO: TG: It seems that we need some parameters with dependence, e.g. vd and vu from THDMII
 
         // Numerical dependence?
-        //command = "DependenceNum /. pdgum[[" + std::to_string(i+1) + ",2]] // ToString";
-        //send_to_math(command);
-        //get_from_math(entry);
-        //if (entry != "DependenceNum" and entry != "None" and sphenodeps != true) continue;
+        // Parameters with DependenceNum are acutally needed, so keep these
         
         // Same with just Dependence
         command = "Dependence /. pdgum[[" + std::to_string(i+1) + ",2]] // ToString";
@@ -1131,7 +1126,7 @@ namespace GUM
 
     try
     {
-      // TODO: for now just get the low scale conditions
+      // TODO: Expand this for other types of boundary conditions 
       int bc_len;
       command = "Length[BoundaryLowScaleInput]";
       send_to_math(command);
