@@ -2,8 +2,8 @@
 //   *********************************************
 ///  \file
 ///
-///  Rollcall header for ColliderBit module;
-///  SUSY models.
+///  Rollcall header for SUSY models in
+///  ColliderBit.
 ///
 ///  *********************************************
 ///
@@ -38,16 +38,15 @@
 #define MODULE ColliderBit
 
 
-  // SLHAea object with spectrum and decays for a Pythia8 collider
+  // Construct an SLHAea object with spectrum and decays for Pythia
   #define CAPABILITY SpectrumAndDecaysForPythia
 
     #define FUNCTION getSpectrumAndDecaysForPythia
     START_FUNCTION(SLHAstruct)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
-    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(decay_rates, DecayTable)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -60,6 +59,7 @@
     START_FUNCTION(Py8Collider_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(SpectrumAndDecaysForPythia, SLHAstruct)
     #undef FUNCTION
 
@@ -68,6 +68,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -75,15 +76,14 @@
 
   // Run event generator
   #define CAPABILITY HardScatteringEvent
-
     #define FUNCTION generateEventPythia
     START_FUNCTION(HEPUtils::Event)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     DEPENDENCY(EventWeighterFunction, EventWeighterFunctionType)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
-
   #undef CAPABILITY
 
 
