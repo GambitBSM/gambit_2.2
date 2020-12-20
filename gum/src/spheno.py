@@ -1237,6 +1237,31 @@ def make_spheno_decay_tables(spheno_path, model_name):
 # /harvesting
 # writing
 
+def write_hb_output(hb_variables):
+
+    # The targets for HiggsBounds
+    hb_targets = ["rHB_S_S_Fd",  "rHB_P_P_Fd", "rHB_S_S_Fu",  "rHB_P_P_Fu", 
+                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VZ",  "rHB_P_VZ", 
+                  "ratioPP",  "ratioPPP", "ratioGG",  "ratioPGG", 
+                  "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
+
+    hboutput = True
+    # If the targets aren't all there then don't write HiggsBounds output. 
+    # They should be!
+    if not all(param in hb_variables for param in hb_targets):
+        hboutput = False
+
+    Wsign = ""
+    # Check to see if we've got VWm or VWp...
+    if all(p in hb_variables for p in ["rHB_S_VWm",   "rHB_P_VWm"]):
+        Wsign = "VWm" 
+    elif all(p in hb_variables for p in ["rHB_S_VWp",   "rHB_P_VWp"]):
+        Wsign = "VWp"
+    else:
+        hboutput = False
+
+    return hboutput, Wsign
+
 def write_spheno_frontend_src(model_name, function_signatures, variables, flags, 
                               particles, parameters, blockparams, gambit_pdgs, 
                               mixings, reality_dict, sphenodeps, hb_variables,
@@ -2088,27 +2113,7 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
     # End of Spectrum_Out
 
     # get_HiggsCouplingsTable function
-    # The targets for HiggsBounds
-    hb_targets = ["rHB_S_S_Fd",  "rHB_P_P_Fd", "rHB_S_S_Fu",  "rHB_P_P_Fu", 
-                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VZ",  "rHB_P_VZ", 
-                  "ratioPP",  "ratioPPP", "ratioGG",  "ratioPGG", 
-                  "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
-
-    hboutput = True
-    # If the targets aren't all there then don't write HiggsBounds output. 
-    # They should be!
-    if not all(param in hb_variables for param in hb_targets):
-        hboutput = False
-
-    Wsign = ""
-    # Check to see if we've got VWm or VWp...
-    if all(p in hb_variables for p in ["rHB_S_VWm",   "rHB_P_VWm"]):
-        Wsign = "VWm" 
-    elif all(p in hb_variables for p in ["rHB_S_VWp",   "rHB_P_VWp"]):
-        Wsign = "VWp"
-    else:
-        hboutput = False
-
+    hboutput, Wsign = write_hb_output(hb_variables)
 
     # Assume SM-like at first
     numh0 = 1
@@ -2743,7 +2748,8 @@ def write_spheno_frontend_src(model_name, function_signatures, variables, flags,
                 ).format(str(i), str(j), model_par, name, e)
 
      
-    # So we don't need Block GAUGEIN generically?
+    # We don't need Block GAUGEIN, the gauge couplings are
+    # fixed at the SM scale by the InitializeStandardModel function
     towrite += (
             "\n"
             "/*****************/\n"
@@ -3299,7 +3305,6 @@ def write_spheno_frontend_header(model_name, function_signatures,
         ).format(function, args, symbol, fullmodelname)
     
     # All scraped from Model_Data_<MODEL>.f90
-    # todo: check these are all present. I think they are.
     # MODEL VARIABLES
     # MASS + OUTPUT VARIABLES
     # MODEL VARIABLES
@@ -3536,26 +3541,7 @@ def write_spheno_frontend_header(model_name, function_signatures,
     ).format(fullmodelname)
 
     # Whether to code up the HiggsCouplingsTable:
-    # The targets for HiggsBounds
-    hb_targets = ["rHB_S_S_Fd",  "rHB_P_P_Fd", "rHB_S_S_Fu",  "rHB_P_P_Fu", 
-                  "rHB_S_S_Fe",  "rHB_P_P_Fe", "rHB_S_VZ",  "rHB_P_VZ", 
-                  "ratioPP",  "ratioPPP", "ratioGG",  "ratioPGG", 
-                  "CPL_H_H_Z",  "CPL_A_H_Z",  "CPL_A_A_Z"]
-
-    hboutput = True
-    # If the targets aren't all there then don't write HiggsBounds output. 
-    # They should be!
-    if not all(param in hb_variables for param in hb_targets):
-        hboutput = False
-
-    Wsign = ""
-    # Check to see if we've got VWm or VWp...
-    if all(p in hb_variables for p in ["rHB_S_VWm",   "rHB_P_VWm"]):
-        Wsign = "VWm" 
-    elif all(p in hb_variables for p in ["rHB_S_VWp",   "rHB_P_VWp"]):
-        Wsign = "VWp"
-    else:
-        hboutput = False
+    hboutput, Wsign = write_hb_output(hb_variables)
 
     if hboutput:
       towrite += ("BE_CONV_FUNCTION(get_HiggsCouplingsTable, int, (const Spectrum&, HiggsCouplingsTable&, const Finputs&), \"SARAHSPheno_{0}_HiggsCouplingsTable\")\n"
