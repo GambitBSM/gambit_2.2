@@ -145,21 +145,16 @@ def clean_calchep_model_files(model_folder, model_name, output_dir):
 
             ## /(if slhaVal in line)
 
-            # W mass - since CalcHEP uses tree-level relation to MZ, GF
-            # & alphainv. GAMBIT uses measured value.
+            # W mass - CalcHEP uses tree-level relation to MZ, GF & alphainv
+            # We set this to use GAMBIT's value, which is the measured MW mass.
 
             elif re.match("MWp", first_entry) or re.match("MWm", first_entry):
                 temp.write(clean(line))
 
             # Weinberg angle - again, CalcHEP uses tree-level relation.
-            # (Same definition as GAMBIT, but for different MW...? Weirdly.)
+            # We use GABMIT's value again
             elif re.match("TW", first_entry):
                 temp.write(clean(line))
-
-            # This is ok I think.
-            # # Only want g3 of the SM coupling constants.
-            # elif re.match("g3", first_entry):
-            #     temp.write(clean(line))
 
             # If no criteria has been matched - go ahead. For example,
             # vertices & variables defined internally, e.g. Higgs self coupling
