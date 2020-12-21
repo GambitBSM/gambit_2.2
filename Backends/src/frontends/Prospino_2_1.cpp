@@ -17,8 +17,7 @@
 #include "gambit/Backends/frontend_macros.hpp"
 #include "gambit/Backends/frontends/Prospino_2_1.hpp"
 #include "gambit/Elements/mssm_slhahelp.hpp"
-#include "gambit/Elements/slhaea_helpers.hpp"
-
+#include "gambit/Utils/slhaea_helpers.hpp"
 #include "gambit/Utils/version.hpp"
 
 #define BACKEND_DEBUG 0

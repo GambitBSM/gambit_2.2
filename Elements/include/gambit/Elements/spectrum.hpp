@@ -43,7 +43,7 @@
 #include "gambit/Utils/yaml_options.hpp"
 #include "gambit/Elements/sminputs.hpp"
 #include "gambit/Elements/subspectrum.hpp"
-#include "gambit/Elements/slhaea_helpers.hpp"
+#include "gambit/Elements/slhaea_spec_helpers.hpp"
 #include "gambit/Models/partmap.hpp"
 
 
