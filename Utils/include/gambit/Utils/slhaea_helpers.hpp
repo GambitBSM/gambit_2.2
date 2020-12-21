@@ -100,6 +100,55 @@ namespace Gambit
    return;
   }
 
+
+  /// Check if a line exists in an SLHAea block, then overwrite it if it does.  Otherwise add the line.
+  template <class T>
+  void SLHAea_overwrite_block(SLHAstruct& slha /*modify*/, const str& block, int index,
+   T value, const str& comment)
+  {
+    if(SLHAea_check_block(slha, block, index))
+    {
+      // entry exists already, delete it
+      slha.at(block).at(index).at(1);
+      auto& line = slha[block][index];
+      line.clear();
+      line << index << value << comment;
+    }
+    else
+    {
+      // Doesn't already exist, add it
+      slha[block][""] << index << value << comment;
+    }
+  }
+
+  /// Check if a line exists in an SLHAea block, then overwrite it if it does.  Otherwise add the line.
+  template <class T>
+  void SLHAea_overwrite_block(SLHAstruct& slha /*modify*/, const str& block, int index1, int index2,
+   T value, const str& comment)
+  {
+    //std::vector<int> indices = initVector<int>(index1, index2);
+    if(SLHAea_check_block(slha, block, index1, index2))
+    {
+      // entry exists already, delete it
+      //slha.at(block).at(indices).at(1); // Is this actually a valid way to use SLHAea? I don't see it in their documentation.
+      std::stringstream i,j;
+      i<<index1; j<<index2;
+      SLHAea::Block::key_type key(2);
+      key[0] = i.str();
+      key[1] = j.str();
+      auto& line = slha[block][key];
+      line.clear();
+      line << index1 << index2 << value << comment;
+    }
+    else
+    {
+      // Doesn't exist, add it
+      slha[block][""] << index1 << index2 << value << comment;
+    }
+  }
+
+
+
 }
 
 #endif //defined __slhaea_helpers_hpp__
