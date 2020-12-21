@@ -46,7 +46,7 @@
     DEPENDENCY(decay_rates, DecayTable)
     DEPENDENCY(MSSM_spectrum, Spectrum)
     DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -59,7 +59,7 @@
     START_FUNCTION(Py8Collider_defaultversion)
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(SpectrumAndDecaysForPythia, SLHAstruct)
     #undef FUNCTION
 
@@ -68,7 +68,7 @@
     NEEDS_MANAGER(RunMC, MCLoopInfo)
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -82,7 +82,7 @@
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     DEPENDENCY(EventWeighterFunction, EventWeighterFunctionType)
-    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
   #undef CAPABILITY
 

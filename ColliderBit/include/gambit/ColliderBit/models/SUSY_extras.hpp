@@ -51,6 +51,7 @@
       DEPENDENCY(ActivePIDPairs, vec_PID_pair)
       DEPENDENCY(SLHA1Spectrum, SLHAstruct)
       ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+      ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
       ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
       BACKEND_REQ(xsecBE_import_slha_string, (), void, (std::string&))
       BACKEND_REQ(xsecBE_set_parameters, (), void, (PyDict&))
@@ -65,6 +66,7 @@
     DEPENDENCY(ActivePIDPairs, vec_PID_pair)
     DEPENDENCY(SLHA1Spectrum, SLHAstruct)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     /// @todo Extend to also allow models CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model
     BACKEND_REQ(prospino_run, (libprospino), map_str_dbl, (const PID_pair&, const Options&))
     BACKEND_REQ(prospino_read_slha1_input, (libprospino), void, (const SLHAstruct&))
@@ -80,6 +82,7 @@
       DEPENDENCY(ActivePIDPairs, vec_PID_pair)
       DEPENDENCY(SLHA1Spectrum, SLHAstruct)
       ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+      ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
       ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
       BACKEND_REQ(salami_import_slha_string, (), void, (std::string&))
       BACKEND_REQ(salami_set_parameters, (), void, (PyDict&))
@@ -136,9 +139,10 @@
     #define FUNCTION getSLHA1Spectrum
     START_FUNCTION(SLHAstruct)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
-    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
   #undef CAPABILITY
 
@@ -147,9 +151,10 @@
     #define FUNCTION getSLHA2Spectrum
     START_FUNCTION(SLHAstruct)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     ALLOW_MODELS(CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
     MODEL_CONDITIONAL_DEPENDENCY(SLHAFileNameAndContent, pair_str_SLHAstruct, CB_SLHA_file_model, CB_SLHA_simpmod_scan_model, CB_SLHA_scan_model)
-    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
   #undef CAPABILITY
   /// @}
@@ -160,8 +165,9 @@
     #define FUNCTION calc_susy_spectrum_scan_guide
     START_FUNCTION(double)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT)
+    ALLOW_MODELS(MSSM63atQ_mA, MSSM63atMGUT_mA)
     DEPENDENCY(SLHA_pseudonyms, mass_es_pseudonyms)
-    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT)
+    MODEL_CONDITIONAL_DEPENDENCY(MSSM_spectrum, Spectrum, MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
     #undef FUNCTION
   #undef CAPABILITY
 

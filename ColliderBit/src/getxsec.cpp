@@ -318,8 +318,9 @@ namespace Gambit
       }
     #endif
 
-    /// WORK IN PROGRESS
+
     /// Get a cross-section from Prospino
+    /// WORK IN PROGRESS
     void getPIDPairCrossSectionsMap_prospino(map_PID_pair_PID_pair_xsec& result)
     {
       using namespace Pipes::getPIDPairCrossSectionsMap_prospino;
