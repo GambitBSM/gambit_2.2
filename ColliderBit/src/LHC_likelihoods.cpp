@@ -469,6 +469,7 @@ namespace Gambit
           if (USE_COVAR && has_covar)
           {
             result[ananame].combination_sr_label = "none";
+            result[ananame].combination_sr_index = -1;
             result[ananame].combination_loglike = 0.0;
           }
           // If this is an analysis without covariance info, add 0-entries for all SRs plus
@@ -481,6 +482,7 @@ namespace Gambit
               result[ananame].sr_loglikes[adata[SR].sr_label] = 0.0;
             }
             result[ananame].combination_sr_label = "none";
+            result[ananame].combination_sr_index = -1;
             result[ananame].combination_loglike = 0.0;
           }
 
@@ -508,7 +510,15 @@ namespace Gambit
         if (all_zero_signal)
         {
           // Store result
-          result[ananame].combination_sr_label = "all";
+          if (!(USE_COVAR && has_covar))
+          {
+            for (size_t SR = 0; SR < adata.size(); ++SR)
+            {
+              result[ananame].sr_indices[adata[SR].sr_label] = SR;
+              result[ananame].sr_loglikes[adata[SR].sr_label] = 0.0;
+            }
+          }
+          result[ananame].combination_sr_label = "any";
           result[ananame].combination_sr_index = -1;
           result[ananame].combination_loglike = 0.0;
 

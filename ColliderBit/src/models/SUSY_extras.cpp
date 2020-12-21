@@ -26,7 +26,7 @@ namespace Gambit
     GET_SPECIFIC_PYTHIA_SLHA(getPythia_SLHA, Pythia_default, )
 
 
-    // Get next SLHA file path and content (for use with model CB_SLHA_file_model)
+    // Get next SLHA file path and content (for use with model ColliderBit_SLHA_file_model)
     void getNextSLHAFileNameAndContent(pair_str_SLHAstruct& result)
     {
       using namespace Pipes::getNextSLHAFileNameAndContent;
@@ -58,7 +58,7 @@ namespace Gambit
 
 
     // Read a single SLHA file and update some entries for each scan point
-    // (for use with models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    // (for use with model ColliderBit_SLHA_scan_model)
     void getAndReplaceSLHAContent(pair_str_SLHAstruct& result)
     {
       using namespace Pipes::getAndReplaceSLHAContent;
@@ -124,7 +124,7 @@ namespace Gambit
 
 
 
-    // Extract SLHA file elements (for use with model CB_SLHA_file_model)
+    // Extract SLHA file elements (for use with model ColliderBit_SLHA_file_model)
     void getSLHAFileElements(map_str_dbl& result)
     {
       using namespace Pipes::getSLHAFileElements;
@@ -185,11 +185,11 @@ namespace Gambit
 
     // Extract an SLHAstruct with the specturm, either from the MSSM_spectrum
     // capability (for MSSM models), or simply from the SLHAFileNameAndContent
-    // capability (for CB_SLHA_file_model, CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    // capability (for ColliderBit_SLHA_file_model, ColliderBit_SLHA_scan_model)
 
     // @todo Should we perform some kind of SLHA1 vs SLHA2 check when used with the
-    //       CB_SLHA_* models below? For these models we currently just trust the user
-    //       to supply SLHA info in the appropriate format.
+    //       ColliderBit_SLHA_* models below? For these models we currently just trust 
+    //       the user to supply SLHA info in the appropriate format.
 
     // @todo Should we unify these two functions into a single module function that just
     //       provides a std::function instance that can be called with an
@@ -209,9 +209,7 @@ namespace Gambit
       {
         result = Dep::MSSM_spectrum->getSLHAea(1);
       }
-      else if (ModelInUse("CB_SLHA_file_model") ||
-               ModelInUse("CB_SLHA_simpmod_scan_model") ||
-               ModelInUse("CB_SLHA_scan_model"))
+      else if (ModelInUse("ColliderBit_SLHA_file_model") || ModelInUse("ColliderBit_SLHA_scan_model"))
       {
         result = Dep::SLHAFileNameAndContent->second;
       }
@@ -247,9 +245,7 @@ namespace Gambit
       {
         result = Dep::MSSM_spectrum->getSLHAea(2);
       }
-      else if (ModelInUse("CB_SLHA_file_model") ||
-               ModelInUse("CB_SLHA_simpmod_scan_model") ||
-               ModelInUse("CB_SLHA_scan_model"))
+      else if (ModelInUse("ColliderBit_SLHA_file_model") || ModelInUse("ColliderBit_SLHA_scan_model"))
       {
         result = Dep::SLHAFileNameAndContent->second;
       }

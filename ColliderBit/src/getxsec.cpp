@@ -1416,7 +1416,7 @@ namespace Gambit
 
 
     /// A function that assigns a total cross-sections directly from the scan parameters
-    /// (for models CB_SLHA_simpmod_scan_model and CB_SLHA_scan_model)
+    /// (for model ColliderBit_SLHA_scan_model)
     void getYAMLCrossSection_param(xsec_container& result)
     {
       using namespace Pipes::getYAMLCrossSection_param;
