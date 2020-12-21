@@ -32,6 +32,7 @@
 ///  \author Ankit Beniwal
 ///         (ankit.beniwal@adelaide.edu.au)
 ///  \date 2016 Oct
+///  \date 2020 Dec
 ///
 ///  *********************************************
 
@@ -750,9 +751,13 @@ namespace Gambit
     void lnL_t_mass_chi2(double &result)
     {
       using namespace Pipes::lnL_t_mass_chi2;
+      /// option mT_obs<double>: Observed value of mT (default: 173.34)
+      double mT_obs = runOptions->getValueOrDef<double>(173.34, "mT_obs");
+      /// option mT_obserr<double>: 1 sigma error on observed value of mT (default: 0.76)
+      double mT_obserr = runOptions->getValueOrDef<double>(0.76, "mT_obserr");
       /// Option profile_systematics<bool>: Use likelihood version that has been profiled over systematic errors (default false)
       bool profile = runOptions->getValueOrDef<bool>(false, "profile_systematics");
-      result = Stats::gaussian_loglikelihood(Dep::SMINPUTS->mT, 173.34, 0.0, 0.76, profile);
+      result = Stats::gaussian_loglikelihood(Dep::SMINPUTS->mT, mT_obs, 0.0, mT_obserr, profile);
     }
 
     /// b quark mass likelihood
