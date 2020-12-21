@@ -5265,19 +5265,19 @@ cap_Sun_vnqn_isoscalar: |
 CalcHEP_3_6_27_init: |
   Initialise CalcHEP backend.
 
-generate_decay_code: |
+CH_generate_decay_code: |
   Generates the codelet for a 1->2 process in CalcHEP.
 
-generate_xsec_code: |
+CH_generate_xsec_code: |
   Generates the codelet for a 2->2 process in CalcHEP.
 
-Assign_Value: |
+CH_Assign_Value: |
   Assigns a numerical value to a given CalcHEP parameter (with error-checking).
 
-Assign_Widths: |
+CH_Assign_Widths: |
   Passes the width from each BSM particle (+ top quark) in the model, from the DecayTable to CalcHEP.
 
-Assign_All_Values: |
+CH_Assign_All_Values: |
   Takes all parameters in a model as given by the vector of SpectrumParameters, and assigns them by value to the appropriate CalcHEP parameter names.
 
 CH_Decay_Width: |
@@ -5286,26 +5286,26 @@ CH_Decay_Width: |
 CH_Sigma_V: |
   Computes annihilation cross-section for 2->2 process, DM+DMbar -> X + Y at tree level. Coannihilations not currently supported; we require the mass of both in states are equal.
 
-setModel: |
+CH_setModel: |
   Set the model within CalcHEP.
 
-pdg2mass: |
+CH_pdg2mass: |
   Returns the name of the mass parameter within CalcHEP for a given PDG code.
 
-pdg2width: |
+CH_pdg2width: |
   Returns the name of the width parameter within CalcHEP for a given PDG code.
 
-calcMainFunc: |
+CH_calcMainFunc: |
   Calculates and updates all PUBLIC (model-dependent) parameters in CalcHEP.
 
-pMass: |
+CH_pMass: |
   Obtains the value of the mass of a particle, for a given CalcHEP particle name.
 
-getMEcode: |
+CH_getMEcode: |
   Generates shared object file computing matrix element - or points to if it already exists.
 
-passParameters: |
+CH_passParameters: |
   Exports numerical values of parameters to the dynamic CalcHEP matrix element code
 
-varNames: |
+CH_varNames: |
   CalcHEP's internal list of variable names.
