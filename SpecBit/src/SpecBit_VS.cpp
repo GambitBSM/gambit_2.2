@@ -441,7 +441,7 @@ namespace Gambit
         // Compute all vacuum stability results
         VevaciousResultContainer vevacious_results = *Dep::check_vacuum_stability;
 
-        // Add the decay width for all reque
+        // Add the decay width for global and nearest vacua
         double width = 0.0;
         for(auto vacua : *Dep::compare_panic_vacua)
         {
@@ -461,7 +461,7 @@ namespace Gambit
 
         // This is based on the estimation of the past lightcone from 1806.11281
         double conversion = (6.5821195e-25)/(31536000);
-        result=((- ( 1 / ( lifetime/conversion ) ) * exp(140) * (1/ (1.2e19) ) )  );
+        result= -  1 / ( lifetime/conversion ) * exp(140) * (1/1.2e19)  ;
     }
 
     /// get all results from VS as str to dbl map to easily print them

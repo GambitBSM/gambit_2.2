@@ -238,9 +238,6 @@ namespace Gambit
 
           } // end omp parallel block
 
-          // Update the flag indicating if there have been warnings raised about exceeding the maximum allowed number of failed events
-          // result.exceeded_maxFailedEvents = result.exceeded_maxFailedEvents or piped_warnings.inquire("exceeded maxFailedEvents");
-
           // Any problems during the main event loop?
           piped_warnings.check(ColliderBit_warning());
           piped_errors.check(ColliderBit_error());
