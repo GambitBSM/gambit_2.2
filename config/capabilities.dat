@@ -393,8 +393,22 @@ RunMC: |
    Controls the parallelization and execution of the entire
    event loop of the collider simulation.
 
-CrossSection: |
-   Total cross-section used to scale Pythia event numbers.
+TotalCrossSection: |
+   Total collider cross-section used to scale the Pythia event numbers.
+
+TotalCrossSectionAsMap: |
+   Info on TotalCrossSection as a str-double map, for easy printing.
+
+TotalEvGenCrossSection: |
+   Total collider cross-section as calculated by Pythia.
+
+EventWeighterFunction: |
+   A function that can be used for collider event weighting, e.g. 
+   for weighting events according to process-level cross-sections 
+   provided via a ProcessCrossSectionsMap.
+
+ProcessCrossSectionsMap: |
+  A map between Pythia process codes and cross-sections.
 
 LHCEventLoopInfo: |
    Info about the event loop.
