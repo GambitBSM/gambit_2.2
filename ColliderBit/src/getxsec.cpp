@@ -75,6 +75,7 @@ namespace Gambit
 
 
     #ifdef HAVE_PYBIND11
+      /// WORK IN PROGRESS
       /// Get a cross-section from the xsecBE backend
       void getPIDPairCrossSectionsMap_xsecBE(map_PID_pair_PID_pair_xsec& result)
       {
@@ -146,6 +147,7 @@ namespace Gambit
     #endif
 
     #ifdef HAVE_PYBIND11
+      /// WORK IN PROGRESS
       /// Get a cross-section from the salami backend (using Prospino for LO)
       void getPIDPairCrossSectionsMap_salami(map_PID_pair_PID_pair_xsec& result)
       {
@@ -250,7 +252,6 @@ namespace Gambit
             double LOxs_err_fb = LOxs_fb * LOxs_rel_err;
             pp_LOxs.set_xsec(LOxs_fb, LOxs_err_fb);
 
-            cerr << "DEBUG: got trust_level: " << prospino_trust_level << endl;
             pp_LOxs.set_trust_level(prospino_trust_level);
 
             // Put the LO cross-section in the map
@@ -319,6 +320,7 @@ namespace Gambit
 
 
     /// Get a cross-section from Prospino
+    /// WORK IN PROGRESS
     void getPIDPairCrossSectionsMap_prospino(map_PID_pair_PID_pair_xsec& result)
     {
       using namespace Pipes::getPIDPairCrossSectionsMap_prospino;
@@ -337,9 +339,6 @@ namespace Gambit
 
         // Get a copy of the SLHA1 spectrum that we can modify
         SLHAstruct slha(*Dep::SLHA1Spectrum);
-
-        // // Get the GAMBIT model parameters
-        // const param_map_type& model_params = Param;
 
         // Contstruct EXTPAR block from the GAMBIT model parameters
         SLHAea_add_block(slha, "EXTPAR");
@@ -972,7 +971,6 @@ namespace Gambit
 
             // Make sure the trust_level of the process_xsec_container proc_xs is set to 
             // the lowest trust_level of the contributing PID_pair_xsec_containers
-            cerr << "DEBUG: pids_xs.trust_level() = " << pids_xs.trust_level() << ",  pids_xs.pid_pair().str() = " << pids_xs.pid_pair().str() << endl;
             if (pids_xs.trust_level() < proc_xs.trust_level()) { proc_xs.set_trust_level(pids_xs.trust_level()); }
 
             // Accumulate result in the process_xsec_container proc_xs

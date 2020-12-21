@@ -82,7 +82,6 @@ namespace Gambit
       if (iteration == COLLIDER_FINALIZE)
       {
         result.collect_and_add_signal();
-        // result.scale(CrossSection.xsec_per_event());
         int ntot = RunMC.current_event_count();
         double xs = TotalCrossSection.xsec();
         double xs_per_event = 0;
