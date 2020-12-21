@@ -379,56 +379,6 @@ SPheno_MSSMspectrum: |
 SPheno_internal: |
     Exclusively used for internal variables and function for the SPheno backend.
 
-####    Vacuum Stability   ####
-
-VS_likelihood_global: |
-    Returns the likelihood associated to the stability of the scalar potential w.r.t. global minimum.
-
-VS_likelihood_nearest: |
-    Returns the likelihood associated to the stability of the scalar potential w.r.t. nearest minimum.
-
-VS_results_global: |
-    Contains all results from a vevacious run using the global minimum for the tunneling calculation in format of a string to double map. The entries are:
-
-      - lifetime
-      - thermalProbability
-      - bounce action threshold ("bounceActionThreshold_[0]" and "bounceActionThresholdThermal_[0]")
-      - action of straight path ("bounceActionThreshold_[1]" and "bounceActionThresholdThermal_[1]")
-      - lowest calculated bounce actions of each implemented path finder
-        ("bounceActionThreshold_[x]" and"bounceActionThresholdThermal_[x]", x = 2 for 1st, x = 3 for 2nd path finder..)
-      - straightPathGoodEnough: information whether the action of drawing a straight path between
-        the physical & panic vacuum is already below the action threshold.
-
-VS_results_nearest: |
-    Contains all results from a vevacious run using the nearest minimum for the tunneling calculation in format of a string to double map. The entries are:
-
-      - lifetime
-      - thermalProbability
-      - bounce action threshold ("bounceActionThreshold_[0]" and "bounceActionThresholdThermal_[0]")
-      - action of straight path ("bounceActionThreshold_[1]" and "bounceActionThresholdThermal_[1]")
-      - lowest calculated bounce actions of each implemented path finder
-        ("bounceActionThreshold_[x]" and"bounceActionThresholdThermal_[x]", x = 2 for 1st, x = 3 for 2nd path finder..)
-      - straightPathGoodEnough: information whether the action of drawing a straight path between
-        the physical & panic vacuum is already below the action threshold.
-
-vevacious_file_location: |
-    Sets the name and locations of the ini files for vevacious for each model, since they might not be just <MODELNAME>.vin, etc. Model dependent.
-
-init_vevacious: |
-    Initialize vevacious. Set potential runOptions for vevacious in the YAML file in the rules section for this capability. Model independent.
-
-vevacious_1_0_init: |
-    Initialization of vevacious 1.0 backend.
-
-check_vacuum_stability_global: |
-    Function for computing the stability of the scalar potential w.r.t. global minimum. Model independent. Only works with a filled instance of SpectrumEntriesForVevacious for the respective Model. Model independent.
-
-check_vacuum_stability_nearest: |
-    Function for computing the stability of the scalar potential w.r.t. nearest minimum. Model independent. Only works with a filled instance of SpectrumEntriesForVevacious for the respective Model. Model independent.
-
-pass_spectrum_to_vevacious: |
-    Adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious to an instance of type SpectrumEntriesForVevacious and returns this instance. The actual passing happens in the helper function exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. Model dependent.
-
 
 #-------------------------------------
 #  ColliderBit capabilities
@@ -5265,19 +5215,19 @@ cap_Sun_vnqn_isoscalar: |
 CalcHEP_3_6_27_init: |
   Initialise CalcHEP backend.
 
-CH_generate_decay_code: |
+generate_decay_code: |
   Generates the codelet for a 1->2 process in CalcHEP.
 
-CH_generate_xsec_code: |
+generate_xsec_code: |
   Generates the codelet for a 2->2 process in CalcHEP.
 
-CH_Assign_Value: |
+Assign_Value: |
   Assigns a numerical value to a given CalcHEP parameter (with error-checking).
 
-CH_Assign_Widths: |
+Assign_Widths: |
   Passes the width from each BSM particle (+ top quark) in the model, from the DecayTable to CalcHEP.
 
-CH_Assign_All_Values: |
+Assign_All_Values: |
   Takes all parameters in a model as given by the vector of SpectrumParameters, and assigns them by value to the appropriate CalcHEP parameter names.
 
 CH_Decay_Width: |
@@ -5286,26 +5236,70 @@ CH_Decay_Width: |
 CH_Sigma_V: |
   Computes annihilation cross-section for 2->2 process, DM+DMbar -> X + Y at tree level. Coannihilations not currently supported; we require the mass of both in states are equal.
 
-CH_setModel: |
+setModel: |
   Set the model within CalcHEP.
 
-CH_pdg2mass: |
+pdg2mass: |
   Returns the name of the mass parameter within CalcHEP for a given PDG code.
 
-CH_pdg2width: |
+pdg2width: |
   Returns the name of the width parameter within CalcHEP for a given PDG code.
 
-CH_calcMainFunc: |
+calcMainFunc: |
   Calculates and updates all PUBLIC (model-dependent) parameters in CalcHEP.
 
-CH_pMass: |
+pMass: |
   Obtains the value of the mass of a particle, for a given CalcHEP particle name.
 
-CH_getMEcode: |
+getMEcode: |
   Generates shared object file computing matrix element - or points to if it already exists.
 
-CH_passParameters: |
+passParameters: |
   Exports numerical values of parameters to the dynamic CalcHEP matrix element code
 
-CH_varNames: |
+varNames: |
   CalcHEP's internal list of variable names.
+
+#------------------------
+#  Rivet capabilites
+#-----------------------
+
+Rivet_3_0_0_init: |
+  Initialise Rivet backend
+
+
+#--------------------------------
+#  Vacuum stability capabilities
+#--------------------------------
+
+VS_likelihood: |
+  Computes the likelihood associated with the stability of the scalar potential
+
+VS_results: |
+  Results from a Vevacious run in the format of a string to double map
+
+check_vacuum_stability: |
+  Computes the stability of a scalar potential with Vevacious
+
+compare_panic_vacua: |
+  Compares two vacua to check if they are the same
+
+panic_vacua: |
+  List of requested panic vacua
+
+tunnelling_strategy: |
+  List of requested tunnelling strategies
+
+vevacious_file_location: |
+    Sets the name and locations of the ini files for vevacious for each model, since they might not be just <MODELNAME>.vin, etc. Model dependent.
+
+init_vevacious: |
+    Initialize vevacious. Set potential runOptions for vevacious in the YAML file in the rules section for this capability. Model independent.
+
+vevacious_1_0_init: |
+    Initialization of vevacious 1.0 backend.
+
+pass_spectrum_to_vevacious: |
+    Adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious to an instance of type SpectrumEntriesForVevacious and returns this instance. The actual passing happens in the helper function exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. Model dependent.
+
+
