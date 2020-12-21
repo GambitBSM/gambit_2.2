@@ -821,7 +821,7 @@ namespace Gambit
         {
           if (Utils::file_exists(darkbitdata_path+"SolarModel_"+solar_model_gagg+".dat"))
           {
-            model_gagg = std::move(SolarModel(darkbitdata_path+"SolarModel_"+solar_model_gagg+".dat"));
+            model_gagg = SolarModel(darkbitdata_path+"SolarModel_"+solar_model_gagg+".dat");
           } else {
             DarkBit_error().raise(LOCAL_INFO, "ERROR! No solar model file found for '"+solar_model_gagg+"'.\n"
                                               "       Check 'DarkBit/data' for files named 'SolarModel_*.dat' for available options *.");
@@ -835,7 +835,7 @@ namespace Gambit
         {
           if (Utils::file_exists(darkbitdata_path+"CAST/"+"Axion_Spectrum_"+solar_model_gaee+"_gaee.dat"))
           {
-            gaee_spectrum = std::move(AxionInterpolator(darkbitdata_path+"CAST/"+"Axion_Spectrum_"+solar_model_gaee+"_gaee.dat"));
+            gaee_spectrum = AxionInterpolator(darkbitdata_path+"CAST/"+"Axion_Spectrum_"+solar_model_gaee+"_gaee.dat");
           } else {
             DarkBit_error().raise(LOCAL_INFO, "ERROR! No spectrum file found for axion-electron interactions and model '"+solar_model_gaee+"'.\n"
                                               "       Check 'DarkBit/data' for files named 'Axion_Spectrum_*_gaee.dat' for available options *.");
