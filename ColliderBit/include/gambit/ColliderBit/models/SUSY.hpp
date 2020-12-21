@@ -69,6 +69,7 @@
     NEEDS_CLASSES_FROM(Pythia, default)
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
+    ALLOW_MODELS(ColliderBit_SLHA_file_model, ColliderBit_SLHA_scan_model)
     #undef FUNCTION
 
   #undef CAPABILITY
@@ -83,6 +84,7 @@
     DEPENDENCY(HardScatteringSim, Py8Collider_defaultversion)
     DEPENDENCY(EventWeighterFunction, EventWeighterFunctionType)
     ALLOW_MODELS(MSSM63atQ, MSSM63atMGUT, MSSM63atQ_mA, MSSM63atMGUT_mA)
+    ALLOW_MODELS(ColliderBit_SLHA_file_model, ColliderBit_SLHA_scan_model)
     #undef FUNCTION
   #undef CAPABILITY
 

@@ -2,25 +2,27 @@
 //   *********************************************
 ///  \file
 ///
-///  Dummy model for doing a scan based on replacing
-///  entries in a SLHA file
+///  Dummy model for doing a ColliderBit-only 
+///  scan over a set of SLHA files
 ///
 ///  *********************************************
 ///
 ///  Authors (add name and date if you modify):
 ///
 ///  \author Anders Kvellestad
+///          (anders.kvellestad@fys.uio.no)
 ///  \date 2019 Jul
+///  \date 2020 Dec
 ///
 ///  *********************************************
 
 
-#ifndef __cb_slha_scan_model_hpp__
-#define __cb_slha_scan_model_hpp__
+#ifndef __colliderbit_slha_file_model_hpp__
+#define __colliderbit_slha_file_model_hpp__
 
-#define MODEL CB_SLHA_scan_model
+#define MODEL ColliderBit_SLHA_file_model
   START_MODEL
-  DEFINEPARS(p1,p2,p3,p4,p5,p6,p7,p8)
+  DEFINEPARS(dummy)
 #undef MODEL
 
-#endif /* defined(__cb_slha_scan_model_hpp__) */
+#endif /* defined(__colliderbit_slha_file_model_hpp__) */
