@@ -40,7 +40,7 @@
 #include "gambit/Elements/gambit_module_headers.hpp"
 #include "gambit/ColliderBit/ColliderBit_rollcall.hpp"
 #include "gambit/Utils/statistics.hpp" 
-#include "gambit/ColliderBit/multimin.h"
+#include "multimin/multimin.hpp"
 
 #include "Eigen/Eigenvalues"
 #include <gsl/gsl_sf_gamma.h>
@@ -247,7 +247,7 @@ namespace Gambit
       static const double SIMPLEX_SIZE = runOptions->getValueOrDef<double>(1e-5, "nuisance_prof_simplexsize");
       static const unsigned METHOD = runOptions->getValueOrDef<unsigned>(6, "nuisance_prof_method");
       static const unsigned VERBOSITY = runOptions->getValueOrDef<unsigned>(0, "nuisance_prof_verbosity");
-      static const struct multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
+      static const struct multimin::multimin_params oparams = {INITIAL_STEP, CONV_TOL, MAXSTEPS, CONV_ACC, SIMPLEX_SIZE, METHOD, VERBOSITY};
 
       // Convert the linearised array of doubles into "Eigen views" of the fixed params
       std::vector<double> fixeds = _gsl_mkpackedarray(n_preds, n_obss, sqrtevals, evecs);
@@ -255,7 +255,7 @@ namespace Gambit
       // Pass to the minimiser
       double minusbestll = 999;
       // _gsl_calc_Analysis_MinusLogLike(nSR, &nuisances[0], &fixeds[0], &minusbestll);
-      multimin(nSR, &nuisances[0], &minusbestll,
+      multimin::multimin(nSR, &nuisances[0], &minusbestll,
                nullptr, nullptr, nullptr,
                _gsl_calc_Analysis_MinusLogLike,
                _gsl_calc_Analysis_MinusLogLikeGrad,
