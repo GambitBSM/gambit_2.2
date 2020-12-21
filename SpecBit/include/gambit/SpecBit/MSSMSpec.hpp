@@ -31,7 +31,7 @@
 
 #include <memory>
 
-#include "gambit/Elements/slhaea_helpers.hpp"
+#include "gambit/Elements/slhaea_spec_helpers.hpp"
 #include "gambit/Elements/mssm_slhahelp.hpp"
 #include "gambit/Utils/version.hpp"
 #include "gambit/Utils/util_functions.hpp"

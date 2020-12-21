@@ -19,6 +19,10 @@
 ///          (p.scott@imperial.ac.uk)
 ///  \date 2015
 ///
+///  \author Tomas Gonzalo
+///         (tomas.gonzalo@monash.edu)
+///  \date 2020
+///
 ///  *********************************************
 
 #ifndef __slha_helpers_hpp__
@@ -26,8 +30,6 @@
 
 #include "gambit/Utils/standalone_error_handlers.hpp"
 #include "gambit/Utils/util_types.hpp"
-#include "gambit/Elements/spectrum_helpers.hpp"
-#include "gambit/Models/SpectrumContents/subspectrum_contents.hpp"
 
 #include "SLHAea/slhaea.h"
 
@@ -35,9 +37,6 @@
 
 namespace Gambit
 {
-  /// Forward declare SubSpectrum class
-  class SubSpectrum;
-
   /// Less confusing name for SLHAea container class
   typedef SLHAea::Coll SLHAstruct;
 
@@ -101,23 +100,54 @@ namespace Gambit
    return;
   }
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; SLHA index given by pdg code
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
-   const Par::Tags partype, const std::pair<int, int>& pdg_pair, const str& block, const str& comment,
-   const bool error_if_missing = true, const double rescale = 1.0);
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; 1 SLHA index
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
-   const Par::Tags partype, const str& name, const str& block, const int slha_index,
-   const str& comment, const bool error_if_missing = true, const double rescale = 1.0);
+  /// Check if a line exists in an SLHAea block, then overwrite it if it does.  Otherwise add the line.
+  template <class T>
+  void SLHAea_overwrite_block(SLHAstruct& slha /*modify*/, const str& block, int index,
+   T value, const str& comment)
+  {
+    if(SLHAea_check_block(slha, block, index))
+    {
+      // entry exists already, delete it
+      slha.at(block).at(index).at(1);
+      auto& line = slha[block][index];
+      line.clear();
+      line << index << value << comment;
+    }
+    else
+    {
+      // Doesn't already exist, add it
+      slha[block][""] << index << value << comment;
+    }
+  }
 
-  /// Add an entry from a subspectrum getter to an SLHAea object; two SubSpectrum getter indices, two SLHA indices
-  void SLHAea_add_from_subspec(SLHAstruct& slha /*modify*/, const str local_info, const SubSpectrum& subspec,
-   const Par::Tags partype, const str& name, const int index1, const int index2, const str& block,
-   const int slha_index1, const int slha_index2, const str& comment, const bool error_if_missing = true, const double rescale = 1.0);
+  /// Check if a line exists in an SLHAea block, then overwrite it if it does.  Otherwise add the line.
+  template <class T>
+  void SLHAea_overwrite_block(SLHAstruct& slha /*modify*/, const str& block, int index1, int index2,
+   T value, const str& comment)
+  {
+    //std::vector<int> indices = initVector<int>(index1, index2);
+    if(SLHAea_check_block(slha, block, index1, index2))
+    {
+      // entry exists already, delete it
+      //slha.at(block).at(indices).at(1); // Is this actually a valid way to use SLHAea? I don't see it in their documentation.
+      std::stringstream i,j;
+      i<<index1; j<<index2;
+      SLHAea::Block::key_type key(2);
+      key[0] = i.str();
+      key[1] = j.str();
+      auto& line = slha[block][key];
+      line.clear();
+      line << index1 << index2 << value << comment;
+    }
+    else
+    {
+      // Doesn't exist, add it
+      slha[block][""] << index1 << index2 << value << comment;
+    }
+  }
 
-  /// Write a SimpleSpectrum to an SLHAea object.
-  void add_SimpleSpec_to_SLHAea(const SubSpectrum&, SLHAstruct&, const SubSpectrumContents&);
+
 
 }
 
