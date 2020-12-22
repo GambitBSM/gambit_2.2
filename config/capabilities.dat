@@ -408,7 +408,35 @@ EventWeighterFunction: |
    provided via a ProcessCrossSectionsMap.
 
 ProcessCrossSectionsMap: |
-  A map between Pythia process codes and cross-sections.
+   A map between Pythia process codes and cross-sections.
+
+PIDPairCrossSectionsMap: |
+   A map between pairs of particle ID codes (PID pairs) and cross-sections.
+
+PIDPairCrossSectionsInfo: |
+   The PID pair cross-sections from PIDPairCrossSectionsMap as a str-dbl map, 
+   for easy printing.
+
+ActiveProcessCodes: |
+   A list of Pythia process codes for all production processes activated in Pythia.
+
+ActivePIDPairs: |
+   A list of all the PID pairs related to the active Pythia process codes (ActiveProcessCodes).
+
+ActiveProcessCodeToPIDPairsMap: |
+   A map connecting Pythia process codes (for the active Pythia processes) to PID pairs
+
+CrossSectionConsistencyCheck: |
+   A consistency check that ensures that if each Pythia event is weighted by a
+   process-level cross-section from an external calculator, then the total cross-section 
+   (TotalCrossSection) is taken from Pythia.
+
+LHC_LogLike_scan_guide: |
+   A dummy log-likelihood to force the scanner to explore a given range of 
+   LHC_Combined_LogLike values. This is done by defining a Gaussian 
+   (meta-)likelihood based on the original LHC_Combined_LogLike value. 
+   Use the two YAML file options 'target_LHC_loglike' and 'width_LHC_loglike' 
+   to control this Gaussian likelihood.
 
 LHCEventLoopInfo: |
    Info about the event loop.
@@ -1062,6 +1090,35 @@ LEP208_xsec_staurstaurbar: |
 Pythia_8_212_init: |
    Initializes Pythia 8.212.
 
+Prospino_2_1_init: |
+   Initializes the Prospino 2.1 backend.
+
+prospino_gb: |
+   Main function in the GAMBIT-patched version of Prospino.
+
+prospino_gb_init: |
+   Initialization function in the GAMBIT-patched version of Prospino.
+
+prospino_errorhandler_cptr: |
+   C function pointer in the GAMBIT-patched version of Prospino, connected 
+   to GAMBIT for safe error handling.
+
+prospino_read_slha1_input: |
+   Prospino backend convenience function: reads SLHA1 input.
+
+prospino_run: |
+   Prospino backend convenience function: runs Prospino after reading 
+   options from the YAML file.
+
+prospino_run_alloptions: |
+   Prospino backend convenience function: runs Prospino, with all options
+   provided directly as function arguments.
+
+salami_0_1_0_init: |
+   Initializes the salami 0.1.0 backend.
+
+xsecBE_1_0_2_init: |
+   Initializes the xsec 1.0.2 backend.
 
 
 #-------------------------------------
@@ -3996,6 +4053,15 @@ RightHandedNeutrinos_parameters: |
 
 RightHandedNeutrinos_diff_parameters: |
    Parameters for the model RightHandedNeutrinos_diff (see ./gambit RightHandedNeutrinos_diff)
+
+ColliderBit_SLHA_file_model_parameters: |
+   Parameters for the ColliderBit dummy model ColliderBit_SLHA_file_model.
+   See ./gambit ColliderBit_SLHA_file_model_parameters for details.
+
+ColliderBit_SLHA_scan_model_parameters: |
+   Parameters for the ColliderBit dummy model ColliderBit_SLHA_scan_model.
+   See ./gambit ColliderBit_SLHA_scan_model_parameters for details.
+
 
 
 #-------------------------------------
