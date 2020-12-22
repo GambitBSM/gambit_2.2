@@ -431,6 +431,24 @@ CrossSectionConsistencyCheck: |
    process-level cross-section from an external calculator, then the total cross-section 
    (TotalCrossSection) is taken from Pythia.
 
+SpectrumAndDecaysForPythia: |
+   What it says on the box: mass spectrum and decays for Pythia.
+
+SLHA1Spectrum: |
+   A SLHA1 spectrum.
+
+SLHA2Spectrum: |
+   A SLHA2 spectrum.
+
+SLHAFileElements: |
+   A map of selected SLHA file elements.
+
+SLHAFileNameAndContent: |
+   Name and content of a SLHA file.
+
+susy_spectrum_scan_guide: |
+   Invalid point check with advances mass cuts, to aid scans of SUSY models.
+
 LHC_LogLike_scan_guide: |
    A dummy log-likelihood to force the scanner to explore a given range of 
    LHC_Combined_LogLike values. This is done by defining a Gaussian 
@@ -1117,8 +1135,28 @@ prospino_run_alloptions: |
 salami_0_1_0_init: |
    Initializes the salami 0.1.0 backend.
 
+salami_get_xsection: |
+   Salami backend function: return the cross-section for a given process, 
+   identified by a PID pair.
+
+salami_import_slha_string: |
+   Salami backend function: import SLHA content as string.
+
+salami_set_parameters: |
+   Salami backend function: set parameters in salami.
+
 xsecBE_1_0_2_init: |
    Initializes the xsec 1.0.2 backend.
+
+xsecBE_get_xsection: |
+   Xsec backend function: return the cross-section for a given process,
+   identified by a PID pair.
+
+xsecBE_import_slha_string: |
+   Xsec backend function: import SLHA content as string.
+
+xsecBE_set_parameters: |
+   Xsec backend function: set parameters in xsec.
 
 
 #-------------------------------------
