@@ -379,56 +379,6 @@ SPheno_MSSMspectrum: |
 SPheno_internal: |
     Exclusively used for internal variables and function for the SPheno backend.
 
-####    Vacuum Stability   ####
-
-VS_likelihood_global: |
-    Returns the likelihood associated to the stability of the scalar potential w.r.t. global minimum.
-
-VS_likelihood_nearest: |
-    Returns the likelihood associated to the stability of the scalar potential w.r.t. nearest minimum.
-
-VS_results_global: |
-    Contains all results from a vevacious run using the global minimum for the tunneling calculation in format of a string to double map. The entries are:
-
-      - lifetime
-      - thermalProbability
-      - bounce action threshold ("bounceActionThreshold_[0]" and "bounceActionThresholdThermal_[0]")
-      - action of straight path ("bounceActionThreshold_[1]" and "bounceActionThresholdThermal_[1]")
-      - lowest calculated bounce actions of each implemented path finder
-        ("bounceActionThreshold_[x]" and"bounceActionThresholdThermal_[x]", x = 2 for 1st, x = 3 for 2nd path finder..)
-      - straightPathGoodEnough: information whether the action of drawing a straight path between
-        the physical & panic vacuum is already below the action threshold.
-
-VS_results_nearest: |
-    Contains all results from a vevacious run using the nearest minimum for the tunneling calculation in format of a string to double map. The entries are:
-
-      - lifetime
-      - thermalProbability
-      - bounce action threshold ("bounceActionThreshold_[0]" and "bounceActionThresholdThermal_[0]")
-      - action of straight path ("bounceActionThreshold_[1]" and "bounceActionThresholdThermal_[1]")
-      - lowest calculated bounce actions of each implemented path finder
-        ("bounceActionThreshold_[x]" and"bounceActionThresholdThermal_[x]", x = 2 for 1st, x = 3 for 2nd path finder..)
-      - straightPathGoodEnough: information whether the action of drawing a straight path between
-        the physical & panic vacuum is already below the action threshold.
-
-vevacious_file_location: |
-    Sets the name and locations of the ini files for vevacious for each model, since they might not be just <MODELNAME>.vin, etc. Model dependent.
-
-init_vevacious: |
-    Initialize vevacious. Set potential runOptions for vevacious in the YAML file in the rules section for this capability. Model independent.
-
-vevacious_1_0_init: |
-    Initialization of vevacious 1.0 backend.
-
-check_vacuum_stability_global: |
-    Function for computing the stability of the scalar potential w.r.t. global minimum. Model independent. Only works with a filled instance of SpectrumEntriesForVevacious for the respective Model. Model independent.
-
-check_vacuum_stability_nearest: |
-    Function for computing the stability of the scalar potential w.r.t. nearest minimum. Model independent. Only works with a filled instance of SpectrumEntriesForVevacious for the respective Model. Model independent.
-
-pass_spectrum_to_vevacious: |
-    Adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious to an instance of type SpectrumEntriesForVevacious and returns this instance. The actual passing happens in the helper function exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. Model dependent.
-
 
 #-------------------------------------
 #  ColliderBit capabilities
@@ -443,8 +393,68 @@ RunMC: |
    Controls the parallelization and execution of the entire
    event loop of the collider simulation.
 
-CrossSection: |
-   Total cross-section used to scale Pythia event numbers.
+TotalCrossSection: |
+   Total collider cross-section used to scale the Pythia event numbers.
+
+TotalCrossSectionAsMap: |
+   Info on TotalCrossSection as a str-double map, for easy printing.
+
+TotalEvGenCrossSection: |
+   Total collider cross-section as calculated by Pythia.
+
+EventWeighterFunction: |
+   A function that can be used for collider event weighting, e.g. 
+   for weighting events according to process-level cross-sections 
+   provided via a ProcessCrossSectionsMap.
+
+ProcessCrossSectionsMap: |
+   A map between Pythia process codes and cross-sections.
+
+PIDPairCrossSectionsMap: |
+   A map between pairs of particle ID codes (PID pairs) and cross-sections.
+
+PIDPairCrossSectionsInfo: |
+   The PID pair cross-sections from PIDPairCrossSectionsMap as a str-dbl map, 
+   for easy printing.
+
+ActiveProcessCodes: |
+   A list of Pythia process codes for all production processes activated in Pythia.
+
+ActivePIDPairs: |
+   A list of all the PID pairs related to the active Pythia process codes (ActiveProcessCodes).
+
+ActiveProcessCodeToPIDPairsMap: |
+   A map connecting Pythia process codes (for the active Pythia processes) to PID pairs
+
+CrossSectionConsistencyCheck: |
+   A consistency check that ensures that if each Pythia event is weighted by a
+   process-level cross-section from an external calculator, then the total cross-section 
+   (TotalCrossSection) is taken from Pythia.
+
+SpectrumAndDecaysForPythia: |
+   What it says on the box: mass spectrum and decays for Pythia.
+
+SLHA1Spectrum: |
+   A SLHA1 spectrum.
+
+SLHA2Spectrum: |
+   A SLHA2 spectrum.
+
+SLHAFileElements: |
+   A map of selected SLHA file elements.
+
+SLHAFileNameAndContent: |
+   Name and content of a SLHA file.
+
+susy_spectrum_scan_guide: |
+   Invalid point check with advances mass cuts, to aid scans of SUSY models.
+
+LHC_LogLike_scan_guide: |
+   A dummy log-likelihood to force the scanner to explore a given range of 
+   LHC_Combined_LogLike values. This is done by defining a Gaussian 
+   (meta-)likelihood based on the original LHC_Combined_LogLike value. 
+   Use the two YAML file options 'target_LHC_loglike' and 'width_LHC_loglike' 
+   to control this Gaussian likelihood.
 
 LHCEventLoopInfo: |
    Info about the event loop.
@@ -1098,6 +1108,55 @@ LEP208_xsec_staurstaurbar: |
 Pythia_8_212_init: |
    Initializes Pythia 8.212.
 
+Prospino_2_1_init: |
+   Initializes the Prospino 2.1 backend.
+
+prospino_gb: |
+   Main function in the GAMBIT-patched version of Prospino.
+
+prospino_gb_init: |
+   Initialization function in the GAMBIT-patched version of Prospino.
+
+prospino_errorhandler_cptr: |
+   C function pointer in the GAMBIT-patched version of Prospino, connected 
+   to GAMBIT for safe error handling.
+
+prospino_read_slha1_input: |
+   Prospino backend convenience function: reads SLHA1 input.
+
+prospino_run: |
+   Prospino backend convenience function: runs Prospino after reading 
+   options from the YAML file.
+
+prospino_run_alloptions: |
+   Prospino backend convenience function: runs Prospino, with all options
+   provided directly as function arguments.
+
+salami_0_1_0_init: |
+   Initializes the salami 0.1.0 backend.
+
+salami_get_xsection: |
+   Salami backend function: return the cross-section for a given process, 
+   identified by a PID pair.
+
+salami_import_slha_string: |
+   Salami backend function: import SLHA content as string.
+
+salami_set_parameters: |
+   Salami backend function: set parameters in salami.
+
+xsecBE_1_0_2_init: |
+   Initializes the xsec 1.0.2 backend.
+
+xsecBE_get_xsection: |
+   Xsec backend function: return the cross-section for a given process,
+   identified by a PID pair.
+
+xsecBE_import_slha_string: |
+   Xsec backend function: import SLHA content as string.
+
+xsecBE_set_parameters: |
+   Xsec backend function: set parameters in xsec.
 
 
 #-------------------------------------
@@ -4033,6 +4092,15 @@ RightHandedNeutrinos_parameters: |
 RightHandedNeutrinos_diff_parameters: |
    Parameters for the model RightHandedNeutrinos_diff (see ./gambit RightHandedNeutrinos_diff)
 
+ColliderBit_SLHA_file_model_parameters: |
+   Parameters for the ColliderBit dummy model ColliderBit_SLHA_file_model.
+   See ./gambit ColliderBit_SLHA_file_model_parameters for details.
+
+ColliderBit_SLHA_scan_model_parameters: |
+   Parameters for the ColliderBit dummy model ColliderBit_SLHA_scan_model.
+   See ./gambit ColliderBit_SLHA_scan_model_parameters for details.
+
+
 
 #-------------------------------------
 #  FeynHiggs capabilities
@@ -5309,3 +5377,47 @@ passParameters: |
 
 varNames: |
   CalcHEP's internal list of variable names.
+
+#------------------------
+#  Rivet capabilites
+#-----------------------
+
+Rivet_3_0_0_init: |
+  Initialise Rivet backend
+
+
+#--------------------------------
+#  Vacuum stability capabilities
+#--------------------------------
+
+VS_likelihood: |
+  Computes the likelihood associated with the stability of the scalar potential
+
+VS_results: |
+  Results from a Vevacious run in the format of a string to double map
+
+check_vacuum_stability: |
+  Computes the stability of a scalar potential with Vevacious
+
+compare_panic_vacua: |
+  Compares two vacua to check if they are the same
+
+panic_vacua: |
+  List of requested panic vacua
+
+tunnelling_strategy: |
+  List of requested tunnelling strategies
+
+vevacious_file_location: |
+    Sets the name and locations of the ini files for vevacious for each model, since they might not be just <MODELNAME>.vin, etc. Model dependent.
+
+init_vevacious: |
+    Initialize vevacious. Set potential runOptions for vevacious in the YAML file in the rules section for this capability. Model independent.
+
+vevacious_1_0_init: |
+    Initialization of vevacious 1.0 backend.
+
+pass_spectrum_to_vevacious: |
+    Adds all entries of the spectrum object (as SLHAea) that need to be passed to vevacious to an instance of type SpectrumEntriesForVevacious and returns this instance. The actual passing happens in the helper function exec_pass_spectrum_to_vevacious which gets executed every time before a vevacious call. Model dependent.
+
+
