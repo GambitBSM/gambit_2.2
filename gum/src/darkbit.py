@@ -1012,7 +1012,7 @@ def write_micromegas_header(gambit_model_name, mathpackage, params, cap_def):
     ).format(gambit_model_name, mo_version, mo_safe_version)
 
     # Add capability definitions
-    cap_def['MicrOmegas_' + model_name + '_' + mo_safe_version + '_init'] = '   Initialise MicrOmegas ' + model_name + ' backend.'
+    cap_def['MicrOmegas_' + gambit_model_name + '_' + mo_safe_version + '_init'] = '   Initialise MicrOmegas ' + gambit_model_name + ' backend.'
 
     return indent(mo_head)
 
