@@ -324,8 +324,6 @@ if args.file:
         print("Now attempting to write proposed GAMBIT code.")
 
         # Create defaultdict for reset file.
-        # TODO: add backend patches (e.g. pythia stuff) to reset_contents
-        # so ordering is not important.
         reset_contents = defaultdict(lambda: defaultdict(list))
 
         # Dictionaries with capability and model definitions to add to the list
@@ -693,6 +691,7 @@ if args.file:
             pythia_cmake = write_pythia_cmake_entry(gum.name, output_dir)
             print(("Setting the default version of Pythia_"+gum.name+" for "
                    "BOSSed classes to 8."+base_pythia_version))
+            write_pythia_capability_defs(gum.name, capability_definitions)
 
             # Adding in a UserHook
             print("Writing a Pythia UserHooks class for ColliderBit")

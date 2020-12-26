@@ -520,3 +520,6 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
     filename = "pythia_{0}/8.{1}/patch_pythia_{0}.py".format(model_name.lower(), base_pythia_version)
     write_file(filename, "Backends", patch_contents, reset_dict, overwrite_path = "patches/")
 
+def write_pythia_capability_defs(model, cap_def):
+    # Add capability definitions
+    cap_def['Pythia_' + model + "_8_" + base_pythia_version + '_init'] = 'Initialise the Pythia ' + base_pythia_version + ' ' + model + ' backend.'
