@@ -736,6 +736,8 @@ def write_darkbit_rollcall(model_name, pc, does_DM_decay):
 MICROMEGAS
 """
 
+mo_version = "3.6.9.2"
+mo_safe_version = "3_6_9_2"
 
 def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
                          particles, gambit_pdg_codes, calchep_masses,
@@ -750,14 +752,14 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
     ## Frontend source file
     intro_message = (
             "///  Frontend for MicrOmegas {0}\n"
-            "///  3.6.9.2 backend."
-    ).format(gambit_model_name)
+            "///  {1} backend."
+    ).format(gambit_model_name, mo_version)
 
     mo_src = blame_gum(intro_message)
 
     mo_src += (
             "#include \"gambit/Backends/frontend_macros.hpp\"\n"
-            "#include \"gambit/Backends/frontends/MicrOmegas_{0}_3_6_9_2.hpp\""
+            "#include \"gambit/Backends/frontends/MicrOmegas_{0}_{1}.hpp\""
             "\n"
             "#include <unistd.h>\n"
             "\n"
@@ -799,7 +801,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "int error;\n"
             "char cdmName[10];\n"
             "\n"
-            "const Spectrum& spec = *Dep::{1};\n"
+            "const Spectrum& spec = *Dep::{3};\n"
             "const SMInputs& sminputs = spec.get_SMInputs();\n"
             "\n"
             "// YAML options for 3-body final states\n"
@@ -823,7 +825,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "*ForceUG=1;\n"
             "\n"
             "// BSM parameters\n"
-    ).format(gambit_model_name, spectrum)
+    ).format(gambit_model_name, mo_version, mo_safe_version, spectrum)
 
 
     donotassign = ["vev", "sinW2", "Yu", "Ye", "Yd", "g1", "g2", "g3"]
@@ -963,8 +965,8 @@ def write_micromegas_header(gambit_model_name, mathpackage, params, cap_def):
     ## Frontend source file
     intro_message = (
             "///  Frontend for MicrOmegas {0}\n"
-            "///  3.6.9.2 backend."
-    ).format(gambit_model_name)
+            "///  {1} backend."
+    ).format(gambit_model_name, mo_version)
 
     # Frontend header file
     mo_head = blame_gum(intro_message)
@@ -973,8 +975,8 @@ def write_micromegas_header(gambit_model_name, mathpackage, params, cap_def):
             "\n"
             "#define BACKENDNAME MicrOmegas_{0}\n"
             "#define BACKENDLANG CC\n"
-            "#define VERSION 3.6.9.2\n"
-            "#define SAFE_VERSION 3_6_9_2\n"
+            "#define VERSION {1}\n"
+            "#define SAFE_VERSION {2}\n"
             "\n"
             "LOAD_LIBRARY\n"
             "\n"
@@ -1007,10 +1009,10 @@ def write_micromegas_header(gambit_model_name, mathpackage, params, cap_def):
             "BE_INI_DEPENDENCY(decay_rates, DecayTable)\n"
             "\n"
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
-    ).format(gambit_model_name)
+    ).format(gambit_model_name, mo_version, mo_safe_version)
 
     # Add capability definitions
-    cap_def['MicrOmegas_' + model_name + '_3_6_9_2_init'] = '   Initialise MicrOmegas ' + model_name + ' backend.'
+    cap_def['MicrOmegas_' + model_name + '_' + mo_safe_version + '_init'] = '   Initialise MicrOmegas ' + model_name + ' backend.'
 
     return indent(mo_head)
 
