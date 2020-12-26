@@ -801,7 +801,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "int error;\n"
             "char cdmName[10];\n"
             "\n"
-            "const Spectrum& spec = *Dep::{3};\n"
+            "const Spectrum& spec = *Dep::{2};\n"
             "const SMInputs& sminputs = spec.get_SMInputs();\n"
             "\n"
             "// YAML options for 3-body final states\n"
@@ -825,7 +825,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
             "*ForceUG=1;\n"
             "\n"
             "// BSM parameters\n"
-    ).format(gambit_model_name, mo_version, mo_safe_version, spectrum)
+    ).format(gambit_model_name, mo_safe_version, spectrum)
 
 
     donotassign = ["vev", "sinW2", "Yu", "Ye", "Yd", "g1", "g2", "g3"]
@@ -1012,7 +1012,7 @@ def write_micromegas_header(gambit_model_name, mathpackage, params, cap_def):
     ).format(gambit_model_name, mo_version, mo_safe_version)
 
     # Add capability definitions
-    cap_def['MicrOmegas_' + gambit_model_name + '_' + mo_safe_version + '_init'] = '   Initialise MicrOmegas ' + gambit_model_name + ' backend.'
+    cap_def['MicrOmegas_' + gambit_model_name + '_' + mo_safe_version + '_init'] = 'Initialise MicrOmegas ' + gambit_model_name + ' backend.'
 
     return indent(mo_head)
 
