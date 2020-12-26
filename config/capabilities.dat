@@ -403,8 +403,8 @@ TotalEvGenCrossSection: |
    Total collider cross-section as calculated by Pythia.
 
 EventWeighterFunction: |
-   A function that can be used for collider event weighting, e.g. 
-   for weighting events according to process-level cross-sections 
+   A function that can be used for collider event weighting, e.g.
+   for weighting events according to process-level cross-sections
    provided via a ProcessCrossSectionsMap.
 
 ProcessCrossSectionsMap: |
@@ -414,7 +414,7 @@ PIDPairCrossSectionsMap: |
    A map between pairs of particle ID codes (PID pairs) and cross-sections.
 
 PIDPairCrossSectionsInfo: |
-   The PID pair cross-sections from PIDPairCrossSectionsMap as a str-dbl map, 
+   The PID pair cross-sections from PIDPairCrossSectionsMap as a str-dbl map,
    for easy printing.
 
 ActiveProcessCodes: |
@@ -428,7 +428,7 @@ ActiveProcessCodeToPIDPairsMap: |
 
 CrossSectionConsistencyCheck: |
    A consistency check that ensures that if each Pythia event is weighted by a
-   process-level cross-section from an external calculator, then the total cross-section 
+   process-level cross-section from an external calculator, then the total cross-section
    (TotalCrossSection) is taken from Pythia.
 
 SpectrumAndDecaysForPythia: |
@@ -450,10 +450,10 @@ susy_spectrum_scan_guide: |
    Invalid point check with advances mass cuts, to aid scans of SUSY models.
 
 LHC_LogLike_scan_guide: |
-   A dummy log-likelihood to force the scanner to explore a given range of 
-   LHC_Combined_LogLike values. This is done by defining a Gaussian 
-   (meta-)likelihood based on the original LHC_Combined_LogLike value. 
-   Use the two YAML file options 'target_LHC_loglike' and 'width_LHC_loglike' 
+   A dummy log-likelihood to force the scanner to explore a given range of
+   LHC_Combined_LogLike values. This is done by defining a Gaussian
+   (meta-)likelihood based on the original LHC_Combined_LogLike value.
+   Use the two YAML file options 'target_LHC_loglike' and 'width_LHC_loglike'
    to control this Gaussian likelihood.
 
 LHCEventLoopInfo: |
@@ -1118,14 +1118,14 @@ prospino_gb_init: |
    Initialization function in the GAMBIT-patched version of Prospino.
 
 prospino_errorhandler_cptr: |
-   C function pointer in the GAMBIT-patched version of Prospino, connected 
+   C function pointer in the GAMBIT-patched version of Prospino, connected
    to GAMBIT for safe error handling.
 
 prospino_read_slha1_input: |
    Prospino backend convenience function: reads SLHA1 input.
 
 prospino_run: |
-   Prospino backend convenience function: runs Prospino after reading 
+   Prospino backend convenience function: runs Prospino after reading
    options from the YAML file.
 
 prospino_run_alloptions: |
@@ -1136,7 +1136,7 @@ salami_0_1_0_init: |
    Initializes the salami 0.1.0 backend.
 
 salami_get_xsection: |
-   Salami backend function: return the cross-section for a given process, 
+   Salami backend function: return the cross-section for a given process,
    identified by a PID pair.
 
 salami_import_slha_string: |
@@ -1210,7 +1210,7 @@ RD_spectrum_ordered: |
    ordered with increasing p_eff, and coannihilation thresholds
    included
 
-RD_eff_annrate_DSprep: |
+RD_eff_annrate_DS5prep: |
    Ensures that DarkSUSY (up to version 5) is correctly initialized
    for relic density calculations.
 
@@ -2078,7 +2078,7 @@ SimYieldTable: |
 GA_missingFinalStates: |
    Final states that are not avaialable with tabulated spectra.
 
-GA_AnnYield: |
+GA_Yield: |
    Calculate the gamma-ray yield from the process catalogue.
 
 DM_process: |
@@ -2902,6 +2902,9 @@ assignVal: |
 
 vSigma: |
    The velocity averaged cross section calculated at a specified temperature.
+
+vSigma_freezeout: |
+   The velocity averaged cross section calculated at the temperature of thermal freezeout.
 
 oh2: |
    The dark matter relic density (Omega h^2).

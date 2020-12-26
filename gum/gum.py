@@ -617,7 +617,7 @@ if args.file:
                                               gambit_pdgs, calchep_masses,
                                               calchep_widths)
                 mo_head = write_micromegas_header(gum.name, gum.math,
-                                                  parameters)
+                                                  parameters, capability_definitions)
 
             darkbit_src = write_darkbit_src(dm, pc, sv, products,
                                             propagators, gum.dm_decays,

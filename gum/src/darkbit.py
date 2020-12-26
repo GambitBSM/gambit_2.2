@@ -955,7 +955,7 @@ def write_micromegas_src(gambit_model_name, spectrum, mathpackage, params,
 
     return indent(mo_src)
 
-def write_micromegas_header(gambit_model_name, mathpackage, params):
+def write_micromegas_header(gambit_model_name, mathpackage, params, cap_def):
     """
     Writes a header file for micromegas.
     """
@@ -1008,6 +1008,9 @@ def write_micromegas_header(gambit_model_name, mathpackage, params):
             "\n"
             "#include \"gambit/Backends/backend_undefs.hpp\"\n"
     ).format(gambit_model_name)
+
+    # Add capability definitions
+    cap_def['MicrOmegas_' + model_name + '_3_6_9_2_init'] = '   Initialise MicrOmegas ' + model_name + ' backend.'
 
     return indent(mo_head)
 
