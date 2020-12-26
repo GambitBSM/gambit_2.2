@@ -522,4 +522,4 @@ def patch_pythia_patch(model_parameters, model_name, reset_dict):
 
 def write_pythia_capability_defs(model, cap_def):
     # Add capability definitions
-    cap_def['Pythia_' + model + "_8_" + base_pythia_version + '_init'] = 'Initialise the Pythia ' + base_pythia_version + ' ' + model + ' backend.'
+    cap_def['Pythia_' + model + "_8_" + base_pythia_version + '_init'] = 'Initialise the Pythia 8.' + base_pythia_version + ' ' + model + ' backend.'

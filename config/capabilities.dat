@@ -1106,7 +1106,7 @@ LEP208_xsec_staurstaurbar: |
    eigenstates 'staur' and 'staurbar' at centre of mass energy 208 GeV.
 
 Pythia_8_212_init: |
-   Initializes Pythia 8.212.
+   Initializes the Pythia 8.212 MSSM backend.
 
 Prospino_2_1_init: |
    Initializes the Prospino 2.1 backend.
